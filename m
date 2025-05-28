@@ -1,96 +1,124 @@
-Received: from mx0b-00007101.pphosted.com (mx0b-00007101.pphosted.com [148.163.139.28])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524F920C02E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681C9210F5B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748470058; cv=none; b=HcYYCJ6X2e0gekwmrLWk3VA+ClxGuqwcywDoJ1+dGcZvgoyyn6v2bT9c7E2yLQbnaNqye3FUpCkJ1VWLr0IsPpEy8Kx6sBwg91ml+XrKjp20bDke5ETHLqUHHmXnJ1XzTvHrK/9hbwjvXtZXItHzeY1vXfwU+z683VlxInH45y0=
+	t=1748470142; cv=none; b=In15cxVwC1yZlPnJmOHQj+DUBYUiKYlfChMiTE8+Nuu21mJWhonLkeVtFpWdadvUjobzChhof+whK3MjUEd1fobOPEA3zjv152RZrf/JG/YYcrddJEaHLq76blBLvlTj6mTVH5JaMqVviaMvhcTnHbvW4ZfkbWVt1bic/FDbi1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748470058; c=relaxed/simple;
-	bh=8Ej1CQfQ7DfMmCY0i3p9U4s2fRLiRdWBUCvMrXo5+4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p6YSQdFvq7YeXlwVF1OJf5FvFKd8VPgjK1/Vjv6ugBDFVsOJONXexAL+bl6EPB0JwX5uRV4eAcSSK6BQUTviIEY1Nl8jf8yMOfA1U2LxDElfYlRD7elx4rhM/1oSBzJw4JjTWMCjxIf56SxF+64vUcY3LzOG448y03OnhYKGHBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu; spf=pass smtp.mailfrom=illinois.edu; dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b=pquFUU6P; arc=none smtp.client-ip=148.163.139.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=illinois.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=illinois.edu header.i=@illinois.edu header.b="pquFUU6P"
-Received: from pps.filterd (m0166260.ppops.net [127.0.0.1])
-	by mx0b-00007101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SJWMwQ032606;
-	Wed, 28 May 2025 21:36:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=illinois.edu; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=campusrelays; bh=WqZLmxBO
-	4LRIFtRWYHBgzSMaAZwMtDHRa26RcVdkZo0=; b=pquFUU6PojhPIA6AfeLV8q90
-	2K29YVDzwZS1uSEUXUeui2cyOcX8DCAHL7JBrQuoEgYSkjqFixNgXoK8JyoUeiXp
-	xWrxG9Z210mLVOCJK/yjOoED6XdOo6bH88f75y1ldQYZcNepNZafLQZ1t3S2/Y8d
-	sjPGEV7Jl3kRm8Zwzzm2tDB92qNG031ya2lyaxkmNUXa1lXfaSAmNeK04kogMhuz
-	MzXtlwxWOLezMF2JyYIGFS+w7f2M3kL89J2LfuzT6b8AqYn4YkA+QAyhYT+5HHdS
-	UfJRllydjbcN8SqKk7avcV9jjZTJdWzS+m4zciNOZnhDt1kAjOSYTQBK+gwvAg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-00007101.pphosted.com (PPS) with ESMTPS id 46x8qxrueb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 21:36:04 +0000 (GMT)
-Received: from m0166260.ppops.net (m0166260.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SLa3Fh016307;
-	Wed, 28 May 2025 21:36:03 GMT
-Received: from localhost.localdomain (sprlab008.csl.illinois.edu [192.17.97.69])
-	by mx0b-00007101.pphosted.com (PPS) with ESMTP id 46x8qxrue8-1;
-	Wed, 28 May 2025 21:36:03 +0000 (GMT)
-From: Yikang Yue <yikangy2@illinois.edu>
-To: viro@zeniv.linux.org.uk
-Cc: mikulas@artax.karlin.mff.cuni.cz, linux-kernel@vger.kernel.org,
-        yikangy2@illinois.edu, shaobol2@illinois.edu, yiruiz2@illinois.edu,
-        jianh@illinois.edu
-Subject: Re: [PATCH] fs/hpfs: Fix error code for new_inode() failure in mkdir/create/mknod/symlink
-Date: Wed, 28 May 2025 16:36:03 -0500
-Message-ID: <20250528213603.222063-1-yikangy2@illinois.edu>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250504032355.GB2023217@ZenIV>
-References: <20250504032355.GB2023217@ZenIV>
+	s=arc-20240116; t=1748470142; c=relaxed/simple;
+	bh=FTrdQ3hMx7DZNBFQbA81Ry3nFSdnYhAy4VPAaZM23gI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q11z4i1mKEJr5cvvme2WLuvZRkdQ0TzLfBrbbXIWrkER/jLeVKpC2p18FDdIaU6eME0jRcs7ek9Tn3pSgqAKNhvK6fWdHMkFLPA2vddlKR8a75Bhlecv2T+vMq/i5AygjWof7zn4VcOucI/Et0bI0qWljkDSQLGNTmVoiXbxR6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <m.felsch@pengutronix.de>)
+	id 1uKOx2-0003CA-ND; Thu, 29 May 2025 00:08:44 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v2 0/4] Input: Add support for TouchNetix aXiom touchscreen
+Date: Thu, 29 May 2025 00:08:41 +0200
+Message-Id: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: sIosjSiFkkC39z0WWs8DU4NRfAuepHVs
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE4OSBTYWx0ZWRfX35+BNqGcCVMA KY8aeOUzdri05zm7IbZsrfLrdu4Kkr8U3TaYQGxDBTbgAySFbb3zmS0lJU+FuwqX0HQ28DQPKMp 44XIU35JGiDiFr/AJRmNFuyAMv9Qj0AwuYZqI0/5Gu2hIW+vXk5fC5ZFDjqPtny9I7yoXSoo1Yl
- GAiJx8i8PSzBj8iBaQcyaZ5smW/zw2avo6QVHNaFMW66iGy+yQ1QbeU5oylISyXHBZPP1skVgIt Omk05B/qMyJviMLXSuI7vUCEl6CL9b54eZSZ5kJZXJu6LhCteuwuokWyxyfTvW4VYuueefA4Zle pYv3foZrI8JMo1L+DqXzWthsdJmGSdnxIQ1Fw79T4UFIS+vbEOj/HY2yrIW+g+McJuLwowDS70J
- tSX3oyI/4J0QMTNMw5B/xCQBtXJ7HQvedkbqyZvceCRYr3IT6xGdbVwvUQje1s/9MjbNVTuk
-X-Proofpoint-GUID: NxXk-xSluYr4G8QPjvuuT5k45jLXFqFf
-X-Authority-Analysis: v=2.4 cv=UNzdHDfy c=1 sm=1 tr=0 ts=683781c4 cx=c_pps a=+i0Qcp0HI8C2S+A/gso+oA==:117 a=+i0Qcp0HI8C2S+A/gso+oA==:17 a=dt9VzEwgFbYA:10 a=x7bEGLp0ZPQA:10 a=oxbsytTKRh_yBJMSUh8A:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_11,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=cautious_plus_nq_notspam policy=cautious_plus_nq score=0 spamscore=0
- suspectscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1011
- mlxlogscore=708 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280189
-X-Spam-Score: 0
-X-Spam-OrigSender: yikangy2@illinois.edu
-X-Spam-Bar: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGmJN2gC/4WNSw6DMAxEr4K8rqs44ttV71GxoMEFL5qgJERUi
+ Ls35QLdjPRmpDc7BPbCAW7FDp6TBHE2g74UYObBTowyZgatdKkaVWKqkRRGt4jJuZo5GM9scdj
+ EvfNUNTVxS4oIsmPx/JLt9D/6zLOE6PznvEv0a08zEXV/zIlQYU267HT17Bpq7wvbaY3eWdmuI
+ 0N/HMcXEpcHmc8AAAA=
+X-Change-ID: 20240704-v6-10-topic-touchscreen-axiom-105761e81011
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+ Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>, 
+ Danilo Krummrich <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-input@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
+X-SA-Exim-Mail-From: m.felsch@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Sorry for the late reply.
+Hi,
 
-On Sun, May 04, 2025 at 03:23:00AM +0000, Al Viro wrote:
-> Frankly, that amount of boilerplate is begging for a helper function...
+this adds the support for the TouchNetix aXiom touchcontroller family.
 
-Could you clarify whether you meant:
-(1) Simplify the patch we already submitted by introducing 
-    a helper function, or
-(2) Simplify the implementations of mkdir/create/mknod/symlink
-    by extracting a common helper?
+The following features are added:
+ - I2C communication
+ - Input event handling
+ - Touchcontroller firmware (AXFW or ALC) updates
+ - Touchcontroller config (TH2CFGBIN) updates
 
-For option 1, the current -ENOMEM fix is intentionally minimal,
-but we can certainly wrap the logic in something like:
-hpfs_new_inode(dir->i_sb, &err);
-to conduct the error code assignment within the helper function.
+Regards,
+  Marco
 
-If you had option 2 in mind, our plan would be to
-first correct the other similar error-code inconsistencies and
-then consider extracting a helper function to reduce duplication.
+---
+Changes in v2:
+- Link to v1: https://lore.kernel.org/r/20241119-v6-10-topic-touchscreen-axiom-v1-0-6124925b9718@pengutronix.de
+- Rework the firmware-duplicate handling -> expose the error to the
+  userspace
+- Drop Krzysztof Kozlowski ACK and RB
+- Add panel-follower support
+- Add sysfs-driver-input-touchnetix-axiom documentation
+- Add support for new firmware 4.8.9
+- Add support to handle 2D and 3D firmware
+
+To: Luis Chamberlain <mcgrof@kernel.org>
+To: Russ Weight <russ.weight@linux.dev>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Rafael J. Wysocki <rafael@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>
+To: Marco Felsch <kernel@pengutronix.de>
+To: Henrik Rydberg <rydberg@bitmath.org>
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-input@vger.kernel.org
+Cc: kernel@pengutronix.de
+
+---
+Kamel Bouhara (2):
+      dt-bindings: vendor-prefixes: Add TouchNetix AS
+      dt-bindings: input: Add TouchNetix axiom touchscreen
+
+Marco Felsch (2):
+      firmware_loader: expand firmware error codes with skip error
+      Input: Add TouchNetix aXiom I2C Touchscreen support
+
+ .../testing/sysfs-driver-input-touchnetix-axiom    |   74 +
+ .../input/touchscreen/touchnetix,ax54a.yaml        |   64 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |    2 +
+ drivers/base/firmware_loader/sysfs_upload.c        |    1 +
+ drivers/input/touchscreen/Kconfig                  |   15 +
+ drivers/input/touchscreen/Makefile                 |    1 +
+ drivers/input/touchscreen/touchnetix_axiom.c       | 2974 ++++++++++++++++++++
+ include/linux/firmware.h                           |    2 +
+ lib/test_firmware.c                                |    1 +
+ 9 files changed, 3134 insertions(+)
+---
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+change-id: 20240704-v6-10-topic-touchscreen-axiom-105761e81011
+
+Best regards,
+-- 
+Marco Felsch <m.felsch@pengutronix.de>
+
