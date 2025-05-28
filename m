@@ -1,73 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63692202996
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB802CA8
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423026; cv=none; b=e9M9HgX1Yaapwrrl7M98jeUVoRjVsdI7h5pcK806BjXDKXRZnbko/CeoDuR0wNstIaLHiWU15GoUudt1CdxZxpcH105s/Gbth1engHCbiUiT4vcONFRQVdpgE3NMd0ck6bgDGCE1+MVPem1XkNe/iae2ht2ZeQa6zgw5gWqtpWo=
+	t=1748423087; cv=none; b=szzu159L+f/A+McTQn7ASgiOMD++MSdePrXK0fIneoZlZBJhifBIdQRcqvUfdu2EOuBR1kMtGUJ3KSz15cBKfyFpRTltPnW2lh4QOXvqC7uztKVwLNlKd/fqE18ZFISUXKQ6jk4ao2911T5Ftt68hNKhwoKrV7tr2tK8dAIQDg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423026; c=relaxed/simple;
-	bh=Ihf96Jf9emlxTAsFz/QMxZBnHIPBcwSzHnWS2+MKpSU=;
+	s=arc-20240116; t=1748423087; c=relaxed/simple;
+	bh=BCPmWotxYnhiVhx8a88cIXNIaYc00lx469hJzboFrXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kn0a920WQjT5iviZEAM1dfeRP3BBLZAU3IMWWESk84Bi7g1/Xf60mTqFigiKLVsDT8inQfzRPltJ35SA9Yj7DAO9DzSPFZ0WvRdS5W6v6/rEZ2g72Rttyxw+bqUoE6cH2w1zV5ZVO/gJ07enPcA2OHhd2MY3hoJAGvvNArKutfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fo7bfkzP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=HffNhSgHwmVbslEW/uTQRD3PvYvEFoJybo+37ar3gP/x1TguPhnLW1lY5nG8dBF/RVJY5UxccXd2dZgvGXq3WL5A6TS86nYZrFRBvW9t/zxunV79Yza2A0l1+7rgNsNlwGGKoO+XNzp+MzIp8/8B23PRz+dzuKEreDDUT+Yqbng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1Yf1CsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L4S6W4h9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1Yf1CsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L4S6W4h9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fo7bfkzP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748423023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1Yf1CsJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L4S6W4h9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1Yf1CsJ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L4S6W4h9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 722BD21B47;
+	Wed, 28 May 2025 09:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748423083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9uc45Svc1W6nrhUpVJMAGcmamvYOihc8Tgxl1943pLA=;
-	b=Fo7bfkzPHDy+69NYqVAsgQmCtemqkfgX57INUf+ltDKfOhJHOk1Vq20nyKrebK2I2Uj7fE
-	MkZC/CqnNH/GuS/we0lKZrutfaSwgjXQ3R/SR6Z0DEd1vyK/vO+bLoDKmaQ7Czad+3eOh3
-	R1jiBuTug6Oc1gdjQ6mJIszvD+9m0So=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-547-E7Qa5zcrOhan9Ap2FESprQ-1; Wed, 28 May 2025 05:03:41 -0400
-X-MC-Unique: E7Qa5zcrOhan9Ap2FESprQ-1
-X-Mimecast-MFC-AGG-ID: E7Qa5zcrOhan9Ap2FESprQ_1748423021
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a35ec8845cso1965384f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:03:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748423020; x=1749027820;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9uc45Svc1W6nrhUpVJMAGcmamvYOihc8Tgxl1943pLA=;
-        b=pUiJmLPyURxCxdBnKlsm96WbrPiTiRi/fmzWilCQgroOmkyrEJfJC0ATbI/41QcMfM
-         z3JmEKVv/mvrzyh9zMDVa/wGcWevthkNsQl7IkaR8px8XgmZSDt35Ll94By7mmR/UiRJ
-         0+NJyAtC0NXpK4VQu26b+9JPL/ARvZkci5oYU8wsVZ3WDHI1bP4gvDpvgD07u+iMeVoB
-         /QF/rwhPYsyCgPw49Wo7H1jPf5PoZq9VEwWnTCQx+n3sLO0x3fuC7i121Kx6Cx7+d/Aj
-         bow7adQhTYTT1Iywc8B86pQyzJrrxP9qMbzoAh2ABpeoIoal4EnHxZvwgW1ITXmfsB0j
-         KdTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXx64E5FrX4glMS0apT5SAShrzESA3rgiAibrK3KkKc4Uy+EwzEXyWdMweu2c11HOQh1GDmE8dFfCJQp0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdW+atv0AtjV04DtY5zsuSDPYGjUMHXxachqmg6vaRkMYN7MCs
-	JpPgiLA3E8LjUsPttXUpY7QTnCmtz8xl0FJZ79hf00mRtaeDcPBNWsrcddyYdv+LCckqUbN1iUc
-	9dtQQ877JUE/SKDPHBh7zLaTCoPJavGx2lgV2u3cmbWUuxaYXDbi2joqumx+vwgrWpA==
-X-Gm-Gg: ASbGncv4+XikVHV7dMQZV75WIX70cLYGBez2xrWosZqJCLVfVWLwReXMXhiWxBAnPxr
-	mxCPPdsIzpae8ZEMDVyNPM2pJBnN/dan9r5a9tZlFZkkOY/HQBDUGHj/NFwbGH3s2dVqeO3ogV9
-	9znJ0qPJHcuNzpC1GaC4l5xPZ001i0+1A2v4vcVTRsYWjo0Euj9YhOKBpbqMu7nOhMjMLJS+wDq
-	zBB03VNhUl63JLE/eF7xL8o5ZMF2IqDvnajmUE9rqVTn3L0R/pfutnvZUkxOZ5Rdel1vwXyZfB1
-	jRuugibWOk77FhChB8RiNmtYBTr8lcB+M5NtTERni2p0cgQMa6q/oEHFbozko1t9cjN/8kJIV18
-	zztz4mUhqJ7SgvpljuuiwEnx6TNm3rufDP0vcuTU=
-X-Received: by 2002:a05:6000:4312:b0:3a4:dc0a:5c0a with SMTP id ffacd0b85a97d-3a4e957be2dmr1397984f8f.44.1748423020477;
-        Wed, 28 May 2025 02:03:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH/FFPCB6RPiUlD6SK7Uvhb6FaRvTdWdlGF2T5R9hZ0YO2drr0+Pok+YZzB60DfLfzkVn3Uqg==
-X-Received: by 2002:a05:6000:4312:b0:3a4:dc0a:5c0a with SMTP id ffacd0b85a97d-3a4e957be2dmr1397947f8f.44.1748423020066;
-        Wed, 28 May 2025 02:03:40 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd8edfsm886493f8f.79.2025.05.28.02.03.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:03:39 -0700 (PDT)
-Message-ID: <cba0155e-d2b9-41fa-bc51-f3738ae73cff@redhat.com>
-Date: Wed, 28 May 2025 11:03:38 +0200
+	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
+	b=j1Yf1CsJ2czzv8SEmdmmEikG0WBJyhQN5WRlv9EeRI72uIhlx0InHeIxRddVEH1NuL4u/e
+	/KA/D/YltvH6m0lGqDZXN1cWcV9mkNjU1PJbnVuE94w/C2jo2iZjh99vL2MOVaJ1JMJ+2E
+	KgOW0mb8EGm805Ao9kQ2gU42ddFTs68=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748423083;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
+	b=L4S6W4h9Y5RwnEOjLgk6d6WaqNNsVWbiAV6zgLp05J5C8JiAUKfG+b+WQIeTEM1bx1/Ryk
+	aiCsoCGwSaw7SCDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j1Yf1CsJ;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=L4S6W4h9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748423083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
+	b=j1Yf1CsJ2czzv8SEmdmmEikG0WBJyhQN5WRlv9EeRI72uIhlx0InHeIxRddVEH1NuL4u/e
+	/KA/D/YltvH6m0lGqDZXN1cWcV9mkNjU1PJbnVuE94w/C2jo2iZjh99vL2MOVaJ1JMJ+2E
+	KgOW0mb8EGm805Ao9kQ2gU42ddFTs68=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748423083;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
+	b=L4S6W4h9Y5RwnEOjLgk6d6WaqNNsVWbiAV6zgLp05J5C8JiAUKfG+b+WQIeTEM1bx1/Ryk
+	aiCsoCGwSaw7SCDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 53FEE136E0;
+	Wed, 28 May 2025 09:04:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kP5uE6vRNmgeZAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 28 May 2025 09:04:43 +0000
+Message-ID: <7faca175-64c2-4a12-9340-37eaeeb8bd3e@suse.cz>
+Date: Wed, 28 May 2025 11:04:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,134 +83,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
- expanding vma during mremap
-To: Pu Lehui <pulehui@huaweicloud.com>, Oleg Nesterov <oleg@redhat.com>
-Cc: lorenzo.stoakes@oracle.com, mhiramat@kernel.org, peterz@infradead.org,
- Liam.Howlett@oracle.com, akpm@linux-foundation.org, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, pulehui@huawei.com
-References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
- <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
- <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
- <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
- <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
- <20250526154850.GA4156@redhat.com>
- <06bd94c0-fefe-4bdc-8483-2d9b6703c3d6@redhat.com>
- <57533126-eb30-4b56-bc4d-2f27514ae5ad@huaweicloud.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 1/1] local_lock: Minor improvements of local_trylock*()
+ documentation
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <57533126-eb30-4b56-bc4d-2f27514ae5ad@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Leonardo Bras <leobras@redhat.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250521174726.578303-1-leobras@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250521174726.578303-1-leobras@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid,suse.cz:email];
+	URIBL_BLOCKED(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 722BD21B47
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On 27.05.25 15:38, Pu Lehui wrote:
-> Hi David,
+On 5/21/25 19:47, Leonardo Bras wrote:
+> Fix local_trylock_init() documentation, as it was mentioning the non-try
+> helper instead, and use the opportunity to make clear the try_lock*() needs
+> to receive a local_trylock_t variable as parameter.
 > 
-> On 2025/5/27 2:46, David Hildenbrand wrote:
->> On 26.05.25 17:48, Oleg Nesterov wrote:
->>> Hi Lehui,
->>>
->>> As I said, I don't understand mm/, so can't comment, but...
->>>
->>> On 05/26, Pu Lehui wrote:
->>>>
->>>> To make things simpler, perhaps we could try post-processing, that is:
->>>>
->>>> diff --git a/mm/mremap.c b/mm/mremap.c
->>>> index 83e359754961..46a757fd26dc 100644
->>>> --- a/mm/mremap.c
->>>> +++ b/mm/mremap.c
->>>> @@ -240,6 +240,11 @@ static int move_ptes(struct pagetable_move_control
->>>> *pmc,
->>>>                   if (pte_none(ptep_get(old_pte)))
->>>>                           continue;
->>>>
->>>> +               /* skip move pte when expanded range has uprobe */
->>>> +               if (unlikely(pte_present(*new_pte) &&
->>>> +                            vma_has_uprobes(pmc->new, new_addr,
->>>> new_addr +
->>>> PAGE_SIZE)))
->>>> +                       continue;
->>>> +
->>>
->>> I was thinking about
->>>
->>>      WARN_ON(!pte_none(*new_pte))
->>>
->>> at the start of the main loop.
->>>
->>> Obviously not to fix the problem, but rather to make it more explicit.
->>
->> Yeah, WARN_ON_ONCE().
->>
->> We really should fix the code to not install uprobes into the area we
->> are moving.
-> Alright, so let's try this direction.
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+Locking tree (btw the local_lock files are missing in the list of
+MAINTAINERS) or mm since this fixes up changes that went through mm recently?
+
+> ---
+> v1: https://lore.kernel.org/all/20250505170244.253170-1-leobras@redhat.com/
+> RFC: https://lore.kernel.org/all/20250430073610.163846-1-leobras@redhat.com/
 > 
->>
->> Likely, the correct fix will be to pass the range as well to
->> uprobe_mmap(), and passing that range to build_probe_list().
 > 
-> It will be great. But IIUC, the range we expand to is already included
-> when entering uprobe_mmap and also build_probe_list.
-
-Right, you'd have to communicate that information through all layers 
-(expanded range).
-
-As an alternative, maybe we can really call handle_vma_uprobe() after 
-moving the pages.
-
-uprobe_write_opcode() should detect that the uprobe is already installed 
-(verify_opcode() will return 0) and just return.
-
--- 
-Cheers,
-
-David / dhildenb
+>  include/linux/local_lock.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+> index 16a2ee4f8310b..d8d5e6cfa1151 100644
+> --- a/include/linux/local_lock.h
+> +++ b/include/linux/local_lock.h
+> @@ -45,38 +45,38 @@
+>  /**
+>   * local_unlock_irqrestore - Release a per CPU local lock and restore
+>   *			      interrupt flags
+>   * @lock:	The lock variable
+>   * @flags:      Interrupt flags to restore
+>   */
+>  #define local_unlock_irqrestore(lock, flags)			\
+>  	__local_unlock_irqrestore(lock, flags)
+>  
+>  /**
+> - * local_lock_init - Runtime initialize a lock instance
+> + * local_trylock_init - Runtime initialize a local_trylock_t instance
+>   */
+>  #define local_trylock_init(lock)	__local_trylock_init(lock)
+>  
+>  /**
+>   * local_trylock - Try to acquire a per CPU local lock
+> - * @lock:	The lock variable
+> + * @lock:	The local_trylock_t variable
+>   *
+>   * The function can be used in any context such as NMI or HARDIRQ. Due to
+>   * locking constrains it will _always_ fail to acquire the lock in NMI or
+>   * HARDIRQ context on PREEMPT_RT.
+>   */
+>  #define local_trylock(lock)		__local_trylock(lock)
+>  
+>  /**
+>   * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
+>   *			   interrupts if acquired
+> - * @lock:	The lock variable
+> + * @lock:	The local_trylock_t variable
+>   * @flags:	Storage for interrupt flags
+>   *
+>   * The function can be used in any context such as NMI or HARDIRQ. Due to
+>   * locking constrains it will _always_ fail to acquire the lock in NMI or
+>   * HARDIRQ context on PREEMPT_RT.
+>   */
+>  #define local_trylock_irqsave(lock, flags)			\
+>  	__local_trylock_irqsave(lock, flags)
+>  
+>  DEFINE_GUARD(local_lock, local_lock_t __percpu*,
 
