@@ -1,134 +1,105 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48D6D28BAA3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0676A28C01C;
+	Wed, 28 May 2025 15:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748445037; cv=none; b=MiOKo5mcmadiZG8WBs4z41ra504mjrc+8QgO+vvEH4Dwj47qfifUzuEtKURJ+pOAHa8C0wbjmLJdFAQ1xQQVPpk/8nNsdIgQYJU1bG+88iUNWigp4yfKhpuXc6o1vyW4YFX5v1SbBeZOIg0zblEI6Z1v69EEeZu90n5wWRXE3yM=
+	t=1748445048; cv=none; b=Snsm5vdqvvK7zAYNbde+eyhxMQzl4EynnxP44aFGCie1gGCUIMma9PB03eq/At07H5oahjaWQtTMuVs5XVkY2RlP8GMvphb7bdxrH6YOQmAnoZ9pR9qbludAkwQccIfxylfjqUryEB+ohuIyCZZk00OGcTRZNN2IipJeU1unixw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748445037; c=relaxed/simple;
-	bh=oRij2I0TpTX32X/NhxasXgfEJxa8A5RThaAlheT8LBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CjrIB7IluL/+1gyu++iD9p9xRrUscffoZrVx4x3OJJP+C8uVoRBlvqXxu8zpJ3o5XCQ/xyDrPBglCiJYgatmOvTz7i4euq66+6ByqRuiXAYfZvGQC2tIhfYbn8H1EylVPwmr2jEGPA1iq/wC+bo0AYryr5vJgZ/6FsKosfbRtQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XSHUHdzh; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748445048; c=relaxed/simple;
+	bh=VoneiAYFe68XxjFSpgm16dS0jALbbMgSV8pvbxVlj3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQzBUwa3CJpBs2YWKq7m9VGdQv+oBtEHReiqclkZd1Dr1ukjDGa7pbE6JVmuek08Cj3IidAIX3tlZqtQlrr04VztHe0eh68tC3lseuJfBlMtwciEazs0zocMJNFGvqoElrlVu0vNnQhgE/HVKNpHUPMFGgW0DtZxbu1UhfA6lM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aDaL1CWn; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XSHUHdzh"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e7dcd60c092so1440562276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748445034; x=1749049834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mkOH/F0mBjSGdYPCUEiDsSIcD6SIWcpvbL1Z7KSMawk=;
-        b=XSHUHdzh4M3Tz1CxqHeZu5QTLHzRV3Z8TIcZdNftoj7tZJUy1qxF7vAtEIvnAlUmTE
-         JdJ/7C3uWpNaHD7A0OgWrMpPOQSSOCNiRkVqlgam5TmRHWM4uNeLXI4FgN4H6pg9dvOc
-         /YNI8k4NDPiydQqZD4S9zOl+A5gQDsBNgNtowZwexAva5z9XQKZLChtezIFfZ061EFpY
-         aTQxb3ee98rHEGg85oBwRrIFAsYtUYTDRDOXQOgCJGmEmWCg3qr8Ez/LcFK8QZoqDMEJ
-         rvqjRx5+n+1UF3ppt/Do5fixTZf9bDsTo9IdGYvIVYoXkmMrod0ABMGWssVFg2SXP5JO
-         1yKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748445034; x=1749049834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mkOH/F0mBjSGdYPCUEiDsSIcD6SIWcpvbL1Z7KSMawk=;
-        b=TNjXcDHfZn0MTDCP1DFF2wmy8j8jaWTyLyRKZK2CD9hFHbYXkbQJN/X0bX4Vhw7Zgp
-         80LaNa3q1O9Rb5lIzLjneMplIqIdCdcWBEPSNTcEQDly1kheJsGvm2na0R6rmk1FIWDi
-         OZ3YmTb+s6B2tpxyMktRpbde54n7Fnl2/VdAWrLNuwSU2QZzWKuVwjK7edDCg/6rbmGk
-         P5W8HbQocoZBh+SRH66p0QPafPku7oROFMPieBhKZtzF/4gyz6tyfkR0Ko7zAQ8BlC3N
-         eAurqsKk2Xi86F36TQCXUFsi0mJKwqOzqZ2AA/POBeJOy1DAMSHFBsS7H4ul5aG/ad9T
-         8dLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfPWb/afBqM7UggpqJ4huyYx61vkwHQGHnbecQ6M4tSwQWZQ51yVRXtd46MMS6w6lqepqHaJT/+QLfqQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu5D6asFVHBGqV21Ufg1zhCJzczdwgUm+dBwZY35pQEGjD/lVk
-	PI/IF/FfkFIRVcfV3Z0LCFCNcvRSloHeDoKUIVp+D6ZJqG1ifSBfIAKclUeGLT9jw++b6t26sVB
-	Z9KEnNUm0HbcK5yvhq5zAzksc4EDCfhNwCScxnSBH
-X-Gm-Gg: ASbGncvb+yTG1NCgKjFGO/Qp6ZWWusU/3tJ+dFWBaIWnOXxcLPnCYUn72kDs3NRAcfc
-	Wc76VZODs+tA8adN3FBtljnP6v6Y8s51g0AP+ivfnRX0xu8PAZUXyQXxPaHqWyd6sPwqzdrQXAB
-	tqV5E3kCiWtvQ+O4fcbdWZg0xB47luDij1l1LPmNVyQq+cnraA92FNgn5/88Te1eJRP5VkkhJ/4
-	5qVzuVFkzBksTv8
-X-Google-Smtp-Source: AGHT+IGR99lWrX4uBQGr2kH0bGfT4JkEfaCzPmaHW/nbBCSd4QahIO99ZAocGBZAuHyfUiwPf1Ucb1uKFWWP5NDU59M=
-X-Received: by 2002:a05:6902:2841:b0:e7d:6fe3:fc81 with SMTP id
- 3f1490d57ef6-e7d91b459aamr21754237276.30.1748445033884; Wed, 28 May 2025
- 08:10:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aDaL1CWn"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9mEf022816;
+	Wed, 28 May 2025 15:10:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=V3i3Tsthb6Ljxbs39P+VC5rZ1AQFt7
+	AlQ+UDegLoUvk=; b=aDaL1CWnZqv4JE4qnpbuhdn8Coo7lOhVH4jY2YCfrEhItt
+	xi1nptzXndG6Uefw+CZ+TQmYOV4gBMVWV5FriPOk2gjEZfXl0XlnCdbWdsnAeJUK
+	9/2dr1UpKNtICFweLWLTuOE5rQOQnMJe0fSI7c6IDlNrAjDAGA5WfFtoz9GaJPFj
+	5XjO2WLaUwkaQP40e8HKMTckUYguxrapJWa3+Pp2BJx1oNgIom2Sy4WdTvMxs5m2
+	SQZ3KtJeHMyNeMTlw/MNDLu8FdeQno74Z+GnhN8kTnPPNhKpWm6C+zCXcIZWOUcv
+	l8Ho6mH3DrtjdAm4tDtw/RcRz1vMZMIVWQrJWlQw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40h0ceu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 15:10:29 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SEpgrn021333;
+	Wed, 28 May 2025 15:10:29 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46utnmqu4q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 15:10:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SFAR5227132332
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 15:10:27 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F3C820040;
+	Wed, 28 May 2025 15:10:27 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4800D20043;
+	Wed, 28 May 2025 15:10:23 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.18.84])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 28 May 2025 15:10:21 +0000 (GMT)
+Date: Wed, 28 May 2025 20:40:15 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: libaokun@huaweicloud.com
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, libaokun1@huawei.com
+Subject: Re: [PATCH 3/4] ext4: get rid of some obsolete EXT4_MB_HINT flags
+Message-ID: <aDcnV0LHAXGBJOEv@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+ <20250523085821.1329392-4-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <20250109204929.1106563-7-jthoughton@google.com> <aBqkINKO9PUAzZeS@google.com>
-In-Reply-To: <aBqkINKO9PUAzZeS@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 28 May 2025 11:09:58 -0400
-X-Gm-Features: AX0GCFt9PLVfklSGC-mOnCNW0mGP_16cIQYPD6tP1ev5K3PmI8fYxDutOCJrYcQ
-Message-ID: <CADrL8HXDDRC6Ey5HYWvtzQzjcM2RNX7c7ngGyjUsD3WiBF3VYA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523085821.1329392-4-libaokun@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8u1fMgIIcPi9DJU2JDz_2YtrciT_Y0Kg
+X-Proofpoint-ORIG-GUID: 8u1fMgIIcPi9DJU2JDz_2YtrciT_Y0Kg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEzMCBTYWx0ZWRfX4CIPuIELoWl7 kuYtLboGBzaGde7dFKP04KOsKFSf0eV8TDKk/IabS5J1wZRkgxhUWzlQbBagTnGS0Oj4Y3vPs1V 9qwSS1P0lAAtlTFr0GAvs+1aiWO1f8AVxbVIv0EKQSw/yPoxv29fjbzV1lpz/oKNkeN4wT1aDlT
+ 1o77i7Q1ConnhPqAM7zEWV4AVBzRbsY0wL9u+Q3qZ6O2inXJB1mf+RbuB++4sFypjj23xS6VnXU 8VksRzxQQ3Vihv+d8Tx2xR+mBl09fHi+9ul0RoqRO2eu73ngB7EmSJFsa5oLBBLG+6xXSom8/BM CZ6IF5YwQ0ZY8SHzWFGrRwp3cnHciNL4a9n3huDrcAVKct7YKuLaumO+sk1u1J5/AxkH/zQEFrB
+ auytSD6j2AQN7WtA2UOEnl2SDmd4tL93GPh5Ymu5Zfr6ix9rP/K+Hfa6yxU9thW3dXGOdAUa
+X-Authority-Analysis: v=2.4 cv=L8MdQ/T8 c=1 sm=1 tr=0 ts=68372765 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=VnNF1IyMAAAA:8 a=twkGVns3odX8MIeO9usA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_07,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=319 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280130
 
-On Tue, May 6, 2025 at 8:06=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> On Thu, Jan 09, 2025, James Houghton wrote:
-> > @@ -2073,6 +2080,23 @@ void kvm_arch_commit_memory_region(struct kvm *k=
-vm,
-> >                                  enum kvm_mr_change change)
-> >  {
-> >       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PA=
-GES;
-> > +     u32 new_flags =3D new ? new->flags : 0;
-> > +     u32 changed_flags =3D (new_flags) ^ (old ? old->flags : 0);
->
-> This is a bit hard to read, and there's only one use of log_dirty_pages. =
- With
-> zapping handled in common KVM, just do:
+On Fri, May 23, 2025 at 04:58:20PM +0800, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> Since nobody has used these EXT4_MB_HINT flags for ages,
+> let's remove them.
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
 
-Thanks, Sean. Yeah what you have below looks a lot better, thanks for
-applying it for me. I'll post a new version soon. One note below.
+Looks good:
 
->
-> @@ -2127,14 +2131,19 @@ void kvm_arch_commit_memory_region(struct kvm *kv=
-m,
->                                    const struct kvm_memory_slot *new,
->                                    enum kvm_mr_change change)
->  {
-> -       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PA=
-GES;
-> +       u32 old_flags =3D old ? old->flags : 0;
-> +       u32 new_flags =3D new ? new->flags : 0;
-> +
-> +       /* Nothing to do if not toggling dirty logging. */
-> +       if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
-> +               return;
+Reviewed-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
 
-This is my bug, not yours, but I think this condition must also check
-that `change =3D=3D KVM_MR_FLAGS_ONLY` for it to be correct. This, for
-example, will break the case where we are deleting a memslot that
-still has KVM_MEM_LOG_DIRTY_PAGES enabled. Will fix in the next
-version.
-
->
->         /*
->          * At this point memslot has been committed and there is an
->          * allocated dirty_bitmap[], dirty pages will be tracked while th=
-e
->          * memory slot is write protected.
->          */
-> -       if (log_dirty_pages) {
-> +       if (new_flags & KVM_MEM_LOG_DIRTY_PAGES) {
->
->                 if (change =3D=3D KVM_MR_DELETE)
->                         return;
+Regards,
+ojaswin
