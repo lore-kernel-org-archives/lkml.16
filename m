@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ABF824DCEE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D24224DD1B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419803; cv=none; b=C97pQj9ZqICLmaw9xWqAV1roFQA8hiZNN6ClU36MkxJ5uJ5QIqEICKFIVBCZn4C6V+nk7RhIQ03Hts5m5USph/Cu0qjI0aCdofc8Heup8V4mdco0luOHd9MTMrSHGJ2wOf2fusmpn9tyQNEeVMkunhk7zwZRabbU6+dQXB0wBME=
+	t=1748419806; cv=none; b=u15z5aUDHFKri6XK3BOjxsnME1FQ3aw+bSrA72OOQJHcwlg8/qobHoK7s42gz6VSM+Y0CCpERLPFVrgrG0Lz2CfKes9uxNmXo8go13SoapxwVQaGmtsp01PJvaXgH5zud8cVh7s+L4kSkM6haLhAwu4piOT3BkYmK4qNfReY8v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419803; c=relaxed/simple;
-	bh=2yy4uprkjJ9k8z5aYq2LuPZtLWlldXfXM4RXFHPqX4Q=;
+	s=arc-20240116; t=1748419806; c=relaxed/simple;
+	bh=+K51kWrxWCvbKfp493M0b+C5HU6KPSTl/Y8J4sAULk4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UI/OBwR9QSLyFB5suv9p2IwE4386fyUpw1NiawQd/h1Yp1Zpj6qQSK4ioKybSUBG9ajY+uqmDC+TWO1HN1blYfTodn31rUGdtObStCa2VYb9kk8TwEo7uZf4vxlNxEXXp09E2fDu4cqpZVkWQJnby/Bf7tmjbHfQwN1BlvEgET4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2M1bSkh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eToaoTHT8zEnitNUM1UI/Jf5NfYL3jL2P7/elc5zjigJT2XLg3LOT1MYS6TRzaVI2PNdiap3/gEEPi8Yc+IO34Oo1+7XrFol36U7ZQZVJhaFFoxbocmOS0DFkH/zQJlscN34yYApCSNm+/9TxL0sOvF+8qt3kNarDPBRKSEl88E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZdsq/U5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2M1bSkh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84208C4CEEB;
-	Wed, 28 May 2025 08:09:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZdsq/U5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129B2C4CEEF;
+	Wed, 28 May 2025 08:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419802;
-	bh=2yy4uprkjJ9k8z5aYq2LuPZtLWlldXfXM4RXFHPqX4Q=;
+	s=k20201202; t=1748419806;
+	bh=+K51kWrxWCvbKfp493M0b+C5HU6KPSTl/Y8J4sAULk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j2M1bSkh0//KRHIiNOVUp5xWktHsdWVQ2UxzqV6N9cQpNDeSlljHm/QbFQ17GvnfA
-	 UIsodlxFFNlVakYXws7S0gIeiTbQmdAytXvdcwJxFjtd+dgts6YYrpFbp6eSSMVDHU
-	 Fo6G95K1KW3xC4ITZTNkWmb6Wqnkn9SQOjMifT6Lwi2nRHxhEQGUO76sSDmBxhm3z5
-	 MvyobJTK3pAehkzFKGQbCdusEzcncL9SLysh3QI30bBBbI4z/wqc9RbaWSeDCcO36y
-	 BueAvl/wuXaUYPrZUhHE8EWZiZ54Uc+iStWhMvzjN+C7KEoplqRE2BVv+zfxZEA/i4
-	 6a1wX63pr3+XA==
+	b=IZdsq/U5w+iYXqJpnN0hTJ7UTg9x7a1jN6608OPjt+kKTXmT/SIEuCZPrHFquVVyj
+	 +dyq+DXeUmFdetg+AlJLYr7SEYaA2g5WZe2N/t1b1qWWobgDp9+SsE/REEMpGBcXzy
+	 iVwytzS2A0Rip6IpXKngZ2MSlEChyHNB2ILjznWO8FR86elCmKk3lpwdNfsAbuR4zN
+	 ajJWys9a7okVeilK7N47dD6CFU7nH7iRIdOid1rzGhYtuQktpFlunPZNZzcM3PkTjw
+	 i/hVa2uge/cKvI3IA1EaqS3HYQIZ7Ot1FogQk1L07kXpbQivv359uRiuHO5BJtAekv
+	 OEKBoPghvnIFA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 04/43] sched: Clean up and standardize #if/#else/#endif markers in sched/cpufreq_schedutil.c
-Date: Wed, 28 May 2025 10:08:45 +0200
-Message-ID: <20250528080924.2273858-5-mingo@kernel.org>
+Subject: [PATCH 05/43] sched: Clean up and standardize #if/#else/#endif markers in sched/cpupri.h
+Date: Wed, 28 May 2025 10:08:46 +0200
+Message-ID: <20250528080924.2273858-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -74,25 +74,19 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/cpufreq_schedutil.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/cpupri.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 816f07f9d30f..a28d0f94ed6b 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -380,9 +380,9 @@ static bool sugov_hold_freq(struct sugov_cpu *sg_cpu)
- 	sg_cpu->saved_idle_calls = idle_calls;
- 	return ret;
- }
--#else
-+#else /* !CONFIG_NO_HZ_COMMON: */
- static inline bool sugov_hold_freq(struct sugov_cpu *sg_cpu) { return false; }
--#endif /* CONFIG_NO_HZ_COMMON */
-+#endif /* !CONFIG_NO_HZ_COMMON */
- 
- /*
-  * Make sugov_should_update_freq() ignore the rate limit when DL
+diff --git a/kernel/sched/cpupri.h b/kernel/sched/cpupri.h
+index d6cba0020064..f9c18e77d6a6 100644
+--- a/kernel/sched/cpupri.h
++++ b/kernel/sched/cpupri.h
+@@ -26,4 +26,4 @@ int  cpupri_find_fitness(struct cpupri *cp, struct task_struct *p,
+ void cpupri_set(struct cpupri *cp, int cpu, int pri);
+ int  cpupri_init(struct cpupri *cp);
+ void cpupri_cleanup(struct cpupri *cp);
+-#endif
++#endif /* CONFIG_SMP */
 -- 
 2.45.2
 
