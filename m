@@ -1,62 +1,62 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B5021A95D;
-	Wed, 28 May 2025 03:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF0F21B9C0;
+	Wed, 28 May 2025 03:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748404206; cv=none; b=BQ9Rz1L4MLc7UP8plny7HAiZriQTnCJQKt2vLRBW6M15CKC41WR3uhLv8zqdVHzilTBggGt4teAk9TiE/WgmSrzHQvkHxW+VpW/x9FsZzH8AIaBHT1qO2plt6sSsF8ss2P2rrJBc91JJCezOapjcQsPiVM2TH5pFC0Mp9CpOzX4=
+	t=1748404211; cv=none; b=pUkNFUScg5M0CipdY9ffGA5+imvhXdQ8f7kqMfqNvLaNxovzWHbAtHy3yPsaN2ha5o+R7ucuvH6SS6ltI1XfDAYpUalqs0jUICgBJc9xNY4tmIhfiChfstYOghPRi9FtFMJBkpUPAxX3/FHbf8p2En5EKOZjjFppwOcsJuHVfdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748404206; c=relaxed/simple;
-	bh=3+KAGe0mMKvHWbDVS0yeauVnAfqDNvt543iPPCKcClE=;
+	s=arc-20240116; t=1748404211; c=relaxed/simple;
+	bh=tT3QgbeZaVPngHmlrmhR/+LqwS5dNFFCHOpwwRuz1fQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mtMvdUbmxfiGx58QK5Pc0HNSCIDYktq7pTMdQqzN/Unbt4yI2ScXHAHUMFxwS7XFPRlHFVaRBmaLcgelS7ekRYXnF3qoFu06Sfxr4wBDH/bAGoon3wePwphlOVEqge59OdNavbuy4XPnwBts5LZeQ/4gxZ1V7RSDu2OwNvOP4Ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXZ2g+VE; arc=none smtp.client-ip=209.85.214.194
+	 MIME-Version; b=A+/CkIc6k9qbxoJIJD+8Am5WnJNki8LsuBq3YxY1nbQVjMy6IoYPbafastaHbO/zvP4hEnjFrJAMqklvBY1iBw16x8gOgmu5aFaqkt3S5y3KlpB0UNDDDcuiQ6XWXNtlYcomGI2knQLSiBSUP/lz8Tyx89+cEIMaZwOTPbwqNWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9KEJM8I; arc=none smtp.client-ip=209.85.214.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXZ2g+VE"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-234ade5a819so11270205ad.1;
-        Tue, 27 May 2025 20:50:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9KEJM8I"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-22e331215dbso3210885ad.1;
+        Tue, 27 May 2025 20:50:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748404204; x=1749009004; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748404209; x=1749009009; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4AN7saxVdEQOZ24jtiS71Z11sBzLh/We020pOkc7UII=;
-        b=XXZ2g+VEFzqp0pnYOxZjzwe6ct9wMDfdr9Ik8fn07GC9NPiAjZrnqQdMRMLZa5T7dp
-         PcBkMqLbJxNxkoZ/VDKqbDMeh/SXGYfrJ40wKD+5Zx5rwBrv8cyd1+dyTTJgLHks71OC
-         RME/R+dYepZW2WOFi2bhWFZQ3FETDLeZxYI62BKFmw22fpRpk+g4wrTZz/eR5XmHnbIp
-         7pkhCMixv+1/GodCoe8tKd2yCvYjIlrvyKzorYHCUVDK3/JxYIu0WWLxpj1GUN5vgWwZ
-         X0XvnIuQFvh24kLkyymheDX38EcV/dtFQYgIY/PTxfCYirMVbwb7mtBrnyXKKHp+sHwh
-         piEg==
+        bh=YAYS5lKsbl835bzscg3XIO5IGldYqod4Ozc4rgXcA6c=;
+        b=A9KEJM8IoE8GMGlHQQEdsKDuWz9vNnO+EU1prXPMRFM61HGv+WLpMEmo7aSYPr63hh
+         8ivNsf7uhKcfWP6NghqhqbmSBS5qTDkWTUTWvZuUveJuZZaAq7ue0XyLvY0W03cBE9Al
+         XrmtHP1wgBXxYOehBvjXowGUUE7o0wP0qSCwTKMaLHKvJ7+FJmnqaWTzp7U4854CLnew
+         +RmGzwNJuHlkQlWxGXdmJ2TY9ZtbYADjZEhWHuT5ZGbf6fLwYY8mlSLfSQatOvrAsiek
+         mHq4K0oBGXmvSc3+IOgUQH+Ghnvd8UlEg9Yp3Kv8gNTLTWnAw6MsQv0I+gAX1b4z81mY
+         UoNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748404204; x=1749009004;
+        d=1e100.net; s=20230601; t=1748404209; x=1749009009;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4AN7saxVdEQOZ24jtiS71Z11sBzLh/We020pOkc7UII=;
-        b=nHX/FBZpJuCvzG+Hrrw4F+HY+97AM1OnDdvBpWCfS0K3fMQnRHCIvX+1jiDD5IhtWV
-         5qo2i5zz/mfHMuogx0f5oGzHJ9hHiuoSS5qoSZPiGOA59nvvqMz4j8rnoBcGI6lwG8Bt
-         kux3KGqcPg5nr4I5A4lH3gwQJzugiBYNxE5Xut2HFiBO7/2ct3wi5YpjbRJkV6CnPJD5
-         byZInVpuD52gagr7K0V3Sxiq0TIE13cYtIClN9A7hjMJH8d2daim8ZRnggXoSjq/IjIJ
-         FYZB+sWjTmE5WjvhlsZw2ZwfB4GURYxLBdVGMTSgO+TuTrGZpXWZL7jkechaRIORSsXN
-         kZNw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+ewUNqneKWGkNG0znThPT8IXca7MuyiH758X+WptgT621kPo3W0c5zQZbdhyBqiVqEbP+nDMZFtllFn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPoFVDDc20ODeHEnOBmBTFfmnB13LNRK3AX9cV4UOfj6S0kYDC
-	37oNyOwELMqRS+nWMiBMe7xbFI6iuyNMxOGaHmW3e4K7rGkcJ++qekTj
-X-Gm-Gg: ASbGnctU6UrOHzKiXZfon89E9Ui5H4p2Y7kQ82AaYTkCVWrNt3npnpKHDCWv3kNcj0d
-	V7QW/CjsQmrDGdjikUSs5a7DebeCb9d8guMVnXOlqGXtt8VQmUZUsoDDgagkwXY7ab+afvaNbE7
-	PjhBLxI0LxD8WehUAryLLDA8XEQjEvEcizDfUqLjNvVaxc2oiCJEMblK/oPfBADLQJm0QMNfs9A
-	qSMvAiPL31xr9IuWo3dUB9NJRtki/cmP2KRnaQrHxgnZi4PxdLcjGSnO3BMGol1xCINP7hlrWMZ
-	3A87b2mvx+bLyoUDMPzfnQYQJW2sLl/C3M6GSj6UyhJePgozlKBSYsWok2umM/kadzsr
-X-Google-Smtp-Source: AGHT+IG+E65Yzbk/55Dmvh6JNx45fYvnIXnjlLRmlCxJdxBJ3L66qt+G/U2TIaq1ic9zNbrT29lP4w==
-X-Received: by 2002:a17:903:2290:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-234d7b22ca6mr1525905ad.12.1748404204531;
-        Tue, 27 May 2025 20:50:04 -0700 (PDT)
+        bh=YAYS5lKsbl835bzscg3XIO5IGldYqod4Ozc4rgXcA6c=;
+        b=cRblM+pghtVgTGY5/GRGP+o2+8j7wOG+zO8FdYn+aIMoy8stlQJ+vsm9+eKWPv3QRt
+         XDMfHT1xvlA1OUcBL+mnKDmTW503SgWvCSIZvaA2VWIOQHaN/Yr1ZccJmg+4+BczLJL3
+         xwxHV9gPZ6P0EwcmqrnT8BAlwZfsNubEt6Y5qupPv9IOzuaUjKqsLrvSq8ftuYj1hJdl
+         rAV0U09oU5tWD3TOX5nuJ4cfEI0DOZ3TskJ0ohtg2yRwvtoy4LJprG7D0H8rVSzescLr
+         kVVuy0EgY+mTLh/WIpYcgVmEB++BW9ft8dII7mZlw4K4W1o79zoz3ibcMKMn5YR7isWS
+         UC+g==
+X-Forwarded-Encrypted: i=1; AJvYcCV+IhhRXLZHHiOM9vSm9e2Tbg22CKovbdoMrK1TzlJKWLi8zCV5wISHMqNgckS8fpFA20T7jn+RZpHRy2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrJlKKYEuiyk3rpWyZSKHHQF51qtalTPY5s84Qe85G4l1WIPzt
+	vdcTT4is0C4enpHpL+zb6akPqIYQHANwjU1Kky9JCUS21BpPmDlIhTYi
+X-Gm-Gg: ASbGncs3psRRGSU1V7Z93EHbvOHEHNZjzh22BM/6DWcwlF9kbFte+FmjV3u+DOMuinj
+	PSDXhrQpg45dj9R2boc2g45Zh3E3xbqgqu7Crirtze7PHrqXizmtew/pZTd0URdCdnUDyljQRsC
+	QhemzKker6UypV3qfXfLcQ1hfUJb3aK6qomDJh9CGeckgkIroQ5jAoXDrYjaWtzUCpPBA3suw9W
+	xd5VKUFr4qbvyVWF4qyARXxQEmOGWVn1sjpvu/F0NDYItGOxgf9F7dMLX+zP8AOk5Ll3L0OwvRX
+	B67GlM3HrU7UkeaxgaqjS7u4KuYlP6cQawxnnIxND3M8LHQ6KShud3GS2Z2tOURYxq0w
+X-Google-Smtp-Source: AGHT+IEBQQaFiaEybooAwzIyji1mQLsF6d+czJF3HzEWnNxRCVv+hTVem/J4PfY5SyVXBw/Pyk0YBQ==
+X-Received: by 2002:a17:903:32c5:b0:231:ad5a:fe9c with SMTP id d9443c01a7336-234b74b7d7emr41679175ad.15.1748404208894;
+        Tue, 27 May 2025 20:50:08 -0700 (PDT)
 Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm2074505ad.169.2025.05.27.20.50.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm2074505ad.169.2025.05.27.20.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 20:50:04 -0700 (PDT)
+        Tue, 27 May 2025 20:50:08 -0700 (PDT)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: alexei.starovoitov@gmail.com,
@@ -65,9 +65,9 @@ To: alexei.starovoitov@gmail.com,
 Cc: bpf@vger.kernel.org,
 	Menglong Dong <dongml2@chinatelecom.cn>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next 13/25] x86,bpf: factor out __arch_get_bpf_regs_nr
-Date: Wed, 28 May 2025 11:47:00 +0800
-Message-Id: <20250528034712.138701-14-dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next 15/25] ftrace: factor out __unregister_ftrace_direct
+Date: Wed, 28 May 2025 11:47:02 +0800
+Message-Id: <20250528034712.138701-16-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250528034712.138701-1-dongml2@chinatelecom.cn>
 References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
@@ -79,111 +79,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Factor the function __arch_get_bpf_regs_nr() to get the regs count that
-used by the function args.
-
-The arch_get_bpf_regs_nr() will return -ENOTSUPP if the regs is not enough
-to hold the function args.
+Factor out __unregister_ftrace_direct, which doesn't hold the direct_mutex
+lock.
 
 Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
- arch/x86/net/bpf_jit_comp.c | 36 +++++++++++++++++++++++++++++-------
- include/linux/bpf.h         |  1 +
- kernel/bpf/verifier.c       |  5 +++++
- 3 files changed, 35 insertions(+), 7 deletions(-)
+ kernel/trace/ftrace.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 9e5fe2ba858f..84bb668f3bee 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -2945,6 +2945,33 @@ static int invoke_bpf_mod_ret(const struct btf_func_model *m, u8 **pprog,
- 	return 0;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 0befb4c93e89..5b6b74ea4c20 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -113,6 +113,8 @@ bool ftrace_pids_enabled(struct ftrace_ops *ops)
  }
  
-+static int __arch_bpf_get_regs_nr(const struct btf_func_model *m)
-+{
-+	int nr_regs = m->nr_args;
-+
-+	/* extra registers for struct arguments */
-+	for (int i = 0; i < m->nr_args; i++) {
-+		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
-+			nr_regs += (m->arg_size[i] + 7) / 8 - 1;
-+	}
-+
-+	return nr_regs;
-+}
-+
-+int arch_bpf_get_regs_nr(const struct btf_func_model *m)
-+{
-+	int nr_regs = __arch_bpf_get_regs_nr(m);
-+
-+	/* The maximum number of registers that can be used to pass
-+	 * arguments is 6. If the number of registers exceeds this,
-+	 * return -ENOTSUPP.
-+	 */
-+	if (nr_regs > 6)
-+		return -EOPNOTSUPP;
-+
-+	return nr_regs;
-+}
-+
- /* mov rax, qword ptr [rbp - rounded_stack_depth - 8] */
- #define LOAD_TRAMP_TAIL_CALL_CNT_PTR(stack)	\
- 	__LOAD_TCC_PTR(-round_up(stack, 8) - 8)
-@@ -3015,7 +3042,7 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
- 					 struct bpf_tramp_links *tlinks,
- 					 void *func_addr)
+ static void ftrace_update_trampoline(struct ftrace_ops *ops);
++static int __unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
++				      bool free_filters);
+ 
+ /*
+  * ftrace_disabled is set when an anomaly is discovered.
+@@ -6046,8 +6048,8 @@ EXPORT_SYMBOL_GPL(register_ftrace_direct);
+  *  0 on success
+  *  -EINVAL - The @ops object was not properly registered.
+  */
+-int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
+-			     bool free_filters)
++static int __unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
++				      bool free_filters)
  {
--	int i, ret, nr_regs = m->nr_args, stack_size = 0;
-+	int i, ret, nr_regs, stack_size = 0;
- 	int regs_off, nregs_off, ip_off, run_ctx_off, arg_stack_off, rbx_off;
- 	struct bpf_tramp_links *fentry = &tlinks[BPF_TRAMP_FENTRY];
- 	struct bpf_tramp_links *fexit = &tlinks[BPF_TRAMP_FEXIT];
-@@ -3033,15 +3060,10 @@ static int __arch_prepare_bpf_trampoline(struct bpf_tramp_image *im, void *rw_im
- 	WARN_ON_ONCE((flags & BPF_TRAMP_F_INDIRECT) &&
- 		     (flags & ~(BPF_TRAMP_F_INDIRECT | BPF_TRAMP_F_RET_FENTRY_RET)));
+ 	struct ftrace_hash *hash = ops->func_hash->filter_hash;
+ 	int err;
+@@ -6057,10 +6059,8 @@ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
+ 	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
+ 		return -EINVAL;
  
--	/* extra registers for struct arguments */
--	for (i = 0; i < m->nr_args; i++) {
--		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
--			nr_regs += (m->arg_size[i] + 7) / 8 - 1;
--	}
--
- 	/* x86-64 supports up to MAX_BPF_FUNC_ARGS arguments. 1-6
- 	 * are passed through regs, the remains are through stack.
- 	 */
-+	nr_regs = __arch_bpf_get_regs_nr(m);
- 	if (nr_regs > MAX_BPF_FUNC_ARGS)
- 		return -ENOTSUPP;
+-	mutex_lock(&direct_mutex);
+ 	err = unregister_ftrace_function(ops);
+ 	remove_direct_functions_hash(hash, addr);
+-	mutex_unlock(&direct_mutex);
  
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index c35da9d91125..080bb966d026 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1221,6 +1221,7 @@ void arch_free_bpf_trampoline(void *image, unsigned int size);
- int __must_check arch_protect_bpf_trampoline(void *image, unsigned int size);
- int arch_bpf_trampoline_size(const struct btf_func_model *m, u32 flags,
- 			     struct bpf_tramp_links *tlinks, void *func_addr);
-+int arch_bpf_get_regs_nr(const struct btf_func_model *m);
- 
- u64 notrace __bpf_prog_enter_sleepable_recur(struct bpf_prog *prog,
- 					     struct bpf_tramp_run_ctx *run_ctx);
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 5d2e70425c1d..9c4e29bc98c0 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -22901,6 +22901,11 @@ static int do_check_main(struct bpf_verifier_env *env)
+ 	/* cleanup for possible another register call */
+ 	ops->func = NULL;
+@@ -6070,6 +6070,18 @@ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
+ 		ftrace_free_filter(ops);
+ 	return err;
  }
- 
- 
-+int __weak arch_bpf_get_regs_nr(const struct btf_func_model *m)
-+{
-+	return -ENODEV;
-+}
 +
- static void print_verification_stats(struct bpf_verifier_env *env)
- {
- 	int i;
++int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
++			     bool free_filters)
++{
++	int err;
++
++	mutex_lock(&direct_mutex);
++	err = __unregister_ftrace_direct(ops, addr, free_filters);
++	mutex_unlock(&direct_mutex);
++
++	return err;
++}
+ EXPORT_SYMBOL_GPL(unregister_ftrace_direct);
+ 
+ static int
 -- 
 2.39.5
 
