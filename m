@@ -1,110 +1,90 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA80A286D60;
-	Wed, 28 May 2025 16:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82EA28BA8E;
+	Wed, 28 May 2025 16:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748450515; cv=none; b=VvUZMKNyiRHR6fhyktrcr4YXwy9ynF9yBJzAfLzGxQPeoS6pfhdPKp76n1zKnf0fSREiV7bwz0V8s3TlbJAMOYH8E0QbRcnZwVPlEc2VW9ShBmzvyCoT727lbefPLm454X+XXafolV8yNixZOS9tcvSCR/44CCvCWnrjZjMz1v4=
+	t=1748450559; cv=none; b=Y9rh/KWzSo239FMKSSTPOENBru8gXciPxlkxwQ6LPKBoBu77oVhgSjRhC6Lk8COINkIG8+prN+se/Sdx+2/Mf0H0GAO5SZKKH+WKTsAdKnmaHMwxuFA3pCts4krrVYL0qXqAuqZJmQ8CNEMnDLVO3J1bfYfI/7Domi+/AXme5v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748450515; c=relaxed/simple;
-	bh=fPIux9WOEBG9ux7bKkGibeqwkEVhOEjLTDfZj4WnLVM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=oX1j7eZInja+lMb2blfqjxHbrfwoufHHaC2VGoSWJq74N8WkjPGTaNaKeza4SqzxpE3yBsGO+ZTmAbdltN+zy2z7zNnGrLvoiKCHnQIJUqtiN9gHUmnt4LOO1FLZDWy+OWXfYTLlB87Szb5Tjkov3tFTwN2Ynu/lMibEJFN9yeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SP+PPD/J; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1748450559; c=relaxed/simple;
+	bh=CL4fdIyFZSXeMM+ZGv0Bz4ORS2ADdJgyt9Wpq8s2V/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=knTW6zL2mnn1lRTOjFH0l2iznq0dIaVqtOvksr31e/4JjoXYixf5Fhdf6wRTv5gQdclMtNRXju1TIvowjPoFT6yOpVWE+CxHkYlfkvAX84KpbJdu7WesJ+pnmGZUr7XgchV2iBACfSsc8EwV3q8/8CmKTlZcpLb1gWfVqUVIoRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E4+wvNe+; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SP+PPD/J"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso5271767b3a.3;
-        Wed, 28 May 2025 09:41:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4+wvNe+"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3dca2473129so119415ab.2;
+        Wed, 28 May 2025 09:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748450513; x=1749055313; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fPIux9WOEBG9ux7bKkGibeqwkEVhOEjLTDfZj4WnLVM=;
-        b=SP+PPD/JXQQKRlA108rQNAd433ks1lkZZ0RTUJAmDBfKd4YGoOyVo3P+E31bSHjWAj
-         tksXFbjE5XkWjgiSzwDubHWHtvncGvLdgA19tLx+z8OPvZr//fhHY085/DWEBi8qDDy6
-         XfHotdvu3Zb/pf8RwHZO3YlBOnZk7xvQyN4EazJegNWj2kLkM/PZNJEO5UuvnXT318jf
-         vDXzx+SO0IgQqn/hlRwdqBdN5RtmBQ4OLU327abombReyNhw5nxEPZ9G9Na2Ar558oST
-         l0NjsqH6t1uxtBLbYiVbGG5rqTnjJUo5ZUe+14yDcm0AlkL1l1T2vuZmJ2UHPmSDKN9D
-         rWVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748450513; x=1749055313;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748450557; x=1749055357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fPIux9WOEBG9ux7bKkGibeqwkEVhOEjLTDfZj4WnLVM=;
-        b=VKxgfTf9++VgfBNPmMc/rzEvf1/WXJpVpA2ity0HSspxuqaZqo1uSCoIOH4GbZ6REV
-         02eh/C+a9IXM0QzI9w+C9y7Fpb9vT+CNtsSRu4vdAXqlsrnlCgvoVJ/lEhXaMMiaRFce
-         WCBEne3x3N15N+J48R/mG8jXY2PmCsFxbhznVMZer/CxB3rsCwIO2SJ8R2Fn2LcuVtac
-         SwDNOhbSaBhugRM6u8GdyZQkvrXFFo6xXR7YllGracDfkae1GtQQM1m3BLmJW97McwCY
-         1I9hiVXuGtUSu9uA6Duj7f+aRE82PUZFzIZkKRZIS3eATesuzTC+dEGCDgF9ppXd7syb
-         MQgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVefTVBRxygMUiyN4YsRi9z4bC5eAhdjWXmrCOZmeA7ov3gF7QKkLrGiav/WVC3NFCqLibIet+uGcVJrDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM9yFuuuadbfktLfMM3Y/jhjDBO4P5lLhRoDt9Z83ScJyHZYdU
-	xB9O+4Khzxsf1U/8H4bjBdCAPdX4giLDZNUEW+G7/BnSLYR45JDGz8Ap
-X-Gm-Gg: ASbGncuUDJ7pFfpjIzxDIbWY7frfgCgrZ0HojzvoIKvffFGZ3AqfF0uKmIrSTNFXN3g
-	48J7H36jx1/6/ciGaAF/WSJogF8oYQq/MBge+4mUPlUuzbmvmLzCKvX6Cp/z2cCfPdW7U7EnpLh
-	oHT0nG5G0zs2LYAG2PZlDpCZq07sXvVpLMmLgPf43UBCDGhzm8GmoSKj/xTjXrfzKz7bgJsSkhW
-	AVjtrhycvP8NQA+GuamK5+UMoVCFgVXrR+NQzAASihPghzTsetpo7TJdk3yppECDvGimenmwS0P
-	3yz9yD7iwOtwc4hEZbhAfoYiBiTDjSnDg/em+Gfm+NzNMJKzT4/KvsE=
-X-Google-Smtp-Source: AGHT+IGoTkvFIh6FMeowmAAsOJeKRgyok9Jr0UFJuFkqrmh91H4Zh8o83Vxeb6z0lomQVOwBZEfktQ==
-X-Received: by 2002:a05:6a00:2d16:b0:747:aa5e:7252 with SMTP id d2e1a72fcca58-747aa5e75b2mr1859541b3a.23.1748450512943;
-        Wed, 28 May 2025 09:41:52 -0700 (PDT)
-Received: from ezingerman-mba ([2620:10d:c090:500::4:d651])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-746e340f854sm1437373b3a.115.2025.05.28.09.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 09:41:52 -0700 (PDT)
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Jerome Marchand <jmarchan@redhat.com>
-Cc: bpf@vger.kernel.org,  Martin KaFai Lau <martin.lau@linux.dev>,  Alexei
- Starovoitov <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,
-  Andrii Nakryiko <andrii@kernel.org>,  linux-kernel@vger.kernel.org,
-  Yonghong Song <yonghong.song@linux.dev>
-Subject: Re: [PATCH] bpf: Specify access type of bpf_sysctl_get_name args
-In-Reply-To: <2b5f6cd0-2b5f-4687-ad43-73a7be8fbfd0@redhat.com> (Jerome
-	Marchand's message of "Wed, 28 May 2025 14:47:56 +0200")
-References: <20250527165412.533335-1-jmarchan@redhat.com>
-	<m2ecw97mxn.fsf@gmail.com>
-	<2b5f6cd0-2b5f-4687-ad43-73a7be8fbfd0@redhat.com>
-Date: Wed, 28 May 2025 09:41:50 -0700
-Message-ID: <m24ix43cxd.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        bh=CL4fdIyFZSXeMM+ZGv0Bz4ORS2ADdJgyt9Wpq8s2V/M=;
+        b=E4+wvNe+TerObiEnW+2WoSaU52r9EJ8YOBUPFzrNr3DHfcTb8VOhoHpVou00o0ftf5
+         IMm/aE813nJ/FkiqAmBPZCzhFRdEQrkjKAOU0H6kzEyFfbdqLtfN/Q89VUFbGdS1HIBT
+         EhdoaI6CncOHI9BTXRfOdH5RCz7jke0N8kgqjLE3DZEtIZ/f0uniYrPUDhI/53tEwRZo
+         eb0Fy+OuzogaubJlb4cbvGj3ByOVj3yg0MRMuf7gVf//6CF33h1eY0kCwKgss/FnDLho
+         GQNi1MpZr1cBTVL1eOGS+irLJmV5pSrQD/y3XpQgjE9ktDIw4CeF3chj8WdCXd7eOA6M
+         oo6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748450557; x=1749055357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CL4fdIyFZSXeMM+ZGv0Bz4ORS2ADdJgyt9Wpq8s2V/M=;
+        b=CcrLeRvBITNNvL3Q5iqejCvUPSa2ZG4YsCwgxLAVpPP7w/tr3uZvhF1nEMexn63QKK
+         n4g/A0gsBOe1jruNrpm60Lat0DjgyRNq58Elcs6yru/CU4JjHHHGz9brHKlC2DZKlLxl
+         tZazgROrL425g5r1UUOpAzoBMPGD96Cr3bNhSVbsZYBd42gHOAcpHhyHsLOlMTnaeJQ1
+         Wa70yhpcCQjb01U6DV8XtfAY/Z2SOqYahgk37k39BujnLcAmfARqL+nNBao9P14nAQqo
+         BvsazWXJYpPqjOpWVLzaeJwbrIBEhqDZipA+Q+AYTEsj1K0SW7NuCxLwI6pnt6KdXzPZ
+         ZQSw==
+X-Forwarded-Encrypted: i=1; AJvYcCVn9yGy9NQvLHU4tsKQ9Pk4XKpYRLWgx6QqG1wjd6NpGXNZLShI945OHidmhkXaTR728NMbWhu5HwNQFvQ=@vger.kernel.org, AJvYcCWI1v/UrRREeQ5pOA9Y1HsBW6ojkvcmbfvsz59H2+KQfunWDIkJK5Xe5/BAsPWIyJR0KpXnkk2r6ETR+cRuvpU=@vger.kernel.org, AJvYcCWtOYtFemF9O1TIvGkk8IcQYMzY+IcJ8r2f5zDCkTWX09tQX8R28b0dgR6g0CQQ6jMTXWGe31kQSV25PHmVMeTT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrymmnwNLLpS6dYdFCW24b/mbG/5GYCBWkwvOXIhJy70JeHkLm
+	Drxa1HWY8JUgEGERHAM91G8984GqrO7ji3tvZp3tHIb36iKelhOPfb+UFCwrLsKGPVi6JkI7nk5
+	gyo/yt52DFuieHfTrwjxxQ9dXnuYw8KM=
+X-Gm-Gg: ASbGncuZWjIuUJ3i5iWWp/u/D9/BlDiefuPpo4+mLvflAsOJEE6BozASr1w25HXcbNB
+	er6gOsN/s7hBCRF2RU444iA2G8cUnxUm4o8DKlykUrLiGhsOVOLeKPenN/Z4clrmdDrpvHbojv5
+	OkP4O28tLWq8ezxP3+5kEJLcHaPN9cZM8Frp4O32snzSY=
+X-Google-Smtp-Source: AGHT+IG8CoEoXwbyCTS6/cob1FWwDC2rYze5HbDUoZubz0J/3OyoxsvLb+KnOL6AWmmS/KoRCLrClA89L8jvbfvLGA4=
+X-Received: by 2002:a05:6e02:b43:b0:3dc:76c6:436f with SMTP id
+ e9e14a558f8ab-3dc9b7656abmr189693575ab.21.1748450556856; Wed, 28 May 2025
+ 09:42:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250528155147.2793921-1-y.j3ms.n@gmail.com> <CANiq72==P-Sp=d6N7B=f-_aHak3Gr596Bs-3MmMBs+tw9J_K9Q@mail.gmail.com>
+In-Reply-To: <CANiq72==P-Sp=d6N7B=f-_aHak3Gr596Bs-3MmMBs+tw9J_K9Q@mail.gmail.com>
+From: JS Y <y.j3ms.n@gmail.com>
+Date: Thu, 29 May 2025 01:42:25 +0900
+X-Gm-Features: AX0GCFssabpDLq5oViRLdDvNbOrwHvkIlD3DNI5Pjr-KshHdlvaTWBADm0sTz54
+Message-ID: <CA+tqQ4+Y_zYowu3ig0CPHc6VTWi1wj6rdZkdq9FBOagC+tfNAA@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: kunit: use crate-level mapping for `c_void`
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jerome Marchand <jmarchan@redhat.com> writes:
-
-[...]
-
->> Looks like we don't run bpf_sysctl_get_name tests on the CI.
->> CI executes the following binaries:
->> - test_progs{,-no_alu32,-cpuv4}
->> - test_verifier
->> - test_maps
->> test_progs is what is actively developed.
->> I agree with the reasoning behind this patch, however, could you
->> please
->> add a selftest demonstrating unsafe behaviour?
+On Thu, May 29, 2025 at 1:31=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> Do you mean to write a selftest that demonstrate the current unsafe
-> behavior of the bpf_sysctl_get_name helper? I could write something
-> similar as the failing test_sysctl cases.
+> I see this is based on rust-next -- if you rebase the patch on top of
+> the latest one, you will see the prelude there :)
 
-Yes, something like that, taking an unsafe action based on content of
-the buffer after the helper call.
+Thanks for the heads up! I'll rebase and send out v3 accordingly.
 
-> I'm thinking that a more general test that would check that helpers
-> don't access memory in a different way than advertised in their
-> prototype would be more useful. But that's quite a different endeavor.
-
-That would be interesting, I think.
-Depends on how much time you need to write such a test.
-
-[...]
+Best regards,
+Jesung
