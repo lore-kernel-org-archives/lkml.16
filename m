@@ -1,153 +1,135 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DB638B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB31DC997
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748401674; cv=none; b=aBF2d10hJU2mLZWOpLOVs0tDc7JnQeOCdz15lX7xyCyVEHLP5Tx7y/4eBKNPvBFxbgzojFuvRZJXoRPue3+2z+xmmiV6LXpRD5F2fcpDTl+J+CoABYB/fsyj2qpfDi3kAIknwR7of7EJfMXavmshfzS3ASX7WcJQl44m09Jsgq0=
+	t=1748401934; cv=none; b=e9kD6KqUDLGSjWChrd12p2pW9GGHywyNbC1gV7XCkhO8wXeYLZSLcUljheiOxTMz+Z1lFCPtJ/xpEwA4Ek2PjS0I/E9WRHSF6uyDkSb+9Bk8iBdVnyg1Z7c/eirnCLLjRCi92D4l7HYTnYB5FH3dK/BhK9aaZ6YdMa8v0wM9o0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748401674; c=relaxed/simple;
-	bh=bYoHRv94+Uhdxo5N61QAXTbOOq0mvF1hZtdvceAEd/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hfz656GkQYGXzss699ZLPqSbjxeNTStOhNOywPXWxxTA9Be0ULnEmcYWEiB+ruUX3a8bWQZopL9voCtidZtCEXd0MgxnsTZ4DjAM7uLVxqjc/2NAZqxTR0U3rJu5VupQlk9ePEYxTbZ183nWrJSNcb4/0J9b05rT09FFHf/u1u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: edb400603b7011f0b29709d653e92f7d-20250528
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:89388e7d-8e1f-4f14-a363-14ef45c0088f,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:697afef8e70c061f84357a4c61fca64f,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
-	-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
-	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: edb400603b7011f0b29709d653e92f7d-20250528
-Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1708069242; Wed, 28 May 2025 11:07:45 +0800
-Received: from node4.com.cn (localhost [127.0.0.1])
-	by node4.com.cn (NSMail) with SMTP id A751116001A02;
-	Wed, 28 May 2025 11:07:45 +0800 (CST)
-X-ns-mid: postfix-68367E01-598433692
-Received: from [10.42.13.56] (unknown [10.42.13.56])
-	by node4.com.cn (NSMail) with ESMTPA id EC51B16001A01;
-	Wed, 28 May 2025 03:07:43 +0000 (UTC)
-Message-ID: <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
-Date: Wed, 28 May 2025 11:07:43 +0800
+	s=arc-20240116; t=1748401934; c=relaxed/simple;
+	bh=45wv2D7qTveHvG++liQk1FdgOdvStQgyo7K7EgLBQ20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AVKGXBChrwbbEUEHE7kv64Ee+gK88NSnvpQLCyfCaK8LpMi15CD+J+HLZHqpgzdZkBnh486Ba0yBzCWlja5OGigip2yiLn9tnJZpeVq82HPxjrrf8JCIjVrUiLZRgLDgjsC7P69KLrJh/y2x1O0cYDEjszlV52vJvIE2/sxWUkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLuGLAzF; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLuGLAzF"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231ba6da557so80045ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748401932; x=1749006732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hi54XJvxzTpbX0StT38uQRnU2/zb/XVmDK+caARZGHA=;
+        b=qLuGLAzFri0ELQo4ug0igeikL8LmDPPfEQYrCmNbU56Tg8RjWHOo8GCx63KdOLC5fb
+         94Jn31FyUqWmxqXyNLqYUmxnmjRwO2pQqa0ZZalBFrASW/1pctyQD2t7UllpFpmvNYrt
+         y0mwJnzWgd4jTwRFf8njjTLsyOLvIvcxHIQ/Ul0eHEV0u33HJa1R9v7DUTEol/dfaCv9
+         XsolPSH5bhIV+A8Xda5ar5qQR1g4R9BqKe9EK8B+ouo8AwtvnLFwFJerameKYWZLZJpd
+         1L1CiVHn/Ix2rwsqKjvMl2SmHlnZz0Uz/gvRtZMV1+LLu2nmlHPBrASFWAikRAlKP3AO
+         IjhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748401932; x=1749006732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hi54XJvxzTpbX0StT38uQRnU2/zb/XVmDK+caARZGHA=;
+        b=cik/D3MoUX8q3vRayXviCMm1OThWIg/zAe6liZTwPI33vPAP1zqG8UXwLoFZnB9Fn1
+         K54DwFte8deMD2GzplZbIni4qHvHv7c67DJoBPe+iApM5/ixMNSRwm3UrdROWEdLWuCZ
+         7B3/sRGehpzbA4aRaKg7C73Uw9pKtRSiRXubc/eE+vIiZ3i8F7Wm9P783LH/1Nj8uESd
+         NOPbmronUpXGi7i+T4REuAT26Bus1oTAnMNwBoj0l3euK5Zjtc5GCCLHX5g9Bzj8BzN8
+         p1BlN1NzyFf8oEOp38z1zFHlO+PTKTzqGF9UOoVkMlkT3Z8HkQIAQSIU4deuuSsqURxk
+         I+/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXtqeQM5QO0NkTQpZwYssYoTad9txadUBdkX2UX0Ns5Ou2mpm7UfaXKVHjKMvjOoHy3ZrUJBSSHPF/cJ9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUoD9zVwnP79anzC7crkqCGN5IO0L5rL1OVg7IUDPR0NrEdXVb
+	7msIev6duOfuf2kWOtSz/cF49rZCsDB8GdHFFK0G1Pnq/sUkQZ9ouPtmmdDFbKTZ3ucsO7c8D6/
+	9Inqh8vh2pSfyoRi0jqXSolqHEexXk01ep3SBZ6p3
+X-Gm-Gg: ASbGncs8f6cfHfegy+eQoJJkCsTu2jJR8MnX1fRcf8oi4fXZ8GUEsPWfHUvc14t+J+m
+	VKaQkGpUDzD59g/BnjmTBt44Hp6XL520qQwWu8cssg2tbq+1m224J0w5b9GrgTAEJlwmrejXAzc
+	KrGovBsvU3qw9cvtl+gZu0j+OyHnd3XNas7g/Ch0R1IvOi
+X-Google-Smtp-Source: AGHT+IGdqjyzoDtqYIHx/y7YKWzz/qyhFs2l//e3GArH1hU2e1HUWggvHASce0D05SKLzqIW3p6xmhC7Nwpq0Q6Hybk=
+X-Received: by 2002:a17:902:d2c7:b0:234:b2bf:e676 with SMTP id
+ d9443c01a7336-234cbe28862mr1141045ad.11.1748401931545; Tue, 27 May 2025
+ 20:12:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
- devm_device_add_group to devres.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
-References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
- <aC8en60QI0MwnXxM@smile.fi.intel.com>
- <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
- <aDWdXT36Ucxk0O63@smile.fi.intel.com>
-From: Pei Xiao <xiaopei01@kylinos.cn>
-In-Reply-To: <aDWdXT36Ucxk0O63@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-3-byungchul@sk.com>
+In-Reply-To: <20250528022911.73453-3-byungchul@sk.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 27 May 2025 20:11:58 -0700
+X-Gm-Features: AX0GCFvbRHta6TyJPe_xr_2KYS1z9gGCeokku76odClbu09MqRPDqhx2_Gv1QJ4
+Message-ID: <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/16] netmem: introduce netmem alloc APIs to wrap page
+ alloc APIs
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-=E5=9C=A8 2025/5/27 19:09, Andy Shevchenko =E5=86=99=E9=81=93:
-> On Tue, May 27, 2025 at 05:41:21PM +0800, Pei Xiao wrote:
->> =E5=9C=A8 2025/5/22 20:54, Andy Shevchenko =E5=86=99=E9=81=93:
->>> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
-> ...
+On Tue, May 27, 2025 at 7:29=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
+rote:
 >
->>>> -void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
->>>> -				   size_t align);
->>>> -void devm_free_percpu(struct device *dev, void __percpu *pdata);
->>> Don't you need to cleanup the header inclusions as well?
->> no, I think we don't need to cleanup .
->>
->> #include <linux/lockdep.h> include #include <asm/percpu.h>
->>
->> only move #include <asm/percpu.h> to linux/device/devres.h for
->>
->> build error.
-> It's not needed for the build error fixing as far as I understood it. _=
-_percpu
-> is defined in another header.
-
-compiler_types.h or compiler.h=C2=A0
-
-I tried before send patch, but it all resulted in compilation failures on=
- my arm64 machine.
-
-
-> ...
+> To eliminate the use of struct page in page pool, the page pool code
+> should use netmem descriptor and APIs instead.
 >
->>>> -int __must_check devm_device_add_group(struct device *dev,
->>>> -				       const struct attribute_group *grp);
->>> I'm not sure about this. The percpu seems standalone piece, but this =
-has
->>> relations with the other group related definitions just above.
->> I'm also not sure if this devm_device_add_group needs to be moved,=C2=A0
->>
->> which is why I haven't replied to you yet
-> Fair enough.
+> As part of the work, introduce netmem alloc APIs allowing the code to
+> use them rather than the existing APIs for struct page.
 >
-> ...
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  include/net/netmem.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 >
->>>> +#include <linux/sysfs.h>
->> it's redundant.
->>>> +#include <asm/percpu.h>
->>> What for are these new inclusions, please?
->> for percpu.
-> It does not define __percpu.
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index a721f9e060a2..37d0e0e002c2 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -177,6 +177,19 @@ static inline netmem_ref page_to_netmem(struct page =
+*page)
+>         return (__force netmem_ref)page;
+>  }
 >
->>>> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
->>> Please, take your time to understand what is behind the __percpu and
->>> why the asm/percpu.h is redundant here.
->> If this header file is missing, there will be a compilation error.=C2=A0
-> Right. But this is wrong header for the purpose.
->
->> Which header file should I include?
-> The one that defines it, hint:
-> https://elixir.bootlin.com/linux/v6.15/A/ident/__percpu
+> +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
+> +               unsigned int order)
+> +{
+> +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
+> +}
+> +
+> +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
+> +               unsigned long nr_netmems, netmem_ref *netmem_array)
+> +{
+> +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
+> +                       (struct page **)netmem_array);
+> +}
+> +
+>  /**
+>   * virt_to_netmem - convert virtual memory pointer to a netmem reference
+>   * @data: host memory pointer to convert
 
-compiler_types.h or compiler.h=C2=A0
+Code looks fine to me, but I'm not sure we want to export these
+helpers in include/net where they're available to the entire kernel
+and net stack. Can we put these helpers in net/core/page_pool.c or at
+least net/core/netmem_priv.h?
 
-I tried before send patch, but it all resulted in compilation failures on=
- my arm64 machine.
+Also maybe the helpers aren't needed anyway. AFAICT there is only 1
+call site in page_pool.c for each, so maybe we can implement this
+inline.
 
-=C2=A0You can give it a try.
-
-when i add a error in compiler_types.h
-
-+++ b/include/linux/compiler_types.h
-@@ -26,6 +26,7 @@
-=C2=A0
-=C2=A0/* sparse defines __CHECKER__; see Documentation/dev-tools/sparse.r=
-st */
-=C2=A0#ifdef __CHECKER__
-+sasasas
-=C2=A0/* address spaces */
-=C2=A0# define __kernel=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __attribute__((addr=
-ess_space(0)))
-=C2=A0# define __user=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __attribute__((noderef, address_spac=
-e(__user)
-
-it=C2=A0 still build success,have no build error.
-
-#include <linux/lockdep.h> include <asm/percpu.h> ,so have no build error=
- before modidy,I think.
-
->> I've found that including=C2=A0<asm/percpu.h>=C2=A0does resolve my com=
-pilation issue.
-thanks!
+--=20
+Thanks,
+Mina
