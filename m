@@ -1,127 +1,96 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B747E1DE881;
-	Wed, 28 May 2025 17:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EE44A1D;
+	Wed, 28 May 2025 17:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453171; cv=none; b=RHXf7SwackIO7fQGPe7Te/7RwiXRtgrVAAfZ5Qw7qVilEf2vBU2UngQ/hgCgrkjq7Q7cFVVrDwIiu4hARcWSs+QlDDT3iOEKTfKSt44aGTW/fs2/4LhdQGxxsSo/l8LJXhp0JDy3bNChZq3qKpiCPRRb/2IcoXTUVgGGiLirBT8=
+	t=1748453247; cv=none; b=Nn/0SCIaOrU0XHlbqMpVXagvwq9cn2Rhk3jIZFoFYVwuXYo5G1Y5vx9q0HSJr0OuiMPcts9i5wPrLcRVWlgsN9b79jfAwoI4qpMjXrqEMRFqsNydtFTrldmp+E79MyxPGjYQTwSt5wqSrVIV+MTBcA993LG78biMV/9kKTceiwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453171; c=relaxed/simple;
-	bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WC3JnCPYijdoTQP2V4HDPuELIUFsF+ie/vare/6BAiBhkwXPO9AkXQszRQLnJ1Kw0VCippXytwuyZNFkOIN//CXMsBSV+8v9mceUNpu9twTEdDLxmjm2CJCXSrGGXCj4mE1zmDTzCPZsYE+2YgeFmlUBpDk+sq9Orvzu3bgyKWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlRNj5dP; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748453247; c=relaxed/simple;
+	bh=BvuHSqastd/tLDidor2pHbxYqt/EefP7zS28DYrkHP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M80xBlYHU/rt8/ElPIBSbOujqg8WgeGRUQefJs5timkVIBEq0eAd2c7k05sl+X33LwiMcQGUqPT/yUQ3j09SwGQIqwOQY5uwsmjrHKDd8VBdJKA/juCfUgaQkxFRXIYxg87Hq+WyuUouNE6MXI5o1PetnW7DH2WI1A+xSwiiJmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AerQ9T1a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlRNj5dP"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d6f933152so7784776e87.1;
-        Wed, 28 May 2025 10:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748453168; x=1749057968; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
-        b=OlRNj5dPmY+eASSfZ1PbcvMlKJZGsjMbu1Z9V8KdMybLC/c+kCU8OmiUOJfW4UrPLT
-         jCdiE1FBQcpxXEfb1r9PWHrF6iyZ88+vKCphBoG7G7ybt7DqcEUPBh85QuIW/1pfzid0
-         wmQ38sOOA7ddSTlmCczylo5LC7y26CoP3PWc+bjGEk0Of77Z2ddK21Gvy1b42cAwtR6J
-         zY2jPeoERrt9xGqrL/AKphi/PCfgyQPH7rTplibBiQgmaHihzruuCwjHpIlS/lDq2HNp
-         yWnCtqCrskBd6VmCgrjms49kMrV4WFveoj0r8eUtvcKccBw0kLUi499NDeO9I44h0PXZ
-         Yv5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453168; x=1749057968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
-        b=TEyoOqc+9XxxpQwEpxb8n532SZsp982qUv/EpC66axjEi4LKgcSDgP3F+SY4pD9m/R
-         cNZ/yTXfe5mLW14Eo4Kt8cJPPaVovsK/+SXuMryy65/8IQk0xst8aZHpexyL/zW7gy6c
-         gtIqLaQkjxKr+ZilZ7FtAXbgBJB8VZDlKT78Fo9+QMnV5i0Mky/ewXJ70U7MlnwW3EIm
-         uWrWwVS3nzi1w6oOR417UAmsu7/2rkxPhF9RKRcfRM76rOIIIAuCaekZ+HxTBTvhjf8F
-         889fDgkQdw+hsZ7wFVFbU3ViTGU56OGim6gbN36sNsigCuEWpT0uj9g4N5+4aab3fQDa
-         Ewbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNTEXuyueRM4YRMiqCleM9c3/IJV8SjWNih2Ao9N0HZio8CjWRZHWcvE0tgyH8HJLhM01rCvW8Mv8=@vger.kernel.org, AJvYcCVXdYx589uXR+momGiYBMzQFKdVaRsWCoEBm4dvTrXPfg3s/K0e5GRV0FQA0Pfshgy2/J6INfq4peQC5M4=@vger.kernel.org, AJvYcCWEAMkCT6fkk8kNr6m+V/J3Vbnw8pwJZYfiPoclv2gA+jW43vqgzj2lNsR4I2zL8yJEjp+xk0J2sPCZcwI=@vger.kernel.org, AJvYcCXBlgxyY8u6pkcaRn9Ov0lrnUqItNkCr0SpwJDUKzGqpvALpKHMcD4BpH29SudXll7u2BmSTna+y74m@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL+Z4l09rWZr+GlDC3EPijAsPlvpBlAUfUn4y1hqmV2w+qMi+0
-	5v6zshqqCJ/kbsR5CMuI88HzOR7xieksft8nkmlwvW0SHP4A+uUrNP1A3agGmAU654g5Zd+aTaZ
-	nEc72NrgYb9xYsVSFUKerAba71+sFGdI=
-X-Gm-Gg: ASbGnct78M2A6tClYPF/aiTkznsss6NbBMR3uKfXZUWu1/M0th4r3OQJ9Xr8TH7FlDW
-	WWKE73M7r4OVddKp45Gz63PUCsV31Y3gksZ2IUdPWpRqv/RZMiQZLaOJkNz32nkNCGcBqfe3b4t
-	+xru+yZUSiJz5za+1knY2s1/FWDXHtq5fn
-X-Google-Smtp-Source: AGHT+IFDyDQi/9wO2SzKKhtMYaaAss1hk+he7j9jtV0kBiJqcwFAaGlSBAYFYPErvYDNN+uLccqGF2iegKs7RZUaWRc=
-X-Received: by 2002:a05:6512:a90:b0:550:d534:2b1a with SMTP id
- 2adb3069b0e04-5521c7bc046mr6331845e87.31.1748453167469; Wed, 28 May 2025
- 10:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AerQ9T1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B6DC4CEE3;
+	Wed, 28 May 2025 17:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748453247;
+	bh=BvuHSqastd/tLDidor2pHbxYqt/EefP7zS28DYrkHP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AerQ9T1ac0tlxfxcul8JTWvqk40fxhxUYpFoH+o4D07uPLYJYadzp7VPL/u9ikHAN
+	 +ihvq98iO93/HZ3oz71vrJLfgCt/Q9B6izW9boUlpn2PXFDF6b7KplO5psqaO5FuU+
+	 AkpqQCgrtAtHlONXpnG+rUuFXoxZpJhLg1yp5zgx7hROHWO+kgysaMQsU5muA0WFJG
+	 jV9MvBPQbxt6xsGRqN5LMe3v8HfqwwainaBC4mE/GNb6ZmemYd8OKXL6s8UvjUJQ51
+	 aD8rdhXv9XEA8sFOtOXv+xQ7K0XZTVVpUYnpZjwiLMwJRsHXcP75UDgGyy8h2uhshg
+	 MJ8fLFYcf3lWQ==
+Date: Wed, 28 May 2025 20:27:19 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
+ code pages
+Message-ID: <aDdHdwf8REvdu5FF@kernel.org>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-2-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
- <20250507-pci-tegra-module-v6-3-5fe363eaa302@gmail.com> <w2ertcizgmtu27kcike3lpw5dvhvqi2b4c6amqzwdfs2xtebfy@itrpen3oblhs>
- <CALHNRZ8899t0BYMgn1a3iDKz_J9z_Wv_XYM2d8Y4AoiXPZaFjA@mail.gmail.com>
-In-Reply-To: <CALHNRZ8899t0BYMgn1a3iDKz_J9z_Wv_XYM2d8Y4AoiXPZaFjA@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 28 May 2025 12:25:55 -0500
-X-Gm-Features: AX0GCFvjYatE1CdKxTKUCkSaQv_HFCfRBq0g_jM2U1KiL6rRWZ40WAWZ1-Bt-YE
-Message-ID: <CALHNRZ92JPds7DYPTt3A6EvQMMw=PJ50wuSLz526UWgJNo=5rQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] PCI: tegra: Allow building as a module
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528123557.12847-2-jgross@suse.com>
 
-On Thu, May 8, 2025 at 6:26=E2=80=AFAM Aaron Kling <webgeek1234@gmail.com> =
-wrote:
->
-> On Thu, May 8, 2025 at 3:40=E2=80=AFAM Thierry Reding <thierry.reding@gma=
-il.com> wrote:
-> >
-> > On Wed, May 07, 2025 at 10:25:54PM -0500, Aaron Kling via B4 Relay wrot=
-e:
-> > > From: Aaron Kling <webgeek1234@gmail.com>
-> > >
-> > > This changes the module macro back to builtin, which does not define =
-an
-> > > exit function. This will prevent the module from being unloaded. Ther=
-e
-> > > are concerns with modules not cleaning up IRQs on unload, thus this
-> > > needs specifically disallowed. The remove callback is also dropped as=
- it
-> > > is unused.
-> >
-> > What exactly are these concerns? I haven't done this lately, but I'm
-> > pretty sure that unbinding the PCI controller is something that I
-> > extensively tested back when this code was introduced. PCI is designed
-> > to be hot-pluggable, so there shouldn't be a need to prevent unloading
-> > of the controller.
-> >
-> > Rather than just forcing this to be always there, can we not fix any
-> > issues and keep this unloadable?
->
-> For the short version, see this part of the conversation on v1 [0].
-> For the long version, read comments on all revisions. Basically, I
-> originally submitted this as unloadable, but got told that due to
-> generic concerns that affect all pci drivers, including ones already
-> modules and unloadable, making this one a module would be blocked if
-> it was unloadable. Which leads us to this revision of the series.
->
-> Sincerely,
-> Aaron
->
-> [0] https://lore.kernel.org/all/4u4h27w77sdjvy43b3yonidhfjuvljylms3qxqfaq=
-wyw3v32qo@kzgrrenxr6yz/
+On Wed, May 28, 2025 at 02:35:55PM +0200, Juergen Gross wrote:
+> In case X86_FEATURE_PSE isn't available (e.g. when running as a Xen
+> PV guest), execmem_arch_setup() will fall back to use PAGE_KERNEL
+> protection for the EXECMEM_MODULE_TEXT range.
+> 
+> This will result in attempts to execute code with the NX bit set in
+> case of ITS mitigation being applied.
+> 
+> Avoid this problem by using PAGE_KERNEL_EXEC protection instead,
+> which will not set the NX bit.
+> 
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Xin Li <xin@zytor.com>
+> Fixes: 5185e7f9f3bd ("x86/module: enable ROX caches for module text on 64 bit")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  arch/x86/mm/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+> index 7456df985d96..f5012ae31d8b 100644
+> --- a/arch/x86/mm/init.c
+> +++ b/arch/x86/mm/init.c
+> @@ -1089,7 +1089,7 @@ struct execmem_info __init *execmem_arch_setup(void)
+>  		pgprot = PAGE_KERNEL_ROX;
+>  		flags = EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE;
+>  	} else {
+> -		pgprot = PAGE_KERNEL;
+> +		pgprot = PAGE_KERNEL_EXEC;
 
-Is there any more comments on this, Manivannan or Thierry? I'd like to
-get some form of this series submitted.
+Please don't. Everything except ITS can work with PAGE_KENREL so the fix
+should be on ITS side. 
 
-Sincerely,
-Aaron
+>  		flags = EXECMEM_KASAN_SHADOW;
+>  	}
+>  
+> -- 
+> 2.43.0
+> 
+
+-- 
+Sincerely yours,
+Mike.
