@@ -1,87 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CAE28E5E2;
-	Wed, 28 May 2025 18:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110DD28E56E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456709; cv=none; b=mGG+5ZHk4i8A19EWQP8UUhlARuB3LI5gG3iupXck91cV47uV8CPfxw4GR9mLrSiSAJ3/5I6Wc6hU64VcCiRq+USkeoEMLBy25L3q8816oNEZSMydLu5AC2T+Ib3lUGiTytp2IKeQgZS4YG+06deBPzpvXRDsEGAGbjHPFYVpJrQ=
+	t=1748456739; cv=none; b=hCr74COO6qeAA3fg9iDPG3PrqmX0Y6z9yDjiIFzi4NnxBwxW5vrFbhCn6Clg6w5jhReHorw/Clq2CzFNncLDd4QRqsoVHjD9GVIGepg8OvGOPL3PXfyXU7ghXjesa61Uu8b4jgguBSPi6HVpOBR3Qmj246+dSepeKSXZgisT4qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456709; c=relaxed/simple;
-	bh=uyZuRX4Nw7zrA3erUec/G18l0Gbl/4E+/efJ+fXP/Os=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BGNwLUw7T+2dvm3Y6VqdF4MJHcTvlD+sQ8Hl0zdlL9R+YylgmcNuUBk8ebVl6DsZNmWyKdlCzv3+z2HfosYR1mRpanQY5IYbvuT2u8T0E3M7jwE+gpiDic6TfkzhR082bJStRmpiNNbMdbpHM30E5LPD3jycLshXf88dWGe3Tz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0FQyEv/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748456739; c=relaxed/simple;
+	bh=TrwTeeb3eSq6peBGpyS2fjLOHTgsDFfooNNEDI35gec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RN3RZG7+piJM5dG9wN0A+YgJ40OdSAVwjb4ssqW9x/XGuucu7unssZi13l+OhJiqtcVcIywkWsWkrvVeMMMOtU1HsqX9bafoR19/Jn/daJRO7VrVPjJ0XHbGB87HqHL0b0ghWs/cw5Pg5lQ27q9roZz9uOUGr5HAiAiNvIru7jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gSb6Q8lw; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0FQyEv/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE678C4CEE3;
-	Wed, 28 May 2025 18:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748456708;
-	bh=uyZuRX4Nw7zrA3erUec/G18l0Gbl/4E+/efJ+fXP/Os=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=W0FQyEv/QioiuwoXwBKXsKDlVluV9IVTUhLest3VzzvccYmh5FG0+vlM4kH/YaQv8
-	 Gfo3A0Pazh0yR6NnJvrrMfuxXf8i8FuzMBFqASaOuU3D/VZ47b+4HtxIzmPvQYyG2M
-	 ZzikGfb1lXIJ++r53dmE4OlkmFSNZr7FONgbSLSwgJt/V8eimYx1u6V5SKNEsvt83O
-	 S6Kf8mRaD6yjEgaqZ4pClowcAFOdqt2SY/eiLwDcXhCI+1ezcZghoj6GOXuTqCcZ7M
-	 N5Xo66QWz4K5GzMaQdVKUB2eVK1jdqj1VV0iuXS7rYdlEDPiX2vz5MoiEWlYKoeg1B
-	 EKQ39xNYlM5uw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,  Arnd Bergmann <arnd@arndb.de>,  Boqun
- Feng <boqun.feng@gmail.com>,  linux-kernel@vger.kernel.org,
-  a.hindborg@samsung.com,  frederic@kernel.org,  lyude@redhat.com,
-  tglx@linutronix.de,  anna-maria@linutronix.de,  jstultz@google.com,
-  sboyd@kernel.org,  ojeda@kernel.org,  alex.gaynor@gmail.com,
-  gary@garyguo.net,  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,
-  aliceryhl@google.com,  tmgross@umich.edu,  chrisi.schrefl@gmail.com,
-  linux@armlinux.org.uk
-Subject: Re: [PATCH v2] rust: time: Avoid 64-bit integer division on 32-bit
- architectures
-In-Reply-To: <20250502004524.230553-1-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Fri, 2 May 2025 09:45:24 +0900")
-References: <20250502004524.230553-1-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 28 May 2025 20:24:50 +0200
-Message-ID: <87seko1tl9.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSb6Q8lw"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3114b7e89a6so49043a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748456737; x=1749061537; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lVVqFr1BE8q6eml8zA1z0lK7aGNcSUfClXnZn98OgHk=;
+        b=gSb6Q8lw7pXUBBIqXjElAS7OXbzu82FDWVRV3vh6FJWCWMqO45j0aiu9z7xaVFKrPr
+         K9mfYHPbGDYrShdyVXl2hTdJQIw5THDggbaiK8U1FREaSToTACTR4Swjbps8QxZgW854
+         cO/+7Q2Cevo+4StQO+zeeSq6RuILwl7zKGk3DBm7ng4mwaSGOf14GX6vvjzfPo+NiJ7w
+         qgxL253czsdTsjp6p36f13uW0ojgCeGPSwztettCeRJSPzT97SWTp++FwuL6CAyS9zyV
+         7Py6Y09VAIQpiNsze0f8IS7B1D+JR76kAbe6GE6CiTMlZq4gLCqqHhObh9pqjwamfjXW
+         Svag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748456737; x=1749061537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lVVqFr1BE8q6eml8zA1z0lK7aGNcSUfClXnZn98OgHk=;
+        b=dPcSh550huhN1mSGYYFKxilDJp4yeUj/p0eZDyaEQixGpB7QAco/MEP9zo0iPgfche
+         dsuWRIeVCNntyzY/L7P8a5yjagIkThAkXL0X88g7VIaFk3iS8GdpQj3wUvfjVSDW7pUY
+         gSGR/FUhJQZC3hf5ObJSWc/yqTq2e9GMOHBR5sYedg7JhikEKgP+m4q9Flvq5fKt1bpF
+         EoLhtc/G0Q0LFbHBO204sCmXuZgfg76P3Us9cU0cgv3qJOxwEUzxbY/vN2OJMBfa4jlR
+         2oKrpeWwuyR/xdqVqvjvO+UsM0eZvGAVTsnV4Yvrij50i6He2QCmq+4u7NC6DeEzYaey
+         oADw==
+X-Forwarded-Encrypted: i=1; AJvYcCVfEVDx7h9iSDjC40YZBKSc2v3GJpnSfZUfpXKaeVGLwBUVjHOZGod9oLre9hcmk3LYoYrDykbhGrUZYzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywomg5bwbv9AXXlHRjz19Xz/L3D9wSng6ZdslTsf40ymaTaR/YU
+	P5nT/TA4rONixReNnRXXMP35PJJRdQNbb23yr/0nPwfwyBlq+Upta20YRfCFW5n1DcXVnK3/0bS
+	ghsEEMNiITU4Z82K2ypCmR3KIDnra5nHJ7Py/Z/OD
+X-Gm-Gg: ASbGncsfKNZe8TyaXxa8B5mCvbr2geNa/P0cXJMtOwonuXltsG+l5T6eqYGY8RRy25C
+	VJckyqkDfuvv6QtJlBxeDXsSmBuQuN6VI42XQsKSNagPQWP+regQ3yTPmUlxWBDkuik/8GLjkfy
+	BvmEOrDGHZkk6X5OKjs8KZlufO6tjO6Kg7fsVpz+mU3R5C6ioccLLwPTom8b+Dvf5oFaocMfacv
+	w==
+X-Google-Smtp-Source: AGHT+IFijwOh+awYdgO4HAk/X8m/A4OWZUBHS7nOP52Vw8xKVE09sTMEC6FE21p5hEzwxtb4ty4X3loZKiHFU1jBNbA=
+X-Received: by 2002:a17:90b:3852:b0:30e:8c5d:8ed with SMTP id
+ 98e67ed59e1d1-3110f31a4fbmr26532549a91.19.1748456737021; Wed, 28 May 2025
+ 11:25:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250515220400.1096945-1-dionnaglaze@google.com>
+ <20250515220400.1096945-2-dionnaglaze@google.com> <aCZtdN0LhkRqm1Vn@google.com>
+ <CAAH4kHai8JStj+=HUiPVxbH9P79GorviG2GykEP7jQ=NB2MbUQ@mail.gmail.com> <aC4ZJyRPpX6eLKsC@google.com>
+In-Reply-To: <aC4ZJyRPpX6eLKsC@google.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Wed, 28 May 2025 11:25:23 -0700
+X-Gm-Features: AX0GCFte05v61MvXwGYneIeTEvRS5b_Es3A7BflZae2g4_6rbG1Vveaf5-F60xY
+Message-ID: <CAAH4kHZkuD4UsXRGED6qecfAkeFpd8sLc+0osDhnKP4T5VmSYQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] kvm: sev: Add SEV-SNP guest request throttling
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
+	Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
-
-> Avoid 64-bit integer division that 32-bit architectures don't
-> implement generally. This uses ktime_to_us() and ktime_to_ms()
-> instead.
+On Wed, May 21, 2025 at 11:19=E2=80=AFAM Sean Christopherson <seanjc@google=
+.com> wrote:
 >
-> The time abstraction needs i64 / u32 division so C's div_s64() can be
-> used but ktime_to_us() and ktime_to_ms() provide a simpler solution
-> for this time abstraction problem on 32-bit architectures.
+> On Fri, May 16, 2025, Dionna Amalie Glaze wrote:
+> > > > @@ -4015,6 +4042,12 @@ static int snp_handle_guest_req(struct vcpu_=
+svm *svm, gpa_t req_gpa, gpa_t resp_
+> > > >
+> > > >       mutex_lock(&sev->guest_req_mutex);
+> > > >
+> > > > +     if (!__ratelimit(&sev->snp_guest_msg_rs)) {
+> > > > +             svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VM=
+M_ERR_BUSY, 0));
+> > > > +             ret =3D 1;
+> > > > +             goto out_unlock;
+> > >
+> > > Can you (or anyone) explain what a well-behaved guest will do in in r=
+esponse to
+> > > BUSY?  And/or explain why KVM injecting an error into the guest is be=
+tter than
+> > > exiting to userspace.
+> >
+> > Ah, I missed this question. The guest is meant to back off and try agai=
+n
+> > after waiting a bit.  This is the behavior added in
+> > https://lore.kernel.org/all/20230214164638.1189804-2-dionnaglaze@google=
+.com/
 >
-> 32-bit ARM is the only 32-bit architecture currently supported by
-> Rust. Using the cfg attribute, only 32-bit architectures will call
-> ktime_to_us() and ktime_to_ms(), while the other 64-bit architectures
-> will continue to use the current code as-is to avoid the overhead.
+> Nice, it's already landed and considered legal VMM behavior.
 >
-> One downside of calling the C's functions is that the as_micros/millis
-> methods can no longer be const fn. We stick with the simpler approach
-> unless there's a compelling need for a const fn.
+> > If KVM returns to userspace with an exit type that the guest request wa=
+s
+> > throttled, then what is user space supposed to do with that?
 >
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> The userspace exit doesn't have to notify userspace that the guest was th=
+rottled,
+> e.g. KVM could exit on _every_ request and let userspace do its own throt=
+tling.
+>
+> I have no idea whether or not that's sane/useful, which is why I'm asking=
+.  The
+> cover letter, changelog, and documentation are all painfully sparse with =
+respect
+> to explaining why *this* uAPI is the right uAPI.
+>
+> > It could wait a bit before trying KVM_RUN again, but with the enlighten=
+ed
+> > method, the guest could at least work on other kernel tasks while it wa=
+its
+> > for its turn to get an attestation report.
+>
+> Nothing prevents KVM from providing userspace a way to communicate VMM_ER=
+R_BUSY,
+> e.g. as done for KVM_EXIT_SNP_REQ_CERTS:
+>
+> https://lore.kernel.org/all/20250428195113.392303-2-michael.roth@amd.com
+>
+> > Perhaps this is me not understanding the preferred KVM way of doing thi=
+ngs.
+>
+> The only real preference at play is to not end up with uAPI and ABI that =
+doesn't
+> fit "everyone's" needs.  It's impossible to fully future-proof KVM's ABI,=
+ but we
+> can at least perform due diligence to ensure we didn't simply pick the th=
+e path
+> of least resistance.
+>
+> The bar gets lowered a tiny bit if we go with a module param (which I thi=
+nk we
+> should do), but I'd still like an explanation of why a fairly simple rate=
+limiting
+> mechanism is the best overall approach.
 
-Looks good to me.
+Before I send out a revised patchset with changed commit text, what do
+you think about the following
+
+    The AMD-SP is a precious resource that doesn't have a scheduler other
+    than a mutex lock queue. To avoid customers from causing a DoS, a
+    kernel module parameter for rate limiting guest requests is added.
+[Addition:]
+    The kernel module parameter is a lower bound kernel-imposed rate limit
+    for any SEV-SNP VM-initiated guest request. This does not preclude the
+    addition of a new KVM exit type for SEV-SNP guest requests for
+    userspace to impose any additional throttling logic. The default value =
+of
+    0 maintains the previous behavior that there is no imposed rate limit o=
+n
+    guest requests.
 
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+We could still ask Michael to change KVM_EXIT_SNP_REQ_CERTS  to
+KVM_EXIT_SNP_GUEST_REQ
+and for the exit structure to include msg_type as well as the
+gfn+npages when the kind is an extended request for an attestation
+report so that we don't need to have two exit types.
+
+Regardless of that change for additional throttling opportunities, I
+think the system-wide imposed lower bound is important for quelling
+noisy neighbors to some degree.
 
 
-Best regards,
-Andreas Hindborg
-
-
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
