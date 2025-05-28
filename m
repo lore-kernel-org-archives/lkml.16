@@ -1,164 +1,82 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67891DE3CA
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F083220FABC
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748427428; cv=none; b=ZaHB1jO4JWRWhC/HRHzHmbDh3k4lmNcaJ3TxuivbSSiNQH62Fp5hkKTUYTzHhON9dQrhhIiCnCsUT7j5BzTWcpgPmR7DaVmNF1kr5VKKC2Y+KiyAjxQSgiiOaKfSLbBl2TZqX6O5Dj7D1BMbQoA58Rdlln9OBbKk++nM36c/iUg=
+	t=1748427504; cv=none; b=MXY7PrisCvGBarzziA/HiLMz7BAXrW3f9TNMI+GljCWR+Jj9HMLaANX4fVQ8Wy6cI8Jmw5hSLz21BGJzaAX+mrQ5QzadcexS3Mlbb58eKizOoAb59Ll9sYWAbWAeYYjQYZ8H+MPidh8lK5XtWRFucbr3U4f6Ae4VSPDvkmFrmW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748427428; c=relaxed/simple;
-	bh=PbDzw/ZxaObgLMGXVIHx8zHTWK7BUQcYBIeexMNbRXM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=tc2M9FRRNBktsaL18ZldjrQL7IXy/sfdQ2tJhIhZxfTQ0EMWQBAFNnq5MD1ZG/KWZQzUlxqaajyQ9Zt7Ao1TWbbVsJWkKoYv3hB+ldYaZlKpDxu0MGWN3XMaTj07AZRwpSMbY231y+H86Jr7s4QY21BLKql+CcOtvsgWtKVdBPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=bw0yXxjI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ah4jn+b3; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
+	s=arc-20240116; t=1748427504; c=relaxed/simple;
+	bh=A0xb8zh27S93Eetp8e9L6f77n+tEtjFUeeIM8YlkTkI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Eo2Qr4JKGRpOaZkIcFPr62+B5ahVMYIfjEFbcLq7/n6jIIvas8PDj/9FcX1M1z/IuqkyKaaOX8qOKgzuIlS8KShvPLj/pYao/akExMP5XZ0UP2cN4WxzKWOePttaEomk0NRf5LuBlLbG7weWjoinFIQ8kqLtQmJJcXbx1hvkvls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pJPFUHQE; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="bw0yXxjI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ah4jn+b3"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id C15DE1380476;
-	Wed, 28 May 2025 06:17:05 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Wed, 28 May 2025 06:17:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748427425;
-	 x=1748513825; bh=P8auA2USmEdV18y196k++sC84Brou4F8CImPgumm/YE=; b=
-	bw0yXxjIdRpX2JiAU1gW3q3m+Pmc4svAkyeqFwWqy0Mu1t9uns8kjClG25fyZt3I
-	52yo8PX64Zpq7R9oZcw8QKZOnxIT2k+ly+M6sz9BsMj3kpGPP4wDKZFldxAVB/CH
-	4Jl0eNZc+NUvjaij+3FmjpXyQnnLKzKvwo0xmU/AJHgsdvClS9H7KGd4Z/1pNyOP
-	ZpGyIDafkQ7mZ9E+/NDJ25ORJFtM2wQyqqG8ejX2TjJm+B1TUHdXHzjYC8j4mXCm
-	dUZDrRMh1ixlcvcqrDMib4NWmmJpgi7y0mH4AnRVmeOLTAy/RIBdQmsBVyqDlFmJ
-	wSSSussQy94Golyh6eymng==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748427425; x=
-	1748513825; bh=P8auA2USmEdV18y196k++sC84Brou4F8CImPgumm/YE=; b=a
-	h4jn+b3bDstgtI9YVEt7q/20vVDEvqcTaj+79ZYBC2d4yb7RoD/YV/8mziMFJrEl
-	EVuTzuvmOu37+t7pZLSRdRqQF5x8AP2fIscnD6mY9EHAZl339To4+KHMyMUw6DgW
-	DTITG8J3yXFO07ohRUNLhVjY2l3iQoSVscZcDJXmFDQteAtSY1qDUcHLI4VTTC75
-	AyawPRw7M3qzBbyjl1fvVyPGYNiqJv9aPnc/f5JS7E888V/k6PwNnPrEzRx7Mpn2
-	+OLk58z2+1c7LUORHVwhRoejwMd+bSV8ZITa8/GQA+pggYAh5P9Q9/3P67hTSq4o
-	wzf1IzTWC7n9bgthCBv2A==
-X-ME-Sender: <xms:oeI2aGUjCBb0kfSLU7OWEAKLyYom2FrZd3p8V70NqfQGnK8eo6dEqg>
-    <xme:oeI2aCnsVTCZ4zFOH6CKzaRop5uVxPDcoq4SKDJggP-J4Bdnf6GrajPeTTPJDL4zv
-    llqsDcNjzfz9cjtTvA>
-X-ME-Received: <xmr:oeI2aKa77gH4agOXiVudrjnsFg1B1wqratG2JDhPpr5zln0ZlYXcuxpo5WYOmKcPpYdl62KRtJF0Jt-m1r9rfgEddBR5qQkCuA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfedttdculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefu
-    hffvofhfjgesthhqredtredtjeenucfhrhhomhepfdevhhhrihhsthhophhhvghrucfunh
-    hofihhihhllhdfuceotghhrhhisheskhhouggvheegrdhnvghtqeenucggtffrrghtthgv
-    rhhnpeeileetudejffegjeegfffhhffhkeefjefgtddujeehheevleevjeejffekieekve
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhr
-    ihhssehkohguvgehgedrnhgvthdpnhgspghrtghpthhtohepudejpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheprghn
-    ughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtph
-    htthhopehluhgtrghsrdguvghmrghrtghhihesihhnthgvlhdrtghomhdprhgtphhtthho
-    pegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhhvghllh
-    hsthhrohhmsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprhhoughrihhg
-    ohdrvhhivhhisehinhhtvghlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrg
-    hilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthht
-    ohepmhgrthhthhgvfidrsghrohhsthesihhnthgvlhdrtghomh
-X-ME-Proxy: <xmx:oeI2aNV1KIVFuLFKAGU7Yw5vDO3VbiclarcMsIhpLqKE3qzcqfyyyw>
-    <xmx:oeI2aAlOt54hH0akC_bt-N19RitpIX1frmmgBOaK3q52MVnA6UNHqA>
-    <xmx:oeI2aCfsWoPmqSl1iRe7uXYdVC4AQFb4AQKrryV2DvBVkb0UmkQNWg>
-    <xmx:oeI2aCEoc5ZwzlAGqMLhoUUOhk1J-JoGq586MWHbG0YxERGYY9BDvA>
-    <xmx:oeI2aEnBSGh_6jhHSjTF187X_eMD8WMiR0jJi3k6ZlGE-tNowY2soXxp>
-Feedback-ID: i9ec6488d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 May 2025 06:17:04 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pJPFUHQE"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so25032315e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748427500; x=1749032300; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8NINXg8J4QmaW8sPWc6e+ws47cGsufUBr4Yz5V/EO6s=;
+        b=pJPFUHQEn3WIBV0/p3yjBolM7DbIugyFbQA9a5cPBLSH2NwW6ttsXd7NThCtu057NZ
+         lDiMBTTPK4faNbNOQ7pzXXU7jS+SVWag9YMfmJeopLaQZO2kCw87Cy9clLy+kejdYNgh
+         X9ZFGBh8us/U2QMmhVJ5hOm/wj+r1BFdGMoRFxZyKuSsRT8lmZKV/sdyFlrg7lmpOfmZ
+         WiIJtdIrCendbCOOsgIePtrhuQf/hhjpkYL3m65gGK2E4fmawODsw6TDhVbfRFLB6T7r
+         Zjwiuej5wLEx0kqq0XSNWj3K5vftEIrutiVx9eYvIpWpNZiOe5fmjGsuBchqs4IsnFlq
+         m2GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748427500; x=1749032300;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8NINXg8J4QmaW8sPWc6e+ws47cGsufUBr4Yz5V/EO6s=;
+        b=ckN5BIVFoHXpzDqOmLlriH1Z6uFi49vy4WXjjcObDGjAqq7EmXIY/MDwAzNqEG+eJv
+         z/jHN+gul5t0FofVdCdV2ZHA3YOhRNK5iptHAo8WJoBQRK1uBhMfwGybGgFdIUIPdbuU
+         1V3ByfoMsRxOwQ11ZARE9PIq6ZfSiOhEz8H1Ma/sjBsS8ZQO9q8OFwP+2UxbKnN0AE11
+         9QDK6gEuJQgvSQcVKxZ6EcEsAg25FX0d25zLvUT7nDN90B+141R1Kbq67vy3tyktGUFH
+         fkbWQmB3ZHpF0k/0YKlJmIZNEEnoXBzY3gv6MiC7RyfKjnuVTt8vpR0byuCHlxB/nJOC
+         l63Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXBTO28Q2+q79vVxIPxhUtH2T6Y86o7JTdrLf/74cYKuEXsOsx0FA6woZeS5Faifgiq7y0Ph1kN02f2K60=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0l+qwKHZwIk96XTTJDidtbyrdIsQdKtQmcw5jrfwU5TW8GgG7
+	pPy/05wmNyib5qMrSNx73+p1u2qgWh/+klqmPoGxCu8r748myDguWkMJrvJq/PBFXrP2YHkItdF
+	gdFkVHQ/VAVhGrQrQkQ==
+X-Google-Smtp-Source: AGHT+IG9PGBM2TysjUwYmOEWzK8Ty36GnkdiP9d5JzUPAfuLhTCZs5RZuwULClsLB26imfDnECTaA8g9RXT0RAo=
+X-Received: from wmsp39.prod.google.com ([2002:a05:600c:1da7:b0:442:ddf8:99dc])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1e25:b0:43d:db5:7af8 with SMTP id 5b1f17b1804b1-44c92a547bbmr142010215e9.21.1748427500382;
+ Wed, 28 May 2025 03:18:20 -0700 (PDT)
+Date: Wed, 28 May 2025 10:18:18 +0000
+In-Reply-To: <20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 03:17:03 -0700
-Message-Id: <DA7PSM1WUKBI.3JA6THJTRF5B7@kode54.net>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, =?utf-8?q?Thomas_Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>, "Rodrigo Vivi"
- <rodrigo.vivi@intel.com>, "Dave Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Matthew Brost" <matthew.brost@intel.com>,
- "Himal Prasad Ghimiray" <himal.prasad.ghimiray@intel.com>, "Imre Deak"
- <imre.deak@intel.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Michael J. Ruhl"
- <michael.j.ruhl@intel.com>, <intel-xe@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
- "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH] drm/xe/vsec: fix CONFIG_INTEL_VSEC dependency
-From: "Christopher Snowhill" <chris@kode54.net>
-To: "Arnd Bergmann" <arnd@arndb.de>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>, "Lucas De Marchi"
- <lucas.demarchi@intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250523121106.2231003-1-arnd@kernel.org>
- <j7yodlrk7wh3ylvb2z622ndlzm4guhahmakdb6l5d6qtv5sabo@w4bfiehtmaab>
- <aDbYs7QZRfr2i80A@smile.fi.intel.com>
- <704fd2b9-04da-4ec8-b854-22bc3ce9058e@app.fastmail.com>
-In-Reply-To: <704fd2b9-04da-4ec8-b854-22bc3ce9058e@app.fastmail.com>
+References: <20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c@gmail.com>
+Message-ID: <aDbi6i9xWWRHaBGb@google.com>
+Subject: Re: [PATCH] rust: replace length checks with match
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Wed May 28, 2025 at 3:03 AM PDT, Arnd Bergmann wrote:
-> On Wed, May 28, 2025, at 11:34, Andy Shevchenko wrote:
->> On Tue, May 27, 2025 at 03:55:46PM -0500, Lucas De Marchi wrote:
->>> On Fri, May 23, 2025 at 02:10:46PM +0200, Arnd Bergmann wrote:
->>
->> ...
->>
->>> > +	depends on INTEL_PLATFORM_DEVICES || !(X86 && ACPI)
->>>=20
->>> 		   ^
->>> Did you mean X86_PLATFORM_DEVICES here?
->
-> Yes, my mistake.
->
->> Why do we need to depend on the whole thingy (yes, it will be enabled at=
- the
->> end) if we only talking about Intel?
->
-> I don't understand what you mean with 'the whole thing'. My change
-> changed the existing 'select X86_PLATFORM_DEVICES if X86 && ACPI'
-> into the corresponding dependency, in order to change it the
-> least.
->
-> The dependency itself is needed because of
->
->        select ACPI_WMI if X86 && ACPI
->
-> and this in turn is needed for
->
->        select ACPI_VIDEO if X86 && ACPI
->
->>> With that, Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
->>>=20
->>> I see several drivers selecting
->>> X86_PLATFORM_DEVICES though. Maybe they should also be translated to
->>> dependencies instead?
->>
->> I think so, selecting that sounds wrong.
->
-> Agreed. Overall, what I'd really like to see is to remove
-> all those 'select' of drivers from other subsystems. I think
-> ACPI_VIDEO is at the center here, and changing all the
-> 'select ACPI_VIDEO if ACPI' instances to
-> 'depends on ACPI_VIDEO || !ACPI_VIDEO' would solve a lot of
+On Tue, May 27, 2025 at 12:09:36PM -0400, Tamir Duberstein wrote:
+> Use a match expression with slice patterns instead of length checks and
+> indexing. The result is more idiomatic, which is a better example for
+> future Rust code authors.
+> 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Maybe you meant 'depends on ACPI_VIDEO || !ACPI' ?
-
-> the recurring dependency loop problems in drivers/gpu/.
->
-> Actually doing it without regressions is going to be
-> nontrivial though, because any change in this area is likely
-> to trigger another dependency loop somewhere.
->
->      Arnd
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
