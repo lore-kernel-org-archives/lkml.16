@@ -1,148 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f74.google.com (mail-ua1-f74.google.com [209.85.222.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966E220FA90;
-	Wed, 28 May 2025 20:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22531220F24
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463464; cv=none; b=MoeRcS9msZ0AM1kbuAFPEwykbsDt7txBY0vHlryDiRvI/VCLZrgUUYNdVG7CTABvQOXFZ468yaKvpSPl89EkUPKs5suN4fzKnA5vSFkXcN9OIuhUPnl0vpvjPsT3wBaYyqHDJiSjxkHj0MuhDnkRvbGZ0Wpuw7Yqa0TknAhW+w4=
+	t=1748463483; cv=none; b=tyRZ/ZY7bD5zzEpY+vFv3gC05YUdNgpxaOcuQPqZKubCACphnbsUmanRhz1Fgt5HxKyhdY7aWzpx5gb58zdmWVAYLPKDayu1P6/B2O/3hjWC+B+EMsTBZ2SwHYI5wgRrcLVCXA624NHNv7y3nH20k2uTofm/mmYAnbQaG5pAKac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463464; c=relaxed/simple;
-	bh=/Np1zwPyXNowrj8gyBj7aEg2EQY/YKZNBSPDvnx555E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=guOsLHXc/qQ3ykyTBwWAYKamtX5x5Uk0g/98ReP9gSGegu+8o3zXsPbX8+Ap8AiPeAaRdtF2dt8LIk+BeE13aQIyF8+QauzqPc6dxDSK1WuIcSO/R8slOCQebFoJCNh9A6aK9rWub2yHe8tWAe2TvLEEcseM/FBljOOEdz9krq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1CaswHv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748463483; c=relaxed/simple;
+	bh=MW9va8ZpX3dYh3E3JLHuTSkrOEon9HLdeDcTvo+YAEU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rPLbNMMGwRjLEN4rzco3rdlPUkWVXLrPvW5X+9/iEPJpD5Ji3e1yMTuI62HpR2tgzanJzl8i/b6IMEU/scngntim/jbsrG2s1bKT0LRdbenVIAuHsdURvWGHR1sxLKhQF1i1/9bmDr0NlK/ov9iDb9R6buM2DFbOOPCe4Ka3DFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cFVKVZX4; arc=none smtp.client-ip=209.85.222.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1CaswHv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E56C4CEE3;
-	Wed, 28 May 2025 20:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748463464;
-	bh=/Np1zwPyXNowrj8gyBj7aEg2EQY/YKZNBSPDvnx555E=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=b1CaswHvKBYzgEicvj492JV/JryFjFWop3NOENUCSBtgUz3d/1BiYve+5mKTgGwkm
-	 rqHRV3N6+Ei7bt1ekFi18wFDcQNKJNLXpgt09+BOrHYqcvNGdzSWLPedW9m4v7o5a1
-	 6Gvy4Ic8IfeL2h8YtT0wZHAYpLdN7PqaCfoFrjnAvqfuKt42eCGlJryF29gBcRuh5L
-	 Tvko8B+A4+q4JVFNFQsZNpXMsRfKYLkcTBcMqAoag8Va/RVsQqMyLdyAaeYZKxQb6I
-	 uv+CpiNw7QeUBOIlkT/uK48jZDboTlPo001jfY34cqCnjvojDUOH6aLS7M7VBcRM4L
-	 239fEyc3wKAxg==
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cFVKVZX4"
+Received: by mail-ua1-f74.google.com with SMTP id a1e0cc1a2514c-87deff34d00so34777241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748463479; x=1749068279; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pS3L3KRfz5KN2f4PHSrDwEqqU16vREHLyymMNsMjI1o=;
+        b=cFVKVZX4RH3eioeab6GMuevfGyXtlRZ+XbIy4swTSnD6RPCujGkDSaJobpxXmtX931
+         5Z+dK+NFe5o6sgZdHjpYBGNuWp5Pl5UuDtpgCd2NMQN4cNv9kzScLbv4kTUJgBFFtWAi
+         Hr7vbQGD/wmfEyd+0dLh37EBKUqGdvpUVxJlbOehYho4yVGgPRFY15XO23poInjJYToN
+         prIQnx+KEAsdRdWdw3I59meSwmMNFyn+mc9veZqnt9tBlOcDmp6rkhJ4Rq+bnibZtxdQ
+         geYuxQP5ANPsAsvgC1k+hwEMRmZWAq/is1Po2Qg+duaBDAYSOSM0UJrKNore7Vbcjw6H
+         jTsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748463479; x=1749068279;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pS3L3KRfz5KN2f4PHSrDwEqqU16vREHLyymMNsMjI1o=;
+        b=WDI00s3WTQMcDW7B87TelY21rwtoU/8PDZhvKg+E+MIyfNSjD0Ld7zosX4ujDJTMLr
+         94cH4ELrObUFbjP4fnrZKqTAjpGH62gYQ2vp/hmhwSx8RCyx/gQy3OAOyEbWF4pWGjpl
+         B1RbJTh2ySGeybhW8lO6PSO/wKSs/jRKTpqzmwnlmSE/r8eKzyPHed9DL9P606z79nGZ
+         amF6yKvqRsWaCfzAzYoFkdRmWsMLjxxk93nI3lJGBbqOYm4IncS91Us+319pA+X63hwQ
+         mNFb2sixqJdlzdrPHbBfVYEel+By7OErmSI7nLmCv3/MWnJ5sf/cJ50UAS0wsLYCzQ4y
+         HHTg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8QZh08kUZXMUMJX3meNFrE31j17ayrwk1Z6FQUbIroe9ddkq7Kg98p2yMiAQlIpfolJ8tZELxqCiFj7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCFccZRNVXGbpwx4dCWS0jSTiBXYnF2QEXiXYz5LN3rH8m6nSO
+	Tzm7O35J6Nd/68tu7H6+o7xeNK4SqztMrzYXBr3eBsS9jKralAy3O4P/3qQe0XiBTvPNZMxfzo7
+	Pfwrid0KlYdMKiXbzhRUMXg==
+X-Google-Smtp-Source: AGHT+IGyUJTOXQyn/15OsOvKdvYlJU2g7lRit6+I+UryLZeKjuoksIAEOAqNG3KzRBgJ4D83T1qgfTqVSbHb27/G
+X-Received: from vsve42.prod.google.com ([2002:a05:6102:faa:b0:4dd:b083:d38c])
+ (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6102:5092:b0:4e5:ac99:e466 with SMTP id ada2fe7eead31-4e5ac99f42fmr1294267137.18.1748463478924;
+ Wed, 28 May 2025 13:17:58 -0700 (PDT)
+Date: Wed, 28 May 2025 20:17:54 +0000
+In-Reply-To: <aDdILHOu9g-m5hSm@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <aDdILHOu9g-m5hSm@google.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250528201756.36271-1-jthoughton@google.com>
+Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
+From: James Houghton <jthoughton@google.com>
+To: seanjc@google.com
+Cc: amoorthy@google.com, corbet@lwn.net, dmatlack@google.com, 
+	jthoughton@google.com, kalyazin@amazon.com, kvm@vger.kernel.org, 
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org, 
+	oliver.upton@linux.dev, pbonzini@redhat.com, peterx@redhat.com, 
+	pgonda@google.com, wei.w.wang@intel.com, yan.y.zhao@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 22:17:37 +0200
-Message-Id: <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-X-Mailer: aerc 0.20.1
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
-In-Reply-To: <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
 
-On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
-> Introduce the `num` module, featuring the `NumExt` extension trait
-> that expands unsigned integers with useful operations for the kernel.
+On Wed, May 28, 2025 at 1:30=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+> On Wed, May 28, 2025, James Houghton wrote:
+> > On Wed, May 28, 2025 at 11:09=E2=80=AFAM James Houghton <jthoughton@goo=
+gle.com> wrote:
+> > > On Tue, May 6, 2025 at 8:06=E2=80=AFPM Sean Christopherson <seanjc@go=
+ogle.com> wrote:
+> > > > @@ -2127,14 +2131,19 @@ void kvm_arch_commit_memory_region(struct k=
+vm *kvm,
+> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0const struct kvm=
+_memory_slot *new,
+> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0enum kvm_mr_chan=
+ge change)
+> > > > =C2=A0{
+> > > > - =C2=A0 =C2=A0 =C2=A0 bool log_dirty_pages =3D new && new->flags &=
+ KVM_MEM_LOG_DIRTY_PAGES;
+> > > > + =C2=A0 =C2=A0 =C2=A0 u32 old_flags =3D old ? old->flags : 0;
+> > > > + =C2=A0 =C2=A0 =C2=A0 u32 new_flags =3D new ? new->flags : 0;
+> > > > +
+> > > > + =C2=A0 =C2=A0 =C2=A0 /* Nothing to do if not toggling dirty loggi=
+ng. */
+> > > > + =C2=A0 =C2=A0 =C2=A0 if (!((old_flags ^ new_flags) & KVM_MEM_LOG_=
+DIRTY_PAGES))
+> > > > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
+> > >
+> > > This is my bug, not yours, but I think this condition must also check
+> > > that `change =3D=3D KVM_MR_FLAGS_ONLY` for it to be correct. This, fo=
+r
+> > > example, will break the case where we are deleting a memslot that
+> > > still has KVM_MEM_LOG_DIRTY_PAGES enabled. Will fix in the next
+> > > version.
+> >
+> > Ah it wouldn't break that example, as `new` would be NULL. But I think
+> > it would break the case where we are moving a memslot that keeps
+> > `KVM_MEM_LOG_DIRTY_PAGES`.
 >
-> These are to be used by the nova-core driver, but they are so ubiquitous
-> that other drivers should be able to take advantage of them as well.
->
-> The currently implemented operations are:
->
-> - align_down()
-> - align_up()
-> - fls()
->
-> But this trait is expected to be expanded further.
->
-> `NumExt` is on unsigned types using a macro. An approach using another
-> trait constrained by the operator traits that we need (`Add`, `Sub`,
-> etc) was also considered, but had to be dropped as we need to use
-> wrapping operations, which are not provided by any trait.
->
-> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  rust/kernel/lib.rs |  1 +
->  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 83 insertions(+)
+> Can you elaborate? =C2=A0Maybe with the full snippet of the final code th=
+at's broken.
+> I'm not entirely following what's path you're referring to.
 
-Have you proposed `align_down` to upstream rust? Not saying that we
-shouldn't do it here, but if we haven't tried yet, it might be a good
-idea to just get them upstreamed. (if you do, it should probably be
-named `prev_multiple_of`)
+This is even more broken than I realized.
 
-> +    /// Align `self` up to `alignment`.
-> +    ///
-> +    /// `alignment` must be a power of 2 for accurate results.
-> +    ///
-> +    /// Wraps around to `0` if the requested alignment pushes the result=
- above the type's limits.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::num::NumExt;
-> +    ///
-> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
-> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
-> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
-> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
-> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
-> +    /// ```
-> +    fn align_up(self, alignment: Self) -> Self;
+I mean that this diff should be applied on top of your patch:
 
-Isn't this `next_multiple_of` [1] (it also allows non power of 2
-inputs).
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 5e2ccde66f43c..f1db3f7742b28 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -2134,8 +2134,12 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	u32 old_flags =3D old ? old->flags : 0;
+ 	u32 new_flags =3D new ? new->flags : 0;
+=20
+-	/* Nothing to do if not toggling dirty logging. */
+-	if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
++	/*
++	 * If only changing flags, nothing to do if not toggling
++	 * dirty logging.
++	 */
++	if (change =3D=3D KVM_MR_FLAGS_ONLY &&
++	    !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
+ 		return;
+=20
+ 	/*
 
-[1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_multiple_=
-of
+So the final commit looks like:
 
-> +
-> +    /// Find Last Set Bit: return the 1-based index of the last (i.e. mo=
-st significant) set bit in
-> +    /// `self`.
-> +    ///
-> +    /// Equivalent to the C `fls` function.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::num::NumExt;
-> +    ///
-> +    /// assert_eq!(0x0u32.fls(), 0);
-> +    /// assert_eq!(0x1u32.fls(), 1);
-> +    /// assert_eq!(0x10u32.fls(), 5);
-> +    /// assert_eq!(0xffffu32.fls(), 16);
-> +    /// assert_eq!(0x8000_0000u32.fls(), 32);
-> +    /// ```
-> +    fn fls(self) -> u32;
+commit 3c4b57b25b1123629c5f2b64065d51ecdadb6771
+Author: James Houghton <jthoughton@google.com>
+Date:   Tue May 6 15:38:31 2025 -0700
 
-Isn't this just `trailing_zeros` [2]?
+    KVM: arm64: Add support for KVM userfault exits
+   =20
+    <to be written by James>
+   =20
+    Signed-off-by: James Houghton <jthoughton@google.com>
+    Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-[2]: https://doc.rust-lang.org/std/primitive.u32.html#method.trailing_zeros
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index c5d21bcfa3ed4..f1db3f7742b28 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -2127,15 +2131,23 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				   const struct kvm_memory_slot *new,
+ 				   enum kvm_mr_change change)
+ {
+-	bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PAGES;
++	u32 old_flags =3D old ? old->flags : 0;
++	u32 new_flags =3D new ? new->flags : 0;
++
++	/*
++	 * If only changing flags, nothing to do if not toggling
++	 * dirty logging.
++	 */
++	if (change =3D=3D KVM_MR_FLAGS_ONLY &&
++	    !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
++		return;
+=20
+ 	/*
+ 	 * At this point memslot has been committed and there is an
+ 	 * allocated dirty_bitmap[], dirty pages will be tracked while the
+ 	 * memory slot is write protected.
+ 	 */
+-	if (log_dirty_pages) {
+-
++	if (new_flags & KVM_MEM_LOG_DIRTY_PAGES) {
+ 		if (change =3D=3D KVM_MR_DELETE)
+ 			return;
+=20
 
----
-Cheers,
-Benno
+So we need to bail out early if we are enabling KVM_MEM_USERFAULT but
+KVM_MEM_LOG_DIRTY_PAGES is already enabled, otherwise we'll be
+write-protecting a bunch of PTEs that we don't need or want to WP.
+
+When *disabling* KVM_MEM_USERFAULT, we definitely don't want to WP
+things, as we aren't going to get the unmap afterwards anyway.
+
+So the check we started with handles this:
+> > > > + =C2=A0 =C2=A0 =C2=A0 u32 old_flags =3D old ? old->flags : 0;
+> > > > + =C2=A0 =C2=A0 =C2=A0 u32 new_flags =3D new ? new->flags : 0;
+> > > > +
+> > > > + =C2=A0 =C2=A0 =C2=A0 /* Nothing to do if not toggling dirty loggi=
+ng. */
+> > > > + =C2=A0 =C2=A0 =C2=A0 if (!((old_flags ^ new_flags) & KVM_MEM_LOG_=
+DIRTY_PAGES))
+> > > > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
+
+So why also check for `change =3D=3D KVM_MR_FLAGS_ONLY` as well? Everything=
+ I just
+said doesn't really apply when the memslot is being created, moved, or
+destroyed. Otherwise, consider the case where we never enable dirty logging=
+:
+
+ - Memslot deletion would be totally broken; we'll see that
+   KVM_MEM_LOG_DIRTY_PAGES is not getting toggled and then bail out, skippi=
+ng
+   some freeing.
+
+ - Memslot creation would be broken in a similar way; we'll skip a bunch of
+   setup work.
+
+ - For memslot moving, the only case that we could possibly be leaving
+   KVM_MEM_LOG_DIRTY_PAGES set without the change being KVM_MR_FLAGS_ONLY,
+   I think we still need to do the split and WP stuff.
