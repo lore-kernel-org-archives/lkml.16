@@ -1,52 +1,52 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA24526A0E0;
-	Wed, 28 May 2025 13:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F31126A0E0;
+	Wed, 28 May 2025 13:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439201; cv=none; b=U+85XmiRS5Ozc8ctnuzNB3j1tWTDNL5PlW4wyDSXpz2Czj1WgXZmp5m/+RDOjLZaqlqm2ijA9sNZvKXj7XCOAeK7MtxYn7e7RDEXrTk6cy7PNLYzX4taxoqhfgMZUxWt+70l5qjMyrTS5INBBJVojylgwmr2zchNpaVRCHuChyU=
+	t=1748439207; cv=none; b=WUNou7a0vfih0kbFdTS6ouKCyqNOeVoY9B6rkYuWG2/NU2EtPeZCbu6/+dRUSR2HNclubo5LEe5MOh64dwA1Sxy5WlhvoOcxfY9fEBiLPkAKBEHHr8qMlOFUySXiwJTd+sAE80gXZ/wPwNSQuz3dThOOEjFXhVXnQtLnQbJ6ZN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439201; c=relaxed/simple;
-	bh=0gXlghNReQ3xJ96aGlYAz/HNqdU+fsvzFoHWeweIWEM=;
+	s=arc-20240116; t=1748439207; c=relaxed/simple;
+	bh=KHbjyN2d2s1I0/J03YDGAwgAwHS1sT7K6Bg42y+oCC0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=lRiII+tZckK3RoCnOFfdM03h7QeKL1gRh9xcf6HRAFHYJ9m8LdyKjAhxHWNovCPrMva46dzvqpy4VO8TRgMh7ud0w2Gj4MNRRU0ORQqb0fJxGuzGr/iC1R3Tu0wrkl5mz6G9Fa3UovhfJTzJFap8KVq82oBKNkpP2dmOyF3z2r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Vgx6lHBJ; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=j0RjYt5sQXiBGaErpXnpI0hTghaMTEK/x+v3vnFOsi3B2bI5rf4e0Lwsf7xLa7RW/rZzndwuWV14b4DowCeV5nGS5yx7rRxZHapY+Nd57QIpkELU4X/TUd5va/DTIctteV9+ptrIbJIWlSEUy1pDJX0ScUa9hnMB6ihfhZZW/dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bcd8cvsK; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Vgx6lHBJ"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SC50nv016771;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bcd8cvsK"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SCXnlC019251;
 	Wed, 28 May 2025 15:33:05 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	E50xYFA31UxV2r8i4ZX3G+C/OQH/OeYpXAFoahXjSdE=; b=Vgx6lHBJQdIh+MUI
-	arbDveMPv8zTQMBrwDm4eeG+uDzjIXdRp9xyVK+J71R4PQaU+yd6001npOIdj99d
-	GqbHWfNog7vETGZrXGggrUoMDrSK72vhw0hGMuPTK+MBagPebEyemKf0p7FdyzcT
-	V+bhOzdFUYtlb0aaIf2uFIk/ps9V2ZWyizpvSeoMjsU7JRdLZ6NwGvp53uT2M0mK
-	9Ch3nZe/8NjAa1C5b+TqqJlRSF426OPsgyYVHZux6JGCe9jOvL5Xbh4uFJs+OvdB
-	a5Phs+8zkjy+xuHJxONWrJ+geKpHChgJs2382GSTKRWxR6Lk/vVE2FJW+HQ8z521
-	+XHyXA==
+	vOKCvrg9T946MeKb54UlHJZ6LDnhr4kD9B8NCELZ49s=; b=bcd8cvsK+mcjyYwr
+	BG8kIBEUsHAZLder+fY5vncgL2M9lQI8otrEzOVGGF9Cz+gpQcXi2zh+7i/fHChD
+	wJZ16YghCKv19E6OmgefAhGEOGOUHeBeeCcP0JFMiCoci4/TtgAs0upaBl8GPdmL
+	EixYoeIEyAVI5+iJm6qDNlaUKVutUS9l7M2StK5NcNW9OMJ2J8Qa+v0hpgW99lsC
+	NHZOPXiwlG/xB78O0HMLglkeEtxlwBd3uJVehWVhLmKQ4e5FE1985fCw4v537pCN
+	UpLlNiamFfPQWEmrbiKuUES5Jzi5BeR15aGFogNVwsGA3uyfll9PD5/RAactdBtm
+	Zkonwg==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u50gsjhv-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46uqp4quvb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 28 May 2025 15:33:05 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8E34C4006D;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E1FF340051;
 	Wed, 28 May 2025 15:31:48 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 38F2E6CCEF7;
-	Wed, 28 May 2025 15:31:06 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 419386CB808;
+	Wed, 28 May 2025 15:31:03 +0200 (CEST)
 Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 28 May
- 2025 15:31:05 +0200
+ 2025 15:31:03 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Wed, 28 May 2025 15:31:01 +0200
-Subject: [PATCH v4 8/9] ARM: dts: stm32: add alternate pinmux for HDP pin
- and add HDP pinctrl node
+Date: Wed, 28 May 2025 15:30:57 +0200
+Subject: =?utf-8?q?=5BPATCH_v4_4/9=5D_MAINTAINERS=3A_add_Cl=C3=A9ment_Le_?=
+ =?utf-8?q?Goffic_as_STM32_HDP_maintainer?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250528-hdp-upstream-v4-8-7e9b3ad2036d@foss.st.com>
+Message-ID: <20250528-hdp-upstream-v4-4-7e9b3ad2036d@foss.st.com>
 References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
 In-Reply-To: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -78,57 +78,30 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
 
-Introduce hdp node to output a user defined value on port hdp2.
-Add pinctrl nodes to be able to output this signal on one SoC pin.
+Add Clément Le Goffic as STM32 HDP maintainer.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
-index 40605ea85ee1..4a31e9f7a897 100644
---- a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
-@@ -5,6 +5,14 @@
-  */
- #include <dt-bindings/pinctrl/stm32-pinfunc.h>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f21f1dabb5fe..c0c30fe00a2a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -23023,6 +23023,12 @@ F:	drivers/bus/stm32_etzpc.c
+ F:	drivers/bus/stm32_firewall.c
+ F:	drivers/bus/stm32_rifsc.c
  
-+&hdp {
-+	/omit-if-no-ref/
-+	hdp2_gpo: hdp2-pins {
-+		function = "gpoval2";
-+		pins = "HDP2";
-+	};
-+};
++ST STM32 HDP PINCTRL DRIVER
++M:	Clément Le Goffic <clement.legoffic@foss.st.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
++F:	drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
 +
- &pinctrl {
- 	/omit-if-no-ref/
- 	adc1_ain_pins_a: adc1-ain-0 {
-@@ -731,6 +739,23 @@ pins {
- 		};
- 	};
- 
-+	/omit-if-no-ref/
-+	hdp2_pins_a: hdp2-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 13, AF0)>; /* HDP2 */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <2>;
-+		};
-+	};
-+
-+	/omit-if-no-ref/
-+	hdp2_sleep_pins_a: hdp2-sleep-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 13, ANALOG)>; /* HDP2 */
-+		};
-+	};
-+
- 	/omit-if-no-ref/
- 	i2c1_pins_a: i2c1-0 {
- 		pins {
+ ST STM32 I2C/SMBUS DRIVER
+ M:	Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>
+ M:	Alain Volmat <alain.volmat@foss.st.com>
 
 -- 
 2.43.0
