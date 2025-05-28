@@ -1,199 +1,288 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982227584C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA78748D;
+	Wed, 28 May 2025 09:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748426268; cv=none; b=XogrTufIGijcXlWZe8NLQgVmRH68aMQ0f0Qk6p/qwEmfsQepX228FhXUCjzceHlM0YOFXIQPkr+ccEB4qvOkHoBlo6plzlPgApgEGdLhm8RTJpcanBXFz+TOrDCAaDDVJH+5Pv7+BmVo24Fjy0hbJKRxZiCS1laoUWTyeLJUinM=
+	t=1748426307; cv=none; b=gA9kpFkCO+jY198RaQ9xdoRPYlwuwA3ZnWNUBJdrUJom5VF1DCwMpTX4QPnzs7mrYOYXxuhxeSjnbcB+CppQ/llcchiHgkYUICJovNLmam6YBsiwZNWtzIH9gie2dqc7sV1W+PvDlKhhBnIKhKHjdNP3EOVF/igx0jgn203NF5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748426268; c=relaxed/simple;
-	bh=NY4ppF8WDLnUEHIz0ojqjJm6a5YSQxyU166J9C6MAD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AB6x68rhAVWuUsnHCTAKl4YvKZCIstMav0C0q04tq4FcakvJIRFremN3WV6v1haXmBaeBLVKfVB377bgoLznt17kILSdfvu+rUeDISrcMWLjTusKqE2TgNrAqO9PNq/KOAzZE/N8ltW8YcjATYAPECHzzUfaDypTlAEzxwpJPU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pjZnWZtC; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748426307; c=relaxed/simple;
+	bh=NRGd1298YR6eHTCIZ4sKS4iKFIP8ajc1FwHkQHVUEcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRuX2JUcOd6Nl1Y9A8/3KjcUxj9kbSycEXoXF75UfDdsSjfY9Ls2E+JdLxqmoh3J1oYD8P8H2uzIWS/BKket4qqokhY427etf7vvVfSYPrYDL21lgcbuSdg/QEEUpgja1AYcQxeT4U7IpyT3bvuexwTaKBXV2Dy9/mFXixPVjzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JFt6cr3U; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pjZnWZtC"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604bf67b515so5096413a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748426264; x=1749031064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ks3rhmD/IHlVoyz8JuxtGnWPe59bWGftTPLGTy/S1P8=;
-        b=pjZnWZtC2h3kOjEe9LEGzuZHtEOwTYCuV6JqcoGywkjnl2A9RQ7ANO3XQmyThu10io
-         U+FOKZKzkLRZYpBgjGiSI0QCBu0lAXRY3dBVERiK/4Kw+WyHaye37A4RnGd0fLPKCgUX
-         IYMjz17DW+mx/JycEAW83UGudA9ayJe8f1Jtk67NjEgN7HS1S88olgpsKT7uA6IRdCyG
-         79K7ZSXQK1ACe7yMiIeT9Bmcd0E4GI/SpGMnoHayK3P05NC06Z9Ged1l2RcHbJ/5NQUL
-         esEB+IvPl/CauWKZX7yyWHg53uFvgEP2rmvix4vTvBQlGx4DzOEuS+OrG+XSF5CP/jv1
-         dUlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748426264; x=1749031064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ks3rhmD/IHlVoyz8JuxtGnWPe59bWGftTPLGTy/S1P8=;
-        b=V6DTZvZ81CG9FtrEymaycaLNI9UchrdYEUY8tnnBzUK9YhGyrm9SYD0tOMBqsoATpb
-         YUOGwjwTsAxj9fJ2fbhdprEt466Joa6Mt5oCmOsCqcz/W+jog4FvcABb+MEUevIH0vZx
-         GRrHjr8cJl3cXCU1fkGbM5zI3IFSD6i+LYIjcDGu12I1T1JlAe3S8PFlwxDnm6JoR+5A
-         WytXu9DWBkfFhXz3DAFfs3YZc/TH9Dtq8kPUl6r+8MP1x1PDrhOXsm/LxPiOipaIhppz
-         mZe/GSKQl1F+gH2r7KgR7Jsyyf7vxlh6F0scvo+8lgsqnVRqgFUNa8J89ycEYPOCN8P6
-         lzow==
-X-Forwarded-Encrypted: i=1; AJvYcCV6S3XH7uXRvtOwaRoWHjARwRn8fo+8sURPktUXRWNCJr0f0HVCv8u8x16BaNWdhf87d8W0aI+24w4zthM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV/Y2PHmgEzLWXc4b1+2f972lLRkpa1Xa/w8/XoA7GBj4OiIxP
-	sAAisMBZMX2xraoVVelgr2ZpHY2NSi2hCozygLKSt+uwM9m2DHcq0E9zSKVGLc6YwTz9PBv9UTw
-	nup8jlCeETYUAU/ENfwDexBvjEdrsnXUvn4/c7ISX
-X-Gm-Gg: ASbGncuXxVQnWggBZBroI6Y/8PyhwaItaXK2IlxwxQpWabwCA/2xRjxIHg+tTwXP4Dl
-	f0WFv1dnXQ0PuYtuwCxMwL0ftYbzWKlAin0+3FV9Qes92weO3ngMXF85uU1YQbfZIlFCfwCIymQ
-	nVdYfN8uB0hx1REOV5ToymS2nLKK5jaOTT9XVndAc5i139d+zMyBVoDpgKe9ZMAGiObVGkqQ==
-X-Google-Smtp-Source: AGHT+IFFD/y5HtmSNrKzHhwfxF7XDgkk5kJYkfCwOSf/luOnKSQmxuN22Xn2tS6vv4V5KENmsK82jP6Xvsq5rx1uJ+c=
-X-Received: by 2002:a05:6402:5112:b0:604:e74d:3615 with SMTP id
- 4fb4d7f45d1cf-604e74d367bmr6357406a12.26.1748426264183; Wed, 28 May 2025
- 02:57:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JFt6cr3U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=1xRm8xDdj9ygUcINq3+7tEJK7XUVkovysG+3uSP4mK0=; b=JFt6cr3UZnexdU5Br0jFmmk949
+	XhyX/5vqmpk8anwlGiS7pymGWJXajA8GSPgjqhyF4r1bZpN1/OJ53PW/0fLE2gthja7QMm4O3Med+
+	vDvX/Hrp5YT63Qzc6JexQeCfq2VlmKmHub9tcdi7ujzqBFvBGYqQDCm6WwTMqbBi9VUpRerm14/ZG
+	ShMYUX/359/JWzzW1iZMyMBmevjnvhUHJxxuKHdyaelhCCin3owVgF9nKNJ1MfT4Z9haO4MzzoELB
+	GQ6LTExaHirxE3KkHHB2hRyX3cuSu3X393aXQN+RYEcztxfK0qnkD9fzMdDzj27b6oQTuR1e66cRS
+	j8KQVTLQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uKDY5-009PDi-1w;
+	Wed, 28 May 2025 17:58:14 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 28 May 2025 17:58:13 +0800
+Date: Wed, 28 May 2025 17:58:13 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
+ dma_map_single works
+Message-ID: <aDbeNYbwhmG6fzUh@gondor.apana.org.au>
+References: <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <aC2uvvzlR89iVFGW@Red>
+ <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
+ <aC3cF0-bWb-Jiz4i@Red>
+ <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
+ <aC7UbAIDA46olNJL@gondor.apana.org.au>
+ <aC-EGr50MIVJqwVn@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527121807.3597061-1-korneld@google.com> <oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5hsil@vhh22j6b5cvq>
-In-Reply-To: <oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5hsil@vhh22j6b5cvq>
-From: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@google.com>
-Date: Wed, 28 May 2025 11:57:32 +0200
-X-Gm-Features: AX0GCFvK9nh_ZQOQ8q-wzxVPyhyMhhVBescCioACvy1eSbZRd2cZXohjA9FPaQ4
-Message-ID: <CACF_fqksF+whYbGEdSvJ=87FQH03EzO+hSSf8eRc8MitR2hzxA@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: qcom_battmgr: Report battery capacity
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC-EGr50MIVJqwVn@Red>
 
-On Tue, May 27, 2025 at 9:34=E2=80=AFPM 'Dmitry Baryshkov' via
-chromeos-krk-upstreaming <chromeos-krk-upstreaming@google.com> wrote:
+On Thu, May 22, 2025 at 10:07:54PM +0200, Corentin Labbe wrote:
 >
-> On Tue, May 27, 2025 at 12:18:07PM +0000, Kornel Dul=C4=99ba wrote:
-> > Battery charge can be reported in several different ways. One of them i=
-s
-> > is charge percentage referred to as POWER_SUPPLY_PROP_CAPACITY in the
-> > power supply API. Currently the driver reports the capacity in this way
-> > on SM8350, but not on the newer variants referred to as SC8280XP in the
-> > driver. Although this is not a bug in itself, not reporting the
-> > percentage can confuse some userspace consumers.
-> > Mimic what is done in the ACPI driver (drivers/acpi/battery.c) and
-> > calculate the percentage capacity by dividing the current charge value
-> > by the full charge. Both values are expressed in either uWh, or
-> > in uAh.
-> >
-> > Signed-off-by: Kornel Dul=C4=99ba <korneld@google.com>
-> > ---
-> >  drivers/power/supply/qcom_battmgr.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply=
-/qcom_battmgr.c
-> > index fe27676fbc7c..5ed5452ab51c 100644
-> > --- a/drivers/power/supply/qcom_battmgr.c
-> > +++ b/drivers/power/supply/qcom_battmgr.c
-> > @@ -577,6 +577,8 @@ static int qcom_battmgr_bat_get_property(struct pow=
-er_supply *psy,
-> >               val->intval =3D battmgr->status.capacity;
-> >               break;
-> >       case POWER_SUPPLY_PROP_CAPACITY:
-> > +             if (battmgr->status.percent =3D=3D (unsigned int)-1)
-> > +                     return -ENODATA;
-> >               val->intval =3D battmgr->status.percent;
-> >               break;
-> >       case POWER_SUPPLY_PROP_TEMP:
-> > @@ -617,6 +619,7 @@ static const enum power_supply_property sc8280xp_ba=
-t_props[] =3D {
-> >       POWER_SUPPLY_PROP_STATUS,
-> >       POWER_SUPPLY_PROP_PRESENT,
-> >       POWER_SUPPLY_PROP_TECHNOLOGY,
-> > +     POWER_SUPPLY_PROP_CAPACITY,
-> >       POWER_SUPPLY_PROP_CYCLE_COUNT,
-> >       POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
-> >       POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> > @@ -1063,6 +1066,21 @@ static void qcom_battmgr_sc8280xp_callback(struc=
-t qcom_battmgr *battmgr,
-> >               battmgr->ac.online =3D source =3D=3D BATTMGR_CHARGING_SOU=
-RCE_AC;
-> >               battmgr->usb.online =3D source =3D=3D BATTMGR_CHARGING_SO=
-URCE_USB;
-> >               battmgr->wireless.online =3D source =3D=3D BATTMGR_CHARGI=
-NG_SOURCE_WIRELESS;
-> > +             if (battmgr->info.last_full_capacity !=3D 0) {
-> > +                     /*
-> > +                      * 100 * battmgr->status.capacity can overflow a =
-32bit
-> > +                      * unsigned integer. Do a temporary cast to avoid=
- that.
-> > +                      */
-> > +                     battmgr->status.percent =3D
-> > +                             (uint64_t)100 * battmgr->status.capacity =
-/
-> > +                             battmgr->info.last_full_capacity;
->
-> Can you use mult_frac(), preventing the overflow?
+> Here is the result:
+> http://kernel.montjoie.ovh/479404.log
+> 
+> I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
 
-Good idea, but I don't think mult_frac() helps in cases where the
-dividend is smaller than the divider. Let's look at the sources:
-#define mult_frac(x, n, d)      \
-(...)
-        typeof(x_) q =3D x_ / d_; \
-        typeof(x_) r =3D x_ % d_; \
-        q * n_ + r * n_ / d_;   \
+Please try this patch on top of the current mainline tree.
 
-Since in our case x_ < d_, q =3D 0 and r =3D x_ then r * n_ will still
-result in an overflow.
+I've force-enabled the software finalisation code and switched it
+over to kmalloc + dma_map_single.
 
-Unfortunately, the cast-and-divide approach won't work either. I
-received an email from a kernel test robot saying that this patch
-breaks a 32-bit only build. (">> ERROR: modpost: "__udivdi3"
-[drivers/power/supply/qcom_battmgr.ko] undefined!") See
-https://lore.kernel.org/oe-kbuild-all/202505280344.GjzOItSS-lkp@intel.com/
-for details.
-
-I suppose I could just use a do_div with a temporary variable to work
-around that. I noticed that all data read from FW is multiplied by
-1000, so I leveraged that instead:
-battmgr->status.percent =3D
-    (100 * le32_to_cpu(resp->status.capacity)) /
-      (battmgr->info.last_full_capacity / 1000);
-
-Any thoughts?
-
->
-> > +             } else {
-> > +                     /*
-> > +                      * Let the sysfs handler know no data is availabl=
-e at
-> > +                      * this time.
-> > +                      */
-> > +                     battmgr->status.percent =3D (unsigned int)-1;
-> > +             }
-> >               break;
-> >       case BATTMGR_BAT_DISCHARGE_TIME:
-> >               battmgr->status.discharge_time =3D le32_to_cpu(resp->time=
-);
-> > --
-> > 2.49.0.1151.ga128411c76-goog
-> >
->
-> --
-> With best wishes
-> Dmitry
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "chromeos-krk-upstreaming" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to chromeos-krk-upstreaming+unsubscribe@google.com.
-> To view this discussion visit https://groups.google.com/a/google.com/d/ms=
-gid/chromeos-krk-upstreaming/oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5=
-hsil%40vhh22j6b5cvq.
-> For more options, visit https://groups.google.com/a/google.com/d/optout.
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..e5b1d6a9add5 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -49,8 +49,7 @@ mv_cesa_ahash_req_iter_next_op(struct mv_cesa_ahash_dma_iter *iter)
+ static inline int
+ mv_cesa_ahash_dma_alloc_cache(struct mv_cesa_ahash_dma_req *req, gfp_t flags)
+ {
+-	req->cache = dma_pool_alloc(cesa_dev->dma->cache_pool, flags,
+-				    &req->cache_dma);
++	req->cache = kmalloc(CESA_MAX_HASH_BLOCK_SIZE, flags);
+ 	if (!req->cache)
+ 		return -ENOMEM;
+ 
+@@ -63,18 +62,14 @@ mv_cesa_ahash_dma_free_cache(struct mv_cesa_ahash_dma_req *req)
+ 	if (!req->cache)
+ 		return;
+ 
+-	dma_pool_free(cesa_dev->dma->cache_pool, req->cache,
+-		      req->cache_dma);
++	dma_unmap_single(cesa_dev->dev, req->cache_dma, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
++	kfree(req->cache);
+ }
+ 
+ static int mv_cesa_ahash_dma_alloc_padding(struct mv_cesa_ahash_dma_req *req,
+ 					   gfp_t flags)
+ {
+-	if (req->padding)
+-		return 0;
+-
+-	req->padding = dma_pool_alloc(cesa_dev->dma->padding_pool, flags,
+-				      &req->padding_dma);
++	req->padding = kmalloc(72, flags);
+ 	if (!req->padding)
+ 		return -ENOMEM;
+ 
+@@ -86,9 +81,8 @@ static void mv_cesa_ahash_dma_free_padding(struct mv_cesa_ahash_dma_req *req)
+ 	if (!req->padding)
+ 		return;
+ 
+-	dma_pool_free(cesa_dev->dma->padding_pool, req->padding,
+-		      req->padding_dma);
+-	req->padding = NULL;
++	dma_unmap_single(cesa_dev->dev, req->padding_dma, 72, DMA_TO_DEVICE);
++	kfree(req->padding);
+ }
+ 
+ static inline void mv_cesa_ahash_dma_last_cleanup(struct ahash_request *req)
+@@ -533,6 +527,13 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
+ 
+ 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
+ 
++	ahashdreq->cache_dma = dma_map_single(cesa_dev->dev, ahashdreq->cache, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
++	if (dma_mapping_error(cesa_dev->dev, ahashdreq->cache_dma)) {
++		dev_err(cesa_dev->dev, "dma_map_single failed\n");
++		kfree(ahashdreq->cache);
++		return -ENOMEM;
++	}
++
+ 	return mv_cesa_dma_add_data_transfer(chain,
+ 					     CESA_SA_DATA_SRAM_OFFSET,
+ 					     ahashdreq->cache_dma,
+@@ -556,7 +557,7 @@ mv_cesa_ahash_dma_last_req(struct mv_cesa_tdma_chain *chain,
+ 	 * If the transfer is smaller than our maximum length, and we have
+ 	 * some data outstanding, we can ask the engine to finish the hash.
+ 	 */
+-	if (creq->len <= CESA_SA_DESC_MAC_SRC_TOTAL_LEN_MAX && frag_len) {
++	if (0 && creq->len <= CESA_SA_DESC_MAC_SRC_TOTAL_LEN_MAX && frag_len) {
+ 		op = mv_cesa_dma_add_frag(chain, &creq->op_tmpl, frag_len,
+ 					  flags);
+ 		if (IS_ERR(op))
+@@ -588,6 +589,13 @@ mv_cesa_ahash_dma_last_req(struct mv_cesa_tdma_chain *chain,
+ 
+ 	trailerlen = mv_cesa_ahash_pad_req(creq, ahashdreq->padding);
+ 
++	ahashdreq->padding_dma = dma_map_single(cesa_dev->dev, ahashdreq->padding, 72, DMA_TO_DEVICE);
++	if (dma_mapping_error(cesa_dev->dev, ahashdreq->padding_dma)) {
++		dev_err(cesa_dev->dev, "dma_map_single failed\n");
++		kfree(ahashdreq->padding);
++		return ERR_PTR(-ENOMEM);
++	}
++
+ 	len = min(CESA_SA_SRAM_PAYLOAD_SIZE - frag_len, trailerlen);
+ 	if (len) {
+ 		ret = mv_cesa_dma_add_data_transfer(chain,
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..230501fe843b 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -374,6 +374,12 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 
+ 		memcpy(ahashreq->result, data, digsize);
+ 	} else {
++		struct {
++			u32 digest[8];
++			u64 len;
++		} state;
++
++		memcpy(state.digest, creq->state, digsize);
+ 		for (i = 0; i < digsize / 4; i++)
+ 			creq->state[i] = readl_relaxed(engine->regs +
+ 						       CESA_IVDIG(i));
+@@ -393,6 +399,21 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 				for (i = 0; i < digsize / 4; i++)
+ 					result[i] = cpu_to_be32(creq->state[i]);
+ 			}
++		} else {
++			HASH_FBREQ_ON_STACK(fbreq, ahashreq);
++
++			crypto_ahash_import_core(fbreq, &state);
++			crypto_ahash_update(fbreq);
++			crypto_ahash_export_core(fbreq, &state);
++			if (memcmp(state.digest, creq->state, digsize)) {
++				pr_err("mv_cesa_ahash_complete partial hash mismatch\n");
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						state.digest, digsize, false);
++				print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET,
++						16, 1,
++						creq->state, digsize, false);
++			}
+ 		}
+ 	}
+ 
+diff --git a/drivers/crypto/marvell/cesa/cesa.c b/drivers/crypto/marvell/cesa/cesa.c
+index 9c21f5d835d2..fd7f43575cb2 100644
+--- a/drivers/crypto/marvell/cesa/cesa.c
++++ b/drivers/crypto/marvell/cesa/cesa.c
+@@ -127,6 +127,8 @@ static irqreturn_t mv_cesa_int(int irq, void *priv)
+ 		if (!(status & mask))
+ 			break;
+ 
++		pr_err("mv_cesa_int: %d 0x%x 0x%x\n", engine->id, status, mask);
++
+ 		/*
+ 		 * TODO: avoid clearing the FPGA_INT_STATUS if this not
+ 		 * relevant on some platforms.
+diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+index 6815eddc9068..ff0735aaed7d 100644
+--- a/drivers/crypto/marvell/cesa/hash.c
++++ b/drivers/crypto/marvell/cesa/hash.c
+@@ -397,6 +397,8 @@ static void mv_cesa_ahash_complete(struct crypto_async_request *req)
+ 	}
+ 
+ 	atomic_sub(ahashreq->nbytes, &engine->load);
++
++	pr_err("mv_cesa_ahash_complete: %d 0x%lx\n", engine->id, (unsigned long)ahashreq);
+ }
+ 
+ static void mv_cesa_ahash_prepare(struct crypto_async_request *req,
+@@ -418,6 +420,8 @@ static void mv_cesa_ahash_req_cleanup(struct crypto_async_request *req)
+ 	struct ahash_request *ahashreq = ahash_request_cast(req);
+ 	struct mv_cesa_ahash_req *creq = ahash_request_ctx(ahashreq);
+ 
++	pr_err("mv_cesa_ahash_req_cleanup: %d 0x%lx\n", creq->base.engine->id, (unsigned long)ahashreq);
++
+ 	if (creq->last_req)
+ 		mv_cesa_ahash_last_cleanup(ahashreq);
+ 
+@@ -796,6 +800,7 @@ static int mv_cesa_ahash_queue_req(struct ahash_request *req)
+ 	engine = mv_cesa_select_engine(req->nbytes);
+ 	mv_cesa_ahash_prepare(&req->base, engine);
+ 
++	pr_err("mv_cesa_ahash_queue_req: %d 0x%lx %d %d\n", engine->id, (unsigned long)req, req->nbytes, creq->last_req);
+ 	ret = mv_cesa_queue_req(&req->base, &creq->base);
+ 
+ 	if (mv_cesa_req_needs_cleanup(&req->base, ret))
+diff --git a/drivers/crypto/marvell/cesa/tdma.c b/drivers/crypto/marvell/cesa/tdma.c
+index 243305354420..55860b480dd6 100644
+--- a/drivers/crypto/marvell/cesa/tdma.c
++++ b/drivers/crypto/marvell/cesa/tdma.c
+@@ -47,6 +47,8 @@ void mv_cesa_dma_step(struct mv_cesa_req *dreq)
+ 	engine->chain_hw.last = dreq->chain.last;
+ 	spin_unlock_bh(&engine->lock);
+ 
++	pr_err("mv_cesa_dma_step: %d 0x%lx 0x%lx 0x%lx\n", engine->id, (unsigned long)dreq, (unsigned long)dreq->chain.first->cur_dma, (unsigned long)dreq->chain.last->cur_dma);
++
+ 	writel_relaxed(0, engine->regs + CESA_SA_CFG);
+ 
+ 	mv_cesa_set_int_mask(engine, CESA_SA_INT_ACC0_IDMA_DONE);
+@@ -137,6 +139,7 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 	int res = 0;
+ 
+ 	tdma_cur = readl(engine->regs + CESA_TDMA_CUR);
++	pr_err("mv_cesa_tdma_process: %d 0x%lx\n", engine->id, (unsigned long)tdma_cur);
+ 
+ 	for (tdma = engine->chain_hw.first; tdma; tdma = next) {
+ 		spin_lock_bh(&engine->lock);
+@@ -186,6 +189,8 @@ int mv_cesa_tdma_process(struct mv_cesa_engine *engine, u32 status)
+ 			break;
+ 	}
+ 
++	pr_err("mv_cesa_tdma_process: %d %d 0x%lx\n", engine->id, res, (unsigned long)req);
++
+ 	/*
+ 	 * Save the last request in error to engine->req, so that the core
+ 	 * knows which request was faulty
