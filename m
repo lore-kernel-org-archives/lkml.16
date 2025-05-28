@@ -1,63 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD5C221FAE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:16:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9873204680;
+	Wed, 28 May 2025 22:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748470612; cv=none; b=Ddg1tgFA3+vPlGe4TmrT14i2BLH3f7a+eYS5LF0GfjWuWqt1kjCQnAacMHylQzKPvMkUykYV1X8Oz52tlTg3ekzujRUz+Vcrv2nesGGPZhhFpiIaB3X0IuChdF/SOXoQcvHvkplnC+PgD08kUQ9kMX2MXSw4drcQwe2k6nVHvSo=
+	t=1748470650; cv=none; b=F8brHBzUseHPUMYxomwBWhAkBwTLGAu5zkn67t62ventEvzIMA+WpttW1gTGOTq3lwh2C70NfZbTQzkQVZmc7u+jS+rS/d7RwI/NKVJ8BhQosp1LU/Fu6SnsKqqW0Xi5A8Mbbp9AU901XUz0t8lt5a+XjhiGUDeJPmezXCxAbaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748470612; c=relaxed/simple;
-	bh=ME97XvHP1p/V2KP9dL0rNzabOMCHQocn0bMBshCDqEY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kmIvOwYpZ+uYjlY+4RDDQB2Egsf5YZ4B29c2Oib9Z1nKgNnlAjQH0MoUjpwxzmQYLMptzCRJHCK6XhcpNjLmPbK5Yh5awanBPD3I9nUf774hmdKBZEnmwHQ4E5bfXxQ6XZlY0wTHL23iVW6Zc2RT1LqOgGI7WnXY6f3w3Tz3StY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bY8oYg+W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748470650; c=relaxed/simple;
+	bh=zNpLWP0iLRo2SdsjN4iDx0HkI1x+t7mIhg4FFPTD5Tk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=okaPMpdMSRR88dHhooLRCpd2Nn5V5K0JD154qSDZ3IblowMfPx/JYuHQCnLkj5VnTf3YpQnZWdP2JDpIJ+TveAdOWd/w4+qQVdLlxbVhWQk6g62ARUQt/ErCrsw7DLej+nBDvZNc2PJE1Dh/zPPglWXjU5rTWJC5izVFQAJmByo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7muyCJc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bY8oYg+W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F5DC4CEE3;
-	Wed, 28 May 2025 22:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748470612;
-	bh=ME97XvHP1p/V2KP9dL0rNzabOMCHQocn0bMBshCDqEY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=bY8oYg+WH5wXr+R1LSgLvMOs0WJ4knWwqMWhgq2cYtwFK1wIS4Ww4n8k8pKc1U4wv
-	 RII9pc5JXDFi4OPTTd7pV5yPBAyaiqTj16hZvnHZMxHq88wbnYCnEq7cM02+/xNgRm
-	 GBSeJlI+G9d4AdQk4FXbWdhSI44hYKTM3+gidkos06Y5SrKna7dj1QrB/4gwOLOtYM
-	 EgtRsBsHQCjULHPt6jj/1txwBHDT/jakHN48iyU+E7I8yXAbmBsGMGlVwfhl7RgHrr
-	 R74joo7Yy8E5/wd6fxhsDuM7trc3B7FQZ8+LigPhxJOdUQ9u8qWVaKX3RAMcCtu80H
-	 hjI3DADA6fIyQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CD53822D1A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7muyCJc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368E3C4CEE3;
 	Wed, 28 May 2025 22:17:27 +0000 (UTC)
-Subject: Re: [GIT PULL] arm64 updates for 6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250528114103.GA27965@willie-the-truck>
-References: <20250528114103.GA27965@willie-the-truck>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250528114103.GA27965@willie-the-truck>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
-X-PR-Tracked-Commit-Id: 217e3cbba3d6613bee9ac33ddc330f8676eb9eca
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 47cf96fbe393839b125a9b694a8cfdd3f4216baa
-Message-Id: <174847064592.2608061.11972465031439133363.pr-tracker-bot@kernel.org>
-Date: Wed, 28 May 2025 22:17:25 +0000
-To: Will Deacon <will@kernel.org>
-Cc: torvalds@linux-foundation.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@android.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748470649;
+	bh=zNpLWP0iLRo2SdsjN4iDx0HkI1x+t7mIhg4FFPTD5Tk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G7muyCJcjzQJFr92jjgnWBBlpxhlTSkns9tT7dVBsYZ8p066RrwEMoBi52I4Dw0DI
+	 eaRLiDhYqbn6faw+B+Y2GJED9hg08bsaHGlfETA9F75ftIxkrXqIi4OsD5QT9YrZYf
+	 CsaqSf2zXr1M9TJ7oIMBiqykalOfsuUlS5XATez3+9oY1oYBUkrSTNXzSwCuLDw77P
+	 mAIoJS7lnZh5pfi+61KTh5B/5D6Udfk/l7Ahoof46MrGPhVaDAeUDAObZJ7cfpg/mX
+	 uxLm3Rt7vPXY3FPlpscg8hjt7CgYs1Zxxy83Afgeh3cmTznC8ByVXp36g6rIFklFa6
+	 k/AeUR12dZOyg==
+From: sven@kernel.org
+To: soc@lists.linux.dev
+Cc: Sven Peter <sven@kernel.org>,
+	Janne Grunau <j@jannau.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>,
+	Sven Peter <sven@svenpeter.dev>,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS, mailmap: update Sven Peter's email address
+Date: Thu, 29 May 2025 00:17:18 +0200
+Message-Id: <20250528221718.45204-1-sven@kernel.org>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Wed, 28 May 2025 12:41:04 +0100:
+From: Sven Peter <sven@kernel.org>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-upstream
+Update my mail address to my new @kernel.org one and also add a mailmap
+entry to make sure everything gets sent there for easier filtering.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/47cf96fbe393839b125a9b694a8cfdd3f4216baa
+Signed-off-by: Sven Peter <sven@kernel.org>
+---
+ .mailmap    | 1 +
+ MAINTAINERS | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Thank you!
+diff --git a/.mailmap b/.mailmap
+index 4f7cd8e23177..7a9cd664183a 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -712,6 +712,7 @@ Sven Eckelmann <sven@narfation.org> <sven.eckelmann@gmx.de>
+ Sven Eckelmann <sven@narfation.org> <sven.eckelmann@open-mesh.com>
+ Sven Eckelmann <sven@narfation.org> <sven.eckelmann@openmesh.com>
+ Sven Eckelmann <sven@narfation.org> <sven@open-mesh.com>
++Sven Peter <sven@kernel.org> <sven@svenpeter.dev>
+ Takashi YOSHII <takashi.yoshii.zj@renesas.com>
+ Tamizh Chelvam Raja <quic_tamizhr@quicinc.com> <tamizhr@codeaurora.org>
+ Taniya Das <quic_tdas@quicinc.com> <tdas@codeaurora.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b827049501..b389195fb9cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2251,7 +2251,7 @@ F:	sound/soc/codecs/cs42l84.*
+ F:	sound/soc/codecs/ssm3515.c
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+ ARM/APPLE MACHINE SUPPORT
+-M:	Sven Peter <sven@svenpeter.dev>
++M:	Sven Peter <sven@kernel.org>
+ M:	Janne Grunau <j@jannau.net>
+ R:	Alyssa Rosenzweig <alyssa@rosenzweig.io>
+ R:	Neal Gompa <neal@gompa.dev>
+--
+2.34.1
+
