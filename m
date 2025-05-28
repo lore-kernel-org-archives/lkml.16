@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56D6D1E8331;
-	Wed, 28 May 2025 02:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABC171C9DC6;
+	Wed, 28 May 2025 02:29:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748399371; cv=none; b=u9nQ+BJR3OvR1gu2EpT5jzpgQFszfqVUTgNnpodTy3b0D+pQ8Jt4PV8bdiVIsXWeu5xIP75cHge1xEDH96+Si1ZhXl4a2DITqkInMStRPfydtSXBwlfVb2bNBvKaCmKiCFBGHNWLKtYIQvpEsEbY/Vb/1eosMoseNCKSoXTTnXs=
+	t=1748399368; cv=none; b=b2vA5es2xlB5CeOQVeeYxw4TJi5dU1hXi++HXBLlDFxUQwtSi8DmnqPXlKJloq4R2ENnRAVUHg9GEmG6mrIusbVhGMLLwXYzsY1qH7iWNaEcTyu7BntUeOFZcN740/6XoVJNWtGkATv3UwBThpuLKPny2COEuXS0LvVHJ0MLjps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748399371; c=relaxed/simple;
-	bh=Bn+B677u1SUXBMK6hXmuHKqv5b/inDpHW5BYywKSQyc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=NjvCYiD6eszAwpqKZhwUFE+J4IjLKpRm4rOasBYefEhP6wPjn74OhBzO6MoqOwZhxHzwIlyzfn+ruclOUqgUHxU7qbyDqnwMnG8To+Luv08fMG0zJ0vA0Y9YULVEvRPJppvtovJWgajCEvojmpPDEhajCAGymN+QOXBHL4sU52E=
+	s=arc-20240116; t=1748399368; c=relaxed/simple;
+	bh=zrNGKnbSxXrbqDwxy2zSBF4Zq1u8zpRiWQM30ZvnayA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=fWasVwLeNqfdu32n8fmQyEuO2xZjBBtYhw/gEUXQy7uUAQwGIZaKscI9G6ZyItW/nMbVAcXtR/iGg2+924tilkufI9k1ypZVQ6waQpRWmmEAMBTNaRHXk0Y1B2fTdZx5tbuh5HlUYzHMiHuwCL17LONeqGLI1zsFFNS5XfVAvHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-91-68367502f54e
+X-AuditID: a67dfc5b-669ff7000002311f-73-683675027897
 From: Byungchul Park <byungchul@sk.com>
 To: willy@infradead.org,
 	netdev@vger.kernel.org
@@ -47,40 +47,40 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	bpf@vger.kernel.org,
 	vishal.moola@gmail.com
-Subject: [PATCH v2 12/16] netmem: use _Generic to cover const casting for page_to_netmem()
-Date: Wed, 28 May 2025 11:29:07 +0900
-Message-Id: <20250528022911.73453-13-byungchul@sk.com>
+Subject: [PATCH v2 09/16] page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
+Date: Wed, 28 May 2025 11:29:04 +0900
+Message-Id: <20250528022911.73453-10-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250528022911.73453-1-byungchul@sk.com>
 References: <20250528022911.73453-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRiH+++cnXMcrk5L9JRiuBBJ8YqX94OYEuX/W0FfwgodenDDOWVT
-	80KgJlSadofQhVPJO82W6DQx7xcMlJmxyutEMzBFl0udZM7y28Pzg4cXXoaQ9JNnGIUqg1er
-	ZEopJSJFP52r/QWZ4fKgit/uoNU3U9C0nQ1180YhaBvbEPza+UaDdWCYgpoqGwHa8SIStvS7
-	BCwNWWiYq10moeteOwGWRyMUlBbZCSg01gtgoq1MCM93XxPQnj9Pw2SnloLZ5n0hLPeVkjBa
-	3kDCXFk0DOlcwTa2imBA3y4A28NXFDwz6ShYLJpDYOq3kFBRUIZA320Wgn1bS0V74daGLwLc
-	UT5DY50hE7+r98XFZhOBDY0PKGzYfErj6c9dFB55aSdxh9EqwKV31yi8sfSVxOvdUxTWt06R
-	+KNugMZWg+dVNk4UmcQrFVm8OjAqQSTXLdbS6V1MtnE7Lx+V0MXIieHYUK5xuIc64h3T9KGn
-	WB/ObN4hHOzCBnNWyzBZjEQMwa4JuSWtXeAYTrFxXMdCJelgkvXmXvS8OQyJ2XBuYfQH8S96
-	lmtq6TlghnE68IPTiQ4tYcO49RI9cjQ5doPm9sdm/x90muutN5OPkViHjjUiiUKVlSpTKEMD
-	5DkqRXZAYlqqAR28tvbO3g0j2py41odYBkmdxbglTC4RyrI0Oal9iGMIqYu48EK4XCJOkuXk
-	8uq0eHWmktf0IXeGlLqJQ2y3kyRssiyDT+H5dF59tAoYpzP5yOtt7Gq1WXY+5lxZlac67nqe
-	JmHeb6s9pmZf9MlgaXLamWze9Xj/XVByZfySG8Pf6m0LnYjIjUgJsV/MKg9l/zwRriumwqxu
-	lQpbmp93YPzsXnKCyD/Q5+Rl907xUFBk63HXzYIP2zODBdaUwMiolbqWtZvKpPvy2OCJlfAT
-	ix5SUiOXBfsSao3sLz/oPL7WAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXRa0hTYRwG8N6ds7PjcHFcUiejglFESpqR8o/K/OZLlBpR2cB06MENndqm
-	oqU0dRFpajdLbNZMMq9NTNwsb8w7CommLTXnBTWj1NRsNqFc0bcfzwPPl4cmxKWkG62ITeBU
-	sbIYCSUkhYHHMw/xEn3lh1c/bAWdoYqCSlsyvJww8UFXUY9gdX1UACvtXRSUFK8RoHunJeGH
-	4RcBM51TArCWzpLQeMtIwFReNwU5WjsBGaYyHrQV9fChvz6XDw9/vSDAqJkQwOAbHQXjVb/5
-	MGvOIaGnsJwEa64/dOq3w1rvVwTtBiMP1u4UUfBgQE/BtNaKYKBtioQn6bkIDM0WPthtOspf
-	guvKP/JwQ+EnAdbXJuLXZe44yzJA4NqK2xSuXb4vwGPDjRTuLrCTuMG0wsM5mQsU/j4zQuLF
-	5iEKl3xe4mFD3RCJ+/TtgmAXqfBEJBejSOJUXn7hQrl+ulQQ30gnm2zXNShbkIWcaJY5yq4P
-	jP01xRxgLZZ1wmFXxptdmeois5CQJpgFPjujs/McxTZGyjZMPiMdJpn9bH7rK8phEePLTvbM
-	E/9G97KVNa2bpmmnzbxjLMIRixkfdjHbgO4ioR5tqUCuitgkpUwR4+OpjpanxCqSPSPilLVo
-	873StI17JrQ6GGBGDI0kziJc4yMX82VJ6hSlGbE0IXEVZZzylYtFkbKUa5wqLkyVGMOpzWgX
-	TUp2iE5f4sLFTJQsgYvmuHhO9b/l0U5uGnRlvlWrdfE0pVskcU9Fw1XVig6lsfpnaFC26uDI
-	MY/z+aP7+vdQHhrp2XNzgaPJmjCxskljm1kmmsa9QoxH1PmTbF2q1Bp08kuBJnLj8qPR3sUi
-	Ucv7vKs3Kr/1NdlSzzwmLqQV828GL+28GDfyVjYb+twY0uLH5UTN2Z3HA3ZLSLVc5u1OqNSy
-	P6ZKak65AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRjG/e/8d3Ycro4nqVNB0aCM7jftjaL8kPGnT0FFUFENd2irOWVL
+	ncHIvFBZ2pUUnbUoTc2arHBzSc25vNBFMYtpF23pPoS6dDbNheaSvv14nvd9ng8PQ3FNeBGj
+	1p4RdFqFRk5LsXQo6t5aUVq8akNRrwxMlhoaHk0Y4GGfXQym6joEY78/SSDgbqHh/r0gBab2
+	XAy/LJMUDDR7JdBb4cPQcMFGgfdqKw0FuSEKsu2VIuioKxTDrclyCmxZfRJ47zDR8LVmWgw+
+	VwGGtpIqDL2FCdBsng/B14MI3BabCIJXymi42Wmm4XtuL4LOJi+G0vOFCCwvPGIITZjohGXk
+	WVW3iNSXfJEQszWNPK1cRfI9nRSxVl+iiXX0hoR8/thAk9biECb19oCIFOQM02RkoAcT/4sP
+	NLE8+4DJG7NbQgLWJfvYw9IdSkGjThd063eekKrGQxdRak604f21YioL+WX5iGF4dgs/2aDM
+	R5H/MOh8Lg4zzcbyHs9vKswx7EY+4G3B+UjKUOywmB8whURhYx57jB+vLP33gNnlfNVEGQqz
+	jI3nx8ra0GzoUv5RrZMKd0XO6K8+J4Vljo3j/ZctKJzJs78kvNnpp2bvF/KNlR58DcnMKKIa
+	cWpterJCrdmyTpWpVRvWJaUkW9HMtBXGP0fsaLRjvwuxDJJHyUhtnIoTK9L1mckuxDOUPEaW
+	vStexcmUisyzgi7luC5NI+hdaDGD5Qtkm4IZSo49qTgjnBaEVEH33xUxkYuyEC4/1b8acbHl
+	5wZvG+Mquqbquc6h6Frb1Lu57p7F3pfx2ulDR6/eLZzjKuo5TjaHfqYc5DLq8IpNY4bUJ299
+	2/V5D9ptjrwRx2rn4OE/Nb4fjaci/Ae+JR5Kbd0dqE+6Y6x+vvL64+6y/U5VX7TxwEvR1m1d
+	wdhEx97Qnu39u9d8lWO9SrFxFaXTK/4CjDAo/tYCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRXUhTcRyG/e+cnR1Hq+OyOtmFOdDISjNUfqSU0de/LjLoIigwlx7dclPZ
+	VFxR+QV+5UcZITphIZpOYbLMTTOTzc8SlYmlpimGYmBazaZuQrmiu4fn5X1vXpoQ15M+tDw5
+	jVMlSxUSSkgKr0TkHuOlh8uO5/uB1tBMQdNGJryYM/NBq29DsLb5SQD2nn4Kap87CNCO5JHw
+	y+AkYKFvXgCz9YskdOabCJgvG6CgJM9FQI65gQfWmkE+jLaV8uGps44AU9acAMY6tBR8bv7N
+	h0VLCQmDVY0kzJZGQZ9uLzjeLyPoMZh44HhUQ0GFTUfBl7xZBDbrPAnV2aUIDF0TfHBtaKko
+	CW5tnOTh9qoZAdYZ0/HLhkBcNGEjsFFfSGHjzycCPP2hk8IDlS4St5vtPFySu0LhHwtTJF7t
+	Gqdw7dJ3Hja0jpN4SNcjuOp1QxgZzynkGZwq+FSsULbuKkCpuV6ZY+WVRBZaFRUhT5plQllH
+	92u+mynmEDsxsUm42ZsJYe3z/WQREtIEs8JnF7QunjvYzcSw6w3Vfwsk4882btQgN4uYcHat
+	ZhD9G/Vlm1q6t4do2nPb907HubWYCWNXiw2oHAl1yEOPvOXJGUqpXBEWpE6SaZLlmUFxKUoj
+	2n6v/v7WYzNaG7toQQyNJDtEuCVMJuZLM9QapQWxNCHxFuWcDpeJRfFSzV1OlXJLla7g1BZ0
+	gCYl+0SXr3OxYiZRmsYlcVwqp/qf8mhPnyykTvX3C6r4dDvR3HbiSOPRhIhlW/S5PI0xetl5
+	/t7DmJUA55lnkRxrIqy9ryrj37xVNoWqCwsSBt5RJ3ctjUa3t36MfZDxTbd1aca3bvYmt7NJ
+	m82K7EnD3cXiZSParw+ovmabijioPJtg3ezz6/b4WtRxeM/QZEzwnQuqsoGRYQmplklDAgmV
+	WvoHFS70lrkCAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -88,35 +88,58 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The current page_to_netmem() doesn't cover const casting resulting in
-trying to cast const struct page * to const netmem_ref fails.
-
-To cover the case, change page_to_netmem() to use macro and _Generic.
+Now that __page_pool_put_page() puts netmem, not struct page, rename it
+to __page_pool_put_netmem() to reflect what it does.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
-Reviewed-by: Mina Almasry <almasrymina@google.com>
 ---
- include/net/netmem.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ net/core/page_pool.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/netmem.h b/include/net/netmem.h
-index 37d0e0e002c2..4c977512f9d7 100644
---- a/include/net/netmem.h
-+++ b/include/net/netmem.h
-@@ -172,10 +172,9 @@ static inline netmem_ref net_iov_to_netmem(struct net_iov *niov)
- 	return (__force netmem_ref)((unsigned long)niov | NET_IOV);
- }
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index af889671df23..f5fe3007f118 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -790,8 +790,8 @@ static bool __page_pool_page_can_be_recycled(netmem_ref netmem)
+  * subsystem.
+  */
+ static __always_inline netmem_ref
+-__page_pool_put_page(struct page_pool *pool, netmem_ref netmem,
+-		     unsigned int dma_sync_size, bool allow_direct)
++__page_pool_put_netmem(struct page_pool *pool, netmem_ref netmem,
++		       unsigned int dma_sync_size, bool allow_direct)
+ {
+ 	lockdep_assert_no_hardirq();
  
--static inline netmem_ref page_to_netmem(struct page *page)
--{
--	return (__force netmem_ref)page;
--}
-+#define page_to_netmem(p)	(_Generic((p),			\
-+	const struct page * :	(__force const netmem_ref)(p),	\
-+	struct page * :		(__force netmem_ref)(p)))
+@@ -850,7 +850,7 @@ static bool page_pool_napi_local(const struct page_pool *pool)
+ 	/* Allow direct recycle if we have reasons to believe that we are
+ 	 * in the same context as the consumer would run, so there's
+ 	 * no possible race.
+-	 * __page_pool_put_page() makes sure we're not in hardirq context
++	 * __page_pool_put_netmem() makes sure we're not in hardirq context
+ 	 * and interrupts are enabled prior to accessing the cache.
+ 	 */
+ 	cpuid = smp_processor_id();
+@@ -869,7 +869,7 @@ void page_pool_put_unrefed_netmem(struct page_pool *pool, netmem_ref netmem,
+ 		allow_direct = page_pool_napi_local(pool);
  
- static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
- 		unsigned int order)
+ 	netmem =
+-		__page_pool_put_page(pool, netmem, dma_sync_size, allow_direct);
++		__page_pool_put_netmem(pool, netmem, dma_sync_size, allow_direct);
+ 	if (netmem && !page_pool_recycle_in_ring(pool, netmem)) {
+ 		/* Cache full, fallback to free pages */
+ 		recycle_stat_inc(pool, ring_full);
+@@ -970,8 +970,8 @@ void page_pool_put_netmem_bulk(netmem_ref *data, u32 count)
+ 				continue;
+ 			}
+ 
+-			netmem = __page_pool_put_page(pool, netmem, -1,
+-						      allow_direct);
++			netmem = __page_pool_put_netmem(pool, netmem, -1,
++							allow_direct);
+ 			/* Approved for bulk recycling in ptr_ring cache */
+ 			if (netmem)
+ 				bulk[bulk_len++] = netmem;
 -- 
 2.17.1
 
