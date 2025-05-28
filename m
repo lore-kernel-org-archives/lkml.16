@@ -1,153 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic306-20.consmr.mail.gq1.yahoo.com (sonic306-20.consmr.mail.gq1.yahoo.com [98.137.68.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95811632C8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8CE1632C8
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.68.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449473; cv=none; b=SyxCKLet2wRVCVwKCIAvPNXDG3jPTbh6RV6hM2lcazxXet4wN/2p197DlOvUHirRKB+wnSjo3KjCX62KyTbps5N0E+YcTPVXF4UzTkQJF90JrncIgcDcKOMf2vHAM6xzF1eLSOBDpZTCthq1dSwfrz1rXmC905CRxQ+CP3lL+Bk=
+	t=1748449535; cv=none; b=DxT0pWt/JuJJFMHVqVx023GQY0u8a6aRx4lT0wPyx41Aveuj8C4jO3ZuLeWD+vpd9T3X8WBymHZ4m8+Q3SLf5krb79C3KlxzuAl5GJ4Ubq5o83Cn8FvzU9phaEFgvpi2hIyL5c5s0NsQaLCs2fmOGDPGy7Msx4hEhClFmJ0sU60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449473; c=relaxed/simple;
-	bh=282JlZCXGeqP/PzRjpZh9RPcBxfOxdu51od+r+SojZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JoqxGuUiMiAs8LO6zUkhtgSoXi3+Lfgk6rjxkdOnaJkAc7LaORh+eZ8enE66S7fj5wgYbXXcacLa0P5k+qrGsBeUmDxzfXi11VbU9yii47V4T4lDtLtXccqoNz/nPQ7nOk0cPeHXwzO5p9xrfcqfNDivlj4otm4GLIKP1l4AQIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FV/+li4T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748449535; c=relaxed/simple;
+	bh=HFxhx5zxugMXnHGPXaZv+GmHaXrwjFwTYGq+wsNop9M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sGQhMQJR59RQsHe6mduBYNXmRwTjkEIKTTEuBPn2aK4JK4dkMFX56x3JrI2jp3HUP5LrJap59reOmZx9GT32CROJDfFnB2dj8EruOhFvuxspwWiPtbfuDLELb09vghxA51jOqRzsNCPzanWulXWJyxMyG0I50JsBnsSIIk/g9Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=jHwONf8/; arc=none smtp.client-ip=98.137.68.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FV/+li4T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748449470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H3WfoxKRVcW4Y+DnHDOZBJuxMROGpvocSlXq1ZkIg5E=;
-	b=FV/+li4TWgmTQ7xQVtbvh+PJAVGtxQuVooFV8o5yDejKOHFsaWEBTQQsoZ7/Owpw6TkIyl
-	tvLisBDEOTK0v1WqCWUcB2rryIeyVn8rqsVWySuFwyiRwAVJxIfll2P49/Fzb1c0fCZF+K
-	lwvaaml8QlT7zdbPGYeWk4tsvQW16h8=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-101-wWI5UzQMNeSNExAZc6aWwg-1; Wed, 28 May 2025 12:24:29 -0400
-X-MC-Unique: wWI5UzQMNeSNExAZc6aWwg-1
-X-Mimecast-MFC-AGG-ID: wWI5UzQMNeSNExAZc6aWwg_1748449469
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c9255d5e8cso799934885a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748449469; x=1749054269;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H3WfoxKRVcW4Y+DnHDOZBJuxMROGpvocSlXq1ZkIg5E=;
-        b=uJU/8dw4SH+VUmlNH0J/q1A6eqoAorN7ORZLaJfU/d7nzN+Y0LmZBZh++v1oP6rbMr
-         qricDVLM9XjZy2wR4TxXIJd13SGs0cmms7r0QkhngE+DRegMH7Lyazq8f/L+xFrumhE3
-         bIxDaWFC9qCFZfyyhQBXVZkR5AX210WrGWlcIGCEBuPpN5OpIrwoK92KkJixh96/LB+7
-         GNyd37U7j+C1Abb4bWb1Y57883i16bWOsNMc6QVva8Ug7Appifvp7l1RF0/nXmyO06Yg
-         h2sJ28aJw2i//9ezFQJKOJzyzrn76KhB7sYHtclYyncAjhblDIKVRzcXnoK+FwXw3tLJ
-         z9sw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUf3ZkqcsvolGk94HRUYVy0T2Go9bgM4sbYaUb/djuQQZmt8oMu8oj8GnTXnt/vFfqltmayN6kfsFp0ag=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQqY60Lpnaa32T4+vzdRAyuIWt6tEyHjHjxhrk/mo+hEbYC3KG
-	6nwMxEyutkkuDl5B4zYvI4cA3agWtKpQiq/l+ZTS11fuGR9sNpHcMXN3EcDTYwmwZOEUP9ErT1/
-	yxefHbc1aYvUHQeC81wtREwxIBaMz7A95g36jqSgMWa6SAA3wyjrdJ+XNFtOT4pxpOQ==
-X-Gm-Gg: ASbGnctwbV3HdSA5d522mpjaJgjUEXuhukl9MFcnqDewP3MwE9r2s7j5LEtgcPDIpnF
-	dkMYxF0D31pu4A9brRmog7NINJAIWIcrFMAMzjWF0LRSYxMzIxIs1y1uVYgb13/OudMiA15RHbi
-	TKHrfl4rB0zPUTZFdG5Fb7jJ14pdUlrnxfxB/rSLLe0rLZ/PZyGatO6Pym2q8vq9b9m6kk+rP+h
-	jTXnL94H+0+xOBSlAUI8KwJasvcQ3GrOoWNQOLs+kL1UWoM9LnY2tVvdjv6BbFTi7Nq+igT4Ogt
-	7VM=
-X-Received: by 2002:a05:620a:8804:b0:7ca:f447:c676 with SMTP id af79cd13be357-7ceecc7b357mr2983878385a.43.1748449468981;
-        Wed, 28 May 2025 09:24:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHAnXf43b6H4MlK1EjDvv8V/BsoyuWSWPUUzmroPDps16PFlFqzdhDpePuXhUVM/nmAt1nS0Q==
-X-Received: by 2002:a05:620a:8804:b0:7ca:f447:c676 with SMTP id af79cd13be357-7ceecc7b357mr2983875185a.43.1748449468640;
-        Wed, 28 May 2025 09:24:28 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfc5d3a361sm87712085a.87.2025.05.28.09.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 09:24:28 -0700 (PDT)
-Date: Wed, 28 May 2025 12:24:24 -0400
-From: Peter Xu <peterx@redhat.com>
-To: James Houghton <jthoughton@google.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@redhat.com>,
-	Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	akpm@linux-foundation.org, mike.kravetz@oracle.com,
-	kernel-dev@igalia.com, stable@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
-	Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-Message-ID: <aDc4uO_Vq-q7ks5h@x1.local>
-References: <20250528023326.3499204-1-gavinguo@igalia.com>
- <aDbXEnqnpDnAx4Mw@localhost.localdomain>
- <aDcl2YM5wX-MwzbM@x1.local>
- <629bb87e-c493-4069-866c-20e02c14ddcc@redhat.com>
- <aDcvplLNH0nGsLD1@localhost.localdomain>
- <CADrL8HXD0hX+5WvtZWKXAr0NvfvOJZhqL9PVBawYQuAyzhGgYg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="jHwONf8/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1748449533; bh=5CSqmFfYZqp9BavGTmNLGt9In65KcvThz/y2RFlvWlI=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=jHwONf8/0khBRFBHgn3ecyRmITo5nhQgvF3qW+Xx9IH027BQhZS6mUjZeewRq3Qp9OflmQOxhSqpo1pLxDaUqtOIa5YMrPHTgVyBQVgMhe82Gp7AvfvfgUgPuII8l55b1Eu8zCXa5q88ZC4fISxIp5ByJdXuA8b7li9ZpVG8dKnb8veJhr9+DDbsa1Iat/4i9iLiUSo0Xq5Y6/AnN3d1mJl8ZlUsAPY2TBFZNwCxLV5q60Ca/9UQrY9s4KAUzvxNZTev5M1vJrQIL0b1/8dGH8ozrczmiSzRMjRflZeckZ6vbtvCRlFAzsJdC2dIxxw7Dnxb8zqpbrlTTYo/08ZuvQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748449533; bh=/6BCCiNfCDsDPoPDAdS56kCitxE1oPgt3d80I70Ympi=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=mW8QyhYrc3hziZF4+/Zs690s5/h9u7/cUUZAcSmU4Ofqev9k3EXxa9lUT5XqwLSeR5cpaC/PIVr14fv3fn39eyIs0z0dq9rl/tl5ITgVwIizpyyX83JoPseWB2OGk+haNpUAD1/aj3iG8yyO5HZD9gl9jERuQ9fkrvd1n2SUPPDYJHmJ4WqfqfDioWuaBw49caCHcRiyFMjSP/b23LSXU+/SW8wW9nJjuyDMecsJj5DgDk8yL4FP7JEdTUM1Orc+gXXvEAhV6ioECI4YQWDSUMzUXXvSOdcB4DxhmYkd3bdFSyjvPYAfjDX4ySDNxI6ZUK3F2Dry2kHTVyzUdgpmHQ==
+X-YMail-OSG: 2g2I1XYVM1lTAAlNSRPOyQoW2upoamcBBoSek7nmqsAcsCn_V1tRH6bvPDCCJnN
+ GdY.ttaLPbNrd8.19pbLDlXCBwNE.UXQGm.gbDsfgig6p3eJCNIAgcr.AeiCqf7oFo75cnlb_H0U
+ cvyqcRbfwvcSqjrgA8nmkgdA0PnXIcf.GhErMMSF.k9ZPgO4R3pCKeYPXFxV1n8x.SEcn3j_KaPY
+ RZreD_ezL.boJkTfTJ_0KjVQG_XxYzM4kzQatTRLJhwChVnh8tiysg4PnRMlQUESUhcB6iq5SNlQ
+ nUnjjJAVk46vlwVGG7Tews1iwwORehV2e8ntDlo2CZH6Jg2CmxBL_aAcV.pbg_lBTdkNN6hSVab_
+ w0ua3CLFK.uPsQvnA8BTzzmnblHX49yTxkFy7ehiZYvegQMPqq0JVONbVBVXI.PRRZ_IJu7TfAHG
+ 1TLnonaZMvNYeG52KriZW9xc6uUYSG5goY7MIbBFzJ8BOzkrqcq1K4hxp9UYsldnX7yDUAJ63A1Z
+ 6aGbz8b_IfO0xFR.H.BYaEomH22YNX4WpK8QTU7xnVxJ44T4SOP6HMKizi5WnkqtjtxuIuF1zz.8
+ 3kiU5nTk9LMAOIvLPX9laGY.71KSvcHa2KPjKmKpqrLKBOEvMhqtGuXss2BgeO6P.zKH_rSjXCz5
+ CutbViCewc4z0s8BPUZJrjPUCgjj.khQ3P0bIuJ0SmHKJlumO9ZrMiYi9rUQCnsQj7lMNioxlZso
+ XtfdR.l8De.GehcRnrvenFojnjOs6Y_ZCvXxwNNSk2weG.E0epzIr0FIjQ7GiDIszDDwh1eRj_H3
+ _r_J7N7sLgR0KTH.pfs0oJrhrYfYJbuKSkBWmuKB2dk2yKf6u1qAhXJpHK26OD1nbWk2ZbXJ6fTG
+ 3LFBiPkge9TjAmRymyLm4Z.jaNDDouAsgve03NxEifuUm0ae6Kh8q69qB941nqGxz947cdGI9zgV
+ DbCyV2Kf7NwaLEtFBWTcmiz5OpAZN0sJnH.QmuyYfxKwB8ixolHfUDuEE5ETbu3xTo5u_h81EwSn
+ T8ylxXw7L5OAoJ5Fo288BlE4UYr2UwTHMHE3GHh0KojwzIDyUw7jEwoytp6GL4M8ayTXY_6edVdM
+ 0d2cVbIvY5CersxG0L4xR4xaAizsikwF0.rjJUUdnDSVW2iqkbccBdo5rXhZhmZM19v_W2sFYDGV
+ 9P.7OA_HDZBMmZ4GhX0bFR0VpS2obizVxHWSTl6lXFCqGMl4CCXYmEP0_wCQlOtqxj.HgtxxXIpf
+ hYzbeilXPRBIVt2DWJyBdJAGsxYjtUmk0jH7z.TaE3LhTAivw5x73bpPQhNLtOZA7j6pkkMqs_JH
+ TyI4.WsB0jtVbWW03PW44_ayeoKmc_9v5zre01F4ZOwauACDECZWKAD09e6SDhDZiXvLgSbMkGis
+ Zbi.QO_i4qYzS45fpC0saNU_G8uf.X69LoWnCn49dwBwwOIjvqdSXNoMdbscUGC8Bd5wuCiMfZjy
+ s_kAa5OCrGgvsFft_jh8RD1qic7x9356.3o9PibcBGD1D229OZxpKaacylNRuV_TgV.tURgUbXql
+ qpkdD1PhGrUs2paT.7idw09kpbqSOzMGz6MO_1qgV.eypovBM1nqZUKksVgyTNkCNYwFYZpEa6rU
+ pxtjRzxcfxSqSW_EZoJkC8tkEq4nBsgEUEZ8UeSy1l7jVlrvh0Qcxsd3plJez_Sl1yoo7iGSg4wM
+ EzmijwFwu4qsVi1vTIeOyosvfj2x51VJHWV5628wtsnw0JRi3dt_dc6vOnD5MhuaFUEaogm7bP1z
+ G541COMrA1EJij2Lmy.m6C_3p3jdZ6W80drV8MoAYNEPwKb97byS4obENx1IWc_1FrG4a2d_fW0r
+ URQGNrRWzrZ0x6TvUvKp8tRFXdGBm4xHif5ROfpCn42kdVkYsPoOxWKg0zhuvfhW8v__eOO2W5Yt
+ ypp4wqnyVIvJ3vYSMosPpwrf_8k_j66HdO7V1tFuZGh9QFlGMLuDZEFkT1k2hIYmUTnuMcpYM16T
+ 9mp69vuTjy8A8O4m2BJV9xOL_2xCfaAoqiK.atkFBaO_GzFX6z9yCZW.4spCyZBNKNop3sdyPQB.
+ oQWEtLVFQnbryxOR99woUH2zkRuvgbKpnUMhPuaNYhgoVZVcJfAJL6VSG51cqhZWLO4kL5zyN7rf
+ Jb6b1lxlOu_m_rbb27ldbgMghBEfuY3nCNr8WuPwdmMNcjrUKnB7A4HNOotcmypg_mlUAdxQ0r1S
+ LCzcXI0FKVynxrlaVu29dicyLx2lvFhT.q42EQDyTV8IonVBW_j6EA6A-
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: 17b931d1-4a0e-4dbf-bbf2-a809d17f94c0
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Wed, 28 May 2025 16:25:33 +0000
+Received: by hermes--production-ir2-858bd4ff7b-th9dj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID eb482e408247eaa799aba001c4517a6b;
+          Wed, 28 May 2025 15:34:54 +0000 (UTC)
+Message-ID: <7a83ac38b5f2c9d7ec08c04a63299d2eeaa832fe.camel@aol.com>
+Subject: Re: [PATCH RESEND] x86/cpu/intel: replace deprecated strcpy with
+ strscpy
+From: Ruben Wauters <rubenru09@aol.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov
+	 <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Date: Wed, 28 May 2025 16:34:51 +0100
+In-Reply-To: <20250520133549.9964-1-rubenru09@aol.com>
+References: <20250520133549.9964-1-rubenru09.ref@aol.com>
+	 <20250520133549.9964-1-rubenru09@aol.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CADrL8HXD0hX+5WvtZWKXAr0NvfvOJZhqL9PVBawYQuAyzhGgYg@mail.gmail.com>
+X-Mailer: WebService/1.1.23884 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-On Wed, May 28, 2025 at 12:14:28PM -0400, James Houghton wrote:
+On Tue, 2025-05-20 at 14:26 +0100, Ruben Wauters wrote:
+> strcpy is deprecated due to lack of bounds checking.
+> This patch replaces strcpy with strscpy, the recommended alternative
+> for
+> null terminated strings, to follow best practices.
+>=20
+> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+> ---
+> This patch was reviewed by H. Peter Anvin and (by my understanding)
+> was deemed ok to apply. However this patch has not been applied after
+> 2
+> weeks, so I am resending it. I have not added a Reviewed-by tag as H.
+> Peter Anvin did not do so.
+>=20
+> I also wanted to note that while immediately this may not have any
+> effect, any addition or changes to the strings above may possibly
+> overflow the fixed buffer of 64, and the use of strscpy instead of
+> strcpy will help prevent any buffer overflows by copying a max amount
+> of
+> bytes. I do also recognise however that the strings above are
+> unlikely
+> to be added to, as (by my understanding) they'd require intel to
+> release
+> a CPU where the x86_model_id would not be detectable.
+>=20
+> I still believe that while the above scenerio may not come to pass,
+> the
+> replacement of a deprecated API with the preferred alternative is
+> good
+> practice and should be done.
+> ---
+> =C2=A0arch/x86/kernel/cpu/intel.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/x86/kernel/cpu/intel.c
+> b/arch/x86/kernel/cpu/intel.c
+> index 584dd55bf739..b49bba30434d 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
+> =C2=A0		}
+> =C2=A0
+> =C2=A0		if (p)
+> -			strcpy(c->x86_model_id, p);
+> +			strscpy(c->x86_model_id, p);
+> =C2=A0	}
+> =C2=A0#endif
+> =C2=A0
 
-[...]
+Hello
+I was wondering if there was any chance this patch could be applied? is
+there something I need to do to change it so it's fine? is there
+someone else I need to send it to so they can review it?
 
-> > > For 2) I am also not sure if we need need the pagecache folio locked; I
-> > > doubt it ... but this code is not the easiest to follow.
-> >
-> > I have been staring at that code and thinking about potential scenarios
-> > for a few days now, and I cannot convice myself that we need
-> > pagecache_folio's lock when pagecache_folio != old_folio because as a
-> > matter of fact I cannot think of anything it protects us against.
-> 
-> Hi Oscar,
+I don't want to keep sending and asking about an unwanted patch so if
+this isn't wanted please let me know and I'll move on.
 
-Hey, James,
+Thank you
 
-> 
-> Have you thought about the UFFDIO_CONTINUE case (hugetlb_mfill_atomic_pte())?
-> 
-> I'm slightly concerned that, if you aren't holding pagecache_folio's
-> lock, there might be issues where hugetlb_mfill_atomic_pte() proceeds
-> to map a hugetlb page that it is not supposed to. (For example, if the
-> fault handler does not generally hold pagecache_folio's lock,
-> hugetlb_mfill_atomic_pte() will see a page in the pagecache and map
-> it, even though it may not have been zeroed yet.)
-> 
-> I haven't had enough time to fully think through this case, but just
-> want to make sure it has been considered.
-
-AFAIU we're talking about two separate code paths.  IIUC you're talking
-about a fresh new hugetlb folio being allocated, but then that's what
-hugetlb_no_page() does.  Folio lock required there.
-
-Here IIUC Oscar's context is only in hugetlb_wp() where there's a niche use
-case to compare whether a VM_PRIVATE has already CoWed once from a
-pagecache, and whether we need the folio lock for the pagecache lookup.
-Aka, this one:
-
-	if ((flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) &&
-	    !(vma->vm_flags & VM_MAYSHARE) && !huge_pte_write(vmf.orig_pte)) {
-		if (vma_needs_reservation(h, vma, vmf.address) < 0) {
-			ret = VM_FAULT_OOM;
-			goto out_mutex;
-		}
-		/* Just decrements count, does not deallocate */
-		vma_end_reservation(h, vma, vmf.address);
-
-		pagecache_folio = filemap_lock_hugetlb_folio(h, mapping, <---
-							     vmf.pgoff);
-		if (IS_ERR(pagecache_folio))
-			pagecache_folio = NULL;
-	}
-
-Thanks,
-
--- 
-Peter Xu
-
+Ruben Wauters
