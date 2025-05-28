@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C963628C87B;
-	Wed, 28 May 2025 16:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE86B28D84D;
+	Wed, 28 May 2025 16:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449811; cv=none; b=rsTVEku6fpNAG9vJA9/oQlMTsIT32xMBa81Q5H1BcvvAnnBBmR52mbXXfReP17FXzxc06/BRG/6VKFqyqz/R61eBd16+F8xoJ8D8Um+O5hOHe44T5BPF9JGgm1FC48XzS2j0pC7Ftoov+Hxpi2JYGpb2PwHlGg6IqOOt7xf4suM=
+	t=1748449814; cv=none; b=TUDbZEfRBCrhA/ZL3BqfUKQ+B86PD2n/0T2sg4COXSMeeu9shroJmFX3SJDlpp5lR9Sl1Pm+9RMTsj09yXHOOBaNHV1OrnGMtONVOtmSfZJbSxXJtfnLwYEctUgsfS7Z2iS7XvurfzEFh8eH1SN9xxeEU7nsUrPgABwWbgvgIgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449811; c=relaxed/simple;
-	bh=HHKUmYQYx+MVj6W9eglzPGornr6ttUWJyuK8q87x0h4=;
+	s=arc-20240116; t=1748449814; c=relaxed/simple;
+	bh=7Ddco8Bs8XoPP7Sgox9+6gs/ynZ2ONDg+RF4XTZ26x8=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=uonzh1QfDI7EVZgRFMUllVO6eyP8QPeURnHzBFIN2VTl0xq7KBvOmW1AYJzxd0ftC3HnSu/RlNQsGggPLn7oxFVQQb5EbRjJm+nM7izyxWcdLpbknn6OTOuXfBCWHvZmkCF9dZV6ynVXEDLSLeLeuh2jUFsTPsaxEgHmKZYyWpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q5BpTKer; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=EDSZ1TC0qx4X4gUb5CYV61y4l2buIUet7B2xUkkmQmp2W1si3JhyiFJIkyzXWUSJYrLS2BjrhZvTFtMBOVVphpVYl3uR5Z49VJn7tHvv30rM3oD1ys7uuN2jkwAeCNRpbB6Md92Yf1zp9CIIgJs5JiwJmGWjVNtfVOshRkFGfjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qM2hQoUQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q5BpTKer"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A22C4CEE3;
-	Wed, 28 May 2025 16:30:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qM2hQoUQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124ACC4CEED;
+	Wed, 28 May 2025 16:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748449811;
-	bh=HHKUmYQYx+MVj6W9eglzPGornr6ttUWJyuK8q87x0h4=;
+	s=k20201202; t=1748449813;
+	bh=7Ddco8Bs8XoPP7Sgox9+6gs/ynZ2ONDg+RF4XTZ26x8=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Q5BpTKerQXKj/oCa+Z2coUymzeTVRHNlRuCXTGKbTkE1UCGTjPUPEkSsiCJQjO7X1
-	 j0eD5Cu+JeVNhAMdhxpoK4BjKR73YE+7Ocohv5EcY7GgZcY9wsIZtBdq937UkCnQa3
-	 zqrGjY2D6XV7W+ulRlTIKtR52wC6Ng/2PWKn/oRKEhxqKseXvxQP+B28pyTHhcwHC4
-	 v/SVjLVS3+6xAJDIWcZ1PFfluUVEk9ed8HnpQkAcbvLGcJx+gk44awPymP38gqCAfe
-	 6YauEPhQgUOwfw6mpTevElSL+Up083ZM++lpUUygg+iekjWQPQMmWrkW0azjayUyDP
-	 LM6RoNXr3DXiA==
-Date: Wed, 28 May 2025 11:30:09 -0500
-Content-Type: text/plain; charset="iso-8859-2"
+	b=qM2hQoUQRoa+sjl+Pd34UZ8gWk9fmaucPWGcXjz2hhNVtu0jQ7cosdxFBtew2i8mg
+	 eijOPXuC37GVroVoy8qFYJdRZ3aDCMTDZklItaIlYhJ8t5NEmf1qVm2ilGq6R7toz/
+	 C6PA5DLY5uu04KrGsgJ0TlP+fw+XBsxB+4MNt1njgkdHntLx2xQKKoQkTmnB3XbZ/x
+	 zxQovxJHQ43ngRcCqoHp9z/4bxJJANwnF06U/+W7dnH6ZEuG0HU09oE6Fk9VecnkMG
+	 XsKkKFXd9WxKXjMLxbuU/yVPLZUPXBDfDkckVDfPv81s9KyUBh7whN0nhQaq4IBR0H
+	 f2dGfD0xkFkjg==
+Date: Wed, 28 May 2025 11:30:11 -0500
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -36,59 +36,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Gaurav Jain <gaurav.jain@nxp.com>, 
- =?utf-8?q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, 
- Thomas Richard <thomas.richard@bootlin.com>, devicetree@vger.kernel.org, 
- imx@lists.linux.dev, Frank Li <Frank.li@nxp.com>, 
- linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
- Conor Dooley <conor+dt@kernel.org>, linux-crypto@vger.kernel.org, 
- "David S . Miller" <davem@davemloft.net>, linux-kernel@vger.kernel.org, 
- Pankaj Gupta <pankaj.gupta@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
- Fabio Estevam <festevam@gmail.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Herbert Xu <herbert@gondor.apana.org.au>
-To: John Ernberg <john.ernberg@actia.se>
-In-Reply-To: <20250528144259.2603914-4-john.ernberg@actia.se>
-References: <20250528144259.2603914-1-john.ernberg@actia.se>
- <20250528144259.2603914-4-john.ernberg@actia.se>
-Message-Id: <174844980849.122008.12781867693102871804.robh@kernel.org>
-Subject: Re: [PATCH v3 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
- domains for iMX8QM and iMX8QXP
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+ Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, linux-clk@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com>
+References: <20250528-ipq5018-ge-phy-v2-0-dd063674c71c@outlook.com>
+ <20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com>
+Message-Id: <174844980913.122039.6315970844779589359.robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018
+ Internal GE PHY support
 
 
-On Wed, 28 May 2025 14:43:07 +0000, John Ernberg wrote:
-> NXP SoCs like the iMX8QM, iMX8QXP or iMX8DXP use power domains for
-> resource management.
+On Wed, 28 May 2025 18:45:48 +0400, George Moussalem wrote:
+> Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
+> SoC. Its output pins provide an MDI interface to either an external
+> switch in a PHY to PHY link scenario or is directly attached to an RJ45
+> connector.
 > 
-> Allow specifying them for such SoCs.
+> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> 802.3az EEE.
 > 
-> Signed-off-by: John Ernberg <john.ernberg@actia.se>
+> For operation, the LDO controller found in the IPQ5018 SoC for which
+> there is provision in the mdio-4019 driver. In addition, the PHY needs
+> to take itself out of reset and enable the RX and TX clocks.
 > 
+> Two common archictures across IPQ5018 boards are:
+> 1. IPQ5018 PHY --> MDI --> RJ45 connector
+> 2. IPQ5018 PHY --> MDI --> External PHY
+> In a phy to phy architecture, DAC values need to be set to accommodate
+> for the short cable length. As such, add an optional boolean property so
+> the driver sets the correct register values for the DAC accordingly.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 > ---
-> 
-> v3:
->  - Fix warnings discovered by Rob Herring's bot
->  - Declare the compatibles correctly (Krzysztof Kozlowski)
-> 
-> v2:
->  - Adjust commit message (Frank Li)
->  - Only allow power-domains when compatible with imx8qm (Frank Li)
-> ---
->  .../bindings/crypto/fsl,sec-v4.0.yaml         | 45 ++++++++++++++++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/net/qca,ar803x.yaml        | 52 +++++++++++++++++++++-
+>  1 file changed, 51 insertions(+), 1 deletion(-)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 yamllint warnings/errors:
-./Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml:114:17: [warning] wrong indentation: expected 18 but found 16 (indentation)
 
 dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/qca,ar803x.example.dtb: ethernet-phy@7 (ethernet-phy-id004d.d0c0): clocks: [[4294967295, 36], [4294967295, 37]] is too long
+	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250528144259.2603914-4-john.ernberg@actia.se
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
