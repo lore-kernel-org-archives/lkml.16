@@ -1,116 +1,125 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp-out.kfki.hu (smtp-out.kfki.hu [148.6.0.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7939C286892
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB05919B3CB;
+	Wed, 28 May 2025 14:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.6.0.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441793; cv=none; b=Cf3TVbo+Dkn/5q1BUAoMN6O8HnxBOfNBptRbnWhFecwoR+01rQHO7G2LaN1pC0OOSgBZ8yz0GsLj3mfggXRqyJxF27iVw7vO0RX4vLXA/YIdEKUuVNQTrVOKJ723NcdfUSEgZmzwvzhCVQs8HLlnLtR8CCwlWAH+lPHm/21FVc4=
+	t=1748441912; cv=none; b=ragr9AO8dzirnoF3oNkkWquf+3u0xkaKp+X8jKwviR4UlsDng9jH4yX/uTnoXSM+HCn47xRTC5cyACxYlTmlWxllT7NL7VsY2d9GHWYRTPRzc7eGt+uaaepsTPhAZylpHpx2xxbeYqQIDDUoY15JgMh4pVIIFfcBfaDq6S336DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441793; c=relaxed/simple;
-	bh=BaZazWUNwzpYDJYIgR7YjT89yC060LzmEBjX/G4NG70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBzcWSJDIDWQa3DPKQqyPzboZOsEKfcCgHuoilhLm89/lDc6bF8RcyQ6c0VSdC2TKiBLKTzGYueYwnPWfKUPSo8APo/xBnhNYDI9iWdv33WwSTa19441GoUSCV00jmvuahAbafSTSWmh0nMvPg1ddabGYgy4laQ/Fxfx9VTLSw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qjpKfob7; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748441912; c=relaxed/simple;
+	bh=6M/v2fzkiyJF+7ss0mIkL0h8Qze2igYDZv1WDkBUazM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=C7SVmnp6cAj5iq4OTILXwEj0GiHF7rZlZkD+6QDy5QUk3zdxJ1c1/a5OuBFL9gXAIJp6/IT/KCVD6hDCqXVOmQuoSsujOqJzHWVAkXMz2GO+WlTU9pIINFxLSd7/zBMGRXR5fbd+/B6FJjJMmpRX4awUewo7MxaLmZi1DAE2YK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=blackhole.kfki.hu; spf=pass smtp.mailfrom=blackhole.kfki.hu; dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b=InFNyCxO; arc=none smtp.client-ip=148.6.0.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=blackhole.kfki.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blackhole.kfki.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qjpKfob7"
-Message-ID: <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748441779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c5mLYhkH15cgSjxuuv6l4kYe/fzzBQUwpR9u2pfZOy8=;
-	b=qjpKfob7Z9nwJXoxx5GUB/npEZom5q2cVoX+WSrhUvhCp38miksFI15n7HED2ElCpa+Gzh
-	rMarA3QV5uYksrG/9PUOkqwZt07frFarx52lcp28KkCgCK6TwCddvcYR3TQi0qP59jouqi
-	jrs60IDKyBiuILyERrfCfy38ldk8MHk=
-Date: Wed, 28 May 2025 07:16:11 -0700
+	dkim=pass (1024-bit key) header.d=blackhole.kfki.hu header.i=@blackhole.kfki.hu header.b="InFNyCxO"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp1.kfki.hu (Postfix) with ESMTP id D54315C001C8;
+	Wed, 28 May 2025 16:18:27 +0200 (CEST)
+Authentication-Results: smtp012.wigner.hu (amavis); dkim=pass (1024-bit key)
+ reason="pass (just generated, assumed good)" header.d=blackhole.kfki.hu
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	blackhole.kfki.hu; h=content-id:mime-version:references
+	:message-id:in-reply-to:from:from:date:date:received:received
+	:received:received; s=20151130; t=1748441906; x=1750256307; bh=N
+	4WEikdHsV0G9jD6Juw+YqI0CSAD7KKrObbmYIgn/Z4=; b=InFNyCxO+uwwuOkK6
+	PqFvwU3qeI/DLV1AFD3T5q7T25ujO6H7mgik6SI8+/p7jN5WDS3tzd21A7hiAxkF
+	5e9RVZYw5OcomMYf7R1mk6rj1r9xIRnmFMCvkB34TZxMQrF8JHauogac7OxPwmdl
+	GmF8QJ6Mrxhd9DKEyonje9UZko=
+X-Virus-Scanned: Debian amavis at smtp1.kfki.hu
+Received: from smtp1.kfki.hu ([127.0.0.1])
+ by localhost (smtp1.kfki.hu [127.0.0.1]) (amavis, port 10026) with ESMTP
+ id OcjPxtQOXhh1; Wed, 28 May 2025 16:18:26 +0200 (CEST)
+Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [IPv6:2001:738:5001:1::240:2])
+	by smtp1.kfki.hu (Postfix) with ESMTP id DFE855C001C0;
+	Wed, 28 May 2025 16:18:25 +0200 (CEST)
+Received: by blackhole.kfki.hu (Postfix, from userid 1000)
+	id 98F6F34316A; Wed, 28 May 2025 16:18:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by blackhole.kfki.hu (Postfix) with ESMTP id 97B8A343169;
+	Wed, 28 May 2025 16:18:25 +0200 (CEST)
+Date: Wed, 28 May 2025 16:18:25 +0200 (CEST)
+From: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+To: ying chen <yc1082463@gmail.com>
+cc: Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>, 
+    pablo@netfilter.org, kadlec@netfilter.org, davem@davemloft.net, 
+    kuba@kernel.org, pabeni@redhat.com, netfilter-devel@vger.kernel.org, 
+    coreteam@netfilter.org, netdev@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [bug report, linux 6.15-rc4] A large number of connections in
+ the SYN_SENT state caused the nf_conntrack table to be full.
+In-Reply-To: <CAN2Y7hxZdWLfd34LPzhUPZJ-oMksajLMVt5K8B6Gy70e9TXMpw@mail.gmail.com>
+Message-ID: <c9255252-3b6a-886a-5959-d59d0bb4640e@blackhole.kfki.hu>
+References: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com> <aDcLIh2lPkAWOVCI@strlen.de> <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com> <CANn89iLG4mgzHteS7ARwafw-5KscNv7vBD3zM9J6yZwDq+RbcQ@mail.gmail.com>
+ <5611b12b-d560-cbb8-1d74-d935f60244dd@blackhole.kfki.hu> <CAN2Y7hxZdWLfd34LPzhUPZJ-oMksajLMVt5K8B6Gy70e9TXMpw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
- 3.0
-To: Andrew Jones <ajones@ventanamicro.com>,
- =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Atish Patra <atish.patra@linux.dev>, Anup Patel <anup@brainfault.org>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Mayuresh Chitale <mchitale@ventanamicro.com>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv <linux-riscv-bounces@lists.infradead.org>
-References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
- <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
- <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
- <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
- <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
- <20250526-224478e15ee50987124a47ac@orel>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250526-224478e15ee50987124a47ac@orel>
+Content-Type: multipart/mixed; boundary="110363376-1127963621-1748441824=:6759"
+Content-ID: <d964ed54-d089-1618-352e-efd16b44b2df@blackhole.kfki.hu>
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--110363376-1127963621-1748441824=:6759
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-ID: <c7035ed8-91a2-96cf-8334-b403f81ddcd1@blackhole.kfki.hu>
+Content-Transfer-Encoding: quoted-printable
 
-On 5/26/25 4:13 AM, Andrew Jones wrote:
-> On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
->> 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
->>> On 5/23/25 6:31 AM, Radim Krčmář wrote:
->>>> 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
->>>>> Upgrade the SBI version to v3.0 so that corresponding features
->>>>> can be enabled in the guest.
->>>>>
->>>>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
->>>>> ---
->>>>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
->>>>> -#define KVM_SBI_VERSION_MAJOR 2
->>>>> +#define KVM_SBI_VERSION_MAJOR 3
->>>> I think it's time to add versioning to KVM SBI implementation.
->>>> Userspace should be able to select the desired SBI version and KVM would
->>>> tell the guest that newer features are not supported.
-> 
-> We need new code for this, but it's a good idea.
-> 
->>>
->>> We can achieve that through onereg interface by disabling individual SBI
->>> extensions.
->>> We can extend the existing onereg interface to disable a specific SBI
->>> version directly
->>> instead of individual ones to save those IOCTL as well.
+On Wed, 28 May 2025, ying chen wrote:
+
+> On Wed, May 28, 2025 at 9:45=E2=80=AFPM Jozsef Kadlecsik
+> <kadlec@blackhole.kfki.hu> wrote:
 >>
->> Yes, I am all in favor of letting userspace provide all values in the
->> BASE extension.
-> 
+>> On Wed, 28 May 2025, Eric Dumazet wrote:
+>>
+>>> On Wed, May 28, 2025 at 6:26=E2=80=AFAM ying chen <yc1082463@gmail.co=
+m> wrote:
+>>>>
+>>>> On Wed, May 28, 2025 at 9:10=E2=80=AFPM Florian Westphal <fw@strlen.=
+de> wrote:
+>>>>>
+>>>>> ying chen <yc1082463@gmail.com> wrote:
+>>>>>> Hello all,
+>>>>>>
+>>>>>> I encountered an "nf_conntrack: table full" warning on Linux 6.15-=
+rc4.
+>>>>>> Running cat /proc/net/nf_conntrack showed a large number of
+>>>>>> connections in the SYN_SENT state.
+>>>>>> As is well known, if we attempt to connect to a non-existent port,=
+ the
+>>>>>> system will respond with an RST and then delete the conntrack entr=
+y.
+>>>>>> However, when we frequently connect to non-existent ports, the
+>>>>>> conntrack entries are not deleted, eventually causing the nf_connt=
+rack
+>>>>>> table to fill up.
+>>>>>
+>>>>> Yes, what do you expect to happen?
+>>>> I understand that the conntrack entry should be deleted immediately
+>>>> after receiving the RST reply.
+>>>
+>>> Then it probably hints that you do not receive RST for all your SYN
+>>> packets.
+>>
+>> And Eric has got right: because the states are in SYN_SENT then either=
+ the
+>> RST packets were not received or out of the window or invalid from oth=
+er
+>> reasons.
+> I also suspect it's due to being "out of the window", but I'm not sure =
+why.
 
-We already support vendorid/archid/impid through one reg. I think we 
-just need to add the SBI version support to that so that user space can 
-set it.
+tcpdump of the traffic from the targeted machine with both the SYN and RS=
+T=20
+packets could help (raw pcap or at least the output with absolute seqs).
 
-> This is covered by your recent patch that provides userspace_sbi.
-
-Why do we need to invent new IOCTL for this ? Once the user space sets 
-the SBI version, KVM can enforce it.
-
-> With that, userspace can disable all extensions that aren't
-> supported by a given spec version, disable BASE and then provide
-> a BASE that advertises the version it wants. The new code is needed
-> for extensions that userspace still wants KVM to accelerate, but then
-> KVM needs to be informed it should deny all functions not included in
-> the selected spec version.
-> 
-> Thanks,
-> drew
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
+Best regards,
+Jozsef
+--110363376-1127963621-1748441824=:6759--
