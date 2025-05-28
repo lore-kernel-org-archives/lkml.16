@@ -1,221 +1,197 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9E828BA86;
-	Wed, 28 May 2025 14:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B5A28BA86;
+	Wed, 28 May 2025 14:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443637; cv=none; b=E/xax24XxvyMK7rwi4JSz2UmwIu+66VCdnzi5pS84xYjk7nridcXCDGwyqmG2zWyHlbI2o+MvIbZx8gFTW0scxBLMauR0Hy+6xO8q/21qL4ga+11aR4EH8mdU5K8O0IhE6a1Y620yNtn/ontM78iSKfGcYI5W7orNsI5E15VU5I=
+	t=1748443650; cv=none; b=Mp2GSfG/RFkczWSdeFw+Rt7r9KF1iWF6sSsTtSBbt+TWBfOhymQmbDthLCDzsVDnDtbcfXrAMjx67Z0pnnrNDGudYmzYhBbeCwN6q/ZYSyCN4SDU84zQOsCj5zBAKTxIh3JX0UP2UhGIH3q6NO9G5seXjbuSxV1m1Gf65sHKdY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443637; c=relaxed/simple;
-	bh=m+MaMGjgOQIJ9Pg5U4JmFhaKVJyB3n1SsDypWk9VzOg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLlfHlX0xR7EtMiLftnqQmAmaWniQ0+jU8FXW7b3eFBNW4uhpkZXvgYsUkKQi1mJxYMhfJPaakWLN3YmlOJOjZePOL1tANBiR+IbSzv/rJR2BjBZ/Z9h1qdgDklrA9P9h1dl7yhtVSLi+jRg9jlDCczCdwga/qoD+qlPEua1GQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ddxrQcIy; arc=none smtp.client-ip=209.85.222.181
+	s=arc-20240116; t=1748443650; c=relaxed/simple;
+	bh=QVusH8ytRFHR18qIeA5nN1QKmrPz1Ltl6HMFW3sfcwU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RkxUX43hOXzY245A9UyuIqWCS76acINSYdhn1b99jCsak14Ht8Dp+90CfrTwsuAOkY29a6/jrToFpSh7jNlRp4pR2jgInoAVDhYGE5+k4QNdMUQekpEKCSeKnzvGvWnRhjvtYGfdqoD6M5sH04C5jSfQG49o157MkQ8uSWxJd7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRWJecfb; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddxrQcIy"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c560c55bc1so441422085a.1;
-        Wed, 28 May 2025 07:47:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRWJecfb"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso1551947a12.3;
+        Wed, 28 May 2025 07:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748443634; x=1749048434; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748443648; x=1749048448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GeCEdtOf7WNBgSJClbP1+l5L+CozBjsJNA4pYrE2hbM=;
-        b=ddxrQcIyDuExMoiWqpltwpZPdM7/clMKHxLKYsgysQzLbYKo0qQLEPwcnqvgwNKXIW
-         F9o3DsRUcZrvp5/yzr2gEi+FmBKrL7yotmbCYnHpln+8JL4Xqpq3jYpseQ7S1Ht924yz
-         Dnq3stZvM6M7qqz2spR8Bjf1SX6tTuOIxZx3HDUzEkqRil+5XCxJ9RtRzihvyNE7K/7b
-         K/S29HRwMyd0SiNLujFfqiehI/T+/PBEtLJm5wR9zdxYCrVWRPwVcNDWoQUdFbltPzTA
-         t/QlclCO6QDL0cCEMaM4SH+tuYCj/sXYd8irpJj8YgQuQJGj9C2JrPd/BwjuLC2sjUEO
-         76kA==
+        bh=jeSugzNf1/4gi32f7Z56MbpoGgBCaskHwFTFR4uqoEA=;
+        b=TRWJecfbYd0AHt/YA12UK44Aapl8RgHFBBb3rV1YDdWZk6Om1bXoHg40Rlkez6SExf
+         0Gtk3GbnR2GVCch3rfqu4WA00CQa04nA78LUHJyGo/g7qkh5mCifXKsVJHNNAECXzRnp
+         DEtXZz63KfopmcVT6aFKDa/KL3jAESS6Ghla215BPBr3FPOX9Oek4fzT0OdyhNbazRhz
+         QYboeLpbT07qAbZNfYpXq5EP5obHXw3GWE76MqL/xL3QyrQCFqqU3N3rWMOECrPBkXV2
+         IHpJ9hJbVf5RkkpTxua0lMxi0m78/4pBQXlpxFWb+Nowll9peyDwr5r1YDJzahG3mLxz
+         9QMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748443634; x=1749048434;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748443648; x=1749048448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GeCEdtOf7WNBgSJClbP1+l5L+CozBjsJNA4pYrE2hbM=;
-        b=jyf8B4GPw1rwoDITHSie1UKdxAuVomir7WkVSXnb5iXwKfFyYvx+BDjiJvB/kYkrSj
-         VYUevRHQTFwQNmqZOYx9AhB5A0l97+GVOu52VbMcAYZnsYlUjuGunuNyHy4wv5ZVSXJw
-         1wp1JD6MoCVIMoE78foyHOch81hbnxYQ39/zXLxpkgLbvMLWfv3Hm6fdKq8l/P/kwF1P
-         sjZ6Ou1FcXr0kP5mNOdo+/jbVlYUHrfycaS3WJsLqN1OF0QXufromq4cWr6iK78O2zTe
-         SulaXV35OwplX8kguLRrMPs+PuqcNz3ZfM+UJYgcQOKvuMlwLTWNf5oeF0ZC0sIKo2TJ
-         G4DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9R4mG0ROgZENIDKFFc2NcVqr9WOVv18UzbSX0AbuZ6+OCct5KcR1GcoV5ZpfpXcgI/6GfFrT++oKgqpvDMnM=@vger.kernel.org, AJvYcCUSZRRdrHqt7Jzn7R5k1FFF9s9TMVrzyc3aAITjMQpFCiMQKP0QJZc2H8bM7lgyB4OvshVz9U+UYlmdz1c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxF4JUOEBMIhAHtn0weF4nyXQ6ooCwVMgwiAv1tHda4LUk211u4
-	cTDuK8Nx4X+Yif0LJR5HhDWLoyW7yqDkplnPv9CHkJnZaEjQDFzwnvuM
-X-Gm-Gg: ASbGncuZXxaQKzwlNUkUFbZgXjdpy2g7+OXB9oSwWMNMX8i4UYc1TH6awvbK+CscGW/
-	wYwFrV0lNhVudYw6AoeoACuuaOILZGgwTALVDEQGI34XW+NkgOAmLpoeqAgbjm1JhJxhVHicCPF
-	dBByvFehYLzLg5JkPJW8WznIf94yvKlyKHSff2S0j+s1tIbyfBEVKLwL6K+xQ5vWxZFU5BInlZY
-	uCaH9S4Uw+5MX4yJGm5f/d7KgbATRRFPzeobAJ9ZEoIX+O7R1z3ZKeJEKJSEiUCdRt34pb3DyMW
-	SVvyhJnYuU6SiljsWazPnOJfWq4ZZyB+mxEyojDy3+benqKgJzn6dKeqvYsYuLr78BQCnE08L4t
-	Wz5l9HN+U97Lv+9ghI2twO35suzgZNs1TP34rk5ZYyg==
-X-Google-Smtp-Source: AGHT+IFPXQGaw1O1c9U5xXJZVucDUV3AN03vR3z9CahJul5Aavx1etvqSZyGVwO9KoEQIhM2j8MZdg==
-X-Received: by 2002:a05:620a:4046:b0:7c5:3cf6:7838 with SMTP id af79cd13be357-7cfcac2a902mr377293585a.49.1748443634006;
-        Wed, 28 May 2025 07:47:14 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfc5d3a3c6sm78141685a.71.2025.05.28.07.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 07:47:13 -0700 (PDT)
-Message-ID: <683721f1.050a0220.80421.29ff@mx.google.com>
-X-Google-Original-Message-ID: <aDch7ZOD6jjGXJdE@winterfell.>
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id ABE6B1200043;
-	Wed, 28 May 2025 10:47:12 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Wed, 28 May 2025 10:47:12 -0400
-X-ME-Sender: <xms:8CE3aP0TA48N3AZsWa2ACT3TYM888jb-hDQVijyVQYV0L3eH47Frmw>
-    <xme:8CE3aOHsdsOZUgpjv_U6t9wcWRyrqEHYNIhEIx5ij_XKSP0f_vf0cEnph7-6ifyN5
-    xT8EMgQ4Izu1PBO3A>
-X-ME-Received: <xmr:8CE3aP5ZQYe14_NIekJBEMAzDe6qai93IpzDAd5w9qWIxwPnZ0RucDFBI-Gij_Fglrpq0-teK2A->
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeehfeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquh
-    hnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhephedugfduffff
-    teeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhp
-    rghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsg
-    hoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggp
-    rhgtphhtthhopeeffedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepphgvthgvrh
-    iisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhihuhguvgesrhgvughhrght
-    rdgtohhmpdhrtghpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhr
-    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtohepuggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsghorhgrrdgtohhm
-    pdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepjhhurh
-    hirdhlvghllhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehvihhntggvnhhtrdhg
-    uhhithhtohhtsehlihhnrghrohdrohhrgh
-X-ME-Proxy: <xmx:8CE3aE3xuMxJzwINYgvwwxtX5FFkJxZUUqr1wdz-dljBa-9RybqZ-A>
-    <xmx:8CE3aCGwycgRSDP5pzGYQX0bheqFQqfkkhv_KXSSDw9xnD5s20V_kw>
-    <xmx:8CE3aF9AcC9kTcYyNrG1BtoeXW-QfRlqPO0aKRo6gbFFCvhcoz-sAA>
-    <xmx:8CE3aPlT0jjET3CjFdiHGaYTZTsZrSSULvAWTX64aLxViYKuI1fTXQ>
-    <xmx:8CE3aOFDPIloTPLi5MWNuMI6ghUzAEhdAJRR-jrjx_lUcz5H5g_lO26e>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 May 2025 10:47:11 -0400 (EDT)
-Date: Wed, 28 May 2025 07:47:09 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,	Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>,	Valentin Schneider <vschneid@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,	David Woodhouse <dwmw@amazon.co.uk>,
- Jens Axboe <axboe@kernel.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	NeilBrown <neilb@suse.de>,	Caleb Sander Mateos <csander@purestorage.com>,
-	Ryo Takakura <ryotkkr98@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-References: <20250527222254.565881-1-lyude@redhat.com>
- <20250527222254.565881-4-lyude@redhat.com>
- <20250528091023.GY39944@noisy.programming.kicks-ass.net>
+        bh=jeSugzNf1/4gi32f7Z56MbpoGgBCaskHwFTFR4uqoEA=;
+        b=uctRh/ge9l807Onh0VAg56i5TFSjoElW+4j4aFgOsYi/1Ws7jfomscmdzJDYXMWxPk
+         P/DwkUk7MEDIqw4sMdOgRfRJkAiKIe6NT7zF3+sbHKWnSfDNFUkX8m5kvpbTIhjU+gXR
+         36olv6xH1+zRYA9DttTeqdSiAYQYZFlz3kfQxdNbgyowQQlYMlbz7AFQkqklyxrYGOyv
+         85RszpK2Ryh0S3pJA9lFDiuGgR6I9ZS4ljMjB4wEJt9hoNTGoBlv7bBlxoYFjRA3YOmB
+         t7bE89zefwWb3mhpBZlKdJfjiVnHPiJdYOl6V73rUGn4rA5hn3GJ58i+fwjsQNEV6XQe
+         ryzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+1oQbXSXOQ+GPq+hdFcX/lq9n5i8F+2TMjELSVNJEPUhw/oUplTDZLLHSseORhx1lp47ek8GT553H@vger.kernel.org, AJvYcCUZwIfpW0lpO77dDZySzVnsqhJshRIPInPscQrfQ3QuFFCfEoPAAgZfGc4BxbWSTnUy769JzMM77V9ugVA=@vger.kernel.org, AJvYcCXB+BV9CCLsQl7MBGoxsaCG5ZGvWA4JKJzAEy0rzh+VtLRtTWGjxIGNMrZ8fj63K7lVPow69tZ4Ojs9Wh9H@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8zyp2Txt+B2XNIy2/jR/hjR0vK7+8bl/unPx1cvEWibavKCVh
+	EsvWWDIRdNGAZaq/bOvDpFlaY7lWxAICjlwCQEzeS4a6bBNxQBDIbf7Orn6cUyUmJm+/1I2cdeX
+	HQPFTZLmMhX1W0Lq+YpXpoO/BwiHZFtkCu9IgoH8=
+X-Gm-Gg: ASbGncuNiMzZZv0jRxZFZtuDbaG677HDMx2FHfWa9BEcFWkSZ+xKDLdkOH0wZUG/BBP
+	tK8UiRFLSqAhOVdX1Thgd+S/0Scjmjf5Ix2+22yptt9yjHyZoqfprGMWTgSHIFh2hkhGfP2e9L4
+	T8m4bfrqzb+eTbMQ4JMeFB/09Usle6OYVY
+X-Google-Smtp-Source: AGHT+IHQJXU3p+rSsWqzxaLHSULaSjkoRZugP1vvKeH7LmxHkr7nUsvjweRVqC9eZYhDskDFMsLev7oBi7HQV+tKXmM=
+X-Received: by 2002:a17:90b:4b8b:b0:311:d670:a0e9 with SMTP id
+ 98e67ed59e1d1-311d670ad95mr4555012a91.21.1748443647809; Wed, 28 May 2025
+ 07:47:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528091023.GY39944@noisy.programming.kicks-ass.net>
+References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
+ <20250502150513.4169098-8-m.felsch@pengutronix.de> <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
+ <20250502165535.aeb2osq2vnxsudmq@pengutronix.de> <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
+ <7cf3e219758a67d08137ebea5e52a1abad835e65.camel@collabora.com>
+In-Reply-To: <7cf3e219758a67d08137ebea5e52a1abad835e65.camel@collabora.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Wed, 28 May 2025 09:47:14 -0500
+X-Gm-Features: AX0GCFs7evzjkWRmfqngQQTZHj2yQaZWL0ja3DzZVNAah62H09qmX0qG_o41Jko
+Message-ID: <CAHCN7xJJz2cOHBbyT0mr3QTndiB4Z6_Gtgy4k2giJt5qg4fH6A@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc: Marco Felsch <m.felsch@pengutronix.de>, benjamin.gaignard@collabora.com, 
+	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, 
+	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, paulk@sys-base.io, 
+	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	sebastian.fricke@collabora.com, ming.qian@nxp.com, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 11:10:23AM +0200, Peter Zijlstra wrote:
-> On Tue, May 27, 2025 at 06:21:44PM -0400, Lyude Paul wrote:
-> > From: Boqun Feng <boqun.feng@gmail.com>
-> > 
-> > Currently the nested interrupt disabling and enabling is present by
-> > _irqsave() and _irqrestore() APIs, which are relatively unsafe, for
-> > example:
-> > 
-> > 	<interrupts are enabled as beginning>
-> > 	spin_lock_irqsave(l1, flag1);
-> > 	spin_lock_irqsave(l2, flag2);
-> > 	spin_unlock_irqrestore(l1, flags1);
-> > 	<l2 is still held but interrupts are enabled>
-> > 	// accesses to interrupt-disable protect data will cause races.
-> > 
-> > This is even easier to triggered with guard facilities:
-> > 
-> > 	unsigned long flag2;
-> > 
-> > 	scoped_guard(spin_lock_irqsave, l1) {
-> > 		spin_lock_irqsave(l2, flag2);
-> > 	}
-> > 	// l2 locked but interrupts are enabled.
-> > 	spin_unlock_irqrestore(l2, flag2);
-> > 
-> > (Hand-to-hand locking critical sections are not uncommon for a
-> > fine-grained lock design)
-> > 
-> > And because this unsafety, Rust cannot easily wrap the
-> > interrupt-disabling locks in a safe API, which complicates the design.
-> > 
-> > To resolve this, introduce a new set of interrupt disabling APIs:
-> > 
-> > *	local_interrupt_disable();
-> > *	local_interrupt_enable();
-> > 
-> > They work like local_irq_save() and local_irq_restore() except that 1)
-> > the outermost local_interrupt_disable() call save the interrupt state
-> > into a percpu variable, so that the outermost local_interrupt_enable()
-> > can restore the state, and 2) a percpu counter is added to record the
-> > nest level of these calls, so that interrupts are not accidentally
-> > enabled inside the outermost critical section.
-> > 
-> > Also add the corresponding spin_lock primitives: spin_lock_irq_disable()
-> > and spin_unlock_irq_enable(), as a result, code as follow:
-> > 
-> > 	spin_lock_irq_disable(l1);
-> > 	spin_lock_irq_disable(l2);
-> > 	spin_unlock_irq_enable(l1);
-> > 	// Interrupts are still disabled.
-> > 	spin_unlock_irq_enable(l2);
-> > 
-> > doesn't have the issue that interrupts are accidentally enabled.
-> > 
-> > This also makes the wrapper of interrupt-disabling locks on Rust easier
-> > to design.
-> > 
-> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> > 
-> > ---
-> > V10:
-> > * Add missing __raw_spin_lock_irq_disable() definition in spinlock.c
-> > 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> 
-> Your SOB is placed wrong, should be below Boqun's. This way it gets
-> lost.
-> 
-> Also, is there effort planned to fully remove the save/restore variant?
-> As before, my main objection is adding variants with overlapping
-> functionality while not cleaning up the pre-existing code.
-> 
+On Wed, May 28, 2025 at 9:14=E2=80=AFAM Nicolas Dufresne
+<nicolas.dufresne@collabora.com> wrote:
+>
+> Hi,
+>
+> Le mardi 27 mai 2025 =C3=A0 22:05 -0500, Adam Ford a =C3=A9crit :
+> > On Fri, May 2, 2025 at 11:55=E2=80=AFAM Marco Felsch <m.felsch@pengutro=
+nix.de> wrote:
+> > >
+> > > On 25-05-02, Adam Ford wrote:
+> > > > On Fri, May 2, 2025 at 10:10=E2=80=AFAM Marco Felsch <m.felsch@peng=
+utronix.de> wrote:
+> > > > >
+> > > > > The VPU_PLL clock must be set before the VPU_BUS clock which is d=
+erived
+> > > > > from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 6=
+00MHz.
+> >
+> > I did verify the current clock rate ends up at 300MHz instead of the
+> > desired 600 or 800MHz, so we should do something.
+> >
+>
+> This reminded me of:
+>
+> https://patchwork.linuxtv.org/project/linux-media/patch/20250217-b4-hantr=
+o-av1-clock-rate-v2-1-e179fad52641@collabora.com/
+>
+> Which also made me discover that this patch wasn't picked despite being m=
+ark accepted. We
+> will favour DT clock settings from here, since its not really managable o=
+therwise, old board
+> will stay like this, otherwise we face backward compatibility issues.
+>
+> Note that G2 and VC8K can be run at higher rate, but to be stable, you ne=
+ed
+> to also control voltage and proper cooling, not something we want "by def=
+ault".
 
-My plan is to map local_irq_disable() to local_interrupt_disable() and
-keep local_irq_save() as it is. That is, local_irq_disable() is the
-auto-pilot version and local_irq_save/restore() is the manual version.
-The reason is that I can see more "creative" (i.e. unpaired) usage of
-local_irq_save/restore(), and maybe someone would like to keep them.
-Thoughts?
+From what I can tell, imx8m_vpu_hw.c doesn't actually set the clock
+rates.  It looks like it just enables and disables them.  I think the
+clocks are all set via the device tree.  The 8MP datasheets list the
+clock rates based on what they call 'nominal' and 'overdrive' which
+determined by some SoC voltages.  600MHz seems reasonable for what NXP
+states as Nominal.  I didn't see any NXP downstream voltage or cooling
+options.
 
-Regards,
-Boqun
+adam
 
-> 
+>
+> Nicolas
+>
+> >
+> > > > >
+> > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > ---
+> > > > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
+> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm=
+64/boot/dts/freescale/imx8mp.dtsi
+> > > > > index 97b09b647ec7..7f4bdefb3480 100644
+> > > > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > > > @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+> > > > >                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
+> > > > >                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>=
+;
+> > > > >                         clock-names =3D "g1", "g2", "vc8000e";
+> > > > > -                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_=
+BUS>, <&clk IMX8MP_VPU_PLL>;
+> > > > > -                       assigned-clock-parents =3D <&clk IMX8MP_V=
+PU_PLL_OUT>;
+> > > > > +                       assigned-clocks =3D <&clk IMX8MP_VPU_PLL>=
+, <&clk IMX8MP_CLK_VPU_BUS>;
+> > > > > +                       assigned-clock-parents =3D <0>, <&clk IMX=
+8MP_VPU_PLL_OUT>;
+> > > > >                         assigned-clock-rates =3D <600000000>, <60=
+0000000>;
+> > > >
+> > > > I think there was a move to make the default be overdrive [1]  and =
+[2]
+> > > > and use a 'nominal' device tree for those who are not in overdrive
+> > > > mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
+> > > > 600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
+> > > > values here should be 800MHz and if we should add the nominal value=
+s
+> > > > of 600MHz to the imx8m-nominal.dtsi file.
+> > >
+> > > You're right, Ahamd and Lucas did change this. I will adapt it later =
+on.
+> >
+> > I updated my device tree to run in overdrive mode and ran fluster at
+> > the higher rates:
+> > VPU_G1 - 800MHz,
+> > VPU-G2 - 700MHz
+> > VPU-Bus - 800MHz
+> >
+> > ./fluster.py run -d GStreamer-VP8-V4L2SL-Gst1.0
+> > Ran 57/61 tests successfully               in 5.922 secs
+> > (vs 7.059 secs at nominal speed)
+> >
+> > ./fluster.py run -dGStreamer-H.264-V4L2SL-Gst1.0
+> > Ran 129/135 tests successfully               in 40.107 secs
+> > (vs 45.741 secs at nominal speed)
+> >
+> > If you want, I can submit the clock updates I have for overdrive or
+> > send them to you to save you some time.
+> >
+> > adam
+> >
+> > >
+> > > Regards,
+> > >   Marco
