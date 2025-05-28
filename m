@@ -1,129 +1,116 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C084A199939;
-	Wed, 28 May 2025 17:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC269199939;
+	Wed, 28 May 2025 17:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453856; cv=none; b=DkmsjQ1CM8vXZinzI61P+AN188zxmsByXS7/rQaf8/ejJzWfpSaXZJ+O0IjzK/N6fC6Rt3xBDphuEgph+1F1vHGxPrz1MENnjScXBv82KuPIlK0JcCld29h3KXQFUjmuYv4wVgpDhD8Bx42xfuD0EIoKaalEBOSXrdFRr6B7FfM=
+	t=1748453866; cv=none; b=cwMuSgfxPr7mY5XHw37xbKHNRmLU7+LODp3+l0NgUnDykF/ZA8/LtsFAGsIn8le2YfFm8muZU8zRyqO1XBjd+eFDwmnOYYyj0tEH/OoOhNMcEb/TOXSTi24A48gfS3RjpZmA9l2fmwTPQ2Cy0HFngJ1IhMgGbUew5a5wbwE4is0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453856; c=relaxed/simple;
-	bh=kNWthH0g4ApCrBfxHhlb8LxBWJC73FgpCl6D3ahFNBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dszjbgAOAwpmh35DUxesYVkPYlVF7uJaHeNKLX8yXkIOoRccK+tMSLBphUMkx9HOAZvSCfyXlQ9cp8FnoFCLRPs+4Vkazj4BeJ66QEMX0ttQ429OHli8MKr/QHKgy6EK85grR/C+h+Z82RuitfuNtKD5eCakIK6hfuFZP+JZgCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Arqb5ggn; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748453866; c=relaxed/simple;
+	bh=CIw7ASx2rLLyfF4nLng8it7E4a96P952Wi8WzNEa/lo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uz9TtoNJu3/f/T6jBoijX+9Oj5sbtyLzeZCKrGAAJvWVVaoZIuw2kMZ13YyQzGljh66Adv2VGbwAq0YGsJ6LaK331kyNHaFp5P5VUXXSdCbPOK8TJHVsh5cPLAmvuM1qElW4CqwGHSVJH2ssqZcF9rdyQoS9A5BiFyDWA8zcRig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G9c10NYO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arqb5ggn"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-55220699ba8so4976076e87.2;
-        Wed, 28 May 2025 10:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748453853; x=1749058653; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dPLbA0TtARsZRpgoy+SeG1Y86H0J4M4EKn9jgtbPam4=;
-        b=Arqb5ggnyTfXX24/ViNwP4mEU8sQWvObydcLq3P3iEjReXkP9xQ/4Q+zExv98pFqgG
-         tFuBmmN2WeBODGfmtSQNq447lZn2iKhNysLkeGxOa+ZFITRnguPZHhf6eZWCxgBAmDRp
-         Ao/uKy4tXFBprJeo4EJ3nOfZxm1sRp8OB0bRh9BqExfFRc39pdmQRfzKtmTgekG/y7+j
-         7OGzwl3t8aRD0dNZT1ySvREYuAXp1qGy9PdIzDXDjcWysNbr6NCx2FmBGNwKRn6IRur8
-         cANh8zXND7OJY0IzoRLTUGvxK4ekclFU8eCe+olA0h2YixSxtLxgZ6oJX4KnfVUxk5++
-         wV5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453853; x=1749058653;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dPLbA0TtARsZRpgoy+SeG1Y86H0J4M4EKn9jgtbPam4=;
-        b=D+mLpsDDwCXovdHVH0ssB95jPd99Lwr1M2fWigeklFCFnrSxbVmv1UH5uDBybFylck
-         Elo4fXZj/uW8Vz1dqgSiw1P8YYPvvMaun0DIkHncjXtD4SB+xlcXrm6aLMZ4A8L/n+Cz
-         EQ3npmCyYYbFlPwclls2kZ1AY4Kn0iurJcj5I5reXJWzY1jif1thPMKURiTQeIVrIX6q
-         iNGnRkAfnrzG0Bg/pitbC/TFXLgPcshLNuEFKEqV+FNZgbtFKmCC2uKPBRn3gtqPSeqK
-         dpiJbTPKFg5SvwLPcz5WTJ4BteCVhOnHWyxGuWPT8zSvGjHInpOuPon/M4oXImXDXZsM
-         jcug==
-X-Forwarded-Encrypted: i=1; AJvYcCUp3T2tiFf1SX7KpuaWqPanaXITiZN6NdiQGV7D0ZR/vbXZmiMzM9joQ19422JIg4PVNzyotMbe3gMnvaP2@vger.kernel.org, AJvYcCV56XwYB6J/JMclatXMXIM73J/+P4YpKj71U+rsYgU5gynTwcn9fJ5NKJ+X2ky/HZ/JH/oUI5yzksVPWWE=@vger.kernel.org, AJvYcCV9BvWHY+9gv16VyAigjdpi21Wm+qOWbh/yUb4W14PHVvFzTbmcvKzqOPOXUS1GCyKZR6PnoatDBiF28A==@vger.kernel.org, AJvYcCVPBjB3KxtbWrf0oUVNPoC8KaoyJQ0cAuq9dTkm45XoFhCojPkZcJDzfqqHWyzr0e7sGQAuXRJAhImF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSgiOTKGeIbYCGhvBXfapdUtAS+IsRi4yCoy/2YFtH+cMuigxv
-	f+Sh4u9atMy1r7MZhZ1aspD0hpyrCFh95F690mMnggCsve2mqvdYKmGILrkReXQNDSJ3ncJm93i
-	jsfEAbQf43C18c4GBjM/uDnLMGYpStvg=
-X-Gm-Gg: ASbGnct4koJSng1EULLyOo7zPnmtFghdwfK5KwC2anoy4dI5JWaX/ll162G30ur83qK
-	W5oIlSpolM1whOFrPJVg5p96RcJk8NAgHhV/eRD/RaP3WMxHZ2pJyE54i68EzUkr3lb10NUM9xA
-	iy09ZA+TXQx4bzh6XIY6yzXqxQ0rEHl24V
-X-Google-Smtp-Source: AGHT+IGgMHiMa2LFQv9Alp4wlZhdkgFdKybKBvuJASh3xQCuBHQ39R5N1rVWML27L94mjMzYkuQzp0Zp3A1W73oMYMI=
-X-Received: by 2002:a05:6512:33c9:b0:553:2f47:ed21 with SMTP id
- 2adb3069b0e04-5532f47ee2amr1220096e87.41.1748453852656; Wed, 28 May 2025
- 10:37:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G9c10NYO"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9QQT022351;
+	Wed, 28 May 2025 17:37:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=mrve+4iTNvB6RRvFk7zMr+O7LxdCHK
+	vtxs8I5e3L/hk=; b=G9c10NYO66vBWrcZrkMb9iJ8J5ZZXsUTuFZBq+SOSmIB60
+	+aqlIH4G2md28bkpIT85E5MDInp9IZzgYV6D2RuF5y5CT77TW2Udl+LlDpXra4+L
+	voI2GETWLFElLjgTh3Z23cHNabo6ACjLIAoT1xK88FwBzKzu1tKW96eZgAAj5Ibn
+	FIXzMXKlKGPXKAaaEwY4qfbe0boXL4ocb8hY3whfXY6H3miSkWX9Y06xvYfMr3oc
+	YmcXGiJpeyibEeukCcD6LTqeVIKaIHhp2ifVCDcgKDxPAEbqElwwVMHRxKuJU6Xv
+	FuTFGlq3R9Vovy1Yo0TcpyQFGxSrYJ9dbGBwB5dA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40k93d8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 17:37:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SF8RNi016192;
+	Wed, 28 May 2025 17:37:36 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0rq0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 17:37:36 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SHbY7n32899668
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 17:37:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6DACC2004B;
+	Wed, 28 May 2025 17:37:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3883120043;
+	Wed, 28 May 2025 17:37:32 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.124.209.136])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 28 May 2025 17:37:31 +0000 (GMT)
+Date: Wed, 28 May 2025 23:07:29 +0530
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Waiman Long <llong@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
+ semantics
+Message-ID: <aDdJ2apexd2sJmm3@linux.ibm.com>
+References: <20250527085335.256045-2-vishalc@linux.ibm.com>
+ <99be9c8e-a5c4-4378-b03b-2af01608de9f@redhat.com>
+ <a9d0e503-ec70-41a7-adb2-989082e4d9f2@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-tegra186-pinctrl-v1-0-722c7c42394e@gmail.com> <CALHNRZ8ndcd3mvGP+W2DVFcm65t4Ai4epNeGigPv=Oo8Cf3LkQ@mail.gmail.com>
-In-Reply-To: <CALHNRZ8ndcd3mvGP+W2DVFcm65t4Ai4epNeGigPv=Oo8Cf3LkQ@mail.gmail.com>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 28 May 2025 12:37:20 -0500
-X-Gm-Features: AX0GCFtLvzBNOUpU0th8YfFcJvN5mluId11UW3CRjUP-3UhpfQ0aTL7BcczZ98Y
-Message-ID: <CALHNRZ91nUSUNPjMNF-4ORvVRCaBSKG+0UKzG4T=ehPaHwBTgA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] pinctrl: tegra: Add Tegra186 pinmux driver
-To: webgeek1234@gmail.com
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a9d0e503-ec70-41a7-adb2-989082e4d9f2@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 07MnXplC8qaEHDlvpX1_ZIA1E6zqfb5m
+X-Authority-Analysis: v=2.4 cv=fuPcZE4f c=1 sm=1 tr=0 ts=683749e2 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=2OsMLQx6joTeCsTfgE4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 07MnXplC8qaEHDlvpX1_ZIA1E6zqfb5m
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE1MiBTYWx0ZWRfX9zkU4XEbjh8o JeGFIAZEBJcq0ASzKm8jLkdwab5KvMty0iJti1K3nSCnD5GFJq78ZU51jM0KlzNm4MXQXMMtLer m2OQjb8CzNbojh3RyXOcC64BRVwZXODdHnYUiOalljVOsgNKor9wFyO/Y4aFWIEgY+C2H1Ha9gr
+ 8RMIJT2qkIBd5GdpxPacalNr4xA84+pVSMexyvS7yeUpaAgO92UKZ8or8q49I0KcyaiyKrB3COL FJmyi3iIiBWnq7cEres1VrAoKf8m8ztQUnLnZZCI8FOMgmXhf4fvv2mh7t95DFGl5ygPOqLUo+o rlUW1PITuH/p7oybpFhPimsDwsVwWjO43Ucy8WBs/bOCeUeLWD+HXrZqWm8Dn+xm88wGW1Wk7Vd
+ Qss8JYmCLMW9MylplkGo3IaXMdZeaNti6Es21OOswumpH5zukUVuHE9ALdRa6ItK3VsiaqkF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ mlxlogscore=346 priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280152
 
-On Tue, Apr 29, 2025 at 4:38=E2=80=AFPM Aaron Kling <webgeek1234@gmail.com>=
- wrote:
->
-> On Tue, Apr 29, 2025 at 4:33=E2=80=AFPM Aaron Kling via B4 Relay
-> <devnull+webgeek1234.gmail.com@kernel.org> wrote:
-> >
-> > This series adds support for Tegra186 pin control, based on a downstrea=
-m
-> > driver, updated to match the existing Tegra194 driver.
-> >
-> > Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> > ---
-> > Aaron Kling (4):
-> >       dt-bindings: pinctrl: Document Tegra186 pin controllers
-> >       dt-bindings: gpio: tegra186: Add gpio-ranges
-> >       pinctrl: tegra: Add Tegra186 pinmux driver
-> >       arm64: tegra: Add Tegra186 pin controllers
-> >
-> >  .../bindings/gpio/nvidia,tegra186-gpio.yaml        |    3 +
-> >  .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   |  285 ++++
-> >  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   12 +
-> >  drivers/pinctrl/tegra/Kconfig                      |    4 +
-> >  drivers/pinctrl/tegra/Makefile                     |    1 +
-> >  drivers/pinctrl/tegra/pinctrl-tegra186.c           | 1784 ++++++++++++=
-++++++++
-> >  drivers/soc/tegra/Kconfig                          |    1 +
-> >  7 files changed, 2090 insertions(+)
-> > ---
-> > base-commit: 1110ce6a1e34fe1fdc1bfe4ad52405f327d5083b
-> > change-id: 20250308-tegra186-pinctrl-651ffbbbe816
-> >
-> > Best regards,
-> > --
-> > Aaron Kling <webgeek1234@gmail.com>
-> >
-> >
-> Thierry and Jonathan, as the maintainers for the other tegra pinmux
-> drivers, I listed you as the maintainers for this one in the dt
-> bindings. And I think MAINTAINERS will do that by default for the
-> driver itself. Are you okay with taking over ongoing maintenance for
-> this one once it is approved for merge? I made it match the others as
-> closely as possible, so it shouldn't need any additional changes over
-> time that the others don't. But I don't want to sign anyone up for
-> work without prior approval.
->
-> Sincerely,
-> Aaron
+Hi Longman,
+On Wed, May 28, 2025 at 11:45:29AM -0400, Waiman Long wrote:
+> 
+> On 5/28/25 11:23 AM, Waiman Long wrote:
+> > I believe breaking the sentence into two separate components
+> > is actually making it less correct. There are implicit
+> > controllers that are always enabled and do not show up in
+> > cgroup.controllers. Prime examples are perf_event and
+> > freezer. IOW, only controllers that are available and need
+> > to be explicitly enabled will show up.
+> 
+> A correction: The cgroup.controllers file shows the controllers
+> that are available in the current cgroup and which have to be
+> explicitly enabled in cgroup.subtree_control to make them
+> available in the child cgroups.
+ 
+Thank you for pointing it out.
 
-Friendly reminder about this series.
-
-Sincerely,
-Aaron
+Vishal
+> 
+> Cheers,
+> Longman
+> 
