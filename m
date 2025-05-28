@@ -1,248 +1,308 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FEF243953
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743DA244665;
+	Wed, 28 May 2025 07:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417746; cv=none; b=jSNJwiGrlf3AoJWUhV0VYMOHeP4i2RJdwlro4abYejTl7FmmjVc9sNeQx4B9fZzia8qvjMXPj3cWpNUvtWwUE8+gQWaRPuV8OacnRTSGH5y6j7R5X8CRggg2S9FBJWyT5DaK7WSUFq+B38VAgD21Vq6DAnLC/Pm1NWeCv2VFiOg=
+	t=1748417749; cv=none; b=m+o8q+laMGSrk0WRE668Sl/ui8RLJFo5DR7NVZPzGIcJooOYmz+CDHgtJ9Cg6Ja4Yr9BGY48KKZpAg81hpuGa4Jmh3FQzrOJIpKqnAccQHvIIRme/3nyVeJr+P0jF1tw+qLvnOdqjTk73tslnJb/LeAGi7zA5lPiowwZkQRGxzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417746; c=relaxed/simple;
-	bh=ojn98cYobv8qkM4itGJX5hRlTmzBGUDcqXxDm4IrqQo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z11w3SDNi7ZdTDmIAzVHzEC3rY8IBuohQOf+uPz7IKAstZ3QJK4m9uWTrAtEijqn0gfaSdN/RkTl+N0RY6XTAOmAHAvplPyU3oXQanuoapt6/cFflgVNfjRwyr39iA66W6JaT86yY5sm0LIjXBUe+nHTbelrayeAmnYLbgoRfwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pLEgx4p5; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748417749; c=relaxed/simple;
+	bh=S8P+yvbmk0wVDGTl+t/UnoLEXNQG5E82HLv9m3qBVhE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NckJUJafvFo8VB4vs2y3aC0sJcRNdvcWE6pA996ztpV4rL59lPV9bUH2Yeu0e03rRuCWQw2GYQtklbxZECdaHmBkOjBFMKYvNM7WooweZZGTeBz9kZbciXDHZbuYkLPNejpIkTD12dk/GddwCCO6ICSdTNual3Wtf4RJLVvAyNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WE0eBuaE; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pLEgx4p5"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-551f007a303so4010e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748417742; x=1749022542; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zOJ/Erz3NJEWEC/FBnmroRUFyLvJzHrkOgqhXobzPPA=;
-        b=pLEgx4p519hz6HzqbX7CBpIldy9HZWvzxSgxLjotp3NtiqGeIwYdNHQgi87QGY10ag
-         OkdGDkjZ0e6BS1BjfWfg7mmpS/yxqKd6IGkxSVPr/kCKrMcTBzhaWPUNabrYLmfffW6R
-         Ndw1ncOJAor0Z4WyonS6RhTldVkVDzqXCTRIipXerhZM5qj+VcK8Bk3ppdWqKQ/A/dqg
-         FWrOcisZI3QeSBsrq76QhxhE6l1ngtNHZH0KzfnTsVjqfIyD9IjY90nwFVTc0jsSDPrH
-         HlfYbumqSZk0bStQ5Nh868RbLk167acGjjcPdkuVOiBft7n2xt0WAuZ99/4QFWyQ8Itr
-         AhAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417742; x=1749022542;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zOJ/Erz3NJEWEC/FBnmroRUFyLvJzHrkOgqhXobzPPA=;
-        b=FpQY10NABCOR1FwFJuytG3E2GKFfsSeLkiCT6udFOJ1UZ+kMHu+vYCPVW5o4013B1O
-         kWXmLtWgvGvaDuN3h4DjFX+O4i1DDJ3sOFa+/yOlk96yaVkMXvuG0jyvFaH23U+7VSzv
-         KLr63X2TWIBnKoB4/9dVSnkDB65bB980taaMiRztXnnfABAAAWInCbH99wXpisInUYv6
-         QTs8e3uXcbR17iNwybAgMfqz4c7xpcNcfVx1U0YKoKHHzWI/DBR+sfCAn8dpLHnQTesf
-         Rg4gTN0zvYrDOFNLmm3ayGxLeBgT1/uXd1FXVHM+uQj/8+7b48Zoj0mmrmxDvs9DHi2G
-         VAtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuv2+/vsU1iJ7CG7mw63vvMP5Yf5/PctKRkO4xauzFURC5ak0ZPWWS089pLYqiKg3mM3NULInz6YdPll0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCOzz6P5uQiKKFRlCJCHEJaprQucGMdgeNFHRagY04LToPms76
-	7q5oMTFR/wknT+N/kZuwaMItWuQO+3h3cegZaa/gd7VRPWZ1UrQjD5o1TfkfrshZllGjWA0Reah
-	fHzJXUuNUl0oPpRHWR+0YoBuAJXiyWepkE9F1xVzm
-X-Gm-Gg: ASbGncudR8jUH2X5hl2tP9HoSEWU4ksmh7nNqewDXIl7SsMbSehJq6qlcwXHnpW63Cp
-	z9BHTb4G+dw66jKTFZpU5PKhyO6TAcNUO0skcXiE+6OuNuuwqGIfghwMOMlwATJloXXCYpPD/lN
-	P0Wc8zAPP8xWkQDQUYs8I4viaAk5MRZLGckEBflZz9Jb8Ko/EhSewwTac4willfFSwfg7eMLI=
-X-Google-Smtp-Source: AGHT+IG+Mn1V+0c8QsQxG5c4rJueBt0y7/DVe9ZoPgIASiHSjGTjAuBSn8DXHY3zE+rzvci8KtUFh03pCmzzb6qQqs0=
-X-Received: by 2002:a19:c212:0:b0:542:6b39:1d57 with SMTP id
- 2adb3069b0e04-5532ef82470mr123218e87.3.1748417742176; Wed, 28 May 2025
- 00:35:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WE0eBuaE"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FC4C1FCF7;
+	Wed, 28 May 2025 07:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748417743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qZet8K57aFf7MLwllx+Xr4zoaf0VAd/thbkHyxlDE/A=;
+	b=WE0eBuaEKnP5zoS7G34uEJE4OlxRIIPdghO+W0Dzl/2r+BsoQ8V0c9/rgQzO1aH3EtA4I9
+	XIiQodWp8YH5Ato2OLO/mD4/8e8TByFpHARy2p4IlVdweBPmpPYKp68ldAd5URk44W9i/D
+	KpOAfykW8CyWDgsnbHvuBDZZOx/kP8HALXY6zpxQm0nwaLnutRkczG12uO6i5LeJxD53x+
+	zTG5N4Mt+bkdx+vOhxlAytUMY75bxid4PAyffkuGoZVvTerJDrD5kLAwL8WUhHpSBw2N1l
+	9VURF1FcbKejrkdSfagsPZzQoRJ8mLcblH4te9SRAZumM4JsPcaU1PuACdGLbw==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>,
+ Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+ Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Daniel Golle <daniel@makrotopia.org>,
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject:
+ Re: [PATCH net-next v6 06/14] net: phy: Introduce generic SFP handling for
+ PHY drivers
+Date: Wed, 28 May 2025 09:35:35 +0200
+Message-ID: <13770694.uLZWGnKmhe@fw-rgant>
+In-Reply-To:
+ <20250523145457.07b1e7db@2a02-8428-0f40-1901-f412-2f85-a503-26ba.rev.sfr.net>
+References:
+ <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+ <23936783.6Emhk5qWAg@fw-rgant>
+ <20250523145457.07b1e7db@2a02-8428-0f40-1901-f412-2f85-a503-26ba.rev.sfr.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416100515.2131853-1-khtsai@google.com> <20250419012408.x3zxum5db7iconil@synopsys.com>
-In-Reply-To: <20250419012408.x3zxum5db7iconil@synopsys.com>
-From: Kuen-Han Tsai <khtsai@google.com>
-Date: Wed, 28 May 2025 15:35:15 +0800
-X-Gm-Features: AX0GCFtkf15X4Sr4-XlDSBRSZecuoEyX3tXHqe5snVtx6egSAV0hGdIdZpP3X8Y
-Message-ID: <CAKzKK0qi9Kze76G8NGGoE=-VTrtf47BbTWCA9XWbKK1N=rh9Ew@mail.gmail.com>
-Subject: Re: [PATCH v4] usb: dwc3: Abort suspend on soft disconnect failure
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="nextPart2992374.e9J7NaK4W3";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdeijeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfgggtsehgtderredttdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfdvleekvefgieejtdduieehfeffjefhleegudeuhfelteduiedukedtieehlefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkv
+ ghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhmshhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Sat, Apr 19, 2025 at 9:24=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
-.com> wrote:
->
-> On Wed, Apr 16, 2025, Kuen-Han Tsai wrote:
-> > When dwc3_gadget_soft_disconnect() fails, dwc3_suspend_common() keeps
-> > going with the suspend, resulting in a period where the power domain is
-> > off, but the gadget driver remains connected.  Within this time frame,
-> > invoking vbus_event_work() will cause an error as it attempts to access
-> > DWC3 registers for endpoint disabling after the power domain has been
-> > completely shut down.
-> >
-> > Abort the suspend sequence when dwc3_gadget_suspend() cannot halt the
-> > controller and proceeds with a soft connect.
-> >
-> > Fixes: 9f8a67b65a49 ("usb: dwc3: gadget: fix gadget suspend/resume")
-> > CC: stable@vger.kernel.org
-> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
-> > ---
-> >
-> > Kernel panic - not syncing: Asynchronous SError Interrupt
-> > Workqueue: events vbus_event_work
-> > Call trace:
-> >  dump_backtrace+0xf4/0x118
-> >  show_stack+0x18/0x24
-> >  dump_stack_lvl+0x60/0x7c
-> >  dump_stack+0x18/0x3c
-> >  panic+0x16c/0x390
-> >  nmi_panic+0xa4/0xa8
-> >  arm64_serror_panic+0x6c/0x94
-> >  do_serror+0xc4/0xd0
-> >  el1h_64_error_handler+0x34/0x48
-> >  el1h_64_error+0x68/0x6c
-> >  readl+0x4c/0x8c
-> >  __dwc3_gadget_ep_disable+0x48/0x230
-> >  dwc3_gadget_ep_disable+0x50/0xc0
-> >  usb_ep_disable+0x44/0xe4
-> >  ffs_func_eps_disable+0x64/0xc8
-> >  ffs_func_set_alt+0x74/0x368
-> >  ffs_func_disable+0x18/0x28
-> >  composite_disconnect+0x90/0xec
-> >  configfs_composite_disconnect+0x64/0x88
-> >  usb_gadget_disconnect_locked+0xc0/0x168
-> >  vbus_event_work+0x3c/0x58
-> >  process_one_work+0x1e4/0x43c
-> >  worker_thread+0x25c/0x430
-> >  kthread+0x104/0x1d4
-> >  ret_from_fork+0x10/0x20
-> >
-> > ---
-> > Changelog:
-> >
-> > v4:
-> > - correct the mistake where semicolon was forgotten
-> > - return -EAGAIN upon dwc3_gadget_suspend() failure
-> >
-> > v3:
-> > - change the Fixes tag
-> >
-> > v2:
-> > - move declarations in separate lines
-> > - add the Fixes tag
-> >
-> > ---
-> >  drivers/usb/dwc3/core.c   |  9 +++++++--
-> >  drivers/usb/dwc3/gadget.c | 22 +++++++++-------------
-> >  2 files changed, 16 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-> > index 66a08b527165..f36bc933c55b 100644
-> > --- a/drivers/usb/dwc3/core.c
-> > +++ b/drivers/usb/dwc3/core.c
-> > @@ -2388,6 +2388,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >  {
-> >       u32 reg;
-> >       int i;
-> > +     int ret;
-> >
-> >       if (!pm_runtime_suspended(dwc->dev) && !PMSG_IS_AUTO(msg)) {
-> >               dwc->susphy_state =3D (dwc3_readl(dwc->regs, DWC3_GUSB2PH=
-YCFG(0)) &
-> > @@ -2406,7 +2407,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >       case DWC3_GCTL_PRTCAP_DEVICE:
-> >               if (pm_runtime_suspended(dwc->dev))
-> >                       break;
-> > -             dwc3_gadget_suspend(dwc);
-> > +             ret =3D dwc3_gadget_suspend(dwc);
-> > +             if (ret)
-> > +                     return ret;
-> >               synchronize_irq(dwc->irq_gadget);
-> >               dwc3_core_exit(dwc);
-> >               break;
-> > @@ -2441,7 +2444,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
-pm_message_t msg)
-> >                       break;
-> >
-> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEVICE) {
-> > -                     dwc3_gadget_suspend(dwc);
-> > +                     ret =3D dwc3_gadget_suspend(dwc);
-> > +                     if (ret)
-> > +                             return ret;
-> >                       synchronize_irq(dwc->irq_gadget);
-> >               }
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 89a4dc8ebf94..630fd5f0ce97 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -4776,26 +4776,22 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
-> >       int ret;
-> >
-> >       ret =3D dwc3_gadget_soft_disconnect(dwc);
-> > -     if (ret)
-> > -             goto err;
-> > -
-> > -     spin_lock_irqsave(&dwc->lock, flags);
-> > -     if (dwc->gadget_driver)
-> > -             dwc3_disconnect_gadget(dwc);
-> > -     spin_unlock_irqrestore(&dwc->lock, flags);
-> > -
-> > -     return 0;
-> > -
-> > -err:
-> >       /*
-> >        * Attempt to reset the controller's state. Likely no
-> >        * communication can be established until the host
-> >        * performs a port reset.
-> >        */
-> > -     if (dwc->softconnect)
-> > +     if (ret && dwc->softconnect) {
-> >               dwc3_gadget_soft_connect(dwc);
-> > +             return -EAGAIN;
->
-> This may make sense to have -EAGAIN for runtime suspend. I supposed this
-> should be fine for system suspend since it doesn't do anything special
-> for this error code.
->
-> When you tested runtime suspend, did you observe that the device
-> successfully going into suspend on retry?
->
-> In any case, I think this should be good. Thanks for the fix:
->
-> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
->
-> Thanks,
-> Thinh
+--nextPart2992374.e9J7NaK4W3
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Date: Wed, 28 May 2025 09:35:35 +0200
+Message-ID: <13770694.uLZWGnKmhe@fw-rgant>
+MIME-Version: 1.0
 
-Hi Greg,
+On Friday, 23 May 2025 14:54:57 CEST Maxime Chevallier wrote:
+> Hi Romain,
+> 
+> On Mon, 12 May 2025 10:38:52 +0200
+> 
+> Romain Gantois <romain.gantois@bootlin.com> wrote:
+> > Hi Maxime,
+> > 
+> > On Wednesday, 7 May 2025 15:53:22 CEST Maxime Chevallier wrote:
+> > > There are currently 4 PHY drivers that can drive downstream SFPs:
+> > > marvell.c, marvell10g.c, at803x.c and marvell-88x2222.c. Most of the
+> > > logic is boilerplate, either calling into generic phylib helpers (for
+> > > SFP PHY attach, bus attach, etc.) or performing the same tasks with a
+> > > 
+> > > bit of validation :
+> > >  - Getting the module's expected interface mode
+> > >  - Making sure the PHY supports it
+> > >  - Optionnaly perform some configuration to make sure the PHY outputs
+> > >  
+> > >    the right mode
+> > > 
+> > > This can be made more generic by leveraging the phy_port, and its
+> > > configure_mii() callback which allows setting a port's interfaces when
+> > > the port is a serdes.
+> > > 
+> > > Introduce a generic PHY SFP support. If a driver doesn't probe the SFP
+> > > bus itself, but an SFP phandle is found in devicetree/firmware, then the
+> > > generic PHY SFP support will be used, relying on port ops.
+> > > 
+> > > PHY driver need to :
+> > >  - Register a .attach_port() callback
+> > >  - When a serdes port is registered to the PHY, drivers must set
+> > >  
+> > >    port->interfaces to the set of PHY_INTERFACE_MODE the port can output
+> > >  
+> > >  - If the port has limitations regarding speed, duplex and aneg, the
+> > >  
+> > >    port can also fine-tune the final linkmodes that can be supported
+> > >  
+> > >  - The port may register a set of ops, including .configure_mii(), that
+> > >  
+> > >    will be called at module_insert time to adjust the interface based on
+> > >    the module detected.
+> > > 
+> > > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > > ---
+> > > 
+> > >  drivers/net/phy/phy_device.c | 107 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/phy.h          |   2 +
+> > >  2 files changed, 109 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> > > index aaf0eccbefba..aca3a47cbb66 100644
+> > > --- a/drivers/net/phy/phy_device.c
+> > > +++ b/drivers/net/phy/phy_device.c
+> > > @@ -1450,6 +1450,87 @@ void phy_sfp_detach(void *upstream, struct
+> > > sfp_bus
+> > > *bus) }
+> > > 
+> > >  EXPORT_SYMBOL(phy_sfp_detach);
+> > > 
+> > > +static int phy_sfp_module_insert(void *upstream, const struct
+> > > sfp_eeprom_id *id) +{
+> > > +	struct phy_device *phydev = upstream;
+> > > +	struct phy_port *port = phy_get_sfp_port(phydev);
+> > > +
+> > 
+> > RCT
+> 
+> Can't be done here, it won't build if in the other order...
+> 
 
-It looks like this patch hasn't been cherry-picked into the usb-next
-branch yet. Am I missing something?
+You could always separate the declaration from the assignment, I've seen that 
+done quite a lot to keep things in RCT.
 
-Regards,
-Kuen-Han
+> > > +	__ETHTOOL_DECLARE_LINK_MODE_MASK(sfp_support);
+> > > +	DECLARE_PHY_INTERFACE_MASK(interfaces);
+> > > +	phy_interface_t iface;
+> > > +
+> > > +	linkmode_zero(sfp_support);
+> > > +
+> > > +	if (!port)
+> > > +		return -EINVAL;
+> > > +
+> > > +	sfp_parse_support(phydev->sfp_bus, id, sfp_support, interfaces);
+> > > +
+> > > +	if (phydev->n_ports == 1)
+> > > +		phydev->port = sfp_parse_port(phydev->sfp_bus, id,
+> > 
+> > sfp_support);
+> > 
+> > As mentionned below, this check looks a bit strange to me. Why are we only
+> > parsing the SFP port if the PHY device only has one registered port?
+> 
+> Because phydev->port is global to the PHY. If we have another port,
+> then phydev->port must be handled differently so that SFP insertion /
+> removal doesn't overwrite what the other port is.
+> 
 
->
-> > +     }
-> >
-> > -     return ret;
-> > +     spin_lock_irqsave(&dwc->lock, flags);
-> > +     if (dwc->gadget_driver)
-> > +             dwc3_disconnect_gadget(dwc);
-> > +     spin_unlock_irqrestore(&dwc->lock, flags);
-> > +
-> > +     return 0;
-> >  }
-> >
-> >  int dwc3_gadget_resume(struct dwc3 *dwc)
-> > --
-> > 2.49.0.604.gff1f9ca942-goog
-> >
+Okay, I see, thanks for explaining.
+
+> Handling of phydev->port is still fragile in this state of the series,
+> I'll try to improve on that for V7 and document it better.
+> 
+> > > +
+> > > +	linkmode_and(sfp_support, port->supported, sfp_support);
+> > > +
+> > > +	if (linkmode_empty(sfp_support)) {
+> > > +		dev_err(&phydev->mdio.dev, "incompatible SFP module
+> > 
+> > inserted\n");
+> > 
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	iface = sfp_select_interface(phydev->sfp_bus, sfp_support);
+> > > +
+> > > +	/* Check that this interface is supported */
+> > > +	if (!test_bit(iface, port->interfaces)) {
+> > > +		dev_err(&phydev->mdio.dev, "incompatible SFP module
+> > 
+> > inserted\n");
+> > 
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	if (port->ops && port->ops->configure_mii)
+> > > +		return port->ops->configure_mii(port, true, iface);
+> > 
+> > The name "configure_mii()" seems a bit narrow-scoped to me, as this
+> > callback might have to configure something else than a MII link. For
+> > example, if a DAC SFP module is inserted, the downstream side of the
+> > transciever will have to be configured to 1000Base-X or something
+> > similar.
+> 
+> In that regard, you can consider 1000BaseX as a MII mode (we do have
+> PHY_INTERFACE_MODE_1000BASEX).
+> 
+
+Ugh, the "1000BaseX" terminology never ceases to confuse me, but yes you're 
+right.
+
+> > I'd suggest something like "post_sfp_insert()", please let me know what
+> > you
+> > think.
+> 
+> That's not intended to be SFP-specific though. post_sfp_insert() sounds
+> lke the narrow-scoped name to me :) Here we are dealing with a PHy that
+> has a media-side port that isn't a MDI port, but an MII interface like
+> a MAC would usually export. There may be an SFP here, or something else
+> entirely :)
+> 
+
+Is that callback really not meant to be SFP-specific? It's only called from 
+phy_sfp_module_insert() though.
+
+> One thing though is that this series uses a mix of "is_serdes" and
+> "configure_mii" to mean pretty-much the same thing, I'll make the names
+> a bit more homogenous.
+> 
+
+Sure, sounds good.
+
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static void phy_sfp_module_remove(void *upstream)
+> > > +{
+> > > +	struct phy_device *phydev = upstream;
+> > > +	struct phy_port *port = phy_get_sfp_port(phydev);
+> > > +
+> > > +	if (port && port->ops && port->ops->configure_mii)
+> > > +		port->ops->configure_mii(port, false, PHY_INTERFACE_MODE_NA);
+> > > +
+> > > +	if (phydev->n_ports == 1)
+> > > +		phydev->port = PORT_NONE;
+> > 
+> > This check is a bit confusing to me. Could you please explain why you're
+> > only setting the phydev's SFP port to PORT_NONE if the PHY device only
+> > has one registered port? Shouldn't this be done regardless?
+> 
+> So that we don't overwrite what the other port would have set :) but,
+> that's a bit fragile as I said and probably not correct anyways, let me
+> double-check that.
+> 
+
+All right, that makes sense given what you've already told me.
+
+Thanks,
+
+-- 
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart2992374.e9J7NaK4W3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmg2vMcACgkQ3R9U/FLj
+284fQw//bXvaaOClw8PTi+x2VP1IslHsH/yhIqqOayUREQePqHxHPAQ0n9mEG7bV
+lYBrv1wJQ7RJlch/c7N1vG5ATGmi5M1YkatEWDgljwGH7GGkPght0TUfRp7mVx5W
+1T+Cm6L6h/Xj7+VSorgiT+bbBlbYAtwv0MHw4+8S6cn0vj4nFyxhXoN/dALln5Pj
+O03Fsd4E7T1nplOzC6uo0cdv4QwINrPDVd80rzv/LNbXjz8to0dIz9hBD2gB8Bjx
+f3gffOH0APTtZyzL8KIWePR8PmBAlu+zpx2XVy1xLhMXQSboiEdFtsxATBSkv++w
+P7UvJ9vaAXfuUMAjcF2T1fe2ECUoRgmayFaNYDLOEs7N2y2a5j3g6oMFi0jrrovv
+PtyrRIEX+c22+v1VS/OjrNdKdtaSDe4ryvDZQr0tU3fTXEybHf0NqDYVY/eJtDvK
+f5C+EtOtIKKxAYwGn0SkFwKfCdVRYeeh9c7+0OtU/s9VPtsoG77a6C1SQ3P32xO8
+7vrSHOHfyqy4uFuwTmheAl8/hrh0tq2iTf46EdicJfBJKF/7873krpXkSLyGPwCK
+mgx4h2pp1XLblD6cI7mUu/zWuhlp2wpJeTDFO9sz9Odh8mup1h4BlxumSimsKCYH
+NAUp4JHDQkX6I/Cm8ZYuoNCbnvYsY2JwMZPDJJb6Z3SQ6c95Nok=
+=GM9s
+-----END PGP SIGNATURE-----
+
+--nextPart2992374.e9J7NaK4W3--
+
+
+
