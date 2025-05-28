@@ -1,217 +1,430 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2074.outbound.protection.outlook.com [40.107.96.74])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FBD28642C;
-	Wed, 28 May 2025 14:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441684; cv=fail; b=DMwTXzce0HrDTCoDrG9U8ZnYhBLkh/kVKTMXU07UMd3++hXS3VeRq0UpgF6CyHTWsGNr1adVng1/5O4qbzLvu9KWt/YsjdOT59RZCHKyI5hLlXevW3zl/1D2Wgnl56ypDEFsk6XiZJKygPFlhYewDYzflsQqmwTF67ND6YGp+as=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441684; c=relaxed/simple;
-	bh=1mVYw4VdZ+IQsddrTcXUFjuyJlyJXzLXDB/tny971ck=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Mxnz8v2FBeBzrG8Mr4jTz1lME4pP8VNqtXqAavViZHg8exZizPpQp+PpBRerIog/KpFrrLh6GOWmlm9wYDZ4a60+X4NURNAJfXxKom8kpd8FbUAYQ3LwToHjli6bLpRTyNsy8WRN+w9YmkHZdNoLFuElDebOPAh4D2DuNyNBv8U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mSMSB54D; arc=fail smtp.client-ip=40.107.96.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mSMSB54D"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bhPmp5UbXbbzgrqHtCxVzyTfEceah1JDtmNM9k79GVKeRY3Ez6M2xP/37d9UySBwkqI3BTujOF7Xkg20Z4z+IBAgGo5sYfiKJgJ4rsGJM4qlMxtY2cEmmqqVgkBHfrNQd+RsfeTphbZ2+ex09tPKjlegAOtApB/QRMSUxJTphvxe0MUZ0fty/4J4ZaowrtLBSJwchF1rY+4LNfyjpA6xsoKdbY+nmtcZfOsmTpKIu0l0RHAWLZobTO87AGWIar1XKvx7GPQk9097j0rLrUMmTQGl40T8ltKIj6SRXj090DWPOnTJrULqSCzDXvNxcPIAsjFym3brTrLTKDt00kTKpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1mVYw4VdZ+IQsddrTcXUFjuyJlyJXzLXDB/tny971ck=;
- b=YuqWvC6yi+eOzNKMZ+TmuekNf6uKdu+dwWNi0anO5HlA41WXMmK0uqCqdwFcO/2usoiCg1cVBbkhiBq0MtC9BT0XdYQBMtSQqKCFTuCb2tQNohvNzIfKsxoTuGoPWMFNwEE3HiDBGWOdlK7jnwvobnKGDZYK+qlvCf8XG/MbDgDGjfpkiW2mgj/x8Ta4GIk+H3CW/tjsoIz+PDTJXd+OKF73PK/xWwZHfgCEDoTtUutQnwuNw4vc5S6uqsIsWqJ2UgrANX50sLGnjrTFsTzopQqhMP4aOYtCHVTgD0plWSyf98vJAw1n93rq8fjSqFa1/w+SvG+KtDI5ndRU891vXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1mVYw4VdZ+IQsddrTcXUFjuyJlyJXzLXDB/tny971ck=;
- b=mSMSB54DHUUiLdyeVyViDVwi1k83TBUggD8DLxkvlXT9d3NxRXkIBIIK68AkhTxFQ5ivIEmBQ+F4jjJnjzmMdYZ7SLhtLt16fp1R6+Y9ge1VoRfYX4Vt5iCMo8s2W02vancjXU/5MpVgG3tmkEWxbrjUbE1ul+g3p4JQvWB5o9M=
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
- CY3PR12MB9606.namprd12.prod.outlook.com (2603:10b6:930:102::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 28 May
- 2025 14:14:40 +0000
-Received: from DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::c48a:6eaf:96b0:8405]) by DS7PR12MB6095.namprd12.prod.outlook.com
- ([fe80::c48a:6eaf:96b0:8405%6]) with mapi id 15.20.8769.022; Wed, 28 May 2025
- 14:14:40 +0000
-From: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>, "Rafael J. Wysocki"
-	<rjw@rjwysocki.net>, Ingo Molnar <mingo@kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>, "Ugwekar, Dhananjay"
-	<Dhananjay.Ugwekar@amd.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Next Mailing List
-	<linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Thread-Topic: linux-next: manual merge of the tip tree with the pm tree
-Thread-Index: AQHbwvoUOif/c+EZnkiNnTIGpgFimLPOdgUAgBkLSgCAAK5vgA==
-Date: Wed, 28 May 2025 14:14:40 +0000
-Message-ID: <45b82a09-07a4-4bbd-a71c-d86010542dfe@amd.com>
-References: <20250512145517.6e0666e3@canb.auug.org.au>
- <20250512152326.3f2f0226@canb.auug.org.au>
- <20250528135020.79fec9ca@canb.auug.org.au>
-In-Reply-To: <20250528135020.79fec9ca@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DS7PR12MB6095:EE_|CY3PR12MB9606:EE_
-x-ms-office365-filtering-correlation-id: 0e18d9ce-4593-449d-6751-08dd9df1fc3c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?d1Mxc2sxc2Zlc2FtUkpHVzFHMWlHQlV0cGlKamZNTXFkdXJUYWY0aGx2ZVU1?=
- =?utf-8?B?RGVKRjQ0V1pvaTJSUGduMHdBdkw1R3RpZTgza3o2MWtyTXlqSDhFUGNyRFdj?=
- =?utf-8?B?V1h2U1ZvanNEZis2NHFaMGs3ZXdSN3hzWmlBRUEvNVVNaG9QL21yNHJ3aTh5?=
- =?utf-8?B?UDBiM3FqQVlBRWl1MjRZeHFDd1RlanFMZ1dtWWhJS0pnTHBuSzRROVN6aHJi?=
- =?utf-8?B?akRUU0QwYjhLbVBPRDdyeG5aNGE0WTlsOVpJbVVYRERzQ0EvUmRpSTFmYnNH?=
- =?utf-8?B?SFRycE5SajZWcHBIL1hVYitTTjFxcGZrL1IvdGRyeCsrQlZmZWM3V1Rld1g3?=
- =?utf-8?B?WkFNN3A5eE9SeVRGdHFKRmlybnVYcHlFMVZyWlQzc1VkRFVnTFMxTXBpSFpu?=
- =?utf-8?B?MWJpQ2w3WFhoVWtOT0VDa1ZTaGcxQXorWkJDcXAxQlBVaHdCWk5LK3FGSm8w?=
- =?utf-8?B?SGN4RURjZzlaTERaeTV0cGZDQ0g1VkxLMmQyRGVtRFVMLzZ2ckVrdVNkQWNL?=
- =?utf-8?B?ZnVHSk0yZlFDTldIUXljenhKM2VmeUNsZERsRGJ0a01mbSs5bTd2WnlSTFJR?=
- =?utf-8?B?YS9RMHI4cWN1V3FNbU5ZbTBIRVFBeXI4MXRsYUlSbG1uRm50U3hob0dpWFE3?=
- =?utf-8?B?VzBBOVU1N3FOWmI5ZUUwaFNra2Z0anlzNkxUazg5T3c1OFh6QVFmd2tBYUlV?=
- =?utf-8?B?TFI2NEFNL0REcW05V0tWbnE1aWZpdDZXQUN2b1hIcGRRVjhVUUdxNE9iQUFh?=
- =?utf-8?B?SngwTFlmUjJnUEJWRlo3YVozZzg4VlRxUkxTL0N1UGhWeHNwQlBBaldjd0Uv?=
- =?utf-8?B?SVZUNGIvbTBORWlzajJoNlBBWHJIVjZlRlg3S3hmdzJxOUZZSW5xMW8zV2Nl?=
- =?utf-8?B?WG5hT2VTdmZmRnVwZmRFNWRvVDBldUxQWVJGYWFwMXJvdmlLQ0dBUzlGVERh?=
- =?utf-8?B?U25zMGRvL2ZtQW9IU2R6OGJVeW5mK1ZYbU50NzluMklmakU5RlBPQy94aDg5?=
- =?utf-8?B?bVkvZkxIeVVLN1BoMDIwSEZUWUhPUytha3BqY1NyQjY1UngzRkd4Snk3cnZq?=
- =?utf-8?B?aEZ2U28vWG9PaCsySTc1a0ZybUtnRTlpenprYzlzMUlvcnR0UFBBLzN3U3Ra?=
- =?utf-8?B?ajNvTFBXVi80L1NIRVpON2wvSUtRR05GcmUzZnFNY09wd0pjRVFDM2ttdWs5?=
- =?utf-8?B?NEs5TTRuN1F3Y29pbEVqRzBiNHEvcXh4eVF5Y0VmWE5FeXIvWGZSelM5ZTlH?=
- =?utf-8?B?a2VISWNvcnJ3RmpPUThFM3VWS3NUV21IWTlPYi96c0h1aEtReVQzRmlPeFpN?=
- =?utf-8?B?T1Vxdy83Q0k5ZmxuYkRNSjhsNlZHZzRIaGFhUWpBbnVXQW9tMFA5ZkltTzFZ?=
- =?utf-8?B?SXZ0dTRoc0tnbHFHSElrMm9KSjVLR2gvQmh3aG1TV3E5TE16cEhKdWtBYUdh?=
- =?utf-8?B?WUcxdkk2NDFIUTlBUnhnM0Q5cXd0UHlJME94VTJrREtSYUZldWdVMWtRMkI0?=
- =?utf-8?B?MkRFdTVhYXptS1JZUkRBNkFsN1E2Z1dBclVhSmNWUXh6WjR6ME4yR2cwRTZP?=
- =?utf-8?B?eFhHUHlNdU1HSFpXWjBsRFlkYnJhb0lKdkpNZVF3MXZETWNLZHhGSG1ITzZP?=
- =?utf-8?B?R1hPaFNZOE1EUW5hU3IzSFlSVEh2N29yeDdBM0o3MzNQc1FJNDJ2SVhrMVVR?=
- =?utf-8?B?OGRUaTg5aVNTZ3QrZ3p3UzRrWUE2S0FUMElNNytXMGJRTVF6OGgxcUdlcGc0?=
- =?utf-8?B?WXpFZjVCdDRTYUVrK0xTS0xBNUdPWDhjVDl5dGxOZDRpdHhUMUd1NzF6S3dh?=
- =?utf-8?B?VXJoUnZyQ2ZhejlYUG92V1ROMmhuSHB0WXVPeFVWNzR3RWkxSXd2M3NsSGZB?=
- =?utf-8?B?LzNlRFV5aGRjOGZCdmw5MTdvWjVoNTNyVnpRVnBodUJ2RGowbzR2Y04yck5O?=
- =?utf-8?B?c2o1bGN4SzZVbGhpREtRSVZqR0JmeGhqRlJkRS82SnRkMHRyQnFqZXVGbnZK?=
- =?utf-8?Q?PzodFdDzhr0x7+RAUfAOaA6EvrJavA=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?MHhLTlRkWFRzMXJ0TloxekNnRjIwRGdsb0JsYVRzWEo2VGRGaWNlS2Z0VXFx?=
- =?utf-8?B?UjdlSkhub3V4SUQyUWJJTkwxQnJqT0NoUVpCK1F5Z1crNU04cjZCUzdLUmJX?=
- =?utf-8?B?VWFDOFp0d2pHWnZYenY1STU3WXlwcmRsLzZyRXRueUozd0hIMWtsSlZhQ2M3?=
- =?utf-8?B?MTcvTHJ2b1ptb0pUS05xaFZBbGRHcUMrU1FIOVJEblRveEhsTHBta3g5ckRn?=
- =?utf-8?B?VDB2SHpYNUgxMWVqam9PZmoxWGRPeXdQcTBiSTU0RjRUOU92YUNZTWhFV1Jo?=
- =?utf-8?B?RHR2RVNHMXhxYVJHNjBpZWxaRVk2VlF6WElSdEpDVkRIY2kvNlNJR1NPMWVM?=
- =?utf-8?B?ZElPZGdDWjJhRFY5VjhLeGhwRkVuZkQ2QTVLSUpxSnVFaHpRNjNid2QzeFNN?=
- =?utf-8?B?N2tpZTNrNXN4bXg2Kzcxbld4d0U5QkZEaDRFVTd3c29KSTdnUCsrczlqNzZI?=
- =?utf-8?B?Z1RMK0I1NFl4OGRITnMwN0ZFSjVmMHhvU1ZlR1pKV2g4d3NRSWxIbWFrdHVw?=
- =?utf-8?B?QTI5cERvWnFTTnpRemdWTGxXOVQvK2J1U2RXZlMvK0ZkODd6Y09raEVWUUg2?=
- =?utf-8?B?TkNCTSthVVQ3M2tDa0MzeDVuenFmTktMQ1F6WExLMmRpRVhvTHEzaHloWWJz?=
- =?utf-8?B?MmdlNGhBTGx6NFVlUlppcTdYYlhwZC9lTlpPRWk2ZmZ5Y2V3bTZQazUvZHRP?=
- =?utf-8?B?dHU4ODNsNExwUVQvRUxjL2N4aTVKQnZ6OU1vQ3BhRXBTSmJKMXBlVGtDWXRz?=
- =?utf-8?B?Mkp6bGRmalBFVTZLelZNd0pFU294MzhsNUdLRnRDZENtRWxPQ0hFcUlFa2E3?=
- =?utf-8?B?dlZRSWpST3dQQ3NEeVplTWwyV0M4alNZb3NTQWNSeWo4c01RZ2ZTVVRWWXRh?=
- =?utf-8?B?bDRnSEQrWTBPVGdxTUp3M1dzREF6c3VxUFZmWHg1eFI0aDkwZDlCd1lmZzlr?=
- =?utf-8?B?R3N1MDRjME1YYVVHWktFUlowL1Q3R0VLdmVVVzYwV1p0Smk3R2lSbnI4S3gz?=
- =?utf-8?B?dk1CVWdrVGNteVJDbEROWEUrWHJ4cTd3ajhCQkQvcEFGRHdWcnlPZXNDNTJh?=
- =?utf-8?B?bTNzcGJVTis5ODQwd0toSE1yVVF4d0ZqRDh3VUZEcVlsN2cvTzl0cFJsNXFo?=
- =?utf-8?B?VGw1R0xoWDliR29wMmo1ckdaT2p5bTE1YndpRWZNRU83RXhCSXBYZTVwZWMv?=
- =?utf-8?B?cWZ2N1hVT0ZTakJsUkhwN01zRFpOcTRJNGg3NE1FVVM4U3krU2lNRUVoNjF0?=
- =?utf-8?B?K3UvMkZOUlZRZUN0ZzNzeUM0d3ZhOHNlY2ljTU5ZVmo5QUQ2cnpLWGNYT3Zt?=
- =?utf-8?B?U21wbXlNd1paby9DdWZqcmlYUFZzTjBMU3JWeWJseXR6dkRZdEkvRzh3Nng5?=
- =?utf-8?B?MVZLNmE4Tld4Vy8ybDI3WVB5V2dTKzkrSlBYa3AySk1SWFd3TFUxOG02UWw4?=
- =?utf-8?B?S0xwTFhUTE1sdWg0UzBGQ3ZsYnFYR2JGbVFyYlIyeEdoVDhja1V2d0pXUkJR?=
- =?utf-8?B?eGRVZnUvV0RqZlN5VGR6eVV1UnNEU3hvS2dqNWVTL0pTczRpS3N1a2czRTUw?=
- =?utf-8?B?V1ZZQmVxaFhQNUM5VTdCcURPUTd1UHRjOFRXQXVZMzJLVjZkaUtrOWkzMVAw?=
- =?utf-8?B?cDJ2YzdQRGF6dVBiMXBBV09tak05OElRejZ4R3VDekl6UllXdWlQdDIrMC9D?=
- =?utf-8?B?c3NnMUIwZ25YQ00yS1locjJFV09VQTVlWk00YW1tbktrTElWZitqeGNSb3dl?=
- =?utf-8?B?Y3VYUG9WVVpyMWc5Sm81eUZuNnNnUmNER0l6TWNaeEMxRVVQWXZUUTV3b1dI?=
- =?utf-8?B?bVhvTDhSYjVUa0NhYk5yK1RROFJsTk5NRzJBdjVOd3FYSEw4b0VSd0dwLzBl?=
- =?utf-8?B?L2J1L0dXc3NyYWxMMThaemhFcFR6Wm5KejkvTUhZaGNlbFU5SDVrWE9xNDRy?=
- =?utf-8?B?emNIZHhick1zMHJxR3QwVFJ2VTlLM3hpL0hUMktWRjJBWW1walA0WVlURU5o?=
- =?utf-8?B?Sm1aTXU1QldxdkhHVHArcjBCSTAxK1hHQWRWYVVPMjVMTFZ5Y1JkM3dQZzRs?=
- =?utf-8?B?UzFvSzRNc1pWVkpRTEFTS1BPWGhJRDl1dnZseEgyNUtuYkZabDVCc0J1L29P?=
- =?utf-8?Q?+qJ4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BC968EA40821924FBB41BA76663B375D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F0CEAD7;
+	Wed, 28 May 2025 14:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748441732; cv=none; b=qD45FN+rm9chbFjNs2o2egRRwZ4EIja/hX7jVXmYAI4ZRZ+7fomskGPvp5hBbcKwECRhRIjbXjTnTs6DLS7uXnbs3nSoQCr+WB6p/T0TlbAOhzU10EXnn2+j1Qr1JpC2CP+806/+MNTgM26ld4EB0MkPOAK2x4158Ekht/A6hKI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748441732; c=relaxed/simple;
+	bh=VTSrIEdQEdu3UCYZs59KzmUF3zx9ivQk+muz5QkMSLg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dhj07ydmq4US670kWj1KtZNqC9aDxn9pGMkW+zhJ143rIB6sMK+LWaBiHzl016G7mNUHowdRsseDaQLPQ37UBKHbW5DP+WtDNpcCzK6YT6uq7IKXdTHNXYtCMH39mFbrSJSU7JRMLqUpEznfyLiOBXf2m40p0Tzlj/rWAkUcrrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6s1x6GF0z6J9yF;
+	Wed, 28 May 2025 22:14:13 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B8434140113;
+	Wed, 28 May 2025 22:15:26 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
+ 2025 16:15:25 +0200
+Date: Wed, 28 May 2025 15:15:24 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
+ Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mark Rutland
+	<mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 20/26] irqchip/gic-v5: Add GICv5 PPI support
+Message-ID: <20250528151524.00006dd9@huawei.com>
+In-Reply-To: <20250513-gicv5-host-v4-20-b36e9b15a6c3@kernel.org>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+	<20250513-gicv5-host-v4-20-b36e9b15a6c3@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e18d9ce-4593-449d-6751-08dd9df1fc3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2025 14:14:40.0953
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ScStfpNMjW0hgjdCo3/i9HeZSGcAIfaQhCWtR8QoMzcgmVWcBG9geVkUNLf9HhKvENbDyndhtj06AdGwXVLoqg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9606
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-T24gNS8yNy8yNSAyMjo1MCwgU3RlcGhlbiBSb3Rod2VsbCB3cm90ZToNCj4gSGkgYWxsLA0KPiAN
-Cj4gT24gTW9uLCAxMiBNYXkgMjAyNSAxNToyMzoyNiArMTAwMCBTdGVwaGVuIFJvdGh3ZWxsIDxz
-ZnJAY2FuYi5hdXVnLm9yZy5hdT4gd3JvdGU6DQo+Pg0KPj4gT24gTW9uLCAxMiBNYXkgMjAyNSAx
-NDo1NToxNyArMTAwMCBTdGVwaGVuIFJvdGh3ZWxsIDxzZnJAY2FuYi5hdXVnLm9yZy5hdT4gd3Jv
-dGU6DQo+Pj4NCj4+PiBUb2RheSdzIGxpbnV4LW5leHQgbWVyZ2Ugb2YgdGhlIHRpcCB0cmVlIGdv
-dCBhIGNvbmZsaWN0IGluOg0KPj4+DQo+Pj4gICAgZHJpdmVycy9jcHVmcmVxL2FtZC1wc3RhdGUu
-Yw0KPj4+DQo+Pj4gYmV0d2VlbiBjb21taXQ6DQo+Pj4NCj4+PiAgICA2MDhhNzZiNjUyODggKCJj
-cHVmcmVxL2FtZC1wc3RhdGU6IEFkZCBzdXBwb3J0IGZvciB0aGUgIlJlcXVlc3RlZCBDUFUgTWlu
-IGZyZXF1ZW5jeSIgQklPUyBvcHRpb24iKQ0KPj4+DQo+Pj4gZnJvbSB0aGUgcG0gdHJlZSBhbmQg
-Y29tbWl0Og0KPj4+DQo+Pj4gICAgZDc0ODRiYWJkMmM0ICgieDg2L21zcjogUmVuYW1lICdyZG1z
-cmxfb25fY3B1KCknIHRvICdyZG1zcnFfb25fY3B1KCknIikNCj4+Pg0KPj4+IGZyb20gdGhlIHRp
-cCB0cmVlLg0KPj4+DQo+Pj4gSSBmaXhlZCBpdCB1cCAodGhlIGZvcm1lciByZW1vdmVkIGEgbGlu
-ZSB1cGRhdGVkIGJ5IHRoZSBsYXR0ZXIpIGFuZCBjYW4NCj4+PiBjYXJyeSB0aGUgZml4IGFzIG5l
-Y2Vzc2FyeS4gVGhpcyBpcyBub3cgZml4ZWQgYXMgZmFyIGFzIGxpbnV4LW5leHQgaXMNCj4+PiBj
-b25jZXJuZWQsIGJ1dCBhbnkgbm9uIHRyaXZpYWwgY29uZmxpY3RzIHNob3VsZCBiZSBtZW50aW9u
-ZWQgdG8geW91cg0KPj4+IHVwc3RyZWFtIG1haW50YWluZXIgd2hlbiB5b3VyIHRyZWUgaXMgc3Vi
-bWl0dGVkIGZvciBtZXJnaW5nLiAgWW91IG1heQ0KPj4+IGFsc28gd2FudCB0byBjb25zaWRlciBj
-b29wZXJhdGluZyB3aXRoIHRoZSBtYWludGFpbmVyIG9mIHRoZSBjb25mbGljdGluZw0KPj4+IHRy
-ZWUgdG8gbWluaW1pc2UgYW55IHBhcnRpY3VsYXJseSBjb21wbGV4IGNvbmZsaWN0cy4NCj4+DQo+
-PiBBY3R1YWxseSBpdCBuZWVkZWQgdGhlIGZpeCB1cCBiZWxvdy4NCj4+DQo+Pg0KPj4gZGlmZiAt
-LWNjIGRyaXZlcnMvY3B1ZnJlcS9hbWQtcHN0YXRlLmMNCj4+IGluZGV4IGQ5NmJiM2UyMDJlZSw2
-NmZkYzc0ZjEzZWYuLjBkNGMwZGU4OWEwMA0KPj4gLS0tIGEvZHJpdmVycy9jcHVmcmVxL2FtZC1w
-c3RhdGUuYw0KPj4gKysrIGIvZHJpdmVycy9jcHVmcmVxL2FtZC1wc3RhdGUuYw0KPj4gQEBAIC0z
-ODksMTAgLTM4OSw5ICszODksMTAgQEBAIHN0YXRpYyBpbmxpbmUgaW50IGFtZF9wc3RhdGVfY3Bw
-Y19lbmFibA0KPj4gICAgc3RhdGljIGludCBtc3JfaW5pdF9wZXJmKHN0cnVjdCBhbWRfY3B1ZGF0
-YSAqY3B1ZGF0YSkNCj4+ICAgIHsNCj4+ICAgIAl1bmlvbiBwZXJmX2NhY2hlZCBwZXJmID0gUkVB
-RF9PTkNFKGNwdWRhdGEtPnBlcmYpOw0KPj4gICAtCXU2NCBjYXAxLCBudW1lcmF0b3I7DQo+PiAg
-ICsJdTY0IGNhcDEsIG51bWVyYXRvciwgY3BwY19yZXE7DQo+PiAgICsJdTggbWluX3BlcmY7DQo+
-PiAgICANCj4+IC0gCWludCByZXQgPSByZG1zcmxfc2FmZV9vbl9jcHUoY3B1ZGF0YS0+Y3B1LCBN
-U1JfQU1EX0NQUENfQ0FQMSwNCj4+ICsgCWludCByZXQgPSByZG1zcnFfc2FmZV9vbl9jcHUoY3B1
-ZGF0YS0+Y3B1LCBNU1JfQU1EX0NQUENfQ0FQMSwNCj4+ICAgIAkJCQkgICAgICZjYXAxKTsNCj4+
-ICAgIAlpZiAocmV0KQ0KPj4gICAgCQlyZXR1cm4gcmV0Ow0KPj4gQEBAIC00MDEsMjIgLTQwMCw2
-ICs0MDEsMjIgQEBADQo+PiAgICAJaWYgKHJldCkNCj4+ICAgIAkJcmV0dXJuIHJldDsNCj4+ICAg
-IA0KPj4gLSAJcmV0ID0gcmRtc3JsX29uX2NwdShjcHVkYXRhLT5jcHUsIE1TUl9BTURfQ1BQQ19S
-RVEsICZjcHBjX3JlcSk7DQo+PiArKwlyZXQgPSByZG1zcnFfb25fY3B1KGNwdWRhdGEtPmNwdSwg
-TVNSX0FNRF9DUFBDX1JFUSwgJmNwcGNfcmVxKTsNCj4+ICAgKwlpZiAocmV0KQ0KPj4gICArCQly
-ZXR1cm4gcmV0Ow0KPj4gICArDQo+PiAgICsJV1JJVEVfT05DRShjcHVkYXRhLT5jcHBjX3JlcV9j
-YWNoZWQsIGNwcGNfcmVxKTsNCj4+ICAgKwltaW5fcGVyZiA9IEZJRUxEX0dFVChBTURfQ1BQQ19N
-SU5fUEVSRl9NQVNLLCBjcHBjX3JlcSk7DQo+PiAgICsNCj4+ICAgKwkvKg0KPj4gICArCSAqIENs
-ZWFyIG91dCB0aGUgbWluX3BlcmYgcGFydCB0byBjaGVjayBpZiB0aGUgcmVzdCBvZiB0aGUgTVNS
-IGlzIDAsIGlmIHllcywgdGhpcyBpcyBhbg0KPj4gICArCSAqIGluZGljYXRpb24gdGhhdCB0aGUg
-bWluX3BlcmYgdmFsdWUgaXMgdGhlIG9uZSBzcGVjaWZpZWQgdGhyb3VnaCB0aGUgQklPUyBvcHRp
-b24NCj4+ICAgKwkgKi8NCj4+ICAgKwljcHBjX3JlcSAmPSB+KEFNRF9DUFBDX01JTl9QRVJGX01B
-U0spOw0KPj4gICArDQo+PiAgICsJaWYgKCFjcHBjX3JlcSkNCj4+ICAgKwkJcGVyZi5iaW9zX21p
-bl9wZXJmID0gbWluX3BlcmY7DQo+PiAgICsNCj4+ICAgIAlwZXJmLmhpZ2hlc3RfcGVyZiA9IG51
-bWVyYXRvcjsNCj4+ICAgIAlwZXJmLm1heF9saW1pdF9wZXJmID0gbnVtZXJhdG9yOw0KPj4gICAg
-CXBlcmYubWluX2xpbWl0X3BlcmYgPSBGSUVMRF9HRVQoQU1EX0NQUENfTE9XRVNUX1BFUkZfTUFT
-SywgY2FwMSk7DQo+IA0KPiBUaGlzIGlzIG5vdyBhIGNvbmZsaWN0IGJldHdlZW4gdGhlIHBtIHRy
-ZWUgYW5kIExpbnVzJyB0cmVlLg0KPiANCg0KSSB0aG91Z2h0IHRoYXQgSW5nbyBhZGRlZCBhbiBl
-eHRyYSAjZGVmaW5lIGZvciBjb21wYXRpYmlsaXR5Pw0KDQo=
+On Tue, 13 May 2025 19:48:13 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+
+> The GICv5 CPU interface implements support for PE-Private Peripheral
+> Interrupts (PPI), that are handled (enabled/prioritized/delivered)
+> entirely within the CPU interface hardware.
+> 
+> To enable PPI interrupts, implement the baseline GICv5 host kernel
+> driver infrastructure required to handle interrupts on a GICv5 system.
+> 
+> Add the exception handling code path and definitions for GICv5
+> instructions.
+> 
+> Add GICv5 PPI handling code as a specific IRQ domain to:
+> 
+> - Set-up PPI priority
+> - Manage PPI configuration and state
+> - Manage IRQ flow handler
+> - IRQs allocation/free
+> - Hook-up a PPI specific IRQchip to provide the relevant methods
+> 
+> PPI IRQ priority is chosen as the minimum allowed priority by the
+> system design (after probing the number of priority bits implemented
+> by the CPU interface).
+> 
+> Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+
+A few trivial things inline.
+
+J
+
+> ---
+>  MAINTAINERS                        |   2 +
+>  arch/arm64/include/asm/sysreg.h    |  19 ++
+>  drivers/irqchip/Kconfig            |   5 +
+>  drivers/irqchip/Makefile           |   1 +
+>  drivers/irqchip/irq-gic-v5.c       | 460 +++++++++++++++++++++++++++++++++++++
+>  include/linux/irqchip/arm-gic-v5.h |  16 ++
+>  6 files changed, 503 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d51efac8f9aa21629a0486977fdc76a2eaf5c52f..14d25cd8cd323b8f61b6523784ee65d63f6c1924 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+
+
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index e7734f90bb723bfbd8be99f16dd6d6fdc7fa57e8..9d28d408f9c6df24526dd8ecbf3c7d920246b22d 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -1079,6 +1079,25 @@
+>  
+>  #define GCS_CAP(x)	((((unsigned long)x) & GCS_CAP_ADDR_MASK) | \
+>  					       GCS_CAP_VALID_TOKEN)
+> +/*
+> + * Definitions for GICv5 instructions
+> + */
+> +#define GICV5_OP_GIC_CDDI		sys_insn(1, 0, 12, 2, 0)
+> +#define GICV5_OP_GIC_CDEOI		sys_insn(1, 0, 12, 1, 7)
+> +#define GICV5_OP_GICR_CDIA		sys_insn(1, 0, 12, 3, 0)
+> +
+> +/* Shift and mask definitions for GIC CDDI */
+
+Technically just masks (which are shifted) but none the less I wouldn't
+expect the comment to say Shift and mask.
+
+> +#define GICV5_GIC_CDDI_TYPE_MASK	GENMASK_ULL(31, 29)
+> +#define GICV5_GIC_CDDI_ID_MASK		GENMASK_ULL(23, 0)
+> +
+> +/* Shift and mask definitions for GICR CDIA */
+
+Likewise.
+
+> +#define GICV5_GIC_CDIA_VALID_MASK	BIT_ULL(32)
+
+Maybe
+GICV5_GICR_CDIA_VALID(r) etc given the instruction define name.
+
+> +#define GICV5_GIC_CDIA_VALID(r)		FIELD_GET(GICV5_GIC_CDIA_VALID_MASK, r)
+
+Personally I rarely see benefit in wrapping FIELD_GET() in another macro
+The bare code is only a little shorter and the FIELD_GET() inline keeps things nice
+and clear.  It's your code though so keep this if you really want to!
+
+
+> +#define GICV5_GIC_CDIA_TYPE_MASK	GENMASK_ULL(31, 29)
+> +#define GICV5_GIC_CDIA_ID_MASK		GENMASK_ULL(23, 0)
+> +
+> +#define gicr_insn(insn)			read_sysreg_s(GICV5_OP_GICR_##insn)
+> +#define gic_insn(v, insn)		write_sysreg_s(v, GICV5_OP_GIC_##insn)
+>  
+>  #define ARM64_FEATURE_FIELD_BITS	4
+>  
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 08bb3b031f23093311cf2f0918ad43e575b581d1..0f268f35b78531775aa233bfc362bfe119a68275 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -54,6 +54,11 @@ config ARM_GIC_V3_ITS_FSL_MC
+>  	depends on FSL_MC_BUS
+>  	default ARM_GIC_V3_ITS
+>  
+> +config ARM_GIC_V5
+> +	bool
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	select GENERIC_IRQ_EFFECTIVE_AFF_MASK
+> +
+>  config ARM_NVIC
+>  	bool
+>  	select IRQ_DOMAIN_HIERARCHY
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 365bcea9a61ff89e2cb41034125b3fc8cd494d81..3f8225bba5f0f9ce5dbb629b6d4782eacf85da44 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-v3-mbi.o irq-gic-common.o
+>  obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o irq-gic-v3-its-msi-parent.o
+>  obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+>  obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+> +obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o
+>  obj-$(CONFIG_HISILICON_IRQ_MBIGEN)	+= irq-mbigen.o
+>  obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
+>  obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
+> diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a50982e5d98816d88e4fca37cc0ac31684fb6c76
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v5.c
+> @@ -0,0 +1,460 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
+> + */
+> +
+> +#define pr_fmt(fmt)	"GICv5: " fmt
+> +
+> +#include <linux/irqdomain.h>
+> +#include <linux/wordpart.h>
+> +
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/arm-gic-v5.h>
+> +
+> +#include <asm/cpufeature.h>
+> +#include <asm/exception.h>
+> +
+> +static u8 pri_bits __ro_after_init = 5;
+> +
+> +#define GICV5_IRQ_PRI_MASK	0x1f
+> +#define GICV5_IRQ_PRI_MI	(GICV5_IRQ_PRI_MASK & GENMASK(4, 5 - pri_bits))
+
+
+> +struct gicv5_chip_data {
+> +	struct fwnode_handle	*fwnode;
+> +	struct irq_domain	*ppi_domain;
+> +};
+> +
+> +static struct gicv5_chip_data gicv5_global_data __read_mostly;
+
+
+> +enum {
+> +	PPI_PENDING,
+> +	PPI_ACTIVE,
+> +	PPI_HM
+> +};
+> +
+> +static __always_inline u64 read_ppi_sysreg_s(unsigned int irq,
+> +					     const unsigned int which)
+
+Name the enum and use that here rather than an unsigned int?
+Might as well give the compiler a hand.
+Maybe I'm missing a later use of this that means we can't do that.
+
+This is almost enough combinations to justify a look up table but
+I guess the compiler might not figure out how to optimize that.	
+
+> +{
+> +	switch (which) {
+> +	case PPI_PENDING:
+> +		return irq < 64	? read_sysreg_s(SYS_ICC_PPI_SPENDR0_EL1) :
+> +				  read_sysreg_s(SYS_ICC_PPI_SPENDR1_EL1);
+> +	case PPI_ACTIVE:
+> +		return irq < 64	? read_sysreg_s(SYS_ICC_PPI_SACTIVER0_EL1) :
+> +				  read_sysreg_s(SYS_ICC_PPI_SACTIVER1_EL1);
+> +	case PPI_HM:
+> +		return irq < 64	? read_sysreg_s(SYS_ICC_PPI_HMR0_EL1) :
+> +				  read_sysreg_s(SYS_ICC_PPI_HMR1_EL1);
+> +	default:
+> +		BUILD_BUG_ON(1);
+> +	}
+> +}
+> +
+> +static __always_inline void write_ppi_sysreg_s(unsigned int irq, bool set,
+> +					       const unsigned int which)
+
+Likewise - nicer with enum perhaps.
+
+> +{
+> +	u64 bit = BIT_ULL(irq % 64);
+> +
+> +	switch (which) {
+> +	case PPI_PENDING:
+> +		if (set) {
+> +			if (irq < 64)
+> +				write_sysreg_s(bit, SYS_ICC_PPI_SPENDR0_EL1);
+> +			else
+> +				write_sysreg_s(bit, SYS_ICC_PPI_SPENDR1_EL1);
+> +		} else {
+> +			if (irq < 64)
+> +				write_sysreg_s(bit, SYS_ICC_PPI_CPENDR0_EL1);
+> +			else
+> +				write_sysreg_s(bit, SYS_ICC_PPI_CPENDR1_EL1);
+> +		}
+> +		return;
+> +	case PPI_ACTIVE:
+> +		if (set) {
+> +			if (irq < 64)
+> +				write_sysreg_s(bit, SYS_ICC_PPI_SACTIVER0_EL1);
+> +			else
+> +				write_sysreg_s(bit, SYS_ICC_PPI_SACTIVER1_EL1);
+> +		} else {
+> +			if (irq < 64)
+> +				write_sysreg_s(bit, SYS_ICC_PPI_CACTIVER0_EL1);
+> +			else
+> +				write_sysreg_s(bit, SYS_ICC_PPI_CACTIVER1_EL1);
+> +		}
+> +		return;
+> +	default:
+> +		BUILD_BUG_ON(1);
+> +	}
+> +}
+> +
+> +static int gicv5_ppi_irq_get_irqchip_state(struct irq_data *d,
+> +					   enum irqchip_irq_state which,
+> +					   bool *val)
+> +{
+> +	u64 hwirq_id_bit = BIT_ULL(d->hwirq % 64);
+> +
+> +	switch (which) {
+> +	case IRQCHIP_STATE_PENDING:
+> +		*val = !!(read_ppi_sysreg_s(d->hwirq, PPI_PENDING) & hwirq_id_bit);
+
+The !! isn't needed AFAICS but maybe adds a small amount of documentation value if
+people don't notice that *val is a bool. I'd call it state as per the
+definition as that's kind of more obviously boolean than 'val'.
+
+> +		return 0;
+> +	case IRQCHIP_STATE_ACTIVE:
+> +		*val = !!(read_ppi_sysreg_s(d->hwirq, PPI_ACTIVE) & hwirq_id_bit);
+> +		return 0;
+> +	default:
+> +		pr_debug("Unexpected PPI irqchip state\n");
+> +		return -EINVAL;
+> +	}
+> +}
+
+
+> +
+> +static void __exception_irq_entry gicv5_handle_irq(struct pt_regs *regs)
+> +{
+> +	bool valid;
+> +	u32 hwirq;
+> +	u64 ia;
+> +
+> +	ia = gicr_insn(CDIA);
+> +	valid = GICV5_GIC_CDIA_VALID(ia);
+> +
+> +	if (!valid)
+> +		return;
+> +
+> +	/*
+> +	 * Ensure that the CDIA instruction effects (ie IRQ activation) are
+> +	 * completed before handling the interrupt.
+> +	 */
+> +	gsb_ack();
+> +
+> +	/*
+> +	 * Ensure instruction ordering between an acknowledgment and subsequent
+> +	 * instructions in the IRQ handler using an ISB.
+> +	 */
+> +	isb();
+> +
+> +	hwirq = FIELD_GET(GICV5_HWIRQ_INTID, ia);
+
+As below - the GICV5_HWIRQ defines other than this one are going from
+hwirq to something the GIC cares about - this one is extracting the
+software managed hwirq from the CDIA register. 
+  
+> +
+> +	handle_irq_per_domain(hwirq);
+> +}
+> +
+> +static void gicv5_cpu_disable_interrupts(void)
+> +{
+> +	u64 cr0;
+> +
+> +	cr0 = FIELD_PREP(ICC_CR0_EL1_EN, 0);
+> +	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+
+This might get more complex later, but if not why not squash
+to one line? Given the register name is right there, there
+isn't a lot of documentation benefit in having cr0 as
+the variable name.
+
+> +}
+> +
+> +static void gicv5_cpu_enable_interrupts(void)
+> +{
+> +	u64 cr0, pcr;
+> +
+> +	write_sysreg_s(0, SYS_ICC_PPI_ENABLER0_EL1);
+> +	write_sysreg_s(0, SYS_ICC_PPI_ENABLER1_EL1);
+> +
+> +	gicv5_ppi_priority_init();
+> +
+> +	pcr = FIELD_PREP(ICC_PCR_EL1_PRIORITY, GICV5_IRQ_PRI_MI);
+> +	write_sysreg_s(pcr, SYS_ICC_PCR_EL1);
+> +
+> +	cr0 = FIELD_PREP(ICC_CR0_EL1_EN, 1);
+> +	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+
+Similar to above, I'd squash into single line.
+
+> +}
+> +
+> +static int gicv5_starting_cpu(unsigned int cpu)
+> +{
+> +	if (WARN(!gicv5_cpuif_has_gcie(),
+> +	    "GICv5 system components present but CPU does not have FEAT_GCIE"))
+
+Alignment off to my eyes.  Either a tab or align with !
+
+> +		return -ENODEV;
+> +
+> +	gicv5_cpu_enable_interrupts();
+> +
+> +	return 0;
+> +}
+> +
+
+> diff --git a/include/linux/irqchip/arm-gic-v5.h b/include/linux/irqchip/arm-gic-v5.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..4ff0ba64d9840c3844671f7850bb3d81ba2eb1b6
+> --- /dev/null
+> +++ b/include/linux/irqchip/arm-gic-v5.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (C) 2025 ARM Limited, All Rights Reserved.
+> + */
+> +#ifndef __LINUX_IRQCHIP_ARM_GIC_V5_H
+> +#define __LINUX_IRQCHIP_ARM_GIC_V5_H
+> +
+> +#include <asm/sysreg.h>
+> +
+> +#define GICV5_HWIRQ_ID			GENMASK(23, 0)
+> +#define GICV5_HWIRQ_TYPE		GENMASK(31, 29)
+> +#define GICV5_HWIRQ_INTID		GENMASK_ULL(31, 0)
+
+Maybe some hint as to what these are in from their naming?
+
+First two are from hwirq as defined in the irq domain stuff.
+Not the 3rd one if I follow this right.
+
+> +
+> +#define GICV5_HWIRQ_TYPE_PPI		UL(0x1)
+> +
+> +#endif
+> 
+
