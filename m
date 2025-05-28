@@ -1,118 +1,189 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0135479FE;
-	Wed, 28 May 2025 03:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C1E1EA7CC
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748403593; cv=none; b=L3Vrf7SFqs2e+UaCLLmHuvH/YTJpUHltN1uF445DjwiGbL3ZM57ePWbsII5nNGbKQxyWrWqey8TzdnS2vdw4PHZKfzWvwqGYOOdlHUnio7pBI1tSTv3lnTsu1q7FZmDN8s58oCZ88lLtjoqd6g/Gx2185qH6/0M7DcAOTPtCEYY=
+	t=1748403599; cv=none; b=fRAo9A4IVlV+YbDBca+Plv0uC0zqFKWeBkjMy2IazAN0lGl59N6cPrX/x7aaDo7qJFrb065/sI7zymXYvW1JdTBx0gCJ3aAGCXwVghGqBrGZDeIwgXj6npayQG6wASRGqYss2TJxsPknLDQCFKUD7vqSoVs1jXOkuLyoXt5vJTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748403593; c=relaxed/simple;
-	bh=ITNiBSM0+JT9vnYQuQVNXjD+6FP9rFnIlOdwWGPSEF8=;
+	s=arc-20240116; t=1748403599; c=relaxed/simple;
+	bh=GwW69SNTqzGr2OriqqPYYKEoROS1fPdGoQyps42QbuY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=otxI6xDQjwBchenhjyKaIulPCIVrBaQDkUXka3wbxGLIoJC1nybbFZ5GsrH/bBnU57JR0Vm7mTeNByjnOpwT89SrGPzFE7KyPAJH7HaQHfLz0Hxdf+R4zkLqqtJQdGLdiOMMQPXd+9hng+GQigE/xfWo3kHBFlNfHuoMTeL4fZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+GknRdv; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=MSSQMrVtclUDbODOO37IHgcLbmMhzl6tHluQRPrlE+ry/HDv9DSGjr9yXU+TfMukV97XXz3gMY/ej0ZrXISIwFkYZa5OyhQawxdQUBO6BgpOwrAgTUfpBS9Y/sZQDK5OhKvaMrpRr3P6ZheK3zgF9rU9ZWvZfxpaTLuHFpdshh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T5rWwBqq; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+GknRdv"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3105ef2a071so45596661fa.1;
-        Tue, 27 May 2025 20:39:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T5rWwBqq"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2348a45fc73so110145ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:39:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748403590; x=1749008390; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748403596; x=1749008396; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k97S9wR51qc4/fnvH9KOEJ16r71ViYeaIlgZl3YKvtw=;
-        b=O+GknRdv3j1JXWmrRhpsImFGDitOINitpsGJdfV0alCtO/qZosedmb5RSzq2GMvbPc
-         QM4bH5x4J0ZGPwCzoyUiMIUDJip0x50H4eS1e/1nYoSfr1PCMpY+2ShXrGEjyCX5hxMz
-         UGVl/KEWXgAcQt5EvUEm/Hkpsx36CyNsfzMjfE4fT/F9PcTALTogSx2ESjwBcmSenOwL
-         SVvb/J0FkETUwGLEgVEQIR+I8q2sECxYoIE6Uh8oWc11NxbM60ctQqVn0lCIHXOCaa6z
-         b+94wYcTD2lTm7lBpRWlAOl8lzLUWT9m6GNNzUWpGwkTjyndn4G9wc4dEPPV/QS07IEE
-         Z5KQ==
+        bh=xzMo1es6YzCF+mytak0KHHshSSIz5JiRwR0oN2yEmjI=;
+        b=T5rWwBqqvPuS46f/n6mFL3gALohXauq2L+hQ0fCRUhcz4CAOsySFB3hbDHMZP/YYD6
+         GSn98SsHOp1evSoGSw/vKpDzSlhhk9XIXf4eWkx1vJb1XfiQvbfYHiZNuu01BD86jL1B
+         W6y2uQV8/JdZrWqW90sTuXsP6vG1AeLqbYUmnCJzdMPcwMvAJpdUsRiuxaxrXBuTB/AU
+         tJ5bX5jJ4C2O7o0m+NF/vjrTG1qWlXSefDCtvUpyHnWxZYU4kHfVEocl4oBbMVntoACn
+         lbKeYFOFs+LfJPnuTBhgISLstdZDx7vdMgdELpmYkeY1Cvu/ZNP4tK8u4ZmzqdF5v6p5
+         9OKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748403590; x=1749008390;
+        d=1e100.net; s=20230601; t=1748403596; x=1749008396;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k97S9wR51qc4/fnvH9KOEJ16r71ViYeaIlgZl3YKvtw=;
-        b=N4mUjD9ZVdfVvBOtrCe7NyZy1m2etID8/q+ufcYtXN1nIUVp82DeGTjg14k0o0Puka
-         Vi0SsNBRBNbJAC04vtecjnZGRAfEQ5DLSLHp7aLODXtfw9qlnEd49saemVBsdbePnx4w
-         tmfgtpVLQLVTWuIelYE5HU2nTjxRDGRPCN0bRXpD0q0ElaKFoqAyoDBQdgwhF6OVpSOx
-         Dr2p63EM2Rw27ndVBtGNKAH/YP4hBRgn/VxnDuqK/w/JBuS+bJSxf8QHl/hnuvbZb/Bb
-         pCkol4ILHsmeTkXbhA9wKPrBQtFPYPD7J4XhXdM3hmNiZTWmKZu41GskYtsoK23X7wD4
-         3cTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqmVvREUIO+aGk3g/Lf/HS/iz94Z3tVexsCviFUyXx3QOv1bkd9g+vHOdorlCyNpT9A/UXX+O0rjmF@vger.kernel.org, AJvYcCXqsX00W9ejiFx55zNU/FH32ftUOKG+o5TEh5cnZkN8eCBpcdMFvAmc3Wjm48aaITRZrZiWuY3ATQfun3lz@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm86tafXASDApgZfT89j70s1S2goXUWcuaB2Zgn+kJPyfXczWp
-	K1wHDdH8J8Ig5yb+Ibh/0z8mOJGfYfs9CuyvL5mO7ccX09PQkxGxJkPBYeDnV3FlQYVxF+KtPuB
-	iAAI2Nk+tvVyYPSENPgwTv49eWdce9g4=
-X-Gm-Gg: ASbGnctLIJDtuyMpiEu7aoCRoJNhcJsINYE8RzPW1hBrf6FsygIDSq5Dfn/TY2S/kJm
-	8t0+Svl5KKmAhLlJVq7YbvnowgSg5r9EbGPXDK5ngk2KGdd+ZqQ/ZAtWR8lPzWqZYzCUCeXliYz
-	SNs+iJChplOXO1QeWH1yaOuo6CZ+rXoULOWyXsNtmPR0sx/ZagVCgJgCb3NJjrcfws6w==
-X-Google-Smtp-Source: AGHT+IEIsd+uvunloDLIb1uC3D1QnCMBn9VDz+WUTsaj2OqUoWw8XlfPOWmq1JhAOND5a/jIHeqlS6sni3hDgI1rTqA=
-X-Received: by 2002:a05:651c:1548:b0:30b:c9cb:47e5 with SMTP id
- 38308e7fff4ca-3295b9abf22mr50089171fa.8.1748403589739; Tue, 27 May 2025
- 20:39:49 -0700 (PDT)
+        bh=xzMo1es6YzCF+mytak0KHHshSSIz5JiRwR0oN2yEmjI=;
+        b=XHZg8v5gR8J8xP43iLlM65jJT/wrPqYfSJxLtOGzAFWvMVy53UWwYabOGowJEDWUCu
+         /g8x4ewVd6bh/6gn1xObIkjIVHmETt6yokZZS8eTEqyYuTHVnW+tHpzeQGgAKy7uw7N8
+         S5vQMUyaTEAz97W42xtrt4Kl3Qvwul2ptApawvnlDlylahBRFyzKjOppIOiuuNf3m6bu
+         GwHXHE2loBoed3SzzHtxAo3Q/w9LVeQb1fRFXaOiCl0fODDL+EN+pRxRy4/O7oZtkFYj
+         KFHTmqPMAvzyBnouUB7vViWkJn/f2Hdvdkx2Z5jVbqXbkD3+PMon3E+j3kNNPVA0TkvH
+         keaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbvuftf3Z+1I2eLOqwBJtm0AlhyIPmtDP7mKIVYvkNTXVMzR3uxHZmQxmjtU1MFRGuphfis06VxOxSpXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzsAaqQX8R5ef/VxhXZbqPGmRs4OcuFHmWMVJ+bf+RRZlSiFxk
+	SDtBUUo0JHIStbwjByGtpvbhvBzJbMjSbohkssqCgmxXaeIfEb1D+QyUHlDReA2LPsXfsZNG2Tr
+	Wf6B5olUf2GUrXGkQmmpp28gb1JT6HjmOn+5UL494
+X-Gm-Gg: ASbGncv238NUBpmU6GR4SX6/Y5udqL3S502CwI5e3fRyVv7brCh6CFTGx/tfk/q3cWF
+	xcfgvOyqo2gKKJgg0TikI4wT32IRokPLr/KYE3a7BeV3GDiway4Qx2rOJQXXVf5vvrCQ45TW4Hr
+	Km4RwlQaz8uQsL5nJfIdv0OUIKA8PatPkMqgYNUDQ05Lp2
+X-Google-Smtp-Source: AGHT+IF0DtQH7lMaEywzvH79+pjzPiS7W3l062O4jZv96hZEQBimhQXlYIdH+KSq7PDb45c71p8VC9s++X3ZaxARsEI=
+X-Received: by 2002:a17:902:d582:b0:22e:4509:cb86 with SMTP id
+ d9443c01a7336-234cbe3a8d4mr936825ad.19.1748403596010; Tue, 27 May 2025
+ 20:39:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528031531.171356-1-chenxiaosong@chenxiaosong.com>
-In-Reply-To: <20250528031531.171356-1-chenxiaosong@chenxiaosong.com>
-From: Steve French <smfrench@gmail.com>
-Date: Tue, 27 May 2025 22:39:37 -0500
-X-Gm-Features: AX0GCFseYEkO9h9MIMfPfbft45khzPT7ofYg9blN_jrcSn2i60KgD6fYt_5tAI4
-Message-ID: <CAH2r5mtAYV925FbL-5GPGvk3wMG5u0027_icNtUw6uZ9yOBqyw@mail.gmail.com>
-Subject: Re: [PATCH] smb/client: use sock_create_kern() in generic_ip_connect()
-To: chenxiaosong@chenxiaosong.com, Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: pc@manguebit.com, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
-	tom@talpey.com, bharathsm@microsoft.com, linux-cifs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ChenXiaoSong <chenxiaosong@kylinos.cn>, 
-	David Laight <david.laight.linux@gmail.com>, Wang Zhaolong <wangzhaolong1@huawei.com>, 
-	Enzo Matsumiya <ematsumiya@suse.de>
+References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-2-byungchul@sk.com>
+In-Reply-To: <20250528022911.73453-2-byungchul@sk.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 27 May 2025 20:39:43 -0700
+X-Gm-Features: AX0GCFvYZCAPoakcUYocTbtCbfWiIMZbRpUPZfb9hmdDb55iCT3pzFSwcWwav8Y
+Message-ID: <CAHS8izPTBnSL_zrW-u0mKBXC=iP9=WZcS9etCRpufCkpCwYoAg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/16] netmem: introduce struct netmem_desc
+ struct_group_tagged()'ed on struct net_iov
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Weren't there issues brought up earlier with using sock_create_kern
-due to network namespaces and refcounts?
+On Tue, May 27, 2025 at 7:29=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
+rote:
+>
+> To simplify struct page, the page pool members of struct page should be
+> moved to other, allowing these members to be removed from struct page.
+>
+> Introduce a network memory descriptor to store the members, struct
+> netmem_desc, reusing struct net_iov that already mirrored struct page.
+>
+> While at it, add a static assert to prevent the size of struct
+> netmem_desc from getting bigger that might conflict with other members
+> within struct page.
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
 
-On Tue, May 27, 2025 at 10:18=E2=80=AFPM <chenxiaosong@chenxiaosong.com> wr=
-ote:
->
-> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
->
-> Change __sock_create() to sock_create_kern() for explicitness.
->
-> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+This patch looks fine to me, but as of this series this change seems
+unnecessary, no? You're not using netmem_desc for anything in this
+series AFAICT. It may make sense to keep this series as
+straightforward renames, and have the series that introduces
+netmem_desc be the same one that is removing the page_pool fields from
+struct page or does something useful with it?
+
 > ---
->  fs/smb/client/connect.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  include/net/netmem.h | 41 +++++++++++++++++++++++++++++++++++------
+>  1 file changed, 35 insertions(+), 6 deletions(-)
 >
-> diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-> index 6bf04d9a5491..3275f2ff84cb 100644
-> --- a/fs/smb/client/connect.c
-> +++ b/fs/smb/client/connect.c
-> @@ -3350,8 +3350,7 @@ generic_ip_connect(struct TCP_Server_Info *server)
->                 struct net *net =3D cifs_net_ns(server);
->                 struct sock *sk;
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index 386164fb9c18..a721f9e060a2 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -31,12 +31,34 @@ enum net_iov_type {
+>  };
 >
-> -               rc =3D __sock_create(net, sfamily, SOCK_STREAM,
-> -                                  IPPROTO_TCP, &server->ssocket, 1);
-> +               rc =3D sock_create_kern(net, sfamily, SOCK_STREAM, IPPROT=
-O_TCP, &server->ssocket);
->                 if (rc < 0) {
->                         cifs_server_dbg(VFS, "Error %d creating socket\n"=
-, rc);
->                         return rc;
+>  struct net_iov {
+> -       enum net_iov_type type;
+> -       unsigned long pp_magic;
+> -       struct page_pool *pp;
+> -       struct net_iov_area *owner;
+> -       unsigned long dma_addr;
+> -       atomic_long_t pp_ref_count;
+> +       /*
+> +        * XXX: Now that struct netmem_desc overlays on struct page,
+
+This starting statement doesn't make sense to me TBH. netmem_desc
+doesn't seem to overlay struct page? For example, enum net_iov_type
+overlays unsigned long page->flags. Both have very different semantics
+and usage, no?
+
+> +        * struct_group_tagged() should cover all of them.  However,
+> +        * a separate struct netmem_desc should be declared and embedded,
+> +        * once struct netmem_desc is no longer overlayed but it has its
+> +        * own instance from slab.  The final form should be:
+> +        *
+
+Honestly I'm not sure about putting future plans that aren't
+completely agreed upon in code comments. May be better to keep these
+future plans to the series that actually introduces them?
+
+> +        *    struct netmem_desc {
+> +        *         unsigned long pp_magic;
+> +        *         struct page_pool *pp;
+> +        *         unsigned long dma_addr;
+> +        *         atomic_long_t pp_ref_count;
+> +        *    };
+> +        *
+> +        *    struct net_iov {
+> +        *         enum net_iov_type type;
+> +        *         struct net_iov_area *owner;
+> +        *         struct netmem_desc;
+> +        *    };
+> +        */
+> +       struct_group_tagged(netmem_desc, desc,
+> +               enum net_iov_type type;
+> +               unsigned long pp_magic;
+> +               struct page_pool *pp;
+> +               struct net_iov_area *owner;
+> +               unsigned long dma_addr;
+> +               atomic_long_t pp_ref_count;
+> +       );
+>  };
+>
+>  struct net_iov_area {
+> @@ -73,6 +95,13 @@ NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
+>  NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+>  #undef NET_IOV_ASSERT_OFFSET
+>
+> +/*
+> + * Since struct netmem_desc uses the space in struct page, the size
+> + * should be checked, until struct netmem_desc has its own instance from
+> + * slab, to avoid conflicting with other members within struct page.
+> + */
+> +static_assert(sizeof(struct netmem_desc) <=3D offsetof(struct page, _ref=
+count));
+> +
+>  static inline struct net_iov_area *net_iov_owner(const struct net_iov *n=
+iov)
+>  {
+>         return niov->owner;
 > --
-> 2.34.1
->
+> 2.17.1
 >
 
 
 --=20
 Thanks,
-
-Steve
+Mina
