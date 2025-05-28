@@ -1,208 +1,170 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C48A207A20
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E857E41C63
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748473887; cv=none; b=GF/UvQ4s3KJIOEelK2WGOT9Mmexs8qE7et3BM+dXH/7835/uWuJT4mPdryOpr7TFB5gtwV/njJy5nkIzamqRgjznh3uipjgZjIbf4hpam+S5RADqin8qyWJPHeBh0edudMUfsC7F6k5AGrI7ScH2w3SiQuzLa6s6VZj52Gdq324=
+	t=1748474234; cv=none; b=VP6JlTptNcR+eITLvpJfxMaS5jlLECYr01o0kYkxcJ9SfMPm4mFGBfT+Qg1tSkJ0Jx5KPdukZb1US60mC/vz2ONiNRqh1v+yQ7whvggef2sJVsuQjgQk2+BF4/ds/B4p/8vo6S3CuNR2XvkB9z4b1VMRf+EmnytclPD7z66zcbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748473887; c=relaxed/simple;
-	bh=5kskNdbmd1wbRPsnBB9OjSRJEFOXvFCXuGgfnm1cLRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9lZI+szXa/D/t/3yxCalNDbD0ccM4RSlhXDudcPTbBHTbgfwQInNga8eVGidsMuzB2Ts/kvZWRIzJpwdmuCFr4CZG32nCuFQvkwTfGlrnMjEq2thaFTHSoJG7g9cQgMZTLGUhuKln7lCxlDbxq0VuvRz0AJVi3VH1kN4tAOfBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lJrmayNU; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748474234; c=relaxed/simple;
+	bh=bR4jltbeJghKywDdd3mwBC+Jb3pwT0W7NWcj+YMcNXk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qpbCjdPEG/rPcAhcqQQcY8LnFFxGguUOyjO9pK2DT9rgNndmqYYWZIDQC/Gxe2CHGGIDEXlfn/xS7OMbnMK8nMolNgY4PxyfEGy6dy6ycaqrbSzRGaliFTwMHUIABnALUF4e++xyBNzfMlBVZr9ZBAILuKDJ3Rn5VKCW38bi0Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A8DofxYq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lJrmayNU"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3dd89a85414so81975ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748473884; x=1749078684; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d7TN5QXJhRSmfoM9Tpxod/qjmd6b/yxgCZaGEbMSEqQ=;
-        b=lJrmayNUwI4B9XoW2GA4RluWFKBEcpold3+664rgEoLkrXDsSOlONc8FyCJp7pD2Lf
-         Z9sL01KS9x61bfuhz5pVwADkp9TUeEI/XSuwNuODzrpHbIFyJxWfBMxlVPQsmgPSefLF
-         b1KLTIuycV0EKjgCU4S1l3YImNWSWYeogSeauQ922VHOVyee9kPNQBndKQK+WHT84b0I
-         kJuJUS7Fxp5FRFaRMc5LzF/+nvdBnMPJcZVqYO6OVGoYDymjYburjycxUVbwqtawpTMF
-         6lvjcirF3koekUICdhzT0a9vMX14yaJ5zxD7OxdCh2caUJLVIYiKuI/850gzKAxGcG3z
-         p8Qg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8DofxYq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748474231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HNVTS3XJErwAg78tN7yQ7rmq17jTcCsZX0ZsbDsKJ4U=;
+	b=A8DofxYqp4AU2Ulq4mM+3J55Z4ZNd/EE2c+kWg2xESfP3GPmSHtuGxI703N23XiaImuvYI
+	rjiz3NZsg5J5no5GsQjlSSveCG/Kr67k60uj0C+eqo++Aeup0JGJND90d2kbS8TbQ4Fipx
+	m7lMZN0HwHZMFu8moo+tTWuC60clbMA=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-360-2rv-ado5M8OC_mvyhnAUWg-1; Wed, 28 May 2025 19:17:10 -0400
+X-MC-Unique: 2rv-ado5M8OC_mvyhnAUWg-1
+X-Mimecast-MFC-AGG-ID: 2rv-ado5M8OC_mvyhnAUWg_1748474230
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7cf6c53390eso28484985a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:17:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748473884; x=1749078684;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d7TN5QXJhRSmfoM9Tpxod/qjmd6b/yxgCZaGEbMSEqQ=;
-        b=LIEXPNXu3VgNy7Yni/g4pjs/J9OZF553hErb0mflH1rhXnZ/dwNzFNxjTx3WCdjWJp
-         Iu9PEUeDChXfWTh1b8N4H814GJegqDGmMwb2DB5R9MA2MPkhAg8+MXF5gMWxqvMNp2Vv
-         QSjnu77vM/aEQe9rkLBf2uXCX9Z+u9jdJWKd93AvVfACIxFvvmIp1U2xXO4TTCPN8xZB
-         elFODW0sGWdJrG5lWl4IngwAIR3gXmgWjdG9FxrJmKhMqqi9KAsYhIhcxPhyr89KE1A9
-         5Mhy/JoBWwObO9XTPV/IyBa0Nwfk3DX9R5hxRNjDHZamMNxqPXr2r9TWAS5CnTvA+lXk
-         JiTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeE2Jrc5Kyr9NtWkByEMpMPWExp6RDiWKgDbh16QiDl22K8PyJYJuWO57IE8H0znChtmF1gScVpaeXCoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXPvr2SxDU4C9g4ZpOT7J5htjFss0XQoU5rQjDVBBlPiGa9TLv
-	9KOCkrk8+Owctszhj1AykSJHe4HXyXihEZMIi/ZrHbOw8kjZ/cWC+zuU1Tnc4tQ02LU24Fod4rV
-	VrbdEninHbIQ/bSMWNFs1zUn0L/F1+0EREkFfOd6t
-X-Gm-Gg: ASbGncuy0tYlTl9kDsPJNdlcoEJN/FNg0HBJXdbDzf06R5mfA3Tbt22LFDaBlL8BsoW
-	Q/ujsxMFwQzsRpvbLb8hmPBgkfk1cvljug+IUlRMinyOKrEno2ltkEEOf9PJFihugwPNA4kxqO8
-	gbAvqCclZF92SeZMJ5zG2G5FWvLMuU3PTkgQWffzWJrTp6LDvX/1HAfEFAF7Y0RTiWZzSn015E
-X-Google-Smtp-Source: AGHT+IGom8NrER1VE/kdfIaohwcyFm+hEoJj2YT3ebrUwFisS6NlVU5jYbwNmrwrJXLRXub0bv+so2t3+K4ZboOFJXg=
-X-Received: by 2002:a05:6e02:1a83:b0:3db:831e:1bc3 with SMTP id
- e9e14a558f8ab-3dd9315c1dcmr544235ab.23.1748473884301; Wed, 28 May 2025
- 16:11:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748474229; x=1749079029;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HNVTS3XJErwAg78tN7yQ7rmq17jTcCsZX0ZsbDsKJ4U=;
+        b=JfE3BtvapvpyTntXRKIc+42GQnEhiYAmYKy8Wi4dKndgFk2lsPL7CIWMmgyFypxaRR
+         5ZaOYoqVROtwsLUmDaOqVq78oxz16cc+bgCt/F20kXC8AiADRkocL0nrEmVRkFFkA+jJ
+         WOeMPd7x3PdEmKYk6qnMTE1Qstb7HK2D0cJUmCoSwFCzyw7M9r3r/v/dGzL8fqBQatl4
+         ElDo/1Mj7Y1xJGxoXzCGFOXAuiQGf5L2xOQJuIVOYu3ocfCMOaoA0kupd+cRDF3H/QpR
+         dXXkD/GB0/JOsgwEKczJXtO6pS1+53q/2fmRQAUhCLo0EN+0UnujjGMDx4Nyru/KKOSz
+         VjFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoJalVf9lFJ7UUbfvi+KYIT2MNGDZCnqkVVw9ofJBjhApBfVFLuzg6H71KLFgw8ln/3MFIn8ewOK5OLWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHiNC2PtVQG4RjlHl0nJhk/j1RWe7BSUkvQBYz3PH+aKAJZENs
+	IHIIYj6HLV6X4XQK7R1EcjMjutow2RcUOg5j5i/ccvjCO94G7y+8Gozd76amUmlSU7CDEdd/njo
+	zzSKYueybqHZ43u1CgEusbaCpY1tAWnVuioExFcM/l3El13iDscjrNl82dj4I8eFiXmcs1ct7RQ
+	8c2lg7ggKjs0d87UOyIxuGfg2QG49nvreHnJxmidzucD4AFWxWGMw=
+X-Gm-Gg: ASbGncvi5KWmws7Y4mJDJM9VYe01jn8GlB5vzKwvOABE956wXGi56LENBSC+lH+y0ck
+	v2DbBIucym5LK++m+vp8rLpdkbeugoo/zZBVgvbsW94XsQNzzVeVV6UCq2HZHDV9HHeTT1apzgI
+	n2tgPaQzVJoG7r3Al2FXK1ldUGSVoEaVp01g6/M+UzicK26Lm0gQhjEnYLllWrPmUoGKDx2oK+q
+	v+3e92bjeaRigeHA62W9QngynHgsXF3cHQG6pmjKH6KoPPCV7J7WguyiDiO8xh8vCx0pQ0Zg5Lv
+	r7gd+Osg4BrNshBOFhhYcl53RfIEeBynwcYQA9WNg2gyBR2++w==
+X-Received: by 2002:a05:620a:240c:b0:7c5:5670:bd77 with SMTP id af79cd13be357-7ceecbf9d5amr2976786085a.55.1748474229307;
+        Wed, 28 May 2025 16:17:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4WUSbtjPX/jIstfDumz1aLRt9cGSRxDbR99fys/EUj2js8Z5XB/6olHr1Rng/KTgyDsa68w==
+X-Received: by 2002:a05:620a:240c:b0:7c5:5670:bd77 with SMTP id af79cd13be357-7ceecbf9d5amr2976780085a.55.1748474228734;
+        Wed, 28 May 2025 16:17:08 -0700 (PDT)
+Received: from [192.168.1.2] (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0f984fsm13437985a.43.2025.05.28.16.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 16:17:07 -0700 (PDT)
+From: Brian Masney <bmasney@redhat.com>
+Subject: [PATCH v2 00/10] clk: add kunit tests and correct rate change bug
+ in the clk core
+Date: Wed, 28 May 2025 19:16:46 -0400
+Message-Id: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428213409.1417584-1-irogers@google.com> <20250428213409.1417584-6-irogers@google.com>
- <aDd06eK7fKFsFsVS@google.com> <CAP-5=fV-cLLpdyoqL8+Jrt3iYU7EbpZZDOyM1kBCc+54gA2Nzg@mail.gmail.com>
- <aDeLLvBVQnQqJT4b@google.com>
-In-Reply-To: <aDeLLvBVQnQqJT4b@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 May 2025 16:11:13 -0700
-X-Gm-Features: AX0GCFufqlmUjrJuC0NBNqF7z_kwH0km2z1g4J15ITd67IMLnpSSJlAZbK8v7Ds
-Message-ID: <CAP-5=fWJMFYBtwPeH8DhzUG2jbjJ865sLojDtEc1+HDQZdpPoA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/9] perf build-id: Mark DSO in sample callchains
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	James Clark <james.clark@linaro.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
-	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
-	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF+ZN2gC/0XMSw7CIBSF4a00d+xteIjFjtyHcUDprRAFGmiqp
+ uneJU48s29w/g0KZU8F+maDTKsvPsUKcWjAOhPvhH6sBsGEYkpotM8HvvyMq0DNZZ0ZOFNnqIc
+ 50+Tfv9j1Vj3lFHBxmcw/cWQdl1wo3XbsJDVyHIIpkT6XTKMzS2tTgH3/AugWmcKYAAAA
+X-Change-ID: 20250528-clk-wip-v2-813333ab1059
+To: Stephen Boyd <sboyd@kernel.org>, Maxime Ripard <mripard@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Alberto Ruiz <aruiz@redhat.com>, Brian Masney <bmasney@redhat.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748474226; l=3436;
+ i=bmasney@redhat.com; s=20250528; h=from:subject:message-id;
+ bh=bR4jltbeJghKywDdd3mwBC+Jb3pwT0W7NWcj+YMcNXk=;
+ b=vdHEnQ94JPNGIHCCZwIxPNiqKHhH6hU6UBtXvT+6qDsaUjVFbtUotmD0843bAl6A5j94b0cD2
+ V0X/h9bsyrOBeVqo7JNvcfsOHL5jhB5mtUTiyp9CT9/h6eJXjl/7b81
+X-Developer-Key: i=bmasney@redhat.com; a=ed25519;
+ pk=x20f2BQYftANnik+wvlm4HqLqAlNs/npfVcbhHPOK2U=
 
-On Wed, May 28, 2025 at 3:16=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Wed, May 28, 2025 at 01:54:41PM -0700, Ian Rogers wrote:
-> > On Wed, May 28, 2025 at 1:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > On Mon, Apr 28, 2025 at 02:34:04PM -0700, Ian Rogers wrote:
-> > > > Previously only the sample IP's map DSO would be marked hit for the
-> > > > purposes of populating the build ID cache. Walk the call chain to m=
-ark
-> > > > all IPs and DSOs.
-> > >
-> > > I think this is correct, but I'm afraid it'd also increase the proces=
-sing
-> > > time.  Do you happen to have any numbers?
-> >
-> > It increases time spent processing the data file but to get a large
-> > data file I had to run for multiple seconds and I struggled to get the
-> > performance cost of this to be in the milliseconds (ie a tiny fraction
-> > of the record time). Ultimately I found the change imperceptible and
-> > couldn't think of a good command line to make it perceptible.
->
-> The worst case would be dwarf unwinding.  Maybe we can skip the
-> processing if it takes too long..
+Here's a series that adds various kunit tests to the clk framework,
+documents the members of struct clk_core, and adds a fix that does a
+better job of preserving the original clock rate when a sibling clock
+changes it's rate, and the shared parent's rate.
 
-This doesn't sound unreasonable but is somewhat beyond the scope of
-what I wanted to do here, which relates to migrating from inodes to
-buildids as identifiers for DSOs. It would be useful to get a bug
-report on this being too slow.
+These tests are centered around inconsistencies and limitations in the
+clock framework that may lead to some clocks unknowingly changing rates
+during a rate change of their siblings.
 
-> >
-> > If the time is spent populating ~/.debug because more DSOs are marked
-> > then this is fixing a bug and isn't a problem with the patch.
->
-> Right, it's a good thing.
->
-> >
-> > My personal opinion is that it is somewhat surprising `perf record` is
-> > post-processing the perf.data file at all, and -B and -N would be my
-> > expected defaults - just as --buildid-mmap implies --no-buildid (-B).
->
-> Otherwise nobody will run perf buildid-cache to add the info. :)
+The intent of the clock framework is to keep the siblings clock rate
+stable during such an operation:
 
-Right, but we know it is high overhead as we run a number of tests with -B:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/record_sideband.sh?h=3Dperf-tools-next#n25
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/test_arm_spe.sh?h=3Dperf-tools-next#n94
+    clk_set_rate(clk, MY_NEW_RATE);
 
-I agree that populating the buildid cache immediately after perf
-record minimizes a gap where DSOs may change prior to perf report. If
-the DSO changes midway through perf record it doesn't help as the
-buildid information is only computed at the end of perf record.
+However, it assumes that the sibling can generate that rate in the first
+place. In many situations, it can't, and it leads to numerous bugs and
+solutions over the years.
 
-Isn't there an argument that because we have build IDs we don't care
-about the record to report race any more as debuginfod can find the
-prior version by means of the build ID? What I mean:
+https://lore.kernel.org/lkml/20230825-pll-mipi_keep_rate-v1-0-35bc43570730@oltmanns.dev/
+https://lore.kernel.org/linux-kernel/20230807-pll-mipi_set_rate_parent-v6-0-f173239a4b59@oltmanns.dev/
+https://lore.kernel.org/all/20241114065759.3341908-1-victor.liu@nxp.com/
+https://lore.kernel.org/linux-clk/20241121-ge-ian-debug-imx8-clk-tree-v1-0-0f1b722588fe@bootlin.com/
 
-Current perf default way:
-1) Run perf record with mmap2 inode rather the buildid data
-1.1) To avoid any DSOs in the perf.data from not being available
-populate the buildid header in the perf.data and the buildid cache at
-the end of perf record
-2) Replace some DSO that's got a sample in the perf.data with a different D=
-SO
-3) Run perf report
-3.1) The DSO's buildid is known via the header and the buildid cache
-already contains the DSO
+We intend to fix these issues, but first we need to agree and document
+what these shortcomings are. These patches are meant to do that, even
+though some will be skipped as they are currently broken.
 
-Current way with -N:
-1) Run perf record with mmap2 inode rather the buildid data
-1.1) To ensure DSOs have buildid data populate the buildid header in
-the perf.data  at the end of perf record
-2) Replace some DSO that's got a sample in the perf.data with a different D=
-SO
-3) Run perf report
-3.1) The DSO's buildid is known via the header, debuginfod can
-populate the buildid cache as needed
+Special thanks to Maxime Ripard for the guidance and feedback on this
+project so far.
 
-With --buildid-mmap:
-1) Run perf record with mmap2 buildid data
-1.1) No need to post process file to gather buildids
-2) Replace some DSO that's got a sample in the perf.data with a different D=
-SO
-3) Run perf report
-3.1) The DSO's buildid is known via the mmap2 events, debuginfod can
-populate the buildid cache as needed
+Changes in v2:
+- Combine my two v1 patch series referenced below into one.
+- Patch 1: Newly introduced: clk: add kernel docs for struct clk_core
+- Patch 2: Simplfy further and there is no need to call clk_recalc() for
+  parts of the tree that didn't request a rate change.
+- Patch 5:
+  - Enable all of the tests since this particular limitation is
+    addressed in the clk core with patch 2.
+  - Update the div_div_3 test to ensure the dividers on the clock
+    are automatically updated as expected.
+- Patch 7: Correct test description of
+  clk_rate_change_sibling_test_suite.
+- Links to v1:
+  clk: preserve original rate when a sibling clk changes it's rate
+  https://lore.kernel.org/lkml/20250520192846.9614-1-bmasney@redhat.com/
 
-With the current way and the current way with -N there is a race with
-the DSO changing midway through perf record. The buildid mmap closes
-the race.
-With -N and --buildid-mmap the buildid cache is populated based on use
-by a tool trying to read the DSO, rather than ahead of time at the end
-of perf record.
+  v1: clk: test: add tests for inconsistencies and limitations in the framework
+  https://lore.kernel.org/lkml/20250407131258.70638-1-bmasney@redhat.com/
 
-Is the risk of the race that much of an issue? I'm not sure, that's
-why I'd say default to using -B (if we didn't switch to buildid mmaps
-by default, but this series does that). You could opt into to covering
-the race by adding a flag so the data is processed at the end of perf
-record. You could use perf inject to add the build IDs.
+Signed-off-by: Brian Masney <bmasney@redhat.com>
+---
+Brian Masney (10):
+      clk: add kernel docs for struct clk_core
+      clk: preserve original rate when a sibling clk changes it's rate
+      clk: test: introduce a few specific rate constants for mock testing
+      clk: test: introduce clk_dummy_div for a mock divider
+      clk: test: introduce test suite for sibling rate changes on a divider
+      clk: test: introduce clk_dummy_gate for a mock gate
+      clk: test: introduce test suite for sibling rate changes on a gate
+      clk: test: introduce helper to create a mock mux
+      clk: test: introduce test variation for sibling rate changes on a mux
+      clk: test: introduce test variation for sibling rate changes on a gate/mux
 
-As you say there's the cost at the end of perf record and I'm not sure
-it is worth it, which is why I'd expect the default to be to opt into
-having the cost. With --buildid-mmap I'm not seeing a race to cover
-but this series populates the buildid cache as I know you've argued
-that perf record should do this by default.
+ drivers/clk/clk.c      |  57 ++++-
+ drivers/clk/clk_test.c | 605 ++++++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 573 insertions(+), 89 deletions(-)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250528-clk-wip-v2-813333ab1059
 
-Thanks,
-Ian
+Best regards,
+-- 
+Brian Masney <bmasney@redhat.com>
 
-> > I didn't want to modify existing behaviors in these changes, however,
-> > in this case I was just trying to make the existing behavior correct,
-> > similar to fixing the same bug in `perf inject`.
->
-> Thanks for your work,
-> Namhyung
->
