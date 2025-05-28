@@ -1,64 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDBC220F36
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1D6221261
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748462409; cv=none; b=NVV0esu7t7N6xT1gyAYus2ahwq1SD7TCQjOCgqHzs8c0ndsaePoE7Agco43xGpqS8DKK6J77Th2t4CG50iKtJoPI8Bna1ndJPmBlMI9Qq7sGnF5+E/xmsF6bjm9xOunBrYam0ZoJMnWltE0iUjQ7vH809F13osg5EMlGgStJEVI=
+	t=1748462414; cv=none; b=CQTahLkGSaaIFhhGANEMlEnHAmRza3o6Kk4eKARf/4rr6CZ0dIlMtrZyJJTsbZ1j41C1z+OUhgKHamLiskUWKjqX3VfZacKgEBWJ2Vvwk0+ZLlZftQef17rjr5MguHcRq0kPF1wuAIK0PEaR7lNgEcZOOUYfvqC7MrqqXwTRfQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748462409; c=relaxed/simple;
-	bh=+RSQH1WWEw3OUmjRpYHyCD+79jexEjxzP96wMUdlgH4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AbIDBn6Fb8LrzSrkB6ut/w6sHDkpTPngwqOfw99TXQW2Ted8H7n9HOJi6va1Oal3+qK6paz3dutVARWzJORq0U0qDf/BobR/qngrQJAQaV3EtcdpsZQ7QrWdRiD1Evea0uvztCpssTsu4Zs5TjP/0+d12AVAYSAoPlWat/kL0EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g5hVM02Q; arc=none smtp.client-ip=209.85.128.54
+	s=arc-20240116; t=1748462414; c=relaxed/simple;
+	bh=CpYH823lP1gANgxKRTCYkC1iXZwcMTKwp/L88jc6Xws=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=csNO68V7osu3Lp0EjGG8GV3F5nAjYOy27D8S53XcrpUapUbhe2PKv2an+BagM2qFMYMEjFC5twjygjC978oZGy7wlGyTf3QzBeFSkUv8vfT1Yrw/+zLnLfdtO4Y/Wm9CMiaylTVYxKbMw9IJcH39elP44hbTpmHddoUOaP0LC98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EcqMzV7b; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g5hVM02Q"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-442cd12d28cso88415e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:00:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EcqMzV7b"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450ca8e6d05so38695e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748462406; x=1749067206; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6vfW+FfH9s8Rae4vVOChz/TDf82CLWQFderngHSXirY=;
-        b=g5hVM02QoRNDYVleh7OFYDuPLp+SVTHmSDqSbtMrWtbgk7fa+LQo0xUZlVjsAg9ayw
-         3ceOo7VYlqaPCLPwiEBMfRX/oid1+EAVzQClJDiN3ndVIYeRQIl7W453Z5lZzfnTscKe
-         SlkMvpXnEYSxPJGSJWLBLCSK3bDL2o05yhmbwhHv5p5gV+Pijny8TXd7x1lfom2iJdNt
-         Ed67pQgbpHo+zPfFIFVFiJwVtbNvcU0uaEfs/GYk1c8SUYhd0fTL5zTXKjiX15+puGJd
-         4LbyycR0IHQ65qUCdr2YzZ3EelE0TS4MrVqJVduNMJ/5pOSXnx5t9h22gelsCgbf69nH
-         7tXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748462406; x=1749067206;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1748462411; x=1749067211; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6vfW+FfH9s8Rae4vVOChz/TDf82CLWQFderngHSXirY=;
-        b=CZSmuSGHr0TNFVbO3hPJUVlfbUcsgKxuq6+sXUBns6Uq9HmVnD39aM/KJe4b4/pQ5c
-         eR950Ky9RsqwOt4JalcYta557FsqQvPFEPBLY/QA2uCHbQgYhTTNAz+N9YptJilMPDwQ
-         aSawlpHGW2aATba4LiRi4xy/Rb29Pbb5mVKkI6PQ9C6Asx64kG2+qQXECDVnNq6l2B86
-         2xFyn1b87yTGAWK+bNt7dpmiW7kDL2MRw+a0keCShsvE9zZaxDcb4XSksv/fwLznXnw3
-         Vyo7sA3wrmWEGd38NUX9cXqxokvQzXpg0lR7goDpn2S+/GFQgbq+Uk8O4J3a/gop6JjD
-         G/8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXqy35bn1/0WzPGuE/XmJkAsWnIpcgfpBAc6JuMGWHsFhGjnMT9auKhTgl2OqVJt3Hf/rT7aaj+N1mYl2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKhkEed4IJHsY1YNv00CLX7KyAISuLtlk8wdNVxQtoCdkh46KF
-	xki1rwvaLTHmASAEOvRqDnyi9U27F3QgOHE2jTY4JwG5Qz52lBvuYLg3Bs4omrBEfb8=
-X-Gm-Gg: ASbGncsej17mnCiWwgpQuIBjY0qt/vpqjD8d2E84rfpS+GlZbK99yqNNOZKLkxMqmci
-	i74PK0+WjZKiIJJ+XrJGxFYw52RbWoXcYUap4Mkt/Rj7yWfoWICzrwSh22ygHb8jqAL7I+lpJzC
-	A4rcEW1ZuR+zYjVqLm+J8T1JPDZRwrR4XjimtAkDTGzH4r+yG5lIvSBME/IGE15is5ZRdPruBZO
-	7fYC2vmf9MkonF7iSGYu1Lza0pt3sTJPB8lZCxMNgkhCqdcGt0a2Pghbyf+SeQG5tpzmbnPeqlb
-	dGObCrfZtqXsmFKLXLuTECgExsjC2OWRfc0KxrgNPu4mXkyQJitx5Kh6ywSxWswecKTeT/4=
-X-Google-Smtp-Source: AGHT+IE1Mm1hj0KXA6UQHYEYpLLI9gqUavUoSQwksygHkZby3xzXc62jj2qjprP5G8oWcOEhnKqxKQ==
-X-Received: by 2002:a05:600c:511b:b0:43b:c0fa:f9c4 with SMTP id 5b1f17b1804b1-44c94c246aemr64196675e9.4.1748462406321;
-        Wed, 28 May 2025 13:00:06 -0700 (PDT)
+        bh=PDq0VVP4RBrXESa/PJeathjlPVt4SwgrUucxImBu+7c=;
+        b=EcqMzV7bAeJT1vV4xfnJLSrs9E0OwVyz9EWvG/WxeBZCx33Lbehwn+dOvpGxdUVaU1
+         OdJxlOX3FWh2ZryuF29StlKMQZ5l2c/s8QZf9c90NHm2v1z5ztyvgnwrns+9K9Jci++O
+         zc15aX+dn0JOiLhvayOmBDaE3/DcnI8Xy+21Q/WPYDHimpeSpG5KuBoI/kJiJ+sp90X1
+         JXGuKdYrN11aBForg3OicMNIy5u9CuyadSAyxgMajcVLUqP2DaYrYsKnUOFS7uNjtrJ9
+         LNY1epowm5W+jaPf5VWa4vQVffTMgQ+R9VIZMSGAWsgSjUu0e9L6zBbkBOMf3OxfWSh0
+         Wn8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748462411; x=1749067211;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PDq0VVP4RBrXESa/PJeathjlPVt4SwgrUucxImBu+7c=;
+        b=UDWKCjo3cyi49oR3InjO+x169wTXkE43oXnCYYSOH35F9HGVXWI3NUlHQZY0i3sP42
+         rxV+C/xtj1HgGjDYf1VXduOrUos77jXDdns4YFkY4kp+WrP7XD9pifQ/K2A1T1pI4Owy
+         E+LeKTOAxcCXZCqkIq2gWFPX1UwhLT2zIs/CerE2tOEqOy5zepiNfcMi4deZnm74CLRS
+         h6TjZ/AvfOL444xupRrRdO3Vtb3gqpysMf40bKlT7v7m4lwlw8j96F1u4A+HwNKD8bkK
+         BW/z869UwfWg3BMu3lUksRuCtmy2bddu8iss74Ml45PX/RrgvWpYA2A96IkqPY2IWUhs
+         Qpvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnB2mjeaFZJsQ//Q4G52L058Rg1tro7GeEqci33nPPWXtjkgEyEovfRBTRjyl/AVoZLWoU7ON/hmK37bc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdawW48yiii1Bmls3oIzv7BY6RTbdzmjuMpS1oS87AfzKmqMVW
+	MtjntUB/MG60o6FGhU670QYwgcEZpb53hJ+KaS3XTjfwnBrES6O19tBNvthKbD8vG2I=
+X-Gm-Gg: ASbGncuwy0suYnaD5H8XaS6DIz2z+zHzxzL97+XWnJtrC6BDQJbYLNUdZ6ly5+5ZQf+
+	rRdPmj1m5WhPhzNKOccFplj4702LO2z8r4jE6NMB55njPPFwB0SCf2J3WuMc1tTWTMAJba+p4Zx
+	dADm0x4n/GdlTCOjXeX9U+t8ddawpqKoObMaVR/Ot3ScaosqEltUBs0rLCT+G3T3SAK8EJXG+lk
+	+gcUP9LYA+STGVwXOowUy2dQsVAF917J3vio3uj8jWq99OSb/eJQg3X1AtYnzGxat7uMCjOQ9B2
+	969MSI5T506IFOqmC7QCqrKUqBCZYwTcH78GSDPJ9CxPfyFM40G9fI4qayMxcjZSoare7hpLTpO
+	sXNpBsg==
+X-Google-Smtp-Source: AGHT+IHZUGUK6yTkOMly/UTCf5TfkRX+RuLMJ+zm0TaswuyyY5q5bbmG4zBXo05PBD4iH1y4pl+NdQ==
+X-Received: by 2002:a05:600c:4752:b0:441:b397:e324 with SMTP id 5b1f17b1804b1-44c93caeb6amr61901665e9.9.1748462410755;
+        Wed, 28 May 2025 13:00:10 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcbd61553sm53347665e9.0.2025.05.28.13.00.04
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcbd61553sm53347665e9.0.2025.05.28.13.00.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:00:05 -0700 (PDT)
+        Wed, 28 May 2025 13:00:10 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 0/8] ASoC: codecs: More const and unused member cleanups
-Date: Wed, 28 May 2025 21:59:54 +0200
-Message-Id: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+Date: Wed, 28 May 2025 21:59:56 +0200
+Subject: [PATCH 2/8] ASoC: fsl: Constify reg_default array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADprN2gC/0XOQQ6DIBAF0KsQ1p1EAa1wFeNCYWxZiBbQmhjvX
- tQ2TWbzJ/lvZqMBvcVAFdmox8UGO7oU8huh+tm6B4I1KVOWsSIrWAVtGDXo0YUIs5sDGsiRy05
- wgYLdaepNHnu7nmbdXNnja050vJZ/WZGvW0Injjn1tzaSywIWY2Ba4cQg01gKLqteaq2W/DjUt
- QHTK8NgoyIO1wg/jTb7/gEkqKVZ2wAAAA==
-X-Change-ID: 20250528-asoc-const-unused-1e39b434e427
+Message-Id: <20250528-asoc-const-unused-v1-2-19a5d07b9d5c@linaro.org>
+References: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+In-Reply-To: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
 To: David Rhodes <david.rhodes@cirrus.com>, 
  Richard Fitzgerald <rf@opensource.cirrus.com>, 
  Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -85,78 +85,69 @@ Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
  linuxppc-dev@lists.ozlabs.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2348;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1754;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=+RSQH1WWEw3OUmjRpYHyCD+79jexEjxzP96wMUdlgH4=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoN2s8GaxaeUdgNhIEnN7feOgfCTXlEE/tNIcfQ
- w7fQgJ/0PiJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDdrPAAKCRDBN2bmhouD
- 1xbAD/wLQHSFVgebaLynwR9dza3iq6tgF1gSzhFhVcuXsg6P0FrtS/lrgOzQT7LszOt/96uK4oz
- IMidlTHwKDQD+qcjRnRxcDYgJFTMPuZnlOGnqA0xoT+MD4djX2sd4sFdWDTeXXvm8EptQ6iyFQc
- OSnOICEE2zWQaDWE6Bws/ggAFo+dF+qm6bVyRsBA4aRbaNqIi9GbzkMtKDOLx9EXooZrUs7lgkg
- asbGuhUkWdq11XX39sP6/WlaqXpHV7WmSwVJg7EZfrLC+v4Fnts6XCnugBiMcUOmOebSOI7927z
- ue6LjpZWd5+K7SbTthbkuEH3SfdE/FnyRCNPp1m/0Yhh+irzaoVTzCA4Av2uIgOcXtOGA5iW3fO
- 9cqwpO5hHeA88z35DAOqACtL0rDv9cHp3JdFPv4PSBtEs2H3ETDCPpeOvDe0egZjA9wVNMVQ87R
- 4SvNhBZVK+/f1GTRsGpINzo11Le+Qly8lSkpXRjyPrxiyJy3CBxyqxYzsC92xddruBz/CfQIoIW
- TB8HJZ+FyR5yZ24zR2dYW9vDrkIs2bwiVoPT9peQChkeozUETrkS/CxLZAp22Wo3CMZ+rBleOWn
- JHuvsXTxZ3QypWNF+pcqdzy1u+Fz+VpdMB0MiF45VP3ia9e/yjMs/9juBjWDx1pmDvz/DS2xCoc
- SSChHiV+h9DSBWQ==
+ bh=CpYH823lP1gANgxKRTCYkC1iXZwcMTKwp/L88jc6Xws=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoN2s+XsqS9sFfoi0z9c+1UBE4EIIisHahFoDdV
+ IQAKD8fYDSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDdrPgAKCRDBN2bmhouD
+ 14HkEACFdeeKCanwIs9cv17+UMezTLZWq0x8/jrTebWUBqQqWOfNZFxDU6WjQcbXZ7dXF5S8wQ4
+ 7bLJBjpg/DGuUc+eS4RBF2PEZ6NX2WBqzoXpwQqGh5IU8mjJoaqnNFYzOQandX1OW//JzbLGrGO
+ YFprEji4Oid03TG7/AgU/DvnN4+g+/8BtNMeq1G+VklfGrQKT49hUMNnST2geP66RYQwpi77ogY
+ 2s+J3a1eRLYcA04uRF54ZJyA2FLE6SMIm6kwzLmwGliMUbqO6w3bRbbwMTdizD3zn3aBPEEZtpG
+ ++ayreX9g0cV5IzOIFqbVfycaLLHom3iO7dy3K4L8Pqz4Ozx5YGewOHbcb3G0kllU6sxYLgfkDX
+ tXro/sl120J1X55bh9T2FwBWVNQuFhi6V8REO7tRcZj/cYwyfXrq3tbAWfH+/iUTKX7dFXCWIk4
+ BafMN7HfrnzbHhhm0m4SrH57UsvnoLA9ZZhao+zwe5EerO0Wb0TKL7tgV3g1I/VdWKCRyHn9wM9
+ jUvYBzaZqnoxLhtU0JcSwfNjwz5TKbJo0TnrJq35lqZOw+zKvpHlx7hqUiSyr088rslYMHZJXp6
+ 2RAFQfgHUZhqSe2i8GfEeRoanO/1RWmQOD3NOHWI1RbMqJObKGTgBWW3+LYWY5ssXczSr3oHcfu
+ 3MvwM/3z7gf87DQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Make static data const for code safety and drop some unused fields in
-structs.
+Static 'struct reg_default' array is not modified so can be changed to
+const for more safety.
 
-This is based on for-v6.16 branch in ASoC tree for context in wcd938x
-driver.
-
-Best regards,
-Krzysztof
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (8):
-      ASoC: codecs: Constify regmap configuration static variables
-      ASoC: fsl: Constify reg_default array
-      ASoC: codecs: wcd9335: Drop unused sido_input_src field
-      ASoC: codecs: wcd934x: Drop unused num_rx_port/num_tx_port fields
-      ASoC: codecs: wcd937x: Drop unused 'struct wcd937x_priv' fields
-      ASoC: codecs: wcd938x: Drop unused 'struct wcd938x_priv' fields
-      ASoC: codecs: wcd938x: Drop unused variant field
-      ASoC: codecs: wcd939x: Drop unused 'struct wcd939x_priv' fields
+ sound/soc/fsl/fsl_asrc.c | 2 +-
+ sound/soc/fsl/fsl_sai.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
- sound/soc/codecs/cs35l36.c        |  2 +-
- sound/soc/codecs/da7218.c         |  2 +-
- sound/soc/codecs/da7219.c         |  4 ++--
- sound/soc/codecs/es8375.c         |  2 +-
- sound/soc/codecs/max98363.c       |  2 +-
- sound/soc/codecs/max98373-i2c.c   |  2 +-
- sound/soc/codecs/max98373-sdw.c   |  2 +-
- sound/soc/codecs/max98388.c       |  2 +-
- sound/soc/codecs/max98390.c       |  2 +-
- sound/soc/codecs/max98396.c       |  4 ++--
- sound/soc/codecs/max98504.c       |  2 +-
- sound/soc/codecs/max98520.c       |  2 +-
- sound/soc/codecs/max98927.c       |  2 +-
- sound/soc/codecs/rt722-sdca-sdw.c |  2 +-
- sound/soc/codecs/wcd9335.c        |  5 -----
- sound/soc/codecs/wcd934x.c        |  4 ----
- sound/soc/codecs/wcd937x.c        |  2 --
- sound/soc/codecs/wcd938x.c        | 18 ++++++++----------
- sound/soc/codecs/wcd939x.c        |  2 --
- sound/soc/codecs/wsa881x.c        |  4 ++--
- sound/soc/codecs/wsa883x.c        |  2 +-
- sound/soc/codecs/wsa884x.c        |  2 +-
- sound/soc/fsl/fsl_asrc.c          |  2 +-
- sound/soc/fsl/fsl_sai.c           |  4 ++--
- 24 files changed, 31 insertions(+), 46 deletions(-)
----
-base-commit: 22d449bcd69e66f25fe847b678738950dcf9301e
-change-id: 20250528-asoc-const-unused-1e39b434e427
-prerequisite-change-id: 20250526-b4-b4-asoc-wcd9395-vdd-px-fixes-0ce64398f9cc:v1
-prerequisite-patch-id: 104000f7254b9cc81be49af9ca584544718e52f1
-prerequisite-patch-id: 230fcd1b712c5a3199e7c9d8250e98e5d55c0a40
-prerequisite-patch-id: ecdbe74955eb7b710f72af1e3cf32ccac52890d5
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 677529916dc0e53a15952c53016930203c56dc9d..637260f306ecab109ed23b92a882cffce1c65421 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -930,7 +930,7 @@ static bool fsl_asrc_writeable_reg(struct device *dev, unsigned int reg)
+ 	}
+ }
+ 
+-static struct reg_default fsl_asrc_reg[] = {
++static const struct reg_default fsl_asrc_reg[] = {
+ 	{ REG_ASRCTR, 0x0000 }, { REG_ASRIER, 0x0000 },
+ 	{ REG_ASRCNCR, 0x0000 }, { REG_ASRCFG, 0x0000 },
+ 	{ REG_ASRCSR, 0x0000 }, { REG_ASRCDR1, 0x0000 },
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index af1a168d35e379e24ce46715ba53b4a4dac65988..c84e3bb1290fd1188118b220adeb4f8e279a3372 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1059,7 +1059,7 @@ static const struct snd_soc_component_driver fsl_component = {
+ 	.legacy_dai_naming	= 1,
+ };
+ 
+-static struct reg_default fsl_sai_reg_defaults_ofs0[] = {
++static const struct reg_default fsl_sai_reg_defaults_ofs0[] = {
+ 	{FSL_SAI_TCR1(0), 0},
+ 	{FSL_SAI_TCR2(0), 0},
+ 	{FSL_SAI_TCR3(0), 0},
+@@ -1082,7 +1082,7 @@ static struct reg_default fsl_sai_reg_defaults_ofs0[] = {
+ 	{FSL_SAI_RMR, 0},
+ };
+ 
+-static struct reg_default fsl_sai_reg_defaults_ofs8[] = {
++static const struct reg_default fsl_sai_reg_defaults_ofs8[] = {
+ 	{FSL_SAI_TCR1(8), 0},
+ 	{FSL_SAI_TCR2(8), 0},
+ 	{FSL_SAI_TCR3(8), 0},
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.45.2
 
