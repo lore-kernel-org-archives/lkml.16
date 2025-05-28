@@ -1,197 +1,203 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB9528DF4C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AD8286880;
+	Wed, 28 May 2025 18:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748457758; cv=none; b=uxoWJOCNk8/tvFbRTWkfibhB3H1W32w3t1MnmYOcbj0PysnyCHzl93yCg9vy9pNIwO/7a8M9/inzjiQ1zCN36likUXpAHPk0fYBloZICGCm9pL2V7vuvR96GU7h+tyZ+1itykXcm/EDHPL6TdpQIx9W+AadTUZ4/cxuOYw/mWlo=
+	t=1748457772; cv=none; b=gZvJmG9JdCwaXnRzW+Iibd8xqZUVWomGAOv5tm1KWWxPbeF6EsGH00En7vYx0O2EB27K8tYIT5lMKx+LBIExa/c/SVO02NqDHzIWLftlZvdJHsrZB2A59QXn8iTvkRWdXQeTaqn0L9HRhj4/FMkdj8m8/72vh/k+VuomNIglj0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748457758; c=relaxed/simple;
-	bh=0wEAblScT3Tn0syVJfG0tTwG1D/tnAHVu9ez28S8eI0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NTPWgYJI9ruRj6hvMoqVZvYXwIUtuTHwMKV6yL9788XpmhzT741Ez0f1UsSyi7rCQMWMhJ5ouWVq8TSuW2BpX327LmNnOQNT2ao4gASNNTafDI1gR3zWE1KZ4GhNOhLW1xoMolfBI90SW511WRVrBQNRilMpMUnzZHrft3pUttc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lY9RG/+t; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748457772; c=relaxed/simple;
+	bh=CsxNqFukGanLgNMaiPSeubBk+ogMH6fMig49d0VA+Ws=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=j9xqz2wf/FtVv+4xwD9dRI/AHQEAjpDsPQi66ilw6NELQEcVgCcrwaiRoz+8lTrORLdjBAYsl7f7SO1Kqi/a7Ku7VtVigSbu8JfFy5DDEM3DAAB0v6UfHPxXxWXZnEJUF8Bk2H/ugZ3MFmgEtNSV5WhIxiR1/mKBj1EUm27kxaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AaV/jORS; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lY9RG/+t"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3f8ae3ed8f4so21349b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:42:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaV/jORS"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c597760323so5395885a.3;
+        Wed, 28 May 2025 11:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748457755; x=1749062555; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/id1cw/2XOGpn9mnUKbEKyu15ax9JW7xw71uWNwiEC8=;
-        b=lY9RG/+t8KnHHveGmFZUq28zEpsC6O9GHvHdi8+s7gYnVJ8FAretIYUjyYV1I7j0Gs
-         HKt56Dmb7/1kmbHP1C/etWlDQvEQHZB91eAPXWgJqAlyUeIAWBVeASlDDf4RKbceK34g
-         QT1a2wnVrjbIRh/Q6F3I9TIqIEMftpoBRaGl9IvXv95dL7gAEJMGHdmlsdPtABQCmZ3C
-         vEmoi2yXGpriMOv5nYgsTjLya/qm2oVV5yykfUEDsyzZ55/C1Mh7u2JxqwGmdYIGc+L7
-         P0kdueMH2IAQmFmW7xN81oB2rC7cdPLzsq8e9rlzXkl9ALj9S/OQE5ibsAmcS6cknC6F
-         zH5Q==
+        d=gmail.com; s=20230601; t=1748457769; x=1749062569; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m3JLOGedtiwvYsvN6Ed7QCXqOisH9oT8ihdwmOFgFGA=;
+        b=AaV/jORSqGB+vNwn1p3aLg3RMPRQOHOD4hN9NmTQivCE+HuKucxPvyjheV/ZiFxTv0
+         60gzygwiKP6pUv9DkxlXKB9SpjndB1aKa611vE/NfJaG6O2QDk3/tDx7fxxn3sncUcg7
+         Ss/O5wEP+NtPZXELJwNEhWQGpIbIPuDWaO2KHmowUzQr5ET7F9duydCP+NvSfXTLZhPH
+         21Qzz0yBoI7vXOe703LRsXz2IJgbxeJkTk9XD+mqddoX8sefXyBOO5rU3a/0J1qPmVNA
+         mcO0W0lznxuE2VBaWoWLk7D1LXK3cTX7xoxX5fj0JEC9Wwfw4/qUUWpY4IY9gwrxC25s
+         wO/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748457755; x=1749062555;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/id1cw/2XOGpn9mnUKbEKyu15ax9JW7xw71uWNwiEC8=;
-        b=Hcx1/FaErpUfIEDSc5h6kqEmHabrppJZB360exJKxPS3O9L2xiQo2N7KQu0dt3cK64
-         ouknoL9wIBkmsxs4zQ05pdojMG84BkhZMTkqb7aEg1LMxoUPnxfvlefQRs1qLdrdY62A
-         DOPzX3aS9xdnpa69ivWS1CXMus5JwxLvKO3cGsVCT5vSHBCUEHvN6za+iX9k+aZwNZ1p
-         UCplLEfY9YoMaC+qiH68q/Y56WdQQjRLaKA3UMOF4QO396pGH75HM7O6gIRWlBYUrnyC
-         6haJIBu3IPw4hHaNZ3iA9ogBOKvAIZgu0TKweWlbEFYo1MqDC59kNpji/CFywG0AEhXp
-         W4MA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdmtREUvFbHv6gBJrSUeJTTOWKEis+BZ9qJXFG00TcbJvREDvarOqgc2ttqXLEy7pmoZrWLAVNTgikZwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKKiXpEk7L6niaSPoKohtx4OFs7FkboytYVuKyRyhcFCWAuTF2
-	TMqOfER8nSXWwll9JvVCiYP+jbS9uAjJpwQF3kn8UEwHU4rTcGCOt/BlRFa4rAn7lA==
-X-Gm-Gg: ASbGncvHjUtQyLoSUBozxP3X9sL4QfGx/WDCjsWC5VpyjJYkC87XTjlEqPvzVAFqwhh
-	Xp5Z/awIoSgziuH5cWz53WtCBB4Em9pcALKdiEbw63Z3Zl57vwncDE+hk4SY0lRs03HW+yJ5AqS
-	XCXdL+PsoP1GpxhqKj6BEHl+Igr0TyfoczyiiQ7k681VEdWEA9mNAwXfetTjsC30rcBv6hoSbwh
-	eWrNmU6gEdMy6jfCFuZE01hGHEOZco+6ZBfhCjwMR68UtDmO6+Z1MSJN23LJiq/KmAad6nO9YGY
-	j+ZpZtiPvQkkXtyRGaL+oIqBrF+0GWxfnx5/BeHkp++OyHFt5yruCwcDHYR/1v4UpoRFjy6zGFW
-	6oo3sK33HoH6Qi69MipV4bBm2NwjI8yPcMA==
-X-Google-Smtp-Source: AGHT+IHs3twkSqT8CkQpqljahoHzRiFkiwtOJeHfFHvri9IID3VQA+sC09W4Uev9RI0/erZOqB2v6g==
-X-Received: by 2002:a05:6808:4496:b0:406:6e89:49ba with SMTP id 5614622812f47-4066e894caemr38806b6e.33.1748457754629;
-        Wed, 28 May 2025 11:42:34 -0700 (PDT)
-Received: from ?IPV6:2600:1700:4570:89a0:c0c2:d38c:e9e8:866d? ([2600:1700:4570:89a0:c0c2:d38c:e9e8:866d])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-406654736d7sm276312b6e.36.2025.05.28.11.42.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 11:42:34 -0700 (PDT)
-Message-ID: <9376817c-30f1-4ca1-afde-60ebdfd93f53@google.com>
-Date: Wed, 28 May 2025 11:42:24 -0700
+        d=1e100.net; s=20230601; t=1748457769; x=1749062569;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=m3JLOGedtiwvYsvN6Ed7QCXqOisH9oT8ihdwmOFgFGA=;
+        b=nrqHIpih9ByCL7J6Aj70Dqh6mMTlYNrBP2jDEHhszcgW9G/+obDeuai2GZ3sz0paVV
+         uQUlV2plto7eZWQnA4Qdo5Xx5HH7dRhco/zt50nzw/KnAAlZBhY3Yk2jzp6O+938y02a
+         nNE9XotnXuB+1Cc3MuL/8C1UlexVnqZo7NvwadhSD6JMfP3A9UeH14skE+LBqrKw9Qy+
+         XishP2oiIV5k6xIEDdKTl8DVY91wQS32ceaeG5KZ7pZ7s4XXHm6IVsxhTnzQUe1ZEXFd
+         1tRfjl2jul38aNH2F5FthvdKVIemaudmwhJ6gMNZVq6JT13jZnOfmeGIriaoHejwHmga
+         T97A==
+X-Forwarded-Encrypted: i=1; AJvYcCUM5MgLuRc9PtYm+bsCwXuzg0zBwtgt9ObeVIdx5zuV/vo8nNQslJlxTdLFS8FIwg1GO8VoXtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Gqocn9GY4BnF7JZVqv0uV0IVBo5AtNChL7vvMIJnYdOzPcW0
+	KwWxkzW4ayre29SyQUzwk3aC5miC4gr+N6QCQ/cS3mHB4KileS20XYVQ
+X-Gm-Gg: ASbGncvtBBRUcYHeE5dcE153KI9xeJa02AaQ0iFW+i9k/QQ1SvN5tnEgpng1ArsoPIN
+	ThMAZyEmKYAwjBow4SRqwz2Qw4fGfm+OCHbOSDzhrSCK2DCQfvjmhV8Rz/dYKlEzKKG/kLWhQ2+
+	gxeWqylnmFtTEesnKokqsCrKI/j5Z0Tj/yuTWmlEB+gsAi8X2QC6LJFBeqk9He1mBhVSWvjK7HA
+	TqEMhydXKicFlzB2a2NguVEvMHpQWFpowrRGl4fKPhqji6zMYuVfaGNsCVR+m/kLbywXlTDZdx1
+	Upyg9w9k3z2b0+ZsVz+urk6ow+zbPhtgeyxavG5hSvfi8QmB6Bixgd4GaleQJ+Z1GbFhqQffI7m
+	Nb2/zKt9WiC0ytXTH/lDArCI=
+X-Google-Smtp-Source: AGHT+IH6pxdMi9plb++lnmF+/wSOYMbx6yme09+SeQwUruZknMe48DheUQEJ7q1GG4PN1rXTSeq11w==
+X-Received: by 2002:ad4:5cce:0:b0:6fa:ac51:bbda with SMTP id 6a1803df08f44-6faac51bd64mr152847226d6.26.1748457769379;
+        Wed, 28 May 2025 11:42:49 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fac0b22465sm9630846d6.18.2025.05.28.11.42.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 11:42:48 -0700 (PDT)
+Date: Wed, 28 May 2025 14:42:48 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Shiming Cheng <shiming.cheng@mediatek.com>, 
+ willemdebruijn.kernel@gmail.com, 
+ willemb@google.com, 
+ edumazet@google.com, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ matthias.bgg@gmail.com
+Cc: linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ shiming.cheng@mediatek.com, 
+ lena.wang@mediatek.com
+Message-ID: <683759284c3a9_38477c2943e@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250528054715.32063-1-shiming.cheng@mediatek.com>
+References: <20250528054715.32063-1-shiming.cheng@mediatek.com>
+Subject: Re: [PATCH net v4] net: fix udp gso skb_segment after pull from
+ frag_list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/5] dt-bindings: connector: extend ports property to
- model power connections
-From: Amit Sunil Dhamne <amitsd@google.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Badhri Jagan Sridharan <badhri@google.com>,
- Sebastian Reichel <sre@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@kernel.org>, Kyle Tso <kyletso@google.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
- tudor.ambarus@linaro.org, andre.draszik@linaro.org, peter.griffin@linaro.org
-References: <20250507-batt_ops-v2-0-8d06130bffe6@google.com>
- <20250507-batt_ops-v2-1-8d06130bffe6@google.com>
- <20250514194249.GA2881453-robh@kernel.org>
- <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
-Content-Language: en-US
-In-Reply-To: <b4a22161-8cab-4d76-a4b0-4bfd0d79cdc1@google.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Shiming Cheng wrote:
 
-On 5/20/25 1:10 PM, Amit Sunil Dhamne wrote:
-> Hi Rob,
->
-> Thanks for your response!
->
-> On 5/14/25 12:42 PM, Rob Herring wrote:
->> On Wed, May 07, 2025 at 06:00:22PM -0700, Amit Sunil Dhamne wrote:
->>> Extend ports property to model power lines going between connector to
->>> charger or battery/batteries. As an example, connector VBUS can supply
->>> power in & out of the battery for a DRP.
->>>
->>> Additionally, add ports property to maxim,max33359 controller example.
->>>
->>> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
->>> ---
->>>  .../bindings/connector/usb-connector.yaml          | 20 +++++++++++------
->>>  .../devicetree/bindings/usb/maxim,max33359.yaml    | 25 ++++++++++++++++++++++
->>>  2 files changed, 38 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->>> index 11e40d225b9f3a0d0aeea7bf764f1c00a719d615..706094f890026d324e6ece8b0c1e831d04d51eb7 100644
->>> --- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
->>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
->>> @@ -181,16 +181,16 @@ properties:
->>>  
->>>    port:
->>>      $ref: /schemas/graph.yaml#/properties/port
->>> -    description: OF graph bindings modeling a data bus to the connector, e.g.
->>> -      there is a single High Speed (HS) port present in this connector. If there
->>> -      is more than one bus (several port, with 'reg' property), they can be grouped
->>> -      under 'ports'.
->>> +    description: OF graph binding to model a logical connection between a device
->>> +      and connector. This connection may represent a data bus or power line. For
->>> +      e.g. a High Speed (HS) data port present in this connector or VBUS line.
->>> +      If there is more than one connection (several port, with 'reg' property),
->>> +      they can be grouped under 'ports'.
->> 'port' and 'port@0' are equivalent. So you can't be changing its 
->> definition.
-> Noted!
->
->
->> I'm not sure showing a power connection with the graph is the right 
->> approach.
-> I want to provide some more context and rationale behind using this design.
->
-> From a hardware perspective:
->
-> The max77759/max33359 IC has Type-C port controller, charger, fuel gauge
-> (FG) ICs. The Vbus from the connector goes to/from the TCPC and connects
-> with the charger IP via circuitry & from there on to the battery. The FG
-> is connected to the battery in parallel. As it can be seen that while
-> these IPs are interconnected, there's no direct connection of the fuel
-> gauge & the connector.
->
-> For this feature, I am interested in getting the reference to the FG. As
-> per graph description: "...These common bindings do not contain any
-> information about the direction or type of the connections, they just
-> map their existence." This works for my case because I just want the
-> connector to be aware of the Fuel gauge device without imposing a
-> specific directionality in terms of power supplier/supplied. This is
-> also the reason why I didn't use
-> "/schemas/power/supply/power-supply.yaml#power-supplies" binding.
->
->> We have a binding for that already with the regulator binding.
-> I haven't explored the option of using regulator bindings. But in my
-> case I am interested in fuel gauge and unfortunately, they're modeled as
-> power_supply devices.
->
->
->>  
->> Perhaps the connector needs to be a supply. It's already using that 
->> binding in the supplying power to the connector case.
-> Want to clarify, in this case you mean
-> /schemas/regulator/regulator.yaml#*-supply$ right?
->
-> Adding to my response above, the reason I don't want to impose a
-> directionality in terms of supplier/supplied is that in case of USB Dual
-> Role Port they're dynamic i.e., when USB is source, the power is
-> supplied out of the battery (battery/FG will be supplier) and in case
-> USB is sink, battery is supplied power. Whether the connector port is in
-> source or sink role is determined on a connection to connection basis.
-> Also, the knowledge of the supply direction is of no consequence for
-> this feature.
->
->
-> Please let me know what you think.
->
-> Thanks,
->
-> Amit
+Code LGTM thanks. Let's make sure that the commit message matches.
+
+> Detect invalid geometry due to pull from frag_list, and pass to
+> regular skb_segment. 
+
+This is a leftover from copying from my patch, and does not really
+capture what the commit does.
+
+How about something like
+
+Commit a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation
+after pull from frag_list") detected invalid geometry in frag_list
+skbs and redirects them from skb_segment_list to more robust
+skb_segment.
+
+But some packets with modified geometry can also hit bugs in that
+code. We don't know how many such cases exist. Addressing each one by
+one also requires touching the complex skb_segment code, which risks
+introducing bugs for other types of skbs.
+
+Instead, linearize all these packets that fail the basic invariants on
+gso fraglist skbs. That is more robust.
 
 
-I wanted to follow up on my previous responses. Please let me know if
-you have any further questions or concerns.
+> If only part of the fraglist payload is pulled
+> into head_skb, it will always cause exception when splitting
+> skbs by skb_segment. For detailed call stack information, see below.
+> 
+> Valid SKB_GSO_FRAGLIST skbs
+> - consist of two or more segments
+> - the head_skb holds the protocol headers plus first gso_size
+> - one or more frag_list skbs hold exactly one segment
+> - all but the last must be gso_size
+> 
+> Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
+> modify fraglist skbs, breaking these invariants.
+> 
+> In extreme cases they pull one part of data into skb linear. For UDP,
+> this  causes three payloads with lengths of (11,11,10) bytes were
+> pulled tail to become (12,10,10) bytes.
+> 
+> The skbs no longer meets the above SKB_GSO_FRAGLIST conditions because
+> payload was pulled into head_skb, it needs to be linearized before pass
+> to regular skb_segment.
+> 
+>     skb_segment+0xcd0/0xd14
+>     __udp_gso_segment+0x334/0x5f4
+>     udp4_ufo_fragment+0x118/0x15c
+>     inet_gso_segment+0x164/0x338
+>     skb_mac_gso_segment+0xc4/0x13c
+>     __skb_gso_segment+0xc4/0x124
+>     validate_xmit_skb+0x9c/0x2c0
+>     validate_xmit_skb_list+0x4c/0x80
+>     sch_direct_xmit+0x70/0x404
+>     __dev_queue_xmit+0x64c/0xe5c
+>     neigh_resolve_output+0x178/0x1c4
+>     ip_finish_output2+0x37c/0x47c
+>     __ip_finish_output+0x194/0x240
+>     ip_finish_output+0x20/0xf4
+>     ip_output+0x100/0x1a0
+>     NF_HOOK+0xc4/0x16c
+>     ip_forward+0x314/0x32c
+>     ip_rcv+0x90/0x118
+>     __netif_receive_skb+0x74/0x124
+>     process_backlog+0xe8/0x1a4
+>     __napi_poll+0x5c/0x1f8
+>     net_rx_action+0x154/0x314
+>     handle_softirqs+0x154/0x4b8
+> 
+>     [118.376811] [C201134] rxq0_pus: [name:bug&]kernel BUG at net/core/skbuff.c:4278!
+>     [118.376829] [C201134] rxq0_pus: [name:traps&]Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>     [118.470774] [C201134] rxq0_pus: [name:mrdump&]Kernel Offset: 0x178cc00000 from 0xffffffc008000000
+>     [118.470810] [C201134] rxq0_pus: [name:mrdump&]PHYS_OFFSET: 0x40000000
+>     [118.470827] [C201134] rxq0_pus: [name:mrdump&]pstate: 60400005 (nZCv daif +PAN -UAO)
+>     [118.470848] [C201134] rxq0_pus: [name:mrdump&]pc : [0xffffffd79598aefc] skb_segment+0xcd0/0xd14
+>     [118.470900] [C201134] rxq0_pus: [name:mrdump&]lr : [0xffffffd79598a5e8] skb_segment+0x3bc/0xd14
+>     [118.470928] [C201134] rxq0_pus: [name:mrdump&]sp : ffffffc008013770
+> 
+> Fixes: a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after pull from frag_list")
+> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+> ---
+>  net/ipv4/udp_offload.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index a5be6e4ed326..59ddb85c858c 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -273,6 +273,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+>  	bool copy_dtor;
+>  	__sum16 check;
+>  	__be16 newlen;
+> +	int ret = 0;
+>  
+>  	mss = skb_shinfo(gso_skb)->gso_size;
+>  	if (gso_skb->len <= sizeof(*uh) + mss)
+> @@ -301,6 +302,10 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+>  		if (skb_pagelen(gso_skb) - sizeof(*uh) == skb_shinfo(gso_skb)->gso_size)
+>  			return __udp_gso_segment_list(gso_skb, features, is_ipv6);
+>  
+> +		ret = __skb_linearize(gso_skb);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+> +
+>  		 /* Setup csum, as fraglist skips this in udp4_gro_receive. */
+>  		gso_skb->csum_start = skb_transport_header(gso_skb) - gso_skb->head;
+>  		gso_skb->csum_offset = offsetof(struct udphdr, check);
+> -- 
+> 2.45.2
+> 
 
-Thanks,
 
-Amit
-
-
->
->> Rob
