@@ -1,157 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422B013AF2;
-	Wed, 28 May 2025 14:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A9613AF2;
+	Wed, 28 May 2025 14:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442332; cv=none; b=bpg6XFc9kjHRmFVkYg+nSj8Kze/3g3Oq78y7Jf4NZJ6rswpt+CJhDoBs4i8jl8ZtCTK6Gi2JqaNc6BXaPTMZoSihKG4uLx8L6/qSUef6RqrUWz3360Qm/2J6YZwhAb3s1IvRYh1lep0UOfP3dG4W1Od9Dr/bpCDE/FDvfshfP78=
+	t=1748442398; cv=none; b=mpQFCnMe0rtMUN7e3Zkjh2w2wy4RrezvHWfg8dGtceQY+J8kgwmE6oGJT5u7UweFQtodu5JVAaCvK5QRxq4fbRRDoqxpdCocJxixRImZ7I51SrSAW10VPvQMyurCUUq7YlBgXKjutX8kpI8U9zZcoecVRh9mFGu9RWQ4zg9bbpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442332; c=relaxed/simple;
-	bh=IGnOjm9mSj79ffcLMCdQ5dCfH2Vp1XxSc1dFI2W3IWU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ifMkcnpaD/q3RrpjMlcQ8ZF8VjpCm7hePPpPRyed1m1BGkakFXFtpYXytBqeXPJyI0oJOurG6Jj86rP6PtLyCqIxQVEoXoSxHU65n/92CmKzpj5yPMBCFSQBbgFx3wpOOGCZ1wMfBV4I5526qr/USfqTVSOtqZK6Wxg6kiXDLkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFPu6Nv5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748442398; c=relaxed/simple;
+	bh=g8gTRASmmvSsfuZwzuPFcSFC+02zA9q+IRn3Y7AYods=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XigXvJERqZ4GbXB12thWcACM22nzM4kMVhYFxgnme9sdHhIo+vyiGMiaFLOHe77IWDApyjJrvX2T7i0s89lrcbfto/NBWzIGlM/3VG5Mnbb60SUN9xgWoxD82zeNoxFpBZ5eDmxZ9tekXz3vW8Fb7bXLdTnWgAlMoDSsjtn/ER8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=IDo7N+g2; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFPu6Nv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4869C4CEF0;
-	Wed, 28 May 2025 14:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748442331;
-	bh=IGnOjm9mSj79ffcLMCdQ5dCfH2Vp1XxSc1dFI2W3IWU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pFPu6Nv5KUg54HCB1RFBZehdsUXuEPF41F5OcBAmTuDSqDk71OuYotBlFk6ApoS6/
-	 qDP2JKUFl4ozF0Apnlw7dCeWRz/Z3LGMvFfm7zS6B5UcKQN4btfND+V5Jr9dq+J7aH
-	 YPAAxwr4Y0AbWePJtjRmdxXuibZn4/J/JodkKIzBIaFTMxoGSrgpvnYXvwwSeso581
-	 i515JJQaspU14NCE7XD2vbIdq3b3ZsvgRXjFsXOc4v6Jxct+lDcMyrPzOC7b1p4P5q
-	 Egbl/e5nWToQz9BRJeTjX4pPJnFg/BskCw1WgQgzbFTPJHNixez+UKj/cG5MolZuy3
-	 Tt2fGENUuNbcA==
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3f9a7cbc8f1so929804b6e.0;
-        Wed, 28 May 2025 07:25:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUaioPM6b07S/HU7hCjZ0DkieQ5kqazmwDK1h1VqawMpWHPJPLSz0uHr4tYm/dh4T5QzsmfMOdZwbC3XP8=@vger.kernel.org, AJvYcCXpNHc2/bHC/vnTw4dn/W4o10qBBkzkvNU9HqbPCmh9mRUCMiCJaYAEQ0cx/Syoep75vQWb821TTag=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw63c8tbhT7pfNOdSF4U4zsbv8tiWuEqbedGpJWM+izO8DX2G3o
-	TL0XtsJyeJIHNRsb1uEikIpP395xbBG66mPn7QyHWC242WY2cQW2v3wNG664VNnpzXberGaAV1K
-	wfjXBIu3wLjtB4wk4h90ssUt7Ybc6yBQ=
-X-Google-Smtp-Source: AGHT+IFBffpsH1BwM4rm3RKitOIYehD5JkfJiM7Akv8GtbDS6I+0PNtu7adSWCuQP2UV0B5aF4Hy2BVM7MD0imWH0JM=
-X-Received: by 2002:a05:6808:3307:b0:401:918a:5b81 with SMTP id
- 5614622812f47-406468464ccmr9420552b6e.25.1748442330895; Wed, 28 May 2025
- 07:25:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="IDo7N+g2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=g8gTRASmmvSsfuZwzuPFcSFC+02zA9q+IRn3Y7AYods=; b=IDo7N+g2tDs+yPTInSf/SucK5j
+	qXu8UivasSaNrRDtcv6nLuxf4VEwNySE17EcHfu3nNBhkZ0AY6fOkrGBz31fThJXI7nUSy9GGtJ6e
+	DsT3LpdecwvvRjxt8RnV4D3QNmQliSDt+qg5t47i/i+PTEEo98YM/FWYdxHm3UtxEnkhNEb9o3zU9
+	t4OqiA6ARR37gu9RYwGWCEX5aTd2YSpr9xjAF3Pwkxospgs404TLxdY65KGAhsVPMa1SEXi020KR/
+	5wY86pEBCOY3ZFjmju3CnwKSAN7QZVnvMlZ01IyIFiJbkA8r42V+eqfPh0WEjmSCBv426xuXJ8GZo
+	T+BtA8eg==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1uKHiz-000000000so-1SBT;
+	Wed, 28 May 2025 10:25:45 -0400
+Message-ID: <43ae7b3bf94b67611069572b7e3e909a922c964f.camel@surriel.com>
+Subject: Re: [PATCH 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+From: Rik van Riel <riel@surriel.com>
+To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
+  Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Ingo Molnar	 <mingo@kernel.org>, Andrew
+ Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"	
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport	
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko	
+ <mhocko@suse.com>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Date: Wed, 28 May 2025 10:25:45 -0400
+In-Reply-To: <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+	 <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2006806.PYKUYFuaPT@rjwysocki.net> <20250528131759.GA39944@noisy.programming.kicks-ass.net>
- <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com> <20250528133807.GC39944@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250528133807.GC39944@noisy.programming.kicks-ass.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 28 May 2025 16:25:19 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
-X-Gm-Features: AX0GCFsL9gL26hQm_JdbGOMd4-i0oGeAZbKK_nVZQB08D27ommvyh01AYcly-4Q
-Message-ID: <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit 96040f7273e2
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	x86 Maintainers <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 3:45=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, May 28, 2025 at 03:20:16PM +0200, Rafael J. Wysocki wrote:
-> > On Wed, May 28, 2025 at 3:18=E2=80=AFPM Peter Zijlstra <peterz@infradea=
-d.org> wrote:
-> > >
-> > > On Wed, May 28, 2025 at 02:53:13PM +0200, Rafael J. Wysocki wrote:
-> > > > Hi Everyone,
-> > > >
-> > > > Commit 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint=
-()")
-> > > > that shipped in 6.15 introduced a nasty power regression on systems=
- that
-> > > > start with "nosmt" in the kernel command line which prevents it fro=
-m entering
-> > > > deep package idle states (for instance, PC10) later on.  Idle power=
-, including
-> > > > power in suspend-to-idle, goes up significantly on those systems as=
- a result.
-> > > >
-> > > > Address this by reverting commit 96040f7273e2 (patch [1/2]) and usi=
-ng a
-> > > > different approach, which is to retain mwait_play_dead_cpuid_hint()=
- and
-> > > > still prefer it to hlt_play_dead() in case it is needed when cpuidl=
-e is
-> > > > not available, but prefer cpuidle_play_dead() to it by default (pat=
-ch [2/2]).
-> > >
-> > > I don't understand. The revert says the reason it regresses is that i=
-t
-> > > goes into play_dead before cpuidle is initialized. The fix is then to
-> > > call cpuidle first.
-> > >
-> > > But if cpuidle isn't initialized yet, how does that fix anything?
-> >
-> > The revert fixes the bug.
->
-> This is not what I asked.
->
-> > The other patch does what the reverted commit was supposed to be
-> > doing, but differently.
->
-> No, it does not.
+On Wed, 2025-05-28 at 01:35 -0400, Tal Zussman wrote:
+> When the TLB_REMOTE_WRONG_CPU enum was introduced for the tlb_flush
+> tracepoint, the enum was not exported to userspace. Add it to the
+> appropriate macro definition to enable parsing by userspace tools, as
+> per [0].
+>=20
+> [0] Link:
+> https://lore.kernel.org/all/20150403013802.220157513@goodmis.org
+>=20
+> Fixes: 2815a56e4b72 ("x86/mm/tlb: Add tracepoint for TLB flush IPI to
+> stale CPU")
+> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
 
-If cpuidle is available and works, it will do the same thing.
+Good catch. Thank you!
 
-> The whole point was that mwait_play_dead did not DTRT because hints are
-> stupid and it could not select the deepest C state in an unambiguous
-> fashion.
+Reviewed-by: Rik van Riel <riel@surriel.com>
 
-Yes, on some systems.
-
-> And now you're restoring that -- code you all argued was fundamentally
-> buggered.
->
-> Yes is 'fixes' things on old platforms, but it is equally broken on the
-> new platforms where you all argued it was broken on. So either way
-> around you're going to need to fix those, and this isn't it.
-
-There are systems where mwait_play_dead_cpuid_hint() does not work and
-there are systems where it works.  Some of the latter are actually
-new.
-
-Regardless, if cpuidle_play_dead() runs before it and cpuidle is
-there, the right thing will be done because cpuidle_play_dead() will
-not return in that case.
-
-The only question is what to do when cpuidle is not there.
-
-The commit reverted by the first patch removed
-mwait_play_dead_cpuid_hint() altogether, so it never runs and the only
-fallback is hlt_play_dead(), but this doesn't work for disabling SMT
-siblings.
-
-If mwait_play_dead_cpuid_hint() is allowed to run before
-hlt_play_dead() though, then worst-case it may use an unrecognized
-MWAIT hint and the CPU should fall back to C1.  If the MWAIT hint is
-valid though, it will enter a deep idle state and that's what happens
-on all of the systems tested in the lab (20+), including the most
-recent ones.
-
-> Now, SMT siblings are all AP, by definition. So can't we simply send
-> them INIT instead of doing CLI;HLT, that way they drop into
-> Wait-for-SIPI and the ucode can sort it out?
-
-No, I don't think so.  I don't think that Wait-for-SIPI is an idle state.
-
-But we are discussing patch [2/2] here while really the problem is
-that the commit in question is broken, so it needs to be reverted in
-the first place.
+--=20
+All Rights Reversed.
