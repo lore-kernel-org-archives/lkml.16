@@ -1,57 +1,137 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A49D53C;
-	Wed, 28 May 2025 06:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1D11E8331;
+	Wed, 28 May 2025 06:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412457; cv=none; b=ZJY/X1hKNdFX3gPRV8QRFflPIoRsKB9pJ/RNOPMcPYGuUQTfSuNQEMkVp1Xn/sZJrO5+yeOez/M6dJVuEehmVKhHW8nGC998HizV3tesHgaoeO7k/Q8xs8tKbdA7hz2OU8PvY48cDiVCctGyWZ6KUc0V5ybQlZ3+C9yQlaewqmc=
+	t=1748412473; cv=none; b=d3nGrt0XA7Uq99DywNy4v3a8q6/CQtPj/N3+jXIrcUxv/jh3EcnqY+UQFoMXem17xbZ3OEWFpVHxGqxMB/0niPr5NCKdNfuZQKAPW7MnAuVyA6300Jz34bHneQMd9vgTr1ju15Y2EKnKE3u5epScDkajlXe2sLWx1CrMft5DRbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412457; c=relaxed/simple;
-	bh=0eeyiMm8PSjk1e3e3J370/EICWfoD7N86Wv/+6uPxV4=;
-	h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PPu01FHYJNB9gS223waERANhouf9kT0o4VwHEOHj5x57zs/SZo/fmgyv9TPTRarVNltxMV0Ofn+deOjwNgiMqFjX0Y3G4OEyd8gMpQN8C6/4AjaCDgfZM/K9memABCDVbfdMbPnL8IaGozpAToLuASH8+P3q94mvhpOQRL9Pmzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b2e8559.dip0.t-ipconnect.de [91.46.133.89])
-	by mail.itouring.de (Postfix) with ESMTPSA id C2D8AC939;
-	Wed, 28 May 2025 08:07:33 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 8F90E60191E20;
-	Wed, 28 May 2025 08:07:33 +0200 (CEST)
-Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-To: Nam Cao <namcao@linutronix.de>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- John Ogness <john.ogness@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org,
- Joe Damato <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>,
- Jens Axboe <axboe@kernel.dk>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
- Valentin Schneider <vschneid@redhat.com>
-References: <20250523061104.3490066-1-namcao@linutronix.de>
- <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <4df97d81-cbea-4fad-66a5-28202903775f@applied-asynchrony.com>
-Date: Wed, 28 May 2025 08:07:33 +0200
+	s=arc-20240116; t=1748412473; c=relaxed/simple;
+	bh=FD/vRrr0K61/ryvWyfuUqQQl+H5RGKY7HCqtiLqKHdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bP3vem5QRU0NwUT7E3eJNwiXBnw4+G9mr8w4gm4yhtzPo54cxor+XHEsltV/P50IF6WNqUaRlRI2BkeNa0opupNOUn9HObu6oAPvdlfBU7yeBsPXZTUpPOOP4AMekls5qXDCU1bQKtygCa5mq5Yr9zIF4PrMcUhyRsb8G9UxPf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-9b-6836a8356a99
+Date: Wed, 28 May 2025 15:07:44 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
+ pool
+Message-ID: <20250528060744.GF9346@system.software.com>
+References: <20250528022911.73453-1-byungchul@sk.com>
+ <20250528022911.73453-17-byungchul@sk.com>
+ <CAHS8izM-hfueYox9Eqti4OsoCafh=pDL2v-6BEJRyt4ay580hQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izM-hfueYox9Eqti4OsoCafh=pDL2v-6BEJRyt4ay580hQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1CMcRTG/d/bvi3La0v+YsgaQ81I2DgfTOTTnxn3LwYzWXrHrtpiu5vB
+	qowpWrcYtq020U1mWdRmmkrSZWqUzWVJF+s2BqFouqxoa4y+/eY8z3me8+HwtDyP9eE1kTGi
+	LlIVoeCkjPTrlNwlQYUr1YGncgLBZCnh4MZAAhR021gwFZci+DnYLoG+2noO8nL7aTC1pDDw
+	yzJEw/s6pwS68j8wUHGyjAbnmQYO0lOGaUiyFVLQWmpgIWPoOg1l+m4JtN03cdBZ8oeFDzXp
+	DDQaixjoMqyFOrM39Dd9QVBrKaOg/3QWBxfsZg7epnQhsD90MpB53IDAUulgYXjAxK2dT+4W
+	vaRIubFDQszWWHKn0J+kOew0sRancsTae15CXj+v4EjD5WGGlNv6KJKe3MORH+9fMeRb5TOO
+	WO4+Y0izuVZC+qxztwg7pavDxAhNnKhbGrxHqh5pPUUdHJQn3M/LZPUoeVoa8uCxoMRNAxbu
+	H3/Pesq6mREW4qttesrNnLAIOxyDtJu9BD98rfLcmIcWulj82HTAzZ7CNtxzaWjMLxNWYX12
+	y2imlJcLRQhf7Emhx4XpuPHKO2Z8eRF2ZdtH5/woz8YFI/z4eB5Ovpc5ZvcQtuKPLzrHbpsh
+	LMDVpfWUOxMLNh735qRKxo+ehR8UOpizaLpxQoVxQoXxf4VxQoUZMcVIromM06o0EcoAdWKk
+	JiFgX5TWikZfJ/+Ia5cN9bZur0ECjxRTZORWkFrOquKiE7U1CPO0wkuWtGalWi4LUyUeFnVR
+	obrYCDG6Bs3mGcVM2fL++DC5sF8VI4aL4kFR90+leA8fPcqoq6r226Hl3xx+1LwuY9Lii589
+	Q+ITP9kXdPRVyTYr12vOxR/67U1Cbm8KCS+/6Rc+OVsZGuw6sdF5oaFkd/sk40hsz59QtXN9
+	oyH35NaANGxw1k4tVu7e8lvtZd74pa3el6p88mvPhqMu116p9zs+d0X9sSCtbPH59BZfWXfG
+	nEAFE61WLfOnddGqvyuGtq82AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRiGe7/TPlfTr6X1lqAw6aDQkbQHkvRP+dKPyAiCimrlh1vqrC1N
+	g2I5KbJcWZY1p6xWqctYLZszxGKJKVaKtlpHTTtKqOX5QOWUyH8X930/16+Hp+Un2AW8WnNI
+	1GqUyQpOykg3rTUsjSyNUq1oLA4Bs72cg1vDGVDS7mLBbHMi6B95K4G+2iccWK8O0mBuymZg
+	wD5Kw+e6Dgm03fzCQPXJSho6ztZzkJs9RkOWq5SCx0UNLDQ7jSzkj96goVLfLoHWB2YOPpT/
+	YeGLO5eBBlMZA23GWKizzIXBxh8Iau2VFAyeKeLgQouFg87sNgQtjzsYKDxuRGCv8bIwNmzm
+	YhWkouw1RapM7yXE4kgj90ojSI63hSYO2ymOOH6dl5B3L6s5Un95jCFVrj6K5Bq6OfLz8xuG
+	9NR4OGL91ksRe4WHIU8ttZLNs7dLoxPEZHW6qF2+bo9U9bv5NHVgRJ7xwFrI6pEhIAf58VhY
+	jXuLXrA+ZoSF+FqrnvIxJyzGXu8I7eNAIRxfr8mb3NBCG4ufm/f7eI6wBXdfGp3cy4Q1WF/c
+	xOUgKS8XyhC+2J1NTxWzccOVT8zU8WI8XtwykfMTHIxLfvNTcSg23C+cnPsJ8fjrqw+cj4OE
+	MPzI+YQ6h/xN00ymaSbTf5NpmsmCGBsKVGvSU5Tq5MhluiRVpkadsWxfaooDTXzHzaPjeS7U
+	3xrnRgKPFLNk5E6kSs4q03WZKW6EeVoRKMuKiVLJZQnKzCOiNnW3Ni1Z1LlRMM8o5sk2bhP3
+	yIVE5SExSRQPiNp/LcX7LdCjJWc/sh7XzFRNnneQGY33N9j6o2PCi5t6KgZuz7LFdG2gTzmd
+	Bcd7OxlLe1eTw+OR4/mrhtQz4yLupu3N/55WlRB5sC487FmWtDHPetfonLGd9DYXJj3N2fAt
+	IGpo/Y65P439zYmvd9cvkhx2h8QX7Nwa0vcmbv6x8tCHDUG71kcrGJ1KuTKC1uqUfwEHnLX6
+	GQMAAA==
+X-CFilter-Loop: Reflected
 
-On 2025-05-28 07:57, Holger Hoffstätte wrote:
-> It seems the condition (!n) in __ep_remove is not always true and the WARN_ON triggers.
+On Tue, May 27, 2025 at 08:32:55PM -0700, Mina Almasry wrote:
+> On Tue, May 27, 2025 at 7:29 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > To simplify struct page, the effort to separate its own descriptor from
+> > struct page is required and the work for page pool is on going.
+> >
+> > Use netmem descriptor and APIs for page pool in mt76 code.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> 
+> This patch looks fine to me... but this is converting 1 driver to
+> netmem. There are hundreds of other drivers in the tree. Are we
+> converting all of them to netmem...?
+> 
+> The motivating reason for existing drivers to use netmem is because
+> it's an abstract memory type that lets the driver support dma-buf
+> memory and io_uring memory:
+> 
+> https://www.kernel.org/doc/Documentation/networking/netmem.rst
+> 
+> This driver does not use the page_pool, doesn't support dma-buf
+> memory, or io_uring memory. Moving it to netmem I think will add
+> overhead due to the netmem_is_net_iov checks while providing no
+> tangible benefit AFAICT. Is your long term plan to convert all drivers
+> to netmem? That maybe thousands of lines of code that need to be
+> touched :(
+> 
+> > ---
+> >  drivers/net/wireless/mediatek/mt76/dma.c      |  6 ++---
+> >  drivers/net/wireless/mediatek/mt76/mt76.h     | 12 +++++-----
+> >  .../net/wireless/mediatek/mt76/sdio_txrx.c    | 24 +++++++++----------
+> >  drivers/net/wireless/mediatek/mt76/usb.c      | 10 ++++----
+> >  4 files changed, 26 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+> > index 35b4ec91979e..cceff435ec4a 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/dma.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/dma.c
+> > @@ -820,10 +820,10 @@ mt76_add_fragment(struct mt76_dev *dev, struct mt76_queue *q, void *data,
+> >         int nr_frags = shinfo->nr_frags;
+> >
+> >         if (nr_frags < ARRAY_SIZE(shinfo->frags)) {
+> > -               struct page *page = virt_to_head_page(data);
+> > -               int offset = data - page_address(page) + q->buf_offset;
+> > +               netmem_ref netmem = netmem_compound_head(virt_to_netmem(data));
+> 
+> It may be worth adding virt_to_head_netmem helper instead of doing
+> these 2 calls together everywhere.
 
-This should of course read "not always false", sorry.
+Sounds good.  I will.
 
--h
+	Byungchul
+> 
+> -- 
+> Thanks,
+> Mina
