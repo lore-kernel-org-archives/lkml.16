@@ -1,126 +1,319 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05EC1E8854;
-	Wed, 28 May 2025 11:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E4E27C145
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:39:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748432097; cv=none; b=px0Cz0aLE+dYZhgdHKPtWIzRHdfUzEt+i1KU3OhhXOn6sUBPtIKkLAx6T903YdSdIhrHAsdKqMlxbn4ACdIcM5/RESjuxYHa2SNwZuIiJ1qAVp+JAxzEZG5z62SysVicjrC4AMKvjP0OWV8XQEnKWkKLyh57r1xHygRNseeJxHg=
+	t=1748432399; cv=none; b=jtxn9CUC317GHVUG6V3aMwX/sy5+vTtpFUJD/2t2D/2ou/4gQzHYIaAPG/0qwgNXoo4bo/WgHUloU7TA8EekhnJhbGMpWb63W92jEANMafgBaXNOAbYsiT7JWx/H0sPayXd5l7E0o0CTym7KU4cyZhow9KkC2YJlSPYw5NfYfO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748432097; c=relaxed/simple;
-	bh=HSxCbgRLZhJCIcQQOJEc5MtOOGLMy3xGR4PMKG3DHvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pIc8kAKys4DXy9AXqqHkBcgq0zw3shGPknULi3XCsEBX8BcrO/grfb24D9XTjo39y7HB2OJ9gy+Sheaolsygu3UNM2pDLnGR7fwJWcUcF6BmscddR3pgSSUXgNW7MpQcVZeOr2t/TIlFUZMtdX8ejsO19bfOqU+1u5jRrq0yp6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ULHOQ+80; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748432399; c=relaxed/simple;
+	bh=BBu36Rgh6aU1bpToO9N1ihK0oHnVGIXTQoN96ZJUo+w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=k1/oolGubzy6FJ6DBKitoxT5FDWskJuqDvRIgA5r9UPemhTFf4pq9CS8HlXVr0T6DyEI3mYonu65cSUbyh6MTlrMXnKEGhIVWzw2FeXb9birptn4qlPZ8SLBtHP6JyqKcHrMHat87q06it/QO23ExT4EgRGPgj57BzSuUGeQuYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NdXC1ja4; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ULHOQ+80"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748432096; x=1779968096;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HSxCbgRLZhJCIcQQOJEc5MtOOGLMy3xGR4PMKG3DHvg=;
-  b=ULHOQ+80tetHTnpZPtjnLc0M30Ar3/v/USsIGMgo3zdgJ75ofW9x+y8w
-   VZLhEWHCOE8UN440lRtGQy3xtjjz1qXd2ZFjnt91hLd7Z7IuXrqAOzfaH
-   uezoU1u8rqpGqTv+WGjRvvFbAsn7ck4yeTV40xfa9VeytSLFXvq/AMhlv
-   ljvcah/vKyTLKFKzHDPr7l1nTfh1eukMKz9nxlbut7URh36odIc5HVLuq
-   lCRRiskDrR+/aPHL4hL5l4HdHGtiVunMeMWc+MEupxlaRoQMiGVNOqVNC
-   n4jwzGqfSL0lMBh9ALccQ/MSN4iWFk5xxbjHs7LZwAn1dmt+xaiQkzXyg
-   A==;
-X-CSE-ConnectionGUID: ckVO1Q45RGC0fjt+8iHR6A==
-X-CSE-MsgGUID: 49Yjd5RfRt25dWQzZIqinw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50152786"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="50152786"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 04:34:56 -0700
-X-CSE-ConnectionGUID: gOecNs2RRlqmVkcs8m6llw==
-X-CSE-MsgGUID: BHUyzIPHSy6OcTM3fSV+GQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="174209022"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 28 May 2025 04:34:53 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKF3a-000VcS-22;
-	Wed, 28 May 2025 11:34:50 +0000
-Date: Wed, 28 May 2025 19:34:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org, jolsa@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	bpf@vger.kernel.org, Menglong Dong <dongml2@chinatelecom.cn>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 14/25] bpf: tracing: add multi-link support
-Message-ID: <202505281947.qIShGsJU-lkp@intel.com>
-References: <20250528034712.138701-15-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NdXC1ja4"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac34257295dso867449966b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748432396; x=1749037196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OiTJp1V4AeD6wzaFFwN/fbbHn5o4MJxEF1SXS8KKGVk=;
+        b=NdXC1ja4O+ASZ9xb0HB2uOZu2q20h5LIbwEoSFbeXYC6/B9NhM/a4dLKkPnsVzAbyB
+         iv/9GSk3/IyxVTopSMBDrTpNTX+GSLH7Sc7H3gZWsJD68Cm+dOuQ5HruT4/pAGnYOErG
+         K33qhJZlyE4fttzHOBMWntraz8xjHIdRbKzOcCtpgLLI5uulcLZORI+r2cBo6hBIfFCg
+         2flRxE6JiIEyqY+VLGutE8QaYeDE3xCPePuDbRnWKxrbFoNb6h5+hwWMI0WrUW9pq1fT
+         MsCh7qWac6+YYtsMdAFz+7IuJ66bXkNNp8jE8SnOsMSw3NZPz51S5RJeahCAZwINPxHD
+         Knqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748432396; x=1749037196;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OiTJp1V4AeD6wzaFFwN/fbbHn5o4MJxEF1SXS8KKGVk=;
+        b=hATrrz4VlY+ACctwQwDLZnXglnTUcFrQ8EcV6Na369SBtSvaMJdCxejvIbqLK7N11i
+         aznNOU0ABDDVxeYLWXhNCLaIZNDkWZSQIrEHUoRFH/RK+5bGBnseJUtDe8FFPFw0gPoy
+         2s3Gx8WH8+6QQh8Nekjqr+/o7bPv8VRfdpyicyuH1E/XRdCROOVbJtA84PIBXD8gK/P3
+         puEFPzi86NVh4QTLNg4rYNfOFcusl6dy4HHSF6vmWZi4HGo8rezBnPyyGUP225g0mrZN
+         XNMdK59M4E88slutEK+JmLQC44kcGSzUe19esaKoaZpQ3q1VER0HTpTBxNlZ0++NFn+U
+         dm/A==
+X-Forwarded-Encrypted: i=1; AJvYcCW8r/YDa/UYhGLsvM15TKu9HLZ27HOgGhftXLyBHSrZ303GgEDdDzinxH5cLSrIfPbHa332Js8DkmHARW8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg1KEV0+2x7m0RTnqBgYhiwmXg4wFyEvdQ9vc+0NY8Rgu/LJi3
+	R2rhBXReykQmophvB2TqdBStHbxhLLdzwIV+3i3fXzbB/9kYCxZLL12tAN/YumG33gs=
+X-Gm-Gg: ASbGncuNQWE34Ck+GhtNJ9Fp7tVUazyU62WsrKbE1+HCkcSvwHWY+Jft0BhDuRzoTGk
+	T031vA8S8O+icHqMt6uVM9IJP77GEtOprx8ZgkSuuHSrB2I6BrhE8/G8mBa64BTgukNoP760+61
+	zVbJE0aCd7tvCMiXjFdaylb0wi/+Vy59glaDilsEdCHWsW8Dk7l/0nE1019nF889QS3FUlK0QZK
+	8NbfEfrCS7YwY3JqhGSWN/f/7AOqwlGhDJiZgjOUqru/X/EqCptQjXtBf0+xIOZP/KdBHVi3g7K
+	kzy6dQwhLasObN73y4+Wq3cQzyLo64yRLdQ5EXzt7SkQB9XtZeYXq16H72HTGLlBBBFAKA==
+X-Google-Smtp-Source: AGHT+IGKnInvLGE6Mi5kyFcchf66ICbQUp4/h5Z1IQ/6gw+wZVuK/zbHHFQ1H3smlCmyuGMG7J3VAA==
+X-Received: by 2002:a17:907:9447:b0:ad8:a41a:3cce with SMTP id a640c23a62f3a-ad8a41a404bmr110557966b.48.1748432395618;
+        Wed, 28 May 2025 04:39:55 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.75])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b29785sm93822166b.93.2025.05.28.04.39.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 04:39:55 -0700 (PDT)
+Message-ID: <6e4b340b-a239-4550-b091-139c3724a54c@linaro.org>
+Date: Wed, 28 May 2025 12:39:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528034712.138701-15-dongml2@chinatelecom.cn>
-
-Hi Menglong,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-per-function-metadata-storage-support/20250528-115819
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250528034712.138701-15-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next 14/25] bpf: tracing: add multi-link support
-config: arm-randconfig-002-20250528 (https://download.01.org/0day-ci/archive/20250528/202505281947.qIShGsJU-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505281947.qIShGsJU-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505281947.qIShGsJU-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/bpf/syscall.c:3727:2: error: call to undeclared function 'bpf_gtrampoline_unlink_prog'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    3727 |         bpf_gtrampoline_unlink_prog(&multi_link->link);
-         |         ^
-   kernel/bpf/syscall.c:3727:2: note: did you mean 'bpf_trampoline_unlink_prog'?
-   include/linux/bpf.h:1492:19: note: 'bpf_trampoline_unlink_prog' declared here
-    1492 | static inline int bpf_trampoline_unlink_prog(struct bpf_tramp_link *link,
-         |                   ^
->> kernel/bpf/syscall.c:3995:8: error: call to undeclared function 'bpf_gtrampoline_link_prog'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    3995 |         err = bpf_gtrampoline_link_prog(&link->link);
-         |               ^
-   kernel/bpf/syscall.c:3995:8: note: did you mean 'bpf_trampoline_link_prog'?
-   include/linux/bpf.h:1486:19: note: 'bpf_trampoline_link_prog' declared here
-    1486 | static inline int bpf_trampoline_link_prog(struct bpf_tramp_link *link,
-         |                   ^
-   kernel/bpf/syscall.c:4001:3: error: call to undeclared function 'bpf_gtrampoline_unlink_prog'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    4001 |                 bpf_gtrampoline_unlink_prog(&link->link);
-         |                 ^
-   3 errors generated.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
+ <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+Content-Language: en-US
+In-Reply-To: <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-vim +/bpf_gtrampoline_unlink_prog +3727 kernel/bpf/syscall.c
 
-  3721	
-  3722	static void bpf_tracing_multi_link_release(struct bpf_link *link)
-  3723	{
-  3724		struct bpf_tracing_multi_link *multi_link =
-  3725			container_of(link, struct bpf_tracing_multi_link, link.link);
-  3726	
-> 3727		bpf_gtrampoline_unlink_prog(&multi_link->link);
-  3728		__bpf_tracing_multi_link_release(multi_link);
-  3729	}
-  3730	
+On 5/28/25 12:22 PM, Tudor Ambarus wrote:
+> 
+> On 5/6/25 4:53 PM, Ilpo Järvinen wrote:
+>> On Tue, 6 May 2025, Tudor Ambarus wrote:
+>>
+>>> Hi!
+>>>
+>>> On 12/16/24 5:56 PM, Ilpo Järvinen wrote:
+>>>> Resetting resource is problematic as it prevent attempting to allocate
+>>>> the resource later, unless something in between restores the resource.
+>>>> Similarly, if fail_head does not contain all resources that were reset,
+>>>> those resource cannot be restored later.
+>>>>
+>>>> The entire reset/restore cycle adds complexity and leaving resources
+>>>> into reseted state causes issues to other code such as for checks done
+>>>> in pci_enable_resources(). Take a small step towards not resetting
+>>>> resources by delaying reset until the end of resource assignment and
+>>>> build failure list (fail_head) in sync with the reset to avoid leaving
+>>>> behind resources that cannot be restored (for the case where the caller
+>>>> provides fail_head in the first place to allow restore somewhere in the
+>>>> callchain, as is not all callers pass non-NULL fail_head).
+>>>>
+>>>> The Expansion ROM check is temporarily left in place while building the
+>>>> failure list until the upcoming change which reworks optional resource
+>>>> handling.
+>>>>
+>>>> Ideally, whole resource reset could be removed but doing that in a big
+>>>> step would make the impact non-tractable due to complexity of all
+>>>> related code.
+>>>>
+>>>> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>>> I'm hitting the BUG_ON(!list_empty(&add_list)); in
+>>> pci_assign_unassigned_bus_resources() [1] with 6.15-rc5 and the the
+>>> pixel6 downstream pcie driver.
+>>>
+>>> I saw the thread where "a34d74877c66 PCI: Restore assigned resources
+>>> fully after release" fixes things for some other cases, but it's not the
+>>> case here.
+>>>
+>>> Reverting the following patches fixes the problem:
+>>> a34d74877c66 PCI: Restore assigned resources fully after release
+>>> 2499f5348431 PCI: Rework optional resource handling
+>>> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
+>> So it's confirmed that you needed to revert also this last commit 
+>> 96336ec70264, not just the rework change?
+> I needed to revert 96336ec70264 as well otherwise the build fails.
+>>> In the working case the add_list list is empty throughout the entire
+>>> body of pci_assign_unassigned_bus_resources().
+>>>
+>>> In the failing case __pci_bus_size_bridges() leaves the add_list not
+>>> empty and __pci_bus_assign_resources() does not consume the list, thus
+>>> the BUG_ON. The failing case contains an extra print that's not shown
+>>> when reverting the blamed commits:
+>>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+>>>
+>>> I've added some prints trying to describe the code path, see
+>>> https://paste.ofcode.org/Aeu2YBpLztc49ZDw3uUJmd#
+>>>
+>>> Failing case:
+>>> [   13.944231][ T1101] pci 0000:01:00.0: [144d:a5a5] type 00 class
+>>> 0x000000 PCIe Endpoint
+>>> [   13.944412][ T1101] pci 0000:01:00.0: BAR 0 [mem
+>>> 0x00000000-0x000fffff 64bit]
+>>> [   13.944532][ T1101] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+>>> pref]
+>>> [   13.944649][ T1101] pci 0000:01:00.0: enabling Extended Tags
+>>> [   13.944844][ T1101] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+>>> [   13.945015][ T1101] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+>>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+>>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+>>> [   13.950616][ T1101] __pci_bus_size_bridges: before pbus_size_mem.
+>>> list empty? 1
+>>> [   13.950784][ T1101] pbus_size_mem: 2. list empty? 1
+>>> [   13.950886][ T1101] pbus_size_mem: 1 list empty? 0
+>>> [   13.950982][ T1101] pbus_size_mem: 3. list empty? 0
+>>> [   13.951082][ T1101] pbus_size_mem: 4. list empty? 0
+>>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+>>> [   13.951448][ T1101] __pci_bus_size_bridges: after pbus_size_mem. list
+>>> empty? 0
+>>> [   13.951643][ T1101] pci_assign_unassigned_bus_resources: before
+>>> __pci_bus_assign_resources -> list empty? 0
+>>> [   13.951924][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>>> 0x40000000-0x401fffff]: assigned
+>>> [   13.952248][ T1101] pci_assign_unassigned_bus_resources: after
+>>> __pci_bus_assign_resources -> list empty? 0
+>>> [   13.952634][ T1101] ------------[ cut here ]------------
+>>> [   13.952818][ T1101] kernel BUG at drivers/pci/setup-bus.c:2514!
+>>> [   13.953045][ T1101] Internal error: Oops - BUG: 00000000f2000800 [#1]
+>>>  SMP
+>>> ...
+>>> [   13.976086][ T1101] Call trace:
+>>> [   13.976206][ T1101]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
+>>> [   13.976462][ T1101]  pci_rescan_bus+0x28/0x48
+>>> [   13.976628][ T1101]  exynos_pcie_rc_poweron
+>>>
+>>> Working case:
+>>> [   13.786961][ T1120] pci 0000:01:00.0: [144d:a5a5] type 00 class
+>>> 0x000000 PCIe Endpoint
+>>> [   13.787136][ T1120] pci 0000:01:00.0: BAR 0 [mem
+>>> 0x00000000-0x000fffff 64bit]
+>>> [   13.787280][ T1120] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+>>> pref]
+>>> [   13.787541][ T1120] pci 0000:01:00.0: enabling Extended Tags
+>>> [   13.787808][ T1120] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+>>> [   13.787988][ T1120] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+>>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+>>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+>>> [   13.795279][ T1120] __pci_bus_size_bridges: before pbus_size_mem.
+>>> list empty? 1
+>>> [   13.795408][ T1120] pbus_size_mem: 2. list empty? 1
+>>> [   13.795495][ T1120] pbus_size_mem: 2. list empty? 1
+>>> [   13.795577][ T1120] __pci_bus_size_bridges: after pbus_size_mem. list
+>>> empty? 1
+>>> [   13.795692][ T1120] pci_assign_unassigned_bus_resources: before
+>>> __pci_bus_assign_resources -> list empty? 1
+>>> [   13.795849][ T1120] pcieport 0000:00:00.0: bridge window [mem
+>>> 0x40000000-0x401fffff]: assigned
+>>> [   13.796072][ T1120] pci_assign_unassigned_bus_resources: after
+>>> __pci_bus_assign_resources -> list empty? 1
+>>> [   13.796662][ T1120] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
+>>> up, yet(s5100_pdev is NULL)
+>>> [   13.796666][ T1120] cpif: register_pcie: s51xx_pcie_init start
+>>>
+>>>
+>>> Any hints are welcomed. Thanks,
+>>> ta
+>> Hi and thanks for the report.
+> Hi! Thanks for the help. I've been out of office for the last 2 weeks,
+> sorry for the delayed reply.
+> 
+>> The interesting part occurs inside reassign_resources_sorted() where most 
+>> items are eliminated from realloc_head by the list_del().
+>>
+>> My guess is that somehow, the change in 96336ec70264 from !res->flags
+>> to the more complicated check somehow causes this. If the new check 
+>> doesn't match and subsequently, no match is found from the head list, the 
+>> loop will do continue and not remove the entry from realloc_head.
+> I added a print right there and it seems it's something else. See below.
+>> But it's hard to confirm without knowing what that resources realloc_head 
+>> contains. Perhaps if you print the resources that are processed around 
+>> that part of the code in reassign_resources_sorted(), comparing the log 
+>> from the reverted code with the non-working case might help to understand 
+>> what is different there and why. To understand better what is in the head 
+>> list, it would be also useful to know from which device the resources were 
+>> added into the head list in pdev_sort_resources().
+>>
+> I added the suggested prints
+> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
+> the downstream PCIe pixel driver and I obtain the following. Note that
+> all added prints contain "tudor" for differentiation.
+> 
+> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
+> 0x000000 PCIe Endpoint
+> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
+> 0x00000000-0x000fffff 64bit]
+> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
+> pref]
+> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
+> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
+> D3cold
+> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
+> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
+> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
+> [mem 0x00000000-0x000fffff 64bit] list empty? 1
+> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
+> [mem 0x00000000-0x0000ffff pref] list empty? 1
+> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
+> [mem 0x00000000-0x0000ffff pref] list empty? 0
+> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
+> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+> 
+> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
+> before __pci_bus_assign_resources -> list empty? 0
+> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
+> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
+> added in head list
+> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
+> 0x40000000-0x401fffff]: assigned
+> [   15.226419][ T1107] tudor : pci_assign_unassigned_bus_resources:
+> after __pci_bus_assign_resources -> list empty? 0
+> [   15.226442][ T1107] ------------[ cut here ]------------
+> [   15.227587][ T1107] kernel BUG at drivers/pci/setup-bus.c:2522!
+> [   15.227813][ T1107] Internal error: Oops - BUG: 00000000f2000800 [#1]
+>  SMP
+> ...
+> [   15.251570][ T1107] Call trace:
+> [   15.251690][ T1107]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
+> [   15.251945][ T1107]  pci_rescan_bus+0x28/0x48
+> 
+> I obtain the following output when using the same prints adapted
+> (https://paste.ofcode.org/37w7RnKkPaCxyNhi5yhZPbZ) and with the blamed
+> commits reverted:
+> a34d74877c66 PCI: Restore assigned resources fully after release
+> 2499f5348431 PCI: Rework optional resource handling
+> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
+> 
+> [   15.200456][ T1102] pci 0000:01:00.0: [144d:a5a5] type 00 class
+> 0x000000 PCIe Endpoint
+> [   15.200632][ T1102] pci 0000:01:00.0: BAR 0 [mem
+> 0x00000000-0x000fffff 64bit]
+> [   15.200755][ T1102] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+> pref]
+> [   15.200876][ T1102] pci 0000:01:00.0: enabling Extended Tags
+> [   15.201075][ T1102] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+> [   15.201254][ T1102] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+> [   15.206555][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: BAR 0
+> [mem 0x00000000-0x000fffff 64bit] list empty? 1
+> [   15.206737][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: ROM
+> [mem 0x00000000-0x0000ffff pref] list empty? 1
+> [   15.206901][ T1102] tudor : pci_assign_unassigned_bus_resources:
+> before __pci_bus_assign_resources -> list empty? 1
+> [   15.207072][ T1102] pcieport 0000:00:00.0: tudor:
+> pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff] resource
+> added in head list
+> [   15.207396][ T1102] pcieport 0000:00:00.0: bridge window [mem
+> 0x40000000-0x401fffff]: assigned
+> [   15.208165][ T1102] tudor : pci_assign_unassigned_bus_resources:
+> after __pci_bus_assign_resources -> list empty? 1
+> [   15.208783][ T1102] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
+> up, yet(s5100_pdev is NULL)
+> [   15.208786][ T1102] cpif: register_pcie: s51xx_pcie_init start
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I see my email client split the lines for the prints making the output
+very hard to read. Added the output here too:
+https://paste.ofcode.org/AEfjASQW8Z2jbMak5VkmpJ
