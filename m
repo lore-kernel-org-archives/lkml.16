@@ -1,120 +1,110 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE391AC891;
-	Wed, 28 May 2025 13:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058B223CB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438258; cv=none; b=NLk6BLu6V51y8YY3kRIUj/eeEEYJHaS5I3/fIdgM8fyG017C4gTqf3m/u7QTG5R2BJmI8ug2kaZ+UOHwc8Je0MgXBiIADMNBUdWODPy+SZmcMHwwHrDg7ro9oLCeGJuAZQOgcljX5a1kHOYFIS5Sm6Yu37+8Hd+P+6OPgeM0oi8=
+	t=1748438263; cv=none; b=Uck40K7VD51YhEGBojJPbLvja9oYeKlgBxbF+PTChK4wggbO2LEvBdTml8t3eRESIJaXuiZIAN/pwYhYWdM6B+dlkW0HC+4pHehGSR8opv9AmHq2qkqK16zRweTkUQYUtKlOxQYmpbdtErqEVNXEhfAw6daypZ/zPf7gAFXWZBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438258; c=relaxed/simple;
-	bh=GZfblSZ2sTL48y/a1XWqWbkhf8ZyUELSfA0kRxh1n+w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNb6yqFdA8ailBL4xT18fup61h7p69CzLR5pRH5AGBJS457MSFNZSMFLDv58X2tDTz7LI2KGGUs75K6PmbUFpRk4N8xazxuCisgL3MT6mVBs+VEHf5rXzTBasm/UQKPSpV8xburmUB/YE4rFZGBR5xwQnrkOisjgpeJYwzcYsJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6qmV1qghz6M4Mc;
-	Wed, 28 May 2025 21:17:30 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DCE7114034D;
-	Wed, 28 May 2025 21:17:32 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
- 2025 15:17:31 +0200
-Date: Wed, 28 May 2025 14:17:30 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mark Rutland
-	<mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 19/26] arm64: Add support for GICv5 GSB barriers
-Message-ID: <20250528141730.0000232e@huawei.com>
-In-Reply-To: <20250513-gicv5-host-v4-19-b36e9b15a6c3@kernel.org>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
-	<20250513-gicv5-host-v4-19-b36e9b15a6c3@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748438263; c=relaxed/simple;
+	bh=+8JeJ0WuWhzvAWlP/eWg/yGnQ5jEOIHa1Vy8lkmwQAI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhJ8+TV5efEY5Z1LfTE7nafQZUcbfHqw/CkuUqPlTo+43ZgytXQcqFDiVN/uG9tkVBlBRUjm6l4Z2ilzhfR8RYs0Ko1qsJwhodNQGiewnGdb8AWUqdvc3SFyzxAxqz6gwOwIIgVBYGRVWJFbWg5TpSbUpvsjRBhTYEGVMOPoZ0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xDjHDgkj; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xDjHDgkj"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4c4e6a0ccso3367504f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:17:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748438260; x=1749043060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=etuOIVUU4x5SySaTzeLNRaqDZ3hUnhSaZPYuWZNFHOo=;
+        b=xDjHDgkjiAQIndoaIzHn1Uc+K0cJAoizjAHQicY87NOfQD5c0YoHvu2tbGQdjCruNx
+         7juAQuxEPoyLd5uIIDL50t1opayQZ0DtZ66rjInnvEqIAIEQoGY0124sRqZVh/cwfdMv
+         1mUS5lWPJrrfAiBIBaOKCjq3crMOSgV8Sl65fmW4jabg6Grk40B3m0cOvA7Ox8AL/8j1
+         FRnuOdWsBfMooh1W2E5LlShZsquGXCuxCw4j+LWxBx1qtA+zsGzcKaeEfcezWW7Vzhpj
+         FSvM8A5AiuVALahUlTILjAC1SEq+rwfKfQ12arGDcIqsNGlb/g4eQEb6U5nKraJQPQXE
+         oQnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748438260; x=1749043060;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=etuOIVUU4x5SySaTzeLNRaqDZ3hUnhSaZPYuWZNFHOo=;
+        b=Om3MpgdvZxtw6Z0svc8ez/mSz97KT9FGROMo/g9dyhPZIIDmI2TROSGR7pGOrreiGe
+         yqCqExwXt+ycXl84DxVRRBF3q7BnU1l24yg3S9G0nmfK+r/oBRWb9x/biPaMmBZ+3wOT
+         WC/fyjHo2rVcX9ALAteoiw+yAnLqFvgDVafvt20mFYJhV2xSTPnSgPoOE9RFvwerYaaD
+         OL1jN5iSu7DZBfoUS4P9nwa7S9j4cqps0GbT7UsTK7mBdmWh+M9BLT7rg4nczpNSZGHC
+         UUWm8y4Jc6FF+fVTQ0pVKNcOhtTULRwdjut/86NxwisAm0wQhYlrUBZtmSb/GHmZqcBj
+         XN6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWXTz0K+7aCaW4by36yCnISiDUJGMcuW0CUvZfkEId6XO83lQg9yfY1tWXjaahoS0qMVT3XXOwCGka1+No=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHaP4Zm5ZNgnsJOquwUpez9Psmj7/dEqqBKNI3SJdNMxbvd+kV
+	pDArCzq9m79xz73ePQnl5bhHCy1l90lCql+wROY5JDxn7rcrEN2HLcAQ8ipM4Gw9PVA=
+X-Gm-Gg: ASbGncsP/PHv795AeNxnJ1Un9yn/wCJUchiedlJE9VaBbpR52ECx5n8mqq/8gntXex1
+	s6ICurLqvQ0uD0ZZgGG8JoGd1e2Ee0dTi9X/lOou0TkcGDYHoa+GSkFXc80/uHX7GjsmR2+MTWj
+	sMjLqzp/PNsnbJOfWA7VJCtrDWeEvo3oo5YwOiAsvT2lZsYDyS7m0rplo45zdnqK/KYzjVwzuja
+	o17J7RVl9/MQvceeAxHGHZr00lrTJ+jN8T72smzRvs81GOhbHbqWo6q5yjvnxUwWIOCpyEvTuYN
+	C0NsVQSDfSd/38hC24CYj3COOqEo9eebGT9KLr6aWMOGOZjt+3e+6kioFTfdDpfuGAOqVf4f1CX
+	6zv9nX5ZlcSmkg5T0Eg0h9m5ZWA==
+X-Google-Smtp-Source: AGHT+IF6k9N6RDrHL9CWqquYKN5znltPLRFbYrRqu24xJR1k0tX7fObXTd2EmsKCVpIINagQQXmgGQ==
+X-Received: by 2002:a05:6000:4308:b0:3a4:ed1e:405b with SMTP id ffacd0b85a97d-3a4ed1e40c4mr749522f8f.46.1748438260235;
+        Wed, 28 May 2025 06:17:40 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4eac6ed4dsm1509868f8f.17.2025.05.28.06.17.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 06:17:39 -0700 (PDT)
+Message-ID: <a6d64948-e713-4a50-9d4e-6de02a550d06@linaro.org>
+Date: Wed, 28 May 2025 15:17:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] Add the NXP S32 Watchdog
+To: Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+ S32@nxp.com, ghennadi.procopciuc@nxp.com, thomas.fossati@linaro.org,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, alexandru-catalin.ionita@nxp.com
+References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
+ <650c336b-a698-42f5-ad59-7dcdf24667f4@linaro.org>
+ <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 19:48:12 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+Hi Guenter, Wim,
 
-> The GICv5 architecture introduces two barriers instructions
-> (GSB SYS, GSB ACK) that are used to manage interrupt effects.
-> 
-> Rework macro used to emit the SB barrier instruction and implement
-> the GSB barriers on top of it.
-> 
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  arch/arm64/include/asm/barrier.h |  3 +++
->  arch/arm64/include/asm/sysreg.h  | 10 +++++++---
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-> index 1ca947d5c93963d33fe8fb02d6037fc71bd9fd7a..f5801b0ba9e9e7e0433f16ffedf0ec7dfb3e358e 100644
-> --- a/arch/arm64/include/asm/barrier.h
-> +++ b/arch/arm64/include/asm/barrier.h
-> @@ -44,6 +44,9 @@
->  						 SB_BARRIER_INSN"nop\n",	\
->  						 ARM64_HAS_SB))
->  
-> +#define gsb_ack()	asm volatile(GSB_ACK_BARRIER_INSN : : : "memory")
-> +#define gsb_sys()	asm volatile(GSB_SYS_BARRIER_INSN : : : "memory")
-> +
->  #ifdef CONFIG_ARM64_PSEUDO_NMI
->  #define pmr_sync()						\
->  	do {							\
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 2639d3633073de10f5040a7efff059021f847530..e7734f90bb723bfbd8be99f16dd6d6fdc7fa57e8 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -112,10 +112,14 @@
->  /* Register-based PAN access, for save/restore purposes */
->  #define SYS_PSTATE_PAN			sys_reg(3, 0, 4, 2, 3)
->  
-> -#define __SYS_BARRIER_INSN(CRm, op2, Rt) \
-> -	__emit_inst(0xd5000000 | sys_insn(0, 3, 3, (CRm), (op2)) | ((Rt) & 0x1f))
-> +#define __SYS_BARRIER_INSN(op0, op1, CRn, CRm, op2, Rt)		\
-> +	__emit_inst(0xd5000000				|	\
-> +	sys_insn((op0), (op1), (CRn), (CRm), (op2))	|	\
-> +	((Rt) & 0x1f))
+On 14/05/2025 20:09, Guenter Roeck wrote:
 
-Perhaps indent as something like the following for readbility?
-#define __SYS_BARRIER_INSN(op0, op1, CRn, CRm, op2, Rt)			\
-	__emit_inst(0xd5000000 |					\
-		    sys_insn((op0), (op1), (CRn), (CRm), (op2)) |	\
-		    ((Rt) & 0x1f))
+[ ... ]
+
+> AFAICS the patches do have Reviewed-by: tags, so this is just waiting 
+> for Wim
+> to pick it up.
+
+I fetched the watchdog tree and saw it was updated from May 23th but I 
+don't see this watchdog series.
+
+Is it possible to give a status about it ?
+
+Thanks
+
+   -- Daniel
 
 
->  
-> -#define SB_BARRIER_INSN			__SYS_BARRIER_INSN(0, 7, 31)
-> +#define SB_BARRIER_INSN			__SYS_BARRIER_INSN(0, 3, 3, 0, 7, 31)
-> +#define GSB_SYS_BARRIER_INSN		__SYS_BARRIER_INSN(1, 0, 12, 0, 0, 31)
-> +#define GSB_ACK_BARRIER_INSN		__SYS_BARRIER_INSN(1, 0, 12, 0, 1, 31)
->  
->  #define SYS_DC_ISW			sys_insn(1, 0, 7, 6, 2)
->  #define SYS_DC_IGSW			sys_insn(1, 0, 7, 6, 4)
-> 
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
