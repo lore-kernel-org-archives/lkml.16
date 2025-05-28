@@ -1,122 +1,162 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F017C1F6694;
-	Wed, 28 May 2025 07:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D941367
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417537; cv=none; b=t12ANywzjxXngIgqGxtj7uAfY+Gew215uS8MnsXdXo2g+iTn4EJKy29j1mBE5Xw1SUOuvbFxE9PWL+uzWrHkafNtftCv8SRCqlEtvnu/rKjyIByPJHmv1k0qA67phIPvOycqYs18fbIzwrlGSNeI0OfAVsfNKsYa1cLoVDBgeqo=
+	t=1748417610; cv=none; b=oquc2Og0IdJ3c0wj4wATbCsOOucsD6hcEwRgRrwMH1dMvYCqoZufUx7dMUKD1cETSIOn5qYcCEixRTrOig2ziGZbAM9d7ZIVPpGmFte5PqF4xN9zIEX0WYz3oW9vDOwI+913bcmCxOLyqOmyZcX1gA3zoYbMCDCCdnBko0tLbgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417537; c=relaxed/simple;
-	bh=tl4HJyy9z6gJQEYRpfp/dQ7sqfOoUaZIh6MPeISWTB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lXI8L4/LyRrW1M4L87dlGvvmidUQ1/PENI97lP91s4ICxe4lE5+j15sJYU1ZwKRKajH3K/y0h2UlX9ttIp4SMOOTQTh/6YYBKturuMPuwY9+yxR60BfZaG6GSGkEQT3WtF0y5sHAqUPO69o3/TafJsFLwVy40/kkN6z2dUeNhpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e45c4d0f54so798622137.3;
-        Wed, 28 May 2025 00:32:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417534; x=1749022334;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xgxGWQtzFo6kc3Pzo0NbHsLbzvVma89U0TG3zIMdKj0=;
-        b=k1yfH3+Moh/z+tJyF3qHVYGoNJAfl1dQXZ8UrQERYVKsJkCLUtPw41u1g0PFx6oEiT
-         kFxz35uC/aPZ/s9CWeJGM2OdQpe1FrqCThDW5BPy19210W4rCrb9Zg02H3J+9V5ChIvo
-         5Q3PCn/s5F0NMd/QHw0dKJg4C4KlLnv4QBXcc3D+3nPnNj4RVNMXyPK6OwcpWGBFNaO5
-         gdZ6pdUE1jJA2VEc0W6522WR6B4wBHgtskOHDwgkRY82njG3nzmk9QkrCwC+Xq93h/2r
-         HO5OWMYKNCKAudEvD4y19doq+0l7n1ZMNBacBU+Df5/MIxvfOO8/qaPsBMme9jmdbn3m
-         YOlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Zj4sol5AyF+GeF8kahPc/QKGACrMyFEdFIIpznuZSe//b8/9vtqCezaM+Zw9uuX3QB12dUCywVku@vger.kernel.org, AJvYcCWy/ZWXbJiSQJTIRC72d9c1nnRwzh7bKq7a4nCt15drpo6DH3Fx7c9gdRPt0EafNbCj/BuNNhwpGpQ+Ld0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw717h+u+sjUIs1nzu0zT92WB8NQaaiztJv9q3sT5NYSScWuXIK
-	6qeZ4h3338QdUQKz24E8edfA2McUoDLhSZF/zYDQKuAXcYaAfd+muJ2fEjt06Trl
-X-Gm-Gg: ASbGncvhxB8vt57/ucoDaGjag1IBCo4T8qAoLEUoYY1EBgBhHY+e0B0odtS028/ZJyR
-	gGozEzwde1cxeARpMdYQP4hbHLnvjELLbQYY56EUKbOV8t3WHd1pu/xjoDZ5o5RYD2bY7J21UCR
-	0xOhG0DRDLB1ilPLsMlNvpHYGaYIaxJkhcvv1iWrDKp9DT82GOLJDf5JJlsYQ4BvXKsHtj0jYHk
-	lneIjRGArAPq7kNMcHa5YUqfzHJ/BHoUv4ZKhg3CWE5Dy3uoyqjb/s4US+rgbgkWRjSCrHsfeDS
-	IjJlP9Q5LRmJFLtp5suewYF+ljnUHtb91W6gd5s6fhRA4lxj93wPvJKw105CXvZetcYAk8LRTOf
-	wj18xT2FxmKQQRA==
-X-Google-Smtp-Source: AGHT+IG7XRR3EqylAKJ6sLGw/h+8CbALYDVblczaxm6paqfZy9gLY9nNywfDUlk1LOsPclGn0mHHxw==
-X-Received: by 2002:a05:6102:3f56:b0:4e2:aafe:1bde with SMTP id ada2fe7eead31-4e4240b0ed0mr12621581137.9.1748417534359;
-        Wed, 28 May 2025 00:32:14 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e59fc11485sm386837137.6.2025.05.28.00.32.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 00:32:14 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-87de33ccdb4so1263133241.2;
-        Wed, 28 May 2025 00:32:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVYl20OZls5C7aSJpmRAt98UmyAtxqY8Bn+b4ghM1XKBjzg7UeeHCTPkZ3ORfuZMmY7n9u5KTIV2d17@vger.kernel.org, AJvYcCXlwqPfx4mTAuzQgi6dWMRkRAO+gyKncQu5vdtenlDxEKyo04PoroJ7Q0Zp2KznL3iQR9Jq0lGCcYYuK48=@vger.kernel.org
-X-Received: by 2002:a05:6102:5092:b0:4e2:bacd:9efa with SMTP id
- ada2fe7eead31-4e424176757mr11597420137.20.1748417534023; Wed, 28 May 2025
- 00:32:14 -0700 (PDT)
+	s=arc-20240116; t=1748417610; c=relaxed/simple;
+	bh=Tcueh2vLPsADo6w4LEQ0sJi466Nq95/odz1N6UfRgJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QhK+/iNXKFDhyHH/Q/Yhx9HQrMMXwrj13lN1w6D5btnjNYDJBKTDYm6bNYxfc0BDkK2WS6uZKHAtpJ/coRk+4OjtC1mNSM5gCaDQcV1glEFIASabyVnHge9JgJcM4HfeyZLttMI687ly4fxD35o+Brk0HV++Zcc8pboUH7zetEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IqU4Q/og; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IqU4Q/og"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54S7WXXu3194667;
+	Wed, 28 May 2025 02:32:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748417553;
+	bh=4xV4o/RHd3QDyMg98SNoIXBaQ+hUKdFjfdMlNfIY4SI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=IqU4Q/ogEjZyHrET17F68VdMeaZfxak/zn2UdOX3Jjb0W3LcoYbNncdovxAkr8qhZ
+	 gvICj3A1mNldnarFMdbcOh9WZLJhiU73WBlNrpIKBZa+FCnlQnUhfE6CmNgPL/03gj
+	 99+iUVpZT8fSkAKJXVjwBiJR3umpOjPrUsvIlNGU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54S7WXx53262049
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 28 May 2025 02:32:33 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
+ May 2025 02:32:32 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 28 May 2025 02:32:32 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54S7WQC44110467;
+	Wed, 28 May 2025 02:32:27 -0500
+Message-ID: <ab5f27ac-6bbe-4746-a2bd-e5f1a667ae91@ti.com>
+Date: Wed, 28 May 2025 13:02:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516100658.585654-1-Raju.Rangoju@amd.com> <20250516100658.585654-4-Raju.Rangoju@amd.com>
-In-Reply-To: <20250516100658.585654-4-Raju.Rangoju@amd.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 May 2025 09:32:02 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWTwcoFQz39uF0gJUT=X4yC=wn0gYGU5L+jW_JBj0WnGA@mail.gmail.com>
-X-Gm-Features: AX0GCFvzmsaL3yoHuU2hM8b7YC4FLoUGtHs5ezJWOusHVPb2odYjFwbLUW_CYcg
-Message-ID: <CAMuHMdWTwcoFQz39uF0gJUT=X4yC=wn0gYGU5L+jW_JBj0WnGA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] spi: spi_amd: Update Kconfig dependencies
-To: Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: broonie@kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, krishnamoorthi.m@amd.com, 
-	akshata.mukundshetty@amd.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
+ capabilities
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+        Michael Walle
+	<mwalle@kernel.org>,
+        Aradhya Bhatia <aradhya.bhatia@linux.dev>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>,
+        Francesco Dolcini <francesco@dolcini.it>,
+        Jyri Sarha <jyri.sarha@iki.fi>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay
+ Abraham I <kishon@kernel.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil
+ Armstrong <neil.armstrong@linaro.org>,
+        Robert Foss <rfoss@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman
+	<jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
+ <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+ <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Raju,
+Hi Michael, Tomi,
 
-Thanks for your patch, which is now commit dbb79974193a2932 ("spi:
-spi_amd: Update Kconfig dependencies") upstream.
+On 27/05/25 18:03, Tomi Valkeinen wrote:
+> Hi Michael (and Aradhya, Devarsh),
+> 
+> On 27/05/2025 12:13, Michael Walle wrote:
+>> Hi Tomi,
+>>
+>> While testing Aardhya's OLDI support patches [1], I've noticed that
+>> the resulting LVDS clock is wrong if this patch is applied.
+>>
+>>> In practice, with the current K3 SoCs, the display PLL is capable of
+>>> producing very exact clocks, so most likely the rounded rate is the same
+>>> as the original one.
+>>
 
-On Fri, 16 May 2025 at 12:09, Raju Rangoju <Raju.Rangoju@amd.com> wrote:
-> Add X86 and SPI_MEM as dependencies for the spi_amd driver to ensure it is
-> built only on relevant platforms and with the required SPI memory
-> framework.
+Yes, display PLL is flexible and device manager should set exact 
+frequency. Please note that there was a bug in device manager in earlier 
+releases which would prevent setting it to exact clocks. You should try 
+with latest SDK release firmware binaries (11.0...(10.1 should also work 
+though)) if seeing any misbehaviour in that regard.
 
-This sounds like you are restricting the driver further (BTW, what are
-"relevant platforms"?)...
+>> This is now what I'm seeing. Most SoCs have that fixed clock thingy
+>> for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
+>> fixed clock rate for this clock, which will then result in an LVDS
+>> clock which is way off.
+>>
+>> I'm testing on an AM67A (J722S) and I've backported some of the
+>> patches as well as dtsi fragmets from downstream. Thus, it might be
+>> as well the case that the fixed-factor-clock node is wrong here.
+>> OTOH other K3 SoCs do this in mainline as well.
+> 
+> Thanks for findings this (It's not a fixed clock, but a (fixed)
+> divider). I can reproduce on my AM62 SK's OLDI output.
+> 
+> I didn't see AM625 TRM explaining the DSS + OLDI clocking. I remember it
+> was a bit "interesting". Afaics from testing, the VP clock is derived
+> from the OLDI serial clock divided by 7. To change the VP clock, we need
+> to set the OLDI clock's rate. But the code we have at the moment is
+> using clk_round_rate/set_rate to the VP clock.
+> 
 
-> Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-> Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
-> Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
+This is correct. The pixel clock is derived as OLDI clock/7 when OLDI is 
+enabled.
 
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -1267,7 +1267,8 @@ config SPI_ZYNQMP_GQSPI
->  config SPI_AMD
->         tristate "AMD SPI controller"
->         depends on PCI
-> -       depends on SPI_MASTER || COMPILE_TEST
-> +       depends on SPI_MASTER || X86 || COMPILE_TEST
+> And we get the crtc atomic_check called before setting the OLDI clock
+> rate, so it doesn't even work by luck (i.e. if the OLDI clock was set
+> earlier, the VP clock would already have the right rate, and it would
+> seem that everything is ok). In the atomic_check we see the OLDI bypass
+> clock (25 MHz), which results in 3571428 Hz VP clock.
+> 
+> And with this patch, the code then decides that 3571428 Hz is what the
+> HW can do, and uses it as the pixel clock.
+> 
+> Aradhya, Devarsh, do you remember how the clocking goes here? Or if it's
+> in the TRM, please point me to it...
+> 
 
-... but this broadens it instead?
-And how can it be used on X86 if SPI_MASTER=n?
+I think what you described is correct, if any specific questions I can 
+help check. But any misbehaviour you are seeing w.r.t clock setting 
+(i.e. what driver is trying to set versus what actually is getting set)
+then please dump the dss clock tree along with relevant details of test 
+done:
 
-Seeing an ACPI match table in drivers/spi/spi-amd.c, perhaps you wanted
-to have a dependency on ACPI (or X86 && ACPI) somewhere?
+k3conf dump clock <display_device_id>
 
-BTW, as you now have a single Kconfig symbol gating both spi-amd.c
-and spi-amd-pci.c, this means you can no longer build spi-amd.c if
-CONFIG_PCI=n.
+You can get the device ID via TISCI Doc [1]
 
-> +       depends on SPI_MEM
->         help
->           Enables SPI controller driver for AMD SoC.
+[1]: 
+https://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62x/clocks.html#clock-for-am62x-device
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards
+Devarsh
