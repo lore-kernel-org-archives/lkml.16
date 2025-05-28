@@ -1,164 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153D31FE461;
-	Wed, 28 May 2025 08:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002D11990A7;
+	Wed, 28 May 2025 08:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419369; cv=none; b=Z+xUKMqP46q4XczV1xZ/H/+Hfc5sNffIPhi/LBFgjtBilF6G00eXbo59wTjV72OsxcBIHV8PYJkBB5VlrzVhHXjFlofXr9s6d5GT53VtL0ugoRt2nyac7ZVHagw0DMH364KBxzzM9us/rwZkOZHVoAHopX25PjDncCzhJ79Om7I=
+	t=1748419402; cv=none; b=GwKq8TdFzJ9rDfOmg90ig23ZrFRtjbWFYAoECiZGzgRcEpB0A1PWIfrDgEIDL2AAmZSSm3psf8HQw1IJnnsgFMk4dQbFbt0A4faM8Fch+lSBoeh8UQNydJRGTSf9TwWkyaj0ByAEVBhf2iQ2f33bb/ApF98ffc0/PdqW7Im+Gpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419369; c=relaxed/simple;
-	bh=3FSWHD3qycKECEg7gTlnngzs/HUVLk9BvvfwY+tVfLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SLMe08ScgF78P0rMFNe//mHimCkFrj9DAiWN7TLBeAiZ+fql5Orh3Eggxp+dbZtiHg2zzS2ueIwlDLxocZYdpg3kLQb8JW1nZFi9KcjLYLaouH+6CUsuldvj05n2haAM85E2HeV//3f+cYmJekCxluNN04bvffXtOv1tCF+0iMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rn4vKWs7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748419402; c=relaxed/simple;
+	bh=m1AgbkSD9ZhqsKYGnxQT5QuWasbz/mdwKFB3lNLS1o0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i6P4hJOyZZlYzlMBLJorBSHOk8hSDS2BQv1L+7lkKV5/L1gJIrGOsEpR0wcAqNfLB4pUpH2dKAL0ZZQk87d7kjFpY8al4SYWOyd6nLzpyHNNfvcrXgczEaaXg8UaGVPZRjmkawB+HiNWIN/Pjdc0/JOGoiWgT089UFemSWWBWWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6s2xY/f; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rn4vKWs7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607EFC4CEE7;
-	Wed, 28 May 2025 08:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419368;
-	bh=3FSWHD3qycKECEg7gTlnngzs/HUVLk9BvvfwY+tVfLE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rn4vKWs71TYxMUa4t4D/2mddYUg7lGsD4WkIzi3nAZgLs1UwBY9gKnUpUEDpVuUvD
-	 2D/w/sQwvLNig2fzR/axh1JZFSegHYBLd4FWzecx7MRz55sqYpGQm3VFRcteVCer6+
-	 GSn7qyFcCi/p7nxa93guRNeh926DEQZ9HTzLPEykRNCUKf67SuLnACLNcmHU5sC+2B
-	 9NXCHFx+WoNlArj133YrUumlqaNklkUfdJLev4XkbEsA4o44BRi2sqYMimE5L3B73Y
-	 GcwJQxeDJ7oDl71uSK0SYNE0hIrThz+igjqRdUQUzxEmFWnT/ZJVRRKE3FnIx7CRNw
-	 6q8BuM2eEIBpA==
-Message-ID: <1c7e9077-c213-40a9-92f4-07e813a3d151@kernel.org>
-Date: Wed, 28 May 2025 10:02:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6s2xY/f"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-309f26c68b8so279522a91.2;
+        Wed, 28 May 2025 01:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748419400; x=1749024200; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7EOwFLOIjUGE9rMIYijxRVcus8CYn2cGLNdJL9ka6c0=;
+        b=Z6s2xY/fAvUzL8vDUiVijKTi5TK+7jVXS4BgONUdNxXuEVvvMKC9PDSou1xKgeS8Of
+         rrNNx67fger4NMvSZbTPtggcZTe/gZE3Pe1rlpIoghBCtl+Nq4dEXZE9kxgsfVrmxmOu
+         JHqc0Mbm7uPQGjG31mJAz3EeIqhpO2n7OdhNko+yTHT7OWuu21viXWW/EJ21jAxp65v3
+         5LP1BrHxOuRXRnEP1mJ2ZAQBZaUzYp7injDzlMut+riPLNl8aGzgdXojZHAZSaBwgFVK
+         DGO2qEk4iROXOOwFGv1GpiT+ewnTJdZ45w05pR6/TpjsZONhTuJAD31OQFGo+Ebu30Sn
+         kQqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748419400; x=1749024200;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7EOwFLOIjUGE9rMIYijxRVcus8CYn2cGLNdJL9ka6c0=;
+        b=lz97CXLBCeixQUTg/0A66oNbAsnj3fXCWqPGRcBstQ9bBjO9DdgOTk4l9I6MTKxRi8
+         R8am77/GkPpRuwmW3ZW8TFdiWzOUQG00nCf5JWJcYRLMb/pD0C1k9wuEudd6vDBgY2aV
+         obz5NSf+6nR/uDI7ONP5nBdB3CEZA+LiRXGKOxrO2M/nwtYIRbxVwcbM4Gdi/1XJJUsx
+         7Aai82ew9tlvfCoMNydzH3i5JBnzPWXntUqAtV6PndP1wLla1tlVrl9AAgbH8oBX5JLQ
+         2pC+KnR3J10QhTgEe7tcfmk8qj6wuTee76wipAAh8BIrN4FczJSw7bhkXqVmpPFcjsT2
+         aGKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh7Gq+scQ4wbXEYNHO7MD4RbFmcyKX7nOAnd6/c89tr8SAu7O6KQC2WvXrp+wVGKq1xLEhNuHwZQ+hfdSY1SI=@vger.kernel.org, AJvYcCWFrlp3xQYcwTpiuvrvE2hTCDTvqzgpcly7nLvtXgfJIeklhPzJjYrdy8fnUN9b0wRb4rWipWyPKNVXP/ypkcxr@vger.kernel.org, AJvYcCXXn3fFLJPUFV2ICCHck6LTnKXzAbHr5jtHTYpL4jzCzNCId/lo92urfYtY11M8D5j+obocnVvvZzkB5vw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUZkmOmod9ADzR9cAi9kvoi7ysD0Iw4ax4Es0VfO/d8UTzDCeB
+	sJ6rN2DrYIiTMGpPEiUXvqV7CJc5w7ypuwiNJAgJDco8x7EoG1/bvf3OB28oYYrDmzyAObsgSYO
+	hz8G5nYWp3vH9y159UAX8xHzWGmW4GvY=
+X-Gm-Gg: ASbGncud6fRez0GzjTdQbEtZGYwSxCdX1tF3ldxd/rSjYD3P1ODQeAs+PvKC8wn/e58
+	dNtooTBlwKBcK4bNQi4lZ75uQ5PQpoCHp1Z1qHk3FrJz6cXIObIZ14L+hvUz7RymucI7qqTZriR
+	Lh+pt3eiDWSCIR3VE9n5Pq7jrk3fkKss36
+X-Google-Smtp-Source: AGHT+IEiwicS/q9RUO/V8KuNVVyWFDIAjAK2Mnb5ZiQ/pv0ORt4DIc9nszJacBNbGZrUZagNVQ3qcC1eIdODchfFkbQ=
+X-Received: by 2002:a17:90b:1b4b:b0:311:e8cc:424b with SMTP id
+ 98e67ed59e1d1-311e8cc4639mr847651a91.5.1748419400178; Wed, 28 May 2025
+ 01:03:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: mmc: ti,da830-mmc: convert text based
- binding to json schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250523-davinci-mmc-v1-1-ceebd8352d9c@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250523-davinci-mmc-v1-1-ceebd8352d9c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250502215133.1923676-1-ojeda@kernel.org> <CANiq72mj2yv4E7Dd+19fmP9xGWELdv6JwXULpu91oq0BMzob+g@mail.gmail.com>
+In-Reply-To: <CANiq72mj2yv4E7Dd+19fmP9xGWELdv6JwXULpu91oq0BMzob+g@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 28 May 2025 10:03:07 +0200
+X-Gm-Features: AX0GCFvKE0fCOzzRb6dIal5zXh6Jr2moZJDyfrK-nCJ7S0wGurEFElmTeo_tH7w
+Message-ID: <CANiq72m2vnoagiFBU81L=Z=AXa--+Sz-Q8OKcv-++mXvRu__mA@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Rust KUnit `#[test]` support improvements
+To: Miguel Ojeda <ojeda@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/05/2025 15:34, Charan Pedumuru wrote:
-> Convert TI Highspeed MMC host controller binding to YAML format. Add
-> 'clocks' property to resolve errors identified by 'dtb_check'.
-> 
-> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
-> ---
->  .../devicetree/bindings/mmc/davinci_mmc.txt        | 32 -----------
->  .../devicetree/bindings/mmc/ti,da830-mmc.yaml      | 62 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+), 32 deletions(-)
-> 
+On Tue, May 27, 2025 at 2:10=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+>     [ Used the `cfg_attr` from the TODO comment and clarified its comment
+>       now that the stabilization is in beta and thus quite likely stable
+>       in Rust 1.88.0. Simplified the `new_body` code by introducing a new
+>       variable. Added `#[allow(clippy::incompatible_msrv)]`. - Miguel ]
 
+One addition:
 
-A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
-prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+    Required `KUNIT=3Dy` like for doctests.
 
-"convert to DT Schema"
+The build error was reported by Stephen when merging -- thanks!
 
-
-
-...
-
-> +
-> +allOf:
-> +  - $ref: mmc-controller.yaml
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-
-No, I really doubt Rob cares about this hardware.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,da830-mmc
-> +      - ti,dm355-mmc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
-> +
-
-This wasn't in original binding. You need to document this in the commit
-msg. Also, list the items.
-
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-
-why interrupts are required?
-
-
-Best regards,
-Krzysztof
+Cheers,
+Miguel
