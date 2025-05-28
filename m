@@ -1,31 +1,50 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B0268FFF;
-	Wed, 28 May 2025 08:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE22269CF5;
+	Wed, 28 May 2025 08:35:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421340; cv=none; b=A8cVt5N6JAbMFRtmidgz/GGFwnJDS/o1c03dL94bvF97qDQUtZIoHibmNWJR1ozqpnfiOT6bkaRjBhikPIxdITHukwrn0ALCvLRiubqGNjwxlCbNCY+fIrs+apvy8NFS6lEz4ar2H2lxIT6THqFfki8uRKOsxQq2PSspHPNnrfg=
+	t=1748421359; cv=none; b=Bnh63DDvT/ggkPAKhuPQXo1OaCOuR84sU/GlqDKd+wi45BALvlqbEepT/zFFEb/cMScH+MX/q1+rpYYA2rVv70hEw+WE37Ja2QuLfIGiNZ2st1ACbjR/dGeq0zRALzz/nGQlIbJYoXj5TvPzVNRwTlLPwt8knznJEPs1cXfgDOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421340; c=relaxed/simple;
-	bh=rALpFPEiTVr308SndMzrfaKc23oNScVyKdtgmZ2jaZo=;
+	s=arc-20240116; t=1748421359; c=relaxed/simple;
+	bh=zC6RfVpR24GC2DQDRKbj6v6ZzT4oGsPAyeKR4bvFIM8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X4Fa6UsnQz2k/gNaqX8SeUMFiYu+7ocH/By0SVdY7rBZoLTFuP58xkNkO7ALf9V/f7OGR7uC8qxDlFLL/WbFBQ0Cm5pKVytIVivd1OCcomUoO2A31aTBOedS+xqXWdHKQ2Vlc9v8uWz6TAKzSrtQYb8X8w+1NPvbiFnqSl4AzdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ey/HoVHv; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=B3tVWPaWEuZAwagSUCJgAYBs9Z/Crwhe+e9wQzuH0IFqLwJIIUihuc6ZmHOcuF+qtJbec9Kq5a9ZmEEw0P05L8dlBmKZCxhfjpPjnJxYMpH+W4v7oUeYXIM/gVD7q7WZ7rt5/+q7n75dsov9u6vSg8O35/YYtI358hsnnF1hwhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ONqR8pR+; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ey/HoVHv"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748421328; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=C1C3naz7hPNUvfz7qjQzQeD+k7g8b1WXlsA41wkU4Fg=;
-	b=ey/HoVHvaDVT7sf8n102x9de18es3mQ+kRvKPbMNJcJS2Og1tVbh25/qmXLw25PqURFdFDQ6GcfMqllAoBLvQ16BAY1NZJ4Q6cMWNJ7T/sXtGVsZqIa7Y1L7KzP7YeGBDt42fxAgs/UhYa1nubbVFFzyFxEx6QPK4q7HGQSn+uQ=
-Received: from 30.221.130.248(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WcCj5pL_1748421326 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 16:35:27 +0800
-Message-ID: <d0e08cbf-c6e4-4ecd-bcaf-40c426279c4f@linux.alibaba.com>
-Date: Wed, 28 May 2025 16:35:26 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ONqR8pR+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748421358; x=1779957358;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zC6RfVpR24GC2DQDRKbj6v6ZzT4oGsPAyeKR4bvFIM8=;
+  b=ONqR8pR+SzPjxsT1JDCpxb6G4g/GiAJhD2PTSA8CgEMfHSjuwPpeo5el
+   IFUmnEIw1Fr3fP8nNW1dU97gMLzJZTB19fGelr5MZaglMjvvWZfHZpTP0
+   TqN5x9B5Sey26lQllN9O+UIse6vNI95emImAY6e7dI5xxf9reLQ3ESe2a
+   gpxdg7vlSPSu3Htcztc995fEwgTBb31FTqW5Q9d37Fewp8YqRgxdmcFcQ
+   enL4IFo6ZEdykz6lSNiucE5jI1ZRqzv8pbbuPi9sBT5wIGa/Rzmt4kdgt
+   yyGpq/wlUIFl+UHpzdppzDs3GOkXKCbWlLtehyFGRUZWOiV0KiPz29ZgN
+   g==;
+X-CSE-ConnectionGUID: P30fevplQ3GMzXzE9WKF/w==
+X-CSE-MsgGUID: 4gkpNXjLReKiQk3kp7NO0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="53062877"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="53062877"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:35:57 -0700
+X-CSE-ConnectionGUID: 2X13U/L4S0+UGn5NnIHtXQ==
+X-CSE-MsgGUID: +PuLB7i8SQqFwqHf8cSYAg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="144148737"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:35:56 -0700
+Message-ID: <aea0cc02-3b18-4c7e-9108-ab5e923051bf@intel.com>
+Date: Wed, 28 May 2025 16:35:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,59 +52,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [QUESTION] cachefiles: Recovery concerns with on-demand loading
- after unexpected power loss
-To: Zizhi Wo <wozizhi@huaweicloud.com>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org, brauner@kernel.org
-Cc: jefflexu@linux.alibaba.com, zhujia.zj@bytedance.com,
- linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, wozizhi@huawei.com, libaokun1@huawei.com,
- yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com
-References: <20250528080759.105178-1-wozizhi@huaweicloud.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250528080759.105178-1-wozizhi@huaweicloud.com>
+Subject: Re: [PATCH v4 3/4] KVM: x86: Use kvzalloc() to allocate VM struct
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
+References: <20250523001138.3182794-1-seanjc@google.com>
+ <20250523001138.3182794-4-seanjc@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250523001138.3182794-4-seanjc@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Zizhi,
-
-On 2025/5/28 16:07, Zizhi Wo wrote:
-> Currently, in on-demand loading mode, cachefiles first calls
-> cachefiles_create_tmpfile() to generate a tmpfile, and only during the exit
-> process does it call cachefiles_commit_object->cachefiles_commit_tmpfile to
-> create the actual dentry and making it visible to users.
+On 5/23/2025 8:11 AM, Sean Christopherson wrote:
+> Allocate VM structs via kvzalloc(), i.e. try to use a contiguous physical
+> allocation before falling back to __vmalloc(), to avoid the overhead of
+> establishing the virtual mappings.  For non-debug builds, The SVM and VMX
+> (and TDX) structures are now just below 7000 bytes in the worst case
+> scenario (see below), i.e. are order-1 allocations, and will likely remain
+> that way for quite some time.
 > 
-> If the cache write is interrupted unexpectedly (e.g., by system crash or
-> power loss), during the next startup process, cachefiles_look_up_object()
-> will determine that no corresponding dentry has been generated and will
-> recreate the tmpfile and pull the complete data again!
+> Add compile-time assertions in vendor code to ensure the size of the
+> structures, sans the memslos hash tables, are order-0 allocations, i.e.
+
+s/memslos/memslots
+
+> are less than 4KiB.  There's nothing fundamentally wrong with a larger
+> kvm_{svm,vmx,tdx} size, but given that the size of the structure (without
+> the memslots hash tables) is below 2KiB after 18+ years of existence,
+> more than doubling the size would be quite notable.
 > 
-> The current implementation mechanism appears to provide per-file atomicity.
-> For scenarios involving large image files (where significant amount of
-> cache data needs to be written), this re-pulling process after an
-> interruption seems considerable overhead?
+> Add sanity checks on the memslot hash table sizes, partly to ensure they
+> aren't resized without accounting for the impact on VM structure size, and
+> partly to document that the majority of the size of VM structures comes
+> from the memslots.
 > 
-> In previous kernel versions, cache dentry were generated during the
-> LOOK_UP_OBJECT process of the object state machine. Even if power was lost
-> midway, the next startup process could continue pulling data based on the
-> previously downloaded cache data on disk.
-> 
-> What would be the recommended way to handle this situation? Or am I
-> thinking about this incorrectly? Would appreciate any feedback and guidance
-> from the community.
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-As you can see, EROFS fscache feature was marked as deprecated
-since per-content hooks already support the same use case.
-
-the EROFS fscache support will be removed after I make
-per-content hooks work in erofs-utils, which needs some time
-because currently I don't have enough time to work on the
-community stuff.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Zizhi Wo
-
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
