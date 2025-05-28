@@ -1,308 +1,159 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013010.outbound.protection.outlook.com [52.101.72.10])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6E828B412;
-	Wed, 28 May 2025 16:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748451494; cv=fail; b=eik1mqr4SNFACaMEoEW9DOUr91hevKg8lZ87jonAUPW+cD/v7c+bUuhABPjiyTk2GZ54X5SCMX1NargUQqzZO73Ji2OKN6hP4SpUYLU0omUXqfU5RMQKn4ktujSwcVzspO9HfFE/k2w1Dj0G5icZMx9Yxq8OVMCEPDHo47FkUS8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748451494; c=relaxed/simple;
-	bh=ozOzZY6urZundEvZG4zLf+Lpb0ip7fvQeREuna5HTQU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=JfZmGRWZLt2WK3m2qzS4X5MLQ5iK1cHtHZGixbuRbq+0x0+lxusJdSboZtzE+uT9/kDDp6VwHaZ9teH2yfuYT63bE7+WQ+V6IgeSQzr+VObgLWmo3QHvBwKGtDXz6bLOxf+hl/FkwGlhSmZfHbHM3rBlkrYRRMkZlmz9QkGR1ts=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ldlis5DB; arc=fail smtp.client-ip=52.101.72.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB4528DF23
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748451496; cv=none; b=PUqKx735H4nVNh9vAIdwb1VlbXHvOGTa9m7QRcXLbA8GzGcy59CZ/e6Vavi/GSouURl5TeVtzHUMKi5CMO7Jx1YmTiXIcmbtkRzIWDSUnPv91tA0YcqtEyjEfF3bWvEFv8TmAN4AL/TfSNm0ljI7lLo8aj2+vrQM/V2KPTb5k3k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748451496; c=relaxed/simple;
+	bh=C/ggDr2U3zgPwsBNLbn/6E0DwqeLz9NmTk3loAa748w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DDTZ4pzy68oOg3nEnhp6r/cwCHk7RiAuVePqoxzTl5P4t6HKX/SdHIKxvrQa7mb+niQoXXdS5S2TVYWDyFTuG8+Cu8aTd0BPwcRu++WAlgDYocZRUa3HApwp2pr1j3+jEhrU5PXVRQu0oxv3IluQ1qS8Jm54eLeeu7pIq9sfdTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IdQJuX77; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ldlis5DB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LETDBSKx5+aS/ov3i785RXH4bgoZ55xttLtZFtJ7uOFAUY0Wba0nX1nO4raqS4uuqnnbiu1o/FB3CoCLa+uqesYTwJDJK0lJJtuB01ivI10BXb7HxDbtMNBDcuv7D0JE/CpPyR2If9yA3L0PbX1mBO/naZRf29+OZjjrOtw+P9ADv9/hWhhgIKCHDtPTEC3/65ryIXLWlQU+oZ+w7HpmUQ61FmqdBlmgC5YIyos+kyleI96vAvxUtVX3EXyW2wzKLHNvY3vRQN2buO4fm7OsPY4qwBhdFNbU+8TmplVpmx9Y+cnFxvIaJbEtJuFtJrR5DWr325kWqh5WyI3iPsQ/kA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zjuWdef5oVzDmwgaKRtYhv2671eT5+5kVduoecCF15k=;
- b=CVpn6IEMP+/8TB75ZhqP2VkeQ0EG7TtqmPGYKo6AuI9XRPFfPrftp2GNh/DIZx6/QYfZ/5H/szmKcwtg5ppBEJ4Gi3nNYxCHUIIShuBjpcDQdmvLAXEkjlWzr+9KOS2lqsRpKzD9hcH/PH0Z1jJY3F8XVQbI/meRw7a6kHSvt+U9BqYHN6B+mDTiTlBiG8p6vrKycNJNOvKJ6Ta9ESHFCTclq5Da4IjvMHEKBmQKcKY9mXrCT84rpW8enKa8i/nZ8rx5XcpbAXWbvlzayoHObtvInmTTCBVrUX459J13J57qUkWH8lCFaMvsHCDXSeKkuZe/0D+HwXBdGmFalVOo+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zjuWdef5oVzDmwgaKRtYhv2671eT5+5kVduoecCF15k=;
- b=ldlis5DBESqPjx3wiGp5uylTZ2glgp06tOe5H3lspEgzn8CX34BjhJrQLNO7qTWp9cz+hA0u+0Hr7DOqr+hUBfuXHsCTrCbM8/2iQHXAdNIcuDdR5vNguWObqE2yilC/WbvGtgMPKwQFzTHvonDG355qP1HSUgwJNXGjtW7ffMIAbZzKeHjvuUns4dXyPwEQ47zDaI75R/ZntWzStQP9RAXX30Bpru+TXjqdGtLf9yjG0z1V0gliTvEbc0cPWkEBe2RNUQzLxow0uLgVjh1bxrcCDpzb79UXOUQVpqrXk94V/XHp8D/BGjoTjuDcuXbWAkCoqc7LuJHMNjiTovF/Gw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI1PR04MB6925.eurprd04.prod.outlook.com (2603:10a6:803:135::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 28 May
- 2025 16:58:09 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
- 16:58:09 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-sound@vger.kernel.org (open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM...),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] ASoC: dt-bindings: covert mxs-audio-sgtl5000.txt to yaml format
-Date: Wed, 28 May 2025 12:57:54 -0400
-Message-Id: <20250528165755.692264-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR05CA0067.namprd05.prod.outlook.com
- (2603:10b6:a03:74::44) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IdQJuX77"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S9PYvC015068
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qPuMK5jZFsmnypBiTqJe5zYuFHyiejNpkSdvHBAX+qM=; b=IdQJuX77asAFx/L9
+	V9dExB1SzToC288lqlo7biqGHva3PbRcVejs7s2klOYoNqPpzUswLaVaayzdourC
+	f6ZBK+R+SxZqnUn5Ivaknt0kqfg2JtOeZxo7uF/KKOOTQuLiafB8hKLkI0iogjQQ
+	dknU9bBD9+wA5UrUfhfiHB9EEvyeqHEk4cOj69NWgDBDI1RQIH2sWhCGotCrWnzv
+	KDurIHQhb6gXzv5nT9qzCsrDs2waLDJhpztub/2/TSRRhljzR+YFYKD6IFgoDlM0
+	4IPOs66w2VZhjC+l7jUSxSKjwHmOlH6Ofq0CbNQ4IEUB4egVfCEZN6ATZFL+5CBS
+	2xiw4w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ek2tu8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:13 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c552802e9fso113748685a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:58:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748451493; x=1749056293;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qPuMK5jZFsmnypBiTqJe5zYuFHyiejNpkSdvHBAX+qM=;
+        b=AGoL2bzk7kXYz/smjb/S5L/AvB03wgVTchwwT1NjI/1+Op1t1l9UIzHOUnGCqN1f/y
+         wuFHWHgwubQ7tnpSabvB1WuQr4bV8fEx4BHpCCU0LVn4sT0+fM0o8VpxgD39ELywq8mc
+         MJ8SZC793VNeeM789/o2FrN7CswyJ2LHYM2Y3+7hvTuol+rhly1xB38e1+1WEicOzhR/
+         mXSky7SINOEw3bHCjsewmAfeZ3q0pkqnDOrelioV/T5QLcFw2NP43DoNvAfa+co5Km/a
+         aDBDAyoZ2VFsBIYVnpMe/z1j7bCGbspoIRg+BkosLycEgSBXrwRqbVz5Vl+NzL1WNMLL
+         kt3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWbOfxAXCSnQETTD3R54Q0mRyUm9heHWsdreshBJd9msrKtbTaetp0C1Cmvlzv0k6QVD0piugkoIb2we2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzAhf0sA9YJqRcjCVR5hzGaR4jIFusZKQVKaRxrOLVy4XZqMk8
+	AUyFaDAlfp02gVa8A/XYG+PvjKP7EDUKGjKriaT888pEfB0gi3BilvyRzr3XDEp1YmhE2H+Ug0V
+	/Z1z9DpUtvrVN54kvzr//Qhj2kYJi6cycewF+NlY6rly5KVDQf8S9FPAVuIhAw7jT7fQ=
+X-Gm-Gg: ASbGncuIM4QhNAN1xye86RK8xrSdOsAuDx6Bx5cWxKl0gqwdBkRsaN/CaWRP/TVihCR
+	54TDqr91SjO2mdsu1EsHwAcRxt6/KHbzoRWvPbSUtHdczACdYr7XGGvjT6SPi3xG5CxqKY7btzo
+	tFhJiiIaChhkUE/snj40bOR4Fu+72mOx0Xi6f/9CBRrFur0mBnVUd19M0fDm34D9VFZ6tYYrpPu
+	hBE066hlUMhqIfGa8zE4udKSnCUgoqkWaE+HmMniGmYQpGJdXHz4adshBqWwzhqnA0IXQZkYgUk
+	MCyrm53MZpJHHsSneaJeEM8KIyFZ5cehubWZPpphN9zxziwHrgj8Nb5enOMkSnoDgQ==
+X-Received: by 2002:a05:620a:3198:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7ceecc09f86mr921830085a.10.1748451493048;
+        Wed, 28 May 2025 09:58:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkAjuwttwsySAmNXr3cyWyVH5nivsVuo17QQGa94DXhh90c8s++PqJyE2HPepyHAHWSRNEhw==
+X-Received: by 2002:a05:620a:3198:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7ceecc09f86mr921827385a.10.1748451492681;
+        Wed, 28 May 2025 09:58:12 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5b865sm135090966b.168.2025.05.28.09.58.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 09:58:12 -0700 (PDT)
+Message-ID: <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
+Date: Wed, 28 May 2025 18:58:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI1PR04MB6925:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0aa5a42-714e-43a7-da7f-08dd9e08d2d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+hbf3H+Gw+OCIp1Ygqo+jePT6dJokU7gEMRxY7FLT7Ex4fzZcMDAqZ2OSqdp?=
- =?us-ascii?Q?GHTdgRJyetwUMBdwIFW58jhdQ1cjVkdLDMOzrOuQ/RM+hQj/c1WR/7IzTvKi?=
- =?us-ascii?Q?IqjbjcahlbhcJQ4DqBUCKtQVka6U9UN9Rgot70iXWJNq0IlKcWfNt/5rXK/k?=
- =?us-ascii?Q?NQ0+1UuDNl7TwNmI80Af0V5lmHDz9GLfZU+QBHiVH/ySiS62PkjW9Wkvtflb?=
- =?us-ascii?Q?yGCrZybL4ScMfUKrXd5V6OX0Z+wXRNrTpHo4c42Xt2y84lCWdyMl0juVnk6q?=
- =?us-ascii?Q?xc1li4mfghW283RxdQ2ZHvcqqS4FH5gm4mtjzI5WTpnDG89lTgu4TvCGmNGU?=
- =?us-ascii?Q?ebYPOi86SN8Mcrb+BChv/FdcBnF/uIBCTVLcQZ0zb04y5Wpk4MfUza0/aQIo?=
- =?us-ascii?Q?rgVungpmRZD9rQKaDyOvOJbJDwJaZZFM9cKDKwMZ4YL+cg1EsHiIPtxxbDfI?=
- =?us-ascii?Q?42kFKMSN7IiaVSwj6BdT5iTaJtZtFTys/fxiPfNEuNYgdTjo+Rjb1lngMv+H?=
- =?us-ascii?Q?vBwV2kW9cxBu3Vgn/vV7ibx3nhb9wXPTnD1l8Psls3CpVZF5emSMyWYP/KgD?=
- =?us-ascii?Q?58q/qVB3AZFHVexJdGyW8d5G6A/CgBmyMKdfTFyv0g9Po3jUibp1QVgBoZVN?=
- =?us-ascii?Q?RMFhxDQUfCahIdteqSCT46zHPnRTNqJzHTlfaMTJ7BN+qLeOBQeSBYCElHBw?=
- =?us-ascii?Q?J//Bx4s1JHrGOcqOQrqdTuII0JWySfQ63F3jzt9jPGwozpNDlPKYnPzqf6v/?=
- =?us-ascii?Q?Q9lQPg3oQ4y/T7PBitCp7f2H7pG61AcBOeeDOdFaj3uVqShKPSPJ9FYudKV2?=
- =?us-ascii?Q?ypYzfbbMS4acG3zkv0QRSZMv8bqvXv+8PL3DjQjYK5KqRuolvZs2OqR5DZ//?=
- =?us-ascii?Q?upJ/fRhd3qnYM37yXDu37n0+JR0CDiug0klrgdqppt16fuUQIjJwqMAIiO7z?=
- =?us-ascii?Q?uSf9S/RJ+GD0qbQ8GT32xG7GmB8PCQSvWNW/+Z7S0KYebE3r7YkSFaVA/e3c?=
- =?us-ascii?Q?kVJcs715qe/qFuKNnNhlDWsvGxXk/PTBKpzDkOPNGL+Ayt8t3NRPyMng0iMP?=
- =?us-ascii?Q?K5aUjXd1kE6IuA2mPBb0M7BD2QTzMiPOsG8HklvXlG4vT2yvYwd8eWpZUAK5?=
- =?us-ascii?Q?19jCpRrBMiqyxogjh+gruFO+aNUhk4DU+F8O+Ou7ntmWNeZyodCc3VqHx3wb?=
- =?us-ascii?Q?PFzovKW30U/BXsv20LrQn1pvW20zedChnGC1ZaPweIEiW5T9R4Fnk8L9yJBw?=
- =?us-ascii?Q?Q+X/MP3MFrhOrZO0vY2LPispZwwTPyMaxQy5kepx+MdwIkQZaHnLe2FfbtMa?=
- =?us-ascii?Q?oYzpfOF8vM7nGYLHDMxPeklbZqzlfKCpcGJVH9ImxEP4rcb/wqyKJk3znwJG?=
- =?us-ascii?Q?rISy3u2g7C8kVpbDr6abH2AkgkLOOHLlYl1iFgeybd5HI8Z61E83x0HBUI7o?=
- =?us-ascii?Q?hAC37WX+fcnMieG9y7b8NIie1yK5wx4V?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Vzo/uoW2cIhHhuYoybLRF3MWb2mTmm7JkUDwdiMfY83XnXr5jf6DHUuZDvTB?=
- =?us-ascii?Q?XI7YtbXPTTVOPhQv8w3mh3XXx58QXlZa5jvZpzuc3eBiSnUjD5fbiAgaFm7Z?=
- =?us-ascii?Q?v3ybS5u2g8J1C+lfo9tzgoy+UymXZKZlRDhQt2q6XIoUrAZA6E4zriYyrANP?=
- =?us-ascii?Q?6aJ4Y3fecl+OyM52GK+zz9Qum90bdM1nc9mBBeCIqih5fA6QcMUCX+hDWkJN?=
- =?us-ascii?Q?et3dKzAysemgnlajlIi+Bun14YB26z85nO4LtNmAzYR/r9ON9UvqhA2zTy5k?=
- =?us-ascii?Q?yQCaC0/+axzxE8v2uQkJblelnSyfqxYcsae+l7fY2Xg3D2K9ZyQ7ORywU0vU?=
- =?us-ascii?Q?JF7b09tHa8J8ONmRi6vvByo4gDR/1XgoGxqFnD0S/JeKMuKKfBiTDpOFFLqT?=
- =?us-ascii?Q?B/TJBJh4lGJXjYr6t0af+ncJA3l75SvhnT7RMiG2wVLMv/3Zxk9l91BcGGfl?=
- =?us-ascii?Q?6x7VtsnDEQSLKinpd1HOmJ/S6YsXf3TZu/jBIUBT3YHcM3gxqD5eL1oyGjUt?=
- =?us-ascii?Q?PmNpC1e9zR3nZm3lIKuED6FXE6yL4xNUzlUu5bdtqElElTyj3GC4xj72Dc6U?=
- =?us-ascii?Q?muVrFUza9PBbx0c5R7UuH/sh6Ov9fOEvKM5KGOU3715J1bu5PZcMCGQN/mwZ?=
- =?us-ascii?Q?pbeGwbeOB8fQjH7abr0j1FcpJWgfbGAcVWTA6EtBhpCNbr5vAoqS3k1k0Nko?=
- =?us-ascii?Q?UImUSGNX4HZ9Wx8j7cEO2+77CfkEyhMKAVAUaaDtlmqsvF5YvhlOmO2TzEN4?=
- =?us-ascii?Q?Zr2n9m5h797bIhhZGcTIpqoqjfZamjaYpaW2yZRb4rNYqJyUOk2cLwABNUI1?=
- =?us-ascii?Q?nuW7eVWyEBmTPKF8HQo236lKB6jxvI7kW4savwPStkZWWDmpBy1cgxgkmqjY?=
- =?us-ascii?Q?l/p8iMoOyUrPW+qKGmWSSe/7okLdZ8Yw0FUw6v/tn22bGFw1wK+HiDn3Ge5T?=
- =?us-ascii?Q?zR5y2flMNt/SQlEX3tPcagvQEhKFmeMhxK/EmkW8Pv1f47O0eda3pMvbAm+J?=
- =?us-ascii?Q?m2ZXjZ7f+7Lm5oAd0Xd091GO2Cr38zYQnw5LTKQWNLpVMROiouNQzDD7bnL+?=
- =?us-ascii?Q?no634x/FV4Ci3G6I+iRwecVpqxM5tySrkuJcBPjNlYwUAyVrWYkIqW4XOKGs?=
- =?us-ascii?Q?XmE6rQHnKFX/xLuVze922HQFbgvmG2UwDpU/b2/PNMJYZtwha2Xmq+LFU3ol?=
- =?us-ascii?Q?/h8QCWYUvyPfZpB8tJXmQfSsRVIUHH3h5cXTrjvdz/+QFE82sqZSwtFVZTcQ?=
- =?us-ascii?Q?WPAiuPgTKSAd1FT9xnNuZyB7a58ws0xH9SxWVRlsoIftcPfZDjB7RH9peD2h?=
- =?us-ascii?Q?Lodeg8r/k6YWAj+7zCSOdEpumxFRzw0iYc6D/iDmWrJDq4l2bvlbAvPDkpbW?=
- =?us-ascii?Q?phbKHHBLmTRMbkYZjl7skKLhgnpNybXmx2AgHmUgLMjBwg8cCgh5ZQ9BcG9y?=
- =?us-ascii?Q?rNqK++ZWmJEoy6s+F/QAXAsITZahXuYAU9FO2aUuPs4nzE2kQw/x62VXxeJn?=
- =?us-ascii?Q?PiC9x7PTmRiVmA5J7fh7ToFYQGsdsWuaXMu0k9LvgDl5S9OhE4KS92zgypeE?=
- =?us-ascii?Q?WHVanehpp55R7tw+YTM=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0aa5a42-714e-43a7-da7f-08dd9e08d2d4
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 16:58:09.2756
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IszjMK+vmwx+I/UMGwQxAgPf5eZ2tey43trzmmfj+ZJcniKsxSCYNTqQfB1+LSdIYsF4+yzJE8utX72gGKU2Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6925
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
+ being selected as SoC component
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
+        linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
+ <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
+ <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=683740a5 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=RZIJFy7CuqSkVLaUGaMA:9
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: bas_z6hHsUvu7-SkRx403As-jqDk1CVO
+X-Proofpoint-GUID: bas_z6hHsUvu7-SkRx403As-jqDk1CVO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE0NiBTYWx0ZWRfXxeZI5hIA7HjK
+ PjKW1coYROmVlLeLTyyAWG2HmNhCGTECkuNbrJYRyx5qufTvr4ogXGZm3edTWHwW3V0Aebf+cBa
+ 6Fo8oFdN7CgDV97u5/NUcCidPET+ZWJNVwMTXx0Kt+B3nHgY6iOuKDPRrNIxxf+j0wNydH6WuhG
+ GmHW7vl3aRCSh8ntDakr1oV/E7uihYm9rG1dtd4wo8D3QZUKIaqVdMi4R9q/CKDkTD612obnN+4
+ UN6sRLyzPHEh3lvGcgqY5hOIiWLCvRcZYB7bNBW1kU3PPpn94z57robgPpm23Oo3R2s5B59tGCY
+ Ffm2y5dms4Fj0vB8XLlVCdlFHaMDr8KDr8UmbQw/g8pM9gWngw+QdPFLWOVPOJdVQEaZz0NavXs
+ 95eAiFu5omQwRJ8Fkq5si8A/+z5R6eDhR2L9HyP0b43oK8f+HZvIypPeX9N5Rbdjs+75FGDW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280146
 
-Convert mxs-audio-sgtl5000.txt to yaml format.
+On 5/28/25 4:37 PM, Alexey Klimov wrote:
+> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
+>> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
+>>> The pattern matching incorrectly selects "wsa" because of "sa" substring
+>>> and evaluates it as a SoC component or block.
+>>>
+>>> Wsa88xx are family of amplifiers and should not be evaluated here.
+>>>
+>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
+>>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
+>>> @@ -23,7 +23,7 @@ description: |
+>>>  select:
+>>>    properties:
+>>>      compatible:
+>>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
+>>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
+>>
+>> Why dropping front .*? Are you sure this matches what we want - so
+>> incorrect compatibles? To me it breaks the entire point of this select,
+>> so I am sure you did not test whether it still works. To remind: this is
+>> to select incorrect compatibles.
+> 
+> Thanks, great point. I tested it with regular dtbs checks with different
+> dtb files but I didn't check if it selects incorrect compatibles.
 
-Additional changes:
-- Add compatible string:
-    bluegiga,apx4devkit-sgtl5000
-    denx,m28evk-sgtl5000
-    fsl,imx28-mbmx28lc-sgtl500
-- Remove audio-routing from required list.
+Maybe we can introduce a '-' before or after the socname, to also officially
+disallow using other connecting characters
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v2
-- add missed commit change (all decleared in Additional changes of commit
-message).
----
- .../sound/fsl,mxs-audio-sgtl5000.yaml         | 81 +++++++++++++++++++
- .../bindings/sound/mxs-audio-sgtl5000.txt     | 42 ----------
- 2 files changed, 81 insertions(+), 42 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,mxs-audio-sgtl5000.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/mxs-audio-sgtl5000.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/fsl,mxs-audio-sgtl5000.yaml b/Documentation/devicetree/bindings/sound/fsl,mxs-audio-sgtl5000.yaml
-new file mode 100644
-index 0000000000000..d12774b42a112
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/fsl,mxs-audio-sgtl5000.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/fsl,mxs-audio-sgtl5000.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale MXS audio complex with SGTL5000 codec
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - bluegiga,apx4devkit-sgtl5000
-+          - denx,m28evk-sgtl5000
-+          - fsl,imx28-evk-sgtl5000
-+          - fsl,imx28-mbmx28lc-sgtl5000
-+          - fsl,imx28-tx28-sgtl5000
-+      - const: fsl,mxs-audio-sgtl5000
-+
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: The user-visible name of this sound complex
-+
-+  saif-controllers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: The phandle list of the MXS SAIF controller
-+
-+  audio-codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: The phandle of the SGTL5000 audio codec
-+
-+  audio-routing:
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    description: |
-+      A list of the connections between audio components.
-+      Each entry is a pair of strings, the first being the
-+      connection's sink, the second being the connection's
-+      source. Valid names could be power supplies, SGTL5000
-+      pins, and the jacks on the board:
-+
-+      Power supplies:
-+        * Mic Bias
-+
-+      SGTL5000 pins:
-+        * MIC_IN
-+        * LINE_IN
-+        * HP_OUT
-+        * LINE_OUT
-+
-+      Board connectors:
-+        * Mic Jack
-+        * Line In Jack
-+        * Headphone Jack
-+        * Line Out Jack
-+        * Ext Spk
-+
-+required:
-+  - compatible
-+  - saif-controllers
-+  - audio-codec
-+
-+allOf:
-+  - $ref: dai-common.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    sound {
-+        compatible = "fsl,imx28-evk-sgtl5000", "fsl,mxs-audio-sgtl5000";
-+        model = "imx28-evk-sgtl5000";
-+        saif-controllers = <&saif0 &saif1>;
-+        audio-codec = <&sgtl5000>;
-+        audio-routing =
-+            "MIC_IN", "Mic Jack",
-+            "Mic Jack", "Mic Bias",
-+            "Headphone Jack", "HP_OUT";
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/mxs-audio-sgtl5000.txt b/Documentation/devicetree/bindings/sound/mxs-audio-sgtl5000.txt
-deleted file mode 100644
-index 4eb980bd02874..0000000000000
---- a/Documentation/devicetree/bindings/sound/mxs-audio-sgtl5000.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--* Freescale MXS audio complex with SGTL5000 codec
--
--Required properties:
--- compatible		: "fsl,mxs-audio-sgtl5000"
--- model			: The user-visible name of this sound complex
--- saif-controllers	: The phandle list of the MXS SAIF controller
--- audio-codec		: The phandle of the SGTL5000 audio codec
--- audio-routing		: A list of the connections between audio components.
--			  Each entry is a pair of strings, the first being the
--			  connection's sink, the second being the connection's
--			  source. Valid names could be power supplies, SGTL5000
--			  pins, and the jacks on the board:
--
--			  Power supplies:
--			   * Mic Bias
--
--			  SGTL5000 pins:
--			   * MIC_IN
--			   * LINE_IN
--			   * HP_OUT
--			   * LINE_OUT
--
--			  Board connectors:
--			   * Mic Jack
--			   * Line In Jack
--			   * Headphone Jack
--			   * Line Out Jack
--			   * Ext Spk
--
--Example:
--
--sound {
--	compatible = "fsl,imx28-evk-sgtl5000",
--		     "fsl,mxs-audio-sgtl5000";
--	model = "imx28-evk-sgtl5000";
--	saif-controllers = <&saif0 &saif1>;
--	audio-codec = <&sgtl5000>;
--	audio-routing =
--		"MIC_IN", "Mic Jack",
--		"Mic Jack", "Mic Bias",
--		"Headphone Jack", "HP_OUT";
--};
--- 
-2.34.1
-
+Konrad
