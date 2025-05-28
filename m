@@ -1,426 +1,270 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB85428368B;
-	Wed, 28 May 2025 12:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68FE022127D;
+	Wed, 28 May 2025 12:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435284; cv=none; b=Tz01wcV+tNAWG0tEnPTDf7c+qpm9JO4QbCqEL2D9voZzHgQTaatmVnc8rHZfLfN4DdlFW4kcJK4G3GzqvGCD4AkWGluvsuAhwJPU77RZxaAh7Pef0G8R5PyDJAgrZgKPPt2n2UN65zd8ktPpjV/6o3WKzkww1pYxFnl9BXI0gAg=
+	t=1748435357; cv=none; b=Rjy9N4IpWOrprdjGiq1qYR4fJmy7iaqthhSdTuH8iLTHvD1soZZ4+kB+YGRUEndESB7rBM58jIbR6IU8E1zjPuxMXrhnRpgLYS0OG3ni8XUKx2xGvWs89Lpf3GqMmWap0veUVgDX1iwdntPYFUHBdyCBv7jB5aa1C9Xvgi14RjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435284; c=relaxed/simple;
-	bh=9UZrE7H6vAF+pGUfoHbDFIXFfGUnDWPrsrVbgKOW0T8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N0gNqhC0Ivp4Z53ugzG3bOi8ZOh+VhoA3aRDR38fstNkxevsUAZnOW8N4zOyYXAInEu33T4+c+tQEcik5iEW+B3xcweG9CrmHMT8wHATylpQoEZY9Nuz2fiDrM/EkTYbVXWl1JOZqaekM0ofW6YlXCcs+2ELfq6HyAUJFF4dJz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R1bayZpQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R1bayZpQ"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S8cLP4002523;
-	Wed, 28 May 2025 12:28:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=pEjcvN806nZ
-	MhWg+HLfbExGftOGwvLxvJZxahVTbZh0=; b=R1bayZpQAC2nvMsJbc8UFIWdPzQ
-	/O8qLGmoUcYlrUST9qh7BbYBzXcyRERHbFYgb/81kXpBRZMwNw5xth4PS7YvRIUM
-	ddzeBXtRRoSTcoJCfXcyWaz0ueS4jLib+iHjwPu/8vpZEhc1stVtsuiA22cJHC5R
-	+RE4TGtvkt+jR9vEBm4f99xPD4Dr7J2jXh33+aQh4/FKxLyl15jDROstcSjOgxtY
-	XqBq6CY2TByFr+G12gRTST9HTTdua589OjGkwvzsIa9zB8bd3SeLiqK8QqZ7I1RQ
-	Bw7Rxl5ZHeNnBuAVqTHUVnZJJlBYKwvy760hWnOPkZmmhcKUs/g5QsomOGA==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjt7h0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 12:27:59 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SCRu18011487;
-	Wed, 28 May 2025 12:27:56 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46u76mxk36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 12:27:56 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54SCRt7w011462;
-	Wed, 28 May 2025 12:27:56 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 54SCRtCH011455
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 12:27:55 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id EAF5A5C6; Wed, 28 May 2025 17:57:54 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        kernel@oss.qualcomm.com, Wasim Nazir <quic_wasimn@quicinc.com>,
-        Rakesh Kota <quic_kotarake@quicinc.com>,
-        Sayali Lokhande <quic_sayalil@quicinc.com>
-Subject: [PATCH v8 4/4] arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
-Date: Wed, 28 May 2025 17:57:51 +0530
-Message-ID: <20250528122753.3623570-5-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250528122753.3623570-1-quic_wasimn@quicinc.com>
-References: <20250528122753.3623570-1-quic_wasimn@quicinc.com>
+	s=arc-20240116; t=1748435357; c=relaxed/simple;
+	bh=F4PwxO+KLYTadT4yYpfoynzp5PQBcFtuaCh/vpB7z+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o8cUO12gz6TH0kwBsjhI77iUjFC50M0Z07ruuWoZpj4okMPyVYo5UiTdMwmT6bUTTNVf1RkMvbzksHrZyQbLQjTGUYh//Waet6BLsO1vivcfIerFTclRGhx5iJlNg9RxHv+n2jes9egB8tcrq/A4Bugu1r4o4yORID6JNEVRALY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 280A11A2D;
+	Wed, 28 May 2025 05:28:57 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADD023F673;
+	Wed, 28 May 2025 05:29:10 -0700 (PDT)
+Date: Wed, 28 May 2025 13:29:02 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
+Cc: =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?=
+ <privatesub2@gmail.com>, linux-kernel@vger.kernel.org, Brandon Cheo Fusi
+ <fusibrandon13@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <20250528132902.70f634cd@donnerap.manchester.arm.com>
+In-Reply-To: <hetih6ul7hdj3kflhy2s2zkkh3r7pcupgwde3xnwmjzs6cujp3@vcw4pde76bdb>
+References: <20250427142500.151925-1-privatesub2@gmail.com>
+	<20250427142500.151925-3-privatesub2@gmail.com>
+	<20250512233944.06bc1cb7@minigeek.lan>
+	<CAF4idN=Kwp8bDYVyjM52eUwVEEZcPM9YyK9KiqUzyf8Dm=cXTQ@mail.gmail.com>
+	<hetih6ul7hdj3kflhy2s2zkkh3r7pcupgwde3xnwmjzs6cujp3@vcw4pde76bdb>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6837014f cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=cGvm-S34xVoSblkgu4kA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: A8-IW5pKaayCcSx1HSdKh5f3QwD3BuhV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEwOCBTYWx0ZWRfX3RC5bAp4ELDF
- hF4gdQy5u2WEjNmqbdEV674iKpCozdSd8byAXAcOdlv9jpd8N2LWkIZW1CiZbEEXs+oQfTQkgPh
- d0ph0/BjFdPAXO8c3nUg6y4Rx2zsYIIGbe09ArfaQ9oLa4BtflJVH5XTU0sWhhnrVlDQYxB+1oI
- KAhHNILprgaq6pL4KeHlf0Dnce/laC2a29dqd7Sv/LS/NgpUZt9SpeWKJUeL2edtsnd953D6pUI
- Cstaf8NtgBkDbRWVFFmVYcmbe/W10OBxMewnEd1IHPuNYHjgTKmnnVVG/SW5EYYJp+Ae9lkRX9j
- bVlXeRk6tGvXptr5u4LpsZEd1KnnU56Z2NDY7v/2yaRvYYeQZI1dKpZr3VswmPtMLtS7C45tJEe
- dVmABnG74IBFP8tM8BJgDaGN4tl9M6t/ouF5OKtWJmrqtxa1t7czw0j4czDEnFS88Lv5m4rc
-X-Proofpoint-GUID: A8-IW5pKaayCcSx1HSdKh5f3QwD3BuhV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505280108
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add initial device tree support for IQ-9075-EVK board,
-based on Qualcomm's QCS9075 SOC.
+On Wed, 28 May 2025 13:08:40 +0200
+Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> wrote:
 
-Implement basic features like uart/ufs to enable boot to shell.
+Hi Uwe,
 
-Co-developed-by: Rakesh Kota <quic_kotarake@quicinc.com>
-Signed-off-by: Rakesh Kota <quic_kotarake@quicinc.com>
-Co-developed-by: Sayali Lokhande <quic_sayalil@quicinc.com>
-Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
-Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 289 ++++++++++++++++++
- 2 files changed, 290 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> On Sat, May 24, 2025 at 12:07:28PM +0300, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=
+=D0=B0=D0=BD=D0=B4=D1=80 =D0=A8=D1=83=D0=B1=D0=B8=D0=BD wrote:
+> > =D0=B2=D1=82, 13 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 01:39, =
+Andre Przywara <andre.przywara@arm.com>: =20
+> > >
+> > > On Sun, 27 Apr 2025 17:24:54 +0300
+> > > Aleksandr Shubin <privatesub2@gmail.com> wrote: =20
+> > > > +              */
+> > > > +             use_bus_clk =3D false;
+> > > > +             val =3D mul_u64_u64_div_u64(state->period, hosc_rate,=
+ NSEC_PER_SEC);
+> > > > +             /*
+> > > > +              * If the calculated value is =E2=89=A4 1, the period=
+ is too short
+> > > > +              * for proper PWM operation
+> > > > +              */
+> > > > +             if (val <=3D 1) { =20
+> > >
+> > > So if I get the code correctly, it prefers HOSC over APB? Is that
+> > > really the best way? Shouldn't it be the other way around: we use the
+> > > faster clock, since this will not limit the sibling channel?
+> > >
+> > > And another thing to consider are rounding errors due to integer
+> > > division: certain period rates might be better achievable with one or
+> > > the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
+> > > 100MHz/32.
+> > > So shall we calculate the values and compare the errors instead?
+> > > Oh, and also we need to consider bypassing, I feel like this should be
+> > > checked first.
+> > >
+> > > In any case I think there should be a comment describing the strategy
+> > > and give some rationale, I think. =20
+> >=20
+> > I like the idea of comparing the quantization error for each clock sour=
+ce
+> > (i.e. computing the actual period for both APB and HOSC and choosing
+> > whichever is closer to the requested period).
+> > I can try to implement that error-minimization approach in the next
+> > series of patches and add a comment explaining the strategy. =20
+>=20
+> Consumers have different needs. Some might prefer a better match for
+> period, but in my experience most would go for a fine-grained selection
+> of duty_cycle, so prefering the faster clock sounds sane.
+>=20
+> I don't say minimizing the error is wrong, but if it's unclear that
+> this matches what a consumer wants I object to make the procedure to
+> select the hardware settings considerably more complicated and run-time
+> intensive.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 669b888b27a1..77501a13d91e 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -124,6 +124,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-industrial-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2-vision-mezzanine.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8300-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= qcs9075-iq-9075-evk.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs9100-ride-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-new file mode 100644
-index 000000000000..f1f725691ba2
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-@@ -0,0 +1,289 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2024-2025, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+
-+#include "qcs9075-som.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IQ 9075 EVK";
-+	compatible = "qcom,qcs9075-iq-9075-evk", "qcom,qcs9075", "qcom,sa8775p";
-+
-+	aliases {
-+		serial0 = &uart10;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&apps_rsc {
-+	regulators-0 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_s4a: smps4 {
-+			regulator-name = "vreg_s4a";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1816000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s5a: smps5 {
-+			regulator-name = "vreg_s5a";
-+			regulator-min-microvolt = <1850000>;
-+			regulator-max-microvolt = <1996000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s9a: smps9 {
-+			regulator-name = "vreg_s9a";
-+			regulator-min-microvolt = <535000>;
-+			regulator-max-microvolt = <1120000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4a: ldo4 {
-+			regulator-name = "vreg_l4a";
-+			regulator-min-microvolt = <788000>;
-+			regulator-max-microvolt = <1050000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5a: ldo5 {
-+			regulator-name = "vreg_l5a";
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6a: ldo6 {
-+			regulator-name = "vreg_l6a";
-+			regulator-min-microvolt = <870000>;
-+			regulator-max-microvolt = <970000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a: ldo7 {
-+			regulator-name = "vreg_l7a";
-+			regulator-min-microvolt = <720000>;
-+			regulator-max-microvolt = <950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8a: ldo8 {
-+			regulator-name = "vreg_l8a";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9a: ldo9 {
-+			regulator-name = "vreg_l9a";
-+			regulator-min-microvolt = <2970000>;
-+			regulator-max-microvolt = <3544000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-1 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "c";
-+
-+		vreg_l1c: ldo1 {
-+			regulator-name = "vreg_l1c";
-+			regulator-min-microvolt = <1140000>;
-+			regulator-max-microvolt = <1260000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2c: ldo2 {
-+			regulator-name = "vreg_l2c";
-+			regulator-min-microvolt = <900000>;
-+			regulator-max-microvolt = <1100000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3c: ldo3 {
-+			regulator-name = "vreg_l3c";
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4c: ldo4 {
-+			regulator-name = "vreg_l4c";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5c: ldo5 {
-+			regulator-name = "vreg_l5c";
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <1300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6c: ldo6 {
-+			regulator-name = "vreg_l6c";
-+			regulator-min-microvolt = <1620000>;
-+			regulator-max-microvolt = <1980000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7c: ldo7 {
-+			regulator-name = "vreg_l7c";
-+			regulator-min-microvolt = <1620000>;
-+			regulator-max-microvolt = <2000000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8c: ldo8 {
-+			regulator-name = "vreg_l8c";
-+			regulator-min-microvolt = <2400000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l9c: ldo9 {
-+			regulator-name = "vreg_l9c";
-+			regulator-min-microvolt = <1650000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-2 {
-+		compatible = "qcom,pmm8654au-rpmh-regulators";
-+		qcom,pmic-id = "e";
-+
-+		vreg_s4e: smps4 {
-+			regulator-name = "vreg_s4e";
-+			regulator-min-microvolt = <970000>;
-+			regulator-max-microvolt = <1520000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s7e: smps7 {
-+			regulator-name = "vreg_s7e";
-+			regulator-min-microvolt = <1010000>;
-+			regulator-max-microvolt = <1170000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s9e: smps9 {
-+			regulator-name = "vreg_s9e";
-+			regulator-min-microvolt = <300000>;
-+			regulator-max-microvolt = <570000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6e: ldo6 {
-+			regulator-name = "vreg_l6e";
-+			regulator-min-microvolt = <1280000>;
-+			regulator-max-microvolt = <1450000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8e: ldo8 {
-+			regulator-name = "vreg_l8e";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1950000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-allow-set-load;
-+			regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-+						   RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
-+&sleep_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&uart10 {
-+	compatible = "qcom,geni-debug-uart";
-+	pinctrl-0 = <&qup_uart10_default>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_hc {
-+	reset-gpios = <&tlmm 149 GPIO_ACTIVE_LOW>;
-+	vcc-supply = <&vreg_l8a>;
-+	vcc-max-microamp = <1100000>;
-+	vccq-supply = <&vreg_l4c>;
-+	vccq-max-microamp = <1200000>;
-+
-+	status = "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply = <&vreg_l4a>;
-+	vdda-pll-supply = <&vreg_l1c>;
-+
-+	status = "okay";
-+};
-+
-+&xo_board_clk {
-+	clock-frequency = <38400000>;
-+};
---
-2.49.0
+Yes, I agree. There seems to be another use case here, which is to provide
+clocks on output pins. The PWM IP has a bypass switch (per channel, after
+the divider), and this feature is already required to supply the
+"internal" (co-packaged) Ethernet PHY on the Allwinner H616 with its clock.
+With the two possible input clocks and those pre-dividers there is actually
+quite a number of possible frequencies to deliver on output pins.
+
+Since we need some algorithm to decide when we need to use the bypass
+mode, should we check for that if the duty cycle is 50%, to see if we can
+reach the frequency with just the pre-dividers?
+Chances are we need this anyway, since for instance the 24MHz required for
+the PHY cannot be achieved otherwise.
+
+> > > > +static int sun20i_pwm_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +     struct pwm_chip *chip;
+> > > > +     struct sun20i_pwm_chip *sun20i_chip;
+> > > > +     struct clk *clk_bus;
+> > > > +     struct reset_control *rst;
+> > > > +     u32 npwm;
+> > > > +     int ret;
+> > > > +
+> > > > +     ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,np=
+wms", &npwm);
+> > > > +     if (ret < 0)
+> > > > +             npwm =3D 8; /* Default value */
+> > > > +
+> > > > +     if (npwm > 16) {
+> > > > +             dev_info(&pdev->dev, "Limiting number of PWM lines fr=
+om %u to 16", npwm); =20
+> > >
+> > > I don't think we should proceed if the firmware information is clearly
+> > > wrong. Just bail out with -EINVAL or so here, so that gets fixed in t=
+he
+> > > DT. =20
+>=20
+> To me it's not obvious that the "firmware information is clearly wrong".
+> Maybe the next Allwinner SoC will have 24 outputs and the problem is
+> only that this driver isn't prepared to cope for that number of outputs?
+
+But then it would be an error, regardless?
+The MMIO register frame of this IP here has a hard limit on 16 channels,
+both by the bit assignments in each register (2 bits per channel in a
+32-bit register), but also by the layout of the registers (max 8
+registers, each for a pair of 2 PWM channels). So anything with more than
+16 channels cannot be compatible with what this driver supports.
+So as this driver here stands right now, more than 16 channels is an
+error, simple as that. If we extend the driver later on, to cover more
+advanced IP, we would naturally amend this check, of course.
+
+> If that really happens it's arguable if it's better to refuse completely
+> or just cope for the 16 outputs that the driver is able to. IMHO it's
+> better to continue because a partially workable pwmchip is better than
+> no chip at all. But I'd upgrade the message to dev_warn().
+
+I don't understand why we should continue. If the firmware information
+(DT) is wrong, we should make this clear, to force people to fix
+that, instead of somehow papering over it.
+
+But it's really an academic discussion, I don't expect anyone to put more
+than 16 channels in the DT. It's in the per-SoC .dtsi anyway, so nothing
+that board DT authors would touch.
+
+> > > > +             npwm =3D 16;
+> > > > +     }
+> > > > +
+> > > > +     chip =3D devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*sun20i_=
+chip));
+> > > > +     if (IS_ERR(chip))
+> > > > +             return PTR_ERR(chip);
+> > > > +     sun20i_chip =3D to_sun20i_pwm_chip(chip);
+> > > > +
+> > > > +     sun20i_chip->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > > > +     if (IS_ERR(sun20i_chip->base))
+> > > > +             return PTR_ERR(sun20i_chip->base);
+> > > > +
+> > > > +     clk_bus =3D devm_clk_get_enabled(&pdev->dev, "bus");
+> > > > +     if (IS_ERR(clk_bus))
+> > > > +             return dev_err_probe(&pdev->dev, PTR_ERR(clk_bus),
+> > > > +                                  "Failed to get bus clock\n");
+> > > > +
+> > > > +     sun20i_chip->clk_hosc =3D devm_clk_get_enabled(&pdev->dev, "h=
+osc");
+> > > > +     if (IS_ERR(sun20i_chip->clk_hosc))
+> > > > +             return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip-=
+>clk_hosc),
+> > > > +                                  "Failed to get hosc clock\n");
+> > > > +
+> > > > +     ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->=
+clk_hosc); =20
+> > >
+> > > Just ignoring for a bit that the 24 MHz oscillator is a fixed clock
+> > > anyway, but why would we want exclusivity already at probe time? Isn't
+> > > that too limiting, as no one might ever use any PWM channels, but it
+> > > would still "belong to us"? =20
+>=20
+> That's a soft concept of "belong to us". Other consumers can still use
+> it and even also call clk_rate_exclusive_get(). IMHO it's a good idea to
+> call clk_rate_exclusive_get() for each clock that a driver relies on not
+> to change. You could make the driver more flexible and only call that
+> when the rate is actually relied on, but that's again a compromise with
+> complexity of the driver. And if the clock rate is fixed anyhow, it
+> doesn't hurt to do it here, right?
+
+Sure, just wanted to point that out. Indeed we don't need to boil the
+ocean here.
+
+> > > > +     if (ret)
+> > > > +             return dev_err_probe(&pdev->dev, ret,
+> > > > +                                  "Failed to get hosc exclusive ra=
+te\n");
+> > > > +
+> > > > +     sun20i_chip->clk_apb =3D devm_clk_get_enabled(&pdev->dev, "ap=
+b");
+> > > > +     if (IS_ERR(sun20i_chip->clk_apb))
+> > > > +             return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip-=
+>clk_apb),
+> > > > +                                  "Failed to get apb clock\n");
+> > > > +
+> > > > +     ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->=
+clk_apb); =20
+> > >
+> > > Just for the records: APB is practically also a fixed clock, set up
+> > > once in firmware and never changed, since it drives a lot of other
+> > > peripherals.
+> > > But same question as above, why do we lock its rate already here? =20
+> >=20
+> > That step was actually recommended by Uwe Kleine-K=C3=B6nig,
+> > so the decision on whether to keep or drop exclusive reservation
+> > is really a question for him=E2=80=94please coordinate with Uwe
+> > to agree on how best to proceed here. =20
+>=20
+> Same as above. Iff the driver relies on the rate of this clock to keep
+> constant, calling clk_rate_exclusive_get() is right.
+
+It technically doesn't until a channel is actually programmed, but fair
+enough, it doesn't matter anyway.
+
+Cheers,
+Andre
+
+> > > > +     if (ret)
+> > > > +             return dev_err_probe(&pdev->dev, ret,
+> > > > +                                  "Failed to get apb exclusive rat=
+e\n");
+> > > > +
+> > > > +     if (clk_get_rate(sun20i_chip->clk_apb) <=3D clk_get_rate(sun2=
+0i_chip->clk_hosc))
+> > > > +             dev_info(&pdev->dev, "APB clock must be greater than =
+hosc clock"); =20
+> > >
+> > > Why this check? Does the code make any assumptions about this relatio=
+n?
+> > > If yes, we must surely deny this and bail out.
+> > > If not (and I feel we should handle it this way), we can just ignore
+> > > this and not print anything. =20
+>=20
+> ack.
+>=20
+> Best regards
+> Uwe
 
