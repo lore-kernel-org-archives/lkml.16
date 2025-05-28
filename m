@@ -1,108 +1,121 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC6D257D;
-	Wed, 28 May 2025 00:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726C323CB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748390854; cv=none; b=i8OkkuDt/6gS++f1lD+eDchs7SiZN2KYozasC49KbN4haFpPYteUgFwHvLS3vLGfeVeKQiyW+i7PsJHQlkwnsq5EPkIqY8Lj1IdnrSB6NHHbMOkzWrJVNZeR1cJ8lNBAxLS45WgkoaxkBBoPyJY+D3NkZq5NhKTcCKHjHqy4zJc=
+	t=1748390930; cv=none; b=TkGTB5XgIJisFtccVWXP3azBshb0A1RChYBtjd0mq0hwyky+vmV9VHQJc/0At4UkB750D+iwsnOr5WIpo/i6OZqm2Buzf1T6vbCv1kQPbSA+nRMpLx5yRQmzmMHNUUm2fznzJ/KH6FIxBlKuVl91m5tBwJ8/425lgavteaNbC7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748390854; c=relaxed/simple;
-	bh=mVsiKfQgdtbPqQDx5dHFsxK7Gt0Bw6dcd5djeHlSsd4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZp5zi6INWIOqajp7df0/LyKKyc6T7c+m18zbsnyViOT4i/XG9BR9270/24dHeJUE513tREgLAJ4JkP9W83EdiXYPdl2d0+OdvtN61bTtnrjDLvVcb5AsGQ9CRpWihp6GXygROYUWh+YeCgYMgAhIDOsP2sCikBed5WfPfyeLis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=frraiNTX; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1748390930; c=relaxed/simple;
+	bh=TR0ZxYypZZy0i1CaeTOe+YTdQQcFYzl9mwiHMZdHDFk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aP7cZk0q+/wEdXLZgivcxL6Ll+H/7a6BJIQYJYTie7qdD8pjKx0lq73SEhFJ/vcSptB1wv3pHz9jcpqP12ugSU0tQXmj3wdwnB6ywEybeIZ3n++BW3DmPkDsYU2FK2Hla9MZUzkJJEYtIoIpbxP0fCY96yS2xrb1MW42MlPqBjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dOxJDg1w; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="frraiNTX"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf680d351so2287285e9.0;
-        Tue, 27 May 2025 17:07:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dOxJDg1w"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad89f9bb725so36169066b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:08:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1748390851; x=1748995651; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmxHPv6GLmc8eS7jcRRS2Vo/3s79/PTvlaYFC6JXyAE=;
-        b=frraiNTXJxPyayiiu4NyiA3DS/NMi58bZgRLeAyy9u7La9kI/B6mxihDpIKMQfRmJl
-         HU4pP8DFa2MuaVcv6JeHunMJL41kHJwINCZCsGpyupMY1OtTZBQN9Ao6nC01o1dIgfDX
-         933Cad+zbWnBNFG4hkJr65xgC7ZXeeHImVfv3a6yGarYFJN3bY0v2vkRrkUIMSNBllif
-         pkKdnwSEGoXZPmF0o2loSjBR3nZw9yYi88wWR1FEmhBfoa9jPDnCkK5vxLB4lM10FWBZ
-         GrWdQVS/D7U35nEfAy2PzS0qDtf8bj/+rFu1pbol0VmQW4PeJHOT6Wfnd8LO2tnT8Ch2
-         1hXA==
+        d=linux-foundation.org; s=google; t=1748390926; x=1748995726; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=edlHaC7UGBhxSlzvX5IeW6JsmYljoWpUJVytG195zA0=;
+        b=dOxJDg1wNE8ydeBSTmW/Q+ZCDhDUqp1ic+O+xllpZJPFNQ+tLTmRYkorkWxNSrIjdh
+         pl+xwwKENb3mZcX54EcnQzZQ/EZO2NPYUYe/gYjqLXn1vc5cjjvfqGqrfSBTcFumMeoh
+         Tf2W8NFtzWgFzGot8873bpkL+u2dLwQlBG4VM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748390851; x=1748995651;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZmxHPv6GLmc8eS7jcRRS2Vo/3s79/PTvlaYFC6JXyAE=;
-        b=dfZDk4OGcV7158Pzv8SZU+3+S+r683QWVpMtrebdmumfh4Bnfu6HIj2/lcI/SRyYr2
-         q3/QgjW2QvNFy0GwFu5Z6/s3UlLCMkUjxA8NW61nTDIyMKeaaWyv3FnuwgXrCQ3Ze39f
-         OLeMfPO0Lzd0qUeKvAIYeVRWDFarqE1WbHOKJieYFaUZYTow5iKVXqkGABtcdUNrs3WE
-         o+B/zVc8vUtPMUSp0MFDRp1Zs+/NgMS+XlxkaONB67VKxWjNsun/3lWgRWGuZ4Djm2mx
-         bz8UHfd9D07auIATsed+ZH9Kyhl2JSKnMlQxcMviowCu2eqFCKpKcuTTYAiRtjOgqchz
-         jJpA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1ykOEoWCUfmwhOBArPwNT9kY6RqW9QJQyR+Y0xmd7dvw42NyeJU/KQncm1vSUo71ZG8dYD1/9MKmHvi8=@vger.kernel.org, AJvYcCXRWw0gn8aWvXhBskgnGHBI/5HJt7DQhd2ULkEvuKhbGbXXFYDdbrqlyzqKZ8WQSa0QZ0PdY9lq@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQfrUsaHqzfhimnopYSwMYOiziHZDEqVN1KwjxSlu3GU2sgPur
-	ko6R8Rcb+2bEDKEfZLnjueGuJ1EkszyRSRcX098TFnDqeTxC7E69cT4=
-X-Gm-Gg: ASbGncsWYnZjI/zwodOpwYRh8WQAJJN5Q580vr68Yu0CBaMowM1OvUJtoyns2oeOI+U
-	YjebsZw/DfngzPjmBombVPZnoFwCubx++8O6vjxeoV91G5vQ9yrOz2nLk1SKUS5co0NVsq9l9YP
-	L9a3UZPOhoabLIvRux62kgPc7crCK0Nz8A14b3yoylq/HuCMef9b2t+Gr45MnqrP7T1oEjSKbRD
-	I0ZRLsx96YStXHxuIsI/AftD71VzFcxqldnKDhKLPOEkE98Cc/VFUikxWdiKuJds67+JBzVGyal
-	lpAIQEs3FO839edTkkUxjczceuNGSdiUcetNfWj1S+h4yZnfi6+vMVfHUGZqkKvhLT9+iZmTapk
-	HeTB+IagOLYT6MjZMYh6tf8tEa4E=
-X-Google-Smtp-Source: AGHT+IHBGYoAjORKLfnGej3XpZtxv04W4+zzbnuU+YN1whrwnc7991n9oDySvfYwvFf92ZxmXZ5owQ==
-X-Received: by 2002:a05:600c:6209:b0:43d:fa5f:7d30 with SMTP id 5b1f17b1804b1-44fd1a67ac0mr23646255e9.16.1748390850777;
-        Tue, 27 May 2025 17:07:30 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b402f.dip0.t-ipconnect.de. [91.43.64.47])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4500e1dd65fsm3544515e9.33.2025.05.27.17.07.28
+        d=1e100.net; s=20230601; t=1748390926; x=1748995726;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=edlHaC7UGBhxSlzvX5IeW6JsmYljoWpUJVytG195zA0=;
+        b=PHPN8FD1DEM6a3nQe4gp41BcmHdcIxFaLZ/XxKWxfq3Tls+O7jFiZ7XTQPW2NdU++F
+         kjtVSGM/fWOh2qyDUG6w1fUNUjs6RPo+VC/I761JFZfelqfMnogF2R+jeJz4+mtnyCM5
+         iB98SrwynCZ+Q9lxy60vMd1xzE1E36p9YsQ6/RgC0y51JwU6UkMYfR5ctOVR8KsYbVpU
+         bOFHuMbOSWIwQ5Sc1OgNfsJj9moZdS3gZqloXDA0flJnn7OIglL9OEzbBXln5i5SugFk
+         z+Na6oKvByOyfSVKVM8NBm+2AjBR4//ool44ndmNhxkN+n3qv3E8UJOW0ItIEshiFU4L
+         OxTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVocFlg7UOnRTUQyueE7ni78cknT+bgeven0FSETv6Ee9UebEeKFpDKiLFSAtOlgIZvmJKTPVa2uwgaah4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1wZ49eOZ+P57hyKU4LKYHH7fBijsQ5xL1HeeyNn0pokJBtRhC
+	rwlUwxo4pLnNoxWrgS8GFn1bTgk00gKanMwHBbnWl0wzOrtRHZ4dcpnzxKThi6/eyqrmlY63My3
+	AaNSO8m4=
+X-Gm-Gg: ASbGnct3IlpuOyFAAfrENE50d1iSXn1SzNB13w7GZrURkb1Y3tO0AMJL5JMXW5UosJF
+	YcRZjegnEmFufljKB4mJ0IZvKHO2hTZpNxT80eD5Dtv5NfsuKPeybS5Q5b/Ng5nhlY9+egS/wdY
+	ahYEGjXC5X57feZrcH5STEPvktDk9+ivuNQkQxspjFodbfuCqYJRyOgIMafNgNL5TdQhD8aRbaH
+	6Et6nb7Maos85513dpYXQv9ZEAtBc7XddJrMahDS9rImMJolEIwkN/AuV6k7hy6PdIRhk2y9Ofn
+	KK70ylhS9NyAtxltK3LsAkz2svGPYXdVIH4MoaHfK9J6gItBrWl3irloOLhVqXTGr5iiUtdWEJV
+	Pi0JyRrOZTp8dnRjvwrDGWbyibw==
+X-Google-Smtp-Source: AGHT+IGDOKGwKuw4oCePEeQafm3G7m0RiwTx13J2HF2HcQZQogGWpG7BehiU80j8tud+HmI2Qg/EmA==
+X-Received: by 2002:a17:907:8686:b0:ad5:b251:17f8 with SMTP id a640c23a62f3a-ad85b185a24mr1409337066b.41.1748390926358;
+        Tue, 27 May 2025 17:08:46 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a19caf58sm8380966b.69.2025.05.27.17.08.44
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 17:07:29 -0700 (PDT)
-Message-ID: <0a14b70c-cfd6-4894-a5db-965e43c1ca15@googlemail.com>
-Date: Wed, 28 May 2025 02:07:28 +0200
+        Tue, 27 May 2025 17:08:45 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad89f9bb725so36163366b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:08:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWCJmSxkX7XG405px2DXyaXmkOj3I4A5Lm4BmBaYlWOnvRnSNUbjpRKIn/GDu1bYfNJiePXz9mah6rFOfQ=@vger.kernel.org
+X-Received: by 2002:a17:907:3e06:b0:ad5:27f5:7174 with SMTP id
+ a640c23a62f3a-ad85adbbbf7mr1420194866b.0.1748390924696; Tue, 27 May 2025
+ 17:08:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.12 000/626] 6.12.31-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250527162445.028718347@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250527162445.028718347@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <4a1559fc9c5d1fec91f1ac5d425871b5.broonie@kernel.org>
+In-Reply-To: <4a1559fc9c5d1fec91f1ac5d425871b5.broonie@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 27 May 2025 17:08:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wixqijS-ptVfduV-tAdfKjnLUBicwsXL1xf5PETfktv+w@mail.gmail.com>
+X-Gm-Features: AX0GCFunwcx56f-t3WhtxF7QDIIPFE08vsP33GUiGJbUKXYqA7CrWkCSD440jBs
+Message-ID: <CAHk-=wixqijS-ptVfduV-tAdfKjnLUBicwsXL1xf5PETfktv+w@mail.gmail.com>
+Subject: Re: [GIT PULL] SPI updates for v6.16
+To: Mark Brown <broonie@kernel.org>, Raju Rangoju <Raju.Rangoju@amd.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Am 27.05.2025 um 18:18 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.12.31 release.
-> There are 626 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, 26 May 2025 at 03:30, Mark Brown <broonie@kernel.org> wrote:
+>
+> Raju Rangoju (4):
+>       spi: spi_amd: Add PCI-based driver for AMD HID2 SPI controller
+>       spi: spi_amd: Remove read{q,b} usage on DMA buffer
+>       spi: spi_amd: Add HIDDMA basic write support
+>       spi: spi_amd: Update Kconfig dependencies
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+So the Kconfig changes made me look at this, and this is just *odd*.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+The driver stops using read{q,b}, but why in the name of everything
+holy did it then convert to this insanity:
 
+        u64 *buf_64 = (u64 *)op->data.buf.in;
+        [...]
+        u64 *dma_buf64 = (u64 *)amd_spi->dma_virt_addr;
+        [...]
 
-Beste Grüße,
-Peter Schneider
+        /* Copy data from DMA buffer */
+        while (left_data >= 8) {
+                *buf_64++ = *dma_buf64++;
+                left_data -= 8;
+        }
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+        buf = (u8 *)buf_64;
+        dma_buf = (u8 *)dma_buf64;
+        while (left_data--)
+                *buf++ = *dma_buf++;
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+which simply seems to be a really stupid and over-complicated way to
+write a regular memory copy:
+
+        memcpy(op->data.buf.in,
+                amd_spi->dma_virt_addr,
+                nbytes);
+
+because I'm not seeing what the point of writing it that way is.
+
+              Linus
