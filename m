@@ -1,115 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05358F6B;
-	Wed, 28 May 2025 20:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BFB8F6B;
+	Wed, 28 May 2025 20:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464507; cv=none; b=qqRfAIHmhK41XJZOqvjOVeKIF3FJdRX65AZ3d4PEJDUNyDHMgXW/T5yubZEwLkBdBY0cyTZ8MM6oVjwu/VpjQOhopfK88AjhBK5VrBhwfjEI9Ft6ACyEx3/DlHx3XKuvPHOKlRSc40ESTPkKy7kERZwt9B3YwqeaWE5I1E+Q5oQ=
+	t=1748464534; cv=none; b=Q2IWzqSGFCWzFhDJRZZH29r+fE3nPE+BcmYXZaWosq6EACDgua6SsXHkTPHdAEptZQg/EGtAaesEomC9CSbZni2DQz1cQInmSCEo4HddGF9WmZePfHfreqydppiBDJaN3sk9eF+fGu9VEdUNpQ/3tipV2iRr0C4kmwyPk9UtnEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464507; c=relaxed/simple;
-	bh=6mNI6+5X2ZfP/LGcaBZDGWjzIzPRAkxIlDtsurqBF5U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=smlO2qkCd1BHQaOwLhPDElzQTIhKF2iwcYozWd/EyEmO2ewXMIpoTzgCxbm9VFeV3eDElf/QAyMjAMsFTNblXY+DhQiwWKmCXShsrqJV0LMlwOv9UsbQ4LzB/QMMucgPhDoY837IyzSW25xIUfafABIYh45lTpaZ9pnfMqX2/Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8Jbe5r9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748464534; c=relaxed/simple;
+	bh=avCNmZfyuO05l7d+1PoNV7xnMEo8BcBGoUvR/4OT5/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6uvTRj2XNztXVG1HtV6hWK2CJJxGFj6MWoiN0jB27uFqH5yjKsNXxflQCoD3cPfZju2EKunNWf3h/koByd6fvpwpffHWXPHlJBppfPsB3BOzb1XPJiuzg3iWoUA/2Ivn+BrK/XK0vA0sYhD63GFX6HeY0jt3vFdpP3/2ShWSTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXVrx4Sr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8Jbe5r9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20843C4CEE3;
-	Wed, 28 May 2025 20:35:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXVrx4Sr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A056AC4CEE3;
+	Wed, 28 May 2025 20:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748464506;
-	bh=6mNI6+5X2ZfP/LGcaBZDGWjzIzPRAkxIlDtsurqBF5U=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=u8Jbe5r9O2itgEsB0A0s4v3vbgwUxB/9coRnZ7PxRcgnB1LDmTcUBJYDZ28N3iFpd
-	 LBHx8tDWeMMhzxqFUPlZ0XN2JshDc/q9aLPiC0Al2OywUM2Ki6etxwnpxPDlpXwQDf
-	 H884mvUcVXrwjuJr0bGxyMroSnjciGkOYaiV4MGkByLKrZdVLcMMHmY9P2S09H/9pw
-	 559Bd3b9yz215tLSF+hUca9JZtQslKomRgZ3his3Qeaokt1J/GxdmbYLbXlHm2nRcz
-	 kl4vD4WvJrGTSfkrIA/z7grGxhjMuqvtQdT8gaggUmK5hPwftBENfD1am3xKQhqH0p
-	 BRiqqRy+YT4JA==
+	s=k20201202; t=1748464533;
+	bh=avCNmZfyuO05l7d+1PoNV7xnMEo8BcBGoUvR/4OT5/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jXVrx4SraKxU/IrxYw4EJ+dWqcfTOLm7ig/7ipHzrB3PvS9fEePASz+Gh6Yvn4/XJ
+	 JJtwlr3RwQleZstiyP2vKuuZgZyAwvJTe3cC5O5qbyVrbxVpLiXkA8GOavMlw/+j/K
+	 QJkA6OAMpAbzjNmEpZQRdYuLqlk+WblBVCjw5GCUI3W0n5fxEfPhqtofqtij0shqiL
+	 5VgyiMAySQjafhdxI8xdUGHLilEppSh/VrgOgQd3mhGqzlD6xcbZ2YPnLzXgXYePQy
+	 0XGhWqIo9GvhSElWPGnOsiR1nCr/TAO3f3L83NiBsMFHugq4U8RJBnrOhT027dDHHI
+	 gIXXjCZvceRKw==
+Date: Wed, 28 May 2025 15:35:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	arm-scmi@vger.kernel.org
+Subject: Re: [PATCH RFC] pmdomain: core: add hierarchy support for onecell
+ providers
+Message-ID: <20250528203532.GA704342-robh@kernel.org>
+References: <20250528-pmdomain-hierarchy-onecell-v1-1-851780700c68@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 22:35:01 +0200
-Message-Id: <DA82XR7C0NCM.DPN2F8RHAB3Y@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Arnd Bergmann" <arnd@arndb.de>, "Andrew
- Morton" <akpm@linux-foundation.org>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
- <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Al Viro"
- <viro@ftp.linux.org.uk>
-Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Al Viro" <viro@zeniv.linux.org.uk>, "Alice Ryhl" <aliceryhl@google.com>
-X-Mailer: aerc 0.20.1
-References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
- <20250527221211.GB2023217@ZenIV> <aDbpsB3ayj6tFfbI@google.com>
- <20250528174546.GC2023217@ZenIV>
-In-Reply-To: <20250528174546.GC2023217@ZenIV>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528-pmdomain-hierarchy-onecell-v1-1-851780700c68@baylibre.com>
 
-On Wed May 28, 2025 at 7:45 PM CEST, Al Viro wrote:
-> On Wed, May 28, 2025 at 10:47:12AM +0000, Alice Ryhl wrote:
->
->> We don't currently have any way to perform that kind of pointer-math on
->> user pointers, nor do we have any users of it. I imagine that this type
->> checking is only useful if you can actually perform pointer math in the
->> first place?
->
-> What you want is something like
-> 	x->field::UserPtr(beta) iff
-> 		x::UserPtr(alpha) and
-> 		_.field::beta where _::alpha
+On Wed, May 28, 2025 at 01:03:43PM -0700, Kevin Hilman wrote:
+> Currently, PM domains can only support hierarchy for simple
+> providers (e.g. ones with #power-domain-cells = 0).
+> 
+> Add support for oncell providers as well by adding a new property
+> `power-domains-child-ids` to describe the parent/child relationship.
+> 
+> For example, an SCMI PM domain provider might be a subdomain of
+> multiple parent domains. In this example, the parent domains are
+> MAIN_PD and WKUP_PD:
+> 
+>     scmi_pds: protocol@11 {
+>         reg = <0x11>;
+>         #power-domain-cells = <1>;
+>         power-domains = <&MAIN_PD>, <&WKUP_PD>;
+>         power-domains-child-ids = <15>, <19>;
+>     };
+> 
+> With the new property, child domain 15 (scmi_pds 15) becomes a
+> subdomain of MAIN_PD, and child domain 19 (scmi_pds 19) becomes a
+> subdomain of WKUP_PD.
+> 
+> Note: this idea was previously discussed on the arm-scmi mailing
+> list[1] where this approach was proposed by Ulf.  This is my initial
+> attempt at implementing it for discussion.  I'm definitely a noob at
+> adding support new DT properties, so I got some help from an AI friend
+> named Claude in writing this code, so feedback on the apprach is
+> welcomed.
+> 
+> [1] https://lore.kernel.org/arm-scmi/CAPDyKFo_P129sVirHHYjOQT+QUmpymcRJme9obzKJeRgO7B-1A@mail.gmail.com/
+> 
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/power/power-domain.yaml |  39 ++++++++++++++++++++++++++++++++
+>  drivers/pmdomain/core.c                                   | 111 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 150 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+> index 8fdb529d560b..1db82013e407 100644
+> --- a/Documentation/devicetree/bindings/power/power-domain.yaml
+> +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+> @@ -68,6 +68,21 @@ properties:
+>        by the given provider should be subdomains of the domain specified
+>        by this binding.
+>  
+> +  power-domains-child-ids:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      An array of child domain IDs that correspond to the power-domains
+> +      property. This property is only applicable to power domain providers
+> +      with #power-domain-cells > 0 (i.e., providers that supply multiple
+> +      power domains). It specifies which of the provider's child domains
+> +      should be associated with each parent domain listed in the power-domains
+> +      property. The number of elements in this array must match the number of
+> +      phandles in the power-domains property. Each element specifies the child
+> +      domain ID (index) that should be made a subdomain of the corresponding
+> +      parent domain. This enables hierarchical power domain structures where
+> +      different child domains from the same provider can have different
+> +      parent domains.
+> +
+>  required:
+>    - "#power-domain-cells"
+>  
+> @@ -133,3 +148,27 @@ examples:
+>              min-residency-us = <7000>;
+>          };
+>      };
+> +
+> +  - |
+> +    // Example of power-domains-child-ids usage
+> +    MAIN_PD: main-power-controller {
+> +        compatible = "foo,main-power-controller";
+> +        #power-domain-cells = <0>;
+> +    };
+> +
+> +    WKUP_PD: wkup-power-controller {
+> +        compatible = "foo,wkup-power-controller";
+> +        #power-domain-cells = <0>;
+> +    };
+> +
+> +    scmi_pds: protocol@11 {
+> +        reg = <0x11>;
+> +        #power-domain-cells = <1>;
+> +        power-domains = <&MAIN_PD>, <&WKUP_PD>;
+> +        power-domains-child-ids = <15>, <19>;
+> +    };
 
-Not 100% sure I understand your code correctly, do you mean that:
-`x->field` is of type `UserPtr(beta)` given that `x` is of type
-`UserPtr(alpha)` and `field` is a field of `alpha` of type `beta`?
+This all looks like a nexus map which is defined in the DT spec. To 
+date, the only ones are interrupt-map and gpio-map. Here that would look 
+like this:
 
-If that is correct, then I have a proposal called field projection [1]
-for the rust language itself to support this kind of operation for any
-custom type.
+power-domain-map = <15 &MAIN_PD>,
+                   <19 &WKUP_PD>;
 
-I also have an macro-based implementation [2] and I could cook up some
-examples with `UserPtr` [^3].
+Quite simple in this case, but the general form of each entry is:
+<<child address> <provider specifier cells> <parent provider> <parent provider specifier cells>>
 
-[1]: https://github.com/rust-lang/rfcs/pull/3735
-[2]: https://github.com/Rust-for-Linux/field-projection/tree/new
-[^3]: Here is a quick sketch of how the above would look like in Rust
-      using [2]:
+<child address> is specific to interrupts dating back to the days when 
+interrupt and bus hierarchies were the same (e.g. ISA).
 
-      #[derive(HasFields)]
-      struct Alpha {
-          field: Beta,
-      }
+For the existing cases, there's no s/w involvement by the child 
+provider. For example, with an interrupt, the device ends up with the 
+parent provider interrupt and there's no involvement by the child 
+provider to enable/disable/ack interrupts. That doesn't have to be the 
+case here if that's not desired.
 
-      impl Alpha {
-          fn write_beta<'a>(mut self: UserPtr<'a, Self>, value: Beta) {
-              start_proj!(mut self);
-              let mut field: UserPtr<'a, Beta> =3D p!(@mut self->field);
-              field.write(value);
-          }
-      }
-
-      A couple notes for anyone not too familiar with Rust:
-
-      * `'a` is called a lifetime, it says for how long a value is valid
-      * the `< ... >` are generic types
-      * the `ident: Type` is a type annotation used in parameters (not
-        optional) and in local variable bindings (optional)
-      * the `self` parameter is special, it allows one to use the
-        `val.fun` syntax (it's similar to `this` in java and `self` in
-        python, but without the object orientation stuff associated with
-        it)
-
----
-Cheers,
-Benno
-
-> Generated code would be "add offset and cast to pointer to type of...",
-> but doing that manually would really invite headache.
+Rob
