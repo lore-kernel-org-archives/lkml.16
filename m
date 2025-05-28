@@ -1,181 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67121311AC;
-	Wed, 28 May 2025 02:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B20AE567;
+	Wed, 28 May 2025 02:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748398658; cv=none; b=Ur8P6HcPb/OhfPntQwsK3XuaHE6Fjz7W7poACS5oQG+ETdxQr2Jp2iYq7EkZKAzqsVypr0G4zHcAFbTtlDTPGQVDg0sNh8AGFZMwMuWDk5TZOO5S0+wrPI4QOZEbc9S5JCJCPufdok4nMt/JorVj3Uxt3hJE0H3G7znW7x8ejZk=
+	t=1748398857; cv=none; b=Q9WbFokYqV9d7WBwqUkhO/xbzcfleGAqFh5ZrpE5mZiBApw0cEyRkQmqSTFsOf8dgRXxruei7lc8er1uDZwj6siZt6tqr9bw6NUP9RLTRUz4ZkchfjH35gnjwqKCJvryiHrZqdt4Jk0TmMPWc8h1gU+2/VPvusUFaM7d3LnP+nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748398658; c=relaxed/simple;
-	bh=prPjqRAFhuR4gJ9/6ommLH7BOpW3yKKwK4wg/sYYt1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cxapWh9gAKZn+N1/wnQOSX/+4LWVLG3vPI69gi+VeTZsiuq0DgHJGW06bsq1BbuJwAva9yfu3JAObdS5424oLd3NE0X3h6IebpxZEh3HfdDuLhR8T5dcUwNgpFIzsSvYl489Ye3rWxlz7PkLEie+wwGmEAFNBStV4X++zjswp+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12E5C4CEE9;
-	Wed, 28 May 2025 02:17:36 +0000 (UTC)
-Date: Tue, 27 May 2025 22:17:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-ID: <20250527221735.04c62a3c@batman.local.home>
-In-Reply-To: <20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-References: <20250527121140.0e7f0565@gandalf.local.home>
-	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748398857; c=relaxed/simple;
+	bh=XF3yvPRPL1NDaELu1am/GZ993wzepWtWoBUwMQNlHi8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iKKY/EseChfWgOuaS5zYCxzRqiY3tkvI7cVJc+2rNJiS/3m7vt776C0vjHx7WE9acIe8jAn6QQ1UQHa/Gsj9+ULXPWBTWurQAzF1SalXy5q/PMhWXLoxaHODrTZirGJb1HYNnCe58Ouk/PuUf2ooC9CFriCmGra5lKn42iEHbHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=no33KxyT; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="no33KxyT"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S1ft9q016679;
+	Wed, 28 May 2025 02:20:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=WcitE8HrvwbKeH+hmuIRyiZ2UX9b2Y8GMgMAXJy54RA=; b=
+	no33KxyTyIqirEjcThvnRfU3m9BFBxGt+OAkRrkLT/V8pWF1ihGpdqmp+d8tamA7
+	bwoq29brqHwNu+1OyqnGDFILDjyuRMr+Y3Z82t6gfkFx86dZyL2wL/+GtO2aWdOe
+	Uoq78iC62qrLQCRej2127G1woFvyGVbpLW/ql9QLP0IWLOmghKaCcLsiryum/QV3
+	dWBg1FI2rGsY07yb4a19uUBATJ7ueau0uMPJQQWCVbITRFSahWWDGEHaKULV/6Tn
+	UQ6z3q+a8OiVPQNwLarnYNCrIawUxY8/0h4pcYwcbOlvLMtPQixIn29qmTWnv+SI
+	jJbrWYZJuk7fnIktUW1jrA==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46wjbcgx0c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 02:20:53 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54S1CJTt021226;
+	Wed, 28 May 2025 02:20:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46u4jgb21s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 02:20:52 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54S2Kq10017834;
+	Wed, 28 May 2025 02:20:52 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46u4jgb21n-1;
+	Wed, 28 May 2025 02:20:52 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: James.Bottomley@HansenPartnership.com, linux-scsi@vger.kernel.org,
+        Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+Subject: Re: [PATCH] scsi: mvsas: fix typos in SAS/SATA VSP register comments
+Date: Tue, 27 May 2025 22:20:15 -0400
+Message-ID: <174839736796.456135.17148269561940749197.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250517192422.310489-1-alok.a.tiwari@oracle.com>
+References: <20250517192422.310489-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_01,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
+ adultscore=0 suspectscore=0 malwarescore=0 mlxlogscore=891 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505280019
+X-Proofpoint-GUID: vyi-VI0AqLgHAdwXAPK55qLPITyrNWQE
+X-Proofpoint-ORIG-GUID: vyi-VI0AqLgHAdwXAPK55qLPITyrNWQE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDAxOSBTYWx0ZWRfX5riihf++YVUe i9Qh99GQThheFsib3RpOh+tQswUqPaef0pp8HJFKaapcyrRC6Em77pz8M0CllseMInt6L7MU78g gljeFqIQGdNJ1vpGvEchROzx7TEDVXgJcdD59ESyt6N2VRknsuj0irPaisRTQ5F7rmd4jydJJrE
+ 6aJQtyFLQtLZzPJYTzLv2oVnUEtouEjkz+2ih7/fq/d+YLjHv5hXWXC3nAL1k6pZ/VL6WxTDdfu Fz09W9plaIV95wcyeFMuQG9iKLWDPrRyui2LN1sa2u6ICD1YU/GrnDO5ilqZBcG0IBo7ez8uSSI IeQM3yINiaO9XR5VDdo0I1Kr/N2V2Mba1drCVX5jJ1UYgsk7EUYikjzD/GeFmo/zKXuWv/a4WAD
+ enj9cj1mZVB0I4jdRUHGIGPoj+HpqjhRLNI1nuL/+A3+ZJXJQHa0eXVjORk1DNoggrbpNneP
+X-Authority-Analysis: v=2.4 cv=c8qrQQ9l c=1 sm=1 tr=0 ts=68367305 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=OadDIfMhQCwyUzP0OLkA:9 a=QEXdDO2ut3YA:10 cc=ntf
+ awl=host:13207
 
-On Wed, 28 May 2025 10:42:03 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Sat, 17 May 2025 12:24:10 -0700, Alok Tiwari wrote:
 
-> > The way to differentiate this case from the normal case of there
-> > only being one page written to where the swap of the reader page
-> > received that one page (which is the commit page), check if the
-> > tail page is on the reader page. The difference between the commit
-> > page and the tail page is that the tail page is where new writes go
-> > to, and the commit page holds the first write that hasn't been
-> > committed yet. In the case of an interrupt preempting the write of
-> > an event and filling the buffer, it would move the tail page but
-> > not the commit page.  
+> Correct spelling mistakes of the SAS/SATA Vendor Specific Port Registers.
+> Fixed "Vednor" to "Vendor" in VSR_PHY_VS0 and VSR_PHY_VS1 comments.
+> This is a non-functional change aimed at improving code clarity.
 > 
-> (BTW, what happen if the interrupted process commits the event? That
->  event will be lost, or commit and just move commit_page?)
-
-No, the first event to be created is the "commit" event. If it gets
-interrupted and the interrupt adds a bunch of events that wraps the
-ring buffer, it can't touch the commit event, it will just start
-dropping events. Then when the commit event finishes, it can either be
-read by the reader, or overwritten by the next events coming in.
-
-> 
-> 
-> Thus the reader_page == commit_page && reader_page == tail_page,
-> missed_events should be 0?
-> 
-> Possible cases if missed_events != 0:
-> 
->  - reader_page != commit_page
-> 	(writer's commit overtook the reader)
-
-The reader is never in the write buffer. Just the head page will move.
-When a new reader page is taken it will swap out the old reader page
-with the head page. If the head page is the commit page, then the
-commit page becomes the reader page too.
-
-> 
->  - reader_page == commit_page but reader_page != tail_page 
-> 	(writer overtook the reader, but commit is not completed yet.)
-
-No, "writer overtook the reader" doesn't make sense as the reader is
-not on the write buffer, so the writer can not catch up to it. What the
-write buffer has is the "head" page which is where the next reader will
-come to.
-
-The only way reader_page == commit_page and reader_page != tail_page is
-if the commit was interrupted and the interrupt added events and moved
-forward off the commit_page. The only way there would be missed events
-in that case is if the interrupt added so many events it wrapped the
-buffer and then started dropping events.
-
-> 
-> if 
->  - reader_page == commit_page == tail_page
-> in this case, missed_events should be 0.
-> 
-> Since the reader_page is out of the ring buffer, writer should not
-> use reader_page while reading the same reader_page, is that right?
-
-Correct. But the writer could end up on the reader page after the swap,
-if the head page happened to be the commit page.
-
 > 
 
+Applied to 6.16/scsi-queue, thanks!
 
-> > cpu_buffer->tail_page,
-> > +				       "Reader on commit with %ld
-> > missed events",
-> > +				       missed_events)) {
-> > +				/*
-> > +				 * If the tail page is not on the
-> > reader page but
-> > +				 * the commit_page is, that would
-> > mean that there's
-> > +				 * a commit_overrun (an interrupt
-> > preempted an
-> > +				 * addition of an event and then
-> > filled the buffer
-> > +				 * with new events). In this case
-> > it's not an
-> > +				 * error, but it should still be
-> > reported.
-> > +				 */
-> > +				pr_info("Ring buffer commit
-> > overrun lost %ld events at timestamp:%lld\n",
-> > +					missed_events,
-> > cpu_buffer->reader_page->page->time_stamp);  
-> 
-> Do we need this pr_info() for each commit overrun?
+[1/1] scsi: mvsas: fix typos in SAS/SATA VSP register comments
+      https://git.kernel.org/mkp/scsi/c/934a5c3230b9
 
-Yes. When doing this stress test, it printed at most 4 times. It
-happens once per time the interrupt fills the buffer while interrupting
-the buffer.
-
-I seldom ever get commit overruns. It's one of the fields in the status
-file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
-
-> 
-> > +			}
-> > +		}
-> >  	}  
-> 
-> Just for cleanup the code idea, with above change, this code is
-> something like;
-> 
-> ----------------
-> 
-> missed_events = cpu_buffer->lost_events;
-> 
-> if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> 	if (missed_event) {
-> 
-> 	}
-> } else {
-> 	if (missed_event) {
-> 		if (!WARN_ONCE(cpu_buffer->reader_page ==
-> cpu_buffer->tail_page,"...")) { pr_info("...")
-> 		}
-> 	}
-> }
-> 
-> ----------------
-> 
-> Can we make it as below?
-> 
-> ----------------
-> missed_events = cpu_buffer->lost_events;
-> 
-> if (missed_event) {
-> 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> 
-> 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
-> cpu_buffer->tail_page, "...") { /**/
-> 		pr_info("..."); 
-> 	}
-> }
-
-Hmm, OK, I'll look at that.
-
-Thanks,
-
--- Steve
+-- 
+Martin K. Petersen	Oracle Linux Engineering
