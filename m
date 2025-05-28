@@ -1,193 +1,199 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C284427A463
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1982227584C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748426132; cv=none; b=fwz+U/62ScvjG+cX2DjjKMBjga7A907IX9CqpuDeqalhCl0asoBVWRQLsu6KgwiQ1fHmrdwgKLDVRVtvmdvpnPbee1470+F1ZXcpDYhbz7KkURkajBF752/4LU5KikywQMgBn3ElYt8JDTBdxsfnQluIU36eBTonardcDcY29lU=
+	t=1748426268; cv=none; b=XogrTufIGijcXlWZe8NLQgVmRH68aMQ0f0Qk6p/qwEmfsQepX228FhXUCjzceHlM0YOFXIQPkr+ccEB4qvOkHoBlo6plzlPgApgEGdLhm8RTJpcanBXFz+TOrDCAaDDVJH+5Pv7+BmVo24Fjy0hbJKRxZiCS1laoUWTyeLJUinM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748426132; c=relaxed/simple;
-	bh=DbDRv7L/SfKUSYtLQod0TKfmO9JV7q5q+E6ZQcQVXI8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=fGRv7VLIjFIAtwsPzoG+hD1gabxpQ7Hw2HGUEPYYgnZUo8Tp6F07qE43ziH05zb1yW4oI4vvAp348PoIAm2tiKwYXquKd0fvTvExKB8AUFCqhzddFt0azF1npuPcRAA3xrDj+1zIOnA1GTLlvecOV/U+ZUcA4OH0BtTjAiv61Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=cpdp0sbS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AMSY+v7Y; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
+	s=arc-20240116; t=1748426268; c=relaxed/simple;
+	bh=NY4ppF8WDLnUEHIz0ojqjJm6a5YSQxyU166J9C6MAD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AB6x68rhAVWuUsnHCTAKl4YvKZCIstMav0C0q04tq4FcakvJIRFremN3WV6v1haXmBaeBLVKfVB377bgoLznt17kILSdfvu+rUeDISrcMWLjTusKqE2TgNrAqO9PNq/KOAzZE/N8ltW8YcjATYAPECHzzUfaDypTlAEzxwpJPU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pjZnWZtC; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="cpdp0sbS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AMSY+v7Y"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id C2555138251D;
-	Wed, 28 May 2025 05:55:29 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 28 May 2025 05:55:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748426129;
-	 x=1748512529; bh=mIr8yhVZYdL15whLx7nAJetmRapUCJpeMtsLnS/rGak=; b=
-	cpdp0sbSCbZxICJ/uifWQuyYZWw/ypXYHoSuiAZ5R83PdXIfI3vrlSsYPqDG3ypc
-	QzqUNS9QOvqM7ueZdiTPppgq406rYkK04HdadYNOS34muwOtlbywITlAZLpCwyN7
-	6NvxeAgThgvL4m8R7TCbrvZzWZNppjxWWrrNFCX1jlYcgxMy22R3B+VPQsZOjabN
-	MtqRrmOyzOMD9UmGnuFaJfXKee3rrlK7QZ/XzvY+Svv7Ho02oo+tkIexuhSNbji4
-	JeJAUZAdOsPpi5aOj+2Hbn+K7WttfAWULNjJA6GYDFmIvAdixDtSJO723Q4+a4nz
-	dw7zAG33l8lHZ4p2oSqWkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748426129; x=
-	1748512529; bh=mIr8yhVZYdL15whLx7nAJetmRapUCJpeMtsLnS/rGak=; b=A
-	MSY+v7YrFBM3fs5FHQm3SmaQNf7i3C4vr1V1iVGd2guZP7i5z5ggnXixRRiQwA16
-	TsBdLz1njDFTlL8Yn+nrh+wLO4L6jcEv4X0Olx5zY5O1cZeGpDzfsDW3gtvl3YsT
-	H58D6e2vHv44Ua7uSJdSzyYpBQMPZ4zgm6sdhRBbyThka71kOHjKVSEffPKCTq7k
-	DVFj0YjSPiA1tErZ+Wa4in9bSRMTqE7ODdPlz5txJOXihMfDt2xyIFwgnTjKKlPd
-	TluZTqYRwbNLqhCth9+3tKenp1Cy0le0VKtgbsCRbJjR3q/iGIcy4Ymy8Er+vHZH
-	4JLnttUH2OQc5eAAaRADw==
-X-ME-Sender: <xms:kd02aBLbQlD9XZrVpymFhIYaXTD2LJsoJCSgUZk0m7JsLzxRWkM9pg>
-    <xme:kd02aNKO1xWATk2FDIvERLDIqxPRHZZu3jcAg3cl3araUiE07DkH2yrYL1sUzSYJe
-    GI613_n0ui8Nd7GTUc>
-X-ME-Received: <xmr:kd02aJvTELS7bZYEiIffqj6gFB6MF4W7Wj86MrCqtKjSroIuMsk0wBBnW08pZ-97M22UgTeploSz-vUpVbysVwXhu_pPr3988A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdelieculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefu
-    hffvofhfjgesthhqredtredtjeenucfhrhhomhepfdevhhhrihhsthhophhhvghrucfunh
-    hofihhihhllhdfuceotghhrhhisheskhhouggvheegrdhnvghtqeenucggtffrrghtthgv
-    rhhnpeeileetudejffegjeegfffhhffhkeefjefgtddujeehheevleevjeejffekieekve
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhr
-    ihhssehkohguvgehgedrnhgvthdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtph
-    houhhtpdhrtghpthhtoheptghhrhhishhtihgrnhdrkhhovghnihhgsegrmhgurdgtohhm
-    pdhrtghpthhtohepphhsthgrnhhnvghrsehrvgguhhgrthdrtghomhdprhgtphhtthhope
-    hphhhilhhiphhprdhrvghishhnvghrsehlihhnsghithdrtghomhdprhgtphhtthhopegu
-    rhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpth
-    htoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegurghkrheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtohepphhhrghsthgrsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopegurhhiqdguvghvvghlqdgsohhunhgtvghssehlihhsthhsrdhfrhgvvgguvg
-    hskhhtohhprdhorhhg
-X-ME-Proxy: <xmx:kd02aCbHDovltV7e8CeWPTDp10c_sUVqTMDo5CZA3wOWBXO2N3CvVw>
-    <xmx:kd02aIazgkMI5tbH94SaxYZZCQGrJ12qQMlp5Xhqp5qRKzSSMPwH6A>
-    <xmx:kd02aGBwX2BSW9y9_6L7uNlnTqVUiBZNr9lRV43zwXqxfHVMH_nZTw>
-    <xmx:kd02aGaqthJvM8zTYC9pDY0YaFFS6JU7MNeT846DHtAEPeUcQbCX2w>
-    <xmx:kd02aFpzcSyj383NUf9vY1RmDB9-i6kpYncJnGSRiKAVBv9ZxufzHUAh>
-Feedback-ID: i9ec6488d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 28 May 2025 05:55:29 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pjZnWZtC"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604bf67b515so5096413a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748426264; x=1749031064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ks3rhmD/IHlVoyz8JuxtGnWPe59bWGftTPLGTy/S1P8=;
+        b=pjZnWZtC2h3kOjEe9LEGzuZHtEOwTYCuV6JqcoGywkjnl2A9RQ7ANO3XQmyThu10io
+         U+FOKZKzkLRZYpBgjGiSI0QCBu0lAXRY3dBVERiK/4Kw+WyHaye37A4RnGd0fLPKCgUX
+         IYMjz17DW+mx/JycEAW83UGudA9ayJe8f1Jtk67NjEgN7HS1S88olgpsKT7uA6IRdCyG
+         79K7ZSXQK1ACe7yMiIeT9Bmcd0E4GI/SpGMnoHayK3P05NC06Z9Ged1l2RcHbJ/5NQUL
+         esEB+IvPl/CauWKZX7yyWHg53uFvgEP2rmvix4vTvBQlGx4DzOEuS+OrG+XSF5CP/jv1
+         dUlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748426264; x=1749031064;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ks3rhmD/IHlVoyz8JuxtGnWPe59bWGftTPLGTy/S1P8=;
+        b=V6DTZvZ81CG9FtrEymaycaLNI9UchrdYEUY8tnnBzUK9YhGyrm9SYD0tOMBqsoATpb
+         YUOGwjwTsAxj9fJ2fbhdprEt466Joa6Mt5oCmOsCqcz/W+jog4FvcABb+MEUevIH0vZx
+         GRrHjr8cJl3cXCU1fkGbM5zI3IFSD6i+LYIjcDGu12I1T1JlAe3S8PFlwxDnm6JoR+5A
+         WytXu9DWBkfFhXz3DAFfs3YZc/TH9Dtq8kPUl6r+8MP1x1PDrhOXsm/LxPiOipaIhppz
+         mZe/GSKQl1F+gH2r7KgR7Jsyyf7vxlh6F0scvo+8lgsqnVRqgFUNa8J89ycEYPOCN8P6
+         lzow==
+X-Forwarded-Encrypted: i=1; AJvYcCV6S3XH7uXRvtOwaRoWHjARwRn8fo+8sURPktUXRWNCJr0f0HVCv8u8x16BaNWdhf87d8W0aI+24w4zthM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV/Y2PHmgEzLWXc4b1+2f972lLRkpa1Xa/w8/XoA7GBj4OiIxP
+	sAAisMBZMX2xraoVVelgr2ZpHY2NSi2hCozygLKSt+uwM9m2DHcq0E9zSKVGLc6YwTz9PBv9UTw
+	nup8jlCeETYUAU/ENfwDexBvjEdrsnXUvn4/c7ISX
+X-Gm-Gg: ASbGncuXxVQnWggBZBroI6Y/8PyhwaItaXK2IlxwxQpWabwCA/2xRjxIHg+tTwXP4Dl
+	f0WFv1dnXQ0PuYtuwCxMwL0ftYbzWKlAin0+3FV9Qes92weO3ngMXF85uU1YQbfZIlFCfwCIymQ
+	nVdYfN8uB0hx1REOV5ToymS2nLKK5jaOTT9XVndAc5i139d+zMyBVoDpgKe9ZMAGiObVGkqQ==
+X-Google-Smtp-Source: AGHT+IFFD/y5HtmSNrKzHhwfxF7XDgkk5kJYkfCwOSf/luOnKSQmxuN22Xn2tS6vv4V5KENmsK82jP6Xvsq5rx1uJ+c=
+X-Received: by 2002:a05:6402:5112:b0:604:e74d:3615 with SMTP id
+ 4fb4d7f45d1cf-604e74d367bmr6357406a12.26.1748426264183; Wed, 28 May 2025
+ 02:57:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250527121807.3597061-1-korneld@google.com> <oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5hsil@vhh22j6b5cvq>
+In-Reply-To: <oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5hsil@vhh22j6b5cvq>
+From: =?UTF-8?Q?Kornel_Dul=C4=99ba?= <korneld@google.com>
+Date: Wed, 28 May 2025 11:57:32 +0200
+X-Gm-Features: AX0GCFvK9nh_ZQOQ8q-wzxVPyhyMhhVBescCioACvy1eSbZRd2cZXohjA9FPaQ4
+Message-ID: <CACF_fqksF+whYbGEdSvJ=87FQH03EzO+hSSf8eRc8MitR2hzxA@mail.gmail.com>
+Subject: Re: [PATCH] power: supply: qcom_battmgr: Report battery capacity
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chromeos-krk-upstreaming@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 02:55:27 -0700
-Message-Id: <DA7PC2LNU79K.28KBFOL3MGI1S@kode54.net>
-Cc: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
- "Simona Vetter" <simona@ffwll.ch>, "Danilo Krummrich" <dakr@kernel.org>,
- "Philipp Stanner" <phasta@kernel.org>, "dri-devel"
- <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH] drm/sched: Fix amdgpu crash upon suspend/resume
-From: "Christopher Snowhill" <chris@kode54.net>
-To: =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, "Philipp
- Stanner" <pstanner@redhat.com>, "Philipp Reisner"
- <philipp.reisner@linbit.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250107140240.325899-1-philipp.reisner@linbit.com>
- <942c02f2-6496-4406-a73b-941d096aadfb@amd.com>
- <CADGDV=U_7CdkdEiLX9kj9yHsXhwb5zP_eGXpwmrj20cmgzMAtA@mail.gmail.com>
- <eb5f3198-7625-40f4-bc23-cac969664e85@amd.com>
- <582e10673bb749f18ebf8a18f46ca573df396576.camel@redhat.com>
- <b055ff59-4653-44d9-a2e0-bb43eb158315@amd.com>
-In-Reply-To: <b055ff59-4653-44d9-a2e0-bb43eb158315@amd.com>
 
-On Mon Jan 13, 2025 at 1:55 AM PST, Christian K=C3=B6nig wrote:
-> Am 13.01.25 um 09:43 schrieb Philipp Stanner:
->> [SNIP]
->>>> The handling of NULL values is half-baked.
->>>>
->>>> In my opinion, you should define if drm_sched_pick_best() may put a
->>>> NULL into
->>>> rq. If your answer is yes, it might put a NULL there; then, there
->>>> should be a
->>>> BUG_ON(!entity->rq) after the invocation of
->>>> drm_sched_entity_select_rq().
->>>> If your answer is no, the BUG_ON() should be in
->>>> drm_sched_pick_best().
->>> Yeah good point.
->>>
->>> We might not want a BUG_ON(), that is only justified when we prevent
->>> further damage (e.g. random data corruption or similar).
->>>
->>> I suggest using a WARN(!shed, "Submission without activated
->>> sheduler!").
->>> This way the system has at least a chance of survival should the
->>> scheduler become ready later on.
->>>
->>> On the other hand the BUG_ON() or the NULL pointer deref should only
->>> kill the application thread which is submitting something before the
->>> driver is resumed. So that might help to pinpoint where the actually
->>> issue is.
->> As I see it the BUG_ON() would just be a more pretty NULL pointer
->> deref. If we agree that this is effectively a misuse of the scheduler
->> API we probably want to add it to make it more pretty, though?
+On Tue, May 27, 2025 at 9:34=E2=80=AFPM 'Dmitry Baryshkov' via
+chromeos-krk-upstreaming <chromeos-krk-upstreaming@google.com> wrote:
 >
-> The only alternative I can see is that the scheduler API gracefully=20
-> handles submits to non-ready schedulers. E.g. that=20
-> drm_sched_entity_push_job() detects this condition and instead of=20
-> pushing the job sets and error code and signals the fences.
+> On Tue, May 27, 2025 at 12:18:07PM +0000, Kornel Dul=C4=99ba wrote:
+> > Battery charge can be reported in several different ways. One of them i=
+s
+> > is charge percentage referred to as POWER_SUPPLY_PROP_CAPACITY in the
+> > power supply API. Currently the driver reports the capacity in this way
+> > on SM8350, but not on the newer variants referred to as SC8280XP in the
+> > driver. Although this is not a bug in itself, not reporting the
+> > percentage can confuse some userspace consumers.
+> > Mimic what is done in the ACPI driver (drivers/acpi/battery.c) and
+> > calculate the percentage capacity by dividing the current charge value
+> > by the full charge. Both values are expressed in either uWh, or
+> > in uAh.
+> >
+> > Signed-off-by: Kornel Dul=C4=99ba <korneld@google.com>
+> > ---
+> >  drivers/power/supply/qcom_battmgr.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >
+> > diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply=
+/qcom_battmgr.c
+> > index fe27676fbc7c..5ed5452ab51c 100644
+> > --- a/drivers/power/supply/qcom_battmgr.c
+> > +++ b/drivers/power/supply/qcom_battmgr.c
+> > @@ -577,6 +577,8 @@ static int qcom_battmgr_bat_get_property(struct pow=
+er_supply *psy,
+> >               val->intval =3D battmgr->status.capacity;
+> >               break;
+> >       case POWER_SUPPLY_PROP_CAPACITY:
+> > +             if (battmgr->status.percent =3D=3D (unsigned int)-1)
+> > +                     return -ENODATA;
+> >               val->intval =3D battmgr->status.percent;
+> >               break;
+> >       case POWER_SUPPLY_PROP_TEMP:
+> > @@ -617,6 +619,7 @@ static const enum power_supply_property sc8280xp_ba=
+t_props[] =3D {
+> >       POWER_SUPPLY_PROP_STATUS,
+> >       POWER_SUPPLY_PROP_PRESENT,
+> >       POWER_SUPPLY_PROP_TECHNOLOGY,
+> > +     POWER_SUPPLY_PROP_CAPACITY,
+> >       POWER_SUPPLY_PROP_CYCLE_COUNT,
+> >       POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
+> >       POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> > @@ -1063,6 +1066,21 @@ static void qcom_battmgr_sc8280xp_callback(struc=
+t qcom_battmgr *battmgr,
+> >               battmgr->ac.online =3D source =3D=3D BATTMGR_CHARGING_SOU=
+RCE_AC;
+> >               battmgr->usb.online =3D source =3D=3D BATTMGR_CHARGING_SO=
+URCE_USB;
+> >               battmgr->wireless.online =3D source =3D=3D BATTMGR_CHARGI=
+NG_SOURCE_WIRELESS;
+> > +             if (battmgr->info.last_full_capacity !=3D 0) {
+> > +                     /*
+> > +                      * 100 * battmgr->status.capacity can overflow a =
+32bit
+> > +                      * unsigned integer. Do a temporary cast to avoid=
+ that.
+> > +                      */
+> > +                     battmgr->status.percent =3D
+> > +                             (uint64_t)100 * battmgr->status.capacity =
+/
+> > +                             battmgr->info.last_full_capacity;
 >
-> But that might not be a good idea.
->
-> It just moves the crash from one place to another and in general I fully=
-=20
-> agree the driver is misusing the scheduler API to do something which=20
-> won't work and potentially crash the whole system.
->
->> @Philipp:
->> BTW, I only just discovered this thread by coincidence. Please use
->> get_maintainer. The scheduler currently has 4 maintainers, and none of
->> them is on CC.
->
-> Oh good, point I was already wondering why nobody else commented and=20
-> didn't realized that nobody was on CC.
->
-> Thanks,
-> Christian.
+> Can you use mult_frac(), preventing the overflow?
 
-I'm only seeing this mail exchange months after the fact because I was
-linked to it by someone on IRC, and I am making a wild guess here.
+Good idea, but I don't think mult_frac() helps in cases where the
+dividend is smaller than the divider. Let's look at the sources:
+#define mult_frac(x, n, d)      \
+(...)
+        typeof(x_) q =3D x_ / d_; \
+        typeof(x_) r =3D x_ % d_; \
+        q * n_ + r * n_ / d_;   \
 
-Could this sleep wake issue also be caused by a similar thing to the
-panics and SMU hangs I was experiencing with my own issue? It's an issue
-known to have the same workaround for both 6000 and 7000 series users. A
-specific kernel commit seems to affect it as well.
+Since in our case x_ < d_, q =3D 0 and r =3D x_ then r * n_ will still
+result in an overflow.
 
-If you could test whether you can still reproduce the error after
-disabling GFXOFF states with the following kernel commandline override:
+Unfortunately, the cast-and-divide approach won't work either. I
+received an email from a kernel test robot saying that this patch
+breaks a 32-bit only build. (">> ERROR: modpost: "__udivdi3"
+[drivers/power/supply/qcom_battmgr.ko] undefined!") See
+https://lore.kernel.org/oe-kbuild-all/202505280344.GjzOItSS-lkp@intel.com/
+for details.
 
-amdgpu.ppfeaturemask=3D0xfff73fff
+I suppose I could just use a do_div with a temporary variable to work
+around that. I noticed that all data read from FW is multiplied by
+1000, so I leveraged that instead:
+battmgr->status.percent =3D
+    (100 * le32_to_cpu(resp->status.capacity)) /
+      (battmgr->info.last_full_capacity / 1000);
 
-And report back. Unless it's already something long solved? Since this
-particular thread died back in January, I guess nothing has happened
-since?
+Any thoughts?
 
 >
->>
->> Danke,
->> P.
->>
->>> Regards,
->>> Christian.
->>>
->>>> That helps guys with zero domain knowledge, like me, to figure out
->>>> how
->>>> this is all
->>>> supposed to work.
->>>>
->>>> best regards,
->>>>  =C2=A0 Philipp
-
+> > +             } else {
+> > +                     /*
+> > +                      * Let the sysfs handler know no data is availabl=
+e at
+> > +                      * this time.
+> > +                      */
+> > +                     battmgr->status.percent =3D (unsigned int)-1;
+> > +             }
+> >               break;
+> >       case BATTMGR_BAT_DISCHARGE_TIME:
+> >               battmgr->status.discharge_time =3D le32_to_cpu(resp->time=
+);
+> > --
+> > 2.49.0.1151.ga128411c76-goog
+> >
+>
+> --
+> With best wishes
+> Dmitry
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "chromeos-krk-upstreaming" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to chromeos-krk-upstreaming+unsubscribe@google.com.
+> To view this discussion visit https://groups.google.com/a/google.com/d/ms=
+gid/chromeos-krk-upstreaming/oa5okg7i2s6s7pxm5tn6nnanazze5lnnre4vnwrhopn5s5=
+hsil%40vhh22j6b5cvq.
+> For more options, visit https://groups.google.com/a/google.com/d/optout.
