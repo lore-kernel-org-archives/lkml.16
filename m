@@ -1,91 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76B2195FE8;
-	Wed, 28 May 2025 06:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9EF20C478;
+	Wed, 28 May 2025 06:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412781; cv=none; b=NGyM4KnOb/AS9hxBGkUBW7RRrx9znlRR0/kw3oKMh8gqA4OzoirNaN76Qz9DK7XfXhHo2GL347gIaDN5oYP2Yq7kVWBeSIhoy0oaoi9WYJZ3oFDcL+aCBw47nHPhJhJ66eXb8uKQq72Uzx+XQ07Wmz305dP2v4MHKwjU7lpI2J4=
+	t=1748412834; cv=none; b=FIe4Alx4LfS1c0dTNl91wTTl7n0Bv3vDYY48WF7B/XJXZByD1SuPkYAk6397zLfxIcQTIQyMpS6U+b20f3L3PNu36+ksiFHwXQ4FqICyl1xUMZcYOMHhkgKBw97jZ8nW0TTNwR6TDps6nxlbVgAIMOb8QIYKoV08/o69XiSo0RE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412781; c=relaxed/simple;
-	bh=rxFzwGyf3zCL39xFxcp2SmNxp4T6cx0JLgHayOZN5NA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2HuWpzLxaVP2YG8C9us8rRpV7ON/NdrPiv7MNbPDdBsebgynINrsnvopSJH2yigwBHOLGE/+BYuUYN9aE97r3ymj9cXWIuhy9N3QpSoPPAaT5CHltfkyMJ1QbVEpn97ZTGo4oQ/XT3kgAVh/RN9rzgJ7SaN5SFooGNMf7+E1Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YB5LvelA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FW7/wTKj; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748412834; c=relaxed/simple;
+	bh=dGXYE/DiAwj+uOxmvi69MBxG9FwMrkP4VaIHvYdkff4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=QVdSQcPTapIx57QinCjC4SwkkalFrpvenvmAIMsvZCwTZuamFigd2MqKTbZ7ftkoyPQ4ZhA8xzNOrH++bBnO8h9Mz1oVJTadk8pJ9vSv5AvSoPbyUy23B/IX4S1AH0gQF5lLvCX/1Da+7TxOdjdUwwBZnzlypWxzmFmffjJPpbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Coy2FnQP; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YB5LvelA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FW7/wTKj"
-Date: Wed, 28 May 2025 08:12:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748412778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxFzwGyf3zCL39xFxcp2SmNxp4T6cx0JLgHayOZN5NA=;
-	b=YB5LvelAj30FQYO2KPZ4V8lgBUjptsHgU1eM41hOEsnaNCxUdxYRoRsHKgc5QoSpDEACra
-	EVknvQu66nPBbmoxFJ9OljtKPLT3optsVo3xXiTqGYB7O2+24zAx2xt/ghWWpoq3QH36Lt
-	oQRDbcCoW67/wEnMnEaaWBGGr6cnI77zIcj9/zV5bqe8leI3YkigugCdu7+XbO0ibX1qBo
-	0TMQekejoSMClnp5oIWpSD7L3zJi59ZyBOBRiWJ/48MqkMpSkZaDdr1ySGYH6l18ntGg1A
-	rbnKupKVQ/fPfj23slPAakEeQkfmBgvsml0eaCnz0K6gpTsqsQqLV4nTIjjjrQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748412778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rxFzwGyf3zCL39xFxcp2SmNxp4T6cx0JLgHayOZN5NA=;
-	b=FW7/wTKjR3KqSk2JP+WuWGgnn8tW5v3fMTN/0/O30mcxDaZMovykk3NmSDpnLOhLTt0v2d
-	CZI9QzscaJE865CA==
-From: Nam Cao <namcao@linutronix.de>
-To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
-Message-ID: <20250528061252.AeDA23yH@linutronix.de>
-References: <20250523061104.3490066-1-namcao@linutronix.de>
- <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Coy2FnQP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1748412833; x=1779948833;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=dGXYE/DiAwj+uOxmvi69MBxG9FwMrkP4VaIHvYdkff4=;
+  b=Coy2FnQPAW5lt55qlo1I9ftBjStc/or3o2ny0nwZXizl5raxNK4QkGga
+   jx8MYQhZMaxAz9NkAmJllGYFdKQS/qVcJtDQdveDfBTnKJNOyCzNthw3G
+   2fqpFh2eEzv4t6A7clj3CmivX3RIZJDeFvtbzPnEHr/6ZqaJvKJ1TPUVO
+   GXtIs3WsWaMQwSNd3xVPrqSb9DF+sgClzuWHRog+1AXPCwx6eOaCcKEnG
+   ov0dwoUs0vrLdtLy93uapFFC7e+ClQ+wAMaA6OanWPu4Rk7DMAeK8YaKF
+   J8FwL6Zm45Ichl2e8JoDfTuFM+G5ZjFRMHjzy6dsArAhOmAWwBq7Ymyku
+   g==;
+X-CSE-ConnectionGUID: Na4ii3iOTbObYzT6z7QrlA==
+X-CSE-MsgGUID: ztvcs+Y1SXeDgHiUPfKLeQ==
+X-IronPort-AV: E=Sophos;i="6.15,320,1739862000"; 
+   d="scan'208";a="42149723"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2025 23:13:52 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 27 May 2025 23:13:16 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Tue, 27 May 2025 23:13:12 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Subject: [PATCH 0/2] TCB: Add DMA support to read the capture register AB
+Date: Wed, 28 May 2025 11:43:03 +0530
+Message-ID: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG+pNmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyML3dzkjALdkuQk3ZTcRF3TRCNLQxOLtFSzVDMloJaCotS0zAqwcdG
+ xtbUAjG8sgF4AAAA=
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
+	<wbg@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
+ Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748412791; l=1279;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=dGXYE/DiAwj+uOxmvi69MBxG9FwMrkP4VaIHvYdkff4=;
+ b=zV5Oyny2gAL5OxDkogoxJfETHlTsLTFHxNGEk/be2hY9iGYHrsZLVJhkFH6yjjXD/KQsIIC3X
+ zGHJ4QN+DkWCp6r0lAU0fW7PsdUlTwx1qU5X/XQ7oCkPQcINu8gSh0X
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-On Wed, May 28, 2025 at 07:57:26AM +0200, Holger Hoffstätte wrote:
-> I have been running with v2 on 6.15.0 without any issues so far, but just
-> found this in my server's kern.log:
+This patch series adds support to enable the DMA support for TCB.
 
-Thanks for testing!
+When DMA is used, the Register AB (TC_RAB) address must be configured as
+source address of the transfer. TC_RAB provides the next unread value from
+TC_RA and TC_RB. It may be read by the DMA after a request has been
+triggered upon loading TC_RA or TC_RB.
 
-> It seems the condition (!n) in __ep_remove is not always true and the WARN_ON triggers.
-> This is the first and only time I've seen this. Currently rebuilding with v3.
+-----------------------------------
+This is tested on sam9x60 curiosity
 
-Yeah this means __ep_remove() thinks the item is in epoll's rdllist and
-attempt to remove it, but then couldn't actually find the item in the list.
+root@sam9x60-curiosity-sd:~# cat /sys/bus/counter/devices/counter0/count0/capture0
+258428554
+root@sam9x60-curiosity-sd:~# devmem2 0xf800800c 
+/dev/mem opened.
+Memory mapped at address 0xb6f78000.
+Read at address  0xF800800C (0xb6f7800c): 0x0F674E8A
 
-__ep_remove() relies on the 'ready' flag, and this flags is quite
-complicated. And as my colleague pointed out off-list, I got memory
-ordering wrong for this flag. Therefore it is likely that you stepped on a
-bug with this flag.
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+Dharma Balasubiramani (2):
+      counter: microchip-tcb-capture: Retrieve and map parent base address
+      counter: microchip-tcb-capture: Add DMA support for TC_RAB register reads
 
-I got rid of this flag in v3, so hopefully the problem goes away.
+ drivers/counter/microchip-tcb-capture.c | 128 +++++++++++++++++++++++++++++++-
+ include/soc/at91/atmel_tcb.h            |   1 +
+ 2 files changed, 126 insertions(+), 3 deletions(-)
+---
+base-commit: fefff2755f2aa4125dce2a1edfe7e545c7c621f2
+change-id: 20250528-mchp-tcb-dma-5a29148fe6e6
 
 Best regards,
-Nam
+-- 
+Dharma Balasubiramani <dharma.b@microchip.com>
+
