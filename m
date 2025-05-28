@@ -1,106 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F3A288C3E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7939C286892
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441754; cv=none; b=WnzWDp66xn9RPc2oxOh4wK4nUnioss/Q7Av89+AitXlqbkFgy9Vh/pGnYK1vZ51z3sjukBbbDHL1nV9kIJ8HwaiXXgutFi4qw9lHclx98F8EoaBoaxRZ81IEts4wnao0GQ29ZqiWojv7S9mpYRscmHnigJnk9PYuULIb0dPXgfs=
+	t=1748441793; cv=none; b=Cf3TVbo+Dkn/5q1BUAoMN6O8HnxBOfNBptRbnWhFecwoR+01rQHO7G2LaN1pC0OOSgBZ8yz0GsLj3mfggXRqyJxF27iVw7vO0RX4vLXA/YIdEKUuVNQTrVOKJ723NcdfUSEgZmzwvzhCVQs8HLlnLtR8CCwlWAH+lPHm/21FVc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441754; c=relaxed/simple;
-	bh=DBQy4jo6CMhz0+laP75ph4Nt2uY9aLQkxx8p/xzxpBc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lHrrW9zV5vmL4nvNIOtpS1KTQu4bCaCdokaIqCzwwuBLU1mIkfExhciubpLuUHe3gLbnV83BC9N575ZRmQeqSEwzwKwf0KYPC7h5Iy9RKBT2iIt8w7VwpjAHZ5dhbnsD+DmovviO3sIzBcqFVk73a5prkHmCIWX3DHT9uxdOPJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Snu4wPcE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748441793; c=relaxed/simple;
+	bh=BaZazWUNwzpYDJYIgR7YjT89yC060LzmEBjX/G4NG70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KBzcWSJDIDWQa3DPKQqyPzboZOsEKfcCgHuoilhLm89/lDc6bF8RcyQ6c0VSdC2TKiBLKTzGYueYwnPWfKUPSo8APo/xBnhNYDI9iWdv33WwSTa19441GoUSCV00jmvuahAbafSTSWmh0nMvPg1ddabGYgy4laQ/Fxfx9VTLSw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qjpKfob7; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Snu4wPcE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 74E9EC4CEE3;
-	Wed, 28 May 2025 14:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748441753;
-	bh=DBQy4jo6CMhz0+laP75ph4Nt2uY9aLQkxx8p/xzxpBc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Snu4wPcEKodZc/fM5KOXDiBSAUe/HfStv/yW0409crV2xy9qPk2jJ9pGd4m01Aa7C
-	 DBaEEGO5ZGs72J4i+k21zjdt00G3h7hwqTErJH04OBUiQpqRVZPc9FHkB6axLUhqkk
-	 xsvqqrLSxG05UDBxjVVqopN/ywXv/4JmUABEnhJyiEYw95UvYJaWJ7M5d/DesCdEFZ
-	 gmoRrfauKkHg/MrtuTtXMYDAPT/BhQAwWxvlrToZHp6dCAVirJYAw5rh2LVG2FDokT
-	 nY8TnIyqTD5KwOPvewccTZZYzTm+QHZdiJK2URX+srRN2Lgf2itGt08eZyg7n5KPJ7
-	 5Mqi5yrHnuK/A==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CE4C5AD49;
-	Wed, 28 May 2025 14:15:53 +0000 (UTC)
-From: Lorenzo Stoakes via B4 Relay <devnull+lorenzo.stoakes.oracle.com@kernel.org>
-Date: Wed, 28 May 2025 15:15:39 +0100
-Subject: [PATCH] tools/testing/vma: add missing function stub
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qjpKfob7"
+Message-ID: <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748441779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c5mLYhkH15cgSjxuuv6l4kYe/fzzBQUwpR9u2pfZOy8=;
+	b=qjpKfob7Z9nwJXoxx5GUB/npEZom5q2cVoX+WSrhUvhCp38miksFI15n7HED2ElCpa+Gzh
+	rMarA3QV5uYksrG/9PUOkqwZt07frFarx52lcp28KkCgCK6TwCddvcYR3TQi0qP59jouqi
+	jrs60IDKyBiuILyERrfCfy38ldk8MHk=
+Date: Wed, 28 May 2025 07:16:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-fix-vma-test-v1-1-c8a5f533b38f@oracle.com>
-X-B4-Tracking: v=1; b=H4sIAIoaN2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDUyML3bTMCt2y3ETdktTiEl1T8yRDY4s0I4s0EzMloJaColSgPNi46Nj
- aWgBi0eRgXgAAAA==
-X-Change-ID: 20250528-fix-vma-test-57b138f28f46
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1135;
- i=lorenzo.stoakes@oracle.com; h=from:subject:message-id;
- bh=/hWcNyu2zzVdPtWKaUfZnsHVgBszi7eCqsh7pAsYZzg=;
- b=owGbwMvMwCUmzHegU0pdXZrxtFoSQ4a51Iwc4TXuqSqOcrbiiccWGMd4nwi7cCZ+zctrbQE/v
- ldHFU/sKGVhEONikBVTZDlcaRzdE7ii7ojXo0yYOaxMIEMYuDgFYCLbNzEyrLyw98zFvw9i+V4G
- vqiOOf/6x7RIl2cvmMVWS8k0nG179IGR4Z/AucNunizR/YtdqrsjOWUl3s0703VzacOL3RIxQnb
- z+QE=
-X-Developer-Key: i=lorenzo.stoakes@oracle.com; a=openpgp;
- fpr=5BEF5562908102FB56727B7CC52D7AFE85F25509
-X-Endpoint-Received: by B4 Relay for lorenzo.stoakes@oracle.com/default
- with auth_id=414
-X-Original-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reply-To: lorenzo.stoakes@oracle.com
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
+ 3.0
+To: Andrew Jones <ajones@ventanamicro.com>,
+ =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Atish Patra <atish.patra@linux.dev>, Anup Patel <anup@brainfault.org>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Mayuresh Chitale <mchitale@ventanamicro.com>,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+ <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+ <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+ <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+ <20250526-224478e15ee50987124a47ac@orel>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250526-224478e15ee50987124a47ac@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On 5/26/25 4:13 AM, Andrew Jones wrote:
+> On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
+>> 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
+>>> On 5/23/25 6:31 AM, Radim Krčmář wrote:
+>>>> 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
+>>>>> Upgrade the SBI version to v3.0 so that corresponding features
+>>>>> can be enabled in the guest.
+>>>>>
+>>>>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>>>>> ---
+>>>>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+>>>>> -#define KVM_SBI_VERSION_MAJOR 2
+>>>>> +#define KVM_SBI_VERSION_MAJOR 3
+>>>> I think it's time to add versioning to KVM SBI implementation.
+>>>> Userspace should be able to select the desired SBI version and KVM would
+>>>> tell the guest that newer features are not supported.
+> 
+> We need new code for this, but it's a good idea.
+> 
+>>>
+>>> We can achieve that through onereg interface by disabling individual SBI
+>>> extensions.
+>>> We can extend the existing onereg interface to disable a specific SBI
+>>> version directly
+>>> instead of individual ones to save those IOCTL as well.
+>>
+>> Yes, I am all in favor of letting userspace provide all values in the
+>> BASE extension.
+> 
 
-The hugetlb fix introduced in commit ee40c9920ac2 ("mm: fix copy_vma()
-error handling for hugetlb mappings") mistakenly did not provide a stub for
-the VMA userland testing, which results in a compile error when trying to
-build this.
+We already support vendorid/archid/impid through one reg. I think we 
+just need to add the SBI version support to that so that user space can 
+set it.
 
-Provide this stub to resolve the issue.
+> This is covered by your recent patch that provides userspace_sbi.
 
----
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- tools/testing/vma/vma_internal.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Why do we need to invent new IOCTL for this ? Once the user space sets 
+the SBI version, KVM can enforce it.
 
-diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-index f6e45e62da3a6ee007b7431573f27ef5c2533865..441feb21aa5a92b7edddb07258c7f368171de15b 100644
---- a/tools/testing/vma/vma_internal.h
-+++ b/tools/testing/vma/vma_internal.h
-@@ -1461,4 +1461,9 @@ static inline int __call_mmap_prepare(struct file *file,
- 	return file->f_op->mmap_prepare(desc);
- }
- 
-+static inline void fixup_hugetlb_reservations(struct vm_area_struct *vma)
-+{
-+	(void)vma;
-+}
-+
- #endif	/* __MM_VMA_INTERNAL_H */
-
----
-base-commit: 1637eadc7fdf2fa4069a149b1e836656a3b64150
-change-id: 20250528-fix-vma-test-57b138f28f46
-
-Best regards,
--- 
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
+> With that, userspace can disable all extensions that aren't
+> supported by a given spec version, disable BASE and then provide
+> a BASE that advertises the version it wants. The new code is needed
+> for extensions that userspace still wants KVM to accelerate, but then
+> KVM needs to be informed it should deny all functions not included in
+> the selected spec version.
+> 
+> Thanks,
+> drew
+> 
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
