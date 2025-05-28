@@ -1,146 +1,166 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB79C2459F7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D9F27584C;
+	Wed, 28 May 2025 09:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748426007; cv=none; b=O9sUUEAvUVdFuhqw/H/3NppQAlJa2MrlvnFyM/vYlVf+3zt/Ds1VCxBf/i2Ttzb8cRRx7V44A2Bud0ts8hSV1gE8Gt/dwKNy7KznTqSsC/bRDrx8jc6TUCXxmO8ZX9Jt8E9ZeOMqtIn47CbBG6qepMi26/aW1aiSkCha1QS2unU=
+	t=1748426117; cv=none; b=i51w0cKiWkow5lCg0YUUiiAggrHpQaiOWq1FWyGwDxJ46KKIN2wJsjPm6aOnSyABkCmHhez+OW5DspE1kOd3MUczKn6fO8U1HLRTkIh/WvvqkzV5UcviA0UPo3RoXRJytQLP674xHYFQdygf8ZhFq4ZOqBV+vdUYJ5TApSBfI1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748426007; c=relaxed/simple;
-	bh=Fmr3jwJi3YQouKuqcPQzlRUJ8rteCm7hNAGsR03cBig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DsoQcNPHjY1kI1axrXlVWBhcVkeQT+M6S4n93uisHKnGLEBiA1ZZwiG8yeGY/ugvWWOXIuLjBSJJgpQ6vEZ7XSLyKrXnKRRotgY5/hcYqqOTJ1qn7x4mBqFGvUBH5H4k1DXjs9KFRbgOzoWa7F3cfxMnS7IhS8ywG0WjPfEKolI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AFBtW3mi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748426117; c=relaxed/simple;
+	bh=qxS8rQ60AEViIgdrw+xI0tC+FwrU/h7kHCn4xV2Hc6w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nt/wcuC2HzWgzu7Qi0JiBcBjkxsD6rkenGUcz6wuamdLDZwOOYpZfpWzv5JDX18ffi5brpRuXXetuvsLvRQfis25WF80+KOwrpPc5UyHd1w7GoZHfTuU9KGFsH9EY22rTEduPdwKqbYFVSf2TbAyuOQmiMWcpPlqS86BS/YVhfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YGifMXx/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AFBtW3mi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748426004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W1u6n8V0ShIO4z2EdyC6/erq05zKheUuyNblwPdU87Q=;
-	b=AFBtW3miO6wLnUZaZ+MSNl1QL1hYtOsCbLkPRQFt+GoknfemoaTVoScYVy9LWnbIKfgEbw
-	53DUSQo++P6sPzu/HpvGUfsNWgotGpGMUvVYsUXx+xWYePJ7NKexvrydFDcwj9zDYY8akg
-	AR3sqGtmNxCAaVLYvw09fAcnVlzV0t8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-Mhs_k5fTMGutcOsnQD2wMQ-1; Wed, 28 May 2025 05:53:23 -0400
-X-MC-Unique: Mhs_k5fTMGutcOsnQD2wMQ-1
-X-Mimecast-MFC-AGG-ID: Mhs_k5fTMGutcOsnQD2wMQ_1748426002
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442fda1cba7so20307735e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:53:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748426002; x=1749030802;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W1u6n8V0ShIO4z2EdyC6/erq05zKheUuyNblwPdU87Q=;
-        b=BA2sl8OksEdlRaYjdgXneM5S7ljQrtfSU0MP4+iJbgvipI3gg7ybclie51E5JxIQRg
-         uJBI9zvnOFsTuy3m0olkCEu13sHu69nnRnzxEJjM+B6yyjHyZsy9TTEJv50J1NyeGTWH
-         FCsWsQJ2Y7v46kcS+gxNchEoI+iifBFKZ/n36tEb6M1GygpJ1+3X5MEsT8DbRqC9g9hb
-         HwThJnac6D+TixG2VVMDZUeulHMpzSiqWiHYO6Gsj70e8X4JwhFuaxnXkNALyRmoyrTW
-         wDem0XSZyWd0nUbPCwV0f/1AUoQgrBPM6mvfflZpzhalSu3FqOe7bKBRHTc6lLwxK6uJ
-         R0Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCW0enMkRRMfWU3X83UV8KK8ZFMKjFd7STtVTk4AJW2NeQP4fPxOdsnuh6EKYMGu5fmklQ3wa1hCJ3jqQKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjnPMUGFyj+ZWvKaEE41HJAcA7bmw2WoiB8+xlBQjww/lIIkuU
-	QzZHQRi8c1Ep3pzDJDCQff9CCiahFCLrHuw95k/tbYzIfxC6H7YVBvi7LaVsegISXIE2yIvqfxI
-	gD3i6q/JSE/ZATqnNcrAzXJPaVx4UW5QVFHr+XrHeEhdBme2Yq23syyHuB0g3a2o3yQ==
-X-Gm-Gg: ASbGncvfW74bYcUTuAauQ3ipV2404OC3FA7S4xYLJ/QaA0duXvvzJLWB6g+PuHLDZj4
-	6Z4k1162f/ViD8mpYjbPuuf1Kk3KkZ5D6awHskL6B+QC0jH2U+WEtGJTNXKZonIJCM0gXHx7/2T
-	mGVvNzs8mHsoQtSHJlEdPgRcVH6pr4Sxzm0LmbtURyAfE/2AhQLSU1SpX3rYjGMWetJW6Rp6EVW
-	Z0zHUaiBCVT3609YQXYiDfnYXddlZ6C3wnpIAFXu6SIpVnDq7uQr6aKTYYlb7Zcz6vD3XEhsg78
-	e7Rk5LAhJWk18q4kHesGj7sfOttyMaBFdQ+j1n7ggqqMBvc65OLipN7IPyHE
-X-Received: by 2002:a05:600c:1e1c:b0:441:d438:4ea5 with SMTP id 5b1f17b1804b1-44c9493e6b1mr125991295e9.20.1748426002029;
-        Wed, 28 May 2025 02:53:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGKtV2CLo/am9z3wUFY2sht7iYltOSuslBrVCVGBjCH19eoPNr5lIJ6KpopXopItx64UQR2OA==
-X-Received: by 2002:a05:600c:1e1c:b0:441:d438:4ea5 with SMTP id 5b1f17b1804b1-44c9493e6b1mr125990955e9.20.1748426001537;
-        Wed, 28 May 2025 02:53:21 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450787ccbd1sm12032595e9.25.2025.05.28.02.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 02:53:21 -0700 (PDT)
-Date: Wed, 28 May 2025 11:53:16 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
-	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <45xqguhrecn57cwc66hfws4eeqrb6rlijvh2z35e56ogojc2q4@pnlrgx57353b>
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
- <20250528065944.4511-5-zhaoqunqin@loongson.cn>
- <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
- <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
- <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
- <ccb1927d-c06a-9fde-6cbb-652974464f4b@loongson.cn>
- <cfaf2fbb-5c6a-9f85-fdc9-325d82fb7821@loongson.cn>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YGifMXx/"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S0THbI017273;
+	Wed, 28 May 2025 09:55:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=t5ypxL8g/1zbo9Ow9aBonSYjXan8wQvPyIBjMtpBm
+	KY=; b=YGifMXx/yGD+gWcsVhlvBDLC0vseYGWgSTyUuJvBTq21kOQpHSFeMaWz6
+	l6mVus60aWM1tNvnX33JEHnGlflcp8mPdS0EL8h6Nn1nBmHvYzKj22PeKI8oDTjV
+	MeCVAqV6ByGR4tYpOsC55VetzG26QvlkpcDTEEnFh5ECSN/hntRc8iyzgRsLeE/s
+	LQ4hOk4Tgz8iUnHr/DFz587XMi0GLiyI9Vf238KmUwcV9hz/glEBYZ0HN+FkzoKe
+	p4cTumsBjcN++2n+i3gdx/dk4kntwhfnJ9d80j2TJDMKxLQq7whdNzcldJk//ZKc
+	WEgX13evS1rGjdjmoIIz+JDY4eD+A==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsgm1xy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 09:55:13 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6FFZb016139;
+	Wed, 28 May 2025 09:55:12 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureuf5he-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 09:55:12 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54S9t8S754198580
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 09:55:08 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C219B2004D;
+	Wed, 28 May 2025 09:55:08 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0EF7320043;
+	Wed, 28 May 2025 09:55:08 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.111.56.81])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 28 May 2025 09:55:07 +0000 (GMT)
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
+        nrb@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
+        schlameuss@linux.ibm.com
+Subject: [PATCH v5 0/4] KVM: s390: Some cleanup and small fixes
+Date: Wed, 28 May 2025 11:54:58 +0200
+Message-ID: <20250528095502.226213-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cfaf2fbb-5c6a-9f85-fdc9-325d82fb7821@loongson.cn>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: w98MoOY6b-ZR0tIdYVKuv_7Sc8q866uo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA4MiBTYWx0ZWRfX4tW+vsASkMZo qc+lgvjdjA9PAtZojA/NrD1ZpG9wUeuFI3kNsYit8ZmN3T3cOLfXGEXCKAH0Oy/ob/hhqzZ+H9m DKQDYTF1gYPHDeFS0HCOWAkNxe8DxRyfMhd5ZVK7bfC1uCnK2aJxwzESmmqs+0zCe5FcLeckJc3
+ 7QSgmx4sBvL4Q6E3eFP1+F6m2R85y1UKkpk2+SSCfMCIKvxn+SFUGhQfNVzArY5+koRFQuUiDpK /ivGsG6Ja1NwyVg4J9CvPaFIZhK/k//CfL2fubHD6OAatr76nlbok47KUMXvjZuSz66PmUnagek 5RL72gElgpd2zs32AeOvk4w3tbOMogf74z1d+dZOSn9fJNEP5kGOJtiXeHau7EdJuC/fZCocIbb
+ WtCmM5F+N/T7/Fi5Nksj5gZzUhy7rdkjkE7rqzza0XkjcWc1KMa+3qy5F7kCPn/P0u2/NarD
+X-Authority-Analysis: v=2.4 cv=bZRrUPPB c=1 sm=1 tr=0 ts=6836dd81 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=gRRxI3zbkkyk7srOQjYA:9
+X-Proofpoint-GUID: w98MoOY6b-ZR0tIdYVKuv_7Sc8q866uo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxscore=0 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=670 malwarescore=0 spamscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280082
 
-On Wed, May 28, 2025 at 05:34:49PM +0800, Qunqin Zhao wrote:
->
->在 2025/5/28 下午5:24, Qunqin Zhao 写道:
->>
->>在 2025/5/28 下午5:00, Stefano Garzarella 写道:
->>>On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
->>>>
->>>>在 2025/5/28 下午3:57, Stefano Garzarella 写道:
->>>>>>+    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->>>>>>+    if (IS_ERR(chip))
->>>>>>+        return PTR_ERR(chip);
->>>>>>+    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
->>>>>
->>>>>Why setting TPM_CHIP_FLAG_IRQ?
->>>>
->>>>When tpm_engine completes  TPM_CC* command,
->>>>
->>>>the hardware will indeed trigger an interrupt to the kernel.
->>>
->>>IIUC that is hidden by loongson_se_send_engine_cmd(), that for 
->>>this driver is completely synchronous, no?
->>>
->>>>
->>>>>
->>>>>IIUC this driver is similar to ftpm and svsm where the send is 
->>>>>synchronous so having .status, .cancel, etc. set to 0 should 
->>>>>be enough to call .recv() just after send() in 
->>>>>tpm_try_transmit(). See commit 980a573621ea ("tpm: Make 
->>>>>chip->{status,cancel,req_canceled} opt")
->>>>The send callback would wait until the TPM_CC* command complete. 
->>>>We don't need a poll.
->>>
->>>Right, that's what I was saying too, send() is synchronous (as in 
->>>ftpm and svsm). The polling in tpm_try_transmit() is already 
->>>skipped since we are setting .status = 0, .req_complete_mask = 0, 
->>>.req_complete_val = 0, etc. so IMHO this is exactly the same of 
->>>ftpm and svsm, so we don't need to set TPM_CHIP_FLAG_IRQ.
->>
->>I see,  but why not skip polling directly in "if (chip->flags & 
->>TPM_CHIP_FLAG_IRQ)"  instead of do while?
->
->I mean, why not skip polling directly in "if (chip->flags & 
->TPM_CHIP_FLAG_IRQ)"?
->
->And In my opinion, TPM_CHIP_FLAG_SYNC and TPM_CHIP_FLAG_IRQ are 
->essentially the same, only with different names.
+This series has some cleanups and small fixes in preparation of the
+upcoming series that will finally completely move all guest page table
+handling into kvm. The cleaups and fixes in this series are good enough
+on their own, hence why they are being sent now.
 
-When TPM_CHIP_FLAG_SYNC is defined, the .recv() is not invoked and 
-.send() will send the command and retrieve the response. For some driver 
-like ftpm this will save an extra copy/buffer.
+v4->v5
+* add missing #include <linux/swap.h> to mm/gmap_helpers.c (thanks
+  kernel test robot)
+* fix diag_release_pages(), I had accidentally removed the guest
+  absolute to qemu virtual address translation
+* fix patch subject lines (thanks Heiko)
 
-Stefano
+v3->v4
+* remove orphaned find_zeropage_ops and find_zeropage_pte_entry() from
+  mm/gmap.c (thanks kernel test robot)
+* add missing #include <linux/swapops.h> to mm/gmap_helpers.c (thanks
+  kernel test robot)
+
+v2->v3  (mainly addresses Nina's and Heiko's comments)
+* drop patch 3 - it was just an attempt to clean up the code a little
+  and make it more readable, but there were too many issues to address
+* remove all dead code from s390/mm/gmap.c that is being replaced by
+  code in s390/mm/gmap_helpers.c
+* remove a couple of unused functions from s390/mm/gmap_helpers.c, some
+  of them will be introduced again in a later series when they are
+  actually needed
+* added documentation to the functions in s390/mm/gmap_helpers.c
+* general readability improvements
+
+v1->v2
+* remove uneeded "gmap.h" include from gaccess.c (thanks Christph)
+* use a custom helper instead of u64_replace_bits() (thanks Nina)
+* new helper functions in priv.c to increase readability (thanks Nina)
+* add lockdep assertion in handle_essa() (thanks Nina)
+* gmap_helper_disable_cow_sharing() will not take the mmap lock, and
+  must now be called while already holding the mmap lock in write mode
+
+
+Claudio Imbrenda (4):
+  s390: Remove unneeded includes
+  KVM: s390: Remove unneeded srcu lock
+  KVM: s390: Refactor and split some gmap helpers
+  KVM: s390: Simplify and move pv code
+
+ MAINTAINERS                          |   2 +
+ arch/s390/include/asm/gmap.h         |   2 -
+ arch/s390/include/asm/gmap_helpers.h |  15 ++
+ arch/s390/include/asm/tlb.h          |   1 +
+ arch/s390/include/asm/uv.h           |   1 -
+ arch/s390/kernel/uv.c                |  12 +-
+ arch/s390/kvm/Makefile               |   2 +-
+ arch/s390/kvm/diag.c                 |  30 +++-
+ arch/s390/kvm/gaccess.c              |   3 +-
+ arch/s390/kvm/gmap-vsie.c            |   1 -
+ arch/s390/kvm/gmap.c                 | 121 ---------------
+ arch/s390/kvm/gmap.h                 |  39 -----
+ arch/s390/kvm/intercept.c            |   9 +-
+ arch/s390/kvm/kvm-s390.c             |  10 +-
+ arch/s390/kvm/kvm-s390.h             |  42 +++++
+ arch/s390/kvm/priv.c                 |   6 +-
+ arch/s390/kvm/pv.c                   |  61 +++++++-
+ arch/s390/kvm/vsie.c                 |  19 ++-
+ arch/s390/mm/Makefile                |   2 +
+ arch/s390/mm/fault.c                 |   1 -
+ arch/s390/mm/gmap.c                  | 185 +---------------------
+ arch/s390/mm/gmap_helpers.c          | 221 +++++++++++++++++++++++++++
+ arch/s390/mm/init.c                  |   1 -
+ arch/s390/mm/pgalloc.c               |   2 -
+ arch/s390/mm/pgtable.c               |   1 -
+ 25 files changed, 410 insertions(+), 379 deletions(-)
+ create mode 100644 arch/s390/include/asm/gmap_helpers.h
+ delete mode 100644 arch/s390/kvm/gmap.c
+ delete mode 100644 arch/s390/kvm/gmap.h
+ create mode 100644 arch/s390/mm/gmap_helpers.c
+
+-- 
+2.49.0
 
