@@ -1,45 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5398FC0E;
-	Wed, 28 May 2025 02:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67121311AC;
+	Wed, 28 May 2025 02:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748398633; cv=none; b=F66fLYROTBlMj3Gorq+uowqVsroxqwxBqhhVJ7+MjuuwNnRorGH37ClropDvA9KS4mcbdn+cpc52K4zlSHKKykgEsInhyqB/WUUBCsDNhTh/TwTz6LCEOcVyUoTTVFIAYPcFuNuGhKcyvQsNjrF4Sb6BJ092CTAfN5JEfYrdrrU=
+	t=1748398658; cv=none; b=Ur8P6HcPb/OhfPntQwsK3XuaHE6Fjz7W7poACS5oQG+ETdxQr2Jp2iYq7EkZKAzqsVypr0G4zHcAFbTtlDTPGQVDg0sNh8AGFZMwMuWDk5TZOO5S0+wrPI4QOZEbc9S5JCJCPufdok4nMt/JorVj3Uxt3hJE0H3G7znW7x8ejZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748398633; c=relaxed/simple;
-	bh=10/gph/i/RNgm1Fvfr7G66Z0UHy6P3vtGDz3OjATGEM=;
+	s=arc-20240116; t=1748398658; c=relaxed/simple;
+	bh=prPjqRAFhuR4gJ9/6ommLH7BOpW3yKKwK4wg/sYYt1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DLKpv92mfvKoVKQtEOE2r8GPcHc98A1wEPmsLTS6yyOnb2BMsq/F8XIp0cJSfrpuJbb+AaPvWuCzrY9LCQKNe5EmdYcYsQN8BR7oED/6Fqq2HYgzBLOhf/WQSdreq0WU0AlW416mSi1hJnvluM4fm93wqRSL5NsOPwFwyJGM2PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGZ7Xljy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGZ7Xljy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB280C4CEE9;
-	Wed, 28 May 2025 02:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748398632;
-	bh=10/gph/i/RNgm1Fvfr7G66Z0UHy6P3vtGDz3OjATGEM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FGZ7Xljy79p2hvIMPpIW2ozU7Rmym9T3nOqDXggxn2ukqooddtM3Nf2yNZJ7zFYru
-	 gZy4qLnwZvOCRTQbH6noo4dtaNWMhBCretzGjUexpmaQfmSlLGZPEow0ZRn74XbAUZ
-	 5cfyue5ekNTTJgHUqDbpGqIF6x0rwYeethfWkp0e18xb9YHXHM27083+tfRo0dk068
-	 85Wf17YQr+nQYrcjGzAM4J/uK51vlaqnEIccLd8YSmocmL+MaFssktUYQa8UaSLyMu
-	 tTNGNSDmyEcoyW4/lqXt8yPh8wEFFlUyS/CVcJ3Fw/vKoR0ySOle2NlJHS+BltPgmN
-	 2XIwocYfD2TVw==
-Date: Tue, 27 May 2025 19:17:10 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: <jiang.kun2@zte.com.cn>
-Cc: <edumazet@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>,
- <pabeni@redhat.com>, <horms@kernel.org>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
- <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>, <fan.yu9@zte.com.cn>,
- <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>, <qiu.yutan@zte.com.cn>,
- <zhang.yunkai@zte.com.cn>, <ye.xingchen@zte.com.cn>
-Subject: Re: [PATCH net-next v2] net: arp: use kfree_skb_reason() in
- arp_rcv()
-Message-ID: <20250527191710.7d94a61c@kernel.org>
-In-Reply-To: <20250527185736038u-6EtRPVin2ftxbrp-C4w@zte.com.cn>
-References: <20250527185736038u-6EtRPVin2ftxbrp-C4w@zte.com.cn>
+	 MIME-Version:Content-Type; b=cxapWh9gAKZn+N1/wnQOSX/+4LWVLG3vPI69gi+VeTZsiuq0DgHJGW06bsq1BbuJwAva9yfu3JAObdS5424oLd3NE0X3h6IebpxZEh3HfdDuLhR8T5dcUwNgpFIzsSvYl489Ye3rWxlz7PkLEie+wwGmEAFNBStV4X++zjswp+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12E5C4CEE9;
+	Wed, 28 May 2025 02:17:36 +0000 (UTC)
+Date: Tue, 27 May 2025 22:17:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-ID: <20250527221735.04c62a3c@batman.local.home>
+In-Reply-To: <20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
+References: <20250527121140.0e7f0565@gandalf.local.home>
+	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,22 +36,146 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 27 May 2025 18:57:36 +0800 (CST) jiang.kun2@zte.com.cn wrote:
-> From: Qiu Yutan <qiu.yutan@zte.com.cn>
+On Wed, 28 May 2025 10:42:03 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> > The way to differentiate this case from the normal case of there
+> > only being one page written to where the swap of the reader page
+> > received that one page (which is the commit page), check if the
+> > tail page is on the reader page. The difference between the commit
+> > page and the tail page is that the tail page is where new writes go
+> > to, and the commit page holds the first write that hasn't been
+> > committed yet. In the case of an interrupt preempting the write of
+> > an event and filling the buffer, it would move the tail page but
+> > not the commit page.  
 > 
-> Replace kfree_skb() with kfree_skb_reason() in arp_rcv().
+> (BTW, what happen if the interrupted process commits the event? That
+>  event will be lost, or commit and just move commit_page?)
 
-## Form letter - net-next-closed
+No, the first event to be created is the "commit" event. If it gets
+interrupted and the interrupt adds a bunch of events that wraps the
+ring buffer, it can't touch the commit event, it will just start
+dropping events. Then when the commit event finishes, it can either be
+read by the reader, or overwritten by the next events coming in.
 
-The merge window for v6.16 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations.
+> 
+> 
+> Thus the reader_page == commit_page && reader_page == tail_page,
+> missed_events should be 0?
+> 
+> Possible cases if missed_events != 0:
+> 
+>  - reader_page != commit_page
+> 	(writer's commit overtook the reader)
 
-Please repost when net-next reopens after June 9th.
+The reader is never in the write buffer. Just the head page will move.
+When a new reader page is taken it will swap out the old reader page
+with the head page. If the head page is the commit page, then the
+commit page becomes the reader page too.
 
-RFC patches sent for review only are obviously welcome at any time.
+> 
+>  - reader_page == commit_page but reader_page != tail_page 
+> 	(writer overtook the reader, but commit is not completed yet.)
 
-See: https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#development-cycle
--- 
-pw-bot: defer
-pv-bot: closed
+No, "writer overtook the reader" doesn't make sense as the reader is
+not on the write buffer, so the writer can not catch up to it. What the
+write buffer has is the "head" page which is where the next reader will
+come to.
 
+The only way reader_page == commit_page and reader_page != tail_page is
+if the commit was interrupted and the interrupt added events and moved
+forward off the commit_page. The only way there would be missed events
+in that case is if the interrupt added so many events it wrapped the
+buffer and then started dropping events.
+
+> 
+> if 
+>  - reader_page == commit_page == tail_page
+> in this case, missed_events should be 0.
+> 
+> Since the reader_page is out of the ring buffer, writer should not
+> use reader_page while reading the same reader_page, is that right?
+
+Correct. But the writer could end up on the reader page after the swap,
+if the head page happened to be the commit page.
+
+> 
+
+
+> > cpu_buffer->tail_page,
+> > +				       "Reader on commit with %ld
+> > missed events",
+> > +				       missed_events)) {
+> > +				/*
+> > +				 * If the tail page is not on the
+> > reader page but
+> > +				 * the commit_page is, that would
+> > mean that there's
+> > +				 * a commit_overrun (an interrupt
+> > preempted an
+> > +				 * addition of an event and then
+> > filled the buffer
+> > +				 * with new events). In this case
+> > it's not an
+> > +				 * error, but it should still be
+> > reported.
+> > +				 */
+> > +				pr_info("Ring buffer commit
+> > overrun lost %ld events at timestamp:%lld\n",
+> > +					missed_events,
+> > cpu_buffer->reader_page->page->time_stamp);  
+> 
+> Do we need this pr_info() for each commit overrun?
+
+Yes. When doing this stress test, it printed at most 4 times. It
+happens once per time the interrupt fills the buffer while interrupting
+the buffer.
+
+I seldom ever get commit overruns. It's one of the fields in the status
+file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
+
+> 
+> > +			}
+> > +		}
+> >  	}  
+> 
+> Just for cleanup the code idea, with above change, this code is
+> something like;
+> 
+> ----------------
+> 
+> missed_events = cpu_buffer->lost_events;
+> 
+> if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
+> 	if (missed_event) {
+> 
+> 	}
+> } else {
+> 	if (missed_event) {
+> 		if (!WARN_ONCE(cpu_buffer->reader_page ==
+> cpu_buffer->tail_page,"...")) { pr_info("...")
+> 		}
+> 	}
+> }
+> 
+> ----------------
+> 
+> Can we make it as below?
+> 
+> ----------------
+> missed_events = cpu_buffer->lost_events;
+> 
+> if (missed_event) {
+> 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
+> 
+> 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
+> cpu_buffer->tail_page, "...") { /**/
+> 		pr_info("..."); 
+> 	}
+> }
+
+Hmm, OK, I'll look at that.
+
+Thanks,
+
+-- Steve
