@@ -1,104 +1,117 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58EA71F1501;
-	Wed, 28 May 2025 05:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D212E360
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748410932; cv=none; b=KH4fxN9DUpTcOxjRvtoW+mesRSNfna6CvTMj97tIJMQRPsYIXwpgXgJuAIFeda6Mm0k2lAgSBVVInCnT14PSakFXQuefoHzLq9NOVmlr/GhoInrdSoL2okSa1ZLF7rec/xkb2vZw0ratxz3CCDBX8HN//I1fNmA9iKDhO8wo6LM=
+	t=1748411009; cv=none; b=hdjg8jmeRWLBobG1SyvoMgX7ePH4wNbwPwLjxiiNfrwR2o3oZz8NxFkluxu+8DGQRqC4hBps4Kak8TWEpZUEFlwuwVB8EDhsS1C3QrgPmlCIO5207e5SsgqcCsH8b2BIQyrNH7X38xClkAe5aaUCSLjk4TH98b7rnyWii0KcPAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748410932; c=relaxed/simple;
-	bh=BWX7HpTW3OUC/DXzs/Slwsj37HTERtYVXU2MLM3qzqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GUuQzw/77H3Ft1TLMKnnDut05aLvkMlcu6Siyi/umtXk69+w7htJ34BNqJNSR2JjNCCTuhc1No16AXGYjXZ68YAfffKCLedi4OYZTDqq0b1Tksl5PaYYvnaZZK7g9Y2J5WTqf8EO2dZRqSW2avHGvgOAwLTQV7phqEAko9OydaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P0qNcj8n; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748411009; c=relaxed/simple;
+	bh=UAW4IDmFuxT7Xs53ZJBV5vj6+YrT1J7KuiKlAlHg/1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6WM7lPfc2PnnHpvrziMgg4NcbipNnnHknlyhXMVIDEIKoGV2eRDBBR34NLIxK1EonCx7aqLM4PMMHPLwE43qqtLhmmA4+HZzUsMIT/qEmWQ3jlW06ryu0LVcubE4rHkvBXufZLStgrNb7+GmgVaT/TCp9t9TqDA4fSkuANnUpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=fRXk1oyk; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P0qNcj8n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=OKZVR5pHZSlScBzOKZd5xLcnKSixLDKu3f4FcAXfbe8=;
-	b=P0qNcj8n7xwDw02AREIY+oMgV65ROf65kP7GsZNM4byewFyhj+Yc4ULBZFUfEe
-	tYvbGY8sUGDpDPkFB0UOgEy1GGCQ22KcmwdGzVP2wLHfU5/rDVV2mjzIrJu3mMFE
-	gFCV02nwm+kzg4uk4ZfVZKz/jD8It068OnJxQzF4/kTcM=
-Received: from [192.168.18.52] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgBX7u4LojZoIdomBA--.25001S2;
-	Wed, 28 May 2025 13:41:32 +0800 (CST)
-Message-ID: <c2ddb1ad-72f9-4ebc-8d6a-3c9d7fa559e4@163.com>
-Date: Wed, 28 May 2025 13:41:30 +0800
+	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="fRXk1oyk"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-864a071b44bso79601139f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brighamcampbell.com; s=google; t=1748411007; x=1749015807; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MSMi/AKPsTMgRd8z+xkRR6U4DbzIU/rPyguhFHTtxoA=;
+        b=fRXk1oykMEgWHm0satGojPSt9dFhImudNhhNegIWDII+5lkOy+9iLstUIIdbAtlQB2
+         gGm8q6WCfNEniGfKuvEOq7PwbNN/jVUUtBvngM6x/jiTOSXk4aPZAv+Sxt0LMin7ca0O
+         0Qf5O73Zo7lyj0wMf3KNGtrErjMuRsTA3ZDNDWkrHcxnVvNxXX3iPUUjytuldVGzD9R4
+         YPelZ9OJr2VY2ekiXbTy4Gs5Lal7ebzfvB/jezHB+tuP5Z585JAv3gyDw3CIcs1SGcq1
+         gQVS+MYgQbJ302zQYAWX8czTNsNKCI0Unq78HbeWI4pdDneL+/MnneB1vQxKGSOWvy0u
+         JDww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748411007; x=1749015807;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MSMi/AKPsTMgRd8z+xkRR6U4DbzIU/rPyguhFHTtxoA=;
+        b=VEqINUZNZb1WGLhyfijk3vqTf49+ynO0McirlZGK1NaeDSBhJphAG6ILDaFsYvRrzH
+         XPUWcG9kt/WJdMgSiIziandb1uiHfF0eOD28p2OsU+r3bI9Z/7pvnmjZWN0i4Vk+sjTZ
+         J0gbsp8Cy3sC7FoLCg+OR+rTwf6L0JA0uyYsj7I4NUJN9D4nxjtQ7ZCt7PifDy7VDxOu
+         l9awJJCfP6zfNuAj8ttITzO122Vg2NybpL4VLMSIxVcAmx6uVuAc+lGnh7JBbO4tmzKC
+         dgUCg8bo/2VkZyUBEOQ59EMVTp5Do3qBtKb6zFYsGW/Hwh4rg1A2xWs7+sLTAM071ZS0
+         ji7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXsGY425q4HgxYRoosw0HK8W6625jBWLDGfWOaHDmKBhQD1bTi51Yeyi9I6bILXpg/aXPV+RPVg99YSXsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4UFSIoqiKAh5cVf7RmVKw+pt6s50LDSW5ZjyDo9E3vElpLwRK
+	gHCklTyuZ9kiT5dqcBcKCuLiI0yiOPkWCnQgB5eX5zQQTIxe7rnmU6wixfsCvLfkJ+w=
+X-Gm-Gg: ASbGnctOJZC6CS1TgzNyybu6YtrxCDVr2nTLX89wY7h3XPDh/3ASUvHLBfB9VUiyhar
+	ipKGTSpOcirGnMMgRTdP9SOUoYbF6o6Omr4s2UwxMaaERJZCvKStc1PVIdqHHxKsXgVJeLbnAzd
+	GpzfXJfONUOs4vpRhkfGSFuQ5Nu+xgVS3E2sajC8DTnYatg744ASEF+m5/XJrgOprqhMFRjx3LQ
+	B4M/8vAff9q30AL1d0z4bhxlOWU66dXh5HTg/NPDSR4Vw5upCCGv1MqTmJTgXh4ZKCKPP6KQCVZ
+	vc3I0epxGS5pie9LVURXh4x1VaecxlY1jSe+LKNSWbl0EzKMyWUK5lQKTJlVboj2gOdbf9g2+9v
+	I1+gKlt0=
+X-Google-Smtp-Source: AGHT+IF+v7eeJiqgx2CgLK57L91nnP+NaoqNBY3MrpJ58a87hZdHLPE/Eq+lD7S1GC6+xWdZO4pGrQ==
+X-Received: by 2002:a05:6e02:1686:b0:3dd:869e:d1f0 with SMTP id e9e14a558f8ab-3dd869ed599mr37235695ab.9.1748411006513;
+        Tue, 27 May 2025 22:43:26 -0700 (PDT)
+Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dd8bfb2ec5sm1220685ab.1.2025.05.27.22.43.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 22:43:25 -0700 (PDT)
+From: Brigham Campbell <me@brighamcampbell.com>
+To: skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Athira Rajeev <atrajeev@linux.ibm.com>,
+	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Brigham Campbell <me@brighamcampbell.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v3] docs: powerpc: Add htm.rst to table of contents
+Date: Tue, 27 May 2025 23:41:47 -0600
+Message-ID: <20250528054146.2658537-2-me@brighamcampbell.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: Extend max-link-speed to support
- PCIe Gen5/Gen6
-To: Rob Herring <robh@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250519160448.209461-1-18255117159@163.com>
- <20250519160448.209461-2-18255117159@163.com>
- <20250527193550.GA1104855-robh@kernel.org>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250527193550.GA1104855-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PygvCgBX7u4LojZoIdomBA--.25001S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJF1rJFW5Kw1xGFy8tryUGFg_yoW8CF4xpa
-	yrCF1xtFWrJr17Wa97X3WfAw4Yq3srAayYkF98G347tFsxZFnYyw4agF15XF1kZryxZFWI
-	qF4Y9F13C3WDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U0jgxUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh5ao2g2EbKL5QABsP
+Content-Transfer-Encoding: 8bit
 
+Fix the following documentation build error, which was introduced when
+Documentation/arch/powerpc/htm.rst was added to the repository without
+any reference to the document.
 
+Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
 
-On 2025/5/28 03:35, Rob Herring wrote:
-> On Tue, May 20, 2025 at 12:04:46AM +0800, Hans Zhang wrote:
->> Update the device tree binding documentation for PCI to include
->> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
->> The original documentation limited the value to 1~4 (Gen1~Gen4),
->> but the kernel now supports up to Gen6. This change ensures the
->> documentation aligns with the actual code implementation.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> This file is now removed. Update the schema if you need to. It lives in
-> dtschema project.
-> 
+Fixes: ab1456c5aa7a ("powerpc/pseries/htmdump: Add documentation for H_HTM debugfs interface")
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+---
+Changes in v3:
+ - Edit commit message to conform better to de facto kernel development style.
+ - No changes to the diff.
 
-Dear Rob,
+ Documentation/arch/powerpc/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thank you very much for your reply and reminder. I will resubmit in the 
-next version.
-
-Best regards,
-Hans
-
->>
->> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
->> index 6a8f2874a24d..5ffd690e3fc7 100644
->> --- a/Documentation/devicetree/bindings/pci/pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/pci.txt
->> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
->>      If present this property specifies PCI gen for link capability.  Host
->>      drivers could add this as a strategy to avoid unnecessary operation for
->>      unsupported link speed, for instance, trying to do training for
->> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
->> -   for gen2, and '1' for gen1. Any other values are invalid.
->> +   unsupported link speed, etc.  Must be '6' for gen6, '5' for gen5, '4' for
->> +   gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other values are
->> +   invalid.
->>   - reset-gpios:
->>      If present this property specifies PERST# GPIO. Host drivers can parse the
->>      GPIO and apply fundamental reset to endpoints.
->> -- 
->> 2.25.1
->>
+diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
+index 0560cbae5fa1..53fc9f89f3e4 100644
+--- a/Documentation/arch/powerpc/index.rst
++++ b/Documentation/arch/powerpc/index.rst
+@@ -19,6 +19,7 @@ powerpc
+     elf_hwcaps
+     elfnote
+     firmware-assisted-dump
++    htm
+     hvcs
+     imc
+     isa-versions
+-- 
+2.49.0
 
