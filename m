@@ -1,118 +1,121 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9742E1448E3;
-	Wed, 28 May 2025 08:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B869D24A07C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421239; cv=none; b=RZqjQFUXy4OGDtvGZ8OIRrvz7yHmDeXf7xLAZ/6ZuOSabOCRj5Dhru0wyQAMXyCApDLT8P+gcZEhSaw/YLa8wrlt7qOlJi1sF0YhOVvJN6sbWILiWnm0aRyzA8rJhf/0yOdnaHVvlJTG3gYjsTMuJ5oVFdRufOShfym2VSnKRdM=
+	t=1748421263; cv=none; b=grYnU0SWT6ongg5KmJXrkP8cscGFCwa0rV8iIX0Oh5F6Yxagt7xYqVUCBg+JbhM8IGYjzzDOsownPL2wJTlgRsHaIhc/YWF1Sw2giw59ExCTx38ZuRyBqR6F7K/nafNLI3Wer4TNygz5ZPv8Z4zItXBIzUok4wGf53ryrVXeBR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421239; c=relaxed/simple;
-	bh=7sPv0uGqgEzHofaHWtN+dLZrGfh1as4fltV8hDUooNI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=H6c7d2Wn3c99yDyLo+GpvQ5LV3lRO/xe5ROHO25Cf7+i2fmC35NCFlzecqT5B0OK8YwJbtNryM9gS7H8czO1t3cNS86WUljyMy8CcH++WrV1Fj4FbBXy84HPnkqzHDTUmC3aoFGTc5Gt2ze2j3E5rGCsu2Kl+u4dORzDK2+ygGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=S2tjY6dn; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748421263; c=relaxed/simple;
+	bh=+CCZesIMhNxnvohUDQmsFwus3PXchNmfqBl0as+bi8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DuJhnfRrhaDW7TNNaJyYuvcqpvXlKXH1MiXnsC492LEGscKThuqboKYbGOrD0XvSOq3LbTaG7Fv4+W3ZBSqZLax82LjuWzimTSnuHFELU6hoUQh0FKuUfsMvjXCb6jioSlibu23o4fHIFmjvWr9LSU/24iQ/yErcSHCqlox6f3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nXn8IeKw; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="S2tjY6dn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E62F842EF2;
-	Wed, 28 May 2025 08:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748421229;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ehqDeg13oyew9TLKS5grv38vFykrmlLsB/LhIMhZ56Y=;
-	b=S2tjY6dnzn6uI6BqR7uuGXs1v0QN/q3+dw5WAfvcPMBbi3o5zTiPQWklaseNVwhYmmWdBC
-	HrR05Iy36DmnH/Zt50lppYOrfJybzQYti9JSWPkFaa4AZVNaSv0Di17YCfxBOto/8L0ojW
-	QAdzmUCLWrtb+vHfP1pdM1G2MaPjiVJ+8T6v/jQ8yofbS9S3tw0WEypnDag9Ur3xTXJvbJ
-	iDjzCfTsbDlzrsFgF1NCQJ8KniHV4cj7hyJEoBlP6oz8ieduUrtAv8uKol2YUf3Eab8vZM
-	5L1sMy6aIQ8RV+/S8JFcprtZMAqknDFyD9V5nQogY8qeMpN/oPI77iV5yNhAtA==
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nXn8IeKw"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S3ugMK004944;
+	Wed, 28 May 2025 08:34:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=UTM5u1l2n0kAspKjldvPCAwdiqwUnt
+	i0AqdYXhv4OyY=; b=nXn8IeKwSsnbto93bOvck9BDUzGNMoVQKLpmhRvOMs70e7
+	gn5qZOr65atsT5YDaENZTgKkIsDMSPykZ16QvPD4bT7OQSfSwvl0ayplxBcZuwqH
+	VErm3I+28PdEgqXHcvoyhBNsQ0yajpKcWsQpXm8YaJ9VbrJnWZikfIjXqxL7PfHL
+	MZzwmCB9puEwE1MWUWSQ1TUcik1SNgjRDLZ3H9x2LNyleM2eQSvck3rwO0lEG0ZL
+	th9q8SJtNy2/NBGwJ0FhKb/tHmGko37E5jNVxJthKIgFuQeY/GojvnXdMrcsktaS
+	mQuGqw1P03Wo9D4F48dmnm/kePgF8RohzPbPJ9yA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj3q8d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 08:34:02 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54S8UfvY017974;
+	Wed, 28 May 2025 08:34:01 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj3q8b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 08:34:01 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6Y0Vk028983;
+	Wed, 28 May 2025 08:34:00 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepxp48-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 08:34:00 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54S8XwbA50528604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 08:33:58 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1E09220043;
+	Wed, 28 May 2025 08:33:58 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3682B20040;
+	Wed, 28 May 2025 08:33:56 +0000 (GMT)
+Received: from li-e1dea04c-3555-11b2-a85c-f57333552245.ibm.com (unknown [9.39.16.188])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 28 May 2025 08:33:56 +0000 (GMT)
+Date: Wed, 28 May 2025 14:03:53 +0530
+From: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, arnd@arndb.de, jk@ozlabs.org,
+        segher@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: Fixing typo in comment
+Message-ID: <e564iytmzbbchj7cxbh6nxysnjh3akd4tixjdg46uvkryl6bnx@njjpjxeppct7>
+References: <20250528080051.1351779-2-mchauras@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 10:33:46 +0200
-Message-Id: <DA7NLJ1CKSFM.3FWBC90NACTRV@bootlin.com>
-Subject: Re: [PATCH v3 1/2] net: stmmac: make sure that ptp_rate is not 0
- before configuring timestamping
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, "Alexandre
- Torgue" <alexandre.torgue@foss.st.com>, "Jose Abreu"
- <joabreu@synopsys.com>, "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Richard Cochran"
- <richardcochran@gmail.com>, "Phil Reid" <preid@electromag.com.au>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Maxime Chevallier"
- <maxime.chevallier@bootlin.com>, <netdev@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- "Jose Abreu" <Jose.Abreu@synopsys.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250528-stmmac_tstamp_div-v3-0-b525ecdfd84c@bootlin.com>
- <20250528-stmmac_tstamp_div-v3-1-b525ecdfd84c@bootlin.com>
-In-Reply-To: <20250528-stmmac_tstamp_div-v3-1-b525ecdfd84c@bootlin.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdejleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuhffvvefofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptedugfevhfevueeggedutefhgfevhfeltefgieejjeeijeejveegtdehgeefkefhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehjohgrsghrvghusehshihnohhpshihshdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvt
- hguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528080051.1351779-2-mchauras@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=IcmHWXqa c=1 sm=1 tr=0 ts=6836ca7a cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=iZhVWIIbJi_2OSwl4MUA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA3MyBTYWx0ZWRfXxXUU8eVrSeot B8+g6YU/mgrpkz3setWL/beWZy2ojs1Gy1YiPmoPy6KM/kBNQPcGg0NYm87HC6SQwhLrx9idpil WuBJaPIiemy4UoLlavqtqMhIgaFIo5BqiGsBxi5OGbBYZje2fo+v4I6eA0iw9S6s2DyVBVPjw/j
+ a52lc7ED0+tiGBdgPprknHowD6a20lJhYOoJCCl5jVr9pmszkCXzk7f68pcvalrWhXRARaCuHBt z5T7jrnMKEZd0zFYigzJ4rXX1DqUMi5JLpamMT5NlKkQ/5O5Zuib+HmbeQrP6dnKv0qk3sKTX3M WWnesbL1icoPH0A3vDMyY09uchaHVfkcc9WjCVfzTrNal/kBgchfKkCup+AbkBvs84vIXPZqVCE
+ WxJkpVYxkeLVgVwtfdhCugh0gDLdK1r8s8s8kLWfvkVMEY6Dv/khx64z1LyyXDa3Zqkp5r9o
+X-Proofpoint-ORIG-GUID: VuMODfVn3SUMOJ3XoRcus3ysqe-89dE9
+X-Proofpoint-GUID: lP-Zoj1lNRC1qbOl--l2mxzoRreFgaK3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_04,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=577 adultscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505280073
 
-On Wed May 28, 2025 at 10:29 AM CEST, Alexis Lothor=C3=A9 wrote:
-> The stmmac platform drivers that do not open-code the clk_ptp_rate value
-> after having retrieved the default one from the device-tree can end up
-> with 0 in clk_ptp_rate (as clk_get_rate can return 0). It will
-> eventually propagate up to PTP initialization when bringing up the
-> interface, leading to a divide by 0:
+On Wed, May 28, 2025 at 01:30:52PM +0530, Mukesh Kumar Chaurasiya wrote:
+> fixing a typo where iff is supposed to be if.
 >
->  Division by zero in kernel.
->  CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.30-00001-g48313bd5=
-768a #22
->  Hardware name: STM32 (Device Tree Support)
->  Call trace:
->   unwind_backtrace from show_stack+0x18/0x1c
->   show_stack from dump_stack_lvl+0x6c/0x8c
->   dump_stack_lvl from Ldiv0_64+0x8/0x18
->   Ldiv0_64 from stmmac_init_tstamp_counter+0x190/0x1a4
->   stmmac_init_tstamp_counter from stmmac_hw_setup+0xc1c/0x111c
->   stmmac_hw_setup from __stmmac_open+0x18c/0x434
->   __stmmac_open from stmmac_open+0x3c/0xbc
->   stmmac_open from __dev_open+0xf4/0x1ac
->   __dev_open from __dev_change_flags+0x1cc/0x224
->   __dev_change_flags from dev_change_flags+0x24/0x60
->   dev_change_flags from ip_auto_config+0x2e8/0x11a0
->   ip_auto_config from do_one_initcall+0x84/0x33c
->   do_one_initcall from kernel_init_freeable+0x1b8/0x214
->   kernel_init_freeable from kernel_init+0x24/0x140
->   kernel_init from ret_from_fork+0x14/0x28
->  Exception stack(0xe0815fb0 to 0xe0815ff8)
->
-> Prevent this division by 0 by adding an explicit check and error log
-> about the actual issue. While at it, remove the same check from
-> stmmac_ptp_register, which then becomes duplicate
->
-> Fixes: 19d857c9038e ("stmmac: Fix calculations for ptp counters when cloc=
-k input =3D 50Mhz.")
-> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
-
-I realize that I forgot to collect Yanteng's and Maxime's RB on this patch,
-and I guess they remain relevant despite the second new patch, my bad. I'll
-remember to add them if this needs a new revision.
-
-Alexis
-
-
-
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+I just realized its if and only if. Please ignore.
+> Signed-off-by: Mukesh Kumar Chaurasiya <mchauras@linux.ibm.com>
+> ---
+>  arch/powerpc/kernel/exceptions-64s.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+> index b7229430ca94..53667dc7fe1a 100644
+> --- a/arch/powerpc/kernel/exceptions-64s.S
+> +++ b/arch/powerpc/kernel/exceptions-64s.S
+> @@ -393,7 +393,7 @@ DEFINE_FIXED_SYMBOL(\name\()_common_real, text)
+>  	.endif
+>  
+>  	ld	r10,PACAKMSR(r13)	/* get MSR value for kernel */
+> -	/* MSR[RI] is clear iff using SRR regs */
+> +	/* MSR[RI] is clear if using SRR regs */
+>  	.if IHSRR_IF_HVMODE
+>  	BEGIN_FTR_SECTION
+>  	xori	r10,r10,MSR_RI
+> -- 
+> 2.49.0
+> 
