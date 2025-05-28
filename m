@@ -1,70 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0BC286436;
-	Wed, 28 May 2025 15:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E5928C864;
+	Wed, 28 May 2025 15:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447908; cv=none; b=bOUJeHb6X8PSEPAMO0ziwWfBZwvXJIfA0bupBTDP9nE48qygCEbelQ3SZqUZwfWkmxWTKK8HrMNcsK+6/xYYSRM92syCd+ZDwKa56XozuwcdD19FGHP+d68B6BIvSkmbIwDjDBOOGJUrLe118Mz6UJeVOtk23RT5+C1lVjrRVyo=
+	t=1748447911; cv=none; b=Yh+7uPSDYxElEsjSWjl659pjSWbQz1C9xjvyC9fAGO/g2CskW4smmfi7Mv4xm6NE6zsRjDfNH3Y+wtaBjtKt0y+LUB5XokcQpRn877AoPwOBAqfuWvSzSt3EqU78JAAZHadhO2b5LJ1/rLNP7sVz3UrsjnKN56lP/SZ/9SKv6pA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447908; c=relaxed/simple;
-	bh=NIZUO6nfWzxOmDFR7kuS4TIBoOtvv4jh2sd4GzavqT4=;
+	s=arc-20240116; t=1748447911; c=relaxed/simple;
+	bh=jQ1GOT+yh1Z61cRE9ycQmcM+5PDeTXfT6DSI9iMG7MA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+uHYdfNyzZtR9pEl0o+3RxHD2x+ykFc6FQwuK0MxAHEFFTS2D/LOVD2KrLYuzDFa0GtRAl3emJQFdQCh+4/cDNnkSzk5YOCAcgOWi9hJ/A1UdpSDEpcEiYkF6YtIDJQi0ZhDTDfV9xqVaCKaejqx6v4i/rrJ5Xahj00c2cVNnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mD9I6qF3; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=H7WTWVTS8Y5CI6NPMM1yJ293604tPtaXuqA8Q38vOv+b34EnG86Nxk8mFpEZxOJAGyPI71+wRaSidV8TZ4H/N7pRjkGhnVzPzbMvJ1kJ2gKpjanCfaDgqxs9nh8tITYHERqTy0hgh5vUb2u9jb9fpwsLpFCBdTRUT1U0VQKxgnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EW3dVrLt; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mD9I6qF3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EW3dVrLt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748447908; x=1779983908;
+  t=1748447910; x=1779983910;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NIZUO6nfWzxOmDFR7kuS4TIBoOtvv4jh2sd4GzavqT4=;
-  b=mD9I6qF3nKN2HG0XnXD+sxfcnJnZkj2zevJTpFMGkU6HHoPGnotFIOjj
-   ybEyWs3i34MNrLaqGreSY4G2EO45vSmfyrj/7XuBh/t2GgDaSlAL3zfl+
-   feYExZ/GvPWQO/9jHeabNgldzNLaXW+meQiGchaQP27Phm3G3WKkRqU6U
-   ++j5unesiiLgDNpLhzEGN83llExWKvinQ462sCh4RqUTzfqEroktNTXH+
-   6mWkPFplitKdDZh1mbd3P+M10Oztpz2CprPd9SMZq7aQt5Ufuz7YmobaU
-   SzpGUgttWjQRngHL7XsKF1sRgZQLIaYe9OYDwI+qe0X/Pb1+AuCbvGTyF
-   A==;
-X-CSE-ConnectionGUID: D/7DjDcEQNijX9zStQLZUA==
-X-CSE-MsgGUID: 9wbXrTghRliEQhdjaqFTiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="67897079"
+  bh=jQ1GOT+yh1Z61cRE9ycQmcM+5PDeTXfT6DSI9iMG7MA=;
+  b=EW3dVrLtbpUPzSO7v+1XHiRsjEIiMuOAztH+3s07Y+nnrIdE/QDAtNEi
+   yVutIGP7eXbWheH2dOlTFcMsKEsEojriyrHZYIxXO7a4Qh3AkagxlHEM9
+   Bb+uZcL4M0exKq2bHp7DKxr1Cu0ADi5M6eRX2FJCKfC5uGjVU8cMO1jEo
+   htSLDkJ+59MQJm2Jdhh37PmHpRYWsIAFS4Q/H2KmqpVGbQdMu8yWUonbq
+   y+z/kA20UHF+VuLTwIziP+Czo5HcUUy2UZgws7AsBMe6c5uyhfHuINMvQ
+   9GrdEPlDrnEEfF51leDkVj2SeGH4z1Gu9H+iczukRBx3uW+6mfrDJKDiw
+   w==;
+X-CSE-ConnectionGUID: E6DM9eaWQaG1g0v4kDV0QA==
+X-CSE-MsgGUID: ex8vJjGCS3iTnI23eUpEiQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="60740128"
 X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="67897079"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:58:27 -0700
-X-CSE-ConnectionGUID: 8KS9rMUsR8uWNQsowgjXnQ==
-X-CSE-MsgGUID: bU31e17nRDSY4Nv7jkm57w==
+   d="scan'208";a="60740128"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:58:29 -0700
+X-CSE-ConnectionGUID: 7vNOD3ErRAaVAEJcQ5OGBA==
+X-CSE-MsgGUID: DTfw/s/YRguYfCNhsp5rkQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="144248096"
+   d="scan'208";a="148140975"
 Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 28 May 2025 08:58:22 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 28 May 2025 08:58:22 -0700
 Received: from kbuild by 1992f890471c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uKJAZ-000Vou-2c;
+	id 1uKJAZ-000Vow-2h;
 	Wed, 28 May 2025 15:58:19 +0000
-Date: Wed, 28 May 2025 23:57:43 +0800
+Date: Wed, 28 May 2025 23:57:45 +0800
 From: kernel test robot <lkp@intel.com>
-To: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [PATCH] rust: replace length checks with match
-Message-ID: <202505282330.oOHtt60s-lkp@intel.com>
-References: <20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c@gmail.com>
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com
+Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
+ pool
+Message-ID: <202505282311.lZqpYSc9-lkp@intel.com>
+References: <20250528022911.73453-17-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,54 +75,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c@gmail.com>
+In-Reply-To: <20250528022911.73453-17-byungchul@sk.com>
 
-Hi Tamir,
+Hi Byungchul,
 
 kernel test robot noticed the following build errors:
 
-[auto build test ERROR on bfc3cd87559bc593bb32bb1482f9cae3308b6398]
+[auto build test ERROR on d09a8a4ab57849d0401d7c0bc6583e367984d9f7]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/rust-replace-length-checks-with-match/20250528-001121
-base:   bfc3cd87559bc593bb32bb1482f9cae3308b6398
-patch link:    https://lore.kernel.org/r/20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c%40gmail.com
-patch subject: [PATCH] rust: replace length checks with match
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250528/202505282330.oOHtt60s-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505282330.oOHtt60s-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/netmem-introduce-struct-netmem_desc-struct_group_tagged-ed-on-struct-net_iov/20250528-103136
+base:   d09a8a4ab57849d0401d7c0bc6583e367984d9f7
+patch link:    https://lore.kernel.org/r/20250528022911.73453-17-byungchul%40sk.com
+patch subject: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page pool
+config: i386-buildonly-randconfig-004-20250528 (https://download.01.org/0day-ci/archive/20250528/202505282311.lZqpYSc9-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505282311.lZqpYSc9-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505282330.oOHtt60s-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505282311.lZqpYSc9-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   PATH=/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   INFO PATH=/opt/cross/rustc-1.78.0-bindgen-0.65.1/cargo/bin:/opt/cross/clang-18/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-   /usr/bin/timeout -k 100 12h /usr/bin/make KCFLAGS= -Wno-error=return-type -Wreturn-type -funsigned-char -Wundef W=1 --keep-going LLVM=1 -j24 -C source O=/kbuild/obj/consumer/x86_64-rhel-9.4-rust ARCH=x86_64 SHELL=/bin/bash rustfmtcheck
-   make: Entering directory '/kbuild/src/consumer'
-   make[1]: Entering directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
->> Diff in scripts/rustdoc_test_gen.rs at line 90:
-                "No path candidates found for `{file}`. This is likely a bug in the build system, or \
-                some files went away while compiling."
-            ),
-   -        [valid_path] => {
-   -            valid_path.to_str().unwrap()
-   -        }
-   +        [valid_path] => valid_path.to_str().unwrap(),
-            valid_paths => {
-                eprintln!("Several path candidates found:");
-                for path in valid_paths {
-   make[2]: *** [Makefile:1826: rustfmt] Error 123
-   make[2]: Target 'rustfmtcheck' not remade because of errors.
-   make[1]: Leaving directory '/kbuild/obj/consumer/x86_64-rhel-9.4-rust'
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'rustfmtcheck' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'rustfmtcheck' not remade because of errors.
-   make: Leaving directory '/kbuild/src/consumer'
+>> drivers/net/wireless/mediatek/mt76/sdio_txrx.c:74:3: error: must use 'struct' tag to refer to type 'page'
+      74 |                 page = netmem_compound_head(virt_to_netmem(data));
+         |                 ^
+         |                 struct 
+>> drivers/net/wireless/mediatek/mt76/sdio_txrx.c:74:8: error: expected identifier or '('
+      74 |                 page = netmem_compound_head(virt_to_netmem(data));
+         |                      ^
+   2 errors generated.
+
+
+vim +74 drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+
+    58	
+    59	static struct sk_buff *
+    60	mt76s_build_rx_skb(void *data, int data_len, int buf_len)
+    61	{
+    62		int len = min_t(int, data_len, MT_SKB_HEAD_LEN);
+    63		struct sk_buff *skb;
+    64	
+    65		skb = alloc_skb(len, GFP_KERNEL);
+    66		if (!skb)
+    67			return NULL;
+    68	
+    69		skb_put_data(skb, data, len);
+    70		if (data_len > len) {
+    71			netmem_ref netmem;
+    72	
+    73			data += len;
+  > 74			page = netmem_compound_head(virt_to_netmem(data));
+    75			skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
+    76					       netmem, data - netmem_address(netmem),
+    77					       data_len - len, buf_len);
+    78			get_netmem(netmem);
+    79		}
+    80	
+    81		return skb;
+    82	}
+    83	
 
 -- 
 0-DAY CI Kernel Test Service
