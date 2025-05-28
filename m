@@ -1,63 +1,444 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7E3548EE;
-	Wed, 28 May 2025 13:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5680284693;
+	Wed, 28 May 2025 13:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439972; cv=none; b=SyK+3iLtBxRzS0l+K+LBCwWr6YxxTcDyAvXiLlqd4FcJiPl2+VQbdTCa/KyikHt7NlHigrSBzYtC+sAqSMb3cuGquqkMARkX3W893Ei+ENjDH0P7J42k14aXmbOMSyBwEBkaFZA/m4Z1eCA4SIouii1uAZ9fLvHKrT06x7yiP0s=
+	t=1748440015; cv=none; b=kJZWOhbieaX937IzEg7QXCrr/hIT7gsb1fgt57CwXxdvyicNSDtZZpizPthFQegM5zBBYGoaIGTbK0yoxVWCE1l/Es/sPj6mF//YF6Pu4Eg62melQZX+QCl1IYCdBmXAnMJanrlNKuVQ7D3QoX9o4XU+BAjfWj3Bclz3fFTiwN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439972; c=relaxed/simple;
-	bh=9QsVaD96h9TZ8yRguSQmceVk5sbKpRXUCWFq4YA94Uc=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=c4nsfwiunfqzhRfqHRUTnpHaUT1t5FChEcOVNV5Fxz6PIcmPf3+Xv4ugUYCyEUkNiTh9p5Cfb523nx4BK7osMQZka8+TR7jNGzLqD1oB7a8PJHvPAKEzoNFULsDVKIvT7AxhVkept2+j1RcaNyeRq1J2JPzA9T5G6/rM4m5FpE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korsgaard.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 42762438DA;
-	Wed, 28 May 2025 13:46:04 +0000 (UTC)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.96)
-	(envelope-from <peter@korsgaard.com>)
-	id 1uKH6Z-001CgK-2G;
-	Wed, 28 May 2025 15:46:03 +0200
-From: Peter Korsgaard <peter@korsgaard.com>
-To: Bram Vlerick <bram.vlerick@openpixelsystems.org>
-Cc: Kevin Cernekee <cernekee@chromium.org>,  Liam Girdwood
- <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>,  Jaroslav Kysela
- <perex@perex.cz>,  Takashi Iwai <tiwai@suse.com>,  Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
- Dooley <conor+dt@kernel.org>,  Neil Armstrong <neil.armstrong@linaro.org>,
-  linux-sound@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] ASoC: tas571x: add support for tas5753
-References: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
-	<20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
-Date: Wed, 28 May 2025 15:46:03 +0200
-In-Reply-To: <20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
-	(Bram Vlerick's message of "Wed, 28 May 2025 14:10:08 +0200")
-Message-ID: <87plfsx2zo.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1748440015; c=relaxed/simple;
+	bh=bRhT0/Vrg1JnPizBgA3qMrogzVvnIT1PA+IxOge4Atc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Z4RrjhUqaDLtc+e3ZMdttAhT1D9L54VwucxgHlwcSZGVystr19Bbjj4lUtbNrOwOXwF1dGwQxuqdvT8dm+GqOwllWvWwNQ1PCmXWfuAnlUqXHJw2kYFm6hBxAJy0ysU2OltmhRZA4xpStkpIOZs61l5qXxhY94trVrJXyaCdiH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ID4CJZUv; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ID4CJZUv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1748440010;
+	bh=bRhT0/Vrg1JnPizBgA3qMrogzVvnIT1PA+IxOge4Atc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ID4CJZUvB8i/vqNMQcZ63Wk0iegU4ufRF3U/AJa/CUDFlKVAXN0NeHrQX6RsWXkpi
+	 ZqHw2vMzcHzAl5ENuiw0saWcoQ1zwbmh2aZ0iz9tIGIS3zbndhdAZ/VE6n+EF0gpLK
+	 kQi0/GuwGsMSC2Hlh+65dCa0miGMcP8sXiXHyPt31PaeT6sXD8KQgUtpDUAuFGOb5I
+	 7HAWAtZOqHa71LIpUDab6LShxpo/69vP99oVa16uFIUYIPUDC93fH222+oUAG9oIHV
+	 2EpmoCSpqUjG/QUGEAa0YgYT20fgQqIr1HBTYlrTq0RIfnhcNCaIy9OP8QoZjeHVF6
+	 4EfWcAOxbVyCQ==
+Received: from [IPv6:2606:6d00:17:b2fc::5ac] (unknown [IPv6:2606:6d00:17:b2fc::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6915F17E0FC2;
+	Wed, 28 May 2025 15:46:49 +0200 (CEST)
+Message-ID: <03a87e1c9e8f77887c2457b9c3fcbf0c6a6cf287.camel@collabora.com>
+Subject: Re: [PATCH v2 2/7] media: chips-media: wave5: Improve performance
+ of decoder
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
+ <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
+ <hverkuil-cisco@xs4all.nl>,  "bob.beckett@collabora.com"	
+ <bob.beckett@collabora.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
+ "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
+ <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
+ <nas.chung@chipsnmedia.com>
+Date: Wed, 28 May 2025 09:46:47 -0400
+In-Reply-To: <SE1P216MB1303C1D1C2A9FA165A01B71AED64A@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+References: <20250522072606.51-1-jackson.lee@chipsnmedia.com>
+		 <20250522072606.51-3-jackson.lee@chipsnmedia.com>
+	 <3afbd0253fabcf9f8795ab2231107e2e9da012cc.camel@collabora.com>
+	 <SE1P216MB1303C1D1C2A9FA165A01B71AED64A@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeegvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufhffjgfkfgggtgesthdttddttdertdenucfhrhhomheprfgvthgvrhcumfhorhhsghgrrghrugcuoehpvghtvghrsehkohhrshhgrggrrhgurdgtohhmqeenucggtffrrghtthgvrhhnpeetgfelveffveehtdevgeefjeeiudduledtffehgefgleekteektedutdfhleeiueenucfkphepkedvrddugeefrdelhedrvddvvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekvddrudegfedrleehrddvvddvpdhhvghlohepuggvlhhlrdgsvgdrgeekvghrshdrughkpdhmrghilhhfrhhomhepphgvthgvrheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepsghrrghmrdhvlhgvrhhitghksehophgvnhhpihigvghlshihshhtvghmshdrohhrghdprhgtphhtthhopegtvghrnhgvkhgvvgestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopehpvghrvgigsehpvghrvgigrdgtiidprhgtphhtthhopehtihifrghisehsuhhsvgdrtghomhdpr
- hgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: peter@korsgaard.com
+Content-Transfer-Encoding: 8bit
 
->>>>> "Bram" == Bram Vlerick <bram.vlerick@openpixelsystems.org> writes:
+Hi,
 
- > Add support for tas5753, device is similar to tas5733 but with added
- > headphone / line driver.
+Le mardi 27 mai 2025 à 04:58 +0000, jackson.lee a écrit :
+> 
+> 
+> > -----Original Message-----
+> > From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> > Sent: Saturday, May 24, 2025 2:39 AM
+> > To: jackson.lee <jackson.lee@chipsnmedia.com>; mchehab@kernel.org;
+> > hverkuil-cisco@xs4all.nl; sebastian.fricke@collabora.com;
+> > bob.beckett@collabora.com; dafna.hirschfeld@collabora.com
+> > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; lafley.kim
+> > <lafley.kim@chipsnmedia.com>; b-brnich@ti.com; hverkuil@xs4all.nl; Nas
+> > Chung <nas.chung@chipsnmedia.com>
+> > Subject: Re: [PATCH v2 2/7] media: chips-media: wave5: Improve performance
+> > of decoder
+> > 
+> > Hi,
+> > 
+> > Le jeudi 22 mai 2025 à 16:26 +0900, Jackson.lee a écrit :
+> > > From: Jackson Lee <jackson.lee@chipsnmedia.com>
+> > > 
+> > > The current decoding method  was to wait until each frame was decoded
+> > > after feeding a bitstream. As a result, performance was low and Wave5
+> > > could not achieve max pixel processing rate.
+> > > 
+> > > Update driver to use an asynchronous approach for decoding and feeding
+> > > a bitstream in order to achieve full capabilities of the device.
+> > > 
+> > > WAVE5 supports command-queueing to maximize performance by pipelining
+> > > internal commands and by hiding wait cycle taken to receive a command
+> > > from Host processor.
+> > > 
+> > > Instead of waiting for each command to be executed before sending the
+> > > next command, Host processor just places all the commands in the
+> > > command-queue and goes on doing other things while the commands in the
+> > > queue are processed by VPU.
+> > > 
+> > > While Host processor handles its own tasks, it can receive VPU
+> > > interrupt request (IRQ).
+> > > In this case, host processor can simply exit interrupt service routine
+> > > (ISR) without accessing to host interface to read the result of the
+> > > command reported by VPU.
+> > > After host processor completed its tasks, host processor can read the
+> > > command result when host processor needs the reports and does response
+> > > processing.
+> > > 
+> > > To archive this goal, the device_run() calls v4l2_m2m_job_finish so
+> > > that next command can be sent to VPU continuously, if there is any
+> > > result, then irq is triggered and gets decoded frames and returns them
+> > > to upper layer.
+> > > Theses processes work independently each other without waiting a
+> > > decoded frame.
+> > > 
+> > > Signed-off-by: Jackson Lee <jackson.lee@chipsnmedia.com>
+> > > Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+> > > ---
+> > >  .../platform/chips-media/wave5/wave5-hw.c     |  2 +-
+> > >  .../chips-media/wave5/wave5-vpu-dec.c         | 84
+> > > +++++++++++--------
+> > >  .../platform/chips-media/wave5/wave5-vpuapi.c |  2 +
+> > >  .../platform/chips-media/wave5/wave5-vpuapi.h |  3 +
+> > >  4 files changed, 57 insertions(+), 34 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> > > b/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> > > index d94cf84c3ee5..687ce6ccf3ae 100644
+> > > --- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
+> > > @@ -102,7 +102,7 @@ static void _wave5_print_reg_err(struct vpu_device
+> > *vpu_dev, u32 reg_fail_reason
+> > >  		dev_dbg(dev, "%s: queueing failure: 0x%x\n", func, reg_val);
+> > >  		break;
+> > >  	case WAVE5_SYSERR_RESULT_NOT_READY:
+> > > -		dev_err(dev, "%s: result not ready: 0x%x\n", func,
+> > reg_fail_reason);
+> > > +		dev_dbg(dev, "%s: result not ready: 0x%x\n", func,
+> > > +reg_fail_reason);
+> > >  		break;
+> > >  	case WAVE5_SYSERR_ACCESS_VIOLATION_HW:
+> > >  		dev_err(dev, "%s: access violation: 0x%x\n", func,
+> > > reg_fail_reason); diff --git
+> > > a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
+> > > b/drivers/media/platform/chips- media/wave5/wave5-vpu-dec.c index
+> > > 32de43de1870..995234a3a6d6 100644
+> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
+> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
+> > > @@ -347,13 +347,12 @@ static void wave5_vpu_dec_finish_decode(struct
+> > vpu_instance *inst)
+> > >  	struct vb2_v4l2_buffer *dec_buf = NULL;
+> > >  	struct vb2_v4l2_buffer *disp_buf = NULL;
+> > >  	struct vb2_queue *dst_vq = v4l2_m2m_get_dst_vq(m2m_ctx);
+> > > -	struct queue_status_info q_status;
+> > > 
+> > >  	dev_dbg(inst->dev->dev, "%s: Fetch output info from firmware.",
+> > > __func__);
+> > > 
+> > >  	ret = wave5_vpu_dec_get_output_info(inst, &dec_info);
+> > >  	if (ret) {
+> > > -		dev_warn(inst->dev->dev, "%s: could not get output info.",
+> > __func__);
+> > > +		dev_dbg(inst->dev->dev, "%s: could not get output info.",
+> > > +__func__);
+> > 
+> > Wouldn't it be better to check the return value to possibly differentiate
+> > some errors from something similar to EGAIN?
+> > 
+> 
+> In case of this, when get_result command is requested to VPU, there could be no output.
+> So it is not error case and EAGIAN is not proper because the wave5_vpu_dec_finish_decode is triggered by PIC_Done
+> interrupt.
+> So I think it is proper code.
 
- > Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
+My worry is that you are silencing possible problems. I checked further, it may return
+EINVAL, EIO and EAGAIN and whatever read_poll_timeout() returns on timeout. For most, this
+trace was noise, so now I agree with the change, but can you go find the EINVAL and add
+a warn_on around it, since this is a programming error, it would happen if dec_info is
+a null pointer. Can be patch in itself, before this one.
 
-Acked-by: Peter Korsgaard <peter@korsgaard.com>
+> 
+> 
+> > >  		v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
+> > >  		return;
+> > >  	}
+> > > @@ -441,20 +440,6 @@ static void wave5_vpu_dec_finish_decode(struct
+> > vpu_instance *inst)
+> > >  		}
+> > >  		spin_unlock_irqrestore(&inst->state_spinlock, flags);
+> > >  	}
+> > > -
+> > > -	/*
+> > > -	 * During a resolution change and while draining, the firmware may
+> > flush
+> > > -	 * the reorder queue regardless of having a matching decoding
+> > operation
+> > > -	 * pending. Only terminate the job if there are no more IRQ coming.
+> > > -	 */
+> > > -	wave5_vpu_dec_give_command(inst, DEC_GET_QUEUE_STATUS, &q_status);
+> > > -	if (q_status.report_queue_count == 0 &&
+> > > -	    (q_status.instance_queue_count == 0 ||
+> > dec_info.sequence_changed)) {
+> > > -		dev_dbg(inst->dev->dev, "%s: finishing job.\n", __func__);
+> > > -		pm_runtime_mark_last_busy(inst->dev->dev);
+> > > -		pm_runtime_put_autosuspend(inst->dev->dev);
+> > > -		v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
+> > > -	}
+> > >  }
+> > > 
+> > >  static int wave5_vpu_dec_querycap(struct file *file, void *fh, struct
+> > > v4l2_capability *cap) @@ -1146,8 +1131,8 @@ static int
+> > > write_to_ringbuffer(struct vpu_instance *inst, void *buffer, size_t b
+> > >  static int fill_ringbuffer(struct vpu_instance *inst)
+> > >  {
+> > >  	struct v4l2_m2m_ctx *m2m_ctx = inst->v4l2_fh.m2m_ctx;
+> > > -	struct v4l2_m2m_buffer *buf, *n;
+> > > -	int ret;
+> > > +	struct vpu_src_buffer *vpu_buf;
+> > > +	int ret = 0;
+> > > 
+> > >  	if (m2m_ctx->last_src_buf)  {
+> > >  		struct vpu_src_buffer *vpu_buf =
+> > > wave5_to_vpu_src_buf(m2m_ctx->last_src_buf);
+> > > @@ -1158,9 +1143,8 @@ static int fill_ringbuffer(struct vpu_instance
+> > *inst)
+> > >  		}
+> > >  	}
+> > > 
+> > > -	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
+> > > -		struct vb2_v4l2_buffer *vbuf = &buf->vb;
+> > > -		struct vpu_src_buffer *vpu_buf = wave5_to_vpu_src_buf(vbuf);
+> > > +	list_for_each_entry(vpu_buf, &inst->avail_src_bufs, list) {
+> > > +		struct vb2_v4l2_buffer *vbuf = &vpu_buf->v4l2_m2m_buf.vb;
+> > >  		struct vpu_buf *ring_buffer = &inst->bitstream_vbuf;
+> > >  		size_t src_size = vb2_get_plane_payload(&vbuf->vb2_buf, 0);
+> > >  		void *src_buf = vb2_plane_vaddr(&vbuf->vb2_buf, 0); @@ -
+> > 1220,9
+> > > +1204,13 @@ static int fill_ringbuffer(struct vpu_instance *inst)
+> > >  			dev_dbg(inst->dev->dev, "last src buffer written to
+> > the ring buffer\n");
+> > >  			break;
+> > >  		}
+> > > +
+> > > +		inst->queuing_num++;
+> > > +		list_del_init(&vpu_buf->list);
+> > > +		break;
+> > >  	}
+> > > 
+> > > -	return 0;
+> > > +	return ret;
+> > >  }
+> > > 
+> > >  static void wave5_vpu_dec_buf_queue_src(struct vb2_buffer *vb) @@
+> > > -1236,6 +1224,11 @@ static void wave5_vpu_dec_buf_queue_src(struct
+> > vb2_buffer *vb)
+> > >  	vbuf->sequence = inst->queued_src_buf_num++;
+> > > 
+> > >  	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
+> > > +
+> > > +	INIT_LIST_HEAD(&vpu_buf->list);
+> > > +	mutex_lock(&inst->feed_lock);
+> > > +	list_add_tail(&vpu_buf->list, &inst->avail_src_bufs);
+> > > +	mutex_unlock(&inst->feed_lock);
+> > >  }
+> > > 
+> > >  static void wave5_vpu_dec_buf_queue_dst(struct vb2_buffer *vb) @@
+> > > -1385,6 +1378,13 @@ static int streamoff_output(struct vb2_queue *q)
+> > >  	dma_addr_t new_rd_ptr;
+> > >  	struct dec_output_info dec_info;
+> > >  	unsigned int i;
+> > > +	struct vpu_src_buffer *vpu_buf, *tmp;
+> > > +
+> > > +	inst->retry = false;
+> > > +	inst->queuing_num = 0;
+> > > +
+> > > +	list_for_each_entry_safe(vpu_buf, tmp, &inst->avail_src_bufs, list)
+> > > +		list_del_init(&vpu_buf->list);
+> > > 
+> > >  	for (i = 0; i < v4l2_m2m_num_dst_bufs_ready(m2m_ctx); i++) {
+> > >  		ret = wave5_vpu_dec_set_disp_flag(inst, i); @@ -1580,10
+> > +1580,19 @@
+> > > static void wave5_vpu_dec_device_run(void *priv)
+> > > 
+> > >  	dev_dbg(inst->dev->dev, "%s: Fill the ring buffer with new
+> > bitstream data", __func__);
+> > >  	pm_runtime_resume_and_get(inst->dev->dev);
+> > > -	ret = fill_ringbuffer(inst);
+> > > -	if (ret) {
+> > > -		dev_warn(inst->dev->dev, "Filling ring buffer failed\n");
+> > > -		goto finish_job_and_return;
+> > > +	if (!inst->retry) {
+> > > +		mutex_lock(&inst->feed_lock);
+> > > +		ret = fill_ringbuffer(inst);
+> > > +		mutex_unlock(&inst->feed_lock);
+> > > +		if (ret < 0) {
+> > > +			dev_warn(inst->dev->dev, "Filling ring buffer
+> > failed\n");
+> > > +			goto finish_job_and_return;
+> > > +		} else if (!inst->eos &&
+> > > +				inst->queuing_num == 0 &&
+> > > +				inst->state == VPU_INST_STATE_PIC_RUN) {
+> > > +			dev_dbg(inst->dev->dev, "%s: no bitstream for feeding,
+> > so skip ", __func__);
+> > > +			goto finish_job_and_return;
+> > > +		}
+> > >  	}
+> > > 
+> > >  	switch (inst->state) {
+> > > @@ -1639,7 +1648,7 @@ static void wave5_vpu_dec_device_run(void *priv)
+> > >  		}
+> > > 
+> > >  		if (q_status.instance_queue_count) {
+> > > -			dev_dbg(inst->dev->dev, "%s: leave with active job",
+> > __func__);
+> > > +			v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
+> > >  			return;
+> > >  		}
+> > > 
+> > > @@ -1650,14 +1659,21 @@ static void wave5_vpu_dec_device_run(void *priv)
+> > >  			dev_err(inst->dev->dev,
+> > >  				"Frame decoding on m2m context (%p), fail: %d
+> > (result: %d)\n",
+> > >  				m2m_ctx, ret, fail_res);
+> > > -			break;
+> > > +			goto finish_job_and_return;
+> > > +		}
+> > > +
+> > > +		if (fail_res == WAVE5_SYSERR_QUEUEING_FAIL) {
+> > > +			inst->retry = true;
+> > > +		} else {
+> > > +			inst->retry = false;
+> > > +			if (!inst->eos)
+> > > +				inst->queuing_num--;
+> > 
+> > I looked into the original state machine violation you had in previous
+> > version, and I got the impression that the reason you did hit that was
+> > that you actually call device_run passed inst->eos. Its probably not that
+> > simple in practice, but I think you forgot to adapt the job_ready() ops to
+> > prevent more device_run() called passed CMD_STOP and having all pending
+> > buffer written in the ring buffer.
+> > 
+> > As a side effect, you endup calling device_run() in a race with the
+> > finish() setting the state to STOP. I really think there is a way to use
+> > inst->eos boolean to prevent that race in the first place. Might need to
+> > be combined with checking if you have buffers prior to command stop that
+> > did not yet fit into the ring buffer.
+> > 
+> 
+> 
+> The queuing_num is used to check if there is input data or not, so it was declared in the int type.
+> If there is no input data, then the device_run will be not called until queuing input data.
+> In case of eos sent, device_run should be ran continuously until getting eos from VPU, the code was needed.
+> If my answer is not correct, please let me know.
 
--- 
-Bye, Peter Korsgaard
+Running in loop anything is never the right approach. The device_run() should be run
+when a useful event occur and filtered by the job_ready() ops. I believe I'm proposing some
+hint how to solve this design issue. The issue is quite clear with the follow up patch trying
+to reduce the CPU usage due to spinning.
+
+> 
+> 
+> > >  		}
+> > > -		/* Return so that we leave this job active */
+> > > -		dev_dbg(inst->dev->dev, "%s: leave with active job",
+> > __func__);
+> > > -		return;
+> > > -	default:
+> > > -		WARN(1, "Execution of a job in state %s illegal.\n",
+> > state_to_str(inst->state));
+> > >  		break;
+> > > +	default:
+> > > +		dev_dbg(inst->dev->dev, "Execution of a job in state %s
+> > illegal.\n",
+> > > +			state_to_str(inst->state));
+> > > +
+> > >  	}
+> > > 
+> > >  finish_job_and_return:
+> > > @@ -1755,6 +1771,8 @@ static int wave5_vpu_open_dec(struct file *filp)
+> > >  	inst->ops = &wave5_vpu_dec_inst_ops;
+> > > 
+> > >  	spin_lock_init(&inst->state_spinlock);
+> > > +	mutex_init(&inst->feed_lock);
+> > > +	INIT_LIST_HEAD(&inst->avail_src_bufs);
+> > > 
+> > >  	inst->codec_info = kzalloc(sizeof(*inst->codec_info), GFP_KERNEL);
+> > >  	if (!inst->codec_info)
+> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
+> > > b/drivers/media/platform/chips-media/wave5/wave5-
+> > > vpuapi.c
+> > > index e5e879a13e8b..68d86625538f 100644
+> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
+> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
+> > > @@ -255,6 +255,8 @@ int wave5_vpu_dec_close(struct vpu_instance *inst,
+> > u32 *fail_res)
+> > >  	if (inst_count == 1)
+> > >  		pm_runtime_dont_use_autosuspend(vpu_dev->dev);
+> > > 
+> > > +	mutex_destroy(&inst->feed_lock);
+> > > +
+> > >  unlock_and_return:
+> > >  	mutex_unlock(&vpu_dev->hw_lock);
+> > >  	pm_runtime_put_sync(inst->dev->dev);
+> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+> > > b/drivers/media/platform/chips-media/wave5/wave5-
+> > > vpuapi.h
+> > > index f3c1ad6fb3be..fd0aef0bac4e 100644
+> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
+> > > @@ -818,6 +818,9 @@ struct vpu_instance {
+> > >  	bool cbcr_interleave;
+> > >  	bool nv21;
+> > >  	bool eos;
+> > > +	bool retry; /* retry to feed bitstream if failure reason is
+> > WAVE5_SYSERR_QUEUEING_FAIL*/
+> > > +	int queuing_num; /* check if there is input buffer or not */
+> > 
+> > This is described as a boolean, but is implemented as a counter. What does
+> > it count exactly ?
+> > I think it needs a better name too.
+> > 
+> 
+> Please refer to the above comment.
+
+That won't work for me, I'm requesting you to correct the comment to properly
+say this is a counter.
+
+Nicolas
+
+> 
+> Thanks
+> Jackson
+> 
+> 
+> > Nicolas
+> > 
+> > > +	struct mutex feed_lock; /* lock for feeding bitstream buffers */
+> > >  	struct vpu_buf bitstream_vbuf;
+> > >  	dma_addr_t last_rd_ptr;
+> > >  	size_t remaining_consumed_bytes;
