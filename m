@@ -1,148 +1,154 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F1C2F2F;
-	Wed, 28 May 2025 06:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C72210F4D;
+	Wed, 28 May 2025 06:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412863; cv=none; b=hlhleCXwfjlaVAYHR4MhT/FfhJxRkixOawhXsbipxK2cVVcjIlCZiLBlZFzsTUWmpQ6uiIQ6vulnvw8XXfkRBzFvIYQ+ZtYwb5vra9pcrRhvyps+Fy7H7zN7N+XSe/5n76KY0HO2OUolYEnRQg3dEbvhYV/f+lchTlzkS0YzNNA=
+	t=1748412884; cv=none; b=nw4ac8Egl6iFxgR5l/qUE0gFaXTQSHX9tEi2rUK3NlkwKsVmL6lJCo+zTWwGyfbT3Ab7RDd2PDkLu0sguYRs6V7hAVzfiTBnXMVYhzK8BU415aP6Coh8EnKSVGXtNVt+4Z8Xdb1w4yjfGRFhzx1AtgurYcs80CUhPI8g6vKzi50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412863; c=relaxed/simple;
-	bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=rwyewbJO089Y34kBx991HDKvmH6cLKstpgpOo0eA49x397dUKwZELO+BblSz3Cy68t8auVz62hQo5YJYhpH4WVcBkgAPqVj/6tHz6wxipRVr4un//ITz9/HspNFBu93Z009BVvrGIrT5VuC6WLyEaEfPTwRHiIHB9anekmB804k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=aBy6t+UK; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748412884; c=relaxed/simple;
+	bh=gSS4CjRAoDJno8ZPj89/BweAbZmckAAF42wPMM0GsLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6l3qk21atcrmGnDsv/IVWYw1M74ZliTdRsbt5BEAr3qRJsd7cilGGeizMofARWGSZU7OCTqtpQeALI5ZFXsNK6El6d+ngkt6ztVFcXtH3pIZrnZpfuwpmGCzPXLwF4T7ndCnv2qK+r5ivNWafuco3ZF+n/TjEAwHnf9go36pCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aocLOYon; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aBy6t+UK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748412862; x=1779948862;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
-  b=aBy6t+UKI1vVC/Cb9H+vKTlDu3X0VU77VYCchRQafKHPEredXGXl3cYW
-   X4dZOTH+TJshMNbjFCVTN45ZmfipGaDSSJdYSp2Qi0p0n0sF7L0nfPat/
-   zRUsmqO/zdFY1yppRfqN+Gwp08HomhENol7bmvfJ3rgIZaB+44XA7WByK
-   be8uVKXmNmaq3+6bjnBJqrrNEzwGknzBVy4wseseHi67nVla+1LKIACOV
-   OqiHoQG0NaUpz+mm6lr79gAwb7Jas2JP0mGAu7UM/pgc9WN/2jMfTC068
-   FcZ0MDk1QrecoDsrSR+/pqdmTOFFNdGG7gLKulTfi2GUuOHtkLbl+Ohbw
-   A==;
-X-CSE-ConnectionGUID: eU1T+fZHR4iBV5joZbGgXA==
-X-CSE-MsgGUID: 73BKs1QST4O0fd8eBA9Lwg==
-X-IronPort-AV: E=Sophos;i="6.15,320,1739862000"; 
-   d="scan'208";a="209641304"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2025 23:14:21 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 27 May 2025 23:13:19 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 27 May 2025 23:13:16 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 28 May 2025 11:43:04 +0530
-Subject: [PATCH 1/2] counter: microchip-tcb-capture: Retrieve and map
- parent base address
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aocLOYon"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98EFC4CEE7;
+	Wed, 28 May 2025 06:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748412884;
+	bh=gSS4CjRAoDJno8ZPj89/BweAbZmckAAF42wPMM0GsLU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aocLOYonwxONTi12LfiZ5xjosNb3Y5gKkNrj56+v0oqn+5bxipcc7fqfKMCLUiPqJ
+	 86koB/f3yH3JfJeFCzRulM0tj0iUYixZECMqlrrgJScAarzNXjZRjx0mo5Zc/ertnT
+	 8tvOuu4HUmgHrE5ANkuyKODt1Qj4IM4GjN2pJu4G+2hJp898Du/mknk+BrCDACyYrY
+	 cdhD6bs1tV3M5NFukEJcRQhBfTCDV7yjlZxxm8fSCmI3bDhNjtnt9hUHWF+Ioq30eW
+	 2vId+gOUX4vWP7jCqmsT4NHqRao2rZzclOgIRz3z+jiai+mHbfe19EkqU5HbAMTMQm
+	 xv3/SBt7Q0Rbg==
+Date: Tue, 27 May 2025 23:14:27 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Kees Cook <kees@kernel.org>, linux-hardening@vger.kernel.org
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [linus:master] [crypto]  40b9969796:
+ UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+Message-ID: <20250528061427.GA42911@sol>
+References: <202505281024.f42beaa7-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250528-mchp-tcb-dma-v1-1-083a41fb7b51@microchip.com>
-References: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-In-Reply-To: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
-	<wbg@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
- Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748412791; l=2336;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
- b=EAc2uHlbuqLve1VW5JZDmKi9XT9LMUfU0eHvGLFn/cY0hKmuGha2kLctmQ9DuSGgrd5GAJjeq
- iCD8XMsq//NDmlAV08a/pEX6qXjvlt8leFAbv+5H2ySrbly0AgOMCte
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505281024.f42beaa7-lkp@intel.com>
 
-Retrieve the parent TCB controller's platform_device and map its MMIO
-region using devm_ioremap_resource(). This allows direct register access
-through a base address, which is required for features like DMA that need
-physical addresses.
+[+Kees and linux-hardening]
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- drivers/counter/microchip-tcb-capture.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+On Wed, May 28, 2025 at 01:15:05PM +0800, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> by this commit, the config has below diff:
+> 
+> --- /pkg/linux/x86_64-randconfig-101-20250522/clang-20/d469eaed223fa485eabebd3bcd05ddd3c891f54e/.config 2025-05-23 23:44:56.781716572 +0800
+> +++ /pkg/linux/x86_64-randconfig-101-20250522/clang-20/40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c/.config 2025-05-24 02:08:29.858605300 +0800
+> @@ -4837,7 +4837,8 @@ CONFIG_CRYPTO_ACOMP2=y
+>  CONFIG_CRYPTO_MANAGER=y
+>  CONFIG_CRYPTO_MANAGER2=y
+>  # CONFIG_CRYPTO_USER is not set
+> -CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=y
+> +CONFIG_CRYPTO_SELFTESTS=y
+> +# CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
+>  # CONFIG_CRYPTO_NULL is not set
+>  CONFIG_CRYPTO_PCRYPT=m
+>  CONFIG_CRYPTO_CRYPTD=y
+> 
+> it seems tests are enabled then we observe the UBSAN issues
+> 
+> d469eaed223fa485 40b9969796bfa49ed1b0f7ddc25
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+>            :6          100%           6:6     dmesg.UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305.c
+> 
+> it's hard for bot to apply this commit to previous commits in bisect, so we just
+> make out below report FYI that we observe UBSAN issues in boot tests.
+> 
+> 
+> kernel test robot noticed "UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c" on:
+> 
+> commit: 40b9969796bfa49ed1b0f7ddc254f48cb2ac6d2c ("crypto: testmgr - replace CRYPTO_MANAGER_DISABLE_TESTS with CRYPTO_SELFTESTS")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linux-next/master 176e917e010cb7dcc605f11d2bc33f304292482b]
+> 
+> in testcase: boot
+> 
+> config: x86_64-randconfig-101-20250522
+> compiler: clang-20
+> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202505281024.f42beaa7-lkp@intel.com
+> 
+> 
+> [   12.442846][    T1] ------------[ cut here ]------------
+> [   12.443261][    T1] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+> [   12.444084][    T1] 16 - 114 cannot be represented in type 'size_t' (aka 'unsigned long')
+> [   12.444682][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G                T   6.15.0-rc5-00342-g40b9969796bf #1 VOLUNTARY
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 1a299d1f350b..9634da75bd1a 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -12,6 +12,7 @@
- #include <linux/mutex.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <uapi/linux/counter/microchip-tcb-capture.h>
-@@ -29,7 +30,9 @@
- 
- struct mchp_tc_data {
- 	const struct atmel_tcb_config *tc_cfg;
-+	struct platform_device *pdev;
- 	struct regmap *regmap;
-+	void __iomem *base;
- 	int qdec_mode;
- 	int num_channels;
- 	int channel[2];
-@@ -479,6 +482,8 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 	const struct atmel_tcb_config *tcb_config;
- 	const struct of_device_id *match;
- 	struct counter_device *counter;
-+	struct platform_device *parent_pdev;
-+	struct resource *parent_res;
- 	struct mchp_tc_data *priv;
- 	char clk_name[7];
- 	struct regmap *regmap;
-@@ -491,6 +496,18 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	priv = counter_priv(counter);
- 
-+	parent_pdev = of_find_device_by_node(np->parent);
-+	if (!parent_pdev)
-+		return -EPROBE_DEFER;
-+
-+	parent_res = platform_get_resource(parent_pdev, IORESOURCE_MEM, 0);
-+	if (!parent_res)
-+		return -EINVAL;
-+
-+	priv->base = devm_ioremap_resource(&parent_pdev->dev, parent_res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
- 	match = of_match_node(atmel_tc_of_match, np->parent);
- 	tcb_config = match->data;
- 	if (!tcb_config) {
-@@ -563,6 +580,7 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 
- 	priv->tc_cfg = tcb_config;
- 	priv->regmap = regmap;
-+	priv->pdev = pdev;
- 	counter->name = dev_name(&pdev->dev);
- 	counter->parent = &pdev->dev;
- 	counter->ops = &mchp_tc_ops;
+This issue predates the blamed commit, and it's specific to
+CONFIG_UBSAN_INTEGER_WRAP which was recently introduced.
 
--- 
-2.43.0
+CONFIG_UBSAN_INTEGER_WRAP apparently requires clang 20.
 
+To try to reproduce this, I built clang from the release/20.x branch, then built
+a kernel with CONFIG_UBSAN_INTEGER_WRAP=y.  When booting that kernel, there are
+many UBSAN reports:
+
+    [    0.000000] UBSAN: negation-overflow in lib/sort.c:199:36
+
+    [    0.000000] UBSAN: negation-overflow in lib/sort.c:185:14
+
+    [    0.276708] UBSAN: unsigned-integer-overflow in ./include/linux/min_heap.h:329:24
+
+    [    0.277376] UBSAN: negation-overflow in ./include/linux/min_heap.h:260:42
+
+    [    0.871191] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8854:47
+
+    [    0.890856] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305-selftest.c:8851:47
+
+    [    0.910455] UBSAN: unsigned-integer-overflow in lib/crypto/chacha20poly1305.c:260:57
+
+    [    1.105542] UBSAN: unsigned-integer-overflow in lib/zstd/compress/zstd_compress_sequences.c:334:21
+
+    [    1.113539] UBSAN: unsigned-integer-overflow in lib/zstd/compress/huf_compress.c:889:23
+
+    [    1.114597] UBSAN: unsigned-integer-overflow in lib/lz4/lz4_compress.c:294:9
+
+So I did get the chacha20poly1305 ones, but they're hardly unique.
+
+If this new sanitizer is going to move forward, is there any sort of plan or
+guide for how to update code to be compatible with it?  Specifically considering
+common situations where unsigned wraparound (which is defined behavior in C) can
+be intentionally relied on, like calculating the distance from the next N-byte
+boundary.  What are the best practices now?
+
+Documentation/dev-tools/ubsan.rst says nothing about this and only mentions
+"undefined behavior", which this is not.
+
+- Eric
