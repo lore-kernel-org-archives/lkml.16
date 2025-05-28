@@ -1,203 +1,111 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0747278E44;
-	Wed, 28 May 2025 10:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAFF35979
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428174; cv=none; b=PC4aFjGckMJ/HCcIQ84yWrE2uK503rNEf+VeHmwnz0zeaNDulJ/plNVRB7h9qbyzJPjn2D2hysVbV0cu+0yujmKIzkJW6BRmbSSFEAzeZKUHk4h8UvBZ90ALlGRtNNV+9OkdCpDjdCGfsxjB6evDBFSCzb5lnx8wG+EZLLu6ssU=
+	t=1748428270; cv=none; b=WV64KFx2UB+CSRnTTLYsmtILn/wndEFhnkkgNyxnhf5fbnJTkrwpbAq1z94jqncNNicXZ2mSpD0TekHVrou0P1uKoa2AuDnkUcivKMk2iGM++xYa/27gtVnHFGYwJpQlgZ0D5Oq/j0/PAuEzztLFj0GnWpr1bfZyr83+D5l3iaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428174; c=relaxed/simple;
-	bh=h+29phBmhlh1+LUraWLSuUdwRFKJoxTWtUu/2ITtjhI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Gw8F83p0q62lTWINyKr6it3pFLYhTwB5lXHvBLeyxwWuL+C/7wsVvL9MSDDgYbC1IuAj7Yra+q/XrnWlD/MvMvWt4YO5PKg5NSx4oRc5ByKGXcwTFOKH19k8hohbLINj5c3jIdCIhRPkh8wLgLXbVWEg0BHTEnInx8I6stLec/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xLWfTKqK; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748428270; c=relaxed/simple;
+	bh=5FpyHY2tQuyzJ0S2g4vKQEYDZ8iGnxH6tJ5/Xaw/2eg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K83/FiyLjZb1xwwdkKkTcSwHgV6zWq5v1BoO3icpDv15g/JISJ00Q9b7D0ieIIZ+jJOKzjNatEGrfA+O0LWiQ9Rbb+iucDJCjdcAPoenDJ+pqNL0DUISzkFmc04ivuVjCWW3bTVFmNGK8TtEchk661MBgsZsFjexdJqn1UG+gFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KnehEPHW; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xLWfTKqK"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54SATMNi3236486;
-	Wed, 28 May 2025 05:29:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748428162;
-	bh=m8AmUS6TNrYkLRwZxzaG8NF3Ct7s6HtxqfyDKxPFrLc=;
-	h=Date:Subject:To:References:From:In-Reply-To;
-	b=xLWfTKqKreLX83E7Sv7bJ60G/xqoWyLC028ZcbJwEzPTY9A76Glyl+04Mo3u9HbH1
-	 fhFr4Ics7qmR+WKvc3GD3NzfP8/b04tuoFeKvVIaqXCTx6TYm1Wc656bquRb5CSVwS
-	 29Mvkih+z9J4SHMT9dejzfRlcG3y6UKghjkSb89g=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54SATM8Q3369282
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 28 May 2025 05:29:22 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
- May 2025 05:29:22 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 28 May 2025 05:29:22 -0500
-Received: from [172.24.30.41] (lt2k2yfk3.dhcp.ti.com [172.24.30.41])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54SATGi7013764;
-	Wed, 28 May 2025 05:29:17 -0500
-Message-ID: <110b1fb3-da88-4b38-babf-eb0e375100a6@ti.com>
-Date: Wed, 28 May 2025 15:59:16 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KnehEPHW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748428269; x=1779964269;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5FpyHY2tQuyzJ0S2g4vKQEYDZ8iGnxH6tJ5/Xaw/2eg=;
+  b=KnehEPHWpC1e6bbHC1a1XMJPJg6n5WeMHh3cyp84peYFVqLIyonKYDym
+   qALCppj6gkhovHE3qYkGMnZQrn4sRuT+N1PfQMAtF+dVKNfmuCSqbET6n
+   33cNHD0n/S5BGH0TS4y8ZikaLPIntobZU+ISMg4nFtIrQUYp0v28TuAoV
+   n2rs8lL7gGqMA8NtKGz6vBF2TgDQ4cBKdv1mNa9TjH826L3x2SQ4fCG1u
+   DBgGTiEBXNuJthuDCKZIpyEdvJa7bkpBpcRlI0ot1wokPsoDggI6/i6JT
+   kQQuaK0+lvgXgz9jpx3x4oF2sdp2mZx46IiKVULqfgFg95tCnZyvg+V38
+   A==;
+X-CSE-ConnectionGUID: izohwbUkRFaLsFI+zpvOdQ==
+X-CSE-MsgGUID: Zq/+W9i3SqeXvxvqFp9VAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="49695531"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="49695531"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 03:31:08 -0700
+X-CSE-ConnectionGUID: s3rzE0s4SMa7uinSdw/PTw==
+X-CSE-MsgGUID: mhMGwAv/SfGRjzvLZUWWkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="143234633"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 03:31:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uKE3o-00000001PuX-3hiz;
+	Wed, 28 May 2025 13:31:00 +0300
+Date: Wed, 28 May 2025 13:31:00 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christopher Snowhill <chris@kode54.net>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>,
+	Imre Deak <imre.deak@intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/xe/vsec: fix CONFIG_INTEL_VSEC dependency
+Message-ID: <aDbl5CIGulMng3de@smile.fi.intel.com>
+References: <20250523121106.2231003-1-arnd@kernel.org>
+ <j7yodlrk7wh3ylvb2z622ndlzm4guhahmakdb6l5d6qtv5sabo@w4bfiehtmaab>
+ <aDbYs7QZRfr2i80A@smile.fi.intel.com>
+ <704fd2b9-04da-4ec8-b854-22bc3ce9058e@app.fastmail.com>
+ <DA7PSM1WUKBI.3JA6THJTRF5B7@kode54.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] drivers: dma: ti: Refactor TI K3 UDMA driver
-To: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
-        <vkoul@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <praneeth@ti.com>, <vigneshr@ti.com>, <u-kumar1@ti.com>,
-        <a-chavda@ti.com>
-References: <20250428072032.946008-1-s-adivi@ti.com>
- <20250428072032.946008-4-s-adivi@ti.com>
- <e823a43e-20a8-4142-875f-a3575cbb0d0b@gmail.com>
-Content-Language: en-US
-From: "Adivi, Sai Sree Kartheek" <s-adivi@ti.com>
-In-Reply-To: <e823a43e-20a8-4142-875f-a3575cbb0d0b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA7PSM1WUKBI.3JA6THJTRF5B7@kode54.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Wed, May 28, 2025 at 03:17:03AM -0700, Christopher Snowhill wrote:
+> On Wed May 28, 2025 at 3:03 AM PDT, Arnd Bergmann wrote:
+> > On Wed, May 28, 2025, at 11:34, Andy Shevchenko wrote:
+> >> On Tue, May 27, 2025 at 03:55:46PM -0500, Lucas De Marchi wrote:
+> >>> On Fri, May 23, 2025 at 02:10:46PM +0200, Arnd Bergmann wrote:
 
+...
 
-On 5/9/2025 7:55 PM, Péter Ujfalusi wrote:
-> Hi,
+> > I think ACPI_VIDEO is at the center here, and changing all the
+> > 'select ACPI_VIDEO if ACPI' instances to
+> > 'depends on ACPI_VIDEO || !ACPI_VIDEO' would solve a lot of
 > 
-> On 28/04/2025 10:20, Sai Sree Kartheek Adivi wrote:
->> Refactors and split the driver into common and device
->> specific parts. There are no functional changes.
->>
->> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
->> ---
->>   drivers/dma/ti/Makefile         |    2 +-
->>   drivers/dma/ti/k3-udma-common.c | 2909 ++++++++++++++++++++++++
->>   drivers/dma/ti/k3-udma.c        | 3751 ++-----------------------------
-> 
-> I'm affraid you do need to break this one up a bit. It might be doing it
-> correctly, but it is impossible to check with the churn, like ....
-noted. I'm working on splitting this. Will post a v2.
+> Maybe you meant 'depends on ACPI_VIDEO || !ACPI' ?
 
-> 
->>   drivers/dma/ti/k3-udma.h        |  548 ++++-
->>   4 files changed, 3700 insertions(+), 3510 deletions(-)
->>   create mode 100644 drivers/dma/ti/k3-udma-common.c
-> 
-> ...
-> 
->> -static bool udma_is_chan_running(struct udma_chan *uc)
->> -{
->> -	u32 trt_ctl = 0;
->> -	u32 rrt_ctl = 0;
->> -
->> -	if (uc->tchan)
->> -		trt_ctl = udma_tchanrt_read(uc, UDMA_CHAN_RT_CTL_REG);
->> -	if (uc->rchan)
->> -		rrt_ctl = udma_rchanrt_read(uc, UDMA_CHAN_RT_CTL_REG);
->> -
->> -	if (trt_ctl & UDMA_CHAN_RT_CTL_EN || rrt_ctl & UDMA_CHAN_RT_CTL_EN)
->> -		return true;
->> -
->> -	return false;
->> -}
->> -
->>   static bool udma_is_chan_paused(struct udma_chan *uc)
->>   {
->>   	u32 val, pause_mask;
->> @@ -643,189 +88,73 @@ static bool udma_is_chan_paused(struct udma_chan *uc)
->>   	return false;
->>   }
->>   
->> -static inline dma_addr_t udma_get_rx_flush_hwdesc_paddr(struct udma_chan *uc)
->> +static void udma_decrement_byte_counters(struct udma_chan *uc, u32 val)
-> 
-> 
-> These sort of diffs.
-> 
->>   {
->> -	return uc->ud->rx_flush.hwdescs[uc->config.pkt_mode].cppi5_desc_paddr;
->> +	if (uc->desc->dir == DMA_DEV_TO_MEM) {
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_rchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		if (uc->config.ep_type != PSIL_EP_NATIVE)
->> +			udma_rchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	} else {
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_BCNT_REG, val);
->> +		udma_tchanrt_write(uc, UDMA_CHAN_RT_SBCNT_REG, val);
->> +		if (!uc->bchan && uc->config.ep_type != PSIL_EP_NATIVE)
->> +			udma_tchanrt_write(uc, UDMA_CHAN_RT_PEER_BCNT_REG, val);
->> +	}
->>   }
->>   
->> -static int udma_push_to_ring(struct udma_chan *uc, int idx)
->> +static void udma_reset_counters(struct udma_chan *uc)
->>   {
-> 
-> ...
-> 
->> +struct udma_dev {
->> +	struct dma_device ddev;
->> +	struct device *dev;
->> +	void __iomem *mmrs[MMR_LAST];
->> +	const struct udma_match_data *match_data;
->> +	const struct udma_soc_data *soc_data;
->> +
->> +	struct udma_tpl bchan_tpl;
->> +	struct udma_tpl tchan_tpl;
->> +	struct udma_tpl rchan_tpl;
->> +
->> +	size_t desc_align; /* alignment to use for descriptors */
->> +
->> +	struct udma_tisci_rm tisci_rm;
->> +
->> +	struct k3_ringacc *ringacc;
->> +
->> +	struct work_struct purge_work;
->> +	struct list_head desc_to_purge;
->> +	spinlock_t lock;
->> +
->> +	struct udma_rx_flush rx_flush;
->> +
->> +	int bchan_cnt;
->> +	int tchan_cnt;
->> +	int echan_cnt;
->> +	int rchan_cnt;
->> +	int rflow_cnt;
->> +	int tflow_cnt;
->> +	unsigned long *bchan_map;
->> +	unsigned long *tchan_map;
->> +	unsigned long *rchan_map;
->> +	unsigned long *rflow_gp_map;
->> +	unsigned long *rflow_gp_map_allocated;
->> +	unsigned long *rflow_in_use;
->> +	unsigned long *tflow_map;
->> +
->> +	struct udma_bchan *bchans;
->> +	struct udma_tchan *tchans;
->> +	struct udma_rchan *rchans;
->> +	struct udma_rflow *rflows;
->> +
->> +	struct udma_chan *channels;
->> +	u32 psil_base;
->> +	u32 atype;
->> +	u32 asel;
->> +
->> +	int (*udma_start)(struct udma_chan *uc);
->> +	int (*udma_stop)(struct udma_chan *uc);
->> +	int (*udma_reset_chan)(struct udma_chan *uc, bool hard);
->> +	bool (*udma_is_desc_really_done)(struct udma_chan *uc, struct udma_desc *d);
->> +	void (*udma_decrement_byte_counters)(struct udma_chan *uc, u32 val);
-> 
-> You can drop the udma_ prefix, it is clear that they are for udma..
-> 
->> +};
+I believe not. The depends on FOO || FOO=n is idiomatic in Kconfig.
+
+> > the recurring dependency loop problems in drivers/gpu/.
+> >
+> > Actually doing it without regressions is going to be
+> > nontrivial though, because any change in this area is likely
+> > to trigger another dependency loop somewhere.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
