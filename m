@@ -1,142 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6E1220F3A;
-	Wed, 28 May 2025 21:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE1421FF32;
+	Wed, 28 May 2025 21:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748469412; cv=none; b=JIlPwkt1wqOVSeQfdU1yVSF9QbA1g5dC6iCXD82pKOveT0K40LCDWfPAIgr7n1Cjn3Zf6YJfYkBQl8e17scwrO2jYx24Bjr4c74xRYbTqK29Pf6paec5/DhuiFet0S0esrJkZVRCu82Hb3tmuDNjyReBmhFXhBN5EVRnQ3zc6FI=
+	t=1748469533; cv=none; b=dOYMRjPH2k6y231tevEzb2wRwvAeHwag5bZWiOPIR5+sjY1JykTiq2cEgJQTCSPaUYmtzv8oCTJRUH8LMnKPr6n3OlS8TdbHrjK3OF72Muwde4OFMQyYHUEMfAVISaWI/loUlUiU3rLXImdaP/IuGeDH/yULLyVE7slblQn2ed8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748469412; c=relaxed/simple;
-	bh=6kk1UuDHJndLmu4iy7P8ROiftYzDAghfNTtHlwXcPF0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=OESaeRU+s93RB9AaE5JHVkkvS2Y0bYlBuV/ZZl2SpW/05ziFsWQQ5VfpF1KEVIxmM8dfoHIrXrK2D2Oaw+oHE7365lpcH9EHWDnSc6pr41nxXtrowcInZIRv4MuD+H/XUshJ+oX9/e69fStt1iDjEvHNgvwdRSZV5XG5SoAi1+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vsqm8+T9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748469533; c=relaxed/simple;
+	bh=LLUztYHjAFJ3efU9EaxF8l2rLkaP+mwM/RroEOD3eeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hgq2UsVvWzaxEy8PyeiwCyqlnVGqQZEoAdVQzWBFHEbFDAq8V8uJxsHbd9NCrjtuo5Oay6/vBXieIsbzwsweZcOo4H/o+/B6NrJujjm8LoVd0bynyMMiHU0gefx07rFkLMq8ErqlNLbSGcfZuNBKHJjOrLcCEVBE1Ep0MdzwiEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aoloa0i6; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vsqm8+T9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04073C4CEE7;
-	Wed, 28 May 2025 21:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748469411;
-	bh=6kk1UuDHJndLmu4iy7P8ROiftYzDAghfNTtHlwXcPF0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Vsqm8+T9FzN3fDAsOKHhfP9053du97kFAngc3z5uW1+UByAkjDHfqUlcjII6YW49H
-	 l3HhcgPQA/KJ3XTs9t4cGsEaKpmeyxOtlfE7888fE84SXpv2yKLehQQfCRAOQxAjly
-	 s9EKr6aUgsa3kYOyhrNK2XaEpEpKGCV/tJN1+HevSQ7cQk0OeaYJoMAXRFE8rbGI/h
-	 rq6cfLCBUpxQZjslXqw1ZxTTR4xNU1hsjLXYEw24XwLu01P4JFU2CCkqB/bBcKll2X
-	 Uxkc/pgBgpuOE4gv7nUYDyZYG9JO8mffmEZsnhhnnMmkuIuvJz+gxGvpnCkc2+9d/H
-	 LlJAaK4iqZJnA==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4] fs/filesystems: Fix potential unsigned integer underflow in fs_name()
-Date: Wed, 28 May 2025 17:56:49 -0400
-Message-Id: <20250528215649.1984033-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aoloa0i6"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23461842024so3299215ad.0;
+        Wed, 28 May 2025 14:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748469531; x=1749074331; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ttAJzmfW9+GQa0rRyczMv5l8LbO1UT5+77cAySADNRQ=;
+        b=Aoloa0i65HznO+dOigx/oBxBElcNoeeKzYMfMavYHGOq22NK1LZ+iM8PEPKiq5oZ46
+         rXmcbdvUxoXAVKpEjQXI2KAB3r8nOH7H51jXVuOsqXkPq9F2ens/6qfkrcCe4hb9qdhP
+         hVUhLILIJUxkjOlioOTOYb6mXvLQ5tKv0Vzh3/dDG8QmKUtkLBYmWfKlFxgbTAz7acVN
+         76ZpsON2b5k1/E9JDw0BB1etqvgc1VgJhJLQrZqYFfXm1SdBpS6ieXCLWeZuT0VVLaEf
+         YRgPLMI0YNs0pXQj0OJONtHs9If0IPBGuUgmPYTE0T+YVU1l7arbB6CdaduX5SvC8uR+
+         Q7hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748469531; x=1749074331;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ttAJzmfW9+GQa0rRyczMv5l8LbO1UT5+77cAySADNRQ=;
+        b=aWrmqn+Cy6gdZkF1NthmhmcEfq73/V70dSaNnrmNtocYOuJw09+QMplTvZkn0704JO
+         Bj14LgjGRhVDfEvVI1+0Ei6+5AiMNKSejs4SGUsJw2vd8Wgx0K+CH+4tzYrbgG4rS319
+         HWjm5hQrj8kwPz2xUt4fgMCu2UXDn8XYgNEGQ/ywPTGgkSjFC1JLmbLYcWLDyEPZGGAb
+         FmK96PTPa5WlgdEMYyJpD2wVYQGeIDh7aOr0WIUqyvd+brsxCRfE/eav8HLWkNndAP2V
+         AgW4xHIh0gqFnBbK4dqrysrbQQlFnTT+QgD3NN56KQeT8BK11ZKGAKxc7RIiXO75nl/B
+         Cymw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6jrN+qEV09dZJ3F0ZLi/M//8dU1Q83ZX2pWl9nOzODzwsbez4LaQN/UTYyQ9pOX4oTvaJwRTpgm+xw5w=@vger.kernel.org, AJvYcCUhUNYEzuwYl+ukn8pYvOJ/yyEOGhrLWhukfY/ESmYTcXP424yWz0GwTH5ejr9YisNRXUH6zQzShYOzB1KQtQ9z@vger.kernel.org, AJvYcCXSjEyPus8TJL0Viq04fC2Q2mVbv/VMBakgTNhET0F/EZ35XnEScNq4npiguvRBdkKgfZCzCPBf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwogOh5/SrdFcKrQQ0ozrsSyDdEHASmceT3lFvTOaUcWCNMb6Wu
+	8zUbkTWe9FoHKEjD3p7URkqm4LUdaPFoOEnAN4jFjEPXXszefNJq0Igb
+X-Gm-Gg: ASbGncsFp2Xsvxvbks/ZxVVdaii8L+6Vluvsdi+IBtAkNYet9qAEfhx1yCR7L9BuTDd
+	j+Os3xrpstnCIAeWtbKowWOd8sg3PjHDeCkM4Ga0y/+bbTmtt9e79Ccb7o/DGKR7gXyhfgA4sEb
+	DHwzO2hjvg/HsEXeBYYBNK9WCnBM4wxwTOSVywfXeO5Jxh5eAwSobK8YDA6l/UgSSQAemPCtK2Q
+	FzY57Kk9mximkWXWGfS1G/DW3nJD4Pwe75iB5HtY8P57pi/XaZwHqJc32t/9rQP2q2N/1AJ43xw
+	JGAuSVUtgkCqZWgn9V1WXZ0J1dFjNGorycSyIwqLa2aoP8PSKOXLd4KB3SwFqt0=
+X-Google-Smtp-Source: AGHT+IFAAfBzpsKcvV0vuav8DmCGmUI4Eo+o2HOPct7NcdnaFE8CpWx5nme7qzYPJ47hd1mO67Ib/Q==
+X-Received: by 2002:a17:903:228c:b0:22d:b305:e097 with SMTP id d9443c01a7336-23414fd3e53mr259186315ad.50.1748469531018;
+        Wed, 28 May 2025 14:58:51 -0700 (PDT)
+Received: from gmail.com ([98.97.34.246])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cfa37fsm581965ad.197.2025.05.28.14.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 14:58:50 -0700 (PDT)
+Date: Wed, 28 May 2025 14:58:46 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>, Ihor Solodrai <isolodrai@meta.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1 2/2] selftests/bpf: Add test to cover ktls
+ with bpf_msg_pop_data
+Message-ID: <20250528215846.iqx6ea7f2bb4m7wj@gmail.com>
+References: <20250523131915.19349-1-jiayuan.chen@linux.dev>
+ <20250523131915.19349-3-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523131915.19349-3-jiayuan.chen@linux.dev>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On 2025-05-23 21:18:59, Jiayuan Chen wrote:
+> The selftest can reproduce an issue where using bpf_msg_pop_data() in
+> ktls causes errors on the receiving end.
+> 
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> ---
 
-[ Upstream commit 1363c134ade81e425873b410566e957fecebb261 ]
+Yep LGTM thanks.
 
-fs_name() has @index as unsigned int, so there is underflow risk for
-operation '@index--'.
-
-Fix by breaking the for loop when '@index == 0' which is also more proper
-than '@index <= 0' for unsigned integer comparison.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-Link: https://lore.kernel.org/20250410-fix_fs-v1-1-7c14ccc8ebaa@quicinc.com
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-**YES** This commit should be backported to stable kernel trees.
-**Detailed Analysis:** **The Bug:** The `fs_name()` function at
-`fs/filesystems.c:156-174` has a critical unsigned integer underflow
-vulnerability. When the function receives `index=0` as a parameter, the
-loop `for (tmp = file_systems; tmp; tmp = tmp->next, index--)`
-decrements `index` from 0 to `UINT_MAX` (4294967295 on 32-bit systems),
-causing the condition `if (index <= 0 && try_module_get(tmp->owner))` to
-evaluate incorrectly. **The Fix:** The commit changes the logic from: -
-Old: `if (index <= 0 && try_module_get(tmp->owner))` - New: `if (index
-== 0) { if (try_module_get(tmp->owner)) res = 0; break; }` This prevents
-the unsigned integer from wrapping around and provides proper bounds
-checking. **Impact and Severity:** 1. **User-accessible vulnerability**:
-The `fs_name()` function is called through the `sysfs` system call
-(syscall #139) with option 2, making it directly accessible to userspace
-applications. 2. **Potential for exploitation**: An attacker could call
-`sysfs(2, 0, buffer)` to trigger the underflow, potentially causing: -
-Infinite loops in the filesystem list traversal - Unintended module
-reference acquisition - System instability or denial of service 3.
-**Core filesystem subsystem**: This affects the fundamental filesystem
-registration mechanism in the kernel. **Comparison with Similar
-Commits:** This follows the same pattern as the **accepted backport
-examples**: - **Similar to Commit #1 (ntfs3)**: Both fix integer
-overflow/underflow issues that could cause system instability -
-**Similar to Commit #3 (f2fs)**: Both prevent integer arithmetic issues
-in filesystem code - **Similar to Commit #5 (f2fs)**: Both add bounds
-checking to prevent corruption **Stable Tree Criteria:** ✅ **Fixes
-important bug**: Prevents potential system instability and undefined
-behavior ✅ **Small and contained**: Minimal code change, only affects
-one function ✅ **Clear side effects**: No architectural changes, just
-safer bounds checking ✅ **Low regression risk**: The fix makes the
-function more robust without changing expected behavior ✅ **Critical
-subsystem**: Filesystem management is fundamental to kernel operation
-**Conclusion:** This is a textbook example of a commit suitable for
-stable backporting: it fixes a clear bug with security implications in
-core kernel infrastructure, uses a minimal and safe approach, and has no
-risk of introducing regressions. The unsigned integer underflow could
-lead to system instability when triggered through the accessible `sysfs`
-syscall.
-
- fs/filesystems.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/fs/filesystems.c b/fs/filesystems.c
-index 5e1a190133738..148073e372acd 100644
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -155,15 +155,19 @@ static int fs_index(const char __user * __name)
- static int fs_name(unsigned int index, char __user * buf)
- {
- 	struct file_system_type * tmp;
--	int len, res;
-+	int len, res = -EINVAL;
- 
- 	read_lock(&file_systems_lock);
--	for (tmp = file_systems; tmp; tmp = tmp->next, index--)
--		if (index <= 0 && try_module_get(tmp->owner))
-+	for (tmp = file_systems; tmp; tmp = tmp->next, index--) {
-+		if (index == 0) {
-+			if (try_module_get(tmp->owner))
-+				res = 0;
- 			break;
-+		}
-+	}
- 	read_unlock(&file_systems_lock);
--	if (!tmp)
--		return -EINVAL;
-+	if (res)
-+		return res;
- 
- 	/* OK, we got the reference, so we can safely block */
- 	len = strlen(tmp->name) + 1;
--- 
-2.39.5
-
+Reviewed-by: John Fastabend <john.fastabend@gmail.com>
