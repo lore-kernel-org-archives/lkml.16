@@ -1,113 +1,161 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 232AF27603D;
-	Wed, 28 May 2025 09:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52A0275868
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424136; cv=none; b=N685tu2ZWvTMQXv7y2VxRy5xJI3clczJ1VW+LKRBk//WGPdgn/CVO0L0YWWlxghBPaALJK+6NHud/HqHnvuozyfgVz7exeFHnA8XkptbCj5b7cjhbra4N7DmUunGQpzmsw890oPB6i/SFLoz5ZydD9m3WaJncmSSPIfA2m87skU=
+	t=1748424155; cv=none; b=XnfKrPNBvUbk0eJLzdBasSY9MytbFQp6p99JAOYaruk+l8YpackcxdGKhL8fyYWk5s1CFobzHd8+iLIcsKpVCGg8xFErmzVm9lB51LFi5GfTEoglqVftoyEVtUJ9kG5VK6bBjwJcI6imv4vzeB39O5hAKvKEI4JbaBQeiVnMXpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424136; c=relaxed/simple;
-	bh=ux5z/bwI4YZWWsbINLJ1ROHKtgYZ4+IDPSRy5k50n4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rLjOGseHyC1M1bz2D+2V3Hr+HanYTooJ9SnR4WUXPimWo2MykYl7AvQBExpSK97dEtXYIprkn9QpAZEBOhA6GgowCFHVL1oYPo3jj2V8Ht4KbqQYicPTQ+HxHn10mqqE2S3cwRl9D+hhaXPtUyGSjY3robMMD1C1Hv2sbOL4ok0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=h9unDjaG; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="h9unDjaG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=q7O5zjtGMuNTZ2eB8CHCX4rdma8dMuUmcapZAjPpK/s=;
-	b=h9unDjaGRRCRLZCw25/Akg+VhyEf7XB9AaR15IXqqsAyYfjjkFD9/hAyE5mjUo
-	Ux+AqsJ5NYQ0F5OzzlsgqLxShVCGRR63zl7WI7UjhtNFHvSBrX793DCQVrLmmHlu
-	SNUG0qy3c+JISjRIJjYcfkWzjUOMZZLVTIjNBeoj7kmYc=
-Received: from [172.21.12.155] (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgAnO5yY1TZodryFCA--.55361S2;
-	Wed, 28 May 2025 17:21:30 +0800 (CST)
-Message-ID: <98542eca-d5ba-470e-b6af-990dda167cec@163.com>
-Date: Wed, 28 May 2025 17:21:23 +0800
+	s=arc-20240116; t=1748424155; c=relaxed/simple;
+	bh=EH1mMXQI5wxXfEugUS09ywjvRboZIQjKHsBHP/oQu+A=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ekbnl6lcjfCziqqTSGlAsEw6gFwsFXf9oQ9w1n+Xrx5Mw/iNvy7Iw5tYVjGMIUSWRQ9RGT2D59u1td8efNKlNqMVV6dYo4+TsrFj9DkLsT7n21NgWXckNpdM2HDsdLGLG2JnXbQQSw3IXQZJI8ComUDaLXyVmxIFBgpHPL7oRdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cd99974d7so287099739f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:22:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748424153; x=1749028953;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QaxN9yI31Cw8gE+zvX2r8p8Olm+56SyVzimumhvEfJc=;
+        b=E6xhXPfxIZjDH5TYco9dRDcgxRX9S+0cSAlG62oKWLflI/crndsRyMsIh3N9okdv12
+         5iJqqv0qGJBrjgVrLechArGwtg9kRv8XQE4vIn+MamUSQWfglh72QnBPsQViONECVjJD
+         C1w2mFyScFAMFxGbOCIVjot2jFr+h6sXQMxwwmwC3tRF3bwl2E2p+YmtcPVjlX+Q3SG0
+         Jm3e+rQPD2SaNVwqzxPNCwDhBellMdiH+7eMllzdJCU5xF70KnKsuwCz8g6KxiT3T649
+         EF13K3rqm3cGwg/honqO6kTmTBbyLWcNhcEDemrXJpi/EtUm3K3NRoEcw6ughVhkYBtg
+         Pzgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWiUA0W1o9gCxQFxPm2bZ6vtOVjItnJo3HaMsWoquGHPiK6jUSF9NiIqL0CrK1ctcvrZGHtkUcXVYlGNw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBbaEOF+d8RYHX7FicSd4GD1yf/WduFyhz9FixQVvdH0azc0J+
+	kgTi7pkaokdm6BzzDko7ZrACA/100Uy256HwlevXR//8R0dt5NHxYvNbzenodk9LLbhg0Bwnnbo
+	/j6JCP3g1e84Wz4fBhow2ciklqLnkNI8BO+R8LFY2MVoMU3g3RPqV4vamXF4=
+X-Google-Smtp-Source: AGHT+IEU8oC+KFnoYP3nDRWZ403fy3i4VUTZQ8/uDd7pju+VTyPCCQ2XA+O9zAdIm7tXNHqKPXfH4qvZVoL4nJW5cEwGqe+QDBym
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] driver core:add device's platform_data set for faux
- device
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, dakr@kernel.org, markgross@kernel.org, arnd@arndb.de,
- eric.piel@tremplin-utc.net, valentina.manea.m@gmail.com, shuah@kernel.org,
- i@zenithal.me, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zongmin Zhou <zhouzongmin@kylinos.cn>
-References: <cover.1746662386.git.zhouzongmin@kylinos.cn>
- <b03b374bc3adad275893e2ad60d4bf5a0ad358e3.1746662386.git.zhouzongmin@kylinos.cn>
- <2025050854-breeching-had-c9b3@gregkh>
- <0ef733c0-a945-4eae-8af2-2fe7bb60ed92@163.com>
- <2025052139-credibly-dealt-c8aa@gregkh>
-Content-Language: en-US
-From: Zongmin Zhou <min_halo@163.com>
-In-Reply-To: <2025052139-credibly-dealt-c8aa@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PCgvCgAnO5yY1TZodryFCA--.55361S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr13Jr1fKw1rtFWrJw1DJrb_yoW5JF18pa
-	yIgFyayr4qgay2krnFvw4rZw1ftr4ft3y5trn8Jryjk34SkrnavFy7Kr4vyayDGFWFk3W2
-	q3yDX34kAFZ8A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UeuWLUUUUU=
-X-CM-SenderInfo: pplqsxxdorqiywtou0bp/1tbiUAVaq2g1KS6GHgACsk
+X-Received: by 2002:a05:6602:7509:b0:867:2374:49cd with SMTP id
+ ca18e2360f4ac-86cbb7b73demr1657350139f.2.1748424152959; Wed, 28 May 2025
+ 02:22:32 -0700 (PDT)
+Date: Wed, 28 May 2025 02:22:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6836d5d8.a70a0220.253bc2.00c5.GAE@google.com>
+Subject: [syzbot] [fbdev?] KASAN: vmalloc-out-of-bounds Write in fillrect
+From: syzbot <syzbot+7a63ce155648954e749b@syzkaller.appspotmail.com>
+To: deller@gmx.de, dri-devel@lists.freedesktop.org, 
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, simona@ffwll.ch, 
+	soci@c64.rulez.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    a5806cd506af Linux 6.15-rc7
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12afde70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87b7b87abbf1a67f
+dashboard link: https://syzkaller.appspot.com/bug?extid=7a63ce155648954e749b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d0398ca67d9a/disk-a5806cd5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/dccdb3c5ff14/vmlinux-a5806cd5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3d94cf3493b5/bzImage-a5806cd5.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7a63ce155648954e749b@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: vmalloc-out-of-bounds in fb_write_offset drivers/video/fbdev/core/sysmem.h:30 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in bitfill drivers/video/fbdev/core/fb_fillrect.h:134 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in fb_fillrect_static drivers/video/fbdev/core/fb_fillrect.h:220 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in fb_fillrect drivers/video/fbdev/core/fb_fillrect.h:279 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in sys_fillrect+0x15d4/0x17b0 drivers/video/fbdev/core/sysfillrect.c:22
+Write of size 8 at addr ffffc90003849000 by task syz.1.1552/13525
+
+CPU: 1 UID: 0 PID: 13525 Comm: syz.1.1552 Tainted: G     U              6.15.0-rc7-syzkaller #0 PREEMPT(full) 
+Tainted: [U]=USER
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ fb_write_offset drivers/video/fbdev/core/sysmem.h:30 [inline]
+ bitfill drivers/video/fbdev/core/fb_fillrect.h:134 [inline]
+ fb_fillrect_static drivers/video/fbdev/core/fb_fillrect.h:220 [inline]
+ fb_fillrect drivers/video/fbdev/core/fb_fillrect.h:279 [inline]
+ sys_fillrect+0x15d4/0x17b0 drivers/video/fbdev/core/sysfillrect.c:22
+ drm_fbdev_shmem_defio_fillrect+0x22/0x140 drivers/gpu/drm/drm_fbdev_shmem.c:37
+ bit_clear+0x17a/0x220 drivers/video/fbdev/core/bitblit.c:73
+ __fbcon_clear+0x600/0x780 drivers/video/fbdev/core/fbcon.c:1292
+ fbcon_scroll+0x48b/0x690 drivers/video/fbdev/core/fbcon.c:1851
+ con_scroll+0x45c/0x690 drivers/tty/vt/vt.c:579
+ csi_M drivers/tty/vt/vt.c:2072 [inline]
+ csi_ECMA drivers/tty/vt/vt.c:2483 [inline]
+ do_con_trol drivers/tty/vt/vt.c:2657 [inline]
+ do_con_write+0x6869/0x7c90 drivers/tty/vt/vt.c:3092
+ con_write+0x23/0xb0 drivers/tty/vt/vt.c:3432
+ process_output_block drivers/tty/n_tty.c:561 [inline]
+ n_tty_write+0x40f/0x1160 drivers/tty/n_tty.c:2377
+ iterate_tty_write drivers/tty/tty_io.c:1015 [inline]
+ file_tty_write.constprop.0+0x502/0x9b0 drivers/tty/tty_io.c:1090
+ tty_write drivers/tty/tty_io.c:1111 [inline]
+ redirected_tty_write drivers/tty/tty_io.c:1134 [inline]
+ redirected_tty_write+0xd4/0x150 drivers/tty/tty_io.c:1114
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x5ba/0x1180 fs/read_write.c:684
+ ksys_write+0x12a/0x240 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f457158e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f457244f038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f45717b5fa0 RCX: 00007f457158e969
+RDX: 0000000000000013 RSI: 0000200000000000 RDI: 0000000000000005
+RBP: 00007f4571610ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f45717b5fa0 R15: 00007ffddb9e8a38
+ </TASK>
+
+The buggy address ffffc90003849000 belongs to a vmalloc virtual mapping
+Memory state around the buggy address:
+ ffffc90003848f00: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90003848f80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+>ffffc90003849000: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+                   ^
+ ffffc90003849080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+ ffffc90003849100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
+==================================================================
 
 
-On 2025/5/21 18:51, Greg KH wrote:
-> On Fri, May 09, 2025 at 10:41:11AM +0800, Zongmin Zhou wrote:
->> On 2025/5/8 17:45, Greg KH wrote:
->>> On Thu, May 08, 2025 at 05:11:47PM +0800, Zongmin Zhou wrote:
->>>> From: Zongmin Zhou <zhouzongmin@kylinos.cn>
->>>>
->>>> Most drivers based on platform bus may have specific data
->>>> for the device.And will get this specific data to use
->>>> after device added.
->>>> So keep the setting for device's platform_data is necessary
->>>> for converting platform device to faux device.
->>> I do not understand, why not just use the platform_data field directly
->>> in the faux device structure?  Why change all callers to now have to
->>> keep track of an additional pointer in these create functions?  That
->>> just adds complexity for everyone when almost no one will need it.
->> In fact, I have tried other approaches.
->> However, I found that it must be set after creating faux_dev and before
->> calling the device_add() function.
->>
->> Because the execution of the driver init and the device probe function is
->> asynchronous,
->> and the actual test shows that the probe function is executed
->> before faux_device_create_with_groups () returns faux_device for the caller.
->> But the probe and related functions may need to get plat_data.If plat_data
->> is set after
->> faux_device_create_with_groups() is completed and fdev is returned, the
->> probe function will get NULL.
->>
->> Take vhci-hcd as an example:
->> vhci_hcd_init() calls faux_device_create_with_groups(),
->> Once device_add() is called, vhci_hcd_probe() will be executed immediately.
->> Therefore, the probe function will attempt to obtain plat_data
->> before vhci_hcd_init() receives the return value of faux_device.
->> It's too late to set plat_data after get the return value of faux_device.
->>
->> If there is anything not clearly or other good ways to handle this, please
->> let me know.
-> I think you need to unwind the "probe" logic here as it's not needed at
-> all.  After you create the faux device, then continue on with the logic
-> that is currently in the probe callback.  No need to split this out at
-> all, it's the same device being used/handled here, just unwind the logic
-> a bit and you should be ok.
-I'm very sorry for the late reply.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Yes,actually vhci_hcd_init() can call probe directly without
-by the faux_probe call it automatically.
-I can make this change for vhci-hcd driver.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Thanks for your suggestion.
->
-> hope this helps,
->
-> greg k-h
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
