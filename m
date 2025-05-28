@@ -1,305 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3318283CAF;
-	Wed, 28 May 2025 12:10:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434217; cv=fail; b=VeR6T7Mfxsqk0lsSzdVLLWzzWtNwvpeyZPZfKEmdQML+wb/AnrQ5v6WAJlx8YE43/y6IfHw4nWthiiDeYunZYYJmFfeBIeQv1pAeS6y8OvbwTqU/to/JihXvfQkoo8KKiEahaX0WAKDbBu7pYAILuNiZaEQuoROoNsA59cZJBOU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434217; c=relaxed/simple;
-	bh=XISfYKEoOe+sZMPtYIMPBX7CWZARArrU6hjdYchaQ6E=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SWTGZvv8YvZs0yWj5vnnlZRX60cz+RXFTp44V4bF2R6YmnjARnra16mr9kGtucD+X5NqVYDxAXFXZ/kDKBTWFT8i4c5jEgLYQXZXT9RVtRuJbaBvcAWG2T+xQBGI4/w12oVptZIdLxVYCQAIxfR2xrAefnuMDCe2J2BQx9bf7l8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SS7OFohJ; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A58283CAF
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748434226; cv=none; b=UkIAXOHbrZqG+HywdCZbn26R/SnsQRItzTDs4KMzz1BW8pCUAock2r9WPbTsxBHSs6fNXFEiXXAApjTGtF+/ecN3RdMzSCbDNlzxLg7P8H8mEQ/7BLwGgeI+8+63U85aUtv5uKzcaJUcVNxeg6r3OJsL4GD1Mwn/6rLYUzaM9U8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748434226; c=relaxed/simple;
+	bh=bnWrEHjmKFYA8LT8CsaB58xc1RYelpnOS+RbLx5r16E=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=alotheIqJyvVaCvY9bDqx4MyOC+3ZkJNeD7xCAqZuXH6xgNH8932WHTFfbwb6xGrgq5oAoyxXdFf6hSVd1HPNTuNwcIzqeFhzlWP0SlPHPs+cw0Mn21ch0NxuGJUMG4nh0sKCCaNbI+CUrG//iml11evPFXcpJtMQjhjiX7Yuhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org; spf=fail smtp.mailfrom=openpixelsystems.org; dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b=TgOerzSx; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=openpixelsystems.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SS7OFohJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748434216; x=1779970216;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=XISfYKEoOe+sZMPtYIMPBX7CWZARArrU6hjdYchaQ6E=;
-  b=SS7OFohJ4RU4Rmtaz4bivUBb85k959KPMg2gWss/Grm9wKjITNkb9rFc
-   teOzSSSik6nnM7rLk30oVA9AWhGuSVWihI0OCCa/k2FlkEppJH+Bjvcyq
-   MoINBvNPZftTHo0r0BTrALDUr2Py4gJGXolLO8NHbe9PYVJimrnAY/xSB
-   NFXDwhEqBXlTA0EosF+fILG08QANuw8ixUm4cE7SyyefRmQK1cOIqkLRW
-   4/jR8c3d5f+bpxD56g+0YoEMHLo6I1VRpnPDN2cqwKkTAKr+hBQx9s7yr
-   yD2/cfhbae9/S6KU3ux7HVk16BpUTq5bJV6R1i3nVONKlshCsoHnfbQs6
-   A==;
-X-CSE-ConnectionGUID: UzqRDhB7S3mtlJyNCM1k+A==
-X-CSE-MsgGUID: I9F2c7TZRXmyi1/RxKsGxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="53080615"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="53080615"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 05:10:15 -0700
-X-CSE-ConnectionGUID: vJhEya/xSkWj4ysycNNmuQ==
-X-CSE-MsgGUID: OkeB6+FVQk2f/Wv3OB0tlw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="148263792"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 05:10:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 28 May 2025 05:10:14 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 28 May 2025 05:10:14 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.51)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Wed, 28 May 2025 05:10:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=geZrrLHvhX3MfHm69KirFJbI/HuFwgNLG2VE2/+z0TUDUZpWsPF9vk/IljsDRO8AYPSAJwHpp7/BPhI7DCcPZ5YyEloXiB1wiZ/2gRSbh3INELIGpL8CnFCn3A0y5NrBjdwo1DcSQR45bjtquBMr7gH7tXNpJHgmqzJ1u5kFsikGdgXir6boCPeVsg//ItpjdLWtTSXIQ76N2k62YW0X1bV6PIDZyJ3P9uMW8uHnvYtEkU9oXaSE4uB9RaYkPNVNPID20kITbMs1OH5w1prTZrucBM/eT+N3sWI4JVma1/bFrqnc5ELqD+3TdfSX05yTMexcA91NquH6d45AtD+RXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Or+vAXllEyWYiZQeDZDgXzbEG225rAbCpI+yfUqfYEc=;
- b=UK2reh0jQKBz98nMyFGPTQXQRd7fexGaT8C85w6cBZO+nADyYoNVAFvHU3pCWlYqv+4T9ZcGjtPN0NA/yhymxrTapsPdymBu3H6yQyfI7Hlv2qZ2cXFqeafNlLZF1IgermS3yld2BLgbw3oplfqtND4Rx6aYLkoq/iV9KwtQxc9GAt2KU3yAQXFYXEUFfaGAjKWEjmzum0iMkh7xi3LOztnINpz1TPbxTVVH6nu2qMTh8kvKEbkto2PoUrMOlox5TOhI1R9p0POH7cMW8vKw0+pZZh4EsOdbSmNQSX/8RnlSwI2CQI1+PA0NhJJ44ijNN1myYOmLBr/E5NOz0XeIqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6054.namprd11.prod.outlook.com (2603:10b6:510:1d2::8)
- by PH3PPFE1E3F709D.namprd11.prod.outlook.com (2603:10b6:518:1::d56) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Wed, 28 May
- 2025 12:09:45 +0000
-Received: from PH7PR11MB6054.namprd11.prod.outlook.com
- ([fe80::a255:8692:8575:1301]) by PH7PR11MB6054.namprd11.prod.outlook.com
- ([fe80::a255:8692:8575:1301%6]) with mapi id 15.20.8769.029; Wed, 28 May 2025
- 12:09:45 +0000
-Message-ID: <20d2730f-1e1b-4f47-b208-201468e21029@intel.com>
-Date: Wed, 28 May 2025 15:09:39 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND V2 2/2] mmc: sdhci-uhs2: Adjust some error messages
- and register dump for SD UHS-II card
-To: Victor Shih <victorshihgli@gmail.com>, <ulf.hansson@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<benchuanggli@gmail.com>, <HL.Liu@genesyslogic.com.tw>,
-	<Greg.tu@genesyslogic.com.tw>, <Ben.Chuang@genesyslogic.com.tw>, Victor Shih
-	<victor.shih@genesyslogic.com.tw>
-References: <20250523110155.10451-1-victorshihgli@gmail.com>
- <20250523110155.10451-3-victorshihgli@gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20250523110155.10451-3-victorshihgli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0087.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:46a::18) To PH7PR11MB6054.namprd11.prod.outlook.com
- (2603:10b6:510:1d2::8)
+	dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b="TgOerzSx"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so58390565e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openpixelsystems-org.20230601.gappssmtp.com; s=20230601; t=1748434222; x=1749039022; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=K/Sru8uL3qj8FenGHJhSAB8NKjzdx19AaoWH6D6+0Gc=;
+        b=TgOerzSxVCj3U4vBwlIaEENl3cddwWCA3JxRihb0dCn4t4dHJisTD6HWI6ciIduOS1
+         jGUd2BCCDQEqR3+BdVgK72fmMdzfnYF7bj0MLZLlnRrFcmqvdART3EqMuIEiFGu5P6Dg
+         O2NE5S3J1ciAQJ89dVFCUsnocv+0+lhXoTKlnGcAmS94l4gwVe/gpki9JkW5BNpR1KwX
+         CwHlqUZ281qke5Ik4HBHeP1uPLVPRph7ymqXP2SwE3lQRts7H2SMXpHyxRbfVh6ycLWs
+         Jzbilk5C/m1xeS+CD7/jYgerijwFfAoXE7hxPojJaz+K3Vq3tS8Y3/QmMsAm3ilqfGTi
+         eCfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748434222; x=1749039022;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K/Sru8uL3qj8FenGHJhSAB8NKjzdx19AaoWH6D6+0Gc=;
+        b=RvmBk3H6OzrJPpeQbQ/3q/vsMlUh0rkyCKc1KQ0C+7qFh5oFORMNIhHNdCJw1fKzYF
+         Xm1uUNXRp9MiXw+kUJdRU7SWcRMyZofi/7+fZA5/xdAAKsvJtVCykTRIU5OTF4CqSCVM
+         c7eebdQsf3wH+UN/1GOXwZeF1y4n/dvB4TozTL4WaeDpqt5fZsh+k0+iYik6B2iqAyiM
+         lKAtPKK83kBm7IjuWyiCtGFi1EqPtcJfjIZAt2WVJUHwUeCHxW4umHLvXo4fBxixBNl+
+         FZo3CfcUhMs/nwJ+RQFHAaMYIqrvGZDILbrCh6tVO9oEoqFfWKtEOq49s2VN2QTwj4Vy
+         iLvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlrCE3Eag+OUFFnTT0hgXpd2hkv0525fEzUbXpG7ctj+GA/N1jnfZg/E9evTI9T87Y8nVVKH+yofysPhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCHZDv5Qeiha5blawWbWMDXZ/Xzj1vF+USrlKwfkuKfHHEGUHg
+	pTFY4cyKn086AVlbLmwrGsY5mnwvHeEggJ7D65wo45zp/yKXpl+mOAt7CbK9dE87cyg=
+X-Gm-Gg: ASbGncveLsVCmNlMw9DEG3nQYt68XeYy220+80IdC+JgnRJOKYduIks1WWZX6UrfrLj
+	Q7XuoHdX09FfVrUAz52MgOlAyPVNODFn66PS7zwXqA+lDW6wxvveRm3GdOJfp/jHOdtl6nOkRzE
+	8roD7BpfIobowwDV++o+Ip+QjpzHI/u/Kd7QmC/JVumZzheA8PmaV2UA2atjMDXwAKc5DDLjg9f
+	sx1F51B2/3beJWqQ+7d3maXW7kJumLj1ziL4m9Rmgt5qMF1fKEtpMKvcyeohI1jxGjq+zyO2pXw
+	66DE3gOfwi+OaW8xFitKeGa9MUZfVJHi7lkKBzzFJ0f57nMSG4C/zsknsF5AvezvhURrnbb3qfM
+	VFRLTMFwCKs7y7pWyxD8BNSHkrC3hGohGBq1SWRYgvwbXyvCvUPLLSg==
+X-Google-Smtp-Source: AGHT+IGJdrXpE2HNtRnmNL6tYG8+KFfjDgcCbvJjR66+8XjZyuCeW244nwDx+6KAA5nIc7Zlr6Y51g==
+X-Received: by 2002:a05:600c:a13:b0:43d:160:cd9e with SMTP id 5b1f17b1804b1-44c91fbb448mr163241105e9.17.1748434221918;
+        Wed, 28 May 2025 05:10:21 -0700 (PDT)
+Received: from [10.0.12.41] (253.124-78-194.adsl-static.isp.belgacom.be. [194.78.124.253])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45006499727sm19874145e9.3.2025.05.28.05.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 05:10:21 -0700 (PDT)
+From: Bram Vlerick <bram.vlerick@openpixelsystems.org>
+Subject: [PATCH 0/2] ASoC: tas571x: add support for tas5753
+Date: Wed, 28 May 2025 14:10:07 +0200
+Message-Id: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6054:EE_|PH3PPFE1E3F709D:EE_
-X-MS-Office365-Filtering-Correlation-Id: c58bc973-5d0b-4ba1-c9e8-08dd9de088c1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bUp5cUdBc08xTXcvRkIreXJGT0FzUDFhUmZqY1NJS3QrUGZyNnRJa0NWUm5B?=
- =?utf-8?B?OTIxZmd2ejJERTljWU0zVkpRbjk4V0hxQ0Z6NlpHTkZsdVo2MFU4bUMxTHFB?=
- =?utf-8?B?VFp0V2RFcStBaFhJQnIvdi9yc0p5am8zYkF2RWNydVpJY0szQzNnNkdyanNU?=
- =?utf-8?B?LzdNUlNzOXYzbnoxMUhldGFzRE04Sk4wZ3o4NG1YbHZoQ0pPNUlKeFpIejdG?=
- =?utf-8?B?bmc2UVk4cEU4akFmWTkzaEx4aFN2L0JjcW1wOE1LOC9XYWIra2dzdzV6TEI2?=
- =?utf-8?B?cHZaeUxHNUZTYjJWaCtUWmJpSFRRTHBEamM0TG5EZitmRTRzUHB2NzR0Zm0y?=
- =?utf-8?B?S3NseGlxNFYyR1EzOXVTemJ1WjBoQjNVT2FOeEVUZjVWT2x0L2xINnlrQmlH?=
- =?utf-8?B?bSs3WERWYmRFTCsxdHFDWG80WEFuVnRCd1JGYStvUzRzTFVsRWpId2drWUxB?=
- =?utf-8?B?Z3E4VVpFRXJUTEVYeXJLcjJ3VVdNUCsyN21WL25vc3RMSlZJaFV2WGpPUVU3?=
- =?utf-8?B?WEIvdFJUcDF5a0M3b3czZ29pV3hlTWdhOUZQN2FxMUltT3ZweUM3K2grN2hh?=
- =?utf-8?B?ZkxTRE1YR0VFdTd0ZnkwUHRoUkI4TzJaZkFaY3hHYTY4ZzZRbVg2bVRzeU5x?=
- =?utf-8?B?b0NKVjF2alZDVms3RmY1TFhROUpuRldWTDlSemxFVk12UkxzNjR5WTZNQ2hs?=
- =?utf-8?B?c3R6Vy9yZEZ5MWgycnQ1NUlaSkZVZ3RWUmJQbERFL1dOMDY0SWY1alRSeXMy?=
- =?utf-8?B?eVFVaFlqNS9qdWYyV0gyMTRFTXdUS05TN3VvUDJodmJRSmJTdXVpL3VLY2hO?=
- =?utf-8?B?Njg2V0JRMk4vTUZYYlVrNnBVS0MzY2VzUHVkQisrbzRkU1IrTW5vbEppeXpy?=
- =?utf-8?B?MGkwK213R3cyNXFvWERsR3RDLzcrZkJKSFJma2lhd3VtVmxDS1h1TzdmeWVj?=
- =?utf-8?B?alh0WWZyR3ZaTEd6UWVMcFJibVZnNnIrc0ZNOENqNDJqbmFOdmJDc0t2QjA4?=
- =?utf-8?B?V2hmNklUKys1Ti9zOVJVZDJ2Vzd3QlAvR2xvYk5hV1hSZzdYUXE5bHdSR25l?=
- =?utf-8?B?M2YrT3NjWjZHTGc1MW8wck5sUmtmUjZhd0MyWjZpRlNEZkZra0tuY2YyS1Bl?=
- =?utf-8?B?QjJRZE4ycGRLL0ZKVlJGSkxaTmFIWXFXR3lTUkQveHJDaEQrUW5aVDJORzhi?=
- =?utf-8?B?c0J6YjNlMTNMUm45ancybTljZU11d3BueGltWUhwdnVlb1A2VFR2VjhDSUNX?=
- =?utf-8?B?dkZKRllXY1d4MTRUOHNCeDdGMDFNU0NEM1ZjME1FUEpFOVdYOWkvajA4M1ZJ?=
- =?utf-8?B?Vi82ZlRRbmZDeklVVXllNW5ETGY0TVlORXhQNzRnWS9EZGpNaWNhc0ZGVGRK?=
- =?utf-8?B?STQ0SldqY0FkbW1ra2ttbmlOZ0JnRk5vYkRlcEc4RlRpTTF6SnY5bG15TE8y?=
- =?utf-8?B?SkhLenV4UW5vOUIvWW94ZCt5KzNWbGRtcUt4R2VEbDBIYmN3ZXVaNHpSZ2lY?=
- =?utf-8?B?eXVLRnB3cHh0U3EveU8zenhsVmdMdVR4T3Rncmt0Q1NIMWMwNlphVXJWQUt3?=
- =?utf-8?B?bkdodmkyZEtpNTdMVjlOZldYdXRYdWtXVzEwd2lXSlJCaHJ4c2wvQ254RUdj?=
- =?utf-8?B?QjZST3YvYnRGa2JKdEs3blRqK0VPd0tSQjZYVHFIemlGQXRISmpnUWtFM2hG?=
- =?utf-8?B?U2M0ZzI3dzF5Y21aRUgxRUZQTXRBUnRLNXpyamh0aDhXOHNxUGtJRFVLY3pC?=
- =?utf-8?B?NVpVQmpqL2RBK0xnbnNkU3hZcFBSb2ZFWHpwbW85NjdKZXJFUHpCTkFFSXIr?=
- =?utf-8?B?VHo2SjF5VzZONi9GSExsUVJtNkJZMll1ZVU0cDNCYXhYNmhrd0hCNm1BWi9I?=
- =?utf-8?B?K1FZaXF0TUZoVlRNTE1aWXFEWHIxRUlXT2t1eDk4K2pTdHg0Uk40TDlDQkg0?=
- =?utf-8?Q?mLkH/faSkpY=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6054.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aW44dnJlZHJpeG05THo4TktwYWFYRlVQUDBmcnJ1VkVtQjMwRVlVbVZpa1FT?=
- =?utf-8?B?OEREVjdvUEJuTnA1Z2RjT2MwSWZjdHVoNXNpM1prd0NjdnlCVGNnZTMyWUFG?=
- =?utf-8?B?N0tEMGNQR2g5TitCVlVTUjlnRFNoRURFUTlPWmFGNU9qeXhRM2t6eDIwV2N4?=
- =?utf-8?B?MEpSb01PV3k0VjUyb0MzenM3NTNrOTN0cE15RUdZTmlERS9xNWpiOW1aQ0Iy?=
- =?utf-8?B?amZkQ0FWOEZJQWVYc3VwaXVHMHkya0dTWGRJeEJBNlJITFBJaE5nZk9iMEZY?=
- =?utf-8?B?VXQyelV0b3REY1FRR3JoM3hxVTZBaW9Zemd5UU12SDJ0UzI3YXl3WGNPT3hP?=
- =?utf-8?B?K0Z5aW1mYnFmR2NXay84bmR0OUkyUFcxd0tza2dDekpQYWljdXRWdFJxeEto?=
- =?utf-8?B?Tm0yM1hrdENpalpycXlVOEZOcnU3bUhJRTRvV1g4ZFBMaFEyRC9QMldpS2F6?=
- =?utf-8?B?d1N5dmQzSGtnZ29rVTZpT21LMEQ3Sk4wd0c3QkxLd1I4Q1NuMGVJN3g2Wm83?=
- =?utf-8?B?Ync4bFNzWW92MlJNTzlwdlphaUNrbFJGbGQzazB0R3FLelFyRTBpQzY0WWw5?=
- =?utf-8?B?dVpEcVViLzE5a3hpY3RHYjhiUHdrT3A2WVFtRE54OGpEeXZoZGlJdS8vSXA5?=
- =?utf-8?B?Uy9kWkFIcHZHcFJ0TUJZOGZvZUdlY3lqZ0VoYUlhcGRNN2J1S1FQdDdlcml0?=
- =?utf-8?B?aE53cjlIa0UzeVNaL1ZhQ3ZKSUMxT1ZJWUdESnhaRVBOZS9vOVNTcCtwMmtJ?=
- =?utf-8?B?SjB3bVFhVTdrZDZkTlNSY2J6Z3M0Q2dPYVFKbUVhczlvYTh4Ym1XUVNzTnNv?=
- =?utf-8?B?V3BwRWFxUFE2QkNBYVpWankwQ0c0QTJ5enhjSUpYTVltT3lJakhwVVFjS1gr?=
- =?utf-8?B?TTRwTE5Hb3J2ZDZzRUtqbUxBNGI5bWN5WitwUmhxem8zVk5ReGw2Vmo5VjIy?=
- =?utf-8?B?Nk1zNEFoSFVQcTNCNWExcXlLdjRnZVduQS9YWkN0bzBFdXBhQ3o3SkZuSEkw?=
- =?utf-8?B?MC9QZnlFUTNYZ0JMeEIvVjRuR0pnemZ2WHpyaVNZWnMwS3NXQjhPb2hIREZi?=
- =?utf-8?B?dHVBSmM5Q1EyT2t2MFk1VzZsSmh6YnFkangxanJWZDhXRVRPR3p1cVFoUmtk?=
- =?utf-8?B?WHVHOGY4Z1ZOV0FDc0NLdVJYbXlTdThPejd5b3VrUnhxYVVVcXFUTjdvMWIv?=
- =?utf-8?B?Lyt1Y2NXWGh3bTh0NXBRMFMwTlU1OEwrSmVTTHZMR3l3UmJCaVRSc3NlQ1F0?=
- =?utf-8?B?RFFPUTEzeHpPUEI3M3cvTWNDZ3pPdHBscTFNU3hISkZDQ0t4aFdPbnFqcUF4?=
- =?utf-8?B?akJ4cVJRSldmZ2RyYTEyR0wzMkhWVHpER0ZxQXdraCtLYldIZFJlWlFJQ0t3?=
- =?utf-8?B?eEhVMTdBRVdzUkFNUkp6ajZCems4U1BTK1VZNUVHMFFpRDNoYk82ZCsrWEZZ?=
- =?utf-8?B?cVlPMENtOVZoSjdqMHpTZlMxVXkxaG1LeE1UM0IyeVVwd251Yjh5eVhCTmZX?=
- =?utf-8?B?UUtKb1IxRVN5MFVXTmJrYmxGbG1rM0NCdXVHR3ZoZWJpOHVBak1POXhjMVZ2?=
- =?utf-8?B?Ym5DUDlpZWg4MlBhZjhNS2JjOUorQk5rbmMrcnVSMzc5YzZXaWNsUkNoRzhq?=
- =?utf-8?B?R1Z0OTFZZ1FueGozSHZtQ3pJM2ZRdTlBdmJ5K1ZHTGptYTd6MU5kUXF6QjE1?=
- =?utf-8?B?dXVvaXFrUzU2L0liTU1sR0xEL0pRT3IvN1Q5OUdqUEtiVG5TeStjNWxKa2R4?=
- =?utf-8?B?V05kM1dVY21IWjlqRG5GUkhPa2tPS1JVS0JXNHhaME5IT1J5UmpCdndZMG92?=
- =?utf-8?B?NXF4Y0ZIZnRDQUZXNzBTQWJuZFFNVEErVDEyZkF1cmNMbDFMc0MydnptSjAz?=
- =?utf-8?B?WmRsa1l3VzYvSVc3MnlOWnVxVGZiV3FkNHdsNlhxcVorU0ZsdGF3TWlQSUpJ?=
- =?utf-8?B?c3Vpanl1RDBLSjJ4YW0wVDRSNmUvNHVPa3NrbGluN0lUbCtBSlAwbkhUdWd3?=
- =?utf-8?B?VUIrZVpkU3JaTm1Hck5CK2o3N2pYamtHRmd3dml1QWpuZXJzeCt6dldmRlFv?=
- =?utf-8?B?enpiUVkrcGN3aEw1VThuVENNRnYyVjk1TDRhcGVXR2dwY2ZZeGxyUmFsQVc5?=
- =?utf-8?B?ZEdlUzVpbXMyNERmUHdmSHRack5HakMrdFdJMnp5ZlBETnNGSVJXT2N3YSti?=
- =?utf-8?B?ZHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c58bc973-5d0b-4ba1-c9e8-08dd9de088c1
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6054.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 12:09:45.1710
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LlnjdTIjVQ5rCegjqH/+Ay5gW+Ktekakjy9Oc5yRtTYmAU7bpbeI4sy9gbywWsM9HuiOBslWuUIBaryPpiSADg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFE1E3F709D
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAB/9NmgC/x3MQQ5AMBBA0avIrE1SpSGuIhajBrPRpoNIxN01l
+ m/x/wPKSVihLx5IfIlK2DOqsgC/0b4yypwN1lhnnO2QNHg8SF3ratQzxpAO7Ka2amYyTU0echo
+ TL3L/22F83w9ssd0PZgAAAA==
+X-Change-ID: 20250528-asoc-tas5753-support-8b714da043ac
+To: Kevin Cernekee <cernekee@chromium.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, 
+ Bram Vlerick <bram.vlerick@openpixelsystems.org>, peter@korsgaard.com
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=615;
+ i=bram.vlerick@openpixelsystems.org; h=from:subject:message-id;
+ bh=bnWrEHjmKFYA8LT8CsaB58xc1RYelpnOS+RbLx5r16E=;
+ b=owEBbQKS/ZANAwAIAblauka9BQbwAcsmYgBoNv0s839Re0z7GaQKdGAbjKad/0vsuw+2/Rqym
+ 9NzhljG6EmJAjMEAAEIAB0WIQQO7PtG7b77XLxuay25WrpGvQUG8AUCaDb9LAAKCRC5WrpGvQUG
+ 8NCsD/wMpM07OPPP8KbFBVlRwIZSwItEg43SveGMTGXexG1kNOP0Kqnunz5gBTu9twvvbWeesqJ
+ U521yb3lMmwtZcuWisjpc8HPrRHyrsJzzqC3kdsq5ZxyAsB8MBLQfixKR5Yz5J0sYZCyZvHFAO8
+ 0kx3MhsJdYUXf9ny3I2C9+hHWbyDKLZqD138tB2oBM30Zg9iKUruuXug2q0IGckHD2JqeLnVqvB
+ N2j3TNI4mm5/+09WLMRK4oaQqEV2k0UA2Dh5Pcs9O61nmLwl4E56AHGEBHLAbVVMMHYCmL48T6c
+ KYu4C1XADMKyddJqYbk4j0oV+vh3GNgszSApz4U0pwqt3B0USM9xX9ZvxuVgZSD7b9TTC342k6d
+ igBl9RcBIf/+PvA9oicL6uDpeMkTJm6YMJxP9HhdYwDZtw87VqYvp9yspHEBBzr6Dvo2ntIJYa8
+ hBYsliGQSps5O1We3vnBFYmKGkhZbDLE4OEfYD5aDKz+STAiRUXHscQDRIypes8toFat+XfejHg
+ ZsOdTgRQu+R9wbGuplnz4j0VyVwW+vjmR6GwLBVd+wgIbp/iBhVXTG+EJlIs2jf9kIVW/6wqr+z
+ KxK4CGduky2QE+OkiAMmlAgn2xqyIro6CQPm9HUI81nDDOxrB3UkTdcLBDPV686d/mUl3oq6IQP
+ DRrRn2ogWJzABew==
+X-Developer-Key: i=bram.vlerick@openpixelsystems.org; a=openpgp;
+ fpr=0EECFB46EDBEFB5CBC6E6B2DB95ABA46BD0506F0
 
-On 23/05/2025 14:01, Victor Shih wrote:
-> From: Victor Shih <victor.shih@genesyslogic.com.tw>
-> 
-> Adjust some error messages to debug mode and register dump to dynamic
-> debug mode to avoid causing misunderstanding it is an error.
-> 
-> Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+Add support for the ti,tas5753 to tas571x driver.
 
-I think Ulf asked for the drivers/mmc/host/sdhci.h change to be
-a separate patch.
+Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
+---
+Bram Vlerick (2):
+      ASoC: tas571x: add support for tas5753
+      ASoC: dt-bindings: tas57xx: add tas5753 compatibility
 
-In any case:
+ .../devicetree/bindings/sound/ti,tas57xx.yaml      |  2 +
+ sound/soc/codecs/tas571x.c                         | 52 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
+---
+base-commit: 76f8d35964e4de1b464de22e4f3fdc14937ed854
+change-id: 20250528-asoc-tas5753-support-8b714da043ac
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-uhs2.c | 20 ++++++++++----------
->  drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
->  2 files changed, 26 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-uhs2.c
-> index c53b64d50c0d..0efeb9d0c376 100644
-> --- a/drivers/mmc/host/sdhci-uhs2.c
-> +++ b/drivers/mmc/host/sdhci-uhs2.c
-> @@ -99,8 +99,8 @@ void sdhci_uhs2_reset(struct sdhci_host *host, u16 mask)
->  	/* hw clears the bit when it's done */
->  	if (read_poll_timeout_atomic(sdhci_readw, val, !(val & mask), 10,
->  				     UHS2_RESET_TIMEOUT_100MS, true, host, SDHCI_UHS2_SW_RESET)) {
-> -		pr_warn("%s: %s: Reset 0x%x never completed. %s: clean reset bit.\n", __func__,
-> -			mmc_hostname(host->mmc), (int)mask, mmc_hostname(host->mmc));
-> +		pr_debug("%s: %s: Reset 0x%x never completed. %s: clean reset bit.\n", __func__,
-> +			 mmc_hostname(host->mmc), (int)mask, mmc_hostname(host->mmc));
->  		sdhci_writeb(host, 0, SDHCI_UHS2_SW_RESET);
->  		return;
->  	}
-> @@ -335,8 +335,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci_host *host)
->  	if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IF_DETECT),
->  			      100, UHS2_INTERFACE_DETECT_TIMEOUT_100MS, true,
->  			      host, SDHCI_PRESENT_STATE)) {
-> -		pr_warn("%s: not detect UHS2 interface in 100ms.\n", mmc_hostname(host->mmc));
-> -		sdhci_dumpregs(host);
-> +		pr_debug("%s: not detect UHS2 interface in 100ms.\n", mmc_hostname(host->mmc));
-> +		sdhci_dbg_dumpregs(host, "UHS2 interface detect timeout in 100ms");
->  		return -EIO;
->  	}
->  
-> @@ -345,8 +345,8 @@ static int sdhci_uhs2_interface_detect(struct sdhci_host *host)
->  
->  	if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_LANE_SYNC),
->  			      100, UHS2_LANE_SYNC_TIMEOUT_150MS, true, host, SDHCI_PRESENT_STATE)) {
-> -		pr_warn("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostname(host->mmc));
-> -		sdhci_dumpregs(host);
-> +		pr_debug("%s: UHS2 Lane sync fail in 150ms.\n", mmc_hostname(host->mmc));
-> +		sdhci_dbg_dumpregs(host, "UHS2 Lane sync fail in 150ms");
->  		return -EIO;
->  	}
->  
-> @@ -417,12 +417,12 @@ static int sdhci_uhs2_do_detect_init(struct mmc_host *mmc)
->  		host->ops->uhs2_pre_detect_init(host);
->  
->  	if (sdhci_uhs2_interface_detect(host)) {
-> -		pr_warn("%s: cannot detect UHS2 interface.\n", mmc_hostname(host->mmc));
-> +		pr_debug("%s: cannot detect UHS2 interface.\n", mmc_hostname(host->mmc));
->  		return -EIO;
->  	}
->  
->  	if (sdhci_uhs2_init(host)) {
-> -		pr_warn("%s: UHS2 init fail.\n", mmc_hostname(host->mmc));
-> +		pr_debug("%s: UHS2 init fail.\n", mmc_hostname(host->mmc));
->  		return -EIO;
->  	}
->  
-> @@ -504,8 +504,8 @@ static int sdhci_uhs2_check_dormant(struct sdhci_host *host)
->  	if (read_poll_timeout(sdhci_readl, val, (val & SDHCI_UHS2_IN_DORMANT_STATE),
->  			      100, UHS2_CHECK_DORMANT_TIMEOUT_100MS, true, host,
->  			      SDHCI_PRESENT_STATE)) {
-> -		pr_warn("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_hostname(host->mmc));
-> -		sdhci_dumpregs(host);
-> +		pr_debug("%s: UHS2 IN_DORMANT fail in 100ms.\n", mmc_hostname(host->mmc));
-> +		sdhci_dbg_dumpregs(host, "UHS2 IN_DORMANT fail in 100ms");
->  		return -EIO;
->  	}
->  	return 0;
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index f9d65dd0f2b2..70ada1857a4c 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -900,4 +900,20 @@ void sdhci_switch_external_dma(struct sdhci_host *host, bool en);
->  void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
->  void __sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd);
->  
-> +#if defined(CONFIG_DYNAMIC_DEBUG) || \
-> +	(defined(CONFIG_DYNAMIC_DEBUG_CORE) && defined(DYNAMIC_DEBUG_MODULE))
-> +#define SDHCI_DBG_ANYWAY 0
-> +#elif defined(DEBUG)
-> +#define SDHCI_DBG_ANYWAY 1
-> +#else
-> +#define SDHCI_DBG_ANYWAY 0
-> +#endif
-> +
-> +#define sdhci_dbg_dumpregs(host, fmt)					\
-> +do {									\
-> +	DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, fmt);			\
-> +	if (DYNAMIC_DEBUG_BRANCH(descriptor) ||	SDHCI_DBG_ANYWAY)	\
-> +		sdhci_dumpregs(host);					\
-> +} while (0)
-> +
->  #endif /* __SDHCI_HW_H */
+Best regards,
+-- 
+Bram Vlerick <bram.vlerick@openpixelsystems.org>
 
