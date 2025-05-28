@@ -1,33 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41291367;
-	Wed, 28 May 2025 07:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994CE1367
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416893; cv=none; b=hwE1FpcnQRzLugnTe75mCq6FcipfsDBZzPZUDQvTPpoYyvH4udyPH2fpMFSlMCjITCJaCIYogJ34A03JvH+XwnsKgo5NgE3Ttbs620mklWSQOXedURY7f4YJGxRSYtmIhe4EX0X81uyT4UDFrtg4eZAB/6JCqYadITpXy108mw0=
+	t=1748416920; cv=none; b=nxAxS5fbr2f3Q4Axq0Z5cJI31AHtpmyi6gCtJvzzS7ymZsXtYn/bky/rM+o2bVaxJGTGMPezpcS7Pdzs+IGXt5cQvFJeY3ZDrQnDxOG11A28oFg+7SUm+/RDVLG2gDCPGMgKBAEXIuLD+zBDtDBIHxcNI/8XMKzopGBOKNBou0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416893; c=relaxed/simple;
-	bh=SkRP/MS8cvO2FVA3kFfTyM8+otz9fEhJJqVQBSgvjeY=;
+	s=arc-20240116; t=1748416920; c=relaxed/simple;
+	bh=o/EBQDrxGdj6WNmlZP1Kd/pL9W3EBdRR95FbKd6mj0Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QdfutxzS26ywlBiI1RIBPNHCqKZl/kP9K/GkNpix0wxnK6gJWIVUEIdAv9COSdiI2UWEkayl1aei9QHJzACjJgC5JpJfB2LAPJj2p92KpK8NyNDPkZGNFyhrqaBNg9ty9ZXsU62rBxaiA0SFyRJHGtEpt78v61THExsRksDdrKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEaHx6s/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gwLBZZ9dQ4+7QoqBFwtJuw5f68/q3nf+LNuQHSBvl0nG6BZU5VPRc31R1PcQos9dMAIpFrBAPN4mA4WpzrqClXncIGDv1FZ6k/iVfx/KEJkHBGJW3NzkQhK9xuvH66pPjPKQpLBl6fkPbBKirG7pdNpVsLamk9FRDr9L1/jBLMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NiUg8Ccb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEaHx6s/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2716FC4CEE7;
-	Wed, 28 May 2025 07:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748416893;
-	bh=SkRP/MS8cvO2FVA3kFfTyM8+otz9fEhJJqVQBSgvjeY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eEaHx6s/f96D84HDtDZITR8TwrnXkMxwpSnlxiLsDEo8zSv1CR2wePfzDROHKmm7V
-	 Ep6fohXmQIa79YjWIDuSqy+5rLhjKE2SScaDusjuMJZGE2iLoKt/k/KvW9nO6r9oGX
-	 Gbh8mwEDFQm7EQqXjgJYOlzj9lyNtRkmBjXc9e3Dzftyz6xl4rnJbY9NlVvM/I+ine
-	 yXnu3PlLu69naPHBhHw+veayI/cVDoFMHtUts6bsWTMnJIR0MUGY1OWxcJd7B8DZSb
-	 /0XjJyv33d6rnMWoFwJ8P7R6JTrDpGS4oaVOONUFsOvWpRDvNelLvmD2IxM+rgiyJk
-	 Fgrb2DSraMv2g==
-Message-ID: <a42f7c93-4c26-489e-a680-ad20a8b8a0a6@kernel.org>
-Date: Wed, 28 May 2025 09:21:27 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NiUg8Ccb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748416917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WaGWCYscG2gJE/9BxI7p6wq8i7SRMLbgQxHuw11S4oM=;
+	b=NiUg8CcbHtgALsAJUuqjuVNa+MhLeAZtGQjsw22FF3adqkghro1XeX37yuL6Or71TuPkBz
+	J0yHk6O4TWJKL+68Qx4GSe+O8ISt6mgUKpHKhbwWkcjE8UxH6WU/nKtnzxX4D/hEn1D31i
+	Z2AcVkIeREHeFBjfBsGAV31tABlZE1I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-402-meB4DhKZPn-ilP_VTPVnjA-1; Wed, 28 May 2025 03:21:56 -0400
+X-MC-Unique: meB4DhKZPn-ilP_VTPVnjA-1
+X-Mimecast-MFC-AGG-ID: meB4DhKZPn-ilP_VTPVnjA_1748416915
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so23430145e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:21:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748416915; x=1749021715;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WaGWCYscG2gJE/9BxI7p6wq8i7SRMLbgQxHuw11S4oM=;
+        b=ub012KCgPtXsQsx9o3X0tkrvc8PgocIYul8bgbE88eq11TsJgpfPlmCUTw5cpIg5Xb
+         aYBVRzpuL02opNCyOY/7S6DZYabCp3wkxiUgNC9o209zSmD9klIOx3M5KsOCSi5bZ4Hx
+         pclasIEDnfDcIlzBaRBKcSkwav7agTGTDxWlXPNb+HpzzQYHacAffg1iCg7F1NqkBoEC
+         G1uD7nuIHUaxEi+peMT3lbaPIkfvI4J+t9zG2yyfin3B/FgC9f5g30neeVWxE8K2CSH4
+         4cy7HIsjbiCAFvhToYZnJdDXdNXHnd0waVy2hjCgTemLfc5rMI1Si5NyO0io0zrP2xp/
+         RRVw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3URnPCq/6n05smh+Su+gHq2CHe2JHCsvhJnI8zJjxYyNvIFGc2zrRQUQ1zxNzbn5MkMDZl9AJNYXNSe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS3bBHTQYTBSRcjbNgrAC9wZL3EJuRzLqdU1BvgS9+lnCLW0Ap
+	AAiUO6QyfrOx+WxqdVYd51D5v2DqDA6JAaCAEfZW3W5eS1fVTjYObB63KJ8J8SeFIzg4hdFwKt0
+	OEGfxqqal2VUzavG2gQ9nkVJN//bLJPGjtug+wlFxjQwTacrbFlwE5Sz2cpIm45dQcA==
+X-Gm-Gg: ASbGncvGhgHE+gFBcSMmOPzEamb0/LCf8LQtNT40MBMcOddwMUqlBPbskSSEhvbXXHd
+	IzmFVLc8zLhwqfLK7jpngJDzaFTrtQOk39pwLHjnL4PlcORxprmCRfZE8SXLoiperJkUFfSdr61
+	mXa9nv5G08/mQmW0D6KZN9GSycPK0BjpwGT4jr1TEs3KdQ2bympa5fjql6X30sCF+LHSjfheU/C
+	2b17RlaeU4KtAMC+dyEYYflfrh3TmiWoXJia2ol4IKeTCm68EX8umsov38qT410xxdwW40OniZm
+	FT4xg4KNe3zLAB6rWTZONw7rMbxOl7JIhXBSsYXMbq9/Z1YtiEMdN/qlEHI=
+X-Received: by 2002:a05:600c:5011:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-44c94c2afbbmr135543545e9.33.1748416915211;
+        Wed, 28 May 2025 00:21:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9fCAeAfcUeAKLwTnP6W7JttQB6exfEvg0cHvk7Qq1JvXftAAhGkUc468XOpjRQE7kLJI4xQ==
+X-Received: by 2002:a05:600c:5011:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-44c94c2afbbmr135543155e9.33.1748416914639;
+        Wed, 28 May 2025 00:21:54 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507253b902sm8490115e9.1.2025.05.28.00.21.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 00:21:54 -0700 (PDT)
+Message-ID: <0a23a584-0aac-4c6a-bca4-3e220607cae6@redhat.com>
+Date: Wed, 28 May 2025 09:21:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,109 +73,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/10] phy: exynos: Add PCIe PHY support for FSD SoC
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
- vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
- m.szyprowski@samsung.com, jh80.chung@samsung.com
-References: <20250518193152.63476-1-shradha.t@samsung.com>
- <CGME20250518193256epcas5p442e9549fd8fd810522f960df74c22e34@epcas5p4.samsung.com>
- <20250518193152.63476-9-shradha.t@samsung.com>
- <20250521-certain-quoll-from-vega-11885b@kuoka>
- <0e2701dbcef4$6f5f24d0$4e1d6e70$@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH net-next v4 0/3] dpll: add all inputs phase offset monitor
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, horms@kernel.org, vadim.fedorenko@linux.dev,
+ jiri@resnulli.us, anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ andrew+netdev@lunn.ch, aleksandr.loktionov@intel.com,
+ milena.olech@intel.com, corbet@lwn.net
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-doc@vger.kernel.org
+References: <20250523154224.1510987-1-arkadiusz.kubalewski@intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <0e2701dbcef4$6f5f24d0$4e1d6e70$@samsung.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250523154224.1510987-1-arkadiusz.kubalewski@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 12:45, Shradha Todi wrote:
->>>
->>> -	generic_phy = devm_phy_create(dev, dev->of_node, &exynos5433_phy_ops);
->>> +	generic_phy = devm_phy_create(dev, dev->of_node, drv_data->phy_ops);
->>>  	if (IS_ERR(generic_phy)) {
->>>  		dev_err(dev, "failed to create PHY\n");
->>>  		return PTR_ERR(generic_phy);
->>>  	}
->>>
->>> +	exynos_phy->pcs_base = devm_platform_ioremap_resource(pdev, 1);
->>> +	exynos_phy->phy_id = of_alias_get_id(dev->of_node, "pciephy");
->>
->> Where did you document aliases?
->>
+On 5/23/25 5:42 PM, Arkadiusz Kubalewski wrote:
+> Add dpll device level feature: phase offset monitor.
 > 
-> Will add it to dt bindings.
+> Phase offset measurement is typically performed against the current active
+> source. However, some DPLL (Digital Phase-Locked Loop) devices may offer
+> the capability to monitor phase offsets across all available inputs.
+> The attribute and current feature state shall be included in the response
+> message of the ``DPLL_CMD_DEVICE_GET`` command for supported DPLL devices.
+> In such cases, users can also control the feature using the
+> ``DPLL_CMD_DEVICE_SET`` command by setting the ``enum dpll_feature_state``
+> values for the attribute.
 > 
->> Anyway, all this looks because you have completely buggy way of handling MMIO via syscon. That's a no-go. Use proper address
->> ranges assigned to ddevices. If you ever need to use syscon, you should pass the offset as argument - just like other devices are
->> doing.
->>
+> Implement feature support in ice driver for dpll-enabled devices.
 > 
-> Alias is used for 2 reasons.
+> Verify capability:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>  --spec Documentation/netlink/specs/dpll.yaml \
+>  --dump device-get
+> [{'clock-id': 4658613174691613800,
+>   'id': 0,
+>   'lock-status': 'locked-ho-acq',
+>   'mode': 'automatic',
+>   'mode-supported': ['automatic'],
+>   'module-name': 'ice',
+>   'type': 'eec'},
+>  {'clock-id': 4658613174691613800,
+>   'id': 1,
+>   'lock-status': 'locked-ho-acq',
+>   'mode': 'automatic',
+>   'mode-supported': ['automatic'],
+>   'module-name': 'ice',
+>   'phase-offset-monitor': 'disable',
+>   'type': 'pps'}]
+> 
+> Enable the feature:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>  --spec Documentation/netlink/specs/dpll.yaml \
+>  --do device-set --json '{"id":1, "phase-offset-monitor":"enable"}'
+> 
+> Verify feature is enabled:
+> $ ./tools/net/ynl/pyynl/cli.py \
+>  --spec Documentation/netlink/specs/dpll.yaml \
+>  --dump device-get
+> [
+>  [...]
+>  {'capabilities': {'all-inputs-phase-offset-monitor'},
+>   'clock-id': 4658613174691613800,
+>   'id': 1,
+>  [...]
+>   'phase-offset-monitor': 'enable',
+>  [...]]
 
-So if on my board the PCI slots are named differently and I use
-different alias, everything will stop working, right? Usually aliases
-for exposable buses are matching what is physically labeled on the
-exposed interface.
+I'm sorry, even if this has been posted (just) before the merge window,
+I think an uAPI extension this late is a bit too dangerous, please
+repost when net-next reopen after the merge window.
 
-> 1. Each of the 2 PHYs in FSD have different initializing sequence due to channel length, etc. We need the alias to select the init sequence accordingly
+Thanks,
 
-So devices are different? What is channel length? Number of lanes?
+Paolo
 
-
-> 2. The syscon offset can be passed via DT but the bit field also varies according to instance. (common reset is bit 8 in PHY0 and bit 1 in PHY1).
-
-You did not address the main problem here: you use MMIO but do not
-define any MMIO. Syscon is not a replacement for MMIO.
-
-
-Best regards,
-Krzysztof
