@@ -1,168 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE9E244678
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0D3125DF;
+	Wed, 28 May 2025 07:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417254; cv=none; b=q4CynzmaK747uUu8NrJWhNEGyo4HfDXLhGXf7vmY8BzmFQcRL+Nc9JCFX7CMhRXL2azGfkg+VQ0sTQX6m5yG5xlWPZzXeq/s7tturKWPjSFtifMa4YCRVE5D7D8yFQXByxYTt3RDNBpQqKWYLDF0sG/UY7dEefOh6gmuxKGYR7s=
+	t=1748417296; cv=none; b=obuAeI+yv2r11k19wgfVNFZsHJqmMHR9XOA5WhEacZ9rZP4BDHEq85Pq8PW4sTLWwxgT7QxPaIUiY+rbBzMfNu81YL+AxEnKRGgXmLUJFr23jW2bKmShcWobbdcV4iCi2KzQMEjKOxWqbGjqOymjpZAdbpkeRxSEOLw+mwDVExU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417254; c=relaxed/simple;
-	bh=4d2Rvh5/049QiSFiG8HqsMtGYGDNAUWELzNpSKTOFQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=J+9oBtj9W9VqXBCGx9W90+vpJu7AKRpdRA/QgYhh4QOVb81ZOEqHfOG+kuDP7b8N75+JQgU5q8laMAuiBQkxMR1JOrwPasf7TWZ1ovMm4rRu0K516RVEbabodd+DE4xNC9Gq3+TKnAce8f+D5o0yukQEU8SPhwq9/kneYr/BkXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NgMFV30/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748417296; c=relaxed/simple;
+	bh=2Xg2H6irTKVHQRxwQt4OW1u8RbDCO90BghAh8SjAitI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=n1VjyUXH/n48wVxtN8BQuxcm2LhvZeGpzY/t8SV4wfYdJ/qb57skIvKfqWlbxEopgYBmBPTMZH/ICbhdgh00UbrPOQGDMo9uLDtSm1BSjE9RbHAwFCDotNyOd2m/o8oPdJAkFN9uPV1oxlgi/1XuzlVIhxG1F5y9vOiG7ibFMlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAjA7yVP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NgMFV30/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748417251;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=u7w+oFgheV8aZ4x33cyzyZZ5cNI/GkUhBQCV4X7SdIs=;
-	b=NgMFV30/1yH8ixTvy4g0k2Q4t+CtKTiArHN7iOChWbB8rmNAyoEVi0MBhiOq3abIso+LB2
-	PFZvjlBLFTgEe0d36XyWSarAL1Z7AdkE1MDR+OkLebqnxHRvU9UFjmOlU58BOZ3DCjRB+g
-	dLo4Z6i3eANTx6cwE2xxYaunZ6ShYx8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-76CT5VU1OiSZl71NvGIaEg-1; Wed, 28 May 2025 03:27:29 -0400
-X-MC-Unique: 76CT5VU1OiSZl71NvGIaEg-1
-X-Mimecast-MFC-AGG-ID: 76CT5VU1OiSZl71NvGIaEg_1748417248
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442f90418b0so21983025e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:27:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417248; x=1749022048;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7w+oFgheV8aZ4x33cyzyZZ5cNI/GkUhBQCV4X7SdIs=;
-        b=spkofylX6FepNBqVp2D0u7Ch7OMtpm+4dEHx7dMpmplJralsLJSeKKfxolvxPdQgWc
-         QUbxJdm229H6VMGwbD5gVQmVeiIJ7Xl6XLQDk11SPF0W14+L9KHHPBsvMA1jWJreQy0l
-         VMOSSY/RXvNJ2s6kYownKF5KTDfwS2MH9I5AnSfMSBKaLWSu3TKapiwVoCBT0MA9rlA6
-         b80XheByBFchHOhY8UXLAfcg73CIk73IdFAwrQT273eE1iCI5ozfr4oV+hhLbpJwiDcw
-         QRfsodjZwuUkcG3Z6CuKzQHAWBQwuHzloGvZ1aA0VtPe/C5BJwZfyoWZ+pSa0feEM9QS
-         8e1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXpv1BvuARPRnLZoLMl2PCxAxYZ2FbvcM95mwjEEm6P38TFkCtjDabuVeAPGZEOip9JevUi7Q7sj0oePpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1VOLuESEbJsmIVvwZ/FlgQC/v3oOLLIM1s8jYbDuFWUwvQ/Wo
-	coXkg8BJzbF+SwUcnSMZ4j461eXg/V87WyGqtyouD0MfE4uWA9XqeWfLL2pw+72dqpOnYeVLHRh
-	qq2GJRbrhZdEJb+HipkWMvOl5yrSBmpMKtCCe9B1oC5AigVXc69KyRKObDslqC/wz8A==
-X-Gm-Gg: ASbGncu2FSIdF9JXWyfSI5400xeomvjh19V0trohk5R2HE3rnpovVXtLMMaoCz10hwJ
-	6xpaM1DKEbvSi3pUgTr0zqE8m0FSCD/8KwXI6gsQuQKgQMpY38al1WB7/UEUGqaWzH/Wnk1k/WW
-	tE7jwaHvHbPDYQvmzQi2GbZRt0+nxmD8PP5iB8wdc5Hl9WzluIG8DaDxxCclFJ21ArV845U7DAa
-	BebkjqoOE2F0R0mbrIAROnEcWU426u/u0lUsokta9JGpUWp7FR8p98NbHzBkE2q9mMgPboaA+qE
-	RDQYCQ==
-X-Received: by 2002:a05:600c:4e45:b0:442:f4a3:8c5c with SMTP id 5b1f17b1804b1-44c919e13ddmr185732445e9.10.1748417247873;
-        Wed, 28 May 2025 00:27:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEltm4UmhdICUHUpMHmQNZNYzagk6xfrMPG1SMAdHiF25jVtOn4A91e8E91qUEsAR8QkJYhDQ==
-X-Received: by 2002:a05:600c:4e45:b0:442:f4a3:8c5c with SMTP id 5b1f17b1804b1-44c919e13ddmr185732135e9.10.1748417247448;
-        Wed, 28 May 2025 00:27:27 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064ae775sm12042235e9.22.2025.05.28.00.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 00:27:26 -0700 (PDT)
-Date: Wed, 28 May 2025 03:27:24 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alexandre.belloni@bootlin.com, dongli.zhang@oracle.com, hch@lst.de,
-	israelr@nvidia.com, kees@kernel.org, leiyang@redhat.com,
-	mst@redhat.com, phasta@kernel.org, quic_philber@quicinc.com,
-	sami.md.ko@gmail.com, vattunuru@marvell.com
-Subject: [GIT PULL] virtio, vhost: features, fixes
-Message-ID: <20250528032724-mutt-send-email-mst@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAjA7yVP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6094C4CEE7;
+	Wed, 28 May 2025 07:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748417296;
+	bh=2Xg2H6irTKVHQRxwQt4OW1u8RbDCO90BghAh8SjAitI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=vAjA7yVPhz/gZdzHJOB3/KiV7gLa2pFg8nQCBfwM2oa8BrGLtK3dTztxYG96GFBvH
+	 xVy0JTCaj2LhuVLKB3e0Gs6Ap9qMha5uGm8maEZYYti6qS9izRuN1N3Q39cwCxot+W
+	 mxOXkcf2lebS0kTBmdbVNNI0pkkZR3G6/KaSWZlOPWD0MP9EOgSHvsTmZcDonzqsBP
+	 6w8lTyHcxW7qSB/kdvzWAfV791vqFaCoBGuPZqbGPUiNmED4dk6ND+py+PD3YgsU3U
+	 B+y27pl+WBX0/PoBbkt89KNDCB2sN70uddWkYgKI/goD1VDg+/4j9N45nE72L93CIp
+	 jnWRZpMItxPXw==
+Message-ID: <e3c75b90-e76e-4ecf-b9cb-2abcc018269f@kernel.org>
+Date: Wed, 28 May 2025 09:28:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mutt-Fcc: =sent
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] dt-bindings: thermal: Document Airoha AN7583
+ support
+To: Christian Marangi <ansuelsmth@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250527215241.25767-1-ansuelsmth@gmail.com>
+ <20250527215241.25767-5-ansuelsmth@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250527215241.25767-5-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
-There are several bugfixes I'm testing for post rc1 on top of this, but they
-are pretty minor.
+On 27/05/2025 23:52, Christian Marangi wrote:
+> Document support for Airoha AN7583 thermal driver.
+> 
+> Airoha AN7583 follow the same logic of Airoha EN7581 to read the
+> temperature but lack all the support for the PTP_THERMAL used to monitor
+> and react when trip point are triggered.
+> 
+> Also the Airoha AN7583 lives entirely under the Chip SCU SoC register
+> space hence a dedicated schema is introduced.
 
 
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
+That's wrong argumentation. If this is part of SCU, it does not mean you
+need separate schema. Quite opposite. No resources here, so this should
+be folded into parent node.
 
-  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-
-for you to fetch changes up to 206cc44588f72b49ad4d7e21a7472ab2a72a83df:
-
-  virtio: reject shm region if length is zero (2025-05-28 03:19:03 -0400)
-
-----------------------------------------------------------------
-virtio, vhost: features, fixes
-
-A new virtio RTC driver.
-
-vhost scsi now logs write descriptors so migration works.
-
-Some hardening work in virtio core.
-
-An old spec compliance issue fixed in vhost net.
-
-A couple of cleanups, fixes in vringh, virtio-pci, vdpa.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      vringh: use bvec_kmap_local
-
-Dongli Zhang (5):
-      vhost: modify vhost_log_write() for broader users
-      vhost-scsi: adjust vhost_scsi_get_desc() to log vring descriptors
-      vhost-scsi: log I/O queue write descriptors
-      vhost-scsi: log control queue write descriptors
-      vhost-scsi: log event queue write descriptors
-
-Israel Rukshin (1):
-      virtio-pci: Fix result size returned for the admin command completion
-
-Kees Cook (1):
-      vhost: vringh: Use matching allocation type in resize_iovec()
-
-Peter Hilber (4):
-      virtio_rtc: Add module and driver core
-      virtio_rtc: Add PTP clocks
-      virtio_rtc: Add Arm Generic Timer cross-timestamping
-      virtio_rtc: Add RTC class driver
-
-Philipp Stanner (1):
-      vdpa/octeon_ep: Control PCI dev enabling manually
-
-Sami Uddin (1):
-      virtio: reject shm region if length is zero
-
- MAINTAINERS                              |    7 +
- drivers/vdpa/octeon_ep/octep_vdpa_main.c |   17 +-
- drivers/vhost/scsi.c                     |  190 +++-
- drivers/vhost/vhost.c                    |   28 +-
- drivers/vhost/vringh.c                   |   19 +-
- drivers/virtio/Kconfig                   |   64 ++
- drivers/virtio/Makefile                  |    5 +
- drivers/virtio/virtio_pci_modern.c       |   13 +-
- drivers/virtio/virtio_rtc_arm.c          |   23 +
- drivers/virtio/virtio_rtc_class.c        |  262 ++++++
- drivers/virtio/virtio_rtc_driver.c       | 1407 ++++++++++++++++++++++++++++++
- drivers/virtio/virtio_rtc_internal.h     |  122 +++
- drivers/virtio/virtio_rtc_ptp.c          |  347 ++++++++
- include/linux/virtio_config.h            |    2 +
- include/uapi/linux/virtio_rtc.h          |  237 +++++
- 15 files changed, 2707 insertions(+), 36 deletions(-)
- create mode 100644 drivers/virtio/virtio_rtc_arm.c
- create mode 100644 drivers/virtio/virtio_rtc_class.c
- create mode 100644 drivers/virtio/virtio_rtc_driver.c
- create mode 100644 drivers/virtio/virtio_rtc_internal.h
- create mode 100644 drivers/virtio/virtio_rtc_ptp.c
- create mode 100644 include/uapi/linux/virtio_rtc.h
-
+Best regards,
+Krzysztof
