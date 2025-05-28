@@ -1,169 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18D9193077;
-	Wed, 28 May 2025 14:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4611E193077;
+	Wed, 28 May 2025 14:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443875; cv=none; b=RKG3nf10h4pfJL8qNB4LRx2XI4uYkxc7ZKodSwBlqIcMMDErzVP+EF8ornQpNLGmOdqZVv3iq+gEpdZrZl+BdfiJ904HfQWPZjlP4PNdDuYWFtTdrs3GE3kcybqmauOT8r2M1E7YUpO5m6DxqDHrL9DLms2e0AaKM+tMu+/sjyY=
+	t=1748443886; cv=none; b=LsG43MGZA32eJ7/bvDAueQES8+gpj5vLsMweDhu5VmNBSqtBBSMnb1vYwq+qrumi78WAzmRB0DEozfoAFlhOyAPi1szy2il6r6KRE5E4e4vUUglLqkCXLAPRta0KHwWtc5bYE25qDhDZwPAiQQFUzdGKwjMqbAUxZTRfSNhr/SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443875; c=relaxed/simple;
-	bh=9T3VdjKsbwgRUKbVfMomhv/3y3RaeBPwP61+a85Jvu0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I4l9WAYf9YkFs5I3LU6Bk+QQOzojlyG87hAWz2L9H8ZxZI3sgevEn9ve6PJrxNiE2qUeZXW2GaxB4i6Pm7q2sQuCgUJVimr6lns5wp8ub7zZHVMWw52CV6qotcphM/igZc/treLOzzgR9cwYLRdyA0Q7t/F0CTY7QPqmMjkYwmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOHPwUen; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748443886; c=relaxed/simple;
+	bh=CaNlGgqQCzHq8F3U49dwDdVi1yyeghj6F8AwiQKBM94=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U77Unxwy8PihXRfERVjD/JNyaF+95Xi+2iZl9q6c1nAaQ0PCMJDRr2bpJYfae9dd9EEfDqPoNLAfk4TjXh8wdw47FQa0zLwucA4nB1RC/9uqs5CD31wWaDPiT5MCphpAUkG6A6JLbd89H+80IXaZyxcA1H600mxz34y2W4MDTGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJ5eHxn7; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOHPwUen"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748443873; x=1779979873;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9T3VdjKsbwgRUKbVfMomhv/3y3RaeBPwP61+a85Jvu0=;
-  b=BOHPwUenJjAtttr2XY4G9HiHniEW/2ueyq8nv/l2h85zeZyUj71UxJbX
-   zF3pu6Xc0nOxmvz7n6eG0p8NczuzNySBZ/XKly5EjaJKhtXdDm8oq1rq7
-   bYWGrD+3zeCywquTHn9PXMsHWcjXvT9GkYTEMfIESaVKc/PLna08uSLE9
-   US3y7kYAHS3TWLO1nG2MMmXwFCwZ8uDZ/ydXR1zexplI6vfRIl5w+nqDl
-   mOUGH85nk74djV4GefrqDZtATqFD/66EHY7kwsv3GIe+AFm8CY+6lk8yR
-   p3mtez1JI6yTwn/LZ+j6A5ZYXynhR2XvBUYP8BwY6/fcyVxL8rWq7apdS
-   A==;
-X-CSE-ConnectionGUID: NejjY1QiRfWmUpjuXuGReQ==
-X-CSE-MsgGUID: hfgS80IFT7ixfmVxbvp+RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50173643"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="50173643"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:51:13 -0700
-X-CSE-ConnectionGUID: OcoufsNVTBaBWLFswdGitQ==
-X-CSE-MsgGUID: bIti5BAFR4+073oJMosWhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="144235207"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:51:13 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E839620B5736;
-	Wed, 28 May 2025 07:51:11 -0700 (PDT)
-Message-ID: <ef09af0b-f6d4-4d41-b658-93c9b72485ce@linux.intel.com>
-Date: Wed, 28 May 2025 10:51:10 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJ5eHxn7"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c54a9d3fcaso418773785a.2;
+        Wed, 28 May 2025 07:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748443884; x=1749048684; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=m4HPI+uUoKdBGuZtoY9CPzya8qdmq+5VMevK83oBeE8=;
+        b=kJ5eHxn7ZqojhY0EYtsJP38TYQ6YXNrGJSFsZl8c8elXeRFHElYWDrKVPDwIgDXPyf
+         ub/R+iElEkVVkrYsGLowqes07rfTZGmGrBBd+yewScjusA355GsXtdCJOYdzBhYFrG9w
+         Ni15rl26i0aZ1ejq73Vy/BMd3lMXcA61VNr+5FxXz/UZzYWHqetg1xZOBN3UTo02hrXe
+         Icr22qjCLhj+jiyuWTsGXblmJsTnPLhn2/w6BgHXgPOcmT1bA6T/w6q7g3q8A54zyHaC
+         BTUpcAAcAXiy66I6GdESKC+ZWbpXjAt3AYKe12cR8vEHOiqCYF9u9uMT+vlrmg/6AW6f
+         ULkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748443884; x=1749048684;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m4HPI+uUoKdBGuZtoY9CPzya8qdmq+5VMevK83oBeE8=;
+        b=h+y9Dwm8S+wtSUHWgp1tnOigsEoHJt1yyaJKXaEBRE/Giw0mkLkWz1na9huD19hXEt
+         l+/1kM54fputPH6f+P/exm3l0hlkvztX+QIEu5IVZrRPhl3q3vNSyky5/XpGcc4hGTkl
+         I1eCKMiR4bnJWfXOctszvdhqQn7dH97NIi3mrOyWfJXMTGxX3tX2Dpgj07Woow4uTmsR
+         Il1t2xfs74BOH+KLyXR15kS/tu8q8U8xZLIXSg2eEvZwZBkSD+Sy0KqyAD9XsrWRbWi4
+         pA5PoOmcUFrU7ZfM72ZEsy6jtAw0wKPsPPBPbpkauuYOyTovMdmXhLwHWGY6r85T+8Xo
+         Jr+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJH7S//i4/4dnk/G/8jkboBf5tqHVUw55jSNCTFhyaBHHyrA1waDDJ1D04tyRfoPSoVWbsjpJxJ9QreymC@vger.kernel.org, AJvYcCUUBV6E9apM5iLfm2lrh7Dn/sssDWbaWG+84xYV+LUEoREVll+kgLMz4Elv1oEdxIMZ21I=@vger.kernel.org, AJvYcCVkzj+G5UNnP26zUGbJZ7TdA3yBeQbZXsM9k+lTFBF4qPPvHKcqrpwQqPx/Q/38HgIuj/7p/Qd8VQRf04l+uug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZrAw4MB1aCqBzkrYjqoO/9v26MKCZNQ7mgNdKiaLv7YOduSLd
+	Bkwxo5UMBeduEPZe0u9Lq7m0PY2GvH9IZyNbX6E6i9IcoGFzd72zFKVx
+X-Gm-Gg: ASbGncuKnkqdxtgt2KaIpT/G3NafiKTz2ScHcbeYEUNEU5mF6Ct/m7IdPCk0K3zK20U
+	6QcCKLfaNLNGMGaFq22Vbai0WtNSyFogOQenebXyIAfZmMQgC74So/APG+BUcAiuRUKmC+nYyta
+	kgKgruoTabcAHa9UeFAJhwqinHHpSIKi6zcx57GTo3nA1SEaQSe+uq7HQ1XGKCqAksLjWv9b+3F
+	awPVTsxdhUDmL4sWM1Y5A8D66Ayn//9Uy8IacBRLB3saakOL7g5ifn1U1QamM80fDHzuWzJE7+o
+	QrA2tWaKHsZ1o3eQS4vXwlPuZhtQR/k1r4Sb8z67b8INMkoSJB0VFrP81qAM12owyMz89QKOwCg
+	Vq1On23YloRcnCLRCHwy+yx4DeBY7+YabNe+/7jNHTzodj8gXxEjq
+X-Google-Smtp-Source: AGHT+IFiFNSqe6X/cs8W0Ae+kpNzm5s01ff7TiY9jBksJfOfSzABXvHKKUK9dRrwKFB8WycQwR+gKA==
+X-Received: by 2002:a05:620a:a901:b0:7cf:15a:7fb1 with SMTP id af79cd13be357-7cf015a8019mr815186385a.10.1748443883994;
+        Wed, 28 May 2025 07:51:23 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb82002c8sm79166185a.5.2025.05.28.07.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 07:51:23 -0700 (PDT)
+Message-ID: <683722eb.050a0220.3d9475.2b4a@mx.google.com>
+X-Google-Original-Message-ID: <aDci6Dz7u6gEUnwr@winterfell.>
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 049FB1200043;
+	Wed, 28 May 2025 10:51:23 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Wed, 28 May 2025 10:51:23 -0400
+X-ME-Sender: <xms:6iI3aCvUg_433TA6Z04ZQJ5CUJlEID6pYkGhaiZFjC0QpN5B1yx_Ng>
+    <xme:6iI3aHcUWvjkUQ1Lkxo14ldf_hl1UClxv-D4cuWjZahIkEQ8WjXtDT2SL7HoMVGsm
+    fdx2hl3SUTcY2d5NQ>
+X-ME-Received: <xmr:6iI3aNz40bMwHYPOXQQ-cY0ChGjuyYw3-BQk1dee1EvJd7wISfsJ_kMfAMJ5Ug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeehheculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
+    gggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqh
+    hunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeejhfeikeek
+    ffejgeegueevffdtgeefudetleegjeelvdffteeihfelfeehvdegkeenucffohhmrghinh
+    epkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
+    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
+    lhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeekpdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhs
+    sehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgsohhniihinhhisehrvgguhhgrthdrtg
+    homhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhfrhestg
+    grnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepsghoqhhunhesfhhigihmvgdr
+    nhgrmhgv
+X-ME-Proxy: <xmx:6iI3aNMJsK1ql7yT3mKpSUP7SZOLDBeDnenZ4yWk60LWDJaa7_fwwg>
+    <xmx:6iI3aC-Fj2Fq2ptvcevwPq6UtT0nI53Kr5JR-hY4-3nVoY36s5SfPA>
+    <xmx:6iI3aFWL_oXdb9C6pAs-4YUR3OrOpkiFqKhfDVQE_hZDd2Rs8KIjOA>
+    <xmx:6iI3aLdCiVmesyv198D8wTu7kzypEbLsnMeWqV_d8LP6NMdEI5caDw>
+    <xmx:6iI3aMeexqz7gsyEaSa2P4lke1avl9wWdzzB33eO-RIV_OSt2l9DW3HC>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 May 2025 10:51:22 -0400 (EDT)
+Date: Wed, 28 May 2025 07:51:20 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] rust: add helper for mutex_trylock
+References: <20250528083431.1875345-1-pbonzini@redhat.com>
+ <CANiq72nwM79eGSAt8FjKgoYCJd-bLeTojaQAtg3SECE28uByQQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 01/16] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, Aishwarya.TCV@arm.com
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-2-kan.liang@linux.intel.com>
- <20250527161656.GJ2566836@e132581.arm.com>
- <44e1c864-a6e1-41a8-9f11-0ea25999131c@linux.intel.com>
- <20250528102801.GK2566836@e132581.arm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250528102801.GK2566836@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72nwM79eGSAt8FjKgoYCJd-bLeTojaQAtg3SECE28uByQQ@mail.gmail.com>
 
-
-
-On 2025-05-28 6:28 a.m., Leo Yan wrote:
-> On Tue, May 27, 2025 at 03:30:06PM -0400, Liang, Kan wrote:
+On Wed, May 28, 2025 at 11:39:12AM +0200, Miguel Ojeda wrote:
+> On Wed, May 28, 2025 at 10:34 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> >         Ok to apply to the KVM tree?
 > 
-> [...]
+> Yeah, looks good to me, thanks!
 > 
->> There may be two ways to fix it.
->> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
->> the stop is invoked by the throttle.
->> - Introduce a PMU flag to track the case. Avoid the event_stop in
->> perf_event_throttle() if the flag is detected.
->>
->> The latter looks more generic. It may be used if there are other cases
->> that want to avoid the stop. So the latter is implemented as below.
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
 > 
-> Yes.  I agreed the fix below is more general and confirmed it can fix
-> the observed issue.
+> Cc'ing Boqun just in case and so that he is aware. Boqun: this fixes a
+> Rust build error on the kvm branch which failed on merging into -next:
 > 
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 947ad12dfdbe..66f02f46595c 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -303,6 +303,7 @@ struct perf_event_pmu_context;
->>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->>  #define PERF_PMU_CAP_AUX_PAUSE			0x0200
->> +#define PERF_PMU_CAP_NO_THROTTLE_STOP		0x0400
->>
->>  /**
->>   * pmu::scope
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 8327ab0ee641..596597886d96 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2655,7 +2655,8 @@ static void perf_event_unthrottle(struct
->> perf_event *event, bool start)
->>
->>  static void perf_event_throttle(struct perf_event *event)
->>  {
->> -	event->pmu->stop(event, 0);
->> +	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
->> +		event->pmu->stop(event, 0);
-> 
-> A background info is that even a PMU event is not stopped when
-> throttling, we still need to re-enable it.  This is why we don't do
-> particualy handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
-> perf_event_unthrottle().
-> 
-> Maybe it is deserved add a comment for easier understanding.
-
-Sure. A formal patch has been sent. Please take a look.
-https://lore.kernel.org/lkml/20250528144823.2996185-1-kan.liang@linux.intel.com/
-
-Thanks,
-Kan>
-> Thanks,
-> Leo
-> 
->>  	event->hw.interrupts = MAX_INTERRUPTS;
->>  	perf_log_throttle(event, 0);
->>  }
->> @@ -11846,7 +11847,8 @@ static int cpu_clock_event_init(struct
->> perf_event *event)
->>  static struct pmu perf_cpu_clock = {
->>  	.task_ctx_nr	= perf_sw_context,
->>
->> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
->> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
->> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->>  	.dev		= PMU_NULL_DEV,
->>
->>  	.event_init	= cpu_clock_event_init,
->> @@ -11928,7 +11930,8 @@ static int task_clock_event_init(struct
->> perf_event *event)
->>  static struct pmu perf_task_clock = {
->>  	.task_ctx_nr	= perf_sw_context,
->>
->> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
->> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
->> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->>  	.dev		= PMU_NULL_DEV,
->>
->>  	.event_init	= task_clock_event_init,
->>
->>
->> Thanks,
->> Kan
->>
->>
+>     https://lore.kernel.org/linux-next/20250528152832.3ce43330@canb.auug.org.au/
 > 
 
+Thank you both!
+
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+
+Regards,
+Boqun
+
+> Cheers,
+> Miguel
