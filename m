@@ -1,167 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05268242D98;
-	Wed, 28 May 2025 08:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 466E2242D98;
+	Wed, 28 May 2025 08:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748420242; cv=none; b=ltSZnI/dKwuf7Y+XpaqK4oibV/LAgYrnlJ7rg9WoCqZjtsY1iZB0fk7Y720tQPTtTUSWj0/n6hDBc1Pw2F1AQvvpPtNczdHBzuNZaoG1rouWGSNuAqGm2KrVtJ8A1V3uRnI2k7e5QpZkzD41zem03frkvCLxAlwf8RMQqiM1ofc=
+	t=1748420268; cv=none; b=ZwabuFmPSpMC7m6gRqexAOq3p36Bl5iZMsolz54ODfOi2+4kmmUNYKbRUUeNNRAnn2WLrs/zt0ljwaBhsukAeuSgjXeDXGBvrEvFMZnFaahWjKzKXDHK91b/CgEcKOpOzZvF2XhQ3mSmhlWtc/zRTZBKBsDcj8cedhzBPouuSs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748420242; c=relaxed/simple;
-	bh=VnaOaI0+0NtHel4oVom/yssIX1THkCXKbXz9EQBzR5E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DsFJZ6pPWeVGQf60rgbdnwzOyI7Zn30nPRbLCTIyFAdBbaGrxQDb4uuoU7zXtNIP9vfCdBhlJQUb9KREd3jhhApdZs4igg/Ded8HhG/XSimObpaC0m68Uuv+rQSNOjiseaVtj5yMUWX6E1dV+h1YKO29zFgYpNAOUJLi2A6HavU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOd9CpmZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOd9CpmZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89880C4CEF0;
-	Wed, 28 May 2025 08:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748420241;
-	bh=VnaOaI0+0NtHel4oVom/yssIX1THkCXKbXz9EQBzR5E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YOd9CpmZUkZ6van6O0glNVQrftPS+aeIgof7ALSYUJCNk2o7GkLyNJCQ+9tlocHiM
-	 SYoU+Oa2anYv/epu3VDI4S4E9wOyeTknjZiTNQNLkb3228vdihlNCHqSxevh4dbxo7
-	 Q83z3SbSVXh6IBJIm6DOmJNuBAA2skzqVyeRUKAJAt5m7g65/L/+LdqEQS0K9IkJdM
-	 A8ui4R0PwNU9RNM3PQQS4vHi5iLvdps4MI5AxFDD9yf34Qxe6tV4ktNIzUnBjzOumN
-	 L7uBTzVEdN9f3TslVHcfUQbN07CesyqVdH4JB7NPUXmhMy3Xkffq1HUmNtLdnv76h4
-	 H2xvT64PRq+jQ==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acb5ec407b1so716701166b.1;
-        Wed, 28 May 2025 01:17:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhC4M9FNUu1tDNWDhaM5Wn0CHz3jigI+xMtEOwYNgZ+F9KDgEsV/sSWY23rmO2s5R6PEQvdo31PsG7NLdm@vger.kernel.org, AJvYcCWpYAUVoZdJGCoHG3NIIv1dwU/+0GlhKBLeeQ3UQpFWlMqiRX4jM46lTpKypK/nhuHkPEKi8oMRrBtaPbk=@vger.kernel.org, AJvYcCXpgljuEJJuhg9rdUJXOI1On7hcwyA2Dz5x+AUF6oYFSJslMaBihu8gqkatdOf0Vx9p56fy1yPHkKMfeC74dHJV@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmyr7g1yv9cB1zB6FSVFv3sCixPqbVa0p/Wwx/yKr8k7EDu/bT
-	kUErMQmTnx+xFZSRuYoiVxpMp+IU3sl/BDUx/MKaOMm4r65Dy4L4PxqgCJRj/u3cqhlILTs9Dbe
-	TRDHhN1CxTQw8hGdiVey+ID5FJLEL/Ks=
-X-Google-Smtp-Source: AGHT+IFNjtG99EzUzmmY6OY+rF91HK/pt//1c3i+uFoT3zCr8MD9sPlpSS8mnivTz9CEjNe5tP5bNThd/JntzDu2YOE=
-X-Received: by 2002:a17:906:c10e:b0:ad8:9e80:6bb1 with SMTP id
- a640c23a62f3a-ad89e807aeemr176781066b.18.1748420240112; Wed, 28 May 2025
- 01:17:20 -0700 (PDT)
+	s=arc-20240116; t=1748420268; c=relaxed/simple;
+	bh=3mNsnGzG6uUwa8ptFauGd0YKJXwEUMSFZsODR54wFjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dYcm8RQyYtvSZlu2BEmAZ6h4fzzx3KfebeiXt50cN7yWng8y8pWGa4SNRxjanIMmBuqFvtT39Kh9V67N5ORJa1wzgrBuhi3+VS74+g93QtOJJi2W/PYVorvXtkcA65mXeEMfu9BL5wKiNgRyAnJTLuHIiIcURDwe1N0IORnmZ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-a1-6836c6a6c04e
+Date: Wed, 28 May 2025 17:17:37 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
+ struct_group_tagged()'ed on struct net_iov
+Message-ID: <20250528081737.GC28116@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-2-byungchul@sk.com>
+ <20250527025047.GA71538@system.software.com>
+ <CAHS8izOJ6BEhiY6ApKuUkKw8+_R_pZ7kKwE9NqzCyC=g_2JGcA@mail.gmail.com>
+ <20250528012152.GA2986@system.software.com>
+ <CAHS8izMvRrG2wpE7HEyK3t544-wN_h3SC8nGabCoPWj1qCv_ag@mail.gmail.com>
+ <20250528050346.GA59539@system.software.com>
+ <4d7a307f-d595-4020-8060-f3bc2f8f72ca@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn> <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
- <cda7ef56-87b3-6594-c2b6-2a4f5a1b63ce@loongson.cn>
-In-Reply-To: <cda7ef56-87b3-6594-c2b6-2a4f5a1b63ce@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 May 2025 16:17:09 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H557CLtoF23nbRQaoDPdzuM5xgsS-+-1p_VeX0OreG2vQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtB9i9vI4aMVSiZAQ7D67ic6L8sSLEvjMA1XGh1pdV0LO7QWr1VhMzf8E0
-Message-ID: <CAAhV-H557CLtoF23nbRQaoDPdzuM5xgsS-+-1p_VeX0OreG2vQ@mail.gmail.com>
-Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d7a307f-d595-4020-8060-f3bc2f8f72ca@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHed7nvW04elq3J6OiRURadpcTdIOCHiooqL50f8m3Npoa05Ya
+	hZpQrVwXo8taNLPyUrRYMi+I5BS1G9rCXGkaVlZUCzNF026vEfXtx/9/+J3z4cjYeEyIlC0J
+	yaotQbGaRD2v/xSROyO/NtY8a/COCG7vTRFu9KVA/stSAdxFfgRf+1sk6K6pEyEvtxeDuyGL
+	hx7vNwxvajskaL/eyUPF4RIMHSfqRcjOGsCQWVrAQaPfKcCZb9cwlKS/lOBJuVuEtps/BegM
+	ZPNwz1XIQ7tzKdR6RkPvg48IarwlHPQevyRCTtAjwqusdgTB6g4eLmY4EXgrQwIM9LnFpZNY
+	ceEzjpW5XkjM49vL7hREMUcoiJmv6KjIfF9OS6z1aYXI6s8P8KystJtj2YfCIut685xnnyub
+	ROYtbuLZQ0+NxLp9E9aSjfqFcarVYldtMxdv15u7Tp7Fex5FpFRXXkXp6KrOgXQyJfOo84WD
+	dyB5iL/3LNRinkyhF2u7OI1FMpWGQv1Y45Ekmn5oDkgOpJcx+ShQ72E/rxUjiJVeyRkcYgMB
+	mtHgFrQhI7mFaV/nO/FPMZzeu/B6aAiTKBr68Z7TFmMyjub/kLVYRxbRnodupPEoMpne9ddx
+	moeSQpkeaakW/hw9llYVhPiTiLj+07r+07r+aT0IFyGjJcEer1is82LMqQmWlJgdifE+9PtF
+	rh8Y3FSKvjSuCyAiI1OEgd2ebzYKij0pNT6AqIxNIw2ZS2LNRkOckpqm2hK32fZa1aQAGifz
+	pjGGOb374oxkl5Ks7lbVPartb8vJush0FFsX32yP3LGS6IMOHUsLTYuskNfmWZqLHqxudZYP
+	lrWd+Jqj2E/Pd6esn4i3HJtcVXVAWrZ/FT33+T73NiNDWnV51vSd4eeXmwyNdftal4f9QWtD
+	+OClzv5D4VD0mu7sxw5pWeaCysDWDeP9wz5tzt04tzr51GKl5vaKqQVRW/MTTXySWZkdhW1J
+	yi/HgA13HgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z/bjsPFcZkdlD60LMN7mvFCZhKUfwykixDVh1x5aMs5ZTPT
+	IFBTpJFaWVJzxvKu2VbLvISITfFSiuEy18U0UzEy07xgalYror79eJ7nx/vlZUnpFOXOKtVJ
+	gkYtV8kYMSWO2nnRr7x9hyIw72ogGMw1DNxdTIGK4QYaDNV1COa+vRHBbFsHAyV3Fkgw9GZS
+	MG9eImGsfUQEQ+XjFDRl15MwktfJQE7mMgkZDZUEtBZ10fC8LpeG60tlJNSnDYvA9tjAwLua
+	HzSMW3Mo6NJXUTCUGw7tRjdYeDaJoM1cT8DC5SIG8vuMDHzIHELQ1zpCQWF6LgJzs52G5UUD
+	Ey7DtVWvCNyoHxRho+UsfljpjXX2PhJbqi8x2PL1mgi/fdnE4M6byxRubJglcM7FKQbPjL2m
+	8JfmfgaXTEwT2FzbT+FuY5vogMsxcWisoFImC5qAsBixYuZKAZnY45zS2lyK0lCpkw6xLM9t
+	57/Ph+qQE0txm/nC9hnCwQznxdvt30gHu3I+/KcBq0iHxCzJTdK8ObuOchRrORVfnL/ymyUc
+	8Om9BtoxknImkl8cn2D+FC58163R3yOS8+btqx8Jx2GS8+ArVllH7MTt4ue7DcjB67hNfEtd
+	B3EFSfT/2fr/bP0/24jIauSqVCfHy5WqEH9tnCJVrUzxP5UQb0G/vqD8wsrVBjRni7AijkUy
+	Zwm+H6KQ0vJkbWq8FfEsKXOVZOzeoZBKYuWp5wVNwgnNWZWgtSIPlpKtl0QeEWKk3Gl5khAn
+	CImC5m9LsE7uaSg6DdzPeVCmBKX0QfCLzGcn8/LfW0Y8C4KittiykgZbgw9HuNnCZ72yA47a
+	7pXt1T7JimxKmDjDHt93UH6jJ3L/oWxdccmesK1Ta6oCXa557I4YnaT9fC3K2xk+ps++LUGD
+	j+iKxLLoMuTjt8E6FzStfmpLXhrwzJ8rpU0bn843yyitQr7Nm9Ro5T8B9lLpoQEDAAA=
+X-CFilter-Loop: Reflected
 
-On Wed, May 28, 2025 at 4:06=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2025/5/28 =E4=B8=8B=E5=8D=883:17, Huacai Chen =E5=86=99=E9=81=
-=93:
-> > Hi, Qunqin,
-> >
-> > As I said before, why the patch "MAINTAINERS: Add entry for Loongson
-> > Security Module driver" is missing?
->
-> Hi, Huacai
->
-> https://lore.kernel.org/all/8e55801a-a46e-58d5-cf84-2ee8a733df9a@loongson=
-.cn/
-Sorry, I missed this email. But if you put all files in one entry, you
-can merge Patch-3 and Patch-5 as the last patch (then you will also
-not meet the 5 patches limit).
+On Wed, May 28, 2025 at 08:43:34AM +0100, Pavel Begunkov wrote:
+> On 5/28/25 06:03, Byungchul Park wrote:
+> ...>> Thus abstractly different things maybe should not share the same
+> > > in-kernel struct.
+> > > 
+> > > One thing that maybe could work is if struct net_iov has a field in it
+> > > which tells us whether it's actually a struct page that can be passed
+> > > to mm apis, or not a struct page which cannot be passed to mm apis.
+> > > 
+> > > > Or I should introduce another struct
+> > > 
+> > > maybe introducing another struct is the answer. I'm not sure. The net
+> > 
+> > The final form should be like:
+> > 
+> >     struct netmem_desc {
+> >        struct page_pool *pp;
+> >        unsigned long dma_addr;
+> >        atomic_long_t ref_count;
+> >     };
+> > 
+> >     struct net_iov {
+> >        struct netmem_desc;
+> >        enum net_iov_type type;
+> >        struct net_iov_area *owner;
+> >        ...
+> >     };
+> > 
+> > However, now that overlaying on struct page is required, struct
+> > netmem_desc should be almost same as struct net_iov.  So I'm not sure if
+> > we should introduce struct netmem_desc as a new struct along with struct
+> > net_iov.
+> 
+> Yes, you should. Mina already explained that net_iov is not the same
+> thing as the net specific sub-struct of the page. They have common
+> fields, but there are also net_iov (memory provider) specific fields
+> as well.
 
-Huacai
+Okay then.  I will introduce a separate struct, netmem_desc, that has
+similar fields to net_iov, and related static assert for the offsets.
 
->
-> Thanks,
->
-> Qunqin.
->
-> >
-> > Huacai
-> >
-> > On Wed, May 28, 2025 at 2:59=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongso=
-n.cn> wrote:
-> >> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
-> >> accelerator engines. Each engine have its own DMA buffer provided
-> >> by the controller. The kernel cannot directly send commands to the
-> >> engine and must first send them to the controller, which will
-> >> forward them to the corresponding engine. Based on these engines,
-> >> TPM2 have been implemented in the chip, then let's treat TPM2 itself
-> >> as an engine.
-> >>
-> >> v10: mfd: Cleanned up coding style.
-> >>       crypto: Unlimited tfm
-> >>       tpm: Added error check
-> >>
-> >> v9: Moved the base driver back to drivers/mfd. Cleanned up coding styl=
-e.
-> >>
-> >> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
-> >>      are all encryption related drivers and SM2, SM3, and SM4 drivers
-> >>      will be added to the crypto subsystem in the future, the base dri=
-ver
-> >>      need to be changed when adding these drivers. Therefore, it may b=
-e
-> >>      more appropriate to place the base driver within the crypto
-> >>      subsystem.
-> >>
-> >>      Removed complete callback in all driver. Removed the concepts of
-> >>      "channel", "msg" and "request" as they may be confusing. Used
-> >>
-> >> v7: Addressed Huacai's comments.
-> >>
-> >> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
-> >>
-> >>      crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
-> >>      ls6000se-rng.c ->loongson-rng.c
-> >>
-> >>      tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
-> >>
-> >> v5: Registered "ls6000se-rng" device in mfd driver
-> >>
-> >>
-> >> Qunqin Zhao (5):
-> >>    mfd: Add support for Loongson Security Engine chip controller
-> >>    crypto: loongson - add Loongson RNG driver support
-> >>    MAINTAINERS: Add entry for Loongson crypto driver
-> >>    tpm: Add a driver for Loongson TPM device
-> >>    MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
-> >>
-> >>   MAINTAINERS                            |   9 +
-> >>   drivers/char/tpm/Kconfig               |   9 +
-> >>   drivers/char/tpm/Makefile              |   1 +
-> >>   drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
-> >>   drivers/crypto/Kconfig                 |   1 +
-> >>   drivers/crypto/Makefile                |   1 +
-> >>   drivers/crypto/loongson/Kconfig        |   5 +
-> >>   drivers/crypto/loongson/Makefile       |   1 +
-> >>   drivers/crypto/loongson/loongson-rng.c | 211 +++++++++++++++++++++
-> >>   drivers/mfd/Kconfig                    |  11 ++
-> >>   drivers/mfd/Makefile                   |   2 +
-> >>   drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++=
-++
-> >>   include/linux/mfd/loongson-se.h        |  53 ++++++
-> >>   13 files changed, 641 insertions(+)
-> >>   create mode 100644 drivers/char/tpm/tpm_loongson.c
-> >>   create mode 100644 drivers/crypto/loongson/Kconfig
-> >>   create mode 100644 drivers/crypto/loongson/Makefile
-> >>   create mode 100644 drivers/crypto/loongson/loongson-rng.c
-> >>   create mode 100644 drivers/mfd/loongson-se.c
-> >>   create mode 100644 include/linux/mfd/loongson-se.h
-> >>
-> >>
-> >> base-commit: c89756bcf406af313d191cfe3709e7c175c5b0cd
-> >> --
-> >> 2.45.2
-> >>
-> >>
->
+	Byungchul
+
+> 
+> -- 
+> Pavel Begunkov
