@@ -1,405 +1,425 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EC41E8326;
-	Wed, 28 May 2025 20:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA78B221561
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748465614; cv=none; b=O44/DTqPOoyqcXn2OwlTWjV9aUco6I1kvUB4x2z9DlJWRFIznj2/od/xrByY2gL1CRBRWOa47/muSYX0jXMHlLmMJr+hJ0H9l/20mm3WBsUX/rGQHZ58Frpd/9GPS+glpWVofyuu6zy0hQqHculyzaIfdQ8N5ioItsirR7Djrz8=
+	t=1748465619; cv=none; b=CpUuQ91mh2sR1cl9S8rOyP1udViqju0b7kUi0g9gMgNePxouNA+AjqbqKMLzSLrHSnNpElry1DNj8BHOt6GGjF/9ZFRfBEky6/JXvG4bHc1OOsmZp3A7G9gWqfoMb063719ty3FoS/Qa08unKVZGs9Ge/+j34UYIr8yBY9V5BMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748465614; c=relaxed/simple;
-	bh=GK9rmZEaWvSkont9DXH4hkJ1E8KBEgj0tq+4dJf0yKs=;
+	s=arc-20240116; t=1748465619; c=relaxed/simple;
+	bh=7IzM7h5L+dgUzAMsJAZp/rkffjiaE+hgQomc7a0kD1M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FO8bxhTI81Xpkm0pTwTHCWmS8gFvGUT9xHaxhbQA9ssNb052EIDj/lBjDdcDpM0cs1yikdvIQbAunFsGgIXK1y3W6A/zPbFzsgUp8/MTlXbMpHnzJdtqZ5E0YunFAZOV8imt6FRtzVi52/a7Eobti2IHp7VchVFkpFf13SmaijE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LWkEZqsZ; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Q4FsK1oUQvbsFtRnv93stMkS8dOOMKafFpYRW6+XWDiIgfgd46TiPUQg3bCfTnzjqNlpbTRDlrlfhNveVP9JX57YLyxs7+E+PlmMh7yFhx+lWWDbK/dU9MwteMn0iq7R088PY+gTuphZDBW8NNfE58QIoG10G6J7KvEmkl2wLnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eghXS/MN; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWkEZqsZ"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7dcab6697cso36118276.2;
-        Wed, 28 May 2025 13:53:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eghXS/MN"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2348a45fc73so53015ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748465611; x=1749070411; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748465617; x=1749070417; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3Gg0iim+NFxN+GfSzNkmRPTRI9ZD4M9Rf8eT64jyuF4=;
-        b=LWkEZqsZxPodP3ieDY/JWhYFovOANXLCkVy09XUgq2Oj0jmrRffveQMNBFgua/aE7Y
-         UKSEUZPUWIUoQpjdA4okARFgdZGGL+9KUzq6esedmh1G73AVh/9k14MoQepeuzcnaVYv
-         f3vX1CBtyYRHlr9bVqgg/+W+PMY/+dCDw4Z6LiEgSNYoTHiE5R9KPZMKMyQQJFtVbMsH
-         6Sxv5/BB2sRL56FmCvBvQRpIvpEqmnc0X5hZWBwnh5TWOomVA/9xdnV+GsoIRxOLhx5h
-         67uCeanMPRl6tLXeimfMW5KeSRCChE5b7djL0inHS/oCJedRYM+iXyLPnmCRaWx/h/QO
-         6lPA==
+        bh=GurTm2N7y0z3rtiw7G6HF7fGb6ar9xO0X9pfPVn2LXY=;
+        b=eghXS/MN87Vg7K1bv3wuyQ74AYkkbV9wBbC667XBR1/yt6O1Pd+8SILWAWaCjtIwjz
+         cw0MBH923Gu3CvyCzTA9VBZmbOI0btjvhfbjcR0rs5dxNYOs/nS0iLO9IbKHUPyQickv
+         d3unzZXu8anKmZ/TplAPQy4k55izGxqBiNsKqfGYBRjiiDyDhYtG7ETPy/DxqTPscdbl
+         osE+sxSoMDwzXEWcDEqDDmu0eU6VNSdX6YCYqk57Jeg0jjUJUAmRSZhNRLCWvTFpM+Tx
+         2E3qETyixYf/qEECmoDcT3i+F1MUU4iKJM/CsymvxMm1Hs3H6MtGbFbcIsuutLzSJQEH
+         k2gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748465611; x=1749070411;
+        d=1e100.net; s=20230601; t=1748465617; x=1749070417;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3Gg0iim+NFxN+GfSzNkmRPTRI9ZD4M9Rf8eT64jyuF4=;
-        b=HctPC6Fi8e0lBtan+WgYP1VbJO/CqIV+/7tiw+vWEqxZTxsD/SQjnWYwFJ4asB1OxL
-         tszQV6rx8dwvkrDVXNz8HO3mfWG4f0YdBB42OC5pj27vhOAtzRCME1LygwbInrtBIlpX
-         nWgJ38b+LpTDQX2GGKsvNY/bZMX2vT7rXtiI0jdSsO9xudfd0IW1zksZDivNjeMjpN+D
-         C96JERg1xxK20Qichj4bddp5jcZ/n+Bu7h1cZtT5xvSP870w+NF7dX6bNMUYlX8bXOye
-         /7dv5ZLv/nRZ+LOtA41a8zv1V5KYxQ3QW//5buEMCNZ86jFlablECFvqikThFPeXwnky
-         wkDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtMWRMbXERpzKs3dhbNJBvd1UrPZqlQSyzipalTekWkIcMB/l1j6UU+8erpYqMjnhEmBKRrkADIfw=@vger.kernel.org, AJvYcCVa7AsikdbcrlZB89yuyIvQlqyeRidM3/bqpnmL1wcJJEN+CUyqZKD/qtAgUjd9EepYVNucMmOQEYLy@vger.kernel.org, AJvYcCWST3jWvtN+M66EmCSwmOfzBnwtouASqhJuw1yeqSSb6S8gQIe6uiuEJfnYF8Qd6iRUCEVcNduJYLrFga7N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQV5Sp650o/VGhq3/GszFKuyIXv8NDzrup08cN/c3rDQmqz3kl
-	J1V92DPLExOUwE9bWNQ5wDy6Yv/lTXY0E8HWSz1f0T73ph1znBj8x8GDN3YOgBEhIfU9IvGbKPG
-	XCAYzaU34o4p4YwJ+il+C6TWDKSNzmww=
-X-Gm-Gg: ASbGnctH9V/0hXIo6An9jPqrXHDj5gjBLbZylpsGLXSmFAxNuaPTtK9GDglExwX1tg5
-	InBDWtWSOsJa8LwVLlZB9rg8VQGlNIZaeZ1SpbF4MenD9oTLoAqmjorhVaVo8RrnoUmiyQj+nka
-	EU4Cojh9hzOpgFctvRyHQlRt592+d0EKZE
-X-Google-Smtp-Source: AGHT+IEKlfFChx8de4UJ8+CmplgrRoN3Rrg1W449blcHWSvnP/scO2OdDxiwRb4KJpadBqvbiNpi0QmMDaic6sRziTk=
-X-Received: by 2002:a05:690c:6d82:b0:70e:572:dd78 with SMTP id
- 00721157ae682-70e2d753d7amr102960977b3.0.1748465611000; Wed, 28 May 2025
- 13:53:31 -0700 (PDT)
+        bh=GurTm2N7y0z3rtiw7G6HF7fGb6ar9xO0X9pfPVn2LXY=;
+        b=esLsb1pll/xkrmmjOHR1UiJIwj9NWO1GxRl/zlj8Yd/ADVfTe2IfBOphzdpXhSKs37
+         nlf4AYsCSEzs1nOiWZCCYbztRYLQkRLpcsvplGCZK4/PQA0viTivTB26+9x52OjZvSXW
+         YGigzatu5Q8WMfrcMmhiA0s/zooK6yVHXvK57+J31burvx5aJdCN7NTJXNtHksZrVKzr
+         +thesN0Gn/kc0Azf8YOsFH/VQlJGFRzXxrmR3dJzcm9EU3snoucjvz9v8QutX6TEyMby
+         ZayYan+yQFWMyDNAtz5xcZRn+8KHidXIdARMuDtfWVexZxtwXtc+XiAcONQ3FpjaYfgk
+         AinQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Vd417gftGfjBUXih2XSuQfyyumeIyBmaJy6zPq95AvDzRRfb5uSX3ypA3G1gELHbef0LgvfmTixDxQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysYOO33CACjjE1AHz9oDakN2mjwUU2oZ1eOimvG6Pdd4PFTERN
+	aEBU4Yd8xIZLaD9NWyQ45hTK9Uz6blBG2Ktoy/3GGJqdbqNBhMhDao2TB0HztKXZ6tyytZ0nE47
+	ylZaI82uO4cDd/yIDTjlMG1BJvRH2o1sm0Rrpi0mz
+X-Gm-Gg: ASbGncs287QMjC6jk2GQkyEhw5Anm1GmACPst/s2ZUAz9PDvTZdWyb+EFVzPem1eQNt
+	dD/fxCZFh2BOjKLXxgty7r1CJatyETc4TUP9JgnFJmxaCqWKeWYKSFwe/CjPLRanMRwqOCkgbjn
+	552Np1GlLAZxqs0JWTJCAO/hZ+Q4/No2Egby4XSnPlC1BoJqZ9yXkBaJg7rzSnN2IYrmHmpepa
+X-Google-Smtp-Source: AGHT+IG2vqbrTFZXjKyrWRszrj/oY7bgBCGfCU2x/BPKW+QyxREhsZRD7r1RL8MK/PqD/nRjG9zuViMNSGPadmmBXvU=
+X-Received: by 2002:a17:903:46c5:b0:234:afcf:d9e8 with SMTP id
+ d9443c01a7336-23506a33f3amr93055ad.7.1748465616668; Wed, 28 May 2025 13:53:36
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523223523.35218-1-l.rubusch@gmail.com> <20250523223523.35218-8-l.rubusch@gmail.com>
- <20250525134831.68b3c905@jic23-huawei>
-In-Reply-To: <20250525134831.68b3c905@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 28 May 2025 22:52:55 +0200
-X-Gm-Features: AX0GCFu4uDW5WMc3QHfaxcty6jSPrSgIoCyUa4juoUHDtmMuYQrdUFBpLZsUyII
-Message-ID: <CAFXKEHaM1xEk-v7rXdKoxdXKV-k=_Leu+hMBukDyKoWr3irVRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 07/12] iio: accel: adxl313: add basic interrupt handling
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+References: <20250404141118.3895592-1-koichiro.den@canonical.com>
+In-Reply-To: <20250404141118.3895592-1-koichiro.den@canonical.com>
+From: Yuanchu Xie <yuanchu@google.com>
+Date: Wed, 28 May 2025 13:53:19 -0700
+X-Gm-Features: AX0GCFuhsPlEnNwmGRcR3NsJ33kdxV-WoaAM9HdU6EYp_SmhqPbFFrw9KL7OtQw
+Message-ID: <CAJj2-QGifr5RmzKUB_zL76H_qis5zxR50pOik9n-Mt6-_s_2Bw@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: apply proportional reclaim pressure for memcg
+ when MGLRU is enabled
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, yuzhao@google.com, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jonathan,
-
-I feel here either I have some missunderstanding or it needs more
-(better?) explanation. Perhaps I'm using the wrong terminology.
-
-One point, I forgot, do I actually need to add a Reviewed-by tag or
-something like that for Andys review? Or if so, they will let me know,
-I guess?
-
-First of all, introducing the adxl313_fifo_reset(data) here is the
-crucial part. So, the title I chose is not matching with the topic, or
-is too general. I'll answer and try to better explain down below.
-
-On Sun, May 25, 2025 at 2:48=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
+On Fri, Apr 4, 2025 at 7:11=E2=80=AFAM Koichiro Den <koichiro.den@canonical=
+.com> wrote:
 >
-> On Fri, 23 May 2025 22:35:18 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Prepare the interrupt handler. Add register entries to evaluate the
-> > incoming interrupt. Add functions to clear status registers and reset t=
-he
-> > FIFO.
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> Hi Lothar,
->
-> A few comments inline.
->
-> > ---
-> >  drivers/iio/accel/adxl313.h      |  16 ++++
-> >  drivers/iio/accel/adxl313_core.c | 134 +++++++++++++++++++++++++++++++
-> >  2 files changed, 150 insertions(+)
->
->
->
-> >  struct adxl313_chip_info {
-> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
-13_core.c
-> > index 9db318a03eea..1e085f0c61a0 100644
-> > --- a/drivers/iio/accel/adxl313_core.c
-> > +++ b/drivers/iio/accel/adxl313_core.c
-> > @@ -10,15 +10,24 @@
-> >  #include <linux/bitfield.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> > +#include <linux/overflow.h>
-> >  #include <linux/property.h>
-> >  #include <linux/regmap.h>
-> >
-> > +#include <linux/iio/buffer.h>
-> > +#include <linux/iio/events.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/iio/kfifo_buf.h>
-> > +#include <linux/iio/sysfs.h>
->
-> This is an odd selection of headers to add now. Why do we need them but d=
-idn't
-> before?  Some of these aren't used yet so drop them (events.h, sysfs.h I =
-think)
->
-
-Agree.
-
-> > +
->
-> >  static const struct regmap_range adxl312_readable_reg_range[] =3D {
-> >       regmap_reg_range(ADXL313_REG_DEVID0, ADXL313_REG_DEVID0),
-> >       regmap_reg_range(ADXL313_REG_OFS_AXIS(0), ADXL313_REG_OFS_AXIS(2)=
-),
-> > @@ -62,6 +71,7 @@ bool adxl313_is_volatile_reg(struct device *dev, unsi=
-gned int reg)
-> >       case ADXL313_REG_DATA_AXIS(4):
-> >       case ADXL313_REG_DATA_AXIS(5):
-> >       case ADXL313_REG_FIFO_STATUS:
-> > +     case ADXL313_REG_INT_SOURCE:
-> >               return true;
-> >       default:
-> >               return false;
-> > @@ -363,6 +373,118 @@ static int adxl313_write_raw(struct iio_dev *indi=
-o_dev,
-> >       }
-> >  }
-> >
-> > +static int adxl313_get_samples(struct adxl313_data *data)
->
-> I doubt this gets called from multiple places. I'd just put
-> the code inline and no have this helper at all.
->
-
-It will be a called at least in two places. First, when reading the
-measurements and second when clearing the fifo in the reset.
-
-> > +{
-> > +     unsigned int regval =3D 0;
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_FIFO_STATUS, &regva=
-l);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return FIELD_GET(ADXL313_REG_FIFO_STATUS_ENTRIES_MSK, regval);
-> > +}
-> > +
-> > +static int adxl313_set_fifo(struct adxl313_data *data)
-> > +{
-> > +     unsigned int int_line;
-> > +     int ret;
-> > +
-> > +     ret =3D adxl313_set_measure_en(data, false);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_INT_MAP, &int_line)=
-;
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     ret =3D regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
-> > +                        FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK, data=
-->fifo_mode));
->
-> Check ret.
->
-
-Agree.
-
-> > +
-> > +     return adxl313_set_measure_en(data, true);
-> > +}
-> > +
-> > +static int adxl313_fifo_transfer(struct adxl313_data *data, int sample=
-s)
-> > +{
-> > +     size_t count;
-> > +     unsigned int i;
-> > +     int ret;
-> > +
-> > +     count =3D array_size(sizeof(data->fifo_buf[0]), ADXL313_NUM_AXIS)=
-;
-> > +     for (i =3D 0; i < samples; i++) {
-> > +             ret =3D regmap_bulk_read(data->regmap, ADXL313_REG_XYZ_BA=
-SE,
-> > +                                    data->fifo_buf + (i * count / 2), =
-count);
->
-> that 2 is I'd guessed based on size of some data store element?
-> I'd guess sizeof(data->fifo_buf[0]) is appropriate.
->
-
-My calculation was the following:
-* samples :=3D number of "lines" in the FIFO e.g. by watermark
-* count :=3D number of bytes per "line"
-* ADXL313_NUM_AXIS :=3D 3 for the three axis here
-There's a bulk read per "line" of the FIFO. A "line" comprises
-measurement for x, y and z axis. Each measurement consists of 2 bytes,
-i.e. count has 6 bytes.
-
-At a second look now, probably count/2 can be replaced directly by
-ADXL313_NUM_AXIS. If so, I don't need the count variable. I see,
-count/2 being already a constant expression here smells somehow. I
-guess, this might be your point? I'll change that and need verify.
+> The scan implementation for MGLRU was missing proportional reclaim
+> pressure for memcg, which contradicts the description in
+> Documentation/admin-guide/cgroup-v2.rst (memory.{low,min} section).
+Nice, this is a discrepancy between the two reclaim implementations.
+Thanks for addressing this.
 
 >
-> > +             if (ret)
-> > +                     return ret;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> > +/**
-> > + * adxl313_fifo_reset() - Reset the FIFO and interrupt status register=
-s.
-> > + * @data: The device data.
-> > + *
-> > + * Reset the FIFO status registers. Reading out status registers clear=
-s the
+> This issue was revealed by the LTP memcontrol03 [1] test case. The
+> following example output from a local test env with no NUMA shows
+> that prior to this patch, proportional protection was not working:
 >
-> I think you already read it before calling this. So how is it ever set?
+> * Without this patch (MGLRU enabled):
+>   $ sudo LTP_SINGLE_FS_TYPE=3Dxfs ./memcontrol03
+>     ...
+>     memcontrol03.c:214: TPASS: Expect: (A/B/C memory.current=3D25964544) =
+~=3D 34603008
+>     memcontrol03.c:216: TPASS: Expect: (A/B/D memory.current=3D26038272) =
+~=3D 17825792
+>     ...
 >
-> > + * FIFO and interrupt configuration. Thus do not evaluate regmap retur=
-n values.
-> > + * Ignore particular read register content. Register content is not pr=
-ocessed
-> > + * any further. Therefore the function returns void.
-> > + */
-> > +static void adxl313_fifo_reset(struct adxl313_data *data)
+> * With this patch (MGLRU enabled):
+>   $ sudo LTP_SINGLE_FS_TYPE=3Dxfs ./memcontrol03
+>     ...
+>     memcontrol03.c:214: TPASS: Expect: (A/B/C memory.current=3D29327360) =
+~=3D 34603008
+>     memcontrol03.c:216: TPASS: Expect: (A/B/D memory.current=3D23748608) =
+~=3D 17825792
+>     ...
 >
-> As below.  This isn't a reset.  Fifo reset is normally the term used
-> for when we have lost tracking of what is in the fifo and drop all data,
-> not normal readback.
+> * When MGLRU is disabled:
+>   $ sudo LTP_SINGLE_FS_TYPE=3Dxfs ./memcontrol03
+>     ...
+>     memcontrol03.c:214: TPASS: Expect: (A/B/C memory.current=3D28819456) =
+~=3D 34603008
+>     memcontrol03.c:216: TPASS: Expect: (A/B/D memory.current=3D24018944) =
+~=3D 17825792
+>     ...
 >
-> > +{
-> > +     unsigned int regval;
-> > +     int samples;
-> > +
-> > +     adxl313_set_measure_en(data, false);
-> Disabling measurement to read a fifo is unusual -  is this really necessa=
-ry
-> as it presumably puts a gap in the data, which is what we are trying
-> to avoid by using a fifo.
->
-> > +
-> > +     samples =3D adxl313_get_samples(data);
-> > +     if (samples > 0)
-> > +             adxl313_fifo_transfer(data, samples);
-> > +
-> > +     regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &regval);
->
-> Not processing the convents of INT_SOURCE every time you read it
-> introduces race conditions.  This logic needs a rethink so that
-> never happens.  I guess this is why you are disabling measurement
-> to stop the status changing?  Just whatever each read of INT_SOURCE
-> tells us we need to handle and all should be fine without disabling
-> measurement.  That read should only clear bits that are set, so no
-> race conditions.
->
-
-When the ADXL345 triggers an interrupt for e.g. watermark, data ready,
-or overrun,... it will stop from triggerring further interrupts until
-the status registers, INT_SOURCE and FIFO_STATUS are cleared. This I
-call "reset". In consequence the FIFO will simply run full.
-
-Usually when the interrupt handler reads the interrupt status
-(INT_SOURCE). In case of, say, watermark, it then reads the
-FIFO_STATUS to obtain number of entries and reads this number of
-samples by a linewise bulk read from the sensor DATA registers.
-Reading all FIFO entries from the DATA register clears FIFO_STATUS,
-and this clears INT_SOURCE.
-
-Now, in case of error or overrun, I'd use this reset function as a
-fallback error handling. I stop measurement i.e. I set the sensor to
-standby. The sensor should not accept further measurements. Then I
-read out the fifo entries to clear FIFO_STATUS and I (already) read
-INT_SOURCE to clear interrupt status. Eventually I turn on measurement
-to bring the sensor back to operational. I ignore the read
-measurements, I'm reading here.
-
-As alternative approaches I also saw for similar sensors (not Linux)
-to e.g. switch FIFO_STREAM mode to FIFO_BYPASS and back. This works
-here too, but only for the FIFO_STATUS not for INT_SOURCE. Another
-idea I can imagine with the ADXL313, there is a soft reset register,
-but never tried that.
-
-In this initial patch, the reset function will resume the interrupt
-handler function. With the follow up patches, this will form rather
-the error handling. It is easy to get into this kind of overrun
-situation, if the interrupt handler is still not working correctly.
-I'm actually pretty confident, that it now works only as a fallback
-error handling, but perhaps I'm doing something wrong here?
-
-> > +
-> > +     adxl313_set_measure_en(data, true);
-> > +}
-> > +
-> > +static int adxl313_buffer_postenable(struct iio_dev *indio_dev)
-> > +{
-> > +     struct adxl313_data *data =3D iio_priv(indio_dev);
-> > +
-> > +     data->fifo_mode =3D ADXL313_FIFO_STREAM;
->
-> If you always set fifo_mode before calling _set_fifo() probably better
-> to pass the value in as a separate parameter and store it as necessary
-> inside that function.
->
-
-It might be that this is even in the cache. I'll verify this.
-
-> > +     return adxl313_set_fifo(data);
-> > +}
-> > +
-> > +static int adxl313_buffer_predisable(struct iio_dev *indio_dev)
-> > +{
-> > +     struct adxl313_data *data =3D iio_priv(indio_dev);
-> > +     int ret;
-> > +
-> > +     data->fifo_mode =3D ADXL313_FIFO_BYPASS;
-> > +     ret =3D adxl313_set_fifo(data);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return regmap_write(data->regmap, ADXL313_REG_INT_ENABLE, 0);
-> > +}
-> > +
-> > +static const struct iio_buffer_setup_ops adxl313_buffer_ops =3D {
-> > +     .postenable =3D adxl313_buffer_postenable,
-> > +     .predisable =3D adxl313_buffer_predisable,
-> > +};
-> > +
-> > +static irqreturn_t adxl313_irq_handler(int irq, void *p)
-> > +{
-> > +     struct iio_dev *indio_dev =3D p;
-> > +     struct adxl313_data *data =3D iio_priv(indio_dev);
-> > +     int int_stat;
-> > +
-> > +     if (regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &int_stat))
->
-> Failure to read is one thing we should handle, but also we should handle
-> int_stat telling us there were no interrupts set for this device.
->
-> > +             return IRQ_NONE;
-> > +
-> > +     adxl313_fifo_reset(data);
->
-> Given we don't know it had anything to do with the fifo at this point
-> resetting the fifo doesn't make much sense.  I'd expect a check
-> on int_status, probably for overrun, before doing this.
->
-> Ah. On closer inspection this isn't resetting the fifo, it's just
-> reading it.  Rename that function and make it dependent on what
-> was in int_stat.
->
-
-As mentioned before, I used the term "reset" to clear the status
-registers. This can occur for typically overrun, but also would cover
-all events which are still not handled by the interrupt handler. I
-could give it a try to see if the soft reset here would be a better
-fit.
-
-Best,
-L
+> Note that the test shows TPASS for all cases here due to its lenient
+> criteria. And even with this patch, or when MGLRU is disabled, the
+> results above show slight deviation from the expected values, but this
+> is due to relatively small mem usage compared to the >> DEF_PRIORITY
+> adjustment.
+It's kind of disappointing that the LTP test doesn't fail when reclaim
+pressure scaling doesn't work. Would you be interested in fixing the
+test as well?
 
 >
-> > +
-> > +     return IRQ_HANDLED;
-> > +}
+> Factor out the proportioning logic to a new function and have MGLRU
+> reuse it.
 >
+> [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kerne=
+l/controllers/memcg/memcontrol03.c
+>
+> Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> ---
+>  mm/vmscan.c | 148 +++++++++++++++++++++++++++-------------------------
+>  1 file changed, 78 insertions(+), 70 deletions(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b620d74b0f66..c594d8264938 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2467,6 +2467,69 @@ static inline void calculate_pressure_balance(stru=
+ct scan_control *sc,
+>         *denominator =3D ap + fp;
+>  }
+>
+> +static unsigned long apply_proportional_protection(struct mem_cgroup *me=
+mcg,
+> +               struct scan_control *sc, unsigned long scan)
+> +{
+> +       unsigned long min, low;
+> +
+> +       mem_cgroup_protection(sc->target_mem_cgroup, memcg, &min, &low);
+> +
+> +       if (min || low) {
+> +               /*
+> +                * Scale a cgroup's reclaim pressure by proportioning
+> +                * its current usage to its memory.low or memory.min
+> +                * setting.
+> +                *
+> +                * This is important, as otherwise scanning aggression
+> +                * becomes extremely binary -- from nothing as we
+> +                * approach the memory protection threshold, to totally
+> +                * nominal as we exceed it.  This results in requiring
+> +                * setting extremely liberal protection thresholds. It
+> +                * also means we simply get no protection at all if we
+> +                * set it too low, which is not ideal.
+> +                *
+> +                * If there is any protection in place, we reduce scan
+> +                * pressure by how much of the total memory used is
+> +                * within protection thresholds.
+> +                *
+> +                * There is one special case: in the first reclaim pass,
+> +                * we skip over all groups that are within their low
+> +                * protection. If that fails to reclaim enough pages to
+> +                * satisfy the reclaim goal, we come back and override
+> +                * the best-effort low protection. However, we still
+> +                * ideally want to honor how well-behaved groups are in
+> +                * that case instead of simply punishing them all
+> +                * equally. As such, we reclaim them based on how much
+> +                * memory they are using, reducing the scan pressure
+> +                * again by how much of the total memory used is under
+> +                * hard protection.
+> +                */
+> +               unsigned long cgroup_size =3D mem_cgroup_size(memcg);
+> +               unsigned long protection;
+> +
+> +               /* memory.low scaling, make sure we retry before OOM */
+> +               if (!sc->memcg_low_reclaim && low > min) {
+> +                       protection =3D low;
+> +                       sc->memcg_low_skipped =3D 1;
+> +               } else {
+> +                       protection =3D min;
+> +               }
+> +
+> +               /* Avoid TOCTOU with earlier protection check */
+> +               cgroup_size =3D max(cgroup_size, protection);
+> +
+> +               scan -=3D scan * protection / (cgroup_size + 1);
+> +
+> +               /*
+> +                * Minimally target SWAP_CLUSTER_MAX pages to keep
+> +                * reclaim moving forwards, avoiding decrementing
+> +                * sc->priority further than desirable.
+> +                */
+> +               scan =3D max(scan, SWAP_CLUSTER_MAX);
+> +       }
+> +       return scan;
+> +}
+> +
+>  /*
+>   * Determine how aggressively the anon and file LRU lists should be
+>   * scanned.
+> @@ -2537,70 +2600,10 @@ static void get_scan_count(struct lruvec *lruvec,=
+ struct scan_control *sc,
+>         for_each_evictable_lru(lru) {
+>                 bool file =3D is_file_lru(lru);
+>                 unsigned long lruvec_size;
+> -               unsigned long low, min;
+>                 unsigned long scan;
+>
+>                 lruvec_size =3D lruvec_lru_size(lruvec, lru, sc->reclaim_=
+idx);
+> -               mem_cgroup_protection(sc->target_mem_cgroup, memcg,
+> -                                     &min, &low);
+> -
+> -               if (min || low) {
+> -                       /*
+> -                        * Scale a cgroup's reclaim pressure by proportio=
+ning
+> -                        * its current usage to its memory.low or memory.=
+min
+> -                        * setting.
+> -                        *
+> -                        * This is important, as otherwise scanning aggre=
+ssion
+> -                        * becomes extremely binary -- from nothing as we
+> -                        * approach the memory protection threshold, to t=
+otally
+> -                        * nominal as we exceed it.  This results in requ=
+iring
+> -                        * setting extremely liberal protection threshold=
+s. It
+> -                        * also means we simply get no protection at all =
+if we
+> -                        * set it too low, which is not ideal.
+> -                        *
+> -                        * If there is any protection in place, we reduce=
+ scan
+> -                        * pressure by how much of the total memory used =
+is
+> -                        * within protection thresholds.
+> -                        *
+> -                        * There is one special case: in the first reclai=
+m pass,
+> -                        * we skip over all groups that are within their =
+low
+> -                        * protection. If that fails to reclaim enough pa=
+ges to
+> -                        * satisfy the reclaim goal, we come back and ove=
+rride
+> -                        * the best-effort low protection. However, we st=
+ill
+> -                        * ideally want to honor how well-behaved groups =
+are in
+> -                        * that case instead of simply punishing them all
+> -                        * equally. As such, we reclaim them based on how=
+ much
+> -                        * memory they are using, reducing the scan press=
+ure
+> -                        * again by how much of the total memory used is =
+under
+> -                        * hard protection.
+> -                        */
+> -                       unsigned long cgroup_size =3D mem_cgroup_size(mem=
+cg);
+> -                       unsigned long protection;
+> -
+> -                       /* memory.low scaling, make sure we retry before =
+OOM */
+> -                       if (!sc->memcg_low_reclaim && low > min) {
+> -                               protection =3D low;
+> -                               sc->memcg_low_skipped =3D 1;
+> -                       } else {
+> -                               protection =3D min;
+> -                       }
+> -
+> -                       /* Avoid TOCTOU with earlier protection check */
+> -                       cgroup_size =3D max(cgroup_size, protection);
+> -
+> -                       scan =3D lruvec_size - lruvec_size * protection /
+> -                               (cgroup_size + 1);
+> -
+> -                       /*
+> -                        * Minimally target SWAP_CLUSTER_MAX pages to kee=
+p
+> -                        * reclaim moving forwards, avoiding decrementing
+> -                        * sc->priority further than desirable.
+> -                        */
+> -                       scan =3D max(scan, SWAP_CLUSTER_MAX);
+> -               } else {
+> -                       scan =3D lruvec_size;
+> -               }
+> -
+> +               scan =3D apply_proportional_protection(memcg, sc, lruvec_=
+size);
+>                 scan >>=3D sc->priority;
+>
+>                 /*
+> @@ -4521,8 +4524,9 @@ static bool isolate_folio(struct lruvec *lruvec, st=
+ruct folio *folio, struct sca
+>         return true;
+>  }
+>
+> -static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+> -                      int type, int tier, struct list_head *list)
+> +static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
+> +                      struct scan_control *sc, int type, int tier,
+> +                      struct list_head *list)
+>  {
+>         int i;
+>         int gen;
+> @@ -4531,7 +4535,7 @@ static int scan_folios(struct lruvec *lruvec, struc=
+t scan_control *sc,
+>         int scanned =3D 0;
+>         int isolated =3D 0;
+>         int skipped =3D 0;
+> -       int remaining =3D MAX_LRU_BATCH;
+> +       int remaining =3D min(nr_to_scan, MAX_LRU_BATCH);
+>         struct lru_gen_folio *lrugen =3D &lruvec->lrugen;
+>         struct mem_cgroup *memcg =3D lruvec_memcg(lruvec);
+>
+> @@ -4642,7 +4646,8 @@ static int get_type_to_scan(struct lruvec *lruvec, =
+int swappiness)
+>         return positive_ctrl_err(&sp, &pv);
+>  }
+>
+> -static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc=
+, int swappiness,
+> +static int isolate_folios(unsigned long nr_to_scan, struct lruvec *lruve=
+c,
+> +                         struct scan_control *sc, int swappiness,
+>                           int *type_scanned, struct list_head *list)
+>  {
+>         int i;
+> @@ -4654,7 +4659,7 @@ static int isolate_folios(struct lruvec *lruvec, st=
+ruct scan_control *sc, int sw
+>
+>                 *type_scanned =3D type;
+>
+> -               scanned =3D scan_folios(lruvec, sc, type, tier, list);
+> +               scanned =3D scan_folios(nr_to_scan, lruvec, sc, type, tie=
+r, list);
+>                 if (scanned)
+>                         return scanned;
+>
+> @@ -4664,7 +4669,8 @@ static int isolate_folios(struct lruvec *lruvec, st=
+ruct scan_control *sc, int sw
+>         return 0;
+>  }
+>
+> -static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, =
+int swappiness)
+> +static int evict_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
+> +                       struct scan_control *sc, int swappiness)
+>  {
+>         int type;
+>         int scanned;
+> @@ -4683,7 +4689,7 @@ static int evict_folios(struct lruvec *lruvec, stru=
+ct scan_control *sc, int swap
+>
+>         spin_lock_irq(&lruvec->lru_lock);
+>
+> -       scanned =3D isolate_folios(lruvec, sc, swappiness, &type, &list);
+> +       scanned =3D isolate_folios(nr_to_scan, lruvec, sc, swappiness, &t=
+ype, &list);
+>
+>         scanned +=3D try_to_inc_min_seq(lruvec, swappiness);
+>
+> @@ -4804,6 +4810,8 @@ static long get_nr_to_scan(struct lruvec *lruvec, s=
+truct scan_control *sc, int s
+>         if (nr_to_scan && !mem_cgroup_online(memcg))
+>                 return nr_to_scan;
+>
+> +       nr_to_scan =3D apply_proportional_protection(memcg, sc, nr_to_sca=
+n);
+> +
+>         /* try to get away with not aging at the default priority */
+>         if (!success || sc->priority =3D=3D DEF_PRIORITY)
+>                 return nr_to_scan >> sc->priority;
+> @@ -4856,7 +4864,7 @@ static bool try_to_shrink_lruvec(struct lruvec *lru=
+vec, struct scan_control *sc)
+>                 if (nr_to_scan <=3D 0)
+>                         break;
+>
+> -               delta =3D evict_folios(lruvec, sc, swappiness);
+> +               delta =3D evict_folios(nr_to_scan, lruvec, sc, swappiness=
+);
+>                 if (!delta)
+>                         break;
+>
+> @@ -5477,7 +5485,7 @@ static int run_eviction(struct lruvec *lruvec, unsi=
+gned long seq, struct scan_co
+>                 if (sc->nr_reclaimed >=3D nr_to_reclaim)
+>                         return 0;
+>
+> -               if (!evict_folios(lruvec, sc, swappiness))
+> +               if (!evict_folios(MAX_LRU_BATCH, lruvec, sc, swappiness))
+>                         return 0;
+Right now this change preserves the current behavior, but given this
+is only invoked from the debugfs interface, it would be reasonable to
+also change this to something like nr_to_reclaim - sc->nr_reclaimed so
+the run_eviction evicts closer to nr_to_reclaim number of pages.
+Closer to what it advertises, but different from the current behavior.
+I have no strong opinion here, so if you're a user of this proactive
+reclaim interface and would prefer to change it, go ahead.
+
+>
+>                 cond_resched();
+> --
+> 2.45.2
+>
+>
+
+Reviewed-by: Yuanchu Xie <yuanchu@google.com>
