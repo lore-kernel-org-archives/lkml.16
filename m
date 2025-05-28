@@ -1,314 +1,150 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6004B1C3F36;
-	Wed, 28 May 2025 09:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4165B15D1
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424601; cv=none; b=RqJAIOHtN3OZY34jlYab5u38ZpyJg2OCSRNOJozKxnk2/dvNv399HuJKfNfAzqiIinKvGIyaQsIyy0goJ0H2UyY2G47bjm4+15apDWY1GGkxZHLp93189ixILnHQRnKKSwHWrq2c+mMqF/vgTw7rYj5j+rYfo2+jtDHP3P6XO0g=
+	t=1748424690; cv=none; b=pdaiCyfM+JRmjqGQvHjmVWv5feopIsdJpylZv1W5RyrEW6r3PZuFNvgYjU6BnCJh26+kJn1Sr2J+88otLGYa8guVFJkj8Q/hyE/L0e9btni5MDMLm1UrRxwr9FIM2Ava0lV2CDuJ0ll1a5l8HfoInDA1q/TYpczlWylV/8/7niQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424601; c=relaxed/simple;
-	bh=j00G/dwW97kfCExu0r+usuJ50t2BSRgmX+trGWNWHTk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=llIPy45L8WXBKNIiMvpPZoP6f29XsB6vAIWvhyJnQOUEHPfvvA8b1Fj9Gcvve/mcGzWdYAcOISpR6KUFubFxSUVLxsLDz0GAa5RlEWnEFkLi/77iYkEpSILVtmLvmD2/GHj4HjYX2h1g5pZR4Nrsixs42wrMFOs1MFLDg4XlN4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=COYg7XrY; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748424690; c=relaxed/simple;
+	bh=3gqXNmfgBpy7vgpHSrbi6sQ1P2dp5ocMzaW85aq70PU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ayw9f7wA3oxK+HaHbUKpu3J7v+6NbPC+QDZtAUc7LbtTwKotRDfo8k/kEqYuslOETLFPIZlJpGxGrCvtv7x2VZhTDXFiLx7PvdIMebmD5AgNO0m5nqXCWtK32hLTWH1rdB2stpR4x5GAFva4xIaafCWICPXqfq1C5M/ZlasGJ8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F28DdG0r; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="COYg7XrY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BB4C44341E;
-	Wed, 28 May 2025 09:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748424590;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tcp+3qiZKrZ/yFS9++J4sy6UEvxx9WuKX4FnkxkfHz0=;
-	b=COYg7XrYSHalG4owcEpWOBAsjunxlDmdWc1VFAql1a5dnt3Eq4iRRkHe8TdRFLaIUq/lE3
-	BTjSw2u8n6EW5pI60SAdQE4OEAU2xDNFEYZ/ZXVOZQaEq/evnqR4GQQoLp+stts5l4Xzyh
-	9NxJ5SJLHMAM26XYxsE1dojYL0J8BIYSQmtkEzJac/3nCK8CkQ9z38zM4bvUqdq7jeKKPF
-	L+WvN5GVjQ+BsVjsVYFYgX2Buqlxrda9UW8piAoXYcs47WqLi42eXnFG3tT+UbeakSLn8t
-	pUSmxs5n/Rvf//Npg+HsS3oq5Cw33wds1WdawIaZGSjII/9sfUTORa7Zu0NSYw==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 28 May 2025 11:29:36 +0200
-Subject: [PATCH v4] drm/bridge: tc358767: convert to
- devm_drm_bridge_alloc() API
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F28DdG0r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748424689; x=1779960689;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3gqXNmfgBpy7vgpHSrbi6sQ1P2dp5ocMzaW85aq70PU=;
+  b=F28DdG0rd9rr4qGnnUlf3rqNDOr8fUKs2/zrzLl7lwVsVsH7W/A7xKe5
+   ypA9zHClFYoYEZWP1hxZDhHgPQ5XY7XoUZhHL9sCLBL/ue1NOkKqhofyF
+   6w3O1lJM29lqEVgLPSnt7Tke4joLzEeu+dUQImYuXn45+mkRBHg6lrg79
+   WUmvQntrl4xRU/GxdmeC3MFWvLRotlD9pIMm0xnTTk+NvxuDKKZ7EroB2
+   lfCXZ931uJC3D9ZvoVci2u5rEtZ5+YwoEc+4/285jpreZkC0PB1Ho/hAr
+   HKEfR6UrOkBEBcDUNLtqN56ZFDgqQV0bErsScKTpBUlkpZrpV9BIgNkai
+   Q==;
+X-CSE-ConnectionGUID: SJnjkPslTVax2tWXoh1jwA==
+X-CSE-MsgGUID: 5lNWTMwdSIu2TezK9Ry1ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50437449"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="50437449"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 02:31:28 -0700
+X-CSE-ConnectionGUID: ck+Bq/amQYmaXnjlUzPETQ==
+X-CSE-MsgGUID: DSk/tjlVTEeJIAgfo9VRtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="174077191"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 02:31:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uKD87-00000001PBP-0Ylo;
+	Wed, 28 May 2025 12:31:23 +0300
+Date: Wed, 28 May 2025 12:31:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
+Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
+ devm_device_add_group to devres.h
+Message-ID: <aDbX6natYH6Pu2ED@smile.fi.intel.com>
+References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
+ <aC8en60QI0MwnXxM@smile.fi.intel.com>
+ <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
+ <aDWdXT36Ucxk0O63@smile.fi.intel.com>
+ <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250528-drm-bridge-convert-to-alloc-api-v4-1-f04e698c9a77@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAH/XNmgC/4WNywrCMBBFf6Vk7UgSY7Wu/A/pos3DDrSZkoSgl
- Py7seDa5bkXztlYtAFtZLdmY8FmjEi+gjo0TE+Df1pAU5lJLs9ccQUmLDAGNPXR5LMNCRLBMM+
- kYVgRWqFGq10rZadYtazBOnzthUdfecKYKLz3YBbf9ee+/HVnARyUFOLk3NV0mt9HojSjP2paW
- F9K+QA4RBdR0AAAAA==
-X-Change-ID: 20250404-drm-bridge-convert-to-alloc-api-614becf62294
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Douglas Anderson <dianders@chromium.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdeludculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeitedtfeefjeeijeejveevleeijefgkefhjeeuffelveelieetleduveetieetnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgpdhkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidru
- ggvpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepphgruhhlkhesshihshdqsggrshgvrdhiohdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+In-Reply-To: <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This is the new API for allocating DRM bridges.
+On Wed, May 28, 2025 at 11:07:43AM +0800, Pei Xiao wrote:
+> 
+> 在 2025/5/27 19:09, Andy Shevchenko 写道:
+> > On Tue, May 27, 2025 at 05:41:21PM +0800, Pei Xiao wrote:
+> >> 在 2025/5/22 20:54, Andy Shevchenko 写道:
+> >>> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
 
-Converting this driver is a bit complex because the drm_bridge funcs
-pointer differs based on the bridge mode. So the current code does:
+...
 
- * tc_probe()
-   * devm_kzalloc() private struct embedding drm_bridge
-   * call tc_probe_bridge_endpoint() which
-     * parses DT description into struct fields
-     * computes the mode
-     * calls different bridge init functions based on the mode
-       * each sets a different bridge.funcs pointer
+> >> include #include <asm/percpu.h>
+> >>
+> >> only move #include <asm/percpu.h> to linux/device/devres.h for
+> >>
+> >> build error.
+> > It's not needed for the build error fixing as far as I understood it. __percpu
+> > is defined in another header.
+> 
+> compiler_types.h or compiler.h 
+> 
+> I tried before send patch, but it all resulted in compilation failures on my arm64 machine.
 
-The new API expects the funcs pointer to be known at alloc time, which does
-not fit in the current code structure.
+You need to investigate those. But header doesn't use anything fancy AFAICS, so
+compiler_types.h should be enough. I think you need to move asm/percpu.h to
+devres.c (C file).
 
-Solve this by splitting tc_probe_bridge_endpoint() in two functions:
+...
 
- * tc_probe_get_mode(), computing the mode without needing the private
-   driver structure
- * tc_probe_bridge_endpoint(), only initializing the endpoints
+> >>>> +#include <linux/sysfs.h>
+> >> it's redundant.
+> >>>> +#include <asm/percpu.h>
+> >>> What for are these new inclusions, please?
+> >> for percpu.
+> > It does not define __percpu.
+> >
+> >>>> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
+> >>> Please, take your time to understand what is behind the __percpu and
+> >>> why the asm/percpu.h is redundant here.
+> >> If this header file is missing, there will be a compilation error. 
+> > Right. But this is wrong header for the purpose.
+> >
+> >> Which header file should I include?
+> > The one that defines it, hint:
+> > https://elixir.bootlin.com/linux/v6.15/A/ident/__percpu
+> 
+> compiler_types.h or compiler.h 
+> 
+> I tried before send patch, but it all resulted in compilation failures on my arm64 machine.
+> 
+>  You can give it a try.
 
-So now the mode is known before allocation and so
-is the funcs pointer, while all other operations are still happening after
-allocation, directly into the private struct data, as they used to.
+Sure.
 
-The new code flow is:
+> when i add a error in compiler_types.h
+> 
+> +++ b/include/linux/compiler_types.h
+> @@ -26,6 +26,7 @@
+>  
+>  /* sparse defines __CHECKER__; see Documentation/dev-tools/sparse.rst */
+>  #ifdef __CHECKER__
+> +sasasas
+>  /* address spaces */
+>  # define __kernel      __attribute__((address_space(0)))
+>  # define __user                __attribute__((noderef, address_space(__user)
+> 
+> it  still build success,have no build error.
+> 
+> #include <linux/lockdep.h> include <asm/percpu.h> ,so have no build error before modidy,I think.
+> 
+> >> I've found that including <asm/percpu.h> does resolve my compilation issue.
+> thanks!
 
- * tc_probe()
-   * tc_probe_get_mode()
-     * parses DT description
-     * computes and returns the mode
-   * based onf the mode, pick the funcs pointer
-   * devm_drm_bridfge_alloc(..., funcs)
-   * call tc_probe_bridge_endpoint() which
-     * calls different bridge init functions based on the mode
-       * these don't set the funcs pointer, it was done by _alloc
-
-This solution is chosen to minimize the changes in the driver logical code
-flow. The drawback is we now iterate twice over the endpoints during probe.
-
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
-devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
-bridge, and the only one supported from now on. It is the first milestone
-towards removal of bridges from a still existing DRM pipeline without
-use-after-free.
-
-The steps in the grand plan [1] are:
-
- 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
- 2. handle gracefully atomic updates during bridge removal
- 3. avoid DSI host drivers to have dangling pointers to DSI devices
- 4. finish the hotplug bridge work, removing the "always-disconnected"
-    connector, moving code to the core and potentially removing the
-    hotplug-bridge itself (this needs to be clarified as points 1-3 are
-    developed)
-
-This series is part of step 1 of the grand plan.
-
-Current tasks in step 1 of the grand plan:
-
- A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
- B. ➜ convert all bridge drivers to new API (this series)
- C. … documentation, kunit tests (v1 under discussion)
- D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
- E. after (B), convert accessors; this is a large work and can be done
-    in chunks
- F. debugfs improvements
-
-More info about this series in the v2 cover [2].
-
-Luca
-
-[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
-[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
-[2] https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
----
-Changes in v4:
-- Removed patches already in drm-misc-next -> only 1 left
-- Improve commit message of patch 1
-- Link to v3: https://lore.kernel.org/all/20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com/
-
-Changes in v3:
-- Fixed issues reported for some patches
-- Added review tags
-- Removed patches that have been applied
-- Added revert for the exynos patch, applied by mistake
-- Update cover with grand plan info and trim some of it
-- Updated bouncing e-mail address in Cc list
-- Link to v2: https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
-
-Changes in v2:
-- Improved cover letter with link to commit adding devm_drm_bridge_alloc()
-- add review tags
-- fix bugs in zynqmp, vc4 patches
-- fix patch 1 error code checking
-- Link to v1: https://lore.kernel.org/r/20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com
----
-
-changes in v4:
-- improved commit message
----
- drivers/gpu/drm/bridge/tc358767.c | 56 ++++++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 7e5449fb86a3fcdae8255bc490d12c543ef3f8ae..61559467e2d22b4b1b4223c97766ca3bf58908fd 100644
---- a/drivers/gpu/drm/bridge/tc358767.c
-+++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -344,6 +344,14 @@
- #define COLOR_BAR_MODE_BARS	2
- #define PLL_DBG			0x0a04
- 
-+enum tc_mode {
-+	mode_dpi_to_edp = BIT(1) | BIT(2),
-+	mode_dpi_to_dp  = BIT(1),
-+	mode_dsi_to_edp = BIT(0) | BIT(2),
-+	mode_dsi_to_dp  = BIT(0),
-+	mode_dsi_to_dpi = BIT(0) | BIT(1),
-+};
-+
- static bool tc_test_pattern;
- module_param_named(test, tc_test_pattern, bool, 0644);
- 
-@@ -2327,7 +2335,6 @@ static int tc_probe_dpi_bridge_endpoint(struct tc_data *tc)
- 	if (bridge) {
- 		tc->panel_bridge = bridge;
- 		tc->bridge.type = DRM_MODE_CONNECTOR_DPI;
--		tc->bridge.funcs = &tc_dpi_bridge_funcs;
- 
- 		return 0;
- 	}
-@@ -2360,7 +2367,6 @@ static int tc_probe_edp_bridge_endpoint(struct tc_data *tc)
- 		tc->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
- 	}
- 
--	tc->bridge.funcs = &tc_edp_bridge_funcs;
- 	if (tc->hpd_pin >= 0)
- 		tc->bridge.ops |= DRM_BRIDGE_OP_DETECT;
- 	tc->bridge.ops |= DRM_BRIDGE_OP_EDID;
-@@ -2368,17 +2374,11 @@ static int tc_probe_edp_bridge_endpoint(struct tc_data *tc)
- 	return 0;
- }
- 
--static int tc_probe_bridge_endpoint(struct tc_data *tc)
-+static enum tc_mode tc_probe_get_mode(struct device *dev)
- {
--	struct device *dev = tc->dev;
- 	struct of_endpoint endpoint;
- 	struct device_node *node = NULL;
--	const u8 mode_dpi_to_edp = BIT(1) | BIT(2);
--	const u8 mode_dpi_to_dp = BIT(1);
--	const u8 mode_dsi_to_edp = BIT(0) | BIT(2);
--	const u8 mode_dsi_to_dp = BIT(0);
--	const u8 mode_dsi_to_dpi = BIT(0) | BIT(1);
--	u8 mode = 0;
-+	enum tc_mode mode = 0;
- 
- 	/*
- 	 * Determine bridge configuration.
-@@ -2401,7 +2401,27 @@ static int tc_probe_bridge_endpoint(struct tc_data *tc)
- 			return -EINVAL;
- 		}
- 		mode |= BIT(endpoint.port);
-+	}
-+
-+	if (mode != mode_dpi_to_edp &&
-+	    mode != mode_dpi_to_dp  &&
-+	    mode != mode_dsi_to_dpi &&
-+	    mode != mode_dsi_to_edp &&
-+	    mode != mode_dsi_to_dp) {
-+		dev_warn(dev, "Invalid mode (0x%x) is not supported!\n", mode);
-+		return -EINVAL;
-+	}
-+
-+	return mode;
-+}
- 
-+static int tc_probe_bridge_endpoint(struct tc_data *tc, enum tc_mode mode)
-+{
-+	struct device *dev = tc->dev;
-+	struct of_endpoint endpoint;
-+	struct device_node *node = NULL;
-+
-+	for_each_endpoint_of_node(dev->of_node, node) {
- 		if (endpoint.port == 2) {
- 			of_property_read_u8_array(node, "toshiba,pre-emphasis",
- 						  tc->pre_emphasis,
-@@ -2427,24 +2447,28 @@ static int tc_probe_bridge_endpoint(struct tc_data *tc)
- 		return tc_probe_edp_bridge_endpoint(tc);
- 	}
- 
--	dev_warn(dev, "Invalid mode (0x%x) is not supported!\n", mode);
--
-+	/* Should never happen, mode was validated by tc_probe_get_mode() */
- 	return -EINVAL;
- }
- 
- static int tc_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
-+	const struct drm_bridge_funcs *funcs;
- 	struct tc_data *tc;
-+	int mode;
- 	int ret;
- 
--	tc = devm_kzalloc(dev, sizeof(*tc), GFP_KERNEL);
--	if (!tc)
--		return -ENOMEM;
-+	mode = tc_probe_get_mode(dev);
-+	funcs = (mode == mode_dsi_to_dpi) ? &tc_dpi_bridge_funcs : &tc_edp_bridge_funcs;
-+
-+	tc = devm_drm_bridge_alloc(dev, struct tc_data, bridge, funcs);
-+	if (IS_ERR(tc))
-+		return PTR_ERR(tc);
- 
- 	tc->dev = dev;
- 
--	ret = tc_probe_bridge_endpoint(tc);
-+	ret = tc_probe_bridge_endpoint(tc, mode);
- 	if (ret)
- 		return ret;
- 
-
----
-base-commit: 18fb864d3afccf7ecdf13d0435464465d31ccf1d
-change-id: 20250404-drm-bridge-convert-to-alloc-api-614becf62294
-
-Best regards,
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+With Best Regards,
+Andy Shevchenko
+
 
