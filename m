@@ -1,221 +1,74 @@
-Received: from mail-ua1-f74.google.com (mail-ua1-f74.google.com [209.85.222.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22531220F24
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3733F220F46;
+	Wed, 28 May 2025 20:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463483; cv=none; b=tyRZ/ZY7bD5zzEpY+vFv3gC05YUdNgpxaOcuQPqZKubCACphnbsUmanRhz1Fgt5HxKyhdY7aWzpx5gb58zdmWVAYLPKDayu1P6/B2O/3hjWC+B+EMsTBZ2SwHYI5wgRrcLVCXA624NHNv7y3nH20k2uTofm/mmYAnbQaG5pAKac=
+	t=1748463491; cv=none; b=i/IwLTml9SVWS22iGx1qCc2EmLEHw/ak9pcLHjrL5LV65UzvLdB3SwedihA4scTPwZO6CWkrLWJlmVA2HgLrwe5b1SGCtBlKivcgoX6nJg0wXARkO8wvIJYE/+GgofaicqgdbE+mNmLt76CAtMAj+TyiDKdLnSSCSxehdVyiEO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463483; c=relaxed/simple;
-	bh=MW9va8ZpX3dYh3E3JLHuTSkrOEon9HLdeDcTvo+YAEU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rPLbNMMGwRjLEN4rzco3rdlPUkWVXLrPvW5X+9/iEPJpD5Ji3e1yMTuI62HpR2tgzanJzl8i/b6IMEU/scngntim/jbsrG2s1bKT0LRdbenVIAuHsdURvWGHR1sxLKhQF1i1/9bmDr0NlK/ov9iDb9R6buM2DFbOOPCe4Ka3DFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cFVKVZX4; arc=none smtp.client-ip=209.85.222.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
+	s=arc-20240116; t=1748463491; c=relaxed/simple;
+	bh=G6RFgAo1ZkDxSZSJIJw1rPFOk7/9WLkdD/wqr5J3kIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lnAf8LahgjwC/PPbHJfq6GKa4dklw6gafjiouzFlpUhuIKqpHmh+jq40x9P9c4GfBLOt/xrj49JlHfpEplcPo/3+LNEjJCRwFpi685PjkU2iORUiquFIijRjZTiv6ttP/ddUnDyVW1Et+kwSzv5JOae8G2vxL2Xy+CFuq0xd4Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pY367jxZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cFVKVZX4"
-Received: by mail-ua1-f74.google.com with SMTP id a1e0cc1a2514c-87deff34d00so34777241.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748463479; x=1749068279; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pS3L3KRfz5KN2f4PHSrDwEqqU16vREHLyymMNsMjI1o=;
-        b=cFVKVZX4RH3eioeab6GMuevfGyXtlRZ+XbIy4swTSnD6RPCujGkDSaJobpxXmtX931
-         5Z+dK+NFe5o6sgZdHjpYBGNuWp5Pl5UuDtpgCd2NMQN4cNv9kzScLbv4kTUJgBFFtWAi
-         Hr7vbQGD/wmfEyd+0dLh37EBKUqGdvpUVxJlbOehYho4yVGgPRFY15XO23poInjJYToN
-         prIQnx+KEAsdRdWdw3I59meSwmMNFyn+mc9veZqnt9tBlOcDmp6rkhJ4Rq+bnibZtxdQ
-         geYuxQP5ANPsAsvgC1k+hwEMRmZWAq/is1Po2Qg+duaBDAYSOSM0UJrKNore7Vbcjw6H
-         jTsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748463479; x=1749068279;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pS3L3KRfz5KN2f4PHSrDwEqqU16vREHLyymMNsMjI1o=;
-        b=WDI00s3WTQMcDW7B87TelY21rwtoU/8PDZhvKg+E+MIyfNSjD0Ld7zosX4ujDJTMLr
-         94cH4ELrObUFbjP4fnrZKqTAjpGH62gYQ2vp/hmhwSx8RCyx/gQy3OAOyEbWF4pWGjpl
-         B1RbJTh2ySGeybhW8lO6PSO/wKSs/jRKTpqzmwnlmSE/r8eKzyPHed9DL9P606z79nGZ
-         amF6yKvqRsWaCfzAzYoFkdRmWsMLjxxk93nI3lJGBbqOYm4IncS91Us+319pA+X63hwQ
-         mNFb2sixqJdlzdrPHbBfVYEel+By7OErmSI7nLmCv3/MWnJ5sf/cJ50UAS0wsLYCzQ4y
-         HHTg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8QZh08kUZXMUMJX3meNFrE31j17ayrwk1Z6FQUbIroe9ddkq7Kg98p2yMiAQlIpfolJ8tZELxqCiFj7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCFccZRNVXGbpwx4dCWS0jSTiBXYnF2QEXiXYz5LN3rH8m6nSO
-	Tzm7O35J6Nd/68tu7H6+o7xeNK4SqztMrzYXBr3eBsS9jKralAy3O4P/3qQe0XiBTvPNZMxfzo7
-	Pfwrid0KlYdMKiXbzhRUMXg==
-X-Google-Smtp-Source: AGHT+IGyUJTOXQyn/15OsOvKdvYlJU2g7lRit6+I+UryLZeKjuoksIAEOAqNG3KzRBgJ4D83T1qgfTqVSbHb27/G
-X-Received: from vsve42.prod.google.com ([2002:a05:6102:faa:b0:4dd:b083:d38c])
- (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6102:5092:b0:4e5:ac99:e466 with SMTP id ada2fe7eead31-4e5ac99f42fmr1294267137.18.1748463478924;
- Wed, 28 May 2025 13:17:58 -0700 (PDT)
-Date: Wed, 28 May 2025 20:17:54 +0000
-In-Reply-To: <aDdILHOu9g-m5hSm@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pY367jxZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BDDC4CEE3;
+	Wed, 28 May 2025 20:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748463489;
+	bh=G6RFgAo1ZkDxSZSJIJw1rPFOk7/9WLkdD/wqr5J3kIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pY367jxZjE+ylU5eP3nMO28+7LZZNHe9V7tC36cr3+Vza7x2p2shCPRK3Y5sXpIeh
+	 jEAo0FjXXAUg4+ccG/tgREy4dXqSeAZl6s4y9BMGU2CG9lHQRrGiH0cxA9ah+Uwq7b
+	 SSndB3u1oSCoyY4Nl2Dt6P/6IQ8s3cVZ1FZ73F4Q=
+Date: Wed, 28 May 2025 16:18:08 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Chuck Lever <cel@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [GIT PULL] NFSD changes for v6.16
+Message-ID: <20250528-wise-platinum-pony-ea6f62@lemur>
+References: <20250527141706.388993-1-cel@kernel.org>
+ <CAHk-=wggC6PP9ZNwKY7sEzdsC7h8qySA7pjqAchrYowniADUQg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aDdILHOu9g-m5hSm@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250528201756.36271-1-jthoughton@google.com>
-Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
-From: James Houghton <jthoughton@google.com>
-To: seanjc@google.com
-Cc: amoorthy@google.com, corbet@lwn.net, dmatlack@google.com, 
-	jthoughton@google.com, kalyazin@amazon.com, kvm@vger.kernel.org, 
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org, 
-	oliver.upton@linux.dev, pbonzini@redhat.com, peterx@redhat.com, 
-	pgonda@google.com, wei.w.wang@intel.com, yan.y.zhao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wggC6PP9ZNwKY7sEzdsC7h8qySA7pjqAchrYowniADUQg@mail.gmail.com>
 
-On Wed, May 28, 2025 at 1:30=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
-> On Wed, May 28, 2025, James Houghton wrote:
-> > On Wed, May 28, 2025 at 11:09=E2=80=AFAM James Houghton <jthoughton@goo=
-gle.com> wrote:
-> > > On Tue, May 6, 2025 at 8:06=E2=80=AFPM Sean Christopherson <seanjc@go=
-ogle.com> wrote:
-> > > > @@ -2127,14 +2131,19 @@ void kvm_arch_commit_memory_region(struct k=
-vm *kvm,
-> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0const struct kvm=
-_memory_slot *new,
-> > > > =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0enum kvm_mr_chan=
-ge change)
-> > > > =C2=A0{
-> > > > - =C2=A0 =C2=A0 =C2=A0 bool log_dirty_pages =3D new && new->flags &=
- KVM_MEM_LOG_DIRTY_PAGES;
-> > > > + =C2=A0 =C2=A0 =C2=A0 u32 old_flags =3D old ? old->flags : 0;
-> > > > + =C2=A0 =C2=A0 =C2=A0 u32 new_flags =3D new ? new->flags : 0;
-> > > > +
-> > > > + =C2=A0 =C2=A0 =C2=A0 /* Nothing to do if not toggling dirty loggi=
-ng. */
-> > > > + =C2=A0 =C2=A0 =C2=A0 if (!((old_flags ^ new_flags) & KVM_MEM_LOG_=
-DIRTY_PAGES))
-> > > > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
-> > >
-> > > This is my bug, not yours, but I think this condition must also check
-> > > that `change =3D=3D KVM_MR_FLAGS_ONLY` for it to be correct. This, fo=
-r
-> > > example, will break the case where we are deleting a memslot that
-> > > still has KVM_MEM_LOG_DIRTY_PAGES enabled. Will fix in the next
-> > > version.
-> >
-> > Ah it wouldn't break that example, as `new` would be NULL. But I think
-> > it would break the case where we are moving a memslot that keeps
-> > `KVM_MEM_LOG_DIRTY_PAGES`.
->
-> Can you elaborate? =C2=A0Maybe with the full snippet of the final code th=
-at's broken.
-> I'm not entirely following what's path you're referring to.
+On Wed, May 28, 2025 at 12:38:58PM -0700, Linus Torvalds wrote:
+> Can you fix your kernel.org email sending setup so that you have a
+> real name, not just your login name?
+> 
+> This is not your fault, btw. I think the kernel.org email sending
+> documentation is actively misleading and wrong, with
+> 
+>     https://korg.docs.kernel.org/mail.html
+> 
+> and the 'getsmtppass' output saying that you should do things like
+> 
+>     from  = "[username]@kernel.org"
+> 
+> in your git config (or mutt settings), like you were some kind of bot
+> that didn't have an actual name.
+> 
+> Konstantin, can we please get the kernel.org documentation and
+> getsmtpass output fixed? We had somebody else who also ended up being
+> nameless (Ingo, I think) due to following the documentation a bit too
+> slavishly.
 
-This is even more broken than I realized.
+I've updated it to say:
 
-I mean that this diff should be applied on top of your patch:
+    from = "Your Name <[username]@kernel.org>"
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 5e2ccde66f43c..f1db3f7742b28 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -2134,8 +2134,12 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	u32 old_flags =3D old ? old->flags : 0;
- 	u32 new_flags =3D new ? new->flags : 0;
-=20
--	/* Nothing to do if not toggling dirty logging. */
--	if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
-+	/*
-+	 * If only changing flags, nothing to do if not toggling
-+	 * dirty logging.
-+	 */
-+	if (change =3D=3D KVM_MR_FLAGS_ONLY &&
-+	    !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
- 		return;
-=20
- 	/*
+So, if you receive mail from a bunch of people called "Your Name", at least
+you'll know that they are reading the documentation (and still following it a
+bit too slavishly). :)
 
-So the final commit looks like:
-
-commit 3c4b57b25b1123629c5f2b64065d51ecdadb6771
-Author: James Houghton <jthoughton@google.com>
-Date:   Tue May 6 15:38:31 2025 -0700
-
-    KVM: arm64: Add support for KVM userfault exits
-   =20
-    <to be written by James>
-   =20
-    Signed-off-by: James Houghton <jthoughton@google.com>
-    Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index c5d21bcfa3ed4..f1db3f7742b28 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -2127,15 +2131,23 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				   const struct kvm_memory_slot *new,
- 				   enum kvm_mr_change change)
- {
--	bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PAGES;
-+	u32 old_flags =3D old ? old->flags : 0;
-+	u32 new_flags =3D new ? new->flags : 0;
-+
-+	/*
-+	 * If only changing flags, nothing to do if not toggling
-+	 * dirty logging.
-+	 */
-+	if (change =3D=3D KVM_MR_FLAGS_ONLY &&
-+	    !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
-+		return;
-=20
- 	/*
- 	 * At this point memslot has been committed and there is an
- 	 * allocated dirty_bitmap[], dirty pages will be tracked while the
- 	 * memory slot is write protected.
- 	 */
--	if (log_dirty_pages) {
--
-+	if (new_flags & KVM_MEM_LOG_DIRTY_PAGES) {
- 		if (change =3D=3D KVM_MR_DELETE)
- 			return;
-=20
-
-So we need to bail out early if we are enabling KVM_MEM_USERFAULT but
-KVM_MEM_LOG_DIRTY_PAGES is already enabled, otherwise we'll be
-write-protecting a bunch of PTEs that we don't need or want to WP.
-
-When *disabling* KVM_MEM_USERFAULT, we definitely don't want to WP
-things, as we aren't going to get the unmap afterwards anyway.
-
-So the check we started with handles this:
-> > > > + =C2=A0 =C2=A0 =C2=A0 u32 old_flags =3D old ? old->flags : 0;
-> > > > + =C2=A0 =C2=A0 =C2=A0 u32 new_flags =3D new ? new->flags : 0;
-> > > > +
-> > > > + =C2=A0 =C2=A0 =C2=A0 /* Nothing to do if not toggling dirty loggi=
-ng. */
-> > > > + =C2=A0 =C2=A0 =C2=A0 if (!((old_flags ^ new_flags) & KVM_MEM_LOG_=
-DIRTY_PAGES))
-> > > > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
-
-So why also check for `change =3D=3D KVM_MR_FLAGS_ONLY` as well? Everything=
- I just
-said doesn't really apply when the memslot is being created, moved, or
-destroyed. Otherwise, consider the case where we never enable dirty logging=
-:
-
- - Memslot deletion would be totally broken; we'll see that
-   KVM_MEM_LOG_DIRTY_PAGES is not getting toggled and then bail out, skippi=
-ng
-   some freeing.
-
- - Memslot creation would be broken in a similar way; we'll skip a bunch of
-   setup work.
-
- - For memslot moving, the only case that we could possibly be leaving
-   KVM_MEM_LOG_DIRTY_PAGES set without the change being KVM_MR_FLAGS_ONLY,
-   I think we still need to do the split and WP stuff.
+-K
