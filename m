@@ -1,216 +1,186 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1FF22ACCE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6069120F087;
+	Wed, 28 May 2025 07:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748415907; cv=none; b=E/z11I7RnWD1MqzW4QT4150tlkdjlI95R4bkE+iAWom45l/Ge+F0P1uKZx6aFeFamo2AwW4zWFFZIUbnSOWf8ykJYSes2JXtkYWKvtb1hIVIljTu2chhJh1Bu0xnbLwbZok21HTsDKXQsvfuyPKY6uWYNTfCK0QI3vSPbTXmB9o=
+	t=1748415910; cv=none; b=ci5LLUtENAr6gSIXHT0r5Nunysn+N5t4fo9KdAIhhJmfnNyGyvjJ/jNI5RA8nT4kKPD2fTLxHg2GQjS93VXIaJ6TLHvNjHWeofL6BSwm8MS/xAFf8dJ2OP8SJmyqc+QUN3iPTY/QRANUY8dAoAIgKR61CZSSe+5Qe91VlDyzDlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748415907; c=relaxed/simple;
-	bh=Mvf0YoyXqkCEfGtLJrNPzkLs56Eb/fTmLY/EAymjqvI=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SqfS1VEBa9UHldk/rRPrw7xbpadUzPWEohUPwGnI7gobklVbehaVTVfWn2xe9eG34wJ4USk4DppOO3KkMf6GQ3sgfB5ecrWMIxMoj0Bl1IJtalIamWtmwkdPeQ79SgO4A/wLKlG6tU3GFL/IkR1c/3ng1e/YDpnzxWYp++Hmuzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MdUvmu7s; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748415910; c=relaxed/simple;
+	bh=7q2WhUY3sGrbDCrsFXssOt+MLhkRFiK6Br4N8IzOHM8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FAiMC79XUMLxwsJMRltS2+c8h3V9EiH5LkDgkQkcGNKkGplDiis1e75WtyJzrWyR84jw0ZO1ossCDN9xEqROmfgBjfBzAWG61Wf34LIoCn0CS+L9bilwg0dqGKGOGK0wXurwcIl+JPFJy7aQoKIPnml8LD0ijEIGuCvlwpYZhXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=eF5bVtXx; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MdUvmu7s"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a4c6c0a9c7so2916525f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748415902; x=1749020702; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u16XtC8m50vUYOx4xXsXVM1MdjBGyfgJ+HP9+pmHAnE=;
-        b=MdUvmu7swZWRuH7FM9ZjRQti65q9gVQPBsliYZLzSD5nBXVwgG72DwMK9NVFqe2EPx
-         g6RjAX47vOm/FzEHOwbEJ0AxYCwrtMb9vKJRx0mJLn6ZkI/jmdLMpqCL3nbsSxYXfTwu
-         6Xa5Uu7343NyfOP7VK18fSuB63pmHa69xKV97i/0RBT7Wy2aYksS5MgFb4Wavld2iHy6
-         h/DYuDWgqZR3j6dUpCBslbvgIf+T39T1OfEJq2hAavMdYw3OqN7h8SrSr2SXdTQrMjMr
-         az3kj4gxx81yQS47dstF8jgTogZnB2d6l6iHJ0iwE+FjVNjBV3BIX9g7/jQfzu/SK/Jb
-         YSQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748415902; x=1749020702;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u16XtC8m50vUYOx4xXsXVM1MdjBGyfgJ+HP9+pmHAnE=;
-        b=SZl2h/l/XxKFnfBHuzv+Yu3HP1ef5IwHRdJNyXZs+tvP5I14BDJ1UvJUd7CdCrqkYm
-         DsDjU0leTRlvcSI+Ek9TumGdGHCiRHOGQIu3aes1SDLHPSub2N+WY+iYNIR2Gg3GIlPh
-         8Y+9Q0I3jVhVYKpngplEUI288Eze66ednD2FmRdLUL5j167i9zv2M7py0/Zxj52qUgAH
-         M5w3HxmdGMfqAbJVFnG5hZMm20mi14gtpaf1xn0OKdXB8hUdJtRlGo3SzPcxArfBXLIH
-         UltFkPTI5VLITgN10YyzI2LzeVCwe4ywoGJVoMAoQTIWDGGfzxXg9qkuda+Ez6bGEuSk
-         OpQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhdVQCmqJYc3wI8XJmehxVJxvKbG3qWYGaz8BaNRjByP+EVzWaE0PSSZbEztA+bzBFbFB8fpShXKlTq+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw38Uv+0e53YhkQaMaougwyCGJqF/CNdiEFdVJG4KQYIGh7kmk5
-	cxGvL93vStt+ZZmNYbweE0i6qOvDpV3WkBVm9vAdrPS1Md3OYi5an2AdWT/cY5syDnM=
-X-Gm-Gg: ASbGncsA9ZJKGmAkY6vkWhvOAj/UHFqU+lfeuxAPXVhfSlFunaeONZ9VM/AGmQjyNPu
-	3zw/FbHEVse+v3flBCZGk1NRhtCIpFxUivBhSIXQOai8AFDGYMOoYReTh6YrcLCL2LvYYbMnGON
-	dUaw/N4sFrUT8vngXS30WYqxOTvpehP+KLnB0vQA8YTUIam8lyu1wLG0NsyY0WWeRNPa6ykgiOo
-	dM/hdoGAa/737haYaXhbJALz4i53LlawhsTda1Art7JXbDFBYiMBcr+cBJqnflW2yQEUjS5jm54
-	URW8Abgeb9a5Gug6B9414mR/yZqIzxOqaDLXC1CZDfgQh26WzQmhKg==
-X-Google-Smtp-Source: AGHT+IGpXaITFwVpQxA+RPc22IfCLswMDTsPi7E1xojNuF3q5QjYAgXEtA+f0fp8AMKu8GeLsAQ2dw==
-X-Received: by 2002:a05:6000:1881:b0:3a4:c6bc:995b with SMTP id ffacd0b85a97d-3a4cb47b7f7mr12782146f8f.35.1748415902373;
-        Wed, 28 May 2025 00:05:02 -0700 (PDT)
-Received: from smtpclient.apple ([129.146.52.149])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-311e9b457f0sm536715a91.2.2025.05.28.00.04.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 28 May 2025 00:05:01 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eF5bVtXx"
+X-UUID: 147e36ae3b9211f082f7f7ac98dee637-20250528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=MqiAn4xMWzvpz7Cv23GHwx+M+Be0XsmKUKljJu0u7Hg=;
+	b=eF5bVtXxrGhoV86Cu8+AXFbemaW2+is2jErrTAws0QaLltc1cqxBrgfpKUP9FQGZyHezI9IzQhcSQs2G4K3qRGBSIDUxgbYxu6TVsktzbfS3FIbkS28014T6ggAD0bo6dDT/94ZIKjoyqBINpUxpGHfQePJb+cTLccTm0CAaDms=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:a6f7c184-92f4-49bd-97c5-b3174d43f04d,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:acb23259-eac4-4b21-88a4-d582445d304a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 147e36ae3b9211f082f7f7ac98dee637-20250528
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <ot_zhangchao.zhang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1835244049; Wed, 28 May 2025 15:05:04 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Wed, 28 May 2025 15:05:00 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 15:05:01 +0800
+From: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
+CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
+	Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>, "Steve
+ Lee" <steve.lee@mediatek.com>, linux-bluetooth
+	<linux-bluetooth@vger.kernel.org>, linux-kernel
+	<linux-kernel@vger.kernel.org>, linux-mediatek
+	<linux-mediatek@lists.infradead.org>, Zhangchao Zhang
+	<ot_zhangchao.zhang@mediatek.com>
+Subject: [PATCH] Bluetooth: BT Driver: mediatek: add gpio pin to reset bt
+Date: Wed, 28 May 2025 15:03:23 +0800
+Message-ID: <20250528070323.14902-1-ot_zhangchao.zhang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH 04/23] md/md-bitmap: support discard for bitmap ops
-From: Glass Su <glass.su@suse.com>
-In-Reply-To: <20250524061320.370630-5-yukuai1@huaweicloud.com>
-Date: Wed, 28 May 2025 15:04:41 +0800
-Cc: hch@lst.de,
- xni@redhat.com,
- colyli@kernel.org,
- song@kernel.org,
- yukuai3@huawei.com,
- linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org,
- yi.zhang@huawei.com,
- yangerkun@huawei.com,
- johnny.chenyi@huawei.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4D5FB87E-13F7-4F61-85E6-F52E4245F37C@suse.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-5-yukuai1@huaweicloud.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+This patch provides some methods btmtk_reset_by_gpio,
+btmtk_reset_by_gpio_work_for mediatek controller.
 
+The pin is configured in dts files, bluetooth is reset by pulling
+the pin, when an exception or coredump occurs, the above method will
+be used to reset the bluetooth.
 
-> On May 24, 2025, at 14:13, Yu Kuai <yukuai1@huaweicloud.com> wrote:
->=20
-> From: Yu Kuai <yukuai3@huawei.com>
->=20
-> Use two new methods {start, end}_discard to handle discard IO, prepare
-> to support new md bitmap.
->=20
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
-> drivers/md/md-bitmap.c |  3 +++
-> drivers/md/md-bitmap.h | 12 ++++++++----
-> drivers/md/md.c        | 15 +++++++++++----
-> drivers/md/md.h        |  1 +
-> 4 files changed, 23 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-> index 2997e09d463d..848626049dea 100644
-> --- a/drivers/md/md-bitmap.c
-> +++ b/drivers/md/md-bitmap.c
-> @@ -2991,6 +2991,9 @@ static struct bitmap_operations bitmap_ops =3D {
->=20
-> .start_write =3D bitmap_start_write,
-> .end_write =3D bitmap_end_write,
-> + .start_discard =3D bitmap_start_write,
-> + .end_discard =3D bitmap_end_write,
-> +
-> .start_sync =3D bitmap_start_sync,
-> .end_sync =3D bitmap_end_sync,
-> .cond_end_sync =3D bitmap_cond_end_sync,
-> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-> index 9474e0d86fc6..4d804c07dbdd 100644
-> --- a/drivers/md/md-bitmap.h
-> +++ b/drivers/md/md-bitmap.h
-> @@ -70,6 +70,9 @@ struct md_bitmap_stats {
-> struct file *file;
-> };
->=20
-> +typedef void (md_bitmap_fn)(struct mddev *mddev, sector_t offset,
-> +    unsigned long sectors);
-> +
-> struct bitmap_operations {
-> struct md_submodule_head head;
->=20
-> @@ -90,10 +93,11 @@ struct bitmap_operations {
-> void (*end_behind_write)(struct mddev *mddev);
-> void (*wait_behind_writes)(struct mddev *mddev);
->=20
-> - void (*start_write)(struct mddev *mddev, sector_t offset,
-> -    unsigned long sectors);
-> - void (*end_write)(struct mddev *mddev, sector_t offset,
-> -  unsigned long sectors);
-> + md_bitmap_fn *start_write;
-> + md_bitmap_fn *end_write;
-> + md_bitmap_fn *start_discard;
-> + md_bitmap_fn *end_discard;
-> +
-> bool (*start_sync)(struct mddev *mddev, sector_t offset,
->   sector_t *blocks, bool degraded);
-> void (*end_sync)(struct mddev *mddev, sector_t offset, sector_t =
-*blocks);
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 04a659f40cd6..466087cef4f9 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8845,18 +8845,24 @@ EXPORT_SYMBOL_GPL(md_submit_discard_bio);
-> static void md_bitmap_start(struct mddev *mddev,
->    struct md_io_clone *md_io_clone)
-> {
-> + md_bitmap_fn *fn =3D unlikely(md_io_clone->rw =3D=3D STAT_DISCARD) ?
-> +   mddev->bitmap_ops->start_discard :
-> +   mddev->bitmap_ops->start_write;
-> +
-> if (mddev->pers->bitmap_sector)
-> mddev->pers->bitmap_sector(mddev, &md_io_clone->offset,
->   &md_io_clone->sectors);
->=20
-> - mddev->bitmap_ops->start_write(mddev, md_io_clone->offset,
-> -       md_io_clone->sectors);
-> + fn(mddev, md_io_clone->offset, md_io_clone->sectors);
-> }
->=20
-> static void md_bitmap_end(struct mddev *mddev, struct md_io_clone =
-*md_io_clone)
-> {
-> - mddev->bitmap_ops->end_write(mddev, md_io_clone->offset,
-> -     md_io_clone->sectors);
-> + md_bitmap_fn *fn =3D unlikely(md_io_clone->rw =3D=3D STAT_DISCARD) ?
-> +   mddev->bitmap_ops->end_discard :
-> +   mddev->bitmap_ops->end_write;
-> +
-> + fn(mddev, md_io_clone->offset, md_io_clone->sectors);
-> }
->=20
-> static void md_end_clone_io(struct bio *bio)
-> @@ -8895,6 +8901,7 @@ static void md_clone_bio(struct mddev *mddev, =
-struct bio **bio)
-> if (bio_data_dir(*bio) =3D=3D WRITE && md_bitmap_enabled(mddev)) {
-> md_io_clone->offset =3D (*bio)->bi_iter.bi_sector;
-> md_io_clone->sectors =3D bio_sectors(*bio);
-> + md_io_clone->rw =3D op_stat_group(bio_op(*bio));
-> md_bitmap_start(mddev, md_io_clone);
-> }
->=20
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index c241119e6ef3..13e3f9ce1b79 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -850,6 +850,7 @@ struct md_io_clone {
-> unsigned long start_time;
-> sector_t offset;
-> unsigned long sectors;
-> + enum stat_group rw;
+Co-developed-by Hao qin <hao.qin@mediatek.com>
+Co-developed-by Chirs lu <chris.lu@mediatek.com>
+Co-developed-by Jiande lu <jiande.lu@mediatek.com>
+Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
+---
+ drivers/bluetooth/btmtk.c | 59 +++++++++++++++++++++++++++++++++++++++
+ drivers/bluetooth/btmtk.h |  5 ++++
+ 2 files changed, 64 insertions(+)
 
-Please also mention the change in commit message.
-
-=E2=80=94=20
-Su
-> struct bio bio_clone;
-> };
->=20
-> --=20
-> 2.39.2
->=20
->=20
+diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
+index 4390fd571dbd..16542c724b40 100644
+--- a/drivers/bluetooth/btmtk.c
++++ b/drivers/bluetooth/btmtk.c
+@@ -6,6 +6,8 @@
+ #include <linux/firmware.h>
+ #include <linux/usb.h>
+ #include <linux/iopoll.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/unaligned.h>
+ 
+ #include <net/bluetooth/bluetooth.h>
+@@ -109,6 +111,59 @@ static void btmtk_coredump_notify(struct hci_dev *hdev, int state)
+ 	}
+ }
+ 
++static void btmtk_reset_by_gpio_work(struct work_struct *work)
++{
++	struct btmtk_reset_gpio *reset_gpio_data =
++			container_of(work, struct btmtk_reset_gpio, reset_work.work);
++
++	gpio_direction_output(reset_gpio_data->gpio_number, 1);
++	kfree(reset_gpio_data);
++}
++
++static int btmtk_reset_by_gpio(struct hci_dev *hdev)
++{
++	struct btmtk_data *data = hci_get_priv(hdev);
++	struct btmtk_reset_gpio *reset_gpio_data;
++	struct device_node *node;
++	int reset_gpio_number;
++
++	node = of_find_compatible_node(NULL, NULL, "mediatek,usb-bluetooth");
++	if (node) {
++		reset_gpio_number = of_get_named_gpio(node, "reset-gpios", 0);
++		if (!gpio_is_valid(reset_gpio_number)) {
++			bt_dev_warn(hdev, "invalid reset gpio, use SW reset");
++			return -EINVAL;
++		}
++	} else {
++		bt_dev_warn(hdev, "no reset gpio, use SW reet");
++		return -ENODEV;
++	}
++
++	/* Toggle the hard reset line. The Mediatek device is going to
++	 * yank itself off the USB and then replug. The cleanup is handled
++	 * correctly on the way out (standard USB disconnect), and the new
++	 * device is detected cleanly and bound to the driver again like
++	 * it should be.
++	 */
++
++	if (test_and_set_bit(BTMTK_HW_RESET_ACTIVE, &data->flags)) {
++		bt_dev_err(hdev, "last reset failed? Not resetting again");
++		return 0;
++	}
++
++	reset_gpio_data = kzalloc(sizeof(*reset_gpio_data), GFP_KERNEL);
++	if (!reset_gpio_data)
++		return -ENOMEM;
++
++	INIT_DELAYED_WORK(&reset_gpio_data->reset_work, btmtk_reset_by_gpio_work);
++	reset_gpio_data->gpio_number = reset_gpio_number;
++
++	gpio_direction_output(reset_gpio_number, 0);
++	schedule_delayed_work(&reset_gpio_data->reset_work, msecs_to_jiffies(200));
++
++	return 0;
++}
++
+ void btmtk_fw_get_filename(char *buf, size_t size, u32 dev_id, u32 fw_ver,
+ 			   u32 fw_flavor)
+ {
+@@ -364,6 +419,10 @@ void btmtk_reset_sync(struct hci_dev *hdev)
+ 	struct btmtk_data *reset_work = hci_get_priv(hdev);
+ 	int err;
+ 
++	/*Toggle reset gpio if the platform provieds one*/
++	err = btmtk_reset_by_gpio(hdev);
++	if (!err)
++		return;
+ 	hci_dev_lock(hdev);
+ 
+ 	err = hci_cmd_sync_queue(hdev, reset_work->reset_sync, NULL, NULL);
+diff --git a/drivers/bluetooth/btmtk.h b/drivers/bluetooth/btmtk.h
+index 5df7c3296624..8a265ce367d1 100644
+--- a/drivers/bluetooth/btmtk.h
++++ b/drivers/bluetooth/btmtk.h
+@@ -179,6 +179,11 @@ struct btmtk_data {
+ 	spinlock_t isorxlock;
+ };
+ 
++struct btmtk_reset_gpio {
++	struct delayed_work reset_work;
++	int gpio_number;
++};
++
+ typedef int (*wmt_cmd_sync_func_t)(struct hci_dev *,
+ 				   struct btmtk_hci_wmt_params *);
+ 
+-- 
+2.46.0
 
