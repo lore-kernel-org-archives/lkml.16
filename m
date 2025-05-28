@@ -1,79 +1,129 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319063FBB3;
-	Wed, 28 May 2025 19:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D55721CC47;
+	Wed, 28 May 2025 19:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748460425; cv=none; b=cQqyxxL5H6c1yHPmCiTknNpYLh3u1xQHeMUXq9n3FfraSqqQIoobveC67ySaSQNhE02pNpoq4KAyvR8aRpfNPs8aGEH6jHQ43R3kXgMZV1ER7jByvTLGWlUOCECmfPA3ANGgyIpevEf2vfIqPbZIfFJp03X5flT8uVulwMlZsZc=
+	t=1748460452; cv=none; b=bjT907LDwnvjcpPUp9/sEx85vFyTkdS0EcQOrOFoYd4DuAb0Z1HZFNcuqFBh5A7BiSnG+Fub2ZAmOLeMqkLFfr5u2M2WWTxgZal9uHF3cbEkUPnXXpDJYc+07FdQqL/rAmZ+bfyEbs6YYQ6C/SFuZflHmz2t1Nw1W5NTXj82n5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748460425; c=relaxed/simple;
-	bh=wjBgevzLWDH4Az7GHSi9rokWMMXObh6pkdPLmStENtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r6kj6BVkeGuWWmA+5IR0ZYhDMp4i8d/wZUA+8MWS1IRcqzTO/YTktMoB/tXb5mPNwJNly0YSihobOPUjN/oBIpN6L+uzi6VQxT33s2WjnIyqe+tvu/5CD/k3xakxO+AgV/47tg0+68ns2lN1jCEXTD0XBEFGLb+YqKJK34/cgko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=itXftLqj; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748460452; c=relaxed/simple;
+	bh=a961YRNnSO8xEEQjmE/kukEuP4H3dhHAVCGU7GMX4s0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7gerlO/3UH57A+arjmMZODcNg1gnhpz3DewNCA0N+kNnr04RTpFzNYa3ea6hDz4IS9garbz6/EvzGLgDLJajTITRT8yR4Hrne2UjoMf7sdeiJiaIhrxLyB99sBuEksyEC7Q1NR6YHA3I/csY14tyKGyRdCIu36ZWrzgGsomssc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=IvBe73y3; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="itXftLqj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=CoouUmz+XC3EQlrGmRNSU994C1trZiX7VGKkB+/ruC0=; b=itXftLqjzzGvQRqc8R+esdPMgF
-	cTXsVm4EHLsn4IzKEgvTjlaUcQHfQrn+M9yivjSvqAhrZ2R01Uk26xcdM9074aSbwIErU4IAu7sDY
-	YjSvg215Cxg2KAeWJpWXFsTwXcMs4vNaGAfgILrh1/nfzNJsVf/MLkKlclRzD6ikHSSI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uKMQN-00ECio-7r; Wed, 28 May 2025 21:26:51 +0200
-Date: Wed, 28 May 2025 21:26:51 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org,
-	netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-Message-ID: <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch>
-References: <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch>
- <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
- <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
- <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
- <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
- <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk>
- <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="IvBe73y3"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.4])
+	by mail.ispras.ru (Postfix) with ESMTPSA id BB05D552F529;
+	Wed, 28 May 2025 19:27:21 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru BB05D552F529
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1748460441;
+	bh=BEK94JMRaUzZgTwrnHfaduJF4K/hbb6wOIgbXm6+ms0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IvBe73y3OdsWLVmYMMLB8hzBGkZ4LCVKHc0IWk7qsVTmAwxuNf4+n5jM4YoJ0zWcb
+	 TBUu+6OZUU2zAKNvyAKjErW01UiaVEYEmi3ndw3PB8uupl4Ps3wVttqCCetkgcNZwl
+	 VD+TsqGBP44NvXJi/lo9lcoTcRoaLeLXMo7g0vwA=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Axel Forsman <axfo@kvaser.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Jimmy Assarsson <extja@kvaser.com>,
+	linux-can@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] can: kvaser_pciefd: refine error prone echo_skb_max handling logic
+Date: Wed, 28 May 2025 22:27:12 +0300
+Message-ID: <20250528192713.63894-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-> I think a lot of ethernet drivers use phy_find_first() for phy scanning
-> as well so it's not limited to just stmmac AFAIU.
+echo_skb_max should define the supported upper limit of echo_skb[]
+allocated inside the netdevice's priv. The corresponding size value
+provided by this driver to alloc_candev() is KVASER_PCIEFD_CAN_TX_MAX_COUNT
+which is 17.
 
-You need to differentiate by time. It has become a lot less used in
-the last decade. DT describes the PHY, so there is no need to hunt
-around for it. The only real use case now a days is USB dongles, which
-don't have DT, and maybe PCIe devices without ACPI support.
+But later echo_skb_max is rounded up to the nearest power of two (for the
+max case, that would be 32) and the tx/ack indices calculated further
+during tx/rx may exceed the upper array boundary. Kasan reported this for
+the ack case inside kvaser_pciefd_handle_ack_packet(), though the xmit
+function has actually caught the same thing earlier.
 
-I suggest you give up pushing this. You have two Maintainers saying no
-to this, so it is very unlikely you are going to succeed.
+ BUG: KASAN: slab-out-of-bounds in kvaser_pciefd_handle_ack_packet+0x2d7/0x92a drivers/net/can/kvaser_pciefd.c:1528
+ Read of size 8 at addr ffff888105e4f078 by task swapper/4/0
 
-   Andrew
+ CPU: 4 UID: 0 PID: 0 Comm: swapper/4 Not tainted 6.15.0 #12 PREEMPT(voluntary)
+ Call Trace:
+  <IRQ>
+ dump_stack_lvl lib/dump_stack.c:122
+ print_report mm/kasan/report.c:521
+ kasan_report mm/kasan/report.c:634
+ kvaser_pciefd_handle_ack_packet drivers/net/can/kvaser_pciefd.c:1528
+ kvaser_pciefd_read_packet drivers/net/can/kvaser_pciefd.c:1605
+ kvaser_pciefd_read_buffer drivers/net/can/kvaser_pciefd.c:1656
+ kvaser_pciefd_receive_irq drivers/net/can/kvaser_pciefd.c:1684
+ kvaser_pciefd_irq_handler drivers/net/can/kvaser_pciefd.c:1733
+ __handle_irq_event_percpu kernel/irq/handle.c:158
+ handle_irq_event kernel/irq/handle.c:210
+ handle_edge_irq kernel/irq/chip.c:833
+ __common_interrupt arch/x86/kernel/irq.c:296
+ common_interrupt arch/x86/kernel/irq.c:286
+  </IRQ>
+
+Tx max count definitely matters for kvaser_pciefd_tx_avail(), but for seq
+numbers' generation that's not the case - we're free to calculate them as
+would be more convenient, not taking tx max count into account. The only
+downside is that the size of echo_skb[] should correspond to the max seq
+number (not tx max count), so in some situations a bit more memory would
+be consumed than could be.
+
+Thus make the size of the underlying echo_skb[] sufficient for the rounded
+max tx value.
+
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+
+Fixes: 8256e0ca6010 ("can: kvaser_pciefd: Fix echo_skb race")
+Cc: stable@vger.kernel.org
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
+
+v2: fix the problem by rounding up the KVASER_PCIEFD_CAN_TX_MAX_COUNT
+    constant when allocating candev (Axel Forsman)
+
+ drivers/net/can/kvaser_pciefd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/can/kvaser_pciefd.c b/drivers/net/can/kvaser_pciefd.c
+index f6921368cd14..0071a51ce2c1 100644
+--- a/drivers/net/can/kvaser_pciefd.c
++++ b/drivers/net/can/kvaser_pciefd.c
+@@ -966,7 +966,7 @@ static int kvaser_pciefd_setup_can_ctrls(struct kvaser_pciefd *pcie)
+ 		u32 status, tx_nr_packets_max;
+ 
+ 		netdev = alloc_candev(sizeof(struct kvaser_pciefd_can),
+-				      KVASER_PCIEFD_CAN_TX_MAX_COUNT);
++				      roundup_pow_of_two(KVASER_PCIEFD_CAN_TX_MAX_COUNT));
+ 		if (!netdev)
+ 			return -ENOMEM;
+ 
+@@ -995,7 +995,6 @@ static int kvaser_pciefd_setup_can_ctrls(struct kvaser_pciefd *pcie)
+ 		can->tx_max_count = min(KVASER_PCIEFD_CAN_TX_MAX_COUNT, tx_nr_packets_max - 1);
+ 
+ 		can->can.clock.freq = pcie->freq;
+-		can->can.echo_skb_max = roundup_pow_of_two(can->tx_max_count);
+ 		spin_lock_init(&can->lock);
+ 
+ 		can->can.bittiming_const = &kvaser_pciefd_bittiming_const;
+-- 
+2.49.0
+
