@@ -1,104 +1,205 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003361DE8A3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925001FB3;
+	Wed, 28 May 2025 03:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748402177; cv=none; b=txfLGEPNAlTwzx3SLj2H7J0SdFLhP5jutNa/18tBx1Zj7QsCNkhMRmYhAsgPwzPuVIh/ZBtYHFg1j0oFZTW7p8r776fZ5/YK1ylofjqg/HLvOhT7AN+qqXBIg6QgFeyW2Bmz40iWNr0IHUc3pURGiuot/zNHy2WUj9VC+YnMF9Y=
+	t=1748402199; cv=none; b=dAykcCJpO95fW6P5rtRJ9yjga0dk7hy9kkCZ3TVPGXzegWS8Ci4bGNgqWKiONGQawXu9D/bupXuThw7qtAxfAuA++SuONIlpLyIsC2h1qfD9WAExrk+jeSXFAVqzQ2vDH/mYBx1Sq0PiYL0hzjywW5iWjA48AmQadNdGIBIIuRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748402177; c=relaxed/simple;
-	bh=0bdtpndwZMuDSr/xS0AhTKAcuII2GsnyUAe5k1Utuqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V8DWry4IN8p0BAzqzTD2rQ9G5patx+yucH1y5I5P2dGaG7oYPiJa1lQiIT1Nk88qO8t3GZQPmL05yA7hett7Cw+w9nWlGvdkEInLw50cstdhYmzZSuGO137g6sD0m1Vf/gTF+ZpYBRnPj4MT6NWOA99sWxFi2Gw0GHv2/9T3QYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pnbfP11N; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748402199; c=relaxed/simple;
+	bh=ol3hrreomk92oy/dMrcK8dYkcWIBmCK1VoFKv2uei8c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ph8d0TDQRMQDLVSHOVu5WY5QOpLVJREhhBrcd+EVY4+4R/wgMJhTguy4gCAASukDHYB8odkvfX+jpAQ6pAkFJlL/EMmQAjO8J876f3F9zEvbBtpeuHxFL2cAk/iczVNRxiInQI3cmLoyrjMF+bDMgbAYLe/BGOsCwkaUUpBRjfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HTt291Fe; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pnbfP11N"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231ba6da557so80715ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748402175; x=1749006975; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bdtpndwZMuDSr/xS0AhTKAcuII2GsnyUAe5k1Utuqo=;
-        b=pnbfP11NPQBkIarbw0bv5nZdtf5tIu1Hgy9LFF0tcTIG4Ddky2BuBRbmRqjkggpzNU
-         X9LoRi4J2pJRQy6Ymj83eBvcdEh1fLI9xel3M1d/KdIBEqWJFeccOP3vL+MpStwgEEjj
-         rWq1uI2CwKoKD0IalwGeIBuhFot4jgq9qVu7N4sYrfUwcNKtC229un9ocw9diQqyAdz3
-         qriyP0oPIPu5tyLSGxtrLxosl3mybzLMSWP5Ba19qAb63I8+nRc4X27ztH3ZRDYndCcR
-         qLhN4RMDMepzE0JGVqEfXZ1gPJ5ZUtN9TxHAPbNFXtx4+/VK2ATOqK3xD+2fb3dt9XxN
-         eumw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748402175; x=1749006975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0bdtpndwZMuDSr/xS0AhTKAcuII2GsnyUAe5k1Utuqo=;
-        b=kr3rUjMS2LQwQa0yk406tII9cutRLkzSQiQMIP3XA1Kz88BxtNN+eSIGnqa7wh035C
-         jINMKkNmJ+OrEmnS9X5s1mM7BDfXrUzQVsBXBC6Pfse/BLsm4ZBo9CqraSUjwvHlPKoC
-         up4NCL9wgiIRN8Jm+cVVdiATZnnvSZbcbnXIlh5Z6OhmvuvtNyaMf5AguZDCO1VTvMRY
-         2wjQ/v95Hj5sKOGiBj9lafqejt96IJK69mEOv5md2lpCZzVgX5kLN4L45u2BZzkhOBap
-         ru6G68dwu3p4oK2yNjGnj1BixVxnh7oZt5dNz3JWDAjHRK3MObd6hqD6byXzVUdygZ3V
-         rzyg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDj77QGnrfBg0WT9iP/CDEp7WmfLQj/VqlPj4035CCZowAbdScEskXu/d15jmsJ8Fp7ZPs25ArtZb3+Ls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfmcMxpRZnNIZItp/rZVoR5Hp1L0W7RJdSRo+WCb7jyeUJwJR7
-	ltXKhlyrTVSyVx9U1AyudVo9dNJTXpqop8CJaO8EY0ZudXgXZfnnRbBFkXiuAb6djOk1uce9+gT
-	4Tw1xXCvVk3RBj3mao9TS93MRK4ux5NyXpLEa/Gad
-X-Gm-Gg: ASbGncvxqXsxutt2B6lvfWiums9vPpGbxVVt0EFMgA9u31ZqdIfNnvFiFRpLk6Vr7tI
-	ydrCdKVClGT/D91EXrkvSKMnmDk3jK9+8fwhaZ+LUbGcVYTehCgxguV2bAKZk8N/66WmU3cbrZ8
-	YZM+wO2/OcXGjnKVMOb1b73vPFlT8pFalMD/E+oYxMULCH
-X-Google-Smtp-Source: AGHT+IFWlfqtKFHMBOLGn7Z83pzgLQUiE0GOnbpIGbNfU5pFgYiUQrcsYOaQ/uMIysvwNUJIuaG+fK9N/GeYGeIrPqk=
-X-Received: by 2002:a17:903:98c:b0:216:4d90:47af with SMTP id
- d9443c01a7336-234cbe69a15mr1091405ad.29.1748402174833; Tue, 27 May 2025
- 20:16:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HTt291Fe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748402198; x=1779938198;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ol3hrreomk92oy/dMrcK8dYkcWIBmCK1VoFKv2uei8c=;
+  b=HTt291Fe+YtU65/udhiMWmevCn2SeppDnx/gfX1r4c2l0T/iKJdth7tw
+   LMgwWoqkWtdwBy2ICnxPkdN5kKgB1bzoYTAcSmVeLaTGcAzZgrDPzh9FE
+   bBmhqreblzNKBq55S2Berw7IedPJfQumUFPlbSBenrmgvEPnEKeX2bnoa
+   +pBSldhxdSIU50k4MjueCGHaHJpsLB706rnZdtcVPb/hLKYZgbL8k6oTc
+   bCbxf+NZyoQcs/sHHnopFWkjMWRPWI5syWJg1VOBVs+G/eyH3tebSstoT
+   4qPvG9RDRPuoJ4Uu6U73i02BbuyqdfOAjwCzoxgeBv/6KCCl5Wr2MMBVx
+   Q==;
+X-CSE-ConnectionGUID: cy9YoWHmRVqK8ypMiw/ceA==
+X-CSE-MsgGUID: W/2exfmVSw2NsCHMJg9D/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="75803180"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="75803180"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 20:16:36 -0700
+X-CSE-ConnectionGUID: qT1plBtYR2uKqedJ4Wk7ng==
+X-CSE-MsgGUID: o4JH+FVTTm+OuGV88pruRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="146961192"
+Received: from unknown (HELO [10.238.3.95]) ([10.238.3.95])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 20:16:18 -0700
+Message-ID: <b66c38ba-ca16-44c5-b498-7c8eb533d805@linux.intel.com>
+Date: Wed, 28 May 2025 11:16:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-5-byungchul@sk.com>
-In-Reply-To: <20250528022911.73453-5-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 27 May 2025 20:16:00 -0700
-X-Gm-Features: AX0GCFumg6JlJqGa53nVXK2u3d4-rG_n2DPcLF5XB4A7_ranyMV2_0D-3YxOvnY
-Message-ID: <CAHS8izMWhQsGuf4vFzU-LwViR5M0a2J3=H8Uuwn27ju4uZC6NA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/16] page_pool: rename __page_pool_alloc_page_order()
- to __page_pool_alloc_large_netmem()
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
-	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
+ ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
+ anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
+ bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
+ chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
+ david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
+ erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+ haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+ ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+ james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
+ jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+ jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+ kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+ liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+ mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+ michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+ nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+ palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+ pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+ pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+ quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+ quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+ quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
+ richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
+ steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
+ tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
+ vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+ vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+ willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+ yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 7:29=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
-rote:
->
-> Now that __page_pool_alloc_page_order() uses netmem alloc/put APIs, not
-> page alloc/put APIs, rename it to __page_pool_alloc_large_netmem() to
-> reflect what it does.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
 
-I suggest squashing this to the previous patch that modifies
-__page_pool_alloc_page_order to make the patch series smaller.
 
-Also __page_pool_alloc_netmem_order may be a better name.
+On 5/15/2025 7:41 AM, Ackerley Tng wrote:
 
-But either way,
+[...]
+> +
+> +static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
+> +				  size_t nr_pages, bool shared,
+> +				  pgoff_t *error_index)
+> +{
+> +	struct conversion_work *work, *tmp, *rollback_stop_item;
+> +	LIST_HEAD(work_list);
+> +	struct inode *inode;
+> +	enum shareability m;
+> +	int ret;
+> +
+> +	inode = file_inode(file);
+> +
+> +	filemap_invalidate_lock(inode->i_mapping);
+> +
+> +	m = shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
+> +	ret = kvm_gmem_convert_compute_work(inode, start, nr_pages, m, &work_list);
+> +	if (ret || list_empty(&work_list))
+> +		goto out;
+> +
+> +	list_for_each_entry(work, &work_list, list)
+> +		kvm_gmem_convert_invalidate_begin(inode, work);
+> +
+> +	list_for_each_entry(work, &work_list, list) {
+> +		ret = kvm_gmem_convert_should_proceed(inode, work, shared,
+> +						      error_index);
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+Since kvm_gmem_invalidate_begin() begins to handle shared memory,
+kvm_gmem_convert_invalidate_begin() will zap the table.
+The shared mapping could be zapped in kvm_gmem_convert_invalidate_begin() even
+when kvm_gmem_convert_should_proceed() returns error.
+The sequence is a bit confusing to me, at least in this patch so far.
 
---=20
-Thanks,
-Mina
+> +		if (ret)
+> +			goto invalidate_end;
+> +	}
+> +
+> +	list_for_each_entry(work, &work_list, list) {
+> +		rollback_stop_item = work;
+> +		ret = kvm_gmem_shareability_apply(inode, work, m);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	if (ret) {
+> +		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
+> +		list_for_each_entry(work, &work_list, list) {
+> +			if (work == rollback_stop_item)
+> +				break;
+> +
+> +			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
+> +		}
+> +	}
+> +
+> +invalidate_end:
+> +	list_for_each_entry(work, &work_list, list)
+> +		kvm_gmem_convert_invalidate_end(inode, work);
+> +out:
+> +	filemap_invalidate_unlock(inode->i_mapping);
+> +
+> +	list_for_each_entry_safe(work, tmp, &work_list, list) {
+> +		list_del(&work->list);
+> +		kfree(work);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+[...]
+> @@ -186,15 +490,26 @@ static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
+>   	unsigned long index;
+>   
+>   	xa_for_each_range(&gmem->bindings, index, slot, start, end - 1) {
+> +		enum kvm_gfn_range_filter filter;
+>   		pgoff_t pgoff = slot->gmem.pgoff;
+>   
+> +		filter = KVM_FILTER_PRIVATE;
+> +		if (kvm_gmem_memslot_supports_shared(slot)) {
+> +			/*
+> +			 * Unmapping would also cause invalidation, but cannot
+> +			 * rely on mmu_notifiers to do invalidation via
+> +			 * unmapping, since memory may not be mapped to
+> +			 * userspace.
+> +			 */
+> +			filter |= KVM_FILTER_SHARED;
+> +		}
+> +
+>   		struct kvm_gfn_range gfn_range = {
+>   			.start = slot->base_gfn + max(pgoff, start) - pgoff,
+>   			.end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff,
+>   			.slot = slot,
+>   			.may_block = true,
+> -			/* guest memfd is relevant to only private mappings. */
+> -			.attr_filter = KVM_FILTER_PRIVATE,
+> +			.attr_filter = filter,
+>   		};
+>   
+>   		if (!found_memslot) {
+> @@ -484,11 +799,49 @@ EXPORT_SYMBOL_GPL(kvm_gmem_memslot_supports_shared);
+>   #define kvm_gmem_mmap NULL
+>   #endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+>   
+[...]
