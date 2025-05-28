@@ -1,65 +1,33 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582D1F8728
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7E12F2F;
+	Wed, 28 May 2025 08:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419165; cv=none; b=PLcwO7qv7KOlTrtjKhG06btiNuOCsWUdd8UMxOEa4Wjt98CpTIEuPvgdxQ4C9rnyq3DOhACGkJ71zoCH9Ko9mB4v30Rjjb4Gf0hW3I+rgelPasyy3lFE+ldolU5CcM4nqxOSMEcl9ySyUiGuJuhFKQSLQHk80mWDw/1wy3vtbgw=
+	t=1748419230; cv=none; b=Sd6lV/kT6FVtGk8Z0ejGuGr8O07kHieZR1JYGQXfrah6RLBHBVMt/PKPpUKNAmzAEoJX9GSB/Z0JESA+SPV1lsPvaYugerGbcZjr0519b7utxbT+DqITZZtZsG88fuvY/qM0BI4nq11cUh1w6Iswr9OIvUJibeCAc2gZO1+RiiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419165; c=relaxed/simple;
-	bh=lTpKD/0DenivGi6z0137m81o+V5ysUx2nV8K0HXyN9w=;
+	s=arc-20240116; t=1748419230; c=relaxed/simple;
+	bh=TmszLVj5iUvpcleJUy57ZyoHPz759+MbiVMNdUK/0Ec=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3rANg0wEutBSXkoPzZFT39L9t1SAjcBSmgE/BwaGCgiJy7RGNpHfWIhHiFDFjMDkPAhNJHYoQJH3TFKIEuh0WtfdvZ6q6LhWJsbkP8SIjZcdyfUlYz1StDl9pZhpH8aY3f/fE8ZJBaPica5oTPboQCVlmcs67nChsPpT0GehS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=NTABLokc; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
+	 In-Reply-To:Content-Type; b=Ahltmd259FYpSNW9JjxprhoQ6xBK2Otg156jMKfR+LH/f9nRtMpKJe2CPbzaqECMU70CTeHE7Mk+PsVdRkxpn1fyiTo0+79AEU0YwJkjiTtSZypWquRsFjUw+1IKKE558S180YY4B8ZnwAbNfgEBVV6pu2mHKbKrGkKMXiz1Lus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3GzBSDk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="NTABLokc"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234d3261631so1889965ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1748419162; x=1749023962; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4S1CZW2QhVODXn5wyDF2trheqRunplrz19cyZTEBaFI=;
-        b=NTABLokcS6bGT9ndtFEYuJl0txh0ugGOYIhMraS0kZ/yi6YQUG+H7LCW2An3TxwZ62
-         Zagryqbby+XSoPd2/7l4WcIawQiCv5VJJ94dEwZMSih6yHbPg+VDEpkjVQJqZ0Emsz2Q
-         EsuhboNkyYKWGWUyZJwBX9dFwyuW6taBOGcTeO+H65P5a2+LHSQpscQOmbsJlpBw3W7W
-         aN8oMG3IW2F5th+IqUAjKXJ4wXR/82hC5cDwmPeY/GB2pZQTAZQvOzC+u4LE9AFeZln8
-         5EPK/YvtFEfPOEvbuTFy6swM87WtEc0kYbPNJ3C+j6oEzcija35KnFLbezE8haHCBwYm
-         vixQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748419162; x=1749023962;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4S1CZW2QhVODXn5wyDF2trheqRunplrz19cyZTEBaFI=;
-        b=En8mK0YgNgAxEwJ0jLiUw8kDxuBqdvYLjwS/uBAMziN32Uvw0iDFxkrk+6+W3iXHkP
-         nLLnsO64nWVVl0Jp3wiWX8G55UtFbOCHZq3V+4JQhbb3SZwNjj2MQoLJOhcn1s5Qzcun
-         5a7c7wUjNwPwkIPsqvNBEpatdlbIWf+mXrrC4Q3mC2EvCbeQQUuO7oszEcCcxH12BnUJ
-         aQeIjPp+nrZKBpoyro46Xm07cu5BzFswwo21GifAczj965CIXsPwhZd00E2froUbbElJ
-         Qq1D4WC/ACICdNS5PZVxc8C7O5HprCTZ7IgXpjgnwbU2uV/TaQGsz+QtCxocjHUllxbY
-         Cs8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOzAmybdKAHzizj0rMlRWuJ1hf8fSUnF9kDETHcdbjUWxacBMPmp6oEx7kD1xL+hMjIvAhp3IjEj0T09w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZcgpzB2SUwKFP7D63klEgRcMlCFExid2Dea0RgQYQ3PC09dW2
-	o/Nlmwhq6wxtAdrfMiBTRLD6u8RuQXSy/Ho+voJ0Veye8pdFhPi9e5tcTqRtQOfmlw==
-X-Gm-Gg: ASbGnctVqxNmRLt3QledmO3JjQom4ZjbBCqO4LCIbmcK2GAeWfjzXgEvmpYwYCX0yl0
-	nhvdO8R5A24rH0a1p0pw9S05QBt0Urfa7aO15djrkaOB7jBDQxYhrx8Xvuq+cBsKswa4VXq/FYI
-	sBDKhbYvaZHryBCBITf/+ty3T//XfpQOjp/o9eW8e9o7Mw4s9r23UR/U7j8LzW3aDGgQoE5Paer
-	Z0CyoOB+jr/grOi5O1U/yzvR8qBHSayA/KheGmTYBQTrjzLD5mjgRSkN8Zf95OM/7Gjx3ToJuON
-	1agVojERANZej1NuYEpDU8Fj8oxxPJ1ua4nrn/XccnKhthfKoH2J3c5t6/k1fsXscx0K+Q6uS4I
-	Tzs+KHZQiLrAYWfDInadotfY7jjPa
-X-Google-Smtp-Source: AGHT+IFinm210KsgPpT052kUqMgd0kmoXBGoJfUCmTLu114QHHNEhBfzO75J/jBa41z7KGIIueND9g==
-X-Received: by 2002:a17:902:e845:b0:234:bfcb:5c21 with SMTP id d9443c01a7336-234bfcb5d41mr40674185ad.19.1748419161996;
-        Wed, 28 May 2025 00:59:21 -0700 (PDT)
-Received: from ?IPV6:2401:4900:8898:4f57:7796:ebc0:39c1:2cae? ([2401:4900:8898:4f57:7796:ebc0:39c1:2cae])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac4e2sm6265415ad.177.2025.05.28.00.59.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 00:59:21 -0700 (PDT)
-Message-ID: <6c61a101-6ec7-4350-bfa7-5b7d32177818@beagleboard.org>
-Date: Wed, 28 May 2025 13:29:14 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3GzBSDk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ECA2C4CEEB;
+	Wed, 28 May 2025 08:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748419229;
+	bh=TmszLVj5iUvpcleJUy57ZyoHPz759+MbiVMNdUK/0Ec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=i3GzBSDkMqQqxwqNiCJROS5Skhr4W5gJf2J7xHjASkor7ATp0BJaY8OLa1sME71lA
+	 Q04/wnFCpgLVOEkL6+06NrPrkA0zy1IR9hdLWcclSQwoV8sblSzARRVogeOH6uBM85
+	 azcO7CJR32BftuPPfenfolAWI6EFBOZbEVe3VOvNphzDDMJOFiD8k2Dz4piedsvRPb
+	 2Ycp4/UEUYwgXKDZiuCpJW7HO2zu1hPBMuP491d5UPBkRADC+uXanHfUWWGipytd+6
+	 TnkzQMN+txu0qT1KORT/Uq08LbBgBIc34C1ryCIaYjO9YC8KTEPxRH46y0E7sAXGB9
+	 O02xtsnzbrZ4Q==
+Message-ID: <56bcea70-6180-443b-8c9b-f5d2a129c73f@kernel.org>
+Date: Wed, 28 May 2025 10:00:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,228 +35,279 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Herve Codina <herve.codina@bootlin.com>,
- David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>
-Cc: devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250430125154.195498-1-herve.codina@bootlin.com>
- <20250430125154.195498-2-herve.codina@bootlin.com>
- <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
+Subject: Re: [PATCH] dt-bindings: mmc: sdhci-omap: convert text based binding
+ to json schema
+To: Charan Pedumuru <charan.pedumuru@gmail.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250523-ti-sdhci-omap-v1-1-695c6eeac778@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Ayush Singh <ayush@beagleboard.org>
-In-Reply-To: <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250523-ti-sdhci-omap-v1-1-695c6eeac778@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/28/25 00:01, Krzysztof Kozlowski wrote:
+On 23/05/2025 19:05, Charan Pedumuru wrote:
+> Convert TI OMAP SDHCI Controller binding to YAML format.
+> Changes during Conversion:
+> - Add patternProperties for pinctrl-<n>.
+> - Define new properties like "ti,hwmods", "ti,needs-special-reset"
+>   "ti,needs-special-hs-handling", "cap-mmc-dual-data-rate"
+>   and "pbias-supply".
 
-> On 30/04/2025 14:51, Herve Codina wrote:
->> An export-symbols node allows to export symbols for symbols resolution
->> performed when applying a device tree overlay.
->>
->> When a device tree overlay is applied on a node having an export-symbols
->> node, symbols listed in the export-symbols node are used to resolve
->> undefined symbols referenced from the overlay.
->
-> I have impression that this is being discussed in three places
-> simultaneously - here, DT spec and DT schema. I don't know how to solve
-> the multiplication, but I will keep answering here, because that's my part.
->
->> This allows:
->>    - Referencing symbols from an device tree overlay without the need to
->>      know the full base board. Only the connector definition is needed.
->>
->>    - Using the exact same overlay on several connectors available on a given
->>      board.
->>
->> For instance, the following description is supported with the
->> export-symbols node:
->>   - Base device tree board A:
->>      ...
->>      foo_connector: connector1 {
->>          export-symbols {
->>             connector = <&foo_connector>;
->>          };
->>      };
->>
->>      bar_connector: connector2 {
->>          export-symbols {
->>             connector = <&bar_connector>;
->>          };
->>      };
->>      ...
-> And what would this mean? Which symbol is exported - foo or bar?
->
->>   - Base device tree board B:
->>      ...
->>      front_connector: addon-connector {
->>          export-symbols {
->>             connector = <&front_connector>;
->>          };
->>      };
-> <from my other reply in private>
-> Another problem is that the board DTS should not care about overlays. It
-> feels like breaking encapsulation and I cannot imagine now adding 1000
-> export-symbols, because every i2c, spi, mikrobus or PCI slot could have
-> an overlay applied.
->
-> You could argue that only few nodes will be exported like this, so only
-> real mikrobus connectors. Then I will argue: look at aliases. People
-> alias everything everywhere, not following the guidelines.
->
-> If we assume that such overlays are designed for specific boards, thus
-> there will be only one or two exported symbols not 1000, then what is
-> the benefit of export symbols comparing to referencing by full path?
-> </end from my other reply>
+Why? commit should answer this.
 
-Can you explain how referencing by full path will work in connector + 
-addon board setups?
+> - Remove "ti,hwmods", "pinctrl-names" and "pinctrl-<n>"
 
-The full path will be dependent on the connector, which means the same 
-addon  board overlay cannot work for different connectors.
+Why? You just added ti,hwmods, so how can you remove it from required?
+
+>   from required as they are not necessary for all DTS files.
+> - Add missing strings like "default-rev11", "sdr12-rev11", "sdr25-rev11",
+>   "hs-rev11", "sdr25-rev11" and "sleep" to pinctrl-names string array.
+> 
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-omap.txt         |  43 ------
+>  .../devicetree/bindings/mmc/sdhci-omap.yaml        | 155 +++++++++++++++++++++
 
 
->
-> And with above assumption - such overlays designed per board - plus my
-> first point about duplicated exports:
-> connector = <&foo_connector>;
-> connector = <&bar_connector>;
->
-> why not exporting the symbol with the same name? E.g.:
->
->       foo_connector: connector1 {
->           export-symbols {
->              whatever-property-style = <&foo_connector>;
->           };
->       };
->
-> and overlay:
->
->       node {
->           ...
->           connector = <&foo_connector>;
->           ...
->       };
+Filename: ti,omap-sdhci.yaml or one of the compatibles (or anything else
+following convention that it should match compatible).
 
 
-Isn't this overlay tied to `foo_connector`, i.e. it cannot be used with 
-`bar_connector`?
+"ti,needs-special-hs-handling" is already documented in other binding
 
 
->
-> Or even annotation?
->
->       foo_connector: connector1 __exported_symbol__ {
->           ....
->       };
->
->
->       node {
->           ...
->           connector = <&foo_connector>;
->           ...
->       };
->
-> ? This also answers my further question about DTS style (see at the bottom)
->
->>      ...
->>
->>   - Overlay describing an addon board the can be connected on connectors:
->>      ...
->>      node {
->>          ...
->>          connector = <&connector>;
->>          ...
->>      };
->>      ...
->>
->> Thanks to the export-symbols node, the overlay can be applied on
->> connector1 or connector2 available on board A but also on
->> addon-connector available on board B.
->>
->> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
->> Tested-by: Ayush Singh <ayush@beagleboard.org>
-> I would argue you cannot test a binding, because testing here is part of
-> a process, but what do I know...
-
-Ahh, I added tested by for the whole patch series to check that the 
-phandle resolution is working. But yes, I have not tested the bindings.
+>  2 files changed, 155 insertions(+), 43 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+> deleted file mode 100644
+> index f91e341e6b36c410275e6f993dd08400be3fc1f8..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
+> +++ /dev/null
+> @@ -1,43 +0,0 @@
+> -* TI OMAP SDHCI Controller
 
 
->
->
->> ---
->>   .../devicetree/bindings/export-symbols.yaml   | 43 +++++++++++++++++++
->>   1 file changed, 43 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/export-symbols.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/export-symbols.yaml b/Documentation/devicetree/bindings/export-symbols.yaml
->> new file mode 100644
->> index 000000000000..0e404eff8937
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/export-symbols.yaml
->> @@ -0,0 +1,43 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/export-symbols.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Export symbols
->> +
->> +maintainers:
->> +  - Herve Codina <herve.codina@bootlin.com>
->> +
->> +description: |
->> +  An export-symbols node allows to export symbols for symbols resolution
->> +  performed when applying a device tree overlay.
->> +
->> +  When a device tree overlay is applied on a node having an export-symbols
->> +  node, symbols listed in the export-symbols node are used to resolve undefined
->> +  symbols referenced from the overlay.
->> +
->> +properties:
->> +  $nodename:
->> +    const: export-symbols
->> +
->> +patternProperties:
->> +  "^[a-zA-Z_]?[a-zA-Z0-9_]*$":
-> This messes up with coding style which I would prefer keep intact.
-> Basically these properties will be using label style.
->
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      A symbol exported in the form <symbol_name>=<phandle>.
->> +
->> +additionalProperties: false
->> +
-> Best regards,
-> Krzysztof
+...
 
 
-Maybe the dt-schema discussion will give a better description of why I 
-need export-symbols or something similar [0].
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.yaml b/Documentation/devicetree/bindings/mmc/sdhci-omap.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e707837bc242b055bbc497ed893a91c9b24f2dde
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.yaml
+> @@ -0,0 +1,155 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/sdhci-omap.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI OMAP SDHCI Controller
+> +
+> +maintainers:
+> +  - Ulf Hansson <ulf.hansson@linaro.org>
 
-I have also been trying to move the discussion regarding global vs local 
-scope overlay application for connectors here [1].
+This is supposed to be someone caring about this device. Eventually
+platform maintainer.
+
+> +
+> +description:
+> +  For UHS devices which require tuning, the device tree should have a
+> +  cpu_thermal node which maps to the appropriate thermal zone. This
+> +  is used to get the temperature of the zone during tuning.
+> +
+> +allOf:
+> +  - $ref: sdhci-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,omap2430-sdhci
+> +      - ti,omap3-sdhci
+> +      - ti,omap4-sdhci
+> +      - ti,omap5-sdhci
+> +      - ti,dra7-sdhci
+> +      - ti,k2g-sdhci
+> +      - ti,am335-sdhci
+> +      - ti,am437-sdhci
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  pinctrl-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    minItems: 1
+> +    maxItems: 19
+> +    items:
+> +      enum:
+> +        - default
+> +        - default-rev11
+> +        - hs
+> +        - sdr12
+> +        - sdr12-rev11
+> +        - sdr25
+> +        - sdr25-rev11
+> +        - sdr50
+> +        - ddr50-rev11
+> +        - sdr104-rev11
+> +        - ddr50
+> +        - sdr104
+> +        - ddr_1_8v-rev11
+> +        - ddr_1_8v
+> +        - ddr_3_3v
+> +        - hs-rev11
+> +        - hs200_1_8v-rev11
+> +        - hs200_1_8v
+> +        - sleep
+> +
+> +  dmas:
+> +    maxItems: 2
+> +
+> +  dma-names:
+> +    items:
+> +      - const: tx
+> +      - const: rx
+> +
+> +  ti,hwmods:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description:
+> +      This field is used to fetch the information such as
+> +      address range, irq lines, dma lines, interconnect, PRCM register,
+> +      clock domain, input clocks associated with MMC.
+> +    pattern: "^mmc[0-9]+$"
+> +
+> +  ti,needs-special-reset:
+
+I don't understand why you added this. There is no user of it.
+
+> +    description:
+> +      It indicates that a specific soft reset sequence is required for
+> +      certain Texas Instruments devices, particularly those with
+> +      HSMMC (High-Speed MultiMediaCard) controllers.
+> +    type: boolean
+> +
+> +  ti,needs-special-hs-handling:
+
+I don't understand why you added this. There is no user of it.
 
 
-[0]: 
-https://lore.kernel.org/devicetree-spec/20250411-export-symbols-v3-1-f59368d97063@beagleboard.org/T/#u
+> +    description:
+> +      It's presence in an MMC controller's DT node signals to the Linux kernel's
+> +      omap_hsmmc driver that this particular IP block requires special software
+> +      handling or workarounds to correctly manage High-Speed (HS) modes like
+> +      SDR25, SDR50, SDR104, DDR50.
+> +    type: boolean
+> +
+> +  pbias-supply:
+> +    description:
+> +      It is used to specify the voltage regulator that provides the bias
+> +      voltage for certain analog or I/O pads.
+> +
+> +  cap-mmc-dual-data-rate:
+> +    description:
+> +      A characteristic or capability associated with MultiMediaCard (MMC)
+> +      interfaces, specifically indicating that the MMC controller
+> +      supports Dual Data Rate (DDR) mode
 
-[1]: 
-https://lore.kernel.org/linux-devicetree/9c326bb7-e09a-4c21-944f-006b3fad1870@beagleboard.org/
+Drop the property. We have standard properties for this and there is no
+ABI for it anyway.
 
+> +    type: boolean
+> +
+> +  ti,non-removable:
+> +    description:
+> +      It indicates that a component is not meant to be easily removed or
+> +      replaced by the user, such as an embedded battery or a non-removable
+> +      storage slot like eMMC.
+> +    type: boolean
+> +    deprecated: true
+> +
+> +  vmmmc-supply:
+> +    description:
+> +      It is used to specify the power supply (regulator) for the MMC/SD card's
+> +      main operating voltage (VCC/VDD).
+> +
+> +  clock-frequency:
 
-Best Regards,
+Why is it here? Nothing in commit msg explained adding it.
 
-Ayush Sigh
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      It is used to specify the frequency of a clock in Hertz (Hz). It's a
+> +      fundamental property for communicating hardware clocking information from
+> +      the Device Tree to the Linux kernel.
 
+Redundant description. It is not a fundamental property. It is a legacy
+property.
+
+> +
+> +patternProperties:
+> +  "^pinctrl-[0-9]+$":
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      Phandles to pinctrl states. The numeric suffix determines the
+> +      state index corresponding to entries in the pinctrl-names array.
+> +    minItems: 1
+
+Why exactly do you need these?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +unevaluatedProperties: false
+> +
+Best regards,
+Krzysztof
