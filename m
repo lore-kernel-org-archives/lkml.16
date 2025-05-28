@@ -1,159 +1,61 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0CD284B49
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCE027A47E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:42:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428949; cv=none; b=QymdGJtr2tbccsDoHt6FulaWh9+9q23QyuZomRbwzxco99MeR0SJaN7JO4GT+QAlBYqUt5IuQjX40p/nhJVrAMq+vSOj3a1JHAF1WXH1U3iLxLJBBenVxe7KFZrKeUJNrtUiFrd6FDS9f30ntN7rm+TTeQP41tjo6eGAMH0BXnU=
+	t=1748428961; cv=none; b=ACiEzAIVA6s6tKNZN1uTryfbSTqRbyCTB+PfvPbhwqfP+H5TtJqZ4cb4CWqTuDfjoIvkM9iDyn+XQuWLx41vGhYraqWwpJqQzcOIaIPZoFDZJA0TfL1ry3jHVDl+HCLpMu8bBF52mcm9UPLypuYbFqxx4xpWnd6UscZfbheA3O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428949; c=relaxed/simple;
-	bh=aZiHVtAix4Bs7VFa47r9w+gaIOPFsTrPZZVeoeZFBbI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uqAWY+ktXddk2KNGphjrdu766+rglMt8HJ37nfj4M9My3GQosqDM069NcPoKgrtSSAG3arCUF0Jgn1zK3uwS2IoF/OnkdjSn9K+xdbevp14P+nnzAejJOfLpIUXuxZ1yU/IxJEz7kRCFlr+wxsv7nqRTZmgpv6I41N/7FOgf32w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hZF/OfWg; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hZF/OfWg"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a362e099cfso733067f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748428946; x=1749033746; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wvIZrAnHYUbgegc3KzvI7IvlrGTu2jq1NObvCezVWR4=;
-        b=hZF/OfWgiDHsJZEHrud44zYhYtnloSsHnCau96QeFCOvnXEXgLj4a12VyTxSCAm11z
-         N6oQ8koJ3ZnP8Ku5giMNrcY8pPyidl0PJuPILzUVpSbiCEIcHfZXXDVQrxzRsojwpETD
-         +R09V8wtE9uHZXCgLssg8todkWdxNY6vBOmmqenSidkbH7oFrattB1MsjFbYuJS/Fdyy
-         gIVCWCNXneazqGlBLC65swhWSZAwvbQ3I3kvCoYCckFFpi5lVxlTitLJnnuJRS0Ix8nk
-         sOUfo111r1jspmfRO6g5KbZOC9Pk/V1AEhyJkDAFaV1hTtFM1XHieblnho6lyLHB7rv/
-         TCmQ==
+	s=arc-20240116; t=1748428961; c=relaxed/simple;
+	bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=YMFxTQ3UphxafdAyYwKnlqf+lPbgZsBlnCtSM8oDYrWl2nQwwsblu1bjkcSylepftpiVLm6CO0wLb8OliNQ1NN9AOd7jWcodWfoXnoBoi52An5yeJGFGjc1KvYZLx1S+KLUdF2EzW39LnAx2l8M3MM/qRVCBWNmB9Za2YRbZ+fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47689dc0f6dso69566641cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:42:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748428946; x=1749033746;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wvIZrAnHYUbgegc3KzvI7IvlrGTu2jq1NObvCezVWR4=;
-        b=abCYZQPcTLy7mlhVTHColpUcYr/4QwbizkGHlEdaHtRmpCagNp0DseBdRRDvrhaBSH
-         fA6xcfh4KNaZyY+TXxQ1gLJV0aZ5SY14w/v3BImOfP1yqp38ktSo9EtlHVCLXInrqngW
-         oM+jAMNmubG/l+aBIaUox9rFTx5MYodctdmWc5eI0qWwyzqcdI9Rf2fVKKct2r8Kj5In
-         JkKpkbHKi02vmJXQ+B91msBguX/cmGJj0xljbqFDSQ2yZLmQ1iNNuhi2zu2qYbvPnx/e
-         YPDH7IfPDVzsBK1GznAC47OBxl9dWo96kIsHAge14vOuxP5YXqZR1nIjNf0QoJr15mGz
-         DXwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmaWwh3MG9zhkwUlIgDBow+itkb9H9R1nmRLPTynmqJQp9vx54KlX8kkk5qKPkCh4ebd6WyZx3G0xVtlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQI3ceIHcgy6CPqc4LB9CQ04mLzeYqyfa4jPSJN93l/PFNpMoe
-	d8ssdOkHb5awFdbfbJ60MEXUtB6x5/OKQkIVrq0Ozu3vnePzBcItdstuwMGFg7GwBUg=
-X-Gm-Gg: ASbGncsg593r3/m8Pm2M2yAhpqmGfDY92Gu4O9yYXhBALcBYRlLLOb82lVb7v4u8Wla
-	RtCYTISMffqOo8IcoqSQi2JhCHwMrQNcEpdWP1vtNCTbN2zZAeFYJxO78Doags6G1ge5toDVp8c
-	/fzp/DMCfJRyiUpFTPGLcJt31i/w2hByOyAjc0S2pPokMyn5LlF9TJOi2/lFLj2jpem9MbDcGrf
-	PJFM+7dxAmeuRuJcrcUAURW+K729MZV9IwQFRUP8ZpcCSz4vz6iRAVaH9Jn2tiBJcmXJcXnYQYS
-	KSykLvkCXc+N6Ml69Ow4CRWTdw32yyzLBYiDAhIA56lcdMQZQjM1xRoJ3IYZ1pdsGD0UQ7acGPV
-	1C7wVvA==
-X-Google-Smtp-Source: AGHT+IFNlq9KlCXRCQr1+6Ymqq9Ne7A6NiNU48Hh7WmaFcskniRj1xewpQQJ+ro3UTKAzWuWhYjH7g==
-X-Received: by 2002:a05:6000:2408:b0:3a4:d0dc:184b with SMTP id ffacd0b85a97d-3a4d0dc1c54mr4702445f8f.6.1748428946040;
-        Wed, 28 May 2025 03:42:26 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064add8bsm17331595e9.17.2025.05.28.03.42.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 03:42:25 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 28 May 2025 12:41:13 +0200
-Subject: [PATCH 17/17] rtc: stm32: Constify static 'pinctrl_desc'
+        d=1e100.net; s=20230601; t=1748428959; x=1749033759;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+        b=K0R2LjWdDweP/OfILS8SDb30GMA0XlNez2HUW3/jFmB6uNdf/0vhg64bmwePw1IPLw
+         jQOgCKtgSVgZZbLkL9bSUroPTivPicv81cCtKLp/y7xjAaJbFoF61lBt86iqwSZ7EPQk
+         nbCvd+5aUqcoFbZEbh8mKB+8ww30llzF3pcpmzLGoA78WyUVNw/clUgDSmsR9CsSWdWR
+         f2iW8ODQBOBjpLlat5FgxanOT3tXy4imE9KoTuRE5R5r0jYHbXrxwAruC3peQjpFfOuf
+         LBx4vAQ8h5xqvZvvNGIxndMdYf+NDJCIQ3JKzyWPWqKPAU1byomwyEHXSH9APD6gYSV0
+         fbLg==
+X-Gm-Message-State: AOJu0YzzV430YoB9kei2V9RMeBZdQGoxdiEux5NH1p5MZsMKBBh5NkGZ
+	+XHEBUZuPOsjD5I51Thr3CVqWG9k7yW+KNPK2Ai1syV/fHt4xr8Aw/jVXmhFEDWa3/ICBSMUYN/
+	uMk72RDx3tpeUEnkx830uWPb2bk8PRPiujrl4s4xKz5fAfu7jA5GRCh5I1z4=
+X-Google-Smtp-Source: AGHT+IEtqZzFZF+GfIqick5XhzVBMJb/dxQqFWsZ6rI6eHYv8MoYbkLfZYQr+/i8rYJ4sXaWsNu31UkWdk5PzKF4ethPKeWFIZRE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-pinctrl-const-desc-v1-17-76fe97899945@linaro.org>
-References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
-In-Reply-To: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
- Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
- Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
- Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Jesper Nilsson <jesper.nilsson@axis.com>, 
- Lars Persson <lars.persson@axis.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Damien Le Moal <dlemoal@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, 
- Michal Simek <michal.simek@amd.com>, Emil Renner Berthing <kernel@esmil.dk>, 
- Jianlong Huang <jianlong.huang@starfivetech.com>, 
- Hal Feng <hal.feng@starfivetech.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
- linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-mediatek@lists.infradead.org, linux-arm-kernel@axis.com, 
- linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=923;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=aZiHVtAix4Bs7VFa47r9w+gaIOPFsTrPZZVeoeZFBbI=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNuhXAXetqzUvjtim1sn5fQnWeOfKvyrbA0k7X
- 0F7r4JYgYKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDboVwAKCRDBN2bmhouD
- 1y5gEACCSmP7bayECWKFTkwRKQ26DxhFqjfLlRRjLxFm5/ZteZr52oR68NuAqE5Oteaw0uuTlF0
- AY7psL9i9caogUFyGEHFJLQoNlWHJx87dbPtNhMZbGpsCLwXVf9MNN9NM5+baphXdCKj68+Ffud
- mc+WQUO8p0rqIbRViIvXBJ6gAx6Ilh7Q8yFzuoVIEAV6I9BDpcBgRtB0mqwZfNT1P01nvvfn/HK
- 0/jT3G9Vdnpc9i1iTCLhpNp/FZupziVL6jPzDf47eWUlT3HFPpaJJ0tYcLLFl85Bsb82X73rnKM
- UBkCUre2kyXNDYjCNKOoZChLO04ZipNp38cUsCGyMOFi677HtzDsxz1RSX5Rbcbla1EOnS+6Zi6
- wES2PU+vUxe+LvEjmBnfAnsp4Vv47qY8+rU+v+N/7L2UAOT/N9w0X38a93OxUVi8HaJ071gheJB
- QCoBqlVg7+rjFK0nodd/1cYnU618gnyxlmtSWGKEOE1t7M+ApTiup2lOqvjt5YqTWangb8P6mI4
- 91zeGot+yAXPL2gIH1Z6qaPZGgJ8qD+xTXRdP2qbVHh+EYSYcb3iCINKLCkSmeAA113O5CegW0f
- 2YlveQzrIRHcqQzevdatgXRW8aDA6/KL/GFs07DAXEI2lUdBp+jh/3BAyA2S//my1rkpdfbhzcL
- ONXQAendt+UGD9Q==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+X-Received: by 2002:a05:6e02:3041:b0:3dc:88f1:d88b with SMTP id
+ e9e14a558f8ab-3dc9b69523dmr186237395ab.3.1748428948206; Wed, 28 May 2025
+ 03:42:28 -0700 (PDT)
+Date: Wed, 28 May 2025 03:42:28 -0700
+In-Reply-To: <681865d0.a70a0220.254cdc.0048.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6836e894.a70a0220.253bc2.00c8.GAE@google.com>
+Subject: Re: [syzbot] #syz test
+From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The local static 'struct pinctrl_desc' is not modified, so can be made
-const for code safety.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+***
 
----
+Subject: #syz test
+Author: abhinav.ogl@gmail.com
 
-Patch depends on this series - const in pinctrl core. Please ack and
-this should go via pinctrl tree.
----
- drivers/rtc/rtc-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index ef8fb88aab48a0edad19ae5872421815aa04fe46..d4ebf3eb54aa9e91c8e9f8254f571c53794192fd 100644
---- a/drivers/rtc/rtc-stm32.c
-+++ b/drivers/rtc/rtc-stm32.c
-@@ -393,7 +393,7 @@ static const struct pinmux_ops stm32_rtc_pinmux_ops = {
- 	.strict			= true,
- };
- 
--static struct pinctrl_desc stm32_rtc_pdesc = {
-+static const struct pinctrl_desc stm32_rtc_pdesc = {
- 	.name = DRIVER_NAME,
- 	.pins = stm32_rtc_pinctrl_pins,
- 	.npins = ARRAY_SIZE(stm32_rtc_pinctrl_pins),
-
--- 
-2.45.2
 
