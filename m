@@ -1,172 +1,142 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A855D28134D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137CA1F9A8B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748431368; cv=none; b=jvknY+5tmm/lQMRg3xR8My/5DyCwGTFZNY2CWlFaoEoLqWfkSTXgLvyYZ6RFy8N+dxdRpQACBf8l1Zacups3GT4GX5hQqp53T9rIaUAz4pdLOMUg1tKd09rT9LVu/bPgZJ4cSd9zyMhWDLI/0bsaETC4GV1//sZp0bFjvM2VSd8=
+	t=1748431466; cv=none; b=drZJtcih6L5QBLAs1Hp+II/bF5++OqeuYRTwvbTaEjQie5ugg9cTa0LceopsstJHOsRGZlXMXuRmz+OiVqEtbmq1iSFfOiTsekmDRoJkNiPP3aoDqX67DgqDDV8baNda7HCPpt4wjxDn7zS5afcOI/ZoDCabongU5tcoluL2JSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748431368; c=relaxed/simple;
-	bh=SQjZk2OifxeYB4JLy8Q5cjUg0zdPgl1qjVVFEnxXc0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hXYi5XoOSyuiMsSqk448hqqqeqcobn8QGhXPUmZsF5ysMmpt2Z5jSo286VF6skdb5ZcuxKj3jUL8drBwNWQDaog7JwLwtwfvQXFPpbfWVvadNWzFMzky51QylmlixEKnnzObRp4eNWlfHEjjrmL/+q/pulByY2h10PKS2QsuksU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ji1J4vDP; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1748431466; c=relaxed/simple;
+	bh=s8YvYzFzgJVHFydhLtLGu0apY3FGCB+uze2f/rIqpz8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OrHiel9DzfSOwaisPdKP0wdXMXogKZ26f6m/T1IpG86jap3QkOxirRoKZg04IASIvGx5S2iSBjEeBfofD+AJ6GLpSq6x3Dq/jt0pDH2Cltli6hvQN6yYqhzUifwXaNqWyTiJRupwg3x0Q6/BqO+HuG4pfn/4HtHFAPs2JwHcos8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jPW272rx; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ji1J4vDP"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAI3sk021578
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:45 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jPW272rx"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAd2ct022296
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:24:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PXrF3chhlKsYPqdRDHwS0A8uxmZl7PCZMAnk+l3O8cw=; b=ji1J4vDPrznP7Pqv
-	1zdDmfOmUi/OK7mmMDtOliQ8DG1CDqh6JpJpI7y0dKCkKdBTh+6Dt5xRaB2LpzuE
-	6W12J5C/vCuUxVRPh/oPeTZZjXcm+2zG7PpjH8gTObT5CIF5p5hEqLweVlbweGUC
-	8o2W759pXLSm1/gpVO01S0fnlx29gM78ddfjxBgabICF7w1NLYtY+K3vC3m6uvLo
-	vjaBqZxgRSWZqIcfTUhrKKX39+cLV5j8h3d/dGwLls4RvZZYPnOIdFJaNg+GyfAX
-	NgeMTerok3qxMHyDdNPSX7cCYNPs2O2sf7Eez4TRQctN5EgC/g/7kpgE9bLBd2EZ
-	R/zT7g==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g9219e-1
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=9OaIR/JgCGry6K2mLBsDcR
+	Bp3ny/e1tbKsimDqc/P5Q=; b=jPW272rxOWAFGjUDZ6W+I6VCbZTymA/xhJ80Su
+	5a8sk3mk4m3KHfbXGqpcalRRpW4pLhgqkK0qa3dCeJj98r1d7Ny57iblbpK4I9tw
+	IYPylnUKNd4dEvF+Lcr9fdScRwJf1OiAGhkDdcIg+v/UFwUUzF1X8oC3H3zqqFhi
+	Du1Xtq0WDEtWjPmzeSfVXDSCstO/k1EMo+MUtP0JYLybg0q33QPbM+pmqffQhzuP
+	ehe4MKZr2o/qRfD0NbOUJDO5RzY/z5UnnEGtFpNRGidMJXR6sMqQ/bYiTs+m0/q+
+	B2hdAxyo3XE+4UPARzA0p1A5WBUjTEhr6XYl11SHmVt6PAJQ==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u3fqa7dk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:45 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7ceec331273so136343985a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:22:45 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:24:23 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-311ef4fb5fdso408239a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:24:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748431364; x=1749036164;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PXrF3chhlKsYPqdRDHwS0A8uxmZl7PCZMAnk+l3O8cw=;
-        b=VTc0Sv/KDQIRSfHADrg57NNRbbujG75bJ9Hl/QNds4x3+TzV7Slhm7kA+M5dVyfDNx
-         ogRZocIJxx3syZjvg1wXBdAyiqsaEG49Ripc9Clu6iHkQxKNk5FK7LXx+kYBgBJbqvsr
-         5bAdc4yohF5I/Xh1CQbylcrS2gDoF2JGr68jpmlJEkcuG6kg87zO10cwlDNEflRgasrK
-         oi13DOP5J8vjUoVujdOYIE3e3hYQCs0QxoAbIC9bxLhEvfDhjtBlLc5yVhmMD/dUYkz1
-         gdjfwPsrWUZnnArsEviASeB43e5IzoLzRtzrUUGHoTkP7IXj2/5yKdIHkEyTbiyzcRid
-         8llg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/TGVX73bvdBN76H5CMiU7GzTuJ2tqHkcFCuodePkt5PI4PyxXd6wr+bopoqINfTsn47FJwvVLiEv56d0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaQ+EGDo257R1DkhJEazrBJeNmtnte12mD/EUL4UDwoJV/ecKa
-	wZLKI5k45QsDLXK313fGx83t0f0Z3ic/ZSlfCdsNP1SlFbyogaGoy7+jEMJtZvPXWky7gnZR8ou
-	ZWUB777XtVrBhnBDAvefrft0eYBrtLXDu9j2HjBoshMQIRB94j6rw2zAXCI34inRr0bk=
-X-Gm-Gg: ASbGnctgtfLBjdMXbFnpYooX9cA23ufuAimmn8IocwogTs/I51mRSs/B0zMwcGB8lHu
-	OMoR4UW6kHU9cg99S80oumzxj19Kqvkq6f8fBFe80XefJUWbbi1Sx0de6LN7anfqc0N4R96D2Pe
-	me6JUB4QCioWMO0MSMKwc7rP0SeK8Fn39yH2B00m4fR4SRPg/qOpCaOYCBLeAm8VQCgQYGtadRv
-	9ndGvK7w4+eExpGhqcl1sBl/ubnCWSLTnA9WbsKcWGHjy736mzsdmHjW9n7jIJ9WjAA5gGUN8hT
-	rqHLyIVch35UUqdTY+TMtw9bxX7iTU6KUEK9/2C3p9pROOigEOLH3bZ2r7qLWUNhug==
-X-Received: by 2002:a05:620a:2710:b0:7ca:e392:2a1b with SMTP id af79cd13be357-7cf5374ae78mr110204185a.10.1748431364559;
-        Wed, 28 May 2025 04:22:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGoL3mKSALNU9U5rUvH7D3DgExdg+X+00mZ1LS8ZpHat+MX4uUZuY9EFAKe+em8TE91JP4dIQ==
-X-Received: by 2002:a05:620a:2710:b0:7ca:e392:2a1b with SMTP id af79cd13be357-7cf5374ae78mr110201785a.10.1748431363985;
-        Wed, 28 May 2025 04:22:43 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b47a16sm91600666b.144.2025.05.28.04.22.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 04:22:43 -0700 (PDT)
-Message-ID: <07aa740a-72f1-4d7a-aefc-437d52b8dac8@oss.qualcomm.com>
-Date: Wed, 28 May 2025 13:22:41 +0200
+        d=1e100.net; s=20230601; t=1748431462; x=1749036262;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9OaIR/JgCGry6K2mLBsDcRBp3ny/e1tbKsimDqc/P5Q=;
+        b=Saw17NwiXuo7Z+3f4g/8WtMQHdrCgqtz+kAT92DA/nClxZ0tN9G0dG0y2/HSMOxAbh
+         j3Bm2+kWCP4m4Aw4LLLr7UbxYT2oyQmTDA5HNmBBTC2b8usUwyLFPlZ22RBKc1Fz7MJz
+         Fb82l4vEEJxhRb+FaPQBaATc8LeL/gNUxP2m8IUbjZ75GaPN+1RcMfWPUq66N1g7z5CP
+         0MDIcKpgqvVi89hdInf34dCBRe+9CwFiyyOV0VTqOMwJ4hCpXRqZRvZ+K6COS4IxeJyb
+         TB2H7VsXSobE5FszaaXhsKfuzTgVZvZekh519tj66pJ1S6b0S9sr595yWpUAV+pOgi9a
+         LeyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxz5XxYRY29T59K/OzXn5PXnEImPx5bsj+4iPrsLehM1qy2fu3id92gaCJtTqO1Zs5Ad2f0CXY+R47TMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOXxhfTRFlJnGmUg2Wrw6SRqjNE6gdgKKthXeJZzEIDTjrKroX
+	9oVMdJFdC1LgPZfvNcr6lxMb9+2oDudnK8FWHpfGbuICXwr4OQ8CSM+x0AMzlE4N09Zeob2skKj
+	06iR92Dj1gmh6/vRb2eMatai/xqt4+90g+aZzEcGdiyj7ctFQQBVI8RmyOliMKf9qU3g=
+X-Gm-Gg: ASbGncsC69PW+gwwHdFvnOZGnahUhav2TAg04UF9r0x2P2MEOPev3p4BgSF7b86tYn+
+	kDwgDbjuHyVVTut2v4/Bv8KHRiHuPmD+SJmcOU0N9AsM+3CzzdMl0EQhnbSMdNUqFITD/ZSdw/n
+	F1P4Ssrg968KE7Pc31PGMU2ZmNN8+LytoiOVaxBQq5Kub6jeK4tdZZUWhF9Fb4v0ZdWLIkCiEep
+	RmHqshWcUvKAlcRwHs6PKfOPqAa/ULUeox32pcYh8fUrJP3+F0Jd9LEYtNFMQt1dmzYwB8kVYNS
+	aWlrB9sE/SdpPjcrdjlvhVdIQGUbT9BjHk8OrEL8dU5f7grEtw8/gvpxAE/1GK24MkOK91Rmg4I
+	CpwQT3t7fTDvA4D4dHs9/S4uxrnj3wiBRpvrF
+X-Received: by 2002:a17:90b:3911:b0:311:f30b:c18 with SMTP id 98e67ed59e1d1-311f30b0ff9mr1919583a91.4.1748431462432;
+        Wed, 28 May 2025 04:24:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGT2k6BW8Nw88MJooxw2RTEDAtCcWs25yiA/HlrYnpjr7dK3nH9uZma9yPDliobnauzqCuwkQ==
+X-Received: by 2002:a17:90b:3911:b0:311:f30b:c18 with SMTP id 98e67ed59e1d1-311f30b0ff9mr1919559a91.4.1748431462029;
+        Wed, 28 May 2025 04:24:22 -0700 (PDT)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-311e9b668ffsm954665a91.20.2025.05.28.04.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 04:24:21 -0700 (PDT)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Subject: [PATCH ath-next 0/2] wifi: ath12k: use real noise floor value
+Date: Wed, 28 May 2025 16:53:59 +0530
+Message-Id: <20250528-support_real_noise_floor-v1-0-04507bd3bc76@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] phy: qcom: qmp-combo: register a typec mux to
- change the QMPPHY_MODE
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>
-References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
- <20250527-topic-4ln_dp_respin-v3-5-f9a0763ec289@oss.qualcomm.com>
- <itmvwhcf37bmnpadcyc7kdt7wx3eljyjwyv64s24zwhbr2e45g@76uzcpjqzx22>
- <7f464eb7-469c-4350-a43a-3b99394ad689@oss.qualcomm.com>
- <7icpna4l7z63gs52oa5lqf35puib66wxxmqqul6ezdkhuziaqi@mvkf73zz2iyj>
- <8692f79f-142c-43e6-9e09-7ed4ce590b87@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <8692f79f-142c-43e6-9e09-7ed4ce590b87@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6836f205 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=WE4J2M1y9a7QUu_BFKwA:9 a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: 8jGn4CA02HeVe2ms0HKEe_3sXY8Jxj-i
-X-Proofpoint-GUID: 8jGn4CA02HeVe2ms0HKEe_3sXY8Jxj-i
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA5OSBTYWx0ZWRfX4ulOSZSNKM7w
- pRgRKmnK+cVl+eebJKG6RgfTc2qfGOqumVQI68Z9nT5Ns/x2xE0ESP2DL8fxgmJjcb9hsRGl+g5
- /Q73Ow1NcmvwN84Z95xh+T9j+IRScaRJsYebk/SS6aMFZaNf3Ua5wimLIMS/7K56556ykDgrJFW
- Wc2VIdev6zaLCqzcLrd2ZoukwARVzi08PBdX2iF4YIbEf4qowqilG88Bkj9P7HTzLEvEwBCwVW1
- pj0nC8Nr4NNJbAGs1KaUOiI+hi6uYXJSV57l0LoWbtjSd2H6gu3/0nozaRNHe0xSCus6fsHrtYH
- m7kBumFubw1GPMrtj65zza2A+hIRCs3LvN7oH/44vvIoRp2DBRLATfsZ+L57qTzXo2Uww46YvAP
- ysBg5+1nsHN99u0kwLSBxbu2CbSSHIO3CmZt0l2hjOYWdJYnZFkqgsIBBSiL1AbArFXPmGWC
+X-B4-Tracking: v=1; b=H4sIAE/yNmgC/x2NUQrDIBAFrxL2u4JRDE2vUopIsqkLwZXVlpTg3
+ Wv7OTzmzQkFhbDAbThB8E2FOHUYLwMsMaQnKlo7g9HGaTdaVV45s1QvGHafmAr6bWcWZbSbr9N
+ sp2W10PUsuNHxv75DqFElPCo8+hKpVJbPr9la+wLFfiAkgwAAAA==
+X-Change-ID: 20250513-support_real_noise_floor-205986936cd3
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: 6t4z1wIuGlSu3FjnQt4IX5uZDrw9nUso
+X-Proofpoint-ORIG-GUID: 6t4z1wIuGlSu3FjnQt4IX5uZDrw9nUso
+X-Authority-Analysis: v=2.4 cv=X8FSKHTe c=1 sm=1 tr=0 ts=6836f267 cx=c_pps
+ a=0uOsjrqzRL749jD1oC5vDA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=oo-PE9G31wNHbytkz5MA:9
+ a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEwMCBTYWx0ZWRfX9s+twSAjRQ2N
+ tPI5zFSgLaS0fw4YuQh0BMhqlistllIZzY+kgqu9XIA63XmOTtITcv7h61H9/x5+siv3OCOCZKw
+ vX3M9ES3TSzCkRNZVqARk5l0WaxikknBnHIyfv+PyMEb/IMwivxPIf9zfjgzcd5D24hn4qOxQOd
+ mFmdATS6SxagZbBucmJN1Ibalcz810x335+ahru/VGlZUUy5QJt+7xJ3WXTTZGIs5BUBY3OzJWs
+ Z+OYxj5ehHcsGV9sChHrjKGgtMHL2/aIR4pgSUk6sTL70/+W1O7HHyAmQ6Nm57OKNZLA0CkBJ6W
+ LjigOVqNs4RYKlQeMXLN2q2RAC8047DKe9IwvecFJAxxc5mbBrNw/W4Xc8AHJUDhikEbahAb1Wj
+ hZI33fmwkVM2hiTYrLMS9niB/k7g/ooZTr2IN+T1Ne4e8nvefLf+K4LKfLeivPNisoJHPoHo
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=881
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280099
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ mlxscore=0 clxscore=1015 priorityscore=1501 spamscore=0 adultscore=0
+ malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505280100
 
-On 5/28/25 1:21 PM, Konrad Dybcio wrote:
-> On 5/28/25 10:58 AM, Dmitry Baryshkov wrote:
->> On Wed, May 28, 2025 at 12:22:01AM +0200, Konrad Dybcio wrote:
->>> On 5/27/25 11:55 PM, Dmitry Baryshkov wrote:
->>>> On Tue, May 27, 2025 at 10:40:07PM +0200, Konrad Dybcio wrote:
->>>>> From: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>
->>>>> Register a typec mux in order to change the PHY mode on the Type-C
->>>>> mux events depending on the mode and the svid when in Altmode setup.
->>>>>
->>>>> The DisplayPort phy should be left enabled if is still powered on
->>>>> by the DRM DisplayPort controller, so bail out until the DisplayPort
->>>>> PHY is not powered off.
->>>>>
->>>>> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
->>>>> will be set in between of USB-Only, Combo and DisplayPort Only so
->>>>> this will leave enough time to the DRM DisplayPort controller to
->>>>> turn of the DisplayPort PHY.
->>>>>
->>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>>> [konrad: renaming, rewording, bug fixes]
->>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>> ---
->>>
->>> [...]
->>>
->>>>> +	} else {
->>>>> +		/* Fall back to USB3+DP mode if we're not sure it's strictly USB3-only */
->>>>
->>>> Why? if the SID is not DP, then there can't be a DP stream.
->>>>
->>>>> +		if (state->mode == TYPEC_MODE_USB3 || state->mode == TYPEC_STATE_USB)
->>>>> +			new_mode = QMPPHY_MODE_USB3_ONLY;
->>>>> +		else
->>>>> +			new_mode = QMPPHY_MODE_USB3DP;
->>>
->>> To be honest I don't really know.. Neil chose to do that, but I don't
->>> think there's a strict requirement.. Should we default to 4ln-USB3?
->>
->> Yes, QMPPHY_MODE_USB3_ONLY. Nit: there is no 4ln-USB3 (it is a special
->> mode). We handle 2ln-USB3 only.
-> 
-> Right, I double checked and we support SS
+At present, the ATH12K_DEFAULT_NOISE_FLOOR (-95) is used to calculate RSSI
+value, providing an estimated noise floor value. Consequently, the RSSI
+value is also approximate. This works but however, using actual noise floor
+value will enable the reporting of the true RSSI value.
 
-I clicked ctrl-z one too many times - I meant SS+ 10Gbps
+The firmware possesses the necessary data to determine the actual noise
+floor. This data is provided to the host via the WMI event
+WMI_PDEV_RSSI_DBM_CONVERSION_PARAMS_INFO_EVENTID, which includes the
+runtime parameters needed for calculating the real noise floor in dBm. This
+event is triggered by the firmware during channel changes, temperature
+offset adjustments, and hardware chainmask modifications.
 
-Konrad
+Add support to handle and parse this WMI event. Use the received values to
+calculate and store the noise floor value and use at the required places.
+
+---
+Raj Kumar Bhagat (2):
+      wifi: ath12k: handle WMI event for real noise floor calculation
+      wifi: ath12k: use real noise floor instead of default value
+
+ drivers/net/wireless/ath/ath12k/core.h   |  17 +++
+ drivers/net/wireless/ath/ath12k/dp_mon.c |   7 +-
+ drivers/net/wireless/ath/ath12k/dp_tx.c  |  20 ++-
+ drivers/net/wireless/ath/ath12k/mac.c    |  14 +-
+ drivers/net/wireless/ath/ath12k/wmi.c    | 233 ++++++++++++++++++++++++++++++-
+ drivers/net/wireless/ath/ath12k/wmi.h    |  42 ++++++
+ 6 files changed, 324 insertions(+), 9 deletions(-)
+---
+base-commit: 3d933084a072fd5fb5da54c06a017abc0412c86f
+change-id: 20250513-support_real_noise_floor-205986936cd3
+
