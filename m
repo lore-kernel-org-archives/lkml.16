@@ -1,133 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D84247285;
-	Wed, 28 May 2025 14:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D58B19B3CB;
+	Wed, 28 May 2025 14:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441539; cv=none; b=M9eRxxP2BX+ALaK+USdefzv14JpOTtcs+MCYXw1tRL5Mg/AvAU0CO6eZyuXFUPc8I7Esfs1wDHsGoU6Xvqyc4NjhnQE0a53oQxHkTb3bGahiIfG6dcVejD/LrUAwpL/XB4YJiufIkR7P9CH2ID8Jr3yXA3IhYe1N9UwmfbEKzKo=
+	t=1748441613; cv=none; b=JX17+Rrqlg2brq4eqfPXk64dnYxn3IuhHy0ebjP4uHBPbEfSVbo0sKTOaY9r+tkJt4DYFOVZlf4ITMVtND9ioAyi6RM+VBLMk2GltAxczEsr11+OA5ySXniT0nx00PGjQ1wGcacFUc7yklLZ/1f2rQEsbeYRztNw7QWOsGpDGwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441539; c=relaxed/simple;
-	bh=oG4ypAGdLjwXhX+tqp2oG4fyMx5KH/HkGNDMrgscEHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Dh/kPGSba93b8+9RuXTT8qkDOseTbxIBfUNPfog5wCVz5FM99Bvgz0hi0kF8ycn3ntU6AEJVrslH6r41zBP4H6y9XnXxJb3zrIDUZDBPgtnurn2ll30DINGX2TdEzAofnbYwpUQijX4hGo+7r+tJxfYl2ziYKP+AwF9H97AYf28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA4AC4CEE3;
-	Wed, 28 May 2025 14:12:18 +0000 (UTC)
-Date: Wed, 28 May 2025 10:13:18 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: yebin <yebin@huaweicloud.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yebin10@huawei.com
-Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
- disabled
-Message-ID: <20250528101318.5ee12329@gandalf.local.home>
-In-Reply-To: <68370E1D.3070802@huaweicloud.com>
-References: <20250523083945.3390587-1-yebin@huaweicloud.com>
-	<20250523083945.3390587-2-yebin@huaweicloud.com>
-	<20250523135452.626d8dcd@gandalf.local.home>
-	<6833C4F1.3030300@huaweicloud.com>
-	<20250527094131.1f4a92ab@gandalf.local.home>
-	<68370E1D.3070802@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748441613; c=relaxed/simple;
+	bh=dpXIbCAlYRmIowUQvMgyFGOg+FO7ISbS1+UG1ZIuELM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eh5UOxZqe27YJCyPegZNUsTwHatFrfvrqtooR0b1vJgKVyJf43Gk5kL9/e3d1SoMErsc4UIumnvssfIAEO0VIj2K2hUAeEYsvqTGad8YeXyuNM93FB1lmu3l+v3HgP+jL+WrIaVZJykRL8tYdnWF9tQLHKWqpd5I8rsxCe1r4e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aj3lQrZm; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aj3lQrZm"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe574976so36299995e9.1;
+        Wed, 28 May 2025 07:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748441610; x=1749046410; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u/NvBcF4s3yGqfgtLGu/F6IheBb4FWCw8Mlh0+qa7IM=;
+        b=aj3lQrZmOCGZLdTm/WMkY5TkY8J5IBvf2ww++U0GuXzFo+Yy5RHQmk1Bu55dSRRMSc
+         cNhLOgofEkW5KqDwlRVZ0lP/jjqaHYxUs6Q/UtguxWHpdIYB0w2Vva3vd4S05AtUuY3M
+         oy7oSOqJkKyD43SYTTYFHyJBtKM4HfZIKLqLxKx6LOrTBrLRRmDUsMMfKpx3g5+spxAb
+         KhtXTapjS8sD+OuZPwEwcaG73Ew2TvO0WP46COqBug88jqdONMC8ct1iI4Kk1zNRceMc
+         WB2IgImBKFCuOpB7Im++v6Itf4Q9ASTRxCNdHdYBgBX96V5ZZGBR5hVpKROxFxPMpWSR
+         ECjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748441610; x=1749046410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u/NvBcF4s3yGqfgtLGu/F6IheBb4FWCw8Mlh0+qa7IM=;
+        b=gEzt297PDL/27IqXsRaA6sz8KoktLxt0Kkwk8ny9g3qdGfGsE9iX7hmWhxaXJssJcC
+         2P7QAjb751pwpQ0PKX4m7uYq3bI4sDc4wYxUw9nKXHdvP4cw495ftDhdaYlmV09R6nND
+         zT4AL0wWmIOG/N/uPxXfZF78UB+IB1ylr4l/chSCskJDfba0iObwBcJ9XxZLgvgbo4HD
+         ndmzo0Uq8lbbH68bXHzxdXLB1yGsBtanuzPfoQI9r3hPBHqwats5wGIzF6RKhdC03rnG
+         180Q7n8WUjy9xIg3o2dskWxqZokkxovnOHapS0oD7cGWSkVXAZ+8KuQTabSHvgOaAAph
+         HEyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4JThMBpKxFCY4l95uyXad1g0a9t3M68n1LrH83/Ve15FxLX+r+pQ+JgbinDRK9fhPcTaF2m6YRbJb@vger.kernel.org, AJvYcCWaf4Y3qMxt3+KJZ2pGMDLyWKpezByiVoQVb0xUEI+pu9TRPSpMPiIwRU9qmnoH2TEQ8C0/gWF6zOGA+QO1@vger.kernel.org, AJvYcCX/egNEtAVE8lIsvmWEK79WV5q4QQQcl74t+itvqVANEHjuYShvw+O4fr8jZB/qwXsk1uID7Ke5Hi17@vger.kernel.org, AJvYcCXw3LjwQHxzD+fHj0nMHzFUlzPdaWQSWNQWQWpr3DhDVmiFq8NkCGJOWdRIIUgFQIlhqHuBWYM9QPtGlNhyPXG5IRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVeRkyYpPfptMKT4uas9rcQNq5tC7/gqoskh0P1sX4exiaRA6f
+	EtVr2WuTX1ibiCqTccG2TfwYNjLVTEo2R9Y2A19j0PXuL2JNe28UcloJhdrmmaSXUtnvSiC9KAo
+	eRQ6kJVNe2h9MWZL77vs6wFqbS9uFxGY=
+X-Gm-Gg: ASbGncvwn8k0Qv+K4gDYbghXiRzJ0WQiqDonp05mHk9c5M8uiL30vuoMh0MCTEuZ5xW
+	LU+9NQO0+W/ItBdAEhwXrrCrsGyN8eBMPAYWa7ft8EOLEA9YSTVtQE/QsH6s/knRQacqObBW7Jd
+	aXy8taws1OisP6f8Vb0MgIcifpPDZ3jYIVtA/HUOh+A2E56bh15tmOBz8gwdy/ljvd+w==
+X-Google-Smtp-Source: AGHT+IHkpT2ySjMUdtYwChJ0/5/1rzDmtMoM740OXZxSdgP34XADiDvdJ0+rhe/twNar59adXV7Gqw4wW8anaLlVuPA=
+X-Received: by 2002:a05:600c:3b17:b0:43c:f1b8:16ad with SMTP id
+ 5b1f17b1804b1-450787c9705mr26585325e9.30.1748441609568; Wed, 28 May 2025
+ 07:13:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512184302.241417-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdU=iuVFo=VJjV7UM-fLTeZk9TwyOJwojOVOSJiniRneHA@mail.gmail.com>
+ <CA+V-a8sOGEEajx9TQsVBb+NeFRUx2eSo81ZdRQMsLzd0Eiox2w@mail.gmail.com> <CAMuHMdXb5ZCX=U_BR0=AkGtdGkVosty0cGsbKQryTy11Au8H-A@mail.gmail.com>
+In-Reply-To: <CAMuHMdXb5ZCX=U_BR0=AkGtdGkVosty0cGsbKQryTy11Au8H-A@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 28 May 2025 15:13:02 +0100
+X-Gm-Features: AX0GCFv1m8Xej_HgH71EgZ4Kvyv9BeSbuvPePanFkBHFJSxJNoRIerOZEfcK3ek
+Message-ID: <CA+V-a8sUyZHGPwUzfUan8tmsF19mB2EPN599Tzu2kaoYxSMaHw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] clk: renesas: rzv2h-cpg: Add support for DSI clocks
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 May 2025 21:22:37 +0800
-yebin <yebin@huaweicloud.com> wrote:
+Hi Geert,
 
-> This problem can be solved by releasing the 'mod_map' resource when the 
-> module is unloaded. Freeing up these resources is just an address that 
-> cannot be translated into symbols, and there are no worse consequences.
+On Wed, May 28, 2025 at 8:09=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, 27 May 2025 at 23:51, Lad, Prabhakar <prabhakar.csengg@gmail.com>=
+ wrote:
+> > On Fri, May 23, 2025 at 3:45=E2=80=AFPM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> =
+wrote:
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Add support for PLLDSI and PLLDSI divider clocks.
+> > > >
+> > > > Introduce the `renesas-rzv2h-dsi.h` header to centralize and share
+> > > > PLLDSI-related data structures, limits, and algorithms between the =
+RZ/V2H
+> > > > CPG and DSI drivers.
+> > > >
+> > > > The DSI PLL is functionally similar to the CPG's PLLDSI, but has sl=
+ightly
+> > > > different parameter limits and omits the programmable divider prese=
+nt in
+> > > > CPG. To ensure precise frequency calculations-especially for milliH=
+z-level
+> > > > accuracy needed by the DSI driver-the shared algorithm allows both =
+drivers
+> > > > to compute PLL parameters consistently using the same logic and inp=
+ut
+> > > > clock.
+> > > >
+> > > > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
+om>
+>
+> > > > +static int rzv2h_cpg_plldsi_div_determine_rate(struct clk_hw *hw,
+> > > > +                                              struct clk_rate_requ=
+est *req)
+> > > > +{
+> > > > +       struct rzv2h_plldsi_div_clk *dsi_div =3D to_plldsi_div_clk(=
+hw);
+> > > > +       struct rzv2h_cpg_priv *priv =3D dsi_div->priv;
+> > > > +       struct rzv2h_plldsi_parameters *dsi_dividers =3D &priv->pll=
+dsi_div_parameters;
+> > > > +       u64 rate_millihz;
+> > > > +
+> > > > +       /*
+> > > > +        * Adjust the requested clock rate (`req->rate`) to ensure =
+it falls within
+> > > > +        * the supported range of 5.44 MHz to 187.5 MHz.
+> > > > +        */
+> > > > +       req->rate =3D clamp(req->rate, 5440000UL, 187500000UL);
+> > > > +
+> > > > +       rate_millihz =3D mul_u32_u32(req->rate, MILLI);
+> > > > +       if (rate_millihz =3D=3D dsi_dividers->error_millihz + dsi_d=
+ividers->freq_millihz)
+> > > > +               goto exit_determine_rate;
+> > > > +
+> > > > +       if (!rzv2h_dsi_get_pll_parameters_values(priv->dsi_limits,
+> > > > +                                                dsi_dividers, rate=
+_millihz)) {
+> > > > +               dev_err(priv->dev,
+> > > > +                       "failed to determine rate for req->rate: %l=
+u\n",
+> > > > +                       req->rate);
+> > > > +               return -EINVAL;
+> > > > +       }
+> > > > +
+> > > > +exit_determine_rate:
+> > > > +       req->best_parent_rate =3D req->rate * dsi_dividers->csdiv;
+> > >
+> > > Shouldn't this also update req->rate with the actual rate?
+> > >
+> > >     req->rate =3D DIV_ROUND_CLOSEST_ULL(dsi_dividers->freq_millihz, M=
+ILLI);
+> > >
+> > Agreed, I will update it.
+>
+> I think not updating req->rate may cause clk_get_rate() to return
+> an incorrect value (can error_millihz > 1000?).  Any chance this fix
+> can simplify the clock handling in the DSI driver?
+>
+Yes, error_millihz can be greater than 1000, as result the DSI driver
+does check this (>=3D 500) and proceeds to try the next one.
 
-OK, I'm fine with releasing the mod_map resource without doing the text
-modifications.
-
-> 
-> > Again, the only solution to a ftrace_disable being set is a full reboot.
-> >  
-> We can't ask users to know such specialized details of the 
-> implementation, which are unclear even to developers unfamiliar with the 
-> ftrace module. Users can accept planned reboot system recovery, but 
-> should not accept casual operations and the system crashes.All we can do 
-> is do a good job of protection, give users more tolerance.Perhaps a 
-> system that is dead but won't lie down is also a very undesirable 
-> situation.However, ftrace is used to collect information and locate 
-> faults. Even if it does not work, it does not affect services.In the 
-> production environment, the most afraid of using ftrace suddenly crashes 
-> the system.Therefore, the robustness of the tool itself is very important.
-
-Preventing ftrace from crashing the system is the reason ftrace_disabled is
-set and stops it from doing any more damage.
-
-If you are worried about users not knowing that a reboot is necessary, we
-could always add the "Dazed and confused, but trying to continue" message
-that could also recommend a reboot.
-
-> > -- Steve
-> >  
-> 
-> I reworked the two patches, and the changes to the existing process 
-> should be minimal. I don't know if I can get your approval. If you 
-> agree, I'll post another V3 version.
-> 
-> PATCH[1/2]:
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 51580e54677f..b3436d86e470 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
-> 
->          mutex_lock(&ftrace_lock);
-> 
-> -       if (ftrace_disabled)
-> -               goto out_unlock;
-> -
-> +       /*
-> +        * To avoid the UAF problem after the module is unloaded, the
-> +        * 'mod_map' resource needs to be released unconditionally.
-> +        */
->          list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
->                  if (mod_map->mod == mod) {
->                          list_del_rcu(&mod_map->list);
-> @@ -7451,6 +7452,9 @@ void ftrace_release_mod(struct module *mod)
->                  }
->          }
-> 
-> +       if (ftrace_disabled)
-> +               goto out_unlock;
-> +
->          /*
->           * Each module has its own ftrace_pages, remove
->           * them from the list.
-
-Yes, this is more appropriate.
-
-Thanks,
-
--- Steve
-
-> 
-> PATCH[2/2]:
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index a3d4dfad0cbc..51580e54677f 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -7629,6 +7629,9 @@ allocate_ftrace_mod_map(struct module *mod,
->   {
->          struct ftrace_mod_map *mod_map;
-> 
-> +       if (ftrace_disabled)
-> +               return NULL;
-> +
->          mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
->          if (!mod_map)
->                  return NULL;
-
+Cheers,
+Prabhaar
