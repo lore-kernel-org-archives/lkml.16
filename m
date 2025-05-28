@@ -1,181 +1,178 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C46628643A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01A320458A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:06:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455439; cv=none; b=PZ3gyVKM0LgaNEx5vrhBY3uz0CHKPiEJgcoEN4g4Ptc4vVrixdnyAUsJIrqVBbjwI6GtINIarvpeplwiR6qiX8P8aJKYMD8mYOOOZGy+X62t42oN0umhtPFVrZoWgzEEjbb9ooG4gaHr08epT6KQ7xzdk+Tk7V/0Nv6ykbLr/co=
+	t=1748455573; cv=none; b=fPhpJIWOtT7cuSR+vXCjxcAhwOIR3krvGEAMKSAbMHdsTMZs+8SJ12vaCoXeTl8SHNfU8ZaUHubS2q6UVbEDsgO7RvI6FXAMbq7rbIuOIp5CKFvl5H400ZSQVb+Pwx43IlcB9VKPW/U6WjNtl+FS7AZm9YoLg38CICzX0SsoIbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455439; c=relaxed/simple;
-	bh=y3gDfBvmW3cfiD0V313GhN2HKcJE858T1+tCRVjO7pE=;
+	s=arc-20240116; t=1748455573; c=relaxed/simple;
+	bh=VRd1lkT9N5ACH+1BjDwXdFBCq75yta6YVidqEhnw3us=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CiFqAsbyJSd6x54myMi/PDHTG1S3EFQw66X9n3J82Yexc+b+G+ZACH22pq4XmsdK8hn9nnA062Q2jbARaIMG7T+RKibQRCb0e9jL0dPtlveLR8EBMMdwpNvgk1GKNFSOjT0OFO+Fo9Mcbgx6PxvEjjEO5HNSci3PMEIhMizlCQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NpIImjmx; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=eIWU/4NhhI1XLInYLGaZIDXStoS4UVYBOe2+6FjNQVYqKCd8y34dQodgr0Cj7ziXUUxjHDWVgIev/pCg5aO5knoZb+kQdvzY8c0M/xkOMFI6nR5xWsWXT31FOlk0xV23QTZ7grHuzsTRuIwJau7xYx6MzYm+R2fSl+/L+nyuY2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L5G4AwX9; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NpIImjmx"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dd89a85414so22525ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:03:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L5G4AwX9"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2349282084bso1860455ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:06:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748455437; x=1749060237; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxCBPuzPZYMMQyoxJpdKY9mjMg1Fs4mGiYtoajGbWLo=;
-        b=NpIImjmxO3QK2VXIBbYHWE45CKGliLsftWOZgUCWXoMt7CWgS04faOW/r7He0xFK3u
-         zFSGWrNAsld9k2ejOJiMDJzQhZ/F60Z8xXNK0cwmtWIN90hwkBl9hc/Rrb+qf+WUgyy/
-         MQZAKTxDgz/ufwecMdhpJgc1ralWbOqCbHRM0/F5x2WtHY/EvjnFcCxgwBzPbnL6o+Yv
-         OPe1/znPv0bqcrF8aIMTWo70TI1DVVuxlw5X09hASwPTvSBk9Z4oV4tiJvYGVcLar+d8
-         3Hvf2xxguKsTRJvCKXpEeiz89TwG2+eXDEUI3mYczG274UyMtzOJvJLGXnAUArVyptfq
-         3TkQ==
+        d=chromium.org; s=google; t=1748455571; x=1749060371; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=V+fgzLhtoA+AV7JPQdrF/lZ8VWpagMNnkYPcAKrhW+k=;
+        b=L5G4AwX95c2PoEuPtyhKEiy2TDc7+q6vD69iWF6eZc7Tk5OCpGYmrU4P2RA/DN4Zuk
+         kLHXZRUlDd4RrpwXA3cHwdwHzNXDSsMLatXcF2/jCcNn0gKuSXxw2YI56Geo2maQkc+J
+         6VAwo3Osx3ZiT971UMGPvrBf06tGxNp3i5r2I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748455437; x=1749060237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lxCBPuzPZYMMQyoxJpdKY9mjMg1Fs4mGiYtoajGbWLo=;
-        b=fDoNOf5OiKbkx3vnGU1nVlIvSTb42v8CPq6KePld72ZEOE3ELWzN3/sYklIO4VNDte
-         JVSZ+D4dymKddeHIc5OrbaG4jgIv4yYq7Fr0OljYuLPByZ7T+fUULy22Zks0QlOf4C+F
-         iDLrdNEq0Bb5lg6953XBXmFzXapo/boaXrCpSVMwv4+1Xis60qzCJKHKbuLFM4azwmJf
-         sKWN7AuzrKrC5xJg0gw+FH3vQP9YiUhldHKdqzPJDiHqXD/2j0AMvVXuI5DqqNR5raYX
-         hI+7KhSljyO81bCgqGIwpKvBMB345ZzO/qjXhsq+CZ2TPQOGPbhH8/cEii6oZl1jnXTe
-         Cvww==
-X-Forwarded-Encrypted: i=1; AJvYcCXr7WjvIR3laMDORWGhyv72B60eBnYsh/jSFg1qcbJVMsGtlLbEroywbJFBsKZLGa7UavyuZjRauVtWsoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGPiiySMKYNyZxN6arj974b32QEerVDQI6og0gMEV/pUryIm6q
-	0Vbm4xHawaMhcdPPrEerLyrgR8UPvZo1Wexg714KaEbffycMZdtODiEmjQq4KzNQtNotbj6Z6FJ
-	I7vfJ4W/M38nK89ituIt8EZ9ylVvu08mugGK2KmKx
-X-Gm-Gg: ASbGncu5pufP7n/lur4dnR0YJ93+EelmFR9N3qFiIkkVcVcrdKd06p2zdZbfpaN6m/3
-	YG7EWC3bQf7Hn6ioVONi5nzNnIWjeputPY8dLziq5NhUbIMgbJRRHmPNxFszjd9vRgLnLx9X7AI
-	xUOpH6ygJ4/6j/TemBNoxT5GwmidbJ3185jgOot3kfOnpRLp0sboRjYuOlNLw535tRmtIzwOYv
-X-Google-Smtp-Source: AGHT+IFZ63PJyaMXkDMN2RPPrQh1dWrNucQH4ctX9WtR0X20S4rMRW+kY0QVFHH5e0k98gRk3nOHrX/SoDRyfIExzVg=
-X-Received: by 2002:a05:6e02:2587:b0:3dc:6151:5903 with SMTP id
- e9e14a558f8ab-3dd91bb286bmr219855ab.10.1748455436707; Wed, 28 May 2025
- 11:03:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748455571; x=1749060371;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V+fgzLhtoA+AV7JPQdrF/lZ8VWpagMNnkYPcAKrhW+k=;
+        b=cgj/iwPpLz2R3YVCpkF1iMbY8gQ8MWg0TuRV65uvhH6xgdh9+RzqEyxVTYFCWbMBBD
+         1lAvSg2novFyRSX2TKtc/tlahH2Wr7ptu/v6aUGm4W5nCzBI5h4yXgSCWElV5dSxYS67
+         eHiXRqNb82/QlTgvnf3s8vOztr9EOBkPPlJS8Jxl1TT1+DOw2Kf2UqHksJlTklicKSZg
+         DDRmHAvYBeGupvshz/e30FabUYqbFkFRiMyqqlwEtuPx86+q3hWg9WIhrinhZfF01iov
+         ItbpnZKwa/oObI4BObleKTH9GPiqrO/QFaj2za/HZeJPI51B6/fkrnhw+yK62J4j5Ale
+         baFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMxlTAH1CQsUbO3RG1oW1GMGDlUeuiwA/QF1ZqOJ81EnGn6r85wcZJuESv+5c9005xcGe0nFhuzC6TZSw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfdlObW1q2RLVVkNFsu108jmDoSceaPyUjU1xCdzCWwYcytZ07
+	mFqAxCCSyUDomI1oQvsfHeALxXDnzAc8Mj+nQST4xsT1kydxuteOKsEjA0g/Xw+zNpQ55agCPpz
+	/TAVR/KXI
+X-Gm-Gg: ASbGncvcWERUla4sFAyWujCCTqfqVQdnyNXEEsxSKsKlHo4i8PbvO6ztUP+T0m4+Jee
+	ZEH/1c1fpEWLZerZl2gKOKshwPS4JSONKqGr7XVpfhstEUjiA48iozCeYy8963uzdu+X1KSTUWi
+	VTt7kTDntTBvK3bS8glgBdbtXa3SHRsv+QX3Hn5/X5mE8T2uEtTzP3kMzkTx5zlKgriUyco9kTT
+	h5PLMYL6ASAJCVBl+grDum35QWbVNEwetKcUXvdCzOHYc+/LbQFvKtK3F3Jp0UJ5rqzECcKe1Li
+	ZrF+dTPGQbV599Wi5dQVs3gq3i80SJ05FV0rNcdgeX//eCklzTVUnscKIm/k+CDq9+awJKOSyXx
+	mNeBYzRQLVxGeLvbI2A==
+X-Google-Smtp-Source: AGHT+IE0MbcL7TCwRAJqHBFLnBzuD7OWqOUxL6t6VrEH0kdYZvzZFqAYUKIm3J6LXZPT04e+9H+S+w==
+X-Received: by 2002:a17:902:ecc3:b0:234:d7b2:2ab2 with SMTP id d9443c01a7336-234d7b22bb6mr35506185ad.8.1748455570906;
+        Wed, 28 May 2025 11:06:10 -0700 (PDT)
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com. [209.85.215.170])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac75fsm14640865ad.167.2025.05.28.11.06.08
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 11:06:08 -0700 (PDT)
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2c40a7ca6eso149184a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:06:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUbmyiYWSXxGmWLNkc35dE8DMPGgqITZE7kUh2JInu9DQTfnYOvivSracBKM/9g+7w9IY4SOabTthE/7Lg=@vger.kernel.org
+X-Received: by 2002:a17:90b:1e11:b0:311:fde5:e224 with SMTP id
+ 98e67ed59e1d1-311fde5e3a7mr2621369a91.6.1748455567945; Wed, 28 May 2025
+ 11:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527180703.129336-1-irogers@google.com> <20250527180703.129336-4-irogers@google.com>
- <aDcF7_pIU5M_XEAs@x1>
-In-Reply-To: <aDcF7_pIU5M_XEAs@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 May 2025 11:03:45 -0700
-X-Gm-Features: AX0GCFvdKyVA368LKetlo9s4uYxP2lbsSg2xZ2-A7hEEtYGI2AEq5-UvDX1LzO0
-Message-ID: <CAP-5=fU6vnbLUbUr=+ZsmKyPo+u3w3F-2qM_6tBxeF=F0C+w1A@mail.gmail.com>
-Subject: Re: [PATCH v1 3/6] perf symbol: Move demangling code out of symbol-elf.c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
+ <20250327-uvc-granpower-ng-v6-5-35a2357ff348@chromium.org>
+ <64c00146-e6d2-448d-a416-19d5ae7ae3f6@jjverkuil.nl> <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
+In-Reply-To: <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 28 May 2025 20:05:50 +0200
+X-Gmail-Original-Message-ID: <CANiDSCv6vb=o-gizVr33XX2sVfBookaze2S1hkzshUyNNnzTbw@mail.gmail.com>
+X-Gm-Features: AX0GCFtPgVMd2juZVahO7Uk3bU64vKS_xa1UhEfT0crKE5AC7K-BWl6NWKkoiUE
+Message-ID: <CANiDSCv6vb=o-gizVr33XX2sVfBookaze2S1hkzshUyNNnzTbw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/5] media: uvcvideo: Do not turn on the camera for
+ some ioctls
+To: Hans Verkuil <hans@jjverkuil.nl>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 5:47=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, 9 May 2025 at 15:51, Ricardo Ribalda <ribalda@chromium.org> wrote:
 >
-> On Tue, May 27, 2025 at 11:07:00AM -0700, Ian Rogers wrote:
-> > symbol-elf.c is used when building with libelf, symbol-minimal is used
-> > otherwise. There is no reason the demangling code with no dependencies
-> > on libelf is part of symbol-elf.c so move to symbol.c. This allows
-> > demangling tests to pass with NO_LIBELF=3D1.
+> Hi Hans
 >
-> At this point:
+> On Fri, 9 May 2025 at 15:44, Hans Verkuil <hans@jjverkuil.nl> wrote:
+> >
+> > On 27/03/2025 22:05, Ricardo Ribalda wrote:
+> > > There are some ioctls that do not need to turn on the camera. Do not
+> > > call uvc_pm_get in those cases.
+> > >
+> > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > > ---
+> > >  drivers/media/usb/uvc/uvc_v4l2.c | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >
+> > > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> > > index 0f1ed0387b2611c8d21e211afe21a35101071d93..668a4e9d772c6d91f045ca75e2744b3a6c69da6b 100644
+> > > --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> > > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> > > @@ -1440,6 +1440,26 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
+> > >       struct uvc_fh *handle = file->private_data;
+> > >       int ret;
+> > >
+> > > +     /* The following IOCTLs do not need to turn on the camera. */
+> > > +     switch (cmd) {
+> > > +     case VIDIOC_CREATE_BUFS:
+> > > +     case VIDIOC_DQBUF:
+> > > +     case VIDIOC_ENUM_FMT:
+> > > +     case VIDIOC_ENUM_FRAMEINTERVALS:
+> > > +     case VIDIOC_ENUM_FRAMESIZES:
+> > > +     case VIDIOC_ENUMINPUT:
+> > > +     case VIDIOC_EXPBUF:
+> > > +     case VIDIOC_G_FMT:
+> > > +     case VIDIOC_G_PARM:
+> > > +     case VIDIOC_G_SELECTION:
+> > > +     case VIDIOC_QBUF:
+> > > +     case VIDIOC_QUERYCAP:
+> > > +     case VIDIOC_REQBUFS:
+> > > +     case VIDIOC_SUBSCRIBE_EVENT:
+> > > +     case VIDIOC_UNSUBSCRIBE_EVENT:
+> >
+> > Wouldn't it be better to check against the ioctls that DO need to turn on the camera?
 >
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ alias m=3D'rm -rf ~/libexec/perf=
--core/ ; make -k O=3D/tmp/build/$(basename $PWD)/ -C tools/perf install-bin=
- && perf test python && cat /tmp/build/$(basename $PWD)/feature/test-all.ma=
-ke.output'
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
-> rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace=
--Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
-> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
-putype.h
->
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
-> ...                  numa_num_possible_cpus: [ on  ]
-> ...                                 libperl: [ on  ]
-> ...                               libpython: [ on  ]
-> ...                               libcrypto: [ on  ]
-> ...                             libcapstone: [ on  ]
-> ...                               llvm-perf: [ on  ]
-> ...                                    zlib: [ on  ]
-> ...                                    lzma: [ on  ]
-> ...                               get_cpuid: [ on  ]
-> ...                                     bpf: [ on  ]
-> ...                                  libaio: [ on  ]
-> ...                                 libzstd: [ on  ]
->
->   INSTALL libsubcmd_headers
->   INSTALL libperf_headers
->   INSTALL libapi_headers
->   INSTALL libsymbol_headers
->   INSTALL libbpf_headers
->   AR      /tmp/build/perf-tools-next/libpmu-events.a
->   CC      /tmp/build/perf-tools-next/util/symbol-elf.o
-> util/symbol-elf.c: In function =E2=80=98get_plt_got_name=E2=80=99:
-> util/symbol-elf.c:563:21: error: implicit declaration of function =E2=80=
-=98demangle_sym=E2=80=99; did you mean =E2=80=98dso__demangle_sym=E2=80=99?=
- [-Wimplicit-function-declaration]
->   563 |         demangled =3D demangle_sym(di->dso, 0, sym_name);
->       |                     ^~~~~~~~~~~~
->       |                     dso__demangle_sym
-> util/symbol-elf.c:563:19: error: assignment to =E2=80=98char *=E2=80=99 f=
-rom =E2=80=98int=E2=80=99 makes pointer from integer without a cast [-Wint-=
-conversion]
->   563 |         demangled =3D demangle_sym(di->dso, 0, sym_name);
->       |                   ^
-> util/symbol-elf.c: In function =E2=80=98dso__synthesize_plt_symbols=E2=80=
-=99:
-> util/symbol-elf.c:761:27: error: assignment to =E2=80=98char *=E2=80=99 f=
-rom =E2=80=98int=E2=80=99 makes pointer from integer without a cast [-Wint-=
-conversion]
->   761 |                 demangled =3D demangle_sym(dso, 0, elf_name);
->       |                           ^
-> util/symbol-elf.c: In function =E2=80=98dso__load_sym_internal=E2=80=99:
-> util/symbol-elf.c:1778:27: error: assignment to =E2=80=98char *=E2=80=99 =
-from =E2=80=98int=E2=80=99 makes pointer from integer without a cast [-Wint=
--conversion]
->  1778 |                 demangled =3D demangle_sym(dso, kmodule, elf_name=
-);
->       |                           ^
-> make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:8=
-5: /tmp/build/perf-tools-next/util/symbol-elf.o] Error 1
-> make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:1=
-42: util] Error 2
-> make[2]: *** [Makefile.perf:798: /tmp/build/perf-tools-next/perf-util-in.=
-o] Error 2
-> make[1]: *** [Makefile.perf:290: sub-make] Error 2
-> make: *** [Makefile:119: install-bin] Error 2
-> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> I thought it was safer this way. I will look into inverting the logic
+> in a follow-up patch.
 
-Sorry, was so focussed on getting the sanitizers clean I'd missed the
-non-sanitizer build. Will fix in v3.
+https://patchwork.linuxtv.org/project/linux-media/list/?series=15601
 
-Thanks,
-Ian
-
-> - Arnaldo
 >
+> Regards!
+>
+> >
+> > That is more future proof IMHO.
+> >
+> > If a new ioctl is created, and uvc implements it and that needs to turn on the camera,
+> > then presumably you will realize that when you add that ioctl in uvc.
+> >
+> > If a new ioctl is created and uvc does not need to turn on the camera, then you will
+> > almost certainly forget to add it to this list.
+> >
+> > I'm not blocking this patch, but I think it will be hard to keep this list up to date.
+> > Inverting the test is probably much easier to handle in the future.
+> >
+> > Apologies if this has been discussed before, if so, just point to that discussion so I
+> > can read through it.
+> >
+> > Regards,
+> >
+> >         Hans
+> >
+> > > +             return video_ioctl2(file, cmd, arg);
+> > > +     }
+> > > +
+> > >       ret = uvc_pm_get(handle->stream->dev);
+> > >       if (ret)
+> > >               return ret;
+> > >
+> >
+>
+>
+> --
+> Ricardo Ribalda
+
+
+
+-- 
+Ricardo Ribalda
