@@ -1,109 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8272857FA;
-	Wed, 28 May 2025 12:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95354268C5D;
+	Wed, 28 May 2025 12:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435887; cv=none; b=UYYqQsvjLsAp+gHsievBNTzOtHxTvdUwPzBkoBuMOv7AoekLJCyQXTVGK+6FM/j2giYxgnhpQZnqK6iIzbQlxAJaiHdhFl3BHvo0Ox5vuxSt8uSH4aFr6E6t8+7qTTU7hNtTFiKvyK7raKxVdzz8omTiJr0FHcGS/42GPcUqCFc=
+	t=1748435964; cv=none; b=OcdpfxFGNp8A5D/pKMxfq3+pKdTqRs0uxs23rTWc4bmLrJwg+MAEvzzqaGnavWQ07++2FW5g+5f+uLcPtRe7w8ar4q2c7FEWe17DghB+ELVlDZC+jHx+5et6WBf8t9akltN70M/jNclab+A1KFd3iGY9xEGoXUC9y1mUINozA7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435887; c=relaxed/simple;
-	bh=Q6eFNenEbUSMPvsXNE7r/lVO7A6gafRRqlJCsQalJhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucgleSmKTzT+sFDPiLjKNrqji97MxTjffQgv5AbHtEfYH6PKPO4NPfEm5JtmSw0HJFkzjplDG0vkLESaXvhtX5GJUdgazDC8CmMEVYXRG36LIK9i7cLVxgRQ9r4AlARn6F03dNkWK40zOcf9Y7UpuShGiXWPZFPNMRorfDmhHJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJSHP0KY; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748435964; c=relaxed/simple;
+	bh=SZRvMbdu3wATDJKn6o28yDXSyhutEhb2/FkYHiV/SkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C23yh0AxrlzFW8R7wPBE7GcEImEWHcq93ufALs1xmvEBoiR6d6k1IVnzs+5I7vWqkzi17UhUR9Ww2UgzL8ZYhkyn0Qvy01lWsICFo3wV165y75352DcHkvuaFDzagQMWUZVyjDA/w/4laAWWphkOadinYSZwIfwdHrdkfsUzC80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=DAjFohPM; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJSHP0KY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748435885; x=1779971885;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q6eFNenEbUSMPvsXNE7r/lVO7A6gafRRqlJCsQalJhI=;
-  b=FJSHP0KYYC9bV61WLG8uDOhvlRY3rj27A/d5HUvIqyJGrqnZNX63fsDL
-   wuQR6OLQHh5F0HVh0gnKEeGOPa/yP4ptAfr6bD/CitXiFEnmygdBf1hap
-   rp4S4Cw8yKgwWOSFMbNgPMTh8D/agPJ2c/2IYbIIHb/lS6ZSJDbztwsZb
-   OG6l85YO2njFOQ1aUDWkUQ4xgiBScZlHncKSvW38dgTQ7ZyDYtLLA7aiU
-   hHtuEyceNZBm6jdL96l/5EmiTjlHyjkwZgvMMuLgtNQXAjWiHHiYnb9wu
-   pxII4T7rECPKLo+eXXmJwm1Syen7lfpNMe1T9qEyYgTUFbOMe6sL2ZsnA
-   Q==;
-X-CSE-ConnectionGUID: qpvmPytQScyxFWFGYeeIBw==
-X-CSE-MsgGUID: CzmMgmKEQkeaZfYA4URbFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61515072"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="61515072"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 05:38:05 -0700
-X-CSE-ConnectionGUID: dWG2Y8gcR9qAt78LRWW/gg==
-X-CSE-MsgGUID: EblxoR5XTA+d0Mjfjr1QFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="147988445"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 28 May 2025 05:38:03 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKG2i-000Vem-2d;
-	Wed, 28 May 2025 12:38:00 +0000
-Date: Wed, 28 May 2025 20:37:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, alexei.starovoitov@gmail.com,
-	rostedt@goodmis.org, jolsa@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, bpf@vger.kernel.org,
-	Menglong Dong <dongml2@chinatelecom.cn>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 15/25] ftrace: factor out
- __unregister_ftrace_direct
-Message-ID: <202505282037.xt8RiXkG-lkp@intel.com>
-References: <20250528034712.138701-16-dongml2@chinatelecom.cn>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="DAjFohPM"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748435956; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=aVWN/MKmTQqqGKE7GEueaj4Por9dh45wCyBCzff0Izg=;
+	b=DAjFohPMPfziz+CPqLGjrrMaCadeDulKisLUn2hGkCiK+tX2g24nL7e6xvrz4DrwWSS0tCmKCzTiRxEzAl/Uimuk7I0HBh+rPP+q4oXhoU5UO/Iazkl0eE0Q3odBaraym1+b7LKocr9qpUgFSC6sPVeiHasiu+aaq4/gLvcLXSc=
+Received: from 30.15.230.171(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcDSnsn_1748435951 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 May 2025 20:39:12 +0800
+Message-ID: <a956379a-7472-4972-bf3d-fe2b2b6715b5@linux.alibaba.com>
+Date: Wed, 28 May 2025 20:39:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528034712.138701-16-dongml2@chinatelecom.cn>
-
-Hi Menglong,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-per-function-metadata-storage-support/20250528-115819
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250528034712.138701-16-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next 15/25] ftrace: factor out __unregister_ftrace_direct
-config: sparc-randconfig-001-20250528 (https://download.01.org/0day-ci/archive/20250528/202505282037.xt8RiXkG-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 14.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505282037.xt8RiXkG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505282037.xt8RiXkG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/ftrace.c:116:12: warning: '__unregister_ftrace_direct' declared 'static' but never defined [-Wunused-function]
-     116 | static int __unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
---
->> kernel/trace/ftrace.c:6053: warning: expecting prototype for unregister_ftrace_direct(). Prototype was for __unregister_ftrace_direct() instead
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/12] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250515032226.128900-1-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-vim +116 kernel/trace/ftrace.c
 
-   114	
-   115	static void ftrace_update_trampoline(struct ftrace_ops *ops);
- > 116	static int __unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
-   117					      bool free_filters);
-   118	
+On 2025/5/15 11:22, Nico Pache wrote:
+> The following series provides khugepaged and madvise collapse with the
+> capability to collapse anonymous memory regions to mTHPs.
+> 
+> To achieve this we generalize the khugepaged functions to no longer depend
+> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+> (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
+> tracked using a bitmap. After the PMD scan is done, we do binary recursion
+> on the bitmap to find the optimal mTHP sizes for the PMD range. The
+> restriction on max_ptes_none is removed during the scan, to make sure we
+> account for the whole PMD range. When no mTHP size is enabled, the legacy
+> behavior of khugepaged is maintained. max_ptes_none will be scaled by the
+> attempted collapse order to determine how full a THP must be to be
+> eligible. If a mTHP collapse is attempted, but contains swapped out, or
+> shared pages, we dont perform the collapse.
+> 
+> With the default max_ptes_none=511, the code should keep its most of its
+> original behavior. To exercise mTHP collapse we need to set
+> max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
+> experience collapse "creep" and constantly promote mTHPs to the next
+> available size. This is due the fact that it will introduce at least 2x
+> the number of pages, and on a future scan will satisfy that condition once
+> again.
+> 
+> Patch 1:     Refactor/rename hpage_collapse
+> Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
+> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+> Patch 6-9:   The mTHP patches
+> Patch 10-11: Tracing/stats
+> Patch 12:    Documentation
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When I tested 64K mTHP collapse and disabled PMD-sized THP, I found that 
+khugepaged couldn't scan and collapse 64K mTHP. I send out two fix 
+patches[1], and with these patches applied, 64K mTHP collapse works 
+well. I hope my two patches can be folded into your next version series 
+if you think there are no issues. Thanks.
+
+[1] 
+https://lore.kernel.org/all/ac9ed6d71b439611f9c94b3506a8ce975d4636e9.1748435162.git.baolin.wang@linux.alibaba.com/
