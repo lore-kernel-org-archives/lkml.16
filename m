@@ -1,120 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDCE4685;
-	Wed, 28 May 2025 23:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F1E1FBCAD;
+	Wed, 28 May 2025 23:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748475755; cv=none; b=CV1kvN9GYzDaTTk6b0G8IANfgJBsvUGwHQOyK67ANRJxzax6qVp6vyNYdmr0t6zVAFDa8b6VGXqBtSG6wqpTDmXYJokIoazx5eOeASAfWmkWXrJZ21YIawCIgbER7/0/1IGkO8/QQOzB/KbmYQneQywydx/5dUZXpQf/0+2dC78=
+	t=1748476025; cv=none; b=aYAqwOIdL+SoI5iQ4JStvq/2IgJTUJ25u1z1MKHJdOHpE26TqcIaPJF9NdgVukisciHS/tIRVCM2VjfPwtNA6pF2rzyy3hCJ+U3Me3M88p7pS2IIu1xIrLc1tg1ev4i9VbbT2xyiKDZrKurNUfj+bf/fel+oKEabHVjRTqDyHAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748475755; c=relaxed/simple;
-	bh=XpwMGRqSBXKXFCcQsstWBhlAdlbcLCDCbgOTySk2V/I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=efXJWpdgRvSQ505rIbA5Y4cGo8cIqlWksD/7BPiJOwaQ2/EQvLZC44BR2+5osOcnj2EW94n2LZqkJzlB2LKxNzfXFvF1/rFOwjLwE3ybRK5WGPuK0k3x3iLEg5j8oThs4oUL6laigX1aYcihfjr600N85UMGBh7x4WmKNlL/UY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9WjqCgD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748476025; c=relaxed/simple;
+	bh=HXvJVjfC3VHKIy7BoJyYz+B80KYy5YwcIHOBuvSf298=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+30ygTIkn1X9sG8Oh7WfcBjoDSeH2Z4vO5nE3c7GXCrvGTgwbHf04bN/UnUb7bImWhx+MfBFK+Df34BToHFBZgPpcsVlghEm5yTQNyLqv2k5nKXaESS4L/zu+umVoKNpDDGhT01+Cqrswo40XgwbD+3j9qWHPMRGVdVH8DzUl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+2jftug; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9WjqCgD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09166C4CEE3;
-	Wed, 28 May 2025 23:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748475755;
-	bh=XpwMGRqSBXKXFCcQsstWBhlAdlbcLCDCbgOTySk2V/I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S9WjqCgDUd8ltc4h8HETFcSn/XpEVFFEknz3REaP2YrDaN8kTPGnUosS5wCyK5jC8
-	 jOm/W1wDmDfmnZw/5jOqy/FtUdOU87QTs/vc5g3EZQgdcqKK7KTnrnI+mQva9oy3Sz
-	 qviVw0e/8F9irW71zPLjUHqEBVlr1wadUQAng/KGKVRrKn93gV01ZvLWw5U3jD0/14
-	 4FcKQX4vhyH4yzJyiUfvXa70vBHfAoYK+mStqATKjjmboWb7sOMMVu6S6jlflFN9J6
-	 oU1m37bo+rZz76TSLeYEe7DzN4cw18tqAaSlSO9/6y5P2/fbXfnw81b3DzKUd5W4ZI
-	 0PQBL1jOYY/dA==
-From: SeongJae Park <sj@kernel.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn,
-	fweimer@redhat.com
-Subject: Re: [PATCH v4] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Wed, 28 May 2025 16:42:32 -0700
-Message-Id: <20250528234232.56701-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250528091543.355386-1-ye.liu@linux.dev>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+2jftug"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234b9dfb842so3702535ad.1;
+        Wed, 28 May 2025 16:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748476023; x=1749080823; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ahVgHGY0syVgqDW38oPCFVl25F/0o5MeCR1HJluHpBg=;
+        b=E+2jftugAmd/kOxFHpCsO8PUWyGgpjCsuul2ItZ2jFyB5kxlRH94PIcDWC7yF9rngj
+         g48WEtt6Hyl1cxSskRy6OZYPw2mSDhfInYwTgDd+4PeIsUVXgJvuhgw/gNrUCOpbtkg2
+         5c8kbXD7j/Qaq0JrdHuvQLCCho25RDGoU4LNnaRz2Q3f9gQ/UxE5nkVKohE45gH5nVLA
+         pzkwmy5Qip1D9vR8UZHNzwd7nH6FhttP8QLnL3lugHcTriARKD/mnavDZnwBzssfTW7N
+         zHuZjLa+us9WFOI6LmoDCOzTD5taBTWHxLRV31W1/GKf68a88FlDRLAB0e63Kk3v0X+p
+         UWqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748476023; x=1749080823;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ahVgHGY0syVgqDW38oPCFVl25F/0o5MeCR1HJluHpBg=;
+        b=wMmJd7z+rvzNk51nGGYlQ8h9EGyum6NMe2K37mr8XgB/9O+6H/vV4Mc2p1YoSCucNq
+         PzwTX8RFjb0FHPPEVfVfcpvayC11pOesedZLggkHBgzGN+rEkXFBQqR04HJkv44ZF9an
+         VJqwgYB+t43FMH8s8W/l2/3ZLpfNC7cC+SG0NS+VPrcNkOdH7CaCaiFpsY1sGGffBWh7
+         iyQVLEUc7RxwQTkuNDAaAoBBbySjQHvg5odQbMMeBByqV/eNjol00pDAPZKTDn5JRkqz
+         V8PZfHWz5tejvuYmQT8N57C+eGL9620rqmPjUDvBme6QWynoBwKILJGGHVrKUkQ8s/MU
+         vUag==
+X-Forwarded-Encrypted: i=1; AJvYcCUzyLymslQaqrd27Z22caQHRjIoML2mfbU1+N93+2Q6A/JtJkVLfQYAIO2tca7IixDqOnnK/Q3ItVn+HUM=@vger.kernel.org, AJvYcCXYHFgvNg8nk0vErzpCA71VonN8X51hzLMvqhYCSLN9NRFadnEaSRwW5wHXkaoZMCQCUp06Iq1h@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzmkxd7OnenqNpPrQSByHG8f/ko6TZyziJTviTt0TiujbNTJyn9
+	M+0jGhc/31Y5wkbCEyPSt5GkyejvWbmiWg+2pgDSunBi2GD+K2rBb0q+
+X-Gm-Gg: ASbGncsuuvWhe88//4oM1f7Vq5AOYzwhqIVAXL0ARY8RGK55SOqxvVeYUQOxlJ60tQt
+	Q3M+erRhAn2c3jh/5C3RQscXbee8nmvQChE7h5E2UNva6xAajwhpaaeKPiiwnqPdlvyNqwg4DsC
+	kUseUTA/MGTZ0SFFfoJ/FVBYtjIruLyRyOqnow5Oe9N4PLYhibA9X4xgIPKfhHLdSn+TonORdCT
+	JfAW6ToqQsaUOj1QN2IqAJQAGDWBrpYTCg6vzKPPqf1YoM+IVw5nUY+havIwWsmzB98Oet7aix+
+	PCKkBNsAWgxYjTed8YrgVY3/6bRW4x4IfussDKszchtO5iQFwl59
+X-Google-Smtp-Source: AGHT+IGb0oVtLFxfTVNkGEYvNAOhNxmeHvVh3eQFioRnpv5ZABaotkNw72x+Sj5c/pKlIAPGw3vBTg==
+X-Received: by 2002:a17:902:f786:b0:234:a734:4ab1 with SMTP id d9443c01a7336-234a7344c4cmr105474015ad.3.1748476023327;
+        Wed, 28 May 2025 16:47:03 -0700 (PDT)
+Received: from gmail.com ([98.97.34.246])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bc8607sm1465935ad.42.2025.05.28.16.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 16:47:02 -0700 (PDT)
+Date: Wed, 28 May 2025 16:46:50 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix psock incorrectly pointing
+ to sk
+Message-ID: <20250528234650.n5orke2yq55qnoen@gmail.com>
+References: <20250523162220.52291-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523162220.52291-1-jiayuan.chen@linux.dev>
 
-On Wed, 28 May 2025 17:15:43 +0800 Ye Liu <ye.liu@linux.dev> wrote:
-
-> From: Ye Liu <liuye@kylinos.cn>
+On 2025-05-24 00:22:19, Jiayuan Chen wrote:
+> We observed an issue from the latest selftest: sockmap_redir where
+> sk_psock(psock->sk) != psock in the backlog. The root cause is the special
+> behavior in sockmap_redir - it frequently performs map_update() and
+> map_delete() on the same socket. During map_update(), we create a new
+> psock and during map_delete(), we eventually free the psock via rcu_work
+> in sk_psock_drop(). However, pending workqueues might still exist and not
+> be processed yet. If users immediately perform another map_update(), a new
+> psock will be allocated for the same sk, resulting in two psocks pointing
+> to the same sk.
 > 
-> Introduces a new drgn script, `show_page_info.py`, which allows users
-> to analyze the state of a page given a process ID (PID) and a virtual
-> address (VADDR). This can help kernel developers or debuggers easily
-> inspect page-related information in a live kernel or vmcore.
+> When the pending workqueue is later triggered, it uses the old psock to
+> access sk for I/O operations, which is incorrect.
 > 
-> The script extracts information such as the page flags, mapping, and
-> other metadata relevant to diagnosing memory issues.
+> Timing Diagram:
 > 
-> Output example:
-> sudo ./show_page_info.py 1 0x7fb3eb1b2000
-> PID: 1 Comm: systemd mm: 0xffff8d27279f9cc0
-> Raw: 0017ffffc000416c fffff31105a61b08 fffff31105a63608 ffff8d27121326a8
-> Raw: 0000000000000000 ffff8d271b9dcc40 0000002500000007 ffff8d2711f12700
-> User Virtual Address: 0x7fb3eb1b2000
-
-This is same to what the user passes as the input.  I think this is not really
-needed?
-
-> Page Address:         0xfffff31106356a00
-> Page Flags:           PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
->                       PG_private|PG_reported|PG_has_hwpoisoned
-> Page Size:            4096
-> Page PFN:             0x18d5a8
-> Page Physical:        0x18d5a8000
-> Page Virtual:         0xffff8d274d5a8000
-> Page Refcount:        37
-> Page Mapcount:        7
-> Page Index:           0x0
-> Page Memcg Data:      0xffff8d2711f12700
-> Memcg Name:           init.scope
-> Memcg Path:           /sys/fs/cgroup/memory/init.scope
-
-On my setup, above two lines look like below:
-
-    Memcg Name:           unknown
-    Memcg Path:           Unexpected error: 'struct kernfs_node' has no member 'parent'
-
-Maybe there are rooms to improve?
-
-> Page Mapping:         0xffff8d27121326a8
-> Page Anon/File:       File
-> Page VMA:             0xffff8d26cac47600
-> VMA Start:            0x7fb3eb1b2000
-> VMA End:              0x7fb3eb1b6000
-> This page is part of a compound page.
-> This page is the head page of a compound page.
-> Head Page:            0xfffff31106356a00
-> Compound Order:       2
-> Number of Pages:      4
+> cpu0                        cpu1
 > 
-> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+> map_update(sk):
+>     sk->psock = psock1
+>     psock1->sk = sk
+> map_delete(sk):
+>    rcu_work_free(psock1)
+> 
+> map_update(sk):
+>     sk->psock = psock2
+>     psock2->sk = sk
+>                             workqueue:
+>                                 wakeup with psock1, but the sk of psock1
+>                                 doesn't belong to psock1
+> rcu_handler:
+>     clean psock1
+>     free(psock1)
+> 
+> Previously, we used reference counting to address the concurrency issue
+> between backlog and sock_map_close(). This logic remains necessary as it
+> prevents the sk from being freed while processing the backlog. But this
+> patch prevents pending backlogs from using a psock after it has been
+> freed.
 
-On my setup, this tool works without obvious or significant errors.
+Nit, its not that psock would be freed because we do have the
+cancel_delayed_work_sync() before the kfree(psock). But this
+is not a good state with two psocks referenceing the same sk.
 
-Tested-by: SeongJae Park <sj@kernel.org>
+> 
+> Note: We cannot call cancel_delayed_work_sync() in map_delete() since this
+> might be invoked in BPF context by BPF helper, and the function may sleep.
+> 
+> Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> 
+> ---
+> Thanks to Michal Luczaj for providing the sockmap_redir test case, which
+> indeed covers almost all sockmap forwarding paths.
+> ---
+>  include/linux/skmsg.h | 1 +
+>  net/core/skmsg.c      | 5 ++++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+> index 0b9095a281b8..b17221eef2f4 100644
+> --- a/include/linux/skmsg.h
+> +++ b/include/linux/skmsg.h
+> @@ -67,6 +67,7 @@ struct sk_psock_progs {
+>  enum sk_psock_state_bits {
+>  	SK_PSOCK_TX_ENABLED,
+>  	SK_PSOCK_RX_STRP_ENABLED,
+> +	SK_PSOCK_DROPPED,
+>  };
+>  
+>  struct sk_psock_link {
+> diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+> index 34c51eb1a14f..bd58a693ce9a 100644
+> --- a/net/core/skmsg.c
+> +++ b/net/core/skmsg.c
+> @@ -656,6 +656,9 @@ static void sk_psock_backlog(struct work_struct *work)
+>  	bool ingress;
+>  	int ret;
+>  
+> +	if (sk_psock_test_state(psock, SK_PSOCK_DROPPED))
+> +		return;
 
 
-Thanks,
-SJ
+Could we use the SK_PSOCK_TX_ENABLED bit here? Its already used to
+ensure we wont requeue work after the psock has started being
+removed. Seems like we don't need two flags? wdyt?
 
-[...]
+> +
+>  	/* Increment the psock refcnt to synchronize with close(fd) path in
+>  	 * sock_map_close(), ensuring we wait for backlog thread completion
+>  	 * before sk_socket freed. If refcnt increment fails, it indicates
+> @@ -867,7 +870,7 @@ void sk_psock_drop(struct sock *sk, struct sk_psock *psock)
+>  	write_unlock_bh(&sk->sk_callback_lock);
+>  
+>  	sk_psock_stop(psock);
+
+Can we add this to sk_psock_stop where we have the TX_ENABLED bit
+cleared.
+
+> -
+> +	sk_psock_set_state(psock, SK_PSOCK_DROPPED);
+>  	INIT_RCU_WORK(&psock->rwork, sk_psock_destroy);
+>  	queue_rcu_work(system_wq, &psock->rwork);
+>  }
+> -- 
+> 2.47.1
+> 
