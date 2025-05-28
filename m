@@ -1,63 +1,66 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B50B78F3B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253571DF273
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748402803; cv=none; b=Nv5Q37jmDZuZMIMU98M9qacwIcq/9Mzu6j6zdEayp/4HKFQ/5Jz9dZSq4RZtlqZNiYyS2cB5LW0SAKBWy8fW5+QsRQJ8C84nw0+athMvPKnfFzdlP+Ni/YX3HRJQvTTLi7yNhNvpyYfgu7tJGD5wQhA5dqOwmErJPX2d/AcUoLM=
+	t=1748402804; cv=none; b=Lh1sYY4tm/f2FqoFuqZq0dftPtnvyv0bHE0BwieDWk3DLsIe9IufC9wF2QDyFjfVMuOvExGrcaIujO8Sy5bG3vud572xxDbeRedcrqO7PVGOZbI+L7Ei6yOq8Y+jbGqcaO2ItBWQGuHv/QiRkuotv0MKUBG2Goja3+aK2wirmPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748402803; c=relaxed/simple;
-	bh=rNzkr9PD/Dn687T+AGetBIv/1kfPiIBsjmnIT83qck4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jI9ZB4QW4V4u74qiPAaUIfsNAjc8CBeq8+LaneohmKvEUJN/i/vvlo3phFRt9yk3PzDidXQSWmRbhX12w3C9mwZFpk0XAgTRNw4j9zTPV+BE0hc/G9ce9f3etfj/aeVibip2FImSDKSgHiCmhn0o3LZW13ebDAvl4cSc6bBqp04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q2dUn5jV; arc=none smtp.client-ip=209.85.215.202
+	s=arc-20240116; t=1748402804; c=relaxed/simple;
+	bh=IyXwtJLrxdIfaysBoqxVyV1K9s0htpjRBN+L5FIf8Jw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=mv28EKlAGjL48oSAdJrNx2wzZLWpS2Q7nrbp4zdk8QWGpKh/R9QhuiMJ6jKaz1YA3dXN5tr0XHs2UnT79NE81PA5KmyZI0w6Q0e/e+lBZDqclqytMcNEns+NnLFi5VWKGZPTwTxh1vtFrumUZSTRo/2gerGWXArvW5aHhN2W430=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a7vjQryp; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q2dUn5jV"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0e0c573531so2370101a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:26:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a7vjQryp"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ea0e890ccso3579003a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748402800; x=1749007600; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qthGPSnrY3//sB/RtQQS5H9LtWVtNZRKXA0sksz8t9E=;
-        b=Q2dUn5jVZeX/+/mi+5W92XiMHFs0yaoHvCSoo2Y819Ar2q5QXeaolfyTwT5rvZlr3R
-         gZjfkJrAfVJDN85p5hpcoND1fHWMogJhLA9GOTpO7WGCObUJiESVeL/N/7CYka30CWKJ
-         LTHZHSZHOiAkQwyoGihY6KsLcVM2mUomVUfUBqzE+R78jbpKWzZBZyC3ne5/36M5nZj4
-         zJvCQWQrzhSvS4UpBy7moL4Hq6HHfiV5AWwPiGgW12ScmYSquHde6ByyzzrXKGpXa8/D
-         hK78av9MI7u711cUnhG6XRnn+nCpgqsKy0OMhpnUe60aX2fBDzgYtv66Hcc3FwCl+ebQ
-         AoAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748402800; x=1749007600;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1748402802; x=1749007602; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qthGPSnrY3//sB/RtQQS5H9LtWVtNZRKXA0sksz8t9E=;
-        b=Oz9yyDa5f9C+jJotzx/nTuBl8qMeTxdDTRlCENK7lJEmezeorVR/FLUjck3bKYrOwP
-         YKSpdXCUCAxJIY6gZb+0x6w1Xn+0JkxhprxrgskjigIFXdfeATMdk8ptwFSCdSfzhwFD
-         R+C3cGW/RksNnSfWsqtKapVQs56FktAKWk0srSOss7W27g/+YbYLg5aTGkKg7C3hRgv5
-         YSwH4YbHJ++6eHgtmfNH655b3SSxzInbU3Jb96slpG7r94GkXp2PWT+of1/WHpjVzMTS
-         P6zv6YkyKS8xSEmw0OQ2LMOSaRDXKCrk3traltPyn1iiI+RAw3w7hfFEXfsMrA/lWhuG
-         TKSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8v/iFWJnGLiA5am42L5PkeLewqiftaxC0P4wJ/pJTck+UxQyDI8q8gnUUz1R/ejtIEidfBbbSK14WMZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaBH8LDGSD8nRGds5JZhOLw9RXY+KlVP5bj5BWAvMIAC7DHvPT
-	o7fj522Clj9xBGqnHCX5kyG4ilKTqH/vl0dLFiFKj2yk/DWi+k9gZujWDZC8QvFPkxgWzL4fh1s
-	D0fn3CZZzjA==
-X-Google-Smtp-Source: AGHT+IEieyR9hfyUbMGNfOASge5qq2XRjAhfP7DHYG9bUxzx9nIbSVq4zNmmetxMqCCk80MpvM4NnSqoC0uW
-X-Received: from pgbfq14.prod.google.com ([2002:a05:6a02:298e:b0:b2d:aac5:e874])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c6cd:b0:1fd:e9c8:cf3b
- with SMTP id adf61e73a8af0-2188c32800bmr26426139637.30.1748402800192; Tue, 27
- May 2025 20:26:40 -0700 (PDT)
-Date: Tue, 27 May 2025 20:26:30 -0700
+        bh=ZeVLDEhUDJmAFqCidyDGWPVhZk//2eKpKN6FRpBx+XE=;
+        b=a7vjQrypnhNOoYwsIYH5V1uRBV6lOYP+xnrNSfmUwThfqeTS6RpA2TAVMixMchccR8
+         Z0pBkPFFTizvLqKkjqHH4xKXMQ+xYenMu467zp1r5zS2es3Zdvk3OL/ALoHU3aKrL25Y
+         2CKBfARzha3UXRBkKC2Mw5PU/KD++m9jth2jUj9YZZYvF/KiL2wqdpgJ0FmpcIwxiWRK
+         ecHSBd6ngRHRXKkqR9lWtp8BNQSCoqZfCfr6A01FJ9r3u//P0OhRSewYYUKuAjMtppC0
+         mDaTkjMAHGlHamHPl48fzPBH5JM1X2npLtRjpiP8ysjYpSXxEqd9Snr0NhF37jkkAShj
+         GT9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748402802; x=1749007602;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZeVLDEhUDJmAFqCidyDGWPVhZk//2eKpKN6FRpBx+XE=;
+        b=UPILnb7aciqdkwXegnvPm6+YefmQxl0KUFdt0GnEQtVO/80Zv6Bh7olraFU57uZBNm
+         rs5ddPLHsWPzQUYiJ9wa+fhYcNBCmNu7k+5u9TukqK3YQfbPNgrP095R58+vQx/YXx4c
+         xUX1XyDR/zqVhVr92Gm3687bE3YmuQ7umbt9f9hVrkI8TsC839kPoACS8loWd5q2RHW/
+         VsQgB6mi+RDlzdofkz7fjemCVYvpBFK1l4xeHTEiTGClRmM4a4aNlG9Zjuv76v8AkPDA
+         2gSd0mSzrNafmFaU1R+l5QJqNks1dmLrIOIcsMNxurHRsYlqFj0Q50KD1xhZ5Qshzlst
+         NdKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVOvqa+xlpPqdBzUIjX8Ps2nL76ovt2Mmwp2HhPp11zxWJGC7otsk8r8KtZukdMBr+bB5pX/QcSsu/uOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS10zIvI5J1kvXi2NNhdfcpW5vFJcN+gPtn809tg8R2kLuALTa
+	EaXKTuag73N/jy5YONgMBg4Zcpq++q08mlOkCid7hlO+HZvqab70lSCliCMBjtjDIp7gts5KIMF
+	cClPLgYgG9Q==
+X-Google-Smtp-Source: AGHT+IF5/Db+YfQ6kRPHM9BBYAqg6LR/2oPo56seGYQ+IX3tevLyBAA7kqQ1Bn+Mj1RSMDeJA4slnRMqCIdt
+X-Received: from pjbsn15.prod.google.com ([2002:a17:90b:2e8f:b0:30c:4b1f:78ca])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:19cd:b0:311:e637:2880
+ with SMTP id 98e67ed59e1d1-311e637296emr1035928a91.26.1748402802410; Tue, 27
+ May 2025 20:26:42 -0700 (PDT)
+Date: Tue, 27 May 2025 20:26:31 -0700
+In-Reply-To: <20250528032637.198960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250528032637.198960-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1238.gf8c92423fb-goog
-Message-ID: <20250528032637.198960-1-irogers@google.com>
-Subject: [PATCH v2 0/7] Various asan and test fixes
+Message-ID: <20250528032637.198960-2-irogers@google.com>
+Subject: [PATCH v2 1/7] perf symbol: Fix use-after-free in filename__read_build_id
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,34 +80,250 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-When testing removing perf_env with asan I noticed a number of test
-failures either because of asan issues or because of building with
-NO_LIBELF=1 and NO_LIBBPF=1 to avoid false memory leaks. Address these
-issues so that real test failures stand out.
+The same buf is used for the program headers and reading notes. As the
+notes memory may be reallocated then this corrupts the memory pointed
+to by the phdr. Using the same buffer is in any case a logic
+error. Rather than deal with the duplicated code, introduce an elf32
+boolean and a union for either the elf32 or elf64 headers that are in
+use. Let the program headers have their own memory and grow the buffer
+for notes as necessary.
 
-v2: Fix wrong elf size use in filename__read_build_id fix. Add
-    thread__comm_lock fix.
+Before `perf list -j` compiled with asan would crash with:
+```
+==4176189==ERROR: AddressSanitizer: heap-use-after-free on address 0x5160000070b8 at pc 0x555d3b15075b bp 0x7ffebb5a8090 sp 0x7ffebb5a8088
+READ of size 8 at 0x5160000070b8 thread T0
+    #0 0x555d3b15075a in filename__read_build_id tools/perf/util/symbol-minimal.c:212:25
+    #1 0x555d3ae43aff in filename__sprintf_build_id tools/perf/util/build-id.c:110:8
+...
 
-Ian Rogers (7):
-  perf symbol: Fix use-after-free in filename__read_build_id
-  perf test demangle-java: Don't segv if demangling fails
-  perf symbol: Move demangling code out of symbol-elf.c
-  perf intel-tpebs: Avoid race when evlist is being deleted
-  perf test intel-pt: Skip jitdump test if no libelf
-  perf test trace_summary: Skip --bpf-summary tests if no libbpf
-  perf thread: Avoid recursively taking thread__comm_lock
+0x5160000070b8 is located 312 bytes inside of 560-byte region [0x516000006f80,0x5160000071b0)
+freed by thread T0 here:
+    #0 0x555d3ab21840 in realloc (perf+0x264840) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
+    #1 0x555d3b1506e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:206:11
+...
 
- tools/perf/tests/demangle-java-test.c   |   5 +
- tools/perf/tests/shell/test_intel_pt.sh |   5 +
- tools/perf/tests/shell/trace_summary.sh |   6 +
- tools/perf/util/demangle-cxx.h          |   2 +
- tools/perf/util/intel-tpebs.c           |  12 +-
- tools/perf/util/symbol-elf.c            |  86 ------------
- tools/perf/util/symbol-minimal.c        | 175 ++++++++++--------------
- tools/perf/util/symbol.c                |  87 ++++++++++++
- tools/perf/util/thread.c                |  17 ++-
- 9 files changed, 198 insertions(+), 197 deletions(-)
+previously allocated by thread T0 here:
+    #0 0x555d3ab21423 in malloc (perf+0x264423) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
+    #1 0x555d3b1503a2 in filename__read_build_id tools/perf/util/symbol-minimal.c:182:9
+...
+```
 
+Note: this bug is long standing and not introduced by the other asan
+fix in commit fa9c4977fbfb ("perf symbol-minimal: Fix double free in
+filename__read_build_id").
+
+Fixes: b691f64360ecec49 ("perf symbols: Implement poor man's ELF parser")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/symbol-minimal.c | 168 +++++++++++++------------------
+ 1 file changed, 70 insertions(+), 98 deletions(-)
+
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index d8da3da01fe6..36c1d3090689 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -90,11 +90,23 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ {
+ 	FILE *fp;
+ 	int ret = -1;
+-	bool need_swap = false;
++	bool need_swap = false, elf32;
+ 	u8 e_ident[EI_NIDENT];
+-	size_t buf_size;
+-	void *buf;
+ 	int i;
++	union {
++		struct {
++			Elf32_Ehdr ehdr32;
++			Elf32_Phdr *phdr32;
++		};
++		struct {
++			Elf64_Ehdr ehdr64;
++			Elf64_Phdr *phdr64;
++		};
++	} hdrs;
++	void *phdr;
++	size_t phdr_size;
++	void *buf = NULL;
++	size_t buf_size = 0;
+ 
+ 	fp = fopen(filename, "r");
+ 	if (fp == NULL)
+@@ -108,119 +120,79 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ 		goto out;
+ 
+ 	need_swap = check_need_swap(e_ident[EI_DATA]);
++	elf32 = e_ident[EI_CLASS] == ELFCLASS32;
+ 
+-	/* for simplicity */
+-	fseek(fp, 0, SEEK_SET);
+-
+-	if (e_ident[EI_CLASS] == ELFCLASS32) {
+-		Elf32_Ehdr ehdr;
+-		Elf32_Phdr *phdr;
+-
+-		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
+-			goto out;
++	if (fread(elf32 ? (void *)&hdrs.ehdr32 : (void *)&hdrs.ehdr64,
++		  elf32 ? sizeof(hdrs.ehdr32) : sizeof(hdrs.ehdr64),
++		  1, fp) != 1)
++		goto out;
+ 
+-		if (need_swap) {
+-			ehdr.e_phoff = bswap_32(ehdr.e_phoff);
+-			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
+-			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
++	if (need_swap) {
++		if (elf32) {
++			hdrs.ehdr32.e_phoff = bswap_32(hdrs.ehdr32.e_phoff);
++			hdrs.ehdr32.e_phentsize = bswap_16(hdrs.ehdr32.e_phentsize);
++			hdrs.ehdr32.e_phnum = bswap_16(hdrs.ehdr32.e_phnum);
++		} else {
++			hdrs.ehdr64.e_phoff = bswap_64(hdrs.ehdr64.e_phoff);
++			hdrs.ehdr64.e_phentsize = bswap_16(hdrs.ehdr64.e_phentsize);
++			hdrs.ehdr64.e_phnum = bswap_16(hdrs.ehdr64.e_phnum);
+ 		}
++	}
++	phdr_size = elf32 ? hdrs.ehdr32.e_phentsize * hdrs.ehdr32.e_phnum
++			  : hdrs.ehdr64.e_phentsize * hdrs.ehdr64.e_phnum;
++	phdr = malloc(phdr_size);
++	if (phdr == NULL)
++		goto out;
+ 
+-		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
+-		buf = malloc(buf_size);
+-		if (buf == NULL)
+-			goto out;
+-
+-		fseek(fp, ehdr.e_phoff, SEEK_SET);
+-		if (fread(buf, buf_size, 1, fp) != 1)
+-			goto out_free;
+-
+-		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
+-			void *tmp;
+-			long offset;
+-
+-			if (need_swap) {
+-				phdr->p_type = bswap_32(phdr->p_type);
+-				phdr->p_offset = bswap_32(phdr->p_offset);
+-				phdr->p_filesz = bswap_32(phdr->p_filesz);
+-			}
+-
+-			if (phdr->p_type != PT_NOTE)
+-				continue;
+-
+-			offset = phdr->p_offset;
+-			if (phdr->p_filesz > buf_size) {
+-				buf_size = phdr->p_filesz;
+-				tmp = realloc(buf, buf_size);
+-				if (tmp == NULL)
+-					goto out_free;
+-				buf = tmp;
+-			}
+-			fseek(fp, offset, SEEK_SET);
+-			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
+-				goto out_free;
++	fseek(fp, elf32 ? hdrs.ehdr32.e_phoff : hdrs.ehdr64.e_phoff, SEEK_SET);
++	if (fread(phdr, phdr_size, 1, fp) != 1)
++		goto out_free;
+ 
+-			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
+-			if (ret == 0) {
+-				ret = bid->size;
+-				break;
+-			}
+-		}
+-	} else {
+-		Elf64_Ehdr ehdr;
+-		Elf64_Phdr *phdr;
++	if (elf32)
++		hdrs.phdr32 = phdr;
++	else
++		hdrs.phdr64 = phdr;
+ 
+-		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
+-			goto out;
++	for (i = 0; i < elf32 ? hdrs.ehdr32.e_phnum : hdrs.ehdr64.e_phnum; i++) {
++		size_t p_filesz;
+ 
+ 		if (need_swap) {
+-			ehdr.e_phoff = bswap_64(ehdr.e_phoff);
+-			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
+-			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
++			if (elf32) {
++				hdrs.phdr32[i].p_type = bswap_32(hdrs.phdr32[i].p_type);
++				hdrs.phdr32[i].p_offset = bswap_32(hdrs.phdr32[i].p_offset);
++				hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_offset);
++			} else {
++				hdrs.phdr64[i].p_type = bswap_32(hdrs.phdr64[i].p_type);
++				hdrs.phdr64[i].p_offset = bswap_64(hdrs.phdr64[i].p_offset);
++				hdrs.phdr64[i].p_filesz = bswap_64(hdrs.phdr64[i].p_filesz);
++			}
+ 		}
++		if ((elf32 ? hdrs.phdr32[i].p_type : hdrs.phdr64[i].p_type) != PT_NOTE)
++			continue;
+ 
+-		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
+-		buf = malloc(buf_size);
+-		if (buf == NULL)
+-			goto out;
+-
+-		fseek(fp, ehdr.e_phoff, SEEK_SET);
+-		if (fread(buf, buf_size, 1, fp) != 1)
+-			goto out_free;
+-
+-		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
++		p_filesz = elf32 ? hdrs.phdr32[i].p_filesz : hdrs.phdr64[i].p_filesz;
++		if (p_filesz > buf_size) {
+ 			void *tmp;
+-			long offset;
+-
+-			if (need_swap) {
+-				phdr->p_type = bswap_32(phdr->p_type);
+-				phdr->p_offset = bswap_64(phdr->p_offset);
+-				phdr->p_filesz = bswap_64(phdr->p_filesz);
+-			}
+-
+-			if (phdr->p_type != PT_NOTE)
+-				continue;
+ 
+-			offset = phdr->p_offset;
+-			if (phdr->p_filesz > buf_size) {
+-				buf_size = phdr->p_filesz;
+-				tmp = realloc(buf, buf_size);
+-				if (tmp == NULL)
+-					goto out_free;
+-				buf = tmp;
+-			}
+-			fseek(fp, offset, SEEK_SET);
+-			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
++			buf_size = p_filesz;
++			tmp = realloc(buf, buf_size);
++			if (tmp == NULL)
+ 				goto out_free;
++			buf = tmp;
++		}
++		fseek(fp, elf32 ? hdrs.phdr32[i].p_offset : hdrs.phdr64[i].p_offset, SEEK_SET);
++		if (fread(buf, p_filesz, 1, fp) != 1)
++			goto out_free;
+ 
+-			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
+-			if (ret == 0) {
+-				ret = bid->size;
+-				break;
+-			}
++		ret = read_build_id(buf, p_filesz, bid, need_swap);
++		if (ret == 0) {
++			ret = bid->size;
++			break;
+ 		}
+ 	}
+ out_free:
+ 	free(buf);
++	free(phdr);
+ out:
+ 	fclose(fp);
+ 	return ret;
 -- 
 2.49.0.1238.gf8c92423fb-goog
 
