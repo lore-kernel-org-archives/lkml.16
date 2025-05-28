@@ -1,154 +1,133 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2AC272E7E;
-	Wed, 28 May 2025 08:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458DE2741A1;
+	Wed, 28 May 2025 08:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422368; cv=none; b=hvO/sVse0Bkkf830t3wI98QWpX0Rhv4v3DgspriNuWFd96lEtpaK6udW4sCi7IGnr7Aowu3MgWeVx50569l6aa5ncBxERCItJ8FZEOaiQdrVZ5Xh9YbugCK/5CSHQtkB1XpLmcJqASx0LGLRuBu7Om3MOZPJHq03laDiM0LNFSU=
+	t=1748422402; cv=none; b=YLXiEXJswgvAAlFwr+vG6XIrWzGxMyBBkAeVWVOs16RS4gJJpNJFg2ONf/TKSWqyZ73C7MRCNow8wINw3uI0QpsN0PUy6gbNKrNmxTOn4v3aaB4RmkMxEURR4XgIPmmJB0lM1kwGFIBUJZUEb7TkhfHEDaj9sK76kCiBSfj0tt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422368; c=relaxed/simple;
-	bh=iNuDCgdNpKdPmqPYhFmyCAmzVB8ms7l5crL7ZLtQg6s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=J2OIkofQI+oIL7FtC/EpX0eqVkHclT+a0r+C4vTPKwoB92qH2gXNXvE9+N6yL0EsVClb6gpfBdK5zPsOHprND9gnlXguuYIX8QKrKWxKDFD/cVl5osAO6k/xSyjIvxIeiqwcBXRSyDa7FakZzeIXlXwVUehMKd8/hqj4XvUejWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=S5KkmpbJ; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="S5KkmpbJ"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S7RYFo027457;
-	Wed, 28 May 2025 10:52:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	lTTfT+AvJq2S9ZuvxQeGBH9435gx0UEYPeUpGsj4dNk=; b=S5KkmpbJ2g0zh2J8
-	HtDGt++y0+Fstv99TJqzpvyxZEDvDpNQu2fcxfrRD55qafMwDtb+sKrbjV8KztA2
-	p4QtdbHW5MlaTS3xaBuZeCwc4Z4y6qIvwMvtWVfTeYiNFDETmj9N3azWkKiyV51C
-	m9YMIV+7lEDSkPxtvHbWC7/DO+txG+XStDACGYCwJALQoMEtHp93gWhwKAcJU3qQ
-	YTbEZsVr4Jpke1kMJT/wdQw0fTL8R0EIxxBAsTfhON0O/ohxtD7C5QrwvOJZWOft
-	LT8qFDVEfrWfFW2U7+gWNBUiYKS3dERBcOHHhNQnmsR71V2glVfvWijgvMZ4Aeb1
-	SROg7A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u50gqst2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 10:52:35 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8EC464004B;
-	Wed, 28 May 2025 10:51:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0B4DBB5CB70;
-	Wed, 28 May 2025 10:50:29 +0200 (CEST)
-Received: from localhost (10.48.87.141) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 28 May
- 2025 10:50:28 +0200
-From: Gatien Chevallier <gatien.chevallier@foss.st.com>
-Date: Wed, 28 May 2025 10:50:21 +0200
-Subject: [PATCH v2 1/2] Input: gpio-keys - fix a sleep while atomic with
- PREEMPT_RT
+	s=arc-20240116; t=1748422402; c=relaxed/simple;
+	bh=yr+rQ5aWKC/egFb1TRG5obKOEortLDCSq545ScIw1ck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MoZGaBpHig0fRqTEi/b5pBYgePEidtK5UjjWuX730H+WReWJ4IqQ5ltDgKT9g+tJz+HmYxgP7vKH0V2dn8F+wpWriAFieLJvI2Lx55bqINbDYxLw4gE9n95gZfhzYfuk0dXWlyeqV+yRMLPkmiiREMpG/lI9F38E3J4K1uNiJWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6jvV5KRDzKHMls;
+	Wed, 28 May 2025 16:53:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 2ED4B1A0359;
+	Wed, 28 May 2025 16:53:09 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1_yzjZoQc0JNw--.57278S3;
+	Wed, 28 May 2025 16:53:08 +0800 (CST)
+Message-ID: <f177a0e4-c2da-40b7-9d47-8968f3c2bc50@huaweicloud.com>
+Date: Wed, 28 May 2025 16:53:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250528-gpio_keys_preempt_rt-v2-1-3fc55a9c3619@foss.st.com>
-References: <20250528-gpio_keys_preempt_rt-v2-0-3fc55a9c3619@foss.st.com>
-In-Reply-To: <20250528-gpio_keys_preempt_rt-v2-0-3fc55a9c3619@foss.st.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Andrzej Siewior
-	<bigeasy@linutronix.de>,
-        Clark Williams <clrkwllms@kernel.org>,
-        Steven
- Rostedt <rostedt@goodmis.org>,
-        Paul Cercueil <paul@crapouillou.net>
-CC: <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-rt-devel@lists.linux.dev>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        <fabrice.gasnier@foss.st.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2425;
- i=gatien.chevallier@foss.st.com; h=from:subject:message-id;
- bh=anvCVpjchmsJmzpQJTuf9KtYZcnMN3OHoJ+A9QMxREo=;
- b=owEB7QES/pANAwAKAar3Rq6G8cMoAcsmYgBoNs5SvM/KGKU3rCuFKlMRz7WEpXZvb9cUosXKr
- mcx4AAdbfGJAbMEAAEKAB0WIQRuDsu+jpEBc9gaoV2q90auhvHDKAUCaDbOUgAKCRCq90auhvHD
- KO8PDACk/JvDAr24U6695cWBWCrPtKeVde9+hJxY56i0EdVkFUVUulVv8t2UQHSUQlZsEqAx/1t
- HZbixrBYJBwx+CrT+BfVX2nOmbNDclXr2usJHnMHiLaPiwRlNT6gSRc4vCgF9TBJojP7ZJFyMJu
- 1qoxHVUbz6dylKJij6yuATwJQb8RjWyte3zPm/MeguCT32D4ypA7K8BgWQGIFdxrk46mxIo2aig
- jhP78/ajC4fdQn39H4jIisr5ojDSdExtLQdoVHeApJKoi72gEFCV2gj2wiV6FWXG6oWbOZYna7I
- 2TcH/iZh7HAsNdHBDWoVpyWWM1yo7KAaapZ53387K8OvxcRtGI4LBYk5x+UJ/abKrlkjHOJr5PE
- XSDx3BlaE/IXxeHYeu4/+FQC4Ck2s0rhg7yOg1Q3P6NlgmJ9wn0rBoIQNXokDcJhkbv5S0aS/Nq
- 9eaOe0ykNzVo7N+btHFCvSPTAORokHBhuU3bs4pF8wllpaxXDp9MXFiB1Mc/WZT9ZYkfA=
-X-Developer-Key: i=gatien.chevallier@foss.st.com; a=openpgp;
- fpr=6E0ECBBE8E910173D81AA15DAAF746AE86F1C328
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_04,2025-05-27_01,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] cachefiles: Recovery concerns with on-demand loading
+ after unexpected power loss
+To: Gao Xiang <hsiangkao@linux.alibaba.com>,
+ Zizhi Wo <wozizhi@huaweicloud.com>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org, brauner@kernel.org
+Cc: jefflexu@linux.alibaba.com, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, libaokun1@huawei.com, yangerkun@huawei.com,
+ houtao1@huawei.com, yukuai3@huawei.com
+References: <20250528080759.105178-1-wozizhi@huaweicloud.com>
+ <d0e08cbf-c6e4-4ecd-bcaf-40c426279c4f@linux.alibaba.com>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <d0e08cbf-c6e4-4ecd-bcaf-40c426279c4f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu1_yzjZoQc0JNw--.57278S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1UJFWUGw18JFWkCr43GFg_yoW8uw47pF
+	WrCw1UK3ykJ3Z7KrZ7ZF4xuFyrt3s3XF45Jw1YqrWktrs8CF1IgrWaqr15KFWDurn7W3y2
+	q34jv3srAwnxAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUonmRUUUUU
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 
-When enabling PREEMPT_RT, the gpio_keys_irq_timer() callback runs in
-hard irq context, but the input_event() takes a spin_lock, which isn't
-allowed there as it is converted to a rt_spin_lock().
 
-[ 4054.289999] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
-[ 4054.290028] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/0
-...
-[ 4054.290195]  __might_resched+0x13c/0x1f4
-[ 4054.290209]  rt_spin_lock+0x54/0x11c
-[ 4054.290219]  input_event+0x48/0x80
-[ 4054.290230]  gpio_keys_irq_timer+0x4c/0x78
-[ 4054.290243]  __hrtimer_run_queues+0x1a4/0x438
-[ 4054.290257]  hrtimer_interrupt+0xe4/0x240
-[ 4054.290269]  arch_timer_handler_phys+0x2c/0x44
-[ 4054.290283]  handle_percpu_devid_irq+0x8c/0x14c
-[ 4054.290297]  handle_irq_desc+0x40/0x58
-[ 4054.290307]  generic_handle_domain_irq+0x1c/0x28
-[ 4054.290316]  gic_handle_irq+0x44/0xcc
+在 2025/5/28 16:35, Gao Xiang 写道:
+> Hi Zizhi,
+> 
+> On 2025/5/28 16:07, Zizhi Wo wrote:
+>> Currently, in on-demand loading mode, cachefiles first calls
+>> cachefiles_create_tmpfile() to generate a tmpfile, and only during the 
+>> exit
+>> process does it call 
+>> cachefiles_commit_object->cachefiles_commit_tmpfile to
+>> create the actual dentry and making it visible to users.
+>>
+>> If the cache write is interrupted unexpectedly (e.g., by system crash or
+>> power loss), during the next startup process, cachefiles_look_up_object()
+>> will determine that no corresponding dentry has been generated and will
+>> recreate the tmpfile and pull the complete data again!
+>>
+>> The current implementation mechanism appears to provide per-file 
+>> atomicity.
+>> For scenarios involving large image files (where significant amount of
+>> cache data needs to be written), this re-pulling process after an
+>> interruption seems considerable overhead?
+>>
+>> In previous kernel versions, cache dentry were generated during the
+>> LOOK_UP_OBJECT process of the object state machine. Even if power was 
+>> lost
+>> midway, the next startup process could continue pulling data based on the
+>> previously downloaded cache data on disk.
+>>
+>> What would be the recommended way to handle this situation? Or am I
+>> thinking about this incorrectly? Would appreciate any feedback and 
+>> guidance
+>> from the community.
+> 
+> As you can see, EROFS fscache feature was marked as deprecated
+> since per-content hooks already support the same use case.
+> 
+> the EROFS fscache support will be removed after I make
+> per-content hooks work in erofs-utils, which needs some time
+> because currently I don't have enough time to work on the
+> community stuff.
+> 
+> Thanks,
+> Gao Xiang
 
-Considering the gpio_keys_irq_isr() can run in any context, e.g. it can
-be threaded, it seems there's no point in requesting the timer isr to
-run in hard irq context.
+Thanks for your reply.
 
-Relax the hrtimer not to use the hard context.
+Indeed, the subsequent implementations have moved to using fanotify.
+Moreover, based on evaluation, this approach could indeed lead to
+performance improvements.
 
-Fixes: 019002f20cb5 ("Input: gpio-keys - use hrtimer for release timer")
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
----
- drivers/input/keyboard/gpio_keys.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+However, in our current use case, we are still working with a kernel
+version that only supports the fscache-based approach, so this issue
+still exists for us. :(
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 5c39a217b94c8ad03a8542380eed741fccdca5da..d884538107c9654d21e37fa20e0b3b6cd9a25ee4 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -486,7 +486,7 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
- 	if (bdata->release_delay)
- 		hrtimer_start(&bdata->release_timer,
- 			      ms_to_ktime(bdata->release_delay),
--			      HRTIMER_MODE_REL_HARD);
-+			      HRTIMER_MODE_REL);
- out:
- 	return IRQ_HANDLED;
- }
-@@ -628,7 +628,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 
- 		bdata->release_delay = button->debounce_interval;
- 		hrtimer_setup(&bdata->release_timer, gpio_keys_irq_timer,
--			      CLOCK_REALTIME, HRTIMER_MODE_REL_HARD);
-+			      CLOCK_REALTIME, HRTIMER_MODE_REL);
- 
- 		isr = gpio_keys_irq_isr;
- 		irqflags = 0;
+Thanks,
+Zizhi Wo
 
--- 
-2.25.1
+> 
+>>
+>> Thanks,
+>> Zizhi Wo
+> 
 
