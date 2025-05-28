@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D651A246776
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CCAC2517B9
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419855; cv=none; b=L7FdIDM/DftP6iltWJ+gtgUR04Gz652WcrBdpGaKWLUbAyDmJtYCAY1OtfamW02mq0dg5mpZ4wYM4XkkLKGYsWNLz8RgoR4PqS3aEE8SrioXn2CJOxFRxwWQ+dNokG6SUqfR9V3TsDf4RFbXtYJhig9/FJJ3NB2PUSjDywzkSqE=
+	t=1748419863; cv=none; b=YsaNMKsB4R0q+84huWREE95tLWSKhJfgebAv5si8Oz549OFIAuhWSKz/1xw8j2RlplVSnLu+i7J/DcG9JpU8ZH3DT3jKDG8/dcm9Z/eHKYb37bobhCzb19ZZ1vcrp1JMzsrWX1KO/AcG+4BUB+0ODiU9f6eRPxDb9FAmSPl7imI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419855; c=relaxed/simple;
-	bh=ny6QSC9rijS4pGlrRodZrfbLqyCq2d1aVXezNqZIRqQ=;
+	s=arc-20240116; t=1748419863; c=relaxed/simple;
+	bh=sLanDBJBBAyjRd/ro3K0Wy5iwo185WPogzHo4PmuQvU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BXJhP/79qQRBsFhxYWH9kBCyX9RSC2kthGbM7T9xpo9bb/VQgxLEDXBc8GHicbXSopYs4sWwD4YHuhhbnLf/n2qm5ZIYakD6TM8hsSsnJCUNq5yGYKJ4K9U7uw3f2sKE4msphlfv7Q36tySTCtUD/vGN1Chlc8IDhnjwBtq0q58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEFJdf50; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mkMHhdTakF98e/8l2MMNXqppiAhf0hqL43LzkM9m3yM+kfAmrpzoZ0LMEkwHylNIKDa2YcovTj0FkNi5/HDSmcCpsldzNz7pCTsrMEeioa8EsRxmLFCiQDayPRf3i1nOsMTCnEgHXxet+hSOaCXEMkpFN1zFbSRjMBI8uosuQ/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOcw5wZd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEFJdf50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E34C4CEEF;
-	Wed, 28 May 2025 08:10:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOcw5wZd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECDAC4CEEF;
+	Wed, 28 May 2025 08:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419855;
-	bh=ny6QSC9rijS4pGlrRodZrfbLqyCq2d1aVXezNqZIRqQ=;
+	s=k20201202; t=1748419862;
+	bh=sLanDBJBBAyjRd/ro3K0Wy5iwo185WPogzHo4PmuQvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oEFJdf509spyKk9yi8VjE/pxup1CikaJXd4pRE5b79X6fxtMWp9FW9NIIDLfQCdxz
-	 VvJoiEmUzEW2ZYXkEuyiwmBvLChEALTCa79O8nYRnuIyvgEiQLz0sFHXRe2M0yNYC/
-	 wOFAgp0huc5mNyduo756CqcLihdhWBeltznOwyYmiN3o3KnwKwUmnqelsLII8zJDKS
-	 EshHMaox5Pj3oC+hkv/wrO3ho+MeYFIZR9Vjz7j9lLt0jOWXpdJZYRCFWaqe9G++rV
-	 V7j++EsTh6Ba7UQL3qJWBYyevJlxEcQYO3TPzEe0C/Ret6mGF096BG+B8A9hcQ8i6u
-	 zJYGLzhDzVjdQ==
+	b=KOcw5wZd1qvaBBCmahA419fAsoH3HbPZsm/S2pce0Dcgs0Ea2zkd7vm38P/EH+sJH
+	 XieOiky4i+ADwknEMqy7w5Y151KvSNxue6IwTi6L1+TDNGWF6D/HuWjLOF/80rKIqR
+	 PVV4ZvF8E0YewJGGqz4ltOyeZRTDqgvu6nArHyl0fnr6j05z0FYagkNU9PrBovYr1A
+	 3iM/DAhI5qwOKj9tUS3MBj/qz2o5WOiSSUR3wqRB3rtRtk+MLSeSMQlW/OIln4uIYY
+	 IdBZT7tQagoouK4k1tXMGsBUhmzf6k3uC8/ZufhSWNsj20hFw/0/k8wMd4ON1cq2O/
+	 Jgo7tg9arKygg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 19/43] sched/smp: Always define sched_domains_mutex_lock()/unlock(), def_root_domain and sched_domains_mutex
-Date: Wed, 28 May 2025 10:09:00 +0200
-Message-ID: <20250528080924.2273858-20-mingo@kernel.org>
+Subject: [PATCH 21/43] sched/smp: Always define is_percpu_thread() and scheduler_ipi()
+Date: Wed, 28 May 2025 10:09:02 +0200
+Message-ID: <20250528080924.2273858-22-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -57,9 +57,6 @@ Content-Transfer-Encoding: 8bit
 Simplify the scheduler by making formerly SMP-only primitives and data
 structures unconditional.
 
-Unconditionally build kernel/sched/topology.c and the main sched-domains
-locking primitives.
-
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Juri Lelli <juri.lelli@redhat.com>
@@ -71,66 +68,44 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- include/linux/sched.h        | 5 -----
- kernel/sched/build_utility.c | 3 ++-
- kernel/sched/topology.c      | 4 ++++
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ include/linux/sched.h | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 45e5953b8f32..77fb5aa73d70 100644
+index f60aaa7fc4ad..8d3167059675 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -395,15 +395,10 @@ enum uclamp_id {
- 	UCLAMP_CNT
- };
+@@ -1756,12 +1756,8 @@ extern struct pid *cad_pid;
+ 
+ static __always_inline bool is_percpu_thread(void)
+ {
+-#ifdef CONFIG_SMP
+ 	return (current->flags & PF_NO_SETAFFINITY) &&
+ 		(current->nr_cpus_allowed  == 1);
+-#else
+-	return true;
+-#endif
+ }
+ 
+ /* Per-process atomic flags. */
+@@ -1958,7 +1954,6 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
+ 	buf;						\
+ })
  
 -#ifdef CONFIG_SMP
- extern struct root_domain def_root_domain;
- extern struct mutex sched_domains_mutex;
- extern void sched_domains_mutex_lock(void);
- extern void sched_domains_mutex_unlock(void);
+ static __always_inline void scheduler_ipi(void)
+ {
+ 	/*
+@@ -1968,9 +1963,6 @@ static __always_inline void scheduler_ipi(void)
+ 	 */
+ 	preempt_fold_need_resched();
+ }
 -#else
--static inline void sched_domains_mutex_lock(void) { }
--static inline void sched_domains_mutex_unlock(void) { }
+-static inline void scheduler_ipi(void) { }
 -#endif
  
- struct sched_param {
- 	int sched_priority;
-diff --git a/kernel/sched/build_utility.c b/kernel/sched/build_utility.c
-index bf9d8db94b70..5c485b2dfb95 100644
---- a/kernel/sched/build_utility.c
-+++ b/kernel/sched/build_utility.c
-@@ -83,9 +83,10 @@
- #ifdef CONFIG_SMP
- # include "cpupri.c"
- # include "stop_task.c"
--# include "topology.c"
- #endif
+ extern unsigned long wait_task_inactive(struct task_struct *, unsigned int match_state);
  
-+#include "topology.c"
-+
- #ifdef CONFIG_SCHED_CORE
- # include "core_sched.c"
- #endif
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 4f52b8e56c19..7ce0bac86e94 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -15,6 +15,8 @@ void sched_domains_mutex_unlock(void)
- 	mutex_unlock(&sched_domains_mutex);
- }
- 
-+#ifdef CONFIG_SMP
-+
- /* Protected by sched_domains_mutex: */
- static cpumask_var_t sched_domains_tmpmask;
- static cpumask_var_t sched_domains_tmpmask2;
-@@ -2855,3 +2857,5 @@ void partition_sched_domains(int ndoms_new, cpumask_var_t doms_new[],
- 	partition_sched_domains_locked(ndoms_new, doms_new, dattr_new);
- 	sched_domains_mutex_unlock();
- }
-+
-+#endif /* CONFIG_SMP */
 -- 
 2.45.2
 
