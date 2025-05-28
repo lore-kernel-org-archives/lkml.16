@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00622472A5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93EF2459D9
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419813; cv=none; b=MJ92/w4C/74d+ZPm7c3WN3mhzPpZq7uWmSU12eE1IzXkScMwp/k5Gk4wu0EWOzmgpcvsDsjdNOf3+DIMMhlTLfJE1ln3yDuIuOOL3xB0AqWlsbr2jNphlhwWetMHWrhDILZ0r0BpXH9PnMwscrsHBxQ879UheuX+8xnLyrqlpSM=
+	t=1748419816; cv=none; b=DWAgUVhDchU9FaMEOWH3rv5iW3lAy4OjA7xLwmywMmHgujqpewmeVMXBsekscYehGhJ8uwOKIogDZ71L0LlPvpV+oRp8FSP2NigH/rtzzt24QisZReTYExtL8F7sbj1m/mYYbrm41Am3E2No7w0RaaQk8PLMOyKNKvx6iL5/bS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419813; c=relaxed/simple;
-	bh=n7Fd0CximPmTongnDQRpr8euc9lxQ5wvM8sWUUcg2Ms=;
+	s=arc-20240116; t=1748419816; c=relaxed/simple;
+	bh=FltFMf430RirGxiT9qRIFlCszu6z4QCr5D/YG0W1Npc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AaW5JJkcWMY5G3qPQ8wNGhvWRnaUWJXjud1csQzZgNe9Ou6Lcq+rVWq9Mn+6d0Iqo8GBZQxujU/opiyMDt+ze0OoXXTbKNdqeGvLQ/d6DoB80swI9i5s9mdxmB9J0b42MZgZle37NRHrLG5062YXaXApCpm+vY4dpbFnf4cxozI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nM34g3Pn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PyPoebHRjHNMK+rpwZHqJyTlRU3JG4HsbYuYEzllqHlATgZ3/8NBUvoSiiG3z4UT9Cx+HZ4fGyffJoOPNlwPZy8iEwKPylJwVJt/qZQenNgSj1i29k7PQ9LILK2PH0Avv2VxHGPkITpLvAPp0Ni/qQgUQxjF7sQxFz+1dc5TA7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwziJpUk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nM34g3Pn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C56C4CEEB;
-	Wed, 28 May 2025 08:10:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwziJpUk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FB0C4CEEF;
+	Wed, 28 May 2025 08:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419813;
-	bh=n7Fd0CximPmTongnDQRpr8euc9lxQ5wvM8sWUUcg2Ms=;
+	s=k20201202; t=1748419816;
+	bh=FltFMf430RirGxiT9qRIFlCszu6z4QCr5D/YG0W1Npc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nM34g3Pn7qJ+VcC5iqsHmIloOR4G1jSSDtHCkCUIo2tCS/0etvThzQpboKdTxSuxm
-	 R95fI47bvt8Swt31JdoL+ZCQnDTlmVhfMaV7OBg6pMGXX1JVijDjRVa/KYwN4a8/Zf
-	 Qdz6orzPxAh3YCNhIHLpRQ5GgwK//dL/p1WtKA1vusHyeJr2/S1HGliXn1ptro0zve
-	 J3FWZLzw2NpUX59Ev3C+9yp9wTWuzA33vBHTQSMkj4NIrX4/sTGMxNGbmUcgDk/J66
-	 cXnQBd92wQJOARz2b2sPKazZhhaM2cPGhbr+XL6dl8LDHTQPJSma10K8zpKJKQDHTU
-	 pTDoH4CiLz2tA==
+	b=UwziJpUkgFPLH6a1rt5o95YXb3kH1SygqhLXE61LX7vzmJXY1YDXf4NeAGThqO7wq
+	 dxlKVHYpb7NiXVQCYGOlsQV73iSpwxg9I/5B3cH7MJ4AgvJSrFz8Pfx9HNlIUnlKNT
+	 fi/d/7+fmWGl7R+UKM3xKheH1CW7tuqkPynR2oaLto0MBrhc/LYyHz4niRJ/QveL0D
+	 B4ARhKSUjGyhWgbBi1NOkdnwsnzxBJhABGUKxWDx4qkVvTMIm5tHT1zItArIPOVdZf
+	 cMCEskvrqE/5TBtHT3QbLk7J3o3O4Hz8emV2tK9iEaYsuJcmj9UQXyRoPIN+oLRUgE
+	 mGoPEJ/Z6ZOVg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 07/43] sched: Clean up and standardize #if/#else/#endif markers in sched/deadline.c
-Date: Wed, 28 May 2025 10:08:48 +0200
-Message-ID: <20250528080924.2273858-8-mingo@kernel.org>
+Subject: [PATCH 08/43] sched: Clean up and standardize #if/#else/#endif markers in sched/debug.c
+Date: Wed, 28 May 2025 10:08:49 +0200
+Message-ID: <20250528080924.2273858-9-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -76,166 +76,140 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/deadline.c | 36 ++++++++++++++++++------------------
+ kernel/sched/debug.c | 36 ++++++++++++++++++------------------
  1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ad45a8fea245..7df38ea4d650 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -51,7 +51,7 @@ static int __init sched_dl_sysctl_init(void)
- 	return 0;
- }
- late_initcall(sched_dl_sysctl_init);
--#endif
-+#endif /* CONFIG_SYSCTL */
- 
- static bool dl_server(struct sched_dl_entity *dl_se)
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 557246880a7e..aaba8661aa46 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -90,10 +90,10 @@ static void sched_feat_enable(int i)
  {
-@@ -99,7 +99,7 @@ static inline bool is_dl_boosted(struct sched_dl_entity *dl_se)
- {
- 	return pi_of(dl_se) != dl_se;
+ 	static_key_enable_cpuslocked(&sched_feat_keys[i]);
  }
 -#else
-+#else /* !CONFIG_RT_MUTEXES: */
- static inline struct sched_dl_entity *pi_of(struct sched_dl_entity *dl_se)
++#else /* !CONFIG_JUMP_LABEL: */
+ static void sched_feat_disable(int i) { };
+ static void sched_feat_enable(int i) { };
+-#endif /* CONFIG_JUMP_LABEL */
++#endif /* !CONFIG_JUMP_LABEL */
+ 
+ static int sched_feat_set(char *cmp)
  {
- 	return dl_se;
-@@ -109,7 +109,7 @@ static inline bool is_dl_boosted(struct sched_dl_entity *dl_se)
- {
- 	return false;
- }
--#endif
-+#endif /* !CONFIG_RT_MUTEXES */
+@@ -214,7 +214,7 @@ static const struct file_operations sched_scaling_fops = {
+ 	.release	= single_release,
+ };
  
- #ifdef CONFIG_SMP
- static inline struct dl_bw *dl_bw_of(int i)
-@@ -191,7 +191,7 @@ void __dl_update(struct dl_bw *dl_b, s64 bw)
- 		rq->dl.extra_bw += bw;
- 	}
- }
--#else
-+#else /* !CONFIG_SMP: */
- static inline struct dl_bw *dl_bw_of(int i)
- {
- 	return &cpu_rq(i)->dl.dl_bw;
-@@ -219,7 +219,7 @@ void __dl_update(struct dl_bw *dl_b, s64 bw)
- 
- 	dl->extra_bw += bw;
- }
--#endif
-+#endif /* !CONFIG_SMP */
- 
- static inline
- void __dl_sub(struct dl_bw *dl_b, u64 tsk_bw, int cpus)
-@@ -753,7 +753,7 @@ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p
- 	return later_rq;
- }
- 
--#else
-+#else /* !CONFIG_SMP: */
- 
- static inline
- void enqueue_pushable_dl_task(struct rq *rq, struct task_struct *p)
-@@ -782,7 +782,7 @@ static inline void deadline_queue_push_tasks(struct rq *rq)
- static inline void deadline_queue_pull_task(struct rq *rq)
- {
- }
--#endif /* CONFIG_SMP */
-+#endif /* !CONFIG_SMP */
- 
- static void
- enqueue_dl_entity(struct sched_dl_entity *dl_se, int flags);
-@@ -1209,7 +1209,7 @@ static void __push_dl_task(struct rq *rq, struct rq_flags *rf)
- 		push_dl_task(rq);
- 		rq_repin_lock(rq, rf);
- 	}
--#endif
+-#endif /* SMP */
 +#endif /* CONFIG_SMP */
- }
  
- /* a defer timer will not be reset if the runtime consumed was < dl_server_min_res */
-@@ -1356,7 +1356,7 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
- 		 * there.
- 		 */
- 	}
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ 
+@@ -311,9 +311,9 @@ static ssize_t sched_verbose_write(struct file *filp, const char __user *ubuf,
+ 
+ 	return result;
+ }
+-#else
+-#define sched_verbose_write debugfs_write_file_bool
+-#endif
++#else /* !CONFIG_SMP: */
++# define sched_verbose_write debugfs_write_file_bool
++#endif /* !CONFIG_SMP */
+ 
+ static const struct file_operations sched_verbose_fops = {
+ 	.read =         debugfs_read_file_bool,
+@@ -520,7 +520,7 @@ static __init int sched_init_debug(void)
+ 	sched_domains_mutex_lock();
+ 	update_sched_domain_debugfs();
+ 	sched_domains_mutex_unlock();
 -#endif
 +#endif /* CONFIG_SMP */
  
- 	enqueue_task_dl(rq, p, ENQUEUE_REPLENISH);
- 	if (dl_task(rq->donor))
-@@ -1598,7 +1598,7 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
- 			rt_rq->rt_time += delta_exec;
- 		raw_spin_unlock(&rt_rq->rt_runtime_lock);
- 	}
+ #ifdef CONFIG_NUMA_BALANCING
+ 	numa = debugfs_create_dir("numa_balancing", debugfs_sched);
+@@ -530,7 +530,7 @@ static __init int sched_init_debug(void)
+ 	debugfs_create_u32("scan_period_max_ms", 0644, numa, &sysctl_numa_balancing_scan_period_max);
+ 	debugfs_create_u32("scan_size_mb", 0644, numa, &sysctl_numa_balancing_scan_size);
+ 	debugfs_create_u32("hot_threshold_ms", 0644, numa, &sysctl_numa_balancing_hot_threshold);
 -#endif
-+#endif /* CONFIG_RT_GROUP_SCHED */
- }
++#endif /* CONFIG_NUMA_BALANCING */
  
- /*
-@@ -1881,12 +1881,12 @@ static void dec_dl_deadline(struct dl_rq *dl_rq, u64 deadline)
- 	}
- }
+ 	debugfs_create_file("debug", 0444, debugfs_sched, NULL, &sched_debug_fops);
  
--#else
-+#else /* !CONFIG_SMP: */
- 
- static inline void inc_dl_deadline(struct dl_rq *dl_rq, u64 deadline) {}
- static inline void dec_dl_deadline(struct dl_rq *dl_rq, u64 deadline) {}
- 
--#endif /* CONFIG_SMP */
-+#endif /* !CONFIG_SMP */
- 
- static inline
- void inc_dl_tasks(struct sched_dl_entity *dl_se, struct dl_rq *dl_rq)
-@@ -2375,11 +2375,11 @@ static void start_hrtick_dl(struct rq *rq, struct sched_dl_entity *dl_se)
- {
- 	hrtick_start(rq, dl_se->runtime);
- }
--#else /* !CONFIG_SCHED_HRTICK */
-+#else /* !CONFIG_SCHED_HRTICK: */
- static void start_hrtick_dl(struct rq *rq, struct sched_dl_entity *dl_se)
- {
- }
--#endif
-+#endif /* !CONFIG_SCHED_HRTICK */
- 
- static void set_next_task_dl(struct rq *rq, struct task_struct *p, bool first)
- {
-@@ -3121,13 +3121,13 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
- 		    dl_time_before(p->dl.deadline, rq->curr->dl.deadline))
- 			resched_curr(rq);
- 	}
--#else
-+#else /* !CONFIG_SMP: */
- 	/*
- 	 * We don't know if p has a earlier or later deadline, so let's blindly
- 	 * set a (maybe not needed) rescheduling point.
- 	 */
- 	resched_curr(rq);
--#endif
-+#endif /* !CONFIG_SMP */
- }
- 
- #ifdef CONFIG_SCHED_CORE
-@@ -3158,7 +3158,7 @@ DEFINE_SCHED_CLASS(dl) = {
- 	.rq_offline             = rq_offline_dl,
- 	.task_woken		= task_woken_dl,
- 	.find_lock_rq		= find_lock_later_rq,
+@@ -694,14 +694,14 @@ static void print_cfs_group_stats(struct seq_file *m, int cpu, struct task_group
+ 	P(se->avg.load_avg);
+ 	P(se->avg.util_avg);
+ 	P(se->avg.runnable_avg);
 -#endif
 +#endif /* CONFIG_SMP */
  
- 	.task_tick		= task_tick_dl,
- 	.task_fork              = task_fork_dl,
-@@ -3570,7 +3570,7 @@ void dl_bw_free(int cpu, u64 dl_bw)
- {
- 	dl_bw_manage(dl_bw_req_free, cpu, dl_bw);
+ #undef PN_SCHEDSTAT
+ #undef PN
+ #undef P_SCHEDSTAT
+ #undef P
  }
+-#endif
++#endif /* CONFIG_FAIR_GROUP_SCHED */
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+ static DEFINE_SPINLOCK(sched_debug_lock);
+@@ -874,8 +874,8 @@ void print_cfs_rq(struct seq_file *m, int cpu, struct cfs_rq *cfs_rq)
+ 			cfs_rq->tg_load_avg_contrib);
+ 	SEQ_printf(m, "  .%-30s: %ld\n", "tg_load_avg",
+ 			atomic_long_read(&cfs_rq->tg->load_avg));
+-#endif
+-#endif
++#endif /* CONFIG_FAIR_GROUP_SCHED */
++#endif /* CONFIG_SMP */
+ #ifdef CONFIG_CFS_BANDWIDTH
+ 	SEQ_printf(m, "  .%-30s: %d\n", "throttled",
+ 			cfs_rq->throttled);
+@@ -951,9 +951,9 @@ static void print_cpu(struct seq_file *m, int cpu)
+ 		SEQ_printf(m, "cpu#%d, %u.%03u MHz\n",
+ 			   cpu, freq / 1000, (freq % 1000));
+ 	}
+-#else
++#else /* !CONFIG_X86: */
+ 	SEQ_printf(m, "cpu#%d\n", cpu);
+-#endif
++#endif /* !CONFIG_X86 */
+ 
+ #define P(x)								\
+ do {									\
+@@ -981,7 +981,7 @@ do {									\
+ 	P64(avg_idle);
+ 	P64(max_idle_balance_cost);
+ #undef P64
 -#endif
 +#endif /* CONFIG_SMP */
  
- void print_dl_stats(struct seq_file *m, int cpu)
- {
+ #define P(n) SEQ_printf(m, "  .%-30s: %d\n", #n, schedstat_val(rq->n));
+ 	if (schedstat_enabled()) {
+@@ -1163,7 +1163,7 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
+ 	SEQ_printf(m, "current_node=%d, numa_group_id=%d\n",
+ 			task_node(p), task_numa_group_id(p));
+ 	show_numa_stats(p, m);
+-#endif
++#endif /* CONFIG_NUMA_BALANCING */
+ }
+ 
+ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+@@ -1256,13 +1256,13 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+ 	P(se.avg.util_avg);
+ 	P(se.avg.last_update_time);
+ 	PM(se.avg.util_est, ~UTIL_AVG_UNCHANGED);
+-#endif
++#endif /* CONFIG_SMP */
+ #ifdef CONFIG_UCLAMP_TASK
+ 	__PS("uclamp.min", p->uclamp_req[UCLAMP_MIN].value);
+ 	__PS("uclamp.max", p->uclamp_req[UCLAMP_MAX].value);
+ 	__PS("effective uclamp.min", uclamp_eff_value(p, UCLAMP_MIN));
+ 	__PS("effective uclamp.max", uclamp_eff_value(p, UCLAMP_MAX));
+-#endif
++#endif /* CONFIG_UCLAMP_TASK */
+ 	P(policy);
+ 	P(prio);
+ 	if (task_has_dl_policy(p)) {
 -- 
 2.45.2
 
