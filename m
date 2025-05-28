@@ -1,98 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660921EE7B7;
-	Wed, 28 May 2025 18:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CAE28E5E2;
+	Wed, 28 May 2025 18:25:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456707; cv=none; b=mdVfVDhB81QmVBynbn2trAbf564azOcTiMj8Y5LJCtVp977tuBaYoDMA5z4NKCD16j4OegShKABpKHj51zo/Y2s2V+uUT8bmVp/6/smfwI8F7s9dolrPCmVnq37jFuqmzCC7lo8w6esfWLMiMFH6LGDPhW84RkxkRecwWKtQE58=
+	t=1748456709; cv=none; b=mGG+5ZHk4i8A19EWQP8UUhlARuB3LI5gG3iupXck91cV47uV8CPfxw4GR9mLrSiSAJ3/5I6Wc6hU64VcCiRq+USkeoEMLBy25L3q8816oNEZSMydLu5AC2T+Ib3lUGiTytp2IKeQgZS4YG+06deBPzpvXRDsEGAGbjHPFYVpJrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456707; c=relaxed/simple;
-	bh=9R7rQjswLIJrPgJWl6lP8SrIEa2p86XfG8Anl84D21U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cEXbjy1D4ncB4JQ+BQY/Ud94SxQL/Brf7+9txqymDITR32wOedAA5BEvwvfl/MRBeO+E2mbmByr6Yahu43H3NTO3sqrqSw6MrH8SZ9cVoo+ZUVkpyKldKErwQH6vgQzXVx4vch97BXDTSJTm4wjT9WRzjJd4tp22hi3NCFEslyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lm6NlCxb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748456709; c=relaxed/simple;
+	bh=uyZuRX4Nw7zrA3erUec/G18l0Gbl/4E+/efJ+fXP/Os=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BGNwLUw7T+2dvm3Y6VqdF4MJHcTvlD+sQ8Hl0zdlL9R+YylgmcNuUBk8ebVl6DsZNmWyKdlCzv3+z2HfosYR1mRpanQY5IYbvuT2u8T0E3M7jwE+gpiDic6TfkzhR082bJStRmpiNNbMdbpHM30E5LPD3jycLshXf88dWGe3Tz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0FQyEv/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lm6NlCxb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B4DC4CEEB;
-	Wed, 28 May 2025 18:25:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0FQyEv/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE678C4CEE3;
+	Wed, 28 May 2025 18:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748456706;
-	bh=9R7rQjswLIJrPgJWl6lP8SrIEa2p86XfG8Anl84D21U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lm6NlCxb4vJfwwDcN3M2IJMcH6XVEBaOsoyVhSjaFO6iaP8Fvlf+oxupHzRawfPff
-	 Q8hd7RaxLTWOMi4ZI3RPk2rdJUrOd4tDzZjbV5Ni4ETaLsyBGIWHbitCyhJFG0+3tw
-	 cY2PQXrv743zvL+0Ey9h0Aoe0I8PTQRCspi2+YABHXwzqRv5qp59euZuZFvV9PJWdT
-	 sr2uPrzcpf7DhWTlvHAJJpeE44NYZxC6iPI1nYibsBO2wRTG9VL5imJ9f8FJg3E68B
-	 ZY2oA7BKjVHApGbiHAjegPoQiaFpANf3Uf1q9IHnSFY5R72sX1uIA303KVUJeYVKTe
-	 J5pBf/3lIn1Cg==
-Message-ID: <b8061efa-83ef-4a7a-a39e-0475dce42614@kernel.org>
-Date: Wed, 28 May 2025 14:25:04 -0400
+	s=k20201202; t=1748456708;
+	bh=uyZuRX4Nw7zrA3erUec/G18l0Gbl/4E+/efJ+fXP/Os=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=W0FQyEv/QioiuwoXwBKXsKDlVluV9IVTUhLest3VzzvccYmh5FG0+vlM4kH/YaQv8
+	 Gfo3A0Pazh0yR6NnJvrrMfuxXf8i8FuzMBFqASaOuU3D/VZ47b+4HtxIzmPvQYyG2M
+	 ZzikGfb1lXIJ++r53dmE4OlkmFSNZr7FONgbSLSwgJt/V8eimYx1u6V5SKNEsvt83O
+	 S6Kf8mRaD6yjEgaqZ4pClowcAFOdqt2SY/eiLwDcXhCI+1ezcZghoj6GOXuTqCcZ7M
+	 N5Xo66QWz4K5GzMaQdVKUB2eVK1jdqj1VV0iuXS7rYdlEDPiX2vz5MoiEWlYKoeg1B
+	 EKQ39xNYlM5uw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: rust-for-linux@vger.kernel.org,  Arnd Bergmann <arnd@arndb.de>,  Boqun
+ Feng <boqun.feng@gmail.com>,  linux-kernel@vger.kernel.org,
+  a.hindborg@samsung.com,  frederic@kernel.org,  lyude@redhat.com,
+  tglx@linutronix.de,  anna-maria@linutronix.de,  jstultz@google.com,
+  sboyd@kernel.org,  ojeda@kernel.org,  alex.gaynor@gmail.com,
+  gary@garyguo.net,  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,
+  aliceryhl@google.com,  tmgross@umich.edu,  chrisi.schrefl@gmail.com,
+  linux@armlinux.org.uk
+Subject: Re: [PATCH v2] rust: time: Avoid 64-bit integer division on 32-bit
+ architectures
+In-Reply-To: <20250502004524.230553-1-fujita.tomonori@gmail.com> (FUJITA
+	Tomonori's message of "Fri, 2 May 2025 09:45:24 +0900")
+References: <20250502004524.230553-1-fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 28 May 2025 20:24:50 +0200
+Message-ID: <87seko1tl9.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] nfsd: use threads array as-is in netlink thread set
- interface
-To: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia
- <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, NeilBrown <neil@brown.name>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
- <174845587080.200069.9203268802136145057.b4-ty@oracle.com>
- <298ef5505e7abb9a0ca5f151090a42f8bf330c43.camel@kernel.org>
-Content-Language: en-US
-From: Chuck Lever <cel@kernel.org>
-Organization: kernel.org
-In-Reply-To: <298ef5505e7abb9a0ca5f151090a42f8bf330c43.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/28/25 2:22 PM, Jeff Layton wrote:
-> On Wed, 2025-05-28 at 14:11 -0400, cel@kernel.org wrote:
->> From: Chuck Lever <chuck.lever@oracle.com>
->>
->> On Tue, 27 May 2025 20:12:46 -0400, Jeff Layton wrote:
->>> The first patch is probably appropriate for stable. It should fix
->>> problems when someone sets the pool_mode to pernode, without userland
->>> sending down a fully-populated thread array.
->>>
->>> The second patch just adds a couple of new tracepoints that I ended up
->>> using to track this down.
->>>
->>> [...]
->>
->> Applied to nfsd-testing, thanks!
->>
->> [1/2] nfsd: use threads array as-is in netlink interface
->>       commit: b2a9a114a3c7f5abfa2875b70ce9b73525a74291
->> [2/2] sunrpc: new tracepoints around svc thread wakeups
->>       commit: 65b8babe551bddf00aac69bc905f88a4e0371766
->>
-> 
-> My apologies, Chuck. Patch #2 has a bug in it:
-> 
-> +       trace_svc_pool_thread_noidle(pool, rqstp->rq_task->pid);
-> 
-> In the call above, the rqstp will be undefined. That should be:
-> 
-> +       trace_svc_pool_thread_noidle(pool, 0);
-> 
-> You can fix that up in tree, or I can resend if you prefer.
+FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
 
-Fixed.
+> Avoid 64-bit integer division that 32-bit architectures don't
+> implement generally. This uses ktime_to_us() and ktime_to_ms()
+> instead.
+>
+> The time abstraction needs i64 / u32 division so C's div_s64() can be
+> used but ktime_to_us() and ktime_to_ms() provide a simpler solution
+> for this time abstraction problem on 32-bit architectures.
+>
+> 32-bit ARM is the only 32-bit architecture currently supported by
+> Rust. Using the cfg attribute, only 32-bit architectures will call
+> ktime_to_us() and ktime_to_ms(), while the other 64-bit architectures
+> will continue to use the current code as-is to avoid the overhead.
+>
+> One downside of calling the C's functions is that the as_micros/millis
+> methods can no longer be const fn. We stick with the simpler approach
+> unless there's a compelling need for a const fn.
+>
+> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+
+Looks good to me.
 
 
--- 
-Chuck Lever
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+
+
+Best regards,
+Andreas Hindborg
+
+
