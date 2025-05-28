@@ -1,116 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA0F1EF38F
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42641C84B2;
+	Wed, 28 May 2025 05:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748410696; cv=none; b=qbgfvggXlrs9ZpEsvBGLDvgfSFklWrQAuhNTGQxDF6xZldwCgIFOmB5h3CLHjLXDOVb1P1Xlj1vQC80ElZM5vLKt6Kz5tTreijeOVjsAYdpp55ocDzN2FGzPfzzX14og43yQNegerRe2DujPTs1O3RedpLm/3mU5JzztDw5EQpE=
+	t=1748410875; cv=none; b=MO3bqGj47vqCOsWZTidK0LZ1dJWWtwOQ60vwzU7wVYYgKaZ+oKsXJtoD09OChj80c9CnuOUqtcexcirFk8H7GZlHjw9nnRFQK5SZlnQkq6k9Eeb2+92vRI8GEBEJV/dMvSri+jUmJuVQhxPO9xOSRADZgpKnsAUDSXsu7luBp+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748410696; c=relaxed/simple;
-	bh=vtplRbHf5cYdnrsURj8lTuNjyZSxPZnaf6G/k5Uxyl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=heB8sIFDujqKCFIZDKr+0Bcx3E+/ivRRtXB0Y8LNgRyUXtPuLe24M3Ec+BmT73jIsprm8Vd0IlxQjZyWq2itCIdNyaHvbkpsFyoVW+xn0to6y9r1lVi1PBrhszsFTQgxxN4bz9/V5WNHMZ0IIGgyBCyRKN9Hvlr3ADLvOPlwrxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ePxtgwHT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ePxtgwHT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748410693;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uGpKYH25qdwO20Qi6WljMpSm7CxKxO2i5GmgG2oMcQM=;
-	b=ePxtgwHTzRpd/g7HkBMW4Jo+MPbWnZ450vIUyDhoUoAcI/JZA8YBIWajg3a9Aw71f5urNE
-	rcV8UZwPfn4ZbHquYxUxBywR83momyMFOn747bTyx3mLc5O14VjcqspQ1G7h3GMvBKgqbZ
-	7Yz8sXk7SCTnEF2liDeIC/IC8CLWvY8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-512-eisqkgOoMlKFi-LkR_2IhQ-1; Wed, 28 May 2025 01:38:12 -0400
-X-MC-Unique: eisqkgOoMlKFi-LkR_2IhQ-1
-X-Mimecast-MFC-AGG-ID: eisqkgOoMlKFi-LkR_2IhQ_1748410691
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so24222315e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:38:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748410689; x=1749015489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uGpKYH25qdwO20Qi6WljMpSm7CxKxO2i5GmgG2oMcQM=;
-        b=sPS+PUJ8vSTfInfkT7gx/2sFBj1SXkkSWvEdQRl18nEVMyMpv3KgZY77mu4X4L032O
-         jc4BEQCuNOUkaj5m7p76CKz69E9V2KIEbii6R9lK4uPf0Jh69hbRlJ1PrMYc1F/THvHh
-         zByzGo0js86vk+9BDw2MX+uEY6lp88ILD2AzeqZ+AFl4iwuHv/nF3yIeDhhEznE041mM
-         DfHbaRyYQ+b5/4293kWF93/fG7/9IOlaui1CW730+HJr9Gz7ehAxtUxgbUQWCRFdEGkB
-         btdZIVrgaWm9N7YRNRRVyicrKzVrkvsj/ZCUp4L2jpHt3RzWRhZwwO7xyLonOTK4QYZJ
-         oXlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ40W+mDvcGzxpksrSnRscUXn6dxuyjo7DsU/o0yWNybAn8394u7ftJmQsv93WPU6gdKDQA0uz7yEH/qM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX4hcKnwXR8ArL+TYD/UX7LSvwPbRPNLrU0ZQlYJA7DlilHyBe
-	/rIFfNCUtAzRzCtTTNTisJ2VruWwm8UtQu7z0ogCvFyEQAMyyLTXKj2AbRTnFlCTq3bhABjREYN
-	ROZNDaMUjPgAgxrPnPi17AtHyKVwqArwsfaNAjMvkBtUnteXiFDaBXnxrLjMuqKR7NPamxFZk6I
-	/JCAnr8V2s5PToJqP6WPsItA9yMXzKoYGETAt1gsyozMXtYtDO
-X-Gm-Gg: ASbGncuIQ3LIXuUDIfHO3VXw5YHHWrR8fTR1rz5+964ixelsMq+7/nvYylMfbfX62fe
-	XyTFe1kCh+kVk5g1vi8R/KLRf3Vl6M8a827XRGShw1CBLDoHlZSn25U8jDbiguKFacWM=
-X-Received: by 2002:a05:6000:40d9:b0:3a3:5c7c:188c with SMTP id ffacd0b85a97d-3a4cb4a9b05mr12776053f8f.57.1748410689401;
-        Tue, 27 May 2025 22:38:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/DjgyHmTi77sz4YL1AcotxWGV19kkLeazwVyYNyUm5/Yz03U89VIiuny/iYpw0zaxNaDubEkcm3y8xMlS5Ng=
-X-Received: by 2002:a05:6000:40d9:b0:3a3:5c7c:188c with SMTP id
- ffacd0b85a97d-3a4cb4a9b05mr12776036f8f.57.1748410689059; Tue, 27 May 2025
- 22:38:09 -0700 (PDT)
+	s=arc-20240116; t=1748410875; c=relaxed/simple;
+	bh=wN8sYZl/mz8uDPrAXCUTTNFLSJM4kxH7HqZEgJtHnQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=izi5OEGQyKabOK+o4fKc5eTAWIFrNlaDfbL3hq8BYganxCmLVWOaFYSEjRx7rG9+B3MWjPyNwpzS+fvT8VrTZQMDXTSTvuw9YGPXd3sDtUbXXyd9/0fpdy2mksOBwSQT/BzEScG9n1f3HUBL/mHNo8ddoUU8lNqJzJ9EEo/Mfqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-bb-6836a1f3d4ed
+Date: Wed, 28 May 2025 14:41:00 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH v2 02/16] netmem: introduce netmem alloc APIs to wrap
+ page alloc APIs
+Message-ID: <20250528054100.GB9346@system.software.com>
+References: <20250528022911.73453-1-byungchul@sk.com>
+ <20250528022911.73453-3-byungchul@sk.com>
+ <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528152832.3ce43330@canb.auug.org.au>
-In-Reply-To: <20250528152832.3ce43330@canb.auug.org.au>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 28 May 2025 07:37:57 +0200
-X-Gm-Features: AX0GCFtOIWFnFVkSToM6sYIdGjE7Y3_nseIDAEn1Nlq5PJJ_ber9SzlILoUMcCY
-Message-ID: <CABgObfbCg1wiZJmnXFihmRLvPiJq2bCQH3MNVMfiUJphz4JW3g@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the kvm tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Miguel Ojeda <ojeda@kernel.org>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, KVM <kvm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fec3YcDo4r603JaBVSlFZYPkWU9CFfuoBd6EPSZbRDW+mS
+	maZ2YakhWpp2o9a0aTfTbLZsrpJRZl4qTDRjXa2VGmSlLsUblXNEfvvx3H7/Dw/PKIrYAF6r
+	2y/qdaoYJSfDsu++hfPdhUs0Cwa7/cFkuclB6UASXP9oZ8FUYkPwa/CtFNw1dRxcLuxnwPQi
+	HUOfZYiB9lqXFNqudWCoyqhkwHWynoPs9GEGUu3FEmiy5bBwZugqA5WGj1JouW/i4MPNPyx0
+	VGdjaDDewNCWEwG15snQ/6wLQY2lUgL9J/I5ON1s5uBzehuC5scuDBeP5iCwOJwsDA+YuIgZ
+	tOLGawm9Z3wvpWZrAr1TPJdmOZsZai3J5Ki195SUvntVxdH688OY3rO7JTQ77QdHe9rfYPrT
+	0cpRS0Urps/NNVLqtgZFCVtly9VijDZR1Ieu2CnTVHSZUNw5vyTHuc0GlC/PQj48EcKIu9HO
+	/OOMTofEw1iYTV4OH8ce5oRg4nQOjs1MEuaQK4481sOM0MaSRtMeD08Uosmxb6Vj83IhnNzN
+	7eaykIxXCMWIOA0vJd6GH2m48AV7l4PJSEHz6FF+lAPJ9d+8tzydpN29OObyETYQwwNvNn9h
+	Jnloq5N4bhLBzpMLmSVSb+ip5FGxE+ciP+M4hXGcwvhfYRynMCNcghRaXWKsShsTFqJJ1mmT
+	Qnbti7Wi0c+5dngk2o56mzZVI4FHSl85LV+sUbCqxPjk2GpEeEY5SZ66colGIVerklNE/b4d
+	+oQYMb4aBfJYOUW+qP+AWiHsVu0X94pinKj/15XwPgEGlLA7v9FGLlXeGjh0RNM+ryM0xbl5
+	4cEo2ZazloJZm1KiPq17Hvy7aPvnh4bwrV0tE62rtBPa16qjy5+Erk1IU8f+CFo6OVwmKrSB
+	6G3u+U5/TVMq9t3WFVlU0JO3pjYzz16vjrzfs7iMnaY73JpRGmaLWL2+deTr02Vxqze2uMpu
+	9ylxvEa1cC6jj1f9BdCSIPI1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe97Ls9fR4nVZvWURLUoSNKO0I0VJH+oh6AaVlB9q6VubTq2t
+	hnahlYZkza6IrSkbVpoKS1s6S0ZMMS1JmxrrOrNSu1CWF9TZxSmR336c///8zpfD0fIz7BxO
+	nXJY1KYoNQosZaSbV2WE9VmjVBH2HgxmWxmG0qE0KOpwsGAuqUTQP/xKAn11jzAUWgdpMDdn
+	MjBgG6HhY32nBLy3uhioyaqiofNCAwZjpo+G045iCmrzG1loqcxh4erITRqqDB0SaL1vxvC2
+	7A8LXS4jA42m2wx4c2Kg3jITBp98RVBnq6Jg8Hw+hituC4b3mV4E7tpOBq6fykFgc3pY8A2Z
+	cYyC2G+/oEi16Y2EWCqOkLvFoSTb46ZJRclZTCp+XpaQ189rMGnI8zGk2tFHEWPGN0x+fHzJ
+	kO/OdkwKe3opYrO3M6TJUifZGrhbujpB1Kj1onbpmr1Slf2rGR3MDUxz5m43oHxZNgrgBH6F
+	kNXtpPzM8IuENt85xs+YDxE8nmHaz0H8EuGG8xLrZ5r3ssJTc6Kfp/NxwpkvpeN9Gb9SuHex
+	F2cjKSfni5HgMbRRE0Gg0HjtAzOxHCKMFrjHpNwYBwtFv7mJ8Xwh49718VsB/DbB8MAxzjP4
+	hcLDykfURTTNNMlkmmQy/TeZJpksiClBQeoUfbJSrYkM1yWp0lPUaeHxqckVaOw5bp0YveRA
+	/a0bXIjnkGKqjNyJVMlZpV6XnuxCAkcrgmSn10ap5LIEZfpRUZu6R3tEI+pcKJhjFLNkG2PF
+	vXL+gPKwmCSKB0Xtv5TiAuYYEN6pbY7O+60Peay24uAtzXnPD/xq8U2Pal9YfihhwTrrwLv3
+	DUM5YTfvZG0ILvgT/fjYSOywcf/SUztSazYldu8wjS5IzTRGSDSfenZN2Rwv2bczd1vTwPdw
+	e2HY8bKB5vIt63lpnPtkYn3pPN+12YuD5hU/C9VY53421EbLXK7lMfsUjE6lXBZKa3XKvxHZ
+	eCsYAwAA
+X-CFilter-Loop: Reflected
 
-On Wed, May 28, 2025 at 7:28=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> After merging the kvm tree, today's linux-next build (x86_64 allmodconfig=
-)
-> failed like this:
->
-> error[E0425]: cannot find function `mutex_trylock` in crate `bindings`
->    --> rust/kernel/sync/lock/mutex.rs:129:41
->     |
-> 129 |         let result =3D unsafe { bindings::mutex_trylock(ptr) };
->     |                                         ^^^^^^^^^^^^^ help: a funct=
-ion with a similar name exists: `mutex_lock`
->     |
->    ::: /home/sfr/next/x86_64_allmodconfig/rust/bindings/bindings_helpers_=
-generated.rs:265:5
->     |
-> 265 |     pub fn mutex_lock(lock: *mut mutex);
->     |     ------------------------------------ similarly named function `=
-mutex_lock` defined here
->
-> error: aborting due to 1 previous error
+On Tue, May 27, 2025 at 08:11:58PM -0700, Mina Almasry wrote:
+> On Tue, May 27, 2025 at 7:29 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > To eliminate the use of struct page in page pool, the page pool code
+> > should use netmem descriptor and APIs instead.
+> >
+> > As part of the work, introduce netmem alloc APIs allowing the code to
+> > use them rather than the existing APIs for struct page.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > ---
+> >  include/net/netmem.h | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> >
+> > diff --git a/include/net/netmem.h b/include/net/netmem.h
+> > index a721f9e060a2..37d0e0e002c2 100644
+> > --- a/include/net/netmem.h
+> > +++ b/include/net/netmem.h
+> > @@ -177,6 +177,19 @@ static inline netmem_ref page_to_netmem(struct page *page)
+> >         return (__force netmem_ref)page;
+> >  }
+> >
+> > +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
+> > +               unsigned int order)
+> > +{
+> > +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
+> > +}
+> > +
+> > +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
+> > +               unsigned long nr_netmems, netmem_ref *netmem_array)
+> > +{
+> > +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
+> > +                       (struct page **)netmem_array);
+> > +}
+> > +
+> >  /**
+> >   * virt_to_netmem - convert virtual memory pointer to a netmem reference
+> >   * @data: host memory pointer to convert
+> 
+> Code looks fine to me, but I'm not sure we want to export these
+> helpers in include/net where they're available to the entire kernel
+> and net stack. Can we put these helpers in net/core/page_pool.c or at
+> least net/core/netmem_priv.h?
+> 
+> Also maybe the helpers aren't needed anyway. AFAICT there is only 1
+> call site in page_pool.c for each, so maybe we can implement this
+> inline.
 
-I thought that since Rust failures wouldn't have to be fixed by
-non-Rust maintainers, they wouldn't block merging of non-Rust trees in
-linux-next?
+Ah.  I recalled the reason why I added these APIs this way, that is, to
+make the allocation method easier to be altered in the future.  I will
+move it to net/core/netmem_priv.h but keep it in the header anyway.
 
-In this case it's not a problem to fix it up at all (I'll send a patch
-to Miguel as soon as I've taken the little guy to school); it's just
-to understand what's to expect.
-
-Paolo
-
+	Byungchul
+> 
+> -- 
+> Thanks,
+> Mina
