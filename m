@@ -1,115 +1,117 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B203223DC5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8147121FF44;
+	Wed, 28 May 2025 19:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748461507; cv=none; b=B0oCC8beHNXaeeBBNN8mncV3c5oBxtQjXKGWUQMzB6YcpYwoEsjCPTrwY8dyk+yYRzzRbzGWfjVQAn++UxelA3UU727tlYeG23r/Amd1PF270tvd0niR3GnkhyBcm+aDZ9+j/d6b27ngnGCLykaONAHrLlAOHeIe0JpWbrwonaA=
+	t=1748461555; cv=none; b=Qg96V1v+bbinZ44CJrWWbCKXkrQRIuDQVc+fA9q+uuwKQvnDL+GLlUUPUVLJPoG9O26zpY2E6JEi9bf59c9HO4hY6F6l2itgao3ExyH5rsBum6pMd2U3mgtQbxLcr8wfGIUy6VV1XozJs4ulYoRjC9D3GdO5QarjZqg9Oo2rxhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748461507; c=relaxed/simple;
-	bh=KlWZh9mGbhh246BLaQj3a0JEHtlWiPcz6tFTLPrpjyw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=auw4CjRuwlJZVckyhUkbmScuyxoMaqHGeJTyDoXJGi23uoyDh6s3JmBLquzWQD7j4grj8sfnPMbWc66AnRMxMk3NtncutxKL+r+FMNwiJYuy2B8IgZcSBtV2y7IaPXoYyUdHenSWpE7ti+9pqug1r3c2C6g3C63ZXkyJFa6FctU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vLX+uzw0; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748461555; c=relaxed/simple;
+	bh=2WYsfpi4i8f0LBMEO0DT617i14NhS7BPxw7WwiazOec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HbF4PJslkUX4JwXsztHeOdayCBPsY79dKP0CeBI6y95YFY9X1pi6QZ7HcaVqs3aUdn2mIHpuL+wwwtMXF6IyDG+A/OnbyD7DF7ChiPjPuSlgpe8vBdDofVyrmqOSNFEBpZhLO/8yV0ntE2zHkEpaE+9bXAhWNNr/cldlDxygWvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICu4e34o; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLX+uzw0"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4db4d1bd7so28898f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:45:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICu4e34o"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e45ebe7ac1so40038137.2;
+        Wed, 28 May 2025 12:45:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748461504; x=1749066304; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6XS2deMVzboP2ASP6uwuuwH3ZN1J3py9R+W7bnWjgpA=;
-        b=vLX+uzw0beHtHa3vJ+3ELXZSzKFIh7CT74/jk1mhRPpg1JFe9v+CjF+P+Rj+iRSI8I
-         nqOTNf3ER3oOI67L/3a0ZMlb1l3TnBb2w8GMejjKdK+YNwEgGeRYh7vjfiHuQZCRqA70
-         c9zJIaCCXtAMmUdbVX+0PpGpOqK0Jwflz8wFs2URuFbhGGJrnGMWByJwGnra0QtpeZN8
-         ublE9G//PWqoST+TV5AymMPhGdTZbI6SzN1zTpMIOo1R9X5XnLEUkhaql3keKPXvQBdV
-         7ljA0qTAtVI8+ydKHfdtCbWWcO9NDVCCx4y1VPrcXn+hCTNck5lbg7zfIQADCh/9qhfF
-         a3JA==
+        d=gmail.com; s=20230601; t=1748461552; x=1749066352; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2WYsfpi4i8f0LBMEO0DT617i14NhS7BPxw7WwiazOec=;
+        b=ICu4e34o7vmIbai/UECVjcuFiwbevmlByzWmW6IuR+1e3YrIr7JjOujKeSxnNXkrb4
+         nz9SULV+BZ6trGKfl+DiLQ2/DrcpPGinyXPdT3Qkl4/9M9smC4lCr4J/xkSsQeVEZW8a
+         sXQQRI7HhdO4V1hQTrTH2c9FjQrbtqNdRWbSyA/tqAa3i5TZHUwrz8qHmpvboqycAuDU
+         47XHtdvWNLfAL8cJ0LD/OfvgHWKIPYYxJ06y8CF8hXjrETa//R/IpC28Y81bcOAwDLIj
+         GXhmdbKOjjCjtooOw/aKBL+6pZ98IjKwYGBqkGbRZ8KP0zkQuOk5/tbEWRNCS48RkreO
+         PbgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748461504; x=1749066304;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6XS2deMVzboP2ASP6uwuuwH3ZN1J3py9R+W7bnWjgpA=;
-        b=Xwu6IDnmv3Ru+ssIp9DgvVeOcfO3E6g3LoAGeKMaYLih2c62VZKhfjs+GHI+BZUYUb
-         7Xp5lTokBnmirRGKKnV11GMBiktkcsAhupKRxauib2ZUnwHXJEQkC6b5D28gbdqPjkzu
-         zD+LYkDzfgwqD8vgbBeer555q9+Mvp25b8e4h4n9QP3ip+BwjaYpCz2lmYUvjDTIlA5Z
-         +hhuZFxrlQwerPlJaxW304+RnLRxUUYSsNTXrI4dLnpv3BfL3NpiN7Y4VYL7ujEPfVmV
-         gjZ/zYIPam6srYmav1h78nKfySFNg/KxumPTZtKsMcnRaxXwxujRX/StJPyTwjiyPkQT
-         kuKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQfv67IzdiasYBAltg7pEB/JD5FE1PGonERwxzvNuPMKPLd0TGvlXrg3LKWuZS2qwBGo2z4A52LM+BftE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz78s+FMVUE/2IFzYURIJCnB2b3ftw54TivCqIvN/Mx0kJkv1u1
-	9pqyq8Nx6/ADhI07y8lK7QnOSVLIp93lLoLyA8Tbmo+XTdaN64CAsmLqbmQfj0q20Zn+wnXuX22
-	S9wyH
-X-Gm-Gg: ASbGncudyuP0/DQDbI8SQz38xhSrwDQgNyhy7mEnqRy9N+8oipTJ+tcnVzll0Z7a00z
-	AvAA0MJtbjtthcJhOp4wmTEAYSlcSOCRjGTYzG8rPTHPaJOWuFJlT07YBx59RbQ87WvtTIgfaxs
-	IbNny4bOVCUinyfc+iaU6Qj7ONrJTjNbbVm9B2HGgOpufXrezgdv5J/bVJwJIGqmzyIhVfwXVsT
-	PS5SPitcBYp+s6L9SUNjKZ9voXzKXk37bZc9nkCnAr4dFT+AOC+YlTxD0ZiXZ8xdtmgQwotN9EH
-	M3Rv61oJCX/vDTPDxY7vZrOghStSHRlEs/EwSgfXxhWCkuXQ58t9FOOFoU+BVQ==
-X-Google-Smtp-Source: AGHT+IE+6eowk0bQqmDKzrEJsfMBGmbrEBcEQGWsiap3HMgyykC6Bl6Me1m9xy0Xn6tbPw7JfXAGgw==
-X-Received: by 2002:a05:600c:3504:b0:442:fff5:5185 with SMTP id 5b1f17b1804b1-44e90da2cb6mr48842315e9.6.1748461504456;
-        Wed, 28 May 2025 12:45:04 -0700 (PDT)
-Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc03147sm416555e9.14.2025.05.28.12.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 12:45:04 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] regmap: kunit: Constify regmap_range_cfg array
-Date: Wed, 28 May 2025 21:45:02 +0200
-Message-ID: <20250528194501.567366-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1748461552; x=1749066352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2WYsfpi4i8f0LBMEO0DT617i14NhS7BPxw7WwiazOec=;
+        b=qP+jUJfxsLwW3HUukQnEVY6Spg8yakmxqgGbouqu8qLxHU+HxyR+itOQ4oo+jVM+LT
+         uULrsRHNZGjJ+Bz1isnMoFHYI+9s9daUCQZJ9kAMcbzWjbGuDPN3PP4w41Yin4wi9YHM
+         d161ZKH528tfvjzBJBbwdMXgy7XkwjMDEClHVnEqp6bnzy8jhtNY0n4tj1DlldlNfHhs
+         n1OJaH8JRInHQ3q7jWo2q/ybY8CX3sMk5kpzWwoK8ZXTP6XMfL38rxClwEy7PQUnkFsp
+         ZGn4j8qiIQ5Sln+6InX/tyK2wiRf5zdkYsPnfkZWrjRashIqoy5FYdSPvRyk+BxA1q7I
+         TUMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVYclBOgRnAXiHA3hhG1WYHbUmvdG4zszScoKzIicujgO8rDkWIjVzx3o15vtHBz+OQiAQR52+F@vger.kernel.org, AJvYcCW6MisNUDSO7NEIkgMEzSXxaaiMWXvULF9wKeKtuNwAHjKTN07wiNK9fcRZLfzr1JBjwyfKCgRK38BMXcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4Nh2ZXQm9bj+rkCVBbUjPF2QZCnlAQf9Sx8EyOAZbScKhNj96
+	h+X7rfKVEmZKetqegB9DIaqt6bniVpzzDEUYjITGHRg8E5l92eQszKxPaj0ENoCYV07IQBYO6ir
+	UaQDYCHMin3oGOwcO43weqodoDN/9Gpc=
+X-Gm-Gg: ASbGncsLDP5Oe76dzLAaiQhdTC2tGONoKdeqQTafhU94HN67jfawRzt8DydWWXvdAL4
+	0wAowK/C2OO9g1HM2J4an/KDkAIpriMPTcChWnFOOrk7YUaALT58hgQ1J/4kSQwER9f281a33c1
+	iJEW6WB/EIrLNpPo/I2RafMx7SiC/TIigmnA==
+X-Google-Smtp-Source: AGHT+IEMvKPgfShf/MwU8EBntmzL2gLB5r9MeIt5Zff5sN3Hg4sMdylM4vuXLPE4sTB9F/25CeOcTFcD0aTeNKmZrbs=
+X-Received: by 2002:a05:6102:441b:b0:4e5:9fbe:79f1 with SMTP id
+ ada2fe7eead31-4e59fbe7f3amr3865881137.24.1748461552237; Wed, 28 May 2025
+ 12:45:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=720; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=KlWZh9mGbhh246BLaQj3a0JEHtlWiPcz6tFTLPrpjyw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoN2e9H6gpzQchhz5tE2IdHRreCxVO/aVmcn4ee
- swTaQu63M6JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDdnvQAKCRDBN2bmhouD
- 1zlHD/9on3biqpsKYu0bS6pbEBz/r9Gy3w/3qo259zZNvpn4SjqxBbr9IoQML8N0Ye6BNfYd4UL
- n7BpdGfP2ToHUXqZcMcMcsYiZLiOBh42RW1plSsa2WdMaPqibG2Ubempl6c6EQV9p8BtZ4q3Oh7
- li+qdN4ZZq/oo8VZi3gGQIXUDvARTeVUiw/vZJozVfvHVggJao5K2KMd5aXEW8VPlK8WS7JX9SQ
- f366s8882U2BLPYFiHmKg0qntawzUuN67JGyxhgzGClukjWuJvDZX9gCZ8eTfIDJwwNEzSyiXex
- BxNuCjP21XqIiDXmeljU5BoktncGzwmJ8K2mQhpp2dyeVgtKE8cieF16SuxLm7irFj43X9Pk1nZ
- EM+yfJJ0l9Vw0zYC+7XyLwAGQ+T/pG5VC5nJL1kp3at2+9yCaWd2RX2XAQdUgSJbrAW4mGftWCK
- j+FuNMYBN7EuRr5Vf3iZYkkALCF1kIXUzIwD4U3hMZRy5wNkQpuRVW31xSEFSLF6p4f4PbO14Op
- 1okbdmQgNPaJDe5eMqqizg/5lYCSbGNY2l1IYWoQaO5oEKol6L3+wE21umRASUd3Zp1kb04m9jz
- 2k9QZ6s/YMquaND12oWANoWrV8Px1lA95tiGmNlAEPyHxcPd/4xCyS5JG0gTNnlJ4/VUAlgPPo0 qszQNPZj+IFw3IQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+References: <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
+ <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch> <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
+ <aDbA5l5iXNntTN6n@shell.armlinux.org.uk> <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
+ <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch> <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
+ <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
+ <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk> <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
+ <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch>
+In-Reply-To: <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Wed, 28 May 2025 13:45:40 -0600
+X-Gm-Features: AX0GCFvXBPujHS6_IsJk8UZ1tZBvuuAf4ZznRV1htx1eM1HjStthmVFSfduasE8
+Message-ID: <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org, netdev@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Static 'struct regmap_range_cfg' array is not modified so can be changed
-to const for more safety.
+On Wed, May 28, 2025 at 1:27=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > I think a lot of ethernet drivers use phy_find_first() for phy scanning
+> > as well so it's not limited to just stmmac AFAIU.
+>
+> You need to differentiate by time. It has become a lot less used in
+> the last decade. DT describes the PHY, so there is no need to hunt
+> around for it. The only real use case now a days is USB dongles, which
+> don't have DT, and maybe PCIe devices without ACPI support.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/base/regmap/regmap-kunit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I mean, hardware probing features for this sort of use case have been
+getting added outside the network subsystem so I'm not sure what the
+issue with this is as those use cases don't appear to be meaningfully
+different.
 
-diff --git a/drivers/base/regmap/regmap-kunit.c b/drivers/base/regmap/regmap-kunit.c
-index 64ea340950b6..95c5bf2a78ee 100644
---- a/drivers/base/regmap/regmap-kunit.c
-+++ b/drivers/base/regmap/regmap-kunit.c
-@@ -736,7 +736,7 @@ static void stride(struct kunit *test)
- 	}
- }
- 
--static struct regmap_range_cfg test_range = {
-+static const struct regmap_range_cfg test_range = {
- 	.selector_reg = 1,
- 	.selector_mask = 0xff,
- 
--- 
-2.45.2
+> I suggest you give up pushing this. You have two Maintainers saying no
+> to this, so it is very unlikely you are going to succeed.
 
+So what should I be doing instead? It's not clear to me what the issue
+with this approach is as it appears to be a rather non-invasive change.
+
+> I personally don't like depending on the bootloader. I often replace
+> the bootloader, because it is a crippled version that does not let me
+> TFTP boot, does not have flash enabled for saving configuration, and i
+> want to use barebox etc. I think it is much better when Linux drives
+> the hardware, not the bootloader.
+
+As you said earlier we don't want to rely on the bootloader(which I agree
+with), so it's unclear how we should support SoC's that require runtime
+autodetection like this in the kernel.
