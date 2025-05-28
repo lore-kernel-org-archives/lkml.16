@@ -1,120 +1,123 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BA344C94;
-	Wed, 28 May 2025 07:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8916F44C94;
+	Wed, 28 May 2025 07:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417867; cv=none; b=gOzy0mSeQPt0GeXC62m8AhypmGTeVgx5VzIhNO5UDUTxumfHn+8LzjS/0LKCPKg07w/M/xYgjd7ZEpSXe9jDqLU1BJFMLoEj1gIvTFfnZWPnda433yJ1DsLuxH18eIBcLYgULyDe7umCLnIfjpg437/KbTFsx1N3oSvXLl61kI0=
+	t=1748417884; cv=none; b=Lo862uFWy+o8iGNx3g/+Rncv/uhrbBErbig92i6z9blM+eyGhAWuVu00TBgJ0gtK8LOOlfKI1HONvmqujJcwBsBOoN7ATifk2nNzFCmTRmXh6Z9GSe0FsfPMM3xKs3jgLFfCYhBX7C/I+2AADKy97Q21QN2/PZpf8OWnGAUGplc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417867; c=relaxed/simple;
-	bh=XFnolhBWMpZsbRKYipyO+ZmWPeaLCtIGk3PDlvRwUU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHOmtYg2T0kyRHptj5hH5ImuNxQNml0c6W73AWepaSv3pV05jYCl0YopXNb3cr3gErex/e8vlqNCWOIkYaHtsINPSX+g3wWvNxQakiNpz1EdLOj6D0x1/959Yvu9NqAR6wNPfx/sSk0Hpc44bPQnlMlVDYib5iRLtYnM+Z0AZNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVhkY5BR; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1748417884; c=relaxed/simple;
+	bh=dC6/r+XL94KrBaJDEg8ysPYbOiXiNK3lHLZP0ifcAGY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kTxAf7rV/xP0/J4YaEMyJZMJUO9RGlOUySWFTruLZyS8OrTLQZ8zBuEZvUtw6vhu/24Wqsh+8NDjeSzMoP+rqoftN6aZq1nM4DNUkfgUIQ3uvH4YKj9ADEekxaAZk1hoPd6aP+LPi8afzCbzU+QjqB5GTZXvBNPoztLb9GSGAZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVhkY5BR"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad8a6c202ffso11076166b.3;
-        Wed, 28 May 2025 00:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748417864; x=1749022664; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t1dSHMFfDFy764C5jJ4C2GRVs5CFaHPqL3t86S7wFV4=;
-        b=JVhkY5BRx7qQmJx+/VBeOvSc/EUIaTc+Q54GeY996o482my7xqBcaZFib4CCNL3Cig
-         qwXEs2ZrgOBMvQHr+uv8HVfUp5tAJIzOJVWdkue5dUJ3kd5JFjEh7sHWHILBKcMTJJt4
-         CkejnLyH7Sl0lHlRQI16mK/B+xLkWWAqxSsNtCCb9cleegdCPlGho31M9t0dvbd23KSP
-         iJjIRXp+QHm1UjOeHl621qPkCtJoMg8zbutCf0/HBz4AfJS1T3PEyWPw+l8S6j8O7yB8
-         m4FPRmCeoCyq1QBsx1SxYSoJ4Jq8mPPI4m5vfkeFLllmeDUoUnV+ffobXyGz2HQqUDTV
-         Owwg==
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1395947e0c.2;
+        Wed, 28 May 2025 00:38:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417864; x=1749022664;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t1dSHMFfDFy764C5jJ4C2GRVs5CFaHPqL3t86S7wFV4=;
-        b=HfjDug7pFAmBCBm6FNBZyFSfAJ4U35/9PmQOsJT09xmbmyutLVpEez9ufTii6vvMAe
-         vAjDHdoCAPGcAM1EAHHqy49qS6Zyza3QfvFKeYawCI3SgVqAQ11ruZND+USSZ9xlhul3
-         +/RL7LklMx7rH+1bsOBWmgaE+WsrDfiDp7qas0NSORXUAYyAfSmn1aewjVTtsdqsyhl3
-         LN1RH8qxAGjUFM2WTRAb2dsaiGc2ZtJgr0WqfupF6kfaKmhwXp1DvtljFWH5+L3PWQv1
-         b6CfnocQJi9bOnMdOJFJAjg6Wnn6oMvbxiyyhMRpiGbq+x4I8taoJW09j5LFVTAceo+W
-         FfTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaJoSWp4s7+XhsuBODPYbfOzwewQyGnHhIABrqLk6eZEVodoYi4krWiSh6GAbocCzA98JOX28Ass+AvhRq@vger.kernel.org, AJvYcCUcLn4Wc0wc6cVB80TxO3JJSeBIhYN6OrsyRpoyIkcBppc9ayl5UK0E9qN0Po/UGjP9+kj9A+7S@vger.kernel.org, AJvYcCVGrUZ7t0eJ1w7jkI9cxLy7wJptOh6A472Q3uiUEMtLOEzzqzX/o6ycZVIfGLjCLnsbYpw=@vger.kernel.org, AJvYcCWW6BtUAJbNSfsUVJQy9s8wUt6KrFc3gcBw1tgZa9rrJhXUiIZZbbjwoW4tXFGO/E2WS9oyGaVxBRD0aQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw305KHftbZq7/R32iiy0BYAoJUSonOxg6uUR1tmkpQ29djxXiE
-	k2M47c00+9DB0e8mHDs/zK/sksivwVGqMzJ8PZjxXwfP0feI9rcFWSDW
-X-Gm-Gg: ASbGncusQrFTKW7K4Z336fEb8oHPPK699QcyYUZHpRckOfSNif0GIWIKQaWMUpLW6Nd
-	8CKZOKk1b6sidRwLapKCrijUVHpFmI7cTMIGtXaVJAP+7f6+Q9UyVo5I6R8WE2sx/02BzGU8r9A
-	7xG3735Blo+a0tMk7Ec6R96/ewJpY7QzSNMfbME4z1N8SlX0Yw4FQS0PxlPvH5Izmq+J5SeV+On
-	bfUratGZu9ZcLoNK2J+R7QhYOoOUiVtXHrRcHwgn3AIy6byH0LvfC1hEQdPX2E/XGAASvyx5TIZ
-	lJ7dqHw/h3uLpaUe7JpdEjnvIXZs+9HFih1QSv5asqETg6GEg9NBlLWC3WQjQ8s5KALL6qGRIA=
-	=
-X-Google-Smtp-Source: AGHT+IGVvc9x00EqEBp/+uRhBV0Xy1432qgXuuK+2L3w2LGJ/kw7OOqZ6bGFRPbEXoSuuCXV4u1knw==
-X-Received: by 2002:a17:906:99c2:b0:ad2:4144:2329 with SMTP id a640c23a62f3a-ad85b1205c3mr1472269966b.7.1748417864109;
-        Wed, 28 May 2025 00:37:44 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::6f? ([2620:10d:c092:600::1:c447])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b28a5fsm61572066b.90.2025.05.28.00.37.42
+        d=1e100.net; s=20230601; t=1748417881; x=1749022681;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q0FIvnATmtkNNdXQbt1Fz7I3kCcVI6Dqou2JsI1LDaQ=;
+        b=A9bhradSkN8DWqfBk3rvVrpiTtQl65UtOoPNI4pulVn4A/Hv32aGMExEdMtpBezzuC
+         ZJXob/1rOEf3VSQo1PuP/wCiPZFln09UBCjGMIBZreyhzqz7E1IQ9huF+lZl40ufFdX2
+         sICx5RQkEuOJ/LPmvuia/PajdePAZM5HXFsi/bjnYcDlO4Hq/QNW2ULMi/U9zlWXw7UQ
+         mT/Wmb7j8eF+oncTR/O9CxUPMaWUIiYjfPU2baw48echfXQFFFKiwuAYFZa476vCRsDC
+         Yu52foPtOWA/K4JT5u1YqqzlXzv9D4lJKTPuBV/V8tKDAKzYG470V0cjJuy4Fen3sk2A
+         Jksg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEYeFh8j9rwwPAz1uEQXUZ4lVvjAdwZL+ezGGXBBN1IoNhsSNAXZdKo1NnQs/qsDJ11PNQbD5aLNTV2v9Y@vger.kernel.org, AJvYcCUnM+XU6UpQXTyqOouCBKVscaelBJZTKj/U5d9QjIlBFqc0vuaeXfthsjnZr09ftY3H7CnNubIOIFxw+zfCdhrY5h8=@vger.kernel.org, AJvYcCV5zdEC3VdrrOUS/tgFrlJY/uh1tAKVbHCaIuCEYBtbAvHXVeRhALr1gBbptiVWzkdw5QKhw5Dzbx3qHJ8=@vger.kernel.org, AJvYcCVXHifsSyyJilK+CKodWu6mvewV26NEiRHUzsPIUSSOYXO8WlHRGuvftN3yIYw8smdTv4oNlayLU/qxCDSO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIUucXOAyU7uv2XEXViTG2bkg4gok9OW5XaMOm0GG+D27albWV
+	nlbsY3n0laGy+F8v7zeYFipbaajQhffy8qIp5+S/cQDJb+G0Oa3NwNfWU/ayb8Xh
+X-Gm-Gg: ASbGncvosmqhEra7BQ7lKL8qpJhmqbhMiGSnUwy8yc8CcOjn+71oz0zaWQsRsp00KfG
+	KIh+pfAnzFVeI4VkgUlzvOoYPpjiyjHY00vp2s6GqOUL1F8vCDbRqE3pvvf7kmbGHSdvblnmdWr
+	Oz+DQVrHplgx5ypMEuqdmu1rAB95ljNFpHg5AtmNwhDUpqAQj3ssIn/r5mVlSQiGgM1wn2U4GIx
+	tlAj8wEii8uQY8x1HyGCje/2HOj2PvZTLoidaeByZStjW21lvCcApAM50VA9dIbWpPmyMipgJTn
+	JIy5bhR4HtKqfXhMm9C4XKqfTNvfDYFxHaBljoNa6FwBRy4s0k6NWc4GYfOoWww9KMF1ypU91eW
+	p5sQYRcsYIRVQtw==
+X-Google-Smtp-Source: AGHT+IHispFt8IBDadtOKw22E5PPSlK7FrOJnlZ6MHJgJfUuzrpL8uTku28GgfXu+2wGW9Q/rkVwQg==
+X-Received: by 2002:a05:6122:2986:b0:530:6bcb:c97f with SMTP id 71dfb90a1353d-5306bcbcb83mr91593e0c.8.1748417880716;
+        Wed, 28 May 2025 00:38:00 -0700 (PDT)
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53066979b54sm500426e0c.47.2025.05.28.00.38.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 00:37:43 -0700 (PDT)
-Message-ID: <6cf44bd6-325f-407a-aadb-74eb567974ef@gmail.com>
-Date: Wed, 28 May 2025 08:38:49 +0100
+        Wed, 28 May 2025 00:38:00 -0700 (PDT)
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e5a1a4e4aaso51509137.0;
+        Wed, 28 May 2025 00:38:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVDZTB8ablys595TS9S9OnRgPpBY6bjjKNMugyGypR3fhN0i/Q39ycwczYEvVaow7PvAmWRr4Q3ZVLJGprXh6le5CA=@vger.kernel.org, AJvYcCVStZOEDp/IllMB/lm283bw//VTOrhXbbRh9Ii13zHVXVBQ61w37f5P4jO9SngvB3xPtoq4RUstL/hjoY7/@vger.kernel.org, AJvYcCWKlpDEaEZCdH4pHZes2TdL/ko2IYBVRjjW1FfTrmZM3T76t6BWkrxVRWIFMzcPgLL6xizbUtdMi/oDKuM=@vger.kernel.org, AJvYcCXgDU4RzsChkkcfW+3K/qDh6U8l4qHuK6mUfb/LW0xrueGwddvzgvkZDWA1Bn+SS+WIWonl2vrBJwm5P4BT@vger.kernel.org
+X-Received: by 2002:a05:6102:d87:b0:4e5:9731:6ded with SMTP id
+ ada2fe7eead31-4e597316ebfmr3313200137.6.1748417879962; Wed, 28 May 2025
+ 00:37:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
- struct_group_tagged()'ed on struct net_iov
-To: Byungchul Park <byungchul@sk.com>, Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
- hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
- tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-2-byungchul@sk.com>
- <20250527025047.GA71538@system.software.com>
- <CAHS8izOJ6BEhiY6ApKuUkKw8+_R_pZ7kKwE9NqzCyC=g_2JGcA@mail.gmail.com>
- <20250528012152.GA2986@system.software.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250528012152.GA2986@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250527082446.2265500-1-aichao@kylinos.cn> <20250527082446.2265500-3-aichao@kylinos.cn>
+In-Reply-To: <20250527082446.2265500-3-aichao@kylinos.cn>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 28 May 2025 09:37:48 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV5ZhJrRiuEWLbU_gFcv40+izLpR0HN0EZU415s3QAkVg@mail.gmail.com>
+X-Gm-Features: AX0GCFve4Aj5WArc9KkplJVctpVO9pqz2wSMOeJzSTUgarGo2ZgOa2T8YLQGOCU
+Message-ID: <CAMuHMdV5ZhJrRiuEWLbU_gFcv40+izLpR0HN0EZU415s3QAkVg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] ALSA: aoa: Use helper function for_each_child_of_node_scoped()
+To: Ai Chao <aichao@kylinos.cn>
+Cc: perex@perex.cz, tiwai@suse.com, johannes@sipsolutions.net, 
+	kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, broonie@kernel.org, 
+	jbrunet@baylibre.com, neil.armstrong@linaro.org, khilman@baylibre.com, 
+	martin.blumenstingl@googlemail.com, shengjiu.wang@gmail.com, 
+	Xiubo.Lee@gmail.com, festevam@gmail.com, nicoleotsuka@gmail.com, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, srinivas.kandagatla@linaro.org, 
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+	imx@lists.linux.dev, kernel@pengutronix.de, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/28/25 02:21, Byungchul Park wrote:
->>> So..  For now, this is the best option we can pick.  We can do all that
->>> you told me once struct netmem_desc has it own instance from slab.
->>>
->>> Again, it's because the page pool fields (or netmem things) from struct
->>> page will be gone by this series.
->>>
->>> Mina, thoughts?
->>>
->>
->> Can you please post an updated series with the approach you have in
->> mind? I think this series as-is seems broken vis-a-vie the
->> _pp_padding_map param move that looks incorrect. Pavel and I have also
->> commented on patch 18 that removing the ASSERTS seems incorrect as
->> it's breaking the symmetry between struct page and struct net_iov.
-> 
-> I told you I will fix it.  I will send the updated series shortly for
-> *review*.  However, it will be for review since we know this work can be
-> completed once the next works have been done:
+Hi Ai,
 
-Please don't forget to tag it with "RFC", otherwise nobody will
-assume it's for for review only.
+On Tue, 27 May 2025 at 12:52, Ai Chao <aichao@kylinos.cn> wrote:
+> The for_each_child_of_node_scoped() helper provides a scope-based
+> clean-up functionality to put the device_node automatically.
+>
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+
+Thanks for your patch!
+
+> --- a/sound/aoa/soundbus/i2sbus/core.c
+> +++ b/sound/aoa/soundbus/i2sbus/core.c
+> @@ -155,7 +155,7 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+>                           struct device_node *np)
+>  {
+>         struct i2sbus_dev *dev;
+> -       struct device_node *child, *sound = NULL;
+> +       struct device_node *sound = NULL;
+>         struct resource *r;
+>         int i, layout = 0, rlen, ok = force;
+>         char node_name[8];
+> @@ -178,7 +178,7 @@ static int i2sbus_add_dev(struct macio_dev *macio,
+>                 return 0;
+>
+>         i = 0;
+> -       for_each_child_of_node(np, child) {
+> +       for_each_child_of_node_scoped(np, child) {
+>                 if (of_node_name_eq(child, "sound")) {
+>                         i++;
+>                         sound = child;
+
+As people pointed out before, the original (and new) code is buggy,
+as child is saved to sound, and the latter is used after this loop.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Pavel Begunkov
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
