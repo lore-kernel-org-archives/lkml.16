@@ -1,127 +1,94 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367F619B3EC;
-	Wed, 28 May 2025 21:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12C4156F3C;
+	Wed, 28 May 2025 21:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748466870; cv=none; b=YQd23j0bqdLYeTDCQEfqPwiI1R0SnI87BsqovMGqeFi4fSTYz2/OE72yEfRYIJjJQfns3VuW91sepKhiyE9Xokeh5k8DyyLCRTT/wtD36+90+JjhGCQeztzw8w2OZd+GkShcUQsq2G42FxVBqNhUvmrdPPT9QkhfBYUw7z4cIEg=
+	t=1748466928; cv=none; b=KGuyFa9W+rF/HlyotBqwe+t8OUPX5EWfKcCne/ZPN/l9tTJPtS7D+ugR2dvYQ69mTZPRzmW8L2xgnf9s1B/788CPPlUH5CTHdX1IlZ1jo3n2D7YygsxAx5eAS/d/jNLiFe6j173og/mCX86s81A/F2BR9wDsdnUD6BjVvcd+X+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748466870; c=relaxed/simple;
-	bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4hAjtvgw+PI8vhmOqyOjAwZLrrT70dYx1gGV2M7wdi5/2z/lZ12wxH2MIBi/4+yU6tJNXSsPLyQ+YXd+NY7XrHzg4FDsv7UiuaofDKkoloUT6bDhikXmQmwYKWslceAAtnVzAt5f+nYe1YAKf6gLZsYLsPRgYm5pBU/geVjkZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncvpEiP4; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748466928; c=relaxed/simple;
+	bh=jNERVCNqkSP5QKFQTNEm2bguz7VN6bMt5UJGM0pMvTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ddRf4SeaZcajI3aA/YrW4wS/EdRSlU0TW8SmUQYcqkI2+O/fP0GknKvUFuB+c8k7XUC9t9dnpafDvgdtGjZzRmJEuBzAlRwP9kgC8zjKMlItCiXkgiQEtHlBxSr3EXg739YMizhyAWu7VTE5ug9N7W5wcufrEWVWiQn8egpEXYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Xhs2g6QW; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncvpEiP4"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87de3223127so59750241.1;
-        Wed, 28 May 2025 14:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748466868; x=1749071668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
-        b=ncvpEiP4AQqOJr2Nm//DPlN289FixuqQYffHdD5X/vwG1g4ukGCnGafiHgThG0GMjc
-         EfQx3kQz2UG+FqTAoH9b6G4s5HiYMLxwrVFUSJIRbAjbmTNel66q9SfjMRxowNWRnIhe
-         qhwlG2p3SKRQn/tX/tx1lYlKvojRORvpjRBPeVr+qt8c3IWRiV25YNPHlcUZ71t81GXh
-         hC9dwngL3rZiVhmaMo5DI5iiqHmX0+NWxIq14gk6AyIwVlaHIwcgyavha5ucD7hdu/LS
-         931PtLlZkp/LTbA+A88tv2rNwUnVsTalbwetPkGIBuIzZVH+43QTvK5ljp9lZWuAmfx8
-         MHiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748466868; x=1749071668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
-        b=uS22fnlbrbhUatejWnt3eTH39LFsBKlkiy29K0B1n4jiouXljI8MjxsnJDa7tSYFYB
-         xYARrEKq/CAHettl0mPH69CdYjqlHDaoXGvXc/a0LY8AAOXNsvQm1DVjEnOlWaxR4amE
-         TFmJAWNSRIHoSJcZmtG0d0DLIaJ9j87RnSToSlEXBVFOyjdODfeBUYEH0crfEfmXmN1d
-         E0MTwZ/duu7TpVUZbscICG22+VtcyvAi3L7O7ln3J99v+s/p5x867o04kQqULH9bSHvE
-         6l7SGWYDuXD4KXVMyK+wOP6ArqEy1C3jX1sm4P1zzbjK/9oloHfm9tPsTIXlid2wGBfu
-         lgkA==
-X-Forwarded-Encrypted: i=1; AJvYcCU30EeiauxJ+PTPyrwT3obXqdbxw9OMP/EIsubdTyGD1Gys69CWv+BQGurUufkx5t+1rpr5te51@vger.kernel.org, AJvYcCXI1wyQFzMjcIj/jtqFUrXCS1Juliw7BR3NFz8mhrCrYIkInAEvQiCKflDW1lRbBSJLnQVWWjMVwnUbHH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0rK7sXkJKt6KMraVW3ii+shxuvEhxRLk/p1y5EqmGNBsCnAKT
-	Nxt7nLtlUApLE89lagPZm1d4SRm5CTkGnnegsatKqPNAIPLKSqsCySkqqnyOk3Qh6TIZaAEGjWN
-	C32AoOq+cFYkfamz40lXCttfVM3L4pjc=
-X-Gm-Gg: ASbGncsot8+lkwfYknwYDn0PuLNuZV/r0jupFdXqT65EON066Uk0TqEm6r0kPVtw5H/
-	n1gcxenM3UxSvw7ICwGsj8jmvIyX5W7ISsj/uz7jaKEQ090ePi4LBFNXpl8hLoJGrx/mXTSS5wY
-	1sJPB6p1F9MLOkKdakE98pNIRvWMRUjKH5hQ==
-X-Google-Smtp-Source: AGHT+IGGLLvtEb730nnh7rC673oR16aeQY2nH92ZW4fGCX/YiQ4QwWrxJP/i3AUVjXlzBuIQT/Ux8cWPw7wSCO4tioo=
-X-Received: by 2002:a05:6102:1612:b0:4e5:958d:4962 with SMTP id
- ada2fe7eead31-4e5958d5d03mr7448988137.2.1748466867876; Wed, 28 May 2025
- 14:14:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Xhs2g6QW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748466924;
+	bh=TBGtLU9W/IuMo6RhJI8z+1luDohP70q7lTVL6U0+FM0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Xhs2g6QWdX246yq44FsRT+rkd1nKHT1KgUlLzbTiyRbclJwzjafQCshwbay00Ph/w
+	 eoEFx3CgbHx4ijeMzM2a3Uv6VXJu/3TtS8vwV6+bEP5klVPnYa8yHy0h2PYh82nr4D
+	 lDqDk7baPwoHXDhCjDF+W96TdTCcidndGp0CC0aN+xbtDeuqvb7WuQxQv66GSwfTZ0
+	 e23UKBYNFlgzPPls62XQPnX+omLoXfRby3eQ9ux6QDtk6d4Go27fNRZ4WHOdtyWSvn
+	 R48UijxnBIum2H0Ph/mrhTQQt5temRTcTS4CIb/FLQmzuivIbsj+75myThsNOBiuOS
+	 4sMcfYlTy7vgg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b72Mw0xWqz4wy6;
+	Thu, 29 May 2025 07:15:24 +1000 (AEST)
+Date: Thu, 29 May 2025 07:15:23 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>
+Cc: NFS Mailing List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the nfs-anna tree
+Message-ID: <20250529071523.273eab82@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk> <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch> <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
- <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
- <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk> <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
- <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch> <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
- <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch>
-In-Reply-To: <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Wed, 28 May 2025 15:14:16 -0600
-X-Gm-Features: AX0GCFtJbKcSZrV6aI_DEhodkWvBg_0kUSxJMObTitKRlUNU-S1IGzUWOHTLoqc
-Message-ID: <CADvTj4r1VvjiK4tj3tiHYVJtLDWtMSJ3GFQgYyteTnLGsQQ2Eg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org, netdev@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/AnhhVMhr=fkNmn_dsX8Vope";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/AnhhVMhr=fkNmn_dsX8Vope
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 3:05=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Wed, May 28, 2025 at 01:45:40PM -0600, James Hilliard wrote:
-> > On Wed, May 28, 2025 at 1:27=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
-ote:
-> > >
-> > > > I think a lot of ethernet drivers use phy_find_first() for phy scan=
-ning
-> > > > as well so it's not limited to just stmmac AFAIU.
-> > >
-> > > You need to differentiate by time. It has become a lot less used in
-> > > the last decade. DT describes the PHY, so there is no need to hunt
-> > > around for it. The only real use case now a days is USB dongles, whic=
-h
-> > > don't have DT, and maybe PCIe devices without ACPI support.
-> >
-> > I mean, hardware probing features for this sort of use case have been
-> > getting added outside the network subsystem so I'm not sure what the
-> > issue with this is as those use cases don't appear to be meaningfully
-> > different.
-> >
-> > > I suggest you give up pushing this. You have two Maintainers saying n=
-o
-> > > to this, so it is very unlikely you are going to succeed.
-> >
-> > So what should I be doing instead?
->
-> Describe the one PHY which actually exists in device tree for the
-> board, and point to it using phy-handle. No runtime detection, just
-> correctly describe the hardware.
+Hi all,
 
-But the boards randomly contain SoC's with different PHY's so we
-have to support both variants.
+The following commits are also in Linus Torvalds' tree as different
+commits (but the same patches):
 
-> Do you have examples of boards where the SoC variant changed during
-> the boards production life?
+  fcb340ec3b51 ("sunrpc: fix race in cache cleanup causing stale nextcheck =
+time")
+  3433575f4da5 ("sunrpc: update nextcheck time when adding new cache entrie=
+s")
 
-Yes, the boards I'm working for example, but this is likely an issue for
-other boards as well(vendor BSP auto detects PHY variants):
-https://www.zeusbtc.com/ASIC-Miner-Repair/Parts-Tools-Details.asp?ID=3D1139
+These are commits
+
+  2298abcbe11e ("sunrpc: fix race in cache cleanup causing stale nextcheck =
+time")
+  5ca00634c8bb ("sunrpc: update nextcheck time when adding new cache entrie=
+s")
+
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AnhhVMhr=fkNmn_dsX8Vope
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3fOsACgkQAVBC80lX
+0GwIqAf8CD+AKDmRLhzkXPr/SKuGQAcK/UMNrWz7tvBaWTnyyW4IODd6gyrf7v+Y
+sW+TXu1WG2Pa+OPZlUSETCzBzRCDrgjulqmYUkpWAbvRb3EULc6ZZelSRhyvBO7F
+Zv5JcBAW2Ky0pQ0EF/gPYSq8Wn9KQVicF7Wk/Jc0Mp+5BPfe8x+dpDO6bNLekxju
+SGgL9YXf9rpy5HfqFK6Weiso+OM4sIkAMj5/fxSTsz/wFpOa2Uxf0eZ05gLJSG6N
+KzqBESzump4LYztaWXNjKolSBji7kZ84wz/YHRK/sSnGMyGbIz4y+pFTgwC7SbYg
+V/pw1ocCQ4gBe7pk4aWzmLqSOOEvKQ==
+=6lUg
+-----END PGP SIGNATURE-----
+
+--Sig_/AnhhVMhr=fkNmn_dsX8Vope--
