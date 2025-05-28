@@ -1,124 +1,114 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681E4279789;
-	Wed, 28 May 2025 12:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C35627A448
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435740; cv=none; b=VDOwsZcsSCu2lPo25nR/Qp28Uclj7Y/gI3ILMj/sP1Yb+z2du9dxFct2grXQxwPrwvWIjRpq2Yu7YD3XUVesv3NvZecOxVQP8zrf+uRCKo7ku9hBoX2BLB/ec731YqZ9V1/hwDVSw4R4c66MRNY1HTYabhqkffXc9Wqmxkc0FGo=
+	t=1748435764; cv=none; b=G9QmLkm7zJM4Is/hCKwtEPJtOiI23Ic+Wqep2bogVVTS/hAhNz3nFyCqoPLmv5ez4TdCTYw9auUd4O4dIBA5anABhXI8nM2sU08zUvZf+1n3vY+NQ17Sv2EL/2mrt88imTQlt/0gXV1MYxbVUznJ1KSVpMLNIbNgmFlEOB/BzeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435740; c=relaxed/simple;
-	bh=LYwqlBRi8ID882TZWjXAGZR8tgMQwuR55sVHt5Q57Jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XE0aOCnzh5tkALHM96V69hxdC6aV+tZ2CSJRbumEfX52mIh0xyjzy5GsODJ/3gWOEAknHZzekv6Ads+V1/MjMFKYwyEMMrx24YD/xPRn39loNrgEnfjQMGwIUUXpi9QSOxOurCZSfXz+0fteXVyohzxfX2rlzImXI6khHqHd2AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YPR4P/Zc; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748435764; c=relaxed/simple;
+	bh=opFMAY7ql65PTVuG1xITeeuQ5Ru9iADMO899kbu8eR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uTWUMnpW8NDIJiWJNSlbALv7dLR1/gcAXZLzn+PTRuzA3eWklRYeOD8z2+YR+/amW/SfGcWSOWBEgqZtUAGbny9ZKLIgkbPmnql4UF+2uGvGrrqPy8/CWR1/lyLUtsnYsdudJrmC1v8pMGaH6Zrw0aiaE7MtfUV1Kk6q1nQiLw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sW76eO0c; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sW76eO0c; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YPR4P/Zc"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748435735; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=54GRYqlSUhKavKBqRRsmmEctJpORh0vvFiJujpYJZXc=;
-	b=YPR4P/ZcdtSOJmHgDyIeIqEeYZUUPDarvb0rNWM9ERT0Q0wb1WBV14LS97BvChkztTtVvQMS6iWY8qGpzC1j8V2zYfmxcJDOGgagykTLYMz7W+anVVvQeruDxlCgkUtzk/8/ITL4d+fsFkuSQ+B65cuBdWu6VSc3AnzM3k0CEuo=
-Received: from 30.221.144.174(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0WcDTszd_1748435734 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 20:35:34 +0800
-Message-ID: <878ab848-c57c-422b-9694-264d43af7f7d@linux.alibaba.com>
-Date: Wed, 28 May 2025 20:35:34 +0800
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sW76eO0c";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sW76eO0c"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 483B21F897;
+	Wed, 28 May 2025 12:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1748435760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oUHpflNkqxQqAeRF/c6Lk5cVWk0vuP3r2ZYdL4XjqBc=;
+	b=sW76eO0cjSJnW4NETyMF/qAOcV8R/jWofXly4AHnsZJccejpPQ3xA3XDrBTvmODFCvw/iE
+	MEKzfCjZQHWQ8r/3cP7cE+rEeW0pl36Kte3HXJ34S08MSDbs99qbJGvS/kfw+1sCyfobFh
+	QXZwGb4ijWxSDK9EkFyKyD9pkv8mkck=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1748435760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=oUHpflNkqxQqAeRF/c6Lk5cVWk0vuP3r2ZYdL4XjqBc=;
+	b=sW76eO0cjSJnW4NETyMF/qAOcV8R/jWofXly4AHnsZJccejpPQ3xA3XDrBTvmODFCvw/iE
+	MEKzfCjZQHWQ8r/3cP7cE+rEeW0pl36Kte3HXJ34S08MSDbs99qbJGvS/kfw+1sCyfobFh
+	QXZwGb4ijWxSDK9EkFyKyD9pkv8mkck=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5306136E0;
+	Wed, 28 May 2025 12:35:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id WCIeLi8DN2iWKQAAD6G6ig
+	(envelope-from <jgross@suse.com>); Wed, 28 May 2025 12:35:59 +0000
+From: Juergen Gross <jgross@suse.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: xin@zytor.com,
+	Juergen Gross <jgross@suse.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 0/3] x86: Fix some bugs related to ITS mitigation
+Date: Wed, 28 May 2025 14:35:54 +0200
+Message-ID: <20250528123557.12847-1-jgross@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: Replace simple_strtol with kstrtol
-To: Su Hui <suhui@nfschina.com>, mark@fasheh.com, jlbec@evilplan.org,
- akpm <akpm@linux-foundation.org>
-Cc: ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <20250527092333.1917391-1-suhui@nfschina.com>
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20250527092333.1917391-1-suhui@nfschina.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
+	RCVD_TLS_ALL(0.00)[]
+X-Spam-Level: 
 
+Running as a Xen PV guest uncovered some bugs when ITS mitigation is
+active.
 
+Juergen Gross (3):
+  x86/execmem: don't use PAGE_KERNEL protection for code pages
+  x86/mm/pat: don't collapse pages without PSE set
+  x86/alternative: make kernel ITS thunks read-only
 
-On 2025/5/27 17:23, Su Hui wrote:
-> kstrtol() is better because simple_strtol() ignores overflow. And using
-> kstrtol() is more concise.
-> 
-> Signed-off-by: Su Hui <suhui@nfschina.com>
+ arch/x86/kernel/alternative.c | 16 ++++++++++++++++
+ arch/x86/mm/init.c            |  2 +-
+ arch/x86/mm/pat/set_memory.c  |  3 +++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
-Looks fine.
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-
-> ---
->  fs/ocfs2/stack_user.c | 15 ++++-----------
->  1 file changed, 4 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/ocfs2/stack_user.c b/fs/ocfs2/stack_user.c
-> index 77edcd70f72c..0f045e45fa0c 100644
-> --- a/fs/ocfs2/stack_user.c
-> +++ b/fs/ocfs2/stack_user.c
-> @@ -360,7 +360,6 @@ static int ocfs2_control_do_setnode_msg(struct file *file,
->  					struct ocfs2_control_message_setn *msg)
->  {
->  	long nodenum;
-> -	char *ptr = NULL;
->  	struct ocfs2_control_private *p = file->private_data;
->  
->  	if (ocfs2_control_get_handshake_state(file) !=
-> @@ -375,8 +374,7 @@ static int ocfs2_control_do_setnode_msg(struct file *file,
->  		return -EINVAL;
->  	msg->space = msg->newline = '\0';
->  
-> -	nodenum = simple_strtol(msg->nodestr, &ptr, 16);
-> -	if (!ptr || *ptr)
-> +	if (kstrtol(msg->nodestr, 16, &nodenum))
->  		return -EINVAL;
->  
->  	if ((nodenum == LONG_MIN) || (nodenum == LONG_MAX) ||
-> @@ -391,7 +389,6 @@ static int ocfs2_control_do_setversion_msg(struct file *file,
->  					   struct ocfs2_control_message_setv *msg)
->  {
->  	long major, minor;
-> -	char *ptr = NULL;
->  	struct ocfs2_control_private *p = file->private_data;
->  	struct ocfs2_protocol_version *max =
->  		&ocfs2_user_plugin.sp_max_proto;
-> @@ -409,11 +406,9 @@ static int ocfs2_control_do_setversion_msg(struct file *file,
->  		return -EINVAL;
->  	msg->space1 = msg->space2 = msg->newline = '\0';
->  
-> -	major = simple_strtol(msg->major, &ptr, 16);
-> -	if (!ptr || *ptr)
-> +	if (kstrtol(msg->major, 16, &major))
->  		return -EINVAL;
-> -	minor = simple_strtol(msg->minor, &ptr, 16);
-> -	if (!ptr || *ptr)
-> +	if (kstrtol(msg->minor, 16, &minor))
->  		return -EINVAL;
->  
->  	/*
-> @@ -441,7 +436,6 @@ static int ocfs2_control_do_down_msg(struct file *file,
->  				     struct ocfs2_control_message_down *msg)
->  {
->  	long nodenum;
-> -	char *p = NULL;
->  
->  	if (ocfs2_control_get_handshake_state(file) !=
->  	    OCFS2_CONTROL_HANDSHAKE_VALID)
-> @@ -456,8 +450,7 @@ static int ocfs2_control_do_down_msg(struct file *file,
->  		return -EINVAL;
->  	msg->space1 = msg->space2 = msg->newline = '\0';
->  
-> -	nodenum = simple_strtol(msg->nodestr, &p, 16);
-> -	if (!p || *p)
-> +	if (kstrtol(msg->nodestr, 16, &nodenum))
->  		return -EINVAL;
->  
->  	if ((nodenum == LONG_MIN) || (nodenum == LONG_MAX) ||
+-- 
+2.43.0
 
