@@ -1,138 +1,201 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57EAEEB2;
-	Wed, 28 May 2025 07:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5B242D98;
+	Wed, 28 May 2025 07:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416441; cv=none; b=ZndKYbyytIfOLkxDJ5gwsK89BRp9XK1D3etVg7SVdH86xDjn4LmyC8YHrvM7gcOJV7s/wGov3hM1+ctlRUbxI5pa9eaO9/0m8d/mq0UER4zh7wP6iIueh3nQBmc2rdX0nQ/hkvP2Lvf4hI5KgklVpeQyJ1ysRM3/sIZTQRZFkN4=
+	t=1748416471; cv=none; b=mXZYBrgG6XoBW/4mVxCbfoMGNN7M2sbZNDmE5UI8CZjCAgXXJtxVt2hE2/BsQRJvJB9R47mfD4Sw+Z1V3oKvq6UUoFHDpJiZgXvn3woQJ+w8tkfQyC288liEgK7RPvzRbHm/En+YcvgZ3a1Y5A4V7KI93ymLp2ypORQW+aWcMRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416441; c=relaxed/simple;
-	bh=NA01JuBV6s2RqUnPspO8lP68OW1tJ4ZIkKhFb8sGOqI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aS8GXvV9PlMFFMHmrF3Mu8Iaggdgkts0AkyCeLbrjYEgeJ8bpHzLrFXwrxjS+pOgtsEl2lIs2+PQVOwQsf2kJpGR+/xjpR8iC2AQNYe91y+nYACRoA/hKyCaJdDYqYeUEI5pkJBub8Y9F5SEI+Bh+cMq4oxQw4MSp7qZSFKv7uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ls50IZf6; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1748416471; c=relaxed/simple;
+	bh=dsYr2+VPVIPpGKKHj9pv38/YtMjGpdlE9wKnObX7AGE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OM8VK0N1oQs6LqJpCZ/qh+aJMTtC60hucLfe4AkfAoU69ILnvOUcIP/o5GV4is7PJy6MVfJEBnV2lm9oRtRHHoRInidaN+ZffmrSQKUo1cygJlg3t95qCM6nTZ6Ze4VgMLiBWeo/hL17YKXakHu0sk8WoUxKuOkCm2wkq8fDRE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ls50IZf6"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-441ab63a415so49193415e9.3;
-        Wed, 28 May 2025 00:13:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748416438; x=1749021238; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8z38qczvZbxO76S2l6qCCFYCsTxTOPBbrJdkHVddxqs=;
-        b=ls50IZf6S7gTgjssKkwT3+X5ZAiWo14FeesTM7XU1h8G1A3Fargr41caUganQNjEK8
-         WNTr6/rdldGhncgm935lFvGrz8aJB1OPHvAEjsAFmZodeS7Z8y2W5b2dfUk6B/tRMhq3
-         w1x/OznO6chKWaD1k1sUBo8yhzfTqzPeXSGT1SrEEW9qXdOFRTmCBqSaF+Wg9Lim30tV
-         FDkwWAnrRH7iGZdtNyTnLj2XgHujCZXyW05M942G59DADeYBIpN0cac//VibNXpreo2V
-         bt9XooJdQ3VxhebVUmS78F/+ztDa1jHsizHaacLsoN7ExGTVQVelx2Q5C8I6u1WygOkr
-         7G8g==
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52eff44a661so1134288e0c.3;
+        Wed, 28 May 2025 00:14:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748416438; x=1749021238;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8z38qczvZbxO76S2l6qCCFYCsTxTOPBbrJdkHVddxqs=;
-        b=Be5XxqE7KY3DCYvrlnjJuyUXi+c53xUFlcAExSfKGC+DHQlzC4BjhWVXa9rQ0oyZmd
-         XUCEBtL1q+1BcozmofMtoT/8r39Qlyjx07B0/zp7bk319a6FE5W3JgO1lxqSMCAPcPm0
-         3DLHM9Fiv+GhGPt906vPSEn7dwVdyXe9Hj0dAUn9CaifGf5i9AYNYRWBgfgawJhsCLAa
-         7yMldfwMbxDPqndhDSq8zgaZ90cawEAkrj1s2n+3St+nqF6+sf51A9f59xInYRYyFphc
-         EpmWPW4/C0wHu220SPoZxF1h3/upF6csS2stdAkcnpCWGmUpUkiUbk71psxNhwQaeVpC
-         6zUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUohqPlwLTnHU8P/Asf9wHo9Fe7FsCBjdt/0O4McNu0rgihEQjql46+JBSPih9WunnPOng50Qh0N3sdo7ri@vger.kernel.org, AJvYcCX0MopLLSf53HrMokp3xrGnNJuFoSBzUv5emdjIs2t/48/Bg1oGXmIF/NUQ4/Hd0Mz3SuZRcvsDtlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlUdMZx3xMbHscqSu8ipRpurPFB68SQ3sYU8MdbW9VUOycSCHw
-	mL7EaqoeAHz75ZnVHeFfU9OfbSlqJFxXdd1+il2mmfPeW1FpISlhuU4XqN+d6Dgp
-X-Gm-Gg: ASbGncuanzINB3JxqPWkM29+gjmSIuyxo2dNgtoRiZFNngFducXi8eP9oWQYWyNs2z9
-	IU92osj3ScZOz71raswon6JY1c7s3Al0lBo+Il35JIDQA97wR/cvCzRU0xPLMkEk8yDsFVqot7g
-	EQuWi8LOeoap9TzI1nNSXY13GNfivYQZJ7+E0O8w+vNacviYhSiWQEXW3ASFg96+gzF6fwa1d5+
-	qadGDxMjs9CCNCbBbOUvoIhGVAwc6N6UVcQkpZr2wzPmqjhIaqGQZTmHMmcCKCtCvPaM6ogUdoJ
-	tcZeAbaLupE8u38wZZTXkcMNYgeB1uYqs9dDaQEqa0K/j3E/jt0=
-X-Google-Smtp-Source: AGHT+IFUeDV6q6xaB+r06fKVdY1G8cH/8XvdGuTg+xFtJRhZxSlobft7u22w3aTFnbPx2ZJc7hHSZg==
-X-Received: by 2002:a05:600c:4ed0:b0:441:b5cb:4f94 with SMTP id 5b1f17b1804b1-44c91ad6b5cmr121816275e9.5.1748416437876;
-        Wed, 28 May 2025 00:13:57 -0700 (PDT)
-Received: from eichest-laptop ([2a02:168:af72:0:a46c:90a2:a3c0:b012])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4500e1ddaeesm11501665e9.35.2025.05.28.00.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 00:13:57 -0700 (PDT)
-Date: Wed, 28 May 2025 09:13:55 +0200
-From: Stefan Eichenberger <eichest@gmail.com>
-To: Lukasz Kucharczyk <lukasz.kucharczyk@leica-geosystems.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	stefan.eichenberger@toradex.com,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"open list:FREESCALE IMX I2C DRIVER" <linux-i2c@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	bsp-development.geo@leica-geosystems.com,
-	customers.leicageo@pengutronix.de
-Subject: Re: [PATCH] i2c: imx: fix emulated smbus block read
-Message-ID: <aDa3s2TR-GvPmF3z@eichest-laptop>
-References: <20250520122252.1475403-1-lukasz.kucharczyk@leica-geosystems.com>
+        d=1e100.net; s=20230601; t=1748416465; x=1749021265;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W3AwXVgZWJIPFDmEkzHtoSPmnRnszxQ34o1b/XJWM3Q=;
+        b=exj82UyqxFgIVvd/BPzwZNXIwSTB3c50PU6U2dVTi5RJTIUO/6irdWlLe09JGHprME
+         F9Vg/IBuowU1UhXnROfaNoLohOyEWyDCtXB2sZqHloc244fuiPVZ6wVodowJd3a8Ohq0
+         GOTXxPfhDo6xz3cHoQnvlAKQj0Q4kL6qmRPzmOyZhay3KoqurqwDr0ghonVxY0vdaxcK
+         hI1jDT11nfG46sHK17O96kXocL9EBz3SGKIaCcPwqFviFwazZBdDDUFBIXvym4etCwjd
+         uPzCmyHyIcjH+vnAZbS/JNgLE88SC99hTmc4TCdRGEiDPHc2u50sZ/qouktRktaSYeAo
+         3kYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWDGtePctpvyYVGj+aE+WL8jkIR6HbSKh8Khqpnnpj6hEYjCR1eKFD3vGthPUU288qx2NZM96uRQ6W@vger.kernel.org, AJvYcCWEzEycTxnT929lw0Y8EM7vF5S2W8ym56MGm6SBHYDVaOCylr3xGuPEBHVeJ+UBCMdWbgUDNsgtLQSt@vger.kernel.org, AJvYcCX3Nu/2QIkeG728VXY3Ngwve9em33eGjU80duNtNCcEEHz/4uJ0t+QZiLQ0Z/np1Sc3lSweJ7U2f/X1q6a8QRVW2hg=@vger.kernel.org, AJvYcCXwopdTE/aCuaqACykuJ6ImR86njnmDlkgv9K7g0lKB0Zuth965F0tBjWCtjY5zrjwKzYGImsD0D+YotUVg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSUdfxr7rBZXwp8K1PacJCqF7uKQ+0FJVsvicBpLALpsVmFbTs
+	TXd7HNI9euG4L/fDiQTx4/uly1GQe8SGX0JKgH/nuLzvdjQ0qDaTbugPrZZ8AzIz
+X-Gm-Gg: ASbGncsZMV53fXqkUe+X3sxq09L0MXPB8nCcc0YdwrJEQilXzecxCq4PQx5Z6zIOWY1
+	SlfoT6OvyACyFT+lBsoFjc82/Kp7YtgPFbU5u2a7pylqinXt5SKRns5sOkHuIrP5QPbvRGLDT68
+	mkCkKuKdhwxgqu3jcu461X5gRyszUi0sHoeZ4JrcmLBOQOhgigiCZq2V4AkV9hOYLy6N76E/BSB
+	FflDtQ59kUS/HMsG6ilETHIYAOAC2o35uiOllFpPs60AMNP86JsaTo/TxIXDVODLoybJhlYCpeu
+	DafyOO2ehg7MjHjLXY6KBsEp16M1aT6tS5pBQBS/krtu4oxLdFcYj8zAS4jMJuR0/nwfSWAQ02T
+	RPdQXiTpdKEKFFA==
+X-Google-Smtp-Source: AGHT+IFldSN9qBJ9ZXoQbnFKrU9RqinI8/7yeYamScCKQoCpsABqGm9CPcEkwuDppDJh7YYIHSLnlA==
+X-Received: by 2002:a05:6122:8b04:b0:520:997d:d0b4 with SMTP id 71dfb90a1353d-52f2c4c8022mr12582574e0c.4.1748416465497;
+        Wed, 28 May 2025 00:14:25 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53066843ecesm490180e0c.4.2025.05.28.00.14.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 00:14:24 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e58d28ebb0so552102137.3;
+        Wed, 28 May 2025 00:14:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVOBmmEYShbq5PFw/t5dXdn14ZiqjQXXuwW7ApuWq60zbOxyB0dbzFYa120qFp8hnaHp3wtAr3fDogx@vger.kernel.org, AJvYcCWgTceBj2IMW3Vkwx17iCaKg0puM7Q21HoaSlg/s3jy/ly2Sj2JA03fWR6HdXuS+E1JckW3bCEzdyQUJzXeVkdkXF0=@vger.kernel.org, AJvYcCX6DC6VtBHnR7VxeiVK6IOznU50QdA/wCiSIZzvKIGYi3q3N7I4arDWl+FWP3u/tHvSHwq0Ytnz7xtv@vger.kernel.org, AJvYcCXt9b5CImezcRpfWbIEeXyfK92LdRKzvOqs3yXOuRtzJc1qVgjzuxJyInilD5iZmvJ3mln1OuMpHy8ukbNn@vger.kernel.org
+X-Received: by 2002:a05:6102:5244:b0:4dd:b82d:e0de with SMTP id
+ ada2fe7eead31-4e42415fc45mr12232806137.17.1748416463800; Wed, 28 May 2025
+ 00:14:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520122252.1475403-1-lukasz.kucharczyk@leica-geosystems.com>
+References: <20250525160513.83029-1-marek.vasut+renesas@mailbox.org>
+ <20250525160513.83029-2-marek.vasut+renesas@mailbox.org> <b7vnm66igh3b3ahyjqhegnbteij3bj2ypxcq6ccwi4i77k3af6@g62yhfervtvt>
+In-Reply-To: <b7vnm66igh3b3ahyjqhegnbteij3bj2ypxcq6ccwi4i77k3af6@g62yhfervtvt>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 28 May 2025 09:14:12 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU==_1o9LNMWxvChNtvrtvJ0nGb3Kp-uLmCX+Kbv_Ajjw@mail.gmail.com>
+X-Gm-Features: AX0GCFtOFIkdeyrU5qOoeF12WCRAZB7wo5Pks_9rfthiicfvECxoWJx-OjXflDE
+Message-ID: <CAMuHMdU==_1o9LNMWxvChNtvrtvJ0nGb3Kp-uLmCX+Kbv_Ajjw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a779g3: Describe split PCIe
+ clock on V4H Sparrow Hawk
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>, linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Lukasz,
+Hi Mani,
 
-On Tue, May 20, 2025 at 02:22:52PM +0200, Lukasz Kucharczyk wrote:
-> Acknowledge the byte count submitted by the target.
-> When I2C_SMBUS_BLOCK_DATA read operation is executed by
-> i2c_smbus_xfer_emulated(), the length of the second (read) message is set
-> to 1. Length of the block is supposed to be obtained from the target by the
-> underlying bus driver.
-> The i2c_imx_isr_read() function should emit the acknowledge on i2c bus
-> after reading the first byte (i.e., byte count) while processing such
-> message (as defined in Section 6.5.7 of System Management Bus
-> Specification [1]). Without this acknowledge, the target does not submit
-> subsequent bytes and the controller only reads 0xff's.
-> 
-> In addition, store the length of block data obtained from the target in
-> the buffer provided by i2c_smbus_xfer_emulated() - otherwise the first
-> byte of actual data is erroneously interpreted as length of the data
-> block.
-> 
-> [1] https://smbus.org/specs/SMBus_3_3_20240512.pdf
-> 
-> Fixes: 5f5c2d4579ca ("i2c: imx: prevent rescheduling in non dma mode")
-> Signed-off-by: Lukasz Kucharczyk <lukasz.kucharczyk@leica-geosystems.com>
-> ---
->  drivers/i2c/busses/i2c-imx.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
-> index ee0d25b498cb..4bf550a3b98d 100644
-> --- a/drivers/i2c/busses/i2c-imx.c
-> +++ b/drivers/i2c/busses/i2c-imx.c
-> @@ -1008,7 +1008,7 @@ static inline int i2c_imx_isr_read(struct imx_i2c_struct *i2c_imx)
->  	/* setup bus to read data */
->  	temp = imx_i2c_read_reg(i2c_imx, IMX_I2C_I2CR);
->  	temp &= ~I2CR_MTX;
-> -	if (i2c_imx->msg->len - 1)
-> +	if ((i2c_imx->msg->len - 1) || (i2c_imx->msg->flags & I2C_M_RECV_LEN))
->  		temp &= ~I2CR_TXAK;
->  
->  	imx_i2c_write_reg(temp, i2c_imx, IMX_I2C_I2CR);
-> @@ -1063,6 +1063,7 @@ static inline void i2c_imx_isr_read_block_data_len(struct imx_i2c_struct *i2c_im
->  		wake_up(&i2c_imx->queue);
->  	}
->  	i2c_imx->msg->len += len;
-> +	i2c_imx->msg->buf[i2c_imx->msg_buf_idx++] = len;
->  }
->  
->  static irqreturn_t i2c_imx_master_isr(struct imx_i2c_struct *i2c_imx, unsigned int status)
+On Wed, 28 May 2025 at 05:50, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> On Sun, May 25, 2025 at 06:04:04PM +0200, Marek Vasut wrote:
+> > The V4H Sparrow Hawk board supplies PCIe controller input clock and PCIe
+> > bus clock from separate outputs of Renesas 9FGV0441 clock generator chip.
+> > Describe this split bus configuration in the board DT. The topology looks
+> > as follows:
+> >
+> >  ____________                    _____________
+> > | R-Car PCIe |                  | PCIe device |
+> > |            |                  |             |
+> > |    PCIe RX<|==================|>PCIe TX     |
+> > |    PCIe TX<|==================|>PCIe RX     |
+> > |            |                  |             |
+> > |   PCIe CLK<|======..  ..======|>PCIe CLK    |
+> > '------------'      ||  ||      '-------------'
+> >                     ||  ||
+> >  ____________       ||  ||
+> > |  9FGV0441  |      ||  ||
+> > |            |      ||  ||
+> > |   CLK DIF0<|======''  ||
+> > |   CLK DIF1<|==========''
+> > |   CLK DIF2<|
+> > |   CLK DIF3<|
+> > '------------'
+> >
+> > Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> > ---
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Conor Dooley <conor+dt@kernel.org>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> > Cc: Magnus Damm <magnus.damm@gmail.com>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-pci@vger.kernel.org
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > ---
+> >  .../dts/renesas/r8a779g3-sparrow-hawk.dts     | 45 ++++++++++++++++++-
+> >  1 file changed, 43 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > index b8698e07add56..7c050a56290fd 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > +++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+> > @@ -130,6 +130,13 @@ mini_dp_con_in: endpoint {
+> >               };
+> >       };
+> >
+> > +     /* Page 26 / PCIe.0/1 CLK */
+> > +     pcie_refclk: clk-x8 {
+> > +             compatible = "fixed-clock";
+> > +             #clock-cells = <0>;
+> > +             clock-frequency = <25000000>;
+> > +     };
+> > +
+> >       reg_1p2v: regulator-1p2v {
+> >               compatible = "regulator-fixed";
+> >               regulator-name = "fixed-1.2V";
+> > @@ -404,6 +411,14 @@ i2c0_mux2: i2c@2 {
+> >                       reg = <2>;
+> >                       #address-cells = <1>;
+> >                       #size-cells = <0>;
+> > +
+> > +                     /* Page 26 / PCIe.0/1 CLK */
+> > +                     pcie_clk: clk@68 {
+> > +                             compatible = "renesas,9fgv0441";
+> > +                             reg = <0x68>;
+> > +                             clocks = <&pcie_refclk>;
+> > +                             #clock-cells = <1>;
+> > +                     };
+> >               };
+> >
+> >               i2c0_mux3: i2c@3 {
+> > @@ -487,24 +502,50 @@ msiof1_snd_endpoint: endpoint {
+> >
+> >  /* Page 26 / 2230 Key M M.2 */
+> >  &pcie0_clkref {
+> > -     clock-frequency = <100000000>;
+> > +     status = "disabled";
+> >  };
+> >
+> >  &pciec0 {
+> > +     clocks = <&cpg CPG_MOD 624>, <&pcie_clk 0>;
+> >       reset-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>;
+> >       status = "okay";
+> > +
+> > +     /* PCIe bridge, Root Port */
+> > +     pci@0,0 {
+>
+> PCIe bridge mostly is integrated into the SoC itself. So it should be defined
+> in the SoC dtsi. Only the vpcie3v3-supply is board specific, so it should live
+> in board dts.
 
-This makes sense, we never tested the actual SMBus emulation. Thanks a lot for the fix.
+... and the clocks property, of course, which is the main subject of this patch.
 
-Reviewed-by: Stefan Eichenberger <eichest@gmail.com>
+> > +             #address-cells = <3>;
+> > +             #size-cells = <2>;
+> > +             reg = <0x0 0x0 0x0 0x0 0x0>;
+> > +             compatible = "pciclass,0604";
+> > +             device_type = "pci";
+> > +             clocks = <&pcie_clk 1>;
+> > +             vpcie3v3-supply = <&reg_3p3v>;
+> > +             ranges;
+> > +     };
+> >  };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
