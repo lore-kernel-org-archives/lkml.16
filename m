@@ -1,138 +1,139 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EED21CC52;
-	Wed, 28 May 2025 19:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635EA1F461A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:13:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748459522; cv=none; b=VP9YgBscQ1A2qxMRGo4/zhj7U0BUcNc6ph72oH2iXDW2iHXAok95+qtdJeXMSd1j/a8TTYatXy7tgfbNxRs/9nVqN5KmnYkmDbhKa/4/8WixOxqmvNjkK1K940AgY80gskT1sGWMWEoXtZQgvGXxQ8+yRQhuY7if9bFC/bKQxNI=
+	t=1748459589; cv=none; b=bxKlA0W5ydkq0V+Xes8uTSVLKlI5RhNXO9Q1cCaoSAsxOnAHo1iF2HtgqUzWcXoIQwNlutyYfdJe4Aeb1c2Ut5IU9FohkH3RlMKecsqHBZaybFltjwCXm6Gi5Wk8qszND/fwXw6kfWr6eytLzQv180e4kBb++9mZ5f5Ot68cmWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748459522; c=relaxed/simple;
-	bh=cX550pISPQDK1DwgJ7QJM3dehdOu55JaKjaF8ro+544=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hBcgMidryUWTQRTeMTN2Y0cjMA8PfrkzzBpoQrhc4WIIjPOxMNIFlqCPkvrAgRKhxFGbNSuOmOXiUFeZ8OXodclHX4tQv9oRqGP2oh6Z5vh9sat4vkMVPJWlD6Er1AcP7gGwhZt0HqYTrgjc1EdgErDA3NjsiBl4HK25hLNARMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+Kk4P/1; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748459589; c=relaxed/simple;
+	bh=1DsrmvdbPw6itl3vJ52knBKK6yOvu7vuaJ8HQqwZ+Ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D1mI7pIDKDtUTXdDGpLFWBkQhr+a3aMyq6h8HrBdEyeqx/RvAS7XXCwsvpkCicF2pxEfN84P3x4nxLzr1yFIwz8q37pHlHoiPjr/sC5kU/W7Y6TiTcJlH16waOTsv7oN7f+3q+7NaYSH4emAt/Mqn3492Xtj1E2FMCcez+K6oIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iKwxB3Ms; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+Kk4P/1"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2346765d5b0so2271855ad.2;
-        Wed, 28 May 2025 12:12:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iKwxB3Ms"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso94028e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:13:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748459520; x=1749064320; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1748459585; x=1749064385; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yWQbsbybo0AYiSDWMY4Ls7SImui0r/N9voyPkWzUhz8=;
-        b=h+Kk4P/1kts58UpcDlhY+nUD1Ug1M0wsIOzrE4jYQhsXA94yE9AntJrxjgGbJpTpps
-         gLEBo8qhrqrtA3mjVX0qcHlyxhibvY5JH/WicBRtiruDjFqv/ihX0Vj40fWYmgIFu7+Y
-         ojkHhGxF0M9DAZqoeFIXcLrgX6TQrNG8jFW7IRe97kXLL7H9AgzpW/umoDCT7hLNy5Dk
-         smq+ABHrmVSOOb9OlYDH8b90qsGWGg4iIRHPTJE4aoxHSMrNrcEpPPRbblZr74b8L+cx
-         SccomBdxLhsmlZwDwNuCGzCI1eVx8G8I+LKd0yoxYC7VhGHZDc6SKcb59j56/tDGaGHb
-         XGhA==
+        bh=PGDPhsmZhFPLUE0e7mKHidePUZHitNrnRQ+jNJrByps=;
+        b=iKwxB3MsZMo8ci/eZZra2C/N77llA4dVi1iNzGd3EW4hOqjvinNd5k2IlSCvjizS9B
+         asj1Pkap1IVGtQupB9GfVUutTiQ1GbXHjMp28cpt0RSDgghUWre+PwDJdat4Az6RfvSm
+         hRwM6HG9piL7ULW8/rjAxb7hN7+Hfl8UcY8dL1IUSVdaMrknnbzI+Q5XWwTcnLMYGbTD
+         uwp6c5n3b0dKyyShzVJrzGKEQ7UqUsn/PLD5dXcQMrPJaxsjYndUYZVJSnOhrqDA0oMt
+         P13vipXe97ACdmEJ4g2Cu5E6+7D9wqu1e+CkEfqR01o+3dNLWEPGjkGKCESDoIftv3iq
+         oD+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748459520; x=1749064320;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748459585; x=1749064385;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yWQbsbybo0AYiSDWMY4Ls7SImui0r/N9voyPkWzUhz8=;
-        b=sok5zzOrSDhDClvUJnNDtDoQ3uhQl4ZVKBSTXpVv3HfLWXESm8iwZ+vWDF/RFxRrw1
-         lz+JGNO/v1jRcE3EYZ1Mkp3AftWkRukoNWr9RNiklhf4dvOV+btwwsrygUi4ub6xwZmB
-         uWkxHj8HKXZ2RkYob49JEDpwRhHvN+W3BB5GrWZN8imXqPO0fB4nTFyWVsgl9jOS5B3E
-         I/5QC8E54trC6KGK0jYup6dpmorKztyaexw2UlxGsRVzUM75uUj1ydRPMgTnt1sjKkC6
-         IhVaYjINXxz1J22NQhnsMmQOAnksCLkzyHhfdIp15fh8oXgkqKDFmEA4YiR1gGSVo1AT
-         CWNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxM+GsKlXj4qxSHfCOlvz5M6wNr/NB/sDvl9kL2M0Zwn8t/1f9lHiaS9aSIBOoZz5epvjsuQbKSwnCZP03RqpUIQ==@vger.kernel.org, AJvYcCWSZjpKFfcbVA6HGJ2WrmhCHUBulA1FtnGvR7NbNyBAtovCoEH+fyC1TrI5al89G9CVLoBEab2AqK/9zVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjI/Z0CYfAv74pQAT12xQLmkJww3o4RtrwfXYFKpBgNN5mhlEH
-	gvYxh4r4Ck8bZgoL1Fhj/PCG2EYtP6df2kh859HBd2WNozcV8ewmNmzR
-X-Gm-Gg: ASbGncsvvkAWouB3zeqGWuRiq81Ox+E/Dnst7cVVFVnfIb6vM83N3g/X3VFqC0k/tGM
-	mYEin631mlY90QtwDUa5o0ldC0zk0fclxmHWYp7+aA+KKm3pvSigUUon290gTXXDofQpbuj5Knv
-	rMAIyfc/UEyS+0OSHOW56H5VEiF8QV7DjzGeRMc2vTAqMkXVqzo600gWl2VnX4Ch/IeVVYiqOTs
-	LlQeoMGMrjT9nYrMSrQsicNrL+nzywIybrnLnv0DljIc7Nk1q32yJdjGDm3xCc+UNvARKWZ6iNB
-	rrA9S7PDfsJQV6EnCMnPPqbM4O3SvKYez9OPgzpPVtskTYWkK5VZEU7Ct0ciAQVhK+t547rw5Rv
-	oly8Youn30+xHDOymkyxC2g==
-X-Google-Smtp-Source: AGHT+IHYU4oZ9mQEkI4vOkU02K4lNP3QUSc8U901XQ2xdQK+jwkgCE2BGiA6OmUv8eYKqS7wKIt5KQ==
-X-Received: by 2002:a17:903:1a30:b0:223:fabd:4f99 with SMTP id d9443c01a7336-23414f334a2mr273797535ad.5.1748459520065;
-        Wed, 28 May 2025 12:12:00 -0700 (PDT)
-Received: from howard.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm15172215ad.169.2025.05.28.12.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 12:11:59 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: mingo@redhat.com,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	peterz@infradead.org,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v3 6/6] perf test trace BTF: Change the regex pattern in the struct test
-Date: Wed, 28 May 2025 12:11:48 -0700
-Message-ID: <20250528191148.89118-7-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250528191148.89118-1-howardchu95@gmail.com>
-References: <20250528191148.89118-1-howardchu95@gmail.com>
+        bh=PGDPhsmZhFPLUE0e7mKHidePUZHitNrnRQ+jNJrByps=;
+        b=JABS+YGj3HkGWDA5CJe8HYV8ZylCoTR3x1yB8TMC+73P97EQaB5Y1Rc4gXLMglHjSD
+         Be+H8fA6XEpWlA3gGts/r6jZ2eArwuCWxAsImHuP6Dd6f/pxj0PJQDhZhA0kzzqItGFD
+         7Th0JsKIGwErt0OsP1Yui7DEliYdCzhRMIcbtQ6ACJypv/lgVnEWoH6nMkayXyn8wDWc
+         /V88AwxtvUq2UqzwTqVHZs6vVbqjjvg8R33axe5KLQ/fR855D0fYQCIe7EJYPcCgDXTy
+         0G1E/HkzRS/8NGaHy/z1B60bqSeExhGUofah0BCIVAltZXN9y9mbxGUTYSOp1MQ7aw4P
+         H/CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXA1HtYp6GnZn0/HJiuHprM2fZVVD8kGp1DebwWnSfB6UljHXlpIzHkv+OiIRAVJ1YTR2GsDDejBhaTZxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/3Ac5WT5UCNQ4A2FHsEab06dt+HKlqj1dx6h5w/IkEoxO5QZr
+	9Wx4r2S/hmGXhGPyJc7GkFsZ8QPZg74LcWfmm2t11AlBD68fFBFWWQmfMSNXpoiSaYTsTqZyjI+
+	3jgfRaQSCHYCKDUsxssCWrw1cQTaMys5ymKJnmn/D
+X-Gm-Gg: ASbGncsfVXa+oZ7oJFWnICeSIKyso0xrmd9Xlc4rfa4KR23GzGlzUvmHW3iE2HmqOAw
+	EQPR0RQm5CpmDtprbeOM1wd8b1Ev5rE+hwfaWu9UnkOYOrV2O38Xe05MColqDwNPtZ550/XmSbG
+	aPMWzwIhmdd/LcUguLClEVHWKTp4M+cF6IxNnmS6ADpEA=
+X-Google-Smtp-Source: AGHT+IENSrWlJkxNFY4TOuDnvof9fLD0sj9JLDZQmVPx55WZqPCCzxZDtUORACYNFiuISGW1oR25nrmY+3RgCW6ZaZk=
+X-Received: by 2002:a05:6512:1189:b0:553:2ee0:7720 with SMTP id
+ 2adb3069b0e04-5532ee077e2mr1435406e87.0.1748459585117; Wed, 28 May 2025
+ 12:13:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com> <20250515182322.117840-7-pasha.tatashin@soleen.com>
+In-Reply-To: <20250515182322.117840-7-pasha.tatashin@soleen.com>
+From: David Matlack <dmatlack@google.com>
+Date: Wed, 28 May 2025 12:12:38 -0700
+X-Gm-Features: AX0GCFuTxrjiUSGmZ0OzPPrEPW0tlYNVcfu7l32SNjf8l-9qIDQ4iNLU10iGMiQ
+Message-ID: <CALzav=dzvVgmwxhh9ic6mTjQL32srzAOH-wXgkksXTa2rd=TNw@mail.gmail.com>
+Subject: Re: [RFC v2 06/16] luo: luo_subsystems: add subsystem registration
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
+	changyuanl@google.com, rppt@kernel.org, rientjes@google.com, corbet@lwn.net, 
+	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
+	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
+	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
+	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
+	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com, ptyadav@amazon.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ian mentioned a reliably occurred failure in the trace_btf_general test
-where he obtained trace output of:
-    sleep/279619 clock_nanosleep(0, 0, {1,1,}, 0x7ffcd47b6450) = 0
+On Thu, May 15, 2025 at 11:23=E2=80=AFAM Pasha Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> +int liveupdate_register_subsystem(struct liveupdate_subsystem *h)
+> +{
+> +       struct liveupdate_subsystem *iter;
+> +       int ret =3D 0;
+> +
+> +       luo_state_read_enter();
+> +       if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
+> +               luo_state_read_exit();
+> +               return -EBUSY;
+> +       }
+> +
+> +       mutex_lock(&luo_subsystem_list_mutex);
+> +       list_for_each_entry(iter, &luo_subsystems_list, list) {
+> +               if (iter =3D=3D h) {
+> +                       pr_warn("Subsystem '%s' (%p) already registered.\=
+n",
+> +                               h->name, h);
+> +                       ret =3D -EEXIST;
+> +                       goto out_unlock;
+> +               }
+> +
+> +               if (!strcmp(iter->name, h->name)) {
+> +                       pr_err("Subsystem with name '%s' already register=
+ed.\n",
+> +                              h->name);
+> +                       ret =3D -EEXIST;
+> +                       goto out_unlock;
+> +               }
+> +       }
+> +
+> +       INIT_LIST_HEAD(&h->list);
+> +       list_add_tail(&h->list, &luo_subsystems_list);
+> +
+> +out_unlock:
+> +       mutex_unlock(&luo_subsystem_list_mutex);
+> +       luo_state_read_exit();
+> +
+> +       return ret;
+> +}
 
-But the regex pattern used for verification is
-    "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, ..."
-
-This lead to a mismatch.
-
-The reason is, different sleep commands use different timespec data to
-call clock_nanosleep, on my machine, the value of tv_nsec is 0.
-~~~
-$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
-     0.000 (1000.196 ms): sleep/54261 clock_nanosleep(rqtp: { .tv_sec:
-1, .tv_nsec: 0 }, rmtp: 0x7ffe13529550) = 0
-~~~
-
-While Ian had this trace log:
-~~~
-$ sudo /tmp/perf/perf trace -e clock_nanosleep -- sleep 1
-    0.000 (1000.208 ms): sleep/1710732 clock_nanosleep(rqtp: {
-.tv_sec: 1, .tv_nsec: 1 }, rmtp: 0x7ffc091f4090) = 0
-~~~
-
-Because sleep's behavior of setting 'tv_nsec' is not certain, and tv_sec
-is most definitely 1, this patch relaxes the key regex pattern to
-'\{1,.*\}' for a better chance of matching.
-
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Reported-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/trace_btf_general.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
-index 30cd3a53f868..ef2da806be6b 100755
---- a/tools/perf/tests/shell/trace_btf_general.sh
-+++ b/tools/perf/tests/shell/trace_btf_general.sh
-@@ -49,7 +49,7 @@ trace_test_buffer() {
- trace_test_struct_btf() {
-   echo "Testing perf trace's struct augmentation"
-   output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
--  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,\}, 0x[0-9a-f]+\) += +[0-9]+$"
-+  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,.*\}, 0x[0-9a-f]+\) += +[0-9]+$"
-   then
- 	printf "BTF struct augmentation test failed, output:\n$output\n"
-     err=1
--- 
-2.45.2
-
+Suggest using guard()() and scoped_guard() throughout this series
+instead of manual lock/unlock and up/down. That will simplify the code
+and reduce the chance of silly bugs where a code path misses an
+unlock/down.
