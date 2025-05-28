@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ACE2580F2
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:12:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D20248F6A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419922; cv=none; b=BmsCodQ/XZhNAtcmZqSvaadC+ChHwTv+nHkI1g+g82N3js5bKdBZWNH36kNPQjauSTZFTtQmGmpPXOjTiPW5UyIgxlPvfMLfqEM4Pi4e4NkcogJ2CMx/dIIN0CwomVMgxJGirWcLPIeNBijagFQy3H/1n9V1B1roawyxhU1PIhA=
+	t=1748419926; cv=none; b=CpIb3ruSGfWOCLT1ZemFxhK8XvU1LZw6oLEKQ6f/sQJ+jrxsOw1+w38nQSo06MbJwkVAczwnAkyHFJ5+TQpuIvKfEyNVFLxQhx5ROfxDwZEpbMIo2G1irxUgY4KowS4hLfJGlGCxbdEQyuoPHdy174PmPlCvG3d71T4ApO7tVUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419922; c=relaxed/simple;
-	bh=fZXEfXDXoR6mUA8KJflJTQEmYbNsOdcpzlbTVIKB9QQ=;
+	s=arc-20240116; t=1748419926; c=relaxed/simple;
+	bh=EWBGbiAoT9c7/GC67CiLl0LDzZ4HPT2SbxPRGmzMgYI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sNYveAMV/K2fxMEYTrnnDH2vRDUfD78y6D4zGIXVqKyW/FxAR9G2IcBD74W1BsPJGufbXhpw6jlNiUmU4q4QyObGgiC2AQqSN5ZMWC0E2WHOms8kdGqaEXG6iCqgqzNwEOTqpe6NxNro+Rj8FKwcDY6Xmot1G7V4syPxoKaGsW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwpD6ON1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uRee8a9VydQwLXbUnho3BzVhPAqIUXCnRZrFqNxkf1FYKGAA6eEmkc93TL45Dj9JFPTp6eRnQ0c0B55OJNILcX4NoNvrJ3n+eN6w3TvglEIYzJy8qsAfdZNfQiowdkwqP0KlGR1CSdjXBLs/qYpeO8F477AI6YoRvGEcQAqlDBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwX1b/+C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwpD6ON1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EC0EC4CEEB;
-	Wed, 28 May 2025 08:11:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwX1b/+C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB5AC4CEEB;
+	Wed, 28 May 2025 08:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419922;
-	bh=fZXEfXDXoR6mUA8KJflJTQEmYbNsOdcpzlbTVIKB9QQ=;
+	s=k20201202; t=1748419926;
+	bh=EWBGbiAoT9c7/GC67CiLl0LDzZ4HPT2SbxPRGmzMgYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AwpD6ON1Qv9faraH5aJAAiDJGRcZrY53tfelt1/YbPrDpHRcXF2HSg4Nwb177DT1H
-	 xERUHQzius13u76y6AIFZ6YChDFqKaZVOnUn+G+QVD2rXL67TFGnt5sRzS8KOyqbux
-	 HZmXKW4qo+76lA7OARnNIGA3jNXLLwDufKgDRxLKntGxE8m5ZWvlQYr9O0EWgc9703
-	 9SZUB4PYVBbEClEEu2Ljk/bn966DM5mPXLG1LcK0r+/oWCjfJdSetdRlvR1GVLpYwC
-	 87nKuA80b1+Ln6UAi37MBBrUvSDTzvPS2mPG+n8lhVzQf2Y8xG2h/XTLjPe+Uddcbw
-	 1xOpXEiEpmD/Q==
+	b=iwX1b/+CZjdfcTZIjSLQ1CxOgkjSd/9P5M3zefKWRKcYC/gESUzVeHYji2rMT3iDc
+	 fR+zJBjxcFBxKLUsAAhUHwzQPC2cY38YKR6J4u+AWFSrUVnAdLE8NhbnLhoiMHRwdi
+	 ocinKFFfRWx1og3EfReT6xHCxSh+tdY8RXvZ2wdTVAeM42h54k0pHeguGzFKIHs7mA
+	 N1PqexnDHyDOo7SLzC+QYOD0ngOm+5m676b6SLK2qD7CsX9I7u7UJyvpXQ+8AYcXIV
+	 UjHJvSrnCvoCZBXUxcyT0SJRTSJQpRLE/eVLZPP+zPqaYl9apuzP2QHqIbGzOq0wfN
+	 Mpn/Ak2OzW2kw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 38/43] sched/smp: Use the SMP version of rq_pin_lock()
-Date: Wed, 28 May 2025 10:09:19 +0200
-Message-ID: <20250528080924.2273858-39-mingo@kernel.org>
+Subject: [PATCH 39/43] sched/smp: Use the SMP version of task_on_cpu()
+Date: Wed, 28 May 2025 10:09:20 +0200
+Message-ID: <20250528080924.2273858-40-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -68,23 +68,25 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/sched.h | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/sched/sched.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 61a5f683c502..28e2847a3584 100644
+index 28e2847a3584..fbc9d25a3e6c 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -1744,9 +1744,7 @@ static inline void rq_pin_lock(struct rq *rq, struct rq_flags *rf)
+@@ -2237,11 +2237,7 @@ static inline int task_current_donor(struct rq *rq, struct task_struct *p)
  
- 	rq->clock_update_flags &= (RQCF_REQ_SKIP|RQCF_ACT_SKIP);
- 	rf->clock_update_flags = 0;
+ static inline int task_on_cpu(struct rq *rq, struct task_struct *p)
+ {
 -#ifdef CONFIG_SMP
- 	WARN_ON_ONCE(rq->balance_callback && rq->balance_callback != &balance_push_callback);
+ 	return p->on_cpu;
+-#else
+-	return task_current(rq, p);
 -#endif
  }
  
- static inline void rq_unpin_lock(struct rq *rq, struct rq_flags *rf)
+ static inline int task_on_rq_queued(struct task_struct *p)
 -- 
 2.45.2
 
