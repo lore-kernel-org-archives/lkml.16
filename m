@@ -1,114 +1,129 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB841FAA;
-	Wed, 28 May 2025 13:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8123C1FAA;
+	Wed, 28 May 2025 13:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438701; cv=none; b=EJmfcWG6ROLnJ6ZwcsuxEJR/1SAux2iaekDJJraJQPPnueA6J98tonQojUfaX33HTIVxYgYvyQ+mMM0oe3boZQ/IUeNYhD4dxWFNT4ZkWagVZb9zpiokuoDsoZ03cGchWDO+hoxI4KrlK51lYIY1yJ5x3UgYcnx2v1h2Qs1+AQg=
+	t=1748438769; cv=none; b=e0jiwNzLtazEUOCt8X7Y+AfP6UP9B74tFN0FY/Sl4Q6fOKHHOLGZMyKYIcT9wiu/GG5rqdhZM7Bwtmc+loQbN/KXf6AxIzS8pAJVIpiXeztjauxF5h6Y6PrtxHA8BRJmeV/FV1t/FccmfvrwlaM9eIivJD/QhDOotQPTdHWXDBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438701; c=relaxed/simple;
-	bh=3EaQ0vYUuKF1jmAFbBVV6X09cz1ehGj922mtt6MzENI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cjosWkV7JFp7wBk4QUE3Lp0oAzK7QIwUoD3GhCZGMC6xnGPEDjUodFDXkHvxOVHB+OATBlHs4thVaecK0OqdbGLqfc0zKAXZxFCDGgbiUzUYm1IhtphRWoKVzx7qR7JQC3yM4rMGrWSQ/8/MSVyHsA0pzxCz6aUwNKkfCderMoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CvNTTWZq; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748438769; c=relaxed/simple;
+	bh=rxep3wf4faA2onypK2iZ/bRRCLhtffcSXOxeWi8D5cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVnJsbGA92GGtM0MjoS/SqB2T2a4NSmlM1TdJePeOIsH0N5LZo9Fhz52f+ZLcA8Awhc8/5baNWu5Zw5ZAXkn6Eat+GXAJwVAldFc82GThUN+EC6ppRYBSAulS9aVRN3kYH/YU5EFRs3436O5UXVWer0r7AeClbbhbZ+ASuZb29o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWjAUUJ5; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CvNTTWZq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=eBLT1coqN7DWf9zqS26cnLXO/a+cQ5A8TJyemfvfOhg=; b=Cv
-	NTTWZqEWIqlQKLw1iqZfeKB2gycKP4fQnxaOgVhW9sQoXjUgOMqlAPqOY/cEdYB0XM/boQ+lyJ8s+
-	kqj5B6BKu2PlJbvkVkPJ277StCNkbUonv85HBREfXR+xowx5Nj4vC0mlLHpG03b0Wk7ggawLr63qs
-	WWFpLv9UJKSTCO4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uKGm5-00EB7S-MN; Wed, 28 May 2025 15:24:53 +0200
-Date: Wed, 28 May 2025 15:24:53 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-Message-ID: <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
- <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
- <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch>
- <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
- <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWjAUUJ5"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-604e299b5b6so1766842a12.0;
+        Wed, 28 May 2025 06:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748438766; x=1749043566; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ieSLku7E97lhZ4UgdnDAb1QCFNhVxCm/IzChsnoZiEc=;
+        b=UWjAUUJ5665ICvx61xNY6FK/9oHtzZc6a4KQT2vCkLxbY9HmJmQN9PvCE8psN6kP24
+         TrtFqM3+4XuJP7yi29DrkTTqfMSg5HPA3Wwg+zIbR+AI+L2qKi5Nw6s7zdcglWziqidb
+         P06TTV6bOJ+kYFt8+6MwuRa0J6qTQpLl6eChDTqnCDF86MlpHVrwcZrfMg77VKHlVpLZ
+         qyUyjry3C6MEws4M0jnTF86M2kpwaw7jpynQ4fjD6R2kwHFeLZKwWwSPFppPNMk6p9Ik
+         kvBez8B4rfuyY/OaQha+/XaVz+oEduN/04aOg2MPdZDZQMXcXzC296i3UGuKKqAnxzWa
+         l2yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748438766; x=1749043566;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ieSLku7E97lhZ4UgdnDAb1QCFNhVxCm/IzChsnoZiEc=;
+        b=LutXOfge8/OnymtH5ba8fcPsedAmbtgs43SOpWaVvRpbklmp3S4jeNdQnRWHhy4G2n
+         PcaKu9RKzzEdokRo7eEWtDWsNi6wsAxcp4l0AWuUPBlEZAUyk+6jv+EJ89dB5ABRCe/t
+         93GzfTA10S2olPfoTMF5yPVjjyBNOikHgawRzahDYpaBlNfUt1YqbehYMsioK6myA+U3
+         N8xNZFruv11mE0oTF2SFYc1qnxA1kdJdPAWghwtGV1uq5/5e6E4NXyGNaYYErsKSh162
+         cuRh8fBUQqMPTJ8BfdhTugVzgK9l0sQpAKAyoRzhhX1ZY7HmiNQeOTxqLxijML25iq0v
+         6uQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIJ1P3hnSNpbX921UbzYKdMPx9tkpB231Pca3ZV8L/89UfALRqd8mAys8dzCK9xBzSdsZAThZT6mgV5HD4@vger.kernel.org, AJvYcCXQmg11sfpnl36i9hLkZYtX99HyUS1RLbPjv9F1sNTmlqPtUErbiWctvoW9ia9yCfWudjVW/QpSCCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTUI0aRYqPYbIkTlXbVF5Do+p0IjP51nm3x73rePt3SyVFveR+
+	dOv5gDfbtaVU96Zu+m6Q/jCJc6rVNbB3GKtvvS7wEOnV5g1jizZn8yOC
+X-Gm-Gg: ASbGncuLkjeTbX7kBpWkfOyluXiyoVrV/5/mnNP1LJgIj828lnyjY58vbiSeTMnKiH3
+	ZB9elTvVaSvztdF02h14E0JmWNlmM3U2IQ8fKXY3Z6gquJyJmcC1uUTrJO2Sf+PWRsYODnzouBW
+	GrEApjTbUIjnSlXT9Va14DuW4zMlSXE+5bNI0RhYckDhumJYENnHeDhf0g8wwAqhzxsk8rYWM38
+	WP6Jw+JQ5RzAsTfl2U4uSGUv2ILtrlUzDy1agj2L8EkW7mp/EIIUgL1ZvIY7NusH9J3sKN1nbP3
+	3b/ESFVdYN+bZrJDHaOLiZ+mzcMjdRoGg4hoNyuUQrU680eXPRFYpxEV5GWTJqU/IGeNrT4obNn
+	F
+X-Google-Smtp-Source: AGHT+IGH6NhjWRQzveyywsEHiNFK4CABJe+WM0+dyFghWFFkW3BP9KOOz7lN2b71Pta0/mTCAqJMrA==
+X-Received: by 2002:a17:907:9717:b0:ad5:6258:996f with SMTP id a640c23a62f3a-ad8989f78acmr418190566b.19.1748438765502;
+        Wed, 28 May 2025 06:26:05 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:7078:193c:ccdc:e2f5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a19ad462sm107742766b.4.2025.05.28.06.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 06:26:04 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] clk: renesas: r9a09g056: Add clock and reset entries for USB2.0
+Date: Wed, 28 May 2025 14:25:58 +0100
+Message-ID: <20250528132558.167178-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
 
-On Wed, May 28, 2025 at 05:57:38AM -0600, James Hilliard wrote:
-> On Wed, May 28, 2025 at 1:53 AM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
-> > > On Tue, May 27, 2025 at 2:30 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > > >
-> > > > > Sure, that may make sense to do as well, but I still don't see
-> > > > > how that impacts the need to runtime select the PHY which
-> > > > > is configured for the correct MFD.
-> > > >
-> > > > If you know what variant you have, you only include the one PHY you
-> > > > actually have, and phy-handle points to it, just as normal. No runtime
-> > > > selection.
-> > >
-> > > Oh, so here's the issue, we have both PHY variants, older hardware
-> > > generally has AC200 PHY's while newer ships AC300 PHY's, but
-> > > when I surveyed our deployed hardware using these boards many
-> > > systems of similar age would randomly mix AC200 and AC300 PHY's.
-> > >
-> > > It appears there was a fairly long transition period where both variants
-> > > were being shipped.
-> >
-> > Given that DT is supposed to describe the hardware that is being run on,
-> > it should _describe_ _the_ _hardware_ that the kernel is being run on.
-> >
-> > That means not enumerating all possibilities in DT and then having magic
-> > in the kernel to select the right variant. That means having a correct
-> > description in DT for the kernel to use.
-> 
-> The approach I'm using is IMO quite similar to say other hardware
-> variant runtime detection DT features like this:
-> https://github.com/torvalds/linux/commit/157ce8f381efe264933e9366db828d845bade3a1
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-That is for things link a HAT on a RPi. It is something which is easy
-to replace, and is expected to be replaced.
+Add clock and reset entries for USB2.0.
 
-You are talking about some form of chiplet like component within the
-SoC package. It is not easy to replace, and not expected to be
-replaced.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/clk/renesas/r9a09g056-cpg.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Different uses cases altogether.
+diff --git a/drivers/clk/renesas/r9a09g056-cpg.c b/drivers/clk/renesas/r9a09g056-cpg.c
+index 13b5db79aab4..e370ffb8c1e2 100644
+--- a/drivers/clk/renesas/r9a09g056-cpg.c
++++ b/drivers/clk/renesas/r9a09g056-cpg.c
+@@ -134,6 +134,7 @@ static const struct cpg_core_clk r9a09g056_core_clks[] __initconst = {
+ 	DEF_DDIV("ca55_0_coreclk3", R9A09G056_CA55_0_CORE_CLK3, CLK_PLLCA55,
+ 		 CDDIV1_DIVCTL3, dtable_1_8),
+ 	DEF_FIXED("iotop_0_shclk", R9A09G056_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
++	DEF_FIXED("usb2_0_clk_core0", R9A09G056_USB2_0_CLK_CORE0, CLK_QEXTAL, 1, 1),
+ 	DEF_FIXED("gbeth_0_clk_ptp_ref_i", R9A09G056_GBETH_0_CLK_PTP_REF_I,
+ 		  CLK_PLLETH_DIV_125_FIX, 1, 1),
+ 	DEF_FIXED("gbeth_1_clk_ptp_ref_i", R9A09G056_GBETH_1_CLK_PTP_REF_I,
+@@ -219,6 +220,12 @@ static const struct rzv2h_mod_clk r9a09g056_mod_clks[] __initconst = {
+ 						BUS_MSTOP(8, BIT(4))),
+ 	DEF_MOD("sdhi_2_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 14, 5, 14,
+ 						BUS_MSTOP(8, BIT(4))),
++	DEF_MOD("usb2_0_u2h0_hclk",		CLK_PLLDTY_DIV8, 11, 3, 5, 19,
++						BUS_MSTOP(7, BIT(7))),
++	DEF_MOD("usb2_0_u2p_exr_cpuclk",	CLK_PLLDTY_ACPU_DIV4, 11, 5, 5, 21,
++						BUS_MSTOP(7, BIT(9))),
++	DEF_MOD("usb2_0_pclk_usbtst0",		CLK_PLLDTY_ACPU_DIV4, 11, 6, 5, 22,
++						BUS_MSTOP(7, BIT(10))),
+ 	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_tx_i", CLK_SMUX2_GBE0_TXCLK, 11, 8, 5, 24,
+ 						BUS_MSTOP(8, BIT(5)), 1),
+ 	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_rx_i", CLK_SMUX2_GBE0_RXCLK, 11, 9, 5, 25,
+@@ -280,6 +287,9 @@ static const struct rzv2h_reset r9a09g056_resets[] __initconst = {
+ 	DEF_RST(10, 7, 4, 24),		/* SDHI_0_IXRST */
+ 	DEF_RST(10, 8, 4, 25),		/* SDHI_1_IXRST */
+ 	DEF_RST(10, 9, 4, 26),		/* SDHI_2_IXRST */
++	DEF_RST(10, 12, 4, 29),		/* USB2_0_U2H0_HRESETN */
++	DEF_RST(10, 14, 4, 31),		/* USB2_0_U2P_EXL_SYSRST */
++	DEF_RST(10, 15, 5, 0),		/* USB2_0_PRESETN */
+ 	DEF_RST(11, 0, 5, 1),		/* GBETH_0_ARESETN_I */
+ 	DEF_RST(11, 1, 5, 2),		/* GBETH_1_ARESETN_I */
+ 	DEF_RST(13, 13, 6, 14),		/* GPU_0_RESETN */
+-- 
+2.49.0
 
-What i think we will end up with is the base SoC .dtsi file, and two
-additional .dtsi files describing the two PHY variants.
-
-	Andrew
