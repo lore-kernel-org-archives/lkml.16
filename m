@@ -1,81 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4DD2036E9;
-	Wed, 28 May 2025 13:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8555F3D561;
+	Wed, 28 May 2025 13:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439812; cv=none; b=Hc39Hkz9CAZMh0TstuBkKFynv2O8FhW53PW1sK0X4Topu6zc12/DSyNbuSmix3HQ/xKrODW6u0kWBqQGQwjsRY6gxD3s2kUCiyJ74GmIDzsZXuJPoH3WMX4PO0nrgZjv4/hyMIH1kG0NxMShdytHi/NSXEOqmCm9VLf8KQdVkp8=
+	t=1748439851; cv=none; b=OTNMoDIJt1ZVFYq2GQDW4znyuNV0llMIhjIkFfbR/LU45ue5uyQDmPoIq0F/sYCP7yMp87y2routFh8FoYYxvDrM2s1SHW5fVQ6y/t0U8oSTR7IUHWZ65z2vzuek0l/FOJg1whhJnUYqdp4YJYUa4MWtsGBSMHPWd0fdFABAxnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439812; c=relaxed/simple;
-	bh=vGq1HLmqALcNndq/cJJqVAuCSHa0StLEkf2aGzgkQAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jGtOZKi+9DFgD6M6hkuOc/lL6c0D0Cvfzm2g9ixBfBZqs0u0qKvsMPvv9TXls4PF9iaCiFSHeZG3VzjPplip8sfoiJFeRG5AZyW8tvKqT4F/zkbYABJBKqYVb62z0XW8vA00dcgaF9lmgtxMkbix3JJYzEOT9mhNQEeVPsGj1z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNLQj2/2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748439851; c=relaxed/simple;
+	bh=ivXPZGYPGUFwUchdnZTRkdaXf0SBh7scsOYbpyld1To=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q7skjtZjWXHb0oJeYXZgUjmsKdpCbZ8ah9rxBApPNpe7qeM+9lUr++ugpqD+orj1GvqqxVlzMcVPA9f0wxSADI+QWSZ38tjzS8QRz8K+jP3waPwCaaFqjDhAHWjETS1l61H/8dmfjtRPxUW6hMv80NnH6jicQwG24Cd8xl7HlOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2aYRG6X; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNLQj2/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0003C4CEE7;
-	Wed, 28 May 2025 13:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748439811;
-	bh=vGq1HLmqALcNndq/cJJqVAuCSHa0StLEkf2aGzgkQAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cNLQj2/2JUOfB2qDCAd+SDA0xzg1qDYDxvANL1nXVK2Z+5pepxh+ZXhYn8Vv4P++l
-	 qHbXKCBahtH7aTtpv0xAAolaiIZj5TnUcDGs9LDsEMIb+Kw61bUtPcj1pN+8QTChHe
-	 kL+2bJAftqGMyF4gGEgt+QFaPrJZG6k6/2d+o0ZK3yndspvsIUtcP/UMP1povs9h/y
-	 WPmH70NjGmrr07yaRO0f0R7ZoOvHG48tXD951zJSaWTiRcqD5TxGzvxaHEFrjs7eNy
-	 ckLouls9V0EHDvNKvjoRvBD2LqsJVQOSUSxLuMo3eh4WiSxSi0LE/aXjH0y3SkqqEY
-	 LlNuwpOFTfrpw==
-Date: Wed, 28 May 2025 14:43:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Drew Fustini <drew@pdp7.com>
-Cc: Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2] dt-bindings: pmem: Convert binding to YAML
-Message-ID: <20250528-repulsive-osmosis-d473fbc61716@spud>
-References: <20250520021440.24324-1-drew@pdp7.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2aYRG6X"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47686580529so37647781cf.2;
+        Wed, 28 May 2025 06:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748439848; x=1749044648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ivXPZGYPGUFwUchdnZTRkdaXf0SBh7scsOYbpyld1To=;
+        b=R2aYRG6X70C3XjKApol9M4WLvymVFHGQumDPDX9rgrwNvdnIovv3j0J6q8xCSoDLD3
+         8/PxJBuQkPNDoC34REnPu7qDLRKmiM8D06c3lvQFtmKRSUu3BFBPvEBqka7ZQMhilb47
+         sjkq+eOqPYbS6ekC580JvpqpEmKL4s3XRDEMW8n/GCQ3KYlPSlYFFNefa+xCiqV1K0GM
+         TsYfYjp39k96xf9wyIcAHu0xFWJ11vbGInPUPk2BTOPmeW4magjjP78B6mePfTKF3Yhf
+         9103V9Z8CjDSm1Lr+ILB5+szBgvvBzk+6wtfWcsjDv4Xt0YdtZrl9jVkaI+IBxJXbPPY
+         yePw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748439848; x=1749044648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ivXPZGYPGUFwUchdnZTRkdaXf0SBh7scsOYbpyld1To=;
+        b=K7WFj9rVPFDQc1niocvUp/MBuajiaXtbDXKsmjMWGCgyEHuEWuKnyx1wj0wu/8MPGU
+         bnZGQrXzpPBLLbTy7GUCWfOAG9aIVPbwvUH7NXnDVnirLrC6JmuzJMKN1pHFwcqk3h7Q
+         gvk8KnFYgvCCnQhg0P74ERTPxGA3JWQcwTjtvYOVGfGnVve3vOeS+f6pa/IAe7RgTQbx
+         +Wq+VhwM4i+TjWJAVXwOfLPA+TaF02xq9t3OGIRsueQ2aQyGtQT/p7iJ5WNZRvclmX/A
+         mFdnBuixBziS6jF9rMHf4mY0vRQiKAjNZ4u/jKCdfylBObKAE6mgvAFipqPyeqOvCxls
+         23sA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuhSMjnh/99W9I4wQAU6VKlB/b9Y8PpzodvJGf5dU5jnKkGvLV1zSRs91ZWjr4zpvtNj363ecEeh1VrHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1E/tM0eDlfuhNJIrNEluOGwgww9yE80HzkRAda815AQxaA/4J
+	4OxMAsjmKhHay2tgTfcuZVdoD3dqt3HrIGawaoBkwjt+iQjwGCbsC4qqpEmnyk21jYN6Dob4Ahu
+	zG7nYtcMwDuFR6IIVtlJocos1qcGQya8Yt9aaCeE=
+X-Gm-Gg: ASbGncsmlWR4By+QTGylRN3f5DKij8jQ4Odu5KZbgyYJqcTRqumBskILa7wdqpRiNlK
+	Y7DGUti7PCmJ6RpcZWTuZ94ko0oBn0G8R2+EBNOeeEwe2YWBwRyNvbyq8fdFDnVIIzQNY9+mvqS
+	useFKRhZbuwFoj3f6Xf5/taIBqnpULL3qcsg==
+X-Google-Smtp-Source: AGHT+IEfSGvN6Gi909FdJQ3g/ClhFdpKwiegzmk+Sy9zxTE47iRN11ZKMPOf7QUGW25a6G9/V6ECQjq6/86XIs5fPvY=
+X-Received: by 2002:a05:6102:8096:b0:4c1:9780:383e with SMTP id
+ ada2fe7eead31-4e42406acdamr13895204137.4.1748439837746; Wed, 28 May 2025
+ 06:43:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y1QSOGp96aDgzao8"
-Content-Disposition: inline
-In-Reply-To: <20250520021440.24324-1-drew@pdp7.com>
-
-
---y1QSOGp96aDgzao8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAOU40uDDL9-ivR=8nx67T9_j+1+2dCXNyBUqFvOPyv0cpPr5Yg@mail.gmail.com>
+ <j3gqh3iv7hsanemh3ctsrzcd3hljhsmdwe65vrnsjrygsz5dzx@7wvtrimqooim>
+In-Reply-To: <j3gqh3iv7hsanemh3ctsrzcd3hljhsmdwe65vrnsjrygsz5dzx@7wvtrimqooim>
+From: Xianying Wang <wangxianying546@gmail.com>
+Date: Wed, 28 May 2025 21:43:46 +0800
+X-Gm-Features: AX0GCFuT-UwMcOAG3n596KKZpc-LvyGfVxAFZf_8ZpDZcgKK1gzjSc_o5WzfRKI
+Message-ID: <CAOU40uAurZLiPCiDNh8Gz3JaYOSRGTLkqQNddZi=kX3UdkP7Pw@mail.gmail.com>
+Subject: Re: [BUG] general protection fault in input_unregister_device
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 11:17:04PM -0700, Drew Fustini wrote:
-> Convert the PMEM device tree binding from text to YAML. This will allow
-> device trees with pmem-region nodes to pass dtbs_check.
->=20
-> Signed-off-by: Drew Fustini <drew@pdp7.com>
-> ---
-> v2 resend:
->  - actually put v2 in the Subject
->  - add Conor's Acked-by
->    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
+Hi Dmitry,
 
-I guess this is the one you mentioned on irc?
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Here is the trimmed reproducer. If it still doesn't work, please feel
+free to contact me anytime.
 
---y1QSOGp96aDgzao8
-Content-Type: application/pgp-signature; name="signature.asc"
+C reproducer :https://pastebin.com/raw/NkJX5AfA
 
------BEGIN PGP SIGNATURE-----
+Best regards,
+Xianying
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcS/wAKCRB4tDGHoIJi
-0t39AP4vyfGKrHVY+bMT/PuBxs9qpgknPf0LIFJyfN2eoUZWEwEA8dr+FIxtNK1p
-vEPMaK/ldN2T0lMdbk0tXTjE6+2fPg4=
-=Z0xj
------END PGP SIGNATURE-----
-
---y1QSOGp96aDgzao8--
+Dmitry Torokhov <dmitry.torokhov@gmail.com> =E4=BA=8E2025=E5=B9=B45=E6=9C=
+=8828=E6=97=A5=E5=91=A8=E4=B8=89 05:02=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Xianying,
+>
+> On Tue, May 27, 2025 at 04:21:40PM +0800, Xianying Wang wrote:
+> > Hi,
+> >
+> > I discovered a kernel crash described as "general protection fault in
+> > input_unregister_device." The crash occurs in the input subsystem,
+> > specifically in the function input_unregister_device
+> > (drivers/input/input.c:2500), due to dereferencing a non-canonical
+> > address, resulting in a general protection fault.
+> >
+> > According to the crash report, the faulting address is
+> > 0xdffffc00000000a4, which corresponds to a KASAN shadow memory region.
+> > The crash is triggered when mac_hid_toggle_emumouse calls
+> > mac_hid_stop_emulation, which in turn invokes
+> > mac_hid_destroy_emumouse, eventually leading to a call to
+> > input_unregister_device with an invalid or uninitialized input_dev
+> > pointer.
+> >
+> > The report indicates that a corrupted or NULL input_dev structure was
+> > passed into input_unregister_device, possibly due to a use-after-free,
+> > double unregister, or incomplete initialization in the emumouse path
+> > in mac_hid.
+> >
+> > This can be reproduced on:
+> >
+> > HEAD commit:
+> >
+> > commit adc218676eef25575469234709c2d87185ca223a
+> >
+> > report: https://pastebin.com/raw/4TeX6E8M
+> >
+> > console output : https://pastebin.com/raw/ZE2AZ1Gq
+> >
+> > kernel config : https://pastebin.com/raw/BpCtvUt2
+> >
+> > C reproducer :
+> >
+> > part1=EF=BC=9Ahttps://pastebin.com/raw/jhU9v99k
+> >
+> > part2=EF=BC=9Ahttps://pastebin.com/raw/dcaKCHZ1
+> >
+> > part3=EF=BC=9Ahttps://pastebin.com/raw/CzgGBb7C
+> >
+> > part4=EF=BC=9Ahttps://pastebin.com/raw/MnwtYcjd
+> >
+> > part5=EF=BC=9Ahttps://pastebin.com/raw/VE8xNmHT
+>
+> Could you try to trim the reproducer to something more manageable? There
+> are really too many things going on to make sense of it...
+>
+> I guess we are ending calling mac_hid_stop_emulation() with NULL input
+> device, but I can;t see how this happens unless we manage to overwrite
+> sysctl table memory with some garbae earlier....
+>
+> Thanks.
+>
+> --
+> Dmitry
