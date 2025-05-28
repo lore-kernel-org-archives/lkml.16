@@ -1,170 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C34A1D6193;
-	Wed, 28 May 2025 16:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964C1214A69
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448369; cv=none; b=oNJXJuY3PvcKH8nhr0w8H12kTkLADWQ7syEsvinKXhCPjCGv1pXRj+BdgyOWySnqSGnkWOCu8wVqfhXBvA9jy8oYsL4pZXik4JhFVj82xwYzz7N4Tj1A2xqyIn/qNObZOD4ClwqupNAHen8j4R76p9ZbzFzphkQ6MODY2jcaKYY=
+	t=1748448510; cv=none; b=YD0w7FO960JQN4avh7zsdSyP+UA97bbuEBPN4bXkLZKt5kCJt2gexivGTgOYZfjJEDLal31Bh8r8ytig9GTS4mSNut6CrMxo+eIg9RNbEb7fSdThzsTZU4Sgx0LSEU2gZ2oat4jhtYiXMfKGxBaQYKev6/Fs3CPtVDRUPElX3qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448369; c=relaxed/simple;
-	bh=E39xeMDQKZ3ZvVa5E2QtOO0iwP3p31vysrL4F+yxZJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VNmMNuiufMVspr/rA84t7FsU5cDTbRUnOvSf/cRFpuhnfgZmAewrY42TLgXl2xTiZsMRrYR4BsKIa1uJ4wsXvaAX8OLRBaS4fZnhgJGgGUqTJY9I3ALByezS5AdMj/R9y0jXQAjoelIhcFWtPVBpkVQDRctkX8f0/BPTliZPKdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7sahqms; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748448510; c=relaxed/simple;
+	bh=LibnRIxltzpbANK+z/ZCNtTGSZsFrtMBHyUPR93lW28=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZaAfV1OTAu1hQmyQI2BhwFRoHF21fYoT4f//JCx33En1Up744HVVqnPAmdvHSfJb8i4fGTKPbS3LgzguMgmvvDrXswPIo8YR9ZZacuOYAiGYnkAJ92QvXWxc2TcmCBuWfTVixoie0YWPjCzPgSkfphOZ11GZ/qnCRRlPLdJ4Oz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTP6sStv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7sahqms"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79CEDC4CEE3;
-	Wed, 28 May 2025 16:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748448368;
-	bh=E39xeMDQKZ3ZvVa5E2QtOO0iwP3p31vysrL4F+yxZJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k7sahqmsm2qzmR0d9kv2eHlH0yQoF3o8f6VJ8OWutWTiGrLuM4c79VZMXrpZ4OLbU
-	 1VNQhGhrk1dSZLC03Z9xy0hFB3ojejIo57HEmZWKtQDJzXQ/1ONdWKgU10UuvdWDJ0
-	 voUiyOM4abGfD9FeM504FY83+skEMLnJF0ZMiV9iMIBhIudKTJvaZksd5zwYH4SB/F
-	 RnE8t29JTO4LyQ50PbrGBDAjdP3qsDp3DontP84JAET9CF7VPBK4PnYo5mLdX5Ccmg
-	 bWTe7joBqst8QJa0npB/NkCWsGaGESGVMciUSEwFb8keLm6dAUgk4oF4taWFLfV47N
-	 B/9Ir/0J1XKlw==
-Date: Wed, 28 May 2025 09:06:03 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jirislaby@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] mfd: Remove node variables that are unused with
- CONFIG_OF=n
-Message-ID: <20250528160603.GA1172935@ax162>
-References: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTP6sStv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748448507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ELCjKD+gxUuR3aRJg9A9JbOeDRYY9q3dgElqJB30ab4=;
+	b=DTP6sStvhnHjYESwgyTmF0GG2suoJ3+RMxOQTNERnl+bzK/BONvH4ML3HpR7zqu4b//hBx
+	zTmYt095F80Ywm+X7wjc7dnjJpssjlgmzjxCIKPSLNY/a9dHs2SQUDBxW2w2MuihwzATSD
+	rlVx9I046oTc+bGKVqmpa0OHWW0Z5eg=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-332-gHVqQf4uMKmuXeGvCOi_ZQ-1; Wed, 28 May 2025 12:08:26 -0400
+X-MC-Unique: gHVqQf4uMKmuXeGvCOi_ZQ-1
+X-Mimecast-MFC-AGG-ID: gHVqQf4uMKmuXeGvCOi_ZQ_1748448505
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7ceb5b5140eso851423185a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:08:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748448505; x=1749053305;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ELCjKD+gxUuR3aRJg9A9JbOeDRYY9q3dgElqJB30ab4=;
+        b=cEggGdTnHfT9/kn6XeuLbhKamRn9DB19sElFqYtjB+Uh2X2qHL765LOrH8OlzY7zBY
+         Ci4CpcnZi3DiqRVM8TsogsFHUHY6LSfKIhF3TDeU8S+bNq759R6TEBxo8fzao2SP6J3E
+         fapoKzWIqHTXIvztSmFgTzRuVI36MU0/Iw71uvvk7cOTPyfbUpQhVypk50lWSFSOLkd+
+         /oTuWE8XcEviPdxIms810fcUPsKvugqpJUhHg87SWmEYGcOtGLd01wgs6hZS8MNewHOs
+         wGP7WD16Vgj0YmAhVV8jWgMO2/J9BaMU0XQ7SgmqXdS7iVPOqTg93NjiwVt7mp1DPJKX
+         2wug==
+X-Forwarded-Encrypted: i=1; AJvYcCXDxUbTPnwWFUG/ivamIbYRkKdYuEEHF89NaGJhiMllJ5GxUGkR0fi1JYnqyL78iTgtjxXfoVDMDqYurXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwppMfMTZAXunfGIbWhbGjgmTaZH3wl7W3MmiYqRHPrkGbs2R0O
+	u17fC1dJX8GJil/whvqrOkRqxK0WSF/D+9cdwrKWKiAiby4RG24FnvoTYU9DPxyY6g07cbxcXvh
+	Tc5uh+5Tpo8YEd/J/Ka45nUt/+/lTB8o4T83vFjxqBWB5p26RfhW+fK2/tgCGSR9C9w==
+X-Gm-Gg: ASbGncudBTWhiuu29GyTqNtKX8Gnc4iHFaJpQS3pEElLbM3TxRE37XX1JlxIu4wJj+I
+	mNmVLpb8lW8ogiobX2O1Jx21sAR0Ne6noLCDtkXL37syNw614fuAfOCWV+e7XhwvorL6D7jRohu
+	bH4F5mYJej3Ibn58r+7/AVd6G9ma356RxB/PMPIqco2XTVXdftrSgKD0ZBxejiLvqNWWMq+opVV
+	QjGjDmNLkD4ettVBqLYl6q/XIKnE5VCfk/KmFgrDxfGjaMvR0vwqYZJcVYMDgh10HrhSYswaPwN
+	XITKHs6hfQz9mPKM31H2oDvJ7YNNyNao65cf8yhAfERLxyvZAalYo8d814s=
+X-Received: by 2002:a05:620a:424d:b0:7c5:962b:e87c with SMTP id af79cd13be357-7ceecc296f9mr2823528785a.44.1748448505351;
+        Wed, 28 May 2025 09:08:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGwBg64uo0z4Bgibxmg+9R08YonGSy0ylNwRuFxVQIAkQT9OnjwXxcnU1GDcfo/I0jNy+NrwQ==
+X-Received: by 2002:a05:620a:424d:b0:7c5:962b:e87c with SMTP id af79cd13be357-7ceecc296f9mr2823520385a.44.1748448504590;
+        Wed, 28 May 2025 09:08:24 -0700 (PDT)
+Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb8210270sm87017585a.31.2025.05.28.09.08.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 09:08:24 -0700 (PDT)
+Message-ID: <fadc8e044c3b18984b0ca4a88ef214feb779034d.camel@redhat.com>
+Subject: Re: [PATCH] rust: add helper for mutex_trylock
+From: mlevitsk@redhat.com
+To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org, ojeda@kernel.org, Stephen Rothwell
+	 <sfr@canb.auug.org.au>
+Date: Wed, 28 May 2025 12:08:23 -0400
+In-Reply-To: <20250528083431.1875345-1-pbonzini@redhat.com>
+References: <20250528083431.1875345-1-pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508-mfd-fix-unused-node-variables-v1-1-df84d80cca55@kernel.org>
 
-Hi Thomas,
+On Wed, 2025-05-28 at 10:34 +0200, Paolo Bonzini wrote:
+> After commit c5b6ababd21a ("locking/mutex: implement mutex_trylock_nested=
+",
+> currently in the KVM tree) mutex_trylock() will be a macro when lockdep i=
+s
+> enabled.=C2=A0 Rust therefore needs the corresponding helper.=C2=A0 Just =
+add it and
+> the rust/bindings/bindings_helpers_generated.rs Makefile rules will do
+> their thing.
+>=20
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-On Thu, May 08, 2025 at 04:57:24PM +0100, Nathan Chancellor wrote:
-> A recent cleanup introduced a few instances of -Wunused-variable in
-> configurations without CONFIG_OF because of_fwnode_handle() does not
-> reference its argument in that case:
-> 
->   drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
->   drivers/mfd/twl4030-irq.c:679:46: warning: unused variable 'node' [-Wunused-variable]
->     679 |         struct                  device_node *node = dev->of_node;
->         |                                              ^~~~
->   drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
->   drivers/mfd/max8925-core.c:659:29: warning: unused variable 'node' [-Wunused-variable]
->     659 |         struct device_node *node = chip->dev->of_node;
->         |                             ^~~~
->   drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
->   drivers/mfd/88pm860x-core.c:576:29: warning: unused variable 'node' [-Wunused-variable]
->     576 |         struct device_node *node = i2c->dev.of_node;
->         |                             ^~~~
 
-These warnings are now present in mainline after the merge of the
-irq/cleanups branch...
+Hi,
+Sorry for that.=C2=A0
 
-> Use the value of these variables as the argument to of_fwnode_handle()
-> directly, clearing up the warnings.
-> 
-> Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
+Next time I'll check rust bindings as well, I never had to deal with them b=
+efore.
 
-but this hash has changed, so this should be
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-Fixes: a36aa0f7226a ("mfd: Switch to irq_domain_create_*()")
+Best regards,
+	Maxim Levitsky
 
-but the rest of the change is still applicable. Would you like a new
-change or can you adjust that when applying?
 
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 > ---
->  drivers/mfd/88pm860x-core.c | 5 ++---
->  drivers/mfd/max8925-core.c  | 5 ++---
->  drivers/mfd/twl4030-irq.c   | 5 ++---
->  3 files changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/mfd/88pm860x-core.c b/drivers/mfd/88pm860x-core.c
-> index 488e346047c1..25300b53a8ef 100644
-> --- a/drivers/mfd/88pm860x-core.c
-> +++ b/drivers/mfd/88pm860x-core.c
-> @@ -573,7 +573,6 @@ static int device_irq_init(struct pm860x_chip *chip,
->  	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
->  	int data, mask, ret = -EINVAL;
->  	int nr_irqs, irq_base = -1;
-> -	struct device_node *node = i2c->dev.of_node;
->  
->  	mask = PM8607_B0_MISC1_INV_INT | PM8607_B0_MISC1_INT_CLEAR
->  		| PM8607_B0_MISC1_INT_MASK;
-> @@ -624,8 +623,8 @@ static int device_irq_init(struct pm860x_chip *chip,
->  		ret = -EBUSY;
->  		goto out;
->  	}
-> -	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, chip->irq_base, 0,
-> -				 &pm860x_irq_domain_ops, chip);
-> +	irq_domain_create_legacy(of_fwnode_handle(i2c->dev.of_node), nr_irqs,
-> +				 chip->irq_base, 0, &pm860x_irq_domain_ops, chip);
->  	chip->core_irq = i2c->irq;
->  	if (!chip->core_irq)
->  		goto out;
-> diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
-> index 78b16c67a5fc..91388477ad2b 100644
-> --- a/drivers/mfd/max8925-core.c
-> +++ b/drivers/mfd/max8925-core.c
-> @@ -656,7 +656,6 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
->  {
->  	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
->  	int ret;
-> -	struct device_node *node = chip->dev->of_node;
->  
->  	/* clear all interrupts */
->  	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
-> @@ -682,8 +681,8 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
->  		return -EBUSY;
->  	}
->  
-> -	irq_domain_create_legacy(of_fwnode_handle(node), MAX8925_NR_IRQS, chip->irq_base, 0,
-> -				 &max8925_irq_domain_ops, chip);
-> +	irq_domain_create_legacy(of_fwnode_handle(chip->dev->of_node), MAX8925_NR_IRQS,
-> +				 chip->irq_base, 0, &max8925_irq_domain_ops, chip);
->  
->  	/* request irq handler for pmic main irq*/
->  	chip->core_irq = irq;
-> diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
-> index 232c2bfe8c18..c7191d2992a1 100644
-> --- a/drivers/mfd/twl4030-irq.c
-> +++ b/drivers/mfd/twl4030-irq.c
-> @@ -676,7 +676,6 @@ int twl4030_init_irq(struct device *dev, int irq_num)
->  	static struct irq_chip	twl4030_irq_chip;
->  	int			status, i;
->  	int			irq_base, irq_end, nr_irqs;
-> -	struct			device_node *node = dev->of_node;
->  
->  	/*
->  	 * TWL core and pwr interrupts must be contiguous because
-> @@ -691,8 +690,8 @@ int twl4030_init_irq(struct device *dev, int irq_num)
->  		return irq_base;
->  	}
->  
-> -	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, irq_base, 0,
-> -				 &irq_domain_simple_ops, NULL);
-> +	irq_domain_create_legacy(of_fwnode_handle(dev->of_node), nr_irqs,
-> +				 irq_base, 0, &irq_domain_simple_ops, NULL);
->  
->  	irq_end = irq_base + TWL4030_CORE_NR_IRQS;
->  
-> 
-> ---
-> base-commit: c63e393a16c9c4cf8c9b70fedf9f27b442874ef2
-> change-id: 20250508-mfd-fix-unused-node-variables-14fe4f2cfd6c
-> 
-> Best regards,
-> -- 
-> Nathan Chancellor <nathan@kernel.org>
-> 
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Ok to apply to the KVM tree?
+>=20
+> =C2=A0rust/helpers/mutex.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
+5 +++++
+> =C2=A01 files changed, 5 insertions(+)
+>=20
+> diff a/rust/helpers/mutex.c b/rust/helpers/mutex.c
+> index 06575553eda5,06575553eda5..9ab29104bee1
+> --- a/rust/helpers/mutex.c
+> +++ b/rust/helpers/mutex.c
+> @@ -7,6 +7,11 @@ void rust_helper_mutex_lock(struct mute
+> =C2=A0	mutex_lock(lock);
+> =C2=A0}
+> =C2=A0
+> +int rust_helper_mutex_trylock(struct mutex *lock)
+> +{
+> +	return mutex_trylock(lock);
+> +}
+> +
+> =C2=A0void rust_helper___mutex_init(struct mutex *mutex, const char *name=
+,
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct lock_class_key *key)
+> =C2=A0{
+>=20
+>=20
+
