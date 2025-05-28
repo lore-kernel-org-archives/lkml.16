@@ -1,64 +1,64 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B54528ECE0
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:18:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F0228ECDB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748452735; cv=none; b=MjxIoHQbkMMgITm1bI3+aqnHgqCgZJ/njx6iEwTKFmRizYsKdSuadjSI0nE3nkxXq66uLvpqn4ZY6rcUVp/QJ17q5ojcdAErKNoe+NUPYFfKC/rg6zBgniPrC+3E2uSe6AzFvW7+DaAGvu8X7TDFlW0Js/jgj43FIw2d45OQvbw=
+	t=1748452735; cv=none; b=QV6R5bK74ql9pmGuK4FpYayGHPXyfjUpMqeuNtlt3Jd0/YJLzjl0sVu+SC22hx7fbtIXMMvW37rtKSuau7qlekfRVe3KEkHzbY2L9/LGZ0P+INApU0kl9QiizhDgRK5xJgIvym1XluUOM6CCwdargh53AmHVCZEm84t+2bgraxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748452735; c=relaxed/simple;
-	bh=mACmBIzqXKJOREyRDy7F2bdW7w04De0Ep/XAUKR23jk=;
+	bh=ckIhFdxE04Lau/vKJs59Z1zqSBhVHfsavPj/gDhabdM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ID/8D1993mQ666rs7L7R1k65sxlz27vg9rpD34ldlKsNNZzSZVB+DpyP2Pr3CX4nuzbGHxupLCyA8ZbTuyvWpmpM7OmBQiO9LmQwuKrKAuxqgLwy73/7/oEHAWnA1bSYO6qmhpNa1qgKbI2dVQ38rxjygIn763HNdgn87g1Iuko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T2U9svhS; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=CTJ6PYmWXzSf94gQrxshy/5CFboSqSQbooXStF012t9Gcs1TKGR74NXQE5aM70p/ELt0AXpaR3cw1pGNgZR5IthNqjsgRZnxj5NLs04EmCp00Eh05YtlwBrk3ys1Nztclw79ijhDYMi786WwzPU9dPx3UYtu2HaIOtmHnzMZY0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=r8Bd5g/F; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T2U9svhS"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9aQQ017944;
-	Wed, 28 May 2025 17:18:30 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="r8Bd5g/F"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9b9A032088;
+	Wed, 28 May 2025 17:18:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=+GzwQJBUnjTYoX8Jm
-	ypLOVmrd71JtaR6C60VUecB4d0=; b=T2U9svhS2TAO8yKQiIQ3snmmRVH7kE2N9
-	f+PJAUoH49yPeS3DRSOy30lSfJvvL3bWE7h80XWIxAmbsSIG+diXKCSfMt4KwK9M
-	pxSIOco9t9+GQUaJeMBarfA/g/AGpWQ7lr/bxpJOq6lV4cx4Y4unkYnLM0sr1WBF
-	L3NmOTu/nTP3ljPYS2xOtCYD7kHqZRBDsjDQ1/ZQhM7tadEtsMQk0A8CxjfPkm6Y
-	c/ntaFtNqnNnqhYkhY8JUOhCDKrSlYBvnXUxPzfZgfb+2dpOtqYg2kPeVqSJxrBT
-	aqZZyYR0U/bX2Is3pzJpPEZVSlG+proaA7IpH5OT0MNF4QgfN8/QA==
+	:mime-version:references:subject:to; s=pp1; bh=D7/L5K8Z89ZuqhiYt
+	FhmptPNwJ8U1u1PPrC83182IKY=; b=r8Bd5g/FnFTLY58rwGSclASQI82xn9N5d
+	9zAJZHwz86QPj94AMRWaZ30csGj7egNw3RvWllmIPKYFUUb33mkEUHjQukH+MlLI
+	hdqgcC4D2gkET5rbUy/ZHIuwUv+HrSZKv3d7D1NGlJo3D/9HcFD83AfFnR8KJSBc
+	cdyt/gh7a1noGWqcBFAB7TsRex2KMOnIzksLqcomBbvukHolx6fwRTyJwf+14YAy
+	CtN/FCRT7RsSnf+uqjW3lIrs1mC3pUlJPjgwL/VwRlqTX1l8dOiuOAFAiX7gODnd
+	ZC8ygNDoYcW7Euk6KS8Vh6FwWEweHN+IzbCsvIkhjRLWDoeh31dTQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40hh0xr-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40js0fx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 17:18:29 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SHITuo014429;
-	Wed, 28 May 2025 17:18:29 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40hh0xa-1
+	Wed, 28 May 2025 17:18:32 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SHIV0k025448;
+	Wed, 28 May 2025 17:18:31 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40js0ft-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 17:18:29 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SF0SaK021349;
-	Wed, 28 May 2025 17:18:25 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46utnmracg-1
+	Wed, 28 May 2025 17:18:31 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SF8RJB016192;
+	Wed, 28 May 2025 17:18:30 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0rmsa-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 17:18:25 +0000
+	Wed, 28 May 2025 17:18:30 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SHIM4Q59703638
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SHIQRL60096848
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 17:18:22 GMT
+	Wed, 28 May 2025 17:18:26 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E6C7A20043;
-	Wed, 28 May 2025 17:18:21 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 243712004B;
+	Wed, 28 May 2025 17:18:26 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 409AD20040;
-	Wed, 28 May 2025 17:18:19 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 6F7DF20040;
+	Wed, 28 May 2025 17:18:23 +0000 (GMT)
 Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 28 May 2025 17:18:19 +0000 (GMT)
+	Wed, 28 May 2025 17:18:23 +0000 (GMT)
 From: Donet Tom <donettom@linux.ibm.com>
 To: David Hildenbrand <david@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -74,9 +74,9 @@ Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
         Madhavan Srinivasan <maddy@linux.ibm.com>,
         Nilay Shroff <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
         Donet Tom <donettom@linux.ibm.com>
-Subject: [PATCH v7 4/5] drivers/base/node: Rename register_memory_blocks_under_node() and remove context argument
-Date: Wed, 28 May 2025 12:18:03 -0500
-Message-ID: <907c22292b0ee4975107876efc875c75c11badd9.1748452242.git.donettom@linux.ibm.com>
+Subject: [PATCH v7 5/5] drivers/base/node: Rename __register_one_node() to register_one_node()
+Date: Wed, 28 May 2025 12:18:04 -0500
+Message-ID: <8262cd0f44eeb048a1fcd3ac8382760d7f7dea60.1748452242.git.donettom@linux.ibm.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
 References: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
@@ -88,38 +88,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE0OCBTYWx0ZWRfX31wtLZ2pXa/f 0S/u7o2otmMw+2W513wqF0P06Ey7XM/9nvxg3mAmpuviJxOxhv/PZBqKm6zIjLYB0MkfCpzdUUd 0bW0gaN4AH6wqWAQH4XLBxIW7lXMif54EhYYCTLwELimDbe9seM38VjZAMcuCOU+5iV9CyOvUQ7
- x+Uugt34QYXl1i7Z6eXoz0yENC7uuclKlrsZEKcTghlsv4kXBIH7jx29hHbWVNiIC10XiIQE7X5 icMFfDrexz5Ur1s413AVZGS09hVGNSm5mWYnELqGQIGaOYDlVwArURKYLoSLJPoZJN//27Kgaaf IhZQRi2eeQJ0x8grejvGsPi4NOe+AW5K7lyrjIGbNWuaFcFenauMhcLHZrd4N0g3eMTUa9A9iWn
- BxQ9AunfaipqEK3El8mJqmCLobbp/+e4SARO1h86u/aI0LpY3Nc2ydkOS7Dbo3XQdUzS7n8e
-X-Proofpoint-GUID: N_e6xefmMaCjPglJD5ZKVs0Q5N8UgZqo
-X-Authority-Analysis: v=2.4 cv=WOd/XmsR c=1 sm=1 tr=0 ts=68374565 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=Ikd4Dj_1AAAA:8 a=xjaU-GFjuEzJSOh1rDoA:9
-X-Proofpoint-ORIG-GUID: BpJoUUUSieyJdVlgPDQjlvTCb1_9MZ-1
+X-Authority-Analysis: v=2.4 cv=SdL3duRu c=1 sm=1 tr=0 ts=68374568 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=TOWdrs_80VijkQ5-_Q4A:9
+X-Proofpoint-GUID: B0Hc32s58QfmHv4DN76JZJCET9P27pX8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE0OCBTYWx0ZWRfXxDf9vCNip17n EuzL8qRC7JXPaMWJm12lT2qTLQrnShmEFkJeeFGPXsMUvkMOO/br5TuzfmANereOhydHd99YAgV ySpK3swLyNk2yRiOCo/hfkmCi45q9BrFfZ5qPDruY9h/BRJ70tQsoDiASGyZhAmpjWYzxmGum2e
+ aYXd8Kw0HOPox4NjbsnlS6JfVgVeJCfkZHPnEWoYXV4LQ91hrBiPkYBn5GcPbC0Lzi2DMnVvpVC A0SKv6dCfXkWC1D8Q2xgx7l+pt5JOwfjP1RRCReGtyAKNQg1UpEWTpq3xHl1Z36Q6uQSne8ErZZ /OY/g1VFsFdFxHUPBeKZUJANnJL1us2AmtvuTSj3e7MM4CNJaGFxMcNKMk7JC53cAps+xQi0hR0
+ 1PYRHPD1moQQWT8CcrdAUZuwOkafcyoStFAQAcRy+k797dV6wLcIJx/fsMcwJ5HpES9nF1qo
+X-Proofpoint-ORIG-GUID: B3UWd6qwXRYfKH4sHkfP79h5sKOS5QTd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 clxscore=1015 malwarescore=0 priorityscore=1501
- adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 mlxlogscore=984 suspectscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
  definitions=main-2505280148
 
-The function register_memory_blocks_under_node() is now only called from
-the memory hotplug path, as register_memory_blocks_under_node_early()
-handles registration during early boot. Therefore, the context argument
-used to differentiate between early boot and hotplug is no longer needed
-and was removed.
+The register_one_node() function was a simple wrapper around
+__register_one_node(). To simplify the code, register_one_node()
+has been removed, and __register_one_node() has been renamed to
+register_one_node().
 
-Since the function is only called from the hotplug path, we renamed
-register_memory_blocks_under_node() to
-register_memory_blocks_under_node_hotplug()
-
-Acked-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Zi Yan <ziy@nvidia.com>
 Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-
 ---
 v6 -> v7
 
@@ -133,66 +124,91 @@ v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.174585
 v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
 ---
 ---
- drivers/base/node.c  |  5 ++---
- include/linux/node.h | 11 +++++------
- mm/memory_hotplug.c  |  5 ++---
- 3 files changed, 9 insertions(+), 12 deletions(-)
+ arch/powerpc/platforms/pseries/pci_dlpar.c |  2 +-
+ drivers/base/node.c                        |  4 ++--
+ include/linux/node.h                       | 13 +------------
+ mm/memory_hotplug.c                        |  2 +-
+ 4 files changed, 5 insertions(+), 16 deletions(-)
 
+diff --git a/arch/powerpc/platforms/pseries/pci_dlpar.c b/arch/powerpc/platforms/pseries/pci_dlpar.c
+index 52e2623a741d..aeb8633a3d00 100644
+--- a/arch/powerpc/platforms/pseries/pci_dlpar.c
++++ b/arch/powerpc/platforms/pseries/pci_dlpar.c
+@@ -29,7 +29,7 @@ struct pci_controller *init_phb_dynamic(struct device_node *dn)
+ 	nid = of_node_to_nid(dn);
+ 	if (likely((nid) >= 0)) {
+ 		if (!node_online(nid)) {
+-			if (__register_one_node(nid)) {
++			if (register_one_node(nid)) {
+ 				pr_err("PCI: Failed to register node %d\n", nid);
+ 			} else {
+ 				update_numa_distance(dn);
 diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 16ad99abeea6..973b7a89a37e 100644
+index 973b7a89a37e..baab9348244f 100644
 --- a/drivers/base/node.c
 +++ b/drivers/base/node.c
-@@ -830,9 +830,8 @@ static void register_memory_blocks_under_nodes(void)
- 	}
+@@ -839,7 +839,7 @@ void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
  }
+ #endif /* CONFIG_MEMORY_HOTPLUG */
  
--void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--				       unsigned long end_pfn,
--				       enum meminit_context context)
-+void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
-+					       unsigned long end_pfn)
+-int __register_one_node(int nid)
++int register_one_node(int nid)
  {
- 	walk_memory_blocks(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn - start_pfn),
- 			   (void *)&nid, register_mem_block_under_node_hotplug);
+ 	int error;
+ 	int cpu;
+@@ -946,7 +946,7 @@ void __init node_dev_init(void)
+ 	 * to already created cpu devices.
+ 	 */
+ 	for_each_online_node(i) {
+-		ret =  __register_one_node(i);
++		ret =  register_one_node(i);
+ 		if (ret)
+ 			panic("%s() failed to add node: %d\n", __func__, ret);
+ 	}
 diff --git a/include/linux/node.h b/include/linux/node.h
-index b15de78e0408..75b036a100d2 100644
+index 75b036a100d2..88bceebcbfa5 100644
 --- a/include/linux/node.h
 +++ b/include/linux/node.h
-@@ -111,13 +111,12 @@ struct memory_block;
- extern struct node *node_devices[];
- 
- #if defined(CONFIG_MEMORY_HOTPLUG) && defined(CONFIG_NUMA)
--void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--				       unsigned long end_pfn,
--				       enum meminit_context context);
-+void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
-+					       unsigned long end_pfn);
- #else
--static inline void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--						     unsigned long end_pfn,
--						     enum meminit_context context)
-+static inline void register_memory_blocks_under_node_hotplug(int nid,
-+							     unsigned long start_pfn,
-+							     unsigned long end_pfn)
+@@ -128,14 +128,7 @@ extern void unregister_node(struct node *node);
+ #ifdef CONFIG_NUMA
+ extern void node_dev_init(void);
+ /* Core of the node registration - only memory hotplug should use this */
+-extern int __register_one_node(int nid);
+-
+-/* Registers an online node */
+-static inline int register_one_node(int nid)
+-{
+-	return __register_one_node(nid);
+-}
+-
++extern int register_one_node(int nid);
+ extern void unregister_one_node(int nid);
+ extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
+ extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
+@@ -148,10 +141,6 @@ extern int register_memory_node_under_compute_node(unsigned int mem_nid,
+ static inline void node_dev_init(void)
  {
  }
- static inline void register_memory_blocks_under_nodes(void)
+-static inline int __register_one_node(int nid)
+-{
+-	return 0;
+-}
+ static inline int register_one_node(int nid)
+ {
+ 	return 0;
 diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 8305483de38b..f734cc924b51 100644
+index f734cc924b51..4dadd156f836 100644
 --- a/mm/memory_hotplug.c
 +++ b/mm/memory_hotplug.c
-@@ -1575,9 +1575,8 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+@@ -1571,7 +1571,7 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 		 * We online node here. We can't roll back from here.
+ 		 */
+ 		node_set_online(nid);
+-		ret = __register_one_node(nid);
++		ret = register_one_node(nid);
  		BUG_ON(ret);
  	}
  
--	register_memory_blocks_under_node(nid, PFN_DOWN(start),
--					  PFN_UP(start + size - 1),
--					  MEMINIT_HOTPLUG);
-+	register_memory_blocks_under_node_hotplug(nid, PFN_DOWN(start),
-+					  PFN_UP(start + size - 1));
- 
- 	/* create new memmap entry */
- 	if (!strcmp(res->name, "System RAM"))
 -- 
 2.43.5
 
