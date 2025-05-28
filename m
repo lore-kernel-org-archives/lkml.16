@@ -1,127 +1,192 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA0D199931;
-	Wed, 28 May 2025 03:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 539271C84B2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748404063; cv=none; b=VXO83PLFdr7SCQNxpulCID0dC9WoKWccKmbuFgIAS/vtVtYfHEmHyo5QePosVGHmyinUA96K8C6r3W0qXnBFzwY1XYpqbprVcBazoDu2Uau1stou7zI4QDGn9VApnBIfci9gwkN+KKVl5+xrNqDBT5yGG9ucnygm4Px3KLEhEV0=
+	t=1748404064; cv=none; b=ENGjKsgvoPMqemMEgXbm7DvITX8eysi4ZOTIx+i+5/aOSKrfphvWQnLS8SE3PSOAVxPy5tQcYfmgPlIBC+dPmAP0MR1AvYt6/ud7PCSKwwSYzzHWOekvAgigNRgq0AS7IMGpbYONqxkkuwHMjTQ0jZMUfLrFm9Ryy9vXgun+mJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748404063; c=relaxed/simple;
-	bh=kHmg6K4hUuGfEE6/rRgMCBZrKFol9EIPcLFJBSSYN3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NM+a3fU5SYtWo0GDR+rizv2FMIsSJ3dDNx8P350nWjtGk8D1nNZvRJJjuWSLna6benvBnipXdtvR8d4Wcyx6VWeLM0hRnigYTX9BY73BUo8mBlHZVQZD5CtI2y7tUMMg6ppoDmLCcxy59vSsLgbyNZNCw99KdF6cLwxyWyF/4lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XMt34V6n; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748404064; c=relaxed/simple;
+	bh=0HTZFtHMrvPYujqgmjuwhl6vU5hlKIj8uruAkgobmM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jw2/ev+Ia/LiBNa+MYct7unv4N6Y6nScgKzjS7UNhqjUJz2cBhChSlC8ZdrjysOhq4Eaq9LPwRAO48XjqZRIJdJ5VobclNlZ0L3VHmkWVvkqpw8wmR/3mg9P1EaLwnAT8mtYluzlecgvbQljnIfgQXGx0hO0U2FjjtT83EWPCP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vxwDB50Y; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XMt34V6n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748404059;
-	bh=cR7ylNJ0z7mTo/7GRrWKbVU0TIvdsV/dzioPLp3vEX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XMt34V6nG/uDGI8CiuJAyDPDl8aMUSF8hGz9x1HaMQ/l1ZbnlrYPc1Bf2eIQI7pqb
-	 6o6Exd3MS8bkAIBa0MExguIFn3cxWb8PieG9Px6mWKx726XyhtJ7fTQNf7O+1iQRV1
-	 jjDjLX44vkrSmQnzG+umrPREwcYqBquFm6e5KkqDGoSSPBLAz+UYx7ogj0LhYgRrpI
-	 ptIfYvGu4QZ3JZhnLNB7JmyjkDi8FiMzlkyEN7PW3C6xaPImVcCg62OCEukWroV03w
-	 t9Co9bTJgFGgQYxnIfXD/dRknQ2w2Rz11ecqnEKxxFVJaHet2nitRUmjQUumqFJ4sq
-	 Nz0afmrHXl43Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6b6x0YYSz4wbr;
-	Wed, 28 May 2025 13:47:37 +1000 (AEST)
-Date: Wed, 28 May 2025 13:47:36 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin <marcan@marcan.st>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the pci tree
-Message-ID: <20250528134736.5c79411a@canb.auug.org.au>
-In-Reply-To: <20250521161656.429889eb@canb.auug.org.au>
-References: <20250521161656.429889eb@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vxwDB50Y"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23211e62204so26567355ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748404062; x=1749008862; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h+9g0jjRqmhF0kN4jpC6BzKtxGKIexmnwr+kN5DjlRU=;
+        b=vxwDB50YWJ5P8J4Aqvo9CBsmcbDt07Tn3knKGmQxmGGCNrt+4QYwF9JNIqPCRJ9ChM
+         fTKBVqsnUDtuSvWFMkaDVCeM3W4F2Dtlp0EoCM3+0IeHTys+qKkc7D96JhGMzCkIGYw4
+         +A1l53odIboduFEjDOZSgRcp/7X43wrgmQrY6q+8Wmp2AQD2+7Vri+TPzietMvOy8/aE
+         ek/mYLsiWRQBe5w92B4Nog9oQpYxArnTsB6UKyuGEhkYquvMEtr9ek7K3m7MmRJgmXcY
+         RWecShJQr9jrB1dYcZIKC6t3fQ7ENGfJ1HPQZVgb5FjY0bqGjk3X3JZh8K00ANDJh/fM
+         yC6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748404062; x=1749008862;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h+9g0jjRqmhF0kN4jpC6BzKtxGKIexmnwr+kN5DjlRU=;
+        b=mr6ZxH7JidiPO7lxJJa4ge5NMDJaN7kAEJKefiBfh17zDTGW0LjQetHQ94gnbQ0MVm
+         HfIdM9iHr/pcs+iaUEcNUj4y/WY9nvcv8F0TWUt4vRf4109TtLagC8DR9vrEBzaW9LXs
+         03IUwkk7GKEc2yDmlf9xUKeSej8pfosEYeS0FkRrBk67VKLc5o+Q+b7U8qob3ahUu37J
+         TOsxosX21OwEIQegJpQ9uBcgA272aRMRNXjLw1Gm4yP3mZMxSAJ2pnQLInKZuuZEPELx
+         LbuaIIeKeM2TQEY+0xzmxIA8jB5G2MmerL0j/CgWkpDkDtM873ZyyCgGOdjjOKYv+tGg
+         MTzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXT3RBw8ZXlo5Nj4Qk0pmCe9lAXFXtwk30gU7Rp5XyKGIwO6KZcBalY4mxtOiAXHvwD8dcDvVFMTzJWUUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxz3qnFUtcJkcq8OMtZsxOlVcR267xzPOIzceH1xu3UjkcshQT0
+	c9HwQHTVishO1GrfindV5UgNuTxCM00Tuq9Zsk7dseS+95htEjjAUF/epx7/SYFSiQ==
+X-Gm-Gg: ASbGncssJCmfpSFsJtb+EJGnvcoIWw3BgMCyvCg01Qu38LN2hU0Eu2SHVL/0xm5iB33
+	WMBTD9Hx3lvBht6bARl0IPYU5vmRztLGXFZ2OQUPaA+ZNNPmB0KVusUbrP5PmjJHUZjePU/ngAp
+	uN+I7QxeZa/BQ4WRS3yPI4m/+aizXgArHXV/DzmB9wt5HWOBqtTskszM7Obo5mCP14PkwKh2lLQ
+	kSQVfTTgL32AvbxPEFedksZuPt0GqGVIsNVtUl7nLGpmxWH7zkjbCPbxAIyD3Dn9+HuYtajEbBR
+	/FvQEFYD3nObRTlzyIEmRAwq1Z8mARkF7FFPvjI5WZy7VhC1W8nwb+Bz9HSHGhSmucRsiVAKIA=
+	=
+X-Google-Smtp-Source: AGHT+IEUi6A5S8uES4iHZMououSHKnzCTcxXGhYKA42ZvuULMyc2nhVY5fjwE6TvUPYSQWctHRzSFQ==
+X-Received: by 2002:a17:902:f686:b0:234:a44c:18d with SMTP id d9443c01a7336-234a44c034bmr78425935ad.22.1748404062477;
+        Tue, 27 May 2025 20:47:42 -0700 (PDT)
+Received: from thinkpad ([120.56.198.159])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d3590bf8sm2056925ad.129.2025.05.27.20.47.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 20:47:42 -0700 (PDT)
+Date: Wed, 28 May 2025 09:17:36 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/pwrctrl: Add optional slot clock to pwrctrl
+ driver for PCI slots
+Message-ID: <rvfkojyooqg7unr4i2izx4hmb24ppsx7tn65pbtfmlbrga76iu@dvsg74hlspzu>
+References: <20250525160513.83029-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kjeyAj/giqHec70ax=Y_3eg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250525160513.83029-1-marek.vasut+renesas@mailbox.org>
 
---Sig_/kjeyAj/giqHec70ax=Y_3eg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, May 25, 2025 at 06:04:03PM +0200, Marek Vasut wrote:
+> Add the ability to enable optional slot clock into the pwrctrl driver.
+> This is used to enable slot clock in split-clock topologies, where the
+> PCIe host/controller supply and PCIe slot supply are not provided by
+> the same clock. The PCIe host/controller clock should be described in
+> the controller node as the controller clock, while the slot clock should
+> be described in controller bridge/slot subnode.
+> 
+> Example DT snippet:
+> &pcicontroller {
+>     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+> 
+>     pci@0,0 {
+>         #address-cells = <3>;
+>         #size-cells = <2>;
+>         reg = <0x0 0x0 0x0 0x0 0x0>;
+>         compatible = "pciclass,0604";
+>         device_type = "pci";
+>         clocks = <&clk_dif 1>;         /* PCIe slot clock */
+>         vpcie3v3-supply = <&reg_3p3v>;
+>         ranges;
+>     };
+> };
+> 
+> Example clock topology:
+>  ____________                    ____________
+> |  PCIe host |                  | PCIe slot  |
+> |            |                  |            |
+> |    PCIe RX<|==================|>PCIe TX    |
+> |    PCIe TX<|==================|>PCIe RX    |
+> |            |                  |            |
+> |   PCIe CLK<|======..  ..======|>PCIe CLK   |
+> '------------'      ||  ||      '------------'
+>                     ||  ||
+>  ____________       ||  ||
+> |  9FGV0441  |      ||  ||
+> |            |      ||  ||
+> |   CLK DIF0<|======''  ||
+> |   CLK DIF1<|==========''
+> |   CLK DIF2<|
+> |   CLK DIF3<|
+> '------------'
+> 
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Hi all,
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On Wed, 21 May 2025 16:16:56 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the tip tree got a conflict in:
->=20
->   drivers/pci/controller/pcie-apple.c
->=20
-> between commit:
->=20
->   3f1ccd6e85d7 ("PCI: apple: Abstract register offsets via a SoC-specific=
- structure")
->=20
-> from the pci tree and commit:
->=20
->   5d627a9484ec ("PCI: apple: Convert to MSI parent infrastructure")
->=20
-> from the tip tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
->=20
-> diff --cc drivers/pci/controller/pcie-apple.c
-> index c3fb2c1cc103,3d412a931774..000000000000
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@@ -183,8 -134,6 +184,7 @@@ struct apple_pcie=20
->   	struct mutex		lock;
->   	struct device		*dev;
->   	void __iomem            *base;
->  +	const struct hw_info	*hw;
-> - 	struct irq_domain	*domain;
->   	unsigned long		*bitmap;
->   	struct list_head	ports;
->   	struct completion	event;
+- Mani
 
-This is now a conflict between the pci tree and Linus' tree.
+> ---
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+>  drivers/pci/pwrctrl/slot.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+> index 18becc144913e..222c14056cfae 100644
+> --- a/drivers/pci/pwrctrl/slot.c
+> +++ b/drivers/pci/pwrctrl/slot.c
+> @@ -4,6 +4,7 @@
+>   * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/device.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> @@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+>  {
+>  	struct pci_pwrctrl_slot_data *slot;
+>  	struct device *dev = &pdev->dev;
+> +	struct clk *clk;
+>  	int ret;
+>  
+>  	slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
+> @@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+>  		goto err_regulator_free;
+>  	}
+>  
+> +	clk = devm_clk_get_optional_enabled(dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		ret = PTR_ERR(clk);
+> +		dev_err_probe(dev, ret, "Failed to enable slot clock\n");
+> +		goto err_regulator_disable;
+> +	}
+> +
+>  	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
+>  				       slot);
+>  	if (ret)
+> -- 
+> 2.47.2
+> 
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kjeyAj/giqHec70ax=Y_3eg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2h1gACgkQAVBC80lX
-0GxePwf/Ytvv6La9pO/eUaEpjgHiNtv4gfboWHgu/ZE796DuoR8zOwBuCHVR9aEB
-lQ1GLuEpAzJd1097U8DuMAPw9/UBuCegVBwMFgyq56t0ApULKQKA4h0euaaDgknL
-9leuJq+uNj66ocxnwSY0yg8Ds74gBCaNq76c72sW+dOXTVDOx060DJvcxomOQ9R8
-G9v7hOXT/Nv7sCD1zk5WXODIuzWz6JHI5KLxyrux1Jyb5kR5gZ5q8lVsJCxFv2Ih
-AKEijw+JrYMpjOZyg9SgNUZAmf83FREY3oqoZ9S0pADoqAsWVZZS25pMfZEz45xN
-hvGsEKhObKQfKAtQNXWMBbdD/i10mQ==
-=diu2
------END PGP SIGNATURE-----
-
---Sig_/kjeyAj/giqHec70ax=Y_3eg--
+-- 
+மணிவண்ணன் சதாசிவம்
