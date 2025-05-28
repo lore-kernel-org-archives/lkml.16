@@ -1,219 +1,248 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFB2212FBE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FEF243953
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417711; cv=none; b=qK8DfLRjTRyGEZHI1wZgbuNO/BxjWrpNWXpZRvWxoy00gC/H70jmF/ESpJ4DBsAoyJVJLBpOCGHc7eDWRlEDFGYWiQHgTEhgExWRSALPOom8iQLgT/sYtHmaf0qCR06qIqgFn9zJoO9MoUFMow8rYEDxIIktxhu5gHCpJmH5UD8=
+	t=1748417746; cv=none; b=jSNJwiGrlf3AoJWUhV0VYMOHeP4i2RJdwlro4abYejTl7FmmjVc9sNeQx4B9fZzia8qvjMXPj3cWpNUvtWwUE8+gQWaRPuV8OacnRTSGH5y6j7R5X8CRggg2S9FBJWyT5DaK7WSUFq+B38VAgD21Vq6DAnLC/Pm1NWeCv2VFiOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417711; c=relaxed/simple;
-	bh=41l0i1YwK5vil3rIBOc/taM+bZvf9pzufhqTCafhYak=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DHFRv7hfUIrAkAky9GbqgMTfemVYlKYa1B8plUuaqY5cba+k0zgzH1jYyp2mTNEjZKjNmcN/QT5yt5DcNTffHot3sjgqBLSDi9sHFJZO69PnW2hO5TQnLTWZArm+AkobulNmlA+7DHe2JR1yABOQJJUgY0+O/APeLFJkTv7bynI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jOORVf84; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748417746; c=relaxed/simple;
+	bh=ojn98cYobv8qkM4itGJX5hRlTmzBGUDcqXxDm4IrqQo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z11w3SDNi7ZdTDmIAzVHzEC3rY8IBuohQOf+uPz7IKAstZ3QJK4m9uWTrAtEijqn0gfaSdN/RkTl+N0RY6XTAOmAHAvplPyU3oXQanuoapt6/cFflgVNfjRwyr39iA66W6JaT86yY5sm0LIjXBUe+nHTbelrayeAmnYLbgoRfwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pLEgx4p5; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jOORVf84"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748417708;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hjtc3drrrmwK+A18ywqDKCDJFVmJvhPabCzpgN9quqU=;
-	b=jOORVf84xH4SjpS88tiWq377mcsyQm973qYntuQF+pIJkxQj+dpXWYz07aV4BCYxpG0NfX
-	ZvMG9+6IpdsejEK/ONi2eBIi3FrREnqM3mjd7PHfYSQbTv/5PDnM9PeYiSZfoFuBM4Y5MH
-	d7eQEy4vM4YYHvTHIVrj3NsoALN75Cw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-502-zuR5FeGuP9GBDbN6Bm13Vg-1; Wed, 28 May 2025 03:35:06 -0400
-X-MC-Unique: zuR5FeGuP9GBDbN6Bm13Vg-1
-X-Mimecast-MFC-AGG-ID: zuR5FeGuP9GBDbN6Bm13Vg_1748417705
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac6ce5fe9bfso392807466b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pLEgx4p5"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-551f007a303so4010e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748417742; x=1749022542; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zOJ/Erz3NJEWEC/FBnmroRUFyLvJzHrkOgqhXobzPPA=;
+        b=pLEgx4p519hz6HzqbX7CBpIldy9HZWvzxSgxLjotp3NtiqGeIwYdNHQgi87QGY10ag
+         OkdGDkjZ0e6BS1BjfWfg7mmpS/yxqKd6IGkxSVPr/kCKrMcTBzhaWPUNabrYLmfffW6R
+         Ndw1ncOJAor0Z4WyonS6RhTldVkVDzqXCTRIipXerhZM5qj+VcK8Bk3ppdWqKQ/A/dqg
+         FWrOcisZI3QeSBsrq76QhxhE6l1ngtNHZH0KzfnTsVjqfIyD9IjY90nwFVTc0jsSDPrH
+         HlfYbumqSZk0bStQ5Nh868RbLk167acGjjcPdkuVOiBft7n2xt0WAuZ99/4QFWyQ8Itr
+         AhAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417705; x=1749022505;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748417742; x=1749022542;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hjtc3drrrmwK+A18ywqDKCDJFVmJvhPabCzpgN9quqU=;
-        b=Pl0UQktwyjb23qx34Eyh3KjRL4RHqpAGxiY0y4CzNE291p3RsmwAdZGzgAvXbT1PJJ
-         eiYLVNf4129Q5f6dRDThUz3YY5Go2A9/X0Kr8MN4CgVO/+JHTfgsOmtfEUWk8mabIU40
-         MBJMtjLXJXoTmfzEfdBYucbRu72+dqpglKC9OyfjUD1fMS1pcqORjqcHhLKFWsSJzCq6
-         pcOZt8+WnUtXwq6ummuG17Xe1B0shsEjHSHlR1sFgC10CGa8s5C/8JhHYeMTr+iRQkck
-         kazAuFZ9r/RfBpx5H2X2UP4mhXgKNejJuCwevFNY3dWxU4mA9oIRS3vzQh/XG0jZkdg4
-         s23A==
-X-Forwarded-Encrypted: i=1; AJvYcCUS+fjFhLWkLIFn4KlCS47g9YH+Pas5oqoLBBrVCn1P1UMIndFSkvMEBCW+twAtRpf43QDbmJ62j2GNmBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDhgHO0vRoeTgsxXaaFjkrt3T5rfzd779UgxC73FTIU85f4T0z
-	mxoGoEg7KprE3OlaYPrsLkP2mQAc0V/T/qeXjFGZsPzcc3zmRNyOuXlpPOUCHmJlrQDujYQrkp6
-	McVwRfNBn56Nr5+GaLxaQGlSKV+Q4xNS1e/OCTB5Tm+XEBQad0QNAVKh+UdnnAk3i+A==
-X-Gm-Gg: ASbGncvNZRT7RdBFivGB3VJ39ZWFCo2yNk+RatYGSRmazSoqE/MOdJPtuG28Ju4sKWd
-	kJalDQZlmQkybPtawhD9DqC0RhAAa4mEA3HcGyic5Q+KZZKepKSWrFiLoSPcvaxawNYQ3lghG2w
-	5lyKuS/xrnuWVCxP55vo+Pfeedqyb627QZP+ztk53s8R4PQcpER3+v0+NM3181AcgwkHrcUBJ+H
-	Pea/+9IPl43tcIMdFfHk3WiTGkWMW2d/RHuhcf+z/MCCNQ1gcebQjbuJe++QwBv1MoBuRiSOX46
-	FHf4EmtHMB4mAlHj7PJ4KEVXlFq7JDBTwETJ
-X-Received: by 2002:a17:907:72cb:b0:ad8:9909:20a3 with SMTP id a640c23a62f3a-ad8a1fcd782mr103806466b.43.1748417705387;
-        Wed, 28 May 2025 00:35:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEEga+XBDVDH9DawBJDd8Hl5ifnReBF7XNSAcatO9kDyc0ZPBxdlOaxJ/FBQIfPV1z0cx+rhA==
-X-Received: by 2002:a17:907:72cb:b0:ad8:9909:20a3 with SMTP id a640c23a62f3a-ad8a1fcd782mr103801966b.43.1748417704872;
-        Wed, 28 May 2025 00:35:04 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b482ffsm60794966b.146.2025.05.28.00.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 00:35:04 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 216321AA87CC; Wed, 28 May 2025 09:35:03 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Byungchul Park <byungchul@sk.com>
-Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- asml.silence@gmail.com, tariqt@nvidia.com, edumazet@google.com,
- pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
- surenb@google.com, mhocko@suse.com, horms@kernel.org,
- linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
- page->pp_magic in page_pool_page_is_pp()
-In-Reply-To: <20250528051452.GB59539@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-13-byungchul@sk.com>
- <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
- <20250526022307.GA27145@system.software.com>
- <20250526023624.GB27145@system.software.com> <87o6vfahoh.fsf@toke.dk>
- <20250526094305.GA29080@system.software.com> <87ldqjae92.fsf@toke.dk>
- <20250528051452.GB59539@system.software.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 28 May 2025 09:35:03 +0200
-Message-ID: <87sekpmbmg.fsf@toke.dk>
+        bh=zOJ/Erz3NJEWEC/FBnmroRUFyLvJzHrkOgqhXobzPPA=;
+        b=FpQY10NABCOR1FwFJuytG3E2GKFfsSeLkiCT6udFOJ1UZ+kMHu+vYCPVW5o4013B1O
+         kWXmLtWgvGvaDuN3h4DjFX+O4i1DDJ3sOFa+/yOlk96yaVkMXvuG0jyvFaH23U+7VSzv
+         KLr63X2TWIBnKoB4/9dVSnkDB65bB980taaMiRztXnnfABAAAWInCbH99wXpisInUYv6
+         QTs8e3uXcbR17iNwybAgMfqz4c7xpcNcfVx1U0YKoKHHzWI/DBR+sfCAn8dpLHnQTesf
+         Rg4gTN0zvYrDOFNLmm3ayGxLeBgT1/uXd1FXVHM+uQj/8+7b48Zoj0mmrmxDvs9DHi2G
+         VAtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuv2+/vsU1iJ7CG7mw63vvMP5Yf5/PctKRkO4xauzFURC5ak0ZPWWS089pLYqiKg3mM3NULInz6YdPll0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCOzz6P5uQiKKFRlCJCHEJaprQucGMdgeNFHRagY04LToPms76
+	7q5oMTFR/wknT+N/kZuwaMItWuQO+3h3cegZaa/gd7VRPWZ1UrQjD5o1TfkfrshZllGjWA0Reah
+	fHzJXUuNUl0oPpRHWR+0YoBuAJXiyWepkE9F1xVzm
+X-Gm-Gg: ASbGncudR8jUH2X5hl2tP9HoSEWU4ksmh7nNqewDXIl7SsMbSehJq6qlcwXHnpW63Cp
+	z9BHTb4G+dw66jKTFZpU5PKhyO6TAcNUO0skcXiE+6OuNuuwqGIfghwMOMlwATJloXXCYpPD/lN
+	P0Wc8zAPP8xWkQDQUYs8I4viaAk5MRZLGckEBflZz9Jb8Ko/EhSewwTac4willfFSwfg7eMLI=
+X-Google-Smtp-Source: AGHT+IG+Mn1V+0c8QsQxG5c4rJueBt0y7/DVe9ZoPgIASiHSjGTjAuBSn8DXHY3zE+rzvci8KtUFh03pCmzzb6qQqs0=
+X-Received: by 2002:a19:c212:0:b0:542:6b39:1d57 with SMTP id
+ 2adb3069b0e04-5532ef82470mr123218e87.3.1748417742176; Wed, 28 May 2025
+ 00:35:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250416100515.2131853-1-khtsai@google.com> <20250419012408.x3zxum5db7iconil@synopsys.com>
+In-Reply-To: <20250419012408.x3zxum5db7iconil@synopsys.com>
+From: Kuen-Han Tsai <khtsai@google.com>
+Date: Wed, 28 May 2025 15:35:15 +0800
+X-Gm-Features: AX0GCFtkf15X4Sr4-XlDSBRSZecuoEyX3tXHqe5snVtx6egSAV0hGdIdZpP3X8Y
+Message-ID: <CAKzKK0qi9Kze76G8NGGoE=-VTrtf47BbTWCA9XWbKK1N=rh9Ew@mail.gmail.com>
+Subject: Re: [PATCH v4] usb: dwc3: Abort suspend on soft disconnect failure
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Byungchul Park <byungchul@sk.com> writes:
-
-> On Mon, May 26, 2025 at 11:54:33AM +0200, Toke H=C3=B8iland-J=C3=B8rgense=
-n wrote:
->> Byungchul Park <byungchul@sk.com> writes:
->>=20
->> > On Mon, May 26, 2025 at 10:40:30AM +0200, Toke H=C3=B8iland-J=C3=B8rge=
-nsen wrote:
->> >> Byungchul Park <byungchul@sk.com> writes:
->> >>=20
->> >> > On Mon, May 26, 2025 at 11:23:07AM +0900, Byungchul Park wrote:
->> >> >> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
->> >> >> > On Thu, May 22, 2025 at 8:26=E2=80=AFPM Byungchul Park <byungchu=
-l@sk.com> wrote:
->> >> >> > >
->> >> >> > > To simplify struct page, the effort to seperate its own descri=
-ptor from
->> >> >> > > struct page is required and the work for page pool is on going.
->> >> >> > >
->> >> >> > > To achieve that, all the code should avoid accessing page pool=
- members
->> >> >> > > of struct page directly, but use safe APIs for the purpose.
->> >> >> > >
->> >> >> > > Use netmem_is_pp() instead of directly accessing page->pp_magi=
-c in
->> >> >> > > page_pool_page_is_pp().
->> >> >> > >
->> >> >> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
->> >> >> > > ---
->> >> >> > >  include/linux/mm.h   | 5 +----
->> >> >> > >  net/core/page_pool.c | 5 +++++
->> >> >> > >  2 files changed, 6 insertions(+), 4 deletions(-)
->> >> >> > >
->> >> >> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
->> >> >> > > index 8dc012e84033..3f7c80fb73ce 100644
->> >> >> > > --- a/include/linux/mm.h
->> >> >> > > +++ b/include/linux/mm.h
->> >> >> > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struc=
-t task_struct *t, unsigned long status);
->> >> >> > >  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
->> >> >> > >
->> >> >> > >  #ifdef CONFIG_PAGE_POOL
->> >> >> > > -static inline bool page_pool_page_is_pp(struct page *page)
->> >> >> > > -{
->> >> >> > > -       return (page->pp_magic & PP_MAGIC_MASK) =3D=3D PP_SIGN=
-ATURE;
->> >> >> > > -}
->> >> >> >=20
->> >> >> > I vote for keeping this function as-is (do not convert it to net=
-mem),
->> >> >> > and instead modify it to access page->netmem_desc->pp_magic.
->> >> >>=20
->> >> >> Once the page pool fields are removed from struct page, struct pag=
-e will
->> >> >> have neither struct netmem_desc nor the fields..
->> >> >>=20
->> >> >> So it's unevitable to cast it to netmem_desc in order to refer to
->> >> >> pp_magic.  Again, pp_magic is no longer associated to struct page.
->> >> >
->> >> > Options that come across my mind are:
->> >> >
->> >> >    1. use lru field of struct page instead, with appropriate commen=
-t but
->> >> >       looks so ugly.
->> >> >    2. instead of a full word for the magic, use a bit of flags or u=
-se
->> >> >       the private field for that purpose.
->> >> >    3. do not check magic number for page pool.
->> >> >    4. more?
->> >>=20
->> >> I'm not sure I understand Mina's concern about CPU cycles from castin=
-g.
->> >> The casting is a compile-time thing, which shouldn't affect run-time
->> >
->> > I didn't mention it but yes.
->> >
->> >> performance as long as the check is kept as an inline function. So it=
-'s
->> >> "just" a matter of exposing struct netmem_desc to mm.h so it can use =
-it
->> >
->> > Then.. we should expose net_iov as well, but I'm afraid it looks weird.
->> > Do you think it's okay?
->>=20
->> Well, it'll be ugly, I grant you that :)
->>=20
->> Hmm, so another idea could be to add the pp_magic field to the inner
->> union that the lru field is in, and keep the page_pool_page_is_pp()
->> as-is. Then add an assert for offsetof(struct page, pp_magic) =3D=3D
->> offsetof(netmem_desc, pp_magic) on the netmem side, which can be removed
->> once the two structs no longer shadow each other?
->>=20
->> That way you can still get rid of the embedded page_pool struct in
->> struct page, and the pp_magic field will just be a transition thing
->> until things are completely separated...
+On Sat, Apr 19, 2025 at 9:24=E2=80=AFAM Thinh Nguyen <Thinh.Nguyen@synopsys=
+.com> wrote:
 >
-> Or what about to do that as mm folks did in page_is_pfmemalloc()?
+> On Wed, Apr 16, 2025, Kuen-Han Tsai wrote:
+> > When dwc3_gadget_soft_disconnect() fails, dwc3_suspend_common() keeps
+> > going with the suspend, resulting in a period where the power domain is
+> > off, but the gadget driver remains connected.  Within this time frame,
+> > invoking vbus_event_work() will cause an error as it attempts to access
+> > DWC3 registers for endpoint disabling after the power domain has been
+> > completely shut down.
+> >
+> > Abort the suspend sequence when dwc3_gadget_suspend() cannot halt the
+> > controller and proceeds with a soft connect.
+> >
+> > Fixes: 9f8a67b65a49 ("usb: dwc3: gadget: fix gadget suspend/resume")
+> > CC: stable@vger.kernel.org
+> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
+> > ---
+> >
+> > Kernel panic - not syncing: Asynchronous SError Interrupt
+> > Workqueue: events vbus_event_work
+> > Call trace:
+> >  dump_backtrace+0xf4/0x118
+> >  show_stack+0x18/0x24
+> >  dump_stack_lvl+0x60/0x7c
+> >  dump_stack+0x18/0x3c
+> >  panic+0x16c/0x390
+> >  nmi_panic+0xa4/0xa8
+> >  arm64_serror_panic+0x6c/0x94
+> >  do_serror+0xc4/0xd0
+> >  el1h_64_error_handler+0x34/0x48
+> >  el1h_64_error+0x68/0x6c
+> >  readl+0x4c/0x8c
+> >  __dwc3_gadget_ep_disable+0x48/0x230
+> >  dwc3_gadget_ep_disable+0x50/0xc0
+> >  usb_ep_disable+0x44/0xe4
+> >  ffs_func_eps_disable+0x64/0xc8
+> >  ffs_func_set_alt+0x74/0x368
+> >  ffs_func_disable+0x18/0x28
+> >  composite_disconnect+0x90/0xec
+> >  configfs_composite_disconnect+0x64/0x88
+> >  usb_gadget_disconnect_locked+0xc0/0x168
+> >  vbus_event_work+0x3c/0x58
+> >  process_one_work+0x1e4/0x43c
+> >  worker_thread+0x25c/0x430
+> >  kthread+0x104/0x1d4
+> >  ret_from_fork+0x10/0x20
+> >
+> > ---
+> > Changelog:
+> >
+> > v4:
+> > - correct the mistake where semicolon was forgotten
+> > - return -EAGAIN upon dwc3_gadget_suspend() failure
+> >
+> > v3:
+> > - change the Fixes tag
+> >
+> > v2:
+> > - move declarations in separate lines
+> > - add the Fixes tag
+> >
+> > ---
+> >  drivers/usb/dwc3/core.c   |  9 +++++++--
+> >  drivers/usb/dwc3/gadget.c | 22 +++++++++-------------
+> >  2 files changed, 16 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index 66a08b527165..f36bc933c55b 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -2388,6 +2388,7 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >  {
+> >       u32 reg;
+> >       int i;
+> > +     int ret;
+> >
+> >       if (!pm_runtime_suspended(dwc->dev) && !PMSG_IS_AUTO(msg)) {
+> >               dwc->susphy_state =3D (dwc3_readl(dwc->regs, DWC3_GUSB2PH=
+YCFG(0)) &
+> > @@ -2406,7 +2407,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >       case DWC3_GCTL_PRTCAP_DEVICE:
+> >               if (pm_runtime_suspended(dwc->dev))
+> >                       break;
+> > -             dwc3_gadget_suspend(dwc);
+> > +             ret =3D dwc3_gadget_suspend(dwc);
+> > +             if (ret)
+> > +                     return ret;
+> >               synchronize_irq(dwc->irq_gadget);
+> >               dwc3_core_exit(dwc);
+> >               break;
+> > @@ -2441,7 +2444,9 @@ static int dwc3_suspend_common(struct dwc3 *dwc, =
+pm_message_t msg)
+> >                       break;
+> >
+> >               if (dwc->current_otg_role =3D=3D DWC3_OTG_ROLE_DEVICE) {
+> > -                     dwc3_gadget_suspend(dwc);
+> > +                     ret =3D dwc3_gadget_suspend(dwc);
+> > +                     if (ret)
+> > +                             return ret;
+> >                       synchronize_irq(dwc->irq_gadget);
+> >               }
+> >
+> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> > index 89a4dc8ebf94..630fd5f0ce97 100644
+> > --- a/drivers/usb/dwc3/gadget.c
+> > +++ b/drivers/usb/dwc3/gadget.c
+> > @@ -4776,26 +4776,22 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+> >       int ret;
+> >
+> >       ret =3D dwc3_gadget_soft_disconnect(dwc);
+> > -     if (ret)
+> > -             goto err;
+> > -
+> > -     spin_lock_irqsave(&dwc->lock, flags);
+> > -     if (dwc->gadget_driver)
+> > -             dwc3_disconnect_gadget(dwc);
+> > -     spin_unlock_irqrestore(&dwc->lock, flags);
+> > -
+> > -     return 0;
+> > -
+> > -err:
+> >       /*
+> >        * Attempt to reset the controller's state. Likely no
+> >        * communication can be established until the host
+> >        * performs a port reset.
+> >        */
+> > -     if (dwc->softconnect)
+> > +     if (ret && dwc->softconnect) {
+> >               dwc3_gadget_soft_connect(dwc);
+> > +             return -EAGAIN;
 >
-> static inline bool page_pool_page_is_pp(struct page *page)
-> {
-> 	/*
-> 	 * XXX: The space of page->lru.next is used as pp_magic in
-> 	 * struct netmem_desc overlaying on struct page temporarily.
-> 	 * This API will be unneeded shortly.  Let's use the ugly but
-> 	 * temporal way to access pp_magic until struct netmem_desc has
-> 	 * its own instance.
-> 	 */
->         return (((unsigned long)page->lru.next) & PP_MAGIC_MASK) =3D=3D P=
-P_SIGNATURE;
-> }
+> This may make sense to have -EAGAIN for runtime suspend. I supposed this
+> should be fine for system suspend since it doesn't do anything special
+> for this error code.
+>
+> When you tested runtime suspend, did you observe that the device
+> successfully going into suspend on retry?
+>
+> In any case, I think this should be good. Thanks for the fix:
+>
+> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+>
+> Thanks,
+> Thinh
 
-Sure, that can work as a temporary solution (maybe with a static assert
-somewhere that pp_magic and lru have the same offsetof())?
+Hi Greg,
 
--Toke
+It looks like this patch hasn't been cherry-picked into the usb-next
+branch yet. Am I missing something?
 
+Regards,
+Kuen-Han
+
+>
+> > +     }
+> >
+> > -     return ret;
+> > +     spin_lock_irqsave(&dwc->lock, flags);
+> > +     if (dwc->gadget_driver)
+> > +             dwc3_disconnect_gadget(dwc);
+> > +     spin_unlock_irqrestore(&dwc->lock, flags);
+> > +
+> > +     return 0;
+> >  }
+> >
+> >  int dwc3_gadget_resume(struct dwc3 *dwc)
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
+> >
