@@ -1,290 +1,173 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013011.outbound.protection.outlook.com [52.101.72.11])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA5F1A5B91;
-	Wed, 28 May 2025 14:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443998; cv=fail; b=kOFqmqC0HX+9xZqNSUg8UPOJTpaMY1Q/52VUR/MTp2lpsrj6j3qw/3aZYZpkvV8RMj/nCB8ryFt+D+SyRZ3mWwDbEitYZXevZqbUk7LAwvmJ2TQtOsZO7Y7msqbJGn9ERphUGE+8Xc1+DhfrdyhcRXudpZ9dY03KAsZ0R3nt0ZU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443998; c=relaxed/simple;
-	bh=hLDMip9V6PbsIHoAIUo7Gt/Pxz03Lr+N/DhvY5iJuis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U3gdQvbSyA+65jCn0v6u42X4+donESEGGtBDloj9qNuJp9Xx8pf+fGub6ydrjwVcHogdKZdF7AVPzQZZvJ4Zoj2IxQjkLYthlhxelAqGlq8n22bS30GZcfUlHkm0SY8zDmmrPTBHJniHrWS//EcOH40SsL9m6rB6/5/z7gcWFbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Cm+PPFKu; arc=fail smtp.client-ip=52.101.72.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9D8288C8C;
+	Wed, 28 May 2025 14:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748444033; cv=none; b=thSZXvUVjvvF++hUugczw6uNxH1vSDRUiwOv7aRZLgnW8WgnxJKaMpmrXhRRlHdJIiqvkT9qQ4dPBQyPxNY/bz6+S8pbjuslavMmpnacWxuqsQUZla8PGz3HJt38/ZwdOYxW9YRt9c3D/ydzE9jz6LtP3BCQygLF25eU3pUxq3k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748444033; c=relaxed/simple;
+	bh=lFDV1HaeUob008ZddkZRHixO8/o/65lcZVfKDJi4TjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4+1snETZ7rpLf8WoWwjEs98CjjgWbC1Axsi1t55GPP/zcX92fZfKe2DejxYyQ5b0AZYmAJewUgOqM2sX7Z1ivMzSsSRxz4cm7CrdolqjSAV+eCoC1z4vfcEuxMKb54+MOBeD9A5ASkPZ1IJ152DWg2Ph8XLpWTSGawTskf4xVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qadhF+PL; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cm+PPFKu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xP6HBerSHDozpOEDjxVsQPFr0x+cAVqv8XyTKXex02OfHNXNzw5zG0/eCihJ1nvHEM2JKBrRlXNJS605t6bcYNkAXElC9I40Klw+qnfRoegn0z8qfSbY3pJQt16GjcyjIbAi11XhUg0jQPn/l8jzS8UnuX3aoDW0URIthZQMAbUdx9usR9VQFj2k1QtpIEYhbNBx/nYq5AEkOFvIAEriO3NlGBF18K1BIh92kW/RXE6/DFe8e6LuTxDazQdjXSyTXSv/EI0/XxcA6jUbG6O1K3SttGt4ACXBVvFbwe7E9cyjaKfAdtLpxhRp5oQ1vNnkx1zuPQMtrSUeWXsdZpD2yQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MupEJWREZvbcHKp7jpQ8OBtDeqAIcIZP+PK/a2E6OqU=;
- b=PWgdpOQV3/dovWYo7mJ/IT15nVTmZJ4j2jhvl5XusAZSMGEYfAwLFpQxYJd3U4rAn68tuvQrn4KlK9Losg52HHfYL+eYi18BK4BrxgLS5ZQ2RLyKzMELIxFjFiSItTNohRVAJk1yymSEOrKOyONjflr7sVdqWgAiCoOeMuvfob2+UpkTEqrqNBw8ZxILk5LIbW8hgt/tKodqQQS36xQHc15mFnzHt+slBq9n5M3hzJeK2VlTIiEGDDXQwUzhD3aQDd36clU3021jkS+IOFJAXAHL3rkC3AdyD8jpufSQRnoXTb5nyPa7Syhtc1tQ3Cxx6I1ncCs8wp/pGPLFz8ELug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MupEJWREZvbcHKp7jpQ8OBtDeqAIcIZP+PK/a2E6OqU=;
- b=Cm+PPFKuLChrz1sRyCH6HokoHDMVcOCoqFy89aljaw5lfqwVSMCTIC8KJo4rY/zEZKevdwByTW+Y8Pz9fnCRYM6qmWI1axrk4/jUEQi89n7oW7/QP93Y2uIXmd7SWOxtTMFD3XxrfbiaxggohT6I72LK7xfsxRobp6R2TXebV88V3l+kN91hX9/qUfjlatKO07fwJJONRKtUcIJt5TYu2w72OSIEz1N8++ww3gcF80M+VKPSkbvsr+A87iVCqzR98zOMl8WHcteXAVcArBhYKBnSlf8vD2zeevSUObNlJ3rkaWuhuW4UVecVn/YtQHznSql/Tv1uGa2HnUKCPwGSQg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DB9PR04MB9282.eurprd04.prod.outlook.com (2603:10a6:10:36e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 28 May
- 2025 14:53:12 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
- 14:53:11 +0000
-Date: Wed, 28 May 2025 10:52:59 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: John Ernberg <john.ernberg@actia.se>
-Cc: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S . Miller" <davem@davemloft.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Thomas Richard <thomas.richard@bootlin.com>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"stable@kernel.org" <stable@kernel.org>
-Subject: Re: [PATCH v3 1/4] crypto: caam - Prevent crash on suspend with
- iMX8QM / iMX8ULP
-Message-ID: <aDcjS+3ing1W81QY@lizhi-Precision-Tower-5810>
-References: <20250528144259.2603914-1-john.ernberg@actia.se>
- <20250528144259.2603914-2-john.ernberg@actia.se>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528144259.2603914-2-john.ernberg@actia.se>
-X-ClientProxiedBy: SJ0PR13CA0003.namprd13.prod.outlook.com
- (2603:10b6:a03:2c0::8) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qadhF+PL"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9XOR032017;
+	Wed, 28 May 2025 14:53:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=C+Ax56K/8glZJmSH+KSxWGDGC6oik9
+	dHEUVf8/VFNLg=; b=qadhF+PLwysgEZYOoIUKp8ZxmQfyZULiZB8WGRrq18v9a0
+	pzQi8ZD9ORDbTJJRJzoGRUGpSSiUNC9jquapZxvmH8B0rqGX50M1+LqOYaAA+FNU
+	26d6ODgWX55VmQWLFqMOOCc6oPsCHmpnzo1v2XcUPuyqNdgVPkqX2S7BU998yerX
+	M4JJSKDWZPB27WrJzxhiBf1y+GGf2/61jdj2rcP0uGagZ5MDPjr8vW8JuWVaUTIV
+	ImUTootbcsqdfo8IiASP53G/szXa+VmUi7iMCXe/Jp6vJGV9z8EPOGwc1I7+TCmP
+	R4Cjpe9hF4oBHEUatWe/GCV9iMbVjHCM72lplFIw==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40jr8k7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 14:53:29 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAecxA021326;
+	Wed, 28 May 2025 14:53:28 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46utnmqreh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 14:53:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SErQfB52232568
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 14:53:26 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8373120040;
+	Wed, 28 May 2025 14:53:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56D912004B;
+	Wed, 28 May 2025 14:53:22 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.18.84])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 28 May 2025 14:53:22 +0000 (GMT)
+Date: Wed, 28 May 2025 20:23:15 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: libaokun@huaweicloud.com
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        jack@suse.cz, linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        yangerkun@huawei.com, libaokun1@huawei.com
+Subject: Re: [PATCH 0/4] ext4: better scalability for ext4 block allocation
+Message-ID: <aDchmYDc_OOAu2yC@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9282:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b993a7a-d818-4c1f-5ca9-08dd9df75dd9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|7416014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EiAgRc3wy3psKXSaTNSVqo4bWMdk//qq9hISV9OwKVmcz8MQQVyBPAwgMIik?=
- =?us-ascii?Q?UeQs0aMuxvrS/1575VcEIaLRpVhMNRf7QJhORybkyL55EMnC8QJ3BujdsRtg?=
- =?us-ascii?Q?lxby8KP4jHKpC2Icwg2GkQXqcEd/PHv8YZPk/p8fWNSEoc77AGeVtEleZC6m?=
- =?us-ascii?Q?IHexlHhHpC8AyXZ0NqyqIbKtHLqx20fVzdeDaaPLndf94AQ/nxn11RZPdiLY?=
- =?us-ascii?Q?5nOt+lKc4YzvzuLZghMK/53/Wzat66PPifUp1DBalRmsk6extXaNCvC663UZ?=
- =?us-ascii?Q?Hcc7r3VQH+YzsjxLCwQJJVU7FIbPValvdZRhq3YTTJNv/X9RemksGWZb0NVB?=
- =?us-ascii?Q?YQ3FArOZrYq12Fgrr1wlAG528ss2XEMy9PHzfs1bIkITpIytdetisrTovt3g?=
- =?us-ascii?Q?XquhD1mjaSOdOkyk4Pr7w4b+PhBlJu9BeNJRw81v+bQ2Xx0If6Oo6u7lPJ2O?=
- =?us-ascii?Q?5dnlvUBmUVkqcca6QYNomX5gkFLhnfBb1+nMTREZkM8IcSrQJpI7i3GjaBrx?=
- =?us-ascii?Q?4ZEZnONMWh70VyvgcHBqthgeydegMHXjeBLZKWAF02GJSh5c48BARcakLHGb?=
- =?us-ascii?Q?+cvE8Pn122YbbG9EnNNNvrmhr4w11oCV3vCnKjTBacqbevtqcJRYHBEQV/up?=
- =?us-ascii?Q?W/IwrOWBwwwSjRTDoLbsR71EwM1s54bfgQYNnnmMPoFWdlng4j8p0v+TP1np?=
- =?us-ascii?Q?NaBgRuFP234SgeJypBBpPqwOWBa32iuCMwBdhN0QrHr2CCmhQoNg0a8WeJk/?=
- =?us-ascii?Q?njWrFdq7GfFXdqjdrivraJj/Xyu/enBqd/8iP82RsAuh83HcPKjEldBZZExB?=
- =?us-ascii?Q?6xCov1Hgbw8PNsXvV+Lt8Q5EJsvE6pMHqMzvoDVCxlt8T9IvvhNIlDGLsigD?=
- =?us-ascii?Q?7BMstqqJbda+ILmSFSzLfzh3te6Yt4xXg0yVklq0v3qT3JaC3Uv9LV6iYYYt?=
- =?us-ascii?Q?tzpRBjMh0q8ZiPHZLzHtSjzwCXCHZdnSLVoXKbmql6nNkUziCxlwKN8dZbgu?=
- =?us-ascii?Q?9XHaJNAnDV138SMvZtvLzjTB8q8SPZ0ojdhqZLXHflU3Lnv7wu1BmFVSKmbU?=
- =?us-ascii?Q?iH/GYyELlkLGGigOGDkgc6f6U/0hYnbcs3HhKfOc/ud1nYtTQAmtTWn8MShg?=
- =?us-ascii?Q?IXqENZG6LsEc8pNeiSnkO5GSplv2RWjNEiOihw+9IaumMRgSMOMSh7kPrvUu?=
- =?us-ascii?Q?Y7P7d3Mx4B8iYtpqxubDqlVKpa4TgpCQLdqI0mIxtVND/7G1ObiKHepIPpk6?=
- =?us-ascii?Q?4anFxU89l6c3V0k2QO9a+qzvzUf2XzOvMQcFavh4OkhtB1HlxKYXowHkZ9/8?=
- =?us-ascii?Q?Oyqha6HBNCeD/afS5VhaPeze9j1H4HnN0KQT6oeoPr20jf9T163ymILoUd4J?=
- =?us-ascii?Q?fxkxc0rh7d2qBQxZctYYRhNQPJcKeDPM9s6JKJmYnsxD6evMkFTuEhwiOZw9?=
- =?us-ascii?Q?v6pTPKgUjSGdJ4FJrw52dmtiwsoUW1GT3vbDHh4wYf0O5T0bFZhlicjEJEJ9?=
- =?us-ascii?Q?5riA4w4Oq1e7jlM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?puOXVFwSvwUc5IjvaAKlxzki+sL7lVU8N8gI3zBJReDl0ldRvx/NtBLWgJd+?=
- =?us-ascii?Q?yWEqkqXeXe2M8fSJPAZ+WixHU5wKCd/YTXI1DaEU/9/+YYBWH2MdQ1kP7pzi?=
- =?us-ascii?Q?IvkDh23pKKvq0n3amO+6FqS4nnmOfcdU5Jvi86BKsYtE4TG/yW8VXKU4vbqo?=
- =?us-ascii?Q?A8Z3SK9aut37PiUbcFn9kr11aUYeh+akqI49GuZOSmdpCvOagZbiE8LPJFfS?=
- =?us-ascii?Q?ZGATD4yJFW2KI5QBfIKePagqDj17kTeeBPKjZHx9nCg0gG1QDHo7LV3xzLO6?=
- =?us-ascii?Q?Dgs/kXS5Dn1kZHZxA6SRqe0L4z04qo8Lp008CqcbLR1mzsENqRkQNKO3Vfb2?=
- =?us-ascii?Q?MViSuHpUUoCOe4r6LhSOfj/gDjovNFITEW2C7AYXYu61/gsw0wJhm+COXMOz?=
- =?us-ascii?Q?u4otZB0ZlGSqs47yN4XXyxWcFkkE1ZYj2HRWoCZSDYvJ75k8xwYmEhnoaMot?=
- =?us-ascii?Q?KiLYTalgysknScOZtxs13mfczUKal/fN4dGIZtnuqudHcOwmnKkWoZ+0VbB7?=
- =?us-ascii?Q?e7jJtNpxCHicmFzVGKo8bZwlVN6R0cwBdkbPSuJ52yQ3K5QOwCn3rynjnwlq?=
- =?us-ascii?Q?qIQb1l46pSAKzVGt1vrGWbBsAxcoU3ch5QVjQ+l1IdsCMsvMG51a0asOYoji?=
- =?us-ascii?Q?e7RuNsCc4Iiygf3qXPrlrSrzxlv5i1NN/evvVZeqQDGxUU7W5/jRD4r5v46p?=
- =?us-ascii?Q?Xerb6jLxBkjEAEAjQskeV9/eU40R7h8+BKYc+dP5lOW8KoRxf2uLQMI/yFss?=
- =?us-ascii?Q?IwFHRKZZeTypz4ferZQsUd0FHYZC0JBjoeXkQmXCyikUYmfPm4lUazPCHrlD?=
- =?us-ascii?Q?PHDHeFq6Rl9/3lnKQ4vQbpKTera+nVCNTXfp9o7+cGSfr3bfsPm4M/GgmnbF?=
- =?us-ascii?Q?BnLtEYjqHqVt6IBlaBJqHvIMTvzQdIAERqVa8+gccfjTKLG2ivTB4PpBGWSx?=
- =?us-ascii?Q?mHozmNq0TWHEJ8N1A68B1RtHzmrJGs9yMIoYJ9eBqQWxGAwUWiu38kI88cG7?=
- =?us-ascii?Q?HvtGq9pqSm6Rt0MC2wspoT8JGmatjOwfAf5U6wf5JyLFo6KIiRUrLcf5O2aF?=
- =?us-ascii?Q?ZAk0zGftdyVYr3dQzHo7NhIgflqv1UaSrNPzhHH/1VeKjHYPX4RRtadw2KKe?=
- =?us-ascii?Q?F090yKuQl7RDZgkr0T3WvX3U2fgnqFDCuhRAxDhPCui1SGv/1moMIk10+ZZ2?=
- =?us-ascii?Q?sHHv2RTkvVKFBTDGRi5EKnaWImXc01PmI/lBtXHK307r2rAyZaUaWNHRZ3mE?=
- =?us-ascii?Q?bCXoVhZpGaCGvOowD8yqENNhiJ2TDa/DpuuKt2xk/fhx3ULp0OBbXwVQvFxH?=
- =?us-ascii?Q?wgPgOYTrk2k7Od/iNiU8+PUmnJsfr3cd0ZSZz+mgedVpzd6wzmt+ZSNTxHLW?=
- =?us-ascii?Q?VYjK0zTE+G9+2WPMPofp8cEXKT5pilIUDBT6SWOSH8hMiUXzpJDBE0A0edW6?=
- =?us-ascii?Q?8UMleJsEVb9+jhWg5VJsKKCwqyYSEvwdUYzFIsV1PfVOG+2mUZpIyAvVHFr8?=
- =?us-ascii?Q?KK9qqN5cck6jmCwmPR81dU7kIR1FnrHLLjJYYre53Gn1Zn17tWzw7pyL9ggf?=
- =?us-ascii?Q?Ak5Q/cwl3LDgPy7zmEHiurk5pY+Kq9fJ143P7Pms?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b993a7a-d818-4c1f-5ca9-08dd9df75dd9
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 14:53:11.9045
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2iXKeO6+fSLsJ1YGzi7buNoujaGlNN+04VGNwR4DrZx/8DBRGTwlzYRm/emrvzQrgRCQSOsPnBQFAnzLnxLOtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9282
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=SdL3duRu c=1 sm=1 tr=0 ts=68372369 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=AiHppB-aAAAA:8 a=i0EeH86SAAAA:8 a=rC1FfmAkVqhJs6Hui7oA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: qxy6T5DMMWDnVa8xMLTdHn_p_De3-cJ1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEyNyBTYWx0ZWRfX8V4UXs5k8tO6 OtIu1brpWBcDIXyReUW9V8cKeKqERrjcXIOkkNF1tsYryGnynWrNl5S6P4ot7mWJ3rM+SQ92KFK hPPy4Ar9VjfDbHp7GVDd4EuAtEi+GcfDddnT4edOmxAKpGAuI0X5zG4TKK3lOcGv1ORwC9N0zYD
+ HDAvLXCMX1W7ZTgjG0sknTk7L1lgRs6IrwL3eWb6/0w8TloXmyhpSDxP++cazECD9W3Eq+nupOq /ebeZc0nYQ13Oi6VWaXyEWNtaWjD+Z+xQwlamQIqNw2zsxiXOvsRioZRHFWIALcvXogwTp47Yey yhvLgLpI6ohxFx/NmmsCDEN2EK+OdTWsNMXphdKwlboqXqY1WjJkC5NOqAJ+iCtSwgEqcOekUdb
+ 3YCl1mYhxdl5uX4GPPNy8+aHjTlx6J9XOlMRbmujA9A+BIdT5gi71WmVa8A1umb1V1tRGzvq
+X-Proofpoint-ORIG-GUID: qxy6T5DMMWDnVa8xMLTdHn_p_De3-cJ1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_07,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 mlxlogscore=732 suspectscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280127
 
-On Wed, May 28, 2025 at 02:43:07PM +0000, John Ernberg wrote:
-> Since the CAAM on these SoCs is managed by another ARM core, called the
-> SECO (Security Controller) on iMX8QM and Secure Enclave on iMX8ULP, which
-> also reserves access to register page 0 suspend operations cannot touch
-> this page.
->
-> This is similar to when running OPTEE, where OPTEE will reserve page 0.
->
-> Track this situation using a new state variable no_page0, reflecting if
-> page 0 is reserved elsewhere, either by other management cores in SoC or
-> by OPTEE.
->
-> Replace the optee_en check in suspend/resume with the new check.
->
-> optee_en cannot go away as it's needed elsewhere to gate OPTEE specific
-> situations.
->
-> Fixes the following splat at suspend:
->
->     Internal error: synchronous external abort: 0000000096000010 [#1] SMP
->     Hardware name: Freescale i.MX8QXP ACU6C (DT)
->     pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->     pc : readl+0x0/0x18
->     lr : rd_reg32+0x18/0x3c
->     sp : ffffffc08192ba20
->     x29: ffffffc08192ba20 x28: ffffff8025190000 x27: 0000000000000000
->     x26: ffffffc0808ae808 x25: ffffffc080922338 x24: ffffff8020e89090
->     x23: 0000000000000000 x22: ffffffc080922000 x21: ffffff8020e89010
->     x20: ffffffc080387ef8 x19: ffffff8020e89010 x18: 000000005d8000d5
->     x17: 0000000030f35963 x16: 000000008f785f3f x15: 000000003b8ef57c
->     x14: 00000000c418aef8 x13: 00000000f5fea526 x12: 0000000000000001
->     x11: 0000000000000002 x10: 0000000000000001 x9 : 0000000000000000
->     x8 : ffffff8025190870 x7 : ffffff8021726880 x6 : 0000000000000002
->     x5 : ffffff80217268f0 x4 : ffffff8021726880 x3 : ffffffc081200000
->     x2 : 0000000000000001 x1 : ffffff8020e89010 x0 : ffffffc081200004
->     Call trace:
->      readl+0x0/0x18
->      caam_ctrl_suspend+0x30/0xdc
->      dpm_run_callback.constprop.0+0x24/0x5c
->      device_suspend+0x170/0x2e8
->      dpm_suspend+0xa0/0x104
->      dpm_suspend_start+0x48/0x50
->      suspend_devices_and_enter+0x7c/0x45c
->      pm_suspend+0x148/0x160
->      state_store+0xb4/0xf8
->      kobj_attr_store+0x14/0x24
->      sysfs_kf_write+0x38/0x48
->      kernfs_fop_write_iter+0xb4/0x178
->      vfs_write+0x118/0x178
->      ksys_write+0x6c/0xd0
->      __arm64_sys_write+0x14/0x1c
->      invoke_syscall.constprop.0+0x64/0xb0
->      do_el0_svc+0x90/0xb0
->      el0_svc+0x18/0x44
->      el0t_64_sync_handler+0x88/0x124
->      el0t_64_sync+0x150/0x154
->     Code: 88dffc21 88dffc21 5ac00800 d65f03c0 (b9400000)
->
-> Fixes: d2835701d93c ("crypto: caam - i.MX8ULP donot have CAAM page0 access")
-> Fixes: 61bb8db6f682 ("crypto: caam - Add support for i.MX8QM")
+On Fri, May 23, 2025 at 04:58:17PM +0800, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> Since servers have more and more CPUs, and we're running more containers
+> on them, we've been using will-it-scale to test how well ext4 scales. The
+> fallocate2 test (append 8KB to 1MB, truncate to 0, repeat) run concurrently
+> on 64 containers revealed significant contention in block allocation/free,
+> leading to much lower aggregate fallocate OPS compared to a single
+> container (see below).
+> 
+>    1   |    2   |    4   |    8   |   16   |   32   |   64
+> -------|--------|--------|--------|--------|--------|-------
+> 295287 | 70665  | 33865  | 19387  | 10104  |  5588  |  3588
+> 
+> The main bottleneck was the ext4_lock_group(), which both block allocation
+> and free fought over. While the block group for block free is fixed and
+> unoptimizable, the block group for allocation is selectable. Consequently,
+> the ext4_try_lock_group() helper function was added to avoid contention on
+> busy groups, and you can see more in Patch 1.
+> 
+> After we fixed the ext4_lock_group bottleneck, another one showed up:
+> s_md_lock. This lock protects different data when allocating and freeing
+> blocks. We got rid of the s_md_lock call in block allocation by making
+> stream allocation work per inode instead of globally. You can find more
+> details in Patch 2.
+> 
+> Patches 3 and 4 are just some minor cleanups.
+> 
+> Performance test data follows:
+> 
+> CPU: HUAWEI Kunpeng 920
+> Memory: 480GB
+> Disk: 480GB SSD SATA 3.2
+> Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
+>  Observation: Average fallocate operations per container per second.
 
-Why need two fixes tags? It should be enough to keep oldest one.
+> 
+> |--------|--------|--------|--------|--------|--------|--------|--------|
+> |    -   |    1   |    2   |    4   |    8   |   16   |   32   |   64   |
+> |--------|--------|--------|--------|--------|--------|--------|--------|
+> |  base  | 295287 | 70665  | 33865  | 19387  | 10104  |  5588  |  3588  |
+> |--------|--------|--------|--------|--------|--------|--------|--------|
+> | linear | 286328 | 123102 | 119542 | 90653  | 60344  | 35302  | 23280  |
+> |        | -3.0%  | 74.20% | 252.9% | 367.5% | 497.2% | 531.6% | 548.7% |
+> |--------|--------|--------|--------|--------|--------|--------|--------|
+> |mb_optim| 292498 | 133305 | 103069 | 61727  | 29702  | 16845  | 10430  |
+> |ize_scan| -0.9%  | 88.64% | 204.3% | 218.3% | 193.9% | 201.4% | 190.6% |
+> |--------|--------|--------|--------|--------|--------|--------|--------|
 
-Frank
+Hey Baokun, nice improvements! The proposed changes make sense to me,
+however I suspect the performance improvements may come at a cost of
+slight increase in fragmentation, which might affect rotational disks
+especially. Maybe comparing e2freefrag numbers with and without the
+patches might give a better insight into this.
 
-> Cc: stable@kernel.org # v6.10+
-> Signed-off-by: John Ernberg <john.ernberg@actia.se>
->
-> ---
->
-> I noticed this when enabling the iMX8QXP support (next patch), hence the
-> iMX8QXP backtrace, but the iMX8QM CAAM integration works exactly the same
-> and according to the NXP tree [1] the iMX8ULP suffers the same issue.
->
-> [1]: https://github.com/nxp-imx/linux-imx/commit/653712ffe52dd59f407af1b781ce318f3d9e17bb
->
-> ---
->
-> v3:
->  - no changes
->
-> v2:
->  - Adjust commit message to make it clearer what is happening around no_page0 (Frank Li)
-> ---
->  drivers/crypto/caam/ctrl.c   | 5 +++--
->  drivers/crypto/caam/intern.h | 1 +
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-> index 38ff931059b4..766c447c9cfb 100644
-> --- a/drivers/crypto/caam/ctrl.c
-> +++ b/drivers/crypto/caam/ctrl.c
-> @@ -831,7 +831,7 @@ static int caam_ctrl_suspend(struct device *dev)
->  {
->  	const struct caam_drv_private *ctrlpriv = dev_get_drvdata(dev);
->
-> -	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->optee_en)
-> +	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->no_page0)
->  		caam_state_save(dev);
->
->  	return 0;
-> @@ -842,7 +842,7 @@ static int caam_ctrl_resume(struct device *dev)
->  	struct caam_drv_private *ctrlpriv = dev_get_drvdata(dev);
->  	int ret = 0;
->
-> -	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->optee_en) {
-> +	if (ctrlpriv->caam_off_during_pm && !ctrlpriv->no_page0) {
->  		caam_state_restore(dev);
->
->  		/* HW and rng will be reset so deinstantiation can be removed */
-> @@ -908,6 +908,7 @@ static int caam_probe(struct platform_device *pdev)
->
->  		imx_soc_data = imx_soc_match->data;
->  		reg_access = reg_access && imx_soc_data->page0_access;
-> +		ctrlpriv->no_page0 = !reg_access;
->  		/*
->  		 * CAAM clocks cannot be controlled from kernel.
->  		 */
-> diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-> index e51320150872..51c90d17a40d 100644
-> --- a/drivers/crypto/caam/intern.h
-> +++ b/drivers/crypto/caam/intern.h
-> @@ -115,6 +115,7 @@ struct caam_drv_private {
->  	u8 blob_present;	/* Nonzero if BLOB support present in device */
->  	u8 mc_en;		/* Nonzero if MC f/w is active */
->  	u8 optee_en;		/* Nonzero if OP-TEE f/w is active */
-> +	u8 no_page0;		/* Nonzero if register page 0 is not controlled by Linux */
->  	bool pr_support;        /* RNG prediction resistance available */
->  	int secvio_irq;		/* Security violation interrupt number */
->  	int virt_en;		/* Virtualization enabled in CAAM */
-> --
-> 2.49.0
+Regardless the performance benefits are significant and I feel it is
+good to have these patches.
+
+I'll give my reviews individually as I'm still going through patch 2
+However, I wanted to check on a couple things:
+
+1. I believe you ran these in docker. Would you have any script etc open
+   sourced that I can use to run some benchmarks on my end (and also
+	 understand your test setup).
+
+2. I notice we are getting way less throughput in mb_optimize_scan? I
+   wonder why that is the case. Do you have some data on that? Are your
+   tests starting on an empty FS, maybe in that case linear scan works a 
+   bit better since almost all groups are empty. If so, what are the
+   numbers like when we start with a fragmented FS?
+
+   - Or maybe it is that the lazyinit thread has not yet initialized all
+   the buddies yet which means we have lesser BGs in the freefrag list
+   or the order list used by faster CRs. Hence, if they are locked we
+   are falling more to CR_GOAL_LEN_SLOW. To check if this is the case,
+   one hack is to cat /proc/fs/ext4/<disk>/mb_groups (or something along
+   the lines) before the benchmark, which forces init of all the group
+   buddies thus populating all the lists used by mb_opt_scan. Maybe we
+   can check if this gives better results.
+
+3. Also, how much IO are we doing here, are we filling the whole FS?
+
+Regards,
+ojaswin
