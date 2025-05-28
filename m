@@ -1,84 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970C327450;
-	Wed, 28 May 2025 18:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26251D6195
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456172; cv=none; b=LdPR0hJHsSQpdy4qwb5lrcTf0NLMMlJH5lQAe7keSjpPJNUq/gCHzxd18TSJyb2vdfsGq985OxRNOgplXWlShvZ8fIFbpunFAZiRPmpv9f4z04fLyed0FpQqI7ELZWB095mQnLRn4JB7OyOTtY2iqb4lW5qIJdZ6B0nlTlnFOZA=
+	t=1748456534; cv=none; b=tNxyg+HkciOkoZEHNZAT2ytyaiOrj9faUNEC1spVNGAgvPHrsWndAgxVODKXoVRQqB/V0qEh3LM335gr4H87vWm7Eyc4KquKjX9NZl3iQIDIivKkXvLamGKlAjLfSL81kD0xwWq8dMkV93uhrybIVvYbekMfvfJ5151Am49aqWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456172; c=relaxed/simple;
-	bh=06Kkx5fpHL8G7g8fwV5lNs2DBz108eD4awwjeVfVyvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWXlPvRKo+Uu8lPFLdT8pdxcsMwW7BZz6Vj0kMuUt33bil4pWBzwcpb1pIFGj0PE0yTKc1n06sWZIefd9e3imzOZIU4GhJL/sOpMQL5dvAlKiZ2eB+r+J323/beVqXRkbRIqjjTssUIqKCcYYQ3R/OqJxwcmRTshQMiLETu8PrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KkWpQ1DL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748456534; c=relaxed/simple;
+	bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VMvg6NCVN0lQVV4YtIf350+ZzLMJ9uriGCAQ6H9XhqFO9sQupehcIZlOH1+4DIuiKLFQaNbes718R/8eH9zjasurYuER4yO/Jz+YMMUOfdeWdNRnGBHMrf8W+GzZEHGCJLvVOWTsthLLNjDvt+oLF0BkQlRPZECrwEVNtRn7NPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WqqAoPNS; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkWpQ1DL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF5A8C4CEE3;
-	Wed, 28 May 2025 18:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748456172;
-	bh=06Kkx5fpHL8G7g8fwV5lNs2DBz108eD4awwjeVfVyvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KkWpQ1DLhunF70Di8HrYsEA5RMqJIldApxKDcf23sYfw4VxPUl8/WwU2VFzwBogNF
-	 HvlXlX3l93ACoy16d+pUXba4k6O6RsKEF4ku8EYu0GeMQEvaFAobNoom9Moli7HLBW
-	 z2mI4XXfrgZdc6HHxRFd3kxwhAcbdvKpRjDnJU1HH3F77jki9wptCiRpo8J6R9CuDC
-	 Qras3IRa5pRwnbT3q4LZSpsSUNL+EgjLRCtWQ45856Yj3HypezaydCwql2UlCghX6I
-	 cWfEyy9YzMstPioPd8/c7kp6fMAQJ20vRiEzuNUIL/V7S0Ga0ThdeBmO5EKqafpqS6
-	 SgyY5G92HF8wQ==
-Date: Wed, 28 May 2025 19:16:04 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Daniel Okazaki <dtokazaki@google.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Zev Weiss <zev@bewilderbeest.net>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] userspace-consumer: adding is_shared flag
-Message-ID: <a0bf24c6-58da-42e7-b686-03a893b38ecb@sirena.org.uk>
-References: <20250528174426.3318110-1-dtokazaki@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WqqAoPNS"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a375888297so110513f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748456530; x=1749061330; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
+        b=WqqAoPNSNxuAR3PqT4ij7Cq3MillF4T50EfpA5J4dOzAq33++n5/3sal6ZZZ5DeVqL
+         zb/s9Tmf1X7riSw2/yzvnZKD47tD3SJh8Lj0sy2aNvNCZx5slWbWh36XEiulo4ESZhsy
+         hLEFKR8wvWkzeo7JRhc/aaZiKpadqvvPYteR4rDovqiPlRQ9dHo0BYcCYpBXDaFlfbCX
+         c8XYCy0qoG+alHf7JeHn8rlGxCvG6bPVt4/heAEx1p6cmuMk6ZqyWlS82rigyqUU+7ug
+         PfXFF2RvRjOGcrUp1819O+WxjTJ4v86YaLS+Gv/rNuJxECBppW0hYKRiy/DzP0N6i6xT
+         joIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748456530; x=1749061330;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
+        b=M76so4F+H1/1LsNp8RgxhvfU8hTBNNJG+gOIaEE8FwBOwqHsFI18YQJac0hkSnKq/+
+         qwyxC6hWvyJnB2dSrw/NwSy0cgYiCxrm2QvKa9irchBxFPVFjcDC+bQyBHwo+JKMaIQa
+         yv15ImsW+TMjUSE7GibrRboTuEibB0l+11LwV3mpN6nezgT+SYDrHp1yyfjs8msAZUUe
+         r3YM1nvU248WGaeIvVT3XWM8qB/gXXaKKjyXYNk75ARO+N/1ercHoh2JboPpeY8vExVJ
+         iy6Udz98abgVSyJpNmutyKbewY9Nj/7RgnlJunJBWGp9apJXygQg8ZW/SgY5+mK61A60
+         6tkQ==
+X-Gm-Message-State: AOJu0YxOqbuI/apZl1e69Vj/Z12EEkdUVsBLlColrCQBIsjXVt61/pZc
+	U24L1fL/6EckwULL+hJJLvk8yZ49d0yIv0jAtRbtFzSBZJ/F8wDBuBQwcvLxx9GFP0I=
+X-Gm-Gg: ASbGnctqzafnG+3X2cvm+0mVrui29mM4ijeBHoMe8YDQsIuZ7rDniXdoQz4MxzSI7pV
+	kkg3h8TOtZK3wzGiIKZC1jb4WSO1kJR4qhHAcMYvJqqsta01ijsWQZgo/PULs4Lc8Nm7+w76o2k
+	7rMOIpQgZjWDMQ84t/h/ZWIpYjWSPFA44tHPSPwvs5umg5zToAd4BCZ9idOAnvCXVxw2Hi/SUsE
+	PTJyE3UR1yKsiGjOUw5nS9QWEHHK1VoTC6VjljJUoBoOzTFjUUjsKjpkoO3mPjfNNJFCKQ8FEAM
+	XGL+vCUlMPlzu8jI9B/e9X2ErAaiZssx1ve1RePCnQqTIoKXtyPqYIZGlQDO5sX6QNIGtf10b3W
+	nTh1otm1sB91K6iupQgzHK0jbSEV0XmLU9B++M86nL+SJ1Uq2co/4Pjpex9kICcd1f/N64lhDoo
+	LD9yZ/vBvnPRQ=
+X-Google-Smtp-Source: AGHT+IHTOE0+PFMYz990jpg9Oe0N7CBnAi3AYUtP4/dXlixK8CwlJULu/dNKcHyCmmvXjdwh0Z/kUw==
+X-Received: by 2002:a05:6000:2289:b0:3a3:7675:902 with SMTP id ffacd0b85a97d-3a4eedada59mr621835f8f.21.1748456529856;
+        Wed, 28 May 2025 11:22:09 -0700 (PDT)
+Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd6f1bsm2109613f8f.80.2025.05.28.11.22.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 11:22:09 -0700 (PDT)
+Message-ID: <137571b5-0665-4ddd-ae78-0b8530daa549@suse.com>
+Date: Wed, 28 May 2025 20:22:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yf9j6Ew/8eSP7Prm"
-Content-Disposition: inline
-In-Reply-To: <20250528174426.3318110-1-dtokazaki@google.com>
-X-Cookie: Keep away from edge.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
+ code pages
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ stable@vger.kernel.org
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-2-jgross@suse.com> <aDdHdwf8REvdu5FF@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <aDdHdwf8REvdu5FF@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------UsuyoDqOVngPVJZQPUnQdaoT"
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------UsuyoDqOVngPVJZQPUnQdaoT
+Content-Type: multipart/mixed; boundary="------------qYBFV4fxCGWNE5BE1KOr8YrG";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ stable@vger.kernel.org
+Message-ID: <137571b5-0665-4ddd-ae78-0b8530daa549@suse.com>
+Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
+ code pages
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-2-jgross@suse.com> <aDdHdwf8REvdu5FF@kernel.org>
+In-Reply-To: <aDdHdwf8REvdu5FF@kernel.org>
 
---yf9j6Ew/8eSP7Prm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--------------qYBFV4fxCGWNE5BE1KOr8YrG
+Content-Type: multipart/mixed; boundary="------------WLDyLAPat7iV2ru9hIIK7gDk"
 
-On Wed, May 28, 2025 at 05:44:23PM +0000, Daniel Okazaki wrote:
+--------------WLDyLAPat7iV2ru9hIIK7gDk
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-> Currently this userspace regulator driver requires exclusive control
-> of the regulator to operate. This patch adds an optional flag to
-> remove that constraint, and allow the regulator to be shared by other
-> modules. This allows for userspace to share control over a regulator
-> with kernel space.
+T24gMjguMDUuMjUgMTk6MjcsIE1pa2UgUmFwb3BvcnQgd3JvdGU6DQo+IE9uIFdlZCwgTWF5
+IDI4LCAyMDI1IGF0IDAyOjM1OjU1UE0gKzAyMDAsIEp1ZXJnZW4gR3Jvc3Mgd3JvdGU6DQo+
+PiBJbiBjYXNlIFg4Nl9GRUFUVVJFX1BTRSBpc24ndCBhdmFpbGFibGUgKGUuZy4gd2hlbiBy
+dW5uaW5nIGFzIGEgWGVuDQo+PiBQViBndWVzdCksIGV4ZWNtZW1fYXJjaF9zZXR1cCgpIHdp
+bGwgZmFsbCBiYWNrIHRvIHVzZSBQQUdFX0tFUk5FTA0KPj4gcHJvdGVjdGlvbiBmb3IgdGhl
+IEVYRUNNRU1fTU9EVUxFX1RFWFQgcmFuZ2UuDQo+Pg0KPj4gVGhpcyB3aWxsIHJlc3VsdCBp
+biBhdHRlbXB0cyB0byBleGVjdXRlIGNvZGUgd2l0aCB0aGUgTlggYml0IHNldCBpbg0KPj4g
+Y2FzZSBvZiBJVFMgbWl0aWdhdGlvbiBiZWluZyBhcHBsaWVkLg0KPj4NCj4+IEF2b2lkIHRo
+aXMgcHJvYmxlbSBieSB1c2luZyBQQUdFX0tFUk5FTF9FWEVDIHByb3RlY3Rpb24gaW5zdGVh
+ZCwNCj4+IHdoaWNoIHdpbGwgbm90IHNldCB0aGUgTlggYml0Lg0KPj4NCj4+IENjOiA8c3Rh
+YmxlQHZnZXIua2VybmVsLm9yZz4NCj4+IFJlcG9ydGVkLWJ5OiBYaW4gTGkgPHhpbkB6eXRv
+ci5jb20+DQo+PiBGaXhlczogNTE4NWU3ZjlmM2JkICgieDg2L21vZHVsZTogZW5hYmxlIFJP
+WCBjYWNoZXMgZm9yIG1vZHVsZSB0ZXh0IG9uIDY0IGJpdCIpDQo+PiBTaWduZWQtb2ZmLWJ5
+OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+PiAtLS0NCj4+ICAgYXJjaC94
+ODYvbW0vaW5pdC5jIHwgMiArLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
+KyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaW5p
+dC5jIGIvYXJjaC94ODYvbW0vaW5pdC5jDQo+PiBpbmRleCA3NDU2ZGY5ODVkOTYuLmY1MDEy
+YWUzMWQ4YiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L21tL2luaXQuYw0KPj4gKysrIGIv
+YXJjaC94ODYvbW0vaW5pdC5jDQo+PiBAQCAtMTA4OSw3ICsxMDg5LDcgQEAgc3RydWN0IGV4
+ZWNtZW1faW5mbyBfX2luaXQgKmV4ZWNtZW1fYXJjaF9zZXR1cCh2b2lkKQ0KPj4gICAJCXBn
+cHJvdCA9IFBBR0VfS0VSTkVMX1JPWDsNCj4+ICAgCQlmbGFncyA9IEVYRUNNRU1fS0FTQU5f
+U0hBRE9XIHwgRVhFQ01FTV9ST1hfQ0FDSEU7DQo+PiAgIAl9IGVsc2Ugew0KPj4gLQkJcGdw
+cm90ID0gUEFHRV9LRVJORUw7DQo+PiArCQlwZ3Byb3QgPSBQQUdFX0tFUk5FTF9FWEVDOw0K
+PiANCj4gUGxlYXNlIGRvbid0LiBFdmVyeXRoaW5nIGV4Y2VwdCBJVFMgY2FuIHdvcmsgd2l0
+aCBQQUdFX0tFTlJFTCBzbyB0aGUgZml4DQo+IHNob3VsZCBiZSBvbiBJVFMgc2lkZS4NCg0K
+SG1tLCBtYXliZSBhZGRpbmcgYW5vdGhlciBlbGVtZW50IHRvIGV4ZWNtZW1faW5mb1tdIHdp
+dGggdGhlIG5ldw0KdHlwZSBFWEVDTUVNX0tFUk5FTF9URVhULCBzcGVjaWZ5aW5nIFBBR0Vf
+S0VSTkVMX0VYRUMgaWYgIVBTRT8NCg0KDQpKdWVyZ2VuDQo=
+--------------WLDyLAPat7iV2ru9hIIK7gDk
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-What is the use case here?  This is a debug tool intended mainly for
-when you're developing a regulator driver and have something like a
-development board with no consumers at all.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
---yf9j6Ew/8eSP7Prm
-Content-Type: application/pgp-signature; name="signature.asc"
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------WLDyLAPat7iV2ru9hIIK7gDk--
+
+--------------qYBFV4fxCGWNE5BE1KOr8YrG--
+
+--------------UsuyoDqOVngPVJZQPUnQdaoT
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg3UuQACgkQJNaLcl1U
-h9Cligf/eRNSCfhAuPHM4/ocG3R+mI+WoS9FgYm7yddNGEdWxY40EnlQkfluFWLj
-JESPxrpHpdVYeou8nzB8P6pSTwidv/wgDBJcIcxnIz3/eiY7Tm7g2EjhMY3jrbxH
-Fj+rt6GbCzbC5XVEzh+XUAh1jOlefXJa0GPt6qgbg9q+6Jsi4YgPygzqGuxpjxqp
-K8zw1JYvB79g2xUsU3OGBc9TBvN6ZVgGVqGP/HFtvnMF4Nh7CaMu+eii7wxqcE9O
-GL7Y1Uvws23ckdJQ2CMgFFrJ48TAYWuS0aCv4oJ/HZtmpdKOb5ecBeGzSIso3tC1
-dvUg/BshSNrt5iGIDUI5b+jxOntskw==
-=X7d1
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmg3VFAFAwAAAAAACgkQsN6d1ii/Ey/E
+cgf9HRi/AUlT/PCZ9hF6vBahfHdlNPASDJOnfCGPtL8frn28VN6qnsVsRzyX/DWDXJWwGvHmgYlp
+TqZE6yodTXoUnZ1BzxoYYbp/t5Rkr+BM8iciOvvrMFXOOHnIpzxpSr1ne4LksCBNnx6jWmIvO+/H
+W2NKgHagfSl/iSPHW4bzebWP7DIAUBwFsyG+RJQ6v1pGsSuDFJDrm7pHPJPOVNhlqrdTJOQBaA38
+wIVku11yvIeBWX35AV0vkzo2jCvCM3KDqTtSivlmP2+YyeU1/PTKoMkUZrRm0rj74E46wUwgAxst
+Art9F25zxwgKv8r0/4Q+ore+g7gWvQdcOZHs2KFnEQ==
+=8AsH
 -----END PGP SIGNATURE-----
 
---yf9j6Ew/8eSP7Prm--
+--------------UsuyoDqOVngPVJZQPUnQdaoT--
