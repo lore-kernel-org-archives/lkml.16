@@ -1,141 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964C1214A69
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FFF627817D;
+	Wed, 28 May 2025 16:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448510; cv=none; b=YD0w7FO960JQN4avh7zsdSyP+UA97bbuEBPN4bXkLZKt5kCJt2gexivGTgOYZfjJEDLal31Bh8r8ytig9GTS4mSNut6CrMxo+eIg9RNbEb7fSdThzsTZU4Sgx0LSEU2gZ2oat4jhtYiXMfKGxBaQYKev6/Fs3CPtVDRUPElX3qQ=
+	t=1748448560; cv=none; b=tchcmLfnlgpmHPWJy0aK6qhO4hh4S89euPjpN59rhUi4NYtyL/ZWxIE1Mh3TAlxUac+V25SQfeNQh1TGcjwH8lySbaJvJ3cBtK/3pThHfKi8uNdSCZyZ+3g/+NlCi5ZUzPZOU+AL03miVFbrR3dKpBpFNrqFO9ZNc1dGsEbj4yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448510; c=relaxed/simple;
-	bh=LibnRIxltzpbANK+z/ZCNtTGSZsFrtMBHyUPR93lW28=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZaAfV1OTAu1hQmyQI2BhwFRoHF21fYoT4f//JCx33En1Up744HVVqnPAmdvHSfJb8i4fGTKPbS3LgzguMgmvvDrXswPIo8YR9ZZacuOYAiGYnkAJ92QvXWxc2TcmCBuWfTVixoie0YWPjCzPgSkfphOZ11GZ/qnCRRlPLdJ4Oz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTP6sStv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTP6sStv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748448507;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ELCjKD+gxUuR3aRJg9A9JbOeDRYY9q3dgElqJB30ab4=;
-	b=DTP6sStvhnHjYESwgyTmF0GG2suoJ3+RMxOQTNERnl+bzK/BONvH4ML3HpR7zqu4b//hBx
-	zTmYt095F80Ywm+X7wjc7dnjJpssjlgmzjxCIKPSLNY/a9dHs2SQUDBxW2w2MuihwzATSD
-	rlVx9I046oTc+bGKVqmpa0OHWW0Z5eg=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-332-gHVqQf4uMKmuXeGvCOi_ZQ-1; Wed, 28 May 2025 12:08:26 -0400
-X-MC-Unique: gHVqQf4uMKmuXeGvCOi_ZQ-1
-X-Mimecast-MFC-AGG-ID: gHVqQf4uMKmuXeGvCOi_ZQ_1748448505
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7ceb5b5140eso851423185a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:08:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748448505; x=1749053305;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ELCjKD+gxUuR3aRJg9A9JbOeDRYY9q3dgElqJB30ab4=;
-        b=cEggGdTnHfT9/kn6XeuLbhKamRn9DB19sElFqYtjB+Uh2X2qHL765LOrH8OlzY7zBY
-         Ci4CpcnZi3DiqRVM8TsogsFHUHY6LSfKIhF3TDeU8S+bNq759R6TEBxo8fzao2SP6J3E
-         fapoKzWIqHTXIvztSmFgTzRuVI36MU0/Iw71uvvk7cOTPyfbUpQhVypk50lWSFSOLkd+
-         /oTuWE8XcEviPdxIms810fcUPsKvugqpJUhHg87SWmEYGcOtGLd01wgs6hZS8MNewHOs
-         wGP7WD16Vgj0YmAhVV8jWgMO2/J9BaMU0XQ7SgmqXdS7iVPOqTg93NjiwVt7mp1DPJKX
-         2wug==
-X-Forwarded-Encrypted: i=1; AJvYcCXDxUbTPnwWFUG/ivamIbYRkKdYuEEHF89NaGJhiMllJ5GxUGkR0fi1JYnqyL78iTgtjxXfoVDMDqYurXc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwppMfMTZAXunfGIbWhbGjgmTaZH3wl7W3MmiYqRHPrkGbs2R0O
-	u17fC1dJX8GJil/whvqrOkRqxK0WSF/D+9cdwrKWKiAiby4RG24FnvoTYU9DPxyY6g07cbxcXvh
-	Tc5uh+5Tpo8YEd/J/Ka45nUt/+/lTB8o4T83vFjxqBWB5p26RfhW+fK2/tgCGSR9C9w==
-X-Gm-Gg: ASbGncudBTWhiuu29GyTqNtKX8Gnc4iHFaJpQS3pEElLbM3TxRE37XX1JlxIu4wJj+I
-	mNmVLpb8lW8ogiobX2O1Jx21sAR0Ne6noLCDtkXL37syNw614fuAfOCWV+e7XhwvorL6D7jRohu
-	bH4F5mYJej3Ibn58r+7/AVd6G9ma356RxB/PMPIqco2XTVXdftrSgKD0ZBxejiLvqNWWMq+opVV
-	QjGjDmNLkD4ettVBqLYl6q/XIKnE5VCfk/KmFgrDxfGjaMvR0vwqYZJcVYMDgh10HrhSYswaPwN
-	XITKHs6hfQz9mPKM31H2oDvJ7YNNyNao65cf8yhAfERLxyvZAalYo8d814s=
-X-Received: by 2002:a05:620a:424d:b0:7c5:962b:e87c with SMTP id af79cd13be357-7ceecc296f9mr2823528785a.44.1748448505351;
-        Wed, 28 May 2025 09:08:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGwBg64uo0z4Bgibxmg+9R08YonGSy0ylNwRuFxVQIAkQT9OnjwXxcnU1GDcfo/I0jNy+NrwQ==
-X-Received: by 2002:a05:620a:424d:b0:7c5:962b:e87c with SMTP id af79cd13be357-7ceecc296f9mr2823520385a.44.1748448504590;
-        Wed, 28 May 2025 09:08:24 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb8210270sm87017585a.31.2025.05.28.09.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 09:08:24 -0700 (PDT)
-Message-ID: <fadc8e044c3b18984b0ca4a88ef214feb779034d.camel@redhat.com>
-Subject: Re: [PATCH] rust: add helper for mutex_trylock
-From: mlevitsk@redhat.com
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
-Cc: rust-for-linux@vger.kernel.org, ojeda@kernel.org, Stephen Rothwell
-	 <sfr@canb.auug.org.au>
-Date: Wed, 28 May 2025 12:08:23 -0400
-In-Reply-To: <20250528083431.1875345-1-pbonzini@redhat.com>
-References: <20250528083431.1875345-1-pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+	s=arc-20240116; t=1748448560; c=relaxed/simple;
+	bh=O2qtelB4US+cJIhzPme3LIw1Jt2jPMgLescTbOZA/UE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jT+NIGTPkbdbfNCpJMihc7xENwkERpzYdQDPBX3PF/o9RTFa7cV0YCs/nidGtl4Cf7T8fhmHUl1Nsi3Ue5Bsk87TTuW8TJ/O5DsfKAc4pVe1vto6Iil6kq2bVXGUYIEKNe5f/p+SSm2fVZ+YCGCqb2UnuhxPsAD1X8jd/LmZiSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FEFF1A2D;
+	Wed, 28 May 2025 09:09:01 -0700 (PDT)
+Received: from [10.57.48.160] (unknown [10.57.48.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C4D93F673;
+	Wed, 28 May 2025 09:09:14 -0700 (PDT)
+Message-ID: <4f5c956e-19e7-4df0-b1f2-d8750c0af4d7@arm.com>
+Date: Wed, 28 May 2025 17:09:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 3/4] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Content-Language: en-GB
+To: "Rob Herring (Arm)" <robh@kernel.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ James Clark <james.clark@linaro.org>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250407-arm-brbe-v19-v21-3-ff187ff6c928@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-05-28 at 10:34 +0200, Paolo Bonzini wrote:
-> After commit c5b6ababd21a ("locking/mutex: implement mutex_trylock_nested=
-",
-> currently in the KVM tree) mutex_trylock() will be a macro when lockdep i=
-s
-> enabled.=C2=A0 Rust therefore needs the corresponding helper.=C2=A0 Just =
-add it and
-> the rust/bindings/bindings_helpers_generated.rs Makefile rules will do
-> their thing.
->=20
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On 07/04/2025 18:41, Rob Herring (Arm) wrote:
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> While BRBE can record branches within guests, the host recording
+> branches in guests is not supported by perf (though events are).
+> Support for BRBE in guests will supported by providing direct access
+> to BRBE within the guests. That is how x86 LBR works for guests.
+> Therefore, BRBE needs to be disabled on guest entry and restored on
+> exit.
+> 
+> For nVHE, this requires explicit handling for guests. Before
+> entering a guest, save the BRBE state and disable the it. When
+> returning to the host, restore the state.
+> 
+> For VHE, it is not necessary. We initialize
+> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
+> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
+> branch recording in the host. When entering the guest, we set
+> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
+> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
+> running a guest.
+> 
+> Should recording in guests (by the host) ever be desired, the perf ABI
+> will need to be extended to distinguish guest addresses (struct
+> perf_branch_entry.priv) for starters. BRBE records would also need to be
+> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
+> be distinguished.
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+> Tested-by: James Clark <james.clark@linaro.org>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Hi,
-Sorry for that.=C2=A0
-
-Next time I'll check rust bindings as well, I never had to deal with them b=
-efore.
-
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-
-Best regards,
-	Maxim Levitsky
-
-
-> ---
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Ok to apply to the KVM tree?
->=20
-> =C2=A0rust/helpers/mutex.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 =
-5 +++++
-> =C2=A01 files changed, 5 insertions(+)
->=20
-> diff a/rust/helpers/mutex.c b/rust/helpers/mutex.c
-> index 06575553eda5,06575553eda5..9ab29104bee1
-> --- a/rust/helpers/mutex.c
-> +++ b/rust/helpers/mutex.c
-> @@ -7,6 +7,11 @@ void rust_helper_mutex_lock(struct mute
-> =C2=A0	mutex_lock(lock);
-> =C2=A0}
-> =C2=A0
-> +int rust_helper_mutex_trylock(struct mutex *lock)
-> +{
-> +	return mutex_trylock(lock);
-> +}
-> +
-> =C2=A0void rust_helper___mutex_init(struct mutex *mutex, const char *name=
-,
-> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct lock_class_key *key)
-> =C2=A0{
->=20
->=20
 
