@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27BC283FF6;
-	Wed, 28 May 2025 12:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913A727A448;
+	Wed, 28 May 2025 12:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436304; cv=none; b=qE5/3NODVJ32l6xjL/qgP4m+Mg4tTDtMEIR1nGREbU/IBuU2hjlpIrGE/AUTggAa2Pml62ckxErlmXwOejTUhnXtDmNp2V/2de06DvMVe14tRVGBu9tNzqU4KMR2KdPstz2ZUkVh1C5i8DJmE8J3Yr8Y+S6lQa++9MTXyePnc1g=
+	t=1748436327; cv=none; b=cqLsoaEY+aZ9gATZe7ArHu9Uhfa5JXVxC0zzlrQAOU7GmIsIkvsAvT+HFInYcxwSMekyppsCRxwP4mdXlPhWkDoyTsA7E/ZiX50KfxbGwtn/z6zws25IOLyeFe2EwlzsYtL+vjvt9gYDHGc0mXzJ3FPTWrep+pVVxuZoRdoz5Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436304; c=relaxed/simple;
-	bh=jPRH3OiK/9a97AF/dwI7dyrPsGMp9AO1LyvMSi3+Sc8=;
+	s=arc-20240116; t=1748436327; c=relaxed/simple;
+	bh=LmgEcjResPLXXpFob/3Qa7tbGuBJRLI/7Xpku70pX8o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2+UuSKQqtA6Yw4Hzq1kaDr/M6qx3jpA9NHxgawSUb7TIxN8AaSeGSwOdqAP5zfYom5t7gQT1+Zt0zZyHYZEEBKUTRfH9pL3LGhbfrloiRD+YYb1xl0XPRQ3vUaDKBv7d5IHnbtQEdlMDM49nRXpKqJmpPH05WxEIHimTCF73u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emJiWeVa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=u00MXJy1ZGV1t3bDLfkDQ2f/gdcy9rW25OA3UY++RUqgVuiOubxzQWYojvDZaqdqaW4VPR9P91JsJ+kSwtTBmq+iyFD2Nrdfl/OEpz7BYW57o6cTEgLQb+SzefD8eBY6L+ZIEm91Dft9YqinnZEiUhQj4FvRnhi87raQkS2b7sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=muAyxPrr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emJiWeVa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38105C4CEE7;
-	Wed, 28 May 2025 12:45:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="muAyxPrr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC895C4CEE7;
+	Wed, 28 May 2025 12:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748436304;
-	bh=jPRH3OiK/9a97AF/dwI7dyrPsGMp9AO1LyvMSi3+Sc8=;
+	s=k20201202; t=1748436327;
+	bh=LmgEcjResPLXXpFob/3Qa7tbGuBJRLI/7Xpku70pX8o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=emJiWeVa/VjqGNMEKf7A2csHkn4bg6RJdJPE0suLmSmPzPBjBnPdde2jtE3w9Xq2z
-	 eWYE/WCRPTSyF2hMHNDXe/RL7pZv6cN3SPTXMnRM/HuO3VWfhNW8LKfN9yn2nCbcom
-	 Enhd1sp0SyXskxDr5K/vLJ+3YlQrC/2BFgUPU+8YRLLNg5td2Rz8uW2eKfBe4H4K2Z
-	 7b5veurmdOEAfYhiXvuHs/qByX08aHcaBkpo1CsPIaoeVnIZaUZnJ9JVlfnZcLm+H2
-	 pVMRkA/2XpIwRJnPLqrLRfW1hsLWWsWB7GKTAJKDZKPmUXBbiagFkUX2Eqfq2JoiID
-	 beQScaDzurshw==
-Message-ID: <7aa4a8c8-a719-4c53-8732-25b7908af30f@kernel.org>
-Date: Wed, 28 May 2025 14:44:59 +0200
+	b=muAyxPrrQfAiKqrfximT+GDqOnM4CS0L94Azb4XzOrb1W1jcZp3z3GRc1tB+Y/pL8
+	 ePEXZt64V73V7hVJzxAAlpmdyNUU26wir0mn3oE6bz/OEJRkaiopKzdsxaLRcO4Z2x
+	 hAeaIkgVrQD7r3jO81z2CJ8SxSKed/4b6W0nssW7aXCbqUE0kC4oZKsA1e9t0wrVu0
+	 otDdIZqkS2vkaA4v9TWHuIilfQ28RPEre3jgzaNnOaJ+VaHk0JFwZ+N38gWxbFs8k9
+	 J5eB4+QpcclcMeXw0iZ9M3xSxMcwKGd6RZIwh5fZVqP3wLosvyCEHce7nEvrArw2nA
+	 2zEikJN3ksVeA==
+Message-ID: <bf7281d8-20bb-4013-a0e2-6cdaf4e0349c@kernel.org>
+Date: Wed, 28 May 2025 14:45:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] ASoC: dt-bindings: tas57xx: add tas5753 compatibility
+Subject: Re: [PATCH 1/2] ASoC: tas571x: add support for tas5753
 To: Bram Vlerick <bram.vlerick@openpixelsystems.org>,
  Kevin Cernekee <cernekee@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>,
  Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
@@ -45,7 +45,7 @@ To: Bram Vlerick <bram.vlerick@openpixelsystems.org>,
 Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
  devicetree@vger.kernel.org, peter@korsgaard.com
 References: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
- <20250528-asoc-tas5753-support-v1-2-a50c3f6734ee@openpixelsystems.org>
+ <20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -91,15 +91,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528-asoc-tas5753-support-v1-2-a50c3f6734ee@openpixelsystems.org>
+In-Reply-To: <20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 28/05/2025 14:10, Bram Vlerick wrote:
-> Add tas5753 to ti,tas57xx devicetree bindings.
+> Add support for tas5753, device is similar to tas5733 but with added
+> headphone / line driver.
 > 
 > Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
 > ---
+>  sound/soc/codecs/tas571x.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
 
 Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
