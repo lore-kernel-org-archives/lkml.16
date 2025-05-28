@@ -1,321 +1,571 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72937193077
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C7F10E0;
+	Wed, 28 May 2025 08:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748420511; cv=none; b=rRhGg5k9JbcY6F/Bd/GyQmXztHRRcTqL60IxGW4++v5cx7KVBGXrNDg2MA/UhNvvrHNRdua0I+WZCjEGUnP0mn2aYymEh3x4u9adKv99ISTNw1rG5rZnr3LH+YqM6lUPvG/0jN+pRFK6ohsJutspg2ea18nR6lTCIb9jg1mI8U8=
+	t=1748420545; cv=none; b=CRlDgU64eLsstE4CHDXV+KW2ACENpc6XzNh58G2Q2R0He1Bn+PusEMPbKFM+kVUMb/EPZKMWdOUqaHKSalGp3SR+Y8GYJxBVRrylpsRJ7lbHs5fb/udYfb+vjZlW+Urh25iIoaHyFxr+KCA+NsHrXgNZ6KHDgyvfMZX5/agYWgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748420511; c=relaxed/simple;
-	bh=y9HRWTnHz4bDZrOtS67J76ayuL+yHdc+H4GH8Oah78U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RXq7NBQKz5YXyag6zBqUVsQaO0v58X84VAZlJZhOYzTW7VqqixwrrrZmgrXxZAz1mgqBYmCp0pCP3TgU4C9d429SlhuFcgdAWsLAZbsffwiPwIQw+g373falXt/Zw33qQ/CTP747nYx2XDCVh1Vg0q2K+YEOmI7aKfWPUa+8RAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jslYXHOX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mNTXITJu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jslYXHOX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mNTXITJu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748420545; c=relaxed/simple;
+	bh=Yuh6vKmjflKKUWIV791akrOKQPbvecxt/YxWPJHHypo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oc0cFiMvQTAwI0vV1VjWbtOVvinjZEc1b4yyP/V/CnjRaKmTuKvMYZrb25thIHaH9A7sl7C7yM9ZEjgObcWAHisv+RcWQslpa/uGAmwCO73v1Ux72ZNe4JnxEhK4OqbybJeQCpde881C92dSwQIFt5AL266dYtEDV/hm3a0+bxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fpUYyQrZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jslYXHOX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mNTXITJu";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jslYXHOX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mNTXITJu"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 61EF41F7C0;
-	Wed, 28 May 2025 08:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748420507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xFnLkQ2p2pcScQ0tA9MbXXmlkAvA2ji4vH+ZT6d5yg8=;
-	b=jslYXHOXspB/oRJL2Ge6r/Cj9D1aM0v+T+UGh7cjIqUSpsWLSpyku0X7iiOucQX6edT+5q
-	Tm8lJkU4nnobseH9CPOdul5PPCcWAnafoA7XMhpfYr7Lk+fXpMgm5uE84s1suSmqr2m0m8
-	0OpbZeT3LA8xg0deNpszBDjvl3Sbkos=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748420507;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xFnLkQ2p2pcScQ0tA9MbXXmlkAvA2ji4vH+ZT6d5yg8=;
-	b=mNTXITJuMHCTRMHn1OSRRJV8jxOQoHDyOYbaT7R6r2rKRWUY6Sih5V6xpkc4ROxHqOVN4M
-	ymPa5ESv77i48LCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=jslYXHOX;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mNTXITJu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748420507; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xFnLkQ2p2pcScQ0tA9MbXXmlkAvA2ji4vH+ZT6d5yg8=;
-	b=jslYXHOXspB/oRJL2Ge6r/Cj9D1aM0v+T+UGh7cjIqUSpsWLSpyku0X7iiOucQX6edT+5q
-	Tm8lJkU4nnobseH9CPOdul5PPCcWAnafoA7XMhpfYr7Lk+fXpMgm5uE84s1suSmqr2m0m8
-	0OpbZeT3LA8xg0deNpszBDjvl3Sbkos=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748420507;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xFnLkQ2p2pcScQ0tA9MbXXmlkAvA2ji4vH+ZT6d5yg8=;
-	b=mNTXITJuMHCTRMHn1OSRRJV8jxOQoHDyOYbaT7R6r2rKRWUY6Sih5V6xpkc4ROxHqOVN4M
-	ymPa5ESv77i48LCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3E46B136E0;
-	Wed, 28 May 2025 08:21:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id PC27DpvHNmikVgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 28 May 2025 08:21:47 +0000
-Message-ID: <77f9dd55-fc5c-44c8-b7ac-eac68c1d378f@suse.cz>
-Date: Wed, 28 May 2025 10:21:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fpUYyQrZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0F66C4CEED;
+	Wed, 28 May 2025 08:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748420545;
+	bh=Yuh6vKmjflKKUWIV791akrOKQPbvecxt/YxWPJHHypo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fpUYyQrZpuwEgT4UeSvaqF6xrvgMm8nlBAo7tsr5KFPBzwGej4XAT4C2wov0Focah
+	 n4MuPct3BUv6yNBkaW8LdC0uVaRwXykWaa+7lF6pWKgDDB9dAHht+iICvYsKPSy7nd
+	 pg2bbIEzdjwg5yYLaE4GCWaVyK55PHoa/DMivrUSkitloVksIyCKuZgNzxAShj9Iow
+	 sq/9NkZSBaHGvd7DVuh6anc6gmP9dMkwX7feKyPEni4FF3QFIzPKZsxHZpgWqOxXTE
+	 Yf8XxxLGH1qo5DnFBTAX4nUC+Lx1mg2qVj75gP507jEUgd5R78sskRV5fyVBBqrfII
+	 xMzBybg41VtTA==
+Date: Wed, 28 May 2025 10:22:22 +0200
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/6] pinctrl: airoha: convert PWM GPIO to macro
+Message-ID: <aDbHvjPII0jlua18@lore-desk>
+References: <20250527222040.32000-1-ansuelsmth@gmail.com>
+ <20250527222040.32000-5-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-Content-Language: en-US
-To: Juan Yescas <jyescas@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: tjmercier@google.com, isaacmanjarres@google.com, kaleshsingh@google.com,
- masahiroy@kernel.org, Minchan Kim <minchan@kernel.org>
-References: <20250521215807.1860663-1-jyescas@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250521215807.1860663-1-jyescas@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 61EF41F7C0
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,suse.cz:mid,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,linux-foundation.org:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="CPM4ZnGQOjRXXEPR"
+Content-Disposition: inline
+In-Reply-To: <20250527222040.32000-5-ansuelsmth@gmail.com>
 
-On 5/21/25 23:57, Juan Yescas wrote:
-> Problem: On large page size configurations (16KiB, 64KiB), the CMA
-> alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
-> and this causes the CMA reservations to be larger than necessary.
-> This means that system will have less available MIGRATE_UNMOVABLE and
-> MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
-> 
-> The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
-> MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
-> ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
-> 
-> For example, in ARM, the CMA alignment requirement when:
-> 
-> - CONFIG_ARCH_FORCE_MAX_ORDER default value is used
-> - CONFIG_TRANSPARENT_HUGEPAGE is set:
-> 
-> PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
-> -----------------------------------------------------------------------
->    4KiB   |      10        |       9         |  4KiB * (2 ^  9) =   2MiB
->   16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =  32MiB
->   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
-> 
-> There are some extreme cases for the CMA alignment requirement when:
-> 
-> - CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
-> - CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
-> - CONFIG_HUGETLB_PAGE is NOT set
-> 
-> PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
-> ------------------------------------------------------------------------
->    4KiB   |      15        |      15         |  4KiB * (2 ^ 15) = 128MiB
->   16Kib   |      13        |      13         | 16KiB * (2 ^ 13) = 128MiB
->   64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
-> 
-> This affects the CMA reservations for the drivers. If a driver in a
-> 4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
-> reservation has to be 32MiB due to the alignment requirements:
-> 
-> reserved-memory {
->     ...
->     cma_test_reserve: cma_test_reserve {
->         compatible = "shared-dma-pool";
->         size = <0x0 0x400000>; /* 4 MiB */
->         ...
->     };
-> };
-> 
-> reserved-memory {
->     ...
->     cma_test_reserve: cma_test_reserve {
->         compatible = "shared-dma-pool";
->         size = <0x0 0x2000000>; /* 32 MiB */
->         ...
->     };
-> };
-> 
-> Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
-> allows to set the page block order in all the architectures.
-> The maximum page block order will be given by
-> ARCH_FORCE_MAX_ORDER.
-> 
-> By default, CONFIG_PAGE_BLOCK_ORDER will have the same
-> value that ARCH_FORCE_MAX_ORDER. This will make sure that
-> current kernel configurations won't be affected by this
-> change. It is a opt-in change.
-> 
-> This patch will allow to have the same CMA alignment
-> requirements for large page sizes (16KiB, 64KiB) as that
-> in 4kb kernels by setting a lower pageblock_order.
-> 
-> Tests:
-> 
-> - Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
-> on 4k and 16k kernels.
-> 
-> - Verified that Transparent Huge Pages work when pageblock_order
-> is 1, 7, 10 on 4k and 16k kernels.
-> 
-> - Verified that dma-buf heaps allocations work when pageblock_order
-> is 1, 7, 10 on 4k and 16k kernels.
-> 
-> Benchmarks:
-> 
-> The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
-> reason for the pageblock_order 7 is because this value makes the min
-> CMA alignment requirement the same as that in 4kb kernels (2MB).
-> 
-> - Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
-> SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
-> (https://developer.android.com/ndk/guides/simpleperf) to measure
-> the # of instructions and page-faults on 16k kernels.
-> The benchmark was executed 10 times. The averages are below:
-> 
->            # instructions         |     #page-faults
->     order 10     |  order 7       | order 10 | order 7
-> --------------------------------------------------------
->  13,891,765,770	 | 11,425,777,314 |    220   |   217
->  14,456,293,487	 | 12,660,819,302 |    224   |   219
->  13,924,261,018	 | 13,243,970,736 |    217   |   221
->  13,910,886,504	 | 13,845,519,630 |    217   |   221
->  14,388,071,190	 | 13,498,583,098 |    223   |   224
->  13,656,442,167	 | 12,915,831,681 |    216   |   218
->  13,300,268,343	 | 12,930,484,776 |    222   |   218
->  13,625,470,223	 | 14,234,092,777 |    219   |   218
->  13,508,964,965	 | 13,432,689,094 |    225   |   219
->  13,368,950,667	 | 13,683,587,37  |    219   |   225
-> -------------------------------------------------------------------
->  13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
-> 
-> There were 4.85% #instructions when order was 7, in comparison
-> with order 10.
-> 
->      13,803,137,433 - 13,131,974,268 = -671,163,166 (-4.86%)
-> 
-> The number of page faults in order 7 and 10 were the same.
-> 
-> These results didn't show any significant regression when the
-> pageblock_order is set to 7 on 16kb kernels.
-> 
-> - Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 times
->  on the 16k kernels with pageblock_order 7 and 10.
-> 
-> order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
-> -------------------------------------------------------------------
->   15.8	 |  16.4    |         0.6        |     3.80%
->   16.4	 |  16.2    |        -0.2        |    -1.22%
->   16.6	 |  16.3    |        -0.3        |    -1.81%
->   16.8	 |  16.3    |        -0.5        |    -2.98%
->   16.6	 |  16.8    |         0.2        |     1.20%
-> -------------------------------------------------------------------
->   16.44     16.4            -0.04	          -0.24%   Averages
-> 
-> The results didn't show any significant regression when the
-> pageblock_order is set to 7 on 16kb kernels.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> CC: Mike Rapoport <rppt@kernel.org>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Minchan Kim <minchan@kernel.org>
-> Signed-off-by: Juan Yescas <jyescas@google.com>
-> Acked-by: Zi Yan <ziy@nvidia.com>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+--CPM4ZnGQOjRXXEPR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+> The PWM GPIO struct definition follow the same pattern for every GPIO
+> pin hence it can be converted to a macro.
+>=20
+> Create 2 macro one for normal mux and one for ext mux and convert all
+> the entry to these new macro to reduce code size.
+>=20
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+
+Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+
+>  drivers/pinctrl/mediatek/pinctrl-airoha.c | 465 ++++------------------
+>  1 file changed, 68 insertions(+), 397 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
+mediatek/pinctrl-airoha.c
+> index 2b532334d759..8c8d5b598f4f 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
+> @@ -1075,404 +1075,75 @@ static const struct airoha_pinctrl_func_group pc=
+ie_reset_func_group[] =3D {
+>  };
+> =20
+>  /* PWM */
+> +#define AIROHA_PINCTRL_PWM(gpio, mux_val)		\
+> +	{						\
+> +		.name =3D (gpio),				\
+> +		.regmap[0] =3D {				\
+> +			AIROHA_FUNC_PWM_MUX,		\
+> +			REG_GPIO_FLASH_MODE_CFG,	\
+> +			(mux_val),			\
+> +			(mux_val)			\
+> +		},					\
+> +		.regmap_size =3D 1,			\
+> +	}						\
+> +
+> +#define AIROHA_PINCTRL_PWM_EXT(gpio, mux_val)		\
+> +	{						\
+> +		.name =3D (gpio),				\
+> +		.regmap[0] =3D {				\
+> +			AIROHA_FUNC_PWM_EXT_MUX,	\
+> +			REG_GPIO_FLASH_MODE_CFG_EXT,	\
+> +			(mux_val),			\
+> +			(mux_val)			\
+> +		},					\
+> +		.regmap_size =3D 1,			\
+> +	}						\
+> +
+>  static const struct airoha_pinctrl_func_group pwm_func_group[] =3D {
+> -	{
+> -		.name =3D "gpio0",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO0_FLASH_MODE_CFG,
+> -			GPIO0_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio1",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO1_FLASH_MODE_CFG,
+> -			GPIO1_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio2",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO2_FLASH_MODE_CFG,
+> -			GPIO2_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio3",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO3_FLASH_MODE_CFG,
+> -			GPIO3_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio4",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO4_FLASH_MODE_CFG,
+> -			GPIO4_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio5",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO5_FLASH_MODE_CFG,
+> -			GPIO5_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio6",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO6_FLASH_MODE_CFG,
+> -			GPIO6_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio7",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO7_FLASH_MODE_CFG,
+> -			GPIO7_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio8",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO8_FLASH_MODE_CFG,
+> -			GPIO8_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio9",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO9_FLASH_MODE_CFG,
+> -			GPIO9_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio10",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO10_FLASH_MODE_CFG,
+> -			GPIO10_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio11",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO11_FLASH_MODE_CFG,
+> -			GPIO11_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio12",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO12_FLASH_MODE_CFG,
+> -			GPIO12_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio13",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO13_FLASH_MODE_CFG,
+> -			GPIO13_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio14",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO14_FLASH_MODE_CFG,
+> -			GPIO14_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio15",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG,
+> -			GPIO15_FLASH_MODE_CFG,
+> -			GPIO15_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio16",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO16_FLASH_MODE_CFG,
+> -			GPIO16_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio17",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO17_FLASH_MODE_CFG,
+> -			GPIO17_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio18",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO18_FLASH_MODE_CFG,
+> -			GPIO18_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio19",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO19_FLASH_MODE_CFG,
+> -			GPIO19_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio20",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO20_FLASH_MODE_CFG,
+> -			GPIO20_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio21",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO21_FLASH_MODE_CFG,
+> -			GPIO21_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio22",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO22_FLASH_MODE_CFG,
+> -			GPIO22_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio23",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO23_FLASH_MODE_CFG,
+> -			GPIO23_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio24",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO24_FLASH_MODE_CFG,
+> -			GPIO24_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio25",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO25_FLASH_MODE_CFG,
+> -			GPIO25_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio26",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO26_FLASH_MODE_CFG,
+> -			GPIO26_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio27",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO27_FLASH_MODE_CFG,
+> -			GPIO27_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio28",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO28_FLASH_MODE_CFG,
+> -			GPIO28_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio29",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO29_FLASH_MODE_CFG,
+> -			GPIO29_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio30",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO30_FLASH_MODE_CFG,
+> -			GPIO30_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio31",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO31_FLASH_MODE_CFG,
+> -			GPIO31_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio36",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO36_FLASH_MODE_CFG,
+> -			GPIO36_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio37",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO37_FLASH_MODE_CFG,
+> -			GPIO37_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio38",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO38_FLASH_MODE_CFG,
+> -			GPIO38_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio39",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO39_FLASH_MODE_CFG,
+> -			GPIO39_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio40",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO40_FLASH_MODE_CFG,
+> -			GPIO40_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio41",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO41_FLASH_MODE_CFG,
+> -			GPIO41_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio42",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO42_FLASH_MODE_CFG,
+> -			GPIO42_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio43",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO43_FLASH_MODE_CFG,
+> -			GPIO43_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio44",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO44_FLASH_MODE_CFG,
+> -			GPIO44_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio45",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO45_FLASH_MODE_CFG,
+> -			GPIO45_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio46",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO46_FLASH_MODE_CFG,
+> -			GPIO46_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	}, {
+> -		.name =3D "gpio47",
+> -		.regmap[0] =3D {
+> -			AIROHA_FUNC_PWM_EXT_MUX,
+> -			REG_GPIO_FLASH_MODE_CFG_EXT,
+> -			GPIO47_FLASH_MODE_CFG,
+> -			GPIO47_FLASH_MODE_CFG
+> -		},
+> -		.regmap_size =3D 1,
+> -	},
+> +	AIROHA_PINCTRL_PWM("gpio0", GPIO0_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio1", GPIO1_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio2", GPIO2_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio3", GPIO3_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio4", GPIO4_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio5", GPIO5_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio6", GPIO6_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio7", GPIO7_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio8", GPIO8_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio9", GPIO9_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio10", GPIO10_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio11", GPIO11_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio12", GPIO12_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio13", GPIO13_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio14", GPIO14_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM("gpio15", GPIO15_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio16", GPIO16_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio17", GPIO17_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio18", GPIO18_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio19", GPIO19_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio20", GPIO20_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio21", GPIO21_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio22", GPIO22_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio23", GPIO23_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio24", GPIO24_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio25", GPIO25_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio26", GPIO26_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio27", GPIO27_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio28", GPIO28_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio29", GPIO29_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio30", GPIO30_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio31", GPIO31_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio36", GPIO36_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio37", GPIO37_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio38", GPIO38_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio39", GPIO39_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio40", GPIO40_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio41", GPIO41_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio42", GPIO42_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio43", GPIO43_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio44", GPIO44_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio45", GPIO45_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio46", GPIO46_FLASH_MODE_CFG),
+> +	AIROHA_PINCTRL_PWM_EXT("gpio47", GPIO47_FLASH_MODE_CFG),
+>  };
+> =20
+>  #define AIROHA_PINCTRL_PHY_LED(gpio, mux_val, map_mask, map_val)	\
+> --=20
+> 2.48.1
+>=20
+
+--CPM4ZnGQOjRXXEPR
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaDbHvgAKCRA6cBh0uS2t
+rBJZAQD7+oRzhJuZS59u7A4b7Xcyz2xWC0arWJEeABCRH+xEIAEAkcZZZRhjb4Ps
+1Ah0XFL6GNNxmJ7KNNr2JzqkmGeuHQY=
+=GTx/
+-----END PGP SIGNATURE-----
+
+--CPM4ZnGQOjRXXEPR--
