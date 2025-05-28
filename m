@@ -1,48 +1,48 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8046A229B1C;
-	Wed, 28 May 2025 06:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277C824501B;
+	Wed, 28 May 2025 06:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414215; cv=none; b=ZiLhS4oGqxfarOBTCauYJl0H6briSQiSXhVtdHrdiBqccLrIvQtUkjmTxVccs//SjHcamuDu+erAZx4cexLtuonOoIZ3pdmswLySsKnBXdY5z87sz/O7IWW6yIWrRu7g5kXhqAhDGLCQhh7ZpkPgeBD755iWnhqXGIrdGMXu0jI=
+	t=1748414217; cv=none; b=q7meci2dkCJXxZDP46VaQLnxyDCiYYvyfRhnfZ0Et0XTXWXyBSm6Yldyd5SYERKYB0yNM2MzY2kdLGh8wumFsP0+gsiD4//ImU38SZV4THb9oLWv+6UOQoCBQNhAS4LJsl8p/E1335MywXzIdVVacsOo3iOynjsSweUnNS9n2rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414215; c=relaxed/simple;
-	bh=35GYQjavQGlJRckCxuoPoAMaWd/SOx57Du1/51RhsPo=;
+	s=arc-20240116; t=1748414217; c=relaxed/simple;
+	bh=BvNKnEhufd+F6GRiYQaXbKD2MBUFxJFVwSyElw50TkU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DoM1yCFH2k+oXAK5m+dEA4i4ZalIsdOu9rmPXNU3D8mmez4YAANTqluWIRnrUnc+KNnpKh/70x7RokXJ6BGLcxpxnz5UFQ6zLUEUKvezzrCGm87/IJTUfUT6NxTwvOzXhNgEEkacf4fp5Zki+GsXaLhpeOttlpbYEsewWy0ga+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jblcgATn; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=DJlTUobmwWT/OKISvInlD7twimpiUDxUHQvyuuO+Ch6ZGjUFbm8H0cRw3b7T8iXXJP2fqnjg14F25s9VSMPZ0xFCOkVQdP56SDWyOxk25tS0w6u9leQFjPkGR+HaDSM8rT+Amu3NAA8WWdEUnTRzoFi85TItTR6N7J6nqslRPo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=VmiCj6Vt; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jblcgATn"
-X-UUID: 2161c5603b8e11f0813e4fe1310efc19-20250528
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VmiCj6Vt"
+X-UUID: 2036c2b23b8e11f082f7f7ac98dee637-20250528
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=zgl5wOzqoA949rZ3T5Z9iviu+Wk5UKqm1QyNzhdR49U=;
-	b=jblcgATn95RH2pBvpLqnUzYhIyvYeKLj2aPVJVEpBEa89rMkhhXwDhLJMrTAixFA5LuJWwXJ3XypmI5+fun12XiXHB1Msd+C0y9MJtNTGVY3XpFeEbUhY+9aysYR405Hs2mmS4HCluNaHT77I3ZpStOFiw34U1hVepU0hnyHsBk=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UyydQE6YDeAByew+ptZ/+RplCdDZOgzzk65SMk9HPXE=;
+	b=VmiCj6VtUYb0khZ5J5BZi/TkAXw5aEYKXZbpjWTu71LRXxQD4hj9AqoBMkl82bYGZS1EAF20ajd4GIvlJai6n7922gBiNHoYSdiGSp/Sn7srmZ8x3Q22O9bcgfGLy696oWCXP2lZNez0TjCRRrNNbnN8zb2P8JZRaK9A8vIVjD8=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:9bf694ec-ea87-4c73-b8f7-3d16a76a94d1,IP:0,UR
+X-CID-O-INFO: VERSION:1.2.1,REQID:98236805-061b-4582-82c8-88799363fb76,IP:0,UR
 	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
 	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:ac5c3259-eac4-4b21-88a4-d582445d304a,B
+X-CID-META: VersionHash:0ef645f,CLOUDID:3d02d047-ee4f-4716-aedb-66601021a588,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 2161c5603b8e11f0813e4fe1310efc19-20250528
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+X-UUID: 2036c2b23b8e11f082f7f7ac98dee637-20250528
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
 	(envelope-from <irui.wang@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1869768534; Wed, 28 May 2025 14:36:47 +0800
+	with ESMTP id 976073134; Wed, 28 May 2025 14:36:46 +0800
 Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 28 May 2025 14:36:45 +0800
+ 15.2.1258.39; Wed, 28 May 2025 14:36:43 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 14:36:45 +0800
+ 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 14:36:43 +0800
 From: Irui Wang <irui.wang@mediatek.com>
 To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
 	<mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger
@@ -54,9 +54,9 @@ CC: <Project_Global_Chrome_Upstream_Group@mediatek.com>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>, Yunfei Dong <yunfei.dong@mediatek.com>,
 	Longfei Wang <longfei.wang@mediatek.com>, Irui Wang <irui.wang@mediatek.com>
-Subject: [PATCH v2 6/6] media: mediatek: encoder: Add MT8196 encoder compatible data
-Date: Wed, 28 May 2025 14:36:32 +0800
-Message-ID: <20250528063633.14054-7-irui.wang@mediatek.com>
+Subject: [PATCH v2 4/6] media: mediatek: encoder: Add a new platform data member
+Date: Wed, 28 May 2025 14:36:30 +0800
+Message-ID: <20250528063633.14054-5-irui.wang@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250528063633.14054-1-irui.wang@mediatek.com>
 References: <20250528063633.14054-1-irui.wang@mediatek.com>
@@ -70,86 +70,129 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-MT8196 encoder use common firmware interface, add compatible data to
-support MT8196 encoding, and need set dma mask to support 34bit.
+Add a new platform data member to indicate each encoder IC, so that the
+get chip name function by 'of_device_is_compatible' can be removed.
 
 Signed-off-by: Irui Wang <irui.wang@mediatek.com>
 ---
- .../vcodec/encoder/mtk_vcodec_enc_drv.c       | 19 +++++++++++++++++++
+ .../mediatek/vcodec/encoder/mtk_vcodec_enc.c  | 23 ++-----------------
+ .../vcodec/encoder/mtk_vcodec_enc_drv.c       |  6 +++++
  .../vcodec/encoder/mtk_vcodec_enc_drv.h       |  2 ++
- 2 files changed, 21 insertions(+)
+ 3 files changed, 10 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc.c b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc.c
+index 03512bf7a072..1a7be3e57eef 100644
+--- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc.c
+@@ -198,34 +198,15 @@ static int vidioc_enum_fmt_vid_out(struct file *file, void *priv,
+ 			       pdata->num_output_formats);
+ }
+ 
+-static int mtk_vcodec_enc_get_chip_name(void *priv)
+-{
+-	struct mtk_vcodec_enc_ctx *ctx = fh_to_enc_ctx(priv);
+-	struct device *dev = &ctx->dev->plat_dev->dev;
+-
+-	if (of_device_is_compatible(dev->of_node, "mediatek,mt8173-vcodec-enc"))
+-		return 8173;
+-	else if (of_device_is_compatible(dev->of_node, "mediatek,mt8183-vcodec-enc"))
+-		return 8183;
+-	else if (of_device_is_compatible(dev->of_node, "mediatek,mt8192-vcodec-enc"))
+-		return 8192;
+-	else if (of_device_is_compatible(dev->of_node, "mediatek,mt8195-vcodec-enc"))
+-		return 8195;
+-	else if (of_device_is_compatible(dev->of_node, "mediatek,mt8188-vcodec-enc"))
+-		return 8188;
+-	else
+-		return 8173;
+-}
+-
+ static int vidioc_venc_querycap(struct file *file, void *priv,
+ 				struct v4l2_capability *cap)
+ {
+ 	struct mtk_vcodec_enc_ctx *ctx = fh_to_enc_ctx(priv);
++	const struct mtk_vcodec_enc_pdata *pdata = ctx->dev->venc_pdata;
+ 	struct device *dev = &ctx->dev->plat_dev->dev;
+-	int platform_name = mtk_vcodec_enc_get_chip_name(priv);
+ 
+ 	strscpy(cap->driver, dev->driver->name, sizeof(cap->driver));
+-	snprintf(cap->card, sizeof(cap->card), "MT%d video encoder", platform_name);
++	snprintf(cap->card, sizeof(cap->card), "MT%d video encoder", pdata->venc_model_num);
+ 
+ 	return 0;
+ }
 diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
-index 50936949d527..c869c4245ebc 100644
+index bb913dfe5f04..50936949d527 100644
 --- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
 +++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
-@@ -20,6 +20,8 @@
- #include "mtk_vcodec_enc_pm.h"
- #include "../common/mtk_vcodec_intr.h"
+@@ -380,6 +380,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+ }
  
-+#define VENC_DMA_BIT_MASK 34
-+
- static const struct mtk_video_fmt mtk_video_formats_output[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_NV12M,
-@@ -299,6 +301,9 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 		goto err_res;
- 	}
- 
-+	if (dev->venc_pdata->set_dma_bit_mask)
-+		dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(VENC_DMA_BIT_MASK));
-+
- 	mutex_init(&dev->enc_mutex);
- 	mutex_init(&dev->dev_mutex);
- 	mutex_init(&dev->dev_ctx_lock);
-@@ -450,6 +455,19 @@ static const struct mtk_vcodec_enc_pdata mt8195_pdata = {
- 	.core_id = VENC_SYS,
+ static const struct mtk_vcodec_enc_pdata mt8173_avc_pdata = {
++	.venc_model_num = 8173,
+ 	.capture_formats = mtk_video_formats_capture_h264,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
+ 	.output_formats = mtk_video_formats_output,
+@@ -390,6 +391,7 @@ static const struct mtk_vcodec_enc_pdata mt8173_avc_pdata = {
  };
  
-+static const struct mtk_vcodec_enc_pdata mt8196_pdata = {
-+	.venc_model_num = 8196,
-+	.capture_formats = mtk_video_formats_capture_h264,
-+	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
-+	.output_formats = mtk_video_formats_output,
-+	.num_output_formats = ARRAY_SIZE(mtk_video_formats_output),
-+	.min_bitrate = 64,
-+	.max_bitrate = 100000000,
-+	.core_id = VENC_SYS,
-+	.uses_common_fw_iface = true,
-+	.set_dma_bit_mask = true,
-+};
-+
- static const struct of_device_id mtk_vcodec_enc_match[] = {
- 	{.compatible = "mediatek,mt8173-vcodec-enc",
- 			.data = &mt8173_avc_pdata},
-@@ -459,6 +477,7 @@ static const struct of_device_id mtk_vcodec_enc_match[] = {
- 	{.compatible = "mediatek,mt8188-vcodec-enc", .data = &mt8188_pdata},
- 	{.compatible = "mediatek,mt8192-vcodec-enc", .data = &mt8192_pdata},
- 	{.compatible = "mediatek,mt8195-vcodec-enc", .data = &mt8195_pdata},
-+	{.compatible = "mediatek,mt8196-vcodec-enc", .data = &mt8196_pdata},
- 	{},
+ static const struct mtk_vcodec_enc_pdata mt8173_vp8_pdata = {
++	.venc_model_num = 8173,
+ 	.capture_formats = mtk_video_formats_capture_vp8,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_vp8),
+ 	.output_formats = mtk_video_formats_output,
+@@ -400,6 +402,7 @@ static const struct mtk_vcodec_enc_pdata mt8173_vp8_pdata = {
  };
- MODULE_DEVICE_TABLE(of, mtk_vcodec_enc_match);
+ 
+ static const struct mtk_vcodec_enc_pdata mt8183_pdata = {
++	.venc_model_num = 8183,
+ 	.uses_ext = true,
+ 	.capture_formats = mtk_video_formats_capture_h264,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
+@@ -411,6 +414,7 @@ static const struct mtk_vcodec_enc_pdata mt8183_pdata = {
+ };
+ 
+ static const struct mtk_vcodec_enc_pdata mt8188_pdata = {
++	.venc_model_num = 8188,
+ 	.uses_ext = true,
+ 	.capture_formats = mtk_video_formats_capture_h264,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
+@@ -423,6 +427,7 @@ static const struct mtk_vcodec_enc_pdata mt8188_pdata = {
+ };
+ 
+ static const struct mtk_vcodec_enc_pdata mt8192_pdata = {
++	.venc_model_num = 8192,
+ 	.uses_ext = true,
+ 	.capture_formats = mtk_video_formats_capture_h264,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
+@@ -434,6 +439,7 @@ static const struct mtk_vcodec_enc_pdata mt8192_pdata = {
+ };
+ 
+ static const struct mtk_vcodec_enc_pdata mt8195_pdata = {
++	.venc_model_num = 8195,
+ 	.uses_ext = true,
+ 	.capture_formats = mtk_video_formats_capture_h264,
+ 	.num_capture_formats = ARRAY_SIZE(mtk_video_formats_capture_h264),
 diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
-index b3206a7b592d..ded794f1b37a 100644
+index 426b1398f815..b3206a7b592d 100644
 --- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
 +++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
-@@ -32,6 +32,7 @@
-  * @core_id: stand for h264 or vp8 encode index
-  * @uses_34bit: whether the encoder uses 34-bit iova
+@@ -21,6 +21,7 @@
+ /**
+  * struct mtk_vcodec_enc_pdata - compatible data for each IC
+  *
++ * @venc_model_num: encoder model number
+  * @uses_ext: whether the encoder uses the extended firmware messaging format
+  * @min_bitrate: minimum supported encoding bitrate
+  * @max_bitrate: maximum supported encoding bitrate
+@@ -33,6 +34,7 @@
   * @uses_common_fw_iface: whether the encoder uses common driver interface
-+ * @set_dma_bit_mask: whether the encoder need set extra DMA bit mask
   */
  struct mtk_vcodec_enc_pdata {
- 	u16 venc_model_num;
-@@ -45,6 +46,7 @@ struct mtk_vcodec_enc_pdata {
- 	u8 core_id;
- 	bool uses_34bit;
- 	bool uses_common_fw_iface;
-+	bool set_dma_bit_mask;
- };
- 
- /*
++	u16 venc_model_num;
+ 	bool uses_ext;
+ 	u64 min_bitrate;
+ 	u64 max_bitrate;
 -- 
 2.45.2
 
