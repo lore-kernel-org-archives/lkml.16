@@ -1,83 +1,76 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467052874EF;
-	Wed, 28 May 2025 14:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B182288C88
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441108; cv=none; b=kyQ8Is6wX0NdWWbZ+fWXhdobLdnct+QmLJtoxn5TaJ2uFIhu6kRy/irMhRXn9KmvX8f1x3XgA9gD4Gzk0XXXxR8MYBeHvD2xHeyypUBMyTfJHDjJtMvqmJ2cwpZqNlELNbLgXeXzXozrTP5kSztn7B9Qx8ICfGFyRjVkFq7il68=
+	t=1748441112; cv=none; b=KgaiBMRyrZjjdl81bldDF4p9rW7x97RSYaritHEiTHlfiyum+LL7R6mdF83sM9JWXG17VG4E+1dpBtqh4VIhUz0puOss7X0VpFF0n8F8d5duUCjQe9LStksvXoMA8mQIc1gM/94mzQxukD2CuiLUJoDS1RTNH0cGGHSAhDlWGc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441108; c=relaxed/simple;
-	bh=eK8J4rKSp8TMiHRSS+hbmaeMQ60qgYoItb86jAoi6TA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCxS7TaOS/3zFi6NdJD2ihKT+jHQGY1Oy1eLNjzOE7H/d/QBKAbGz8KUV9iTV3lMFmmZB6WVkSydrTCgmIp5a0hoScimwlrIiiN7IL63dJ815pkmwSzbKtDR1q00txWw1bN91K3Lgd8HxMAnn1Yag16A3TuJ9dpEDfyMKOW4j9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I7pXTYCE; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748441112; c=relaxed/simple;
+	bh=a+b8oFQ+o3n4GVpZkSbmFKxukgJHOdKZ0BeU7RaJ1ok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WII5CNLb62u2x+E+TURaIUqbDoft7S+1Pnnc3tmmtoEdbbtjDiSp3j2UPfS3/n+o7Z0VZH1GC9u0baeK6/l6IO4pHkjB6E4TBVoc6WhlkUMtmUIFgX4/dDicydBfvNmk/dwewfwf6chDTR6TJKNsOeXJ1khS7wgtcNgtliNgpYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fL2+OEMj; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7pXTYCE"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cd6b511cso1150115e9.2;
-        Wed, 28 May 2025 07:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748441105; x=1749045905; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wywLmOGfapMCxW2dgEXjBZVhH7MDXoBTN5ewWnefwOE=;
-        b=I7pXTYCEpdZh8VvDFbCds7XHA8srnqW8SqyRDCJFSLxB3Dk3b1ybunQi9hPcqwEFuk
-         I7Nt45l7xldXFo1B5Q2vc0TWMbIk4ZEb2ioHVwTUQsmAt8OMJq0kN6akg2Dagw8uh9JZ
-         Z1llo0PC8tGwyxyJo+sFszDGqok1HTU7XPmTqd7vRkAtUCMi0UOBKx53IlUIwWyXKv65
-         V2BgLHtFVgtjXr7hpmdMc45iTa2agFMbq79AIBcsgAGik0OTCyXQ9VpHcGQUCHAJvuGp
-         gUWXMt2YjhYowJWyUyiVay20hmEiUZki4sSmVK2EKYgs4kItootKIs7YwOXnSLC4EnMx
-         /x6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748441105; x=1749045905;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wywLmOGfapMCxW2dgEXjBZVhH7MDXoBTN5ewWnefwOE=;
-        b=CJXoKCbRKglSQpnQIllCSE5RWAASXPtsgucxRfsXUVjlFPsEurJYVN8vr+qzPPD/AW
-         qNLlJkeyBX7lRX3M/H8p6Lqz1QGTJaLV304LjjkPRUpKvKMHN6+IzIY5oJwTLBihuS/2
-         RigoWvS7GzwZUdLX9XsoRKh5FOqiAYRfGrYazZlWoEF4UUcmwmG5QD/5h2cH6szReX+n
-         HdVrN8LqquijWLOcp3ea3Nic8HpdrAIbsvCpxogl3TmFqLaQhmTr5yjAR2G+aW1swxd8
-         KZZTZj68YT1KLP/9KVzupLYP7bPYZ4dZugmhM86B//pujQra8o0wvMPNXRwTnhoZOOOE
-         EIXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKp3AsmMB+w4ipK4XSVJmc3GLoH7wfote3wne72xVxZFmVX66kk8lN9GzM/TeZidXbWn+l/DCUf8bl@vger.kernel.org, AJvYcCWP9jWPrUqtmVC3FO0NN1MznvoL11mADTwMciCFmhyiCJv/gF7BnmRgQpl/ansi8usbeagnIqh1mRfhh9LL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPDQY29J4K4uD+AEVV+R6hoWkcMGjquzW84+Afjyzjo3c+rLkN
-	uJNCID9yY2KsgUJBa0jaRC8CKTeegUnGx4t6LQouFnWF/tPc2jv/3CJbV+lvCqLE
-X-Gm-Gg: ASbGncviTNh+8whtGlJ98Ex3CHbKQYrrGSI3DGgJ3XCwejf1xOnPi8ocOyvxGIRQ8ls
-	D+ckcUR3upoirGiXRG43ZmbmfRgTpKjCQPZ4NnJTw+Mw1LRsYRZiG/+vBtSD34s68tqy2QEY0dV
-	3qvSiXEH2h0eChC4AuQTs2yOqAgVNAqusa+oUVcwefNZjh+huP4zCfL9StfD+2iTxxVkkIFefRN
-	k5eTgK0GeHdRI+VMaYn+asqzEh7+BOTIESE81ypdksC9gifkdvjFpjD0tob2SZuj5VouBwJLezn
-	6qq6HhAu6MOEmmvyvahR1Xr1Kcqkt6qf/q8N04uv+DlMeXpFUVsYQZwoC20HchPf8ZQOiG4ih2n
-	r
-X-Google-Smtp-Source: AGHT+IG3wbpyLM9y8mxjXehCmiOh/DrSRXXFvOxHsVMVuB/IqbCLyu39wh+w7m2yy/yJNfsrBTqa1Q==
-X-Received: by 2002:a05:600c:5118:b0:442:e0f9:394d with SMTP id 5b1f17b1804b1-45077d424fbmr21309815e9.24.1748441104969;
-        Wed, 28 May 2025 07:05:04 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:7078:193c:ccdc:e2f5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450787ccbd1sm18846795e9.25.2025.05.28.07.05.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 07:05:04 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fL2+OEMj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748441110; x=1779977110;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=a+b8oFQ+o3n4GVpZkSbmFKxukgJHOdKZ0BeU7RaJ1ok=;
+  b=fL2+OEMjSWClt3iluBKvP6Nw4XilZSvoeMaAZh8npvBJ2uZTmMdI5Fj6
+   ZxF+szFh1khVag54cUX+AohSn9wdwvnR6LpDyR7g6+8D7TZ92IDZVPCbZ
+   tHF3EAec/RoYX8ecvRio+hhdHGrRQr7fdvzYMKcY1ouTHB72kDbeuw0Yk
+   0awgJZ7BZKmLkz8y1h+sZWvc7uztoPljwp4VwLKTQ8eoLbu4AiOTxenLi
+   ylMOgkITNE3CsJ1X7tr25tO0l9zN3FSNNRvU4WTA6FGJnDQOkdlrxgkXk
+   Li0o/N+60dpjSUPG6ltcJvWZdgFDpjn9Fwq/OV24T/bsQz7BwZft4HYyu
+   g==;
+X-CSE-ConnectionGUID: 6WY25BupTY+h3cfdNzd6ug==
+X-CSE-MsgGUID: vwlZEb/7S92cZXJ/cW/0bQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61524766"
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="61524766"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:05:09 -0700
+X-CSE-ConnectionGUID: T4slOBrWRYOzAaVlSgycZQ==
+X-CSE-MsgGUID: qwiu8CfXTtaojvQo5zb2hA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="143238784"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:05:04 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Raag Jadav <raag.jadav@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable USB2.0 support
-Date: Wed, 28 May 2025 15:04:53 +0100
-Message-ID: <20250528140453.181851-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Alexander Usyskin <alexander.usyskin@intel.com>
+Subject: [PATCH v11 00/10] mtd: add driver for Intel discrete graphics
+Date: Wed, 28 May 2025 16:51:05 +0300
+Message-ID: <20250528135115.2512429-1-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,91 +79,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Add driver for access to Intel discrete graphics card
+internal NVM device.
+Expose device on auxiliary bus by i915 and Xe drivers and
+provide mtd driver to register this device with MTD framework.
 
-Enable USB2.0 support on the RZ/V2N EVK board, CN2 connector on the EVK
-supports host/function operation.
+This is a rewrite of "drm/i915/spi: spi access for discrete graphics"
+and "spi: add driver for Intel discrete graphics"
+series with connection to the Xe driver and splitting
+the spi driver part to separate module in mtd subsystem.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 36 +++++++++++++++++++
- 1 file changed, 36 insertions(+)
+This series intended to be pushed through drm-xe-next.
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-index 55aa2bdce132..795d9f6b9651 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dts
-@@ -82,6 +82,11 @@ &audio_extal_clk {
- 	clock-frequency = <22579200>;
- };
- 
-+&ehci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &eth0 {
- 	pinctrl-0 = <&eth0_pins>;
- 	pinctrl-names = "default";
-@@ -103,6 +108,11 @@ &gpu {
- 	mali-supply = <&reg_0p8v>;
- };
- 
-+&hsusb {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-0 = <&i2c0_pins>;
- 	pinctrl-names = "default";
-@@ -190,6 +200,11 @@ phy1: ethernet-phy@1 {
- 	};
- };
- 
-+&ohci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &ostm0 {
- 	status = "okay";
- };
-@@ -302,6 +317,16 @@ sd1-dat-cmd {
- 			slew-rate = <0>;
- 		};
- 	};
-+
-+	usb20_pins: usb20 {
-+		ovc {
-+			pinmux =  <RZV2N_PORT_PINMUX(9, 6, 14)>; /* OVC */
-+		};
-+
-+		vbus {
-+			pinmux = <RZV2N_PORT_PINMUX(9, 5, 14)>; /* VBUS */
-+		};
-+	};
- };
- 
- &qextal_clk {
-@@ -330,6 +355,17 @@ &sdhi1 {
- 	status = "okay";
- };
- 
-+&usb20phyrst {
-+	status = "okay";
-+};
-+
-+&usb2_phy0 {
-+	pinctrl-0 = <&usb20_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
- &wdt1 {
- 	status = "okay";
- };
+V2: Replace dev_* prints with drm_* prints in drm (xe and i915) patches.
+    Enable NVM device on Battlemage HW (xe driver patch)
+    Fix overwrite register address (xe driver patch)
+    Add Rodrigo's r-b
+
+V3: Use devm_pm_runtime_enable to simplify flow.
+    Drop print in i915 unload that was accidentally set as error.
+    Drop HAS_GSC_NVM macro in line with latest Xe changes.
+    Add more Rodrigo's r-b and Miquel's ack.
+
+V4: Add patch that always creates mtd master device
+    and adjust mtd-intel-dg power management to use this device.
+
+V5: Fix master device creation to accomodate for devices without
+    partitions (create partitoned master in this case)
+    Rebase over latest drm-xe-next
+    Add ack's
+V6: Fix master device release (use rigth idr in release)
+    Rebase over latest drm-xe-next
+    Grammar and style fixes
+
+V7: Add patch with non-posted erase support (fix hang on BMG)
+    Rebase over latest drm-xe-next
+
+V8: Create separate partition device under master device, if requested
+    and configure parent of usual partitions to this partition.
+    Rebase over drm-tip.
+
+V9: Fix checkpatch warning on non-posted erase patch.
+    Add Rodrigo's review and ack.
+
+V10: Drop master device creation patch as it now in mtd-next.
+     Drop power-management patch, it will be merged lately after
+     master device patch is propagated.
+     Rebase over drm-tip.
+
+V11: Fix review comments.
+     Add reviewed-by.
+     Add cleanup in error path.
+     Add PADDING region that exists on some BMG devices.
+
+Alexander Usyskin (9):
+  mtd: add driver for intel graphics non-volatile memory device
+  mtd: intel-dg: implement region enumeration
+  mtd: intel-dg: implement access functions
+  mtd: intel-dg: register with mtd
+  mtd: intel-dg: align 64bit read and write
+  drm/i915/nvm: add nvm device for discrete graphics
+  drm/i915/nvm: add support for access mode
+  drm/xe/nvm: add on-die non-volatile memory device
+  drm/xe/nvm: add support for access mode
+
+Reuven Abliyev (1):
+  drm/xe/nvm: add support for non-posted erase
+
+ MAINTAINERS                           |   7 +
+ drivers/gpu/drm/i915/Makefile         |   4 +
+ drivers/gpu/drm/i915/i915_driver.c    |   6 +
+ drivers/gpu/drm/i915/i915_drv.h       |   3 +
+ drivers/gpu/drm/i915/i915_reg.h       |   1 +
+ drivers/gpu/drm/i915/intel_nvm.c      | 121 ++++
+ drivers/gpu/drm/i915/intel_nvm.h      |  15 +
+ drivers/gpu/drm/xe/Makefile           |   1 +
+ drivers/gpu/drm/xe/regs/xe_gsc_regs.h |   4 +
+ drivers/gpu/drm/xe/xe_device.c        |   5 +
+ drivers/gpu/drm/xe/xe_device_types.h  |   6 +
+ drivers/gpu/drm/xe/xe_heci_gsc.c      |   5 +-
+ drivers/gpu/drm/xe/xe_nvm.c           | 167 ++++++
+ drivers/gpu/drm/xe/xe_nvm.h           |  15 +
+ drivers/gpu/drm/xe/xe_pci.c           |   6 +
+ drivers/mtd/devices/Kconfig           |  11 +
+ drivers/mtd/devices/Makefile          |   1 +
+ drivers/mtd/devices/mtd_intel_dg.c    | 830 ++++++++++++++++++++++++++
+ include/linux/intel_dg_nvm_aux.h      |  32 +
+ 19 files changed, 1236 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.c
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.h
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.c
+ create mode 100644 drivers/gpu/drm/xe/xe_nvm.h
+ create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
+ create mode 100644 include/linux/intel_dg_nvm_aux.h
+
 -- 
-2.49.0
+2.43.0
 
