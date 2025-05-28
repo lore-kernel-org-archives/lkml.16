@@ -1,276 +1,152 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3133398A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAD21EF36B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748399442; cv=none; b=btCa/eyQf2OKs6VhlUTHKxYokN6W1UPCKOWItH0HkyRDLbujWid1nOisvDGZHbIH0HUJGpv6RlAWZNpEjht8gIFfORIacASDySNYJwbvcjUoZxXVkqAi/ekYXKdP5cRPdXlZKiCEzjCoBP/l5RcSyUjP/0c5l9JOMBV3rFXCrQk=
+	t=1748399486; cv=none; b=N3pVj/eMRd7SSK/pXl9M8J58PogheM0JDrrI99uqN+FvqC0waQLYxyaO6Gmo1waprRq1DxPbUVeKK8rBFfue0539TM4NwUQ3QDFSPJEbXLyfTxkzCODkO4JlncRWu1gfaIzrsKVo74Yj+NB7OF85hPFuXophf7HMdcvCsMFw+mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748399442; c=relaxed/simple;
-	bh=cgw3zgYmKScxl2sklQoE1AMEPFW6AHwB7KJ/wN1ji34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqIIOxkidQLZHLm+3BVneGB+3yI7lvq+xG7gMkVx5bsGVRUQrmLgBd6OYTvyiXHF6Fi9Rjl3h0WC5ZpDFJcGrtJaE8HSLWQbwMXwQg/ieqf6skc+JL+hyOS2mv+AmabKGLLpmEGIyCY56/AGuGoPtfJuoPfKhlu8fCNyBppJXcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=iqtP18d/; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748399486; c=relaxed/simple;
+	bh=/HzPKugMmaCRrhBJ4YFkeZUX/9qBlQMp0yGEzMrprqI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=KrQ84UvYww2J3Iv6vytIxh8pkSFtSYqgNpXOTA96wVM/b70gLDS4mnLE4z8/toR7S4unExGjPZn0BPHBivtjWdLlw3DKtYcypeDoO74sx2t5SoaQsvAxwUSVZoIv0MYCRN8St9kKBJLpuDKXQLaGmCD0qqyvay/uwRMZZspXkDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TtOvO5v8; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="iqtP18d/"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748399431; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=4GKIzVM2Fg2/j7DiLGJIHTMBZLOUdWqEOifY6fxsKhY=;
-	b=iqtP18d/R6PNMA26caDr9g2j6Yh0XXjtYjLdOHVFFj4zY5776DntxJgpW7mqVd+M5706Nraz4npyod/qtrdQ4cyacu34JxWgyy4Uv3paWtZFq52sQh9QUXQsyVhi5DCpU6pVufvyelAPuW8+ewjqtGLBt9UC3gm8bQcbJKEPRIU=
-Received: from 30.178.82.30(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcBXhv3_1748399422 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 10:30:30 +0800
-Message-ID: <c0c4a374-d24e-4896-8adc-4df43249ecd2@linux.alibaba.com>
-Date: Wed, 28 May 2025 10:30:21 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TtOvO5v8"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b440afa7so8534655ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748399483; x=1749004283; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BQRgW2zDMDyRpGcNs2f/hIRhslp675QORwh/naIQme4=;
+        b=TtOvO5v8XKmaO+o/YTUpcwQPtoqN2dyq2dO9J6x8fsXr8azbIRrfIBP2GiDDrXp9r0
+         k/Lhm5ibKeRtHzkboUeRk+el23rSQcBBWWlwrEmvMzsUfGCbRksUpQZUBfVToeyudNnq
+         1w5CZoEa+JakijWe/RUOyaKaj0/0jJtkKiSUEXLM3JW7E7rn4zX7X2yJQHDA311CGyxc
+         k5Vod8L53TdBYJnHy12roaMiRDoMRpOtGvTGuVBK49mQqS3UMDVJhTcoHcPXUPcSuQaw
+         qPmlQSv2o0Z9GywslycIWK/MQlqP4klNwiFmJIi81l/yjWDBn3peZRwgJ9mZ9GKeP3Gz
+         LbBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748399483; x=1749004283;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BQRgW2zDMDyRpGcNs2f/hIRhslp675QORwh/naIQme4=;
+        b=HcjPwjuaz4l85a+L/P5oWuwx5Q/VW8HAbdbxtZi+9Pa1YWHy54qbCfiyY91D/c2MaY
+         gAkmJ1IZZ+O5c40A/yizTyg1AtEE4J8LpyDuZ46Uj2FT07rk8RYf8+3dge6joYSbKbm1
+         xMBlBWwgyjt9pL5Fpxc7WJNY1r7JQ/9wjDepHckmxVtB5XnsD/HBupnhLRhAPhx6iee3
+         DF7Iqy05AzOvHw5zCkb5aL/1DMJc+oAkfd82q7mJkMR5zSzVEvDStzB4mQ3uPuORTzEQ
+         +3B6IErTVaa4jZw9FObnNdEsPzwMcElg/gknPToyrt9Yb+5kOLjvF26RQ6SfuLFGjAC5
+         H0mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyLpUTDbfHAOxSnNMoAZinotReKdM7bjPVNiTMiq/qaueXMx+PAtEsf/nEoiKNS0wW0b+W2VGapvHL0X4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyu1PyaqSoMia1qJ6cfSLjeWfHikxSZMS7ecPUyp/j1djBVbwbw
+	q5cGMMgA2NDivLDvA5tgwd94Xkw8vZmPfc0QdP8m0yesrRxN5lvfPSDVEpLr3T83ctoIl+yuhgC
+	CCO1AUHDf
+X-Gm-Gg: ASbGncvC+WnGAhodjQkupoUlUB8Ja5N9zQtNgeIH3IxaVqwPAMfBXrCG8nPoHl+IAAV
+	q6P/j9NmnmLUlXDPJVMyRnL5ysac/fGYNIDXaC7gVL934bjlEQ5C8iJB6f69sW04yjPBSILEfy4
+	/15AnbVZX0CSBzcVbdbLaz15DYhM1XiHJUqOQgVbvDel4oo82Zwt6zvlvoKcDrBYSLZ8kfNFdfT
+	LSMTacekxYtJAP8hdJilj8t/niewH6iE4yf5/pDPxVCvGKl+vYh4TLldAUduhTiXWjMRM46p7wL
+	WDLkAYXdXKka4wJvP+d/zfM6p6MM2+LHCdtJGxPY4Hzp+obW9Z9+WadWbf5kDq/IA/QaCBD5ALT
+	6TQnaIL3qIrZbRKdyaPBcK7QgwdzLZS5rFqJDg0E4HVOCBa+3
+X-Google-Smtp-Source: AGHT+IE52Y2joor7wjefGN/rIOi1GNEnRj6y0peHvF6A3p0ZaVNxrYsUFOHwWucOb5D5xtlgH28nxQ==
+X-Received: by 2002:a17:903:41cc:b0:22e:b215:1b6 with SMTP id d9443c01a7336-23414fc0524mr198873785ad.28.1748399483313;
+        Tue, 27 May 2025 19:31:23 -0700 (PDT)
+Received: from ynaffit-andsys.c.googlers.com (163.192.16.34.bc.googleusercontent.com. [34.16.192.163])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d2fe204asm1343745ad.80.2025.05.27.19.31.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 19:31:22 -0700 (PDT)
+From: Tiffany Yang <ynaffit@google.com>
+To: "'Carlos Llamas' via kernel-team" <kernel-team@android.com>
+Cc: Alice Ryhl <aliceryhl@google.com>,  Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?=
+ <arve@android.com>,  Todd
+ Kjos <tkjos@android.com>,  Martijn Coenen <maco@android.com>,  Joel
+ Fernandes <joel@joelfernandes.org>,  Christian Brauner
+ <brauner@kernel.org>,  Carlos Llamas <cmllamas@google.com>,  Suren
+ Baghdasaryan <surenb@google.com>,  Li Li <dualli@google.com>,
+  stable@vger.kernel.org,
+  syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com,  "open
+ list:ANDROID DRIVERS" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] binder: fix yet another UAF in binder_devices
+In-Reply-To: <20250524220758.915028-1-cmllamas@google.com> (via kernel-team's
+	message of "Sat, 24 May 2025 22:07:58 +0000")
+References: <20250524220758.915028-1-cmllamas@google.com>
+User-Agent: mu4e 1.12.8; emacs 30.1
+Date: Wed, 28 May 2025 02:31:21 +0000
+Message-ID: <dbx8o6vdihza.fsf@ynaffit-andsys.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
- in the resctrl subsystem.
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, Reinette Chatre <reinette.chatre@intel.com>
-References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
- <aDYt0eXB4nSawkJr@agluck-desk3>
-From: qinyuntan <qinyuntan@linux.alibaba.com>
-In-Reply-To: <aDYt0eXB4nSawkJr@agluck-desk3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+"'Carlos Llamas' via kernel-team" <kernel-team@android.com> writes:
 
+> Commit e77aff5528a18 ("binderfs: fix use-after-free in binder_devices")
+> addressed a use-after-free where devices could be released without first
+> being removed from the binder_devices list. However, there is a similar
+> path in binder_free_proc() that was missed:
+>
+>   ==================================================================
+>   BUG: KASAN: slab-use-after-free in binder_remove_device+0xd4/0x100
+>   Write of size 8 at addr ffff0000c773b900 by task umount/467
+>   CPU: 12 UID: 0 PID: 467 Comm: umount Not tainted 6.15.0-rc7-00138-g57483a362741 #9 PREEMPT
+>   Hardware name: linux,dummy-virt (DT)
+>   Call trace:
+>    binder_remove_device+0xd4/0x100
+>    binderfs_evict_inode+0x230/0x2f0
+>    evict+0x25c/0x5dc
+>    iput+0x304/0x480
+>    dentry_unlink_inode+0x208/0x46c
+>    __dentry_kill+0x154/0x530
+>    [...]
+>
+>   Allocated by task 463:
+>    __kmalloc_cache_noprof+0x13c/0x324
+>    binderfs_binder_device_create.isra.0+0x138/0xa60
+>    binder_ctl_ioctl+0x1ac/0x230
+>   [...]
+>
+>   Freed by task 215:
+>    kfree+0x184/0x31c
+>    binder_proc_dec_tmpref+0x33c/0x4ac
+>    binder_deferred_func+0xc10/0x1108
+>    process_one_work+0x520/0xba4
+>   [...]
+>   ==================================================================
+>
+> Call binder_remove_device() within binder_free_proc() to ensure the
+> device is removed from the binder_devices list before being kfreed.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 12d909cac1e1 ("binderfs: add new binder devices to binder_devices")
+> Reported-by: syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=4af454407ec393de51d6
+> Tested-by: syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com
+> Signed-off-by: Carlos Llamas <cmllamas@google.com>
+> ---
+>  drivers/android/binder.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 682bbe4ad550..c463ca4a8fff 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -5241,6 +5241,7 @@ static void binder_free_proc(struct binder_proc *proc)
+>  			__func__, proc->outstanding_txns);
+>  	device = container_of(proc->context, struct binder_device, context);
+>  	if (refcount_dec_and_test(&device->ref)) {
+> +		binder_remove_device(device);
+>  		kfree(proc->context->name);
+>  		kfree(device);
+>  	}
 
-On 5/28/25 5:25 AM, Luck, Tony wrote:
-> On Mon, May 26, 2025 at 03:37:44PM +0800, Qinyun Tan wrote:
-> 
-> Hi Qinyun Tan,
-> 
->> In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
->> structure previously relied on the cacheinfo interface to store L3 cache
->> information (e.g., shared_cpu_map) for monitoring. However, this approach
->> introduces risks when CPUs go offline:
->>
->> 1. Inconsistency: The ci field in rdt_mon_domain was initialized using the
->> first online CPU of a NUMA node. If this CPU later goes offline, the
->> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
->> incorrect or undefined behavior when accessed via rdt_mon_domain.
->>
->> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
->> by the cache subsystem, making it unsafe for resctrl to hold
->> long-term references.
-> 
-> You are correct. Saving a pointer to the per-cpu cacheinfo leads to
-> the problems that you describe.
-> 
->> To resolve these issues and align with design principles:
->>
->> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
->> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
->>
->> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
->> shared_cpu_map logic for determining valid CPUs for RMID counter reads
->> via the MSR interface.
->>
->> Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
->> ---
->>   arch/x86/kernel/cpu/resctrl/core.c        | 6 ++++--
->>   arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 6 +++---
->>   arch/x86/kernel/cpu/resctrl/internal.h    | 4 ++--
->>   arch/x86/kernel/cpu/resctrl/monitor.c     | 6 +-----
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 6 +++---
->>   include/linux/resctrl.h                   | 4 ++--
->>   6 files changed, 15 insertions(+), 17 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
->> index cf29681d01e04..a0dff742e9e93 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -516,6 +516,7 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
->>   	struct rdt_hw_mon_domain *hw_dom;
->>   	struct rdt_domain_hdr *hdr;
->>   	struct rdt_mon_domain *d;
->> +	struct cacheinfo *ci;
->>   	int err;
->>   
->>   	lockdep_assert_held(&domain_list_lock);
->> @@ -543,12 +544,13 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
->>   	d = &hw_dom->d_resctrl;
->>   	d->hdr.id = id;
->>   	d->hdr.type = RESCTRL_MON_DOMAIN;
->> -	d->ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
->> -	if (!d->ci) {
->> +	ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
->> +	if (!ci) {
->>   		pr_warn_once("Can't find L3 cache for CPU:%d resource %s\n", cpu, r->name);
->>   		mon_domain_free(hw_dom);
->>   		return;
->>   	}
->> +	d->ci_id = ci->id;
->>   	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
->>   
->>   	arch_mon_domain_online(r, d);
->> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> index 0a0ac5f6112ec..f9768669ce806 100644
->> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> @@ -690,10 +690,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
->>   		 * one that matches this cache id.
->>   		 */
->>   		list_for_each_entry(d, &r->mon_domains, hdr.list) {
->> -			if (d->ci->id == domid) {
->> -				rr.ci = d->ci;
->> +			if (d->ci_id == domid) {
->> +				rr.ci_id = d->ci_id;
->>   				mon_event_read(&rr, r, NULL, rdtgrp,
->> -					       &d->ci->shared_cpu_map, evtid, false);
->> +					       &d->hdr.cpu_mask, evtid, false);
-> 
-> This change restricts choice of CPUs to execute the read to one of the
-> CPUs in the SNC domain, instead of any that share the L3 cache.
-hdr.cpu_mask is a subset of ci->shared_cpu_map, and using it should have 
-no side effects？>
->>   				goto checkresult;
->>   			}
->>   		}
->> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
->> index eaae99602b617..91e71db554a9c 100644
->> --- a/arch/x86/kernel/cpu/resctrl/internal.h
->> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
->> @@ -136,7 +136,7 @@ union mon_data_bits {
->>    *	   domains in @r sharing L3 @ci.id
->>    * @evtid: Which monitor event to read.
->>    * @first: Initialize MBM counter when true.
->> - * @ci:    Cacheinfo for L3. Only set when @d is NULL. Used when summing domains.
->> + * @ci_id:    Cacheinfo id for L3. Only set when @d is NULL. Used when summing domains.
->>    * @err:   Error encountered when reading counter.
->>    * @val:   Returned value of event counter. If @rgrp is a parent resource group,
->>    *	   @val includes the sum of event counts from its child resource groups.
->> @@ -150,7 +150,7 @@ struct rmid_read {
->>   	struct rdt_mon_domain	*d;
->>   	enum resctrl_event_id	evtid;
->>   	bool			first;
->> -	struct cacheinfo	*ci;
->> +	unsigned int	ci_id;
->>   	int			err;
->>   	u64			val;
->>   	void			*arch_mon_ctx;
->> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
->> index a93ed7d2a1602..bedccd62158c3 100644
->> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
->> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
->> @@ -620,10 +620,6 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
->>   		return 0;
->>   	}
->>   
->> -	/* Summing domains that share a cache, must be on a CPU for that cache. */
->> -	if (!cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
->> -		return -EINVAL;
->> -
-> 
-> This sanity check that code is executing on a CPU that shares the L3
-> cache has gone. But I don't see any code to replace it based on checking
-> your new "ci_id" field.
-You are right，I will add this check in the next patch.>
-> Should it be something like:
-> 
-> 	struct cacheinfo *ci;
-> 
-> 	ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
-> 	if (!ci || ci->id != rr->ci_id)
-> 		return -EINVAL;
-> 
->>   	/*
->>   	 * Legacy files must report the sum of an event across all
->>   	 * domains that share the same L3 cache instance.
->> @@ -633,7 +629,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
->>   	 */
->>   	ret = -EINVAL;
->>   	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
->> -		if (d->ci->id != rr->ci->id)
->> +		if (d->ci_id != rr->ci_id)
->>   			continue;
->>   		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
->>   					     rr->evtid, &tval, rr->arch_mon_ctx);
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index cc4a54145c83d..075fdca2080d8 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -3146,7 +3146,7 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
->>   	char name[32];
->>   
->>   	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
->> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
->> +	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
->>   	if (snc_mode)
->>   		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
->>   
->> @@ -3171,7 +3171,7 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
->>   		return -EPERM;
->>   
->>   	priv.u.rid = r->rid;
->> -	priv.u.domid = do_sum ? d->ci->id : d->hdr.id;
->> +	priv.u.domid = do_sum ? d->ci_id : d->hdr.id;
->>   	priv.u.sum = do_sum;
->>   	list_for_each_entry(mevt, &r->evt_list, list) {
->>   		priv.u.evtid = mevt->evtid;
->> @@ -3198,7 +3198,7 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
->>   	lockdep_assert_held(&rdtgroup_mutex);
->>   
->>   	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
->> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
->> +	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
->>   	kn = kernfs_find_and_get(parent_kn, name);
->>   	if (kn) {
->>   		/*
->> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->> index 880351ca3dfcb..c990670d18c02 100644
->> --- a/include/linux/resctrl.h
->> +++ b/include/linux/resctrl.h
->> @@ -145,7 +145,7 @@ struct rdt_ctrl_domain {
->>   /**
->>    * struct rdt_mon_domain - group of CPUs sharing a resctrl monitor resource
->>    * @hdr:		common header for different domain types
->> - * @ci:			cache info for this domain
->> + * @ci_id:			cache info id for this domain
->>    * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
->>    * @mbm_total:		saved state for MBM total bandwidth
->>    * @mbm_local:		saved state for MBM local bandwidth
->> @@ -156,7 +156,7 @@ struct rdt_ctrl_domain {
->>    */
->>   struct rdt_mon_domain {
->>   	struct rdt_domain_hdr		hdr;
->> -	struct cacheinfo		*ci;
->> +	unsigned int			ci_id;
->>   	unsigned long			*rmid_busy_llc;
->>   	struct mbm_state		*mbm_total;
->>   	struct mbm_state		*mbm_local;
->> -- 
->> 2.43.5
->>
-> 
-> One other note. Linus just[1] merged the patches that split the
-> architecture independent portions of resctrl into "fs/resctrl"
-> (moving just over 7000 lines out of arch/x86/kernel/cpu/resctrl).
-> 
-> Some parts of this patch touch code that moved. But it should be
-> fairly easy to track the new location as the function names did
-> not change in the move. Please base new version of the patch on
-> upstream.
-> 
-> -Tony
-> 
-> [1] After you wrote this patch, and about 4 hours before I'm writing
-> this reply!Ok. Soon I will rebase the master and then resend thispatch.
+Reviewed-by: Tiffany Yang <ynaffit@google.com>
 
---
-Thanks
-Qinyun Tan
-
-
+-- 
+Tiffany Y. Yang
