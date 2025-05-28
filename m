@@ -1,197 +1,231 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-qv1-f77.google.com (mail-qv1-f77.google.com [209.85.219.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B5A28BA86;
-	Wed, 28 May 2025 14:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35D0286D72
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443650; cv=none; b=Mp2GSfG/RFkczWSdeFw+Rt7r9KF1iWF6sSsTtSBbt+TWBfOhymQmbDthLCDzsVDnDtbcfXrAMjx67Z0pnnrNDGudYmzYhBbeCwN6q/ZYSyCN4SDU84zQOsCj5zBAKTxIh3JX0UP2UhGIH3q6NO9G5seXjbuSxV1m1Gf65sHKdY8=
+	t=1748443724; cv=none; b=TdvJEHWbTF1y2n1N89r0ISuGH9lxsmG5uP9MlXhC+V+ILEh3nCJ34QZ4KVbbJ5cWMNWbYI7Adl43C/SJcAIVhW987uDJJigqy/teUmtSGGuv5hUmoKQGgXddcOPFcJrNoJmjW2a/26FxXLEVi1PdlB7mPPRSwb+TX0WwWxrwVTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443650; c=relaxed/simple;
-	bh=QVusH8ytRFHR18qIeA5nN1QKmrPz1Ltl6HMFW3sfcwU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RkxUX43hOXzY245A9UyuIqWCS76acINSYdhn1b99jCsak14Ht8Dp+90CfrTwsuAOkY29a6/jrToFpSh7jNlRp4pR2jgInoAVDhYGE5+k4QNdMUQekpEKCSeKnzvGvWnRhjvtYGfdqoD6M5sH04C5jSfQG49o157MkQ8uSWxJd7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRWJecfb; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRWJecfb"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b2c4331c50eso1551947a12.3;
-        Wed, 28 May 2025 07:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748443648; x=1749048448; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jeSugzNf1/4gi32f7Z56MbpoGgBCaskHwFTFR4uqoEA=;
-        b=TRWJecfbYd0AHt/YA12UK44Aapl8RgHFBBb3rV1YDdWZk6Om1bXoHg40Rlkez6SExf
-         0Gtk3GbnR2GVCch3rfqu4WA00CQa04nA78LUHJyGo/g7qkh5mCifXKsVJHNNAECXzRnp
-         DEtXZz63KfopmcVT6aFKDa/KL3jAESS6Ghla215BPBr3FPOX9Oek4fzT0OdyhNbazRhz
-         QYboeLpbT07qAbZNfYpXq5EP5obHXw3GWE76MqL/xL3QyrQCFqqU3N3rWMOECrPBkXV2
-         IHpJ9hJbVf5RkkpTxua0lMxi0m78/4pBQXlpxFWb+Nowll9peyDwr5r1YDJzahG3mLxz
-         9QMA==
+	s=arc-20240116; t=1748443724; c=relaxed/simple;
+	bh=aSQkgtbaIw4kmPNazY/4wGXVxEjN0zpCY0z42x76mdQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JrWhHcX3EY2c06GxrR5XdjAgDtwrY7mVd1Zr5FMtAllAMl+1JsxcczcjXhmFjV0bO/mGeTy4OM6BK2OOc6KYhgO/OrrYfHrQWmGFYNndfmT5bVeqvjy0b8w7HQA1Avs3BhmSS0EEamce22YMtHIMrv910V92zPGbTPpcTvHv1yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.219.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-qv1-f77.google.com with SMTP id 6a1803df08f44-6faaf3f1552so40622956d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:48:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748443648; x=1749048448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jeSugzNf1/4gi32f7Z56MbpoGgBCaskHwFTFR4uqoEA=;
-        b=uctRh/ge9l807Onh0VAg56i5TFSjoElW+4j4aFgOsYi/1Ws7jfomscmdzJDYXMWxPk
-         P/DwkUk7MEDIqw4sMdOgRfRJkAiKIe6NT7zF3+sbHKWnSfDNFUkX8m5kvpbTIhjU+gXR
-         36olv6xH1+zRYA9DttTeqdSiAYQYZFlz3kfQxdNbgyowQQlYMlbz7AFQkqklyxrYGOyv
-         85RszpK2Ryh0S3pJA9lFDiuGgR6I9ZS4ljMjB4wEJt9hoNTGoBlv7bBlxoYFjRA3YOmB
-         t7bE89zefwWb3mhpBZlKdJfjiVnHPiJdYOl6V73rUGn4rA5hn3GJ58i+fwjsQNEV6XQe
-         ryzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+1oQbXSXOQ+GPq+hdFcX/lq9n5i8F+2TMjELSVNJEPUhw/oUplTDZLLHSseORhx1lp47ek8GT553H@vger.kernel.org, AJvYcCUZwIfpW0lpO77dDZySzVnsqhJshRIPInPscQrfQ3QuFFCfEoPAAgZfGc4BxbWSTnUy769JzMM77V9ugVA=@vger.kernel.org, AJvYcCXB+BV9CCLsQl7MBGoxsaCG5ZGvWA4JKJzAEy0rzh+VtLRtTWGjxIGNMrZ8fj63K7lVPow69tZ4Ojs9Wh9H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8zyp2Txt+B2XNIy2/jR/hjR0vK7+8bl/unPx1cvEWibavKCVh
-	EsvWWDIRdNGAZaq/bOvDpFlaY7lWxAICjlwCQEzeS4a6bBNxQBDIbf7Orn6cUyUmJm+/1I2cdeX
-	HQPFTZLmMhX1W0Lq+YpXpoO/BwiHZFtkCu9IgoH8=
-X-Gm-Gg: ASbGncuNiMzZZv0jRxZFZtuDbaG677HDMx2FHfWa9BEcFWkSZ+xKDLdkOH0wZUG/BBP
-	tK8UiRFLSqAhOVdX1Thgd+S/0Scjmjf5Ix2+22yptt9yjHyZoqfprGMWTgSHIFh2hkhGfP2e9L4
-	T8m4bfrqzb+eTbMQ4JMeFB/09Usle6OYVY
-X-Google-Smtp-Source: AGHT+IHQJXU3p+rSsWqzxaLHSULaSjkoRZugP1vvKeH7LmxHkr7nUsvjweRVqC9eZYhDskDFMsLev7oBi7HQV+tKXmM=
-X-Received: by 2002:a17:90b:4b8b:b0:311:d670:a0e9 with SMTP id
- 98e67ed59e1d1-311d670ad95mr4555012a91.21.1748443647809; Wed, 28 May 2025
- 07:47:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748443721; x=1749048521;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4cx32Sj3K02lxj9Rd2CNjxbRCZi+yI5OJOD2QwS+p60=;
+        b=JuOH6wa8fYTder7p+utauw5+FnxCWwo7ToRDhxlRO/0vNOd/dYHJasGtLwV9EZ+Yas
+         KA7dlQaC0M74EqT1Ufo8BZ+hBqiiH0inZaVvlrm53FSc8BQtX0lSfDTJAtxTUeauw6Y7
+         EJVqSgkzUep+62fmleOQbzko9gwsTzL8M/4ZgPTFY9Vm2FAnDYp8EbCrNJKxlvBcJlMX
+         yui3YVomYrJj46sWygXqgucglipJUfFYHjZd2CBbCzW+ysaeRx/ek5RzSL6dsiFk3MsS
+         KHfVT1Ji3vo/5ed7Auw7k7eJNBKSUA6KeYj1cV+66uLUkGMQDo961oa4QKgUS/6gVtJE
+         Ta9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX7U9YfHcXeAJlW6yq+8ZKTQafccWejYFGfx/DBHdKHoweUcDubxrwQgEVrGJuiLUQe/me4E7jjg760S+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqEFawvGO0ueIlYNWAz5GQcFemzEkDc8ArSRoWWWXQfzeT7EEC
+	JuhXLccEB6/F5+FNuc/ZEJ9nWrdTP0Iecl5TZTTk246Z1uM03UhyEuceKDv3PI28SQwHa/1BMaS
+	IjjdSyaaMys2C1LfaKjVtXHWcfyMFMvglnYYozlO8mghjum0aiZTOzRgaSmE=
+X-Google-Smtp-Source: AGHT+IHyNdUnFlDInVGodrS7ppM23zNXxx5vyd1O1xHzhAZF56lKu3J3ZIGJXBCUr2NKQDLaFOTt0pjj+esfFRASa9ROXT3BAyXl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
- <20250502150513.4169098-8-m.felsch@pengutronix.de> <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
- <20250502165535.aeb2osq2vnxsudmq@pengutronix.de> <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
- <7cf3e219758a67d08137ebea5e52a1abad835e65.camel@collabora.com>
-In-Reply-To: <7cf3e219758a67d08137ebea5e52a1abad835e65.camel@collabora.com>
-From: Adam Ford <aford173@gmail.com>
-Date: Wed, 28 May 2025 09:47:14 -0500
-X-Gm-Features: AX0GCFs7evzjkWRmfqngQQTZHj2yQaZWL0ja3DzZVNAah62H09qmX0qG_o41Jko
-Message-ID: <CAHCN7xJJz2cOHBbyT0mr3QTndiB4Z6_Gtgy4k2giJt5qg4fH6A@mail.gmail.com>
-Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc: Marco Felsch <m.felsch@pengutronix.de>, benjamin.gaignard@collabora.com, 
-	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, 
-	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, paulk@sys-base.io, 
-	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	sebastian.fricke@collabora.com, ming.qian@nxp.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+X-Received: by 2002:a05:6602:b94:b0:86a:93c:5548 with SMTP id
+ ca18e2360f4ac-86cbb7be930mr2044389139f.3.1748443711224; Wed, 28 May 2025
+ 07:48:31 -0700 (PDT)
+Date: Wed, 28 May 2025 07:48:31 -0700
+In-Reply-To: <67ae02b1.050a0220.110943.005e.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6837223f.a70a0220.253bc2.00d1.GAE@google.com>
+Subject: Re: [syzbot] [ocfs2?] possible deadlock in ocfs2_read_folio
+From: syzbot <syzbot+bd316bb736c7dc2f318e@syzkaller.appspotmail.com>
+To: jlbec@evilplan.org, joseph.qi@linux.alibaba.com, 
+	linux-kernel@vger.kernel.org, mark@fasheh.com, ocfs2-devel@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 9:14=E2=80=AFAM Nicolas Dufresne
-<nicolas.dufresne@collabora.com> wrote:
->
-> Hi,
->
-> Le mardi 27 mai 2025 =C3=A0 22:05 -0500, Adam Ford a =C3=A9crit :
-> > On Fri, May 2, 2025 at 11:55=E2=80=AFAM Marco Felsch <m.felsch@pengutro=
-nix.de> wrote:
-> > >
-> > > On 25-05-02, Adam Ford wrote:
-> > > > On Fri, May 2, 2025 at 10:10=E2=80=AFAM Marco Felsch <m.felsch@peng=
-utronix.de> wrote:
-> > > > >
-> > > > > The VPU_PLL clock must be set before the VPU_BUS clock which is d=
-erived
-> > > > > from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 6=
-00MHz.
-> >
-> > I did verify the current clock rate ends up at 300MHz instead of the
-> > desired 600 or 800MHz, so we should do something.
-> >
->
-> This reminded me of:
->
-> https://patchwork.linuxtv.org/project/linux-media/patch/20250217-b4-hantr=
-o-av1-clock-rate-v2-1-e179fad52641@collabora.com/
->
-> Which also made me discover that this patch wasn't picked despite being m=
-ark accepted. We
-> will favour DT clock settings from here, since its not really managable o=
-therwise, old board
-> will stay like this, otherwise we face backward compatibility issues.
->
-> Note that G2 and VC8K can be run at higher rate, but to be stable, you ne=
-ed
-> to also control voltage and proper cooling, not something we want "by def=
-ault".
+syzbot has found a reproducer for the following issue on:
 
-From what I can tell, imx8m_vpu_hw.c doesn't actually set the clock
-rates.  It looks like it just enables and disables them.  I think the
-clocks are all set via the device tree.  The 8MP datasheets list the
-clock rates based on what they call 'nominal' and 'overdrive' which
-determined by some SoC voltages.  600MHz seems reasonable for what NXP
-states as Nominal.  I didn't see any NXP downstream voltage or cooling
-options.
+HEAD commit:    c89756bcf406 Merge tag 'pm-6.16-rc1' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1201f170580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ded97a85afe9a6c8
+dashboard link: https://syzkaller.appspot.com/bug?extid=bd316bb736c7dc2f318e
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113ae6d4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b01df4580000
 
-adam
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-c89756bc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b21d74e73303/vmlinux-c89756bc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b778ededeb75/bzImage-c89756bc.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/6ca75df782b2/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=14b01df4580000)
 
->
-> Nicolas
->
-> >
-> > > > >
-> > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
-> > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm=
-64/boot/dts/freescale/imx8mp.dtsi
-> > > > > index 97b09b647ec7..7f4bdefb3480 100644
-> > > > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > > > @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
-> > > > >                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
-> > > > >                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>=
-;
-> > > > >                         clock-names =3D "g1", "g2", "vc8000e";
-> > > > > -                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_=
-BUS>, <&clk IMX8MP_VPU_PLL>;
-> > > > > -                       assigned-clock-parents =3D <&clk IMX8MP_V=
-PU_PLL_OUT>;
-> > > > > +                       assigned-clocks =3D <&clk IMX8MP_VPU_PLL>=
-, <&clk IMX8MP_CLK_VPU_BUS>;
-> > > > > +                       assigned-clock-parents =3D <0>, <&clk IMX=
-8MP_VPU_PLL_OUT>;
-> > > > >                         assigned-clock-rates =3D <600000000>, <60=
-0000000>;
-> > > >
-> > > > I think there was a move to make the default be overdrive [1]  and =
-[2]
-> > > > and use a 'nominal' device tree for those who are not in overdrive
-> > > > mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
-> > > > 600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
-> > > > values here should be 800MHz and if we should add the nominal value=
-s
-> > > > of 600MHz to the imx8m-nominal.dtsi file.
-> > >
-> > > You're right, Ahamd and Lucas did change this. I will adapt it later =
-on.
-> >
-> > I updated my device tree to run in overdrive mode and ran fluster at
-> > the higher rates:
-> > VPU_G1 - 800MHz,
-> > VPU-G2 - 700MHz
-> > VPU-Bus - 800MHz
-> >
-> > ./fluster.py run -d GStreamer-VP8-V4L2SL-Gst1.0
-> > Ran 57/61 tests successfully               in 5.922 secs
-> > (vs 7.059 secs at nominal speed)
-> >
-> > ./fluster.py run -dGStreamer-H.264-V4L2SL-Gst1.0
-> > Ran 129/135 tests successfully               in 40.107 secs
-> > (vs 45.741 secs at nominal speed)
-> >
-> > If you want, I can submit the clock updates I have for overdrive or
-> > send them to you to save you some time.
-> >
-> > adam
-> >
-> > >
-> > > Regards,
-> > >   Marco
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+bd316bb736c7dc2f318e@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-syzkaller-03478-gc89756bcf406 #0 Not tainted
+------------------------------------------------------
+syz-executor341/5408 is trying to acquire lock:
+ffff888046e7a2e0 (&ocfs2_file_ip_alloc_sem_key){++++}-{4:4}, at: ocfs2_read_folio+0x353/0x970 fs/ocfs2/aops.c:287
+
+but task is already holding lock:
+ffff888046e7a7e0 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:932 [inline]
+ffff888046e7a7e0 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_fault+0x546/0x1200 mm/filemap.c:3391
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (mapping.invalidate_lock#3){.+.+}-{4:4}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
+       filemap_invalidate_lock_shared include/linux/fs.h:932 [inline]
+       filemap_fault+0x546/0x1200 mm/filemap.c:3391
+       ocfs2_fault+0xa4/0x3f0 fs/ocfs2/mmap.c:38
+       __do_fault+0x138/0x390 mm/memory.c:5098
+       do_read_fault mm/memory.c:5518 [inline]
+       do_fault mm/memory.c:5652 [inline]
+       do_pte_missing mm/memory.c:4160 [inline]
+       handle_pte_fault mm/memory.c:5997 [inline]
+       __handle_mm_fault+0x37c5/0x55e0 mm/memory.c:6140
+       handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
+       faultin_page mm/gup.c:1193 [inline]
+       __get_user_pages+0x1a78/0x30c0 mm/gup.c:1491
+       populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
+       __mm_populate+0x24c/0x380 mm/gup.c:2032
+       mm_populate include/linux/mm.h:3487 [inline]
+       vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+       ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&mm->mmap_lock){++++}-{4:4}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __might_fault+0xcc/0x130 mm/memory.c:7151
+       _inline_copy_to_user include/linux/uaccess.h:192 [inline]
+       _copy_to_user+0x2c/0xb0 lib/usercopy.c:26
+       copy_to_user include/linux/uaccess.h:225 [inline]
+       fiemap_fill_next_extent+0x1c0/0x390 fs/ioctl.c:145
+       ocfs2_fiemap+0x888/0xc90 fs/ocfs2/extent_map.c:806
+       ioctl_fiemap fs/ioctl.c:220 [inline]
+       do_vfs_ioctl+0x16d3/0x1990 fs/ioctl.c:841
+       __do_sys_ioctl fs/ioctl.c:905 [inline]
+       __se_sys_ioctl+0x82/0x170 fs/ioctl.c:893
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&ocfs2_file_ip_alloc_sem_key){++++}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
+       ocfs2_read_folio+0x353/0x970 fs/ocfs2/aops.c:287
+       filemap_read_folio+0x117/0x380 mm/filemap.c:2401
+       filemap_fault+0xb16/0x1200 mm/filemap.c:3495
+       ocfs2_fault+0xa4/0x3f0 fs/ocfs2/mmap.c:38
+       __do_fault+0x138/0x390 mm/memory.c:5098
+       do_read_fault mm/memory.c:5518 [inline]
+       do_fault mm/memory.c:5652 [inline]
+       do_pte_missing mm/memory.c:4160 [inline]
+       handle_pte_fault mm/memory.c:5997 [inline]
+       __handle_mm_fault+0x37c5/0x55e0 mm/memory.c:6140
+       handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
+       faultin_page mm/gup.c:1193 [inline]
+       __get_user_pages+0x1a78/0x30c0 mm/gup.c:1491
+       populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
+       __mm_populate+0x24c/0x380 mm/gup.c:2032
+       mm_populate include/linux/mm.h:3487 [inline]
+       vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+       ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &ocfs2_file_ip_alloc_sem_key --> &mm->mmap_lock --> mapping.invalidate_lock#3
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  rlock(mapping.invalidate_lock#3);
+                               lock(&mm->mmap_lock);
+                               lock(mapping.invalidate_lock#3);
+  rlock(&ocfs2_file_ip_alloc_sem_key);
+
+ *** DEADLOCK ***
+
+1 lock held by syz-executor341/5408:
+ #0: ffff888046e7a7e0 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:932 [inline]
+ #0: ffff888046e7a7e0 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_fault+0x546/0x1200 mm/filemap.c:3391
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 5408 Comm: syz-executor341 Not tainted 6.15.0-syzkaller-03478-gc89756bcf406 #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
+ check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+ down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
+ ocfs2_read_folio+0x353/0x970 fs/ocfs2/aops.c:287
+ filemap_read_folio+0x117/0x380 mm/filemap.c:2401
+ filemap_fault+0xb16/0x1200 mm/filemap.c:3495
+ ocfs2_fault+0xa4/0x3f0 fs/ocfs2/mmap.c:38
+ __do_fault+0x138/0x390 mm/memory.c:5098
+ do_read_fault mm/memory.c:5518 [inline]
+ do_fault mm/memory.c:5652 [inline]
+ do_pte_missing mm/memory.c:4160 [inline]
+ handle_pte_fault mm/memory.c:5997 [inline]
+ __handle_mm_fault+0x37c5/0x55e0 mm/memory.c:6140
+ handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
+ faultin_page mm/gup.c:1193 [inline]
+ __get_user_pages+0x1a78/0x30c0 mm/gup.c:1491
+ populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
+ __mm_populate+0x24c/0x380 mm/gup.c:2032
+ mm_populate include/linux/mm.h:3487 [inline]
+ vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+ ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1267d03dd9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1267c97208 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 00007f1267d90718 RCX: 00007f1267d03dd9
+RDX: 0000000001000003 RSI: 0000000000b36000 RDI: 0000200000000000
+RBP: 00007f1267d90710 R08: 0000000000000006 R09: 0000000000000000
+R10: 0000000000028011 R11: 0000000000000246 R12: 00007f1267d5d624
+R13: 5bf000f24f5ebbca R14: 0000200000000280 R15: 0000200000000000
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
