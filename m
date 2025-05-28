@@ -1,52 +1,72 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488631CAA6C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FD122A81E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423122; cv=none; b=WiI7V2QTeZa/NNpbeFD2PP0+0n6Spz76DN3ZGNo9noZPAJz9q/Z5Sj8Cu+irSNSNPmJxwRVot7uoR76oqDsHy/iy6O5EQIT10ba1GdWhvquGSKJGsoCvkFcTWIwZeOTl6Zj4gddK7wNVnwEtlf9CspnPRZx6QQFT7uVPb+ecN3s=
+	t=1748423177; cv=none; b=mFzUEJO5syo5JJQJf2syb9LQqUJ11NKpFIIt5aNByTI+TkZYCv1tYCsJu7famjbJ4Ltk7D34/UPg9vDfUVr+fREdjv65Px27eK9Mc2LiNLBe0MpIisatUqu40smjRJ3ZOFM7fnN83nB/O28VMwQXvHSWqOABfZj1IfXWkTjqUpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423122; c=relaxed/simple;
-	bh=rs6PIvGPcHrLv/ovucbB4V8gMKGPAt2gjljEKfXGzW8=;
+	s=arc-20240116; t=1748423177; c=relaxed/simple;
+	bh=uMd7vvtHClvbK/XR9D4ur3jM2f+3IfWm3Bv1Ja3tbbg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rQkh69myhz2gg6J/swfJnJ+7t0D3nog7GouGffjf1qTmsohJdrK0aKKUsuyyxVKGvAGl6Rl/Pheutbpzvuwm67lpmYs4aLOoQOJbx9D6ptbF+4qovLqoLK5NFjcaYltJLc+PtEjcUYy+3PC/s7LGk6egb2Aa2bv2nFCegNYR0hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=jD0XFiqd; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	 In-Reply-To:Content-Type; b=T4tG8AqetdhEUliavle0f5pxw1kj02Gfox9vPfkuKcCz/Qhq9+29u4xXrPHefatHbQvVNCCpGT7uFcntZm8hjEYVVSo9D42oasK5aAtc1cLha9ZxIHiLEw9mkM4erKXm4ixD8KCUebxYsySjkr0TO/DPSLMI6x4bZs0DYiWL6iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HQ/+Kujw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="jD0XFiqd"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id JWhguK9fjiuzSKCitu0Kkb; Wed, 28 May 2025 09:05:19 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id KCisui40P3IrfKCisuw8j4; Wed, 28 May 2025 09:05:18 +0000
-X-Authority-Analysis: v=2.4 cv=PL4J++qC c=1 sm=1 tr=0 ts=6836d1ce
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=5E2gbQE8QDOJjfjLMUMA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nKwsNn5rJRhi0owYZFN+Q60hsLqiKxH83B+Fzcz0XYg=; b=jD0XFiqdAqR+o3a6crgtabCEe1
-	21CZumjLpddWBzvMlEibcPTboVLEpNyckM5WKw89z4b6M2N6UPdlnQ3YAaHZtTsMPP09NLERiInJn
-	nmBcrTVRw5ShjzVWA5/EFywENNebdVeHe+39lNYej8ujievcgHxmmyfLZhq0oTyNi+adWgg3BXLO9
-	ux5lYZHD9xHE9wVtbionRNdBEL2vzn+ozjF5r7I1JZ6BJshnFFUOHpwqY85FHOXDKF/KjeG4KJdyn
-	5FDc77PiY0g6FbtlyZBnoL3DyN7mnASw4WT7WXAY8veWRTBx0ibx7uVv5oEIo58Y1Nw5HUcYuyYPl
-	DOLMkvCA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:54484 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uKCiq-00000000JFF-1igv;
-	Wed, 28 May 2025 03:05:16 -0600
-Message-ID: <48e5d458-c2f9-4968-b9db-5c100ef9b185@w6rz.net>
-Date: Wed, 28 May 2025 02:05:13 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQ/+Kujw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748423175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yPtp4BVlfZsRur8/3HKaTK/1oayZ+9mURRHo233+dpk=;
+	b=HQ/+Kujw24kxmu5Ui9Mo93Nm3jviRlBWMjhWwrAUtDEJFihgA8CbB3i2rI7mBsB+LJ0RT+
+	M1UAwOl0ML8qUfRk5B1XNRQcDaJ67FhpVmog+Q68Rklq2d0eUjQqnBqVjcInDPL4jqGdmz
+	hQbU5UmZBrtg6dC2EmSgb3qo07//8dM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-304-43Bk3KXhNJO795OfG39UXg-1; Wed, 28 May 2025 05:06:13 -0400
+X-MC-Unique: 43Bk3KXhNJO795OfG39UXg-1
+X-Mimecast-MFC-AGG-ID: 43Bk3KXhNJO795OfG39UXg_1748423172
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a367b3bb78so2470982f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:06:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748423172; x=1749027972;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yPtp4BVlfZsRur8/3HKaTK/1oayZ+9mURRHo233+dpk=;
+        b=ewslHYU3HcSkE4cBmHhs4ivAHj3+6KV0O+VqkuuJcviCm2P0CTA1eVvF5L5eKrsr5n
+         uNvCf37BoWIbpfxpRXQyVwKZx9F58qsSEK6i/lcCqIl3L9HTs/DzP3q0c92zkJMvG0tX
+         jltxao9Z1Q6x2J6H2vxjw9+xC/pbYBWcOrGphPoZK8vAtYYmFnLBCxWGnJ05tmcgT8vE
+         lqcsMdoF8mvuuCzAoS6v+4SkugpCc1Hnh+xi720mnoj2u0BYFarmt+SlFpzpX+0LTTDA
+         FsFYzu0d625nBf3ft2yBZFYo8jqWd4qO6yxkxJ09FXyRH855elbOoSBB4Q2//0fz49eY
+         zwsQ==
+X-Gm-Message-State: AOJu0YxdlsZO30M4G698PDKqJcE6tl6lBfYPiALxkngL24WnhMBQqQzt
+	KtUQHkwNJcasrGNua7VXIyat+RhJJv9HyywkMxqY7ESlRSK2F0/mup7zJ+cDcJKTzmGF/2VSY+g
+	JLKLcqxy87122tMdRPXiwanCNDAGnHtagk3TKp1t15Q45/Tp18LLkI9FUEsvz/UEscQ==
+X-Gm-Gg: ASbGncsFhv9xu9lzKEJVzk88geUGj3RG1V/xY/Bj+I0prMvSrUuU0BWq2pAp4IHloAO
+	bwKoaRfJkEZnxbL/MSohj0MfcL51ZzRCpRW6IgWLbAinKIXHjnkFWvsAHhuda96LDF3/TRfmPH6
+	hwQpugX2Cruma6NPzR5maYC9h8lMWsLLqdxt1W2RSnYx84EDPCNbA867Lp2MI/dmwJLrgfYVPao
+	+R8Vi5vJUvgDAbaYAIpYr3n3v3+m/BCL9DPWj4LgxaEO3xT3RosqEyX88oVpzMrZj/VwegY5xeI
+	cv1ekFkleRpz2KR6LL5z2hfgLHiUbpDa7GC2cNGUvCmvlZcSlvMB9VefawFQ0Gik28q9ObYKiUA
+	wa9ODeh/FM+g5SDm7X/P2uIbr/lDAD+CCYEFURYg=
+X-Received: by 2002:a05:6000:26d0:b0:3a4:e4bd:1b27 with SMTP id ffacd0b85a97d-3a4e4bd1c83mr3907320f8f.54.1748423172267;
+        Wed, 28 May 2025 02:06:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNHqCOw0QGd8W0A6TOY7dtBnKuUBRtv0uNloTLnvRnPNgfBlftkrP2fUjm4+kQAzqv5GkdyQ==
+X-Received: by 2002:a05:6000:26d0:b0:3a4:e4bd:1b27 with SMTP id ffacd0b85a97d-3a4e4bd1c83mr3907286f8f.54.1748423171762;
+        Wed, 28 May 2025 02:06:11 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd7cc5sm905044f8f.73.2025.05.28.02.06.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 02:06:11 -0700 (PDT)
+Message-ID: <876f65d0-e873-4c08-b404-db89e542e7a3@redhat.com>
+Date: Wed, 28 May 2025 11:06:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,62 +74,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/626] 6.12.31-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250527162445.028718347@linuxfoundation.org>
+Subject: Re: [PATCH 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+ <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250527162445.028718347@linuxfoundation.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uKCiq-00000000JFF-1igv
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:54484
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJ/FIIDl5mrWXlp7sXz35ACRy+7vrKoOspn9Upey624p91L9lzEJQ0kjw9tiikQsxF7tTrLEwnYz7ZgYwYCiyyJ2Obu5iBLmbOMxQ9BhdeckFkdTgbUQ
- bNo5zEP3feeykVaL4yloUiPUr6F/D6V05yfujZk3ziZv1YPXhXtFtwod0FS4WFoa0y2GALurjNcipcF85X+xiuldgkj9J9tG7Lc=
 
-On 5/27/25 09:18, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.31 release.
-> There are 626 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.31-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 28.05.25 07:35, Tal Zussman wrote:
+> When the TLB_REMOTE_WRONG_CPU enum was introduced for the tlb_flush
+> tracepoint, the enum was not exported to userspace. Add it to the
+> appropriate macro definition to enable parsing by userspace tools, as
+> per [0].
+> 
+> [0] Link: https://lore.kernel.org/all/20150403013802.220157513@goodmis.org
+> 
+> Fixes: 2815a56e4b72 ("x86/mm/tlb: Add tracepoint for TLB flush IPI to stale CPU")
+> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+> ---
+>   include/trace/events/tlb.h | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/tlb.h b/include/trace/events/tlb.h
+> index b4d8e7dc38f8..725a75720a23 100644
+> --- a/include/trace/events/tlb.h
+> +++ b/include/trace/events/tlb.h
+> @@ -13,7 +13,8 @@
+>   	EM(  TLB_REMOTE_SHOOTDOWN,	"remote shootdown" )		\
+>   	EM(  TLB_LOCAL_SHOOTDOWN,	"local shootdown" )		\
+>   	EM(  TLB_LOCAL_MM_SHOOTDOWN,	"local mm shootdown" )		\
+> -	EMe( TLB_REMOTE_SEND_IPI,	"remote ipi send" )
+> +	EM(  TLB_REMOTE_SEND_IPI,	"remote ipi send" )		\
+> +	EMe( TLB_REMOTE_WRONG_CPU,	"remote wrong CPU" )
 
-Built (with both gcc-14 and gcc-15) and booted successfully on RISC-V 
-RV64 (HiFive Unmatched).
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Tested-by: Ron Economos <re@w6rz.net>
+-- 
+Cheers,
+
+David / dhildenb
 
