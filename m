@@ -1,131 +1,101 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1AF24678D;
-	Wed, 28 May 2025 06:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A841F17EB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414655; cv=none; b=T1NsgWfwXRrxcRJeOJmzGyV2rF2R2HDtOQNT8EG5MoY2uZeHr0kZJRSeR1fBCvznALDuqk+UPPU3t40FZBxscJG03DCx0+nHN16TJgYnIxb/hTG7BAPZuut/2W582rhA4DrYdSfktodIPb/jLqkJKTOcUw+xk6Y337BaMsVugyA=
+	t=1748414913; cv=none; b=L3Wpqz2pMqmUTbklyhth44Hm5LGQ6w9K7OsNSixGCM3Xvaub/N5vFf7TwCRwpZH2Gs10jfZVhwBfJkoTGopDRhO6Q6oXiFcYGDqdk+bw2p68O8a2VbTZth4ITtpa8uw+QSurTHPRSTU6JasS6+IwLjx4dDTaD3Hs8WlGTCiIbC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414655; c=relaxed/simple;
-	bh=i/IPBsRRQzA/LSTE9msuNs7+guqvJN7NuTau9LEEuis=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=llS7Ycq+YPadKlltYKzR+VoZ/IreqYpKgfs85P9xG7dqdD23Y2lOX67oxCmC237s6ZkMJwWsUITomSi7j3rgQ+lQb320CYg1vWuIyADU31uK/ouOTvew8XKY1aVluci2Uir9nWMw6bsSHwa1T74YbzCUiKEK7MVl6V6+4CraZjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=r8EFuGRB; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748414913; c=relaxed/simple;
+	bh=etRbnA3xZin9MqbRKKbN4xHljgwi2Jr5O1pQXqZ1N/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=D1LPQbSs8oGeF79Eh+r03Z2LghmHO3rPHt5QOcs6qVLIfa8r5e5rW6P7RirKNNVHhkEFajnvrcgfFDyp9MoYzIucGQAFBh+XfU4up6Vjy9hoHO0ruVibj8AUEstwlqLTcccwXboKnS/k78ZeiJa5TC7CmuwBB/mTEmxy6ark0VU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=fI4lC8fq; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="r8EFuGRB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748414648;
-	bh=WvPbx51UEfdYoAoEDuqVeZqZrLagzgnwzW0OdKATt9E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r8EFuGRBg5Lg4KLSqw677Yk2Rm3v/LggXuyUr5cknbdyxjGCAR/I4EK8taXpbgfSO
-	 UUZ6XXqOR4Yov+RWB1KJnXzkXzhs49toVPhJe4oGohuPrUsCDfsFov0dtnIWBIOsAP
-	 cbHpNC/2liziQbUnU9m//QBrrunZKhaEDnpaSYZQjNe1/Y0JqWYQJLXdzeYgRlRYTl
-	 W1N2zR4xP6Hp6DYmMGuUE0AxgJBP5cTHrU83E7HclHIKTpIFygylIm9f+2fS6EB7fF
-	 KjSL+KRHvx2eWTg+AKHS6hZ9Q0bvV+c3nt5hEzZ8t0nyqP/uU1B+IT20aagSFCNVpP
-	 7IGZtvQtoftKQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6g2c41Hwz4x8Z;
-	Wed, 28 May 2025 16:44:08 +1000 (AEST)
-Date: Wed, 28 May 2025 16:44:07 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>,
- KVM <kvm@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kvm tree
-Message-ID: <20250528164407.1d8d3948@canb.auug.org.au>
-In-Reply-To: <CABgObfbCg1wiZJmnXFihmRLvPiJq2bCQH3MNVMfiUJphz4JW3g@mail.gmail.com>
-References: <20250528152832.3ce43330@canb.auug.org.au>
-	<CABgObfbCg1wiZJmnXFihmRLvPiJq2bCQH3MNVMfiUJphz4JW3g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="fI4lC8fq"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72c09f8369cso1225698a34.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kali.org; s=google; t=1748414911; x=1749019711; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nPvGOSoqhKg3HDWOQ8u+r39VlbKRUC6utvJP/sL9JLw=;
+        b=fI4lC8fqZ+nKlKsum3jrCu70vf0ToABAjjpDaQj+v+MW/QSbjw/G1M/dbXClc6ta7W
+         RQFLmRT+bcmokpn8ipoW8+A4GTxIGRzcqc2YTVjxszXGQxGLmBlIb6F0zEQYLA9WRq0Z
+         TuRvbVuX3ZYODCnycU4nPmWkR+eGE17LnUv7ZFi++EsISZ4ldBd12+eYZWOEmYOZxu7v
+         AhI4KZwWnerYEPZwNvaLb+rmxN/VPIBGhRQBMibLeAaQFfprzie18M6VcgMMPyFDeLxL
+         PE+qLFMMVfMcDUo7t1YFt60uSp30/MkcLwn4ASatxPKS/i+p93oKVNmiKikc/GPTznb4
+         KX8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748414911; x=1749019711;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nPvGOSoqhKg3HDWOQ8u+r39VlbKRUC6utvJP/sL9JLw=;
+        b=fcVMl/4mnJQsowjyeU6Ml5eOfJcDBDsJhserii8RU0aj5Q2iBVMVfG1heOC4gZcQn5
+         sztujI4VUMBqxrjGq5c3a4WD7n5yRama+bl/DPcGhNwvKdDmfHDujPeXozonUzS0qT9J
+         M4FkgqFVguSJm5UZetXHknG0/vwuMS7UFlVGaVheQ9mXx6sjwNbtH1wRCXUla0GVog+t
+         mqpcryyg04HXn4EucHCvwX+ze6+bJYlVoXuQCkfvNvJYz1iWmQ2WZq60G8i4bQyV1R1L
+         BssXxljxPBxm+Pc22MFs+W8uxSbkbCvw4dODF0ZhSBLgOq7ZIuyx+PKEmlfsmwqfU3s2
+         4+rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuqQmSZzycffwmCWCr2Thk8Nq+1vJav5jW4pGuNVCNa2k7GnkGDm3heLNCiVvYO61vSQX10wlNuz+Kld0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0ospKfv43KtOZD55ImwNNmvwmD3cTBX6RaSou1EVIxyPhhgYs
+	GFnco63sokd8wiyuXyb5fY/s790pJaOvq/MNjaijdI5sdMhn5yv7kkfZTeILo1/NrtQ=
+X-Gm-Gg: ASbGnct0nKwaiB5WPjoWQdWu7ueerNc8Y6Lveerj6ArXTWCQUd6dSmMLFepEarCXBIF
+	OS8qqM+yZz6K1sDQtHyYcTqSV2+kkTatOmffxPmX+VIGD2/qQqLu8IL6RfdZZ3ojB7SnMVh708X
+	7tISSb4Uole0z13lBSO7WtfANHOtcFpk7btaO5YRfWKbmTExN9M/wJNnwQbzXTLgh2j0mHTIiWB
+	QH7s5UuLOOmkvBU3F8CiL0j5/d9PF12qwut6yStdAfruAGpxGhehJJsNX5vpyE2lT7RAdDA0tBK
+	kBLPbk0KkxSTuFHA5DdIX2DI2/PU7T8ulcfg+0rcPqEXyi6RBEVcvIvaW8GGRuskvJhM+YNa8D+
+	Z22RlX8vL2m18aTDy46SwpS0Pv8+IOA==
+X-Google-Smtp-Source: AGHT+IGchj3vYrZA2FlcLUNGNEiAVfySRrcOoVWx2qIqozY3Q5RXbSOS19g6uYvk3sFwWF90c+7PoQ==
+X-Received: by 2002:a05:6808:3191:b0:406:1e0c:319d with SMTP id 5614622812f47-406467fff9fmr8991080b6e.19.1748414910949;
+        Tue, 27 May 2025 23:48:30 -0700 (PDT)
+Received: from localhost (104-48-214-220.lightspeed.snantx.sbcglobal.net. [104.48.214.220])
+        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-60bd9c1bd5asm102369eaf.9.2025.05.27.23.48.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 23:48:29 -0700 (PDT)
+From: Steev Klimaszewski <steev@kali.org>
+To: quic_chejiang@quicinc.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luiz.dentz@gmail.com,
+	marcel@holtmann.org
+Subject: 
+Date: Wed, 28 May 2025 01:48:27 -0500
+Message-ID: <20250528064828.4112-1-steev@kali.org>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20240821105027.425783-1-quic_chejiang@quicinc.com>
+References: <20240821105027.425783-1-quic_chejiang@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/RZdYClXNIns397zIJYDIAX7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/RZdYClXNIns397zIJYDIAX7
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Paolo,
+Subject: Re: [PATCH v2] Bluetooth: hci_qcca: Drop unused event during BT on
 
-On Wed, 28 May 2025 07:37:57 +0200 Paolo Bonzini <pbonzini@redhat.com> wrot=
-e:
->
-> On Wed, May 28, 2025 at 7:28=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.o=
-rg.au> wrote:
-> >
-> > After merging the kvm tree, today's linux-next build (x86_64 allmodconf=
-ig)
-> > failed like this:
-> >
-> > error[E0425]: cannot find function `mutex_trylock` in crate `bindings` =
-=20
-> >    --> rust/kernel/sync/lock/mutex.rs:129:41 =20
-> >     |
-> > 129 |         let result =3D unsafe { bindings::mutex_trylock(ptr) };
-> >     |                                         ^^^^^^^^^^^^^ help: a fun=
-ction with a similar name exists: `mutex_lock`
-> >     |
-> >    ::: /home/sfr/next/x86_64_allmodconfig/rust/bindings/bindings_helper=
-s_generated.rs:265:5
-> >     |
-> > 265 |     pub fn mutex_lock(lock: *mut mutex);
-> >     |     ------------------------------------ similarly named function=
- `mutex_lock` defined here
-> >
-> > error: aborting due to 1 previous error =20
->=20
-> I thought that since Rust failures wouldn't have to be fixed by
-> non-Rust maintainers, they wouldn't block merging of non-Rust trees in
-> linux-next?
+Hi Cheng,
 
-I am sorry, but I am not sure how that is supposed to work.  (Do I
-disable RUST in my builds - thereby possibly missing other build
-problems?)  In this case you can probably not even do an allmodconfig
-build of the kvm tree alone if you have rustc etc installed, right?
+I have been looking into a long standing issue on the Thinkpad X13s, which has a
+WCN6855 where every so often would get the following error in dmesg output:
 
-BTW, the only bit of the kvm tree not merged into linux-next today is
-the kvm-lockdep-common topic branch that was merged overnight (my time).
+Bluetooth: hci0: unexpected event for opcode 0xfc48
 
-> In this case it's not a problem to fix it up at all (I'll send a patch
-> to Miguel as soon as I've taken the little guy to school); it's just
-> to understand what's to expect.
+I don't get the message super often, 11 times since 16 April, though I do not
+know how many reboots happened in that time.
 
-That patch needs to go into your tree (with Miguel's Ack if necessary)
-otherwise as soon as Linus merges your tree, his allmodconfig build
-will be broken and he will (probably) unmerge your tree and let you
-know (and wonder why I didn't pick it up).
+I noticed you wrote this patch 9 months ago, and I've applied it locally and in
+my testing, with it applied, I cannot get the unexpected event anymore.  Looking
+in patchwork, it says this patch was superseded, but I can't find what its
+replacement is.
 
-I don't know what to tell you about expectations, sorry.
---=20
-Cheers,
-Stephen Rothwell
+Does anyone know if this patch just fell through the cracks?
 
---Sig_/RZdYClXNIns397zIJYDIAX7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2sLcACgkQAVBC80lX
-0GzLRwgAmeVTbPm1XBE0JnDMQuwmj6lX0bnhI0YU9CFzbEwCYJ7S8TQiqhAqnbpi
-a3pkfykkmATvcA7M2lrGa3nmRmDgoH0soOIkotGO1ZHA14IdvXaFWvRBUOqL8wOn
-Y3IVV0GYrfZA++KR5MT1oqOics71su/nL2Us93ig97yQLhqv6BaR913NDY1HPW+1
-6ZQeu+0ZycPQ4ExZFZS3Jj8NC6pd5ezR/r9lcgvITWtIy8eQBBIPMbw6/6zbRUTv
-nnpE4eYNtoaIkTDxhjPE4kPJOjSFu6SBQzF27DmnCdLZqCkVSzWTJfnmBTLbZdUh
-qxb9PbqpliB0c13ZOZySNZGpq4biaQ==
-=HZKP
------END PGP SIGNATURE-----
-
---Sig_/RZdYClXNIns397zIJYDIAX7--
+-- steev
