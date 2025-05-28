@@ -1,65 +1,67 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C312F18DB03
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD6F327602A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428895; cv=none; b=NmNrVhpp2NN1jDAEKPc9FmE8oPNImmM1bQRDfKasYTNb0PXf3AzuVgKD15RtZt4+qrJEBOwsjZlYrSCcSAdVyFpUUAALMSupymD5IsUSdmWW3eofh2ZcynMrkq+42Mwz2nuTCVawJZ1k6ceOFs9eNJ0ny3QtzggtkY5stFXTLPM=
+	t=1748428898; cv=none; b=asFi7LlnESX37C22RQyEI7qhLsVGGj8S0lbOgkOF/2kljr7wJTBOdZlI5X8eMxPSzIetNxQxiJMeTlnAAb/gpDybGs/1/42iHNXz7eYvVTzCITv2Jr+pGHrdSZryx8sAfd02UzsGi+YHeRnvdfG2rQNQE4d2XOqR4xWnEoZ21q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428895; c=relaxed/simple;
-	bh=31q5XaAMlBexIYczbpLSD3TpwdohBFMpqp6LWBCJyAo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KdTELdv7fLaLGqfCqZIx4yMa7S96o51LHAoMyWt4Um1Nb+56srlTSLDxlJ+uvdJenQxFLLDp6R1q8ShLkXdHb9zN1NgJFbmoAPewoNp4Z7TFoliKsrBo4N/FPDAeyPswClCaCRuUxi8FDeEzhKKSQY9m92tyQSoNWkhvJoUHjXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MW7/9SVE; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1748428898; c=relaxed/simple;
+	bh=zrI5XszXIHo55XzuEzxs+Nt+l2DX90UOcjrVjPXljcM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AHn9YCrjwHiSbtalnfYnsuWEokTxYQsJfTGXvFPmrlAox9+EImtk1DHR0NpFA8zMC8dZFJMQOWXvsRehe5yn4TfbqhzJW84/tH8JapH5rmEKiDAkUMlpnxfNx2zOBfTN0VCPOequ41H5Gsf9xAonmbi4z572JL5/0OMCufjQz2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FUf26LPi; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MW7/9SVE"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so5846095e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:41:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUf26LPi"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442cd12d28cso4687935e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748428892; x=1749033692; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WYGECA6tC+WcTnZvoeh8g+cRlyTZnil5/IN1N4S/06M=;
-        b=MW7/9SVE0LCBuR3VdEZQUcZI+q/wrIA8c1C82+QV/i0t6FupFFHSg5l8cIl1L2qV6t
-         7a17W8thQR+NdgEGpmX06gW1eFnke2QnUnEkBGLUhdo1fGGdnxFuS+rHMSBE7AXbEHv0
-         gRelWuPHzAimrILeHTv/M0SGCacUb8r7OJFsApDbkKmLjBJqjC2WXPqgO9/nDEYOSlJS
-         kpR5dayR10fS6Uy3p6x9P+v4VS3QzWafxGvuKub4kL7x5nTbfzt2+utPmDHFiJpDkDNn
-         k2NqbIFuSyUCnefkKp1QuDyRx758YiALZlg2EX4EJFALBdpu5TwB8+fimlvfTDTbhIts
-         fA1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748428892; x=1749033692;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1748428895; x=1749033695; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WYGECA6tC+WcTnZvoeh8g+cRlyTZnil5/IN1N4S/06M=;
-        b=g9VEiDANHv0l763NpU1F6InDjdIrNFAHFtgoVjadM6WiRMZyQxncsDUCc3TTvGHcRL
-         rq+4qM3Zl7drZ94f1qH9jgJcpK33oO+/jyEUaUugOVPvt2UIrmx4gdIf7+V+UE60ds0u
-         moeN40V1TSJLRlbKsWLaJT7gjzqmWoNg0YkVXQQTD1GVWCTUZCMQbdWUNZD8I+RPHVyk
-         GCMXZYyjM2h8F6t9v4Sc74xCteSCn4n/2XFOo7nqSNbqJltIM+owRiAoKgl1uIz0pFUV
-         ln/m/RnlEXtNVhCEwMNIY+9+9fHCKp/IRfq9guWwMih58sObN0T4t7QZka4tZlXmjuq3
-         SfUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEtPiP/PwN6htJk/wyE3ObP46e20HTn7kcEEQRTomKYq49foswATvJRXAcNvX5TG0J4Bgp5Myt3CdIQzM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5V06R2lgJE/EBHSXKXwbNevw1KDs6xWXKyTijfgtw3dS5kF1H
-	ZeGUcw6MPlxIbNSgvz6N2tryTlBhZy+9+v4GvcPUzTjKcK6FebohU17MZ1Ut7xAQzpM=
-X-Gm-Gg: ASbGncuuvb46LWACwjQsrpDB3ah6YhBvzGWB6ut0E5Sg9hlFmtcLylbFOYyVUTbTCca
-	ZFh6HWvCjiqZWXUuj6VBVWWKb6av1VkArYVOrh4A3B2COyFXUjKFOoyT+b07nimpuAekui0bOoG
-	nvJiMtgOEgJv0N2fjhbIrFacRGcFAl07zrGPQEErjNTQWIOvHUiZSJ9lV0n8i6bEwys/K8WUs6p
-	vMi5OcNMQq88o3v8zYFvAiRVYm+WEptYGrHr7sthGBM5izNPBkPTPOR2K5RSi9TbA1fhfqIh+Yy
-	2EdQMRo8mXc04ft7NKiAmSwo02AiNuA/DH3BnyESv9g5fFP2pbi1Hmq9z0bnz2bHF8Fld2E=
-X-Google-Smtp-Source: AGHT+IGEfOLQIkgSBlZ2iFouY1f/KgLVcIHYsjuV4CgQ8KecLfZQnSg2l0D8HirR5K2pryTmJCchcg==
-X-Received: by 2002:a05:600c:3144:b0:43d:fa58:81d2 with SMTP id 5b1f17b1804b1-44ffbf6531fmr6551045e9.9.1748428891894;
-        Wed, 28 May 2025 03:41:31 -0700 (PDT)
+        bh=7p6g8nrYLu2YSRDRFX7+ayHvEGE7eEHjSKPeWK9MLgc=;
+        b=FUf26LPiWgQDd/7WsZegNt9UYRVHMfMbl34DHzO3qwlmPqWWyNobyvpeC5gTt+tCoP
+         UAbfiKG94aigNoTDMorQWZhYeAo+xRyQ9rj4SHa+f5HpE9oRFMGka+zMowpyy8mGqoJ1
+         4rye4kYIanGg59wVZ/gldCV4VePH6DK8usT9ClDDJgydWpxHPsZQbh0FbfRiqU4JIqfN
+         5KZhrzO+X7Drj9gmgr+TQAMGRoubl3kPjmkiU69dNy8FDU9vg9Epxh15hmePzn2ksq0/
+         5yCPls6EXmSBURAVYvKIwKWN8bC2eCMrXszsTSbxYF5tXQfiKZ5uEI0kNKxqzsD32CmA
+         eAig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748428895; x=1749033695;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7p6g8nrYLu2YSRDRFX7+ayHvEGE7eEHjSKPeWK9MLgc=;
+        b=Ikbq4T5YYQyCNigYlFlPoxMY0r9rD/ArxRwtx4+vJr99Lm2DBfWsYTzQyaqkpEr/Tq
+         vzwzSd3b4Re2GucR7TsuP9WA+DkskSRfZxtML5rUTYcfC5CqAkRet2geUwOY3oZsvTH1
+         CD1RSXD9g5cgT6rp+zxSvc/K5a566i9x4OyCFEWg7Da2LA+4kFnVfd4uh+iOXMpLfgC4
+         Y0S5EWJwigLUXqenlpI74QCoK4zS6T2VeqRMQqGn+trAR5CUAD//ShmswC6BsrVNOlDc
+         xNU7wEsFKcPDw07YxqyNaAgDOcNe/1TYazICj7nCbV04/25RDZ9C/vnYx7nn+jbwZrpe
+         OBMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPYvNXPhVTv6BXyKGDVyk5va5hQYMeMndXrtDI5cNxqW5VkDtwylM2AOwnxmy1LvGth2f7v2YvAZtIIi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPelProRpONfS4eoxopkzz+ZnPwAus8nu4mop1C0oRhnWd2hga
+	tE6Qp1rAbgkTNsjtD06zJpL5x8xnyJeEtv+dbnn+y+qwBz0gvAB1GnAsRvEm064tuWQ=
+X-Gm-Gg: ASbGncvj6pe0k1OpZrEe8SjCKaVt3I7wDhYw6qxTyYG3efvKYpxssjUEsHDvx7TZ61M
+	spSjnUQNe5ymaOuF3TGH2ixruOpIXaoMJXDiel4UGk73+6JgTKs5mFur6iHWfGFcmPvclulAUqi
+	j/cHt04ESKVjKz1S9SANy5zOiQNf/yuIqQeHyubDR6NavYDg6atoFowvOTiIfS6HbeSgKkDQkSp
+	eZ2BHQaSO/TbIEmleZgPPjCNRK7VSt7Pq6p1111aH9CVbS3nuU1BDem9M5tFj6yCqtxQc6E0bXm
+	xJApvV84x4oL/f54pelHiKhbXFxxm7BvKMQIWl3BsRBXMQfKtkdNFh6G6RGiKbef27AHs/EULat
+	i4LnENw==
+X-Google-Smtp-Source: AGHT+IF4XXp1aLCWKB2Y2JNdxIiZKbtNgU9ZnNFVay8r7bVjoBOcuQslbgG6XG2skmv22UHi94V+gA==
+X-Received: by 2002:a05:6000:1885:b0:3a4:e672:df0c with SMTP id ffacd0b85a97d-3a4e672e083mr1108871f8f.13.1748428894969;
+        Wed, 28 May 2025 03:41:34 -0700 (PDT)
 Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064add8bsm17331595e9.17.2025.05.28.03.41.28
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064add8bsm17331595e9.17.2025.05.28.03.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 03:41:31 -0700 (PDT)
+        Wed, 28 May 2025 03:41:34 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 00/17] pinctrl: Constify pointers to 'pinctrl_desc' and
- more
-Date: Wed, 28 May 2025 12:40:56 +0200
-Message-Id: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+Date: Wed, 28 May 2025 12:40:57 +0200
+Subject: [PATCH 01/17] pinctrl: starfive: Allow compile testing on other
+ platforms
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADjoNmgC/x3MMQqAMAxA0atIZgO1WlCvIg4lRg1IlUZEKL27x
- fEN/ydQjsIKY5Ug8iMqZyho6gpo92FjlKUYrLHOONvjJYHueCCdQW9cWAlb3xluBybfOCjhFXm
- V959Oc84fseaE1mQAAAA=
-X-Change-ID: 20250528-pinctrl-const-desc-3a40e39eca15
+Message-Id: <20250528-pinctrl-const-desc-v1-1-76fe97899945@linaro.org>
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+In-Reply-To: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
  Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
@@ -109,100 +110,48 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4130;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=941;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=31q5XaAMlBexIYczbpLSD3TpwdohBFMpqp6LWBCJyAo=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNuhIG4ER1L7WtI9n7LAHBv7yR7/wd9Y62GAPM
- YOkBRMFzV2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDboSAAKCRDBN2bmhouD
- 1/WaD/9J3m4W4vBhw2XThuOyRYX1b6hv7wnFg0kwf/oG58B+tqan9UkROsMsYaftbalsBBZ5ZRN
- 1M9nkKj1NYeRqNX8GD5zgdOlhg99/xoNAe4tKnXdHhemj/SZnMwRRpjoouoI5MZtU0Wyr3D/iRh
- apzqHY1Bktzyyz3i0o+EX3N6UGXKOyRFk/Nv4gpE89Tnp5pCpCtNpTewhTStIJo5v/+Zbe2YPrQ
- AnR+OeW0EPpY4/9GqX4FIXW/SBGtMEBrUl82vugNf3cxGgJTWmgAVoKYZNsVPsoZ7Cw5w9ZG7UJ
- nT+moUwF280v4jVOMoAy14NfrX3rj2HWST1PKwMiowU5NSmpEaJi+w6xE/2vB6qVh2QW7+3dAaA
- BpZVKNBQeFJMhZ8WdOg+Jh/qQ6uiZPxIFnUZRKqjwl44agPEeENckIbyD1wJJfAA+JkHuc8AiPh
- V9ANQmhknrtWhe7+PeFJI8GfxRXLnum00ByOaQGly2msm7YKUjNC5gshTcRyWaWNB5rCwL7LPa1
- 0IdR7g9/Tt/4d5KIA6xWPHTzupJxtq1nsBEZwM9n0z2/82V8a2ByQNlhmzte2qCLPiweUR6oikT
- 3AEpIeiINOC5++QtVlihhuU7o9fNUbOyMpEqQNMr5jj0m6eoELYBLii4S7gWJrXGzT0Ya3JNLAx
- mzmNbbD8leWapdw==
+ bh=zrI5XszXIHo55XzuEzxs+Nt+l2DX90UOcjrVjPXljcM=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNuhJ4yZZSqj6dEPnXTgLNjKYLUIHgwgauUARk
+ H8eJl7B4ryJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDboSQAKCRDBN2bmhouD
+ 1+ivEACCJDREpm7C+JuFF39/eQGACEJKolMKPZ3B1qh8VZPQQTidC/Sc4YJsNMf2ALyneQVNJRr
+ ee0rzIGyB1dV+BdbrAAaU1luTOQfqd28ZU+hkN12kluq5TtfVYsfjC3qY+xT+s57CmqWJrS8suf
+ tF84DJ05p8vijBMGOe4xzZO7or5BqM1JK32hTFyoZh7kOPiI174p0w91Flem3uX1rLg8f2iRGf5
+ nPHw4aLV+fgDVeF1lulUpeOAfqHnt0lqKBhpWkowevGEp1PvCHxN9C+zZxjzyVFbhW7DQ7Vtb2q
+ ekSrBr/nfXxV1LWbppOeZjsUoqbUYpEBFiNSjCW5tB6Rc2K4ez83OLBVRPG6U/mKcdlG/sz8MYf
+ kxnETUB/7A5YgTrEHNeATC8iZ+qcu0dlniWB178PRj/Ohb5p/++wVINLNbOzxqKur1h03+i74ZQ
+ lU+QrFHay3EclA4eZmLOSb5rWnnCam0dbD7OAwUxuYLUeB1dFqcULcpDozUjb0t6M4vPm2Opadi
+ Y+Kcj/2g3qAtprbL+7BXQPANgJ7TNXpvHXfiUyPvyMmZPuCNkI2SsPmCPNPVAMn0fgSqkoz6iC1
+ UKVdN+23XFZMk5MbzTHm838PZoLCCpE96EW79bgbL2OEPv4hPAfZ9GTjdJjAGafoQ+3/4WhNNSh
+ y+XmeSNsjaGGtHQ==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-In several drivers pointers to 'struct pinctrl_desc' is not modified, so
-since core does not modify it, it can be made as const.
+Always descent to drivers/pinctrl/starfive/ because limiting it with
+SOC_STARFIVE is redundant since all of its Kconfig entries are already
+have "depends on SOC_STARFIVE".  This allows compile testing on other
+architectures with allyesconfig.
 
-Dependencies/merging:
-Patch #4 "pinctrl: Constify pointers to 'pinctrl_desc'" is a
-prerequisite for all further patches, including RTC patch, therefore
-probably everything should be via main pinctrl tree.
-
-I split several patches, although not all, per SoC-submaintainers, so
-reviewing will be easier.
-
-Best regards,
-Krzysztof
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (17):
-      pinctrl: starfive: Allow compile testing on other platforms
-      pinctrl: Allow compile testing for K210, TB10X and ZYNQ
-      pinctrl: amd: Constify pointers to 'pinctrl_desc'
-      pinctrl: Constify pointers to 'pinctrl_desc'
-      pinctrl: aspeed: Constify static 'pinctrl_desc'
-      pinctrl: nuvoton: Constify static 'pinctrl_desc'
-      pinctrl: bcm: Constify static 'pinctrl_desc'
-      pinctrl: bcm: cygnus-mux: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: bcm: cygnus-ns2: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: bcm: cygnus-nsp: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: as3722: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: max77620: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: palmas: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: renesas: Move fixed assignments to 'pinctrl_desc' definition
-      pinctrl: pistachio: Constify static 'pinctrl_desc'
-      pinctrl: Constify static 'pinctrl_desc'
-      rtc: stm32: Constify static 'pinctrl_desc'
+ drivers/pinctrl/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/pinctrl/Kconfig                            |  8 ++++----
- drivers/pinctrl/Makefile                           |  2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         |  2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c         |  2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  2 +-
- drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  2 +-
- drivers/pinctrl/bcm/pinctrl-bcm4908.c              |  2 +-
- drivers/pinctrl/bcm/pinctrl-cygnus-mux.c           |  8 ++++----
- drivers/pinctrl/bcm/pinctrl-ns.c                   |  2 +-
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c              |  8 ++++----
- drivers/pinctrl/bcm/pinctrl-nsp-mux.c              |  8 ++++----
- drivers/pinctrl/berlin/berlin.c                    |  2 +-
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c           |  2 +-
- drivers/pinctrl/core.c                             | 13 +++++++------
- drivers/pinctrl/core.h                             |  2 +-
- drivers/pinctrl/mediatek/pinctrl-airoha.c          |  2 +-
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c          |  2 +-
- drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c          |  2 +-
- drivers/pinctrl/nuvoton/pinctrl-wpcm450.c          |  2 +-
- drivers/pinctrl/pinctrl-amd.c                      |  8 ++++----
- drivers/pinctrl/pinctrl-artpec6.c                  |  2 +-
- drivers/pinctrl/pinctrl-as3722.c                   |  4 ++--
- drivers/pinctrl/pinctrl-bm1880.c                   |  2 +-
- drivers/pinctrl/pinctrl-k210.c                     |  2 +-
- drivers/pinctrl/pinctrl-lpc18xx.c                  |  2 +-
- drivers/pinctrl/pinctrl-max77620.c                 |  9 ++++-----
- drivers/pinctrl/pinctrl-mlxbf3.c                   |  2 +-
- drivers/pinctrl/pinctrl-palmas.c                   |  4 ++--
- drivers/pinctrl/pinctrl-pistachio.c                |  8 ++++----
- drivers/pinctrl/pinctrl-tb10x.c                    |  2 +-
- drivers/pinctrl/pinctrl-zynq.c                     |  2 +-
- drivers/pinctrl/renesas/pinctrl-rzn1.c             |  4 ++--
- drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c |  2 +-
- drivers/rtc/rtc-stm32.c                            |  2 +-
- include/linux/pinctrl/pinctrl.h                    |  8 ++++----
- 36 files changed, 69 insertions(+), 69 deletions(-)
----
-base-commit: 08ea0cc455fbf6f6719b7a4cdcd1d132ea34577b
-change-id: 20250528-pinctrl-const-desc-3a40e39eca15
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index ac27e88677d14f1c697e0d0be9f295c746556f4d..dcede70b25660833a158c298d1269d6ecea9dd8b 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -82,7 +82,7 @@ obj-y				+= sophgo/
+ obj-y				+= spacemit/
+ obj-$(CONFIG_PINCTRL_SPEAR)	+= spear/
+ obj-y				+= sprd/
+-obj-$(CONFIG_SOC_STARFIVE)	+= starfive/
++obj-y				+= starfive/
+ obj-$(CONFIG_PINCTRL_STM32)	+= stm32/
+ obj-y				+= sunplus/
+ obj-$(CONFIG_PINCTRL_SUNXI)	+= sunxi/
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.45.2
 
