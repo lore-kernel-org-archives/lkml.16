@@ -1,267 +1,210 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C805D28B4E1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748445720; cv=none; b=Mcn3VzqWaa6Oc+9PSXgnceiVOW7jc/nZRoqtZSY5q0thiVfDT3Q6IJC/mqol4dgP3+Ygry/MVSzdm7b8dibfvnH2MXocIsk4Xjl1+nqVIZZFHiAmZbvYk6vPSji3LSmiMA5i0jRGP2fuoY+6XOfLmxALWzTL3DRZXr5lyzyMp2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748445720; c=relaxed/simple;
-	bh=0L9FqIrWV1HH0CKjcDoLD6PMX4MXaZyCx+Isv4wqI6I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TiXU4tE1qS1/jT8fTISZr6QzPU3E13HorOQmXP7lqR88mB/LqrS8njU9lrnQTonuIvpQkE6VRd0Z3hoCEMKgmAsn2+8dhTiGMoofykiX5Mv2AvXlM7pERBGPmAStQtZyny0PmMlRdMZrGGBGmr0qAnsKTjNRJvzfCf9P0EFlRpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q7y8oo1+; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADDB35947;
+	Wed, 28 May 2025 15:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748445807; cv=fail; b=AAjWZuAS37UbrbgSvoItclshBirDlBjNIgMnwZGC5jvbVutAeafKw1x4ozwCRQ8yf2+48YtYR6BTGzzyASh9VxM3rW0zm6cRTlrLZ5BwrgK/Kr+idwku/gZtDiU3QWG3dfvf7128ZNhVRjMpccry7kijAOkukdmHG1VTM3lViYE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748445807; c=relaxed/simple;
+	bh=2tuzlxWDkpT5Hn275OOOUT1zMVbkMBB9qzMPMpZo/XI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JpJbrOsIC+no6rLaZ6Id9OI+rWD0xV/qZcLS5r1cIHN+3BC2+dR9YO9n/7e9aGa5t6huNHbz+6BiUlkUJbyfGkuLG4jZII0OqiXopeedimB0OHT1bnm12d5nv1kjVxyJ0e5/0YnRMAtWk1ADb7oy0v9DF6RANlTxAwBoTfw80kA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XcYhzudc; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q7y8oo1+"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b3410e122so3676637276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748445718; x=1749050518; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=32qgoYfovQ3gS/SAum8cU1W1nbKSlw2h8oFp1ZvYf5Q=;
-        b=Q7y8oo1+2gzsQIi+PeqDcDAEwLJqN+KmeSdhlEh3Oi3GxiDgf1I5sJWOXGjVsF0iI3
-         WvpuGJEz4EZwmJw7SAASjvpWF6xX9GVTVmSwI9JV+vJP0K9hxQ0RQZI941LbvGj9MVj9
-         bJRxr3We937W2p75QhjIWt9fa1Hp9fqxL3XM5E5y7qLDKTa0jzbIq4itUfFTgLtNIedm
-         j5L9ZtOAvfdeecYg2YWAvMxTNR4pDzqKtSNpAPWMiZ1IPBBkAtmw8bbXpWrGLvtrBCwA
-         pjsZGKulykcsqmcS+pAF85LYpXUB86JQQ1JasA17T1omW96W4pdyjy/raBYdRZBZFRwv
-         l/ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748445718; x=1749050518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=32qgoYfovQ3gS/SAum8cU1W1nbKSlw2h8oFp1ZvYf5Q=;
-        b=ngJqK+WrcdrkV3ksK7H56jGGmWGAeIehyuV+Cy+SzKhxpvO3Hu5jWlT3j+euelIULt
-         h1BUJ+Klmd0Z61vrSJvLoZvEHoG2t6+nOXbJ4idXlej033KSQjVmk/uDuMYiF3cCcDC8
-         p1CwbQtg2kO85seKZdbzrGXZbEYyZnVOGGTQHQ/n0guAW3cehDm+u/+mpGJp0TtvLHQr
-         gXBW5Xu4Sb6uyQh0S3nP/c+I8S0++KKdJaPlIRdrgOuSzExaCFslUhxpCk/IHJQZ5ags
-         IlS1zZflp0i/Te4tPcDzLiGqe/eGq+F4BBHUqi+j8tyVBOnoyzNlGdghf74NEgcqFTs/
-         +a4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVogqyOdxYcJgZV3khcK1pWQ3M8NJ+L3kRD8oJ4+cY0LbAxi6pMtnyPHeD0O7f4EJaNWJpwFlXOnwtIhx0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmb1Y1g+l+WIqbVyND/Q0o61lBf/qaQmlyYvOSMpWL8bBNiHu0
-	lO1BxL+qldcS+pGyd9PKxbPouFZUj4Q5nr0kyfjIx6Lo//EdMRYnLvNBj4Dd07ZXHKJIu/v/nXx
-	cjw3HTFBTCUq1bVGeDjGYTvlPr6yUQE/pzxLVNwOE
-X-Gm-Gg: ASbGncv0/tuCt5JptoO/gvMywKQEO/VCtUl26gfV3BR9AcRr2QS/dzonSQMtCrVmxXv
-	nwyhCWYb2BxVqKBRE87B1F8rAR/MhrmUrHx5+abl2GpTXL0OXpE+6rqQEO4KRFQr3nvxq7m3cDv
-	57B/sOnVLUa0FAvbeVk4y9RgDmB3ab2gvwtp2NXHvciPRdhb0gK0IojL1rDPujxdh2YiYap6l7F
-	d4MFw==
-X-Google-Smtp-Source: AGHT+IFSzzwtG0QBLjREdP8rJp3MI7Sye8YaM/FgQl/WLbT3PKgJS/6Q9/qQMcY7F2ocTfZADqMYbCZWjE0ffy1ogQw=
-X-Received: by 2002:a05:6902:2b0c:b0:e78:f7a0:fd02 with SMTP id
- 3f1490d57ef6-e7f61839725mr2840203276.37.1748445717406; Wed, 28 May 2025
- 08:21:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XcYhzudc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748445805; x=1779981805;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=2tuzlxWDkpT5Hn275OOOUT1zMVbkMBB9qzMPMpZo/XI=;
+  b=XcYhzudcADingZoYz8KCGhF6t8L83FncNBQAA9QaJnTqE7G/uYYhbwzb
+   IHjif9Y610rMi4H8Ws5xivs1yDpW00OV1t0gd0gwvf9NonvDZXTzWS+0u
+   yfc2HykdL1gQBKfTsDrhzhE2mkz+yRIVO/CNDQ4zZ4DzEx+yrwcDTdLY/
+   awTS34MBqJZZxm+3g4PhuiqmnlIRaool57kpKj9VN6ETK+ndJr9L2zH23
+   Ojyrxs1UqnEuJNV/A6h+jdz+iri7UcsAtn8NYxJNa4osC/9UQeTCP1WRE
+   vzeStyIP8FRTRrfvLOJVhrc0QCeMLL+S6gXV0ROqe0W715jqwGZJis28O
+   g==;
+X-CSE-ConnectionGUID: 9emOmpViRkiiQL8awrdHwQ==
+X-CSE-MsgGUID: 9gqyUo7GSaG08FGJauLVyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61109577"
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="61109577"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:23:14 -0700
+X-CSE-ConnectionGUID: BPzc3aVrT++j76el2kSL2A==
+X-CSE-MsgGUID: jtA08U6yRwivnX2/xA4vZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="143251952"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:23:14 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 28 May 2025 08:23:13 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 28 May 2025 08:23:13 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.71)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Wed, 28 May 2025 08:23:12 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tWGgv+YMxsToFSgCT+RTani0EO3LR0zIvTogvjK6YLT3/VZ/U4hj5gUBHubYvUyfckigNNdI1QqQUL4o4ERfAc/LnyJoXvwQHk3KY7zrCm9THF0ToHvXJZ1+sThvX8xr3DjZAFrtKe9oTHiZ+3tk2+aRL2visDwkcFMUuvhGJGvdfMkYD0g8o+8bqdZekdWHEtRPkeep+jJC4p/sm+64a3ALYlK8fW9LeefkHzxvtiOrY3YLSVmiJ5SdYS0BhlJGcoK8Hnh9yDEQnbdGsGI0rg88yQrUwuC6fV1CiJ5BphJHv567D4+hvLwEwu/KYuF4L6ChYFE1GwXgUn93P1a+Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zGSUis9mK5T671C7ZEdAtFaAm1fh3G1pDD1R4U7kb5c=;
+ b=F1LkDx+ieF6DLY4Jw164LY2Q3z5XZpBWsLkEgdRq+ZQ5qIl2uTvP2kIPAK/KWsK8VLEaEAgzwJVPMPvV8WiFRoB/zi2DWXvFRSjaGURyAAZ5KLZa1CnQsb/W6FSERNMyeOellMFkuHi6lxqDzeLrxOtvay0qFxDwG5XUlI/1pnecIkA3fB8HbgEl3hLZ4AVqmbwSwyUf8LYoTQ39gtWY7WYN2FLv1np+dHQNfd1qwtczrzL5AMYg4NTdwRbvEeMllW4qN3EbgwBn8OTqFK9iBKivZsBRcPP0A9yltuXZg7t4AH5rwSxU6qPy+tLd70kMc+7eesw4F/tgGoR65t35lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
+ by MW5PR11MB5809.namprd11.prod.outlook.com (2603:10b6:303:197::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Wed, 28 May
+ 2025 15:22:39 +0000
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8769.025; Wed, 28 May 2025
+ 15:22:39 +0000
+Date: Wed, 28 May 2025 08:22:35 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Shiju Jose <shiju.jose@huawei.com>, Dan Carpenter
+	<dan.carpenter@linaro.org>
+CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
+ Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
+ Williams" <dan.j.williams@intel.com>, Li Ming <ming.li@zohomail.com>, Fan Ni
+	<fan.ni@samsung.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH next] cxl: fix return value in
+ cxlctl_validate_set_features()
+Message-ID: <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
+References: <aDbFPSCujpJLY1if@stanley.mountain>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <aDbFPSCujpJLY1if@stanley.mountain>
+X-ClientProxiedBy: SJ0PR05CA0102.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::17) To SA1PR11MB8794.namprd11.prod.outlook.com
+ (2603:10b6:806:46a::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <20250109204929.1106563-2-jthoughton@google.com> <aBqi7fDtnvxzxV1V@google.com>
-In-Reply-To: <aBqi7fDtnvxzxV1V@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 28 May 2025 11:21:21 -0400
-X-Gm-Features: AX0GCFti85Bmslv3UKy35YTx4AbsV0M4oMVo9TuLb01TfEKfWoCE-rNdRG1Yeks
-Message-ID: <CADrL8HUMm0PUqx-xNdPvSMP6z4gzs2OTUJG1sdyy88D-XWxT3g@mail.gmail.com>
-Subject: Re: [PATCH v2 01/13] KVM: Add KVM_MEM_USERFAULT memslot flag and bitmap
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|MW5PR11MB5809:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3064544-a4d6-48f7-f0b5-08dd9dfb7b9e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?T7u/vHUZBb2YjRTxhS6X+98MmtwBvCxcJWL+JJPPNG2+SXrZr26OyhgvcHO0?=
+ =?us-ascii?Q?U75+2SPw+tlORNnf9jQ3j4dhI7ZPwRdw2qBexFxjVkf3Z8FLhbXhsDPCfyf3?=
+ =?us-ascii?Q?KkZdX13lP2x+fH+FsJl4bYDkxD+wJFpKqXVEphKoWniValQAIqqE2NVrZNGx?=
+ =?us-ascii?Q?OJNxkLeIdDce4LEdAq5xBbzBnUSToYLT/tRzf0610fzgG1F7pahfXZZIonhs?=
+ =?us-ascii?Q?Va4q1w+po89zyC2Lnt0cb7alVneNHsHvXenahzaSRCYfis5M811HMNfpdI29?=
+ =?us-ascii?Q?wLc6La6K04GBO28cl6fq99kjboicnboyGzcSVJALzHMmDIdoqBIGozcI5Wx0?=
+ =?us-ascii?Q?GqTqYtSAT5wh67eOEcKorduxsTjGkWwfYWm1gSWaZ7MtWVGWsgeG482NsTev?=
+ =?us-ascii?Q?5VcUU94XxRy9WV2DUmm4swR8LbXMns8m8Dk9gf+ghPf2msaItdrxmNBDof0b?=
+ =?us-ascii?Q?+a/+elspKzWcbrykkw1lLapUpmOSy4ou1iuB/1o964lskSKt5UlqcDxNVFLb?=
+ =?us-ascii?Q?KQmojF6meKa9fN5qsTxy3FR7BAmB8keq+tVsL3xL8IeL9EFe3Xx5JFmoie0X?=
+ =?us-ascii?Q?vT052O8N2oouEfddVf41fbHyb1xGR5OHR+balxTkEiMvp1FpnFVelywUIwVl?=
+ =?us-ascii?Q?Q/gI2oi9hcM8lcQbphJ6l/bcErPqWsrxLN0TdUKe1E/WA6O+kC+0Qw0QOCn9?=
+ =?us-ascii?Q?zAqRowrkL3yEMWL8i6DEZzYI19c61RuhWsvgDxZ93p30vnHVfQPXRQbPgOK0?=
+ =?us-ascii?Q?JrwPIFucYFYRp1JDaKHKfDUANymq1v7BNfsgaJLP8mDJAT9RBi9ip3SY2YAh?=
+ =?us-ascii?Q?0zhunx8uGnWDj1Xw84p/nM5kq5NzxCR+O/1FH5APvsEupkNTPZdmh5BtkEnd?=
+ =?us-ascii?Q?+qD62j7XeLjhIZXvUwI4zuaI9dQyeHfr5fKMyw4InoVWMktp88h7DakkdYmX?=
+ =?us-ascii?Q?mtV3N0w17PRHvi3UUixE7lbF95OjzRJVMVC5m1LnUoJllX1DD0W+z/wqtqdU?=
+ =?us-ascii?Q?LlQK1C9I5WMiEoLPF8yQ3o6uQSpklettPxbauZKWD1xz+kuofjpv+b3ObMlP?=
+ =?us-ascii?Q?viMCEjhEFiyq27WTPsxzf/KpBZNOxo2rMC1ksjvqn/D2zMlvmeKlHbYSoKVi?=
+ =?us-ascii?Q?ZWMLnu8f75rPFraVjflXbTHJFbItH895q6Zz8dXYi8muiGusvJq8mmLZr/Is?=
+ =?us-ascii?Q?xYChRRFaWxO508zS74ZLVtZhQJ009TeauZiXgJ1vTLm3upYx0lwo5QJcDeHn?=
+ =?us-ascii?Q?3/E7J8Hy/CGvZ0ycLRJpoyhJ1vlzlhPrp7qBMLAlpDBki23vpqn8p33pgzka?=
+ =?us-ascii?Q?9PULOqtVWt3c7esZEe/qt4BOT5ISrpnvLvFqPUvPOOAmEekHGC+fGXFdFSdH?=
+ =?us-ascii?Q?GB+2/xghHq22Vp5/gzwKKQ8OwGQOxY3OhEFOOuyAGUHQPOFnScOHY7jiwH0S?=
+ =?us-ascii?Q?/5U9Z35JTiY=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3kKMYDAk9dpilV4+HJU3iI8rnwyAlPAGYYrtJGysglCh4HkU+/NjryiL9P6z?=
+ =?us-ascii?Q?zY6yzSbY+ZR/SaIs7xPpYcUlY8gdA93L5Xwf1Qo0gxaMGfAUsRpkwNXpN9xo?=
+ =?us-ascii?Q?fhqawzXB45FqeYp9JWo32ycNHi1qhLD3ayza3nG5VV/7zOkZ40McRxt0C7hr?=
+ =?us-ascii?Q?0pltYy0avJ1v9DHr++DstVA+8/2aXWESHYDwJRGKdt++0R0+SqUw+WGNFxiS?=
+ =?us-ascii?Q?LLLxZ/E8oJZtMfCt3nW005SWEDTVVfwmaz94Xzorm634kk6lpZT+zdKGtDDr?=
+ =?us-ascii?Q?uUC121Ru7QU+NX7T3MNt7KeYTRjPFzgpdn4jIFgyeNALIDS3mcNg9U0/625S?=
+ =?us-ascii?Q?UHMB3WfmuJfgjxqGK40fIb9WOdzhZzLyTiRl4KRHYzFyPX8g4Fqp/nNHjND2?=
+ =?us-ascii?Q?tSp4tiu7mpuJqbiKSddKdHypNZ4mYxlaZ2eliRM2TdAJ0Kk6muqBlq76eW3Y?=
+ =?us-ascii?Q?Yrv5+eYcsBCAMtzeOzaSsDZfUcZNtH3c1djsUNY3z5vpiouhKWXZs1z7JozH?=
+ =?us-ascii?Q?kn19j4SFoP3RAys5AQmeIy0H9cCdhiTmwm/xF3hvUtZPgnV+jvVR4xytqmIN?=
+ =?us-ascii?Q?0lT4/LUE0O/MV8J4bPL741KffrneKGyX6jImVo7Tij49w3TJDfny6Gr3NCwX?=
+ =?us-ascii?Q?ta177j7oloveKebC9HV76B0nD3naCRkLEGrjCBMzYP8BoBQJeaiHjI4D3uVv?=
+ =?us-ascii?Q?5xaPM4Y/PQ8NSKw9S7dVnoLPs/640+oxerW7BznnDxqc70AkO3m2My2rBJ2A?=
+ =?us-ascii?Q?cd/BKLTPYG25UcYUqWOOgE8SMi7aPgaGT7qtg01nlGrSxG+lEEXi73F1mrR3?=
+ =?us-ascii?Q?2AwvSjYcupuceyiVIsiYFHbZ1CCSEVDWzP5FS0HOjOUYBQBpYrzEpspubA7h?=
+ =?us-ascii?Q?SpQd6zGs53hZBObJcU9CkLp29IwLdZKxq6fdI7j2U08ug63RZkYCb87HHIsI?=
+ =?us-ascii?Q?TTz/wTBVs+i3ta+WVGQnPmkeWaLEdwFY7FhPz/5pyuddUovAIZYbbj6MeVdG?=
+ =?us-ascii?Q?ZrNQE6B5EKt04Bb3UVR6hUtA1iyQHqZ+Jj3GJFNU7IBEKN1CAOsK+WEfDFZG?=
+ =?us-ascii?Q?Na4Po5ABMr9aa08NUFTaZwhbmOw76eHJr2XzL6j9pG29tSwAG/4diN89vrSS?=
+ =?us-ascii?Q?3/+4rraQ44H6uYEVezVA2kfImX4fdPZpeUtKVzjC/KNwOHPaI3syIAdN19qz?=
+ =?us-ascii?Q?TmqwuG5eqh+EMeQtpOTJc/e5XhfIyeCTSBUgP4XyVvwtQVJHFjCnaQTo8+HB?=
+ =?us-ascii?Q?7Y5wQOCRfxg552bhTdQWWvsmxRsa8F2twcq0+P882wCFCQg3o1zgv0BfdGpY?=
+ =?us-ascii?Q?JAdn1AIIbFEVYVcAK3Ga2/Hf88aGERfH9QgJwBCzU1045USG3Pq3iZ1MTWAb?=
+ =?us-ascii?Q?91ei1MQaNuiAzhZqmhWGVAZLoU51756hd18w/6czXrG+PeYnUcoGPU/U6gRi?=
+ =?us-ascii?Q?ham6Q7zlUQDNW3TvoZLVZYi2uueJyacx1Quw5uqhD7wMAujg+m7nBJh2x8rw?=
+ =?us-ascii?Q?OLw2c6dQZjI6MsJMXKwOu7I9S2ATDFxpMFCQPhJLP7MQ3SvDuaIx69Jzm/S0?=
+ =?us-ascii?Q?sHp/JwEMAQrM0zUmynssB3dTDLLNGof/UgIjPG6st2dF7uiY5He/Yr8SEnes?=
+ =?us-ascii?Q?Wg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3064544-a4d6-48f7-f0b5-08dd9dfb7b9e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 15:22:39.5781
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PK3btjwY4D5KHM+D3SckimT/Lolue7y3busQbDGMw+enZ75v/QkhseR8pQAiIi8dwO/x/idpYVPbl+18dWA7l/VfnA33jHL5H5+3T18EsEI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5809
+X-OriginatorOrg: intel.com
 
-On Tue, May 6, 2025 at 8:01=E2=80=AFPM Sean Christopherson <seanjc@google.c=
-om> wrote:
->
-> On Thu, Jan 09, 2025, James Houghton wrote:
-> > Use one of the 14 reserved u64s in struct kvm_userspace_memory_region2
-> > for the user to provide `userfault_bitmap`.
-> >
-> > The memslot flag indicates if KVM should be reading from the
-> > `userfault_bitmap` field from the memslot. The user is permitted to
-> > provide a bogus pointer. If the pointer cannot be read from, we will
-> > return -EFAULT (with no other information) back to the user.
->
-> For the uAPI+infrastructure changelog, please elaborate on the design goa=
-ls and
-> choices.  The "what" is pretty obvious from the patch; describe why this =
-is being
-> added.
->
-> > Signed-off-by: James Houghton <jthoughton@google.com>
-> > ---
-> >  include/linux/kvm_host.h | 14 ++++++++++++++
-> >  include/uapi/linux/kvm.h |  4 +++-
-> >  virt/kvm/Kconfig         |  3 +++
-> >  virt/kvm/kvm_main.c      | 35 +++++++++++++++++++++++++++++++++++
-> >  4 files changed, 55 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 401439bb21e3..f7a3dfd5e224 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -590,6 +590,7 @@ struct kvm_memory_slot {
-> >       unsigned long *dirty_bitmap;
-> >       struct kvm_arch_memory_slot arch;
-> >       unsigned long userspace_addr;
-> > +     unsigned long __user *userfault_bitmap;
-> >       u32 flags;
-> >       short id;
-> >       u16 as_id;
-> > @@ -724,6 +725,11 @@ static inline bool kvm_arch_has_readonly_mem(struc=
-t kvm *kvm)
-> >  }
-> >  #endif
-> >
-> > +static inline bool kvm_has_userfault(struct kvm *kvm)
-> > +{
-> > +     return IS_ENABLED(CONFIG_HAVE_KVM_USERFAULT);
-> > +}
->
-> Eh, don't think we need this wrapper.  Just check the CONFIG_xxx manually=
- in the
-> one or two places where code isn't guarded by an #ifdef.
->
-> >  struct kvm_memslots {
-> >       u64 generation;
-> >       atomic_long_t last_used_slot;
-> > @@ -2553,4 +2559,12 @@ long kvm_arch_vcpu_pre_fault_memory(struct kvm_v=
-cpu *vcpu,
-> >                                   struct kvm_pre_fault_memory *range);
-> >  #endif
-> >
-> > +int kvm_gfn_userfault(struct kvm *kvm, struct kvm_memory_slot *memslot=
-,
-> > +                   gfn_t gfn);
-> > +
-> > +static inline bool kvm_memslot_userfault(struct kvm_memory_slot *memsl=
-ot)
->
-> I strongly prefer kvm_is_userfault_memslot().  KVM's weird kvm_memslot_<f=
-lag>()
-> nomenclature comes from ancient code, i.e. isn't something I would follow=
-.
->
-> > +{
-> > +     return memslot->flags & KVM_MEM_USERFAULT;
->
-> I think it's worth checking for a non-NULL memslot, even if all current c=
-allers
-> pre-check for a slot.
->
-> > @@ -2042,6 +2051,9 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> >               if (r)
-> >                       goto out;
-> >       }
-> > +     if (mem->flags & KVM_MEM_USERFAULT)
-> > +             new->userfault_bitmap =3D
-> > +               (unsigned long __user *)(unsigned long)mem->userfault_b=
-itmap;
->
->         if (mem->flags & KVM_MEM_USERFAULT)
->                 new->userfault_bitmap =3D u64_to_user_ptr(mem->userfault_=
-bitmap);
+On Wed, May 28, 2025 at 11:11:41AM +0300, Dan Carpenter wrote:
+> The cxlctl_validate_set_features() function is type bool.  It's supposed
+> to return true for valid requests and false for invalid.  However, this
+> error path returns ERR_PTR(-EINVAL) which is true when it was intended to
+> return false.
 
-Applied this change to the other cast (where we do access_ok()) as well, th=
-anks!
+Shiju - Can you trace this one through and add the impact statement?
+Wondering if this is going to fail gracefully, or badly, further 
+down this path?
 
->
-> >       r =3D kvm_set_memslot(kvm, old, new, change);
-> >       if (r)
-> > @@ -6426,3 +6438,26 @@ void kvm_exit(void)
-> >       kvm_irqfd_exit();
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_exit);
-> > +
-> > +int kvm_gfn_userfault(struct kvm *kvm, struct kvm_memory_slot *memslot=
-,
-> > +                    gfn_t gfn)
->
-> I think this series is the perfect opportunity (read: victim) to introduc=
-e a
-> common "struct kvm_page_fault".  With a common structure to provide the g=
-fn, slot,
-> write, exec, and is_private fields, this helper can handle the checks and=
- the call
-> to kvm_prepare_memory_fault_exit().
->
-> And with that in place, I would vote to name this something like kvm_do_u=
-serfault(),
-> return a boolean, and let the caller return -EFAULT.
-
-Returning 'true' from kvm_do_userfault() without a
-kvm_prepare_memory_fault_exit() looked a bit strange at first, but I
-don't have strong feelings. I'll add a small comment there.
-
->
-> For making "struct kvm_page_fault" common, one thought would be to have a=
-rch code
-> define the entire struct, and simply assert on the few fields that common=
- KVM needs
-> being defined by arch code.  And wrap all references in CONFIG_KVM_GENERI=
-C_PAGE_FAULT.
->
-> I don't expect there will be a huge number of fields that common KVM need=
-s, i.e. I
-> don't think the maintenance burden of punting to arch code will be high. =
- And letting
-> arch code own the entire struct means we don't need to have e.g. fault->a=
-rch.present
-> vs. fault->write in KVM x86, which to me is a big net negative for readab=
-ility.
->
-> I'll respond to the cover letter with an attachment of seven patches to s=
-ketch out
-> the idea.
-
-Looks great! Thanks very much!
-
->
-> > +{
-> > +     unsigned long bitmap_chunk =3D 0;
-> > +     off_t offset;
-> > +
-> > +     if (!kvm_memslot_userfault(memslot))
-> > +             return 0;
-> > +
-> > +     if (WARN_ON_ONCE(!memslot->userfault_bitmap))
-> > +             return 0;
->
-> '0' is technically a valid userspace address.  I'd just drop this.  If we=
- have a
-> KVM bug that results in failure to generate usefaults, we'll notice quite=
- quickly.
->
-> > +
-> > +     offset =3D gfn - memslot->base_gfn;
-> > +
-> > +     if (copy_from_user(&bitmap_chunk,
-> > +                        memslot->userfault_bitmap + offset / BITS_PER_=
-LONG,
-> > +                        sizeof(bitmap_chunk)))
->
-> Since the address is checked during memslot creation, I'm pretty sure thi=
-s can
-> use __get_user().  At the very least, it should be get_user().
-
-Thanks! I agree, __get_user() should be fine.
-
->
-> > +             return -EFAULT;
-> > +
-> > +     /* Set in the bitmap means that the gfn is userfault */
-> > +     return !!(bitmap_chunk & (1ul << (offset % BITS_PER_LONG)));
->
-> test_bit()?
-
-Thanks for all the feedback and applying it for me in those patches
-you sent back. :)
+> 
+> Fixes: f76e0bbc8bc3 ("cxl: Update prototype of function get_support_feature_info()")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/cxl/core/features.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 6f2eae1eb126..7c750599ea69 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -544,7 +544,7 @@ static bool cxlctl_validate_set_features(struct cxl_features_state *cxlfs,
+>  	u32 flags;
+>  
+>  	if (rpc_in->op_size < sizeof(uuid_t))
+> -		return ERR_PTR(-EINVAL);
+> +		return false;
+>  
+>  	feat = cxl_feature_info(cxlfs, &rpc_in->set_feat_in.uuid);
+>  	if (IS_ERR(feat))
+> -- 
+> 2.47.2
+> 
