@@ -1,245 +1,102 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931EE286D74;
-	Wed, 28 May 2025 13:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD3B2868A1
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438564; cv=none; b=Pba4b1V9XHQTlOrardD3+xGxeI8vYHdlV/COvcnF3a++M3rLNc1G07SLpYqt502Il0MO3PgMubfuCxxiLOFaK6rOF17XaCHaZQ7QcI73tgv3qII+NA9WT4tTlbky9dJN4/wcDGrlt6AxHjyogAkgo0Cfs9xbXtybjPwLeBHZ468=
+	t=1748438587; cv=none; b=lfVrjDRFiWr4gGwEX2sru/QAbVbbxHw1mUcOLfwxxb/nHod1GmcOC7GPwRXuqxjqQyivbeOjgxlW2m7M61N1+aDYS53tlzHerkYiMbifNElA0qIlE3W92LgujnTicfPgMdEHpKQ43tW7UaH+zxh9/yB9PY3gYxqzzACXyC0dvhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438564; c=relaxed/simple;
-	bh=9B09LdKjupc2KUC3Z122eNeKX4XjkQrIA4hbaw1bsnY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ubuZWzRT5SGuTqdJeAtMbBFAOH745xI4CfpJ2Muu6fVjNNlxU/drj4bwGCuoOlXF3SzIyuQyZLw939VwimeN4VCtqe5TqIVQYwP4Ev50roZrN3Z+I7YqaLzD7AIkpD2M3uyxamg08ZBYDzj81YGjPWT1E2T1Vl4/HrQiRPVQYuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6qtS26YMzKHLyf;
-	Wed, 28 May 2025 21:22:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B71401A1ABE;
-	Wed, 28 May 2025 21:22:38 +0800 (CST)
-Received: from [10.174.178.185] (unknown [10.174.178.185])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2AdDjdokjQdNw--.49955S3;
-	Wed, 28 May 2025 21:22:38 +0800 (CST)
-Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
- disabled
-To: Steven Rostedt <rostedt@goodmis.org>
-References: <20250523083945.3390587-1-yebin@huaweicloud.com>
- <20250523083945.3390587-2-yebin@huaweicloud.com>
- <20250523135452.626d8dcd@gandalf.local.home>
- <6833C4F1.3030300@huaweicloud.com>
- <20250527094131.1f4a92ab@gandalf.local.home>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yebin10@huawei.com
-From: yebin <yebin@huaweicloud.com>
-Message-ID: <68370E1D.3070802@huaweicloud.com>
-Date: Wed, 28 May 2025 21:22:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+	s=arc-20240116; t=1748438587; c=relaxed/simple;
+	bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=au3PDJdkTROx+eBoxBsS8McXm8H2+Ig7wbzedUC1ephO24jPWjkOj+KqSYIDL8E372dRtnOSKohFxtWHIc6jd1tXNi3xxpEejDa6JlgFv3cbSdtzG8+QDSone1ioqhDhMd0Qq7gHckN6DG7ZAQdsXJZRTl5AUHMTTfxKliKTMsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bXHor/Y7; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXHor/Y7"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476b89782c3so42609011cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748438584; x=1749043384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
+        b=bXHor/Y7iQUXdwSub6pJ/SULEIUI9E2G2oEq5gCdmBNzJVk/WLvueLT9dqNF6vGO0u
+         jwZy5d+WWZ6RkjW0yV+i5AnCp96ClSK7wnVzflG0GZb0ljTG0NEvFs/sjhiHNbE9zIJP
+         wZ5dhtaUWNiuPFYV2QBsHIqJBlZPgMTA3UM6KbHET60PIPtok/itn5OfFFTzXhpgEG7J
+         shImmydziY1PQlihUm8Vdf4oDYFmoiky+Mq+bTSljcNVwkc2QZroAxVDoIiZsHQapUST
+         cbnP3s8kBFciuwnQk8RBVGB79itJKm9m6SK3EEO1yOXSc1tA4oxha8hTscS4pjW6SoHS
+         RTrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748438584; x=1749043384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
+        b=rF++YHCKSZPnaN03+I6rZnLAZGiCFAvxfqi+20ymGKAljGb0AhD9Q3SAJ/3LTw0N/m
+         bLd97UeRQkPHQmbWuu7WVHy7Tc6QZl9zBcp69vHn2ZXW3359uR9a0vbMO56P4jbADp2e
+         Vglc48zxF2r1LzlpXhXx8VkJarkiBf/3sKadglAb6gTUMQlXvCGFiImBfho8+t2KWW1g
+         uaeaCaX6OE1ysgp53Z4yJ+1huh8e4HpjTeRBMOJo748prvU8LFqh4X8BUEq4RQ2nUzEf
+         k4giYNU2MylojSZyanqgw0bRHZ3tFj3821MJhgtTwRFimRLPXAh4LqE5lSdZoP7yA9cB
+         9A+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVzsnsKxsd1GWdzr27afjbv3jpOVoSIqj4iiZU8kBSfBZzB0fNsPbUpbLbO6Ey6LzTxhZlE9EllG6jQCvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfIY6rOCaFriec7xGpP5qP7zTcZ8CWLkTcszsI9rJypNV1+ume
+	clw8UIjsuWdIXUvtZc8HbqEa5fBS9eIpWexGNLHBm2Ji2OCVIOOYfXkhIhq7egi1psM1mpNH/BM
+	ldf9CXOAVBVSVgS80ll9IGNcDfPMXqnkhghlY5GYX
+X-Gm-Gg: ASbGncs24Fe/Hfx4fYkBcYhl0pGVlY43/0useov7y0yW1k/amYZ5J2fkJGtHLdu+Fjd
+	42AxIlk7TN/xdF414Lh2AFB4KTLujqZkaNpZmPHNsGtRfqazcLYBW6w8ocvqII4VgkJ66fJSzk7
+	r1K4VzinhgYYTnZVWmPplrc/0ogCnMlmzYO4kM1s0uEwI=
+X-Google-Smtp-Source: AGHT+IGbZYbMUUF0o/p3mJU8DlaGsdqh7xPg6DKlw1BJkyhZ4Y5kJip0JlOAmFjFmFCnoDaO4CJolysrrKy64JLg9BY=
+X-Received: by 2002:a05:622a:608d:b0:494:b1f9:d683 with SMTP id
+ d75a77b69052e-4a38c7dd4cfmr34934901cf.49.1748438584068; Wed, 28 May 2025
+ 06:23:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250527094131.1f4a92ab@gandalf.local.home>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCnC2AdDjdokjQdNw--.49955S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JryxJFWkKw43Kr1UZF4kXrb_yoWxWr4Upr
-	yftFWqkF4UZF4vk3Z29w18Wryjy3yUtrW3Was8Gr1fZw4Dtry0grs7tFs8uFyxJr15GrWS
-	vF4jvr9rWrWDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
-	tUUUUU=
-X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
+References: <CANn89i+C-qk-WhEanMS_tRiYJHHixH33MAO3u-wQVdWGJOjskw@mail.gmail.com>
+ <20250526194619126ArX868H3UosA7Jz31tRqF@zte.com.cn>
+In-Reply-To: <20250526194619126ArX868H3UosA7Jz31tRqF@zte.com.cn>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 28 May 2025 06:22:53 -0700
+X-Gm-Features: AX0GCFuFbinN-PIix2adUwdlDdRnQDxrOpLHN9thHLQVIv65tW3K_tN3mCvIi88
+Message-ID: <CANn89iL43q7tCETt3gW9L_HVHdRrovu9mauekA3QrWrpVSm+Ow@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: arp: use kfree_skb_reason() in arp_rcv()
+To: jiang.kun2@zte.com.cn
+Cc: davem@davemloft.net, kuba@kernel.org, dsahern@kernel.org, 
+	pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, 
+	wang.yaxin@zte.com.cn, fan.yu9@zte.com.cn, he.peilin@zte.com.cn, 
+	tu.qiang35@zte.com.cn, qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn, 
+	ye.xingchen@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 26, 2025 at 4:47=E2=80=AFAM <jiang.kun2@zte.com.cn> wrote:
+>
+> >Are these errors common enough to get dedicated drop reasons ? Most
+> >stacks have implemented ARP more than 20 years ago.
+> >
+> >I think that for rare events like this, the standard call graph should
+> >be plenty enough. (perf record -ag -e skb:kfree_skb)
+> >
+> >Otherwise we will get 1000 drop reasons, and the profusion of names
+> >makes them useless.
+>
+> Thank you for your feedback.
+>
+> Maliciously crafted ARP packets often trigger these two scenarios.
+> Using perf cannot directly distinguish between the two cases;
+> additionally, enabling perf in embedded environments may lead to
+> noticeable performance overhead.
 
+ARP packets are local to the domain. They are not a concern, really.
 
-On 2025/5/27 21:41, Steven Rostedt wrote:
-> On Mon, 26 May 2025 09:33:37 +0800
-> yebin <yebin@huaweicloud.com> wrote:
->
->> On 2025/5/24 1:54, Steven Rostedt wrote:
->>> On Fri, 23 May 2025 16:39:44 +0800
->>> Ye Bin <yebin@huaweicloud.com> wrote:
->>>
->>>> Above issue may happens as follow:
->>>> (1) Add kprobe trace point;
->>>> (2) insmod test.ko;
->>>> (3) Trigger ftrace disabled;
->>>
->>> This is the bug. How was ftrace_disabled triggered? That should never
->>> happen. Was test.ko buggy?
->>>
->> Yes. The following warning is reported during concurrent registration
->> between register_kprobe() and live patch, causing ftrace_disabled.
->>
->> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612
->> ftrace_modify_all_code+0x116/0x140
->
-> OK, so it is a buggy module.
->
->>>> (4) rmmod test.ko;
->>>> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
->>>> ftrace_mod_get_kallsym()
->>>> ...
->>>> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
->>>> ...
->>>>
->>>> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
->>>> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
->>>> release. Therefore, this also causes residual resources to accumulate.
->>>> To solve above issue, unconditionally clean up'mod_map'.
->>>>
->>>> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
->>>
->>> This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
->>> this prevents ftrace_disabled from getting set, then it would be a fix. But
->>> if something else happens when ftrace_disabled is set, it just fixes a
->>> symptom and not the bug itself.
->>>
->> There are multiple causes for triggering ftrace_disabled. I agree that
->
-> Yes, just like there's multiple causes for BUG_ON() ;-)
->
-> The ftrace_disable is used to help keep the system from being totally
-> corrupted. When it triggers, the best thing to do is a reboot.
->
->> aba4b5c22cba is not faulty. However, the incorporation of this patch
->> will cause problems due to triggering ftrace_disabled. The generation of
->> ftrace_disabled is beyond our control. This is related to the user. What
->> we can do is even if there are no additional derivative problems.
->
-> Well, when a user inserts a module, then they become a kernel developer too ;-)
->
->>>
->>>> Signed-off-by: Ye Bin <yebin10@huawei.com>
->>>> ---
->>>>    kernel/trace/ftrace.c | 3 ---
->>>>    1 file changed, 3 deletions(-)
->>>>
->>>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->>>> index a3d4dfad0cbc..ff5d9d73a4a7 100644
->>>> --- a/kernel/trace/ftrace.c
->>>> +++ b/kernel/trace/ftrace.c
->>>> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
->>>>
->>>>    	mutex_lock(&ftrace_lock);
->>>>
->>>> -	if (ftrace_disabled)
->>>> -		goto out_unlock;
->>>> -
->>>
->>> Here you delete the check, and the next patch you have:
->>>
->>> +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
->>> +		mutex_unlock(&ftrace_lock);
->>> +		return;
->>> +	}
->>> +
->>>
->> The second patch I added judgment when initializing 'mod_map' in
->> ftrace_free_mem(). The first patch removes the judgment when
->> ftrace_release_mod() releases'mod_map'. The logic modified by the two
->> patches is isolated.
->
-> Actually I think both patches are buggy.
->
-> When ftrace_disabled is set, we don't know the state of the code and we do
-> not want to do *any* more text modification. That's what ftrace_disable
-> means. Something went wrong with text modification and any more changes can
-> cause a bigger problem.
->
-This problem can be solved by releasing the 'mod_map' resource when the 
-module is unloaded. Freeing up these resources is just an address that 
-cannot be translated into symbols, and there are no worse consequences.
-
-> We don't add "exceptions".
->
-> If you are worried about unloading modules when ftrace_disable is set, what
-> is a much safer solution is to up the module count of all modules that have
-> any ftrace callsites active, and prevent those modules from being removed.
->
-I don't think it's necessary to introduce logic to restrict module 
-unloading here, which doesn't bring benefits but increases the cost of 
-interpretation for maintainers.
-
-> Again, the only solution to a ftrace_disable being set is a full reboot.
->
-We can't ask users to know such specialized details of the 
-implementation, which are unclear even to developers unfamiliar with the 
-ftrace module. Users can accept planned reboot system recovery, but 
-should not accept casual operations and the system crashes.All we can do 
-is do a good job of protection, give users more tolerance.Perhaps a 
-system that is dead but won't lie down is also a very undesirable 
-situation.However, ftrace is used to collect information and locate 
-faults. Even if it does not work, it does not affect services.In the 
-production environment, the most afraid of using ftrace suddenly crashes 
-the system.Therefore, the robustness of the tool itself is very important.
-> -- Steve
->
-
-I reworked the two patches, and the changes to the existing process 
-should be minimal. I don't know if I can get your approval. If you 
-agree, I'll post another V3 version.
-
-PATCH[1/2]:
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 51580e54677f..b3436d86e470 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
-
-         mutex_lock(&ftrace_lock);
-
--       if (ftrace_disabled)
--               goto out_unlock;
--
-+       /*
-+        * To avoid the UAF problem after the module is unloaded, the
-+        * 'mod_map' resource needs to be released unconditionally.
-+        */
-         list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
-                 if (mod_map->mod == mod) {
-                         list_del_rcu(&mod_map->list);
-@@ -7451,6 +7452,9 @@ void ftrace_release_mod(struct module *mod)
-                 }
-         }
-
-+       if (ftrace_disabled)
-+               goto out_unlock;
-+
-         /*
-          * Each module has its own ftrace_pages, remove
-          * them from the list.
-
-PATCH[2/2]:
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a3d4dfad0cbc..51580e54677f 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7629,6 +7629,9 @@ allocate_ftrace_mod_map(struct module *mod,
-  {
-         struct ftrace_mod_map *mod_map;
-
-+       if (ftrace_disabled)
-+               return NULL;
-+
-         mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
-         if (!mod_map)
-                 return NULL;
-
+If your local domain has 'malicious hosts', they could actually
+trigger more issues by sending
+complete packets, to make sure to fill various hash tables.
