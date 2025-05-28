@@ -1,68 +1,73 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 350FB275111;
-	Wed, 28 May 2025 09:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DCB27585C;
+	Wed, 28 May 2025 09:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423439; cv=none; b=j3AditVrxyi/VJr3YJ2P4UEjBsIoZ/MOlIqTUA3wRP/983s/Q6fEfwOQioelBK4m9D/4vlivOmuAx/bvSCA6psq+JdZSrI4OYjcDLARgx2FYLAUG8ABYN/8WR2g6bbJmqH9lTrlIKW36iZuk/ZoHz83kRMX+mgGxFvHpKI7uNUQ=
+	t=1748423444; cv=none; b=teZCqozypTd1iBNIevwmbam2JFC9Vg4+SgbC2MtD/cUCapn2wwdsJQxTOVMM8WN1sNDuhABMSqjkosqVmw9qpFkcgf6hhWJYV7WvZEBmTixPIDhlkpxgUTcMYzWPEkoFCyH9BIjbmisvS99STsQ0HWCONNjs81LAq0HyjRgPUBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423439; c=relaxed/simple;
-	bh=Ia2GozwV4a8lhyp5neP6FN7joVX9OC4FCSS0RVxVnDA=;
+	s=arc-20240116; t=1748423444; c=relaxed/simple;
+	bh=af5JUKcthRKAQgniGzokaJiKen7a00vYt3vsaVOT2BQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5OC3JqKfTsw4r0+XdQP5Cak1dFahiUoze8DYA7CzZixXaZH6o/rTZ5GpA7bXfGujppUHAtlwz5Pa8Fh1li+kveIFxZxfBido1Vz3yzRFLEmCCYFtVRFyBBZDMiGLE4SnKev5FQX9aJ6ypWhunGzjhUN6ZPVC05WgClI7i75ss8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=n80odNv+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=DIeNe1xujOecDdkRbzTkBkC2YjFH4KHoapvlcz7uXXlc/1gJuIGh4hxP0ak1xxC+kVAjw5WF/el+wBarvmtfg5GkRk9gFr9iTaN/gZmt+MiTHQPs/YXOeI89CNmucxmlP3s6TLTgyYiQmfgNI5DCS7UPMPKQZSUKaLBOnfclFEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDQqpOGv; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n80odNv+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=f6UBhiqU0OYkhGbwcIEcEvBe+Cw0gb40pBFliPLoPzM=; b=n80odNv+N9ONWYA1sCuYXOgxON
-	wVHEbZdcisAMdQq1mjr0VsxZt3IJEp+TxKV/nWSpoajpOCz1zRxwJ9NzgXyKSZRpJVKfXGQ7N7Bcg
-	686Q0qsKPQwPpFgDuUe3utYZZ7CrMl6fptdnNDNpgbQ+ScqWjUaeUMiOOnVKoFnQIi6QIjVzu5l7T
-	ke/r5pSL9I9wOY9RmJ993URFMvBvY3MDG/R+pE3/Y5LacpC4N7FwjpnBrcqeKqt6etQULRZJGnp4E
-	yOXSXJ8jDnqww8d6uuwSQkMb4T2yF5SUxSelCD6OMCMl+f8DSj9jR6OhUFAK1k4UYy5eUxT2ZJhyq
-	8b2ymuRg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKCno-0000000DQmJ-19iM;
-	Wed, 28 May 2025 09:10:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D38FB3005AF; Wed, 28 May 2025 11:10:23 +0200 (CEST)
-Date: Wed, 28 May 2025 11:10:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDQqpOGv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748423442; x=1779959442;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=af5JUKcthRKAQgniGzokaJiKen7a00vYt3vsaVOT2BQ=;
+  b=BDQqpOGvazRQYzXDMeBL8ZZPmcDXvDpvLFZPj+Lb/kyQopBbrFS7R4Jh
+   iw0N3esyK0cTLifD0WqjMJ69VcInRmVZgATrIJu4WI2WdJscMc2WG5ywC
+   lIMvP32W0stfJBf1Qd/oX+WjOEGcP1tdFI4qA18MMV+HHwOaU7A5QfPUH
+   lZKrQ1xR8T/bnCYr67INx593XyJRCQQThjrzEcT2g7vkPV55Zg6NO7P+I
+   00j6A+bLxsTV1vOytN83FGf6tIS9iJTB89gUE0aDC8bq5Xu81GeebVa2+
+   OZksV10TUFZ+ZdYhSTD+Xvs6Hr1xxY5atpo/rD/A0bPrak3x8uNheAKbj
+   g==;
+X-CSE-ConnectionGUID: QTS/5hW1SYG0w6St1B7Q7g==
+X-CSE-MsgGUID: zvM3jp4iSF+XBCpBebVBXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50326608"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="50326608"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 02:10:41 -0700
+X-CSE-ConnectionGUID: Ig1TGYOjTf2XVusvXjCvvQ==
+X-CSE-MsgGUID: 8Uw5VHDBRgSXHe3hgjU49g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="143012443"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 28 May 2025 02:10:37 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKCnz-000VTk-01;
+	Wed, 28 May 2025 09:10:35 +0000
+Date: Wed, 28 May 2025 17:10:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>,
+	Kees Cook <kees@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
 	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
+	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Woodhouse <dwmw@amazon.co.uk>, Jens Axboe <axboe@kernel.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	NeilBrown <neilb@suse.de>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Ryo Takakura <ryotkkr98@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-Message-ID: <20250528091023.GY39944@noisy.programming.kicks-ass.net>
-References: <20250527222254.565881-1-lyude@redhat.com>
- <20250527222254.565881-4-lyude@redhat.com>
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 4/5] rust: add find_bit_benchmark_rust module.
+Message-ID: <202505281613.EHiMAdkN-lkp@intel.com>
+References: <20250526150141.3407433-5-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,77 +76,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527222254.565881-4-lyude@redhat.com>
+In-Reply-To: <20250526150141.3407433-5-bqe@google.com>
 
-On Tue, May 27, 2025 at 06:21:44PM -0400, Lyude Paul wrote:
-> From: Boqun Feng <boqun.feng@gmail.com>
-> 
-> Currently the nested interrupt disabling and enabling is present by
-> _irqsave() and _irqrestore() APIs, which are relatively unsafe, for
-> example:
-> 
-> 	<interrupts are enabled as beginning>
-> 	spin_lock_irqsave(l1, flag1);
-> 	spin_lock_irqsave(l2, flag2);
-> 	spin_unlock_irqrestore(l1, flags1);
-> 	<l2 is still held but interrupts are enabled>
-> 	// accesses to interrupt-disable protect data will cause races.
-> 
-> This is even easier to triggered with guard facilities:
-> 
-> 	unsigned long flag2;
-> 
-> 	scoped_guard(spin_lock_irqsave, l1) {
-> 		spin_lock_irqsave(l2, flag2);
-> 	}
-> 	// l2 locked but interrupts are enabled.
-> 	spin_unlock_irqrestore(l2, flag2);
-> 
-> (Hand-to-hand locking critical sections are not uncommon for a
-> fine-grained lock design)
-> 
-> And because this unsafety, Rust cannot easily wrap the
-> interrupt-disabling locks in a safe API, which complicates the design.
-> 
-> To resolve this, introduce a new set of interrupt disabling APIs:
-> 
-> *	local_interrupt_disable();
-> *	local_interrupt_enable();
-> 
-> They work like local_irq_save() and local_irq_restore() except that 1)
-> the outermost local_interrupt_disable() call save the interrupt state
-> into a percpu variable, so that the outermost local_interrupt_enable()
-> can restore the state, and 2) a percpu counter is added to record the
-> nest level of these calls, so that interrupts are not accidentally
-> enabled inside the outermost critical section.
-> 
-> Also add the corresponding spin_lock primitives: spin_lock_irq_disable()
-> and spin_unlock_irq_enable(), as a result, code as follow:
-> 
-> 	spin_lock_irq_disable(l1);
-> 	spin_lock_irq_disable(l2);
-> 	spin_unlock_irq_enable(l1);
-> 	// Interrupts are still disabled.
-> 	spin_unlock_irq_enable(l2);
-> 
-> doesn't have the issue that interrupts are accidentally enabled.
-> 
-> This also makes the wrapper of interrupt-disabling locks on Rust easier
-> to design.
-> 
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-> 
-> ---
-> V10:
-> * Add missing __raw_spin_lock_irq_disable() definition in spinlock.c
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
+Hi Burak,
 
-Your SOB is placed wrong, should be below Boqun's. This way it gets
-lost.
+kernel test robot noticed the following build errors:
 
-Also, is there effort planned to fully remove the save/restore variant?
-As before, my main objection is adding variants with overlapping
-functionality while not cleaning up the pre-existing code.
+[auto build test ERROR on akpm-mm/mm-nonmm-unstable]
+[also build test ERROR on kees/for-next/hardening kees/for-next/pstore kees/for-next/kspp linus/master v6.15]
+[cannot apply to rust/rust-next next-20250527]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Burak-Emir/rust-add-bindings-for-bitmap-h/20250526-230435
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-nonmm-unstable
+patch link:    https://lore.kernel.org/r/20250526150141.3407433-5-bqe%40google.com
+patch subject: [PATCH v9 4/5] rust: add find_bit_benchmark_rust module.
+config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20250528/202505281613.EHiMAdkN-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505281613.EHiMAdkN-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505281613.EHiMAdkN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> error[E0463]: can't find crate for `core`
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
