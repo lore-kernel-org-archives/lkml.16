@@ -1,58 +1,57 @@
 Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110DD28E56E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACC028E57B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:25:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456739; cv=none; b=hCr74COO6qeAA3fg9iDPG3PrqmX0Y6z9yDjiIFzi4NnxBwxW5vrFbhCn6Clg6w5jhReHorw/Clq2CzFNncLDd4QRqsoVHjD9GVIGepg8OvGOPL3PXfyXU7ghXjesa61Uu8b4jgguBSPi6HVpOBR3Qmj246+dSepeKSXZgisT4qw=
+	t=1748456740; cv=none; b=XqXsLFH3vhelU3rRaIdk0vG0gEuveth1ZsXXSCKeFPoraWRtj+oB5kD8nTueE5lYlCD5YJsyMUbCDZpgSMZow+BfSSEraXEoqXmHNJ6v18RP3WzG4vmfrJUMstIKnA+ujhAK/tdim4kH1ZFpK8J3TEUecaVoOoGH6XE2GEgzl84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456739; c=relaxed/simple;
-	bh=TrwTeeb3eSq6peBGpyS2fjLOHTgsDFfooNNEDI35gec=;
+	s=arc-20240116; t=1748456740; c=relaxed/simple;
+	bh=2c4RyGcyTBBIaHhq5vhbuQx07DTDPoo7PyvHV+koXWY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RN3RZG7+piJM5dG9wN0A+YgJ40OdSAVwjb4ssqW9x/XGuucu7unssZi13l+OhJiqtcVcIywkWsWkrvVeMMMOtU1HsqX9bafoR19/Jn/daJRO7VrVPjJ0XHbGB87HqHL0b0ghWs/cw5Pg5lQ27q9roZz9uOUGr5HAiAiNvIru7jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gSb6Q8lw; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=hBb/2M9khttFqrlPPwROkv887+QEI0EQ9eNBG59T+bAqtjBeUqsAtaGCjf+SCbu4vgEaUpUow5jUEQOeRL+bE6T4H4itjbZRO6CCjnmXoQxk77nKg8hPJNLB1hrl7x6FXU5tBNwBQr8UwsUJiYon5FIpHM2t8CLWpedxRnRpYWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DI/xfSLk; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gSb6Q8lw"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3114b7e89a6so49043a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:25:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DI/xfSLk"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30eccc61f96so6200a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:25:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748456737; x=1749061537; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1748456738; x=1749061538; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lVVqFr1BE8q6eml8zA1z0lK7aGNcSUfClXnZn98OgHk=;
-        b=gSb6Q8lw7pXUBBIqXjElAS7OXbzu82FDWVRV3vh6FJWCWMqO45j0aiu9z7xaVFKrPr
-         K9mfYHPbGDYrShdyVXl2hTdJQIw5THDggbaiK8U1FREaSToTACTR4Swjbps8QxZgW854
-         cO/+7Q2Cevo+4StQO+zeeSq6RuILwl7zKGk3DBm7ng4mwaSGOf14GX6vvjzfPo+NiJ7w
-         qgxL253czsdTsjp6p36f13uW0ojgCeGPSwztettCeRJSPzT97SWTp++FwuL6CAyS9zyV
-         7Py6Y09VAIQpiNsze0f8IS7B1D+JR76kAbe6GE6CiTMlZq4gLCqqHhObh9pqjwamfjXW
-         Svag==
+        bh=y1DgNtNfVgtxZCoAyIGz18OP4Bo5orqBMpRuB4iTX3k=;
+        b=DI/xfSLkwhD9aAt4kDul2oUw0gTKuCrXvB6WHkm1SqcP/WsGxfkH1KQKcq2+30nTWL
+         H183cIIig3Z6cDaqylzGpk4g4xyYdc9AwKTSROa+/le3geGgYMTqMRAtC2Na9KsigHsP
+         nNwGCZVADf9g773SF/gM6mDOwU8gsMarp63m46ZfWyCu1o6T5vEdiaGY7SUNNFkdnE0d
+         +1l9z/Kt2Y/N+w0UxcY1jhcZDzJ4zt96VwmVrxjI/0+AYty/duSEiiI/VL7scj7LVVVq
+         1UtPja1h7tdsLI5KkKCf+BgYIbEhhlb943vga9rjLqhUu3m0wxfzHtfefzBJ9aopIdrg
+         d0FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748456737; x=1749061537;
+        d=1e100.net; s=20230601; t=1748456738; x=1749061538;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lVVqFr1BE8q6eml8zA1z0lK7aGNcSUfClXnZn98OgHk=;
-        b=dPcSh550huhN1mSGYYFKxilDJp4yeUj/p0eZDyaEQixGpB7QAco/MEP9zo0iPgfche
-         dsuWRIeVCNntyzY/L7P8a5yjagIkThAkXL0X88g7VIaFk3iS8GdpQj3wUvfjVSDW7pUY
-         gSGR/FUhJQZC3hf5ObJSWc/yqTq2e9GMOHBR5sYedg7JhikEKgP+m4q9Flvq5fKt1bpF
-         EoLhtc/G0Q0LFbHBO204sCmXuZgfg76P3Us9cU0cgv3qJOxwEUzxbY/vN2OJMBfa4jlR
-         2oKrpeWwuyR/xdqVqvjvO+UsM0eZvGAVTsnV4Yvrij50i6He2QCmq+4u7NC6DeEzYaey
-         oADw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfEVDx7h9iSDjC40YZBKSc2v3GJpnSfZUfpXKaeVGLwBUVjHOZGod9oLre9hcmk3LYoYrDykbhGrUZYzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywomg5bwbv9AXXlHRjz19Xz/L3D9wSng6ZdslTsf40ymaTaR/YU
-	P5nT/TA4rONixReNnRXXMP35PJJRdQNbb23yr/0nPwfwyBlq+Upta20YRfCFW5n1DcXVnK3/0bS
-	ghsEEMNiITU4Z82K2ypCmR3KIDnra5nHJ7Py/Z/OD
-X-Gm-Gg: ASbGncsfKNZe8TyaXxa8B5mCvbr2geNa/P0cXJMtOwonuXltsG+l5T6eqYGY8RRy25C
-	VJckyqkDfuvv6QtJlBxeDXsSmBuQuN6VI42XQsKSNagPQWP+regQ3yTPmUlxWBDkuik/8GLjkfy
-	BvmEOrDGHZkk6X5OKjs8KZlufO6tjO6Kg7fsVpz+mU3R5C6ioccLLwPTom8b+Dvf5oFaocMfacv
-	w==
-X-Google-Smtp-Source: AGHT+IFijwOh+awYdgO4HAk/X8m/A4OWZUBHS7nOP52Vw8xKVE09sTMEC6FE21p5hEzwxtb4ty4X3loZKiHFU1jBNbA=
-X-Received: by 2002:a17:90b:3852:b0:30e:8c5d:8ed with SMTP id
- 98e67ed59e1d1-3110f31a4fbmr26532549a91.19.1748456737021; Wed, 28 May 2025
+        bh=y1DgNtNfVgtxZCoAyIGz18OP4Bo5orqBMpRuB4iTX3k=;
+        b=QUodWzwQ90GU2pQUQl46mUBCDBeV2YdI3gsGJfcDT833Hy2ifEtFESzHKRmjYv4KBg
+         tYGC+MuPEQGWTP17UhMep5r3SMX3gwYakPpx1pCbPy5tCXj6u+hyzUDPUvsheJzsmCzK
+         +2QrGfrXsUIeQBW987/73/aPQmzjvcYMp/coZnkpHpNTfG+2BR/ZZ6laHCh6i3c1xaUd
+         9cA7ZgUSBVNquBIuVWwD31cfNBTGj64VNsjBHRIMfWUsDsGKtumoee9ZI7g3LdJBVFVJ
+         13ATg3jHQ15M595ONsAfAwJxsCGbVE/rkZvOeAhFPTfnFOs3bkgE0cKsiWHKu7TU5yyq
+         oeQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZSgL+uKOxpAQIVocYmLTWT6fZi8EiJ2Seia1ObPibCzawMUM5h+7q+uG6SoOOR02V88lhJPTF4IOw7ag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU/ApoIUPfuDQVKDmZImRMh1WkCECxFaqAWsk7TY5IGC6WOneM
+	XwcxXYmItIvBt/D1rtg0ouqgeevCH7IDD1XmvZk6WVc20WcoDMVmzRFOh/XpAwK2ECSh04eEigS
+	51Gqcjxoga+OKMpgGloHh1DLQkofcqHGu008f3NWYHA==
+X-Gm-Gg: ASbGnctm898Mqm24DKwKgfE8i5LWBRKqEWGpPMZG0i5UxjJy4tXJyQwj1lRS9nseBCw
+	Iqe6cJx8BqsKkte14gcYo9c6y8L9b0Yi21HGFQ3QWyvYVzNRWPRjHk+Jv39QFfRHfu1NgPtv2ZH
+	I84o+MofP2eqrJU7h+OlnLLnx9cNAELdQ/
+X-Google-Smtp-Source: AGHT+IEL1ZmsyEu0mOM9uUeenWGvWnw6r/IpkOg2ZOyaSFG+h5gtxxKjC4pS8VpZXgUHmiU0tBsXCbt6CaOavzqbLmM=
+X-Received: by 2002:a17:90b:384a:b0:310:8d79:dfe4 with SMTP id
+ 98e67ed59e1d1-311e18132a2mr2095484a91.4.1748456737764; Wed, 28 May 2025
  11:25:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,123 +59,72 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515220400.1096945-1-dionnaglaze@google.com>
- <20250515220400.1096945-2-dionnaglaze@google.com> <aCZtdN0LhkRqm1Vn@google.com>
- <CAAH4kHai8JStj+=HUiPVxbH9P79GorviG2GykEP7jQ=NB2MbUQ@mail.gmail.com> <aC4ZJyRPpX6eLKsC@google.com>
-In-Reply-To: <aC4ZJyRPpX6eLKsC@google.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Wed, 28 May 2025 11:25:23 -0700
-X-Gm-Features: AX0GCFte05v61MvXwGYneIeTEvRS5b_Es3A7BflZae2g4_6rbG1Vveaf5-F60xY
-Message-ID: <CAAH4kHZkuD4UsXRGED6qecfAkeFpd8sLc+0osDhnKP4T5VmSYQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] kvm: sev: Add SEV-SNP guest request throttling
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
-	Borislav Petkov <bp@alien8.de>
+References: <20250527-ublk_task_per_io-v7-0-cbdbaf283baa@purestorage.com> <20250527-ublk_task_per_io-v7-1-cbdbaf283baa@purestorage.com>
+In-Reply-To: <20250527-ublk_task_per_io-v7-1-cbdbaf283baa@purestorage.com>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 28 May 2025 11:25:26 -0700
+X-Gm-Features: AX0GCFuRsiYqORRMNhWkxx1ChAuVZ4WWAaGZPWCcLkLjY7VGBp6_rK8DXEjxOFM
+Message-ID: <CADUfDZp9CpghO7vXjhptPoxHgO8HFEa5WF=oyiKS=BoPn8pirQ@mail.gmail.com>
+Subject: Re: [PATCH v7 1/8] ublk: have a per-io daemon instead of a per-queue daemon
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 11:19=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
+On Tue, May 27, 2025 at 4:01=E2=80=AFPM Uday Shankar <ushankar@purestorage.=
+com> wrote:
 >
-> On Fri, May 16, 2025, Dionna Amalie Glaze wrote:
-> > > > @@ -4015,6 +4042,12 @@ static int snp_handle_guest_req(struct vcpu_=
-svm *svm, gpa_t req_gpa, gpa_t resp_
-> > > >
-> > > >       mutex_lock(&sev->guest_req_mutex);
-> > > >
-> > > > +     if (!__ratelimit(&sev->snp_guest_msg_rs)) {
-> > > > +             svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VM=
-M_ERR_BUSY, 0));
-> > > > +             ret =3D 1;
-> > > > +             goto out_unlock;
-> > >
-> > > Can you (or anyone) explain what a well-behaved guest will do in in r=
-esponse to
-> > > BUSY?  And/or explain why KVM injecting an error into the guest is be=
-tter than
-> > > exiting to userspace.
-> >
-> > Ah, I missed this question. The guest is meant to back off and try agai=
-n
-> > after waiting a bit.  This is the behavior added in
-> > https://lore.kernel.org/all/20230214164638.1189804-2-dionnaglaze@google=
-.com/
+> Currently, ublk_drv associates to each hardware queue (hctx) a unique
+> task (called the queue's ubq_daemon) which is allowed to issue
+> COMMIT_AND_FETCH commands against the hctx. If any other task attempts
+> to do so, the command fails immediately with EINVAL. When considered
+> together with the block layer architecture, the result is that for each
+> CPU C on the system, there is a unique ublk server thread which is
+> allowed to handle I/O submitted on CPU C. This can lead to suboptimal
+> performance under imbalanced load generation. For an extreme example,
+> suppose all the load is generated on CPUs mapping to a single ublk
+> server thread. Then that thread may be fully utilized and become the
+> bottleneck in the system, while other ublk server threads are totally
+> idle.
 >
-> Nice, it's already landed and considered legal VMM behavior.
+> This issue can also be addressed directly in the ublk server without
+> kernel support by having threads dequeue I/Os and pass them around to
+> ensure even load. But this solution requires inter-thread communication
+> at least twice for each I/O (submission and completion), which is
+> generally a bad pattern for performance. The problem gets even worse
+> with zero copy, as more inter-thread communication would be required to
+> have the buffer register/unregister calls to come from the correct
+> thread.
 >
-> > If KVM returns to userspace with an exit type that the guest request wa=
-s
-> > throttled, then what is user space supposed to do with that?
+> Therefore, address this issue in ublk_drv by allowing each I/O to have
+> its own daemon task. Two I/Os in the same queue are now allowed to be
+> serviced by different daemon tasks - this was not possible before.
+> Imbalanced load can then be balanced across all ublk server threads by
+> having the ublk server threads issue FETCH_REQs in a round-robin manner.
+> As a small toy example, consider a system with a single ublk device
+> having 2 queues, each of depth 4. A ublk server having 4 threads could
+> issue its FETCH_REQs against this device as follows (where each entry is
+> the qid,tag pair that the FETCH_REQ targets):
 >
-> The userspace exit doesn't have to notify userspace that the guest was th=
-rottled,
-> e.g. KVM could exit on _every_ request and let userspace do its own throt=
-tling.
+> ublk server thread:     T0      T1      T2      T3
+>                         0,0     0,1     0,2     0,3
+>                         1,3     1,0     1,1     1,2
 >
-> I have no idea whether or not that's sane/useful, which is why I'm asking=
-.  The
-> cover letter, changelog, and documentation are all painfully sparse with =
-respect
-> to explaining why *this* uAPI is the right uAPI.
+> This setup allows for load that is concentrated on one hctx/ublk_queue
+> to be spread out across all ublk server threads, alleviating the issue
+> described above.
 >
-> > It could wait a bit before trying KVM_RUN again, but with the enlighten=
-ed
-> > method, the guest could at least work on other kernel tasks while it wa=
-its
-> > for its turn to get an attestation report.
+> Add the new UBLK_F_PER_IO_DAEMON feature to ublk_drv, which ublk servers
+> can use to essentially test for the presence of this change and tailor
+> their behavior accordingly.
 >
-> Nothing prevents KVM from providing userspace a way to communicate VMM_ER=
-R_BUSY,
-> e.g. as done for KVM_EXIT_SNP_REQ_CERTS:
->
-> https://lore.kernel.org/all/20250428195113.392303-2-michael.roth@amd.com
->
-> > Perhaps this is me not understanding the preferred KVM way of doing thi=
-ngs.
->
-> The only real preference at play is to not end up with uAPI and ABI that =
-doesn't
-> fit "everyone's" needs.  It's impossible to fully future-proof KVM's ABI,=
- but we
-> can at least perform due diligence to ensure we didn't simply pick the th=
-e path
-> of least resistance.
->
-> The bar gets lowered a tiny bit if we go with a module param (which I thi=
-nk we
-> should do), but I'd still like an explanation of why a fairly simple rate=
-limiting
-> mechanism is the best overall approach.
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 
-Before I send out a revised patchset with changed commit text, what do
-you think about the following
+Still looks good to me.
 
-    The AMD-SP is a precious resource that doesn't have a scheduler other
-    than a mutex lock queue. To avoid customers from causing a DoS, a
-    kernel module parameter for rate limiting guest requests is added.
-[Addition:]
-    The kernel module parameter is a lower bound kernel-imposed rate limit
-    for any SEV-SNP VM-initiated guest request. This does not preclude the
-    addition of a new KVM exit type for SEV-SNP guest requests for
-    userspace to impose any additional throttling logic. The default value =
-of
-    0 maintains the previous behavior that there is no imposed rate limit o=
-n
-    guest requests.
-
-
-We could still ask Michael to change KVM_EXIT_SNP_REQ_CERTS  to
-KVM_EXIT_SNP_GUEST_REQ
-and for the exit structure to include msg_type as well as the
-gfn+npages when the kind is an extended request for an attestation
-report so that we don't need to have two exit types.
-
-Regardless of that change for additional throttling opportunities, I
-think the system-wide imposed lower bound is important for quelling
-noisy neighbors to some degree.
-
-
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+Best,
+Caleb
