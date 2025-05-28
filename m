@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D781FECB1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2739C1531E3;
+	Wed, 28 May 2025 06:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748413659; cv=none; b=eK/h4e3yzUoQBWN6vIhjhWlWmITSq5CZd7GSr6e0BM2H7mHeHyvOqPsEv2KFsBrl0ZvtOqLW/MjUuOKNFwfHasezSl+p8iHGg+U/uAoW5cLpCsQhr4Au+56dCiv31vGLKfkb7B9vzqQ48GTzLzM5wrht2b9XR4aVTCKNbzImCqQ=
+	t=1748413779; cv=none; b=im+FeMz2G0SMSXLnaHCn1C1YFpv9TRJ9HYmcQhE2WG7dLyLqfJSQtdscuYUVmZBrCIiRV0W7ZW46w9mp8M/deFYVth9KOTgvWdbbgsIvXxRsghMAVeMdDZEw5uFFHjyKxtKgpobXyXy2hw5OOh7NFflOH2drEHzuMeagfxQnd4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748413659; c=relaxed/simple;
-	bh=f1WOn5bnj2UiZh1qSh/Jp9KeecmIWyjy1z5A+Z1c9OQ=;
+	s=arc-20240116; t=1748413779; c=relaxed/simple;
+	bh=dzyFlOWPpi/yLNvkCZ6F2fmrDGMtcAHJnWsuGUdB9W0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KyiWSmkmnPMacMP37zNi7Ayx6SZwshYJSQVhUkWcCiFO0LJQ56JCw0KFvTkRHZEuFbwnDvTk3g71lHTBJsv9oo5fu7AOv3xOkgRIpfksEWP6bQ6lluOsZY6etdCEU5KchgFy/DUpsdJOv0j2o2bWL01hk9hhc+eOYEeHHOaAMm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eaaNt+T6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Y4H7pXscAZB69km4dCI1P/JWvyxIVbNXSChj3I4VzPAOo41xGXmrIldQODRcz9BNEWFAw10NCsl744f4zrXwBNMdrptlg0y6jdd7MnJGutctwHpX1JFCPpaDnoZhgG38fn9cjywRML0/enZ4jdHuCjqIKRCYThQv7JrGXW8kVR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRUW3bjb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eaaNt+T6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748413656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CvTHk+O/1QSNVGu8SxpKsRTrNLnlauH5F8Emt0iiKkY=;
-	b=eaaNt+T6QDoaQZJSl2MSTtuC4JpXgoOBMWS9O9zUK6Vy78dvs4Qn+1howh/kzjERe2lpiz
-	bUSK4WXNQhWUqL60Y9v5yXuUoBv/cKOZAhu+lklV731tpM6ffAeJPruhiD6DEFN1vzpNQz
-	BelylX8xn/PzTCuOlZyUjhcQherBU/Y=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-AlZ8X7HAMYqlT6CImxv_rw-1; Wed, 28 May 2025 02:27:35 -0400
-X-MC-Unique: AlZ8X7HAMYqlT6CImxv_rw-1
-X-Mimecast-MFC-AGG-ID: AlZ8X7HAMYqlT6CImxv_rw_1748413654
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4dde7eec6so1645626f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:27:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748413654; x=1749018454;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvTHk+O/1QSNVGu8SxpKsRTrNLnlauH5F8Emt0iiKkY=;
-        b=el+BSmMexH/kCLmltBwqwQLbXIJOReBnVoTeSR96IcLLj9WUG4MQ2kZT6PCMq2yAmE
-         57nz0+4a+BoMsdLn14hFYNkr4kxVSB6RQNIur5amJn5NR1RZtDVtoM9aTMvqcnIRl8rH
-         59MSF3xivjQNflpED2XNS1bzaSfkaEDpUKO6m+bcxaKHqK8Uzzj/Zt/P6SKifWAqLb8J
-         mUxoBuI5SOPvfhBPj8N/fd8/Ceer+AoJhkg7HjD2fgE0rJuj8ZvFQNp9PKQWSvqBL4Gv
-         IvyGV3rF4RZsuB3+yBZG01AfTFX7gKAT7aZT+4RlZ2QlZbyZ3rKhBYLMllMj+KFvcjbL
-         bbLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsDidR9Eorg+MczaLJokNdM1wuYAfpNaiVbcj6EY1TDeH0vAB/P12MmAj5Otsr3oIRflQIUHiynFOQpWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv4CDuQ95UU8qY6r9+whsWSl7dt9jAYARDpsFBc3Nj0YVfcPe6
-	r1jFizJB60yEWya3v95MAuxakMQ24q8e3g8scAFYjx1tThpC6xyillrnA8ThrvvTCJBo1Fi0OSO
-	UgbqP7vG66rw7kcrllyA+KyxtFraahmmmHh3loTVsPsVM7flOxSrMeGCNnSckFqThcA==
-X-Gm-Gg: ASbGncuDwEHHVW3n/aM6aco6edIPLv/RQIf3DVREXayQAJ9MammVau7P6y5wcWH1tXO
-	3QiDKPb8yeZ59i0B8jzx1iqIrREy+lZwVYDJzOmA5S6oY4itcIBGw1ToMT3yjEdRkzabzRrm0sP
-	v2rdak+BR0n2O+a1kevu4fcLxMf015WdY8y1I9R4LJDdYGfXw5X4FNpbTUPC5cPd0cJnrbhdFJQ
-	lSSAUyGX1xLHwKOCY1FcBfYb1VuRsuTOros6+gmv+8LX6Z2C1+f3fA6+yE2v2lrUR68J2oop+kE
-	YznWvMMDMPEoW2b9cbaOa+6zgDtAxGKqLAbJywbrd4QCzECLmjp/10xu1DQ=
-X-Received: by 2002:a05:6000:250f:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a4ea9a16ddmr675508f8f.10.1748413654185;
-        Tue, 27 May 2025 23:27:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG3ksxKXCaZGLNbvzK9nMv3YAIr7uCKvT4NZXCaUrz8CA2YqI+qp5uV65PPS+UexzqChEwaNw==
-X-Received: by 2002:a05:6000:250f:b0:3a4:ea9a:1656 with SMTP id ffacd0b85a97d-3a4ea9a16ddmr675469f8f.10.1748413653728;
-        Tue, 27 May 2025 23:27:33 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac7ea29sm573113f8f.37.2025.05.27.23.27.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 23:27:33 -0700 (PDT)
-Message-ID: <648d56af-ed86-4d45-8e7a-944d1563117c@redhat.com>
-Date: Wed, 28 May 2025 08:27:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRUW3bjb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE27C4CEE7;
+	Wed, 28 May 2025 06:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748413778;
+	bh=dzyFlOWPpi/yLNvkCZ6F2fmrDGMtcAHJnWsuGUdB9W0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MRUW3bjbcZAt2FjPkzILIiprwpKI05ueTeFmphbDrKSQKn96AHy1kUVXuCpDuWg+c
+	 6cLLqvUo6w/i+8P0W8nTnY1GSbR1RMfZprU80LjPQ9EyuDes12QWDZFEqvBOCXlhck
+	 kBqXbUBrxzJ33c1+nO6oNRWAJz/iuK2sZX0kuQiaNNAbeWq2ngNZcj2eFvUtiCYbzk
+	 1IF8Dsbvto4JJXznoxos6SyCIOnUixcBhR0DvgiPpQ4mZf4uH2vybh0hlGDqbigLeC
+	 SRDRuhLovmsrp9vfKkHTtTd6uumGXlboP2TDXh1fwhht8fK3KkWFcrmVyjiA8Sv58+
+	 OGsVPKf+BOxMw==
+Message-ID: <5be237d3-5b8d-42ee-a492-d5d7b075fe81@kernel.org>
+Date: Wed, 28 May 2025 08:29:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,145 +35,159 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
- Multi Vports on Bare metal
-To: Haiyang Zhang <haiyangz@microsoft.com>, Simon Horman <horms@kernel.org>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- "stephen@networkplumber.org" <stephen@networkplumber.org>,
- KY Srinivasan <kys@microsoft.com>, Paul Rosswurm <paulros@microsoft.com>,
- "olaf@aepfle.de" <olaf@aepfle.de>, "vkuznets@redhat.com"
- <vkuznets@redhat.com>, "davem@davemloft.net" <davem@davemloft.net>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>, "leon@kernel.org" <leon@kernel.org>,
- Long Li <longli@microsoft.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
- "daniel@iogearbox.net" <daniel@iogearbox.net>,
- "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "ast@kernel.org"
- <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
- "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- Konstantin Taranov <kotaranov@microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
- <20250521140231.GW365796@horms.kernel.org>
- <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
- <20250522120229.GX365796@horms.kernel.org>
- <5470f2d2-d3cb-4451-b8e8-5ee768ed9741@redhat.com>
- <MN0PR21MB3437196CFAF4574776862F6ACA99A@MN0PR21MB3437.namprd21.prod.outlook.com>
+Subject: Re: [PATCH 1/2] dt-bindings: regulator: mediatek: Add MT8196 vmm
+ controller
+To: =?UTF-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
+ "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
+Cc: =?UTF-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
+ "broonie@kernel.org" <broonie@kernel.org>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ =?UTF-8?B?UGF1bC1wbCBDaGVuICjpmbPmn4/pnJYp?= <Paul-pl.Chen@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>
+References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
+ <20250522150426.3418225-2-nancy.lin@mediatek.com>
+ <d21e1775-d5d4-4f58-865e-0cb33d14f371@kernel.org>
+ <9ada04bb73e980f981d3b933552f0eda47d4fd26.camel@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <MN0PR21MB3437196CFAF4574776862F6ACA99A@MN0PR21MB3437.namprd21.prod.outlook.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <9ada04bb73e980f981d3b933552f0eda47d4fd26.camel@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/22/25 4:51 PM, Haiyang Zhang wrote:
->> -----Original Message-----
->> From: Paolo Abeni <pabeni@redhat.com>
->> Sent: Thursday, May 22, 2025 9:44 AM
->> To: Simon Horman <horms@kernel.org>; Haiyang Zhang
->> <haiyangz@microsoft.com>
-> 
->>>>>>  static int mana_query_device_cfg(struct mana_context *ac, u32
->>>>> proto_major_ver,
->>>>>>  				 u32 proto_minor_ver, u32 proto_micro_ver,
->>>>>> -				 u16 *max_num_vports)
->>>>>> +				 u16 *max_num_vports, u8 *bm_hostmode)
->>>>>>  {
->>>>>>  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
->>>>>>  	struct mana_query_device_cfg_resp resp = {};
->>>>>> @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct
->> mana_context
->>>>> *ac, u32 proto_major_ver,
->>>>>>  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
->>>>>>  			     sizeof(req), sizeof(resp));
->>>>>>
->>>>>> -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
->>>>>> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
->>>>>>
->>>>>>  	req.proto_major_ver = proto_major_ver;
->>>>>>  	req.proto_minor_ver = proto_minor_ver;
->>>>>
->>>>>> @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct
->>>>> mana_context *ac, u32 proto_major_ver,
->>>>>>
->>>>>>  	*max_num_vports = resp.max_num_vports;
->>>>>>
->>>>>> -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
->>>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
->>>>>>  		gc->adapter_mtu = resp.adapter_mtu;
->>>>>>  	else
->>>>>>  		gc->adapter_mtu = ETH_FRAME_LEN;
->>>>>>
->>>>>> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
->>>>>> +		*bm_hostmode = resp.bm_hostmode;
->>>>>> +	else
->>>>>> +		*bm_hostmode = 0;
->>>>>
->>>>> Hi,
->>>>>
->>>>> Perhaps not strictly related to this patch, but I see
->>>>> that mana_verify_resp_hdr() is called a few lines above.
->>>>> And that verifies a minimum msg_version. But I do not see
->>>>> any verification of the maximum msg_version supported by the code.
->>>>>
->>>>> I am concerned about a hypothetical scenario where, say the as yet
->> unknown
->>>>> version 5 is sent as the version, and the above behaviour is used,
->> while
->>>>> not being correct.
->>>>>
->>>>> Could you shed some light on this?
->>>>>
->>>>
->>>> In driver, we specify the expected reply msg version is v3 here:
->>>> req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
->>>>
->>>> If the HW side is upgraded, it won't send reply msg version higher
->>>> than expected, which may break the driver.
->>>
->>> Thanks,
->>>
->>> If I understand things correctly the HW side will honour the
->>> req.hdr.resp.msg_version and thus the SW won't receive anything
->>> it doesn't expect. Is that right?
+On 28/05/2025 06:01, Nancy Lin (林欣螢) wrote:
 >>
->> @Haiyang, if Simon's interpretation is correct, please change the
->> version checking in the driver from:
+>> Virtual regulators do not sound real, so feels like you want some
+>> sort
+>> of power domains?
 >>
->> 	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
->>
->> to
->> 	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V3)
->>
->> As the current code is misleading.
+> This regulator supplies power to the power domain. Before the power
+> domain can be powered up, the MediaTek PM driver first enables the
+> regulator that the power domain relies on, and then powers up the
+> domain. While "virtual" might not be the best term, it accurately
+> describes a regulator used to control the power switch.
 > 
-> Simon:
-> Yes, you are right. So newer HW can support older driver, and vice
-> versa.
+> Ultimately, the VCP (uP) handles the on/off control of the regulator.
+> Therefore, we encapsulate it as a standard regulator in the kernel.
 > 
-> Paolo:
-> The MANA protocol doesn't remove any existing fields during upgrades.
+> The internal control of the VMM regulator is as follows:
+>    kernel                 HWCCF                          VCP (uP)
+> |--------------|      |--------------|   irq    |---------------------|
+> | VMM reglator | ---> | hardware     |  ----->  | get buck on/off irq |
+> |              |      | voter        |          | and then turn on/off|
+> |              |      |              |          | buck                |
+> |--------------|      |--------------|          |---------------------|
 > 
-> So (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3) will continue
-> to work in the future. If we change it to 
-> (resp.hdr.response.msg_version == GDMA_MESSAGE_V3), 
-> we will have to remember to update it to something like:
-> (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3 &&
->  resp.hdr.response.msg_version <= GDMA_MESSAGE_V5), 
-> if the version is upgraded to v5 in the future. And keep on updating
-> the checks on existing fields every time when the version is
-> upgraded.
-> 
-> So, can I keep the ">=" condition, to avoid future bug if anyone
-> forget to update checks on all existing fields?
+> When the regulator needs to be turned on or off, it uses the voter
+> provided by hwccf to cast a vote for on/off. The VCP then receives the
+> corresponding IRQ for the regulator and performs the buck on/off
+> accordingly.
 
-Ok, thanks for the clarification. fine by me.
+OK, thanks for explanation.
 
-/P
+> 
+...
 
+> 
+>>> +
+>>> +  mediatek,hw-ccf:
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>> +    description: Phandle to the hardware common clock framework
+>>> syscon controller.
+>>
+>> No, you cannot express clocks with syscon.
+>>
+> HWCCF is MediaTek's internal naming; the functionality of the hardware
+> IP is voter. We use the IP to vote for buck on/off, and the VCP will
+> get the voting result to perform buck on/off. I will refine the
+> naming/description to "voter."
+
+
+OK, that was a bit confusing, but now I have more questions:
+
+Why isn't this a child of the HWCCF? You do not have here any resources,
+so this looks just to instantiate device for Linux.
+
+Looking at your diagram earlier (maybe include it in binding description
+if this stays as is at the end) I would imagine phandle only to hwccf.
+But you have two phandles - HWCCF and VCP.
+
+So maybe this is part of VCP device, not HWCCF? I don't know. I am
+afraid the moment I will suggest you something someone from Collabora
+will be pointing out that my advice us wrong and I don't know this
+hardware. Yeah, I don't know it. You should know it.
+
+> 
+>>> +
+>>> +  mediatek,vcp:
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>> +    description: Phandle to the Video Co-Processor (VCP) node.
+>>
+>> For what purpose?
+>>
+> This is used to ensure that the VCP uP is ready to receive the hwccf
+> IRQ and handle the corresponding buck on/off operations.
+> 
+>>> +
+>>> +patternProperties:
+>>> +  "^(vdisp|vdec-vcore)$":
+>>
+>> Redundant nodes, useless. Drop these completely.
+>>
+> OK.
+Best regards,
+Krzysztof
