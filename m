@@ -1,131 +1,148 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3762F211A0E;
-	Wed, 28 May 2025 06:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F1C2F2F;
+	Wed, 28 May 2025 06:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412838; cv=none; b=P7oSRNFoknMc0a0gfXv/RBdSrlme0cBWLIKtFXpl4Gp8FO3pm3fxXloypXM5fub0JTwz76VdIlaLxXFoiV6QFSpSX3mbcVS/ff9U4rjCkpx+AREuMXvOScrKrZQlzD/agHDDLPSBEedUdwZxGkawlqNawUM8uIfakNXdSlS5h+E=
+	t=1748412863; cv=none; b=hlhleCXwfjlaVAYHR4MhT/FfhJxRkixOawhXsbipxK2cVVcjIlCZiLBlZFzsTUWmpQ6uiIQ6vulnvw8XXfkRBzFvIYQ+ZtYwb5vra9pcrRhvyps+Fy7H7zN7N+XSe/5n76KY0HO2OUolYEnRQg3dEbvhYV/f+lchTlzkS0YzNNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412838; c=relaxed/simple;
-	bh=eiT/vSc22rEGiAvVFZ5/ZWqinHH0e3XtVZ+udxaTsIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bR1khq8CNaOCRe6Agiq5fMu2D3dcUnd7jXxpFcIH0eC2a6nkX151ph0FPWAaQQMjsPy2wCtYiPG3GaWcpMzrYd4+lEYM/a/0ubegsMFqxu4y0o+3JC8R3Ptf389Bav2RqyvwLKS15cbTU7GFosmgh1FgZ+I1XR0Gds/M5YJ38/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cfNZ+ABh; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748412863; c=relaxed/simple;
+	bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=rwyewbJO089Y34kBx991HDKvmH6cLKstpgpOo0eA49x397dUKwZELO+BblSz3Cy68t8auVz62hQo5YJYhpH4WVcBkgAPqVj/6tHz6wxipRVr4un//ITz9/HspNFBu93Z009BVvrGIrT5VuC6WLyEaEfPTwRHiIHB9anekmB804k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=aBy6t+UK; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cfNZ+ABh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748412827;
-	bh=AifmlD6epwaraxjcxUJRxGnsd49Asu8Er1vCXQcUTVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cfNZ+ABhXc53YvuOrV8s6xuFkbs26dgv/UxojMQSBtdcfkgdl4dF6EeJsPGMDFsZS
-	 b1WyVHDeLSnqhZuyUHncTsZY2npJUWbqkzGg2gzGSsUSzhmuN8JvTsusQcj6sJ5klL
-	 KyVvP6zCoXvfuV+d15KrgsLC7QMBt886kX5j1QThBuP4wkJ9OgmSaItXw933htYMSS
-	 RZ4edILUd/QHqiNz6WRkWEaQzx38lxtvy7E9ONZOMoVEhBxaLnHbt0x3yaFU79nfo8
-	 haf8cFR+p+P6F4791/+gd0GsmBEzKY2Xhg2y2giUcHi2Y3sTMZ/1M0sYrQANFPzk3D
-	 HiylG6yLTSfCA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6fMY1sm1z4wcg;
-	Wed, 28 May 2025 16:13:45 +1000 (AEST)
-Date: Wed, 28 May 2025 16:13:44 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, Mengyuan Lou
- <mengyuanlou@net-swift.com>, Networking <netdev@vger.kernel.org>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the net-next tree
-Message-ID: <20250528161344.0533ae6b@canb.auug.org.au>
-In-Reply-To: <20250507124900.4dad50d4@canb.auug.org.au>
-References: <20250507124900.4dad50d4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="aBy6t+UK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1748412862; x=1779948862;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
+  b=aBy6t+UKI1vVC/Cb9H+vKTlDu3X0VU77VYCchRQafKHPEredXGXl3cYW
+   X4dZOTH+TJshMNbjFCVTN45ZmfipGaDSSJdYSp2Qi0p0n0sF7L0nfPat/
+   zRUsmqO/zdFY1yppRfqN+Gwp08HomhENol7bmvfJ3rgIZaB+44XA7WByK
+   be8uVKXmNmaq3+6bjnBJqrrNEzwGknzBVy4wseseHi67nVla+1LKIACOV
+   OqiHoQG0NaUpz+mm6lr79gAwb7Jas2JP0mGAu7UM/pgc9WN/2jMfTC068
+   FcZ0MDk1QrecoDsrSR+/pqdmTOFFNdGG7gLKulTfi2GUuOHtkLbl+Ohbw
+   A==;
+X-CSE-ConnectionGUID: eU1T+fZHR4iBV5joZbGgXA==
+X-CSE-MsgGUID: 73BKs1QST4O0fd8eBA9Lwg==
+X-IronPort-AV: E=Sophos;i="6.15,320,1739862000"; 
+   d="scan'208";a="209641304"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2025 23:14:21 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 27 May 2025 23:13:19 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Tue, 27 May 2025 23:13:16 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Date: Wed, 28 May 2025 11:43:04 +0530
+Subject: [PATCH 1/2] counter: microchip-tcb-capture: Retrieve and map
+ parent base address
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/o+MW=vr2532+4g+j=5kq6Tm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250528-mchp-tcb-dma-v1-1-083a41fb7b51@microchip.com>
+References: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
+In-Reply-To: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
+	<wbg@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
+ Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
+	<claudiu.beznea@tuxon.dev>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748412791; l=2336;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=TktazPySSKGEf/0fslH0MvDKjlP70/UT5hkBSp27kl0=;
+ b=EAc2uHlbuqLve1VW5JZDmKi9XT9LMUfU0eHvGLFn/cY0hKmuGha2kLctmQ9DuSGgrd5GAJjeq
+ iCD8XMsq//NDmlAV08a/pEX6qXjvlt8leFAbv+5H2ySrbly0AgOMCte
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
---Sig_/o+MW=vr2532+4g+j=5kq6Tm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Retrieve the parent TCB controller's platform_device and map its MMIO
+region using devm_ioremap_resource(). This allows direct register access
+through a base address, which is required for features like DMA that need
+physical addresses.
 
-Hi all,
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+ drivers/counter/microchip-tcb-capture.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-On Wed, 7 May 2025 12:49:00 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->=20
-> Today's linux-next merge of the tip tree got a conflict in:
->=20
->   drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
->=20
-> between commit:
->=20
->   a9843689e2de ("net: txgbe: add sriov function support")
->=20
-> from the net-next tree and commit:
->=20
->   567b0a520912 ("net: Switch to irq_domain_create_*()")
->=20
-> from the tip tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
->=20
-> diff --cc drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-> index 3b9e831cf0ef,f2c2bd257e39..000000000000
-> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
-> @@@ -198,9 -183,9 +198,9 @@@ int txgbe_setup_misc_irq(struct txgbe *
->   	if (wx->mac.type =3D=3D wx_mac_aml)
->   		goto skip_sp_irq;
->  =20
->  -	txgbe->misc.nirqs =3D 1;
->  +	txgbe->misc.nirqs =3D TXGBE_IRQ_MAX;
-> - 	txgbe->misc.domain =3D irq_domain_add_simple(NULL, txgbe->misc.nirqs, =
-0,
-> - 						   &txgbe_misc_irq_domain_ops, txgbe);
-> + 	txgbe->misc.domain =3D irq_domain_create_simple(NULL, txgbe->misc.nirq=
-s, 0,
-> + 						      &txgbe_misc_irq_domain_ops, txgbe);
->   	if (!txgbe->misc.domain)
->   		return -ENOMEM;
->  =20
+diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
+index 1a299d1f350b..9634da75bd1a 100644
+--- a/drivers/counter/microchip-tcb-capture.c
++++ b/drivers/counter/microchip-tcb-capture.c
+@@ -12,6 +12,7 @@
+ #include <linux/mutex.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <uapi/linux/counter/microchip-tcb-capture.h>
+@@ -29,7 +30,9 @@
+ 
+ struct mchp_tc_data {
+ 	const struct atmel_tcb_config *tc_cfg;
++	struct platform_device *pdev;
+ 	struct regmap *regmap;
++	void __iomem *base;
+ 	int qdec_mode;
+ 	int num_channels;
+ 	int channel[2];
+@@ -479,6 +482,8 @@ static int mchp_tc_probe(struct platform_device *pdev)
+ 	const struct atmel_tcb_config *tcb_config;
+ 	const struct of_device_id *match;
+ 	struct counter_device *counter;
++	struct platform_device *parent_pdev;
++	struct resource *parent_res;
+ 	struct mchp_tc_data *priv;
+ 	char clk_name[7];
+ 	struct regmap *regmap;
+@@ -491,6 +496,18 @@ static int mchp_tc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	priv = counter_priv(counter);
+ 
++	parent_pdev = of_find_device_by_node(np->parent);
++	if (!parent_pdev)
++		return -EPROBE_DEFER;
++
++	parent_res = platform_get_resource(parent_pdev, IORESOURCE_MEM, 0);
++	if (!parent_res)
++		return -EINVAL;
++
++	priv->base = devm_ioremap_resource(&parent_pdev->dev, parent_res);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
+ 	match = of_match_node(atmel_tc_of_match, np->parent);
+ 	tcb_config = match->data;
+ 	if (!tcb_config) {
+@@ -563,6 +580,7 @@ static int mchp_tc_probe(struct platform_device *pdev)
+ 
+ 	priv->tc_cfg = tcb_config;
+ 	priv->regmap = regmap;
++	priv->pdev = pdev;
+ 	counter->name = dev_name(&pdev->dev);
+ 	counter->parent = &pdev->dev;
+ 	counter->ops = &mchp_tc_ops;
 
-This is now a conflict between the net-next tree and Linus' tree/
+-- 
+2.43.0
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/o+MW=vr2532+4g+j=5kq6Tm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2qZgACgkQAVBC80lX
-0GwT7wf/fWQAj8OZZMVbej4HGWoEpYR1tA0t1tacM6TqEUm8ooLO0mCWNos1RlSq
-OYcABZyMkEa+86zzL45PubNi+KKrAGQU2pphTVztZ12zYh18OcPgNWU8xasuL+TF
-XSxrswGyAmPpN/YV+VJs3NNY5ALaPgd3gPkgUhXH3PAN21V027vZsrE5qCMCHz3D
-zlXYd09X0tSVIej7BFUTJMCvNF+RxH2AtiGi+s//HgGqimfqiRI7iKzOESAfWlPF
-w4VDOQGyLoOGJIcE1mpedhcYzbYGRHJ/T6UY4S/IC3oEF9Gt524oh0S2aHXcYxQA
-4jyAx8u+NbG/A83VqPivI025yGBlLw==
-=cjmD
------END PGP SIGNATURE-----
-
---Sig_/o+MW=vr2532+4g+j=5kq6Tm--
