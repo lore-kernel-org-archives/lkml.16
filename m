@@ -1,133 +1,202 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A7E223DC5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A0F1DE8AD
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748462426; cv=none; b=dfs14qqZJUyd52qHt1MUvRqaORpsnwz9Lt2G0BcZugd2f+elaQNTmK6/VX79v3BFLzjP9JABdMYyw0SwQOh347swGJR0OPuwlBdscX5p2ndMSZqdLrSdTFyhFbu8vZWVlTrBXRcS/d29ycpx7dg1zJf0v7wpxUpCOliMf/y6oxs=
+	t=1748462460; cv=none; b=m4JIBuzS+mhV5mpgri05wgjH88442bP0M/gYtaV2olkf9x+d0XIul8NALQ+QfUHYWJOnLVMumk3NkG1DsZjXIcK+R7qiCUFnHl7LzDLjYtImUSL5pv77f9NR4FpCQd962LBUtv72oKU2XXNOlgGnkToLs+Rk91YS1s0NfQSQItM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748462426; c=relaxed/simple;
-	bh=5DA+AqsUHtlrpCLr53RVEPhkKk3E6BWf3tgkSlGM9po=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tHb4Wiv7/OqT22qXTh8sKbTGQtV49BkN9Ye9jQ0UgkICtkR2h417aJfoPHBWanCjRZJlF+HMWTu3qBqGhrxA7BPFBT5f5Ad2B8X4U9P20Kd6aZeb8QnKSX7cgsNsA1RCctHmxGuWBihsjsXigOvbMBx0i4ucreVp7ovuA60xO7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ljm8VMBd; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748462460; c=relaxed/simple;
+	bh=KqrLmv35uoKda9csT1p9zJ9SSwocl++gGV7O1tqD2og=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XN6X0TGDdj6oPu05B91UiNkMIShHaVLm3zdw2Z9mXE4yJMlbWjRoU/dNkA0deLDnsh5yDT0nTHN6LJoioFQBvvkOa2h9coP15kgNFduOkvePxH+BLjUfCyIAkYMoyAeY5L1oT3k5dA1J2SQePLYkWd13k0IUpM7uFKb69NwTgE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T9nRDjk4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ljm8VMBd"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a362e099cfso28594f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748462422; x=1749067222; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UKLxvsv39RxRJwsXICazlS7Jk7LfOfN7XFHnOLZsSTY=;
-        b=ljm8VMBdoZqhlxe5P/bT+dtQhctkx0PtLIDzRLFgvoFsCNNa1w022B1RPMtNW38s9e
-         LeK9tE8DdEfFTplxFWz2ZoF4CJioXarUzXT9nbRbf0t1slS6KcSW0k2iBkyPRVIzCtDm
-         wHj8/q5McGa5JnnIzaG7NvVdR1FCrSKke48j4zhUcn80VJHIIXEZ9mTONIvwtR2K0hSu
-         v4fHh0IEW7KwapWMB43p/ULX1UC88Mg3S9JPRgscKpspvywe/NrGRxV/hOYdC60px6ix
-         wF0jNM+ETBMktFuwvffLU9ixdG0tm10MXUgjF16SmLH/NIieDZfQe/AuP+pEdBZYuoDC
-         nXZA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T9nRDjk4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748462456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=93E838XESEujavn6CtgRlZj0LiotNbJUH5vfb4rXjr0=;
+	b=T9nRDjk4krnFMt7k5jMM2WQbt9IUHOOUDCadpkDusFk+yknh4j0SmeAOmnVhs3u4L7j+QD
+	L/6AxQ0Y/gLYM+JRpDO2SDjfXTnotTNFGEgxLHU2HKN2yrxJufZK/aexFDrLS15z+BKoRL
+	RIlL4bARtcPZ52RPjMjTP5EcizHxga4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-453-8aSjCGm7OOCo9r7F3QSixQ-1; Wed, 28 May 2025 16:00:55 -0400
+X-MC-Unique: 8aSjCGm7OOCo9r7F3QSixQ-1
+X-Mimecast-MFC-AGG-ID: 8aSjCGm7OOCo9r7F3QSixQ_1748462454
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso78663f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:00:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748462422; x=1749067222;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UKLxvsv39RxRJwsXICazlS7Jk7LfOfN7XFHnOLZsSTY=;
-        b=meeIwjcQGLGFBIRUmRqhGjr8XRLGfRT2MgQDepAqPYDFuhD7cZhT2H2pl0NRSkYSkE
-         qLx58Dt2ME3khKJgnZzgE6doJGNScm6wSo48Fpnq48L+/x49PUOiuJm+k7T0Kw2N+ygf
-         W/3qg5tewWwUO9rZCkKif7mL8ELPHiQ0SmSQ/jpXH+I9xU4zsorcj9NP+YaKELSrAgNw
-         kbZQLBcfE4uqEnvlztOjI+/VUaUHJmswKauKOO3rPNGK7UwLXFHo33HrE8F0GUBigJdB
-         kkyRoifc0IUan9rCE9YxxRhmtWQKgshcJodV+jV7AzM6Z+HS41svU22/u0PqfhyoK7Gd
-         N+Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9/RLwFLheNGFoapQJuRFVg/Yd84KqYKYK+yhL2pLYkv++V9V9IkxqUgE6UObQGwmIoXsM//J+LKOoBDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr2krfo10V9HCFvyArhvc1w63sgWLunDWeoo3sYQFEOQjTzDNA
-	K4TqIsJ18lsQNlFfPtvGgz+cXqm5lqY//5tUg+WrQZJniHc0rpjGn6yEqqO51cSKD8M=
-X-Gm-Gg: ASbGnctJ5xQ9/rKp2owjXUhIsIIc8eOMkdAAdmr2lrT8EH4leJSY36SE8Ri0xNTHPR5
-	YsTRAuXvdT1antYkkAh9S4Cm/Su02NKBtaOuVFJyvt1bNn3/XPG7gFIt2AfBOfgOHgd2E5YLT2A
-	fDckaQNt27yeW1YPPyfBhbQZKHfy5aXLQDlJu8EU4cZjBn3sWkmZOL9tIAF6jcHZHSwXJvSKELL
-	s3fnJXEZRfwOLWaDtRQ3i6BaF5v2QvqF9D5VbZCJYlF+QEz+v3byfpoiuicMI1sVrOfnOWFebXg
-	I5jPzPBFIR47gI2Qz4PIySkcmkrBz8TqDyTWf86/KtM55J0rnWGIQ5WjuG2dbJ/ipJm4lnpiksJ
-	jRWfJlQ==
-X-Google-Smtp-Source: AGHT+IGJ3sSfYBTi3fPzjAN4VbtvolMgUW9qvhXd5IMVHnaBWBDNY4Nx1ZMx26UcQkDgBz2hyRa/zA==
-X-Received: by 2002:a05:600c:511f:b0:442:e608:12a6 with SMTP id 5b1f17b1804b1-44c91dc9fd0mr58577005e9.1.1748462422502;
-        Wed, 28 May 2025 13:00:22 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcbd61553sm53347665e9.0.2025.05.28.13.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:00:21 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 28 May 2025 22:00:02 +0200
-Subject: [PATCH 8/8] ASoC: codecs: wcd939x: Drop unused 'struct
- wcd939x_priv' fields
+        d=1e100.net; s=20230601; t=1748462454; x=1749067254;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=93E838XESEujavn6CtgRlZj0LiotNbJUH5vfb4rXjr0=;
+        b=bl2ngmKlOTx486Nq7ahNWq6mgZoCkOhc2b1ssurIeJePOyd9imGTeP494e2kiWK3vq
+         hYPpdYKIZBiL2n+25ua+6O6VUc0PogHeTr5Xq2nq4b3iVmrupThj7qAwo/liIKpBjd45
+         dimdCwHFlK6jYxjrl0g+MN7OoSki86dOE3AyeIfmZQBYBFw26x1GW6wzvNCvy3+jD/3b
+         wrVp03tvRQIMSX8lnuva/mg1Z5Nw887tx/4pVdeqJ1xYijCJ2kYGKCHpVLidoPwhjjR9
+         yJtTXhNOZTxouHEE+PPMjI/p+J0CA9M7iY0CJrt3k48f+rSrtIP7cQ4dXlSHK7wXoMPc
+         zNNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXLxBMRKiSLe527vAXA1dtsSxylzfHPQLAxc0MBo9BiUbUUUK0ldvS2z1t9oJ8eIg+EqID513F65yNhZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7UvDlymexahIPZUWVSRwoBppMIYxSrVOHVj3mea1zEq/gnenx
+	KkTd9ExPMuUWG0d8KwwXZ+kKrQnHuGUrg4YTADHYBBlalSAThUoKWmKZNfgLigcVIotpflCmDhj
+	rG2JmFPPtX2Wu9iTrgmPS6CFNQTSPnR84l1ZN9BR3jNQxox/KIOhRbeeB2+tXFkhGxw==
+X-Gm-Gg: ASbGncuOz7AAqCTDrPVbHhICZ0yZ9Tszo2zgUDjFAhd5nl++XXuGwKVKn2g6aOveR0i
+	CCek/x/Jm8iTNB58k5uDJtfzy6o3nqc+kr3GWAxvGOb7W5N4Bts0nlpVUy11MdTVLk+PmoCXZx0
+	3UVidQCgkj2w7mEoVqQprkA5JhX/ZQI/LK718T0yumdo/YvYvG8hvHWUk2M1YzgojdgAmnlTQpk
+	jB4aVU0ZBzIS8ssOUcFCc/RPw94g5K/TXHYTVkmXl06wWJFqDu8vSPQNIOQH0tVlUb9HaiA7G3a
+	/DeZD/YaVPmipARv50hWViDc9mUqV8KMzCdfq/QAoxWZNvZ738TIHvMmphx6cJdRPLeJ1EDddu2
+	7ufv1BZ1Joy3tiAKIo7Kw2YMQn8olIBEcwjxNLR8=
+X-Received: by 2002:a5d:5f8b:0:b0:3a0:bad4:1247 with SMTP id ffacd0b85a97d-3a4cb43214amr14077328f8f.15.1748462453908;
+        Wed, 28 May 2025 13:00:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBqsLwtFcwOenCmYLpxNpkEXnrA8AqUwB7ajvLJSL+i9CQyVRLcPLGZQcSU4LE00ooD3Gfig==
+X-Received: by 2002:a5d:5f8b:0:b0:3a0:bad4:1247 with SMTP id ffacd0b85a97d-3a4cb43214amr14077297f8f.15.1748462453524;
+        Wed, 28 May 2025 13:00:53 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eace3278sm2272546f8f.88.2025.05.28.13.00.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 13:00:53 -0700 (PDT)
+Message-ID: <4cc7e0bb-f247-419d-bf6f-07dc5e88c9c1@redhat.com>
+Date: Wed, 28 May 2025 22:00:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+ akpm@linux-foundation.org, mike.kravetz@oracle.com, kernel-dev@igalia.com,
+ stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+ Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
+References: <20250528023326.3499204-1-gavinguo@igalia.com>
+ <aDbXEnqnpDnAx4Mw@localhost.localdomain> <aDcl2YM5wX-MwzbM@x1.local>
+ <629bb87e-c493-4069-866c-20e02c14ddcc@redhat.com>
+ <aDcvplLNH0nGsLD1@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aDcvplLNH0nGsLD1@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-asoc-const-unused-v1-8-19a5d07b9d5c@linaro.org>
-References: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
-In-Reply-To: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
-To: David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Support Opensource <support.opensource@diasemi.com>, 
- Oder Chiou <oder_chiou@realtek.com>, Srinivas Kandagatla <srini@kernel.org>, 
- Shengjiu Wang <shengjiu.wang@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
- Fabio Estevam <festevam@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=5DA+AqsUHtlrpCLr53RVEPhkKk3E6BWf3tgkSlGM9po=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoN2tDrfib95CIYvZk4xi7M3DrBPE5m3VnGlzkN
- aW+v+MbM4yJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDdrQwAKCRDBN2bmhouD
- 15GKD/9fKywTDMjSHUBEwvsrMSYZ7PJx1H3Kx5RNb5MUtSG25meDZbWaHgDfMYrAPGpDsrgrtFR
- SGnr2WIOUdS4bx+SOU06YlLibFXpT+Uomolo2M9qHd7FLc9eJoh1VJ51hjHFznCbfpvEHAA7Fd+
- S44waPs6dgPrXRiTebK6adQOIYTf0kbBpNxkpwzdU6qNpSXeDzoDhbBYEI6bVp7ACElErAPg+NV
- HVY1qU+6PYUr2qVy1oTqiRvJoJ+4XQkSRNTLJArUdzXCN0gVU12dVuWu8n02ktCTobOjY1HflB7
- N39K6tqGL+Yu3tuQjuBjiF0asayZYqxOU70Zvz4Uj/82wQ3+yPqLWofZZr5nBf4S+eH7A+nUcLn
- wKuSW0AARL4MBdUQMBsByDZ+1583R5ti1ZzC5jcqWsyd/WUpPz1drs0CH4u9lcIQB6ZrWhQWIzW
- YoOULhkd7QttJe6kqE7XG2yq13z01RP7ONPPWtgJdlBtic1UKttSPbvib5iqZfIiOL0qhzYmcRA
- hLLlgRGEGM+6gL4ZMIpaAhypFVgKfBeyC5YlrjiUEy9y+aDSJTcOmrtR9SSI3JrzAB4lg1AQ2bu
- +t0xvzD0BCNsmMcuB6x3ZWOGTergECuyHVgmIaHVU8ZxvHTWUfHLsqEnc1foLwqqtXekUF4SY7C
- YLds3m08OwHgHMA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-'wcd_regmap_irq_chip' and 'jack' in 'struct wcd939x_priv' are not used
-at all.
+On 28.05.25 17:45, Oscar Salvador wrote:
+> On Wed, May 28, 2025 at 05:09:26PM +0200, David Hildenbrand wrote:
+>> On 28.05.25 17:03, Peter Xu wrote:
+>>> So I'm not 100% sure we need the folio lock even for copy; IIUC a refcount
+>>> would be enough?
+>>
+>> The introducing patches seem to talk about blocking concurrent migration /
+>> rmap walks.
+> 
+> I thought the main reason was because PageLock protects us against writes,
+> so when copying (in case of copying the underlying file), we want the
+> file to be stable throughout the copy?
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- sound/soc/codecs/wcd939x.c | 2 --
- 1 file changed, 2 deletions(-)
+Well, we don't do the same for ordinary pages, why should we do for hugetlb?
 
-diff --git a/sound/soc/codecs/wcd939x.c b/sound/soc/codecs/wcd939x.c
-index 067d23c7ecf90ae06da1ad6cc89d273fb7f7f875..bfd4d2c8bdc9bcfcdbf673d20458f779922eb464 100644
---- a/sound/soc/codecs/wcd939x.c
-+++ b/sound/soc/codecs/wcd939x.c
-@@ -190,10 +190,8 @@ struct wcd939x_priv {
- 	struct wcd_mbhc_intr intr_ids;
- 	struct wcd_clsh_ctrl *clsh_info;
- 	struct irq_domain *virq;
--	struct regmap_irq_chip *wcd_regmap_irq_chip;
- 	struct regmap_irq_chip_data *irq_chip;
- 	struct regulator_bulk_data supplies[WCD939X_MAX_SUPPLY];
--	struct snd_soc_jack *jack;
- 	unsigned long status_mask;
- 	s32 micb_ref[WCD939X_MAX_MICBIAS];
- 	s32 pullup_ref[WCD939X_MAX_MICBIAS];
+See wp_page_copy().
+
+If you have a MAP_PRIVATE mapping of a file and modify the pagecache 
+pages concurrently (write to another MAP_SHARED mapping, write() ...), 
+there are no guarantees about one observing any specific page state.
+
+At least not that I am aware of ;)
+
+
+> 
+>> Maybe also concurrent fallocate(PUNCH_HOLE) is a problem regarding
+>> reservations? Not sure ...
+> 
+> fallocate()->hugetlb_vmdelete_list() tries to grab the vma in write-mode,
+> and hugetlb_wp() grabs the lock in read-mode, so we should be covered?
+
+Yeah, maybe that's the case nowadays. Maybe it wasn't in the past ...
+
+> 
+> Also, hugetlbfs_punch_hole()->remove_inode_hugepages() will try to grab the mutex.
+> 
+> The only fishy thing I see is hugetlbfs_zero_partial_page().
+> 
+> But that is for old_page, and as I said, I thought main reason was to
+> protect us against writes during the copy.
+
+See above, I really wouldn't understand why that is required.
+
+> 
+>> For 2) I am also not sure if we need need the pagecache folio locked; I
+>> doubt it ... but this code is not the easiest to follow.
+>   
+> I have been staring at that code and thinking about potential scenarios
+> for a few days now, and I cannot convice myself that we need
+> pagecache_folio's lock when pagecache_folio != old_folio because as a
+> matter of fact I cannot think of anything it protects us against.
+> 
+> I plan to rework this in a more sane way, or at least less offusctaed, and then
+> Galvin can fire his syzkaller to check whether we are good.
+> 
+
 
 -- 
-2.45.2
+Cheers,
+
+David / dhildenb
 
