@@ -1,162 +1,163 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD4320A5F2
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B78C212FA2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464321; cv=none; b=fGiefpx6N+DOCLnez6kVHJHEPiktIRrWMeW+0O5rJhB9LqmbplUato5xuxXYhmXCQJZ7dARn9dAJ0CX76o/BOu8FZrYYjwAkvficyjobXXWHt6PJ/Isx2Y5LNepTW4hpqhKg75rXBVcb5mZW/gYiTmyiFOuflh4oCfIEQCt49T0=
+	t=1748464344; cv=none; b=BoByTn6sV3xymRMLG6VnwlHVA0TxYmPZAeP/1E16+CNzj59ZrbKcF1r/0RYSfQWWx1kSbOTsHLonGbIf+lRrVhpUmDXotykk7v6yAikP7YQsTGHGolbCHWYrcAEj53+5Z0Q9jeR9EdP0BxAnIMGMYNVaXRQpj6wt9PmGV6jBgLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464321; c=relaxed/simple;
-	bh=BrBbR5CbQI4aYUBRypucmSqCUVq5TrcbJLGOVPXbW0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jtt9GpsGZNZ8+Zoc92bF/ZQCIlgxSPle+wEF12UyFzgLFGC8LX6AMOCkCzlP6kuZGUHr8z+AFa7QKgj/bnQ6RxwkjEDf8noeZpIjSxKziB+lTYaXxD+rFAglGwDydc9jX5i/hRfdecfS5yx4RlYT/wUavGz1Ui/9XWOu/sBP5dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b=H/pj6v40; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
+	s=arc-20240116; t=1748464344; c=relaxed/simple;
+	bh=cqzg8Nrs2RZmTh//Eb9TZWrUR64FfEAGu16wIkkYdAs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFX7MIC0lLZnqsoPRzXH/6ab3mwjw4gY+gfyIsPygLJH8XyNLZ0d0DSbFewjk6N1uquTifpzvudi3LqMmeBfN9I+pNu03z8w0q6lp6iv/UmHnhP3ytfz+Rfvq/dzm0IOtDf7/SxdVY+zRGeTY/V9868Fh8gaX8h4xCzRB1mQGNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EDyg0zd9; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=smile.fr header.i=@smile.fr header.b="H/pj6v40"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a37a243388so153253f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:31:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDyg0zd9"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so6455ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:32:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile.fr; s=google; t=1748464317; x=1749069117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qSWXgr0Rc+W5KMUBLUdxw5Riulc06AxCHfqoKhxLOoQ=;
-        b=H/pj6v40epSxPzsz5NOLTEW4bEevGT4CPwr8NtlX9ehbR5H/6Tj4P8D8mkVOsOaL0Q
-         W0TvAf60MD5WKVjfx9y2t3uQ1XP0Hl7rpNyrK0VqVHWF+H8XRS/1jL2eG4ePBTESzMdu
-         ojveZz2CbqP7rf95JslNfNh1M2o6NHXJEZOzg=
+        d=google.com; s=20230601; t=1748464342; x=1749069142; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
+        b=EDyg0zd9WoMAXGYqL44CIGrO2Nfy6tslK/NTrvGJ28wx7zUjSgX/D4gxJ67b0Narz7
+         RIC78+wW5UkRzwZnSoIYcpG4QYVwU9CKIlwQAOTxJTfRJQerBxgECpEVRk4HRrljCqZL
+         a0mW1KWEZwqr7KShAfwkUKQ+JAuJCTRvtM6KW0wVa2loXaC/0rzozgSC/sjMpMuMvlu2
+         0QemHv0SSRiFw9FbkPUC+ZWp4lS+KgdzFNicHrU839fSedOmjcMLR0Angqy0hbhiNNYi
+         YLxnpvV1Xe5fGz3d2WMWJ0p73SnhIYSqDlgVBznWrVJoAKh4Md3Mm6HxXcNPOdZw24OH
+         snzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748464317; x=1749069117;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qSWXgr0Rc+W5KMUBLUdxw5Riulc06AxCHfqoKhxLOoQ=;
-        b=Z8dWVM8BCrdCW5Rw5VPFP24UsnWuJuBkO0cmHRCQ2F5iRYQadeQRARoA6MV1nFD32y
-         u4EGxYYLxmTgZQhvPfSKC1dPFQq6om7RwK9R6XS/01TdvlEcjj3WwWEuWn65z6SNMfGO
-         kUmpiPqE6fU0C03uYFXvV0eNwYIw5f1mRg9bd5ZedfPfQpKsDPCdjSwRqWnLGjAZ2X5w
-         fApsttUIxnpSJ9MnlyyYQH4MuiXj5tlwz0oFYZWybjl8wh9Ej7JKp4y3461IrvrpYci3
-         5bHrjAAgMAAqyS38M8EL4H30nwzMcjcih5WOxY8t37XQ3ngW2PPnyUy3WcELOoKRyfB1
-         EMLg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBdze8Rf+/x82wbT7wSx/uhLCgl6PzOXwsnxfYZRl78JJmxI7bAn2XefkuXjMDA5EqdUCsiLqlvRCpOMI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSRwJD8IsBDBxA/9Lx9v9jFvkRWcdS8anB7b30toNgMe69cF//
-	p5+cjI6fWAVs/I5jvRk/WKKaD0Uiv1LYhlzfIeiKS0WM2HFZ/t099xT/WXYDDC6TVSc=
-X-Gm-Gg: ASbGncvAeZCml1rjmy/F3syEQYfzh418Z7tozsIqZ6WvN5Yz/PJRIlJ3+2hw2hHDShO
-	BOg2i4u2zPe6YXpaG3B/WUI9DlwLx2iBhrYr96UNX26+Dshz0hdWxdw7fJFjhx2DabqJyLIyZjk
-	/BZOCjPjHvcafx1Lkiscqmkzaerucre1e9nJEtmKl1nsDTQKJWuCvcBbVjQq4u5laAqj8ZTTVy4
-	1u1187JEq+DGnAFfVeQkXOePn7g1TNyr6CoqOVUJnzU++TItixuCz7921gVxgyzwm2qV5uG54Ly
-	Cvef3boz5ravQTO+KSis0Hi/5TOFIBV0E1aH855w4rlDgvtdq+y4VTLGQHlfGUk=
-X-Google-Smtp-Source: AGHT+IFQ2szQOUKTYzQfDg5v2dEo7jM5cHq832S17GBiq2kI8tiPg0A1o7C6s+Meugy/KOsjoVv/2w==
-X-Received: by 2002:a05:6000:2087:b0:3a4:e706:5328 with SMTP id ffacd0b85a97d-3a4e70655cbmr4586644f8f.48.1748464317574;
-        Wed, 28 May 2025 13:31:57 -0700 (PDT)
-Received: from heaven.lan ([2001:861:3080:b0f0:6448:db2c:bea7:b817])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd8f0bsm2391181f8f.75.2025.05.28.13.31.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:31:57 -0700 (PDT)
-From: Corentin Guillevic <corentin.guillevic@smile.fr>
-To: Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Vasut <marex@denx.de>
-Cc: Corentin Guillevic <corentin.guillevic@smile.fr>,
-	Woojung Huh <Woojung.Huh@microchip.com>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: net: dsa: microchip: add bit-banged SMI example
-Date: Wed, 28 May 2025 22:31:51 +0200
-Message-ID: <20250528203152.628818-1-corentin.guillevic@smile.fr>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748464342; x=1749069142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ArJMZMVl2LGkS46qbZimujHcHlerzQiWnjpA0Sru5c=;
+        b=SpD0JEDtWWm+EKl8DcoCsxCupB2h/uUYefnLFMz3UKgbyIcEKlkutgMRylOuhR/aPx
+         NShPEqw35Oy3FJSLgi/cLDi61M9FRI/2UF6y/MRBUcY9XHXkNi9uJqqv6QVRdX7fIcWD
+         MGWjQKm16oZIY3OyyV8MeaLnX1e/uMRMNb4NCG/4h7nLCdF6o7wsG3rQZ4QXrQClT58G
+         0oAW7cnDcR0mDNhGqtL4NDMnz0UU1S4KAYZrRN9B5U4xydUkyvP59bQqXFvzCDiUmMNK
+         Nzjh5EbZiI7RvscvZMdL7kDqpbc+rlHAghqx3sXmlgONjxchW5VxE2fFt/U0IDoPEQvu
+         kyPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/HnOLDeySibktPB1OkYGEPqoKO01irTKymY25W6u4BCCWBSORZ86ylcoGb3YAMnMOMfajZfEJWn4IQB0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/FcoHb002YD33Oof6bkKJIlVKUKNDnk9qq2cEjuKq81KDACKh
+	WQAMQM+fKzOeKETPoZp74tNZYjAfv4FitPXsz73Gv6Et7s53G+Ffvjx3mh45HBf7eG0vrwRXfKf
+	vgZA8HIDnuWXCITaUvva8c5hHu+4zMqlQGksuULOd
+X-Gm-Gg: ASbGncvKyPa4FEDUfUFPUrLpUUGLLflso4pfAKsqJnIRE/wvVUUzB51NQ2pX7VqLzJ8
+	VfN84TaA5FS71q+4gc9EkTPChQqyc2OJbGac01/4EtMUibnW6Hnte6mlqh3rwlOI8OATc6iePLb
+	cgevUlwDEQM3b7QYndaTBonuZ4Z4cC3R6vCo/eIiN76WXBfQP8RyFpSd2xdofESVquKGa4CLWW
+X-Google-Smtp-Source: AGHT+IFxbYf/KKgtCHgkR2g2hC0aOo7l94jOkHSdvspLVMHrtQQvMGCJs9feaLc4Sb7/kUdAI99/uigeUUrlItn6an0=
+X-Received: by 2002:a05:6e02:3e90:b0:3dc:7350:b0c with SMTP id
+ e9e14a558f8ab-3dd91cc5c41mr800305ab.16.1748464341947; Wed, 28 May 2025
+ 13:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250410202647.1899125-1-irogers@google.com> <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+ <aDdU1npHL2Vczhsa@google.com> <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
+ <aDdqcfuAuk78eKXD@google.com>
+In-Reply-To: <aDdqcfuAuk78eKXD@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 28 May 2025 13:32:10 -0700
+X-Gm-Features: AX0GCFurQFzXfvz3EqLi-jVNrcInm9hsA2oagIcDmbIRIUFQSZV7VWoEaX9DxkU
+Message-ID: <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's -Wunreachable-code
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-KSZ8863 can be configured using I2C, SPI or Microchip SMI. The latter is
-similar to MDIO, but uses a different protocol. If the hardware doesn't
-support this, SMI bit banging can help. This commit adds an device tree
-example that uses the CONFIG_MDIO_GPIO driver for SMI bit banging.
+On Wed, May 28, 2025 at 12:56=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
+> > On Wed, May 28, 2025 at 11:24=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > > > On Fri, Apr 11, 2025 at 3:14=E2=80=AFPM Ian Rogers <irogers@google.=
+com> wrote:
+> > > > >
+> > > > > On Fri, Apr 11, 2025 at 2:34=E2=80=AFPM Namhyung Kim <namhyung@ke=
+rnel.org> wrote:
+> > > > > >
+> > > > > > Hi Ian,
+> > > > > >
+> > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > > > Clang's unreachable code warning is able to catch bugs like t=
+he famous
+> > > > > > > "goto fail" which gcc's unreachable code warning fails to war=
+n about
+> > > > > > > (it will complain about misleading indent). The changes here =
+are
+> > > > > > > sufficient to get perf building with clang with -Wunreachable=
+ code,
+> > > > > > > but they don't really fix any bugs. Posting as an RFC to see =
+if anyone
+> > > > > > > things this is worth pursuing.
+> > > > > >
+> > > > > > I'm not sure if it's useful and don't see what kind of bugs it =
+can
+> > > > > > address.  The proposed changes don't look like an improvement.
+> > > > >
+> > > > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > > > ```
+> > > > > if (...)
+> > > > >   goto fail;
+> > > > >   goto fail;
+> > > > > ```
+> > > > > Meaning the fail path was always taken and checking on the non-fa=
+il
+> > > > > code never executed. Newer GCCs will warn of this because of the
+> > > > > "misleading indent" but  clang won't. It is easy to imagine simil=
+ar
+> > > > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > > > could be useful.
+> > >
+> > > It doesn't look very convincing to me but it might be valuable in som=
+e
+> > > rare cases.  But the proposed changes - basically replace exit() to
+> > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  =
+I
+> > > guess it already has some kind of annotation like "noreturn"?
+> >
+> > Yep. The exit is incorrect (depending on your notion of correct, I'd
+> > go with clang's notion as they've had to consider this for a while) as
+> > it can never be executed. I've added the __builtin_unreachable() to
+> > document that you can never get to that statement, as otherwise it can
+> > make the code readability harder with the code looking like it will
+> > fall through after calling something like usage_with_options (which is
+> > noreturn). In unoptimized builds __builtin_unreachable() will fail if
+> > executed, so it is a bit more active than just a comment.
+>
+> Oh I see, usage_with_options() calls exit() inside so any code after
+> that won't be executed.  Hmm.. isn't it better to remove those codes
+> then?
 
-Signed-off-by: Corentin Guillevic <corentin.guillevic@smile.fr>
----
- .../bindings/net/dsa/microchip,ksz.yaml       | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Not sure I follow. The patch does remove the code but it replaces it
+with __builtin_unreachable() to basically state that the code here and
+below can never be reached. Do you mean remove the exit from
+usage_with_options? Then we'd need to fix all the callers, which would
+be a larger patch. Perhaps it should be usage_with_options_and_exit()
+to make it clearer that the code doesn't return. I was after doing
+what was minimal for -Wunreachable-code but while trying to keep the
+code clear.
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-index 62ca63e8a26f..6cab0100065b 100644
---- a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-+++ b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-@@ -242,3 +242,60 @@ examples:
-         };
-     };
- ...
-+  # KSZ8863 with bit-banged SMI
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    // Ethernet switch connected via SMI to the host, CPU port wired to eth0:
-+    ethernet0 {
-+        phy-mode = "rmii";
-+
-+        fixed-link {
-+            speed = <100>;
-+            full-duplex;
-+            pause;
-+        };
-+    };
-+
-+    mdio: mdio {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        compatible = "microchip,mdio-smi0";
-+        gpios = <&gpioc 1 GPIO_ACTIVE_HIGH>,
-+            <&gpioa 2 GPIO_ACTIVE_HIGH>;
-+        status = "okay";
-+
-+        switch@0 {
-+            compatible = "microchip,ksz8863";
-+            reg = <0>;
-+            reset-gpios = <&gpioa 4 GPIO_ACTIVE_LOW>;
-+            status = "okay";
-+
-+            ethernet-ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                lan1: port@0 {
-+                    reg = <0>;
-+                    label = "lan1";
-+                    phy-mode = "internal";
-+                };
-+                lan2: port@1 {
-+                    reg = <1>;
-+                    label = "lan2";
-+                    phy-mode = "internal";
-+                };
-+                port@2 {
-+                    reg = <2>;
-+                    label = "cpu";
-+                    ethernet = <&ethernet0>;
-+                    phy-mode = "rmii";
-+                    microchip,rmii-clk-internal;
-+
-+                    fixed-link {
-+                        speed = <100>;
-+                        full-duplex;
-+                    };
-+                };
-+            };
-+        };
-+   };
--- 
-2.49.0
+Thanks,
+Ian
 
+> Thanks,
+> Namhyung
+>
