@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217E61F872D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B301367;
+	Wed, 28 May 2025 07:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417088; cv=none; b=E63o96kN/HXrKvlshSby9hkaBEly8oGzl3bBEeGe5mDGlGqS6/cOSvhl2Nb9o8KCGFnlseN9jowAYAr4Ae2wH1Yu3K2SwdaLU3QqRJruOJaQHG5Av0syKV+x0JhtcwwkkgsC1RBR/muhO4o+/kjU/vkVfHPzEQsIc5ETr3c2wOc=
+	t=1748417142; cv=none; b=bxj4bsOjUH9LyTqwVdPcQURVKvrt8b/X7x9fkLL0aN+mUeTSPeTnkc7Td/6nOUsVBPmrDbxmEJQvujW+2SjuajpeYXv8gzDEjlcXBVp0rOwHO9/ehSCj26hdgPxbBd8hU4Y5YYmTSIVggTTgssYjiCMtGriPFlzTzjcuwtTAj5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417088; c=relaxed/simple;
-	bh=6xJQzx4C9XKRYxfQfKcV+U7e1I4Iv7BNohHvGevc1l0=;
+	s=arc-20240116; t=1748417142; c=relaxed/simple;
+	bh=4oYNcof0NvsL8+KTpTf/6kMf6BWKIsxqMPsWFf9O4mA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NKH5TnE5sWs7FMnfwYVb+cjjpglXUgIzNRaxMJ/z2m52/zdPZRY0Y5dmlBsdLcebhJhre000aBFFksJ/fuPiWsuuDr6/HWAsYDmbBlwUSO8/YrDi6cb1MiNi4mND0K/Ahmhnnx6U/FARxuKcc6ItmmFD6uODXwPNhhiEMVaTcZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ff6Tt3Wk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=NuoylqEhCd6eD3lB7iAUS4C6l/PhdIrXe4qjXAag7Dw76NE/7qS6hQgZ7A514sq9YIFANRLWwoRVvkLdUOUSqu4dhUGr/ZEjj4QkjvnDg0iWruwlUn0jidpMdJOEf42KR1tJrAW4SlAS5yURkKTJqO4nLhglGjS8n1zmHxwql6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3xfTqv/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ff6Tt3Wk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748417086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6XYHyB+9SF/Z+X8QKiEUWQZQ80MVzujdD87l+S5+Um8=;
-	b=ff6Tt3WkDfS/WEuuQYI8kxdyNwFSZMOSvcGPDm6CZsAP2i1rvkwkpi6o+K+e2gbjoN2SwN
-	/9cqQXQj9Dt6VoK9YwyREchpeDFjjgO/QHRaq51MyX8kiygMhzWEcfuXiW8OdtmeuUMelY
-	uzRUr8xqOU1YNPopnODosrZogkDODmo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-G_7PA-QhPBmZjA_oitwmHw-1; Wed, 28 May 2025 03:24:44 -0400
-X-MC-Unique: G_7PA-QhPBmZjA_oitwmHw-1
-X-Mimecast-MFC-AGG-ID: G_7PA-QhPBmZjA_oitwmHw_1748417083
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442cd12d151so35839985e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417083; x=1749021883;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6XYHyB+9SF/Z+X8QKiEUWQZQ80MVzujdD87l+S5+Um8=;
-        b=EqJhIuCVBwcqHB9BrFN2R/UBWuzY62oA0EXPYCCH/qmSgQXdQnu70c2JSWvWi1Mj3r
-         yEuDE6rt5CxpTaMrYvenzQL4Sx+sIrZDQdMkP1EE4132b1ZQvAgMjfXH/qOFo8l8J8C5
-         /LcjS+7+FZXYUC8MQpROiJaHQeFrl21cSfzRgZz5Vmwds5lISSFhO0r/V2JYJ41erGFZ
-         eRnHSPPBL6ohHsIXH3M248/tR3IyYGseuJqgxk1KIVqntZ73q9PYzNMAkZv6907YxGcU
-         TYOpDMpvLoj6INXifUF4dcAuZkr5+BoZ+eRXXaAcs/y4acPYUaeuSKTon+1OOATfUDrq
-         tS0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUS40wvLwWtx0nXMNUrmJAxhSXI7eVNUVEefGDByrAeY/SuvtiUIv6tQyqqE/oBnzKTIPE9I4QpR+oTqV4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKxO8dXwK6UW23S/U76EdQk+x1Txpxd16M1XjwsYiWWQsa9jRe
-	oPPfubPj5LeeUoy7RaCWlhbAnECyCgAaSzMeKtvg9M9QbBiD2Ng9KabhV5sll9QSRqFLfInq6WY
-	9vP7z+Q0yVKIjGN+3tEuWn06RvIRcFx9cVxJEzrm4N8EO3lNlt75uyiH5O8E/sTD2mQ==
-X-Gm-Gg: ASbGnctxZ6o5+Gxa35Lre19ec/H6naQeZSHdv4Z7FCI82x4m35isnAWK0YpZFiJdwfQ
-	6E1vbfqoq942hAkTffv0keNberBpNWvn37pLh7h+fj6xi7HmwosukxDujJ3tb97w5sV8F6w2WMr
-	WkyKXD3LzulpIHVMNtM7ZaIVkUg0xOk671MECh+355HG0Q9zmw/sG68ohsjgst6lc6dGmLoQINK
-	IvkNkzJReVm/lQUswoswEVEStTu//ks9UO2POHnu4JGknfOcSUIEwXTsjrPwm4Tfa2CUPCcJl5n
-	bmu5LUl6bhAnBTBDOQ+PdyNiUGkqwL+xZTBQXKCfcWe/HCiu6QMbc5JfrpI=
-X-Received: by 2002:a05:600c:5618:b0:441:a715:664a with SMTP id 5b1f17b1804b1-44f840b38bcmr46892705e9.20.1748417083454;
-        Wed, 28 May 2025 00:24:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFCqE1uwRo600JGmvrx2hbwcJjRSG8+fqxy1BRdw24yujy5GkHaEMyOu3ekjIht4ITlGdwQlA==
-X-Received: by 2002:a05:600c:5618:b0:441:a715:664a with SMTP id 5b1f17b1804b1-44f840b38bcmr46892395e9.20.1748417083030;
-        Wed, 28 May 2025 00:24:43 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064ae775sm11977185e9.22.2025.05.28.00.24.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 00:24:41 -0700 (PDT)
-Message-ID: <dbc34cfe-c788-46bb-bd26-793104d887ab@redhat.com>
-Date: Wed, 28 May 2025 09:24:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3xfTqv/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5639FC4CEE7;
+	Wed, 28 May 2025 07:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748417141;
+	bh=4oYNcof0NvsL8+KTpTf/6kMf6BWKIsxqMPsWFf9O4mA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A3xfTqv/aRqe3q/tUZrThHNI+nMFY318R4H/TLQCQ9vWKOB/H/bnAVOoN3AsHO5tG
+	 9PbV2nLbbxG5BKqFdgkleiVdySiRtW09ifX5uJQhaWh8eM7A4qM1yN3irbHJ2mTYES
+	 lCXkU0EI+H5mmhW+yGZsiX13kAVn/o+ncr+hcNUi0bLSJuwwgNr37JpWrPadwVtc8t
+	 TXqhrAXQoGH1av837RuoHqTI15rQHFTP4hKcat63hjdXpoylWWdAVWR4uRUsIa7ymx
+	 yJGv3L5MVaGO0qEGAN0e055fXDqTeq+mWcoN/Dx9T1EhzG5cem9dvuiUsV9qlncR6+
+	 9sUiEPKftXiYA==
+Message-ID: <441dd5c3-fd51-4471-86ad-337c646b1571@kernel.org>
+Date: Wed, 28 May 2025 09:25:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,35 +35,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 1/3] dpll: add reference-sync netlink
- attribute
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
- edumazet@google.com, horms@kernel.org, vadim.fedorenko@linux.dev,
- jiri@resnulli.us, anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- andrew+netdev@lunn.ch, aleksandr.loktionov@intel.com, corbet@lwn.net
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
- linux-doc@vger.kernel.org, Milena Olech <milena.olech@intel.com>
-References: <20250523172650.1517164-1-arkadiusz.kubalewski@intel.com>
- <20250523172650.1517164-2-arkadiusz.kubalewski@intel.com>
+Subject: Re: [PATCH 09/10] PCI: exynos: Add support for Tesla FSD SoC
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+ krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+ vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
+ m.szyprowski@samsung.com, jh80.chung@samsung.com
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193300epcas5p17e954bb18de9169d65e00501b1dcd046@epcas5p1.samsung.com>
+ <20250518193152.63476-10-shradha.t@samsung.com>
+ <20250521-competent-honeybee-of-will-3f3ae1@kuoka>
+ <0e2801dbcef4$78fe5ec0$6afb1c40$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250523172650.1517164-2-arkadiusz.kubalewski@intel.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <0e2801dbcef4$78fe5ec0$6afb1c40$@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/23/25 7:26 PM, Arkadiusz Kubalewski wrote:
-> Add new netlink attribute to allow user space configuration of reference
-> sync pin pairs, where both pins are used to provide one clock signal
-> consisting of both: base frequency and sync signal.
+On 27/05/2025 12:45, Shradha Todi wrote:
 > 
-> Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Reviewed-by: Milena Olech <milena.olech@intel.com>
-> Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: 21 May 2025 15:18
+>> To: Shradha Todi <shradha.t@samsung.com>
+>> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.or;
+>> linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
+>> kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+>> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de; m.szyprowski@samsung.com;
+>> jh80.chung@samsung.com
+>> Subject: Re: [PATCH 09/10] PCI: exynos: Add support for Tesla FSD SoC
+>>
+>> On Mon, May 19, 2025 at 01:01:51AM GMT, Shradha Todi wrote:
+>>>  static int exynos_pcie_probe(struct platform_device *pdev)  {
+>>>  	struct device *dev = &pdev->dev;
+>>> @@ -355,6 +578,26 @@ static int exynos_pcie_probe(struct platform_device *pdev)
+>>>  	if (IS_ERR(ep->phy))
+>>>  		return PTR_ERR(ep->phy);
+>>>
+>>> +	if (ep->pdata->soc_variant == FSD) {
+>>> +		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
+>>> +		if (ret)
+>>> +			return ret;
+>>> +
+>>> +		ep->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
+>>> +				"samsung,syscon-pcie");
+>>> +		if (IS_ERR(ep->sysreg)) {
+>>> +			dev_err(dev, "sysreg regmap lookup failed.\n");
+>>> +			return PTR_ERR(ep->sysreg);
+>>> +		}
+>>> +
+>>> +		ret = of_property_read_u32_index(dev->of_node, "samsung,syscon-pcie", 1,
+>>> +						 &ep->sysreg_offset);
+>>> +		if (ret) {
+>>> +			dev_err(dev, "couldn't get the register offset for syscon!\n");
+>>
+>> So all MMIO will go via syscon? I am pretty close to NAKing all this, but let's be sure that I got it right - please post your complete DTS
+>> for upstream. That's a requirement from me for any samsung drivers - I don't want to support fake, broken downstream solutions
+>> (based on multiple past submissions).
+>>
+> 
+> By all MMIO do you mean DBI read/write? The FSD hardware architecture is such that the DBI/ATU/DMA address is at the same offset.
+> The syscon register holds the upper bits of the actual address differentiating between these 3 spaces. This kind of implementation was done
+> to reduce address space for PCI DWC controller. So yes, each DBI/ATU register read/write will have syscon write before it to switch address space.
 
-Same reasoning of the other series, please repost after the merge
-window, thanks!
+Wrap your replies correctly to fit mailing list.
 
-Paolo
+No, I meant your binding does not define any MMIO at all. I see you use
+for example elbi_base which is mapped from "elbi" reg entry, but you do
+not have it in your binding.
 
+Maybe just binding is heavily incomplete and that confused me.
+
+Best regards,
+Krzysztof
