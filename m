@@ -1,67 +1,67 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010062.outbound.protection.outlook.com [52.101.85.62])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11010060.outbound.protection.outlook.com [52.101.51.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644973398A;
-	Wed, 28 May 2025 10:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6E211A35;
+	Wed, 28 May 2025 10:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428090; cv=fail; b=iIsFlmnlJvoxBguJGFe2hSRWVrqBu2tQY1Qleazu053Gxsh2w/50WBAokJoB5U7aO3bLYu9zNRpZHw9Chh9kwZVlgFbm9NYfJ50G0IcY0Y6tV9WGxgNFQO6/AjsQBwzGa2ErGzDMqxyqge/JdoSisKIbeZQWdDLMzuSWYUzZR/U=
+	t=1748428156; cv=fail; b=d2bZPKXIXS4wgXyphB47u/zlLeTbRGysVcN2TXL6e8UhI4LCtY3JczgE/LliBQHLP8iZ80tVnzR2dMvgw5uQDSCc/y/IHELwJ7aaXbnsZmAdbExok3ykJtbzL64WaFBoQ2zud0kwy51vylEbf+yY8LcBANB1AkcXmj4j4VrxoJw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428090; c=relaxed/simple;
-	bh=TaBmxuT1vDj/cWheJmtriy1OWMOKY4QfDBN4Y+FrX7k=;
+	s=arc-20240116; t=1748428156; c=relaxed/simple;
+	bh=lcqcNqFQpPpOIVoPD4SRwXBqHtI25WBw23Z4EwhJjk0=;
 	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eFBmi7+9prB4Q2ypWmw+VL883xev+ZBNGf21xryp4VEBJDpattvqDKUlYuaVDP9a58RjDec30vHjz+znrqMi9MjDFCdOw6ZPdS4mnqH7l8ZEq7NKguGR1hjj0V5QIdSVbTH0uS88A06H1DciJXheCgh94BPG3ItNNy2K46YdKtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=QWuEu22m; arc=fail smtp.client-ip=52.101.85.62
+	 Content-Type:MIME-Version; b=KOSzHQ/SR3ypIIKuFPU6sAeKlyZlxqeOmWdkioRNFnE6q0ELDxupvxifzWE98gqfzOiNETKjMi2e8dmO+6vRPAFDhSaRondI36Y4wTFHXt4f5uXG0BHX941t0PVgGyA0YlU+i4IWKQj9KvAE3vQI8XuIOyqua/kaZl/aj8hiZ+Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=wMdjYH7R; arc=fail smtp.client-ip=52.101.51.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="QWuEu22m"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="wMdjYH7R"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DH1DZzj0NwHNc6e1KYj7EWLD7Ps6FLdC3Ti9b0eXVIDVmBrcQ91mbe1IqAQ59STD7BPGfJuYNEeVHwr6zYjSC/Rur7jL9aohKp+5UbEae9mlEYVcpiHhYyMWNnpQt64bsqZai7RrgfgbiVAzw6z4ZEDh44SpoCThxqCoVZkofMpFrr9C/d62O+NOQtEqT/b+kwGTqiK5Zi/NnsTGOfnh69oH7d7OIBZNkzsColtFGQWvOCj0v9L3i0hyMlayPZyo65utND4sy4EJ2fxqQJGzxtvhx7m5MpEaqZViUZhk9XDdxFbYzlONcfQpokjECgukvoMyOeOANp+XsYCVAEHs0Q==
+ b=gMV3Qkcze7k3wtCcsGtxL1flQmRcM+z/EL2pQ9wRWmQdag9iK89NLlhztezokIzElGIz0f+tw9sOoRzv+FelDSR3p9Ofcq36VmS6iRSJpgSAZkGUq6sxyFUKax2o3AWWC0UDXEukGljJq26JmB5Hir8fKjYr9dRvUfEPFRUnhwInB1IKCR5DZh0y02yFZJLN22ZMTLikSVHNvyB0PTfqLDiJXxBtwt9fEB5wlOc8iTmCwL2bCvWJ0V1ud9k2+JQO0L4UKWX1Ld7XH5bIex6G7KHk0P3h57dpglSm/HWRnJJVulKs7Q/JOKqy/Zzt8FrxOlvfKkuFczscP9khzgkFBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ssWFnHgHyycAuwzhntW4yMXjlJoPHlESVcjLoMb9S3g=;
- b=JdYYu0TaKiU4TvbTDPqUJupiCnlLJe3jk1XIO7i8cYBJqjdrn5aFc0mqya3cPNGtiFA0ANCRnlKpDPcwF2FTXSpx352cM2fHcRUgZXhUq/dxp79d5BvkMf/m+MNDROajJP21xx5kl1NB82McIJAV7nzD+2IAItA50QPH82QNrv5RkEwZV5b+4vNW8VTgJ0mrtpV2vNs2vmAze9wYeG37nc0YhdT+4oVxwHUk1QjTQy1dh/FKX3/RWl9DTHcnjUgC5Qb9aoDX2qvI+sU5CVz6Of59wVzmZLkqJEzZ9SJlAMNCyngx7eHnL7Hz1d9kHfcJs8Jt5AOPt3aetgvfvLfb9Q==
+ bh=cVFQ385IfMWP+dmdQn3UliBRM7KkvEf7cViU3m0wzHM=;
+ b=gnEtNXX0iWoxzuyxstFfHidZ1bM+7/rHm2d7cK5xyEKP2wx5zjr83M4NoU1ghO1fHHfnXXHt4D3uE7UwwNQWzijvVYI1i9oZec2dbSf8KoEssHzI5WYf6cg7qABAgMI0h0Og6wbHmdbFj03BD9wBe9KcFzC9VUkvsAiaBmDKgkmlCAqSAK3fQ4KB50xErh42WMRZ0+LKVvMrGf34KuNfM5tIDavIwnSWjMsUB+1u49YRMWfvSMToUiAz/q3l5A6Ur+ll5Gd3Ob6i/sPVrymL0fybcUu8FlITaeuQ7OmrN/mNCbkXplKQcyiBkDhpJVU6/VFxko7ao2hWtofHP7jQKg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
  dkim=pass header.d=altera.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ssWFnHgHyycAuwzhntW4yMXjlJoPHlESVcjLoMb9S3g=;
- b=QWuEu22mOmO9DVSXrYlijQ59BiN7ib/Z9OqYJ5Qd1jJXsP95uQPZYfWA9VUqQPlN1X8Co2mjDBMAwjX6xQL9jpbfGfr/g6/F1xXtISpVJEcZ8v/3fVadxQNT8D6/xf6ZOg39H78B5kjG4JU3J53jQ1Nqfix8eO8wq0MLVe5PE5q8lo2Z/tEodp3QEBgHzi1ptG/mPX5n7nc5Q5NYASosDNS71t3YBPg1YAwwr1mpk2OjAXfVETfSxeUmXmuHT0hEsgFfSJMUVVvr8g0Jqbd/exMlzheQGvo/zQP4FsAuaFUdi/QXqnR1Kcnph/uLo5/v3ZnsKZVZDmEDH9Af0109Mw==
+ bh=cVFQ385IfMWP+dmdQn3UliBRM7KkvEf7cViU3m0wzHM=;
+ b=wMdjYH7RougFIpMDg4fndDkJe479ctbE6Jk8DS2ARW2ePLLf8adPOhYF825Ke7l30EK3qsHmF5nMsPlObYbcqkBmn4InHsWS2lc5Iz19ofNgdpf+kurAerzV9qNVWH2m+gSSk3gf4d87+q6uOG8bwsEcJP7hgq1mH7lnbKzi/9BnvCn7OakwdafAHiX+gJIF111Xg+LNGhlFqUh48FwiGxieYnGjcPPQoFRgOHQf6N23Yg6LT9z0kwJjW6qQHBUu32/atRGFmQypGCIwp1ocRGGLT1zDkM6cvjNoq1kL7L0PVhmI0O1aIjEvMllsEO3l90e9K5dZOT8HO+mbCW/ptA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=altera.com;
 Received: from BN9PR03MB6201.namprd03.prod.outlook.com (2603:10b6:408:11e::20)
  by DM4PR03MB6176.namprd03.prod.outlook.com (2603:10b6:5:39c::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Wed, 28 May
- 2025 10:28:05 +0000
+ 2025 10:29:12 +0000
 Received: from BN9PR03MB6201.namprd03.prod.outlook.com
  ([fe80::6b16:5fd0:112:ab8e]) by BN9PR03MB6201.namprd03.prod.outlook.com
  ([fe80::6b16:5fd0:112:ab8e%5]) with mapi id 15.20.8769.021; Wed, 28 May 2025
- 10:28:05 +0000
-Message-ID: <5d055750-787e-44e8-a498-47258c7ffe70@altera.com>
-Date: Wed, 28 May 2025 15:57:58 +0530
+ 10:29:12 +0000
+Message-ID: <0f74ed36-13bd-4b6c-9d5e-f52cc25235f8@altera.com>
+Date: Wed, 28 May 2025 15:59:05 +0530
 User-Agent: Mozilla Thunderbird
 From: Mahesh Rao <mahesh.rao@altera.com>
-Subject: Re: [PATCH v3 1/4] firmware: stratix10-svc: Add mutex lock and unlock
- in stratix10 memory allocation/free
+Subject: Re: [PATCH v3 3/4] firmware: stratix10-svc: Add initial support for
+ asynchronous communication with Stratix10 service channel
 To: Krzysztof Kozlowski <krzk@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>,
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 References: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
- <20250526-sip_svc_upstream-v3-1-6a08a4502de3@altera.com>
- <c9c08142-752a-4ce5-a723-9f50486dddb6@kernel.org>
+ <20250526-sip_svc_upstream-v3-3-6a08a4502de3@altera.com>
+ <3a76c7b1-ce02-41eb-a4c0-ae065e9b99f3@kernel.org>
 Content-Language: en-US
-In-Reply-To: <c9c08142-752a-4ce5-a723-9f50486dddb6@kernel.org>
+In-Reply-To: <3a76c7b1-ce02-41eb-a4c0-ae065e9b99f3@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0078.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ad::20) To BN9PR03MB6201.namprd03.prod.outlook.com
+X-ClientProxiedBy: MA0PR01CA0091.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ae::14) To BN9PR03MB6201.namprd03.prod.outlook.com
  (2603:10b6:408:11e::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,183 +71,259 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BN9PR03MB6201:EE_|DM4PR03MB6176:EE_
-X-MS-Office365-Filtering-Correlation-Id: a07f2206-2930-4476-0f22-08dd9dd2552b
+X-MS-Office365-Filtering-Correlation-Id: aca553fe-93ad-4bb9-93f8-08dd9dd27cfb
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d3BLRlhCYVBxOEtaazJieEh4K2tSakdYc2N3OUthMklpSVJhSURwNGV6N1l2?=
- =?utf-8?B?NlR2QzNVRVBIWmdIanY1aTRjY1M5Y0xVVEkvalhIR0N6Rkw1ZDRvYzFpOGpR?=
- =?utf-8?B?d21ycC9SUVpmTXNRMXcvbUxhcDBFWVo3aFhpMGpRM2FwR3cwMmtDZUplb1VS?=
- =?utf-8?B?SFBSeFVxTnJXVTVyelR6dFZuRDBweXZ4SldhdVdEaVo0b3NqZWN2MUxFVzUr?=
- =?utf-8?B?b296MEx2SURlYll1d1FtUUFpZEdRQnRaek5yeWtDRVBJU3lxSzR4TWUwdWYy?=
- =?utf-8?B?ajVDQjhQU1dpb0lwMW5VZUhCb005SStsd0RYNTgzVmdxbU1hYjJYeGYvUGQ2?=
- =?utf-8?B?ZC9PeUJqbTh5YU9peVR3Tnk5cnowRnMrNXBuSzMvbVppaDFNT1Y1ak8wOHdH?=
- =?utf-8?B?dmxMWVM2a0x4bGFlM3pKMURYZjR1VEJhMmtuVDl2Y01PdzYzdVIzN3duVkd0?=
- =?utf-8?B?WStKYXdKQS9mRlZVbFJFelZIMHB1RW9YQW9TNEM4Z0ZFcWpkTFAzaHlzKzI5?=
- =?utf-8?B?a0FUODZiS0c1OVc3T2I1NU1nbmFEdjJJTHBMWXBMY0tCc0prQ004MVQ3eFpt?=
- =?utf-8?B?MmpPNWVTVDBCakJVWlc5VURMWTJ6T1pHNUVsditKRjBTZTZoUEx5dVBYU3dL?=
- =?utf-8?B?NVZ2RFE4TkdCbTVWZjFvUkJBeFZOQWlZNVpaMXhPNG5nOFNwam9JNEFlMVlL?=
- =?utf-8?B?Q1h6cTk4L3c2dVh2dEQrRmk2bEFSTUFKelBDcWdXVHdoYytVUG9kSUJML1BW?=
- =?utf-8?B?WXhyVDJnQ21TOEsrSTJsajJ2bVByYjVWSEZOZDQ0VWlCKzIxMjlmNlRBMlBY?=
- =?utf-8?B?Q2JmKythaUZLVGdqMzA2QTgxRThMZTZDK2pncFc4SHZ1TU1ZMEF1NnJ3elBZ?=
- =?utf-8?B?TXFxV1FQWG9LZFM2YVI5NldPYVNYczFTYm53M2JlLzJrOWQyRWg5OXFJOEIx?=
- =?utf-8?B?VU1hayt3aFY5eHd5Zy9tT2crOUVZS3YzN1ZDUW1adUpNc21EMUh3OC9ySFRo?=
- =?utf-8?B?QUZ5VyswWUtTM256em1PaG9FQkVrRzFaTDhJaEhqbk9NWUZ0VTBSd01WaVE4?=
- =?utf-8?B?c1dOZEs2UWhqeVpINkFvaWxvQ3Z5RXBkSnd2MXNwUmpRTWhLbEJnZ3BrOGw5?=
- =?utf-8?B?aE1wRFIzVEpGV09saUpTVzRlOHJPMWpDVTJRRlYvMTBSaFZ2WjFpazhmT0lJ?=
- =?utf-8?B?MHV5NnRXdkV0VVk3YzgxYzNDV3RYUDAzMmorQ3RFN3lobWFWWjltaDRvRFVM?=
- =?utf-8?B?dFgzUEtkR1prVlJ4d3U4NzRvZjlOS3JONVFma2Q4Qjl6MGRvSHlwajJETHVF?=
- =?utf-8?B?cm53Y0M1UGxDdG1Qb1p2eXF4cnNLV0RQS2FRcDVjQjhaQ0xUS2hzTlF3Qmp2?=
- =?utf-8?B?VXFHRXg0d0RCYjA5Z0JzV1ZzYnBZYTR5SXlWLzM3dHlHT0hkNUh3NERwU3pF?=
- =?utf-8?B?WXBjWnFuZDNjQ3NDbG8zQjRaVUFCa1loV3phcDRjTGZxdjBTYXZKaTZPdGMz?=
- =?utf-8?B?L3p1S1JHSFJmZVFpcnVNTnNkWVc2SSt6SitRc0ppS0hkSzg5emhzUEppU1Y3?=
- =?utf-8?B?RFl3clJzRHVEQVppd3N0MDlsWWtuTGhSUi82VHNQUzB0bElQa2U0V0VhcE5D?=
- =?utf-8?B?ZTBWT203NC9aeEhCdStjZ1BudFF0YWdiZnIrYk5McUZYVGx5anltRzVkbk1k?=
- =?utf-8?B?cnBNdXZkL0F5em1vNUp5dWdSdnRUdHJla1NxcERjK1hnc041TFFpVVI2YlJO?=
- =?utf-8?B?QjRtdWNtVUU0TTZ5R2FoT2N4YXhvNFBQUHRlUHpFQXZHNE55QkNHTHQ5L0F1?=
- =?utf-8?B?Y1lBbmRlSE9CWlhsM0xBeVkxZlRDcWJVdFBBVXRDUDhxUllLQ0o0NzVTbnZl?=
- =?utf-8?B?aUtXVm5kQitkZUM4eGxBQWZOL0l3RTdLZDBhcjdsUXVORGFUbTRGMnFsa2k5?=
- =?utf-8?Q?Ugao42Wf1ek=3D?=
+	=?utf-8?B?aVlheFFGTVpUYjVOYlVIWm5nRS9iQVpnRjhwTWNUVnMyRlVnSzV3OXVHUXA0?=
+ =?utf-8?B?QndBNk1MbW1PSVY1WDk4MXRLd2F2OTg0cjNnSnlDeHNrUC9XMm5kNVdNZHhK?=
+ =?utf-8?B?aWRjSHpobnZ5dlpMQ25zeE9XMCs2OFI0Z0h2VE9FT3Y5M1hyL1kvRml3TGFX?=
+ =?utf-8?B?blBEamtPcW91bU45aE1pVEx3T21LRGJsVTBRc1pmK28zVncvSjl2YmpscEwv?=
+ =?utf-8?B?bnIzWVcwL2lUQ2NsQkZtNklTcEM5QVdkVGJ1bm5RL1N6QVczUHJMcEJRQWxD?=
+ =?utf-8?B?ZWpMN3dZQnBCN0lySmNTWEdpalE2WjFhaXNablpyV05KemFPTTdPV2t4Zmg5?=
+ =?utf-8?B?QkFUcStFd05uTGpxd1FsSGVOc3gzVHArZ05hTGc5Y2psUlJ1cDIxUnB1czdj?=
+ =?utf-8?B?TVJ0UzVDMW5yY1dnYWRHSG92L1dQbHlSTVpzQ3NBUjZDVElEWTVMZE5TaHVJ?=
+ =?utf-8?B?SmVHZ1VmQ2FuL2RSRksyeWZVQ0hVTCtNbmhrbXMwditRSU1SRW80UlgreGFZ?=
+ =?utf-8?B?ZmwxbDRxWFFQYWV5VmMwUS8rNnVJUGdieGt0L09zeDIzOXJ6UlptVWR6dkw5?=
+ =?utf-8?B?VFp4MGpVOVA2UWh3TkIzTi9pQ2dVL2xxMk0zRHdqd2RZYTRyd2NHM0N3S2ZY?=
+ =?utf-8?B?OUFLMjFqM28rY0xucnpkV2Q4bGxoNityRnhYQ0hzNDdxNm9OSng0aDk3UWNm?=
+ =?utf-8?B?dXlTbU1DUDlHeUpWbUkzbzkyanBNNmhIS2xVSWM5SVpscTlPSXFFWGpJV3d3?=
+ =?utf-8?B?SFlrRG1taEhGaVoxTzBUeFMxYlZ2MDdEWnlQYUhwMEhtRVlmUFp2ZGxRbmxL?=
+ =?utf-8?B?SU5yamJZN2xDc2JpbDNpK1dUaVJRSEJ6RFdzRGptd1RIUmZsMVp6WGluSU9D?=
+ =?utf-8?B?YWZDSExScjJQaERBUU4way81NDFxeFBabFV5K1JKTzJtcm5MQzlEcG8zcHRk?=
+ =?utf-8?B?TVpDM0I1TXNXRVEzUUlIVmx3UGIzNjUzMm5Wa0UyTjd0MWFpNUZHdlRRSXNI?=
+ =?utf-8?B?b1dvSUdya0VacGhZL2R5RU1PejBhRXVibllITHV3cVdwM0F5NVhDNmFqbGFW?=
+ =?utf-8?B?Z05zTDM1amxhNExMTVlMaXBOT2lFZDFrWDBkMk1URE95NTB1NkxhN2FTUDB5?=
+ =?utf-8?B?ZEVVakxYdCs0THpuYWxuNjE5WUdib2J3T1JTOGQ0MERvZlNGeEFwdWtEVUZI?=
+ =?utf-8?B?V24wOEJXTTVPemdVRTgxVHBzNVFhUWpYb1lqT2c1YzhNMGhhN0lCOStQSmZo?=
+ =?utf-8?B?Um50UnZEQTYrOWtEbFQxZGF6bSt5bGdjM3d2c1FDMSt1OEZMZ2R6a2VDYVdF?=
+ =?utf-8?B?VDVHblZiamJIdUdVdEw1ak9LWHhaRml6Y3htdDZkeVlnb09WczJFQUM1WTds?=
+ =?utf-8?B?NHhZSXR1ZHdEdVdYY3hrL3lRaXhFYm85cWJ1R2x2Z2VnZ1FrYUxyWWFQcUlN?=
+ =?utf-8?B?S2Y1RC9MNmFQcVJOYkJCSW04M3N2NllmSkJFaEM0aXl4WWQ5dnBmT0xtdEVu?=
+ =?utf-8?B?VUZ3SGdOcVFzZ2NKKzZKMEgwV3VwQ0czejRpWDg2QzNJdzVMM29GbHc2Vlhr?=
+ =?utf-8?B?dkZ5ZWNkOGYvWDhFOHNEMkZDMVF3U0dsU0NTYkNLdTFOUEhULzFseGE2ZGk2?=
+ =?utf-8?B?ckhUQlFabFVicVlzVUV0eUFSK3RCTjRIaytFZkswSlVLbytabVVxS3VXemlv?=
+ =?utf-8?B?R3l3WGRCT1VOTXlRaTlnOHE1NVBGK0ZGbkUzcWYwQ1FBblB5WVFCeDdTZSs3?=
+ =?utf-8?B?SWlvWnFKSXBoYnNFRWo1QzBncE10SitKZDFsdCtKQjJnQ0toUVVEcTNkelhh?=
+ =?utf-8?Q?oLiL8nuznjJ1z7RqgPjgcSLY+OS0WHvcl4C1s=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR03MB6201.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SkdaQUQ3aTRQcnBVTmRqaThDSEJPdWZIWGFYNkRJbFRLandkOUQ2emJxOTlO?=
- =?utf-8?B?OUF1Z2JXdjRjQzVFajRTS2NjbkhIa1VQU0tFR2EwSUtkVjl0VlBDTC9lVDVC?=
- =?utf-8?B?RmY0Ykc5aDU1aFUrOVlmQXQxZ0FBT3dwajhJVVM1TWRKZmg0eXdUNU9Tem4z?=
- =?utf-8?B?U1BpbXd6UHJwOHVQcHpobjZkY1dhTDFTY0xpamc1UmFoMHFVaml5a0hFa1Uv?=
- =?utf-8?B?K2hRdGRsOTVmM0tMTWttWUxCSW94bE55SVV6czlGcnlIN0FXTHNWc3U2YTFm?=
- =?utf-8?B?ZFBoUWNXZ0RKVzBXWjlhU3F1LzdMUlZWR3RMNzB4THE4NGo2eW5xcTJrRU9l?=
- =?utf-8?B?YjNlS2psZnVCTEFRb0RoRzhCUFBiOEF5ZVZRUndLNnMrOHA4OUhvUUgzQnNV?=
- =?utf-8?B?WkIwa3lseGNCbi9LcDhCaFl3bldqRm1mUDYzbVJkWkR4aDJ3aFZFUytvaVhJ?=
- =?utf-8?B?UVdiN2ZvRUJtWFVDbVpwcVFmYjJhbGdkdFM4c2hNeVo5cG1MR1BVbklDVnZ6?=
- =?utf-8?B?RkVHYmVDTWp5MjhGVTRrVjRZNGpDTWlQTzRWN2hZamJ6MG82aTJ4TW9KY1Ar?=
- =?utf-8?B?WHQyQnBaemhSdzVVSEtyNHd4K0dTTWdjUTBscFpZUG1EMEFhbDFQbUI2RSt5?=
- =?utf-8?B?ZjVsWXFqOU5lMktwVGNNRjFmV3E4S1ZtbEF1NmJJV0ttdGF4RmhMNE55R05j?=
- =?utf-8?B?UTNtMjBMbm1ZZVFVUmZRN2ZkQ0JZVGppMzR0VjU2Slp1UHVVK1kvQjduKzQ3?=
- =?utf-8?B?MHUrOXZwVmZiVG10M0pSclI4a1N6QUU4OEYyOEE0WVNwOHdnZnlkcG9mdEN1?=
- =?utf-8?B?Q0R6dFhLa1hNRDJOQmM1M2Z0cnJOOG4yWlY1U1JhU1RhbTVsQ1o3a0VoUFJB?=
- =?utf-8?B?ZEd2aUxvMjYvUUU0Y0xRT2F2TXpHSi9rTEJJV29vS0ZsdHRHczcyT3QrVEkw?=
- =?utf-8?B?MkNEVzFEcXlwNmMvM3NzY3VQYjA5c3kvaVBYWk1kL2VUMXlqT2RDcjZzOVNV?=
- =?utf-8?B?S0YxWk5NejAxRkhoSlcxdVBKSWpHcFFYdVk1cEpxVXU4M1NYaEl3QTlTbHRJ?=
- =?utf-8?B?YmRlZFlac01NTGNHQlFjdEVsQ2NiR1lwdGxXT0VYcTlwZXcrWGlIM1dJWnNU?=
- =?utf-8?B?V3BDaFVQQnNZK1l4dlpveEFIVjFKYjBXRjE3Z0labUU4UDVXZktjYUFQWkdk?=
- =?utf-8?B?dEtpN0loSEtDSmxkdzB3LzB1RmxhT1J6azNycWFpUXh5NktWN1lFeDFxb1d0?=
- =?utf-8?B?bk1GaGlhakU0ZnZBL25iVWpsSnV3QWpOWkllT0NSVFlHS2VDV01zYmpDVlho?=
- =?utf-8?B?YkJJeFViNVNhSjdqM3NRdHN0SldKWlVaYTRHOTJwMk5LS3JsaFNlZnJEQS9j?=
- =?utf-8?B?c2p3U1Q4UzIzeHdxYWRPTUFycythMFpvMXY3TFRVcUIvTzF5OWVrTkI0Rjgw?=
- =?utf-8?B?aVRXZ0MvWW1PN0lZTTV6dC8xYXYyZUgxOHlKUGZKZzNiTUNCVW9FbkV4WE1C?=
- =?utf-8?B?RnYreW5CWkhTcU1sRWk4YitTUlpkTk81NCtRNzRCZWcrckg3TU5vd3RVUGx1?=
- =?utf-8?B?SU1QRndwS1FQbkFCOHU2OVJzQktocE1lK3lEVmh3SHBmRXNRRmhKMmlYZ3JE?=
- =?utf-8?B?UFlQRTdwYmZqNFRpUExZQ0dEazFJelVoQnZGUDZTTjBUS0hUZ2x0SHNZRTJ6?=
- =?utf-8?B?K1RSOG9HUEdxRXNuc3VqVlNWR2Rhb3pQYWtvakh2bnpvQmt6aThPYmh0MXZa?=
- =?utf-8?B?cUZIakROdk9qRTBGNUZLSGJVTjRLRXlQUjFBSWRBK1grNkY0SGNZL3ZWVUpG?=
- =?utf-8?B?WVQ5RHF3N0ZQWXFKdEN0WmJmUkE1cFFwbWI3UWZ4aWlVS3Fvd3JtMEQ1Qkpr?=
- =?utf-8?B?dXRoTVhVN0RnRFROcXZOanZrWVFteGVVVXpDd04vckxjaXdSNFJyakdmMU13?=
- =?utf-8?B?c2NibmdGV3BnY1Y0ZE9RUE13N052OE5wQUpkaXVhYTFjaWFFOEFQb3I1Ymo2?=
- =?utf-8?B?b0xiOHowK09XVHlTMDk0TnpsSXN1SjBkbkVvN2RsQllVZFJyWjl0dnNQTCtp?=
- =?utf-8?B?dndraEN4dE51N0lsREdBTHhiS2dOK3REMkRjamxYb1JuMVpTaXIvU1d1bjds?=
- =?utf-8?Q?JKmTzX+4/Mj/HJYireoJe6ZmC?=
+	=?utf-8?B?eVpWUUp0MHdZYnljVVVXS1V4eU5hMlBmNUxTTGpwOFEzODgyc29sdFBabmw5?=
+ =?utf-8?B?ZmpTSlFoZTRaZG4yZDk4aUNHR2V6aXRwUTdkK1BJeFpZUmJHK3pwU3NMbDM3?=
+ =?utf-8?B?MklWMTZSZTNnZWlpVlRBTmZsVGlaaGNPOE42QTA1dnhKSzlUQzJFak16VXda?=
+ =?utf-8?B?K3kwQ1hXN25JR2xCNzlodnF1c3VQcUR0YnB4b1BHMU16ekZCTmdydUpvRG1w?=
+ =?utf-8?B?OEwza1VLS1JMQ1gwSk1xVTBOMDg5ZDJwNkh0UG42SEoxTWhRa0Fzbml3ZUVl?=
+ =?utf-8?B?aG44bkxPcU5NbFp3TTlKUzBETzh0RlVZTlFMeE9XcG9aWWROMlg3RWNKa1BR?=
+ =?utf-8?B?dFpFbkJUbmYvbm4xNVd1QVNtakhaMUVDUktQdDJKbkxLVnBnRTNNT0VXSGpO?=
+ =?utf-8?B?SVNLWFNUQ29CWXIyZXp0Mll2TjlKN0JNOXRCQUVGRXJ1WjNoT1JiQkxiY05M?=
+ =?utf-8?B?RkxmZWZUMU1SeVNMT3hTMGMzWldLVHJHNFFsbmVRanZrVjJacGRiZkZHRGN1?=
+ =?utf-8?B?SjZ3VlZNOUVEdk9aRTh2eTN2akhaSEN5LzRqbUk0c09ObFVIdmJqdjVaL1FK?=
+ =?utf-8?B?bnliNGJKUEJwL3BrdzZRaTdhU3hiZWpCNzlISkJQdEhvTUFYcVIwTUE5VXJx?=
+ =?utf-8?B?NWc5bEwzRjFha3hoekROU0R1UjVkN3lVYWNaRXVkUVB3WUcwVU1DYmFvNmYw?=
+ =?utf-8?B?NWtYcU5QMENzeDhZR0xKS1F3cytzTFZ6UENHaGlTQjR4dnF3OWJMN3hLRkNT?=
+ =?utf-8?B?YlhWTTM1SnorWFJ0dkd3VDlhUDgrU0l2NXQ3ZVJjUjJ4cnlWdzB5OHdLZ2ZM?=
+ =?utf-8?B?cXBmU1N5Q2ZScXpUTzZUbEwzRVFJd3JVWTBCb2trRWpzRFN2bGttVGF1M1BP?=
+ =?utf-8?B?NE1HYXhkS1M3M1dYQ25yYmtqcEVqSDhCM1BMSERzQndmRG9GTyt4VU1yWkEv?=
+ =?utf-8?B?WHN0TUhxbW13THBVUGljd09rU0w1bUZ5Y2dESUl5amc0ZkNhMXN5cFR4dzZm?=
+ =?utf-8?B?cm5HVFVQbzdxdmRlT003Sk00OWVOUmtFNk1CcUpJMHFGVW5Lbmg4bGFkY2lT?=
+ =?utf-8?B?QjQxUG5iTGI2aVFNY05YQXdrYkR3bVdVVkJiVXEyemJRSWxOTWVHbEppaVNn?=
+ =?utf-8?B?RzQ5S2YyTTZhbi82WTNzREk1aWFHbFFWL1ovS2FLQzR5S1VBNGd3U1dFdzlV?=
+ =?utf-8?B?WGx3eEpoYkZwU1lTSkRzWEUxL3Flem1VSWlKUEtKYXptZG13SUxsc3pybVU1?=
+ =?utf-8?B?aVVWSzRrVHpldDNkNWttc2wzTUZDYlBNSWE0Wm90OVB4VW84Yzg5cm5jRVEv?=
+ =?utf-8?B?UjNUZFlqQk9acDEvaHoxREwxRVVRZWFCc204a2RKVDlZV3Z6UjFKVjJHMTN5?=
+ =?utf-8?B?NGRRVDNtZ0pKR281WGovUElqR0VlQlBQSm56Zkp6amxUbG92TEY1NDRtTkQ4?=
+ =?utf-8?B?TFhsY1h0aS81ZlhhNXVtQ3BuRG5NSnVrU3Y3N1J0dWNianl6bUZJcnZCb0E5?=
+ =?utf-8?B?TEF4OXZySzc5K1B0YnVnRS9MQitXREF0aEgrbDdUampUSHQzMzY1dm5BWDhp?=
+ =?utf-8?B?LzkzQXgwQVhEQy9HaGs1L0ovZVVPU0NTUHdIU2Mwa0R6RU1lNCtkTkRBNGR4?=
+ =?utf-8?B?UmtUVVU3TWNONEREeEd0Z2M1U25vSzV4SDdpdlZIRVF6dm16WjYrV3dYMkQx?=
+ =?utf-8?B?djJQa3FEY2I0aWN1dlBPVjFCR1pjOUtKc2NsOElqbXlYK2RIL0VsSnEwTENG?=
+ =?utf-8?B?YW1DMzJ0SjZzMkJFVEw1S1Y1Vk0xS0tKMEwzbDZlZFRwdzlVcGFUNld4Y0Z0?=
+ =?utf-8?B?SUpDTER6YUIzbGZoRnMzV2JMQUJnVmVzd3piYjB2Z2lNNFFFZFlTaU1Sajdl?=
+ =?utf-8?B?SjBhWXBrTlNWS2p0RmpSUy93V3NyRmF6b1VYekE5Q01VVVRZTDk4QVZYQTFG?=
+ =?utf-8?B?Y0pzdkxqd3VRZUordzl4b3NreXVpUlBGNEcyUlJGOW51YVpaUjExOUZ6c28v?=
+ =?utf-8?B?QXl3S1BiQ1pZS0Vhb29IVUNkQWl6NmI2RDlTa3hKMkZ4MmJBaVh6MWtvcUlT?=
+ =?utf-8?B?Y0ZDMTJ1Nm5xYk9IY3l0b2J0THNONU1NZ21vdnFvdmtsMEQrT2M0QnRSbHh2?=
+ =?utf-8?Q?oHJatiRuWmzAinvHYDVvrmADJ?=
 X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a07f2206-2930-4476-0f22-08dd9dd2552b
+X-MS-Exchange-CrossTenant-Network-Message-Id: aca553fe-93ad-4bb9-93f8-08dd9dd27cfb
 X-MS-Exchange-CrossTenant-AuthSource: BN9PR03MB6201.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 10:28:05.7802
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 10:29:12.5066
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: epcnCe3H4SURqm3Gom/uV+ZJDEbwbYigLjL38A/dQAE89zVMAHIKCRxBqpMOLZKiVliDfvAJqAuwDRaIp8Q2jw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: aJ6+SZZ/IXZYmE3fhk91qjqfXenoszc5s5Wa0a2bFLswSTNLcPW1r4kUK3yMDyzc/IoC3l7JyFTxtsR+s84cRQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR03MB6176
 
 Hi Krzysztof,
 	Thanks for reviewing the code.
 
-On 27-05-2025 02:19 pm, Krzysztof Kozlowski wrote:
+On 27-05-2025 02:14 pm, Krzysztof Kozlowski wrote:
 > On 26/05/2025 08:25, Mahesh Rao via B4 Relay wrote:
 >> From: Mahesh Rao <mahesh.rao@altera.com>
 >>
->> This commit adds a mutex lock to stratix10_svc_allocate_memory
->> and stratix10_svc_free_memory functions to ensure
->> thread safety when allocating and freeing memory.
->> This prevents potential race conditions and ensures
->> synchronization.
->>
->> Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
->> Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
->> ---
->>   drivers/firmware/stratix10-svc.c | 29 ++++++++++++++++++++++-------
->>   1 file changed, 22 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
->> index e3f990d888d71829f0ab22b8a59aa7af0316bea0..3d42d4b18b7299d0a9e5110159e06253dfeddf88 100644
->> --- a/drivers/firmware/stratix10-svc.c
->> +++ b/drivers/firmware/stratix10-svc.c
->> @@ -1,6 +1,7 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   /*
->>    * Copyright (C) 2017-2018, Intel Corporation
->> + * Copyright (C) 2025, Altera Corporation
->>    */
->>   
->>   #include <linux/completion.h>
->> @@ -171,6 +172,7 @@ struct stratix10_svc_chan {
->>   
->>   static LIST_HEAD(svc_ctrl);
->>   static LIST_HEAD(svc_data_mem);
->> +static DEFINE_MUTEX(svc_mem_lock);
+>> This commit adds support for asynchronous communication
 > 
-> You need to document what you are protecting here.
+> Please do not use "This commit/patch/change", but imperative mood. See
+> longer explanation here:
+> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Will make the change
+Will incorporate the change.
 
 > 
->>   
->>   /**
->>    * svc_pa_to_va() - translate physical address to virtual address
->> @@ -182,14 +184,17 @@ static LIST_HEAD(svc_data_mem);
->>   static void *svc_pa_to_va(unsigned long addr)
->>   {
->>   	struct stratix10_svc_data_mem *pmem;
->> +	void *ret = NULL;
->>   
->>   	pr_debug("claim back P-addr=0x%016x\n", (unsigned int)addr);
->> +	mutex_lock(&svc_mem_lock);
->>   	list_for_each_entry(pmem, &svc_data_mem, node)
->> -		if (pmem->paddr == addr)
->> -			return pmem->vaddr;
->> -
->> -	/* physical address is not found */
->> -	return NULL;
->> +		if (pmem->paddr == addr) {
->> +			/* physical address is found */
->> +			ret = pmem->vaddr;
->> +		}
->> +	mutex_unlock(&svc_mem_lock);
->> +	return ret;
->>   }
->>   
->>   /**
->> @@ -990,13 +995,16 @@ int stratix10_svc_send(struct stratix10_svc_chan *chan, void *msg)
->>   			p_data->flag = ct->flags;
->>   		}
->>   	} else {
->> +		mutex_lock(&svc_mem_lock);
->>   		list_for_each_entry(p_mem, &svc_data_mem, node)
->>   			if (p_mem->vaddr == p_msg->payload) {
->>   				p_data->paddr = p_mem->paddr;
->>   				p_data->size = p_msg->payload_length;
->>   				break;
->>   			}
->> +		mutex_unlock(&svc_mem_lock);
->>   		if (p_msg->payload_output) {
->> +			mutex_lock(&svc_mem_lock);
 > 
-> Especially that this looks odd.
+>> with the Stratix10 service channel. It introduces
+>> new definitions to enable asynchronous messaging to
+>> the Secure Device Manager (SDM). The changes include
+>> the adding/removing of asynchronous support to existing
+>> channels, initializing/exit-cleanup of the new asynchronous
+>> framework and sending/polling of messages to SDM.
+> 
+> Please wrap commit message according to Linux coding style / submission
+> process (neither too early nor over the limit):
+> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
 
-Shall I combine the both lock invocation together?
+Will incorporate the change.
+
+> 
+> 
+> ...
+> 
+>> +	args.a0 = INTEL_SIP_SMC_ASYNC_POLL;
+>> +	args.a1 =
+>> +		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
+>> +
+>> +	actrl->invoke_fn(actrl, &args, &handle->res);
+>> +
+>> +	data->status = 0;
+>> +	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
+>> +		return 0;
+>> +	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
+>> +		dev_dbg(ctrl->dev, "async message is still in progress\n");
+>> +		return -EAGAIN;
+>> +	}
+>> +
+>> +	dev_err(ctrl->dev,
+>> +		"Failed to poll async message ,got status as %ld\n",
+>> +		handle->res.a0);
+>> +	return -EINVAL;
+>> +}
+>> +EXPORT_SYMBOL_GPL(stratix10_svc_async_poll);
+> 
+> No, drop entire function. There is no user of it. You cannot add exports
+> for dead code.
+
+These functions have been newly introduced for the Stratix10-SVC 
+platform driver. The client drivers that will utilize these APIs are 
+currently under development and are planned for inclusion in a 
+subsequent patch set. Would you prefer that I include a sample client 
+driver using these APIs in this patch set instead?
+
+> 
+>> +
+>> +/**
+>> + * stratix10_svc_async_done - Completes an asynchronous transaction.
+>> + * @chan: Pointer to the service channel structure.
+>> + * @tx_handle: Handle to the transaction being completed.
+>> + *
+>> + * This function completes an asynchronous transaction identified by the given
+>> + * transaction handle. It ensures that the necessary structures are initialized
+>> + * and valid before proceeding with the completion operation. The function
+>> + * deallocates the transaction ID, frees the memory allocated for the handler,
+>> + * and removes the handler from the transaction list.
+>> + *
+>> + * Return: 0 on success, -EINVAL if any input parameter is invalid, or other
+>> + *         negative error codes on failure.
+>> + */
+>> +int stratix10_svc_async_done(struct stratix10_svc_chan *chan, void *tx_handle)
+>> +{
+>> +	if (!chan || !tx_handle)
+>> +		return -EINVAL;
+>> +
+>> +	struct stratix10_svc_controller *ctrl = chan->ctrl;
+>> +	struct stratix10_async_chan *achan = chan->async_chan;
+>> +
+>> +	if (!achan) {
+>> +		dev_err(ctrl->dev, "async channel not allocated\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	struct stratix10_svc_async_handler *handle =
+>> +		(struct stratix10_svc_async_handler *)tx_handle;
+>> +	if (!hash_hashed(&handle->next)) {
+>> +		dev_err(ctrl->dev, "Invalid transaction handle\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
+>> +
+>> +	spin_lock(&actrl->trx_list_wr_lock);
+>> +	hash_del_rcu(&handle->next);
+>> +	spin_unlock(&actrl->trx_list_wr_lock);
+>> +	synchronize_rcu();
+>> +	stratix10_deallocate_id(achan->job_id_pool,
+>> +				STRATIX10_GET_JOBID(handle->transaction_id));
+>> +	kfree(handle);
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(stratix10_svc_async_done);
+> 
+> No, drop entire function. There is no user of it. You cannot add exports
+> for dead code.
+
+Same as above.
+
+> 
+>> +
+>> +static inline void stratix10_smc_1_2(struct stratix10_async_ctrl *actrl,
+>> +				     const struct arm_smccc_1_2_regs *args,
+>> +				     struct arm_smccc_1_2_regs *res)
+>> +{
+>> +	arm_smccc_1_2_smc(args, res);
+>> +}
+>> +
+>> +/**
+>> + * stratix10_svc_async_init - Initialize the Stratix10 service controller
+>> + *                            for asynchronous operations.
+>> + * @controller: Pointer to the Stratix10 service controller structure.
+>> + *
+>> + * This function initializes the asynchronous service controller by setting up
+>> + * the necessary data structures, initializing the transaction list.
+>> + *
+>> + * Return: 0 on success, -EINVAL if the controller is NULL or already initialized,
+>> + *         -ENOMEM if memory allocation fails, -EADDRINUSE if the client ID is already
+>> + *         reserved, or other negative error codes on failure.
+>> + */
+>> +static int stratix10_svc_async_init(struct stratix10_svc_controller *controller)
+>> +{
+>> +	int ret;
+>> +	struct arm_smccc_res res;
+>> +
+>> +	if (!controller)
+>> +		return -EINVAL;
+>> +
+>> +	struct stratix10_async_ctrl *actrl = &controller->actrl;
+> 
+> Do not declare variables in the middle of the code. See coding style.
+
+Will incorporate the change.
+
+> 
+>> +
+>> +	if (actrl->initialized)
+>> +		return -EINVAL;
+>> +
+>> +	struct device *dev = controller->dev;
+> 
+> Same here.
+
+Will incorporate the change.
+
 > 
 > 
 > 
