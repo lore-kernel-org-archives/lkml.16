@@ -1,56 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CF828C5D0;
-	Wed, 28 May 2025 15:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF1C3234
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:00:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447937; cv=none; b=VV7vVxnhOGyaAooUShcADnuT5rSzMwBP1jkFAZmhtob84p/wvnNhCIWqOEZf7FIvhAtBT45ROfAHXIm9mhHJh9EatB3JX9Jz2isRQYm+ltworv/Teh6li9Y+rjWQOOoL26TXttD94mC1O4f0SAX3McF7oEpresIoFdCXiKqRMkU=
+	t=1748448024; cv=none; b=Q7+pPEKThBuzEqkVzM/7N0MC+Qt2xmoqJ+sDCG081ZrZwUVSEMgzY30PwmIcMkruaOVjVbZ/6wEJmf/HEm/Ihl6yUMu6DEKlIWEzBpu5j1IIYECheTQFTx4Wz85VRtor59XNcP1+Q7o83zsH+1mHAF0a740N8w3NY6N/O1r8Klk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447937; c=relaxed/simple;
-	bh=xKowylPyTdzZfPOURaXcphgFk7iTFVGDPZA0kg7cWTs=;
+	s=arc-20240116; t=1748448024; c=relaxed/simple;
+	bh=KcwudleOKREFiTnzrvnQ2gW5IQ/mRaXJ1eFhUaLPNiY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nKYFSiSzFk6CQJ/juPkWbGXsEz0OJZoJ5Rcetn882M4jhPIeyVDTSQXied1rfUhb5yogwzs3Jz69e6kfUL49vqyBxTRH80u/ZNGB/dhHH3EMdT3WtLJD+Hdl1/EEGr6sRtvKgQZ/jFR4lh8MxUkb7LNmkJpMf1l887hZZ16Yu+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrtVL2cb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjDWIgL2zLgiCTZ7PjKlmqdzLBiLUn/ReD7Bp8qaId4Ondo+I3xUaZZC0qo4Enocm+ycIvfXNtsSdNyLwWnuiohOTN6aogfslNSv3ELTNWqL5yDSAR8AdoVl2/Io8KQJ4rR8Cffr6Jc5/da+WEiNiW8xls4RcaR3+XKX3ZuGicY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwnAgZHN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrtVL2cb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99952C4CEE3;
-	Wed, 28 May 2025 15:58:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwnAgZHN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA42C4CEE3;
+	Wed, 28 May 2025 16:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748447937;
-	bh=xKowylPyTdzZfPOURaXcphgFk7iTFVGDPZA0kg7cWTs=;
+	s=k20201202; t=1748448024;
+	bh=KcwudleOKREFiTnzrvnQ2gW5IQ/mRaXJ1eFhUaLPNiY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RrtVL2cbP+6dJkhkxrxYdcnXryUcMIlBpp2b7KxMbNPx55IFR5QvEseVCG45enlzM
-	 GMbM1ZD5Yx7uzeCtuWPi+Wxr0kges79m1AfjE/NUJoxKwUG46JbmY5vwqThWQHKyQr
-	 3wMVyhS4QzkOdSD8jGts5sQemxrdCChiyxYw/foL5WwM23a3ZajhGo083EHbfduqqT
-	 Fio8UQy1xlQd171NSbWUPGYwtMEjRDvMA4dWCQa0SPdDufZ9IoE3a/Uucc69oPHwDk
-	 J6nRIbfG+r//UIl8rmYgJHqHzZ5U0oesNpuTUJXZGxfw7f+BEqgHk84IhIKEPEeaiq
-	 lS38LXDYI62+g==
-Date: Wed, 28 May 2025 12:58:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Bill Wendling <morbo@google.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	Fei Lang <langfei@huawei.com>, Howard Chu <howardchu95@gmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/1] Revert "perf thread: Ensure comm_lock held for
- comm_list"
-Message-ID: <aDcyvvOKZkRYbjul@x1>
-References: <aDcyVLVpZRui1ole@x1>
+	b=JwnAgZHNMom76PzcOL3VWdBEGAku5nLRro0GIgJlXJ/FNpRhqsVNHjWhFqv4Koxfj
+	 Fcp6kECQ1k2FqaEH8xXl07P1Ku2dalyl3w1Y3/ivjZQ60wHLD87Gk4+XqPQUmd9xUC
+	 1GbZ4Gi2PNIeQkT+bG5S1mvF3xSi7zuzX8Ft2B7D1wmGj0/iAPWsfxjkBgrxHsiXZX
+	 1kwSYp6Oh6bJbJ6/kYpM+7SbhtYaaOPQZkbo+ROJM8jvd0rcecWaL9VGcelIQHgB7x
+	 SlqXt7Myp379Z4xM5xoYIVM3tUTgUlcaGdKuhkhxkGDI2238hks+qnguvoigdADAj+
+	 NIbivoYtWDycg==
+Date: Wed, 28 May 2025 16:00:22 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	syzbot+1fa48dc6faf1ff972d7d@syzkaller.appspotmail.com,
+	"yohan.joung" <yohan.joung@sk.com>
+Subject: Re: [PATCH] f2fs: fix to do sanity check on section
+ ckpt_valid_blocks correctly
+Message-ID: <aDczFqQAMoLxcatZ@google.com>
+References: <20250528072045.416898-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,149 +44,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aDcyVLVpZRui1ole@x1>
+In-Reply-To: <20250528072045.416898-1-chao@kernel.org>
 
-Hi Ian,
-
-	This one had hit perf-tools-next, so I'm reverting it till we
-figure out, since I'm trying to finish processing patches real soon now
-for this window, to give it some time to soak in linux-next.
-
-	I noticed that sometimes when trying to exit 'perf top' it just
-sat there, so doing a bisect I ended up on this one, had no time to
-properly investigate it.
-
-- Arnaldo
-
-On Wed, May 28, 2025 at 12:57:11PM -0300, Arnaldo Carvalho de Melo wrote:
-> This reverts commit 8f454c95817d15ee529d58389612ea4b34f5ffb3.
+Thanks, I added the patches back with this fix applied to the original patch. :)
+On 05/28, Chao Yu wrote:
+> syzbot report a f2fs bug as below:
 > 
-> 'perf top' is freezing on exit sometimes, bisected to this one, revert.
+> CPU: 0 UID: 0 PID: 5840 Comm: syz-executor138 Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full)
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:408 [inline]
+>  print_report+0xd2/0x2b0 mm/kasan/report.c:521
+>  kasan_report+0x118/0x150 mm/kasan/report.c:634
+>  sanity_check_valid_blocks fs/f2fs/segment.h:385 [inline]
+>  build_sit_entries+0x1b0c/0x1f80 fs/f2fs/segment.c:5060
+>  f2fs_build_segment_manager+0x3112/0x49f0 fs/f2fs/segment.c:5707
+>  f2fs_fill_super+0x45bc/0x6c80 fs/f2fs/super.c:4754
+>  mount_bdev+0x211/0x2c0 fs/super.c:1736
+>  legacy_get_tree+0xfd/0x1a0 fs/fs_context.c:666
+>  vfs_get_tree+0x92/0x2b0 fs/super.c:1802
+>  do_new_mount+0x24a/0xa40 fs/namespace.c:3869
+>  do_mount fs/namespace.c:4206 [inline]
+>  __do_sys_mount fs/namespace.c:4417 [inline]
+>  __se_sys_mount+0x317/0x410 fs/namespace.c:4394
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 > 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-> Cc: Fei Lang <langfei@huawei.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> sanity_check_valid_blocks() should be called after set_ckpt_valid_blocks()
+> in the loop, otherwise, @segno passed to sanity_check_valid_blocks() will
+> become invalid, fix it.
+> 
+> Fixes: 313d10d79a82 ("f2fs: add ckpt_valid_blocks to the section entry")
+> Reported-by: syzbot+1fa48dc6faf1ff972d7d@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/linux-f2fs-devel/68345c8d.a70a0220.253bc2.0097.GAE@google.com
+> Cc: yohan.joung <yohan.joung@sk.com>
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
->  tools/perf/util/comm.c   |  2 --
->  tools/perf/util/thread.c | 17 ++++-------------
->  tools/perf/util/thread.h |  9 ++++-----
->  3 files changed, 8 insertions(+), 20 deletions(-)
+> Change v1:
+> - merge this into original patch is fine to me as well.
+>  fs/f2fs/segment.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
-> index 9880247a2c3364cb..8aa456d7c2cd2d74 100644
-> --- a/tools/perf/util/comm.c
-> +++ b/tools/perf/util/comm.c
-> @@ -24,7 +24,6 @@ static struct comm_strs {
->  static void comm_strs__remove_if_last(struct comm_str *cs);
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 5ff0111ed974..b77b5de71a48 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -5054,10 +5054,10 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
+>  	if (__is_large_section(sbi)) {
+>  		unsigned int segno;
 >  
->  static void comm_strs__init(void)
-> -	NO_THREAD_SAFETY_ANALYSIS /* Inherently single threaded due to pthread_once. */
->  {
->  	init_rwsem(&_comm_strs.lock);
->  	_comm_strs.capacity = 16;
-> @@ -120,7 +119,6 @@ static void comm_strs__remove_if_last(struct comm_str *cs)
->  }
->  
->  static struct comm_str *__comm_strs__find(struct comm_strs *comm_strs, const char *str)
-> -	SHARED_LOCKS_REQUIRED(comm_strs->lock)
->  {
->  	struct comm_str **result;
->  
-> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-> index c202b98b36c29215..415c0e5d1e751a47 100644
-> --- a/tools/perf/util/thread.c
-> +++ b/tools/perf/util/thread.c
-> @@ -41,7 +41,6 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
->  }
->  
->  struct thread *thread__new(pid_t pid, pid_t tid)
-> -	NO_THREAD_SAFETY_ANALYSIS /* Allocation/creation is inherently single threaded. */
->  {
->  	RC_STRUCT(thread) *_thread = zalloc(sizeof(*_thread));
->  	struct thread *thread;
-> @@ -203,29 +202,22 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
->  
->  struct comm *thread__comm(struct thread *thread)
->  {
-> -	struct comm *res = NULL;
-> +	if (list_empty(thread__comm_list(thread)))
-> +		return NULL;
->  
-> -	down_read(thread__comm_lock(thread));
-> -	if (!list_empty(thread__comm_list(thread)))
-> -		res = list_first_entry(thread__comm_list(thread), struct comm, list);
-> -	up_read(thread__comm_lock(thread));
-> -	return res;
-> +	return list_first_entry(thread__comm_list(thread), struct comm, list);
->  }
->  
->  struct comm *thread__exec_comm(struct thread *thread)
->  {
->  	struct comm *comm, *last = NULL, *second_last = NULL;
->  
-> -	down_read(thread__comm_lock(thread));
->  	list_for_each_entry(comm, thread__comm_list(thread), list) {
-> -		if (comm->exec) {
-> -			up_read(thread__comm_lock(thread));
-> +		if (comm->exec)
->  			return comm;
-> -		}
->  		second_last = last;
->  		last = comm;
+> -		for (segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi))
+> +		for (segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi)) {
+>  			set_ckpt_valid_blocks(sbi, segno);
+> -
+> -		sanity_check_valid_blocks(sbi, segno);
+> +			sanity_check_valid_blocks(sbi, segno);
+> +		}
 >  	}
-> -	up_read(thread__comm_lock(thread));
 >  
->  	/*
->  	 * 'last' with no start time might be the parent's comm of a synthesized
-> @@ -241,7 +233,6 @@ struct comm *thread__exec_comm(struct thread *thread)
->  
->  static int ____thread__set_comm(struct thread *thread, const char *str,
->  				u64 timestamp, bool exec)
-> -	EXCLUSIVE_LOCKS_REQUIRED(thread__comm_lock(thread))
->  {
->  	struct comm *new, *curr = thread__comm(thread);
->  
-> diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-> index 56e08c8ae005e82b..cd574a896418ac94 100644
-> --- a/tools/perf/util/thread.h
-> +++ b/tools/perf/util/thread.h
-> @@ -236,15 +236,14 @@ static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread
->  	return &RC_CHK_ACCESS(thread)->namespaces_lock;
->  }
->  
-> -static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
-> +static inline struct list_head *thread__comm_list(struct thread *thread)
->  {
-> -	return &RC_CHK_ACCESS(thread)->comm_lock;
-> +	return &RC_CHK_ACCESS(thread)->comm_list;
->  }
->  
-> -static inline struct list_head *thread__comm_list(struct thread *thread)
-> -	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
-> +static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
->  {
-> -	return &RC_CHK_ACCESS(thread)->comm_list;
-> +	return &RC_CHK_ACCESS(thread)->comm_lock;
->  }
->  
->  static inline u64 thread__db_id(const struct thread *thread)
+>  	if (err)
 > -- 
 > 2.49.0
-> 
