@@ -1,353 +1,330 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6DD1D6195;
-	Wed, 28 May 2025 18:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456471D6195;
+	Wed, 28 May 2025 18:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748457490; cv=none; b=YlPvLl6Z2554e/2GTRmxbouXbjJEW8KxHLcIbHhsdlMkg0hNkCYYRftAyM54w/GvX1/Ej/H5E9dCo9pbIlglGBE4PO9iT146UmGfoCcpDIeAJh63WuWihKna9VfVsXaReilqaHyUORbxdRrBfkDE93u0T6YxoibNSEJs4/aigkQ=
+	t=1748457528; cv=none; b=Y7rUPktLuWo9HwbQWmceeb7p10uXNyPVQrsjQuzY1A1jQwyMCy7aug5bY6sLNn6KTRlnFnrzJNKhE0h9ZPbnGznKR7ordticKXTAlsEdHgiHw11XkrfT9VBOMYXocFEUvOhdHjfaWuzCT7iHzQCBX+8aeqI2EIMUi/AH0ND+PYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748457490; c=relaxed/simple;
-	bh=W5acOlEAdjgfenO8dPOfN7GtgEzKg0IXWTAug1aAJ2A=;
+	s=arc-20240116; t=1748457528; c=relaxed/simple;
+	bh=Vn+l1DcNxMcoVSXL76f6dSgWCLSq/i+dJade3bSRVhs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GSJdSU9pxlQOSCsiAPLLpIN0tm3vDcx1rPHRezlB6tpYRR/FXFPeaRo9lc6XH/6s18uohDRs6UYyc/mFQw/luLfU+3WMDXFsC80Ni2Fu3fgn88V9EQkzJ6XDmEXvsugJADftZTTKDPLzaSRGhl0m0KAHRXRY7hx9fNCNjyla1cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeyGfCim; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qWd9jma4BJU9HHehtJZNxqbdxhfWKyAv3oe5CLvzSbPb+2Xlk2dNr0/STMLm+SyB2ZhBB5kPFiYyZ/0Z53USwR145gsVAXD+AqPPAZHXhuFjWgyVfrDTRTpfcazkXWn73Y84jooNEev1QPV1iVOFzge8k1ZWo+4nRy9TUCwd+dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jyT4tSJj; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeyGfCim"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC58FC4CEE3;
-	Wed, 28 May 2025 18:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748457490;
-	bh=W5acOlEAdjgfenO8dPOfN7GtgEzKg0IXWTAug1aAJ2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AeyGfCimPY2kT4QHRa3RfqddiICw8gUD7MZQyDOto75vRL141UGAWJEf1vuFtyPE/
-	 hcVF1KRPz58f4bFHJwXc/dHDhCgTNc8xmrTbDP8LX+oPC4GQ0x2Bk0xkme3BL56Hoa
-	 cZvYmnw1PvJMfhqXXZ1c1992gX/jTKrtq7wplKixbB01fVlpHY6IdyOrhXbWtR9ByO
-	 IEAggndjvS6rFI66xmre0pDw3m0j4+FS9+3UcxzzlfAnp7Z3fUBA988KQlkQuNXZO8
-	 Ql+hn1Hc6LsJP7SKZBbOJeOWSVp0e9M/97dsp4HVC8DxUaazM9yqrld/DqIOJys4i5
-	 hqq/t5peApKaw==
-Date: Wed, 28 May 2025 11:38:08 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
- system-wide mode
-Message-ID: <aDdYEH3lIYHAB-lk@google.com>
-References: <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
- <aBvwFPRwA2LVQJkO@google.com>
- <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
- <aCdo6Vz2MVv3N0kk@google.com>
- <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
- <aCveO4qQGy03ow5p@google.com>
- <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
- <aC0HH45JCBTchZMc@google.com>
- <CACT4Y+apAJ_m9W=P2hsGvWrGZnTzxB+9qgJg=ujjU8OWCVcUoQ@mail.gmail.com>
- <CACT4Y+Z3Bbn3KcwhjOYAmzHWqRSZ4ywCrw8FNNxj5MrDUzFtVg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jyT4tSJj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748457526; x=1779993526;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Vn+l1DcNxMcoVSXL76f6dSgWCLSq/i+dJade3bSRVhs=;
+  b=jyT4tSJj0aIt8vE5EiPVvgDKxG6YREuocdWUzMEzj4KIhcoAmnkdc8fs
+   DhwVbnqCqhYWw6tkV6jTIbrTGshPC+NkNXTOkOY+29i0adnPx7bmBOky6
+   hR05VGlZLL3nHNVt+GNXd2HcZBHetwR9fvwa4szX205PTP45zWd07w3QE
+   xoikIZUISmmTcGcS/zSojb4zfCiRZMi51by8G2VS6DUoH3CyLsPvEnF7J
+   Ls0Y5Z6/WCZhgk29pl/DIbITrvvRNpYs82Q6BVlzLg0PO29QHankHjssg
+   8KERlIYIL26qxZv7RjItB8wBlrYNZunVlcKvrbpTiVNSHvv+ZubcHcpMy
+   Q==;
+X-CSE-ConnectionGUID: Smpz2bfPTJWMT+id0yuZUA==
+X-CSE-MsgGUID: xdOhlDawQc600jHSWh7bMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="38124542"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="38124542"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 11:38:45 -0700
+X-CSE-ConnectionGUID: Wo7OZEVJQ0m05nyK9tmk7A==
+X-CSE-MsgGUID: vUbiPWboRQ+rWcII18U+Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="143317327"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 28 May 2025 11:38:38 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKLfg-000VyW-1O;
+	Wed, 28 May 2025 18:38:36 +0000
+Date: Thu, 29 May 2025 02:37:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	vladimir.oltean@nxp.com, rmk+kernel@armlinux.org.uk,
+	yong.liang.choong@linux.intel.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
+	jan.petrous@oss.nxp.com, jszhang@kernel.org, p.zabel@pengutronix.de,
+	0x1207@gmail.com, boon.khai.ng@altera.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	lizhi2@eswincomputing.com,
+	Shangjuan Wei <weishangjuan@eswincomputing.com>
+Subject: Re: [PATCH v2 2/2] =?iso-8859-1?Q?ethernet?=
+ =?iso-8859-1?B?OqBlc3dpbjqgQWRkoGVpYzc3MDCgZXRoZXJuZXSgZHJpdmVy?=
+Message-ID: <202505290202.daQ8Q8Xq-lkp@intel.com>
+References: <20250528041634.912-1-weishangjuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z3Bbn3KcwhjOYAmzHWqRSZ4ywCrw8FNNxj5MrDUzFtVg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250528041634.912-1-weishangjuan@eswincomputing.com>
 
-Hello,
+Hi,
 
-On Tue, May 27, 2025 at 09:14:34AM +0200, Dmitry Vyukov wrote:
-> On Wed, 21 May 2025 at 09:30, Dmitry Vyukov <dvyukov@google.com> wrote:
-> >
-> > On Wed, 21 May 2025 at 00:50, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > Sorry for the delay.
-> > > > > > >
-> > > > > > > On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
-> > > > > > > > On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
-> > > > > > > > > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > > > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
-> > > > > > > > > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Basically yes, but you can use --sample-cpu to add it.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
-> > > > > > > > > > >
-> > > > > > > > > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
-> > > > > > > > > > >
-> > > > > > > > > > > We may disable latency column by default in this case and show warning
-> > > > > > > > > > > if it's requested.  Or we may add a new attribute to emit sched-switch
-> > > > > > > > > > > records only for idle tasks and enable the latency report only if the
-> > > > > > > > > > > data has sched-switch records.
-> > > > > > > > > > >
-> > > > > > > > > > > What do you think?
-> > > > > > > > > >
-> > > > > > > > > > Depends on what problem we are trying to solve:
-> > > > > > > > > >
-> > > > > > > > > > 1. Enabling latency profiling for system-wide mode.
-> > > > > > > > > >
-> > > > > > > > > > 2. Switch events bloating trace too much.
-> > > > > > > > > >
-> > > > > > > > > > 3. Lost switch events lead to imprecise accounting.
-> > > > > > > > > >
-> > > > > > > > > > The patch mentions all 3 :)
-> > > > > > > > > > But I think 2 and 3 are not really specific to system-wide mode.
-> > > > > > > > > > An active single process profile can emit more samples than a
-> > > > > > > > > > system-wide profile on a lightly loaded system.
-> > > > > > > > >
-> > > > > > > > > True.  But we don't need to care about lightly loaded systems as they
-> > > > > > > > > won't cause problems.
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > > Similarly, if we rely on switch events for system-wide mode, then it's
-> > > > > > > > > > equally subject to the lost events problem.
-> > > > > > > > >
-> > > > > > > > > Right, but I'm afraid practically it'll increase the chance of lost
-> > > > > > > > > in system-wide mode.  The default size of the sample for system-wide
-> > > > > > > > > is 56 byte and the size of the switch is 48 byte.  And the default
-> > > > > > > > > sample frequency is 4000 Hz but it cannot control the rate of the
-> > > > > > > > > switch.  I saw around 10000 Hz of switches per CPU on my work env.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > For problem 1: we can just permit --latency for system wide mode and
-> > > > > > > > > > fully rely on switch events.
-> > > > > > > > > > It's not any worse than we do now (wrt both profile size and lost events).
-> > > > > > > > >
-> > > > > > > > > This can be an option and it'd work well on lightly loaded systems.
-> > > > > > > > > Maybe we can just try it first.  But I think it's better to have an
-> > > > > > > > > option to make it work on heavily loaded systems.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > For problem 2: yes, we could emit only switches to idle tasks. Or
-> > > > > > > > > > maybe just a fake CPU sample for an idle task? That's effectively what
-> > > > > > > > > > we want, then your current accounting code will work w/o any changes.
-> > > > > > > > > > This should help wrt trace size only for system-wide mode (provided
-> > > > > > > > > > that user already enables CPU accounting for other reasons, otherwise
-> > > > > > > > > > it's unclear what's better -- attaching CPU to each sample, or writing
-> > > > > > > > > > switch events).
-> > > > > > > > >
-> > > > > > > > > I'm not sure how we can add the fake samples.  The switch events will be
-> > > > > > > > > from the kernel and we may add the condition in the attribute.
-> > > > > > > > >
-> > > > > > > > > And PERF_SAMPLE_CPU is on by default in system-wide mode.
-> > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > For problem 3: switches to idle task won't really help. There can be
-> > > > > > > > > > lots of them, and missing any will lead to wrong accounting.
-> > > > > > > > >
-> > > > > > > > > I don't know how severe the situation will be.  On heavily loaded
-> > > > > > > > > systems, the idle task won't run much and data size won't increase.
-> > > > > > > > > On lightly loaded systems, increased data will likely be handled well.
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > > A principled approach would be to attach a per-thread scheduler
-> > > > > > > > > > quantum sequence number to each CPU sample. The sequence number would
-> > > > > > > > > > be incremented on every context switch. Then any subset of CPU should
-> > > > > > > > > > be enough to understand when a task was scheduled in and out
-> > > > > > > > > > (scheduled in on the first CPU sample with sequence number N, and
-> > > > > > > > > > switched out on the last sample with sequence number N).
-> > > > > > > > >
-> > > > > > > > > I'm not sure how it can help.  We don't need the switch info itself.
-> > > > > > > > > What's needed is when the CPU was idle, right?
-> > > > > > > >
-> > > > > > > > I mean the following.
-> > > > > > > > Each sample has a TID.
-> > > > > > > > We add a SEQ field, which is per-thread and is incremented after every
-> > > > > > > > rescheduling of the thread.
-> > > > > > > >
-> > > > > > > > When we see the last sample for (TID,SEQ), we pretend there is SCHED
-> > > > > > > > OUT event for this thread at this timestamp. When we see the first
-> > > > > > > > sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
-> > > > > > > > thread at this timestamp.
-> > > > > > > >
-> > > > > > > > These SCHED IN/OUT events are not injected by the kernel. We just
-> > > > > > > > pretend they happen for accounting purposes. We may actually
-> > > > > > > > materialize them in the perf tool, or me may just update parallelism
-> > > > > > > > as if they happen.
-> > > > > > >
-> > > > > > > Thanks for the explanation.  But I don't think it needs the SEQ and
-> > > > > > > SCHED IN/OUT generated from it to track lost records.  Please see below.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > With this scheme we can lose absolutely any subset of samples, and
-> > > > > > > > still get very precise accounting. When we lose samples, the profile
-> > > > > > > > of course becomes a bit less precise, but the effect is local and
-> > > > > > > > recoverable.
-> > > > > > > >
-> > > > > > > > If we lose the last/first event for (TID,SEQ), then we slightly
-> > > > > > > > shorten/postpone the thread accounting in the process parallelism
-> > > > > > > > level. If we lose a middle (TID,SEQ), then parallelism is not
-> > > > > > > > affected.
-> > > > > > >
-> > > > > > > I'm afraid it cannot check parallelism by just seeing the current thread.
-> > > > > > > I guess it would need information from other threads even if it has same
-> > > > > > > SEQ.
-> > > > > >
-> > > > > > Yes, we still count parallelism like you do in this patch, we just use
-> > > > > > the SEQ info instead of CPU numbers and explicit switch events.
-> > > > >
-> > > > > I mean after record lost, let's say
-> > > > >
-> > > > >   t1: SAMPLE for TID 1234, seq 10  (parallelism = 4)
-> > > > >   t2: LOST
-> > > > >   t3: SAMPLE for TID 1234, seq 10  (parallelism = ?)
-> > > > >
-> > > > > I don't think we can continue to use parallelism of 4 after LOST even if
-> > > > > it has the same seq because it cannot know if other threads switched on
-> > > > > other CPUs.  Then do we need really the seq?
-> > > >
-> > > > I do not understand the problem you describe.
-> > > > We just keep updating parallelism according to the algorithm I
-> > > > described. It works fine in the presence of lost events.
-> > >
-> > > Do you think it's ok to use 4 if seq is the same?  I'm afraid it'd be
-> > > inaccurate.
-> >
-> > It will be inaccurate briefly for the period of 1 sample if we lost
-> > specifically the last/first sample of a thread scheduling quantum. And
-> > then it will recover and will be precise.
-> >
-> > But it's exactly the same in your scheme, right. If we stopped seeing
-> > events on a CPU due to lost events, we will assume it's not running.
-> >
-> > And generally lost events will always lead to imprecision. That's
-> > unavoidable. It's only important if the imprecision is limited and
-> > proportional to the number of lost events. And this is the case for
-> > the SEQ scheme.
-> >
-> >
-> > > > > > > Also postpone thread accounting can be complex.  I think it should wait
-> > > > > > > for all other threads to get a sample.  Maybe some threads exited and
-> > > > > > > lost too.
-> > > > > >
-> > > > > > Yes, in order to understand what's the last event for (TID,SEQ) we
-> > > > > > need to look ahead and find the event (TID,SEQ+1). The easiest way to
-> > > > > > do it would be to do 2 passes over the trace. That's the cost of
-> > > > > > saving trace space + being resilient to lost events.
-> > > > > >
-> > > > > > Do you see any other issues with this scheme besides requiring 2 passes?
-> > > > >
-> > > > > Well.. 2 pass itself can be a problem due to slowness it'd bring.  Some
-> > > > > people complain about the speed of perf report as of now.
-> > > >
-> > > > Is trace processing CPU-bound or memory-bound? If it's CPU-bound, then
-> > > > the second pass may be OK-ish, since we will need minimal CPU
-> > > > processing during the first pass.
-> > >
-> > > It depends on the size of data, but I guess it's CPU-bound in most cases.
-> > >
-> > > >
-> > > >
-> > > > > I think we can simply reset the parallelism in all processes after LOST
-> > > > > and set current process to the idle task.  It'll catch up as soon as it
-> > > > > sees samples from all CPUs.
-> > > >
-> > > > I guess we can approximate parallelism as you described here:
-> > > >
-> > > > > Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
-> > > > > CPU and clear the current thread after some period (2x of given freq?).
-> > > >
-> > > > We probably don't need to do anything special for lost events in this
-> > > > scheme at all. If the gap caused by lost events is tiny, then we
-> > > > consider nothing happened. If the gap is large enough, then we
-> > > > consider the CPU as idle for the duration of the gap. Either way it
-> > > > will be handled on common grounds.
-> > >
-> > > How do you know if it's tiny?  Do you mean the seq remains after lost?
-> >
-> > I was talking about your scheme based on CPU numbers.
-> >
-> >
-> > > > But tuning of these heuristics + testing and verification may be a bit
-> > > > of a problem. I would hate to end up with a tool which I won't trust.
-> > > >
-> > > > Here:
-> > > > "after some period (2x of given freq?)"
-> > > > do you mean 2x average/median period, or 1/2 average/median period?
-> > > > (2x freq is 1/2 period)
-> > >
-> > > Oh, sorry.  It's 2x period.
-> > >
-> > > >
-> > > > Ideally, we consider a CPU idle after 1/2 period after it switched to
-> > > > the idle task and we stop receiving samples.
-> > > > But on the other hand, we don't want to consider it constantly
-> > > > becoming idle, when it's just doing normal sampling with the normal
-> > > > period...
-> > > >
-> > > > So ideally the algorithm should be something like:
-> > > > let's say average/median sampling period is P
-> > > > we got last sample for CPU X at time T
-> > > > if by time T+2P we have not seen any other sample on CPU X, then
-> > > > consider CPU X idle since T+0.5P
-> > > >
-> > > > But this would also require either 2 passes over the data, or some
-> > > > kind of look ahead similar to the algo I proposed...
-> > >
-> > > I think we can do it in 1 pass.  For each sample,
-> > >
-> > >   for_each_cpu(cpu) {
-> > >       if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
-> > >           if (current[cpu]->thread != idle) {
-> > >               current[cpu]->thread->parallelism--;
-> > >               current[cpu]->thread = idle;
-> > >           }
-> > >       }
-> > >   }
-> > >
-> > >   leader = machine__findnew_thread(machine, sample->pid);
-> > >   current[sample->cpu]->last_timestamp = sample->timestamp;
-> > >
-> > >   if (current[sample->cpu]->thread != leader) {
-> > >       if (current[sample->cpu]->thread != idle)
-> > >           current[sample->cpu]->thread->parallelism--;
-> > >
-> > >       current[sample->cpu]->thread = leader;
-> > >       leader->parallelism++;
-> > >   }
-> > >
-> > >   sample->parallelism = leader->parallelism;
-> >
-> > As I described, for this simple 1 pass algorithm, I am afraid of imprecision.
-> > The thread has not continued to run for 2 periods. I run for 0-1 period.
-> >
-> >
-> >
-> > > > Also, do we take the median period? or average? do we update it over
-> > > > time (say, if CPU freq changes)? do we count it globally, or per CPU
-> > > > (in case CPUs run at different freqs)?
-> > >
-> > > Oh, perf tools use default frequency of 4000 Hz.
-> >
-> > Is the actual sample rate reasonably precise across time/CPUs?
-> >
-> > > Maybe we can use this
-> > > only for the frequency mode which means user didn't use -c option or
-> > > similar in the event description.
-> 
-> 
-> All-in-all I think the best option for now is using CPU IDs to track
-> parallelism as you suggested, but be more precise with idle detection.
-> 2 passes over the trace may be fine to detect idle points. I see the
-> most time now spent in hist_entry__cmp, which accesses other entries
-> and is like a part of O(N*logN) processing, so a simple O(N) pass
-> shouldn't slow it down much.
-> That's what I would try. But I would also try to assess the precision
-> of this approach by comparing with results of using explicit switch
-> events.
+kernel test robot noticed the following build warnings:
 
-It's not clear to me how you want to maintain the idle info in the 2
-pass approach.  Please feel free to propose something based on this
-work.
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on net-next/main net/main linus/master v6.15 next-20250528]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Thanks,
-Namhyung
+url:    https://github.com/intel-lab-lkp/linux/commits/weishangjuan-eswincomputing-com/dt-bindings-ethernet-eswin-Document-for-EIC7700-SoC/20250528-121947
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250528041634.912-1-weishangjuan%40eswincomputing.com
+patch subject: [PATCH v2 2/2] ethernet: eswin: Add eic7700 ethernet driver
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250529/202505290202.daQ8Q8Xq-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505290202.daQ8Q8Xq-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505290202.daQ8Q8Xq-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:210:6: warning: unused variable 'err' [-Wunused-variable]
+     210 |         int err;
+         |             ^~~
+>> drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:369:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+     369 |         if (data->probe)
+         |             ^~~~~~~~~~~
+   drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:371:6: note: uninitialized use occurs here
+     371 |         if (ret < 0) {
+         |             ^~~
+   drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:369:2: note: remove the 'if' if its condition is always true
+     369 |         if (data->probe)
+         |         ^~~~~~~~~~~~~~~~
+     370 |                 ret = data->probe(pdev, plat_dat, &stmmac_res);
+   drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:343:9: note: initialize the variable 'ret' to silence this warning
+     343 |         int ret;
+         |                ^
+         |                 = 0
+   drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c:153:12: warning: unused function 'dwc_qos_probe' [-Wunused-function]
+     153 | static int dwc_qos_probe(struct platform_device *pdev,
+         |            ^~~~~~~~~~~~~
+   3 warnings generated.
+
+
+vim +/err +210 drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c
+
+   196	
+   197	static int eswin_qos_probe(struct platform_device *pdev,
+   198				   struct plat_stmmacenet_data *plat_dat,
+   199				   struct stmmac_resources *stmmac_res)
+   200	{
+   201		struct eswin_qos_priv *dwc_priv;
+   202		u32 hsp_aclk_ctrl_offset;
+   203		u32 hsp_aclk_ctrl_regset;
+   204		u32 hsp_cfg_ctrl_offset;
+   205		u32 eth_axi_lp_ctrl_offset;
+   206		u32 eth_phy_ctrl_offset;
+   207		u32 eth_phy_ctrl_regset;
+   208		struct clk *clk_app;
+   209		int ret;
+ > 210		int err;
+   211	
+   212		dwc_priv = devm_kzalloc(&pdev->dev, sizeof(*dwc_priv), GFP_KERNEL);
+   213		if (!dwc_priv)
+   214			return -ENOMEM;
+   215	
+   216		if (device_property_read_u32(&pdev->dev, "id", &dwc_priv->dev_id))
+   217			return dev_err_probe(&pdev->dev, -EINVAL,
+   218					"Can not read device id!\n");
+   219	
+   220		dwc_priv->dev = &pdev->dev;
+   221	
+   222		ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,phyaddr", 0,
+   223						 &dwc_priv->phyaddr);
+   224		if (ret)
+   225			dev_warn(&pdev->dev, "can't get phyaddr (%d)\n", ret);
+   226	
+   227		ret = of_property_read_variable_u32_array(pdev->dev.of_node, "eswin,dly_hsp_reg",
+   228							  &dwc_priv->dly_hsp_reg[0], 3, 0);
+   229		if (ret != 3) {
+   230			dev_err(&pdev->dev, "can't get delay hsp reg.ret(%d)\n", ret);
+   231			return ret;
+   232		}
+   233	
+   234		ret = of_property_read_variable_u32_array(pdev->dev.of_node, "dly-param-1000m",
+   235							  &dwc_priv->dly_param_1000m[0], 3, 0);
+   236		if (ret != 3) {
+   237			dev_err(&pdev->dev, "can't get delay param for 1Gbps mode (%d)\n", ret);
+   238			return ret;
+   239		}
+   240	
+   241		ret = of_property_read_variable_u32_array(pdev->dev.of_node, "dly-param-100m",
+   242							  &dwc_priv->dly_param_100m[0], 3, 0);
+   243		if (ret != 3) {
+   244			dev_err(&pdev->dev, "can't get delay param for 100Mbps mode (%d)\n", ret);
+   245			return ret;
+   246		}
+   247	
+   248		ret = of_property_read_variable_u32_array(pdev->dev.of_node, "dly-param-10m",
+   249							  &dwc_priv->dly_param_10m[0], 3, 0);
+   250		if (ret != 3) {
+   251			dev_err(&pdev->dev, "can't get delay param for 10Mbps mode (%d)\n", ret);
+   252			return ret;
+   253		}
+   254	
+   255		dwc_priv->crg_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+   256								       "eswin,syscrg_csr");
+   257		if (IS_ERR(dwc_priv->crg_regmap)) {
+   258			dev_dbg(&pdev->dev, "No syscrg_csr phandle specified\n");
+   259			return 0;
+   260		}
+   261	
+   262		ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 1,
+   263						 &hsp_aclk_ctrl_offset);
+   264		if (ret)
+   265			return dev_err_probe(&pdev->dev, ret, "can't get syscrg_csr 1\n");
+   266	
+   267		regmap_read(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, &hsp_aclk_ctrl_regset);
+   268		hsp_aclk_ctrl_regset |= (HSP_ACLK_CLKEN | HSP_ACLK_DIVSOR);
+   269		regmap_write(dwc_priv->crg_regmap, hsp_aclk_ctrl_offset, hsp_aclk_ctrl_regset);
+   270	
+   271		ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,syscrg_csr", 2,
+   272						 &hsp_cfg_ctrl_offset);
+   273		if (ret)
+   274			return dev_err_probe(&pdev->dev, ret, "can't get syscrg_csr 2\n");
+   275	
+   276		regmap_write(dwc_priv->crg_regmap, hsp_cfg_ctrl_offset, HSP_CFG_CTRL_REGSET);
+   277	
+   278		dwc_priv->hsp_regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+   279								       "eswin,hsp_sp_csr");
+   280		if (IS_ERR(dwc_priv->hsp_regmap)) {
+   281			dev_dbg(&pdev->dev, "No hsp_sp_csr phandle specified\n");
+   282			return 0;
+   283		}
+   284	
+   285		ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 2,
+   286						 &eth_phy_ctrl_offset);
+   287		if (ret)
+   288			return dev_err_probe(&pdev->dev, ret, "can't get hsp_sp_csr 2\n");
+   289	
+   290		regmap_read(dwc_priv->hsp_regmap,
+   291			    eth_phy_ctrl_offset,
+   292			    &eth_phy_ctrl_regset);
+   293		eth_phy_ctrl_regset |= (ETH_TX_CLK_SEL | ETH_PHY_INTF_SELI);
+   294		regmap_write(dwc_priv->hsp_regmap,
+   295			     eth_phy_ctrl_offset,
+   296			     eth_phy_ctrl_regset);
+   297	
+   298		ret = of_property_read_u32_index(pdev->dev.of_node, "eswin,hsp_sp_csr", 3,
+   299						 &eth_axi_lp_ctrl_offset);
+   300		if (ret)
+   301			return dev_err_probe(&pdev->dev, ret,
+   302					"can't get hsp_sp_csr 3\n");
+   303	
+   304		regmap_write(dwc_priv->hsp_regmap,
+   305			     eth_axi_lp_ctrl_offset,
+   306			     ETH_CSYSREQ_VAL);
+   307	
+   308		clk_app = devm_clk_get_enabled(&pdev->dev, "app");
+   309		if (IS_ERR(clk_app))
+   310			return dev_err_probe(&pdev->dev, PTR_ERR(clk_app),
+   311					"error getting app clock\n");
+   312	
+   313		plat_dat->clk_tx_i = devm_clk_get_enabled(&pdev->dev, "tx");
+   314		if (IS_ERR(plat_dat->clk_tx_i))
+   315			return dev_err_probe(&pdev->dev, PTR_ERR(plat_dat->clk_tx_i),
+   316					"error getting tx clock\n");
+   317	
+   318		plat_dat->fix_mac_speed = eswin_qos_fix_speed;
+   319		plat_dat->set_clk_tx_rate = stmmac_set_clk_tx_rate;
+   320		plat_dat->bsp_priv = dwc_priv;
+   321		plat_dat->phy_addr = PHY_ADDR;
+   322	
+   323		return 0;
+   324	}
+   325	
+   326	struct dwc_eth_dwmac_data {
+   327		int (*probe)(struct platform_device *pdev,
+   328			     struct plat_stmmacenet_data *plat_dat,
+   329			     struct stmmac_resources *res);
+   330		const char *stmmac_clk_name;
+   331	};
+   332	
+   333	static const struct dwc_eth_dwmac_data eswin_qos_data = {
+   334		.probe = eswin_qos_probe,
+   335		.stmmac_clk_name = "stmmaceth",
+   336	};
+   337	
+   338	static int dwc_eth_dwmac_probe(struct platform_device *pdev)
+   339	{
+   340		const struct dwc_eth_dwmac_data *data;
+   341		struct plat_stmmacenet_data *plat_dat;
+   342		struct stmmac_resources stmmac_res;
+   343		int ret;
+   344	
+   345		data = device_get_match_data(&pdev->dev);
+   346	
+   347		memset(&stmmac_res, 0, sizeof(struct stmmac_resources));
+   348	
+   349		/**
+   350		 * Since stmmac_platform supports name IRQ only, basic platform
+   351		 * resource initialization is done in the glue logic.
+   352		 */
+   353		stmmac_res.irq = platform_get_irq(pdev, 0);
+   354		if (stmmac_res.irq < 0)
+   355			return stmmac_res.irq;
+   356		stmmac_res.wol_irq = stmmac_res.irq;
+   357	
+   358		stmmac_res.addr = devm_platform_ioremap_resource(pdev, 0);
+   359		if (IS_ERR(stmmac_res.addr))
+   360			return PTR_ERR(stmmac_res.addr);
+   361	
+   362		plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
+   363		if (IS_ERR(plat_dat))
+   364			return PTR_ERR(plat_dat);
+   365	
+   366		plat_dat->stmmac_clk = dwc_eth_find_clk(plat_dat,
+   367							data->stmmac_clk_name);
+   368	
+ > 369		if (data->probe)
+   370			ret = data->probe(pdev, plat_dat, &stmmac_res);
+   371		if (ret < 0) {
+   372			return dev_err_probe(&pdev->dev, ret,
+   373					"failed to probe subdriver\n");
+   374		}
+   375	
+   376		ret = dwc_eth_dwmac_config_dt(pdev, plat_dat);
+   377		if (ret)
+   378			return dev_err_probe(&pdev->dev, ret,
+   379					"Failed to config dt\n");
+   380	
+   381		ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
+   382		if (ret)
+   383			return dev_err_probe(&pdev->dev, ret,
+   384					"Failed to driver probe\n");
+   385	
+   386		return ret;
+   387	}
+   388	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
