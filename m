@@ -1,318 +1,193 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0189A1EB193;
-	Wed, 28 May 2025 09:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9D01D47B4;
+	Wed, 28 May 2025 09:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748425729; cv=none; b=q5xy6EUzxpBXUDIrKg+B4l4EXDT8O6qJkxoh15dNlgESZd5YvprA93EpdmwcGPCqe9MuowFIyYYeXcimNN4jzFkVzJ2ch7mF/8irZf+IoWnirgVVJg0Ar1EYao7KkFsQZ3/mLn4Ttdl7fY8Bfr63Fq3p5KDNrbSWwuR9G6owmzw=
+	t=1748425822; cv=none; b=Hmh4lXHj6bfQG22I5nywG3OcYpMEcMKlthPgsj4ORc5/bikZN6yH3VxlYNz3RJYJl9SoOrxLVVp7zNiGXag7a5uD8bQ9WQUxiQ4Oxm2gVSbLYqjA3nDnug4Ut2C1d435TG9tzlT9DdgeXfI4Amq8WEijnbdn5hjY3NwFlOuxshA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748425729; c=relaxed/simple;
-	bh=Uinns349GxH1UR6aquqSJAn77/2GAuIwH7OpLa221PM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rMReJrJCgaTXdQZ4dUMzotEC0m96oe9T04b+iaNgzRId7XIk6Bj45wHIewP+y+VFGuiRoSz/gwwTY9zX4iXKanRlMCNC9931L3Z7o7v/Eys3TTIRXA+PfL2xQl95d4o3uxeRRUF1ASCSCfXpzuFkxJo9rzb9pdHL59g5XiX61to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiceM8ZH; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1748425822; c=relaxed/simple;
+	bh=uXLKxbZMGyPQIhzmIxYiHPJggnsUBGMt+mRIvq+k2ts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YYzqTvoNE2bgtjtG9dpW7FE3UNwptNwFOZLusvSl2BTEV1v9cnD/TP0rK5lK0SsCnxNf33nFnc73ulrrh49JEEXQs7AKmkfJBSF7zNXczeMtStY3pCIXLzgikctnkDx1IypDeWBQLiPsKC5hC2d6YA7t4W7IcCTE1h6VaLNSAh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkiktXZ2; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiceM8ZH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf257158fso36648165e9.2;
-        Wed, 28 May 2025 02:48:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkiktXZ2"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6045b95d1feso7258704a12.1;
+        Wed, 28 May 2025 02:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748425726; x=1749030526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YejcQjvowFFKkqN+UPoZNPAf32M6HyCXABg2+FNPRa0=;
-        b=MiceM8ZHMEqXDc+TTwJgcGHGooDwvxe71qsaljJ24CMv5GBt0i34fgUgzdRLaBCr09
-         rNt8AaCI1KGbbBueXpd/grj186cOqSUcZJrj/gf+h3kzfl5+c4W//GbZTj9s1vrOF44L
-         CrQsSsJK5gdgty1fCaTZZW4x5p3E3rXRWsPF26NmMFlQ3PXBWAcze6SUwkOGn0MZsX3/
-         20hf039WuYIsxRFqchlfOSFF8d7jajZR6KnRnE20+0VcixNZbd1VqsyECoV1R4EMr8fR
-         IqxGMutTl2tX5o9VGzoRqa50P5X7JKy0xyPOqXKJfmWVJaSrBwOA/btEMWxouYYuWoRl
-         0xSg==
+        d=gmail.com; s=20230601; t=1748425818; x=1749030618; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U154eK3ddwaPqm55ZRdw1sQb9SuIUnfO5tNkP86wnH0=;
+        b=dkiktXZ2ICbVFaVjQFr+BJONEu3yGJH7RtL+96TN6vvDkNNpKurGpkqOY02rCn2bU7
+         GEMOMJRdhSNVOoESrLiQukmPMvhUTYTX9Yr0Bur+FS5e8CPxL6rGHwwbcu/2dTUYv0/o
+         PxaONM4LmGwyFkOoSiLdVf4pBcejcfslhjTz+6PFnbROaS+Yj4fte236k+Lm/9N5yZGh
+         85RIdVpC/tJHX6VVRTe47v4BEbptLFqfShHKjOjVoNdeahYBbY8g1uWJQMgwVDZXTu00
+         BAH596Nu/SigCPC2HCLQxlcMuD6ULAIqaWqmh5AsIbJal6xy6JamjVQVZXmkaYF8dtDc
+         FhCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748425726; x=1749030526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YejcQjvowFFKkqN+UPoZNPAf32M6HyCXABg2+FNPRa0=;
-        b=ojKzZE9BPFjcWvnwPulA4ju+XmkGkMEZO2p+MI1LEMesiBtUeCa7Lba/PiBEFPMrw/
-         Aq+Q7u+UekV+novw13iLUQ9kucx2gxLW1efvaiqlCt5WZRwQ8AWm7f3/UOw26aIcahbu
-         EGBWKr+4B58axbc0e6nIzw8ag5lIxqxuXu8xs5J3HSWup3zE1nbF6mYZR7gT5xHm8mwh
-         zS5TDmx/lDCcVHXhw1FWeTWwpZWkWwQD66753ojnwA9KDP35viYES/v7Wc6MFkriNCUR
-         hYLe0mg5yrbLRJnsM+udbRnbjtiFNJJioRnX2110louPiPW3e88sOonyZYt3nLLL/n2P
-         dT1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUBfe58iYwfe4FOB4B2pY3UcXS6/GeGUGD2Qmb2XrbyaYAb6NqyaDlwm4Ulvdlh7d+j6GUe6BqjI/Lc@vger.kernel.org, AJvYcCUZOpZXfasuio8YfIlAxNmFFxpBboLKMSXgLNUHh+jOqPMIZyCPhd2lI6BTH2NvC0OaSoNEbkPCVcdDOqgU@vger.kernel.org, AJvYcCVBZk/uWxJXMPOiMXtvGagsnN1rJjsb/F4u3Ho08ikePJaI3lvRo96t13S/Pbhf8ZTLzYBVWYxsGdQU@vger.kernel.org, AJvYcCXkaPDHunzIq0SgVp3LRKb3UYHfjACFJb3tCp2sXpr+zwhKruwmR1IWq014eEQmoSjpCnr/CozJgrKtnVP3qeihUeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxL81YB0OcG5gfhWtTpnkXLVTXtWCUkHcMzb6U4PGHvGVVQKcnX
-	2uRHDtx64AGfAFr+oSNsDplbFWKqxTXf3yviooq2TTjHQ+5VFDao0/zFGvfU6f7l5Vr3lfIOfPE
-	yr3qLj7yDdNHcYvGTFoyx7zDXOqhHFXs=
-X-Gm-Gg: ASbGncs6DcWickGSa1C/ah57oASycCuZYXa0c3wY5m1IcgfGBXp68ZPzbBUg2qE8eVc
-	qzxAmm0dM8v6nQYeHGMK+SKDmdJZNr4IhYEC6pXcu4rAS/keiPjXM7jhVMUde/gh/imzfhHhQN3
-	OQ2Ex4HdOvCFOL+Sx4iOcXulLU77Qd5wAIPJYqvdObDOFPI6v7ltPBE2UGqRj11wwaeA==
-X-Google-Smtp-Source: AGHT+IFOU92ZFS2S3O0R5SwadRfYVFCtrH9pyzPNYTlNPomarpL8i1KADqoaf8Wf35yeCGDtsi5p0K+tgRPxmCxDFK4=
-X-Received: by 2002:a05:600c:6089:b0:444:c28f:e81a with SMTP id
- 5b1f17b1804b1-44c94c246b9mr146760025e9.27.1748425726021; Wed, 28 May 2025
- 02:48:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748425818; x=1749030618;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U154eK3ddwaPqm55ZRdw1sQb9SuIUnfO5tNkP86wnH0=;
+        b=Txs+ZjVDi/OwIcqg2XVmpPrhU0Yw/+5HtMg4vL3En+cNzjqATN3rkPaCRWpW54IgGQ
+         BXUxMhce5+elC6HZImwQMLNg27e9J4O+hqgE//9QHtoMsa7t0OAXZ1ubLozO2zBVPIn8
+         87RPJqcj7oYApqgu/aZamR4vC6EkJiMNY8d9YEuRpY3oAFgrX8AIxtNlrqlu3bN150KX
+         bXzjo23sYfGe1ZnlnDN9qwtUW4STi3mFEo4auo0S3iTZXBxmAnGezf4/kYPGY7REeuNy
+         FCS1EhE8zrn1ftvVrd5LZcP8RwjUyuppYxe8jhKaDomaI63u471V1w/fD9tUNT4gMVQ1
+         Cwpw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVOIyVtJUKOEazW/nJPHzT2prNu04mxbPuwbW/ikr/PZQg8BlW9SkOvGi32xDtKpfLKv+cMyLTJEC5bk/E@vger.kernel.org, AJvYcCWofrpj6fcyw5gkf5j/7o0DuqbOLTv/xvTqs9XI6QYM0ZY0glTw1E38fpvJ1n2LiHes+Xw=@vger.kernel.org, AJvYcCWx3QU6iwiWXhGq80gmw/PE5e33IaIVjxOhg+NZIqmChnjLSG4QmB5M1EkAhW8n76PGn8SAOszZUAIm2w==@vger.kernel.org, AJvYcCX+I9M9db9UlUh7I5Q7iRcEzl9GpornlB9EFEysuDqgJR/09bIkvQVm6BWw0i5frJcI/9YOvWSA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdqmJ2BN+hgHaL/3/vLpwXH6siNUfX+vM7BlHEpgwCAuHRDB09
+	oddPT/LHTAOtpYC1qGVnniWi2fuLEkArwBB9fKy0SEg2jxgHxs+wdhP/
+X-Gm-Gg: ASbGncu5i+5F9l17VVwNyBvkwgHg9D+2K8mrDvYMUC2DmXR8y/4PDfasrIOLlLZRfrw
+	WejmxAgNzhkBTdfEvK/+pOGVZ5XZPcIFhqY2qQMlbsEkvzdZkgVxiNJcTcLs0LskJp4wjFc93eG
+	Izb73Uk7YMWq+bvU1gT0ieygXS7raYKtYkJmmUEv/ctcjpthiMb0APwPRE6nkeAIWsJ0IanAy7y
+	9paiHOaoiNv8CGyjbash76YN5gQKEPm1AABNSIgp/WyNMIYiqxpBSF7JwzKNw71JMEsR3XiBili
+	sgEQshW2YOddvTzpiLtyqsYFARNRpkqzloVwF2P1P1020pEl9VESQLGZoMrJEQCCe1vSct4+vQ=
+	=
+X-Google-Smtp-Source: AGHT+IFBpwXe6OYaA+6pIeCAYnPKbCTjWryXK9Qi9lEDBkg++QM3cSR3IC/BzivItjAiaVNDFa3zmw==
+X-Received: by 2002:a17:906:c14f:b0:ad8:a4a8:103a with SMTP id a640c23a62f3a-ad8a4a81180mr97835266b.4.1748425818177;
+        Wed, 28 May 2025 02:50:18 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::6f? ([2620:10d:c092:600::1:c447])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b28908sm78014966b.117.2025.05.28.02.50.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 02:50:17 -0700 (PDT)
+Message-ID: <5494b37d-1af0-488e-904b-2d3cbd0e7dcf@gmail.com>
+Date: Wed, 28 May 2025 10:51:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512184302.241417-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdX5_P4R43HOPuZc3JSAOQ5O2xOBDVhVVg1SxU1ucPdbPA@mail.gmail.com>
-In-Reply-To: <CAMuHMdX5_P4R43HOPuZc3JSAOQ5O2xOBDVhVVg1SxU1ucPdbPA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 28 May 2025 10:48:20 +0100
-X-Gm-Features: AX0GCFvgbR9aYLSei5CukQRvloak3Q9KnXFyd1nNDHatfD-viQKLYa05qK7GLSE
-Message-ID: <CA+V-a8sde6Zaz3Z2uDt3OGZ52UBJfR3vQMs4-ZUusDu=oNwFhg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access page->pp_magic
+ in page_pool_page_is_pp()
+To: Byungchul Park <byungchul@sk.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
+ harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
+ <a4ff25cb-e31f-4ed7-a3b9-867b861b17bd@gmail.com>
+ <20250528081403.GA28116@system.software.com>
+ <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
+ <20250528091416.GA54984@system.software.com>
+ <b7efa56b-e9fd-4ca6-9ecf-0d5f15b8d0c1@gmail.com>
+ <20250528093303.GB54984@system.software.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250528093303.GB54984@system.software.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+On 5/28/25 10:33, Byungchul Park wrote:
+> On Wed, May 28, 2025 at 10:20:29AM +0100, Pavel Begunkov wrote:
+>> On 5/28/25 10:14, Byungchul Park wrote:
+>>> On Wed, May 28, 2025 at 10:07:52AM +0100, Pavel Begunkov wrote:
+>>>> On 5/28/25 09:14, Byungchul Park wrote:
+>>>>> On Wed, May 28, 2025 at 08:51:47AM +0100, Pavel Begunkov wrote:
+>>>>>> On 5/26/25 03:23, Byungchul Park wrote:
+>>>>>>> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+>>>>>>>> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+>>>>>>>>>
+>>>>>>>>> To simplify struct page, the effort to seperate its own descriptor from
+>>>>>>>>> struct page is required and the work for page pool is on going.
+>>>>>>>>>
+>>>>>>>>> To achieve that, all the code should avoid accessing page pool members
+>>>>>>>>> of struct page directly, but use safe APIs for the purpose.
+>>>>>>>>>
+>>>>>>>>> Use netmem_is_pp() instead of directly accessing page->pp_magic in
+>>>>>>>>> page_pool_page_is_pp().
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>>>>>>>>> ---
+>>>>>>>>>      include/linux/mm.h   | 5 +----
+>>>>>>>>>      net/core/page_pool.c | 5 +++++
+>>>>>>>>>      2 files changed, 6 insertions(+), 4 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>>>>>>> index 8dc012e84033..3f7c80fb73ce 100644
+>>>>>>>>> --- a/include/linux/mm.h
+>>>>>>>>> +++ b/include/linux/mm.h
+>>>>>>>>> @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+>>>>>>>>>      #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+>>>>>>>>>
+>>>>>>>>>      #ifdef CONFIG_PAGE_POOL
+>>>>>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>>>>>>> -{
+>>>>>>>>> -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+>>>>>>>>> -}
+>>>>>>>>
+>>>>>>>> I vote for keeping this function as-is (do not convert it to netmem),
+>>>>>>>> and instead modify it to access page->netmem_desc->pp_magic.
+>>>>>>>
+>>>>>>> Once the page pool fields are removed from struct page, struct page will
+>>>>>>> have neither struct netmem_desc nor the fields..
+>>>>>>>
+>>>>>>> So it's unevitable to cast it to netmem_desc in order to refer to
+>>>>>>> pp_magic.  Again, pp_magic is no longer associated to struct page.
+>>>>>>>
+>>>>>>> Thoughts?
+>>>>>>
+>>>>>> Once the indirection / page shrinking is realized, the page is
+>>>>>> supposed to have a type field, isn't it? And all pp_magic trickery
+>>>>>> will be replaced with something like
+>>>>>>
+>>>>>> page_pool_page_is_pp() { return page->type == PAGE_TYPE_PP; }
+>>>>>
+>>>>> Agree, but we need a temporary solution until then.  I will use the
+>>>>> following way for now:
+>>>>
+>>>> The question is what is the problem that you need another temporary
+>>>> solution? If, for example, we go the placeholder way, page_pool_page_is_pp()
+>>>
+>>> I prefer using the place-holder, but Matthew does not.  I explained it:
+>>>
+>>>      https://lore.kernel.org/all/20250528013145.GB2986@system.software.com/
+>>>
+>>> Now, I'm going with the same way as the other approaches e.g. ptdesc.
+>>
+>> Sure, but that doesn't change my point
+> 
+> What's your point?  The other appoaches do not use place-holders.  I
+> don't get your point.
+> 
+> As I told you, I will introduce a new struct, netmem_desc, instead of
+> struct_group_tagged() on struct net_iov, and modify the static assert on
+> the offsets to keep the important fields between struct page and
+> netmem_desc.
+> 
+> Then, is that following your point?  Or could you explain your point in
+> more detail?  Did you say other points than these?
 
-Thank you for the review.
+Then please read the message again first. I was replying to th
+aliasing with "lru", and even at the place you cut the message it
+says "for example", which was followed by "You should be able to
+do the same with the overlay option.".
 
-On Fri, May 23, 2025 at 4:19=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar, Fabrizio,
->
-> On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add DSI support for Renesas RZ/V2H(P) SoC.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -5,6 +5,7 @@
-> >   * Copyright (C) 2022 Renesas Electronics Corporation
-> >   */
-> >  #include <linux/clk.h>
-> > +#include <linux/clk/renesas-rzv2h-dsi.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/io.h>
-> >  #include <linux/iopoll.h>
-> > @@ -30,6 +31,9 @@
-> >
-> >  #define RZ_MIPI_DSI_FEATURE_16BPP      BIT(0)
-> >
-> > +#define RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA       (80 * MEGA)
-> > +#define RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA       (1500 * MEGA)
->
-> RZV2H_MIPI_DPHY_FOUT_M{IN,AX}_IN_MHZ?
->
-Ok, I'll rename them as above.
+You can still continue to use pp_magic placed in the netmem_desc
+until mm gets rid of it in favour of page->type. I hear that you're
+saying it's temporary, but it's messy and there is nothing more
+persistent than a "temporary solution", who knows where the final
+conversion is going to happen.
 
-> > +
-> >  struct rzg2l_mipi_dsi;
-> >
-> >  struct rzg2l_mipi_dsi_hw_info {
-> > @@ -40,6 +44,7 @@ struct rzg2l_mipi_dsi_hw_info {
-> >                               u64 *hsfreq_millihz);
-> >         unsigned int (*dphy_mode_clk_check)(struct rzg2l_mipi_dsi *dsi,
-> >                                             unsigned long mode_freq);
-> > +       const struct rzv2h_pll_div_limits *cpg_dsi_limits;
-> >         u32 phy_reg_offset;
-> >         u32 link_reg_offset;
-> >         unsigned long max_dclk;
-> > @@ -47,6 +52,11 @@ struct rzg2l_mipi_dsi_hw_info {
-> >         u8 features;
-> >  };
-> >
-> > +struct rzv2h_dsi_mode_calc {
-> > +       unsigned long mode_freq;
-> > +       u64 mode_freq_hz;
->
-> Interesting... I guess mode_freq is not in Hz?
->
-Actually it is int Hz, I will make it unsigned long.
+-- 
+Pavel Begunkov
 
-> > +};
-> > +
-> >  struct rzg2l_mipi_dsi {
-> >         struct device *dev;
-> >         void __iomem *mmio;
->
-> > +static u16 rzv2h_dphy_find_ulpsexit(unsigned long freq)
-> > +{
-> > +       static const unsigned long hsfreq[] =3D {
-> > +               1953125UL,
-> > +               3906250UL,
-> > +               7812500UL,
-> > +               15625000UL,
-> > +       };
-> > +       static const u16 ulpsexit[] =3D {49, 98, 195, 391};
-> > +       unsigned int i;
-> > +
-> > +       for (i =3D 0; i < ARRAY_SIZE(hsfreq); i++) {
-> > +               if (freq <=3D hsfreq[i])
-> > +                       break;
-> > +       }
-> > +
-> > +       if (i =3D=3D ARRAY_SIZE(hsfreq))
-> > +               i -=3D 1;
->
-> i--
->
-OK.
-
-> > +
-> > +       return ulpsexit[i];
-> > +}
-> > +
-> > +static u16 rzv2h_dphy_find_timings_val(unsigned long freq, u8 index)
-> > +{
-> > +       const struct rzv2h_mipi_dsi_timings *timings;
-> > +       u16 i;
-> > +
-> > +       timings =3D &rzv2h_dsi_timings_tables[index];
-> > +       for (i =3D 0; i < timings->len; i++) {
-> > +               unsigned long hsfreq =3D timings->hsfreq[i] * 10000000U=
-L;
->
-> (I wanted to say "MEGA", but then I noticed the 7th zero ;-)
->
-> 10 * MEGA?
->
-Agreed, I will update it as above.
-
-> > +
-> > +               if (freq <=3D hsfreq)
-> > +                       break;
-> > +       }
-> > +
-> > +       if (i =3D=3D timings->len)
-> > +               i -=3D 1;
->
-> i--
->
-> > +
-> > +       return timings->start_index + i;
-> > +};
-> > +
-> >  static void rzg2l_mipi_dsi_phy_write(struct rzg2l_mipi_dsi *dsi, u32 r=
-eg, u32 data)
-> >  {
-> >         iowrite32(data, dsi->mmio + dsi->info->phy_reg_offset + reg);
-> > @@ -308,6 +479,158 @@ static int rzg2l_dphy_conf_clks(struct rzg2l_mipi=
-_dsi *dsi, unsigned long mode_f
-> >         return 0;
-> >  }
-> >
-> > +static unsigned int rzv2h_dphy_mode_clk_check(struct rzg2l_mipi_dsi *d=
-si,
-> > +                                             unsigned long mode_freq)
-> > +{
-> > +       struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi->dsi_pa=
-rameters;
-> > +       u64 hsfreq_millihz, mode_freq_hz, mode_freq_millihz;
-> > +       struct rzv2h_plldsi_parameters cpg_dsi_parameters;
-> > +       unsigned int bpp, i;
-> > +
-> > +       bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
-> > +
-> > +       for (i =3D 0; i < 10; i +=3D 1) {
-> > +               unsigned long hsfreq;
-> > +               bool parameters_found;
-> > +
-> > +               mode_freq_hz =3D mode_freq * MILLI + i;
->
-> KILO?
->
-OK, as mode_freq_hz is in Hz I'll make it unsigned long.
-
-> And I guess you want to use mul_u32_u32(), as mode_freq_hz is u64?
->
-and use mul_u32_u32() below...
-> > +               mode_freq_millihz =3D mode_freq_hz * MILLI * 1ULL;
->
-> Why * 1ULL?
->
-Agreed, not needed, I will use mul_u32_u32() here.
-
-> > +               parameters_found =3D rzv2h_dsi_get_pll_parameters_value=
-s(dsi->info->cpg_dsi_limits,
-> > +                                                                      =
-&cpg_dsi_parameters,
-> > +                                                                      =
-mode_freq_millihz);
-> > +               if (!parameters_found)
-> > +                       continue;
-> > +
-> > +               hsfreq_millihz =3D DIV_ROUND_CLOSEST_ULL(cpg_dsi_parame=
-ters.freq_millihz * bpp,
-> > +                                                      dsi->lanes);
-> > +               parameters_found =3D rzv2h_dsi_get_pll_parameters_value=
-s(&rzv2h_plldsi_div_limits,
-> > +                                                                      =
-dsi_parameters,
-> > +                                                                      =
-hsfreq_millihz);
-> > +               if (!parameters_found)
-> > +                       continue;
-> > +
-> > +               if (abs(dsi_parameters->error_millihz) >=3D 500)
-> > +                       continue;
-> > +
-> > +               hsfreq =3D DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI)=
-;
-> > +               if (hsfreq >=3D RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA &&
-> > +                   hsfreq <=3D RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA) {
-> > +                       dsi->mode_calc.mode_freq_hz =3D mode_freq_hz;
-> > +                       dsi->mode_calc.mode_freq =3D mode_freq;
-> > +                       return MODE_OK;
-> > +               }
-> > +       }
-> > +
-> > +       return MODE_CLOCK_RANGE;
-> > +}
->
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> > @@ -40,6 +40,39 @@
-> >  #define DSIDPHYTIM3_THS_TRAIL(x)       ((x) << 8)
-> >  #define DSIDPHYTIM3_THS_ZERO(x)                ((x) << 0)
-> >
-> > +/* RZ/V2H DPHY Registers */
-> > +#define PLLENR                         0x000
-> > +#define PLLENR_PLLEN                   BIT(0)
-> > +
-> > +#define PHYRSTR                                0x004
-> > +#define PHYRSTR_PHYMRSTN               BIT(0)
-> > +
-> > +#define PLLCLKSET0R                    0x010
-> > +#define PLLCLKSET0R_PLL_S(x)           ((x) << 0)
->
->  #define PLLCLKSET0R_PLL_S GENMASK(2, 0)
->
-> and after that you can use FIELD_PREP(PLLCLKSET0R_PLL_S, x) in the code.
-> More opportunities for masks below...
->
-Thanks, I will make use of GENMASK/FIELD_PREP macros.
-
-Cheers,
-Prabhakar
