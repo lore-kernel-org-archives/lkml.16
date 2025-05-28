@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9975277816;
-	Wed, 28 May 2025 12:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1439E273F9;
+	Wed, 28 May 2025 12:09:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434054; cv=none; b=UjX2IRjQRH2reE/hkPW39lahzfNV5iBOUghKBnkH/oV7GySLI5kplUrBU6G06yh5/kFvfvyxikgCehKxztepI/luKHZ+37u580OwSreFdVKiR/r/13NlBLkbKDb0ayZ+AUGedsGBL8l9RB/rh0NGQD9lo3gWxlMD5RepL/Ia7Bk=
+	t=1748434155; cv=none; b=r26xyUXgjJgHPLwOuL/B2fqbwl2w5F8W5vf40kef5uGACaNsOUzcqA6ehu7z2OO5AzF6o65uXwK/hp7CVWiQz0fv6uobyMxnlkiDnxtruV5l0gIzdMEXrEAEsaFwzC3iCeLIBaEsp6e5xYLSonQr77yAU1dXDhVUc2rL9aRFcxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434054; c=relaxed/simple;
-	bh=nqxUSx2y7ieoQY1FNXOZ4tknl2q0hN4mg0ilBAT41n0=;
+	s=arc-20240116; t=1748434155; c=relaxed/simple;
+	bh=riKR+ikn9pqTRZr9QK52Dn8usb+TT24tbqNMERJBrOs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TQA4yHB9tV1ew57EmrLmsldk3GHNAHKN1oANVFis8GKa4o+FFjX3DziISEpBZ0m1CaXkb299gjUvGnUoJ0WViHLGJCX1IeLTfKcLnb+JKxBRcDv/wx7ik85iZbfEwA30STz/JD/CcUxI1PBnXk1duubYSh0lEgzTlVfGDLJZZao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tX+T6gsY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=TYJWDDFIZnBEE6fhhJBELoWMERxf2CmYPCgWuHNqpgJhzrGwFraeBth/9dn0QqP/TUFybTMemqzYncupuxM5jEHWitWZG+v7E5rByg++eI+Ckn7ob2RkRUWViFgQV6jiaQXYnh+KWcT+aZQxQU7twMK7ReNusvRX7WMiCP0VA6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ztk1FPVz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tX+T6gsY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A1BDC4CEE7;
-	Wed, 28 May 2025 12:07:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ztk1FPVz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8623EC4CEE7;
+	Wed, 28 May 2025 12:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748434054;
-	bh=nqxUSx2y7ieoQY1FNXOZ4tknl2q0hN4mg0ilBAT41n0=;
+	s=k20201202; t=1748434154;
+	bh=riKR+ikn9pqTRZr9QK52Dn8usb+TT24tbqNMERJBrOs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tX+T6gsYdTiwTZeh/McCgMZ3KbIV1yrn8WtIbQc359BHRWGzQhnm/ZV4j6i1qSNdW
-	 h684k7lz5z0K7A89CsaPBZSVJ03vrYKEZHe9K8PsMZ3aa67lwl55hQuU8JxKB0dX7/
-	 8WLb2TyCTYu7jyeVlipIic0tMfRVkes44TQAE/uSzZrGrSsxQVlKG7RpgBTEUy1Uk2
-	 tinQ62Qnqst7zQieLXL7GJbtI6QXBldpg+XXXly98STBvaWWlnQph6CMTHGNNXfTEC
-	 Kt3341bH7sl+rRMiq0exP3/R3p48zcrX+I0mafDgi20Y+WzABjMRVX8Wf2A3heJTCc
-	 9LBX7tdQx1p1g==
-Message-ID: <5a430a69-6182-4a34-b5df-5fd557411b68@kernel.org>
-Date: Wed, 28 May 2025 14:07:29 +0200
+	b=Ztk1FPVzlKwuilqD7GP4y5A+W3e5sSSt4CxuAtySRJXitxh7mbK5KRdviOUHdKlWL
+	 Pq2a3EDKv/4T3pBNOagwUcgJWyj65r1VFYzgDl1D8HlS0+j+Wj2XULCgBEgqrnuOHv
+	 +3teLfWWZUFJF1fNWHEaa8aZFXMMBm7liyGNXSUYQSlN9o63TgW7KQej9fP2w7e0uE
+	 mBrFGWvkoAoSXzTN7i7S5rBAOx+lBSekQHXVIWj9OSr1+wxyXz6ttxAHc+X+Avizc4
+	 TKs1o18tNYyleQDYuLEz4NksUwfGN38J2Tn+3H2UX5LFZtcgRDAknAoAfH++6TDAu7
+	 VW59HhGLDVOzA==
+Message-ID: <960907ec-61e5-4fcc-9980-7df1d533cd77@kernel.org>
+Date: Wed, 28 May 2025 14:09:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: BT Driver: mediatek: add gpio pin to reset bt
-To: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Von Dentz <luiz.dentz@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
- Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>,
- Steve Lee <steve.lee@mediatek.com>,
- linux-bluetooth <linux-bluetooth@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linux-mediatek <linux-mediatek@lists.infradead.org>
-References: <20250528070323.14902-1-ot_zhangchao.zhang@mediatek.com>
+Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back into
+ watchdog node
+To: Meng Li <Meng.Li@windriver.com>, shawnguo@kernel.org, robh@kernel.org,
+ conor+dt@kernel.org, Frank.Li@nxp.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250528111751.3505224-1-Meng.Li@windriver.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,29 +87,17 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528070323.14902-1-ot_zhangchao.zhang@mediatek.com>
+In-Reply-To: <20250528111751.3505224-1-Meng.Li@windriver.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 09:03, Zhangchao Zhang wrote:
-> +
-> +static int btmtk_reset_by_gpio(struct hci_dev *hdev)
-> +{
-> +	struct btmtk_data *data = hci_get_priv(hdev);
-> +	struct btmtk_reset_gpio *reset_gpio_data;
-> +	struct device_node *node;
-> +	int reset_gpio_number;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "mediatek,usb-bluetooth");
+On 28/05/2025 13:17, Meng Li wrote:
+> When verifying watchdog feature on NXP ls1046ardb board,
+> it doesn't work. Because the big-endian is deleted by accident,
+> add it back.
 
-There is no such compatible. Just git grep for it.
-
-> +	if (node) {
-> +		reset_gpio_number = of_get_named_gpio(node, "reset-gpios", 0);
-
-Where is the ABI documented? Anyway, you should not pick GPIOs from
-random devices.
-
+It is not removed by accident. It was removed intentionally. Bring
+arguments (bindings, hardware, drivers) why this is correct choice.
 
 Best regards,
 Krzysztof
