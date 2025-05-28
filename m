@@ -1,48 +1,64 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CAA283C87
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A028D284B35
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434769; cv=none; b=CpvzeYWw7wCuFEXBW6Vkc9MCk6f4m2j2fzs4GArSxc9R1M2et931hylv9j/HVkquQcFpe5Ptlk8kF/lYNOQ/oWMc4ZMLUZ8UhNEwx0sJo1+2/ycNG9Lrd08LFbGa+5IIHDHro9E2qPF0yDS3xKn9+P06/Bc7npDdRIj5FctFriw=
+	t=1748434773; cv=none; b=nMLHhNlB++ykosks5tIF94IqURFnGKoy3lG5ug/a/8vQ5G+wheEJri0IeVovCA1ApxNdZ31rOeSxElicM+lm0WHGkoSnLqn7c0M3dUb4KD7VLJygkgKovRZq8vTRsWetW2bhYxO9PNp2aABR3IK2I2Xm4FdBC4fGOiug6KVHk2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434769; c=relaxed/simple;
-	bh=VGnl6Y+q2kjW350SAMV6KWgkQ0sTgZ/83xluxF/uE1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EuB1YbOrlK14csAbsdXlrbott73WOVNoLuvnArezZvt99r/wKJhbHoXNAhXhqsp5RUgsxyLP5it4ijOKKa8gknDaalmJy8ps/kT0oqxXs/PvXKyyrjBwnZcZmkhYVZDVL0FfD1zuq7IzSkzsHwC7OHgTr+I55Bb5UX0Mkz7qG/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=kNdFqCqw; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748434773; c=relaxed/simple;
+	bh=UTy+PEU7tr0mOQr1WcfZgDzuuEmIiCfQAFSll5QPB9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vw0XrxgSyIu5v/mMJHbmmrxDiC7Cl74aLcPRuiga50shjBcWTDLHt4cuX5hZVHJWpf9baYumUTPnsH7GHNd1BOPpWd0qOrmGVzIUcHu066mlpqcRk+SZWtF84/ZkUNZcZAGGmsSnz1Oeqc02DV3A9OtdwiqL2L7DqtV9/MAtYYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=kLTei5vg; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kNdFqCqw"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54SCJ5Wx2052677;
-	Wed, 28 May 2025 07:19:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748434745;
-	bh=l3YN0YjiGyCT1PJmlXnIccHSCajQruxefXMQ1JMSQPE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=kNdFqCqwIXkdgc+N8Lzivt5YP4XEfjRfMYbEa1U6f9OEiyl4WJzQXCScqofA1Nj/f
-	 GbkxJcp5Mxj9SdqCATMIinnQq+e6GggR1jliwD6IxwMLHM+yP+dmFv3bNGseS+UrYB
-	 VPoHqFXov61GpsAlmpO4rHJhFA8K+aB/wpli6YSg=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54SCJ4823553852
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 28 May 2025 07:19:04 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
- May 2025 07:19:03 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 28 May 2025 07:19:03 -0500
-Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54SCIv5e095919;
-	Wed, 28 May 2025 07:18:57 -0500
-Message-ID: <0936a042-8ebe-42f7-b3eb-a4606120cc47@ti.com>
-Date: Wed, 28 May 2025 17:48:56 +0530
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="kLTei5vg"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6045b95d1feso7544590a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:19:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1748434770; x=1749039570; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gUs1WGbpbtSdkN7Nj6CphSlTzl8HeW1Wjos25VNHfcc=;
+        b=kLTei5vgu21+KKSJf3ODIz96GYG117NrrT6qfl9k2/mzeS9baqjonSD53BfyJ/8ENl
+         oyN1ajvts6hopw7+BxxOXmV4KriXwyGJTyIUCePFDSkiC+8Jds3OGWKcpodX4TtG8ib+
+         tX4qEdqbKD3ljMD6zmGAlhVb7sWBX0GCN5bwHzeVYVbF7mKn2CJ18hg14pPIFayaAz4c
+         X1JbZ2AGhZUDXtYFxRtLwC6aXrJWw1WCuXH8jgWWdYdRj+xVujQ9d0PcdWkAJCuclCk1
+         kndcUMQudzKC1hiPkesJR5wTy9Tfz8fniYn2zn17YKbMGjEo0kdn1dMCwiRSYjnnZf9m
+         Chew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748434770; x=1749039570;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gUs1WGbpbtSdkN7Nj6CphSlTzl8HeW1Wjos25VNHfcc=;
+        b=PgX3or4dnHOLd6FbebFj4UGGnxtprWnl36bJqTBqfUk30HXi9B2riMI4owoaKnIOlb
+         hQLhcg99GPE68cGxKGBAcQ60XquGoYOoasXP8nPtH7hfgLdA+5SuPrclOhTODE1xXBVy
+         oJzTyqoXdDEZW/xjp44jibyr2EMv7HMr/JeknxUhn+fXoEZP85T8Myy4e+5Webdh6Zl3
+         rY8yWQaPQu6yHt1K7y2alepQe+i5jzwvfH5uzLuCZG71IIWoz3OIwHSY8g7wELOBflX9
+         N0eVM5BtRtb+Iw1JBQu3H2j3k4Sl+L8R9vq69by1jpgDYw9zXalIrqIv0Kr2SGzahWaU
+         cLZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWvTzuEukt7fCWwui6WmOHxG88pAAeUIkYySstziJX3E3rjLdDRg1+UbLjtB5UmC5MWSF8DCDjeGCnbs4w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6xN3J4/hscPfEehybpDlm7V5HLeBZQzD5OjA40tiJCH/orQXZ
+	vtX+46UaH7QEM0+p04bds2bILeIdAr+QCS35YKr6HOuzoaRtWwFNNeGUyDcVeYr1YPQ=
+X-Gm-Gg: ASbGnctkLCuesIeTBRXJpw+PsD6dIsoCbC81Qf5fU16TdhSFPhVqklmt+hW9xQs/uee
+	jNhbjW+sb33mxIQcSLu+RJl6OpQs/BSYvhov4ksDm1frXfMvcPbyrQ6KCGXHSi3Z2Uvu8H1oSlO
+	CgUb9tmv1rz5xL+AGhYkhp15aNf8SlxSvNSDvdlYAQm40cFtZbOxKQhmXyaFUgSGybI8VeigQtm
+	J+rN33vNfVU9GmZ3Dq7jMFMCHX36Ga9b+lVvnFwlWjigQ7OVLcnEFCSK02Fo8dmliqyBW6vWP4C
+	SHQwRBQ5etXzfTNOo58j55tuGV5j4QzF7AkZChmruUxPBkcaCf7jhc1c09Kt
+X-Google-Smtp-Source: AGHT+IGGhc5A2T3ca464ACVEsiUUFLDwI1rD81PEkeAvBkW4x1BJfuPs5Bg5vFJS51y64CfcmLZiFQ==
+X-Received: by 2002:a05:6402:5113:b0:605:878:3560 with SMTP id 4fb4d7f45d1cf-605087843demr4023398a12.26.1748434769848;
+        Wed, 28 May 2025 05:19:29 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.126])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d9936sm706164a12.7.2025.05.28.05.19.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 05:19:29 -0700 (PDT)
+Message-ID: <8bcbf37b-b70d-48e3-b435-a097d351f786@tuxon.dev>
+Date: Wed, 28 May 2025 15:19:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,99 +66,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Doug Anderson <dianders@chromium.org>,
-        Ernest Van Hoecke
-	<ernestvanhoecke@gmail.com>
-CC: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <max.krummenacher@toradex.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <kieran.bingham+renesas@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <max.oss.09@gmail.com>,
-        <devarsht@ti.com>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <ernest.vanhoecke@toradex.com>
-References: <20250508115433.449102-1-j-choudhary@ti.com>
- <mwh35anw57d6nvre3sguetzq3miu4kd43rokegvul7fk266lys@5h2euthpk7vq>
- <CAD=FV=U7XJZg4Vh4xMKEiAuaJHNA1H11SiD19KLBazPmMEVduw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PM: domains: Add devres variant for
+ dev_pm_domain_attach()
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ len.brown@intel.com, pavel@kernel.org, jic23@kernel.org,
+ daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, bhelgaas@google.com,
+ geert@linux-m68k.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20250526122054.65532-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com>
+ <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
+ <CAPDyKFptNg5t6RehRNNfnnuCqpfiaQLaHBEdh4aRXfn7X6rYQQ@mail.gmail.com>
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <CAD=FV=U7XJZg4Vh4xMKEiAuaJHNA1H11SiD19KLBazPmMEVduw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <CAPDyKFptNg5t6RehRNNfnnuCqpfiaQLaHBEdh4aRXfn7X6rYQQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Doug, Ernest,
+Hi, Ulf,
 
-On 27/05/25 21:14, Doug Anderson wrote:
-> Hi,
+On 28.05.2025 12:31, Ulf Hansson wrote:
+>>> +
+>>> +/**
+>>> + * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attach()
+>>> + * @dev: Device to attach.
+>>> + * @attach_power_on: Use to indicate whether we should power on the device
+>>> + *                   when attaching (true indicates the device is powered on
+>>> + *                   when attaching).
+>>> + * @detach_power_off: Used to indicate whether we should power off the device
+>>> + *                    when detaching (true indicates the device is powered off
+>>> + *                    when detaching).
+>>> + *
+>>> + * NOTE: this will also handle calling dev_pm_domain_detach() for
+>>> + * you during remove phase.
+>>> + *
+>>> + * Returns 0 on successfully attached PM domain, or a negative error code in
+>>> + * case of a failure.
+>>> + */
+>>> +int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
+>>> +                       bool detach_power_off)
+>> Do we have examples where we power on a device and leave it powered on
+>> (or do not power on device on attach but power off it on detach)? I
+>> believe devm release should strictly mirror the acquisition, so separate
+>> flag is not needed.
+> This sounds reasonable for me too.
+
+Then I'll drop the detach_power_off in the next version.
+
+Thank you for your review,
+Claudiu
+
 > 
-> On Mon, May 26, 2025 at 1:41 AM Ernest Van Hoecke
-> <ernestvanhoecke@gmail.com> wrote:
->>
->> Hi Jayesh,
->>
->> First of all, thanks for your patch. I applied it to our 6.6-based
->> downstream kernel supporting a board I have here, and noticed some
->> strange behaviour with eDP now.
->>
->> On Thu, May 08, 2025 at 05:24:33PM +0530, Jayesh Choudhary wrote:
->>> +     if (pdata->bridge.type == DRM_MODE_CONNECTOR_eDP)
->>> +             regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
->>> +                                HPD_DISABLE);
->>>
->>
->> On my setup it seems that `pdata->bridge.type` is not yet set here,
->> because it executes before `ti_sn_bridge_probe`. For the DP use case,
->> this is not a problem because the type field is 0 (i.e., not
->> DRM_MODE_CONNECTOR_eDP) in that case. But for eDP, it means that we are
->> unexpectedly not disabling HDP.
->>
->> With working HDP, everything is fine in the end for both DP and eDP. But
->> when the HDP line is not connected, eDP no longer works. So I wonder if
->> this breaks some functionality for weird eDP panels or board
->> implementations.
->>
->> I could certainly be missing something; from my understanding it looks
->> like without a good HPD signal, the `ti_sn_bridge_probe` and quoted code
->> are stuck in a loop. `ti_sn65dsi86_enable_comms` runs but does not
->> disable HDP, after which the probe runs but fails and does not set the
->> type field, so the next `enable_comms` run fails to disable HDP again,
->> etc.
+> Note that, in most of the *special* cases for where
+> dev_pm_domain_attach|detach() is used today, the corresponding PM
+> domain is managed by genpd through a DT based configuration. And genpd
+> via genpd_dev_pm_attach|detach() doesn't even take this as an
+> in-parameter.
 > 
-> This does sound like a real problem.
+> So this is solely for the behaviour for the acpi PM domain, just to
+> make sure that's clear.
 > 
-> I'm not sure I'll have the time to analyze it and come up with a
-> proposal myself right now, but Jayesh: you should make sure you
-> consider and address this issue before you send your next version.
+> [...]
 > 
-> Thanks!
+> Kind regards
+> Uffe
 
-
-I see that i2c_driver probe ti_sn65dsi86_probe() is called first
-which calls ti_sn65dsi86_resume() and ti_sn65dsi86_enable_comms()
-and after that auxiliary_driver probe ti_sn_bridge_probe() is called
-where pdata->bridge.type is set.
-
-As per the bindings, I see that we should have "no-hpd" property in
-the device description for platforms with bad HPD or disconnected HPD.
-
-Then we can read it in ti_sn65dsi86_probe() before resume call and use
-it as a conditional instead.
-Since I do not have any "bad HPD signal" board, I would need some
-help validating this on such boards from Ernest.
-
-Also, that would mean adding "no-hpd" to all the platforms using
-sn65dsi86 for baseline first, even before the driver changes are in.
-Because if driver changes go in first, this would enable HPD for all
-the platforms. Whereas, the dts changes alone are harmless.
-But still I am doubtful about dts changes getting in before driver
-changes.
-Considering this, please let me know the order of changes and I will
-send out the patches accordingly.
-
-Thanks,
-Jayesh
