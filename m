@@ -1,118 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8C62882AB;
-	Wed, 28 May 2025 14:19:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D0713AF2;
+	Wed, 28 May 2025 14:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441943; cv=none; b=ItLbbT6MXSAa8HXISsDbTnhF7DS3ucr2zduTR+WA9JPi+dJFcOs5wCX8JAe7+oieWnaOTyoYk5MJrjLutMtBuLrHcaTH20j64+a6ew17ueHfPm0synGu4uP4coIglj3/7ffGmoQkgSFKs9lcnt4R5bWXWF/lgoGvOGPMjW6zXsU=
+	t=1748442034; cv=none; b=LNi1nR/XouvbFsHSYDAAK4EASdDjLOJKaohtNfSUMIuuvV7L9HAvajPVSUT9SCiPnriedNTFUO7zvH/iqwq57NE5fHptBedNg2Eztf6nder1Rb75EC//ROM378vWdj88rN5dJaeNfOGAmM4V8DG3KVFrhkvAtnwDDjbYwhSSedc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441943; c=relaxed/simple;
-	bh=78K9IapfEUA0fFpl8LYkfjYQvXb/zqZqFdh+VYT4FJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkLXKmZwE6eeN1k5rQ7gP5s7ejwLouPEFY9AqV5bmxP8hMkQzgvaDd8TBQ0r3NYq36t1Fquu8xjxBXYByvZ+cRzj/XUXf41BsNotCBTwHfepzsXa5DLAXQ83Fp+8xxNLXPnm0nNPHHOrgCtG9wsUKb9ZJFhR8K1lcBFciB16iGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkeOzXk5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748442034; c=relaxed/simple;
+	bh=IAmFVHlk4nuMOFtQv4aOrf2liouMBgPnbsltL1EJW04=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=D8FvBtrrgeVwHaZoxvLAHAAedpJMcYQsjj1sbIKRMekZptbG4dgsmbU9NTqIkmchxUjH46BCUu0C1JbX7BKoIZJkfAdHl+Dr4NJpPbfr94XNR+V/NW78e77QJw+93OE2KI8FZ1lQ/tRw8ErGa5yigMAd/wp2B9YPgcURfJ2xd0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZoPl5l4B; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkeOzXk5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB70CC4CEE3;
-	Wed, 28 May 2025 14:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748441943;
-	bh=78K9IapfEUA0fFpl8LYkfjYQvXb/zqZqFdh+VYT4FJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VkeOzXk5eN+qrU03KZerCJkDAKnh8wRqro+X+AhBJBc8PifbmrRAc7xFN7hOyrJhv
-	 YuWH3To3Cku6KJ6Bj4LyKfoGNRaQt+JCqQi/HpFULd1mEXAAMfNVTJrYyJXBGFi9t/
-	 CiI7iQfuvkIIi3N+R8u5PnQI3VT07VKW86Uy6Fq67CgEpm7Z2BTV4KDWrCFMw7rR/X
-	 DG1T56yPZ9LShXI/wJZGo4wrbTVonT2ei3JlAf4qD9t3Mc4zL69HkK4qubSV76E+rN
-	 aqs/b1z/Ix2qzhtSvjo6CrXO6LPVQy60spli6q5XfIGfNYT5NmG3VUxjqzV4stWCft
-	 xrS69ZDzlonEQ==
-Date: Wed, 28 May 2025 09:19:01 -0500
-From: Rob Herring <robh@kernel.org>
-To: "Edgar E. Iglesias" <edgar.iglesias@gmail.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jank@cadence.com, edgar.iglesias@amd.com,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: clk: fixed-mmio-clock: Add optional
- ready reg
-Message-ID: <20250528141901.GA3966725-robh@kernel.org>
-References: <20250528140917.876453-1-edgar.iglesias@gmail.com>
- <20250528140917.876453-2-edgar.iglesias@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZoPl5l4B"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5049043B39;
+	Wed, 28 May 2025 14:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748442029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cMf/Hnpv8Kkgl2xtdJEs4s67UUfmu0Eb4EkJAcuiJ54=;
+	b=ZoPl5l4Bc9sqvQi2thDwCWwhk5PjKwCCN3n/aQ5kZ4NplF+u0r3r+1MEIONI2Ui9oaeiqe
+	WZs5Fge+nMbp4fz/eG2+8veOdhCml9z3FBDTn4sgpSpu5HyuxTbV4Bp6d8+g5MNkSs8s26
+	7bGo8GfafcJlkDqv9W+uLSKc7tHj8Kl2nShiODJPxSWrXr+3g7E7SKKIe9E1QotQqz3Lxt
+	OCOoMGWxKHcasdtt3Cs3627y5E5w9717QCWPRhBFFeDL3ECLBLfjGsu/RHvEpVQ9iw4zLD
+	DyqdgFsC/yWqONV/ev72/pjqxlcdGtgkaE1QDjfAwMkS1pL0DxUX7A/1fCdMYQ==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Melissa Wen <melissa.srw@gmail.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
+ Haneen Mohammed <hamohammed.sa@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, rdunlap@infradead.org, 
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>, 
+ pekka.paalanen@haloniitty.fi, Simona Vetter <simona@ffwll.ch>, 
+ Rodrigo Siqueira <siqueira@igalia.com>, 
+ Simona Vetter <simona.vetter@ffwll.ch>, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
+ nicolejadeyee@google.com, linux-doc@vger.kernel.org, 
+ Pekka Paalanen <pekka.paalanen@collabora.com>, 
+ =?utf-8?q?Jos=C3=A9_Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+In-Reply-To: <20250415-yuv-v18-0-f2918f71ec4b@bootlin.com>
+References: <20250415-yuv-v18-0-f2918f71ec4b@bootlin.com>
+Subject: Re: [PATCH v18 0/8] drm/vkms: Add support for YUV and
+ DRM_FORMAT_R*
+Message-Id: <174844202720.20871.17817031129231550592.b4-ty@bootlin.com>
+Date: Wed, 28 May 2025 16:20:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528140917.876453-2-edgar.iglesias@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeegleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeehieelvdekieegledutdeljedvhfelfeelffffiedttedvledttddttdfgleetnecukfhppedvtddtudemkeeiudemgedugedtmegtkeeitdemfeduudekmeguieehvdemjedvtdejmeelfhehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeegudegtdemtgekiedtmeefuddukeemugeihedvmeejvddtjeemlehfhedphhgvlhhopegluddvjedrtddrtddrudgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdeipdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghls
+ egsohhothhlihhnrdgtohhmpdhrtghpthhtohepphgvkhhkrgdrphgrrghlrghnvghnsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtoheprhguuhhnlhgrphesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehpvghkkhgrrdhprggrlhgrnhgvnheshhgrlhhonhhiihhtthihrdhfihdprhgtphhtthhopegrrhhthhhurhhgrhhilhhlohesrhhishgvuhhprdhnvghtpdhrtghpthhtohepmhgvlhhishhsrgdrshhrfiesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Wed, May 28, 2025 at 04:09:16PM +0200, Edgar E. Iglesias wrote:
-> From: "Edgar E. Iglesias" <edgar.iglesias@amd.com>
+
+On Tue, 15 Apr 2025 15:55:31 +0200, Louis Chauvet wrote:
+> This patchset is extracted from [1]. The goal is to introduce the YUV
+> support, thanks to Arthur's work.
 > 
-> Add an optional ready register and properties describing bitfields
-> that signal when the clock is ready. This can for example be useful
-> to describe PLL lock bits.
+> - PATCH 2: Document pixel_arbg_u16
+> - PATCH 3: Add the support of YUV formats
+> - PATCH 4: Add some drm properties to expose more YUV features
+> - PATCH 5: Cleanup the todo
+> - PATCH 6..7: Add some kunit tests
+> - PATCH 8: Add the support of DRM_FORMAT_R1/2/4/8
 > 
-> Signed-off-by: Edgar E. Iglesias <edgar.iglesias@amd.com>
-> ---
->  .../bindings/clock/fixed-mmio-clock.yaml      | 37 ++++++++++++++++++-
->  1 file changed, 36 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
-> index e22fc272d023..57419b4de343 100644
-> --- a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
-> @@ -10,6 +10,11 @@ description:
->    This binding describes a fixed-rate clock for which the frequency can
->    be read from a single 32-bit memory mapped I/O register.
->  
-> +  An optional ready register can be specified in a second reg entry.
-> +  The ready register will be polled until it signals ready prior to reading
-> +  the fixed rate. This is useful for example to optionally wait for a PLL
-> +  to lock.
-> +
->    It was designed for test systems, like FPGA, not for complete,
->    finished SoCs.
->  
-> @@ -21,7 +26,10 @@ properties:
->      const: fixed-mmio-clock
->  
->    reg:
-> -    maxItems: 1
-> +    minItems: 1
-> +    items:
-> +      - description: Fixed rate register
-> +      - description: Optional clock ready register
->  
->    "#clock-cells":
->      const: 0
-> @@ -29,6 +37,24 @@ properties:
->    clock-output-names:
->      maxItems: 1
->  
-> +  ready-timeout-us:
-> +    description:
-> +      Optional timeout in micro-seconds when polling for clock readiness.
-> +      0 means no timeout.
-> +    default: 0
-> +
-> +  ready-mask:
-> +    description:
-> +      Optional mask to apply when reading the ready register.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0xffffffff
-> +
-> +  ready-value:
-> +    description:
-> +      When a ready register is specified in reg, poll the ready reg until
-> +      ready-reg & ready-mask == ready-value.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+> [...]
 
-And next someone wants to add an enable bit, so there's another 2-3 new 
-properties. And it never ends...
+Applied, thanks!
 
-So no, create a specific binding for your h/w.
+[1/8] drm/vkms: Document pixel_argb_u16
+      commit: c76e2c78bc2a35ca04eead275f14b6d23ae9a89f
+[2/8] drm/vkms: Add YUV support
+      commit: fe22d21e93426294eb0ebdb0bf5f6d6b77481ecc
+[3/8] drm/vkms: Add range and encoding properties to the plane
+      commit: 81dbec07197678fc2d86f1494dfaf44023864842
+[4/8] drm/vkms: Drop YUV formats TODO
+      commit: f776e5cef757927b038a9c07c0c68f34d35f7787
+[5/8] drm: Export symbols to use in tests
+      commit: 11d435b81e5dd2cc48daa2d3d71a19bcbc46e807
+[6/8] drm/vkms: Create KUnit tests for YUV conversions
+      commit: 3e897853debde269ab01f0d3d28c3e7b37bf2c39
+[7/8] drm/vkms: Add how to run the Kunit tests
+      commit: c59176cbca1188b906a36f06004a98a6264a8008
+[8/8] drm/vkms: Add support for DRM_FORMAT_R*
+      commit: ef818481d9fbaf3483dde0d1faa565a016810de3
 
-Rob
+Best regards,
+-- 
+Louis Chauvet <louis.chauvet@bootlin.com>
+
