@@ -1,33 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557DA82899;
-	Wed, 28 May 2025 09:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488631CAA6C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423104; cv=none; b=QezL66qjnmGcRctllyqorDrAlZQUdb5hJJvHldrLB9X4fdCw9Xl2sLbS2aB9TtfpTIo3BhUvdZBpHGDYnp+YW0Nu44felbSNwJEW7Lby9Z03nw/vNy6sM7AG2idSZPrOHFHv4wugMCjRRDC36eVjH59pu8Jux5SMlJ4cMgW6mJE=
+	t=1748423122; cv=none; b=WiI7V2QTeZa/NNpbeFD2PP0+0n6Spz76DN3ZGNo9noZPAJz9q/Z5Sj8Cu+irSNSNPmJxwRVot7uoR76oqDsHy/iy6O5EQIT10ba1GdWhvquGSKJGsoCvkFcTWIwZeOTl6Zj4gddK7wNVnwEtlf9CspnPRZx6QQFT7uVPb+ecN3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423104; c=relaxed/simple;
-	bh=H4qTJAgQkqzg2T/n9OCdD55Dx5Fmz+dp8Gq6HHYqBdw=;
+	s=arc-20240116; t=1748423122; c=relaxed/simple;
+	bh=rs6PIvGPcHrLv/ovucbB4V8gMKGPAt2gjljEKfXGzW8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NuWVVtskWOJC4jf83TU+7mjO/NzgAj72AsMWaVpevWtwY2OiG9kCUh4lyfgA+q48KyNNPOKMpZ17u7x5ZQkHxT1bqFH3vow2SN2xmuvqAm6ov0j/b2m/ewoGIHkeVsObzziHQscjC7yqIYCl8dMAxCFZ1GB53+qksBdPEktDiKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiD4KHw8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=rQkh69myhz2gg6J/swfJnJ+7t0D3nog7GouGffjf1qTmsohJdrK0aKKUsuyyxVKGvAGl6Rl/Pheutbpzvuwm67lpmYs4aLOoQOJbx9D6ptbF+4qovLqoLK5NFjcaYltJLc+PtEjcUYy+3PC/s7LGk6egb2Aa2bv2nFCegNYR0hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=jD0XFiqd; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiD4KHw8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D61C4CEE7;
-	Wed, 28 May 2025 09:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748423103;
-	bh=H4qTJAgQkqzg2T/n9OCdD55Dx5Fmz+dp8Gq6HHYqBdw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DiD4KHw81TFLxKlaoZsfc1sUc+5gMM9knpiopZZgKe+EkbqIduFetCdU4G9fuqEI8
-	 ULOxJPzaQwnwA585GMMYFtxKCyjahGyZHur2K7sHLGAihfANjrVnLVs2qcBlrd7YZ7
-	 SXF61CSIL8yVEDArxy9/dQK+o1FK6PXdf+ZubomCehpA99w8duaq/i5qXD668Ei0Il
-	 V9UvbbkJwwpd1P/YeGZRRLwtFaSdR0phlmz2YwtPLjo+pUpPfayq/Zl9pCI9Wqhxn+
-	 aIQRlJEaaI9DqM9PfsFxiFE+C6O+Skkm3jssmABW0mD5zA5aPcwrQRAl0BXQy1sKH6
-	 /xh1dnaN6AJkw==
-Message-ID: <4134d72c-94f1-4b52-a372-34a305b3ea19@kernel.org>
-Date: Wed, 28 May 2025 11:04:59 +0200
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="jD0XFiqd"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id JWhguK9fjiuzSKCitu0Kkb; Wed, 28 May 2025 09:05:19 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id KCisui40P3IrfKCisuw8j4; Wed, 28 May 2025 09:05:18 +0000
+X-Authority-Analysis: v=2.4 cv=PL4J++qC c=1 sm=1 tr=0 ts=6836d1ce
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=5E2gbQE8QDOJjfjLMUMA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nKwsNn5rJRhi0owYZFN+Q60hsLqiKxH83B+Fzcz0XYg=; b=jD0XFiqdAqR+o3a6crgtabCEe1
+	21CZumjLpddWBzvMlEibcPTboVLEpNyckM5WKw89z4b6M2N6UPdlnQ3YAaHZtTsMPP09NLERiInJn
+	nmBcrTVRw5ShjzVWA5/EFywENNebdVeHe+39lNYej8ujievcgHxmmyfLZhq0oTyNi+adWgg3BXLO9
+	ux5lYZHD9xHE9wVtbionRNdBEL2vzn+ozjF5r7I1JZ6BJshnFFUOHpwqY85FHOXDKF/KjeG4KJdyn
+	5FDc77PiY0g6FbtlyZBnoL3DyN7mnASw4WT7WXAY8veWRTBx0ibx7uVv5oEIo58Y1Nw5HUcYuyYPl
+	DOLMkvCA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:54484 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uKCiq-00000000JFF-1igv;
+	Wed, 28 May 2025 03:05:16 -0600
+Message-ID: <48e5d458-c2f9-4968-b9db-5c100ef9b185@w6rz.net>
+Date: Wed, 28 May 2025 02:05:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,123 +54,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/9] dt-bindings: arm: add Black Sesame Technologies
- (bst) SoC
-To: Albert Yang <yangzh0906@thundersoft.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Ge Gordon <gordon.ge@bst.ai>
-Cc: BST Linux Kernel Upstream Group <bst-upstream@bstai.top>,
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528085444.481163-1-yangzh0906@thundersoft.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 6.12 000/626] 6.12.31-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250527162445.028718347@linuxfoundation.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250528085444.481163-1-yangzh0906@thundersoft.com>
-Content-Type: text/plain; charset=UTF-8
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250527162445.028718347@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uKCiq-00000000JFF-1igv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:54484
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJ/FIIDl5mrWXlp7sXz35ACRy+7vrKoOspn9Upey624p91L9lzEJQ0kjw9tiikQsxF7tTrLEwnYz7ZgYwYCiyyJ2Obu5iBLmbOMxQ9BhdeckFkdTgbUQ
+ bNo5zEP3feeykVaL4yloUiPUr6F/D6V05yfujZk3ziZv1YPXhXtFtwod0FS4WFoa0y2GALurjNcipcF85X+xiuldgkj9J9tG7Lc=
 
-On 28/05/2025 10:54, Albert Yang wrote:
-> Add device tree bindings for Black Sesame Technologies Arm SoC,
-> it consists several SoC models like C1200, etc.
-> 
-> Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-> Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
-> ---
->  .../devicetree/bindings/arm/bst.yaml          | 34 +++++++++++++++++++
+On 5/27/25 09:18, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.31 release.
+> There are 626 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.31-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-... so now I see patch 2/9 disconnected from the rest.
+Built (with both gcc-14 and gcc-15) and booted successfully on RISC-V 
+RV64 (HiFive Unmatched).
 
-Just use b4 for submitting and you will avoid several easy mistakes.
+Tested-by: Ron Economos <re@w6rz.net>
 
-
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/bst.yaml b/Documentation/devicetree/bindings/arm/bst.yaml
-> new file mode 100644
-> index 000000000000..e21a37130cef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/bst.yaml
-> @@ -0,0 +1,34 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/bst.yaml#
-
-Missing vendor prefix.... unless 1/9 was there and will come sometime in
-the future. :/
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: BST platforms
-> +
-> +description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +  Black Sesame Technologies (BST) is a semiconductor company that produces
-> +  automotive-grade system-on-chips (SoCs) for intelligent driving, focusing
-> +  on computer vision and AI capabilities. The BST C1200 family includes SoCs
-> +  for ADAS (Advanced Driver Assistance Systems) and autonomous driving applications.
-> +
-> +maintainers:
-> +  - Ge Gordon <gordon.ge@bst.ai>
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +      - description: BST C1200 family platforms
-> +        items:
-> +          - const: bst,c1200
-
-Drop this entry. You cannot have SoC aloone.
-
-
-
-Best regards,
-Krzysztof
