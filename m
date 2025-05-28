@@ -1,159 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB4528DF23
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD4328DF03;
+	Wed, 28 May 2025 16:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748451496; cv=none; b=PUqKx735H4nVNh9vAIdwb1VlbXHvOGTa9m7QRcXLbA8GzGcy59CZ/e6Vavi/GSouURl5TeVtzHUMKi5CMO7Jx1YmTiXIcmbtkRzIWDSUnPv91tA0YcqtEyjEfF3bWvEFv8TmAN4AL/TfSNm0ljI7lLo8aj2+vrQM/V2KPTb5k3k=
+	t=1748451549; cv=none; b=Fe8dZmVpesr4gMo6qeopNS49mNf5wR/Mpbf+gC6al0oaCsj28gIteXucE25R9sDHXBWP47MkKgy39s25Pz5xr7kVM5Tzww/jnAs36BXVFMjsS5mAP+BlMEeFWrY8fifI1plnGXw0QyCFPEIu54/p9bPs9nKa/qAP+8DOoFLYIfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748451496; c=relaxed/simple;
-	bh=C/ggDr2U3zgPwsBNLbn/6E0DwqeLz9NmTk3loAa748w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DDTZ4pzy68oOg3nEnhp6r/cwCHk7RiAuVePqoxzTl5P4t6HKX/SdHIKxvrQa7mb+niQoXXdS5S2TVYWDyFTuG8+Cu8aTd0BPwcRu++WAlgDYocZRUa3HApwp2pr1j3+jEhrU5PXVRQu0oxv3IluQ1qS8Jm54eLeeu7pIq9sfdTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IdQJuX77; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748451549; c=relaxed/simple;
+	bh=xP2c9GIwsMqQtGZLR94lMghxEZG0UL4HkkMvzlYZWO8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=N0ZRVW5B1cCd3pxE7yW2uVHK+E9TIZ3gMUnKvogSenEFWoXalO1CJ9dKsuTZXs+z5R7ijbm/p4bcUyEBCnwGU6EAZLPakyrm3LMgsZ/B38ekLnrIvP2gTH4/pEIgRQDK7Y/ieGdj35FF/it3l/J0SP4uWa9cZN7KjwnDq9Y8o7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CbvEonSl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KYVf8BpU; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IdQJuX77"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S9PYvC015068
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qPuMK5jZFsmnypBiTqJe5zYuFHyiejNpkSdvHBAX+qM=; b=IdQJuX77asAFx/L9
-	V9dExB1SzToC288lqlo7biqGHva3PbRcVejs7s2klOYoNqPpzUswLaVaayzdourC
-	f6ZBK+R+SxZqnUn5Ivaknt0kqfg2JtOeZxo7uF/KKOOTQuLiafB8hKLkI0iogjQQ
-	dknU9bBD9+wA5UrUfhfiHB9EEvyeqHEk4cOj69NWgDBDI1RQIH2sWhCGotCrWnzv
-	KDurIHQhb6gXzv5nT9qzCsrDs2waLDJhpztub/2/TSRRhljzR+YFYKD6IFgoDlM0
-	4IPOs66w2VZhjC+l7jUSxSKjwHmOlH6Ofq0CbNQ4IEUB4egVfCEZN6ATZFL+5CBS
-	2xiw4w==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ek2tu8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:58:13 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c552802e9fso113748685a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:58:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748451493; x=1749056293;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qPuMK5jZFsmnypBiTqJe5zYuFHyiejNpkSdvHBAX+qM=;
-        b=AGoL2bzk7kXYz/smjb/S5L/AvB03wgVTchwwT1NjI/1+Op1t1l9UIzHOUnGCqN1f/y
-         wuFHWHgwubQ7tnpSabvB1WuQr4bV8fEx4BHpCCU0LVn4sT0+fM0o8VpxgD39ELywq8mc
-         MJ8SZC793VNeeM789/o2FrN7CswyJ2LHYM2Y3+7hvTuol+rhly1xB38e1+1WEicOzhR/
-         mXSky7SINOEw3bHCjsewmAfeZ3q0pkqnDOrelioV/T5QLcFw2NP43DoNvAfa+co5Km/a
-         aDBDAyoZ2VFsBIYVnpMe/z1j7bCGbspoIRg+BkosLycEgSBXrwRqbVz5Vl+NzL1WNMLL
-         kt3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbOfxAXCSnQETTD3R54Q0mRyUm9heHWsdreshBJd9msrKtbTaetp0C1Cmvlzv0k6QVD0piugkoIb2we2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzAhf0sA9YJqRcjCVR5hzGaR4jIFusZKQVKaRxrOLVy4XZqMk8
-	AUyFaDAlfp02gVa8A/XYG+PvjKP7EDUKGjKriaT888pEfB0gi3BilvyRzr3XDEp1YmhE2H+Ug0V
-	/Z1z9DpUtvrVN54kvzr//Qhj2kYJi6cycewF+NlY6rly5KVDQf8S9FPAVuIhAw7jT7fQ=
-X-Gm-Gg: ASbGncuIM4QhNAN1xye86RK8xrSdOsAuDx6Bx5cWxKl0gqwdBkRsaN/CaWRP/TVihCR
-	54TDqr91SjO2mdsu1EsHwAcRxt6/KHbzoRWvPbSUtHdczACdYr7XGGvjT6SPi3xG5CxqKY7btzo
-	tFhJiiIaChhkUE/snj40bOR4Fu+72mOx0Xi6f/9CBRrFur0mBnVUd19M0fDm34D9VFZ6tYYrpPu
-	hBE066hlUMhqIfGa8zE4udKSnCUgoqkWaE+HmMniGmYQpGJdXHz4adshBqWwzhqnA0IXQZkYgUk
-	MCyrm53MZpJHHsSneaJeEM8KIyFZ5cehubWZPpphN9zxziwHrgj8Nb5enOMkSnoDgQ==
-X-Received: by 2002:a05:620a:3198:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7ceecc09f86mr921830085a.10.1748451493048;
-        Wed, 28 May 2025 09:58:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkAjuwttwsySAmNXr3cyWyVH5nivsVuo17QQGa94DXhh90c8s++PqJyE2HPepyHAHWSRNEhw==
-X-Received: by 2002:a05:620a:3198:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7ceecc09f86mr921827385a.10.1748451492681;
-        Wed, 28 May 2025 09:58:12 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5b865sm135090966b.168.2025.05.28.09.58.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 09:58:12 -0700 (PDT)
-Message-ID: <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
-Date: Wed, 28 May 2025 18:58:09 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CbvEonSl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KYVf8BpU"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id BF5F61140135;
+	Wed, 28 May 2025 12:59:06 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 28 May 2025 12:59:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748451546;
+	 x=1748537946; bh=LDMLe1OsHNvAiaE+yCUbTBas5Ud07EYR3wfP01RS7as=; b=
+	CbvEonSlObjQmr/ENFYwXlOn3Cnv1cN+1IEx+e2Ab23SPHhfKgz1XueM3fIcXkNy
+	SNAp0dWWYLpZKbcTIbfHX2WF50LYIWSXFyoWc2k4lDZ5LWu8wh+Ve88KSODl6vla
+	PDOK3aQC9aMwqDtboyP5v5mx4IIAX2Ur49yCoiq3dSEHzalS8tsVt7X2MOZ+1X7a
+	FPrqnkEzHbUGqkywECJZMaABpCIXub1AUUaxeluVYhtY7YDGYr1GYd3N1PctEigD
+	FFseJAiDEo8rfwobpyHH8ZETk/Q3TxxWDfMVAWUrFv95sv32QbsaOfaH2aobzCtj
+	34WUyaPhAq0m1rSPDNteBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748451546; x=
+	1748537946; bh=LDMLe1OsHNvAiaE+yCUbTBas5Ud07EYR3wfP01RS7as=; b=K
+	YVf8BpUEaYAApd+aYNL/QKwjVaXyMecVPGA6F2XwKDk+X6SIwGCLbJS3KfOMpyb7
+	moV7fEYaVU2Gcxp6gttLPCXQ3kZTV9Hr7Sq6Ex4Ql6DweYicAPUtZ/wNpJG71ylk
+	hgy7zYqbVjO4pv4eBPsq2Y/FfJ1/Lk1UWgUpO56pWM55LNfxdcWAdC4w+VxwjoUx
+	q9YQWKLUkDsvSa1GPyKnHL9KVIwlqrboSy0xrp3bS7AAyWPyg+THIDCQ5CHeJ5q/
+	DuYLLnu16UIC0UFSwcX+XZKW/luz3uFtrNeng/xPGrTK59CzNLewj1VV8sO/zuo6
+	BwlGuk476VBHwu0MNewfA==
+X-ME-Sender: <xms:2EA3aGq_c7e29CDINjflnwN6vQsFRKUbM0wL4brFM1H1T2o9msR-zw>
+    <xme:2EA3aErY78NnJY5ukk14GqjiP4AQUxHV3mBQ-EFX19AOddbhFlReIIMHkr1SbmZFF
+    4oiyrZOGA09GdjRemY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeektdculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
+    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
+    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeeh
+    udekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+    pdhnsggprhgtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephh
+    gvrhgsvghrthesghhonhguohhrrdgrphgrnhgrrdhorhhgrdgruhdprhgtphhtthhopehj
+    uhhsthhinhhsthhithhtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehlkhhpsehinh
+    htvghlrdgtohhmpdhrtghpthhtohepohhlihhvvghrrdhsrghnghesihhnthgvlhdrtgho
+    mhdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhk
+    vghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehllh
+    hvmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlohhonhhgrghrtghh
+    sehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:2EA3aLPrCXH1sLOgxGk-N_ufObFw_-vDd88aHQv85aFF9g6SXA9TsA>
+    <xmx:2EA3aF6Z49KxjlhsBtzOxXAr-GUQ3t56s0p7YNs-AnjMnWXg0OgDmQ>
+    <xmx:2EA3aF6Fnml8oHrs4GRk-ujdxAV-1WPPJ8_WeK8n3b6N_O8cTKrWPQ>
+    <xmx:2EA3aFjZ31ssou5dbrszO3e6LRcGJsfzBiCQmfVOoCSGbH_QgocyIg>
+    <xmx:2kA3aGXqXDA0CXLM-NXCkKqSIAcrC_X5XH8KNVMj6ZHGavqs6JaLqFeb>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A1161700063; Wed, 28 May 2025 12:59:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-To: Alexey Klimov <alexey.klimov@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
-        linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
- <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: Tff0b0175c39a25d0
+Date: Wed, 28 May 2025 18:58:44 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Kees Cook" <kees@kernel.org>, "Eric Biggers" <ebiggers@kernel.org>,
+ "Justin Stitt" <justinstitt@google.com>
+Cc: linux-hardening@vger.kernel.org, oe-lkp@lists.linux.dev,
+ "kernel test robot" <lkp@intel.com>, linux-kernel@vger.kernel.org,
+ "Herbert Xu" <herbert@gondor.apana.org.au>,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+ "kernel test robot" <oliver.sang@intel.com>, llvm@lists.linux.dev
+Message-Id: <324a5724-7bde-42f2-8910-e70b5b5f9d9e@app.fastmail.com>
+In-Reply-To: <202505280937.6802F0F210@keescook>
+References: <202505281024.f42beaa7-lkp@intel.com> <20250528061427.GA42911@sol>
+ <202505280937.6802F0F210@keescook>
+Subject: Re: [linus:master] [crypto]  40b9969796:
+ UBSAN:unsigned-integer-overflow_in_lib/crypto/chacha20poly1305-selftest.c
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=683740a5 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=RZIJFy7CuqSkVLaUGaMA:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: bas_z6hHsUvu7-SkRx403As-jqDk1CVO
-X-Proofpoint-GUID: bas_z6hHsUvu7-SkRx403As-jqDk1CVO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE0NiBTYWx0ZWRfXxeZI5hIA7HjK
- PjKW1coYROmVlLeLTyyAWG2HmNhCGTECkuNbrJYRyx5qufTvr4ogXGZm3edTWHwW3V0Aebf+cBa
- 6Fo8oFdN7CgDV97u5/NUcCidPET+ZWJNVwMTXx0Kt+B3nHgY6iOuKDPRrNIxxf+j0wNydH6WuhG
- GmHW7vl3aRCSh8ntDakr1oV/E7uihYm9rG1dtd4wo8D3QZUKIaqVdMi4R9q/CKDkTD612obnN+4
- UN6sRLyzPHEh3lvGcgqY5hOIiWLCvRcZYB7bNBW1kU3PPpn94z57robgPpm23Oo3R2s5B59tGCY
- Ffm2y5dms4Fj0vB8XLlVCdlFHaMDr8KDr8UmbQw/g8pM9gWngw+QdPFLWOVPOJdVQEaZz0NavXs
- 95eAiFu5omQwRJ8Fkq5si8A/+z5R6eDhR2L9HyP0b43oK8f+HZvIypPeX9N5Rbdjs+75FGDW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280146
 
-On 5/28/25 4:37 PM, Alexey Klimov wrote:
-> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
->> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->>> The pattern matching incorrectly selects "wsa" because of "sa" substring
->>> and evaluates it as a SoC component or block.
->>>
->>> Wsa88xx are family of amplifiers and should not be evaluated here.
->>>
->>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
->>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>> @@ -23,7 +23,7 @@ description: |
->>>  select:
->>>    properties:
->>>      compatible:
->>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
->>
->> Why dropping front .*? Are you sure this matches what we want - so
->> incorrect compatibles? To me it breaks the entire point of this select,
->> so I am sure you did not test whether it still works. To remind: this is
->> to select incorrect compatibles.
-> 
-> Thanks, great point. I tested it with regular dtbs checks with different
-> dtb files but I didn't check if it selects incorrect compatibles.
+On Wed, May 28, 2025, at 18:45, Kees Cook wrote:
+> On Tue, May 27, 2025 at 11:14:27PM -0700, Eric Biggers wrote:
+>> On Wed, May 28, 2025 at 01:15:05PM +0800, kernel test robot wrote:
 
-Maybe we can introduce a '-' before or after the socname, to also officially
-disallow using other connecting characters
+> I'm not sure how to enforce "don't enable this unless you're developing
+> the Overflow Behavior Types" with current Kconfig, given the randconfig
+> gap... I have some memory of Arnd doing something special with his
+> randconfigs to avoid these kinds of things, but I can't find it now.
+>
 
-Konrad
+The main thing I do on the randconfig builds to avoid obscure issues
+is to force CONFIG_COMPILE_TEST=y, but that only works for build
+testing, not actually running it.
+
+      Arnd
