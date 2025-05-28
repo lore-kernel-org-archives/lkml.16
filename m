@@ -1,177 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A45A288526;
-	Wed, 28 May 2025 13:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4DD2036E9;
+	Wed, 28 May 2025 13:43:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439726; cv=none; b=QxhoyCZGRjS3YQ34/MUdaKqTWRoUr/bHoO4FjWPOo5/GZjr29E5h/uDfoUyWIYbdvsG04hv8yBgLf7+1LB4GpreN61pXEgCMsJBWN2p+Ho5JPaj98w3J6UrG5Huyea4t2c68qfegrerj52dV8HkGhSHJFCQoN7aMuLLnl1dYIGU=
+	t=1748439812; cv=none; b=Hc39Hkz9CAZMh0TstuBkKFynv2O8FhW53PW1sK0X4Topu6zc12/DSyNbuSmix3HQ/xKrODW6u0kWBqQGQwjsRY6gxD3s2kUCiyJ74GmIDzsZXuJPoH3WMX4PO0nrgZjv4/hyMIH1kG0NxMShdytHi/NSXEOqmCm9VLf8KQdVkp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439726; c=relaxed/simple;
-	bh=V9S/2REy6SRPwlWHL+UjOecCAm58nBM9YBmNFi5Tywo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A01xXwPLpDjaqBG5BScIvwppG1CDEPvM1o9dKc7ixDmS7j9vTMG5XJ6VUkQJfgqHPGIWZwMkUDIV9z9AflZbdtKc9hKpV+J5DxFSeuFpYuM7+GldbJziZiZXQT4rEUHf1bxP/gW/yFedc/zXLQteotgWO9Y9d47MQPfBQ1yujGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNsjXw9M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748439812; c=relaxed/simple;
+	bh=vGq1HLmqALcNndq/cJJqVAuCSHa0StLEkf2aGzgkQAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jGtOZKi+9DFgD6M6hkuOc/lL6c0D0Cvfzm2g9ixBfBZqs0u0qKvsMPvv9TXls4PF9iaCiFSHeZG3VzjPplip8sfoiJFeRG5AZyW8tvKqT4F/zkbYABJBKqYVb62z0XW8vA00dcgaF9lmgtxMkbix3JJYzEOT9mhNQEeVPsGj1z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNLQj2/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNsjXw9M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C975C4CEF4;
-	Wed, 28 May 2025 13:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNLQj2/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0003C4CEE7;
+	Wed, 28 May 2025 13:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748439725;
-	bh=V9S/2REy6SRPwlWHL+UjOecCAm58nBM9YBmNFi5Tywo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GNsjXw9M9L1DpZv3jViNj4XkRdb+mXI+2m/G47jUDBV7WxLPvUEubGj+1ixOIJqRZ
-	 e717/UmjcPxGcIwM1BREjJHjlHf7DQ6xXKLJDrFl1tj04VPf1Nl1KOdgCgSbhZFqe1
-	 fB4uuTK4326ar1JEQv1u6vI97cf23A7RHdJvMGc4fpP8miZY3I2LE258OtWM74XvuF
-	 uyjjxH7Jkv2eBczrYAMXiiQ4xzeMUCcmt8tKkGRjgdQl+plEZu+sAUbi3CzKXza/g/
-	 qkqGVbbTWmfb3tPdTBHScCSnX5dqhvmCdvqDtXY9/jBXm1ah6dywidLzlVPvpGBgkS
-	 H/v7sUXokTZ5Q==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-604b9c53f6fso6198532a12.2;
-        Wed, 28 May 2025 06:42:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUdtAbmoiLXxg2NpIyWwsqEG7J42UhRVk1A0nkoP7m5sJggzseyC6MA5pTNOBf1/DWGFykmxNlfqDDe@vger.kernel.org, AJvYcCV3Cp7hU17NJmrsFwFeoidb7DPFuxPCZA+U+5V2x7u+CFOoBx7oVm/BxLoheOD+YFbn+jjMKpZK2jMxC0A=@vger.kernel.org, AJvYcCX73D11X+0+lxz62B7/QDlmHJzZKFS+UhdTeNPLYr377J6/iIfUa/Clqe0OYO/OSAYnl12xEfZegv8WVLbH@vger.kernel.org, AJvYcCXeW1In+Cg42CG1OuKvYhPAX9K12ySHnulPo+cZGmOlJT8DetDG7/fllGhk3erseAs3bxtqSWVMt50n@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4DhbO8wojG3FVTKyg4jyvKZDfiX283MHZ1cjmS2Yn14jEHpcv
-	Jdzrdkb2lz2MoaatIrqt4gxPcybLDNQxfFBkCdi62TdH2Jl+KveVobuGv6s6nX5IrnHrJjFyBVv
-	YjoU952VBTKI3d3E9cFqlXFOvO/nzsA==
-X-Google-Smtp-Source: AGHT+IF33pDJOIkUnFeeemo7C8vEsrRKhSwUSbgBJjMPDXVeNtNZPzFqXBOHGol2WTjwYaKgOgXZo2D8V9wI8E6hrhc=
-X-Received: by 2002:a17:907:7f09:b0:ad5:23e3:48b6 with SMTP id
- a640c23a62f3a-ad85b2b586fmr1522153166b.45.1748439724013; Wed, 28 May 2025
- 06:42:04 -0700 (PDT)
+	s=k20201202; t=1748439811;
+	bh=vGq1HLmqALcNndq/cJJqVAuCSHa0StLEkf2aGzgkQAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cNLQj2/2JUOfB2qDCAd+SDA0xzg1qDYDxvANL1nXVK2Z+5pepxh+ZXhYn8Vv4P++l
+	 qHbXKCBahtH7aTtpv0xAAolaiIZj5TnUcDGs9LDsEMIb+Kw61bUtPcj1pN+8QTChHe
+	 kL+2bJAftqGMyF4gGEgt+QFaPrJZG6k6/2d+o0ZK3yndspvsIUtcP/UMP1povs9h/y
+	 WPmH70NjGmrr07yaRO0f0R7ZoOvHG48tXD951zJSaWTiRcqD5TxGzvxaHEFrjs7eNy
+	 ckLouls9V0EHDvNKvjoRvBD2LqsJVQOSUSxLuMo3eh4WiSxSi0LE/aXjH0y3SkqqEY
+	 LlNuwpOFTfrpw==
+Date: Wed, 28 May 2025 14:43:27 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Drew Fustini <drew@pdp7.com>
+Cc: Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2] dt-bindings: pmem: Convert binding to YAML
+Message-ID: <20250528-repulsive-osmosis-d473fbc61716@spud>
+References: <20250520021440.24324-1-drew@pdp7.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net> <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net>
-In-Reply-To: <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 28 May 2025 08:41:51 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
-X-Gm-Features: AX0GCFtEoojAQ2L7InqgVIis2qLVvXMe-zX4FDkooFBAAdsDZZRxWtAdT4YSjTY
-Message-ID: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="y1QSOGp96aDgzao8"
+Content-Disposition: inline
+In-Reply-To: <20250520021440.24324-1-drew@pdp7.com>
+
+
+--y1QSOGp96aDgzao8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 5:27=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net=
-> wrote:
->
-> Add the bindings for the Neural Processing Unit IP from Rockchip.
->
-> v2:
-> - Adapt to new node structure (one node per core, each with its own
->   IOMMU)
-> - Several misc. fixes from Sebastian Reichel
->
-> v3:
-> - Split register block in its constituent subblocks, and only require
->   the ones that the kernel would ever use (Nicolas Frattaroli)
-> - Group supplies (Rob Herring)
-> - Explain the way in which the top core is special (Rob Herring)
->
-> v4:
-> - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowski)
-> - Remove unneeded items: (Krzysztof Kozlowski)
-> - Fix use of minItems/maxItems (Krzysztof Kozlowski)
-> - Add reg-names to list of required properties (Krzysztof Kozlowski)
-> - Fix example (Krzysztof Kozlowski)
->
-> v5:
-> - Rename file to rockchip,rk3588-rknn-core.yaml (Krzysztof Kozlowski)
-> - Streamline compatible property (Krzysztof Kozlowski)
->
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+On Tue, May 27, 2025 at 11:17:04PM -0700, Drew Fustini wrote:
+> Convert the PMEM device tree binding from text to YAML. This will allow
+> device trees with pmem-region nodes to pass dtbs_check.
+>=20
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
 > ---
->  .../bindings/npu/rockchip,rk3588-rknn-core.yaml    | 147 +++++++++++++++=
-++++++
->  1 file changed, 147 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-c=
-ore.yaml b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.=
-yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..9eb426367afcbc03c387d43c4=
-b8250cdd1b9ee86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.yam=
-l
-> @@ -0,0 +1,147 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/npu/rockchip,rk3588-rknn-core.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Neural Processing Unit IP from Rockchip
-> +
-> +maintainers:
-> +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
-> +
-> +description:
-> +  Rockchip IP for accelerating inference of neural networks, based on NV=
-IDIA's
-> +  open source NVDLA IP.
-> +
-> +  There is to be a node per each core in the NPU. In Rockchip's design t=
-here
-> +  will be one core that is special and needs to be powered on before any=
- of the
-> +  other cores can be used. This special core is called the top core and =
-should
-> +  have the compatible string that corresponds to top cores.
+> v2 resend:
+>  - actually put v2 in the Subject
+>  - add Conor's Acked-by
+>    - https://lore.kernel.org/all/20250520-refract-fling-d064e11ddbdf@spud/
 
-Is this really a distinction in the h/w? If you change which core is
-the top one in the DT, does it still work?
+I guess this is the one you mentioned on irc?
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: '^npu@[a-f0-9]+$'
-> +
-> +  compatible:
-> +    enum:
-> +      - rockchip,rk3588-rknn-core-top
-> +      - rockchip,rk3588-rknn-core
-> +
-> +  reg:
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: pc
-> +      - const: cna
-> +      - const: core
-> +
-> +  clocks:
-> +    minItems: 2
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aclk
-> +      - const: hclk
-> +      - const: npu
-> +      - const: pclk
-> +    minItems: 2
+--y1QSOGp96aDgzao8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It is odd that the non-top cores only have bus clocks and no module
-clock. But based on the clock names, I'm guessing the aclk/hclk are
-not shared, but the npu and pclk are shared. Since you make the top
-core probe first, then it will enable the shared clocks and the
-non-top cores don't have to worry about them. If so, that is wrong as
-it is letting the software design define the bindings.
+-----BEGIN PGP SIGNATURE-----
 
-Rob
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcS/wAKCRB4tDGHoIJi
+0t39AP4vyfGKrHVY+bMT/PuBxs9qpgknPf0LIFJyfN2eoUZWEwEA8dr+FIxtNK1p
+vEPMaK/ldN2T0lMdbk0tXTjE6+2fPg4=
+=Z0xj
+-----END PGP SIGNATURE-----
+
+--y1QSOGp96aDgzao8--
