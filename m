@@ -1,78 +1,54 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001F828C854;
-	Wed, 28 May 2025 16:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BAA1632C8
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448597; cv=none; b=CHusmOkR7EGBZDrS2jfewd61Y9A7KU0FN95Ffv/xGZrqBIkGZZtJilcFNVtS2G/Xlh91B7uSArQth5LFJc5izhNn9k/xCAvIQhrlaMVdIo+vFznj7qQSOvTyQVu1c2Zv+TBrHY/5GnVyR6LlgVr8+pZ3SPwPFN7lZyPzNHaEQwQ=
+	t=1748448632; cv=none; b=Uv/3qOkceeMoQoWb04mJL/YhKjT5QmjwcSvsP+ctKBwtmzslfQVBSFQCbx7ZdvSSS+JIqzeUjy+ik/dyozjOai4WnU2O1EsI+rVg0+HOGIGZur83WEI+4IY5x0+ScWguNbVY1zBQJgfG/hr6yXaV0FbQzH03Ti6Nc1ByWn/02Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448597; c=relaxed/simple;
-	bh=4pIzHoj8Wd1R86ms192nvXS2WXmNPmnprRiEWCCPGQM=;
+	s=arc-20240116; t=1748448632; c=relaxed/simple;
+	bh=H7znW9/UZKH3WDMti+Go2o8l0Paatw1ZPa07jLxTYgk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FDprm9STEEBjtWEACuut1bAQ1IBYDbasLQUtZKyS2szeG1t8To7XKT0O0IYG2AcTjniBjriGgx8+//Z6fu6yScc4mHDywQrg9BMeeVBF42qBRZGX92EifxHTznNnh2TqvkulpIO1l/Z77VxPq4rNn/J/hX60eHmCgUDJFUMIV7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ob8KMb7s; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iw7LF4IZgyD4Bt9+hIXHlsgafkBdRDUwxvB3Ehe8ahgTsVo4LsRih6n4N5V5fj9EXca5xUXaVNwr+EfLqoV94VFGPKKQjlMQC9nchhna3rv9PJgO/VwIQ7iz97vzLSR5WMY72TnUnU5eLFZtawRWnnNkpsohKlxHgyXLa1F3lKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dYupGxUE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ob8KMb7s"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2349282084bso303095ad.1;
-        Wed, 28 May 2025 09:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748448595; x=1749053395; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ndd+6L/B1sq36+O8/FHu3Tozs8dSSyaGb710UgM7Sw=;
-        b=Ob8KMb7sXw9qOww1CJ+j2EA3BohfJgH+6+eIzgJygYs8Us/xuZVykTg3l1qoiOk94Z
-         kK69CrKS0dPGY4xLxuXuLNdHfWQ0b854d4qCo+bI6I7hSuvi3GfDwTVUIhq/YtDkvmm5
-         ygGCsMuU4eTR9zOwScX7SbRNEyY0GnRIIcU9kcx3SbBXkCE95cLAaBJKdutNOaRn/v7b
-         POxaohp2SJNd+ipVNGgq12RtBIbfZ0SQNtFuUdprB7a0Wx54o2TdnYfjXnquTlAQdydi
-         m4r3AFGACrS5GPVR+blIvfPKHZyAmjUPI8uJcYOj6MrF1CuAbemtXbmskKrGPMjrZhmh
-         DiDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748448595; x=1749053395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0ndd+6L/B1sq36+O8/FHu3Tozs8dSSyaGb710UgM7Sw=;
-        b=mCZTFt+KRgzPendUq2S+9dmQlPs8s+LB+Fau71547arXwu8zp0+ZO05yh/1jjoJy7a
-         EQWkpEjhQL8/To/6V5zDRNysJUiJc1mcOCe5wqOVObuEkScWPtCrQfzg4jC87OHa0rws
-         H8cEk3KFi6wX8bMpoRdtenoV2ObTrUNRHKd0sdvT8O7bYAXPUeMQIVWejbjjygKBkPVp
-         49kyJ06LkIHBSRS9pNAf0/6FAJ/ZRb8p/pmx/unw+29yLdF8Lvsl3BcVsqY/QiiiA3Jj
-         dvnx7UpqGKkYiU+R6jraxDDADTfwT9szhJwXKS9q5lfaDYzH6zy2OaKvefLyTs+tanDT
-         TheQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5YC3IgSQNFTFJa89ACBYMYvD1WBJkYwxTDbQ+is/q1NdrRM5flVaj2t8CZFZeZLY57i+a1rx3VEHDyadm+46lnbo=@vger.kernel.org, AJvYcCWPdzGd5Dkb+5YEx600LeUQra2Ze/Fr6S/8qDrrjfP93b8FurWeE9ow40CxGEvCbTM4Ocfs4vriwOQ=@vger.kernel.org, AJvYcCWfphGpcIlN7PPSZFGEZGMGab9uFGF+OfvbkPEWfkzMK+AOTOpwTt6tmoK7ZK6lJf5CmA4ro54tGbjJjLtp@vger.kernel.org, AJvYcCX/kmw5uCT9wJnRNbk77b/ljR+B/Dlt2mbys26QoD+pWkZgC/+lDXHorSgYACj6vPI0tYYHF2X59xA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLxIbHYRuvqJZedLzUXuWYkZrv2YKhUiqcLsymzh0TS6BUcso2
-	p2LKCWgz7RhQAq5VysvFHlPi8Cs8v/wtMlrccjutWYRVbaHJTeC9sfJ4
-X-Gm-Gg: ASbGncslFdsCJMFGXd6GbrebIqOjKBYs1I8Y2Ou9pN9Tpd+dDHBfzSlTtHf/31NIDDd
-	LdYBAUlD06rR4sGkWiooXQQOjdbYhND1i8rhIG5NFMXurba2TAJCzezIc9VpxsENQb2mugpqz0m
-	dqLjlaU6GqSJ1unW0fRkHQKqaGXghglUyrxtWAXvDKdE0vcK8dsAjz72TJa9ZH0r1eDTnIEKbII
-	3P+jRQ7LGC1JHOcTA1jkpHVtAEd+F2eSNSUUjSg7dfVZRiMdpb4qJLX3SXX+BxBCc0Fk6kWcjqL
-	XgXfmXPjnJys+J7g3DXe4yzTrW+R5QwQVJi10DpwuJ24Z67fa8ef
-X-Google-Smtp-Source: AGHT+IEct1Mu/j97rbbxjLzBpmVysIk9gdkVmOYKtsSlG+RsTHJF3YcX0aRp3FdZFqor4oEVwjdt3g==
-X-Received: by 2002:a17:903:4b0d:b0:234:a139:1208 with SMTP id d9443c01a7336-234a139160dmr96789515ad.16.1748448594950;
-        Wed, 28 May 2025 09:09:54 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:a04a:d85e:c794:147c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35acbdasm13535885ad.197.2025.05.28.09.09.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 09:09:54 -0700 (PDT)
-Date: Wed, 28 May 2025 09:09:51 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, 
-	jic23@kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	bhelgaas@google.com, geert@linux-m68k.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v2 1/2] PM: domains: Add devres variant for
- dev_pm_domain_attach()
-Message-ID: <rmc7me6rvumr6pcekgp5lsrxtuge5houitn474lkljew2hzdcw@z7wh2vtntvs5>
-References: <20250526122054.65532-1-claudiu.beznea.uj@bp.renesas.com>
- <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com>
- <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
- <111d2d6c-8ac0-40b9-94c3-02f2f64ef9fe@tuxon.dev>
- <CAPDyKFoQYTNBhtBXY-Ds7E0TohtA6558W1Jf3cLsnXDQC74DSg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dYupGxUE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WpRAs9+OtUV4uljG/ilQ1tHw0nuTmHkby899eBfbPm4=; b=dYupGxUE5GBeoqxatcaiXuVJWm
+	ZYZD+wvE3ApzHNbI3F0MulHf894ME+APCAAvbylwjHW9WZCR0/ptR21BNW8EidF+l39XfILCCmmu1
+	FUCsH1bX6y45YIlMOUODuXGExNSw2B4v+Z2sdPtWFlff6p7aMKDutG5Yt95zKyr1gWMLZZdc58EZY
+	KO2jzjvrN5OUTvXLbDl/BdPyXSyAqX2+9VRCpGdjJ7oFEQ0RfAwA6cNVvlz6s3cU62OHQX8iUpNlI
+	tTLckibExc79VYqWgAkMB7gNBGFGDwQqgCeU9qc1brTqKRX8w5rYfJqgSClhQxE7I5R+l0EzR+Nyk
+	4z70HvxQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKJMD-0000000023o-3oxn;
+	Wed, 28 May 2025 16:10:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 13E673005AF; Wed, 28 May 2025 18:10:21 +0200 (CEST)
+Date: Wed, 28 May 2025 18:10:20 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH 00/43] sched: Use the SMP scheduler on UP too
+Message-ID: <20250528161020.GF39944@noisy.programming.kicks-ass.net>
+References: <20250528080924.2273858-1-mingo@kernel.org>
+ <20250528085813.GX39944@noisy.programming.kicks-ass.net>
+ <20250528100000.0ab0a8b1@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,80 +57,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFoQYTNBhtBXY-Ds7E0TohtA6558W1Jf3cLsnXDQC74DSg@mail.gmail.com>
+In-Reply-To: <20250528100000.0ab0a8b1@gandalf.local.home>
 
-On Wed, May 28, 2025 at 06:04:45PM +0200, Ulf Hansson wrote:
-> [...]
+On Wed, May 28, 2025 at 10:00:00AM -0400, Steven Rostedt wrote:
+> On Wed, 28 May 2025 10:58:13 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> > >> +/**
-> > >> + * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attach()
-> > >> + * @dev: Device to attach.
-> > >> + * @attach_power_on: Use to indicate whether we should power on the device
-> > >> + *                   when attaching (true indicates the device is powered on
-> > >> + *                   when attaching).
-> > >> + * @detach_power_off: Used to indicate whether we should power off the device
-> > >> + *                    when detaching (true indicates the device is powered off
-> > >> + *                    when detaching).
-> > >> + *
-> > >> + * NOTE: this will also handle calling dev_pm_domain_detach() for
-> > >> + * you during remove phase.
-> > >> + *
-> > >> + * Returns 0 on successfully attached PM domain, or a negative error code in
-> > >> + * case of a failure.
-> > >> + */
-> > >> +int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
-> > >> +                      bool detach_power_off)
-> > >
-> > > Do we have examples where we power on a device and leave it powered on
-> > > (or do not power on device on attach but power off it on detach)? I
-> >
-> > I haven't found one yet.
-> >
-> > > believe devm release should strictly mirror the acquisition, so separate
-> > > flag is not needed.
-> >
-> > I was in the middle whether I should do it with 2 flags or only to revert
-> > the acquisition.
-> >
-> > >
-> > >
-> > >> +{
-> > >> +    int ret;
-> > >> +
-> > >> +    ret = dev_pm_domain_attach(dev, attach_power_on);
-> > >> +    if (ret)
-> > >> +            return ret;
-> > >> +
-> > >> +    if (detach_power_off)
-> > >> +            return devm_add_action_or_reset(dev, devm_pm_domain_detach_off,
-> > >> +                                            dev);
-> > >> +
-> > >> +    return devm_add_action_or_reset(dev, devm_pm_domain_detach_on, dev);
-> > >
-> > > Instead of 2 separate cleanup methods maybe define dedicated devres:
-> > >
-> > > struct dev_pm_domain_devres {
-> > >       struct device *dev;
-> > >       bool power_off;
-> > > }
-> > >
-> > > ?
-> >
-> > That was the other option I've thought about but I found the one with 2
-> > cleanup methods to be simpler. What would you prefer here?
-> >
-> > Ulf: could you please let me know what would you prefer here?
+> > You know about unifdef, right :-)
 > 
-> As it looks like we agreed to use one cleanup method, the struct
-> dev_pm_domain_devres seems superfluous to me.
+> I didn't know about that!
+> 
+> > 
+> > $ unifdef -m -DCONFIG_SMP=y kernel/sched/*.[ch] include/linux/sched.h include/linux/sched/*.h
+> 
+> Cool!
+> 
+> Although I wish there was better documentation about it.
 
-I think we agreed that cleanup should mirror the acquisition, that is
-true. But since attaching to the domain has an option to either turn the
-device on or not we still need 2 cleanup branches. They can either be
-implemented with 2 cleanup callbacks or with 1 callback and dedicated
-devres structure.
+It has a manpage :-)
 
-Thanks.
-
--- 
-Dmitry
