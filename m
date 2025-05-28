@@ -1,195 +1,127 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CF11EE7B7;
-	Wed, 28 May 2025 17:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B747E1DE881;
+	Wed, 28 May 2025 17:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453136; cv=none; b=PrHOsGr4A50p6DBJH/q54pXaS0OEBZlQI9mTBNQU5sl4F6VAHCwD6g3Am3XwloLXrfWOgP2aVIu/Omv0zzCwdslzcGlTiSkQ3f9bOco/jZ584arM2auSS1quxsYWeNcAaOma0U+u1rbYEYF6x3QcxF+p4xQwGr0RNDkNsVPmL00=
+	t=1748453171; cv=none; b=RHXf7SwackIO7fQGPe7Te/7RwiXRtgrVAAfZ5Qw7qVilEf2vBU2UngQ/hgCgrkjq7Q7cFVVrDwIiu4hARcWSs+QlDDT3iOEKTfKSt44aGTW/fs2/4LhdQGxxsSo/l8LJXhp0JDy3bNChZq3qKpiCPRRb/2IcoXTUVgGGiLirBT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453136; c=relaxed/simple;
-	bh=/OzUyuVqnOB7miLFV37uZy05en+YqG3p0V1Vv2/8lTk=;
+	s=arc-20240116; t=1748453171; c=relaxed/simple;
+	bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JqvKphxCs1HEdDEuelCY7LbSpv/Hbnbz3bD5g4inxmkmg4YVuWwfYBVwpCWv9Mz8/R5z88x8gjDeODRRAK1+AV6ox8Qomk5s6gfQHDQEvGX0AOnB/a2HzyhI6isnoKo4bn4XGZwnVdXeVoDt21cBN6khTBXPcTEaFwByC/EfMe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoiYCpYt; arc=none smtp.client-ip=209.85.219.46
+	 To:Cc:Content-Type; b=WC3JnCPYijdoTQP2V4HDPuELIUFsF+ie/vare/6BAiBhkwXPO9AkXQszRQLnJ1Kw0VCippXytwuyZNFkOIN//CXMsBSV+8v9mceUNpu9twTEdDLxmjm2CJCXSrGGXCj4mE1zmDTzCPZsYE+2YgeFmlUBpDk+sq9Orvzu3bgyKWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlRNj5dP; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoiYCpYt"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6f5365bdbaeso926686d6.3;
-        Wed, 28 May 2025 10:25:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlRNj5dP"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54d6f933152so7784776e87.1;
+        Wed, 28 May 2025 10:26:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748453134; x=1749057934; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748453168; x=1749057968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/OzUyuVqnOB7miLFV37uZy05en+YqG3p0V1Vv2/8lTk=;
-        b=RoiYCpYt9dX/nmBRfRsDFN8/QyIo61MOVV1xymizxstQ9HK4murJufDE9NxDw5bj/N
-         DfNHKPF9IH3tVSeSrP3FUvQZYNJlAzJZqcgN9E7RsthTQywnC2Yr27MqDmLkONzXqZvx
-         TtobWHmtDzvh6dGuvOlary7ATwxGMpM+TqXk2SYXAw7+QBU6v763WJBZcmkgHwDVTSU3
-         QSM0Gs0aGwxwxET/QRjO8vjiFYbjKF07cUpK8/R665jsUAe7WHBSs/QwB9HReWNP+c3W
-         fe5krBdphLuyEG/TcyFfxAmgBI3lW6lhTYcLm6WYfBckLWQ/uA2jl5QPivCIKUvvIUMS
-         VCPQ==
+        bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
+        b=OlRNj5dPmY+eASSfZ1PbcvMlKJZGsjMbu1Z9V8KdMybLC/c+kCU8OmiUOJfW4UrPLT
+         jCdiE1FBQcpxXEfb1r9PWHrF6iyZ88+vKCphBoG7G7ybt7DqcEUPBh85QuIW/1pfzid0
+         wmQ38sOOA7ddSTlmCczylo5LC7y26CoP3PWc+bjGEk0Of77Z2ddK21Gvy1b42cAwtR6J
+         zY2jPeoERrt9xGqrL/AKphi/PCfgyQPH7rTplibBiQgmaHihzruuCwjHpIlS/lDq2HNp
+         yWnCtqCrskBd6VmCgrjms49kMrV4WFveoj0r8eUtvcKccBw0kLUi499NDeO9I44h0PXZ
+         Yv5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453134; x=1749057934;
+        d=1e100.net; s=20230601; t=1748453168; x=1749057968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/OzUyuVqnOB7miLFV37uZy05en+YqG3p0V1Vv2/8lTk=;
-        b=ih1O9HkdA/2PaGM+1F+cgvH+FAkDwCn2SqOTPPMJ8RWLtTtY/9PM8TOVTjkLJ5oFB1
-         QpWXDPjsvrpaDNLuh0qT3V+DrN0GW59sWHkUzNDb98nBgRvANPcOsWl/o/RaHMV32NHc
-         xKH4/T2uZUyBNYGDfOvL4WOiJ5CJYp9j7gA0A9+kiR+XlgBtafcQlB5G/cc/LGwtEPrN
-         UIu/c6bNV0zfv6oU376+H3hbafl4+XoxfnhJsTy8zQF5AZ4Az+joTPIN/j1t3yaDQz7L
-         wuXJWgeP4ECMET2SA9J2BE4pO6JQExcwqc9mYKnuoSBJz8jDPOoKujP9BIp4s3qR49qy
-         AB1g==
-X-Forwarded-Encrypted: i=1; AJvYcCU5IS96gb2s5UjeXQ1IfiFgtZAe1p+LZ5RuNgHtQ6Md/0zZWl3zt0wybrnNnH/qmbwbBo7/eqavWanTofk=@vger.kernel.org, AJvYcCVop4KJYAxpaNmCNlGikX8OSCxhaXGOF6DxnMgKyLCjntb6oDQjuiNZ0bwLlM7gzTAiySooXioZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywny9iw6NBgVu5/ON5FUgjmVdZDc/FobUW1z3ttveN8ZE9UKz9i
-	B64BQQJuBMp1LPVe0t9WREOLXT08GeYN697t5xEONXjY3c5Aw2a5WB86WcU1aAH2F/PSfh4CXpn
-	mxJms7xku7aPpvY/99JEK3IXMbfipCJw=
-X-Gm-Gg: ASbGncvv08Dy4EGzgBLHp/SmpAiN3X4hhQBox5imPWGftiYZ20qqiCEO5L4zWrrIRGT
-	USAbl/QZ+TL8OWNB4Eg6RwTk6SlSNA347I/B0ti/izHrkR2bg4djyYnXAiYH507Dmmps+hWB6KR
-	QTTm5ThMmIFRuqkKmqGbITwYh1wa1NcHuP6A==
-X-Google-Smtp-Source: AGHT+IER5qx1DwG+fJoBcyq/OD8RJi4KmfX7CsQR2aaR2iNxoMBecCu9w8+lxoiC4pk7miaSH11257NF0qW83P2oVoA=
-X-Received: by 2002:a05:6214:20e5:b0:6e8:9dc9:1c03 with SMTP id
- 6a1803df08f44-6fa9d290768mr317566926d6.21.1748453133588; Wed, 28 May 2025
- 10:25:33 -0700 (PDT)
+        bh=HgsEhS2sAmmOIZVLiGhDdAQFM5SB/+50Njb9ruDD5sA=;
+        b=TEyoOqc+9XxxpQwEpxb8n532SZsp982qUv/EpC66axjEi4LKgcSDgP3F+SY4pD9m/R
+         cNZ/yTXfe5mLW14Eo4Kt8cJPPaVovsK/+SXuMryy65/8IQk0xst8aZHpexyL/zW7gy6c
+         gtIqLaQkjxKr+ZilZ7FtAXbgBJB8VZDlKT78Fo9+QMnV5i0Mky/ewXJ70U7MlnwW3EIm
+         uWrWwVS3nzi1w6oOR417UAmsu7/2rkxPhF9RKRcfRM76rOIIIAuCaekZ+HxTBTvhjf8F
+         889fDgkQdw+hsZ7wFVFbU3ViTGU56OGim6gbN36sNsigCuEWpT0uj9g4N5+4aab3fQDa
+         Ewbg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNTEXuyueRM4YRMiqCleM9c3/IJV8SjWNih2Ao9N0HZio8CjWRZHWcvE0tgyH8HJLhM01rCvW8Mv8=@vger.kernel.org, AJvYcCVXdYx589uXR+momGiYBMzQFKdVaRsWCoEBm4dvTrXPfg3s/K0e5GRV0FQA0Pfshgy2/J6INfq4peQC5M4=@vger.kernel.org, AJvYcCWEAMkCT6fkk8kNr6m+V/J3Vbnw8pwJZYfiPoclv2gA+jW43vqgzj2lNsR4I2zL8yJEjp+xk0J2sPCZcwI=@vger.kernel.org, AJvYcCXBlgxyY8u6pkcaRn9Ov0lrnUqItNkCr0SpwJDUKzGqpvALpKHMcD4BpH29SudXll7u2BmSTna+y74m@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL+Z4l09rWZr+GlDC3EPijAsPlvpBlAUfUn4y1hqmV2w+qMi+0
+	5v6zshqqCJ/kbsR5CMuI88HzOR7xieksft8nkmlwvW0SHP4A+uUrNP1A3agGmAU654g5Zd+aTaZ
+	nEc72NrgYb9xYsVSFUKerAba71+sFGdI=
+X-Gm-Gg: ASbGnct78M2A6tClYPF/aiTkznsss6NbBMR3uKfXZUWu1/M0th4r3OQJ9Xr8TH7FlDW
+	WWKE73M7r4OVddKp45Gz63PUCsV31Y3gksZ2IUdPWpRqv/RZMiQZLaOJkNz32nkNCGcBqfe3b4t
+	+xru+yZUSiJz5za+1knY2s1/FWDXHtq5fn
+X-Google-Smtp-Source: AGHT+IFDyDQi/9wO2SzKKhtMYaaAss1hk+he7j9jtV0kBiJqcwFAaGlSBAYFYPErvYDNN+uLccqGF2iegKs7RZUaWRc=
+X-Received: by 2002:a05:6512:a90:b0:550:d534:2b1a with SMTP id
+ 2adb3069b0e04-5521c7bc046mr6331845e87.31.1748453167469; Wed, 28 May 2025
+ 10:26:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch> <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk> <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch> <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
-In-Reply-To: <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Wed, 28 May 2025 11:25:20 -0600
-X-Gm-Features: AX0GCFveR1vAlsAT85LmMrDh-cWJLkLNiCTzyzcFYtPEIKrvDRjHUdM3zbS3iJQ
-Message-ID: <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: wens@csie.org, Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250507-pci-tegra-module-v6-0-5fe363eaa302@gmail.com>
+ <20250507-pci-tegra-module-v6-3-5fe363eaa302@gmail.com> <w2ertcizgmtu27kcike3lpw5dvhvqi2b4c6amqzwdfs2xtebfy@itrpen3oblhs>
+ <CALHNRZ8899t0BYMgn1a3iDKz_J9z_Wv_XYM2d8Y4AoiXPZaFjA@mail.gmail.com>
+In-Reply-To: <CALHNRZ8899t0BYMgn1a3iDKz_J9z_Wv_XYM2d8Y4AoiXPZaFjA@mail.gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Wed, 28 May 2025 12:25:55 -0500
+X-Gm-Features: AX0GCFvjYatE1CdKxTKUCkSaQv_HFCfRBq0g_jM2U1KiL6rRWZ40WAWZ1-Bt-YE
+Message-ID: <CALHNRZ92JPds7DYPTt3A6EvQMMw=PJ50wuSLz526UWgJNo=5rQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] PCI: tegra: Allow building as a module
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 8:12=E2=80=AFAM Chen-Yu Tsai <wens@csie.org> wrote:
+On Thu, May 8, 2025 at 6:26=E2=80=AFAM Aaron Kling <webgeek1234@gmail.com> =
+wrote:
 >
-> On Wed, May 28, 2025 at 9:25=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrot=
+> On Thu, May 8, 2025 at 3:40=E2=80=AFAM Thierry Reding <thierry.reding@gma=
+il.com> wrote:
+> >
+> > On Wed, May 07, 2025 at 10:25:54PM -0500, Aaron Kling via B4 Relay wrot=
 e:
-> >
-> > On Wed, May 28, 2025 at 05:57:38AM -0600, James Hilliard wrote:
-> > > On Wed, May 28, 2025 at 1:53=E2=80=AFAM Russell King (Oracle)
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
-> > > > > On Tue, May 27, 2025 at 2:30=E2=80=AFPM Andrew Lunn <andrew@lunn.=
-ch> wrote:
-> > > > > >
-> > > > > > > Sure, that may make sense to do as well, but I still don't se=
-e
-> > > > > > > how that impacts the need to runtime select the PHY which
-> > > > > > > is configured for the correct MFD.
-> > > > > >
-> > > > > > If you know what variant you have, you only include the one PHY=
- you
-> > > > > > actually have, and phy-handle points to it, just as normal. No =
-runtime
-> > > > > > selection.
-> > > > >
-> > > > > Oh, so here's the issue, we have both PHY variants, older hardwar=
-e
-> > > > > generally has AC200 PHY's while newer ships AC300 PHY's, but
-> > > > > when I surveyed our deployed hardware using these boards many
-> > > > > systems of similar age would randomly mix AC200 and AC300 PHY's.
-> > > > >
-> > > > > It appears there was a fairly long transition period where both v=
-ariants
-> > > > > were being shipped.
-> > > >
-> > > > Given that DT is supposed to describe the hardware that is being ru=
-n on,
-> > > > it should _describe_ _the_ _hardware_ that the kernel is being run =
-on.
-> > > >
-> > > > That means not enumerating all possibilities in DT and then having =
-magic
-> > > > in the kernel to select the right variant. That means having a corr=
-ect
-> > > > description in DT for the kernel to use.
+> > > From: Aaron Kling <webgeek1234@gmail.com>
 > > >
-> > > The approach I'm using is IMO quite similar to say other hardware
-> > > variant runtime detection DT features like this:
-> > > https://github.com/torvalds/linux/commit/157ce8f381efe264933e9366db82=
-8d845bade3a1
-> >
-> > That is for things link a HAT on a RPi. It is something which is easy
-> > to replace, and is expected to be replaced.
->
-> Actually it's for second sourced components that are modules _within_
-> the device (a tablet or a laptop) that get swapped in at the factory.
-> Definitely not something easy to replace and not expected to be replaced
-> by the end user.
-
-Yeah, to me it seems like the PHY situation is similar, it's not replaceabl=
+> > > This changes the module macro back to builtin, which does not define =
+an
+> > > exit function. This will prevent the module from being unloaded. Ther=
 e
-due to being copackaged, it seems the vendor just switched over to a
-second source for the PHY partway through the production run without
-distinguishing different SoC variants with new model numbers.
-
-Keep in mind stmmac itself implements mdio PHY scanning already,
-which is a form of runtime PHY autodetection, so I don't really see
-how doing nvmem/efuse based PHY autodetection is all that different
-from that as both are forms of PHY runtime autodetection.
-
-https://github.com/torvalds/linux/blob/v6.15/drivers/net/ethernet/stmicro/s=
-tmmac/stmmac_mdio.c#L646-L673
-
-> The other thing is that there are no distinguishing identifiers for a
-> device tree match for the swap-in variants at the board / device level.
-> Though I do have something that does DT fixups in the kernel for IDs
-> passed over by the firmware. There are other reasons for this arrangement=
-,
-> one being that the firmware is not easily upgradable.
->
-> ChenYu
->
-> > You are talking about some form of chiplet like component within the
-> > SoC package. It is not easy to replace, and not expected to be
-> > replaced.
+> > > are concerns with modules not cleaning up IRQs on unload, thus this
+> > > needs specifically disallowed. The remove callback is also dropped as=
+ it
+> > > is unused.
 > >
-> > Different uses cases altogether.
+> > What exactly are these concerns? I haven't done this lately, but I'm
+> > pretty sure that unbinding the PCI controller is something that I
+> > extensively tested back when this code was introduced. PCI is designed
+> > to be hot-pluggable, so there shouldn't be a need to prevent unloading
+> > of the controller.
 > >
-> > What i think we will end up with is the base SoC .dtsi file, and two
-> > additional .dtsi files describing the two PHY variants.
+> > Rather than just forcing this to be always there, can we not fix any
+> > issues and keep this unloadable?
+>
+> For the short version, see this part of the conversation on v1 [0].
+> For the long version, read comments on all revisions. Basically, I
+> originally submitted this as unloadable, but got told that due to
+> generic concerns that affect all pci drivers, including ones already
+> modules and unloadable, making this one a module would be blocked if
+> it was unloadable. Which leads us to this revision of the series.
+>
+> Sincerely,
+> Aaron
+>
+> [0] https://lore.kernel.org/all/4u4h27w77sdjvy43b3yonidhfjuvljylms3qxqfaq=
+wyw3v32qo@kzgrrenxr6yz/
 
-I think having a single PHY .dtsi for both here is ideal if we can
-do runtime detection, since it's difficult to know which potential
-variants of PHY various devices shipped with, in our case we
-have access to enough hardware to determine that we have
-both variants but for other devices most developers will likely
-only have access to one PHY variant even if hardware at various
-points in time may have shipped with both variants.
+Is there any more comments on this, Manivannan or Thierry? I'd like to
+get some form of this series submitted.
 
-IMO without runtime detection this will likely be a major footgun
-for anyone trying to add ethernet support to H616 boards as they
-will have difficulty testing on hardware they don't have. If we provide
-a single .dtsi that implements the autodetection correctly then they
-will simply be able to include that and the hardware will then likely
-function on both variants automatically by including the single .dtsi
-file.
-
-Requiring the bootloader to modify the DT adds a good bit of
-complexity and will be difficult for most developers to test as
-many will not have access to hardware with both PHY variants.
+Sincerely,
+Aaron
