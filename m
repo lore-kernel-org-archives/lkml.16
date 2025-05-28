@@ -1,138 +1,104 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D42641C84B2;
-	Wed, 28 May 2025 05:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58EA71F1501;
+	Wed, 28 May 2025 05:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748410875; cv=none; b=MO3bqGj47vqCOsWZTidK0LZ1dJWWtwOQ60vwzU7wVYYgKaZ+oKsXJtoD09OChj80c9CnuOUqtcexcirFk8H7GZlHjw9nnRFQK5SZlnQkq6k9Eeb2+92vRI8GEBEJV/dMvSri+jUmJuVQhxPO9xOSRADZgpKnsAUDSXsu7luBp+0=
+	t=1748410932; cv=none; b=KH4fxN9DUpTcOxjRvtoW+mesRSNfna6CvTMj97tIJMQRPsYIXwpgXgJuAIFeda6Mm0k2lAgSBVVInCnT14PSakFXQuefoHzLq9NOVmlr/GhoInrdSoL2okSa1ZLF7rec/xkb2vZw0ratxz3CCDBX8HN//I1fNmA9iKDhO8wo6LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748410875; c=relaxed/simple;
-	bh=wN8sYZl/mz8uDPrAXCUTTNFLSJM4kxH7HqZEgJtHnQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izi5OEGQyKabOK+o4fKc5eTAWIFrNlaDfbL3hq8BYganxCmLVWOaFYSEjRx7rG9+B3MWjPyNwpzS+fvT8VrTZQMDXTSTvuw9YGPXd3sDtUbXXyd9/0fpdy2mksOBwSQT/BzEScG9n1f3HUBL/mHNo8ddoUU8lNqJzJ9EEo/Mfqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-bb-6836a1f3d4ed
-Date: Wed, 28 May 2025 14:41:00 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH v2 02/16] netmem: introduce netmem alloc APIs to wrap
- page alloc APIs
-Message-ID: <20250528054100.GB9346@system.software.com>
-References: <20250528022911.73453-1-byungchul@sk.com>
- <20250528022911.73453-3-byungchul@sk.com>
- <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
+	s=arc-20240116; t=1748410932; c=relaxed/simple;
+	bh=BWX7HpTW3OUC/DXzs/Slwsj37HTERtYVXU2MLM3qzqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUuQzw/77H3Ft1TLMKnnDut05aLvkMlcu6Siyi/umtXk69+w7htJ34BNqJNSR2JjNCCTuhc1No16AXGYjXZ68YAfffKCLedi4OYZTDqq0b1Tksl5PaYYvnaZZK7g9Y2J5WTqf8EO2dZRqSW2avHGvgOAwLTQV7phqEAko9OydaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P0qNcj8n; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P0qNcj8n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=OKZVR5pHZSlScBzOKZd5xLcnKSixLDKu3f4FcAXfbe8=;
+	b=P0qNcj8n7xwDw02AREIY+oMgV65ROf65kP7GsZNM4byewFyhj+Yc4ULBZFUfEe
+	tYvbGY8sUGDpDPkFB0UOgEy1GGCQ22KcmwdGzVP2wLHfU5/rDVV2mjzIrJu3mMFE
+	gFCV02nwm+kzg4uk4ZfVZKz/jD8It068OnJxQzF4/kTcM=
+Received: from [192.168.18.52] (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBX7u4LojZoIdomBA--.25001S2;
+	Wed, 28 May 2025 13:41:32 +0800 (CST)
+Message-ID: <c2ddb1ad-72f9-4ebc-8d6a-3c9d7fa559e4@163.com>
+Date: Wed, 28 May 2025 13:41:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fec3YcDo4r603JaBVSlFZYPkWU9CFfuoBd6EPSZbRDW+mS
-	maZ2YakhWpp2o9a0aTfTbLZsrpJRZl4qTDRjXa2VGmSlLsUblXNEfvvx3H7/Dw/PKIrYAF6r
-	2y/qdaoYJSfDsu++hfPdhUs0Cwa7/cFkuclB6UASXP9oZ8FUYkPwa/CtFNw1dRxcLuxnwPQi
-	HUOfZYiB9lqXFNqudWCoyqhkwHWynoPs9GEGUu3FEmiy5bBwZugqA5WGj1JouW/i4MPNPyx0
-	VGdjaDDewNCWEwG15snQ/6wLQY2lUgL9J/I5ON1s5uBzehuC5scuDBeP5iCwOJwsDA+YuIgZ
-	tOLGawm9Z3wvpWZrAr1TPJdmOZsZai3J5Ki195SUvntVxdH688OY3rO7JTQ77QdHe9rfYPrT
-	0cpRS0Urps/NNVLqtgZFCVtly9VijDZR1Ieu2CnTVHSZUNw5vyTHuc0GlC/PQj48EcKIu9HO
-	/OOMTofEw1iYTV4OH8ce5oRg4nQOjs1MEuaQK4481sOM0MaSRtMeD08Uosmxb6Vj83IhnNzN
-	7eaykIxXCMWIOA0vJd6GH2m48AV7l4PJSEHz6FF+lAPJ9d+8tzydpN29OObyETYQwwNvNn9h
-	Jnloq5N4bhLBzpMLmSVSb+ip5FGxE+ciP+M4hXGcwvhfYRynMCNcghRaXWKsShsTFqJJ1mmT
-	Qnbti7Wi0c+5dngk2o56mzZVI4FHSl85LV+sUbCqxPjk2GpEeEY5SZ66colGIVerklNE/b4d
-	+oQYMb4aBfJYOUW+qP+AWiHsVu0X94pinKj/15XwPgEGlLA7v9FGLlXeGjh0RNM+ryM0xbl5
-	4cEo2ZazloJZm1KiPq17Hvy7aPvnh4bwrV0tE62rtBPa16qjy5+Erk1IU8f+CFo6OVwmKrSB
-	6G3u+U5/TVMq9t3WFVlU0JO3pjYzz16vjrzfs7iMnaY73JpRGmaLWL2+deTr02Vxqze2uMpu
-	9ylxvEa1cC6jj1f9BdCSIPI1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe97Ls9fR4nVZvWURLUoSNKO0I0VJH+oh6AaVlB9q6VubTq2t
-	hnahlYZkza6IrSkbVpoKS1s6S0ZMMS1JmxrrOrNSu1CWF9TZxSmR336c///8zpfD0fIz7BxO
-	nXJY1KYoNQosZaSbV2WE9VmjVBH2HgxmWxmG0qE0KOpwsGAuqUTQP/xKAn11jzAUWgdpMDdn
-	MjBgG6HhY32nBLy3uhioyaqiofNCAwZjpo+G045iCmrzG1loqcxh4erITRqqDB0SaL1vxvC2
-	7A8LXS4jA42m2wx4c2Kg3jITBp98RVBnq6Jg8Hw+hituC4b3mV4E7tpOBq6fykFgc3pY8A2Z
-	cYyC2G+/oEi16Y2EWCqOkLvFoSTb46ZJRclZTCp+XpaQ189rMGnI8zGk2tFHEWPGN0x+fHzJ
-	kO/OdkwKe3opYrO3M6TJUifZGrhbujpB1Kj1onbpmr1Slf2rGR3MDUxz5m43oHxZNgrgBH6F
-	kNXtpPzM8IuENt85xs+YDxE8nmHaz0H8EuGG8xLrZ5r3ssJTc6Kfp/NxwpkvpeN9Gb9SuHex
-	F2cjKSfni5HgMbRRE0Gg0HjtAzOxHCKMFrjHpNwYBwtFv7mJ8Xwh49718VsB/DbB8MAxzjP4
-	hcLDykfURTTNNMlkmmQy/TeZJpksiClBQeoUfbJSrYkM1yWp0lPUaeHxqckVaOw5bp0YveRA
-	/a0bXIjnkGKqjNyJVMlZpV6XnuxCAkcrgmSn10ap5LIEZfpRUZu6R3tEI+pcKJhjFLNkG2PF
-	vXL+gPKwmCSKB0Xtv5TiAuYYEN6pbY7O+60Peay24uAtzXnPD/xq8U2Pal9YfihhwTrrwLv3
-	DUM5YTfvZG0ILvgT/fjYSOywcf/SUztSazYldu8wjS5IzTRGSDSfenZN2Rwv2bczd1vTwPdw
-	e2HY8bKB5vIt63lpnPtkYn3pPN+12YuD5hU/C9VY53421EbLXK7lMfsUjE6lXBZKa3XKvxHZ
-	eCsYAwAA
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: Extend max-link-speed to support
+ PCIe Gen5/Gen6
+To: Rob Herring <robh@kernel.org>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250519160448.209461-1-18255117159@163.com>
+ <20250519160448.209461-2-18255117159@163.com>
+ <20250527193550.GA1104855-robh@kernel.org>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250527193550.GA1104855-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PygvCgBX7u4LojZoIdomBA--.25001S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF1rJFW5Kw1xGFy8tryUGFg_yoW8CF4xpa
+	yrCF1xtFWrJr17Wa97X3WfAw4Yq3srAayYkF98G347tFsxZFnYyw4agF15XF1kZryxZFWI
+	qF4Y9F13C3WDAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U0jgxUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOh5ao2g2EbKL5QABsP
 
-On Tue, May 27, 2025 at 08:11:58PM -0700, Mina Almasry wrote:
-> On Tue, May 27, 2025 at 7:29 PM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > To eliminate the use of struct page in page pool, the page pool code
-> > should use netmem descriptor and APIs instead.
-> >
-> > As part of the work, introduce netmem alloc APIs allowing the code to
-> > use them rather than the existing APIs for struct page.
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > ---
-> >  include/net/netmem.h | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/include/net/netmem.h b/include/net/netmem.h
-> > index a721f9e060a2..37d0e0e002c2 100644
-> > --- a/include/net/netmem.h
-> > +++ b/include/net/netmem.h
-> > @@ -177,6 +177,19 @@ static inline netmem_ref page_to_netmem(struct page *page)
-> >         return (__force netmem_ref)page;
-> >  }
-> >
-> > +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
-> > +               unsigned int order)
-> > +{
-> > +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
-> > +}
-> > +
-> > +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
-> > +               unsigned long nr_netmems, netmem_ref *netmem_array)
-> > +{
-> > +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
-> > +                       (struct page **)netmem_array);
-> > +}
-> > +
-> >  /**
-> >   * virt_to_netmem - convert virtual memory pointer to a netmem reference
-> >   * @data: host memory pointer to convert
-> 
-> Code looks fine to me, but I'm not sure we want to export these
-> helpers in include/net where they're available to the entire kernel
-> and net stack. Can we put these helpers in net/core/page_pool.c or at
-> least net/core/netmem_priv.h?
-> 
-> Also maybe the helpers aren't needed anyway. AFAICT there is only 1
-> call site in page_pool.c for each, so maybe we can implement this
-> inline.
 
-Ah.  I recalled the reason why I added these APIs this way, that is, to
-make the allocation method easier to be altered in the future.  I will
-move it to net/core/netmem_priv.h but keep it in the header anyway.
 
-	Byungchul
+On 2025/5/28 03:35, Rob Herring wrote:
+> On Tue, May 20, 2025 at 12:04:46AM +0800, Hans Zhang wrote:
+>> Update the device tree binding documentation for PCI to include
+>> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
+>> The original documentation limited the value to 1~4 (Gen1~Gen4),
+>> but the kernel now supports up to Gen6. This change ensures the
+>> documentation aligns with the actual code implementation.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> -- 
-> Thanks,
-> Mina
+> This file is now removed. Update the schema if you need to. It lives in
+> dtschema project.
+> 
+
+Dear Rob,
+
+Thank you very much for your reply and reminder. I will resubmit in the 
+next version.
+
+Best regards,
+Hans
+
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> index 6a8f2874a24d..5ffd690e3fc7 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
+>>      If present this property specifies PCI gen for link capability.  Host
+>>      drivers could add this as a strategy to avoid unnecessary operation for
+>>      unsupported link speed, for instance, trying to do training for
+>> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+>> -   for gen2, and '1' for gen1. Any other values are invalid.
+>> +   unsupported link speed, etc.  Must be '6' for gen6, '5' for gen5, '4' for
+>> +   gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other values are
+>> +   invalid.
+>>   - reset-gpios:
+>>      If present this property specifies PERST# GPIO. Host drivers can parse the
+>>      GPIO and apply fundamental reset to endpoints.
+>> -- 
+>> 2.25.1
+>>
+
