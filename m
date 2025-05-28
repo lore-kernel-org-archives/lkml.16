@@ -1,69 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AE7258A;
-	Wed, 28 May 2025 21:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8868A1DFFC;
+	Wed, 28 May 2025 21:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748468853; cv=none; b=TOJkbueZ/+STjhcKvx6d+STjt83WTptd1+fnbsCEgWjP3szMThGlFpdGerU2+dKFkjCypOU5V+OP1qQiS1sXCkRrDIHekkhEnVyfM4sB3vW0XLR1X89GhGVjir6/eb7YukmmMpEgOk4FXNCEtMcX2Hum++GpkDKmwM5/0P8ak1w=
+	t=1748469050; cv=none; b=TRxWE3Ic8s3t4y0jjsbAWfeoOd/WSg9FUtrQqwFBUWF+oOsTtMjp4T4CkaHknXiluj2Qc57+dpF4LHErHXk9przM2s1VGx6UGnB3tlw5xLrNHz+ofakIKSLwtc0pIRTl9BtTfXf6egwsjSxzjGwq9ixq2g4PlhXeB/iT/NrIXSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748468853; c=relaxed/simple;
-	bh=nuz0o0BGLyrSP915wdaM0jKsDNSUMxNsELda8wm1SiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kaFqMxESE3Yw9Lw8q95pA53V58jij+/7yQ1eG87IlCq2v+O+CoWj6Q6p6OOfrQQ27GqNiM/CWkI7pCtXBRs2E5zmII+2corCNSujldSq+px2b56BSa4X5m83A9bJagRs9E30kgoaY6cit2RGEDG5Xf+AqTYP3QrOtNaMI+uZmQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j66ZH4aC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748469050; c=relaxed/simple;
+	bh=YcT1GjnH1ix3Hf2n1JVSjZ7SLshS6F8OF/fMw8ktYXk=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SpfBQtR2GvFxnk52RvHpBIWXAM9DzA7ARJcvRYdbEs1dUXIebwf3oe10fFkV11o1NVcdp4MnyKjKcj9wdl5qvSWFwmqDALOHCbZubrUeWvDjCP9OgFyf7oUvf+Fl2JzeB0dzGAdIRQ2txTOsKYRIfzfSw/Kj59ciFI9BHWVYOyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RXrXPq/L; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j66ZH4aC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD22C4CEE3;
-	Wed, 28 May 2025 21:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748468851;
-	bh=nuz0o0BGLyrSP915wdaM0jKsDNSUMxNsELda8wm1SiE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=j66ZH4aCk4nt9Y7OjMFjdnQMYLSLJMVrWU0QsR4oGgbTZ68S1L4GrjKy6xWyVy9qW
-	 m1+IbaRuOnK3v9IbtKihJs9DuSa8gErD5IKcIROVkl8B9pK8lMdajwomDUFJ6bocKd
-	 1FaPOwGScP+rnGVrBM8c0nILi8KSX9F05IuRF4aaP+wcxnENgqIH/75miinJbkkyiJ
-	 iz4iyKGe5e9y5OadzWnHU7gGjas47wXMZxVIQL62OB9nXnr1ZO8Xd7XDH0/oTv7cxo
-	 CoutemBqrTnC8bdFs56x2TExoIQ7ZGeiVVtzPQ4SInq1P1Mcx9giiO21NXTRLLZ+uA
-	 qAjhxgb6V7SwA==
-Date: Wed, 28 May 2025 14:47:30 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, Kuniyuki
- Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, Nathan
- Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
-Subject: Re: [PATCH v11 00/10] ref_tracker: add ability to register a
- debugfs file for a ref_tracker_dir
-Message-ID: <20250528144730.57741830@kernel.org>
-In-Reply-To: <20250528-reftrack-dbgfs-v11-0-94ae0b165841@kernel.org>
-References: <20250528-reftrack-dbgfs-v11-0-94ae0b165841@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RXrXPq/L"
+Received: from narnia.corp.microsoft.com (unknown [40.78.13.173])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 5B517207860F;
+	Wed, 28 May 2025 14:50:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5B517207860F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748469048;
+	bh=HjZx60XrcN96ZNYCOO5IXgNhQ4tLOgnr0P8/yA+GqsQ=;
+	h=From:To:Subject:Date:From;
+	b=RXrXPq/LIr/YPpS9qtiEXzftGS13aDvZ6G3sJ0hTbiPtM/8HxKhsksnK1x77FtQwK
+	 9getRppvdRl8jsCMh9YXVMbmakvBCgtsijEctcAagbzu4TP/z4/oiH14XEpBdp/B91
+	 5j+ScvIY3eWE9vCjQA7QWO/Yx53ew7OFFBPInzRw=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Paul Moore <paul@paul-moore.com>,
+	bboscaccy@linux.microsoft.com,
+	jarkko@kernel.org,
+	zeffron@riotgames.com,
+	xiyou.wangcong@gmail.com,
+	kysrinivasan@gmail.com,
+	code@tyhicks.com,
+	linux-security-module@vger.kernel.org,
+	roberto.sassu@huawei.com,
+	James.Bottomley@hansenpartnership.com,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	Jordan Rome <linux@jordanrome.com>,
+	Martin Kelly <martin.kelly@crowdstrike.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Matteo Croce <teknoraver@meta.com>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: [PATCH 0/3] BPF signature verification
+Date: Wed, 28 May 2025 14:49:02 -0700
+Message-ID: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 May 2025 10:34:32 -0400 Jeff Layton wrote:
-> Changes in v10:
-> - drop the i915 symlink patch
-> - Link to v9: https://lore.kernel.org/r/20250509-reftrack-dbgfs-v9-0-8ab888a4524d@kernel.org
+As suggested or mandated by KP Singh
+https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=-FmXz46GHJh3d=FXh5j4KfexcEFbHV-vg@mail.gmail.com/,
+this patchset proposes and implements an alternative hash-chain
+algorithm for signature verification of BPF programs.
 
-Hm, I reported the refracker warnings at boot on v9 :
-   ref_tracker: ref_tracker: unable to create debugfs file for net_refcnt@ffffffffb73a98f0: -ENOENT
-   ref_tracker: ref_tracker: unable to create debugfs file for net_notrefcnt@ffffffffb73a9978: -ENOENT
+This design diverges in two key ways:
 
-Did you decide against fixing those? 
-Or did they creep back in?
+1. Signature Strategy
+
+Two different signature strategies are
+implemented. One verifies only the signature of the loader program in
+the kernel, as described in the link above. The other verifies the
+program’s maps in-kernel via a hash chain.  The original design
+required loader programs to be “self-aborting” and embedded the
+terminal hash verification logic as metaprogramming code generation
+routines inside libbpf. While this patchset supports that scheme, it
+is considered undesirable in certain environments due to the potential
+for supply-chain attack vectors and the lack of visibility for the LSM
+subsystem.  Additionally, it is impossible to verify the code
+performing the signature verification, as it is uniquely regenerated
+for every program.
+
+2. Timing of Signature Check
+
+This patchset moves the signature check to a point before
+security_bpf_prog_load is invoked, due to an unresolved discussion
+here:
+https://lore.kernel.org/linux-security-module/CAHC9VhTj3=ZXgrYMNA+G64zsOyZO+78uDs1g=kh91=GR5KypYg@mail.gmail.com/
+This change allows the LSM subsystem to be informed of the signature
+verification result—if it occurred—and the method used, all without
+introducing a new hook. It improves visibility and auditability,
+reducing the “trust me, friend” aspect of the original design.
+
+
+Blaise Boscaccy (3):
+  bpf: Add bpf_check_signature
+  bpf: Support light-skeleton signatures in autogenerated code
+  bpftool: Allow signing of light-skeleton programs
+
+ include/linux/bpf.h            |   2 +
+ include/linux/verification.h   |   1 +
+ include/uapi/linux/bpf.h       |   4 +
+ kernel/bpf/arraymap.c          |  11 +-
+ kernel/bpf/syscall.c           | 123 +++++++++++++++++++-
+ tools/bpf/bpftool/Makefile     |   4 +-
+ tools/bpf/bpftool/common.c     | 204 +++++++++++++++++++++++++++++++++
+ tools/bpf/bpftool/gen.c        |  66 ++++++++++-
+ tools/bpf/bpftool/main.c       |  24 +++-
+ tools/bpf/bpftool/main.h       |  23 ++++
+ tools/include/uapi/linux/bpf.h |   4 +
+ tools/lib/bpf/libbpf.h         |   4 +
+ tools/lib/bpf/skel_internal.h  |  28 ++++-
+ 13 files changed, 491 insertions(+), 7 deletions(-)
+
+-- 
+2.48.1
+
