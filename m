@@ -1,163 +1,165 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9B51FA178
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA5E202965
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748408002; cv=none; b=BerDlhA0lVB3vaF/ZPok2uOy2J2yI2qias70YP+0B0PeyAgdpRsWQ1EDWd5AzaCRB3zYnciiwW079UUi36uJOolauVPlrG9zo2Nv+LjCQF5d/AwcXSzyFy2gdJnr8ok4RjZKRbNuCGDS1K/hFIsBXHD1eV8tFUhAtW6wKmEKCGo=
+	t=1748408006; cv=none; b=llMqvK9TNnOTnLZnOxkNTwm1rTMJDQ+M/0WGwuKOCzWuQX+cWOaiHtdUTJEFSoeVjUlJu2hbRWd+0A4Ad83hjd3WNV0/ENXUiHlGPi+nM+dOQ0CFFx6EGudi/igTX3AcsQf+v6BovSB5i2zBMuPp3m8LZOOSfmKgndadFyW+Z5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748408002; c=relaxed/simple;
-	bh=ilFObzrRzcuIWyVpYbM1OOdelz4vGq5DSgh6SR3N6SU=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=N99ehx81CDiDSyiF/YSwk+LyxiPgBYMq/NX4+TziOdbxTaKcB3RlrwM3osKILqIcT1bxzbUSL4uScX4LWGo0cojpQ8Us6zibpBy2nx6uiV0xrmM54O5TTLCRy0rS5zA7wrDq6BgJ2koWYrKAAI9zd7aoqFF2Uqt5nFv7WRzcRBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vT+z2/09; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748408006; c=relaxed/simple;
+	bh=+5bT6sLoqX1CK/nv6Y09Rlj5Wk6fqnt7kYp3W/6/AZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ROmi+eu5sjlMsxnhERyK9C1XxUuZVivvqpKMKfXhKt0JvCJnW1zBEXy8j/8gfH7E/5qwJZD+rST21ZCpQCWZ7S8obehhg9CRVliq7CkezuYL7IdrWGrwcwCR/Z2VQ1bGq3X6hq3koFUu/aqV+A2ed5Ie4D56ul0chmQ4IlZoAqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhIMUcm2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vT+z2/09"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250528045318epoutp03c0327ddcb5d0498db0b060abec416b5d~Dl8_rwfqL0999209992epoutp03X
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:53:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250528045318epoutp03c0327ddcb5d0498db0b060abec416b5d~Dl8_rwfqL0999209992epoutp03X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748407998;
-	bh=oI/3Kv7rqiURNi/gqpByHgIefsR+vmV8gDPLpOar4lE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=vT+z2/09TSgsPVFN5z8cbmp2FygjLGRoiUPVygrHOziKHAwkGtonnx8C86PziPfK/
-	 tRGbQBvICeR9/DIGug+NIizGuhzLM+jQNLQHcv3xg0YO5l29P4AUBKDDvXi0PfqbRY
-	 12ZvqPe8axgqnueUW1SK6w627gYguRFPQTwkN2HY=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250528045317epcas5p1c42fddd3db36a3282fb6749408482541~Dl893bHeW0861408614epcas5p1v;
-	Wed, 28 May 2025 04:53:17 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4b6cZg6QT7z6B9m4; Wed, 28 May
-	2025 04:53:15 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250527104438epcas5p1e0a184c9f61fdf0682ef2c8297d7e29f~DXGcVBx_F0160301603epcas5p1B;
-	Tue, 27 May 2025 10:44:38 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250527104438epsmtrp2988aa4c8e59dcd5addbc301fc78dfc8d~DXGcPHpLB3064030640epsmtrp2N;
-	Tue, 27 May 2025 10:44:38 +0000 (GMT)
-X-AuditID: b6c32a52-41dfa70000004c16-4c-68359795bcba
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	4F.08.19478.59795386; Tue, 27 May 2025 19:44:37 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250527104435epsmtip142267e44fbd8d2dd40f2921c75798631~DXGZbE85o0412004120epsmtip1O;
-	Tue, 27 May 2025 10:44:34 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.or>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
-	<vkoul@kernel.org>, <kishon@kernel.org>, <arnd@arndb.de>,
-	<m.szyprowski@samsung.com>, <jh80.chung@samsung.com>
-In-Reply-To: <20250521-quirky-tanuki-of-tact-a79b86@kuoka>
-Subject: RE: [PATCH 07/10] dt-bindings: phy: Add PHY bindings support for
- FSD SoC
-Date: Tue, 27 May 2025 16:14:34 +0530
-Message-ID: <0e2601dbcef4$57ebe0e0$07c3a2a0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhIMUcm2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748408003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3qoz40Fv9dqOLasbkSia0eh+o0evOnHHCkU1NVu2z+o=;
+	b=HhIMUcm2xCaAudbZlNzCfb4SDuLZlafTBLm6e9NQqoD/gpxkyvoR+xwt0eszK3GlMb7QSR
+	Fssrxz2img8/gtUbMmXUg1k0SlzGeI4S0/uFBtCaI5kboZuXyP5v41xZB+YddxH0YHv3oM
+	m06SqjZNM8pKx30RXIITdQF/FtPu5Mw=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-163-suO5IVlzN5KVJRwW2tNeqA-1; Wed, 28 May 2025 00:53:20 -0400
+X-MC-Unique: suO5IVlzN5KVJRwW2tNeqA-1
+X-Mimecast-MFC-AGG-ID: suO5IVlzN5KVJRwW2tNeqA_1748407999
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-3280329a02fso22515671fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:53:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748407999; x=1749012799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3qoz40Fv9dqOLasbkSia0eh+o0evOnHHCkU1NVu2z+o=;
+        b=RXzYQyu13HjWrhJxj0n/eU9gNCcBEe9QN0dMZXifJC5roslcMR55BYkLunnUKde6cR
+         NgsjzhdqyVWNjCd3Z1o3EeonOfINHXdPFVE1XNin0V37gODwVd1xRwIzEnpcITKI6yPj
+         7KIulC9mNWQa8HMV53Dy+KY6xCefWUuJgY2EuljXWTJNpbmXjdYJJsnZuQwpMX/Ar7vr
+         fiVr/O7XapqBmZD1ThbDgbh4E5lQ9XBvc0ClADZjqKJns9AGdGQBLBJwdgNR7t7sYV6V
+         Kt+ua42TTI/ev17eyi+2SQ/fz4gjR8yeWAl17IkHYzdiwk7K1Utp8UUlP8D+ZAlOzm18
+         6RQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdS/XoOwMA6Ls+SzN54r0XCYqPpnsZ7dg/lZU8pSeqvpleMYRoiVBa4hItwDLhAz2KSQCd0ZL9aBB2PF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaXc390fb34t9mKyl3uHFgDciQ7FW53VuRTgx6jpPRyqclk5LL
+	QTDVlaV+ZKRXIGxh8mAmrGIQ0Hf0MshCHHjxC4y9JkUc6GOyWsBCC1BRB3uKfFPVemVcgTjADIB
+	LgvuH+oPL7XslBLubBTBzJXdck8BqKh1XXUeK+yIPdjvzPZsAvfxoaYoYxDZKt6RrfruOwV0bXc
+	vy8ZbKpNzLotN23ExEAo6v4KERgeWrYBMVrBBt/SOU
+X-Gm-Gg: ASbGnctiRfx34UpjkyH7rQ5+XjhTUAM3HKPeMDPXU0aB+n6GOF2keBmNKaXac3YfVKa
+	BO+H+p+vHW0B8jmRxL1qlV+tKWnWUxjlQEWPX727NrViK9aWW8jfKSVGR7XhohyrugoCeXQ==
+X-Received: by 2002:a05:651c:547:b0:326:ba31:bc1b with SMTP id 38308e7fff4ca-3295b9c6e82mr56904051fa.19.1748407998745;
+        Tue, 27 May 2025 21:53:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHST1hlfOsH7e7ZZwenC3npuT82YxgHz4N9xnnGh2MZrS78ykwqpUhtP6DEAauq3IXZOjG0ltgie6ZYMAAqIkk=
+X-Received: by 2002:a05:651c:547:b0:326:ba31:bc1b with SMTP id
+ 38308e7fff4ca-3295b9c6e82mr56903931fa.19.1748407998310; Tue, 27 May 2025
+ 21:53:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKa2HaEso6x90WQFKmaYw3pYxuT6gG1RTy+AkknIl0Ba3wP+rI853gA
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Re0hTYRjG+845OzsORl9T80u7zgRbaRkan12kIvJ0b/VPBlFLD87adJ05
-	sRtp6EhZtWqmLqvhLHXYbZazKInlZVreSMxALctlQgVl2sXsso3A/x5+7/M8PPAypKSHCmZS
-	UtM5PlWhktIiquaJdHZEQWGMconTGotfX6mh8cT5RiEuO6nEVY/aCHy1vk2Ae37qBbjia7EQ
-	N+T+IfGwuZ/G7e23hTjLMC7A9rfdAvz8QQmNW6800dhoG6Nw6zcLgXN+5VD4Rn2fEPfl5Anw
-	n4e1Qny/10WuDmTHf54H7H1zn5C12HWs3ZZHs73dD2l2sKuQYKvLTrBn7toAWz9aSLEj9tnb
-	RbtFK5M4VUoGxy+O2ydStjY+pzVGmNlwGmYBizgf+DEIRqMXn05RHi2BDoCs7TIfn4FGOm8S
-	Pu2PKn8PCfOB6J/nHUDfLedIz4GGi9Bg1y+vDoARqLqn3GsioYNCz64NAF9iGKAS/Suvyw8u
-	R6WvHvyrZRh/KEf9jhUeTMEw1GQdJT1YDGOR3hDuwWI4DTUXD3rHkXAhOj2QC3x6DnJ8LCF9
-	4+aiH+7rAk80AK5HLhPhswShhh8G0gj8zZOazJOazJOazJMiFkDZQCCn0aqT1YmaqEitQq3V
-	pSZHJqap7cD7fNmOWnD91kSkExAMcALEkNIAcY0xWikRJykOH+H4tL28TsVpnSCEoaRB4lBV
-	XpIEJivSuYMcp+H4/1eC8QvOIoIex0x7/z4hZwUvK4ivXBR6KWwcx08Xf/qt1m1449bdu2g0
-	zhiTN11yBhZ1L9gTvbqGVGUnZt5eppJI5LBoy6G7tmXay6JjxuCzEcZR06kXWpklvC53JNPW
-	supobou+JaaM33S0qG4/kHyor513x+TufKnUZD8baq6aur2vDV2O7Egnmpyu0uy9cH7jgquH
-	3BMJJpdm3bz8kK0unfVDPLtx3etNX3e+zPtyc/OsxgOx2/QGdsh6XDc9w/S4Sz7FjXatjWvr
-	n3nu85S4fklZ6HzmQngGV2k4u0ZuLh/o6BoL4fVLSzsnUhxZIwU7bIeDK6qqyMGQ5uGn5XWL
-	5xRmDkkprVIRJSN5reIvsEti+WsDAAA=
-X-CMS-MailID: 20250527104438epcas5p1e0a184c9f61fdf0682ef2c8297d7e29f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250518193252epcas5p3e4d1d329f1e5616e842801ceb26728b6
-References: <20250518193152.63476-1-shradha.t@samsung.com>
-	<CGME20250518193252epcas5p3e4d1d329f1e5616e842801ceb26728b6@epcas5p3.samsung.com>
-	<20250518193152.63476-8-shradha.t@samsung.com>
-	<20250521-quirky-tanuki-of-tact-a79b86@kuoka>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-13-yukuai1@huaweicloud.com>
+In-Reply-To: <20250524061320.370630-13-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Wed, 28 May 2025 12:53:05 +0800
+X-Gm-Features: AX0GCFsPvf7RCW8LBzVeUbKU7yRZ83m7i3GdKLvyxYqxJBrFEjDYTcKPMZaxrmY
+Message-ID: <CALTww2_pEnnWTGMbHUvX2CURrEvUHO=t2Notw9-Ynjemr5sDsw@mail.gmail.com>
+Subject: Re: [PATCH 12/23] md/md-bitmap: add macros for lockless bitmap
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> Also move other values to md-bitmap.h and update comments.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md-bitmap.c |  9 ---------
+>  drivers/md/md-bitmap.h | 17 +++++++++++++++++
+>  2 files changed, 17 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
+> index 17d41a7b30ce..689d5dba9328 100644
+> --- a/drivers/md/md-bitmap.c
+> +++ b/drivers/md/md-bitmap.c
+> @@ -36,15 +36,6 @@
+>  #include "md-bitmap.h"
+>  #include "md-cluster.h"
+>
+> -#define BITMAP_MAJOR_LO 3
+> -/* version 4 insists the bitmap is in little-endian order
+> - * with version 3, it is host-endian which is non-portable
+> - * Version 5 is currently set only for clustered devices
+> - */
+> -#define BITMAP_MAJOR_HI 4
+> -#define BITMAP_MAJOR_CLUSTERED 5
+> -#define        BITMAP_MAJOR_HOSTENDIAN 3
+> -
+>  /*
+>   * in-memory bitmap:
+>   *
+> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+> index f2d79c8a23b7..d2cdf831ef1a 100644
+> --- a/drivers/md/md-bitmap.h
+> +++ b/drivers/md/md-bitmap.h
+> @@ -18,10 +18,27 @@ typedef __u16 bitmap_counter_t;
+>  #define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
+>  #define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
+>
+> +/*
+> + * version 3 is host-endian order, this is deprecated and not used for n=
+ew
+> + * array
+> + */
+> +#define BITMAP_MAJOR_LO                3
+> +#define BITMAP_MAJOR_HOSTENDIAN        3
+> +/* version 4 is little-endian order, the default value */
+> +#define BITMAP_MAJOR_HI                4
+> +/* version 5 is only used for cluster */
+> +#define BITMAP_MAJOR_CLUSTERED 5
+> +/* version 6 is only used for lockless bitmap */
+> +#define BITMAP_MAJOR_LOCKLESS  6
+> +
+> +#define BITMAP_SB_SIZE 1024
 
+Hi
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: 21 May 2025 15:03
-> To: Shradha Todi <shradha.t@samsung.com>
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.or;
-> linux-kernel@vger.kernel.org; linux-phy@lists.infradead.org; manivannan.sadhasivam@linaro.org; lpieralisi@kernel.org;
-> kw@linux.com; robh@kernel.org; bhelgaas@google.com; jingoohan1@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
-> alim.akhtar@samsung.com; vkoul@kernel.org; kishon@kernel.org; arnd@arndb.de; m.szyprowski@samsung.com;
-> jh80.chung@samsung.com
-> Subject: Re: [PATCH 07/10] dt-bindings: phy: Add PHY bindings support for FSD SoC
-> 
-> On Mon, May 19, 2025 at 01:01:49AM GMT, Shradha Todi wrote:
-> > Document PHY device tree bindings for Tesla FSD SoCs.
-> >
-> > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> > ---
-> >  .../devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml  | 8
-> > ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> > b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> > index 41df8bb08ff7..3a5bff0fb82d 100644
-> > ---
-> > a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> > +++ b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.ya
-> > +++ ml
-> > @@ -15,10 +15,14 @@ properties:
-> >      const: 0
-> >
-> >    compatible:
-> > -    const: samsung,exynos5433-pcie-phy
-> > +    oneOf:
-> 
-> Drop, that's just enumm unless you already add here more?
-> 
-> > +      - enum:
-> > +          - samsung,exynos5433-pcie-phy
-> > +          - tesla,fsd-pcie-phy
-> >
-> >    reg:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 2
-> 
-> You need to list the items and constrain existing variants. I do not get why exynos5433 gets now two MMIO ranges.
-> 
+For super1, the bitmap bits are next to bitmap superblock.
+BITMAP_SB_SIZE is only used by md-llbitmap, is it better to define it
+in md-llbitmap.c?
 
-Will constraint both variants with if - else
+Regards
+Xiao
 
-> Best regards,
-> Krzysztof
-
+>  /* use these for bitmap->flags and bitmap->sb->state bit-fields */
+>  enum bitmap_state {
+>         BITMAP_STALE       =3D 1,  /* the bitmap file is out of date or h=
+ad -EIO */
+>         BITMAP_WRITE_ERROR =3D 2, /* A write error has occurred */
+> +       BITMAP_FIRST_USE   =3D 3, /* llbitmap is just created */
+> +       BITMAP_CLEAN       =3D 4, /* llbitmap is created with assume_clea=
+n */
+> +       BITMAP_DAEMON_BUSY =3D 5, /* llbitmap daemon is not finished afte=
+r daemon_sleep */
+>         BITMAP_HOSTENDIAN  =3D15,
+>  };
+>
+> --
+> 2.39.2
+>
 
