@@ -1,307 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5453137932;
-	Wed, 28 May 2025 02:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A6914F98
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748398912; cv=none; b=bBm4ZA9DuJJ1T5ChzVKS2y4C1BCSzMTPSVb9aT91+y5dqcN+q/ZxORGMyDHqZufN0gTSf5xYwQj4qDPD63IffPzeWWuIm2S8L3aeTZvya4U6Bn1iOYKhkjISKJ14TN6OioJj8RItil701FNHxXqQR1pcdanuhKMoZlYBc1NrEKo=
+	t=1748399042; cv=none; b=qT6n5hqPTA/8DIVA1/q4AhkWAX2sJLVioDH3riUGdt4ZNMwO8Ebk2qkn+luZeoU0Gaz1TU0k98rEsU/jO80zHJBxT14phw/ucl+9sETKhm2ndnDSQlj7Ud/o5hxg+rMzUQiNkAEHOASotLbVZ+/HYuaOKoBD87b/L34RKtOP8gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748398912; c=relaxed/simple;
-	bh=qb3jRL/0E3NrKIW9DVamyFCMdvGUtKYDx0GQpM67T8c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DiXR1IeEVfsbovmd1u787zcIX0XclNRGOZQCtarLAUDmawdw0mxFoDrEPIupLqDIugQHtgUciUI27HFAmKl85NlbQHiyW0HnoJJQos2DJNscoQQTiqt+VTW5b6Q5H+/JvR3LWvFPV7E2p4MEmuEk2SOp/eSUSmBfsypwHIrle+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M9TdeUvL; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M9TdeUvL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748398909; x=1779934909;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=qb3jRL/0E3NrKIW9DVamyFCMdvGUtKYDx0GQpM67T8c=;
-  b=M9TdeUvL80JuAh0hFZ0cQuLJV5P659BWOYR9O8stYAhX8yYN3CObZppE
-   q9wvwtfWO9GbHqY7JN08uZJ7bE7slBwCBsht0cP9/xmlD921vfgDQQlTB
-   MU18vchZparZ/0z5ub51zxC/7L8dRc506Elt8bbaQLDyPe98lHIzxwkC+
-   JKTSKQ5ggAKmAE0l7QsY4LoQXJExLImDAyPunO3NRXLrjQEnJrsyEhwsm
-   KsJAVkClEDXjabrBIbKWFH5tvxOAyHekDLjRPo56A/7liZEQQCJyOyTXy
-   1i5jQyH/+5AlOPaU2KPGVGNU1HoRuUeyum01J+8m54Ih88AVvvKGH7EyK
-   A==;
-X-CSE-ConnectionGUID: zkHycBu+SoWSDEsoF+wq1g==
-X-CSE-MsgGUID: D54U6OvqRfCkcqo5GB0xkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="60663691"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="60663691"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 19:21:49 -0700
-X-CSE-ConnectionGUID: uZa9ILcfQcamj6NR0ldV8A==
-X-CSE-MsgGUID: PkzsLG17S5GoUTZwnFJeaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="142991895"
-Received: from unknown (HELO vcostago-mobl3) ([10.241.225.218])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 19:21:49 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Dave Jiang
- <dave.jiang@intel.com>, fenghuay@nvidia.com, vkoul@kernel.org
-Cc: dmaengine@vger.kernel.org, colin.i.king@gmail.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] dmaengine: idxd: Fix race condition between WQ
- enable and reset paths
-In-Reply-To: <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
-References: <20250522063329.51156-1-xueshuai@linux.alibaba.com>
- <20250522063329.51156-2-xueshuai@linux.alibaba.com>
- <a03e4f97-2289-4af7-8bfc-ad2d38ec8677@intel.com>
- <b2153756-a57e-4054-bde2-deb8865c9e59@linux.alibaba.com>
- <4cd53b91-bd20-46a1-854c-9bf0950ea496@intel.com>
- <87234fab-081e-4e2e-9ef1-0414b23601ce@linux.alibaba.com>
-Date: Tue, 27 May 2025 19:21:48 -0700
-Message-ID: <874ix5bhkz.fsf@intel.com>
+	s=arc-20240116; t=1748399042; c=relaxed/simple;
+	bh=i9+uLrA29n1Y3Db0nkdiYujc5Plr7p/jODTJeXT5qos=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BhkFMwmH3K2VQrZHvrRKSEjmnnDATcdhv8ankfEnhNpMkQPctrqIyIevDiF2OrU+dTRTqzIQU3GP6/VqIJXZyQmPKh5Q11Csah30Janegsx6Z1bZgLAlMtYx+AfuF25DP2AXO4I40afNOcY5D+UzrllN+N/NRh+yPF3OuwEM6T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-a6-683673baa881
+Message-ID: <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
+Date: Wed, 28 May 2025 11:23:53 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rakie Kim
+ <rakie.kim@sk.com>, Harry Yoo <harry.yoo@oracle.com>,
+ dan.carpenter@linaro.org
+Subject: Re: [PATCH v3 2/3] mm,memory_hotplug: Implement numa node notifier
+To: Gregory Price <gourry@gourry.net>, Oscar Salvador <osalvador@suse.de>
+References: <20250502083624.49849-1-osalvador@suse.de>
+ <20250502083624.49849-3-osalvador@suse.de>
+ <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsXC9ZZnoe6uYrMMg0mHuS0m9hhYzFm/hs3i
+	w7xWdouv638xW/y8e5zd4v6yZywWqxZeY7O4vGsOm8W9Nf9ZLc5MK7KY3djH6MDtsXPWXXaP
+	7rbL7B4tR96yemz6NInd4861PWweJ2b8ZvH4+PQWi8f7fVfZPM4sOMLusfl0tcfnTXIB3FFc
+	NimpOZllqUX6dglcGW3fTzEXPJKs+DBxPWMDY7NIFyMnh4SAiUTH5enMMPa75uksIDavgKXE
+	p3svmEBsFgFViSuHV7NBxAUlTs58AlYjKiAvcf/WDPYuRi4OZoHfTBK/+l+wgySEBbwltjT+
+	ZQWxRQQ8JTY9OscEUiQk0M8o8XtWI1iCWUBEYnZnG9hmNgE1iSsvJ4Ft4xQwk/iwYBcLRI2Z
+	RNfWLkYIW15i+9s5zCCDJAT62SX+Xd3LCnG2pMTBFTdYJjAKzkJy4SwkO2YhmTULyawFjCyr
+	GIUy88pyEzNzTPQyKvMyK/SS83M3MQIjblntn+gdjJ8uBB9iFOBgVOLh9dhgmiHEmlhWXJl7
+	iFGCg1lJhLfJ3ixDiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwT
+	B6dUAyNP+r+XEedNOx1mTMuxd7l64HGUnwSfP8u26Il6sf+33l3hcPSO0N0nHQemq/w7ezb9
+	Vb7mR5Hl182ConSdcxSZZtmkPpvUuiVjcnS0lXCPw/zttSk/NobpXW8ofC/NWK34ySk7OpJX
+	+fCMlZfd3nyoZpTSk9BsMHHZVC4cekThU2L9Efb1pUosxRmJhlrMRcWJAKYMQZG0AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsXCNUNLT3dnsVmGwZwJ1hYTewws5qxfw2bx
+	YV4ru8XX9b+YLX7ePc5ucX/ZMxaLVQuvsVkcnnuS1eLyrjlsFvfW/Ge1ODOtyOLQteesFrMb
+	+xgdeD12zrrL7tHddpndo+XIW1aPTZ8msXvcubaHzePEjN8sHh+f3mLxeL/vKpvHt9seHotf
+	fGDyOLPgCLvH5tPVHp83yQXwRnHZpKTmZJalFunbJXBltH0/xVzwSLLiw8T1jA2MzSJdjJwc
+	EgImEu+ap7OA2LwClhKf7r1gArFZBFQlrhxezQYRF5Q4OfMJWI2ogLzE/Vsz2LsYuTiYBX4z
+	Sfzqf8EOkhAW8JbY0viXFcQWEfCU2PToHBNIkZBAP6PE71mNYAlmARGJ2Z1tzCA2m4CaxJWX
+	k8C2cQqYSXxYsIsFosZMomtrFyOELS+x/e0c5gmMfLOQHDILyahZSFpmIWlZwMiyilEkM68s
+	NzEzx1SvODujMi+zQi85P3cTIzCiltX+mbiD8ctl90OMAhyMSjy8HhtMM4RYE8uKK3MPMUpw
+	MCuJ8DbZm2UI8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1
+	MAZOa8yYb7Y5SNP8bfiR+P/T4ziFpj5i6dgpnXKaYc/e/vkucyJ+bJ4hKc63X33S64gXO6LD
+	bi4LqZRQSkz5Fdnf5tF72tFkuoiTkbHUPbZDE/UFY+quCZlU+thfFJ1+UPx+rfBF4eLjU5il
+	a/lMtionrRNauWT+pB0fP2ac1nq1i61zyzMjZSWW4oxEQy3mouJEACup9sSkAgAA
+X-CFilter-Loop: Reflected
 
-Shuai Xue <xueshuai@linux.alibaba.com> writes:
+Hi Gregory and Oscar,
 
-> =E5=9C=A8 2025/5/23 22:54, Dave Jiang =E5=86=99=E9=81=93:
->>=20
->>=20
->> On 5/22/25 10:20 PM, Shuai Xue wrote:
->>>
->>>
->>> =E5=9C=A8 2025/5/22 22:55, Dave Jiang =E5=86=99=E9=81=93:
->>>>
->>>>
->>>> On 5/21/25 11:33 PM, Shuai Xue wrote:
->>>>> A device reset command disables all WQs in hardware. If issued while =
-a WQ
->>>>> is being enabled, it can cause a mismatch between the software and ha=
-rdware
->>>>> states.
->>>>>
->>>>> When a hardware error occurs, the IDXD driver calls idxd_device_reset=
-() to
->>>>> send a reset command and clear the state (wq->state) of all WQs. It t=
-hen
->>>>> uses wq_enable_map (a bitmask tracking enabled WQs) to re-enable them=
- and
->>>>> ensure consistency between the software and hardware states.
->>>>>
->>>>> However, a race condition exists between the WQ enable path and the
->>>>> reset/recovery path. For example:
->>>>>
->>>>> A: WQ enable path=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 B: Reset and reco=
-very path
->>>>> ------------------=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ------------------------
->>>>> a1. issue IDXD_CMD_ENABLE_WQ
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b1. i=
-ssue IDXD_CMD_RESET_DEVICE
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b2. c=
-lear wq->state
->>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b3. c=
-heck wq_enable_map bit, not set
->>>>> a2. set wq->state =3D IDXD_WQ_ENABLED
->>>>> a3. set wq_enable_map
->>>>>
->>>>> In this case, b1 issues a reset command that disables all WQs in hard=
-ware.
->>>>> Since b3 checks wq_enable_map before a2, it doesn't re-enable the WQ,
->>>>> leading to an inconsistency between wq->state (software) and the actu=
-al
->>>>> hardware state (IDXD_WQ_DISABLED).
->>>>
->>>>
->>>> Would it lessen the complication to just have wq enable path grab the =
-device lock before proceeding?
->>>>
->>>> DJ
->>>
->>> Yep, how about add a spin lock to enable wq and reset device path.
->>>
->>> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->>> index 38633ec5b60e..c0dc904b2a94 100644
->>> --- a/drivers/dma/idxd/device.c
->>> +++ b/drivers/dma/idxd/device.c
->>> @@ -203,6 +203,29 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>>  =C2=A0}
->>>  =C2=A0EXPORT_SYMBOL_GPL(idxd_wq_enable);
->>>=20=20=20
->>> +/*
->>> + * This function enables a WQ in hareware and updates the driver maint=
-ained
->>> + * wq->state to IDXD_WQ_ENABLED. It should be called with the dev_lock=
- held
->>> + * to prevent race conditions with IDXD_CMD_RESET_DEVICE, which could
->>> + * otherwise disable the WQ without the driver's state being properly
->>> + * updated.
->>> + *
->>> + * For IDXD_CMD_DISABLE_DEVICE, this function is safe because it is on=
-ly
->>> + * called after the WQ has been explicitly disabled, so no concurrency
->>> + * issues arise.
->>> + */
->>> +int idxd_wq_enable_locked(struct idxd_wq *wq)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct idxd_device *idxd =3D wq->=
-idxd;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&idxd->dev_lock);
->>=20
->> Let's start using the new cleanup macro going forward:
->> guard(spinlock)(&idxd->dev_lock);
->>=20
->> On a side note, there's been a cleanup on my mind WRT this driver's lock=
-ing. I think we can replace idxd->dev_lock with idxd_confdev(idxd) device l=
-ock. You can end up just do:
->> guard(device)(idxd_confdev(idxd));
->
-> Then we need to replace the lock from spinlock to mutex lock?
+On 5/3/2025 12:28 AM, Gregory Price wrote:
+> On Fri, May 02, 2025 at 10:36:23AM +0200, Oscar Salvador wrote:
+>> There are at least six consumers of hotplug_memory_notifier that what they
+>> really are interested in is whether any numa node changed its state, e.g: going
+>> from being memory aware to becoming memoryless and vice versa.
+>>
+>> Implement a specific notifier for numa nodes when their state gets changed,
+>> and have those consumers that only care about numa node state changes use it.
+>>
+>> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+>> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>   
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index f43951668c41..b3ad63fb3a2b 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -3591,20 +3591,20 @@ static int wi_node_notifier(struct notifier_block *nb,
+>>   			       unsigned long action, void *data)
+>>   {
+>>   	int err;
+>> -	struct memory_notify *arg = data;
+>> +	struct node_notify *arg = data;
+>>   	int nid = arg->status_change_nid;
+>>   
+>>   	if (nid < 0)
+>>   		return NOTIFY_OK;
+>>   
+>>   	switch (action) {
+>> -	case MEM_ONLINE:
+>> +	case NODE_BECAME_MEM_AWARE:
+>>   		err = sysfs_wi_node_add(nid);
+>>   		if (err)
+>>   			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
+>>   			       nid, err);
+>>   		break;
+> 
+> May I suggest rolling this patch in with this change:
+> https://lore.kernel.org/linux-mm/aAij2oUCP1zmcoPv@stanley.mountain/
+> 
+> seems to fix the underlying problem, and returning an error now makes
+> sense given the change.
 
-We still need a (spin) lock that we could hold in interrupt contexts.
+The 'err' of sysfs_wi_node_add() wasn't propagated to its caller before
+this change as discussed with David at the following.
+https://lore.kernel.org/198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com
 
->
->>=20
->> And also drop the wq->wq_lock and replace with wq_confdev(wq) device loc=
-k:
->> guard(device)(wq_confdev(wq));
->>=20
->> If you are up for it that is.
->
-> We creates a hierarchy: pdev -> idxd device -> wq device.
-> idxd_confdev(idxd) is the parent of wq_confdev(wq) because:
->
->      (wq_confdev(wq))->parent =3D idxd_confdev(idxd);
->
-> Is it safe to grap lock of idxd_confdev(idxd) under hold
-> lock of wq_confdev(wq)?
->
-> We have mounts of code use spinlock of idxd->dev_lock under
-> hold of wq->wq_lock.
->
+But as Gregory mentioned, we can pass 'err' now with this numa node notifier
+so for this hunk, shouldn't we add the following change on top of this?
 
-I agree with Dave that the locking could be simplified, but I don't
-think that we should hold this series because of that. That
-simplification can be done later.
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 3a7717e09506..3073ebd4e7ee 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -3792,7 +3792,7 @@ static int sysfs_wi_node_add(int nid)
+  static int wi_node_notifier(struct notifier_block *nb,
+                                unsigned long action, void *data)
+  {
+-       int err;
++       int err = 0;
+         struct node_notify *arg = data;
+         int nid = arg->status_change_nid;
 
->>=20
->>=20
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D idxd_wq_enable_locked(wq);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&idxd->dev_lock);
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>> +}
->>> +
->>>  =C2=A0int idxd_wq_disable(struct idxd_wq *wq, bool reset_config)
->>>  =C2=A0{
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct idxd_device *idxd =
-=3D wq->idxd;
->>> @@ -330,7 +353,7 @@ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
->>>=20=20=20
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __idxd_wq_set_pasid_locked(=
-wq, pasid);
->>>=20=20=20
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D idxd_wq_enable(wq);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D idxd_wq_enable_locked(wq);
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc < 0)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return rc;
->>>=20=20=20
->>> @@ -380,7 +403,7 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 iowrite32(wqcfg.bits[WQCFG_=
-PASID_IDX], idxd->reg_base + offset);
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&idxd->dev_lock=
-);
->>>=20=20=20
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D idxd_wq_enable(wq);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D idxd_wq_enable_locked(wq);
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc < 0)
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 return rc;
->>>=20=20=20
->>> @@ -644,7 +667,11 @@ int idxd_device_disable(struct idxd_device *idxd)
->>>=20=20=20
->>>  =C2=A0void idxd_device_reset(struct idxd_device *idxd)
->>>  =C2=A0{
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&idxd->dev_lock);
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idxd_cmd_exec(idxd, IDXD_CM=
-D_RESET_DEVICE, 0, NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock(&idxd->dev_lock);
->>> +
->>>
->>=20
->> I think you just need the wq_enable locked and also in idxd_device_clear=
-_state(), extend the lock to the whole function. Locking the reset function=
- around just the command execute won't protect the wq enable path against t=
-he changing of the software states on the reset side.
->
-> Quite agreed.
->
->>=20
->> DJ
->>=20
->>> (The dev_lock should also apply to idxd_wq_enable(), I did not paste he=
-re)
->>>
->>> Also, I found a new bug that idxd_device_config() is called without
->>> hold idxd->dev_lock.
->>>> idxd_device_config() explictly asserts the hold of idxd->dev_lock.
->>>
->>> +++ b/drivers/dma/idxd/irq.c
->>> @@ -33,12 +33,17 @@ static void idxd_device_reinit(struct work_struct *=
-work)
->>>  =C2=A0{
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct idxd_device *idxd =
-=3D container_of(work, struct idxd_device, work);
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &idx=
-d->pdev->dev;
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int rc, i;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int rc =3D 0, i;
->>>=20=20=20
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 idxd_device_reset(idxd);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D idxd_device_config(idxd);
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc < 0)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_lock(&idxd->dev_lock);
->> I wonder if you should also just lock the idxd_device_reset() and the id=
-xd_device_enable() as well in this case as you don't anything to interfere =
-with the entire reinit path.
->
-> During reset, any operation to enable wq should indeed be avoided,
-> but there isn't a suitable lock currently. idxd->dev_lock is a
-> lightweight lock, only used when updating the device state, and
-> it's used while holding wq->wq_lock. Therefore, holding idxd->dev_lock
-> currently cannot form mutual exclusion with wq->wq_lock.
->
-> And the sub caller of idxd_device_reset(), e.g. idxd_device_clear_state()
-> also spins to hold idxd->dev_lock.
->
-> A hack way it to grab wq_lock of all wqs before before reinit, but
-> this is hardly elegant (:
->
-> Thanks.
-> Have a nice holiday!
->
-> Best regards,
-> Shuai
->
+@@ -3811,7 +3811,7 @@ static int wi_node_notifier(struct notifier_block *nb,
+                 break;
+         }
 
+-       return NOTIFY_OK;
++       return notifier_from_errno(err);
+  }
 
-Cheers,
---=20
-Vinicius
+  static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+
+> 
+> +cc: Honggyu Kim, Dan Carpenter
+
+Thanks for cc-ing me into this thread.
+
+Honggyu
+
+> 
+>> -	case MEM_OFFLINE:
+>> +	case NODE_BECAME_MEMORYLESS:
+>>   		sysfs_wi_node_delete(nid);
+>>   		break;
+>>   	}
+>> @@ -3639,7 +3639,7 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
+>>   		}
+>>   	}
+>>   
+>> -	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
+>> +	hotplug_node_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
+>>   	return 0;
+>>   
+>>   err_cleanup_kobj:
