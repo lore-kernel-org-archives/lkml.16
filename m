@@ -1,72 +1,79 @@
-Received: from mail-oa1-f71.google.com (mail-oa1-f71.google.com [209.85.160.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD4F1E8332
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319063FBB3;
+	Wed, 28 May 2025 19:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748460258; cv=none; b=i22V5Ujyz0MaW1GRX6gtTgHLskiW2ZkHnELkRLPV5Jo/cDRU0I2gOqh1Xh4fhoUparXbv+2iJAqS5Se4Z7kfQ6wtq/16ZmewVYXxXIG/9OAeFj36dK3TAaNjbT3Qjk+FA8gPCvoYWjxtTHuzT4ACZDrHD+5bodO+gG0K52BM+wU=
+	t=1748460425; cv=none; b=cQqyxxL5H6c1yHPmCiTknNpYLh3u1xQHeMUXq9n3FfraSqqQIoobveC67ySaSQNhE02pNpoq4KAyvR8aRpfNPs8aGEH6jHQ43R3kXgMZV1ER7jByvTLGWlUOCECmfPA3ANGgyIpevEf2vfIqPbZIfFJp03X5flT8uVulwMlZsZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748460258; c=relaxed/simple;
-	bh=HGwRJgKqdLb5DEAp4lRsKdZmgQ6lIQ1b7tTWsWR7vrk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CK9eu4EH6O9zVlwVXOyVP014Wq4V3WgqIauoSt0Qct8goQ/eHx0uogcfHpcvOy1f9PcXM7xDchEY37WpVwJ00cxpFl953d77/0p/rlUil/Cm+oFxcuz1iIZrc2NujT9CDtTowH2k7yaDgQc327+JctSKKl/Eawc+opRX1z2Qlkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.160.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oa1-f71.google.com with SMTP id 586e51a60fabf-2da80e525e3so208847fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:24:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748460255; x=1749065055;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SBR/tTOEDsXHmga/+xUZPS+/ZfS7zuFk7zr0XZn6BI=;
-        b=FLVl+EtzXhxm7FKYhyxUyByot9oMKUTImr4Oo0IM46Bf7eIcxp8vZJ2xZCFUYLEJXu
-         BcL9lM3mJiT0nKyL8pZC7nhYmxGPBDeph0KBrh6AWLA5hY1MdZCsNbi+3Nr62KDI6SxA
-         XU762OMM8bQ/KJ+VYWjJyy1fvYoTNnbnxm9SvTnLCPKOSM2wDKFOt5UUAPSSXKdJCXmt
-         YMHJGESLOkUrDM1WOBFBeWS6/wv7RarMhjFF2oYibimgbSJ3OuwPM5qaIlsHM8XKpeCB
-         wqJ68uXpD31MZZodtTtNsT12UznITfU+lbZQJtkCc6Slrlhkr2wrYHoURWxvGr8htqIp
-         SJpw==
-X-Gm-Message-State: AOJu0YwQwcF9OTeDUmTBLyIK/A02Ff36dNehXVwnDXU+771ghvhRQ9tJ
-	2qqDSyPxk7wn+P0X0CKOJdifOTo8/vCrtkDdBSVWVNYJW452p2lc9tR7ng6Cg9vsOO/a39+48cK
-	Guv2ZkLnck0VCjpCNlidhYaIa3CoseVYzkg4FHGusah3APKhSFmqNCLUwjnA=
-X-Google-Smtp-Source: AGHT+IEYltUmKTpC/O1xianUc4byK2XFNkBRStYfa5Btyne9hfDU3P1YQjyyd+ALQ1TAhB2VRO0cyVfpFS4tuZRm1R6ScnLnMW8B
+	s=arc-20240116; t=1748460425; c=relaxed/simple;
+	bh=wjBgevzLWDH4Az7GHSi9rokWMMXObh6pkdPLmStENtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r6kj6BVkeGuWWmA+5IR0ZYhDMp4i8d/wZUA+8MWS1IRcqzTO/YTktMoB/tXb5mPNwJNly0YSihobOPUjN/oBIpN6L+uzi6VQxT33s2WjnIyqe+tvu/5CD/k3xakxO+AgV/47tg0+68ns2lN1jCEXTD0XBEFGLb+YqKJK34/cgko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=itXftLqj; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="itXftLqj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=CoouUmz+XC3EQlrGmRNSU994C1trZiX7VGKkB+/ruC0=; b=itXftLqjzzGvQRqc8R+esdPMgF
+	cTXsVm4EHLsn4IzKEgvTjlaUcQHfQrn+M9yivjSvqAhrZ2R01Uk26xcdM9074aSbwIErU4IAu7sDY
+	YjSvg215Cxg2KAeWJpWXFsTwXcMs4vNaGAfgILrh1/nfzNJsVf/MLkKlclRzD6ikHSSI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uKMQN-00ECio-7r; Wed, 28 May 2025 21:26:51 +0200
+Date: Wed, 28 May 2025 21:26:51 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org,
+	netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+Message-ID: <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch>
+References: <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
+ <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch>
+ <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
+ <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
+ <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
+ <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
+ <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
+ <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
+ <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk>
+ <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4192:b0:864:a228:92b4 with SMTP id
- ca18e2360f4ac-86cbb80ad39mr1755717339f.7.1748460245042; Wed, 28 May 2025
- 12:24:05 -0700 (PDT)
-Date: Wed, 28 May 2025 12:24:05 -0700
-In-Reply-To: <CABBYNZKyKk8=E7sU-O=ysxYvbF2inEuwV1sA20vuuM-yq360aQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683762d5.a70a0220.1765ec.0175.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- mgmt_remove_adv_monitor_complete (3)
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
 
-Hello,
+> I think a lot of ethernet drivers use phy_find_first() for phy scanning
+> as well so it's not limited to just stmmac AFAIU.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+You need to differentiate by time. It has become a lot less used in
+the last decade. DT describes the PHY, so there is no need to hunt
+around for it. The only real use case now a days is USB dongles, which
+don't have DT, and maybe PCIe devices without ACPI support.
 
-Reported-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
-Tested-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+I suggest you give up pushing this. You have two Maintainers saying no
+to this, so it is very unlikely you are going to succeed.
 
-Tested on:
-
-commit:         b08494a8 Merge tag 'drm-next-2025-05-28' of https://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1207f170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=67c5e0d63b5e6251
-dashboard link: https://syzkaller.appspot.com/bug?extid=feb0dc579bbe30a13190
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15ec6bf4580000
-
-Note: testing is done by a robot and is best-effort only.
+   Andrew
