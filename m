@@ -1,61 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BF62459EA;
-	Wed, 28 May 2025 12:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4CC3398A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436593; cv=none; b=rGa+pn5uIMTmqYYWZnf2GaZ8mm/80uuuss/Wcz+MfWd/6V6BszEciOBVvSf0ufcU0Al+BoWQJWJkP9krhbu/xELFcbBpKPnwP1yNJoPgYRfvFOdqhbj/S1ruCPJryUpgctfR3zdSH7sY/qTnE7gEluM4QdQjwCHMB4+AYLVOFDk=
+	t=1748436663; cv=none; b=l6aXy/OcscEc4SDHml7XdtwPUskNypVg09Fef94QJVCIfBs/9cfR/w7nKclRnLCxNM5kuBS0vnnd+3j95vhm7xu7yT2W5qIQuvvLd30gk5pYzVtWTg2GupnWHgmFGEuyLqu1zP7KQ5ZL8MpLyVYtm03douICinneY82nuaNivDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436593; c=relaxed/simple;
-	bh=zG58Qfis3MVaxADVC9NvFFiFdyxhDqPETkMDlqepafI=;
+	s=arc-20240116; t=1748436663; c=relaxed/simple;
+	bh=QQICW+CypoFjK5BqJ6heT+1m+k+pLORcZ4vDWH1R5VQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ggttLufYTKLzOusnTHB032xOYFNSCE2Qix5JfprofIshqiH7+Ehq9Wk/NzNNjNM5DqYsdFIUDH/u7CUi1YOjDUIuLap1qe6oYZ8OZEu9WI4TS3Gaknv8jUsOZ4+BtjZ2Aq/aFsPHCq4HhHbuPIaHdCmlaKGJl1sbjjYWnl1YtAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3fMib8k; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rryqr7ZnQGN/wwZr37wYYbZ0WXf/n6fsqrpAZlDOnlJyVYrTenzbLqRxP43XUanZXQJh109oV8tpSF2A2JPsHJgKDD2s3rJNoah26gWLnw5gv7DkuL5lojZs7CWz4PPK0Hou/5pyu+1wEysi7YXLVZuwFBBcAkdYqahmhT0goC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C/Kny2Ua; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3fMib8k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB56BC4CEE7;
-	Wed, 28 May 2025 12:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748436593;
-	bh=zG58Qfis3MVaxADVC9NvFFiFdyxhDqPETkMDlqepafI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3fMib8k5j19SJ1VaOYDiWEju48wR5yrDqs+ASX1wA5cAhU+g7gtiWzPvrKPTASBW
-	 VUDKcfu/+Hxm4JmubjLeHeP8RiaPwr97FTx+PkjWDr/QplXqWnt1Aeom1/rf0a1dWz
-	 HG1c9RPX9igTHNqkngoSn9mdarEeWFVQvAxg23jGClYeFQOhjgw/M2m9TniTSQ+k56
-	 TDDTpm14LhI7yC2M3si2aOzXuErK5HVxt0CNHJNata+AbCrlSIfVmwKM+PKtofsBP0
-	 zu6DFtlyfB0mOpXDxhCEIAFmhupX767JhILffKGyMESkRVOr0jbIyjaoREYcgYt6VW
-	 CNNKpElrG6NGQ==
-Date: Wed, 28 May 2025 09:49:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/6] perf test demangle-java: Don't segv if demangling
- fails
-Message-ID: <aDcGbmJXkLL4TVzC@x1>
-References: <20250527180703.129336-1-irogers@google.com>
- <20250527180703.129336-3-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/Kny2Ua"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748436661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VWR+5p6ptUR6spJK+eA+18Unm4RrTl1BPCG1yFI4dP4=;
+	b=C/Kny2Uaw1MQvIC9jWoc2DFg11zc1C6yZjp5tEn7V+49KiGfwL4G2bcjJGlJV5ttFhNJO3
+	OO/n0iRXFUIJl2LkG0Sp8scDtG3CJoFIDZeURQY2WmXqmbidD221F4T/MjwPvl/InQrYje
+	ev+axCfar1FaK0/AIxq2ZnjoJzfiHXE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-515-hJqwx2FPPEOAZybcE2atKQ-1; Wed, 28 May 2025 08:50:59 -0400
+X-MC-Unique: hJqwx2FPPEOAZybcE2atKQ-1
+X-Mimecast-MFC-AGG-ID: hJqwx2FPPEOAZybcE2atKQ_1748436658
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a35ec8845cso2081568f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:50:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748436658; x=1749041458;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VWR+5p6ptUR6spJK+eA+18Unm4RrTl1BPCG1yFI4dP4=;
+        b=DrQyrZIP9nZQkYH/TJXfUPYiViImIQ4ingmzo00afE/IOzoF9cosYbp9jA7n2bEt5k
+         t7zzPKM3NixEgMhJkSz0SWA07RDA6b9X21yrPIp6w9voX3EwYllfOR85joFOdLlD3Qe3
+         9mWSdhTMDYwZlLBev47KUX+s03o1aSIqVey50HBy4+LEvV6tfwntd2vIDUw8RXg5XMks
+         z8zfD2hN0AKsdaaEr6omlht+mkpagqLBVuVp+rM1uyWZx2jeX/EDPkmuLM96aNPFAy1r
+         SEGZRLHn+pPJPL+QgzlY+oH4bdB7qGSEJxVEewmWkHzMxkz96aVEM0XANOhK/qyLTUTa
+         U6BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1+Z96oABtnXhtRGeIoz1e1HEMIBnstyMt6xXvkcGkO4YfAthGS0Su0vplhGqywWO0yqkenXnPnPfGk1Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5e/PV1sUqFJ+6CC+VzAZWRdMXJ+LJN21WmQscKHWOdlUi9mIf
+	ZR+h+njUvcEZhQZDmFDkI64wnFF5Lyxi1BXyUjAXTBGBHEtHLcN+R4h3w7/HXj5IhMfJSbVAxjc
+	/Xu62o0ErYZoXWkJhMsoTbZiS1nWQBnaxj06f/Bxqvr2jQNrVmRafFuZ9pfK0LHykTFA+fDxRug
+	==
+X-Gm-Gg: ASbGncteWyHCfwhE6uMzLtmGDQZK3LGhzHxSDQzsM8A/R1PUh7skHW3/mjfrjXDvuPk
+	xgOJWnLWmqqEp52eivL45WnXex20nJWNraWWUNeLz+GPloCT2/nAqnxuj8q/tquVJIdB/tDA+l0
+	jkYPZmx2Ej9lIo2APAMl0Q8pkbO7GeOs8A3BT5hh93irLytPODZBXW290Eq2RLtl3OOQ93AVqx5
+	HgI1k7xto4BaPsk+sD9HDs8uiHDrJFGa+zsHAAHcHoZsd71CQT5PS5hSk5mJEbKhc2yGMi3XMJm
+	ofZPxg==
+X-Received: by 2002:a05:6000:2dc4:b0:3a4:dfc2:2a3e with SMTP id ffacd0b85a97d-3a4e957b210mr1631504f8f.39.1748436658022;
+        Wed, 28 May 2025 05:50:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGDT3PcePhhoStWwOcSwIXapMw5WkiamBsXKooLqximtwBRdLGBqfc9aCDPZLpSSxOK/eQEQ==
+X-Received: by 2002:a05:6000:2dc4:b0:3a4:dfc2:2a3e with SMTP id ffacd0b85a97d-3a4e957b210mr1631488f8f.39.1748436657639;
+        Wed, 28 May 2025 05:50:57 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4500e1dd6c8sm20848545e9.37.2025.05.28.05.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 05:50:56 -0700 (PDT)
+Date: Wed, 28 May 2025 08:50:54 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Jason Wang <jasowang@redhat.com>
+Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 00/19] virtio_ring in order support
+Message-ID: <20250528084904-mutt-send-email-mst@kernel.org>
+References: <20250528064234.12228-1-jasowang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,36 +80,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527180703.129336-3-irogers@google.com>
+In-Reply-To: <20250528064234.12228-1-jasowang@redhat.com>
 
-On Tue, May 27, 2025 at 11:06:59AM -0700, Ian Rogers wrote:
-> The buffer returned by dso__demangle_sym may be NULL, don't segv in
-> strcmp if this happens. Currently this happens for NO_LIBELF=1 builds.
+On Wed, May 28, 2025 at 02:42:15PM +0800, Jason Wang wrote:
+> Hello all:
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/demangle-java-test.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> This sereis tries to implement the VIRTIO_F_IN_ORDER to
+> virtio_ring. This is done by introducing virtqueue ops so we can
+> implement separate helpers for different virtqueue layout/features
+> then the in-order were implemented on top.
+> 
+> Tests shows 3%-5% imporvment with packed virtqueue PPS with KVM guest
+> testpmd on the host.
 
-Thanks, applied to perf-tools-next,
+ok this looks quite clean. We are in the merge window so not merging new
+intrusive stuff, but after rc2 or so pls ping me I will put it in next.
 
-- Arnaldo
- 
-> diff --git a/tools/perf/tests/demangle-java-test.c b/tools/perf/tests/demangle-java-test.c
-> index ebaf60cdfa99..0fb3e5a4a0ed 100644
-> --- a/tools/perf/tests/demangle-java-test.c
-> +++ b/tools/perf/tests/demangle-java-test.c
-> @@ -30,6 +30,11 @@ static int test__demangle_java(struct test_suite *test __maybe_unused, int subte
->  
->  	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
->  		buf = dso__demangle_sym(/*dso=*/NULL, /*kmodule=*/0, test_cases[i].mangled);
-> +		if (!buf) {
-> +			pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n", test_cases[i].mangled,
-> +				 test_cases[i].demangled);
-> +			continue;
-> +		}
->  		if (strcmp(buf, test_cases[i].demangled)) {
->  			pr_debug("FAILED: %s: %s != %s\n", test_cases[i].mangled,
->  				 buf, test_cases[i].demangled);
+> Changes since V1:
+> 
+> - use const global array of function pointers to avoid indirect
+>   branches to eliminate retpoline when mitigation is enabled
+> - fix used length calculation when processing used ids in a batch
+> - fix sparse warnings
+> 
+> Please review.
+> 
+> Thanks
+> 
+> Jason Wang (19):
+>   virtio_ring: rename virtqueue_reinit_xxx to virtqueue_reset_xxx()
+>   virtio_ring: switch to use vring_virtqueue in virtqueue_poll variants
+>   virtio_ring: unify logic of virtqueue_poll() and more_used()
+>   virtio_ring: switch to use vring_virtqueue for virtqueue resize
+>     variants
+>   virtio_ring: switch to use vring_virtqueue for virtqueue_kick_prepare
+>     variants
+>   virtio_ring: switch to use vring_virtqueue for virtqueue_add variants
+>   virtio: switch to use vring_virtqueue for virtqueue_add variants
+>   virtio_ring: switch to use vring_virtqueue for enable_cb_prepare
+>     variants
+>   virtio_ring: use vring_virtqueue for enable_cb_delayed variants
+>   virtio_ring: switch to use vring_virtqueue for disable_cb variants
+>   virtio_ring: switch to use vring_virtqueue for detach_unused_buf
+>     variants
+>   virtio_ring: use u16 for last_used_idx in virtqueue_poll_split()
+>   virtio_ring: introduce virtqueue ops
+>   virtio_ring: determine descriptor flags at one time
+>   virtio_ring: factor out core logic of buffer detaching
+>   virtio_ring: factor out core logic for updating last_used_idx
+>   virtio_ring: factor out split indirect detaching logic
+>   virtio_ring: factor out split detaching logic
+>   virtio_ring: add in order support
+> 
+>  drivers/virtio/virtio_ring.c | 896 ++++++++++++++++++++++++++---------
+>  1 file changed, 684 insertions(+), 212 deletions(-)
+> 
 > -- 
-> 2.49.0.1204.g71687c7c1d-goog
+> 2.31.1
+
