@@ -1,97 +1,90 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D494D78F3B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6FC79FE;
+	Wed, 28 May 2025 03:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748402240; cv=none; b=fIVTiCrw0W63EOkjsn+58Wgti0Gol/GH6ORGppwby23qFvbppzdUU54pb7C7NgfwSILQAKEiZR0BUvCUTsSm/MsPkfUupG+g05WXENObKnf1Lit6ZcQs0OvNlrUQXZcXOzOYK2vF8lNoOzWTC68XhElUPRfEFmyqrFc3yMSV8AQ=
+	t=1748402277; cv=none; b=WC5T6xehQqCmVexw4pR7P1NgeiJOs4JjM89jhJR7Y3BAcm8NFR6jI8/eYue0ssyRpZ6OLKmgvNcLN0ZUfhUpbATXNA0g3EKVq2ghofn2tFkmUAiM9ex6K0SwlRVG7eVxaBcLWjzKJywrBKTIw1jWESh0t3g89NGeSdCmFvy0pRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748402240; c=relaxed/simple;
-	bh=LdFAyeQKVhf9an3e5Ej7+PQMaVUuxTdXfDQvB2CxLPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NeGN6QaLJmje6nSZHiVSNiAcjMqlS//AWiAiqFdHigSYZ85NwFrSgMTypAIRYgVNmaliXhxgnLsncEBgGCIoIj3czpyp9/xgGI4c8snFHNsXcRJF3uTmYfu9fcrIPU6fmn6EbaZ8VJL6oSpu63prFbivCASVyQeBOGrT8fJnfL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AUtdmK2x; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUtdmK2x"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2349068ebc7so134625ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:17:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748402238; x=1749007038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LdFAyeQKVhf9an3e5Ej7+PQMaVUuxTdXfDQvB2CxLPQ=;
-        b=AUtdmK2xipN+sZQV7Qo76/sOfDnoWKgEgP2v40hWsmGmrGxbr0cc9D7EiPHGOS0cXm
-         Wz7EMFD9xV4B3CEUWPGwsIjks/X3EGkJcQql3y/mdnouEwwiaEh8hbthGBlwH2hF6jCP
-         75Xr/+7z67Ad+8aw1BqRB7LxgGX7bcnc399qs4I09LOw+fhcU42bGj2mcluoqmaSv6wD
-         +CsOAqPniJcsIMR2WPzdtjvu7sk43omgmglDfG3e/cDRk0YGqqAIGIAWRjNNbmhmNe5c
-         P2aJH7/rRCZvSVi61dAQYUsgqd1vtEcPXsWdwMFTir3OclYupZU2USsXwEdmlPKCTjPR
-         w2YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748402238; x=1749007038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LdFAyeQKVhf9an3e5Ej7+PQMaVUuxTdXfDQvB2CxLPQ=;
-        b=V392gpSPc3ctU3QIHFbDzFIBBdhjTahUAS1PTT92aBSXPt9i+2F5GoS6wxBuaxVpq1
-         rMY9UpASHGXQP+5O7SPHTkmFaYS7BXP5sDyp0m2Ju4KAcpdDcuACPtkMKKykTqw7oT88
-         1DRNr+wPQczH+HIap3UREGlzqpF4yv9koG9FN8AwSEYMDinH6w59eU81sNLZje+6Ntw/
-         G7TGoN3wvvskbzL9mxdq2Wn3Vram7wh39lK4zBFMC9Uwsnz4rwxbVhw8bmj14wQ1c6bx
-         HG/lP61J2YMBYxBzlIR8Wx5hT1N8pEZFxBE/jOSIQXvgJOQGfHY3M/qbJbCSiBXbp9/N
-         ojfg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6jWKMWaLd0dziRs9+Fd/Kv2QoPdtgdEcsXBNQS0PdYRYID2iE7ClvHKSQyoa+cPbdghRlBiZgXx/bhDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLnIEjsjNO/pYtmda8ziBgmc4zYeK8MBTcq7E3XTF4G+X+R2vS
-	pVcCb1R6VgTiTuv6Yi2S6o5jCEA8GIHaz+5qaSwWkej/Sy0A25hjSOik8H5BOU/5C9NUIuzbMxb
-	2pxyN+Kd8pJ35DLv0Fitv28cOSFzyO+XDpozJVPMR
-X-Gm-Gg: ASbGncsNTQ8jj8StN5TlS8n5Z80rWWxgERYUY/4+lu/b7ZA7f9bul2JtHUyelG55tsT
-	6PdLJSxSv7xwkDo7l26JMXpjPkmutnLLb0HUiLL3J9Mk8QGJakxaMRygEpJx9Scng1U1HT/Stuk
-	5gn6GEQAGNbk+KGePa1o/A37sOaSv6NA+vng3rI+nEoOd+m/pk/qgaAcY=
-X-Google-Smtp-Source: AGHT+IEnczAUe8aSvzmzngQXQGk0N5lF0CakBmamAAAHOTmJuCP9XYZrHm/qfHgB3Xi0bVS+4KeIoprZZQQkQB9JjsY=
-X-Received: by 2002:a17:902:ea0b:b0:234:bcd0:3d6f with SMTP id
- d9443c01a7336-234cbaf560cmr1132885ad.1.1748402237697; Tue, 27 May 2025
- 20:17:17 -0700 (PDT)
+	s=arc-20240116; t=1748402277; c=relaxed/simple;
+	bh=mzfW20sFFR6D/60o4wNJyAxellP62F05rai/LV6m27o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IiOcFioFU5pMbhwbrjpmsklIe1OlxVUaDkhzLnJ2y5v8w75r7U4KRd7mBreSwt726zqBYa3hrvTF3XAoUphERlmpdVUH1a7PdLjuux/V71EdeD1D6qIbWAVNvhhrKrE2zOZJFT77U23aVR/1Qogj6n9COmM4Km4NEolEETP+PBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.204.34.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: zesmtpsz6t1748402170t6248cb72
+X-QQ-Originating-IP: rpHufvYFYUJ0bTcomXzGOi8T7Xf90nx7Je9QKh+gAm8=
+Received: from localhost.localdomain ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 28 May 2025 11:16:08 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 13204632789230215609
+From: chenxiaosong@chenxiaosong.com
+To: sfrench@samba.org,
+	pc@manguebit.com,
+	ronniesahlberg@gmail.com,
+	sprasad@microsoft.com,
+	tom@talpey.com,
+	bharathsm@microsoft.com
+Cc: linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ChenXiaoSong <chenxiaosong@kylinos.cn>
+Subject: [PATCH] smb/client: use sock_create_kern() in generic_ip_connect()
+Date: Wed, 28 May 2025 11:15:31 +0800
+Message-Id: <20250528031531.171356-1-chenxiaosong@chenxiaosong.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-6-byungchul@sk.com>
-In-Reply-To: <20250528022911.73453-6-byungchul@sk.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 27 May 2025 20:17:04 -0700
-X-Gm-Features: AX0GCFs29uDSGIhRSaJWQiNCOlbuHKz4cCZioyPrXBBoYFAI3Cxm46scEROF8Bo
-Message-ID: <CAHS8izOVbJZfS0r+A1Pi_ZxmrJBfUBZR4fApbd=GWj0AFQ8vcw@mail.gmail.com>
-Subject: Re: [PATCH v2 05/16] page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
-To: Byungchul Park <byungchul@sk.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
-	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
-	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: MFdGPHhuqhNoOWNRcEyLWJrL0qUXQ3qT5D5wx9m9puYNGgcNX7WDrIde
+	tGaNwEqrTnQ0H8TwUPhIdP84AE6PDxCup4Qn+9812XVGpHJUyPhvAAoe1SDCzxNlpXmemXh
+	CdVj6a4ye8i4w4+l7Mr9VTv3ErR+LC5Vl7QhoaN0jRFdAC0rRtoxqtb3cTspGTi8ddivmGz
+	TkTBVzIlJznwcOItOwaW1QGcj34EsiKxwMh0a3I3N3BV6lw6d/JxzQE8kz/WU1gOFccFQFk
+	CVN+E8wAMb1WDXMHL5X02URyweeWvXjZhW0jw/fDT6ZaX7T9N/uwYtVdt+JHjE61m1tjFse
+	rwYQaWkvKbZ8hFzGw/Xd7NgWnvI8POe+wO6s3drekwdQ9pdlMT2Zjmm0Ud5CjBFPCtcyCmV
+	asMcbfrd9XIPLZaWM9oHn2Mnuz223oddrbnPJ46KbXBnKeSUua7sZGGqSc0BDdxe9TnKbrt
+	8UckOOfnAxl+IV2dkS388/IQPKI3kx4oMoOqG2YRjNK4MCJivA+hYmasLJqDlPXmVY+4m6c
+	ROO1M0IIsLA8PCCvrBe+iJQSl5k0+yDJERj5etgBUSmITQKiijQXsZ+Woqh4JvN4jPtxZU4
+	UftMYDh913DvsxdcQNo5zbFWT8xM4k+a+rOvjmwvPp7Is7PtZwcpprQ5pRXacmrnEiA0am5
+	FUhBr5A7PSU91Wd5Y9inIZqpSfBlsfPd7k1GsZu4KF1IYgN3l9orJ6svb4Xzj9xItV4+P9Z
+	m7ILVyyBaDZuH3UL/aJBrmRBJAL1NyIdV4x7wesVFK1EY/66DNuG7T+eWCg2lEHMspGekEf
+	N2Toet4ogmlG6LhD1RV1Q7JX8SmLYRjUGQlN5CxarGbUsyrHd/B2fs4p1m7skBl6mYE5Pr+
+	kHws3JYDW3qYrp0Dm3anK+rqQA/R7U6Ha8Z3N5CvQitPMsIS0OP+8CRN1mlnmuEA5heXg+u
+	icMqxmcP9bPcfStimvnX8ST26fe0nux16nNBtXJ5Xlo7ab3a9f7/m/mp2mQrglKm7VPc=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-On Tue, May 27, 2025 at 7:29=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
-rote:
->
-> Use netmem alloc/put APIs instead of page alloc/put APIs in
-> __page_pool_alloc_pages_slow().
->
-> While at it, improved some comments.
->
-> Signed-off-by: Byungchul Park <byungchul@sk.com>
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
+Change __sock_create() to sock_create_kern() for explicitness.
 
---=20
-Thanks,
-Mina
+Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+---
+ fs/smb/client/connect.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+index 6bf04d9a5491..3275f2ff84cb 100644
+--- a/fs/smb/client/connect.c
++++ b/fs/smb/client/connect.c
+@@ -3350,8 +3350,7 @@ generic_ip_connect(struct TCP_Server_Info *server)
+ 		struct net *net = cifs_net_ns(server);
+ 		struct sock *sk;
+ 
+-		rc = __sock_create(net, sfamily, SOCK_STREAM,
+-				   IPPROTO_TCP, &server->ssocket, 1);
++		rc = sock_create_kern(net, sfamily, SOCK_STREAM, IPPROTO_TCP, &server->ssocket);
+ 		if (rc < 0) {
+ 			cifs_server_dbg(VFS, "Error %d creating socket\n", rc);
+ 			return rc;
+-- 
+2.34.1
+
