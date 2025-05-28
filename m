@@ -1,118 +1,210 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BDA1C54A2;
-	Wed, 28 May 2025 11:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A6727876A;
+	Wed, 28 May 2025 11:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748433055; cv=none; b=Zf1SAP2bp/D7CVL9aN/YfpbWobf1cuEorFLBldB92xKtjrV+5kDvoUlOtb1LUZyH99Erb0sBHa87q/JHmlUpHiBpkzfAvxCw3GfGK2PEibG3J3BxR8BcoG7h+U/bL3cSt0XxP+VU3iyr65kWpR2lopVYy1r+ZAQGQLnuXYd6E70=
+	t=1748433419; cv=none; b=CxQ0lWE6izSIRUrHgqF3JbCq7jKANm5HQRcQPnOq2zeXjSwt2E+OEMfLRHbHROlCPyFlDrFYkqdmuMT3Z8nrliwHTe8eO8w+Q50RwtyLirQYg0ul5rPp0wfBJb9ezkK+35QpJJkhGCndngIROBbPNjz0YwIeebCkfmi9FALH8XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748433055; c=relaxed/simple;
-	bh=jnBA2vy6brg7qcYWAqNXi9fDqoOzyQWhlaWks6xrX+o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CcCYM/i2KDZjP4h13CHJ0GrOX3WP0PDQINrMffacxRDq88wlHKJuXjoG0WW4G79VRKJQl1auYFpIiJ1ciZIvNztgTBDdZnX0rEmSTP90DIzyfrBvsOa0JW69cN8FfRgLeKNsd7rl/tXaTpFz8OmJocXoqnl76w14W0zGulagpxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-87ded9c6eb4so516744241.0;
-        Wed, 28 May 2025 04:50:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748433052; x=1749037852;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qi3vD3S+nX/QcexFRov6QeC8OODrBI1qA67zGZMFfDM=;
-        b=NIBZGFP/sr1yTPkhK+qbb+McT9dLvfPyt2QConmHkcrgI5qO9K0DcMuzBxbbS1zhRd
-         7feLo6E8+5CWhfSUjf60jOD0tSuwm1ivbwyTK0E6qOmtU2koA4QNz/0+3IFYIQyMLPpf
-         5a9/m7U/QRpOOJdvAfTGCBfBVJhkS6w2AZ696HhB+DRSetLzqXXVeVW7MyF+ps9gNdLE
-         NBacGCNVEAxM7NDIejRGednrUtxCa9PhDGz9e+/eQeVH/s4JifaGJkeVjuTr5mlnaV5f
-         tjDpLnZmrX91JlDhYOipnchS92y+hxRM0gMhSoBqr0L8WERfpdQKzzO4Pa18ShYNUSdF
-         VrPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Zv6EtTnHgB6Pv0pJ1ghP8uWgXXhPctfe9CUCM//zBvozIdqWsd2uLoMamYD0VVQ3GG1LFIM8wz8TEKwg@vger.kernel.org, AJvYcCVRztj4njCBF1HG+a8qy2RVikol9dPLPPAKOFdP/1olmuBZ6/kx/0F3FbPGTUGX/xyS6jyVBtXWSg7y24WRpJj5mdE=@vger.kernel.org, AJvYcCVW5XSJhVH20sQSXX8CPemKBqZAwFOJHt4jCxpCujTHSHSH9YymFBwie+XI4Xz6B1JW4lY0sDXMKHbY@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ8XFYZPfFxjx4Ext2PE435owhiXIFhWIdTLQ7o83BzxuMZKyB
-	GOgXSTC/BVpUIGKaz4t8a7gTljDH8ojMRxV+Hr7JeBltdE0xMQ4s0p5ONovnrsGE
-X-Gm-Gg: ASbGnctZyeNgJB8HhalDyAH/X5Yo5BBAGeY2TRzrqkfjCc9P7HkOvqC7ew+YqO9H+pK
-	aWdYCgeFqE7Ref6L21E+lsErRwz+oM5uwNIL3ftLZaia73T+iK+B1KZ6r6UyEoMY5BW/6VGFcpZ
-	iD6mKKF7QxNWWH5Hbgl1CnWP3MWSFa5DoAOjbu3qqpTDLx39WxGkCvKd+wXTUZaMUQxBxAK6RwO
-	EAxTxb44eP5womgcrZZFO326RBg6itk4y5UNue8/LPobSU47NoDvMgew2oSoT66QZAImK1rwmGD
-	zktPAv7hHdJqb0T2I6EGLi535VTndtVz6thYIfM5IwVdsA6KbzQUPqpLfIp4wCIqDEutN+6Fy72
-	oJAlUx2TD2Lqn2Q==
-X-Google-Smtp-Source: AGHT+IFTOsiA6XhyKtFAciT0iUMbIRg2b8jyHZ1IEMyPaiKKYUHSkv18sy/tnHwCyz/dHqT76IVrWw==
-X-Received: by 2002:a67:f288:0:b0:4e1:5132:67c9 with SMTP id ada2fe7eead31-4e597961feamr2712050137.0.1748433051758;
-        Wed, 28 May 2025 04:50:51 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e23df8b53sm243338241.33.2025.05.28.04.50.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 04:50:51 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d6fd581f4so468142241.1;
-        Wed, 28 May 2025 04:50:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVV3S/LTEW8bYCzyUwFKZE2wFqVtF4PiTAEn5aq+SrATiL2Vub5FcwuvL/O1ZzKlkQZb2p8YzwkoCSj@vger.kernel.org, AJvYcCVXl7o+1m6p9NdZoJqHjThQgpo4Z9VwcfT0zGqCjkAuNFmkNDPhEnUxBpeikuA/3NOVI1BBYVRR22znfwfv@vger.kernel.org, AJvYcCX/tmRcEhAlQoVgEcJm2Z8A82g6pi1HEfFrcXccxiDdGuOaaUt10SeJUCOg0r+7taTWVPCzEYsczsMB6yQ7sMSIxeQ=@vger.kernel.org
-X-Received: by 2002:a67:f857:0:b0:4e4:3c3a:f163 with SMTP id
- ada2fe7eead31-4e597db44bcmr2629330137.7.1748433051413; Wed, 28 May 2025
- 04:50:51 -0700 (PDT)
+	s=arc-20240116; t=1748433419; c=relaxed/simple;
+	bh=33oeSjTLQKDkwvECcdEQbSGGAT2GJkxeaDlQ5VZ2A34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Aalb54BO1cSDanAVgYrZJoU0ffPNhk8qyLdlqrPBW133JUNMgoF6GHSfwtNx514Mczoc3/P6pyQPlNQFSI01d/EO5r2lEByHBNO+6WFKvr6lZx0JttLEBQvEI/LDddQX/NC9P8PCPkMS4H1w0gdqid/5lGXE9Pg162DN+zoPTNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nT3aTKV1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nT3aTKV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81B76C4CEE7;
+	Wed, 28 May 2025 11:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748433419;
+	bh=33oeSjTLQKDkwvECcdEQbSGGAT2GJkxeaDlQ5VZ2A34=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nT3aTKV1VTgUwWQdvlzDwruiyqFJR3cjI3SmGAGa4lEwwSKo15o1kQamXgBN1YgsB
+	 1zMXRZEsF3A+9UkTB2464tz5uI5dwv9IR5SY8HgDXeceLJJlRXB580qWgylTjpFT/A
+	 ACSuKx6dAF4ivLCBAqOOPc3/tLuYYMeEVPxB4GEkLnqycwyyaN8qU97Jc8KarWWE1s
+	 ej5xPz5x9TbElbCn0mW5LeXrVXc/q6JY923Mf6B1QnX91dYv6MBkeN8QLlZc0pWv/t
+	 LKG+1tEBGKb+HIUPSLLhcnKdMtEet5ktkYpkoX6RGiCSfc/EI4BwUWxTFjtHRyR74A
+	 UWqCKKel/sLIg==
+Message-ID: <969c42d7-0a40-4daf-a074-f2713d0d0412@kernel.org>
+Date: Wed, 28 May 2025 13:56:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519215734.577053-1-thierry.bultel.yh@bp.renesas.com> <20250519215734.577053-4-thierry.bultel.yh@bp.renesas.com>
-In-Reply-To: <20250519215734.577053-4-thierry.bultel.yh@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 28 May 2025 13:50:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVLktxp5EC1P56Y0SYcMOHsnpMeW+joYTEj4_amoQoHHA@mail.gmail.com>
-X-Gm-Features: AX0GCFvh54g40zEsfgecMYJZc5x8Vr4fnqVT6gNM6K_YWYoSqBMvdXzavV5U1gw
-Message-ID: <CAMuHMdVLktxp5EC1P56Y0SYcMOHsnpMeW+joYTEj4_amoQoHHA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: renesas: Add pinctrl for renesas RZ/T2H SoC
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
-	paul.barker.ct@bp.renesas.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] dt-bindings: clock: airoha: Document support for
+ AN7583 clock
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250528004924.19970-1-ansuelsmth@gmail.com>
+ <20250528004924.19970-5-ansuelsmth@gmail.com>
+ <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
+ <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thierry,
+On 28/05/2025 10:54, Christian Marangi wrote:
+> On Wed, May 28, 2025 at 09:30:37AM +0200, Krzysztof Kozlowski wrote:
+>> On 28/05/2025 02:49, Christian Marangi wrote:
+>>>    - if:
+>>>        properties:
+>>>          compatible:
+>>> @@ -75,6 +78,17 @@ allOf:
+>>>          reg:
+>>>            maxItems: 1
+>>>  
+>>> +      required:
+>>> +        - reg
+>>> +
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          const: airoha,an7583-clock
+>>> +    then:
+>>> +      properties:
+>>> +        reg: false
+>>
+>>
+>> No resources here, so this should be part of parent node.
+>>
+> 
+> Ok hope you can help here. This is another case of "MFD" thing.
+> 
+> I was with the idea that it was O.K. to use this with very different
+> devices. (current scenario Clock controller and MDIO controller)
+> 
+> The node structure I had in mind was
+> 
+> 		system-controller@1fa20000 {
+> 			compatible = "airoha,an7583-scu", "syscon", "simple-mfd";
+> 			reg = <0x0 0x1fb00000 0x0 0x970>;
+> 
+> 			scuclk: scuclk {
+> 				compatible = "airoha,an7583-clock";
+> 				#clock-cells = <1>;
+> 				#reset-cells = <1>;
+> 			};
+> 
+> 			mdio {
+> 				compatible = "airoha,an7583-mdio";
+> 				#address-cells = <1>;
+> 				#size-cells = <0>;
+> 
+> 				mdio_0: bus@0 {
+> 					reg = <0>;
+> 					resets = <&scuclk AN7583_MDIO0>;
+> 				};
+> 
+> 				mdio_1: bus@1 {
+> 					reg = <1>;
+> 					resets = <&scuclk AN7583_MDIO1>;
+> 				};
+> 			};
+> 		};
+> 
+> But you want
+> 
+> system-controller@1fa20000 {
+>         compatible = "airoha,an7583-scu", "syscon";
+>         reg = <0x0 0x1fb00000 0x0 0x970>;
+> 
+>         #clock-cells = <1>;
+>         #reset-cells = <1>;
+> 
 
-On Mon, 19 May 2025 at 23:57, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
-> Add pinctrl node for r9a09g077
->
-> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+mdio could be here just to group the bus (it's pretty common I think),
+although not sure if compatible is useful then.
 
-Thanks for your patch!
+>         mdio_0: bus@0 {
+>                 reg = <0>;
+>                 resets = <&scuclk AN7583_MDIO0>;
+>         };
+> 
+>         mdio_1: bus@1 {
+>                 reg = <1>;
+>                 resets = <&scuclk AN7583_MDIO1>;
+>         };
+> };
+> 
+> Again sorry if this question keeps coming around and I can totally
+> understand if you are getting annoyed by this. The reason I always ask
+> this is because it's a total PAIN to implement this with the driver
+> structure due to the old "simple-mfd" model.
 
-> --- a/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r9a09g077.dtsi
-> @@ -101,6 +101,15 @@ cpg: clock-controller@80280000 {
->                         #power-domain-cells = <0>;
->                 };
->
-> +               pinctrl: pinctrl@812c0000 {
+... and Rob was saying multiple times: be careful when adding
+simple-mfd. If it bites back, then I am sorry, but everyone were warned,
+weren't they?
 
-The unit address does not match the first reg property.
+What is exactly the pain anyway? You cannot instantiate children from
+SCU driver?
 
-> +                       compatible = "renesas,pfc-r9a09g077";
-> +                       reg = <0 0x802c0000 0 0x2000>,
-> +                             <0 0x812c0000 0 0x2000>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       gpio-ranges = <&pinctrl 0 0 287>;
+> 
+> (as again putting everything in a single node conflicts with the OF
+> principle of autoprobing stuff with compatible property)
 
-No (optional?) clock, no interrupts...
+I am not sure if I follow. What principle? Where is this principle
+expressed?
 
-> +               };
-> +
->                 gic: interrupt-controller@83000000 {
->                         compatible = "arm,gic-v3";
->                         reg = <0x0 0x83000000 0 0x40000>,
+And you do not have in your second example additional compatibles, so
+even if such principle exists it is not broken: everything autoprobes, I
+think.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Krzysztof
