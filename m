@@ -1,109 +1,131 @@
-Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CE328641B;
-	Wed, 28 May 2025 12:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4174A214211
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436744; cv=none; b=PYunkI7+QE9LglcHY1LtcsbAZfNDAJ3GI7aoNoKOisqP04PZD7SuZUIovWgvRSMnhgqt56GOzL3fZhkrPRj+7wRe7g0sp3meRrEHGCeEZ0TggOZZiTfc/dkjwz1dZ1ldn4OE1DqT2VpAKyKSQ0wvcKmHaVasMo3qQuT6o7pv/vU=
+	t=1748436866; cv=none; b=tlOTbZXkoJcIeDUyvZKjAkzWlYgzwgpW5vbzoxPf2vVLx0U4CzJnl7FdA9gBUO/usQjEG+wzv4fow66FElDmpgSnFErPYvoO46TjvMoavUqaWF7awI70nnxQ3HtFzgYb4Z0mDUrIQLJPcflg9MoVQzeKKg+KvJgw5r2RlopYX74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436744; c=relaxed/simple;
-	bh=rSHnMm/I4ZVMAQknHKeTSE6S/3hkTR9sAaQ2wgg/3GU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=aZpYyNMDXSvoRNJ8G7DNn8tRPe+Dgwgv1/8xkhAyuqCSfNPsWY/Hg2D3Z5lPkVDQo/K0EQycZk16SxIf2c4mDOcOt6vSvLw8CsgEmz5sd220WyWgiwnax/SxdPAcVbZNJdl5XNDoBq6abDhzbd9jzbHzFwovCjeXanUn3HZ5FTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qyq82CRO; arc=none smtp.client-ip=209.85.218.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748436866; c=relaxed/simple;
+	bh=4kzUi/76sU4TOqttKuHGINwdxexMyc5EKBLODsQjbIM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=d19w4LUtWa+DsTCJ+egS/WTbNTSJWo0H+/kqyNkUED0tyrcfKIzAI2i5r2H5cPCKJ7IntnmAa67uTum9SpZ4jrf8xdwTOlvrHqk9N1vu1U+c6TgUuyegt3DgIWHtjXALBRZ+EOVUpBP3EgXzB5AfKNCGVQch78b3AQuU27sTBnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SfDn8l2h; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qyq82CRO"
-Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-ad5740dd20eso683777466b.0;
-        Wed, 28 May 2025 05:52:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SfDn8l2h"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31147652b36so3562156a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748436741; x=1749041541; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q6gUi0f9uAatD/UfV5AR0D8k7xuPtA+o2t8ZNTCP0J4=;
-        b=Qyq82CROaBL21M2MwV+P90fTXoOJGXXa1D8VBiCp+HPSFf+gYxoZVoaMsjflyAyJmU
-         ViEdmU3pCGKnsGi9qSW4Q6AGH8zO6sZhdSDSSIoYgIQV9nYxwZUAbPnv93FO8r98qG0y
-         xTqLt8CPxWnOQwA6iOMUzCsHo37WLK5eKGT8+WjH9N44cjn01ug44+8V+24oYyITXk6X
-         Nr+XOOphLEDEhLiRCFt2moru0Amd1+1uyteZfvytHlmr1WT7LYOUBHsQ0POUGk2VSCly
-         oJsan4PFdRA4E+z+edTICDULIvU+ypjw10SOUPX0NiWqWQlDXB5ETy9oYWW0RwMC96vo
-         kSdg==
+        d=google.com; s=20230601; t=1748436864; x=1749041664; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xuuvC7M6sC9txYVcxiKR7Nz7uk/ZLoX9CRoOMl5AG9g=;
+        b=SfDn8l2hz+9fZu0Gd0vx2BgA0Dw904zl0x1+/FLzUrd9wBxGOhpRr3JCZkN02wyY/N
+         gIRkJLJ09jR8MSpCPZY1ELkZu+rlZ5UkUNAJ1ujBianemAoDJ4yYynTl75gXWst+lDQl
+         2E7cYi7AmAwdxyj7kMdvEudVBpeZ0qvGJnlPyx0vMSSdeyHRW4hgAS5sznrPiFOzUekS
+         GfuLStDxAKzQPkIlCaYER05LYGgBpVQW+qMYcPT8sGydr9tOn/KShx2uc6QqK/xAAIsA
+         rZDGOZzxsMi7tYAuD3WxoKNXcb0PqBlqEWn56n/KrURGIl00xz8K0++Uzh1kRcLPLtht
+         XccQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748436741; x=1749041541;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q6gUi0f9uAatD/UfV5AR0D8k7xuPtA+o2t8ZNTCP0J4=;
-        b=WfsXzF826uT+7P8pVNJnS0jAzSt3BXLRSQbl3JiNKRVWYr95VvA2aJcPvlYB/PzSn5
-         eAn1xIoXrtRsOuGtgvgQrZImT21kiKt1KwNzPuQD9xxZ4TI6a+NbA+T2xc1ddSOwCW0p
-         VXfKRmSTylHlaywn+JxS8Qkust4KltTyIFB1vJMld9iPFkezsPTiSvCxlxBiYsILH98g
-         KABzCWrf9BHBH4SDNK4Hq6N/ktdNy11itkPyGv/L+eOlJlSr3j86Yn4fUuDMEdGEb1EW
-         ZAMgU+L1DdEzH/DmN6LKaUpgyHlWBVnXp4vPxL78sV4gE6bi7uFWB2A2v+EAH/+Hq/Tl
-         C4+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuqWGr9RO5R7caYCiuit7q1r8JWXo7pGXDb9PkQHs+WcQWCUiwXCONsHXga611GRs2WYfYMXoBDdP/Fbo=@vger.kernel.org, AJvYcCWXJfsD7Ayhsr43DENRGlfe1BKCsoXhDcZdFTbVoQlau+Ga7IzVfBKaGlxg+D09vAWoDXAKs29r@vger.kernel.org, AJvYcCX9eLg3KDReupqtxyaeE1Ufc9wxEPzW9U5hsGkY2/Es1fqgEpoI56G0OR33d6xw8tNQP8Kiguu1ZRlha1uxqPZ1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRXFTGc/95UhCpis7ctIwmKGRfxQqx/xbUqOgaG6ozx336P+KO
-	k+zeOQiwADWT48jCJnq1orAcvrOzELCe5w8ItTTXQOEcSF2c6oGZFa7gX/LSUVlpPlx2mmjqZr4
-	Gbr+iotN2sD2BydLoHxbviRdYuhDnZYe2VM7B+5I=
-X-Gm-Gg: ASbGncsz1o3xzk/g6HPZZbvTBkUG+xC7hf7AysvENqOVOqxcGvSkNeBWkMt3y0q7tuU
-	z9qgvPfv/qTKBxdfVZvtnRdeV5W41db8RUSBK5zmWotVywz2RcKOJKtkZYYk9p33jvPfrWK5VDQ
-	NQMUkIIVTe1a3tsgrSQUT+iPb8fk+TGZr0BSnU2EtyaK21
-X-Google-Smtp-Source: AGHT+IH3Z8+NTchkkrhzXIRW9XhN78aZiIFMRJuj2GxLRE0a/FSnwoZZ/z81gAnvkQOnuGdnHPKq/HcUz08E8e439B8=
-X-Received: by 2002:a17:907:2da0:b0:ad8:8d3c:8a73 with SMTP id
- a640c23a62f3a-ad88d3c8d43mr640644366b.17.1748436741125; Wed, 28 May 2025
- 05:52:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748436864; x=1749041664;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xuuvC7M6sC9txYVcxiKR7Nz7uk/ZLoX9CRoOMl5AG9g=;
+        b=lmrrc7uiMu8Lgj5qDQtRiiQdPKaTFH48WmgBVqO1Ia7akLoj34RpT2AyD9f8tP4lwd
+         d1IldvTEa3imoVP7tLNwO+QbbHWX4RSQMCcgxbRI8DkchpUVSxMsZdgD13UAmOBDyuaE
+         S5lQLYypdQ7CpUX55xKbuUJj7uAjHVBR8cHKLvtHiFqlFZVIGBDxl0DCqY3aE71GsJ49
+         cuFg8Yk4dHQ3ttRnOetkcvX33BpGq1l4e6gOd3EBQPhuXdXDWY1v/YY9LnhE0hTzgq9b
+         UZ5x5JB6GEkbTyjIbgnWNQwjW+NpuJU+J2RZr6yqyIDG0uYQb1o7EJgMQBQpluOdxBXv
+         mH0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Hu3ixwQ3MgYhHFbU7bNCGWRYoTu9VOcbLir1K+XQS2iEUw/fbyz+QNX85f/c+djRBYGlLPgNVk6yy9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMvUb+p2iqJMpMncwRmnDSXERdeh3/8N8xjoPjF55Md9S1vMOx
+	xeiWvcjK+sOZwAKGX5DgmR+f1FkIZxvzSzYOkSb1Opf1FkTI8Z2aQtKL7zlzS+W8BYC3b3D0dtO
+	f/3DlAw==
+X-Google-Smtp-Source: AGHT+IHklk6ygB6BrAMAW+vre57cickd20wXmOPZTFQC5U6g6cHQDuc5vbvNaOVhN+qmRiCUV+DfgdMkufQ=
+X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:311:4201:4021])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3911:b0:311:f30b:c18
+ with SMTP id 98e67ed59e1d1-311f30b0ff9mr2383545a91.4.1748436864587; Wed, 28
+ May 2025 05:54:24 -0700 (PDT)
+Date: Wed, 28 May 2025 05:54:22 -0700
+In-Reply-To: <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: ying chen <yc1082463@gmail.com>
-Date: Wed, 28 May 2025 20:52:09 +0800
-X-Gm-Features: AX0GCFvcMRe9eaU2zLXLzQ3AXlGsNYT_X_RyAVlEYp0RSgrVDkCPnVNhzQh1ogQ
-Message-ID: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
-Subject: [bug report, linux 6.15-rc4] A large number of connections in the
- SYN_SENT state caused the nf_conntrack table to be full.
-To: pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250523001138.3182794-1-seanjc@google.com> <20250523001138.3182794-3-seanjc@google.com>
+ <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com>
+Message-ID: <aDcHfuAbPMrhI9As@google.com>
+Subject: Re: [PATCH v4 2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's
+ hashed page list
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hello all,
+On Wed, May 28, 2025, Xiaoyao Li wrote:
+> On 5/23/2025 8:11 AM, Sean Christopherson wrote:
+> > Dynamically allocate the (massive) array of hashed lists used to track
+> > shadow pages, as the array itself is 32KiB, i.e. is an order-3 allocation
+> > all on its own, and is *exactly* an order-3 allocation.  Dynamically
+> > allocating the array will allow allocating "struct kvm" using kvmalloc(),
+> > and will also allow deferring allocation of the array until it's actually
+> > needed, i.e. until the first shadow root is allocated.
+> > 
+> > Opportunistically use kvmalloc() for the hashed lists, as an order-3
+> > allocation is (stating the obvious) less likely to fail than an order-4
+> > allocation, and the overhead of vmalloc() is undesirable given that the
+> > size of the allocation is fixed.
+> > 
+> > Cc: Vipin Sharma <vipinsh@google.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >   arch/x86/include/asm/kvm_host.h |  4 ++--
+> >   arch/x86/kvm/mmu/mmu.c          | 23 ++++++++++++++++++++++-
+> >   arch/x86/kvm/x86.c              |  5 ++++-
+> >   3 files changed, 28 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> > index 330cdcbed1a6..9667d6b929ee 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1343,7 +1343,7 @@ struct kvm_arch {
+> >   	bool has_private_mem;
+> >   	bool has_protected_state;
+> >   	bool pre_fault_allowed;
+> > -	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+> > +	struct hlist_head *mmu_page_hash;
+> >   	struct list_head active_mmu_pages;
+> >   	/*
+> >   	 * A list of kvm_mmu_page structs that, if zapped, could possibly be
+> > @@ -2006,7 +2006,7 @@ void kvm_mmu_vendor_module_exit(void);
+> >   void kvm_mmu_destroy(struct kvm_vcpu *vcpu);
+> >   int kvm_mmu_create(struct kvm_vcpu *vcpu);
+> > -void kvm_mmu_init_vm(struct kvm *kvm);
+> > +int kvm_mmu_init_vm(struct kvm *kvm);
+> >   void kvm_mmu_uninit_vm(struct kvm *kvm);
+> >   void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index cbc84c6abc2e..41da2cb1e3f1 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -3882,6 +3882,18 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+> >   	return r;
+> >   }
+> > +static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
+> > +{
+> > +	typeof(kvm->arch.mmu_page_hash) h;
+> 
+> Out of curiousity, it is uncommon in KVM to use typeof() given that we know
+> what the type actually is. Is there some specific reason?
 
-I encountered an "nf_conntrack: table full" warning on Linux 6.15-rc4.
-Running cat /proc/net/nf_conntrack showed a large number of
-connections in the SYN_SENT state.
-As is well known, if we attempt to connect to a non-existent port, the
-system will respond with an RST and then delete the conntrack entry.
-However, when we frequently connect to non-existent ports, the
-conntrack entries are not deleted, eventually causing the nf_conntrack
-table to fill up.
+I'm pretty sure it's a leftover from various experiments.  IIRC, I was trying to
+do something odd and was having a hard time getting the type right :-)
 
-The problem can be reproduced using the following command:
-hping3 -S -V -p 9007 --flood xx.x.xxx.xxx
-
-~$ cat /proc/net/nf_conntrack
-ipv4     2 tcp      6 112 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=2642 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=2642 mark=0 zone=0 use=2
-ipv4     2 tcp      6 111 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=11510 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=11510 mark=0 zone=0 use=2
-ipv4     2 tcp      6 111 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=28611 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=28611 mark=0 zone=0 use=2
-ipv4     2 tcp      6 112 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=62849 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=62849 mark=0 zone=0 use=2
-ipv4     2 tcp      6 111 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=3410 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=3410 mark=0 zone=0 use=2
-ipv4     2 tcp      6 111 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=44185 dport=9007 [UNREPLIED] src=xx.xx.xx.xx dst=xx.x.xxx.xxx
-sport=9007 dport=44185 mark=0 zone=0 use=2
-ipv4     2 tcp      6 111 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=51099 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=51099 mark=0 zone=0 use=2
-ipv4     2 tcp      6 112 SYN_SENT src=xx.x.xxx.xxx dst=xx.xx.xx.xx
-sport=23609 dport=9007 src=xx.xx.xx.xx dst=xx.x.xxx.xxx sport=9007
-dport=23609 mark=0 zone=0 use=2
+I'll drop the typeof() in favor of "struct hlist_head *", using typeof here isn't
+justified and IMO makes the code a bit harder to read.
