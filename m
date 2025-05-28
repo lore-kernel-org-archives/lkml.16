@@ -1,113 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251212750E8;
-	Wed, 28 May 2025 15:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E3628C865
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748446506; cv=none; b=HGyuyk4sxvMcSIledlf903uwqXotRZ3eLj7cNyIT1nWHPAlcjcQhgx0Rjus7VEic/Nl2PruKBE08X6u1uamcEIX7kDX/i4W6WuCr1MqTpI/BRRtmaf4OOih5tMhw0yeosR8omN9WwvOlT0GfcP/DFbF3HpzOWu+mIlVypCfJ20A=
+	t=1748446516; cv=none; b=GGZVOrJ4tlRNs+kpWn58HZoHMLw6Bb9s/iGdsHR4tru+0HYN77/wkVRl0P0PXwJftBtTK1Uo99uz9is5DHJM2+vE9hxz2VVKnLzbmLECH6yQNR0P4G/SB2UEvZzjo9NgoCDH5u+A2xF4ssglt/iv32YR6ZWxOLxeNTSresbTEFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748446506; c=relaxed/simple;
-	bh=zB7eSGVJ68Jl0gMC9+d7mPya9pfNddYzQqEMb7NDisM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=bfP+XXmzZwosfYyV1htHeT21FYHH7Gu4L91xrysMa0SMI71/hWzz5AGNs03PY+24WJ+ffjMfEdFUILt5FsY6lqTkBxhy2pGs3tF7sBC4zS6q2YjkEw6/qlBFQGH9V6JuobNfGRoXbnvw8AmBJE7SB1fr0saBHYeim9Rh1NfJc9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVPnqshC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748446516; c=relaxed/simple;
+	bh=J57SZfY4LXui76ePtrfBMHyfF57llELgFBmoKZ+iFtc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jM1MHZTAq9G09SJJByaPfqU4JH0Sy8qZ5yOSZXXogXQ7Emzc2vXmqy26iB1OzAX0GM0ECEtgUCMzHyygtkrWWJUVQZ4k4b8NYz3CUrMSuoG2uqMQuDvQI01GOju/LFzDbrvzzsAmOAkkp2X3UGJlxbK3m7YUL7oNnSPZpi1mlQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=Dn7TaLR0; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVPnqshC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B031C4CEE3;
-	Wed, 28 May 2025 15:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748446506;
-	bh=zB7eSGVJ68Jl0gMC9+d7mPya9pfNddYzQqEMb7NDisM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=kVPnqshCxEe5Da+hatugp5jpRO+YqdxnSK8hHV9/MuHaeYogJc8HUNfD+v7Y7oNnd
-	 ajTOOvKZaF0AWykZCZmwO7rAa8WJYeT6DIdhhnZOGCLAyadkSOftnheVVRR4FwmZLb
-	 wINaZlL/et1WxglyVXp6Bdc2km89Q4hZ8nTMOxo7LZNYnc6ZSms6wti8wzmuvtyWSz
-	 Ytq92scLm0QqesXBybdXA+fa1nRyGQudkluYwUXFNmEW9Vvt+RNGG7P+2+BjFDmGjt
-	 0jtso4IYLC52ByJ/P3KhBshux6a8WckGKiCjTxpDWhMHWsCdgKZeCnAhtK1FWUAVGf
-	 4ZiszX0mmUL+w==
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="Dn7TaLR0"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e740a09eb00so3597725276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1748446509; x=1749051309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/xxvQd++y7EnTgMMEVQbGeZAD8fz0r4wC/tmiy3K++8=;
+        b=Dn7TaLR0l8qw9XKJqK8BBgm9OqoxrSOMlR6HN24NNUEQ6z3p4mVgcjWVJCoY3fYqiE
+         SjqOqvpBbL5fMkYgbDAlB6NsyjRkdBeE9XTXiFQyhylv4QnrC0ZVUHWPCmlMlAL/QKsL
+         P1Ne1E6hDYCwFwkedGiegv66HEQZzS6f0vi9BUfYRUsNl21aFajysOqMYO5Q98cy4lU4
+         umOirpHeySjhmzvXRbm64j7BRoqmrAqNOWDoOfBn1DT78+5tK8SxWO2aROpoY7y8yMzq
+         A5Jk9pDmLhjlRPkZNxPSqfFAo3mn4zi6PPeQzl7lpz4DiQA6HXWCubmYToM8lWr+TYT3
+         CzKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748446509; x=1749051309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/xxvQd++y7EnTgMMEVQbGeZAD8fz0r4wC/tmiy3K++8=;
+        b=SkP0Q1pQ+W1hlDOhFz2WsetL6EzOKeZ/oyyzDzCMxz6hp8U9kQNBhWS2WyQqfy2ZMk
+         x77K9lvfbY++U0m6WOokrez5YpWNyzDXCd1iZZ1jeOZvKI6po9tuOQZbrjPt9SPzOGYF
+         q71Au8YfuhtZ8pgv2gEnXPQy3qjQrcfG1NCMSpCjjcM4WlGIKis6Kie4/bZD+TBLTC13
+         wtoM0rd3uBUm6TZ1cChRghkYGEpF9vd4dQ7gu1xcoP62qgnPOgaQq4mih8SV0QsBqX6G
+         XCk9yAQQAeXbQWz666ixRzhTUgnA9Gsiimk4W+DHrh4TJ2Y6umdKQ63LY8d0GllWY5/L
+         vtiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUmStZ4Wrt9+awDCVBkHffvfKofk1nXSnWfe77bbXkWtfr1W2nVpq/BpbUTeVwzkZZvC+/8AB5BqRmmqMY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQUFBxAs4JrFLquUaK0huoxhUCDQeWRiaqPoEM/12/s0hhKscB
+	JB9od22dJHlY2KgZ9zS3FDdXiAZiEAR3NMe9FzUETDweYaojstTIsA0SqyFPdOwd03E=
+X-Gm-Gg: ASbGncv8RN6E97mS/jFy5n3pBbtVpX6GArE2ZYe7wPYvRS4Uj0PREX4oFzpqW6mXt4b
+	FqIKiDSTtT9Gn76XXKN5uHv5YXzAaIz7okMOi+9E0nzJsie2g7z6lYEU4U0P47WbWioYFNQYlkw
+	gjZf2cQ1M/J9R4Vhd2KXmKb6aKhg54TEQ/CnUhD1RbBquaa9me3jmRADGofMYYHl03lWdS6PSz0
+	iUyiSEbqJoaCxZRI35YQQaVMFPIS41TII9s0HUVpT9khIzgCFgBdnNTWY4JI7KZQubYHn099Rn2
+	cxI2ykg3skrkleTuAz0DXtUXrtDp4UkfTVGHX/UhY5ZnjxlK1izXHNja1tKltcvpw6KmQeZjxer
+	KewR8sWKC0a13mJwV3Cs=
+X-Google-Smtp-Source: AGHT+IFNri4VZP668TZRiLiVPchub4mhmoXvwTtePdpwff5wJ8RFOvLtGPEDClrpn0GJacLg8abqsA==
+X-Received: by 2002:a05:6902:284a:b0:e7d:d181:3261 with SMTP id 3f1490d57ef6-e7dd18132cdmr6259259276.12.1748446509526;
+        Wed, 28 May 2025 08:35:09 -0700 (PDT)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7f61886a4esm310749276.51.2025.05.28.08.35.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 08:35:09 -0700 (PDT)
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e731a56e111so3785596276.1;
+        Wed, 28 May 2025 08:35:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVtWG0GRt0ueE9Bnw+z5uDi3NBhwM6UlHEkBgYKgTabLXCDvRMYps9cwT6EhqaFP231qz7VupN+TgbO/u83@vger.kernel.org, AJvYcCVv36bTNyd5YP21/E6+JlVkVtn+zrJNhfv4F8gR/T/1fQeS0yTtj2Ko0ilZ4LSjGCk24JmbDo4tHtUhbEc=@vger.kernel.org, AJvYcCWGDV84Ogd40UFv9hvP8jhFE5RaqDpg6uEP8PT0b/e9Fjh4VZ4iwph92joOzqp6VbWz9CTGjKEbbb/i@vger.kernel.org, AJvYcCWgQSwxv1usGpPzWqRPEGXgb0a3v0n1DBzHoZx6Ztl1ItBke5heeIbv5CAolA/EkD4EaouecC9lGjEd@vger.kernel.org
+X-Received: by 2002:a05:6902:1021:b0:e7d:ca07:a144 with SMTP id
+ 3f1490d57ef6-e7dca07a23dmr8541656276.5.1748446509068; Wed, 28 May 2025
+ 08:35:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net>
+ <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net> <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Wed, 28 May 2025 17:34:57 +0200
+X-Gmail-Original-Message-ID: <CAAObsKDE33kZ27XbgeWBqQzrZXDHwHzp2Q6A7y_osC50UG-n7g@mail.gmail.com>
+X-Gm-Features: AX0GCFtwrQfY2JjemntUXNTLyymu_4uxtqwB53YlQ42a11mlnVkp6EMD0QhiJuw
+Message-ID: <CAAObsKDE33kZ27XbgeWBqQzrZXDHwHzp2Q6A7y_osC50UG-n7g@mail.gmail.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+	Kever Yang <kever.yang@rock-chips.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 17:34:53 +0200
-Message-Id: <DA7WJYNAN5AI.2HE6B953GR16A@kernel.org>
-Subject: Re: [PATCH v10 4/5] rust: replace `kernel::c_str!` with C-Strings
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>, "Tamir Duberstein"
- <tamird@gmail.com>
-Cc: "Michal Rostecki" <vadorovsky@protonmail.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
- <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Luis Chamberlain"
- <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "FUJITA
- Tomonori" <fujita.tomonori@gmail.com>, "Rob Herring" <robh@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>, "Peter Zijlstra"
- <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Will Deacon"
- <will@kernel.org>, "Waiman Long" <longman@redhat.com>, "Nathan Chancellor"
- <nathan@kernel.org>, "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt"
- <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit"
- <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "David S.
- Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Arnd Bergmann" <arnd@arndb.de>, "Jens
- Axboe" <axboe@kernel.dk>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <kunit-dev@googlegroups.com>, <dri-devel@lists.freedesktop.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <llvm@lists.linux.dev>, <linux-pci@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <linux-block@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-4-6412a94d9d75@gmail.com>
- <DA66NJXU86M4.1HU12P6E79JLO@kernel.org>
- <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com>
- <aDbnLzPIGiAZISOq@google.com>
-In-Reply-To: <aDbnLzPIGiAZISOq@google.com>
 
-On Wed May 28, 2025 at 12:36 PM CEST, Alice Ryhl wrote:
-> On Mon, May 26, 2025 at 06:29:46PM -0400, Tamir Duberstein wrote:
->> On Mon, May 26, 2025 at 11:04=E2=80=AFAM Benno Lossin <lossin@kernel.org=
-> wrote:
->> >
->> > On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
->> > > +macro_rules! c_str_avoid_literals {
->> >
->> > I don't like this name, how about `concat_to_c_str` or
->> > `concat_with_nul`?
->> >
->> > This macro also is useful from macros that have a normal string litera=
-l,
->> > but can't turn it into a `c""` one.
->>=20
->> Uh, can you give an example? I'm not attached to the name.
+On Wed, May 28, 2025 at 3:41=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
 >
-> I also think it should be renamed. Right now it sounds like it creates a
-> c string while avoiding literals in the input ... whatever that means.
+> On Tue, May 20, 2025 at 5:27=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.n=
+et> wrote:
+> >
+> > Add the bindings for the Neural Processing Unit IP from Rockchip.
+> >
+> > v2:
+> > - Adapt to new node structure (one node per core, each with its own
+> >   IOMMU)
+> > - Several misc. fixes from Sebastian Reichel
+> >
+> > v3:
+> > - Split register block in its constituent subblocks, and only require
+> >   the ones that the kernel would ever use (Nicolas Frattaroli)
+> > - Group supplies (Rob Herring)
+> > - Explain the way in which the top core is special (Rob Herring)
+> >
+> > v4:
+> > - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowsk=
+i)
+> > - Remove unneeded items: (Krzysztof Kozlowski)
+> > - Fix use of minItems/maxItems (Krzysztof Kozlowski)
+> > - Add reg-names to list of required properties (Krzysztof Kozlowski)
+> > - Fix example (Krzysztof Kozlowski)
+> >
+> > v5:
+> > - Rename file to rockchip,rk3588-rknn-core.yaml (Krzysztof Kozlowski)
+> > - Streamline compatible property (Krzysztof Kozlowski)
+> >
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > ---
+> >  .../bindings/npu/rockchip,rk3588-rknn-core.yaml    | 147 +++++++++++++=
+++++++++
+> >  1 file changed, 147 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn=
+-core.yaml b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-cor=
+e.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..9eb426367afcbc03c387d43=
+c4b8250cdd1b9ee86
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.y=
+aml
+> > @@ -0,0 +1,147 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/npu/rockchip,rk3588-rknn-core.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Neural Processing Unit IP from Rockchip
+> > +
+> > +maintainers:
+> > +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > +
+> > +description:
+> > +  Rockchip IP for accelerating inference of neural networks, based on =
+NVIDIA's
+> > +  open source NVDLA IP.
+> > +
+> > +  There is to be a node per each core in the NPU. In Rockchip's design=
+ there
+> > +  will be one core that is special and needs to be powered on before a=
+ny of the
+> > +  other cores can be used. This special core is called the top core an=
+d should
+> > +  have the compatible string that corresponds to top cores.
+>
+> Is this really a distinction in the h/w? If you change which core is
+> the top one in the DT, does it still work?
 
-Yeah that's a good way to put why the name is weird.
+No, I really need to power on that one before the others can work (the
+first core is also marked as special in a diagram in the TRM).
 
-> I like Benno's suggestions, but str_to_cstr! could also work?
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^npu@[a-f0-9]+$'
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - rockchip,rk3588-rknn-core-top
+> > +      - rockchip,rk3588-rknn-core
+> > +
+> > +  reg:
+> > +    maxItems: 3
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: pc
+> > +      - const: cna
+> > +      - const: core
+> > +
+> > +  clocks:
+> > +    minItems: 2
+> > +    maxItems: 4
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: aclk
+> > +      - const: hclk
+> > +      - const: npu
+> > +      - const: pclk
+> > +    minItems: 2
+>
+> It is odd that the non-top cores only have bus clocks and no module
+> clock. But based on the clock names, I'm guessing the aclk/hclk are
+> not shared, but the npu and pclk are shared. Since you make the top
+> core probe first, then it will enable the shared clocks and the
+> non-top cores don't have to worry about them. If so, that is wrong as
+> it is letting the software design define the bindings.
 
-Hmm, I think then people won't know that it can also concat? I don't
-think it matters too much, the macro probably won't be used that often
-and if someone needs to use it, they probably wouldn't fine it by name
-alone.
+Yes, I think it's probably as you say, but I don't know how I could
+check. Maybe Kever, Heiko or Sebastian would have any ideas?
 
----
-Cheers,
-Benno
+Thanks,
+
+Tomeu
