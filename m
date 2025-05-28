@@ -1,114 +1,149 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C35627A448
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D2BE28469D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435764; cv=none; b=G9QmLkm7zJM4Is/hCKwtEPJtOiI23Ic+Wqep2bogVVTS/hAhNz3nFyCqoPLmv5ez4TdCTYw9auUd4O4dIBA5anABhXI8nM2sU08zUvZf+1n3vY+NQ17Sv2EL/2mrt88imTQlt/0gXV1MYxbVUznJ1KSVpMLNIbNgmFlEOB/BzeU=
+	t=1748435764; cv=none; b=DAWlrD71BQZLgpmJA+du8IjVPStDarrnParZ1mEafy2uBn9czNx/5jUhWewq6gdw3u9aWmpaKhsH4URNIk4JfH0idORjEx04PFITZzxysds74aAlIZWKM2SwTBw4PSbzq/aH+dxXUsGp5z9oMh+etJ6AE4mdAshRbCUnA7PK4Xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748435764; c=relaxed/simple;
-	bh=opFMAY7ql65PTVuG1xITeeuQ5Ru9iADMO899kbu8eR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uTWUMnpW8NDIJiWJNSlbALv7dLR1/gcAXZLzn+PTRuzA3eWklRYeOD8z2+YR+/amW/SfGcWSOWBEgqZtUAGbny9ZKLIgkbPmnql4UF+2uGvGrrqPy8/CWR1/lyLUtsnYsdudJrmC1v8pMGaH6Zrw0aiaE7MtfUV1Kk6q1nQiLw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sW76eO0c; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=sW76eO0c; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	bh=ZhZaCx9zTAfydyiSk7i4+D3+796XUnIpYm5sDEhibbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qsMCFwru/hW1VB2iKylYKKGVTk+NPtS/FNYzpJDyKp1MmnBKwIDf6KgVtL4y3Sug40sGRnojcxskqf7ZfTB6CfOtsfy6wEPOJQ1+bUBWxfOBJQ1upe9EVpxtAMJHMfj3I91bp6amUxfFZKkjWoLBBs7t2YrUlR3Y+V80vhWwAPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Aw5z0QSc; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sW76eO0c";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="sW76eO0c"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 483B21F897;
-	Wed, 28 May 2025 12:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748435760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=oUHpflNkqxQqAeRF/c6Lk5cVWk0vuP3r2ZYdL4XjqBc=;
-	b=sW76eO0cjSJnW4NETyMF/qAOcV8R/jWofXly4AHnsZJccejpPQ3xA3XDrBTvmODFCvw/iE
-	MEKzfCjZQHWQ8r/3cP7cE+rEeW0pl36Kte3HXJ34S08MSDbs99qbJGvS/kfw+1sCyfobFh
-	QXZwGb4ijWxSDK9EkFyKyD9pkv8mkck=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748435760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=oUHpflNkqxQqAeRF/c6Lk5cVWk0vuP3r2ZYdL4XjqBc=;
-	b=sW76eO0cjSJnW4NETyMF/qAOcV8R/jWofXly4AHnsZJccejpPQ3xA3XDrBTvmODFCvw/iE
-	MEKzfCjZQHWQ8r/3cP7cE+rEeW0pl36Kte3HXJ34S08MSDbs99qbJGvS/kfw+1sCyfobFh
-	QXZwGb4ijWxSDK9EkFyKyD9pkv8mkck=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C5306136E0;
-	Wed, 28 May 2025 12:35:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WCIeLi8DN2iWKQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Wed, 28 May 2025 12:35:59 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: xin@zytor.com,
-	Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 0/3] x86: Fix some bugs related to ITS mitigation
-Date: Wed, 28 May 2025 14:35:54 +0200
-Message-ID: <20250528123557.12847-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Aw5z0QSc"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e733a6ff491so3621134276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748435762; x=1749040562; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Y2nJxgpLq/4ajBXNTSM9IN0ALNLXkV13ENJ/HewBaA=;
+        b=Aw5z0QScH2LZafG66RDOljRoUaAq3gM2OGOhltff6mdMqOcuOnMSWCUlynnyhMgIuJ
+         5b1tw5VPsBBnx9y6VuyEP11jkrnw3qEw5w+Hq1f1zfKnIV25G/syGnXvXU0dxY6skkTM
+         5ND+vGAOKxH8ow6b/tZePm03QG6KbXxsZJVkE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748435762; x=1749040562;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Y2nJxgpLq/4ajBXNTSM9IN0ALNLXkV13ENJ/HewBaA=;
+        b=UfkbJItj8plLGaFbMbhSo6e0CtDfmBtcXGCarGI/2hebdfLs1hOsDVSuhJ9un8sp5U
+         F2Klyt+uACHCH24ELiYmjt0lVb0S2kh+O+SEWNH43hM1H+jP1/DzgtBQXJNg64KzsgFK
+         IAVuziectaV+O1dvmvsp14QHZQ5hZOQh/N0sRHb+YO9rj+QzkFyQ6ftto1i1P1hVj7NK
+         EmUHMfl9KCE2jjbicK5KTTJ2TyeMX347+Oe6+DUAwe0PK5yZ3SspDS33SPWuTZ1UBy8F
+         /1n55JJIy0l+pzwlqJvoDdVLAzRgRjfrcMpC7hkgmCHAyom+fphYnxraJLc4gCyIGWjo
+         kprA==
+X-Gm-Message-State: AOJu0YyZS9HqAAuW5ki5t1sRy+HSB3y89h4CSwTjVAEIf+1DjlCB9IcM
+	miLWvUZVf4ARRv+T5cAGcHdQYRkhwfAyzrl/pfx7prNOQm9HiIMqRTboutdlsAF59TrsZHRpiUs
+	FvmnEagxmspGscUrNNuQ/75wrhuhKtznK3pKpyMhOHw==
+X-Gm-Gg: ASbGncuptOwwTDzcOFxBmzQ6AWZG7rPyYVeI3f4iliBu774FMlK1T5ui69wVvLtufcu
+	US/Bk8GgNfyFU4G53evLK7TXtEFsEqA4/rZzNuG3BfkYnS+bknMIdra5RJ1onMQDAuH8WTLts6s
+	pLPB0pQmxTbLfX0z2Uz4x9Ru4hEZQ3gKzQFtUGKoZQX58qIAd8BbNyl6Agpd4YQRMLLA==
+X-Google-Smtp-Source: AGHT+IHBh35vbTwgJCVmI6qYBeU0Sp2Wx1M+Pq2Rp63W3aCe0f9Vwlcw2TxiYl89UFgJ0Ni/gNn9cRNUEGm7TvbhuTg=
+X-Received: by 2002:a05:6902:20c8:b0:e7d:8a63:1a2a with SMTP id
+ 3f1490d57ef6-e7d919b04c6mr18500419276.25.1748435762006; Wed, 28 May 2025
+ 05:36:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
+References: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
+ <20250528121306.1464830-5-dario.binacchi@amarulasolutions.com> <20250528-toucanet-of-utter-conversion-2bb1c7-mkl@pengutronix.de>
+In-Reply-To: <20250528-toucanet-of-utter-conversion-2bb1c7-mkl@pengutronix.de>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Wed, 28 May 2025 14:35:49 +0200
+X-Gm-Features: AX0GCFsWpbnRJlmj0FdLliCaul8VD_OZHEgOqPPNi4PhesFCouLSLcxJegiNFSU
+Message-ID: <CABGWkvqAy+-mjhXFKc9dkeJnZKLKuC23=Dmn3axJx_1+5fLWSw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: mxs: support i.MX28 Amarula rmm board
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-amarula@amarulasolutions.com, Sascha Hauer <s.hauer@pengutronix.de>, 
+	imx@lists.linux.dev, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, michael@amarulasolutions.com, 
+	Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Running as a Xen PV guest uncovered some bugs when ITS mitigation is
-active.
+On Wed, May 28, 2025 at 2:21=E2=80=AFPM Marc Kleine-Budde <mkl@pengutronix.=
+de> wrote:
+>
+> On 28.05.2025 14:11:41, Dario Binacchi wrote:
+> > The board includes the following resources:
+> >  - 256 Mbytes NAND Flash
+> >  - 128 Mbytes DRAM DDR2
+> >  - CAN
+> >  - USB 2.0 high-speed/full-speed
+> >  - Ethernet MAC
+> >
+> > Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+>
+> [...]
+>
+> > +     reg_3v3: regulator-3v3 {
+> > +             compatible =3D "regulator-fixed";
+> > +             regulator-name =3D "3v3";
+> > +             regulator-min-microvolt =3D <3300000>;
+> > +             regulator-max-microvolt =3D <3300000>;
+> > +             regulator-always-on;
+> > +     };
+>
+> [...]
+>
+> > +&can0 {
+> > +     pinctrl-names =3D "default";
+> > +     pinctrl-0 =3D <&can0_pins_a>;
+> > +     xceiver-supply =3D <&reg_3v3>;
+>
+> The xceiver-supply "reg_3v3" is an always fixed regulator, that doesn't
+> switch a GPIO, so IMHO, you can remove it. Saves a bit of runtime mem.
 
-Juergen Gross (3):
-  x86/execmem: don't use PAGE_KERNEL protection for code pages
-  x86/mm/pat: don't collapse pages without PSE set
-  x86/alternative: make kernel ITS thunks read-only
+Yes, you're right.
+Removed and verified.
+It works.
 
- arch/x86/kernel/alternative.c | 16 ++++++++++++++++
- arch/x86/mm/init.c            |  2 +-
- arch/x86/mm/pat/set_memory.c  |  3 +++
- 3 files changed, 20 insertions(+), 1 deletion(-)
+Thanks and regards,
+Dario
 
--- 
-2.43.0
+>
+> > +     status =3D "okay";
+> > +};
+>
+> regards,
+> Marc
+>
+> --
+> Pengutronix e.K.                 | Marc Kleine-Budde          |
+> Embedded Linux                   | https://www.pengutronix.de |
+> Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+> Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
 
+
+
+--=20
+
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
+
+
+Amarula Solutions SRL
+
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
