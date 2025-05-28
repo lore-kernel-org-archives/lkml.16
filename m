@@ -1,35 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27880244677;
-	Wed, 28 May 2025 08:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C1B2459EA
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419795; cv=none; b=ACwsvonDmY+bNK+DtR6CgR2CKCWnnqIIx5p35VJn5LgBoIbc1IqDAS5xpqt1glbJk8mQmHqVtuYNUfRh0E9rf1yH0dSotgpt0LrVj2hD2nat0PDS9NL2gTfwhUEzXzI0adNtXrlIghdBu4ybvd7Czo6HdpnEG13Qwt//9+heoBo=
+	t=1748419796; cv=none; b=Gc+3rF+Hq5M3um59T479wRvBW+Y3h4mMNvxS1H412AjKSZPK6zCQGBYxIcYVlXJR/J2glVD8Hi8OJ6oSYqrz4JhfTwoaBoACTEOLT7mcnNUgb89H/D0uVbsb0Tc20XUDlhp+0adh+x7v9rVyBoukDgoL/rYnxprmHS1yfbrlpCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419795; c=relaxed/simple;
-	bh=xPH2TOLrYbaBzEBjshCytD643Fi1W6h06i3izOxmaMA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nShdT9RTGfhI/VstRnEneMdkxvATwZPgZkCj/rkWSlJrpzQLntv6SPzz94wLM5E/REw57EXSFnUnTlaLaBO3qhbN/gGQYid8e7aEvVeIW8w+eB3iwFRDnydahbeByB/wMfOEIQJZUpyHVZBk7qFVCKOkDpMnBXg+2AKNoJ7k4Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6q2CReX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748419796; c=relaxed/simple;
+	bh=aHNjuT+pVXde7vagc9ohxmkVnGnBYIIpr8O000cJReU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RWZabxsgd3yuQvMljlPpi5uTgmEZ/Hy2EXodDTxnU6SioIlQ3R/0YNXygilbNAIFeB+F8NG+3OphqtkeWYjrwYLElwDpl7K8+vC/GKULlwKqVtuZ9ZaYqU1dGquWW9V72NFn2QlKpc2cKMotlNRL0hjsnzTOP0P08md1TYn+Q7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uqs8g7+3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6q2CReX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3618C4CEE7;
-	Wed, 28 May 2025 08:09:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uqs8g7+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AC3C4CEF0;
+	Wed, 28 May 2025 08:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419794;
-	bh=xPH2TOLrYbaBzEBjshCytD643Fi1W6h06i3izOxmaMA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=R6q2CReXqi351arYamfusEQw3O0kwi4YGd1bt879B4qr4yvgBUk1CyvnArTIv0smc
-	 NXvJhy3rHieKVOi+tUe5QmmlnCN5RO898055mEoH1EWKJPjjovI8/QDjF4zqm1vQfJ
-	 cqU29tVewnnoJzKgnTuhDpH728qLojOt2AyC7BIE+/+X42qYlaKQwrYaMK403no7Ua
-	 TZ0bKUkqqecki/5lUad1aiEGgWoQMqYzfRayyTmnEV25atRmA02iqR9BtlD0qJsJ0r
-	 qB6J9uLElOL2/leSpfly+lbqDvyBix1dzCA1VbPuw7ltatxCIhV+w4Y2yOC6kxRB3e
-	 Iccf1+EJveFYg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF6739F1DE4;
-	Wed, 28 May 2025 08:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1748419795;
+	bh=aHNjuT+pVXde7vagc9ohxmkVnGnBYIIpr8O000cJReU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uqs8g7+345gBU4LRzjilwc57vFuv5iAmjItNZfc5qb4iXPDBd0SqgC8AA9GJ7S97c
+	 H8Ny+5nSpUlexxE+I2rtRF2izr6Mvf9A2+kM84CC2ElJo1EWZQK5FmkyuDtHjdnJUU
+	 ktZMysdXtWM3LFQU7pF0wHwFYFS5xYFWwP+vBVRcICpkqT3ymiL/71vc/x20Uhlkph
+	 2+MduEVQB2AZ4jmAHIQebN1pF0ClaB61PRDK6qjoRLFHXpyIyaGd5i+LgoZ1dU4Seq
+	 6sp5eX829+cPHFyWVb6FBFTN8pUjJpvGUkMsAnLIaqUvvJFkD0NrX7uk/CpwTMAWxY
+	 NDOUPzX4xLGyQ==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mel Gorman <mgorman@suse.de>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH 02/43] sched: Clean up and standardize #if/#else/#endif markers in sched/clock.c
+Date: Wed, 28 May 2025 10:08:43 +0200
+Message-ID: <20250528080924.2273858-3-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
+References: <20250528080924.2273858-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,47 +53,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] selftests/bpf: Fix bpf selftest build warning
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174841982875.2299972.9858779087019173111.git-patchwork-notify@kernel.org>
-Date: Wed, 28 May 2025 08:10:28 +0000
-References: <20250527054138.1086006-1-skb99@linux.ibm.com>
-In-Reply-To: <20250527054138.1086006-1-skb99@linux.ibm.com>
-To: Saket Kumar Bhaskar <skb99@linux.ibm.com>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-next@vger.kernel.org, hbathini@linux.ibm.com, maddy@linux.ibm.com,
- venkat88@linux.ibm.com, sfr@canb.auug.org.au, alexei.starovoitov@gmail.com,
- daniel@iogearbox.net, mykolal@fb.com, yoong.siang.song@intel.com,
- martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, shuah@kernel.org
 
-Hello:
+ - Use the standard #ifdef marker format for larger blocks,
+   where appropriate:
 
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+        #if CONFIG_FOO
+        ...
+        #else /* !CONFIG_FOO: */
+        ...
+        #endif /* !CONFIG_FOO */
 
-On Tue, 27 May 2025 11:11:38 +0530 you wrote:
-> On linux-next, build for bpf selftest displays a warning:
-> 
-> Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h'
-> differs from latest version at 'include/uapi/linux/if_xdp.h'.
-> 
-> Commit 8066e388be48 ("net: add UAPI to the header guard in various network headers")
-> changed the header guard from _LINUX_IF_XDP_H to _UAPI_LINUX_IF_XDP_H
-> in include/uapi/linux/if_xdp.h.
-> 
-> [...]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+---
+ kernel/sched/clock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Here is the summary with links:
-  - [net-next] selftests/bpf: Fix bpf selftest build warning
-    https://git.kernel.org/netdev/net-next/c/acea6b132d81
-
-You are awesome, thank you!
+diff --git a/kernel/sched/clock.c b/kernel/sched/clock.c
+index a09655b48140..3406145925b1 100644
+--- a/kernel/sched/clock.c
++++ b/kernel/sched/clock.c
+@@ -471,7 +471,7 @@ notrace void sched_clock_idle_wakeup_event(void)
+ }
+ EXPORT_SYMBOL_GPL(sched_clock_idle_wakeup_event);
+ 
+-#else /* CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
++#else /* !CONFIG_HAVE_UNSTABLE_SCHED_CLOCK: */
+ 
+ void __init sched_clock_init(void)
+ {
+@@ -489,7 +489,7 @@ notrace u64 sched_clock_cpu(int cpu)
+ 	return sched_clock();
+ }
+ 
+-#endif /* CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
++#endif /* !CONFIG_HAVE_UNSTABLE_SCHED_CLOCK */
+ 
+ /*
+  * Running clock - returns the time that has elapsed while a guest has been
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.45.2
 
