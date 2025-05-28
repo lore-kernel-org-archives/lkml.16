@@ -1,161 +1,86 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82D9E20CCD0;
-	Wed, 28 May 2025 09:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CCD2750FA
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423670; cv=none; b=ie3tIrygHEdL/4yoV4D+omHGARXVjmuXL/6yRpebnrRcdQROM75tTXO0Usp3wyuVxGK6fcE03aiSHYK7itKwAP2dautu0G6vYsksFuQSpiVxbRF3snACbiYyWPwb48EyigeMHxQpOs/96L1bmyUmJJ7mK0lImOYJjMMqZxyDZiE=
+	t=1748423723; cv=none; b=VT+qKKLTcBU7h0xwxK/JjcxtNeubMEbSc35TLdJs1sjZZGtgGbtDpewN5+fvfpnezRURhhIMnP5r5wec2fKgYl7lpx2x/c6IeDn5Tiogbgd9/t/5KKRhhUzCV06P/qy91WKpZ8fSxhqWsJ+U4mPbyUw6XM3uaooynTroKPajOYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423670; c=relaxed/simple;
-	bh=zyvjLg/hY8UCWc5yJms8u/bhLNJ5o5BQnWkTrB0wzlQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mfy6GTm65cNrZZeTu4M1qXWJdMMy2K6D5YM0qsNwjh+fks60ZvWUMXStzCLqAFfQF/4szck/47M4VRu/KOV7DHTIuf+Z3xqyow3T8QF+RnXSo9Eknwytvb81ROPkrldRQhmqVO2oLgoxuWBLt82+Jcv5E8joHn2E0N4ukKanuB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-71-6836d3edca26
-Date: Wed, 28 May 2025 18:14:16 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
-	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
- page->pp_magic in page_pool_page_is_pp()
-Message-ID: <20250528091416.GA54984@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-13-byungchul@sk.com>
- <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
- <20250526022307.GA27145@system.software.com>
- <a4ff25cb-e31f-4ed7-a3b9-867b861b17bd@gmail.com>
- <20250528081403.GA28116@system.software.com>
- <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
+	s=arc-20240116; t=1748423723; c=relaxed/simple;
+	bh=4cXf7MErAkLA9U3B2oNG6s7tbUnnuq7wfLX8Cx+1mvM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H1uWw7KIPfpmNQAKCbcrmLeo/AH846cpErVHqLsTjr57sqcKlCX2CDlndEopC7H+Pvp6GgFmzjlXV76RtWknCUivRKIlWCMpfxszdaag0t2EoXQaYzm324uj7Q4KAdrEc4SnJAFLKa/EBkWSPEaM4n5jZdzxcAvvRadA3hNIln0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pn4kTPQj; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pn4kTPQj"
+Message-ID: <0b328692-f333-4bba-9572-6f3c86dbed29@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748423709;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FI9HKlKAfdwWrEKUw5etibdxZ+5o3KFvUbDhmI3SbF0=;
+	b=pn4kTPQjC7e1P+nXW2gDru2pUb+AApmOIFcvMaQQcceHjVel2fhXM4qGNuOjhIe8RJ3Tuh
+	h/pNN3yQAx9UsrZwpptM2jrubF5d11fQiql17wRMxC5c7x1plULl8WB2aidGKwNaCq3y3D
+	+NCJy9gWuRc8lQu3Isla4IudqVTf/Mg=
+Date: Wed, 28 May 2025 17:14:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
+To: Huacai Chen <chenhuacai@kernel.org>, Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+ <cda7ef56-87b3-6594-c2b6-2a4f5a1b63ce@loongson.cn>
+ <CAAhV-H557CLtoF23nbRQaoDPdzuM5xgsS-+-1p_VeX0OreG2vQ@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <CAAhV-H557CLtoF23nbRQaoDPdzuM5xgsS-+-1p_VeX0OreG2vQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTYRDH83W3u0ulca2oH1RRildQ8YiSeUAl8vL5YGJijMG7ymqrXCmH
-	YELkDGAACWqCpZgSBLGS1NTaghKPioDxIkWloAIBQVGQyBWQyxYk8vbLzH/mNw/DUbISsRen
-	jogRNBHKMAUjoSV97sWb+hoDVFs+3gLQGSsYuDsaD7fbK8WgM1gQDI19YmGwpo6BkuIRCnTv
-	0mgYNv6hoKu2g4W2sm4aqjOsFHRcqWcgJ22cgpTKchE0WHLFcO1PKQXWpHYWGh/qGGitmBZD
-	ty2HhpfaOzS05QZBrX4pjLzqRVBjtIpgJLuIgat2PQOdaW0I7M87aChMzkVgfOwQw/iojgny
-	IeY7zSJSpf3CEr0pltwv9yOXHXaKmAxZDDEN5LPk88dqhtQXjNOkqnJQRHJSfzHkd1cLTfof
-	f2CI0fyBJq/1NSwZNHnv5w9LAkOFMHWcoNm866RE1V9fx0Zdlce35b9BSajL4zJy4zC/HTus
-	r9EcT02WsS6m+TW4WWuiXczw67DDMUa52IPfgH822ZwZCUfxvWJszLDMhBbz53B2yzfGxVIe
-	cG3Ze5ErJOP7RDi5MP1fYxF+eePrzADl3Dpx0+7cyjlZjm9PcbPllTj1QeGMzI3fiXsmhsQu
-	XsL74qeWOtHsoWYOP8qSzrInflbuoPPQIu08g3aeQfvfoJ1n0CPagGTqiLhwpTpsu78qIUId
-	7386MtyEnK9TljhxpBINNBywIZ5DCncpubdDJRMr46ITwm0Ic5TCQ5qyO0Alk4YqEy4KmsgT
-	mtgwIdqG5BytWCbdNnIhVMafVcYI5wUhStDMdUWcm1cS8gq3q/L2fF9Vs7xn78F99xuHCzJ9
-	ltYXxtrk6zMNrwKC7a2TZ594nnlr3Hg0sujQ2KnjDWyidONaWr7aN8ZwqaR3gWOt58KowA2n
-	OGv1ihCPQPNJ9z2Z09dDzN13j8ssqQHHvD+r6krzzcExVRfzmnL6O9t3mV74/AhJHz6vLnW0
-	EgUdrVJu9aM00cq/tzO2DTYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzH9/09dzp+ncNv9Ye5mKdVGrWPkfzFdzbGHx7mYRz91l0q3FXK
-	ZjsVrfREbPw6HObSYWdX6lhrdj0Pk8vDKTpKySqFaj3nLkz/vfZ5vz+vzz8fjlRk0P6cNj5B
-	1MWrY1WMjJJtW5cW1NsUrlklFS8Go/U+A/eGk6Hok50Go6UMwcBICwu/qusYuH1ziATjy3QK
-	Bq2jJHTUtrHgNndSUJFRTkJbXj0DOeljJKTa7xJQda2BhsayXBoujd4hodzwiYWmJ0YGWu9P
-	0dDpyKGgQSqmwJ27EWpN82HoWQ+Cams5AUPZ1xgocJoYaE93I3BWtVFQeCYXgbXSRcPYsJHZ
-	qMKlxe8J/Fj6yGKTLRGX3F2Bs1xOEtssmQy2/bzI4g9vKxhcf2WMwo/tvwick/adwT86minc
-	V/mGwbe7+glsLX1D4eemana7317Z+igxVpsk6kI2HJJp+urr2OMFAcnuiy+QAXUos5APJ/Br
-	hMkJM+tlil8ivJdslJcZfqngco2QXlbyK4Xudw5PR8aRfA8tWDPKpktz+Rghu/kr42U5D0Kt
-	+TXhLSn4XkI4U3j2b+AnNFz9Mr1Aeqzj150eK+fhAKFokvszXiikPSqcPubDRwjfxgdoL8/j
-	A4WnZXVEPpotzTBJM0zSf5M0w2RClAUptfFJcWptbFiw/qgmJV6bHHzkWJwNed7DfHr8gh0N
-	NG12IJ5DKl85fhimUdDqJH1KnAMJHKlSylMjwzUKeZQ65ZSoO3ZQlxgr6h0ogKNUC+RbdouH
-	FHy0OkE8KorHRd2/lOB8/A1oB+UMeR2haL+Vv2sixrC6u29rjzGwJszv3DCdGbo8z1wkxa13
-	mZJ1kZpNs1r6oxNPcMsCEwxRa+salR8O+I4sku+2X36VtWOOJa+LbGqdyK55UfJgi292UcHJ
-	qiN5lj07gyr6DdC1H7mnzreG3NjXMBxwPZwV/QcPxwRRkZ8vm1SUXqMOXUHq9Orf/1LMbxoD
-	AAA=
-X-CFilter-Loop: Reflected
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 28, 2025 at 10:07:52AM +0100, Pavel Begunkov wrote:
-> On 5/28/25 09:14, Byungchul Park wrote:
-> > On Wed, May 28, 2025 at 08:51:47AM +0100, Pavel Begunkov wrote:
-> > > On 5/26/25 03:23, Byungchul Park wrote:
-> > > > On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
-> > > > > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
-> > > > > > 
-> > > > > > To simplify struct page, the effort to seperate its own descriptor from
-> > > > > > struct page is required and the work for page pool is on going.
-> > > > > > 
-> > > > > > To achieve that, all the code should avoid accessing page pool members
-> > > > > > of struct page directly, but use safe APIs for the purpose.
-> > > > > > 
-> > > > > > Use netmem_is_pp() instead of directly accessing page->pp_magic in
-> > > > > > page_pool_page_is_pp().
-> > > > > > 
-> > > > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > > > > > ---
-> > > > > >    include/linux/mm.h   | 5 +----
-> > > > > >    net/core/page_pool.c | 5 +++++
-> > > > > >    2 files changed, 6 insertions(+), 4 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > > > > > index 8dc012e84033..3f7c80fb73ce 100644
-> > > > > > --- a/include/linux/mm.h
-> > > > > > +++ b/include/linux/mm.h
-> > > > > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
-> > > > > >    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
-> > > > > > 
-> > > > > >    #ifdef CONFIG_PAGE_POOL
-> > > > > > -static inline bool page_pool_page_is_pp(struct page *page)
-> > > > > > -{
-> > > > > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
-> > > > > > -}
-> > > > > 
-> > > > > I vote for keeping this function as-is (do not convert it to netmem),
-> > > > > and instead modify it to access page->netmem_desc->pp_magic.
-> > > > 
-> > > > Once the page pool fields are removed from struct page, struct page will
-> > > > have neither struct netmem_desc nor the fields..
-> > > > 
-> > > > So it's unevitable to cast it to netmem_desc in order to refer to
-> > > > pp_magic.  Again, pp_magic is no longer associated to struct page.
-> > > > 
-> > > > Thoughts?
-> > > 
-> > > Once the indirection / page shrinking is realized, the page is
-> > > supposed to have a type field, isn't it? And all pp_magic trickery
-> > > will be replaced with something like
-> > > 
-> > > page_pool_page_is_pp() { return page->type == PAGE_TYPE_PP; }
-> > 
-> > Agree, but we need a temporary solution until then.  I will use the
-> > following way for now:
+在 5/28/25 4:17 PM, Huacai Chen 写道:
+> On Wed, May 28, 2025 at 4:06 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
+>>
+>>
+>> 在 2025/5/28 下午3:17, Huacai Chen 写道:
+>>> Hi, Qunqin,
+>>>
+>>> As I said before, why the patch "MAINTAINERS: Add entry for Loongson
+>>> Security Module driver" is missing?
+>>
+>> Hi, Huacai
+>>
+>> https://lore.kernel.org/all/8e55801a-a46e-58d5-cf84-2ee8a733df9a@loongson.cn/
+> Sorry, I missed this email. But if you put all files in one entry, you
+> can merge Patch-3 and Patch-5 as the last patch (then you will also
+> not meet the 5 patches limit).
+
+We are cutting the foot to fit the shoe. Sigh...
+
+
+Thanks,
+Yanteng
 > 
-> The question is what is the problem that you need another temporary
-> solution? If, for example, we go the placeholder way, page_pool_page_is_pp()
-
-I prefer using the place-holder, but Matthew does not.  I explained it:
-
-   https://lore.kernel.org/all/20250528013145.GB2986@system.software.com/
-
-Now, I'm going with the same way as the other approaches e.g. ptdesc.
-
-	Byungchul
-
-> can continue using page->netmem_desc->pp_magic as before, and mm folks
-> will fix it up to page->type when it's time for that. And the compiler
-> will help by failing compilation if forgotten. You should be able to do
-> the same with the overlay option.
+> Huacai
 > 
-> And, AFAIU, they want to remove/move the lru field in the same way?
-> In which case we'll get the same problem and need to re-alias it to
-> something else.
-> 
-> -- 
-> Pavel Begunkov
+>>
+>> Thanks,
+>>
+>> Qunqin.
+>>
+>>>
+>>> Huacai
