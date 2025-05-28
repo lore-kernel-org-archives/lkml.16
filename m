@@ -1,90 +1,95 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6FC79FE;
-	Wed, 28 May 2025 03:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EF112CDBE
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748402277; cv=none; b=WC5T6xehQqCmVexw4pR7P1NgeiJOs4JjM89jhJR7Y3BAcm8NFR6jI8/eYue0ssyRpZ6OLKmgvNcLN0ZUfhUpbATXNA0g3EKVq2ghofn2tFkmUAiM9ex6K0SwlRVG7eVxaBcLWjzKJywrBKTIw1jWESh0t3g89NGeSdCmFvy0pRs=
+	t=1748402306; cv=none; b=hpZRXRZDlHLqSUrEy48oKB+P/VRY7F8qsj/FwkLDGAQwe2CCTZCfJwV401G9FrWKoz2bSm9VsbL6cf7n5Y/cmPtwBSBPimdsfbIQ95Bcw/0QLRlXun595vnGQiWte1lEDfFSXcHVAE4sBKrJkWlYwvxB+t9H3sTKI4enSAXS3MY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748402277; c=relaxed/simple;
-	bh=mzfW20sFFR6D/60o4wNJyAxellP62F05rai/LV6m27o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IiOcFioFU5pMbhwbrjpmsklIe1OlxVUaDkhzLnJ2y5v8w75r7U4KRd7mBreSwt726zqBYa3hrvTF3XAoUphERlmpdVUH1a7PdLjuux/V71EdeD1D6qIbWAVNvhhrKrE2zOZJFT77U23aVR/1Qogj6n9COmM4Km4NEolEETP+PBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: zesmtpsz6t1748402170t6248cb72
-X-QQ-Originating-IP: rpHufvYFYUJ0bTcomXzGOi8T7Xf90nx7Je9QKh+gAm8=
-Received: from localhost.localdomain ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 28 May 2025 11:16:08 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13204632789230215609
-From: chenxiaosong@chenxiaosong.com
-To: sfrench@samba.org,
-	pc@manguebit.com,
-	ronniesahlberg@gmail.com,
-	sprasad@microsoft.com,
-	tom@talpey.com,
-	bharathsm@microsoft.com
-Cc: linux-cifs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ChenXiaoSong <chenxiaosong@kylinos.cn>
-Subject: [PATCH] smb/client: use sock_create_kern() in generic_ip_connect()
-Date: Wed, 28 May 2025 11:15:31 +0800
-Message-Id: <20250528031531.171356-1-chenxiaosong@chenxiaosong.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748402306; c=relaxed/simple;
+	bh=p0o8H/ZWP5ajJApvc49pdLseFqRSuUwEFayifU1/9TM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q9ahh/RZleg5CMxdxKdIPKLKS2K3CEkWnKOs27gcFP3HxVk57T0wDHi1YvQuYfqDUHrY+z6TvyLn2ZHLymd2pKFeJpFMMi7us9O3fRM0rOxwMr25kro8Q9L6Pk8xWrq7aXi6zujDGkz8sSbLKBLDG7Q2p0zfpykcv2v1nrlT+4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xFZ7x+ue; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xFZ7x+ue"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2349068ebc7so134945ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748402304; x=1749007104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p0o8H/ZWP5ajJApvc49pdLseFqRSuUwEFayifU1/9TM=;
+        b=xFZ7x+uen24P4ZojJyJX0jgpi8lonQi6MVbcGYpkKXqXdiK8kFJW/+aGMdVAq/PAIB
+         m7A8Rio2Rmkc5Ek4Oia+B/ST52OT5+FoTxjsVvxUqx/76r2K7D4g64Mszm3txZj7XQPV
+         O7qLQLyZYgzAaUG5nVTYK+NVYuxPoP95xcGGyp5OUg7DTLPPPTK/MquRfG93T3ffD/B/
+         PpdLXU6EZZizv+FaYUHKH/MCpNLMZFJapTUJVpGkHBld9fdCUSztexbTXClG/LhFHPBF
+         NwWrYEvLyWQIlJ96NEP1hqgfwwwZWE5tG+9OXXTqBLvnFbJ1TXjqDGpVSOZK6cBgGnek
+         U8DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748402304; x=1749007104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p0o8H/ZWP5ajJApvc49pdLseFqRSuUwEFayifU1/9TM=;
+        b=VDfl5ifZhBjtDZ6d7FOAPFcENstdWRDPersDl9vROMr6+MgiNVaz2B1xeqnB4nAc7s
+         M8PU/IB8uZW0MUb+/acpT6AoLWGw0TE3KBu3ttymceqmtof0KdltOFGIeBgLdW6ITGrD
+         SRs1QvZOHXUdzoH74yIvPOCgLPKdPtrlGaL0KTzqcmkQMRWLfx4dU0G3Xqp4UO2Zpgct
+         ZfaGruzCOC0MoyJHeZHJN3LliQ4vf2xh2XVgXC0tiwqWHcfm0JNIq6Si+Y0yTMgVOp3X
+         GVAo78GW1E+5lrNDjGKELHfx/+gkNwWylMMC8Dq0rYqHfAevlUeZ8iqQeBsS/GXyUYuO
+         C+nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVgm1i6M2YGnlIhQYi+UubQRW9tYc91PtsGzM0a7jmG2dwntEqwMxeBuengfz2lpwL+daCBxdckufdLFwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0hkiy6bEvZlhJH+n2jwL5Cc7HUq6fJHhIMkrqEIUpl6JTN5Z8
+	K2VefXp86trLFgiSea/bUpmlhdroOkTtdgTSHSGTjyQS+nRMxSDVp6Nys/QWlcpMTKGFBn7bs/m
+	xyw4w2Xc3p0VYS95YFqdsuCwehfJiT5PQxlPWKnqu
+X-Gm-Gg: ASbGncsluYyVMihYK1yLgAMJdlbTh54vplNJD8Nv4KDsP+twnekWHmeiY7qxcE9oS/f
+	a1pR59EmteGONRY8FP3wgK2ETSphYDFd8PQ2Cy5zs23q2ANe6wWq3lQ1frkkoVozgXwuFR49KWh
+	Z0Kz/dm52LbX3MtFBzmwaFgn6Hr3F8yZwYwTXVxNC6HxpU
+X-Google-Smtp-Source: AGHT+IHyBASOmSpQ6jrt38akPkcyDz5ZPwdAwA+jYpxd9Nbay9v2Ysdq8wuVjVilze9WFqafdNaHLI6g1ELAifk2Rao=
+X-Received: by 2002:a17:902:e845:b0:231:ddc9:7b82 with SMTP id
+ d9443c01a7336-234cbe2892cmr1015255ad.13.1748402298919; Tue, 27 May 2025
+ 20:18:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MFdGPHhuqhNoOWNRcEyLWJrL0qUXQ3qT5D5wx9m9puYNGgcNX7WDrIde
-	tGaNwEqrTnQ0H8TwUPhIdP84AE6PDxCup4Qn+9812XVGpHJUyPhvAAoe1SDCzxNlpXmemXh
-	CdVj6a4ye8i4w4+l7Mr9VTv3ErR+LC5Vl7QhoaN0jRFdAC0rRtoxqtb3cTspGTi8ddivmGz
-	TkTBVzIlJznwcOItOwaW1QGcj34EsiKxwMh0a3I3N3BV6lw6d/JxzQE8kz/WU1gOFccFQFk
-	CVN+E8wAMb1WDXMHL5X02URyweeWvXjZhW0jw/fDT6ZaX7T9N/uwYtVdt+JHjE61m1tjFse
-	rwYQaWkvKbZ8hFzGw/Xd7NgWnvI8POe+wO6s3drekwdQ9pdlMT2Zjmm0Ud5CjBFPCtcyCmV
-	asMcbfrd9XIPLZaWM9oHn2Mnuz223oddrbnPJ46KbXBnKeSUua7sZGGqSc0BDdxe9TnKbrt
-	8UckOOfnAxl+IV2dkS388/IQPKI3kx4oMoOqG2YRjNK4MCJivA+hYmasLJqDlPXmVY+4m6c
-	ROO1M0IIsLA8PCCvrBe+iJQSl5k0+yDJERj5etgBUSmITQKiijQXsZ+Woqh4JvN4jPtxZU4
-	UftMYDh913DvsxdcQNo5zbFWT8xM4k+a+rOvjmwvPp7Is7PtZwcpprQ5pRXacmrnEiA0am5
-	FUhBr5A7PSU91Wd5Y9inIZqpSfBlsfPd7k1GsZu4KF1IYgN3l9orJ6svb4Xzj9xItV4+P9Z
-	m7ILVyyBaDZuH3UL/aJBrmRBJAL1NyIdV4x7wesVFK1EY/66DNuG7T+eWCg2lEHMspGekEf
-	N2Toet4ogmlG6LhD1RV1Q7JX8SmLYRjUGQlN5CxarGbUsyrHd/B2fs4p1m7skBl6mYE5Pr+
-	kHws3JYDW3qYrp0Dm3anK+rqQA/R7U6Ha8Z3N5CvQitPMsIS0OP+8CRN1mlnmuEA5heXg+u
-	icMqxmcP9bPcfStimvnX8ST26fe0nux16nNBtXJ5Xlo7ab3a9f7/m/mp2mQrglKm7VPc=
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+References: <20250523032609.16334-1-byungchul@sk.com> <20250523032609.16334-7-byungchul@sk.com>
+In-Reply-To: <20250523032609.16334-7-byungchul@sk.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 27 May 2025 20:18:05 -0700
+X-Gm-Features: AX0GCFs9-vI-xN4yFg2bdl4ceoAUrTj04uXSI8vFV9kuA2D-mWZq_A_MtCFBCAU
+Message-ID: <CAHS8izO8fqvXV2_83MVLCxo5z7DepRVaPWS6rymqputuhcrk5A@mail.gmail.com>
+Subject: Re: [PATCH 06/18] page_pool: rename page_pool_return_page() to page_pool_return_netmem()
+To: Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org, 
+	akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com, 
+	andrew+netdev@lunn.ch, asml.silence@gmail.com, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On Thu, May 22, 2025 at 8:26=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
+rote:
+>
+> Now that page_pool_return_page() is for returning netmem, not struct
+> page, rename it to page_pool_return_netmem() to reflect what it does.
+>
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
 
-Change __sock_create() to sock_create_kern() for explicitness.
+Reviewed-by: Mina Almasry <almasrymina@google.com>
 
-Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
----
- fs/smb/client/connect.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 6bf04d9a5491..3275f2ff84cb 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -3350,8 +3350,7 @@ generic_ip_connect(struct TCP_Server_Info *server)
- 		struct net *net = cifs_net_ns(server);
- 		struct sock *sk;
- 
--		rc = __sock_create(net, sfamily, SOCK_STREAM,
--				   IPPROTO_TCP, &server->ssocket, 1);
-+		rc = sock_create_kern(net, sfamily, SOCK_STREAM, IPPROTO_TCP, &server->ssocket);
- 		if (rc < 0) {
- 			cifs_server_dbg(VFS, "Error %d creating socket\n", rc);
- 			return rc;
--- 
-2.34.1
-
+--=20
+Thanks,
+Mina
