@@ -1,72 +1,71 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDB31DC997
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D545E84D08
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:13:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748401934; cv=none; b=e9kD6KqUDLGSjWChrd12p2pW9GGHywyNbC1gV7XCkhO8wXeYLZSLcUljheiOxTMz+Z1lFCPtJ/xpEwA4Ek2PjS0I/E9WRHSF6uyDkSb+9Bk8iBdVnyg1Z7c/eirnCLLjRCi92D4l7HYTnYB5FH3dK/BhK9aaZ6YdMa8v0wM9o0w=
+	t=1748401992; cv=none; b=nDGHO1ckjmVlmAwHMBttMJGSxszuM9WmUGebkL1Nptwd6yZ+oKjpE6PrY9WSPtiwAA92etEsp8ZJ92V5E/PoU9kwLuVzi3GH7EuQdt45kMJk+H42hlGUBskFve6SVV+VzXyzpfUJ9HMGZqtv04AjU7ym9Z1EwqUh4vcqbEUn1a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748401934; c=relaxed/simple;
-	bh=45wv2D7qTveHvG++liQk1FdgOdvStQgyo7K7EgLBQ20=;
+	s=arc-20240116; t=1748401992; c=relaxed/simple;
+	bh=zzZKAu+ekb5wfUFWFWxFj7mtfUTDEeQOhI9SgqQhXNE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AVKGXBChrwbbEUEHE7kv64Ee+gK88NSnvpQLCyfCaK8LpMi15CD+J+HLZHqpgzdZkBnh486Ba0yBzCWlja5OGigip2yiLn9tnJZpeVq82HPxjrrf8JCIjVrUiLZRgLDgjsC7P69KLrJh/y2x1O0cYDEjszlV52vJvIE2/sxWUkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLuGLAzF; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=nyZb7WTkzhq4PZQMxPpq8yIgJPo0K4d0SrpG6m3r1rqDnXUp5ONjMiA/AM+gmSyKiLT1OX5M85T8UbTUusTfBLbzzZtaY/jsrPOOLNy++hOzlXtnC/zXhotFqwJrhuX5M46xvc4o/D/LBg8chCIssQyYEG+yTVyPSZOfkyzhz7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZWyu1Vbv; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLuGLAzF"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231ba6da557so80045ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:12:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWyu1Vbv"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2348ac8e0b4so69695ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748401932; x=1749006732; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748401990; x=1749006790; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hi54XJvxzTpbX0StT38uQRnU2/zb/XVmDK+caARZGHA=;
-        b=qLuGLAzFri0ELQo4ug0igeikL8LmDPPfEQYrCmNbU56Tg8RjWHOo8GCx63KdOLC5fb
-         94Jn31FyUqWmxqXyNLqYUmxnmjRwO2pQqa0ZZalBFrASW/1pctyQD2t7UllpFpmvNYrt
-         y0mwJnzWgd4jTwRFf8njjTLsyOLvIvcxHIQ/Ul0eHEV0u33HJa1R9v7DUTEol/dfaCv9
-         XsolPSH5bhIV+A8Xda5ar5qQR1g4R9BqKe9EK8B+ouo8AwtvnLFwFJerameKYWZLZJpd
-         1L1CiVHn/Ix2rwsqKjvMl2SmHlnZz0Uz/gvRtZMV1+LLu2nmlHPBrASFWAikRAlKP3AO
-         IjhA==
+        bh=zzZKAu+ekb5wfUFWFWxFj7mtfUTDEeQOhI9SgqQhXNE=;
+        b=ZWyu1Vbv2ejyjuwmvqu1s5LfjEB+ZlDCoQcWYYNoKJEIHuwynv37TA4DSBtp1UaZ0S
+         zuJRuTA+hcMV3KHX4mCcQuBv+9ATmxDFcW1KDMbqI3vgmdVEBlR3+86X/gnC/kjumIqo
+         hpUv4Z8VF64uiEztKO29w91LCXXBm7SB4I/vRih3EVRgbicfFWwMWAnptFa45ZrwtrwA
+         3Vkq3epp/y39JSoFZA72R55fuSQflQs7VGkORFX/afLDoMqhcUcxbL+A3PXGw+R8XuYt
+         ehXEjMr3F8JgaNKtCttMdDn0q/wht2A2DHeROq5FlhKDhmnDC1MRv7OnIiWcp7MKB8g9
+         uv2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748401932; x=1749006732;
+        d=1e100.net; s=20230601; t=1748401990; x=1749006790;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hi54XJvxzTpbX0StT38uQRnU2/zb/XVmDK+caARZGHA=;
-        b=cik/D3MoUX8q3vRayXviCMm1OThWIg/zAe6liZTwPI33vPAP1zqG8UXwLoFZnB9Fn1
-         K54DwFte8deMD2GzplZbIni4qHvHv7c67DJoBPe+iApM5/ixMNSRwm3UrdROWEdLWuCZ
-         7B3/sRGehpzbA4aRaKg7C73Uw9pKtRSiRXubc/eE+vIiZ3i8F7Wm9P783LH/1Nj8uESd
-         NOPbmronUpXGi7i+T4REuAT26Bus1oTAnMNwBoj0l3euK5Zjtc5GCCLHX5g9Bzj8BzN8
-         p1BlN1NzyFf8oEOp38z1zFHlO+PTKTzqGF9UOoVkMlkT3Z8HkQIAQSIU4deuuSsqURxk
-         I+/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXtqeQM5QO0NkTQpZwYssYoTad9txadUBdkX2UX0Ns5Ou2mpm7UfaXKVHjKMvjOoHy3ZrUJBSSHPF/cJ9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUoD9zVwnP79anzC7crkqCGN5IO0L5rL1OVg7IUDPR0NrEdXVb
-	7msIev6duOfuf2kWOtSz/cF49rZCsDB8GdHFFK0G1Pnq/sUkQZ9ouPtmmdDFbKTZ3ucsO7c8D6/
-	9Inqh8vh2pSfyoRi0jqXSolqHEexXk01ep3SBZ6p3
-X-Gm-Gg: ASbGncs8f6cfHfegy+eQoJJkCsTu2jJR8MnX1fRcf8oi4fXZ8GUEsPWfHUvc14t+J+m
-	VKaQkGpUDzD59g/BnjmTBt44Hp6XL520qQwWu8cssg2tbq+1m224J0w5b9GrgTAEJlwmrejXAzc
-	KrGovBsvU3qw9cvtl+gZu0j+OyHnd3XNas7g/Ch0R1IvOi
-X-Google-Smtp-Source: AGHT+IGdqjyzoDtqYIHx/y7YKWzz/qyhFs2l//e3GArH1hU2e1HUWggvHASce0D05SKLzqIW3p6xmhC7Nwpq0Q6Hybk=
-X-Received: by 2002:a17:902:d2c7:b0:234:b2bf:e676 with SMTP id
- d9443c01a7336-234cbe28862mr1141045ad.11.1748401931545; Tue, 27 May 2025
- 20:12:11 -0700 (PDT)
+        bh=zzZKAu+ekb5wfUFWFWxFj7mtfUTDEeQOhI9SgqQhXNE=;
+        b=Cxav2taHvBNo2R/CgsE/UYFEs+ktgNxgZiVtNj3wBCiouutP6XiQwXGGUvPK+PtDXU
+         BhBkJj9CyT2ZuaaJyUF8llFBMWgZZU/sn9CZ2WdB7ylYD8hroKTgHcx2pgKoIZCXhYTV
+         cfbp/tNyORuXJq84AOw3LupMpT3eJoa5HnrrK04dth/iak8QlaUBrfdkyAWwoKe4sTr4
+         knbsYK2kWbcGENtOFF1Xaz5s6/XYBDSQj570712c0o5JiX3dIBOvobJjdWFTv8O7H8xI
+         zcFV5QnvqsnHQ5DKPJJKmHmfv4SLtRgsQn55tiTvptmNSEEFkp0ylHMUTrr1jdHiBmVr
+         0Q/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9DpDqW/057RHNPeBgAY00FVtNRbqKEIqrSbl2RPQrZnSRr6N6oecqE5K5iNTzYLI+g29bQEiwlvXAao=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3wNERW0doZ7JsD5iTkIej6meBE+S8MK+uteXm+5c3tBlPT9xj
+	mispZDlGXNSPBNUgwfjtXTjFo/ujh6lQw961GFyZw3+KHjGVbwkqvzT697Quw5AH3n/BewYNZvK
+	PWxQGJvfEvire++RU6cIrMYvLf8lFDDKrXMu8vLHl
+X-Gm-Gg: ASbGncv9Qb5Dwafl6N0sdq9oGubZQ+hbRfhF25qARZZTGHXwtCU+OC8ti/ffLIpX9X2
+	EAxO69eeoyr5AsF6Ywra+5hqAIlXSA5CRK2ajqW4L0f+jU/0/mZTI0D8MF+UdJKZS19AeYoij8S
+	8hIi34VWYWALSyidAZvVAhdFdxE9qFuH+vNK6foYO2k96N
+X-Google-Smtp-Source: AGHT+IEDUY7riFOOR08zN+pI5SwQ05vmhq98GyByeU8awQ87xrmYDNUTemcQa8sUY7rtO1VWlklZOkyX7GAf8CRHf1k=
+X-Received: by 2002:a17:902:f785:b0:22e:766f:d66e with SMTP id
+ d9443c01a7336-234c5256552mr1833575ad.12.1748401989824; Tue, 27 May 2025
+ 20:13:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-3-byungchul@sk.com>
-In-Reply-To: <20250528022911.73453-3-byungchul@sk.com>
+References: <20250528022911.73453-1-byungchul@sk.com> <20250528022911.73453-4-byungchul@sk.com>
+In-Reply-To: <20250528022911.73453-4-byungchul@sk.com>
 From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 27 May 2025 20:11:58 -0700
-X-Gm-Features: AX0GCFvbRHta6TyJPe_xr_2KYS1z9gGCeokku76odClbu09MqRPDqhx2_Gv1QJ4
-Message-ID: <CAHS8izOkr96_i1B8o_AWQGgfWSWZVVjHhOShReLZozsxZB6WdQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/16] netmem: introduce netmem alloc APIs to wrap page
- alloc APIs
+Date: Tue, 27 May 2025 20:12:56 -0700
+X-Gm-Features: AX0GCFstQ8TSymZiP1u3KsDOqDNDhSVZvkeBqi3jCf2XyHkp_VooW3rcyXYh7Xo
+Message-ID: <CAHS8izO_ypBm4htYOZ6mDqn5hge5S_3DBKHHTdEW7ay86MsSZg@mail.gmail.com>
+Subject: Re: [PATCH v2 03/16] page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
 To: Byungchul Park <byungchul@sk.com>
 Cc: willy@infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org, 
@@ -84,51 +83,13 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, May 27, 2025 at 7:29=E2=80=AFPM Byungchul Park <byungchul@sk.com> w=
 rote:
 >
-> To eliminate the use of struct page in page pool, the page pool code
-> should use netmem descriptor and APIs instead.
->
-> As part of the work, introduce netmem alloc APIs allowing the code to
-> use them rather than the existing APIs for struct page.
+> Use netmem alloc/put APIs instead of page alloc/put APIs and make it
+> return netmem_ref instead of struct page * in
+> __page_pool_alloc_page_order().
 >
 > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> ---
->  include/net/netmem.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/include/net/netmem.h b/include/net/netmem.h
-> index a721f9e060a2..37d0e0e002c2 100644
-> --- a/include/net/netmem.h
-> +++ b/include/net/netmem.h
-> @@ -177,6 +177,19 @@ static inline netmem_ref page_to_netmem(struct page =
-*page)
->         return (__force netmem_ref)page;
->  }
->
-> +static inline netmem_ref alloc_netmems_node(int nid, gfp_t gfp_mask,
-> +               unsigned int order)
-> +{
-> +       return page_to_netmem(alloc_pages_node(nid, gfp_mask, order));
-> +}
-> +
-> +static inline unsigned long alloc_netmems_bulk_node(gfp_t gfp, int nid,
-> +               unsigned long nr_netmems, netmem_ref *netmem_array)
-> +{
-> +       return alloc_pages_bulk_node(gfp, nid, nr_netmems,
-> +                       (struct page **)netmem_array);
-> +}
-> +
->  /**
->   * virt_to_netmem - convert virtual memory pointer to a netmem reference
->   * @data: host memory pointer to convert
 
-Code looks fine to me, but I'm not sure we want to export these
-helpers in include/net where they're available to the entire kernel
-and net stack. Can we put these helpers in net/core/page_pool.c or at
-least net/core/netmem_priv.h?
-
-Also maybe the helpers aren't needed anyway. AFAICT there is only 1
-call site in page_pool.c for each, so maybe we can implement this
-inline.
+Reviewed-by: Mina Almasry <almasrymina@google.com>
 
 --=20
 Thanks,
