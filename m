@@ -1,79 +1,57 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D212E360
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652D120296A;
+	Wed, 28 May 2025 05:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748411009; cv=none; b=hdjg8jmeRWLBobG1SyvoMgX7ePH4wNbwPwLjxiiNfrwR2o3oZz8NxFkluxu+8DGQRqC4hBps4Kak8TWEpZUEFlwuwVB8EDhsS1C3QrgPmlCIO5207e5SsgqcCsH8b2BIQyrNH7X38xClkAe5aaUCSLjk4TH98b7rnyWii0KcPAQ=
+	t=1748411037; cv=none; b=FIQxD60nx8L+4fZDJ5nCcA+kjVHgng25tOwssPrcSL+L984b+iH6GSWECbjUqdyzkgkp9As+bel8VUMqBuVEed52ETBGmdeeaiJaYaTKBfPxOnpIu/ngQp6kaG9o5lChuwO+kEqAFJ1B77QUqdvd9h3DMSO+R5VV4Ao7QWDb8OM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748411009; c=relaxed/simple;
-	bh=UAW4IDmFuxT7Xs53ZJBV5vj6+YrT1J7KuiKlAlHg/1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a6WM7lPfc2PnnHpvrziMgg4NcbipNnnHknlyhXMVIDEIKoGV2eRDBBR34NLIxK1EonCx7aqLM4PMMHPLwE43qqtLhmmA4+HZzUsMIT/qEmWQ3jlW06ryu0LVcubE4rHkvBXufZLStgrNb7+GmgVaT/TCp9t9TqDA4fSkuANnUpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=fRXk1oyk; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
+	s=arc-20240116; t=1748411037; c=relaxed/simple;
+	bh=BjhYdU8zIsDfSu5tKkeASlKHUT4Q53Q1G1X0YfnzDh4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=B121WhTJr0KYNrlGUAJqtf/DbI3MDHFXtUgntQbwbExAGbVfAzKN1/X2deZ6wjsQ2TFbkcPEAuMdICKcTc6R5knoYz5YwmNrgx2/NKUdzap8nfP+RgNjjqSegK7jQpX7c7abLRtowT1DcK9CVXcfedf7zNW4etCXV3VX7sWAplc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=OKpEdFge; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="fRXk1oyk"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-864a071b44bso79601139f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1748411007; x=1749015807; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MSMi/AKPsTMgRd8z+xkRR6U4DbzIU/rPyguhFHTtxoA=;
-        b=fRXk1oykMEgWHm0satGojPSt9dFhImudNhhNegIWDII+5lkOy+9iLstUIIdbAtlQB2
-         gGm8q6WCfNEniGfKuvEOq7PwbNN/jVUUtBvngM6x/jiTOSXk4aPZAv+Sxt0LMin7ca0O
-         0Qf5O73Zo7lyj0wMf3KNGtrErjMuRsTA3ZDNDWkrHcxnVvNxXX3iPUUjytuldVGzD9R4
-         YPelZ9OJr2VY2ekiXbTy4Gs5Lal7ebzfvB/jezHB+tuP5Z585JAv3gyDw3CIcs1SGcq1
-         gQVS+MYgQbJ302zQYAWX8czTNsNKCI0Unq78HbeWI4pdDneL+/MnneB1vQxKGSOWvy0u
-         JDww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748411007; x=1749015807;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MSMi/AKPsTMgRd8z+xkRR6U4DbzIU/rPyguhFHTtxoA=;
-        b=VEqINUZNZb1WGLhyfijk3vqTf49+ynO0McirlZGK1NaeDSBhJphAG6ILDaFsYvRrzH
-         XPUWcG9kt/WJdMgSiIziandb1uiHfF0eOD28p2OsU+r3bI9Z/7pvnmjZWN0i4Vk+sjTZ
-         J0gbsp8Cy3sC7FoLCg+OR+rTwf6L0JA0uyYsj7I4NUJN9D4nxjtQ7ZCt7PifDy7VDxOu
-         l9awJJCfP6zfNuAj8ttITzO122Vg2NybpL4VLMSIxVcAmx6uVuAc+lGnh7JBbO4tmzKC
-         dgUCg8bo/2VkZyUBEOQ59EMVTp5Do3qBtKb6zFYsGW/Hwh4rg1A2xWs7+sLTAM071ZS0
-         ji7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXsGY425q4HgxYRoosw0HK8W6625jBWLDGfWOaHDmKBhQD1bTi51Yeyi9I6bILXpg/aXPV+RPVg99YSXsc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4UFSIoqiKAh5cVf7RmVKw+pt6s50LDSW5ZjyDo9E3vElpLwRK
-	gHCklTyuZ9kiT5dqcBcKCuLiI0yiOPkWCnQgB5eX5zQQTIxe7rnmU6wixfsCvLfkJ+w=
-X-Gm-Gg: ASbGnctOJZC6CS1TgzNyybu6YtrxCDVr2nTLX89wY7h3XPDh/3ASUvHLBfB9VUiyhar
-	ipKGTSpOcirGnMMgRTdP9SOUoYbF6o6Omr4s2UwxMaaERJZCvKStc1PVIdqHHxKsXgVJeLbnAzd
-	GpzfXJfONUOs4vpRhkfGSFuQ5Nu+xgVS3E2sajC8DTnYatg744ASEF+m5/XJrgOprqhMFRjx3LQ
-	B4M/8vAff9q30AL1d0z4bhxlOWU66dXh5HTg/NPDSR4Vw5upCCGv1MqTmJTgXh4ZKCKPP6KQCVZ
-	vc3I0epxGS5pie9LVURXh4x1VaecxlY1jSe+LKNSWbl0EzKMyWUK5lQKTJlVboj2gOdbf9g2+9v
-	I1+gKlt0=
-X-Google-Smtp-Source: AGHT+IF+v7eeJiqgx2CgLK57L91nnP+NaoqNBY3MrpJ58a87hZdHLPE/Eq+lD7S1GC6+xWdZO4pGrQ==
-X-Received: by 2002:a05:6e02:1686:b0:3dd:869e:d1f0 with SMTP id e9e14a558f8ab-3dd869ed599mr37235695ab.9.1748411006513;
-        Tue, 27 May 2025 22:43:26 -0700 (PDT)
-Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dd8bfb2ec5sm1220685ab.1.2025.05.27.22.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 22:43:25 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Athira Rajeev <atrajeev@linux.ibm.com>,
-	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Brigham Campbell <me@brighamcampbell.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v3] docs: powerpc: Add htm.rst to table of contents
-Date: Tue, 27 May 2025 23:41:47 -0600
-Message-ID: <20250528054146.2658537-2-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OKpEdFge"
+X-UUID: bba0d6aa3b8611f0813e4fe1310efc19-20250528
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=qDqcO+1lT1CdVZbL9zzydevEmoh/kdOll60G7116BHU=;
+	b=OKpEdFger6mJk8dF4y/beTkkfUsGwlANtMvuk2DQqxKY8DXonmpBhLrGoTmNnJZu3SmnVstFNx5HpSOwkcbqAjoetwUdID8HlzNPLNOlVttp+BU0SBuZMYxv43PKnLXbRCBq4+B3gVbg9cSUGRUeg9Mzz0MzZHxKz+EVzrbMFzU=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:2052d81e-d4d7-4f7b-a52d-50c428ed460b,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:86be3159-eac4-4b21-88a4-d582445d304a,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: bba0d6aa3b8611f0813e4fe1310efc19-20250528
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
+	(envelope-from <shiming.cheng@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 744441040; Wed, 28 May 2025 13:43:50 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Wed, 28 May 2025 13:43:49 +0800
+Received: from mbjsdccf07.gcn.mediatek.inc (10.15.20.246) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 13:43:48 +0800
+From: Shiming Cheng <shiming.cheng@mediatek.com>
+To: <willemdebruijn.kernel@gmail.com>, <willemb@google.com>,
+	<edumazet@google.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <matthias.bgg@gmail.com>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<shiming.cheng@mediatek.com>, <lena.wang@mediatek.com>
+Subject: [PATCH net v4] net: fix udp gso skb_segment after pull from frag_list
+Date: Wed, 28 May 2025 13:46:28 +0800
+Message-ID: <20250528054715.32063-1-shiming.cheng@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,37 +59,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Fix the following documentation build error, which was introduced when
-Documentation/arch/powerpc/htm.rst was added to the repository without
-any reference to the document.
+Detect invalid geometry due to pull from frag_list, and pass to
+regular skb_segment. If only part of the fraglist payload is pulled
+into head_skb, it will always cause exception when splitting
+skbs by skb_segment. For detailed call stack information, see below.
 
-Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree [toc.not_included]
+Valid SKB_GSO_FRAGLIST skbs
+- consist of two or more segments
+- the head_skb holds the protocol headers plus first gso_size
+- one or more frag_list skbs hold exactly one segment
+- all but the last must be gso_size
 
-Fixes: ab1456c5aa7a ("powerpc/pseries/htmdump: Add documentation for H_HTM debugfs interface")
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
+modify fraglist skbs, breaking these invariants.
+
+In extreme cases they pull one part of data into skb linear. For UDP,
+this  causes three payloads with lengths of (11,11,10) bytes were
+pulled tail to become (12,10,10) bytes.
+
+The skbs no longer meets the above SKB_GSO_FRAGLIST conditions because
+payload was pulled into head_skb, it needs to be linearized before pass
+to regular skb_segment.
+
+    skb_segment+0xcd0/0xd14
+    __udp_gso_segment+0x334/0x5f4
+    udp4_ufo_fragment+0x118/0x15c
+    inet_gso_segment+0x164/0x338
+    skb_mac_gso_segment+0xc4/0x13c
+    __skb_gso_segment+0xc4/0x124
+    validate_xmit_skb+0x9c/0x2c0
+    validate_xmit_skb_list+0x4c/0x80
+    sch_direct_xmit+0x70/0x404
+    __dev_queue_xmit+0x64c/0xe5c
+    neigh_resolve_output+0x178/0x1c4
+    ip_finish_output2+0x37c/0x47c
+    __ip_finish_output+0x194/0x240
+    ip_finish_output+0x20/0xf4
+    ip_output+0x100/0x1a0
+    NF_HOOK+0xc4/0x16c
+    ip_forward+0x314/0x32c
+    ip_rcv+0x90/0x118
+    __netif_receive_skb+0x74/0x124
+    process_backlog+0xe8/0x1a4
+    __napi_poll+0x5c/0x1f8
+    net_rx_action+0x154/0x314
+    handle_softirqs+0x154/0x4b8
+
+    [118.376811] [C201134] rxq0_pus: [name:bug&]kernel BUG at net/core/skbuff.c:4278!
+    [118.376829] [C201134] rxq0_pus: [name:traps&]Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+    [118.470774] [C201134] rxq0_pus: [name:mrdump&]Kernel Offset: 0x178cc00000 from 0xffffffc008000000
+    [118.470810] [C201134] rxq0_pus: [name:mrdump&]PHYS_OFFSET: 0x40000000
+    [118.470827] [C201134] rxq0_pus: [name:mrdump&]pstate: 60400005 (nZCv daif +PAN -UAO)
+    [118.470848] [C201134] rxq0_pus: [name:mrdump&]pc : [0xffffffd79598aefc] skb_segment+0xcd0/0xd14
+    [118.470900] [C201134] rxq0_pus: [name:mrdump&]lr : [0xffffffd79598a5e8] skb_segment+0x3bc/0xd14
+    [118.470928] [C201134] rxq0_pus: [name:mrdump&]sp : ffffffc008013770
+
+Fixes: a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after pull from frag_list")
+Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
 ---
-Changes in v3:
- - Edit commit message to conform better to de facto kernel development style.
- - No changes to the diff.
+ net/ipv4/udp_offload.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- Documentation/arch/powerpc/index.rst | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/arch/powerpc/index.rst b/Documentation/arch/powerpc/index.rst
-index 0560cbae5fa1..53fc9f89f3e4 100644
---- a/Documentation/arch/powerpc/index.rst
-+++ b/Documentation/arch/powerpc/index.rst
-@@ -19,6 +19,7 @@ powerpc
-     elf_hwcaps
-     elfnote
-     firmware-assisted-dump
-+    htm
-     hvcs
-     imc
-     isa-versions
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index a5be6e4ed326..59ddb85c858c 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -273,6 +273,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+ 	bool copy_dtor;
+ 	__sum16 check;
+ 	__be16 newlen;
++	int ret = 0;
+ 
+ 	mss = skb_shinfo(gso_skb)->gso_size;
+ 	if (gso_skb->len <= sizeof(*uh) + mss)
+@@ -301,6 +302,10 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+ 		if (skb_pagelen(gso_skb) - sizeof(*uh) == skb_shinfo(gso_skb)->gso_size)
+ 			return __udp_gso_segment_list(gso_skb, features, is_ipv6);
+ 
++		ret = __skb_linearize(gso_skb);
++		if (ret)
++			return ERR_PTR(ret);
++
+ 		 /* Setup csum, as fraglist skips this in udp4_gro_receive. */
+ 		gso_skb->csum_start = skb_transport_header(gso_skb) - gso_skb->head;
+ 		gso_skb->csum_offset = offsetof(struct udphdr, check);
 -- 
-2.49.0
+2.45.2
 
