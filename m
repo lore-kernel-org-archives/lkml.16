@@ -1,88 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324691F872D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C961F872D;
+	Wed, 28 May 2025 07:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416620; cv=none; b=nATlgQD1LEsf1Ocpupv+lal6l13cufmgdxv/Gcb4m8F0OlezNpF3dZs+DI2J/jGQKNeqWBb2haaAhSN/lZTY04KiPkTt9h4FYBTXW6BTVT+d0bc9PVQpoEMUn+Av5wuel4kD2ZODoR2ylLdJt/9hypRs4NrknLgtQm9eJJstWJ4=
+	t=1748416646; cv=none; b=cW7Yp087+YU9ZIpc2PiH3FqvSygDh/tyn+Zjii6A/V9nlGSkyLqiJ6T/ZKqQbXGPvvVo/o/MPaQsSXYajo7hTqxeAHG6UAI9RTOq94gErRrNlbt5He7BJQHFxpZynR4j0VOom2+ZEUG0gX9iBrTnhOAxaqjg7RsWLSUoN8YUYJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416620; c=relaxed/simple;
-	bh=hq8gWYqnKKoKi9YMyMtjzxe802L2vhu5zZ+wC637M+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bBjD03EukzjDPvk82DJIUPh5CeN/ogV/L+0H5vustROoHMDt0SgVmELjVLrKjynhJqpRRhtpu2I4fKPcYA7ZcSeNN3h6RXHKqBaULo69y25Df/C20aom6uq2AdxJSugTCMR6dyQaROI6hnoSbUreqxL/rK44DG3Z/Zm/zPKvTHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YMj61BIp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748416646; c=relaxed/simple;
+	bh=R+f29xiLd8IReSQyDpamYthFgoEuOJOqeanA6Eoi8Qk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=igLpMyKxTNdMCyYHfw8sIis9MER5HgNWwn00gZj7tP62TFIN6dMNhPjcZKwDRKjiF/IReSLuBLkxTIRotQcSzDIMaj66C3+TJhh1LOGRbPZDsguGDwAtmK/pGG2pPngMXU0YqS4RXlVZA+SZaeiyylTCBN/LvIrb7aArQtsWMwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ced6P5O/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YMj61BIp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748416618;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/uqW+fuUszjgO5HVBpIHxHEyysrbpSb3yza49f7EKaE=;
-	b=YMj61BIpwb3jD9+zT9y/DecVjE982lAIX70XpoD3gweOMO23baaJVcmz8lJuM65B9rKHhl
-	LN7WLo7ahL7qLM0rGzz3FB5PFbziK/B6ou/rOravYk38csiK9ERkJqZMOA5roH6EMehPWJ
-	ptq4NPKNg8KN7BPvfC34xL+ugEiB0Ws=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-546-iECNX6LXPheDA8EPYCXsjg-1; Wed,
- 28 May 2025 03:16:53 -0400
-X-MC-Unique: iECNX6LXPheDA8EPYCXsjg-1
-X-Mimecast-MFC-AGG-ID: iECNX6LXPheDA8EPYCXsjg_1748416612
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D7359195609E;
-	Wed, 28 May 2025 07:16:51 +0000 (UTC)
-Received: from dobby.home.kraxel.org (unknown [10.45.224.91])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1FBD018003FC;
-	Wed, 28 May 2025 07:16:50 +0000 (UTC)
-Received: by dobby.home.kraxel.org (Postfix, from userid 1000)
-	id F262E450776; Wed, 28 May 2025 09:16:47 +0200 (CEST)
-Date: Wed, 28 May 2025 09:16:47 +0200
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, kvm@vger.kernel.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/sev: let sev_es_efi_map_ghcbs map the caa pages
- too
-Message-ID: <4qola3kscsxwpxmfowsigotjwx5f4meramwjww5ut4nzq3pu6o@n4b2fco644ap>
-References: <20250527144546.42981-1-kraxel@redhat.com>
- <20250527144546.42981-2-kraxel@redhat.com>
- <CAAH4kHYMyJ0Td47KShOJGntRPs6RLcJ97oajA7z9VPdUbjT+WQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ced6P5O/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB129C4CEF2;
+	Wed, 28 May 2025 07:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748416645;
+	bh=R+f29xiLd8IReSQyDpamYthFgoEuOJOqeanA6Eoi8Qk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ced6P5O/gL4/4hT7d4beZXNWruI6RNKDrJFw1HI2NaKeauOVVC0GSx3hOvXrzzHSm
+	 y6EtHewr5HuyC8pRYGAYZ8xevfi4d0QhAHcpXl3WGO0/1oTC+PY9Cb0Ojx4gSFOnWm
+	 M4cAeVDBqpfxXxXkJLrjv26i6FRzfYw7gvFEzE7GZ/2s+SP0n6RoLrtQiT4AB8/FXC
+	 lVdDgO79mj5V0aMYNm5iokted9AQzDR4r76Ssw5j6BImRLqk4NSDIFanAyKnoUIIbg
+	 om1fD21cq/eY0Kbre2i8gGGtqjyIA/mSF18LOcm39fOyHB7zHQbQ5RYot349fJQx+C
+	 U8frzT9dX5Atw==
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604e745b6fbso3970017a12.2;
+        Wed, 28 May 2025 00:17:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJnbhX4x5535yM7qwPRRy9D7+5mkdhVOnkTV8g9AXV5TIbqEgxqxq3XYGxtEMQduPM+wwB81BsIlvFcmn+@vger.kernel.org, AJvYcCW5GuGUKOiPotDarYQqqHDif9ZDHQP7qOHSM1+j4875XqIQCyMFkQA/Vul8sFWI/julyyqnLD77b769TEw=@vger.kernel.org, AJvYcCWh7ilaGcVvABf/2O5VQYAXiOEXVTCEnzI+vXxf1UTm4VFZ3Sc59bqpNRG0lYRjVinMZC2yVcGYsgS7Sx3E2wOh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAu1aNBCZFY1PTO79J4jjXda8Tm9ulZ+Ak9a8TvHkC9tCyvRLn
+	cQe54DimfeGxFx+L5llyAHW4xnE94/HGSTNKlwn1XJNGut1669zNZRqHIpNeTiLnIOHfnirDruQ
+	ZNgqd8BHjrPpc5H/vnRiBdc85njallHE=
+X-Google-Smtp-Source: AGHT+IHCLtdmroV2Jn717BjtWj2/PFsHPpgneov+NHQPQi7ryO9RQG3YNYf02S1+/qgP7fr2xVHK2n+PMl/EbxAxjb0=
+X-Received: by 2002:a05:6402:27d2:b0:5fb:c4be:b1e with SMTP id
+ 4fb4d7f45d1cf-6051c377803mr795235a12.11.1748416644421; Wed, 28 May 2025
+ 00:17:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAH4kHYMyJ0Td47KShOJGntRPs6RLcJ97oajA7z9VPdUbjT+WQ@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 28 May 2025 15:17:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+X-Gm-Features: AX0GCFv1PqBc0S9eTI_-YpcpFrAcsFhiOkHWorIkKM40rfRHllkBaZF6-n5uegw
+Message-ID: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
+	linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 09:44:34AM -0700, Dionna Amalie Glaze wrote:
-> > index a4b4ebd41b8f..1136c576831f 100644
-> > --- a/arch/x86/platform/efi/efi_64.c
-> > +++ b/arch/x86/platform/efi/efi_64.c
-> > @@ -215,7 +215,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
-> >          * When SEV-ES is active, the GHCB as set by the kernel will be used
-> >          * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
-> >          */
-> > -       if (sev_es_efi_map_ghcbs(pgd)) {
-> > +       if (sev_es_efi_map_ghcbs_caas(pgd)) {
-> >                 pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
-> 
-> nit: update error to reflect the expanded scope?
+Hi, Qunqin,
 
-Yep, missed that, will fix for v2.
+As I said before, why the patch "MAINTAINERS: Add entry for Loongson
+Security Module driver" is missing?
 
-take care,
-  Gerd
+Huacai
 
+On Wed, May 28, 2025 at 2:59=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+> accelerator engines. Each engine have its own DMA buffer provided
+> by the controller. The kernel cannot directly send commands to the
+> engine and must first send them to the controller, which will
+> forward them to the corresponding engine. Based on these engines,
+> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+> as an engine.
+>
+> v10: mfd: Cleanned up coding style.
+>      crypto: Unlimited tfm
+>      tpm: Added error check
+>
+> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
+>
+> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>     are all encryption related drivers and SM2, SM3, and SM4 drivers
+>     will be added to the crypto subsystem in the future, the base driver
+>     need to be changed when adding these drivers. Therefore, it may be
+>     more appropriate to place the base driver within the crypto
+>     subsystem.
+>
+>     Removed complete callback in all driver. Removed the concepts of
+>     "channel", "msg" and "request" as they may be confusing. Used
+>
+> v7: Addressed Huacai's comments.
+>
+> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>
+>     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>     ls6000se-rng.c ->loongson-rng.c
+>
+>     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>
+> v5: Registered "ls6000se-rng" device in mfd driver
+>
+>
+> Qunqin Zhao (5):
+>   mfd: Add support for Loongson Security Engine chip controller
+>   crypto: loongson - add Loongson RNG driver support
+>   MAINTAINERS: Add entry for Loongson crypto driver
+>   tpm: Add a driver for Loongson TPM device
+>   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>
+>  MAINTAINERS                            |   9 +
+>  drivers/char/tpm/Kconfig               |   9 +
+>  drivers/char/tpm/Makefile              |   1 +
+>  drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
+>  drivers/crypto/Kconfig                 |   1 +
+>  drivers/crypto/Makefile                |   1 +
+>  drivers/crypto/loongson/Kconfig        |   5 +
+>  drivers/crypto/loongson/Makefile       |   1 +
+>  drivers/crypto/loongson/loongson-rng.c | 211 +++++++++++++++++++++
+>  drivers/mfd/Kconfig                    |  11 ++
+>  drivers/mfd/Makefile                   |   2 +
+>  drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++++
+>  include/linux/mfd/loongson-se.h        |  53 ++++++
+>  13 files changed, 641 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_loongson.c
+>  create mode 100644 drivers/crypto/loongson/Kconfig
+>  create mode 100644 drivers/crypto/loongson/Makefile
+>  create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>  create mode 100644 drivers/mfd/loongson-se.c
+>  create mode 100644 include/linux/mfd/loongson-se.h
+>
+>
+> base-commit: c89756bcf406af313d191cfe3709e7c175c5b0cd
+> --
+> 2.45.2
+>
+>
