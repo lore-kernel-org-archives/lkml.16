@@ -1,137 +1,216 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1D11E8331;
-	Wed, 28 May 2025 06:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0E120F085;
+	Wed, 28 May 2025 06:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412473; cv=none; b=d3nGrt0XA7Uq99DywNy4v3a8q6/CQtPj/N3+jXIrcUxv/jh3EcnqY+UQFoMXem17xbZ3OEWFpVHxGqxMB/0niPr5NCKdNfuZQKAPW7MnAuVyA6300Jz34bHneQMd9vgTr1ju15Y2EKnKE3u5epScDkajlXe2sLWx1CrMft5DRbM=
+	t=1748412503; cv=none; b=KpYciTHjIu/O8t/O7ipIib2jTMvB8SIYLFbcOxyOv0OHSuq+hRS9dmUitnzSJPeA/NpGL8AgPyE6R9XPqm/VpcyZhRqWKljYzsP+zQxJBnXVqQwKLvQeUmbZNaE0b0CAQ3eQ7nQmDepSGvyjBUTOGGYpdaxMYoZpP7Yryt4gNGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412473; c=relaxed/simple;
-	bh=FD/vRrr0K61/ryvWyfuUqQQl+H5RGKY7HCqtiLqKHdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bP3vem5QRU0NwUT7E3eJNwiXBnw4+G9mr8w4gm4yhtzPo54cxor+XHEsltV/P50IF6WNqUaRlRI2BkeNa0opupNOUn9HObu6oAPvdlfBU7yeBsPXZTUpPOOP4AMekls5qXDCU1bQKtygCa5mq5Yr9zIF4PrMcUhyRsb8G9UxPf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-9b-6836a8356a99
-Date: Wed, 28 May 2025 15:07:44 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
- pool
-Message-ID: <20250528060744.GF9346@system.software.com>
-References: <20250528022911.73453-1-byungchul@sk.com>
- <20250528022911.73453-17-byungchul@sk.com>
- <CAHS8izM-hfueYox9Eqti4OsoCafh=pDL2v-6BEJRyt4ay580hQ@mail.gmail.com>
+	s=arc-20240116; t=1748412503; c=relaxed/simple;
+	bh=/JC3gGZ8Q9DdKYDyYaEVzxxLkm2Yi35dZsaPUf3NQDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iO//SNwMUEyle9aYu66XZUXiHF3iQt7dQSWeO88Cjxm7cFO/DViCXYnTXfBJBuLWbUvyKbtTOdl6OzxWBlNf47dWCbLLgd+AMdyoB1y1o0q3YpGj9wPIXaGK/KEuKDt6R8RwFfVdMw949/B2CoNvL9ycXelo3kl61TYgCgUPVI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE0Ma/H0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE0Ma/H0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34826C4CEE7;
+	Wed, 28 May 2025 06:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748412503;
+	bh=/JC3gGZ8Q9DdKYDyYaEVzxxLkm2Yi35dZsaPUf3NQDM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZE0Ma/H0JblFA4ium+PGZRkGBmojq76R93O6Hm+rB6e3Q8iliL8+IL7lJSRpp9g+p
+	 yEVamsORm4l/eYQV8VxTFbeNHrKHbQ1dn+LhgvnMG7niB5Wu4IoklUsv2HFYXqIN5N
+	 CaMd9uFANvjfT4Z+W3k6OXiyxysdIcppfI6NTw/2Ki7u3hoV4oXcgft+MTFcpZNnXI
+	 pxPLG0x2Bpt04kKspcj8PQ+LSL3z6shBsy09EBnpWfN9BuIAIptp9Ww3nE+0CmSr/9
+	 IY7kYV5iTQsbfw5kcWGTWNUDH+nBUjyhJn9OijHs6Y/cktniJQEEpTkJ/P2JwEszpG
+	 L15qfl5UDEIRg==
+Message-ID: <250c9bf7-c958-4383-9b3f-45b4174585c5@kernel.org>
+Date: Wed, 28 May 2025 08:08:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izM-hfueYox9Eqti4OsoCafh=pDL2v-6BEJRyt4ay580hQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1CMcRTG/d/bvi3La0v+YsgaQ81I2DgfTOTTnxn3LwYzWXrHrtpiu5vB
-	qowpWrcYtq020U1mWdRmmkrSZWqUzWVJF+s2BqFouqxoa4y+/eY8z3me8+HwtDyP9eE1kTGi
-	LlIVoeCkjPTrlNwlQYUr1YGncgLBZCnh4MZAAhR021gwFZci+DnYLoG+2noO8nL7aTC1pDDw
-	yzJEw/s6pwS68j8wUHGyjAbnmQYO0lOGaUiyFVLQWmpgIWPoOg1l+m4JtN03cdBZ8oeFDzXp
-	DDQaixjoMqyFOrM39Dd9QVBrKaOg/3QWBxfsZg7epnQhsD90MpB53IDAUulgYXjAxK2dT+4W
-	vaRIubFDQszWWHKn0J+kOew0sRancsTae15CXj+v4EjD5WGGlNv6KJKe3MORH+9fMeRb5TOO
-	WO4+Y0izuVZC+qxztwg7pavDxAhNnKhbGrxHqh5pPUUdHJQn3M/LZPUoeVoa8uCxoMRNAxbu
-	H3/Pesq6mREW4qttesrNnLAIOxyDtJu9BD98rfLcmIcWulj82HTAzZ7CNtxzaWjMLxNWYX12
-	y2imlJcLRQhf7Emhx4XpuPHKO2Z8eRF2ZdtH5/woz8YFI/z4eB5Ovpc5ZvcQtuKPLzrHbpsh
-	LMDVpfWUOxMLNh735qRKxo+ehR8UOpizaLpxQoVxQoXxf4VxQoUZMcVIromM06o0EcoAdWKk
-	JiFgX5TWikZfJ/+Ia5cN9bZur0ECjxRTZORWkFrOquKiE7U1CPO0wkuWtGalWi4LUyUeFnVR
-	obrYCDG6Bs3mGcVM2fL++DC5sF8VI4aL4kFR90+leA8fPcqoq6r226Hl3xx+1LwuY9Lii589
-	Q+ITP9kXdPRVyTYr12vOxR/67U1Cbm8KCS+/6Rc+OVsZGuw6sdF5oaFkd/sk40hsz59QtXN9
-	oyH35NaANGxw1k4tVu7e8lvtZd74pa3el6p88mvPhqMu116p9zs+d0X9sSCtbPH59BZfWXfG
-	nEAFE61WLfOnddGqvyuGtq82AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRiGe7/TPlfTr6X1lqAw6aDQkbQHkvRP+dKPyAiCimrlh1vqrC1N
-	g2I5KbJcWZY1p6xWqctYLZszxGKJKVaKtlpHTTtKqOX5QOWUyH8X930/16+Hp+Un2AW8WnNI
-	1GqUyQpOykg3rTUsjSyNUq1oLA4Bs72cg1vDGVDS7mLBbHMi6B95K4G+2iccWK8O0mBuymZg
-	wD5Kw+e6Dgm03fzCQPXJSho6ztZzkJs9RkOWq5SCx0UNLDQ7jSzkj96goVLfLoHWB2YOPpT/
-	YeGLO5eBBlMZA23GWKizzIXBxh8Iau2VFAyeKeLgQouFg87sNgQtjzsYKDxuRGCv8bIwNmzm
-	YhWkouw1RapM7yXE4kgj90ojSI63hSYO2ymOOH6dl5B3L6s5Un95jCFVrj6K5Bq6OfLz8xuG
-	9NR4OGL91ksRe4WHIU8ttZLNs7dLoxPEZHW6qF2+bo9U9bv5NHVgRJ7xwFrI6pEhIAf58VhY
-	jXuLXrA+ZoSF+FqrnvIxJyzGXu8I7eNAIRxfr8mb3NBCG4ufm/f7eI6wBXdfGp3cy4Q1WF/c
-	xOUgKS8XyhC+2J1NTxWzccOVT8zU8WI8XtwykfMTHIxLfvNTcSg23C+cnPsJ8fjrqw+cj4OE
-	MPzI+YQ6h/xN00ymaSbTf5NpmsmCGBsKVGvSU5Tq5MhluiRVpkadsWxfaooDTXzHzaPjeS7U
-	3xrnRgKPFLNk5E6kSs4q03WZKW6EeVoRKMuKiVLJZQnKzCOiNnW3Ni1Z1LlRMM8o5sk2bhP3
-	yIVE5SExSRQPiNp/LcX7LdCjJWc/sh7XzFRNnneQGY33N9j6o2PCi5t6KgZuz7LFdG2gTzmd
-	Bcd7OxlLe1eTw+OR4/mrhtQz4yLupu3N/55WlRB5sC487FmWtDHPetfonLGd9DYXJj3N2fAt
-	IGpo/Y65P439zYmvd9cvkhx2h8QX7Nwa0vcmbv6x8tCHDUG71kcrGJ1KuTKC1uqUfwEHnLX6
-	GQMAAA==
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: add pf1550
+To: samuel.kayode@savoirfairelinux.com, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Dmitry Torokhov
+ <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-pm@vger.kernel.org, eballetbo@gmail.com,
+ abelvesa@linux.com, b38343@freescale.com, yibin.gong@nxp.com,
+ Abel Vesa <abelvesa@kernel.org>
+References: <20250527-pf1550-v3-0-45f69453cd51@savoirfairelinux.com>
+ <20250527-pf1550-v3-1-45f69453cd51@savoirfairelinux.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250527-pf1550-v3-1-45f69453cd51@savoirfairelinux.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 08:32:55PM -0700, Mina Almasry wrote:
-> On Tue, May 27, 2025 at 7:29 PM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > To simplify struct page, the effort to separate its own descriptor from
-> > struct page is required and the work for page pool is on going.
-> >
-> > Use netmem descriptor and APIs for page pool in mt76 code.
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+On 28/05/2025 00:25, Samuel Kayode via B4 Relay wrote:
+> From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 > 
-> This patch looks fine to me... but this is converting 1 driver to
-> netmem. There are hundreds of other drivers in the tree. Are we
-> converting all of them to netmem...?
+> Add a DT binding document for pf1550 PMIC. This describes the core mfd
+> device along with its children: regulators, charger and onkey.
 > 
-> The motivating reason for existing drivers to use netmem is because
-> it's an abstract memory type that lets the driver support dma-buf
-> memory and io_uring memory:
-> 
-> https://www.kernel.org/doc/Documentation/networking/netmem.rst
-> 
-> This driver does not use the page_pool, doesn't support dma-buf
-> memory, or io_uring memory. Moving it to netmem I think will add
-> overhead due to the netmem_is_net_iov checks while providing no
-> tangible benefit AFAICT. Is your long term plan to convert all drivers
-> to netmem? That maybe thousands of lines of code that need to be
-> touched :(
-> 
-> > ---
-> >  drivers/net/wireless/mediatek/mt76/dma.c      |  6 ++---
-> >  drivers/net/wireless/mediatek/mt76/mt76.h     | 12 +++++-----
-> >  .../net/wireless/mediatek/mt76/sdio_txrx.c    | 24 +++++++++----------
-> >  drivers/net/wireless/mediatek/mt76/usb.c      | 10 ++++----
-> >  4 files changed, 26 insertions(+), 26 deletions(-)
-> >
-> > diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
-> > index 35b4ec91979e..cceff435ec4a 100644
-> > --- a/drivers/net/wireless/mediatek/mt76/dma.c
-> > +++ b/drivers/net/wireless/mediatek/mt76/dma.c
-> > @@ -820,10 +820,10 @@ mt76_add_fragment(struct mt76_dev *dev, struct mt76_queue *q, void *data,
-> >         int nr_frags = shinfo->nr_frags;
-> >
-> >         if (nr_frags < ARRAY_SIZE(shinfo->frags)) {
-> > -               struct page *page = virt_to_head_page(data);
-> > -               int offset = data - page_address(page) + q->buf_offset;
-> > +               netmem_ref netmem = netmem_compound_head(virt_to_netmem(data));
-> 
-> It may be worth adding virt_to_head_netmem helper instead of doing
-> these 2 calls together everywhere.
+> Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+> ---
+> v3:
+>  - Address Krzysztof's feedback:
+>    - Fold charger and onkey objects
+>    - Drop compatible for sub-devices: onkey, charger and regulator.
+>    - Drop constant voltage property already included in
+>      monitored-battery
+>    - Fix whitespace warnings
+>    - Fix license
+> v2:
+>  - Add yamls for the PMIC and the sub-devices
+> ---
+>  Documentation/devicetree/bindings/mfd/pf1550.yaml | 139 ++++++++++++++++++++++
 
-Sounds good.  I will.
+Filename: nothing improved.
 
-	Byungchul
+
+>  1 file changed, 139 insertions(+)
 > 
-> -- 
-> Thanks,
-> Mina
+> diff --git a/Documentation/devicetree/bindings/mfd/pf1550.yaml b/Documentation/devicetree/bindings/mfd/pf1550.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..7f22cb91eb5542c8aa616525ed1e78efa2a863d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/pf1550.yaml
+
+
+...
+
+> +
+> +    patternProperties:
+> +      "^(ldo[1-3]|sw[1-3]|vrefddr)$":
+> +        type: object
+> +        $ref: /schemas/regulator/regulator.yaml
+> +        description:
+> +          regulator configuration for ldo1-3, buck converters(sw1-3)
+> +          and DDR termination reference voltage (vrefddr)
+> +        unevaluatedProperties: false
+> +
+> +    additionalProperties: false
+> +
+> +  monitored-battery:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: |
+> +      A phandle to a monitored battery node that contains a valid value
+> +      for:
+> +      constant-charge-voltage-max-microvolt.
+> +
+> +  fsl,thermal-regulation:
+
+-celsius or whatever is in standard suffixes:
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/property-units.yaml
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+Drop
+
+> +    description:
+> +      Temperature threshold for thermal regulation of charger in celsius.
+
+But this now makes me wonder whether this should be just part of thermal
+zone and get the threshold from there. I assume this is temperature of
+CHARGER, not the battery. If battery, you have such properties in
+battery.yaml (monitored-batter).
+
+@Sebastian,
+Are there existing bindings or devices which regulate temperature based
+on thermal-zones in DT?
+
+
+
+> +    enum: [ 60, 75, 90, 105 ]
+> +
+> +  fsl,min-system-microvolt:
+> +    description:
+> +      System specific lower limit voltage.
+> +    enum: [ 3500000, 3700000, 4300000 ]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    battery: battery-cell {
+> +        compatible = "simple-battery";
+> +        constant-charge-voltage-max-microvolt = <4400000>;
+> +        operating-range-celsius = <0 75>;
+
+So this looks like duplicating thermal-regulation property.
+
+> +    };
+
+Blank line
+
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+
+Includes go before battery-cell.
+
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+
+
+
+Best regards,
+Krzysztof
