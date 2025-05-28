@@ -1,127 +1,135 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9F322370F
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D322D22370F;
+	Wed, 28 May 2025 21:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748469558; cv=none; b=Pg/sOlIXPJoi1sFMM5w2caqQZXW2HBfSnW8glPzOhyRZ+pwCdCi0II/EWzeMA7rwECB0bEgPM9FeqVnIRU1LvUvL9RNh+ed/uDGGpsO3AukUQY6GscOONef708QKC9bL12bg97vOvgyLNG7koo0ZxHzFJCaneIFCq/xHib4il/k=
+	t=1748469561; cv=none; b=e/wAq8TzJE/xSsLTsJKhdy7SED0ABJJgILFEN3xpDHZuzUpsIh/wNHQrBtwkeom1L5/A6T3d8+PwPG3oCxbG0hPsGixotU9mislNhb6nXeWeE9juPNfSHllwtJ4JGlWJ73apPW3u4LKsdNA2PsxxF4ig56uRZMuamy3EV21ETOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748469558; c=relaxed/simple;
-	bh=yyebnnYOMbojsKMKGZn7b6zqWXbtEPzDW9iqHsQj194=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pd8wYNLRs4lBE9Yjn48RqQWIYwgExXbFXbGCISw7lwLn/vqoyn+cRZE1Mcd2spIDJW1E9VQRW7z95PMvTGip/+l1DJPIsRIb4tYXzpaJlOCAJa6TpsJLMPPXLDaTVTAJjToxPigQOCuDVCXcF2jmdv8G77usrCgFQ+kjoPe6s0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xyTS/0IS; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748469561; c=relaxed/simple;
+	bh=rTSHTbWhD0fIYsIngS/eYKjGxuLf3+dx2sFLpQ/GdZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWq8ytWUFKTG6sekfOWcCOf7jcjv56su0BsQTghb+UXP1rLxkBUKnlVWCT+aMoUvFv4gpOtd4M/UXsyrY5fXfSu6G40H9R5pr3DBaR5u42zulTzzuutMIbblXqtJaDwQeUtygv8Odlee5mqyXg+R4UsIBn0VRf+DsxXs+e065bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cbjd9J45; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xyTS/0IS"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fab54e8bbeso3798276d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748469554; x=1749074354; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=omqhGSOmEXdWEk90xAF7uWs/RUMkuzL/uGHdLMr4fAc=;
-        b=xyTS/0ISigjpP7Axm6ewGMGQrt7+CGWL53KT49AcWkNAStpWCOxm6B6xw8CRQYmE6D
-         9W0oPyepbxSE4hZMnWx31r4QcqtXjHtR7KC4EvM0U2Pj1Ld2VWOchAMgWX+1z3T9Vp43
-         0zF+ckASBLohDBX8EB78mduf7cQPX9/50uBs4atvDYTEa/IM6A7QVMRSp8WH++BpoSr8
-         zkR1HKXCEOS15jCK13yrI84y3OtdnRAxoENi9n3+4cOqyUv7mMFyigaaEGFWS27FwDJB
-         u0Z/YwSgfGQEEJZD8Hz28g/Fib3UBGkAvrhQ4POu2qt0tto9sTem4fVp7oEkT/GwrnVP
-         AQ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748469554; x=1749074354;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=omqhGSOmEXdWEk90xAF7uWs/RUMkuzL/uGHdLMr4fAc=;
-        b=KaOrtIdxUFSiosVhX3u4w0hj/TcsMChEyX83xIAAE984+50uI9zvQhsetBXLW7GCcR
-         wwgoLKg4rHeY1Z5ODuAx3yzR/CIg6h/V7VcWa67HwtiByG9MekEllGT45+XwQuz8v/s3
-         QDXdBOEacQnaOAHJH/tFA3oPsDuPkrqG+IJAh0FokY8kRRqTN35JNKvzHqU78v1R6zak
-         tsnbw1GTn002058eYIXWaI+fp3V29lcYfuMuK/5VGtItQoHGlCwviahN2xKmhul52y8v
-         fyVJo3LRgaTNvY9kBmIreCDwGPT1lcqPn+yn9hHygXkXOEcKglpdfTPBJFso8zwI7cL7
-         Hj2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUZbIceAjBnsIMS7umaqkezXmJW50nnvNqWFdVuIxr2UkklwdA20Hnh7vJb07n2R25h16Rr5GWyc7ycNkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSL3j8gW/t4uIW7jQ4sbmYQKr+19IiTSO7OHdXGAhi1me4FszB
-	dZqMu1loWiTaOaH4B3X/RIlc4jtL2QXN+WKQoGtzUOvdfWOKZVgLcMRix/voASS1/1J6hL7nqQx
-	rTbQ/lpRYiw==
-X-Gm-Gg: ASbGncux2O/t01BL4wuOyo7NwCU8qt+BjTwwGM3V4n/487n69g/JXEMSZK2+HTBPlwW
-	TrJD42vLA2RjFAhsHtEsaZHLcQUbyND+YVGyWiwMlzJpojfqirSXtYV7NhaegD/mDFMxhTT3M4u
-	WKLRYDWS/Ohn6X9sIkOSmveM2mtSO8OmOJgJ/oIo3LDvq6hV8zdRiqvc8cWR/jdsf6h+vsstK+R
-	6H77hloSgO/wyNDroZrZVnIwiGtAHLfNGKv5/WbCeB3QBmoJC3hb9Yb/KwBHar/t20FOvV+EH4j
-	XHEcch2P54HqtuwBIM7ADv9CESgjAtlNqB4V7VMcqfKEQncS6w==
-X-Google-Smtp-Source: AGHT+IEeu/ru0xTIC0/zY+95mafro63ViqPTFWl+O1vbQhm3YH/mab55TTmjjT4Phvr/wnuUzcgNMA==
-X-Received: by 2002:a17:90b:1dd0:b0:311:c970:c9ce with SMTP id 98e67ed59e1d1-311c970d207mr9821264a91.28.1748469543377;
-        Wed, 28 May 2025 14:59:03 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3121b9337c6sm119747a91.31.2025.05.28.14.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 14:59:02 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH RFC v2 0/2] pmdomains: core: add support for domain
- hierarchies in DT
-Date: Wed, 28 May 2025 14:58:50 -0700
-Message-Id: <20250528-pmdomain-hierarchy-onecell-v2-0-7885ae45e59c@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cbjd9J45"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B68C4CEE3;
+	Wed, 28 May 2025 21:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748469561;
+	bh=rTSHTbWhD0fIYsIngS/eYKjGxuLf3+dx2sFLpQ/GdZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cbjd9J45sepFgn5GqkwPTv4ImwQvkxSKOkk5dGqw3h6OSW/Vb7pCPFRvFKb3GtJM0
+	 gSGanIZX6tlE0026pDYsp3H7s03uSkytwXvkXyI7UIKT3QLXlTWdgQ2vJpsPz3z9Jj
+	 EPceE/0C4VYrxsGQTLKrMYlLQPMixw3DCCLV2mlGUZ4oSuVRZeXQCWO+OldrgI/PfC
+	 LGF185uk/BbMT2fSqcWiAl23fMlM/T3gFnk3eTnHmdrQTAbgF+J+3MA9uHXIVH1gBO
+	 OL8wFKl3BpusYiHl1B/5XniEY1ffF2XlY9IEb7umAkETvKAAsh44sp6yn04ifOVYxY
+	 QK3K9yH3GY1Wg==
+Date: Wed, 28 May 2025 14:59:19 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
+ -Wunreachable-code
+Message-ID: <aDeHN4DeYS3i-5jY@google.com>
+References: <20250410202647.1899125-1-irogers@google.com>
+ <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+ <aDdU1npHL2Vczhsa@google.com>
+ <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
+ <aDdqcfuAuk78eKXD@google.com>
+ <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABqHN2gC/42NQQqDMBBFryKzbkoSjIauCkIP0G1xEZOxGdBEk
- iIV8e4NnqDL9z68v0PGRJjhVu2QcKVMMRSQlwqsN+GNjFxhkFwqrqRmy+zibCgwT5hMsn5jMaD
- FaWKmbkbj6tZppaAEloQjfc/4C56PDvoiPeVPTNt5uIpz+qe9CiaYVqLVvOXcNvo+mG2iIeHVx
- hn64zh+6Prit8wAAAA=
-X-Change-ID: 20250528-pmdomain-hierarchy-onecell-a46fad47d855
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org
-X-Mailer: b4 0.14.3-dev-d7477
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1106; i=khilman@baylibre.com;
- h=from:subject:message-id; bh=yyebnnYOMbojsKMKGZn7b6zqWXbtEPzDW9iqHsQj194=;
- b=owEBbQKS/ZANAwAIAVk3GJrT+8ZlAcsmYgBoN4cmQojOk3Ihl9E9SAPUH/nPBbWT/ptBi3GKE
- yto3X+2wKKJAjMEAAEIAB0WIQR7h0YOFpJ/qfW/8QxZNxia0/vGZQUCaDeHJgAKCRBZNxia0/vG
- ZReYD/0UiVWQ8Gm6D+kFMfawkv1wkZcTcoS8aCapvqjbHOU06U54DLhNtqjXVwJZN8SdGkWEzXK
- XCUIb+sR+91FDipIxCQWW4Y8S7xrFpCf5OWEmpXsgNsZtoqa8waPcqpuZo5ymhwZQZt1DxXQCGs
- q3trDyhh1vm5jKR0hWnfgBB+O1xR5IHdAIxKrup8TyeSq8xzDaKWvrhLBAFcbPmQz3FHMOJdXdW
- De0UXcS362k8GBVHyvaRYDA5Y4nG5pmKh5ekpFtw4GEBmojphBna2wZ0IQYgdZVleg+fBfcmymo
- WUNuALb5gFUn5lvQQitX1wqw8vcvmISdmJpUYO7BheCZcJhZDJd6rtO8R50a+6utWe2igSVZJ5m
- bvSHn+VIScsCGcHoQlkBoCBZIYsj6OknD8FC+NLhIlddV9uoCsGzXiu6mRfNPtiCTATg37LNJS9
- Wy5CE65DeVd6UJceBPCa9izXgMWcmHGh3bN3Q5E4V8k8zdBiyG6eR2ZakDWkyWYPQ3PU8z38tTz
- M9Kn4E1+0Henp2Ks+cVffVM3wqs6DFwBAhu12AqjU0UzuD4y6gTCmHwYOpqc0ucR1lJ5hfZKcll
- t6oIbAgdnIMHgTK45eRmxEeOFrcnfMqmpxIXGCfzNPA8+aHRzZuPSjGDiWVnvsNaxu5obhE3q/+
- 8tZEFD0oL5da76g==
-X-Developer-Key: i=khilman@baylibre.com; a=openpgp;
- fpr=7B87460E16927FA9F5BFF10C5937189AD3FBC665
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUX-gSv0q_j59bG19=dnaCPMeATtFgM0bPMSP8DKZWRJQ@mail.gmail.com>
 
-Currently, PM domains can only support hierarchy for simple
-providers (e.g. ones with #power-domain-cells = 0).
+On Wed, May 28, 2025 at 01:32:10PM -0700, Ian Rogers wrote:
+> On Wed, May 28, 2025 at 12:56 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
+> > > On Wed, May 28, 2025 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > > > > On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > >
+> > > > > > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hi Ian,
+> > > > > > >
+> > > > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > > > > Clang's unreachable code warning is able to catch bugs like the famous
+> > > > > > > > "goto fail" which gcc's unreachable code warning fails to warn about
+> > > > > > > > (it will complain about misleading indent). The changes here are
+> > > > > > > > sufficient to get perf building with clang with -Wunreachable code,
+> > > > > > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
+> > > > > > > > things this is worth pursuing.
+> > > > > > >
+> > > > > > > I'm not sure if it's useful and don't see what kind of bugs it can
+> > > > > > > address.  The proposed changes don't look like an improvement.
+> > > > > >
+> > > > > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > > > > ```
+> > > > > > if (...)
+> > > > > >   goto fail;
+> > > > > >   goto fail;
+> > > > > > ```
+> > > > > > Meaning the fail path was always taken and checking on the non-fail
+> > > > > > code never executed. Newer GCCs will warn of this because of the
+> > > > > > "misleading indent" but  clang won't. It is easy to imagine similar
+> > > > > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > > > > could be useful.
+> > > >
+> > > > It doesn't look very convincing to me but it might be valuable in some
+> > > > rare cases.  But the proposed changes - basically replace exit() to
+> > > > __builtin_unreachable() - seem weird.  Why is calling it a problem?  I
+> > > > guess it already has some kind of annotation like "noreturn"?
+> > >
+> > > Yep. The exit is incorrect (depending on your notion of correct, I'd
+> > > go with clang's notion as they've had to consider this for a while) as
+> > > it can never be executed. I've added the __builtin_unreachable() to
+> > > document that you can never get to that statement, as otherwise it can
+> > > make the code readability harder with the code looking like it will
+> > > fall through after calling something like usage_with_options (which is
+> > > noreturn). In unoptimized builds __builtin_unreachable() will fail if
+> > > executed, so it is a bit more active than just a comment.
+> >
+> > Oh I see, usage_with_options() calls exit() inside so any code after
+> > that won't be executed.  Hmm.. isn't it better to remove those codes
+> > then?
+> 
+> Not sure I follow. The patch does remove the code but it replaces it
+> with __builtin_unreachable() to basically state that the code here and
+> below can never be reached. Do you mean remove the exit from
+> usage_with_options? Then we'd need to fix all the callers, which would
+> be a larger patch. Perhaps it should be usage_with_options_and_exit()
+> to make it clearer that the code doesn't return. I was after doing
+> what was minimal for -Wunreachable-code but while trying to keep the
+> code clear.
 
-Add support for oncell providers as well by adding support for a nexus
-node map, as described in section 2.5.1 of the DT spec.
+No, I meant we may not need the __builtin_unreachable() at the callsites.
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
----
-Changes in v2:
-- Use nexus map instead of creating new property as suggested by Rob H.
-- Link to v1: https://lore.kernel.org/r/20250528-pmdomain-hierarchy-onecell-v1-1-851780700c68@baylibre.com
+Would it complain this code?
 
----
-Kevin Hilman (2):
-      dt-bindings: power: add nexus map for power-domains
-      pmdomain: core: use DT map to support hierarchy
+  if (some_bad_option_use)
+    usage_with_options(...);
 
- Documentation/devicetree/bindings/power/power-domain.yaml |  35 ++++++++++++++++++++
- drivers/pmdomain/core.c                                   | 166 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 201 insertions(+)
----
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-change-id: 20250528-pmdomain-hierarchy-onecell-a46fad47d855
+  /* normal code path */
 
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+Thanks,
+Namhyung
 
