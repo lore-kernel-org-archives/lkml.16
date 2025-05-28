@@ -1,280 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CB628A73B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2545238FB0
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:08:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441165; cv=none; b=QLGcp6LqNJUzW4SbHGjd0iJMKe/d2S2QJQl5MPEZsNaNgpfBB/WUmY9xaMt+P5Yjmw1naoCcT7s0ebBNd+I4RLr+T0jNWunfLK+Igjt69Lwf4oHYGpy+DnU0H0C3qZEu+nAaZIYH1TlYdcUZWhS7YV1a1TSKsdcF+9zc3hT70Ws=
+	t=1748441329; cv=none; b=tD9gg6LH/lsCKfrwlamURUKg0CDoPpAXdCxH1q5IjWkmHH76YQtSkGcZBs5fo5fgZown3CBhyUSqA47DRpixrCg/F6KETawgPRYgzucuMBa1cULbyHMhZE1xlNlAD1THHGyDBcp6/1D6L3O34ITrMZ2k0O16AcQwqT/uuvEicuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441165; c=relaxed/simple;
-	bh=fH2hdGzwTf4pZxd5L5oHs+dVIY/4d4It2eb8BdPFp3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VRMgGV0h29NtLssC9galXVatJMeVell3QGjHm/6XdImJIaZm6lI5QWRlQ5SvfzkHTTFDcd135nIJC++1xGCobBfrsg+hqDExszUpAPzk5XUZupv2a9lGTfSCsD+29DSAQDVvOzl6U6v8ua8cFFhGBRcKbXmuGAGgBLyYn9xNV7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cfol7nDS; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748441329; c=relaxed/simple;
+	bh=oje1uT4DfQgi/MzRvPGP49Wn11GSzin9n3V01bfKijw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=rqjbFz8QmcNW53YZgTuVan5aZqfovza4H0kAtgLA1KAB1RnLMkfHZ1wFvEgYmBuGrlLCRxZ8O/4yjasQGox2KIc9O+Llfg4TyKurO1Z+fM1etH8F4VW9uEp2WUA1BEDiZGf631g1Jz8Cukn1hrOIKpZBbYwe/AI8o0W4rsfDumA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jje2RgIY; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cfol7nDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748441164; x=1779977164;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fH2hdGzwTf4pZxd5L5oHs+dVIY/4d4It2eb8BdPFp3E=;
-  b=cfol7nDSnzw0kKeLi9d89AMZscRbE/FZbwLrcV3dgLBj8Iby/6y0XY1E
-   kg60fj1RVCuqixqc1+uS2V7iQkSd+lYkie37q9sRH5Xsq2BAJ7D3+F0FD
-   O6bmPw8TnzJFMgpW9faGU0ZQGN5m3aGCr6Gi9JTCZJpaMQ2/fyTijX+6s
-   nIp4NmEE8u59h5UGfKnLjhLFojHG4eltRjAnOl79JTowSRARSGemcgsJv
-   XLt4Y4CZW2TVYBFhtw8dpSLgZBsa2CKhPK40bvTXDxnCVlR1UA9Z76LrQ
-   PCMmP90E/m3zX94VQM0bEjdupJRsfu4iH0yEtm3Fml2TPzJyLdwRM3Kfk
-   w==;
-X-CSE-ConnectionGUID: 0iuQPSfzSvmSpzzRedy4Ig==
-X-CSE-MsgGUID: k33pgiggTwy8wDiWRfXSpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61525162"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="61525162"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:06:04 -0700
-X-CSE-ConnectionGUID: UbkNrucWQgyX1vWN4u4AKQ==
-X-CSE-MsgGUID: ttg0zycSRYq8FPm5EsLpfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="143239170"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 07:05:58 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>,
-	Raag Jadav <raag.jadav@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v11 10/10] drm/xe/nvm: add support for non-posted erase
-Date: Wed, 28 May 2025 16:51:15 +0300
-Message-ID: <20250528135115.2512429-11-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250528135115.2512429-1-alexander.usyskin@intel.com>
-References: <20250528135115.2512429-1-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jje2RgIY"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6OfRI028874
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:08:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fSFpanlCd3QG3PGIaRTOjidLhr0r0dGvANBn6D3rDi8=; b=jje2RgIY1ZeyWFUa
+	feaj7Cca3/ucoKI9zamf1wnCy4L3sVgCYy18VV+z9DCo7Rmfenofk9ChKw5W237r
+	B7XCI+I7fFDtQrfxRpvvtxR4tocjl0ZoWqMLBBLU7gLSNR4CROTOyJPfizsUTlB7
+	/5pQzVh5zspcCju1K8yS7ypHTQUgdby0p0B+zcWyplnjqEHhto8f1LDaNbPwsMWR
+	1fAcU5gxefhJJVnHuAZlNMbftFGBq3vzIn712DltgAwbhxEF1p31hRS99um1vjw9
+	vZe0eClZh9dvTMCDOdaPHTR1CFBVRdrdvQIniEhVFokuouwLEH0FJfQpLrpiDQ46
+	V5z6bg==
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf2tpa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:08:47 +0000 (GMT)
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3dd7e0c7195so25137815ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:08:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748441314; x=1749046114;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fSFpanlCd3QG3PGIaRTOjidLhr0r0dGvANBn6D3rDi8=;
+        b=uzij6fx7iuKD3o52jE6qy/vjKUDSLClFBLATid2Fs3ksA0GAlEFAtQaxYruoDzAcVl
+         EawDtkZLzPfXPlw52T//0J3raU9v0L1nOzu/fkjuj3N5pHS5p/IlpCZuHt/cT+pxJak7
+         5qlpHxjGVlr8JoLzs+IfD3EHRYsDGns/2ze7X3xt5DsXMilqb9huPjmV1Yr3Oga+9HZg
+         wuNQWvzQKRr2LE0CxESKpmT6QmGuchM6crnj7yZLrGqP3ax01p4EB9GHeDDQsKStwaxD
+         Nd6UBaOWusnJJWhkQ7NTifuCZyNB45OveTWvp3ohj/yhPO/isNrNy0wq8zhmkUe6Eq5h
+         ijsw==
+X-Forwarded-Encrypted: i=1; AJvYcCULI/mrvAqNMjbM68A8MZabQimWqN+6lDiIUubIcH7Qd5mcozPnub5nylXhOCKsxOabeEemonN5SyZ+1Z0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzQlciUmm5QgloSH+LiIqQ/nxww3+VW34OhdohjxNry2HswBhz
+	AVmkTdavfqyklrF00T38wv5ZY2oFqhzuQrafx3cbEQ6RaZcppZh3DrunuI+XKtB1DWk4sBJfa7/
+	cOgt3DMdb58Ppwj68as0gZNU6ALysGoKqKrVCuxOKFVmV6kO8LLDQ33/LnwusIQg50/I=
+X-Gm-Gg: ASbGnctvdPKm+xdBj2LZ9tSmwFaa9k7LYmJxFyCA6cogrGSiPc5erq1CFYF8aHZkkSk
+	4ic8LrlriSm9adYdAKYFssXRMJ0IW4ltg1xHVCNjGyZD4GTzLSHOKNzQBk4rBIWCnAshABdz0IV
+	kaCWuRrfCUVu3hsQx8Mc3bWqlwP0D1PHmzzv87neDdYWB87yEFRT7DAVGaP4hB5QJVxp35ftt1x
+	7OwhNgGbuPJEtnqB+BF7jt1rvRDNJjar501txvhutFMBEQIfnkcVicQjmZ7SDdyi52dx/4zYVzG
+	jfvyV9OlB9fMr1+v8lphkYtgaXPffJEQjllYynJKVfIEIoE6lNTzKBSmV+mLo4MTK60GAn6Swti
+	i8O6tBhqsq4qAyvsrVDX199Iz
+X-Received: by 2002:a05:6e02:17c6:b0:3dc:8b57:b770 with SMTP id e9e14a558f8ab-3dc9b697450mr155527745ab.11.1748441314245;
+        Wed, 28 May 2025 07:08:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG3/IrURGfZHuF1uVWj+6vn3B5a1R5Lj0MNa3HPhG6oLZTFAIcn0Koqx6e0QULRt+G7HCLk4g==
+X-Received: by 2002:a05:6e02:17c6:b0:3dc:8b57:b770 with SMTP id e9e14a558f8ab-3dc9b697450mr155527385ab.11.1748441313824;
+        Wed, 28 May 2025 07:08:33 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a79ee1ab5sm2604621fa.62.2025.05.28.07.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 07:08:33 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Heiko Stuebner <heiko@sntech.de>
+Cc: Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, tzimmermann@suse.de,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250527225120.3361663-1-heiko@sntech.de>
+References: <20250527225120.3361663-1-heiko@sntech.de>
+Subject: Re: [PATCH] drm/bridge: analogix_dp: Fix clk-disable removal
+Message-Id: <174844131284.307638.13863376143596559629.b4-ty@oss.qualcomm.com>
+Date: Wed, 28 May 2025 17:08:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=683718ef cx=c_pps
+ a=5fI0PjkolUL5rJELGcJ+0g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=XtzDPwPC1q_kEnb0TJMA:9 a=QEXdDO2ut3YA:10
+ a=HaQ4K6lYObfyUnnIi04v:22
+X-Proofpoint-ORIG-GUID: 5Zl5e0tVhDby3Z0Bdf7eyMDQ8ojBWdmU
+X-Proofpoint-GUID: 5Zl5e0tVhDby3Z0Bdf7eyMDQ8ojBWdmU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEyNCBTYWx0ZWRfXyGLOBbrlWaNV
+ GNXd0WqFqYY6PLQYBWJb4uETNzxwTCmbsVAVMIGUaFHMDhxsu1GqLa0P1JlwJ29XlBFwp7c1y8V
+ jH3aD9MwgzAmF8ySdJaa6ocr12y4F3CuNWbtHC3+qPx30NDVIu+Kxwk6f/USJ16szZsxgu/Djvj
+ iqTnsigUUL7dZ+sk/Wfc64IImw3FO+L2dXeMBRmV3HJ5/z6LeLo8jVrJcd61MdNPWTeHb9Ncqhz
+ CckqpEHkEUpiCJpcBMNUN71BnTlvGkzhR56Ogo7cCsiCRkDxBzeDwNwpUN1UcJKDUT62vlsJUVV
+ LUds8+JWtZiyh95arVqGMH6RwMgkf2Gg9GUGDLWRZlBiltgHkNFwOMwfOoIQuUhnLpoTsSj93cf
+ 2yWO7lwxl8PwLhCCLskxmXSKseyZJmdfT23AnGVGrOv1cE1uso7RgMViHfNW5m3uXHNKgJzp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_07,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 mlxlogscore=790 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280124
 
-From: Reuven Abliyev <reuven.abliyev@intel.com>
+On Wed, 28 May 2025 00:51:19 +0200, Heiko Stuebner wrote:
+> Commit 6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary
+> calls to clk_disable_unprepare() during probing") removed the mismatched
+> clock_disable calls from analogix_dp_probe.
+> 
+> But that patch was created and sent before
+> commit e5e9fa9f7aad ("drm/bridge: analogix_dp: Add support to get panel
+> from the DP AUX bus") was merged, so couldn't know about this change.
+> 
+> [...]
 
-Erase command is slow on discrete graphics storage
-and may overshot PCI completion timeout.
-BMG introduces the ability to have non-posted erase.
-Add driver support for non-posted erase with polling
-for erase completion.
+Applied to drm-misc-next-fixes, thanks!
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Reuven Abliyev <reuven.abliyev@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/xe/xe_nvm.c        | 25 ++++++++++++++++++
- drivers/mtd/devices/mtd_intel_dg.c | 42 ++++++++++++++++++++++++++++--
- include/linux/intel_dg_nvm_aux.h   |  2 ++
- 3 files changed, 67 insertions(+), 2 deletions(-)
+[1/1] drm/bridge: analogix_dp: Fix clk-disable removal
+      commit: fd03f82a026cc03cb8051a8c6487c99f96c9029f
 
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 20aa3b5d3637..61b0a1531a53 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -14,7 +14,15 @@
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-+#define GEN12_DEBUG_NVM_BASE 0x00101018
-+
-+#define GEN12_CNTL_PROTECTED_NVM_REG 0x0010100C
-+
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define GEN12_DEBUG_NVM_SIZE 0x4
-+
-+#define NVM_NON_POSTED_ERASE_CHICKEN_BIT BIT(13)
-+
- #define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
-@@ -29,6 +37,16 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_non_posted_erase(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+
-+	if (xe->info.platform != XE_BATTLEMAGE)
-+		return false;
-+	return !(xe_mmio_read32(&gt->mmio, XE_REG(GEN12_CNTL_PROTECTED_NVM_REG)) &
-+		 NVM_NON_POSTED_ERASE_CHICKEN_BIT);
-+}
-+
- static bool xe_nvm_writable_override(struct xe_device *xe)
- {
- 	struct xe_gt *gt = xe_root_mmio_gt(xe);
-@@ -86,6 +104,7 @@ int xe_nvm_init(struct xe_device *xe)
- 	nvm = xe->nvm;
- 
- 	nvm->writable_override = xe_nvm_writable_override(xe);
-+	nvm->non_posted_erase = xe_nvm_non_posted_erase(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
-@@ -93,6 +112,12 @@ int xe_nvm_init(struct xe_device *xe)
- 	nvm->bar.desc = IORES_DESC_NONE;
- 	nvm->regions = regions;
- 
-+	nvm->bar2.parent = &pdev->resource[0];
-+	nvm->bar2.start = GEN12_DEBUG_NVM_BASE + pdev->resource[0].start;
-+	nvm->bar2.end = nvm->bar2.start + GEN12_DEBUG_NVM_SIZE - 1;
-+	nvm->bar2.flags = IORESOURCE_MEM;
-+	nvm->bar2.desc = IORES_DESC_NONE;
-+
- 	aux_dev = &nvm->aux_dev;
- 
- 	aux_dev->name = "nvm";
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-index 97e1dc1ada5d..b438ee5aacc3 100644
---- a/drivers/mtd/devices/mtd_intel_dg.c
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -25,6 +25,9 @@ struct intel_dg_nvm {
- 	struct mtd_info mtd;
- 	struct mutex lock; /* region access lock */
- 	void __iomem *base;
-+	void __iomem *base2;
-+	bool non_posted_erase;
-+
- 	size_t size;
- 	unsigned int nregions;
- 	struct {
-@@ -41,6 +44,7 @@ struct intel_dg_nvm {
- #define NVM_VALSIG_REG        0x00000010
- #define NVM_ADDRESS_REG       0x00000040
- #define NVM_REGION_ID_REG     0x00000044
-+#define NVM_DEBUG_REG         0x00000000
- /*
-  * [15:0]-Erase size = 0x0010 4K 0x0080 32K 0x0100 64K
-  * [23:16]-Reserved
-@@ -72,6 +76,9 @@ struct intel_dg_nvm {
- #define NVM_FREG_ADDR_SHIFT 12
- #define NVM_FREG_MIN_REGION_SIZE 0xFFF
- 
-+#define NVM_NON_POSTED_ERASE_DONE BIT(23)
-+#define NVM_NON_POSTED_ERASE_DONE_ITER 3000
-+
- static inline void idg_nvm_set_region_id(struct intel_dg_nvm *nvm, u8 region)
- {
- 	iowrite32((u32)region, nvm->base + NVM_REGION_ID_REG);
-@@ -373,13 +380,32 @@ static ssize_t idg_read(struct intel_dg_nvm *nvm, u8 region,
- static ssize_t
- idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_addr)
- {
-+	void __iomem *base2 = nvm->base2;
- 	void __iomem *base = nvm->base;
- 	const u32 block = 0x10;
-+	u32 iter = 0;
-+	u32 reg;
- 	u64 i;
- 
- 	for (i = 0; i < len; i += SZ_4K) {
- 		iowrite32(from + i, base + NVM_ADDRESS_REG);
- 		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-+		if (nvm->non_posted_erase) {
-+			/* Wait for Erase Done */
-+			reg = ioread32(base2 + NVM_DEBUG_REG);
-+			while (!(reg & NVM_NON_POSTED_ERASE_DONE) &&
-+			       ++iter < NVM_NON_POSTED_ERASE_DONE_ITER) {
-+				msleep(10);
-+				reg = ioread32(base2 + NVM_DEBUG_REG);
-+			}
-+			if (reg & NVM_NON_POSTED_ERASE_DONE) {
-+				/* Clear Erase Done */
-+				iowrite32(reg, base2 + NVM_DEBUG_REG);
-+			} else {
-+				*fail_addr = from + i;
-+				return -ETIME;
-+			}
-+		}
- 		/* Since the writes are via sgunit
- 		 * we cannot do back to back erases.
- 		 */
-@@ -388,7 +414,8 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- 	return len;
- }
- 
--static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
-+static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device,
-+			     bool non_posted_erase)
- {
- 	u32 access_map = 0;
- 	unsigned int i, n;
-@@ -448,7 +475,10 @@ static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
- 			n++;
- 	}
- 
-+	nvm->non_posted_erase = non_posted_erase;
-+
- 	dev_dbg(device, "Registered %d regions\n", n);
-+	dev_dbg(device, "Non posted erase %d\n", nvm->non_posted_erase);
- 
- 	/* Need to add 1 to the amount of memory
- 	 * so it is reported as an even block
-@@ -729,7 +759,15 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
- 		goto err;
- 	}
- 
--	ret = intel_dg_nvm_init(nvm, device);
-+	if (invm->non_posted_erase) {
-+		nvm->base2 = devm_ioremap_resource(device, &invm->bar2);
-+		if (IS_ERR(nvm->base2)) {
-+			ret = PTR_ERR(nvm->base2);
-+			goto err;
-+		}
-+	}
-+
-+	ret = intel_dg_nvm_init(nvm, device, invm->non_posted_erase);
- 	if (ret < 0) {
- 		dev_err(device, "cannot initialize nvm %d\n", ret);
- 		goto err;
-diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-index 00b6c1301bd8..625d46a6b96e 100644
---- a/include/linux/intel_dg_nvm_aux.h
-+++ b/include/linux/intel_dg_nvm_aux.h
-@@ -20,7 +20,9 @@ struct intel_dg_nvm_region {
- struct intel_dg_nvm_dev {
- 	struct auxiliary_device aux_dev;
- 	bool writable_override;
-+	bool non_posted_erase;
- 	struct resource bar;
-+	struct resource bar2;
- 	const struct intel_dg_nvm_region *regions;
- };
- 
+Best regards,
 -- 
-2.43.0
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
