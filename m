@@ -1,221 +1,118 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C4413AF2;
-	Wed, 28 May 2025 14:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8C62882AB;
+	Wed, 28 May 2025 14:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441937; cv=none; b=uiJ+Ir9u1lvau6hkwg+8uhE19adYBCq13UtttWlTqmPdxO8sFP79c0vxi8LNv+6xRSAFhhiEQERLCP8E+KghptFHkn5I3IgC5ftDiPhCLVweAlAJZG1AXbVyO59poD9pZJJ6g/8W7mCQi+dH8hBlrWMICvgRW1nexL8MH2mbInA=
+	t=1748441943; cv=none; b=ItLbbT6MXSAa8HXISsDbTnhF7DS3ucr2zduTR+WA9JPi+dJFcOs5wCX8JAe7+oieWnaOTyoYk5MJrjLutMtBuLrHcaTH20j64+a6ew17ueHfPm0synGu4uP4coIglj3/7ffGmoQkgSFKs9lcnt4R5bWXWF/lgoGvOGPMjW6zXsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441937; c=relaxed/simple;
-	bh=zJx6vFfwz0MYTEHthiU61dRG76ot+J1AonqUVhsuUz0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=evvXz9IVJOAQwf6nNXsbCSpa+V4ZasYurtbf3PymtNeOLR3sROJtf3rAHjytJXLyYiVzMosHd+JQsxE9ovrzKWswigpM55NoxmcpueNIeBe04UCPGfw6e+TCbxyanGCGUHvLg8kdbr4MEAHK9zsycdRpJOXqPfSwWwyvm7YtPZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=TJnJr1yD; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1748441943; c=relaxed/simple;
+	bh=78K9IapfEUA0fFpl8LYkfjYQvXb/zqZqFdh+VYT4FJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DkLXKmZwE6eeN1k5rQ7gP5s7ejwLouPEFY9AqV5bmxP8hMkQzgvaDd8TBQ0r3NYq36t1Fquu8xjxBXYByvZ+cRzj/XUXf41BsNotCBTwHfepzsXa5DLAXQ83Fp+8xxNLXPnm0nNPHHOrgCtG9wsUKb9ZJFhR8K1lcBFciB16iGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkeOzXk5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="TJnJr1yD"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b6s792zx3z9swD;
-	Wed, 28 May 2025 16:18:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1748441925; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zJx6vFfwz0MYTEHthiU61dRG76ot+J1AonqUVhsuUz0=;
-	b=TJnJr1yDLKr7T7cAmicStZcRlA8JXH9j13Oh8esWSeeepjouJBcnEQdg5nD8+CN6fFcVRD
-	nyrSXhLPlMvsOWb5dmXyV57DQWLs4lCg8h21dj0UV1gLhSQ+PqoHzrs0MktM3kcTQOv3Tz
-	VBqJRrdR/oGhIs7WY3mzAjxbRQUhpSTKVqH+6d5h7HpRjGCQIeCsy3PugkdN2ZlS2D8x5G
-	Ft+kRUI2xzuE9c13mTzMYRXoC4wd517ZaJxnNNCcHX1K9j00VDmjGPj748+hdBLFjt/1kN
-	JiF1Ken79t+9APOBjhHOqbJPNBQOCon9xR24tXyu9T4k9QG4wIkinlKw8bWbog==
-Message-ID: <f46f73db6594c7cd40149e35da9f188baa5961a2.camel@mailbox.org>
-Subject: Re: [PATCH v11 00/10] Improve gpu_scheduler trace events + UAPI
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, 
- =?ISO-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>, Thomas
- =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, Abhinav
- Kumar <quic_abhinavk@quicinc.com>,  Alex Deucher
- <alexander.deucher@amd.com>, Boris Brezillon
- <boris.brezillon@collabora.com>, Danilo Krummrich <dakr@kernel.org>, David
- Airlie <airlied@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>, Felix
- Kuehling <Felix.Kuehling@amd.com>, Frank Binns <frank.binns@imgtec.com>,
- Jonathan Corbet <corbet@lwn.net>, Liviu Dudau <liviu.dudau@arm.com>, Lizhi
- Hou <lizhi.hou@amd.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Lucas
- Stach <l.stach@pengutronix.de>, Lyude Paul <lyude@redhat.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,  Matt Coster
- <matt.coster@imgtec.com>, Matthew Brost <matthew.brost@intel.com>, Maxime
- Ripard <mripard@kernel.org>, Melissa Wen <mwen@igalia.com>, Min Ma
- <min.ma@amd.com>,  Oded Gabbay <ogabbay@kernel.org>, Philipp Stanner
- <phasta@kernel.org>, Qiang Yu <yuq825@gmail.com>, Rob Clark
- <robdclark@gmail.com>, Rob Herring <robh@kernel.org>, Rodrigo Vivi
- <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>, Steven Price
- <steven.price@arm.com>, Sumit Semwal <sumit.semwal@linaro.org>, Thomas
- Zimmermann <tzimmermann@suse.de>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org,  etnaviv@lists.freedesktop.org,
- freedreno@lists.freedesktop.org,  intel-xe@lists.freedesktop.org,
- lima@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org,
- linux-arm-msm@vger.kernel.org,  linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-media@vger.kernel.org,
- nouveau@lists.freedesktop.org
-Date: Wed, 28 May 2025 16:18:30 +0200
-In-Reply-To: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkeOzXk5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB70CC4CEE3;
+	Wed, 28 May 2025 14:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748441943;
+	bh=78K9IapfEUA0fFpl8LYkfjYQvXb/zqZqFdh+VYT4FJQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VkeOzXk5eN+qrU03KZerCJkDAKnh8wRqro+X+AhBJBc8PifbmrRAc7xFN7hOyrJhv
+	 YuWH3To3Cku6KJ6Bj4LyKfoGNRaQt+JCqQi/HpFULd1mEXAAMfNVTJrYyJXBGFi9t/
+	 CiI7iQfuvkIIi3N+R8u5PnQI3VT07VKW86Uy6Fq67CgEpm7Z2BTV4KDWrCFMw7rR/X
+	 DG1T56yPZ9LShXI/wJZGo4wrbTVonT2ei3JlAf4qD9t3Mc4zL69HkK4qubSV76E+rN
+	 aqs/b1z/Ix2qzhtSvjo6CrXO6LPVQy60spli6q5XfIGfNYT5NmG3VUxjqzV4stWCft
+	 xrS69ZDzlonEQ==
+Date: Wed, 28 May 2025 09:19:01 -0500
+From: Rob Herring <robh@kernel.org>
+To: "Edgar E. Iglesias" <edgar.iglesias@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, jank@cadence.com, edgar.iglesias@amd.com,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: clk: fixed-mmio-clock: Add optional
+ ready reg
+Message-ID: <20250528141901.GA3966725-robh@kernel.org>
+References: <20250528140917.876453-1-edgar.iglesias@gmail.com>
+ <20250528140917.876453-2-edgar.iglesias@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 71bbfe2918ed815d7c0
-X-MBO-RS-META: 1d87cwrtfwt5qgx3mzet88gb4nq4xi15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528140917.876453-2-edgar.iglesias@gmail.com>
 
-On Mon, 2025-05-26 at 14:54 +0200, Pierre-Eric Pelloux-Prayer wrote:
-> Hi,
->=20
-> The initial goal of this series was to improve the drm and amdgpu
-> trace events to be able to expose more of the inner workings of
-> the scheduler and drivers to developers via tools.
->=20
-> Then, the series evolved to become focused only on gpu_scheduler.
-> The changes around vblank events will be part of a different
-> series, as well as the amdgpu ones.
->=20
-> Moreover Sima suggested to make some trace events stable uAPI,
-> so tools can rely on them long term.
->=20
-> The first patches extend and cleanup the gpu scheduler events,
-> then add a documentation entry in drm-uapi.rst.
->=20
-> The last 2 patches are new in v8. One is based on a suggestion
-> from Tvrtko and gets rid of drm_sched_job::id. The other is a
-> cleanup of amdgpu trace events to use the fence=3D%llu:%llu format.
->=20
-> The drm_sched_job patches don't affect gpuvis which has code to parse
-> the gpu_scheduler events but these events are not enabled.
->=20
-> Changes since v10:
-> * fixed 2 errors reported by kernel test robot
-> * rebased on drm-misc-next
->=20
-> Changes since v9:
-> * fixed documentation link syntax
-> * fixed typos in commit messages
-> * spelled out that these events cannot be used before
-> =C2=A0 drm_sched_job_arm has been called
->=20
-> Changes since v8:
-> * swapped patches 8 & 9
-> * rebased on drm-next
->=20
-> Changes since v7:
-> * uint64_t -> u64
-> * reworked dependencies tracing (Tvrtko)
-> * use common name prefix for all events (Tvrtko)
-> * dropped drm_sched_job::id (Tvrtko)
->=20
-> Useful links:
-> - userspace tool using the updated events:
-> https://gitlab.freedesktop.org/tomstdenis/umr/-/merge_requests/37
-> - v8:
-> https://lists.freedesktop.org/archives/dri-devel/2025-March/496781.html
->=20
-> Pierre-Eric Pelloux-Prayer (10):
-> =C2=A0 drm/debugfs: Output client_id in in drm_clients_info
-> =C2=A0 drm/sched: Store the drm client_id in drm_sched_fence
-> =C2=A0 drm/sched: Add device name to the drm_sched_process_job event
-> =C2=A0 drm/sched: Cleanup gpu_scheduler trace events
-> =C2=A0 drm/sched: Trace dependencies for GPU jobs
-> =C2=A0 drm/sched: Add the drm_client_id to the drm_sched_run/exec_job
-> events
-> =C2=A0 drm/sched: Cleanup event names
-> =C2=A0 drm: Get rid of drm_sched_job.id
-> =C2=A0 drm/doc: Document some tracepoints as uAPI
-> =C2=A0 drm/amdgpu: update trace format to match gpu_scheduler_trace
+On Wed, May 28, 2025 at 04:09:16PM +0200, Edgar E. Iglesias wrote:
+> From: "Edgar E. Iglesias" <edgar.iglesias@amd.com>
+> 
+> Add an optional ready register and properties describing bitfields
+> that signal when the clock is ready. This can for example be useful
+> to describe PLL lock bits.
+> 
+> Signed-off-by: Edgar E. Iglesias <edgar.iglesias@amd.com>
+> ---
+>  .../bindings/clock/fixed-mmio-clock.yaml      | 37 ++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> index e22fc272d023..57419b4de343 100644
+> --- a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> +++ b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> @@ -10,6 +10,11 @@ description:
+>    This binding describes a fixed-rate clock for which the frequency can
+>    be read from a single 32-bit memory mapped I/O register.
+>  
+> +  An optional ready register can be specified in a second reg entry.
+> +  The ready register will be polled until it signals ready prior to reading
+> +  the fixed rate. This is useful for example to optionally wait for a PLL
+> +  to lock.
+> +
+>    It was designed for test systems, like FPGA, not for complete,
+>    finished SoCs.
+>  
+> @@ -21,7 +26,10 @@ properties:
+>      const: fixed-mmio-clock
+>  
+>    reg:
+> -    maxItems: 1
+> +    minItems: 1
+> +    items:
+> +      - description: Fixed rate register
+> +      - description: Optional clock ready register
+>  
+>    "#clock-cells":
+>      const: 0
+> @@ -29,6 +37,24 @@ properties:
+>    clock-output-names:
+>      maxItems: 1
+>  
+> +  ready-timeout-us:
+> +    description:
+> +      Optional timeout in micro-seconds when polling for clock readiness.
+> +      0 means no timeout.
+> +    default: 0
+> +
+> +  ready-mask:
+> +    description:
+> +      Optional mask to apply when reading the ready register.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 0xffffffff
+> +
+> +  ready-value:
+> +    description:
+> +      When a ready register is specified in reg, poll the ready reg until
+> +      ready-reg & ready-mask == ready-value.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
+And next someone wants to add an enable bit, so there's another 2-3 new 
+properties. And it never ends...
 
-Applied to drm-misc-next
+So no, create a specific binding for your h/w.
 
-
-Thanks
-P.
-
->=20
-> =C2=A0Documentation/gpu/drm-uapi.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 ++++
-> =C2=A0drivers/accel/amdxdna/aie2_ctx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_job.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_job.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 32 ++----
-> =C2=A0drivers/gpu/drm/drm_debugfs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 10 +-
-> =C2=A0drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c=C2=A0 |=C2=A0=C2=A0 2 =
-+-
-> =C2=A0drivers/gpu/drm/imagination/pvr_job.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/imagination/pvr_queue.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 5 +-
-> =C2=A0drivers/gpu/drm/imagination/pvr_queue.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/lima/lima_gem.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/lima/lima_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +-
-> =C2=A0drivers/gpu/drm/lima/lima_sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/lima/lima_trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +-
-> =C2=A0drivers/gpu/drm/msm/msm_gem_submit.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0drivers/gpu/drm/nouveau/nouveau_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/panfrost/panfrost_drv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/panthor/panthor_drv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0drivers/gpu/drm/panthor/panthor_mmu.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/panthor/panthor_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 5 +-
-> =C2=A0drivers/gpu/drm/panthor/panthor_sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0.../gpu/drm/scheduler/gpu_scheduler_trace.h=C2=A0=C2=A0 | 103 +++++=
-++++++++---
-> --
-> =C2=A0drivers/gpu/drm/scheduler/sched_entity.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 16 ++-
-> =C2=A0drivers/gpu/drm/scheduler/sched_fence.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0=C2=A0 4 +-
-> =C2=A0drivers/gpu/drm/scheduler/sched_internal.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/scheduler/sched_main.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0 12 +-
-> =C2=A0.../gpu/drm/scheduler/tests/mock_scheduler.c=C2=A0 |=C2=A0=C2=A0 3 =
-+-
-> =C2=A0drivers/gpu/drm/v3d/v3d_submit.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
-> =C2=A0drivers/gpu/drm/xe/xe_sched_job.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 13 ++-
-> =C2=A032 files changed, 191 insertions(+), 101 deletions(-)
->=20
-
+Rob
