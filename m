@@ -1,160 +1,138 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE9D2AD00;
-	Wed, 28 May 2025 18:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A081528DEE0
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748457303; cv=none; b=fDQgaXJ6YlooQVqjjaVU+ZmoLl7oO/AtAdbgc9kXZiJ/p2oTHQ20c+1rAKE0huPFvBk5Js0Re3QuIrZTe5bXGZYDQzw0rx+zdoRNYENqcTXFzG1ZPjJ1rz7TOvOIOwysRYIOG0O7zt/T+gFv9PGYDXDZyopYHsyxqK6g7Qlw/rU=
+	t=1748457316; cv=none; b=EEcgebQksNI2w1vQ2NZo3ifjUy072lydHQOJWG5rdL53S7Whw5SGr6R9XXBW01srKjdl2QACxvBWNm7tyJxXdwalLtaGuHpO5zT/e3S+SxCVgne1y7h9z8I+5qmnVhhPcsddWjYg3i2WDa71jOBixf088x9gf965oM9F4wr4zpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748457303; c=relaxed/simple;
-	bh=o9psRuqLrZuh6dkcqaKQG63amKvh7ilq2Ah+aLkz5sM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bu8p+KFWL1NfXLxdpz2xYWVwyp9nqqxo9vPcQSuZ54Z4Ty94oZjy+CfndDkCSws7YTuVlLtGnnVkS+bSgR3vUXolNqcHYzi4+VOHRVe0JYxfFjHa/TTl6IclQpIcHbaLKEg8pz4v0G4ai9GP/FvgZhV8GmlPTUBWUbuDMG7bBJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Wosndm3Q; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1748457316; c=relaxed/simple;
+	bh=Jz7Nai9JFiOirN09TRvaGuuwtMD049NqJp7EUjquMVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BldxXJQZ/FzREJpuoE69NoI1ZP2bgJMA1B9Zdal3UKkVmwlS5Qz/3dhLyZUCSvNiKmMspiaHpOa9Q3b6hoCbtW9n5lKuAC+Y+Pw5xaiccc0Z3mwd4Z9hjGBDpOoworaCoehWRxgSJlmk4tujqhRfp8wKQl16ZZm23wPARp2j33Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YWRioj7l; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Wosndm3Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oEfLgoqZZlV3CauhRyPut9aS8+kFBL6RAy2mXOuaG1k=; b=Wosndm3QpTZVvNqtddTO/EUoXb
-	G2aSMfofpfTs0Lj9HH36ZoGLLfL29XW2NdZptgFMhsLa4HiLJmIRkdeqv7/651xgC0r0P/ve6nFjK
-	QFQxC/4Ql5Bi0PD/gU1UHyqdJMizemvlygAL97MKyKy/l31HXEXeKcuTqXtchmTqSG3u7BbvuNwUl
-	wR4TI0dfDpSr3+Keyxz27/QnzYt/qxEsxU02bJbw0JG54MYdZwnf6PKG2ee1/3m98EsDkdlnl5nGy
-	wu5BiJNG0PHlg6yVdKWTnIIuO7RJ8l0+gdQCwwtIoYJo7bvIaE1s1Cqc1C9Mg9iX9fpnKBjlFABZS
-	jcD17Cog==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50888)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uKLc2-0000ci-1Y;
-	Wed, 28 May 2025 19:34:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uKLbx-0002d3-0P;
-	Wed, 28 May 2025 19:34:45 +0100
-Date: Wed, 28 May 2025 19:34:44 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: wens@csie.org, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-Message-ID: <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk>
-References: <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
- <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch>
- <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
- <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
- <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
- <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWRioj7l"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so18155ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748457313; x=1749062113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2cVLMwY4AxanVU8F/mVt2OHuXPMKbrtS0JnadrXFkYs=;
+        b=YWRioj7lDUZBh61XThc8rxbgIqVywLZ6oNeTGKZXZOEV6A9X4reI8bzBkwwcL6ZeQC
+         dtU+60ycwHyWiWOsjvR+An02+17mZo5xYYRLarL7B8IGYd+cr1L6weLcph+WMwyauR7M
+         ELkR1NU1xg4Rtt7fddCDVcjRFjpdurarcfNXvdCxQchYCbEbgirskQwIUldoRmKEzgwT
+         nP1WL0w67LH+ftBGRYcIMCBS9kMW5SX+Ml7YFZra99DeKCgOCopcrO7EkiNhThFFW6s8
+         oKvcrLv7HlepCVzOUtmMuitaIynv948HhfBYMdFFF9MQqZE4jN9fU1fdyyZ43U8JtX/q
+         QSzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748457313; x=1749062113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2cVLMwY4AxanVU8F/mVt2OHuXPMKbrtS0JnadrXFkYs=;
+        b=Rxq7ZITAjrNuMz5Q72En+qfpfaYwyuDXMkiyRqY6ETCPRNizJYPF118U+lllPOSoGr
+         DqX9QEhIsNr8KJvdOxEqXBeI67+0Cvtpl9gNi/rtpUOFYbFvp+shteZqZLQyfjYXFFKp
+         LimWooy1F4qW15RKpapG+MrfB4gBJgQfC6sNuk9kiV0LgVXcGAsLGChslUEKcqhpys1Y
+         yHdNdeMXj8kZcgzzypP43XWzimYxgyhmvvKpSDhtCLvWo9qZcfRv4szYEuFikFmJUENE
+         LO7UYeAivZyvpatiyWCbDq+VvhEJych1uH1WTeo0KaNV7hMYRcltrinsVpDgwyO9QELA
+         4H0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUZhggL4PPOedpa4GwQMZOu9sl29LVb2iHDjZZBHxb4/DFE+2H9RpGz/1ovZH3cltV7/s5K9C4jQg61ur8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzal0AhHZFwgx3ZeQ1lceWeWEfQhQZWxKxYM0TkTqsOw/ZWkHT1
+	8C3ZcqUOaHZbx3dvlpHx20Sq/dp/QCx2SzqXm+bEOhCkCSuGslyQaFQ5su/BArWHtSazOfhOIjW
+	omhfkaEGpYhikWInsFuiT3mtI8+Zy97RBf77W60oM
+X-Gm-Gg: ASbGncsHe+9x8kZa53SA1BExPFSHCszdgEFYSoJHz2bXISswK7IuEjNbSJgPFLhyuPT
+	QiZtpzMVN3bGdRwD+8BXya6zVepnVYnU9AqAWYBC4l4bP2zXfyhiRpIH8vQXCR3OdYdj0bSPQJq
+	MB+IH7IQktoo0wlyTxQ3aqbzgwPEsBdDvLRM+olQeJZ+2ihl9olTanrfn9Ci3QNIruu+r2hNvy
+X-Google-Smtp-Source: AGHT+IGYXX0WDoz2XCkffg330kupFU0jreTbKLaIcJ3R/pK8nBp48fujSFr5wR2xC39RxHnZaH4b1vXmghZ5HEoyCok=
+X-Received: by 2002:a05:6e02:1a08:b0:3dc:830e:1ce6 with SMTP id
+ e9e14a558f8ab-3dd920f5e16mr384695ab.22.1748457312709; Wed, 28 May 2025
+ 11:35:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250410202647.1899125-1-irogers@google.com> <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com> <aDdU1npHL2Vczhsa@google.com>
+In-Reply-To: <aDdU1npHL2Vczhsa@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 28 May 2025 11:35:00 -0700
+X-Gm-Features: AX0GCFuOWPXoPpHqCzIaOBkJlXVpLQKsGRF_N94G7uJ_0dqi9rbnNFLaxAn8bjI
+Message-ID: <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's -Wunreachable-code
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 11:25:20AM -0600, James Hilliard wrote:
-> On Wed, May 28, 2025 at 8:12 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Wed, May 28, 2025 at 9:25 PM Andrew Lunn <andrew@lunn.ch> wrote:
+On Wed, May 28, 2025 at 11:24=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > On Fri, Apr 11, 2025 at 3:14=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
 > > >
-> > > On Wed, May 28, 2025 at 05:57:38AM -0600, James Hilliard wrote:
-> > > > On Wed, May 28, 2025 at 1:53 AM Russell King (Oracle)
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > >
-> > > > > On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
-> > > > > > On Tue, May 27, 2025 at 2:30 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > > > > > >
-> > > > > > > > Sure, that may make sense to do as well, but I still don't see
-> > > > > > > > how that impacts the need to runtime select the PHY which
-> > > > > > > > is configured for the correct MFD.
-> > > > > > >
-> > > > > > > If you know what variant you have, you only include the one PHY you
-> > > > > > > actually have, and phy-handle points to it, just as normal. No runtime
-> > > > > > > selection.
-> > > > > >
-> > > > > > Oh, so here's the issue, we have both PHY variants, older hardware
-> > > > > > generally has AC200 PHY's while newer ships AC300 PHY's, but
-> > > > > > when I surveyed our deployed hardware using these boards many
-> > > > > > systems of similar age would randomly mix AC200 and AC300 PHY's.
-> > > > > >
-> > > > > > It appears there was a fairly long transition period where both variants
-> > > > > > were being shipped.
-> > > > >
-> > > > > Given that DT is supposed to describe the hardware that is being run on,
-> > > > > it should _describe_ _the_ _hardware_ that the kernel is being run on.
-> > > > >
-> > > > > That means not enumerating all possibilities in DT and then having magic
-> > > > > in the kernel to select the right variant. That means having a correct
-> > > > > description in DT for the kernel to use.
+> > > On Fri, Apr 11, 2025 at 2:34=E2=80=AFPM Namhyung Kim <namhyung@kernel=
+.org> wrote:
 > > > >
-> > > > The approach I'm using is IMO quite similar to say other hardware
-> > > > variant runtime detection DT features like this:
-> > > > https://github.com/torvalds/linux/commit/157ce8f381efe264933e9366db828d845bade3a1
+> > > > Hi Ian,
+> > > >
+> > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > Clang's unreachable code warning is able to catch bugs like the f=
+amous
+> > > > > "goto fail" which gcc's unreachable code warning fails to warn ab=
+out
+> > > > > (it will complain about misleading indent). The changes here are
+> > > > > sufficient to get perf building with clang with -Wunreachable cod=
+e,
+> > > > > but they don't really fix any bugs. Posting as an RFC to see if a=
+nyone
+> > > > > things this is worth pursuing.
+> > > >
+> > > > I'm not sure if it's useful and don't see what kind of bugs it can
+> > > > address.  The proposed changes don't look like an improvement.
 > > >
-> > > That is for things link a HAT on a RPi. It is something which is easy
-> > > to replace, and is expected to be replaced.
-> >
-> > Actually it's for second sourced components that are modules _within_
-> > the device (a tablet or a laptop) that get swapped in at the factory.
-> > Definitely not something easy to replace and not expected to be replaced
-> > by the end user.
-> 
-> Yeah, to me it seems like the PHY situation is similar, it's not replaceable
-> due to being copackaged, it seems the vendor just switched over to a
-> second source for the PHY partway through the production run without
-> distinguishing different SoC variants with new model numbers.
-> 
-> Keep in mind stmmac itself implements mdio PHY scanning already,
-> which is a form of runtime PHY autodetection, so I don't really see
-> how doing nvmem/efuse based PHY autodetection is all that different
-> from that as both are forms of PHY runtime autodetection.
+> > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > ```
+> > > if (...)
+> > >   goto fail;
+> > >   goto fail;
+> > > ```
+> > > Meaning the fail path was always taken and checking on the non-fail
+> > > code never executed. Newer GCCs will warn of this because of the
+> > > "misleading indent" but  clang won't. It is easy to imagine similar
+> > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > could be useful.
+>
+> It doesn't look very convincing to me but it might be valuable in some
+> rare cases.  But the proposed changes - basically replace exit() to
+> __builtin_unreachable() - seem weird.  Why is calling it a problem?  I
+> guess it already has some kind of annotation like "noreturn"?
 
-What is different is using "phys" and "phy-names" which historically
-has never been used for ethernet PHYs. These have been used for serdes
-PHYs (e.g. multi-protocol PHYs that support PCIe, SATA, and ethernet
-protocols but do not provide ethernet PHY capability).
+Yep. The exit is incorrect (depending on your notion of correct, I'd
+go with clang's notion as they've had to consider this for a while) as
+it can never be executed. I've added the __builtin_unreachable() to
+document that you can never get to that statement, as otherwise it can
+make the code readability harder with the code looking like it will
+fall through after calling something like usage_with_options (which is
+noreturn). In unoptimized builds __builtin_unreachable() will fail if
+executed, so it is a bit more active than just a comment.
 
-Historically, "phys" and "phy-names" have been the domain of
-drivers/phy and not drivers/net/phy. drivers/net/phy PHYs have
-been described using "phy-handle".
+Thanks,
+Ian
 
-So, you're deviating from the common usage pattern, and I'm not sure
-whether that has been made clear to the DT maintainers that that is
-what is going on in this patch series.
-
-As for the PHY scanning is a driver implementation issue; it doesn't
-have any effect on device tree, it doesn't "abuse" DT properties to
-do so. The PHY scanning is likely historical, probably from times
-where the stmmac platform data was provided by board files (thus
-having the first detected PHY made things simpler.) Therefore, I
-don't think using it as a justification for more "autodetection"
-stands up.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> Thanks,
+> Namhyung
+>
