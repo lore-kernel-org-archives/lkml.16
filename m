@@ -1,67 +1,114 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BAE244665
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9631367;
+	Wed, 28 May 2025 07:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748418158; cv=none; b=AafIurc5mkklXcZJPb+lxZnc/PFBWasWUhO2CTSxfbcMM2U9ZkrKRr2SB23dcRWqNJEXK/s6IgsnPYqdWW+vDxS08AtyTJ6Eel5HkuZHGntUcoBB2QWcSHMroTO21qsWMwbFGKP8cxGd3QMJbfX+P02X7XLXK7e1yZ+zEQ9USPs=
+	t=1748418233; cv=none; b=JwsAS3A3i0x7rr5zRFBHrrH57/kESQc4MB3QBvzjcYmwbiIX83W9NYNML+2YcvPch0Ro8yEI6k/09cH8yFLA/qfupQrC6L66e1+aGT5F2HusVUGIzWwkZs+btqtyKTlDUyGQ3x3DO7IUmFMl2swZFcNG3VwzQzal2445KhcqaAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748418158; c=relaxed/simple;
-	bh=xYJevYiGKI0K7avOKmDDQjjiD0+OYWRjkuns92h5r1U=;
+	s=arc-20240116; t=1748418233; c=relaxed/simple;
+	bh=UDTXmWoYv9/xyJqEAsScTL5vAx1ZZeaAczWfwT05les=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVuCcahUv4tCkx2mZUZZ0D0Xh1KFdMLWdt96FXWKg3WjZg57s7dHh3O7QeHjE7Ltq30OqEa4rUytHos/JWfeGLV10JtMVqjG+QwfXlBa+cCenGHKQF9kLew5zbNeZ2LqoYpmXvV6Iay+PxhxpkK47v6cLqmyGpaRzwVbqV5dHfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FUN/QgMS; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=bvB20nsGBgw9FPMkqrGFa+HgzTCoGVFXHHdD+YulkHP9XisN1BSVEj8kH90IKCCrjk22G3ABMi+BlZXTmX+pYKzINUAlGVKwvdc6mCLs3vs6LqtkaiZ0QsbW7Az9wlpBr4Fu6z2mxq4QmYoHWLLp9NOoWKMQu0ct++WfmV/1lLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXtHtHR8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FUN/QgMS"
-Message-ID: <edd25df6-47a0-410d-ab48-54a0660c6149@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748418144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XWpUHx95xVQCUGTqWlHukBzLJnxxv1s1PMTNi6sAZco=;
-	b=FUN/QgMSNmz/dsJyLSQ9iduOvw6nDteuE2lDMs+7mz6z+byomfgosG2T1MsoPBeBuVGhR3
-	DBo5chzKTeQei5Z+/poQJRfeZGsrvUQPYNRBP56S3w7sjU3iWWntUmD91zAaH5rj//wrCs
-	WazTaJjqCQLRdwYSootlfyykjyxhnlA=
-Date: Wed, 28 May 2025 15:42:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXtHtHR8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A39CC4CEE7;
+	Wed, 28 May 2025 07:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748418232;
+	bh=UDTXmWoYv9/xyJqEAsScTL5vAx1ZZeaAczWfwT05les=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jXtHtHR8IRSjqMfFlBbzEm/QcuoeHsg2WKHcAHv301klgRgl0C+q85BHx7sVM35uM
+	 StgVp4Bh87ZwxrbJpRJx6YP8JpwLiviEW2Rw3BJZo35X7pjAYeE2TYWgk9ytUovO2x
+	 iEgCsFEyR5eM/koJYtXhoc/khCR4pGbL4M5L2KPs0M+b/N7HIgc79epnpTd2dje/qo
+	 JH6G0ENMXeSWvM3YeEZSEtV3RqL0cvNbHnur+yovMhzPaEbra6MyEnZ9RAdcY1PNPj
+	 hE+krx+7lqGKkLmcdgfC7El1BPRnVanW9I3CLKzryptPIKo9DABwoSJjRaCSJwVUoL
+	 HVzSwvfll6MNw==
+Message-ID: <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
+Date: Wed, 28 May 2025 09:43:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
-To: Huacai Chen <chenhuacai@kernel.org>, Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
- <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: timer: xlnx,xps-timer: Make PWM in example
+ usable
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Sean Anderson <sean.anderson@seco.com>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 5/28/25 3:17 PM, Huacai Chen 写道:
-> Hi, Qunqin,
+On 27/05/2025 19:15, Uwe Kleine-König wrote:
+> With #pwm-cells = <0> no usable reference to that PWM can be created.
+> Even though a xlnx,xps-timer device only provides a single PWM line, Linux
+> would fail to determine the right (pwmchip, pwmnumber) combination.
 > 
-> As I said before, why the patch "MAINTAINERS: Add entry for Loongson
-> Security Module driver" is missing?
+> Fix the example to use the recommended value 3 for #pwm-cells.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+And what about the binding itself? It allows any arbitrary value.
+Setting it to const=3 would not break the ABI, as long as driver does
+not care.
 
-Similar issues widely exist in the Loongarch mailing list.
-The cause should be attributed to the mail server of Loongson.
-
-It seems that Loongson Mail can only send no more than five
-emails at a time. I suggest abandoning the use of Loongson Mail.
-
-
-Thanks,
-Yanteng
+Best regards,
+Krzysztof
