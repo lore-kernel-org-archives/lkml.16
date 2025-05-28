@@ -1,155 +1,153 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E37E1C5D4B;
-	Wed, 28 May 2025 03:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DB638B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748401537; cv=none; b=kUprHy7EfOM0yMR8XNKU/gEoFMLk8xKs88rJQfa6ibrOLfO3WpcHMrjO2CsoaXQgiWiWnF1LHOnonwFGDTNfNgjMyoGFNQW4oBetT3gbPnscFt3w7rKYYhuVYeFKmowL9mxrfbxX26W8fMptdjsYeQ+bZwMYoBoFajQI1V2lOhM=
+	t=1748401674; cv=none; b=aBF2d10hJU2mLZWOpLOVs0tDc7JnQeOCdz15lX7xyCyVEHLP5Tx7y/4eBKNPvBFxbgzojFuvRZJXoRPue3+2z+xmmiV6LXpRD5F2fcpDTl+J+CoABYB/fsyj2qpfDi3kAIknwR7of7EJfMXavmshfzS3ASX7WcJQl44m09Jsgq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748401537; c=relaxed/simple;
-	bh=P4NoW3ykcOBCx61JzkfeuKAq1Yv3n1sxMGQ2EH9VqOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XxssXA0mAvfVGExtsqN2J3C+tUiH38nJyaFF0IQXXyLxKBQumEE7Hy/SzTR9SBjjZUBrtWQ6Xtpg8AGR3odkj8SI2EmNUmu22Qli+6SbjUf3NB1MDutlAdkQQng7D4nK57vdUJAqvLZEu/5WaXP/nlPhv8Fo2KeulVgn9m20kF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWfPuf7B; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWfPuf7B"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30e542e4187so2752384a91.3;
-        Tue, 27 May 2025 20:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748401535; x=1749006335; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qYmnbtrMxduOKu9ITGTitlSbMtTKd5M645QiTbXrAaY=;
-        b=EWfPuf7BTjqds9ETG4srdJlyoPexcmMpHsT9O9HBa1inQxPMwWpOJNbygMuwksPb+D
-         zjEhRNiyP/oyD20cD/62OmfbMt8M+7nRGkKkaUn/kLoXmZcqH98cO/42YcNc5tzcummf
-         mh3HU7XHWpb//mF1sK8GIk1MjGMJmEpIDDmG0T7Ad1CAedBj4/kd3l29P4EzvqPWNe26
-         7jUN2gPQ2GSNLAaQEZrKL4C7ObYTcUCdmvCN1rLcwyWFLceEJ+LkfFdf0iVs0n0J5DoT
-         3R6mOST2fHEkZxtWCgU2b/LB3cs0Xi6Y9O/E3X4KluPsKMbzh7CE4Qt9qyxKVy0YfCjv
-         r2UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748401535; x=1749006335;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qYmnbtrMxduOKu9ITGTitlSbMtTKd5M645QiTbXrAaY=;
-        b=MrrM/S5evkORqaANYEe4GVN5v0atJbrQP5AGWgJExUYZzhHvT1NllEHE8tx63yaZ4H
-         Zu5F8IIKbQ7WSxKBU3Fla/S1kJpxYqJlkpXK2yMcPlIGK+oDTlOXVu3uVxlJXDYQ74v0
-         PKdIQkTdWZMZWnb8MVUe1rw07H7kDQ9ju/IkGupUMAMYb0lGSDCzsbJR+KDY+h7JotBr
-         HA9CxJWOaspn27cta7vyUG15wlCF6WX0EeBoLYaK1reL+rB13Id0lkf0jViXKero0srX
-         CqStKAiWYpXSV1bhFgtbRBzg5P3NOyvkU2g2cBA+on5mUI/eoaYks+dx4YNe94TlMMT9
-         QhVA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIRKlLvecXwWZ0mPExQCeC66kKKW+9D8pSxnJPNy7SLKCXpFCBZkSDJBid4LNdw/iLHfWXRWZGuNaK@vger.kernel.org, AJvYcCWZ66UL4VjaAfm3B2ImSWMbiAtRJvx/XXnm1DpXmlVLmU7QGbDcsCInjXtHyP5xi3DU4ZM3KnftEiLgd/w5@vger.kernel.org, AJvYcCWz3oUSlOOHAZE0Ngct7/+EK+LdgxS5HjqZEwXsGwv6xzFti3IglnR3b8ytV3cRtIwWVcxA1bAfWeXrrkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEU1+Us27Ca9Cc/UVbh7/SvANot1bmCilRwOX58krdvcEfX3AD
-	4kxmzKBdb6yjIL1pcTsZoZ6RlmqUfJXC+C5xFIR95pIXdVZbVljiCiFPOgmM5kJbWWXZh/Ljzt3
-	p6Md8cDRxlpC/1MSr8UCUwVF45yRnQKw=
-X-Gm-Gg: ASbGnct+dVMWCJ5/B7i5I8bRDO3IgNp+DpYxZ8MowAfl+EMef7fBK2tVO3y4rb6zRf7
-	MfS76rr0FKsO/oUIYOHWtdWMIoIU5kKRgAYUeW9tGhN4/ijm9K0iPPWveCKzQlTA9GO01zIdeKO
-	SS3IA/uo+p6695SY/1jlATBzMe8aRNfQKkxaT4V/dRxhI=
-X-Google-Smtp-Source: AGHT+IEZ6LkUmKwlZlKmCgrqaa17DjFrtDszVlcH7RcGvuUieg+Ee25K0BY70YK/3VI5vchDvPkcpByMtCn4N3Ku04o=
-X-Received: by 2002:a17:90b:4b8b:b0:311:d670:a0e9 with SMTP id
- 98e67ed59e1d1-311d670ad95mr2330419a91.21.1748401535339; Tue, 27 May 2025
- 20:05:35 -0700 (PDT)
+	s=arc-20240116; t=1748401674; c=relaxed/simple;
+	bh=bYoHRv94+Uhdxo5N61QAXTbOOq0mvF1hZtdvceAEd/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hfz656GkQYGXzss699ZLPqSbjxeNTStOhNOywPXWxxTA9Be0ULnEmcYWEiB+ruUX3a8bWQZopL9voCtidZtCEXd0MgxnsTZ4DjAM7uLVxqjc/2NAZqxTR0U3rJu5VupQlk9ePEYxTbZ183nWrJSNcb4/0J9b05rT09FFHf/u1u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: edb400603b7011f0b29709d653e92f7d-20250528
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:89388e7d-8e1f-4f14-a363-14ef45c0088f,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:697afef8e70c061f84357a4c61fca64f,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-UUID: edb400603b7011f0b29709d653e92f7d-20250528
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1708069242; Wed, 28 May 2025 11:07:45 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id A751116001A02;
+	Wed, 28 May 2025 11:07:45 +0800 (CST)
+X-ns-mid: postfix-68367E01-598433692
+Received: from [10.42.13.56] (unknown [10.42.13.56])
+	by node4.com.cn (NSMail) with ESMTPA id EC51B16001A01;
+	Wed, 28 May 2025 03:07:43 +0000 (UTC)
+Message-ID: <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
+Date: Wed, 28 May 2025 11:07:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
- <20250502150513.4169098-8-m.felsch@pengutronix.de> <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
- <20250502165535.aeb2osq2vnxsudmq@pengutronix.de>
-In-Reply-To: <20250502165535.aeb2osq2vnxsudmq@pengutronix.de>
-From: Adam Ford <aford173@gmail.com>
-Date: Tue, 27 May 2025 22:05:23 -0500
-X-Gm-Features: AX0GCFu8yyPWk2ODj0OO3w1sV1GGZuj2FPHpU_Gczh74crcCq6_GDYUbvmDndvY
-Message-ID: <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
-Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com, 
-	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, 
-	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, paulk@sys-base.io, 
-	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
-	sebastian.fricke@collabora.com, ming.qian@nxp.com, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
+ devm_device_add_group to devres.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
+References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
+ <aC8en60QI0MwnXxM@smile.fi.intel.com>
+ <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
+ <aDWdXT36Ucxk0O63@smile.fi.intel.com>
+From: Pei Xiao <xiaopei01@kylinos.cn>
+In-Reply-To: <aDWdXT36Ucxk0O63@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 2, 2025 at 11:55=E2=80=AFAM Marco Felsch <m.felsch@pengutronix.=
-de> wrote:
+
+=E5=9C=A8 2025/5/27 19:09, Andy Shevchenko =E5=86=99=E9=81=93:
+> On Tue, May 27, 2025 at 05:41:21PM +0800, Pei Xiao wrote:
+>> =E5=9C=A8 2025/5/22 20:54, Andy Shevchenko =E5=86=99=E9=81=93:
+>>> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
+> ...
 >
-> On 25-05-02, Adam Ford wrote:
-> > On Fri, May 2, 2025 at 10:10=E2=80=AFAM Marco Felsch <m.felsch@pengutro=
-nix.de> wrote:
-> > >
-> > > The VPU_PLL clock must be set before the VPU_BUS clock which is deriv=
-ed
-> > > from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 600MH=
-z.
+>>>> -void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
+>>>> -				   size_t align);
+>>>> -void devm_free_percpu(struct device *dev, void __percpu *pdata);
+>>> Don't you need to cleanup the header inclusions as well?
+>> no, I think we don't need to cleanup .
+>>
+>> #include <linux/lockdep.h> include #include <asm/percpu.h>
+>>
+>> only move #include <asm/percpu.h> to linux/device/devres.h for
+>>
+>> build error.
+> It's not needed for the build error fixing as far as I understood it. _=
+_percpu
+> is defined in another header.
 
-I did verify the current clock rate ends up at 300MHz instead of the
-desired 600 or 800MHz, so we should do something.
+compiler_types.h or compiler.h=C2=A0
 
-> > >
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/b=
-oot/dts/freescale/imx8mp.dtsi
-> > > index 97b09b647ec7..7f4bdefb3480 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
-> > >                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
-> > >                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
-> > >                         clock-names =3D "g1", "g2", "vc8000e";
-> > > -                       assigned-clocks =3D <&clk IMX8MP_CLK_VPU_BUS>=
-, <&clk IMX8MP_VPU_PLL>;
-> > > -                       assigned-clock-parents =3D <&clk IMX8MP_VPU_P=
-LL_OUT>;
-> > > +                       assigned-clocks =3D <&clk IMX8MP_VPU_PLL>, <&=
-clk IMX8MP_CLK_VPU_BUS>;
-> > > +                       assigned-clock-parents =3D <0>, <&clk IMX8MP_=
-VPU_PLL_OUT>;
-> > >                         assigned-clock-rates =3D <600000000>, <600000=
-000>;
-> >
-> > I think there was a move to make the default be overdrive [1]  and [2]
-> > and use a 'nominal' device tree for those who are not in overdrive
-> > mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
-> > 600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
-> > values here should be 800MHz and if we should add the nominal values
-> > of 600MHz to the imx8m-nominal.dtsi file.
+I tried before send patch, but it all resulted in compilation failures on=
+ my arm64 machine.
+
+
+> ...
 >
-> You're right, Ahamd and Lucas did change this. I will adapt it later on.
-
-I updated my device tree to run in overdrive mode and ran fluster at
-the higher rates:
-VPU_G1 - 800MHz,
-VPU-G2 - 700MHz
-VPU-Bus - 800MHz
-
-./fluster.py run -d GStreamer-VP8-V4L2SL-Gst1.0
-Ran 57/61 tests successfully               in 5.922 secs
-(vs 7.059 secs at nominal speed)
-
-./fluster.py run -dGStreamer-H.264-V4L2SL-Gst1.0
-Ran 129/135 tests successfully               in 40.107 secs
-(vs 45.741 secs at nominal speed)
-
-If you want, I can submit the clock updates I have for overdrive or
-send them to you to save you some time.
-
-adam
-
+>>>> -int __must_check devm_device_add_group(struct device *dev,
+>>>> -				       const struct attribute_group *grp);
+>>> I'm not sure about this. The percpu seems standalone piece, but this =
+has
+>>> relations with the other group related definitions just above.
+>> I'm also not sure if this devm_device_add_group needs to be moved,=C2=A0
+>>
+>> which is why I haven't replied to you yet
+> Fair enough.
 >
-> Regards,
->   Marco
+> ...
+>
+>>>> +#include <linux/sysfs.h>
+>> it's redundant.
+>>>> +#include <asm/percpu.h>
+>>> What for are these new inclusions, please?
+>> for percpu.
+> It does not define __percpu.
+>
+>>>> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
+>>> Please, take your time to understand what is behind the __percpu and
+>>> why the asm/percpu.h is redundant here.
+>> If this header file is missing, there will be a compilation error.=C2=A0
+> Right. But this is wrong header for the purpose.
+>
+>> Which header file should I include?
+> The one that defines it, hint:
+> https://elixir.bootlin.com/linux/v6.15/A/ident/__percpu
+
+compiler_types.h or compiler.h=C2=A0
+
+I tried before send patch, but it all resulted in compilation failures on=
+ my arm64 machine.
+
+=C2=A0You can give it a try.
+
+when i add a error in compiler_types.h
+
++++ b/include/linux/compiler_types.h
+@@ -26,6 +26,7 @@
+=C2=A0
+=C2=A0/* sparse defines __CHECKER__; see Documentation/dev-tools/sparse.r=
+st */
+=C2=A0#ifdef __CHECKER__
++sasasas
+=C2=A0/* address spaces */
+=C2=A0# define __kernel=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __attribute__((addr=
+ess_space(0)))
+=C2=A0# define __user=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __attribute__((noderef, address_spac=
+e(__user)
+
+it=C2=A0 still build success,have no build error.
+
+#include <linux/lockdep.h> include <asm/percpu.h> ,so have no build error=
+ before modidy,I think.
+
+>> I've found that including=C2=A0<asm/percpu.h>=C2=A0does resolve my com=
+pilation issue.
+thanks!
