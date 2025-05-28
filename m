@@ -1,98 +1,204 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538DA1990A7;
-	Wed, 28 May 2025 08:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D36217679;
+	Wed, 28 May 2025 08:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419477; cv=none; b=c1wEY/s9/2ZvSqvS29sRt+f3sEwWymGRj6WRcCwpDC0H/Vs1Ude6EyXZdkb2HqMHI9FiESN3w5N500Wr/AOluM+LM0MIrlabFuvsJGwcOHshWpZ6r5N5EHEcOwCF1H8tu5vPwBknv2v2WxK82oDR0LS41kLRa7TWvZCYZjfiKEo=
+	t=1748419499; cv=none; b=ra1/guNrpt3gUYcVxn3Pm7+NkwuiOI9do3faYXhGpc3ExGIw+TfZh2PKtj2GBhdrSgrCjOM/p59/xH7VcIDY1ZfQe5hfl36kxaNv8B5NpguTX2pfwVzaPd8d5Az8rvqG5eIEMTMA21WzgjZYlLd4LczKGidgVfODBrS8+GYWKUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419477; c=relaxed/simple;
-	bh=XqT576a4+pge7B4a4Rzz0v2Or+g/qgeLaa1Dg40HAWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oDnEnz7oTXacd9/v5x+ct8kNeyxigX2YmGHaiFW1M5arr5pGO3lk2E00PGS2WS5TOz0i+CAVHYQZEBYj5inuBS7GixK2gTIiqJnMiChSlVCYWdLIdvfFEHfFIzArd9+iM9bHRGvYmZhinix92Kzc8m4SiT/OWJZ6yF5shDxZMXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wNqcsvHH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i72A5JCB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748419499; c=relaxed/simple;
+	bh=zvk+/0pOBB6n96MopJf2kYiRrFww4RvKm0+5MlficmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hWupNrP4RtYbm3CjEU4tfmtOZDo8+KAiJfsGOiPGdM3rq5kpBYz0QwZnimTLLU0bB7YiP7uhSJc3v1QoYLVqcgP3yabPg45S1MuGceIvbosWO8wWMIJyughk6tOv/nthSwo/FiuwCHyngkW3ifSzm3fseBDg6lBY7+6e4Mmhtnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WpRqsxLE; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wNqcsvHH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i72A5JCB"
-Date: Wed, 28 May 2025 10:04:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748419474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ovrRv3FXIRrWqtjmQh9OpUxF47ZJQWlIULBJidB3gng=;
-	b=wNqcsvHH6McVUSiMrlgCo3LTQwVwhgf0mPCMpt9R2KGu+FVTqTVg5a44RP2KRT8Pc5+bUL
-	xAcg5mYhzBkLFccdvw9AEQMsMkcnwsOGdhqfA07+KXbUmfF/+Hs24egqAooz+xrvNoBJEC
-	77TZ5xYpidvzv0TUnWNf/IrD9VLDfuy2y3vKm82746Gtjoa2KimeBWr8/YiNdTOic68Zd9
-	TSHZ80jmP5k33g/IjGozXKDUflBl+oPF3WWmFd0LYehqLrJ89Z548y9LOpoe4ewY/JuUMG
-	6adKo/tWZ5vPFEwHAhiJxsGzHdmjpzgpKgZelfxg3gj7mcJoA6FAbcT9utqs0g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748419474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ovrRv3FXIRrWqtjmQh9OpUxF47ZJQWlIULBJidB3gng=;
-	b=i72A5JCBGUIF5ClurNrGNHBichGzZbPsYF1G187CWSqEG0evuQoIdcPRiH7PHQLMuLtxSf
-	1uLDT5gD4W0S1DBg==
-From: Nam Cao <namcao@linutronix.de>
-To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	John Ogness <john.ogness@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
-	Martin Karsten <mkarsten@uwaterloo.ca>,
-	Jens Axboe <axboe@kernel.dk>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
-Message-ID: <20250528080432.Qke-VMIY@linutronix.de>
-References: <20250523061104.3490066-1-namcao@linutronix.de>
- <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
- <20250528061252.AeDA23yH@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WpRqsxLE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748419498; x=1779955498;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zvk+/0pOBB6n96MopJf2kYiRrFww4RvKm0+5MlficmA=;
+  b=WpRqsxLE0fqpqsst422z/Tq2rzisuo9Bkb/HudTVO5w2BThmaFtIA7b7
+   VH4gxyehConApYL8jcLvQtONp+LJz22YzS/edeoQBcTKSJ63ssElkY9Jw
+   WisD3rK51n4FpNbTWbTMOjOd/TYNFa06wIHGI5zk6nRDc6ljpV19TVdEy
+   nzVeZODzVQitPC3WT/RScz18I8z0T/dX6sK8mrY40M1iUoIwRNHsdvcRD
+   /Q4pPzfO3Sow9oqZJ10iJ24CM9WOHaCTbenX5d5e9Gsk3C3KbyTI/aICa
+   RWrN2ZQSc+LDYXXKw+NtG/6Kn0hePbNlln1Fpah3OH9yijjgLRSJABXqe
+   w==;
+X-CSE-ConnectionGUID: f1b05I5ZT/64CMmDa7z1RQ==
+X-CSE-MsgGUID: rMUIiL02TCOzQ1M87RoHKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50428456"
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="50428456"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:04:56 -0700
+X-CSE-ConnectionGUID: 2JaN/U7vSq2pjZYvQ5ifTg==
+X-CSE-MsgGUID: 0swEWbnRSVKrGb0smiqn7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
+   d="scan'208";a="174057105"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:04:54 -0700
+Message-ID: <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com>
+Date: Wed, 28 May 2025 16:04:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528061252.AeDA23yH@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's
+ hashed page list
+To: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
+References: <20250523001138.3182794-1-seanjc@google.com>
+ <20250523001138.3182794-3-seanjc@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250523001138.3182794-3-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 08:12:58AM +0200, Nam Cao wrote:
-> On Wed, May 28, 2025 at 07:57:26AM +0200, Holger Hoffstätte wrote:
-> > I have been running with v2 on 6.15.0 without any issues so far, but just
-> > found this in my server's kern.log:
+On 5/23/2025 8:11 AM, Sean Christopherson wrote:
+> Dynamically allocate the (massive) array of hashed lists used to track
+> shadow pages, as the array itself is 32KiB, i.e. is an order-3 allocation
+> all on its own, and is *exactly* an order-3 allocation.  Dynamically
+> allocating the array will allow allocating "struct kvm" using kvmalloc(),
+> and will also allow deferring allocation of the array until it's actually
+> needed, i.e. until the first shadow root is allocated.
 > 
-> Thanks for testing!
+> Opportunistically use kvmalloc() for the hashed lists, as an order-3
+> allocation is (stating the obvious) less likely to fail than an order-4
+> allocation, and the overhead of vmalloc() is undesirable given that the
+> size of the allocation is fixed.
 > 
-> > It seems the condition (!n) in __ep_remove is not always true and the WARN_ON triggers.
-> > This is the first and only time I've seen this. Currently rebuilding with v3.
+> Cc: Vipin Sharma <vipinsh@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/include/asm/kvm_host.h |  4 ++--
+>   arch/x86/kvm/mmu/mmu.c          | 23 ++++++++++++++++++++++-
+>   arch/x86/kvm/x86.c              |  5 ++++-
+>   3 files changed, 28 insertions(+), 4 deletions(-)
 > 
-> Yeah this means __ep_remove() thinks the item is in epoll's rdllist and
-> attempt to remove it, but then couldn't actually find the item in the list.
-> 
-> __ep_remove() relies on the 'ready' flag, and this flags is quite
-> complicated. And as my colleague pointed out off-list, I got memory
-> ordering wrong for this flag. Therefore it is likely that you stepped on a
-> bug with this flag.
-> 
-> I got rid of this flag in v3, so hopefully the problem goes away.
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 330cdcbed1a6..9667d6b929ee 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1343,7 +1343,7 @@ struct kvm_arch {
+>   	bool has_private_mem;
+>   	bool has_protected_state;
+>   	bool pre_fault_allowed;
+> -	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+> +	struct hlist_head *mmu_page_hash;
+>   	struct list_head active_mmu_pages;
+>   	/*
+>   	 * A list of kvm_mmu_page structs that, if zapped, could possibly be
+> @@ -2006,7 +2006,7 @@ void kvm_mmu_vendor_module_exit(void);
+>   
+>   void kvm_mmu_destroy(struct kvm_vcpu *vcpu);
+>   int kvm_mmu_create(struct kvm_vcpu *vcpu);
+> -void kvm_mmu_init_vm(struct kvm *kvm);
+> +int kvm_mmu_init_vm(struct kvm *kvm);
+>   void kvm_mmu_uninit_vm(struct kvm *kvm);
+>   
+>   void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index cbc84c6abc2e..41da2cb1e3f1 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -3882,6 +3882,18 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+>   	return r;
+>   }
+>   
+> +static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
+> +{
+> +	typeof(kvm->arch.mmu_page_hash) h;
 
-Sorry, I have been staring at this but still have no clue why. None of my
-stress test can reproduce the issue.
+Out of curiousity, it is uncommon in KVM to use typeof() given that we 
+know what the type actually is. Is there some specific reason?
 
-Let me know if testing for v3 goes well.
+anyway, it works.
 
-Best regards,
-Nam
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+> +
+> +	h = kvcalloc(KVM_NUM_MMU_PAGES, sizeof(*h), GFP_KERNEL_ACCOUNT);
+> +	if (!h)
+> +		return -ENOMEM;
+> +
+> +	kvm->arch.mmu_page_hash = h;
+> +	return 0;
+> +}
+> +
+>   static int mmu_first_shadow_root_alloc(struct kvm *kvm)
+>   {
+>   	struct kvm_memslots *slots;
+> @@ -6675,13 +6687,19 @@ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
+>   		kvm_tdp_mmu_zap_invalidated_roots(kvm, true);
+>   }
+>   
+> -void kvm_mmu_init_vm(struct kvm *kvm)
+> +int kvm_mmu_init_vm(struct kvm *kvm)
+>   {
+> +	int r;
+> +
+>   	kvm->arch.shadow_mmio_value = shadow_mmio_value;
+>   	INIT_LIST_HEAD(&kvm->arch.active_mmu_pages);
+>   	INIT_LIST_HEAD(&kvm->arch.possible_nx_huge_pages);
+>   	spin_lock_init(&kvm->arch.mmu_unsync_pages_lock);
+>   
+> +	r = kvm_mmu_alloc_page_hash(kvm);
+> +	if (r)
+> +		return r;
+> +
+>   	if (tdp_mmu_enabled)
+>   		kvm_mmu_init_tdp_mmu(kvm);
+>   
+> @@ -6692,6 +6710,7 @@ void kvm_mmu_init_vm(struct kvm *kvm)
+>   
+>   	kvm->arch.split_desc_cache.kmem_cache = pte_list_desc_cache;
+>   	kvm->arch.split_desc_cache.gfp_zero = __GFP_ZERO;
+> +	return 0;
+>   }
+>   
+>   static void mmu_free_vm_memory_caches(struct kvm *kvm)
+> @@ -6703,6 +6722,8 @@ static void mmu_free_vm_memory_caches(struct kvm *kvm)
+>   
+>   void kvm_mmu_uninit_vm(struct kvm *kvm)
+>   {
+> +	kvfree(kvm->arch.mmu_page_hash);
+> +
+>   	if (tdp_mmu_enabled)
+>   		kvm_mmu_uninit_tdp_mmu(kvm);
+>   
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index f9f798f286ce..d204ba9368f8 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -12787,7 +12787,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>   	if (ret)
+>   		goto out;
+>   
+> -	kvm_mmu_init_vm(kvm);
+> +	ret = kvm_mmu_init_vm(kvm);
+> +	if (ret)
+> +		goto out_cleanup_page_track;
+>   
+>   	ret = kvm_x86_call(vm_init)(kvm);
+>   	if (ret)
+> @@ -12840,6 +12842,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>   
+>   out_uninit_mmu:
+>   	kvm_mmu_uninit_vm(kvm);
+> +out_cleanup_page_track:
+>   	kvm_page_track_cleanup(kvm);
+>   out:
+>   	return ret;
+
