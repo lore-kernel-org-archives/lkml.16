@@ -1,88 +1,77 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240EE21D5B4
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B722F775
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748474341; cv=none; b=DXgZj/JwJDVIThVabkQHXPzPDm0/blzyLrT3tXz1g2+yykLhqgSpMWhz9SVnMcOek+4xsYowWQ61k/69GYLWO+tJbY3OHgoXV/GBPti+Bc7M9f2ES+ZBvFKTuuxvFIyAiY506zcMeKcOf9NcZYSdd/CO/7QjeE7+tJqQNTtSPAE=
+	t=1748474586; cv=none; b=WBGUj6eQ1BcdARnnkSQCn2bqZWD8IX7IRj6y97Xq8IqWGLdx7Da5dXfGc4whXepDzEfIhqZhI9qm12LEJmkfb+hc7McKCt/Rh6j9MtGGaEdb3OzJ4zilhC274SLO2y3nLEXLgZU4wyVlysolkvKVyItmUwqdMPYVmQyZYNYJ3Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748474341; c=relaxed/simple;
-	bh=O7L3fLy+QaTyix+eKylq/aIqGwtqBPG8+wkD5igJ/MQ=;
+	s=arc-20240116; t=1748474586; c=relaxed/simple;
+	bh=p3cS7ziZxA7eWl6AkFDcQeO1xTNZ1j8LYv7CxtgwRMQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dd3DBNwRqmDo5QpgkoBJgCQbBB/+HbtUMb9GeSSIyBRV4IUGA7PHwHkf3g3qcYCd1w6NzZwp4duzBuq3AucEk5q+y+TGEOwq3qaolDdWvl1+kFg9oJni//woEbjG/yPgN/okUQqPkZpwYlIP3qLiQVoVI9p6FBpd2mzsZihrvd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f7FgeKJC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gEZ6rMUi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f7FgeKJC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gEZ6rMUi; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=sygQ4n00s2b1IAHuca01FPhGI9lPw/Fgdokv+YnPm+3ahXu1HzME5hwxuloZ32YCzeEyLFSUmMbs97K8ySCJK/gL/9Wwh98+NGv9rCAvEZuk+jF3i6TrNTAlPO/9VGCHuP+K9hT6RCsih3ArqW/Vg4uQBUWy70UXR/g5AxDreec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kt+j9N6H; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f7FgeKJC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gEZ6rMUi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f7FgeKJC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gEZ6rMUi"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 14B6521A44;
-	Wed, 28 May 2025 23:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748474338;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kt+j9N6H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748474583;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TCXvysN7+NzyL6KlTscHZe37ZnGxUoud6K9PjSrxwcU=;
-	b=f7FgeKJCaP8udS5flaQ/XDRjskpOz2ZxTXVGwNXS/KkL8KFyFvj4DxYcoRROZeZCoXkLNV
-	2DGoK2j7kdB0hP74poS+L9J5uVb+KdS8qJV+jf1TflZLZDHUtKoJyEBgcItAOwVmaJmRLI
-	jBTc/j7a5cDoOKgpoWgo3N9CQBScroc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748474338;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TCXvysN7+NzyL6KlTscHZe37ZnGxUoud6K9PjSrxwcU=;
-	b=gEZ6rMUiWmu8DVQXlo2Vx0ZGW1JSo9oU6RNcCYmQQ3UpXuFz9yD9mmhiXPPQ4oHukpYjND
-	LjbtXOC5LJkYsGBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748474338;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TCXvysN7+NzyL6KlTscHZe37ZnGxUoud6K9PjSrxwcU=;
-	b=f7FgeKJCaP8udS5flaQ/XDRjskpOz2ZxTXVGwNXS/KkL8KFyFvj4DxYcoRROZeZCoXkLNV
-	2DGoK2j7kdB0hP74poS+L9J5uVb+KdS8qJV+jf1TflZLZDHUtKoJyEBgcItAOwVmaJmRLI
-	jBTc/j7a5cDoOKgpoWgo3N9CQBScroc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748474338;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TCXvysN7+NzyL6KlTscHZe37ZnGxUoud6K9PjSrxwcU=;
-	b=gEZ6rMUiWmu8DVQXlo2Vx0ZGW1JSo9oU6RNcCYmQQ3UpXuFz9yD9mmhiXPPQ4oHukpYjND
-	LjbtXOC5LJkYsGBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EF4C6136E0;
-	Wed, 28 May 2025 23:18:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id z/4wOuGZN2ibWwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 28 May 2025 23:18:57 +0000
-Date: Thu, 29 May 2025 01:18:56 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: dsterba@suse.cz, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: btrfs_backref_link_edge() cleanup
-Message-ID: <20250528231856.GK4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250514131240.3343747-1-neelx@suse.com>
- <20250515144742.GH9140@twin.jikos.cz>
- <CAPjX3FcSigbx4siWMvxUFyeQk3u-WwnWTgqikcDB0vxwwZHFjw@mail.gmail.com>
+	bh=p3cS7ziZxA7eWl6AkFDcQeO1xTNZ1j8LYv7CxtgwRMQ=;
+	b=Kt+j9N6HQt17GTPGaOHkbojNdJCh70XdH95zE/QEDRtFHl6Nn6fYHj6Rp5erNHe8Yu5hC4
+	2Am6UjutlJ/p6ckvC1U1dXpicBKUmLN4JM7P7CXkXhV/uYbW+zUcVwyKBDkZCqlZsJYyU3
+	EQW4ihWuE34STqOb/3GU4OcVKwKfsAs=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-64-AeuF1KvANw25_B7tRFL08w-1; Wed, 28 May 2025 19:23:02 -0400
+X-MC-Unique: AeuF1KvANw25_B7tRFL08w-1
+X-Mimecast-MFC-AGG-ID: AeuF1KvANw25_B7tRFL08w_1748474582
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4769a1db721so6555341cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:23:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748474582; x=1749079382;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p3cS7ziZxA7eWl6AkFDcQeO1xTNZ1j8LYv7CxtgwRMQ=;
+        b=DbMo8k2aNCWipeZ0OlxaBw7cAuKcRsWUvPRMXVEiNEerOa4qDWkflN3izfXQyDpBjH
+         q5RfnxUM+Y/u072RXUZpoZqOJUTfRc0fSWqUFJh55oT7U9Tq5VnawBmm+jJbn+r+kFBe
+         C8cOLEiIKYVcJRfodXfmOS8irjLdrpjbNGve9xCfG28kkYRdtcuiwiGQ+tc24hNddQ/L
+         dXIB1oqDMSoWijKFaqbEeTWiZ0e9JkFH5yiiIu6dCjhSRdjUpfmtkqGx4iRbIBBqMlpc
+         /bOAAAc9NWxpXN2pB8pjVAqPQh+ck3K5MdsFwD2RBG+Q9ukMOHt1FCTzaSXxoqP3hyo8
+         Mxew==
+X-Forwarded-Encrypted: i=1; AJvYcCXwP7EF4cfJi46O1S7hK6y+pLuAe+c22+Gu8Kwzc5SegYGJ5at+xMBb1VUyHkK7C/fckA+NtyAltRzIKlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqrIblNXeoHKwLEaBIlnYzFMC321kMJrvinxXkEsv8+61vtHxs
+	KyoOUotCRAloQZUa08jzGpxctVFytzEmy6e8dschikbhyUQJg/DEob4ezShdByhTVdAnufyCqEX
+	DjYqPyhBLi/HklL2qu2jFgh5jGp6mhbUMWxCC/f5peh9N/ol1Sx8uhdt9tsUpnM/4Gw==
+X-Gm-Gg: ASbGncvHpXQDiIkr9Q+O1dFMQblXhdjSi2e/kJGq5wPmSZ1u2sP1/tkZfWlh8LsQv1N
+	NUzhTMIE9UMDgWEoY71JUMTvwU9BP9Plk1iwXf3EW+f6R2CM59WRoFT5LOW7NO5/KhvTOsOA0nx
+	vpOVWWwfuFnVqHh/1MSW6UzG1difSZ1beevXkQ63AAMKpSL7MaNt7Ob75UR9QHMAgwh6n/0/ru4
+	lKrCcbPp4Nw9BzuNVudm1SEt/MLWZgZxrBNicxftCEw3FjvooRSJKFsPWV5xuK70eQxOMV/dDZl
+	jo+TeYG29DNpsb0H00+PE0X70w545Aq9T5k=
+X-Received: by 2002:a05:622a:2591:b0:4a4:2c46:26a2 with SMTP id d75a77b69052e-4a42c46272dmr39923381cf.10.1748474581672;
+        Wed, 28 May 2025 16:23:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxmHZfkjn5NZQNvu2eOxIy27NyirRpd6v7QkpaRHIVY/chEiuLRUJUD1UiqdL0oTpISgUIjQ==
+X-Received: by 2002:a05:622a:2591:b0:4a4:2c46:26a2 with SMTP id d75a77b69052e-4a42c46272dmr39923091cf.10.1748474581307;
+        Wed, 28 May 2025 16:23:01 -0700 (PDT)
+Received: from x1 (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435a37204sm886781cf.60.2025.05.28.16.23.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 16:23:00 -0700 (PDT)
+Date: Wed, 28 May 2025 19:22:59 -0400
+From: Brian Masney <bmasney@redhat.com>
+To: sboyd@kernel.org, mturquette@baylibre.com
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mripard@redhat.com
+Subject: Re: [PATCH 0/8] clk: test: add tests for inconsistencies and
+ limitations in the framework
+Message-ID: <aDea0w0hWl6yBVGa@x1>
+References: <20250407131258.70638-1-bmasney@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,56 +80,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPjX3FcSigbx4siWMvxUFyeQk3u-WwnWTgqikcDB0vxwwZHFjw@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:email]
-X-Spam-Level: 
+In-Reply-To: <20250407131258.70638-1-bmasney@redhat.com>
+User-Agent: Mutt/2.2.14 (2025-02-20)
 
-On Mon, May 19, 2025 at 12:38:14PM +0200, Daniel Vacek wrote:
-> On Thu, 15 May 2025 at 16:47, David Sterba <dsterba@suse.cz> wrote:
-> >
-> > Please write more descriptive subject lines, related to what is being
-> > cleaned up, and not just a generic "function() cleanup".
-> >
-> > On Wed, May 14, 2025 at 03:12:39PM +0200, Daniel Vacek wrote:
-> > > This function is always called with the LINK_LOWER argument. Thus we can
-> > > simplify it and remove the LINK_LOWER and LINK_UPPER macros.
-> > >
-> > > The last call with LINK_UPPER was removed with commit
-> > > 0097422c0dfe0a ("btrfs: remove clone_backref_node() from relocation")
-> >
-> > While removing the code is ok, looking to the git history I think
-> > there's probably more, related to the node linking. Here it's removing
-> > one half (LINK_UPPER).
-> 
-> I'm not sure what you mean here. I mentioned the commit you suggested.
-> Checking the rest of edge linking I don't see how it could be
-> trivially simplified further.
+On Mon, Apr 07, 2025 at 09:12:50AM -0400, Brian Masney wrote:
+> Here's a series that introduces some clock provider kunit tests. These
+> tests are centered around inconsistencies and limitations in the clock
+> framework that may lead to some clocks unknowingly changing rates during
+> a rate change of their siblings.
 
-The idea is to look around if there's possibly more code to be removed,
-not trivially but based on the logic related to the removed code for the
-LOWER part. The relocation code is complicated so this is beyond the
-cleanup and don't have a specific suggestion, so let's take what we have
-now.
+I posted a v2 of this series with a new title for the cover letter. This
+combines another series related to fixing an issue in the clk core.
+
+https://lore.kernel.org/lkml/20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com/T/#t
+
+Brian
+
