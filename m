@@ -1,128 +1,110 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AF5283FE7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF061494C2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434939; cv=none; b=VewrUBwxLvkiAgRqgUUDOgYG0DByg/UMa+wlPxof++V9IKAc2peg/i7xW9E+ED5joraKGqVLqJLUkhCn9HwoUEHmfyCrbZLgtpSAEw2COUrryDI74xWEP+nR1Dq4DdLr/8wbRpoiKADxoS4H1Nuuh8G4any3hNOQYSRs/K37CpU=
+	t=1748435123; cv=none; b=WmOXsFPkZi6fqBI5YorGWgQoF/Q5hNFaeyZ9WzVbJ4acOW9zi/iFT6zBnu2/UxLw2/rxUqzLduNIrGSiKlug/Y6acuEoJoE2CL99d7CAknDtxt71/3LKJ8Jk67mXJ+b+PTWoSxeVQNK++Eot8CpMc0hjs6lWgI08cBYMv2Zi82U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434939; c=relaxed/simple;
-	bh=L6s/yq8mz6+pYVGOZSYXHTm7G9toveW1Uq3hhmEWU7A=;
+	s=arc-20240116; t=1748435123; c=relaxed/simple;
+	bh=HqH7e82HFOn8c9Wpi45EOHV+4J6RuYz9jpwePPr1yqA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3F7LgJnEYFvaslLAa/zSPaEDZTVG6eOxKBxHb15ZxjpZKhLWzO3qXqilvI2rd4Cj2ZAJ87voldEUfDoFjkms5I0NLA8T8wggnRE3T/pvv5cWSUgjCHAyJHTiXDGndWb7nX4mg4yqmB9bUKrL3JGJj33f7VbhZVABOhL3To8nB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uKFn3-0002SH-Bf; Wed, 28 May 2025 14:21:49 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uKFn2-000aSn-37;
-	Wed, 28 May 2025 14:21:48 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 930EB41B601;
-	Wed, 28 May 2025 12:21:48 +0000 (UTC)
-Date: Wed, 28 May 2025 14:21:48 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com, 
-	Sascha Hauer <s.hauer@pengutronix.de>, imx@lists.linux.dev, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, michael@amarulasolutions.com, Fabio Estevam <festevam@gmail.com>, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] ARM: dts: mxs: support i.MX28 Amarula rmm board
-Message-ID: <20250528-toucanet-of-utter-conversion-2bb1c7-mkl@pengutronix.de>
-References: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
- <20250528121306.1464830-5-dario.binacchi@amarulasolutions.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aojlnQUCNVQ8xNgc2BqbD9khvE3fizh+sYWnD8s1kpf/SMdLAtwi/UtZBoUq32pyJd9MVcK45ja2qWbYFyuwt/xB0uea/9oLZtZLp4OST9fq4zDwlK/lBKVGIVg5gZ2k9DoHNhf+YvJCeD6NEwEL8GScHZ5MNBS/Ue9h2BduceI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L7YqBlgK; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7YqBlgK"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a361b8a664so4492378f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748435120; x=1749039920; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gx27Ka76ChtB2rd8/90IbtQhwxpnww4n1RM1ipSXbgM=;
+        b=L7YqBlgKg7ey+FdDeI7UcAJ/3MSqcByBBRl9oVSJLxL4mchl0B2Lg6HOD26U8aFUez
+         dLbhDQp+5Yi4V2iDlAZ2hVlRnrvh7nVkYqNvLZeOtmFRcv86O8+M9MVBQxmojt/isGxt
+         Gq+nAybFiuzev91mGy/ELDL87jmlyl6vWNOEwrriMa7k8/lAbqUsCOLQzB8aizFiDE/G
+         NAuTtMP8Tv0AJrlOEEaaj6LSXmEDsJpxZ+OwHwml6s9vJvgPkKF3P/cpdOygnojrob7D
+         VAcXFx5epcZ9S/IWx5h2Q/4TEcpwtTLzkZ/6gn6KJaDerILJil8LHGe2mScgQKzzv2IS
+         QB9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748435120; x=1749039920;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gx27Ka76ChtB2rd8/90IbtQhwxpnww4n1RM1ipSXbgM=;
+        b=UNs//YeTnbGnHHM3CaYYcXuELXWzkHWbySIV5tj1VHSxyIISB56t5G9R+1cVJgkzwE
+         8Qj9PSfHazKierKr3y48dyjvpNcjrUbZwcQO0BnmfzhhNT1nUhShzOhOFZFo7ZnEgsJQ
+         NdqhJlv7Z2kph3Ey26ySdv2xKG6C6QU6ub1F1jfWjHpohETDQKCwc+xRmoYdlM8ngHvd
+         p7m9g4FAFdpvm3wwjzui4IFZQDXsmv1fvlU99ZqY9BR1XLwvAvDkGk1Ce7e8YxdT+kbo
+         SR30XxHLmEqfOQrQ2CsZhjVprvvcYgPDNT1XHZxfLN7iwb6yKxf0TrHLIr5Ac5zxrXyN
+         PGLg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Y52ykKkzzB3pEbNVWpPtZponLYu7b0Hr06sRezYgPzJALL9TQL5bF6fiwpI9xwDV6GNYcLfe+S5lXtQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzIdngjrHQxHx3oDNMpBY+0W3QeEJFMyAOmdxSAc5VEbVfZqYz
+	Nbx/es69UZqBJ/okB1rrxf2Vkh4l3xPtnQqIcALwmYgzDcF7vMyxkFED
+X-Gm-Gg: ASbGncsC/tPE6YMj+GJ2bEwf2MYt2ok0r2jnxWn7M9pmfWSpV+iFBPHPqq+jS1mZYqP
+	C/YMMmlnnypnP1Zc5a7smxvDnmYccg/g81PBBOa9zj1HQtqmaUvpnrP/p5OKw6OKRCwHR2ajPR6
+	FeQpGpmDuZk3+361EaUj6Uwk5zERUZ0fZxe16T2Pnh+U2kyYvvoKtsWdlZXtLpRCFl4tIB5OOI9
+	tgfMGuI/DsK+3bKUBXYPApfMnVbhoG06KOcd42SQoQdBBnIZ531jJKzDSeR069OSCWAkLntcx70
+	BNPCLnMrInfSp4ztzMjOv4yN4tmC+cuVgB46A8vODmlqxfpv2Ms=
+X-Google-Smtp-Source: AGHT+IECMjwbFuOI/6hxsWepZz+pzUbSZ+x3gZlMFBHR5U0NEq3cHEZ9XAI8fsatRidm2mFZVAYgbg==
+X-Received: by 2002:a05:6000:26d0:b0:3a4:e502:81b8 with SMTP id ffacd0b85a97d-3a4e5028508mr3838397f8f.43.1748435119720;
+        Wed, 28 May 2025 05:25:19 -0700 (PDT)
+Received: from ed.ac.uk ([2001:630:3c1:90:97e6:f326:b9e:1a85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac8f128sm1368680f8f.60.2025.05.28.05.25.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 05:25:19 -0700 (PDT)
+Date: Wed, 28 May 2025 13:25:13 +0100
+From: Karim Manaouil <kmanaouil.dev@gmail.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, Bharata B Rao <bharata@amd.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Jonathan.Cameron@huawei.com, dave.hansen@intel.com,
+	gourry@gourry.net, hannes@cmpxchg.org, mgorman@techsingularity.net,
+	mingo@redhat.com, peterz@infradead.org, raghavendra.kt@amd.com,
+	riel@surriel.com, rientjes@google.com, sj@kernel.org,
+	weixugc@google.com, willy@infradead.org,
+	ying.huang@linux.alibaba.com, dave@stgolabs.net,
+	nifan.cxl@gmail.com, joshua.hahnjy@gmail.com,
+	xuezhengchu@huawei.com, yiannis@zptcorp.com,
+	akpm@linux-foundation.org
+Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
+Message-ID: <20250528122513.4rxzkia7lge7du5p@ed.ac.uk>
+References: <20250521080238.209678-1-bharata@amd.com>
+ <20250521080238.209678-3-bharata@amd.com>
+ <62cef618-123c-4ffa-b45a-c38b65d2a5a3@redhat.com>
+ <AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+ <5d6b92d8-251f-463b-adde-724ea25b2d89@redhat.com>
+ <996B013E-4143-4182-959F-356241BE609A@nvidia.com>
+ <382839fc-ea63-421a-8397-72cb35dd8052@redhat.com>
+ <FF2F9A08-9BD8-4207-901D-AC9B21443BF6@nvidia.com>
+ <dbc7c66b-24c9-49f4-8988-a7eec1280ca8@redhat.com>
+ <94BF4806-ABCD-4D01-8577-9E138A634815@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d4u36iwafj365ic5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250528121306.1464830-5-dario.binacchi@amarulasolutions.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <94BF4806-ABCD-4D01-8577-9E138A634815@nvidia.com>
 
+On Mon, May 26, 2025 at 10:20:39AM -0400, Zi Yan wrote:
+> On 26 May 2025, at 5:29, David Hildenbrand wrote:
+> > PFN scanning can be faster than walking lists, but I suspect it depends on how many pages there really are to be migrated ... and some other factors :)
+> 
+> Yes. LRU list is good since it restricts the scanning range, but PFN scanning
+> itself does not have it. PFN scanning with some filter mechanism might work
+> and that filter mechanism is a way of marking to-be-migrated pages. Of course,
+> a quick re-evaluation of the to-be-migrated pages right before a migration
+> would avoid unnecessary work like we discussed above.
 
---d4u36iwafj365ic5
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 4/4] ARM: dts: mxs: support i.MX28 Amarula rmm board
-MIME-Version: 1.0
+PFN scanning could be faster because of prefetching, but it pollutes the
+caches, which may not be nice to the application running on that cpu
+core before we transitioned to kernel space.
 
-On 28.05.2025 14:11:41, Dario Binacchi wrote:
-> The board includes the following resources:
->  - 256 Mbytes NAND Flash
->  - 128 Mbytes DRAM DDR2
->  - CAN
->  - USB 2.0 high-speed/full-speed
->  - Ethernet MAC
->=20
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-
-[...]
-
-> +	reg_3v3: regulator-3v3 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "3v3";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		regulator-always-on;
-> +	};
-
-[...]
-
-> +&can0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&can0_pins_a>;
-> +	xceiver-supply =3D <&reg_3v3>;
-
-The xceiver-supply "reg_3v3" is an always fixed regulator, that doesn't
-switch a GPIO, so IMHO, you can remove it. Saves a bit of runtime mem.
-
-> +	status =3D "okay";
-> +};
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---d4u36iwafj365ic5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmg2/9kACgkQDHRl3/mQ
-kZyAngf+N7jzZFlLipBmBOA/ABOkh8i4xKnSDc8VZEjAK8pgExYn3GEOwfRnRwrE
-EH6bJllykyHzbXfS9/xHs657upS0FW9caUJK2WrWj/8gUfJKVHYs1h0fRa5Cw3TC
-6OPZRsWvOaarYXj7+EnnhyfJ79H3/00LwVBMqc3Arne0fz/iienfgPjW8OEDBHin
-tibPVj8IDRdEoa7ZROykjv0xbfvCpuSXCKUqfCy8z60KH1m/a2yeWpjrgqDv4Pg0
-pYMak6V2+BFkLpRvEzEQEG023ftbkb2FuizWwrFj+/B7K+D5iOefx3PFVblfWXwh
-D2cgAu3iOjcjElKDelSSG2QRmdkD7A==
-=LqyP
------END PGP SIGNATURE-----
-
---d4u36iwafj365ic5--
+-- 
+~karim
