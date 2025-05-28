@@ -1,225 +1,239 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF51A9B3D;
-	Wed, 28 May 2025 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8001324418F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748444625; cv=none; b=E1fyt2GK2fSSxcKXzrtOHW08AD5qVlvl/NDraP1kVaa/fUqrLKQT7VHMhGEI+MUEVs7xd/e7GurtVlhAwOfYkbJiLmmvmnt8l6pG8clU30A4mDsUJJTAsS7A0Lpb2/tk4TQim5VoZA1tiuUWmEtkS5wqeWHsX8HwnBoQAJWAfSI=
+	t=1748444644; cv=none; b=HaJA2OHTA+rm4BNv5oFPhwR1Y0WXN7F0g5Hc108QS2n5e6aB47zjZoD7sKj+FAoXCdmdeboXd0utylNmjK5qYKMbHf86pysmUeVaCTL1ffm25AQh/i15zjO5u3eSxQ5nLprdC1c+6E0TR/L0eQbeaiKeTB0e3YpPfEDbQKwOsp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748444625; c=relaxed/simple;
-	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=B5GD5jLcrIeMj92JsfYhL5c9A4/ECgSNcuGIM+ve20Sj31fcq4FbHLMZgyTSUkmGVP8cUVIP8fOiArFvzjVV/qODSj2j38/hlosPE1WXs78p7iGHSfT+X9y4VO39P2q3E/cxsJb5mEA7nQhUXaxmewe0c+QPzNpf9TTAcDtE8O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2xKvA4+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748444644; c=relaxed/simple;
+	bh=OkmiKIsgi5XBDLuEUxaDQ06HcaY5iOHPXJI+iHHY6fU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fJzScIhk9CxRw+AAAqXhTFxkreiUUNjN+pfz9jR/2ZxnUkrf+1P0l1VQSkyubcc4kKgUrqB9DNz1vzH1bUqPEEtrhLo4+0Lpw2iSmtI7vzbrJ+Bv6Jw7itApKqcN2CSx/PLlJooPWL6kUZvlauiH+iVGa95ehj68AiEGXvCQVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WG67XJgn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2xKvA4+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B27C4CEE3;
-	Wed, 28 May 2025 15:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748444625;
-	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I2xKvA4+ZXDYTNOLD2BakxlQShpTHOEEjD3hxU+fum4FTWqFjae7+GB4O9jsL0qNF
-	 Mn6vbrEwTjy0VCtl8xOdyXRPKCdsrR7yzCFzT7nCZI68ojWVaRb/sYt40l+ntxBYHY
-	 zNk98BANAZFBJXiLv+FR11ZfK49Yb6VEy7ClWmeyMljs8M4YjAB7PjOzUPm1NFovtU
-	 vWzFyT+snOE19xPqQRdI+YXKeLguFs8khSpB16arfJxJkRB9FCtVKyCAqbhSeGA+jr
-	 97D6eIy8BlsgwsOJQIcUQXFq8l780Okf3mAQwHOyU+gxJqOU2fjfY85P/lL0T/1uEn
-	 36Kpnq0N2gYeA==
-Date: Thu, 29 May 2025 00:03:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-Id: <20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
-In-Reply-To: <20250527221735.04c62a3c@batman.local.home>
-References: <20250527121140.0e7f0565@gandalf.local.home>
-	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-	<20250527221735.04c62a3c@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WG67XJgn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748444640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Fcg1D7pi8/e049vKSQfksEQEilD5PKbpIfwXzkGgo8Q=;
+	b=WG67XJgnbKyuT/aVVcc8awq33yCiWu0vMkCBCqNOjZIhu570SgxKw0bCQI2uPID2A0+Ul0
+	Y+uCuvm1WrrTTYghKHhdzL/rF9HyRPPUCh1nASh46eCd5vw32LcEwRz2Zr2ASmSmw+Z9fa
+	IFBQpK878z0krmRweRh1YuP4nnv6gcI=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-61-cK5NGrZqNTWhi4w52UKEFg-1; Wed, 28 May 2025 11:03:59 -0400
+X-MC-Unique: cK5NGrZqNTWhi4w52UKEFg-1
+X-Mimecast-MFC-AGG-ID: cK5NGrZqNTWhi4w52UKEFg_1748444638
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4769273691dso78937071cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:03:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748444638; x=1749049438;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fcg1D7pi8/e049vKSQfksEQEilD5PKbpIfwXzkGgo8Q=;
+        b=kHQys13T7Jlo60+2c09Ij7NckleeG8XpH5qSoQdO8qBcIp8/jNkSunouxW5nID0Zod
+         KB7kibhJT0atKdKq7N8/tLRbqSHEWW9aVwtuPoUczLgxwWJxW7rW0MREPd62FNtli09q
+         Jt5BglTMC13VOTQ168coq1goFGAxqnnHvLQlYasuuJdBlCZofZYAKMOx6UqaO1mthRnb
+         fILeG+upv9XRxWopBt5arI5UPL7he8nSsnQl/IK1HpUzUZKnMzPQmgrwJmwqPNEZiqLp
+         XxxYVhoKZBn25bXlCO+qIbEmQz9F4axtf6pgZXOeIdsF67htd2pnmn/wUW8wL8zVc0b+
+         WqPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUpY+XEotoyme5ISqTJ+gVrS5s3QdSwXRfKY/6hSlTKeloXCMNapART/y0VwomLr5v8Q13BjOIxTergNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM2P477FlufL+em/b3ACyUx22BiSzOeYS9uL78hWIH7TgPxTQZ
+	+JbeyT0HJgWR+f2jy8ZJI7mVZfi+q5+sBAMyOeN0Pc7QCSyob53aPTWHkdS8/cE0ZVQGRRyeiPH
+	A22WRu4LKUtDoHZCgWF4oyUQMBlJJpGyEvN5i0RFvDThJazu2i7F5YMUf3123RyuLHA==
+X-Gm-Gg: ASbGncuTPNzcjvhY2wT0o0GjOOKIZ5VQsXXhgu+ErYpwSA/ekMMPwwxjsNM7JbQ8fxM
+	NLGnKgnNw9iWg0Udg5pjxS/gAVxIASAymDNPDPZwNqwI+r9JVUIVz49Kq9e7d264Z2CqG4VQSNi
+	M2atTGj3SuvoMLrehlTCu6LXMkeJppPW293zCte93bnV1XViAdqRW+gIn+tK6YkRSH6guGim2Eq
+	2rKyQUHHK76LID1xyBB1A0YRUHIh/JF6o6sa3UMEXMewh8LISjQTHRltyhOwzLC+3IyU1cclSxt
+	F6Y=
+X-Received: by 2002:a05:622a:6107:b0:494:b316:3c7e with SMTP id d75a77b69052e-49f46d2a5efmr286510891cf.28.1748444638287;
+        Wed, 28 May 2025 08:03:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnUJayuS+UkHO22TovQrelasWBZh3qt4Z2cFlt3nrXlxBdJnptXMVTRnxlIh9YaGB7i53KdA==
+X-Received: by 2002:a05:622a:6107:b0:494:b316:3c7e with SMTP id d75a77b69052e-49f46d2a5efmr286510291cf.28.1748444637865;
+        Wed, 28 May 2025 08:03:57 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a3c80f2b8asm6940071cf.73.2025.05.28.08.03.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 08:03:57 -0700 (PDT)
+Date: Wed, 28 May 2025 11:03:53 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	akpm@linux-foundation.org, mike.kravetz@oracle.com,
+	kernel-dev@igalia.com, stable@vger.kernel.org,
+	Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
+	Gavin Shan <gshan@redhat.com>, David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <aDcl2YM5wX-MwzbM@x1.local>
+References: <20250528023326.3499204-1-gavinguo@igalia.com>
+ <aDbXEnqnpDnAx4Mw@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aDbXEnqnpDnAx4Mw@localhost.localdomain>
 
-On Tue, 27 May 2025 22:17:35 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed, 28 May 2025 10:42:03 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > The way to differentiate this case from the normal case of there
-> > > only being one page written to where the swap of the reader page
-> > > received that one page (which is the commit page), check if the
-> > > tail page is on the reader page. The difference between the commit
-> > > page and the tail page is that the tail page is where new writes go
-> > > to, and the commit page holds the first write that hasn't been
-> > > committed yet. In the case of an interrupt preempting the write of
-> > > an event and filling the buffer, it would move the tail page but
-> > > not the commit page.  
+On Wed, May 28, 2025 at 11:27:46AM +0200, Oscar Salvador wrote:
+> On Wed, May 28, 2025 at 10:33:26AM +0800, Gavin Guo wrote:
+> > There is ABBA dead locking scenario happening between hugetlb_fault()
+> > and hugetlb_wp() on the pagecache folio's lock and hugetlb global mutex,
+> > which is reproducible with syzkaller [1]. As below stack traces reveal,
+> > process-1 tries to take the hugetlb global mutex (A3), but with the
+> > pagecache folio's lock hold. Process-2 took the hugetlb global mutex but
+> > tries to take the pagecache folio's lock.
 > > 
-> > (BTW, what happen if the interrupted process commits the event? That
-> >  event will be lost, or commit and just move commit_page?)
-> 
-> No, the first event to be created is the "commit" event. If it gets
-> interrupted and the interrupt adds a bunch of events that wraps the
-> ring buffer, it can't touch the commit event, it will just start
-> dropping events. Then when the commit event finishes, it can either be
-> read by the reader, or overwritten by the next events coming in.
-
-Hmm, rb_end_commit() seems to try commit all nested events (committing > 1)
-if committing == 1, and the rb_set_commit_to_write() pushes commit pointer
-to the latest write pointer. So when it "start dropping events"? (is that
-write side?)
-
+> > Process-1                               Process-2
+> > =========                               =========
+> > hugetlb_fault
+> >    mutex_lock                  (A1)
+> >    filemap_lock_hugetlb_folio  (B1)
+> >    hugetlb_wp
+> >      alloc_hugetlb_folio       #error
+> >        mutex_unlock            (A2)
+> >                                         hugetlb_fault
+> >                                           mutex_lock                  (A4)
+> >                                           filemap_lock_hugetlb_folio  (B4)
+> >        unmap_ref_private
+> >        mutex_lock              (A3)
 > > 
-> > Thus the reader_page == commit_page && reader_page == tail_page,
-> > missed_events should be 0?
+> > Fix it by releasing the pagecache folio's lock at (A2) of process-1 so
+> > that pagecache folio's lock is available to process-2 at (B4), to avoid
+> > the deadlock. In process-1, a new variable is added to track if the
+> > pagecache folio's lock has been released by its child function
+> > hugetlb_wp() to avoid double releases on the lock in hugetlb_fault().
+> > The similar changes are applied to hugetlb_no_page().
 > > 
-> > Possible cases if missed_events != 0:
-> > 
-> >  - reader_page != commit_page
-> > 	(writer's commit overtook the reader)
+> > Link: https://drive.google.com/file/d/1DVRnIW-vSayU5J1re9Ct_br3jJQU6Vpb/view?usp=drive_link [1]
+> > Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
+> > Cc: <stable@vger.kernel.org>
+> > Cc: Hugh Dickins <hughd@google.com>
+> > Cc: Florent Revest <revest@google.com>
+> > Reviewed-by: Gavin Shan <gshan@redhat.com>
+> > Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+> ... 
+> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > index 6a3cf7935c14..560b9b35262a 100644
+> > --- a/mm/hugetlb.c
+> > +++ b/mm/hugetlb.c
+> > @@ -6137,7 +6137,8 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
+> >   * Keep the pte_same checks anyway to make transition from the mutex easier.
+> >   */
+> >  static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+> > -		       struct vm_fault *vmf)
+> > +		       struct vm_fault *vmf,
+> > +		       bool *pagecache_folio_locked)
+> >  {
+> >  	struct vm_area_struct *vma = vmf->vma;
+> >  	struct mm_struct *mm = vma->vm_mm;
+> > @@ -6234,6 +6235,18 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+> >  			u32 hash;
+> >  
+> >  			folio_put(old_folio);
+> > +			/*
+> > +			 * The pagecache_folio has to be unlocked to avoid
+> > +			 * deadlock and we won't re-lock it in hugetlb_wp(). The
+> > +			 * pagecache_folio could be truncated after being
+> > +			 * unlocked. So its state should not be reliable
+> > +			 * subsequently.
+> > +			 */
+> > +			if (pagecache_folio) {
+> > +				folio_unlock(pagecache_folio);
+> > +				if (pagecache_folio_locked)
+> > +					*pagecache_folio_locked = false;
+> > +			}
 > 
-> The reader is never in the write buffer. Just the head page will move.
-> When a new reader page is taken it will swap out the old reader page
-> with the head page. If the head page is the commit page, then the
-> commit page becomes the reader page too.
+> I am having a problem with this patch as I think it keeps carrying on an
+> assumption that it is not true.
+> 
+> I was discussing this matter yesterday with Peter Xu (CCed now), who has also some
+> experience in this field.
+> 
+> Exactly against what pagecache_folio's lock protects us when
+> pagecache_folio != old_folio?
+> 
+> There are two cases here:
+> 
+> 1) pagecache_folio = old_folio  (original page in the pagecache)
+> 2) pagecache_folio != old_folio (original page has already been mapped
+>                                  privately and CoWed, old_folio contains
+> 				 the new folio)
+> 
+> For case 1), we need to hold the lock because we are copying old_folio
+> to the new one in hugetlb_wp(). That is clear.
 
-Hmm, so this is the case that the writer is too fast and it moves
-head page to the next page. Thus some events on old head page are
-lost.
-
-> 
-> > 
-> >  - reader_page == commit_page but reader_page != tail_page 
-> > 	(writer overtook the reader, but commit is not completed yet.)
-> 
-> No, "writer overtook the reader" doesn't make sense as the reader is
-> not on the write buffer, so the writer can not catch up to it. What the
-> write buffer has is the "head" page which is where the next reader will
-> come to.
-> 
-> The only way reader_page == commit_page and reader_page != tail_page is
-> if the commit was interrupted and the interrupt added events and moved
-> forward off the commit_page. The only way there would be missed events
-> in that case is if the interrupt added so many events it wrapped the
-> buffer and then started dropping events.
-
-OK, so "wrapped the buffer" means "tail (write) page caught up the commit"?
-
-> 
-> > 
-> > if 
-> >  - reader_page == commit_page == tail_page
-> > in this case, missed_events should be 0.
-> > 
-> > Since the reader_page is out of the ring buffer, writer should not
-> > use reader_page while reading the same reader_page, is that right?
-> 
-> Correct. But the writer could end up on the reader page after the swap,
-> if the head page happened to be the commit page.
-
-OK.
-
-> 
-> > 
-> 
-> 
-> > > cpu_buffer->tail_page,
-> > > +				       "Reader on commit with %ld
-> > > missed events",
-> > > +				       missed_events)) {
-> > > +				/*
-> > > +				 * If the tail page is not on the
-> > > reader page but
-> > > +				 * the commit_page is, that would
-> > > mean that there's
-> > > +				 * a commit_overrun (an interrupt
-> > > preempted an
-> > > +				 * addition of an event and then
-> > > filled the buffer
-> > > +				 * with new events). In this case
-> > > it's not an
-> > > +				 * error, but it should still be
-> > > reported.
-> > > +				 */
-> > > +				pr_info("Ring buffer commit
-> > > overrun lost %ld events at timestamp:%lld\n",
-> > > +					missed_events,
-> > > cpu_buffer->reader_page->page->time_stamp);  
-> > 
-> > Do we need this pr_info() for each commit overrun?
-> 
-> Yes. When doing this stress test, it printed at most 4 times. It
-> happens once per time the interrupt fills the buffer while interrupting
-> the buffer.
-
-Ah, I meant we should report it in printk buffer, since the event
-lost will happen in some case and reader can notice that.
+So I'm not 100% sure we need the folio lock even for copy; IIUC a refcount
+would be enough?
 
 > 
-> I seldom ever get commit overruns. It's one of the fields in the status
-> file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
+> But for case 2), unless I am missing something, we do not really need the
+> pagecache_folio's lock at all, do we? (only old_folio's one)
+> The only reason pagecache_folio gets looked up in the pagecache is to check
+> whether the current task has mapped and faulted in the file privately, which
+> means that a reservation has been consumed (a new folio was allocated).
+> That is what the whole dance about "old_folio != pagecache_folio &&
+> HPAGE_RESV_OWNER" in hugetlb_wp() is about.
 > 
-> > 
-> > > +			}
-> > > +		}
-> > >  	}  
-> > 
-> > Just for cleanup the code idea, with above change, this code is
-> > something like;
-> > 
-> > ----------------
-> > 
-> > missed_events = cpu_buffer->lost_events;
-> > 
-> > if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> > 	if (missed_event) {
-> > 
-> > 	}
-> > } else {
-> > 	if (missed_event) {
-> > 		if (!WARN_ONCE(cpu_buffer->reader_page ==
-> > cpu_buffer->tail_page,"...")) { pr_info("...")
-> > 		}
-> > 	}
-> > }
-> > 
-> > ----------------
-> > 
-> > Can we make it as below?
-> > 
-> > ----------------
-> > missed_events = cpu_buffer->lost_events;
-> > 
-> > if (missed_event) {
-> > 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> > 
-> > 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
-> > cpu_buffer->tail_page, "...") { /**/
-> > 		pr_info("..."); 
-> > 	}
-> > }
+> And the original mapping cannot really go away either from under us, as
+> remove_inode_hugepages() needs to take the mutex in order to evict it,
+> which would be the only reason counters like resv_huge_pages (adjusted in
+> remove_inode_hugepages()->hugetlb_unreserve_pages()) would
+> interfere with alloc_hugetlb_folio() from hugetlb_wp().
 > 
-> Hmm, OK, I'll look at that.
+> So, again, unless I am missing something there is no need for the
+> pagecache_folio lock when pagecache_folio != old_folio, let alone the
+> need to hold it throughout hugetlb_wp().
+> I think we could just look up the cache, and unlock it right away.
+> 
+> So, the current situation (previous to this patch) is already misleading
+> for case 2).
+> 
+> And comments like:
+> 
+>  /*
+>   * The pagecache_folio has to be unlocked to avoid
+>   * deadlock and we won't re-lock it in hugetlb_wp(). The
+>   * pagecache_folio could be truncated after being
+>   * unlocked. So its state should not be reliable
+>   * subsequently.
+>   */
+> 
+> Keep carrying on the assumption that we need the lock.
+> 
+> Now, if the above is true, I would much rather see this reworked (I have
+> some ideas I discussed with Peter yesterday), than keep it as is.
 
+Yes just to reply in public I also am not aware of why the folio lock is
+needed considering hugetlb has the fault mutex.  I'm not sure if we should
+rely more on the fault mutex, but that doesn't sound like an immediate
+concern.
 
-Thanks! Anyway, the logic looks good to me.
+It may depend on whether my above understand was correct.. and only if so,
+maybe we could avoid locking the folio completely.
 
+Thanks,
 
 > 
-> Thanks,
+> Let me also CC David who tends to have a good overview in this.
 > 
-> -- Steve
-
+> -- 
+> Oscar Salvador
+> SUSE Labs
+> 
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Peter Xu
+
