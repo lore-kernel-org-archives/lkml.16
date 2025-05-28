@@ -1,150 +1,230 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4165B15D1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EEA1EB193
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424690; cv=none; b=pdaiCyfM+JRmjqGQvHjmVWv5feopIsdJpylZv1W5RyrEW6r3PZuFNvgYjU6BnCJh26+kJn1Sr2J+88otLGYa8guVFJkj8Q/hyE/L0e9btni5MDMLm1UrRxwr9FIM2Ava0lV2CDuJ0ll1a5l8HfoInDA1q/TYpczlWylV/8/7niQ=
+	t=1748424703; cv=none; b=foycdyUTnQis5XwaCcFLhrlyY0zxoymbhMdgUMKqiFxE4q1kZ5tTgjiE70j3fyS7nupE5eEf4FO1zDu99WiAp2khGPAdmPNMkhErBt/Qxl4sYIkOSS4wUyTzNHJgkK5b0QoHJFOuyyeZ0fHlun9QeQ01CXtXQ02WWN3SNgAIBBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424690; c=relaxed/simple;
-	bh=3gqXNmfgBpy7vgpHSrbi6sQ1P2dp5ocMzaW85aq70PU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ayw9f7wA3oxK+HaHbUKpu3J7v+6NbPC+QDZtAUc7LbtTwKotRDfo8k/kEqYuslOETLFPIZlJpGxGrCvtv7x2VZhTDXFiLx7PvdIMebmD5AgNO0m5nqXCWtK32hLTWH1rdB2stpR4x5GAFva4xIaafCWICPXqfq1C5M/ZlasGJ8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F28DdG0r; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748424703; c=relaxed/simple;
+	bh=WsTVlNGVWMlMr7/1HnY9hFlDZoNZeHk/mPpV96JRdec=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NFq+7Eeo/EWmmcbnBJZOKgraBjRcpFBQhL60vW5TEs+zvxFr2xI2Sqm6Zq2tT1fGitRZK79qt6mM9RMyQMoWifGMHIwB6JX4ERVH2MIfGFgbVeh0eVjIemFLCCCd0xoZCh/pahmU2viNSKi745q+mGGNwddhOfoP7btv4mFRgz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XU+rZryQ; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F28DdG0r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748424689; x=1779960689;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3gqXNmfgBpy7vgpHSrbi6sQ1P2dp5ocMzaW85aq70PU=;
-  b=F28DdG0rd9rr4qGnnUlf3rqNDOr8fUKs2/zrzLl7lwVsVsH7W/A7xKe5
-   ypA9zHClFYoYEZWP1hxZDhHgPQ5XY7XoUZhHL9sCLBL/ue1NOkKqhofyF
-   6w3O1lJM29lqEVgLPSnt7Tke4joLzEeu+dUQImYuXn45+mkRBHg6lrg79
-   WUmvQntrl4xRU/GxdmeC3MFWvLRotlD9pIMm0xnTTk+NvxuDKKZ7EroB2
-   lfCXZ931uJC3D9ZvoVci2u5rEtZ5+YwoEc+4/285jpreZkC0PB1Ho/hAr
-   HKEfR6UrOkBEBcDUNLtqN56ZFDgqQV0bErsScKTpBUlkpZrpV9BIgNkai
-   Q==;
-X-CSE-ConnectionGUID: SJnjkPslTVax2tWXoh1jwA==
-X-CSE-MsgGUID: 5lNWTMwdSIu2TezK9Ry1ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50437449"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="50437449"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 02:31:28 -0700
-X-CSE-ConnectionGUID: ck+Bq/amQYmaXnjlUzPETQ==
-X-CSE-MsgGUID: DSk/tjlVTEeJIAgfo9VRtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="174077191"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 02:31:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uKD87-00000001PBP-0Ylo;
-	Wed, 28 May 2025 12:31:23 +0300
-Date: Wed, 28 May 2025 12:31:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Pei Xiao <xiaopei01@kylinos.cn>
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
-Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
- devm_device_add_group to devres.h
-Message-ID: <aDbX6natYH6Pu2ED@smile.fi.intel.com>
-References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
- <aC8en60QI0MwnXxM@smile.fi.intel.com>
- <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
- <aDWdXT36Ucxk0O63@smile.fi.intel.com>
- <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XU+rZryQ"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7dc83224d5so622067276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748424700; x=1749029500; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qxCNklpcwB9Aux3Ir6fEZ7ZfodLW5xursubADF1vInc=;
+        b=XU+rZryQS5rdYN2wA/8ERj2PCnbtqeZzyNCZx0JNdYtBEYRXhfmQfsyR5N3NHJAi8x
+         BqXDUxD5KSNbirNzLWcNZiIyDNgr7am0Iv2Nj6gXZ1YKATLsJnlOSufs2e54SxfMRypH
+         fhl+tKm/Fmv8RstCQ4Ou3HKlz2LjaEyoOItKT33DvXjNkPD2sd8uZrKfsrxt7jfxukzc
+         UZ/P7qCKYr+uWmsbUOTyfyGoobkyz7vNIGCOya1yVOcLk+fJNYRggd3+djG9XKnpzjU0
+         BGqQzRYyc6d4Y/1wXFYWbGDS0yEcXNaX+DZVYfrRpr4J/O5W0b9aLtJ6OEmKxNPhWLPO
+         a7MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748424700; x=1749029500;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qxCNklpcwB9Aux3Ir6fEZ7ZfodLW5xursubADF1vInc=;
+        b=EbnqADir6e3fDauQ7Oh4Z7foO/9TdI1MIb01qNw6zx1lRWD5nKVpnb5kOhLhYyTRGz
+         6/tVZLCGSqSHXOVszIWb+6nGiKVqufuHNOX64ju98qvyGFpS8hQ8FA5S2HrAO54HY6Yc
+         4V7fuwhkbbvizacf3qfMiXVaIshe2NMey4G7R+vSJjYGwGQ/yVwfo18m2Cymq/RXiRN2
+         uLxiFLNenisqaTqYyqUZDRSNP+g3HOoU3j36zv9fguZ2+x8fgtePEsziVBthH2h+dnCB
+         RsiYibSHndsEvGMOklKVad7xGHMvLZKSA7TvOQMFsU/mJteyL0bdYvG9fklvpROSZHdL
+         UhBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEdtt3HpkQBKqcs/LbcNQNcgzLeD3Hm7K3M1D2541kszlU23Urmfg4UONLZCsrKUN8LQ+q33WiD3HMIHM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuZyJHVeoNBEr7TQDMvkDq0QnOP2FBhXAw69wz7DLAQUx3ysfF
+	jedT8vwcCyq5krCYfrSM726fKc2eF2tO6gZscgZStHMXBdTAGe/UgNttIV6XYpvwQI060ymUDgY
+	N6kEAgIX8Tj07rDMNz/Y9VfcyLBMGpTgfVjjvq6gyWQ==
+X-Gm-Gg: ASbGncuWpPTKhBG8afeRN1LY8dH8IMQMSL+YDvLTBk1PVLqPAJuOQvmvCjcwLRAtnsF
+	iuMTcehccOwYa57pExpwOFBY13/AeZJtKFYJF+kN+L1oPKOT9Il+0LKAUfsw7osJAXZRFrb3O0m
+	57JW04+ACyIfyuUWPdFbjS+E06toywJg0zdw==
+X-Google-Smtp-Source: AGHT+IEyw0lUrmYinEboMHvAdYvFeBCQMFpAFX9P5BvMD2PBk8DgM7GAXBhZytV2fKUiOCBjFWXeZ1b8qL3n9/JSqsY=
+X-Received: by 2002:a05:6902:120a:b0:e7d:cff1:340b with SMTP id
+ 3f1490d57ef6-e7dd01eea9bmr4498112276.0.1748424700237; Wed, 28 May 2025
+ 02:31:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2154e254-3cbc-4dc4-8497-f168fee58598@kylinos.cn>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250526122054.65532-1-claudiu.beznea.uj@bp.renesas.com>
+ <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com> <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
+In-Reply-To: <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 28 May 2025 11:31:03 +0200
+X-Gm-Features: AX0GCFsFhqUi2AGDMBlqa7RGrDqiU7Kbc5fKh9Fg0pv0gNT5kfMImVz5Whz-roI
+Message-ID: <CAPDyKFptNg5t6RehRNNfnnuCqpfiaQLaHBEdh4aRXfn7X6rYQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Claudiu <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, rafael@kernel.org, 
+	dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, jic23@kernel.org, 
+	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 28, 2025 at 11:07:43AM +0800, Pei Xiao wrote:
-> 
-> 在 2025/5/27 19:09, Andy Shevchenko 写道:
-> > On Tue, May 27, 2025 at 05:41:21PM +0800, Pei Xiao wrote:
-> >> 在 2025/5/22 20:54, Andy Shevchenko 写道:
-> >>> On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
-
-...
-
-> >> include #include <asm/percpu.h>
-> >>
-> >> only move #include <asm/percpu.h> to linux/device/devres.h for
-> >>
-> >> build error.
-> > It's not needed for the build error fixing as far as I understood it. __percpu
-> > is defined in another header.
-> 
-> compiler_types.h or compiler.h 
-> 
-> I tried before send patch, but it all resulted in compilation failures on my arm64 machine.
-
-You need to investigate those. But header doesn't use anything fancy AFAICS, so
-compiler_types.h should be enough. I think you need to move asm/percpu.h to
-devres.c (C file).
-
-...
-
-> >>>> +#include <linux/sysfs.h>
-> >> it's redundant.
-> >>>> +#include <asm/percpu.h>
-> >>> What for are these new inclusions, please?
-> >> for percpu.
-> > It does not define __percpu.
+On Tue, 27 May 2025 at 23:27, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Claudiu,
+>
+> On Mon, May 26, 2025 at 03:20:53PM +0300, Claudiu wrote:
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > >
-> >>>> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
-> >>> Please, take your time to understand what is behind the __percpu and
-> >>> why the asm/percpu.h is redundant here.
-> >> If this header file is missing, there will be a compilation error. 
-> > Right. But this is wrong header for the purpose.
+> > The dev_pm_domain_attach() function is typically used in bus code alongside
+> > dev_pm_domain_detach(), often following patterns like:
 > >
-> >> Which header file should I include?
-> > The one that defines it, hint:
-> > https://elixir.bootlin.com/linux/v6.15/A/ident/__percpu
-> 
-> compiler_types.h or compiler.h 
-> 
-> I tried before send patch, but it all resulted in compilation failures on my arm64 machine.
-> 
->  You can give it a try.
+> > static int bus_probe(struct device *_dev)
+> > {
+> >     struct bus_driver *drv = to_bus_driver(dev->driver);
+> >     struct bus_device *dev = to_bus_device(_dev);
+> >     int ret;
+> >
+> >     // ...
+> >
+> >     ret = dev_pm_domain_attach(_dev, true);
+> >     if (ret)
+> >         return ret;
+> >
+> >     if (drv->probe)
+> >         ret = drv->probe(dev);
+> >
+> >     // ...
+> > }
+> >
+> > static void bus_remove(struct device *_dev)
+> > {
+> >     struct bus_driver *drv = to_bus_driver(dev->driver);
+> >     struct bus_device *dev = to_bus_device(_dev);
+> >
+> >     if (drv->remove)
+> >         drv->remove(dev);
+> >     dev_pm_domain_detach(_dev);
+> > }
+> >
+> > When the driver's probe function uses devres-managed resources that depend
+> > on the power domain state, those resources are released later during
+> > device_unbind_cleanup().
+> >
+> > Releasing devres-managed resources that depend on the power domain state
+> > after detaching the device from its PM domain can cause failures.
+> >
+> > For example, if the driver uses devm_pm_runtime_enable() in its probe
+> > function, and the device's clocks are managed by the PM domain, then
+> > during removal the runtime PM is disabled in device_unbind_cleanup() after
+> > the clocks have been removed from the PM domain. It may happen that the
+> > devm_pm_runtime_enable() action causes the device to be runtime-resumed.
+> > If the driver specific runtime PM APIs access registers directly, this
+> > will lead to accessing device registers without clocks being enabled.
+> > Similar issues may occur with other devres actions that access device
+> > registers.
+>
+> I think you are concentrating too much on runtime PM aspect of this. As
+> you mentioned in the last sentence the same issue may happen in the
+> absence of runtime PM if the power domain code will shut down the device
+> while it is not fully cleaned up.
+>
+> >
+> > Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() and
+> > dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
+> > device is detached from its PM domain in device_unbind_cleanup(), only
+> > after all driver's devres-managed resources have been release.
+> >
+> > For flexibility, the implemented devm_pm_domain_attach() has 2 state
+> > arguments, one for the domain state on attach, one for the domain state on
+> > detach.
+> >
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> > ---
+> >
+> > Changes in v2:
+> > - none; this patch is new
+> >
+> >  drivers/base/power/common.c | 59 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/pm_domain.h   |  8 +++++
+> >  2 files changed, 67 insertions(+)
+> >
+> > diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> > index 781968a128ff..6ef0924efe2e 100644
+> > --- a/drivers/base/power/common.c
+> > +++ b/drivers/base/power/common.c
+> > @@ -115,6 +115,65 @@ int dev_pm_domain_attach(struct device *dev, bool power_on)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
+> >
+> > +/**
+> > + * devm_pm_domain_detach_off - devres action for devm_pm_domain_attach() to
+> > + * detach a device and power it off.
+> > + * @dev: device to detach.
+> > + *
+> > + * This function reverse the actions from devm_pm_domain_attach().
+> > + * It will be invoked during the remove phase from drivers implicitly.
+> > + */
+> > +static void devm_pm_domain_detach_off(void *dev)
+> > +{
+> > +     dev_pm_domain_detach(dev, true);
+> > +}
+> > +
+> > +/**
+> > + * devm_pm_domain_detach_on - devres action for devm_pm_domain_attach() to
+> > + * detach a device and power it on.
+> > + * @dev: device to detach.
+> > + *
+> > + * This function reverse the actions from devm_pm_domain_attach().
+> > + * It will be invoked during the remove phase from drivers implicitly.
+> > + */
+> > +static void devm_pm_domain_detach_on(void *dev)
+> > +{
+> > +     dev_pm_domain_detach(dev, false);
+> > +}
+> > +
+> > +/**
+> > + * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attach()
+> > + * @dev: Device to attach.
+> > + * @attach_power_on: Use to indicate whether we should power on the device
+> > + *                   when attaching (true indicates the device is powered on
+> > + *                   when attaching).
+> > + * @detach_power_off: Used to indicate whether we should power off the device
+> > + *                    when detaching (true indicates the device is powered off
+> > + *                    when detaching).
+> > + *
+> > + * NOTE: this will also handle calling dev_pm_domain_detach() for
+> > + * you during remove phase.
+> > + *
+> > + * Returns 0 on successfully attached PM domain, or a negative error code in
+> > + * case of a failure.
+> > + */
+> > +int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
+> > +                       bool detach_power_off)
+>
+> Do we have examples where we power on a device and leave it powered on
+> (or do not power on device on attach but power off it on detach)? I
+> believe devm release should strictly mirror the acquisition, so separate
+> flag is not needed.
 
-Sure.
+This sounds reasonable for me too.
 
-> when i add a error in compiler_types.h
-> 
-> +++ b/include/linux/compiler_types.h
-> @@ -26,6 +26,7 @@
->  
->  /* sparse defines __CHECKER__; see Documentation/dev-tools/sparse.rst */
->  #ifdef __CHECKER__
-> +sasasas
->  /* address spaces */
->  # define __kernel      __attribute__((address_space(0)))
->  # define __user                __attribute__((noderef, address_space(__user)
-> 
-> it  still build success,have no build error.
-> 
-> #include <linux/lockdep.h> include <asm/percpu.h> ,so have no build error before modidy,I think.
-> 
-> >> I've found that including <asm/percpu.h> does resolve my compilation issue.
-> thanks!
+Note that, in most of the *special* cases for where
+dev_pm_domain_attach|detach() is used today, the corresponding PM
+domain is managed by genpd through a DT based configuration. And genpd
+via genpd_dev_pm_attach|detach() doesn't even take this as an
+in-parameter.
 
--- 
-With Best Regards,
-Andy Shevchenko
+So this is solely for the behaviour for the acpi PM domain, just to
+make sure that's clear.
 
+[...]
 
+Kind regards
+Uffe
