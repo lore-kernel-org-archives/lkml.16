@@ -1,179 +1,146 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D58B19B3CB;
-	Wed, 28 May 2025 14:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D411F37D3;
+	Wed, 28 May 2025 14:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441613; cv=none; b=JX17+Rrqlg2brq4eqfPXk64dnYxn3IuhHy0ebjP4uHBPbEfSVbo0sKTOaY9r+tkJt4DYFOVZlf4ITMVtND9ioAyi6RM+VBLMk2GltAxczEsr11+OA5ySXniT0nx00PGjQ1wGcacFUc7yklLZ/1f2rQEsbeYRztNw7QWOsGpDGwg=
+	t=1748441662; cv=none; b=VXDucbNJ2Bqy8Oor47Ls/Vw3s3GkiVD8SnxMFlh0Pt+2UpvLm7zVvFmGTSJ1tN1MIgcwWHGUriags6pf7ggjgeXhah7yBEUOHHrpqEGMwaZVpxzxMzQUdWtrZkv1zqPkdxrKkDoXcR9bfTm6VWLPORt3ocIgJyMVLDXa2HNLja4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441613; c=relaxed/simple;
-	bh=dpXIbCAlYRmIowUQvMgyFGOg+FO7ISbS1+UG1ZIuELM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eh5UOxZqe27YJCyPegZNUsTwHatFrfvrqtooR0b1vJgKVyJf43Gk5kL9/e3d1SoMErsc4UIumnvssfIAEO0VIj2K2hUAeEYsvqTGad8YeXyuNM93FB1lmu3l+v3HgP+jL+WrIaVZJykRL8tYdnWF9tQLHKWqpd5I8rsxCe1r4e0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aj3lQrZm; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748441662; c=relaxed/simple;
+	bh=Xck/nwOYiqy1ZVp9Sss2kWwcLSvKVmGgOkD7OBgsZBA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BNJvlo543y8RY3naKobMMhnHKGZWlwPYnt3Z4kpqojYCoQVOCzkhYufW5WYCl0uS4WnRFMb30O8RdRRBDTn7aFQ6nsFoqCCKgFawjGGyiPSCYHJBqUjPXF9VY4GtUumu72R016FWHlT2shv4pHqkoScYlUTbbupW0ssrP/ayF4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lVVoA1jc; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aj3lQrZm"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe574976so36299995e9.1;
-        Wed, 28 May 2025 07:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748441610; x=1749046410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u/NvBcF4s3yGqfgtLGu/F6IheBb4FWCw8Mlh0+qa7IM=;
-        b=aj3lQrZmOCGZLdTm/WMkY5TkY8J5IBvf2ww++U0GuXzFo+Yy5RHQmk1Bu55dSRRMSc
-         cNhLOgofEkW5KqDwlRVZ0lP/jjqaHYxUs6Q/UtguxWHpdIYB0w2Vva3vd4S05AtUuY3M
-         oy7oSOqJkKyD43SYTTYFHyJBtKM4HfZIKLqLxKx6LOrTBrLRRmDUsMMfKpx3g5+spxAb
-         KhtXTapjS8sD+OuZPwEwcaG73Ew2TvO0WP46COqBug88jqdONMC8ct1iI4Kk1zNRceMc
-         WB2IgImBKFCuOpB7Im++v6Itf4Q9ASTRxCNdHdYBgBX96V5ZZGBR5hVpKROxFxPMpWSR
-         ECjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748441610; x=1749046410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u/NvBcF4s3yGqfgtLGu/F6IheBb4FWCw8Mlh0+qa7IM=;
-        b=gEzt297PDL/27IqXsRaA6sz8KoktLxt0Kkwk8ny9g3qdGfGsE9iX7hmWhxaXJssJcC
-         2P7QAjb751pwpQ0PKX4m7uYq3bI4sDc4wYxUw9nKXHdvP4cw495ftDhdaYlmV09R6nND
-         zT4AL0wWmIOG/N/uPxXfZF78UB+IB1ylr4l/chSCskJDfba0iObwBcJ9XxZLgvgbo4HD
-         ndmzo0Uq8lbbH68bXHzxdXLB1yGsBtanuzPfoQI9r3hPBHqwats5wGIzF6RKhdC03rnG
-         180Q7n8WUjy9xIg3o2dskWxqZokkxovnOHapS0oD7cGWSkVXAZ+8KuQTabSHvgOaAAph
-         HEyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4JThMBpKxFCY4l95uyXad1g0a9t3M68n1LrH83/Ve15FxLX+r+pQ+JgbinDRK9fhPcTaF2m6YRbJb@vger.kernel.org, AJvYcCWaf4Y3qMxt3+KJZ2pGMDLyWKpezByiVoQVb0xUEI+pu9TRPSpMPiIwRU9qmnoH2TEQ8C0/gWF6zOGA+QO1@vger.kernel.org, AJvYcCX/egNEtAVE8lIsvmWEK79WV5q4QQQcl74t+itvqVANEHjuYShvw+O4fr8jZB/qwXsk1uID7Ke5Hi17@vger.kernel.org, AJvYcCXw3LjwQHxzD+fHj0nMHzFUlzPdaWQSWNQWQWpr3DhDVmiFq8NkCGJOWdRIIUgFQIlhqHuBWYM9QPtGlNhyPXG5IRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVeRkyYpPfptMKT4uas9rcQNq5tC7/gqoskh0P1sX4exiaRA6f
-	EtVr2WuTX1ibiCqTccG2TfwYNjLVTEo2R9Y2A19j0PXuL2JNe28UcloJhdrmmaSXUtnvSiC9KAo
-	eRQ6kJVNe2h9MWZL77vs6wFqbS9uFxGY=
-X-Gm-Gg: ASbGncvwn8k0Qv+K4gDYbghXiRzJ0WQiqDonp05mHk9c5M8uiL30vuoMh0MCTEuZ5xW
-	LU+9NQO0+W/ItBdAEhwXrrCrsGyN8eBMPAYWa7ft8EOLEA9YSTVtQE/QsH6s/knRQacqObBW7Jd
-	aXy8taws1OisP6f8Vb0MgIcifpPDZ3jYIVtA/HUOh+A2E56bh15tmOBz8gwdy/ljvd+w==
-X-Google-Smtp-Source: AGHT+IHkpT2ySjMUdtYwChJ0/5/1rzDmtMoM740OXZxSdgP34XADiDvdJ0+rhe/twNar59adXV7Gqw4wW8anaLlVuPA=
-X-Received: by 2002:a05:600c:3b17:b0:43c:f1b8:16ad with SMTP id
- 5b1f17b1804b1-450787c9705mr26585325e9.30.1748441609568; Wed, 28 May 2025
- 07:13:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lVVoA1jc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1748441656;
+	bh=Xck/nwOYiqy1ZVp9Sss2kWwcLSvKVmGgOkD7OBgsZBA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=lVVoA1jctbfwewW2KGob5hfTDoq2NQRzQk9gxJCzi1YcEl/+KT9lpM1mZDY7EpwAz
+	 C01gp7g9uaW3/+R4aPvO6wDfW5R1enrQHhY17Rc4ZbwusXt7h3uDWywQzwv3+uHrrJ
+	 eyXVnqTow726pX7uJU1Zh9KVXNThuEmBMg///ei+djpn3Olt5z7LlLIGYfjVzSUyVS
+	 Cob+tignic8jH9R0rI61lG5DM3Ej2AQt6cNGR2LAloGMo6fvEbUWpg5GqiDbnM6mLF
+	 WDNyYPavHzBqZqlWkUbSY/zfiMhnakM4/8bZ+WN4gDOyZVH9dAF3IHgby93SQWFHEg
+	 LI1+Pb7C4IL6Q==
+Received: from [IPv6:2606:6d00:17:b2fc::5ac] (unknown [IPv6:2606:6d00:17:b2fc::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 524C317E3700;
+	Wed, 28 May 2025 16:14:14 +0200 (CEST)
+Message-ID: <7cf3e219758a67d08137ebea5e52a1abad835e65.camel@collabora.com>
+Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Adam Ford <aford173@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: benjamin.gaignard@collabora.com, p.zabel@pengutronix.de,
+ mchehab@kernel.org, 	shawnguo@kernel.org, Sascha Hauer
+ <s.hauer@pengutronix.de>, 	kernel@pengutronix.de, festevam@gmail.com,
+ robh@kernel.org, krzk+dt@kernel.org, 	conor+dt@kernel.org,
+ paulk@sys-base.io, hverkuil@xs4all.nl, 	laurent.pinchart@ideasonboard.com,
+ sebastian.fricke@collabora.com, 	ming.qian@nxp.com,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Date: Wed, 28 May 2025 10:14:12 -0400
+In-Reply-To: <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
+References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
+	 <20250502150513.4169098-8-m.felsch@pengutronix.de>
+	 <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
+	 <20250502165535.aeb2osq2vnxsudmq@pengutronix.de>
+	 <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512184302.241417-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdU=iuVFo=VJjV7UM-fLTeZk9TwyOJwojOVOSJiniRneHA@mail.gmail.com>
- <CA+V-a8sOGEEajx9TQsVBb+NeFRUx2eSo81ZdRQMsLzd0Eiox2w@mail.gmail.com> <CAMuHMdXb5ZCX=U_BR0=AkGtdGkVosty0cGsbKQryTy11Au8H-A@mail.gmail.com>
-In-Reply-To: <CAMuHMdXb5ZCX=U_BR0=AkGtdGkVosty0cGsbKQryTy11Au8H-A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 28 May 2025 15:13:02 +0100
-X-Gm-Features: AX0GCFv1m8Xej_HgH71EgZ4Kvyv9BeSbuvPePanFkBHFJSxJNoRIerOZEfcK3ek
-Message-ID: <CA+V-a8sUyZHGPwUzfUan8tmsF19mB2EPN599Tzu2kaoYxSMaHw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] clk: renesas: rzv2h-cpg: Add support for DSI clocks
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Geert,
+Hi,
 
-On Wed, May 28, 2025 at 8:09=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, 27 May 2025 at 23:51, Lad, Prabhakar <prabhakar.csengg@gmail.com>=
- wrote:
-> > On Fri, May 23, 2025 at 3:45=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add support for PLLDSI and PLLDSI divider clocks.
-> > > >
-> > > > Introduce the `renesas-rzv2h-dsi.h` header to centralize and share
-> > > > PLLDSI-related data structures, limits, and algorithms between the =
-RZ/V2H
-> > > > CPG and DSI drivers.
-> > > >
-> > > > The DSI PLL is functionally similar to the CPG's PLLDSI, but has sl=
-ightly
-> > > > different parameter limits and omits the programmable divider prese=
-nt in
-> > > > CPG. To ensure precise frequency calculations-especially for milliH=
-z-level
-> > > > accuracy needed by the DSI driver-the shared algorithm allows both =
-drivers
-> > > > to compute PLL parameters consistently using the same logic and inp=
-ut
-> > > > clock.
-> > > >
-> > > > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
->
-> > > > +static int rzv2h_cpg_plldsi_div_determine_rate(struct clk_hw *hw,
-> > > > +                                              struct clk_rate_requ=
-est *req)
-> > > > +{
-> > > > +       struct rzv2h_plldsi_div_clk *dsi_div =3D to_plldsi_div_clk(=
-hw);
-> > > > +       struct rzv2h_cpg_priv *priv =3D dsi_div->priv;
-> > > > +       struct rzv2h_plldsi_parameters *dsi_dividers =3D &priv->pll=
-dsi_div_parameters;
-> > > > +       u64 rate_millihz;
-> > > > +
-> > > > +       /*
-> > > > +        * Adjust the requested clock rate (`req->rate`) to ensure =
-it falls within
-> > > > +        * the supported range of 5.44 MHz to 187.5 MHz.
-> > > > +        */
-> > > > +       req->rate =3D clamp(req->rate, 5440000UL, 187500000UL);
-> > > > +
-> > > > +       rate_millihz =3D mul_u32_u32(req->rate, MILLI);
-> > > > +       if (rate_millihz =3D=3D dsi_dividers->error_millihz + dsi_d=
-ividers->freq_millihz)
-> > > > +               goto exit_determine_rate;
-> > > > +
-> > > > +       if (!rzv2h_dsi_get_pll_parameters_values(priv->dsi_limits,
-> > > > +                                                dsi_dividers, rate=
-_millihz)) {
-> > > > +               dev_err(priv->dev,
-> > > > +                       "failed to determine rate for req->rate: %l=
-u\n",
-> > > > +                       req->rate);
-> > > > +               return -EINVAL;
-> > > > +       }
-> > > > +
-> > > > +exit_determine_rate:
-> > > > +       req->best_parent_rate =3D req->rate * dsi_dividers->csdiv;
-> > >
-> > > Shouldn't this also update req->rate with the actual rate?
-> > >
-> > >     req->rate =3D DIV_ROUND_CLOSEST_ULL(dsi_dividers->freq_millihz, M=
-ILLI);
-> > >
-> > Agreed, I will update it.
->
-> I think not updating req->rate may cause clk_get_rate() to return
-> an incorrect value (can error_millihz > 1000?).  Any chance this fix
-> can simplify the clock handling in the DSI driver?
->
-Yes, error_millihz can be greater than 1000, as result the DSI driver
-does check this (>=3D 500) and proceeds to try the next one.
+Le mardi 27 mai 2025 à 22:05 -0500, Adam Ford a écrit :
+> On Fri, May 2, 2025 at 11:55 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > 
+> > On 25-05-02, Adam Ford wrote:
+> > > On Fri, May 2, 2025 at 10:10 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > > > 
+> > > > The VPU_PLL clock must be set before the VPU_BUS clock which is derived
+> > > > from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 600MHz.
+> 
+> I did verify the current clock rate ends up at 300MHz instead of the
+> desired 600 or 800MHz, so we should do something.
+> 
 
-Cheers,
-Prabhaar
+This reminded me of: 
+
+https://patchwork.linuxtv.org/project/linux-media/patch/20250217-b4-hantro-av1-clock-rate-v2-1-e179fad52641@collabora.com/
+
+Which also made me discover that this patch wasn't picked despite being mark accepted. We
+will favour DT clock settings from here, since its not really managable otherwise, old board
+will stay like this, otherwise we face backward compatibility issues.
+
+Note that G2 and VC8K can be run at higher rate, but to be stable, you need
+to also control voltage and proper cooling, not something we want "by default".
+
+Nicolas
+
+> 
+> > > > 
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > ---
+> > > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > > index 97b09b647ec7..7f4bdefb3480 100644
+> > > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > > @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
+> > > >                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
+> > > >                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
+> > > >                         clock-names = "g1", "g2", "vc8000e";
+> > > > -                       assigned-clocks = <&clk IMX8MP_CLK_VPU_BUS>, <&clk IMX8MP_VPU_PLL>;
+> > > > -                       assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
+> > > > +                       assigned-clocks = <&clk IMX8MP_VPU_PLL>, <&clk IMX8MP_CLK_VPU_BUS>;
+> > > > +                       assigned-clock-parents = <0>, <&clk IMX8MP_VPU_PLL_OUT>;
+> > > >                         assigned-clock-rates = <600000000>, <600000000>;
+> > > 
+> > > I think there was a move to make the default be overdrive [1]  and [2]
+> > > and use a 'nominal' device tree for those who are not in overdrive
+> > > mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
+> > > 600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
+> > > values here should be 800MHz and if we should add the nominal values
+> > > of 600MHz to the imx8m-nominal.dtsi file.
+> > 
+> > You're right, Ahamd and Lucas did change this. I will adapt it later on.
+> 
+> I updated my device tree to run in overdrive mode and ran fluster at
+> the higher rates:
+> VPU_G1 - 800MHz,
+> VPU-G2 - 700MHz
+> VPU-Bus - 800MHz
+> 
+> ./fluster.py run -d GStreamer-VP8-V4L2SL-Gst1.0
+> Ran 57/61 tests successfully               in 5.922 secs
+> (vs 7.059 secs at nominal speed)
+> 
+> ./fluster.py run -dGStreamer-H.264-V4L2SL-Gst1.0
+> Ran 129/135 tests successfully               in 40.107 secs
+> (vs 45.741 secs at nominal speed)
+> 
+> If you want, I can submit the clock updates I have for overdrive or
+> send them to you to save you some time.
+> 
+> adam
+> 
+> > 
+> > Regards,
+> >   Marco
