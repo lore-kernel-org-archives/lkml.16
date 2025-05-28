@@ -1,27 +1,26 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7CD221D98
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:09:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83220223320
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:09:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748470142; cv=none; b=ukJ6wScoOk2EcTzqyjlnup845YdU7UJbhxPIFNSDo2AacZuu7i9SxHhYyCb1Dg+XWnJMaC4zqphPlT9H9NEX8sRo4nk6lNIoYJWo5MU/rNPEn975DoW6e7eFjqLJNRAbMJxp7oz1yPFDOVdTTofYWybHaU4xVSKBliR8z3D9wuw=
+	t=1748470147; cv=none; b=kY/WqbyFxzTQ7oJVxxN1kwoJdGRJ/U+mcTOOZQnoJWv14Bh5FXY/KqD/BOjtr8ZWryWokb3xozuZGFF3ielReFZxlB2P4s3j8B2x0pdD+EgwtMsq5zgYOvxV/9gqrIu2usA9k7l+s+ExWM6pt2oiTvud3f8/hn5Xd/mHweZLZrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748470142; c=relaxed/simple;
-	bh=LIMOGkVYqdW3z+lX1Yvnz2undmvCIMwYs/KxwSs3uRM=;
+	s=arc-20240116; t=1748470147; c=relaxed/simple;
+	bh=98KQ7SIJE9kytA0TzwTcq43i2vpeJXhL2Tmt5P0rpvg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sQwMDNysJKfDxymejoXKJqm/+U9zXr86AsWvY8Oy3bfIQv9NwId+q0FJKBpj3egNi/6xzyjATsndyo7miW+/ULtAosm5jDIT/iS4Exqi3hrSK7aZgvWLmEFH4UdFjENE7uUIZU5RlE9YY6wUuAM2C7e9CYW/rAGUC4LhY6Ynd+U=
+	 In-Reply-To:To:Cc; b=Dd02Gsw0FNqalY9jK+6Z1vxsNL3Zt38M5SsNfTlL6UbBbRdaQ6SEwHwYCeTuRj8COkMCZAO4kT/qyESRECn7bPe1V6sK+QRu9UBfEgu6/bZ4lajsg8x8SzQnJLLGnoyYXHM8hsfrERuwg2oEQ5BygUTh1Aa333YvRjoIokq1V/Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <m.felsch@pengutronix.de>)
-	id 1uKOx2-0003CA-PP; Thu, 29 May 2025 00:08:44 +0200
+	id 1uKOx2-0003CA-RO; Thu, 29 May 2025 00:08:44 +0200
 From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Thu, 29 May 2025 00:08:42 +0200
-Subject: [PATCH v2 1/4] firmware_loader: expand firmware error codes with
- skip error
+Date: Thu, 29 May 2025 00:08:43 +0200
+Subject: [PATCH v2 2/4] dt-bindings: vendor-prefixes: Add TouchNetix AS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-v6-10-topic-touchscreen-axiom-v2-1-a5edb105a600@pengutronix.de>
+Message-Id: <20250529-v6-10-topic-touchscreen-axiom-v2-2-a5edb105a600@pengutronix.de>
 References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
 In-Reply-To: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
 To: Luis Chamberlain <mcgrof@kernel.org>, 
@@ -52,63 +51,29 @@ X-SA-Exim-Mail-From: m.felsch@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add FW_UPLOAD_ERR_SKIP to allow drivers to inform the firmware_loader
-framework that the update is not required. This can be the case if the
-user provided firmware matches the current running firmware.
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
-Sync lib/test_firmware.c file accordingly.
+Add vendor prefix for TouchNetix AS (https://www.touchnetix.com/products/).
 
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/base/firmware_loader/sysfs_upload.c | 1 +
- include/linux/firmware.h                    | 2 ++
- lib/test_firmware.c                         | 1 +
- 3 files changed, 4 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/base/firmware_loader/sysfs_upload.c b/drivers/base/firmware_loader/sysfs_upload.c
-index 829270067d1632f92656859fb9143e3fa9635670..0a583a1b3f4fde563257566426d523fbf839b13f 100644
---- a/drivers/base/firmware_loader/sysfs_upload.c
-+++ b/drivers/base/firmware_loader/sysfs_upload.c
-@@ -28,6 +28,7 @@ static const char * const fw_upload_err_str[] = {
- 	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
- 	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
- 	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
-+	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
- };
- 
- static const char *fw_upload_progress(struct device *dev,
-diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-index aae1b85ffc10e20e9c3c9b6009d26b83efd8cb24..fe7797be4c08cd62cdad9617b8f70095d5e0af2f 100644
---- a/include/linux/firmware.h
-+++ b/include/linux/firmware.h
-@@ -29,6 +29,7 @@ struct firmware {
-  * @FW_UPLOAD_ERR_RW_ERROR: read or write to HW failed, see kernel log
-  * @FW_UPLOAD_ERR_WEAROUT: FLASH device is approaching wear-out, wait & retry
-  * @FW_UPLOAD_ERR_FW_INVALID: invalid firmware file
-+ * @FW_UPLOAD_ERR_DUPLICATE: firmware is already up to date (duplicate)
-  * @FW_UPLOAD_ERR_MAX: Maximum error code marker
-  */
- enum fw_upload_err {
-@@ -41,6 +42,7 @@ enum fw_upload_err {
- 	FW_UPLOAD_ERR_RW_ERROR,
- 	FW_UPLOAD_ERR_WEAROUT,
- 	FW_UPLOAD_ERR_FW_INVALID,
-+	FW_UPLOAD_ERR_DUPLICATE,
- 	FW_UPLOAD_ERR_MAX
- };
- 
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 211222e63328f970228920f5662ee80cc7f51215..603c3a4b385c849944a695849a1894693234b5eb 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -1133,6 +1133,7 @@ static const char * const fw_upload_err_str[] = {
- 	[FW_UPLOAD_ERR_RW_ERROR]     = "read-write-error",
- 	[FW_UPLOAD_ERR_WEAROUT]	     = "flash-wearout",
- 	[FW_UPLOAD_ERR_FW_INVALID]   = "firmware-invalid",
-+	[FW_UPLOAD_ERR_DUPLICATE]    = "firmware-duplicate",
- };
- 
- static void upload_err_inject_error(struct test_firmware_upload *tst,
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1e9e2b52312439e4b1d48b262200c..4ce9d6ec85381e5305c56dfbca875ef5499e000c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1543,6 +1543,8 @@ patternProperties:
+     description: Toradex AG
+   "^toshiba,.*":
+     description: Toshiba Corporation
++  "^touchnetix,.*":
++    description: TouchNetix AS
+   "^toumaz,.*":
+     description: Toumaz
+   "^tpk,.*":
 
 -- 
 2.39.5
