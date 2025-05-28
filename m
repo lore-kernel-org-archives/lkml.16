@@ -1,242 +1,258 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE21121A931
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748459159; cv=none; b=ICXS1UGaUMEHj0wvKTf5M2gC3O1Zap+6HBc6TYP4zF8egnwkiTX1hnBQPzdRlGpoECTtvcDL1wmZF9bCtWmBK3PU6WhzWeBIIqu/x8FbBWosdqUY4FfLIzNLL0CgS1kooJHtZWYZX9954uPApwS0CxYJ84ntHezzMkbpFCKF2Ms=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748459159; c=relaxed/simple;
-	bh=sZ9FIcQVpn0uh9fCmpFV7+WIIQpiLB3e3RkxJVozPN8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tgbd+CHsonzHv4I0o5xGjw3Zn1ZaYwDRFQfrdJV2WcF8QerfVnoo6goyQHG2wSPjX2GxeSf/1hSWAyH4/RbKexIQ/UuWKotje7b7qFH1nGO3JECfNq5qITXuyAoeq45oLKZUyQyUKGNhPRktBX/DfNF4IVdzHi9EhsuW88bxRqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b4dc23f03so7691339f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:05:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748459156; x=1749063956;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BoU3G5hmnMDZf8TfEo1AisxE9BKN/r0sRMS8lO5Dwng=;
-        b=LukHMwLDg6sZqgttrVfFYxEm7U22sVqq1hKOICxONMOsk2aV1Xx8sKalqZiz80jVea
-         USpKjtj7wbgpDtCiOkrSkhVZDtU4JSDDpbSqf7sujnW4slnI1lBYWvmOnc+EW7upfb6P
-         mQ7M0ZQYR4Bxd7ExglPGEvHq8oHw6+J9JxRkk1UL3vbNbz2gXrGl4H8qi7FGTLTLfwof
-         RzjvUjR5j99ODw5M1GQtTGSKBkOmxPvM0YleQNbOA/gCBr5huNr7h2+OFM+JxyW3cLuV
-         uFXw1FaV6Nxbo0U0M/PyoX9gHhJ9F8knnYw+05yTKaL0daR4ezV2U5Bs/Y7SgtSvbBVN
-         WzKg==
-X-Gm-Message-State: AOJu0YzTtQ8Hyb5anPhI6Mph2AIb4Dt3TZKNA6Nmy95Ih4cBqobqzpFU
-	Ueo/FV5bfEATTnESwePus2I1SDp2tdb5+wa9ghqLOeAmrQ+NivMyT97mCP7YNrfMMsfFc5EHAgD
-	WRbPiv6oX5G870sM7l4T20/roN5eQhQEcm8AhHT6WN7dydyQ87vaWhbgSaWA=
-X-Google-Smtp-Source: AGHT+IHnobeXPhkJhU1Kln+vyv4TZKs8Ugwrfz+lpH/9hKDMAqTaPa5d0cR+7tenVCY8nvhoEJINuTNP3hNaWD/4vH1lYieEL3UD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB66213E78;
+	Wed, 28 May 2025 19:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748459266; cv=fail; b=YEGX+GyJTAoMitu69UGl5qcCjsBF4g/7IEZ17EDTrwgUE8XnlKm4X1BZg9bDKAyZDdQSVGqVw2ajZelusM0BPv8NAtvk/eaumAMVB/RWZYbo/FzeGY9Er45WH2Bj7AEfQvNJBCIK7hePTRrjCxA1UxDFZpK8CeS3m28kcQoUcjg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748459266; c=relaxed/simple;
+	bh=O5XWh+gJMUd7tA88qYJNDWtvGCD86ewIesBcFWu7zc8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rOEkw03t91zTx2bOW5P6Z5RJHjMJu9ky91JViUxk4Cb5fOgTVhezubLH46a+Ye5/YH3bozLI49GM2Hl4TSNirjRRLYWkCbZhLeU8E6mV3TPaBvhJrLdQSe7q8dJRFkKri92UU076rAiWbR0INVJETXGRc2fuS8gFW4piKDIYxE0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JiSlmzCT; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JiSlmzCT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748459265; x=1779995265;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=O5XWh+gJMUd7tA88qYJNDWtvGCD86ewIesBcFWu7zc8=;
+  b=JiSlmzCTjFZNO7OhhfSgjZ0ZRfg8rcZbMvwAvIA5Suw6sxRUw7TQhTh5
+   kDZKUJwl0Noovi1D8B3mdyYeg+JK3k7XehlYOyp5IH5+AIG85P3xy9LM3
+   vB8kfCXiEaI0vCXmoMWx0giB81NEd0ICZf5UPhZ89ig7w+4JkRV4LqQZP
+   Ky8PnDkvEooFSDwvF/TM8HEJHgpNkS+xkYtGFks+4Mn/RzzwbXaWzAnm0
+   BA4W/a5BLGY8pLyId0/u0M79S1m5zyRsEwTSdSo+lsIdlbVubQrxBfWD5
+   g89LLCtSvak7jZPLXb+zzVNXdT+lT/p2b1DHA31LFzStfPr3uE1Yx0I2h
+   g==;
+X-CSE-ConnectionGUID: GZBQQyV7RqOmyT23D8hnPQ==
+X-CSE-MsgGUID: caecX2rJT2yBuh+iHFT2ZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61556999"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="61556999"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 12:07:44 -0700
+X-CSE-ConnectionGUID: klS8+gx7R/mZcLU9XfuvTw==
+X-CSE-MsgGUID: QN2bxNgBRv64Tvn5MFqZCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="148190915"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 12:07:42 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 28 May 2025 12:07:42 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 28 May 2025 12:07:42 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (40.107.94.60) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Wed, 28 May 2025 12:07:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qF2IR6e42epCDRKbysno2ZlfqA68NnWyJNPxYXuJHsZuCftpD987qUgexz0bi3GYKmKKt7BWcWo6W/qd4ceqcLW8wgVhqkb4ujC27GurfF9tnwjqNfG28vwCuI3Ih2iVa86ktzNHy/Fo7JxXMqpwnlANtkDHBR6Ok6sqkjxe23lbQvP+5cfshoUueX1Og2BSaa6FN01wQjZHZr0qg0ioXUe5RUOtUsK46kHhgij2HBcttSlqK/Q23p8mQbtARay0384VPgJKNs00PetcE9t/59a+H2c4P4Me9W00PutPCWCATfIBZcnzE0rNeRLXhXUVYfDHVx1iQ4GFqgAJasHPuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cks2IbmT19oybuvLMq6OrsyC5QlmBX3OrlIf3Zoh3Kw=;
+ b=iGpLSJ3jtLA++W0dFS+0dpJ7KOEds29jpE8vfaqz5jQiNMt2/gAE9WcT8fmy4eKc+cayd20afRFLIEqRO6gUpFdMuipV5stcnksL1OVRWtNtSGkfaxtxZoU38UOiqR8TjSIpCcTSOTsHlwF3zPPzLX+Ln+OUiXt2XvvXJDOpMwoNth0bky5IcBA8qAllrMKRTJ3uiLZg4Zxf/+YbB2ioQ4k9ANbP3mAdD+UineQxQU4m8yZFPMVGBjIkxFiAcC8wFXpYlHu/z9O1mlr3ceU9VzfCjrXsjTa+qego0PINt4W/Ei5mvmavhUGJGERgPjHK/BKeUA9u/HjkGc7Cv0hz2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by IA0PR11MB7882.namprd11.prod.outlook.com (2603:10b6:208:40f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Wed, 28 May
+ 2025 19:07:40 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%5]) with mapi id 15.20.8769.025; Wed, 28 May 2025
+ 19:07:39 +0000
+Date: Wed, 28 May 2025 14:07:34 -0500
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+CC: Min Ma <min.ma@amd.com>, Lizhi Hou <lizhi.hou@amd.com>, Oded Gabbay
+	<ogabbay@kernel.org>, Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher
+	<alexander.deucher@amd.com>, Christian =?utf-8?B?S8O2bmln?=
+	<christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+	<simona@ffwll.ch>, Lucas Stach <l.stach@pengutronix.de>, Russell King
+	<linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
+	<christian.gmeiner@gmail.com>, Frank Binns <frank.binns@imgtec.com>, "Matt
+ Coster" <matt.coster@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, Qiang Yu <yuq825@gmail.com>, "Rob
+ Clark" <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, "Marijn
+ Suijten" <marijn.suijten@somainline.org>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>, Boris Brezillon
+	<boris.brezillon@collabora.com>, Rob Herring <robh@kernel.org>, Steven Price
+	<steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Matthew Brost
+	<matthew.brost@intel.com>, Philipp Stanner <phasta@kernel.org>, Melissa Wen
+	<mwen@igalia.com>, =?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Thomas
+ =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi
+	<rodrigo.vivi@intel.com>, Christian =?utf-8?B?S8O2bmln?=
+	<ckoenig.leichtzumerken@gmail.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
+	<etnaviv@lists.freedesktop.org>, <lima@lists.freedesktop.org>,
+	<linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>,
+	<nouveau@lists.freedesktop.org>, <intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH v11 02/10] drm/sched: Store the drm client_id in
+ drm_sched_fence
+Message-ID: <5jnpsmjef5ibegbsbelkfmudv4wagpcfb25nptqs5z4ccitq4c@3bdtrbrrmtil>
+References: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
+ <20250526125505.2360-3-pierre-eric.pelloux-prayer@amd.com>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250526125505.2360-3-pierre-eric.pelloux-prayer@amd.com>
+X-ClientProxiedBy: BYAPR01CA0019.prod.exchangelabs.com (2603:10b6:a02:80::32)
+ To CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:474b:b0:867:9af:812e with SMTP id
- ca18e2360f4ac-86cbb7e4163mr1809562139f.5.1748459156610; Wed, 28 May 2025
- 12:05:56 -0700 (PDT)
-Date: Wed, 28 May 2025 12:05:56 -0700
-In-Reply-To: <6832ca5f.a70a0220.1765ec.015d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68375e94.a70a0220.1765ec.0173.GAE@google.com>
-Subject: Re: [syzbot] Re: [PATCH v1] Bluetooth: MGMT: Use RCU-protected in
- mgmt_pending list
-From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|IA0PR11MB7882:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0267c96c-eb01-4127-2eaa-08dd9e1aea7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?IVLfLNw7R6hG7kLM+X+tTxzxs7C1YYlLkHxLLEnbWNwIkL2IDLZ7ki8oIPUN?=
+ =?us-ascii?Q?dlDbeDkfepS6yPAQWELfZNJh0YNq0AVXvNW+CmMluki2sIOG8kCA0Df3qRwm?=
+ =?us-ascii?Q?eIUWMUnrQc/VEjAy1vSKcQUTGIXGvkS8tKv33FjyXzfGOeYSzQGf3FBkXLoJ?=
+ =?us-ascii?Q?BXXT0CQ3TRs7ax3hpIGnH/eMIDQCcjByM1zEvUeWm0mOH3mcwD1IsmFH1G2Y?=
+ =?us-ascii?Q?kdOCkct9JLsuckHm7KNsztCCB82a88XSbMFD5em7xX8rOoLQEzA2f/fekLN2?=
+ =?us-ascii?Q?VUfmhoHDA+L659jePLXKuUV4bVh8zaFVMCivt060xRk4ItIPJgmZidjjDsvq?=
+ =?us-ascii?Q?zRXTVzrR70oEvaC+Ni11ccreBWKRt5F0tqBXz+NG79VPAsKsSnSnwIrYF6hZ?=
+ =?us-ascii?Q?qiCXuuIwFA0NlWlQUgAVu+t/U64vMWjWABudMgWcxwuxHG8JLjJRcbI/Eo1p?=
+ =?us-ascii?Q?Gp1f08tuJrEotvwNAZRHkAC9i+eGQSJRjK0Ga2blk3gtQDWhZui40F0WoRFc?=
+ =?us-ascii?Q?8REPlWw9t9kijhPS5OiYGx/maFRrcxPNsCxy9W+lq17rxJEdZNlzwt3Bw37M?=
+ =?us-ascii?Q?DtSW6xR41KOhwOp0Xt4N+Epwp9iKGmuimjeqY177K/S1/LicGZ4b+gs4ixhA?=
+ =?us-ascii?Q?4vqHsxAlFOg/z0VTEeV3LNLv/A8sKygCtLZsUP8cIHiy25C9nVRoAWxrnOM6?=
+ =?us-ascii?Q?No6whhDOmaWcep59bd0NzJxZcAalIP3cNLbflp1Czf+xF7Dx2vggKcV9kOFc?=
+ =?us-ascii?Q?NEdwRoZvNYQ1X54IKgzQVEngJIHOtSJD+pVwFYmYjE+Hh3FrrtF2YOXo51p+?=
+ =?us-ascii?Q?S8JYFH0tPfCvP2gvIjI7l0viGMq25HvJALbzfBZHRZqoq9Bj5K7O/QMSfEyO?=
+ =?us-ascii?Q?drno72X5lpYGWYcuGzqp0YbIdDF9QnrI9U8vbZDOQGYUC4C6GRLN8k9wyKK8?=
+ =?us-ascii?Q?SwbdcLWUvaLgd0KVNcZ6zYxmcqhpleBYGGak45JU30kYyGuc5rh6FFrdBo+G?=
+ =?us-ascii?Q?2Vv6JPnP72pn0wJDPg/2BThvM9JQGpZpUkIbRYefTx9PHOQALTCC8OHsTYL2?=
+ =?us-ascii?Q?sABU7/S/s05dw0o0HP+7FE31fkbuLY8iWhgpaORSx+gVnfj7yqIAjHb5cvT1?=
+ =?us-ascii?Q?vUCPxHO6ADIuLIy3i3b6lQ+srCnmg74QKYpWCp62W86xpQJG30GUb8lEjbK+?=
+ =?us-ascii?Q?OuHS2YQpy7GTauQoiZqKlihMdvRlVI2CaetabXXa9eL3sLlUGKfVqH5N9NW+?=
+ =?us-ascii?Q?/mfh7lQWpA3d02q7CIagLxYcWiKntbYKKuxoNlUKv0ofO9aSvJvaZZ3pDGw6?=
+ =?us-ascii?Q?GKToFVXBPbI8dhHoZDZbuatqJg2aoctReLKxbXhRPYi6Wx8I8vKFe/xJHZY2?=
+ =?us-ascii?Q?bHCIg5o=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wa+0Rvn0Qr/bjKWly5oDUFUzXhAHLrVnjETPfqyl33C7ulTZzs4ByRJUIS/J?=
+ =?us-ascii?Q?5eLuN5FbEjJqhE4x8hZj9zMSYA1ARdG3LatOzLgMszuNwv43FcgjPyzq+e1T?=
+ =?us-ascii?Q?XamqJnyjpzIsuG9NqEiXApjR8GcMeJDubUroeyqSJU6vpXPCXvpoYyQiqYAq?=
+ =?us-ascii?Q?CR2pJcMHWO1GpkqF7GJ6AH4pxSUNtdW4Kvjzj9dpUjhWwnyONrgdXafgG4yu?=
+ =?us-ascii?Q?PAPBURKL6Vfo0sTwqRdgTSGkX2pgJiuGmbMqsmNjlBdG8S2pLub2+du1N4lF?=
+ =?us-ascii?Q?m7Fw7TBJ/+jwiVvvY6Zsr+NrcTQ/vo2t9sqD3HECQxoF0TIEuv0tleY+xfjk?=
+ =?us-ascii?Q?SnsIXrW7piZJqVi/5EvyhAiL9+Rdbh4BBRzcfWLxlRXfdnNA+lT24H639rWn?=
+ =?us-ascii?Q?08ewE5PVGC12+vP8ZUrwLAQdmjqRptCILYvnO7wPvDqtewP0ZkYCuO0QS/HQ?=
+ =?us-ascii?Q?SK/353+Kph9R/sf/a0GZA0xGCdSAbbVM1BJJd+IjdfBGCI1kao9p4STg21rc?=
+ =?us-ascii?Q?x9Mt/O/5s7yaV7+n71OEYdJm8WChocM17xhHl4U8PDCckXlfOqufbp908GIP?=
+ =?us-ascii?Q?Ox4E5GncbqRBJd2pEZLUACBSg+oyKPVRmDRGdlzG/6/t+nN8k8HCAf+H59FO?=
+ =?us-ascii?Q?jXmBUfaA1D/Ue/SqCRsxksau7RadWFfAvllP4f0jZxZIO3oDgXruH3VC8NgG?=
+ =?us-ascii?Q?RYOQNOq8wWBQmvKoNLt9cCyyDfcy0IzicRkm+jhgT5yboUcKSstJ6i++dxcA?=
+ =?us-ascii?Q?j3xZczhQVQywausdNcWoUuU4y4k2G81oSlabU8FSXdsLoIvkrE3bkI5WZfWz?=
+ =?us-ascii?Q?bt8tNrez56Jxu8dOcOtUEU6/ZLO8i8Y0QVYhiDtAEtHDjpWS2B5fp3xqMnLc?=
+ =?us-ascii?Q?JZfNkLFreiPlzXpt4LfppiyjnSWDL3xvGxDqPYqxtndFnb2EvYM/OiyTL7Tt?=
+ =?us-ascii?Q?tFmX+B0ogPIrSAgHdbHWP/LoGwEUNNZrmAKfzcBFCEYAkNyuTgm34l0RL2sL?=
+ =?us-ascii?Q?5VUUYyLLxq+deBlfvS0GyKTOpL8Bku8L42IZd1YyYShAN62P05I4aE2sAQ2r?=
+ =?us-ascii?Q?kc7/Pl9CPXBlKxM4UhYyY1PaSTtMrskRDirFxUsSSlysS1M4Fplji2ZA5v/n?=
+ =?us-ascii?Q?a88Y/4H33TN5tP87h26+QgVJYkMz3Au/hHB/RrB5/8Tah/d9KHgWw134vtI9?=
+ =?us-ascii?Q?0K/LnCsDoxs9I3dDf8RuR8wymP6He232cpTMMF30r78RC3T1Fwccz4R219Aj?=
+ =?us-ascii?Q?GK9qS1VouVm1dyRHLE7V3vuTgswomMOVDazUwYEnT8s8X7mWY9OgDzB9eAm4?=
+ =?us-ascii?Q?3/496RZ2kg7bWxBbQL17OMZA9VSta6VPe4k0HusLRhB2K8tW5Z9AYuRVN+3i?=
+ =?us-ascii?Q?KXfCd8B5HwSO5qfzb5eBF/3anbvysPCiQOOSDDRCValaMnvicqIQjPEhfHw+?=
+ =?us-ascii?Q?2CbZ3muUP97gV2bPIGuGJXL6pN8wLvwNgkkdh2giQ+WQdQ207h/VZxVto2UJ?=
+ =?us-ascii?Q?MwneqK9tkYYCaxJthRcwJno3UVL2RbSodfW0q0mag5NV/lCiiYVcHIa+tbWs?=
+ =?us-ascii?Q?kRvQ0xuMp1KPDYCsjVopvkGIWO2E+M8lbX4aUiucwyy41IKpmFIctSTEiUFa?=
+ =?us-ascii?Q?PQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0267c96c-eb01-4127-2eaa-08dd9e1aea7a
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 19:07:39.8918
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aWGsR+lKXTHnXAuZ+Dq6j4ZKKVeAZqz409DS8n73+vReT5YA8Gnc5iRDOuRieWY0T928ACwAN0vOIMvrgmbkL7+8zodA1wtWBLNf9T6J9Xw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7882
+X-OriginatorOrg: intel.com
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
-
-***
-
-Subject: Re: [PATCH v1] Bluetooth: MGMT: Use RCU-protected in mgmt_pending =
-list
-Author: luiz.dentz@gmail.com
-
-#syz test
-
-On Wed, May 28, 2025 at 3:03=E2=80=AFPM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
+On Mon, May 26, 2025 at 02:54:44PM +0200, Pierre-Eric Pelloux-Prayer wrote:
+> drivers/gpu/drm/xe/xe_sched_job.c                |  3 ++-
+>diff --git a/drivers/gpu/drm/xe/xe_sched_job.c b/drivers/gpu/drm/xe/xe_sched_job.c
+>index f0a6ce610948..5921293b25db 100644
+>--- a/drivers/gpu/drm/xe/xe_sched_job.c
+>+++ b/drivers/gpu/drm/xe/xe_sched_job.c
+>@@ -113,7 +113,8 @@ struct xe_sched_job *xe_sched_job_create(struct xe_exec_queue *q,
+> 	kref_init(&job->refcount);
+> 	xe_exec_queue_get(job->q);
 >
-> #syz test
->
-> On Wed, May 28, 2025 at 2:44=E2=80=AFPM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
-> >
-> > From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> >
-> > This uses RCU procedures to protect from concurrent access of
-> > mgmt_pending list which can cause crashes like:
-> >
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > BUG: KASAN: slab-use-after-free in mgmt_remove_adv_monitor_complete+0xe=
-5/0x540 net/bluetooth/mgmt.c:5405
-> > Read of size 8 at addr ffff888048891a18 by task kworker/u5:8/5333
-> >
-> > CPU: 0 UID: 0 PID: 5333 Comm: kworker/u5:8 Not tainted 6.15.0-rc5-syzka=
-ller-00197-gea34704d6ad7 #0 PREEMPT(full)
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-=
-1.16.3-2~bpo12+1 04/01/2014
-> > Workqueue: hci0 hci_cmd_sync_work
-> > Call Trace:
-> >  <TASK>
-> >  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
-> >  print_address_description mm/kasan/report.c:408 [inline]
-> >  print_report+0xb4/0x290 mm/kasan/report.c:521
-> >  kasan_report+0x118/0x150 mm/kasan/report.c:634
-> >  mgmt_remove_adv_monitor_complete+0xe5/0x540 net/bluetooth/mgmt.c:5405
-> >  hci_cmd_sync_work+0x25e/0x3a0 net/bluetooth/hci_sync.c:334
-> >  process_one_work kernel/workqueue.c:3238 [inline]
-> >  process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
-> >  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
-> >  kthread+0x70e/0x8a0 kernel/kthread.c:464
-> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> >  </TASK>
-> >
-> > Allocated by task 5702:
-> >  kasan_save_stack mm/kasan/common.c:47 [inline]
-> >  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
-> >  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
-> >  __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
-> >  kasan_kmalloc include/linux/kasan.h:260 [inline]
-> >  __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4358
-> >  kmalloc_noprof include/linux/slab.h:905 [inline]
-> >  kzalloc_noprof include/linux/slab.h:1039 [inline]
-> >  mgmt_pending_new+0x65/0x240 net/bluetooth/mgmt_util.c:252
-> >  mgmt_pending_add+0x34/0x120 net/bluetooth/mgmt_util.c:279
-> >  remove_adv_monitor+0x103/0x1b0 net/bluetooth/mgmt.c:5453
-> >  hci_mgmt_cmd+0x9c6/0xef0 net/bluetooth/hci_sock.c:1712
-> >  hci_sock_sendmsg+0x6ca/0xee0 net/bluetooth/hci_sock.c:1832
-> >  sock_sendmsg_nosec net/socket.c:712 [inline]
-> >  __sock_sendmsg+0x219/0x270 net/socket.c:727
-> >  sock_write_iter+0x258/0x330 net/socket.c:1131
-> >  new_sync_write fs/read_write.c:591 [inline]
-> >  vfs_write+0x548/0xa90 fs/read_write.c:684
-> >  ksys_write+0x145/0x250 fs/read_write.c:736
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > Freed by task 5700:
-> >  kasan_save_stack mm/kasan/common.c:47 [inline]
-> >  kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
-> >  kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
-> >  poison_slab_object mm/kasan/common.c:247 [inline]
-> >  __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
-> >  kasan_slab_free include/linux/kasan.h:233 [inline]
-> >  slab_free_hook mm/slub.c:2380 [inline]
-> >  slab_free mm/slub.c:4642 [inline]
-> >  kfree+0x193/0x440 mm/slub.c:4841
-> >  mgmt_pending_foreach+0xc9/0x120 net/bluetooth/mgmt_util.c:242
-> >  mgmt_index_removed+0x10d/0x2f0 net/bluetooth/mgmt.c:9362
-> >  hci_sock_bind+0xbe9/0x1000 net/bluetooth/hci_sock.c:1307
-> >  __sys_bind_socket net/socket.c:1810 [inline]
-> >  __sys_bind+0x2c3/0x3e0 net/socket.c:1841
-> >  __do_sys_bind net/socket.c:1846 [inline]
-> >  __se_sys_bind net/socket.c:1844 [inline]
-> >  __x64_sys_bind+0x7a/0x90 net/socket.c:1844
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> >
-> > Fixes: a380b6cff1a2 ("Bluetooth: Add generic mgmt helper API")
-> > Closes: https://syzkaller.appspot.com/bug?extid=3Dfeb0dc579bbe30a13190
-> > Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-> > Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-> > ---
-> >  net/bluetooth/mgmt_util.c | 25 +++++++++++++++----------
-> >  1 file changed, 15 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/net/bluetooth/mgmt_util.c b/net/bluetooth/mgmt_util.c
-> > index 3713ff490c65..c2dc8ddf5f78 100644
-> > --- a/net/bluetooth/mgmt_util.c
-> > +++ b/net/bluetooth/mgmt_util.c
-> > @@ -219,13 +219,20 @@ struct mgmt_pending_cmd *mgmt_pending_find(unsign=
-ed short channel, u16 opcode,
-> >  {
-> >         struct mgmt_pending_cmd *cmd;
-> >
-> > -       list_for_each_entry(cmd, &hdev->mgmt_pending, list) {
-> > +       rcu_read_lock();
-> > +
-> > +       list_for_each_entry_rcu(cmd, &hdev->mgmt_pending, list) {
-> >                 if (hci_sock_get_channel(cmd->sk) !=3D channel)
-> >                         continue;
-> > -               if (cmd->opcode =3D=3D opcode)
-> > +
-> > +               if (cmd->opcode =3D=3D opcode) {
-> > +                       rcu_read_unlock();
-> >                         return cmd;
-> > +               }
-> >         }
-> >
-> > +       rcu_read_unlock();
-> > +
-> >         return NULL;
-> >  }
-> >
-> > @@ -233,14 +240,11 @@ void mgmt_pending_foreach(u16 opcode, struct hci_=
-dev *hdev,
-> >                           void (*cb)(struct mgmt_pending_cmd *cmd, void=
- *data),
-> >                           void *data)
-> >  {
-> > -       struct mgmt_pending_cmd *cmd, *tmp;
-> > -
-> > -       list_for_each_entry_safe(cmd, tmp, &hdev->mgmt_pending, list) {
-> > -               if (opcode > 0 && cmd->opcode !=3D opcode)
-> > -                       continue;
-> > +       struct mgmt_pending_cmd *cmd;
-> >
-> > +       cmd =3D mgmt_pending_find(HCI_CHANNEL_CONTROL, opcode, hdev);
-> > +       if (cmd)
-> >                 cb(cmd, data);
-> > -       }
-> >  }
-> >
-> >  struct mgmt_pending_cmd *mgmt_pending_new(struct sock *sk, u16 opcode,
-> > @@ -280,7 +284,7 @@ struct mgmt_pending_cmd *mgmt_pending_add(struct so=
-ck *sk, u16 opcode,
-> >         if (!cmd)
-> >                 return NULL;
-> >
-> > -       list_add_tail(&cmd->list, &hdev->mgmt_pending);
-> > +       list_add_tail_rcu(&cmd->list, &hdev->mgmt_pending);
-> >
-> >         return cmd;
-> >  }
-> > @@ -294,7 +298,8 @@ void mgmt_pending_free(struct mgmt_pending_cmd *cmd=
-)
-> >
-> >  void mgmt_pending_remove(struct mgmt_pending_cmd *cmd)
-> >  {
-> > -       list_del(&cmd->list);
-> > +       list_del_rcu(&cmd->list);
-> > +       synchronize_rcu();
-> >         mgmt_pending_free(cmd);
-> >  }
-> >
-> > --
-> > 2.49.0
-> >
->
->
-> --
-> Luiz Augusto von Dentz
+>-	err = drm_sched_job_init(&job->drm, q->entity, 1, NULL);
+>+	err = drm_sched_job_init(&job->drm, q->entity, 1, NULL,
+>+				 q->xef->drm->client_id);
 
+you can't do this here. xef is only !NULL if it's a job from userspace.
+For in-kernel jobs, xef is NULL and this explodes. Right now this
+completely breaks xe since one of the very first things we do is
+to submit a job to save the default context. Example:
+https://intel-gfx-ci.01.org/tree/intel-xe/xe-3151-56d2b14961751a677ff1f7ff8b93a6c814ce2be3/bat-bmg-1/igt@xe_module_load@load.html
 
+	<4> [] RIP: 0010:xe_sched_job_create+0xbd/0x390 [xe]
+	<4> [] Code: c1 43 18 85 c0 0f 84 6f 02 00 00 8d 50 01 09 c2 0f 88 3e 02 00 00 48 8b 03 48 8b b3 d8 00 00 00 31 c9 4c 89 ef ba 01 00 00 00 <48> 8b 40 08 4c 8b 40 60 e8 86 64 7c ff 41 89 c4 85 c0 0f 85 9b 01
+	<4> [] RSP: 0018:ffffc900031972d8 EFLAGS: 00010246
+	<4> [] RAX: 0000000000000000 RBX: ffff88815fc40d00 RCX: 0000000000000000
+	<4> [] RDX: 0000000000000001 RSI: ffff88812e6552a8 RDI: ffff88815f939c40
+	<4> [] RBP: ffffc90003197318 R08: 0000000000000000 R09: 0000000000000000
+	<4> [] R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90003197428
+	<4> [] R13: ffff88815f939c40 R14: ffff88811f054000 R15: ffff88815fc40d00
+	<4> [] FS:  00007681f2948940(0000) GS:ffff8888daf14000(0000) knlGS:0000000000000000
+	<4> [] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+	<4> [] CR2: 0000000000000008 CR3: 0000000118315004 CR4: 0000000000f72ef0
+	<4> [] PKRU: 55555554
+	<4> [] Call Trace:
+	<4> []  <TASK>
+	<4> []  __xe_bb_create_job+0xa2/0x240 [xe]
+	<4> []  ? find_held_lock+0x31/0x90
+	<4> []  ? xa_find_after+0x12c/0x250
+	<4> []  xe_bb_create_job+0x6e/0x380 [xe]
+	<4> []  ? xa_find_after+0x136/0x250
+	<4> []  ? __drm_dev_dbg+0x7d/0xb0
+	<4> []  xe_gt_record_default_lrcs+0x542/0xb00 [xe]
 
---=20
-Luiz Augusto von Dentz
+Can we use 0 for in-kernel client since drm_file starts them from 1?
+Like this:
+
+| diff --git a/drivers/gpu/drm/xe/xe_sched_job.c b/drivers/gpu/drm/xe/xe_sched_job.c
+| index 5921293b25db3..d21bf8f269640 100644
+| --- a/drivers/gpu/drm/xe/xe_sched_job.c
+| +++ b/drivers/gpu/drm/xe/xe_sched_job.c
+| @@ -114,7 +114,7 @@ struct xe_sched_job *xe_sched_job_create(struct xe_exec_queue *q,
+|         xe_exec_queue_get(job->q);
+|  
+|         err = drm_sched_job_init(&job->drm, q->entity, 1, NULL,
+| -                                q->xef->drm->client_id);
+| +                                q->xef ? q->xef->drm->client_id : 0);
+|         if (err)
+|                 goto err_free;
+
+I tested with the above diff and it at least loads...
+
+Also, I see this in intel-xe mailing list, but I'm not sure why we
+didn't have any CI results... I will check that.
+
+Lucas De Marchi
