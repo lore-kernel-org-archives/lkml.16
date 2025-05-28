@@ -1,196 +1,108 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E571F582E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20F71FBCB2
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748409734; cv=none; b=gj3TkbhpaMmw79Aulh7xSCTZdJNHzk/S25PhYvfSE8fnlOu2mE9WZ40ozXmnDXM9dx1FWwqceIs81dadJqBlVMugnjM7JkQysRl9uBnMPCDFv6rJE0cNeC3rxyaw76I93KY6PIToEhKqjUcJKl9xvynL+E5t2Na2JxmwfvkZedE=
+	t=1748409822; cv=none; b=LuIWwHE2Ons1yYMPGbRNLM0IERUuDOtAk5ZX4wiC8z3C3SUHpa2IcTJIr+SdeHJO+zf+w3pKP9r08TUCkcG75DtgVBd4aOawXV8sQbv7iSr93kXSOJdD2/VtDdc3ITYfFcvM3MKUxARtiQpNjfT4wGRPJ93dLsxEca1PmuGI/sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748409734; c=relaxed/simple;
-	bh=yXGgj+mtxns8PhzMgNMh2VawII6kvgVSZTxvTe6x10Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=hL9MvD8kIEV2AJ8jG2i15Tj5XovU27eoVa98D8dDm6IzAwcmnrEIR7fdbLyVvZOfIPficGfOwJBwyyL4aMwdWXFqMMm4M8a8ei6pH/Vd57BvHkoWQtbTmWNzvU0TA0JBpQ6LcVIWS+gs2RngCm5EccCdWinNmHcy/7iq1CWkDdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rtJ1njK3; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748409822; c=relaxed/simple;
+	bh=OMnGfda8KClSL9GGHmUONx3gMKPVl27s+0O8Uijwykg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gOzGONAflsc/6Fz0sjBn++GcSVC5TFvs2z67UcRZvvIx8Iys86lqZudvsZTUQIWBWbjuE0ZflgOXuyNIG68qnhy6DwrFAdk9qiyHuYM715h6WXO78GxIXRg+kuGIS+xpT+U9mY4vn+IvFW362IAPCE/GdlWRVSoGlvWY/lfd7ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=fTk616/k; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rtJ1njK3"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-44b1f5b917fso24926355e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:22:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="fTk616/k"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da831c17faso13072915ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:23:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748409730; x=1749014530; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hQoa0JY92XB83bF0hiIU1JdZJVH9XdUX6CbZ3gHnktA=;
-        b=rtJ1njK38bjbmRTgcx5Q8nv58SVXSFssmZneBw3MIEIAIvKqXK5OvwIugucZYZGrIQ
-         VslXBssJUKpAC49zdn5f+KAMq2ZBWMBw3EKzm76/1lP9b1MIoPoLysqaJGnJSUoWhq3G
-         2wMLXZr8oiqPvFnICw71nYb+64a2ZgbXn7MFMOaLJz9b4LHcX9E+zNRTbCj0+8j/AO2s
-         L3pJodMkWjsy07LlhIamkxyhZ1V0YNK+MovDBdWzqDWjsFlXEJFibB7lsFhT0DMEI6QI
-         AqaxqCu2i0cm+uFiX4PMo0bfO5k4G8kpzdDv5UJ3EnuhPTsKi7DsiXv3nULgs5HqS/ZP
-         vPRA==
+        d=brighamcampbell.com; s=google; t=1748409820; x=1749014620; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wenxtdrBK9XwmMmiCLqhXCe+oFW2gyHDArCJgDTJFDY=;
+        b=fTk616/k0SSUryAJYv3t9JEW/72IgkgqzQLEWE4QFoPdMGeOAuI/Rpa8A+zGJ8ZlI1
+         gX3l3gOFCCw46Be2GFUzz38tqRiYYm7LqAs6v2PR29DUFSbDb/z6TrSpy16REsuR/Xyw
+         s9m9VNANFayKQ+d0syTWVxkT9dyd3vLegF0PEpikXOnecAJAVuRDSB8/c97uPWRX+RBb
+         4bRdIVY2x5LlSGvJyFQw/7EyOTBMp0v+hrGHu2pF/2sl5nN0CZIl081DCem7Ri1ob+yU
+         jPyLyuP6jJWkErDN3Nhf3LvHQRFukFirM6sxPMKKQziuKsk2SCLU+wxTFId3D6OM6F99
+         1AbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748409730; x=1749014530;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1748409820; x=1749014620;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hQoa0JY92XB83bF0hiIU1JdZJVH9XdUX6CbZ3gHnktA=;
-        b=i0i8ep/GQZ3NIK0yrt0n2loJwh2OGXPk6NF3+w+Ukk5n2p/6G01xlcvtBnd0iFBcIe
-         yaCqUHVWH6utG8zSH8O9RZAFaqbGZ/c2f/CsORM0GznnxbytcWsb6fbjkz2ndvPx2o6E
-         0tPQXPb+Pgs3QYMMIf1l9vIopXSHjLrUZp4o8mSOgRKDqswN2jkiV+FanhgY+JXeVixT
-         T6d7a9CfQ9LbXeC5YbtjLFp8G3WEpY7OXyWs4QVd15Nhx3Fg80+KQRMBB1bmBsevzLX5
-         bxx/75hVFSheG76zz9qaRL529iNdxz973s+xGBeV8gBn1KIpZHZw5if6zCqrHthBzQE7
-         fuhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYNnRJKgJA8NDtldlcsRVR/247umTz2SThBaVLroOwIBPxPwn59Lq5uCvxQZU3wGdPGB8RFMtd2/lUPf4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGJ6gO92ozoO/Q6rnDQrTDYLhNb/N8EC8Ija+NI4C96WXvUku5
-	uza8adoyzmbPRH+S44oVdhjsa8yzjWeLLGUjFyzK1QHZYQbeiOT0y2fGIjaKizgDbqg=
-X-Gm-Gg: ASbGncuNSjkPZXl3P5+I8WAhAEYhjvgQIO+ZQQvrm/Lbgeh9lSBRw3IOWB/1FuSMCAm
-	cQF8o9d3hF0BCPj9Km4kuVS3M2RAoNm+SHt3QeQiJaBnhLE8e9Y1zBDK28XJ9aYIlwWpEmpt/jK
-	EW6yvGNJVTh8Kcl/t1TZAg/5FUGsOOZOSzlrNyEpY8wlPnMeywniQlwGpHli/Mpx6MBlH3SGBdx
-	/UgMizUgAcYADBj9eL9aMUspZSMF7fO6zaWGxsCGUg/f2GFemgGB3fAOSUb2eIki4hqdU3qRXFi
-	5IlHrs9arHS1VLOcTCiIMdg5958/vA+OUsWj8y1/ffssaQqufeCoM4T8
-X-Google-Smtp-Source: AGHT+IFRt79F9Nml3doFVgCAm1e3lBsDWSa75/5HWtnFCBSWr87OHZCH/XypCJ2QyEheeH/6O/16gw==
-X-Received: by 2002:a05:600c:621b:b0:43c:fffc:786c with SMTP id 5b1f17b1804b1-44fafbf883dmr53519405e9.19.1748409729976;
-        Tue, 27 May 2025 22:22:09 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45072559736sm5617525e9.19.2025.05.27.22.22.08
+        bh=wenxtdrBK9XwmMmiCLqhXCe+oFW2gyHDArCJgDTJFDY=;
+        b=CkRRY4gfxg1Mt68h+Avf4IWiT5Sf7q+Iz48h9oTebnMvdjSnimYxQL0GHbSr0HJV3O
+         M0YT+GMnz1swuoxQWX1KbwHczIePqFpAaKGFOEqVOsPIfhAEw4wXHjz5sujlY6Kkyv5i
+         bMFukKR8wz1DULakMxAD5Ibqx/I/vpHWvqGQjOohHgH6/BwxJg+kEIuZzRb48NQEPkfR
+         EizDHE0U7ffGjeFQj3sZdzwU9GqbeN2by550bkr8Ip7jO2MClXc9r6kusPCwIyxHVA8i
+         otIz7TzePJ9UIjE3long2BZ3sLppcMMDrF7ZWj1KfKq2KbcgO5FxN6kYjSvIquouDwrW
+         TC4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXk4FKUixZ8R0a6fbu7OpFPXQy+dI9P/TJDXEIvQdVWQkCzWFSYqgzcxOqrTvpqpcpAEWg0lHwns9D0hP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTf49ezatRzSMdmPyqpPiVn7uUmXm2xmVjonTl5X2lTXi+Ktdf
+	N9rPZWZ2HYxyVQLf1XZhRM1e/ANo5bBG8HaIfXqr8PdaChraxuMDzX7T4TqYKqXP5Wk=
+X-Gm-Gg: ASbGnctPMdLtt+2aV0UKTu1PfYAMxTlwRroiZOAXItgaXz9HdtRQxEIfpxOj4KSxOnu
+	cqxe3j/tNMiJsWBENglrc43xVf4AzSg3PR7mSnMa7tq8zeist57YkjMJ39sEHa2zGgQhBbABL01
+	5lunUtQm778MnleIclVVpJFi3djKIHlZFt/Y8Qcgxh59UqySTdZg/m4mVbP7rPwM+S2lRyIWvVF
+	gwgLwIScU9T7Sq6SHz2MeyX4rOhLLBYzeQqF5KhrNGVkWRPTnTvgJdRJ8izTghghtRHFnANLJJq
+	jEJhwh03mu1cxmcANYMTegnZ06LRdl6eLaIntmAUl0zE9IDp1LUHRXymf5TjjyxnjQC84uVuvNF
+	bskwjcvU=
+X-Google-Smtp-Source: AGHT+IEg/+dDIFunsDgQZav8rM0OV0IRgirnDBMEGzWGxkPG5lDOpWmkE4qjIJg31NM/Oy281AN8XA==
+X-Received: by 2002:a05:6e02:2482:b0:3d3:db70:b585 with SMTP id e9e14a558f8ab-3dc9b72443emr180381485ab.21.1748409819889;
+        Tue, 27 May 2025 22:23:39 -0700 (PDT)
+Received: from mystery-machine.brighamcampbell.com ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdbd5c2e27sm73730173.135.2025.05.27.22.23.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 22:22:09 -0700 (PDT)
-Date: Wed, 28 May 2025 08:22:06 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: oe-kbuild@lists.linux.dev,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
-	Harshal Dev <quic_hdev@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-Message-ID: <202505280653.Y79JKqDd-lkp@intel.com>
+        Tue, 27 May 2025 22:23:39 -0700 (PDT)
+From: Brigham Campbell <me@brighamcampbell.com>
+To: skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
+Cc: Brigham Campbell <me@brighamcampbell.com>
+Subject: [PATCH v3] kselftest: x86: Improve MOV SS test result message
+Date: Tue, 27 May 2025 23:21:05 -0600
+Message-ID: <20250528052105.2657582-2-me@brighamcampbell.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Amirreza,
+Make test result message more descriptive and grammatically correct.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
+---
+No changes in v3. I'm resending this patch to adjust patch format
+suggestions made by Shuah.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250527-151020
-base:   3be1a7a31fbda82f3604b6c31e4f390110de1b46
-patch link:    https://lore.kernel.org/r/20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9%40oss.qualcomm.com
-patch subject: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-config: x86_64-randconfig-161-20250528 (https://download.01.org/0day-ci/archive/20250528/202505280653.Y79JKqDd-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+ tools/testing/selftests/x86/mov_ss_trap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-| Closes: https://lore.kernel.org/r/202505280653.Y79JKqDd-lkp@intel.com/
-
-smatch warnings:
-drivers/tee/qcomtee/call.c:748 qcomtee_probe() warn: missing error code 'err'
-
-vim +/err +748 drivers/tee/qcomtee/call.c
-
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  711  static int qcomtee_probe(struct platform_device *pdev)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  712  {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  713  	struct workqueue_struct *async_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  714  	struct tee_device *teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  715  	struct tee_shm_pool *pool;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  716  	struct tee_context *ctx;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  717  	struct qcomtee *qcomtee;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  718  	int err;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  719  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  720  	qcomtee = kzalloc(sizeof(*qcomtee), GFP_KERNEL);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  721  	if (!qcomtee)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  722  		return -ENOMEM;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  723  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  724  	pool = qcomtee_shm_pool_alloc();
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  725  	if (IS_ERR(pool)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  726  		err = PTR_ERR(pool);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  727  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  728  		goto err_free_qcomtee;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  729  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  730  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  731  	teedev = tee_device_alloc(&qcomtee_desc, NULL, pool, qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  732  	if (IS_ERR(teedev)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  733  		err = PTR_ERR(teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  734  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  735  		goto err_pool_destroy;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  736  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  737  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  738  	qcomtee->teedev = teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  739  	qcomtee->pool = pool;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  740  	err = tee_device_register(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  741  	if (err)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  742  		goto err_unreg_teedev;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  743  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  744  	platform_set_drvdata(pdev, qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  745  	/* Start async wq. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  746  	async_wq = alloc_ordered_workqueue("qcomtee_wq", 0);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  747  	if (!async_wq)
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26 @748  		goto err_unreg_teedev;
-
-err = -ENOMEM;
-
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  749  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  750  	qcomtee->wq = async_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  751  	/* Driver context used for async operations of teedev. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  752  	ctx = teedev_open(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  753  	if (IS_ERR(ctx)) {
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  754  		err = PTR_ERR(ctx);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  755  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  756  		goto err_dest_wq;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  757  	}
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  758  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  759  	qcomtee->ctx = ctx;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  760  	/* Init Object table. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  761  	qcomtee->xa_last_id = 0;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  762  	xa_init_flags(&qcomtee->xa_local_objects, XA_FLAGS_ALLOC);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  763  	/* Get QTEE verion. */
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  764  	qcomtee_get_qtee_feature_list(qcomtee->ctx,
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  765  				      QCOMTEE_FEATURE_VER_OP_GET_QTEE_ID,
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  766  				      &qtee_version);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  767  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  768  	pr_info("QTEE version %u.%u.%u\n",
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  769  		QTEE_VERSION_GET_MAJOR(qtee_version),
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  770  		QTEE_VERSION_GET_MINOR(qtee_version),
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  771  		QTEE_VERSION_GET_PATCH(qtee_version));
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  772  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  773  	return 0;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  774  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  775  err_dest_wq:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  776  	destroy_workqueue(qcomtee->wq);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  777  err_unreg_teedev:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  778  	tee_device_unregister(qcomtee->teedev);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  779  err_pool_destroy:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  780  	tee_shm_pool_free(pool);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  781  err_free_qcomtee:
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  782  	kfree(qcomtee);
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  783  
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  784  	return err;
-accd33ce59c3367 Amirreza Zarrabi 2025-05-26  785  }
-
+diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
+index f22cb6b382f9..d80033c0d7eb 100644
+--- a/tools/testing/selftests/x86/mov_ss_trap.c
++++ b/tools/testing/selftests/x86/mov_ss_trap.c
+@@ -269,6 +269,6 @@ int main()
+ 			);
+ 	}
+ 
+-	printf("[OK]\tI aten't dead\n");
++	printf("[OK]\tkernel handled MOV SS without crashing test\n");
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
 
