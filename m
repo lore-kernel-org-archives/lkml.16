@@ -1,70 +1,74 @@
 Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFCF220F45
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CB8221F0F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463752; cv=none; b=DCjB1x8EV0yeW3MT87LqkjMP+/FIGpRCHwAIdVILiXaYJFT4lhIA9JmW6AIlFTO9W/XKAKEhB4QVA/9hVphofMS21dTT/PfYuCZuB3YGnzhDg/JQPofv5vOj2KltxpPmK63DtqT5w1R2ieRCSJ/mGSngPjR3MHiN4QAsuhdGwU8=
+	t=1748463758; cv=none; b=GGZU+FOEoTCeTpMrxWeVqWa2D8PwGmqzUuVVQ2KmBNscTciDuKG5MAOeCAZNn/5tR69M2HjwDADxb1PHKOdS5ts02NhQJYjqprWIlJb7hzcNhiORC2Qo/7pB6EX1pJAJQq5jLsj5ae8iIeWN+BkN5O2KJ0u/D+U0OBd9nkUEK7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463752; c=relaxed/simple;
-	bh=yjstY6rXEpYFD0+RmP7Mw5VcbzLqQWKymqkM+58/TWg=;
+	s=arc-20240116; t=1748463758; c=relaxed/simple;
+	bh=KkXe+Lm+rabuheSlfIsCTUsWtN9PJTjQap3jOjZ/bdo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NFMh0NVhOcOmiHcBQYSjfRbt9Aqv4Pew6haop6QikNS4emNJMNHW75hWf76Kl53r7YpDU8AkLQPJIMPu2RS19/ENFvnNN4t2Vt1Qw3FP9yXMkbHyGRcnM1Bk1kL6B/+/xXlf2TYs7lZvBFYWAjfRGhLgSHkoAjCYN9oLROCz7XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wu70i/MV; arc=none smtp.client-ip=209.85.128.41
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdx9JKjmzDmtAW2rYEGCCUprwlTCc7udu3OK6beePY3KbZHm5USIkTV3rjhgCPQUK84JAJzA+9bz3hiHqaDJoUCcXXrlOoSbBs+LoWBsthgpxFEG+45WLxh2H7hwjDy56QASU3plVoh5Q5Lpdnev6lkTBDqjtTPV4j87IEm8Efk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HdJaikkz; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wu70i/MV"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so2747345e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:22:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HdJaikkz"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so2394715e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748463749; x=1749068549; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748463755; x=1749068555; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N+GSbJtN0YTSTL+bpD4kJB+1zO1bOLCqaQRg1wG/P7Q=;
-        b=wu70i/MVMRvUlp1kAQV4dB16ZynTNbiqaKs+SrB4FIJsyX9gr0+8RgxGvWRnK5tX4R
-         K3SWFLFvDZ1T/PDHXN6AIK5wJOIzZ0/yEyqgqjUWmoQkljVEfT9kL4xtfyo+4oW3Bnpy
-         ysxUnC4U/ubHqdChoOLKteUKz13I6dwXKgthtrlTB7G1jpOxw59e1AEAOTQOaSTusBkl
-         TcAVfz349mcTjgam82+zlGOjWAAdBu3JeX7ojjCrbwVCrRgNqOjrYPVCO8K/hm2QwbuG
-         rlXMwwOzk7eb9MI+hVYftsGz9tCGofbWnigJZ/fUdXnyvXoaPLunGDV/m2V7tUfbtk0y
-         6d7w==
+        bh=c5CwG2DjF5EIaVt29I4TTm2tkN33VTDrEArKVdA+dcE=;
+        b=HdJaikkzyDyByHHxF984kKe8M1erWDtSOsa/LtecJyQQUaQAnv1g6LaCwpsb74+jgE
+         zk/WatajVgy2WdXOhC2pduB3CBsh/YfwRxS4J6ZHVF/Adi/3POxRMTxQONTVTSEn2Lls
+         Anulpt215clW+kWL9F0E08CRi1ooDYi62T2o5ZfXEjlOz4a/FqVECpHbU04um+YhIThy
+         DuPkXnmNTLRRBaoK00Bjj+nkvV9bOuXfzHjvuop3JZceX9WZsvGaFEGojUVrK7Ov6A2t
+         y67j0slDEDx0AXmjN4t0HwQhWd5t2Csw18JKiEETuf8bTn1TZyKDzYKlt+HTGycDLmMN
+         ZB2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748463749; x=1749068549;
+        d=1e100.net; s=20230601; t=1748463755; x=1749068555;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N+GSbJtN0YTSTL+bpD4kJB+1zO1bOLCqaQRg1wG/P7Q=;
-        b=uvr3/Jx0BxmC9jZ+suVKqiJr1PQVgD8NWlOMOr8Vct6D3Zqmrm8Uj6R/nIR4Et9lWq
-         8HRWvcTR7aT7KTZ5ydnNasFQkQ2Plp4elDkXLCJeOe0t69DhNZ10dZhxefH7zpZ+pa97
-         PUrrLguSzy3MXqpMVqCdpGy0fLRoPQzlKZyUzzAXSSwWeTPsTw4TJn6gjpkVW3sqENYo
-         F2dr7GSzr5J6FvoFxaHwjFl5ZqjIxeJrDhF/BDQyeKGZUS2gRIQiAa7+gR0Z9hjhtLOs
-         qqJXrSBPUEv+O1T9OQV2+9vqzrBYMjzxigyo1AjtuYXb6nXrTnP72wr0yjIA9Vi7bzUB
-         iP+w==
-X-Forwarded-Encrypted: i=1; AJvYcCUkbPax8dcF/bFj1mxADYv4GOg8b/hoeHGGrk0AFOKTm2BzHlcJX7wDbhnaG09vCbXWqNrdZUc1WxQIhuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1oMDG+dscOkxq73Ths+nOzxpmqvqj3aioAo6+Gtx0PJUJhKwn
-	AmZaNhy7N4RSDqie+p1V+a5GAfBFXvKj4gqMrjCGeV/qj2s5aKRqMQaiKB7UxqP1OdM=
-X-Gm-Gg: ASbGncsarb1wohoqTq5bP1c/xWroGqAmkZA87CZNxm9ziCTSfDc/5x2KWhBC5hw+WSz
-	01ZuaN7Bk6LKcIYaGBgmKcAovXCmq8nHfv95YruE0g418qVR5ULOnkrejodpbU5cBYQaMBmAxJU
-	PKFxjPPH17P6V5m7QGyhA72x/IJueMJboJb7CWM+7VRH2/IyDimrHepdZkYw7bCnEYHEmN1itNk
-	Ca/cE7WzxhUZN2YFcM0A/Hj42B2gN5k0ZcmibE0xSuqhP6vuR7UcdEues4PGKznZIOa+G4NrvrK
-	cuLTtOMS7FPSdPSeU8Bkb94QHLuzQZE5XjEll/u146d1UkQl68nZjMo=
-X-Google-Smtp-Source: AGHT+IHvy1r6OZs5sU4LLXUI0yWkVLTSuuPl8W2UXljyyd/AXSg0+qU0wKujDqcSxYJO0fbZol0FVQ==
-X-Received: by 2002:a05:6000:26c9:b0:3a4:de01:f8dd with SMTP id ffacd0b85a97d-3a4de01fa09mr8765641f8f.2.1748463749231;
-        Wed, 28 May 2025 13:22:29 -0700 (PDT)
+        bh=c5CwG2DjF5EIaVt29I4TTm2tkN33VTDrEArKVdA+dcE=;
+        b=OaocQ2ryMkzeUEL2je0OjJnjx4Is7IvKgyJzHAcxmE89J3OKIi8yYix+cVMnCR3/vs
+         drtyXLUmNVk6zzdDmUTGUCtP9O+cY4JLjLTrRog/WPGcF7PN9vKsJQdSVnJFLLd1gXX2
+         Jwx8JrsoK+8HuPmFI+wCcUP+I/tiB38lkHhBSVglXqPoC2NOySL8EpNzIIUi3BIM7NOG
+         KwsYovSQgWL+1/EQFRrzD4XY5IvWVgmKbRQmHp/dAqGJ10zIAib9L6QtHAMxs4ojhWu/
+         jtugkDrY2lHPWeHdjiie6wHA3sc46KMIoyGscJdJ4zi8ZzBzmlGlELJ7KNYiZlNQrPyk
+         FQ1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUmQe2vFQPGjypZfLQBAa2ba7MEPWiY110km7N1VTho3cHGx+vOQyESXzKomnclCZz8TrByCmM5NLXqGdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ0xVK0XUxrMsl+VK0GiP39RLQy1gUfAcVtdAnPaU0Mfc1YmTx
+	bdmrzp1AB+4+v2okz4g07/PNtkJV0C+rN5eYjVors26fEoK7hIVkp2S/vnWxOVt0+T0=
+X-Gm-Gg: ASbGncutIFhJ8GM2mYF1hB+bsm1w5/Hc0dvrK0jmeHLRxx2Jan9hL1Lodtkg2AYpY+o
+	9YKNc0X/pqwi6QegJUiwJH+UU0nCtcwVrr1rAyoIw71O9HcLXGCobxWvDKclBxIn3U20T7OAG44
+	kUC8ZmUxTnQ9yoSWGthzDS/3l/kDINUwDqkPyqoa1pZ4qR4l91BkyDVfoHAnQD8ftm7+RZa/G9F
+	P6QrnArU4PfpMf/L2FPfJWhKng9obnhLZFhMF887vNnwdY2rocYeomuM45HdA63axAkLjwBs8sY
+	+UOICrTYPaVBcR0jStsr0jvwpJGk8+kMzyHD9R4awot5GR31Jcptpul4ieMs+POZTg==
+X-Google-Smtp-Source: AGHT+IHpyf0K/RJnIz9oYa7SCeInqhGIp/UYOUV+jDz2DXQY6iQAbI9UyULPYQBzAB+01wRfsWA8zg==
+X-Received: by 2002:a05:600c:4e0a:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-44c91dd158bmr173850615e9.17.1748463755420;
+        Wed, 28 May 2025 13:22:35 -0700 (PDT)
 Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eace367asm2409656f8f.95.2025.05.28.13.22.27
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450cfc03c93sm1116955e9.15.2025.05.28.13.22.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:22:27 -0700 (PDT)
-Date: Wed, 28 May 2025 23:22:19 +0300
+        Wed, 28 May 2025 13:22:34 -0700 (PDT)
+Date: Wed, 28 May 2025 23:22:24 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Enric Balletbo i Serra <eballetbo@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] watchdog: ziirave_wdt: check record length in
- ziirave_firm_verify()
-Message-ID: <3b58b453f0faa8b968c90523f52c11908b56c346.1748463049.git.dan.carpenter@linaro.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Kees Cook <kees@kernel.org>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	David Lechner <dlechner@baylibre.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] Input: ims-pcu - Check record size in
+ ims_pcu_flash_firmware()
+Message-ID: <131fd1ae92c828ee9f4fa2de03d8c210ae1f3524.1748463049.git.dan.carpenter@linaro.org>
 References: <cover.1748463049.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -76,31 +80,38 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1748463049.git.dan.carpenter@linaro.org>
 
-The "rec->len" value comes from the firmware.  We generally do
-trust firmware, but it's always better to double check.  If
-the length value is too large it would lead to memory corruption
-when we set "data[i] = ret;"
+The "len" variable comes from the firmware and we generally do
+trust firmware, but it's always better to double check.  If the "len"
+is too large it could result in memory corruption when we do
+"memcpy(fragment->data, rec->data, len);"
 
-Fixes: 217209db0204 ("watchdog: ziirave_wdt: Add support to upload the firmware.")
+Fixes: 628329d52474 ("Input: add IMS Passenger Control Unit driver")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/watchdog/ziirave_wdt.c | 3 +++
- 1 file changed, 3 insertions(+)
+Kees, this is a __counted_by() thing.  Would the checkers catch this?
+We know the maximum valid length for "fragment" is and so it's maybe
+possible to know that "fragment->len = len;" is too long?
 
-diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
-index fcc1ba02e75b..5c6e3fa001d8 100644
---- a/drivers/watchdog/ziirave_wdt.c
-+++ b/drivers/watchdog/ziirave_wdt.c
-@@ -302,6 +302,9 @@ static int ziirave_firm_verify(struct watchdog_device *wdd,
- 		const u16 len = be16_to_cpu(rec->len);
- 		const u32 addr = be32_to_cpu(rec->addr);
+ drivers/input/misc/ims-pcu.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+index d9ee14b1f451..4581f1c53644 100644
+--- a/drivers/input/misc/ims-pcu.c
++++ b/drivers/input/misc/ims-pcu.c
+@@ -844,6 +844,12 @@ static int ims_pcu_flash_firmware(struct ims_pcu *pcu,
+ 		addr = be32_to_cpu(rec->addr) / 2;
+ 		len = be16_to_cpu(rec->len);
  
-+		if (len > sizeof(data))
++		if (len > sizeof(pcu->cmd_buf) - 1 - sizeof(*fragment)) {
++			dev_err(pcu->dev,
++				"Invalid record length in firmware: %d\n", len);
 +			return -EINVAL;
++		}
 +
- 		if (ziirave_firm_addr_readonly(addr))
- 			continue;
- 
+ 		fragment = (void *)&pcu->cmd_buf[1];
+ 		put_unaligned_le32(addr, &fragment->addr);
+ 		fragment->len = len;
 -- 
 2.47.2
 
