@@ -1,50 +1,65 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D5A1DE4F1;
-	Wed, 28 May 2025 07:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582D1F8728
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419124; cv=none; b=eAGNdVBBJ99ZfY//uBd7bklEHNmhRxq0pvkpua1MHRmSwXHGix/ukOdQ5FiLhtykyiCqMzg81syxwHddyFVcwTPAMuHyr65TQjzJzFOxKj2u16j3vffH3OerBr1ok6w+RgmvHM6RB1KSWUTTtLsugykkOwE6H6m/x7288eG8x9g=
+	t=1748419165; cv=none; b=PLcwO7qv7KOlTrtjKhG06btiNuOCsWUdd8UMxOEa4Wjt98CpTIEuPvgdxQ4C9rnyq3DOhACGkJ71zoCH9Ko9mB4v30Rjjb4Gf0hW3I+rgelPasyy3lFE+ldolU5CcM4nqxOSMEcl9ySyUiGuJuhFKQSLQHk80mWDw/1wy3vtbgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419124; c=relaxed/simple;
-	bh=GwAIH0J4QxodC4TBbWXZN0g8BBoWbus+4IO1ifLIQZ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XEuXVlqt30kJX25hTbl4CGrKlgJfOeG3l9KTiILgvwf7/vOBwh0yoh2wtEvQpBR91g3TnXgSIgu5TuK/MjBEsoxvA3C3Q/68h71kjFxLRPKkfm+7GrXuidy2LDX9oTCU9dhlV1spjvSBiz5XKd9uo+vsNIc1kPyeD7xe6idfDX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=MZY20TUS; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1748419165; c=relaxed/simple;
+	bh=lTpKD/0DenivGi6z0137m81o+V5ysUx2nV8K0HXyN9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A3rANg0wEutBSXkoPzZFT39L9t1SAjcBSmgE/BwaGCgiJy7RGNpHfWIhHiFDFjMDkPAhNJHYoQJH3TFKIEuh0WtfdvZ6q6LhWJsbkP8SIjZcdyfUlYz1StDl9pZhpH8aY3f/fE8ZJBaPica5oTPboQCVlmcs67nChsPpT0GehS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=NTABLokc; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MZY20TUS"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S5K2Zc023650;
-	Wed, 28 May 2025 09:58:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	zs/m0sTwjcc/cPY4fbpGq8K8yrAOAzwWnhRtkFcb4oA=; b=MZY20TUSWorsKXkH
-	iZj2sXs6x5m2C5ADe4PIn1Ww24WqZxmm5Y0Nq3c+oiIck/cUZFB0vYxUbNYoWoPJ
-	yA0aQQ9f/469vaJMc2ScDZV4sNyfRF9faM8D9bqX5d6dVQLeVroAq3nNfLdIl3yz
-	QdFNDPs99aNgY95rsUYhltqttb88A147ZFAEoGPMCW0vz9XHg0G9bvZu+GZDxyLQ
-	xHugAG5+4JAtbTW3JrfktXlgc3LbzcscjNU+ZGj2wxwoAixkC3CyhYy2RtFApu3V
-	EbtGzyxVyKVqvD1LdjJmI0OLhiw4ul+xFt9cMWl6GZ4ocrrVToGUoGG7236MNtbT
-	3X3rTQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u3hk84u6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 09:58:20 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1A40240046;
-	Wed, 28 May 2025 09:57:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9B9E5B27A38;
-	Wed, 28 May 2025 09:55:46 +0200 (CEST)
-Received: from [10.48.87.141] (10.48.87.141) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 28 May
- 2025 09:55:46 +0200
-Message-ID: <bd6c5a45-f6ee-4cdc-99fe-6af22e30015b@foss.st.com>
-Date: Wed, 28 May 2025 09:55:38 +0200
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="NTABLokc"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234d3261631so1889965ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1748419162; x=1749023962; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4S1CZW2QhVODXn5wyDF2trheqRunplrz19cyZTEBaFI=;
+        b=NTABLokcS6bGT9ndtFEYuJl0txh0ugGOYIhMraS0kZ/yi6YQUG+H7LCW2An3TxwZ62
+         Zagryqbby+XSoPd2/7l4WcIawQiCv5VJJ94dEwZMSih6yHbPg+VDEpkjVQJqZ0Emsz2Q
+         EsuhboNkyYKWGWUyZJwBX9dFwyuW6taBOGcTeO+H65P5a2+LHSQpscQOmbsJlpBw3W7W
+         aN8oMG3IW2F5th+IqUAjKXJ4wXR/82hC5cDwmPeY/GB2pZQTAZQvOzC+u4LE9AFeZln8
+         5EPK/YvtFEfPOEvbuTFy6swM87WtEc0kYbPNJ3C+j6oEzcija35KnFLbezE8haHCBwYm
+         vixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748419162; x=1749023962;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4S1CZW2QhVODXn5wyDF2trheqRunplrz19cyZTEBaFI=;
+        b=En8mK0YgNgAxEwJ0jLiUw8kDxuBqdvYLjwS/uBAMziN32Uvw0iDFxkrk+6+W3iXHkP
+         nLLnsO64nWVVl0Jp3wiWX8G55UtFbOCHZq3V+4JQhbb3SZwNjj2MQoLJOhcn1s5Qzcun
+         5a7c7wUjNwPwkIPsqvNBEpatdlbIWf+mXrrC4Q3mC2EvCbeQQUuO7oszEcCcxH12BnUJ
+         aQeIjPp+nrZKBpoyro46Xm07cu5BzFswwo21GifAczj965CIXsPwhZd00E2froUbbElJ
+         Qq1D4WC/ACICdNS5PZVxc8C7O5HprCTZ7IgXpjgnwbU2uV/TaQGsz+QtCxocjHUllxbY
+         Cs8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOzAmybdKAHzizj0rMlRWuJ1hf8fSUnF9kDETHcdbjUWxacBMPmp6oEx7kD1xL+hMjIvAhp3IjEj0T09w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZcgpzB2SUwKFP7D63klEgRcMlCFExid2Dea0RgQYQ3PC09dW2
+	o/Nlmwhq6wxtAdrfMiBTRLD6u8RuQXSy/Ho+voJ0Veye8pdFhPi9e5tcTqRtQOfmlw==
+X-Gm-Gg: ASbGnctVqxNmRLt3QledmO3JjQom4ZjbBCqO4LCIbmcK2GAeWfjzXgEvmpYwYCX0yl0
+	nhvdO8R5A24rH0a1p0pw9S05QBt0Urfa7aO15djrkaOB7jBDQxYhrx8Xvuq+cBsKswa4VXq/FYI
+	sBDKhbYvaZHryBCBITf/+ty3T//XfpQOjp/o9eW8e9o7Mw4s9r23UR/U7j8LzW3aDGgQoE5Paer
+	Z0CyoOB+jr/grOi5O1U/yzvR8qBHSayA/KheGmTYBQTrjzLD5mjgRSkN8Zf95OM/7Gjx3ToJuON
+	1agVojERANZej1NuYEpDU8Fj8oxxPJ1ua4nrn/XccnKhthfKoH2J3c5t6/k1fsXscx0K+Q6uS4I
+	Tzs+KHZQiLrAYWfDInadotfY7jjPa
+X-Google-Smtp-Source: AGHT+IFinm210KsgPpT052kUqMgd0kmoXBGoJfUCmTLu114QHHNEhBfzO75J/jBa41z7KGIIueND9g==
+X-Received: by 2002:a17:902:e845:b0:234:bfcb:5c21 with SMTP id d9443c01a7336-234bfcb5d41mr40674185ad.19.1748419161996;
+        Wed, 28 May 2025 00:59:21 -0700 (PDT)
+Received: from ?IPV6:2401:4900:8898:4f57:7796:ebc0:39c1:2cae? ([2401:4900:8898:4f57:7796:ebc0:39c1:2cae])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac4e2sm6265415ad.177.2025.05.28.00.59.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 00:59:21 -0700 (PDT)
+Message-ID: <6c61a101-6ec7-4350-bfa7-5b7d32177818@beagleboard.org>
+Date: Wed, 28 May 2025 13:29:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,90 +67,228 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: gpio-keys - fix a sleep while atomic with
- PREEMPT_RT
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Clark Williams
-	<clrkwllms@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Paul Cercueil
-	<paul@crapouillou.net>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rt-devel@lists.linux.dev>,
-        Fabrice
- Gasnier <fabrice.gasnier@foss.st.com>
-References: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
- <20250526141321.FcXEgnV4@linutronix.de>
- <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
- <20250527144159.Dcstk83c@linutronix.de>
+Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Herve Codina <herve.codina@bootlin.com>,
+ David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>
+Cc: devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+ <20250430125154.195498-2-herve.codina@bootlin.com>
+ <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
 Content-Language: en-US
-From: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-In-Reply-To: <20250527144159.Dcstk83c@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_04,2025-05-27_01,2025-03-28_01
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Sebastian,
+On 5/28/25 00:01, Krzysztof Kozlowski wrote:
 
-On 5/27/25 16:41, Sebastian Andrzej Siewior wrote:
-> On 2025-05-27 15:36:37 [+0200], Gatien CHEVALLIER wrote:
->> Hello Sebastian,
-> Hello Gatien,
-> 
->> Can you elaborate on "This flag change makes not difference on
->> !PREEMPT_RT" please? IIUC,this makes the callback not run in hard IRQ
->> context, even in !PREEMPT_RT, no?
-> 
-> If you set
-> - HRTIMER_MODE_REL_HARD
->    then the callback runs in
->    - hardirq context on !PREEMPT_RT
->    - hardirq context on PREEMPT_RT.
-> 
-> - HRTIMER_MODE_REL
->    then the callback runs in
->    - hardirq context on !PREEMPT_RT
->    - preemptible softirq on PREEMPT_RT.
-> 
-> - HRTIMER_MODE_REL_SOFT
->    then the callback runs in
->    - softirq context on !PREEMPT_RT
->    - preemptible softirq on PREEMPT_RT.
-> 
-> Therefore if you switch HRTIMER_MODE_REL_HARD -> HRTIMER_MODE_REL then
-> it is a nop on !PREEMPT_RT.
-> 
+> On 30/04/2025 14:51, Herve Codina wrote:
+>> An export-symbols node allows to export symbols for symbols resolution
+>> performed when applying a device tree overlay.
+>>
+>> When a device tree overlay is applied on a node having an export-symbols
+>> node, symbols listed in the export-symbols node are used to resolve
+>> undefined symbols referenced from the overlay.
+>
+> I have impression that this is being discussed in three places
+> simultaneously - here, DT spec and DT schema. I don't know how to solve
+> the multiplication, but I will keep answering here, because that's my part.
+>
+>> This allows:
+>>    - Referencing symbols from an device tree overlay without the need to
+>>      know the full base board. Only the connector definition is needed.
+>>
+>>    - Using the exact same overlay on several connectors available on a given
+>>      board.
+>>
+>> For instance, the following description is supported with the
+>> export-symbols node:
+>>   - Base device tree board A:
+>>      ...
+>>      foo_connector: connector1 {
+>>          export-symbols {
+>>             connector = <&foo_connector>;
+>>          };
+>>      };
+>>
+>>      bar_connector: connector2 {
+>>          export-symbols {
+>>             connector = <&bar_connector>;
+>>          };
+>>      };
+>>      ...
+> And what would this mean? Which symbol is exported - foo or bar?
+>
+>>   - Base device tree board B:
+>>      ...
+>>      front_connector: addon-connector {
+>>          export-symbols {
+>>             connector = <&front_connector>;
+>>          };
+>>      };
+> <from my other reply in private>
+> Another problem is that the board DTS should not care about overlays. It
+> feels like breaking encapsulation and I cannot imagine now adding 1000
+> export-symbols, because every i2c, spi, mikrobus or PCI slot could have
+> an overlay applied.
+>
+> You could argue that only few nodes will be exported like this, so only
+> real mikrobus connectors. Then I will argue: look at aliases. People
+> alias everything everywhere, not following the guidelines.
+>
+> If we assume that such overlays are designed for specific boards, thus
+> there will be only one or two exported symbols not 1000, then what is
+> the benefit of export symbols comparing to referencing by full path?
+> </end from my other reply>
 
-Thank you for the details.
+Can you explain how referencing by full path will work in connector + 
+addon board setups?
 
->> Regarding the need of the spin_lock: gpio_keys_irq_timer() and
->> gpio_keys_irq_isr() appear to access the same resources. Can't we
->> have a concurrent access on it from:
->> HR timer interrupt // GPIO interrupt?
-> 
-> Yes, it could.
-> 
->> But looking back at the patch, this situation does not depend on
->> the HRTIMER_MODE_REL_HARD flag. So maybe it should be addressed
->> separately.
-> 
-> Yes, please.
-> 
+The full path will be dependent on the connector, which means the same 
+addon  board overlay cannot work for different connectors.
 
-Ok, I will do that in V2
 
->> On the other hand, I should use the new
->> guard(spinlock_irqsave)(&bdata->lock);
-> 
-> Yes, please. The other instance already does so.
-> 
-> Sebastian
+>
+> And with above assumption - such overlays designed per board - plus my
+> first point about duplicated exports:
+> connector = <&foo_connector>;
+> connector = <&bar_connector>;
+>
+> why not exporting the symbol with the same name? E.g.:
+>
+>       foo_connector: connector1 {
+>           export-symbols {
+>              whatever-property-style = <&foo_connector>;
+>           };
+>       };
+>
+> and overlay:
+>
+>       node {
+>           ...
+>           connector = <&foo_connector>;
+>           ...
+>       };
 
-Ok
 
-Best regards,
-Gatien
+Isn't this overlay tied to `foo_connector`, i.e. it cannot be used with 
+`bar_connector`?
+
+
+>
+> Or even annotation?
+>
+>       foo_connector: connector1 __exported_symbol__ {
+>           ....
+>       };
+>
+>
+>       node {
+>           ...
+>           connector = <&foo_connector>;
+>           ...
+>       };
+>
+> ? This also answers my further question about DTS style (see at the bottom)
+>
+>>      ...
+>>
+>>   - Overlay describing an addon board the can be connected on connectors:
+>>      ...
+>>      node {
+>>          ...
+>>          connector = <&connector>;
+>>          ...
+>>      };
+>>      ...
+>>
+>> Thanks to the export-symbols node, the overlay can be applied on
+>> connector1 or connector2 available on board A but also on
+>> addon-connector available on board B.
+>>
+>> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+>> Tested-by: Ayush Singh <ayush@beagleboard.org>
+> I would argue you cannot test a binding, because testing here is part of
+> a process, but what do I know...
+
+Ahh, I added tested by for the whole patch series to check that the 
+phandle resolution is working. But yes, I have not tested the bindings.
+
+
+>
+>
+>> ---
+>>   .../devicetree/bindings/export-symbols.yaml   | 43 +++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/export-symbols.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/export-symbols.yaml b/Documentation/devicetree/bindings/export-symbols.yaml
+>> new file mode 100644
+>> index 000000000000..0e404eff8937
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/export-symbols.yaml
+>> @@ -0,0 +1,43 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/export-symbols.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Export symbols
+>> +
+>> +maintainers:
+>> +  - Herve Codina <herve.codina@bootlin.com>
+>> +
+>> +description: |
+>> +  An export-symbols node allows to export symbols for symbols resolution
+>> +  performed when applying a device tree overlay.
+>> +
+>> +  When a device tree overlay is applied on a node having an export-symbols
+>> +  node, symbols listed in the export-symbols node are used to resolve undefined
+>> +  symbols referenced from the overlay.
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    const: export-symbols
+>> +
+>> +patternProperties:
+>> +  "^[a-zA-Z_]?[a-zA-Z0-9_]*$":
+> This messes up with coding style which I would prefer keep intact.
+> Basically these properties will be using label style.
+>
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      A symbol exported in the form <symbol_name>=<phandle>.
+>> +
+>> +additionalProperties: false
+>> +
+> Best regards,
+> Krzysztof
+
+
+Maybe the dt-schema discussion will give a better description of why I 
+need export-symbols or something similar [0].
+
+I have also been trying to move the discussion regarding global vs local 
+scope overlay application for connectors here [1].
+
+
+[0]: 
+https://lore.kernel.org/devicetree-spec/20250411-export-symbols-v3-1-f59368d97063@beagleboard.org/T/#u
+
+[1]: 
+https://lore.kernel.org/linux-devicetree/9c326bb7-e09a-4c21-944f-006b3fad1870@beagleboard.org/
+
+
+Best Regards,
+
+Ayush Sigh
+
