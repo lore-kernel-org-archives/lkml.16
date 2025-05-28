@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897AB1E9906
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826D01E9B1A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748402814; cv=none; b=XwGGqdAM8SPxNF6zOCF73fTX812ES2HH524RvxUVqTCH14htzgvEsy4BIIWm/1zr+UqM8aHMXOrXdPpkq912iC0tXfu8gsqFgkODRq6vS1z1uVdRcCWTlri5uJb4F6o0lSxoMYQVyuSn9Y8rvXeeY3GSjPCA7xuAPG84588ViOQ=
+	t=1748402816; cv=none; b=fGF4eDlfcJHveAZ4INhTqOn37gnvTPosl0ySiqa7iAVsM6NY8zWMsO4J7c2QDJ2yuTVWKzf9bNBxu/65j4G+6uIUQNUc2pwwY7A5rloQ1EQnNkeCACIKQyDffbk32xyh6GgOsTc5a7QiXCaUiA29x1Kp2AsgcUpM+DBkJaub6h0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748402814; c=relaxed/simple;
-	bh=yjTPsKSxmbyVi0xYc8waeGT8wUg8QG5YQf9FdsD3qXs=;
+	s=arc-20240116; t=1748402816; c=relaxed/simple;
+	bh=yDdkDVXJa4LAtUyk9Bgo06vGKbsrt3gQVFGfh0+Q7BY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=EUXhMKJnEBhj6s7ygi8YXS7UJJhizHRNZDxveXy5dzTcVF6CobDlr+if1vECA/GKffl0hbnOPbJgngU/mnVsOjhIYqbwXGYkGRhwqv1X+ZXptnJ/6bgGWVzI3gjdUSDUAQjYDGliDYqtEXNzKDrc1BlvGdBUfyPzFpPmNAWtJKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z3920srW; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=UvTc/Kl95zNf45/IA4YCKlOjvX5/gUD3Ln2Yo0p6a1tNXbKZsoF8h/TptMM8MNt5jFlmQoJy5vZGmCtkL992KKppQaFvQsxOy8t21sUx1VxIiR+OMmKuRDM2gb0jaKR24rqBB5aJwwu47bYI7VzRSU1If/9hj3Y21QZucid52ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=srvkSJ2P; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z3920srW"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742a969a4d0so3268434b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:26:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="srvkSJ2P"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23446aa30d1so34716885ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:26:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748402813; x=1749007613; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748402815; x=1749007615; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RZAHNOEi1GDiBdM9uSQlMPb9/h/uXsjvJd4PLbv+ikw=;
-        b=Z3920srWuZ4exNdOXKZ/EZs6esEzLbSJUHEBiF0EMTgCcRr0Dh2lb4gKRNcyuGwRsJ
-         koZS/eEdXUACZ9M9CniwbQhQuVK181iaNHg/ZFfQOiulq4dXRKSlKnmjx2t2J1CYyCFq
-         s/MoxBy7XPxpXzxdlrEWD1gGheOMVm8L5DiiiyD8LgOfbbQCANRilMI1pK2KKJPHWZ5P
-         t3Co+KIuL3JlettMPyRXXmXd76bEaY8BqPM1/IQFr83UnGEykcKJRPbwSNliPEygECvR
-         frefzHPL8u/80u/gFA5Rb9+EWchmQQJXfUbLtQynnfXEoZ94uh6yGIolG1HGMF8PeMqm
-         rBPQ==
+        bh=OP73Bs+bCS0Lnt9HD+IXUqkNBcchfjlRThGQUgNgoPE=;
+        b=srvkSJ2PnJ/TLx6Elmz8H8ATu/ClUVmrJkHZY1FndEu+KjbaNgVAsBGHvE17+TT3ka
+         dfEhosodrtj4e//1PQSOgj4Emx4Dr7yP4JO6IxPU1TwCRogH8Rbkw85wC20uq13+MnNP
+         aiDJvTGZYk8Ovb/+moRbL/Fqxc5tvN/9qQbBBkV2/kpVg8HtoVHZe0D8jhgVTAT0EUfz
+         XA75bxm7OakOZgeG+YIRFSYIhRQ/mbTh0WywEKhfLuLMP/IJK5L09qHmMAnMoZNzTJEd
+         3yUvZF18VLfsY2tRQTcSzTCOmzNKRXibStzOyg7kj3qfU+GwmslgxOI1tZojvsm6GA/I
+         idlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748402813; x=1749007613;
+        d=1e100.net; s=20230601; t=1748402815; x=1749007615;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RZAHNOEi1GDiBdM9uSQlMPb9/h/uXsjvJd4PLbv+ikw=;
-        b=cjn516DQBTt+tV+WhsQDMbY9nXRo8UTBkIkQDqEnNBtH0ojB32rCRINttRla5d8DrU
-         hVbQyqg0AZj6yOJAM6knbufxNGXwF+SFeS6BwKSMgWFgcn1iOo6XJxHazmWnNqtt1hty
-         tEpBv5CZvXkr1I+wBqmZfc52Ca56ouJaE03MKRcX/zqdBROnRFQxwFtzxeIOL94I2LX3
-         t7fK9a4GnvypUBtVUQ2xD6j9kZbVGY7DeXhMIqTc9C9UUHsuhQWCVZhEmLkQqGH/7ALB
-         AvCcy5uSwUnFA5Q4zSJ3KGTZgMLEPLOfR5rh7/f4bpN6RD1yZf5qAWxBZnbL9qKfjFGE
-         M1Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCX5JCkR/MzVB8xClCP8hVsbZK2kY+EQcukDMczWuQn4TYcbmaSDY9BI3uHKB4tHRjwYo8NIpPakZA0bFcM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFra3Rry+ZuRXQpBJK+FuY9oWlV6i8vmqRfg+6nraAVsR7UoRK
-	9aXPBy0TSKXwWCfy+rmvr/+/5SrPSSoeeyIw5CVMePEDM/ReK1PCEXKwepSrePcWEhsl1hwZRYI
-	c17nRZ0ClyQ==
-X-Google-Smtp-Source: AGHT+IFHNdbunybiDC1c15s08f0AHDldblug++nnZKfibi8krDlpSwQGpmfT98+ER5+JgXKf2Eu1056F7el4
-X-Received: from pfbcr6.prod.google.com ([2002:a05:6a00:f06:b0:740:b40b:d298])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:22c2:b0:736:450c:fa54
- with SMTP id d2e1a72fcca58-745fde9e1c5mr21632802b3a.6.1748402812580; Tue, 27
- May 2025 20:26:52 -0700 (PDT)
-Date: Tue, 27 May 2025 20:26:36 -0700
+        bh=OP73Bs+bCS0Lnt9HD+IXUqkNBcchfjlRThGQUgNgoPE=;
+        b=HFarD6UFZ4lKRRwMsDdDgh1UgBxH9faI1cphC4evLze/qfXRdMztmYpiJCcNlJuDTw
+         nNhVv+uhOlmgh/JwXLC2qeFQVoUfJzL7zAum83OCNNFhM02OQ8O4vgKqdJlvo2ND0rAb
+         3LbR2AyLwIEKzJnkbR0f8sEy2Me4R+wJuCXeZKU7N2M4d99e+kSPEdQvQdo1DKKX2LRY
+         QMb31ChyGcj/zYufyNv9mUxDpOxhwKskQG2tK4L7/x43WeVaUcqwD3ca2Hq6/pBLTIya
+         XS/eHZZwBddqBQ5ILEn90gYBUuSz/XYwSRPRSoeQTy+QAtDcxXUM/dw/unFBxxe+y0pr
+         MQTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXon/d5BR6uzrrOB+u8bXYEQMciuIyErtVgtFKHEODDXrOWfKobi+7KavAH07Z1CtjM2o2GhTk25/D9QTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe6YcxuQ39EpouP+Utp94qXguyGmG85mcHcsF0cK+6be0c+Zu5
+	IGX3knhw7JC2hP7t3TcE/xx2ZT/EP52miIA8BeFHJREmeGgWOi3heXrIJvugPXVHeYPijRxAwQx
+	+LmjOxCFjPA==
+X-Google-Smtp-Source: AGHT+IHPzrydUxK+ONtesAiJ6lgu3uQKUAWeAXS6Dib84yogrTnHecMR8fxJOe+5D6+8+kKKgJB7wuHFxOj2
+X-Received: from plbkm14.prod.google.com ([2002:a17:903:27ce:b0:234:bcd2:f39b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cf42:b0:224:c76:5e57
+ with SMTP id d9443c01a7336-23414feaadcmr247729375ad.39.1748402814817; Tue, 27
+ May 2025 20:26:54 -0700 (PDT)
+Date: Tue, 27 May 2025 20:26:37 -0700
 In-Reply-To: <20250528032637.198960-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250528032637.198960-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1238.gf8c92423fb-goog
-Message-ID: <20250528032637.198960-7-irogers@google.com>
-Subject: [PATCH v2 6/7] perf test trace_summary: Skip --bpf-summary tests if
- no libbpf
+Message-ID: <20250528032637.198960-8-irogers@google.com>
+Subject: [PATCH v2 7/7] perf thread: Avoid recursively taking thread__comm_lock
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,32 +80,65 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-If perf is built without libbpf (e.g. NO_LIBBPF=1) then the
---bpf-summary perf trace tests will fail. Skip the tests as this is
-expected behavior.
+Fix cases where functions that take thread_comm_lcok were called
+holding thread__comm_lock. This created some buggy behavior in perf
+top when built with sanitizers. Ensure -Wthread-safety warnings for
+clang work.
 
+Fixes: 8f454c95817d ("perf thread: Ensure comm_lock held for comm_list")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/trace_summary.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/thread.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index 49766524dc21..f9bb7f9388be 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -53,6 +53,12 @@ test_perf_trace "-as --summary-mode=thread --no-bpf-summary"
- # summary only for system wide - total summary mode
- test_perf_trace "-as --summary-mode=total --no-bpf-summary"
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index c202b98b36c2..f4ad15e1e314 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -201,13 +201,21 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
+ 	return ret;
+ }
  
-+if ! perf check feature -q bpf; then
-+    echo "Skip --bpf-summary tests as perf built without libbpf"
-+    rm -f ${OUTPUT}
-+    exit 2
-+fi
++static struct comm *__thread__comm(struct thread *thread)
++	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
++{
++	if (list_empty(thread__comm_list(thread)))
++		return NULL;
 +
- # summary only for system wide - per-thread summary with BPF
- test_perf_trace "-as --summary-mode=thread --bpf-summary"
++	return list_first_entry(thread__comm_list(thread), struct comm, list);
++}
++
+ struct comm *thread__comm(struct thread *thread)
+ {
+ 	struct comm *res = NULL;
  
+ 	down_read(thread__comm_lock(thread));
+-	if (!list_empty(thread__comm_list(thread)))
+-		res = list_first_entry(thread__comm_list(thread), struct comm, list);
++	res = __thread__comm(thread);
+ 	up_read(thread__comm_lock(thread));
+ 	return res;
+ }
+@@ -243,7 +251,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 				u64 timestamp, bool exec)
+ 	EXCLUSIVE_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+-	struct comm *new, *curr = thread__comm(thread);
++	struct comm *new, *curr = __thread__comm(thread);
+ 
+ 	/* Override the default :tid entry */
+ 	if (!thread__comm_set(thread)) {
+@@ -294,8 +302,9 @@ int thread__set_comm_from_proc(struct thread *thread)
+ }
+ 
+ static const char *__thread__comm_str(struct thread *thread)
++	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+-	const struct comm *comm = thread__comm(thread);
++	const struct comm *comm = __thread__comm(thread);
+ 
+ 	if (!comm)
+ 		return NULL;
 -- 
 2.49.0.1238.gf8c92423fb-goog
 
