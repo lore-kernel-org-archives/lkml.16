@@ -1,169 +1,314 @@
-Received: from mail-m32100.qiye.163.com (mail-m32100.qiye.163.com [220.197.32.100])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2151C3F36;
-	Wed, 28 May 2025 09:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6004B1C3F36;
+	Wed, 28 May 2025 09:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424589; cv=none; b=q2DMjPpysX2ygLcp5mehR44nMh0ZUiipKpr1A2/iBL8js7OiD20T0X94bkQl9MLYKbzcTOQs+4OYtXVXu0bNzmjschAR13K56+pUIpWfK9nDj8wnKq3yF007GkYCfSamONPU385SupG41Qdy8sAeTtyiVxn8yGwSapxphNwxdBU=
+	t=1748424601; cv=none; b=RqJAIOHtN3OZY34jlYab5u38ZpyJg2OCSRNOJozKxnk2/dvNv399HuJKfNfAzqiIinKvGIyaQsIyy0goJ0H2UyY2G47bjm4+15apDWY1GGkxZHLp93189ixILnHQRnKKSwHWrq2c+mMqF/vgTw7rYj5j+rYfo2+jtDHP3P6XO0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424589; c=relaxed/simple;
-	bh=yWhuVxMPiOKdsI/vKCGMniZKg4uK/kBT2UHZ49fzVi4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pZA1R/9rTKaoTPWsKZng3nSD24zuVd7I2CGhUjccc6RfY7dMWv62QYTlF7or02LdH9I7hEYj23l0X3ONN3dQTkaENKoAwpKXPF0VWq3k2ySwpGg4j6fQ5yVDakUD99sKCaZDM30D7xR2fnoeL4yQkUf7T87dt8Pt9HbCp2zFmOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=X92BVYze; arc=none smtp.client-ip=220.197.32.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+	s=arc-20240116; t=1748424601; c=relaxed/simple;
+	bh=j00G/dwW97kfCExu0r+usuJ50t2BSRgmX+trGWNWHTk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=llIPy45L8WXBKNIiMvpPZoP6f29XsB6vAIWvhyJnQOUEHPfvvA8b1Fj9Gcvve/mcGzWdYAcOISpR6KUFubFxSUVLxsLDz0GAa5RlEWnEFkLi/77iYkEpSILVtmLvmD2/GHj4HjYX2h1g5pZR4Nrsixs42wrMFOs1MFLDg4XlN4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=COYg7XrY; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="X92BVYze"
-Received: from localhost.localdomain (unknown [117.184.129.134])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16b13e7e0;
-	Wed, 28 May 2025 16:54:07 +0800 (GMT+08:00)
-From: Albert Yang <yangzh0906@thundersoft.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ge Gordon <gordon.ge@bst.ai>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Junhao Xie <bigfoot@classfun.cn>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	BST Linux Kernel Upstream Group <bst-upstream@bstai.top>,
-	linux-mmc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>,
-	Shan-Chun Hung <shanchun1218@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-	soc@lists.linux.dev,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Ross Burton <ross.burton@arm.com>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Albert Yang <yangzh0906@thundersoft.com>
-Subject: [PATCH v1 0/9] arm64: Introduce Black Sesame Technologies C1200 SoC and CDCU1.0 board 
-Date: Wed, 28 May 2025 16:54:03 +0800
-Message-Id: <20250528085403.481055-1-yangzh0906@thundersoft.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="COYg7XrY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BB4C44341E;
+	Wed, 28 May 2025 09:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748424590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tcp+3qiZKrZ/yFS9++J4sy6UEvxx9WuKX4FnkxkfHz0=;
+	b=COYg7XrYSHalG4owcEpWOBAsjunxlDmdWc1VFAql1a5dnt3Eq4iRRkHe8TdRFLaIUq/lE3
+	BTjSw2u8n6EW5pI60SAdQE4OEAU2xDNFEYZ/ZXVOZQaEq/evnqR4GQQoLp+stts5l4Xzyh
+	9NxJ5SJLHMAM26XYxsE1dojYL0J8BIYSQmtkEzJac/3nCK8CkQ9z38zM4bvUqdq7jeKKPF
+	L+WvN5GVjQ+BsVjsVYFYgX2Buqlxrda9UW8piAoXYcs47WqLi42eXnFG3tT+UbeakSLn8t
+	pUSmxs5n/Rvf//Npg+HsS3oq5Cw33wds1WdawIaZGSjII/9sfUTORa7Zu0NSYw==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Wed, 28 May 2025 11:29:36 +0200
+Subject: [PATCH v4] drm/bridge: tc358767: convert to
+ devm_drm_bridge_alloc() API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ0gdVk1KGRhIGksfTUlNS1YVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a971619533c09cckunm56b16e873977ff
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PxA6PQw4QzExLkg8UQ4POg8#
-	MhUaCTxVSlVKTE9DT0lJT05LS0JNVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
-	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQU1LTU83Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=X92BVYze+FDykM3ZBObdOjojJQdlAV/2cTwFjvMT6/Xgl+LBFpnnRmsVeWD2scpXayORmz8+50gqzdjr1gNbbReYh/8o5rT662nj8gQ6IDydF+kW+TT58ZO0myp6ezLKEn5ZS4CyzQ8goN/RWjGTyxBPofsBe9CPgz/ExxoIK60=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
-	bh=aq3WV+O2bYKN04nPLa/IM/y7JcSQg3FEsNEEzJZKpcs=;
-	h=date:mime-version:subject:message-id:from;
+Message-Id: <20250528-drm-bridge-convert-to-alloc-api-v4-1-f04e698c9a77@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAH/XNmgC/4WNywrCMBBFf6Vk7UgSY7Wu/A/pos3DDrSZkoSgl
+ Py7seDa5bkXztlYtAFtZLdmY8FmjEi+gjo0TE+Df1pAU5lJLs9ccQUmLDAGNPXR5LMNCRLBMM+
+ kYVgRWqFGq10rZadYtazBOnzthUdfecKYKLz3YBbf9ee+/HVnARyUFOLk3NV0mt9HojSjP2paW
+ F9K+QA4RBdR0AAAAA==
+X-Change-ID: 20250404-drm-bridge-convert-to-alloc-api-614becf62294
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdeludculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeeitedtfeefjeeijeejveevleeijefgkefhjeeuffelveelieetleduveetieetnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgpdhkvghrnhgvlhdrohhrghenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidru
+ ggvpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghgrghnsegrmhgrrhhulhgrshholhhuthhiohhnshdrtghomhdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepphgruhhlkhesshihshdqsggrshgvrdhiohdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhm
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-Black Sesame Technologies C1200 is a high-performance Armv8 SoC designed for automotive
-and industrial applications. The CDCU1.0 (Central Domain Control Unit) board is the
-development platform built by Black Sesame Technologies. You can find more information
-about the SoC and related boards at:
-https://bst.ai
+This is the new API for allocating DRM bridges.
 
-Currently, to run the upstream kernel on the CDCU1.0 board, you need to use the
-bootloader provided by Black Sesame Technologies. The board supports various
-interfaces including MMC/SD card, which is implemented using the BST C1200 DWCMSHC
-SDHCI controller.
+Converting this driver is a bit complex because the drm_bridge funcs
+pointer differs based on the bridge mode. So the current code does:
 
-In this series, we add initial SoC and board support for kernel building. The series
-includes:
+ * tc_probe()
+   * devm_kzalloc() private struct embedding drm_bridge
+   * call tc_probe_bridge_endpoint() which
+     * parses DT description into struct fields
+     * computes the mode
+     * calls different bridge init functions based on the mode
+       * each sets a different bridge.funcs pointer
 
-Patch 1: Add Black Sesame Technologies vendor prefix in vendor-prefixes.yaml
-- Adds "bst" vendor prefix for Black Sesame Technologies Co., Ltd.
-- Required for device tree bindings to properly identify BST hardware
+The new API expects the funcs pointer to be known at alloc time, which does
+not fit in the current code structure.
 
-Patch 2: Add device tree bindings for BST SoC platforms
-- Creates new binding file Documentation/devicetree/bindings/arm/bst.yaml
-- Defines compatible strings for BST C1200 family and C1200 CDCU1.0 board
-- Documents BST's focus on automotive-grade SoCs for ADAS applications
+Solve this by splitting tc_probe_bridge_endpoint() in two functions:
 
-Patch 3: Add ARCH_BST configuration for BST silicon support
-- Adds Kconfig option for BST architecture support
-- Enables building kernel for BST platforms
+ * tc_probe_get_mode(), computing the mode without needing the private
+   driver structure
+ * tc_probe_bridge_endpoint(), only initializing the endpoints
 
-Patch 4: Add device tree binding for BST DWCMSHC SDHCI controller
-- Documents the BST C1200 SDHCI controller binding
-- Required for MMC/SD card support on BST platforms
+So now the mode is known before allocation and so
+is the funcs pointer, while all other operations are still happening after
+allocation, directly into the private struct data, as they used to.
 
-Patch 5: Add BST C1200 SDHCI controller driver
-- Implements the MMC host controller driver for BST C1200
-- Enables SD card support on BST platforms
+The new code flow is:
 
-Patch 6: Add device tree support for BST C1200 CDCU1.0 board
-- Adds device tree source files for C1200 SoC and CDCU1.0 board
-- Configures hardware components including MMC controller
+ * tc_probe()
+   * tc_probe_get_mode()
+     * parses DT description
+     * computes and returns the mode
+   * based onf the mode, pick the funcs pointer
+   * devm_drm_bridfge_alloc(..., funcs)
+   * call tc_probe_bridge_endpoint() which
+     * calls different bridge init functions based on the mode
+       * these don't set the funcs pointer, it was done by _alloc
 
-Patch 7: Enable BST SoC in arm64 defconfig
-- Adds ARCH_BST configuration to default arm64 config
+This solution is chosen to minimize the changes in the driver logical code
+flow. The drawback is we now iterate twice over the endpoints during probe.
 
-Patch 8: Enable BST C1200 DWCMSHC controller in defconfig
-- Enables MMC controller driver in default arm64 config
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
+bridge, and the only one supported from now on. It is the first milestone
+towards removal of bridges from a still existing DRM pipeline without
+use-after-free.
 
-Patch 9: Update MAINTAINERS for BST support
-- Adds maintainer information for BST ARM SoC support
-- Consolidates BST-related entries
+The steps in the grand plan [1] are:
 
-Albert Yang (9):
-  dt-bindings: vendor-prefixes: Add Black Sesame Technologies Co., Ltd.
-  dt-bindings: arm: add Black Sesame Technologies (bst) SoC
-  arm64: Kconfig: add ARCH_BST for bst silicons
-  dt-bindings: mmc: add binding for BST DWCMSHC SDHCI controller
-  mmc: sdhci: add Black Sesame Technologies BST C1200 controller driver
-  arm64: dts: bst: add support for Black Sesame Technologies C1200
-    CDCU1.0 board
-  arm64: defconfig: Enable BST SoC
-  arm64: defconfig: enable BST C1200 DWCMSHC SDHCI controller
-  MAINTAINERS: add and consolidate Black Sesame Technologies (BST) ARM
-    SoC support
+ 1. ➜ add refcounting to DRM bridges (struct drm_bridge)
+ 2. handle gracefully atomic updates during bridge removal
+ 3. avoid DSI host drivers to have dangling pointers to DSI devices
+ 4. finish the hotplug bridge work, removing the "always-disconnected"
+    connector, moving code to the core and potentially removing the
+    hotplug-bridge itself (this needs to be clarified as points 1-3 are
+    developed)
 
- .../devicetree/bindings/arm/bst.yaml          |  34 +
- .../bindings/mmc/bst,dwcmshc-sdhci.yaml       | 115 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |  10 +
- arch/arm64/Kconfig.platforms                  |  19 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/bst/Makefile              |  10 +
- .../dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts    |  44 +
- arch/arm64/boot/dts/bst/bstc1200.dtsi         | 130 +++
- arch/arm64/configs/defconfig                  |   3 +
- drivers/mmc/host/Kconfig                      |  11 +
- drivers/mmc/host/Makefile                     |   1 +
- drivers/mmc/host/sdhci-of-bst-c1200.c         | 920 ++++++++++++++++++
- 13 files changed, 1300 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
- create mode 100644 Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
- create mode 100644 arch/arm64/boot/dts/bst/Makefile
- create mode 100644 arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts
- create mode 100644 arch/arm64/boot/dts/bst/bstc1200.dtsi
- create mode 100644 drivers/mmc/host/sdhci-of-bst-c1200.c
+This series is part of step 1 of the grand plan.
 
+Current tasks in step 1 of the grand plan:
+
+ A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
+ B. ➜ convert all bridge drivers to new API (this series)
+ C. … documentation, kunit tests (v1 under discussion)
+ D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
+ E. after (B), convert accessors; this is a large work and can be done
+    in chunks
+ F. debugfs improvements
+
+More info about this series in the v2 cover [2].
+
+Luca
+
+[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
+[1] https://lore.kernel.org/lkml/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/t/#u
+[2] https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
+---
+Changes in v4:
+- Removed patches already in drm-misc-next -> only 1 left
+- Improve commit message of patch 1
+- Link to v3: https://lore.kernel.org/all/20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com/
+
+Changes in v3:
+- Fixed issues reported for some patches
+- Added review tags
+- Removed patches that have been applied
+- Added revert for the exynos patch, applied by mistake
+- Update cover with grand plan info and trim some of it
+- Updated bouncing e-mail address in Cc list
+- Link to v2: https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com/
+
+Changes in v2:
+- Improved cover letter with link to commit adding devm_drm_bridge_alloc()
+- add review tags
+- fix bugs in zynqmp, vc4 patches
+- fix patch 1 error code checking
+- Link to v1: https://lore.kernel.org/r/20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com
+---
+
+changes in v4:
+- improved commit message
+---
+ drivers/gpu/drm/bridge/tc358767.c | 56 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 40 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
+index 7e5449fb86a3fcdae8255bc490d12c543ef3f8ae..61559467e2d22b4b1b4223c97766ca3bf58908fd 100644
+--- a/drivers/gpu/drm/bridge/tc358767.c
++++ b/drivers/gpu/drm/bridge/tc358767.c
+@@ -344,6 +344,14 @@
+ #define COLOR_BAR_MODE_BARS	2
+ #define PLL_DBG			0x0a04
+ 
++enum tc_mode {
++	mode_dpi_to_edp = BIT(1) | BIT(2),
++	mode_dpi_to_dp  = BIT(1),
++	mode_dsi_to_edp = BIT(0) | BIT(2),
++	mode_dsi_to_dp  = BIT(0),
++	mode_dsi_to_dpi = BIT(0) | BIT(1),
++};
++
+ static bool tc_test_pattern;
+ module_param_named(test, tc_test_pattern, bool, 0644);
+ 
+@@ -2327,7 +2335,6 @@ static int tc_probe_dpi_bridge_endpoint(struct tc_data *tc)
+ 	if (bridge) {
+ 		tc->panel_bridge = bridge;
+ 		tc->bridge.type = DRM_MODE_CONNECTOR_DPI;
+-		tc->bridge.funcs = &tc_dpi_bridge_funcs;
+ 
+ 		return 0;
+ 	}
+@@ -2360,7 +2367,6 @@ static int tc_probe_edp_bridge_endpoint(struct tc_data *tc)
+ 		tc->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
+ 	}
+ 
+-	tc->bridge.funcs = &tc_edp_bridge_funcs;
+ 	if (tc->hpd_pin >= 0)
+ 		tc->bridge.ops |= DRM_BRIDGE_OP_DETECT;
+ 	tc->bridge.ops |= DRM_BRIDGE_OP_EDID;
+@@ -2368,17 +2374,11 @@ static int tc_probe_edp_bridge_endpoint(struct tc_data *tc)
+ 	return 0;
+ }
+ 
+-static int tc_probe_bridge_endpoint(struct tc_data *tc)
++static enum tc_mode tc_probe_get_mode(struct device *dev)
+ {
+-	struct device *dev = tc->dev;
+ 	struct of_endpoint endpoint;
+ 	struct device_node *node = NULL;
+-	const u8 mode_dpi_to_edp = BIT(1) | BIT(2);
+-	const u8 mode_dpi_to_dp = BIT(1);
+-	const u8 mode_dsi_to_edp = BIT(0) | BIT(2);
+-	const u8 mode_dsi_to_dp = BIT(0);
+-	const u8 mode_dsi_to_dpi = BIT(0) | BIT(1);
+-	u8 mode = 0;
++	enum tc_mode mode = 0;
+ 
+ 	/*
+ 	 * Determine bridge configuration.
+@@ -2401,7 +2401,27 @@ static int tc_probe_bridge_endpoint(struct tc_data *tc)
+ 			return -EINVAL;
+ 		}
+ 		mode |= BIT(endpoint.port);
++	}
++
++	if (mode != mode_dpi_to_edp &&
++	    mode != mode_dpi_to_dp  &&
++	    mode != mode_dsi_to_dpi &&
++	    mode != mode_dsi_to_edp &&
++	    mode != mode_dsi_to_dp) {
++		dev_warn(dev, "Invalid mode (0x%x) is not supported!\n", mode);
++		return -EINVAL;
++	}
++
++	return mode;
++}
+ 
++static int tc_probe_bridge_endpoint(struct tc_data *tc, enum tc_mode mode)
++{
++	struct device *dev = tc->dev;
++	struct of_endpoint endpoint;
++	struct device_node *node = NULL;
++
++	for_each_endpoint_of_node(dev->of_node, node) {
+ 		if (endpoint.port == 2) {
+ 			of_property_read_u8_array(node, "toshiba,pre-emphasis",
+ 						  tc->pre_emphasis,
+@@ -2427,24 +2447,28 @@ static int tc_probe_bridge_endpoint(struct tc_data *tc)
+ 		return tc_probe_edp_bridge_endpoint(tc);
+ 	}
+ 
+-	dev_warn(dev, "Invalid mode (0x%x) is not supported!\n", mode);
+-
++	/* Should never happen, mode was validated by tc_probe_get_mode() */
+ 	return -EINVAL;
+ }
+ 
+ static int tc_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
++	const struct drm_bridge_funcs *funcs;
+ 	struct tc_data *tc;
++	int mode;
+ 	int ret;
+ 
+-	tc = devm_kzalloc(dev, sizeof(*tc), GFP_KERNEL);
+-	if (!tc)
+-		return -ENOMEM;
++	mode = tc_probe_get_mode(dev);
++	funcs = (mode == mode_dsi_to_dpi) ? &tc_dpi_bridge_funcs : &tc_edp_bridge_funcs;
++
++	tc = devm_drm_bridge_alloc(dev, struct tc_data, bridge, funcs);
++	if (IS_ERR(tc))
++		return PTR_ERR(tc);
+ 
+ 	tc->dev = dev;
+ 
+-	ret = tc_probe_bridge_endpoint(tc);
++	ret = tc_probe_bridge_endpoint(tc, mode);
+ 	if (ret)
+ 		return ret;
+ 
+
+---
+base-commit: 18fb864d3afccf7ecdf13d0435464465d31ccf1d
+change-id: 20250404-drm-bridge-convert-to-alloc-api-614becf62294
+
+Best regards,
 -- 
-2.25.1
+Luca Ceresoli <luca.ceresoli@bootlin.com>
 
