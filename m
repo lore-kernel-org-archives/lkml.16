@@ -1,81 +1,33 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB802CA8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557DA82899;
+	Wed, 28 May 2025 09:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423087; cv=none; b=szzu159L+f/A+McTQn7ASgiOMD++MSdePrXK0fIneoZlZBJhifBIdQRcqvUfdu2EOuBR1kMtGUJ3KSz15cBKfyFpRTltPnW2lh4QOXvqC7uztKVwLNlKd/fqE18ZFISUXKQ6jk4ao2911T5Ftt68hNKhwoKrV7tr2tK8dAIQDg8=
+	t=1748423104; cv=none; b=QezL66qjnmGcRctllyqorDrAlZQUdb5hJJvHldrLB9X4fdCw9Xl2sLbS2aB9TtfpTIo3BhUvdZBpHGDYnp+YW0Nu44felbSNwJEW7Lby9Z03nw/vNy6sM7AG2idSZPrOHFHv4wugMCjRRDC36eVjH59pu8Jux5SMlJ4cMgW6mJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423087; c=relaxed/simple;
-	bh=BCPmWotxYnhiVhx8a88cIXNIaYc00lx469hJzboFrXs=;
+	s=arc-20240116; t=1748423104; c=relaxed/simple;
+	bh=H4qTJAgQkqzg2T/n9OCdD55Dx5Fmz+dp8Gq6HHYqBdw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HffNhSgHwmVbslEW/uTQRD3PvYvEFoJybo+37ar3gP/x1TguPhnLW1lY5nG8dBF/RVJY5UxccXd2dZgvGXq3WL5A6TS86nYZrFRBvW9t/zxunV79Yza2A0l1+7rgNsNlwGGKoO+XNzp+MzIp8/8B23PRz+dzuKEreDDUT+Yqbng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1Yf1CsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L4S6W4h9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=j1Yf1CsJ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=L4S6W4h9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=NuWVVtskWOJC4jf83TU+7mjO/NzgAj72AsMWaVpevWtwY2OiG9kCUh4lyfgA+q48KyNNPOKMpZ17u7x5ZQkHxT1bqFH3vow2SN2xmuvqAm6ov0j/b2m/ewoGIHkeVsObzziHQscjC7yqIYCl8dMAxCFZ1GB53+qksBdPEktDiKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiD4KHw8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1Yf1CsJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L4S6W4h9";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="j1Yf1CsJ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="L4S6W4h9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 722BD21B47;
-	Wed, 28 May 2025 09:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748423083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
-	b=j1Yf1CsJ2czzv8SEmdmmEikG0WBJyhQN5WRlv9EeRI72uIhlx0InHeIxRddVEH1NuL4u/e
-	/KA/D/YltvH6m0lGqDZXN1cWcV9mkNjU1PJbnVuE94w/C2jo2iZjh99vL2MOVaJ1JMJ+2E
-	KgOW0mb8EGm805Ao9kQ2gU42ddFTs68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748423083;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
-	b=L4S6W4h9Y5RwnEOjLgk6d6WaqNNsVWbiAV6zgLp05J5C8JiAUKfG+b+WQIeTEM1bx1/Ryk
-	aiCsoCGwSaw7SCDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=j1Yf1CsJ;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=L4S6W4h9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748423083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
-	b=j1Yf1CsJ2czzv8SEmdmmEikG0WBJyhQN5WRlv9EeRI72uIhlx0InHeIxRddVEH1NuL4u/e
-	/KA/D/YltvH6m0lGqDZXN1cWcV9mkNjU1PJbnVuE94w/C2jo2iZjh99vL2MOVaJ1JMJ+2E
-	KgOW0mb8EGm805Ao9kQ2gU42ddFTs68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748423083;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DF79ZmvEmJitEx8ite1iCdEbm7wTvePAxSFygteHMdE=;
-	b=L4S6W4h9Y5RwnEOjLgk6d6WaqNNsVWbiAV6zgLp05J5C8JiAUKfG+b+WQIeTEM1bx1/Ryk
-	aiCsoCGwSaw7SCDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 53FEE136E0;
-	Wed, 28 May 2025 09:04:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kP5uE6vRNmgeZAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 28 May 2025 09:04:43 +0000
-Message-ID: <7faca175-64c2-4a12-9340-37eaeeb8bd3e@suse.cz>
-Date: Wed, 28 May 2025 11:04:43 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiD4KHw8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D61C4CEE7;
+	Wed, 28 May 2025 09:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748423103;
+	bh=H4qTJAgQkqzg2T/n9OCdD55Dx5Fmz+dp8Gq6HHYqBdw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DiD4KHw81TFLxKlaoZsfc1sUc+5gMM9knpiopZZgKe+EkbqIduFetCdU4G9fuqEI8
+	 ULOxJPzaQwnwA585GMMYFtxKCyjahGyZHur2K7sHLGAihfANjrVnLVs2qcBlrd7YZ7
+	 SXF61CSIL8yVEDArxy9/dQK+o1FK6PXdf+ZubomCehpA99w8duaq/i5qXD668Ei0Il
+	 V9UvbbkJwwpd1P/YeGZRRLwtFaSdR0phlmz2YwtPLjo+pUpPfayq/Zl9pCI9Wqhxn+
+	 aIQRlJEaaI9DqM9PfsFxiFE+C6O+Skkm3jssmABW0mD5zA5aPcwrQRAl0BXQy1sKH6
+	 /xh1dnaN6AJkw==
+Message-ID: <4134d72c-94f1-4b52-a372-34a305b3ea19@kernel.org>
+Date: Wed, 28 May 2025 11:04:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,156 +35,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] local_lock: Minor improvements of local_trylock*()
- documentation
+Subject: Re: [PATCH v1 2/9] dt-bindings: arm: add Black Sesame Technologies
+ (bst) SoC
+To: Albert Yang <yangzh0906@thundersoft.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Ge Gordon <gordon.ge@bst.ai>
+Cc: BST Linux Kernel Upstream Group <bst-upstream@bstai.top>,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250528085444.481163-1-yangzh0906@thundersoft.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Leonardo Bras <leobras@redhat.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250521174726.578303-1-leobras@redhat.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250521174726.578303-1-leobras@redhat.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250528085444.481163-1-yangzh0906@thundersoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid,suse.cz:email];
-	URIBL_BLOCKED(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 722BD21B47
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
 
-On 5/21/25 19:47, Leonardo Bras wrote:
-> Fix local_trylock_init() documentation, as it was mentioning the non-try
-> helper instead, and use the opportunity to make clear the try_lock*() needs
-> to receive a local_trylock_t variable as parameter.
+On 28/05/2025 10:54, Albert Yang wrote:
+> Add device tree bindings for Black Sesame Technologies Arm SoC,
+> it consists several SoC models like C1200, etc.
 > 
-> Signed-off-by: Leonardo Bras <leobras@redhat.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Locking tree (btw the local_lock files are missing in the list of
-MAINTAINERS) or mm since this fixes up changes that went through mm recently?
-
+> Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
+> Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
 > ---
-> v1: https://lore.kernel.org/all/20250505170244.253170-1-leobras@redhat.com/
-> RFC: https://lore.kernel.org/all/20250430073610.163846-1-leobras@redhat.com/
-> 
-> 
->  include/linux/local_lock.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-> index 16a2ee4f8310b..d8d5e6cfa1151 100644
-> --- a/include/linux/local_lock.h
-> +++ b/include/linux/local_lock.h
-> @@ -45,38 +45,38 @@
->  /**
->   * local_unlock_irqrestore - Release a per CPU local lock and restore
->   *			      interrupt flags
->   * @lock:	The lock variable
->   * @flags:      Interrupt flags to restore
->   */
->  #define local_unlock_irqrestore(lock, flags)			\
->  	__local_unlock_irqrestore(lock, flags)
->  
->  /**
-> - * local_lock_init - Runtime initialize a lock instance
-> + * local_trylock_init - Runtime initialize a local_trylock_t instance
->   */
->  #define local_trylock_init(lock)	__local_trylock_init(lock)
->  
->  /**
->   * local_trylock - Try to acquire a per CPU local lock
-> - * @lock:	The lock variable
-> + * @lock:	The local_trylock_t variable
->   *
->   * The function can be used in any context such as NMI or HARDIRQ. Due to
->   * locking constrains it will _always_ fail to acquire the lock in NMI or
->   * HARDIRQ context on PREEMPT_RT.
->   */
->  #define local_trylock(lock)		__local_trylock(lock)
->  
->  /**
->   * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
->   *			   interrupts if acquired
-> - * @lock:	The lock variable
-> + * @lock:	The local_trylock_t variable
->   * @flags:	Storage for interrupt flags
->   *
->   * The function can be used in any context such as NMI or HARDIRQ. Due to
->   * locking constrains it will _always_ fail to acquire the lock in NMI or
->   * HARDIRQ context on PREEMPT_RT.
->   */
->  #define local_trylock_irqsave(lock, flags)			\
->  	__local_trylock_irqsave(lock, flags)
->  
->  DEFINE_GUARD(local_lock, local_lock_t __percpu*,
+>  .../devicetree/bindings/arm/bst.yaml          | 34 +++++++++++++++++++
 
+... so now I see patch 2/9 disconnected from the rest.
+
+Just use b4 for submitting and you will avoid several easy mistakes.
+
+
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/bst.yaml b/Documentation/devicetree/bindings/arm/bst.yaml
+> new file mode 100644
+> index 000000000000..e21a37130cef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/bst.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/bst.yaml#
+
+Missing vendor prefix.... unless 1/9 was there and will come sometime in
+the future. :/
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: BST platforms
+> +
+> +description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +  Black Sesame Technologies (BST) is a semiconductor company that produces
+> +  automotive-grade system-on-chips (SoCs) for intelligent driving, focusing
+> +  on computer vision and AI capabilities. The BST C1200 family includes SoCs
+> +  for ADAS (Advanced Driver Assistance Systems) and autonomous driving applications.
+> +
+> +maintainers:
+> +  - Ge Gordon <gordon.ge@bst.ai>
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - description: BST C1200 family platforms
+> +        items:
+> +          - const: bst,c1200
+
+Drop this entry. You cannot have SoC aloone.
+
+
+
+Best regards,
+Krzysztof
