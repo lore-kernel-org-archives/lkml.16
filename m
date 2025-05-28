@@ -1,112 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01E7286D69
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:24:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDD128E585;
+	Wed, 28 May 2025 18:24:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456662; cv=none; b=pjs2GtwJOiFTnTcL3p1lg5JO3a9RHQn3gn6UmZJFnnd1dbPOs10sU+b2lgh+C1OJLIjDt5NU/bSga8PvaFIW76qBF6GXM/J/BvRvoi417RyRqL2Olfqr0F2o0n7o0+2MixOBCiLVsMtUsvDOu2dxuscRX5ELsqHvr36J4pk3Ukc=
+	t=1748456665; cv=none; b=pJ7pdaY1m37unCd/RgQn4ZZ7nb2sevJV3Y0Q2KmhcZlkYGjcW2F/7LLIDsoQxsdm5JPlfEZTmFGrBdj9vgNPwVWyXxdYq/X0bMrWA5x3H2w3Y+D+xblUMj9CB1YScnetkLPKPxJIOQjlBL5DDZ7YjxiA/TKrjkhVPMG+7ieFwQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456662; c=relaxed/simple;
-	bh=WLFHdokIEiKAduh/NqbqXIeup1v2VNaeRhhmYuC35/c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=isanSaC1Kkuzfdlmio75zwm6Nc+mTdFNQDmC6VrZso4/hMhqHxnwVDBsWgBinks2S/AaCp/Ng+0U4c5kJ+QzQPCsmccc0upsFBWZ/srQv1gYMXl66TTKsH/eMOLawSVNU2l/cTTJWQHVrYIb4AKh7hfPiaiflgCJA/DHCzU1P8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hPQQXk/Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748456665; c=relaxed/simple;
+	bh=VdtY8LqEyBJypLL5p9nIDE+rbyWPhX/d8Y9T4l0C3Ek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNPYiHS8pDsjGE/t2iv+PBOiRKdAIgsoojaBcD8I2ly825ZSM4iwtbw+a8xAboFOjasC1TYpqbHjVF07IIMRmijRSmYVJPT4Ff/xrGdd90yJidN5RH4VXMV/pOi42Itb/1ZypFrnV2902OwoLg5DcoU9fCCEEKFareJlJelnD9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPhtmiXc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hPQQXk/Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DE1C4CEE3;
-	Wed, 28 May 2025 18:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748456661;
-	bh=WLFHdokIEiKAduh/NqbqXIeup1v2VNaeRhhmYuC35/c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hPQQXk/YGUcpo9h7DrJc4gpim2zo0jIW6pdigAYLBQXwe75OVG5RhWK4TWM9jot01
-	 y6KwGDQzIvXKETbFYAgg17f6PuE6lU6xN4O0DRWcFd6oQZy2zm5duMfuAfWH4w2dF1
-	 ZSzncBUnuZWx4q8ngqHenMmrnNd4Inwz7Qlnbhpk=
-Date: Wed, 28 May 2025 11:24:19 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Juan Yescas <jyescas@google.com>, David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
- <Liam.Howlett@oracle.com>, Mike Rapoport <rppt@kernel.org>, Suren
- Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Zi Yan
- <ziy@nvidia.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- tjmercier@google.com, isaacmanjarres@google.com, kaleshsingh@google.com,
- masahiroy@kernel.org, Minchan Kim <minchan@kernel.org>
-Subject: Re: [PATCH v7] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block
- order
-Message-Id: <20250528112419.cac43a6abff2c0e005764a79@linux-foundation.org>
-In-Reply-To: <77f9dd55-fc5c-44c8-b7ac-eac68c1d378f@suse.cz>
-References: <20250521215807.1860663-1-jyescas@google.com>
-	<77f9dd55-fc5c-44c8-b7ac-eac68c1d378f@suse.cz>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPhtmiXc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B35BC4CEED;
+	Wed, 28 May 2025 18:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748456664;
+	bh=VdtY8LqEyBJypLL5p9nIDE+rbyWPhX/d8Y9T4l0C3Ek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SPhtmiXcJ/CDPHmkzH6ZeAnm3VOouWW2jo1NU2cVzU3XJE407CBJfkWNI5VyQsf2L
+	 i9yC07kM3ppoQQupL20LMvolMMAyM4SnACNStq/4aszjmi0q6rR8i9Dg0zc6RkDdr1
+	 aacxX5by0RYlMcjexBLDZBZQCmp4JAakfLjPv6B6CXGyEGT5TvscgWxw9IGjUAsyej
+	 xedLpE+tVuEGln0jEe1qTHubC1DAxouNvZggEUXnISkxTEueiGlVaJlQDQzmQlB6Dr
+	 Gt7ih24VuOPw5/c8OXBdnZAuJKRH7vpFso4l2lvkIi8R80nsaTMbVPxC4t5ASbKzOK
+	 LmV5pOSONMBcw==
+Date: Wed, 28 May 2025 11:24:22 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
+ -Wunreachable-code
+Message-ID: <aDdU1npHL2Vczhsa@google.com>
+References: <20250410202647.1899125-1-irogers@google.com>
+ <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
 
-On Wed, 28 May 2025 10:21:46 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
+On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > Clang's unreachable code warning is able to catch bugs like the famous
+> > > > "goto fail" which gcc's unreachable code warning fails to warn about
+> > > > (it will complain about misleading indent). The changes here are
+> > > > sufficient to get perf building with clang with -Wunreachable code,
+> > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
+> > > > things this is worth pursuing.
+> > >
+> > > I'm not sure if it's useful and don't see what kind of bugs it can
+> > > address.  The proposed changes don't look like an improvement.
+> >
+> > The goto fail case was in OpenSSL the code from a bad merge:
+> > ```
+> > if (...)
+> >   goto fail;
+> >   goto fail;
+> > ```
+> > Meaning the fail path was always taken and checking on the non-fail
+> > code never executed. Newer GCCs will warn of this because of the
+> > "misleading indent" but  clang won't. It is easy to imagine similar
+> > mistakes creeping in, so using compiler warnings to avoid the bug
+> > could be useful.
 
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+It doesn't look very convincing to me but it might be valuable in some
+rare cases.  But the proposed changes - basically replace exit() to
+__builtin_unreachable() - seem weird.  Why is calling it a problem?  I
+guess it already has some kind of annotation like "noreturn"?
 
-Great, thanks.  I'll move this patch into mm-stable.  I'll be sending
-two MM pull requests to Linus this cycle.  The below patches will be in
-the second batch, next week.
-
-
-
-#
-m68k-remove-use-of-page-index.patch
-mm-rename-page-index-to-page-__folio_index.patch
-#
-ntfs3-use-folios-more-in-ntfs_compress_write.patch
-iov-remove-copy_page_from_iter_atomic.patch
-#
-zram-rename-zcomp_param_no_level.patch
-zram-support-deflate-specific-params.patch
-#
-selftests-mm-deduplicate-test-logging-in-test_mlock_lock.patch
-#
-selftests-mm-deduplicate-default-page-size-test-results-in-thuge-gen.patch
-#
-memcg-disable-kmem-charging-in-nmi-for-unsupported-arch.patch
-memcg-nmi-safe-memcg-stats-for-specific-archs.patch
-memcg-add-nmi-safe-update-for-memcg_kmem.patch
-memcg-nmi-safe-slab-stats-updates.patch
-memcg-make-memcg_rstat_updated-nmi-safe.patch
-#
-mm-damon-core-avoid-destroyed-target-reference-from-damos-quota.patch
-#
-mm-shmem-avoid-unpaired-folio_unlock-in-shmem_swapin_folio.patch
-mm-shmem-add-missing-shmem_unacct_size-in-__shmem_file_setup.patch
-mm-shmem-fix-potential-dead-loop-in-shmem_unuse.patch
-mm-shmem-only-remove-inode-from-swaplist-when-its-swapped-page-count-is-0.patch
-mm-shmem-remove-unneeded-xa_is_value-check-in-shmem_unuse_swap_entries.patch
-#
-selftests-mm-skip-guard_regionsuffd-tests-when-uffd-is-not-present.patch
-selftests-mm-skip-hugevm-test-if-kernel-config-file-is-not-present.patch
-#
-hugetlb-show-nr_huge_pages-in-report_hugepages.patch
-#
-#
-mm-damon-kconfig-set-damon_vaddrpaddrsysfs-default-to-damon.patch
-mm-damon-kconfig-enable-config_damon-by-default.patch
-#
-mmu_gather-move-tlb-flush-for-vm_pfnmap-vm_mixedmap-vmas-into-free_pgtables.patch
-#
-mm-rust-make-config_mmu-ifdefs-more-narrow.patch
-#
-kcov-rust-add-flags-for-kcov-with-rust.patch
-#
-#
-selftests-mm-deduplicate-test-names-in-madv_populate.patch
-#
-mmu_notifiers-remove-leftover-stub-macros.patch
-#
-mm-add-config_page_block_order-to-select-page-block-order.patch
-#
+Thanks,
+Namhyung
 
