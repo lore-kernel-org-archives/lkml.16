@@ -1,230 +1,169 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EEA1EB193
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95C9D1DF27D;
+	Wed, 28 May 2025 09:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424703; cv=none; b=foycdyUTnQis5XwaCcFLhrlyY0zxoymbhMdgUMKqiFxE4q1kZ5tTgjiE70j3fyS7nupE5eEf4FO1zDu99WiAp2khGPAdmPNMkhErBt/Qxl4sYIkOSS4wUyTzNHJgkK5b0QoHJFOuyyeZ0fHlun9QeQ01CXtXQ02WWN3SNgAIBBM=
+	t=1748424797; cv=none; b=Qgi/DRcuy9Qb8RWvfq3sEhQo2yVeFd46LsBvBxeut0UHl+qircv1QrgrLSzh5nKNru+XzIWHp6WkuDGwc6xm4CI3xRu2egukjl63fFMV1jQ/e09vs6iC5ek+IYX9HsTAre+TZTqfCFZuvlLnM+xt1GmeJ5VHdn+4RbGenx2hx5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424703; c=relaxed/simple;
-	bh=WsTVlNGVWMlMr7/1HnY9hFlDZoNZeHk/mPpV96JRdec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NFq+7Eeo/EWmmcbnBJZOKgraBjRcpFBQhL60vW5TEs+zvxFr2xI2Sqm6Zq2tT1fGitRZK79qt6mM9RMyQMoWifGMHIwB6JX4ERVH2MIfGFgbVeh0eVjIemFLCCCd0xoZCh/pahmU2viNSKi745q+mGGNwddhOfoP7btv4mFRgz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XU+rZryQ; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XU+rZryQ"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7dc83224d5so622067276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748424700; x=1749029500; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxCNklpcwB9Aux3Ir6fEZ7ZfodLW5xursubADF1vInc=;
-        b=XU+rZryQS5rdYN2wA/8ERj2PCnbtqeZzyNCZx0JNdYtBEYRXhfmQfsyR5N3NHJAi8x
-         BqXDUxD5KSNbirNzLWcNZiIyDNgr7am0Iv2Nj6gXZ1YKATLsJnlOSufs2e54SxfMRypH
-         fhl+tKm/Fmv8RstCQ4Ou3HKlz2LjaEyoOItKT33DvXjNkPD2sd8uZrKfsrxt7jfxukzc
-         UZ/P7qCKYr+uWmsbUOTyfyGoobkyz7vNIGCOya1yVOcLk+fJNYRggd3+djG9XKnpzjU0
-         BGqQzRYyc6d4Y/1wXFYWbGDS0yEcXNaX+DZVYfrRpr4J/O5W0b9aLtJ6OEmKxNPhWLPO
-         a7MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748424700; x=1749029500;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qxCNklpcwB9Aux3Ir6fEZ7ZfodLW5xursubADF1vInc=;
-        b=EbnqADir6e3fDauQ7Oh4Z7foO/9TdI1MIb01qNw6zx1lRWD5nKVpnb5kOhLhYyTRGz
-         6/tVZLCGSqSHXOVszIWb+6nGiKVqufuHNOX64ju98qvyGFpS8hQ8FA5S2HrAO54HY6Yc
-         4V7fuwhkbbvizacf3qfMiXVaIshe2NMey4G7R+vSJjYGwGQ/yVwfo18m2Cymq/RXiRN2
-         uLxiFLNenisqaTqYyqUZDRSNP+g3HOoU3j36zv9fguZ2+x8fgtePEsziVBthH2h+dnCB
-         RsiYibSHndsEvGMOklKVad7xGHMvLZKSA7TvOQMFsU/mJteyL0bdYvG9fklvpROSZHdL
-         UhBg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEdtt3HpkQBKqcs/LbcNQNcgzLeD3Hm7K3M1D2541kszlU23Urmfg4UONLZCsrKUN8LQ+q33WiD3HMIHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuZyJHVeoNBEr7TQDMvkDq0QnOP2FBhXAw69wz7DLAQUx3ysfF
-	jedT8vwcCyq5krCYfrSM726fKc2eF2tO6gZscgZStHMXBdTAGe/UgNttIV6XYpvwQI060ymUDgY
-	N6kEAgIX8Tj07rDMNz/Y9VfcyLBMGpTgfVjjvq6gyWQ==
-X-Gm-Gg: ASbGncuWpPTKhBG8afeRN1LY8dH8IMQMSL+YDvLTBk1PVLqPAJuOQvmvCjcwLRAtnsF
-	iuMTcehccOwYa57pExpwOFBY13/AeZJtKFYJF+kN+L1oPKOT9Il+0LKAUfsw7osJAXZRFrb3O0m
-	57JW04+ACyIfyuUWPdFbjS+E06toywJg0zdw==
-X-Google-Smtp-Source: AGHT+IEyw0lUrmYinEboMHvAdYvFeBCQMFpAFX9P5BvMD2PBk8DgM7GAXBhZytV2fKUiOCBjFWXeZ1b8qL3n9/JSqsY=
-X-Received: by 2002:a05:6902:120a:b0:e7d:cff1:340b with SMTP id
- 3f1490d57ef6-e7dd01eea9bmr4498112276.0.1748424700237; Wed, 28 May 2025
- 02:31:40 -0700 (PDT)
+	s=arc-20240116; t=1748424797; c=relaxed/simple;
+	bh=CfPnfHr9W94nu2DOrAYlWE0gmLEjs2BufMiWiQgXfQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WzfSjXEageBDoiaSIoSJ/+CAhb04droElvPH+HI0EIzyksd3FMRNQwIqLrW9Su0FsIrVk8njFbDWue96N4PyQiIUCkafqrkIVT+XnGFAE5eULaCeD0a4cbEuF9dkArzxn6w0i4EmoEGHUqXrtPqjRDGXyjrESjvWFpPX8Y/a7qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-ab-6836d855b221
+Date: Wed, 28 May 2025 18:33:03 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
+ page->pp_magic in page_pool_page_is_pp()
+Message-ID: <20250528093303.GB54984@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
+ <a4ff25cb-e31f-4ed7-a3b9-867b861b17bd@gmail.com>
+ <20250528081403.GA28116@system.software.com>
+ <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
+ <20250528091416.GA54984@system.software.com>
+ <b7efa56b-e9fd-4ca6-9ecf-0d5f15b8d0c1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526122054.65532-1-claudiu.beznea.uj@bp.renesas.com>
- <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com> <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
-In-Reply-To: <hojdkntm3q5a5ywya7n5i4zy24auko4u6zdqm25infhd44nyfx@x2evb6sc2d45>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 28 May 2025 11:31:03 +0200
-X-Gm-Features: AX0GCFsFhqUi2AGDMBlqa7RGrDqiU7Kbc5fKh9Fg0pv0gNT5kfMImVz5Whz-roI
-Message-ID: <CAPDyKFptNg5t6RehRNNfnnuCqpfiaQLaHBEdh4aRXfn7X6rYQQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Claudiu <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	dakr@kernel.org, len.brown@intel.com, pavel@kernel.org, jic23@kernel.org, 
-	daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, bhelgaas@google.com, geert@linux-m68k.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b7efa56b-e9fd-4ca6-9ecf-0d5f15b8d0c1@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzHfX+/3/3u163bfk7xVebhEMsIUR/P/WXffzyMsWHi6Dd3XFeu
+	B6WxpEm3inka1+EwerJdTt1dHhrnUi1LzuIilZBZqZRu1UXcNdN/773fn8/79fnjw9Gym6Ig
+	TqVJFLQahVrOShjJd/+bC7e5IpSLSzMngcF0l4WSwRQoaLOJwFBsQfBz6L0Y+h3VLNy64abB
+	8DKTgQHTMA1fnreLofVOBwOPsqw0tJ+pYSE300NDhq2QggZLngguDN+mwZreJobXDwwstNwd
+	FUGHPZeBWn0RA615UfDcOBncdV0IHCYrBe6cqyycdxpZ+JTZisD5rJ2B/BN5CEyVLhF4Bg1s
+	1CxSVtREkQr9BzExmpPI/cJQonM5aWIuzmaJue+cmDS/ecSSmssehlTY+imSe7KbJT++vGNI
+	T2UjS0xljQx5YXSISb95+mZ+p2R1jKBWJQvasLV7JcqazhYqvmp6SkH1JZSO+ifrkB+H+WV4
+	OLee1iHOp/t6k7w2w8/FlT0DlFez/Dzscg3RXh3AL8Cdb+1iHZJwNN8lwqYsC+MNJvEHcc67
+	r6xXS3nA9qwnviEZ/5LG1tJaaiyYiGuvfPYt0H9bR645fWCaD8YFv7kxewY+WZ7vs/34Nbjo
+	nr/XDuRn4yeWaspbiXkbhyselrBj90/FTwtdzFk0UT+OoB9H0P8n6McRjIgpRjKVJjlWoVIv
+	W6RM1ahSFu2PizWjv59z59jILhvqa9hqRzyH5P5SUrpcKRMpkhNSY+0Ic7Q8QJqxLkIpk8Yo
+	Uo8K2rg92iS1kGBHwRwjnyJd6j4SI+MPKBKFQ4IQL2j/pRTnF5SONox+i4z8mV4b9hhZi2Sn
+	dqd1WBx7n10MDKei6+uT963fsWvHrwnz3y/fkBGlSimPdrocHu2mLaUhh0NLqjRDoWpnQaTH
+	PfO4vqrBVtinnTMtJLyuV9d8MckZZwtpf9WWVrFiXfbHK4FNaXOur7r9dTRt++mm04buPSup
+	W69nyDdG3JMzCUrFklBam6D4Ax8ZkRg1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe885OzsOZ8dlekowWEhilBVqD9j9iy8R0ZewJNBRh7byxqai
+	RXjNkaStC5FzyiLyDjM1NyXUpnlJSZ1oK0tNmwaad815qZwS+e3P//c8v+fLw5CSu4LdjCIq
+	lldGySKktIgSnQ9KO3DRGig/VPiQAJ2hjIbSpQQoHDIJQFdSjWDe3i+EuaYWGl48XyRB15lO
+	wYJhmQRb87AQBgtGKXijNpIw/KCVhqz0FRJSTUUENOa1CaCrOlsAT5ZfkmBMHhJCT62OhoGy
+	PwIYNWdR0KYtpmAw+xQ0691hsX0CQZPBSMDi/TwaHlv0NIykDyKwNA5TkJuSjcBQZxXAypKO
+	PiXFVcWfCFyj/SrE+oo4XFnkizOtFhJXlNyjccXsIyH+0veGxq3PVihcY5ojcFbaJI1nbJ8p
+	PFXXS+MXP6YJbKjqpXCHvkl4wTVUdOwaH6GI55V+J8JF8tbxASLmnVdCYctTlIzm3DMRw3Cs
+	Pzc7HZeJnBiK9ebqphYIR6bZfZzVaicd2Y3dz41/NAszkYgh2QkBZ1BXUw6wg73B3f88Rjuy
+	mAXOrG7YGJKwnSRnLG8jNoEr15bzfWOBXLeu5ltIx2GS9eQKfzOb9R4u7XXuRu3EHueKXzk7
+	6p3sXq6huoXQIBftFpF2i0j7X6TdItIjqgS5KaLiI2WKiICDqpvyxChFwsGr0ZEVaP05Cu6s
+	PjSh+Z5gM2IZJHUW4/IAuUQgi1clRpoRx5BSN3HqyUC5RHxNlniLV0aHKeMieJUZeTKU1EN8
+	NoQPl7DXZbH8TZ6P4ZX/KME47U5G52pH8lI0tqCq0G9r6HRMQvlPe0+ID6/xudSV4moN8u62
+	5FROX5kKztPVj9FDBuRT6nHGfOdo/Yz7bPpbYtw/6cj7XX1rS2H2krSMqe02Ineho/P2tsDT
+	4mCvXx014S6u/SuT3caMXV6rRXv9SmfaNR8YWwB99NPl9qR8F3WRUUqp5LLDvqRSJfsLmbvC
+	rxgDAAA=
+X-CFilter-Loop: Reflected
 
-On Tue, 27 May 2025 at 23:27, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
->
-> Hi Claudiu,
->
-> On Mon, May 26, 2025 at 03:20:53PM +0300, Claudiu wrote:
-> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >
-> > The dev_pm_domain_attach() function is typically used in bus code alongside
-> > dev_pm_domain_detach(), often following patterns like:
-> >
-> > static int bus_probe(struct device *_dev)
-> > {
-> >     struct bus_driver *drv = to_bus_driver(dev->driver);
-> >     struct bus_device *dev = to_bus_device(_dev);
-> >     int ret;
-> >
-> >     // ...
-> >
-> >     ret = dev_pm_domain_attach(_dev, true);
-> >     if (ret)
-> >         return ret;
-> >
-> >     if (drv->probe)
-> >         ret = drv->probe(dev);
-> >
-> >     // ...
-> > }
-> >
-> > static void bus_remove(struct device *_dev)
-> > {
-> >     struct bus_driver *drv = to_bus_driver(dev->driver);
-> >     struct bus_device *dev = to_bus_device(_dev);
-> >
-> >     if (drv->remove)
-> >         drv->remove(dev);
-> >     dev_pm_domain_detach(_dev);
-> > }
-> >
-> > When the driver's probe function uses devres-managed resources that depend
-> > on the power domain state, those resources are released later during
-> > device_unbind_cleanup().
-> >
-> > Releasing devres-managed resources that depend on the power domain state
-> > after detaching the device from its PM domain can cause failures.
-> >
-> > For example, if the driver uses devm_pm_runtime_enable() in its probe
-> > function, and the device's clocks are managed by the PM domain, then
-> > during removal the runtime PM is disabled in device_unbind_cleanup() after
-> > the clocks have been removed from the PM domain. It may happen that the
-> > devm_pm_runtime_enable() action causes the device to be runtime-resumed.
-> > If the driver specific runtime PM APIs access registers directly, this
-> > will lead to accessing device registers without clocks being enabled.
-> > Similar issues may occur with other devres actions that access device
-> > registers.
->
-> I think you are concentrating too much on runtime PM aspect of this. As
-> you mentioned in the last sentence the same issue may happen in the
-> absence of runtime PM if the power domain code will shut down the device
-> while it is not fully cleaned up.
->
-> >
-> > Add devm_pm_domain_attach(). When replacing the dev_pm_domain_attach() and
-> > dev_pm_domain_detach() in bus probe and bus remove, it ensures that the
-> > device is detached from its PM domain in device_unbind_cleanup(), only
-> > after all driver's devres-managed resources have been release.
-> >
-> > For flexibility, the implemented devm_pm_domain_attach() has 2 state
-> > arguments, one for the domain state on attach, one for the domain state on
-> > detach.
-> >
-> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> > ---
-> >
-> > Changes in v2:
-> > - none; this patch is new
-> >
-> >  drivers/base/power/common.c | 59 +++++++++++++++++++++++++++++++++++++
-> >  include/linux/pm_domain.h   |  8 +++++
-> >  2 files changed, 67 insertions(+)
-> >
-> > diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-> > index 781968a128ff..6ef0924efe2e 100644
-> > --- a/drivers/base/power/common.c
-> > +++ b/drivers/base/power/common.c
-> > @@ -115,6 +115,65 @@ int dev_pm_domain_attach(struct device *dev, bool power_on)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
-> >
-> > +/**
-> > + * devm_pm_domain_detach_off - devres action for devm_pm_domain_attach() to
-> > + * detach a device and power it off.
-> > + * @dev: device to detach.
-> > + *
-> > + * This function reverse the actions from devm_pm_domain_attach().
-> > + * It will be invoked during the remove phase from drivers implicitly.
-> > + */
-> > +static void devm_pm_domain_detach_off(void *dev)
-> > +{
-> > +     dev_pm_domain_detach(dev, true);
-> > +}
-> > +
-> > +/**
-> > + * devm_pm_domain_detach_on - devres action for devm_pm_domain_attach() to
-> > + * detach a device and power it on.
-> > + * @dev: device to detach.
-> > + *
-> > + * This function reverse the actions from devm_pm_domain_attach().
-> > + * It will be invoked during the remove phase from drivers implicitly.
-> > + */
-> > +static void devm_pm_domain_detach_on(void *dev)
-> > +{
-> > +     dev_pm_domain_detach(dev, false);
-> > +}
-> > +
-> > +/**
-> > + * devm_pm_domain_attach - devres-enabled version of dev_pm_domain_attach()
-> > + * @dev: Device to attach.
-> > + * @attach_power_on: Use to indicate whether we should power on the device
-> > + *                   when attaching (true indicates the device is powered on
-> > + *                   when attaching).
-> > + * @detach_power_off: Used to indicate whether we should power off the device
-> > + *                    when detaching (true indicates the device is powered off
-> > + *                    when detaching).
-> > + *
-> > + * NOTE: this will also handle calling dev_pm_domain_detach() for
-> > + * you during remove phase.
-> > + *
-> > + * Returns 0 on successfully attached PM domain, or a negative error code in
-> > + * case of a failure.
-> > + */
-> > +int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
-> > +                       bool detach_power_off)
->
-> Do we have examples where we power on a device and leave it powered on
-> (or do not power on device on attach but power off it on detach)? I
-> believe devm release should strictly mirror the acquisition, so separate
-> flag is not needed.
+On Wed, May 28, 2025 at 10:20:29AM +0100, Pavel Begunkov wrote:
+> On 5/28/25 10:14, Byungchul Park wrote:
+> > On Wed, May 28, 2025 at 10:07:52AM +0100, Pavel Begunkov wrote:
+> > > On 5/28/25 09:14, Byungchul Park wrote:
+> > > > On Wed, May 28, 2025 at 08:51:47AM +0100, Pavel Begunkov wrote:
+> > > > > On 5/26/25 03:23, Byungchul Park wrote:
+> > > > > > On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+> > > > > > > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> > > > > > > > 
+> > > > > > > > To simplify struct page, the effort to seperate its own descriptor from
+> > > > > > > > struct page is required and the work for page pool is on going.
+> > > > > > > > 
+> > > > > > > > To achieve that, all the code should avoid accessing page pool members
+> > > > > > > > of struct page directly, but use safe APIs for the purpose.
+> > > > > > > > 
+> > > > > > > > Use netmem_is_pp() instead of directly accessing page->pp_magic in
+> > > > > > > > page_pool_page_is_pp().
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > > > > > > > ---
+> > > > > > > >     include/linux/mm.h   | 5 +----
+> > > > > > > >     net/core/page_pool.c | 5 +++++
+> > > > > > > >     2 files changed, 6 insertions(+), 4 deletions(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > > > > > > index 8dc012e84033..3f7c80fb73ce 100644
+> > > > > > > > --- a/include/linux/mm.h
+> > > > > > > > +++ b/include/linux/mm.h
+> > > > > > > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> > > > > > > >     #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> > > > > > > > 
+> > > > > > > >     #ifdef CONFIG_PAGE_POOL
+> > > > > > > > -static inline bool page_pool_page_is_pp(struct page *page)
+> > > > > > > > -{
+> > > > > > > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> > > > > > > > -}
+> > > > > > > 
+> > > > > > > I vote for keeping this function as-is (do not convert it to netmem),
+> > > > > > > and instead modify it to access page->netmem_desc->pp_magic.
+> > > > > > 
+> > > > > > Once the page pool fields are removed from struct page, struct page will
+> > > > > > have neither struct netmem_desc nor the fields..
+> > > > > > 
+> > > > > > So it's unevitable to cast it to netmem_desc in order to refer to
+> > > > > > pp_magic.  Again, pp_magic is no longer associated to struct page.
+> > > > > > 
+> > > > > > Thoughts?
+> > > > > 
+> > > > > Once the indirection / page shrinking is realized, the page is
+> > > > > supposed to have a type field, isn't it? And all pp_magic trickery
+> > > > > will be replaced with something like
+> > > > > 
+> > > > > page_pool_page_is_pp() { return page->type == PAGE_TYPE_PP; }
+> > > > 
+> > > > Agree, but we need a temporary solution until then.  I will use the
+> > > > following way for now:
+> > > 
+> > > The question is what is the problem that you need another temporary
+> > > solution? If, for example, we go the placeholder way, page_pool_page_is_pp()
+> > 
+> > I prefer using the place-holder, but Matthew does not.  I explained it:
+> > 
+> >     https://lore.kernel.org/all/20250528013145.GB2986@system.software.com/
+> > 
+> > Now, I'm going with the same way as the other approaches e.g. ptdesc.
+> 
+> Sure, but that doesn't change my point
 
-This sounds reasonable for me too.
+What's your point?  The other appoaches do not use place-holders.  I
+don't get your point.
 
-Note that, in most of the *special* cases for where
-dev_pm_domain_attach|detach() is used today, the corresponding PM
-domain is managed by genpd through a DT based configuration. And genpd
-via genpd_dev_pm_attach|detach() doesn't even take this as an
-in-parameter.
+As I told you, I will introduce a new struct, netmem_desc, instead of
+struct_group_tagged() on struct net_iov, and modify the static assert on
+the offsets to keep the important fields between struct page and
+netmem_desc.
 
-So this is solely for the behaviour for the acpi PM domain, just to
-make sure that's clear.
+Then, is that following your point?  Or could you explain your point in
+more detail?  Did you say other points than these?
 
-[...]
-
-Kind regards
-Uffe
+	Byungchul
+> 
+> -- 
+> Pavel Begunkov
