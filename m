@@ -1,179 +1,191 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFAE1E98E3;
-	Wed, 28 May 2025 22:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD881DFFC;
+	Wed, 28 May 2025 22:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748470330; cv=none; b=We1SPuCbnM5HgEY7L/O9oLhbJLFCHVqbCu/irH9lig3NrOMAHxFB8qawVjKaHOpl3FjC64m8+AvJi50DjLkwuC8dAvB6oT1AUgJpfT5nLEh6Lq0NURBkCtU/BDawg4HzRdaXn/Tgrs/Kuiaqom3G7QJmKhMAalQ9dWWD8WVje+Y=
+	t=1748470415; cv=none; b=FpU4Tb5x1PXtGV/IgAZyq/rhJF1a3sBQm+feBhZ+YBZfnFVV9FqGiYsUIpuHHl7by3Jz5Yu6qMQTcDvibnQ/Mdw2TZ2QSWyfoqHGoDhUhgeoMrtcW2V9CG5KElbG1r+tKhDrh8W8XJJAGGW9lB5e6cWHQs/rdeAUm14FxxErEtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748470330; c=relaxed/simple;
-	bh=JiseGLwIbj9BNipfB204c8kdBEtpwFWpj2vXB9O98qI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KauSMgI0kxew8cxgxLow/UqnptoLMFOx6UXEqJDwtPKgatnYGSEEJkc6uDwacI8JTNWca81Tm5URSkuRIUkUk6PU5R6AHuGBqyEXc1OwG9nwldOg+LpMej1T6wDuBb3iQ3ufE9zcP5+TJ2lyPH33KSz6W7Iy6xqFFAMHbG7/Wj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VMasHqNG; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748470415; c=relaxed/simple;
+	bh=FFixiD6CWexuWWAc/vkRspwDcAhH5LtSZ12dUKV7hE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9IK6VhGjMKg7y4rwT27ZBQZN5QGglDB7JnyrSdRFMFke9QtF+LfLAD4IG5O40GMNOq8JCvC92h/g1juwGrLe2P30XYNvAN3VD68ADhkiAqn+IXAtlZYNosygbUe77+18+3RIO9ExHwEkTvlSeV0p5nDVK9mL9j4c+ewp5Td7LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3PMepjo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VMasHqNG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748470323;
-	bh=SGQvhWif3QYPIYX6pawvxuDDLJ9nBo78PsLIaUJuC+4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VMasHqNGh7KnwiqrHbjjKLlnhT7sGDjOWMSw7BwARrnLcIqvHaBoYIT7IA8oklOXa
-	 Uc0q7BZFbPZyQgws3Zg+g9l5m0PP0wccC+HYjgsski5Bhs/KovKHevJEa8z+B8aXCg
-	 Srt0QzaKq/Vals+yRQQD7gTazNt1viQ+43kg33mXGdLOm1wDQtUrlB5kao8ZHmHXFW
-	 +icVUwYF/l9R209I/OQ4I5gwB29qfvKrggjrwRof1aPf9DyL3pJjRE5q+9Gh4EqZCA
-	 UrDXWk48IfX7SNEsF1LSL4uSkCoBiQu5nkt8DB44mJyksbnq+UIx1Lxxzy9twmrGl2
-	 2V+URghR/qDLA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b73dG0Gkmz4wxh;
-	Thu, 29 May 2025 08:12:01 +1000 (AEST)
-Date: Thu, 29 May 2025 08:12:00 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, "Ugwekar, Dhananjay"
- <Dhananjay.Ugwekar@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <20250529081200.280bb922@canb.auug.org.au>
-In-Reply-To: <45b82a09-07a4-4bbd-a71c-d86010542dfe@amd.com>
-References: <20250512145517.6e0666e3@canb.auug.org.au>
-	<20250512152326.3f2f0226@canb.auug.org.au>
-	<20250528135020.79fec9ca@canb.auug.org.au>
-	<45b82a09-07a4-4bbd-a71c-d86010542dfe@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3PMepjo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40082C4CEE3;
+	Wed, 28 May 2025 22:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748470414;
+	bh=FFixiD6CWexuWWAc/vkRspwDcAhH5LtSZ12dUKV7hE0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C3PMepjoQrqneKfB199dlEwGYYOL3JdVq6BLsQ/5Y08O/Jmg4zN8NeJg8BmlLYmZs
+	 ZNWdGjuw/Dl4Y4llpRj9y26stNCk2oy5PsdsHiq5PY0ztWOBjto63ZcYb5+gQKut0e
+	 dDd5+gaGzbTlE/Y0H3sGi+cdnV1WzUs2jkniTxR28HOLRfT241BeDs8YPFhG7Iyyt+
+	 rcdH0yE9cpm61u6A7TsFsXaJF14n8sh5BxGfdoHsmEg/Du7VVTsxjgAe+QTF3fovuJ
+	 Hj69WkFIZIhP8c0E3g4jZ9lo+EeZYKSzGCGGCko9bBU/gJMZIg7HmJD/i4KZfrfV7W
+	 WVZrtUd6ulZ0A==
+Date: Wed, 28 May 2025 17:13:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-clk@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>, Eric Dumazet <edumazet@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018
+ Internal GE PHY support
+Message-ID: <20250528221332.GA865966-robh@kernel.org>
+References: <20250528-ipq5018-ge-phy-v2-0-dd063674c71c@outlook.com>
+ <20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com>
+ <174844980913.122039.6315970844779589359.robh@kernel.org>
+ <DS7PR19MB8883581EF8CD829910D3C1C29D67A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_LFh1+GkUx18LD7UR+Q/bY3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DS7PR19MB8883581EF8CD829910D3C1C29D67A@DS7PR19MB8883.namprd19.prod.outlook.com>
 
---Sig_/_LFh1+GkUx18LD7UR+Q/bY3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 28, 2025 at 08:59:45PM +0400, George Moussalem wrote:
+> Hi Rob,
+> 
+> On 5/28/25 20:30, Rob Herring (Arm) wrote:
+> > 
+> > On Wed, 28 May 2025 18:45:48 +0400, George Moussalem wrote:
+> > > Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
+> > > SoC. Its output pins provide an MDI interface to either an external
+> > > switch in a PHY to PHY link scenario or is directly attached to an RJ45
+> > > connector.
+> > > 
+> > > The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> > > 802.3az EEE.
+> > > 
+> > > For operation, the LDO controller found in the IPQ5018 SoC for which
+> > > there is provision in the mdio-4019 driver. In addition, the PHY needs
+> > > to take itself out of reset and enable the RX and TX clocks.
+> > > 
+> > > Two common archictures across IPQ5018 boards are:
+> > > 1. IPQ5018 PHY --> MDI --> RJ45 connector
+> > > 2. IPQ5018 PHY --> MDI --> External PHY
+> > > In a phy to phy architecture, DAC values need to be set to accommodate
+> > > for the short cable length. As such, add an optional boolean property so
+> > > the driver sets the correct register values for the DAC accordingly.
+> > > 
+> > > Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> > > ---
+> > >   .../devicetree/bindings/net/qca,ar803x.yaml        | 52 +++++++++++++++++++++-
+> > >   1 file changed, 51 insertions(+), 1 deletion(-)
+> > > 
+> > 
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> > 
+> > yamllint warnings/errors:
+> > 
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/qca,ar803x.example.dtb: ethernet-phy@7 (ethernet-phy-id004d.d0c0): clocks: [[4294967295, 36], [4294967295, 37]] is too long
+> > 	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+> > 
+> > doc reference errors (make refcheckdocs):
+> > 
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com
+> > 
+> > The base for the series is generally the latest rc1. A different dependency
+> > should be noted in *this* patch.
+> > 
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> > 
+> > pip3 install dtschema --upgrade
+> > 
+> > Please check and re-submit after running the above command yourself. Note
+> > that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> > your schema. However, it must be unset to test all examples with your schema.
+> > 
+> 
+> 
+> Really weird, I've checked this numerous times:
+> 
+> (myenv) george@sl2-ubuntu:~/src/linux-next$ make dt_binding_check
+> DT_SCHEMA_FILES=qca,ar803x.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   CHKDT   ./Documentation/devicetree/bindings
+>   LINT    ./Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/net/qca,ar803x.example.dts
+>   DTC [C] Documentation/devicetree/bindings/net/qca,ar803x.example.dtb
+> (myenv) george@sl2-ubuntu:~/src/linux-next$ pip3 install dtschema --upgrade
+> Requirement already satisfied: dtschema in
+> /home/george/myenv/lib/python3.12/site-packages (2025.2)
+> Requirement already satisfied: ruamel.yaml>0.15.69 in
+> /home/george/myenv/lib/python3.12/site-packages (from dtschema) (0.18.10)
+> Requirement already satisfied: jsonschema<4.18,>=4.1.2 in
+> /home/george/myenv/lib/python3.12/site-packages (from dtschema) (4.17.3)
+> Requirement already satisfied: rfc3987 in
+> /home/george/myenv/lib/python3.12/site-packages (from dtschema) (1.3.8)
+> Requirement already satisfied: pylibfdt in
+> /home/george/myenv/lib/python3.12/site-packages (from dtschema) (1.7.2)
+> Requirement already satisfied: attrs>=17.4.0 in
+> /home/george/myenv/lib/python3.12/site-packages (from
+> jsonschema<4.18,>=4.1.2->dtschema) (25.3.0)
+> Requirement already satisfied: pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,>=0.14.0
+> in /home/george/myenv/lib/python3.12/site-packages (from
+> jsonschema<4.18,>=4.1.2->dtschema) (0.20.0)
+> Requirement already satisfied: ruamel.yaml.clib>=0.2.7 in
+> /home/george/myenv/lib/python3.12/site-packages (from
+> ruamel.yaml>0.15.69->dtschema) (0.2.12)
+> (myenv) george@sl2-ubuntu:~/src/linux-next$ make dt_binding_check
+> DT_SCHEMA_FILES=qca,ar803x.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>   CHKDT   ./Documentation/devicetree/bindings
+>   LINT    ./Documentation/devicetree/bindings
+>   DTEX    Documentation/devicetree/bindings/net/qca,ar803x.example.dts
+>   DTC [C] Documentation/devicetree/bindings/net/qca,ar803x.example.dtb
+> 
+> I only found the same errors when removing the DT_SCHEMA_FILES property.
 
-Hi Mario,
+Correct.
 
-On Wed, 28 May 2025 14:14:40 +0000 "Limonciello, Mario" <Mario.Limonciello@=
-amd.com> wrote:
->
-> On 5/27/25 22:50, Stephen Rothwell wrote:
-> >=20
-> > On Mon, 12 May 2025 15:23:26 +1000 Stephen Rothwell <sfr@canb.auug.org.=
-au> wrote: =20
-> >>
-> >> On Mon, 12 May 2025 14:55:17 +1000 Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote: =20
-> >>>
-> >>> Today's linux-next merge of the tip tree got a conflict in:
-> >>>
-> >>>    drivers/cpufreq/amd-pstate.c
-> >>>
-> >>> between commit:
-> >>>
-> >>>    608a76b65288 ("cpufreq/amd-pstate: Add support for the "Requested =
-CPU Min frequency" BIOS option")
-> >>>
-> >>> from the pm tree and commit:
-> >>>
-> >>>    d7484babd2c4 ("x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu=
-()'")
-> >>>
-> >>> from the tip tree.
-> >>>
-> >>> I fixed it up (the former removed a line updated by the latter) and c=
-an
-> >>> carry the fix as necessary. This is now fixed as far as linux-next is
-> >>> concerned, but any non trivial conflicts should be mentioned to your
-> >>> upstream maintainer when your tree is submitted for merging.  You may
-> >>> also want to consider cooperating with the maintainer of the conflict=
-ing
-> >>> tree to minimise any particularly complex conflicts. =20
-> >>
-> >> Actually it needed the fix up below.
-> >>
-> >>
-> >> diff --cc drivers/cpufreq/amd-pstate.c
-> >> index d96bb3e202ee,66fdc74f13ef..0d4c0de89a00
-> >> --- a/drivers/cpufreq/amd-pstate.c
-> >> +++ b/drivers/cpufreq/amd-pstate.c
-> >> @@@ -389,10 -389,9 +389,10 @@@ static inline int amd_pstate_cppc_enabl
-> >>    static int msr_init_perf(struct amd_cpudata *cpudata)
-> >>    {
-> >>    	union perf_cached perf =3D READ_ONCE(cpudata->perf);
-> >>   -	u64 cap1, numerator;
-> >>   +	u64 cap1, numerator, cppc_req;
-> >>   +	u8 min_perf;
-> >>   =20
-> >> - 	int ret =3D rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
-> >> + 	int ret =3D rdmsrq_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
-> >>    				     &cap1);
-> >>    	if (ret)
-> >>    		return ret;
-> >> @@@ -401,22 -400,6 +401,22 @@@
-> >>    	if (ret)
-> >>    		return ret;
-> >>   =20
-> >> - 	ret =3D rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
-> >> ++	ret =3D rdmsrq_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
-> >>   +	if (ret)
-> >>   +		return ret;
-> >>   +
-> >>   +	WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
-> >>   +	min_perf =3D FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
-> >>   +
-> >>   +	/*
-> >>   +	 * Clear out the min_perf part to check if the rest of the MSR is =
-0, if yes, this is an
-> >>   +	 * indication that the min_perf value is the one specified through=
- the BIOS option
-> >>   +	 */
-> >>   +	cppc_req &=3D ~(AMD_CPPC_MIN_PERF_MASK);
-> >>   +
-> >>   +	if (!cppc_req)
-> >>   +		perf.bios_min_perf =3D min_perf;
-> >>   +
-> >>    	perf.highest_perf =3D numerator;
-> >>    	perf.max_limit_perf =3D numerator;
-> >>    	perf.min_limit_perf =3D FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1)=
-; =20
-> >=20
-> > This is now a conflict between the pm tree and Linus' tree.
-> >  =20
->=20
-> I thought that Ingo added an extra #define for compatibility?
+> Is that because ethernet-phy.yaml is a catch-all based on the pattern on the
+> compatible property (assuming my understanding is correct)? How would we get
+> around that without modifying ethernet-phy.yaml only for this particular PHY
+> (with a condition)? This PHY needs to enable two clocks and the restriction
+> is on 1.
 
-Having that define does not change the above conflict at all.  It just
-means that further additions of calls to rdmsrl_safe_on_cpu() will not
-cause build failures.
+It's kind of a mess since ethernet phys didn't have compatibles 
+frequently and then there was resistance to adding compatibles. You know 
+we don't need compatibles because phys are discoverable and all. Well, 
+except for everything we keep adding for them in DT like clocks...
 
---=20
-Cheers,
-Stephen Rothwell
+We probably need to split out common phy properties to its own schema. 
+And then add a schema just for phys with no compatible string (so 
+'select' needs to match on $nodename with ethernet-phy as now, but also 
+have 'not: { required: [compatible] }'. And then a schema for the 
+'generic' phys with just ethernet-phy-ieee802.3-c22 or 
+ethernet-phy-ieee802.3-c45. Then we'll have to look at what to do with 
+ones with "^ethernet-phy-id[a-f0-9]{4}\\.[a-f0-9]{4}$" compatibles. 
+Probably, we need to add specific id's to the generic schema or in their 
+own schemas.
 
---Sig_/_LFh1+GkUx18LD7UR+Q/bY3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Or we can just change clocks in ethernet-phys.yaml to:
 
------BEGIN PGP SIGNATURE-----
+minItems: 1
+maxItems: 2
 
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3ijAACgkQAVBC80lX
-0Gzvlwf3VG5iu/KkhuBpYt85nxQftsDbAJBj7EHsCa/ilw9lWHTBYjdoNtySRlLq
-AXZp9+luNnIbRVFSXDWZ3MgEggjes96JgIhs3sPjfPNNXcT2dOx0GbQFeV9xR/2n
-MWAwt9tFIv/1tSV91sJMhGDNw/gd4IlmbIaUYmUgwue7rMLgeDPhkwDR9WdHKSvA
-gDsxPowrzvrxCTrHDXKkvXMd0KbX7h8+wd82hfdk84xKjIfDFALwTxchD1SFGuPH
-E6ki+90olVTLPfzhYVOv1nUaStVYheUol76bOl1C1gqBYyICpTMeVJBOjC93YOio
-IYrr7XrkN+ihqtNAV7ovFL7EcMRQ
-=XcqE
------END PGP SIGNATURE-----
+And kick that can down the road...
 
---Sig_/_LFh1+GkUx18LD7UR+Q/bY3--
+Rob
