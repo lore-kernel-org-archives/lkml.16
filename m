@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586D418C004;
-	Wed, 28 May 2025 01:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65CF1EE7BE;
+	Wed, 28 May 2025 01:20:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748395216; cv=none; b=j1GmOUlijIBvHj55O0cs3TWFi3nTAiK6y0i1aReFsXewvTg8f9Ctx7vM2rywfEbvZfXeyt2Jazo2+MLsaufZQpveSILFqazuCyQ1mDzfNeXO2Jd5oUoyVUGXIjeKBTmFpaDEiDtvdtZFOI7tateGqCtO2mJZfGYhDR0pVdXYAl4=
+	t=1748395219; cv=none; b=Ejrk/wRTx9Aw9t/Z6Nmtg4/py2ekEk/dSiJB3jDUR/zO4/YD2RyWrQXKwTQeoVNjhnIxKdgJ47bBGHmcRYKnuyvkxb7QqhfUPR7tvmyuApwIIdR96siHUCYq9krxAiS14QBjNDY7dLVbDJDHry2YGwP+aKYrVJRL7qb3frZgDP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748395216; c=relaxed/simple;
-	bh=W2+dbvW7t8dJh1KZx8OEQK9FItnMc5/NHMP8AiZOl6M=;
+	s=arc-20240116; t=1748395219; c=relaxed/simple;
+	bh=tf2eN1NSxXBp6thc/aiZCb1w13OZWvzEQmOaH9edm08=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Hs+LMZowaJKUpYGL7SIs89VESnutZIgCQzrynFrMHGn5a2HLK972cP3MCdrRYsuklyix6SeCWT9dJzTABjGsrO0QAVyokf8mQgU4mKHKrS8PmxvldxUNWib5+/9Saew7ri2Ea6uIDvCKy1TeZJ2TJ9nWQpQV4V7YU5BE6rDAc0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qv4MTw8C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ntko+ekA7GkadG70wDsDMdvNcK0U5T6Q4bHt+t6Gugb5mRm7V5cpmVzhp1p1TdkUBpewrIF6wlB2MWgYtFUrfuVHrJA/13sP8/5Ia+s9T57QzqSNC8DuM80KlnA3CMaBNJ4UaGcpSRniEsQjlJnb/jcsNmZqpgpawbiVpLUvhQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsX4TH5j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qv4MTw8C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA7EEC4CEE9;
-	Wed, 28 May 2025 01:20:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsX4TH5j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 863F2C4CEE9;
+	Wed, 28 May 2025 01:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748395214;
-	bh=W2+dbvW7t8dJh1KZx8OEQK9FItnMc5/NHMP8AiZOl6M=;
+	s=k20201202; t=1748395219;
+	bh=tf2eN1NSxXBp6thc/aiZCb1w13OZWvzEQmOaH9edm08=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=qv4MTw8CVhkMsrldM9hlGSuybugf00H5MtDWpvTxfMeMOIDhnr2IBqIvpjxEm039N
-	 pMB7hyZvI3RZjnGSZJVVeukVS0YdCqn3UeyE2+0YYw01tVYjandhweqDfS+i2o3Fgq
-	 oAuXU8FbDwo4uGy55J3JnHQjdg1ZAmCZF4sI4viEOv1wajDod/tgjseG3Im12angc3
-	 SOjXWUcvYlcomgt+4+DH6Rk+LauuQNZMgnhjUwZGNlANO/zidY1/kx7ikpJPpzXkro
-	 qpGI4TCtMnS94tQYvLk/lmyrfzJJuWj2IFj0Z8JsEKuPrUf90ci6V8kdDeYgYWgbpu
-	 TmUmGeAgjSh9g==
+	b=KsX4TH5j8FUJxyS2DmLQri4ddYJbAabtM4RmcvD7ptMhNvnDQvWr+hSzz/xHIG0H9
+	 QC+H3MzwLdWa7p2kGak3jwC5/VP9tK6gHm6qI1bHCtcSvzvCGJEC1qZtlaAxPP0NGy
+	 DdblQoHmzyJHZPywVgL3y3EqecKfy2gZhKOdJl8KrgKiD4qJVbZP7Johw7Y7Z8mpVF
+	 lLpOCnV9mWf6aX4sRrWnTB60iXWVwmhXOPxmje0OlBo3CwWnHy+33Ni7bAMOmzXEYr
+	 7kvYNIIZYwO3EP5Nge+5CZjEMhI8r16BkvWUHtC3lEF/V3BRbjKVGNssNazHVwcF+n
+	 9fDB5u093+MGg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C0B380AAE2;
-	Wed, 28 May 2025 01:20:50 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD05380AAE2;
+	Wed, 28 May 2025 01:20:54 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,39 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] mlxsw: core_thermal: Constify struct
- thermal_zone_device_ops
+Subject: Re: [PATCH net-next] net/mlx5: HWS, Fix an error code in
+ mlx5hws_bwc_rule_create_complex()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174839524874.1849945.12481137182393218605.git-patchwork-notify@kernel.org>
-Date: Wed, 28 May 2025 01:20:48 +0000
-References: <4516676973f5adc1cdb76db1691c0f98b6fa6614.1748164348.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <4516676973f5adc1cdb76db1691c0f98b6fa6614.1748164348.git.christophe.jaillet@wanadoo.fr>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: idosch@nvidia.com, petrm@nvidia.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
- netdev@vger.kernel.org
+ <174839525349.1849945.8234116859810090724.git-patchwork-notify@kernel.org>
+Date: Wed, 28 May 2025 01:20:53 +0000
+References: <aDCbjNcquNC68Hyj@stanley.mountain>
+In-Reply-To: <aDCbjNcquNC68Hyj@stanley.mountain>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: kliteyn@nvidia.com, saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, cratiu@nvidia.com, mbloch@nvidia.com,
+ vdogaru@nvidia.com, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 25 May 2025 11:13:17 +0200 you wrote:
-> 'struct thermal_zone_device_ops' are not modified in this driver.
+On Fri, 23 May 2025 19:00:12 +0300 you wrote:
+> This was intended to be negative -ENOMEM but the '-' character was left
+> off accidentally.  This typo doesn't affect runtime because the caller
+> treats all non-zero returns the same.
 > 
-> Constifying these structures moves some data to a read-only section, so
-> increases overall security, especially when the structure holds some
-> function pointers.
-> 
-> While at it, also constify a struct thermal_zone_params.
+> Fixes: 17e0accac577 ("net/mlx5: HWS, support complex matchers")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] mlxsw: core_thermal: Constify struct thermal_zone_device_ops
-    https://git.kernel.org/netdev/net-next/c/82fb5a369b8d
+  - [net-next] net/mlx5: HWS, Fix an error code in mlx5hws_bwc_rule_create_complex()
+    https://git.kernel.org/netdev/net-next/c/a540ee75945a
 
 You are awesome, thank you!
 -- 
