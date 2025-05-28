@@ -1,123 +1,256 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD60A221268
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CC01DED4C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464185; cv=none; b=XdXTFf8r2+sats2pINNTntT0n0jNV0M3V7KWtGI0wCH+PRUrE8yivfYJ3oEej4bZ+QfCJr1EyHmCU76gJiJAzw8n6tLCtZJsP/NmIyfXx+tDj5dGw6MIsS7nMYZMSrKcG7gxytC/X+6aauj7XPdJ4rsEMtMRkYXftnO1uJFUJHA=
+	t=1748464253; cv=none; b=P21It51KSk5JEB3w5dWAU/H6Q40DKYG7fooWbi5iPEM193/oYgC5VN+T3SIlcBVst3ghQJc6vz1REDdpsB5XMawRtSADIFoQZzhoXo/gifLnzuYu4w2havUtTFqZdkvNUtSPCbpF0vl76VCoj/7dm2KCloRwfwVATzl6HNz82pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464185; c=relaxed/simple;
-	bh=sbF3z9kaUzweO2TUVbqeSb4prVvCanJ6u3NDjk6MEFc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BP86kwZy9eZbQrcudSwLFWs/+lXBUTjqZQBHcIy+WKSzu84Qy871hxqPuUA0YVjLilGO3ZB/xJWvFCUATGBvRA4kPKWvbwV6H2I0d1BMitsMMcLMHqLZNCHrS/Eo3Ljvzh8RCk7WSFh2E4V53bkfsP3SAAvhtqdWEduSCCm25GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0VwF6iVX; arc=none smtp.client-ip=209.85.167.48
+	s=arc-20240116; t=1748464253; c=relaxed/simple;
+	bh=K3wSpQSAlquUmzWD4KKnCoFCek1BZ89eqpX1JdY+UdQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RQgAtN3pbrl+15EYNqIwaAtsB3IOWUCZrrRWMdMOdqzMYrA3s5BRFbqNrJu6uktVDSNBSZZVc9fyXK6fx2k1eqqlknQLl85zceXMwMA2LAEU/CM64EABmoLcUjVRphFefJZdraq+3Prfuct/shV9xlW0Hhlqp8W0xMpusr1Wj7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F/3klPMc; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0VwF6iVX"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b166fa41bso228722e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:29:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F/3klPMc"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-443d4bff5dfso3425e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:30:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748464182; x=1749068982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YAQTz4gs0qjYnO6FgGT3yFTm8XMDLPUsfY93F9OnJmM=;
-        b=0VwF6iVX8HV48gHRxW05PCG6yttFfYkunrLxnLp6SBCwIdmio03m+AzBorJjF/P6TQ
-         UnQSEb2PHG+Sz6qkX+S4r0U0YeDKKmIW1YwQE1ElYD24AQ7BN/OzOqMKVJSzbvSNOqo6
-         GHuKVIv2Ba5qipTcPRQixB/9ucTmPnWtbWDakp57nlbMSo8kZohdRkkDYM9bcMWu2c0x
-         VLlcoXL8dARAW27fKb9aPeomY2b3W6/4vT4avn2U1UWnp6yiSxb2OgA1lEHN5TBMUc7v
-         Gv3UOEYijgEF/9OJcIAhyd/ixqzPOZD3DaNqfc4IwFAA5QchpUDd+sqeWmKf8xZnyOIi
-         OrKQ==
+        d=google.com; s=20230601; t=1748464250; x=1749069050; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YcyfVdlq9WV/erYYjl14s2tEh37ryQwi/k+tSn20SwQ=;
+        b=F/3klPMcCQze4GXW1ZGpMbKLNbu5BpRe+zuuUvA7otkbyFY2bRYIRlG7QU0+WFba3S
+         EEbr03mRSnCLnnmaTbLKGDd+8+Tdm65MClKnkF9qsXsGNiKx+W4ONf4Q8ELvDxpy8zV0
+         hV1UOXR+rMbpWfATVZuW79gPyRJadBJTTKYii18mDKvqk6Ycm+RnyglLwT3PIM/qaNIY
+         LlWCOgRLBbRBOZTXbYWO2rGok4ZbsKmEgQlcQ+M98BsMk5Lv79hoO3mkMbUgLuoa+AAD
+         zvNnLJ2wvZjUOkul9nA9VlaOwS3tpelgg/1tDpm205JFnTa0fQaivd51sa6RB8cdvXbr
+         VF2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748464182; x=1749068982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YAQTz4gs0qjYnO6FgGT3yFTm8XMDLPUsfY93F9OnJmM=;
-        b=K6iHKdqLGe+zZHXhTlPhRysnnrQgwMVgAbi/KLSOvPghb+xCZMHlmhNMvi08wks7xp
-         vpZYMRyRWLxXrpObBnNTbUOkJVFr/BzzYkZZhDn8oi/fO8c3lp8tvW+wjFzwUlILTsQG
-         L7Q1EDutDxcBL5BRSkpiuC6Qq4QOz7YoUgZNiDWPyp5b3s0o/kZXW5hye6NQklclwviQ
-         uA0uYVa/F9C6s2UdQ6m/SNGbHXjE/JR2OecYeP28RaiVOSVSG+L7U3Llv0AZak1TNook
-         oCe2JO9INDEpwG71v/WGSBXyrZwbKE5zCNwhiGReeAKN2jeVJgygoSMHEZ43QKgeXHA4
-         s83A==
-X-Forwarded-Encrypted: i=1; AJvYcCXwMRpW9ftMkXcLnnNzWCVFKV5QV0k2gBuWG7Orctikz51HQoAT6dVcFcpLit9yB4fQfzmD2SwgBmq3pCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxA5WCDSPeuFsVBsc3msRdsI1U4OJ46kOWijbd06ET5zTvuYkS
-	/oGsMjNslU4fJrJimZynUfxtNSzuJFu37OX1SSdY5FK0SLjzmlpKpWXxO+isrimBvwbiAd50JZw
-	juChi601R4ABNUe0le9YzIc20JyJmSk0cbe/9oIeR
-X-Gm-Gg: ASbGncuvSEGf6SzEWQSVpovE6dx1bAqbTdgnTKJxlEmgtQnmnEwggE6GOnyFYKMfBi+
-	gM1jnAYJ9QXZrZdm/0XeBLCisKssIFSTQJwDTtiuHUn4TXIaLWTIcmgmRcvJdbVo0mOVj0qwgtr
-	Hm/oB8rvm4yzArU7HLZXn4vcsBJ4s0N2aRkIkVwcr/kUo=
-X-Google-Smtp-Source: AGHT+IF45STyrs34elU44CUwMCYWgaMk1iP9fwetArWutXYXe6915Ne5pggJH8TEQNxrkcCcU+Zu5CZn4NKDFdXs8YM=
-X-Received: by 2002:ac2:568b:0:b0:553:24bf:2287 with SMTP id
- 2adb3069b0e04-55324bf24f9mr3571266e87.11.1748464181753; Wed, 28 May 2025
- 13:29:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748464250; x=1749069050;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YcyfVdlq9WV/erYYjl14s2tEh37ryQwi/k+tSn20SwQ=;
+        b=HeAQuDwq/5ylDwRGhNWUpJAB0vT1P5+nf6TxxLhO6DVPkF/PmcpAdPzcuYvLSN1j0I
+         FluwUkAlvnS2fx0+zafDQ6wLwZUx1Cg7/cnpKzD9d4zaWyrn7tJ1Mw5MIYhkgDd6TMYE
+         k4jWT5SqkqjXHMb7SqQDgyZD9nN/m54lHne/G30izDosWS9sz7/Syh1mrLn22zJwFuA3
+         XenCnaVBQXdV19IXflN3RVleuqZO7vSAmzgcDFPGBMv1xCFrtEd94X0+domgRbjgchWX
+         VvZAAy4AEfECcQ1W7jvRQR8Gn9aBpCZoD3WbueiqSSD7rDQy3P8cS1Ai1RgWYBOU8j4x
+         NVMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXK6zoE3XiU+rN38efaPPEKOtvxhiTN4vRtQMHVfybaFOMttORpZv3g5wVh9Qh/vqmo12h13ixm8t54qPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCasr/D1wbOtaDffYhlJq5/u+wUAPqWii3TuqiKs3drdtz4KMX
+	Azi4YrvWw0lqRLj9n1JOVjTdHilGpiD0D3vXp0oKWMAN/+qapMHvGtCkxAQfectDT6Wj8qBnV4j
+	gQ6le5pds
+X-Gm-Gg: ASbGncu/YyMG6/xCYbXWcu928k4VmaF0u5t01TdwF2QHyyIqXYWPEBNZr1gA32HjjjU
+	+lLjvJtEwyGRG+l55MHzH5Smx2hRxkLTtSRHCNlzqiilaWb5BxgtoEp+d61xCyj9uwO7UWOvoW4
+	JKqRHi/GSPVRISZoxQF3ivfmpHiMrUks13oxhMVl10Bg81esCAWsDflYG9/Bsw+KaLV+AyhlgjQ
+	mPY8UiHluFJmL9Rthd9FK68V5Btr/y95kt4kXqA/VuVUk7CvWX324zMmenrpUfNuxOj8AiTmGWY
+	J+eoArfj66wPU3mOMRWlfY1hHGjKQxS5KkmecRQ0r/EykTtX/Q==
+X-Google-Smtp-Source: AGHT+IFqhlF0VTg6IWiksSiMoRyALLlwo7XBHc4J7Ft9f2DbhSi1BHjDFm9gnxcDI891tqLECRlnFA==
+X-Received: by 2002:a7b:c3da:0:b0:439:961d:fc7d with SMTP id 5b1f17b1804b1-450cf335ea3mr289205e9.6.1748464249605;
+        Wed, 28 May 2025 13:30:49 -0700 (PDT)
+Received: from localhost ([2a00:79e0:9d:4:badf:6b4:8f13:cb30])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450cfc51585sm1098995e9.23.2025.05.28.13.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 13:30:49 -0700 (PDT)
+From: Jann Horn <jannh@google.com>
+Date: Wed, 28 May 2025 22:30:27 +0200
+Subject: [PATCH] x86/mm: Fix paging-structure cache flush on kernel table
+ freeing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com> <20250515182322.117840-11-pasha.tatashin@soleen.com>
-In-Reply-To: <20250515182322.117840-11-pasha.tatashin@soleen.com>
-From: David Matlack <dmatlack@google.com>
-Date: Wed, 28 May 2025 13:29:13 -0700
-X-Gm-Features: AX0GCFu-az7wXS3tUctrkttv1BpVxbVwipCz3lDeWXiCiQMHX4cL0MiB-XnGYnI
-Message-ID: <CALzav=eAWdADOyZHxCTF-eKwiYhw2ELj3mKJ+8uQY6sOf0Hmuw@mail.gmail.com>
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, rientjes@google.com, corbet@lwn.net, 
-	rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, 
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, 
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com, 
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com, 
-	vincent.guittot@linaro.org, hannes@cmpxchg.org, dan.j.williams@intel.com, 
-	david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, 
-	linux@weissschuh.net, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-mm@kvack.org, gregkh@linuxfoundation.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org, 
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250528-x86-fix-vmap-pt-del-flush-v1-1-e250899ed160@google.com>
+X-B4-Tracking: v=1; b=H4sIAGNyN2gC/x2MSQqAMAwAvyI5G9C6Vb8iHoomGnAprUpB/LvF4
+ 8DMPODJCXnokgcc3eLl2CPkaQLjYvaZUKbIoDJVZZXSGHSNLAHvzVi0J060Iq+XX5BbNiUr3Yx
+ tAbG3jqL4v/vhfT9FKR7zawAAAA==
+X-Change-ID: 20250528-x86-fix-vmap-pt-del-flush-f9fa4f287c93
+To: Dave Hansen <dave.hansen@linux.intel.com>, 
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>, Toshi Kani <toshi.kani@hpe.com>, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Jann Horn <jannh@google.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748464245; l=6612;
+ i=jannh@google.com; s=20240730; h=from:subject:message-id;
+ bh=K3wSpQSAlquUmzWD4KKnCoFCek1BZ89eqpX1JdY+UdQ=;
+ b=03u+DvgqZJMLdJObp7ioKN9pW+AaQ2iK6kURB092/Zrvwa8LhlYFetXYwJxwLzsgF0jBk0D86
+ jP7MvVRDBiuBJHBLkXIirCoVXi8u3ThzsyMpUzy14SFUmQKjKjXYNmq
+X-Developer-Key: i=jannh@google.com; a=ed25519;
+ pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-On Thu, May 15, 2025 at 11:23=E2=80=AFAM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
-> +static int luo_open(struct inode *inodep, struct file *filep)
-> +{
-> +       if (!capable(CAP_SYS_ADMIN))
-> +               return -EACCES;
+There are several issues in pud_free_pmd_page() and pmd_free_pte_page(),
+which are used by vmalloc:
 
-It makes sense that LIVEUPDATE_IOCTL_EVENT* would require
-CAP_SYS_ADMIN. But I think requiring it for LIVEUPDATE_IOCTL_FD* will
-add a lot of complexity.
+1. flush_tlb_kernel_range() does not flush paging-structure caches for
+   inactive PCIDs, but we're using it when freeing kernel page tables.
+2. flush_tlb_kernel_range() only flushes paging-structure cache entries
+   that intersect with the flush range, and pud_free_pmd_page() passes in
+   the first PAGE_SIZE bytes of the area covered by the PMD table; but
+   pud_free_pmd_page() is actually designed to also remove PTE tables that
+   were installed in the PMD table, so we need to also flush those.
+3. [theoretical issue] invlpgb_kernel_range_flush() expects an exclusive
+   range, it does: `nr = (info->end - addr) >> PAGE_SHIFT;`
+   But pmd_free_pte_page() and pud_free_pmd_page() provide inclusive
+   ranges (`addr, addr + PAGE_SIZE-1`).
 
-It would essentially require a central userspace process to mediate
-all preserving/restoring of file descriptors across Live Update to
-enforce security. If we need a central authority to enforce security,
-I don't see why that authority can't just be the kernel or what the
-industry gains by punting the problem to userspace. It seems like all
-users of LUO are going to want the same security guarantees when it
-comes to FDs: a FD preserved inside a given "security domain" should
-not be accessible outside that domain.
+To fix it:
 
-One way to do this in the kernel would be to have the kernel hand out
-Live Update security tokens (say, some large random number). Then
-require userspace to pass in a security token when preserving an FD.
-Userspace can then only restore or unpreserve an FD if it passes back
-in the security token associated with the FD. Then it's just up to
-each userspace process to remember their token across kexec, keep it
-secret from other untrusted processes, and pass it back in when
-recovering FDs.
+1. Add a new helper flush_tlb_kernel_pgtable_range() for flushing paging
+   structure caches for kernel page tables, and use that.
+2. Flush PUD_SIZE instead of PAGE_SIZE in pud_free_pmd_page().
+3. Remove `-1` in end address calculations.
 
-All the kernel has to do is generate secure tokens, which I imagine
-can't be that hard.
+Note that since I'm not touching invlpgb_kernel_range_flush() or
+invlpgb_flush_addr_nosync() in this patch, the flush on PMD table deletion
+with INVLPGB might be a bit slow due to using PTE_STRIDE instead of
+PMD_STRIDE. I don't think that matters.
+
+Backport notes:
+Kernels before 6.16 don't have invlpgb_kernel_range_flush(); for them,
+kernel_tlb_flush_pgtable() should just unconditionally call
+flush_tlb_all().
+I am marking this as fixing commit 28ee90fe6048 ("x86/mm: implement free
+pmd/pte page interfaces"); that is technically incorrect, since back then
+no paging-structure cache invalidations were performed at all, but probably
+makes the most sense here.
+
+Cc: stable@vger.kernel.org
+Fixes: 28ee90fe6048 ("x86/mm: implement free pmd/pte page interfaces")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+ arch/x86/include/asm/tlb.h      |  4 ++++
+ arch/x86/include/asm/tlbflush.h |  1 +
+ arch/x86/mm/pgtable.c           | 13 +++++++++----
+ arch/x86/mm/tlb.c               | 37 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 51 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index 866ea78ba156..56a4b93a0742 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -153,6 +153,10 @@ static inline void invlpgb_flush_all(void)
+ /* Flush addr, including globals, for all PCIDs. */
+ static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
+ {
++	/*
++	 * Don't set INVLPGB_FLAG_FINAL_ONLY here without adjusting
++	 * kernel_tlb_flush_pgtable().
++	 */
+ 	__invlpgb(0, 0, addr, nr, PTE_STRIDE, INVLPGB_FLAG_INCLUDE_GLOBAL);
+ }
+ 
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index e9b81876ebe4..06a4a2b7a9f5 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -318,6 +318,7 @@ extern void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 				unsigned long end, unsigned int stride_shift,
+ 				bool freed_tables);
+ extern void flush_tlb_kernel_range(unsigned long start, unsigned long end);
++void flush_tlb_kernel_pgtable_range(unsigned long start, unsigned long end);
+ 
+ static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
+ {
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 62777ba4de1a..0779ed02226c 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -745,8 +745,13 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
+ 
+ 	pud_clear(pud);
+ 
+-	/* INVLPG to clear all paging-structure caches */
+-	flush_tlb_kernel_range(addr, addr + PAGE_SIZE-1);
++	/*
++	 * Clear paging-structure caches.
++	 * Note that since this function can remove a PMD table together with the
++	 * PTE tables it points to, we can't just flush the first PAGE_SIZE, we
++	 * must flush PUD_SIZE!
++	 */
++	flush_tlb_kernel_pgtable_range(addr, addr + PUD_SIZE);
+ 
+ 	for (i = 0; i < PTRS_PER_PMD; i++) {
+ 		if (!pmd_none(pmd_sv[i])) {
+@@ -778,8 +783,8 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ 	pte = (pte_t *)pmd_page_vaddr(*pmd);
+ 	pmd_clear(pmd);
+ 
+-	/* INVLPG to clear all paging-structure caches */
+-	flush_tlb_kernel_range(addr, addr + PAGE_SIZE-1);
++	/* clear paging-structure caches */
++	flush_tlb_kernel_pgtable_range(addr, addr + PAGE_SIZE);
+ 
+ 	free_page((unsigned long)pte);
+ 
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 39f80111e6f1..26b78451a7ed 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -1525,6 +1525,22 @@ static void kernel_tlb_flush_range(struct flush_tlb_info *info)
+ 		on_each_cpu(do_kernel_range_flush, info, 1);
+ }
+ 
++static void kernel_tlb_flush_pgtable(struct flush_tlb_info *info)
++{
++	/*
++	 * The special thing about removing kernel page tables is that we can't
++	 * use a flush that just removes global TLB entries; we need one that
++	 * flushes paging structure caches across all PCIDs.
++	 * With INVLPGB, that's explicitly supported.
++	 * Otherwise, there's no good way (INVLPG and INVPCID can't specifically
++	 * target one address across all PCIDs), just throw everything away.
++	 */
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		invlpgb_kernel_range_flush(info);
++	else
++		flush_tlb_all();
++}
++
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+ 	struct flush_tlb_info *info;
+@@ -1542,6 +1558,27 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ 	put_flush_tlb_info();
+ }
+ 
++/*
++ * Flush paging-structure cache entries for page tables covering the specified
++ * range and synchronize with concurrent hardware page table walks, in
++ * preparation for freeing page tables in the region.
++ * This must not be used for flushing translations to data pages.
++ */
++void flush_tlb_kernel_pgtable_range(unsigned long start, unsigned long end)
++{
++	struct flush_tlb_info *info;
++
++	/* We don't synchronize against GUP-fast. */
++	VM_WARN_ON(start < TASK_SIZE_MAX);
++
++	guard(preempt)();
++
++	info = get_flush_tlb_info(NULL, start, end, PMD_SHIFT, true,
++				  TLB_GENERATION_INVALID);
++	kernel_tlb_flush_pgtable(info);
++	put_flush_tlb_info();
++}
++
+ /*
+  * This can be used from process context to figure out what the value of
+  * CR3 is without needing to do a (slow) __read_cr3().
+
+---
+base-commit: b1456f6dc167f7f101746e495bede2bac3d0e19f
+change-id: 20250528-x86-fix-vmap-pt-del-flush-f9fa4f287c93
+
+-- 
+Jann Horn <jannh@google.com>
+
