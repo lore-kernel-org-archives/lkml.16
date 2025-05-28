@@ -1,101 +1,139 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F711F0992;
-	Wed, 28 May 2025 08:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554A626A1BE
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421798; cv=none; b=GrUJn16wkQjFMU0p7Wq2vzLh6go5C3veKIyp0u4bJ0ytCGiGIHKbXrlGL7KUMR8Y2F7sjZ4o+vkcbb42QLhA8jjVACNDKL5VjgEKfoxDLWZNfRahV1ESCORYg2qBfdZzlT8gTxEIg0u1gAvE87dhzyron16eL4F2gb7RxI7wDKc=
+	t=1748422012; cv=none; b=ExglQy111qJTH+P1n6to7FMIpvrx4lCuIo/fZ16eTlq/qweCSgvMzwHzCYtQkxEHqtAS8nHe00anherl6P5h0s51A1vYcIXHlRZVfZJNsjGqR9luHGnpgGa4ZgIUpafdAen0ANn6KmzRi0ts+yJce8p+D4aagvtkHAW4XpvpXaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421798; c=relaxed/simple;
-	bh=MxnGdClLFWl1jY7LIi7McbBUXxSTG4DC87SB7p2eWgQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=lY3nA3Mp8Ag9XYsCAoZvyt0+opDoRItqrUE1uIpmZEtN3fl08DO0r1ZRzIC49/E1REJw4Uojg+fsTw5QS6h+tAK3PS4t+1fHj/jhbHBKJ+abEONXNQGanArFrfB3Lu4E5mAB1+wpOpPR1FoZHYr9FURphtp3QaUjIQ9M/LXix5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxnOKdzDZokNP_AA--.49136S3;
-	Wed, 28 May 2025 16:43:09 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMCxLBuWzDZonpz3AA--.26840S2;
-	Wed, 28 May 2025 16:43:04 +0800 (CST)
-Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
- <20250528065944.4511-5-zhaoqunqin@loongson.cn>
- <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
-Date: Wed, 28 May 2025 16:42:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1748422012; c=relaxed/simple;
+	bh=Fi+QiGSJC8uF2K0X5kt8vPGp5bckmVAYGE46xxU1R40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZllrtDp/kLV6P7wcW+70kuJJENKyam1cBHwS8JQK7X9iINIp4AkRIbW2sQhbrlk1WaqQEqT4ILk7WTcCozHByEm1eTx3GKBbaC/+Wgz8rgLUsk1pKGelTm68J1FxtvESUrmtclib5MoO5RtFQAh8g6Da+Z1dRyPe9ilXfPxzqdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NYX8fy24; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NYX8fy24"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S7nc30027040
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:46:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=DRzWkDK3ft+iwkKji/GjVMzB
+	ocQDwCbSuP5DIc/EUys=; b=NYX8fy24OEESH86jLxZM9FLzbN+nsk41j6+K93rW
+	ueBNg7KgmhdpslFMbhhc4lTXjuX2liHHDZxYeQ/+t5uz9RssxOwPIu4W9c2tZM+J
+	CGtb5ziTFEhYj5WTXFiQn5KrflxgZV78v52nlevTu5N0Jjc4c+qYaCk8LOv+Tn+X
+	X9OkFAJ3pBEtSkNYly3WQ2nZCCsEO0I5MNBO/kIJSpabr4MU67xuXpVyT/mgYo2N
+	NHHOxlvQLJOx7rtO0uWJ3xj2jV7gU37aeb1yVu/1aXV7A4de+16hUocYKszCct8r
+	MsQgCFogJEUBfWNdmeQitrcpH8XZeyPrbMesdFQBdkqzXA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u66whv6f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:46:49 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6faad1f2b69so41041066d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:46:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748422009; x=1749026809;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DRzWkDK3ft+iwkKji/GjVMzBocQDwCbSuP5DIc/EUys=;
+        b=MH7Rfdrr4fJ4MtnyUa67Kc1LKxvHRg1nkAHu1kojLBAl5F8oA5fTq+rl+nQCOnxb5E
+         oGOcZOJoAbR84nOFFQSd4zL78j1nwJ2EScmJOAucD2U733KyNEA+lhhoyhLf+tzobYJo
+         B92Aq3Q6bd9tAc4KmzhPF5cGlIgd1LsL9SYQC0TNg401s9IV2+5//PVOq3uTnD9oJIJq
+         rSXRqTLNn1urZE7ZkFegoYBXcmPVGbDYcU48XsXOUG4UT2RxNUsi75LhrGi+64gmognd
+         ZOP0C/fYDzBT237u3bjDiIKAr/ma8dmKuZ2lwWoGVQkvTFi3Tuh9Ug40qpdw2Nx3LpGM
+         IOAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtBfrwbg/XE/foC0qOCuGya9dWvpYiENdl0woeWGP2mjgQ1BluKVihzQMo5lHaJFmmVNiLTNBP5YnwV10=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYAmBSs5NJrOO7q5OvdJj/KSfsRtpFFLYPxzcI4V7gnDjie/+S
+	YWMVSw4ddKtq7lPR2On4dzB5QqZvGlapq5s2yFc6+F4dWJjEYWyneeasyiDEnPVdlWsIFuoLt50
+	IpfjyT/n99axCkgHxxSjFqd3/bOom0LUFONbXhgeEkNiivJGLyXiyiJvsNcF4emqCD9c=
+X-Gm-Gg: ASbGncvzhblSqy3O4+Sz72T4DLOXV1j9exID1A10aj1tndsNH72N94BtWcIhg1GUEw1
+	RDuqgCcAF2s328ZlFIKMtUwOlsujDNpHQ81KocAg9tkPUQab11IRUxyZ9fMioaO51DS1AcuGiMf
+	SjXLXbCUp2+AD2mJB5o4MvRzTrm6u4/WnaZWPXlbjx0wCnC/IKlqvSzx1hm4OE0VaXWdZh/DvF0
+	yibOhpm8Zr8xlCqZ+ItxPho6sRjMaRSfmH/vYZfYD7N+yBTIbpA+kWjmQhmhRP9PXUl6BIa4Iiu
+	DDJv+TnUiQTijudB4PU9DTR+noK1TXawvDY926x6FIXdmAhDwyMrXpDMbOnyl7IcLjJHNmiRY6E
+	=
+X-Received: by 2002:ad4:5b81:0:b0:6f8:e367:8440 with SMTP id 6a1803df08f44-6fa9d0330admr302008676d6.23.1748422008962;
+        Wed, 28 May 2025 01:46:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGo9qqoQrF01ykPGF/17EjYHoPs6gmbavsSE2zy6sawKd53Clq0hMx0BlOXLpAzfgtNG6M5ag==
+X-Received: by 2002:ad4:5b81:0:b0:6f8:e367:8440 with SMTP id 6a1803df08f44-6fa9d0330admr302008336d6.23.1748422008535;
+        Wed, 28 May 2025 01:46:48 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f6b3e3asm182752e87.234.2025.05.28.01.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 01:46:47 -0700 (PDT)
+Date: Wed, 28 May 2025 11:46:45 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ai Chao <aichao@kylinos.cn>
+Cc: perex@perex.cz, tiwai@suse.com, johannes@sipsolutions.net,
+        kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com,
+        broonie@kernel.org, jbrunet@baylibre.com, neil.armstrong@linaro.org,
+        khilman@baylibre.com, martin.blumenstingl@googlemail.com,
+        shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        nicoleotsuka@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        srinivas.kandagatla@linaro.org, linux-sound@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
+        kernel@pengutronix.de, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] ASoC: qcom: Use helper function
+ for_each_child_of_node_scoped()
+Message-ID: <vjtgxpbpaowlz7ftryudf44f35jyaislvkckuzrzlpj25z25cf@vytjvui65gec>
+References: <20250527082446.2265500-1-aichao@kylinos.cn>
+ <20250527082446.2265500-7-aichao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxLBuWzDZonpz3AA--.26840S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7XF13Cr1kXF18CF17KFy8JFc_yoWDtrX_Ka
-	y5WF1rua4UCr4DJa1DCr4fuF17K3y2qF1IyayUtrWIyryDJan5AFs5J395Kr1fGa18CrZ8
-	Cr9Ig3Z3Zw13XosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527082446.2265500-7-aichao@kylinos.cn>
+X-Authority-Analysis: v=2.4 cv=aYJhnQot c=1 sm=1 tr=0 ts=6836cd79 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=uJ6pKfArofpzZCl0i4YA:9 a=CjuIK1q_8ugA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-ORIG-GUID: 7ONW1uhHAdPlWREQCznDEFg3P0uJn4FE
+X-Proofpoint-GUID: 7ONW1uhHAdPlWREQCznDEFg3P0uJn4FE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA3NCBTYWx0ZWRfX080PfmgyWC92
+ 592IM6ot2V2u/2qZHiHzwaC/kdYOcurwuQE7ZGFFohwRal4VtEBv9Q/seuFyjXiSn2XjT7gFf21
+ XjdT3UCFbtv+KIU4uh6eFv21v2zhEuZbAYRlICamh6Vn+RodD1TU+pu2HTH8MYxKLDWXpBXiCa9
+ JORdcjbVry/7+epUWKj29K3fTWgVXKWz6X6IemVl5mY5Wgkw6D+xV6wpvBRw9OVnkgd56EmfcE2
+ aw+WFVE4Gk5kirAyvOOcXU105LzNOeXnXWRdp7Ld/7oRvDkjIzsN0XRPugsgC7hnKnvi/v1WCHq
+ 0PQTRwa3Fg+sFu8g6F4AH7sKtnAP29yC/GhZC5LkLUiSUo24/51TCaZX/wEt7ES221HZbYoJCWV
+ xY5aigM0v7VfatuCGuFLRjKPNkgT/hgNmYnyNFxJdAWEGXOovSvycO89Qwm++nTeL0t9IuRs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_04,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=478 lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505280074
 
+On Tue, May 27, 2025 at 04:24:46PM +0800, Ai Chao wrote:
+> The for_each_child_of_node_scoped() helper provides a scope-based
+> clean-up functionality to put the device_node automatically.
 
-在 2025/5/28 下午3:57, Stefano Garzarella 写道:
->> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->> +    if (IS_ERR(chip))
->> +        return PTR_ERR(chip);
->> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
->
-> Why setting TPM_CHIP_FLAG_IRQ?
+There are no calls to put the node. In the patched files the nodes are
+already automatically put by the looping macro, there is nothing to
+cleanup. Please stop sending this patch.
 
-When tpm_engine completes  TPM_CC* command,
+> 
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+>  sound/soc/qcom/lpass-cpu.c       | 3 +--
+>  sound/soc/qcom/qdsp6/q6afe-dai.c | 3 +--
+>  sound/soc/qcom/qdsp6/q6asm-dai.c | 4 +---
+>  3 files changed, 3 insertions(+), 7 deletions(-)
+> 
 
-the hardware will indeed trigger an interrupt to the kernel.
-
->
-> IIUC this driver is similar to ftpm and svsm where the send is 
-> synchronous so having .status, .cancel, etc. set to 0 should be enough 
-> to call .recv() just after send() in tpm_try_transmit(). See commit 
-> 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
-The send callback would wait until the TPM_CC* command complete. We 
-don't need a poll.
-
-Thanks,
-
-Qunqin.
-
->
-> BTW, I think I should touch also this driver in the next version of my 
-> series that I'll send after the merge window:
-> https://lore.kernel.org/linux-integrity/20250514134630.137621-1-sgarzare@redhat.com/ 
->
->
-> The rest LGTM!
->
-> Thanks,
-> Stefano
-
+-- 
+With best wishes
+Dmitry
