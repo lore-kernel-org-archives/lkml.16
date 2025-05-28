@@ -1,167 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1073A246326
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB841FAA;
+	Wed, 28 May 2025 13:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438635; cv=none; b=eox+7iE/oGukKwIXSVER1UEKdQ96Xv271I1arF+EgNVezm801KRMkV8fg8cIjXxD1dJ51cE6levyMX2KVLfSs2HBNhmUC52vmi2PNCIR8w8k0HmekDuxUgpHkHzZGtxLO6uAUy38BNvcbthIvKvzW+AvrljLC77L+CWwrDmNZR0=
+	t=1748438701; cv=none; b=EJmfcWG6ROLnJ6ZwcsuxEJR/1SAux2iaekDJJraJQPPnueA6J98tonQojUfaX33HTIVxYgYvyQ+mMM0oe3boZQ/IUeNYhD4dxWFNT4ZkWagVZb9zpiokuoDsoZ03cGchWDO+hoxI4KrlK51lYIY1yJ5x3UgYcnx2v1h2Qs1+AQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438635; c=relaxed/simple;
-	bh=5vKSGaBChbSlR5lX+l//vJBLLeI/kpeZbgb9bJhXdmI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=aDr3VDQv/7KThivOQDOJ1proLXV4s4TIwA6FusTkEY5Ip2ShSAMlI3bY/OxUqwJV/DtLB7JElIpjc2e/jf6f+FLcvzqUlZmr8+5cggILt8iubZaSRZ+GzLCc50/S5ZRmg5v8SjSZa+vFi07LYlnjbJtwPmsuE6Lz+zgxDoZRRxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvGahb1D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748438701; c=relaxed/simple;
+	bh=3EaQ0vYUuKF1jmAFbBVV6X09cz1ehGj922mtt6MzENI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cjosWkV7JFp7wBk4QUE3Lp0oAzK7QIwUoD3GhCZGMC6xnGPEDjUodFDXkHvxOVHB+OATBlHs4thVaecK0OqdbGLqfc0zKAXZxFCDGgbiUzUYm1IhtphRWoKVzx7qR7JQC3yM4rMGrWSQ/8/MSVyHsA0pzxCz6aUwNKkfCderMoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CvNTTWZq; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvGahb1D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA28C4CEE7;
-	Wed, 28 May 2025 13:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748438634;
-	bh=5vKSGaBChbSlR5lX+l//vJBLLeI/kpeZbgb9bJhXdmI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SvGahb1Do9eqe3wYzPHut9tiGeekau9E3fkbyq23F3FrZk/QHelsJAtjySHEJh/S2
-	 BP/9WfUEWcRRx5e+n07v424qqusqgcwVW0B1iKztcH9mvKersXINz2nOVHJ033iSbM
-	 t5aeZXGDeNd0MYvnQo5kOg1eZ5YEsJu4zHSkJQHWl9jQQyuONp4yNjCvyTsL3CV/tP
-	 y4G3wCbrF7x3FU0EHTfQ0jnZhCxXpwQc2wMCGhb4+JCD4QKVz2RfnSux88ZJGtnKTT
-	 3ZWXiI9Euov3Ym4g6mVEjSxIgRGRRyI7qJOAxlrUKosARIRmzlfONW3KZG90X+TrM3
-	 9JG2TsMFQCGFg==
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CvNTTWZq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=eBLT1coqN7DWf9zqS26cnLXO/a+cQ5A8TJyemfvfOhg=; b=Cv
+	NTTWZqEWIqlQKLw1iqZfeKB2gycKP4fQnxaOgVhW9sQoXjUgOMqlAPqOY/cEdYB0XM/boQ+lyJ8s+
+	kqj5B6BKu2PlJbvkVkPJ277StCNkbUonv85HBREfXR+xowx5Nj4vC0mlLHpG03b0Wk7ggawLr63qs
+	WWFpLv9UJKSTCO4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uKGm5-00EB7S-MN; Wed, 28 May 2025 15:24:53 +0200
+Date: Wed, 28 May 2025 15:24:53 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+Message-ID: <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
+References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
+ <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
+ <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
+ <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
+ <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
+ <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch>
+ <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
+ <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
+ <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 28 May 2025 15:23:47 +0200
-From: Michael Walle <mwalle@kernel.org>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Aradhya Bhatia
- <aradhya.bhatia@linux.dev>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, Francesco
- Dolcini <francesco@dolcini.it>, Jyri Sarha <jyri.sarha@iki.fi>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Vinod Koul
- <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Andrzej
- Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
- Skrabec <jernej.skrabec@gmail.com>
-Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
- capabilities
-In-Reply-To: <ab5f27ac-6bbe-4746-a2bd-e5f1a667ae91@ti.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
- <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
- <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
- <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
- <ab5f27ac-6bbe-4746-a2bd-e5f1a667ae91@ti.com>
-Message-ID: <27fa4ad56a57f0c408d3b119a620c1cb@kernel.org>
-X-Sender: mwalle@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
 
-Hi Devarsh, Hi Tomi,
-
->>> While testing Aardhya's OLDI support patches [1], I've noticed that
->>> the resulting LVDS clock is wrong if this patch is applied.
->>> 
->>>> In practice, with the current K3 SoCs, the display PLL is capable of
->>>> producing very exact clocks, so most likely the rounded rate is the 
->>>> same
->>>> as the original one.
->>> 
+On Wed, May 28, 2025 at 05:57:38AM -0600, James Hilliard wrote:
+> On Wed, May 28, 2025 at 1:53 AM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
+> > > On Tue, May 27, 2025 at 2:30 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > >
+> > > > > Sure, that may make sense to do as well, but I still don't see
+> > > > > how that impacts the need to runtime select the PHY which
+> > > > > is configured for the correct MFD.
+> > > >
+> > > > If you know what variant you have, you only include the one PHY you
+> > > > actually have, and phy-handle points to it, just as normal. No runtime
+> > > > selection.
+> > >
+> > > Oh, so here's the issue, we have both PHY variants, older hardware
+> > > generally has AC200 PHY's while newer ships AC300 PHY's, but
+> > > when I surveyed our deployed hardware using these boards many
+> > > systems of similar age would randomly mix AC200 and AC300 PHY's.
+> > >
+> > > It appears there was a fairly long transition period where both variants
+> > > were being shipped.
+> >
+> > Given that DT is supposed to describe the hardware that is being run on,
+> > it should _describe_ _the_ _hardware_ that the kernel is being run on.
+> >
+> > That means not enumerating all possibilities in DT and then having magic
+> > in the kernel to select the right variant. That means having a correct
+> > description in DT for the kernel to use.
 > 
-> Yes, display PLL is flexible and device manager should set exact 
-> frequency.
-> Please note that there was a bug in device manager in earlier releases 
-> which
-> would prevent setting it to exact clocks. You should try with latest 
-> SDK
-> release firmware binaries (11.0...(10.1 should also work though)) if 
-> seeing
-> any misbehaviour in that regard.
+> The approach I'm using is IMO quite similar to say other hardware
+> variant runtime detection DT features like this:
+> https://github.com/torvalds/linux/commit/157ce8f381efe264933e9366db828d845bade3a1
 
-Yes, I don't doubt that. But it's the way the driver is handling the
-clock w.r.t. to the fixed-clock-divider in the LVDS case which is 
-causing
-problems.
+That is for things link a HAT on a RPi. It is something which is easy
+to replace, and is expected to be replaced.
 
->>> This is now what I'm seeing. Most SoCs have that fixed clock thingy
->>> for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
->>> fixed clock rate for this clock, which will then result in an LVDS
->>> clock which is way off.
->>> 
->>> I'm testing on an AM67A (J722S) and I've backported some of the
->>> patches as well as dtsi fragmets from downstream. Thus, it might be
->>> as well the case that the fixed-factor-clock node is wrong here.
->>> OTOH other K3 SoCs do this in mainline as well.
->> 
->> Thanks for findings this (It's not a fixed clock, but a (fixed)
->> divider). I can reproduce on my AM62 SK's OLDI output.
->> 
->> I didn't see AM625 TRM explaining the DSS + OLDI clocking. I remember 
->> it
->> was a bit "interesting". Afaics from testing, the VP clock is derived
->> from the OLDI serial clock divided by 7. To change the VP clock, we 
->> need
->> to set the OLDI clock's rate. But the code we have at the moment is
->> using clk_round_rate/set_rate to the VP clock.
->> 
-> 
-> This is correct. The pixel clock is derived as OLDI clock/7 when OLDI 
-> is
-> enabled.
+You are talking about some form of chiplet like component within the
+SoC package. It is not easy to replace, and not expected to be
+replaced.
 
-What means "if OLDI is enabled"? Is there any other clock otherwise or
-none at all? Reading the clock ID desciption in the TISCI documentation,
-I presume there is no configurable clock for the first VP at all. I.e.
-if one compares it with DSS1 which has two muxed clocks, DSS0 only has
-one muxed clock (DEV_DSS0_DPI_1_IN_CLK) and DEV_DSS0_DPI_0_IN_CLK is 
-fixed,
-presumely thats the fixed /7 clock.
+Different uses cases altogether.
 
-Also how is this handled for the DSS1 (on an AM67A)? The TI downstream
-kernel also has a fixed-clock-divider for the VP1 on DSS1, but I think
-that is wrong, because it's actually configurable (if OLDI is 
-disabled?).
+What i think we will end up with is the base SoC .dtsi file, and two
+additional .dtsi files describing the two PHY variants.
 
->> And we get the crtc atomic_check called before setting the OLDI clock
->> rate, so it doesn't even work by luck (i.e. if the OLDI clock was set
->> earlier, the VP clock would already have the right rate, and it would
->> seem that everything is ok). In the atomic_check we see the OLDI 
->> bypass
->> clock (25 MHz), which results in 3571428 Hz VP clock.
->> 
->> And with this patch, the code then decides that 3571428 Hz is what the
->> HW can do, and uses it as the pixel clock.
-
-FWIW, I'm seeing exactly 300MHz on the AM67A (the FCLK is 2.1GHz 
-according
-to k3conf).
-
--michael
-
->> 
->> Aradhya, Devarsh, do you remember how the clocking goes here? Or if 
->> it's
->> in the TRM, please point me to it...
->> 
-> 
-> I think what you described is correct, if any specific questions I can 
-> help
-> check. But any misbehaviour you are seeing w.r.t clock setting (i.e. 
-> what
-> driver is trying to set versus what actually is getting set)
-> then please dump the dss clock tree along with relevant details of test 
-> done:
-> 
-> k3conf dump clock <display_device_id>
-> 
-> You can get the device ID via TISCI Doc [1]
-> 
-> [1]: 
-> https://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62x/clocks.html#clock-for-am62x-device
-> 
-> Regards
-> Devarsh
+	Andrew
