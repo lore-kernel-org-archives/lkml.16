@@ -1,131 +1,78 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4174A214211
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9572214211;
+	Wed, 28 May 2025 12:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436866; cv=none; b=tlOTbZXkoJcIeDUyvZKjAkzWlYgzwgpW5vbzoxPf2vVLx0U4CzJnl7FdA9gBUO/usQjEG+wzv4fow66FElDmpgSnFErPYvoO46TjvMoavUqaWF7awI70nnxQ3HtFzgYb4Z0mDUrIQLJPcflg9MoVQzeKKg+KvJgw5r2RlopYX74=
+	t=1748436916; cv=none; b=oN4wG9okM4XejT7Nj/j++D52dHxWTJ75RDze2Z8sLcPJpyY4pOeyIKkmkpu5xKjybWHjxLnTmaYl2v4rokPb8jAIQPx7x+uIC1r/Tlbpp6zY8fqweQVuvjyMnpyYdaylwXi0wAau0+ft8Vqw/LO2H6+JZHl6KoeTJzUhzBpS6r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436866; c=relaxed/simple;
-	bh=4kzUi/76sU4TOqttKuHGINwdxexMyc5EKBLODsQjbIM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=d19w4LUtWa+DsTCJ+egS/WTbNTSJWo0H+/kqyNkUED0tyrcfKIzAI2i5r2H5cPCKJ7IntnmAa67uTum9SpZ4jrf8xdwTOlvrHqk9N1vu1U+c6TgUuyegt3DgIWHtjXALBRZ+EOVUpBP3EgXzB5AfKNCGVQch78b3AQuU27sTBnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SfDn8l2h; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748436916; c=relaxed/simple;
+	bh=u06uU+f22ZydMweS4ad4ipwJZCaFj54prJ9Y8i2zNxA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mBLvBUyjYWfZVef32EbL5fRmd0nHV0u+VnqgbHDqJxFWvArRssYgLl7z8ag9ZDUh1i4kIzWdDVkT0hhuFXMOtPmg0V5fwDQEMOq32rjOnAUzyQkqxMTAHRW1/6ZJw2BoEjqdgARtBHqOWcxAghOVPE9MQI2L9sIhM0ZV32AXDB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=ndnJc5FP; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SfDn8l2h"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31147652b36so3562156a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748436864; x=1749041664; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xuuvC7M6sC9txYVcxiKR7Nz7uk/ZLoX9CRoOMl5AG9g=;
-        b=SfDn8l2hz+9fZu0Gd0vx2BgA0Dw904zl0x1+/FLzUrd9wBxGOhpRr3JCZkN02wyY/N
-         gIRkJLJ09jR8MSpCPZY1ELkZu+rlZ5UkUNAJ1ujBianemAoDJ4yYynTl75gXWst+lDQl
-         2E7cYi7AmAwdxyj7kMdvEudVBpeZ0qvGJnlPyx0vMSSdeyHRW4hgAS5sznrPiFOzUekS
-         GfuLStDxAKzQPkIlCaYER05LYGgBpVQW+qMYcPT8sGydr9tOn/KShx2uc6QqK/xAAIsA
-         rZDGOZzxsMi7tYAuD3WxoKNXcb0PqBlqEWn56n/KrURGIl00xz8K0++Uzh1kRcLPLtht
-         XccQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748436864; x=1749041664;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xuuvC7M6sC9txYVcxiKR7Nz7uk/ZLoX9CRoOMl5AG9g=;
-        b=lmrrc7uiMu8Lgj5qDQtRiiQdPKaTFH48WmgBVqO1Ia7akLoj34RpT2AyD9f8tP4lwd
-         d1IldvTEa3imoVP7tLNwO+QbbHWX4RSQMCcgxbRI8DkchpUVSxMsZdgD13UAmOBDyuaE
-         S5lQLYypdQ7CpUX55xKbuUJj7uAjHVBR8cHKLvtHiFqlFZVIGBDxl0DCqY3aE71GsJ49
-         cuFg8Yk4dHQ3ttRnOetkcvX33BpGq1l4e6gOd3EBQPhuXdXDWY1v/YY9LnhE0hTzgq9b
-         UZ5x5JB6GEkbTyjIbgnWNQwjW+NpuJU+J2RZr6yqyIDG0uYQb1o7EJgMQBQpluOdxBXv
-         mH0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Hu3ixwQ3MgYhHFbU7bNCGWRYoTu9VOcbLir1K+XQS2iEUw/fbyz+QNX85f/c+djRBYGlLPgNVk6yy9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMvUb+p2iqJMpMncwRmnDSXERdeh3/8N8xjoPjF55Md9S1vMOx
-	xeiWvcjK+sOZwAKGX5DgmR+f1FkIZxvzSzYOkSb1Opf1FkTI8Z2aQtKL7zlzS+W8BYC3b3D0dtO
-	f/3DlAw==
-X-Google-Smtp-Source: AGHT+IHklk6ygB6BrAMAW+vre57cickd20wXmOPZTFQC5U6g6cHQDuc5vbvNaOVhN+qmRiCUV+DfgdMkufQ=
-X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:311:4201:4021])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3911:b0:311:f30b:c18
- with SMTP id 98e67ed59e1d1-311f30b0ff9mr2383545a91.4.1748436864587; Wed, 28
- May 2025 05:54:24 -0700 (PDT)
-Date: Wed, 28 May 2025 05:54:22 -0700
-In-Reply-To: <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="ndnJc5FP"
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 6D2D166810C;
+	Wed, 28 May 2025 14:55:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1748436904;
+	bh=u06uU+f22ZydMweS4ad4ipwJZCaFj54prJ9Y8i2zNxA=;
+	h=From:Subject:Date;
+	b=ndnJc5FPKZ/gAEhXWrUWuQ6N9zgrgwaDt4sG1DWP0owFVQwK1CZf7V3HCLkv2cHX2
+	 Vpud6wmvofFI8Oj6VQryqoPqtveIFlwXF6gBVPfR9m0i0XuxdjgA/L4yVB2OxZ/alm
+	 uGdy/tdhka3APiXK2yPQIWaQf6BkyPiQsNrvicF3jeSY/WgCVAw9vNb/0Qpz6grmvn
+	 uEZJNphV2DHygPhapge0M1qhWVO4Pv6egj76Vf7Mr2n+VgT4HfVLGYOISquf4OqYEL
+	 g2QNMwFWsEV0YVZPoJcrfoiZ70lJTSx3zhosD8y2QYFxXAbmXtuZES0XRjfJsAiANR
+	 opTZ0doBCBCpA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: x86 Maintainers <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Len Brown <lenb@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>,
+ Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject:
+ [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit
+ 96040f7273e2
+Date: Wed, 28 May 2025 14:53:13 +0200
+Message-ID: <2006806.PYKUYFuaPT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523001138.3182794-1-seanjc@google.com> <20250523001138.3182794-3-seanjc@google.com>
- <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com>
-Message-ID: <aDcHfuAbPMrhI9As@google.com>
-Subject: Re: [PATCH v4 2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's
- hashed page list
-From: Sean Christopherson <seanjc@google.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTEHEdcPvDb44RX7oLy/l0XZsAaDsySGk2yiU1eNtMaRD1jj7PwTFn2xAYp8o0iAjmTVoe6ZGZaOOMsZJ49A4eudkghxFhzckY2diivE17GlEIoxg8trE3zRqjV8o1kzpBEeyA4kmvhEP8t9tE65NjajAvWfVkFgA181gCxV6f8eY7uKPMacthbKQ3Wz9UMXuYmHytYdGi64pBHYmmT2Ez24Ij5HjNr+/vUcx/BtM21yBQTYe5pReKOOdaAoHDKaLGS+flJe0i2Hnac7cR4W640PkdYrwZeJ9l9p6kmWypBNs+6zOHQhZIav6rMmxp2+ZzutyIyh9KbgLbUrwlyhqOqdtl2rGjTR5BH9A90WJYQyuIZurD17gJfpCkyLGNysSpxtW7hXgoSYIra1Vf33ek+bFEz6UddXUA/mwUC3mCONoWF3H1gmhoE3XsXPCpfm8yWTyMdi/ClUWfpSzCrtYPaZx7iM52v158hmVMM8NGgrnMCVo+EokCwQNDW7DcJ1MZ/K/cNm4omDL2tNcglj+gjRkxhMcGvexr96oj8BqOdFVIW3zxovRr/D3RjjHBj9iWkH+9lE1Yvk4IEUnxYZMsR0dQQSHj59TQkzopjwVGSB2EMZOqr6j8tY6TywLhLCMl4hFxYK60pOTdWG2WlfYrIRARlPzTBPqVQG7yeOR4IygA
+X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
 
-On Wed, May 28, 2025, Xiaoyao Li wrote:
-> On 5/23/2025 8:11 AM, Sean Christopherson wrote:
-> > Dynamically allocate the (massive) array of hashed lists used to track
-> > shadow pages, as the array itself is 32KiB, i.e. is an order-3 allocation
-> > all on its own, and is *exactly* an order-3 allocation.  Dynamically
-> > allocating the array will allow allocating "struct kvm" using kvmalloc(),
-> > and will also allow deferring allocation of the array until it's actually
-> > needed, i.e. until the first shadow root is allocated.
-> > 
-> > Opportunistically use kvmalloc() for the hashed lists, as an order-3
-> > allocation is (stating the obvious) less likely to fail than an order-4
-> > allocation, and the overhead of vmalloc() is undesirable given that the
-> > size of the allocation is fixed.
-> > 
-> > Cc: Vipin Sharma <vipinsh@google.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >   arch/x86/include/asm/kvm_host.h |  4 ++--
-> >   arch/x86/kvm/mmu/mmu.c          | 23 ++++++++++++++++++++++-
-> >   arch/x86/kvm/x86.c              |  5 ++++-
-> >   3 files changed, 28 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index 330cdcbed1a6..9667d6b929ee 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1343,7 +1343,7 @@ struct kvm_arch {
-> >   	bool has_private_mem;
-> >   	bool has_protected_state;
-> >   	bool pre_fault_allowed;
-> > -	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
-> > +	struct hlist_head *mmu_page_hash;
-> >   	struct list_head active_mmu_pages;
-> >   	/*
-> >   	 * A list of kvm_mmu_page structs that, if zapped, could possibly be
-> > @@ -2006,7 +2006,7 @@ void kvm_mmu_vendor_module_exit(void);
-> >   void kvm_mmu_destroy(struct kvm_vcpu *vcpu);
-> >   int kvm_mmu_create(struct kvm_vcpu *vcpu);
-> > -void kvm_mmu_init_vm(struct kvm *kvm);
-> > +int kvm_mmu_init_vm(struct kvm *kvm);
-> >   void kvm_mmu_uninit_vm(struct kvm *kvm);
-> >   void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index cbc84c6abc2e..41da2cb1e3f1 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -3882,6 +3882,18 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
-> >   	return r;
-> >   }
-> > +static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
-> > +{
-> > +	typeof(kvm->arch.mmu_page_hash) h;
-> 
-> Out of curiousity, it is uncommon in KVM to use typeof() given that we know
-> what the type actually is. Is there some specific reason?
+Hi Everyone,
 
-I'm pretty sure it's a leftover from various experiments.  IIRC, I was trying to
-do something odd and was having a hard time getting the type right :-)
+Commit 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()")
+that shipped in 6.15 introduced a nasty power regression on systems that
+start with "nosmt" in the kernel command line which prevents it from entering
+deep package idle states (for instance, PC10) later on.  Idle power, including
+power in suspend-to-idle, goes up significantly on those systems as a result.
 
-I'll drop the typeof() in favor of "struct hlist_head *", using typeof here isn't
-justified and IMO makes the code a bit harder to read.
+Address this by reverting commit 96040f7273e2 (patch [1/2]) and using a
+different approach, which is to retain mwait_play_dead_cpuid_hint() and
+still prefer it to hlt_play_dead() in case it is needed when cpuidle is
+not available, but prefer cpuidle_play_dead() to it by default (patch [2/2]).
+
+Thanks!
+
+
+
