@@ -1,151 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DB10E0;
-	Wed, 28 May 2025 07:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324691F872D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416568; cv=none; b=JHnnEV9IlhbbUBeJBuHSochPhvs1MDXn/EfncxLxevbE9a1h07q9ITqHSpMWRemX70v32Qp4eYrO8jvbt5gjjKB6VjpZ6PShGdrdALdANioE37BBzoPEjKxRyCI79go+41xU12jLKIiCwVtG1opqQdfujpiCq+0ol2n4sKjhkgE=
+	t=1748416620; cv=none; b=nATlgQD1LEsf1Ocpupv+lal6l13cufmgdxv/Gcb4m8F0OlezNpF3dZs+DI2J/jGQKNeqWBb2haaAhSN/lZTY04KiPkTt9h4FYBTXW6BTVT+d0bc9PVQpoEMUn+Av5wuel4kD2ZODoR2ylLdJt/9hypRs4NrknLgtQm9eJJstWJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416568; c=relaxed/simple;
-	bh=K9xLFL3YjxEg/yT53Mbd2sI0G3a9mzJ1vSU6/nzZZGc=;
+	s=arc-20240116; t=1748416620; c=relaxed/simple;
+	bh=hq8gWYqnKKoKi9YMyMtjzxe802L2vhu5zZ+wC637M+Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tb9+35uZAQP50pHpT4lGxNq/tDC1yZkl2vtZNHOVvXE2o8bPUyAwxarWR3Hs5vtzexv+skxUutKibaehJ3cP6K09h5GXBpOeVNn9Ss/ebqIhEBj6Pu6RPi+IV89l3QfGKawzgkGGnxR0mgf+lQ60Nj/wLdGwjnHZmaAwdlPW6ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrJmZD+e; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBjD03EukzjDPvk82DJIUPh5CeN/ogV/L+0H5vustROoHMDt0SgVmELjVLrKjynhJqpRRhtpu2I4fKPcYA7ZcSeNN3h6RXHKqBaULo69y25Df/C20aom6uq2AdxJSugTCMR6dyQaROI6hnoSbUreqxL/rK44DG3Z/Zm/zPKvTHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YMj61BIp; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrJmZD+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC15C4CEE7;
-	Wed, 28 May 2025 07:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748416567;
-	bh=K9xLFL3YjxEg/yT53Mbd2sI0G3a9mzJ1vSU6/nzZZGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LrJmZD+eu3rGOkhdZyxN4JM0eL8FuhebF+ryNOrcZ3k1MneHJ1X5+eEXS7NrupIye
-	 wA5u5eQFtYyQuPWcieS+EjiAS5elaLKloPDwlUe9b6vJBmF1sWotJ45tquAxoX47KP
-	 ao5OXqAWHI+6evaZxj0jDiKgTEEPTST6erF+kpU7erw3SKEuo7IU48OTDJW2u/3lng
-	 u2P/FTign5MUZqI4L/xBu9AqdJBd86+DU0xYw0yu6xeGuoC6ONgeweeRJk6PcHWB+p
-	 ROe0CE/Xk8BE0qKGzovhVkhfKPVBhYf2Oq5fXfqZDBdNXudraKMyoJEco5YK1XljO8
-	 xw2DClFYdtBRg==
-Date: Wed, 28 May 2025 09:16:04 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/6] pinctrl: airoha: fix wrong PHY LED mux value for
- LED1 GPIO46
-Message-ID: <aDa4NCTzyzw0mnfE@lore-desk>
-References: <20250527222040.32000-1-ansuelsmth@gmail.com>
- <20250527222040.32000-2-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YMj61BIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748416618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/uqW+fuUszjgO5HVBpIHxHEyysrbpSb3yza49f7EKaE=;
+	b=YMj61BIpwb3jD9+zT9y/DecVjE982lAIX70XpoD3gweOMO23baaJVcmz8lJuM65B9rKHhl
+	LN7WLo7ahL7qLM0rGzz3FB5PFbziK/B6ou/rOravYk38csiK9ERkJqZMOA5roH6EMehPWJ
+	ptq4NPKNg8KN7BPvfC34xL+ugEiB0Ws=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-546-iECNX6LXPheDA8EPYCXsjg-1; Wed,
+ 28 May 2025 03:16:53 -0400
+X-MC-Unique: iECNX6LXPheDA8EPYCXsjg-1
+X-Mimecast-MFC-AGG-ID: iECNX6LXPheDA8EPYCXsjg_1748416612
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D7359195609E;
+	Wed, 28 May 2025 07:16:51 +0000 (UTC)
+Received: from dobby.home.kraxel.org (unknown [10.45.224.91])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1FBD018003FC;
+	Wed, 28 May 2025 07:16:50 +0000 (UTC)
+Received: by dobby.home.kraxel.org (Postfix, from userid 1000)
+	id F262E450776; Wed, 28 May 2025 09:16:47 +0200 (CEST)
+Date: Wed, 28 May 2025 09:16:47 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>, kvm@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/sev: let sev_es_efi_map_ghcbs map the caa pages
+ too
+Message-ID: <4qola3kscsxwpxmfowsigotjwx5f4meramwjww5ut4nzq3pu6o@n4b2fco644ap>
+References: <20250527144546.42981-1-kraxel@redhat.com>
+ <20250527144546.42981-2-kraxel@redhat.com>
+ <CAAH4kHYMyJ0Td47KShOJGntRPs6RLcJ97oajA7z9VPdUbjT+WQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="CoT/qmCue5gfNYHx"
-Content-Disposition: inline
-In-Reply-To: <20250527222040.32000-2-ansuelsmth@gmail.com>
-
-
---CoT/qmCue5gfNYHx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAH4kHYMyJ0Td47KShOJGntRPs6RLcJ97oajA7z9VPdUbjT+WQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-> In all the MUX value for LED1 GPIO46 there is a Copy-Paste error where
-> the MUX value is set to LED0_MODE_MASK instead of LED1_MODE_MASK.
->=20
-> This wasn't notice as there were no board that made use of the
-> secondary PHY LED but looking at the internal Documentation the actual
-> value should be LED1_MODE_MASK similar to the other GPIO entry.
->=20
-> Fix the wrong value to apply the correct MUX configuration.
+On Tue, May 27, 2025 at 09:44:34AM -0700, Dionna Amalie Glaze wrote:
+> > index a4b4ebd41b8f..1136c576831f 100644
+> > --- a/arch/x86/platform/efi/efi_64.c
+> > +++ b/arch/x86/platform/efi/efi_64.c
+> > @@ -215,7 +215,7 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+> >          * When SEV-ES is active, the GHCB as set by the kernel will be used
+> >          * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
+> >          */
+> > -       if (sev_es_efi_map_ghcbs(pgd)) {
+> > +       if (sev_es_efi_map_ghcbs_caas(pgd)) {
+> >                 pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
+> 
+> nit: update error to reflect the expanded scope?
 
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Yep, missed that, will fix for v2.
 
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 1c8ace2d0725 ("pinctrl: airoha: Add support for EN7581 SoC")
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-airoha.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/=
-mediatek/pinctrl-airoha.c
-> index b97b28ebb37a..8ef7f88477aa 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> @@ -1752,8 +1752,8 @@ static const struct airoha_pinctrl_func_group phy1_=
-led1_func_group[] =3D {
->  		.regmap[0] =3D {
->  			AIROHA_FUNC_MUX,
->  			REG_GPIO_2ND_I2C_MODE,
-> -			GPIO_LAN3_LED0_MODE_MASK,
-> -			GPIO_LAN3_LED0_MODE_MASK
-> +			GPIO_LAN3_LED1_MODE_MASK,
-> +			GPIO_LAN3_LED1_MODE_MASK
->  		},
->  		.regmap[1] =3D {
->  			AIROHA_FUNC_MUX,
-> @@ -1816,8 +1816,8 @@ static const struct airoha_pinctrl_func_group phy2_=
-led1_func_group[] =3D {
->  		.regmap[0] =3D {
->  			AIROHA_FUNC_MUX,
->  			REG_GPIO_2ND_I2C_MODE,
-> -			GPIO_LAN3_LED0_MODE_MASK,
-> -			GPIO_LAN3_LED0_MODE_MASK
-> +			GPIO_LAN3_LED1_MODE_MASK,
-> +			GPIO_LAN3_LED1_MODE_MASK
->  		},
->  		.regmap[1] =3D {
->  			AIROHA_FUNC_MUX,
-> @@ -1880,8 +1880,8 @@ static const struct airoha_pinctrl_func_group phy3_=
-led1_func_group[] =3D {
->  		.regmap[0] =3D {
->  			AIROHA_FUNC_MUX,
->  			REG_GPIO_2ND_I2C_MODE,
-> -			GPIO_LAN3_LED0_MODE_MASK,
-> -			GPIO_LAN3_LED0_MODE_MASK
-> +			GPIO_LAN3_LED1_MODE_MASK,
-> +			GPIO_LAN3_LED1_MODE_MASK
->  		},
->  		.regmap[1] =3D {
->  			AIROHA_FUNC_MUX,
-> @@ -1944,8 +1944,8 @@ static const struct airoha_pinctrl_func_group phy4_=
-led1_func_group[] =3D {
->  		.regmap[0] =3D {
->  			AIROHA_FUNC_MUX,
->  			REG_GPIO_2ND_I2C_MODE,
-> -			GPIO_LAN3_LED0_MODE_MASK,
-> -			GPIO_LAN3_LED0_MODE_MASK
-> +			GPIO_LAN3_LED1_MODE_MASK,
-> +			GPIO_LAN3_LED1_MODE_MASK
->  		},
->  		.regmap[1] =3D {
->  			AIROHA_FUNC_MUX,
-> --=20
-> 2.48.1
->=20
+take care,
+  Gerd
 
---CoT/qmCue5gfNYHx
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaDa4NAAKCRA6cBh0uS2t
-rOCOAQDIlVEn3j31KLCPSoLJ6jFOUiwWCNqW5qOv7UtW1mOCagEAh6LZiTafRxQs
-HXf7z9JkF4bcnAu1w5WH7iDwvjnpNw0=
-=lKi2
------END PGP SIGNATURE-----
-
---CoT/qmCue5gfNYHx--
