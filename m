@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65568270ECD
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:11:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E55270565
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:11:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419898; cv=none; b=Cg0jRO3rnuo/lSNMHoU0yKy8VYe5nro9gWtJy5mzasTNFupxDSvcKHEhcK+dCH53Q+Y4YK9gQC2EAhL/2sYD8wRa+oubJ80Q2jizg2W2rJHvKxXtJ9/1PmCGsbrytEJ7pMC4uNAJ8bwcXWnesDGqBvM56pRNC80OxgWrJU9jmFo=
+	t=1748419901; cv=none; b=ts0mCaSflbHHBTgYDbZjCWtgR3yV0998EmmvW7JZDq4lKuhOc5F5uz2sQSBGhujShQjLPHMSpYUz163x8bdKNgxXeyPBKFb1Yv9uKOZJSYUD4j5h9IXyMqSwmi/1v1CbVmCV71RavFF36ZsQQu2StbPUu9QViMO7sDNji5m5OeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419898; c=relaxed/simple;
-	bh=jm3nLmXD/nEkkUF7+EgdT+Vbjj+DyhZtqeD96ddwuLQ=;
+	s=arc-20240116; t=1748419901; c=relaxed/simple;
+	bh=HhJn8+Bkf3Al4z35LmUKeudBi8itfc26hNtt4GX4IZE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nIApvgdAVJy7mEMDOMdVFDdKNuvWMQ58rBPWPQzZcTTvZwuIzngcGSWco3nZD1uVAANYmzfpIWlr8QHY93R/ImwiR4ElrmfrHfM661AlYa9/RuK3K6barx0/No8GrxwEGHG9EIonvwgu5lNy9HZ+4L1Al9ouF4xcFubRgkUV6F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjFcVLiJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gYG4gwGS1G/g3NqBOZmCHfgVnrmpF7dQTNL5Bm4d0wA3z87stGRUVjTSoshAk4aHCwxAd4Uv1jvCycaFit8TvxOkCebkiEtOEsg8GF+QYEhPQHc2d2MqVJTwYWq6uEGwHPDvZmmsG8O4MtCCPN8on+xT5PKVZi9nnpUlrU7c9CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cf5HRH+j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjFcVLiJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF501C4CEEB;
-	Wed, 28 May 2025 08:11:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cf5HRH+j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630E1C4CEE7;
+	Wed, 28 May 2025 08:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419897;
-	bh=jm3nLmXD/nEkkUF7+EgdT+Vbjj+DyhZtqeD96ddwuLQ=;
+	s=k20201202; t=1748419901;
+	bh=HhJn8+Bkf3Al4z35LmUKeudBi8itfc26hNtt4GX4IZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TjFcVLiJ77ZidQ/IhhUZMaZRIhbyMTvDDaudL0Q4eM5L1izvYle3q7cR4uEaJ5Vrv
-	 Bii88qOyB9+LbPgYwf7eYCRGiliEZ1inw3bIgsm4BrpaZy9JY/Xq7XT5aR5QhIoK9p
-	 g+W2JFx3i47FirZVd/dMxOxUqLeflsFL+C1PahgQ9biWReDlrk2CLn8wwdwfeZQeUR
-	 EJv74J5+EZeEYT+S8BEOvWHOXuD3MiL6ZaZZK5rRgKRC6TVrIf9RbZgjN4iZG9BsXm
-	 fN7Xr2SqxaoqprFtGoqHBorQ63yemdBd7vpNiBnbKZHil1BLzYU4nCse/A8tC2okfq
-	 o+bMb1eK8Gmtw==
+	b=Cf5HRH+jVr5Kcj9KAZiD76SB/UAwUOAq0MNQW9KooocId91THoq7DcSLyL4i9dMBY
+	 VQql1n/AFRyYTMK3bYsO3dd0rj/Icp/rCDQIHoc9Oq8TfSiYSn0fxxcwjFhr92mASi
+	 rjuIeBScLORL4RdqqE+6cX+lR4PtHU5/gAHmBzEtuQhUYbUVN1DfCRERrs1VJ1WHsL
+	 cJ/sjngf5UYlI4DCmQ9smFpQJO/vYJr4CB4THLXiO5kbtOM9NtVm8lgfYH62XliIaD
+	 IlGka7KfI9EdQ0lGVxXgG3G0BWVx6eg4m6r9yH2Ivbd6j52Hu7654bIRlok2rucWti
+	 8aKZNuwwRcvDg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 31/43] sched/smp: Use the SMP version of schedstats
-Date: Wed, 28 May 2025 10:09:12 +0200
-Message-ID: <20250528080924.2273858-32-mingo@kernel.org>
+Subject: [PATCH 32/43] sched/smp: Use the SMP version of the scheduler syscalls
+Date: Wed, 28 May 2025 10:09:13 +0200
+Message-ID: <20250528080924.2273858-33-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -68,40 +68,49 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/stats.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/syscalls.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/kernel/sched/stats.c b/kernel/sched/stats.c
-index def01886e93f..adb40371e370 100644
---- a/kernel/sched/stats.c
-+++ b/kernel/sched/stats.c
-@@ -114,10 +114,8 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 		seq_printf(seq, "timestamp %lu\n", jiffies);
- 	} else {
- 		struct rq *rq;
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index d7fccf871c7d..77ae87f36e84 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -209,10 +209,8 @@ int idle_cpu(int cpu)
+ 	if (rq->nr_running)
+ 		return 0;
+ 
 -#ifdef CONFIG_SMP
- 		struct sched_domain *sd;
- 		int dcount = 0;
+ 	if (rq->ttwu_pending)
+ 		return 0;
 -#endif
- 		cpu = (unsigned long)(v - 2);
- 		rq = cpu_rq(cpu);
  
-@@ -132,7 +130,6 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 
- 		seq_printf(seq, "\n");
- 
--#ifdef CONFIG_SMP
- 		/* domain-specific stats */
- 		rcu_read_lock();
- 		for_each_domain(cpu, sd) {
-@@ -163,7 +160,6 @@ static int show_schedstat(struct seq_file *seq, void *v)
- 			    sd->ttwu_move_balance);
+ 	return 1;
+ }
+@@ -641,7 +639,6 @@ int __sched_setscheduler(struct task_struct *p,
+ 			goto unlock;
  		}
- 		rcu_read_unlock();
+ #endif /* CONFIG_RT_GROUP_SCHED */
+-#ifdef CONFIG_SMP
+ 		if (dl_bandwidth_enabled() && dl_policy(policy) &&
+ 				!(attr->sched_flags & SCHED_FLAG_SUGOV)) {
+ 			cpumask_t *span = rq->rd->span;
+@@ -657,7 +654,6 @@ int __sched_setscheduler(struct task_struct *p,
+ 				goto unlock;
+ 			}
+ 		}
 -#endif /* CONFIG_SMP */
  	}
- 	return 0;
- }
+ 
+ 	/* Re-check policy now with rq lock held: */
+@@ -1239,7 +1235,7 @@ long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
+ 	user_mask = alloc_user_cpus_ptr(NUMA_NO_NODE);
+ 	if (user_mask) {
+ 		cpumask_copy(user_mask, in_mask);
+-	} else if (IS_ENABLED(CONFIG_SMP)) {
++	} else {
+ 		return -ENOMEM;
+ 	}
+ 
 -- 
 2.45.2
 
