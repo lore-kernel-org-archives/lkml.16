@@ -1,125 +1,71 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C033827816A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1F327815F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748425607; cv=none; b=DRwdZOd/AiCvW8BqSDW9q9y4I8hqpnU86PsLWIiM7yBVHlx2cGZfTxKe88YhQ4LIWZq2B6D6KHcPP2chd4YGJLbfy0vMb/9+SUyBo+mhGV0Wl91OWkun2Xn2kDrNf1j/SJ5b3cj5up7h0+f9FcZ59eHK1zBDPiTAHXBmjcdBwaM=
+	t=1748425652; cv=none; b=EAgss6imWV7H9oo9Muu1b/L9agyVmPggoJXq3iUi1zHmp3Tj2fQDcBnIcXfFpoVzTXsZ2oZ0EGGEW9dnGsovQvmJShxBwBhBbTAPvHH/3v3KuXVEuRQlJw/wWFq5fSi7czPWMUKcxRSyJBQMcSS4WJUSA6a0ISLmSs5RhtN+NVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748425607; c=relaxed/simple;
-	bh=ahUZkqPwadES68HTIhQm8fxXZkps7dNBsaVEhNXvlxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u9cHBwT15uY3TfwE65GTSdZjV14OmmMyg1/ola18NimqYFTe0hZo3d2k6UwjnH7VADhc6X1rZZKszJoTt07OMu++Sv6DM5ZGzC3niEQPzt5gIqDNx8WhbDYH0b0pvU/YBk5eFepnoJGL9XEwK3fKOzQN6mcVzrch558sg4cMoA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nCceK5O3; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748425652; c=relaxed/simple;
+	bh=Y1mJQ3DF5VL7r3sPW5fzJrKYJD+f9X05KD9LdmNOgoo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Rw8BBuh00DnKdXhBm88grgjzXKcx/Sd5s4zEK4HPw6MzXalL6Vcz+svNmex/kS3DvxhMWmGzfhS+AGyPe5qz6PrSaj+yUgPAIC3vbIPqRhBoULDPWir8Ir220IH7cOJmbB2B1d7VSIAsDeoqp8rvXT867CgSBxmTlgwnORl2n6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QMUQ8DSF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SEy96rth; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nCceK5O3"
-Date: Wed, 28 May 2025 11:46:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748425602;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QMUQ8DSF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SEy96rth"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748425648;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0a0vAQ+z6APVJCVEpoJNU8cjAHQkqm8VO7jrgFhVbN4=;
-	b=nCceK5O33h6MW3MeSC6j/jdBqEBmeaoq6jiOkX1MsDGOwJTP96XsmbJp3Yfabz/U2xc5qQ
-	sl0iwE8vJDlXhAx/PwyP6gtuhxXT5S4QjC9jYdK/uUKwCP1v0OtslKSwe18Ke4ta+b+dX7
-	cmgsBqgDzmoCQLL+OuK074hdGKyVjYo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Richard Leitner <richard.leitner@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v4 09/10] media: i2c: ov9282: add strobe_source v4l2
- control
-Message-ID: <jsohv4yhopqla6gvae76qqtat7ekeqxvjvxvcaxjaw2th7hq32@uupjpwho3b5d>
-References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
- <20250507-ov9282-flash-strobe-v4-9-72b299c1b7c9@linux.dev>
- <aDTOCC1wE26Md_Zo@kekkonen.localdomain>
+	bh=qqCwS8JMBjO9RvnzZhwCPFZkKFkdqnzqQUXG5Vq7VkU=;
+	b=QMUQ8DSFZX6GBwUL2pIvsdd0HquBDn2oEYALu1AhQCwO/4dwvJ+6lpCGP2Dxo/T8SZGJZw
+	A0ASR8wnZ1IIZ2pSavupvNeei6ttE3CxSdpwwSdDsGX0uXCy3qC3ViIql67Y8lvFMK5SDK
+	oksklEznYEcuN0E4Q1PEeZ7aisMFJ0+VYN6vN+zNSDYNZUJUwhwdSVtmOQW1s/Sg6kMTDO
+	nh+OEIvgU5NUOLOJK79cXn69XZilAOLVZHqcWqIloXQ6DCdXAu5XKVwd/X1N0jlTRqZSFn
+	09kaNqjXrqTTIz40fVXNrYnUIQ2C5UKvqf5nNQ3YfUa0Pa+OgES5dVq6IVNrPQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748425648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqCwS8JMBjO9RvnzZhwCPFZkKFkdqnzqQUXG5Vq7VkU=;
+	b=SEy96rthWjg5ezQjPSdt0DJWVaWOxI1ELOvL7JothVkrPu0SkzX/1HxUaZq0XtlhBQ6H0l
+	+2rQiJaLLAdPeiBg==
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [GIT pull] irq/msi for v6.16-rc1
+In-Reply-To: <CAHk-=wishzzcmRY8EY_qjD4T4i+W_sX2HWyKfo7dcEwPUSSoew@mail.gmail.com>
+References: <174820637262.238682.1985899398053030312.tglx@xen13>
+ <174820637979.238682.4349646136552270664.tglx@xen13>
+ <CAHk-=wishzzcmRY8EY_qjD4T4i+W_sX2HWyKfo7dcEwPUSSoew@mail.gmail.com>
+Date: Wed, 28 May 2025 11:47:27 +0200
+Message-ID: <875xhlqd74.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDTOCC1wE26Md_Zo@kekkonen.localdomain>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Mon, May 26, 2025 at 08:24:40PM +0000, Sakari Ailus wrote:
-> Hi Richard,
+On Tue, May 27 2025 at 08:18, Linus Torvalds wrote:
+> On Sun, 25 May 2025 at 13:53, Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>>     With this update the code is correct by design and implementation.
+>
+> You have reached that unattainable state of code nirvana.
+>
+> Congratulations.
 
-Hi Sakari,
+Thank you very much!
 
-thanks for the review!
+I'm pretty sure, you'll reach that state too once your grandkids put
+your world view into a different perspective.
 
-> 
-> On Wed, May 07, 2025 at 09:51:38AM +0200, Richard Leitner wrote:
-> > Add read-only V4L2_CID_FLASH_STROBE_SOURCE control. Its value is fixed
-> > to V4L2_FLASH_STROBE_SOURCE_EXTERNAL as the camera sensor triggers the
-> > strobe based on its register settings.
-> 
-> Is strobe source control relevant for the sensor? It's triggering the flash
-> but the flash LED isn't connected to it, is it?
-
-Exactly. The sensor is only triggering a "strobe output" pin, but no
-LEDs are on the sensor module. Nonetheless at least in our use-case the LEDs
-are switched directly by this output pin of the sensor (via some FET
-circuit).
-
-So to be honest I don't know if it is relevant, or not. I guess the
-sensor in this case is a "external strobe source" as seen from the
-kernel, isn't it?
-
-> 
-> > 
-> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-> > ---
-> >  drivers/media/i2c/ov9282.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-> > index 0bbdf08d7cda8f72e05fdc292aa69a4c821e4e03..09d522d5977ec6fb82028ddb6015f05c9328191d 100644
-> > --- a/drivers/media/i2c/ov9282.c
-> > +++ b/drivers/media/i2c/ov9282.c
-> > @@ -1368,11 +1368,12 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
-> >  	struct v4l2_ctrl_handler *ctrl_hdlr = &ov9282->ctrl_handler;
-> >  	const struct ov9282_mode *mode = ov9282->cur_mode;
-> >  	struct v4l2_fwnode_device_properties props;
-> > +	struct v4l2_ctrl *ctrl;
-> >  	u32 hblank_min;
-> >  	u32 lpfr;
-> >  	int ret;
-> >  
-> > -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
-> > +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 13);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > @@ -1447,6 +1448,14 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
-> >  	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
-> >  			  0, 13900, 1, 8);
-> >  
-> > +	ctrl = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
-> > +				      V4L2_CID_FLASH_STROBE_SOURCE,
-> > +				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL,
-> > +				      ~(1 << V4L2_FLASH_STROBE_SOURCE_EXTERNAL),
-> > +				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
-> > +	if (ctrl)
-> > +		ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-> > +
-> >  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
-> >  	if (!ret) {
-> >  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
-> > 
-> 
-> -- 
-> Regards,
-> 
-> Sakari Ailus
-
-thanks & regards;rl
+        Thomas
