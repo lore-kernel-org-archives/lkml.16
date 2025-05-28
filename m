@@ -1,99 +1,78 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345AB28C2A9
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22D5217F35;
+	Wed, 28 May 2025 17:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748451947; cv=none; b=RBzhAZ/OQU1gG5SHXpAGoBgPEIy2DOXVbyaWCG1eVJNHji3JWUPFGdJMK2dY/UMVqIVrMrrSwkB+FyuzUUAcUhYtEf3SxC6mj2zBJ12yupu/mYN4Jq3IWGO8EKgcX1KjmGSIClwVJ3VO4kJdP+Axu9ZIwTyV+6VyLs/jAXqSAm0=
+	t=1748452033; cv=none; b=i1qlF5J07utTfUDwH+JX9a60K/0rVWDlDg/rh4FcAAKaf6qADlrZj8jxC27bK4H3g8UVBIP5cT6lDA1+eFqa5QXKM4iP2YKE4yAxZRw6cIfuAFwhAwXRroVrO/YV0IVffI+cU69rfEyM7MLPTte2k9D2e1bLm4vSS1lQVeAG8us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748451947; c=relaxed/simple;
-	bh=MjN3DeO7RN6Mtg+Ma+91ASlzL4kT4/NFZVHo/75DdS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7nDW+gvchdATklLURfCtzK+lNhJq75QnJ4RTa6H8g+w5oOwyylgl623RtOGWrDqNPxhNdql2Pg2PycCj8WPcVMW5q+K2b+RNURSDOHhzgdQwltNPhswdW004jEYWB81ecOQTKB3GlQjeWoFSyZDC3YQ2vh2aHiJg00aPX8Q66I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=QU3K5Rcw; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1748452033; c=relaxed/simple;
+	bh=t37yk+MnOZNVhzpxhZTfVy1pndiycr+ulkZxEYdPMZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PmgxtuOhUI7+pJ/eaH/VvH/lHo9gDWbnitswXoTn1Blc1sjhxkKl8yjtEQpMfrXkclMZrqwgb9DKJIaHBSVmRyjJnBgMv7CMONZTurFbxJL4O+hDZJuX9KTBjQ3HkKkgfgOW6WPd89XdPSlrFy1NwGiGYGCVh5BpGHgXOy5HuOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=is0I8ZDz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="QU3K5Rcw"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-476af5479feso45838771cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:05:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1748451944; x=1749056744; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MjN3DeO7RN6Mtg+Ma+91ASlzL4kT4/NFZVHo/75DdS4=;
-        b=QU3K5RcwwQRFKzg24rtjAGsmq/xYQYKtfzNLBU3zLHCnLfMIf14jactvm2tVB+KPVk
-         +OqJLGi7c3pTeXzZKkp0HPz2+5f34hpV0jUYcFwoQiDXXWvEFp5HRAkXSHNAtpgcSOWJ
-         +MVcIXoeaoUZ/bmJZibWprGxdGaXz29h05O42I/XOz1KUfuk3K0f6C2rRsA/VEPeinS4
-         5cEBbRY5l0l20ftwxnkyJQMjdG82JGEWxzYsENpwDHkl9JJAHzaYI+uM8nApp7zO6Rl3
-         QxcGXa1wyjVV1Su+08dS/vfHz/nSy+EMHHgcGwyH7A2VdOx1u9yK1itsG+eMZ4n2/LrD
-         lQ1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748451944; x=1749056744;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MjN3DeO7RN6Mtg+Ma+91ASlzL4kT4/NFZVHo/75DdS4=;
-        b=kfaJ7jJ7ujVPn74RI/4AvG5kok71f9IDR04xBvjNX3dJeXLPbZKj/a9XGtHDoGf93o
-         3OmgYObRupG3J/gerIeBEQW+x7fIzb+SpqQwTUs0uquV+eF6h/MYRwqLOyc5leNrX/wx
-         1zJIzsTQ9elDIJoVax+ABh9lAYb1G7U/nAgffvFyOyJDZstftlkYb/vmbh0danHX012m
-         1siHcjQsT5irEuh2jqjAyTjG2XQcBWaWBeFDSKjPZkhC+KmmnDOQYi6gebwoUsX+fj9h
-         EsZoq8Z39ZXZKAowdnmddJQBpVky7VO7ud+obXhJ7L+dxFBb72/0l4pOwcAI+CEYTLqD
-         tHIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXz3UZycmmjE4abAE/5WvHYh9qb5aHbXV6rNdoQVEvtpP0xXhY2ej9DFNtLP3dDx22hfZgCrwxMj05c6zw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlag1wnQT6wjWM7uJTN5twAaYq6lxd5IN7GJi9oREO7f9a/cus
-	1DAEgs9tueEWmISOA1y3yBcBr1DT0XeHHTIxVEwQa88l/aKDPQy3hLcYHa8409XjIvIh51VQgHn
-	AKjwGNTCdg2wu4El+cjKb6DSB/xI/DO5zqEO7fzwgSw==
-X-Gm-Gg: ASbGncs3yu+k6a2fhQZm/0Qe/XN5uCKlegLKvLCwmOV6AXZssfP5jKFrhCnPID376MI
-	sn2/qvKBeFADWFmWJGWAo9Av4SHT5au0VMGQWZK5KRIXDwR6M6VsL3ZM3VOkt9k6T+Pf3wligpT
-	tK67vMkZvDyFDw8VC7XagMp9VNOARYgw==
-X-Google-Smtp-Source: AGHT+IEm0ejvPbwrNrqDkZXRJHIE7U5qRPKrsu+TZQu2HF/RoG0QL+BHmiqMQvBwLiCrtZT5dzW9XHwkZ3YcoQoZDUU=
-X-Received: by 2002:a05:622a:22a2:b0:476:a713:f783 with SMTP id
- d75a77b69052e-49f47de7e8amr310623321cf.47.1748451943943; Wed, 28 May 2025
- 10:05:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="is0I8ZDz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9AFC4CEE3;
+	Wed, 28 May 2025 17:07:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748452033;
+	bh=t37yk+MnOZNVhzpxhZTfVy1pndiycr+ulkZxEYdPMZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=is0I8ZDz85a7b7gIAoJ6yoIq/+Imay5aGk6o0z7cQ8iSpSHg+bIhl/5nm3mdHj4RQ
+	 UVPUnUVxbNh7oxaKnA0knz3fg4dIgexwfTGxrrKhBonNlk0Huiq0gi7yYDAasyJNjv
+	 CF3GWSbtpVZh7JfmDwQipA26tF1VlhBTDAVyTSX3aZ5fSokwP3rsx4aQ5Sy88gvFWE
+	 GFEwUCcZbVqqk/sNvdFBYLwMdnuRuMoy6X0wyDqjhnEuEWoNxlZlGJsykN3v2VowiM
+	 EOqmq0pJo8Keu/fpDaP5S3dsXjyhXqFHqde7RyqtQPrfV80mEFsgrKzdR60woaK006
+	 yfAIMcp0i0ciQ==
+Date: Wed, 28 May 2025 18:07:05 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
+Message-ID: <20250528170705.GG1484967@horms.kernel.org>
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+ <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523150815.3066081-1-ashley.smith@collabora.com>
- <CAPj87rOw2UrabPVHBw0ymJEV3LZ29vzL5KK9T2K0znoEyDYeaw@mail.gmail.com> <20250526091646.7020bcff@collabora.com>
-In-Reply-To: <20250526091646.7020bcff@collabora.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Wed, 28 May 2025 18:05:32 +0100
-X-Gm-Features: AX0GCFv3czEaeWL4c-hEA86xSpuMEGadqYNvEfZwMV6awSY6zHBdvHknCd_zQJA
-Message-ID: <CAPj87rP=HEfPDX8dDM_-BptLmt054x+WHZdCBZOtdMX=X4VkjA@mail.gmail.com>
-Subject: Re: [PATCH v4] drm/panthor: Make the timeout per-queue instead of per-job
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Ashley Smith <ashley.smith@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Heiko Stuebner <heiko@sntech.de>, 
-	kernel@collabora.com, Daniel Stone <daniels@collabora.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
 
-On Mon, 26 May 2025 at 08:16, Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
-> On Sat, 24 May 2025 16:03:37 +0100
-> Daniel Stone <daniel@fooishbar.org> wrote:
-> > Unfortunately I have to revoke my T-b as we're seeing a pile of
-> > failures in a CI stress test with this, e.g.
-> > https://gitlab.freedesktop.org/daniels/mesa/-/jobs/77004047
->
-> Note that you need [1] too, which I don't see in your tree. Ashley, a
-> note for next time: when you have dependencies between patches, like is
-> the case here, it's usually better to post them in the same patchset,
-> so that:
->
-> 1. They are applied in the right order
-> 2. Cherry-pickers/reviewers know that they need to consider both to
-> have a working branch.
+On Tue, May 27, 2025 at 08:12:47PM -0400, Jeff Layton wrote:
+> The old nfsdfs interface for starting a server with multiple pools
+> handles the special case of a single entry array passed down from
+> userland by distributing the threads over every NUMA node.
+> 
+> The netlink control interface however constructs an array of length
+> nfsd_nrpools() and fills any unprovided slots with 0's. This behavior
+> defeats the special casing that the old interface relies on.
+> 
+> Change nfsd_nl_threads_set_doit() to pass down the array from userland
+> as-is.
+> 
+> Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread counts via netlink")
+> Reported-by: Mike Snitzer <snitzer@kernel.org>
+> Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@kernel.org/
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Oh, sorry I hadn't spotted that. Yeah, with that applied, you can keep
-my Tb, as it looks entirely solid in CI.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Cheers,
-Daniel
