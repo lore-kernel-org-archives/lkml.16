@@ -1,113 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D594B28BAAB;
-	Wed, 28 May 2025 15:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D902E567;
+	Wed, 28 May 2025 15:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748446586; cv=none; b=d+T3j8SaxL6nLJ83jdzYMnwy9wGZvx2tH1aG5E6moG2ZPyUJ862WK9O9syUl2wFnGQPE6G3Ffj+aNqba3PUCDfT9XzmmpJmwLuO0BGvli5oRHrB0rmdn5FoSgGOBfUyWVEhfIrzBcjoPAp3w8GSk03pRoDN4jZrwoqPo4x2s1EE=
+	t=1748446693; cv=none; b=YLFoXZo95Vy07Zu9jeIiDAQvyNpeKWoOwHLLzdprvX2xVRUYpBO1CjgEe2zESF9mXr5LXwyQXrB622dHZaa//+WmzDgKd2AxDfhIXTL4poZ60OHDG1zOMsh6olgs1jPImaT2cn3yZepT/ALE+RtTrwHSYrl/h8nO/WAwmoXs51o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748446586; c=relaxed/simple;
-	bh=NyxJjdO0uqLgRbXeG3fMSXDtDw3lT9wwstsorauv94E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+4BNW+zegbckhqs5feQ8BnwbH8eYGSiYz6X9Qy/jw2uND318TkPbrBltVqZbaVnrP7hyu5y6L+eiudz3TghtY87KCT+3Kshy3n+vCn8SHDesJ1riFkX8llsm4H+2rGjFqLMU7aVQwucHpuwHV5ywrIFzOKu7PkU9RG1pLesqI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=libzENgz; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748446693; c=relaxed/simple;
+	bh=DxUiu34y960Pp2icfPC+3P8sA4wh8Nmjsq4tuxZsZ+U=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ry2+jd1VBacDsvdRNKJ/Hvi7IVy3Y4CXtasdCm7xiW669SzuM9Rgteh2fVmbmmosyWDC2EL/RA1PCe51PKO9KTZx5L4eRPgpnx+t6FftDtGE8Ieie8VM0eHkIO88JMMVCaS3v140IjfMwiGrW8m6+NOzUloXvtO928kq39BlB9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BUC/kyK4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="libzENgz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748446583; x=1779982583;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NyxJjdO0uqLgRbXeG3fMSXDtDw3lT9wwstsorauv94E=;
-  b=libzENgzVfyjEj0jizhiCOsdiGQZqTZLhyIwQt1pV97WXDEnanIRKSK/
-   XgTOuaySKZ4HuU0xR/iY75ezSfANsGTB01GSE3eotrho12Bp9vpEybkAo
-   OVb4OHmwiM5Zid4BtQ/Abs+HbFTKTvJZQtPL1dpL838EDy8AZ98Vtcsz6
-   4si2W4BJuTKQ9KXZ295vRjCVpgWNCTG3Fj0fhW+o7aW6X7MXxMEmkoWci
-   tUvy3ufRbF7V2C8yiHmixHSBOYmjwRS5wQ4BBXc/QK+dnmr7el1F56JdI
-   8eBPy/v9Yf1RsKfqUPhnKAcuerUTg3b4X/OMFqK8IhWfj3KqBnMdmr5mU
-   Q==;
-X-CSE-ConnectionGUID: Rv0CnB5MQfOvPyeaqlZ4sQ==
-X-CSE-MsgGUID: OZYz5iRgTMi5hnXE1RXtHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="67894315"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="67894315"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:36:22 -0700
-X-CSE-ConnectionGUID: ZOSc//TGTDiNqLFdZkNVow==
-X-CSE-MsgGUID: 4kneYjTAQt+FRNP8RxgZhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="147154189"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 28 May 2025 08:36:19 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKIpE-000VnY-2r;
-	Wed, 28 May 2025 15:36:16 +0000
-Date: Wed, 28 May 2025 23:36:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
-Subject: Re: [PATCH v4 4/9] =?iso-8859-1?Q?MAINTAIN?=
- =?iso-8859-1?Q?ERS=3A_add_Cl=E9ment?= Le Goffic as STM32 HDP maintainer
-Message-ID: <202505282333.T9mzfGT8-lkp@intel.com>
-References: <20250528-hdp-upstream-v4-4-7e9b3ad2036d@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BUC/kyK4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F27C0C4CEE3;
+	Wed, 28 May 2025 15:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748446693;
+	bh=DxUiu34y960Pp2icfPC+3P8sA4wh8Nmjsq4tuxZsZ+U=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=BUC/kyK4OV4UlweEG7n3yg1xl1oLI1ZYzP/0AwTVpWwKf10Vwv6ctk9j/37uM/A3x
+	 pVNC8ACUtbBk2m5un42TYR0S8pLdsYG9GiOHa0ij0PELn//MF4J/ChIkn32VArL/yW
+	 NhETXln+j2IBnca70fev+DKWahbeWj/ebRJWRHTHTb9ppwPspgh727T3BvEWXf8Gt8
+	 P1+T54H/M6giYh31s3iXcgvnJZFSb4RBF634eMftJ2jXnflK8TUStY0TZPRZdvxaf9
+	 5oSHDVFxhBwGR1MDek6Q4MtSoDJ1hDDHlAWYPlm3hIC4F7tQqEhZyNt2PTT5toxFYG
+	 AiBP4CZ6VEB8A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528-hdp-upstream-v4-4-7e9b3ad2036d@foss.st.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 May 2025 17:38:08 +0200
+Message-Id: <DA7WMFWY8I6Z.2EADXSPL111PP@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Arnd Bergmann"
+ <arnd@arndb.de>, "Andrew Morton" <akpm@linux-foundation.org>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
+ <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Boqun Feng" <boqun.feng@gmail.com>, "Al Viro" <viro@zeniv.linux.org.uk>
+X-Mailer: aerc 0.20.1
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+ <20250527221211.GB2023217@ZenIV>
+ <68364701.050a0220.48858.0017@mx.google.com>
+In-Reply-To: <68364701.050a0220.48858.0017@mx.google.com>
 
-Hi Clément,
+On Wed May 28, 2025 at 1:13 AM CEST, Boqun Feng wrote:
+> On Tue, May 27, 2025 at 11:12:11PM +0100, Al Viro wrote:
+>> On Tue, May 27, 2025 at 01:53:12PM +0000, Alice Ryhl wrote:
+>> > In C code we use sparse with the __user annotation to detect cases whe=
+re
+>> > a user pointer is mixed up with other things. To replicate that, we
+>> > introduce a new struct UserPtr that serves the same purpose using the
+>> > newtype pattern.
+>> >=20
+>> > The UserPtr type is not marked with #[derive(Debug)], which means that
+>> > it's not possible to print values of this type. This avoids ASLR
+>> > leakage.
+>> >=20
+>> > The type is added to the prelude as it is a fairly fundamental type
+>> > similar to c_int. The wrapping_add() method is renamed to
+>> > wrapping_byte_add() for consistency with the method name found on raw
+>> > pointers.
+>>=20
+>> That's considerably weaker than __user, though - with
+>> 	struct foo {struct bar x; struct baz y[2]; };
+>
+> Translate to Rust this is:
+>
+>     struct Foo {
+>         x: Bar,
+> 	y: Baz[2],
+>     }
+>
+>> 	struct foo __user *p;
+>
+> UserPtr should probably be generic over pointee, so:
+>
+>     pub struct UserPtr<T>(*mut c_void, PhantomData<*mut T>);
+>
+> and
+>
+>     let p: UserPtr<Foo> =3D ...;
+>
+>> 	void f(struct bar __user *);
+>
+> and this is:
+>
+>     pub fn f(bar: UserPtr<Bar>)
+>
+> and the checking should work, a (maybe unrelated) tricky part though..
+>
+>> sparse does figure out that f(&p->y[1]) is a type error - &p->y[1] is
+>
+> In Rust, you will need to play a little unsafe game to get &p->y[1]:
+>
+>     let foo_ptr: *mut Foo =3D p.as_mut_ptr();
+>     let y_ptr: *mut Baz =3D unsafe { addr_of_mut!((*foo_ptr).y[1]) };
+>     let y: UserPtr<Baz> =3D unsafe { UserPtr::from_ptr(y_ptr) };
 
-kernel test robot noticed the following build warnings:
+Shouldn't this use `wrapping_add` since the pointer shouldn't be
+dereferenced?
 
-[auto build test WARNING on a08b2b34239e63bd839078de98911d3653cdab83]
+If we don't use `wrapping_add`, then the field projection operation for
+this type must be `unsafe`.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cl-ment-Le-Goffic/gpio-mmio-add-BGPIOF_NO_INPUT-flag-for-GPO-gpiochip/20250528-213620
-base:   a08b2b34239e63bd839078de98911d3653cdab83
-patch link:    https://lore.kernel.org/r/20250528-hdp-upstream-v4-4-7e9b3ad2036d%40foss.st.com
-patch subject: [PATCH v4 4/9] MAINTAINERS: add Clément Le Goffic as STM32 HDP maintainer
-reproduce: (https://download.01.org/0day-ci/archive/20250528/202505282333.T9mzfGT8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505282333.T9mzfGT8-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Warning: Documentation/translations/ja_JP/process/submit-checklist.rst references a file that doesn't exist: Documentation/translations/ja_JP/SubmitChecklist
-   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
-   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
-   make[1]: *** [Makefile:1799: htmldocs] Error 2
-   make: *** [Makefile:248: __sub-make] Error 2
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+Cheers,
+Benno
