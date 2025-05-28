@@ -1,85 +1,103 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E512220F07D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7B3214A9E;
+	Wed, 28 May 2025 10:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748427692; cv=none; b=UYSG1uFmzU3urHCLNlNMUwzK8vvgUoMAyKtd4tCXGhRmvoOlP21XMloSYgr4ghaJMRgJ7+a3ZQLeFR/PWyrMIj2w0LTH/XSOIaWsX4sLWOf8X6XznttJpweL1hVPHZ+HG3s2dvTdcNnWb8RINU0Mbk/sbDBG85ZtZG+/1/EY6+s=
+	t=1748427708; cv=none; b=V3fznS8Ps7OlB6t73dsWXHuFfJkrKhjL/RKck4bV1zCYAMyJownL4ruxLfGFGYpKwKYd8HFsPWZg+nWzv0KuozVmxLvvA3S/1fe/CqMRz4mPPAoFMZyxPWa3gQpx0TnWVPNewCNMqf65GiH8IwO7DKe2CRjybqiIWc4XCUhRvOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748427692; c=relaxed/simple;
-	bh=dcMsoNk413jU5nMOVSSWNMWozGrxa6Y/JoRiP9+BC/w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ogWJMWgeHWynV5jTI103grSTuseAD5RLZSZXBDVFAG/V9gYwJv6AuWcTreN9RNexusdL08bV7W+ODTuqbhyyY1tZidCj08Io2WX4OF4Y0YuQdbQCSA1k00UoFXLfnfu4Rg+K8Sdf7h/iXj7N6DFSTRwIohclpk49gIl2j6QTN4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dPGc8QOZ; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1748427708; c=relaxed/simple;
+	bh=MarkZ8utDfJEEqG+ZwLpK8d+OC45TaBkZgBFc7qet+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DwYkyneQnV4KzQW1mIqD4RSWAsbX2IHZpbYNz0W+FxSGIYRiX8p92RvjyOrP9h+bBrV9RnrP8aUDvGxBkgt4LRLtPcVXU2fCn0bIGlsgY6VDMRLe2Ko+Mf/0/CsrOXlm/AF4IOuDT7pfPVCOWjKUuWiJzCAo8LjU6O4D/UFzqqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4QFFQUI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dPGc8QOZ"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so35144935e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:21:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748427689; x=1749032489; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihiUk54rwHLhPgQ/ymNPw0bmICGiLYzE3RfqwI1pWg8=;
-        b=dPGc8QOZEEOtso2iiK+PNqTfM11KNVC0sX2yftEkhPp8JR9hFAxJKOGokvsok0nJUd
-         mx/2MxhInCejAtp732bS2ikE2y7eLEm7XoPtfRppkUxSJLEE7dY82J+ZHe/iI16ol7fr
-         7yKHDNfvZoZlt3g2cQ11ZaPv0QauV6DpqC3uNQANv9aGfRkXDI90RBhUsTH61MxSY2qO
-         2wAqDY9g9YGlY5njlyu8u3ioG64IIVzjS9zBCPvMPAnjkTpD/P3H9+NwgQ8CkkYVFaGw
-         j7/HFzjiryTSe26tXWkZ6Fj4WmzHdoQmNBIoXXEVUNHYmyaT3Tb5H1Ppg9WPj1dxXKcI
-         gKMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748427689; x=1749032489;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ihiUk54rwHLhPgQ/ymNPw0bmICGiLYzE3RfqwI1pWg8=;
-        b=R8Hw4SKgUbAfMB8tIaKqfhUP2Vo8Dmmhfzhpdr8JwPaKYZluIFaPshjcWNAeKCppSk
-         dSng38UjtbGOFWbuQFQp0HPNgq/ZkgJSSkhxs8jLcqlKOvhF8myTXW/IDnSqrGSeqpP6
-         wFQp8aAlosAdGvyV60sV5uy8VwwhKDOpfYaql/6XzqPHHt0VUlfCCOabirsP17ErKaTA
-         H+oxO3Um3XuDm5MKOXQNLn08pPk6sZ2xyGlSqKmEvMosyyLtlcFpc0XDh3YKV+CNE6NY
-         RL9AFeFrVF7qo1WJ2XjVg11NjfZj36dZF1s+YatkBNM7MMQbCntGaLJe4Kaad/FdKZs4
-         TUow==
-X-Forwarded-Encrypted: i=1; AJvYcCULxuKLZmVr2BRuYa8NqPu7ADvUwdqld6aPEwDUEjOdoXAok5qocQeoEQ7BKPejgBDQpy4xGpLPDRCdbzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZjEFbBXG50mQkqctcxAbB9bM+TQ4TeZK+yTlrXKD9IhnQDsMR
-	AottOZMchSW1InpO4C9XBBj7JaA+rOnY393bhlATqsjXB4AGbvElEWCULph44qGa/Eh+Y0iAtuo
-	oCFtH2MCJl+aYkReTsg==
-X-Google-Smtp-Source: AGHT+IHs5mJnbDInw3TkGPf3wo/Sg9XehLgPlODOdQf67wGziF/MJj+S+6bCTlQgb/SVU7imTB0yCuQAEVqM6f8=
-X-Received: from wmbez3.prod.google.com ([2002:a05:600c:83c3:b0:442:f8e9:a2ac])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3f07:b0:442:f4d4:522 with SMTP id 5b1f17b1804b1-44c916072e2mr127245905e9.5.1748427689385;
- Wed, 28 May 2025 03:21:29 -0700 (PDT)
-Date: Wed, 28 May 2025 10:21:27 +0000
-In-Reply-To: <20250527204928.5117-1-albinbabuvarghese20@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4QFFQUI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626A6C4CEEB;
+	Wed, 28 May 2025 10:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748427708;
+	bh=MarkZ8utDfJEEqG+ZwLpK8d+OC45TaBkZgBFc7qet+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U4QFFQUIcZimiPD3SX9jXdRRX77wR2TsQWYRGBAm7B+x66WD6mXbTPY8CFWaatNzT
+	 BHpRSl9D0m0FV3dyChup6xal++HQlK+ocxtllMOk59zPyM1hOM43W45usPV/a1cF15
+	 hqroARrL1RjBAtB8rh/GjU3BNsCaSW7Ozrpg3opRCsOtJEpuffjm413yrnP5/HeANG
+	 Wpw0cqfAbUqjZ10TiqhukNRnJPqjA387wshfZqS4ipF3XJOSA9LSYIKkWHLOL4wgqI
+	 CP7gtUj2HsLSfbQ92/w4Ckam3mMIwyeNIY1f6UzHUl6nk1Sdj130C9sV/AusB0V8Tp
+	 ZucM4V6myOcTg==
+Date: Wed, 28 May 2025 12:21:45 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Nylon Chen <nylon.chen@sifive.com>, Conor Dooley <conor@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, paul.walmsley@sifive.com, samuel.holland@sifive.com
+Subject: Re: [PATCH v14 0/5] Change PWM-controlled LED pin active mode and
+ algorithm
+Message-ID: <crcfskukqifse6gqrydx2iezargv5frv6dguj3iqdkfm7xxbqh@4v2dvo4zcmbz>
+References: <20250509095234.643890-1-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250527204928.5117-1-albinbabuvarghese20@gmail.com>
-Message-ID: <aDbjp1oCqtGi6W9l@google.com>
-Subject: Re: [PATCH v2] rust/list: replace unwrap() with ? in doctest examples
-From: Alice Ryhl <aliceryhl@google.com>
-To: Albin Babu Varghese <albinbabuvarghese20@gmail.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q3beuwyz772xtchz"
+Content-Disposition: inline
+In-Reply-To: <20250509095234.643890-1-nylon.chen@sifive.com>
 
-On Tue, May 27, 2025 at 04:49:28PM -0400, Albin Babu Varghese wrote:
-> Using `unwrap()` in kernel doctests can cause panics on error and may
-> give newcomers the mistaken impression that panicking is acceptable
-> in kernel code.
-> 
-> Replace all `.unwrap()` calls in `kernel::list`
-> examples with `.ok_or(EINVAL)?` so that errors are properly propagated.
-> 
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1164
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Reviewed-by: Benno Lossin <lossin@kernel.org>
-> Link: https://github.com/Rust-for-Linux/linux/issues/1164
-> Signed-off-by: Albin Babu Varghese <albinbabuvarghese20@gmail.com>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+--q3beuwyz772xtchz
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v14 0/5] Change PWM-controlled LED pin active mode and
+ algorithm
+MIME-Version: 1.0
+
+Hello,
+
+patches 1 and 2 ideally go in together, right? @Conor, does your Ack
+mean that you're OK with me taking the dts change via my pwm tree?
+
+On Fri, May 09, 2025 at 05:52:29PM +0800, Nylon Chen wrote:
+> Nylon Chen (5):
+>   riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+>     active-low properties
+>   pwm: sifive: change the PWM algorithm
+>   pwm: sifive: Fix the error in the idempotent test within the
+>     pwm_apply_state_debug function
+>   pwm: sifive: Fix rounding issues in apply and get_state functions
+>   pwm: sifive: clarify inverted compare logic in comments
+
+The objective of patches #3 and #4 is the same, right? Both prevent that
+=2Eapply =E2=88=98 .get_state is idempotent, right?
+
+And I'd also squash patches #2 and #5 to have the comments updated
+together with the respective code changes.
+
+I think the algorithm implemented in this driver is more complicated
+than it should be, but this is not this series's fault, so I tend to
+apply it with the above mentioned squashes.
+
+Best regards
+Uwe
+
+--q3beuwyz772xtchz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg247UACgkQj4D7WH0S
+/k6YPwf8CPS53gGarqxZhus1KnVvEiNi//eZnxRpZNoAwKCuMXf3nZ87lDGFDOpr
+ZafvQskHAPQK6E5WffbH33HJyr+8sFLhHWPFLWBmpHbi4pNdUDYfYWPhgwcU0roH
+j3J0ihE2ysD3hq8AnYFjM/O5wqZDkXQQ+Qgk1XUuLp3SywIQDYmsVt5+Gqy7LXRd
+BcYv7fWURROIeLL4XnKEZghjYDJUXIk50ue3UYqeYDv6jhWdoJOn6Acc7KdUXDYQ
+hO99harJgO772boFRxa7+c9edXfNpCHzeVMFJbqoqvWu8msq7SpvZqJKz1aUQOMN
+EPaRoaY8tdFY4qPbwrka8VfubM395A==
+=dm+D
+-----END PGP SIGNATURE-----
+
+--q3beuwyz772xtchz--
