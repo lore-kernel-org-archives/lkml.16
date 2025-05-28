@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C931D8E10;
-	Wed, 28 May 2025 00:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A54F1DE4F1;
+	Wed, 28 May 2025 00:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748392157; cv=none; b=StquJ3zcjrzq+XKUKStX30tjI3R6lE+KVV5noQkTyQd1hIDXCyCKe5KYRMSpGXpL3+8WokPY7YDVhoB2Vym1itBd8YHiqTBG15+PBNEMjFbLQQG8MuWuvuy2DptxHUKHwQBmPnTvgOJ9QFIUDPHx0CzdZKGPY5hpSW74HHuVtpU=
+	t=1748392160; cv=none; b=tG5cuIyF0y48WIhweu9EByal+zYfjhOTB76Ef+hbi+lWnhNtXPfC13GrOjIw1oGU1GhULUi5Hxjgd2F48jqTrZCKeza3iDPxD96DNV7pcvbVK38E1ReIX7eJ2NXMz5KroT4T1G1cqyTV8s6EYJaiDqiIv1OllKJCrWdY+KyEd24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748392157; c=relaxed/simple;
-	bh=cGhmg8ARdx2wYAkWfOvPwjDmaAAsZp466GUUzPvUPIg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=eOsuGhrWn1m3kNWmE5ZCem8ydEJTWL0882QzXbZIrcZEcXuXaglZDI/ERzVAhouZSwbg1dYqmRM/cGq27pVH4FTGBiu8GU/fp4gfvgEMAQ2AkDpELwTu6LZ6UwiUzXmcHw+avqnKV4SRhwNNABIh+5ENHjYZSDyUxSlV1VBH+Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPhhBH8j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748392160; c=relaxed/simple;
+	bh=MWDvOy/cGKe/sJ+FFDga4SKXZLlHvUuPJ91f1/yhZsc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=e7vX0oJ6rzrkQWvUCI9g6o6oh+xllz+VOW86WauMtEf9WnaDTm3WIWGCCyiCQL+OCRncCHBY+o25PbHHX3o1s5WDCBW9TPzvMg9yGXmEmnsW/hrL9disnmaoYFNL9xcswU67HVe77oE9AdB+5eld5uAnxlx+wExJHgT2EWgtIdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa4CuLzN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPhhBH8j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF9AC4CEED;
-	Wed, 28 May 2025 00:29:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa4CuLzN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89CCCC4CEE9;
+	Wed, 28 May 2025 00:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748392157;
-	bh=cGhmg8ARdx2wYAkWfOvPwjDmaAAsZp466GUUzPvUPIg=;
+	s=k20201202; t=1748392159;
+	bh=MWDvOy/cGKe/sJ+FFDga4SKXZLlHvUuPJ91f1/yhZsc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jPhhBH8j6IqFDG0dy89VfTwmPI2KQjI60ONN0QPBz0FK3ioa59ERy1N92hHH0/BGO
-	 mgS2mo0b5oejbRNhEyFNHUVdg3FNswIqKTVcZIoqIhG1ECKm82rRB+pCI1EjEEH1jj
-	 /eXWtOZcJiRaT/5zhTScI8pEtGRD9Z0kIleHwI4lENDlQPet0bZYVYB4eIYQhegX1U
-	 cJ1zYt7izzZ2QslcDMrNhPGVbxjufN1LY6nOGFAM/c9QiYx5cbVh2Y+GYp9uoipwwN
-	 D7XxKqzzq3iiNTXIuiw+Awa8sECx9wUhJeHDH/A2POw9eOQgeB0fF6UXmmwLhwhY7a
-	 UtMw/4Up2D+pA==
+	b=oa4CuLzNt1XpvJCDthpWlKmSbfE2/R4REC5QKXK/EYumDgvtZCuxa9+Mp4OHp86Qh
+	 B/8qOfWouRMoEoBZ4Pvby+vIt3cbQ5FYj47w7Hnbirkdu84hubm6VOS7XWd9AGC6r6
+	 EwokauIJ5O7b1Spa2DN/L1DWqJjelSvX7B+SfFtRsm0xJ+95GlvhTU4meBPHGx1FrQ
+	 0IaDlKwda4Mu/dk5yPlXLQNmY5+NE4OVFcQdGQ3K8yT7Wr5WvxYsRfRcCubc33YmMI
+	 U3mRCkaC062XWCpcT7o0DGZ9PXhtd35FRgxTA4VT6ddmEqROQHrhtYEDZtyeBTI5DA
+	 OLkO7PC+TajMQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADBD1380AAE2;
-	Wed, 28 May 2025 00:29:52 +0000 (UTC)
-Subject: Re: [GIT PULL] Power management updates for v6.16-rc1
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADAC380AAE2;
+	Wed, 28 May 2025 00:29:54 +0000 (UTC)
+Subject: Re: [GIT PULL] SPI updates for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0gK5=_HkTg-O7GOz-xUw27_484_AeoJHaz9vN0XRZvmqw@mail.gmail.com>
-References: <CAJZ5v0gK5=_HkTg-O7GOz-xUw27_484_AeoJHaz9vN0XRZvmqw@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-pm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0gK5=_HkTg-O7GOz-xUw27_484_AeoJHaz9vN0XRZvmqw@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.16-rc1
-X-PR-Tracked-Commit-Id: 3e0c509fbdb106ba2d2fa13beafe58f4ba11e13d
+In-Reply-To: <4a1559fc9c5d1fec91f1ac5d425871b5.broonie@kernel.org>
+References: <4a1559fc9c5d1fec91f1ac5d425871b5.broonie@kernel.org>
+X-PR-Tracked-List-Id: <linux-spi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <4a1559fc9c5d1fec91f1ac5d425871b5.broonie@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-v6.16
+X-PR-Tracked-Commit-Id: b00d6864a4c948529dc6ddd2df76bf175bf27c63
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c89756bcf406af313d191cfe3709e7c175c5b0cd
-Message-Id: <174839219130.1837144.14239282792044585443.pr-tracker-bot@kernel.org>
-Date: Wed, 28 May 2025 00:29:51 +0000
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+X-PR-Merge-Commit-Id: 5722a6cecfff3e381b96bbbd7e9b3911731e80d9
+Message-Id: <174839219343.1837144.344561637732015603.pr-tracker-bot@kernel.org>
+Date: Wed, 28 May 2025 00:29:53 +0000
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 26 May 2025 22:12:06 +0200:
+The pull request you sent on Mon, 26 May 2025 11:30:17 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-6.16-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-v6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c89756bcf406af313d191cfe3709e7c175c5b0cd
+https://git.kernel.org/torvalds/c/5722a6cecfff3e381b96bbbd7e9b3911731e80d9
 
 Thank you!
 
