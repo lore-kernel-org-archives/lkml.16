@@ -1,217 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EB87FD;
-	Wed, 28 May 2025 00:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5038AA2D;
+	Wed, 28 May 2025 00:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748390694; cv=none; b=out4q2IESO2DtzHSfAamHsEM1JohXDo/gi9zy5bmlaKdb3tdg3D8dpmwJ1x7/zgPP9907YuOsrxkgsAmS5pviUpQfND2iFeAFXLbiXaagHcvgfH6w37CKgL8zub6DG+TK+js1BrRi5Cytz7hqVaAbI2JzHAI6SZjiLzyejtiQTQ=
+	t=1748390747; cv=none; b=kJnPJysUI6O7bK8aKPSfXhR11EupY/4DlrxThmUvXnaRkwsxaY3RUCO2V/+SFQn+8/rtEw0a8GL2McOaqQ9+ByF4su59Yql0mQ/BM2JukVDs/KQlqJMle4kRE4LyNgf72BcVYTdee0Hu8MU/y2yzbiMmv/yPYfhIvQm8D6OxoFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748390694; c=relaxed/simple;
-	bh=0EUqTd8s0a0nZiI7FjdMX0MsV8D/5MPI3MWQmgodAv4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CraTpMDlO34L3Jngpa4IyFHulT4PnD2x8e/DGk8JHdh4QGEShQZGsPMt8hJN1qz3LE/46H4a7wuCDYE3eg6beoxWWHmX0zCCwGqyRt8OnlXtlK82qcrAiJwUeIJL+HFaYuG7+xzFb4E0r0hMwdNG7fqyzSi/Ua6Flgrb7hqNvoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jcbBXaPj; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748390747; c=relaxed/simple;
+	bh=IpRdMgsILcpdxAO7E2U3/J/paPCQk9L6dsR5uiOHUGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YzhsGyPD6ZUjGHFHttxKSZEhsgphrcjMoM1jZrMyhhp9YRf4gwlGjOvljoS4c2lphRPqQ8k5yYkgMTKWqnTLu4MzBTtTdWJgN21hSzTVRgyTh+pDqmP8BtBD46LUvoAPDrDIzPWJ0lb7rRC2IJEnB66g/q83b00QzQoGBN3WyhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KPa9xkJn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jcbBXaPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748390692; x=1779926692;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0EUqTd8s0a0nZiI7FjdMX0MsV8D/5MPI3MWQmgodAv4=;
-  b=jcbBXaPjvJIKSKhtMlglepA+P0FFY2uE3QPLFKJVfad3WV7NLxSkm9h8
-   s/LlbZ62+NgBRNygv1bwKV2iok2DELpwl2QpWd3XOs9OHpN0NYbXTv9X7
-   Z+ylx21rKD/ICit8N3lwQJFGY7jzXQhqhxyqfL/I2mNpFak6ZkBUIDiXC
-   5VrN29Sufw03glJWqIj33kW4f1tWkdKfibGe81ITK24Hs6+xmDNj32Oz+
-   HVLfLLP1yrxozzWJLi6dnuGlvCEFjnxlzmImIk21Xh1tTEQeDb5qs6/FQ
-   f8Z6seJOsg8M+5vVNSDQIOKrnO/hh9vt/zWX3x0hVrNLqSgVtfXISuxV7
-   A==;
-X-CSE-ConnectionGUID: FWA3fnZCT0KhLhBSnyaHKA==
-X-CSE-MsgGUID: Mn26YyyxSAGEkPBKJvLooQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="75791712"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="75791712"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:04:51 -0700
-X-CSE-ConnectionGUID: Z0dzMtooSOi3rlQ5YDayog==
-X-CSE-MsgGUID: w/x9uTQuS320aQAasX4eig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="147790475"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 27 May 2025 17:04:46 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uK4Hk-000V6u-00;
-	Wed, 28 May 2025 00:04:44 +0000
-Date: Wed, 28 May 2025 08:04:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v5 03/12] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-Message-ID: <202505280721.abBn0GaE-lkp@intel.com>
-References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KPa9xkJn"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHTw0m029872;
+	Wed, 28 May 2025 00:04:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	aDUNQStuy0jRMfLgtZNwbSDgWxeyT3CWPdpJ9IflsOA=; b=KPa9xkJnirrwzekO
+	bDz3gfL44EL6qyKyMqf8l+ZazG8GyQ+Pp+Q2VEW9BJK+Hrk++Vnco1Ch3P2Hr6aj
+	y2+1FGK/8JQE4sOUa6aIl6dR9BS14FycJvUHzIdKiuiEu/YMnJ/6gVoj8dyIxNud
+	PYmG99yMkuEOC4P5YhenxRTbg9f+g/1xMcxnKgdP8pqwpyWCROVfg3cvS6lmNWyu
+	aRsgre5v8zia5HJlWjSrPuBgQ+32tmg2ZTiKhniIdKp8mCAKdezQVe3lPMEVo29/
+	YcsC2kt0lYQFYlgVT5A5/oBiI8U8KSWMIuuAXsXOdYdlOY0+/PgK+rdGNxne2Ulg
+	yPZZuA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf0v68-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 00:04:59 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54S04wpi029950
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 00:04:58 GMT
+Received: from [10.46.19.239] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 27 May
+ 2025 17:04:58 -0700
+Message-ID: <7ac5c034-9e6d-45c4-b20a-2a386b4d9117@quicinc.com>
+Date: Tue, 27 May 2025 17:04:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 0/5] net: stmmac: Add PCI driver support for
+ BCM8958x
+To: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>,
+        Andrew Lunn
+	<andrew@lunn.ch>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+CC: <netdev@vger.kernel.org>, <alexandre.torgue@foss.st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>, <richardcochran@gmail.com>,
+        <ast@kernel.org>, <daniel@iogearbox.net>, <hawk@kernel.org>,
+        <john.fastabend@gmail.com>, <fancer.lancer@gmail.com>,
+        <rmk+kernel@armlinux.org.uk>, <ahalaney@redhat.com>,
+        <xiaolei.wang@windriver.com>, <rohan.g.thomas@intel.com>,
+        <Jianheng.Zhang@synopsys.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <bpf@vger.kernel.org>,
+        <andrew@lunn.ch>, <linux@armlinux.org.uk>, <horms@kernel.org>,
+        <florian.fainelli@broadcom.com>,
+        Sagar Cheluvegowda
+	<quic_scheluve@quicinc.com>
+References: <20241018205332.525595-1-jitendra.vegiraju@broadcom.com>
+ <CAMdnO-+FjsRX4fjbCE_RVNY4pEoArD68dAWoEM+oaEZNJiuA3g@mail.gmail.com>
+ <67919001-1cb7-4e9b-9992-5b3dd9b03406@quicinc.com>
+ <CAMdnO-+HwXf7c=igt2j6VHcki3cYanXpFApZDcEe7DibDz810g@mail.gmail.com>
+Content-Language: en-US
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <CAMdnO-+HwXf7c=igt2j6VHcki3cYanXpFApZDcEe7DibDz810g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=6836532b cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=Q-fNiiVtAAAA:8 a=GcoI09lhNaN5Dz-92OEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: zpgw-8AFVHvXHtIYfQ8he9X3VaAn-d9R
+X-Proofpoint-GUID: zpgw-8AFVHvXHtIYfQ8he9X3VaAn-d9R
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDIwNSBTYWx0ZWRfX8H1fR9ASfCTa
+ ZlnZzyxxTeEKKwpoBS+icLkuaoKXs4Azv6NRGJGyRSh+Ov1Dgd8gUpITWQcc8f917X6MsQWXJq8
+ DNiWojEgXqeKeMQ4jEMgKanGjYrxyECFJlj77JL2zanB+lj6nZJBW95l4BphnN2vvIlMiVmgwiG
+ AqJX7RuCgI6rc+kZzA731mkW4JFsWNk7eazg4sZGM9zNctL3mnh3Es4qQD9rOEXN+PfGop+t8YK
+ 4PQvT7toq/X8Cuj+P45Z4i+lAXRLvdR/ZQJvDfl3uAXazTazV/Z/vG6s6ytO7h6LH0anFkC4EMp
+ 0bzre8YvTRSTEe/CQ5IcStqOjxZeBE6zyiQnvZzPxlrc58QS/arf2cuUmTGcfBvpuN5lQDEPlRC
+ FRBsxV9WT+kO5VYpNEo/kls+YIB6bYXc3PQOoGZWTk6jxeRYgVk8T+OpApL1UpiHg9e822RW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_11,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270205
 
-Hi Amirreza,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on 3be1a7a31fbda82f3604b6c31e4f390110de1b46]
+On 2/7/2025 3:18 PM, Jitendra Vegiraju wrote:
+> Hi Abhishek,
+> 
+> On Fri, Feb 7, 2025 at 10:21 AM Abhishek Chauhan (ABC) <
+> quic_abchauha@quicinc.com> wrote:
+> 
+>>
+>>
+>> On 11/5/2024 8:12 AM, Jitendra Vegiraju wrote:
+>>> Hi netdev team,
+>>>
+>>> On Fri, Oct 18, 2024 at 1:53 PM <jitendra.vegiraju@broadcom.com> wrote:
+>>>>
+>>>> From: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>
+>>>>
+>>>> This patchset adds basic PCI ethernet device driver support for Broadcom
+>>>> BCM8958x Automotive Ethernet switch SoC devices.
+>>>>
+>>>
+>>> I would like to seek your guidance on how to take this patch series
+>> forward.
+>>> Thanks to your feedback and Serge's suggestions, we made some forward
+>>> progress on this patch series.
+>>> Please make any suggestions to enable us to upstream driver support
+>>> for BCM8958x.
+>>
+>> Jitendra,
+>>          Have we resent this patch or got it approved ? I dont see any
+>> updates after this patch.
+>>
+>>
+> Thank you for inquiring about the status of this patch.
+> As stmmac driver is going through a maintainer transition, we wanted to
+> wait until a new maintainer is identified.
+> We would like to send the updated patch as soon as possible.
+> Thanks,
+> Jitendra
+Thanks Jitendra, I am sorry but just a follow up. 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250527-151020
-base:   3be1a7a31fbda82f3604b6c31e4f390110de1b46
-patch link:    https://lore.kernel.org/r/20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-3-024e3221b0b9%40oss.qualcomm.com
-patch subject: [PATCH v5 03/12] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-config: arm64-randconfig-r121-20250527 (https://download.01.org/0day-ci/archive/20250528/202505280721.abBn0GaE-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250528/202505280721.abBn0GaE-lkp@intel.com/reproduce)
+Do we know if stmmac maintainer are identified now ?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505280721.abBn0GaE-lkp@intel.com/
+Andrew/Russell - Can you please help us ? 
 
-sparse warnings: (new ones prefixed by >>)
-   drivers/tee/tee_core.c:393:48: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *[noderef] uaddr @@     got void [noderef] __user * @@
-   drivers/tee/tee_core.c:393:48: sparse:     expected void *[noderef] uaddr
-   drivers/tee/tee_core.c:393:48: sparse:     got void [noderef] __user *
->> drivers/tee/tee_core.c:396:56: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *addr @@     got void *[noderef] uaddr @@
-   drivers/tee/tee_core.c:396:56: sparse:     expected void const [noderef] __user *addr
-   drivers/tee/tee_core.c:396:56: sparse:     got void *[noderef] uaddr
-   drivers/tee/tee_core.c:785:41: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *[noderef] uaddr @@     got void [noderef] __user * @@
-   drivers/tee/tee_core.c:785:41: sparse:     expected void *[noderef] uaddr
-   drivers/tee/tee_core.c:785:41: sparse:     got void [noderef] __user *
-   drivers/tee/tee_core.c:788:56: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const [noderef] __user *addr @@     got void *[noderef] uaddr @@
-   drivers/tee/tee_core.c:788:56: sparse:     expected void const [noderef] __user *addr
-   drivers/tee/tee_core.c:788:56: sparse:     got void *[noderef] uaddr
-   drivers/tee/tee_core.c:396:46: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:396:46: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:677:37: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:788:46: sparse: sparse: dereference of noderef expression
-   drivers/tee/tee_core.c:788:46: sparse: sparse: dereference of noderef expression
+Best regards
+ABC
 
-vim +396 drivers/tee/tee_core.c
-
-   361	
-   362	static int params_from_user(struct tee_context *ctx, struct tee_param *params,
-   363				    size_t num_params,
-   364				    struct tee_ioctl_param __user *uparams)
-   365	{
-   366		size_t n;
-   367	
-   368		for (n = 0; n < num_params; n++) {
-   369			struct tee_shm *shm;
-   370			struct tee_ioctl_param ip;
-   371	
-   372			if (copy_from_user(&ip, uparams + n, sizeof(ip)))
-   373				return -EFAULT;
-   374	
-   375			/* All unused attribute bits has to be zero */
-   376			if (ip.attr & ~TEE_IOCTL_PARAM_ATTR_MASK)
-   377				return -EINVAL;
-   378	
-   379			params[n].attr = ip.attr;
-   380			switch (ip.attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK) {
-   381			case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-   382			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-   383				break;
-   384			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-   385			case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-   386				params[n].u.value.a = ip.a;
-   387				params[n].u.value.b = ip.b;
-   388				params[n].u.value.c = ip.c;
-   389				break;
-   390			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
-   391			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-   392			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
-   393				params[n].u.ubuf.uaddr = u64_to_user_ptr(ip.a);
-   394				params[n].u.ubuf.size = ip.b;
-   395	
- > 396				if (!access_ok(params[n].u.ubuf.uaddr,
-   397					       params[n].u.ubuf.size))
-   398					return -EFAULT;
-   399	
-   400				break;
-   401			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-   402			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-   403			case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-   404				/*
-   405				 * If a NULL pointer is passed to a TA in the TEE,
-   406				 * the ip.c IOCTL parameters is set to TEE_MEMREF_NULL
-   407				 * indicating a NULL memory reference.
-   408				 */
-   409				if (ip.c != TEE_MEMREF_NULL) {
-   410					/*
-   411					 * If we fail to get a pointer to a shared
-   412					 * memory object (and increase the ref count)
-   413					 * from an identifier we return an error. All
-   414					 * pointers that has been added in params have
-   415					 * an increased ref count. It's the callers
-   416					 * responibility to do tee_shm_put() on all
-   417					 * resolved pointers.
-   418					 */
-   419					shm = tee_shm_get_from_id(ctx, ip.c);
-   420					if (IS_ERR(shm))
-   421						return PTR_ERR(shm);
-   422	
-   423					/*
-   424					 * Ensure offset + size does not overflow
-   425					 * offset and does not overflow the size of
-   426					 * the referred shared memory object.
-   427					 */
-   428					if ((ip.a + ip.b) < ip.a ||
-   429					    (ip.a + ip.b) > shm->size) {
-   430						tee_shm_put(shm);
-   431						return -EINVAL;
-   432					}
-   433				} else if (ctx->cap_memref_null) {
-   434					/* Pass NULL pointer to OP-TEE */
-   435					shm = NULL;
-   436				} else {
-   437					return -EINVAL;
-   438				}
-   439	
-   440				params[n].u.memref.shm_offs = ip.a;
-   441				params[n].u.memref.size = ip.b;
-   442				params[n].u.memref.shm = shm;
-   443				break;
-   444			default:
-   445				/* Unknown attribute */
-   446				return -EINVAL;
-   447			}
-   448		}
-   449		return 0;
-   450	}
-   451	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
