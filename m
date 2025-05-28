@@ -1,172 +1,258 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFC51F1537
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283822F2F;
+	Wed, 28 May 2025 05:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748408304; cv=none; b=UpoSKZNUpbaiYQ6BZUaLjhr/iWdMGPUgab9/UDAOxpE28puEzKbL6VRc9LY83axVBoG7heyLXJwBZU/m7Kj35rkbBcA8lDgZJfqVmSTrzY6UGivmbQ0J17X+CaV0wyQOxdzhPcgPP6EwNX8mcwE/aBUEbAiM8wK6/4KDm3R3uZA=
+	t=1748408641; cv=none; b=o6yOKr7svL+6oXtp/3sptgclJB4vSBEO4gJ+FI4r79IsPcaWy21xQOt+k8yeWvRAsv8ZXKZTFNZG1Ht5J7/+7akI9b4yKfrISsXyrS95oL0++ccvPQG+3l/IsKXp7seqiEVnlhsY8SozJqHDiAhWYjZsdioiYh4O+swOyQBahBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748408304; c=relaxed/simple;
-	bh=2LX650AeAHn3TzSjSL4/06vnyAtRrEY3yfwhoaLvd6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g2JVc2Ao7QR/W1os0utl/ePQ+/RiK3Fbrg2wILJBaR4vgol6nS+1Ty5VNvHmyHLzRf3/PmzN4eDknof2kXQT5gUcKyvRP+zHO+LyjdzWkNTLwUgaooFhaW/TvKaPRwyrKzpXHRbe5xzRdFNQ1c5Qbm4z4IvHPPwf6pyzoqs80zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LZ65FbHh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LZ65FbHh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748408301;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lvIb7tWWsEupK9BWjz39c0yzeNm9G9imVR6VZCBLXa4=;
-	b=LZ65FbHhSY1AbsNa+qH/W0trd+X8nhpyYf/KX9GKe1PTnt4Yw8kZW947MvfIKV+SBvWHRh
-	E9qRUKiYdBfRSfsL/xdYrn9pQMngjhzFwiegFLFQ6cimDQZbGx+CAolJsNnTg21YT/9MEW
-	08dXXKHi6i46Ew/bEIykc+UQfenrf/s=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-392-6OgFJOrkOWyeA5dzsATH2A-1; Wed, 28 May 2025 00:58:19 -0400
-X-MC-Unique: 6OgFJOrkOWyeA5dzsATH2A-1
-X-Mimecast-MFC-AGG-ID: 6OgFJOrkOWyeA5dzsATH2A_1748408298
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-32805c6330aso20076961fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:58:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748408298; x=1749013098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lvIb7tWWsEupK9BWjz39c0yzeNm9G9imVR6VZCBLXa4=;
-        b=GUgDPopCwfXmEC2mPwwFno8Ul+5kaBZcpbN5V23shBqJt6YVINNmH+wwTecKRJYFIw
-         6oyFHUDeAgN7m8O8UF035+JY9J3aFLDeKDxqwm6/8clxshw+zerUKd2qzDlNWNPQXIqf
-         E5ysscfNisbxkXg9qRE6Tki9e9O7hCR9sAuNjpagi4XgGH7GOs8yEIqYgkXAy8zLLhZQ
-         Gy5hv7krthH9vcH2ERWG+vdyFNGXLCbU97mqab2OWqy8nb16qnP3vHnNEhh70TYBDvHU
-         jo2JNprg5DsOCtSw7RA441VqMPmGZM87LF00VpmGK3L4BxtCCFzeK2B7736X96iJ31oZ
-         JEGg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGJdzzLOJ5hMoA5t3pvEQf7c/onND4ODoMqr5vLIm0+pUSrcQIVzmuY/NYoAg7s/jq/eEWkuXJzY4XbkM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypGEpRpITcUrh0rHDeKkuK+KNzTRcEv/EjfY1dzEY2PYsIQVQ9
-	hdUKCc/QwkF9WebhRNbTYDsXxm6DpJ5+FS54YEanm68xaXXHmG6mcGUY4tFsuVOJblme+svzGYx
-	ZlgBe73pcYO/KyOogAxgYJpBmkl3d+Ilbucz2z3YfWZYlSlMOoSucJSDg7oywsDI6wD3NlA7KNg
-	yJFu60amYqWpi+aD4ate1OYuyu8IZQBrCm/h/VyMfn
-X-Gm-Gg: ASbGncsLtkLVqCQi0ZcFNJKfxF9zdOtzVDQBvlYUzNvT23PiTeaYRov65W9Zc4xKgPk
-	iyc7L5qnIDHW3FqnZG3SDfwsIQOQzVhXcs/C3OSbYMk3lF6ZN15t++y5BbInDJTNEMeNS1w==
-X-Received: by 2002:a05:651c:4208:b0:30b:c980:c589 with SMTP id 38308e7fff4ca-32a79aaf867mr1376011fa.14.1748408298248;
-        Tue, 27 May 2025 21:58:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLuLgqlBSKVn3XuzZ5O4WHptTWpAn5Hj8UQwNjGJRq+mdS4yUEkruE7gijVJvks3bFhtJOEMBJBaD1evghUbY=
-X-Received: by 2002:a05:651c:4208:b0:30b:c980:c589 with SMTP id
- 38308e7fff4ca-32a79aaf867mr1375941fa.14.1748408297836; Tue, 27 May 2025
- 21:58:17 -0700 (PDT)
+	s=arc-20240116; t=1748408641; c=relaxed/simple;
+	bh=dt+569Mi8I/WnFbEt5T0NVUFcQVTHyRkAy3g66451z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SonbDvYq+Eyyk6H08GD6jFjGk8YRbmwOEoEHa5Q+S0l1shQflP9OhgqU7aIKi8N5NpQ2q1pV7gV+qwOuDNqn/yocVMTozAQ6WZivDbIqzMwKO7Kn1iwGA4xSNm0RIRY+251FHgmkO+bCxwDhAs5thY9hWrxAOXugLVlQ0WfvN5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-fa-68369938ff3b
+Date: Wed, 28 May 2025 14:03:46 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
+ struct_group_tagged()'ed on struct net_iov
+Message-ID: <20250528050346.GA59539@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-2-byungchul@sk.com>
+ <20250527025047.GA71538@system.software.com>
+ <CAHS8izOJ6BEhiY6ApKuUkKw8+_R_pZ7kKwE9NqzCyC=g_2JGcA@mail.gmail.com>
+ <20250528012152.GA2986@system.software.com>
+ <CAHS8izMvRrG2wpE7HEyK3t544-wN_h3SC8nGabCoPWj1qCv_ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-15-yukuai1@huaweicloud.com>
-In-Reply-To: <20250524061320.370630-15-yukuai1@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Wed, 28 May 2025 12:58:05 +0800
-X-Gm-Features: AX0GCFukkho086GfzsFTanUNNcI5WTEbYMx59B1Hh2FftMmayZ2nfabg-QIjzlg
-Message-ID: <CALTww296VZXQoBryTLkYj+JkXtQoNOuzG2SwHbnTk1KxSGRjKw@mail.gmail.com>
-Subject: Re: [PATCH 14/23] md/dm-raid: remove max_write_behind setting limit
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
-	johnny.chenyi@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izMvRrG2wpE7HEyK3t544-wN_h3SC8nGabCoPWj1qCv_ag@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa2xLYRiA8/V85/SsWTmr4TNBVIQtzCW2vMxl4vb98IOQSEjQ2YmWruPs
+	YpNgrCGbte4JVXTDdNOodLOLLLPVzBbCVDZlrLO5hMxto8OW4VjE/j153rx53h8vz2gusBG8
+	wZQqSiadUcupsOpDaP50OBOrn2npHQN2t4uDq98z4Ep7BQv24jIEX3+0KqGn7i4HF/ODDNgf
+	mjF8c/9k4HV9hxIChW8wVB0qZ6DjSAMHFnMfAwcqnApoKrOycPLnZQbKs9qV8PimnYM21y8W
+	3ngtGBptRRgC1niod4yC4L0uBHXucgUE885xcMLn4KDTHEDgu92B4ex+KwJ3tZ+Fvu92Ln4i
+	LS16qqCVthdK6vCk0RJnFM31+xjqKc7hqKf7uJI+b6niaMPpPkwrK3oU1JL9kaNfXj/D9FN1
+	M0fdpc2Y3nfUKWmPZ/wqYb1qfqJoNKSL0oyFm1X6mpo6dkfP3IzSwn1ZyBmZi0J4IswhOeZe
+	lIv4v1xgXS5rLEwmbW+bkcycMIX4/T8YmcOFSHKp+hgrMyMEWPLAvk3mEYKRFJzoxzKrBSAv
+	u1yczBrhvoL0Fiwe9GGk8cwrPLg7hfSf9zFylhHGkisD/KCeQLJvnP2rQ4TV5NWxtbIeKUwi
+	NWV3FblI9efIUp6c8ubhwevHkFqnHx9FYbYhBduQgu1/wTak4EC4GGkMpvQkncE4J1qfaTJk
+	RG9JTvKgP29TuKd/QwXqblrjRQKPtKFqej1Gr2F16SmZSV5EeEYbrj6wKFavUSfqMneLUvIm
+	Kc0opnjRWB5rR6tnB3claoStulRxuyjuEKV/UwUfEpGFlJFTR5ZtiFt5/H3LvFGpSwrjWuK+
+	BZ5JxLJn7+TOgeiwBcmm6+8/jEuY1itYk6M87/JqB+48WlmZDzubGs+XHB1WcuvJrWjPRinh
+	cMbwInPftGut7Ir8eZeWNYSti18RcU04dznUHK6I0K/yrc6sytnWlRZM/7x0eHaTK6G5O0bq
+	OKjFKXrdrChGStH9BguV5TsyAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUyMcRzA97vn5Z6Os8cp/VY222EtG2GyrzHyB35sLKa1aejwrDuulz2X
+	umwpV4ZUpELntFP0pjlO6ryl3eWq1YosDr1Jhc28lV503k4z/ffZ57vv5/vPl6MUBsaP08TE
+	C2KMSqtkZbRs66q0RVCwQr0kr00GJkslC9fG9FDaa2PAVFGNYHj8lRSG6htYKL48QoGpLZ2G
+	b5bvFAw4+6TQUzJIw/3jNRT0nW5kISt9ggKDrUwCjktNDDyuzmYg7/tVCmpSe6Xw9K6Jhe7K
+	XwwM2rNoaDKW09CTHQJO82wYaf6AoN5SI4GRzEss5LabWXiT3oOg3dFHw8Wj2QgstS4GJsZM
+	bIiSVJW/kJA7xi4pMVsPkVtlC0mGq50i1oqTLLF+PSslnc/us6TxwgRN7tiGJCQr7SNLvgy8
+	pMmn2g6WFL/7LCGWqg6atJjrpaEzd8pW7xe0mgRBDFoTKVPX1dUzcUMr9VUlKamoLDADcRzm
+	l+Oi7A0ZyIuj+QW4+20H8jDLB2CXa5zysDcfiK/U5jAepvgeBreaDnh4Fq/FRblu2sNyHvDr
+	D5WshxV8iwSPFq2b9DNxU0E/PbkbgN2F7ZTnLMX749Kf3KSei9NuX/yrvfhtuD9nh0f78PNw
+	XXWD5AyaYZwSMk4JGf+HjFNCZkRXIG9NTEK0SqMNXqw7qE6K0egX74uNtqI/n1GS7M6xoeGn
+	G+2I55ByupzcCFYrGFWCLinajjBHKb3lhrUr1Ar5flXSYUGM3SMe0go6O/LnaKWvfHO4EKng
+	o1TxwkFBiBPEf1MJ5+WXik60JnqdKfzxIErUNEY4ardUv49P6XPHLt3rxLvYucuCWudMOze6
+	1rgh+MdO/yf5m4a50LFxQ+76YlVmsq1r8OHozaC8U7xhe5iz2XzqtHfikfkpUZEhixwnPn9a
+	JxSE2V4cu+Z7vj/TnLg3nHTpu+75dObfrWuOeO5oWXL9UbIYsltJ69SqpQspUaf6DRFxYQ4V
+	AwAA
+X-CFilter-Loop: Reflected
 
-On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> The comments said 'vaule in kB', while the value actually means the
-> number of write_behind IOs. And since md-bitmap will automatically
-> adjust the value to max COUNTER_MAX / 2, there is no need to fail
-> early.
->
-> Also move some macros that is only used md-bitmap.c.
->
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/dm-raid.c   |  6 +-----
->  drivers/md/md-bitmap.c | 10 ++++++++++
->  drivers/md/md-bitmap.h |  9 ---------
->  3 files changed, 11 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-> index 088cfe6e0f98..9757c32ea1f5 100644
-> --- a/drivers/md/dm-raid.c
-> +++ b/drivers/md/dm-raid.c
-> @@ -1356,11 +1356,7 @@ static int parse_raid_params(struct raid_set *rs, =
-struct dm_arg_set *as,
->                                 return -EINVAL;
->                         }
->
-> -                       /*
-> -                        * In device-mapper, we specify things in sectors=
-, but
-> -                        * MD records this value in kB
-> -                        */
-> -                       if (value < 0 || value / 2 > COUNTER_MAX) {
-> +                       if (value < 0) {
->                                 rs->ti->error =3D "Max write-behind limit=
- out of range";
->                                 return -EINVAL;
->                         }
-> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-> index 535bc1888e8c..098e7b6cd187 100644
-> --- a/drivers/md/md-bitmap.c
-> +++ b/drivers/md/md-bitmap.c
-> @@ -98,9 +98,19 @@
->   *
->   */
->
-> +typedef __u16 bitmap_counter_t;
-> +
->  #define PAGE_BITS (PAGE_SIZE << 3)
->  #define PAGE_BIT_SHIFT (PAGE_SHIFT + 3)
->
-> +#define COUNTER_BITS 16
-> +#define COUNTER_BIT_SHIFT 4
-> +#define COUNTER_BYTE_SHIFT (COUNTER_BIT_SHIFT - 3)
-> +
-> +#define NEEDED_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 1)))
-> +#define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
-> +#define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
-> +
->  #define NEEDED(x) (((bitmap_counter_t) x) & NEEDED_MASK)
->  #define RESYNC(x) (((bitmap_counter_t) x) & RESYNC_MASK)
->  #define COUNTER(x) (((bitmap_counter_t) x) & COUNTER_MAX)
-> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-> index d2cdf831ef1a..a9a0f6a8d96d 100644
-> --- a/drivers/md/md-bitmap.h
-> +++ b/drivers/md/md-bitmap.h
-> @@ -9,15 +9,6 @@
->
->  #define BITMAP_MAGIC 0x6d746962
->
-> -typedef __u16 bitmap_counter_t;
-> -#define COUNTER_BITS 16
-> -#define COUNTER_BIT_SHIFT 4
-> -#define COUNTER_BYTE_SHIFT (COUNTER_BIT_SHIFT - 3)
-> -
-> -#define NEEDED_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 1)))
-> -#define RESYNC_MASK ((bitmap_counter_t) (1 << (COUNTER_BITS - 2)))
-> -#define COUNTER_MAX ((bitmap_counter_t) RESYNC_MASK - 1)
-> -
->  /*
->   * version 3 is host-endian order, this is deprecated and not used for n=
-ew
->   * array
-> --
-> 2.39.2
->
+On Tue, May 27, 2025 at 08:47:54PM -0700, Mina Almasry wrote:
+> On Tue, May 27, 2025 at 6:22 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > On Tue, May 27, 2025 at 01:03:32PM -0700, Mina Almasry wrote:
+> > > On Mon, May 26, 2025 at 7:50 PM Byungchul Park <byungchul@sk.com> wrote:
+> > > >
+> > > > On Fri, May 23, 2025 at 12:25:52PM +0900, Byungchul Park wrote:
+> > > > > To simplify struct page, the page pool members of struct page should be
+> > > > > moved to other, allowing these members to be removed from struct page.
+> > > > >
+> > > > > Introduce a network memory descriptor to store the members, struct
+> > > > > netmem_desc, reusing struct net_iov that already mirrored struct page.
+> > > > >
+> > > > > While at it, relocate _pp_mapping_pad to group struct net_iov's fields.
+> > > > >
+> > > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > > > > ---
+> > > > >  include/linux/mm_types.h |  2 +-
+> > > > >  include/net/netmem.h     | 43 +++++++++++++++++++++++++++++++++-------
+> > > > >  2 files changed, 37 insertions(+), 8 deletions(-)
+> > > > >
+> > > > > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > > > > index 56d07edd01f9..873e820e1521 100644
+> > > > > --- a/include/linux/mm_types.h
+> > > > > +++ b/include/linux/mm_types.h
+> > > > > @@ -120,13 +120,13 @@ struct page {
+> > > > >                       unsigned long private;
+> > > > >               };
+> > > > >               struct {        /* page_pool used by netstack */
+> > > > > +                     unsigned long _pp_mapping_pad;
+> > > > >                       /**
+> > > > >                        * @pp_magic: magic value to avoid recycling non
+> > > > >                        * page_pool allocated pages.
+> > > > >                        */
+> > > > >                       unsigned long pp_magic;
+> > > > >                       struct page_pool *pp;
+> > > > > -                     unsigned long _pp_mapping_pad;
+> > > > >                       unsigned long dma_addr;
+> > > > >                       atomic_long_t pp_ref_count;
+> > > > >               };
+> > > > > diff --git a/include/net/netmem.h b/include/net/netmem.h
+> > > > > index 386164fb9c18..08e9d76cdf14 100644
+> > > > > --- a/include/net/netmem.h
+> > > > > +++ b/include/net/netmem.h
+> > > > > @@ -31,12 +31,41 @@ enum net_iov_type {
+> > > > >  };
+> > > > >
+> > > > >  struct net_iov {
+> > > > > -     enum net_iov_type type;
+> > > > > -     unsigned long pp_magic;
+> > > > > -     struct page_pool *pp;
+> > > > > -     struct net_iov_area *owner;
+> > > > > -     unsigned long dma_addr;
+> > > > > -     atomic_long_t pp_ref_count;
+> > > > > +     /*
+> > > > > +      * XXX: Now that struct netmem_desc overlays on struct page,
+> > > > > +      * struct_group_tagged() should cover all of them.  However,
+> > > > > +      * a separate struct netmem_desc should be declared and embedded,
+> > > > > +      * once struct netmem_desc is no longer overlayed but it has its
+> > > > > +      * own instance from slab.  The final form should be:
+> > > > > +      *
+> > > > > +      *    struct netmem_desc {
+> > > > > +      *         unsigned long pp_magic;
+> > > > > +      *         struct page_pool *pp;
+> > > > > +      *         unsigned long dma_addr;
+> > > > > +      *         atomic_long_t pp_ref_count;
+> > > > > +      *    };
+> > > > > +      *
+> > > > > +      *    struct net_iov {
+> > > > > +      *         enum net_iov_type type;
+> > > > > +      *         struct net_iov_area *owner;
+> > > > > +      *         struct netmem_desc;
+> > > > > +      *    };
+> > > > > +      */
+> > > > > +     struct_group_tagged(netmem_desc, desc,
+> > > >
+> > > > So..  For now, this is the best option we can pick.  We can do all that
+> > > > you told me once struct netmem_desc has it own instance from slab.
+> > > >
+> > > > Again, it's because the page pool fields (or netmem things) from struct
+> > > > page will be gone by this series.
+> > > >
+> > > > Mina, thoughts?
+> > > >
+> > >
+> > > Can you please post an updated series with the approach you have in
+> > > mind? I think this series as-is seems broken vis-a-vie the
+> > > _pp_padding_map param move that looks incorrect. Pavel and I have also
+> > > commented on patch 18 that removing the ASSERTS seems incorrect as
+> > > it's breaking the symmetry between struct page and struct net_iov.
+> >
+> > I told you I will fix it.  I will send the updated series shortly for
+> > *review*.  However, it will be for review since we know this work can be
+> > completed once the next works have been done:
+> >
+> >    https://lore.kernel.org/all/20250520205920.2134829-2-anthony.l.nguyen@intel.com/
+> >    https://lore.kernel.org/all/1747950086-1246773-9-git-send-email-tariqt@nvidia.com/
+> >
+> > > It's not clear to me if the fields are being removed from struct page,
+> > > where are they going... the approach ptdesc for example has taken is
+> >
+> > They are going to struct net_iov.
 
-Reviewed-by: Xiao Ni <xni@redhat.com>
+Precisely speaking, to 'struct netmem_desc'.
 
+> Oh. I see. My gut reaction is I'm not sure moving the page_pool fields
+> to struct net_iov will work.
+> 
+> struct net_iov shares some fields with struct page, but abstractly
+> it's very different.
+> 
+> struct page is allocated by the mm stack via things like alloc_pages
+> and can be passed to mm apis such as put_page() (called from
+> skb_frag_ref) and vm_insert_batch (called from
+> tcp_zerocopy_vm_insert_batch_error).
+> 
+> struct net_iov is kvmalloced by networking code (see
+> net_devmem_bind_dmabuf for example), and *must not* be passed to any
+> mm apis as it's not a struct page at all. Accidentally calling
+> vm_insert_batch on a struct net_iov will cause a kernel crash or some
+> memory corruption.
+> 
+> Thus abstractly different things maybe should not share the same
+> in-kernel struct.
+> 
+> One thing that maybe could work is if struct net_iov has a field in it
+> which tells us whether it's actually a struct page that can be passed
+> to mm apis, or not a struct page which cannot be passed to mm apis.
+> 
+> > Or I should introduce another struct
+> 
+> maybe introducing another struct is the answer. I'm not sure. The net
+
+The final form should be like:
+
+   struct netmem_desc {
+      struct page_pool *pp;
+      unsigned long dma_addr;
+      atomic_long_t ref_count;
+   };
+
+   struct net_iov {
+      struct netmem_desc;
+      enum net_iov_type type;
+      struct net_iov_area *owner;
+      ...
+   };
+
+However, now that overlaying on struct page is required, struct
+netmem_desc should be almost same as struct net_iov.  So I'm not sure if
+we should introduce struct netmem_desc as a new struct along with struct
+net_iov.
+
+> stack today already supports struct page and struct net_iov, with
+> netmem_ref acting as an abstraction over both. Adding a 3rd struct and
+> adding more checks to test if page or net_iov or something new will
+> add overhead.
+
+So I think the current form in this patch is a good option we can take
+for now.
+
+> An additional problem is that there are probably hundreds or thousands
+> of references to 'page' in the net stack and drivers. I'm not sure
+> what you're going to do about those. Are you converting all those to
+> netmem or netmem_desc?
+
+No.  I will convert only the references for page pool.
+
+	Byungchul
+
+> 
+> -- 
+> Thanks,
+> Mina
