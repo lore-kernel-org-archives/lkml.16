@@ -1,89 +1,109 @@
-Received: from mail-m21470.qiye.163.com (mail-m21470.qiye.163.com [117.135.214.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0285210F4B;
-	Wed, 28 May 2025 07:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76F82459C5;
+	Wed, 28 May 2025 07:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416647; cv=none; b=NdcVxSA8D/DaQL3QIvES0v7s/mNox7y7rbyoWmLg+04Hjz/FSge1IrZZuMMcu5yfuRGAfkGWx/U2CJQXJZuak+a9OZU8pGKY4P6stE+6eBP86lTnQ87hwWDk+wXAF+aVrrOJ1NgBaewOP5edeGQhDnafKq8WFjJdDiLjqt/2qVs=
+	t=1748416650; cv=none; b=rtPkvo9FvxETUI3dabd19xrhm+wCNdaMabNpdfMFo8c+T7wuhE1Wb6m+EApHBHGIlLAUGFG7M/8Y9ksFhLH7Ow6zHADRkmpSzB7gjVVpzmk5AXLRpN1XgxgNnnbDbOEXDyYJbyMLUrJ+lkN8pxldPYOm/aObegx4BfH7xaq6/sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416647; c=relaxed/simple;
-	bh=IPvRjDM80lWDHGgo28IBzcYx0Ckk1dRIKONDiTK4iSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=si05lQ8/faEMk2lOcRoapXDjvy0c46NnfR/evPT4njeHhF3JaluW5Duh4zCw6JL4b+Q+9QDH2FomCkeLMHvMsqDoaFHH7NlrjIM4zIRwGLbR3FF6beqCEhwXS8hYLzmV2xbf3x0C+rER6TR/+A8cqILqvVZFXLNGSLrIrK3ZoLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Rm31BU1I; arc=none smtp.client-ip=117.135.214.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1748416650; c=relaxed/simple;
+	bh=bd/aJP8Z+HFGyFKthRLPNXegtvWYiD2y2JJ2wy+gcmg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DB0oDGUsVgITxSyma2s2Yf6xcSI8ilC7odNrwWzG3pA9CyEJ2TXGowwQBU/R4ID8WXMUD1VmkFd78fR685/wYnmiu+dZmUBnbUwqUZ/tC1tgMUBixhJitbWp1JOH0b+ZcrpIy88pSRBVTzpgGmCEW6Jey4srzU8i/xOLndnnEUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iKdsMgbt; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Rm31BU1I"
-Received: from [172.16.12.26] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16ad4c5b7;
-	Wed, 28 May 2025 15:17:14 +0800 (GMT+08:00)
-Message-ID: <64499337-fc61-42b0-8c50-7749b2036c54@rock-chips.com>
-Date: Wed, 28 May 2025 15:17:13 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKdsMgbt"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c59e7039eeso561210585a.2;
+        Wed, 28 May 2025 00:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748416647; x=1749021447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bd/aJP8Z+HFGyFKthRLPNXegtvWYiD2y2JJ2wy+gcmg=;
+        b=iKdsMgbtZhL1peKScE7j+3LmxVr7+wXLU+QAVpcUEGSB63BldoJkw237YgIFbN2CGz
+         t/bR/fEZMBimj7OYvO2kG7jTu4DG4Ggy2/sCJZ8khnY9YGlSWmTHVJhNkEovW8EbejX3
+         7O14joWjKAMFxrPyB+npX6IBPHCpHa7dcLrBc/A2k1Fw1zP6LmhhUzaoYbaSFzjK2mxm
+         dBkEacSlK4JMxoIcnJ12w9lk95OxuCjqy7LtnNqA9yyGMjMLpw6WBksI0TjQHGUIq7oA
+         loZI7yIHVx9beLCtToSSUGerPJ6iM90UiDI9xuESnh/Yd/5uhjtVPNoKFtgJafC2tEEd
+         0KIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748416647; x=1749021447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bd/aJP8Z+HFGyFKthRLPNXegtvWYiD2y2JJ2wy+gcmg=;
+        b=EKQYJKmh/RwIokOQYAVLJfM8Uc+KvCH0dtW6GEGxnlw9VCwHU7jrwtdFOrT0Z7O7Me
+         s1hl3GeTZDFF1h+p3zR6UgefB3X3pnXPUXoHaLRzHXlI2Y09Ld4pvKJXShNISrdJVDpi
+         98TARe4uzGWIBZwWEXEhSNwwkALsEDD0xHTyM/z16iXVS9JheJ2fjewaOiz2MyO26vzF
+         wmLnYoTX3fM3mBgnBnu/w4U6q8LCj2v9MwDaauIf51whFJpIul+9S+rnH1lWf12cLLT1
+         NS/DI7m2hfSx5gAbBVnKac3ihMCtHGVs0/9NptP+bOfzI5jvZvAt2z94qVc1aWPb+9ry
+         9XdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUsV+c3L4+7WwHuW1VE2rpMiojOhZh9udqwBorF1ApgrJJ9vCxH5OeJ3C/3ANmr1752nKMbw7Z5+oo=@vger.kernel.org, AJvYcCV1OMoDpahVjAPXhMlpdbs3ISQj1Ik5sq/5iAcuy9gTUWyImejeT28Kqy8TZ/Qb9ZC5iYXM7MPURdkD7RdC@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6dAb9lawxli2Eb+C9uDqJMzdEsd0Iboko7sfz8zqLzTB2Xy/O
+	tDf/sqsTc60mC+aAeOGeiHiMIkKeYw833aIVRr9WCzRfxbJdzXCno4IHt4ixn2pTFurQVB1N4/i
+	ihTY+TZXqtjuITIwCjBDRfjYffEjtyebx9OPE
+X-Gm-Gg: ASbGnctAx5S5rqoNpxP3VnKd5HmpW32QmxdppnLmpSzPfEPqzWj5RaXYhcLfjWraQt7
+	EvH/bS94S50hC7wZlnnwYtBfn/DT+AFlOBypT3qYZdLxe4Bp55qcnBU+Kj2XkLTvs/Hqmu/nhBD
+	gDdCZkCNjG+T1GBLBdUfR3ter1sX7wSWx9uelkE3zCSWI=
+X-Google-Smtp-Source: AGHT+IEcA1KfBo8BpmPpVnNMOQSYL7FTtU+tEkri+kXIIGVB2noWHyiZVcSqevKrJX8uVLLo8KqamkiUBCc70hZqEa0=
+X-Received: by 2002:a17:90b:4b83:b0:2fe:baa3:b8bc with SMTP id
+ 98e67ed59e1d1-311104b6bdfmr20792918a91.23.1748416637352; Wed, 28 May 2025
+ 00:17:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the drm-misc tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Simona Vetter <simona.vetter@ffwll.ch>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Intel Graphics <intel-gfx@lists.freedesktop.org>,
- DRI <dri-devel@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250528134245.13dc84aa@canb.auug.org.au>
-Content-Language: en-US
-From: Damon Ding <damon.ding@rock-chips.com>
-In-Reply-To: <20250528134245.13dc84aa@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGU0aGlZNGB1DHx1KQk8aSBhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
-	xVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9715c09ca103a3kunmf43b205c7c0117
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NUk6PTo5DzE3HElCMUgLPwko
-	DBQaCxNVSlVKTE9DT0pNTUhOS0JPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKQ09JNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=Rm31BU1IBANLdwjKdweGRV23FdVzgx6FBf6ic/48VtsB/DskqVdw9vmZGiAvRMfS/Abti7vA2c4j9h2XdHRm+C6GaBFYuXUiORvNf0iEJ1ivgG2mt02/J1EkmfnT3ZULWyshmZTIUJUt/cMbsbdqMtDY35AsR6IHgccScvRVwUc=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=1y9XPtE/Gokh+W8CqyQCHL4aO+4NRxKNs2KqCpdAynE=;
-	h=date:mime-version:subject:message-id:from;
+References: <20250527200534.98689-1-gye976@gmail.com> <CAHp75VcUr7-X+F1f=wPH4=Z7q3kFffv8BgkmKWM4VTjy2w-tGg@mail.gmail.com>
+ <CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com> <CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
+In-Reply-To: <CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Wed, 28 May 2025 16:17:06 +0900
+X-Gm-Features: AX0GCFu9luqM_jmgZAjq-9c7kyPq1xlIiuHnZ845qEB9XjiYNxbovY3TIngikt8
+Message-ID: <CAKbEznt7ZhN9gZWy-7wHhFhwbF8XtCGrukuxe4eAFZpfxfu6vg@mail.gmail.com>
+Subject: Re: [PATCH] iio: trigger: Avoid data race
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Stephen,
+On Wed, May 28, 2025 at 6:19=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, May 27, 2025 at 11:10=E2=80=AFPM Gyeyoung Baek <gye976@gmail.com>=
+ wrote:
+> > On Wed, May 28, 2025 at 5:25=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, May 27, 2025 at 10:05=E2=80=AFPM Gyeyoung Baek <gye976@gmail.=
+com> wrote:
+>
+> ...
+>
+> > > At bare minimum they are not relevant to the patch change and haven't
+> > > been described in the commit messages.
+> >
+> > Hi Andy, thanks for your review.
+> > I initially skipped this part as I thought it was minor.
+> > But on a second look, it seems better to separate the declaration from
+> > the logic.
+> >
+> > What do you think about the data race logic? Would it make sense?
+>
+> The point is valid, the atomic_read() + atomic_set() is 101 thingy,
+> whoever did that doesn't really have a clue what atomic(ity) is.
 
-On 2025/5/28 11:42, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the drm-misc tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
-> 
-> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function 'analogix_dp_probe':
-> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1589:17: error: label 'err_disable_clk' used but not defined
->   1589 |                 goto err_disable_clk;
->        |                 ^~~~
-> 
-> Caused by commit
-> 
->    6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary calls to clk_disable_unprepare() during probing")
-> 
-> I have used the drm-misc tree from next-20250527 for today.
-> 
+Thanks for your explanation.
+Then I=E2=80=99ll send a v2 patch with only the `int i` change, following t=
+he
+review feedback.
 
-Oh, I have found the same compile error after rebasing.
-
-I have removed the 'err_disable_clk' flag and made it return 
-ERR_PTR(ret) in:
-https://lore.kernel.org/all/20250310104114.2608063-7-damon.ding@rock-chips.com/
-
-Likely a small merge conflict bug. Will patch it later. ;-)
-
+--
 Best regards,
-Damon
-
+Gyeyoung
