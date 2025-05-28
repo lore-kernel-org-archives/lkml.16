@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AD5170826
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DB51EA7CC;
+	Wed, 28 May 2025 04:18:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748405913; cv=none; b=FeogG3KWGnxAl06sPLx/V6KKkerNiTzIeaVq8JdcrfUbZSVnpqY8AidktRJdTvJwN5e7RJSxXFaSQV/eB1lDD8e9XS8iwQf7fkIc4WF/hAf+Fu/7+GdKdiQHUTtrXiuo7ZYlsy34OcapgvKKLEwY5nDQ29y5oPDVTwmHRWzkqPU=
+	t=1748405914; cv=none; b=PVINvpdsK/XtkIWMh+KfLjOXc68uAvZvr6oYIvcuk6+IIkmlW3CPKFw7iI1EeUjYZiUA2RxPnYStgSfLge5MShA65F0ZxAiRA96y/+7hnjAiWXa8RjSu9U/BBcZ0Or+KIPZ3luZPJs4eQdsn8CI4RNiwA3XlOi3GuXpA8sIfP8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748405913; c=relaxed/simple;
-	bh=OlhZwRqfB27F+RuaZoFnoqGRcbXFTH4GIwttovaaM5k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ck3ZCRNXPgGx+MwReX1ymrX8/lvbODaVYrTLinBkg+meTqMODz8Oz+ghQoY6AQsXaFNZO99Xr+br1WIseOzY+SPEUzbhnV5bauQvL61cGsI71txit3gjHHIA9eFt93eMxa0xxasV8wSOmH9umSrV24cLaohg3GgW+ja8qRyAJtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=er4jTpce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748405914; c=relaxed/simple;
+	bh=oW0RYhWnxaOCSNpS2aKraFApUd2lBlH2hn2IXxAZHf0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EMCT1LKb1TIr0/oYFffb3fZoB9ZLZkHVVfsTw8WKdZvctCQt0eMROkKOtQZd31Xlw3AIf8LP4kbI4WG65kuY8YVhYr8ocIjr4d3BujfYPtgIQL2PkdEWdrGszqVicIa+dWxl8xPNRoGR7cQ2ih+LyLAWCwL/QQDz3H/B/Uub12k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/CkAzM7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="er4jTpce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 598EEC4CEE7;
-	Wed, 28 May 2025 04:18:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/CkAzM7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E44C4CEF0;
+	Wed, 28 May 2025 04:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748405912;
-	bh=OlhZwRqfB27F+RuaZoFnoqGRcbXFTH4GIwttovaaM5k=;
+	s=k20201202; t=1748405913;
+	bh=oW0RYhWnxaOCSNpS2aKraFApUd2lBlH2hn2IXxAZHf0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=er4jTpce9N6huFZt9EXHojbp9/EMPzaSWZUBCVwJSMCDM0FWm7bv0qwzlsn3PIYRA
-	 mo5fFkKSk8DITYsuTSS+1SPoDeyCqQHUew8tdCgZFB6y7rFVjrRA+zLVcwvyObilIz
-	 QXs/Skhv04VoesSlaYrVCAj1FIlHQULIf7gqHmfQ8+2VKt6CdZEsCEvIMVvO9HZrld
-	 8Z+sYaas8RYtEOP7E48I/K9VsyJhFXWwXypJk9rkrmBG870alwwr0g7zbigYA7oG5a
-	 1p9FudpVP/1iK/fiCPWBMEzEK4lmh2h4egUbNGrDy9pKiPIkTx+7c8zvnJGMHAMzPH
-	 StSWOtQKPC78A==
+	b=R/CkAzM7n7oUp7HqxblT+F7eIjg3YMLuo6evPJUPH55Jx6gfAJ5VZbf3ANqWFIV8+
+	 5+7mwhgq3AXmVpOgdVHU/zPP9oHL5hnSkhKFYQ2o9Yf25zSlW+BeoasqCoRRRVoSFk
+	 7X2goYA0inAreNH9VgXVEagvSrUTde9RJxgoZehFeMsu2jJ4M5Vv3yn6vGjeLA1LKe
+	 gv9qvKixy96NX2LOGapd51RysIrVAtI5KEL3h4GNUqk+i3GM33RCFs1iWZm0txW2nb
+	 LUJt1SZa9T9byV28Hei767WTpnH1eAQ/h1onSWEtL69lWCn8TxjSJb0REmUkiPL0w1
+	 7vm0F7Z047jwQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE933822D1A;
-	Wed, 28 May 2025 04:19:07 +0000 (UTC)
-Subject: Re: [GIT PULL] m68k updates for v6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3EEEE3822D1A;
+	Wed, 28 May 2025 04:19:09 +0000 (UTC)
+Subject: Re: [GIT PULL] cgroup: Changes for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250526124624.2778122-1-geert@linux-m68k.org>
-References: <20250526124624.2778122-1-geert@linux-m68k.org>
-X-PR-Tracked-List-Id: <linux-m68k.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250526124624.2778122-1-geert@linux-m68k.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v6.16-tag1
-X-PR-Tracked-Commit-Id: f440518f379d22c95329e9e0e0fb6caaafa0f8b0
+In-Reply-To: <aDYVvLimkaLAtdiV@slm.duckdns.org>
+References: <aDYVvLimkaLAtdiV@slm.duckdns.org>
+X-PR-Tracked-List-Id: <cgroups.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aDYVvLimkaLAtdiV@slm.duckdns.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ cgroup-for-6.16
+X-PR-Tracked-Commit-Id: 82648b8b2ae0a0ff371e2a98133844658cfaae9a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c35328632ed89efeb616603e7fa151ac730fafe4
-Message-Id: <174840594640.1893196.1828711394452628754.pr-tracker-bot@kernel.org>
-Date: Wed, 28 May 2025 04:19:06 +0000
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Ungerer <gerg@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+X-PR-Merge-Commit-Id: 3b66e6b3c098646f75c54e269dd963e2281c555c
+Message-Id: <174840594813.1893196.14058895567465804911.pr-tracker-bot@kernel.org>
+Date: Wed, 28 May 2025 04:19:08 +0000
+To: Tejun Heo <tj@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>, Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, cgroups@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Mon, 26 May 2025 14:46:24 +0200:
+The pull request you sent on Tue, 27 May 2025 09:42:52 -1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v6.16-tag1
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ cgroup-for-6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c35328632ed89efeb616603e7fa151ac730fafe4
+https://git.kernel.org/torvalds/c/3b66e6b3c098646f75c54e269dd963e2281c555c
 
 Thank you!
 
