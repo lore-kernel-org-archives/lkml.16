@@ -1,112 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C495A111AD;
-	Wed, 28 May 2025 18:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3519BEAD7;
+	Wed, 28 May 2025 18:07:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455583; cv=none; b=I0DGH0oUwC1vztlYifPcbYUt01UWgFUhWO0lYSvFauvVcepyABr5b9HkeZxl2mrBn7a1HJ225327sUr1YIeebrjPN16r38CSvV495uztzvANfLUD1zZtLiwQSBfXzyn8/QwBZriUDLEy0K1gZ+6HodII5PK0QjnjHHM/yY2nNvk=
+	t=1748455628; cv=none; b=KGxaJJg8tcceSz+8qWu+LHu+oPEdYPhWGB4GNnQ+qufIMWN+r2qzQOokIyCcZ7AcKZj69K5uFxIgR1Vkq4asLMbjBtPNKpCLOP8Atxtzmp7DjVc/ivFNTO/gc2IiHxYfNGrdCPZInjH0Fqqyu88RdSHnES6JYPQhqo8+XkDzU0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455583; c=relaxed/simple;
-	bh=SwYQFIc7r2JHQ2hnmDJnXLD9YNcIS11EmU+W4n5WpnE=;
+	s=arc-20240116; t=1748455628; c=relaxed/simple;
+	bh=n1jaTc09zu8RAZsHSVnrZVQ4yyD+khqHCH7iV6CHfjs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ioTWUxN7Qflcgv4wD+BORdChkgsBa0Ung05XWhUbr3OR8AE2Tt7c7XqcXM5XOeZLXioqcR2bXnNItVxzG7L3JPESpwSKEjloUjTHs44x6SzMNhvoaRALzqnZcbKR7fVSI2UkHwzi6M5Gi1x5tG0dCCMSts9CmSlT5oXnMkcCHtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPYy9JI5; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=n7+Z73ty+0Oh3ZuYxIG5lRBWwvJ4H8O+eaVfAqVyViL3IfzqJXXpqPs9UmyYHozb7Z+wC2Wv3cq45roLHuF/YMUKbiwmyDJI3iymYhd/gPT1wCK0Vkl2CqS7EZ7dmVqW7bzIfWIY4VcB5FZdhG82bnB3RH0//tXRNedBSegFbjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekUJQKQe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPYy9JI5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35DC1C4CEE3;
-	Wed, 28 May 2025 18:06:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekUJQKQe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0B2C4CEE3;
+	Wed, 28 May 2025 18:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748455583;
-	bh=SwYQFIc7r2JHQ2hnmDJnXLD9YNcIS11EmU+W4n5WpnE=;
+	s=k20201202; t=1748455627;
+	bh=n1jaTc09zu8RAZsHSVnrZVQ4yyD+khqHCH7iV6CHfjs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tPYy9JI5+Gq5oIXon40EQ7pZd9jgDOyyAG7rfA1wIsXVU6Qg1E7TFYs9rekn7ijcZ
-	 czdAEjOqRjbCaQC5a1Zf4ZXBhNSpGOM39Oj+BUsp0Ckgzc7oP4wjVoJpmhgSzBO8UY
-	 5oUxUni4HiriTQY9fnXq7QAo5h55D801ScHz80ztdfprIIDTx7TDfUn9rwRHrCdzi+
-	 ysZHBygnTEMVto2mSjV+I5Ulb/YBHAebj1cxrloW8JxHyYDno1597lDZ496iqVPqrU
-	 ZtE5dX013juINIBqTO3C/BtjYmsX30k0MKDhpZ0Hec8EXu8wiVsfefoMfdmdpninH4
-	 pmAXzwCsHDwEQ==
-Date: Wed, 28 May 2025 20:06:16 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
- resources
-Message-ID: <aDdQmJ-pen_MQNDB@cassiopeiae>
-References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
- <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
- <aCYVG-VVdJXYnSTt@pollux>
- <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
+	b=ekUJQKQeHM9EXOmJDZydfKsoPIxDQlvT/v1hThSkSO1n/k8/Hz41baXXpT0UPNkBj
+	 ir2dVwEiQFVDpxsE3Oyo45sg0WzDKtcz08smQ+jY6UTcB7mbGllcbIdLaZF0Iy7dqm
+	 v3S/dDhnzVwogBjmawhVnyjJauRuiOE7MNY0W0ocZQxSWdiMijoAy3+NkfHWcrKNww
+	 9xZ3cEgmvWrS4qJw2BCENWZCIH8z1wxf9f6KvwrAZPm8MRNOmJDdIIdOiEmGvvMUI3
+	 8YREgHo5xu+oVEvEt9hC8NtlTZwjx8U+TVxN7JHzL2XULvFZ9bXfNw77WbwXYiWBU7
+	 5ES1rAmz04/Uw==
+Date: Wed, 28 May 2025 15:07:04 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Cc: Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	alexander.shishkin@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org
+Subject: Re: [PATCH RESEND] perf stat: Fix JSON output formatting in
+ iostat_prefix()
+Message-ID: <aDdQyPNrnd4b-qWg@x1>
+References: <20250520094525.97706-1-suchitkarunakaran@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
+In-Reply-To: <20250520094525.97706-1-suchitkarunakaran@gmail.com>
 
-On Wed, May 28, 2025 at 02:29:44PM -0300, Daniel Almeida wrote:
-> Hi Danilo,
+On Tue, May 20, 2025 at 03:15:25PM +0530, Suchit Karunakaran wrote:
+> The iostat_prefix() function previously included a TODO noting that its output
+> format was incorrect in JSON mode. This patch corrects that by conditionally
+> formatting the prefix string based on the output mode specified in
+> perf_stat_config.
+
+O don't have how to test this as I dont have:
+
+access("/sys/bus/event_source/devices/uncore_iio_0", F_OK) = -1 ENOENT (No such file or directory)
+write(2, ""..., 37Unsupported uncore pmu configuration
+)                     = 37
+write(2, ""..., 43
+ Usage: perf stat [<options>] [<command>]
+)                     = 43
+write(2, ""..., 1
+<SNIP>
+write(2, ""..., 84                          measure I/O performance metrics provided by arch/platform
+)                     = 84
+exit_group(129)                         = ?
++++ exited with 129 +++
+root@x1:~# strace -s0 perf stat --iostat --timeout 1000
+
+Could someone with access to hardware with this capability to try this
+patch and provide a  Tested-by?
+
+- Arnaldo
+ 
+> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> ---
+>  tools/perf/arch/x86/util/iostat.c | 35 ++++++++++++++++++++-----------
+>  1 file changed, 23 insertions(+), 12 deletions(-)
 > 
-> […]
-> 
-> > 
-> >> +    ///     let offset = 0; // Some offset.
-> >> +    ///
-> >> +    ///     // If the size is known at compile time, use `ioremap_resource_sized`.
-> >> +    ///     // No runtime checks will apply when reading and writing.
-> >> +    ///     let resource = pdev.resource(0).ok_or(ENODEV)?;
-> >> +    ///     let iomem = pdev.ioremap_resource_sized::<42>(&resource)?;
-> >> +    ///
-> >> +    ///     // Read and write a 32-bit value at `offset`. Calling `try_access()` on
-> >> +    ///     // the `Devres` makes sure that the resource is still valid.
-> >> +    ///     let data = iomem.try_access().ok_or(ENODEV)?.read32_relaxed(offset);
-> >> +    ///
-> >> +    ///     iomem.try_access().ok_or(ENODEV)?.write32_relaxed(data, offset);
-> > 
-> > Since this won't land for v6.16, can you please use Devres::access() [1]
-> > instead? I.e.
-> > 
-> > let iomem = pdev.ioremap_resource_sized::<42>(&resource)?;
-> > let io = Devres::access(pdev.as_ref())?;
-> > 
-> > let data = io.read32_relaxed(offset);
-> > io.write32_relaxed(data, offset);
-> > 
-> > Devres::access() is in nova-next and lands in v6.16.
-> > 
-> > [1] https://gitlab.freedesktop.org/drm/nova/-/commit/f301cb978c068faa8fcd630be2cb317a2d0ec063
-> 
-> Devres:access takes &Device<Bound>, but the argument in probe() is
-> &Device<Core>.
-> 
-> Are these two types supposed to convert between them? I see no explicit
-> function to do so.
-
-Yes, it comes from impl_device_context_deref!() [1], which, as the name implies,
-implements the corresponding Deref traits.
-
-Device dereference in the following way:
-
-	&Device<Core> -> &Device<Bound> -> &Device (i.e. &Device<Normal>)
-
-You can just pass in the &Device<Core>, it will work.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/tree/rust/kernel/device.rs?h=driver-core-next#n284
+> diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+> index 7442a2cd87ed..1d9c20dab5c7 100644
+> --- a/tools/perf/arch/x86/util/iostat.c
+> +++ b/tools/perf/arch/x86/util/iostat.c
+> @@ -403,18 +403,29 @@ void iostat_prefix(struct evlist *evlist,
+>  	struct iio_root_port *rp = evlist->selected->priv;
+>  
+>  	if (rp) {
+> -		/*
+> -		 * TODO: This is the incorrect format in JSON mode.
+> -		 *       See prepare_timestamp()
+> -		 */
+> -		if (ts)
+> -			sprintf(prefix, "%6lu.%09lu%s%04x:%02x%s",
+> -				ts->tv_sec, ts->tv_nsec,
+> -				config->csv_sep, rp->domain, rp->bus,
+> -				config->csv_sep);
+> -		else
+> -			sprintf(prefix, "%04x:%02x%s", rp->domain, rp->bus,
+> -				config->csv_sep);
+> +		if (ts) {
+> +			if (config->json_output)
+> +				sprintf(prefix,
+> +					"\"interval\" : %lu.%09lu, \"device\" : \"%04x:%02x\"",
+> +					(unsigned long)ts->tv_sec, ts->tv_nsec,
+> +					rp->domain, rp->bus);
+> +			else if (config->csv_output)
+> +				sprintf(prefix, "%lu.%09lu%s%04x:%02x%s",
+> +					(unsigned long)ts->tv_sec, ts->tv_nsec,
+> +					config->csv_sep,
+> +					rp->domain, rp->bus, config->csv_sep);
+> +			else
+> +				sprintf(prefix, "%6lu.%09lu %04x:%02x%s",
+> +					(unsigned long)ts->tv_sec, ts->tv_nsec,
+> +					rp->domain, rp->bus, config->csv_sep);
+> +		} else {
+> +			if (config->json_output)
+> +				sprintf(prefix, "\"device\" : \"%04x:%02x\"",
+> +					rp->domain, rp->bus);
+> +			else
+> +				sprintf(prefix, "%04x:%02x%s", rp->domain,
+> +					rp->bus, config->csv_sep);
+> +		}
+>  	}
+>  }
+>  
+> -- 
+> 2.49.0
