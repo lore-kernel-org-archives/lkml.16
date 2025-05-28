@@ -1,116 +1,190 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EB532063E7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FEC1FFC41;
+	Wed, 28 May 2025 05:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748409952; cv=none; b=mucmP82rv0Tgq+cdikTi+pNe8BSOCLLqod8rnGPh+nOiIE+pzRq3iRUzPpAoPUCOnMCj1tMcNIkrPB84xl5bcpuZokjJERImD+tcj5MoPPJ+JlnbhpX5NL1b2ONXrzof10rzCqUVD2JsN7xzSGRt6N5DBK+Gq1lcj7CLNd0iQSU=
+	t=1748409973; cv=none; b=Py4TEKZlhz00SqRuMI/kmryRZxD/Sz0jccwDCYGr3Tzk+Obp1hwIDM+0CdJyav0ny88unehWoLB0QmfR4zrEBILmeOjEkTeF5W1nrHuPXXlpi6KMmsQhfhvAkPzd/L7C9X08LdbJjQndjK6/59xw5JNsqR9g67vfGuEw8wzRe4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748409952; c=relaxed/simple;
-	bh=8bUXCSo65pFuL9K7IKGHK785dYGPeGX435gMmbBZl8I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IGrAiwXwRPZWr8xKj64b/oLuhMdN0sRjJuwgIyARN5hmAJ5gl09cEDXjQxo8mZHgBi93XRJMf/402ykb95k3x38AmNNZ96tla9feiG4aFNFEg6wiGhHkx4wl99wGjPqflKM/6JlsxMQxCkqE5zvVx8XbkHHgRX8Uq8elQHuUUPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: rt5OKpiCTnquPEUvqN4/dQ==
-X-CSE-MsgGUID: SdvyL35LRFiTF1FxPEt/Gw==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 28 May 2025 14:25:45 +0900
-Received: from [127.0.1.1] (unknown [10.226.78.19])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B95A34172C21;
-	Wed, 28 May 2025 14:25:43 +0900 (JST)
-From: Michael Dege <michael.dege@renesas.com>
-Date: Wed, 28 May 2025 07:25:25 +0200
-Subject: [PATCH v3 2/2] phy: renesas: r8a779f0-ether-serdes: add new step
- added to latest datasheet
+	s=arc-20240116; t=1748409973; c=relaxed/simple;
+	bh=ENSPcoDU8pkE9gqV7fe6vQxO9rHxe7aKvomwqpl+fXY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SaZhNIX8/EqsBQtRSOXNJE2kKKznPjDrYJxTkx1xEE2OK6WIn2KDVBjSS44UN1PdZ5X6eZV6MC+Ad5Wdus2xYbLS2CBBk6HuNTdqckSRN+Flryg8WMRpMIX6h/NxH5Z4LPQZl1CrCVmFzJA2In8gNoZFIwSkcQHUpgBqo9Xr7sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WK0fNyRS; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WK0fNyRS"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acacb8743a7so86558766b.1;
+        Tue, 27 May 2025 22:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748409970; x=1749014770; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eGClTHgroxBcfOqGpSNsGz5pDhgYGNK3UlpzTs482Pc=;
+        b=WK0fNyRSDtYetaujGrwvZJbt2SWLqsztd59Fa0qJjslBEL6xW5EPJ3WI9DsrYUzsci
+         Moqr4Xlbhj7XEh7dh6vIiX84aKVtElBGuk5g4HXG2wb9bTGePqlxUS032Fcccfi6GMtZ
+         tmqqGmaQhuV0VTo7g4UoVtB7GIVaWw985MfZeo0+bv23pCNONp3+0Eik+2r0fD2GDhw3
+         UWIFLyFadoy6Fqxr6eTdlRbKIbshRxcu7ODd+7uyGKUakn/lTw6oZQh9aRvx9sOE0wEl
+         mHwelZmG1w48ffzHYIPEBVC/prfe24hPdOXLO9fncdjl+QFkBxooPFBdNsuEHomIZVJ/
+         bRIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748409970; x=1749014770;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eGClTHgroxBcfOqGpSNsGz5pDhgYGNK3UlpzTs482Pc=;
+        b=uKsU6Tl8JRCZ8T+dtPppjO1fy1zpFUp7mNV7SLvFODexXmQ3ebY6xfX96Tqj1VOwd7
+         u7/Eu7dz4AtHXVQ//nF+CZx2TH/+GxzC5X+RE3n9oXEyE79Dqtp+tov/4IRDMkqimaDz
+         Q9nJ5fOrcL2AEcJG7rlW0EPIuF5W33HcjMYa8P3q0KGk7KbrNmk4YtiCZTky7qFimhWv
+         abtPNRMgWsQqVarP9O9jAdJa9DP2ngp3zDsiBYsLUxcpMg7ygFA8Rw0RHml3T+PjSf81
+         FwVWmJ5SSc91GlyYZ6v5Jyo8MIvcbIaetBfLLkHYgUkGQ9hRLpWL+eifLGuOU+tQ/WN3
+         DAew==
+X-Forwarded-Encrypted: i=1; AJvYcCUTVJlXLipukaLpXdKduQMYAFCxnLPMsNkSXxbjUPV354W+7dt7LCKswJX5964uDnAfjKJ3F4GrXjuq@vger.kernel.org, AJvYcCVABDb/y8rFUU9bNWQ22o3tSYYe8cnBKGFDsEvac1s2HGwuarkz2jpZLJkpaoC52EZW06Hg+GV0toL0@vger.kernel.org, AJvYcCX6zaFI/RPCDTooaqviDnF7xEmW++ziksJrhzxjSacM1BL9Bj5sIk83yLCCElWwNa4ytfp0zEn6XDO6B2g+uPyof2c=@vger.kernel.org, AJvYcCXhINVgAwGK1QKbGfu0WUZJ4N8el8UYVlF7XXYQvrJklrgSw2IZBh62Tj4+rqQh6vIebz0sCvWNydGmGh3M@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNZWetQIrVyl6qdvat5RIbEMk3+K0twLXZDcj27G5y6asJzFaH
+	WKJfxa1DiNSSu3m9mzEOQAe0DSYD8lba0BSHYYB7Oo8mQz2+7WjdS3Pa7M95y+g3qUV8E8Zu52l
+	8Pygij5gHa2Uf3UNzfDGedHweQLWa3BI=
+X-Gm-Gg: ASbGnctdQWVp7XxxfmblQalPhkqiaauIbk4KhIvCg5TOb1dXbiEMX4m0Db5ESzbu3Mi
+	JHsgzJHoSnGbVnzK0i0wqn6HZ87ub48PfOS44tw6BrJkV0S6a18LBQZyHarqKTNFZNqEkAe36cx
+	1FvzZ9/Fd1e7koZ4YfLrEDDhjJJmmG74BFIpCcGvjxWg==
+X-Google-Smtp-Source: AGHT+IGtzXS7r014ksMOyLWyv3PY+eL9kVmReP9BCXuY+JhbQJHaBU9SpOog9pV/WyubUhLYHA04NIb+oVSmRa6PrEA=
+X-Received: by 2002:a17:907:1c2a:b0:ad5:9ff3:c6ce with SMTP id
+ a640c23a62f3a-ad89886abebmr283385766b.4.1748409969604; Tue, 27 May 2025
+ 22:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-renesas-serdes-update-v3-2-8413fcd70dba@renesas.com>
-References: <20250528-renesas-serdes-update-v3-0-8413fcd70dba@renesas.com>
-In-Reply-To: <20250528-renesas-serdes-update-v3-0-8413fcd70dba@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Dege <michael.dege@renesas.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748409938; l=2379;
- i=michael.dege@renesas.com; s=20250523; h=from:subject:message-id;
- bh=8bUXCSo65pFuL9K7IKGHK785dYGPeGX435gMmbBZl8I=;
- b=8XI1GZGrhlZZC6BBERC915AI0BkHI3Nm+wepvcwgfeCXZZQOIzPGqEXn20w2oyPGj9/8BD+N7
- szvz4bKgdZbDi2H05ASovfJyHiD8tGx7omW0i8qsK0pSwdB79Z7qH1y
-X-Developer-Key: i=michael.dege@renesas.com; a=ed25519;
- pk=+gYTlVQ3/MlOju88OuKnXA7MlapP4lYqJn1F81HZGSo=
+References: <20250525160513.83029-1-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250525160513.83029-1-marek.vasut+renesas@mailbox.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 28 May 2025 10:55:52 +0530
+X-Gm-Features: AX0GCFvOx05IZ5_kXJ72iIXw3IbiUdPuTxyEyjCQN5yHvmLpaXyXqe_dfeV4Hz8
+Message-ID: <CANAwSgRXDLGAaXGXHfiS2rA3=+r2is2g557Bozu+SocQoBMySQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] PCI/pwrctrl: Add optional slot clock to pwrctrl
+ driver for PCI slots
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-R-Car S4-8 datasheet Rev.1.20 describes some additional register
-settings at the end of the initialization.
+Hi Marek,
 
-Signed-off-by: Michael Dege <michael.dege@renesas.com>
----
- drivers/phy/renesas/r8a779f0-ether-serdes.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+On Sun, 25 May 2025 at 21:35, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+>
+> Add the ability to enable optional slot clock into the pwrctrl driver.
+> This is used to enable slot clock in split-clock topologies, where the
+> PCIe host/controller supply and PCIe slot supply are not provided by
+> the same clock. The PCIe host/controller clock should be described in
+> the controller node as the controller clock, while the slot clock should
+> be described in controller bridge/slot subnode.
+>
+> Example DT snippet:
+> &pcicontroller {
+>     clocks = <&clk_dif 0>;             /* PCIe controller clock */
+>
+>     pci@0,0 {
+>         #address-cells = <3>;
+>         #size-cells = <2>;
+>         reg = <0x0 0x0 0x0 0x0 0x0>;
+>         compatible = "pciclass,0604";
+>         device_type = "pci";
+>         clocks = <&clk_dif 1>;         /* PCIe slot clock */
+>         vpcie3v3-supply = <&reg_3p3v>;
+>         ranges;
+>     };
+> };
+>
+> Example clock topology:
+>  ____________                    ____________
+> |  PCIe host |                  | PCIe slot  |
+> |            |                  |            |
+> |    PCIe RX<|==================|>PCIe TX    |
+> |    PCIe TX<|==================|>PCIe RX    |
+> |            |                  |            |
+> |   PCIe CLK<|======..  ..======|>PCIe CLK   |
+> '------------'      ||  ||      '------------'
+>                     ||  ||
+>  ____________       ||  ||
+> |  9FGV0441  |      ||  ||
+> |            |      ||  ||
+> |   CLK DIF0<|======''  ||
+> |   CLK DIF1<|==========''
+> |   CLK DIF2<|
+> |   CLK DIF3<|
+> '------------'
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> ---
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+>  drivers/pci/pwrctrl/slot.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+> index 18becc144913e..222c14056cfae 100644
+> --- a/drivers/pci/pwrctrl/slot.c
+> +++ b/drivers/pci/pwrctrl/slot.c
+> @@ -4,6 +4,7 @@
+>   * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>   */
+>
+> +#include <linux/clk.h>
+>  #include <linux/device.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> @@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+>  {
+>         struct pci_pwrctrl_slot_data *slot;
+>         struct device *dev = &pdev->dev;
+> +       struct clk *clk;
+>         int ret;
+>
+>         slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
+> @@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+>                 goto err_regulator_free;
+>         }
+>
+> +       clk = devm_clk_get_optional_enabled(dev, NULL);
+> +       if (IS_ERR(clk)) {
+> +               ret = PTR_ERR(clk);
+> +               dev_err_probe(dev, ret, "Failed to enable slot clock\n");
+you can user the return from ret = dev_err_probe()
+> +               goto err_regulator_disable;
+> +       }
+> +
+>         ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
+>                                        slot);
+>         if (ret)
 
-diff --git a/drivers/phy/renesas/r8a779f0-ether-serdes.c b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-index ed83c46f6d00c255852cc5af867c89ab0d0db02a..8a6b6f366fe376d21f5fee7795893f5aac0feae4 100644
---- a/drivers/phy/renesas/r8a779f0-ether-serdes.c
-+++ b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-@@ -49,6 +49,13 @@ static void r8a779f0_eth_serdes_write32(void __iomem *addr, u32 offs, u32 bank,
- 	iowrite32(data, addr + offs);
- }
- 
-+static u32 r8a779f0_eth_serdes_read32(void __iomem *addr, u32 offs,  u32 bank)
-+{
-+	iowrite32(bank, addr + R8A779F0_ETH_SERDES_BANK_SELECT);
-+
-+	return ioread32(addr + offs);
-+}
-+
- static int
- r8a779f0_eth_serdes_reg_wait(struct r8a779f0_eth_serdes_channel *channel,
- 			     u32 offs, u32 bank, u32 mask, u32 expected)
-@@ -319,6 +326,7 @@ static int r8a779f0_eth_serdes_hw_init_late(struct r8a779f0_eth_serdes_channel
- *channel)
- {
- 	int ret;
-+	u32 val;
- 
- 	ret = r8a779f0_eth_serdes_chan_setting(channel);
- 	if (ret)
-@@ -332,6 +340,26 @@ static int r8a779f0_eth_serdes_hw_init_late(struct r8a779f0_eth_serdes_channel
- 
- 	r8a779f0_eth_serdes_write32(channel->addr, 0x03d0, 0x380, 0x0000);
- 
-+	val = r8a779f0_eth_serdes_read32(channel->addr, 0x00c0, 0x180);
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x00c0, 0x180, val | BIT(8));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0100, 0x180, BIT(0), 1);
-+	if (ret)
-+		return ret;
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x00c0, 0x180, val & ~BIT(8));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0100, 0x180, BIT(0), 0);
-+	if (ret)
-+		return ret;
-+
-+	val = r8a779f0_eth_serdes_read32(channel->addr, 0x0144, 0x180);
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x0144, 0x180, val | BIT(4));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0180, 0x180, BIT(0), 1);
-+	if (ret)
-+		return ret;
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x0144, 0x180, val & ~BIT(4));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0180, 0x180, BIT(0), 0);
-+	if (ret)
-+		return ret;
-+
- 	return r8a779f0_eth_serdes_monitor_linkup(channel);
- }
- 
+with that change.
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
 
--- 
-2.25.1
-
+Thanks
+-Anand
+> --
+> 2.47.2
+>
+>
