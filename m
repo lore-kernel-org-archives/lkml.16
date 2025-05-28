@@ -1,70 +1,89 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC269199939;
-	Wed, 28 May 2025 17:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE5528DF04;
+	Wed, 28 May 2025 17:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453866; cv=none; b=cwMuSgfxPr7mY5XHw37xbKHNRmLU7+LODp3+l0NgUnDykF/ZA8/LtsFAGsIn8le2YfFm8muZU8zRyqO1XBjd+eFDwmnOYYyj0tEH/OoOhNMcEb/TOXSTi24A48gfS3RjpZmA9l2fmwTPQ2Cy0HFngJ1IhMgGbUew5a5wbwE4is0=
+	t=1748453902; cv=none; b=lBPssweMbjBGUJzUl54YToanv9zf2uWrXNqOJaA/kT3BtAjB+oc02AUU5IsHoCFfx/jnNgB5HmMYaZRPXGGJbg2RmTZitLFe/8QHY9WguR2wcpd2J3RqGB9Pzbmk0f3i5acb6XfuVQqLDogD0OlPKkLpRHulLy3a3BwvTr5aPkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453866; c=relaxed/simple;
-	bh=CIw7ASx2rLLyfF4nLng8it7E4a96P952Wi8WzNEa/lo=;
+	s=arc-20240116; t=1748453902; c=relaxed/simple;
+	bh=U++dy45I+onFjsonr1vngeU772ZgTI8qI+k6vKRdUN0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uz9TtoNJu3/f/T6jBoijX+9Oj5sbtyLzeZCKrGAAJvWVVaoZIuw2kMZ13YyQzGljh66Adv2VGbwAq0YGsJ6LaK331kyNHaFp5P5VUXXSdCbPOK8TJHVsh5cPLAmvuM1qElW4CqwGHSVJH2ssqZcF9rdyQoS9A5BiFyDWA8zcRig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=G9c10NYO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDPnr+IbNXVjlJ1N1ZtqUH3YQkSYZAGO9zKVfIcTf0QLBwX/OnQ1F6az2WIDPNnU9yswKjCPBullUR42tGcFSB7mKveeLCeNIA+GOJcuLgeXTNj3+j7S3FW2YTueCBWOLmXDnvf/uuxuqGojrEBMFXSjBj2hQl8onrq6P/RwapM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q79bKWgq; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="G9c10NYO"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9QQT022351;
-	Wed, 28 May 2025 17:37:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=mrve+4iTNvB6RRvFk7zMr+O7LxdCHK
-	vtxs8I5e3L/hk=; b=G9c10NYO66vBWrcZrkMb9iJ8J5ZZXsUTuFZBq+SOSmIB60
-	+aqlIH4G2md28bkpIT85E5MDInp9IZzgYV6D2RuF5y5CT77TW2Udl+LlDpXra4+L
-	voI2GETWLFElLjgTh3Z23cHNabo6ACjLIAoT1xK88FwBzKzu1tKW96eZgAAj5Ibn
-	FIXzMXKlKGPXKAaaEwY4qfbe0boXL4ocb8hY3whfXY6H3miSkWX9Y06xvYfMr3oc
-	YmcXGiJpeyibEeukCcD6LTqeVIKaIHhp2ifVCDcgKDxPAEbqElwwVMHRxKuJU6Xv
-	FuTFGlq3R9Vovy1Yo0TcpyQFGxSrYJ9dbGBwB5dA==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40k93d8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 17:37:38 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SF8RNi016192;
-	Wed, 28 May 2025 17:37:36 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0rq0e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 17:37:36 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SHbY7n32899668
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 17:37:34 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6DACC2004B;
-	Wed, 28 May 2025 17:37:34 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3883120043;
-	Wed, 28 May 2025 17:37:32 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.124.209.136])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 28 May 2025 17:37:31 +0000 (GMT)
-Date: Wed, 28 May 2025 23:07:29 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Waiman Long <llong@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-Message-ID: <aDdJ2apexd2sJmm3@linux.ibm.com>
-References: <20250527085335.256045-2-vishalc@linux.ibm.com>
- <99be9c8e-a5c4-4378-b03b-2af01608de9f@redhat.com>
- <a9d0e503-ec70-41a7-adb2-989082e4d9f2@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q79bKWgq"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87df8fa1c6aso7591241.0;
+        Wed, 28 May 2025 10:38:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748453899; x=1749058699; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XuU7vghs/Roa4fUMqe76N60+pRs9TTlZ7VpQ6fcHfmM=;
+        b=Q79bKWgqa4il3gX8SS1S0AhAWXMViTYQJ3z990oIGERVmMGTC0U5+yUAALBlppv296
+         NOXCULWXhlKAb5DnuM8NlRN6aeeb4XHqZAYyHuJtYNfSRT4pLq0PNBJ94WMs30dCRHJQ
+         /ZygiUM1O4pAflqaK+QDhepz35VRUJpoV1/cGtpbhSXQDyE5MjHoJR7zdnA8GAMsULj1
+         +aPtz+h1z+wdAiD/jDKHjJdZS+Q8P09Io3AnudU/YY/ZmqTwHjazR/Dft8uVUd9KQD0i
+         cOPKrn+LAyZ+iLKk82WA7FBLv8wqru3LQYK/jYDFsKQRew4RlbXIOQdtkRyn5MWKcblK
+         qHZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748453899; x=1749058699;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XuU7vghs/Roa4fUMqe76N60+pRs9TTlZ7VpQ6fcHfmM=;
+        b=G1Ux4T8RcTpN0gJo3rtzH1M6xavg1xsRwg66ao9mJLsDB6sVJUgQgnzrpIyaiy/4/d
+         r7urco7myPuXJIf/F3/ZsrJRpcBIA2ah1rwQoJKMe/LEqlca/umRnfQEWa/9mD6xHi07
+         xyRLbDJ/H/dfZY4trpHtErM8c3+dEG3ZuE0UzYlHyU9f9jywYcJD6bJ566yzqdB3pgb0
+         wwBAleC0jT14LvJkP3jy/a5vU1tYB70JKB2S73JCX5+mMnHMDwMmYbdikbY87+2+sUnV
+         hQhxM4srvg2bak8nP0SJJYFkD31rfuZVol+NYKhI0chaF8CuwOveG9u6d+quKKfE5y2S
+         itAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD9aDr3OK83mU9awEPb1sSQOr0vnajVJaMQMQ6SDc+bA38lD9lX8ue7xvrrh5BWWdo2GorvIYWcWetX8c=@vger.kernel.org, AJvYcCW4cseKNtXmjMDGmgJxffCQ1qTXnmEKmAsXTI1SFEq9nDs6xm2yc3q75ZRtpxOzMekaoaMBiv03EZo=@vger.kernel.org, AJvYcCWyQind8k6GM57JlPInuVJrEccs8rvkO/O7bIK8S7IcirXtGAgqjwNbfH0LTsxqmzBhuMOnwiTGvjAAGg+vJn6Yxw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwanM+o4ozClsPgsheztqNFnJyeFV+FZA6TUmWd0Inea/qHhA8O
+	d2VTqX4HiNQxOGTL/THu/K2RqXo2o1Saoj3xbsgVPYZ9zXckA5Rq+Axj
+X-Gm-Gg: ASbGncs4qgzJwg5Aw5eY1NEAhtXCBnC5mJ4ahYtf/ACwoRc/yp6G7tT7mCZuiWlBcU2
+	xs/YwF5jW2nG0wmtzJhRfzWOZSSy6hmhgXD5bRSst2ZuKEogQp6PlUi6SaDvdlASK/8igOfHyfe
+	wsoaFOTpdoRx/9DfowHZaaw61dfgCavuBpTzZ/M0pQdf09kR3rxFYQ0pok7HbCys/1IYZ4/xp2B
+	ZGrCPOukPl9jJ3GTJEt0P802FZrjixebfe+uGfGec7eYvUwalid46yhwPNpc63x1Yrt98MSsydd
+	ikErl4QwhKNJe6V70Z3oYFpPlK1YzPF/2pd0Mvo5lKClma68vKX3ckNTuxNz
+X-Google-Smtp-Source: AGHT+IH0yWuJoUrC0OxGQWzTqljadyq7cuFUTOFbkQW4fn/ETHGhWue+swzwXlHVyYeAv2NimJNc6A==
+X-Received: by 2002:a05:6122:4286:b0:523:dd87:fe95 with SMTP id 71dfb90a1353d-52f2c5919c0mr15157933e0c.9.1748453899161;
+        Wed, 28 May 2025 10:38:19 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53066973c62sm1439097e0c.44.2025.05.28.10.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 10:38:18 -0700 (PDT)
+Date: Wed, 28 May 2025 14:38:13 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Peng Fan <peng.fan@oss.nxp.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
+ remote core attachment
+Message-ID: <20250528173813.rxqu6pzqgu4m5joo@hiago-nb>
+References: <CAPDyKFpGcgMzOUHf-JTRTLBviFdLdbjZKrMm8yd37ZqJ1nfkHw@mail.gmail.com>
+ <20250521041306.GA28017@nxa18884-linux>
+ <20250521041840.GB28017@nxa18884-linux>
+ <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
+ <20250523191713.nylhi74jq6z4hqmr@hiago-nb>
+ <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
+ <20250527000510.fofehmsdhifcwlys@hiago-nb>
+ <20250527023921.GA14252@nxa18884-linux>
+ <CAPDyKFqZkcaGfss=Oi+H9UERFU29jY2t5uTPnGVGQgSAJSeCoA@mail.gmail.com>
+ <20250527134525.f7yzs4ww64xxmjmr@hiago-nb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,44 +92,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a9d0e503-ec70-41a7-adb2-989082e4d9f2@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 07MnXplC8qaEHDlvpX1_ZIA1E6zqfb5m
-X-Authority-Analysis: v=2.4 cv=fuPcZE4f c=1 sm=1 tr=0 ts=683749e2 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=2OsMLQx6joTeCsTfgE4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 07MnXplC8qaEHDlvpX1_ZIA1E6zqfb5m
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE1MiBTYWx0ZWRfX9zkU4XEbjh8o JeGFIAZEBJcq0ASzKm8jLkdwab5KvMty0iJti1K3nSCnD5GFJq78ZU51jM0KlzNm4MXQXMMtLer m2OQjb8CzNbojh3RyXOcC64BRVwZXODdHnYUiOalljVOsgNKor9wFyO/Y4aFWIEgY+C2H1Ha9gr
- 8RMIJT2qkIBd5GdpxPacalNr4xA84+pVSMexyvS7yeUpaAgO92UKZ8or8q49I0KcyaiyKrB3COL FJmyi3iIiBWnq7cEres1VrAoKf8m8ztQUnLnZZCI8FOMgmXhf4fvv2mh7t95DFGl5ygPOqLUo+o rlUW1PITuH/p7oybpFhPimsDwsVwWjO43Ucy8WBs/bOCeUeLWD+HXrZqWm8Dn+xm88wGW1Wk7Vd
- Qss8JYmCLMW9MylplkGo3IaXMdZeaNti6Es21OOswumpH5zukUVuHE9ALdRa6ItK3VsiaqkF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- mlxlogscore=346 priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280152
+In-Reply-To: <20250527134525.f7yzs4ww64xxmjmr@hiago-nb>
 
-Hi Longman,
-On Wed, May 28, 2025 at 11:45:29AM -0400, Waiman Long wrote:
+On Tue, May 27, 2025 at 10:45:25AM -0300, Hiago De Franco wrote:
+
+[...]
+
+> > 
+> > Thanks for the detailed analysis!
+> > 
+> > This is a very similar issue as many other genpd providers are
+> > suffering from - and something that I have been working on recently to
+> > fix.
+> > 
+> > A few days ago I posted a new version of a series [1], which is based
+> > upon using the fw_devlink and ->sync_state() support. In principle, we
+> > need to prevent genpd from power-off a PM domain if it was powered-on
+> > during boot , until all the consumer-drivers of a PM domain have been
+> > probed.
+> > 
+> > I had a look at the DT description of how imx describes power-domain
+> > providers/consumers, along with the corresponding genpd provider
+> > implementation in drivers/pmdomain/imx/scu-pd.c. Unless I missed
+> > something, I think [1] should do the trick for you, without any
+> > further changes. Can you please give it a try and see if that solves
+> > this problem?
 > 
-> On 5/28/25 11:23 AM, Waiman Long wrote:
-> > I believe breaking the sentence into two separate components
-> > is actually making it less correct. There are implicit
-> > controllers that are always enabled and do not show up in
-> > cgroup.controllers. Prime examples are perf_event and
-> > freezer. IOW, only controllers that are available and need
-> > to be explicitly enabled will show up.
+> Cool! I can give a try and provide an answer soon. Thanks!
+
+We are making progress ;-)
+
+With the patches you shared Ulf (I added them on top of the current
+master branch), it works as expected, dev_pm_genpd_is_on() returns 0
+when I boot the kernel without M4 running and it returns 1 when I boot
+the kernel with M4 running with a hello-world demo.
+
+However now I tried to, if dev_pm_genpd_is_on() returns 1, put the
+DETACHED state, something as
+
+if (dev_pm_genpd_is_on(priv->pd_list->pd_devs[0]))
+	priv->rproc->state = RPROC_DETACHED;
+
+In this case I used 0 because I understand this is the
+IMX_SC_R_M4_0_PID0 defined in my device tree overlay:
+
+		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+				<&pd IMX_SC_R_M4_0_MU_1A>;
+
+But in this case, the kernel does not boot anymore, I see the "Starting
+kernel..." and nothing else.
+
+I am using the pm_runtime functions before rproc_add():
+
+@@ -1146,6 +1154,9 @@ static int imx_rproc_probe(struct platform_device *pdev)
+                }
+        }
+
++       pm_runtime_enable(dev);
++       pm_runtime_get_sync(dev);
++
+        ret = rproc_add(rproc);
+        if (ret) {
+                dev_err(dev, "rproc_add failed\n");
+
+and calling dev_pm_genpd_is_on() after dev_pm_domain_attach_list() has
+been called.
+
+With kernel not starting I cannot even debug it. Do you have any
+suggestion on why this might be happening?
+
 > 
-> A correction: The cgroup.controllers file shows the controllers
-> that are available in the current cgroup and which have to be
-> explicitly enabled in cgroup.subtree_control to make them
-> available in the child cgroups.
+> > 
+> > [...]
+> > 
+> > Kind regards
+> > Uffe
+> > 
+> > [1]
+> > https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
+> 
+> Best regards,
+> Hiago
  
-Thank you for pointing it out.
-
-Vishal
-> 
-> Cheers,
-> Longman
-> 
+Best regards,
+Hiago
