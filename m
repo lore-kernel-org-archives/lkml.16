@@ -1,102 +1,167 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD3B2868A1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1073A246326
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438587; cv=none; b=lfVrjDRFiWr4gGwEX2sru/QAbVbbxHw1mUcOLfwxxb/nHod1GmcOC7GPwRXuqxjqQyivbeOjgxlW2m7M61N1+aDYS53tlzHerkYiMbifNElA0qIlE3W92LgujnTicfPgMdEHpKQ43tW7UaH+zxh9/yB9PY3gYxqzzACXyC0dvhA=
+	t=1748438635; cv=none; b=eox+7iE/oGukKwIXSVER1UEKdQ96Xv271I1arF+EgNVezm801KRMkV8fg8cIjXxD1dJ51cE6levyMX2KVLfSs2HBNhmUC52vmi2PNCIR8w8k0HmekDuxUgpHkHzZGtxLO6uAUy38BNvcbthIvKvzW+AvrljLC77L+CWwrDmNZR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438587; c=relaxed/simple;
-	bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=au3PDJdkTROx+eBoxBsS8McXm8H2+Ig7wbzedUC1ephO24jPWjkOj+KqSYIDL8E372dRtnOSKohFxtWHIc6jd1tXNi3xxpEejDa6JlgFv3cbSdtzG8+QDSone1ioqhDhMd0Qq7gHckN6DG7ZAQdsXJZRTl5AUHMTTfxKliKTMsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bXHor/Y7; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748438635; c=relaxed/simple;
+	bh=5vKSGaBChbSlR5lX+l//vJBLLeI/kpeZbgb9bJhXdmI=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=aDr3VDQv/7KThivOQDOJ1proLXV4s4TIwA6FusTkEY5Ip2ShSAMlI3bY/OxUqwJV/DtLB7JElIpjc2e/jf6f+FLcvzqUlZmr8+5cggILt8iubZaSRZ+GzLCc50/S5ZRmg5v8SjSZa+vFi07LYlnjbJtwPmsuE6Lz+zgxDoZRRxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvGahb1D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXHor/Y7"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476b89782c3so42609011cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748438584; x=1749043384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
-        b=bXHor/Y7iQUXdwSub6pJ/SULEIUI9E2G2oEq5gCdmBNzJVk/WLvueLT9dqNF6vGO0u
-         jwZy5d+WWZ6RkjW0yV+i5AnCp96ClSK7wnVzflG0GZb0ljTG0NEvFs/sjhiHNbE9zIJP
-         wZ5dhtaUWNiuPFYV2QBsHIqJBlZPgMTA3UM6KbHET60PIPtok/itn5OfFFTzXhpgEG7J
-         shImmydziY1PQlihUm8Vdf4oDYFmoiky+Mq+bTSljcNVwkc2QZroAxVDoIiZsHQapUST
-         cbnP3s8kBFciuwnQk8RBVGB79itJKm9m6SK3EEO1yOXSc1tA4oxha8hTscS4pjW6SoHS
-         RTrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748438584; x=1749043384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wLAIAFZApvRfJYt9cSIjJYMbXnMPn+iDGWN+sR5UeVM=;
-        b=rF++YHCKSZPnaN03+I6rZnLAZGiCFAvxfqi+20ymGKAljGb0AhD9Q3SAJ/3LTw0N/m
-         bLd97UeRQkPHQmbWuu7WVHy7Tc6QZl9zBcp69vHn2ZXW3359uR9a0vbMO56P4jbADp2e
-         Vglc48zxF2r1LzlpXhXx8VkJarkiBf/3sKadglAb6gTUMQlXvCGFiImBfho8+t2KWW1g
-         uaeaCaX6OE1ysgp53Z4yJ+1huh8e4HpjTeRBMOJo748prvU8LFqh4X8BUEq4RQ2nUzEf
-         k4giYNU2MylojSZyanqgw0bRHZ3tFj3821MJhgtTwRFimRLPXAh4LqE5lSdZoP7yA9cB
-         9A+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVzsnsKxsd1GWdzr27afjbv3jpOVoSIqj4iiZU8kBSfBZzB0fNsPbUpbLbO6Ey6LzTxhZlE9EllG6jQCvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfIY6rOCaFriec7xGpP5qP7zTcZ8CWLkTcszsI9rJypNV1+ume
-	clw8UIjsuWdIXUvtZc8HbqEa5fBS9eIpWexGNLHBm2Ji2OCVIOOYfXkhIhq7egi1psM1mpNH/BM
-	ldf9CXOAVBVSVgS80ll9IGNcDfPMXqnkhghlY5GYX
-X-Gm-Gg: ASbGncs24Fe/Hfx4fYkBcYhl0pGVlY43/0useov7y0yW1k/amYZ5J2fkJGtHLdu+Fjd
-	42AxIlk7TN/xdF414Lh2AFB4KTLujqZkaNpZmPHNsGtRfqazcLYBW6w8ocvqII4VgkJ66fJSzk7
-	r1K4VzinhgYYTnZVWmPplrc/0ogCnMlmzYO4kM1s0uEwI=
-X-Google-Smtp-Source: AGHT+IGbZYbMUUF0o/p3mJU8DlaGsdqh7xPg6DKlw1BJkyhZ4Y5kJip0JlOAmFjFmFCnoDaO4CJolysrrKy64JLg9BY=
-X-Received: by 2002:a05:622a:608d:b0:494:b1f9:d683 with SMTP id
- d75a77b69052e-4a38c7dd4cfmr34934901cf.49.1748438584068; Wed, 28 May 2025
- 06:23:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvGahb1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEA28C4CEE7;
+	Wed, 28 May 2025 13:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748438634;
+	bh=5vKSGaBChbSlR5lX+l//vJBLLeI/kpeZbgb9bJhXdmI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SvGahb1Do9eqe3wYzPHut9tiGeekau9E3fkbyq23F3FrZk/QHelsJAtjySHEJh/S2
+	 BP/9WfUEWcRRx5e+n07v424qqusqgcwVW0B1iKztcH9mvKersXINz2nOVHJ033iSbM
+	 t5aeZXGDeNd0MYvnQo5kOg1eZ5YEsJu4zHSkJQHWl9jQQyuONp4yNjCvyTsL3CV/tP
+	 y4G3wCbrF7x3FU0EHTfQ0jnZhCxXpwQc2wMCGhb4+JCD4QKVz2RfnSux88ZJGtnKTT
+	 3ZWXiI9Euov3Ym4g6mVEjSxIgRGRRyI7qJOAxlrUKosARIRmzlfONW3KZG90X+TrM3
+	 9JG2TsMFQCGFg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANn89i+C-qk-WhEanMS_tRiYJHHixH33MAO3u-wQVdWGJOjskw@mail.gmail.com>
- <20250526194619126ArX868H3UosA7Jz31tRqF@zte.com.cn>
-In-Reply-To: <20250526194619126ArX868H3UosA7Jz31tRqF@zte.com.cn>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 28 May 2025 06:22:53 -0700
-X-Gm-Features: AX0GCFuFbinN-PIix2adUwdlDdRnQDxrOpLHN9thHLQVIv65tW3K_tN3mCvIi88
-Message-ID: <CANn89iL43q7tCETt3gW9L_HVHdRrovu9mauekA3QrWrpVSm+Ow@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: arp: use kfree_skb_reason() in arp_rcv()
-To: jiang.kun2@zte.com.cn
-Cc: davem@davemloft.net, kuba@kernel.org, dsahern@kernel.org, 
-	pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, 
-	wang.yaxin@zte.com.cn, fan.yu9@zte.com.cn, he.peilin@zte.com.cn, 
-	tu.qiang35@zte.com.cn, qiu.yutan@zte.com.cn, zhang.yunkai@zte.com.cn, 
-	ye.xingchen@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Wed, 28 May 2025 15:23:47 +0200
+From: Michael Walle <mwalle@kernel.org>
+To: Devarsh Thakkar <devarsht@ti.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Aradhya Bhatia
+ <aradhya.bhatia@linux.dev>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, Francesco
+ Dolcini <francesco@dolcini.it>, Jyri Sarha <jyri.sarha@iki.fi>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Vinod Koul
+ <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Andrzej
+ Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>
+Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
+ capabilities
+In-Reply-To: <ab5f27ac-6bbe-4746-a2bd-e5f1a667ae91@ti.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
+ <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+ <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
+ <ab5f27ac-6bbe-4746-a2bd-e5f1a667ae91@ti.com>
+Message-ID: <27fa4ad56a57f0c408d3b119a620c1cb@kernel.org>
+X-Sender: mwalle@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 26, 2025 at 4:47=E2=80=AFAM <jiang.kun2@zte.com.cn> wrote:
->
-> >Are these errors common enough to get dedicated drop reasons ? Most
-> >stacks have implemented ARP more than 20 years ago.
-> >
-> >I think that for rare events like this, the standard call graph should
-> >be plenty enough. (perf record -ag -e skb:kfree_skb)
-> >
-> >Otherwise we will get 1000 drop reasons, and the profusion of names
-> >makes them useless.
->
-> Thank you for your feedback.
->
-> Maliciously crafted ARP packets often trigger these two scenarios.
-> Using perf cannot directly distinguish between the two cases;
-> additionally, enabling perf in embedded environments may lead to
-> noticeable performance overhead.
+Hi Devarsh, Hi Tomi,
 
-ARP packets are local to the domain. They are not a concern, really.
+>>> While testing Aardhya's OLDI support patches [1], I've noticed that
+>>> the resulting LVDS clock is wrong if this patch is applied.
+>>> 
+>>>> In practice, with the current K3 SoCs, the display PLL is capable of
+>>>> producing very exact clocks, so most likely the rounded rate is the 
+>>>> same
+>>>> as the original one.
+>>> 
+> 
+> Yes, display PLL is flexible and device manager should set exact 
+> frequency.
+> Please note that there was a bug in device manager in earlier releases 
+> which
+> would prevent setting it to exact clocks. You should try with latest 
+> SDK
+> release firmware binaries (11.0...(10.1 should also work though)) if 
+> seeing
+> any misbehaviour in that regard.
 
-If your local domain has 'malicious hosts', they could actually
-trigger more issues by sending
-complete packets, to make sure to fill various hash tables.
+Yes, I don't doubt that. But it's the way the driver is handling the
+clock w.r.t. to the fixed-clock-divider in the LVDS case which is 
+causing
+problems.
+
+>>> This is now what I'm seeing. Most SoCs have that fixed clock thingy
+>>> for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
+>>> fixed clock rate for this clock, which will then result in an LVDS
+>>> clock which is way off.
+>>> 
+>>> I'm testing on an AM67A (J722S) and I've backported some of the
+>>> patches as well as dtsi fragmets from downstream. Thus, it might be
+>>> as well the case that the fixed-factor-clock node is wrong here.
+>>> OTOH other K3 SoCs do this in mainline as well.
+>> 
+>> Thanks for findings this (It's not a fixed clock, but a (fixed)
+>> divider). I can reproduce on my AM62 SK's OLDI output.
+>> 
+>> I didn't see AM625 TRM explaining the DSS + OLDI clocking. I remember 
+>> it
+>> was a bit "interesting". Afaics from testing, the VP clock is derived
+>> from the OLDI serial clock divided by 7. To change the VP clock, we 
+>> need
+>> to set the OLDI clock's rate. But the code we have at the moment is
+>> using clk_round_rate/set_rate to the VP clock.
+>> 
+> 
+> This is correct. The pixel clock is derived as OLDI clock/7 when OLDI 
+> is
+> enabled.
+
+What means "if OLDI is enabled"? Is there any other clock otherwise or
+none at all? Reading the clock ID desciption in the TISCI documentation,
+I presume there is no configurable clock for the first VP at all. I.e.
+if one compares it with DSS1 which has two muxed clocks, DSS0 only has
+one muxed clock (DEV_DSS0_DPI_1_IN_CLK) and DEV_DSS0_DPI_0_IN_CLK is 
+fixed,
+presumely thats the fixed /7 clock.
+
+Also how is this handled for the DSS1 (on an AM67A)? The TI downstream
+kernel also has a fixed-clock-divider for the VP1 on DSS1, but I think
+that is wrong, because it's actually configurable (if OLDI is 
+disabled?).
+
+>> And we get the crtc atomic_check called before setting the OLDI clock
+>> rate, so it doesn't even work by luck (i.e. if the OLDI clock was set
+>> earlier, the VP clock would already have the right rate, and it would
+>> seem that everything is ok). In the atomic_check we see the OLDI 
+>> bypass
+>> clock (25 MHz), which results in 3571428 Hz VP clock.
+>> 
+>> And with this patch, the code then decides that 3571428 Hz is what the
+>> HW can do, and uses it as the pixel clock.
+
+FWIW, I'm seeing exactly 300MHz on the AM67A (the FCLK is 2.1GHz 
+according
+to k3conf).
+
+-michael
+
+>> 
+>> Aradhya, Devarsh, do you remember how the clocking goes here? Or if 
+>> it's
+>> in the TRM, please point me to it...
+>> 
+> 
+> I think what you described is correct, if any specific questions I can 
+> help
+> check. But any misbehaviour you are seeing w.r.t clock setting (i.e. 
+> what
+> driver is trying to set versus what actually is getting set)
+> then please dump the dss clock tree along with relevant details of test 
+> done:
+> 
+> k3conf dump clock <display_device_id>
+> 
+> You can get the device ID via TISCI Doc [1]
+> 
+> [1]: 
+> https://downloads.ti.com/tisci/esd/latest/5_soc_doc/am62x/clocks.html#clock-for-am62x-device
+> 
+> Regards
+> Devarsh
