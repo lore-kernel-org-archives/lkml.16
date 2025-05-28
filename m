@@ -1,72 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FCE247282
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E951E0DBA;
+	Wed, 28 May 2025 09:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423196; cv=none; b=HuQph0geDGnhgonQwvulS9O8qtSzUpL+icPLfgPERzOleeU3qtA2XUrtKHMftzPzGoG9wnQcPTOhEBzFwjt/TU/fmjDNdp5fFLEUri0Izk6RPBAVLrA9hTGxxLaklztpsrqddGuMSc8LWZ4KE3gSzqHt5wN5R370JtN3jk8MRww=
+	t=1748423206; cv=none; b=m2nBtv2qgfNKdVYSlLb669WmB1iHfreaIMhLgEL0NeuEMqWA1Q74PBl7KsbeCMNJKe0Foegf1zipZ51z07fokIdxAWWbpkPuDyYxz0k+4d6mxoz03qVxVOCpltzQ0jfcmKpR54JD+ViDG00VO3XX/qtXKajLXYtWXFxaygb6WE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423196; c=relaxed/simple;
-	bh=4TvTmbiWXB5FhroHsvlg+K8JZ75ZnMsD85mUMetTHRU=;
+	s=arc-20240116; t=1748423206; c=relaxed/simple;
+	bh=kOXKXYBm0pp28YtkaxvHzV7xrXjXU6/FZ4rd0x7+0rg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WCwdc6gsC+CJ93bPOvo0UUx9LdWV9WfzOCYfPU8TvKwEZEpOSBTcHsp9nV+PqfGhdI9io1trs0TmSjHWbamewPbvJ97g9qs0P73i4PyA1Gfy3kSKltm9grxjbmPFVTVc3yybdUT5tLjfDTQHldTsNyO9c8P+t4jZm9FS8CqZxmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q+xloBN2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=N3oz28GbLOALIrUFJQa5UqzJWCA5Y7aSTZ7dAnFzIlEBvBWgstv64QrjPy7kH8VaXM9e8JZqwUL1JAOQmhD4LrtNGNGmTDlQQuw4QspeYrMI4HmzureJYEcujc/EyVDZOSPRty0E0ZPcWywGpy1rWJrkrDITRZaqvd2ogjMIdh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SjfKKxw9; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q+xloBN2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748423193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0jNfWBnNwI4vmCYyyWkZIC0z1gNt+R1x0CiFYOJERUE=;
-	b=Q+xloBN2Fggr8aZTqHpO/ENONSn9gCNVDzdQn56z+v3DHAvIIU2Q5GhJwMoNch7uSjfejY
-	zpTeDZOhlKTP7UQ7T711QJkLbu+dcE6u0WRF3dvKP7fHZyH2dVPMBuTUvuuRDHb9uRk1IX
-	IiSOOfF3tYZY7JzidniVQre8uwB5kAM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-351-2Xh6seF3OM2TUf-ZcEBQnA-1; Wed, 28 May 2025 05:06:32 -0400
-X-MC-Unique: 2Xh6seF3OM2TUf-ZcEBQnA-1
-X-Mimecast-MFC-AGG-ID: 2Xh6seF3OM2TUf-ZcEBQnA_1748423191
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-441c122fa56so20602435e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:06:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SjfKKxw9"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acbb85ce788so853256266b.3;
+        Wed, 28 May 2025 02:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748423203; x=1749028003; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SrHG2O5BYtb3YtvsVKxTKKGZHaxoCb1RYr5BGkq1In0=;
+        b=SjfKKxw9aCyq2O2rJnC6/sLZWWY8XvldqAMTqL4ZZbPAM5R7TL+r7EHZd6VaTlOrJW
+         6GdZE29EyU/F9o+BcPSc7yGssAT3ZDRDoLFbkYzUUWz8+LOGyxZQHXn38xuUmib/S1bX
+         DmmOWdnie25fHO2OEePCFboyCtdyYu0f4w3CwpIcAn93ef2g3Q9OZVUxar+2kxNjcVAK
+         IJfn/vxg1lXyw38uWkQ4m91nnafvFbzvzEvtF06eWlQy3/BIq6f+RipnaIU0JRg1HVK2
+         gVpMo/l3OcS65RUWwJiZxyfli/NE7/NV0nLJbcAhK41K7tHbsSs47CLqcc+MzBkDJU6F
+         fErw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748423191; x=1749027991;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0jNfWBnNwI4vmCYyyWkZIC0z1gNt+R1x0CiFYOJERUE=;
-        b=H8qITd9SM6urQYo3IMplQTX3/z8wWHjYfXBOADM9oP+EYQNLiTfQIRZG4TLP6dZPha
-         gSudmAjXW4K1yk/TB5ppSLIpdcUcyUyQLN5uB4TUvIklp2SEEY6ZeG83tnIIFEp7Nm34
-         kaFofDP7WDpVjC2haNCHrTGC9N0iPObpMm2FUPKGW2VGr3vm/EqNWKMA9yYRPH5JYHUh
-         5Z7i6Xqy8MsDXrR1Br2nnVyqCc94VY5sjQ7sbIk+/jqWYQoYF6LJRNYUrr2wLOmWJ7zT
-         y3+V38oBAR/AzZfg8pAQCQmWZfcezHcNjzCUaM9qSldLHR9zqsdAv4j5fS6wftJaQJ2w
-         flXw==
-X-Gm-Message-State: AOJu0YxmAFA+pgUOeJ/3VUAodzXZ6tJVunQbgkaFTXdQot3QAZj2OsJM
-	8hbGcSNFU2UZnbjOsqqibor4Ro/Hs5RoODrzI62rEXoQl3lq9w41L2g8AxOWRItNrBvT3r37GLD
-	9ZBmVxCVK7MCvEDzT0FxJ20KH8nc5iqww7fQTToJWIyIiAHe3QrTPfn2VfVzNDcrhzA==
-X-Gm-Gg: ASbGnctnflY1sP5e8sOxg+BuqhuaqK4V/ySrP+8qkbzS4VoPgNsRxhx/QGDKP6U56Ye
-	rwM97Rqx4FgsA1HTVTVgyO85Huq2VZe+ZRsypKPhXJqNKaknwxSNIR71z3ghqYmJFbgMN4mLQHI
-	kXy6WBj0DeBuCUmJq+bZtfZyVO7zngRIQLH/6f+VD7xGvjltIvhGW4lgPaYVLV92DMygIj77e4E
-	vcOGcXFbJLwb6lDevf1T4djlrf2+8DE1n30v2YfKmVkCyES7Fkn9hf+BylJ5ZFmjJpwBDpHega1
-	cbDIlNbr8ZT+Rj8Y4r9t124lPQFDTgAj3Dr/8pkGb6iC8/LbeHd6lldQCf7No1bp8FR94OFWeUc
-	fCWcPTd0k/faG1TQawfM83lss78vRW5nqFKDmptI=
-X-Received: by 2002:a05:6000:1785:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a4cb4602a6mr11987345f8f.25.1748423191186;
-        Wed, 28 May 2025 02:06:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFFS2yw6ICITHixIjXBzRYXeXOzAPyp23fKYDFoE4S3dOHqpW1SBJwXLDvJ8JMJEkqZ76misw==
-X-Received: by 2002:a05:6000:1785:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a4cb4602a6mr11987314f8f.25.1748423190772;
-        Wed, 28 May 2025 02:06:30 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac7d7a7sm889461f8f.21.2025.05.28.02.06.29
+        d=1e100.net; s=20230601; t=1748423203; x=1749028003;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SrHG2O5BYtb3YtvsVKxTKKGZHaxoCb1RYr5BGkq1In0=;
+        b=wn6OKhll23QO2/doG7sgkaTK9GLxd8rYf1cqrl5mJNV+lcTM8q2rKoly5gDkIpcrBh
+         84MPEQ2yZstIVSCOkrLGvJPqxRBNRJXUHHMG7ucroAG2GQJnQGKOlvxR86P+Yhcnv8hC
+         u6eEb9JUwbhPOo6jVrwrWNqZjSrBcDniqUHz0I6NlCaSM+R+UJjTKzX6ibowXZcBHaey
+         OP1He5XcfNxKVabO7Crrz6fRaDmZKRiOItg5JWoJG8VqwF8RFHwrZbDGUfO3kkyO+61c
+         MJVef9jGvrbJzW3bfxz3RTmFvAJkTBWocVHThvCdXV+dG9i55pdH2FOWrsQTXolCSjYH
+         VUwA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjgybyGTmuT2kcUk/kSZcY9VZ3CMmkteSrSoVh81GRI4IB2wm6JX7hBf1qhPshq5W40MY=@vger.kernel.org, AJvYcCUjjhys2INpyqGSI7y1S7dDPRGxMGveQ1J0pOPagcLiYvbebfvNpuLYl4/CQefiMXlk+ThZJouM@vger.kernel.org, AJvYcCVfzUWy4JElFcgdaSOHhke4LBJJjI3jLWw4KhariPlP09P1IqhOdv+g3q+rKCiu8DyHHSejcQILpru+1oMC@vger.kernel.org, AJvYcCX49d5U1mwu9IerlUzoG6K0R7au1RtMn0UfzQoKLJ+eVEMhawBVgcEMiLDUl7PzZBkKhxU1Vv5FNmKYMw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXhHNgBSJ96VhrgQsygehE3HDTkO5kY40xXzOpKheyf8U+FWaX
+	qrPWZEuJoCwKLo81NzbeKzdbrtiLFul1uNawiAmAVDxmYwmdqa6uCpAP
+X-Gm-Gg: ASbGncsjZYin804MX4DAFqq4GmAtZ0hFxf+5Ph1R/nfuEJSCa1wrAcSCOphH4skL63y
+	9bsRow0K+QaaXAey8JR93xBiNxzSXeA1rOVNeBb2ySztiJKGREjXs+XdEAJdLN0FTOR7LAkz3e0
+	+6L0t0jP5xw/Kfhw6Ew9ryyckMSRsSZlhadyqaBzpBUJ+9TYa3pmx0LBnf18o9Y7MLxePDo1A+I
+	+zaUB/pAy7OLGHxxN5F+drH5Q//8yqFlL+b34PblVhx5zeC8VhTFWkE0/9bL+FnusDbaLQhmAl5
+	hTI3vRBQlKmettonzBfQ/vzPfw4EXbdxg5XJp4YdCm3rAHjgXWxbX6eiTNvlpmo=
+X-Google-Smtp-Source: AGHT+IHlRG59ZQ1RE5LCh+OggOjfsmRsw03O6EaDU9OGsaOzsQR2qjNj3W2GDEZEmVgO/2R9EYjTRQ==
+X-Received: by 2002:a17:907:8686:b0:ad5:55db:e413 with SMTP id a640c23a62f3a-ad85b1504d9mr1421685166b.26.1748423202406;
+        Wed, 28 May 2025 02:06:42 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::6f? ([2620:10d:c092:600::1:c447])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b29324sm73175966b.100.2025.05.28.02.06.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:06:30 -0700 (PDT)
-Message-ID: <23fc6556-6578-44ba-8443-84adecc29d24@redhat.com>
-Date: Wed, 28 May 2025 11:06:29 +0200
+        Wed, 28 May 2025 02:06:41 -0700 (PDT)
+Message-ID: <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
+Date: Wed, 28 May 2025 10:07:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,100 +66,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
-To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
- <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access page->pp_magic
+ in page_pool_page_is_pp()
+To: Byungchul Park <byungchul@sk.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
+ harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
+ <a4ff25cb-e31f-4ed7-a3b9-867b861b17bd@gmail.com>
+ <20250528081403.GA28116@system.software.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250528081403.GA28116@system.software.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 28.05.25 07:35, Tal Zussman wrote:
-> This has been unused since it was added 11 years ago in commit
-> d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
+On 5/28/25 09:14, Byungchul Park wrote:
+> On Wed, May 28, 2025 at 08:51:47AM +0100, Pavel Begunkov wrote:
+>> On 5/26/25 03:23, Byungchul Park wrote:
+>>> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+>>>> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+>>>>>
+>>>>> To simplify struct page, the effort to seperate its own descriptor from
+>>>>> struct page is required and the work for page pool is on going.
+>>>>>
+>>>>> To achieve that, all the code should avoid accessing page pool members
+>>>>> of struct page directly, but use safe APIs for the purpose.
+>>>>>
+>>>>> Use netmem_is_pp() instead of directly accessing page->pp_magic in
+>>>>> page_pool_page_is_pp().
+>>>>>
+>>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>>>>> ---
+>>>>>    include/linux/mm.h   | 5 +----
+>>>>>    net/core/page_pool.c | 5 +++++
+>>>>>    2 files changed, 6 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>>>>> index 8dc012e84033..3f7c80fb73ce 100644
+>>>>> --- a/include/linux/mm.h
+>>>>> +++ b/include/linux/mm.h
+>>>>> @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+>>>>>    #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+>>>>>
+>>>>>    #ifdef CONFIG_PAGE_POOL
+>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
+>>>>> -{
+>>>>> -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+>>>>> -}
+>>>>
+>>>> I vote for keeping this function as-is (do not convert it to netmem),
+>>>> and instead modify it to access page->netmem_desc->pp_magic.
+>>>
+>>> Once the page pool fields are removed from struct page, struct page will
+>>> have neither struct netmem_desc nor the fields..
+>>>
+>>> So it's unevitable to cast it to netmem_desc in order to refer to
+>>> pp_magic.  Again, pp_magic is no longer associated to struct page.
+>>>
+>>> Thoughts?
+>>
+>> Once the indirection / page shrinking is realized, the page is
+>> supposed to have a type field, isn't it? And all pp_magic trickery
+>> will be replaced with something like
+>>
+>> page_pool_page_is_pp() { return page->type == PAGE_TYPE_PP; }
 > 
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-> ---
->   include/linux/mm_types.h | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 3e934dc6057c..8b91362fcf8e 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -1539,7 +1539,6 @@ enum tlb_flush_reason {
->   	TLB_LOCAL_MM_SHOOTDOWN,
->   	TLB_REMOTE_SEND_IPI,
->   	TLB_REMOTE_WRONG_CPU,
-> -	NR_TLB_FLUSH_REASONS,
->   };
->   
->   /**
-> 
+> Agree, but we need a temporary solution until then.  I will use the
+> following way for now:
 
+The question is what is the problem that you need another temporary
+solution? If, for example, we go the placeholder way, page_pool_page_is_pp()
+can continue using page->netmem_desc->pp_magic as before, and mm folks
+will fix it up to page->type when it's time for that. And the compiler
+will help by failing compilation if forgotten. You should be able to do
+the same with the overlay option.
 
-Acked-by: David Hildenbrand <david@redhat.com>
+And, AFAIU, they want to remove/move the lru field in the same way?
+In which case we'll get the same problem and need to re-alias it to
+something else.
 
 -- 
-Cheers,
-
-David / dhildenb
+Pavel Begunkov
 
