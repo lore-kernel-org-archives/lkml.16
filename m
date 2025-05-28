@@ -1,127 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7E41FBCB2;
-	Wed, 28 May 2025 05:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6FBF1F7586
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748409898; cv=none; b=Cr7sbIwNQuq7oyPMPa/bv/9OkN9zI3MBFZWUSUbm8gDi+TvcR/qO4w8QcHrh6S/4z7rB8pwVPh5lAv6MxmZtiSZh2tpywI5nMR+M2VuojtCoakCEWGrqficIRVajz4qOwqnWOsMibkaLmSjXgS5u0AT0/cmfSEV1I9G7P/Hor1Q=
+	t=1748409946; cv=none; b=NMOLtu3LGEYHhBp6dL1wZ56LrmmgkqbmzTVAXqIQszAbQykyc+/+6hSfo4n3bZ2rzFip1GmRzWXQOiJ5ZRgOw/1bE/idglXOTGUR67Fk/ygZXzt2JnvvEu2UpF/YOk4KlykXayF4It57TmHB7DuwreZ4LNurx/A3CnCkiOFJoS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748409898; c=relaxed/simple;
-	bh=17rSp5U/xGeglZ8H7tF6/G2owk/7blSgg3sqoGfP+0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XlquwTCY5x6EnSwJF9Z9NJzzepLQZqgx+VUbaM+mc9016YhUyKQn1xD11Ww5Y8Lujp0Lhxjs5u+mSNI7JCuzwrp13esC43pN+i+VSfX+jlzoEAwGqOrqvefDgGiJz3sNo7VK1heYC7y2dPY2pVf6IZQW2Vk86r5n30YoGVAFGK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PzUgQz4U; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PzUgQz4U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748409897; x=1779945897;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=17rSp5U/xGeglZ8H7tF6/G2owk/7blSgg3sqoGfP+0U=;
-  b=PzUgQz4UDGxfMrdLkkgOuYKNRqSJ6qEdO3IbvPgfhLQJCivJtnHGhset
-   AxScILfjThtgkX3c1/7bp/WGYQa4qUJtwfFu9Wtmco8auhNsAvz7JRYWE
-   FhP6KVf0MLJxh6iqKd12HmEmIP5P49HQgPW8oCnqHSUJktvAWdyWUMVrm
-   /yPwq2M4pCFHU36CZm+V+wh2Wh8u0R6ifX5e0lHGShL9mLcBzIqZBjd4e
-   LhQAR4OBL04A5ulH7424RjNgwzBB5n01WYp5oQ+2O/6YQsfWYk2M7BbKV
-   b9vMmPZ2boet4xVXqIlQQRdoTmHpAI895DzfkMPSFyE4IjEbCpBwcB2tg
-   A==;
-X-CSE-ConnectionGUID: V+9exAmDTUmSLGT8exmKRw==
-X-CSE-MsgGUID: smPf+JPhT9+E6vtb/OubsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50576507"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="50576507"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:24:56 -0700
-X-CSE-ConnectionGUID: 43PRHqaxS/iGGHO6XHx9aA==
-X-CSE-MsgGUID: 9VBCuzvETsG4GSy2PbL5cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="142947801"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:24:50 -0700
-Date: Wed, 28 May 2025 07:24:11 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: weishangjuan@eswincomputing.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	vladimir.oltean@nxp.com, rmk+kernel@armlinux.org.uk,
-	yong.liang.choong@linux.intel.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
-	jan.petrous@oss.nxp.com, jszhang@kernel.org, p.zabel@pengutronix.de,
-	0x1207@gmail.com, boon.khai.ng@altera.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, lizhi2@eswincomputing.com
-Subject: Re: [PATCH v2 0/2] Add driver support for Eswin eic7700 SoC ethernet
- controller
-Message-ID: <aDad+8YHEFdOIs38@mev-dev.igk.intel.com>
-References: <20250528041455.878-1-weishangjuan@eswincomputing.com>
+	s=arc-20240116; t=1748409946; c=relaxed/simple;
+	bh=vdlPPURZFqLW0CfYUqmDIFGE6MunILIj03Dugkm8ypU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IEJ8ID0gve89GJjDTbMpzI2CJ2v3xDUgZVfAQHaUXaY3kpCn2JfDN6lVJ+Jj13RjReF6LuXnduMQaQ2M5UxayTulXEqCIuo+c7x5puKTbCyFKdUOVYmHBFqgkieFXQPQR+Cav1MCYjbc/rpwEHLBMrlaq9WXln8nbispUIaCGzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: vwHT20hcS92e+6NCRNsqyw==
+X-CSE-MsgGUID: wrKAZZudT4+bhAv8lq7C5w==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 28 May 2025 14:25:43 +0900
+Received: from [127.0.1.1] (unknown [10.226.78.19])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5838E4172C21;
+	Wed, 28 May 2025 14:25:41 +0900 (JST)
+From: Michael Dege <michael.dege@renesas.com>
+Date: Wed, 28 May 2025 07:25:24 +0200
+Subject: [PATCH v3 1/2] phy: renesas: r8a779f0-ether-serdes: add USXGMII
+ mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528041455.878-1-weishangjuan@eswincomputing.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250528-renesas-serdes-update-v3-1-8413fcd70dba@renesas.com>
+References: <20250528-renesas-serdes-update-v3-0-8413fcd70dba@renesas.com>
+In-Reply-To: <20250528-renesas-serdes-update-v3-0-8413fcd70dba@renesas.com>
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Dege <michael.dege@renesas.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748409938; l=5036;
+ i=michael.dege@renesas.com; s=20250523; h=from:subject:message-id;
+ bh=vdlPPURZFqLW0CfYUqmDIFGE6MunILIj03Dugkm8ypU=;
+ b=9fAYNYfvfrd1npQnc068D8Oe6kGTnEjjLnBMknGm7npWzXfv0IquiTg9INlz9T11Ki0NaB+fQ
+ /t9sm5CP3GiAjAo9x2vj+XsZp2a8YRN544B64zvSv2sbklyAIS1CVcM
+X-Developer-Key: i=michael.dege@renesas.com; a=ed25519;
+ pk=+gYTlVQ3/MlOju88OuKnXA7MlapP4lYqJn1F81HZGSo=
 
-On Wed, May 28, 2025 at 12:14:42PM +0800, weishangjuan@eswincomputing.com wrote:
-> From: Shangjuan Wei <weishangjuan@eswincomputing.com>
-> 
-> Updates:
-> 
->   dt-bindings: ethernet: eswin: Document for EIC7700 SoC
->   v1 -> v2:
->     1. Remove the code related to PHY LED configuration from the MAC driver.
->     2. Use phylib instead of the GPIO API in the driver to implement the PHY reset function.
->     3. Align with the latest stmmac API, use the API provided by stmmac helper to refactor the driver,
->        and replace or remove duplicate code.
->     4. Adjust the code format and driver interfaces, such as replacing kzalloc with devm_kzalloc, etc.
-> 
->   ethernet: eswin: Add eic7700 ethernet driver
->   v1 -> v2:
->     1. Significant errors have been corrected in the email reply for version v1.
->     2. Add snps,dwmac.
->     3. Chang the names of reset-names and phy-mode.
->     4. Add descriptions of eswin, hsp_sp_csr, eswin, syscrg.csr, eswin, dly_hsp.reg.
-> 
->   Regarding the question about delay parameters in the previous email reply, the explanation is as follows:
->     Dly_hsp_reg: Configure the delay compensation register between MAC/PHY;
->     Dly_param_ *: The value written to the dly_hsp_reg register at a rate of 1000/100/10, which varies due 
->                   to the routing of the board;
-> 
->   In addition, your bot found errors running 'make dt_binding_check' on our patch about yamllint warnings/errors,
->   it looks like the validation failure is because missing eswin entry in vendor-prefixes.yaml. 
->   When we run "make dt_binding_check", we get the same error. We have already added 'eswin' in the vendor-prefixes.yaml 
->   file before, and the code has mentioned the community, but you have not yet integrated it.
+The initial driver implementation was limited to SGMII and 1GBit/s. The
+new mode allows speeds up to 2.5GBit/s on R-Car S4-8 SOCs.
 
-Usualy description is above the changelog. Please try to follow 72 line
-length rule.
+Signed-off-by: Michael Dege <michael.dege@renesas.com>
+---
+ drivers/phy/renesas/r8a779f0-ether-serdes.c | 69 ++++++++++++++++++++++++-----
+ 1 file changed, 57 insertions(+), 12 deletions(-)
 
-net-next is closed, you should resend it when open (after June 9th) [1]
+diff --git a/drivers/phy/renesas/r8a779f0-ether-serdes.c b/drivers/phy/renesas/r8a779f0-ether-serdes.c
+index 3b2d8cef75e52c939fcc8806961e172dbafb8008..ed83c46f6d00c255852cc5af867c89ab0d0db02a 100644
+--- a/drivers/phy/renesas/r8a779f0-ether-serdes.c
++++ b/drivers/phy/renesas/r8a779f0-ether-serdes.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Renesas Ethernet SERDES device driver
+  *
+- * Copyright (C) 2022 Renesas Electronics Corporation
++ * Copyright (C) 2022-2025 Renesas Electronics Corporation
+  */
+ 
+ #include <linux/delay.h>
+@@ -92,17 +92,18 @@ r8a779f0_eth_serdes_common_setting(struct r8a779f0_eth_serdes_channel *channel)
+ {
+ 	struct r8a779f0_eth_serdes_drv_data *dd = channel->dd;
+ 
+-	switch (channel->phy_interface) {
+-	case PHY_INTERFACE_MODE_SGMII:
+-		r8a779f0_eth_serdes_write32(dd->addr, 0x0244, 0x180, 0x0097);
+-		r8a779f0_eth_serdes_write32(dd->addr, 0x01d0, 0x180, 0x0060);
+-		r8a779f0_eth_serdes_write32(dd->addr, 0x01d8, 0x180, 0x2200);
+-		r8a779f0_eth_serdes_write32(dd->addr, 0x01d4, 0x180, 0x0000);
+-		r8a779f0_eth_serdes_write32(dd->addr, 0x01e0, 0x180, 0x003d);
+-		return 0;
+-	default:
+-		return -EOPNOTSUPP;
+-	}
++	/* Set combination mode */
++	r8a779f0_eth_serdes_write32(dd->addr, 0x0244, 0x180, 0x00d7);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01cc, 0x180, 0xc200);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01c4, 0x180, 0x0042);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01c8, 0x180, 0x0000);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01dc, 0x180, 0x002f);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01d0, 0x180, 0x0060);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01d8, 0x180, 0x2200);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01d4, 0x180, 0x0000);
++	r8a779f0_eth_serdes_write32(dd->addr, 0x01e0, 0x180, 0x003d);
++
++	return 0;
+ }
+ 
+ static int
+@@ -155,6 +156,42 @@ r8a779f0_eth_serdes_chan_setting(struct r8a779f0_eth_serdes_channel *channel)
+ 		r8a779f0_eth_serdes_write32(channel->addr, 0x0028, 0x1f80, 0x07a1);
+ 		r8a779f0_eth_serdes_write32(channel->addr, 0x0000, 0x1f80, 0x0208);
+ 		break;
++
++	case PHY_INTERFACE_MODE_USXGMII:
++		r8a779f0_eth_serdes_write32(channel->addr, 0x001c, 0x300, 0x0000);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0014, 0x380, 0x0050);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0000, 0x380, 0x2200);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x001c, 0x380, 0x0400);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x01c0, 0x180, 0x0001);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0248, 0x180, 0x056a);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0258, 0x180, 0x0015);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0144, 0x180, 0x1100);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x01a0, 0x180, 0x0001);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00d0, 0x180, 0x0001);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0150, 0x180, 0x0001);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00c8, 0x180, 0x0300);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0148, 0x180, 0x0300);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0174, 0x180, 0x0000);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0160, 0x180, 0x0004);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x01ac, 0x180, 0x0000);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00c4, 0x180, 0x0310);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00c8, 0x180, 0x0301);
++		ret = r8a779f0_eth_serdes_reg_wait(channel, 0x00c8, 0x180, BIT(0), 0);
++		if (ret)
++			return ret;
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0148, 0x180, 0x0301);
++		ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0148, 0x180, BIT(0), 0);
++		if (ret)
++			return ret;
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00c4, 0x180, 0x1310);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00d8, 0x180, 0x1800);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x00dc, 0x180, 0x0000);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0000, 0x380, 0x2300);
++		ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0000, 0x380, BIT(8), 0);
++		if (ret)
++			return ret;
++		break;
++
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -179,6 +216,14 @@ r8a779f0_eth_serdes_chan_speed(struct r8a779f0_eth_serdes_channel *channel)
+ 			return ret;
+ 		r8a779f0_eth_serdes_write32(channel->addr, 0x0008, 0x1f80, 0x0000);
+ 		break;
++	case PHY_INTERFACE_MODE_USXGMII:
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0000, 0x1f00, 0x0120);
++		usleep_range(10, 20);
++		r8a779f0_eth_serdes_write32(channel->addr, 0x0000, 0x380, 0x2600);
++		ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0000, 0x380, BIT(10), 0);
++		if (ret)
++			return ret;
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
 
-[1] https://lore.kernel.org/netdev/20250527191710.7d94a61c@kernel.org/T/#m0bc90575288f5f1bcf5e50ecff59fb904b79505c
+-- 
+2.25.1
 
-> 
-> Shangjuan Wei (2):
->   dt-bindings: ethernet: eswin: Document for EIC7700 SoC
->   ethernet: eswin: Add eic7700 ethernet driver
-> 
->  .../bindings/net/eswin,eic7700-eth.yaml       | 200 +++++++++
->  drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
->  .../ethernet/stmicro/stmmac/dwmac-eic7700.c   | 410 ++++++++++++++++++
->  4 files changed, 622 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c
-> 
-> -- 
-> 2.17.1
