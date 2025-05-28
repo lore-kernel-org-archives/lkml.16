@@ -1,90 +1,217 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CCD229B1C;
-	Wed, 28 May 2025 06:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5276A201017
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414221; cv=none; b=BCwgucbBi8y5TEQtusyQpVlL0zKoQtAOryuARzrw3vHDHV/YbXE2uXxgxSD57kAjnb8Te9hNtz3luuS1OvHkEwf9yvLGg3nllrffQDEXEJXGbRSJ8oRyVZ0Gg751A8P1AtM6EyqQY4BLfcVBqWZDOyDICZAw9VaZLACO+L2d6r4=
+	t=1748414276; cv=none; b=IhjuANuNT9KPVjtWiLNQ6Bg73PcvbbZhbUgSA3o4fBB5EuJK85y/KeL7+OKBkJV9OVofFfLFcgLasfppv6CgoULZ0NYBTb+MLqVCn6Frc8xbtdLl9PqU03D0tmeKS/rBXlX2bPDtbvl/MlIntIowBO5sCuqrCh+6q5/vAZ8xvtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414221; c=relaxed/simple;
-	bh=11tFUM3TULXoB5cAE/S/6LaR+nrzvNKbNf05E5x2cpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHvkOj/V/dzm3Kbn6JChYbsEb9LrKAvXAN6U/X05iVrmanin7OXYtI792358ZjdUxoQikJSJ2RrBCHt/yzqSHxIZZlqiMm0ca/Va6VdH8hXaC895rAQ2nTE9Cv4lJycb3aYLz0Dc+hw9cFrcbr9+T8BBnlfChfRrNG8Guk/Z7aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=S7+RhUQH; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1748414276; c=relaxed/simple;
+	bh=QdxSdB5O8arLPaXhqNSnuOn1D24TwdojBlnVIDeFlm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OlKEQXW+dkp0GBrB4Oc88QTt/5XDDvDa63sgSgeeWytiwOAOtq6AGlHSlbGI53z6uZp5Ff2XByHu4AXnIEcqpwB6OHAYG2lRW8azKp+XSwnMFtC9uDqwtlOoSfV2XSOAHTfpwYBIqcJ+lKgOl1P5N2wPWy/jtlX+bwbcRjnK+zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oE3gosTj; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="S7+RhUQH"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8F3A81039728C;
-	Wed, 28 May 2025 08:36:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1748414216; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=SJ665PIw+zdBcBYTOJq6QfkF7vfcPN/CAeV7BEmm7b4=;
-	b=S7+RhUQHOwiKrTp/1djB2GauECG924WgiQ1YCnPrYJ5Q6RizcsqOg81FpIL6VVMyLdLKGC
-	56HGjkEZbW2hIBUWEiW2OJh2PKam/S+YA/rR4cWoxWq62vlS50cq8Wr382uMtd9YEoscVw
-	3GVBI1OcCg2kF+q2Tljb848t0FujNuStsxE6UtYcOwZ+UWfR+CqKaXu9RJARqDTs4RqLtu
-	JCRE/Hs6a9wU97TxMJhfYDaQIVY7JacYQgOOyPJvyyBywg/Wd+K7TnD6WnHEXrTbQUTav1
-	jTBZyhLfMFiEe8qkp3xBxJIjJkr7LWETmhyKvOGSG/P6epFty9lsgv6xMmhygA==
-Date: Wed, 28 May 2025 08:36:48 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.12 000/626] 6.12.31-rc1 review
-Message-ID: <aDavAM+eSKEycKrZ@duo.ucw.cz>
-References: <20250527162445.028718347@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oE3gosTj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748414264; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=3ocuD1ul3n57xfwsiRwmLlmf/dVIDY83H6yZAAtxHOU=;
+	b=oE3gosTjbS2I3la7hQZNjP6D8WE7631ODD7rGM83iIPWB+kA214SAq3yk3euXE67r9goOHX8DMa9ZtznG2UuGNfsPaI0fS0hcGkYKOGury41I6jIRsj02MOw2kDoRSvPVNhZSB/S8vu5F9qnO9VPHl64nhdG8tWreRovo3EtAJM=
+Received: from 30.178.82.30(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcCHyMf_1748414263 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 May 2025 14:37:44 +0800
+Message-ID: <37f6345f-7536-45a3-8c85-6b2bfdba2fe6@linux.alibaba.com>
+Date: Wed, 28 May 2025 14:37:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Nx3cPtjHiT/0/nIz"
-Content-Disposition: inline
-In-Reply-To: <20250527162445.028718347@linuxfoundation.org>
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
+ in the resctrl subsystem.
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
+ <c4382156-a51e-4d07-9ccb-e6db2ca9d719@intel.com>
+ <b67949b8-7eac-47b4-a667-6343837226f7@linux.alibaba.com>
+ <5b446254-a2c8-4f01-93bf-3a348d474820@intel.com>
+From: qinyuntan <qinyuntan@linux.alibaba.com>
+In-Reply-To: <5b446254-a2c8-4f01-93bf-3a348d474820@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi Reinette Chatre,
 
---Nx3cPtjHiT/0/nIz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/28/25 12:49 PM, Reinette Chatre wrote:
+> Hi Qinyun Tan,
+> 
+> On 5/27/25 8:32 PM, qinyuntan wrote:
+>> On 5/28/25 7:36 AM, Reinette Chatre wrote:
+>>> On 5/26/25 12:37 AM, Qinyun Tan wrote:
+> 
+> 
+>>>> first online CPU of a NUMA node. If this CPU later goes offline, the
+>>>> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
+>>>
+>>> "is cleared" sounds like the shared_cpu_map is empty. Looking at
+>>> cache_shared_cpu_map_remove() it seems that the worst case is when the
+>>> CPU goes offline the shared_cpu_map only contains the offline CPU itself.
+>>> If there remains a reference to that shared_cpu_map then it will thus be
+>>> to a cpumask with an offline CPU. Are you seeing other scenarios?
+>>>
+>> Yes, you are right. Once this CPU goes offline, its shared_cpu_map
+>> will only include itself. If we then try to call this offline CPU
+>> using smp_call_on_cpu, it will result in a failure.
+> 
+> Thank you for confirming. Could you please update this changelog to reflect
+> this detail? Doing so will remove confusion and make the change easier to
+> consume by making it obvious to reader what the problem is.
+Thank you for your patient review, I will update this changelog in the 
+next patch.
 
-Hi!
+>   
+>>>> incorrect or undefined behavior when accessed via rdt_mon_domain.
+>>>
+>>> Could you please elaborate what "incorrect and undefined behavior" you
+>>> encountered?
+>>> It looks like reading the top level event would not be able to read
+>>> an event from one (or more?) of the online domains since the shared_cpu_map
+>>> will contain an offline CPU causing smp_call_on_cpu() to return with a failure
+>>> that is not caught ... the symptom may this be that there are no errors but
+>>> data is wrong?
+>>
+>> Yes, there won't be any errors here, but when reading the top-level events, it may not retrieve any values.
+>>
+>> For example, in the SNC-3 mode, suppose cpus 0, 40, and 80 are the
+>> firtst online cpus on node0, node1, and node2 respectively. If cpus
+>> 0, 40, and 80 are all offline, At this point, reading "the top level
+>> event" will result in a zero.
+> 
+> This is SNC-3 mode with a single socket example where CPU 0 cannot
+> go offline. I thus do not see this happening for the reason you provide below.
+> 
+> I *can* see how this happens on a second socket when the first online CPU
+> of the first node of that (the second) socket goes offline.
+>   
 
-> This is the start of the stable review cycle for the 6.12.31 release.
-> There are 626 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>> Why hasn’t this issue been discovered earlier? The reason is that CPU0 is always the first online CPU on node0. The cacheinfo stored in the first rdt_mon_domain corresponds to CPU0. When rdtgroup_mondata_show reads the top-level event, it iterates through all rdt_mon_domain entries, using if (d->ci->id == domid) to find the first rdt_mon_domain that shares the resource. It then selects a CPU from the corresponding cacheinfo to perform the monitoring group data read operation. In a single-socket environment, all CPUs typically share the L3 Cache, which means this traversal action will usually lead directly to CPU0's cacheinfo. Additionally, since the mainline kernel no longer supports taking CPU0 offline, that cacheinfo remains valid indefinitely.
+>>
+>>>
+>>>>
+>>>> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
+>>>> by the cache subsystem, making it unsafe for resctrl to hold
+>>>> long-term references.
+>>>
+>>> This is not obvious to me. Could you please elaborate how resctrl could
+>>> have a reference to a removed structure?
+>> As mentioned above, although the cacheinfo of each CPU is not freed
+>> in the latest mainline, the shared_cpu_map within the cacheinfo will
+>> be modified as CPUs go online or offline. Each rdt_mon_domain
+>> directly references the cacheinfo of the first online CPU in the
+>> node, and the shared_cpu_map is used in various processes. This
+>> situation is bound to lead to some problems.
+> 
+> Claiming that it is unsafe for resctrl to hold a reference implies that
+> resctrl uses an invalid pointer. This is not the case here. The pointer
+> is valid, but the data pointed to by it does not support resctrl's usage. I
+> thus do not believe that this "lifecycle dependency" point is a valid
+> motivation for this change.My description is indeed inaccurate. I will adjust it in the next patch. 
+Thanks.
 
-CIP testing did not find any problems here:
+>   
+>>>
+>>>>
+>>>> To resolve these issues and align with design principles:
+>>>>
+>>>> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
+>>>> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+>>>>
+>>>> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
+>>>> shared_cpu_map logic for determining valid CPUs for RMID counter reads
+>>>> via the MSR interface.
+>>>
+>>> I think it will help to explain why it is ok now to use hdr.cpu_mask instead
+>>> of the shared_cpu_map. In support of this you could mention that the original
+>>> solution aimed to read the counters on any CPU associated with the L3 cache
+>>> that the sub-numa domain forms part of, but this solution uses the
+>>> cpumask of one of the sub-numa domains that is known to be associated with
+>>> the L3 cache. This is a reduced set of CPUs from previously intended but
+>>> known to be accurate. Alternative may be to build a local cpumask from the
+>>> all the sub-numa domains but it is not clear to me how much this will
+>>> improve things.
+>>>
+>>> Considering this I do not think the references are "unnecessary" as the
+>>> subject claims since the solution does not replace the original cpumask with
+>>> an identical one.
+>>
+>> Thanks a lot, you are correct. hdr.cpu_mask is a subset of
+>> shared_cpu_map, and we can almost use hdr.cpu_mask to replace the
+>> functionality of shared_cpu_map.
+>>
+>> In fact, in resctrl, the only purpose of using cpu_mask is to select
+>> a CPU that shares the cache resource for performing monitoring group
+>> data reads. Therefore, I think there is no need to build a local
+>> cpumask from all the sub-NUMA domains in this context.
+> 
+> One issue I can think of here is when there is a usage where the user does
+> task isolation on the numa node boundary. Let's consider the SNC-3 example
+> again with node3, node4, and node5 on the second socket, "L3 cache ID 1".
+> If all CPUs on node3 are in tick_nohz_full_mask while none of the node4 and
+> node5 CPUs are in tick_nohz_full_mask then one of node3's CPUs will get
+> an unnecessary IPI.
+> 
+You are right, how about this? First, obtain any cpu in hdr.cpu_mask, 
+and then use the cacheinfo shared_cpu_map of this cpu:
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.12.y
+diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
+index 9337787461d2d..d43f438465ad0 100644
+--- a/fs/resctrl/ctrlmondata.c
++++ b/fs/resctrl/ctrlmondata.c
+@@ -596,7 +596,8 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+         struct rdtgroup *rdtgrp;
+         struct rdt_resource *r;
+         struct mon_data *md;
+-       int domid, ret = 0;
++       struct cacheinfo *ci;
++       int domid, cpu, ret = 0;
 
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
+         rdtgrp = rdtgroup_kn_lock_live(of->kn);
+         if (!rdtgrp) {
+@@ -625,8 +626,12 @@ int rdtgroup_mondata_show(struct seq_file *m, void 
+*arg)
+                 list_for_each_entry(d, &r->mon_domains, hdr.list) {
+                         if (d->ci_id == domid) {
+                                 rr.ci_id = d->ci_id;
++                               cpu = cpumask_any(&d->hdr.cpu_mask)
++                               ci = get_cpu_cacheinfo_level(cpu, 
+RESCTRL_L3_CACHE);
++                               if (!ci)
++                                       continue;
+                                 mon_event_read(&rr, r, NULL, rdtgrp,
+-                                              &d->hdr.cpu_mask, evtid, 
+false);
++                                              &ci->shared_cpu_map, 
+evtid, false);
+                                 goto checkresult;
+                         }
+                 }
 
-Best regards,
-                                                                Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+>>
+>> I will provide a more detailed description in my commit log moving
+>> forward.
+> 
+> Thank you very much.
+> 
+> Reinette
 
---Nx3cPtjHiT/0/nIz
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks
+Qinyun Tan
 
------BEGIN PGP SIGNATURE-----
-
-iFwEABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaDavAAAKCRAw5/Bqldv6
-8t5WAJiPHT00Qk81P79QYdubi/RNLnZcAKCrda8uUhMoUPDsTZi9JvkLWiusjw==
-=GP+/
------END PGP SIGNATURE-----
-
---Nx3cPtjHiT/0/nIz--
