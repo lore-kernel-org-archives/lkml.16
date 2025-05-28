@@ -1,303 +1,142 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417E03595D;
-	Wed, 28 May 2025 06:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEF03595D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748413564; cv=none; b=fNJd++tr0E822jZc03RqVM9v1HdGsvqYCZcEoCfpY0WdOzP9Gu3Kh5H1KsWGLGkN4doRsFhrw8W42fsAQH5ZdOGay4BS8fkIKiotseMl8eY7XNN8okwcEqjFvCQtqZ4VIMtM2M/bWmmU0puDK1GTqveD5gaZIBZYsm5STwPJdsM=
+	t=1748413584; cv=none; b=nDO+uZwq+AzV28KVxK2ui2j+OfpHKtlIxnZFbrCyIHlW4bwGArJdOXKhK99w+fDlKWXSTexza0+lrHVGmMSzASHHS6y3Xi8iniJSdy65oVXT0T7raXp4gasCd5oJaI9r1J+vVJpMS0mbDavJ424syNmscrV1bT6j2yW+rx2sQPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748413564; c=relaxed/simple;
-	bh=WeWjH41mrEkbusF98EtwUqch+IFJWFOJGcgswpCUM+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=p8xuyvwFsXImBtxMTRaAYdlnjlwZep66E6Z5uwXD8Z/DOI6ZnQAmfTwGt2nsDQb7JYL1uXZ5aNcARQlC8xWke5mTXqgERKMqM8Mcr5HktfJscIMjd5qLWVXU/JNC9J7EVRGq1w2e+w7Pdws8ATeNqW3IuCyvQ2uvFi6Mj54U3Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Kn0NTP+a; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748413584; c=relaxed/simple;
+	bh=kVXBJy2waXc8Zm3U1zeBkK0QCDtIv0VCdcWVejgqIaw=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=LciZjwCwlsGIJfenW3TnDFLzMQcrwf0fg+36VxN2CXsRqpPZCZISIBeaJKgo5ygEH9AnSSl5MSNSF+MXlJUFQxuYsUxUVNWF9HnD0NILosUXCSO0b8IupajYd8CKUdkm/TzWCzC6M+kDO06hlwWgxKVsVUqtfKxG6q+LHarkIb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=ewSpP0y/; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Kn0NTP+a"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54S6POS42015803;
-	Wed, 28 May 2025 01:25:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748413524;
-	bh=RfhQ8nQXc3egTrJ7CgUcsgqkADz9ucH+UQPWVxJcGIU=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Kn0NTP+aWlYtJFGUAUm7yGdlc8BjtI8dHiWAB1UC+bhDnpe+bZ0D7BqLJNFOqIZ/2
-	 hp187UrCLVplnNg9oKPNqFcPHxOi+cHGA2nQS5YmtyvvrvkSReo44HEzvqiYA9YTJ8
-	 2RTfoaifyhJJe861NXaDImOmc9BMze1b5fYLuPME=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54S6PNZx3226098
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 28 May 2025 01:25:24 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
- May 2025 01:25:23 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 28 May 2025 01:25:23 -0500
-Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54S6PJEI4019676;
-	Wed, 28 May 2025 01:25:19 -0500
-Message-ID: <85243712-e09f-43c3-bdcc-4a7e7be4dc52@ti.com>
-Date: Wed, 28 May 2025 11:55:18 +0530
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="ewSpP0y/"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2c4476d381so506577a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748413581; x=1749018381; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pJQtmBORsLul2V6MNygZMp10lRlI52BK+PKHssMFRlI=;
+        b=ewSpP0y/zWP6dzyhIJbggeIjxYShxz9NcHfqBwijmiCUiVlpPSEUZscjH3SXlKHHaP
+         jwuKUo8j8vUl1+OTjcce97wf94Dlb/RZDU8dMDiiGfI20QzMh8+adwq13Vt7+/H+KDaZ
+         zh0o6vIBJuHWAuz8jIH3p/H5mbbjJ8PIx1ByguzXqIVk6hcnqR4Oq2Qio5/S8Hf+KE2B
+         yngoFAhIVy5dPjBD3nyJa6wdxqbvJ+wuyHg6yNtVgHofiYoBzuRVtwxvPjWVBGiiqXNd
+         oqAxY3d7Zb5NBlZV1lF63Y1B6exbZsRzjVL45dmJLAbgjocS8135RRnYCVLMX6DbPjoR
+         7PLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748413581; x=1749018381;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pJQtmBORsLul2V6MNygZMp10lRlI52BK+PKHssMFRlI=;
+        b=No7wc32nENavvhLBOhUA6MtNiKhFKztJo0AkqR6jP8Q/GebS/U56e42QKziZxQPDvR
+         DvUY6lul923CmzLqqccemosNUDV19+QSd2BZLjzEOzuQwh4Jkmfu0RLiZAk2634O6qoM
+         Kyi0K1L2kgyI9Oi0J9pYNqSXrvFfTpPoJMsAjz3/2AUnjlf/WIGy5smNDTQCfr/aqwVX
+         afMHS2q3/ZGtT60uKRNFISghcJdBpuu+84fHRNRC43evNSKUt5hT4bbi23aUYT0000FC
+         drrTIkrT0sENtKuw1f8kVV+8yJ0lyhrRh2njgrIWMeG7T1PwCoH3Mau2KfJz82RkV2Qt
+         bWtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUa4UFtR0Jbv7q6/irJBvmVA54xNMqMNCii51TNSGwE2Ze5yFROVRd3q5Io0ygiW07hLQQg53rUhIV64B8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRe4/8bERLz0tjWKciVbNSInjePhW8vcb+YotWBdOy4JS2Sqj8
+	vgHnQZF9cNy2ZzaiRkgRevJX298w6aosEZu11yEviB4uOFkXtir69YqDuucpmPbEMgc=
+X-Gm-Gg: ASbGnct090hTbl+oI4cAq/12Sx0IHVgcm7qbGgNPVcWhbZW4IoZf9Wxbzp5H9IcLSYR
+	+XcHDxjrgYTxSeRCLhfEgZ+8o4LZSHgwoDpTHRMqGquxHsXhBfnMjdi1IIVxg38uZZmJ46MugDX
+	Q5o+RcA4Rqi8yfchwQjCiQj93kXJauwEKG3Rb+KuIrie2h90M1ZaGxGl/S6uZ6scaRmLqngaGHF
+	zBGNUcJmE03mO9iGXh3uY830gtxJGcJKWaLsg4lGIQITsJsjTve+DyAydoar7mDOquFxCZ/zsea
+	50yncc2EiAUPQYpGuWwSiIk3sORT0K/9Ab3SJYP9lDqrLVl2sEimEcSM57Zbw0SRylPpI5bRW7v
+	QGjyll6q4HQ==
+X-Google-Smtp-Source: AGHT+IG1r91+7tI2/CIrBwPliEl4ShQJtjrlA4mz6gCB/b9+fF0Qvdsp0MdfXtmq8J21fWN5WqE8Qw==
+X-Received: by 2002:a17:903:3d0b:b0:234:6b1f:6356 with SMTP id d9443c01a7336-234b74b4c95mr53731085ad.22.1748413580666;
+        Tue, 27 May 2025 23:26:20 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35acf6dsm4619515ad.201.2025.05.27.23.26.13
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 27 May 2025 23:26:20 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: arnd@arndb.de,
+	andriy.shevchenko@linux.intel.com,
+	benjamin.larsson@genexis.eu,
+	cuiyunhui@bytedance.com,
+	gregkh@linuxfoundation.org,
+	heikki.krogerus@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	jirislaby@kernel.org,
+	jkeeping@inmusicbrands.com,
+	john.ogness@linutronix.de,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	markus.mayer@linaro.org,
+	matt.porter@linaro.org,
+	namcao@linutronix.de,
+	paulmck@kernel.org,
+	pmladek@suse.com,
+	schnelle@linux.ibm.com,
+	sunilvl@ventanamicro.com,
+	tim.kryger@linaro.org
+Subject: [PATCH v7 1/4] serial: 8250: fix panic due to PSLVERR
+Date: Wed, 28 May 2025 14:26:06 +0800
+Message-Id: <20250528062609.25104-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: i2c: ds90ub960: Add support for DS90UB954-Q1
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <hverkuil@xs4all.nl>, <sakari.ailus@linux.intel.com>,
-        <laurent.pinchart@ideasonboard.com>, <vaishnav.a@ti.com>,
-        <u-kumar1@ti.com>, <jai.luthra@linux.dev>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mchehab@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-References: <20250523083655.3876005-1-y-abhilashchandra@ti.com>
- <20250523083655.3876005-3-y-abhilashchandra@ti.com>
- <07e4d87f-0893-40d6-8704-f37c743ff979@ideasonboard.com>
-Content-Language: en-US
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-In-Reply-To: <07e4d87f-0893-40d6-8704-f37c743ff979@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
-Hi Tomi,
+When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+an error response if an attempt is made to read an empty RBR (Receive
+Buffer Register) while the FIFO is enabled.
 
-Thanks for the review.
+In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+Execution proceeds to the serial_port_in(port, UART_RX).
+This satisfies the PSLVERR trigger condition.
 
-On 27/05/25 11:10, Tomi Valkeinen wrote:
-> Hi,
-> 
-> On 23/05/2025 11:36, Yemike Abhilash Chandra wrote:
->> DS90UB954-Q1 is an FPDLink-III deserializer that is mostly register
->> compatible with DS90UB960-Q1. The main difference is that it supports
->> half of the RX and TX ports, i.e. 2x FPDLink RX ports and 1x CSI TX
->> port.
->>
->> Some other registers are marked as reserved in the datasheet as well,
->> notably around CSI-TX frame and line-count monitoring and some other
-> 
-> Hmm what does that mean? That in log_status we show random data (or
-> maybe always 0) for these?
-> 
+When another CPU (e.g., using printk()) is accessing the UART (UART
+is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
+(lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+dw8250_force_idle().
 
-It seems like it is showing 0's for these. I streamed around 100 frames.
-But the frame counter and line counter returned is 0. Please find the
-logs at [1].
+Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+to fix this issue.
 
->> status registers. The datasheet also does not mention anything about
->> setting strobe position, and fails to lock the RX ports if we forcefully
->> set it, so disable it through the hw_data.
-> 
-> This app-note has some details:
-> 
-> https://www.ti.com/lit/an/snla301/snla301.pdf
-> 
->> Link: https://www.ti.com/lit/gpn/ds90ub954-q1
->> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->> ---
->>   drivers/media/i2c/Kconfig     |  2 +-
->>   drivers/media/i2c/ds90ub960.c | 46 +++++++++++++++++++++++++++++++++++
->>   2 files changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
->> index e68202954a8f..6e265e1cec20 100644
->> --- a/drivers/media/i2c/Kconfig
->> +++ b/drivers/media/i2c/Kconfig
->> @@ -1662,7 +1662,7 @@ config VIDEO_DS90UB960
->>   	select V4L2_FWNODE
->>   	select VIDEO_V4L2_SUBDEV_API
->>   	help
->> -	  Device driver for the Texas Instruments DS90UB960
->> +	  Device driver for the Texas Instruments DS90UB954/DS90UB960
->>   	  FPD-Link III Deserializer and DS90UB9702 FPD-Link IV Deserializer.
->>   
->>   config VIDEO_MAX96714
->> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
->> index ed2cf9d247d1..38e4f006d098 100644
->> --- a/drivers/media/i2c/ds90ub960.c
->> +++ b/drivers/media/i2c/ds90ub960.c
->> @@ -460,6 +460,7 @@ struct ub960_hw_data {
->>   	u8 num_txports;
->>   	bool is_ub9702;
->>   	bool is_fpdlink4;
->> +	bool is_ub954;
-> 
-> No, let's not add any more of these. We should have enums for the device
-> model and the "family" (ub954/ub960 are clearly of the same family,
-> whereas ub9702 is of a newer one).
-> 
+Panic backtrace:
+[    0.442336] Oops - unknown exception [#1]
+[    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+[    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+...
+[    0.442416] console_on_rootfs+0x26/0x70
 
-Got it. I will add enums in the next revision.
+Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround")
+Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+---
+ drivers/tty/serial/8250/8250_port.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
->>   };
->>   
->>   enum ub960_rxport_mode {
->> @@ -982,6 +983,10 @@ static int ub960_txport_select(struct ub960_data *priv, u8 nport)
->>   
->>   	lockdep_assert_held(&priv->reg_lock);
->>   
->> +	/* TX port registers are shared for UB954*/
-> 
-> Space missing at the end. What does the comment mean? "registers are
-> shared"?
-> 
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 6d7b8c4667c9c..07fe818dffa34 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+ 	/*
+ 	 * Now, initialize the UART
+ 	 */
+-	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+ 
+ 	uart_port_lock_irqsave(port, &flags);
++	serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
++
+ 	if (up->port.flags & UPF_FOURPORT) {
+ 		if (!up->port.irq)
+ 			up->port.mctrl |= TIOCM_OUT1;
+-- 
+2.39.5
 
-Apologies for the inaccurate comment description, My intention to
-comment that the tx_port_select function does not make sense for
-UB954, since we have only 1 CSI TX. May be I can have something
-like below.
-
-/** UB954 has only 1 CSI TX. Hence, no need to select **/
-
-> I think it's good to have this after the lockdep assert. The lock rules
-> are in place, even if on ub954 we don't do anything here.
-> 
->> +	if (priv->hw_data->is_ub954)
->> +		return 0;
->> +
->>   	if (priv->reg_current.txport == nport)
->>   		return 0;
->>   
->> @@ -1415,6 +1420,13 @@ static int ub960_parse_dt_txport(struct ub960_data *priv,
->>   		goto err_free_vep;
->>   	}
->>   
->> +	/* UB954 does not support 1.2 Gbps */
->> +	if (priv->tx_data_rate == MHZ(1200) && priv->hw_data->is_ub954) {
-> 
-> Test for ub954 first, 1200 MHz second. It's more logical for the reader
-> that way.
-> 
-
-Noted, will do that in the next revision.
-
->> +		dev_err(dev, "tx%u: invalid 'link-frequencies' value\n", nport);
->> +		ret = -EINVAL;
->> +		goto err_free_vep;
->> +	}
->> +
->>   	v4l2_fwnode_endpoint_free(&vep);
->>   
->>   	priv->txports[nport] = txport;
->> @@ -1572,6 +1584,10 @@ static int ub960_rxport_set_strobe_pos(struct ub960_data *priv,
->>   	u8 clk_delay, data_delay;
->>   	int ret = 0;
->>   
->> +	/* FIXME: After writing to this area the UB954 chip no longer responds */
->> +	if (priv->hw_data->is_ub954)
->> +		return 0;
->> +
-> 
-> Check the app note. It would be nice to have this working, as, afaik,
-> the HW functionality should be the same on ub954 and ub960.
-> 
-
-I tried referring the app note and changed the strobe position values
-accordingly, but it did not help.
-
-Since the app note also specifies the below at Table 2 Strobe Adaption Modes
-
-"
-AEQ Adaption Mode--> Strobe position is selected as part of AEQ. This is 
-the default mode.
-
-Manual Adaption Mode --> The strobe position is selected manually and 
-will remain at
-the specified position until a new one is chosen. This mode is 
-recommended as an
-evaluation and debugging mode "
-
-Since, under the default settings, the strobe position is selected as 
-part of the AEQ process.
-Can we limit the ub960_rxport_set_strobe_pos function to only UB960 and 
-UB9702.
-
->>   	clk_delay = UB960_IR_RX_ANA_STROBE_SET_CLK_NO_EXTRA_DELAY;
->>   	data_delay = UB960_IR_RX_ANA_STROBE_SET_DATA_NO_EXTRA_DELAY;
->>   
->> @@ -5021,6 +5037,27 @@ static int ub960_enable_core_hw(struct ub960_data *priv)
->>   	if (priv->hw_data->is_ub9702)
->>   		ret = ub960_read(priv, UB9702_SR_REFCLK_FREQ, &refclk_freq,
->>   				 NULL);
->> +	else if (priv->hw_data->is_ub954) {
->> +		/* From DS90UB954-Q1 datasheet:
->> +		 * "REFCLK_FREQ measurement is not synchronized. Value in this
->> +		 * register should read twice and only considered valid if
->> +		 * REFCLK_FREQ is unchanged between reads."
->> +		 */
->> +		unsigned long timeout = jiffies + msecs_to_jiffies(100);
->> +
->> +		do {
->> +			u8 refclk_new;
->> +
->> +			ret = ub960_read(priv, UB960_XR_REFCLK_FREQ, &refclk_new,
->> +					 NULL);
->> +			if (ret)
->> +				goto err_pd_gpio;
->> +
->> +			if (refclk_new == refclk_freq)
->> +				break;
->> +			refclk_freq = refclk_new;
->> +		} while (time_before(jiffies, timeout));
->> +	}
-> 
-> This feels a bit too much for a not-that-important debug print... As the
-> tests show that a single read is (practically always?) enough, I think
-> we can just use the same code as for ub960. Maybe add a comment about
-> it, though.
-> 
-
-okay, I will use the same code that is being used for UB960 and will add 
-a comment
-about that.
-
-Thanks and Regards,
-Abhilash Chandra
-
-[1]: 
-https://gist.github.com/Yemike-Abhilash-Chandra/c6b3da2a10586567a3a4179a2b20d21b
-
->   Tomi
-> 
->>   	else
->>   		ret = ub960_read(priv, UB960_XR_REFCLK_FREQ, &refclk_freq,
->>   				 NULL);
->> @@ -5177,6 +5214,13 @@ static void ub960_remove(struct i2c_client *client)
->>   	mutex_destroy(&priv->reg_lock);
->>   }
->>   
->> +static const struct ub960_hw_data ds90ub954_hw = {
->> +	.model = "ub954",
->> +	.num_rxports = 2,
->> +	.num_txports = 1,
->> +	.is_ub954 = true,
->> +};
->> +
->>   static const struct ub960_hw_data ds90ub960_hw = {
->>   	.model = "ub960",
->>   	.num_rxports = 4,
->> @@ -5192,6 +5236,7 @@ static const struct ub960_hw_data ds90ub9702_hw = {
->>   };
->>   
->>   static const struct i2c_device_id ub960_id[] = {
->> +	{ "ds90ub954-q1", (kernel_ulong_t)&ds90ub954_hw },
->>   	{ "ds90ub960-q1", (kernel_ulong_t)&ds90ub960_hw },
->>   	{ "ds90ub9702-q1", (kernel_ulong_t)&ds90ub9702_hw },
->>   	{}
->> @@ -5199,6 +5244,7 @@ static const struct i2c_device_id ub960_id[] = {
->>   MODULE_DEVICE_TABLE(i2c, ub960_id);
->>   
->>   static const struct of_device_id ub960_dt_ids[] = {
->> +	{ .compatible = "ti,ds90ub954-q1", .data = &ds90ub954_hw },
->>   	{ .compatible = "ti,ds90ub960-q1", .data = &ds90ub960_hw },
->>   	{ .compatible = "ti,ds90ub9702-q1", .data = &ds90ub9702_hw },
->>   	{}
-> 
