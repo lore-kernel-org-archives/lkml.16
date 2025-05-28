@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A1024469C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6174825DAFB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419831; cv=none; b=bH4veU/qwZSQ9CrnLsc3eIuOF+Z7ZC5XlKaILlLZRl2aToe5AHF5MD9ekUxM0/Mul7e9oUt7jyMJQjM7faOZacdSEzPhfNahnoJuEF+XjIRg4HaAZORh0tJxbmuu+TzztIQEhio/XXPQWX+iCtmhLFqg75yizFp1KPAhAdnTnQw=
+	t=1748419834; cv=none; b=INPz0MnloHk4th61K5zryXk0peyv396C6Cxz0Hss7H19G+ecjZWqza4dHT5qhKN77vjo/M4JmEoxH/OIopoAMNyfeAW5cMdWjl8RElRTwjTOfpOPqn3iqwnOxte/FdjffHqtS/R0sdElKxMCGDOPpr1s4R9fdn04ov9V+iDG6e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419831; c=relaxed/simple;
-	bh=ujQDYZVP7hXF+6mTGhNSKv+0Wz4zSkV/GbzAuJP3/HM=;
+	s=arc-20240116; t=1748419834; c=relaxed/simple;
+	bh=YhyixJygq2Xiz6zbjdR3uAQI14g8MbE2KC8BX2OleAs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kdQSn5h3/5jQKY4Mp/ETy4Kp+ayiUkVchQpTkADQKlB6xFWg+cKIBu946dVB7WdBcoemuxSqrWE2dqQCPfsRmZZotgHNAKfxi4DuN1r8SNKVHpyhnUAaYRu27bOBwPdJhq+0o1nF1I3rClImOY1h+MxoTwIBuLgk9Zsj1MOJxcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+f/elGh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DsYxVjReSUef2ak0hpaMl0kHNS/3si78Hc23r8pYU7IwuKP9J4G2VWDfOWJ9zoE9aOoHwJPcNdJl1zO0HaQ1i1Swf4rnUobb7XfH61DZtQ9FqdDnWBG5JoUllvDrPTxoXgiqEHGeUVKZJ77In0x9t1fK+rOkWUGYqZQtWb25ESs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtJ8oNnW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+f/elGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B79E2C4CEE7;
-	Wed, 28 May 2025 08:10:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtJ8oNnW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D598C4CEEF;
+	Wed, 28 May 2025 08:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419830;
-	bh=ujQDYZVP7hXF+6mTGhNSKv+0Wz4zSkV/GbzAuJP3/HM=;
+	s=k20201202; t=1748419834;
+	bh=YhyixJygq2Xiz6zbjdR3uAQI14g8MbE2KC8BX2OleAs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=d+f/elGhV+HtzzVj2+v1eOADh4nj6h09oRUDmKUQLLikWGCIQ9E5JLT/xlCtk+f0j
-	 /bv00LoEuLGORPJh6GCteb8HpOQkuRRUq1CUWsf+AE8+UxnLukSnJ+zuIYocwWBdYt
-	 xQ2QVKiOpvJ0d/e1PjPhbKoIit5rTb6YEoPSmtkfCH/aGKGx0SJowLkGXu8++oxU9+
-	 jyjjNgMhdad9O2ur+HtY2+WTmj9miQ5AobKteBpBGvp89WaB4vZReSIW0yowOWZPc2
-	 aHP03+B6stOSlQsrz/HHD4M7LbqKuIB3n4WHZrPjtkcSVm+lWfPj8QzZG1LIpdbU4O
-	 xUJ7DiWlbqifw==
+	b=FtJ8oNnW5z8z/hE2XhrDyi1ixXdnbqfGxplON1XXbabCeuW9VcV7jNzmFfUVzcdQ5
+	 ZWYe9YK/r3PQre8oAtjpaewi0Jkevw74AdMzw9OYoEQQxy3K/yPpZ07VQEMEZeZPw7
+	 T5DvES7qFqLR6ADIoVcm2+7neQDM6fSktZu1JgYWpxb66pLuCDd1wWm1oZB1At/u3d
+	 ezmSARnrBOMBpa2vOy/YAwhqRlMcTEI2ycNOesWq/dQcaWm08ibBFBLxG+xeJ74yk4
+	 PQdiaL5G3y+o7GbQhG9BKS2BaqusoLCBYGP/yeqW9qu1QjEeumyY0oOHxXZfneBq3v
+	 hg2a/LtVRqELA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 12/43] sched: Clean up and standardize #if/#else/#endif markers in sched/pelt.[ch]
-Date: Wed, 28 May 2025 10:08:53 +0200
-Message-ID: <20250528080924.2273858-13-mingo@kernel.org>
+Subject: [PATCH 13/43] sched: Clean up and standardize #if/#else/#endif markers in sched/psi.c
+Date: Wed, 28 May 2025 10:08:54 +0200
+Message-ID: <20250528080924.2273858-14-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -63,18 +63,6 @@ Content-Transfer-Encoding: 8bit
         ...
         #endif /* !CONFIG_FOO */
 
- - Fix whitespace noise and other inconsistencies.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Juri Lelli <juri.lelli@redhat.com>
@@ -86,81 +74,31 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/pelt.c |  4 ++--
- kernel/sched/pelt.h | 13 ++++++-------
- 2 files changed, 8 insertions(+), 9 deletions(-)
+ kernel/sched/psi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-index 7a8534a2deff..7ec1ca5a6178 100644
---- a/kernel/sched/pelt.c
-+++ b/kernel/sched/pelt.c
-@@ -413,7 +413,7 @@ int update_hw_load_avg(u64 now, struct rq *rq, u64 capacity)
- 
- 	return 0;
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 1396674fa722..c48aba6ab0a6 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -1035,7 +1035,7 @@ void psi_account_irqtime(struct rq *rq, struct task_struct *curr, struct task_st
+ 			psi_schedule_rtpoll_work(group, 1, false);
+ 	} while ((group = group->parent));
  }
 -#endif
-+#endif /* CONFIG_SCHED_HW_PRESSURE */
++#endif /* CONFIG_IRQ_TIME_ACCOUNTING */
  
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- /*
-@@ -466,7 +466,7 @@ int update_irq_load_avg(struct rq *rq, u64 running)
- 
- 	return ret;
- }
+ /**
+  * psi_memstall_enter - mark the beginning of a memory stall section
+@@ -1651,7 +1651,7 @@ static const struct proc_ops psi_irq_proc_ops = {
+ 	.proc_poll	= psi_fop_poll,
+ 	.proc_release	= psi_fop_release,
+ };
 -#endif
-+#endif /* CONFIG_HAVE_SCHED_AVG_IRQ */
++#endif /* CONFIG_IRQ_TIME_ACCOUNTING */
  
- /*
-  * Load avg and utiliztion metrics need to be updated periodically and before
-diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
-index f4f6a0875c66..2635ec239bff 100644
---- a/kernel/sched/pelt.h
-+++ b/kernel/sched/pelt.h
-@@ -15,7 +15,7 @@ static inline u64 hw_load_avg(struct rq *rq)
+ static int __init psi_proc_init(void)
  {
- 	return READ_ONCE(rq->avg_hw.load_avg);
- }
--#else
-+#else /* !CONFIG_SCHED_HW_PRESSURE: */
- static inline int
- update_hw_load_avg(u64 now, struct rq *rq, u64 capacity)
- {
-@@ -26,7 +26,7 @@ static inline u64 hw_load_avg(struct rq *rq)
- {
- 	return 0;
- }
--#endif
-+#endif /* !CONFIG_SCHED_HW_PRESSURE */
- 
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- int update_irq_load_avg(struct rq *rq, u64 running);
-@@ -174,15 +174,15 @@ static inline u64 cfs_rq_clock_pelt(struct cfs_rq *cfs_rq)
- 
- 	return rq_clock_pelt(rq_of(cfs_rq)) - cfs_rq->throttled_clock_pelt_time;
- }
--#else
-+#else /* !CONFIG_CFS_BANDWIDTH: */
- static inline void update_idle_cfs_rq_clock_pelt(struct cfs_rq *cfs_rq) { }
- static inline u64 cfs_rq_clock_pelt(struct cfs_rq *cfs_rq)
- {
- 	return rq_clock_pelt(rq_of(cfs_rq));
- }
--#endif
-+#endif /* !CONFIG_CFS_BANDWIDTH */
- 
--#else
-+#else /* !CONFIG_SMP: */
- 
- static inline int
- update_cfs_rq_load_avg(u64 now, struct cfs_rq *cfs_rq)
-@@ -231,6 +231,5 @@ static inline void
- update_idle_rq_clock_pelt(struct rq *rq) { }
- 
- static inline void update_idle_cfs_rq_clock_pelt(struct cfs_rq *cfs_rq) { }
--#endif
--
- 
-+#endif /* !CONFIG_SMP */
 -- 
 2.45.2
 
