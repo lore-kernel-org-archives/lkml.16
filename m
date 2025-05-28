@@ -1,132 +1,91 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB4C235054
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A574685;
+	Wed, 28 May 2025 23:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748474933; cv=none; b=DBxEBQueKtgS/ONKiekYDgggsAHIAH8c2cB52P84YDt1cHeG1ndcikRxGPi8ist2TuUQizAUx2vDxeQELqI2kjo5r2gyTSDcRYb4HYEZas91STSPoI/GPB6+dxrnk5qr/OWydm1vko99rVdJyIbHasV8ephk1N65AuxK/1KiLM4=
+	t=1748475148; cv=none; b=aXuHJHVj1jLpRpdXo2RGZMDNqqNi0K4TNvrVWt7AudK/wrbCjJlPhjlP15UWHcTmIbJyYLSalxBH21Zh5r9vquGGtlnVATYCPq1LYge+cJ/ndZTA4+cwkPpa8YA1qtOjt6XYOZwj1Agb8Ed/BMjiPOA5RlFvdOBkDn1fWFJ2URc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748474933; c=relaxed/simple;
-	bh=7a7fYDtj0dtJ7GJ5g+HYdLl+MsSUffIFJ1RyUxGkV2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ePOB8o/9sUboc9ayDWOfXWyDIh6XfotqKBHGsmifIeZKJacw8aPFRYvU1J9LA9jEmfDjPC7rQ9+yVtp+T/rZzU1MYcwym2QStVkf54hVu6TA5QL/Z7JKmi7qy8/6UxzCls2AUc7scCoxrHTguFw+8ArRnPz2Dq5J7ab41rMPs+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vGxOCBMC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g7ss9x1k; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vGxOCBMC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g7ss9x1k; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748475148; c=relaxed/simple;
+	bh=4aKrX970HlgQ+JdihNfwN5qAE0p+0Jvx9ru62vyW8IY=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=KlXF//jisIlBsP1XOQCmuFwN04xlLkJx7VRJBybpBdfRAupNAuSKK6H+bPWUTP2BrR2vBxGWIrBm0Kd/gamIg46HGEwSEJsgQtY5YbIoEc8F7QLvR/Q5JI7yjfPNCDoCJsW82Rk0OMaXwBlS/SlOjPM0x3oCrd4+SPR44kWOzLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FAJDYHbO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vGxOCBMC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g7ss9x1k";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vGxOCBMC";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g7ss9x1k"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 54FB4211D2;
-	Wed, 28 May 2025 23:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748474930;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6olg2zbth4Ly9vizF4n9EaCvDOSfCuec5+2SnUi6QcQ=;
-	b=vGxOCBMCAyBQqlgxYTuzjA3oYL5O+qUqNf9voX8guKTvTbljRszGoECKDJYcEV1inDG0k5
-	hc0JW92n0vCvmpvXKmgAfe7gE8mHd6EF5xqhrO+nqLfp4R1orDnW9a030/x2v2N486fjSS
-	ejqCJeA1xsqLFAI0vnjMNDQLg51QWcs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748474930;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6olg2zbth4Ly9vizF4n9EaCvDOSfCuec5+2SnUi6QcQ=;
-	b=g7ss9x1kZbyb0OcMWzCOBlqXG9tkAOjG+Ax+JypYGw3DzNCI6Z7V/SnXYuv9RdY4egr7W0
-	W5jE77IDUKc54lDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748474930;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6olg2zbth4Ly9vizF4n9EaCvDOSfCuec5+2SnUi6QcQ=;
-	b=vGxOCBMCAyBQqlgxYTuzjA3oYL5O+qUqNf9voX8guKTvTbljRszGoECKDJYcEV1inDG0k5
-	hc0JW92n0vCvmpvXKmgAfe7gE8mHd6EF5xqhrO+nqLfp4R1orDnW9a030/x2v2N486fjSS
-	ejqCJeA1xsqLFAI0vnjMNDQLg51QWcs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748474930;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6olg2zbth4Ly9vizF4n9EaCvDOSfCuec5+2SnUi6QcQ=;
-	b=g7ss9x1kZbyb0OcMWzCOBlqXG9tkAOjG+Ax+JypYGw3DzNCI6Z7V/SnXYuv9RdY4egr7W0
-	W5jE77IDUKc54lDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 34364136E0;
-	Wed, 28 May 2025 23:28:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HOxEDDKcN2gIXgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 28 May 2025 23:28:50 +0000
-Date: Thu, 29 May 2025 01:28:49 +0200
-From: David Sterba <dsterba@suse.cz>
-To: David Sterba <dsterba@suse.cz>
-Cc: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Nick Terrell <terrelln@fb.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] btrfs: harden parsing of compress mount option
-Message-ID: <20250528232848.GM4037@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250423132220.4052042-1-neelx@suse.com>
- <20250424192956.GO3659@twin.jikos.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FAJDYHbO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0391C4CEE3;
+	Wed, 28 May 2025 23:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748475148;
+	bh=4aKrX970HlgQ+JdihNfwN5qAE0p+0Jvx9ru62vyW8IY=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=FAJDYHbOX4Th3H5g7MvkE6jrg5V58S4Qv464ec8gk0/aM2rBHPzWcsyAFWZchxZDt
+	 jDAwpJpE3jcOfNqzzOn/aHbZ1FbSZvDgtY3b1KbKleAbOMk5jK9KPWzo27Z3TjZO9R
+	 gWrUevVG3RBXZklz1BdBANprbTirpeab+O4QPsUA/CCVb+TLp5jD5LKaxBu5axmGT3
+	 qCH1GOMZp204WdXg9S0HBD0TJAqTk/IyNsSh0KU6BCkNUGWtMqgBuGe+A0+L9NgfA1
+	 PyEx3Cubwem3/ZsGZKLTeExQYV6w0JcSpmq74It5gWKV8rBIukbOqTEw3OJTWFjQE2
+	 Ca7SEys+QF/5A==
+Date: Wed, 28 May 2025 18:32:26 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424192956.GO3659@twin.jikos.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: 1.00
-X-Spam-Level: *
-X-Spamd-Result: default: False [1.00 / 50.00];
-	REPLYTO_EQ_TO_ADDR(5.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, 
+ arm-scmi@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+In-Reply-To: <20250528-pmdomain-hierarchy-onecell-v2-1-7885ae45e59c@baylibre.com>
+References: <20250528-pmdomain-hierarchy-onecell-v2-0-7885ae45e59c@baylibre.com>
+ <20250528-pmdomain-hierarchy-onecell-v2-1-7885ae45e59c@baylibre.com>
+Message-Id: <174847514622.1183193.5216863446447451692.robh@kernel.org>
+Subject: Re: [PATCH RFC v2 1/2] dt-bindings: power: add nexus map for
+ power-domains
 
-On Thu, Apr 24, 2025 at 09:29:56PM +0200, David Sterba wrote:
-> On Wed, Apr 23, 2025 at 03:22:19PM +0200, Daniel Vacek wrote:
-> > Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
-> > options with any random suffix. Let's handle that correctly.
+
+On Wed, 28 May 2025 14:58:51 -0700, Kevin Hilman wrote:
+> Add support for nexus map to be able to support hierarchical power
+> domains for providers with #power-domain-cells > 0.
 > 
-> Please split the patch. Moving code and adding a fix obscures the fix.
-> As we'll want to backport more than just the validation of ':' it
-> makes more sense to do the full move first and then add the individual
-> fixes on top of that. Thanks.
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/power/power-domain.yaml | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
 
-As we've discussed it, both ways how to split it are ok, so please first
-factor out the code to a helper and the add the fix or any other
-validation that would make sense. Thanks.
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/power/power-domain.example.dts:136.18-19 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/power/power-domain.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250528-pmdomain-hierarchy-onecell-v2-1-7885ae45e59c@baylibre.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
