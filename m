@@ -1,112 +1,130 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4FF38B;
-	Wed, 28 May 2025 17:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360197E107
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453373; cv=none; b=McbOyQH37y2X4zTIAFsa1MYfN3vzBAC2xUnujNEP4h4ZFFfwPQKyujgiifHYcCii6WtMwk1S5+eJEQNeYTWJ8p2veZFp8x7eiFqsofwtQS2cJ9uugPFnWVIvAxOylvr7062HCzcPlBjrCBXWWL5QiksTwSsvGVhoncXomq57ajg=
+	t=1748453423; cv=none; b=av+FMdOh1JQz7OIzME90m5xNJp+Syth8dv0kXUushDMvrjkrZELoM+oioXqsLGL9mfVqEGBvcBQ6UAbMnT27cMsC8upJ+QZeeC6/NuGUn7aPBA5iytXra/vLQ9AaeZgULfTbwtZmJUluCqX1p6EhFMYn547sZsDC7EQe0npZJcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453373; c=relaxed/simple;
-	bh=73UTn5zY0Ma+9HSZwcpINlS8OsmErek97WGREM5hkbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CAgvWGm34vdCT4lX8tLbvf95KjcmTc3kKHgRV1CynLplBWZ0YBtx0W8gfCZF/OegoBmIgQ3nqK7ZynGR/UwiX5+f01WOdlD8cVDjpoCTNvfe8YwoQ6nbzlsZ4Swea6vrUVO6nnAHb8+Cm9OP4lrkqV+S7JdVEgJ0vZ3+48QILlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GykcIT1l; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748453423; c=relaxed/simple;
+	bh=ARY8CwNgeEkx4xeewofft7OOZG05/4+sLW6rStZljR4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=A5ZHhtISNk/GQx41+vK7hFQgFqr4takWWqrbG1u9d8gdJou7nDv/o1SjT3vwRiSy86GzI1H53utho89mvrfyF7xvpReuCuGr0CSbGWsFTz+PSZ5JdSpNJJPkAZEPLmzGdkUo3D01mcVQna85PsNW+L95ZbjrONFP+kbS6m4EMdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0vHEnPRv; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GykcIT1l"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6114319e87.3;
-        Wed, 28 May 2025 10:29:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0vHEnPRv"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c3e576201so1031339a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748453369; x=1749058169; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=73UTn5zY0Ma+9HSZwcpINlS8OsmErek97WGREM5hkbg=;
-        b=GykcIT1lvYeIzcUJaRqn91x3B1EdSAI5PMTv4si0q9pWATJvG/AcTnPt96hd2y28F6
-         ZBO4UGxQtTxpLqzvkezCT3Zj+K1/WoU22YHsfYeR2Wen5on+bVrhl63HhQUlLH40OGzt
-         Jgs2ddqmpyXv+ix8g/1JY14YfEp1OJycz8GhHmqNVN1JlFEz/1wNUjHyOE75BTUjHyQ3
-         Se5hg4HUnGkpBY0GbwHkhhMiN+A2sWBOT2AWWTYpAHOFO6zOMx+51/Sav1830/IvpLMZ
-         7q708FAM6GtF1iLwzLMWdOG/DUjkVyTiO4Tz6gP0q2WeKSJvevk7s4Q4uVuJLqN5ahkq
-         fwHw==
+        d=google.com; s=20230601; t=1748453421; x=1749058221; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X5lk3aR+RzRKEkMTxOWzVHzMD+THYlxrp/Tixh3xiWc=;
+        b=0vHEnPRvxl8OZy/Y7wTTc11pqfjzRERfZHMbTLrG+0UHdiRO08+rT9acCaXYZzXHvu
+         AYAGz/8VNERpC1goEnKBJZZt9lYQF3QlOUm/3T555gduuaV5Yg1edrv8bDx3MFV/izJs
+         GGGB+5VjPH+0MJBsLYGMLkRg56dglb55mO1XGbj7GnRj33Bg+0NuPYu5iiPZzI9lvmeF
+         FF2+PC/P6x5Qk9vHwVLR8RZvyRVK4BE+hu/QkTJiTX754RsdzIHsGuLgdw44iRxHnjwT
+         5VkM6uKhUZsOVjd/C6k4rKYBlhGyNUsW8aj/KbuNEezB0wQggbxvuK6lJt0LHtRVnHVs
+         t22A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453369; x=1749058169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=73UTn5zY0Ma+9HSZwcpINlS8OsmErek97WGREM5hkbg=;
-        b=IpWmJlex4Di5uKWNgXcUNoTzdkbVPCHnv9Wm0vP2yUBh/TEDsU1geefqPQuLbTQ0Rk
-         FYtC98g9a12oV0ehtew17hF5mWTlkHH7qXuiXAjBjHbhv6QBZsALMcDzyg1U1F+gKRnH
-         rXu3eDls/GIKY7nEXrv9qdVoLj0kkzJYWZyuMAh+7NL+n5RqBkISPaYw+T4BmqHKC+d2
-         /hi5FtEKu00c8YSLWVx21vVnv3nr77a7QN7MoZqtyyRPjptvrbsk9E8p6V/5tGeWrO0m
-         Wa0htmQUDwY2+qjb8x3SGqFGIYwleP08Ir10lro7g76aC/KIizY0vW23quwuLDWPHmRF
-         HllQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/pMiEaUJJY2wo3bpcLN1Xdy6BGWuy+4kS8CG8ztlXLX99vEya4ex02iNI5Q8ocBquxE3CJzNVqXeaLI8=@vger.kernel.org, AJvYcCWZc0reH1uBGhWVABLmPi9EWCjXCvO5XK/cpdfAyTphC0H3MsmCy/cXiiREe5NSA9RIKz6S+iaa5aU=@vger.kernel.org, AJvYcCXPFsCs3EDggjb9+3MGWwqKwa3Ek8iz05EUevxYEBPCP9aU9rk3HcIUqj+WrxGHeQ17ZR2cjGvKeba/NPw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFCYsalcCHrNkoUtRQljy/xxEv2jzlcBcJ2J6IeTcyY04St1/g
-	fzbLDRnhfBN1To4hvpx42KbyrNsX7usi0tHH2FRnCWIf04tdvfCx8ocajcep/ea4YzO1kN9ZTum
-	WnviD+e5T2561ogMNpF8L7UpVpoOM2dk=
-X-Gm-Gg: ASbGncth6OL+8BfZTDgmlhWbj3y56n+0dp+vyvtf+WPYMdYZNq2R1ED/MRYezH4Wigv
-	51M68DnW6TnbUTmeFNr1yHTp8V7Zh0bH7SOJUbSq5FeQ0Qo3x48ns5KLqwU+xKHJew5vPZS7EJ5
-	PGLruKcVrrU+2yOF+NMk/sJVurx5AMK9hl
-X-Google-Smtp-Source: AGHT+IGeLxSaCCmOZYrOhpS4fQYrJKlAb1hOVaUvdIZMARS0JybXByMBW34nalQnpHzL7W3y9vXGkwkkk83WEtarRdA=
-X-Received: by 2002:a05:6512:4152:b0:553:2357:288c with SMTP id
- 2adb3069b0e04-5532357294emr3106825e87.17.1748453369179; Wed, 28 May 2025
- 10:29:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748453421; x=1749058221;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=X5lk3aR+RzRKEkMTxOWzVHzMD+THYlxrp/Tixh3xiWc=;
+        b=o20Nfp48cRFRbrKXRbl7Uo+UeRskH6napGwOq8rBYMTrHmG91I505OZTI2WRZ3Wh7o
+         /vv1p3toy10YwzrqXRmuRR/MnV4hjcWtn1eVVdR+qHIK662Oyw/odXTEVgIodsvpwq3c
+         Ak3xE0Lg+H39UMJm2JrNu4TxxVKtYzYyeb56zYockiNbCPq80RxtSfXhRboR5sPh36m5
+         /7etBzVISTQs2xRGh8/0IgAHrTL5owDVRtcYnAXA6OlzdNfxP/rQuZfglWsQNQDdimlS
+         FW4AFyA+MwdbrZbg/tH3mUIWkEd17WAzMNMHFZ+rZHsaneD3p54/09Fp4XMyQZuBQK7v
+         e4Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8WpMePBlkQEcSb/qx8FzjsboAJYRFBhPxhxeZM/0x1egim5Jbgizb91278tbJu1lkFHMCYHxPJBiVsEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYBYQUjCdeq8EcGC7VGcBekfsWHcotPvFy6T6txHAVyL0i8nf2
+	4wWDqJy+U8BAaZCSC0QXITtuYEQKl7Sa9k3uy2FRmUKqmiHSN9hbMoHfPm09fwrb09PPxgswB3t
+	J1Lx1Rw==
+X-Google-Smtp-Source: AGHT+IEsnEf7VuMExZRw8wVJdfyr2XCnHx5H/B/LOCvx+d5raumWeIsp3ExyZi0ZxIt7xWBlYTiCNvkn+ag=
+X-Received: from pjbpx18.prod.google.com ([2002:a17:90b:2712:b0:311:8076:14f1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3848:b0:311:be43:f09a
+ with SMTP id 98e67ed59e1d1-31214e6e01dmr517950a91.9.1748453421388; Wed, 28
+ May 2025 10:30:21 -0700 (PDT)
+Date: Wed, 28 May 2025 10:30:20 -0700
+In-Reply-To: <CADrL8HXS7zvJZjOxTxPKH0dAGoMXnFrrxCW7J7CXRtaeV6izjQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-1-d142bcbd0234@gmail.com> <040b0d8b-e862-48dd-9b77-9266a5194f99@nvidia.com>
- <20250519101725.k644wzizjwygtwa7@vireshk-i7> <49e7d006-e9cb-49da-a4cb-b73a08f6b792@nvidia.com>
- <20250520100218.te5i5ltrx43zjsq6@vireshk-i7>
-In-Reply-To: <20250520100218.te5i5ltrx43zjsq6@vireshk-i7>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Wed, 28 May 2025 12:29:16 -0500
-X-Gm-Features: AX0GCFuz-ai7H74ZpiHER5h5FZpctpdNrW6hh5LPSHxVFGPBRpq8sIb3pPiD9gQ
-Message-ID: <CALHNRZ_NtdiOek_bEABYpkW+p=c2RgCC4o9EXmqmAkdv3o9i6A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] cpufreq: tegra124: Remove use of disable_cpufreq
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250109204929.1106563-1-jthoughton@google.com>
+ <20250109204929.1106563-7-jthoughton@google.com> <aBqkINKO9PUAzZeS@google.com>
+ <CADrL8HXDDRC6Ey5HYWvtzQzjcM2RNX7c7ngGyjUsD3WiBF3VYA@mail.gmail.com> <CADrL8HXS7zvJZjOxTxPKH0dAGoMXnFrrxCW7J7CXRtaeV6izjQ@mail.gmail.com>
+Message-ID: <aDdILHOu9g-m5hSm@google.com>
+Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 5:02=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> On 20-05-25, 10:53, Jon Hunter wrote:
-> > I understand, but this seems odd. It would be odd that the device may j=
-ust
-> > disappear after resuming from suspend if it fails to resume. I have not=
- seen
-> > this done for other drivers that fail to resume. Presumably this is not=
- the
-> > only CPU Freq driver that could fail to resume either?
+On Wed, May 28, 2025, James Houghton wrote:
+> On Wed, May 28, 2025 at 11:09=E2=80=AFAM James Houghton <jthoughton@googl=
+e.com> wrote:
 > >
-> > It makes the code messy because now we have more than one place where t=
-he
-> > device could be unregistered.
->
-> Fair enough.
->
-> This driver, along with other cpufreq drivers, can fail at multiple
-> places during suspend/resume (and other operations). If something goes
-> wrong, we print an error to inform the user. Should we avoid doing
-> anything else (like everyone else) ? i.e. Just remove the call to
-> disable_cpufreq(), as all later calls will fail anyway.
->
-> This is the only driver that behaves differently on failures.
->
-> --
-> viresh
+> > On Tue, May 6, 2025 at 8:06=E2=80=AFPM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+> > >
+> > > On Thu, Jan 09, 2025, James Houghton wrote:
+> > > > @@ -2073,6 +2080,23 @@ void kvm_arch_commit_memory_region(struct kv=
+m *kvm,
+> > > >                                  enum kvm_mr_change change)
+> > > >  {
+> > > >       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRT=
+Y_PAGES;
+> > > > +     u32 new_flags =3D new ? new->flags : 0;
+> > > > +     u32 changed_flags =3D (new_flags) ^ (old ? old->flags : 0);
+> > >
+> > > This is a bit hard to read, and there's only one use of log_dirty_pag=
+es.  With
+> > > zapping handled in common KVM, just do:
+> >
+> > Thanks, Sean. Yeah what you have below looks a lot better, thanks for
+> > applying it for me. I'll post a new version soon. One note below.
+> >
+> > >
+> > > @@ -2127,14 +2131,19 @@ void kvm_arch_commit_memory_region(struct kvm=
+ *kvm,
+> > >                                    const struct kvm_memory_slot *new,
+> > >                                    enum kvm_mr_change change)
+> > >  {
+> > > -       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRT=
+Y_PAGES;
+> > > +       u32 old_flags =3D old ? old->flags : 0;
+> > > +       u32 new_flags =3D new ? new->flags : 0;
+> > > +
+> > > +       /* Nothing to do if not toggling dirty logging. */
+> > > +       if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
+> > > +               return;
+> >
+> > This is my bug, not yours, but I think this condition must also check
+> > that `change =3D=3D KVM_MR_FLAGS_ONLY` for it to be correct. This, for
+> > example, will break the case where we are deleting a memslot that
+> > still has KVM_MEM_LOG_DIRTY_PAGES enabled. Will fix in the next
+> > version.
+>=20
+> Ah it wouldn't break that example, as `new` would be NULL. But I think
+> it would break the case where we are moving a memslot that keeps
+> `KVM_MEM_LOG_DIRTY_PAGES`.
 
-Is there any consensus on the best way to handle this? I'd like to
-keep the series moving.
-
-Sincerely,
-Aaron
+Can you elaborate?  Maybe with the full snippet of the final code that's br=
+oken.
+I'm not entirely following what's path you're referring to.
