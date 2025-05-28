@@ -1,332 +1,215 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891E2798EB
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6AA28DB65;
+	Wed, 28 May 2025 16:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748450379; cv=none; b=u6lo3yZO1Ne56HIjuatf/YZLaOvA1dWw24e1UCAjyxQ+F6gSWdrS5dfv0Q2qNRhmUgZWFvtbROvZ4b4LaYGOJWotXHYQgLURttHB/Ca8KhIhaY63xvEpw38WejIRCpPKHBieddf8gscPuILOOPIF5amPzP7UPR9oD6XBhxTnq5E=
+	t=1748450386; cv=none; b=qS4PiT0ywq2BmjsAUZ2hR0Ujha+GzUzqoPVfycpu8uWS4Huhd6XWsikUj6pvMFnGpb1orK7fMTZLqwwikn+NwGsQ49ksOpOFquZaug5gIg7JHqKk5qMq5c41YMb4zy5OaWHBRrtTEByfn+G0XDSkhJYLqewC7fzogyQ9WAI4x/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748450379; c=relaxed/simple;
-	bh=9ZFIKNoaGAoZluGUowCky6Ngnpz41IO5N/0CSvVPfsU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Z5Mo3LQuKWmewmsGiOpYIjcme45YigyIVprHldYES+R7AWF+Q4+SXmcdyzTPCwlusAbkQZFThkG1L0Iwu87xvp1pGWuvDLAPfTZCq9tl8bScn/a1M7IlKqsHJSmE6H1o947L4HwkeFcjIqzzEBYv6eajH50pEbtHOT2arEnXsyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EaCfKUID; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1748450386; c=relaxed/simple;
+	bh=PK5I36SR6KPvbVW5o/5/Nxx2H4DZmk3oW5UwCer9tb8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HtDZ/RJUQkARXd3nCu83H0gbj3Har4aWU2EZyxwzXts7bJfDT/6wF55m66a2+u51k/jdPUCLaANSHVGN2XLpQGSftWDUGuXIHGHyMGgUSCwvbfovzh0iVb5H//Xr6ybhQZDThtTlInUyfR+vsRJIQptOXAkbYePUnts527qC2Lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ByvZ4mxD; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EaCfKUID"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so44121a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:39:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByvZ4mxD"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad883afdf0cso531810266b.0;
+        Wed, 28 May 2025 09:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748450377; x=1749055177; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ug/rSTqNkaK2DiSNfaEAiTgoamlZ5in/WoXI2qFgjt4=;
-        b=EaCfKUIDMqq78MjqgxE6vs6E9C91Gx7CFpQCpGpiESrnK4wBxmJOVtUbyE1cTU1C8Z
-         nBKetPvfOsnUXH+LhEcbIUaSY/e9Fd7kkQ9XeRnU+q9x9GmirTjjLz4ja6hsf3iunBpW
-         uzhY1k27QVWNZnG0kyNMuI3tK8ZnnTAtgYKvih61T96IJKIGVoB/L3lqq/PNL8MekqvI
-         9+cf1eIGnBJKX0NCeSv7vBGDPwhy/w5N7N3GxIHRJSC9/enQKMP/9HHCcXY1RwthE2Gc
-         VdGUfEuvc0+rj/Uqhea/h1ytjdiJ6amJveLUzs5c5EURcHd0MQwHDyFLgAqURyn4Uc9U
-         x5mA==
+        d=gmail.com; s=20230601; t=1748450382; x=1749055182; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VKX1pLwdxEywKNCdYX14Pz2UBR1qa4gDnMcpTfxzuao=;
+        b=ByvZ4mxD15OlSA0j06VQ6oQDQ/wCcd9LA3T60RzohzwRaajn/pDtjp88scPFMil3Uc
+         a7d78antlm2MQFGXTnxViJ2yNNjxQhWOw4/KyDvxhhhjl/ns6POnIfAacuTJxZPojTxB
+         KrVqeFR6mGe8DdVH7zc4QepF8P14B7twFP2XXGii7fXI3B/5Q9f4BM9CZn4FFE1sOKCm
+         LnqyikqbnB7VWXgn0EwwFYqe62sNP2IGSs2YyT73ep+H7n7HtisT4zsBJhaW35jcAmur
+         HV/Jf2SIPMCdrtYRG5IaOKciiCBQJTDQkqUWR2VwTDErJBU1QrFH39tNNjCUruqEItPp
+         wGgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748450377; x=1749055177;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ug/rSTqNkaK2DiSNfaEAiTgoamlZ5in/WoXI2qFgjt4=;
-        b=AVezMz5sdGKketrFg869imZfrfPMgz6qlAiHdLsIW6BC496bkmRJ8atEjLOYuQxr5j
-         Po1S1iUzfqT+OwBkDU6rBL6BzNNGvvk/xUF2ELUAAd1mJuaWahUEMhIlzMHopCmz7Bn1
-         m3XyupI84LonNo09xDvPwopnNb3sS1KTue/Utqe6b63WbGczv3Wymuab/460OWUGs8Ag
-         cHGMyLMaZZxKdvTpNZYnA9YEZjYiu6L7En2KrrSvGR70dtiT+AgODQTTmYYcDN94tdYZ
-         HV25obrbj5OPaACTZIm5MFk1EVw8kjJFG9WLykaGHleH3hunvrK1QlKe5H32krUmm2Hu
-         t8lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYoOyiHX8wlvEPeZGybuW3eKcrdBk8f/1wWFrfoMwTHfH6CGXv5hsF8YEwfAqpUMtyMsxZDXMy8vbv6y0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzn1Cf5rP+gri49wYioFUEfydxZWBwX/IDPVAvRKWIQB/DrcTm/
-	OUzSsnvvTCfx2DxhZ8HngjvlBgIh+edyNRcu4abr1v8WwzUwkFmKqE9yoH/h1knHOpcAsW70Fi9
-	1qDc0A/Nu24KOGVzGyaNZ+rZr8Q==
-X-Google-Smtp-Source: AGHT+IFNpKZD9lN4cOQmrQeE/v6mJ+Aez5Zu8/h2NScD8jBwFV5IrxK/YzUb/E+mnOr3jMtt3fLdteDpb1Js1lKinQ==
-X-Received: from plhs4.prod.google.com ([2002:a17:903:3204:b0:223:5693:a4e9])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:1a67:b0:234:d7b2:2ac2 with SMTP id d9443c01a7336-234d7b22c20mr46594455ad.22.1748450376728;
- Wed, 28 May 2025 09:39:36 -0700 (PDT)
-Date: Wed, 28 May 2025 09:39:35 -0700
-In-Reply-To: <aDbswJwGRe5a4Lzf@yzhao56-desk.sh.intel.com>
+        d=1e100.net; s=20230601; t=1748450382; x=1749055182;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VKX1pLwdxEywKNCdYX14Pz2UBR1qa4gDnMcpTfxzuao=;
+        b=ArqsscaoeiZtJC0DmAJdmolqsOvGDatW3QvSZ6Val3q4VgLpFrJoMJTM+txiEQnV2l
+         DA4Z79SKCSh0NY3aw/534aGOyi2cZVGwesilKKDTaIUSlan5yHT9TwJ5OtoKM0jDdc9r
+         vOnC5vsTUx7pHxbgfAPNVA4eVAONDnLw63aoQ6vwHkolXOJaT6M1kLB1g4phdURENHiq
+         cVmH0UdyJaaLerxW3BZtQ6dmsV97SojI4xujWBlfiRvgaUy8/KxqlXVSkeJx8kqf7WOl
+         bu1NrvGTJXSiB6BUPDcK2CZQbzVRd7JClrZG+ZROjI/UacKjZB6PhDLMk0QivP6eiRBu
+         /PFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGbWcv1P+MQtknStJdYHp8Xi2EAcBpKl1o0SKRTm1lJZyZ17FoyIWXM7bqpMylO+siQcj0Gxvr5mc=@vger.kernel.org, AJvYcCVfKx6cuvkUnxLePRMigMI6m548FXTvUfcWHs9NUK5agpu5BxiBIxSqNltgflCsuVZrK02T1HJqA3vZPX8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJdNVuvNqx/UQxsPnlPb3FsY6Uyf5z45jjVXw7OvMbooGhajta
+	QIP2hXoNFmQ6mBWTn8JrAIiK46Wm2rHRFfCsoEBMl+xJNQH7HmAvzby88IL1lWIiQHVuK1lt3+N
+	3Adyd1PjCOKOdyJ4Khcl9xV2CZ7FGSS4=
+X-Gm-Gg: ASbGncuBSVHE1SC4/01rBvymeSeZVVFe47HjNf9D45tqxz54E0ZxwpFDteuQ2mvr0bT
+	2B8Ab2DqcEHLtbvvzqJVqVlxyenPFCDvfBzDGq9uyHsbKW5mPoDNZSh5/1KBFAYhxDihDaPdnnT
+	iDlxONSd70rfxk2Ogao4Z+0YxC1m/VGiI=
+X-Google-Smtp-Source: AGHT+IHtke/J7pX7aA75Lv72+AWPYtXUnawbwRg8keF4TFoH7myfHumge6n7abfdZpauiHv1YhpnhbXU7KZ+KKW/qZM=
+X-Received: by 2002:a17:907:da3:b0:ad8:9b5d:2c26 with SMTP id
+ a640c23a62f3a-ad89b5d2e87mr425218266b.30.1748450382185; Wed, 28 May 2025
+ 09:39:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <625bd9c98ad4fd49d7df678f0186129226f77d7d.1747264138.git.ackerleytng@google.com>
- <aDbswJwGRe5a4Lzf@yzhao56-desk.sh.intel.com>
-Message-ID: <diqz34co8zaw.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 39/51] KVM: guest_memfd: Merge and truncate on fallocate(PUNCH_HOLE)
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
+MIME-Version: 1.0
+References: <20250113044107.566-1-gautham.shenoy@amd.com> <aDaB63tDvbdcV0cg@HQ-GR2X1W2P57>
+ <aDb6Mgg3TqyR2IRT@BLRRASHENOY1.amd.com>
+In-Reply-To: <aDb6Mgg3TqyR2IRT@BLRRASHENOY1.amd.com>
+From: Manu Bretelle <chantr4@gmail.com>
+Date: Wed, 28 May 2025 09:39:31 -0700
+X-Gm-Features: AX0GCFutIJtBiXdzMO7ABReyuippZSjiExk3NiGS0UThEwallEw2Do4W0buLZVU
+Message-ID: <CAArYzrJHSFgiiPamMDfp9-nvHr1+SGfQ-tgOpJ5tgR5Wtw+Mnw@mail.gmail.com>
+Subject: Re: [PATCH] acpi-cpufreq: Fix max-frequency computation
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>, 
+	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Adam Clark <Adam.Clark@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
-
-> On Wed, May 14, 2025 at 04:42:18PM -0700, Ackerley Tng wrote:
->> Merge and truncate on fallocate(PUNCH_HOLE), but if the file is being
->> closed, defer merging to folio_put() callback.
->> 
->> Change-Id: Iae26987756e70c83f3b121edbc0ed0bc105eec0d
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> ---
->>  virt/kvm/guest_memfd.c | 76 +++++++++++++++++++++++++++++++++++++-----
->>  1 file changed, 68 insertions(+), 8 deletions(-)
->> 
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index cb426c1dfef8..04b1513c2998 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -859,6 +859,35 @@ static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
->>  	return ret;
->>  }
->>  
->> +static long kvm_gmem_merge_truncate_indices(struct inode *inode, pgoff_t index,
->> +					   size_t nr_pages)
->> +{
->> +	struct folio *f;
->> +	pgoff_t unused;
->> +	long num_freed;
->> +
->> +	unmap_mapping_pages(inode->i_mapping, index, nr_pages, false);
->> +
->> +	if (!kvm_gmem_has_safe_refcount(inode->i_mapping, index, nr_pages, &unused))
-
-Yan, thank you for your reviews!
-
-> Why is kvm_gmem_has_safe_refcount() checked here, but not in
-> kvm_gmem_zero_range() within kvm_gmem_truncate_inode_range() in patch 33?
 >
-
-The contract for guest_memfd with HugeTLB pages is that if holes are
-punched in any ranges less than a full huge page, no pages are removed
-from the filemap. Those ranges are only zeroed.
-
-In kvm_gmem_zero_range(), we never remove any folios, and so there is no
-need to merge. If there's no need to merge, then we don't need to check
-for a safe refcount, and can just proceed to zero.
-
-kvm_gmem_merge_truncate_indices() is only used during hole punching and
-not when the file is closed. Hole punch vs file closure is checked using
-mapping_exiting(inode->i_mapping).
-
-During a hole punch, we will only allow truncation if there are no
-unexpected refcounts on any subpages, hence this
-kvm_gmem_has_safe_refcount() check.
-
->> +		return -EAGAIN;
->> +
+> No, the patch has a bug. The nominal_frequency returned from the
+> get_max_boost_ratio() function was in MHz, while cpufreq maintains
+> frequencies in KHz due to which the computed max_frequency was
+> incorrect and thus as a fallback, cpufreq reported P0 frequency as the
+> cpuinfo_max_freq.
 >
-> Rather than merging the folios, could we simply call kvm_gmem_truncate_indices()
-> instead?
+> Can you please try the following patch on top of the original one?
+
+Thanks for the quick turnaround Gautham.
+
+I applied this patch on top of a fresh Ubuntu 22.04 5.15.0-140-generic tree and
+confirmed that CPU max MHz reports its original value.
+
+Thanks!
+
+Manu
+
+  $ uname  -r
+  5.15.0-9991-generic
+  $ lscpu
+  Architecture:             x86_64
+    CPU op-mode(s):         32-bit, 64-bit
+    Address sizes:          48 bits physical, 48 bits virtual
+    Byte Order:             Little Endian
+  CPU(s):                   128
+    On-line CPU(s) list:    0-127
+  Vendor ID:                AuthenticAMD
+    Model name:             AMD EPYC 7713P 64-Core Processor
+      CPU family:           25
+      Model:                1
+      Thread(s) per core:   2
+      Core(s) per socket:   64
+      Socket(s):            1
+      Stepping:             1
+      Frequency boost:      enabled
+      CPU max MHz:          3720.7029
+      CPU min MHz:          1500.0000
+      BogoMIPS:             3992.55
+      Flags:                fpu vme de pse tsc msr pae mce cx8 apic
+sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscal
+                            l nx mmxext fxsr_opt pdpe1gb rdtscp lm
+constant_tsc rep_good nopl nonstop_tsc cpuid extd_apicid aperfmperf
+                            rapl pni pclmulqdq monitor ssse3 fma cx16
+pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm
+                            cmp_legacy svm extapic cr8_legacy abm
+sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perf
+                            ctr_core perfctr_nb bpext perfctr_llc
+mwaitx cpb cat_l3 cdp_l3 invpcid_single hw_pstate ssbd mba ibrs ibpb
+                            stibp vmmcall fsgsbase bmi1 avx2 smep bmi2
+erms invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xs
+                            aveopt xsavec xgetbv1 xsaves cqm_llc
+cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr rdp
+                            ru wbnoinvd amd_ppin arat npt lbrv
+svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists
+pausef
+                            ilter pfthreshold v_vmsave_vmload vgif
+v_spec_ctrl umip pku ospke vaes vpclmulqdq rdpid overflow_recov succ
+                            or smca fsrm
+  Virtualization features:
+    Virtualization:         AMD-V
+  Caches (sum of all):
+    L1d:                    2 MiB (64 instances)
+    L1i:                    2 MiB (64 instances)
+    L2:                     32 MiB (64 instances)
+    L3:                     256 MiB (8 instances)
+  NUMA:
+    NUMA node(s):           1
+    NUMA node0 CPU(s):      0-127
+  Vulnerabilities:
+    Gather data sampling:   Not affected
+    Itlb multihit:          Not affected
+    L1tf:                   Not affected
+    Mds:                    Not affected
+    Meltdown:               Not affected
+    Mmio stale data:        Not affected
+    Reg file data sampling: Not affected
+    Retbleed:               Not affected
+    Spec rstack overflow:   Mitigation; safe RET
+    Spec store bypass:      Mitigation; Speculative Store Bypass
+disabled via prctl and seccomp
+    Spectre v1:             Mitigation; usercopy/swapgs barriers and
+__user pointer sanitization
+    Spectre v2:             Mitigation; Retpolines; IBPB conditional;
+IBRS_FW; STIBP always-on; RSB filling; PBRSB-eIBRS Not affected;
+                            BHI Not affected
+    Srbds:                  Not affected
+    Tsx async abort:        Not affected
+
 >
-> num_freed = kvm_gmem_truncate_indices(inode->i_mapping, index, nr_pages);
-> return num_freed;
 >
+> ------------------------x8------------------------------------------------
+>
+> From 13d5c28823ed03353059801281d3b22e9f139a8d Mon Sep 17 00:00:00 2001
+> From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+> Date: Wed, 28 May 2025 16:43:33 +0530
+> Subject: [PATCH] acpi-cpufreq: Fix nominal_freq units to KHz in get_max_boost_ratio()
+>
+> commit 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
+> modified get_max_boost_ratio() to return the nominal_freq advertised
+> in the _CPC object for the purposes of computing the maximum
+> frequency. The frequencies advertised in _CPC objects are in MHz but
+> cpufreq expects the frequency to be in KHz. Because the
+> nominal_frequency was not converted to KHz, the cpuinfo_max_frequency
+> that got computed was incorrect and the cpufreq reported the P0
+> frequency as the cpuinfo_max_freq.
+>
+> Fix this by returning nominal_freq in KHz in get_max_boost_ratio()
+>
+> Reported-by: Manu Bretelle <chantr4@gmail.com>
+> Closes: https://lore.kernel.org/lkml/aDaB63tDvbdcV0cg@HQ-GR2X1W2P57/
+> Fixes: 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
+> Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
 
-We could do this too, but then that would be deferring the huge page
-merging to the folio_put() callback and eventually the kernel worker
-thread.
+Tested-by: Manu Bretelle <chantr4@gmail.com>
 
-My goal here is to try to not to defer merging and freeing as much as
-possible so that most of the page/memory operations are
-synchronous, because synchronous operations are more predictable.
-
-As an example of improving predictability, in one of the selftests, I do
-a hole punch and then try to allocate again. Because the merging and
-freeing of the HugeTLB page sometimes takes too long, the allocation
-sometimes fails: the guest_memfd's subpool hadn't yet received the freed
-page back. With a synchronous truncation, the truncation may take
-longer, but the selftest predictably passes.
-
->> +	f = filemap_get_folio(inode->i_mapping, index);
->> +	if (IS_ERR(f))
->> +		return 0;
->> +
->> +	/* Leave just filemap's refcounts on the folio. */
->> +	folio_put(f);
->> +
->> +	WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
->> +
->> +	num_freed = folio_nr_pages(f);
->> +	folio_lock(f);
->> +	truncate_inode_folio(inode->i_mapping, f);
->> +	folio_unlock(f);
->> +
->> +	return num_freed;
->> +}
->> +
->>  #else
->>  
->>  static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
->> @@ -874,6 +903,12 @@ static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
->>  	return 0;
->>  }
->>  
->> +static long kvm_gmem_merge_truncate_indices(struct inode *inode, pgoff_t index,
->> +					   size_t nr_pages)
->> +{
->> +	return 0;
->> +}
->> +
->>  #endif
->>  
->>  #else
->> @@ -1182,8 +1217,10 @@ static long kvm_gmem_truncate_indices(struct address_space *mapping,
->>   *
->>   * Removes folios beginning @index for @nr_pages from filemap in @inode, updates
->>   * inode metadata.
->> + *
->> + * Return: 0 on success and negative error otherwise.
->>   */
->> -static void kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
->> +static long kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
->>  						  pgoff_t index,
->>  						  size_t nr_pages)
->>  {
->> @@ -1191,19 +1228,34 @@ static void kvm_gmem_truncate_inode_aligned_pages(struct inode *inode,
->>  	long num_freed;
->>  	pgoff_t idx;
->>  	void *priv;
->> +	long ret;
->>  
->>  	priv = kvm_gmem_allocator_private(inode);
->>  	nr_per_huge_page = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->>  
->> +	ret = 0;
->>  	num_freed = 0;
->>  	for (idx = index; idx < index + nr_pages; idx += nr_per_huge_page) {
->> -		num_freed += kvm_gmem_truncate_indices(
->> -			inode->i_mapping, idx, nr_per_huge_page);
->> +		if (mapping_exiting(inode->i_mapping) ||
->> +		    !kvm_gmem_has_some_shared(inode, idx, nr_per_huge_page)) {
->> +			num_freed += kvm_gmem_truncate_indices(
->> +				inode->i_mapping, idx, nr_per_huge_page);
->> +		} else {
->> +			ret = kvm_gmem_merge_truncate_indices(inode, idx,
->> +							      nr_per_huge_page);
->> +			if (ret < 0)
->> +				break;
->> +
->> +			num_freed += ret;
->> +			ret = 0;
->> +		}
->>  	}
->>  
->>  	spin_lock(&inode->i_lock);
->>  	inode->i_blocks -= (num_freed << PAGE_SHIFT) / 512;
->>  	spin_unlock(&inode->i_lock);
->> +
->> +	return ret;
->>  }
->>  
->>  /**
->> @@ -1252,8 +1304,10 @@ static void kvm_gmem_zero_range(struct address_space *mapping,
->>   *
->>   * Removes full (huge)pages from the filemap and zeroing incomplete
->>   * (huge)pages. The pages in the range may be split.
->> + *
->> + * Return: 0 on success and negative error otherwise.
->>   */
->> -static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
->> +static long kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
->>  					  loff_t lend)
->>  {
->>  	pgoff_t full_hpage_start;
->> @@ -1263,6 +1317,7 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
->>  	pgoff_t start;
->>  	pgoff_t end;
->>  	void *priv;
->> +	long ret;
->>  
->>  	priv = kvm_gmem_allocator_private(inode);
->>  	nr_per_huge_page = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
->> @@ -1279,10 +1334,11 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
->>  		kvm_gmem_zero_range(inode->i_mapping, start, zero_end);
->>  	}
->>  
->> +	ret = 0;
->>  	if (full_hpage_end > full_hpage_start) {
->>  		nr_pages = full_hpage_end - full_hpage_start;
->> -		kvm_gmem_truncate_inode_aligned_pages(inode, full_hpage_start,
->> -						      nr_pages);
->> +		ret = kvm_gmem_truncate_inode_aligned_pages(
->> +			inode, full_hpage_start, nr_pages);
->>  	}
->>  
->>  	if (end > full_hpage_end && end > full_hpage_start) {
->> @@ -1290,6 +1346,8 @@ static void kvm_gmem_truncate_inode_range(struct inode *inode, loff_t lstart,
->>  
->>  		kvm_gmem_zero_range(inode->i_mapping, zero_start, end);
->>  	}
->> +
->> +	return ret;
->>  }
->>  
->>  static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->> @@ -1298,6 +1356,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->>  	pgoff_t start = offset >> PAGE_SHIFT;
->>  	pgoff_t end = (offset + len) >> PAGE_SHIFT;
->>  	struct kvm_gmem *gmem;
->> +	long ret;
->>  
->>  	/*
->>  	 * Bindings must be stable across invalidation to ensure the start+end
->> @@ -1308,8 +1367,9 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->>  	list_for_each_entry(gmem, gmem_list, entry)
->>  		kvm_gmem_invalidate_begin_and_zap(gmem, start, end);
->>  
->> +	ret = 0;
->>  	if (kvm_gmem_has_custom_allocator(inode)) {
->> -		kvm_gmem_truncate_inode_range(inode, offset, offset + len);
->> +		ret = kvm_gmem_truncate_inode_range(inode, offset, offset + len);
->>  	} else {
->>  		/* Page size is PAGE_SIZE, so use optimized truncation function. */
->>  		truncate_inode_pages_range(inode->i_mapping, offset, offset + len - 1);
->> @@ -1320,7 +1380,7 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->>  
->>  	filemap_invalidate_unlock(inode->i_mapping);
->>  
->> -	return 0;
->> +	return ret;
->>  }
->>  
->>  static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
->> -- 
->> 2.49.0.1045.g170613ef41-goog
->> 
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+> index d26b610e4f24..76768fe213a9 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -660,7 +660,7 @@ static u64 get_max_boost_ratio(unsigned int cpu, u64 *nominal_freq)
+>         nominal_perf = perf_caps.nominal_perf;
+>
+>         if (nominal_freq)
+> -               *nominal_freq = perf_caps.nominal_freq;
+> +               *nominal_freq = perf_caps.nominal_freq * 1000;
+>
+>         if (!highest_perf || !nominal_perf) {
+>                 pr_debug("CPU%d: highest or nominal performance missing\n", cpu);
+> --
+> 2.34.1
+>
+>
+> --
+> Thanks and Regards
+> gautham.
