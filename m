@@ -1,95 +1,209 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFB32147E3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50A720E6E4
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464560; cv=none; b=Qtiq2FbmRMmiPUVZ82b2CIRDVgrqF3wTHdCEnlMmy0Lh5NdDKPCr8IWEN5jgiAIWrWV/lNcIW+dLWOuvZNSkih0qGti6tDKbMQW4yn2iEH9jgnbcl/a5TVvWxzfAG3kGiB++f0tayVY7Pwoby7a9FuTZsKLTqN3QrOIXsiv3sPM=
+	t=1748464602; cv=none; b=VtY9OsYySvubFRT5iBz28RXI3+LM2KIJtYxmX+0IXeGZpqxpXSbahxOh6S73JpB4moEa3e7xoEloSlSj82kO87wxRlLS/SEnrsXsVKFlEzK1ZcvK7i7uQD7SuqAKmtHyffvRTqva4B9fSxhlEhu6yMrlEPxnasaP9p4MJjsmCag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464560; c=relaxed/simple;
-	bh=rL2WJHK3yK6U8yCpBEsDlHfjp9mdR1IrM81qSsZErHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ktHlh+PG7xEBXVOKlilYskX4muaO4VebzkAF/aU3JzGEUgMPiDiTfVY78SkpMDgMfDgD4ttWysZXTfqLzqg2F4WXppPx2q+0GOyezQ5qzieRZ6nLTSy1f+dv/v+OHwZ2r7cMoSe3C69fPYrh3hWQ6p3d9IK+sXYMROPECA6LAbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=d0C8kYcN; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748464602; c=relaxed/simple;
+	bh=LKuuiFod4XXbTge4GHdm/9QLj8tPwgj0K7XcZn50K68=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L16ZCkIIFLeFjXaymrZ7cM5mGy9No6AFz2SLBCjT6CIskUcEenyw3aRb7mivWRrGcksK9A758p8HMges5A23ikl++aGVnAVNknFlC5jK+7IUlm4slxzg6gWZvy7+Jzr0TPI5HpFpJwzA/RZyi6I8YbdDMrqcr9BdzEMu1AOPKBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IBlRcxLK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="d0C8kYcN"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so28574466b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:35:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1748464556; x=1749069356; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SI3go0hstqNJMeRsNvBC/Uwu5IUh2YuAXmhIt3IADQ4=;
-        b=d0C8kYcNXVLsHGj1yntNqWW4CrV+1WrfGDmluUnyu2LNNcF04WfdgpXM9g5LZWyG2I
-         PUqChEqAZwfHk+8cYY1sN7KCQ5Gash3/V0Bc0RqDVNO3MVi/O2Qm1UPAnvoBdXGIOJTB
-         WMoxO8a43gJjFyScm6StS2HPvl7+vL3fvClak=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBlRcxLK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748464599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=iDHOfDzbDRVpg69jsOvmjB9r5MFng2zhSkjSqjMHIqA=;
+	b=IBlRcxLK3g0LBShy929vzSJ+JMFNpAPg9hSJd6mbPhNmZHlKnzVLdyfs7tJACYaXTpAk3u
+	AabanyefWcxy5zWfIhRzdmjCHXQf6Wb5P1bhxV2nNXPdPBe+JClMSJvzBKl0YES1oqox8e
+	mNZfC/8Cs/CaKIAC7cLAo8GA2xMw+5o=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-IirhcXEvMIauGyTs5bHGcQ-1; Wed, 28 May 2025 16:36:38 -0400
+X-MC-Unique: IirhcXEvMIauGyTs5bHGcQ-1
+X-Mimecast-MFC-AGG-ID: IirhcXEvMIauGyTs5bHGcQ_1748464597
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4d95f197dso128435f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:36:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748464556; x=1749069356;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SI3go0hstqNJMeRsNvBC/Uwu5IUh2YuAXmhIt3IADQ4=;
-        b=sh4wb2xMrlg7xiPVBPJA7XD+76m8SvSrGSx3EB6XL/DEG6l9MGqNyeKzNpx+AJtYeG
-         Z3FJOtfxwCsluRqG7vhifsQS0NynvARELzgo57SqPU8ArAx8ImmaoSdDdOuCb9Eh6lmE
-         b1xSGf3mRJlX/mZj+ZduKA/oB/NKTXIz19UAG+lphD0DAhizoxYvgJZIukBH8NTs3I+n
-         K9vUXdtv8ODvtrjLVP3snLxEZ/T2zG/ApY9PXMeF0yRnk408d4vN8BEy1Nbwfct9ccrj
-         XoBOaJBaSTG2A4DhHABTk8jGWcNsnt4/6n/4DpO+Ogi/5uvdLSAJlCmD6+RpSudJYM4q
-         8OpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXl+fhVm5ffOzG3kUEf4yrl/vmekWep3mxu9wZZcfSGvjibSHprYh6dj6TcGOJVy1FQ6bIXd+UebLElwWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpRkcCwGsG/jDzyd869FLufHyl+CFWNJhsZjVF/bCy6yrDjn64
-	tPWon+AcJ84C7shBK2OE/VqDi8BcsE1Ji2ZTjdWmeRo98K17NcLQuICIh29eCSieIzFMCEU5zlk
-	2jnwg+F0=
-X-Gm-Gg: ASbGncshOoThOlweLkfEvid0cKsNePxQRNlRSmRaTH5KGAk7ymRib+t3o3DNa+aXX0g
-	hzNZwvj/PAT2NTs+X+cPIEhLpEqHfAKnv6+KAT4UyV2Rz54TvINR26bHxT14+F5b8NT8+1xVuV0
-	xrABi58C0qm+b639g7hpTjIQLSWlbs1LQeu2MJTQSTGT8WifGyUJyCW/F/PM93cGoufx35xd8Yx
-	rUwosmYU0Uf407Y8qsyTNJGzr4NAqXFfoNe/2X+QwhUM+ct6SfX2bel2kX5hpL5gbERA/ZOV1Jv
-	UyNXsCg9a03mYxsm78yxqVhwaWappNNTUcoBHZfmfTlGxk49S7NOktlaYBnIzoVtncf7CmiM5vv
-	NNHiHbDnPXI4rDWHhKUUxgMbYVg==
-X-Google-Smtp-Source: AGHT+IE6lRMvFOLWE7RgYWuCsKLpaBcGq2J/BhDS0ucAbEEqbesIMLo4l800lx1RVy9w4q7ariZDAQ==
-X-Received: by 2002:a17:907:9721:b0:ad5:7529:94d with SMTP id a640c23a62f3a-ad8a1fce9demr360559266b.42.1748464556487;
-        Wed, 28 May 2025 13:35:56 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b47a0bsm165650866b.132.2025.05.28.13.35.55
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1748464597; x=1749069397;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iDHOfDzbDRVpg69jsOvmjB9r5MFng2zhSkjSqjMHIqA=;
+        b=qEJYD1n+XRxfSWgtGLlGP9c4mki61tdZobFa2XBhrU9/kZQOAFdmAZWrFirEGWzDvM
+         cqChw/NSU833sd6hY2KPH/HQmsEj0axVbxpgyjJLzrXCmSjwcQ/nWEPb6qFF6lM4mWXL
+         3nOgMN6mPBuNElcz3sQ/IVCZ8NPq6Qw7mAaAJNssHtzd5UpdQ7ztuzHeS789vzf1Y8v1
+         18ssdBjlJ7+kQ5d07f9Lc303MJBggmsX7OV2b5Jl5s3L01knL0C1qanTI1uDTBuzZ47s
+         NvgpXpnKWYLM2r1/BGJq9MuIvzQGB0eLgO2330GAYlz4MpVsSchWUji2WDJCPm36nb56
+         CTcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQbZHvj9IysP5RKhLXUFzxEbh8mRzB708I/Y7ouhiv8ZObnArSyKxbGehE8xxz0P2+Fgc4lMynpuZb8xk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP31QjCgOUafhh6223K++O8fbF9w7zic/T7nDBxdQFYTR/B+BF
+	ixYBkmxjY8EC57vOJmEVyN4oIE1rZXcWgkkXlw8hY2KjEAlTrzwuQ6Judp7HU/P2hC6eI4M8kjM
+	m/G+CQEOus6ag6pUZjkPyMOEubzsS77PtNKi4f6ZNWaIfRy76O6gydiwVTROhUyBVmg==
+X-Gm-Gg: ASbGncv8RuUmKlYo1Up+MWVErhK+naVWZj57yC9mdFeCeh49z+IceXMdrpDsqLRpF0Z
+	gCcw8jz4Y3d03CwPDA26r6Z7iL597yFLJvAvlPJ/PN3nKjtbd2BLgXtle/UNG1tQHbvMCrLcm0Y
+	iO88aRrpWG9t8bNIiYttCQ+Oo7zqCPwtZj+Zs54QXsVPUCZSxGoPvQUFXNA4fP/pQj2YuMul6V/
+	NKaLVQYwAw8AAi3A5qMk9vPjAlek3k5FCKjD259Bn0KHk3PZyXU8wrPtXAjAAr/L755dbd+KGfA
+	o1YZFtsvdvbQ1PU3lrdkz50woc7Q1AM4MlHfJWE0nYJ4MELSmQaFGZAqPtUohMlFTqA8cHIYlsn
+	mC26sHs+nTAOwCSlZo65NNKfUUwy50cL42o+iEhs=
+X-Received: by 2002:a05:6000:144b:b0:3a4:eda1:f64f with SMTP id ffacd0b85a97d-3a4eda1f745mr1926667f8f.30.1748464597174;
+        Wed, 28 May 2025 13:36:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGyw2FecFHjr2FE4rwo6929V09lCFuPkawv9vWLWEm5i38UkYZ4QCg7UaqjU3X8Av1gnPqQNQ==
+X-Received: by 2002:a05:6000:144b:b0:3a4:eda1:f64f with SMTP id ffacd0b85a97d-3a4eda1f745mr1926619f8f.30.1748464596733;
+        Wed, 28 May 2025 13:36:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfbf4966sm1450355e9.6.2025.05.28.13.36.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 13:35:55 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6046ecc3e43so332377a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:35:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXSMwQOEg3zqkmjiXJsIAwPYVjSiKN0A96sS8HpSaXBtXIAF6aQuNcG4BU9MmXZDJ/JuD/r1zQORanCoBI=@vger.kernel.org
-X-Received: by 2002:a05:6402:4405:b0:601:834a:e678 with SMTP id
- 4fb4d7f45d1cf-6051c391cebmr3066095a12.17.1748464555249; Wed, 28 May 2025
- 13:35:55 -0700 (PDT)
+        Wed, 28 May 2025 13:36:36 -0700 (PDT)
+Message-ID: <31dd1efc-ccf3-4908-a06f-20dabac86ce1@redhat.com>
+Date: Wed, 28 May 2025 22:36:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527141706.388993-1-cel@kernel.org> <CAHk-=wggC6PP9ZNwKY7sEzdsC7h8qySA7pjqAchrYowniADUQg@mail.gmail.com>
- <20250528-wise-platinum-pony-ea6f62@lemur>
-In-Reply-To: <20250528-wise-platinum-pony-ea6f62@lemur>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 28 May 2025 13:35:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjzMJBiBboMEWy+cP5ke0otahkzfO-UAjvRh4XrSqrL1Q@mail.gmail.com>
-X-Gm-Features: AX0GCFt7MDkczEmwkTnb1VLnT_bDG5bEQpgslWhXYWynZCrj6otp4h35LOxc5RU
-Message-ID: <CAHk-=wjzMJBiBboMEWy+cP5ke0otahkzfO-UAjvRh4XrSqrL1Q@mail.gmail.com>
-Subject: Re: [GIT PULL] NFSD changes for v6.16
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Chuck Lever <cel@kernel.org>, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Dave Hansen <dave.hansen@intel.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>,
+ Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
+ Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
+ Dev Jain <dev.jain@arm.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org,
+ x86@kernel.org, linux-fsdevel@vger.kernel.org,
+ "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
+ gost.dev@samsung.com, hch@lst.de
+References: <20250527050452.817674-1-p.raghav@samsung.com>
+ <20250527050452.817674-3-p.raghav@samsung.com>
+ <626be90e-fa54-4ae9-8cad-d3b7eb3e59f7@intel.com>
+ <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 28 May 2025 at 13:18, Konstantin Ryabitsev
-<konstantin@linuxfoundation.org> wrote:
->
-> So, if you receive mail from a bunch of people called "Your Name", at least
-> you'll know that they are reading the documentation (and still following it a
-> bit too slavishly). :)
+On 27.05.25 20:00, Pankaj Raghav (Samsung) wrote:
+> On Tue, May 27, 2025 at 09:37:50AM -0700, Dave Hansen wrote:
+>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>> index 055204dc211d..96f99b4f96ea 100644
+>>> --- a/arch/x86/Kconfig
+>>> +++ b/arch/x86/Kconfig
+>>> @@ -152,6 +152,7 @@ config X86
+>>>   	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
+>>>   	select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
+>>>   	select ARCH_WANTS_THP_SWAP		if X86_64
+>>> +	select ARCH_WANTS_STATIC_PMD_ZERO_PAGE if X86_64
+>>
+>> I don't think this should be the default. There are lots of little
+>> x86_64 VMs sitting around and 2MB might be significant to them.
+> 
+> This is the feedback I wanted. I will make it optional.
+> 
+>>> +config ARCH_WANTS_STATIC_PMD_ZERO_PAGE
+>>> +	bool
+>>> +
+>>> +config STATIC_PMD_ZERO_PAGE
+>>> +	def_bool y
+>>> +	depends on ARCH_WANTS_STATIC_PMD_ZERO_PAGE
+>>> +	help
+>>> +	  Typically huge_zero_folio, which is a PMD page of zeroes, is allocated
+>>> +	  on demand and deallocated when not in use. This option will always
+>>> +	  allocate huge_zero_folio for zeroing and it is never deallocated.
+>>> +	  Not suitable for memory constrained systems.
+>>
+>> "Static" seems like a weird term to use for this. I was really expecting
+>> to see a 2MB object that gets allocated in .bss or something rather than
+>> a dynamically allocated page that's just never freed.
+> 
+> My first proposal was along those lines[0] (sorry I messed up version
+> while sending the patches). David Hilderbrand suggested to leverage the
+> infrastructure we already have in huge_memory.
 
-At that point I suspect they *may* actually be bots, and it's a good
-sign that it isn't a real human behind the email ..
+Sorry, maybe I was not 100% clear.
 
-            Linus
+We could either
+
+a) Allocate it statically in bss and reuse it for huge_memory purposes
+
+(static vs. dynamic is a good fit)
+
+b) Allocate it during early boot and never free it.
+
+Assuming we allocate it from memblock, it's almost static ... :)
+
+
+I would not allocate it at runtime later when requested. Then, "static" 
+is really a suboptimal fit.
+
+-- 
+Cheers,
+
+David / dhildenb
+
