@@ -1,98 +1,151 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6D8286D48;
-	Wed, 28 May 2025 14:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03E282C60;
+	Wed, 28 May 2025 14:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442411; cv=none; b=ui+p3AlqsNVFtGeiPlDWDbddEY3vRNibXvGHEOUZzcEas/rFnfn6tVJWRJq81PPqyAgqNo6jnhJkRzl5XyaNptA9Q1CHkllnMHM3dv+DqVb7af+q19IyCIymf0RqYJJ/ekAU3hLKbB0smMGDbTvC2QRgjgqGQe9EP++qByvW4f4=
+	t=1748442498; cv=none; b=erLvqAYGRyTxHbErO5UZLPdl1RkFTrka0h0TR1Ywl0pZ0rHk3yq8S7H1CAuGKfhGRFvGyyP76ix+S+VK/lHJVLkMc2nEco3C8pk/Bh0Lqe2oceHWjZ4qsN3wcb/kLpIB2nlkzhLI+lQHIVnYLdSch7nqT6muZQyWLgaBq/nRhbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442411; c=relaxed/simple;
-	bh=cS79qCw02W352C4o5afUgwhUGwcsuYgeRjXGbXZOI8U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vn/W5ZzvVs5ZkJXMTYcyekfWBCie9Pn9TQHzKZqVDTAGpRGcPxmEa6fpe08UcqvUsduLRCFZb+fGR1K5I7gqhz8MRWCDWQzTgM0X7tJMeAISC4QlUKw8QroofdKvFDRNIE6upVnhyaZpYLchZP50fDnrXske7rj+pV37Kvhp8ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=iiHSrwGb; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	s=arc-20240116; t=1748442498; c=relaxed/simple;
+	bh=Pj2dKcYrs8qtXXImT3zhxemqWnlmlXzSCeJP/bi3GqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=flufaKY5SSO0N1It0+X0w7oK0ebvAZsYjw9uqDyavxG7bN896NzbqOXPDOAAP7+P3YUn7m6askAzbRnSmJJV4mkGRFG+M3hd2715VMyeWL7/Y8QaeOPFRy7DEN1rxZKmkGh+nafbvDJ5EmB8qH6L3mWZQyy4I5YKMBRY1rA3ed8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7V4HdhH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="iiHSrwGb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=cS79qCw02W352C4o5afUgwhUGwcsuYgeRjXGbXZOI8U=; b=iiHSrwGbrwswQJmrXNS4YYn773
-	kGLotIEZIyAPFV8+h+WqbAVM9Bl7VS9C6jzQMLjg0b/NaMXooV9/Hfu6ZHAo6k3V5K5yLGZOsa11/
-	SseSd9Q9Ej0iFITTMbX/T6xAQZw8L4m+yel7ystwEK0ly9rnzKOO77DHCxkgVOSpT0CT04p9nOwWi
-	YIbBTsQMz65FhF3aTl1bAnYIGaWo/vME4yph61afiuI2yeK50NqkLOHrB6kk2C/WvQftYkwJWu7+C
-	oPtuNEymkRDfACZXLRPUBJFG4J2O3kIzsg2qPB6y8Ml/EL8g9K1UlWZGfcjGkktRVnV2UIM9PhLjj
-	cGLZePeA==;
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1uKHjh-000000000tN-0jg8;
-	Wed, 28 May 2025 10:26:29 -0400
-Message-ID: <05b6280b2550011623a433017baa8f17bc83fe9d.camel@surriel.com>
-Subject: Re: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
-From: Rik van Riel <riel@surriel.com>
-To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
-  Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Ingo Molnar	 <mingo@kernel.org>, Andrew
- Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"	
- <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport	
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko	
- <mhocko@suse.com>, x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org
-Date: Wed, 28 May 2025 10:26:29 -0400
-In-Reply-To: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
-References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-	 <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7V4HdhH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 589E9C4CEE3;
+	Wed, 28 May 2025 14:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748442497;
+	bh=Pj2dKcYrs8qtXXImT3zhxemqWnlmlXzSCeJP/bi3GqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J7V4HdhH4LP0/xhdufXH7ukurAfnZkeM28NOSeG7dnwmm7xGN2Q21KwDYd99fZser
+	 ENBiRECT9v5o6UwShPCdLRJs5hb76XQNPWD2f/FtHeNJ16IQ1P1atj4YicGXgqoJn1
+	 Qd2um5zkwTUZJ2j0jGLZXafqR8nLyKbFR3akyuxesS0b0jKtOD4xUph+xmh7+49kee
+	 b927Nhc/iraXGDSm+YLrubDnVPbh8ckd6J+rDLrEABHeq1f/+nNRsVK6PeHmm6jOV6
+	 1a5v0NhCdVWXwv5mJEnlDyFrPrmCiExJ30hu90lAAlQ9yyNdZtG+Q+Zw+BxBaQHGoV
+	 bk/5c/9YQyLKA==
+Date: Wed, 28 May 2025 16:28:09 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 18/26] arm64: smp: Support non-SGIs for IPIs
+Message-ID: <aDcdeWuwCzZ4pA9y@lpieralisi>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+ <20250513-gicv5-host-v4-18-b36e9b15a6c3@kernel.org>
+ <20250528131744.00001544@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528131744.00001544@huawei.com>
 
-On Wed, 2025-05-28 at 01:35 -0400, Tal Zussman wrote:
-> This has been unused since it was added 11 years ago in commit
-> d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
->=20
-> Signed-off-by: Tal Zussman <tz2294@columbia.edu>
->=20
-Reviewed-by: Rik van Riel <riel@surriel.com>
+On Wed, May 28, 2025 at 01:17:44PM +0100, Jonathan Cameron wrote:
+> On Tue, 13 May 2025 19:48:11 +0200
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> 
+> > From: Marc Zyngier <maz@kernel.org>
+> > 
+> > The arm64 arch has relied so far on GIC architectural software
+> > generated interrupt (SGIs) to handle IPIs. Those are per-cpu
+> > software generated interrupts.
+> > 
+> > arm64 architecture code that allocates the IPIs virtual IRQs and
+> > IRQ descriptors was written accordingly.
+> > 
+> > On GICv5 systems, IPIs are implemented using LPIs that are not
+> > per-cpu interrupts - they are just normal routable IRQs.
+> > 
+> > Add arch code to set-up IPIs on systems where they are handled
+> > using normal routable IRQs.
+> > 
+> > For those systems, force the IRQ affinity (and make it immutable)
+> > to the cpu a given IRQ was assigned to.
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > [timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
+> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> > [lpieralisi: changed affinity set-up, log]
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Hi Lorenzo,
+> 
+> A few trivial comments inline.
+> 
+> > +
+> > +static int ipi_to_irq(int ipi, int cpu)
+> 
+> Maybe this naming needs a breadcrumb to indicate this only
+> applies only to lpi case as it's directly computed in the old ppi code?
+> A comment might do the job.
 
+Maybe rename it to ipi_to_irq_percpu() (similar to what we did for
+set_smp_ipi_range()) and then
 
---=20
-All Rights Reversed.
+static int ipi_to_irq(int ipi)
+{
+	ipi_to_irq_percpu(ipi, 0);
+}
+
+and use ipi_to_irq() in ppi code ?
+
+Likely overkill, not a big deal anyway.
+
+> > +{
+> > +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
+> > +}
+> > +
+> > +static int irq_to_ipi(int irq)
+> > +{
+> > +	return (irq - ipi_irq_base) % nr_ipi;
+> > +}
+> 
+> 
+> > +static void ipi_setup_lpi(int ipi, int ncpus)
+> > +{
+> > +	for (int cpu = 0; cpu < ncpus; cpu++) {
+> > +		int err, irq;
+> > +
+> > +		irq = ipi_to_irq(ipi, cpu);
+> > +
+> > +		err = irq_force_affinity(irq, cpumask_of(cpu));
+> > +
+> Trivial local consistency thing but maybe no blank line here or...
+> > +		WARN(err, "Could not force affinity IRQ %d, err=%d\n", irq, err);
+> > +
+> > +		err = request_irq(irq, ipi_handler, IRQF_NO_AUTOEN, "IPI",
+> > +				  &irq_stat);
+> > +
+> here to match the style in ipi_setup_ppi()
+
+Done.
+
+Thanks,
+Lorenzo
+
+> > +		WARN(err, "Could not request IRQ %d, err=%d\n", irq, err);
+> > +
+> > +		irq_set_status_flags(irq, (IRQ_HIDDEN | IRQ_NO_BALANCING_MASK));
+> > +
+> > +		get_ipi_desc(cpu, ipi) = irq_to_desc(irq);
+> > +	}
+> > +}
+> 
