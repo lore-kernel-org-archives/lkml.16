@@ -1,105 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CAE24469C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321951C84B8;
+	Wed, 28 May 2025 07:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417917; cv=none; b=HRp4G5oa825dfbuneEGtYNwA2X/7GblbQiXf0IBiGTfNPK50OOALsWe76uNWB6QxV5V5pxMvnp6/adSqPnXhH+k5TQT7ZA/76RA6sTqoVbghqZfCygDerYm9iXfmyiRwWMX75dpqQwdem54J8BLcLzC3jkv8COfJXLx43aXdvk8=
+	t=1748418147; cv=none; b=Pjgxydf2c+YW7+ly/1hh9wF51jdQm040o506zfyg0LrnfRpeobx2qnc1fR2ALy8rUeURTciIykwdP2GEQJOotU6Du+bGAlH2JdJs5y/M7YylWvca1HuLMRqzutSbFYEqtmACRVfWYeMormjsNo7NMEmb78UzWm8HXSaTJH5m9NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417917; c=relaxed/simple;
-	bh=EH+F4iRJI7anYHX3NynlYUSDaVIlMgqBZ6Ur6WFXNAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrdT7rsBRrPdWeuliMV68rxUDrKkTG2z43njVCiZfbmoE9fnLzSqc78aU+VzRESuklkBLs8g5u280pP9SiNvW7T5afc5GPcf8ew1Sd9CIkftj0/SBrEKA4H4JBhcN2Vc4adsiZ7yWnYwrFtfwC/DK+MGLI3fNksWxN4r9z/nxmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rr4la10C; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748418147; c=relaxed/simple;
+	bh=FBdm3zXl/J+bAroDHqYjB2GcWTFC6T1eJvlgk8gKQ4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lCogjLbtGVlohnDFOeX6Q0QuL9C4uXzZnuxmIdNukIq0b/3Nm8Skjmyv38/uUheoRejsCJU2X0FVwqfAEILepXNh5CM4vKu7kEPb/2OyXWlIaUj1GNxUkXqa4IzqZmdQPk38rcD4ND3FXdpFKRlWjKetnWlsYdlsggorUndYTno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mODGx2LY; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rr4la10C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748417914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nIttIbYMTmu8/eguOayC3dSJD20KFYU/EvDlBxz1bX8=;
-	b=Rr4la10CtJneAF19D8vtUN4PLCnI9xIN9Bk4//BRlDMOGhcs4KTG7DJNO3yII+IXPpFqfS
-	l8uSeSdugvqsqI+uk+N+T5FGHvQJ9PKFmYDKMWyLowLO86BhcXXWItPxXIwMViCzHlupAx
-	DmKrFYEE1LSKbOd2fQDuC0Sg/qUqgPU=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-424-qlHoU7GUPsGgzsvwWcraWw-1; Wed,
- 28 May 2025 03:38:31 -0400
-X-MC-Unique: qlHoU7GUPsGgzsvwWcraWw-1
-X-Mimecast-MFC-AGG-ID: qlHoU7GUPsGgzsvwWcraWw_1748417909
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9EC6A1956086;
-	Wed, 28 May 2025 07:38:28 +0000 (UTC)
-Received: from dobby.home.kraxel.org (unknown [10.45.224.91])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07335180049D;
-	Wed, 28 May 2025 07:38:27 +0000 (UTC)
-Received: by dobby.home.kraxel.org (Postfix, from userid 1000)
-	id D532F4507BC; Wed, 28 May 2025 09:38:24 +0200 (CEST)
-Date: Wed, 28 May 2025 09:38:24 +0200
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/sev/vc: fix efi runtime instruction emulation
-Message-ID: <77hywpberfkulac3q3hpupdmdpw2xbmlvzin4ks7xypikravkj@xjpi7gqscs6a>
-References: <20250527144546.42981-1-kraxel@redhat.com>
- <20250527162151.GAaDXmn8O3f_HYgRju@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mODGx2LY"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60410a9c6dcso7790868a12.1;
+        Wed, 28 May 2025 00:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748418144; x=1749022944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eLPcSIp/DD1rCYzGKNk0Bn8Y+IA3lzvlJ6bnzdrWQSU=;
+        b=mODGx2LY+DBWGmon66D3fqRwsqxc1wMt7G5QSkHPhAejo4lMVdOiHrCIY6Abf+dQyb
+         W5frfbIeFreU6u1fybJCOs7onz78KBDEH/UzfWdQqNxNn1z+wW9K4bPB0dpC1t8V/yeV
+         lhZWSD1hIjBxrIyhOAz3dBVwW3sPVdyf5gMujXwer12o1lawHJeR7T/RCkaAGo6xAa4/
+         fxvCc0G+KsOlbRGx5BSUX0YKCPER/iSs10WyJmRTD30rpUiPn0FsOHqrvdIjek43cNIn
+         7CuQIarXLuQ4Rkw247uF/KWTzxGr92vB/mAM12idghl4zcEae4pk8CQ9g2EuDMtztT8s
+         16fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748418144; x=1749022944;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eLPcSIp/DD1rCYzGKNk0Bn8Y+IA3lzvlJ6bnzdrWQSU=;
+        b=uY4KJ/NBOfHG+9aJ4hyYxZUnVhBvfALrHGf0G4R4asj3oHF1MtD9ehbqqalJFZSJtC
+         FBwTWF8vVDwBerewiJ4qqGzgG5LQJKXtBwJhrc/AYTmhC4yA2E2/rLG7gd5TUabLqJAF
+         OwplAx3JWLYpm+0pST7wReyM+637xs1Gd6HUMy44QdnNWoc0R6Mj86H6qpXEFiZAeOdo
+         LwvwLp+0PkcNlc54nW1m78zqnK0etWHXwDS574JUS8eXUUc68cC7YOnGAaooMm1xbnmJ
+         Z+Hv2WyitCIgcZCbPOTBmHd+TbdrD89MKZ2mLBkL2sD5pXkYFEVI3ZNuQbeWjekydTrZ
+         QNow==
+X-Forwarded-Encrypted: i=1; AJvYcCVv1V0ZmN0T45P2wqBmV8qaYQTWwWhwi0QLsCTHJ/eAxtfN83EliWM93NnqT9g1DzQ0ZpcCF9+T@vger.kernel.org, AJvYcCW8+pOTqMxebvuGRHWN2LScJogGqiYt/6xUatN9SU7xZDOYe3eZYtCrG/+GHIUHjsF+JNEOnTPGU5Z1UA==@vger.kernel.org, AJvYcCWxCJxczQYduBz6nQXI20/OVzl68nU14MVOB9IHp0ULQuD+xyDVxKUORkIkzb5cIudzJYc=@vger.kernel.org, AJvYcCXyPCkIEgppOSBUDNAIZltWcXWNxU4ISKiD9vtCkQYlhGcm3KbuYwgyERTxSlPljBo8AXnPSyWrSD4tJDP4@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsSe7HzO15vtYbvZfdYO7ZJ+vT3iNzVPn+HcaR46cIEUA9v1Cq
+	1+TsoxvItqoTB838eiKR+7dh4tbMP8ZsVgM/XYHEenmBAgMhsuGKkVR8
+X-Gm-Gg: ASbGnctBibmbBOqVr/vb5cm3XwzIWA2Zw99VGLnyMG5yHQjxoTIqzMIsw1joUZQvh3U
+	yDUE/qoa5GJsDZMAIfs8abARE+FEYuBUVOM3qxlZlZ2Hz3k4fz0bdOry/BDEyfuc+vzeW42I2/O
+	ZckDIcsTHvqGwhQvBCDYka44Kx5kqXczHBz9zRiVJYuoQdI1FVhqJC5bgJxpi/Z56quQygPMLq6
+	qaqG9bbK6TgKT2ysEsSLsPgJf4XSmNLgQDI9j1hU2+K8PSA/zk/vRTxY5Nluu32getmGReyeMfe
+	DdUCR2kwE93f3c5mQX5yB6FtvJthKTuuYfYuDRenFp/si0esEd7mMDG6Thz27BUXPzxrMU6aHg=
+	=
+X-Google-Smtp-Source: AGHT+IH8GIKLi3J19CB1X7s1vCnZGjRCWQBW0YxLPfQlCr0ZehSV3jt8AiU4iunzA8JJZOzdVmuDew==
+X-Received: by 2002:a17:907:d643:b0:ad5:3055:a025 with SMTP id a640c23a62f3a-ad85b0518aemr1514904966b.6.1748418144007;
+        Wed, 28 May 2025 00:42:24 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::6f? ([2620:10d:c092:600::1:c447])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d991esm392479a12.3.2025.05.28.00.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 00:42:23 -0700 (PDT)
+Message-ID: <4d7a307f-d595-4020-8060-f3bc2f8f72ca@gmail.com>
+Date: Wed, 28 May 2025 08:43:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527162151.GAaDXmn8O3f_HYgRju@fat_crate.local>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
+ struct_group_tagged()'ed on struct net_iov
+To: Byungchul Park <byungchul@sk.com>, Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
+ hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
+ john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
+ tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-2-byungchul@sk.com>
+ <20250527025047.GA71538@system.software.com>
+ <CAHS8izOJ6BEhiY6ApKuUkKw8+_R_pZ7kKwE9NqzCyC=g_2JGcA@mail.gmail.com>
+ <20250528012152.GA2986@system.software.com>
+ <CAHS8izMvRrG2wpE7HEyK3t544-wN_h3SC8nGabCoPWj1qCv_ag@mail.gmail.com>
+ <20250528050346.GA59539@system.software.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250528050346.GA59539@system.software.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 06:21:51PM +0200, Borislav Petkov wrote:
-> On Tue, May 27, 2025 at 04:45:44PM +0200, Gerd Hoffmann wrote:
-> > In case efi_mm is active go use the userspace instruction decoder which
-> > supports fetching instructions from active_mm.  This is needed to make
-> > instruction emulation work for EFI runtime code, so it can use cpuid
-> > and rdmsr.
-> > 
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > ---
-> >  arch/x86/coco/sev/core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/28/25 06:03, Byungchul Park wrote:
+...>> Thus abstractly different things maybe should not share the same
+>> in-kernel struct.
+>>
+>> One thing that maybe could work is if struct net_iov has a field in it
+>> which tells us whether it's actually a struct page that can be passed
+>> to mm apis, or not a struct page which cannot be passed to mm apis.
+>>
+>>> Or I should introduce another struct
+>>
+>> maybe introducing another struct is the answer. I'm not sure. The net
 > 
-> Can you pls explain what the use cases for this and your next patch are?
+> The final form should be like:
+> 
+>     struct netmem_desc {
+>        struct page_pool *pp;
+>        unsigned long dma_addr;
+>        atomic_long_t ref_count;
+>     };
+> 
+>     struct net_iov {
+>        struct netmem_desc;
+>        enum net_iov_type type;
+>        struct net_iov_area *owner;
+>        ...
+>     };
+> 
+> However, now that overlaying on struct page is required, struct
+> netmem_desc should be almost same as struct net_iov.  So I'm not sure if
+> we should introduce struct netmem_desc as a new struct along with struct
+> net_iov.
 
-Use case is coconut-svsm providing an uefi variable store and edk2
-runtime code doing svsm protocol calls to send requests to the svsm
-variable store.  edk2 needs a caa page mapping and a working rdmsr
-instruction for that.
+Yes, you should. Mina already explained that net_iov is not the same
+thing as the net specific sub-struct of the page. They have common
+fields, but there are also net_iov (memory provider) specific fields
+as well.
 
-Another less critical but useful case is edk2 debug logging to qemu
-debugcon port.  That needs a working cpuid instruction because edk2
-uses that to figure whenever sev is active and adapt ioport access
-accordingly.
-
-> We'd like to add them to our test pile.
-
-That is a bit difficult right now because there are a number of pieces
-which need to fall into place before this is easily testable.  You need:
-
- * host kernel with vmplanes patch series (for snp vmpl support).
- * coconut svsm with uefi variable store patches.
- * edk2 patches so it talks to svsm for variable access.
- * igvm support patches for qemu.
-
-Hope I didn't forgot something ...
-
-take care,
-  Gerd
+-- 
+Pavel Begunkov
 
