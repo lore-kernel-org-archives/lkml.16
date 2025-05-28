@@ -1,93 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE22269CF5;
-	Wed, 28 May 2025 08:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E377269CF1
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421359; cv=none; b=Bnh63DDvT/ggkPAKhuPQXo1OaCOuR84sU/GlqDKd+wi45BALvlqbEepT/zFFEb/cMScH+MX/q1+rpYYA2rVv70hEw+WE37Ja2QuLfIGiNZ2st1ACbjR/dGeq0zRALzz/nGQlIbJYoXj5TvPzVNRwTlLPwt8knznJEPs1cXfgDOg=
+	t=1748421371; cv=none; b=iDh5fTMJlxpxYeY7olyPTWM99FIvNNtVqm8UTI4zb3HaiSB/En+ahzwQuFQ/aJfgnhxgt9vcVAJwivJgZyjCq16SugIUXW22kEu0D773A8PFwGlAB5zwHig2MS6YpapAS1deMbyssGVXAwv/9at9niiD1JR/79ZjAhqR/T+44vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421359; c=relaxed/simple;
-	bh=zC6RfVpR24GC2DQDRKbj6v6ZzT4oGsPAyeKR4bvFIM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3tVWPaWEuZAwagSUCJgAYBs9Z/Crwhe+e9wQzuH0IFqLwJIIUihuc6ZmHOcuF+qtJbec9Kq5a9ZmEEw0P05L8dlBmKZCxhfjpPjnJxYMpH+W4v7oUeYXIM/gVD7q7WZ7rt5/+q7n75dsov9u6vSg8O35/YYtI358hsnnF1hwhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ONqR8pR+; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ONqR8pR+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748421358; x=1779957358;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zC6RfVpR24GC2DQDRKbj6v6ZzT4oGsPAyeKR4bvFIM8=;
-  b=ONqR8pR+SzPjxsT1JDCpxb6G4g/GiAJhD2PTSA8CgEMfHSjuwPpeo5el
-   IFUmnEIw1Fr3fP8nNW1dU97gMLzJZTB19fGelr5MZaglMjvvWZfHZpTP0
-   TqN5x9B5Sey26lQllN9O+UIse6vNI95emImAY6e7dI5xxf9reLQ3ESe2a
-   gpxdg7vlSPSu3Htcztc995fEwgTBb31FTqW5Q9d37Fewp8YqRgxdmcFcQ
-   enL4IFo6ZEdykz6lSNiucE5jI1ZRqzv8pbbuPi9sBT5wIGa/Rzmt4kdgt
-   yyGpq/wlUIFl+UHpzdppzDs3GOkXKCbWlLtehyFGRUZWOiV0KiPz29ZgN
-   g==;
-X-CSE-ConnectionGUID: P30fevplQ3GMzXzE9WKF/w==
-X-CSE-MsgGUID: 4gkpNXjLReKiQk3kp7NO0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="53062877"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="53062877"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:35:57 -0700
-X-CSE-ConnectionGUID: 2X13U/L4S0+UGn5NnIHtXQ==
-X-CSE-MsgGUID: +PuLB7i8SQqFwqHf8cSYAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="144148737"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:35:56 -0700
-Message-ID: <aea0cc02-3b18-4c7e-9108-ab5e923051bf@intel.com>
-Date: Wed, 28 May 2025 16:35:52 +0800
+	s=arc-20240116; t=1748421371; c=relaxed/simple;
+	bh=+juGPqQx2dxxIRe2qNdCPx4owhUmUrZBrz0AU2Mt+1o=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=pkS/MsZix5mHI8GPfr9dZNG2IhmfnrLEAgeauFMfzBGPthDmllb8TBnmJFS6kqVb6oBtKKrSHVi7eK3JapyDSty6eOnFMe16sk+4rWJVlexbwl0lTxAcnRU//8zqaCufmciixKPSQgWBOlQ7wAJqWULHUC1Lid3gt/qPDd4DeSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b6jWc6b90z51SZC;
+	Wed, 28 May 2025 16:35:56 +0800 (CST)
+Received: from szxl2zmapp06.zte.com.cn ([10.1.32.108])
+	by mse-fl1.zte.com.cn with SMTP id 54S8ZqSF007524;
+	Wed, 28 May 2025 16:35:52 +0800 (+08)
+	(envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp02[null])
+	by mapi (Zmail) with MAPI id mid14;
+	Wed, 28 May 2025 16:35:55 +0800 (CST)
+Date: Wed, 28 May 2025 16:35:55 +0800 (CST)
+X-Zmail-TransId: 2b046836caeb06c-f558f
+X-Mailer: Zmail v1.0
+Message-ID: <202505281635550657WwIZSDv_Pkkfh9PqJSEV@zte.com.cn>
+In-Reply-To: <20250521093157668iQrhhcMjA-th5LQf4-A3c@zte.com.cn>
+References: 20250521093157668iQrhhcMjA-th5LQf4-A3c@zte.com.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] KVM: x86: Use kvzalloc() to allocate VM struct
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
-References: <20250523001138.3182794-1-seanjc@google.com>
- <20250523001138.3182794-4-seanjc@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250523001138.3182794-4-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <yang.yang29@zte.com.cn>
+To: <jiang.kun2@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <akpm@linux-foundation.org>
+Cc: <xu.xin16@zte.com.cn>, <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
+        <bsingharora@gmail.com>, <jiang.kun2@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsaW51eCBuZXh0IHYzXSBkZWxheWFjY3Q6IHJlbW92ZSByZWR1bmRhbnQgY29kZSBhbmQKIGFkanVzdCBpbmRlbnRhdGlvbg==?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+X-MAIL:mse-fl1.zte.com.cn 54S8ZqSF007524
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6836CAEC.001/4b6jWc6b90z51SZC
 
-On 5/23/2025 8:11 AM, Sean Christopherson wrote:
-> Allocate VM structs via kvzalloc(), i.e. try to use a contiguous physical
-> allocation before falling back to __vmalloc(), to avoid the overhead of
-> establishing the virtual mappings.  For non-debug builds, The SVM and VMX
-> (and TDX) structures are now just below 7000 bytes in the worst case
-> scenario (see below), i.e. are order-1 allocations, and will likely remain
-> that way for quite some time.
-> 
-> Add compile-time assertions in vendor code to ensure the size of the
-> structures, sans the memslos hash tables, are order-0 allocations, i.e.
 
-s/memslos/memslots
 
-> are less than 4KiB.  There's nothing fundamentally wrong with a larger
-> kvm_{svm,vmx,tdx} size, but given that the size of the structure (without
-> the memslots hash tables) is below 2KiB after 18+ years of existence,
-> more than doubling the size would be quite notable.
-> 
-> Add sanity checks on the memslot hash table sizes, partly to ensure they
-> aren't resized without accounting for the impact on VM structure size, and
-> partly to document that the majority of the size of VM structures comes
-> from the memslots.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
+--=====_001_next=====
+Content-Type: multipart/related;
+	boundary="=====_002_next====="
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+--=====_002_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
+
+
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PiByZW1vdmUgcmVkdW5kYW50IGNvZGUgYW5kIGFkanVzdCBpbmRlbnRhdGlvbiBvZiB4eHhfZGVs
+YXlfbWF4L21pbg0KUGxlYXNlIHBheSBhdHRlbnRpb24gdG8gY2FwaXRhbGl6YXRpb24gb2YgdGhl
+IGZpcnN0IGxldHRlciBhbmQgcHVuY3R1YXRpb24uDQpUaGlzIHBhdGNoIG1ha2UgdGhlIGNvZGUg
+bW9yZSBjb25jaXNlIGFuZCBleHByZXNzaXZlLg0KQWNrLWJ5OiBZYW5nIFlhbmcgPHlhbmcueWFu
+ZzI5QHp0ZS5jb20uY24+DQoNCj4gUmVtb3ZlIHJlZHVuZGFudCBjb2RlIGFuZCBhZGp1c3QgaW5k
+ZW50YXRpb24gb2YgeHh4X2RlbGF5X21heC9taW4uDQpIaSBNb3J0b24sIHRoaXMgcGF0Y2ggYWZ0
+ZXIgeW91IGFkanVzdGVkIGRvZXNuJ3QgaW5jbHVkZSBpbmRlbnRhdGlvbiBmaXgu
+
+
+--=====_003_next=====
+Content-Type: text/html ;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgcmVtb3ZlIHJlZHVuZGFudCBjb2RlIGFu
+ZCBhZGp1c3QgaW5kZW50YXRpb24gb2YgeHh4X2RlbGF5X21heC9taW48L3A+PHA+UGxlYXNlIHBh
+eSBhdHRlbnRpb24gdG8gY2FwaXRhbGl6YXRpb24gb2YgdGhlIGZpcnN0IGxldHRlciBhbmQgcHVu
+Y3R1YXRpb24uPC9wPjxwPlRoaXMgcGF0Y2ggbWFrZSB0aGUgY29kZSBtb3JlIGNvbmNpc2UgYW5k
+IGV4cHJlc3NpdmUuPC9wPjxwPkFjay1ieTombmJzcDtZYW5nIFlhbmcgJmx0O3lhbmcueWFuZzI5
+QHp0ZS5jb20uY24mZ3Q7PC9wPjxwPjxicj48L3A+PHA+Jmd0OyZuYnNwO1JlbW92ZSByZWR1bmRh
+bnQgY29kZSBhbmQgYWRqdXN0IGluZGVudGF0aW9uIG9mIHh4eF9kZWxheV9tYXgvbWluLjwvcD48
+cD5IaSBNb3J0b24sIHRoaXMgcGF0Y2ggYWZ0ZXIgeW91IGFkanVzdGVkIGRvZXNuJ3QgaW5jbHVk
+ZSZuYnNwO2luZGVudGF0aW9uIGZpeC48L3A+PC9kaXY+
+
+
+--=====_003_next=====--
+
+--=====_002_next=====--
+
+--=====_001_next=====--
+
