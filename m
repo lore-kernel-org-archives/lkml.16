@@ -1,197 +1,174 @@
-Received: from mail-m21470.qiye.163.com (mail-m21470.qiye.163.com [117.135.214.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259BA265CD0;
-	Wed, 28 May 2025 08:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E81274FE5;
+	Wed, 28 May 2025 08:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422499; cv=none; b=nS8JWQ+dOjV8lGdZIsybhkuoA+aKO6PGQgMPCowusISBLDZyWK6ZkcPilXMPmXV2foSly+T68nKJXpTKd+0fR1Mt8kTr1XF/AXi+2aqH7FqNFEcg3C9RE236q/XcyjGNgON3bBp7eyVYLGn1Px7OQJhsjD9CcP6HgZSeJPr3gfE=
+	t=1748422502; cv=none; b=AjdqUBt0/qr2GdXCOpCdDRGzDTlvFA9JQ9e8UV7cA0Sfa0bxuGteQqsbvswySdaVXaEnKQp0LnMpX2FhLP7TUUoulRHCDUWJDStQwNHVVY2VPn3Hek+oWVo6u9j++Ddrn4uQqBRn2eqcNBxbtmG1CfTHNs/+RAgkkjtwCrRFa38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422499; c=relaxed/simple;
-	bh=6OrfkisRggUmUjJtD20gSVGc6+cKde6EW/sKfoA/v2Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jG2KIKqlg0CT0L8eF3FvAefOD3ScUU6V1HYN8FhosipqAreLDVxcn8LMPO40UkDLiYiu9LxxLPtptN265ECIQfX7I3vCFX2PrKm0bIqB0ZMl5DYjfUtMlAwWqivXDAlMn/xK5RnIyuUqKhAjIPYiLxjH3IFW2VrKzi4/xRI9fBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=bAE0mei3; arc=none smtp.client-ip=117.135.214.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+	s=arc-20240116; t=1748422502; c=relaxed/simple;
+	bh=UVux7hP9bMnrn8D/4/hQlg1HOvWZ0FYr+0n+VvHDd6g=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D70w4foxOKUbANuQeU3BpN2gh8ekDDpfbkioTEjN2pBNmUhjuIJ9+knK83V6n3CfjEfuGuAL6jMjg426uz5YLYdhATD1qc9x+hQ79zoj6SC7TUY6lYXSO4793hpGWWIJfVlPmdVi63lGv9v2wBTIcKXmVDCeyKXA4n4V5HnTDYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZwMkE3w; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="bAE0mei3"
-Received: from localhost.localdomain (unknown [117.184.129.134])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16b15a60d;
-	Wed, 28 May 2025 16:54:52 +0800 (GMT+08:00)
-From: Albert Yang <yangzh0906@thundersoft.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZwMkE3w"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442fda876a6so39920375e9.0;
+        Wed, 28 May 2025 01:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748422499; x=1749027299; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=X4jr0jEwV3YNS8f7iVKb2L3Icr+a8dnf2UQtf6f1As8=;
+        b=OZwMkE3w5p3YquP5bfzqj05sMAwlSZE8M6Ng46nz4dMYnFhGl2QieMKnSAYB/x8N4P
+         xN3kbMRbMiKMo8N66gxbLfWRlXgVcnn3BsJttC0FBBNyDIgx8o4YDbkrjJ7j7Mf6aYXn
+         XSrrY/1vLZc4HQhs4oLKiWCEX2T2IMq2ryiWxMEOoqjPJ845XvZ7ppyOqC1/qFjNG5Pp
+         tssh/QiRIiyXSuKmTjQUiRJKzhMJ+zATY/SKRcEYEGTQnVIc8wwQLdNWmwpKl1hkDDm6
+         MBXoO9hJ22lDhBgROwmRaAST2I5e79ZcDOHs4JbmbqhKGwHDRRc6pzHqEiCrUDTlDaeH
+         l85Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748422499; x=1749027299;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X4jr0jEwV3YNS8f7iVKb2L3Icr+a8dnf2UQtf6f1As8=;
+        b=JG3kDHDvarRFDkQKGdEb0MMtGzmxe5U8VfN/7kFbXB2zgo9FZCGMcp4O/6VQw15dv5
+         MeOZAomXorIF0vC99Pc1Xg3OZlquRQhExozAUBEdndDk0us0rQLJFNSaa+OqFEwZsN3u
+         1tFCOqSa5+JulYprgoxoGDZjXBUCL0lk5uxU8bU7hVS/0m7YjAwbltOQ52rWg9LVqCXz
+         uA2mdmUkIuK0VCj3UQZS3I5MKcs/oOsdQn4BiVdG8mLSczIAnU/fMXNvGSLTV+ZXjska
+         /I8hOyt/1a2kXW0eVk994haJD+T1N6ZOqCUFtNfrPu0vvAU6y+FzjFvvdvggtUXHP/MX
+         kg4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUvD8yfp3M6xbBkmIyHPw7ieDz9rf6ttHf2POUjIphl6392WZCEh+svp55uL9q/RRrBt91uesLv4HKdN6nW@vger.kernel.org, AJvYcCW4nZ+PV1cpT4/DmcZVGyDdEgXvTPzE7478xhLRTPooX7Qmihbwm+tbGf0lMsoC9PJoutrh/9jIJhl0@vger.kernel.org, AJvYcCXIjQcI3I2bOoKTEnQqZJ40iyjXcRguR6nOj0EyvCaPBSq6biiexVkB3X6CHbhtqqK+LAZ1qo2RMDb3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMTIuy+tC++VQzkHgynsk4s6MHs0kKnXp1ZcnnH+9KCF4+lxGf
+	Sp6sdaGK+fU6g0WIBaaI8KMdA99PM1gKCiZQASNXyEwo45nFogTrB4XS
+X-Gm-Gg: ASbGncurlSckx7Elp+9oAxDMOoKPMcz7tCye37ICOe0iZJ39P3UObhnG6FkFgKIvUjX
+	R+D39VbZGEAyEtS0JqaoDkRrtC3XnTvbCu5+/5w1C1hz+JdFUyBHtY4E0+8r5/+KjrpEAXej176
+	hp9eDjQecezMsEWzKF/6l38V4VRW6jJTKSrZfw1cvLKrEroH8ccADRZdh/kCNQpbiVNyuinclul
+	GWVStNZy2WJtCM0ZWRq93tXVFrkG6qkuJoXOr6jPDJnjwGzYulhgi0shWViYbYNv7cbs/onAKRL
+	HhHNWv2B+1QzBdgfRw6Z2ra/NUVzJpR9ZRivKwJEQXtyVdITJ9AFDu6pk8iOd0LrETkDkIwVnD7
+	0eJjk/K8=
+X-Google-Smtp-Source: AGHT+IHzDXo4DKV7NuIB2FHat2ZLCgGieMqt3tp4PCcFaDmAJxHMEYrCP10nDJxLNZ8k0RrjjTbMcg==
+X-Received: by 2002:a05:600c:511d:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-44c91cc5591mr137161785e9.11.1748422498857;
+        Wed, 28 May 2025 01:54:58 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd6e8asm865113f8f.70.2025.05.28.01.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 01:54:58 -0700 (PDT)
+Message-ID: <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
+X-Google-Original-Message-ID: <aDbPYDACfIkaZMLj@Ansuel-XPS.>
+Date: Wed, 28 May 2025 10:54:56 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Ge Gordon <gordon.ge@bst.ai>
-Cc: BST Linux Kernel Upstream Group <bst-upstream@bstai.top>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Albert Yang <yangzh0906@thundersoft.com>
-Subject: [PATCH v1 4/9] dt-bindings: mmc: add binding for BST DWCMSHC SDHCI controller
-Date: Wed, 28 May 2025 16:54:51 +0800
-Message-Id: <20250528085451.481267-1-yangzh0906@thundersoft.com>
-X-Mailer: git-send-email 2.25.1
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: clock: airoha: Document support for
+ AN7583 clock
+References: <20250528004924.19970-1-ansuelsmth@gmail.com>
+ <20250528004924.19970-5-ansuelsmth@gmail.com>
+ <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTB0ZVksdSUNITR1DTxgeGVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a97161a016709cckunm4606c7f3397dab
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mxw6LCo6PjE#PkgKLg5COTIR
-	LEkKCUJVSlVKTE9DT0lJT0JITUJKVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
-	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQU9MSUk3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=bAE0mei3mJMwcZJl4gdhGUEj8pKxMfbikNhy9hrQxxV+RXQM3X6pjhUaT4rl1GO7WzNyaAXsEWIteJjFR37b6ZNSu+XH1aiXTsJlNfuGgHMrtkSALTXadz7fKJfSCk1BtkKd8LiveB4cailNM1bioJtJRmLqqgez7ULqVmeKLqg=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
-	bh=Vb4BX0UJyLUvKF4fET6nq/FFfA6w/RMSx8v+7CHMEsA=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
 
-Add device tree binding documentation for the Black Sesame Technologies
-(BST) DWCMSHC SDHCI controller.
+On Wed, May 28, 2025 at 09:30:37AM +0200, Krzysztof Kozlowski wrote:
+> On 28/05/2025 02:49, Christian Marangi wrote:
+> >    - if:
+> >        properties:
+> >          compatible:
+> > @@ -75,6 +78,17 @@ allOf:
+> >          reg:
+> >            maxItems: 1
+> >  
+> > +      required:
+> > +        - reg
+> > +
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          const: airoha,an7583-clock
+> > +    then:
+> > +      properties:
+> > +        reg: false
+> 
+> 
+> No resources here, so this should be part of parent node.
+> 
 
-This binding describes the required and optional properties for the
-bst,dwcmshc-sdhci compatible controller, including register layout,
-interrupts, bus width, clock configuration, and other controller-specific
-features.
+Ok hope you can help here. This is another case of "MFD" thing.
 
-Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
----
- .../bindings/mmc/bst,dwcmshc-sdhci.yaml       | 115 ++++++++++++++++++
- 1 file changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
+I was with the idea that it was O.K. to use this with very different
+devices. (current scenario Clock controller and MDIO controller)
 
-diff --git a/Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
-new file mode 100644
-index 000000000000..429e7f50cdec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/bst,dwcmshc-sdhci.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Black Sesame Technologies DWCMSHC SDHCI Controller
-+
-+maintainers:
-+  - Ge Gordon <gordon.ge@bst.ai>
-+
-+description: |
-+  The BST DWCMSHC SDHCI controller is a Synopsys DesignWare Mobile Storage Host
-+  Controller IP integrated in BST SoCs.
-+
-+  This documents the differences between the core properties in mmc.yaml and the
-+  properties used by the sdhci-bst driver.
-+
-+properties:
-+  compatible:
-+    const: bst,dwcmshc-sdhci
-+
-+  reg-names:
-+    const: base
-+    description: Specify the register name
-+
-+  reg:
-+    maxItems: 1
-+    description: Host controller base address
-+
-+  interrupts:
-+    maxItems: 1
-+    description: One MMC interrupt should be described here
-+
-+  interrupt-names:
-+    items:
-+      - const: IRQDWMMC0
-+
-+  non-removable:
-+    type: boolean
-+    description: Non-removable slot (like eMMC)
-+
-+  bus-width:
-+    description: Number of data lines
-+    enum: [1, 4, 8]
-+
-+  clock-frequency:
-+    description: Base clock frequency in Hz
-+
-+  max-frequency:
-+    description: Maximum clock frequency in Hz
-+
-+  fifo-depth:
-+    description: |
-+      FIFO depth in bytes. If this property is not specified, the default value
-+      of the fifo size is determined from the controller registers.
-+
-+  mmc_crm_base:
-+    description: Base address of MMC CRM registers
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  mmc_crm_size:
-+    description: Size of MMC CRM registers
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  memory-region:
-+    maxItems: 1
-+    description: Specify the MMC DMA buffer range
-+
-+  sdhci,auto-cmd12:
-+    type: boolean
-+    description: Enable auto CMD12 support
-+
-+  dma-coherent:
-+    type: boolean
-+    description: Enable coherent DMA operations
-+
-+required:
-+  - compatible
-+  - reg-names
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - non-removable
-+  - bus-width
-+  - clock-frequency
-+  - max-frequency
-+  - fifo-depth
-+  - mmc_crm_base
-+  - mmc_crm_size
-+
-+examples:
-+  - |
-+    dwmmc0@22200000 {
-+        status = "okay";
-+        compatible = "bst,dwcmshc-sdhci";
-+        reg-names = "base";
-+        reg = <0x0 0x22200000 0x0 0x1000>;
-+        interrupts = <0x0 0x90 0x4>;
-+        interrupt-names = "IRQDWMMC0";
-+        #address-cells = <0x2>;
-+        #size-cells = <0x0>;
-+        clock-frequency = <200000000>;
-+        max-frequency = <200000000>;
-+        mmc_crm_base = <0x23006000>;
-+        mmc_crm_size = <0x1000>;
-+        fifo-depth = <0x400>;
-+        bus-width = <8>;
-+        non-removable;
-+        sdhci,auto-cmd12;
-+        dma-coherent;
-+        memory-region = <&mmc_dma_buf>;
-+    };
-+
-+additionalProperties: true
-\ No newline at end of file
+The node structure I had in mind was
+
+		system-controller@1fa20000 {
+			compatible = "airoha,an7583-scu", "syscon", "simple-mfd";
+			reg = <0x0 0x1fb00000 0x0 0x970>;
+
+			scuclk: scuclk {
+				compatible = "airoha,an7583-clock";
+				#clock-cells = <1>;
+				#reset-cells = <1>;
+			};
+
+			mdio {
+				compatible = "airoha,an7583-mdio";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				mdio_0: bus@0 {
+					reg = <0>;
+					resets = <&scuclk AN7583_MDIO0>;
+				};
+
+				mdio_1: bus@1 {
+					reg = <1>;
+					resets = <&scuclk AN7583_MDIO1>;
+				};
+			};
+		};
+
+But you want
+
+system-controller@1fa20000 {
+        compatible = "airoha,an7583-scu", "syscon";
+        reg = <0x0 0x1fb00000 0x0 0x970>;
+
+        #clock-cells = <1>;
+        #reset-cells = <1>;
+
+        mdio_0: bus@0 {
+                reg = <0>;
+                resets = <&scuclk AN7583_MDIO0>;
+        };
+
+        mdio_1: bus@1 {
+                reg = <1>;
+                resets = <&scuclk AN7583_MDIO1>;
+        };
+};
+
+Again sorry if this question keeps coming around and I can totally
+understand if you are getting annoyed by this. The reason I always ask
+this is because it's a total PAIN to implement this with the driver
+structure due to the old "simple-mfd" model.
+
+(as again putting everything in a single node conflicts with the OF
+principle of autoprobing stuff with compatible property)
+
 -- 
-2.25.1
-
+	Ansuel
