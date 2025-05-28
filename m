@@ -1,215 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E732165E2
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2505522126F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748469207; cv=none; b=AnkgA82ijZxFaOZ0dRk0Do0b+2iUSJwlewmZ7Xf3F1jBFvN+0adxbewf2l/FDb0k+i9LnNS8eQ2OxUZgWr9OJgEb7D1ccb35yqgKaddKPn/FQpJSstMi1mr8UmyR10pCT86B69/4N1dCZh/rOdZU87BcUEXeSuI6Y6zk7vZa4lA=
+	t=1748469210; cv=none; b=BRYcXcAjd/ClLqkbpMl7MWLUZ7U1Z8J2jyAcHobuNupBzEgx3zcWT4Rl/0IXz6B5xhh4/gG+E9Pm1TmhluSB5z6TQFEZIYqCkI37w2Yh6ZKQFzhChSOQvKdE7Gj0mqHxXJYlwyd418JuOZECcIuWp0WkZkilzMAr4rbt7q5qKG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748469207; c=relaxed/simple;
-	bh=ugZzrN5hkE7bV73Xx7y6ZySUoSVTU+STDA8S7G9uHc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rG2OslWfJQs/37GeiPhdo7Vlpx0E5J6q90IKuL/Rr+yGs4WcQoT6vkZLPMEAlMiGT5Wgzw24qdRZDNHh8Lq1rSg5qHyI2X75/H1vUoGZoDpGkwtkyLAbSIVKnxQaJHT2jtWxULmSWggAP87ynPW5wavlaHEWyvjHG7cRoE5ka9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eyAsrvqd; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eyAsrvqd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748469206; x=1780005206;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ugZzrN5hkE7bV73Xx7y6ZySUoSVTU+STDA8S7G9uHc4=;
-  b=eyAsrvqdQ+wUCFSLngurtxnojiD2DfBIQUKQixhpfTlae3cIqODkF+rP
-   Poiq1o2eUA7Z11RlTFmyEov5RdjO6tWlNz1l46m7MXBw5nYW2C2S17/k6
-   cxX0C6xcbRdbSh9ic2Sy46Mz+qZFuOuW8rDhMvsf5VpuExqAH78+mDrh1
-   nk0vshalmnL3g2gxHqKLhscxGVW5n7RSb2/f8IZMp3lVmaFSjS3rFRMbi
-   Auh6T/OJIE48v1i8NKcSzFUVhJDgDw2DsFJQ/kH+ouGT7ckASUfLyNL9m
-   atmiZqa0p2Li6Bdh1xmlEnMF9c2b+jSK6MIR+GVJ5G/zViuRbqUELvWNu
-   g==;
-X-CSE-ConnectionGUID: +QvkjPl4S825V6rYyMLI3w==
-X-CSE-MsgGUID: 5wiyzMxRQsqhczTEk93MEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61918103"
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="asc'?scan'208";a="61918103"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 14:53:25 -0700
-X-CSE-ConnectionGUID: XDNgAupbR5OpYXKY9JKgZw==
-X-CSE-MsgGUID: OAQjGB/QQcGdQN3zuHjcLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="asc'?scan'208";a="148138037"
-Received: from josephbr-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.30])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 14:53:24 -0700
-Date: Wed, 28 May 2025 14:53:18 -0700
-From: Gupta Pawan <pawan.kumar.gupta@linux.intel.com>
-To: Juergen Gross <jgross@suse.com>
-Cc: Xin Li <xin@zytor.com>, Zijlstra Peter <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Hansen Dave <dave.hansen@linux.intel.com>,
-	alexandre.chartre@oracle.com,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Zhang Tao1 <tao1.zhang@intel.com>
-Subject: Re: [Bug Report] Linux v6.15-rc7 boot failure on Xen-4.17
-Message-ID: <20250528215318.6xkflhrrhcigmn3m@desk>
-References: <607917bc-6788-425a-8051-181a078ddb49@suse.com>
- <C28A8745-02AD-489E-B2F3-6DE81C511783@zytor.com>
- <081152ba-79b5-477e-8248-02bf289ff9ce@citrix.com>
- <227db775-f4ce-4dd3-ba14-30232ab3ab6f@suse.com>
- <1b8e565e-2ed6-4f1d-9138-fbf12662c404@suse.com>
- <1226c371-5d44-4206-973f-3c10152c4195@zytor.com>
- <400ee15a-12fa-4477-ba03-123eb8e07dc2@zytor.com>
- <760c96da-a8da-49be-bc4e-b82a8b2a1623@suse.com>
- <a71e7aba-759b-47aa-9170-a4045c52239a@suse.com>
+	s=arc-20240116; t=1748469210; c=relaxed/simple;
+	bh=NSbqjUxsRy4mKYQML3irMFdvdS4gwI4tq2Eye2Ume50=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nGNhSK5YQSHNC5YKr7ysAfUk4aKhQCbPsRvqWoux+uER9c7/VEus7L4OQbqjJvS1r4FlK6icY54Iamo2+mBF0XNbB3xtHeqpS1r46pey2ya3AqaU9jvUVUJid8/ZB7bgcZKgVt5hJPbH+ql25YLPE1KWEadbe8BfZr8YtQh3vHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3dd74e0f5c7so2671845ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:53:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748469208; x=1749074008;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KAmEaZEjQpx+xG/4gF7ATK1pixD46ZOK6jvHoM9aflc=;
+        b=kK9XhsvjAmsLlw6pZWwZtygDEzVAuDaDijcp3YMtFDw8FQdhl+mROAYYsNUXbHygLU
+         4Ycj07xu53avdaPU642R8pxCRvgTCWs4vEoREbAHTGNWhIgrr6cwHXJ9aIPf7PtKgDJD
+         q9WMH0Pn6qT8BKDoYwlHJnXlezdQPZfW71sYmZqw2zhZY7sQfDvnSztJW1fbDFX8X//H
+         vC/sJcX38SyuacmshkE8KFBLUk1JXReUU9P5PegBBL7U49mBIX1aRE9bbyFNfQ3qw+PL
+         UbEVPHplrblxuqHcWIdiMy1yQbw8HeayvJhBYV8TrTWfyc9pd7SEjkVVqFAAwS/JLiat
+         6AbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhiITLlnHiHDqA6N4WsCZlPqtYAJvvNxuLB4Ut15QMe9SGXEi1PdYSAupAar3sbcqTCWC//VsVOspJE9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXBpRkoebyhWP8prsi0Le7nuTNgv4tL/6ycga6doJA7UFpibo4
+	/vbMb1TXHtgAUcVhVBKvp9wbK83w+5qeJ5OlwvzlWE/PvFY2uZmo4A3mXEHmdWviOYWC9PH18gH
+	AZkqhOrNH0d4B+5z1WHjd7QfDCtSVrG1/EBZzLkufbiCZ7hsUrh8KsZGx05o=
+X-Google-Smtp-Source: AGHT+IFA+LCBnCbRCJMJafvXC6gTDOW+ac2cXhcKkNqa38o4akoDp03CrjXbETtz2dJMxr5sW5EsDJ26fr5cFu+hAsa/gYRn4WCG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4gp2exwv34uty6o4"
-Content-Disposition: inline
-In-Reply-To: <a71e7aba-759b-47aa-9170-a4045c52239a@suse.com>
+X-Received: by 2002:a05:6e02:1488:b0:3dc:89e3:b882 with SMTP id
+ e9e14a558f8ab-3dc9b6d4de6mr186184055ab.8.1748469208258; Wed, 28 May 2025
+ 14:53:28 -0700 (PDT)
+Date: Wed, 28 May 2025 14:53:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683785d8.a70a0220.1765ec.017d.GAE@google.com>
+Subject: [syzbot] [net?] KMSAN: uninit-value in mkiss_receive_buf
+From: syzbot <syzbot+dca31068cff20d2ad44d@syzkaller.appspotmail.com>
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hello,
 
---4gp2exwv34uty6o4
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+syzbot found the following issue on:
 
-On Wed, May 28, 2025 at 11:19:19AM +0200, Juergen Gross wrote:
-> On 28.05.25 10:57, J=C3=BCrgen Gro=C3=9F wrote:
-> > On 28.05.25 10:26, Xin Li wrote:
-> > > On 5/28/2025 12:27 AM, Xin Li wrote:
-> > > > On 5/27/2025 11:49 PM, Juergen Gross wrote:
-> > > > > On 28.05.25 07:11, J=C3=BCrgen Gro=C3=9F wrote:
-> > > > > > On 27.05.25 21:29, Andrew Cooper wrote:
-> > > > > > > On 27/05/2025 8:21 pm, Xin Li wrote:
-> > > > > > > > > On May 27, 2025, at 11:36=E2=80=AFAM, J=C3=BCrgen Gro=C3=
-=9F <jgross@suse.com> wrote:
-> > > > > > > > >=20
-> > > > > > > > > =EF=BB=BFOn 27.05.25 19:54, Xin Li wrote:
-> > > > > > > > > > On 5/27/2025 10:46 AM, Pawan Gupta wrote:
-> > > > > > > > > > > > Attached is the serial console log and my kernel co=
-nfig.
-> > > > > > > > > > > Serial logs aren't telling much. I
-> > > > > > > > > > > do not have a Xen setup to test,
-> > > > > > > > > > > without
-> > > > > > > > > > > Xen the config that you provided is booting a KVM gue=
-st just fine.
-> > > > > > > > > > Yeah, as I replied to Juergen, the same kernel binary b=
-oots fine as
-> > > > > > > > > > "native".
-> > > > > > > > > > Unfortunately when booting as dom0 on Xen, it keeps reb=
-ooting w/o
-> > > > > > > > > > helpful log.
-> > > > > > > > > What about booting Xen on bare metal, i.e. no KVM being i=
-nvolved?
-> > > > > > > > The same exact problem happens on Intel Simics.=C2=A0
-> > > > > > > > And I got to see it=E2=80=99s a NX page fault in dom0
-> > > > > > > > kernel during apply alternatives.
-> > > > > > >=20
-> > > > > > > In which case it's likely that there's an opencoded PTE updat=
-e, rather
-> > > > > > > than using the hooks (which are suitably paravirt'd).
-> > > > > >=20
-> > > > > > I'd suspect a bug when NOT using 2M pages for execmem.
-> > > > > >=20
-> > > > > > I'll have a look.
-> > > > >=20
-> > > > > Could you have a try using "nohugevmalloc" dom0 kernel boot param=
-eter?
-> > > > >=20
-> > > >=20
-> > > > Tried in a KVM guest, still the same problem, and nothing new in the
-> > > > serial log.
-> > >=20
-> > > Attached is a dom0 log with stack traces.
-> > >=20
-> > > But I really did NOT change anything to make it happen...
-> >=20
-> > Thanks.
-> >=20
-> > I think this might be related to Xen not advertising X86_FEATURE_PSE.
-> >=20
-> > This will use PAGE_KERNEL page protection for execmem_alloc() page prot=
-ection,
-> > while with X86_FEATURE_PSE PAGE_KERNEL_ROX is being used.
-> >=20
-> > For the kernel (so not in a module) there is no execmem_restore_rox() c=
-all
-> > involved, so the NX bit will be kept for kernel side ITS thunks.
-> >=20
-> > Peter, can you confirm my suspicion?
->=20
-> I just made a small test on my (rather old) system:
->=20
-> I verified that kernel 6.15 is booting fine as Xen dom0 (ITS mitigation
-> not needed due to old cpu). Then I modified alternative.c to apply the
-> ITS mitigations nevertheless, which made the kernel crash as Xen dom0.
->=20
-> With the following additional modification boot was working again:
->=20
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index bfa444a7dbb0..fac4f9d26132 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -1090,7 +1090,7 @@ struct execmem_info __init *execmem_arch_setup(void)
->                 pgprot =3D PAGE_KERNEL_ROX;
->                 flags =3D EXECMEM_KASAN_SHADOW | EXECMEM_ROX_CACHE;
->         } else {
-> -               pgprot =3D PAGE_KERNEL;
-> +               pgprot =3D PAGE_KERNEL_EXEC;
->                 flags =3D EXECMEM_KASAN_SHADOW;
->         }
+HEAD commit:    0f8c0258bf04 Merge tag 'mm-hotfixes-stable-2025-05-25-00-5..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=151b0df4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a423536a47898618
+dashboard link: https://syzkaller.appspot.com/bug?extid=dca31068cff20d2ad44d
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-I am not sure if returning a RWX page post-boot is a good idea.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Another option that might work is to set the executable permission when we
-know that the allocated page is for kernel ITS thunk, and not modules?
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/29899159fd0d/disk-0f8c0258.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5559f4a31e21/vmlinux-0f8c0258.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7fe7bf82ed6b/bzImage-0f8c0258.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dca31068cff20d2ad44d@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in kiss_unesc drivers/net/hamradio/mkiss.c:303 [inline]
+BUG: KMSAN: uninit-value in mkiss_receive_buf+0x5a6/0x23c0 drivers/net/hamradio/mkiss.c:901
+ kiss_unesc drivers/net/hamradio/mkiss.c:303 [inline]
+ mkiss_receive_buf+0x5a6/0x23c0 drivers/net/hamradio/mkiss.c:901
+ tty_ldisc_receive_buf+0x1f4/0x2c0 drivers/tty/tty_buffer.c:391
+ tty_port_default_receive_buf+0xd7/0x1a0 drivers/tty/tty_port.c:37
+ receive_buf drivers/tty/tty_buffer.c:445 [inline]
+ flush_to_ldisc+0x44f/0xdb0 drivers/tty/tty_buffer.c:495
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb9a/0x1d90 kernel/workqueue.c:3319
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3400
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x71/0x90 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was stored to memory at:
+ mkiss_receive_buf+0x59f/0x23c0 drivers/net/hamradio/mkiss.c:901
+ tty_ldisc_receive_buf+0x1f4/0x2c0 drivers/tty/tty_buffer.c:391
+ tty_port_default_receive_buf+0xd7/0x1a0 drivers/tty/tty_port.c:37
+ receive_buf drivers/tty/tty_buffer.c:445 [inline]
+ flush_to_ldisc+0x44f/0xdb0 drivers/tty/tty_buffer.c:495
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb9a/0x1d90 kernel/workqueue.c:3319
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3400
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x71/0x90 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4153 [inline]
+ slab_alloc_node mm/slub.c:4196 [inline]
+ __do_kmalloc_node mm/slub.c:4326 [inline]
+ __kmalloc_noprof+0x95f/0x1310 mm/slub.c:4339
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ tty_buffer_alloc drivers/tty/tty_buffer.c:180 [inline]
+ __tty_buffer_request_room+0x3d4/0x7a0 drivers/tty/tty_buffer.c:273
+ __tty_insert_flip_string_flags+0x157/0x6f0 drivers/tty/tty_buffer.c:309
+ tty_insert_flip_char include/linux/tty_flip.h:77 [inline]
+ uart_insert_char+0x368/0x930 drivers/tty/serial/serial_core.c:3515
+ serial8250_read_char+0x1ba/0x670 drivers/tty/serial/8250/8250_port.c:1764
+ serial8250_rx_chars drivers/tty/serial/8250/8250_port.c:1781 [inline]
+ serial8250_handle_irq+0x930/0x1110 drivers/tty/serial/8250/8250_port.c:1945
+ serial8250_default_handle_irq+0x116/0x2b0 drivers/tty/serial/8250/8250_port.c:1970
+ serial8250_interrupt+0xc8/0x400 drivers/tty/serial/8250/8250_core.c:86
+ __handle_irq_event_percpu+0x11c/0xbf0 kernel/irq/handle.c:158
+ handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
+ handle_irq_event+0xe0/0x2a0 kernel/irq/handle.c:210
+ handle_edge_irq+0x450/0xfd0 kernel/irq/chip.c:831
+ generic_handle_irq_desc include/linux/irqdesc.h:173 [inline]
+ handle_irq arch/x86/kernel/irq.c:254 [inline]
+ call_irq_handler arch/x86/kernel/irq.c:266 [inline]
+ __common_interrupt+0xa2/0x220 arch/x86/kernel/irq.c:292
+ common_interrupt+0x94/0xb0 arch/x86/kernel/irq.c:285
+ asm_common_interrupt+0x2b/0x40 arch/x86/include/asm/idtentry.h:693
+
+CPU: 0 UID: 0 PID: 4519 Comm: kworker/u8:20 Not tainted 6.15.0-rc7-syzkaller-00175-g0f8c0258bf04 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: events_unbound flush_to_ldisc
+=====================================================
+
 
 ---
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index ecfe7b497cad..706464103856 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -211,6 +211,14 @@ static void *its_alloc(void)
- 		its_mod->its_page_array[its_mod->its_num_pages++] =3D page;
-=20
- 		execmem_make_temp_rw(page, PAGE_SIZE);
-+	} else if (!IS_ENABLED(CONFIG_ARCH_HAS_EXECMEM_ROX) ||
-+		   !cpu_feature_enabled(X86_FEATURE_PSE)) {
-+		set_memory_x((unsigned long)page, 1);
-+	}
-+#else /* CONFIG_MODULES */
-+	if (!IS_ENABLED(CONFIG_ARCH_HAS_EXECMEM_ROX) ||
-+	    !cpu_feature_enabled(X86_FEATURE_PSE)) {
-+		set_memory_x((unsigned long)page, 1);
- 	}
- #endif /* CONFIG_MODULES */
-=20
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
---4gp2exwv34uty6o4
-Content-Type: application/pgp-signature; name="signature.asc"
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
------BEGIN PGP SIGNATURE-----
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-iQIzBAABCgAdFiEEhLB5DdoLvdxF3TZu/KkigcHMTKMFAmg3hc4ACgkQ/KkigcHM
-TKPl1RAAtkZFX2/jJR+KggHc8b+LOcmHse1yWTBonCGgYLb0pkSNugT0f/qceVEe
-Aa0C8YfylUpTSDSPIJa9E5voi205DIcujBh63qtYj0KCTpufqlZ3NIHeUDKFqLrN
-erh6mZMqWf8Qa8oLsl1J/meoK9Sn/H+FNI8KRc4AEjHM5xlPN0EG1nHCfsbkJtHm
-qDEOremUX7x1YiPgEXqtfjA8FmF3pIhsP+qbzAG+C076Gk3wq42y3U+/FFrYUum1
-9Tp9VdnSRyr/1QhzuqWG9zFCF4QglIPf3oHV6ZVdvAT8lvQS1qmMKcKIA144HtD/
-yQlJ1G69ueO2M2Cod8iHE+VUdWUN+NiC6Q895bkubavlb7Z1D1CYyXPXMrwrTClA
-cBQznUORSouIf/YjKH2c6tIjPQRl5XhzWSIHRK9W4vz0qn1HyXk+vJzfahikuvB7
-WvlxVKO+ZsyP8UokKiGShO7c9bOuvJVT/EU+B8NGauzCfy14z0Hhpa0ffsGv+o85
-KMkBqo369YIALwd6ZXExpmMe6rG3xgFJhlGRbuQUxxg5Jnrug1dccwzy71ZmHpbT
-whAOzXgwArpD8TKTT8KbJ6wdu3QxTbyw5qGLfJFDIRbpAYIoW9Se1c6tXn8exhPk
-xyxl9WlUZ8qDmPmf1Foy5CNLFqv+N0bkobSawHsFQ/J6JUgLQb4=
-=hi94
------END PGP SIGNATURE-----
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
---4gp2exwv34uty6o4--
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
