@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003112459D9;
-	Wed, 28 May 2025 08:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AFD2741AC;
+	Wed, 28 May 2025 08:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422528; cv=none; b=ExnoOR+00L4zicL/K+Na8eElHW4+sam2dHpgIEN1XCY1mPLKeRWqjnReNe8s9m0SYJEChnjPTEAp853c3S6ZbNNh/w3aokZEAGUdEfoz+KBRt65FI/4osVqhfN1AEI0dZmfvl2NxSACAa9VlsjfuwKngcYonDMNp0EIXbXvYdjM=
+	t=1748422534; cv=none; b=SsGw3mvEi/usQUC55iXM7KemSbVkPCUJKJkG8H/TpW6KoQ+218980uaoo9r8IOskcn75JThibgkm3d8G+HGOr6Zw5uC8Mk4aTYkt0Ifx9oTlhWkagSpk2NZDH3j9hn9pXFUBqdTxcwitITcKw2SZZcj46iD8ATUizSKQNTHB6Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422528; c=relaxed/simple;
-	bh=o/IBf/bL4uUQfqfko7CVRmw6Pl3VESZqBWXrtTbKLHg=;
+	s=arc-20240116; t=1748422534; c=relaxed/simple;
+	bh=Ds1jmiTlYH0fpkMu9OyDsilhlkVbX/npUvsczO4YbAE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f6bVmoaG2Zue6EhVB61zFqqS0E/GRoiUml8PprsByYg7twoFp890DFjNaHebvCPXaQ6kpzvh0ScgnklL1FHdpyhIecxga72PD03ACGF9tFiAVyirC35f6YAHNR/dHvk71h5fgiNc2hlaOY1GEV3d8SMJ3/LDLPGqLC9+x805Mi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kb9z1b/B; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=duIlFBqomvHUYAy5EJeG8vwtOZaA/g/8bLTzreHbIkmKPLr3Q0gE09k+IhliCGgQaPbJU3w0ThRfh50TZpFhUVXP4vdx/xmcbO2NJlWuPwXyCTC8/CRwzkqqcF0aDRlRdXlNNNJaiYgcIAE0HxJJJaQRZq5jcPaKH9myoamc2TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1FcPjnw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kb9z1b/B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748422527; x=1779958527;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o/IBf/bL4uUQfqfko7CVRmw6Pl3VESZqBWXrtTbKLHg=;
-  b=Kb9z1b/Be7vgBgT3nxMLgZpNH8w24y1kZKjH8ruWxRf9AM7HXq2Anijl
-   sVkd8YQY7m6eX7a4HKw7bmtdJd3gyIUSpBClWkOpvyNkJyApu1Mp6NVqt
-   C9dJU+NHnyH2n+LBY2OGveyuDtLF14bfLZU/34FmTY8p+Woi2f/ix8Xzg
-   LCUNaF8hLATTy3X1KYrW+vJPm6kTu6CsAt/JrigfPbrXBiDYZeL4yinOl
-   mmyy3GxTcgVS7uPwIR+YosvI5eutfl4NH10WHiKc5gWUuzQh3yJS2Y9r0
-   dkZqYmZgAI8ic8vGwSEAdmszwirTE6Ma7RARTCGF2adOTEmX+7Xk3xDfc
-   Q==;
-X-CSE-ConnectionGUID: TqxAGj1wSda+VGBajRT0aQ==
-X-CSE-MsgGUID: 5b9Wh10cQtOTLPyMz/GCyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="61098598"
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="61098598"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:55:26 -0700
-X-CSE-ConnectionGUID: 1yTLA9bhTNGc1WfrftagLg==
-X-CSE-MsgGUID: YJGTweprTPmbgT0LpLaE6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,320,1739865600"; 
-   d="scan'208";a="166357521"
-Received: from unknown (HELO [10.238.3.95]) ([10.238.3.95])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 01:55:08 -0700
-Message-ID: <ad77da83-0e6e-47a1-abe7-8cfdfce8b254@linux.intel.com>
-Date: Wed, 28 May 2025 16:55:05 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1FcPjnw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690C5C4CEEB;
+	Wed, 28 May 2025 08:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748422533;
+	bh=Ds1jmiTlYH0fpkMu9OyDsilhlkVbX/npUvsczO4YbAE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E1FcPjnwy+Z+bJX1gi8FQPSB900K+Xj3C0QWEp9vgstNpldp3biFrBcjBIFWVZd9n
+	 FfMirStte3ykoIzrHkQZcuqLS6r/3lGruQ0ahJAa3IXD08ljvNxu5eRWyRpVtCwN4W
+	 Io4J/Y1p2N3UhIgikJEIKxPyYM+LaRcmaFJwk1GoD3gRm7wA2uLXoRJJ2S3dK7FqUs
+	 +ycpEUq7dMmusgvZJfwOgfeiviwtUg1bvcaxj9M2rzPwUnmXe9jX7B0BDsxgUs3NU+
+	 gtl0+UYqXfwbnwHAJNYfzDu/OfWOlgMvJf0cvuU1URBqfHj8uA+wct7qvbzkFX7+Yk
+	 MOBdJBUg+UbmQ==
+Message-ID: <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+Date: Wed, 28 May 2025 10:55:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,131 +35,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 16/51] mm: hugetlb: Consolidate interpretation of
- gbl_chg within alloc_hugetlb_folio()
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <8548af334e01401a776aae37a0e9f30f9ffbba8c.1747264138.git.ackerleytng@google.com>
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <8548af334e01401a776aae37a0e9f30f9ffbba8c.1747264138.git.ackerleytng@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-
-
-On 5/15/2025 7:41 AM, Ackerley Tng wrote:
-> Previously, gbl_chg was passed from alloc_hugetlb_folio() into
-> dequeue_hugetlb_folio_vma(), leaking the concept of gbl_chg into
-> dequeue_hugetlb_folio_vma().
->
-> This patch consolidates the interpretation of gbl_chg into
-> alloc_hugetlb_folio(), also renaming dequeue_hugetlb_folio_vma() to
-> dequeue_hugetlb_folio() so dequeue_hugetlb_folio() can just focus on
-> dequeuing a folio.
->
-> Change-Id: I31bf48af2400b6e13b44d03c8be22ce1a9092a9c
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+On 23/05/2025 14:38, Clément Le Goffic wrote:
+> Add the hdp devicetree node for stm32mp13 SoC family
+> 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 > ---
->   mm/hugetlb.c | 28 +++++++++++-----------------
->   1 file changed, 11 insertions(+), 17 deletions(-)
->
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 6ea1be71aa42..b843e869496f 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1364,9 +1364,9 @@ static unsigned long available_huge_pages(struct hstate *h)
->   	return h->free_huge_pages - h->resv_huge_pages;
->   }
->   
-> -static struct folio *dequeue_hugetlb_folio_vma(struct hstate *h,
-> -				struct vm_area_struct *vma,
-> -				unsigned long address, long gbl_chg)
-> +static struct folio *dequeue_hugetlb_folio(struct hstate *h,
-> +					   struct vm_area_struct *vma,
-> +					   unsigned long address)
+>  arch/arm/boot/dts/st/stm32mp131.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> index 8512a6e46b33..b0537bcdb9d5 100644
+> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
+> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> @@ -951,6 +951,12 @@ dts: thermal@50028000 {
+>  			clocks = <&rcc DTS>;
+>  			clock-names = "pclk";
+>  			#thermal-sensor-cells = <0>;
 
-The rename seems not needed in this patch, since the function still takes vma
-and uses it. May be better to move the rename to a later patch.
+Why are you enabling it? Commit msg should explain this and this should
+be sparate patch.
 
->   {
->   	struct folio *folio = NULL;
->   	struct mempolicy *mpol;
-> @@ -1374,13 +1374,6 @@ static struct folio *dequeue_hugetlb_folio_vma(struct hstate *h,
->   	nodemask_t *nodemask;
->   	int nid;
->   
-> -	/*
-> -	 * gbl_chg==1 means the allocation requires a new page that was not
-> -	 * reserved before.  Making sure there's at least one free page.
-> -	 */
-> -	if (gbl_chg && !available_huge_pages(h))
-> -		goto err;
-> -
->   	gfp_mask = htlb_alloc_mask(h);
->   	nid = huge_node(vma, address, gfp_mask, &mpol, &nodemask);
->   
-> @@ -1398,9 +1391,6 @@ static struct folio *dequeue_hugetlb_folio_vma(struct hstate *h,
->   
->   	mpol_cond_put(mpol);
->   	return folio;
-> -
-> -err:
-> -	return NULL;
->   }
->   
->   /*
-> @@ -3074,12 +3064,16 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
->   		goto out_uncharge_cgroup_reservation;
->   
->   	spin_lock_irq(&hugetlb_lock);
+> +		};
 > +
->   	/*
-> -	 * glb_chg is passed to indicate whether or not a page must be taken
-> -	 * from the global free pool (global change).  gbl_chg == 0 indicates
-> -	 * a reservation exists for the allocation.
-> +	 * gbl_chg == 0 indicates a reservation exists for the allocation - so
-> +	 * try dequeuing a page. If there are available_huge_pages(), try using
-> +	 * them!
->   	 */
-> -	folio = dequeue_hugetlb_folio_vma(h, vma, addr, gbl_chg);
-> +	folio = NULL;
-> +	if (!gbl_chg || available_huge_pages(h))
-> +		folio = dequeue_hugetlb_folio(h, vma, addr);
-> +
->   	if (!folio) {
->   		spin_unlock_irq(&hugetlb_lock);
->   		folio = alloc_buddy_hugetlb_folio_with_mpol(h, vma, addr);
+> +		hdp: pinctrl@5002a000 {
+> +			compatible = "st,stm32mp131-hdp";
+> +			reg = <0x5002a000 0x400>;
+> +			clocks = <&rcc HDP>;
+>  			status = "disabled";
 
+Why are you disabling it? What is missing?
+
+>  		};
+>  
+> 
+
+
+Best regards,
+Krzysztof
