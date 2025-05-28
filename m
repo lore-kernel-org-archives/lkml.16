@@ -1,137 +1,175 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B938284662
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02982139B0
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434506; cv=none; b=adtNwlhZw2l4Bbar2aLf7hegI5VqngFpufbYva+1BMdo7tWhZbeHnZkTpehWP96iowbSyRdgqqV2L8kuerLupDGf49GzCMgGPtNTg3rI2yZcDo33FdAJxVCJnciuA16E44uZ4z6hSAAtbOVfNeQ3SfGkraNtKnNwE6tEffsYPLk=
+	t=1748434552; cv=none; b=jRzOZ/bosV/IpysUUQdU0vu6Wj06bUJd7m4qcCGO3ohzrtuKf+hvRBPCjKP3d6WMETYIGj0c49xKAKTk7sg7l0YfkpHKwZroAHPVNDdGYJe6YhRLLBisxnkVB/PMmarcS0HmOhGSHiv9Q9nQ1I9s2wFgyRYdaPJ4UbgNJ4yT5SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434506; c=relaxed/simple;
-	bh=B4Iy4GScb0lOZr3qXJcMXNhDcnRTr1zdGPMFxHZBWQA=;
+	s=arc-20240116; t=1748434552; c=relaxed/simple;
+	bh=anNOxNhTmr/QW22GBuugjQkfUTz6mqXQB+pAiBjysSE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Upp6NMW5550oK0Tv0HnscZDe6lmzuL2WDJmEpd1ZvtAffCSz4n7LaPyTyvqjhyAs+Y+ZdGw20udY/Ob3THOVCdIpdvbGU9Bb09GhDEMTglJNgjoGcEqcF39/Apnq/g7FZper3TyCa72FTBbdKoUps0zj2L4vIBhe8bzeaWonUcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oRMEPjVr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QWHMCYuItgVXb0uahmwBIs/ER37IHG4xGW4qnM7YaDdQQNsy7cI4sIx4xVxFT5KaBa70RzrJJ1beXi/KAnx/HMDCI1zxn973+B7UlOGWD1RujSrq28iqd6hL8Pp13A/RezuOUHkkqnMPB3NAAdacVcH5d6nWtTqeaYbjnwjMvP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=btONvrwB; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oRMEPjVr"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S67SM7030924
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:15:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3kxSJrMywr9s+d3mPmL3Y3rsQ2dFUTAUlZhEMbytmdA=; b=oRMEPjVrCnOedfZI
-	FTk+db0FQ9H+q3FFA1mBrcPBn6D3TZRIfCH1pTDhGc+QbtgRpfmzmXD0gdbuRnTd
-	f1552dHaTa2uGvEhaBVbSIzt8vdOUSrE2jP7PTGfKeTvP03JrU/YrIwReS25sJpe
-	uH6jGH2oDJf6g9DX7TdRQY/FNnvr/1PZeD2FarsV51SCNJmAHV9yf5cUJohyLvH9
-	R/c9ArwXCxfx/dId6ZQQ3qfFtdi7szGGKglAlCcMnFXB2MbrXTap2m+hXpuReYKU
-	ZqhfwDXvX+QX0LZkrMYqyvfJy0YOwKg4ATPmzWwA7jYKeyBWV8dOohrlFVg+YT41
-	5rF0Hw==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf2h3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:15:04 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6eeb5e86c5fso37001426d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:15:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748434502; x=1749039302;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3kxSJrMywr9s+d3mPmL3Y3rsQ2dFUTAUlZhEMbytmdA=;
-        b=oBV2RvzgL7/0K+T5izx83of+MaVO8mifF6DjZEkt8wJN9hmPaMijP4ErYZ3fj9KmZp
-         l1kWfQKrZiFcE25hXRLDMySt9CW+g/D1U/idBxs4kFSHmfuMClHLPu3eRSvWOsB1KXdG
-         KyhF3OFdRlJe7MV/dsnpuuK3SoWxlMlK3CWTZXVK1z1fg5CSgThiZRNQrujplyq5NjQX
-         4KcmlIuvdAykt5iuGty3/iWmeUJocUmn7Wy/1pp+La9zJLK5hje4HPC+ew64SvaCKJqt
-         eyO0NkEtAluRX/p7GQ6zhNqWiuMH7HcIduAzeO3N5e5+sABI6lwiH2YISfZMUJfH82Uy
-         whfg==
-X-Forwarded-Encrypted: i=1; AJvYcCXHzg7TKMo0sagQWB7KcL5VaBZhUGPQRLk7g9FS0Kr3cs2lZzKoLj9HPPwXGxmIx4daA3WOono1U1fHKn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxuny0kMRFs5BXkOl4Il78jhZQrTQ4JTspxEn4qbhz8dDzIfKVk
-	PJ4ynTGqULTSqsk9wuyA1eR2tCCdfVBP67WSGaL9I45GP5iTSlVyuX5bbQEImbmXoY8i4vcpfN2
-	CtQzEH0f3GTmw3pmtMY6sknxagvmOpWnaYiTQLk5ppCR3/USPz8SPH65RCNe5sTrrpx3BgrpJSx
-	4=
-X-Gm-Gg: ASbGncvycjaZrZgQ0bkNeIE36ID93JXCkNFcpKwvFmaf+3t11mggHnQU+hgDt0K0GA5
-	K5CDUoS0VqdpkdYdJ0A8j40E3qmDQT5sc/vxeR9BcdEpKFGWZLDXwPXGpoic56/VVLQLfiEwzaq
-	v0VjcSSGurRKXCYLCwm5nLyG/HtW64cVD6xm2nR3r2svJ9BBSnAgTugthxcY2K68ww1DGbyGapd
-	ZTwdwtD7fcgZ/mcp3kNr3axzC3zD+TODr/lSdKmel17BY6b8R36WVco7DaeROpv4ZqzLb1oRSEH
-	iz7Up/1bkxNqGLhnpRIMTKVQxPMDpBGqXhMy8T3a5s2hyJp8zE7FbZ9feBTM/Hq7t58EgYdTMIo
-	=
-X-Received: by 2002:a05:6214:1805:b0:6fa:c0f8:4dff with SMTP id 6a1803df08f44-6fac0f84fb3mr19984766d6.37.1748434502649;
-        Wed, 28 May 2025 05:15:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6Xjdm32wkahk/ntIryyXQ0dV0UAu8jmCUZQcY0SDaEWnx0pvAxtAjn4+fgoBP7skc2unmMQ==
-X-Received: by 2002:a05:6214:1805:b0:6fa:c0f8:4dff with SMTP id 6a1803df08f44-6fac0f84fb3mr19984406d6.37.1748434502242;
-        Wed, 28 May 2025 05:15:02 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f6b3f02sm258525e87.236.2025.05.28.05.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 05:15:01 -0700 (PDT)
-Date: Wed, 28 May 2025 15:14:58 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Kornel =?utf-8?Q?Dul=C4=99ba?= <korneld@google.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] power: supply: qcom_battmgr: Report battery capacity
-Message-ID: <q6zxkzuvczjuewapb5jrk6bnp3t6lsvu5mgqb7gpq7bbdsgprd@ozgvgbtapdjw>
-References: <20250528112328.1640743-2-korneld@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="btONvrwB"
+Date: Wed, 28 May 2025 14:15:31 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748434538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F5dbCg1gXdtP3wVHnkQdduOjmohgVv2E1pqRMKiFkFE=;
+	b=btONvrwBrnIzQe3VF8Tz5lvz+LWsW0C9DgizsnehcMNebYn74vVCsrE6oVFe1PZKGDhCgS
+	Xffdnp0Odh9Xk74GrYpqNHsP75mTQ9qqJQEBavrD1pNy7trG2g8glPaUvJp52AepkcyIDd
+	yn5mQNpmt46mmzncsfYo4foEJU0ru9o=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 07/10] media: i2c: ov9282: add led_mode v4l2 control
+Message-ID: <ns3aybw7nvxrcowprdwbwcn6zpuybkbfmtv44emy567dryszih@yp4hgpgtbvnt>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-7-72b299c1b7c9@linux.dev>
+ <aDTR5JrYIvj2gxHR@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528112328.1640743-2-korneld@google.com>
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=6836fe48 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=1XWaLZrsAAAA:8 a=EUspDBNiAAAA:8 a=zIzJRpkdUK6dvKgA1CAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-ORIG-GUID: E_-C-YcUnHDxLJF7U-UrdROStkyOoiEw
-X-Proofpoint-GUID: E_-C-YcUnHDxLJF7U-UrdROStkyOoiEw
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDEwNiBTYWx0ZWRfXxaIz3O3t4fqu
- Wgq7pm7+T9ZJVEe+k6CwdexrUOdXgYqYM1DzeixVbqe/PPNrdZo0JYrahgiT4mJrQ1+cgut8RY7
- /olZvLiEILS2pSiJIU1AjR87LZqONbALJS1FOjAu2iuDlYXML1L4PWZy30E2iDw7ZPddFepw0U9
- A2B369ril7A/M8Q770cuVwBLlVyrDLBz+zps7gKPBUO596sHt5OPE4sxBsIzM8NARicJ8cU03Tv
- 9nFlrXfC0JQqPAnj5s516OLqhDaFCOhqOAOHWOve/HRnSFTKX/+fzNDoMU9eJuDLZ/nNMgy0WYp
- b9x1EBJpFJE2onsk6G++jySvr+4G6oFrnEfJPTBZnVJ8x7HX4mw+5lr3wb52PrsQ05CDPdwmZ5i
- jYUClmG0mRsF0duCm6VW+0rQanGrSXjvYJ4PQTGT5VXVNwth7zvrsk5KZ5X6K72iC4pgkuIW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280106
+In-Reply-To: <aDTR5JrYIvj2gxHR@kekkonen.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 28, 2025 at 11:23:29AM +0000, Kornel Dulęba wrote:
-> Battery charge can be reported in several different ways. One of them is
-> is charge percentage referred to as POWER_SUPPLY_PROP_CAPACITY in the
-> power supply API. Currently the driver reports the capacity in this way
-> on SM8350, but not on the newer variants referred to as SC8280XP in the
-> driver. Although this is not a bug in itself, not reporting the
-> percentage can confuse some userspace consumers.
-> Mimic what is done in the ACPI driver (drivers/acpi/battery.c) and
-> calculate the percentage capacity by dividing the current charge value
-> by the full charge.
-> 
-> Signed-off-by: Kornel Dulęba <korneld@google.com>
-> ---
-> v2: Change the logic to avoid u64 division, which is problematic on
->     32bit platforms.
-> 
->  drivers/power/supply/qcom_battmgr.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
+Hi Sakari,
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+On Mon, May 26, 2025 at 08:41:08PM +0000, Sakari Ailus wrote:
+> Hi Richard,
+> 
+> On Wed, May 07, 2025 at 09:51:36AM +0200, Richard Leitner wrote:
+> > Add V4L2_CID_FLASH_LED_MODE support using the "strobe output enable"
+> > feature of the sensor. This implements following modes:
+> 
+> The flash LED mode control is, well, setting the flash LED mode. There's no
+> LED on the sensor so I think I'd add a new control for this.
+> 
+> I'd call it V4L2_FLASH_LED_STROBE_ENABLE, and make it a boolean control.
+> 
+> (My apologies for not giving a better review for this set earlier on.)
 
--- 
-With best wishes
-Dmitry
+No problem. I'm open for discussions all the time ;-)
+
+I'm basically fine with renaming this, but is there any benefit we get
+by introducing such a new control?
+
+IMHO V4L2_CID_FLASH_LED_MODE and V4L2_FLASH_LED_STROBE_ENABLE sound
+pretty similar and I'm not sure this is "worth" a new v4l2 control.
+
+But of course, you guys are the domain expert, so please feel free to
+"overrule" my gut feeling. ;-)
+
+> 
+> How does this sensor make use the information? E.g. what's the latching
+> point this setting in relation to a given frame?
+
+I'm not sure if I understand you correctly, but the strobe pulse
+"starting time" is configurable using registers on the sensor. To keep
+this patchset small I've decided to not include this
+"strobe_frame_shift" setting (which may be positive or negative) here.
+
+Nonetheless I'm planning to send another series adding more features of
+the sensors as soon as this got merged.
+
+IMHO we would need another new v4l2 control for this then (something
+like V4L2_FLASH_LED_STROBE_SHIFT).
+
+Does that answer your question?
+
+> 
+> > 
+> >  - V4L2_FLASH_LED_MODE_NONE, which disables the strobe output
+> >  - V4L2_FLASH_LED_MODE_FLASH, which enables the strobe output
+> > 
+> > All values are based on the OV9281 datasheet v1.53 (january 2019) and
+> > tested using an ov9281 VisionComponents module.
+> > 
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 29 ++++++++++++++++++++++++++++-
+> >  1 file changed, 28 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index f42e0d439753e74d14e3a3592029e48f49234927..b6de96997426f7225a061bfdc841aa062e8d0891 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -670,6 +670,23 @@ static int ov9282_set_ctrl_vflip(struct ov9282 *ov9282, int value)
+> >  				current_val);
+> >  }
+> >  
+> > +static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+> > +{
+> > +	u32 current_val;
+> > +	int ret = ov9282_read_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
+> > +				  &current_val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (mode == V4L2_FLASH_LED_MODE_FLASH)
+> > +		current_val |= OV9282_OUTPUT_ENABLE6_STROBE;
+> > +	else
+> > +		current_val &= ~OV9282_OUTPUT_ENABLE6_STROBE;
+> > +
+> > +	return ov9282_write_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
+> > +				current_val);
+> > +}
+> > +
+> >  /**
+> >   * ov9282_set_ctrl() - Set subdevice control
+> >   * @ctrl: pointer to v4l2_ctrl structure
+> > @@ -736,6 +753,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  		ret = ov9282_write_reg(ov9282, OV9282_REG_TIMING_HTS, 2,
+> >  				       (ctrl->val + ov9282->cur_mode->width) >> 1);
+> >  		break;
+> > +	case V4L2_CID_FLASH_LED_MODE:
+> > +		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
+> > +		break;
+> >  	default:
+> >  		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+> >  		ret = -EINVAL;
+> > @@ -1326,7 +1346,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >  	u32 lpfr;
+> >  	int ret;
+> >  
+> > -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 10);
+> > +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > @@ -1391,6 +1411,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+> >  						OV9282_TIMING_HTS_MAX - mode->width,
+> >  						1, hblank_min);
+> >  
+> > +	/* Flash/Strobe controls */
+> > +	v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
+> > +			       V4L2_CID_FLASH_LED_MODE,
+> > +			       V4L2_FLASH_LED_MODE_TORCH,
+> > +			       (1 << V4L2_FLASH_LED_MODE_TORCH),
+> > +			       V4L2_FLASH_LED_MODE_NONE);
+> > +
+> >  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+> >  	if (!ret) {
+> >  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> > 
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
