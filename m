@@ -1,347 +1,281 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88996279903
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFAB28642F;
+	Wed, 28 May 2025 13:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748437804; cv=none; b=Q0ed7hYNpGrzso0hL/fXn+ArNafP7bE8HRQCSiLXx1U1c2akLb1PYgfdsdGXQ6lZhomoOVQMJJJYEPEeGDXaob/pFDrr7csBHbKX3AMnvzsLX16Hx4+JOf3ln1sStC7UMW7bFH29PTUF1m5mBHsUDLMsLHK86DEFADfp4UDfvNM=
+	t=1748437822; cv=none; b=Ppb8GlNHqumfA0kOHPR9szCUWZ1fF+MuelUh8dLR1Uq3HRF6ZagNNIFNw6xeNa27DKAlbiPtVjnriwqw5uJa2stFoeF/mkDiVEgXdhQquKU0ecu2cqULRmvSXpiVavXVWepaa3HNR1VjHpkh/An9h3VFXRnvJhZakzu0vzowlYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748437804; c=relaxed/simple;
-	bh=7TPZwdIPwmw4UR6wtL6uqEsrSOMS8c3M8ouvk93pX7k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=IQFpmuH5FrRbI1oSV5aSx4co7encId6oRjeJJ8GDijHj2u7g7+GjCkx+WcchA3qpRcqYWYm5/JZqcO991PBk92QbKu+vFAsapyZHAG+oLoKINkXzBjZmQDTthgk1DKeM+oo8mcC/1JL1HJltowO7zgOjIpAVOFDniR01tVzzmmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ugVpcmlI; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748437822; c=relaxed/simple;
+	bh=3//2x1aqktliMt3C7OKPxIAa3P4Rzdpq3q8YXamdG9s=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JS52oamZpGW73qxsfYtrUUHC0SM4a+G2N9YOBDHDg23IKeWI+fuLrP0pViAet6BgYHrztbu8wmswcAkdw9uF2wu46WTBrvi2kv0yI/kYGhfnTZAslctaCa+6lXWRzOg/AgjgqLz3lYaP0ODzS+iAi9qs6NkFext73536CLCYjto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=FZVJWZNx; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ugVpcmlI"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad1b94382b8so763168366b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748437801; x=1749042601; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=z9+xHaxKhbPsEc6xOO5pfmbbYaY7x26j+ttvRrojUuE=;
-        b=ugVpcmlIXRsnM4PG+/0Gcz9ASEURkUx99KyqAStF3mrI0+hxIMyH+W+0yTlAlhp28a
-         YHNqqeHEZcW4blvlgUZ8knoUZ0vNtinJHbzVGTErlogt2c8Ys++v6FMGVSI7BwZ+s6xu
-         ThvfU0QUhpNIq3OKXk+tFRWvI4k5Sj69yYgkjvu4cLy56MYc6UUpd+fp5Oa8nO6YvRgP
-         ojmmrYL74gpb46OYSnI6dinEIjNgU3TiUN6+IahUSXTLYI9jnPV5TRgk9fbK0KHopohN
-         T0HrBHsD2oP48dA8OSWhYpmowpfeXSYwFKRxwI4qzii/Mil51xh2xkO9TTbTekdIhVlz
-         jJgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748437801; x=1749042601;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z9+xHaxKhbPsEc6xOO5pfmbbYaY7x26j+ttvRrojUuE=;
-        b=JW9bw3Ftt7FQ/w9fGoHS9Wzx7pdGBVx+G5exFdUgI7dc7YCTs4XH/EhTRpLRveqHN3
-         6Xa2BNevF8OraoOrjDT2XRS2mvXB38XmBjvb07PNx3rGET3dk/QRdCurRlTlpYe7zwjr
-         3vftrm27iKEWF40vtdfEtZVrQYpznJ/VDWcFJiycQ0ddLeW7hwBYyYzQPDzsOYoK+LV6
-         PKZ2nQev0cijG7fN0/Vw5utOM3pJqkKqEcq+ilhrKNBdfzEFT0MDayJbnODKxEuf/OqS
-         LUqtU0LFeoivh/eYloBU1UxMjrWIs5+dlQak1PIb1r3+MgYkSFYL6nifeL2SMs3+U6VA
-         h0eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLRTMPISWrC9yNEE4bm7MmIptHIauscTU0aFVjzuQVGP1voHGPF6PgMhpTA6bZyX8T+Ie2CtefiiNmbHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2TB570++K1D66vzaCE17ILLXbtaeeIrGDtWfVqv3wWwPe9Qhz
-	fxFfHrnoYP28Ka4veryBwttWRNjtut8c+7TTxirhITpVP4OhKbtRfEUvudst6Lbtmdc=
-X-Gm-Gg: ASbGncsrvQqtrMydHbD165vNMil37qPlDW7LpHqhzhrs7RMC7/wAWglP2P9Mj4GssnB
-	pMPrF279QUxoFt2Ky+ck6OlJ949nF/EuQMszke4DE93RKtkP/YhXWJo3HbMT2+xHPkmiJKBZpDR
-	pfyJsX613Y3hCyYfqFOddYu2G9fIEf0VUAPP62N5qszcGNytk5j/sNJURx3D0ZRWyXjfmjfJU4b
-	m0TvS/SM1l9FyRGrINtS2AMGLiVEXGo8d79oh0AvX/GutLQ1Q5tdGA3Ilqr5WnUDuA0NGF3hb2x
-	S8hPdq/0Iy6t807KgCq6eRsNFOAFjCIroMoEL2Fjs1QcJZS3enctuW/gy18=
-X-Google-Smtp-Source: AGHT+IF8B/2tTVv6HqhSsoLN2fJLeFE0SP+vAc3O6/hAnJNPKIqcmwJjUw3s8noqz2W7TfqWl20+fw==
-X-Received: by 2002:a17:907:9616:b0:ad2:2e5c:89c5 with SMTP id a640c23a62f3a-ad85b13879amr1623882266b.20.1748437800581;
-        Wed, 28 May 2025 06:10:00 -0700 (PDT)
-Received: from [192.168.0.14] ([79.115.63.75])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5bd07sm105387766b.176.2025.05.28.06.09.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 06:10:00 -0700 (PDT)
-Message-ID: <30da0c82-ef21-4089-b71c-8444314035e0@linaro.org>
-Date: Wed, 28 May 2025 14:09:58 +0100
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FZVJWZNx"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SCiolB005896;
+	Wed, 28 May 2025 06:09:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=lhFFwHACWIeW/4ep5BhL9R3Wp
+	6JYUJNGPHcV8EAW4ro=; b=FZVJWZNx1k5Ry+wcedX0t7LEWZ6oG0S/JJrhPlbQX
+	krl7+d4j++obUfQqiT+zx+K1oIptoHlGb2rEAyO2jcxzvUWuKe4Ufdtt2EvEoxdI
+	XX7JjVd0io4MmcekL4RXIhrE4HQVHXW1Licp5nfcW1NeaQ6ETyldHk1HqgyNF1K8
+	3BhnpwEmTdSxzTDMbszAa0D6TKSo4OGsWxUrMzmnY0B8hXm5gnCPS0IpONgWxYQp
+	Qp+1EkWktCxOk3FPYvpHy9eOFiQBFpa33Ypk5dPmhvPAAq8DsB6XkPQRD2XCUA21
+	r6CGkrk3T72OKOjnGVDHGS/DfPKKv5+TTdaOKLNUYt5AA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46x2rkr2ug-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 06:09:44 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 28 May 2025 06:09:40 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 28 May 2025 06:09:40 -0700
+Received: from f50a6ab61f9a (unknown [10.193.66.37])
+	by maili.marvell.com (Postfix) with SMTP id 441653F7045;
+	Wed, 28 May 2025 06:09:34 -0700 (PDT)
+Date: Wed, 28 May 2025 13:09:33 +0000
+From: Subbaraya Sundeep <sbhatta@marvell.com>
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
+CC: Sean Anderson <sean.anderson@linux.dev>,
+        "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org"
+	<kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Simek, Michal"
+	<michal.simek@amd.com>,
+        "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+        "horms@kernel.org" <horms@kernel.org>,
+        "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "git (AMD-Xilinx)" <git@amd.com>,
+        "Katakam,
+ Harini" <harini.katakam@amd.com>
+Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report
+ coalesce parameters in DMAengine flow
+Message-ID: <aDcLDdKA2GNRIY3G@f50a6ab61f9a>
+References: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+ <679d6810-9e76-425c-9d4e-d4b372928cc3@linux.dev>
+ <BL3PR12MB6571ABA490895FDB8225CAEBC967A@BL3PR12MB6571.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
- in sync
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
- =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
- Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- William McVicker <willmcvicker@google.com>
-References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
- <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
- <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
- <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
- <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
- <6e4b340b-a239-4550-b091-139c3724a54c@linaro.org>
-Content-Language: en-US
-In-Reply-To: <6e4b340b-a239-4550-b091-139c3724a54c@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BL3PR12MB6571ABA490895FDB8225CAEBC967A@BL3PR12MB6571.namprd12.prod.outlook.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDExNSBTYWx0ZWRfX6XRbvJ3Qdt9e mMPjkhiUIbUREw3clM21ckDVA+Bq6UwtCLBQwE4HZ+Kycg4VI4XAFmMMC7K9+m+GA9RRxn/GNT6 KGIRVrJK4d+HiEFevevglF1PRTu697xhCZY9esibIH6o6zpq1pk9qepkEvQTIvd6D4e1nvc9lLt
+ Cw7kQMXec/ACqZSbZKXEsr2eHtMu1uXPKZJF4HwJF8VZmCPSkiSa6eAGRwphqEP40SfJCXgio4N g5N/+fAsC3mxb//WsyUIdn16iCxlfs8NVTMLhuvwEUB4pc35M9Fxo0AOkFpK6DCrWUa2XsyzSUv 9KP3Oq/+uc++YA6I9D5Cnj6b6GQK2u4dpJf/X0u2LxFZKRALmAuk3vG9CdUOf0U4LKbI1iRP9pA
+ lxIvN8rngti42iDbo6BXv8jqaecDAcsfO1d7CzhTsXHIDY1u3l8avhiccTizflVBJ8TUFJ8T
+X-Proofpoint-GUID: qPMMYTQBXYqk7OnWGy4VniD-WZ2prfLP
+X-Authority-Analysis: v=2.4 cv=fvzcZE4f c=1 sm=1 tr=0 ts=68370b18 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=zd2uoN0lAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8
+ a=JfrnYn6hAAAA:8 a=Phdkh1rV2inUpnr7k2QA:9 a=CjuIK1q_8ugA:10 a=y1Q9-5lHfBjTkpIzbSAN:22 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-ORIG-GUID: qPMMYTQBXYqk7OnWGy4VniD-WZ2prfLP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
 
+On 2025-05-28 at 12:00:56, Gupta, Suraj (Suraj.Gupta2@amd.com) wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+>
+Fix your mail settings. Cannot be internal if posting to mailing list :)
 
+Thanks,
+Sundeep
 
-On 5/28/25 12:39 PM, Tudor Ambarus wrote:
+> > -----Original Message-----
+> > From: Sean Anderson <sean.anderson@linux.dev>
+> > Sent: Tuesday, May 27, 2025 9:47 PM
+> > To: Gupta, Suraj <Suraj.Gupta2@amd.com>; andrew+netdev@lunn.ch;
+> > davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > pabeni@redhat.com; vkoul@kernel.org; Simek, Michal <michal.simek@amd.com>;
+> > Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>; horms@kernel.org
+> > Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> > kernel@vger.kernel.org; git (AMD-Xilinx) <git@amd.com>; Katakam, Harini
+> > <harini.katakam@amd.com>
+> > Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report coalesce
+> > parameters in DMAengine flow
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On 5/25/25 06:22, Suraj Gupta wrote:
+> > > Add support to configure / report interrupt coalesce count and delay
+> > > via ethtool in DMAEngine flow.
+> > > Netperf numbers are not good when using non-dmaengine default values,
+> > > so tuned coalesce count and delay and defined separate default values
+> > > in dmaengine flow.
+> > >
+> > > Netperf numbers and CPU utilisation change in DMAengine flow after
+> > > introducing coalescing with default parameters:
+> > > coalesce parameters:
+> > >    Transfer type        Before(w/o coalescing)  After(with coalescing)
+> > > TCP Tx, CPU utilisation%      925, 27                 941, 22
+> > > TCP Rx, CPU utilisation%      607, 32                 741, 36
+> > > UDP Tx, CPU utilisation%      857, 31                 960, 28
+> > > UDP Rx, CPU utilisation%      762, 26                 783, 18
+> > >
+> > > Above numbers are observed with 4x Cortex-a53.
+> >
+> > How does this affect latency? I would expect these RX settings to increase latency
+> > around 5-10x. I only use these settings with DIM since it will disable coalescing
+> > during periods of light load for better latency.
+> >
+> > (of course the way to fix this in general is RSS or some other method involving
+> > multiple queues).
+> >
 > 
+> I took values before NAPI addition in legacy flow (rx_threshold: 24, rx_usec: 50) as reference. But netperf numbers were low with them, so tried tuning both and selected the pair which gives good numbers.
 > 
-> On 5/28/25 12:22 PM, Tudor Ambarus wrote:
->>
->> On 5/6/25 4:53 PM, Ilpo Järvinen wrote:
->>> On Tue, 6 May 2025, Tudor Ambarus wrote:
->>>
->>>> Hi!
->>>>
->>>> On 12/16/24 5:56 PM, Ilpo Järvinen wrote:
->>>>> Resetting resource is problematic as it prevent attempting to allocate
->>>>> the resource later, unless something in between restores the resource.
->>>>> Similarly, if fail_head does not contain all resources that were reset,
->>>>> those resource cannot be restored later.
->>>>>
->>>>> The entire reset/restore cycle adds complexity and leaving resources
->>>>> into reseted state causes issues to other code such as for checks done
->>>>> in pci_enable_resources(). Take a small step towards not resetting
->>>>> resources by delaying reset until the end of resource assignment and
->>>>> build failure list (fail_head) in sync with the reset to avoid leaving
->>>>> behind resources that cannot be restored (for the case where the caller
->>>>> provides fail_head in the first place to allow restore somewhere in the
->>>>> callchain, as is not all callers pass non-NULL fail_head).
->>>>>
->>>>> The Expansion ROM check is temporarily left in place while building the
->>>>> failure list until the upcoming change which reworks optional resource
->>>>> handling.
->>>>>
->>>>> Ideally, whole resource reset could be removed but doing that in a big
->>>>> step would make the impact non-tractable due to complexity of all
->>>>> related code.
->>>>>
->>>>> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
->>>> I'm hitting the BUG_ON(!list_empty(&add_list)); in
->>>> pci_assign_unassigned_bus_resources() [1] with 6.15-rc5 and the the
->>>> pixel6 downstream pcie driver.
->>>>
->>>> I saw the thread where "a34d74877c66 PCI: Restore assigned resources
->>>> fully after release" fixes things for some other cases, but it's not the
->>>> case here.
->>>>
->>>> Reverting the following patches fixes the problem:
->>>> a34d74877c66 PCI: Restore assigned resources fully after release
->>>> 2499f5348431 PCI: Rework optional resource handling
->>>> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
->>> So it's confirmed that you needed to revert also this last commit 
->>> 96336ec70264, not just the rework change?
->> I needed to revert 96336ec70264 as well otherwise the build fails.
->>>> In the working case the add_list list is empty throughout the entire
->>>> body of pci_assign_unassigned_bus_resources().
->>>>
->>>> In the failing case __pci_bus_size_bridges() leaves the add_list not
->>>> empty and __pci_bus_assign_resources() does not consume the list, thus
->>>> the BUG_ON. The failing case contains an extra print that's not shown
->>>> when reverting the blamed commits:
->>>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
->>>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->>>>
->>>> I've added some prints trying to describe the code path, see
->>>> https://paste.ofcode.org/Aeu2YBpLztc49ZDw3uUJmd#
->>>>
->>>> Failing case:
->>>> [   13.944231][ T1101] pci 0000:01:00.0: [144d:a5a5] type 00 class
->>>> 0x000000 PCIe Endpoint
->>>> [   13.944412][ T1101] pci 0000:01:00.0: BAR 0 [mem
->>>> 0x00000000-0x000fffff 64bit]
->>>> [   13.944532][ T1101] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
->>>> pref]
->>>> [   13.944649][ T1101] pci 0000:01:00.0: enabling Extended Tags
->>>> [   13.944844][ T1101] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
->>>> [   13.945015][ T1101] pci 0000:01:00.0: 15.752 Gb/s available PCIe
->>>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
->>>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->>>> [   13.950616][ T1101] __pci_bus_size_bridges: before pbus_size_mem.
->>>> list empty? 1
->>>> [   13.950784][ T1101] pbus_size_mem: 2. list empty? 1
->>>> [   13.950886][ T1101] pbus_size_mem: 1 list empty? 0
->>>> [   13.950982][ T1101] pbus_size_mem: 3. list empty? 0
->>>> [   13.951082][ T1101] pbus_size_mem: 4. list empty? 0
->>>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
->>>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->>>> [   13.951448][ T1101] __pci_bus_size_bridges: after pbus_size_mem. list
->>>> empty? 0
->>>> [   13.951643][ T1101] pci_assign_unassigned_bus_resources: before
->>>> __pci_bus_assign_resources -> list empty? 0
->>>> [   13.951924][ T1101] pcieport 0000:00:00.0: bridge window [mem
->>>> 0x40000000-0x401fffff]: assigned
->>>> [   13.952248][ T1101] pci_assign_unassigned_bus_resources: after
->>>> __pci_bus_assign_resources -> list empty? 0
->>>> [   13.952634][ T1101] ------------[ cut here ]------------
->>>> [   13.952818][ T1101] kernel BUG at drivers/pci/setup-bus.c:2514!
->>>> [   13.953045][ T1101] Internal error: Oops - BUG: 00000000f2000800 [#1]
->>>>  SMP
->>>> ...
->>>> [   13.976086][ T1101] Call trace:
->>>> [   13.976206][ T1101]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
->>>> [   13.976462][ T1101]  pci_rescan_bus+0x28/0x48
->>>> [   13.976628][ T1101]  exynos_pcie_rc_poweron
->>>>
->>>> Working case:
->>>> [   13.786961][ T1120] pci 0000:01:00.0: [144d:a5a5] type 00 class
->>>> 0x000000 PCIe Endpoint
->>>> [   13.787136][ T1120] pci 0000:01:00.0: BAR 0 [mem
->>>> 0x00000000-0x000fffff 64bit]
->>>> [   13.787280][ T1120] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
->>>> pref]
->>>> [   13.787541][ T1120] pci 0000:01:00.0: enabling Extended Tags
->>>> [   13.787808][ T1120] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
->>>> [   13.787988][ T1120] pci 0000:01:00.0: 15.752 Gb/s available PCIe
->>>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
->>>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->>>> [   13.795279][ T1120] __pci_bus_size_bridges: before pbus_size_mem.
->>>> list empty? 1
->>>> [   13.795408][ T1120] pbus_size_mem: 2. list empty? 1
->>>> [   13.795495][ T1120] pbus_size_mem: 2. list empty? 1
->>>> [   13.795577][ T1120] __pci_bus_size_bridges: after pbus_size_mem. list
->>>> empty? 1
->>>> [   13.795692][ T1120] pci_assign_unassigned_bus_resources: before
->>>> __pci_bus_assign_resources -> list empty? 1
->>>> [   13.795849][ T1120] pcieport 0000:00:00.0: bridge window [mem
->>>> 0x40000000-0x401fffff]: assigned
->>>> [   13.796072][ T1120] pci_assign_unassigned_bus_resources: after
->>>> __pci_bus_assign_resources -> list empty? 1
->>>> [   13.796662][ T1120] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
->>>> up, yet(s5100_pdev is NULL)
->>>> [   13.796666][ T1120] cpif: register_pcie: s51xx_pcie_init start
->>>>
->>>>
->>>> Any hints are welcomed. Thanks,
->>>> ta
->>> Hi and thanks for the report.
->> Hi! Thanks for the help. I've been out of office for the last 2 weeks,
->> sorry for the delayed reply.
->>
->>> The interesting part occurs inside reassign_resources_sorted() where most 
->>> items are eliminated from realloc_head by the list_del().
->>>
->>> My guess is that somehow, the change in 96336ec70264 from !res->flags
->>> to the more complicated check somehow causes this. If the new check 
->>> doesn't match and subsequently, no match is found from the head list, the 
->>> loop will do continue and not remove the entry from realloc_head.
->> I added a print right there and it seems it's something else. See below.
->>> But it's hard to confirm without knowing what that resources realloc_head 
->>> contains. Perhaps if you print the resources that are processed around 
->>> that part of the code in reassign_resources_sorted(), comparing the log 
->>> from the reverted code with the non-working case might help to understand 
->>> what is different there and why. To understand better what is in the head 
->>> list, it would be also useful to know from which device the resources were 
->>> added into the head list in pdev_sort_resources().
->>>
->> I added the suggested prints
->> (https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
->> the downstream PCIe pixel driver and I obtain the following. Note that
->> all added prints contain "tudor" for differentiation.
->>
->> [   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
->> 0x000000 PCIe Endpoint
->> [   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
->> 0x00000000-0x000fffff 64bit]
->> [   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
->> pref]
->> [   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
->> [   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
->> D3cold
->> [   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
->> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
->> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->> [   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
->> [mem 0x00000000-0x000fffff 64bit] list empty? 1
->> [   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
->> [mem 0x00000000-0x0000ffff pref] list empty? 1
->> [   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
->> [mem 0x00000000-0x0000ffff pref] list empty? 0
->> [   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
->> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
->>
->> [   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
->> before __pci_bus_assign_resources -> list empty? 0
->> [   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
->> pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
->> added in head list
->> [   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
->> 0x40000000-0x401fffff]: assigned
->> [   15.226419][ T1107] tudor : pci_assign_unassigned_bus_resources:
->> after __pci_bus_assign_resources -> list empty? 0
->> [   15.226442][ T1107] ------------[ cut here ]------------
->> [   15.227587][ T1107] kernel BUG at drivers/pci/setup-bus.c:2522!
->> [   15.227813][ T1107] Internal error: Oops - BUG: 00000000f2000800 [#1]
->>  SMP
->> ...
->> [   15.251570][ T1107] Call trace:
->> [   15.251690][ T1107]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
->> [   15.251945][ T1107]  pci_rescan_bus+0x28/0x48
->>
->> I obtain the following output when using the same prints adapted
->> (https://paste.ofcode.org/37w7RnKkPaCxyNhi5yhZPbZ) and with the blamed
->> commits reverted:
->> a34d74877c66 PCI: Restore assigned resources fully after release
->> 2499f5348431 PCI: Rework optional resource handling
->> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
->>
->> [   15.200456][ T1102] pci 0000:01:00.0: [144d:a5a5] type 00 class
->> 0x000000 PCIe Endpoint
->> [   15.200632][ T1102] pci 0000:01:00.0: BAR 0 [mem
->> 0x00000000-0x000fffff 64bit]
->> [   15.200755][ T1102] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
->> pref]
->> [   15.200876][ T1102] pci 0000:01:00.0: enabling Extended Tags
->> [   15.201075][ T1102] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
->> [   15.201254][ T1102] pci 0000:01:00.0: 15.752 Gb/s available PCIe
->> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
->> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
->> [   15.206555][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: BAR 0
->> [mem 0x00000000-0x000fffff 64bit] list empty? 1
->> [   15.206737][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: ROM
->> [mem 0x00000000-0x0000ffff pref] list empty? 1
->> [   15.206901][ T1102] tudor : pci_assign_unassigned_bus_resources:
->> before __pci_bus_assign_resources -> list empty? 1
->> [   15.207072][ T1102] pcieport 0000:00:00.0: tudor:
->> pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff] resource
->> added in head list
->> [   15.207396][ T1102] pcieport 0000:00:00.0: bridge window [mem
->> 0x40000000-0x401fffff]: assigned
->> [   15.208165][ T1102] tudor : pci_assign_unassigned_bus_resources:
->> after __pci_bus_assign_resources -> list empty? 1
->> [   15.208783][ T1102] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
->> up, yet(s5100_pdev is NULL)
->> [   15.208786][ T1102] cpif: register_pcie: s51xx_pcie_init start
+> > > Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+> > > ---
+> > > This patch depend on following AXI DMA dmengine driver changes sent to
+> > > dmaengine mailing list as pre-requisit series:
+> > > https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.
+> > > com/
+> > > ---
+> > >  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
+> > > .../net/ethernet/xilinx/xilinx_axienet_main.c | 53 +++++++++++++++++++
+> > >  2 files changed, 59 insertions(+)
+> > >
+> > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > > b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > > index 5ff742103beb..cdf6cbb6f2fd 100644
+> > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> > > @@ -126,6 +126,12 @@
+> > >  #define XAXIDMA_DFT_TX_USEC          50
+> > >  #define XAXIDMA_DFT_RX_USEC          16
+> > >
+> > > +/* Default TX/RX Threshold and delay timer values for SGDMA mode with
+> > DMAEngine */
+> > > +#define XAXIDMAENGINE_DFT_TX_THRESHOLD       16
+> > > +#define XAXIDMAENGINE_DFT_TX_USEC    5
+> > > +#define XAXIDMAENGINE_DFT_RX_THRESHOLD       24
+> > > +#define XAXIDMAENGINE_DFT_RX_USEC    16
+> > > +
+> > >  #define XAXIDMA_BD_CTRL_TXSOF_MASK   0x08000000 /* First tx packet */
+> > >  #define XAXIDMA_BD_CTRL_TXEOF_MASK   0x04000000 /* Last tx packet */
+> > >  #define XAXIDMA_BD_CTRL_ALL_MASK     0x0C000000 /* All control bits */
+> > > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > index 1b7a653c1f4e..f9c7d90d4ecb 100644
+> > > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > > @@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct
+> > > net_device *ndev)  {
+> > >       struct axienet_local *lp = netdev_priv(ndev);
+> > >       struct skbuf_dma_descriptor *skbuf_dma;
+> > > +     struct dma_slave_config tx_config, rx_config;
+> > >       int i, ret;
+> > >
+> > >       lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0"); @@ -1520,6
+> > > +1521,22 @@ static int axienet_init_dmaengine(struct net_device *ndev)
+> > >               goto err_dma_release_tx;
+> > >       }
+> > >
+> > > +     tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
+> > > +     tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
+> > > +     rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
+> > > +     rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
+> >
+> > I think it would be clearer to just do something like
+> >
+> >         struct dma_slave_config tx_config = {
+> >                 .coalesce_cnt = 16,
+> >                 .coalesce_usecs = 5,
+> >         };
+> >
+> > since these are only used once. And this ensures that you initialize the whole struct.
+> >
+> > But what tree are you using? I don't see these members on net-next or dmaengine.
 > 
-> I see my email client split the lines for the prints making the output
-> very hard to read. Added the output here too:
-> https://paste.ofcode.org/AEfjASQW8Z2jbMak5VkmpJ
-
-With the following change things get back to how they were before
-2499f5348431:
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index 5247370010aa..1589dd8afa69 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1214,9 +1214,10 @@ static int pbus_size_mem(struct pci_bus *bus,
-unsigned long mask,
- 				__func__, r_name, r, list_empty(realloc_head));
-
- 			/* Put SRIOV requested res to the optional list */
--			if (realloc_head && pci_resource_is_optional(dev, i)) {
-+			if (realloc_head && pci_resource_is_iov(i)) {
- 				add_align = max(pci_resource_alignment(dev, r), add_align);
--				add_to_list(realloc_head, dev, r, 0, 0 /* Don't care */);
-+				resource_set_size(r, 0);
-+				add_to_list(realloc_head, dev, r, r_size, 0 /* Don't care */);
- 				children_add_size += r_size;
- 				pci_info(dev, "tudor: 2: %s: %s %pR list empty? %d\n",
- 					__func__, r_name, r, list_empty(realloc_head));
--- 
-2.49.0.1238.gf8c92423fb-goog
+> These changes are proposed in separate series in dmaengine https://lore.kernel.org/all/20250525101617.1168991-2-suraj.gupta2@amd.com/ and I described it here below my SOB.
+> 
+> >
+> > > +     ret = dmaengine_slave_config(lp->tx_chan, &tx_config);
+> > > +     if (ret) {
+> > > +             dev_err(lp->dev, "Failed to configure Tx coalesce parameters\n");
+> > > +             goto err_dma_release_tx;
+> > > +     }
+> > > +     ret = dmaengine_slave_config(lp->rx_chan, &rx_config);
+> > > +     if (ret) {
+> > > +             dev_err(lp->dev, "Failed to configure Rx coalesce parameters\n");
+> > > +             goto err_dma_release_tx;
+> > > +     }
+> > > +
+> > >       lp->tx_ring_tail = 0;
+> > >       lp->tx_ring_head = 0;
+> > >       lp->rx_ring_tail = 0;
+> > > @@ -2170,6 +2187,19 @@ axienet_ethtools_get_coalesce(struct net_device
+> > *ndev,
+> > >       struct axienet_local *lp = netdev_priv(ndev);
+> > >       u32 cr;
+> > >
+> > > +     if (lp->use_dmaengine) {
+> > > +             struct dma_slave_caps tx_caps, rx_caps;
+> > > +
+> > > +             dma_get_slave_caps(lp->tx_chan, &tx_caps);
+> > > +             dma_get_slave_caps(lp->rx_chan, &rx_caps);
+> > > +
+> > > +             ecoalesce->tx_max_coalesced_frames = tx_caps.coalesce_cnt;
+> > > +             ecoalesce->tx_coalesce_usecs = tx_caps.coalesce_usecs;
+> > > +             ecoalesce->rx_max_coalesced_frames = rx_caps.coalesce_cnt;
+> > > +             ecoalesce->rx_coalesce_usecs = rx_caps.coalesce_usecs;
+> > > +             return 0;
+> > > +     }
+> > > +
+> > >       ecoalesce->use_adaptive_rx_coalesce = lp->rx_dim_enabled;
+> > >
+> > >       spin_lock_irq(&lp->rx_cr_lock);
+> > > @@ -2233,6 +2263,29 @@ axienet_ethtools_set_coalesce(struct net_device
+> > *ndev,
+> > >               return -EINVAL;
+> > >       }
+> > >
+> > > +     if (lp->use_dmaengine)  {
+> > > +             struct dma_slave_config tx_cfg, rx_cfg;
+> > > +             int ret;
+> > > +
+> > > +             tx_cfg.coalesce_cnt = ecoalesce->tx_max_coalesced_frames;
+> > > +             tx_cfg.coalesce_usecs = ecoalesce->tx_coalesce_usecs;
+> > > +             rx_cfg.coalesce_cnt = ecoalesce->rx_max_coalesced_frames;
+> > > +             rx_cfg.coalesce_usecs = ecoalesce->rx_coalesce_usecs;
+> > > +
+> > > +             ret = dmaengine_slave_config(lp->tx_chan, &tx_cfg);
+> > > +             if (ret) {
+> > > +                     NL_SET_ERR_MSG(extack, "failed to set tx coalesce parameters");
+> > > +                     return ret;
+> > > +             }
+> > > +
+> > > +             ret = dmaengine_slave_config(lp->rx_chan, &rx_cfg);
+> > > +             if (ret) {
+> > > +                     NL_SET_ERR_MSG(extack, "failed to set rx coalesce
+> > parameters");
+> > > +                     return ret;
+> > > +             }
+> > > +             return 0;
+> > > +     }
+> > > +
+> > >       if (new_dim && !old_dim) {
+> > >               cr = axienet_calc_cr(lp, axienet_dim_coalesce_count_rx(lp),
+> > >                                    ecoalesce->rx_coalesce_usecs);
