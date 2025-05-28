@@ -1,168 +1,92 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6AB1EB193;
-	Wed, 28 May 2025 09:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B99A278E60;
+	Wed, 28 May 2025 09:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748425162; cv=none; b=MK2aFRUUqX46Zw8MhD8Lq1x7siLQJmffZ5F5UQQw083W3Qpx+EUCONc8S2q8kC4FKOmLSgSeYCybEcsgqv5idMcSDZYT+xeZ34Rx4iGuKhLd4DwsEQQb44VSg2GQuzHAHhFuD4tC4rKD1/MIeUtx4kraP7mCr7dnVYkBOG9TMks=
+	t=1748425167; cv=none; b=q07Fr2DQPrXSHnNBudaU5zU7+2lcvrNoSLcQ89Xs02a0eRBlh4L6BVBxWHGpm+FrfiltRs0+RUTYQas9PmEw3jac6WNV3pEMiaFRlOeqVLByeLZ/lK6sVol2M9mEq/W2fF6YAz37SeKt7maQc0VlgJ/UBsIkSYOkHGsdNqjFWuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748425162; c=relaxed/simple;
-	bh=6LD09DYS/0kYn1kkjqpbETm1/pEymJDs2xvRz8uJ0/A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QpeDIRFezXOyZwk00QpIIBPLW4U57nr+VTHmE7XLTQ2a0YHJ3ATZiKsGu8YPwTHh8HhhhB5MHedeaFNgUYXgvjATUEWd1h9ekDgbYQcwAxB4B6LmAEmK4tanbvpAY2aIECEAhwcdsQ2E6pVmoLsSBgBrAuHERhf8UhizOjgQnt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=HvUQP+Gj; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748425167; c=relaxed/simple;
+	bh=y4NzMxD9tmogr+AetKOa3VXWiWOLUF+6spJ2YgI8RsY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d/jOcDncrth8A9PXbDWjJn4Ta6u9QeF4PExu46N0fJw+9KxvLQ2nNPWIRUFrencDU5Bhw/bEEWNcBuMpDIcgHOHiesQx3fT40CQLwM8uLR5HRoifkQrmlCftY1zPlhWy1zqJIOhE4LS031BzKbKWLsgyuVMIqk395gp5RwwJjik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz0ddtiF; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="HvUQP+Gj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748425161; x=1779961161;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6LD09DYS/0kYn1kkjqpbETm1/pEymJDs2xvRz8uJ0/A=;
-  b=HvUQP+GjjGMx3X0dHUqSSFTW0231s8ofvj/IrHl3hgv6T7fuQ1WTsznM
-   ie/qCBZ3vPK0/FlnXOTwcVEn/g2D3LrwdSCrztmBQa5JzwpT9fDgNEqHp
-   1xiyUTMBkeP1KCkzfe8wcqhGU0Ozg9uJBAYQd+QlD/gcxu4HISAuU7M5Q
-   invkOJLcwGftd2mczMHZkyz4y+fuq0ChRN2OBcs7MxK0BNtMgPgEM5Vxx
-   h8DtYSeJgYC7xKlURw7so/5BkOJim1adiD9eXcev5u7CC4opXgzezlSf3
-   NSmTmgxMY6yMEsnLugNlJfqBmw/63NtinR4ViXowYqhL/CqiUaG37B+WG
-   g==;
-X-CSE-ConnectionGUID: 7lF291wvQn+FgAjIRLT7Iw==
-X-CSE-MsgGUID: wkNj7d69SDqxvKOXLpOy7A==
-X-IronPort-AV: E=Sophos;i="6.15,320,1739862000"; 
-   d="scan'208";a="42157104"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 May 2025 02:39:13 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 28 May 2025 02:38:34 -0700
-Received: from DEN-DL-M31836.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Wed, 28 May 2025 02:38:32 -0700
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: <UNGLinuxDriver@microchip.com>, <andrew+netdev@lunn.ch>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Horatiu Vultur
-	<horatiu.vultur@microchip.com>, Maxime Chevallier
-	<maxime.chevallier@bootlin.com>
-Subject: [PATCH net v2] net: lan966x: Make sure to insert the vlan tags also in host mode
-Date: Wed, 28 May 2025 11:36:19 +0200
-Message-ID: <20250528093619.3738998-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz0ddtiF"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-311f6be42f1so37547a91.0;
+        Wed, 28 May 2025 02:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748425165; x=1749029965; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZQBoysENhIbgW5/kLFhu2v5G6iCydX7mEkkhpaN14T0=;
+        b=Rz0ddtiF85FovreUueojk0HHigqQKTsz06tTQa32/Sq9vmZnp/LxnW+L8dYn6zhrh1
+         awWf3hm7MTwiTaGVPIuoifcvaadmsxL2ZWJe12TJDbM1xDfGew1h8h60YdBbRyUniHXx
+         v8gDTz3K3eVvDScswnZP2/NhksvgRXx3HGknM4yo9HsWk5Q89Yi6yP+E52xbFsEROAMd
+         IPHfCwxCx+uCV9Wne/tG1SdNzFbhApvPsMZsPMrHCpP3LaMmkPuKIDTbX0ovrL4yT6wn
+         14n316aYxgaBMwEtuFrWdQVkamNxKs4Z+4dcJAy0Vwn5n0BBewLgeCj1JDnwV1+vwEo7
+         AcKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748425165; x=1749029965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZQBoysENhIbgW5/kLFhu2v5G6iCydX7mEkkhpaN14T0=;
+        b=kHijPsgQeEtHWaK+hC5aVdtMqAJaaL20yxv4lq25hmBon5DIyOCfRQ4aZ3qmUvbIu7
+         Yagpv0bOFUIQsAFQWd5xe4V9xAnlVDTLP6PwHgTyczd7iWTy7dYX4T2GSXnNIYQwPq4L
+         hfzZO3oEg9DqPmBJvkxN4CiXNCutKtJtxS9C7iejPiAocMbzWtkuLAggKBTzA15Wl6TM
+         ufNea0iqOZnkFDYgpzIF3Lb8rKrbi/IwCbkvfoYk1MYMGC4Fhid0b7gK0bc1WxfYNSIk
+         kKutEInZRHwsG1PDHvJRWS+ENaK7HdT2myrE7fc+WJt2wbxW2vxkjiHgspuG9FZMGXMc
+         bf4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWIBczkzF24amG7+kZnVa5Qer7V1XH6E2wKqtNKuUFCeLeI30czmKXwowZnn6YbhVN/Sz8=@vger.kernel.org, AJvYcCWJJr8QHfo7vnfF3ZQ+fc48wDSRcPSTmzIWLBnAUjjIdo0bi4nC+l9eETRFc1Q3X50olvawvoXlFShTndF0LdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMclseVYDs8yXfqQJm1OjDeBRANAZwph3SGICLbj85aqRrLIfl
+	ISrNwl6NP777R6FCBBwzcKvYgRRurQsy+Qibgq5pZ6OyN6i6tYIlet2RUbOv7yRV7kf6iy5Hg1i
+	ThGjj9+Xrnfcy4LWpxLS2gmcvqdiZheU=
+X-Gm-Gg: ASbGncs5ck6SgfmBs0DqZB1qGxenep35fiwpI7b+Q9Tr1gc6AMbYbPVHtH9KMbg7DJ9
+	qJFccVVw1cUsE0Cj/BZtTgruvVqBz3D2PmzvVJnT1yA8kKK+uV6euP64Q1KxALoB1mHR/X/MxPU
+	8EtcjxPQKvqMNNE/1qGzP5Fr+Zwe5GXZde
+X-Google-Smtp-Source: AGHT+IES7Q+itUfT5wFGMqq1cdttplKaNdUc32Nx59Bv5rwPOYXCpDB88AGK9vWYeBz/+WcV0xKa7x6/E1mxh1Z7838=
+X-Received: by 2002:a17:90b:1e10:b0:311:488:f506 with SMTP id
+ 98e67ed59e1d1-311e1a122b4mr1202559a91.6.1748425164739; Wed, 28 May 2025
+ 02:39:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20250528083431.1875345-1-pbonzini@redhat.com>
+In-Reply-To: <20250528083431.1875345-1-pbonzini@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 28 May 2025 11:39:12 +0200
+X-Gm-Features: AX0GCFvBLnlzWD65XoPoEaCqR8aQRkKJqxadBtl2y6UrWx3JHjZf3XpuLM3RmeQ
+Message-ID: <CANiq72nwM79eGSAt8FjKgoYCJd-bLeTojaQAtg3SECE28uByQQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: add helper for mutex_trylock
+To: Paolo Bonzini <pbonzini@redhat.com>, Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, ojeda@kernel.org, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When running these commands on DUT (and similar at the other end)
-ip link set dev eth0 up
-ip link add link eth0 name eth0.10 type vlan id 10
-ip addr add 10.0.0.1/24 dev eth0.10
-ip link set dev eth0.10 up
-ping 10.0.0.2
+On Wed, May 28, 2025 at 10:34=E2=80=AFAM Paolo Bonzini <pbonzini@redhat.com=
+> wrote:
+>
+>         Ok to apply to the KVM tree?
 
-The ping will fail.
+Yeah, looks good to me, thanks!
 
-The reason why is failing is because, the network interfaces for lan966x
-have a flag saying that the HW can insert the vlan tags into the
-frames(NETIF_F_HW_VLAN_CTAG_TX). Meaning that the frames that are
-transmitted don't have the vlan tag inside the skb data, but they have
-it inside the skb. We already get that vlan tag and put it in the IFH
-but the problem is that we don't configure the HW to rewrite the frame
-when the interface is in host mode.
-The fix consists in actually configuring the HW to insert the vlan tag
-if it is different than 0.
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Fixes: 6d2c186afa5d ("net: lan966x: Add vlan support.")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
-v1->v2:
-- fix typos
-- set REW_TAG_CFG_TAG_CFG_SET to a value of 2 to match the comments
----
- .../ethernet/microchip/lan966x/lan966x_main.c |  1 +
- .../ethernet/microchip/lan966x/lan966x_main.h |  1 +
- .../microchip/lan966x/lan966x_switchdev.c     |  1 +
- .../ethernet/microchip/lan966x/lan966x_vlan.c | 21 +++++++++++++++++++
- 4 files changed, 24 insertions(+)
+Cc'ing Boqun just in case and so that he is aware. Boqun: this fixes a
+Rust build error on the kvm branch which failed on merging into -next:
 
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-index 427bdc0e4908c..7001584f1b7a6 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-@@ -879,6 +879,7 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
- 	lan966x_vlan_port_set_vlan_aware(port, 0);
- 	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
- 	lan966x_vlan_port_apply(port);
-+	lan966x_vlan_port_rew_host(port);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-index 1f9df67f05044..4f75f06883693 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-@@ -497,6 +497,7 @@ void lan966x_vlan_port_apply(struct lan966x_port *port);
- bool lan966x_vlan_cpu_member_cpu_vlan_mask(struct lan966x *lan966x, u16 vid);
- void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
- 				      bool vlan_aware);
-+void lan966x_vlan_port_rew_host(struct lan966x_port *port);
- int lan966x_vlan_port_set_vid(struct lan966x_port *port,
- 			      u16 vid,
- 			      bool pvid,
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-index 1c88120eb291a..bcb4db76b75cd 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-@@ -297,6 +297,7 @@ static void lan966x_port_bridge_leave(struct lan966x_port *port,
- 	lan966x_vlan_port_set_vlan_aware(port, false);
- 	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
- 	lan966x_vlan_port_apply(port);
-+	lan966x_vlan_port_rew_host(port);
- }
- 
- int lan966x_port_changeupper(struct net_device *dev,
-diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-index fa34a739c748e..7da22520724ce 100644
---- a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-+++ b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-@@ -149,6 +149,27 @@ void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
- 	port->vlan_aware = vlan_aware;
- }
- 
-+/* When the interface is in host mode, the interface should not be vlan aware
-+ * but it should insert all the tags that it gets from the network stack.
-+ * The tags are not in the data of the frame but actually in the skb and the ifh
-+ * is configured already to get this tag. So what we need to do is to update the
-+ * rewriter to insert the vlan tag for all frames which have a vlan tag
-+ * different than 0.
-+ */
-+void lan966x_vlan_port_rew_host(struct lan966x_port *port)
-+{
-+	struct lan966x *lan966x = port->lan966x;
-+	u32 val;
-+
-+	/* Tag all frames except when VID=0*/
-+	val = REW_TAG_CFG_TAG_CFG_SET(2);
-+
-+	/* Update only some bits in the register */
-+	lan_rmw(val,
-+		REW_TAG_CFG_TAG_CFG,
-+		lan966x, REW_TAG_CFG(port->chip_port));
-+}
-+
- void lan966x_vlan_port_apply(struct lan966x_port *port)
- {
- 	struct lan966x *lan966x = port->lan966x;
--- 
-2.34.1
+    https://lore.kernel.org/linux-next/20250528152832.3ce43330@canb.auug.or=
+g.au/
 
+Cheers,
+Miguel
