@@ -1,127 +1,165 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFA928E573;
-	Wed, 28 May 2025 18:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1175199939;
+	Wed, 28 May 2025 18:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455694; cv=none; b=f5PA+OLy62+62KXtB5qswl1iUEiaEC2axUPQuGPCo559viB3OhAZIjoGDt1IFkmMkj5umWiEo/RiYjmQHB24e24GRbinMfbyS/7pmTflti53+Nl3MGexvqSPJX7roClKeLi6kVyAFOdXfmm+6kxtvjc8QBo5SjZn3lbNnHg6L1I=
+	t=1748455850; cv=none; b=jFhqdn6dFz7S1q6ACDz11WsBC2TiE+Hb2nkjbFrF9mk6BKRjZHkfY6nAwLJPx9+n80D8Xm1P6soI6b9/fR3SfBHiPmoHFCs55n87nO0dHKptvvC7RpX7ULuAOMf29F7P2szI7ZJf/W/eFqKDIuiB4WYS1twlr3TPQi9Sp/LeTSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455694; c=relaxed/simple;
-	bh=n7qvY25wzU4LBN1V7seQQRsvaX0gcd8CSYPUS3iqD3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/6u/d5kL5nSGjwT6keTspB2+KKK2RbQF7sWzA2IDr3kR1DJdpxriJ6eAlXAM6AjUr4mhsg4Rh1ssgYvEGDYljkqextnwI7yWAk7gzSKkTJvyw7OUuZ32PIp+V4zk2pogRofmt7MnoGuEQdBsfD0WJMlqnQh7kMuphD0h3iLTro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ALGUjlWf; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748455850; c=relaxed/simple;
+	bh=tJgGaeL8lDq9uscvebOcn4+6B6FshQVjhO0hl3B3BdA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pq6a3+O/6wcFdt4EKskPYEY3bLUITIxAGeW8UfrOLjIaL2JIdeh8322cY401qT49lQm31sZN1VEM6B2RjHEWWRwrslaQsaUJE/0pbZY7BG61ALs5j3Ei8z4cxiUOoTmNTh7lgghh0jWykdLrJIYu508Zjr8+8d2MInpX+PNEXAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N2vKWmS6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ALGUjlWf"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9Zie032044;
-	Wed, 28 May 2025 18:08:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SXk6xY
-	TCJrBiRraj2g3E97hdrA+qVzMbgY3MR8FW4gA=; b=ALGUjlWf8ERxczbOOQZIIQ
-	uhjC1OUxMQqHGYtb834u0O1o5EmvANTZ5SEa3j3gTbwhkhcUxi1p+FMDpfIEI9u+
-	dLiZhvmjX4ZR+AJoZhTS1+jOyISg9m9xQ/BlBbwcEJyJXgKVxnQPNFh6QKRj1bpQ
-	fPqP0WvE0RM8xKeNFDWLCz48+nJ8zOtnywSQW0KAE7odQODAd9crtauRn3H4VNH1
-	ihAFDdT4sNyUrbt+hLPeGs8KKB59XXTuKljd7TBZF+Xvl1yxkjXgkYyvIVcxau4r
-	RuqZTlTp1UlZXxGCJcYcAGE8zuwD2uUjcRHhhjRzAVSddq69oFhulqcpr8Fkcf4A
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40js81e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 18:08:08 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SElXZt015798;
-	Wed, 28 May 2025 18:08:07 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu538d9w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 18:08:07 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SI85np34013522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 18:08:05 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6266D20040;
-	Wed, 28 May 2025 18:08:05 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A93D20043;
-	Wed, 28 May 2025 18:08:03 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.124.209.136])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 28 May 2025 18:08:03 +0000 (GMT)
-Date: Wed, 28 May 2025 23:38:00 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-Message-ID: <aDdRAFMFY5hI2uNn@linux.ibm.com>
-References: <20250527085335.256045-2-vishalc@linux.ibm.com>
- <vzdrzqphpjnvrfynx7ajdrgfraavebig4edipde3kulxp2euqh@7p32zx7ql6k6>
- <aDcNLTA2JfoLXdIM@linux.ibm.com>
- <bdstku24kbgj2oalpbzw62uohq7centgaz7fbeatnuymjr2qct@gp2vah7mumk3>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N2vKWmS6"
+Received: from CPC-grwhy-1BDK8.redmond.corp.microsoft.com (unknown [70.37.26.37])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 65C62207860A;
+	Wed, 28 May 2025 11:10:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 65C62207860A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748455848;
+	bh=BN4btWrgT6mTRx8CSI6Tnm6/WQ8RUzdUec/ttgLYXhY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N2vKWmS6UItT4oQ1mziW5lSnPP3CcGCEpdMKxoVnYFrgfIFgpZ+1EXwAv2gAMqeBb
+	 Co8n0qAUWkV6ND2NgIEK3RgSu5M3zd4OmYs63LXBYB3+yNh1MMs8ktxnCbpfUADsd/
+	 pyqQEL3zEAAhJFCKQYCxCuyNe5A0fp7DVmBXZsi8=
+From: grwhyte@linux.microsoft.com
+To: linux-pci@vger.kernel.org
+Cc: shyamsaini@linux.microsoft.com,
+	code@tyhicks.com,
+	Okaya@kernel.org,
+	bhelgaas@google.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: Reduce delay after FLR of Microsoft MANA devices
+Date: Wed, 28 May 2025 18:10:47 +0000
+Message-Id: <20250528181047.1748794-1-grwhyte@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <bdstku24kbgj2oalpbzw62uohq7centgaz7fbeatnuymjr2qct@gp2vah7mumk3>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=SdL3duRu c=1 sm=1 tr=0 ts=68375108 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=8nJEP1OIZ-IA:10 a=dt9VzEwgFbYA:10 a=KSb9T-wMAAAA:8 a=VnNF1IyMAAAA:8 a=fKiKOXW4520yZCUzCKYA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10 a=KF4VuIdXkMyp4E_ug72i:22
-X-Proofpoint-GUID: yBv1QbkSCPABfv32Vs5UbabjPFZrMY4Q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE1NyBTYWx0ZWRfX7Y0ha3Ip/EK0 r7HpOSWDq3b/bM7Q0Y/81nx88O+SoPRF8urRF9BZY6He6lTjOeOVBAOIWCNjsa39ExQbwoyvjgu WJP71cjwVZ1/hTvOgQ9wc0KvlacFG+63mDojoNcYMc1bYqqTPc0jL94+O8t+Tux1uNgcuY53Qlh
- Shym0lz+BISWiNk3XkJpsg0KFbRHlknMTFCfbEzMlR6TZWN9FXNYPr0GuF+sOFuqmauMz29Vv72 wFqBb59h1ABSr4jGy9QZFKqXiT03GqNd41cLXKKQsmHj+tEuFFBb4jDfUETXMJWsd8V5DmvffZp MRLcio/xd/q2o68rvjEKZrcvIChW6YdJg1d2thni7uCDgvEDcK7HHmuhvvhlANTaFurhq+VhHV2
- SOdyeqR5p8eyPUPVHTtzaUbzb/tRTO5Cgb7F8Ae4fhXv3b9abZKASK9F96jsSks1Wg35dCF1
-X-Proofpoint-ORIG-GUID: yBv1QbkSCPABfv32Vs5UbabjPFZrMY4Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_09,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 mlxlogscore=354 suspectscore=0 bulkscore=0
- spamscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280157
 
-On Wed, May 28, 2025 at 07:05:06PM +0200, Michal Koutný wrote:
-> On Wed, May 28, 2025 at 06:48:37PM +0530, Vishal Chourasia <vishalc@linux.ibm.com> wrote:
-> > The part that was confused me, was the meaning behind controller being
-> > available vs. enabled in a cgroup.
-> > 
-> > Though, the documentation does mention what it means for a controller to
-> > be enabled in a cgroup later in the text. But at the point of the
-> > change it is unclear.
-> 
-> There's a picture [1] that may be more descriptive than the docs (on
-> which it is based).
-Thanks for the reference. 
+From: Graham Whyte <grwhyte@linux.microsoft.com>
 
-I didn't get the part about "io controller enabling memory controller
-too". Is it referring to the fact that multiple controller can work
-together in a cgroup? Because, enabling just the io controller does not
-automatically enable memory controller too.
+Add a device-specific reset for Microsoft MANA devices with the FLR
+delay reduced from 100ms to 10ms. While this is not compliant with the pci
+spec, these devices safely complete the FLR much quicker than 100ms and
+this can be reduced to optimize certain scenarios
 
-Okay, what do you suggest, should I send out V2 taking corrections from
-others?
+Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
 
-Regards,
-Vishal
+---
+Changes in v2:
+- Removed unnecessary EXPORT_SYMBOL_GPL for function pci_dev_wait
+- Link to v1:https://lore.kernel.org/linux-pci/20250522085253.GN7435@unreal/T/#m7453647902a1b22840f5e39434a631fd7b2515ce
+---
+ drivers/pci/pci.c    |  2 +-
+ drivers/pci/pci.h    |  1 +
+ drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 57 insertions(+), 1 deletion(-)
 
-> 
-> HTH,
-> Michal
-> 
-> [1] https://paste.opensuse.org/pastes/987b665209bb
-
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 9cb1de7658b5..28f3bfd24357 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
+ 		pci_walk_bus(bus, pci_resume_one, NULL);
+ }
+ 
+-static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
++int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+ {
+ 	int delay = 1;
+ 	bool retrain = false;
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index f2958318d259..3a98e00eb02a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
+ int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+ int pci_bus_error_reset(struct pci_dev *dev);
+ int __pci_reset_bus(struct pci_bus *bus);
++int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
+ 
+ struct pci_cap_saved_data {
+ 	u16		cap_nr;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index c354276d4bac..94bd2c82cbbd 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
+ 	return 0;
+ }
+ 
++#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
++#define MICROSOFT_2051_SVC 0xb210
++#define MICROSOFT_2051_MANA_MGMT 0x00b8
++#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
++
++/* Device specific reset for msft GFT and gdma devices */
++static int msft_pcie_flr(struct pci_dev *dev)
++{
++	if (!pci_wait_for_pending_transaction(dev))
++		pci_err(dev, "timed out waiting for pending transaction; "
++			"performing function level reset anyway\n");
++
++	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
++
++	if (dev->imm_ready)
++		return 0;
++
++	/*
++	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
++	 * 100ms, but may silently discard requests while the FLR is in
++	 * progress. However, 100ms is much longer than required for modern
++	 * devices, so we can afford to reduce the timeout to 10ms.
++	 */
++	usleep_range(10000, 10001);
++
++	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
++}
++
++/*
++ * msft_pcie_reset_flr - initiate a PCIe function level reset
++ * @dev: device to reset
++ * @probe: if true, return 0 if device can be reset this way
++ *
++ * Initiate a function level reset on @dev.
++ */
++static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
++{
++	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
++		return -ENOTTY;
++
++	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
++		return -ENOTTY;
++
++	if (probe)
++		return 0;
++
++	return msft_pcie_flr(dev);
++}
++
+ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+ 		 reset_intel_82599_sfp_virtfn },
+@@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 		reset_chelsio_generic_dev },
+ 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+ 		reset_hinic_vf_dev },
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
++		msft_pcie_reset_flr},
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
++		msft_pcie_reset_flr},
++	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
++		msft_pcie_reset_flr},
+ 	{ 0 }
+ };
+ 
+-- 
+2.25.1
 
