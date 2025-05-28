@@ -1,263 +1,133 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2145A31
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28AFA31
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414446; cv=none; b=pqhYZ4ZT/8hvXZpfn57k/uDxCknyBAabcFGgm8/ur2twVGyXR/+BibigILe/4zmH3qHw+oghbxzhI/qyTha7Mrhg/XBJ3p9Dqpgnro+sMJ6GtbTlZjbxjw8/73ThJML0kthMIRxLZev5cqVC6lnTFx2hFUtKtnxg1LVI9EYAX5w=
+	t=1748414494; cv=none; b=OO+5/qGhprCkIdWW85LIet+6xvCHOVWNJajIa37W/gIQLClbe2dz8h2f1749F2HiTnERHRmLJRFLbIn7UlviKCEQNRnTHbt0JOsDvSYDcedmaAboRUwGlH2WkV0IYssGzzusgnBdEgMsMzZ4ocZYwZUSoteGwJ4kekFpFje7ZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414446; c=relaxed/simple;
-	bh=YdSEeEeFk0NNGxlGnJH5Bc6dpaJH3N+LN88sgJ3+usU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=D0oS0OxupGduxRPKlUfel4PmyQBuLrmfRn9GBJZycJ9Qr7GnHbY3RaRo1lpwD6IHeKMFI0vWW0wFWMgyrq1pXm3wvCvKqQ14uEsZTA1iSDEF+w/WSPs6KBtSyK7zcfJ5cesDxWp3ZdBCyUqZTbL1CXwDJTcqlk1v8Kiu3q1a/1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LgEO1KpS; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748414494; c=relaxed/simple;
+	bh=QuS4ki+ygmzNgbM1gN3bOweRZf/kkEWCfvJRu5b9BWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=VltEuKEf+niabdceOVTLiYtRm67OQM9Ul9GbaoSl5AY44qW7pTP+dxfb9cqqFda5C58Drb2NCpQExRYd/JanheiUMzY12jALxX+x2W9IGcjmDGdQCy61qj5yJ25Mvi8MXV91zT00Xwmj2D/tPsGQjP0tZW+eWCDaWb7Qdp62ys4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lY3RS0ZJ; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LgEO1KpS"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748414434; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=ALky2DM7w5Vr5OhyF0xpoF/BhlE4wBFPvSGHW4CICRw=;
-	b=LgEO1KpS+0a3+QlQ8HZWRQ3cmY64m8fI0uoYq6+xkFw8FH/yLLYJQ0gfaCkPjTG1zKOEmdM/+QpqGBkcS6DlLRmBwRPSxpgIPKzn4X0y1jM/AE76Y85W7SEfOnjvrPT8a2/X7WgYRLQRLS19hEr3ceV2k7hO3+BfRKvjGHSH4t4=
-Received: from 30.178.82.30(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcCNDOa_1748414433 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 14:40:34 +0800
-Message-ID: <176f45a3-76d7-4e35-a668-6e845f168110@linux.alibaba.com>
-Date: Wed, 28 May 2025 14:40:32 +0800
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lY3RS0ZJ"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250528064129euoutp01a252898ceb79a91bae3d3fd9f77e3a2d~DnbcQwyb81766317663euoutp01E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:41:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250528064129euoutp01a252898ceb79a91bae3d3fd9f77e3a2d~DnbcQwyb81766317663euoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748414489;
+	bh=1CqYlDJ7Pye3W/xNL1WCDcZNkM1De9lFuAMds043EQQ=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=lY3RS0ZJCY2FT4ZRA2JOyjYq04zRvZ/4bCvl64owpge97u/lq1XtOcDil8YCp4lsE
+	 yXqHY55aN6rKYm9Lf8AVNtfsfmp8laLHWb61qmve4OaJI5QlCi7DmuZd81R/jBq8Aw
+	 DpMPhKEPqgn0Wd6dvtI6k4Z5me09lv2EO/JjpukY=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250528064129eucas1p2cf0cc2407e45422e9598a01b5dc0906f~DnbbxmIM51574615746eucas1p20;
+	Wed, 28 May 2025 06:41:29 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250528064128eusmtip150027ece79e69b35d778441f1de3c0c8~Dnba22_l10218602186eusmtip1F;
+	Wed, 28 May 2025 06:41:28 +0000 (GMT)
+Message-ID: <d96f5578-4c87-4b94-b42f-7e8e54d75b04@samsung.com>
+Date: Wed, 28 May 2025 08:41:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
- in the resctrl subsystem.
-From: qinyuntan <qinyuntan@linux.alibaba.com>
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Tony Luck <tony.luck@intel.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
- <c4382156-a51e-4d07-9ccb-e6db2ca9d719@intel.com>
- <b67949b8-7eac-47b4-a667-6343837226f7@linux.alibaba.com>
- <5b446254-a2c8-4f01-93bf-3a348d474820@intel.com>
- <37f6345f-7536-45a3-8c85-6b2bfdba2fe6@linux.alibaba.com>
-In-Reply-To: <37f6345f-7536-45a3-8c85-6b2bfdba2fe6@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/4] drm/bridge: samsung-dsim: Stop controlling
+ vsync display FIFO flush in panels
+To: Philipp Zabel <p.zabel@pengutronix.de>, Inki Dae <inki.dae@samsung.com>,
+	Jagan Teki <jagan@amarulasolutions.com>, Andrzej Hajda
+	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
+	Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Artur Weber <aweber.kernel@gmail.com>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250528064129eucas1p2cf0cc2407e45422e9598a01b5dc0906f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250527141451eucas1p268427354487325dd2fc1302a94f40c1a
+X-EPHeader: CA
+X-CMS-RootMailID: 20250527141451eucas1p268427354487325dd2fc1302a94f40c1a
+References: <CGME20250527141451eucas1p268427354487325dd2fc1302a94f40c1a@eucas1p2.samsung.com>
+	<20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
 
-Hi Reinette Chatre,
+On 27.05.2025 16:14, Philipp Zabel wrote:
+> This series enables the vsync flush feature in the samsung-dsim driver
+> unconditionally and removes the MIPI_DSI_MODE_VSYNC_FLUSH flag.
+>
+> Background: I've recently seen shifted display issues on two different
+> i.MX8MM boards (mxsfb + samsung-dsim) with different DSI panels.
+> The symptoms were horizonally shifted display contents, with a stable
+> offset, in about 0.1 to 0.6 percent of modesets.
+> Enabling the MIPI_DSI_MODE_VSYNC_FLUSH flag in the panels' mode_flags
+> fixed the issue in both cases.
+>
+> The samsung-dsim driver is the only DSI bridge driver that uses this
+> flag: If the flag is absent, the driver sets the DSIM_MFLUSH_VS bit in
+> the DSIM_CONFIG_REG register, which disables the vsync flush feature.
+> The reset value of this bit is cleared (vsync flush is default-enabled).
+> According to the i.MX8MM reference manual,
+>
+>      "It needs that Main display FIFO should be flushed for deleting
+>       garbage data."
+>
+> This appears to match the comment in mxsfb_reset_block() in mxsfb_kms.c:
+>
+>      /*
+>       * It seems, you can't re-program the controller if it is still
+>       * running. This may lead to shifted pictures (FIFO issue?), so
+>       * first stop the controller and drain its FIFOs.
+>       */
+>
+> Now I wonder why the bit is controlled by a flag in the panel drivers.
+> Whether the display controller pushes up to a FIFO worth of garbage data
+> into the DSI bridge during initialization seems to be a property of the
+> display controller / DSI bridge integration (whether this is due to
+> hardware or driver bugs), not a specific requirement of the panel.
+> Surely no panel needs to receive a partial line of garbage data in front
+> of the first frame?
+>
+> Instead of adding the flag to every panel connected to affected SoCs,
+> the vsync flush feature could just be enabled unconditionally.
+> Clearing an already-empty display FIFO should have no effect, unless
+> I'm missing something? With that, the MIPI_DSI_MODE_VSYNC_FLUSH flag
+> would not be used anymore and could be removed.
 
-On 5/28/25 2:37 PM, qinyuntan wrote:
-> Hi Reinette Chatre,
-> 
-> On 5/28/25 12:49 PM, Reinette Chatre wrote:
->> Hi Qinyun Tan,
->>
->> On 5/27/25 8:32 PM, qinyuntan wrote:
->>> On 5/28/25 7:36 AM, Reinette Chatre wrote:
->>>> On 5/26/25 12:37 AM, Qinyun Tan wrote:
->>
->>
->>>>> first online CPU of a NUMA node. If this CPU later goes offline, the
->>>>> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
->>>>
->>>> "is cleared" sounds like the shared_cpu_map is empty. Looking at
->>>> cache_shared_cpu_map_remove() it seems that the worst case is when the
->>>> CPU goes offline the shared_cpu_map only contains the offline CPU 
->>>> itself.
->>>> If there remains a reference to that shared_cpu_map then it will 
->>>> thus be
->>>> to a cpumask with an offline CPU. Are you seeing other scenarios?
->>>>
->>> Yes, you are right. Once this CPU goes offline, its shared_cpu_map
->>> will only include itself. If we then try to call this offline CPU
->>> using smp_call_on_cpu, it will result in a failure.
->>
->> Thank you for confirming. Could you please update this changelog to 
->> reflect
->> this detail? Doing so will remove confusion and make the change easier to
->> consume by making it obvious to reader what the problem is.
-> Thank you for your patient review, I will update this changelog in the 
-> next patch.
-> 
->>>>> incorrect or undefined behavior when accessed via rdt_mon_domain.
->>>>
->>>> Could you please elaborate what "incorrect and undefined behavior" you
->>>> encountered?
->>>> It looks like reading the top level event would not be able to read
->>>> an event from one (or more?) of the online domains since the 
->>>> shared_cpu_map
->>>> will contain an offline CPU causing smp_call_on_cpu() to return with 
->>>> a failure
->>>> that is not caught ... the symptom may this be that there are no 
->>>> errors but
->>>> data is wrong?
->>>
->>> Yes, there won't be any errors here, but when reading the top-level 
->>> events, it may not retrieve any values.
->>>
->>> For example, in the SNC-3 mode, suppose cpus 0, 40, and 80 are the
->>> firtst online cpus on node0, node1, and node2 respectively. If cpus
->>> 0, 40, and 80 are all offline, At this point, reading "the top level
->>> event" will result in a zero.
->>
->> This is SNC-3 mode with a single socket example where CPU 0 cannot
->> go offline. I thus do not see this happening for the reason you 
->> provide below.
->>
->> I *can* see how this happens on a second socket when the first online CPU
->> of the first node of that (the second) socket goes offline.
-> 
->>> Why hasn’t this issue been discovered earlier? The reason is that 
->>> CPU0 is always the first online CPU on node0. The cacheinfo stored in 
->>> the first rdt_mon_domain corresponds to CPU0. When 
->>> rdtgroup_mondata_show reads the top-level event, it iterates through 
->>> all rdt_mon_domain entries, using if (d->ci->id == domid) to find the 
->>> first rdt_mon_domain that shares the resource. It then selects a CPU 
->>> from the corresponding cacheinfo to perform the monitoring group data 
->>> read operation. In a single-socket environment, all CPUs typically 
->>> share the L3 Cache, which means this traversal action will usually 
->>> lead directly to CPU0's cacheinfo. Additionally, since the mainline 
->>> kernel no longer supports taking CPU0 offline, that cacheinfo remains 
->>> valid indefinitely.
->>>
->>>>
->>>>>
->>>>> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is 
->>>>> managed
->>>>> by the cache subsystem, making it unsafe for resctrl to hold
->>>>> long-term references.
->>>>
->>>> This is not obvious to me. Could you please elaborate how resctrl could
->>>> have a reference to a removed structure?
->>> As mentioned above, although the cacheinfo of each CPU is not freed
->>> in the latest mainline, the shared_cpu_map within the cacheinfo will
->>> be modified as CPUs go online or offline. Each rdt_mon_domain
->>> directly references the cacheinfo of the first online CPU in the
->>> node, and the shared_cpu_map is used in various processes. This
->>> situation is bound to lead to some problems.
->>
->> Claiming that it is unsafe for resctrl to hold a reference implies that
->> resctrl uses an invalid pointer. This is not the case here. The pointer
->> is valid, but the data pointed to by it does not support resctrl's 
->> usage. I
->> thus do not believe that this "lifecycle dependency" point is a valid
->> motivation for this change.My description is indeed inaccurate. I will 
->> adjust it in the next patch. 
-> Thanks.
+The Exynos5433 datasheet doesn't give us anything more about this bit:
 
-Sorry, I accidentally pressed backspace twice. It should be:
+"Auto flush of display FIFO in only video mode.
+It requires that the display FIFO should be flushed for
+deleting garbage data in video mode."
 
-'''
-My description is indeed inaccurate. I will adjust it in the next patch.
-Thanks.
-'''
+Your reasoning seems to be correct, it probably slipped into 
+MIPI_DSI_MODE flags just because it is in the same register.
 
-> 
->>>>
->>>>>
->>>>> To resolve these issues and align with design principles:
->>>>>
->>>>> 1. Replace direct cacheinfo references in struct rdt_mon_domain and 
->>>>> struct
->>>>> rmid_read with the cacheinfo ID (a unique identifier for the L3 
->>>>> cache).
->>>>>
->>>>> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
->>>>> shared_cpu_map logic for determining valid CPUs for RMID counter reads
->>>>> via the MSR interface.
->>>>
->>>> I think it will help to explain why it is ok now to use hdr.cpu_mask 
->>>> instead
->>>> of the shared_cpu_map. In support of this you could mention that the 
->>>> original
->>>> solution aimed to read the counters on any CPU associated with the 
->>>> L3 cache
->>>> that the sub-numa domain forms part of, but this solution uses the
->>>> cpumask of one of the sub-numa domains that is known to be 
->>>> associated with
->>>> the L3 cache. This is a reduced set of CPUs from previously intended 
->>>> but
->>>> known to be accurate. Alternative may be to build a local cpumask 
->>>> from the
->>>> all the sub-numa domains but it is not clear to me how much this will
->>>> improve things.
->>>>
->>>> Considering this I do not think the references are "unnecessary" as the
->>>> subject claims since the solution does not replace the original 
->>>> cpumask with
->>>> an identical one.
->>>
->>> Thanks a lot, you are correct. hdr.cpu_mask is a subset of
->>> shared_cpu_map, and we can almost use hdr.cpu_mask to replace the
->>> functionality of shared_cpu_map.
->>>
->>> In fact, in resctrl, the only purpose of using cpu_mask is to select
->>> a CPU that shares the cache resource for performing monitoring group
->>> data reads. Therefore, I think there is no need to build a local
->>> cpumask from all the sub-NUMA domains in this context.
->>
->> One issue I can think of here is when there is a usage where the user 
->> does
->> task isolation on the numa node boundary. Let's consider the SNC-3 
->> example
->> again with node3, node4, and node5 on the second socket, "L3 cache ID 1".
->> If all CPUs on node3 are in tick_nohz_full_mask while none of the 
->> node4 and
->> node5 CPUs are in tick_nohz_full_mask then one of node3's CPUs will get
->> an unnecessary IPI.
->>
-> You are right, how about this? First, obtain any cpu in hdr.cpu_mask, 
-> and then use the cacheinfo shared_cpu_map of this cpu:
-> 
-> diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-> index 9337787461d2d..d43f438465ad0 100644
-> --- a/fs/resctrl/ctrlmondata.c
-> +++ b/fs/resctrl/ctrlmondata.c
-> @@ -596,7 +596,8 @@ int rdtgroup_mondata_show(struct seq_file *m, void 
-> *arg)
->          struct rdtgroup *rdtgrp;
->          struct rdt_resource *r;
->          struct mon_data *md;
-> -       int domid, ret = 0;
-> +       struct cacheinfo *ci;
-> +       int domid, cpu, ret = 0;
-> 
->          rdtgrp = rdtgroup_kn_lock_live(of->kn);
->          if (!rdtgrp) {
-> @@ -625,8 +626,12 @@ int rdtgroup_mondata_show(struct seq_file *m, void 
-> *arg)
->                  list_for_each_entry(d, &r->mon_domains, hdr.list) {
->                          if (d->ci_id == domid) {
->                                  rr.ci_id = d->ci_id;
-> +                               cpu = cpumask_any(&d->hdr.cpu_mask)
-> +                               ci = get_cpu_cacheinfo_level(cpu, 
-> RESCTRL_L3_CACHE);
-> +                               if (!ci)
-> +                                       continue;
->                                  mon_event_read(&rr, r, NULL, rdtgrp,
-> -                                              &d->hdr.cpu_mask, evtid, 
-> false);
-> +                                              &ci->shared_cpu_map, 
-> evtid, false);
->                                  goto checkresult;
->                          }
->                  }
-> 
->>>
->>> I will provide a more detailed description in my commit log moving
->>> forward.
->>
->> Thank you very much.
->>
->> Reinette
-> 
-> Thanks
-> Qinyun Tan
-> 
+Feel free to add:
 
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
