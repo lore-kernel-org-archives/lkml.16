@@ -1,215 +1,194 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570D27585C;
-	Wed, 28 May 2025 09:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2961EB193;
+	Wed, 28 May 2025 09:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424194; cv=none; b=nNvmb1MvKBXXBGMCBTQxxUL9oYAZJ/FzcRpakmIk5i+NwUClbni697rX52fZx2y6Xxw8zg5JEK+zmgE7Ve6C5Tiy2O8/YLqwYbwS+rr+MmaXiWRtpTCg1nO/7NcAqqzR4xJidQmce4PcJ1QkxLa23wNtSxJidepBowmOlracw3o=
+	t=1748424323; cv=none; b=oE1zhJlIaEVHdQaZ0eANNr3fGeDtyb67gBQNvuvIE5TjRZpLAmSlcGgkPwbfnZbHPRY+jeOTfR7FWGaV5i/GktCk/YcTXJbY9lURHrtQ9+Cl3RGyXGStB6RbZ23dX7/IZnKbXsNOh9mUYFBrfBRsECW6tIekMhEwOVTG1UoSMCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424194; c=relaxed/simple;
-	bh=XwVcsM0Ke27QaXVu4HALsNtN2BuTrzEyaowisRAZRTo=;
+	s=arc-20240116; t=1748424323; c=relaxed/simple;
+	bh=N1s+EAnE4QksMuJkGOXKpbTVBre+UINn2yE45vNS4fc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaERraTyQfFkQLsm9vJjuPQs7NUq5/NVNArclvP3KhoeZhiPNnuPmSflUCTU4SZieWn1JeW8hkwHBLLmJ3I3iVyLYmOdSW2rEH1AfB+YGdRaLPhI5wLcYPgu9WDoqRu031S01HK1/brrEXg+Cep0HaOS79wM+vUuR2+W46COLLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MwCo+B4S reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ElcDh+Cg08GPWzQW1LF1QUC9BMKSh204GIWxtoikXHnRXMfLGZK0h34Ve6Ihz26phwndKMbk6T24BK58BG7WKih/TUGNsECTCk1z7Zlukjxsx7s9YAJX7KOTlD5ogLmlYIMH2ADL3Nrlflwx/fd6WpjlUecYcSsOOtbdnDSZTnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Xu6n2n/G; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MwCo+B4S"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9D2DA40E01AD;
-	Wed, 28 May 2025 09:23:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 6k1iIRKJfFlA; Wed, 28 May 2025 09:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748424182; bh=si5vjMB3rqYmyMn24gD/zflzQ5T1gxEmIVKPQTemnUs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MwCo+B4SRUadtIe1XUxkBce8rFMI6dulfrRCIQeV3A/qP5P4UrULAs//ut1GGt8+J
-	 9cddGaZsgFOhZ/f7kdnmMZlk8VIDBzPOuasIQm8Qum51RnHfLzrPaGcQMYORD23uhs
-	 yDXcDlf7ilZ+EjBjxFxdDeCXbOjQyT4YAflvjvn0anDy6S305curU6phw351VdLwFo
-	 1tzAj8ndKknisMKZ4HE0bxEnzWlDSyH65EUH4UuFWAOG40AL8G9Aa0He++7W04oP/u
-	 q+rIDZ3iylb9GLu4mlDOxqv4td3pOfZ/3NUvtP7FVrvsqjzBvGgkW0muYsEj/Vk9DK
-	 V3uMCtuXN1CTURb9BADn9kTtTU+Jnf3qBNxhp2+ZiV7vY5dqyU0W09bVkEOyRbeyWO
-	 5acH68wcAQ/Pv8c4IdbW9yZND1szWbqX/o/wyxzDepbSZsdEI4jdUMPGPP9lYeDp5E
-	 sOnn3m7TLbXQan6OtBfgNSxomfAbw7SKLFjkJGbOOB69ME28Fw7sCDaZza7S3lW4YE
-	 YpyiTTDOcSviSuAJCdGI/v6Ig8FUkI5hwGEsblInpI7axuw38BeiQZQ4A48LdpKGFH
-	 dbV06SpVtBjqJAvgf4TMYdMne7uEHnzZuMET81tnV7XWX8G21DLMYjEMGb6uG4Iga9
-	 G1QxEwJ2RSUvJZyJ5OM7ZCXo=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6159540E01B5;
-	Wed, 28 May 2025 09:22:56 +0000 (UTC)
-Date: Wed, 28 May 2025 11:22:50 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Avadhut Naik <avadhut.naik@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	avadnaik@amd.com,
-	=?utf-8?Q?=C5=BDilvinas_=C5=BDaltiena?= <zilvinas@natrix.lt>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v4] EDAC/amd64: Fix size calculation for Non-Power-of-Two
- DIMMs
-Message-ID: <20250528092250.GAaDbV6oEqvE3279dJ@fat_crate.local>
-References: <20250513192221.784445-1-avadhut.naik@amd.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Xu6n2n/G"
+Date: Wed, 28 May 2025 11:25:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748424309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PI9dqXcHsvuMiIRgJ1QC3uTmfdcNnM4s+Ml7A/VgMkA=;
+	b=Xu6n2n/GymRMG8uaqCgeu6oxjq1uhEB73MIy3PcgZuBp+GFEmKqlY0AFQi8Fx4fDkSMcR2
+	3W9UB9AgD+AC2XzYBaTyStJg7TTNmoWQQNoCtwYw3S1TONke4tJ8Aq/pmbV7dJPekpC9kb
+	VJmZTz83atGdCLiT9qZHZTGkyOMkvqQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 10/10] media: i2c: ov9282: implement try_ctrl for
+ strobe_duration
+Message-ID: <eqtrzwtlptlh5wrma24p2fwm626mwwzlfxl7cwfucbqkg7hyat@s2nnu7mgmijf>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-10-72b299c1b7c9@linux.dev>
+ <aDTNd7sswLyBNbzd@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250513192221.784445-1-avadhut.naik@amd.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDTNd7sswLyBNbzd@kekkonen.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 13, 2025 at 07:20:11PM +0000, Avadhut Naik wrote:
-> Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD's
-> modern Zen-based SOCs has an Address Mask and a Secondary Address Mask
-> register associated with it. The amd64_edac module logs DIMM sizes on a
-> per-UMC per-CS granularity during init using these two registers.
->=20
-> Currently, the module primarily considers only the Address Mask registe=
-r
-> for computing DIMM sizes. The Secondary Address Mask register is only
-> considered for odd CS. Additionally, if it has been considered, the
-> Address Mask register is ignored altogether for that CS. For
-> power-of-two DIMMs, this is not an issue since only the Address Mask
+On Mon, May 26, 2025 at 08:22:15PM +0000, Sakari Ailus wrote:
+> Hi Richard,
+> 
+> Thanks for the update.
 
-What are power-of-two DIMMs?
+Thank you for the review!
 
-The number of DIMMs on the system is a 2^x?
+> 
+> On Wed, May 07, 2025 at 09:51:39AM +0200, Richard Leitner wrote:
+> > As the granularity of the hardware supported values is lower than the
+> > control value, implement a try_ctrl() function for
+> > V4L2_CID_FLASH_DURATION. This function calculates the nearest possible
+> > µs strobe duration for the given value and returns it back to the
+> > caller.
+> > 
+> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > ---
+> >  drivers/media/i2c/ov9282.c | 56 ++++++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 54 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> > index 09d522d5977ec6fb82028ddb6015f05c9328191d..f75882dcb73bea0e00e2cb37ffc19ec3c3a8b126 100644
+> > --- a/drivers/media/i2c/ov9282.c
+> > +++ b/drivers/media/i2c/ov9282.c
+> > @@ -128,6 +128,8 @@
+> >  #define OV9282_REG_MIN		0x00
+> >  #define OV9282_REG_MAX		0xfffff
+> >  
+> > +#define OV9282_STROBE_SPAN_FACTOR	192
+> > +
+> >  static const char * const ov9282_supply_names[] = {
+> >  	"avdd",		/* Analog power */
+> >  	"dovdd",	/* Digital I/O power */
+> > @@ -691,7 +693,7 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+> >  				current_val);
+> >  }
+> >  
+> > -static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+> > +static u32 ov9282_us_to_flash_duration(struct ov9282 *ov9282, u32 value)
+> >  {
+> >  	/*
+> >  	 * Calculate "strobe_frame_span" increments from a given value (µs).
+> > @@ -702,7 +704,31 @@ static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+> >  	 * The formula below is interpolated from different modes/framerates
+> >  	 * and should work quite well for most settings.
+> >  	 */
+> > -	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
+> > +	u32 frame_width = ov9282->cur_mode->width + ov9282->hblank_ctrl->val;
+> > +
+> > +	return value * OV9282_STROBE_SPAN_FACTOR / frame_width;
+> > +}
+> > +
+> > +static u32 ov9282_flash_duration_to_us(struct ov9282 *ov9282, u32 value)
+> > +{
+> > +	/*
+> > +	 * As the calculation in ov9282_us_to_flash_duration uses an integer
+> > +	 * divison calculate in ns here to get more precision. Then check if
+> > +	 * we need to compensate that divison by incrementing the µs result.
+> > +	 */
+> > +	u32 frame_width = ov9282->cur_mode->width + ov9282->hblank_ctrl->val;
+> > +	u64 ns = value * 1000 * frame_width / OV9282_STROBE_SPAN_FACTOR;
+> > +	u32 us = ns / 1000;
+> > +	u32 remainder = ns % 1000;
+> > +
+> > +	if (remainder > 0)
+> > +		us++;
+> 
+> It looks like you're trying to round up here. Wouldn't
+> 
+> 	return DIV_ROUND_UP(ns, 1000);
+> 
+> do the same?
 
-Their ranks are a power of two?
+Yes, thanks for the suggestion. I wasn't thinking of DIV_ROUND_UP here,
+but this makes the code way more readable :-)
 
-Their combined size is not power of two?
+Will adapt this in v5.
 
-One can only guess...
+> 
+> > +	return us;
+> > +}
+> > +
+> > +static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+> > +{
+> > +	u32 val = ov9282_us_to_flash_duration(ov9282, value);
+> >  
+> >  	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
+> >  	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
+> > @@ -792,9 +818,35 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+> >  	return ret;
+> >  }
+> >  
+> > +static int ov9282_try_ctrl(struct v4l2_ctrl *ctrl)
+> > +{
+> > +	struct ov9282 *ov9282 =
+> > +		container_of(ctrl->handler, struct ov9282, ctrl_handler);
+> > +
+> > +	if (ctrl->id == V4L2_CID_FLASH_DURATION) {
+> > +		u32 fd = ov9282_us_to_flash_duration(ov9282, ctrl->val);
+> > +		u32 us = ctrl->val;
+> > +		u32 us0 = ov9282_flash_duration_to_us(ov9282, fd);
+> > +		u32 us1 = ov9282_flash_duration_to_us(ov9282, (fd + 1));
+> > +
+> > +		if ((us1 - us) < (us - us0))
+> 
+> Is this missing abs?
 
-> register is used.
->=20
-> For non-power-of-two DIMMs, however, the Secondary Address Mask registe=
-r
-> is used in conjunction with the Address Mask register. However, since t=
-he
-> module only considers either of the two registers for a CS, the size
-> computed by the module is incorrect.
+IMHO this abs() isn't required here, as the (fd + 1) value should be
+always higher than the fd one. But nonetheless it doesn't hurt, so I'll
+add it in v5. Thanks!
 
-Yah, it must be something about the size...
+> 
+> > +			ctrl->val = us1;
+> > +		else
+> > +			ctrl->val = us0;
+> > +
+> > +		if (us != ctrl->val) {
+> > +			dev_dbg(ov9282->dev, "using next valid strobe_duration %u instead of %u\n",
+> > +				ctrl->val, us);
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /* V4l2 subdevice control ops*/
+> >  static const struct v4l2_ctrl_ops ov9282_ctrl_ops = {
+> >  	.s_ctrl = ov9282_set_ctrl,
+> > +	.try_ctrl = ov9282_try_ctrl,
+> >  };
+> >  
+> >  /**
+> > 
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
 
-> The Secondary Address Mask register
-> is not considered for even CS, and the Address Mask register is not
-> considered for odd CS.
->=20
-> Introduce a new helper function so that both Address Mask and Secondary
-> Address Mask registers are considered, when valid, for computing DIMM
-> sizes. Furthermore, also rename some variables for greater clarity.
-
-So it is non-power-of-two sized DIMMs?
-
-IOW, DIMMs whose size is not a power of two?
-
-> Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
-> Reported-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
-> Closes: https://lore.kernel.org/dbec22b6-00f2-498b-b70d-ab6f8a5ec87e@na=
-trix.lt
-> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-> Tested-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
-> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Cc: stable@vger.kernel.org
-
-All that changelog stuff...
-
-> ```
-> Changes in v2:
-> 1. Avoid unnecessary variable initialization.
-> 2. Modify commit message to accurately reflect the changes.
-> 3. Move check for non-zero Address Mask register into the new helper.
->=20
-> Changes in v3:
-> 1. Add the missing Closes tag and rearrange tags per tip tree handbook.
-> 3. Slightly modify commit message to properly reflect the SOCs that may
-> encounter this issue.
-> 4. Rebase on top of edac-for-next.
->=20
-> Changes in v4:
-> 1. Rebase on top of edac-for-next.
->=20
-> Links:
-> v1: https://lore.kernel.org/all/20250327210718.1640762-1-avadhut.naik@a=
-md.com/
-> v2: https://lore.kernel.org/all/20250415213150.755255-1-avadhut.naik@am=
-d.com/
-> v3: https://lore.kernel.org/all/20250416222552.1686475-1-avadhut.naik@a=
-md.com/
-> ---
-
-<--- ... goes here, under the --- line so that patch handling tools can i=
-gnore
-it.
-
->  drivers/edac/amd64_edac.c | 57 ++++++++++++++++++++++++---------------
->  1 file changed, 36 insertions(+), 21 deletions(-)
-
-...
-
-> +static int __addr_mask_to_cs_size(u32 addr_mask, u32 addr_mask_sec,
-> +				  unsigned int cs_mode, int csrow_nr, int dimm)
-> +{
-> +	int size;
-> =20
->  	edac_dbg(1, "CS%d DIMM%d AddrMasks:\n", csrow_nr, dimm);
-> -	edac_dbg(1, "  Original AddrMask: 0x%x\n", addr_mask_orig);
-> -	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", addr_mask_deinterleav=
-ed);
-> +	edac_dbg(1, "  Primary AddrMask: 0x%x\n", addr_mask);
-> =20
->  	/* Register [31:1] =3D Address [39:9]. Size is in kBs here. */
-> -	size =3D (addr_mask_deinterleaved >> 2) + 1;
-> +	size =3D calculate_cs_size(addr_mask, cs_mode);
-> +
-> +	edac_dbg(1, "  Secondary AddrMask: 0x%x\n", addr_mask_sec);
-> +	size +=3D calculate_cs_size(addr_mask_sec, cs_mode);
-> =20
->  	/* Return size in MBs. */
->  	return size >> 10;
-> @@ -1270,7 +1284,7 @@ static int umc_addr_mask_to_cs_size(struct amd64_=
-pvt *pvt, u8 umc,
->  				    unsigned int cs_mode, int csrow_nr)
->  {
->  	int cs_mask_nr =3D csrow_nr;
-> -	u32 addr_mask_orig;
-> +	u32 addr_mask =3D 0, addr_mask_sec =3D 0;
->  	int dimm, size =3D 0;
-
-The EDAC tree preferred ordering of variable declarations at the
-beginning of a function is reverse fir tree order::
-
-	struct long_struct_name *descriptive_name;
-	unsigned long foo, bar;
-	unsigned int tmp;
-	int ret;
-
-The above is faster to parse than the reverse ordering::
-
-	int ret;
-	unsigned int tmp;
-	unsigned long foo, bar;
-	struct long_struct_name *descriptive_name;
-
-And even more so than random ordering::
-
-	unsigned long foo, bar;
-	int ret;
-	struct long_struct_name *descriptive_name;
-	unsigned int tmp;
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+thanks & regards;rl
