@@ -1,128 +1,109 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D139428689D;
-	Wed, 28 May 2025 13:32:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E97A7FBA2;
+	Wed, 28 May 2025 13:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439132; cv=none; b=l/QSac6TBV0XGuJMeCL+c0lmPE/eEqC8UT+ncgCmwPABm73y2laX25sdGBGWbpoubH8fYq8WMce6E5ZcakE5xbV5gQF6MZpWzRluvi5f2jojfIy2aRZsM466nw+E1deGjuODRo1M7wjOyw4ARuiwCuosjunVUzVFoXJL4bL/JhU=
+	t=1748439198; cv=none; b=b4Uu66Byj4MwpppgQxMCxIJuyB2XmTvOWzUeFDJfY/2iFvtOY7YAus8WYVlihBb8a3xkbu1qU/hTySLWslvIaO6j3ajy5xxUh2KSNAEhEiTMHURuN40JXOehZf7jpOJ48Eml1AGrVkLZOgilaonroQm6NYeWCoXjthTfHtGEl60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439132; c=relaxed/simple;
-	bh=eX/daBorH/smLCo4dfPUeMY+z3xMXmm8aak/L0nuKGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=am3MJB6AIk3LpXO+aZp4CjSS81ZVxG6GRTyYblAg3DEQxulHHPXQN2PNkQTzIEgnbRqIfslUIPYdXAA66rSwq0tw+5RqW3eqrgY8+sxJk/vDyR6sCuAOnXFxoyxjyHtzvCaoggy8JH9M3iqCcu+1fClha0RxgJjNQXZUcNBfW5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OYjcPFjF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748439198; c=relaxed/simple;
+	bh=+HZ1hAlMJLfS8JRxhzEDYGYpGNGcjsFe5N6n4fXa37s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=e5sPavOoPLRe87Jm0uZgvNcTVy3fMfFbIKN+YUnhB8QPKt/KqMMsg29UM+9XPoB9vYvvW58qbb0blAjM3YBozKDOSdvzNJd/hHrOjhE/T5Ue4/i/P+JDeGOOM0ieRPx8rdy2K+DoOjmRWx3vFXH3mSN9K8EFcW3H2huWVdQ4IBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=odvNrkoR; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OYjcPFjF"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SD66uW012388;
-	Wed, 28 May 2025 13:32:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=X6d7v5
-	KHeDqP4SfAbwNK+BtPEbep1L/+/1PYfLP9vuQ=; b=OYjcPFjFymhSOiNINpxnAg
-	Fa7AzXrjoVg7P8Gspa+aXvxb7LqsIHZgkGQ72Kc0skhoC/g8pzEvuV0EfqB6sg1k
-	Z8lNGym27uzLwSG+O/3UeqVe/Ng+PoV9mltivBaiOnWJ+C5lDnfQlifpXeTnm6Pm
-	EAmFXGHy7FUNVXsq+pJQ323rIuYCZfNBBu4jXUieYRCCOZTGdMVEdLjoQqcvfLJU
-	KE+XQ8Lx+1z+DtIWXkduSBs0mUGaPr078t5u1JwFglGA/lcBO7c6msJwnRQ+MWaI
-	fzwDRxMvHKayXvyPOzXLLKH8An15VHdCSbpo4cws/7FY/o7ys6vx2aigfok0zGYg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsgd3je-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="odvNrkoR"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SC68gI005524;
+	Wed, 28 May 2025 15:33:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	q1Xe+iFfoFaZmcBVvqZtaLKC4sE7WOeQvKFEpMrwsnw=; b=odvNrkoRVpw2eeBF
+	6BILyXCBCKpMRfy+QKoOohuD5teIPpRe7OsA2d7uZTMuctfU6zFmMZYahdmUAe1I
+	goDmOhgSXIaPDR4e/Akj7Kgpb5sC0oGU3HSxIBlCdwZm4TumemNYY+nqdkEehZzN
+	Z6ujf6C8Me0DWbHXLLFdeXul2qiXl/2QD10C/qrr08apZedHfLy7zskuGTurE6GO
+	nIapA9MNIlzHJDpy7lKEzIYdL2zAQSDCruhftpp7/ANhgelRXjA6nrL9ZYb7l2FO
+	5RnHAlvMjznpgfhO8+ho/2519eJoWRFbSjm0qit6QpUYRDeqI7fx9pf1IlVHKhD4
+	+/GZMQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46w54hrb5u-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 13:32:05 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAcxke015803;
-	Wed, 28 May 2025 13:31:49 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu537bc3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 13:31:49 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SDVlR254198746
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 13:31:47 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 94E7E2004D;
-	Wed, 28 May 2025 13:31:47 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A16EB20043;
-	Wed, 28 May 2025 13:31:45 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.124.209.136])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 28 May 2025 13:31:45 +0000 (GMT)
-Date: Wed, 28 May 2025 19:01:42 +0530
-From: Vishal Chourasia <vishalc@linux.ibm.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-Message-ID: <aDcQPgjzx-X2Kj5s@linux.ibm.com>
-References: <20250527085335.256045-2-vishalc@linux.ibm.com>
- <vzdrzqphpjnvrfynx7ajdrgfraavebig4edipde3kulxp2euqh@7p32zx7ql6k6>
+	Wed, 28 May 2025 15:33:05 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 25BA540070;
+	Wed, 28 May 2025 15:31:49 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6C9076CCEEE;
+	Wed, 28 May 2025 15:31:05 +0200 (CEST)
+Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 28 May
+ 2025 15:31:05 +0200
+From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
+Date: Wed, 28 May 2025 15:31:00 +0200
+Subject: [PATCH v4 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp25
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <vzdrzqphpjnvrfynx7ajdrgfraavebig4edipde3kulxp2euqh@7p32zx7ql6k6>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=OIIn3TaB c=1 sm=1 tr=0 ts=68371055 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=8nJEP1OIZ-IA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=ihcwlhghPN_qPqRxoEcA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
-X-Proofpoint-GUID: a6VRcOVsuolG0IXKqeIGJA0iNkgN6ltU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDExOSBTYWx0ZWRfXwGHLpxZXd/i6 s3cO+s3LPeKtfBoDgsO2WPbPiDDxoS8QnHOrtE257zpWQeaPZX97O4M2pqT7ImqlbDFEvDuVtNi 7lGwd1TWV5fA9dAwFRswII3VSNrg/EkyEgIWzMbRlKgcJdckwfYawa9uQaeYHLtPuomhDWHhCNK
- 0WyIlh1ZsmhuO5gLKOpOc0LbJEdd+fejNmJcCJ0urwn7Ot2t5jdioe683qChfBFTp5fzmHjK9eq CGeCoexuWpOhsb+t5M5EOuSXai0+lTjLcrnl56phjufPoah37hnHUKWkvOayS2SbDHparR27Clx +H94sccmp2mQNXv22vol8KmjJsrHlQZLGyU/ThMqOBXykm8umnQb4raZNIBuCL+xocdrWb+iBIk
- VJHDBV9SzPSxReP3ulc+pMb934Se6bilCO+tg/BJvMgcjKWhlbalodgyKMkXLecDPBCTViyf
-X-Proofpoint-ORIG-GUID: a6VRcOVsuolG0IXKqeIGJA0iNkgN6ltU
+Message-ID: <20250528-hdp-upstream-v4-7-7e9b3ad2036d@foss.st.com>
+References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
+In-Reply-To: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        =?utf-8?q?Cl=C3=A9ment_Le_Goffic?=
+	<clement.legoffic@foss.st.com>
+X-Mailer: b4 0.15-dev-6f78e
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- mlxlogscore=371 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280119
 
-On Tue, May 27, 2025 at 11:58:50AM +0200, Michal Koutn˝ wrote:
-> Hello.
-> 
-> On Tue, May 27, 2025 at 02:23:36PM +0530, Vishal Chourasia <vishalc@linux.ibm.com> wrote:
-> > --- a/Documentation/admin-guide/cgroup-v2.rst
-> > +++ b/Documentation/admin-guide/cgroup-v2.rst
-> > @@ -438,8 +438,8 @@ Controlling Controllers
-> >  Enabling and Disabling
-> >  ~~~~~~~~~~~~~~~~~~~~~~
-> >  
-> > -Each cgroup has a "cgroup.controllers" file which lists all
-> > -controllers available for the cgroup to enable::
-> > +Each cgroup has a cgroup.controllers file, which lists all the controllers
-> > +available for that cgroup and which can be enabled for its children.
-> >  
-> >    # cat cgroup.controllers
-> >    cpu io memory
-> 
-> Honestly, I see little difference between the two resulting formulations.
-> Could you perhaps add an example where the documentation confused you or
-> behavior was not what you expected based on the docs?
+Add the hdp devicetree node for stm32mp25 SoC family
 
-You are right, there is little difference. I wanted to highlight the
-point, that, Availablity means controller can be used to resource
-control a cgroup, while Enablement means controller is now "availble" to
-children of the cgroup.
+Signed-off-by: Cl√©ment Le Goffic <clement.legoffic@foss.st.com>
+---
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Regards,
-Vishal
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 87110f91e489..0fd79acd458f 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -917,6 +917,13 @@ package_otp@1e8 {
+ 			};
+ 		};
+ 
++		hdp: pinctrl@44090000 {
++			compatible = "st,stm32mp251-hdp";
++			reg = <0x44090000 0x400>;
++			clocks = <&rcc CK_BUS_HDP>;
++			status = "disabled";
++		};
++
+ 		rcc: clock-controller@44200000 {
+ 			compatible = "st,stm32mp25-rcc";
+ 			reg = <0x44200000 0x10000>;
 
-> 
-> Thanks,
-> Michal
-
+-- 
+2.43.0
 
