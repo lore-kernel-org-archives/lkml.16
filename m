@@ -1,93 +1,113 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848DE286403;
-	Wed, 28 May 2025 16:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671EB79FE;
+	Wed, 28 May 2025 16:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449886; cv=none; b=ASb4ea6/QO7oSO7MyH/k0XkSufhBWJSf52pGzdmtRDYIZyxxU6XjaNUWPdAnPYcYrjvavRPn29/xnracHx/A/vCh3BJSpDtWOUVCZofcIKEd1Nw39aVE1M1m7zrKsXqavHnYZ2OtBZvGi+Dqqce82AyDogCLxe2ZEHvFhIFLUQY=
+	t=1748450168; cv=none; b=k42Fw8lyOAPeneoy+uUnfXgUvCJZ1zwE5ER88629KVGwx7nCA3dypsHYpSv+km+Ow6xYm1quKiIylhVrE9zmddkqvQJ5Y7WYF09+1pQUTMDrICQVjEsn76XBMj2s2RLc0fF5w/aXEDHEqqavdjjHlfFPV3FuHdnZKpbJH5nB70s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449886; c=relaxed/simple;
-	bh=P3y/C6BOs8zMzpQ9uc5/+S+36UJcguhm1Xu50gAFsj0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fh3v77/vAvdg1MesgFIxvw2EtBaB/z5iXJDRhRCkEmzNOZ0fx8rA7zv6yEOAFdUCUOyh2Sd/D+nw1cmr3H1JfcgIsqzZig+xqU2jDJjMF2UzNTGcUT2iG3zxnlUhNromeP4MKuDbXGcyHKdciocDyHb3b+TXShaSEK5nRcnKVyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gfGKxS8j; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748450168; c=relaxed/simple;
+	bh=8tkCt7P4+2Itg5B4iyjr2bnz0MD5gJmHFsKamVWzmY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LKGtkAy+7jrPN5LT+oRVwjTsPanUVKfUP8WhOfcfcV1+ro1OCiTumsAxRUQNt1t1UuyzihovvLVHSWxudab3vYYj3TAdzS0WietNsQeWT7aG2RagfdBk7gefmEjsFlmjVIroYHG/vFpMCLL+ZzhbtyCbHKkEeRuMzmpC9zpI2gU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CI3whra/; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gfGKxS8j"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3120dd42103so34199a91.0;
-        Wed, 28 May 2025 09:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748449885; x=1749054685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P3y/C6BOs8zMzpQ9uc5/+S+36UJcguhm1Xu50gAFsj0=;
-        b=gfGKxS8js+IcipE13qCnNsD4WTTmaNABuGQj5p3a+uYcIBNQtdDZfa6nkXV1vO9lGr
-         YfokDCAgg9McGXkoPNnxs/uZlNWFGD1buw6/nuaKIK9dCPk+SCU1Sh+f6+HeKvWOFyBT
-         POM4/iNImwXLDxyzYP8dF5PunkEFNc9dhXSxJOkmA+87qeDRk8zYHIWNKDd/msHGIXin
-         01byOLZ/d+J8yb8FWaRNoBMtnpRkoOEYa+X/zCiJzZfWSwCd3ZdwzpKBRMhQYi1a+wTc
-         //Ci6B0dhOgJ62IrUfAxC6lh/a/63UyrqetXsKeLdhHiRpTegIkFAT/ImKQ9Eo7mdLLo
-         CM8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748449885; x=1749054685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P3y/C6BOs8zMzpQ9uc5/+S+36UJcguhm1Xu50gAFsj0=;
-        b=YXcFCuwhHBd9a6R5/MQVSdJzumLPMuETTxdBwbjkQKn8ff0ufDlROodo6ceEzgaD9C
-         kieVwLRrcSCS+fh+Dus6Irad3HSptsJpAqlJ8ggzSELdNx5Ospb7Tu9Wr8rGsdfCwYnf
-         1nSxfbLdEYME7YWTbQ76fhbOZ/BfJytTFiNgmrg1MNa0hkpqkj5kD4viWk5GmRJq6c3V
-         NyN5SbRsrwXlZyajjrZc6/0rZGRypUa7vepZmGJhIYTcq/Td7vxL3fg32dzX5SuVYcJe
-         TcQ4gm6A/5tKFkElHghCe+D96kNHf/dpg8EL596uWfXZ4L6KA4/1iB5GcOphK86nfGLR
-         KYxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWn1NM9BUE+eaPgbpXOrq0mQC2qa1rRWbmxCamsR0SYnnS5bxluJxy7FVBU3SZ3jZRVK1xl0AEwCWU+ghU=@vger.kernel.org, AJvYcCXCcVi52v5joIRWVeW461hzyCaxbU0Kw0TQFhd7GDHmB2t0DF0LDgAPeY9ktbUoGdDK4g50tyW5qHaXIGCErgo=@vger.kernel.org, AJvYcCXHEyxWXvnz56CKVhkA9xOlunAD7Mm4vpo9UAOEDkPFlXq6H500y402k77Pjktk3EX0U2d4ObHAxQ+LmcnApmy8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+82TXlw8vF9KtChKKfxEfMhQiJDWVOd/to2cK7gRW2avUclsJ
-	idOXtviU3SaryFGpPl8eHyNNGbD5HUm61XM0m2siw/KHiG0XI4LVot7qhJ78zbzkNZyQBmM5iBN
-	29JoAVOh+t0vgkimyZ1Id1ocB76oxrRk=
-X-Gm-Gg: ASbGncsa9+GgL+Vm+FJrphlhw9FjsbQCagn1EzUGFi5AyxuQBo3MNGozIKvyGyq73T4
-	+S1ybRxg7CgKIUTpWuT/l1d5/dKc4ZCWn98e1P4osF5a3xJRs+O9280EFYI+dYq95+ej/7n7TCl
-	dMCwgy4PDCQp/6ny8fq5sNHBPNgQEUxc4x
-X-Google-Smtp-Source: AGHT+IHOJrnI/nuLXZHb8+rmB/wiEXoSp/bEqDC6ZUxb34OhLHK0jaWZqJSsxdkkbjCTI3wCGcSjWuYxHiTdVkoMHcs=
-X-Received: by 2002:a17:90b:1d8b:b0:311:e9a6:332e with SMTP id
- 98e67ed59e1d1-311e9a63395mr1754483a91.0.1748449884630; Wed, 28 May 2025
- 09:31:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CI3whra/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=568UXfg09DhGtkTDBYV5iMDI+b3lSxDAU/RR+HqOCYA=; b=CI3whra/FNKgPC6/MrrW3/7oAv
+	gJ5A/lFJJfDNjjvOWVxWPYcIaNKO5GhQHKgKeQBfWXQ5KsbRarMDrQ+JT3DIIXQ2qkBV1LtduiLLO
+	WHtwhFJlmkqQ1lexDv8Sw2MAzPE9g4AlHH3iaSQEuIRMd2BLFruRjyBtdpwUjQlQEPbisK3s2IO4S
+	ktBd+DGQuegeItaFJsTX+0XvLscXM7mt1HEashHGAGbUHkx4nIVJPzYzcSj5bVnJpMYfDqlE2ZSAb
+	426Hsd8fujIAwPu2cXH1c210B8lEDyUDFp4VIzVaxWbIgO/xhBKefAc/BYjqYzcMZZRYb+b8b52DV
+	6rqvJ3tg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKJl0-0000000Dr3Y-1soE;
+	Wed, 28 May 2025 16:35:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 05D793005AF; Wed, 28 May 2025 18:35:58 +0200 (CEST)
+Date: Wed, 28 May 2025 18:35:57 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <20250528163557.GI31726@noisy.programming.kicks-ass.net>
+References: <aBO9uoLnxCSD0UwT@google.com>
+ <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+ <aBUiwLV4ZY2HdRbz@google.com>
+ <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+ <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
+ <20250506073100.GG4198@noisy.programming.kicks-ass.net>
+ <20250506133234.GH4356@noisy.programming.kicks-ass.net>
+ <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
+ <20250528074452.GU39944@noisy.programming.kicks-ass.net>
+ <20250528163035.GH31726@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528155147.2793921-1-y.j3ms.n@gmail.com>
-In-Reply-To: <20250528155147.2793921-1-y.j3ms.n@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 28 May 2025 18:31:11 +0200
-X-Gm-Features: AX0GCFtHMn_KuvjvBkIeX53fBiemP9VoNR9r1Lds-yXsvikvU80_bPY6l7Er12s
-Message-ID: <CANiq72==P-Sp=d6N7B=f-_aHak3Gr596Bs-3MmMBs+tw9J_K9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: kunit: use crate-level mapping for `c_void`
-To: Jesung Yang <y.j3ms.n@gmail.com>
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528163035.GH31726@noisy.programming.kicks-ass.net>
 
-On Wed, May 28, 2025 at 5:55=E2=80=AFPM Jesung Yang <y.j3ms.n@gmail.com> wr=
-ote:
->
-> So in sum, I believe it's reasonable to keep the diff unchanged... but
-> I'm happy to adjust if you'd prefer a different approach.
+On Wed, May 28, 2025 at 06:30:35PM +0200, Peter Zijlstra wrote:
+> On Wed, May 28, 2025 at 09:44:52AM +0200, Peter Zijlstra wrote:
+> > On Tue, May 06, 2025 at 12:18:49PM -0700, Josh Poimboeuf wrote:
+> > 
+> > > Weird, I'm not seeing that.
+> > 
+> > I Ate'nt Crazeh...
+> > 
+> > https://lore.kernel.org/all/202505280410.2qfTQCRt-lkp@intel.com/T/#u
+> > 
+> > I'll go poke at it, see if today is the day I can figure out WTF
+> > happens.
+> 
+> It manages to trip the CFI_UNDEFINED case in op->dest.reg == cfa->base
+> in update_cfi_state().
+> 
+> I figured it ought to tickle the regular 'mov %rbp, %rsp' case above
+> there, but it doesn't, for some reason it has cfa.base == SP at this
+> point.
+> 
+> This happens... /me looks in scrollback ... at POP_REGS 'pop
+> %rbp'. ARGH!!
+> 
+> 
+> So the sequence of fail is:
+> 
+> 	push %rbp
+> 	mov %rsp, %rbp	# cfa.base = BP
+> 
+> 	SAVE
+> 	...
+> 	push %rbp
+> 	...
+> 	pop %rbp	# cfa.base = SP
 
-I see this is based on rust-next -- if you rebase the patch on top of
-the latest one, you will see the prelude there :)
+This is the POP !drap and dest==base case.
 
-Thanks!
-
-Cheers,
-Miguel
+> 	...
+> 	mov %rbp, %rsp  # UNDEF
+> 	nop		# FAIL
+> 	RESTORE
+> 
+> Note that the MOV+NOP is the 4 bytes ERETS needs.
