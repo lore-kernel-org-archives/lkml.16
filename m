@@ -1,113 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF49B74BE1;
-	Wed, 28 May 2025 18:55:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E710F81724;
+	Wed, 28 May 2025 18:57:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748458520; cv=none; b=tRCa3qJWtPMgvXr34etPhYsYQ/zv2aoiOQdJT5unY4KqEOC7Apf5HRKNW1NMZcrRGcak6r6FZpY6A6cTjOCJd/Oi4f/Trjrh4L5rMAxoX8Owl7joFD+PpPhv9LBmk1r0JSD+m8qyelCv+lJp/+pUz7TMPKTlmcdb2xIJDGmK/9M=
+	t=1748458659; cv=none; b=eN8Y5xGUe08sAB1HvUxHEigc9i0kApmGfAsWby2pVAzL2TkAGR0csQO7DcQqb8FFSWiJ6uRx75QHFXSalE1iMTWie4OHJpK3cI+2CIeG/iY1HUE/9nIOZhpF3+0XYMbTNvjsZhIM1BQtFWqIF0v0pn69hH5nTHyzM8lXyTFzo/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748458520; c=relaxed/simple;
-	bh=HPXyaBEtLP4rxgNlcKWVIBnWfTrSOpit78Uj4rkTXY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dw8bKR5+378LkZPiPHg3zjKxn5r4bngcDBJBQb1HiAt1LfWjOXUjZjyXgNNfLJPKamOPL0B8irFJczXWJtz6uSaAUT5tvYakfGmnn+Y97yCd1QsMOBDh8CbceyUcyOCCccEjPdBTe+v+42FlkVj92WAgqKXuvnsENxispbIiVrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iymk3p3q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748458659; c=relaxed/simple;
+	bh=NP57BkZzjq1plXytv+G2I0CdgzK0RRxKGjgpR/vkFpU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ArxovfAFDuMWc9xvusiXoiN2BowELBSZWLFoSzUuZvOiiNnJaCy/jk3qQ9aRlwvGLM0Mpi6awxYEo4kBmc8pF0I8Ah4K7kiwxURUibVHKbOmhP87z/VEuPypjTlfOJ/20oUxngSDKW1+MAAa5uIV0xB79Of2w6sivvjEmeAiKp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEp2ES2M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iymk3p3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B485C4CEE3;
-	Wed, 28 May 2025 18:55:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEp2ES2M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48774C4CEE3;
+	Wed, 28 May 2025 18:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748458519;
-	bh=HPXyaBEtLP4rxgNlcKWVIBnWfTrSOpit78Uj4rkTXY0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iymk3p3qurAJxmEFyt4xikozpFvS6K2PsBr+wTDcEbMAZGS6WX6FNTJ+aUuh+dmdv
-	 bARe1NiR7jmFMTdtSgD6Ksesge5RPAZovOtY/P+kB6+fV3bi6tzQaLCvJeeyLh5VMS
-	 JoYJ2Vv5wyPbfKESQm1/EUAv4ELsKQO+qMnIi6Y6LlpdbJ70UJYcSfDBIqYzZpIpxh
-	 GigV1Mz4Qmw4rKievHayPHUIB1/+7ygJcqh05xUEsdUC3Lc40nlr+Lh4PcE21iJ6Xp
-	 XGX1Jxf4Ug8C0dh2uURttHV1kd9aYS8/hf++KkJ72QR3fkv7vnj7Lz84hB8iFyHzWT
-	 VgeV8/foOnIeQ==
-Date: Wed, 28 May 2025 19:55:08 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250528185508.GK1484967@horms.kernel.org>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+	s=k20201202; t=1748458658;
+	bh=NP57BkZzjq1plXytv+G2I0CdgzK0RRxKGjgpR/vkFpU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sEp2ES2M+ul6PIPV1rZfhiYM/d90zzKKgNVDy225KDFyY1bxf2Dj92txydVum6btm
+	 caEqAbBbSyU/ts78I9S8NxWVIZVAYfc1y2CLRBaPx7XdRsMFUTY0d9WStdFuIKL81I
+	 EnGoSwXZbtCsyXYGQ9BvZAE19IytBgSlNa5ZBoTve76yq+3fa14y2M9LoVM33DDSk6
+	 UQeraxWvFw7UD2WLjzqJ4N2X69jIckJOiiuJ5bHCsrNHmB0nvNJ2EAZawFcdGiUyUX
+	 wDscLytqpT9VQaJznHUJwkPOCnCoUFlFALDgV5xoR4tUYnga2j87v4mbOQ35XeqJ9a
+	 kJRXKgy0D3ckg==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>,  Tudor Ambarus
+ <tudor.ambarus@linaro.org>,  Michael Walle <mwalle@kernel.org>,  Miquel
+ Raynal <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  Rob Herring <robh@kernel.org>,
+  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  "open list:SPI NOR SUBSYSTEM"
+ <linux-mtd@lists.infradead.org>,  "open list:OPEN FIRMWARE AND FLATTENED
+ DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,  open list
+ <linux-kernel@vger.kernel.org>,  imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: mtd: jedec,spi-nor: Add atmel,at26*
+ compatible string
+In-Reply-To: <aDcscr4pF5vC4kNq@lizhi-Precision-Tower-5810>
+References: <20250523155258.546003-1-Frank.Li@nxp.com>
+	<mafs0r00arpzx.fsf@kernel.org>
+	<aDcscr4pF5vC4kNq@lizhi-Precision-Tower-5810>
+Date: Wed, 28 May 2025 20:57:35 +0200
+Message-ID: <mafs0tt54r2ao.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+Content-Type: text/plain
 
-On Tue, May 27, 2025 at 08:57:33AM -0700, Shradha Gupta wrote:
-> In this patchset we want to enable the MANA driver to be able to
-> allocate MSI-X vectors in PCI dynamically.
-> 
-> The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> correctly prepare descriptors for dynamically added MSI-X vectors.
-> 
-> The second patch adds the support of dynamic vector allocation in
-> pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> flag and using the pci_msix_prepare_desc() exported in first patch.
-> 
-> The third patch adds a detailed description of the irq_setup(), to
-> help understand the function design better.
-> 
-> The fourth patch is a preparation patch for mana changes to support
-> dynamic IRQ allocation. It contains changes in irq_setup() to allow
-> skipping first sibling CPU sets, in case certain IRQs are already
-> affinitized to them.
-> 
-> The fifth patch has the changes in MANA driver to be able to allocate
-> MSI-X vectors dynamically. If the support does not exist it defaults to
-> older behavior.
+On Wed, May 28 2025, Frank Li wrote:
 
-Hi Shradha,
+> On Tue, May 27, 2025 at 06:13:22PM +0200, Pratyush Yadav wrote:
+>> On Fri, May 23 2025, Frank Li wrote:
+>>
+>> > Add atmel,at26* compatible string to fix below CHECK_DTB warning:
+>> >
+>> > arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: /soc/bus@40000000/spi@4002c000/at26df081a@0:
+>> >     failed to match any schema with compatible: ['atmel,at26df081a']
+>>
+>> Is there any problem with setting the compatible to "jedec,spi-nor" in
+>> the DTS instead? If not, it would better to do that instead.
+>
+> I suppose it should work. But it is quite old legancy boards. I have not
+> board to test it.  And dt also prefer add chip specific compatible string
+> before common failback compatible string in case need workaround some chip
+> issues.
 
-It's unclear what the target tree for this patch-set is.
-But if it is net-next, which seems likely given the code under
-drivers/net/, then:
+Hmm, poking around with old DTs is probably not a good idea. Anyway, the
+flash is listed in spi_nor_dev_ids just like the others in this yaml, so
+this patch looks fine.
 
-Please include that target in the subject of each patch in the patch-set.
+Acked-by: Pratyush Yadav <pratyush@kernel.org>
 
-	Subject: [PATCH v5 net-next 0/5] ...
-
-And, moreover, ...
-
-## Form letter - net-next-closed
-
-The merge window for v6.16 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations. We are
-currently accepting bug fixes only.
-
-Please repost when net-next reopens after June 8th.
-
-RFC patches sent for review only are obviously welcome at any time.
+-- 
+Regards,
+Pratyush Yadav
