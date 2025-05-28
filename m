@@ -1,273 +1,131 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01646210F65;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3762F211A0E;
 	Wed, 28 May 2025 06:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412836; cv=none; b=VfOKHw+6lr9GqGgVo/af/Ccch6yIrn+mHenNLaZwVRZSPEPjcTin7YuxEVclsQn5ul8UiJvwykzzUz4SlQxqUvEZc1pXYlfP2mqYOE3KXQGouDCagJQrZyDW5y0ALa/7p/HhEWgmGlaeXk3X9MhiyzAClh3IFm4KDwCpDyl4YbI=
+	t=1748412838; cv=none; b=P7oSRNFoknMc0a0gfXv/RBdSrlme0cBWLIKtFXpl4Gp8FO3pm3fxXloypXM5fub0JTwz76VdIlaLxXFoiV6QFSpSX3mbcVS/ff9U4rjCkpx+AREuMXvOScrKrZQlzD/agHDDLPSBEedUdwZxGkawlqNawUM8uIfakNXdSlS5h+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412836; c=relaxed/simple;
-	bh=timdkqszBy9pRJGN5hJ0FwkI0yGkdV1tziqvIcqNk+w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=cFviUiGYJEN3VFKhftELR2cfOFsIPdbpLkJRgMON2+dm7rlgXNSsGbbETF6N8hUv/PPbgp8V3JSSS9T5WUkxzZgv86u6oXoeULNxZAwnyVPkQh3wte5yf8UKNlT2cF9yOexL8yu8G57v/OXSj5ZToBXWE+ZpdGPYYYj/z4vmB9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OWatpCnL; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1748412838; c=relaxed/simple;
+	bh=eiT/vSc22rEGiAvVFZ5/ZWqinHH0e3XtVZ+udxaTsIQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bR1khq8CNaOCRe6Agiq5fMu2D3dcUnd7jXxpFcIH0eC2a6nkX151ph0FPWAaQQMjsPy2wCtYiPG3GaWcpMzrYd4+lEYM/a/0ubegsMFqxu4y0o+3JC8R3Ptf389Bav2RqyvwLKS15cbTU7GFosmgh1FgZ+I1XR0Gds/M5YJ38/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cfNZ+ABh; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OWatpCnL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748412835; x=1779948835;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=timdkqszBy9pRJGN5hJ0FwkI0yGkdV1tziqvIcqNk+w=;
-  b=OWatpCnLvhiWTMp8VyDL6TI8fIOdj8xuzcAGLjSwkvk9JAQO3d1IrmAl
-   7ltb/OetaXvVcSckB+aPKzL0fYfwSRmv0VbiJ/wgk9XBIXtMLh4tLO2as
-   X7sA1UsMydlPF7U/wSAqFGI0uJz7NU4boLrLH/l3dWInWZbO/uPS7WZ6d
-   UjrL4fntwtUaIZIf/N5yOoXfSnMI2y7kmG9qDsnHWl7VjEuHP56MgC+pV
-   GOe+U5oOl3xMjEggJPVkRSnS0aeMJ4osLxCf5bBORtCXLghPaBiPhoV7M
-   1SIcmKjqt4p6Bs9rFR4FZcrSJCrp5UIxnpuCuK3m0viQKSv9rFF9KO15O
-   Q==;
-X-CSE-ConnectionGUID: Na4ii3iOTbObYzT6z7QrlA==
-X-CSE-MsgGUID: /JIRnDJ9QduRg7sJME2snQ==
-X-IronPort-AV: E=Sophos;i="6.15,320,1739862000"; 
-   d="scan'208";a="42149725"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 May 2025 23:13:53 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 27 May 2025 23:13:23 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 27 May 2025 23:13:20 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 28 May 2025 11:43:05 +0530
-Subject: [PATCH 2/2] counter: microchip-tcb-capture: Add DMA support for
- TC_RAB register reads
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cfNZ+ABh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748412827;
+	bh=AifmlD6epwaraxjcxUJRxGnsd49Asu8Er1vCXQcUTVs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cfNZ+ABhXc53YvuOrV8s6xuFkbs26dgv/UxojMQSBtdcfkgdl4dF6EeJsPGMDFsZS
+	 b1WyVHDeLSnqhZuyUHncTsZY2npJUWbqkzGg2gzGSsUSzhmuN8JvTsusQcj6sJ5klL
+	 KyVvP6zCoXvfuV+d15KrgsLC7QMBt886kX5j1QThBuP4wkJ9OgmSaItXw933htYMSS
+	 RZ4edILUd/QHqiNz6WRkWEaQzx38lxtvy7E9ONZOMoVEhBxaLnHbt0x3yaFU79nfo8
+	 haf8cFR+p+P6F4791/+gd0GsmBEzKY2Xhg2y2giUcHi2Y3sTMZ/1M0sYrQANFPzk3D
+	 HiylG6yLTSfCA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6fMY1sm1z4wcg;
+	Wed, 28 May 2025 16:13:45 +1000 (AEST)
+Date: Wed, 28 May 2025 16:13:44 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, Mengyuan Lou
+ <mengyuanlou@net-swift.com>, Networking <netdev@vger.kernel.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the net-next tree
+Message-ID: <20250528161344.0533ae6b@canb.auug.org.au>
+In-Reply-To: <20250507124900.4dad50d4@canb.auug.org.au>
+References: <20250507124900.4dad50d4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250528-mchp-tcb-dma-v1-2-083a41fb7b51@microchip.com>
-References: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-In-Reply-To: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
-	<wbg@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Alexandre
- Belloni" <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748412791; l=5988;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=timdkqszBy9pRJGN5hJ0FwkI0yGkdV1tziqvIcqNk+w=;
- b=kPxGwSciC4VTlx2DjWq3wGdOzg0lsJ2YPOQbl09O2vKiubiXkJp0NNdYlmqYdQtozf2ws0mrT
- dhSgpNfyYhMDglCAnrOIjUz24hCHa9UU4MXRWgLVVcf1Q8F0yXkqeEC
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+Content-Type: multipart/signed; boundary="Sig_/o+MW=vr2532+4g+j=5kq6Tm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Add optional DMA-based data transfer support to read the TC_RAB register,
-which provides the next unread captured value from either RA or RB. This
-improves performance and offloads CPU when mchp,use-dma-cap is enabled in
-the device tree.
+--Sig_/o+MW=vr2532+4g+j=5kq6Tm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- drivers/counter/microchip-tcb-capture.c | 110 +++++++++++++++++++++++++++++++-
- include/soc/at91/atmel_tcb.h            |   1 +
- 2 files changed, 108 insertions(+), 3 deletions(-)
+Hi all,
 
-diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
-index 9634da75bd1a..fa177edc6803 100644
---- a/drivers/counter/microchip-tcb-capture.c
-+++ b/drivers/counter/microchip-tcb-capture.c
-@@ -6,6 +6,9 @@
-  */
- #include <linux/clk.h>
- #include <linux/counter.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-direction.h>
-+#include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
-@@ -28,9 +31,19 @@
- #define ATMEL_TC_QDEN			BIT(8)
- #define ATMEL_TC_POSEN			BIT(9)
- 
-+struct mchp_tc_dma {
-+	struct dma_chan *chan;
-+	struct dma_slave_config slave_cfg;
-+	u32 *buf;
-+	dma_addr_t addr;
-+	phys_addr_t phy_addr;
-+	bool enabled;
-+};
-+
- struct mchp_tc_data {
- 	const struct atmel_tcb_config *tc_cfg;
- 	struct platform_device *pdev;
-+	struct mchp_tc_dma dma;
- 	struct regmap *regmap;
- 	void __iomem *base;
- 	int qdec_mode;
-@@ -74,6 +87,61 @@ static struct counter_synapse mchp_tc_count_synapses[] = {
- 	}
- };
- 
-+static void mchp_tc_dma_remove(void *data)
-+{
-+	struct mchp_tc_data *priv = data;
-+
-+	if (priv->dma.buf)
-+		dma_free_coherent(&priv->pdev->dev, sizeof(u32),
-+				  priv->dma.buf, priv->dma.addr);
-+
-+	if (priv->dma.chan)
-+		dma_release_channel(priv->dma.chan);
-+}
-+
-+static int mchp_tc_dma_transfer(struct mchp_tc_data *priv, u32 *val)
-+{
-+	struct dma_async_tx_descriptor *desc;
-+	struct device *dev = &priv->pdev->dev;
-+	dma_cookie_t cookie;
-+	int ret;
-+
-+	ret = dmaengine_slave_config(priv->dma.chan, &priv->dma.slave_cfg);
-+	if (ret) {
-+		dev_err(dev, "DMA slave_config failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	desc = dmaengine_prep_dma_memcpy(priv->dma.chan,
-+					 priv->dma.addr,
-+					 priv->dma.slave_cfg.src_addr,
-+					 sizeof(u32),
-+					 DMA_CTRL_ACK | DMA_PREP_INTERRUPT);
-+	if (!desc) {
-+		dev_err(dev, "DMA prep descriptor failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	cookie = dmaengine_submit(desc);
-+	if (dma_submit_error(cookie)) {
-+		dev_err(dev, "DMA submit error (%d)\n", cookie);
-+		return cookie ?: -EIO;
-+	}
-+
-+	dma_async_issue_pending(priv->dma.chan);
-+
-+	ret = dma_sync_wait(priv->dma.chan, cookie);
-+	if (ret) {
-+		dev_err(dev, "DMA transfer timed out (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	/* Retrieve the 32-bit value the engine just copied */
-+	*val = le32_to_cpu(*(u32 *)priv->dma.buf);
-+
-+	return 0;
-+}
-+
- static int mchp_tc_count_function_read(struct counter_device *counter,
- 				       struct counter_count *count,
- 				       enum counter_function *function)
-@@ -260,20 +328,25 @@ static int mchp_tc_count_cap_read(struct counter_device *counter,
- 				  struct counter_count *count, size_t idx, u64 *val)
- {
- 	struct mchp_tc_data *const priv = counter_priv(counter);
--	u32 cnt;
-+	u32 cnt, reg_offset;
- 	int ret;
- 
- 	switch (idx) {
- 	case COUNTER_MCHP_EXCAP_RA:
--		ret = regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RA), &cnt);
-+		reg_offset = ATMEL_TC_REG((priv->channel[0]), RA);
- 		break;
- 	case COUNTER_MCHP_EXCAP_RB:
--		ret = regmap_read(priv->regmap, ATMEL_TC_REG(priv->channel[0], RB), &cnt);
-+		reg_offset = ATMEL_TC_REG((priv->channel[0]), RB);
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
- 
-+	if (!priv->dma.enabled)
-+		ret = regmap_read(priv->regmap, reg_offset, &cnt);
-+	else
-+		ret = mchp_tc_dma_transfer(priv, &cnt);
-+
- 	if (ret < 0)
- 		return ret;
- 
-@@ -578,6 +651,7 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	priv->dma.phy_addr = parent_res->start;
- 	priv->tc_cfg = tcb_config;
- 	priv->regmap = regmap;
- 	priv->pdev = pdev;
-@@ -589,6 +663,36 @@ static int mchp_tc_probe(struct platform_device *pdev)
- 	counter->num_signals = ARRAY_SIZE(mchp_tc_count_signals);
- 	counter->signals = mchp_tc_count_signals;
- 
-+	/* Check the dma flag */
-+	priv->dma.enabled = of_property_read_bool(np, "mchp,use-dma-cap") ? true : false;
-+
-+	if (priv->dma.enabled) {
-+		/* Initialise DMA */
-+		priv->dma.buf = dma_alloc_coherent(&pdev->dev, sizeof(u32),
-+						   &priv->dma.addr, GFP_KERNEL);
-+		if (!priv->dma.buf)
-+			return -ENOMEM;
-+
-+		priv->dma.chan = dma_request_chan(&parent_pdev->dev, "rx");
-+		if (IS_ERR(priv->dma.chan))
-+			return -EINVAL;
-+
-+		dev_info(&pdev->dev, "Using %s (rx) for DMA transfers\n",
-+			 dma_chan_name(priv->dma.chan));
-+
-+		/* Configure DMA channel to read TC AB register */
-+		priv->dma.slave_cfg.direction = DMA_DEV_TO_MEM;
-+		priv->dma.slave_cfg.src_addr = priv->dma.phy_addr + ATMEL_TC_REG(priv->channel[0],
-+										 RAB);
-+		priv->dma.slave_cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+		priv->dma.slave_cfg.src_maxburst = 1;
-+		priv->dma.slave_cfg.dst_maxburst = 1;
-+
-+		ret = devm_add_action_or_reset(&pdev->dev, mchp_tc_dma_remove, priv);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	i = of_irq_get(np->parent, 0);
- 	if (i == -EPROBE_DEFER)
- 		return -EPROBE_DEFER;
-diff --git a/include/soc/at91/atmel_tcb.h b/include/soc/at91/atmel_tcb.h
-index 26b56a07bd1f..9fad7f58a56a 100644
---- a/include/soc/at91/atmel_tcb.h
-+++ b/include/soc/at91/atmel_tcb.h
-@@ -243,6 +243,7 @@ extern const u8 atmel_tc_divisors[5];
- #define ATMEL_TC_RA	0x14		/* register A */
- #define ATMEL_TC_RB	0x18		/* register B */
- #define ATMEL_TC_RC	0x1c		/* register C */
-+#define ATMEL_TC_RAB	0x0c		/* register AB */
- 
- #define ATMEL_TC_SR	0x20		/* status (read-only) */
- /* Status-only flags */
+On Wed, 7 May 2025 12:49:00 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> Today's linux-next merge of the tip tree got a conflict in:
+>=20
+>   drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+>=20
+> between commit:
+>=20
+>   a9843689e2de ("net: txgbe: add sriov function support")
+>=20
+> from the net-next tree and commit:
+>=20
+>   567b0a520912 ("net: Switch to irq_domain_create_*()")
+>=20
+> from the tip tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+>=20
+> diff --cc drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+> index 3b9e831cf0ef,f2c2bd257e39..000000000000
+> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_irq.c
+> @@@ -198,9 -183,9 +198,9 @@@ int txgbe_setup_misc_irq(struct txgbe *
+>   	if (wx->mac.type =3D=3D wx_mac_aml)
+>   		goto skip_sp_irq;
+>  =20
+>  -	txgbe->misc.nirqs =3D 1;
+>  +	txgbe->misc.nirqs =3D TXGBE_IRQ_MAX;
+> - 	txgbe->misc.domain =3D irq_domain_add_simple(NULL, txgbe->misc.nirqs, =
+0,
+> - 						   &txgbe_misc_irq_domain_ops, txgbe);
+> + 	txgbe->misc.domain =3D irq_domain_create_simple(NULL, txgbe->misc.nirq=
+s, 0,
+> + 						      &txgbe_misc_irq_domain_ops, txgbe);
+>   	if (!txgbe->misc.domain)
+>   		return -ENOMEM;
+>  =20
 
--- 
-2.43.0
+This is now a conflict between the net-next tree and Linus' tree/
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/o+MW=vr2532+4g+j=5kq6Tm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2qZgACgkQAVBC80lX
+0GwT7wf/fWQAj8OZZMVbej4HGWoEpYR1tA0t1tacM6TqEUm8ooLO0mCWNos1RlSq
+OYcABZyMkEa+86zzL45PubNi+KKrAGQU2pphTVztZ12zYh18OcPgNWU8xasuL+TF
+XSxrswGyAmPpN/YV+VJs3NNY5ALaPgd3gPkgUhXH3PAN21V027vZsrE5qCMCHz3D
+zlXYd09X0tSVIej7BFUTJMCvNF+RxH2AtiGi+s//HgGqimfqiRI7iKzOESAfWlPF
+w4VDOQGyLoOGJIcE1mpedhcYzbYGRHJ/T6UY4S/IC3oEF9Gt524oh0S2aHXcYxQA
+4jyAx8u+NbG/A83VqPivI025yGBlLw==
+=cjmD
+-----END PGP SIGNATURE-----
+
+--Sig_/o+MW=vr2532+4g+j=5kq6Tm--
