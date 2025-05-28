@@ -1,141 +1,101 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDC826A09A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63F711F0992;
+	Wed, 28 May 2025 08:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421796; cv=none; b=omaQ0oKFM6SDYwdskgpylybTsoTGYAg0pNzGBTjvxGg9k5PML1Hr7Q8+M0H6QL6qb7ke2uuoDo7sPvh34P2As1aRF8K5TRy+ZWs2SmWrGW1s8xG8OGNCilpnimIYbBx8aJcb9dT4MsBZcLUrIZdhL2r3/Pwvpw1RRga3YYNFPLM=
+	t=1748421798; cv=none; b=GrUJn16wkQjFMU0p7Wq2vzLh6go5C3veKIyp0u4bJ0ytCGiGIHKbXrlGL7KUMR8Y2F7sjZ4o+vkcbb42QLhA8jjVACNDKL5VjgEKfoxDLWZNfRahV1ESCORYg2qBfdZzlT8gTxEIg0u1gAvE87dhzyron16eL4F2gb7RxI7wDKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421796; c=relaxed/simple;
-	bh=AF42yE5eaiMw9g4IvDqTKH/lawldAZudRQ3yzq7M0X0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kQ81ZKUm54uWBj0VXKbsGJbRcA1ga+GIz8PJhmdbDcqT1NlBHhNEc219Xc5Z7tI2N7SBw78wqMYrSWGdaHdNOWrsJ4GRFzPmvbS2LvbUI+7J7Nm7socusqTUpVXLFsnVd/r8ddVPGzRH6uyp98YrQArpUtdp1FAQuQ/4O0cVJYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKCN9-00033D-JK; Wed, 28 May 2025 10:42:51 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKCN8-000YbX-0F;
-	Wed, 28 May 2025 10:42:50 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKCN7-00ER89-34;
-	Wed, 28 May 2025 10:42:49 +0200
-Date: Wed, 28 May 2025 10:42:49 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Adam Ford <aford173@gmail.com>
-Cc: nicolas.dufresne@collabora.com, benjamin.gaignard@collabora.com,
-	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-	festevam@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, paulk@sys-base.io, hverkuil@xs4all.nl,
-	laurent.pinchart@ideasonboard.com, sebastian.fricke@collabora.com,
-	ming.qian@nxp.com, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 07/11] arm64: dts: imx8mp: fix VPU_BUS clock setting
-Message-ID: <20250528084249.6qn2mnu2rmrv7xhi@pengutronix.de>
-References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
- <20250502150513.4169098-8-m.felsch@pengutronix.de>
- <CAHCN7x+Lu9momgX3Vwp+Yu+Tet5Q=k2vCL83SMLuad24SDchEg@mail.gmail.com>
- <20250502165535.aeb2osq2vnxsudmq@pengutronix.de>
- <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
+	s=arc-20240116; t=1748421798; c=relaxed/simple;
+	bh=MxnGdClLFWl1jY7LIi7McbBUXxSTG4DC87SB7p2eWgQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lY3nA3Mp8Ag9XYsCAoZvyt0+opDoRItqrUE1uIpmZEtN3fl08DO0r1ZRzIC49/E1REJw4Uojg+fsTw5QS6h+tAK3PS4t+1fHj/jhbHBKJ+abEONXNQGanArFrfB3Lu4E5mAB1+wpOpPR1FoZHYr9FURphtp3QaUjIQ9M/LXix5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxnOKdzDZokNP_AA--.49136S3;
+	Wed, 28 May 2025 16:43:09 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMCxLBuWzDZonpz3AA--.26840S2;
+	Wed, 28 May 2025 16:43:04 +0800 (CST)
+Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-5-zhaoqunqin@loongson.cn>
+ <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
+Date: Wed, 28 May 2025 16:42:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHCN7xLecU12XtXFuwfNP+eee+9RLCSB9iErNmk7VFV+WrozJA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxLBuWzDZonpz3AA--.26840S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XF13Cr1kXF18CF17KFy8JFc_yoWDtrX_Ka
+	y5WF1rua4UCr4DJa1DCr4fuF17K3y2qF1IyayUtrWIyryDJan5AFs5J395Kr1fGa18CrZ8
+	Cr9Ig3Z3Zw13XosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
+	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
+	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jFApnUUUUU=
 
-Hi Adam,
 
-thanks for testing.
+在 2025/5/28 下午3:57, Stefano Garzarella 写道:
+>> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>> +    if (IS_ERR(chip))
+>> +        return PTR_ERR(chip);
+>> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>
+> Why setting TPM_CHIP_FLAG_IRQ?
 
-On 25-05-27, Adam Ford wrote:
-> On Fri, May 2, 2025 at 11:55 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > On 25-05-02, Adam Ford wrote:
-> > > On Fri, May 2, 2025 at 10:10 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > >
-> > > > The VPU_PLL clock must be set before the VPU_BUS clock which is derived
-> > > > from the VPU_PLL clock else the VPU_BUS clock is 300MHz and not 600MHz.
-> 
-> I did verify the current clock rate ends up at 300MHz instead of the
-> desired 600 or 800MHz, so we should do something.
-> 
-> > > >
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > > index 97b09b647ec7..7f4bdefb3480 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > > > @@ -2289,8 +2289,8 @@ vpumix_blk_ctrl: blk-ctrl@38330000 {
-> > > >                                  <&clk IMX8MP_CLK_VPU_G2_ROOT>,
-> > > >                                  <&clk IMX8MP_CLK_VPU_VC8KE_ROOT>;
-> > > >                         clock-names = "g1", "g2", "vc8000e";
-> > > > -                       assigned-clocks = <&clk IMX8MP_CLK_VPU_BUS>, <&clk IMX8MP_VPU_PLL>;
-> > > > -                       assigned-clock-parents = <&clk IMX8MP_VPU_PLL_OUT>;
-> > > > +                       assigned-clocks = <&clk IMX8MP_VPU_PLL>, <&clk IMX8MP_CLK_VPU_BUS>;
-> > > > +                       assigned-clock-parents = <0>, <&clk IMX8MP_VPU_PLL_OUT>;
-> > > >                         assigned-clock-rates = <600000000>, <600000000>;
-> > >
-> > > I think there was a move to make the default be overdrive [1]  and [2]
-> > > and use a 'nominal' device tree for those who are not in overdrive
-> > > mode.  According to the TRM, the VPU_BUS_CLK_ROOT, the nominal is
-> > > 600MHz and the overdrive is 800MHz.  Based on that, I wonder if the
-> > > values here should be 800MHz and if we should add the nominal values
-> > > of 600MHz to the imx8m-nominal.dtsi file.
-> >
-> > You're right, Ahamd and Lucas did change this. I will adapt it later on.
-> 
-> I updated my device tree to run in overdrive mode and ran fluster at
-> the higher rates:
-> VPU_G1 - 800MHz,
-> VPU-G2 - 700MHz
-> VPU-Bus - 800MHz
-> 
-> ./fluster.py run -d GStreamer-VP8-V4L2SL-Gst1.0
-> Ran 57/61 tests successfully               in 5.922 secs
-> (vs 7.059 secs at nominal speed)
-> 
-> ./fluster.py run -dGStreamer-H.264-V4L2SL-Gst1.0
-> Ran 129/135 tests successfully               in 40.107 secs
-> (vs 45.741 secs at nominal speed)
-> 
-> If you want, I can submit the clock updates I have for overdrive or
-> send them to you to save you some time.
+When tpm_engine completes  TPM_CC* command,
 
-Sure, you can pick-up my patches or add new ones. Either way you're
-right, the clock fixes can go in separately.
+the hardware will indeed trigger an interrupt to the kernel.
 
-Regards,
-  Marco
+>
+> IIUC this driver is similar to ftpm and svsm where the send is 
+> synchronous so having .status, .cancel, etc. set to 0 should be enough 
+> to call .recv() just after send() in tpm_try_transmit(). See commit 
+> 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
+The send callback would wait until the TPM_CC* command complete. We 
+don't need a poll.
 
-> 
-> adam
-> 
-> >
-> > Regards,
-> >   Marco
-> 
+Thanks,
+
+Qunqin.
+
+>
+> BTW, I think I should touch also this driver in the next version of my 
+> series that I'll send after the merge window:
+> https://lore.kernel.org/linux-integrity/20250514134630.137621-1-sgarzare@redhat.com/ 
+>
+>
+> The rest LGTM!
+>
+> Thanks,
+> Stefano
+
