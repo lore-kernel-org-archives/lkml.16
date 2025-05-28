@@ -1,244 +1,288 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655821F4E4F;
-	Wed, 28 May 2025 17:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453673; cv=fail; b=Az3HtE7K0nxetlrzBjTO8sVf8ezwZugNzU/Se3BGaMD85cs0bxGFm9+PyEI2DXpsjobdmahNe3dsKP/ZNnHZudHd/JVs5Lj8FsaM4mRlTt56S5M/OGlKFUmUtk8fjp/yxgU7L1i01lTc0r2kpwVhJ3eUZZafhAsEUuCHzm8VY10=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453673; c=relaxed/simple;
-	bh=fJHD4TW/RDyiLSQdoopzseeTE/vCzMAOgjskPpGpdHA=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uNmSuArzbpGVKzzb7SQti4m6bLSSCRmid/Et1zBfl60rY3+fE6v1qQHzhCNw+jdrSJTKZK27LfvXJ3LREZlOeosinCb4sBmrB0+r5MS4fhtLVjKOzsflti/05riWrZ45+16jCIfanPyHwWtli3LT8JTkCPhY37MaZ8jryRIwpVo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fcL+uQRR; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572611F4E4F;
+	Wed, 28 May 2025 17:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748453733; cv=none; b=KCdX340gKYoO9GaFeW8kck9bIRZO4huSNXyT3nNGnH3wYwXIFDigNAHgs0hvT6CETi4hu2zie/J0uA45V4qkx9MSUAHs4LwXEwS3LRzfbvOvsQKxHZ//oVdRsiH7zQe9p6B71smLRnrEqBKgvPxzFT//M5Fgg8u54iU2xinMX24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748453733; c=relaxed/simple;
+	bh=itrs7d2YdB95+jj/CJN3GF3X1vJf8HSkmGOfDoknRGI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bj3IR+wMaV9P/isyAGruEqrE26mtE18NrTAboo9uUf1NlMbM1zjtXXfCz4Eq+yvUiYDNiDiwjZ0GJMK36vHh4aK/MWiufvDdHGcasn0vWna0ggGTuelEdwT45joRLOKZIxwTHWrO0xCHNNmXfM4wugp0SCu+hhHnzv/YQ6q8jlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NSAztqM8; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fcL+uQRR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748453672; x=1779989672;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=fJHD4TW/RDyiLSQdoopzseeTE/vCzMAOgjskPpGpdHA=;
-  b=fcL+uQRRfk/+L0RriefLG0puafHl4CCz/RCG9+yVDCSkuJyL+aF9Oz2i
-   IMiJLBfqxPM2AjTIfJc3Nauamx0SArqQ9MW3wGIcCj9KKZSZUXNz3+6Rq
-   s1CeYSsvTK9n6+W+MS4varj3R5KHOsL+jXXMfHJLUXK7Z9ceatPx60IMY
-   7nWFe5FNpILs73zF8b/m+iPVXeVmO0XGvJE0n8OwHkmZZvn1VsoDEybd1
-   ZX95M3+SciZzENTE47xdE1fFUs3r8giZ2R0Zg4qp2TmyyXHiPuAsXcP0O
-   GrvqMc2u8alys3IAnfePrv0737rir3Ek0vRViyRjpjxQ8Rec8+wqYwUjw
-   w==;
-X-CSE-ConnectionGUID: V8FD0ESJTGan7Dl4EBWfqA==
-X-CSE-MsgGUID: IZK8X4ZeQS2K6qU4MgFUFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50378864"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="50378864"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 10:34:30 -0700
-X-CSE-ConnectionGUID: lIhWSFs4Qi6lQ+2zTYO14Q==
-X-CSE-MsgGUID: oJjuSotASKqOl/gn/+oOjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="147185128"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 10:34:27 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 28 May 2025 10:34:26 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 28 May 2025 10:34:26 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.75)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Wed, 28 May 2025 10:34:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KcsSNFF5QrVB5NrUyADTEY9UWyn1AjOxppGm8MRbdJY9tBbEIJe4NNKACRf63TUREh5DOB0iT9ncWd/vssU1S+JJXAdxquG3zUA5deuOr9Ez8Xvmax0/8Kn/1+doZO8NCb/dPtYMQFsKrmpGeZvQ0LbrHmo0zQuS7IujR7DBEsEXCby9Ns4cLZEoYsfv+RxQVDKooxbtwDY7oz+QrHAbEVrCZt2ubZ4UTce/DJqIiVVqK7+q3MXp6wu38bvNR1bopvyz3EPYTECUjLt5xeKOJ4WiRiKqNbvDTaOsaX8vFKDSU08kI4tBhMvZFQwifvNxPAnHReWU/zZ6xF0n8lGegg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qvo7uwH1OlvakEF25QUgRSA8uiRm7aYuUjyYhwibSjQ=;
- b=fYJsbgoj+y8h1je5hJBphGT89LqKSqKp7v2VBoncHG6RcYCBze34+a58nPJd6/0ogHkMm5QQBUzpZif2DNBxanmvciGh1NTNJdUu7oWy3Ht9Y78E0cC2m4SqgGPFFaC1WbP53K/h5yKyhtOxBZy36AlwJab6Tia52YZd+TR7VldSCmiDWQSI8v0YG6vLUPOnFxOoJT5xAQXtnosZW64hUE4JW08Q9gRVJFXWMJc+yjNTQbdLgoAfaiRLFIC/1tPnNFP6KlS4lAoZWvKAdbULvrcWKyg2B5k6ZbFKCT5yUZluHr3X+/+g8dHd7FE67tnKKDsU0jOHvThv/GpH7mCatA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by DM4PR11MB6525.namprd11.prod.outlook.com (2603:10b6:8:8c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 28 May
- 2025 17:34:07 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8769.021; Wed, 28 May 2025
- 17:34:07 +0000
-Message-ID: <14ca1527-ee25-448d-949b-ed8df546c916@intel.com>
-Date: Wed, 28 May 2025 10:34:04 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 08/27] x86/resctrl: Introduce mbm_cntr_cfg to track
- assignable counters at domain
-To: "Moger, Babu" <bmoger@amd.com>, Babu Moger <babu.moger@amd.com>,
-	<corbet@lwn.net>, <tony.luck@intel.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
-CC: <james.morse@arm.com>, <dave.martin@arm.com>, <fenghuay@nvidia.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
-	<akpm@linux-foundation.org>, <thuth@redhat.com>, <rostedt@goodmis.org>,
-	<ardb@kernel.org>, <gregkh@linuxfoundation.org>,
-	<daniel.sneddon@linux.intel.com>, <jpoimboe@kernel.org>,
-	<alexandre.chartre@oracle.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <perry.yuan@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
-	<xin3.li@intel.com>, <ebiggers@google.com>, <xin@zytor.com>,
-	<sohil.mehta@intel.com>, <andrew.cooper3@citrix.com>,
-	<mario.limonciello@amd.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <peternewman@google.com>,
-	<maciej.wieczor-retman@intel.com>, <eranian@google.com>,
-	<Xiaojian.Du@amd.com>, <gautham.shenoy@amd.com>
-References: <cover.1747349530.git.babu.moger@amd.com>
- <79efa13654a6f1a308622bd13e0d2bc21ffb4367.1747349530.git.babu.moger@amd.com>
- <5636898e-78dc-4eb1-b226-ced62372e09a@intel.com>
- <40ff2cd0-c8b9-460b-b98a-087cb251324e@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <40ff2cd0-c8b9-460b-b98a-087cb251324e@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ2PR07CA0019.namprd07.prod.outlook.com
- (2603:10b6:a03:505::21) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSAztqM8"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54d6f93316dso6143681e87.2;
+        Wed, 28 May 2025 10:35:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748453729; x=1749058529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pkBRjqxyCqXXxfI/2vwtQAEpiBtmXiodfVIRt4U1ZTw=;
+        b=NSAztqM8oaRUuQr2scsCRc+xGxJNKfq1VsnElbx9PMCc1mBS2+T3O5e+lE1/TVQ2NO
+         +bRLBEI39oRzysakypgfuLXxxvRfu5Pffpxva6oHnUot1Q7vsvN1dyHJWs89c55MswWK
+         ee+5pTyYEvruSeOlKsfmBimddBWUDu8Z0OP5k8LvO2I3wqV4QyLZTuqMjVyAFbL0E7XM
+         V+M2td1WAVTobGAb5cJe0kULG4iXtxF51FW8YUnTfxnoQVe16MEgg7VkjvsdgZW3rR9x
+         SInDBPxiakfyA7ZyWwejMTbASxDyyxtghrPiI6Od6lN1t4YRmHKAYhBle1Ox+Fu9pvFY
+         /YUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748453729; x=1749058529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pkBRjqxyCqXXxfI/2vwtQAEpiBtmXiodfVIRt4U1ZTw=;
+        b=S5GVPv7XC9w2vmQ1ZluTWloN3O/7veNJ7iSlNNpH0F2toB9jvZJzyC3zp2Wq81BKum
+         VhyILFrvmWt92BPEQixSYNA6EZSno7yFuBLSIbgALLbnD4gQ/EcRZ3vZnnGVNRooUEN6
+         VUtEPIwaiwQDp2J8tBuEeb/1rSt/TB0OxBmyvfgXutITim2296v7UoCsHOksick6m8mB
+         12k41yOOWB1aI/Xfb6/0Xwz39TMRU4KqDzHoFCXu0tTXRhyo7UJ9O7r01/1RoFPyXVMZ
+         Q7G2YoXTVTx4+Y/t9ycsu6fNuozVFBbqrY4tkNO1EcOz+WYcZBVI2cMg68W3HJMYtXB+
+         ITEg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYgQ2fiDzgvqOsP3P1dgPbwMzYYyd4r838CVVYCL47cMneLvpd15mca5ZUM3q1XM9WCk/UBDs9G0oeMvwu@vger.kernel.org, AJvYcCVq79Axr7Udm3i6pABgTI1K32l7DcmocSDDd3Wxa/8MNyi5uxvFnbYImc5ctwGSAWt5Z5bDS37LfK7f@vger.kernel.org, AJvYcCW9SrhkeRlaWbvRG8U2IEyorzF0hVs3/XuxlgvCOdo/QPLdX7jqd+YMir9nFL/Cu12xjLNjPwcuBNluk2rLy8V2@vger.kernel.org, AJvYcCWondaazLhTFpeNrB6tqVfNUUGcJ/uomuLbv2j5dywhvSZZ4/slKhw/jnWnFbkQzwrFaDnEF8uijFDoLpU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBLGICpR15bnNiX2rugcz52mQSluK8s+h3/2qe2jXMFOw0cwnm
+	7g9Wd9wLDkav0KjyFhO51uliBMuU2JDjfsJy+WO9Rqzk1SwA1NpPgauKGFjJSWqYXgMTnnaZhG+
+	DJOA3no80ELF8YkgtC9SwpGnuWTFjU4k=
+X-Gm-Gg: ASbGncsD79+0m6JdLmPAq9KLUpvWitipf//IDyZ+V/SHFWRAydNrgKCtNGH7NBWSMh0
+	SVYah2jcvazKCYfMJuyMv5pQLNWN0zD8a8orCtMrtRZSEMG4BxqmNJHrbFKkdfR3j1NqAReEFOi
+	Svi04AqSPdzySw2txZWXIDirvyd6rpxSXg
+X-Google-Smtp-Source: AGHT+IGTKw6zClBo5eqB8K+0a/cg2IicSc3zUkPVD2pgqdfqnz+KyoVBS1RLzfzMBFa7iS6949XPCRO4e3u5pA0Kmf4=
+X-Received: by 2002:a05:6512:671a:b0:553:2191:d32f with SMTP id
+ 2adb3069b0e04-5532191d4f6mr3684316e87.44.1748453729228; Wed, 28 May 2025
+ 10:35:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DM4PR11MB6525:EE_
-X-MS-Office365-Filtering-Correlation-Id: 17edfb79-bd3b-4f87-4c6a-08dd9e0dd90d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?Z3RrQ1EvMXVBaWxvTldTN3QrYUNsWDZiSWxoVVdlTEpuWnBiS0xRMDBQTlNL?=
- =?utf-8?B?ZlExbDZqd0VQWU5RQVN5QWhyV0RXS2NJNC9nb0hUQUd4blJMSFVCM2pHR3Nu?=
- =?utf-8?B?MVhpdXBzTDYyM0ZQazVMcWd4M2RmajZBVHpMV0lJSmZCOEZwMDkwUzJZbmNS?=
- =?utf-8?B?LzBnSVVjMnlQa3hFZmV5VUlHb2w4L2hQbnNOWkI1NHpGRzJnRHdTRFpyck5q?=
- =?utf-8?B?M1k2UHY4TDJQQkVEVFVYeVBnN09EUmtnRm1nSkdlT1BZVEI1N0hFTzh2T3Iv?=
- =?utf-8?B?N1YvRW9uUThRL3VIS1F6S2NzZ1d1aWd5bzIyR29SNUlEV09meHVRSlVDUkRs?=
- =?utf-8?B?ZS96WVRYV2svMlRXeWRoZnBMOXRnVTRGb3BsS1ROTXhQbDVOOWU5MWtyQ1VM?=
- =?utf-8?B?VjRld0ZvZ3UvcHBneXJQTGxzSmM5UnR0bVZaNjhqS1pGc043WmVsYXhDQUg0?=
- =?utf-8?B?NUJtMng4eUUvSXFrblNoc0FlUCtsZHIxZ1gxRFl2S3daV1JzV2R6dElJV2Mz?=
- =?utf-8?B?dVZvRENUeEUzaUdqRk1PT05jTnBtNlBSUFhiSHdxQ2F6bmNHM3NaemkwMEV0?=
- =?utf-8?B?dXRQMWpQd1pBT0lmbnpFUVpqRGd5dHNXQXk5c0FVbmQrdjRYdjRKK1RYUTAx?=
- =?utf-8?B?MkFaZzRLR0VweVR1cGxnMzkzOFRETDEveHJSaEJaWjYxTytvRHlmQ2Zva1lD?=
- =?utf-8?B?YUhOck83SmdabmlTeERMcHp0TjBjbU1xZmVwR3dHYTVLdmxMVDZvbG5QRjF6?=
- =?utf-8?B?bW83eUhpYTc2UXVwVnMrSlpJaFl3UzB5OU9lSmVoT1JZSjNabzQwc3VEZ0xn?=
- =?utf-8?B?ekJOQm5mVDNPWTN3dk5xNHJYdVBvSndPeVR3ZjdnUi9BZFlYT2REcXdxeS9z?=
- =?utf-8?B?UEs4M1JRNmlNcGdEY1NsUEZGUEpjcy9CYUc4M1ByOUxmU21xaTBHMW05eSsr?=
- =?utf-8?B?bTFCblZBVURqNkJSMzJmL3B3aExOVUw0WHRsajlTeW9OL1h1SzA3MGhrSEFG?=
- =?utf-8?B?RVF3K0pkSE9wcE1SaDIyc050SDU2V3FGRVFNaE1QUkVNN2hSZ0NqY0V2TGFh?=
- =?utf-8?B?Wk5mQ01OR29semhwRlV0OXRJYngxUWk0ZG1tSGxvcnA5SU05WEJzQ0paaHdZ?=
- =?utf-8?B?L1F1cUEwNFdHWGxuSGN1M0pOM1I3WHJRRzk4VnVyS09CUDZMVlRLQWE5UTlp?=
- =?utf-8?B?YkRkQkZNTFNUUjh2SVE2OFdteFFacnp5eFdrZnRNS1JxYk5FQXFsNVg3emFQ?=
- =?utf-8?B?WER1VjBmVzE0SC9TRWRndGtMcEpBVmM0cFZlVmUzQTNMWk5JangwUjhiOEl6?=
- =?utf-8?B?OVczek9KTWw5bWZWZ1pIaHlHbzhmNG1HZUdhQVVUYUZwMVQyRmxDVkpQOE5n?=
- =?utf-8?B?bjRWWjI5TGhKcC9CN3Rka1RITHNFTC9XT0R5eEtvWUhPSFBMSUdYalMreXlh?=
- =?utf-8?B?L3B3MTVhSEYvQ2hDK2hBbzNYR0ZrQmc4a3JkajRmNlhZeXBETDhiTjVsb2xD?=
- =?utf-8?B?RWk1NzA2eTRoS2xDall2SGFpRDA1T0NjNnptbzUxaXhkSytpd09leGZIMW1H?=
- =?utf-8?B?SWNBS3ZLd01BTHg5VmpTLzN6L2M4alc4Y3k2dngrY3dNYkJXSnJsOGMyVzc0?=
- =?utf-8?B?N3BxVlNvZFV2bEVFMXV6U010d0cyN25aeUdobmU2ajJsd0xqa2xwSHhHZEdH?=
- =?utf-8?B?MlhPSTN5b3JXS2RhRUh6dkEyYVFiNGdYbmtEUVIxUzBUV3hZbm9PRW5GK3lD?=
- =?utf-8?B?YUp0NmNFdmpHamFPMEtUdUxySHFmd0dZWXhwRnlZQUlDdkswN3ZuZVpKT0Zo?=
- =?utf-8?B?ZnJGZDdZYUU4M0xOT1F3VEdTVVRhUkk0NlVtaEZWUjBNZnpzTFdJNzA1TGhx?=
- =?utf-8?B?S2k3dlJBcWpTZnFRRW9WS1c1dytZR0loR3ZHZUVidklPM1QydlZtcVRuTnNq?=
- =?utf-8?Q?mx4iw+oKpO8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1FnNExmYVFoWUxWVElPVzc2dUJpYVk2L2ZuRVpabUtBVTJHZHVKbml5by9r?=
- =?utf-8?B?UzhBMmRkSGlIZzZKUFovRjZJVlFObzVjUTdlLzY5NTU4NVkvSS9TaHkxN2hI?=
- =?utf-8?B?UTErc0dEd1cydG5vWnJxUW5KSmRLcHZWYnY5U1lYellXbGxXVE9zT0xjdFlB?=
- =?utf-8?B?b0pubXlYVldpQjJtcUI0eGFHRmdSL0p5dFhWQlZnN1dDYUFXNVFjdDg5TE5R?=
- =?utf-8?B?NkpFaVY2N1R2cG51QjBPdG02OEJPUUdSTXlEcmlzWFRPWXZxVjRYb3RSbmlv?=
- =?utf-8?B?bE41dkhnZ2dCMHJWL3JOdHpCN2toMStEY1VkUE9FQ2srbUtQT1FYUGFDQkU4?=
- =?utf-8?B?b0NsbU5seW1EYVI0d3JFOXpHRzJzU3FUaFRmZjlQTjNxc1NsNW9wbGNnM3Zr?=
- =?utf-8?B?eWF5RkplaHZqUGp6UFlPUFlYZlJ3WXFXb2lvdk5iSVB3elYwTU9IM3lZUGlB?=
- =?utf-8?B?Yml6MjIrakpFUldVSGk0dXIzekY0NUZDdVVDeXBwZzd0VEtlYXdjZjJjQ05S?=
- =?utf-8?B?b3o1Y0xJN0h5dnRXbktqaUwyTlhMRkZpUjh6QTkzL25VK0ZLNXhWd1B1V3RI?=
- =?utf-8?B?RGQ2cWM4STBZWkVVZXpVZm9rbjZYS2k5RXFqaTlReTROd0pwRWpTVzg5dG5T?=
- =?utf-8?B?OTh1WnRVVi9UUmFYVmIxVjdEeUltMFAxRWlSeVZ3K2xLLzYwYjRyUXU4QXh3?=
- =?utf-8?B?NFF0VnpsWndIaTVLVjArOVBXMHJvT0ErcXFURzVEQU5jSE4wQ2c4MWwrdWpz?=
- =?utf-8?B?ZTlXZ1VFS2k2Y2QrSUF1Y1JkcTZCeW5wVllxKzUyR2NuVjgzbk5HclRxWWRo?=
- =?utf-8?B?VG0vR01nTVpUaVJXWEltMTlqRmlxc2x6ZGs2TjBUYlFybG9vK0ZscW5BVGxP?=
- =?utf-8?B?SUtJQWw5a0JMU2djdzlDVzlSWGNiNFJ0VFg0Q2phbDN1VlptSzV4TDgzalhy?=
- =?utf-8?B?VXI5Ty80Tk5WWm93dEtqME8zVzZNdG4xWkR4UTQzUytUWExxemRaR0VzZGpj?=
- =?utf-8?B?N2NucFZIZzhibnRpNXJVejgwWW1OeHNzWjZ4ZnlwNXMvUHZNQW91ckw3Qkto?=
- =?utf-8?B?M0JxWUVwSlEwdkY4MXNQSkxxMG9GSkNmT2s4aGRoejFwZlRKcUJrR1Q1V0Ji?=
- =?utf-8?B?UlEvSU9XM3Z5bHU5SzYxckxlZm5uVjZJMjlGUmJzU25INlpyL2thQWlndUFm?=
- =?utf-8?B?ZXB2S24zQzFERjNSTk9UcGFuYWNoZXNxRnlLZVIySm5BS1FZOFZWamtyVDNR?=
- =?utf-8?B?N3J1SnVhSG9iN2JaTTNIdnE4M3Qxck5hMHpXUFhaN1djeEtnQnRhMDJjMkRZ?=
- =?utf-8?B?M3EvV3l1NnV2RXNqS1daa0xEWkl0bmErSzBOYlc1U3c1Q1MrMVlYQ1lzZC9L?=
- =?utf-8?B?dWFETVVJSDNTL01ma1I3Ty9iMzl3QmJ2Vm9PTTIxMlVVM3UrR2dOU1A3Q1JF?=
- =?utf-8?B?T2lqWWl5OTljcVNmWmJ2b2YrMjRQVkw2UFpqbHJaeEU5bG9KRUdMM1piZHd3?=
- =?utf-8?B?dlV3VE9ua3k5MzI2OVpDMnN6ZjVkRVpMMm9RSlljZjdWT3pqaENZOVZBcjUv?=
- =?utf-8?B?eG4yOUo0NkpkMHBMeGpFVTdyK1pIb0tza09wRURvaEhvbTMyN2h4S1hZTzMr?=
- =?utf-8?B?Vi94WU53aEdFc2crQjV2TjJMaWZXcWN1RzF3RFNXTGtzcWFWdER5SlFYWHg4?=
- =?utf-8?B?Uyt2c3k3WERiS3dZZStWOWx2cmdDNkFkNFcwZTJCZTBGMWVkMWltQm1ML1FQ?=
- =?utf-8?B?b1hvRVFnZlFVaWJIT0dJM1dQRUYxVjFVVlhlZWJDSG5KckxSMU1CNUdDeDYy?=
- =?utf-8?B?UjRML1RGUVVSNXlqaXNCSkIvOUZJN1BWdmlhQzRIRDl2ZWVuVTduSzl3UGlx?=
- =?utf-8?B?RTFzbHJld0loVTNFeWlHWm16OHR5ZXRsUmdJWVlQd2hLL2EyV0Fjc0gySTJC?=
- =?utf-8?B?aE91dlRwb1p0ekpRUmNvS3d0TDFnSmF4VXVWbUFhK3prSEN2VjlOZG1FYzFJ?=
- =?utf-8?B?R2JCNm1MY1ZQTjB1dW1qemZkS0tiQzlTYnZ4akRZczZhNFovZ29PTnBlNVZa?=
- =?utf-8?B?blRLYnRNSVAreXpEV1c4S3Fia0FHUTNYL3hXVFRyaFhCZTBQZHlKMTdoSnQ2?=
- =?utf-8?B?R1ZzVTdVNTZ5RWpURmIvcWJvbnlxM3djK1ZVZGJzN1lTdlA2dUxiZ2NadmlM?=
- =?utf-8?B?akE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17edfb79-bd3b-4f87-4c6a-08dd9e0dd90d
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 17:34:07.1360
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gb1JjafVN6Ssxbt5jGk7yHX8Z1XLpZL2VuCHCFjaF42spTO0bwQ4k8X63kalYQPtwxb9wA3kkHG7gCngtSsZ0soeIZR4Hzx70NcGldQRcSU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6525
-X-OriginatorOrg: intel.com
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+ <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+ <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org> <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
+ <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org> <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
+ <CALHNRZ-YZg3cKzRBMGaxRpejFMLSpOOz-FPQEaQVXFpFao40WA@mail.gmail.com>
+ <CALHNRZ-jxC5PXqiG4tNShybaU9gZjTz4YT+VXgfQFNQ-Ox7crg@mail.gmail.com> <yczvbwanjadyfife3hnp2khxkgs77pokypqkxotlldjskshskt@xckrkfucg6xx>
+In-Reply-To: <yczvbwanjadyfife3hnp2khxkgs77pokypqkxotlldjskshskt@xckrkfucg6xx>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Wed, 28 May 2025 12:35:16 -0500
+X-Gm-Features: AX0GCFuWj7SeQ6mDUO11G55r0wDiicwxp7isA0ut-iK3MjYm86BCkS6KX2PoJZM
+Message-ID: <CALHNRZ--ZUxqrXHEnizXC8ddHC5LFA10oH+CgQmOcTt+cJ1CWw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Babu,
+On Thu, May 8, 2025 at 4:27=E2=80=AFPM Thierry Reding <thierry.reding@gmail=
+.com> wrote:
+>
+> On Mon, Apr 28, 2025 at 08:21:55PM -0500, Aaron Kling wrote:
+> > On Sun, Apr 20, 2025 at 8:45=E2=80=AFPM Aaron Kling <webgeek1234@gmail.=
+com> wrote:
+> > >
+> > > On Tue, Apr 8, 2025 at 3:49=E2=80=AFAM Aaron Kling <webgeek1234@gmail=
+.com> wrote:
+> > > >
+> > > > On Tue, Apr 8, 2025 at 3:17=E2=80=AFAM Krzysztof Kozlowski <krzk@ke=
+rnel.org> wrote:
+> > > > >
+> > > > > On 08/04/2025 09:35, Aaron Kling wrote:
+> > > > > > On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krz=
+k@kernel.org> wrote:
+> > > > > >>
+> > > > > >> On 07/04/2025 18:00, Aaron Kling wrote:
+> > > > > >>> On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <k=
+rzk@kernel.org> wrote:
+> > > > > >>>>
+> > > > > >>>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
+> > > > > >>>>> From: Aaron Kling <webgeek1234@gmail.com>
+> > > > > >>>>>
+> > > > > >>>>> This allows using pstore on all such platforms. There are s=
+ome
+> > > > > >>>>> differences per arch:
+> > > > > >>>>>
+> > > > > >>>>> * Tegra132: Flounder does not appear to enumerate pstore an=
+d I do not
+> > > > > >>>>>   have access to norrin, thus Tegra132 is left out of this =
+commit.
+> > > > > >>>>> * Tegra210: Does not support ramoops carveouts in the bootl=
+oader, instead
+> > > > > >>>>>   relying on a dowstream driver to allocate the carveout, h=
+ence this
+> > > > > >>>>>   hardcodes a location matching what the downstream driver =
+picks.
+> > > > > >>>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the a=
+ddress and
+> > > > > >>>>>   size in a node specifically named /reserved-memory/ramoop=
+s_carveout,
+> > > > > >>>>>   thus these cannot be renamed.
+> > > > > >>>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the no=
+de based on
+> > > > > >>>>>   compatible, however the dt still does not know the addres=
+s, so keeping
+> > > > > >>>>>   the node name consistent on Tegra186 and newer.
+> > > > > >>>>>
+> > > > > >>>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> > > > > >>>>> ---
+> > > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++=
+++++
+> > > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++=
+++++
+> > > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 ++++++++++++=
++
+> > > > > >>>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++=
+++++
+> > > > > >>>>>  4 files changed, 61 insertions(+)
+> > > > > >>>>>
+> > > > > >>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arc=
+h/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > > >>>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb95=
+7dfd754e42dd03f5a1da5079971dc 100644
+> > > > > >>>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > > >>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> > > > > >>>>> @@ -2051,6 +2051,22 @@ pmu-denver {
+> > > > > >>>>>               interrupt-affinity =3D <&denver_0 &denver_1>;
+> > > > > >>>>>       };
+> > > > > >>>>>
+> > > > > >>>>> +     reserved-memory {
+> > > > > >>>>> +             #address-cells =3D <2>;
+> > > > > >>>>> +             #size-cells =3D <2>;
+> > > > > >>>>> +             ranges;
+> > > > > >>>>> +
+> > > > > >>>>> +             ramoops_carveout {
+> > > > > >>>>
+> > > > > >>>> Please follow DTS coding style for name, so this is probably=
+ only ramoops.
+> > > > > >>>
+> > > > > >>> As per the commit message regarding tegra186: bootloader fill=
+s in the
+> > > > > >>> address and size in a node specifically named
+> > > > > >>> /reserved-memory/ramoops_carveout, thus these cannot be renam=
+ed.
+> > > > > >>
+> > > > > >> That's not a reason to introduce issues. Bootloader is suppose=
+d to
+> > > > > >> follow same conventions or use aliases or labels (depending on=
+ the node).
+> > > > > >>
+> > > > > >> If bootloader adds junk, does it mean we have to accept that j=
+unk?
+> > > > > >>
+> > > > > >>>
+> > > > > >>>>
+> > > > > >>>> It does not look like you tested the DTS against bindings. P=
+lease run
+> > > > > >>>> `make dtbs_check W=3D1` (see
+> > > > > >>>> Documentation/devicetree/bindings/writing-schema.rst or
+> > > > > >>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-d=
+evicetree-sources-with-the-devicetree-schema/
+> > > > > >>>> for instructions).
+> > > > > >>>> Maybe you need to update your dtschema and yamllint. Don't r=
+ely on
+> > > > > >>>> distro packages for dtschema and be sure you are using the l=
+atest
+> > > > > >>>> released dtschema.
+> > > > > >>>
+> > > > > >>> The bot is reporting that the reg field is missing from the a=
+dded
+> > > > > >>> ramoops nodes on t186, t194, and t234. However, as also menti=
+oned in
+> > > > > >>> the commit message, this is intentional because it is expecte=
+d for the
+> > > > > >>> bootloader to fill that in. It is not known at dt compile tim=
+e. Is
+> > > > > >>> there a way to mark this as intentional, so dtschema doesn't =
+flag it?
+> > > > > >>
+> > > > > >> Fix your bootloader or chain load some normal one, like U-Boot=
+.
+> > > > > > How would chainloading a second bootloader 'fix' previous stage
+> > > > > > bootloaders trampling on an out-of-sync hardcoded reserved-memo=
+ry
+> > > > > > address? It's possible for carveout addresses and sizes to chan=
+ge. Not
+> > > > > > from boot to boot on the same version of the Nvidia bootloader,=
+ but
+> > > > > > potentially from one version to another. Depending on if the
+> > > > > > bootloader was configured with different carveout sizes.
+> > > > > >
+> > > > > > There is precedence for this. When blind cleanup was done on ar=
+m
+> > > > > > device trees, a chromebook broke because the memory node has to=
+ be
+> > > > > > named exactly '/memory' [0]. How is this any different from tha=
+t case?
+> > > > >
+> > > > > That was an existing node, so ABI.
+> > > > >
+> > > > > > These nodes are an ABI to an existing bootloader. Carveouts on =
+these
+> > > > >
+> > > > > You add new ABI, which I object to.
+> > > > >
+> > > > > > archs are set up in bl1 or bl2, which are not source available.=
+ I
+> > > > > > could potentially hardcode things for myself in bl33, which is =
+source
+> > > > > > available, but the earlier stages could still overwrite any cho=
+sen
+> > > > > > block depending on how carveouts are configured. But even then,=
+ that
+> > > > > > will not change the behaviour of the vast majority of units tha=
+t use a
+> > > > > > fully prebuilt boot stack direct from Nvidia. My intent here is=
+ for
+> > > > > > pstore to work on such units without users needing to use a cus=
+tom
+> > > > > > bootloader.
+> > > > > I understand your goal. What I still do not understand, why bootl=
+oader
+> > > > > even bothers with ramoops carveout. It shouldn't and you should j=
+ust
+> > > > > ignore whatever bootloader provides, no?
+> > > >
+> > > > Mmm, I actually don't have the answer to this. Ramoops carveout
+> > > > handling was added to t186 and t194 in cboot for L4T r32.7.3, fairl=
+y
+> > > > late in the life cycle. But it has always been in edk2 for t194 and
+> > > > t234 afaik. I could hazard some guesses, but don't have any
+> > > > documentation on why the decision was made. Maybe Thierry or Jonath=
+an
+> > > > could chime in on why this was done.
+> > > >
+> > >
+> > > Friendly reminder to the Tegra maintainers about this question.
+> > >
+> > In lieu of a response from the Tegra subsystem maintainers, I can only
+> > hazard an assumption, Krzysztof. I presume the pstore carveout is
+> > bootloader controlled because various stages of the boot stack can
+> > dynamically allocate memory, and this became bootloader controlled to
+> > prevent any of those from overwriting pstore. I worry about hardcoding
+> > an address in the kernel dt, then finding out later that there's an
+> > in-use configuration that overwrites or corrupts that section of ram
+> > during boot. What are your thoughts on this? And is there any way for
+> > this patch to proceed?
+>
+> I haven't been able to find anything out about this yet. Generally it's
+> difficult to get the bootloaders updated for these devices. Tegra194 and
+> Tegra234 may be new enough to make an update eventually go into a
+> release, but for Tegra186 and older, I honestly wouldn't hold my
+> breath.
+>
+> Thierry
 
-On 5/28/25 9:56 AM, Moger, Babu wrote:
-> On 5/22/2025 4:02 PM, Reinette Chatre wrote:
->> On 5/15/25 3:51 PM, Babu Moger wrote:
+Krzysztof, based on this response, is there any way or form that the
+Tegra186 part of this could be submitted? I can drop the newer
+platforms from this patch if Thierry can get a response to his other
+reply about how the bootloader could conform.
 
->>> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->>> index bdb264875ef6..d77981d1fcb9 100644
->>> --- a/include/linux/resctrl.h
->>> +++ b/include/linux/resctrl.h
->>> @@ -156,6 +156,20 @@ struct rdt_ctrl_domain {
->>>       u32                *mbps_val;
->>>   };
->>>   +/**
->>> + * struct mbm_cntr_cfg - Assignable counter configuration
->>> + * @evtid:        MBM event to which the counter is assigned. Only valid
->>> + *            if @rdtgroup is not NULL.
->>> + * @evt_cfg:        Event configuration value.
->>
->> @evt_cfg is not introduced in changelog nor defined here. Please add a snippet here
->> on what @evt_cfg's values represent. This is important since this is exposed
->> as resctrl fs API to architectures so all architectures need to use same values when
->> interacting with resctrl.
-> 
-> Sure.
-> 
-> @evt_cfg: A value that represents memory transactions (e.g., reads, writes, etc.).
-
-This still does not explain how an @evt_cfg value should be interpreted. For example, it
-could be something like below (please feel free to improve).
-
-@evt_cfg: Event configuration created using the READS_TO_LOCAL_MEM, READS_TO_REMOTE_MEM, etc. bits
-	  that represent the memory transactions being counted.
-
-Reinette
+Sincerely,
+Aaron
