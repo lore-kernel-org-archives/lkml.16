@@ -1,69 +1,70 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B8621E087
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFCF220F45
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463745; cv=none; b=S1bmlz9va19fkqxYJ3higamheJMNDAW3syAlPiJe9cmUxXTEFIKupe47+r7XetGxAY4Onb9UcCdcjUYJGTXMQSrNsRhYoi9rQFN41kUbIT8Jn5s4Cc27lnD+FMCVvYaXVN2lCmFTmrbH72Rcix8fx3Z2+fAfD9+TfL7dcxbmeVk=
+	t=1748463752; cv=none; b=DCjB1x8EV0yeW3MT87LqkjMP+/FIGpRCHwAIdVILiXaYJFT4lhIA9JmW6AIlFTO9W/XKAKEhB4QVA/9hVphofMS21dTT/PfYuCZuB3YGnzhDg/JQPofv5vOj2KltxpPmK63DtqT5w1R2ieRCSJ/mGSngPjR3MHiN4QAsuhdGwU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463745; c=relaxed/simple;
-	bh=huHhx83QOe4ytOYGTtBjpmUB1tXdH+3Wmtjjm+SSGvU=;
+	s=arc-20240116; t=1748463752; c=relaxed/simple;
+	bh=yjstY6rXEpYFD0+RmP7Mw5VcbzLqQWKymqkM+58/TWg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLcWtqP3G9fQqVUnU2Y2jU+sdHrc16GZJdGWbgsUSaVsFk4l6iSXoC6AttH+0y8wKEYNLwW0QQ2Quq/BHKN7rq2Nl5wTROYYGKSso2sqzLDGHvA+3Dd24IY0DEwtK0Bh6Al9jkE48F+6frg6L4F1wKzmN27bO0IVUik8UX9HQkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MBMkLMgZ; arc=none smtp.client-ip=209.85.221.42
+	 Content-Type:Content-Disposition:In-Reply-To; b=NFMh0NVhOcOmiHcBQYSjfRbt9Aqv4Pew6haop6QikNS4emNJMNHW75hWf76Kl53r7YpDU8AkLQPJIMPu2RS19/ENFvnNN4t2Vt1Qw3FP9yXMkbHyGRcnM1Bk1kL6B/+/xXlf2TYs7lZvBFYWAjfRGhLgSHkoAjCYN9oLROCz7XE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wu70i/MV; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBMkLMgZ"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a3758b122cso151006f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:22:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wu70i/MV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so2747345e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748463742; x=1749068542; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748463749; x=1749068549; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t/GHNKIbcWNsKXVXR2KnFC3ujKn6xHbitos5kAD6Ag4=;
-        b=MBMkLMgZzG047gI652FafZG8nc0mIg+oY9WTbEZe7My6oLMunJJR07nR0FImRARITl
-         fLiFMji26AwEak7vAwsFSXNtZTaEjumIRJYn/CfdZzn6vxN5ffcR6bYi5MoOWUL1CBlW
-         MUl7cxNHFSKq1smdYNhvUd6WfBoo1rhd+ZpGgHujFUhqFPVkoXFnlixonpmMoqfUEwbN
-         3Fyz+kc1+RERpIVH45icQmAo07b/UpwRptOiT1ZQevlTZepKEiAkdlXckwNmLzpxIwJM
-         jvR4EbelWrp394I8bB7c2nHObDHffvabBxWBDIhAig2KcCaaudzX0TppmPrqp226hSO5
-         +9dA==
+        bh=N+GSbJtN0YTSTL+bpD4kJB+1zO1bOLCqaQRg1wG/P7Q=;
+        b=wu70i/MVMRvUlp1kAQV4dB16ZynTNbiqaKs+SrB4FIJsyX9gr0+8RgxGvWRnK5tX4R
+         K3SWFLFvDZ1T/PDHXN6AIK5wJOIzZ0/yEyqgqjUWmoQkljVEfT9kL4xtfyo+4oW3Bnpy
+         ysxUnC4U/ubHqdChoOLKteUKz13I6dwXKgthtrlTB7G1jpOxw59e1AEAOTQOaSTusBkl
+         TcAVfz349mcTjgam82+zlGOjWAAdBu3JeX7ojjCrbwVCrRgNqOjrYPVCO8K/hm2QwbuG
+         rlXMwwOzk7eb9MI+hVYftsGz9tCGofbWnigJZ/fUdXnyvXoaPLunGDV/m2V7tUfbtk0y
+         6d7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748463742; x=1749068542;
+        d=1e100.net; s=20230601; t=1748463749; x=1749068549;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t/GHNKIbcWNsKXVXR2KnFC3ujKn6xHbitos5kAD6Ag4=;
-        b=fJUPyel9J0o3IbyJiD+a3MbCrYrrJHh5gvWEI9Dqbh+dDLv43q/yZZ20Vok76X2G25
-         OCCxYNDloh4KVW97enfmyKzEJWeWOtIeLmKUKNepWnNHz0yQw0aqWGkG1moLkncda4eS
-         e98ZkP//LYO0yw5fb5lbZfTVmG+4ZhOziLFFzN86G7S8utCE0EuVXno/k7Zi1Oey0k+x
-         vGsmIs6+NdT/yLdtIsY0BQCLlRNSDibFl2sPBIdIgdsSdrxIT6Rd3bYb6TccShJPr92f
-         7dctk3oi/V4ZBzI2nsXvzf2ecTA9mnS2BTlTTLh/Sf9WFeHTjlNb4LT5O6wa2v52RtwJ
-         AU3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUsSkFhxP0UwhM26tOs91RSPX2AOOqJ8PywVLOn0CUh3l4dioZDEEGUgZNIZet470IEYK4WRlN1YpxfIAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt7ekk2K6uzoY84dNacyAAU50H26pvMDpNmHEZN4CodCyKsnIE
-	+gkM3iW84vHgzi7ItgRmL5FW/9Xvk68fTcpf5IK8wdhwV841IQHQBc89kzmLsY2keKo=
-X-Gm-Gg: ASbGncsp3il8L/ZT78NGycnUfU3HNligt0l22rG2UzgTI8kZuoVIGqYIdlk94Vwjk7/
-	7iMAYrz24M0r+DqYm1GyUs4NMraMwrRGrb7Um4JL7+CVo+Z51XT/6q3ufYmebjnUruXG+i1gAiN
-	AoO4nCAVNLOLBmKXO6d1ZExDNb/KAxyk2Kk124otlsCK+z20JxXPIYudMJ3tXksdz+J+y3V+OM8
-	Izb5x0BL7k3O1xjLLJrrmu751hpg67A9sy/xogve7kgXg2t362SU/vkdzSpY/sWLewASyl9JdD3
-	+lZ3OtmhIrKRu9NMpDTiVphTjxFdxut/kjNIRXZcRsYZhlj/7tjXZdI=
-X-Google-Smtp-Source: AGHT+IE3zn4Dy9h4jWWCscJ1M+kpJaQhAI/mIcsizVpyQJzFiH/Pk4FYER8Sv/LTG2QhffZTotBPeg==
-X-Received: by 2002:a05:6000:2909:b0:3a3:5c05:d98b with SMTP id ffacd0b85a97d-3a4cb44533fmr17005363f8f.5.1748463742253;
-        Wed, 28 May 2025 13:22:22 -0700 (PDT)
+        bh=N+GSbJtN0YTSTL+bpD4kJB+1zO1bOLCqaQRg1wG/P7Q=;
+        b=uvr3/Jx0BxmC9jZ+suVKqiJr1PQVgD8NWlOMOr8Vct6D3Zqmrm8Uj6R/nIR4Et9lWq
+         8HRWvcTR7aT7KTZ5ydnNasFQkQ2Plp4elDkXLCJeOe0t69DhNZ10dZhxefH7zpZ+pa97
+         PUrrLguSzy3MXqpMVqCdpGy0fLRoPQzlKZyUzzAXSSwWeTPsTw4TJn6gjpkVW3sqENYo
+         F2dr7GSzr5J6FvoFxaHwjFl5ZqjIxeJrDhF/BDQyeKGZUS2gRIQiAa7+gR0Z9hjhtLOs
+         qqJXrSBPUEv+O1T9OQV2+9vqzrBYMjzxigyo1AjtuYXb6nXrTnP72wr0yjIA9Vi7bzUB
+         iP+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUkbPax8dcF/bFj1mxADYv4GOg8b/hoeHGGrk0AFOKTm2BzHlcJX7wDbhnaG09vCbXWqNrdZUc1WxQIhuw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1oMDG+dscOkxq73Ths+nOzxpmqvqj3aioAo6+Gtx0PJUJhKwn
+	AmZaNhy7N4RSDqie+p1V+a5GAfBFXvKj4gqMrjCGeV/qj2s5aKRqMQaiKB7UxqP1OdM=
+X-Gm-Gg: ASbGncsarb1wohoqTq5bP1c/xWroGqAmkZA87CZNxm9ziCTSfDc/5x2KWhBC5hw+WSz
+	01ZuaN7Bk6LKcIYaGBgmKcAovXCmq8nHfv95YruE0g418qVR5ULOnkrejodpbU5cBYQaMBmAxJU
+	PKFxjPPH17P6V5m7QGyhA72x/IJueMJboJb7CWM+7VRH2/IyDimrHepdZkYw7bCnEYHEmN1itNk
+	Ca/cE7WzxhUZN2YFcM0A/Hj42B2gN5k0ZcmibE0xSuqhP6vuR7UcdEues4PGKznZIOa+G4NrvrK
+	cuLTtOMS7FPSdPSeU8Bkb94QHLuzQZE5XjEll/u146d1UkQl68nZjMo=
+X-Google-Smtp-Source: AGHT+IHvy1r6OZs5sU4LLXUI0yWkVLTSuuPl8W2UXljyyd/AXSg0+qU0wKujDqcSxYJO0fbZol0FVQ==
+X-Received: by 2002:a05:6000:26c9:b0:3a4:de01:f8dd with SMTP id ffacd0b85a97d-3a4de01fa09mr8765641f8f.2.1748463749231;
+        Wed, 28 May 2025 13:22:29 -0700 (PDT)
 Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eac89daesm2324797f8f.44.2025.05.28.13.22.20
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eace367asm2409656f8f.95.2025.05.28.13.22.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:22:21 -0700 (PDT)
-Date: Wed, 28 May 2025 23:22:14 +0300
+        Wed, 28 May 2025 13:22:27 -0700 (PDT)
+Date: Wed, 28 May 2025 23:22:19 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] media: gspca: Add bounds checking to firmware parser
-Message-ID: <b258c7f831cc3c15491d400cbf822892867696ac.1748463049.git.dan.carpenter@linaro.org>
+To: Enric Balletbo i Serra <eballetbo@kernel.org>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] watchdog: ziirave_wdt: check record length in
+ ziirave_firm_verify()
+Message-ID: <3b58b453f0faa8b968c90523f52c11908b56c346.1748463049.git.dan.carpenter@linaro.org>
 References: <cover.1748463049.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,53 +76,31 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1748463049.git.dan.carpenter@linaro.org>
 
-This sd_init() function reads the firmware.  The firmware data holds a
-series of records and the function reads each record and sends the data
-to the device.  The request_ihex_firmware() function
-calls ihex_validate_fw() which ensures that the total length of all the
-records won't read out of bounds of the fw->data[].
+The "rec->len" value comes from the firmware.  We generally do
+trust firmware, but it's always better to double check.  If
+the length value is too large it would lead to memory corruption
+when we set "data[i] = ret;"
 
-However, a potential issue is if there is a single very large
-record (larger than PAGE_SIZE) and that would result in memory
-corruption.  Generally we trust the firmware, but it's always better to
-double check.
-
-Fixes: 49b61ec9b5af ("[media] gspca: Add new vicam subdriver")
-Cc: stable@vger.kernel.org
+Fixes: 217209db0204 ("watchdog: ziirave_wdt: Add support to upload the firmware.")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/media/usb/gspca/vicam.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/watchdog/ziirave_wdt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/gspca/vicam.c b/drivers/media/usb/gspca/vicam.c
-index d98343fd33fe..91e177aa8136 100644
---- a/drivers/media/usb/gspca/vicam.c
-+++ b/drivers/media/usb/gspca/vicam.c
-@@ -227,6 +227,7 @@ static int sd_init(struct gspca_dev *gspca_dev)
- 	const struct ihex_binrec *rec;
- 	const struct firmware *fw;
- 	u8 *firmware_buf;
-+	int len;
+diff --git a/drivers/watchdog/ziirave_wdt.c b/drivers/watchdog/ziirave_wdt.c
+index fcc1ba02e75b..5c6e3fa001d8 100644
+--- a/drivers/watchdog/ziirave_wdt.c
++++ b/drivers/watchdog/ziirave_wdt.c
+@@ -302,6 +302,9 @@ static int ziirave_firm_verify(struct watchdog_device *wdd,
+ 		const u16 len = be16_to_cpu(rec->len);
+ 		const u32 addr = be32_to_cpu(rec->addr);
  
- 	ret = request_ihex_firmware(&fw, VICAM_FIRMWARE,
- 				    &gspca_dev->dev->dev);
-@@ -241,9 +242,14 @@ static int sd_init(struct gspca_dev *gspca_dev)
- 		goto exit;
- 	}
- 	for (rec = (void *)fw->data; rec; rec = ihex_next_binrec(rec)) {
--		memcpy(firmware_buf, rec->data, be16_to_cpu(rec->len));
-+		len = be16_to_cpu(rec->len);
-+		if (len > PAGE_SIZE) {
-+			ret = -EINVAL;
-+			break;
-+		}
-+		memcpy(firmware_buf, rec->data, len);
- 		ret = vicam_control_msg(gspca_dev, 0xff, 0, 0, firmware_buf,
--					be16_to_cpu(rec->len));
-+					len);
- 		if (ret < 0)
- 			break;
- 	}
++		if (len > sizeof(data))
++			return -EINVAL;
++
+ 		if (ziirave_firm_addr_readonly(addr))
+ 			continue;
+ 
 -- 
 2.47.2
 
