@@ -1,217 +1,179 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5276A201017
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F2224467F;
+	Wed, 28 May 2025 06:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414276; cv=none; b=IhjuANuNT9KPVjtWiLNQ6Bg73PcvbbZhbUgSA3o4fBB5EuJK85y/KeL7+OKBkJV9OVofFfLFcgLasfppv6CgoULZ0NYBTb+MLqVCn6Frc8xbtdLl9PqU03D0tmeKS/rBXlX2bPDtbvl/MlIntIowBO5sCuqrCh+6q5/vAZ8xvtM=
+	t=1748414284; cv=none; b=IyYU5bB2+GmHjL31BDF8srRWjL7hw6Ov1c8Nwe26SKtgWxAx7BwISHNfeSuk6qAB0vlq3WaIY94kpup9EXRKVYbSQTlGkKgB6p8XA97I0P1Cog2sDWFyXa5ei4NkUldmG3K5kittChqcO1OiKdUnMnCcORFJ/3IZw1rJfFxQnLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414276; c=relaxed/simple;
-	bh=QdxSdB5O8arLPaXhqNSnuOn1D24TwdojBlnVIDeFlm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OlKEQXW+dkp0GBrB4Oc88QTt/5XDDvDa63sgSgeeWytiwOAOtq6AGlHSlbGI53z6uZp5Ff2XByHu4AXnIEcqpwB6OHAYG2lRW8azKp+XSwnMFtC9uDqwtlOoSfV2XSOAHTfpwYBIqcJ+lKgOl1P5N2wPWy/jtlX+bwbcRjnK+zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oE3gosTj; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748414284; c=relaxed/simple;
+	bh=bB82vmL6a+M31IOUJuuSn5weOdN/FrkXJIDlz5KgiwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ga1tK3Dr54eNVjEaG7x4J5TPITtUtpCC1lppvGeQWtowykg/8gGWXgBqKT4hTwkHpkHYZRr4C/Sz+EUKuiawQQrx/RYY7tQTmL43KRDz+65fCSGfUmSNWuKOh4cLOBIgLsMn3VWrXFilVkCFRI7ZmICtFMKpK3Oqueb1QaySBbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BKYtFkTR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oE3gosTj"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748414264; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=3ocuD1ul3n57xfwsiRwmLlmf/dVIDY83H6yZAAtxHOU=;
-	b=oE3gosTjbS2I3la7hQZNjP6D8WE7631ODD7rGM83iIPWB+kA214SAq3yk3euXE67r9goOHX8DMa9ZtznG2UuGNfsPaI0fS0hcGkYKOGury41I6jIRsj02MOw2kDoRSvPVNhZSB/S8vu5F9qnO9VPHl64nhdG8tWreRovo3EtAJM=
-Received: from 30.178.82.30(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcCHyMf_1748414263 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 14:37:44 +0800
-Message-ID: <37f6345f-7536-45a3-8c85-6b2bfdba2fe6@linux.alibaba.com>
-Date: Wed, 28 May 2025 14:37:43 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BKYtFkTR"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S5Zx0t008547;
+	Wed, 28 May 2025 06:37:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=BbSHV62Wuvy5Df5zaV9/pLva8CNc8x
+	+VcthWIwNtRjw=; b=BKYtFkTRw7R76/ZD9BeOohPHmddfU6KSDpBbXh8/Hmj2d3
+	cl65xW+vMHjBdsQrc1ZoE3csck2GaDr9J/ePSSQcnI5WcTNWhAKvBuSrfAJxQUY3
+	b/u3ai9mjhsw/S0Wq+zpVEBmvujlq31VzQ3Ouetxv7zRpscFyxppRklrEW27VC2a
+	n+IKEJboTMUULmkwoRi5FZIbbMf8YTpx1la43SzNOEuq1l5T8+gczgc+NTtNBamr
+	C0ZKfbP88H7xA6qglKR8YQvMcDSkh9Fs0vGL/j2YJCYB8wLNql9ApEh/3CWQUAam
+	KXFlVc3BJGd77JK8PTQ+Ja0qedYtM+d3DTifWB2A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wvfb07kq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 06:37:39 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54S6WLkA019749;
+	Wed, 28 May 2025 06:37:39 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wvfb07kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 06:37:39 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6FFpc016139;
+	Wed, 28 May 2025 06:37:38 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureuegus-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 06:37:38 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54S6bY8O34144544
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 06:37:34 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 781EC2004B;
+	Wed, 28 May 2025 06:37:34 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C463220040;
+	Wed, 28 May 2025 06:37:33 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.133])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 28 May 2025 06:37:33 +0000 (GMT)
+Date: Wed, 28 May 2025 08:37:31 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        Daniel Almeida <daniel.almeida@collabora.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Juergen Christ <jchrist@linux.ibm.com>,
+        Uros Bizjak <ubizjak@gmail.com>, Brian Gerst <brgerst@gmail.com>,
+        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>,
+        "open list:S390 ARCHITECTURE" <linux-s390@vger.kernel.org>,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>
+Subject: Re: [RFC RESEND v10 02/14] preempt: Introduce __preempt_count_{sub,
+ add}_return()
+Message-ID: <20250528063731.8022B19-hca@linux.ibm.com>
+References: <20250527222254.565881-1-lyude@redhat.com>
+ <20250527222254.565881-3-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
-Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
- in the resctrl subsystem.
-To: Reinette Chatre <reinette.chatre@intel.com>,
- Tony Luck <tony.luck@intel.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org
-References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
- <c4382156-a51e-4d07-9ccb-e6db2ca9d719@intel.com>
- <b67949b8-7eac-47b4-a667-6343837226f7@linux.alibaba.com>
- <5b446254-a2c8-4f01-93bf-3a348d474820@intel.com>
-From: qinyuntan <qinyuntan@linux.alibaba.com>
-In-Reply-To: <5b446254-a2c8-4f01-93bf-3a348d474820@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527222254.565881-3-lyude@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA1NiBTYWx0ZWRfX0T/cYI9jB324 vSOkEmOl/7vl/+6HuElcS05NMxCHyCHZKZUa7rWQoTV2IKtC+vCc9aIlSWRARa9fqEQABto5bvT zS5vjcJDKYXmd/2xx2JaERYo/JYPMwDyQKNJ/iCvvGY5MfNfA79Ppf84B/iY5viEHG8YAZI5KDD
+ VHwUVyIWDTEPeOowg8agh2dZiByTvUE1CO0alL/yQUebOWcVxr5wJlf5h1s84FuVsh9trNEPsc3 z7R7vBbotBMpN3UTg/WY5qJBin5NB7Vod4IeuPVPysagNK/nLwz583gyxObIoFlbOTrm3LKKvjK BmfxjmphNEAElmmgKkDKPaFjOlCcdIKrFCIaIRXApSeq2ZqHdvjPAh5e2WcdkuXSNLYjqYamdMD
+ yhNZP5Ebc0znmiYKJ2BUvJNzkwqo61fpjv/QXBZHXg6Aq24Uydz1r79z0AEKCIumHaakx+pj
+X-Proofpoint-ORIG-GUID: Po87WT_2gKohl3MVVII4-9DCSMQdYQMn
+X-Authority-Analysis: v=2.4 cv=bt5MBFai c=1 sm=1 tr=0 ts=6836af34 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=sCjic1ysK2PjgQY2DYoA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: dwv2dCkek_F3F7nKzn0VlVIce0MIHx1s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_03,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=796
+ impostorscore=0 malwarescore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280056
 
-Hi Reinette Chatre,
+On Tue, May 27, 2025 at 06:21:43PM -0400, Lyude Paul wrote:
+> From: Boqun Feng <boqun.feng@gmail.com>
+> 
+> In order to use preempt_count() to tracking the interrupt disable
+> nesting level, __preempt_count_{add,sub}_return() are introduced, as
+> their name suggest, these primitives return the new value of the
+> preempt_count() after changing it. The following example shows the usage
+> of it in local_interrupt_disable():
+> 
+> 	// increase the HARDIRQ_DISABLE bit
+> 	new_count = __preempt_count_add_return(HARDIRQ_DISABLE_OFFSET);
+> 
+> 	// if it's the first-time increment, then disable the interrupt
+> 	// at hardware level.
+> 	if (new_count & HARDIRQ_DISABLE_MASK == HARDIRQ_DISABLE_OFFSET) {
+> 		local_irq_save(flags);
+> 		raw_cpu_write(local_interrupt_disable_state.flags, flags);
+> 	}
+> 
+> Having these primitives will avoid a read of preempt_count() after
+> changing preempt_count() on certain architectures.
+> 
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> 
+> ---
+> V10:
+> * Add commit message I forgot
+> * Rebase against latest pcpu_hot changes
+> 
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  arch/arm64/include/asm/preempt.h | 18 ++++++++++++++++++
+>  arch/s390/include/asm/preempt.h  | 19 +++++++++++++++++++
+>  arch/x86/include/asm/preempt.h   | 10 ++++++++++
+>  include/asm-generic/preempt.h    | 14 ++++++++++++++
+>  4 files changed, 61 insertions(+)
 
-On 5/28/25 12:49 PM, Reinette Chatre wrote:
-> Hi Qinyun Tan,
-> 
-> On 5/27/25 8:32 PM, qinyuntan wrote:
->> On 5/28/25 7:36 AM, Reinette Chatre wrote:
->>> On 5/26/25 12:37 AM, Qinyun Tan wrote:
-> 
-> 
->>>> first online CPU of a NUMA node. If this CPU later goes offline, the
->>>> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
->>>
->>> "is cleared" sounds like the shared_cpu_map is empty. Looking at
->>> cache_shared_cpu_map_remove() it seems that the worst case is when the
->>> CPU goes offline the shared_cpu_map only contains the offline CPU itself.
->>> If there remains a reference to that shared_cpu_map then it will thus be
->>> to a cpumask with an offline CPU. Are you seeing other scenarios?
->>>
->> Yes, you are right. Once this CPU goes offline, its shared_cpu_map
->> will only include itself. If we then try to call this offline CPU
->> using smp_call_on_cpu, it will result in a failure.
-> 
-> Thank you for confirming. Could you please update this changelog to reflect
-> this detail? Doing so will remove confusion and make the change easier to
-> consume by making it obvious to reader what the problem is.
-Thank you for your patient review, I will update this changelog in the 
-next patch.
+...
 
->   
->>>> incorrect or undefined behavior when accessed via rdt_mon_domain.
->>>
->>> Could you please elaborate what "incorrect and undefined behavior" you
->>> encountered?
->>> It looks like reading the top level event would not be able to read
->>> an event from one (or more?) of the online domains since the shared_cpu_map
->>> will contain an offline CPU causing smp_call_on_cpu() to return with a failure
->>> that is not caught ... the symptom may this be that there are no errors but
->>> data is wrong?
->>
->> Yes, there won't be any errors here, but when reading the top-level events, it may not retrieve any values.
->>
->> For example, in the SNC-3 mode, suppose cpus 0, 40, and 80 are the
->> firtst online cpus on node0, node1, and node2 respectively. If cpus
->> 0, 40, and 80 are all offline, At this point, reading "the top level
->> event" will result in a zero.
-> 
-> This is SNC-3 mode with a single socket example where CPU 0 cannot
-> go offline. I thus do not see this happening for the reason you provide below.
-> 
-> I *can* see how this happens on a second socket when the first online CPU
-> of the first node of that (the second) socket goes offline.
->   
+> diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
+> index 6ccd033acfe52..67a6e265e9fff 100644
+> --- a/arch/s390/include/asm/preempt.h
+> +++ b/arch/s390/include/asm/preempt.h
+> @@ -98,6 +98,25 @@ static __always_inline bool should_resched(int preempt_offset)
+>  	return unlikely(READ_ONCE(get_lowcore()->preempt_count) == preempt_offset);
+>  }
+>  
+> +static __always_inline int __preempt_count_add_return(int val)
+> +{
+> +	/*
+> +	 * With some obscure config options and CONFIG_PROFILE_ALL_BRANCHES
+> +	 * enabled, gcc 12 fails to handle __builtin_constant_p().
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES)) {
+> +		if (__builtin_constant_p(val) && (val >= -128) && (val <= 127)) {
+> +			return val + __atomic_add_const(val, &get_lowcore()->preempt_count);
+> +		}
+> +	}
+> +	return val + __atomic_add(val, &get_lowcore()->preempt_count);
+> +}
 
->> Why hasn’t this issue been discovered earlier? The reason is that CPU0 is always the first online CPU on node0. The cacheinfo stored in the first rdt_mon_domain corresponds to CPU0. When rdtgroup_mondata_show reads the top-level event, it iterates through all rdt_mon_domain entries, using if (d->ci->id == domid) to find the first rdt_mon_domain that shares the resource. It then selects a CPU from the corresponding cacheinfo to perform the monitoring group data read operation. In a single-socket environment, all CPUs typically share the L3 Cache, which means this traversal action will usually lead directly to CPU0's cacheinfo. Additionally, since the mainline kernel no longer supports taking CPU0 offline, that cacheinfo remains valid indefinitely.
->>
->>>
->>>>
->>>> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
->>>> by the cache subsystem, making it unsafe for resctrl to hold
->>>> long-term references.
->>>
->>> This is not obvious to me. Could you please elaborate how resctrl could
->>> have a reference to a removed structure?
->> As mentioned above, although the cacheinfo of each CPU is not freed
->> in the latest mainline, the shared_cpu_map within the cacheinfo will
->> be modified as CPUs go online or offline. Each rdt_mon_domain
->> directly references the cacheinfo of the first online CPU in the
->> node, and the shared_cpu_map is used in various processes. This
->> situation is bound to lead to some problems.
-> 
-> Claiming that it is unsafe for resctrl to hold a reference implies that
-> resctrl uses an invalid pointer. This is not the case here. The pointer
-> is valid, but the data pointed to by it does not support resctrl's usage. I
-> thus do not believe that this "lifecycle dependency" point is a valid
-> motivation for this change.My description is indeed inaccurate. I will adjust it in the next patch. 
-Thanks.
+This is still wrong and needs to be changed to:
 
->   
->>>
->>>>
->>>> To resolve these issues and align with design principles:
->>>>
->>>> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
->>>> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
->>>>
->>>> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
->>>> shared_cpu_map logic for determining valid CPUs for RMID counter reads
->>>> via the MSR interface.
->>>
->>> I think it will help to explain why it is ok now to use hdr.cpu_mask instead
->>> of the shared_cpu_map. In support of this you could mention that the original
->>> solution aimed to read the counters on any CPU associated with the L3 cache
->>> that the sub-numa domain forms part of, but this solution uses the
->>> cpumask of one of the sub-numa domains that is known to be associated with
->>> the L3 cache. This is a reduced set of CPUs from previously intended but
->>> known to be accurate. Alternative may be to build a local cpumask from the
->>> all the sub-numa domains but it is not clear to me how much this will
->>> improve things.
->>>
->>> Considering this I do not think the references are "unnecessary" as the
->>> subject claims since the solution does not replace the original cpumask with
->>> an identical one.
->>
->> Thanks a lot, you are correct. hdr.cpu_mask is a subset of
->> shared_cpu_map, and we can almost use hdr.cpu_mask to replace the
->> functionality of shared_cpu_map.
->>
->> In fact, in resctrl, the only purpose of using cpu_mask is to select
->> a CPU that shares the cache resource for performing monitoring group
->> data reads. Therefore, I think there is no need to build a local
->> cpumask from all the sub-NUMA domains in this context.
-> 
-> One issue I can think of here is when there is a usage where the user does
-> task isolation on the numa node boundary. Let's consider the SNC-3 example
-> again with node3, node4, and node5 on the second socket, "L3 cache ID 1".
-> If all CPUs on node3 are in tick_nohz_full_mask while none of the node4 and
-> node5 CPUs are in tick_nohz_full_mask then one of node3's CPUs will get
-> an unnecessary IPI.
-> 
-You are right, how about this? First, obtain any cpu in hdr.cpu_mask, 
-and then use the cacheinfo shared_cpu_map of this cpu:
-
-diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-index 9337787461d2d..d43f438465ad0 100644
---- a/fs/resctrl/ctrlmondata.c
-+++ b/fs/resctrl/ctrlmondata.c
-@@ -596,7 +596,8 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
-         struct rdtgroup *rdtgrp;
-         struct rdt_resource *r;
-         struct mon_data *md;
--       int domid, ret = 0;
-+       struct cacheinfo *ci;
-+       int domid, cpu, ret = 0;
-
-         rdtgrp = rdtgroup_kn_lock_live(of->kn);
-         if (!rdtgrp) {
-@@ -625,8 +626,12 @@ int rdtgroup_mondata_show(struct seq_file *m, void 
-*arg)
-                 list_for_each_entry(d, &r->mon_domains, hdr.list) {
-                         if (d->ci_id == domid) {
-                                 rr.ci_id = d->ci_id;
-+                               cpu = cpumask_any(&d->hdr.cpu_mask)
-+                               ci = get_cpu_cacheinfo_level(cpu, 
-RESCTRL_L3_CACHE);
-+                               if (!ci)
-+                                       continue;
-                                 mon_event_read(&rr, r, NULL, rdtgrp,
--                                              &d->hdr.cpu_mask, evtid, 
-false);
-+                                              &ci->shared_cpu_map, 
-evtid, false);
-                                 goto checkresult;
-                         }
-                 }
-
->>
->> I will provide a more detailed description in my commit log moving
->> forward.
-> 
-> Thank you very much.
-> 
-> Reinette
-
-Thanks
-Qinyun Tan
-
+static __always_inline int __preempt_count_add_return(int val)
+{
+	return val + __atomic_add(val, &get_lowcore()->preempt_count);
+}
