@@ -1,144 +1,147 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6518F1E3DC8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBB31AC891;
+	Wed, 28 May 2025 13:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438135; cv=none; b=ghZHJvK1S4bCDHowrwxkMXPd2wVLeKtfz9x7U0yYnbMJr3NP0Mn7CU8UY53W7Yn8JoXITfzTfTzXx71N1H5EhMuBquWLyQyCGj+j+aJAsJKyi3WR191+9ll6qNyBcH6om9Me3tupZZSMdrSO2gRkFYtjfiVDa169shlccBD9Sc8=
+	t=1748438248; cv=none; b=iZrJyYhcLrTLpuvxTsR+5t2nxHqt677QrgSv4taKW1nVqI0KijS9pArmLav4QfEnY+ba5riFw3dIVc440XNHiv8u1F4L7kAo1shUenvHGs+tFiViPL9eDsVDMh13llnNQAqsW4omAQtIe+1KNt4eISWUa8yZp47Zmo9QSJfgMis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438135; c=relaxed/simple;
-	bh=PIRdrkn4tXQ/Nrngd/B6xUH/lNsjoWD2K2FQZhbNEiw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lcayHtPEND3IUtfRLqXfBiEG9vKialfCjen5SS31qRVW+scGDm2ixfOr52TY+AEMfN+WEXE5CEm2/3SoPSfOXNTFigiwiCW19hT/EGEMuZkAepC4BeRutaIW5N49F5F+BiGfZo03qU2QZxLbA0bqmKGljsniCTonSXf0mSRuAWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86cda073958so299212239f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:15:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748438132; x=1749042932;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GX4lpjdQUN+6EDguSjn+NQtMuXJztbQghOCQZ9PhaHQ=;
-        b=lAntByJcmOySsA0HvZ9pcJqrxJmD2yyGZRQ4USy2l9hJ/dcLABBzYKo294MdeqA+LQ
-         6/7diTg+opIAGsV8nYT0aLOkNE3TUVDmfpURu2vyDGSbELjJ8WxfbcQIeGigSxWLFPGt
-         Kafpet0Rd0qAxU26E4fva22sMbnAo6ipjEY45AWSnk6c7sZcHuXyXatW6YrevT2TyMLp
-         5+ABFMV+YSi64jYMWRqIsDguc+NzBk+00dCuNThTY6WQH2F0Jk90s/P0VxLsQBjAMQFx
-         YbsG5biIYj1WolDdQgHEpz/HON7H5l1oaw0UXuucYsfDxy2T1XPCZtTOf0p7fBC2nEhp
-         1YLg==
-X-Forwarded-Encrypted: i=1; AJvYcCW34tpcpAQo24IiQHduviOEB3lqE9DSs7+IRyVyllKRzWTGNd/Tn04Abtrc1aAoxkxyqqPtnAPjLeyxpg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8HUto+uCms7/IeV3c3CQulJPibpQS/yS6Lyhz4Je0w5zNzBMC
-	M+SWV5ivYxb24xvQXcpwgj9GD4STto/bMCWy8yW7pkny8mnTglerocMXvHiLjK0fxULCSD7IrGP
-	i4QMfFu2fjuTEERrlANJflDPEpr0oWXpi3DMNuwmyEjNBuPFU8Hq0b1X+ZNA=
-X-Google-Smtp-Source: AGHT+IHJDVCZxm4KIQ1DwJLE+6C3Ib6KsrUY/6QQGyvT43fuL7kZcOJ4XOaZXovq85X5staTd1+teEXQo7NcDSb96lK4fAAkeT0C
+	s=arc-20240116; t=1748438248; c=relaxed/simple;
+	bh=XyqXMFLpjQUAOlJ4J5EDK/pH8DkmZweApWK3C83/s9M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lTwtom7UDk55/6MI0z4C4+F/pyV0v0TSW/kNCxSY7+5AP0t7qQpdC1f4/IGu8YpJGJN31zuJnWHJjSRMOOT7/Lyz/cpr4Rw/dBQMqZa7dBuxZA5RPeeHXDuF3ANT82I52wyGgn2Ye5xZ/yYLVDL5dVirbYnSgEGsr6sx/NFOkm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f5pa5OML; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f5pa5OML"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6A39F43B39;
+	Wed, 28 May 2025 13:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748438238;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jhe4l8G7g9CuqxjAYyb4mOmnurWtrgOLitbau5hV8GQ=;
+	b=f5pa5OML32eamqT/6wf2JaYwGb0E5OBrE0uNEUr8vEb16KKhlfBTpZDLQHmDC/oAIXmR9t
+	vcX791GXDtrvMNye5H6KAGRHoyE3dUpWmtObyq6EskJBei0K/i9c1Tr4phPLQAOKuAzPHA
+	vi77pjqXAe+bz+l4KaFY9wvE47MJaWIyyfYpJEChna3qJI07jAqbeQEv/h0M1CjLFQOmes
+	rfK8CxgR7KVVBBVCs63WpBYxdL6QLOFCThoNCHt306T6lLopESzqT6oLss/sDpaI5Oj10w
+	mONgTGbx2jnBGcMlY5QDvJTbNctGKdnZTt47lbkAlN3/KKQg5tt6FiHHCwkZYQ==
+Date: Wed, 28 May 2025 15:17:15 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski
+ <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH net-next v12 00/13] Add support for PSE budget
+ evaluation strategy
+Message-ID: <20250528151715.59b8f738@kmaincent-XPS-13-7390>
+In-Reply-To: <8b3cdc35-8bcc-41f6-84ec-aee50638b929@redhat.com>
+References: <20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com>
+	<8b3cdc35-8bcc-41f6-84ec-aee50638b929@redhat.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a22:b0:3dc:79e5:e696 with SMTP id
- e9e14a558f8ab-3dd8b01b114mr18743335ab.11.1748438132458; Wed, 28 May 2025
- 06:15:32 -0700 (PDT)
-Date: Wed, 28 May 2025 06:15:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68370c74.a70a0220.253bc2.00cd.GAE@google.com>
-Subject: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in __bch2_bkey_unpack_key
-From: syzbot <syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeefieculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtp
+ dhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Hello,
+Le Wed, 28 May 2025 09:31:20 +0200,
+Paolo Abeni <pabeni@redhat.com> a =C3=A9crit :
 
-syzbot found the following issue on:
+> On 5/24/25 12:56 PM, Kory Maincent wrote:
+> > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> >=20
+> > This series brings support for budget evaluation strategy in the PSE
+> > subsystem. PSE controllers can set priorities to decide which ports sho=
+uld
+> > be turned off in case of special events like over-current.
+> >=20
+> > This patch series adds support for two budget evaluation strategy.
+> > 1. Static Method:
+> >=20
+> >    This method involves distributing power based on PD classification.
+> >    It=E2=80=99s straightforward and stable, the PSE core keeping track =
+of the
+> >    budget and subtracting the power requested by each PD=E2=80=99s clas=
+s.
+> >=20
+> >    Advantages: Every PD gets its promised power at any time, which
+> >    guarantees reliability.
+> >=20
+> >    Disadvantages: PD classification steps are large, meaning devices
+> >    request much more power than they actually need. As a result, the po=
+wer
+> >    supply may only operate at, say, 50% capacity, which is inefficient =
+and
+> >    wastes money.
+> >=20
+> > 2. Dynamic Method:
+> >=20
+> >    To address the inefficiencies of the static method, vendors like
+> >    Microchip have introduced dynamic power budgeting, as seen in the
+> >    PD692x0 firmware. This method monitors the current consumption per p=
+ort
+> >    and subtracts it from the available power budget. When the budget is
+> >    exceeded, lower-priority ports are shut down.
+> >=20
+> >    Advantages: This method optimizes resource utilization, saving costs.
+> >=20
+> >    Disadvantages: Low-priority devices may experience instability.
+> >=20
+> > The UAPI allows adding support for software port priority mode managed =
+from
+> > userspace later if needed.
+> >=20
+> > Patches 1-2: Add support for interrupt event report in PSE core, ethtool
+> > 	     and ethtool specs.
+> > Patch 3: Adds support for interrupt and event report in TPS23881 driver.
+> > Patches 4,5: Add support for PSE power domain in PSE core and ethtool.
+> > Patches 6-8: Add support for budget evaluation strategy in PSE core,
+> > 	     ethtool and ethtool specs.
+> > Patches 9-11: Add support for port priority and power supplies in PD692=
+x0
+> > 	      drivers.
+> > Patches 12,13: Add support for port priority in TPS23881 drivers.
+> >=20
+> > Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>=
+ =20
+>=20
+> I'm sorry, even if this has been posted (just) before the merge window,
+> I think an uAPI extension this late is a bit too dangerous, please
+> repost when net-next will reopen after the merge window.
 
-HEAD commit:    785cdec46e92 Merge tag 'x86-core-2025-05-25' of git://git...
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=10b5adf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cf9956a5a76267c7
-dashboard link: https://syzkaller.appspot.com/bug?extid=cfd994b9cdf00446fd54
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11e626d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e626d4580000
+Ok I will.
+Would it be possible to review the netlink part of the series? (patch 2, 7 =
+and
+8)=20
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0672bd8fdf4a/disk-785cdec4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/df460fea958f/vmlinux-785cdec4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7ae41e61549e/bzImage-785cdec4.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/8a6de6365ccd/mount_0.gz
-
-The issue was bisected to:
-
-commit cd3cdb1ef706a1ac725194d81858d58375739b25
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Tue Apr 22 13:14:19 2025 +0000
-
-    bcachefs: Single err message for btree node reads
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=138c6df4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=104c6df4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=178c6df4580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cfd994b9cdf00446fd54@syzkaller.appspotmail.com
-Fixes: cd3cdb1ef706 ("bcachefs: Single err message for btree node reads")
-
-bcachefs (loop0): sb invalid before write: Unsupported superblock version_min 0.0: (unknown version) (min 0.9: (unknown version), max 1.28: inode_has_case_insensitive)
-  emergency read only at seq 10
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/bcachefs/bkey.c:163:16
-shift exponent 4294967127 is too large for 64-bit type 'u64' (aka 'unsigned long long')
-CPU: 0 UID: 0 PID: 5832 Comm: read_btree_node Not tainted 6.15.0-syzkaller-01958-g785cdec46e92 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0x386/0x410 lib/ubsan.c:492
- get_inc_field fs/bcachefs/bkey.c:163 [inline]
- __bch2_bkey_unpack_key+0xdc4/0xe10 fs/bcachefs/bkey.c:284
- __bch2_bkey_compat+0x4db/0xbd0 fs/bcachefs/bkey_methods.c:480
- bch2_bkey_compat fs/bcachefs/bkey_methods.h:134 [inline]
- validate_bset_keys+0x6c1/0x1390 fs/bcachefs/btree_io.c:983
- bch2_btree_node_read_done+0x18c8/0x4f60 fs/bcachefs/btree_io.c:1211
- btree_node_read_work+0x426/0xe30 fs/bcachefs/btree_io.c:1400
- bch2_btree_node_read+0x887/0x29f0 fs/bcachefs/btree_io.c:-1
- bch2_btree_node_fill+0xd12/0x14f0 fs/bcachefs/btree_cache.c:994
- bch2_btree_node_get_noiter+0xa2c/0x1000 fs/bcachefs/btree_cache.c:1261
- found_btree_node_is_readable fs/bcachefs/btree_node_scan.c:85 [inline]
- try_read_btree_node fs/bcachefs/btree_node_scan.c:220 [inline]
- read_btree_nodes_worker+0x1319/0x1e20 fs/bcachefs/btree_node_scan.c:269
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4e/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
----[ end trace ]---
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Regard,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
