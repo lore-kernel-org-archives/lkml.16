@@ -1,65 +1,48 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9D01D47B4;
-	Wed, 28 May 2025 09:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2569278152;
+	Wed, 28 May 2025 09:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748425822; cv=none; b=Hmh4lXHj6bfQG22I5nywG3OcYpMEcMKlthPgsj4ORc5/bikZN6yH3VxlYNz3RJYJl9SoOrxLVVp7zNiGXag7a5uD8bQ9WQUxiQ4Oxm2gVSbLYqjA3nDnug4Ut2C1d435TG9tzlT9DdgeXfI4Amq8WEijnbdn5hjY3NwFlOuxshA=
+	t=1748425911; cv=none; b=MJVj3+edQJ7BWHPsUPOtQ5JHXdykJTZi64LM2RAczzw70LmQvcWOBCkkyxlfxDaq37Bm0cWf0ufICjfyHRL5Okdm8nN+0wKyn9EA1pn9BVjcEdMUlOJ+/F1llXPMrYl5EWYpax+T1577SGjLScj8DBeDyAMMHxa7n8Z71k41QyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748425822; c=relaxed/simple;
-	bh=uXLKxbZMGyPQIhzmIxYiHPJggnsUBGMt+mRIvq+k2ts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YYzqTvoNE2bgtjtG9dpW7FE3UNwptNwFOZLusvSl2BTEV1v9cnD/TP0rK5lK0SsCnxNf33nFnc73ulrrh49JEEXQs7AKmkfJBSF7zNXczeMtStY3pCIXLzgikctnkDx1IypDeWBQLiPsKC5hC2d6YA7t4W7IcCTE1h6VaLNSAh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dkiktXZ2; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748425911; c=relaxed/simple;
+	bh=tcQArO/ilw7koTVs+1Wqs9sPMLBSpYyfkvbgmUzFeXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ua6T/+skBZNZfg1i5Wl5/JZ8KtleE4SyDAnGnrvFgCdIFUdT2SnMxydzpqFwJ/X50iqnJu0mZkIfbzELG1rXChUFm5moG3pwtNnBz3qhi3o0nh9dzrxV+GIhZR0OgbjEdEg2FKeKqrD72p8Mbi0s7RLFzBwH9T4SShPmMRxAMs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I4rKlkkc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkiktXZ2"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6045b95d1feso7258704a12.1;
-        Wed, 28 May 2025 02:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748425818; x=1749030618; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U154eK3ddwaPqm55ZRdw1sQb9SuIUnfO5tNkP86wnH0=;
-        b=dkiktXZ2ICbVFaVjQFr+BJONEu3yGJH7RtL+96TN6vvDkNNpKurGpkqOY02rCn2bU7
-         GEMOMJRdhSNVOoESrLiQukmPMvhUTYTX9Yr0Bur+FS5e8CPxL6rGHwwbcu/2dTUYv0/o
-         PxaONM4LmGwyFkOoSiLdVf4pBcejcfslhjTz+6PFnbROaS+Yj4fte236k+Lm/9N5yZGh
-         85RIdVpC/tJHX6VVRTe47v4BEbptLFqfShHKjOjVoNdeahYBbY8g1uWJQMgwVDZXTu00
-         BAH596Nu/SigCPC2HCLQxlcMuD6ULAIqaWqmh5AsIbJal6xy6JamjVQVZXmkaYF8dtDc
-         FhCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748425818; x=1749030618;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U154eK3ddwaPqm55ZRdw1sQb9SuIUnfO5tNkP86wnH0=;
-        b=Txs+ZjVDi/OwIcqg2XVmpPrhU0Yw/+5HtMg4vL3En+cNzjqATN3rkPaCRWpW54IgGQ
-         BXUxMhce5+elC6HZImwQMLNg27e9J4O+hqgE//9QHtoMsa7t0OAXZ1ubLozO2zBVPIn8
-         87RPJqcj7oYApqgu/aZamR4vC6EkJiMNY8d9YEuRpY3oAFgrX8AIxtNlrqlu3bN150KX
-         bXzjo23sYfGe1ZnlnDN9qwtUW4STi3mFEo4auo0S3iTZXBxmAnGezf4/kYPGY7REeuNy
-         FCS1EhE8zrn1ftvVrd5LZcP8RwjUyuppYxe8jhKaDomaI63u471V1w/fD9tUNT4gMVQ1
-         Cwpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVOIyVtJUKOEazW/nJPHzT2prNu04mxbPuwbW/ikr/PZQg8BlW9SkOvGi32xDtKpfLKv+cMyLTJEC5bk/E@vger.kernel.org, AJvYcCWofrpj6fcyw5gkf5j/7o0DuqbOLTv/xvTqs9XI6QYM0ZY0glTw1E38fpvJ1n2LiHes+Xw=@vger.kernel.org, AJvYcCWx3QU6iwiWXhGq80gmw/PE5e33IaIVjxOhg+NZIqmChnjLSG4QmB5M1EkAhW8n76PGn8SAOszZUAIm2w==@vger.kernel.org, AJvYcCX+I9M9db9UlUh7I5Q7iRcEzl9GpornlB9EFEysuDqgJR/09bIkvQVm6BWw0i5frJcI/9YOvWSA@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdqmJ2BN+hgHaL/3/vLpwXH6siNUfX+vM7BlHEpgwCAuHRDB09
-	oddPT/LHTAOtpYC1qGVnniWi2fuLEkArwBB9fKy0SEg2jxgHxs+wdhP/
-X-Gm-Gg: ASbGncu5i+5F9l17VVwNyBvkwgHg9D+2K8mrDvYMUC2DmXR8y/4PDfasrIOLlLZRfrw
-	WejmxAgNzhkBTdfEvK/+pOGVZ5XZPcIFhqY2qQMlbsEkvzdZkgVxiNJcTcLs0LskJp4wjFc93eG
-	Izb73Uk7YMWq+bvU1gT0ieygXS7raYKtYkJmmUEv/ctcjpthiMb0APwPRE6nkeAIWsJ0IanAy7y
-	9paiHOaoiNv8CGyjbash76YN5gQKEPm1AABNSIgp/WyNMIYiqxpBSF7JwzKNw71JMEsR3XiBili
-	sgEQshW2YOddvTzpiLtyqsYFARNRpkqzloVwF2P1P1020pEl9VESQLGZoMrJEQCCe1vSct4+vQ=
-	=
-X-Google-Smtp-Source: AGHT+IFBpwXe6OYaA+6pIeCAYnPKbCTjWryXK9Qi9lEDBkg++QM3cSR3IC/BzivItjAiaVNDFa3zmw==
-X-Received: by 2002:a17:906:c14f:b0:ad8:a4a8:103a with SMTP id a640c23a62f3a-ad8a4a81180mr97835266b.4.1748425818177;
-        Wed, 28 May 2025 02:50:18 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::6f? ([2620:10d:c092:600::1:c447])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b28908sm78014966b.117.2025.05.28.02.50.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:50:17 -0700 (PDT)
-Message-ID: <5494b37d-1af0-488e-904b-2d3cbd0e7dcf@gmail.com>
-Date: Wed, 28 May 2025 10:51:29 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I4rKlkkc"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S8gG2x022962;
+	Wed, 28 May 2025 09:51:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Wp2KgjjSZKhPsd4HV/S8Rh5q5fv+5sUwsR45Qw85m0w=; b=I4rKlkkcmQDiKk/W
+	roAjtfpLaewNNA49eTHjQZweV9TBXnAGfsa+eVlHNq+VgWL5HP+Jwf/Ow/u8ZNQu
+	AnVjgDRDfQ7S2paykfKWtLtFQRrEb1o8aWgY1vO2ZDw3QDY3TZ5MqZz2RFdfMy8c
+	Vkrq8weiTgHvfJAvSB1rLa3VL0+SWx/LnPuGeU3chfAaeOvcvKMcNcwyzU1FPinC
+	ZY8nRQWAXNWntttSBD+IDFvfe1ZTsibauS9ljHPTXM2zhfoQCAxrxcHzIt+1vaik
+	TfurmsZosej3S/gVr2QHQLN3oRPzBNmZIv8IGhgcA4oVSUdCzYg5LN1u4vqXcRBb
+	COZkMA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmgcx8x3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 09:51:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54S9phOf020897
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 09:51:43 GMT
+Received: from [10.218.22.7] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 28 May
+ 2025 02:51:36 -0700
+Message-ID: <bb9f9498-5b24-4df8-923a-a54bc528799d@quicinc.com>
+Date: Wed, 28 May 2025 15:21:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,127 +50,153 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access page->pp_magic
- in page_pool_page_is_pp()
-To: Byungchul Park <byungchul@sk.com>
-Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-13-byungchul@sk.com>
- <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
- <20250526022307.GA27145@system.software.com>
- <a4ff25cb-e31f-4ed7-a3b9-867b861b17bd@gmail.com>
- <20250528081403.GA28116@system.software.com>
- <06fca2f8-39f6-4abb-8e0d-bef373d9be0f@gmail.com>
- <20250528091416.GA54984@system.software.com>
- <b7efa56b-e9fd-4ca6-9ecf-0d5f15b8d0c1@gmail.com>
- <20250528093303.GB54984@system.software.com>
+Subject: Re: [PATCH v4 02/18] dt-bindings: clock: qcom: Update sc8280xp camcc
+ bindings
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Satya Priya
+ Kakitapalli" <quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+References: <20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com>
+ <20250515-videocc-pll-multi-pd-voting-v4-2-571c63297d01@quicinc.com>
+ <20250519-barnacle-of-beautiful-enthusiasm-4e6af0@kuoka>
+ <ec4ee2f5-162b-430d-aeb9-90ad4559707b@quicinc.com>
+ <the3rt4gwb766u5tmzzugoozkyt3qw7kxvy6mlemxcqb5ibs37@szcq2rzbukma>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250528093303.GB54984@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <the3rt4gwb766u5tmzzugoozkyt3qw7kxvy6mlemxcqb5ibs37@szcq2rzbukma>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: _I-QgFM5UlQRHwcQjaVShaytowtLaBq5
+X-Proofpoint-GUID: _I-QgFM5UlQRHwcQjaVShaytowtLaBq5
+X-Authority-Analysis: v=2.4 cv=Ws4rMcfv c=1 sm=1 tr=0 ts=6836dcb0 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
+ a=qU0-ABsse5SAqXbbjgwA:9 a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA4NSBTYWx0ZWRfX6UqsCeu+7/XO
+ hkIKzHjiwbyPlYFVq8PwHgLZeBCOLcBfipX+yOLQakUw/F1sa1ICq1ftdhmn9Wxv1UhSiIzutps
+ 1i7OlNj3wxSsSTFo8IZyttP+A2Kr3ZiR3V/czOuASdomQ90VCkoPNNbEaW1XYKqA/5VihAERdrm
+ zh7GI/vuZ0I1QOW8P+tR7ccRvhpuS0hdosPX8fcNHXelN/zXQS4t/RIJZvtnkXm3OTz5tAZzvyi
+ vvQo/7ct/niem6TjHnLRwZW/5eaTiPaXzrXjJw1icxDdyGjUTzazVBu/uMS9kmAE3lJIgyDAoQR
+ wsq+emi5P+yQd71vtDe+B/1VhGhjaF8UbtYomM9BuSkjPNgsgQa+blORcx1VseXjqsIQs3F5+NN
+ k4IaiIocl5HT3t/KcdOkHb8BFVCktFHXxvsu31tGoUIgGZcVMg3vJm2jiYMTdazGBftWYGz+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505280085
 
-On 5/28/25 10:33, Byungchul Park wrote:
-> On Wed, May 28, 2025 at 10:20:29AM +0100, Pavel Begunkov wrote:
->> On 5/28/25 10:14, Byungchul Park wrote:
->>> On Wed, May 28, 2025 at 10:07:52AM +0100, Pavel Begunkov wrote:
->>>> On 5/28/25 09:14, Byungchul Park wrote:
->>>>> On Wed, May 28, 2025 at 08:51:47AM +0100, Pavel Begunkov wrote:
->>>>>> On 5/26/25 03:23, Byungchul Park wrote:
->>>>>>> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
->>>>>>>> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
->>>>>>>>>
->>>>>>>>> To simplify struct page, the effort to seperate its own descriptor from
->>>>>>>>> struct page is required and the work for page pool is on going.
->>>>>>>>>
->>>>>>>>> To achieve that, all the code should avoid accessing page pool members
->>>>>>>>> of struct page directly, but use safe APIs for the purpose.
->>>>>>>>>
->>>>>>>>> Use netmem_is_pp() instead of directly accessing page->pp_magic in
->>>>>>>>> page_pool_page_is_pp().
->>>>>>>>>
->>>>>>>>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>>>>>>>> ---
->>>>>>>>>      include/linux/mm.h   | 5 +----
->>>>>>>>>      net/core/page_pool.c | 5 +++++
->>>>>>>>>      2 files changed, 6 insertions(+), 4 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>>>>>>>> index 8dc012e84033..3f7c80fb73ce 100644
->>>>>>>>> --- a/include/linux/mm.h
->>>>>>>>> +++ b/include/linux/mm.h
->>>>>>>>> @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
->>>>>>>>>      #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
->>>>>>>>>
->>>>>>>>>      #ifdef CONFIG_PAGE_POOL
->>>>>>>>> -static inline bool page_pool_page_is_pp(struct page *page)
->>>>>>>>> -{
->>>>>>>>> -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
->>>>>>>>> -}
->>>>>>>>
->>>>>>>> I vote for keeping this function as-is (do not convert it to netmem),
->>>>>>>> and instead modify it to access page->netmem_desc->pp_magic.
->>>>>>>
->>>>>>> Once the page pool fields are removed from struct page, struct page will
->>>>>>> have neither struct netmem_desc nor the fields..
->>>>>>>
->>>>>>> So it's unevitable to cast it to netmem_desc in order to refer to
->>>>>>> pp_magic.  Again, pp_magic is no longer associated to struct page.
->>>>>>>
->>>>>>> Thoughts?
->>>>>>
->>>>>> Once the indirection / page shrinking is realized, the page is
->>>>>> supposed to have a type field, isn't it? And all pp_magic trickery
->>>>>> will be replaced with something like
->>>>>>
->>>>>> page_pool_page_is_pp() { return page->type == PAGE_TYPE_PP; }
->>>>>
->>>>> Agree, but we need a temporary solution until then.  I will use the
->>>>> following way for now:
->>>>
->>>> The question is what is the problem that you need another temporary
->>>> solution? If, for example, we go the placeholder way, page_pool_page_is_pp()
->>>
->>> I prefer using the place-holder, but Matthew does not.  I explained it:
->>>
->>>      https://lore.kernel.org/all/20250528013145.GB2986@system.software.com/
->>>
->>> Now, I'm going with the same way as the other approaches e.g. ptdesc.
+
+
+On 5/21/2025 6:16 PM, Dmitry Baryshkov wrote:
+> On Wed, May 21, 2025 at 03:32:34PM +0530, Jagadeesh Kona wrote:
 >>
->> Sure, but that doesn't change my point
+>>
+>> On 5/19/2025 1:48 PM, Krzysztof Kozlowski wrote:
+>>> On Thu, May 15, 2025 at 12:38:47AM GMT, Jagadeesh Kona wrote:
+>>>> SC8280XP camcc only requires the MMCX power domain, unlike
+>>>> SM8450 camcc which will now support both MMCX and MXC power
+>>>
+>>> I do not see change to sm8450 here. This makes no sense on its own. You
+>>> do not move compatibles - what is the point of such change?
+>>>
+>>
+>> I did the SM8450 changes in next patch (3/18). But I agree with you, this needs to
+>> be more structured. So I am planning to drop this patch and instead take care of
+>> single power domain requirement for SC8280XP within SM8450 camcc bindings using
+>> minItems and maxItems properties based on if check for sc8280xp compatible similar
+>> to below snippet.
 > 
-> What's your point?  The other appoaches do not use place-holders.  I
-> don't get your point.
+> I think it is a bad idea. I liked the split that you've implemented:
+> separate bindings for platforms that require MMCX (and MX), separate
+> bindings for platforms which require MMCX and MXC (and MXA).
 > 
-> As I told you, I will introduce a new struct, netmem_desc, instead of
-> struct_group_tagged() on struct net_iov, and modify the static assert on
-> the offsets to keep the important fields between struct page and
-> netmem_desc.
+> It might be better to start by changing SM8450 binding to support MXC
+> and then adding SC8280XP to those bindings.
 > 
-> Then, is that following your point?  Or could you explain your point in
-> more detail?  Did you say other points than these?
 
-Then please read the message again first. I was replying to th
-aliasing with "lru", and even at the place you cut the message it
-says "for example", which was followed by "You should be able to
-do the same with the overlay option.".
+Okay, I will reverse the order of patches 2 and 3 to support MXC for SM8450 camcc
+bindings first and then move SC8280XP to have single power domain support. 
 
-You can still continue to use pp_magic placed in the netmem_desc
-until mm gets rid of it in favour of page->type. I hear that you're
-saying it's temporary, but it's messy and there is nothing more
-persistent than a "temporary solution", who knows where the final
-conversion is going to happen.
+Thanks,
+Jagadeesh
 
--- 
-Pavel Begunkov
-
+>>
+>>    power-domains:
+>> -    maxItems: 1
+>> +    minItems: 1
+>>      description:
+>> -      A phandle and PM domain specifier for the MMCX power domain.
+>> +      Power domains required for the clock controller to operate
+>> +    items:
+>> +      - description: MMCX power domain
+>> +      - description: MXC power domain
+>>
+>> ......
+>>
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,sc8280xp-camcc
+>> +    then:
+>> +      properties:
+>> +        power-domains:
+>> +          maxItems: 1
+>> +        required-opps:
+>> +          maxItems: 1
+>> +
+>>
+>>
+>>>> domains. Hence move SC8280XP camcc bindings from SM8450 to
+>>>> SA8775P camcc.
+>>>
+>>> Subject: everything could be an update. Be specific.
+>>>
+>>> A nit, subject: drop second/last, redundant "bindings". The
+>>> "dt-bindings" prefix is already stating that these are bindings.
+>>> See also:
+>>> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+>>>
+>>
+>> Sure, I will take care of above in next series.
+>>
+>> Thanks,
+>> Jagadeesh
+>>
+>>>>
+>>>> SA8775P camcc doesn't support required-opps property currently
+>>>> but SC8280XP camcc need that property,  so add required-opps
+>>>> based on SC8280XP camcc conditional check in SA8775P camcc
+>>>> bindings.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+> 
