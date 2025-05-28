@@ -1,356 +1,198 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11023107.outbound.protection.outlook.com [40.107.162.107])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFD3152E02;
-	Wed, 28 May 2025 09:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424067; cv=fail; b=cO2sMWWErN8J73QpOPZ1+gnjlR+PpLkvmykcVD7gtwsEzJLDYoO1LfYCDlt2xBjUlvpZBKlcDaH5YkeN4c320rSwIO/ukWo7apARe3d7GzAAL8B0wU5ayhk/+pI59bypbCDLNYT+IUnmyV36NGAqFEx0dVDaLrne/543MpWU/Nc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424067; c=relaxed/simple;
-	bh=clsLgmbXMrG8mK9z9LgmXIBBuv3vvTFemmavVBWFMTw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dSrCu258Y2RxUm/OErY8PfvQYWWs13G9O9MevcAgWq/IyIU3sJr7so4fH0Ch3b0N+w39zk9ygzkEMO1uQ2wImh08x08xpuKJIEf53RUjnQPeN0/uT/Ll8fMOBJ/E4cCMsFL3FUtB5U3TCpjFYjEJEsK57E12ZS5ZjfAQzeOX87s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=genexis.eu; spf=pass smtp.mailfrom=genexis.eu; dkim=pass (2048-bit key) header.d=genexis.eu header.i=@genexis.eu header.b=f+mTSq50; arc=fail smtp.client-ip=40.107.162.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=genexis.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=genexis.eu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDBA31EB193
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748424103; cv=none; b=Iq34RhYi38VSqo4CkwwLMsUwQwNuZxfcOrOGDq5drU8xQAa86BSxVSm6fM90F09pus0TsC9WPV47cdiFrAWxCH6sc/MPd0lNufBxOSUFtrhfxm1tPhcA+Ch97ynY5X4u/AeBCRuZe4c/VzRPiMr3aRyPXYgiRrgqqUCGXaQBAZI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748424103; c=relaxed/simple;
+	bh=rJtVL3NDhF4y5DFmGfxRMVAXGO+BDTrt0EJ0QuEI6ns=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WfvUTcrwDruCefR/pdT5YRjKQbashYy3JhMSlwLe/BapIjB5s9dbvph0UAji56MNvpkUhGHdX2TrMyo2cpYPuWWesByb4rCNHC3mdcD2FMsz/SKkV7C/4QpLuQQIWdqN7/6QWtpEu+BXw5He5Y7tuB28gC52GeEpACXVaAnB8E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ln52FnII; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=genexis.eu header.i=@genexis.eu header.b="f+mTSq50"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vhTFZKSL45k5WDvxTMpKap5zOZxC1hMKNX6aeUp0+N6hHSyS9hrpagYw+lQnpZWRAbjUT0n5BIzSVifK5n5RZgmGxqj/t3RuYo1yYPGR/wbDnsJOBbhK0NQp9JWf2P2QAvOEwqpCTbRbH2vH3brScPs5M456Ab3okO8HxujoZ27M9obNsVt8Er9bCRWzVyY1hanQaaBeAiXI+ocNVXiGtgEgp/cjxt/mmswpqSxz/uAgFQWPefF2MMIjjYgezEMZkEPf1hFeJDU+EnDPBhBNOoZwNKqlD8tpQWqa481pIhaKT1OTc3LWXsSuT8W4B/Pw0iSX4dY/i9DHPKyQVS6Q6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gz/Xh3ZL3C2+Zw0PCetO3VgLrD3Rzu/DdkijnqDwc9c=;
- b=Io6SsJWgglnQDe2lv3aklz8HOvMVQVTJt7Ia40LZ4/ZZsu2h9BTRpTF9f9gkgR+4tW5gtYN3nu5DO7a2jqyjjUFIijGN5laDiKlhMwBUqbPprdbCPO6fLbvgdjYiv2d1WzS0y21lveriDsqsk+WTL2ESrDg5k3mgPMVpJPDegUlVaWN1X3frqPpfQg166sptbJh9xmm0LUdALElaXoB9L5FLWHdXyDa8FB1l6KjZSjGVZOK09mD/vP1t9AgOgVACrRohkrVFFcv85bYpzdCuuH5Tt5207jIcGVdUhuyX0tELPbZHBPAd7bsOX87nW85e+mTZX93Nfg0mOIm83yQMnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=genexis.eu; dmarc=pass action=none header.from=genexis.eu;
- dkim=pass header.d=genexis.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=genexis.eu;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gz/Xh3ZL3C2+Zw0PCetO3VgLrD3Rzu/DdkijnqDwc9c=;
- b=f+mTSq501uEHI8P9WBnZqIRNNPmGqJZAO8JDgPKxVD4zd1BeHhy+soCpZh9h0yRdqMpTzKv0hZIL0yqFLdDuSOHcTQAqxcjm35Ds9cumuPtvahXzuRNLs+ybHDGmhWNZLo81OzRuWC2MlDsyh5LXPsmi3BxlzBcg3N57GZv2SF5i6Be+whDw2slSpjcZ/RSDSCyeQILskjE0HFDswBeSeLEHlPvnapYYiyidkDcEVjEh7j3odqlEoac1tz1U3xH+wUVO9WAqK6ov6Oi0Uy0GZQy+G8+Bd7IWxa07et2GjIQGbzRm3s9sIGiVCXbj6Y0rrSD1HdwT+VKhv3NolFY55g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=genexis.eu;
-Received: from AM6PR08MB4215.eurprd08.prod.outlook.com (2603:10a6:20b:90::16)
- by PAVPR08MB9481.eurprd08.prod.outlook.com (2603:10a6:102:319::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 28 May
- 2025 09:21:00 +0000
-Received: from AM6PR08MB4215.eurprd08.prod.outlook.com
- ([fe80::f8bd:a866:322f:7b42]) by AM6PR08MB4215.eurprd08.prod.outlook.com
- ([fe80::f8bd:a866:322f:7b42%5]) with mapi id 15.20.8722.027; Wed, 28 May 2025
- 09:21:00 +0000
-Message-ID: <b1f58f49-83b3-48c3-8c44-4c82fcd2f69b@genexis.eu>
-Date: Wed, 28 May 2025 11:20:53 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] pinctrl: airoha: add support for Airoha AN7583 PINs
-To: Christian Marangi <ansuelsmth@gmail.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sean Wang <sean.wang@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250527222040.32000-1-ansuelsmth@gmail.com>
- <20250527222040.32000-7-ansuelsmth@gmail.com>
-Content-Language: en-US
-From: Benjamin Larsson <benjamin.larsson@genexis.eu>
-In-Reply-To: <20250527222040.32000-7-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR08CA0023.namprd08.prod.outlook.com
- (2603:10b6:610:33::28) To AM6PR08MB4215.eurprd08.prod.outlook.com
- (2603:10a6:20b:90::16)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ln52FnII"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S66LL1029183
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:21:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=3DRqMWuo/9LCc7qXzV/bil
+	l0X/zQ8yils3PttskPMyk=; b=Ln52FnIIbU37T6u197rbpe+MsSp1FgXQN73aIH
+	xnYK3I41VSJYck2I5t2X0g+ufSJxBDTUuoeXPnai5ajAaSu7J9yEeS1ozH4gIRVa
+	Cc7OV57kJ3SZiAxLq1Zk4dr/UdsHF94ScfBB0KR1+MRBmtjWw8E2RmU273gCXOT+
+	9qTmc5LRHsPlmme31VEzZ7eO49Ci+2WSltJ+f4jUEdB25LAPPmv0pSD5Yx4qxVZ8
+	2EAhfoNx0HG5G4cXnQrFE9zLYGnxPRTCPZwUmnPS7rQP1IhZpdVCVGearQyQw885
+	YIsdn+SbzWeAoyuCzDXs1cd5IvfRLZ9IDFekxA9a6/Jw/oQw==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf23rh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:21:39 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-234dbbc4899so3539655ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:21:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748424099; x=1749028899;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3DRqMWuo/9LCc7qXzV/bill0X/zQ8yils3PttskPMyk=;
+        b=I85dyO3eQ9CdZ7bLutqY8GqPjlFWnO4jkUFWix3N3nr4+T5PLqfvR4I+YEwSGHwR0I
+         2j4tobN3kIv/cMH53v45kQDEdFRvBUMXKdC0emsuCPCvx0pPqCggyYIclpRUWj1z1ZEu
+         tw/tn6GnLrt+tEGepnUXF1ZEjv05WMQxIQ0q1xaj+xMtPj9gRQ3Yn4oRyCJK7++lAK2O
+         9fyXS/sYYDVAMUGj3j29Yv0soWjJwigyu+3k7vE0zqSs3hkRpzNZ0KWzhaDxVJpBvEFF
+         O2Myi0znu3KJX0CabbvXm9qVfA5sf7YempEJzz6KH5rG/X/54+wVJf/yjrEpD4v/qP37
+         BcoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXjZwL7fdl1zO+i9OpuxxmTRCyi9gpIts7unHQnB6CiQCOGjgMxxQKc8UT0shXajoD08nX9UGTQjBdphsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbEzWrunAuaAfB8uxVqrSfydR8RyUWR0mePClxOpDzEZiLbpYz
+	gfTSMdPzClLsd5DE3+2L353BJ1AmwiZvnDQwQ5rSHvU6dVTJ1jIYDlMuZe7FQPnWt1PPwPMQJkj
+	gfbOQp4YCHeI1+L8N/pb1IEjlLITwgtVrhiyZbQ+ehgQlj10dN21TSMVeJ9RPe48zAfM=
+X-Gm-Gg: ASbGnctVSMy3Uo3lpCvBWY15KHlSiZGu4lyS+1+YlEpIc1wCiSM9bteJlxs2bv+RkNi
+	rV9MtLwKgylWRx5uPDjtY1rV5F9mRHZ7EIohSrOefICdJmK8XNGBkPLz++XRnY0cBgXfDBrEhxR
+	tos9+9hYF8+9zev1QL4B0N+sobKrwDjQk+bsjp7/3flb2OrVbd0YxUufP7wiblDA9M3p3j582YO
+	OVTbPX4/WWz7QWlwz0O9aFOdAmjfOnSIYB8+QbfHeBROrGAlQ9OUneur9VCuebPLW0PnlqCO6Z5
+	PRXgXxjhYHbxPqOE63HzRMpKiw==
+X-Received: by 2002:a05:6a21:4a4c:b0:1f5:889c:3cbd with SMTP id adf61e73a8af0-2188c3b0db2mr28606027637.35.1748424099049;
+        Wed, 28 May 2025 02:21:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH5o37DFxUmG5HSgtWJ9sRbQCeAReZRpjvgn4XA+4dS7Xr21VlTaAbQtVXKeq6pE2AJOFOE4Q==
+X-Received: by 2002:a05:6a21:4a4c:b0:1f5:889c:3cbd with SMTP id adf61e73a8af0-2188c3b0db2mr28606004637.35.1748424098724;
+        Wed, 28 May 2025 02:21:38 -0700 (PDT)
+Received: from [10.213.103.17] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-746e343c2c6sm833456b3a.134.2025.05.28.02.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 02:21:38 -0700 (PDT)
+From: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Subject: [PATCH v4 0/3] soc: qcom: qcom_stats: Add DDR stats
+Date: Wed, 28 May 2025 14:51:30 +0530
+Message-Id: <20250528-ddr_stats_-v4-0-b4b7dae072dc@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4215:EE_|PAVPR08MB9481:EE_
-X-MS-Office365-Filtering-Correlation-Id: a0b36d26-73fb-4ee3-a9a9-08dd9dc8f621
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VENyc2JNK1plSTM0b25IWU4zUXFuNm1QR2IvWmhxK3l6bjhrcGJoaVpFb3Ev?=
- =?utf-8?B?Vlo4eHZjTnUyd3pOT1BYZWZEeWNpak1aSnd4enQ2VmZtbzZkb1JsYnBzWndy?=
- =?utf-8?B?NDMzU3oxV2Fzbjg0ZWFhRy94OEZ0MWRKUG5lVVJVdTFvL29wN09ibUhGUWp3?=
- =?utf-8?B?ZGd0UG4raGxYTGdCRloxbWFZNkRocVlmYjdURWNPSWU0bFRUc2Z1Qy9rR0hO?=
- =?utf-8?B?aklabitiQVB6NW1XRHBTOSttRDRWUUo2RGM2LzdEOE5TdTJVTVVTMVEwZDFk?=
- =?utf-8?B?ZndVVjg4UDFuR1JHTm9jekZLYThLREpHZ3RnQXlzK2NOUlNLSjB5UklIdU5z?=
- =?utf-8?B?SkRLL2NkaEVuMUdNNEFuaDMyTEtFd3MrdGVrSk12OFJYeFNFRkk2OTVkcC9P?=
- =?utf-8?B?TWFEeVkxNngvSmVqOE5mYUJvWFlzbDV1MTdTbitMNkVqNm85clFQV05FdjdJ?=
- =?utf-8?B?ZzJBd2ttRVRrb045NjhzeEFhVEZTS3Uxa2FjY0NPdXVlTkhYY2tCUnhIcW9l?=
- =?utf-8?B?V3IzQ1BGdDEzdUJZV1owNlVnSTVETmFxcGNpdGN6cmoxOEUxOGpUR0ZYalQ3?=
- =?utf-8?B?ZXJuS0Z1UUcxSGNXZndZZ3AweWNPZ3RLc05OK2V2TytmQXpuVWdkY0lzdXpy?=
- =?utf-8?B?ZFdiYjRjcUhIbFk2eGxudTRzazBGdDJKaTJDMnNOQThrem1rS0d0cGY5TUdx?=
- =?utf-8?B?a3FkWkREdXRTc0tPVUtXK2J0NzM4NUd0ZDQ0MWROZ0JENVFSd3NzaThyMG5J?=
- =?utf-8?B?TlJIT01FWFBVR2dTQUw1NW5Kek51b1J4dWN4R2l3Rk1uWllhYmVnOXQwV1F4?=
- =?utf-8?B?ZWsybWNrSEkrWWRpamRCQlFJUUl0aXBxaGZUYkVhZUNKU3FEdm9wNUdFNFdN?=
- =?utf-8?B?Wm5sdnYxYjNGZ1RoY3YvS05idzIraWdnZjJycER2S3FJeWlrcDRXS2p0eHJT?=
- =?utf-8?B?c29XcGErMk8vU2tjVkV2WFFJMUFwVURjbUVsb21jQUxUZDlUcHVYSTBNZGR6?=
- =?utf-8?B?U2tVSExHWVZaaVltYjFUQndFWFdnZ0d2MUZPYWp5QmlPbjF2SWZ3RnF1ZlNa?=
- =?utf-8?B?OGgvQUhOdWVBYmU3ZG1qMWxhZmxxaWxjRkU2KzQ2VVpnYy9KVkxQb0hkT0Ur?=
- =?utf-8?B?aDdVVkRVNXVvWjkyaTNkN2YvNHg1ZkpUY20yY1hjdDJscHFsSUVYdkNiQ2Jh?=
- =?utf-8?B?UEFZWkNNMWh4bGlWQWkyRzJVcnh6Qzc2WU1ZWkJ2SVFPOW00VXVPMlUvdkQv?=
- =?utf-8?B?ay8rS0E2dGZZaThmVmV0OFhTeHJtRDNCd1pudXlpUjRkckxWVUJ1SHFCQmMy?=
- =?utf-8?B?NDNXb1dIQ2tYcXRrbVNqSU9NMTloOUdvUDJWYlB6RTZNUXhSRFRPOW1HR0Uz?=
- =?utf-8?B?bVFPYnNHdXVTVVkyQnUweVM4Yy9JVURWbFhiNkpJaWYyS3lzc2h1TXNsQ2Vn?=
- =?utf-8?B?MktLeVBScm41S3dOT0FTNXpaSzErMzE5alZ2NENnOWEwaHhIcGdObWNkU001?=
- =?utf-8?B?UGVSb1Nrd3Q1eHJyUkpIWlNvallXRmlwRW9MUFVKZ0tWT3RFeUhVQ2pzclVv?=
- =?utf-8?B?UmR4VlFTbDlPdWltbjhXYUMxaUpIMWxSV2dqaHdyUTNqV2c0cHczU3pER1lM?=
- =?utf-8?B?QkNucUk4NmFxb0FET0t4dklsMEZoZEFyQlBnSDJhYjV2OVkxQXdKcFRqc0tq?=
- =?utf-8?B?VmFvYnlqam83QnMvOG90MnJWeUl0QnJ4cjltc1ZCRldBaGREcG1oU0dmUHRk?=
- =?utf-8?B?Nnc0U2JZVExUTTZUS2hrUXlqdFBTRE51OEhGdVlteE5VaHVsaEZ0WDRRclZ0?=
- =?utf-8?B?bGE4ZjhFRS9YVENDcnNaekZ0d3pjbnFpSTRVajMwaWdqYUxXRjdwQjY0V1Yz?=
- =?utf-8?B?R2F4T0d3K09LcTNHdFh2QnZuT3l0U2pacGMzdW1NQnh6R3JaM0NUOFFzSE5a?=
- =?utf-8?B?eE5vRjVkT1ZOYUpMZm5kUjN4dDJPVi9IaWcvNGYzYTRqUzRkcUpaTDhuSHFW?=
- =?utf-8?B?MVVzeTZXNmV3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4215.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aktways2SzlWZ1VQbC9VYWg3MTAxbWFEUzlaSkJVeFZKMVpETzRpaVJoaHpR?=
- =?utf-8?B?dTBJa3QzZitHbnV4NlBmVHdoMnZiNUt6eGtEV0NkVmg4ZHVjQjhVVkozN2Fy?=
- =?utf-8?B?Ni95OXF0TmUvUUZZSzhHemRpY0laM0ZOdnVrVFVYL0dVMTNNeEZRak1XTTVP?=
- =?utf-8?B?dU1vSWF5ajRBZlBidTFFSU9CTkFwbXB1K0VjdUVqQ2MzdG90eHZ1NFZNNnNj?=
- =?utf-8?B?U2xGY0FpT1ROSzJkdy9IdFpFQlRVQkNadi9ETU1iWmFHL0NKWnVZcHZaMklz?=
- =?utf-8?B?c1ZtZkEzSWhsNGNPckl1OTFCbXlmYzl1azA4cC9GNU8xb3RZOHhzODBLdHh4?=
- =?utf-8?B?VStzNHY1K1k2S0JYWWR2dzhwOG1ybjZmTHZXTUcvZkREaHVqa1ZWeXpPK3JR?=
- =?utf-8?B?ZlJaclFMc3RkSS80L0htVUl2blp4aG9Lb3Awcm5CZWJyWUo3WHNIWjZtYkUv?=
- =?utf-8?B?cDgwLzhkRUVxcE5CLzM1c1dZVGIwbm5PbVpTMDZ5RDZKU25Pejg0UGxWY1ly?=
- =?utf-8?B?R0FtbHIwOUFSOFlCbFFMS1dQMDJLV3VOaXpSQTBEWmxya2VFZEhnK29YODNi?=
- =?utf-8?B?alVjU0tTMjhvSzJ6Wjg3NmJhQXJURWdYcTFlbW81eFFtNXluWnNnUDJVTnhy?=
- =?utf-8?B?TmZ2MVFYSHcvQ1ltQ3FTenNvOGwwWHp0R3RVZk01NCs1cTVRd3hOcEE3MzRX?=
- =?utf-8?B?MjRNYk1ObVN1N0JZOCtPMjBLUVJTc3FuR0MvR3RqRlhmTXU4TjNkVmUybE43?=
- =?utf-8?B?VmplWjd0TWdCZzVER1RxWTJPZGlzZW9icVg2TVRvaHpwOWd4eFNvZTg2SWRn?=
- =?utf-8?B?VDNFRzJvaHdDOWdaQ05pNFhHek1hSDMvNGRubTdzeDB5bnFDYnVsN2hyOXNO?=
- =?utf-8?B?SnpSUTRMV0pwNDBaWlVMcDUrc0VCWStZdXZlTWRiazRkK0tEWTdZV0VTWWFJ?=
- =?utf-8?B?V2VMbDlWQThXNkJMc0czeEhwM2ZKRUFzNExrVTZEQmVGQ0hnb2oxN05HaXhi?=
- =?utf-8?B?UHBkMFo2b1JRblpGcy9Kb0JHTkpOV1p3MHVKc1l6UVlHa1cvYzl1TE1hNFVF?=
- =?utf-8?B?M1VTQy8wMmErWVR2M0g3Lzk2WUxSdFB3VVBIS1d6UGI3aXpNUm9naTlTVWp5?=
- =?utf-8?B?a0pZenY3Mkwvd1pJY1FsYlM1MDl3elNqMCtxRktJT01aUlZ3RWtlSEc5YkdM?=
- =?utf-8?B?UlhIN1pxY0hlMmd1Y1U5cFdTdWJHSmJWS2dqVk1IOE1NOEJjOXhyTS9NWnh3?=
- =?utf-8?B?aGdBZHJvRGc4ZTJ6OEh2QnlDSEs1U1Z4OVRUQkg0MzVOM3oyaDdZZ0J5cSt0?=
- =?utf-8?B?QlRaNUgzTEtDMkFoczc0MGYvMnF0NW5McUNycVBDM1pHYTgzanZuWnJqamZv?=
- =?utf-8?B?NGJkeVNXOFQ1Z2Y1QnJZclYrWk1oSVZxSVc1dHBHREo1aC9sQmVPMm5Xcmdm?=
- =?utf-8?B?MCtTamRXbGtlRGFoMkd0SW9ta2QrZ3VKQnFBd3pPL2o4NTZGQkxCSWFTVmRW?=
- =?utf-8?B?eHNHalhqcEp1Q0psNXJ2U0ZVUkxqWU1pZTlxdW5Gd1hJajh1K0plQ2tObllu?=
- =?utf-8?B?dUFYdkI5VDJMRDZaYWRrdlF0OWsrUkJZc0Mwd2FERmgxMFhOWTdnTjZMWjBJ?=
- =?utf-8?B?UU1Ha1BucjFXUlBUWUpMREZTdTIybUZyTEdOcFNxTlJmNXJEMGRiMHpPL1dR?=
- =?utf-8?B?V0RWSVlqSXRRQW45UzhyYXBweUFzWUhnRDFQMUJ0Q3VCd1ZpeUpKRjVlTjBZ?=
- =?utf-8?B?c2NJY1pSUW9zLzBDclBNV3JwRlRWMzZZYkFBSnlOa2YwM1BBVVN0cW9IOUlk?=
- =?utf-8?B?WWRlVnRFK0NPU2Z2T3pPNGJnUTEvWjZNZ3RCOWh6S08yRHdFK3ZjdS9rd0ty?=
- =?utf-8?B?V1ZDQVdOeHVpVGlsSDYwZ2VsaDdFNGovMHgwWFhSbUtabitybTBET1JDU2px?=
- =?utf-8?B?UlpxWlRxZzN1aWV0WC80OFlhS21zUGpWVEkyNWhtOHVPd1JRU0NNZHJXakxz?=
- =?utf-8?B?emJaMmIzamVoRm1ZVGNVZDRhTkVlZ0pSa0pVNVVaem1EZldJUVhvcVdITVQ4?=
- =?utf-8?B?M3NLQllaRDZFUHNrUnpLSGlsV0xkMk15Z0E4MTJpdTB4L2V5OGxhV29YQ3p4?=
- =?utf-8?B?cVNVNlM1Q1lTNDBRd0ZybnpjeU94eE16R2F4QXlHVlM5NEs0UEdrM0l3M3Yx?=
- =?utf-8?B?VXc9PQ==?=
-X-OriginatorOrg: genexis.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0b36d26-73fb-4ee3-a9a9-08dd9dc8f621
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4215.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 09:21:00.7903
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8d891be1-7bce-4216-9a99-bee9de02ba58
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZlZvR07DX5wAbeGmEHkD4f29XxxdMJqnh+vp6YseLoiygCTDIwUfT/+pKrYf0FjlA07+qfqHE/8n0LEtMpIAh9A5NgY0TUu8ExquR4VQa14=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB9481
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJrVNmgC/3XO2wqCQBCA4VeJvW5ljx666j0iZPZgLqTWrkkhv
+ nurECnUzcA/MB8zomC9swEddiPydnDBdW0Msd8hXUN7sdiZ2IgRJolgKTbGl6GHPpSYF1QSqbi
+ BFFA8uHlbueeCnc6xaxf6zr8We6Dz9sMUa2agmGBR6ZzmACpT6tiFkNwfcNVd0yRxoFkb2FeQj
+ G4EFgWmpbAQHZLRPwJfC3Ij8PmHArimVjCjsh/CNE1vkKF6FC8BAAA=
+X-Change-ID: 20250426-ddr_stats_-391505b3da6a
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Maulik Shah <maulik.shah@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748424095; l=3340;
+ i=maulik.shah@oss.qualcomm.com; s=20240109; h=from:subject:message-id;
+ bh=rJtVL3NDhF4y5DFmGfxRMVAXGO+BDTrt0EJ0QuEI6ns=;
+ b=VO7z4/3CUDsnlfSgN+Ac7UZ7EIHTaUqmcGU9py6Z2lgOZYZ2YSSY0lNvY7KZrQHdgfaZDmaWK
+ f+NRcQfEdNzDkrJ8JmGyyvQh9yis/CABVVUTxpFnCh8qf9KXGygTb40
+X-Developer-Key: i=maulik.shah@oss.qualcomm.com; a=ed25519;
+ pk=bd9h5FIIliUddIk8p3BlQWBlzKEQ/YW5V+fe759hTWQ=
+X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=6836d5a3 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
+ a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=ubf2v9fuHxWRXcPCyOcA:9 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: B9PHME1wtw9L1-Ln1fsi2OOu576UZCnj
+X-Proofpoint-GUID: B9PHME1wtw9L1-Ln1fsi2OOu576UZCnj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA4MCBTYWx0ZWRfX9bym7A24JAr/
+ NQo2XxWrVfY0Cs+WHt6kUA89sfBYhoL7eyzhqbNqW665XQa+8AxevKrHm0vwiBu41u8t+yuuMmn
+ e8rUFcYEKrFpPuczJOuBs6zsJaRic9gXiA/2uG9FQa1b/j499gVR18nH7tRbMiVaJyh2q3Eg+Va
+ I1t5/ZoYbYmRAPX36woOrHzyR3lrpbrHawZQgMZf6JTNYiBWaH5eyoKZhnKN42jcBjznEqV0jR6
+ L9zunGCpAD2kAOZ93XuvIg80OcJsvDT10bto4Bkqz4JnWDJ1o8T4y3Ny4D4ROeXP7BqznVX7eJR
+ mYhH6C3kMPKDCf0LCKOBHH12Nuk4E9DQFvIG/NjVU80DDiUnOtMSGDU4J2qxq5E1MdVWfV6zYqE
+ ibDIFeYXmFu9hR4SWjsh0RcrrCGeTX0l6sruC6TTR/qLa7SPLujaA7szBmdpnd615du661oD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_04,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280080
 
-Hi.
+This series adds support to read various DDR low power mode and frequency
+stats. This was added in past with series [1] but reverted with [4] due
+to some SoCs boot up failures. This series is more aligned to downstream
+implementation and fixes the issues mentioned in [4].
 
-On 28/05/2025 00:20, Christian Marangi wrote:
-> Add all the required entry to add suppot for Airoha AN7583 PINs.
-> 
-> Where possible the same function group are used from Airoha EN7581 to
-> reduce code duplication.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
->   drivers/pinctrl/mediatek/pinctrl-airoha.c | 733 ++++++++++++++++++++++
->   1 file changed, 733 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-airoha.c b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> index 8c8d5b598f4f..0960649d5d66 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-airoha.c
-> @@ -75,6 +75,7 @@
->   #define GPIO_PCM_SPI_CS3_MODE_MASK		BIT(20)
->   #define GPIO_PCM_SPI_CS2_MODE_P156_MASK		BIT(19)
->   #define GPIO_PCM_SPI_CS2_MODE_P128_MASK		BIT(18)
-> +#define AN7583_GPIO_PCM_SPI_CS2_MODE_MASK	BIT(18)
->   #define GPIO_PCM_SPI_CS1_MODE_MASK		BIT(17)
->   #define GPIO_PCM_SPI_MODE_MASK			BIT(16)
->   #define GPIO_PCM2_MODE_MASK			BIT(13)
+The series [1] tried to add three feature support
 
-Missing are the pinmuxes for the following:
+A. Reading DDR Frequency and low power stats from MSG RAM
+   (targets where DDR stats are readily available in MSG RAM to read)
 
-	{ RG_BCDR_FLUSH_EN,	IOMUX3, 1<<28},
-	{ RG_GPIO_PON2_MODE,	IOMUX3, 1<<27},
-	{ RG_MDIO_0_GPIO_MODE,	IOMUX3, 1<<26},
-	{ RG_MDC_0_GPIO_MODE,	IOMUX3, 1<<25},
-	{ RG_UART_RXD_GPIO_MODE,	IOMUX3, 1<<24},
-	{ RG_UART_TXD_GPIO_MODE,	IOMUX3, 1<<23},
-	{ RG_SPI_MISO_GPIO_MODE,	IOMUX3, 1<<22},
-	{ RG_SPI_MOSI_GPIO_MODE,	IOMUX3, 1<<21},
-	{ RG_SPI_CS_GPIO_MODE,	IOMUX3, 1<<20},
-	{ RG_SPI_CLK_GPIO_MODE,	IOMUX3, 1<<19},
-	{ RG_I2C1_SDA_GPIO_MODE,	IOMUX3, 1<<18},
-	{ RG_I2C1_SCL_GPIO_MODE,	IOMUX3, 1<<17},
-	{ RG_I2C0_SDA_GPIO_MODE,	IOMUX3, 1<<16},
-	{ RG_I2C0_SCL_GPIO_MODE,	IOMUX3, 1<<15},
+B. Trigger QMP to ask AOP to populate DDR Frequency and low power stats
+   (targets where DDR stats are available but duration field syncing
+   requires QMP message to be sent to AOP)
 
+C. Trigger QMP to ask AOP to populate DDR vote table information
+   (To read different DRV / Direct Resource Voter, CPUSS, DSPs's votes
+   for DDR frequency)
 
+Current series do not include reading the DDR vote table information (C)
+part from [1] which is to be separately sent potentially including reading
+other resources votes like Cx Rail level vote information. These vote
+tables details are not strictly related to DDR Frequency and low power
+stats (A) and (B) this series is adding.
 
-> @@ -129,6 +130,8 @@
->   
->   /* CONF */
->   #define REG_I2C_SDA_E2				0x001c
-> +#define AN7583_I2C1_SCL_E2_MASK			BIT(16)
-> +#define AN7583_I2C1_SDA_E2_MASK			BIT(15)
->   #define SPI_MISO_E2_MASK			BIT(14)
->   #define SPI_MOSI_E2_MASK			BIT(13)
->   #define SPI_CLK_E2_MASK				BIT(12)
-> @@ -136,12 +139,16 @@
->   #define PCIE2_RESET_E2_MASK			BIT(10)
->   #define PCIE1_RESET_E2_MASK			BIT(9)
->   #define PCIE0_RESET_E2_MASK			BIT(8)
-> +#define AN7583_MDIO_0_E2_MASK			BIT(5)
-> +#define AN7583_MDC_0_E2_MASK			BIT(4)
->   #define UART1_RXD_E2_MASK			BIT(3)
->   #define UART1_TXD_E2_MASK			BIT(2)
->   #define I2C_SCL_E2_MASK				BIT(1)
->   #define I2C_SDA_E2_MASK				BIT(0)
->   
->   #define REG_I2C_SDA_E4				0x0020
-> +#define AN7583_I2C1_SCL_E4_MASK			BIT(16)
-> +#define AN7583_I2C1_SDA_E4_MASK			BIT(15)
->   #define SPI_MISO_E4_MASK			BIT(14)
->   #define SPI_MOSI_E4_MASK			BIT(13)
->   #define SPI_CLK_E4_MASK				BIT(12)
-> @@ -149,6 +156,8 @@
->   #define PCIE2_RESET_E4_MASK			BIT(10)
->   #define PCIE1_RESET_E4_MASK			BIT(9)
->   #define PCIE0_RESET_E4_MASK			BIT(8)
-> +#define AN7583_MDIO_0_E4_MASK			BIT(5)
-> +#define AN7583_MDC_0_E4_MASK			BIT(4)
->   #define UART1_RXD_E4_MASK			BIT(3)
->   #define UART1_TXD_E4_MASK			BIT(2)
->   #define I2C_SCL_E4_MASK				BIT(1)
-> @@ -160,6 +169,8 @@
->   #define REG_GPIO_H_E4				0x0030
->   
->   #define REG_I2C_SDA_PU				0x0044
-> +#define AN7583_I2C1_SCL_PU_MASK			BIT(16)
-> +#define AN7583_I2C1_SDA_PU_MASK			BIT(15)
->   #define SPI_MISO_PU_MASK			BIT(14)
->   #define SPI_MOSI_PU_MASK			BIT(13)
->   #define SPI_CLK_PU_MASK				BIT(12)
-> @@ -167,12 +178,16 @@
->   #define PCIE2_RESET_PU_MASK			BIT(10)
->   #define PCIE1_RESET_PU_MASK			BIT(9)
->   #define PCIE0_RESET_PU_MASK			BIT(8)
-> +#define AN7583_MDIO_0_PU_MASK			BIT(5)
-> +#define AN7583_MDC_0_PU_MASK			BIT(4)
->   #define UART1_RXD_PU_MASK			BIT(3)
->   #define UART1_TXD_PU_MASK			BIT(2)
->   #define I2C_SCL_PU_MASK				BIT(1)
->   #define I2C_SDA_PU_MASK				BIT(0)
->   
->   #define REG_I2C_SDA_PD				0x0048
-> +#define AN7583_I2C1_SDA_PD_MASK			BIT(16)
-> +#define AN7583_I2C1_SCL_PD_MASK			BIT(15)
->   #define SPI_MISO_PD_MASK			BIT(14)
->   #define SPI_MOSI_PD_MASK			BIT(13)
->   #define SPI_CLK_PD_MASK				BIT(12)
-> @@ -180,6 +195,8 @@
->   #define PCIE2_RESET_PD_MASK			BIT(10)
->   #define PCIE1_RESET_PD_MASK			BIT(9)
->   #define PCIE0_RESET_PD_MASK			BIT(8)
-> +#define AN7583_MDIO_0_PD_MASK			BIT(5)
-> +#define AN7583_MDC_0_PD_MASK			BIT(4)
->   #define UART1_RXD_PD_MASK			BIT(3)
->   #define UART1_TXD_PD_MASK			BIT(2)
->   #define I2C_SCL_PD_MASK				BIT(1)
-> @@ -627,10 +644,223 @@ static const struct pingroup en7581_pinctrl_groups[] = {
->   	PINCTRL_PIN_GROUP("pcie_reset2", en7581_pcie_reset2),
->   };
->   
-> +static struct pinctrl_pin_desc an7583_pinctrl_pins[] = {
-> +	PINCTRL_PIN(2, "gpio0"),
-> +	PINCTRL_PIN(3, "gpio1"),
-> +	PINCTRL_PIN(4, "gpio2"),
-> +	PINCTRL_PIN(5, "gpio3"),
-> +	PINCTRL_PIN(6, "gpio4"),
-> +	PINCTRL_PIN(7, "gpio5"),
-> +	PINCTRL_PIN(8, "gpio6"),
-> +	PINCTRL_PIN(9, "gpio7"),
-> +	PINCTRL_PIN(10, "gpio8"),
-> +	PINCTRL_PIN(11, "gpio9"),
-> +	PINCTRL_PIN(12, "gpio10"),
-> +	PINCTRL_PIN(13, "gpio11"),
-> +	PINCTRL_PIN(14, "gpio12"),
-> +	PINCTRL_PIN(15, "gpio13"),
-> +	PINCTRL_PIN(16, "gpio14"),
-> +	PINCTRL_PIN(17, "gpio15"),
-> +	PINCTRL_PIN(18, "gpio16"),
-> +	PINCTRL_PIN(19, "gpio17"),
-> +	PINCTRL_PIN(20, "gpio18"),
-> +	PINCTRL_PIN(21, "gpio19"),
-> +	PINCTRL_PIN(22, "gpio20"),
-> +	PINCTRL_PIN(23, "gpio21"),
-> +	PINCTRL_PIN(24, "gpio22"),
-> +	PINCTRL_PIN(25, "gpio23"),
-> +	PINCTRL_PIN(26, "gpio24"),
-> +	PINCTRL_PIN(27, "gpio25"),
-> +	PINCTRL_PIN(28, "gpio26"),
-> +	PINCTRL_PIN(29, "gpio27"),
-> +	PINCTRL_PIN(30, "gpio28"),
-> +	PINCTRL_PIN(31, "gpio29"),
-> +	PINCTRL_PIN(32, "gpio30"),
-> +	PINCTRL_PIN(33, "gpio31"),
-> +	PINCTRL_PIN(34, "gpio32"),
-> +	PINCTRL_PIN(35, "gpio33"),
-> +	PINCTRL_PIN(36, "gpio34"),
-> +	PINCTRL_PIN(37, "gpio35"),
-> +	PINCTRL_PIN(38, "gpio36"),
-> +	PINCTRL_PIN(39, "gpio37"),
-> +	PINCTRL_PIN(40, "gpio38"),
-> +	PINCTRL_PIN(41, "i2c0_scl"),
-> +	PINCTRL_PIN(42, "i2c0_sda"),
-> +	PINCTRL_PIN(43, "i2c1_scl"),
-> +	PINCTRL_PIN(44, "i2c1_sda"),
-> +	PINCTRL_PIN(45, "spi_clk"),
-> +	PINCTRL_PIN(46, "spi_cs"),
-> +	PINCTRL_PIN(47, "spi_mosi"),
-> +	PINCTRL_PIN(48, "spi_miso"),
-> +	PINCTRL_PIN(49, "uart_txd"),
-> +	PINCTRL_PIN(50, "uart_rxd"),
-> +	PINCTRL_PIN(51, "pcie_reset0"),
-> +	PINCTRL_PIN(52, "pcie_reset1"),
-> +	PINCTRL_PIN(53, "mdc_0"),
-> +	PINCTRL_PIN(54, "mdio_0"),
-> +};
-> +
-> +static const int an7583_pon_pins[] = { 15, 16, 17, 18, 19, 20 };
+This series updates respective SoC devicetree with QMP handle (where DDR
+stats syncing is required) and it is backward compatible with older
+devicetree as without the QMP handle present, ddr stats can be still be
+read (duration field will be read as 0).
 
-I have other pin numbers listed in my documentation (my numbers align 
-with gpio number).
+Note that [1] was only partially reverted and hence device binding update
+for QMP handle [2] is already present along with the fix to have
+dependency on AOSS QMP driver in Kconfig [3].
 
-static const int pon_pins0[] = { 13, 14, 17, 18 };
-static const int pon_pins1[] = { 36, 37, 38 };
-static const int olt_pins0[] = { 34, 35, 36, 37, 38 };
+[1] https://lore.kernel.org/all/20231130-topic-ddr_sleep_stats-v1-0-5981c2e764b6@linaro.org/
+[2] https://lore.kernel.org/all/20231130-topic-ddr_sleep_stats-v1-2-5981c2e764b6@linaro.org/
+[3] https://lore.kernel.org/lkml/20231205-qcom_stats-aoss_qmp-dependency-v1-1-8dabe1b5c32a@quicinc.com/T/
+[4] https://lore.kernel.org/all/20231214-topic-undo_ddr_stats-v1-1-1fe32c258e56@linaro.org/
 
+Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+---
+Changes in v4:
+- Handle clean up for qmp_get() probe defer case
+- Link to v3: https://lore.kernel.org/r/20250525-ddr_stats_-v3-0-49a3c1e42db7@oss.qualcomm.com
 
-MvH
-Benjamin Larsson
+Changes in v3:
+- Use correct format specifiers
+- Handle qmp_get() failure cases
+- Link to v2: https://lore.kernel.org/r/20250521-ddr_stats_-v2-0-2c54ea4fc071@oss.qualcomm.com
+
+Changes in v2:
+- Mention count in decimal instead of hex
+- Update read failure cases to return error code instead of success
+- Fix typo in comment
+- Link to v1: https://lore.kernel.org/r/20250429-ddr_stats_-v1-0-4fc818aab7bb@oss.qualcomm.com
+
+---
+Maulik Shah (3):
+      soc: qcom: qcom_stats: Add support to read DDR statistic
+      soc: qcom: qcom_stats: Add QMP support for syncing ddr stats
+      arm64: dts: qcom: Add QMP handle for qcom_stats
+
+ arch/arm64/boot/dts/qcom/sm8450.dtsi |   1 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi |   1 +
+ arch/arm64/boot/dts/qcom/sm8650.dtsi |   1 +
+ arch/arm64/boot/dts/qcom/sm8750.dtsi |   1 +
+ drivers/soc/qcom/qcom_stats.c        | 131 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 135 insertions(+)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20250426-ddr_stats_-391505b3da6a
+
+Best regards,
+-- 
+Maulik Shah <maulik.shah@oss.qualcomm.com>
+
