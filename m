@@ -1,164 +1,145 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10A6914F98
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEBADF5C;
+	Wed, 28 May 2025 02:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748399042; cv=none; b=qT6n5hqPTA/8DIVA1/q4AhkWAX2sJLVioDH3riUGdt4ZNMwO8Ebk2qkn+luZeoU0Gaz1TU0k98rEsU/jO80zHJBxT14phw/ucl+9sETKhm2ndnDSQlj7Ud/o5hxg+rMzUQiNkAEHOASotLbVZ+/HYuaOKoBD87b/L34RKtOP8gw=
+	t=1748399200; cv=none; b=UiXxESE29jrWZlVzvTQs1UGfv2YAA9RwJaZKtVlF0unfJ5Ip/GFMWrzg26ZipyneySzCp2OymuQV72WJC3PlIrdKslmufij3KvuRMdkXlVgdxajXmCb3dlegeHmLFqR4eLvyK4cGEUjwRVVOInvV+PY65XZvVqsr0Ce6+I5Y9KA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748399042; c=relaxed/simple;
-	bh=i9+uLrA29n1Y3Db0nkdiYujc5Plr7p/jODTJeXT5qos=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BhkFMwmH3K2VQrZHvrRKSEjmnnDATcdhv8ankfEnhNpMkQPctrqIyIevDiF2OrU+dTRTqzIQU3GP6/VqIJXZyQmPKh5Q11Csah30Janegsx6Z1bZgLAlMtYx+AfuF25DP2AXO4I40afNOcY5D+UzrllN+N/NRh+yPF3OuwEM6T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-a6-683673baa881
-Message-ID: <3ad3bcba-b8b6-4e30-8ad9-adba5761e923@sk.com>
-Date: Wed, 28 May 2025 11:23:53 +0900
+	s=arc-20240116; t=1748399200; c=relaxed/simple;
+	bh=vfulN77fTygHJL04EB4mEbOCA/3jWIfOkUggo54Gx8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvt0UsHwE6hABD0QxMm4SgiPNJw1udpKG+QdDMqTsct3U+s34zfHTStTzZFhGdH8kaDIEl6W7qp6I5tzkerNFxyELEZ/j2rfKclsQ6eC2PUwyE5at48afcP6e/fzGfYvG+yStrSOrRb5rPwMaSsc5cpn4UlBf+EAd7VFz6FcfYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=F50S5oMe; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="F50S5oMe"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 1E8B925EBB;
+	Wed, 28 May 2025 04:26:29 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 4PY_1hSbsrZz; Wed, 28 May 2025 04:26:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748399188; bh=vfulN77fTygHJL04EB4mEbOCA/3jWIfOkUggo54Gx8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=F50S5oMeEn8XHycWt54tQ0SU7fGgPg8XC6Cfl7T1xUpGstB4ecDYDDjqAsAXLTrw3
+	 Qrajm/+I7mdep+OOk5/2P64CEU2M2IQsUEDvy0hDL8vlH1kwS+S6o3kr7KD/KUP1yC
+	 +0+BoYFtmGmOlaX0ThHgMaDqYM9XWWrk1N9mt9cOlIBwOwHa2ZV5nCwWNY4+eRLYsD
+	 PApm3NQ60kPAtedOiLMrvVCqJ4lrHy7DCvFtki71aPt8JjKJ6n8BK446p6nOGKP06T
+	 2e+NJIBFyOYiMeyDlK62xZKFE4wgUOPuVlSJ6rr8oDl8MziLKkm2sVcFLKzerAsnGo
+	 dG0tZVC3dg2Og==
+Date: Wed, 28 May 2025 02:25:56 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: 8250: Make clocks and
+ clock-frequency exclusive
+Message-ID: <aDZ0NPg2UCVZisk2@pie.lan>
+References: <20250524105602.53949-1-ziyao@disroot.org>
+ <20250527-polio-snooze-c05aafc1e270@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, Rakie Kim
- <rakie.kim@sk.com>, Harry Yoo <harry.yoo@oracle.com>,
- dan.carpenter@linaro.org
-Subject: Re: [PATCH v3 2/3] mm,memory_hotplug: Implement numa node notifier
-To: Gregory Price <gourry@gourry.net>, Oscar Salvador <osalvador@suse.de>
-References: <20250502083624.49849-1-osalvador@suse.de>
- <20250502083624.49849-3-osalvador@suse.de>
- <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
-Content-Language: ko
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <aBTkgnYYSN0SMQCU@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsXC9ZZnoe6uYrMMg0mHuS0m9hhYzFm/hs3i
-	w7xWdouv638xW/y8e5zd4v6yZywWqxZeY7O4vGsOm8W9Nf9ZLc5MK7KY3djH6MDtsXPWXXaP
-	7rbL7B4tR96yemz6NInd4861PWweJ2b8ZvH4+PQWi8f7fVfZPM4sOMLusfl0tcfnTXIB3FFc
-	NimpOZllqUX6dglcGW3fTzEXPJKs+DBxPWMDY7NIFyMnh4SAiUTH5enMMPa75uksIDavgKXE
-	p3svmEBsFgFViSuHV7NBxAUlTs58AlYjKiAvcf/WDPYuRi4OZoHfTBK/+l+wgySEBbwltjT+
-	ZQWxRQQ8JTY9OscEUiQk0M8o8XtWI1iCWUBEYnZnG9hmNgE1iSsvJ4Ft4xQwk/iwYBcLRI2Z
-	RNfWLkYIW15i+9s5zCCDJAT62SX+Xd3LCnG2pMTBFTdYJjAKzkJy4SwkO2YhmTULyawFjCyr
-	GIUy88pyEzNzTPQyKvMyK/SS83M3MQIjblntn+gdjJ8uBB9iFOBgVOLh9dhgmiHEmlhWXJl7
-	iFGCg1lJhLfJ3ixDiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwT
-	B6dUAyNP+r+XEedNOx1mTMuxd7l64HGUnwSfP8u26Il6sf+33l3hcPSO0N0nHQemq/w7ezb9
-	Vb7mR5Hl182ConSdcxSZZtmkPpvUuiVjcnS0lXCPw/zttSk/NobpXW8ofC/NWK34ySk7OpJX
-	+fCMlZfd3nyoZpTSk9BsMHHZVC4cekThU2L9Efb1pUosxRmJhlrMRcWJAKYMQZG0AgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsXCNUNLT3dnsVmGwZwJ1hYTewws5qxfw2bx
-	YV4ru8XX9b+YLX7ePc5ucX/ZMxaLVQuvsVkcnnuS1eLyrjlsFvfW/Ge1ODOtyOLQteesFrMb
-	+xgdeD12zrrL7tHddpndo+XIW1aPTZ8msXvcubaHzePEjN8sHh+f3mLxeL/vKpvHt9seHotf
-	fGDyOLPgCLvH5tPVHp83yQXwRnHZpKTmZJalFunbJXBltH0/xVzwSLLiw8T1jA2MzSJdjJwc
-	EgImEu+ap7OA2LwClhKf7r1gArFZBFQlrhxezQYRF5Q4OfMJWI2ogLzE/Vsz2LsYuTiYBX4z
-	Sfzqf8EOkhAW8JbY0viXFcQWEfCU2PToHBNIkZBAP6PE71mNYAlmARGJ2Z1tzCA2m4CaxJWX
-	k8C2cQqYSXxYsIsFosZMomtrFyOELS+x/e0c5gmMfLOQHDILyahZSFpmIWlZwMiyilEkM68s
-	NzEzx1SvODujMi+zQi85P3cTIzCiltX+mbiD8ctl90OMAhyMSjy8HhtMM4RYE8uKK3MPMUpw
-	MCuJ8DbZm2UI8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhPLEnNTk0tSC2CyTJxcEo1
-	MAZOa8yYb7Y5SNP8bfiR+P/T4ziFpj5i6dgpnXKaYc/e/vkucyJ+bJ4hKc63X33S64gXO6LD
-	bi4LqZRQSkz5Fdnf5tF72tFkuoiTkbHUPbZDE/UFY+quCZlU+thfFJ1+UPx+rfBF4eLjU5il
-	a/lMtionrRNauWT+pB0fP2ac1nq1i61zyzMjZSWW4oxEQy3mouJEACup9sSkAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527-polio-snooze-c05aafc1e270@spud>
 
-Hi Gregory and Oscar,
-
-On 5/3/2025 12:28 AM, Gregory Price wrote:
-> On Fri, May 02, 2025 at 10:36:23AM +0200, Oscar Salvador wrote:
->> There are at least six consumers of hotplug_memory_notifier that what they
->> really are interested in is whether any numa node changed its state, e.g: going
->> from being memory aware to becoming memoryless and vice versa.
->>
->> Implement a specific notifier for numa nodes when their state gets changed,
->> and have those consumers that only care about numa node state changes use it.
->>
->> Signed-off-by: Oscar Salvador <osalvador@suse.de>
->> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
->> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>   
->> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->> index f43951668c41..b3ad63fb3a2b 100644
->> --- a/mm/mempolicy.c
->> +++ b/mm/mempolicy.c
->> @@ -3591,20 +3591,20 @@ static int wi_node_notifier(struct notifier_block *nb,
->>   			       unsigned long action, void *data)
->>   {
->>   	int err;
->> -	struct memory_notify *arg = data;
->> +	struct node_notify *arg = data;
->>   	int nid = arg->status_change_nid;
->>   
->>   	if (nid < 0)
->>   		return NOTIFY_OK;
->>   
->>   	switch (action) {
->> -	case MEM_ONLINE:
->> +	case NODE_BECAME_MEM_AWARE:
->>   		err = sysfs_wi_node_add(nid);
->>   		if (err)
->>   			pr_err("failed to add sysfs for node%d during hotplug: %d\n",
->>   			       nid, err);
->>   		break;
+On Tue, May 27, 2025 at 04:24:11PM +0100, Conor Dooley wrote:
+> On Sat, May 24, 2025 at 10:56:02AM +0000, Yao Zi wrote:
+> > The 8250 binding before converting to json-schema states,
+> > 
+> >   - clock-frequency : the input clock frequency for the UART
+> >   	or
+> >   - clocks phandle to refer to the clk used as per Documentation/devicetree
+> > 
+> > for clock-related properties, where "or" indicates these properties
+> > shouldn't exist at the same time.
+> > 
+> > Additionally, the behavior of Linux's driver is strange when both clocks
+> > and clock-frequency are specified: it ignores clocks and obtains the
+> > frequency from clock-frequency, left the specified clocks unclaimed. It
+> > may even be disabled, which is undesired most of the time.
 > 
-> May I suggest rolling this patch in with this change:
-> https://lore.kernel.org/linux-mm/aAij2oUCP1zmcoPv@stanley.mountain/
+> That sounds like an issue in the driver itself, no? If the clock phandle
+> is present it sounds like the driver should be claiming the clock
+> whether a frequency is specified or not. If so, that should be fixed
+> whether this patch gets applied or not.
+
+Agree.
+
+> > 
+> > But "anyOf" doesn't prevent these two properties from coexisting, as it
+> > considers the object valid as long as there's at LEAST one match.
+> > 
+> > Let's switch to "oneOf" and disallows the other property if one exists,
+> > exclusively matching the original binding and avoid future confusion on
+> > the driver's behavior.
 > 
-> seems to fix the underlying problem, and returning an error now makes
-> sense given the change.
+> Have you checked whether or not there are devices that have both
+> in-tree? If there are, can you fix them up as part of the change, rather
+> than adding new warnings.
 
-The 'err' of sysfs_wi_node_add() wasn't propagated to its caller before
-this change as discussed with David at the following.
-https://lore.kernel.org/198f2cbe-b1cb-4239-833e-9aac33d978fa@redhat.com
+Had taken a brief search, seems all UARTs ship both clock-frqeuency and
+clocks properties are snps,dw-apb-uart variants, which are not related
+to the generic 8250 binding. So I think it shouldn't cause new warnings.
 
-But as Gregory mentioned, we can pass 'err' now with this numa node notifier
-so for this hunk, shouldn't we add the following change on top of this?
-
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 3a7717e09506..3073ebd4e7ee 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -3792,7 +3792,7 @@ static int sysfs_wi_node_add(int nid)
-  static int wi_node_notifier(struct notifier_block *nb,
-                                unsigned long action, void *data)
-  {
--       int err;
-+       int err = 0;
-         struct node_notify *arg = data;
-         int nid = arg->status_change_nid;
-
-@@ -3811,7 +3811,7 @@ static int wi_node_notifier(struct notifier_block *nb,
-                 break;
-         }
-
--       return NOTIFY_OK;
-+       return notifier_from_errno(err);
-  }
-
-  static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-
+> > 
+> > Fixes: e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to json-schema")
+> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > ---
+> >  Documentation/devicetree/bindings/serial/8250.yaml | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+> > index dc0d52920575..4322394f5b8f 100644
+> > --- a/Documentation/devicetree/bindings/serial/8250.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/8250.yaml
+> > @@ -45,9 +45,13 @@ allOf:
+> >                    - ns16550
+> >                    - ns16550a
+> >      then:
+> > -      anyOf:
+> > -        - required: [ clock-frequency ]
+> > -        - required: [ clocks ]
+> > +      oneOf:
+> > +        - allOf:
 > 
-> +cc: Honggyu Kim, Dan Carpenter
+> Why is the allOf needed here? Does
+> oneOf:
+>   - required: foo
+>   - required: bar
+> not work? There's a bunch of bindings doing that, so not sure why it
+> doesn't work in your case.
 
-Thanks for cc-ing me into this thread.
+Oops, you're right, it does work here and emits an "... is valid under
+each of ..." error. Will change to this form in v2.
 
-Honggyu
-
+> Cheers,
+> Conor.
 > 
->> -	case MEM_OFFLINE:
->> +	case NODE_BECAME_MEMORYLESS:
->>   		sysfs_wi_node_delete(nid);
->>   		break;
->>   	}
->> @@ -3639,7 +3639,7 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
->>   		}
->>   	}
->>   
->> -	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
->> +	hotplug_node_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
->>   	return 0;
->>   
->>   err_cleanup_kobj:
+> > +            - required: [ clock-frequency ]
+> > +            - properties: { clocks: false }
+> > +        - allOf:
+> > +            - required: [ clocks ]
+> > +            - properties: { clock-frequency: false }
+> >  
+> >  properties:
+> >    compatible:
+> > -- 
+> > 2.49.0
+> > 
+
+Best regards,
+Yao Zi
