@@ -1,83 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E710F81724;
-	Wed, 28 May 2025 18:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A81A81724
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748458659; cv=none; b=eN8Y5xGUe08sAB1HvUxHEigc9i0kApmGfAsWby2pVAzL2TkAGR0csQO7DcQqb8FFSWiJ6uRx75QHFXSalE1iMTWie4OHJpK3cI+2CIeG/iY1HUE/9nIOZhpF3+0XYMbTNvjsZhIM1BQtFWqIF0v0pn69hH5nTHyzM8lXyTFzo/o=
+	t=1748458707; cv=none; b=h7mJGd6e84/dl1MUjIzejLEUaeyVFKJ+Adc31SatcRzeWjxEuMTWwjUmhxb1DN5iqFapfAmAa7gsoldN5t7Lt8baNVkDXcqLHqGYUv2/VQpv6hSvkUyWiuouYv65YJsrDUtW1HNl31rS4fXXYnl06z8/5VYdMIZnbC362qWUarU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748458659; c=relaxed/simple;
-	bh=NP57BkZzjq1plXytv+G2I0CdgzK0RRxKGjgpR/vkFpU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ArxovfAFDuMWc9xvusiXoiN2BowELBSZWLFoSzUuZvOiiNnJaCy/jk3qQ9aRlwvGLM0Mpi6awxYEo4kBmc8pF0I8Ah4K7kiwxURUibVHKbOmhP87z/VEuPypjTlfOJ/20oUxngSDKW1+MAAa5uIV0xB79Of2w6sivvjEmeAiKp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEp2ES2M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748458707; c=relaxed/simple;
+	bh=gaPL0v8nEKkNSQ8LGZZSy3Ry/HNfytnzxhOkPaPWBXE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ozPy53jfJTaWqyt9MAM2lPa87N4a15hXxtiEJ0H15t9ZsqwkwdgzNRiSf8igUdJaGipWTYCrY6vSyMcC7qwUGjDH5HyyePxhoNJ3O5WYDDp5YJmJcreT0RtaPUNudjvqhYqvXXGS0fOY2E6QG2Ci4cSVRcrFrTaL4yqysTL1ltc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=peuNCJDc; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEp2ES2M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48774C4CEE3;
-	Wed, 28 May 2025 18:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748458658;
-	bh=NP57BkZzjq1plXytv+G2I0CdgzK0RRxKGjgpR/vkFpU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=sEp2ES2M+ul6PIPV1rZfhiYM/d90zzKKgNVDy225KDFyY1bxf2Dj92txydVum6btm
-	 caEqAbBbSyU/ts78I9S8NxWVIZVAYfc1y2CLRBaPx7XdRsMFUTY0d9WStdFuIKL81I
-	 EnGoSwXZbtCsyXYGQ9BvZAE19IytBgSlNa5ZBoTve76yq+3fa14y2M9LoVM33DDSk6
-	 UQeraxWvFw7UD2WLjzqJ4N2X69jIckJOiiuJ5bHCsrNHmB0nvNJ2EAZawFcdGiUyUX
-	 wDscLytqpT9VQaJznHUJwkPOCnCoUFlFALDgV5xoR4tUYnga2j87v4mbOQ35XeqJ9a
-	 kJRXKgy0D3ckg==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>,  Tudor Ambarus
- <tudor.ambarus@linaro.org>,  Michael Walle <mwalle@kernel.org>,  Miquel
- Raynal <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
-  Vignesh Raghavendra <vigneshr@ti.com>,  Rob Herring <robh@kernel.org>,
-  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
- <conor+dt@kernel.org>,  "open list:SPI NOR SUBSYSTEM"
- <linux-mtd@lists.infradead.org>,  "open list:OPEN FIRMWARE AND FLATTENED
- DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,  open list
- <linux-kernel@vger.kernel.org>,  imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: mtd: jedec,spi-nor: Add atmel,at26*
- compatible string
-In-Reply-To: <aDcscr4pF5vC4kNq@lizhi-Precision-Tower-5810>
-References: <20250523155258.546003-1-Frank.Li@nxp.com>
-	<mafs0r00arpzx.fsf@kernel.org>
-	<aDcscr4pF5vC4kNq@lizhi-Precision-Tower-5810>
-Date: Wed, 28 May 2025 20:57:35 +0200
-Message-ID: <mafs0tt54r2ao.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="peuNCJDc"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3dd745f8839so24155ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748458705; x=1749063505; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uw/8L0cxS+bRy/+krjmRvgo/N9nxwpWPmbf44DvJ4aM=;
+        b=peuNCJDc2jYE9PIN4+WTYVEsC+ecofY4yKL1m3TT08bKnXEMuXHTs9agR1PfMe0Knj
+         1US6wk0/iQhYH6db62Wl0NfFvXwooryjTOpsv3RXtOwYcRlNgMzeDP/QQRDZNmRe8pR2
+         dbBfYP5q7F42TgirLT5GcwvdGHxLtMRqXUQ0f2JraLFBUtON/hcZLxkq4Xg+q4uQ1jSG
+         JKPJgwGusr6Guv59iMnLVkOv6zgXyluzygnsJbpLKOiukewZ0d8/CpLgkJpoxWySGbRH
+         F/DW2/m+aXXaqHSYRBg1/ymrR7mZgN/RPT4yJ75+xe9QmRGOogFraa3wQUb255BATkDa
+         GqIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748458705; x=1749063505;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uw/8L0cxS+bRy/+krjmRvgo/N9nxwpWPmbf44DvJ4aM=;
+        b=bKICQE5GBNRVbnwva7NfHWJoufOR2OCc5TWIpZPql0i74KhLnZELLpq9M1N+LHnFNs
+         QJ9r16H8/w28qfaSlTRClkm+aePOHefi8ZkICTRr7M00tO4q6E7dSj/ypkL8HHg8oPO3
+         8HL5ussT97QP2oLXukDyxMjwkPJG+jMdYJTGJJcY1Ke4U7rz7Wf3Ro9sZNjgbZLJ6ZeA
+         MdCZgQyQgwDRo1VpFHOEnyFptTzGptjr7l0XUdOAja3fBwevZ5C8ZUNR1pGr22yDASSC
+         PHUskh5oNpRfHhcqVnXFL076eJ6qFWjZvvHJLNOwibhgKtMb6yBmerwygy3AvMMQE1pD
+         N5Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJr8Nve8syGke+qFnwP9oYk/wh6FlLbexDWJggbJ38qPMQpXXoO45WPlZNZo3atUTDTAjKMQHvuZNzYhg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxloCWaY/fgsDooiZJ4b6rOtkf8X20Cff0Q06337MkvBtcTOJYr
+	VeryNK/WgwUeiQWSwjq1XAgfnwOGKedosVefOoBm4ztChZ4fRP+BHbbgGDjjmLXXLj9cN/X4pfy
+	+ZoYz645cZOPkA8pzeOTis07MJEeMIIoFHrRWcN6D
+X-Gm-Gg: ASbGncs0cPI58izuB2E8tgcgtno7feaHqMhYutdrWK6JmNEVf5WFMU72Wn53SWN8tVP
+	4RrjYBSL8SR6yu4LVhjAwU+vqEggABstP6f7nxfWRW8MywIeQG75f689oKIaPil4rpyMPGixoAB
+	Z1ZnDkAE9RtcFjzeN0f51npuTW6sZ/AJtZ9A14qoGDn25vZPQ7llEwoXlgPgW1r1tNPnOY+1X7
+X-Google-Smtp-Source: AGHT+IHL0knIYLnbl7lC08Uit4krwIaZS45MIcoCyeKTOyiEyaLFw9XaXRXYYogwQAp7QTeq+R44jh1JGCIAFaPiSuk=
+X-Received: by 2002:a92:cda3:0:b0:3dc:7c30:c6d4 with SMTP id
+ e9e14a558f8ab-3dd920f560fmr423955ab.20.1748458704947; Wed, 28 May 2025
+ 11:58:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250428213409.1417584-1-irogers@google.com> <CAP-5=fVy6J+d1aoQwv6TMuybXWAhpeaJOvMmr3-jbsz5ig66kg@mail.gmail.com>
+ <aDdaZ0TMA5kwZ-iV@x1>
+In-Reply-To: <aDdaZ0TMA5kwZ-iV@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 28 May 2025 11:58:13 -0700
+X-Gm-Features: AX0GCFvdJ3yReKQ2ZI90oGeBXJrGASy3ES2rkApCGXTixl6CW5MPdiV15BQuNso
+Message-ID: <CAP-5=fWk=HFojgZi0eXCuBTc8WLJL1c6vMhow7xHfPmovXpxuQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] perf: Default use of build IDs and improvements
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Li Huafei <lihuafei1@huawei.com>, "Steinar H. Gunderson" <sesse@google.com>, 
+	James Clark <james.clark@linaro.org>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Zhongqiu Han <quic_zhonhan@quicinc.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
+	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
+	Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28 2025, Frank Li wrote:
-
-> On Tue, May 27, 2025 at 06:13:22PM +0200, Pratyush Yadav wrote:
->> On Fri, May 23 2025, Frank Li wrote:
->>
->> > Add atmel,at26* compatible string to fix below CHECK_DTB warning:
->> >
->> > arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: /soc/bus@40000000/spi@4002c000/at26df081a@0:
->> >     failed to match any schema with compatible: ['atmel,at26df081a']
->>
->> Is there any problem with setting the compatible to "jedec,spi-nor" in
->> the DTS instead? If not, it would better to do that instead.
+On Wed, May 28, 2025 at 11:48=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> I suppose it should work. But it is quite old legancy boards. I have not
-> board to test it.  And dt also prefer add chip specific compatible string
-> before common failback compatible string in case need workaround some chip
-> issues.
+> On Tue, May 27, 2025 at 01:48:43PM -0700, Ian Rogers wrote:
+> > On Mon, Apr 28, 2025 at 2:34=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > Build ID mmap2 events have been available since Linux v5.12 and avoid
+> > > certain races. Enable these by default as discussed in:
+> > > https://lore.kernel.org/linux-perf-users/CAP-5=3DfXP7jN_QrGUcd55_QH5J=
+-Y-FCaJ6=3DNaHVtyx0oyNh8_-Q@mail.gmail.com/
+> > >
+> > > The dso_id is used to indentify a DSO that may change by being
+> > > overwritten. The inode generation isn't present in /proc/pid/maps and
+> > > so was already only optionally filled in. With build ID mmap events
+> > > the other major, minor and inode varialbes aren't filled in. Change
+> > > the dso_id implementation to make optional values explicit, rather
+> > > than injecting a dso_id we want to improve it during find operations,
+> > > add the buildid to the dso_id for sorting and so that matching fails
+> > > when build IDs vary between DSOs.
+> > >
+> > > Mark the callchain for buildids and not just the sample IP, fixing
+> > > missing DSOs.
+> > >
+> > > Fix sample__for_each_callchain_node to populate the map even when
+> > > symbols aren't computed.
+> > >
+> > > Other minor bits of build_id clean up.
+> > >
+> > > v3: Ensure the struct build_id is initialized empty prior to use as
+> > >     read paths may fail (Namhyung).
+> > >
+> > > v2: Make marking DSOs still the default even with the defaulted build
+> > >     ID mmap. The command line option still disables this to avoid
+> > >     regressions. Add callchain patches and jitdump fix.
+> >
+> > Ping. Thanks,
+> > Ian
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$        git am ./v3_20250428_irog=
+ers_perf_default_use_of_build_ids_and_improvements.mbx
+> Applying: perf callchain: Always populate the addr_location map when addi=
+ng IP
+> Applying: perf build-id: Reduce size of "size" variable
+> Applying: perf build-id: Truncate to avoid overflowing the build_id data
+> Applying: perf build-id: Change sprintf functions to snprintf
+> Applying: perf build-id: Mark DSO in sample callchains
+> Applying: perf build-id: Ensure struct build_id is empty before use
+> Applying: perf dso: Move build_id to dso_id
+> Applying: perf jitdump: Directly mark the jitdump DSO
+> Applying: perf record: Make --buildid-mmap the default
+> error: patch failed: tools/perf/builtin-record.c:3349
+> error: tools/perf/builtin-record.c: patch does not apply
+> Patch failed at 0009 perf record: Make --buildid-mmap the default
+> hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+> hint: When you have resolved this problem, run "git am --continue".
+> hint: If you prefer to skip this patch, run "git am --skip" instead.
+> hint: To restore the original branch and stop patching, run "git am --abo=
+rt".
+> hint: Disable this message with "git config set advice.mergeConflict fals=
+e"
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
 
-Hmm, poking around with old DTs is probably not a good idea. Anyway, the
-flash is listed in spi_nor_dev_ids just like the others in this yaml, so
-this patch looks fine.
+Thanks, I'll send the rebase in v4. I saw you had a branch on
+perf-tools-next.git.
 
-Acked-by: Pratyush Yadav <pratyush@kernel.org>
+Thanks,
+Ian
 
--- 
-Regards,
-Pratyush Yadav
+> - Arnaldo
