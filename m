@@ -1,88 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4B726A0E0;
-	Wed, 28 May 2025 13:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229752853EF
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439586; cv=none; b=R4CAcwUVZhwcltaY74KloXtOTZYHas3jitYKS/NG1r17IeyWyLSXmAYBnhG1CN7aacM65EotwoKvj+GM09gciNzriqmcTE/GtK65mS3lSEJWaco2BcWfVjjpvYBDFeBCk2xevUC6Xbs52YMpBSXgIxm3MAGu/HKBaql4AxunYKY=
+	t=1748439722; cv=none; b=ORlnpw26BRrYtGUhEZ3JIfR6vc4JtiOO7Lbtib8LdCUvthnPSMlNKHYO1tkXFjSlWYCpxvmoi3ITp4ILLBVnIv6mRWuc5cP8oDtsBLwD1rVdBrt5s7RlW9ea0qVDsf20Oxw9jSg0mKKoYYhJfLuNTTzNMjLGZNn1URqUc8l0jnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439586; c=relaxed/simple;
-	bh=ZDCkiWTSUutPpidL4yxIxvrpNX9oGUvaRD1iiumCPrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Slar2TcWOufQSKt+J+NvqNb2/msMeKlplVG6kPa6+iG2qpbx/RsVVkRsjJPIYZOaDxpB3ZiQy70BUa6ZcnmXEU4IwQeXvLqwS0y3rXIbxBmb5jAxdIrQxj4wwuHozza8rrRM+QHXTwM+a7rgiBMtwzIlmGThOwtByBF15mcKCNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhgsVX/V; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748439722; c=relaxed/simple;
+	bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qMwihIxCT3KJdPNDBDnOP9m38989vK3aXMr54Yv2Hcln2RcGn5O/PQe2R25g3mSYOx8UxbcDsaWvpeaTWDsKDnOQut0hnsQGB2o22p3xDWvQ4Ukl/DObkstO/V96I1NUo90sWN3ihvVCpbWgtE8ZE4nBTJpHk36DuoGtjc71604=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvDTI76j; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhgsVX/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C48C4CEE7;
-	Wed, 28 May 2025 13:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748439585;
-	bh=ZDCkiWTSUutPpidL4yxIxvrpNX9oGUvaRD1iiumCPrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IhgsVX/VgZv4mWKaIDhGq6Sy6mSnktVxPrbhwjX02DgsKX8s2yF6syckTB/0CYKZB
-	 L3fwJ81DTGtaHSvdmzeXNEfxapzoddam2d1YuhPC1fkKX4tT5XoY3MbiShhzzhN2At
-	 QT24NHe9A2T3A+ag5RRG4uef7m2cPbg83mMCJcq66IXft15D4+Rxe+M7hrogLlfTEo
-	 o9LJ0fawVDictOX7WVHoIeHeIRGJqUj44RnxedcsPjjpcmqc4W5eIBsqM3LlCEe410
-	 PGgUd1o9b/L3ELyMpPz8CtS1x54zijcL1yS+w/5+YqjVWX/Um0+mofy0ZwQ1ArElJ7
-	 vscuhtbAGfH1g==
-Date: Wed, 28 May 2025 14:39:39 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, michael@amarulasolutions.com,
-	linux-amarula@amarulasolutions.com,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: mfd: convert mxs-lradc bindings to
- json-schema
-Message-ID: <20250528-kitchen-snowy-e9a97843419f@spud>
-References: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
- <20250528121306.1464830-2-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvDTI76j"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47677b77725so41399911cf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748439719; x=1749044519; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
+        b=dvDTI76jZZGKZmTUy8Wff5m8yyne23JCwucBRkoFbQLgPKmcWzyLZ2j6RrrAgnWDlA
+         Db5GSXJPcEIp1gJIjJmCCAnswBjT7gBApuO25JjYe/9SkA5BSUfPS02mZUwesFAVHmL+
+         mrvM509kQpcIPbIWZPVIWspkkPPA3rxuHJKyloF4yoyc0wrHf8oA325hyPgtI6+n0Uo0
+         qUPjyuJAKbzSwr10pvyQU8OKlKxenOXH7rvszJf1DqxBrBU2ZdhzifhdezlkvRgijtFs
+         CLqEaXxVmkLzvJya9w2F3JcjClKiCSTiyXAgdCTx/qnSD394/bmpLZdVjJPwcdOpAOJK
+         EANw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748439719; x=1749044519;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
+        b=FjTRhJe5ZzMwejRELtuuqTrcp3w8kh+j12h9jX1cwGVc1JkFHvQkuFlkaecJaatbgl
+         zUIDEaSH6pkp/vR1DkoArFgHvR74Dgk0lsMU++0fGDB2k0yxahwT5MyGLI9ZgglcIy7Y
+         jQfYOHsbNMUJeUu9k/fS0NOLPfEzamxh9AjkJpRZcu0MXV8ldmSiuzC1fPHmwbTSts/w
+         J7xuYQXRAn3g01vunNmKrZ/kJgy60EYhk2i0cw1oqVW3j/hxXPP1q1F/LHZVdVRzo8Rc
+         aN5KGXJ7YICAndspxZBiBJaCW5XSXFSHgAfOOlId260AnvL4QP95nlkbBTkYKZ65OvDG
+         hoAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvKwwS6Pto4VVEgXD9MxbImLfiV5FdJH/mwyKmIsjus7lDHX4WnZAHPOH3jmn6pOiXhHUpXhHeJpJLnzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/L21gOA0WSHT1EQWTmiG0iuIAvE7HfiylkQ6hul4dYPvDmYfc
+	6eZ7LPP6TP2jOP9TXcjsXNK0qZKHL6Dsy+nKsFYX7oe4Ort1cljt9FUiQafjniXZAScGZbvUa2V
+	wBm8VbIp29ictywM/lryQS8hPXQ4Nm5qvKczgpn2x
+X-Gm-Gg: ASbGncvn4OSgPhCCq5rrAuYMp/hzeNRbeUR5ZcAjMhqnYPGJBAILuZ3+ubXn7vBtXyc
+	mQQmqC4mwDgsZwXFokY4FE62Cj2Joxix14MH3zH90XtmXgDSDifDVHdtb0Ht82G4686mihtZR5H
+	33k1U/I4/tWqbiLQo5Oo6GRsW/8LdKLL8rJqfP1ky+e2nkjef98W34Fw==
+X-Google-Smtp-Source: AGHT+IFXUSUWOaRqlGgnQsk3Ddxf9ikBISkt0/KlPz6xvIxI0l0YyOvrvNO9ok6mnWdgT9562252wxJ87xj+prWb40Q=
+X-Received: by 2002:a05:622a:5c15:b0:476:add4:d2a9 with SMTP id
+ d75a77b69052e-49f46c33b2dmr291076841cf.30.1748439717984; Wed, 28 May 2025
+ 06:41:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hItL2TUlX6LkKJfG"
-Content-Disposition: inline
-In-Reply-To: <20250528121306.1464830-2-dario.binacchi@amarulasolutions.com>
-
-
---hItL2TUlX6LkKJfG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
+ <aDcLIh2lPkAWOVCI@strlen.de> <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com>
+In-Reply-To: <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 28 May 2025 06:41:45 -0700
+X-Gm-Features: AX0GCFtlj7sv-EQdf2aW5VpoDTLIYK53zi24E4KIItVmjWV2JQld-StOJ3wEEoo
+Message-ID: <CANn89iLG4mgzHteS7ARwafw-5KscNv7vBD3zM9J6yZwDq+RbcQ@mail.gmail.com>
+Subject: Re: [bug report, linux 6.15-rc4] A large number of connections in the
+ SYN_SENT state caused the nf_conntrack table to be full.
+To: ying chen <yc1082463@gmail.com>
+Cc: Florian Westphal <fw@strlen.de>, pablo@netfilter.org, kadlec@netfilter.org, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 02:11:38PM +0200, Dario Binacchi wrote:
-> Convert the Freescale MXS Low-Resoulution ADC (LRADC) device tree
-> binding documentation to json-schema.
->=20
-> The clocks and #io-channel-cells properties have also been added; They
-> are present in the respective SoC DTSI files but were missing from the
-> old mxs-lradc.txt file.
->=20
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+On Wed, May 28, 2025 at 6:26=E2=80=AFAM ying chen <yc1082463@gmail.com> wro=
+te:
+>
+> On Wed, May 28, 2025 at 9:10=E2=80=AFPM Florian Westphal <fw@strlen.de> w=
+rote:
+> >
+> > ying chen <yc1082463@gmail.com> wrote:
+> > > Hello all,
+> > >
+> > > I encountered an "nf_conntrack: table full" warning on Linux 6.15-rc4=
+.
+> > > Running cat /proc/net/nf_conntrack showed a large number of
+> > > connections in the SYN_SENT state.
+> > > As is well known, if we attempt to connect to a non-existent port, th=
+e
+> > > system will respond with an RST and then delete the conntrack entry.
+> > > However, when we frequently connect to non-existent ports, the
+> > > conntrack entries are not deleted, eventually causing the nf_conntrac=
+k
+> > > table to fill up.
+> >
+> > Yes, what do you expect to happen?
+> I understand that the conntrack entry should be deleted immediately
+> after receiving the RST reply.
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
---hItL2TUlX6LkKJfG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcSGwAKCRB4tDGHoIJi
-0soAAP9SfwHOSL1Ms8FpK7wxpbph1w25Kea+OlBcRLmP/UiQRAEAsqbLvfI5diEw
-y90b4EL9sNqb/XkTmdiiZmLczzii1gU=
-=5qe/
------END PGP SIGNATURE-----
-
---hItL2TUlX6LkKJfG--
+Then it probably hints that you do not receive RST for all your SYN packets=
+.
