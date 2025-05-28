@@ -1,153 +1,151 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DDB1367;
-	Wed, 28 May 2025 07:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FB624467D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748417618; cv=none; b=mVVPsrxlgTFPiCWY7kFy0e/WrAWYgK85yAHfK4KASb86SYM8W+ADz7fYLk18nFufNRCxkXBhZHtbUTLUxiZr9vo5PfLhUpPlTpSA+TdQXyzls37LqLsIxNM/Zd0TRs24xqQYwKr5dy230RcgHyLqnChlwGS2Mi138ysAhcNatek=
+	t=1748417646; cv=none; b=ujCOUsdYL5G5vhL51jBPf8jbquitAPs2/VK+u1pONyiPGgqNZlQkeRa2Z0EbIr4dSjP/oI0dN4h6wTPvw2PHQgv8NnVYDyA3mrxxorHMXx2gLj1DDS7RsVScsR0ySNhttHkHyMeQQttgsHAELgnsUyDRlxXsFefsoUQDuQXYH/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748417618; c=relaxed/simple;
-	bh=2OeE558hdBFTVCXYdRaDO5wJSZ13Rc6atVD3qWcnum8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XzfYgC6hEA+NOJt6gTw1sYFuFbsjgLfoWyqi1eiXasfVU4TmRKsUeTwBbytrYHxqe0KwN9QxThR0F0Byrp2LJuHp6D6Pe+4dxdaBNOeTKClzPbd46+LWGiFGCOZbh2V9/zqAbsywTC392yR3JOsBqthJ+L0YPpOPP7acHimjUHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jz5oF0GS; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748417646; c=relaxed/simple;
+	bh=wp7LdqPedvDYAse+G9tNyEO6oCgaUn6A7pd+gyrV7qM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BZIkUnmdcVs6O8FR6g/ftmkCIaMhpKThf89uvoU4NejIzIUcfmEHI5e3+Uoi8z8Wli32lg/iMgMsprC3f23bCFbrLoX1zFhUKZQ/767M/d1wi3zttIHrbxJ6ZHbG5X3nmG+gDPxB/w2DetAJgmNEjYMpIikEzK1Nr1yXyLaUUek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZWm/2isP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jz5oF0GS"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac34257295dso827822666b.2;
-        Wed, 28 May 2025 00:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748417615; x=1749022415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6onlswMv8qjmQeq9ualmjWop3GYnwDgj7aBf1pQHqQo=;
-        b=jz5oF0GSnkEGitbrYG5rOh6c6Z9LlUo84EjkiymaIOhFfNqqmeFR2fEA0ddDLoGmbo
-         oins03TnnG9UOsY+Kbde349NFH0Pgiu/FWiFurw7FeJGMQXF3ajWA/yZAnlHML3Zw5OH
-         d3F2U42sAa2iGOn5XMyi/NFIFMoyvBaB8AbCv0mbJ+/yrg1IEWQPNmm7v9PPUUc6Gw9s
-         z2LfRJ2QJbvnrPXdIbIdfcnh1Xs6zqXpjtSC6rU0Fr8TQn1LB/LRC5IDyB+39/A7cjyv
-         uK1jVvMfFtIN2nu+EMbjfha6pb6XlpbmUlnh/WelPYtrziBcLWBiK49qugSxfetE7i88
-         FlWQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZWm/2isP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748417644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cx1/E7n8px2Cn8C9YEuMbUpQQvtYPWoNjC2S1QtM08s=;
+	b=ZWm/2isPLI88Ez7yVz2bG4zFSK+W4MYs4EyLR9YVVh65TOpDLL2qHqBcuRoNE/HnXF8oq7
+	5a1KsUDCCAYclCgIuiBrjv2OklDVhB9wYSRL223hzRt3zo7yfc+REqlPTsp2tDeUiakvyM
+	wNJrWg9MZg7lkIsBX9r/9rrCf5xO5IU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-BHMWcHQrN76kVg0L-gzE-w-1; Wed, 28 May 2025 03:34:02 -0400
+X-MC-Unique: BHMWcHQrN76kVg0L-gzE-w-1
+X-Mimecast-MFC-AGG-ID: BHMWcHQrN76kVg0L-gzE-w_1748417641
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad56c5412f2so343393766b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:34:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748417615; x=1749022415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6onlswMv8qjmQeq9ualmjWop3GYnwDgj7aBf1pQHqQo=;
-        b=DQX4KxnmDdbzQrUF836juEintOyBLRPMbH0scx1pmzWdtsY2kxBUzLt388y9JM2JEY
-         krJChZ6kXAQOm7Y2Z11VYPfPtiw4SyOuVThMFf/ELYj5CeIAmetH8n2DdIYQJaGwygfg
-         8N+IEBk38tXsG7DY+l8wkn3eq2syNKGeKWykdVGDuxqKI4BXQIlqw1LyG1nWNJ6wlKUC
-         qPogernn5ZRc9XoLUPwUF2gBvaaV9TrrqTHATl5ov8Pd/6e1GlktfoEbgo8f5/IVwAOO
-         rw9l9tXK88HEsj6h9mtp/uGkEB+C7VhAtigZJ66DWPuVw+5czW6raD3ReGghK7rFKTlb
-         xZ+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKiaKN2WJK35DxfT4L2h1fDt6Ox9jK6KXCLanqNvGSgp3zkZjkw62y3BUwFM6awV8GZMQMLMxpe5VuBQuX@vger.kernel.org, AJvYcCV/e5opL/RbyB2pMOPJv4lknejr5LlvKyt4HfrV0kBRFXjgilkQKMcluW6/0USIB7Yblos+vZJsqIgJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzMqzmQmH0pE3s52hYvF/S1+t0S069A22j4QH0CSjioLXpVPJx
-	ap6lg/8uloc8QUXWAmun07fTW/6tz4tbo8VixKOmVo7z6lcED4Wz5TfHiste/wIieGffOyP6HAK
-	YPj+ekzDTzDhRcxkqt1U+6PgyXcn8eNk=
-X-Gm-Gg: ASbGncvOCR5hChwhag/AZlQ+l0Sa4htqyMw+oEYlToHV6Fz66JjuS9n5yPW6tUmn/l/
-	emcRr2YxD0I3+LR8Hy2RPNbHHMhqZoM4r77TRz/sxjGjme8GjeLbGZsNJymxapUDjke/KXNYdrW
-	1t1reyxOtmxNQ2etVeFG8u+dzWwnJV3uM=
-X-Google-Smtp-Source: AGHT+IF1fHMff8y//YavCY6qV37Mp44tGyDZLCVJ94/lgd4evp/huakNGNFGIncJfZaxREzO0BTmn3RMxhTEPInRqyk=
-X-Received: by 2002:a17:907:7252:b0:ad2:4fa0:88cd with SMTP id
- a640c23a62f3a-ad85b120626mr1097477166b.9.1748417614813; Wed, 28 May 2025
- 00:33:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748417641; x=1749022441;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cx1/E7n8px2Cn8C9YEuMbUpQQvtYPWoNjC2S1QtM08s=;
+        b=uJIVFdxZmdmgD1oSC7c5All8gZCqmU1tRcYMUceRe3sR7PoqE5acLXMV93I/c08pMH
+         oIz2l9biC3Puzvqk1AOYSFOCzN82FvP+Uz6rnHgyoBYZ1BAoqCvIdBFDFyBFEezxmC/2
+         5O2AXvpGG4T2KyjXAsHlZ1AOI2BEjcDinH4t5mXBRfjxA0ACy2euR+ue/Bcnda4Qu5Hk
+         KfEIHNDXA78J0p+aJ0UaZu/iA0VqBwy9X3AIkcwQ+7plKGbqNldNSiw65/LArXkj7naj
+         qQ5GsAnx5JkjIxd2tRzfrMlE+1b7ElxhjhjIGPHLn+h6ZwNIj0tVI3fP2g8rSah818pS
+         PYfg==
+X-Gm-Message-State: AOJu0YwJ0L8c9Q1ahgAJWpjAbHOxL9APpXZokxmoz2gEHZ79nwMolZ++
+	RNfL/pJzEa0TWMP4SfVlD0bmDI9CNf69BzS0sFF5+pk5PcIAfKYVphU7tEpAH7u2mBTUQAJhPC5
+	y1gSNmjJ27F+h9yf6JELjxdLKcgYbynUcTk6bfV/uvRY9g/fXWDb9B2L4nuAZrOpj9w==
+X-Gm-Gg: ASbGnctVf7/5w4XmqqxTKof7v1wkg0O3otIjpZujn3JwBpV2wSLFKAe9NA8H1Ce8xzk
+	hNH+4rhdktxoIdIYjP1hPulZtKLb02CGYVWv8Vpl64qSr/ufHJBxmWpAuMTp/RMjdeteWvvMd8V
+	BkZv3eFKMFvgIxEaB6eiISqEYK68SaTFZ31xq+hsCDsDor3cjgqD416u6r5JZPfRLELl0r6As/U
+	IkGsb2sr5jXKfIc4q1iZujKfw3+N3RUlCkBa77mrwMOKQT/ZUTx/a14gUps6Z6+hM5EzNqTUqJd
+	D08I7uzwQkkzB7N17XzD/tpByv1rg2wLGWVZ
+X-Received: by 2002:a17:907:9715:b0:ad8:8841:b393 with SMTP id a640c23a62f3a-ad88841b3a0mr601919366b.6.1748417641419;
+        Wed, 28 May 2025 00:34:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9KtaRBWywvd7zEOcu9IyROxtjjzZhhygOMCxeJM4DbxyWYXeOrAIlAA0NCDwD/ITwJYGxIQ==
+X-Received: by 2002:a17:907:9715:b0:ad8:8841:b393 with SMTP id a640c23a62f3a-ad88841b3a0mr601916266b.6.1748417640996;
+        Wed, 28 May 2025 00:34:00 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5d89bsm59534966b.183.2025.05.28.00.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 00:34:00 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id E72221AA87CA; Wed, 28 May 2025 09:33:58 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
+ netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+ ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+ akpm@linux-foundation.org, davem@davemloft.net, john.fastabend@gmail.com,
+ andrew+netdev@lunn.ch, asml.silence@gmail.com, tariqt@nvidia.com,
+ edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+ leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org,
+ linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
+ pool
+In-Reply-To: <20250528060715.GE9346@system.software.com>
+References: <20250528022911.73453-1-byungchul@sk.com>
+ <20250528022911.73453-17-byungchul@sk.com>
+ <20250528060715.GE9346@system.software.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Wed, 28 May 2025 09:33:58 +0200
+Message-ID: <87v7plmbo9.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522172535.302064-1-linux.amoon@gmail.com> <174802762618.2701053.17389702773465611504.robh@kernel.org>
-In-Reply-To: <174802762618.2701053.17389702773465611504.robh@kernel.org>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 28 May 2025 13:03:17 +0530
-X-Gm-Features: AX0GCFuQMy8n1ZwrrUkMQP3W0riMpGcHItsAis2ldicF1OXrte5AN2N1gNz0rP4
-Message-ID: <CANAwSgQFbhG-VPwSsEZcMZq3VE8n14trr4uXp8MoMW3ML+vHDA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: amlogic: Update USB hub power and
- reset properties
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Wayne Schroeder <raz@chewies.net>, 
-	Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, 
-	Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi Rob,
+Byungchul Park <byungchul@sk.com> writes:
 
-On Sat, 24 May 2025 at 00:46, Rob Herring (Arm) <robh@kernel.org> wrote:
+> On Wed, May 28, 2025 at 11:29:11AM +0900, Byungchul Park wrote:
+>> To simplify struct page, the effort to separate its own descriptor from
+>> struct page is required and the work for page pool is on going.
+>> 
+>> Use netmem descriptor and APIs for page pool in mt76 code.
+>> 
+>> Signed-off-by: Byungchul Park <byungchul@sk.com>
+>> ---
+>>  drivers/net/wireless/mediatek/mt76/dma.c      |  6 ++---
+>>  drivers/net/wireless/mediatek/mt76/mt76.h     | 12 +++++-----
+>>  .../net/wireless/mediatek/mt76/sdio_txrx.c    | 24 +++++++++----------
+>>  drivers/net/wireless/mediatek/mt76/usb.c      | 10 ++++----
+>>  4 files changed, 26 insertions(+), 26 deletions(-)
+>> 
+>> diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+>> index 35b4ec91979e..cceff435ec4a 100644
+>> --- a/drivers/net/wireless/mediatek/mt76/dma.c
+>> +++ b/drivers/net/wireless/mediatek/mt76/dma.c
+>> @@ -820,10 +820,10 @@ mt76_add_fragment(struct mt76_dev *dev, struct mt76_queue *q, void *data,
+>>  	int nr_frags = shinfo->nr_frags;
+>>  
+>>  	if (nr_frags < ARRAY_SIZE(shinfo->frags)) {
+>> -		struct page *page = virt_to_head_page(data);
+>> -		int offset = data - page_address(page) + q->buf_offset;
+>> +		netmem_ref netmem = netmem_compound_head(virt_to_netmem(data));
+>> +		int offset = data - netmem_address(netmem) + q->buf_offset;
+>>  
+>> -		skb_add_rx_frag(skb, nr_frags, page, offset, len, q->buf_size);
+>> +		skb_add_rx_frag_netmem(skb, nr_frags, netmem, offset, len, q->buf_size);
+>>  	} else {
+>>  		mt76_put_page_pool_buf(data, allow_direct);
+>>  	}
+>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+>> index 5f8d81cda6cd..f075c1816554 100644
+>> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+>> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+>> @@ -1795,21 +1795,21 @@ int mt76_rx_token_consume(struct mt76_dev *dev, void *ptr,
+>>  int mt76_create_page_pool(struct mt76_dev *dev, struct mt76_queue *q);
+>>  static inline void mt76_put_page_pool_buf(void *buf, bool allow_direct)
+>>  {
+>> -	struct page *page = virt_to_head_page(buf);
+>> +	netmem_ref netmem = netmem_compound_head(virt_to_netmem(buf));
+>>  
+>> -	page_pool_put_full_page(page->pp, page, allow_direct);
 >
+> To Mina,
 >
-> On Thu, 22 May 2025 22:55:31 +0530, Anand Moon wrote:
-> > Add missing reset-gpios property to the USB 2.0 hub node to
-> > ensure proper reset handling. Also update the vdd-supply for
-> > both USB 2.0 and 3.0 hubs to use the shared hub_5v regulator
-> > for consistent power management.
-> >
-> > Fixes: ccff36934137 ("arm64: dts: amlogic: Used onboard usb hub reset o=
-n odroid n2")
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > v3: dropped remove of usb2_phy1.
-> > v2: remove usb2_phy1 phy-supply since now it's managed by
-> > the hub reset control.
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
->
->
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
->
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
->
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
->
->   pip3 install dtschema --upgrade
->
->
-> This patch series was applied (using b4) to base:
->  Base: using specified base-commit 5cdb2c77c4c3d36bdee83d9231649941157f82=
-04
->
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
->
-> New warnings running 'make CHECK_DTBS=3Dy for arch/arm64/boot/dts/amlogic=
-/' for 20250522172535.302064-1-linux.amoon@gmail.com:
->
-> arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dtb: usb@ffe09000 (=
-amlogic,meson-g12a-usb-ctrl): 'phy-supply' does not match any of the regexe=
-s: '^pinctrl-[0-9]+$', '^usb@[0-9a-f]+$'
->         from schema $id: http://devicetree.org/schemas/usb/amlogic,meson-=
-g12a-usb-ctrl.yaml#
-> arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtb: usb@ffe09000 (amlog=
-ic,meson-g12a-usb-ctrl): 'phy-supply' does not match any of the regexes: '^=
-pinctrl-[0-9]+$', '^usb@[0-9a-f]+$'
->         from schema $id: http://devicetree.org/schemas/usb/amlogic,meson-=
-g12a-usb-ctrl.yaml#
->
-Ok I am able to reproduce this, it seem the issue is with second patch
+> They touch ->pp field.  That's why I thought they use page pool.  Am I
+> missing something?
 
-Currently, I am in the process of debugging the onboard_usb_dev.c driver.
-It appears that the driver is not correctly parsing the perr-hub node and
-is exiting prematurely. I=E2=80=99ve been able to partially identify the ro=
-ot cause,
-but I haven=E2=80=99t yet found a proper solution.
+It does, since commit: 2f5c3c77fc9b ("wifi: mt76: switch to page_pool allocator")
 
-alarm@odroid-n2plus:~$ lsmod | grep onboard
-onboard_usb_dev        20480  0
-alarm@odroid-n2plus:~$
+-Toke
 
-Thanks
--Anand
