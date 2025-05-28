@@ -1,148 +1,81 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AA5C2D1;
-	Wed, 28 May 2025 03:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3C6B67F;
+	Wed, 28 May 2025 03:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748401345; cv=none; b=m87FTVmK2XiDKXkQeEtxHQFuOeqHlbbqZO6M/o7OnrmTzTWarGepvrLpx6G9gvFusU8DHES7jA1zmJB4QIsn8Y8+comaxmYLjGzB2/4kaqde6WnlbCMpM45wj+12zzDwkOA9257b+XcKeOC/Z363watiSOiiQd8i9ynh79AS9SY=
+	t=1748401412; cv=none; b=RvswoZWoDgzap9uKs73Lul4GdIBVUzU0ugkmh/2sYyHVLQCdKcI7boSUedBhWjYXxPAd/b6hJkULjixGLzKPRQY3e/ffVFLRGFWvMuzxpKju0R9dIKM3ulBJxosI/CUbyJpjE5VW1VLsvaIumYAvFtQcpnsXuzg4lu2vc9XrXQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748401345; c=relaxed/simple;
-	bh=V4N0QlLndwhp+7iGLidvA8gBZ3DccshhG6KBalwRhBY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XhZXH/vA8uvFGTtMSR92prI03ZO7Z49lU7J5j4lUtW48sdpDCwleIakf67Ul8pEUYCJQ1+T+BHq2CwdfGJ4c40w+Wz3fFu77L6DotMhsiW9KUDMNBEziMaP1G/ZReV6pHjbDehU1lUWHANT7GlMprh6jm2ImqIpeNYSt0B2h4Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=URsZhDuh; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748401412; c=relaxed/simple;
+	bh=vw4tpSyUWZj2lLpNQC+OehFPzLnew3DIc2sffloq36Q=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=div+bmOs8rzKEB+e7+B5SnSbpxdBsZWtNFqFbT02gVDSekG46nIHlHX8Rki61177hq6hPw3aW6Wphs9nUwk2sveoGTVOCTTux8s5rdzzSPZXmww/Q5OyabZDOQhH02uSYygdbbgOMmpvuepHDYU6J9fwIojqIKm7CfqxrYZ1OvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=TlRqKbUV; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="URsZhDuh"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHTZp9028900;
-	Wed, 28 May 2025 03:02:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	aCmMZH6fVUihhyJ2gWZpLO2QRq9B2MY8JDD25Y0R9FE=; b=URsZhDuhvUuL/JXi
-	VfY7jq1UDx6D3PhFt5iwI7kSD1zDQyupLfLlAq2STH+iMUSad+GGGFQ1mnNVHK5I
-	KtN2YlF/FfO/5aeE3tp+8tSWBexs+MOjmYmEXSAn7l7tMqbtLlQoGWOeKbnGhqn7
-	YKzw38deuWZYOSAsuOSXUNZbR7vDJTL8uWBSDX4+lzIjtoKJvKF12/KE7jjjBCJY
-	WWANk8TVB8oh0ajq1kflO123iCobZxTOYkJjL34/a+swvjr8Vk+AFr8loSD+fPmk
-	V53g217x44CeV+vWMhMtKC7XlG2froXZnijwsxqtPG/tc+3lAcySyxLY+dUPdEAj
-	Ca6pTw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf16nt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 03:02:20 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54S32Kdb008450
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 03:02:20 GMT
-Received: from [10.133.33.76] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 27 May
- 2025 20:02:16 -0700
-Message-ID: <79f5e42f-f857-4247-abf9-d0f3f5c1a498@quicinc.com>
-Date: Wed, 28 May 2025 11:02:14 +0800
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="TlRqKbUV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=Content-Type:MIME-Version:Message-ID:Subject:To:From:Date:
+	Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=MahgvY8xQ6K2XZOMfAzg24LiOTV+7t/YLOtjWGRZtwI=; b=TlRqKbUV2UlVi0Ndz1rY4G3ZPP
+	vCNgtpHNy21ACqKDHCLZA2EVrt9rvqfmJckMYL4z1ArwfZu63mmgt2c9WJHOQB2Y4IyjoGz3AE5TP
+	IYD2j9lZbDf5mDRCCF3g1/u7mQ75rf5m3qc5IgijmnzZhQeF8ueAKyTFvnWTDLTQKzPPSYH34qpfp
+	4PQA8UUXlW/T5Bf/9hwqFrYiZALKk/qfoMf18JLLNHNXGDXMLlsgez6wZiehVi9h/FHsL39gPrZxi
+	h8P31As5YHS6pBNNIYLjKNuW4abNPpA0OT2q6l5HZ8MhtVhrnz648Mm7PUOcS6Ug1R8cPRASYXFMA
+	Qoiy3T9A==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uK74W-009NBL-2R;
+	Wed, 28 May 2025 11:03:17 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 28 May 2025 11:03:16 +0800
+Date: Wed, 28 May 2025 11:03:16 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 6.16
+Message-ID: <aDZ89Fs8Y20_fj2I@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
- camera block
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Jie Gan
-	<jie.gan@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
-        Jinlong Mao
-	<quic_jinlmao@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
- <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
- <9a156925-cf7b-4d2e-88a8-fdfed5528553@quicinc.com>
- <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
-Content-Language: en-US
-From: Jie Gan <quic_jiegan@quicinc.com>
-In-Reply-To: <1fef810c-47fe-4f6d-95bc-0d72dbd63bf0@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=68367cbc cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8
- a=lW3qVuOrv7gLkRXel_gA:9 a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: 9scQjtoa8sGwS9-dGnfGdFggTEspXCb6
-X-Proofpoint-GUID: 9scQjtoa8sGwS9-dGnfGdFggTEspXCb6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDAyNiBTYWx0ZWRfX7km28jnnQnbS
- vqHf0uAjZ2hi4Kg4Grrmwe/hsnmYrWO/iLoiKNN1cumsAVHVTXGquO/0CrbHSVlPMAllkN4V0lw
- wp6BHgW2SDA5OZsfaXmLvHnRx5/jbzSfVaUA1+ux3U9OojE5UKUUD0jbLwltUgEi1l52AhILB8a
- ui+BvQRI0Jd4X6TpjQNrPWgWtr79LSS6maXwJVkrHHoh9kvDspJM6O/a8RNTyz1972iYsZdd64F
- cTdGlpQjxkCOiwEfLxTWNhWXmYBA5e/Bq3mrY0Wa3btrD/pgUuCknqVgeCzS6AC9356eUgJ9eDF
- JnagxxpxyVYKpIXW4ZwlqIZePOpmX7Qpe8SrCSjfkvE1AkhMTo4b1g7JhH4kMOHOgzpjl+MV8Kj
- 9hZwpqQQDzgHq+g2w0Ds1bWuch4pKGTA6KN26snlVmIWpcIj3S0WnIoDZWlQR1C/jgCD4zzl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_02,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=631 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280026
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Linus:
 
+The following changes since commit 2297554f01df6d3d4e98a3915c183ce3e491740a:
 
-On 5/27/2025 6:41 PM, Konrad Dybcio wrote:
-> On 5/27/25 12:32 PM, Jie Gan wrote:
->>
->>
->> On 5/27/2025 6:23 PM, Konrad Dybcio wrote:
->>> On 5/27/25 3:52 AM, Jie Gan wrote:
->>>> Disable the CTI device of the camera block to prevent potential NoC errors
->>>> during AMBA bus device matching.
->>>>
->>>> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
->>>> through a mailbox. However, the camera block resides outside the AP domain,
->>>> meaning its QDSS clock cannot be controlled via aoss_qmp.
->>>
->>> Which clock drives it then?
->>
->> It's qcom,aoss-qmp.
->>
->> clk_prepare->qmp_qdss_clk_prepare
->> https://elixir.bootlin.com/linux/v6.15-rc7/source/drivers/soc/qcom/qcom_aoss.c#L280
-> 
-> I'm confused about this part:
-> 
->> However, the camera block resides outside the AP domain,
->> meaning its QDSS clock cannot be controlled via aoss_qmp.
-> 
-> Do we need to poke the QMP of another DRV?
+  x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining (2025-05-26 10:58:50 +0800)
 
-The AOSS has a clock control register for all QDSS clocks. when we vote 
-the qdss clock, the aoss_qmp driver will send a message to AOSS to 
-enable the clock control register, then the clock control register will 
-enable all QDSS clocks.
+are available in the Git repository at:
 
-The QDSS clock is not a single clock source, it is a term that 
-representing all the clock sources utilized by the QDSS.
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.16-p2
+
+for you to fetch changes up to 0a84874c7e7dde5cdddc80a82093120e924a348b:
+
+  crypto: shash - Fix buffer overrun in import function (2025-05-27 13:43:32 +0800)
+
+----------------------------------------------------------------
+This push fixes a buffer overflow regression in shash.
+----------------------------------------------------------------
+
+Herbert Xu (1):
+      crypto: shash - Fix buffer overrun in import function
+
+ crypto/shash.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 Thanks,
-Jie
-
-> 
-> Konrad
-
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
