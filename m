@@ -1,209 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50A720E6E4
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A082420E6E4
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748464602; cv=none; b=VtY9OsYySvubFRT5iBz28RXI3+LM2KIJtYxmX+0IXeGZpqxpXSbahxOh6S73JpB4moEa3e7xoEloSlSj82kO87wxRlLS/SEnrsXsVKFlEzK1ZcvK7i7uQD7SuqAKmtHyffvRTqva4B9fSxhlEhu6yMrlEPxnasaP9p4MJjsmCag=
+	t=1748464700; cv=none; b=SHvUKnZ9HuRKrsNxLLE019bEguZL6luShuCc+2dbaCcgzS66QQDhke8IbBL6Lt8QdVE1qieaZSmtKMjaaUfZYaj6IpVGyMXCl7h4Ouk6B7/L29pjZtLyp7/okpc2oOMJA++FoUMDNr7hvTy4GHdNJnH4W9MWm0stGC7cuU7MSos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748464602; c=relaxed/simple;
-	bh=LKuuiFod4XXbTge4GHdm/9QLj8tPwgj0K7XcZn50K68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L16ZCkIIFLeFjXaymrZ7cM5mGy9No6AFz2SLBCjT6CIskUcEenyw3aRb7mivWRrGcksK9A758p8HMges5A23ikl++aGVnAVNknFlC5jK+7IUlm4slxzg6gWZvy7+Jzr0TPI5HpFpJwzA/RZyi6I8YbdDMrqcr9BdzEMu1AOPKBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IBlRcxLK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748464700; c=relaxed/simple;
+	bh=Sk0KsMgaB+xZjKeQ1toE0XUKUHEAW+cJu2j+0JU8sA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QE3dFj6PjIKRrbQHbDIotsl2YWCeZbVicp4NnFR/KMBWysgbTzZQR1uVviECVAFJffVs6M/KzPJzf7UAThL37o9q1BqltUjUHJHiHuWxjJJ9Rz7ayGiycgrtQaAa0nqxotpsk35PstWCpI6+UDOPyUAW/78xbaqYfQi0svJR+8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0npROHW; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBlRcxLK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748464599;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iDHOfDzbDRVpg69jsOvmjB9r5MFng2zhSkjSqjMHIqA=;
-	b=IBlRcxLK3g0LBShy929vzSJ+JMFNpAPg9hSJd6mbPhNmZHlKnzVLdyfs7tJACYaXTpAk3u
-	AabanyefWcxy5zWfIhRzdmjCHXQf6Wb5P1bhxV2nNXPdPBe+JClMSJvzBKl0YES1oqox8e
-	mNZfC/8Cs/CaKIAC7cLAo8GA2xMw+5o=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-IirhcXEvMIauGyTs5bHGcQ-1; Wed, 28 May 2025 16:36:38 -0400
-X-MC-Unique: IirhcXEvMIauGyTs5bHGcQ-1
-X-Mimecast-MFC-AGG-ID: IirhcXEvMIauGyTs5bHGcQ_1748464597
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4d95f197dso128435f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0npROHW"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3dd745f8839so36235ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748464696; x=1749069496; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CysRy/6eh5eLY4N+6IpIoDvJtx8LW/RoAsL4riwmZR8=;
+        b=b0npROHWiu+iEeKRRZkPj1uHqndhlAhlibjEtMvncBDhW/nPwL5XtdHExq9fcgTwtU
+         xj2HRmVeD2e1XB9XfxlHDbEMBADxsCLUu9MN9LCsi3Us1DWYAqtKDwuC31xeQxaaKAq0
+         A0NNrzJ0twoxX5C7sYUzoGRA1LXVmiv2teN9juSepMuOm1vTVgX4Umt6sfEzv+1k8wN6
+         mBfjMIgQEjTv4tjN0fIJ976595V7OKMFKr3YVGfPZm1+XUDhdIOevPyrjcl/ZpmvJ04m
+         E4qoRjQ29IiqDR0C4tfIo7W61rzaSlOx0sR4G40iGZoiwbVI9KdCqm0S9ggVbxbMtRXk
+         RljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748464597; x=1749069397;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iDHOfDzbDRVpg69jsOvmjB9r5MFng2zhSkjSqjMHIqA=;
-        b=qEJYD1n+XRxfSWgtGLlGP9c4mki61tdZobFa2XBhrU9/kZQOAFdmAZWrFirEGWzDvM
-         cqChw/NSU833sd6hY2KPH/HQmsEj0axVbxpgyjJLzrXCmSjwcQ/nWEPb6qFF6lM4mWXL
-         3nOgMN6mPBuNElcz3sQ/IVCZ8NPq6Qw7mAaAJNssHtzd5UpdQ7ztuzHeS789vzf1Y8v1
-         18ssdBjlJ7+kQ5d07f9Lc303MJBggmsX7OV2b5Jl5s3L01knL0C1qanTI1uDTBuzZ47s
-         NvgpXpnKWYLM2r1/BGJq9MuIvzQGB0eLgO2330GAYlz4MpVsSchWUji2WDJCPm36nb56
-         CTcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUQbZHvj9IysP5RKhLXUFzxEbh8mRzB708I/Y7ouhiv8ZObnArSyKxbGehE8xxz0P2+Fgc4lMynpuZb8xk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP31QjCgOUafhh6223K++O8fbF9w7zic/T7nDBxdQFYTR/B+BF
-	ixYBkmxjY8EC57vOJmEVyN4oIE1rZXcWgkkXlw8hY2KjEAlTrzwuQ6Judp7HU/P2hC6eI4M8kjM
-	m/G+CQEOus6ag6pUZjkPyMOEubzsS77PtNKi4f6ZNWaIfRy76O6gydiwVTROhUyBVmg==
-X-Gm-Gg: ASbGncv8RuUmKlYo1Up+MWVErhK+naVWZj57yC9mdFeCeh49z+IceXMdrpDsqLRpF0Z
-	gCcw8jz4Y3d03CwPDA26r6Z7iL597yFLJvAvlPJ/PN3nKjtbd2BLgXtle/UNG1tQHbvMCrLcm0Y
-	iO88aRrpWG9t8bNIiYttCQ+Oo7zqCPwtZj+Zs54QXsVPUCZSxGoPvQUFXNA4fP/pQj2YuMul6V/
-	NKaLVQYwAw8AAi3A5qMk9vPjAlek3k5FCKjD259Bn0KHk3PZyXU8wrPtXAjAAr/L755dbd+KGfA
-	o1YZFtsvdvbQ1PU3lrdkz50woc7Q1AM4MlHfJWE0nYJ4MELSmQaFGZAqPtUohMlFTqA8cHIYlsn
-	mC26sHs+nTAOwCSlZo65NNKfUUwy50cL42o+iEhs=
-X-Received: by 2002:a05:6000:144b:b0:3a4:eda1:f64f with SMTP id ffacd0b85a97d-3a4eda1f745mr1926667f8f.30.1748464597174;
-        Wed, 28 May 2025 13:36:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyw2FecFHjr2FE4rwo6929V09lCFuPkawv9vWLWEm5i38UkYZ4QCg7UaqjU3X8Av1gnPqQNQ==
-X-Received: by 2002:a05:6000:144b:b0:3a4:eda1:f64f with SMTP id ffacd0b85a97d-3a4eda1f745mr1926619f8f.30.1748464596733;
-        Wed, 28 May 2025 13:36:36 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfbf4966sm1450355e9.6.2025.05.28.13.36.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 13:36:36 -0700 (PDT)
-Message-ID: <31dd1efc-ccf3-4908-a06f-20dabac86ce1@redhat.com>
-Date: Wed, 28 May 2025 22:36:33 +0200
+        d=1e100.net; s=20230601; t=1748464696; x=1749069496;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CysRy/6eh5eLY4N+6IpIoDvJtx8LW/RoAsL4riwmZR8=;
+        b=fCgtP0jqBFJmbXvNxXuU5Lyh+U4fglBYSJWhVJgUnyU9Eu4hbScPboQuW0fju8bzTO
+         NXSjj54aYPhHJOqHyyvLgSWrDRIh1MCqWRdo3Xqiiu5p2r7la93cl5lTiV3ub4w7Gx5G
+         Fw3pWL4TpZ4jULP5b3GvjXAys/WtXzpge8AE6cpNfGc9Rwz32jBx0X5KTRMKt1Eou1pu
+         j4Sj27r+dTHEVgm0jHXBZjAEZvFx4Gax+KMMuZd2kYWfYIRk7oaDNRXcQClwZ6lw8lpR
+         Ql2Klo567WdTne0HR0AMxfE4RbpYUBV8wpb5z3Ktgl8mwnlJRoEQ6g8jXa8ZL4ipY2PY
+         TNRw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/W4O8kKjatXXEwYyP6bgyqKvypIv6h0iWvao/UZ+J2pNEDeGta1a9+rO4wZX/TPndVHqgh8UXlmHZsT8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxguf8t3NyqSTujVat9CuMvMrS4ssx0mmx+vO41fFDjnqHExrkk
+	o2SQliTlvlI+j45pUqnXsoaqIjH1uIVW3/OIDluYFdRQqlKdu/M3lRYYElfhitIAw2LW1JVFGux
+	7XMo00kAVUbtKERLVowrntqpNYSyGNfpIrMhZnDrR
+X-Gm-Gg: ASbGncsxJ4WBIA732hj05WUWrUHOAzjFJRUeuIBs458UI1qO7irz2ez+OzlkbsNKHob
+	+Iq5eVLcBn3nxUUeJqfQUbWOHt3cqW6iXm65H2dWLZqJv4DZ0LNorQkVrOMgVRZg/7H3v+IK1Ji
+	PLcYHFYgo8rIyPAJBzc1jMjjFVUEqmVOdBeCPfdQbmZIUBpgRklNywBuJjI5wtod+wLafI2bmg
+X-Google-Smtp-Source: AGHT+IE9bzHVt/yUEPZJKDRNU4/P3m0whhwjx11oXjO87AScLkBfxZoU0C1CnCERqAW+9+XcXXaK/T5DZtWDKt5e4aE=
+X-Received: by 2002:a05:6e02:1a0b:b0:3dc:670e:ad5f with SMTP id
+ e9e14a558f8ab-3dd91cc4504mr906045ab.14.1748464695389; Wed, 28 May 2025
+ 13:38:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
- Dave Hansen <dave.hansen@intel.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Vlastimil Babka <vbabka@suse.cz>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org,
- gost.dev@samsung.com, hch@lst.de
-References: <20250527050452.817674-1-p.raghav@samsung.com>
- <20250527050452.817674-3-p.raghav@samsung.com>
- <626be90e-fa54-4ae9-8cad-d3b7eb3e59f7@intel.com>
- <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250521165317.713463-1-irogers@google.com> <20250521165317.713463-2-irogers@google.com>
+ <aC43Et06tyrBOrsT@google.com> <CAP-5=fUYUDq6hmd+e3_E7HCRPYuy-0KLE+gLuSCWAHh3A5wJLA@mail.gmail.com>
+ <aDdR0pCNSmxCEyEZ@google.com> <CAP-5=fVv9+0UdYDNQ52T-QgKfUYBL-pgRwd_ac3jp7KW8sxrRw@mail.gmail.com>
+ <aDdtWlUbDZtM9pvg@google.com>
+In-Reply-To: <aDdtWlUbDZtM9pvg@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 28 May 2025 13:38:03 -0700
+X-Gm-Features: AX0GCFv-h49dYmQU2vung1CGzOzr11YPBVSw5C9RIXQXF3GPgA73aQr5Xf0vg88
+Message-ID: <CAP-5=fXaaQv5eFTheW52CNc-5Zhmfow2aZ59vnJy74XL2oEcfw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] perf sample: Remove arch notion of sample parsing
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, Yujie Liu <yujie.liu@intel.com>, 
+	Graham Woodward <graham.woodward@arm.com>, Howard Chu <howardchu95@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Andi Kleen <ak@linux.intel.com>, Thomas Falcon <thomas.falcon@intel.com>, 
+	Matt Fleming <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>, 
+	Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27.05.25 20:00, Pankaj Raghav (Samsung) wrote:
-> On Tue, May 27, 2025 at 09:37:50AM -0700, Dave Hansen wrote:
->>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>> index 055204dc211d..96f99b4f96ea 100644
->>> --- a/arch/x86/Kconfig
->>> +++ b/arch/x86/Kconfig
->>> @@ -152,6 +152,7 @@ config X86
->>>   	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
->>>   	select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
->>>   	select ARCH_WANTS_THP_SWAP		if X86_64
->>> +	select ARCH_WANTS_STATIC_PMD_ZERO_PAGE if X86_64
->>
->> I don't think this should be the default. There are lots of little
->> x86_64 VMs sitting around and 2MB might be significant to them.
-> 
-> This is the feedback I wanted. I will make it optional.
-> 
->>> +config ARCH_WANTS_STATIC_PMD_ZERO_PAGE
->>> +	bool
->>> +
->>> +config STATIC_PMD_ZERO_PAGE
->>> +	def_bool y
->>> +	depends on ARCH_WANTS_STATIC_PMD_ZERO_PAGE
->>> +	help
->>> +	  Typically huge_zero_folio, which is a PMD page of zeroes, is allocated
->>> +	  on demand and deallocated when not in use. This option will always
->>> +	  allocate huge_zero_folio for zeroing and it is never deallocated.
->>> +	  Not suitable for memory constrained systems.
->>
->> "Static" seems like a weird term to use for this. I was really expecting
->> to see a 2MB object that gets allocated in .bss or something rather than
->> a dynamically allocated page that's just never freed.
-> 
-> My first proposal was along those lines[0] (sorry I messed up version
-> while sending the patches). David Hilderbrand suggested to leverage the
-> infrastructure we already have in huge_memory.
+On Wed, May 28, 2025 at 1:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Wed, May 28, 2025 at 11:27:06AM -0700, Ian Rogers wrote:
+> > On Wed, May 28, 2025 at 11:11=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > >
+> > > On Wed, May 21, 2025 at 02:15:24PM -0700, Ian Rogers wrote:
+> > > > On Wed, May 21, 2025 at 1:27=E2=80=AFPM Namhyung Kim <namhyung@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Wed, May 21, 2025 at 09:53:15AM -0700, Ian Rogers wrote:
+> > > > > > By definition arch sample parsing and synthesis will inhibit ce=
+rtain
+> > > > > > kinds of cross-platform record then analysis (report, script,
+> > > > > > etc.). Remove arch_perf_parse_sample_weight and
+> > > > > > arch_perf_synthesize_sample_weight replacing with a common
+> > > > > > implementation. Combine perf_sample p_stage_cyc and retire_lat =
+to
+> > > > > > capture the differing uses regardless of compiled for architect=
+ure.
+> > > > >
+> > > > > Can you please do this without renaming?  It can be a separate pa=
+tch but
+> > > > > I think we can just leave it.
+> > > >
+> > > > It is not clear what the use of the union is. Presumably it is a
+> > > > tagged union but there is no tag as the union value to use is impli=
+ed
+> > > > by either being built on x86_64 or powerpc. The change removes the
+> > > > notion of this code being built for x86_64 or powerpc and so the un=
+ion
+> > > > value to use isn't clear (e.g. should arm use p_stage_cyc or
+> > > > retire_lat from the union), hence combining to show that it could b=
+e
+> > > > one or the other. The code could be:
+> > > > ```
+> > > > #ifdef __x86_64__
+> > > >        u16 p_stage_cyc;
+> > > > #elif defined(powerpc)
+> > > >        u16 retire_lat;
+> > > > #endif
+> > > > ```
+> > > > but this isn't cross-platform.
+> > >
+> > > Right, we probably don't want it.
+> > >
+> > >
+> > > > The change in hist.h of
+> > > > ```
+> > > > @@ -255,7 +255,7 @@ struct hist_entry {
+> > > >         u64                     code_page_size;
+> > > >         u64                     weight;
+> > > >         u64                     ins_lat;
+> > > > -       u64                     p_stage_cyc;
+> > > > +       u64                     p_stage_cyc_or_retire_lat;
+> > > > ```
+> > > > could be a follow up CL, but then we lose something of what the fie=
+ld
+> > > > is holding given the value is just a copy of that same named value =
+in
+> > > > perf_sample. The code only inserts 34 lines and so the churn of doi=
+ng
+> > > > that seemed worse than having the change in a single patch for
+> > > > clarity.
+> > >
+> > > Assuming other archs can add something later, we won't rename the fie=
+ld
+> > > again.  So I can live with the ugly union fields.  If we really want =
+to
+> > > rename it, I prefer calling it just 'weight3' and let the archs handl=
+e
+> > > the display name only.
+> >
+> > But that's my point (or in other words maybe you've missed my point) .
+> > Regardless of arch we should display p_stage_cyc if processing a
+> > perf.data file from a PowerPC as determined from the perf_env in the
+> > perf.data file, or retire_lat if processing a perf.data file from x86.
+>
+> Agreed.
+>
+>
+> > The arch of the perf build is entirely irrelevant and calling the
+> > variable an opaque weight3 will require something that will need to be
+> > disambiguate it elsewhere in the code. The goal in variable names
+> > should be to be intention revealing, which I think
+> > p_stage_cyc_or_retire_lat is doing better than weight3, which is
+> > something of a regression from the existing but inaccurate
+> > p_stage_cyc.
+>
+> Yeah, but I worried if it would end up with
+> 'p_stage_cyc_or_retire_lat_or_something_else' later.
 
-Sorry, maybe I was not 100% clear.
+Perhaps it should be:
+```
+union {
+  u16 raw;
+  u16 p_stage_cyc;
+  u16 retire_lat;
+} weight3;
+```
+to try to best capture this. `xyz.weight3.raw` when the PowerPC or x86
+use isn't known, etc. In the histogram code the u16 is a u64.
 
-We could either
+Thanks,
+Ian
 
-a) Allocate it statically in bss and reuse it for huge_memory purposes
-
-(static vs. dynamic is a good fit)
-
-b) Allocate it during early boot and never free it.
-
-Assuming we allocate it from memblock, it's almost static ... :)
-
-
-I would not allocate it at runtime later when requested. Then, "static" 
-is really a suboptimal fit.
-
--- 
-Cheers,
-
-David / dhildenb
-
+> Thanks,
+> Namhyung
+>
