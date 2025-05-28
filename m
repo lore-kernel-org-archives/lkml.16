@@ -1,104 +1,72 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B397125DF;
-	Wed, 28 May 2025 10:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0512139D8;
+	Wed, 28 May 2025 10:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748429530; cv=none; b=C12BkXP2c5sQ8LWUVt8ZMDf3KS6Qv8NRJveGKOO3GP1xOZuJZzdJ0Bj0Qbzg8ng//2rIflL8DdkeptfOwXxypOH2gIZSF+QjFDSugsOk5EDHT9UFpZ4bEP8vuC7y4SXhQLhPOJO9G3AEA/pCJuPad4MV+6Lrx0QS3Nywqo7CneI=
+	t=1748429557; cv=none; b=KtDcwfCBHlHk16BeYP7+Vvn/Agv9D+GKtr3Zvz7JFPOeTidal348u3b4z/w/ZGcrxdeXamqgc4HsGFtVe6FDeo3cZOIpuy/1jVjJ2z4tkA6bXiz0MVKFo+LijE2aRtd2m5TdJ4Vh9Pd38B57OQqIFUJsO0WzXT4U15XlO+GvdWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748429530; c=relaxed/simple;
-	bh=EUwrbpwQ1JOkb9+kiB9V360QHuBxmCHR7WtQ/iFAenY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nof9qWvd/7I7EN2fqS/apEc6vh7umu7u4lBEFzOHJivI/fP5fMW9XIwkEo2d7/6g03MIj31qjA6O1JBmUVRd8VPpfJAOtc6rI02899/zSY03oPzMPQdhLcKSwhhIch+hmWzX5wZdEykbmFiEwW6Q/cB2ZTxq6mEFFL7MOif9vQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O2xt+j+w; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748429557; c=relaxed/simple;
+	bh=GUs28pJdm4CINoN+poc+XGtdJq/AcECrplYFC+uuFTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j0NcI/03F5rIQ2Awo6xPHXfGEOBKCiZo/FVW706nFeEzeB9JtZ6rhWjZHZA+Xoo3piN6Oqjz9zoOVle5qLmkrZLRXQJ0JQ7P7142Z3TLk9XH+9yUJ4qiTEqz/htg4DtNoiGGkfOxf5zz0kLnLjvaanW6oCIbBHUG3ddY3OTHeKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+qcIY1h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2xt+j+w"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-742ad4a71a0so199337b3a.1;
-        Wed, 28 May 2025 03:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748429528; x=1749034328; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EUwrbpwQ1JOkb9+kiB9V360QHuBxmCHR7WtQ/iFAenY=;
-        b=O2xt+j+wCEaS+QHp6YhGGO8cY4J3q4mRsghyN3UE0enNZ4Ef7OAtxT/cbSxJtdWNj1
-         kWXyKJdsQ0Zcw9WEqDA/53nkFgzbqlpxPIdbfQSZJHasJGiEFzkpvw4epPXBXJaOhvnD
-         mMCLZ95DQB0LKWGriu8f2edTul5V0Ls+c39xH4gZvHZdE2e9/65SHQSHe3aEudFD7crz
-         Ysbr8EFt7+4lHFgcW8IqDhcm7Xi40KwsPXgB0gbCE+OVakmy28QhBgSvL5epOEmVsY+4
-         xlq4b9BV+lOQruWHbH9+fh+JoDezJW+Amwfpy9FVExbOcilSLz1EqcJiCDiIr1eWwHIn
-         37YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748429528; x=1749034328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EUwrbpwQ1JOkb9+kiB9V360QHuBxmCHR7WtQ/iFAenY=;
-        b=qLlPOM6xDOVv+BQdpMQex7wWErb/0kpTRlZEdHcleI7UgK6tivsn/ANFzjnW0J9vHI
-         bVOoWqbd5v/ipog8hRZ1zcjd5xuYHhaffDbz0IamR+1YjP2v7A7h32JhWgxn47v+tLri
-         EuIOMflpqp22X44U8V5jqhq3Qm7UdSvJT8atCFNr0WJbUEZw0pMFWsCe+GUWzjb6KVHE
-         l5K7FPgzLWwxTGQEoG+SwlqaxTvwge0WE+blpSTZM78diu4LYM2HJ4O9BGyt43VpPsbw
-         g9u3VmlwbnwCf6Jio9g1pcQvFnoZgiQzduD9hNv126MI4fbpWGhvMJkJeU/MPdxsrQUj
-         qpJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVByZF2s+wBl9QiGx6gigldtI9pZ0bLstAfgckGMs5uoSQB7s9ll5fxkzTbwLpvg5yL4scuc/PJWzF7K2h6gE=@vger.kernel.org, AJvYcCXP6TxR064VQRnWOLmjdxx6P7tI3b9k4fGq/1EyRheU2nKKOGcatA60rrzFjXSB5ZJRQCG4NxNJluBR9sJt@vger.kernel.org, AJvYcCXWeDkmHetsTKQpz5EhUpL3Wq5rn+7OhJpfh8wkSND1YWU4T7ajMKzm1WRGdCLWwToN0kOOf+vvYQLnX1Sa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3Za5IoxWBhV75pYTV2R86Hlh4mEe/YGw/M3DbwkYdGqU9gz8G
-	4Twcv5+mmdIENOoh0GHVEr+mYXtA6mfZJ3uI78EJRnpw1jB8HbtH/7YiBdrdu4mpmw8cSvaFbgy
-	Ydk5mpSOWLkbP86HOxj/JaurAZKmyPKY=
-X-Gm-Gg: ASbGncvCUy2RvXg0KMwpmNOBiMCAv5NdeLJ/YXb6SwYwPJDUhqE/LmnmGiu7NhCv04c
-	RsL23LKkFxCZvxlFAhiIPCnaBLdEinshYUCb7sCYeEjNBJI6Gix1fy+7O+EsSoiZM3r0uRT7ttz
-	cJGeBdY/CUUIP7ecM6clhUVGSrDAkvhn+M
-X-Google-Smtp-Source: AGHT+IHfPTHmMRq3pP+tHA4uSAtyuPwc0/J1qF3EQXD/6n+vSjrMqJsfUa8K4jNNDxI1FvsNq5ui0L1Iv30eHKTFeNk=
-X-Received: by 2002:a17:903:181:b0:234:bfe3:c4b8 with SMTP id
- d9443c01a7336-234cc08f6f5mr10989035ad.2.1748429528426; Wed, 28 May 2025
- 03:52:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+qcIY1h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE81C4CEE7;
+	Wed, 28 May 2025 10:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748429557;
+	bh=GUs28pJdm4CINoN+poc+XGtdJq/AcECrplYFC+uuFTA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e+qcIY1h5ai4P2UyiCKdD5RbR3HG2EX+mOwLaOOGq2+6cvKYz8mTOlcnjt886Xn3M
+	 mV4q5KHqSczdMea1/glY/Kc0J2JzP0mNGRAae9HqGU58q5vsMofM/zQ388KB1m0RSq
+	 fZupIGKuw49qjLTqO7RMynzVZNN56TJ3NbsuHGxbwEIuLy9iE+1TYwUbNwsd4X+jU9
+	 KKJkI4Fb7XIcBDhsKxiE8PCCxw6hYFsuY2N5zTNHYOQZ4KM8WIEyqPqviEMicHOxqY
+	 gNMhTm77rnQ3rO2YdCReRXaHlxDIwDpfbkS6ZAJvvhTaX/gnChR9J0MywdemNFoIDz
+	 /S5InTik/xGcg==
+Message-ID: <0789cbad-3164-4046-b8d6-b245721b6515@kernel.org>
+Date: Wed, 28 May 2025 12:52:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527204636.12573-1-pekkarr@protonmail.com>
-In-Reply-To: <20250527204636.12573-1-pekkarr@protonmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 28 May 2025 12:51:55 +0200
-X-Gm-Features: AX0GCFur2ooyqiX9o0dgEJ1syY8B-ipKPG0HeMAxM-ke-LN9uVLyyNAo4K9MERQ
-Message-ID: <CANiq72kgu+qKBFOUfcsF9fJkq78p+uBA6KAnpY1Uz5McT0y=SA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rust: file: mark `LocalFile` as `repr(transparent)`
-To: Pekka Ristola <pekkarr@protonmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Jan Kara <jack@suse.cz>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-fsdevel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 10:49=E2=80=AFPM Pekka Ristola <pekkarr@protonmail.=
-com> wrote:
->
-> Unsafe code in `LocalFile`'s methods assumes that the type has the same
-> layout as the inner `bindings::file`. This is not guaranteed by the defau=
-lt
-> struct representation in Rust, but requires specifying the `transparent`
-> representation.
->
-> The `File` struct (which also wraps `bindings::file`) is already marked a=
-s
-> `repr(transparent)`, so this change makes their layouts equivalent.
->
-> Fixes: 851849824bb5 ("rust: file: add Rust abstraction for `struct file`"=
-)
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1165
-> Signed-off-by: Pekka Ristola <pekkarr@protonmail.com>
+On 5/27/25 3:53 PM, Alice Ryhl wrote:
+> In C code we use sparse with the __user annotation to detect cases where
+> a user pointer is mixed up with other things. To replicate that, we
+> introduce a new struct UserPtr that serves the same purpose using the
+> newtype pattern.
+> 
+> The UserPtr type is not marked with #[derive(Debug)], which means that
+> it's not possible to print values of this type. This avoids ASLR
+> leakage.
+> 
+> The type is added to the prelude as it is a fairly fundamental type
+> similar to c_int. The wrapping_add() method is renamed to
+> wrapping_byte_add() for consistency with the method name found on raw
+> pointers.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Thanks Pekka, both patches look good to me. I will close the issue
-when Christian applies them (or if I should take them, that is good
-too).
-
-Cheers,
-Miguel
+Reviewed-by: Danilo Krummrich <dakr@kernel.org>
