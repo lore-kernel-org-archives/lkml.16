@@ -1,73 +1,76 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F79D218EB1
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C4B2206BF
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748462239; cv=none; b=bz9X2V9i3iR8ZsXraqEH61xNJn+gHlVoatgK1SP9O8F116IZA7+B4C9TjBUkImmHSIDBhIThtWVfml5vxzGRbt76dz6dhe4XE5/lpvvwuK+VQLwcMH80FFEFsBomTYSakS+DeneHQaWMMK9HQSmCZ1eh3Op7bKIgGZS96EL4+xI=
+	t=1748462248; cv=none; b=dOqf6KHyA1YHIe15JZSiPTcrjHI8Z7aMmEnaHDFHT1m3y4CNdPghC/QHbs8GKTyPk2RYH8zgkeEMMORtWCYOsZVCEZsIFwNn46z5LdTKh75tjxkB+q4vLIWjQ+WeXGv4mzeBenC7w17QWCJRTxQrTA5V9EaNJxywCgguu7cc8pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748462239; c=relaxed/simple;
-	bh=pVQoY2tMvY1bG+KKCYoQBM+7JiHkA5uoBLgsR0UXjf4=;
+	s=arc-20240116; t=1748462248; c=relaxed/simple;
+	bh=NSe9RzYFBpq47/dJ5qqWUOPu2I/KiKwtwt0jkoCunaY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n9D/hqzOg26ZDzC7jTJKXkr5PbzeUqEVajI1GANQqmktHgtfL0k4CLwjGfK6eA6NDA85j0Ua5Y2ZLUBmcpCgNPjft9dmLStrNfB+pwfGpixCe4jIVMO3Gw7Y2n6l/DsT4glpB5gKdBZ5fxcdTInqktwQrURarwPtV/kDjkfpuwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JCfi0B6U; arc=none smtp.client-ip=209.85.221.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=qyEUH1BAwNmlPWQbRRf2s/esMthiPitR4LcmY5nYpsrcgAuwJZZLTI2l+MT3pwxU/A8MqNYCO3bMDoNfymdDtorysBr8tpGVOYT7Ub5UZbwIjgszzCKjLaGICkboEEw9P9u3t4lYz+nnIrpST0HwJQGQs8FrMaiI+kmEwQd8tss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CFQ7G+io; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JCfi0B6U"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36748920cso165976f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:57:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFQ7G+io"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cf0025c0so1272205e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748462236; x=1749067036; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748462245; x=1749067045; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uZkzIt+VTNDuOeuHZJXYBs4wfX/HzzJDRDfTN1kT4V4=;
-        b=JCfi0B6UVftMUrPg88K/tbg7gcIb/TByL6ZVTPSwsnAQXuTUJPd9if8Fy79+nVD9c5
-         wZ2BSUPHbi44tu3zFFZu4MWm6PwIQwARKGKbiO9FbTqKXKaH7yc+kN344C24BZyEcLyK
-         l8GIRZJbTcpVp/hCzSALzzS43M0WDTSZu+87KCLHrOs0G0bvSQOY6rpuTLE8ndD2WkeI
-         od8Bl8wDwHfGJmT4EJQ1Lc//UNvYMR3slCvzOr+y0wkIrJRsTLrqEOwFmDWtoP8luZpy
-         ILCTxNK13Qfv0F7VCbYDfzo33jzQPkpxJVw3QXDjhDqgQulBp7s+tP7Lnk1iY0C6GutU
-         NYmQ==
+        bh=jox9SekNR3rtKHNYCobALo8p2iBIaUa3VzzVOakwrMQ=;
+        b=CFQ7G+iogz9ohwn6ms/590G4KfsuI77AWtGZuvgyCydOokQxrzdBayAgp1JLSpXysF
+         zHr7llscxlMVmyj5iBH+jD7FWXlext/3Zkzm39jdkNdowuKnpZYZusVmRPI9RDA1ciIa
+         u5KBitHC5f6ZwhqnGt+X2dhAJXIqxQlitaOXJhyION7ErzGKv3keH+qAJ5A2pPye0C3d
+         CcQCpLHGGgLdA5vWFPmR0KSwgX+jXhGTQI3XXfNJ3G7LfD/0Bv6IBhPdHO5WYmACEb1h
+         r0pq4XNQ6uDHiLOXK91+9S0yQ2YacH8jAhnUx0T4TGmWfnaqRb1fvhk4QsnWHKhIQ00G
+         UQDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748462236; x=1749067036;
+        d=1e100.net; s=20230601; t=1748462245; x=1749067045;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uZkzIt+VTNDuOeuHZJXYBs4wfX/HzzJDRDfTN1kT4V4=;
-        b=TljVtay/VKUCwa5THM51+jCMOZJWr4/dhHzBj5CQ6XEwNe9tK/gvimErd3FYSzmquy
-         j/AWKwIKxt+Ch2U/O110xI3+3yKPqz8JdvsIHYuZD3l0AYSor7/NJeIRY1ZXUPHvcWRw
-         9pvavt1Y7C8k79mtlGR9/YMjbto085+wSa5V4WeAbNpIvt2t8PlCpMB7ko0D/fOIT8C/
-         EGOyZynhWUco7og/QxoxEsRHLGmPDw6QeYBFX+Y+UbP5ushML3QvEh2L6X0qQLssJWVX
-         qj11Gefmb5T83NT/pe1tU1tpyJyfNxF9oj2SiPXJvNFbb/fLshi3yu3eIDOt9QThwUG3
-         4epA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSrkzEhw+pDrNnINC2Iq8qSJMbbztNUfqcqiNn6XOb8dFOeX3qvzW2uUJWFm7iANFu098426Vp2erJEm4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+wp2wReN4h33a4FkF3XAGww5LokAjr5uxBlYCBtt/YX3JvL63
-	XeQXafNvWqc03EVSA7imSwoxIes6u0SQ7fRcBkcrLO0KRI8UrqyxMqlQsv2AZuimZBg=
-X-Gm-Gg: ASbGnctakNymZWL+JKWdnngg0cKhBb9yDnXeLGCmiJTH3lKnkl2UX5dVZ3XCa13kfIG
-	WAYMXcV/pc1yyak+VWgmvUNCP72vz2etS4AqnGe4GSpiVqEoknOh3xLSidxoA7y3q+fk3Jb4tbd
-	3YFIaHZk8clV+rFJSg1Nq2EOckxDYKWAuOyzA44Asm5wmzYO6dp5l8TuGpO0fDELvF7AdEqRsZf
-	ZvdFMRbJlyfoeG+CBUwB5sz3lF2UHUKfUmvBZXqnoR9dCvPPrPfwEZEgmEm7za4TDjgEFcytuqw
-	bg/y0gPAOU2pFKX+FX1WS/UfjgmAFZDxLDhbdekF/YvbBg9VmkoXWmeu3GTmygWKpg==
-X-Google-Smtp-Source: AGHT+IHIxmmykQrqu735nSLQ1ET0rx6h2/v3wuHEtKjqqdqG51esqr6GYjEdXnpcisfuQFGupRBg5w==
-X-Received: by 2002:a05:6000:178d:b0:3a0:a0d1:1131 with SMTP id ffacd0b85a97d-3a4cb43dae1mr15437245f8f.7.1748462235728;
-        Wed, 28 May 2025 12:57:15 -0700 (PDT)
+        bh=jox9SekNR3rtKHNYCobALo8p2iBIaUa3VzzVOakwrMQ=;
+        b=Kq60CCoxbTjSnY6uRaZk/sOpnqF3ayZDlgrxVrKkEVToT/aSdgdytDlKtk7Iatf72x
+         OFn1ZIDdWFFEGkqWBTbZUmfD+hEGBL0+c6SU3t+nQFPGvFiB9yM3fGbso67vFZBPjyOW
+         aaiNJxugLBWZO4jyJKJJeb6Z9F91aDLzoQuzQGAlZTPaUgQ1fRxHtNghyVlPrg6rlas2
+         NbN/o+JWLsKK7vI8hEdUBaJXhsdMaF8r9YZAhcXh2cKsiVx8DwNGIHv9H/jrv65s0VyF
+         pwNpjATE3/5BjsfXcXaJTIkQX8n6/NIDtKrwdiakAp0I3Z6eIk+O49sPsdt6sY6owa+S
+         PttA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGmfEQ5mVxN+8Y+09FB/cyZM3uGJI9/9IN6+jxdT8bixVRgPK8+fAB0bCilx+viGP6GTwY4wPx3IJDs7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPMlz9t0PZb4eagWkoU28shnPhs9mR++Fe+t+1y69ED0Ex/58K
+	fE5RREXdlXYh7BciZTg3VMgOXFEQH4LX9iqyXpWGXPGB9mG1IgzYgS1ANxI2/1xATkc=
+X-Gm-Gg: ASbGncsnit3dG3COdOgBJ2D5IOQnaiZUCvOTyA9ZbxA9rcZHF3QOvSPsAadfbI8GYpM
+	/Ripk6hvYbLAE9ob1wC3uJNYElNsHiTtfnzIE15HYThX0gepRr1j0a4Ec1A9UC87ejJRyj6Kx2D
+	hnjrpGaeUH7pwzd3kiHlh0BCVQC0tAMBwv4l5rS1tEg/WPjNA4F0D0JVyfkAoUd3xvXwAPXAzcX
+	3BG559YjawoYGH9bEOE7CbedhJI0VzHr0I4p14M02qcLM3Mu+G2bSr3NvantmlPbOnS3V5kuWcj
+	vPkG2xEbsL2Tv+w5M+an/BHmV/o2hnMZ0wneHoegkVuGUUcEJK2GztMZ3gnONDA8tQ==
+X-Google-Smtp-Source: AGHT+IGFimIQlDKktgw+rSB1HgWLv0+JQH4Uvai1EVQNKILhkigc431Q3x3/98hg2t4hXWqFBll7vg==
+X-Received: by 2002:a05:600c:4f43:b0:442:e0e0:250 with SMTP id 5b1f17b1804b1-44c933ed7efmr166096775e9.29.1748462245206;
+        Wed, 28 May 2025 12:57:25 -0700 (PDT)
 Received: from localhost ([41.210.143.146])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eace3bc1sm2360397f8f.99.2025.05.28.12.57.14
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450cfc2d383sm586565e9.32.2025.05.28.12.57.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 12:57:15 -0700 (PDT)
-Date: Wed, 28 May 2025 22:57:10 +0300
+        Wed, 28 May 2025 12:57:24 -0700 (PDT)
+Date: Wed, 28 May 2025 22:57:20 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Xu Yang <xu.yang_2@nxp.com>,
-	Peng Fan <peng.fan@nxp.com>, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Peter Chen <peter.chen@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-usb@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
 	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, s32@nxp.com,
-	linaro-s32@linaro.org, Larisa Grigore <larisa.grigore@nxp.com>,
-	Ionut Vicovan <Ionut.Vicovan@nxp.com>
-Subject: [PATCH 1/4] dt-bindings: usb: Add compatible strings for s32g2/s32g3
-Message-ID: <2a4317353557e4fac2a7bfa4261a75886eebe41b.1748453565.git.dan.carpenter@linaro.org>
+	linaro-s32@linaro.org
+Subject: [PATCH 2/4] usb: chipidea: usbmisc: s32g: Add a REINIT_DURING_RESUME
+ flag
+Message-ID: <b1ddbc5993b2906cf916d023fdf27b07088a9672.1748453565.git.dan.carpenter@linaro.org>
 References: <cover.1748453565.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,43 +84,47 @@ In-Reply-To: <cover.1748453565.git.dan.carpenter@linaro.org>
 
 From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
 
-Add the compatible strings for the NXP s32g2 and s32g3.
+The s32g2 and s32g3 chips will need to re-initialize in the resume path.
+Add a REINIT_DURING_RESUME flag which will trigger the reinitialization.
 
-Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-Signed-off-by: Ionut Vicovan <Ionut.Vicovan@nxp.com>
 Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml | 2 ++
- Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml  | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/usb/chipidea/usbmisc_imx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-index cc5787a8cfa3..400d885fea96 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-@@ -24,6 +24,8 @@ properties:
-           - nvidia,tegra114-udc
-           - nvidia,tegra124-udc
-           - qcom,ci-hdrc
-+          - nxp,s32g2-usb
-+          - nxp,s32g3-usb
-       - items:
-           - enum:
-               - nvidia,tegra114-ehci
-diff --git a/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml b/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml
-index 019435540df0..ca677d1a8274 100644
---- a/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml
-+++ b/Documentation/devicetree/bindings/usb/fsl,usbmisc.yaml
-@@ -21,6 +21,8 @@ properties:
-           - fsl,imx53-usbmisc
-           - fsl,imx6q-usbmisc
-           - fsl,vf610-usbmisc
-+          - nxp,s32g2-usbmisc
-+          - nxp,s32g3-usbmisc
-       - items:
-           - enum:
-               - fsl,imx6ul-usbmisc
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index 118b9a68496b..95759a4ec60c 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -155,6 +155,9 @@
+ 					 BLKCTL_OTG_VBUS_WAKEUP_EN | \
+ 					 BLKCTL_OTG_DPDM_WAKEUP_EN)
+ 
++/* Flags for 'struct imx_usbmisc' */
++#define REINIT_DURING_RESUME	BIT(1)
++
+ struct usbmisc_ops {
+ 	/* It's called once when probe a usb device */
+ 	int (*init)(struct imx_usbmisc_data *data);
+@@ -171,6 +174,7 @@ struct usbmisc_ops {
+ 	/* It's called when system resume from usb power lost */
+ 	int (*power_lost_check)(struct imx_usbmisc_data *data);
+ 	void (*vbus_comparator_on)(struct imx_usbmisc_data *data, bool on);
++	u32 flags;
+ };
+ 
+ struct imx_usbmisc {
+@@ -1266,6 +1270,9 @@ int imx_usbmisc_resume(struct imx_usbmisc_data *data, bool wakeup)
+ 
+ 	usbmisc = dev_get_drvdata(data->dev);
+ 
++	if ((usbmisc->ops->flags & REINIT_DURING_RESUME) && usbmisc->ops->init)
++		usbmisc->ops->init(data);
++
+ 	if (usbmisc->ops->power_lost_check)
+ 		ret = usbmisc->ops->power_lost_check(data);
+ 	if (ret > 0) {
 -- 
 2.47.2
 
