@@ -1,90 +1,150 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DC275100;
-	Wed, 28 May 2025 09:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22728152E02;
+	Wed, 28 May 2025 09:23:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424168; cv=none; b=AsqVxzG6BX/IFpZ6DRmDM5APicwULjTZiqxBpZ6dZTWN988xWOdouZOvZlq4SJxubGVSsaN+Dp4ZqkdvnfHFXpgpwrxQQrg5oU9Oj+b8cv0RqWpn1hNUs0i/uvKL2NDA5oxngAXoGC5yHuUQabrxJ18MAq9mLITZSchha2EYflM=
+	t=1748424184; cv=none; b=T445n1joH1iGjSfsQxzWurA98ZkE4ss1Fp7Dv6s9loxGjO5IBFNyrlpOIb/H5z/iUpJLJiY//2hzErlJ1mdbGFTM9RxJeVLLC6igTqxJ5ypYJvSb74VrtKriz6xMOUCx//t5zvzKF6TpEdPHJcR6Vx4Vx03Ek8Qh6imaJWBm04I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424168; c=relaxed/simple;
-	bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UOWDM70C9KrBH0+jrcVkWav40ufS95c8AuwbCqMY8hbQ/3zNuAZNpNF1RTG8e1ZqfUV9HlRszR8TDLuiSABepNpkPk6SzE//QUnW5wHjjTzR/BDpLr4hY6OMq3MDZOuFg05FQADd5wDVVzfaN5A7hU6PVTXc02mgwd34zsYUDzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YsAd1fAK; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748424184; c=relaxed/simple;
+	bh=xkNiKYgODlSY9yyRlPkx7iULzopxvQVIpmtbhyv/rTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=msDDlPNC0r6X/BslLLZ0OK0JHoBfaLBZaFFX9m79u8Gt/615dEWiz1iAQ5QBjKlhV5HC5kEQHtkS2wRvFPUtaW8HLthh0fdF6X6iMt2vs3ro4wuDKK6XV6eOomMtjx7EJZq22jSvonkVOfbfVQ1rhwJk1VwTvqI4y6H9/yhoXRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Stkx4be7; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsAd1fAK"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad52d9be53cso639974866b.2;
-        Wed, 28 May 2025 02:22:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748424164; x=1749028964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
-        b=YsAd1fAKA31OgV/R3qlpxx1gZPIn+r97hykZDGK/LpI+jGcQ8DMflT3uo1nuHfuGuD
-         xgs/HsCCCjRhKA0QJr5IG7UGjlL4Sw4PES8PBTjF/DAdppGVY51ToUM85J1ZPtzVu0eJ
-         sv4af1Vg/5ax7aylfeDgfX5OEOafXWZMJrNDEy3Biq9g9uBx7CubiS3WSsbNL65c5h2/
-         UfL6oy291HvFEQXw6LiRqwkW1WN1hwW3BeuC7cTIF+Km68MK44tlH3JHkQ3rjgOQ17Vt
-         1zNaBdIK3v66AOpARq/TIVEpeCvljG1MbRXJNH3syWO/2OghlFigV19A19q0uHdCCYaa
-         a4hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748424164; x=1749028964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
-        b=Ud6ZcD5XN2BcY1ZEMEd5xWKMMMagCtNMVHgxXf5ISOOfO+aKaRQI8VND5Xh7SSU/gz
-         1bu7ZV9pR7+chQ7qYZXhLDwA8xxA1S/2wi3I8fPGUcT/e+Qre/KTSLD/sEAmmBICdMNi
-         jNjv4g2BSF7z8ddHncBmfLtV4/QoiZPOhloFWOx7Wsa1uCg7+bgQrae35KoCdvyxTcoC
-         3bHZBOshu8iVWEmzF+6KywQNLipGupLgCG4MwwIt6G/WtG0audvqW5L/eah+BJCP9TsC
-         isXV5vOD9X6JisFBq9m1aU0/bSkz/6Q4Fp9q1a4FuND5X9OJF7y1o8l8/CqZZeI+2E1z
-         pK3w==
-X-Forwarded-Encrypted: i=1; AJvYcCViGr4I26EolfpycoJKLSuOGLlFVT1jWmPULFRhrf/c4iLCOc/GH8tNvS7Fz2nWZhhcXyTs++fD77Z/8fY7@vger.kernel.org, AJvYcCWJUFMjvCp1BZd/x/UHyR2KbAZ9hrY30HcqYcxwC+kIUHxEn/40fo0/9JdRdSS5rONUBRtHwZGOS7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywud1tloyzEiVXx3uhKtRXG295zJ2B8nQsS7dPYyPAG7JvHOA2B
-	WJf4lPGHW8ZNgQf2UFUT5l2qSJ8O9OOo8ocQTCvknEk2ZG93ZAtm2sMQ1gUgD1cKqz9DC09TxFj
-	4hhhi7sXasgjmKyRafh/kODGeZ5p56TY=
-X-Gm-Gg: ASbGncttv1XUFMyzxdNHRH6qSD3WvkIXxMllIOYS4OKm/OegyQZhnnZHnUBPWlQ62w4
-	/4piCitQE4LJX6rgK/0LgcshvpH0RUJQNFV6PONd/fzJd2273tbNUcW2/JBgIV8bjwIWtzd65an
-	ZkP8u4eE5pMLGGGJ5GNsl3Z0eRoz97+t4DIYw=
-X-Google-Smtp-Source: AGHT+IFKYN9n2rkV2PZefCaqRfYU3re0P4utva0VpHPFE+K2BVhU6PWrUUJ2nKg/dYSV1lYeauSugGZrxtVP3B7ICIU=
-X-Received: by 2002:a17:906:f587:b0:ad8:a2a8:23db with SMTP id
- a640c23a62f3a-ad8a2a825bbmr104381166b.56.1748424164196; Wed, 28 May 2025
- 02:22:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Stkx4be7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3j
+	2smcIYQQg9AX7JiG4sdGXoPpomEDE53IFAHBoEZdQ=; b=Stkx4be72PteeZ5DEC
+	pUc8I/3Ny1Yl2Ef5+6aAVkKppN+yqCG5TG6caQ2p7uA/oUqzqjwmuMS7DFVxwglL
+	rmo9+rpG4dx5KbEvBF0DmIUmbcNGSO9fE5bg+M2Nwmwu1eqnpJ6vyTL44TV3MRWp
+	g7zTe2TeU2Fs6Z8Ouf/lTCsqw=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCnjVLa1TZoOyU7Eg--.4046S2;
+	Wed, 28 May 2025 17:22:35 +0800 (CST)
+From: Slark Xiao <slark_xiao@163.com>
+To: manivannan.sadhasivam@linaro.org,
+	johan+linaro@kernel.org,
+	mhi@lists.linux.dev
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Slark Xiao <slark_xiao@163.com>
+Subject: [PATCH v2] bus: mhi: host: pci_generic: Add Foxconn T99W696
+Date: Wed, 28 May 2025 17:22:32 +0800
+Message-Id: <20250528092232.16111-1-slark_xiao@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528080119.9380-1-gye976@gmail.com>
-In-Reply-To: <20250528080119.9380-1-gye976@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 28 May 2025 11:22:07 +0200
-X-Gm-Features: AX0GCFvCaaze7T6kJScaIwxolgrLro7kCQGTu5210iyv7oSEWYbCeoX0cpurpd4
-Message-ID: <CAHp75VdhgftCKAuBuoDJ4d9HcKLqkGJ+bdx5gxQmkCSWO7SBAw@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: trigger: Avoid data race
-To: Gyeyoung Baek <gye976@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCnjVLa1TZoOyU7Eg--.4046S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxWF13Cw15Kr4kZw4kWF43GFg_yoWrurWkpF
+	WIv3y5KrWkJa1Fg3y0y34kKas5Zan3Xr93Krnrtw10g3WYk3y5XrWkt342qFWYv34qqrWI
+	vFykuFy7uanrJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRqsUtUUUUU=
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1S2mRxpbZGg2zteGcAABsS
 
-On Wed, May 28, 2025 at 10:01=E2=80=AFAM Gyeyoung Baek <gye976@gmail.com> w=
-rote:
->
-> A data race could occur between `atomic_read()` and `atomic_set()`.
-> Use `atomic_cmpxchg_relaxed()` to group them atomically.
->
-> Previously the main logic was executed when `use_count` was 0.
-> Now it returns early when `use_count` was not 0.
+T99W696 is designed based on Qualcomm SDX61 chip which is a cost
+down chip refer to previous SDX62/SDX65. Though we have a support
+on SDX62/SDX65, we create a new channel config for SDX61 since
+we add a NMEA channel support from this product.
+For new products we are allowed to customize the subVID and
+subPID only.
 
-This needs Fixes tag, otherwise LGTM,
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Slark Xiao <slark_xiao@163.com>
+---
+v2: Correct the ch_cfg as sdx61 channels
+---
+ drivers/bus/mhi/host/pci_generic.c | 52 ++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+index a4a62429c784..a90ab31c46a9 100644
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
+@@ -490,6 +490,23 @@ static const struct mhi_channel_config mhi_foxconn_sdx55_channels[] = {
+ 	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
+ };
+ 
++static const struct mhi_channel_config mhi_foxconn_sdx61_channels[] = {
++	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 32, 0),
++	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 32, 0),
++	MHI_CHANNEL_CONFIG_UL(4, "DIAG", 32, 1),
++	MHI_CHANNEL_CONFIG_DL(5, "DIAG", 32, 1),
++	MHI_CHANNEL_CONFIG_UL(12, "MBIM", 32, 0),
++	MHI_CHANNEL_CONFIG_DL(13, "MBIM", 32, 0),
++	MHI_CHANNEL_CONFIG_UL(32, "DUN", 32, 0),
++	MHI_CHANNEL_CONFIG_DL(33, "DUN", 32, 0),
++	MHI_CHANNEL_CONFIG_UL_FP(34, "FIREHOSE", 32, 0),
++	MHI_CHANNEL_CONFIG_DL_FP(35, "FIREHOSE", 32, 0),
++	MHI_CHANNEL_CONFIG_UL(50, "NMEA", 32, 0),
++	MHI_CHANNEL_CONFIG_DL(51, "NMEA", 32, 0),
++	MHI_CHANNEL_CONFIG_HW_UL(100, "IP_HW0_MBIM", 128, 2),
++	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
++};
++
+ static struct mhi_event_config mhi_foxconn_sdx55_events[] = {
+ 	MHI_EVENT_CONFIG_CTRL(0, 128),
+ 	MHI_EVENT_CONFIG_DATA(1, 128),
+@@ -506,6 +523,15 @@ static const struct mhi_controller_config modem_foxconn_sdx55_config = {
+ 	.event_cfg = mhi_foxconn_sdx55_events,
+ };
+ 
++static const struct mhi_controller_config modem_foxconn_sdx61_config = {
++	.max_channels = 128,
++	.timeout_ms = 20000,
++	.num_channels = ARRAY_SIZE(mhi_foxconn_sdx61_channels),
++	.ch_cfg = mhi_foxconn_sdx61_channels,
++	.num_events = ARRAY_SIZE(mhi_foxconn_sdx55_events),
++	.event_cfg = mhi_foxconn_sdx55_events,
++};
++
+ static const struct mhi_controller_config modem_foxconn_sdx72_config = {
+ 	.max_channels = 128,
+ 	.timeout_ms = 20000,
+@@ -615,6 +641,17 @@ static const struct mhi_pci_dev_info mhi_foxconn_dw5934e_info = {
+ 	.sideband_wake = false,
+ };
+ 
++static const struct mhi_pci_dev_info mhi_foxconn_t99w696_info = {
++	.name = "foxconn-t99w696",
++	.edl = "qcom/sdx61/foxconn/prog_firehose_lite.elf",
++	.edl_trigger = true,
++	.config = &modem_foxconn_sdx61_config,
++	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
++	.dma_data_width = 32,
++	.mru_default = 32768,
++	.sideband_wake = false,
++};
++
+ static const struct mhi_channel_config mhi_mv3x_channels[] = {
+ 	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 64, 0),
+ 	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 64, 0),
+@@ -863,6 +900,21 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+ 	/* Telit FE990A */
+ 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2015),
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fe990a_info },
++	/* Foxconn T99W696.01, Lenovo Generic SKU */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe142),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
++	/* Foxconn T99W696.02, Lenovo X1 Carbon SKU */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe143),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
++	/* Foxconn T99W696.03, Lenovo X1 2in1 SKU */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe144),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
++	/* Foxconn T99W696.04, Lenovo PRC SKU */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe145),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
++	/* Foxconn T99W696.00, Foxconn SKU */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe146),
++		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0308),
+ 		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx65_info },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0309),
+-- 
+2.25.1
+
