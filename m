@@ -1,134 +1,252 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C9B27A139;
-	Wed, 28 May 2025 11:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132D927A462;
+	Wed, 28 May 2025 11:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748430481; cv=none; b=i4N0NrLxGL9cz8ohGiqvFZQGXAOCytZAlpILo9GRw6O0sIRT5FuYbm1pC0uOM6Xgs7/B6udwolFmyC8TqIjJ0ynSgHdXzRf0TSAHAjPWW/zpOuKkcQVXCQUf2w3zwq1LpclGlpDZDPCzWEfY7UL2TUvoflgTKntzsUom6ycEZlM=
+	t=1748430525; cv=none; b=lSa9rC5BVi3EKlbiBONIvKUbetrfUAJ+MyVdgCL6P8X1+vbM7nT0i7S521+msrSmkTNCbMwTtevlrTWBpdIMUkoXtZgioTM8kmberz+e2kbXZ5N62NI2uF/ftK+dNhlqgohbVlNmcrlNQhft8ORRE7UMpZqSqe+yIyFtZ44jqVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748430481; c=relaxed/simple;
-	bh=R1Eh8RWRdVlzRqbFs9zMJ1Ckr8QstB1hZzkYJUC8K+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EnpL5x2RSmZMUBDkjuJahLMi5/FpEpyEldzgL74dIiB5eh4owT0s1kcq6QKStuOZJTpVVm0JHxoFLowwdQZw46Bz6MYlmV3NotTOPkHt05akLyPSzAQ7z11ZkkvdSrLOlf9QMM9oq8z8boj2P6B2nUYN63CCQ4nBbVySPfkFymo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QqO5PhzB; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748430525; c=relaxed/simple;
+	bh=vs9C+yM7jX/8lBqahjesUiVEoedayFKv4eRr8WPo1Z8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5MghPI5y375xi/HAfXNOJrClvafr3j0gPGboqLVyxpU6wQwIDgP+P+PcOvxyUdhEyykn7y+ZXlDs9zOgsxTRdkzPhfqXWs8di/bOS8B7uzGFidSv0nfi8VgOm+lKAHsjRmsWCYKWZkdEOj5fnWOnzzNhR9xUY0v5p4CmKx7pIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTAu1Tje; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqO5PhzB"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac34257295dso862230666b.2;
-        Wed, 28 May 2025 04:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748430478; x=1749035278; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y0d9IobXiw91z9fWsL1fagf4MsIBeTY/sxiexdnW7zM=;
-        b=QqO5PhzB4fOP6WymG77V6rQj1dIKhtDHPM0s+pB4s6J/ymWPFlra1HOgX3/FjQaJwn
-         V7u9XHEZB082s6g9cYwylOOd9X98dE6mxFGBe68X9jRYOCLGFdF74cm5+69bU+fg3IF2
-         IVqgQbDvcRJWO37rK9JPqVTbNlmGuyDCTV6YuOziJMFTF4zvxBKaJ/OS/Jqhke5AvnVE
-         XYSFD2NqLGTYtRWdCaR5QoRl/qytU2iR4By0tp7SWtDNjpOsyg07Z/73z92WxiAiEY/Y
-         Ut8ytzrEl8knt9a0LpWbAeVWowk/pZDaKMNbw/ZdhEHMvVT+nZ+Boifqdo4QHhPvIBKi
-         Hyeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748430478; x=1749035278;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y0d9IobXiw91z9fWsL1fagf4MsIBeTY/sxiexdnW7zM=;
-        b=jCnZIzCpaefnNhMfqF4TOBQlD6THenY5F7/6hVW3VihQ6vl9TOfxTKGrIY93nby8Ag
-         s8RgspB43Wr+hfytAkNSOWfi3kPffGSWvqbkvXICasJeIoz/JEpDIvngYwKk3cOqfKY3
-         O4+oV1p+ncRfwyxhMjS2qWvxDny/yr3J8KAO83IkZdd7d2h7Bbl9IKykPw9Wv8JPBpyu
-         /xtZxdNq0LdJUH188EVh9DUPimAhnkSSI1ou6ywb+H6W66L5ePC9+p2COvD2d3K3qtBn
-         YtDp3eaQ3iXiSuRdg/oU+3oXswdtKlv2c7Gwf6TPO1MARX5E1U8Vx0iZvHMqzDTkW+vq
-         yuQA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0qLidIPmOBN3LjG0GJqeYiEciPC/9c1TyN2UJvkzNJ6TU2MHPNmwagXh2uLdw1/i44eqEB01i@vger.kernel.org, AJvYcCVZ0dPiq2dF5d3VDW0RBYJ73fSdqpWpGQ0R6agdCBfp54Yn/cuBIHmhl0ZcHhRmhYx6wIcaXeyH0nVb@vger.kernel.org, AJvYcCWItNOLnrkyK9o2Ob0pETkp4NyL7qwfoWp2RWOHtqig8gHb+VzX0Hh1cm6Hoj3xyVPOJ/EsZfsB01MGSTmA@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNQPNL0cjhGA3v+kT+cFL5K3x5plyAPF/D6mHmIvDOvWuLs3MY
-	PtppMf42LrP8GWHL46Wmu0pu4keOJO/Jm0XbBCelZ/AVrdYbKUcbH9Gs
-X-Gm-Gg: ASbGncvc/lME3aAIBld3psDO6KqKyU7R3jEGv2fUirD04YcNA2Xj+YN5ctgBSolvE29
-	EFUX2fdjhXiORtb0VAIHv8wqCjG0w/HCtAxGPyoXiEg726jXv5ldrOyuLYUe3KT/nJ1bmLKArgw
-	R5Ywx/qWF/ibcKZLZXbtd34c829sT7sznwsSQOYFvdwIJznoLe+eBSFfJgLRTJUtan3PMwkrRXe
-	OTL/D0u9fuBzV8SRJk9aujMslwPysWNRSEJ5GYwCzqZ4joIdnmYdE7ATaxvB+dGdh0DxI8dtQkP
-	j0LW6HpXqGt0YbatZF1sunlsVYAjQ9au7Mo1LgqxUykn3MrjtAOHCiEm58mZhvvd1PqWuSGO
-X-Google-Smtp-Source: AGHT+IEtyhnn9NHAemtfJzTKjrsDVohoBEwPwSRjHx8mSKQZYwXz0JyxONi4zbTF+2+ejSAk/iafmA==
-X-Received: by 2002:a17:907:7f17:b0:ad5:2137:cc9e with SMTP id a640c23a62f3a-ad85b120246mr1545273566b.3.1748430477700;
-        Wed, 28 May 2025 04:07:57 -0700 (PDT)
-Received: from localhost.localdomain ([2001:b07:aac:705d:5a2:70b0:c9d3:7010])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d9765sm626908a12.8.2025.05.28.04.07.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 04:07:57 -0700 (PDT)
-From: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v1] arm64: dts: ti: k3-am62-verdin: Enable pull-ups on I2C buses
-Date: Wed, 28 May 2025 13:07:37 +0200
-Message-ID: <20250528110741.262336-1-ghidoliemanuele@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTAu1Tje"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F219AC4CEE7;
+	Wed, 28 May 2025 11:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748430524;
+	bh=vs9C+yM7jX/8lBqahjesUiVEoedayFKv4eRr8WPo1Z8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BTAu1Tjew7E5vCuzuLnwXVsjhaJk4oq4cIksA970ux59BFH+zbRzt1E1a9TzFsyOG
+	 xEdwj6FCowDGIzbsGCACPUzH+f4UfPvUUXkflpf7Soagv2DC3m3UpFLZ7SEMBGZ5IT
+	 yOIoWZctn0xSy1MInbuUzfU8rL063kyt3UFj9qEUmhTmGXPmk9JkXmVM49xsCDUtFz
+	 UxF22UnKNzhzGi0OabAhcsiJMQDsWCI7+ZHjZ0pE3YsnmijTp/vRQ/R99jXW+rCEsT
+	 +Fa55E+B2opUBxi0dVMKxgHvc5Iq/v836GAtrRgmqAuihWEZ0yCwwE4/HLKXU1FcQP
+	 qnh4rhbBUvi6A==
+Date: Wed, 28 May 2025 13:08:40 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: =?utf-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?= <privatesub2@gmail.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, 
+	Brandon Cheo Fusi <fusibrandon13@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+Message-ID: <hetih6ul7hdj3kflhy2s2zkkh3r7pcupgwde3xnwmjzs6cujp3@vcw4pde76bdb>
+References: <20250427142500.151925-1-privatesub2@gmail.com>
+ <20250427142500.151925-3-privatesub2@gmail.com>
+ <20250512233944.06bc1cb7@minigeek.lan>
+ <CAF4idN=Kwp8bDYVyjM52eUwVEEZcPM9YyK9KiqUzyf8Dm=cXTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="j6nnrxchndqyddxe"
+Content-Disposition: inline
+In-Reply-To: <CAF4idN=Kwp8bDYVyjM52eUwVEEZcPM9YyK9KiqUzyf8Dm=cXTQ@mail.gmail.com>
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
 
-Enable internal bias pull-ups on the SoC-side I2C buses that do not have
-external pull resistors populated on the SoM. This ensures proper
-default line levels.
+--j6nnrxchndqyddxe
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
+ support
+MIME-Version: 1.0
 
-Cc: stable@vger.kernel.org
-Fixes: 316b80246b16 ("arm64: dts: ti: add verdin am62")
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
----
- arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Hello,
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-index 1ea8f64b1b3b..bc2289d74774 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-@@ -507,16 +507,16 @@ AM62X_IOPAD(0x01ec, PIN_INPUT_PULLUP, 0) /* (A17) I2C1_SDA */ /* SODIMM 12 */
- 	/* Verdin I2C_2_DSI */
- 	pinctrl_i2c2: main-i2c2-default-pins {
- 		pinctrl-single,pins = <
--			AM62X_IOPAD(0x00b0, PIN_INPUT, 1) /* (K22) GPMC0_CSn2.I2C2_SCL */ /* SODIMM 55 */
--			AM62X_IOPAD(0x00b4, PIN_INPUT, 1) /* (K24) GPMC0_CSn3.I2C2_SDA */ /* SODIMM 53 */
-+			AM62X_IOPAD(0x00b0, PIN_INPUT_PULLUP, 1) /* (K22) GPMC0_CSn2.I2C2_SCL */ /* SODIMM 55 */
-+			AM62X_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /* (K24) GPMC0_CSn3.I2C2_SDA */ /* SODIMM 53 */
- 		>;
- 	};
- 
- 	/* Verdin I2C_4_CSI */
- 	pinctrl_i2c3: main-i2c3-default-pins {
- 		pinctrl-single,pins = <
--			AM62X_IOPAD(0x01d0, PIN_INPUT, 2) /* (A15) UART0_CTSn.I2C3_SCL */ /* SODIMM 95 */
--			AM62X_IOPAD(0x01d4, PIN_INPUT, 2) /* (B15) UART0_RTSn.I2C3_SDA */ /* SODIMM 93 */
-+			AM62X_IOPAD(0x01d0, PIN_INPUT_PULLUP, 2) /* (A15) UART0_CTSn.I2C3_SCL */ /* SODIMM 95 */
-+			AM62X_IOPAD(0x01d4, PIN_INPUT_PULLUP, 2) /* (B15) UART0_RTSn.I2C3_SDA */ /* SODIMM 93 */
- 		>;
- 	};
- 
-@@ -786,8 +786,8 @@ AM62X_MCU_IOPAD(0x0010, PIN_INPUT, 7) /* (C9) MCU_SPI0_D1.MCU_GPIO0_4 */ /* SODI
- 	/* Verdin I2C_3_HDMI */
- 	pinctrl_mcu_i2c0: mcu-i2c0-default-pins {
- 		pinctrl-single,pins = <
--			AM62X_MCU_IOPAD(0x0044, PIN_INPUT, 0) /*  (A8) MCU_I2C0_SCL */ /* SODIMM 59 */
--			AM62X_MCU_IOPAD(0x0048, PIN_INPUT, 0) /* (D10) MCU_I2C0_SDA */ /* SODIMM 57 */
-+			AM62X_MCU_IOPAD(0x0044, PIN_INPUT_PULLUP, 0) /*  (A8) MCU_I2C0_SCL */ /* SODIMM 59 */
-+			AM62X_MCU_IOPAD(0x0048, PIN_INPUT_PULLUP, 0) /* (D10) MCU_I2C0_SDA */ /* SODIMM 57 */
- 		>;
- 	};
- 
--- 
-2.43.0
+On Sat, May 24, 2025 at 12:07:28PM +0300, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=
+=B0=D0=BD=D0=B4=D1=80 =D0=A8=D1=83=D0=B1=D0=B8=D0=BD wrote:
+> =D0=B2=D1=82, 13 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 01:39, An=
+dre Przywara <andre.przywara@arm.com>:
+> >
+> > On Sun, 27 Apr 2025 17:24:54 +0300
+> > Aleksandr Shubin <privatesub2@gmail.com> wrote:
+> > > +              */
+> > > +             use_bus_clk =3D false;
+> > > +             val =3D mul_u64_u64_div_u64(state->period, hosc_rate, N=
+SEC_PER_SEC);
+> > > +             /*
+> > > +              * If the calculated value is =E2=89=A4 1, the period i=
+s too short
+> > > +              * for proper PWM operation
+> > > +              */
+> > > +             if (val <=3D 1) {
+> >
+> > So if I get the code correctly, it prefers HOSC over APB? Is that
+> > really the best way? Shouldn't it be the other way around: we use the
+> > faster clock, since this will not limit the sibling channel?
+> >
+> > And another thing to consider are rounding errors due to integer
+> > division: certain period rates might be better achievable with one or
+> > the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
+> > 100MHz/32.
+> > So shall we calculate the values and compare the errors instead?
+> > Oh, and also we need to consider bypassing, I feel like this should be
+> > checked first.
+> >
+> > In any case I think there should be a comment describing the strategy
+> > and give some rationale, I think.
+>=20
+> I like the idea of comparing the quantization error for each clock source
+> (i.e. computing the actual period for both APB and HOSC and choosing
+> whichever is closer to the requested period).
+> I can try to implement that error-minimization approach in the next
+> series of patches and add a comment explaining the strategy.
 
+Consumers have different needs. Some might prefer a better match for
+period, but in my experience most would go for a fine-grained selection
+of duty_cycle, so prefering the faster clock sounds sane.
+
+I don't say minimizing the error is wrong, but if it's unclear that
+this matches what a consumer wants I object to make the procedure to
+select the hardware settings considerably more complicated and run-time
+intensive.
+
+> > > +static int sun20i_pwm_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct pwm_chip *chip;
+> > > +     struct sun20i_pwm_chip *sun20i_chip;
+> > > +     struct clk *clk_bus;
+> > > +     struct reset_control *rst;
+> > > +     u32 npwm;
+> > > +     int ret;
+> > > +
+> > > +     ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,npwm=
+s", &npwm);
+> > > +     if (ret < 0)
+> > > +             npwm =3D 8; /* Default value */
+> > > +
+> > > +     if (npwm > 16) {
+> > > +             dev_info(&pdev->dev, "Limiting number of PWM lines from=
+ %u to 16", npwm);
+> >
+> > I don't think we should proceed if the firmware information is clearly
+> > wrong. Just bail out with -EINVAL or so here, so that gets fixed in the
+> > DT.
+
+To me it's not obvious that the "firmware information is clearly wrong".
+Maybe the next Allwinner SoC will have 24 outputs and the problem is
+only that this driver isn't prepared to cope for that number of outputs?
+
+If that really happens it's arguable if it's better to refuse completely
+or just cope for the 16 outputs that the driver is able to. IMHO it's
+better to continue because a partially workable pwmchip is better than
+no chip at all. But I'd upgrade the message to dev_warn().
+
+> > > +             npwm =3D 16;
+> > > +     }
+> > > +
+> > > +     chip =3D devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*sun20i_ch=
+ip));
+> > > +     if (IS_ERR(chip))
+> > > +             return PTR_ERR(chip);
+> > > +     sun20i_chip =3D to_sun20i_pwm_chip(chip);
+> > > +
+> > > +     sun20i_chip->base =3D devm_platform_ioremap_resource(pdev, 0);
+> > > +     if (IS_ERR(sun20i_chip->base))
+> > > +             return PTR_ERR(sun20i_chip->base);
+> > > +
+> > > +     clk_bus =3D devm_clk_get_enabled(&pdev->dev, "bus");
+> > > +     if (IS_ERR(clk_bus))
+> > > +             return dev_err_probe(&pdev->dev, PTR_ERR(clk_bus),
+> > > +                                  "Failed to get bus clock\n");
+> > > +
+> > > +     sun20i_chip->clk_hosc =3D devm_clk_get_enabled(&pdev->dev, "hos=
+c");
+> > > +     if (IS_ERR(sun20i_chip->clk_hosc))
+> > > +             return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->c=
+lk_hosc),
+> > > +                                  "Failed to get hosc clock\n");
+> > > +
+> > > +     ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->cl=
+k_hosc);
+> >
+> > Just ignoring for a bit that the 24 MHz oscillator is a fixed clock
+> > anyway, but why would we want exclusivity already at probe time? Isn't
+> > that too limiting, as no one might ever use any PWM channels, but it
+> > would still "belong to us"?
+
+That's a soft concept of "belong to us". Other consumers can still use
+it and even also call clk_rate_exclusive_get(). IMHO it's a good idea to
+call clk_rate_exclusive_get() for each clock that a driver relies on not
+to change. You could make the driver more flexible and only call that
+when the rate is actually relied on, but that's again a compromise with
+complexity of the driver. And if the clock rate is fixed anyhow, it
+doesn't hurt to do it here, right?
+
+> > > +     if (ret)
+> > > +             return dev_err_probe(&pdev->dev, ret,
+> > > +                                  "Failed to get hosc exclusive rate=
+\n");
+> > > +
+> > > +     sun20i_chip->clk_apb =3D devm_clk_get_enabled(&pdev->dev, "apb"=
+);
+> > > +     if (IS_ERR(sun20i_chip->clk_apb))
+> > > +             return dev_err_probe(&pdev->dev, PTR_ERR(sun20i_chip->c=
+lk_apb),
+> > > +                                  "Failed to get apb clock\n");
+> > > +
+> > > +     ret =3D devm_clk_rate_exclusive_get(&pdev->dev, sun20i_chip->cl=
+k_apb);
+> >
+> > Just for the records: APB is practically also a fixed clock, set up
+> > once in firmware and never changed, since it drives a lot of other
+> > peripherals.
+> > But same question as above, why do we lock its rate already here?
+>=20
+> That step was actually recommended by Uwe Kleine-K=C3=B6nig,
+> so the decision on whether to keep or drop exclusive reservation
+> is really a question for him=E2=80=94please coordinate with Uwe
+> to agree on how best to proceed here.
+
+Same as above. Iff the driver relies on the rate of this clock to keep
+constant, calling clk_rate_exclusive_get() is right.
+
+> > > +     if (ret)
+> > > +             return dev_err_probe(&pdev->dev, ret,
+> > > +                                  "Failed to get apb exclusive rate\=
+n");
+> > > +
+> > > +     if (clk_get_rate(sun20i_chip->clk_apb) <=3D clk_get_rate(sun20i=
+_chip->clk_hosc))
+> > > +             dev_info(&pdev->dev, "APB clock must be greater than ho=
+sc clock");
+> >
+> > Why this check? Does the code make any assumptions about this relation?
+> > If yes, we must surely deny this and bail out.
+> > If not (and I feel we should handle it this way), we can just ignore
+> > this and not print anything.
+
+ack.
+
+Best regards
+Uwe
+
+--j6nnrxchndqyddxe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg27rUACgkQj4D7WH0S
+/k7eMQf+MFh+WPOSnrL0ChmTNdZTkd/HHROpjXJFoKvZp8zcSHMTplW1nj2woA1/
+Va88dWGfc9SB3t8CtiIDNa5+Uqe1TKApG1dH+Wa85exLeIamnSGMlmr2UrslLX+Z
+U4CO0QmYVZGBjQtwEulMwGIfhZr/v4xBCLhwB0NoHqn2R1S1rxDjK6LHQFBj1RHl
+IqvMLUGJ0XSg5bzLiS3OqRH0FpHKyAggpEoqJPYOBBc7yjhxklvLN+u5Gb6riPaT
+pm7nwLkH/qBqpTgJfHxGf92AuW23qp/PcytQABrRXlsGNhFJBilXQPcFjN16JthK
+FxuATRizXxGVnnfFjeGzHSc9RoSOvw==
+=DLbu
+-----END PGP SIGNATURE-----
+
+--j6nnrxchndqyddxe--
