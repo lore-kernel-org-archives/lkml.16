@@ -1,179 +1,275 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176522DFE3;
-	Thu, 29 May 2025 17:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DC3B67F;
+	Thu, 29 May 2025 17:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748539654; cv=none; b=dNvgYmEwyyJXKv4bIYwzaab7XczpPLvnhYf5QTQ/DA8L8cOhEQ+SCOWo5KBWb13Avj++SwQLo9jni2AvNswJrIyDqPMro5YAj62bTI+nojyl6gfsUUEyMP0Q8DGVldYKBKguPljgcyUO3zoNibAQi9XZ0+VFDYXqU7wntyHIV8U=
+	t=1748539882; cv=none; b=THuS7kvoGxEwnWGciYOinnEVCjfzJmMffrjNlg9Fc4mP1+GRknmLNp8W04pJEXCqOqKtZGqFdwVH8lLz+uuRSbTGxfdXcyON6ij5gITnLMMTMR1fnUUz8ph4PxqTmEoWimw6TAXFgVAbPkD3It7LNCNpcSEZclZLtbV3Z8tx7Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748539654; c=relaxed/simple;
-	bh=qH4v453/dendpSvOjjh1ZKW/R1SsJgK2XoSkPc/H1O4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEpWIYtxXwD8MstZqiq/3SfCigvJFrm9M8LLHgo+evJ6PEPbZ9N3iSXPSafwTBDhpTlIedJezETJ7eDSKMy4VEYD5g1+zBnujfdu2T50y2nZR/r69Z2m/T6Ghttso3u5ohF3eeLNHpOuBZM9CT+neDAbNNdsNkTJW4iIJVInatc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8+N4dZw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748539882; c=relaxed/simple;
+	bh=eJHe3QL2ZFLGTuDAjKNfjZ95JLx6wVjs73kqdqjM65Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k4LZMqRtKMOmVwpvrXtlEbdh1m3osSQOGZKAswid3yJi3gDKhy/6cjY/kyV2mCr59IxpeAdVIe+ccVnpyVqPczOyOhHb8yx6BBwxmybj+eT03Rrb215b0z6H0uwNmy0O6SwgiXAeM8wDSx4VrcEZdDf8SM23WE8rxleW4RdPH5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIobDUBE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8+N4dZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9035DC4AF0B;
-	Thu, 29 May 2025 17:27:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIobDUBE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D7E4C4CEE7;
+	Thu, 29 May 2025 17:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748539653;
-	bh=qH4v453/dendpSvOjjh1ZKW/R1SsJgK2XoSkPc/H1O4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t8+N4dZwEfhe+LFdQdFK8MJrzNy7bvLmeld55BQDnlTZUtyshocGIoHG9Q40WZcPw
-	 sQjwhnS0pE4+6v1cuKiyCYdZNSqdystTTX9qPQa/JQQDunaV7D1OTBHrpYfvBH8rWR
-	 I4bt4WKKQRFnD7KDw5+1is9ziv9jMmW2lYcwx7DVz4OyepjgwIVGLz3qMzuVnQMnjr
-	 lifyHr/Wgb/uXXY+3Jej4XdsCuWpCspYzVUXaxBgQIBkyw3VPsoQZuxuMNcjWZ9TSB
-	 lectM9/hGEwmawfAB/TYKRzSY600fKZ22CRpVeBgU8mxb/yFrwZrYK8/55QJg8x0RB
-	 JrBjN0tSGQ21Q==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so185683566b.0;
-        Thu, 29 May 2025 10:27:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV47vZBhUogi3jw0Z79NFGHlWSkOrNPLXh7P+IP2patGwGsRn7zzxrNf2p4O7o/mW9bnuyYOuyNNjQJSohe@vger.kernel.org, AJvYcCVnd/y6J5RMaoPrTAEiWGBAPHve7VkkQNmStxPFCq/EsToGIzlKfRryoX1nZ9g0uc2YVTnTUdkqiag=@vger.kernel.org, AJvYcCXCkxl9iBIIy6nfHXKjGEk9LhV8aRU9T5Jv7xJJpPvdC8VqKyCrForSGiBVMxI78sl0zFGHlxNDsHDpZygjrQZ+0w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YynIqiuz33z4RW/2VKah5JqUhzf7cIjymz8E76CSfvT7m/VB62E
-	cf0aEEYKhu8FXwk0JtDNfWEF672AOR11syk4hlYc/WwVrAMQEz7lCFUaPbI/YRYxBwiC3On2mol
-	Yt82JWDRI5hpFucRy7dU6z9t1sGLjkQ==
-X-Google-Smtp-Source: AGHT+IG8vuuuHmnAkDYhc0wSUHyMMZZ4pVnP2sLktIt9BGUIiU4Wla89J8p0IqYHCL/M3OMkUGaMQGKSpkLntPI8/WI=
-X-Received: by 2002:a17:907:2d12:b0:ad2:2d75:d7fb with SMTP id
- a640c23a62f3a-adb322fa1c2mr29287066b.55.1748539652145; Thu, 29 May 2025
- 10:27:32 -0700 (PDT)
+	s=k20201202; t=1748539882;
+	bh=eJHe3QL2ZFLGTuDAjKNfjZ95JLx6wVjs73kqdqjM65Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JIobDUBEKLhUSuISDV4aU+0j9KyJeS5Hl3ctPf7pRuD+UDy60r0taqWf9dRsVnGPm
+	 /a32ulttUyZR0bf53VL3jSwWK1hsSovHrYaBJFtw1xjRObX9A9wL1EUday4dgIvdgK
+	 rV4Mq+qhQcVkyNqBfKmHy6F7NV4yno/WJa8XWNeUmCabnBT6orGgtHp8pjo7mawrY/
+	 CJupza/+RIeL2wzHZjLaNx0fD3Lfd6BXdMqJN/K+OLkpykf94mjbU9pOu8DIjNvjhC
+	 QuK+eA198il3vtK42qaygU2Ou3csZ58Et7OthB+cKyXmPTHqchojYV1rKCAtWNyCD6
+	 FhuJdZI90z77Q==
+From: Kees Cook <kees@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: Annotate crypto strings with nonstring
+Date: Thu, 29 May 2025 10:31:17 -0700
+Message-Id: <20250529173113.work.760-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
- <20250520-arm-brbe-v19-v22-5-c1ddde38e7f8@kernel.org> <925bf014-cea8-4cf0-9517-46291db729f2@linaro.org>
-In-Reply-To: <925bf014-cea8-4cf0-9517-46291db729f2@linaro.org>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 29 May 2025 12:27:18 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJ3t5UvWMBgLEkm_-sD_S7NEor+vWfVkU-d7va6u9xsmQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuZiRqbTownBtX9p_AAnxqssjZP9dZ9VucncBlXoHjZthrkTUHlQWalK88
-Message-ID: <CAL_JsqJ3t5UvWMBgLEkm_-sD_S7NEor+vWfVkU-d7va6u9xsmQ@mail.gmail.com>
-Subject: Re: [PATCH v22 5/5] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8228; i=kees@kernel.org; h=from:subject:message-id; bh=eJHe3QL2ZFLGTuDAjKNfjZ95JLx6wVjs73kqdqjM65Q=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkWM5/KOb9d1D+DT/W1FXPESROHnwaTzy4+XnxU6J2px Am3yceEO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACaiUMXIcKJAR/HYeq+F52aH 5tb7pc8Q8rD7fmzt7oeaFdsvNatxLmH4Zy6ze+WyTQnXzI90Nqx6a7xlKmepy2G51THvj2kayMY 3MAAA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 11:03=E2=80=AFAM James Clark <james.clark@linaro.or=
-g> wrote:
-> On 20/05/2025 11:27 pm, Rob Herring (Arm) wrote:
-> > The ARMv9.2 architecture introduces the optional Branch Record Buffer
-> > Extension (BRBE), which records information about branches as they are
-> > executed into set of branch record registers. BRBE is similar to x86's
-> > Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
-> > (BHRB).
+Annotate various keys, ivs, and other byte arrays with __nonstring so
+that static initializers will not complain about truncating the trailing
+NUL byte under GCC 15 with -Wunterminated-string-initialization enabled.
+Silences many warnings like:
 
-[...]
+../lib/crypto/aesgcm.c:642:27: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (13 chars into 12 available) [-Wunterminated-string-initialization]
+  642 |                 .iv     = "\xca\xfe\xba\xbe\xfa\xce\xdb\xad"
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> > +/*
-> > + * BRBE is configured with an OR of permissions from all events, so th=
-ere may
-> > + * be events which have to be dropped or events where just the source =
-or target
-> > + * address has to be zeroed.
-> > + */
-> > +static bool filter_branch_privilege(struct perf_branch_entry *entry, u=
-64 branch_sample_type)
-> > +{
-> > +     /* We can only have a half record if permissions have not been ex=
-panded */
-> > +     if (!entry->from || !entry->to)
-> > +             return true;
-> > +
-> > +     bool from_user =3D access_ok((void __user *)(unsigned long)entry-=
->from, 4);
-> > +     bool to_user =3D access_ok((void __user *)(unsigned long)entry->t=
-o, 4);
-> > +     bool exclude_kernel =3D !((branch_sample_type & PERF_SAMPLE_BRANC=
-H_KERNEL) ||
-> > +             (is_kernel_in_hyp_mode() && (branch_sample_type & PERF_SA=
-MPLE_BRANCH_HV)));
-> > +
-> > +     /*
-> > +      * If record is within a single exception level, just need to eit=
-her
-> > +      * drop or keep the entire record.
-> > +      */
-> > +     if (from_user =3D=3D to_user)
-> > +             return ((entry->priv =3D=3D PERF_BR_PRIV_KERNEL) && !excl=
-ude_kernel) ||
-> > +                     ((entry->priv =3D=3D PERF_BR_PRIV_USER) &&
-> > +                      (branch_sample_type & PERF_SAMPLE_BRANCH_USER));
-> > +
-> > +     // Fixup calls which are syscalls
-> > +     if (entry->type =3D=3D PERF_BR_CALL && from_user && !to_user)
-> > +             entry->type =3D PERF_BR_SYSCALL;
-> > +
-> > +     /*
-> > +      * Record is across exception levels, mask addresses for the exce=
-ption
-> > +      * level we're not capturing.
-> > +      */
-> > +     if (!(branch_sample_type & PERF_SAMPLE_BRANCH_USER)) {
-> > +             if (from_user)
-> > +                     entry->from =3D 0;
-> > +             if (to_user)
-> > +                     entry->to =3D 0;
-> > +     }
-> > +
-> > +     if (exclude_kernel) {
-> > +             if (!from_user)
-> > +                     entry->from =3D 0;
-> > +             if (!to_user)
-> > +                     entry->to =3D 0;
-> > +     }
-> > +     return true;
-> > +}
-> > +
-> > +static bool filter_branch_type(struct perf_branch_entry *entry,
-> > +                            const unsigned long *event_type_mask)
-> > +{
-> > +     if (entry->type =3D=3D PERF_BR_EXTEND_ABI)
-> > +             return test_bit(PERF_BR_MAX + entry->new_type, event_type=
-_mask);
-> > +     else
-> > +             return test_bit(entry->type, event_type_mask);
-> > +}
-> > +
-> > +static bool filter_branch_record(struct perf_branch_entry *entry,
-> > +                              u64 branch_sample,
-> > +                              const unsigned long *event_type_mask)
-> > +{
-> > +     return filter_branch_type(entry, event_type_mask) &&
-> > +             filter_branch_privilege(entry, branch_sample);
->
-> filter_branch_privilege() sometimes changes the branch type for
-> PERF_BR_SYSCALL so I think it should come before filter_branch_type(). I
-> didn't see any actual issue caused by this, but it's a bit hard to
-> review to see if it's working correctly.
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Eric Biggers <ebiggers@google.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: <linux-crypto@vger.kernel.org>
+---
+ lib/crypto/aescfb.c |  8 ++++----
+ lib/crypto/aesgcm.c | 46 ++++++++++++++++++++++-----------------------
+ 2 files changed, 27 insertions(+), 27 deletions(-)
 
-Looking at this again, I think we can drop that with this change:
+diff --git a/lib/crypto/aescfb.c b/lib/crypto/aescfb.c
+index 437613265e14..2f09ae92ffa0 100644
+--- a/lib/crypto/aescfb.c
++++ b/lib/crypto/aescfb.c
+@@ -106,11 +106,11 @@ MODULE_LICENSE("GPL");
+  */
+ 
+ static struct {
+-	u8	ptext[64];
+-	u8	ctext[64];
++	u8	ptext[64] __nonstring;
++	u8	ctext[64] __nonstring;
+ 
+-	u8	key[AES_MAX_KEY_SIZE];
+-	u8	iv[AES_BLOCK_SIZE];
++	u8	key[AES_MAX_KEY_SIZE] __nonstring;
++	u8	iv[AES_BLOCK_SIZE] __nonstring;
+ 
+ 	int	klen;
+ 	int	len;
+diff --git a/lib/crypto/aesgcm.c b/lib/crypto/aesgcm.c
+index 277824d6b4af..faa4dee9bb1b 100644
+--- a/lib/crypto/aesgcm.c
++++ b/lib/crypto/aesgcm.c
+@@ -205,19 +205,19 @@ MODULE_LICENSE("GPL");
+  * Test code below. Vectors taken from crypto/testmgr.h
+  */
+ 
+-static const u8 __initconst ctext0[16] =
++static const u8 __initconst ctext0[16] __nonstring =
+ 	"\x58\xe2\xfc\xce\xfa\x7e\x30\x61"
+ 	"\x36\x7f\x1d\x57\xa4\xe7\x45\x5a";
+ 
+ static const u8 __initconst ptext1[16];
+ 
+-static const u8 __initconst ctext1[32] =
++static const u8 __initconst ctext1[32] __nonstring =
+ 	"\x03\x88\xda\xce\x60\xb6\xa3\x92"
+ 	"\xf3\x28\xc2\xb9\x71\xb2\xfe\x78"
+ 	"\xab\x6e\x47\xd4\x2c\xec\x13\xbd"
+ 	"\xf5\x3a\x67\xb2\x12\x57\xbd\xdf";
+ 
+-static const u8 __initconst ptext2[64] =
++static const u8 __initconst ptext2[64] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -227,7 +227,7 @@ static const u8 __initconst ptext2[64] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39\x1a\xaf\xd2\x55";
+ 
+-static const u8 __initconst ctext2[80] =
++static const u8 __initconst ctext2[80] __nonstring =
+ 	"\x42\x83\x1e\xc2\x21\x77\x74\x24"
+ 	"\x4b\x72\x21\xb7\x84\xd0\xd4\x9c"
+ 	"\xe3\xaa\x21\x2f\x2c\x02\xa4\xe0"
+@@ -239,7 +239,7 @@ static const u8 __initconst ctext2[80] =
+ 	"\x4d\x5c\x2a\xf3\x27\xcd\x64\xa6"
+ 	"\x2c\xf3\x5a\xbd\x2b\xa6\xfa\xb4";
+ 
+-static const u8 __initconst ptext3[60] =
++static const u8 __initconst ptext3[60] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -249,7 +249,7 @@ static const u8 __initconst ptext3[60] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39";
+ 
+-static const u8 __initconst ctext3[76] =
++static const u8 __initconst ctext3[76] __nonstring =
+ 	"\x42\x83\x1e\xc2\x21\x77\x74\x24"
+ 	"\x4b\x72\x21\xb7\x84\xd0\xd4\x9c"
+ 	"\xe3\xaa\x21\x2f\x2c\x02\xa4\xe0"
+@@ -261,17 +261,17 @@ static const u8 __initconst ctext3[76] =
+ 	"\x5b\xc9\x4f\xbc\x32\x21\xa5\xdb"
+ 	"\x94\xfa\xe9\x5a\xe7\x12\x1a\x47";
+ 
+-static const u8 __initconst ctext4[16] =
++static const u8 __initconst ctext4[16] __nonstring =
+ 	"\xcd\x33\xb2\x8a\xc7\x73\xf7\x4b"
+ 	"\xa0\x0e\xd1\xf3\x12\x57\x24\x35";
+ 
+-static const u8 __initconst ctext5[32] =
++static const u8 __initconst ctext5[32] __nonstring =
+ 	"\x98\xe7\x24\x7c\x07\xf0\xfe\x41"
+ 	"\x1c\x26\x7e\x43\x84\xb0\xf6\x00"
+ 	"\x2f\xf5\x8d\x80\x03\x39\x27\xab"
+ 	"\x8e\xf4\xd4\x58\x75\x14\xf0\xfb";
+ 
+-static const u8 __initconst ptext6[64] =
++static const u8 __initconst ptext6[64] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -281,7 +281,7 @@ static const u8 __initconst ptext6[64] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39\x1a\xaf\xd2\x55";
+ 
+-static const u8 __initconst ctext6[80] =
++static const u8 __initconst ctext6[80] __nonstring =
+ 	"\x39\x80\xca\x0b\x3c\x00\xe8\x41"
+ 	"\xeb\x06\xfa\xc4\x87\x2a\x27\x57"
+ 	"\x85\x9e\x1c\xea\xa6\xef\xd9\x84"
+@@ -293,17 +293,17 @@ static const u8 __initconst ctext6[80] =
+ 	"\x99\x24\xa7\xc8\x58\x73\x36\xbf"
+ 	"\xb1\x18\x02\x4d\xb8\x67\x4a\x14";
+ 
+-static const u8 __initconst ctext7[16] =
++static const u8 __initconst ctext7[16] __nonstring =
+ 	"\x53\x0f\x8a\xfb\xc7\x45\x36\xb9"
+ 	"\xa9\x63\xb4\xf1\xc4\xcb\x73\x8b";
+ 
+-static const u8 __initconst ctext8[32] =
++static const u8 __initconst ctext8[32] __nonstring =
+ 	"\xce\xa7\x40\x3d\x4d\x60\x6b\x6e"
+ 	"\x07\x4e\xc5\xd3\xba\xf3\x9d\x18"
+ 	"\xd0\xd1\xc8\xa7\x99\x99\x6b\xf0"
+ 	"\x26\x5b\x98\xb5\xd4\x8a\xb9\x19";
+ 
+-static const u8 __initconst ptext9[64] =
++static const u8 __initconst ptext9[64] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -313,7 +313,7 @@ static const u8 __initconst ptext9[64] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39\x1a\xaf\xd2\x55";
+ 
+-static const u8 __initconst ctext9[80] =
++static const u8 __initconst ctext9[80] __nonstring =
+ 	"\x52\x2d\xc1\xf0\x99\x56\x7d\x07"
+ 	"\xf4\x7f\x37\xa3\x2a\x84\x42\x7d"
+ 	"\x64\x3a\x8c\xdc\xbf\xe5\xc0\xc9"
+@@ -325,7 +325,7 @@ static const u8 __initconst ctext9[80] =
+ 	"\xb0\x94\xda\xc5\xd9\x34\x71\xbd"
+ 	"\xec\x1a\x50\x22\x70\xe3\xcc\x6c";
+ 
+-static const u8 __initconst ptext10[60] =
++static const u8 __initconst ptext10[60] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -335,7 +335,7 @@ static const u8 __initconst ptext10[60] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39";
+ 
+-static const u8 __initconst ctext10[76] =
++static const u8 __initconst ctext10[76] __nonstring =
+ 	"\x52\x2d\xc1\xf0\x99\x56\x7d\x07"
+ 	"\xf4\x7f\x37\xa3\x2a\x84\x42\x7d"
+ 	"\x64\x3a\x8c\xdc\xbf\xe5\xc0\xc9"
+@@ -347,7 +347,7 @@ static const u8 __initconst ctext10[76] =
+ 	"\x76\xfc\x6e\xce\x0f\x4e\x17\x68"
+ 	"\xcd\xdf\x88\x53\xbb\x2d\x55\x1b";
+ 
+-static const u8 __initconst ptext11[60] =
++static const u8 __initconst ptext11[60] __nonstring =
+ 	"\xd9\x31\x32\x25\xf8\x84\x06\xe5"
+ 	"\xa5\x59\x09\xc5\xaf\xf5\x26\x9a"
+ 	"\x86\xa7\xa9\x53\x15\x34\xf7\xda"
+@@ -357,7 +357,7 @@ static const u8 __initconst ptext11[60] =
+ 	"\xb1\x6a\xed\xf5\xaa\x0d\xe6\x57"
+ 	"\xba\x63\x7b\x39";
+ 
+-static const u8 __initconst ctext11[76] =
++static const u8 __initconst ctext11[76] __nonstring =
+ 	"\x39\x80\xca\x0b\x3c\x00\xe8\x41"
+ 	"\xeb\x06\xfa\xc4\x87\x2a\x27\x57"
+ 	"\x85\x9e\x1c\xea\xa6\xef\xd9\x84"
+@@ -369,7 +369,7 @@ static const u8 __initconst ctext11[76] =
+ 	"\x25\x19\x49\x8e\x80\xf1\x47\x8f"
+ 	"\x37\xba\x55\xbd\x6d\x27\x61\x8c";
+ 
+-static const u8 __initconst ptext12[719] =
++static const u8 __initconst ptext12[719] __nonstring =
+ 	"\x42\xc1\xcc\x08\x48\x6f\x41\x3f"
+ 	"\x2f\x11\x66\x8b\x2a\x16\xf0\xe0"
+ 	"\x58\x83\xf0\xc3\x70\x14\xc0\x5b"
+@@ -461,7 +461,7 @@ static const u8 __initconst ptext12[719] =
+ 	"\x59\xfa\xfa\xaa\x44\x04\x01\xa7"
+ 	"\xa4\x78\xdb\x74\x3d\x8b\xb5";
+ 
+-static const u8 __initconst ctext12[735] =
++static const u8 __initconst ctext12[735] __nonstring =
+ 	"\x84\x0b\xdb\xd5\xb7\xa8\xfe\x20"
+ 	"\xbb\xb1\x12\x7f\x41\xea\xb3\xc0"
+ 	"\xa2\xb4\x37\x19\x11\x58\xb6\x0b"
+@@ -559,9 +559,9 @@ static struct {
+ 	const u8	*ptext;
+ 	const u8	*ctext;
+ 
+-	u8		key[AES_MAX_KEY_SIZE];
+-	u8		iv[GCM_AES_IV_SIZE];
+-	u8		assoc[20];
++	u8		key[AES_MAX_KEY_SIZE] __nonstring;
++	u8		iv[GCM_AES_IV_SIZE] __nonstring;
++	u8		assoc[20] __nonstring;
+ 
+ 	int		klen;
+ 	int		clen;
+-- 
+2.34.1
 
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 2f254bd40af3..acdde61a8559 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -546,7 +546,7 @@ static const int
-brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2]
-        [BRBINFx_EL1_TYPE_INDIRECT_LINK] =3D { PERF_BR_IND_CALL, 0 },
-        [BRBINFx_EL1_TYPE_RET] =3D { PERF_BR_RET, 0 },
-        [BRBINFx_EL1_TYPE_DIRECT_COND] =3D { PERF_BR_COND, 0 },
--       [BRBINFx_EL1_TYPE_CALL] =3D { PERF_BR_CALL, 0 },
-+       [BRBINFx_EL1_TYPE_CALL] =3D { PERF_BR_SYSCALL, 0 },
-        [BRBINFx_EL1_TYPE_ERET] =3D { PERF_BR_ERET, 0 },
-        [BRBINFx_EL1_TYPE_IRQ] =3D { PERF_BR_IRQ, 0 },
-        [BRBINFx_EL1_TYPE_TRAP] =3D { PERF_BR_IRQ, 0 },
-
-AFAICT, the only cases for BRBINFx_EL1_TYPE_CALL are SVC, SMC, and HVC.
-
-Rob
