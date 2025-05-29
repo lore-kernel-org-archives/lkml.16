@@ -1,101 +1,108 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055081362
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C961362;
+	Thu, 29 May 2025 16:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748536645; cv=none; b=LIo/pBKTbYVl7Kza/GUQ+0DpOhuZ4n1ZmJEoMYNrF37z+cGQsF4aXawY0JrsjRXM3YM78wxxd334fPDXwyhYJlgMsNmnoPILgKsoycsjmLORSSi0UWXmPci9R7cn1aQ3edhVf2e+Ey/9I+5w9nyKAYN56way1OdxQLj6kXa7320=
+	t=1748536655; cv=none; b=AcgWjHmUcKGwnz1tcUtktNH2af2/erT28T6r1I2Z35UxEHITA4xovQ6oRzJiDuUw4Xae6l7/UG3BTvHzgs1Jud+sp6gEkraT5+84ne1Z4nQxq9HzS8768MV8fE3WGfaFTsZSCJCZFBJGp2KVAOFiVC9yeDOjkqYADzIofabH/d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748536645; c=relaxed/simple;
-	bh=36XtsfB/Y/+r/p4PcJpXDCd1enWQ5otOmMPW+JGUpDY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g1FD3z8KI6zVO+1ckTpoeS5nwaLb7AXz0Y2s973i4R3OEobd/cNbOoKVD0IN0vMlPeCyPO5DTX7c/oIgxTfAZs+8bMS7Rafx39zRtXkVXUykAE8Ela32mN/Te8KbsMA1orD+Rj23t/4LbbmRQuvIFbtQ7c/UIpfkL50Wgcu3xSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=PuC9zSuv; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
+	s=arc-20240116; t=1748536655; c=relaxed/simple;
+	bh=BvOVZq2AHLJJJYptHSBqkzbep1xS/oogtJo1WIvUUGk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P/pUvQnerdJ0WHJJAxqEBXLn1F4laahngjAeb+A1xGOsiXTvCoiKULfXPEdjv+bxNFXQll1xVzIJ/y+RaphZQOMsKfp24H2aW012KVP7yu6Xbx1+AXDPjTSC/Od/PhugjzrxTzUtmKJ36cFM+lJp6J/v/URuCxb7fU1M4AXc5t0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Aw7h5ZFV; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="PuC9zSuv"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f6dccdcadaso793166b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google; t=1748536643; x=1749141443; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NJbHX8UWtBwYvowVAn6Pcv/J1e4Yt0eXJegAoG1XhWA=;
-        b=PuC9zSuv8gBLVg5UWkbiVhbOpUD6rMAttLSsopnGAxGGAMkIhGNFBhlz8Nav9iFY36
-         TNY0FEO4KcQGdWofGyTHJIMPQcGbOZaK0pVwg9m5rgTPzm4EizY0bTaJ1DUCHTizLbPI
-         xulEfZtZQ2vfYOMV0M00bw0mEB2oXFVuncmphL5+mJ0+E+IQboxk8JHDhI3TYpFUlRSI
-         j/HYd2K43KzeB6XSDK3j6rWFH7wiL4I3PI8aH0l1YkpvsUkt0FgtstCi8G65ApML21XV
-         6ggMqf27Mg9bax3Ff0SVLSekEkPIHnZ+nHJK6Ys6eG3mA53DD2HaXM4m+12DItNSz1u+
-         pieQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748536643; x=1749141443;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NJbHX8UWtBwYvowVAn6Pcv/J1e4Yt0eXJegAoG1XhWA=;
-        b=sszZHIOsVnB2tt4b6pJe22PkILgvuh7fNkRJPET1OZhnpE2FTeXWhqE9zgPKaIWmF3
-         vq0LhZ4DSAodZ8KAONGjZChwLCjgp6KbhaWAdxCPaOwYdbUjveCwKQxxYFRSv3ZxXc8u
-         bhkl2QOF/drWzWaIVuaXm/+AhMaCVO+a3svl/ASCJpq5jHYTU4bTnOM5ayqTKj3NK2A1
-         ko1vquSMW8zBPOvv4XXvH4TWkWesvy8FocC8+9k3TJPg3h3E/hgDtmXguGoCo2Lorp+4
-         6nOUYs/7BiHMCpTPFvArluZMI9QDa7DVBrH3RrJyCsuLCo+af/CMthBQ8XOnkQuFjRaW
-         8RqA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0Hh79MRYjVhioHUELKeOzvuGfhywdsWs1DmjG1UDRXTCOPoKuHBqx4lpfDbcVL+jfr2F1AJt2Dp4Jh7U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5FtWtmRTKsQ5eoew77prBrwQSg6+XGkBJjEYhLg/0gPWTxLsm
-	mYVFRmynNf+f8MxaB6KOagWtiIYkHpxuIUb4XSHyQnsWnZHKxyhA3Af0GgV/lbugqGlWga4YdbS
-	kDu+E+xQ=
-X-Gm-Gg: ASbGncsdxZwD4JkItAP2H4hntEYiAUDFWWsKfkSO1XOq0FceuR4Pzs6bYj+0w4NdaBz
-	Hv7/bKPyEyovP46oFLZ7b7zjxtF2rkvf8F60mCYNfPqG6lwZF1KT5RPM5JVBv/mA72tLpOGd5yT
-	xBK1Rd3xw0CdWnxfCdpAqn3Hfco8NAD2U2f4TvSPKwzorLC0icMnEXQav3QJUR4XRcR5q34KkGn
-	n4H9u9/RKs+WrGkmvD0czWYiUYi20+9sZvZ6QWjhmG8+71bRVBWmMZVdLK9Z2z6gYbTw611Rxmo
-	cMyUF3+zSQaD7CthAC/KX+mODUtUZmmGHPbKX6nA4orsA8o6U0P4mYc4NBL987ycWRBmxSSbgAw
-	KrctunOvPCQjIydkzmxs=
-X-Google-Smtp-Source: AGHT+IGi9zW66xHGV0ooQgA4CE2RM/TMhTeayWKMwz8Z/b5BCfRRoPEIHimSNVfOYav1Uk6Qofw95Q==
-X-Received: by 2002:a05:6830:6589:b0:72b:940a:a7c9 with SMTP id 46e09a7af769-73670a605c7mr15249a34.27.1748536632389;
-        Thu, 29 May 2025 09:37:12 -0700 (PDT)
-Received: from localhost (104-48-214-220.lightspeed.snantx.sbcglobal.net. [104.48.214.220])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-735af85614csm291924a34.26.2025.05.29.09.37.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 09:37:11 -0700 (PDT)
-From: Steev Klimaszewski <steev@kali.org>
-To: quic_chejiang@quicinc.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	marcel@holtmann.org
-Subject: Re: [v2] Bluetooth: hci_qca: Drop unused event during BT on
-Date: Thu, 29 May 2025 11:37:11 -0500
-Message-ID: <20250529163711.475128-1-steev@kali.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20240821105027.425783-1-quic_chejiang@quicinc.com>
-References: <20240821105027.425783-1-quic_chejiang@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Aw7h5ZFV"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 54D257E1;
+	Thu, 29 May 2025 18:36:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748536618;
+	bh=BvOVZq2AHLJJJYptHSBqkzbep1xS/oogtJo1WIvUUGk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Aw7h5ZFVP/UzUkRh4uj4s1Z4rgHoQ6FG7NzyEiildgq2ZCoW7PptTncMipe5F+YgM
+	 0dL+ORHJFvCYRqy03MIytMD7RJX25JvpH18CyOo5naLFitfYrOTPuJbWxnr0SVrgK9
+	 6qWCKf3vQ6vXvYpLrGP2MyqsEacGcFWSdfABF5rA=
+From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+Subject: [PATCH 0/2] media: vsp1: Detect display list wrong usage patterns
+Date: Thu, 29 May 2025 18:36:29 +0200
+Message-Id: <20250529-vsp1_dl_list_count-v1-0-40c6d0e20592@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA2NOGgC/x3MQQqAIBBA0avErBN0wKKuEiGVUw2EhVMRhHdPW
+ r7F/y8IRSaBtngh0s3Ce8gwZQHTOoSFFPtsQI1WW2zULYdxfnMby+mm/QqnMrbyWA/o7Wggh0e
+ kmZ9/2vUpfZUveB5kAAAA
+X-Change-ID: 20250529-vsp1_dl_list_count-156d27a2d5b1
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1428;
+ i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=BvOVZq2AHLJJJYptHSBqkzbep1xS/oogtJo1WIvUUGk=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoOI1EKmgeToUg5hW8B7Zn13WmVGZVEMED7xHp2
+ T7XRqWrcpKJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaDiNRAAKCRByNAaPFqFW
+ PHflD/oCg7yTtoelmnCUSQibXqBgfdEhF02csJoCsrJjI87mbAhdAZgGQbb7dla13+TstKK8l8c
+ mip08rBI5VqT5wnxXg1R2lBxzq0D1RSQsLmppSz8PKUPHQz0vVf9s5isLy6tE4QZrD8K/xrXAAK
+ zG30Hih79fzFtYpnlLIswafpG/M8HTyDfSWwKWd7Ptgss5RJ6/9G/vkp64udPXxFcCmBPUl0Yfx
+ BDmc1A9dCv9694EuWRl3kIwDa8WILS+fMn4qeuf612a4nJAcIDY1MmNbTKx3WEYry5R3qCKIC65
+ 64eH6nrOEOQQRax9lMX3fXQcoIlcKZFsX7ClyBY4De8Hi/iYYwjP+SPhNK5DDUvXPrFPkJ50Pvi
+ nV65rXrg6pLUDCyOqvH0mkGjm7FdqHlaQxEn9pv0+92/KNNJ3Z4IerD32Yrarz9CVDK10C+Tvzq
+ piqVIElrh4x3dzeYF5sKZbcTw90G561nI4gCDjWM4qTb9Bqq3QNLUXyzqFwu7rswNwzZfYu3Gwy
+ FYZW2shN3d848U2DDhwEp2Hiagb+y5K8DN8/NbWMkdSHYANYnbXJxdrcuqhNxBIe/8B0Q+7OaRz
+ dQbqaTMWY5Ov/XImfl4rhTvEBjDMuf+17SsVO8NhLt8N1JxnxEZFmoXnYkoS2SW+0HPJAzQFZSF
+ 8J+ONvxWDEg0oXw==
+X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-I have been looking into a long standing issue on the Thinkpad X13s, which has a
-WCN6855 where every so often would get the following error in dmesg output:
+The VSP1 library driver offers support for programming the VSP
+using display lists.
 
-Bluetooth: hci0: unexpected event for opcode 0xfc48
+Display lists are created in a pool and users can get them and use them
+to program the VSP. Once done the display list shall be returned to
+the display list pool.
 
-I don't get the message super often, 11 times since 16 April, though I do not
-know how many reboots happened in that time.
+The correct management of the display list pool is left to the user
+of the helpers, and it's helpful to add a few checks to detect invalid
+usage patterns, such as a double release or a non-returned display list.
 
-I noticed you wrote this patch 9 months ago, and I've applied it locally and in
-my testing, with it applied, I cannot get the unexpected event anymore.  Looking
-in patchwork, it says this patch was superseded, but I can't find what its
-replacement is.
+Add two counters to detect double releases of a display list, and a
+counter to the display list to make sure that once it is reset all the
+display lists have been returned.
 
-Does anyone know if this patch just fell through the cracks?
+Tested with vsp-tests
+170 tests: 165 passed, 0 failed, 5 skipped
 
--- steev
+However I got a (hopefully unrelated) warning:
 
-Resending due to the previous reply having an empty subject, I am not sure how
-that happened as the subject seemed to move into the body of the email.  Sorry
-for the noise!
+[  795.547528] [<000000007d841fd6>] vsp1_irq_handler
+[  795.552448] Disabling IRQ #43
+[  795.653324] vsp1 fea20000.vsp: Underrun occurred at WPF1 (total underruns 1)
+
+Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+---
+Jacopo Mondi (2):
+      media: vsp1: vsp1_dl: Add usage counter
+      media: vsp1: vsp1_dl: Count display lists
+
+ drivers/media/platform/renesas/vsp1/vsp1_dl.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+---
+base-commit: 5e1ff2314797bf53636468a97719a8222deca9ae
+change-id: 20250529-vsp1_dl_list_count-156d27a2d5b1
+
+Best regards,
+-- 
+Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+
