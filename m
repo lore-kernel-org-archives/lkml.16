@@ -1,111 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570E11DF738;
-	Thu, 29 May 2025 18:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EBA21B184;
+	Thu, 29 May 2025 18:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748543507; cv=none; b=UDcGpsUrdbZDLsAmIod/xl/gp7CG9bG9YhgohQ6+KWuKxnntH1MdWoMF1RtiUpBSMTKIKpaMYtJh+iIsb8gEglxD8PuuMf5/7ByTT6jIrf2bO510vx2R1tfuOePRqLo7dv81v5aNFYAIisCsmqkFrnJJp5dWoBKVOnDk+8cy1/E=
+	t=1748543539; cv=none; b=hLiWmkQKpOAjfDd75/7ISgj0ZAMAigI3Htc6Uct3OENWt0ISGzHtVAE9Jl9im+0fmWax6G+6IiwlB335ToHENzvczpvWXvO1n3yh26UbU1NG3MigqIHFKAaV2tVORh7n76xsApVbWIa/hos1ZLPHD8s0eqdEAcZyGWg68H8ioNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748543507; c=relaxed/simple;
-	bh=tvdb9zj58cvDAS6PCxKYpi5glIKRt4zKu2kRcZVy9DQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=haB4F+/pySYPtvptMGCGkY0NuSRa5der7TPpD3CkaQ6EvKxKPbZFib50vDKX9F4PQRsjdyM/4iIwIvSvYhDf3jXsUd+Y+048GI0iL7YM+iZHxwGWCPEYdMuOQFK/PcIHNOJneY6EHBVFKEB0lSGTEe9/5i07MiRthnMDUtaxj64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiZMtIuU; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748543539; c=relaxed/simple;
+	bh=izhbGzD/gIasApbaGAVduWJRDRGKZ0Ha7wcSglXyLpI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jRJKWEix+VpXGkxhKk8oxPCKM6kggQi1PItKhDfK3FPaDpJ4iAFfJBgmT8qdfxkrlETH6Dnc2DUrxXIxOXM3RXUE+hT1qRq+7ZDqFNR8f3eD0ijNX5mIzFUnJewnMVBR0IzfCjna1rNo4ulWXI+qkV1S9ZgtXyrp2LSThG86BkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GQAfaKrX; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiZMtIuU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748543507; x=1780079507;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tvdb9zj58cvDAS6PCxKYpi5glIKRt4zKu2kRcZVy9DQ=;
-  b=fiZMtIuUAgKTAU+2dTe4YGP6XcXKtGy2hMhBJxrY4SXWRSlnsgGrdBoj
-   FowGOaVgRmqeK/XyqUp0zj/8jXu4ffa+Or4JbnB9brsbaV59GLxUcPicP
-   J0yG9F/yieFrwv9VvrgzYBoTetEY3VPehoni7bgJsGzQ3wqbs/kQwWh1Y
-   jqJVZu5qRYTq68MKv+PetG6v+xgdcj5SOaioic/IVfT0I6zZYgU6ynGDe
-   GphrDmM0AAAq6cax7WgFsqKBcKIGuQ9kCoE2inLi3mBsJJyWWMqiX0+S+
-   t+fzFzuMoqUYNH21H4vZ8wxRhshrMGJOquXPiCWk1myAc5rj1v1npzi3A
-   g==;
-X-CSE-ConnectionGUID: YeJOY621RHyVTHpcJnJ90Q==
-X-CSE-MsgGUID: tE3Stl7USDeBDo9x6xKZaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50769479"
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="50769479"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 11:31:46 -0700
-X-CSE-ConnectionGUID: bRKXYJWESgqIGlos4DB4sA==
-X-CSE-MsgGUID: 68CCrVNmQRKAO7a4zuL43Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="143472020"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 29 May 2025 11:31:42 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKi2W-000Wz6-14;
-	Thu, 29 May 2025 18:31:40 +0000
-Date: Fri, 30 May 2025 02:30:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Frank Li <Frank.Li@nxp.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: display: convert himax, hx8357d.txt to
- yaml format
-Message-ID: <202505300219.7v1CVviw-lkp@intel.com>
-References: <20250529164822.777908-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQAfaKrX"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so252761766b.1;
+        Thu, 29 May 2025 11:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748543534; x=1749148334; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7LGWBvQI1vDUtAHOCvyOaAxPV1uBhtbnvWvq9BppvFw=;
+        b=GQAfaKrXGYDw7cmbID8ZPxh+WYGr2BDPq3eQJbPZibrrSMd0OyaRtijGB/VFaoQAY3
+         8utTN+E3wRTgceJgwRsIr36ZKIXmNZQgAmXPJCiYWBHHa27NACP0Bgo4x2mfxiulN9Vw
+         1Mrjs0qAmlmXO67Hp5G371aLDtoOTbSazHBUSAYC72zbazgWhZqGOSTooNoMT2nZoxzq
+         tj6Nd2yIo3on+TbGwegpx0NZPr9x3q0h/yt/LqZ/jFMvlriqihuI6KOwEE2ozyATBsnB
+         sUxyvuv0ZLlcH1HJUyTuBjueXeb+Ox4wiS3m3fzeQVOHEPHPiMxDhbCmNRfy8UOSpikn
+         rYMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748543534; x=1749148334;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7LGWBvQI1vDUtAHOCvyOaAxPV1uBhtbnvWvq9BppvFw=;
+        b=h66zVSIQv0EBLhhVJiJLTjqE5DQN6QLiqc4qnmpNtYU8BNRDzbraz004+4nGzr8eWC
+         6dtyELsZGC7rlRa9V1FJlUaWLXmZTuzzlf4l17IaKwWbCGmEwbb4TkBt2ubvhc9eb7aP
+         0cWXFILx2TCsgiPF83Z0VFtYDL4MFwGxYurr8DrCUZbzIH0MdRylMel9zw2ZgAcxIJop
+         I3hrb7bwVj9WcetjG9z79+az3M3ahU4Wh9WEXRKiVQ2RGxm+Rf26/J74poT2/XclAPef
+         eSe3gLo5a2glOPKXK3IgMNBNpqE8MkBLeyLdaWBELrlnnyCXYIEhbaE0h6VQYBPi24HY
+         kPuA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+HGIKTPJa75n/9OIEhYTDHEBRWBM+L0lTtCfk+VhHJUXXERyu7r0/wcYoH4j3xKj4M9YfDxcuNDkj0x6f@vger.kernel.org, AJvYcCUAo/LBk4fFc+y8WdE4C6RexuIAqQqV5rjE7v49TNUetJPd1gGsXWVqwjdVzSyO8tj7uIyVV3Vc8eU=@vger.kernel.org, AJvYcCXxDLV/tZ0ny2G64AO21rD7axozhmZfVpmugDP9+tR3zO1+5qOMs8Q+j/2oxKczS4uowVcoM3AWsk1y7Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbUSsKIxabanKPrt+5+1jvdpg3k0N7FCUh7hgSlFGY8G8uO13I
+	FcYPIXfv56c/WfsR2cEaPFKI5yQpUdCQKRPq+TE5mi8LxkV1iq/Xbkfg
+X-Gm-Gg: ASbGncuQU05OOh6UGFRA+hDiMNz7sYtbfIweE1pCWqDDz4jzdhbQyfvYFtN8ixQ4j4Z
+	6CK783ViS8cVPnLpt5+LlO5ue6zA5vRPpQo94iTau7lUEZsAvlNyR63ZzfrYDkUdTU2Q1aII1xh
+	WZbiBZQBgQZuqfDN8UshY0EsK5DzwdMhgVWYwqSNf9eGjjbDg3kLVC44+Uy4Jn2cpwyZXWTaHXF
+	AjiFWAHlT8S+lbfQS4xqfIyMDipDOLKT50h1y462+zufk568toGW1Q1l2J1D5lKUpFkgW2ItQ3T
+	zByZYyUirqMDKQXYP9XX48t8ktRDCY4fgvMEL5E6KrsheC7lnFXeVA6+8ipEWbxHr9HhBjrr4lK
+	grcDRl3aVa8vvf/mqWcpKivPs
+X-Google-Smtp-Source: AGHT+IH3jMaZbwa3JBJe8orI1Uw0kXh5RxmFXNau0vVoGSKJtJHkYT5j19OFg78Tkin/EtohP0YEWw==
+X-Received: by 2002:a17:907:3f29:b0:ad2:40a1:7894 with SMTP id a640c23a62f3a-adb32582f61mr52689966b.41.1748543534216;
+        Thu, 29 May 2025 11:32:14 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:18cd:67ac:6946:5beb? ([2620:10d:c092:500::6:9f6d])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60567169d14sm329705a12.74.2025.05.29.11.32.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 11:32:13 -0700 (PDT)
+Message-ID: <162c14e6-0b16-4698-bd76-735037ea0d73@gmail.com>
+Date: Thu, 29 May 2025 19:32:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529164822.777908-1-Frank.Li@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [DISCUSSION] proposed mctl() API
+To: Matthew Wilcox <willy@infradead.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, SeongJae Park <sj@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <aDh9LtSLCiTLjg2X@casper.infradead.org>
+ <c7fqqny5yv7smhxnxe5o4rc2wepmc6uei76teymfhxoana34nk@sfqnc2qclf23>
+ <aDij5brAsGJVHCFK@casper.infradead.org>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <aDij5brAsGJVHCFK@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Frank,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.15 next-20250529]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 29/05/2025 19:13, Matthew Wilcox wrote:
+> On Thu, May 29, 2025 at 10:54:34AM -0700, Shakeel Butt wrote:
+>> On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
+>>> People should put more effort into allocating THPs automatically and
+>>> monitoring where they're helping performance and where they're hurting
+>>> performance,
+>>
+>> Can you please expand on people putting more effort? Is it about
+>> workloads or maybe malloc implementations (tcmalloc, jemalloc) being
+>> more intelligent in managing their allocations/frees to keep more used
+>> memory in hugepage aligned regions? And conveying to kernel which
+>> regions they prefer hugepage backed and which they do not? Or something
+>> else?
+> 
+> We need infrastructure inside the kernel to monitor whether a task is
+> making effective use of the THPs that it has, and if it's not then move
+> those THPs over to where they will be better used.
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/dt-bindings-display-convert-himax-hx8357d-txt-to-yaml-format/20250530-004954
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250529164822.777908-1-Frank.Li%40nxp.com
-patch subject: [PATCH 1/1] dt-bindings: display: convert himax, hx8357d.txt to yaml format
-reproduce: (https://download.01.org/0day-ci/archive/20250530/202505300219.7v1CVviw-lkp@intel.com/reproduce)
+I think this is the really difficult part.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505300219.7v1CVviw-lkp@intel.com/
+If we have 2 workloads on the same server, For e.g. one is database where THPs 
+just dont do well, but the other one is AI where THPs do really well. How
+will the kernel monitor that the database workload is performing worse
+and the AI one isnt?
 
-All warnings (new ones prefixed by >>):
+I added THP shrinker to hopefully try and do this automatically, and it does
+really help. But unfortunately it is not a complete solution.
+There are severely memory bound workloads where even a tiny increase
+in memory will lead to an OOM. And if you colocate the container thats running
+that workload with one in which we will benefit with THPs, we unfortunately
+can't just rely on the system doing the right thing.
 
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/himax,hx8357d.txt
-   Using alabaster theme
+It would be awesome if THPs are truly transparent and don't require
+any input, but unfortunately I don't think that there is a solution
+for this with just kernel monitoring.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This is just a big hint from the user. If the global system policy is madvise
+and the workload owner has done their own benchmarks and see benefits
+with always, they set DEFAULT_MADV_HUGEPAGE for the process to optin as "always".
+If the global system policy is always and the workload owner has done their own 
+benchmarks and see worse results with always, they set DEFAULT_MADV_NOHUGEPAGE for 
+the process to optin as "madvise". 
+
+
+
+> I don't necessarily object to userspace giving hints like "I think I'm
+> going to use all of this 20MB region quite heavily", but the kernel should
+> treat those hints with the appropriate skepticism, otherwise it's just
+> a turbo button that nobody would ever _not_ press.
+> 
+>>> instead of coming up with these baroque reasons to blame
+>>> the sysadmin for not having tweaked some magic knob.
+>>
+>> To me this is not about blaming sysadmin but more about sysadmin wanting
+>> more fine grained control on THP allocation policies for different
+>> workloads running in a multi-tenant environment.
+> 
+> That's the same thing.  Linux should be auto-tuning, not relying on some
+> omniscient sysadmin to fix it up.
+
