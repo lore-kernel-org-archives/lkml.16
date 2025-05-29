@@ -1,131 +1,310 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DF2D531
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083831B7F4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748479554; cv=none; b=PDIGXo9E26vZettv6HQNRrYz7mMbaqFYxNoadx9QnGvuAgSk8jHMqXrQHmrBlNyFkqVEejTxQZVFXNio6gGo/VcQlCZFYWKHHvoHYtZ4AyIcZ1rJyEZRUkqOb36EsMwuTns2lSscRc2NeRix7ME4NZIHFjAgJ8WWThHFla5F1T8=
+	t=1748479642; cv=none; b=F7g3RBB2wkfujZ5xF/rhBVnBpJ8Rngsl4zlvMFvkXVgnQXmlq7lsK5XJNM7yJv9Lsh0/QR90lZTWX1MNTDE/rKWQiKOYIlRWQwOjQJs7fKBUiB2dAyHJ3kZ7PEMd00WRWKB0YpX/PTqAam/O/EKFcJlBdPymVr3yKeLfsJM/n40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748479554; c=relaxed/simple;
-	bh=RBRQJtrU1o/5GEIK3NL3AuJ9HmHI6MTEnzGsJ8BgC+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NrLfFNQZbf+I/pVzPSuFvnxnlPU7EwUcZMwXof7+5cNZaxKqgGDqdZ6MHCd4izWceqTbmSYbNNfKZyTp9piLa74fuLa3Ac4LkXMpuEPd8EghUTw+lK8QfTSeHAmbmEMu56P3rBaCzweTZjyUi345cy5g6X1+A0Jxf+DaGsHH5rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=dIK/KI+O; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1748479642; c=relaxed/simple;
+	bh=nMxYb8M8OaAeVFAVvCa0NWPJ0hqSKxbRHfrVdZuONdA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r7Dt2m1G7mEnHF7o6D6LfX9xMW5Rvdbo/0M0EoMDsnDcvqmjmqLBcAJXWJPu3T6mnJDtBkDD23BtJymODbFcHKi+n3uPmdkkPe7ot18GjxvNgsjoFrEN4iWM3bwW+oPanIGWJ0HAekarS8kZy5N4LEBNi/KKE1A3SYFsI38yBn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UwD3waOm; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dIK/KI+O"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47692b9d059so5181931cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:45:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UwD3waOm"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e45a626663so100643137.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:47:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748479551; x=1749084351; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u3lirCGQK/pK/dwoYb1WbV7HzR0WtFCYVJUxyqG54gc=;
-        b=dIK/KI+OamU/fEUYVanrHke3Qr2mVSwUdo7VwlQp1izojqRScUx9+uhQMCMxvH6q6V
-         alS8JeifXBGtNCg0wgAslfleLjymfKgiyMaaJd/bq4gCEd3kpXj/Y9QI94pVS4a6zw28
-         bTW11Plg1s4BRFeu7GJJqiELFWr/Uo0oFsxySDNgStfKEpBq7Og9bhMoLS4ccGg4g5O8
-         Z85rDMP0qd7u+VkyYIqVkrcSCx5j4qdT6btxaePoynHNacNmNdMIOLCjFRyYSmBz9HYn
-         2+xvVdM1XmNGedAVf1qWJQgTMHBYgj3MHu7FlyDLg9mMJ7/7CufIxCw9aUwqJHYOnyjL
-         JFpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748479551; x=1749084351;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1748479640; x=1749084440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u3lirCGQK/pK/dwoYb1WbV7HzR0WtFCYVJUxyqG54gc=;
-        b=oxtjF6ZmgHTBoSPu4ZI+deN9eIa5bdsDHYu/7ouk/rBzu2/Fr2xOhmKqHBRZcTbmng
-         IBu2+/uhZQZERJCUf/7raGWLoMjB53RCFS5fPPTBj1rllQXW6qVCZbtLGC+FH7M/3u2U
-         KuXNYmYuRe2rv97MiPLmIOjH4eKryM+6JYob/tS0HbZIvoPxIXOzI5U2P4goFochBNi9
-         +VWqRnJrNp6xL1FC3NcANaYlFKlHNN8GRtgdFOklgBxODIV39VAEy5Ovo5jbLAbcq0jZ
-         nG13k3rxgVbh59VLFPCIpu0oZDMvyPIhvPNmTqFA6tMtGMLJu71uPBQMiX+CW4ycHl3n
-         95gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuU7qnWE9HeRW8n/jw4hw9yzyb25t5bBF7hBorgnZRGG8148w8eUQ+wQOafeP3AhWRRfgN+cG0qsVXuj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxupZeUEO4shOpGL77NTENR53+LCEu1jvL67hljs8Uba/2mOowk
-	PAEKDjW6pmPgWERdrnXkWjWWIcRqaElBj+Z/Ky0IECGxZMnPY24YBpIr/idG3h6tlYo=
-X-Gm-Gg: ASbGncsb3QNPptCq+mAhU1LTK+8vmk/5Q6gD+lbwqjlk1xG+gri9N03Vvu1KQ0IYg3D
-	JGEH+fThN6r8Y5jRJUTv2Km/p9eQM1DaQ08dXDxpcMVQyokyeixp8J58ZkvSrA7+9hZamqiw7dx
-	5bA3rkVBNvMUcAuG/o5qQ7S7KwUTvH9aMXizzZErbWhrFOLwx+7Q/lTwaSvpi4Zd2I9rWCwGBsd
-	j2rKc+QUkaUZvSU9iES+GtHu3zrWm102VWA4e0AvL4j5PpMfLOrQiGjH/DHLwO9WyddKUIVr517
-	6x4htyn6lj3tgYH2NRtrYgDLvDzrd60UxVanxKJKUgMDQ/4n9GhFPl58bKuGuLySn0apuWVufjj
-	knjfpAjPuNbIB7RuNA0PbReBnAhc=
-X-Google-Smtp-Source: AGHT+IHnqnRTolKjMO7lt2c7vFTmLmTqjyLGW4orbu4JZw/Ke3zfhB9aPh390EN0T2RwX/GWqU+5fg==
-X-Received: by 2002:a05:622a:6107:b0:494:7e11:fe59 with SMTP id d75a77b69052e-49f46d32fdbmr301749631cf.25.1748479551637;
-        Wed, 28 May 2025 17:45:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435a633c8sm1683561cf.70.2025.05.28.17.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 17:45:51 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uKRP4-00000000qoo-1zjw;
-	Wed, 28 May 2025 21:45:50 -0300
-Date: Wed, 28 May 2025 21:45:50 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Cc: acourbot@nvidia.com, dakr@kernel.org, lyude@redhat.com,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
-	Petr Tesarik <petr@tesarici.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Sui Jingfeng <sui.jingfeng@linux.dev>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-Message-ID: <20250529004550.GB192517@ziepe.ca>
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+        bh=NcJSuZLlEiXXGQNoUX9py5aoN4tofONoEJKG7XFVq38=;
+        b=UwD3waOmApEZO6iDEVTS07SrZJlEYSmPbic+sE0mI7fvinHYunNHcp+dB3uiOcZ+BE
+         Cobsv+0nGZ4T8AfRabNeF2zjZYH4C3zlUYTxHs+aABdtfzxtCKw5OzRRYPJPifJgGiqP
+         T8dURJL+To7g5kCe6b755s7MPI6tWy272W2KwAjN0IpnJ+RS5HZzCxSE9Wpv3xk5NSCT
+         DbPUN/ZCOM+Tak/xyESh5CKVmE86f5alYksqo0FbvuhBFMAZRo+co0eyWcBzhnP99kn/
+         ZVmdsn/dtROh2hjXchNr9NlTakRP2l1iKlAz3Wd6sWyCJP7qqTwb/8JU++ltqN/5RNcp
+         Ztbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748479640; x=1749084440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NcJSuZLlEiXXGQNoUX9py5aoN4tofONoEJKG7XFVq38=;
+        b=jO46t4ePHzFh1YVV8+EFDnb1aMK3WJSeqR0TtL5rH5I89eGHntFXfrC2GpElTmqkIM
+         Xg9SPFFtIV664fj6Nq2CdyIPn6zIaaV03YVGOUiYJSYUNBLDu1Q4LGSdsGpvn/A3Fbau
+         M7bPARg4Z1Vu1hPQf3yUzgAOx/W6rfZhVkpOUsreWu9ALAPyaqY7/deLL0YuO/nA7ifz
+         FF34nwEt/uN8MFNZHwsqRVzPqbaZ9lNlkijXeLsYqTWvzS9Mvl2XzcEGSnO8LNjyQLpQ
+         EdOiXC9C/R+toUtS8JR6irbWNf0oGitaZjw4S22PZULFNZd7rhNQVXHFw+6S6Kt4sl3Z
+         t1Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvVb0noDAnC/+otzUsmlpu3/u4486o7hMef7o560srIw2oA/bPy8XsjKQb2zmWzERtRlTfsLkK5UMF51w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDh4PhlTloZD4pgOMJzp9WnQTgJNoTfVvL3bH53HkHtexL9qEz
+	dM9bpFs8NGIpw0NbZhhosA9DKj8vhMlinBP9opBVmHgJW4PShBiu2aKz82g+Y3wCS6c97NnsIVN
+	ED2VLteay120QoTQvMHz8divYTZN/oqoVybDsD5rR
+X-Gm-Gg: ASbGncvSHic5DbS1fKwqVTCMlhqs11S/Nu1eXl0jYvL8lU+YOU3FcmQtfT5Dbbtbozi
+	VGyQ8VESpMxLM701P3pBL0V0fk/gbx3CXvkBF9TDPhaEZdJ+S0geacJ0jjlUjUc3/SuECmzMg84
+	0c6Vhedj6uCA3hb9iDo0sRc54GIYPrbg4BeoRFRZZlhjA=
+X-Google-Smtp-Source: AGHT+IEj9ymqfBXg6cFdB/Bj79VZBgVJSds2yTL3tVJMdz6WyDjPNGjPqLqwJ5g5XLlSN1N8famZpJNRS8BECNpItp4=
+X-Received: by 2002:a05:6102:2c0f:b0:4e5:9628:9e39 with SMTP id
+ ada2fe7eead31-4e59628a358mr6877728137.6.1748479639651; Wed, 28 May 2025
+ 17:47:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
+References: <20250522205205.3408764-1-dylanbhatch@google.com>
+ <20250522205205.3408764-2-dylanbhatch@google.com> <aDXQYMcLle2E_b2d@pathway.suse.cz>
+In-Reply-To: <aDXQYMcLle2E_b2d@pathway.suse.cz>
+From: Dylan Hatch <dylanbhatch@google.com>
+Date: Wed, 28 May 2025 17:47:08 -0700
+X-Gm-Features: AX0GCFst9YoNtP29t3lkS_hoyCgFJvPQXD1R7QrZslaZlG-dM0idmAI4vCWSU-M
+Message-ID: <CADBMgpzO36dP=bXQAL46_WnWZJK0TmdO9ZR5z6OBdvtXsHn4_g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] livepatch, x86/module: Generalize late module
+ relocation locking.
+To: Petr Mladek <pmladek@suse.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+	Miroslav Benes <mbenes@suse.cz>, Joe Lawrence <joe.lawrence@redhat.com>, Song Liu <song@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	live-patching@vger.kernel.org, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
-> +impl SGEntry<Unmapped> {
-> +    /// Set this entry to point at a given page.
-> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
-> +        let c: *mut bindings::scatterlist = self.0.get();
-> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
-> +        // `Page` invariant also ensures the pointer is valid.
-> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
-> +    }
-> +}
+Hi Petr,
 
-Wrong safety statement. sg_set_page captures the page.as_ptr() inside
-the C datastructure so the caller must ensure it holds a reference on
-the page while it is contained within the scatterlist.
+On Tue, May 27, 2025 at 7:46=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> As this patch suggests, the "text_mutex" has been used to
+> sychronize apply_relocate_add() only on x86_64 so far.
+>
+> s390x seems to rely on "s390_kernel_write_lock" taken by:
+>
+>   + apply_relocate_add()
+>     + s390_kernel_write()
+>       + __s390_kernel_write()
+>
+> And powerpc seems to rely on "pte" locking taken by
+>
+>   + apply_relocate_add()
+>     + patch_instruction()
+>       + patch_mem()
+>         + __do_patch_mem_mm()
+>           + get_locked_pte()
+>
 
-Which this API doesn't force to happen.
+Reading through these implementations, I see that the serialization
+happens only at the level of each individual write action. This is
+equivalent to the patch_lock already used by aarch64_insn_copy() and
+aarch64_insn_set(). I see now that this same serialization is achieved
+by x86 using text_mutex, and that text_poke uses
+'lockdep_assert_held(&text_mutex);' instead of grabbing the lock
+itself, which is why only the x86 apply_relocate_add() currently takes
+this mutex.
 
-Most likely for this to work for rust you have to take a page
-reference here and ensure the page reference is put back during sg
-destruction. A typical normal pattern would 'move' the reference from
-the caller into the scatterlist.
+> I see two possibilities:
+>
+>   1. Either this change makes a false feeling that "text_mutex"
+>      sychronizes apply_relocate_add() on all architextures.
+>
+>      This does not seems to be the case on, for example, s390
+>      and powerpc.
+>
+>      =3D> The code is misleading and could lead to troubles.
+>
 
-I also think set_page should not be exposed to rust at all, it should
-probably only build scatterlists using the append APIs inside scatter
-tables where the entire model is much cleaner.
+My original intent with this change was to give the late relocations
+on arm64 the correct synchronization with respect to other
+text-patching code. From what you've shown above, it looks like the
+[PATCH 2/2] should work fine without this change since the arm64
+patching code already takes patch_lock.
 
-Because this is also wrong in the sense that it destroys whatever
-sg_page was already there, which may have been holding a page refcount
-and thus it would leak it.
+>
+>    2. Or it actually provides some sychronization on all
+>       architectures, for example, against kprobe code.
+>
+>       In this case, it might actually fix an existing race.
+>       It should be described in the commit message
+>       and nominated for backporting to stable.
+>
 
-Jason
+I hadn't really considered this. From what I can tell, kprobe is the
+only non-arch-specific code that takes this mutex when touching kernel
+text. Though my understanding of kprobe is very limited, I think there
+could be a risk due to the late relocations for livepatch:
+
+Suppose I apply a livepatch 'L' that touches some module 'M', but M
+isn't currently loaded. Between check_kprobe_address_safe() and
+__register_kprobe(), I don't see any check that would fail for a probe
+'P' registered on a function inside L. So it seems to me that it's
+possible for prepare_kprobe() on L to race with apply_relocate_add()
+for L if P is registered while M is being loaded.
+
+Perhaps more importantly, is it ever safe to kprobe an instruction
+that hasn't yet received relocation? This would probably only be
+possible in the case of late relocations for a livepatch, so maybe
+this scenario was overlooked. I wonder if check_kprobe_address_safe()
+can check for this case and cause the kprobe to fail, preventing the
+above race condition from ever being possible.
+
+In any case, synchronizing against kprobe wasn't the original intent
+of this patch series, so in my opinion it makes sense to resend it as
+a standalone patch (if it is to be resent at all).
+
+>
+> I am sorry if this has already been discussed. But I have been
+> in Cc only for v3 and v4. And there is no changelog in
+> the cover letter.
+>
+
+This patch was added to the series in v3, which is how you got added
+to CC. Sorry about not adding a changelog, I'm still learning the best
+practices for sending patches.
+
+> > +
+> > +     if (apply)
+> > +             ret =3D apply_relocate_add(sechdrs, strtab, symndx, secnd=
+x, pmod);
+> > +     else
+> > +             clear_relocate_add(sechdrs, strtab, symndx, secndx, pmod)=
+;
+> > +
+> > +     if (!early)
+> > +             mutex_unlock(&text_mutex);
+> > +     return ret;
+> >  }
+>
+> Best Regards,
+> Petr
+
+Thanks,
+Dylan
+
+On Tue, May 27, 2025 at 7:46=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> On Thu 2025-05-22 20:52:04, Dylan Hatch wrote:
+> > Late module relocations are an issue on any arch that supports
+> > livepatch, so move the text_mutex locking to the livepatch core code.
+> >
+> > Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
+> > Acked-by: Song Liu <song@kernel.org>
+> > ---
+> >  arch/x86/kernel/module.c |  8 ++------
+> >  kernel/livepatch/core.c  | 18 +++++++++++++-----
+> >  2 files changed, 15 insertions(+), 11 deletions(-)
+> >
+> > --- a/arch/x86/kernel/module.c
+> > +++ b/arch/x86/kernel/module.c
+> > @@ -197,18 +197,14 @@ static int write_relocate_add(Elf64_Shdr *sechdrs=
+,
+> >       bool early =3D me->state =3D=3D MODULE_STATE_UNFORMED;
+> >       void *(*write)(void *, const void *, size_t) =3D memcpy;
+> >
+> > -     if (!early) {
+> > +     if (!early)
+> >               write =3D text_poke;
+> > -             mutex_lock(&text_mutex);
+> > -     }
+> >
+> >       ret =3D __write_relocate_add(sechdrs, strtab, symindex, relsec, m=
+e,
+> >                                  write, apply);
+> >
+> > -     if (!early) {
+> > +     if (!early)
+> >               text_poke_sync();
+> > -             mutex_unlock(&text_mutex);
+> > -     }
+> >
+> >       return ret;
+> >  }
+> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> > index 0e73fac55f8eb..9968441f73510 100644
+> > --- a/kernel/livepatch/core.c
+> > +++ b/kernel/livepatch/core.c
+> > @@ -319,12 +320,19 @@ static int klp_write_section_relocs(struct module=
+ *pmod, Elf_Shdr *sechdrs,
+> >                                         sec, sec_objname);
+> >               if (ret)
+> >                       return ret;
+> > -
+> > -             return apply_relocate_add(sechdrs, strtab, symndx, secndx=
+, pmod);
+> >       }
+> >
+> > -     clear_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+> > -     return 0;
+> > +     if (!early)
+> > +             mutex_lock(&text_mutex);
+>
+> I understand why you do this but it opens some questions.
+>
+> As this patch suggests, the "text_mutex" has been used to
+> sychronize apply_relocate_add() only on x86_64 so far.
+>
+> s390x seems to rely on "s390_kernel_write_lock" taken by:
+>
+>   + apply_relocate_add()
+>     + s390_kernel_write()
+>       + __s390_kernel_write()
+>
+> And powerpc seems to rely on "pte" locking taken by
+>
+>   + apply_relocate_add()
+>     + patch_instruction()
+>       + patch_mem()
+>         + __do_patch_mem_mm()
+>           + get_locked_pte()
+>
+> I see two possibilities:
+>
+>   1. Either this change makes a false feeling that "text_mutex"
+>      sychronizes apply_relocate_add() on all architextures.
+>
+>      This does not seems to be the case on, for example, s390
+>      and powerpc.
+>
+>      =3D> The code is misleading and could lead to troubles.
+>
+>
+>    2. Or it actually provides some sychronization on all
+>       architectures, for example, against kprobe code.
+>
+>       In this case, it might actually fix an existing race.
+>       It should be described in the commit message
+>       and nominated for backporting to stable.
+>
+>
+> I am sorry if this has already been discussed. But I have been
+> in Cc only for v3 and v4. And there is no changelog in
+> the cover letter.
+>
+> > +
+> > +     if (apply)
+> > +             ret =3D apply_relocate_add(sechdrs, strtab, symndx, secnd=
+x, pmod);
+> > +     else
+> > +             clear_relocate_add(sechdrs, strtab, symndx, secndx, pmod)=
+;
+> > +
+> > +     if (!early)
+> > +             mutex_unlock(&text_mutex);
+> > +     return ret;
+> >  }
+>
+> Best Regards,
+> Petr
