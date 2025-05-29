@@ -1,106 +1,68 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139C61552E0
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41217155C83;
+	Thu, 29 May 2025 01:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748480326; cv=none; b=SvCDod7lk4GhVPQW/Ky0maEVq/JzrZD+Q7lGYzmh07EdT+hRbzXJoJapy5nWqyoFNrZ1rfnmfanZ+T2udcDv52E++Llm2+Xg39owkaMzWQxSVTaxqKoRRxaSXeRP2ktBMRnF0mPlIBVJtfVOZI5qXl/oZ2MHsHqb2SAmX2W8Kes=
+	t=1748481072; cv=none; b=tf9iZ/XVteR/k1wBWl/XJF1eH7rZgp/9CvPQVE78Zdz2cJwb1KhwVTVM+dJVVuGLgZBYVMtVe2k7T7VE3n3RwOpPyQ2HrLl95hhqPkyoY+59D0xnSY6O6Nqt/u48eBmvob1PtIgUpW5QEfi4s4/SNuVOney1wAhY+tfHso4Lv60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748480326; c=relaxed/simple;
-	bh=3LJcOgM16Q1j+9Th1SFZvDmY147GM4KkX2rAr1YfKhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DKHu9H0ocet4LExlSML5qv1kgYFkXK2RAMVRzRiDo1ExSnX6n+aNv2XEFUv89Uelk6HMR7LuPmOpdFtiFYb1ruV0ZJWYVUm3A3MyVCJZtWtCBW8a+mOKDKo8+AyzS02kE6hApFc/fm9T+JIc+hIjuFm3LWNctV0BN58BW6xyr/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V8SAI7VF; arc=none smtp.client-ip=209.85.217.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V8SAI7VF"
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e45dae6c8cso239850137.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748480324; x=1749085124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3LJcOgM16Q1j+9Th1SFZvDmY147GM4KkX2rAr1YfKhQ=;
-        b=V8SAI7VFlPtkPbyc1dL1gjfXp12iNxY/O7nkWcdeSjTl/YcfVPiLQpk9HH1R1gB/lS
-         Wkbf6qRz1mKeF9Ddi8zlrJYonyniXGkF72XVGahic1jKgOtMGVN+pOD6OpfxEJ3sssDE
-         1x48JlAdlty5tUZm0WeBJvGiZAkxYVmxuY9ZrnUQRtbVfSU7rZbnqJQUcEYQ3toZA4Fl
-         S711KAzkr+GfJTlcbDTzhAETuRin8N1BV53/sSrAHqR0WlmB9bpfcb2pQgByJ2MXQyik
-         Xp1/07GlEGJ18BMp6lzx+Yn8RWSmmc2HUI8Eko/50s7M74snfEUrFegh+STKT869tRqh
-         3DrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748480324; x=1749085124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3LJcOgM16Q1j+9Th1SFZvDmY147GM4KkX2rAr1YfKhQ=;
-        b=a6qfTunVwNVM3a/3IyK+E6HAt62xNENpvsCLQlMMvPqSe5DaqYAsbSzSxj69zM88Ur
-         +ZrbcrWFYY8R/WYbflay33jFa/+HlqzfvKCpCplrF29Ul58wHJFQ5JN/lYypC1Mf41g+
-         uoctAvpH8VjqMr5W3Xqg/S93i9f0XIcSlg4oI45vJY3I4m/r4Y0lzFdGbLEhj/ngJvZ1
-         37YCpfUIAUTwJ8CYH1MStI+8D2T73vTsChwq5JozBU8oEkSr76Ne5uR1cJ1wOCbRUoDi
-         GNghbLfiK8Qpw3UNu3MJ7gxHTm9e1wvMBetAiAzc2GGd44LIghyEfjlJCzKNMdQ38vdj
-         Qccg==
-X-Forwarded-Encrypted: i=1; AJvYcCXpEoFZoSf1jmyEgC0AVE5NJ33WHVBAQhbCU8+K4ntOW8yvCtIxmnXvvOLLPHuzpUaFnOZLimU/C2dBvJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4RZSLoERUpEavjDCmwtGmCZxlXXb7qJ8u4vBagjS0CasXqe/d
-	pkiQj5hQCw9Jy+nUDLFzIWV60antdnbWbvvmt3NUaNwfpfGAJ0b1DykbSrwNSaRrjPFNlEcj5rv
-	eUYrkGHistFs7lDJuS03ZwSXH3mzyFlsZqZzvKqQ+
-X-Gm-Gg: ASbGncunWM3LxK6zAORemgpy6EovNsu7LpsyCefD+lav19WAGnsgfKCuh3KrrpSfXwH
-	VzaOooY3kO5r9jEH7SnNbauC+b7uAxjdZ5n6ilcwdKCszogKdZYhFvROqbH0RX0lsI6Efmej+s6
-	shKHIBYTbDkwGF0q4FJ30F4GzGG9lQWwxXXe3o9oiQCXA=
-X-Google-Smtp-Source: AGHT+IGwx4Uty5er2IzIySgycdil2fOJygTTHKMBF3mM9M6iD5H+JXzX07+IWyvy/kC9EeuCYaOM6quQ4vt7XbW+weA=
-X-Received: by 2002:a05:6102:2927:b0:4e5:a309:85da with SMTP id
- ada2fe7eead31-4e5a3098731mr3876448137.7.1748480323519; Wed, 28 May 2025
- 17:58:43 -0700 (PDT)
+	s=arc-20240116; t=1748481072; c=relaxed/simple;
+	bh=wOBSgxrE3eFgY8U43apRcxIY0s0fPyaGRr5Is1W7FEM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eYQoOJ4mmCfEgxYadN4JgaUozk795nVUVQweV2n1mcm64OgL6+YTPyCYrxFPH5hhMLu5VOKclLVNDekK9mkLmCS2nxpGIi4ZUArYiR5k1USbOGRWM7Pxr2Te7EMlTqZt/Ttb5F4qv4HNLeNbFgtI948a2m9H4whWORQYXJp1dGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxbWsntDdofB4BAQ--.20456S3;
+	Thu, 29 May 2025 09:11:03 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMCx_cYmtDdoR0P5AA--.57458S2;
+	Thu, 29 May 2025 09:11:02 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Tianrui Zhao <zhaotianrui@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xianglai Li <lixianglai@loongson.cn>
+Cc: kvm@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] LoongArch: KVM: Enhancement about eiointc emulation
+Date: Thu, 29 May 2025 09:10:57 +0800
+Message-Id: <20250529011102.378749-1-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-2-blakejones@google.com> <aC9iF4_eASPkPxXd@x1> <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
-In-Reply-To: <CAP_z_Cg_vH1+BAm87U4gYQ0hDRGtHkkYb2DHtTRSd_QNvg3ZLQ@mail.gmail.com>
-From: Blake Jones <blakejones@google.com>
-Date: Wed, 28 May 2025 17:58:32 -0700
-X-Gm-Features: AX0GCFusfVzOe8iNeRt_7LeEPUEcrg67_QANaTma6IA3CsaAZ6gVZ8V4ecXjgtQ
-Message-ID: <CAP_z_ChErhmooT5rhyXH8L-Ltkz3xdJ7PG20UKDpn9usMUgqTA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf: add support for printing BTF character arrays
- as strings
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx_cYmtDdoR0P5AA--.57458S2
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Hi Arnaldo,
+This series fix two issue about kernel eiointc emulation, one is caused
+by type forced assignment, the other is to use physical cpu with
+interrupt route.
 
-On Thu, May 22, 2025 at 11:19=E2=80=AFAM Blake Jones <blakejones@google.com=
-> wrote:
-> On Thu, May 22, 2025 at 1:42=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> > I'll test this but unsure if this part should go thru the perf tool
-> > tree, perhaps should go, together with some test case, via the libbpf
-> > tree?
->
-> Thanks for taking a look at this. I'd appreciate your guidance here - I
-> sent it here because the other two patches in my patch set depend on this
-> one.
+Also there is code cleanup with kernel eiointc emulation.
 
-Do you think this can be merged through the perf tree, or should I separate
-this patch and send it though the BPF tree first?
+Bibo Mao (5):
+  LoongArch: KVM: Fix interrupt route update with eiointc
+  LoongArch: KVM: Check interrupt route from physical cpu with eiointc
+  LoongArch: KVM: Use standard bitops API with eiointc
+  LoongArch: KVM: Remove unused parameter len
+  LoongArch: KVM: Add stat information with kernel irqchip
+
+ arch/loongarch/include/asm/kvm_host.h |  9 +--
+ arch/loongarch/kvm/intc/eiointc.c     | 98 ++++++++++++++-------------
+ arch/loongarch/kvm/intc/ipi.c         | 28 ++------
+ arch/loongarch/kvm/intc/pch_pic.c     |  4 +-
+ arch/loongarch/kvm/vcpu.c             |  5 +-
+ 5 files changed, 65 insertions(+), 79 deletions(-)
+
+
+base-commit: feacb1774bd5eac6382990d0f6d1378dc01dd78f
+-- 
+2.39.3
+
