@@ -1,207 +1,258 @@
-Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011029.outbound.protection.outlook.com [52.103.67.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36332EAE3;
-	Thu, 29 May 2025 03:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748489280; cv=fail; b=c2ZxCz0K+4u3rFaUMQBYfmrgHfrGMey569Jb1v9UJrBEQawtwiXnwwqtUeYjl3BaweItCIRxRHDupvshbBf/df9vlMmRhIyFckKKvp671u5UoskvehikWM6le2t9oofZiAl6SFfxE4GR7e88uubLPY0NZ7vjAacJL1IrObTsqHk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748489280; c=relaxed/simple;
-	bh=zFbTv0ri166bW6ucMi+TkTfWK0Cpv26tQY46ndcgP6E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Kf8Ea9/jcjy2ffKyF+VW8Llsrim4SCxIeSWuktc+RE0WLSr/qWTzcUun4JC6JhKOSr81Vwcl62NaOJMwHqpWXJKyM/nWJbs65brA48uptUvViubLCjpAjJXszvCq9DcbjNWUr1J1XYcEpkOLnjntRwVSgaLWBxj15t/Fhoe8ouE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Iid3cXLi; arc=fail smtp.client-ip=52.103.67.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Iid3cXLi"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K87zwCj+Ne4GIPuNDqdLC88SlkDpAk7WBTL36qNlH9qgPO80K7m0WBva6IEKcYlPZvPOMYJCMYiBEZpb/f2evnxj6EerAfRooKxb3LWgo8u5aNBaei5MJg2S29JpfdVaQ++JwgnlODSFwdzaAgAaAWpDet0eNIV9SmFfV5F2h8IZb1gD6BxFDAHyBu240CWwZHYE36LFTN/V5Vev8btOhODvubmPX+u3P8i5Bwn2AFyxD4EHyOnFM0hmSUdPYArF69IADXGL9U1boVldaA9FgvczYI+M8eGEMSbOnfqvR9qWsnhClPepca33fmA7KZau4B44dr3PHTmt0/zM42UI8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wvo+w60nQlstCPOpF6pTVO34Hbb9ZCA0VHvCfan99Ps=;
- b=FUeCUMbQ7XgfCIDZo2dMPTVBYeL8R5q08Nn62rH8kfY+wF6uGmsYP5rVzsSlbNTzsXUfVbi6AXemlRRnaEIYYnx016bwSxEDrhXZvBsmb/NIrYkhNqJl2o4YrjfOTxvrqgQDMrf09+uZT4gIxO2Nuhjhd783d3dn/bGdk72ZA0PEFWUtlK2EgPzh0b8eDA2iWb7KmQsRDRtB+cQihOZQBaQbJQTtmtmuUHQm0DVNMA2BlkTfB5cNOszXQOQR11NERRpFnxqixWi6MXk9/kuiRFcJ/SoxQ1sONF7oJpCJ1FJvMQKYwJXJLvUMNEwU00GzUTwaUPKn83JxGYcjuEMqng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wvo+w60nQlstCPOpF6pTVO34Hbb9ZCA0VHvCfan99Ps=;
- b=Iid3cXLiOeV2FXEklgeRhrnQDsG5RJujtoAlVKdi4oEq5Q3Pu70H4OL38svxQyOGcA/VzSIcFgpIHhVfnY5QFaY7OmJOZGWjDX4sUqt0H88ITG0PFpf7Y6DvfSru7VEJtNk6d+BlgMHSOg3TU9x+RwLAi5cuyuKhxOOwgqHUFbeSemOmqBXeJY5wpMbkPsfZ0J6n6T8TPA/UjOcDPJpfFouKCZTK42V0LEORPoDg4GDQcnLexzOuuPXFlBRNnG4gCCelq5EDNyazrcvOttW7GQIp7DDijoTuhr+mhLWQIpXtMxNxVT8BEq6emSzkr6f1JoCbhvyIEgkqQFgUPHqnAg==
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
- by MA0P287MB0555.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:116::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Thu, 29 May
- 2025 03:27:50 +0000
-Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8769.029; Thu, 29 May 2025
- 03:27:50 +0000
-Message-ID:
- <MA0P287MB22623CDDCC0156327B446B32FE66A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Thu, 29 May 2025 11:27:45 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/3] riscv: pwm: sophgo: add pwm support for SG2044
-To: Longbin Li <looong.bin@gmail.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Inochi Amaoto <inochiama@gmail.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250528101139.28702-1-looong.bin@gmail.com>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <20250528101139.28702-1-looong.bin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR01CA0051.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::6) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:100::6)
-X-Microsoft-Original-Message-ID:
- <83e4a554-c4a4-4c99-8f9f-d4a4912ccccc@outlook.com>
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3009D2EAE3;
+	Thu, 29 May 2025 03:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748489357; cv=none; b=fuxz/u3SUQ5SkdlAar2T/yV1xQuKZxsHTVpP5K52IbF7PSgi1T3zyhtGJ7oqTvVpID2bsX7olMJAhtBRGu+gKnV1BLbTYcGPY6EnVKrQlUbWbsdDLLA08tpi/whXdanxXXv5PbdIUnsfukQHl580ptGFPyu9RgF8mRMtM+GjGBU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748489357; c=relaxed/simple;
+	bh=IUxEdRG+ZYpiSQ6ECtVtnjnubZIa5EDRVhpJpvsRhsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TkGEG8tXKf+b9wmPUh7KONQc/nGcdgOD1aTOBOekX25MabX32lKdPrSVH6IQYNiypwAzwbtxRdsVOBMyq/UQJCfimq/QjtuEYWrgoCeN8FS2n706QjYUfZIbNa8x/TfQmm/by1kuLj1WcLJC7FWgqT6zusWy4mRLxNJN03QauH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-22-6837d484f185
+Date: Thu, 29 May 2025 12:29:03 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com, anthony.l.nguyen@intel.com
+Subject: Re: [RFC v3 00/18] Split netmem from struct page
+Message-ID: <20250529032903.GA14480@system.software.com>
+References: <20250529031047.7587-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|MA0P287MB0555:EE_
-X-MS-Office365-Filtering-Correlation-Id: eca71ce3-5709-49b4-e570-08dd9e60ca25
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|6090799003|461199028|7092599006|8060799009|19110799006|15080799009|5072599009|1602099012|440099028|3412199025|4302099013|10035399007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OEx4NVVHbGpRZ0dIZm9RM0lXOE0vSkNmcjhGQnZpZXZvdW5lOGl1QmhuOVpa?=
- =?utf-8?B?OU5yNXV2dDFPOXZVNlNhNVJyUDZld0lGL3FGditIaU1Kb0NIelBFbDhiQ2Vx?=
- =?utf-8?B?Z1FXclVNemJOU29OdWtBU2FIdUZqcVo0NU5ONDU1UXZUdlpHN21LbEZvQlUy?=
- =?utf-8?B?dXJRQndXK3FJZ3JkMGJLNGNRcXNGV3Z5cVJYWmdUd1Y4SDhxTnlOZ3orYWQ4?=
- =?utf-8?B?NWZ0TVl1T0xwVHZ1TVIwekVMOThKUEh6T3JKR21VS3RIMEtDSHIyRXNxbUlu?=
- =?utf-8?B?b1BRVzNTZldVSVo0ektKTlBGcWt2Qmk4Z3NIZ2FmL1BuWWtiQ3pldldHZHdV?=
- =?utf-8?B?eGRUN0VCc1hTVU1WdWRiZFBlaTY3RG1COEF3Rk14SEYzeXYyVkJML1NLVEFt?=
- =?utf-8?B?dEdRNkcwdUcyOVBnVUtVVmRMNXE2Tm9Oc2JYeWtJSGcvV21hQ2pQN1FJeHZ4?=
- =?utf-8?B?bHVmT3lsd1EvRm96cCt6NU1HOC9wa0svZ2k0MEdHYkdVRStIeGFDeXRUY2tP?=
- =?utf-8?B?Z1JTQW1HUEMyaXZvdGpuUlNQMXViLzFYZTRzZzFiR05CZHQrQkFEYlRwY3pz?=
- =?utf-8?B?b1NCLzB1VU9tbTRKV2hKTnk0RnBMTURQRkZZZU9JektnMHV3VFZnTlVVNDIv?=
- =?utf-8?B?ZXN3SEx1SEdvNVRZNmxMNDkxUTR0NWJvTVNPOG81M1E1SHkxNGN6MW15S3cy?=
- =?utf-8?B?clNkMU9aalp4YXB3SXJoWEdjOUNtbmNpb0loa20ybm1tdFk0THVyQzhmSlhI?=
- =?utf-8?B?M2JaMzNmZFlQL2xrc0ZCNzg2bHZrcHdIcUQ4SXBxWnNEQzI4OGl1OVcxNGdt?=
- =?utf-8?B?dnZ5ZUY0RkZpL1h6MDhzdzB0NDdkbTc1QU5taGZKZ0ozYmtuTk5JcWhEWlM3?=
- =?utf-8?B?Vmp5QUtPTUFrT0NnRTEvd2JhUmJrb2gzaU85eW4wMlNNWERGLzd0Tmdrdyth?=
- =?utf-8?B?dWRneEkrQ3NVSGk1S2RwRjVEQVJzcDUvdGRUWUs4ZEV0clpxMVlocXRTMm9p?=
- =?utf-8?B?ZDhNdC9YUnBZM2kva0JiWVJRKzhvZUdya0p4enYzVWluWFVuMUQ4NFFxRmtl?=
- =?utf-8?B?eEQ1TVB5bS9xeUFPMzdPU2pKVGZITjZOSjhaYWEvYThTOUdDVjRtbU0wbzhi?=
- =?utf-8?B?Rk43L2VPOVplVFdQR2tsQ1c4cFRlakdEMzc0ZDYyMFEwU0pIUnRTNm9wYjNp?=
- =?utf-8?B?VHlsQnRwMVBMZ3YwVUZhRjVLaGxLK1hrekczUW4yenZDRStIaUNrLzErbmt4?=
- =?utf-8?B?cnhsMHVUTUZtcXRUazVYdlV2d3dIWDFPUEhhem1oNEoyYnR0UVlMZzBmR1lV?=
- =?utf-8?B?dGtzbGtwemVvNGxSRmx0bGlOSklFT2VPNWgzQjBkUk9oZEdqNFRNQ09RR24x?=
- =?utf-8?B?UGFwaUJ5NmtNTmZXZVFlRVN6MGxpdEJuRWhNWDVud1cxSzY3bGZpQ1V3YTJJ?=
- =?utf-8?B?L1JEak5vUVhkZHNyY0RiclBGYU42ai9NYmJ5WDBFQ1Rqc1JTbDhlemxDdThM?=
- =?utf-8?B?YnZGb2dZR3M3MktDc1VCdTZ5b0Q5aEZiTDhMOUlMWWQ5Y1ZIQ0hUK3lNd3pq?=
- =?utf-8?B?Vkw1ZzJRZ2tiYytheXFxc0ZLRUtxRi9RSmFRZ29ncktLV2R5d3VvUjBydFB0?=
- =?utf-8?B?dkljNkIwQ1dFK0pkS0NjWkpvQjEwU3UxTmV2ZkNtcDlJMFg1LzJPQmw4eWtE?=
- =?utf-8?B?U0JaZG9zdk9EdklRcDVZWS9zbHJQRHVyZ1JGWTRVNE5QRlFDSXVNLzQ3cDBW?=
- =?utf-8?Q?Xk3VZl71pb+6a//weKzXWK2PBbWKxgT2xKgyJFG?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZFExN2pwL2s4Zm9jME9hQVJUWjFQZUtudVJ5bFBEUHpjeEh6OVJjVEhGc1FJ?=
- =?utf-8?B?TUdLVmRoT29vcjk0RG0yTnpsZ2p2U05Jd2ZBd1U5SS84N2FucWVqdnlvczEz?=
- =?utf-8?B?MEtqMDBLUHNtMUdIZWJ3T3NISWlWRkxrWk9vdUNGeGhVUnd5aUJVMnRPMWEx?=
- =?utf-8?B?cUdqZnZmaVhKTzBTSk10Q3pJYjNIdGFvTUkvOHpreWZiT1VoRHhWUElZR2Vh?=
- =?utf-8?B?S0VXSFFQTUNUdk1tc3Roc1Z1K09TcEd2VXI4eVNEUXUzNTdhV1huVnBab2ZZ?=
- =?utf-8?B?dUI1aHU3Sy9aTFYyK3VHYkk2eEo0bmRnNlV5VWhLRkY1cSs3WDI5Mjd2WjJL?=
- =?utf-8?B?cnVUS3JsZUs2QTU1R0QxZVUrVXQxdy9RbWZTZ2JsL1NsM2I1a0t1aWU4a2w3?=
- =?utf-8?B?ODhEaDBwV3Faa1JWUEthWTVLVDlmdms5WHlNeHp1RVczUUVrUGh3RTF2OWhX?=
- =?utf-8?B?MHBjREZITC9TOEE3RU1EaG9makNXODRwdkgxTGZ5YnJlNWlKRElvSUtvUUQ2?=
- =?utf-8?B?WSs2bnB5NzIxakNyNG1BVlRvSXBhNlljejZJQ1V2dVZORXgvM1lncTI0N1NR?=
- =?utf-8?B?WG12RUFpTE9rRHpiVnZENGYvSHBzT0xSVE9tQWVPZzkwZ0F4elE0Z0tRdGJJ?=
- =?utf-8?B?R29ud1dDUExmTUV5MFZtMGJCTzB0SlQwSE13bkptL1FtL1BFUFljUVI3enRz?=
- =?utf-8?B?dW5WbGpvNDM1RGlpMUhHUFlDb2Mwa01VYTJlcHFqckZDSEJLdGFZa1J0bWtT?=
- =?utf-8?B?aHNvcEUrWUJBeFVvOGdtcWc0RTh2bUJiVW4rQm84VllwVGIxSTdiSmt1am5k?=
- =?utf-8?B?d3E5OGhPZlhMMnNCajJBYmJxMlkrMCtWOGVaUXlMWTdzWDRZWDhkb2s4UnZT?=
- =?utf-8?B?UnZaM01vYzE5cVNwWlpySmFXazh3d3ZzQmg1Zkd3SERZYmxSREd0NVA1cjJY?=
- =?utf-8?B?YXRlY1pVSjYyd3IxVE1OenlidElmVTJmWHh4S0NSR0Y2WE9VcVVBbmQvSC9p?=
- =?utf-8?B?T1pqc3ZXU1VKWHlMY0lBRExXZkR5OVEvV0VtSjZzVHpLNTNXdkowdjlKSHRF?=
- =?utf-8?B?LzdjajZEd2hua1ZDZUs3d0xyYU1EU1lrMHkydEdlbnJ6QzMwYXRFUHdVOU5W?=
- =?utf-8?B?QjlEQ0I3SmFOc1NoV0JPRnJlbkdSRG9hQlhjaE15K0FpZFJIS1JmQ3BaQmRO?=
- =?utf-8?B?b0VQaWNDWCtDdWhPOUxnQS9Za2hxM0x0K2F6ZTZmM21LUWRPTlk5VUdaUUZJ?=
- =?utf-8?B?aVJVS2VkMndielNLMEdlemdMYmNjbFc4S3VmSzg4UlNOQVpqaDErdVptaHlR?=
- =?utf-8?B?QWk2ZmcwZ2U2WmdHR0hjUDJrUllhSUx4YjhvazNmaGZObm4wU0FUVUd3TlJw?=
- =?utf-8?B?SVpmQjhkRTZEU00vNjlRSitJM2dkMnhra2FYVlZ0REt3WTNQaHNJNXJyQjNJ?=
- =?utf-8?B?ek5hWG5WcktaMmRIWW5sUWFBV1Z1NjNZcXp3VGtRdnZYMUJNYmkzUUNHWC9q?=
- =?utf-8?B?K2VBN1NyMkVIN0czajJKalh6NVVQUFBTOElDVlE4eS9idUhWMWFPK1BaVnNX?=
- =?utf-8?B?NDcrQ0hLYTBGZkMyZTNMWGYrTGo2YUpKazlrcyszb2Yxa1Uvckt1SEhIMXBs?=
- =?utf-8?B?dlNqNEpXZ01MVnFxY3hVdEFYRkpPSzY1blZWUC9SY09zVkJVYU5OZTg4RjNn?=
- =?utf-8?B?a3d3WFN6b0dVb0dEQko0Y0R6Y1l4bnd0MHkzMFZYSzBZM1lIa3N2TU1ZNHdm?=
- =?utf-8?Q?GQAmYP/Di40DLYUo6lf5e1Fv0uqONPxSm3UX8mR?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eca71ce3-5709-49b4-e570-08dd9e60ca25
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 03:27:50.4492
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0555
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529031047.7587-1-byungchul@sk.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe+69u7sbrm7L6ikhZRGBkGYveqIy6dNDFAT5xYpq5K2N5hxb
+	vkUvthRp+JaV1DSaSU5nsbLS+ZKoiRkWybKxzFJ0aoYW5QtTy3ITqW8/zvmf3zkfDkfL80Rr
+	ObX2rKDXKjUKVspIxwJKNmV2Rak2192kodj+gIVKbypY+xwiqO/0UlBsq0YwMf1RDOOtL1ko
+	LZmaj73NYGDSPkPDYFu/GHrLhhhoyKqhoT+vnYWcjFkajI5yCjqrc0VwY+Y+DTXpfWJ4V1fM
+	wucHf0Qw1JLDwCtzBQO9uTHQZlkFUx2jCFrtNRRMZd9h4brTwsJARi8C54t+Boou5yKwN7pF
+	MOstZmMU5GnFB4rUmj+JiaUqiTwpDyWlDSMUMbmdNKmyXWVJ1c8CMelxNbCk/dYsQ2od4xTJ
+	ufKNJT8GuxnyvfE9S+xP3zPktaVVfHD5YemueEGjThb04dEnpKohr0SXFZ360OFi0tG1zSYk
+	4TC/DZdnD4gX2ftpgPIxw2/Ao4WZIh+z/Ebsdk/TJsRxgXw4dhXEmZCUo3mPCM+W5PnzK/gd
+	uK2jlPGxjAdcb/von5XPO2+bmtmF+nL86rbHn6H5UOyeG6F8TpoPwtY5zleW8Ntx4ZNCv3Il
+	vx43Vb+kfLswX8Fha+Y4vXDnGtxc7mbyEW/+T2v+T2v+p7Ug2obkam1yglKt2RamStOqU8NO
+	JiZUofk3Kbvw64gD/ew81IJ4DikCZO0oSiUXKZMNaQktCHO0IlBm3BOpksvilWnnBH3icX2S
+	RjC0oCCOUayWbZlKiZfzp5VnhTOCoBP0i12Kk6xNR/at+c92zTSfKoi0DW+/99hl6HZOxkYt
+	K6T2hBgfvQlRXtz/+Nu6YKcnE+2tfNu2z9MUf6LU9Mh6aVVKcFyArmly6SHPkt13a4ICuw/Q
+	2pDa52O6iiid5zyZ6fh6tKtLUlQ3atlSORrxpWdlNHVwhebWcOyx39Rk0vRE7M4Nv40lcQrG
+	oFJGhNJ6g/IvoUnNhCIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z/bjqPR6eTlVBQ0SUNSE1JfKewGebogfirKDzny1IZzxqai
+	RWW6MFfOtJRaKyaHvKWspuimpjXNFD8kK8e6mGYqBXa1ZLqwmhH57eF5n9/v00vj7FdiNa3S
+	ZAtajUItp6SENHlrUaT+ebxyc4klDMzWRgruevOgdsxOQseQFwNzQyuC73OvJDDT+4QCsXoW
+	B/NTPQE/rPM4TPaNS2C0ZoqAzuI2HMbL+iko1ftwKLTXYdBza4CEoVYjCdfm7+DQVjAmgWft
+	ZgreNP4iYcpZSsCAqZ6AUeMO6LMEw+zgNIJeaxsGs5dvUXDVZaHgnX4UgatnnICb540IrF0e
+	EnxeM7UjlG+pf4HxDtOIhLfYcvjmughe7PyA8QaPC+dtDSUUb/tWIeFfuzspvv+6j+Ad9hmM
+	Ly36RPFfJ18S/OeuYYoX33/BeGvLMJHCHpFuSxfUqlxBG52YJlVOeQNOFifmNdndRAEq32xA
+	ATTHbOG8I+8wfyaYDdx01QXSnykmnPN45nADoulAJppzVxw2ICmNMxMk56suW9yvZBK4vkGR
+	8GcZA1xHw6tFlv3jvGF4RP3tV3ADNyYWNzgTwXkWPmB+J86s4WoXaH8dwMRyVc1Vi8ogJpR7
+	2PoEu4JkpiW0aQlt+k9bEN6AAlWa3EyFSh0bpctQ5mtUeVHHsjJt6M8j1Jz5WW5H358lORFD
+	I/kyWT+KV7KkIleXn+lEHI3LA2WF2+OUrCxdkX9K0GYd1eaoBZ0TraEJeYhs3yEhjWVOKLKF
+	DEE4KWj/XTE6YHUBaqspJoMrTWRL4WT3rjJj7/paR0/Squ79Ce6DJZc2Kefikitz0bqsj6LD
+	1/S2/YoYnJlq/DLOLZ8udzcmRKqGo00zEzEHXGd3W1ins+ucZPvCvdIHUclYkHlCpggpOC2G
+	58XtvH1RLx6nwjam9p6P2buWTdo7G5gSkvj49P09LjmhUypiInCtTvEbooWcCQQDAAA=
+X-CFilter-Loop: Reflected
 
+On Thu, May 29, 2025 at 12:10:29PM +0900, Byungchul Park wrote:
+> The MM subsystem is trying to reduce struct page to a single pointer.
+> The first step towards that is splitting struct page by its individual
+> users, as has already been done with folio and slab.  This patchset does
+> that for netmem which is used for page pools.
+> 
+> Matthew Wilcox tried and stopped the same work, you can see in:
+> 
+>    https://lore.kernel.org/linux-mm/20230111042214.907030-1-willy@infradead.org/
+> 
+> Mina Almasry already has done a lot fo prerequisite works by luck, he
+> said :).  I stacked my patches on the top of his work e.i. netmem.
+> 
+> I focused on removing the page pool members in struct page this time,
+> not moving the allocation code of page pool from net to mm.  It can be
+> done later if needed.
+> 
+> The final patch removing the page pool fields will be submitted once
+> all the converting work of page to netmem are done:
+> 
+>    1. converting of libeth_fqe by Tony Nguyen.
+>    2. converting of mlx5 by Tariq Toukan.
 
-On 2025/5/28 18:11, Longbin Li wrote:
-> This patch adds PWM controller support for four independent
-> PWM channel outputs.
->
++cc Tony Nguyen
++cc Tariq Toukan
+
+	Byungchul
+
+>    3. converting of prueth_swdata (on me).
+>    4. converting of freescale driver (on me).
+> 
+> For our discussion, I'm sharing what the final patch looks like the
+> following.
+> 
+> 	Byungchul
+> --8<--
+> commit 86be39ea488df859cff6bc398a364f1dc486f2f9
+> Author: Byungchul Park <byungchul@sk.com>
+> Date:   Wed May 28 20:44:55 2025 +0900
+> 
+>     mm, netmem: remove the page pool members in struct page
+>     
+>     Now that all the users of the page pool members in struct page have been
+>     gone, the members can be removed from struct page.
+>     
+>     However, since struct netmem_desc still uses the space in struct page,
+>     the important offsets should be checked properly, until struct
+>     netmem_desc has its own instance from slab.
+>     
+>     Remove the page pool members in struct page and modify static checkers
+>     for the offsets.
+>     
+>     Signed-off-by: Byungchul Park <byungchul@sk.com>
+> 
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 56d07edd01f9..5a7864eb9d76 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -119,17 +119,6 @@ struct page {
+>  			 */
+>  			unsigned long private;
+>  		};
+> -		struct {	/* page_pool used by netstack */
+> -			/**
+> -			 * @pp_magic: magic value to avoid recycling non
+> -			 * page_pool allocated pages.
+> -			 */
+> -			unsigned long pp_magic;
+> -			struct page_pool *pp;
+> -			unsigned long _pp_mapping_pad;
+> -			unsigned long dma_addr;
+> -			atomic_long_t pp_ref_count;
+> -		};
+>  		struct {	/* Tail pages of compound page */
+>  			unsigned long compound_head;	/* Bit zero is set */
+>  		};
+> diff --git a/include/net/netmem.h b/include/net/netmem.h
+> index 9e4ed3530788..e88e299dd0f0 100644
+> --- a/include/net/netmem.h
+> +++ b/include/net/netmem.h
+> @@ -39,11 +39,8 @@ struct netmem_desc {
+>  	static_assert(offsetof(struct page, pg) == \
+>  		      offsetof(struct netmem_desc, desc))
+>  NETMEM_DESC_ASSERT_OFFSET(flags, _flags);
+> -NETMEM_DESC_ASSERT_OFFSET(pp_magic, pp_magic);
+> -NETMEM_DESC_ASSERT_OFFSET(pp, pp);
+> -NETMEM_DESC_ASSERT_OFFSET(_pp_mapping_pad, _pp_mapping_pad);
+> -NETMEM_DESC_ASSERT_OFFSET(dma_addr, dma_addr);
+> -NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+> +NETMEM_DESC_ASSERT_OFFSET(lru, pp_magic);
+> +NETMEM_DESC_ASSERT_OFFSET(mapping, _pp_mapping_pad);
+>  #undef NETMEM_DESC_ASSERT_OFFSET
+>  
+>  /*
 > ---
->
-> Changes in v5:
->
->    - Rename function and variables for clarity.
->    - Modify code style.
->
-> Changes in v4:
->    You can simply review or test the patches at the link [4].
->
->    - add tags for mail.
->
-> Changes in v3:
->    You can simply review or test the patches at the link [3].
->
->    - Rename macro definitions to unify naming.
->    - Modify code style.
->
-> Changes in v2:
->    You can simply review or test the patches at the link [2].
->
->    - Modify variable naming and code logic.
->    - update "MODULE_AUTHOR".
->
-> Changes in v1:
->    You can simply review or test the patches at the link [1].
->
-> Link: https://lore.kernel.org/linux-riscv/20250407072056.8629-1-looong.bin@gmail.com/ [1]
-> Link: https://lore.kernel.org/linux-riscv/20250418022948.22853-1-looong.bin@gmail.com/ [2]
-> Link: https://lore.kernel.org/linux-riscv/20250424012335.6246-1-looong.bin@gmail.com/ [3]
-> Link: https://lore.kernel.org/linux-riscv/20250428013501.6354-1-looong.bin@gmail.com/ [4]
-> ---
->
-> Longbin Li (3):
->    pwm: sophgo: reorganize the code structure
->    pwm: sophgo: add driver for SG2044
->    dt-bindings: pwm: sophgo: add pwm controller for SG2044
->
->   .../bindings/pwm/sophgo,sg2042-pwm.yaml       |   4 +-
->   drivers/pwm/pwm-sophgo-sg2042.c               | 141 +++++++++++++++---
->   2 files changed, 127 insertions(+), 18 deletions(-)
->
-> --
-> 2.49.0
-
-No major changes, LGTM.
-
-Chen
-
+> Changes from v2:
+> 	1. Introduce a netmem API, virt_to_head_netmem(), and use it
+> 	   when it's needed.
+> 	2. Introduce struct netmem_desc as a new struct and union'ed
+> 	   with the existing fields in struct net_iov.
+> 	3. Make page_pool_page_is_pp() access ->pp_magic through struct
+> 	   netmem_desc instead of struct page.
+> 	4. Move netmem alloc APIs from include/net/netmem.h to
+> 	   net/core/netmem_priv.h.
+> 	5. Apply trivial feedbacks, thanks to Mina, Pavel, and Toke.
+> 	6. Add given 'Reviewed-by's, thanks to Mina.
+> 
+> Changes from v1:
+> 	1. Rebase on net-next's main as of May 26.
+> 	2. Check checkpatch.pl, feedbacked by SJ Park.
+> 	3. Add converting of page to netmem in mt76.
+> 	4. Revert 'mlx5: use netmem descriptor and APIs for page pool'
+> 	   since it's on-going by Tariq Toukan.  I will wait for his
+> 	   work to be done.
+> 	5. Revert 'page_pool: use netmem APIs to access page->pp_magic
+> 	   in page_pool_page_is_pp()' since we need more discussion.
+> 	6. Revert 'mm, netmem: remove the page pool members in struct
+> 	   page' since there are some prerequisite works to remove the
+> 	   page pool fields from struct page.  I can submit this patch
+> 	   separatedly later.
+> 	7. Cancel relocating a page pool member in struct page.
+> 	8. Modify static assert for offests and size of struct
+> 	   netmem_desc.
+> 
+> Changes from rfc:
+> 	1. Rebase on net-next's main branch.
+> 	   https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/
+> 	2. Fix a build error reported by kernel test robot.
+> 	   https://lore.kernel.org/all/202505100932.uzAMBW1y-lkp@intel.com/
+> 	3. Add given 'Reviewed-by's, thanks to Mina and Ilias.
+> 	4. Do static_assert() on the size of struct netmem_desc instead
+> 	   of placing place-holder in struct page, feedbacked by
+> 	   Matthew.
+> 	5. Do struct_group_tagged(netmem_desc) on struct net_iov instead
+> 	   of wholly renaming it to strcut netmem_desc, feedbacked by
+> 	   Mina and Pavel.
+> 
+> Byungchul Park (18):
+>   netmem: introduce struct netmem_desc mirroring struct page
+>   netmem: introduce netmem alloc APIs to wrap page alloc APIs
+>   page_pool: use netmem alloc/put APIs in __page_pool_alloc_page_order()
+>   page_pool: rename __page_pool_alloc_page_order() to
+>     __page_pool_alloc_netmem_order()
+>   page_pool: use netmem alloc/put APIs in __page_pool_alloc_pages_slow()
+>   page_pool: rename page_pool_return_page() to page_pool_return_netmem()
+>   page_pool: use netmem put API in page_pool_return_netmem()
+>   page_pool: rename __page_pool_release_page_dma() to
+>     __page_pool_release_netmem_dma()
+>   page_pool: rename __page_pool_put_page() to __page_pool_put_netmem()
+>   page_pool: rename __page_pool_alloc_pages_slow() to
+>     __page_pool_alloc_netmems_slow()
+>   mlx4: use netmem descriptor and APIs for page pool
+>   netmem: use _Generic to cover const casting for page_to_netmem()
+>   netmem: remove __netmem_get_pp()
+>   page_pool: make page_pool_get_dma_addr() just wrap
+>     page_pool_get_dma_addr_netmem()
+>   netdevsim: use netmem descriptor and APIs for page pool
+>   netmem: introduce a netmem API, virt_to_head_netmem()
+>   mt76: use netmem descriptor and APIs for page pool
+>   page_pool: access ->pp_magic through struct netmem_desc in
+>     page_pool_page_is_pp()
+> 
+>  drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  48 +++---
+>  drivers/net/ethernet/mellanox/mlx4/en_tx.c    |   8 +-
+>  drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |   4 +-
+>  drivers/net/netdevsim/netdev.c                |  19 +--
+>  drivers/net/netdevsim/netdevsim.h             |   2 +-
+>  drivers/net/wireless/mediatek/mt76/dma.c      |   6 +-
+>  drivers/net/wireless/mediatek/mt76/mt76.h     |  12 +-
+>  .../net/wireless/mediatek/mt76/sdio_txrx.c    |  24 +--
+>  drivers/net/wireless/mediatek/mt76/usb.c      |  10 +-
+>  include/linux/mm.h                            |  12 --
+>  include/net/netmem.h                          | 145 +++++++++++++-----
+>  include/net/page_pool/helpers.h               |   7 +-
+>  mm/page_alloc.c                               |   1 +
+>  net/core/netmem_priv.h                        |  14 ++
+>  net/core/page_pool.c                          | 101 ++++++------
+>  15 files changed, 239 insertions(+), 174 deletions(-)
+> 
+> 
+> base-commit: d09a8a4ab57849d0401d7c0bc6583e367984d9f7
+> -- 
+> 2.17.1
