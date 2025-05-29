@@ -1,121 +1,281 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA211E8326;
-	Thu, 29 May 2025 11:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162CA1E8326;
+	Thu, 29 May 2025 11:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748517444; cv=none; b=q1awiqbD9xPVA3Ntd9aaRmRLQn5mEp08s/Kw+3Nz1IALspAvO/wHeKo22M46OPD8g8ls5MY92ATc6ZQJtmx2iZImJW7/J8fdr4uHU8xyoBQQWFt7RrDde59luwVzOaUyKfQXFZ/ZgqFMJOy2WNsDUDYzs3EfMFVnpYw25exJjFk=
+	t=1748517453; cv=none; b=D+OwR0DwFM0/JdepR9gOGQlrYZgLxVvReFRxKnbaEdS9Lqs3L0Po5RRPz8EngYjaF6Yz+mmC4rFVdFBUMBf0CL5ihLcIhTZtMHgiInD97CDgUi7HUZ4qC1Kj3U22vFwbYnJyZgYWjDoyKPtxZDedzdeqbaj/97L+1XVGkfUQwck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748517444; c=relaxed/simple;
-	bh=y1WxNsUaaCQ76I6bmdF7st+6K4OmxaslZfaz5YthJcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohGDG3fXOieUaj6HB/fttSRGIVUtu6DL9B/DxkR5WtChpAEqlvgwn8elpaWjwW8+CnIZCEmiKNh6mwYKuzTG+enm5a5wnSsy8fA+i/imMvN5I16vy2jnbkxbVIXVAH/0lNdXl4QVdRK4OfjwBTSPsg7xX15p6Pu4hoy9PCkftGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWp0Ebs6; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWp0Ebs6"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so471471f8f.2;
-        Thu, 29 May 2025 04:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748517441; x=1749122241; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nlXDRDgb6NELSEvtZDiZWhvLmZhCjsZFnwl0WjO5hXQ=;
-        b=gWp0Ebs6W9U8dpJyQRC8XeLUxqC7D84gPD74W7M0+02zf/y1aSKfz9c2c5uqy5nKTj
-         QyXhjhm3nDu5BABwVhwNnI2DhwHLpLx05WkgNEeBnW1uPBr4BF8ZqKlU9D5Do/UmEk7g
-         /uZqY/Ijva7zclNWSvsG0oPGfZN3owF5FsrSojN+jic3C0dLI0ExXDgYD+L3p8RD30BH
-         55Azv/0yX3q6QCJ5lGDdAfwrmAvvNNhlnjj0DJToSbpaeYpws/YL4Xs1LQWq8wLhT1f2
-         vy+68j2UL4PpEV/a+54LCFg/suQrOK5Vov3abUvk7BsX/64x0EeO02Fli+Nrc990xpQK
-         OwDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748517441; x=1749122241;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nlXDRDgb6NELSEvtZDiZWhvLmZhCjsZFnwl0WjO5hXQ=;
-        b=sldIj30fkUMlIgZqJI/95DyCCJjNabo6kR3aODLkoNS9Ow9t/MP1n2l0gLG5SelLJ/
-         f4BOsJTdbHg+mUes7KRxij8wzM8mO2nxfNaWMVOn5MvjB6qpz6YdJpK8DriGxRsdNCM0
-         J/6CNgEQiTsXHXYBeKNyPX8w56iA1DcSf2aXFU0UI1a/+5kQ9ero1FgcCMVlLHlhWg5Z
-         EKJ3TDzDdgocrBME+EhpiYhhnVGTlqdpQ2ne/DmJQhMreYCIzWOTXxM86R+AL95kZDts
-         vgJEaPJYbC7GNKU5ppMzxdBA1JUclMmUCitnXWF3i+UhwLldxagc9iW55dhoZk/P6cJr
-         S+Og==
-X-Forwarded-Encrypted: i=1; AJvYcCUUArnpJARj+qQ89f8ZegMSQuiMRWR5BimaozoaE0c/B3oxz8hRDEpPEfd/GaI0BoeG2ykVP+Mg6qeTssD1@vger.kernel.org, AJvYcCXyztSpzmF/cPoZHvijBqPw7bqrmQ6wS9EePk1LS6bSE14LBCegZKpmbEP5r1kyJC21AEM4T/JRZUFGLr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxuh4Cmw59v+MGB+dHTJFtfrqFjs2nCMe2HK/TahgrxC95fMBsm
-	M6rXDX7pHy7VzmfsXOoTGzX4FPmg+q+BpJOEklmB7zXPnkFZqL/AC3NZWEqYvg==
-X-Gm-Gg: ASbGncu8NkANA3g+6yYI5wbXVih5d5zpsO+4zy6bnK7hxfNlRzsQrmAo7KDDHsOgoqB
-	ZcAZ+xEk9q+wxJ8TdS1Ho6k3bm2SzRj3DDcDCKsSY23wyRRtZ/75rhzS+VPRM+Uq4l/mLiEzfFN
-	QQyw7pZKoCtX10ag8FB7csAfnmPOOkFUQGA/aD0gPrShdXj/8WMqkTIlKsUIUU5wuNyr0lq19Zz
-	OFpxr3A9GI5NIU2KK1Oj/cON3RnkR4zONGUabcpgKg9nWpmv8Tzq2B7LfND26RDeCAfjFfykOQY
-	5Z5BuQT/chnV/tYphWGeSHRN+uVzDxQTi+bBcPuqrAwQrnCqHCLpj8hBmwE9Lck=
-X-Google-Smtp-Source: AGHT+IHtgZ/XW+7fRrlSv/HIrfly33pmvCxjkrQUeDtROrJKxEFcueqCNb0ZrPOIgzS/ZWEMVKb0LQ==
-X-Received: by 2002:a05:6000:250f:b0:3a4:eac6:e320 with SMTP id ffacd0b85a97d-3a4eac6e4cfmr5557421f8f.3.1748517440483;
-        Thu, 29 May 2025 04:17:20 -0700 (PDT)
-Received: from Red ([2a01:cb1d:897:7800:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-450cfc030fcsm16997705e9.15.2025.05.29.04.17.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 04:17:19 -0700 (PDT)
-Date: Thu, 29 May 2025 13:17:17 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: crypto: marvell/cesa - dma_alloc_coherent broken but kmalloc +
- dma_map_single works
-Message-ID: <aDhCPZwmH515TJav@Red>
-References: <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
- <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
- <aC2aAvX07Aaho08d@gondor.apana.org.au>
- <aC2uvvzlR89iVFGW@Red>
- <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
- <aC3cF0-bWb-Jiz4i@Red>
- <aC6TkPM6mOuFwvkD@gondor.apana.org.au>
- <aC7UbAIDA46olNJL@gondor.apana.org.au>
- <aC-EGr50MIVJqwVn@Red>
- <aDbeNYbwhmG6fzUh@gondor.apana.org.au>
+	s=arc-20240116; t=1748517453; c=relaxed/simple;
+	bh=tvIVFwDVFikH3SyG51Hbn5TG8e+E83JqNfhqx5+ohQI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gafyB7lPN6GyW9b+/NUEjTIwKX3amDIOKEXaVfqBHNJdJDdSFL638kvFWlwFwAad33WI5icQx9HHmLKH36AqjP1P2w6b7NiYG5LvlQ2veWktCbxBlXT/4exZO/14nF+nAgRO8qRay0A7r3qJ2HTOw3nS3qfpO8ZzSsd6tmLMFN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7NzL6PjHz67btf;
+	Thu, 29 May 2025 19:13:50 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5188514022E;
+	Thu, 29 May 2025 19:17:27 +0800 (CST)
+Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
+ 2025 13:17:26 +0200
+Date: Thu, 29 May 2025 12:17:21 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Marc Zyngier
+	<maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "Will
+ Deacon" <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff
+	<sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Jiri
+ Slaby <jirislaby@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 21/26] irqchip/gic-v5: Add GICv5 IRS/SPI support
+Message-ID: <20250529121721.000066fb.alireza.sanaee@huawei.com>
+In-Reply-To: <aDgplizfKU/iFwe/@lpieralisi>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+	<20250513-gicv5-host-v4-21-b36e9b15a6c3@kernel.org>
+	<20250528170318.00001dd8@huawei.com>
+	<aDgc7URS+jPBlfQX@lpieralisi>
+	<20250529094519.0000460e.alireza.sanaee@huawei.com>
+	<aDgplizfKU/iFwe/@lpieralisi>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDbeNYbwhmG6fzUh@gondor.apana.org.au>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-Le Wed, May 28, 2025 at 05:58:13PM +0800, Herbert Xu a écrit :
-> On Thu, May 22, 2025 at 10:07:54PM +0200, Corentin Labbe wrote:
-> >
-> > Here is the result:
-> > http://kernel.montjoie.ovh/479404.log
+On Thu, 29 May 2025 11:32:06 +0200
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+
+> On Thu, May 29, 2025 at 09:45:19AM +0100, Alireza Sanaee wrote:
+> 
+> [...]
+> 
+> > > > cpus is a phandle? I think this is going to run into current
+> > > > discussion on what phandles to CPUs on an SMT system look like
+> > > > (Rob Herring and Mark Rutland have different views)
+> > > > https://lore.kernel.org/linux-arm-kernel/20250512080715.82-1-alireza.sanaee@huawei.com/    
+> > > 
+> > > I will make sure to steer clear of that then ;-), whatever the
+> > > outcome the current "cpus" bindings should continue to work
+> > > as-is, right ? 
+> > > > Anyhow this doesn't look right to me.
+> > > > I think it should be of_count_phandle_with_args()     
+> > > 
+> > > Aren't they equivalent in functionality if
+> > > of_count_phandle_with_args() cells_name == NULL ?
+> > > 
+> > > I will update the code but if the functionality provided is not
+> > > the same there is kernel code to fix (it is an example, there are
+> > > others):
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/irqchip/irq-apple-aic.c?h=v6.15#n903  
 > > 
-> > I have built by adding also your "crypto: marvell/cesa - Fix engine load inaccuracy"
+> > I think this is fine, as long as we have always len(reg) == 1 which
+> > is our current case in the dt.  
 > 
-> Please try this patch on top of the current mainline tree.
+> I don't understand what you mean. "cpus" is a list of phandles, what
+> has "reg" got to do with it ?
 > 
-> I've force-enabled the software finalisation code and switched it
-> over to kmalloc + dma_map_single.
+> "reg" of which node ? "cpu" ? why should it be that len(reg) == 1
+> always ? It describes MPIDR_EL1, it depends on the "cpus" _node_
+> #address-cells.
 > 
-> Thanks,
-> -- 
+> I am missing something from the thread above probably.
+> 
+> Lorenzo
 
-Hello
+Hi Lorenzo,
 
-I have tried on top of torvalds/master 90b83efa6701656e02c86e7df2cb1765ea602d07
+This goes back to the Rob and Mark discussion in regards to
+representing SMTs.
 
-https://kernel.montjoie.ovh/479785.log
+With SMTs if cpu-node reg property has
+more than one entry, then you probably have to count them and also ref
+them differently.
 
-Regards
+But if every single SMT is a cpu-node in the DT (which is indeed how
+things are currently), it is fine.
+
+Thanks,
+Alireza
+> 
+> > >   
+> > > > Potentially with cpu-cells as the argument depending on how that
+> > > > thread goes.
+> > > >     
+> > > > > +	if (ncpus < 0)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	niaffids = of_property_count_elems_of_size(node,
+> > > > > "arm,iaffids",
+> > > > > +
+> > > > > sizeof(u16));
+> > > > > +	if (niaffids != ncpus)
+> > > > > +		return -EINVAL;
+> > > > > +    
+> > > > 	u16 *iaffids __free(kfree) = kcalloc(niaffids,
+> > > > sizeof(*iaffids), GFP_KERNEL);    
+> > > 
+> > > Maybe I should rewrite this in Rust :)
+> > >   
+> > > > > +	iaffids = kcalloc(niaffids, sizeof(*iaffids),
+> > > > > GFP_KERNEL);
+> > > > > +	if (!iaffids)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	ret = of_property_read_u16_array(node, "arm,iaffids",
+> > > > > iaffids, niaffids);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	for (i = 0; i < ncpus; i++) {
+> > > > > +		struct device_node *cpu_node;
+> > > > > +		u32 cpu_phandle;
+> > > > > +		int cpu;
+> > > > > +
+> > > > > +		if (of_property_read_u32_index(node, "cpus",
+> > > > > i, &cpu_phandle))
+> > > > > +			continue;
+> > > > > +
+> > > > > +		cpu_node =
+> > > > > of_find_node_by_phandle(cpu_phandle); 
+> > > > 
+> > > > 		cpu_node = of_parse_phandle(node, "cpus", i);
+> > > > 
+> > > > not work here?    
+> > > 
+> > > I think it would.
+> > >   
+> > > >      
+> > > > > +		if (WARN_ON(!cpu_node))
+> > > > > +			continue;
+> > > > > +
+> > > > > +		cpu = of_cpu_node_to_id(cpu_node);    
+> > > > 
+> > > > If this is all you want then Ali's series gives you a helper
+> > > > 
+> > > > 		cpu = of_cpu_phandle_to_id(node, &cpu_node, i);
+> > > > 
+> > > > Though even better to have a helper that allows
+> > > > 		cpu = of_cpu_phandle_to_id(node, NULL, i); and
+> > > > handles the node put as internally.
+> > > > 
+> > > > Ali, any reason we can't do that?  Seems to be a fairly common
+> > > > pattern.
+> > > > 
+> > > > 
+> > > >      
+> > > > > +		of_node_put(cpu_node);
+> > > > > +		if (WARN_ON(cpu < 0))
+> > > > > +			continue;
+> > > > > +
+> > > > > +		if (iaffids[i] & ~iaffid_mask) {
+> > > > > +			pr_warn("CPU %d iaffid 0x%x exceeds
+> > > > > IRS iaffid bits\n",
+> > > > > +				cpu, iaffids[i]);
+> > > > > +			continue;
+> > > > > +		}
+> > > > > +
+> > > > > +		per_cpu(cpu_iaffid, cpu).iaffid = iaffids[i];
+> > > > > +		per_cpu(cpu_iaffid, cpu).valid = true;
+> > > > > +
+> > > > > +		/* We also know that the CPU is connected to
+> > > > > this IRS */
+> > > > > +		per_cpu(per_cpu_irs_data, cpu) = irs_data;
+> > > > > +	}
+> > > > > +
+> > > > > +	return ret;
+> > > > > +}    
+> > > >     
+> > > > > diff --git a/drivers/irqchip/irq-gic-v5.c
+> > > > > b/drivers/irqchip/irq-gic-v5.c index
+> > > > > a50982e5d98816d88e4fca37cc0ac31684fb6c76..e58ff345dbfaf840b17ad63c4fdb6c227137cf4b
+> > > > > 100644 --- a/drivers/irqchip/irq-gic-v5.c +++
+> > > > > b/drivers/irqchip/irq-gic-v5.c
+> > > > >
+> > > > > +
+> > > > > +static int gicv5_spi_irq_set_irqchip_state(struct irq_data
+> > > > > *d,
+> > > > > +					   enum
+> > > > > irqchip_irq_state which,
+> > > > > +					   bool val)
+> > > > > +{    
+> > > > 
+> > > > Similar to previous, I'd call the state parameter state rather
+> > > > than val.    
+> > > 
+> > > Right.
+> > >   
+> > > > > diff --git a/include/linux/irqchip/arm-gic-v5.h
+> > > > > b/include/linux/irqchip/arm-gic-v5.h index
+> > > > > 4ff0ba64d9840c3844671f7850bb3d81ba2eb1b6..187af307de9170d9569898cb1e50de376a38bd0a
+> > > > > 100644 --- a/include/linux/irqchip/arm-gic-v5.h +++
+> > > > > b/include/linux/irqchip/arm-gic-v5.h @@ -5,6 +5,8 @@
+> > > > >  #ifndef __LINUX_IRQCHIP_ARM_GIC_V5_H
+> > > > >  #define __LINUX_IRQCHIP_ARM_GIC_V5_H    
+> > > >     
+> > > > >  
+> > > > > +#define GICV5_NO_READ_ALLOC		0b0
+> > > > > +#define GICV5_READ_ALLOC		0b1
+> > > > > +#define GICV5_NO_WRITE_ALLOC		0b0
+> > > > > +#define GICV5_WRITE_ALLOC		0b1    
+> > > > 
+> > > > Given these are being written to fields called _RA and _WA
+> > > > so the defines provide value over 0 and 1 in appropriate places?
+> > > > Maybe just about. Anyhow, your code so on this up to you.
+> > > >     
+> > > > > +
+> > > > > +#define GICV5_NON_CACHE			0b00
+> > > > > +#define GICV5_WB_CACHE			0b01
+> > > > > +#define GICV5_WT_CACHE			0b10
+> > > > > +
+> > > > > +#define GICV5_NON_SHARE			0b00
+> > > > > +#define GICV5_OUTER_SHARE		0b10
+> > > > > +#define GICV5_INNER_SHARE		0b11
+> > > > > +
+> > > > > +#define GICV5_IRS_IDR1			0x0004
+> > > > > +#define GICV5_IRS_IDR2			0x0008
+> > > > > +#define GICV5_IRS_IDR5			0x0014
+> > > > > +#define GICV5_IRS_IDR6			0x0018
+> > > > > +#define GICV5_IRS_IDR7			0x001c
+> > > > > +#define GICV5_IRS_CR0			0x0080
+> > > > > +#define GICV5_IRS_CR1			0x0084
+> > > > > +#define GICV5_IRS_SPI_SELR		0x0108
+> > > > > +#define GICV5_IRS_SPI_CFGR		0x0114
+> > > > > +#define GICV5_IRS_SPI_STATUSR		0x0118
+> > > > > +#define GICV5_IRS_PE_SELR		0x0140
+> > > > > +#define GICV5_IRS_PE_STATUSR		0x0144
+> > > > > +#define GICV5_IRS_PE_CR0		0x0148    
+> > > > 
+> > > > Blank line here as this is end of register offsets.    
+> > > 
+> > > Yep, fixed it.
+> > > 
+> > > Thanks for having a look !
+> > > Lorenzo
+> > >   
+> > > > > +#define GICV5_IRS_IDR1_PRIORITY_BITS	GENMASK(22, 20)
+> > > > > +#define GICV5_IRS_IDR1_IAFFID_BITS	GENMASK(19, 16)    
+> > > > 
+> > > > 
+> > > >     
+> > >   
+> >   
+> 
+> 
+
