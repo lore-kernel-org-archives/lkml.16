@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0B225487E;
-	Thu, 29 May 2025 06:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114ED10E3
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:31:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748500183; cv=none; b=LyA334GyIJxRKAHcRGxRXM2PjlWtTocP3vfcLqJO2kXhnwGuf0d3mCe3RGXFD0BIADGptn7xpoaB+nF+3sAzDZMfxBT6E55Gyy4T367cf1vBu69SsA0BtbB+SDvPTezrNW92rHAkreDYXYxvo6b9dknybliznAQFWYf+q1yahPo=
+	t=1748500283; cv=none; b=Moj2xZPQgqi9WZEIqzbjmPEcSKfoOVq8HywyXsufTfbLoAiokmn1n+hBUC/eqaM7bnwtcOeGqKpgv0ZIz/fy7S4fjyvn5QqkKZg1si3esVhAstAkOdQJJdB64Tptakvcl/gFdR+Q7gACmxJbG/+kjdVEiUoBNLIA42Jlf5fIab0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748500183; c=relaxed/simple;
-	bh=0ajlM8mtOHuMZ6vsibPyQspxbxIqr6LNq4zGuZXpbC4=;
+	s=arc-20240116; t=1748500283; c=relaxed/simple;
+	bh=j8BqjmjHZNv71a5DNyE9aKkxJqPzWFLn/6qs1DPKhuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ddWWe7SikLkWQ7xeIsKQZU2xs3P6o+kh6EcspASrmhEj+zMdYB7WXxBljVDKA+CzAg+X7PoWw9dtW8w8sqNEGdJu6kVir+uHoxpMYCj8i0PqkHYC40R5HlAiQvu1dzV1597gilnSJ9CPNYXFDXSAeYpYvWVhr/iTbwcLqPOIMWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6Fd1CqR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VtS9m9STXO68WGhXB+eZYxEe4gXUxo0M5r4nHR44qBvMTBwsLIrvCr4KMjOVXR7GVk+1VvGaIo+F+OMoYgoL2Q73OshEf1PjT+ic7NJ4vTfnyqhGvLOZpJ3fHWxDSLZ/CvHLssE7ElY3CKi77Ymo3odvhxBhUQHRITACaO8gVh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yQeTN6q7; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6Fd1CqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 454C5C4CEE7;
-	Thu, 29 May 2025 06:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748500182;
-	bh=0ajlM8mtOHuMZ6vsibPyQspxbxIqr6LNq4zGuZXpbC4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a6Fd1CqRemHTPvWzGHCtlG/JrXeWqRNXiZn0pG8Cog6Do8UjI/yKA/Yk3HkN9BaDf
-	 z/Di1pcXv16ecHrUlCVuypmV4zjGmRul+f9pdpgFX//Z7xDrXlktocSGiRwFYR2Pkb
-	 0OhRx8b9HTLxlwT2gi+Se8U2S+cPZbARj+cJ9Qu6ZNIOI5h3gTxryR6Aj/yAotW0Lc
-	 t8An7gUDTbNYhRXwExXVFl6y7oYuP+7MmfN3dk7AfkPFv8CvDnPirWJcIG94B3GYS6
-	 XebpVWAw4o5aemyTrcRYZYEYSlLPelsW9rnnpLH8CkoP/kc7iTarNHUXYmw+DxFC7u
-	 iGmncbgO103iQ==
-Message-ID: <853418c8-5aae-440f-a28c-971cef20645f@kernel.org>
-Date: Thu, 29 May 2025 08:29:38 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yQeTN6q7"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6045a484818so117540a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748500279; x=1749105079; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rt6mhCx+Xta4pmHm0wtc8Qz2ggrm33jLnwirmmfkTiM=;
+        b=yQeTN6q7zQAG1AVIIuU3mZTZ3x3/RBONr/Xz0AbM+dmGuZKpJo+z6O+hSF23vXwZn+
+         aEnKLGZNtKNyWpkVWakJ/ImUV9M8CRBMIWcKA75oq5iV40p5haf4m9EtyqM2DdbgK6E8
+         DAwC6x3yQ62SytDc1TVarnKLuFitwPlLKz7RjdlxIvgssTfon89Sdp6lxkdZxag7BlAd
+         I17uoQJ58YMtxhAgKEm8b5R45pV5nCD/zoq5QIL+Fis3dUi1c5WmCdhWNaA5DkuDTGvp
+         yZ/giVOyofizM3q8m4bNk1G+zYTDwo9jUQTSw+hdQTJVoOXwuxf3xU3C7i6xfGTvEbXR
+         qwTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748500279; x=1749105079;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rt6mhCx+Xta4pmHm0wtc8Qz2ggrm33jLnwirmmfkTiM=;
+        b=fGl99ljpgfgDZa3rmAk2MwVwcLhsluoVE4e61ZTzbU0qAgi1CJOhZAeO0Iy8DoB9N2
+         rldPw77LYZhA5eHfn4NUN2EPszjjcvPh7YyH2XostewOkb/Af6W3OhRb7Er3nT5irXNw
+         6WzW0HIG2gf+HvqsOo6IF3zIg9XUWC0em8nIyoRR8PaaM6NHHKnMCrKtTKqQJBO5eEou
+         8C7/s0YlxUgG48qYtWgHNvgjNmIWsHITH6OOm11wjUUjKuuzVL/yyVTT9EdeVI8OLphV
+         RgAbh6RpFDqDBN2POavkqGa3oo0oiogvz0ZTwKtFFcG5gl5hKG0TN7wWHm30HMdNIdYR
+         0OIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDPbm1Rjw48oNbD5XQvKKjlfERSHeIyu1MP5NiQ6wCvjf+kIxNDpVWthbQHooL1RUI6E1EeFWRQZ5s2Ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOXeEJniZM9LHcuptkbeZhUatKdbwqY55dB+YY1ah6Ys3z97Zh
+	V7wKsFa3mDI0Qqol3MJzFGZ1ini/OCGAZhXZ9i2fkjeQ7S43mh50zSYdU1voFSdY3Vw=
+X-Gm-Gg: ASbGncuVm7ZIKkZJ1OefPkl76CwayhcsC/NP1pQc4iFfHQTKF/tkyS2HBLRsKwrpMis
+	puHOmszHd8RGVFFT6S6hjfmh4s6UFPdPiAx0o8zpHhC3AntdXnvcs3UXUXGaF3o8SakP4KGb/rP
+	hSJKamSYkh9zREgf9OvGplP2prJHPavgmRFdrTFXupjjyTIYhyYV6Vab2nA+jmvcKiMSr3ZKxBM
+	upjhvUWSiuGQ7RLMff5QGtu2MIQ50bLExwjAlFmZU8UcSiY9ZY2eib7OFDm9Mq0UrCCDt9qLIjq
+	SfnvPPmtnIC4uNv9RIZCvFfCmjW7rGnIbF7SG4X+9JgBRZ5nzsDDIagbYt5MsXxa/K7B29g=
+X-Google-Smtp-Source: AGHT+IHBoTLt2zj07UfvDpduyo6VwGS6VJkEDnEAwKaxoqBhRhFaLtslOtTaIwBlX2xZrWOmGrIukw==
+X-Received: by 2002:a05:6402:51d2:b0:602:a0:1f27 with SMTP id 4fb4d7f45d1cf-60518ce9f36mr1664563a12.1.1748500279313;
+        Wed, 28 May 2025 23:31:19 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fee1esm83489266b.25.2025.05.28.23.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 23:31:18 -0700 (PDT)
+Message-ID: <8b2f664d-8e89-460f-a8df-d3fab13fe889@linaro.org>
+Date: Thu, 29 May 2025 08:31:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +67,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/4] dt-bindings: arm: qcom: Add bindings for QCS9075
- SOC based board
-To: Rob Herring <robh@kernel.org>, Wasim Nazir <quic_wasimn@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@quicinc.com, kernel@oss.qualcomm.com
-References: <20250528122753.3623570-1-quic_wasimn@quicinc.com>
- <20250528122753.3623570-2-quic_wasimn@quicinc.com>
- <20250528222056.GA907125-robh@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] leds: flash: leds-qcom-flash: Fix registry access after
+ re-bind
+To: Fenglin Wu <fenglin.wu@oss.qualcomm.com>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20250528194425.567172-2-krzysztof.kozlowski@linaro.org>
+ <42be0934-2e97-4d02-98df-b5a03195e8ae@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
  JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
@@ -59,57 +87,72 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  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
- 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 a/A=
-In-Reply-To: <20250528222056.GA907125-robh@kernel.org>
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <42be0934-2e97-4d02-98df-b5a03195e8ae@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 29/05/2025 00:20, Rob Herring wrote:
-> On Wed, May 28, 2025 at 05:57:48PM +0530, Wasim Nazir wrote:
->> QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
->> Unlike QCS9100, it doesn't have safety monitoring feature of
->> Safety-Island(SAIL) subsystem, which affects thermal management.
->>
->> qcs9075-iq-9075-evk board is based on QCS9075 SOC.
->>
->> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+On 29/05/2025 05:11, Fenglin Wu wrote:
+>> -static struct reg_field mvflash_4ch_regs[REG_MAX_COUNT] = {
+>> +static const struct reg_field mvflash_4ch_regs[REG_MAX_COUNT] = {
+>>   	REG_FIELD(0x06, 0, 7),			/* status1	*/
+>>   	REG_FIELD(0x07, 0, 6),			/* status2	*/
+>>   	REG_FIELD(0x09, 0, 7),			/* status3	*/
+>> @@ -854,11 +854,17 @@ static int qcom_flash_led_probe(struct platform_device *pdev)
+>>   	if (val == FLASH_SUBTYPE_3CH_PM8150_VAL || val == FLASH_SUBTYPE_3CH_PMI8998_VAL) {
+>>   		flash_data->hw_type = QCOM_MVFLASH_3CH;
+>>   		flash_data->max_channels = 3;
+>> -		regs = mvflash_3ch_regs;
+>> +		regs = devm_kmemdup(dev, mvflash_3ch_regs, sizeof(mvflash_3ch_regs),
+>> +				    GFP_KERNEL);
+>> +		if (!regs)
+>> +			return -ENOMEM;
+>>   	} else if (val == FLASH_SUBTYPE_4CH_VAL) {
+>>   		flash_data->hw_type = QCOM_MVFLASH_4CH;
+>>   		flash_data->max_channels = 4;
+>> -		regs = mvflash_4ch_regs;
+>> +		regs = devm_kmemdup(dev, mvflash_4ch_regs, sizeof(mvflash_3ch_regs),
 > 
-> This is missing Krzysztof's ack.
+> Minor: sizeof(mvflash_4ch_regs)
 
-... and yours. This was acked twice but was changed more often then we
-were able to ack it, so I gave up.
+Copy paste, thanks.
+
+> 
+
+
 
 Best regards,
 Krzysztof
