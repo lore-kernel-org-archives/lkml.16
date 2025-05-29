@@ -1,203 +1,108 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9EB229B1A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55408229B1A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748515265; cv=none; b=raybZxF0tMQ5pK1G7f9gsZmzZ44O2zY6gLnYh2g8LYWk6Tk8aPvAm6eeL4RRqQ+GT/x/H3g+9HjVvhxU6VpSBoTtqGX5NXSYH9CgJq+I9YafQxFLP3NpCbpZUiXZdklEpjWyvTLgqYTmd+hW+KnM5DOGN/lcvKAnFXSrMtr/se4=
+	t=1748515440; cv=none; b=KsFPSuapTA+1y2rUYv9F92Gh4Is8oA8Q9w1DJUvlRE9RvUaKPWTdTgxM+ISH16ukrDHCl8NFUprkLCgxbI/Waboqu1JX+9Yzw42ajZ2tF+CkMkvcYIPWo+G/YaXKbSmyGsYZ0eCPbhjOlE3h6YISkB2YMBJ+K6ucgGNnesn5LDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748515265; c=relaxed/simple;
-	bh=BD/p+q3nyb7mcMBxCQ9/1sSiRcqFvqJoK2KlslK3PGQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=d/8FmEhtbgjq+EL8BdPLwPZh3tsnSrsh89zqYgVncnNVLFGub5dxevx5YRkAmpubc/r63xneNlojkc9SlEEkAtKFrzY/VUlN6i0ctDWumMy5pbN0AW9gizEio5suzlR7kJ1tCYaxBYhLN9/n3lHV9gk8WsE36HclNjVj+qrM/QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e7551197bso79424939f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:41:03 -0700 (PDT)
+	s=arc-20240116; t=1748515440; c=relaxed/simple;
+	bh=d70cOs+yRjLV9v1g4IMElU9hP9dP3kaHVrgHH82h00Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MfkAPqD92tFdqdb5N44tWMtHEdfmpB7GeLLzLcEnBbpeHKvVQV/k5L0mBLunwF29TyPN5/jo7fD2bk+sMzz8vfDcotbx2gEQTL3O8mFs7q9nUmHv/rW+mJqazBv4YtUX714qRcZzANGnqjwna0CXEEkdMDLlmoldeZIQGPRMUZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=fY7021ds; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="fY7021ds"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86a52889f45so20388939f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:43:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1748515436; x=1749120236; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mBKHhBlBfRf8OS9bGTTn4Xut5Q4UhzCrCrJUCDJ3k2w=;
+        b=fY7021dsgTqxeleVgj7g2RpOf1gM8Tqdl9b6YDc7pJaju4nCxudcuB1D0Kel+EqOlS
+         34GxCvoywEJshq57MHAGu3/4yg1BPuJiRixwwYk6FFluDLFJ6VvqdvdYcmF+5ty/a1C1
+         5J2JeGHzEvekuovBN1lHA8UxFiHk/nG2/GdNQSbKDIE3tOZ6wnXsMfh0SgEHAuN4yzVH
+         7suGD0fvnhcFpHX+/z6v+Cc0zJNZyHGCaNqPPGJvIuu65ONo6Gzr3nbN0HV5s5kAbFOf
+         3CfHXdsZGhF2h4GJAGspiL+KKDgQmTy7l31D+0EOnFTQ1OosIGJnKmTKQllZIvb1sivI
+         U+3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748515263; x=1749120063;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1748515436; x=1749120236;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IEFkLSsxbPpYjirsgZP7WbHX9Y/5W7Yk0kPNnHbIn8s=;
-        b=X6x6Czhv0h7kANYdQrxTbfrW4OKyTuFrN5yGvY4jB2HsEjUc8iSjTTrB2ZnGjxuRM0
-         l77WsGbgURDUFQ2oeJRrnvIqqV9KopE/Gnub/amSIuxuVRMqTbAPd1XTev7FrqFsvZ6j
-         0UMzlHAK1DHfGfYflWdlDKxAlsoqkx5mRZK8Lgue2c/hZlLnPe9RPwLg7cP7PDeoMLaw
-         zxtvWF23psjyDr/MMhAeYuDlt0ORa7uFqhbCRqHiWjHW6tf+nERLqE/gA6rC3TQyoqLV
-         nA4cv7IuGiisfmi3WS5ydBp/WIpINRARqTzdfa7eg+kfqgVpcx8s1jAbwNHCM4tBNKHz
-         SPfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWgIACaFc6YaxblPodFuovN3lTwjMxqKoRV2TPW9p2sihGZ+1jN235Awvz1n5+QKtBvfSO+CwC8Bo9af3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLxWmmtmo8ut6+TbjlOK54QcIyUO341TXOohdQUoij57yBjDp0
-	yp7tm3p3D9iyaMjFkskGdOVhWAXgbRPMUzzm/Y/CiHVEp4HW/bW6g9puWCgIAiAwinDw+25+Td3
-	1D0t2xbse3YLWKMVVj0tgzNmjf6971y7+V4bhICZNPVuONlNzmr8NkdiXe40=
-X-Google-Smtp-Source: AGHT+IHyAxMwziaBp4IF7dGVc3/IKk8XYkD3i8sWYQGL+CcdB6bFPbiUelzYuBC6V+HxBKS13qkjNzHVHquYq+QhWwO3tbH6iyK9
+        bh=mBKHhBlBfRf8OS9bGTTn4Xut5Q4UhzCrCrJUCDJ3k2w=;
+        b=pKUnf8tzFOT0R4blmkxupEmzoriuQMnrG1u3wKtIo5+qlvnIXdWPZysfVm4w+QG5ul
+         PY5o9/RVf73KUsk6qfQITV4e7X4dGdyMLwP0BlTTNOpCPDmUnrFaCnQw56qFd0ehIsga
+         mKETHnxEOMAeGPoW5/cmVd9NaliSkD9Di3aQYSXdZ5anDa3SjHWR6/nkS6dEI07V784w
+         hrgDwzi5355/vmwuhRffElTPa1vwuZ2DIlyMfRQt4ZTlTFJzqC9l7e56YuhIY71Z5BZ1
+         P+k5ZzQXBIcPM7g2V90gJdFG11zbYRjylsPVeAkKn4wVIMnmzTJIDosWXmPPxz+0XDyR
+         o0KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVf8HAOpstIQ/i2HewiZRlHwHhlKhIB6GwzkUSQTuvwBggRxSmQOO9FazVrIkZtIrTX+n+6UhzCWhLjGc0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1HXegCcDXlRE1PnoMADUaXg6EeqYM4fhbMpdywQgktv0F2TkQ
+	oq0XcCPDDRS8BIjHd6nExXOTOH3jeQoWMimeoVUoV/SDCHjqGmoT55CjEEQuzDdAeMs=
+X-Gm-Gg: ASbGncuj6AwwF6xxnFBwl7ghPtPWZF+PEX8Ldg0Rqigyo7uN7lcHmKchRkNQSEzaMpF
+	6jdK8maoMUwZoR1rstV/mqji83ZsUyYrQIhsU50XLHdhJ4I4l4qqM50KkihSdZMzn3N5CXoLe8/
+	925ltCkz4eSlQYOJHMP4IX8nIqSzVaWzpziRn4blVLEX9YCGwO+/OlAFPM0SgO3jmzGJAV5GOQk
+	KGHjYPjlwXfclHuXtwqcP4uJDUY9NS1/9X+L+x4BwiSOXSeqkiGTVDb5PYYRl0j2GJhVHtlnQkh
+	DArpsom4itP8EkGmnFOOusQ1OzLfOSm4LnzSQUqoVGBZ1nq2VAFYCtvoK9M=
+X-Google-Smtp-Source: AGHT+IHGVGn+63JWl0t2CYty2GIDIfHTGjGGUyr3yYuuyCx1E71eWmROwfUZXoYGh7QKeqcJ+9RtFw==
+X-Received: by 2002:a05:6e02:2289:b0:3dc:8a5f:7cc1 with SMTP id e9e14a558f8ab-3dd943d0d04mr17643405ab.3.1748515436218;
+        Thu, 29 May 2025 03:43:56 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdbd4bb1e4sm608197173.43.2025.05.29.03.43.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 03:43:55 -0700 (PDT)
+Message-ID: <cd3307c0-4af5-4477-9258-2eec57c7003d@kernel.dk>
+Date: Thu, 29 May 2025 04:43:54 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:7215:b0:867:bf9:64d5 with SMTP id
- ca18e2360f4ac-86cf29e70d8mr430011839f.2.1748515262792; Thu, 29 May 2025
- 03:41:02 -0700 (PDT)
-Date: Thu, 29 May 2025 03:41:02 -0700
-In-Reply-To: <20250529102503.2425-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683839be.a00a0220.52848.0004.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in __del_gendisk
-From: syzbot <syzbot+2e9e529ac0b319316453@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Hongyu Ning <hongyu.ning@linux.intel.com>,
+ stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+ Hannes Reinecke <hare@suse.de>,
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>
+References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 5/29/25 4:38 AM, Kirill A. Shutemov wrote:
+> Hongyu noticed that the nr_unaccepted counter kept growing even in the
+> absence of unaccepted memory on the machine.
+> 
+> This happens due to a commit that removed NR_BOUNCE: it removed the
+> counter from the enum zone_stat_item, but left it in the vmstat_text
+> array.
+> 
+> As a result, all counters below nr_bounce in /proc/vmstat are
+> shifted by one line, causing the numa_hit counter to be labeled as
+> nr_unaccepted.
+> 
+> To fix this issue, remove nr_bounce from the vmstat_text array.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in __del_gendisk
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-syzkaller-g90b83efa6701-dirty #0 Not tainted
-------------------------------------------------------
-kworker/u4:2/31 is trying to acquire lock:
-ffff888000617358 (&disk->open_mutex){+.+.}-{4:4}, at: __del_gendisk+0x129/0x9e0 block/genhd.c:706
+> Cc: stable@vger.kernel.org
 
-but task is already holding lock:
-ffff88803f055188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: del_gendisk+0xe0/0x160 block/genhd.c:818
+No need for a stable tag, the patch went into the 6.16 merge window.
 
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #2 (&set->update_nr_hwq_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       blk_mq_update_nr_hw_queues+0x3b/0x14c0 block/blk-mq.c:5041
-       nbd_start_device+0x16c/0xac0 drivers/block/nbd.c:1476
-       nbd_genl_connect+0x1250/0x1930 drivers/block/nbd.c:2203
-       genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
-       genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-       genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
-       netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
-       genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x21c/0x270 net/socket.c:727
-       ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-       ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-       __sys_sendmsg net/socket.c:2652 [inline]
-       __do_sys_sendmsg net/socket.c:2657 [inline]
-       __se_sys_sendmsg net/socket.c:2655 [inline]
-       __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&nbd->config_lock){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       nbd_open+0x2c3/0x5f0 drivers/block/nbd.c:1704
-       blkdev_get_whole+0x98/0x510 block/bdev.c:730
-       bdev_open+0x31e/0xd30 block/bdev.c:957
-       blkdev_open+0x3a8/0x510 block/fops.c:676
-       do_dentry_open+0xdf0/0x1970 fs/open.c:964
-       vfs_open+0x3b/0x340 fs/open.c:1094
-       do_open fs/namei.c:3887 [inline]
-       path_openat+0x2ee5/0x3830 fs/namei.c:4046
-       do_filp_open+0x1fa/0x410 fs/namei.c:4073
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1463
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&disk->open_mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       __del_gendisk+0x129/0x9e0 block/genhd.c:706
-       del_gendisk+0xe8/0x160 block/genhd.c:819
-       nbd_dev_remove drivers/block/nbd.c:268 [inline]
-       nbd_dev_remove_work+0x47/0xe0 drivers/block/nbd.c:284
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
-       worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
-Chain exists of:
-  &disk->open_mutex --> &nbd->config_lock --> &set->update_nr_hwq_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(&set->update_nr_hwq_lock);
-                               lock(&nbd->config_lock);
-                               lock(&set->update_nr_hwq_lock);
-  lock(&disk->open_mutex);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/u4:2/31:
- #0: ffff88801f97e148 ((wq_completion)nbd-del){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff88801f97e148 ((wq_completion)nbd-del){+.+.}-{0:0}, at: process_scheduled_works+0x9b4/0x17b0 kernel/workqueue.c:3321
- #1: ffffc90000527bc0 ((work_completion)(&nbd->remove_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc90000527bc0 ((work_completion)(&nbd->remove_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ef/0x17b0 kernel/workqueue.c:3321
- #2: ffff88803f055188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: del_gendisk+0xe0/0x160 block/genhd.c:818
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 31 Comm: kworker/u4:2 Not tainted 6.15.0-syzkaller-g90b83efa6701-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: nbd-del nbd_dev_remove_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
- __del_gendisk+0x129/0x9e0 block/genhd.c:706
- del_gendisk+0xe8/0x160 block/genhd.c:819
- nbd_dev_remove drivers/block/nbd.c:268 [inline]
- nbd_dev_remove_work+0x47/0xe0 drivers/block/nbd.c:284
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
-Tested on:
-
-commit:         90b83efa Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16892482580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=262b2977ef00756b
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e9e529ac0b319316453
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1345dbf4580000
+-- 
+Jens Axboe
 
