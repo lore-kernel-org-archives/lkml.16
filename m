@@ -1,44 +1,44 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E83DC21C16A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EF122127A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748557457; cv=none; b=ogRK49ozfXGXotHYkG+wlMrVfuHS7NycYiiJsLvESq86aVuE8L3SU8BsUXBB5Jk31ER4oTAddrdX2VlMn1J4QHYI/wijBx5Y7lMffKD6F1pfbQePVKGGnSgsk7Q6OQixt+KFDvafnF6vhhz5T12qBLbAwlbXmxsY6PeqG3se2TE=
+	t=1748557459; cv=none; b=fKtPLVbbEzcrcyB4LuAGtSlmeYgpsVIRzZgc3CRAhrTLimNkqUBmuE3jlFjDWX/cGIOlfVfgabfqourU8MGrGX8KsDzMN5ZvVUJIv/odsHQBwOUfp9Uzyr6w5MxjSMlN9sfZ0JGVo7+c4k5VoqMLlkx4KfwBsV850ysmWWh+UzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748557457; c=relaxed/simple;
-	bh=g3HrJI+i/qPWzFTH4SgOBu/2lO60y1spJ4g/6Mp0yD8=;
+	s=arc-20240116; t=1748557459; c=relaxed/simple;
+	bh=8ehvIhyMSQqVR119BSQV9qbRojv4D1Uow/adRa6T4EY=;
 	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=YX5D+4PjcstT7VImypzYmQw9QRHH7hXngOl+ZrbgqmqT2FpgDRrm44szLGLRLg3ugQkFYRGdVLv8dTiox7C7ed5a/mV1VkgO6pVgng1eH71G7f/dJc0qiZ5csxJnUz2DlrJ6fhCehOpQfi3SbTiHETJDKXbhnbn0063pIwT9yzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=llvfwWOv; arc=none smtp.client-ip=210.118.77.12
+	 Content-Type:References; b=FfxsycywyO1B8U/Uyslk99Mcz7CKJC9jNcdGBnckNNdSRfkgfz2uhrq5DTO723R5caGbr0+/kse/PxqBjhhZA9p9ycaAp7JvrqNnwdKBiLegg29l8eHlCTQxg+UjYIAURediVKA7ub5VjeawsjM7M734PXkqG79zc6HqKqpZRvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Bo1cbFTC; arc=none smtp.client-ip=210.118.77.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="llvfwWOv"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250529222406euoutp02218296ee4c183d6a1c4cb2bef23ec220~EH7vUIEI32697926979euoutp02V
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250529222406euoutp02218296ee4c183d6a1c4cb2bef23ec220~EH7vUIEI32697926979euoutp02V
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Bo1cbFTC"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250529222409euoutp01da886e1316cacc1fb6feb7ce9ad11173~EH7xxO1Fh2316423164euoutp012
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250529222409euoutp01da886e1316cacc1fb6feb7ce9ad11173~EH7xxO1Fh2316423164euoutp012
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748557446;
-	bh=l0+urxkDydJaXZt0i4z0eElhXfnETxRC93PMjjsxpdg=;
+	s=mail20170921; t=1748557449;
+	bh=UtMJUuq6/j+HHS1BRexsXIMJEKVh/fKMbHv0hDIc9WQ=;
 	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=llvfwWOv0sO8NtmufNjuIBWK2vet2yjTAqstOr3zZg4XsoKpfav2awGlw7/jyJyXg
-	 1UvbgDFg3uGtQI6nDAcTzb4a3akd2UIWHqCGMixCO5oHeGWWQ2me/ecSYRnVkLFYxH
-	 RAy24GPFwLObzua/bmTej4qJg1+wIdvA3VuaPewM=
+	b=Bo1cbFTC/L2jtBQzgLE4qcGuhQaPqUydLGvl1eR5kYcegBYAbznwVpewNQjOM+yLp
+	 ChI8ODy+AELbT5s2uhpaO5+kogdPSCMAnn0n7Xlp2TAfEuLBdDDyMcftnrkQffezDa
+	 ToCcohPrYIOFrDPqBDdbftHrF4VTUawqSTw8bmBE=
 Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1~EH7uSIjI11302113021eucas1p1A;
-	Thu, 29 May 2025 22:24:05 +0000 (GMT)
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265~EH7wSHjOI1565715657eucas1p2_;
+	Thu, 29 May 2025 22:24:07 +0000 (GMT)
 Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
 	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250529222404eusmtip2ba5a345a3bd699d30ca989a3242df931~EH7tZQdKj3031530315eusmtip2L;
-	Thu, 29 May 2025 22:24:04 +0000 (GMT)
+	20250529222406eusmtip29a64f97e4cb0480e499cfbe8b47ef396~EH7vU3Abr3031530315eusmtip2M;
+	Thu, 29 May 2025 22:24:06 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Fri, 30 May 2025 00:23:50 +0200
-Subject: [PATCH v3 3/8] drm/imagination: Use pwrseq for TH1520 GPU power
- management
+Date: Fri, 30 May 2025 00:23:52 +0200
+Subject: [PATCH v3 5/8] riscv: dts: thead: th1520: Add missing reset
+ controller header include
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-apr_14_for_sending-v3-3-83d5744d997c@samsung.com>
+Message-Id: <20250530-apr_14_for_sending-v3-5-83d5744d997c@samsung.com>
 In-Reply-To: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
 To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
 	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
@@ -64,258 +64,40 @@ Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
 	dri-devel@lists.freedesktop.org
 X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
+X-CMS-MailID: 20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
+X-RootMTR: 20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265
 X-EPHeader: CA
-X-CMS-RootMailID: 20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1
+X-CMS-RootMailID: 20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265
 References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222405eucas1p18ed1254bf1b2d78468734656fec537e1@eucas1p1.samsung.com>
+	<CGME20250529222407eucas1p233be883d7e84e5a000e4d44b37cf7265@eucas1p2.samsung.com>
 
-Update the Imagination PVR DRM driver to leverage the pwrseq framework
-for managing the power sequence of the GPU on the T-HEAD TH1520 SoC.
+TH1520_RESET_ID_GPU_CLKGEN and TH1520_RESET_ID_GPU are required for GPU
+power sequencing to work.  To make these symbols available, add the
+necessary include for the T-HEAD TH1520 reset controller bindings.
 
-In pvr_device_init(), the driver now attempts to get a handle to the
-"gpu-power" sequencer target using devm_pwrseq_get(). If successful,
-the responsibility for powering on and off the GPU's core clocks and
-resets is delegated to the power sequencer. Consequently, the GPU
-driver conditionally skips acquiring the GPU reset line if the pwrseq
-handle is obtained, as the sequencer's match function will acquire it.
-Clock handles are still acquired by the GPU driver for other purposes
-like devfreq.
+This change was dropped during conflict resolution [1].
 
-The runtime PM callbacks, pvr_power_device_resume() and
-pvr_power_device_suspend(), are modified to call pwrseq_power_on() and
-pwrseq_power_off() respectively when the sequencer is present.  If no
-sequencer is found, the driver falls back to its existing manual clock
-and reset management. A helper function,
-pvr_power_off_sequence_manual(), is introduced to encapsulate the manual
-power-down logic.
+[1] - https://lore.kernel.org/all/aAvfn2mq0Ksi8DF2@x1/
 
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- drivers/gpu/drm/imagination/Kconfig      |  1 +
- drivers/gpu/drm/imagination/pvr_device.c | 33 +++++++++++--
- drivers/gpu/drm/imagination/pvr_device.h |  6 +++
- drivers/gpu/drm/imagination/pvr_power.c  | 82 +++++++++++++++++++++-----------
- 4 files changed, 89 insertions(+), 33 deletions(-)
+ arch/riscv/boot/dts/thead/th1520.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/imagination/Kconfig b/drivers/gpu/drm/imagination/Kconfig
-index 3bfa2ac212dccb73c53bdc2bc259bcba636e7cfc..737ace77c4f1247c687cc1fde2f139fc2e118c50 100644
---- a/drivers/gpu/drm/imagination/Kconfig
-+++ b/drivers/gpu/drm/imagination/Kconfig
-@@ -11,6 +11,7 @@ config DRM_POWERVR
- 	select DRM_SCHED
- 	select DRM_GPUVM
- 	select FW_LOADER
-+  select POWER_SEQUENCING
- 	help
- 	  Choose this option if you have a system that has an Imagination
- 	  Technologies PowerVR (Series 6 or later) or IMG GPU.
-diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
-index 8b9ba4983c4cb5bc40342fcafc4259078bc70547..19d48bbc828cf2b8dbead602e90ff88780152124 100644
---- a/drivers/gpu/drm/imagination/pvr_device.c
-+++ b/drivers/gpu/drm/imagination/pvr_device.c
-@@ -25,6 +25,7 @@
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pwrseq/consumer.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/stddef.h>
-@@ -631,10 +632,34 @@ pvr_device_init(struct pvr_device *pvr_dev)
- 	if (err)
- 		return err;
+diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+index 1db0054c4e093400e9dbebcee5fcfa5b5cae6e32..bdbb1b985b0b76cf669a9bf40c6ec37258329056 100644
+--- a/arch/riscv/boot/dts/thead/th1520.dtsi
++++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/clock/thead,th1520-clk-ap.h>
+ #include <dt-bindings/power/thead,th1520-power.h>
++#include <dt-bindings/reset/thead,th1520-reset.h>
  
--	/* Get the reset line for the GPU */
--	err = pvr_device_reset_init(pvr_dev);
--	if (err)
--		return err;
-+	/*
-+	 * Try to get a power sequencer. If successful, it will handle clocks
-+	 * and resets. Otherwise, we fall back to managing them ourselves.
-+	 */
-+	pvr_dev->pwrseq = devm_pwrseq_get(dev, "gpu-power");
-+	if (IS_ERR(pvr_dev->pwrseq)) {
-+		int pwrseq_err = PTR_ERR(pvr_dev->pwrseq);
-+
-+		/*
-+		 * If the error is -EPROBE_DEFER, it's because the
-+		 * optional sequencer provider is not present
-+		 * and it's safe to fall back on manual power-up.
-+		 */
-+		if (pwrseq_err == -EPROBE_DEFER)
-+			pvr_dev->pwrseq = NULL;
-+		else
-+			return dev_err_probe(dev, pwrseq_err,
-+					     "Failed to get power sequencer\n");
-+	}
-+
-+	/* Get the reset line for the GPU, but since it's exclusive only
-+	 * get it if the pwerseq is NULL.
-+	 */
-+	if (!pvr_dev->pwrseq) {
-+		err = pvr_device_reset_init(pvr_dev);
-+		if (err)
-+			return err;
-+	}
- 
- 	/* Explicitly power the GPU so we can access control registers before the FW is booted. */
- 	err = pm_runtime_resume_and_get(dev);
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 7cb01c38d2a9c3fc71effe789d4dfe54eddd93ee..0b6d53994d25abe32a2f1b133a4efa574e150da9 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -37,6 +37,9 @@ struct clk;
- /* Forward declaration from <linux/firmware.h>. */
- struct firmware;
- 
-+/* Forward declaration from <linux/pwrseq/consumer.h */
-+struct pwrseq_desc;
-+
- /**
-  * struct pvr_gpu_id - Hardware GPU ID information for a PowerVR device
-  * @b: Branch ID.
-@@ -148,6 +151,9 @@ struct pvr_device {
- 	 */
- 	struct reset_control *reset;
- 
-+	/** @pwrseq: Pointer to a power sequencer, if one is used. */
-+	struct pwrseq_desc *pwrseq;
-+
- 	/** @irq: IRQ number. */
- 	int irq;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_power.c b/drivers/gpu/drm/imagination/pvr_power.c
-index 41f5d89e78b854cf6993838868a4416a220b490a..b7dcc03d7d9e06f03f059124fbe21dd844de713e 100644
---- a/drivers/gpu/drm/imagination/pvr_power.c
-+++ b/drivers/gpu/drm/imagination/pvr_power.c
-@@ -21,6 +21,7 @@
- #include <linux/reset.h>
- #include <linux/timer.h>
- #include <linux/types.h>
-+#include <linux/pwrseq/consumer.h>
- #include <linux/workqueue.h>
- 
- #define POWER_SYNC_TIMEOUT_US (1000000) /* 1s */
-@@ -234,6 +235,19 @@ pvr_watchdog_init(struct pvr_device *pvr_dev)
- 	return 0;
- }
- 
-+static int pvr_power_off_sequence_manual(struct pvr_device *pvr_dev)
-+{
-+	int err;
-+
-+	err = reset_control_assert(pvr_dev->reset);
-+
-+	clk_disable_unprepare(pvr_dev->mem_clk);
-+	clk_disable_unprepare(pvr_dev->sys_clk);
-+	clk_disable_unprepare(pvr_dev->core_clk);
-+
-+	return err;
-+}
-+
- int
- pvr_power_device_suspend(struct device *dev)
- {
-@@ -252,11 +266,10 @@ pvr_power_device_suspend(struct device *dev)
- 			goto err_drm_dev_exit;
- 	}
- 
--	clk_disable_unprepare(pvr_dev->mem_clk);
--	clk_disable_unprepare(pvr_dev->sys_clk);
--	clk_disable_unprepare(pvr_dev->core_clk);
--
--	err = reset_control_assert(pvr_dev->reset);
-+	if (pvr_dev->pwrseq)
-+		err = pwrseq_power_off(pvr_dev->pwrseq);
-+	else
-+		err = pvr_power_off_sequence_manual(pvr_dev);
- 
- err_drm_dev_exit:
- 	drm_dev_exit(idx);
-@@ -276,44 +289,55 @@ pvr_power_device_resume(struct device *dev)
- 	if (!drm_dev_enter(drm_dev, &idx))
- 		return -EIO;
- 
--	err = clk_prepare_enable(pvr_dev->core_clk);
--	if (err)
--		goto err_drm_dev_exit;
-+	if (pvr_dev->pwrseq) {
-+		err = pwrseq_power_on(pvr_dev->pwrseq);
-+		if (err)
-+			goto err_drm_dev_exit;
-+	} else {
-+		err = clk_prepare_enable(pvr_dev->core_clk);
-+		if (err)
-+			goto err_drm_dev_exit;
- 
--	err = clk_prepare_enable(pvr_dev->sys_clk);
--	if (err)
--		goto err_core_clk_disable;
-+		err = clk_prepare_enable(pvr_dev->sys_clk);
-+		if (err)
-+			goto err_core_clk_disable;
- 
--	err = clk_prepare_enable(pvr_dev->mem_clk);
--	if (err)
--		goto err_sys_clk_disable;
-+		err = clk_prepare_enable(pvr_dev->mem_clk);
-+		if (err)
-+			goto err_sys_clk_disable;
- 
--	/*
--	 * According to the hardware manual, a delay of at least 32 clock
--	 * cycles is required between de-asserting the clkgen reset and
--	 * de-asserting the GPU reset. Assuming a worst-case scenario with
--	 * a very high GPU clock frequency, a delay of 1 microsecond is
--	 * sufficient to ensure this requirement is met across all
--	 * feasible GPU clock speeds.
--	 */
--	udelay(1);
-+		/*
-+		 * According to the hardware manual, a delay of at least 32 clock
-+		 * cycles is required between de-asserting the clkgen reset and
-+		 * de-asserting the GPU reset. Assuming a worst-case scenario with
-+		 * a very high GPU clock frequency, a delay of 1 microsecond is
-+		 * sufficient to ensure this requirement is met across all
-+		 * feasible GPU clock speeds.
-+		 */
-+		udelay(1);
- 
--	err = reset_control_deassert(pvr_dev->reset);
--	if (err)
--		goto err_mem_clk_disable;
-+		err = reset_control_deassert(pvr_dev->reset);
-+		if (err)
-+			goto err_mem_clk_disable;
-+	}
- 
- 	if (pvr_dev->fw_dev.booted) {
- 		err = pvr_power_fw_enable(pvr_dev);
- 		if (err)
--			goto err_reset_assert;
-+			goto err_power_off;
- 	}
- 
- 	drm_dev_exit(idx);
- 
- 	return 0;
- 
--err_reset_assert:
--	reset_control_assert(pvr_dev->reset);
-+err_power_off:
-+	if (pvr_dev->pwrseq)
-+		pwrseq_power_off(pvr_dev->pwrseq);
-+	else
-+		pvr_power_off_sequence_manual(pvr_dev);
-+
-+	goto err_drm_dev_exit;
- 
- err_mem_clk_disable:
- 	clk_disable_unprepare(pvr_dev->mem_clk);
+ / {
+ 	compatible = "thead,th1520";
 
 -- 
 2.34.1
