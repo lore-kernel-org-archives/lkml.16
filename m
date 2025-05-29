@@ -1,217 +1,468 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17707EC4;
-	Thu, 29 May 2025 07:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E3821ABB7
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748502232; cv=none; b=rySr6CKpO9BLTIA5wx7rIgyFgzTCkIny1mdgZaRaBxInrBXZpfnMLrFvNOdHanfwsEEfiAydUeLy2XF1mzLhmFzKivrPuDDjHJ+ud2XKhMSF7YL5iL2Vp/UF1sgO35SBriMTyQoN/p7vnAqOzttwTMaHHXGrJ6pCcrcHpd9jcTM=
+	t=1748502249; cv=none; b=CBcYbR8JEdB5NyAkEv8ux9F5YnVIVRJcbOW+T/GVj3gWBPX8OrgHq7DTbq/augw7597EERsFGGSm+XJ/RZ/ngqEBifyD1U1Y587IaQa7C5zxLEometvZzWl7zi1x1P4ZaHhEbXXYr0QqLm/kGzLst5fpgTSiU/5uaaWQ89d1Nbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748502232; c=relaxed/simple;
-	bh=+xmkRlZ8AGIEZrZiWtJrfAL/ehTHBGAbW3sINC7us5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=h6N1P8iRgMbshaxlMYR5KUM//2iRhGlbDPI7pN25kPYD3QnkzscBBPWCAET1e3ZSUVy+9cbztb3RSNnggiHoVPMzMe1tu5q8uFdTwO5unagkWWv1w8NvI/iTrUS3MvBStOlVoAlpAPVMyJuOnZCuKmtiwazdBdASTX0lLlRCDDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RDMsCN4X; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748502249; c=relaxed/simple;
+	bh=gGAIBfPLJ5mzuI2J9XqVGwHUjLcIMVokl51TD/0nSPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LptT3aoauytq46ZHtYtqvF/4NVeKt6v+ULDPMlJ2eGJe2LDd7GOz1/F81EM5K1ztuxPItst0e5DFSENnuykZZp0YD3zi+k9zdHVsmNMmJQuVW9USZcyFIT5awXVr1WJPTzwYwHvoz0NGp/6lMDpHP13Thy4AGJ6jZhaM0VrKrAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DJ/OyZEd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RDMsCN4X"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T3U235030924;
-	Thu, 29 May 2025 07:03:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yf1sra5ei+YWgbd0wCWc5vmWvo0kR8CErObKG5rUvKE=; b=RDMsCN4XP1TgRFRQ
-	vEOJwHkIOHYulO57bBZ2Je6coYZkV8nyC1ucokhXINdOFYQ5U56yoKT2jI0y57UT
-	62Z7/1LhhW+yLkPjV06jeO4wDiQjYpZNB/EOUBMgCuIx1T+crXHYOoJeBBB2M6YB
-	3bcm+SIo1wfS7qJHzlzoeaWN4UemsYXQjVja2XYeAGeLyPZQn3a2GhoOlJxWsqv0
-	sEPrMwchUdukyipzdTQWVL9ZhD34yEmRuC0eHLOiX53A2dDhUtBib8Z/OE4nNPBO
-	txvQraQ+A32OUmtewF1HBTZR5S4o0vC2KDTCxT/F0BGTOoOO33cNoqk0ITSHqIHG
-	TlN3aA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf56kc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 07:03:43 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T73hDw007603
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 07:03:43 GMT
-Received: from [10.133.33.94] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 29 May
- 2025 00:03:40 -0700
-Message-ID: <026b710f-b50f-4302-ad4f-36932c2558ff@quicinc.com>
-Date: Thu, 29 May 2025 15:03:38 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJ/OyZEd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748502246;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FLyhUeKcdVZ0yoXoNzS788RI+RJY/OUuQZYjxQszTis=;
+	b=DJ/OyZEduU4p/V3smNxH5TYKAeyks3mflZjr+KCFa/8UiCdKh+K5ctpbLETbskPglem37T
+	1pqadVaZBAKM2Nanhnl6BPt9O41nZR9RZueB2cVI9V2NUSGFPDKs/A5iCyrfAid0Glxw67
+	GXZmbua1cDaq+x9rVDst1CM/43Hhytc=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-111-wTmRzE4cNOWRhDwB6T3I3A-1; Thu, 29 May 2025 03:04:05 -0400
+X-MC-Unique: wTmRzE4cNOWRhDwB6T3I3A-1
+X-Mimecast-MFC-AGG-ID: wTmRzE4cNOWRhDwB6T3I3A_1748502244
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5520a231361so258320e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:04:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748502244; x=1749107044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FLyhUeKcdVZ0yoXoNzS788RI+RJY/OUuQZYjxQszTis=;
+        b=s3H0S2p0o6X2XlXPvDA/SoiC1v6oY7zKfClsJtik3QIGlW/bzpzP2ZgeV+s8jo68fG
+         EJONk8QFMLZ8h5G5Cyh9PrrOV1dyUY2foxevCKSShRxImrDWjVK2xy9xc5wtUBXbvV+O
+         gEXnlhrWDM9rb5b5zw9WoTrSGCzP6Q24WzstboRWUwStZyPsdNAp5YbMmRSrmDxQ7IqW
+         tQB91mqPlKxBIfOHwQM6nBq/3mCk64t4vmXYxZT/TV4o0/qTXvOANYDAa9vNUHIxgY+t
+         RwN1QAWaWkXUjJguvbOhWIJAL94UqJnImyK9dDnitCIHEw9nK3iw8hJrLvEtOGP+lZRT
+         QWzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDExZvLfnX0MzLZitB1WUxQkpurK79pkkgUx2Q3e4WbfHpAODOMhftkcBd7yRhYHRCcL1Itpn0EIZl+nA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrn3bZdRSvMIS6jtgCWBrdP6uG0DpGo/DNIG/D3xURIW54tolN
+	O0C3jYRzloBh+yKO7kudc6Y1IvbX17bWaF/N5GpFPAfAhsOq9IZuuAIPiasu+xv2orUBKGVoFUf
+	K1KVJAyxitO8N30hvQWBZ0+iF6vJ858Z2ZYkmxsGMSROEfJgZHW3yqc9O6va/TyBnUDfzGmzk4q
+	A9qBHkWcognnnmOqYykmsqQGIut431+PnBJBiHeyFy
+X-Gm-Gg: ASbGncsqWkn7neY6AkGiuT/vMSKt76cWTWa3ydzSX2ZY0zohGIfvxYReo3kOyO+8Ceq
+	jK34GE/ko+G7yYhRhjYgtZxFjIoNsLyaSNUJlZfwQCWZB4+CMMq/UOtD0gLByRnuoB7U1IA==
+X-Received: by 2002:a05:6512:a88:b0:550:e527:886f with SMTP id 2adb3069b0e04-5521c9b48a5mr6226580e87.51.1748502243504;
+        Thu, 29 May 2025 00:04:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhBwtEWV7FTygdRfcy4kngKHINa8KsHRMkeClwkAOFQYJyufuKIr4JvD4VEJD5vzTS24wJDQc0jIE+CufADn0=
+X-Received: by 2002:a05:6512:a88:b0:550:e527:886f with SMTP id
+ 2adb3069b0e04-5521c9b48a5mr6226569e87.51.1748502242998; Thu, 29 May 2025
+ 00:04:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Miaoqing Pan <quic_miaoqing@quicinc.com>
-In-Reply-To: <20250526114803.2122-2-johan+linaro@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=683806cf cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=xt-FAz5EuN-mLoWhW44A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: ublGsjyCSGbR_kY6RSrO4PK_2uM8o_TU
-X-Proofpoint-GUID: ublGsjyCSGbR_kY6RSrO4PK_2uM8o_TU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA2OCBTYWx0ZWRfX9l8N77fVGXBz
- VWq+r+buWOo32kfkGPIGql0bJELp1LYd7adoiBZSCjoZZWoVpkGCykOwWt5Tk9+iH3Hn5q2v19A
- 7kgCHx2YtE5ji0Rl6pe5O7vj7Y8bxGqWfzrXzx9MVCZwmwdhp7eEathghZCUquWMtT1zEzG1aEI
- zp2+uMD9rb2FWKnF44DS6gJbtkZhsBX8S1I0PsRuogkl7tUXWrBhaTUSZG1iRsqqe+4HHBJd/YP
- H5w+UV7QjDFFeNnCf3cgu9jQ4nJmXRVZoeBuh+K+gKeMsESiLujlMKBWMLg46xT2TT7dwBSmQcN
- 8hrqsjodMFAOIGw8SLdT1vKXhxwl9nCySGoapWm75rzNe0kGtqGaZ7vaOODZFGmd6fJ1a75dzVY
- YCee03X1FkH3OmFsnjsJ9ZGyFYIrzMAEaS8QmrgTqPp7cxkBSxDWTKpUrz8tVA63WeuSZG3u
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_03,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=896 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290068
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-19-yukuai1@huaweicloud.com>
+In-Reply-To: <20250524061320.370630-19-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Thu, 29 May 2025 15:03:50 +0800
+X-Gm-Features: AX0GCFt6aelieDdKVpFEW95DgBTQaabsDTo6V1Wck7H_eO8X27kgvzCG7zQ3eY8
+Message-ID: <CALTww2-+0h2Pxq0PJLZQxcoYpMJuiKuv6CZQ3kgX5PeqBkxKsQ@mail.gmail.com>
+Subject: Re: [PATCH 18/23] md/md-llbitmap: implement APIs to mange bitmap lifetime
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Kuai
 
+Is it better to put this patch before patch15. I'm reading patch15.
+But I need to read this patch first to understand how llbitmap is
+created and loaded. Then I can go to read the io related part.
 
-On 5/26/2025 7:48 PM, Johan Hovold wrote:
-> Add the missing memory barriers to make sure that destination ring
-> descriptors are read after the head pointers to avoid using stale data
-> on weakly ordered architectures like aarch64.
-> 
-> Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
-> 
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Cc: stable@vger.kernel.org	# 5.6
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Regards
+Xiao
+
+On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> Include following APIs:
+>  - llbitmap_create
+>  - llbitmap_resize
+>  - llbitmap_load
+>  - llbitmap_destroy
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 > ---
->   drivers/net/wireless/ath/ath11k/dp_rx.c | 19 +++++++++++++++++++
->   drivers/net/wireless/ath/ath11k/dp_tx.c |  3 +++
->   2 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
-> index ea2959305dec..dfe2d889c20f 100644
-> --- a/drivers/net/wireless/ath/ath11k/dp_rx.c
-> +++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
-> @@ -3851,6 +3851,9 @@ int ath11k_dp_process_rx_err(struct ath11k_base *ab, struct napi_struct *napi,
->   
->   	ath11k_hal_srng_access_begin(ab, srng);
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+>  drivers/md/md-llbitmap.c | 322 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 322 insertions(+)
+>
+> diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
+> index 4d5f9a139a25..23283c4f7263 100644
+> --- a/drivers/md/md-llbitmap.c
+> +++ b/drivers/md/md-llbitmap.c
+> @@ -689,4 +689,326 @@ static void llbitmap_resume(struct llbitmap *llbitm=
+ap, int page_idx)
+>         wake_up(&pctl->wait);
+>  }
+>
+> +static int llbitmap_check_support(struct mddev *mddev)
+> +{
+> +       if (test_bit(MD_HAS_JOURNAL, &mddev->flags)) {
+> +               pr_notice("md/llbitmap: %s: array with journal cannot hav=
+e bitmap\n",
+> +                         mdname(mddev));
+> +               return -EBUSY;
+> +       }
 > +
-
-Thanks Johan, for continuing to follow up on this issue. I have some 
-different opinions.
-
-This change somewhat deviates from the fix approach described in 
-https://lore.kernel.org/all/20250321095219.19369-1-johan+linaro@kernel.org/. 
-In this case, the descriptor might be accessed before it is updated or 
-while it is still being updated. Therefore, a dma_rmb() should be added 
-after the call to ath11k_hal_srng_dst_get_next_entry() and before 
-accessing ath11k_hal_ce_dst_status_get_length(), to ensure that the DMA 
-has completed before reading the descriptor.
-
-However, in this patch, the memory barrier is used to protect the head 
-pointer (HP). I don't think a memory barrier is necessary for HP, 
-because even if an outdated HP is fetched, 
-ath11k_hal_srng_dst_get_next_entry() will return NULL and exit safely. 
-So, placing the memory barrier inside 
-ath11k_hal_srng_dst_get_next_entry() would be more appropriate.
-
-@@ -678,6 +678,8 @@ u32 *ath11k_hal_srng_dst_get_next_entry(struct 
-ath11k_base *ab,
-         if (srng->flags & HAL_SRNG_FLAGS_CACHED)
-                 ath11k_hal_srng_prefetch_desc(ab, srng);
-
-+       dma_rmb();
-+
-         return desc;
-  }
-
-
->   	while (budget &&
->   	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
->   		struct hal_reo_dest_ring *reo_desc = (struct hal_reo_dest_ring *)desc;
-> @@ -4154,6 +4157,9 @@ int ath11k_dp_rx_process_wbm_err(struct ath11k_base *ab,
->   
->   	ath11k_hal_srng_access_begin(ab, srng);
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +       if (mddev->bitmap_info.space =3D=3D 0) {
+> +               if (mddev->bitmap_info.default_space =3D=3D 0) {
+> +                       pr_notice("md/llbitmap: %s: no space for bitmap\n=
+",
+> +                                 mdname(mddev));
+> +                       return -ENOSPC;
+> +               }
+> +       }
 > +
->   	while (budget) {
->   		rx_desc = ath11k_hal_srng_dst_get_next_entry(ab, srng);
->   		if (!rx_desc)
-> @@ -4280,6 +4286,9 @@ int ath11k_dp_process_rxdma_err(struct ath11k_base *ab, int mac_id, int budget)
->   
->   	ath11k_hal_srng_access_begin(ab, srng);
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +       if (!mddev->persistent) {
+> +               pr_notice("md/llbitmap: %s: array must be persistent\n",
+> +                         mdname(mddev));
+> +               return -EOPNOTSUPP;
+> +       }
 > +
->   	while (quota-- &&
->   	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
->   		ath11k_hal_rx_reo_ent_paddr_get(ab, desc, &paddr, &desc_bank);
-> @@ -4353,6 +4362,9 @@ void ath11k_dp_process_reo_status(struct ath11k_base *ab)
->   
->   	ath11k_hal_srng_access_begin(ab, srng);
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +       if (mddev->bitmap_info.file) {
+> +               pr_notice("md/llbitmap: %s: doesn't support bitmap file\n=
+",
+> +                         mdname(mddev));
+> +               return -EOPNOTSUPP;
+> +       }
 > +
->   	while ((reo_desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
->   		tag = FIELD_GET(HAL_SRNG_TLV_HDR_TAG, *reo_desc);
->   
-> @@ -5168,6 +5180,9 @@ static void ath11k_dp_rx_mon_dest_process(struct ath11k *ar, int mac_id,
->   	rx_bufs_used = 0;
->   	rx_mon_stats = &pmon->rx_mon_stats;
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +       if (mddev->bitmap_info.external) {
+> +               pr_notice("md/llbitmap: %s: doesn't support external meta=
+data\n",
+> +                         mdname(mddev));
+> +               return -EOPNOTSUPP;
+> +       }
 > +
->   	while ((ring_entry = ath11k_hal_srng_dst_peek(ar->ab, mon_dst_srng))) {
->   		struct sk_buff *head_msdu, *tail_msdu;
->   
-> @@ -5630,6 +5645,10 @@ static int ath11k_dp_full_mon_process_rx(struct ath11k_base *ab, int mac_id,
->   	spin_lock_bh(&mon_dst_srng->lock);
->   
->   	ath11k_hal_srng_access_begin(ar->ab, mon_dst_srng);
+> +       if (mddev_is_dm(mddev)) {
+> +               pr_notice("md/llbitmap: %s: doesn't support dm-raid\n",
+> +                         mdname(mddev));
+> +               return -EOPNOTSUPP;
+> +       }
 > +
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +       return 0;
+> +}
 > +
->   	while ((ring_entry = ath11k_hal_srng_dst_peek(ar->ab, mon_dst_srng))) {
->   		head_msdu = NULL;
->   		tail_msdu = NULL;
-> diff --git a/drivers/net/wireless/ath/ath11k/dp_tx.c b/drivers/net/wireless/ath/ath11k/dp_tx.c
-> index 8522c67baabf..549d17d90503 100644
-> --- a/drivers/net/wireless/ath/ath11k/dp_tx.c
-> +++ b/drivers/net/wireless/ath/ath11k/dp_tx.c
-> @@ -700,6 +700,9 @@ void ath11k_dp_tx_completion_handler(struct ath11k_base *ab, int ring_id)
->   
->   	ath11k_hal_srng_access_begin(ab, status_ring);
->   
-> +	/* Make sure descriptor is read after the head pointer. */
-> +	dma_rmb();
+> +static int llbitmap_init(struct llbitmap *llbitmap)
+> +{
+> +       struct mddev *mddev =3D llbitmap->mddev;
+> +       sector_t blocks =3D mddev->resync_max_sectors;
+> +       unsigned long chunksize =3D MIN_CHUNK_SIZE;
+> +       unsigned long chunks =3D DIV_ROUND_UP(blocks, chunksize);
+> +       unsigned long space =3D mddev->bitmap_info.space << SECTOR_SHIFT;
+> +       int ret;
 > +
->   	while ((ATH11K_TX_COMPL_NEXT(tx_ring->tx_status_head) !=
->   		tx_ring->tx_status_tail) &&
->   	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, status_ring))) {
+> +       while (chunks > space) {
+> +               chunksize =3D chunksize << 1;
+> +               chunks =3D DIV_ROUND_UP(blocks, chunksize);
+> +       }
+> +
+> +       llbitmap->chunkshift =3D ffz(~chunksize);
+> +       llbitmap->chunksize =3D chunksize;
+> +       llbitmap->chunks =3D chunks;
+> +       mddev->bitmap_info.daemon_sleep =3D DEFAULT_DAEMON_SLEEP;
+> +
+> +       ret =3D llbitmap_cache_pages(llbitmap);
+> +       if (ret)
+> +               return ret;
+> +
+> +       llbitmap_state_machine(llbitmap, 0, llbitmap->chunks - 1, BitmapA=
+ctionInit);
+> +       return 0;
+> +}
+> +
+> +static int llbitmap_read_sb(struct llbitmap *llbitmap)
+> +{
+> +       struct mddev *mddev =3D llbitmap->mddev;
+> +       unsigned long daemon_sleep;
+> +       unsigned long chunksize;
+> +       unsigned long events;
+> +       struct page *sb_page;
+> +       bitmap_super_t *sb;
+> +       int ret =3D -EINVAL;
+> +
+> +       if (!mddev->bitmap_info.offset) {
+> +               pr_err("md/llbitmap: %s: no super block found", mdname(md=
+dev));
+> +               return -EINVAL;
+> +       }
+> +
+> +       sb_page =3D llbitmap_read_page(llbitmap, 0);
+> +       if (IS_ERR(sb_page)) {
+> +               pr_err("md/llbitmap: %s: read super block failed",
+> +                      mdname(mddev));
+> +               ret =3D -EIO;
+> +               goto out;
+> +       }
+> +
+> +       sb =3D kmap_local_page(sb_page);
+> +       if (sb->magic !=3D cpu_to_le32(BITMAP_MAGIC)) {
+> +               pr_err("md/llbitmap: %s: invalid super block magic number=
+",
+> +                      mdname(mddev));
+> +               goto out_put_page;
+> +       }
+> +
+> +       if (sb->version !=3D cpu_to_le32(BITMAP_MAJOR_LOCKLESS)) {
+> +               pr_err("md/llbitmap: %s: invalid super block version",
+> +                      mdname(mddev));
+> +               goto out_put_page;
+> +       }
+> +
+> +       if (memcmp(sb->uuid, mddev->uuid, 16)) {
+> +               pr_err("md/llbitmap: %s: bitmap superblock UUID mismatch\=
+n",
+> +                      mdname(mddev));
+> +               goto out_put_page;
+> +       }
+> +
+> +       if (mddev->bitmap_info.space =3D=3D 0) {
+> +               int room =3D le32_to_cpu(sb->sectors_reserved);
+> +
+> +               if (room)
+> +                       mddev->bitmap_info.space =3D room;
+> +               else
+> +                       mddev->bitmap_info.space =3D mddev->bitmap_info.d=
+efault_space;
+> +       }
+> +       llbitmap->flags =3D le32_to_cpu(sb->state);
+> +       if (test_and_clear_bit(BITMAP_FIRST_USE, &llbitmap->flags)) {
+> +               ret =3D llbitmap_init(llbitmap);
+> +               goto out_put_page;
+> +       }
+> +
+> +       chunksize =3D le32_to_cpu(sb->chunksize);
+> +       if (!is_power_of_2(chunksize)) {
+> +               pr_err("md/llbitmap: %s: chunksize not a power of 2",
+> +                      mdname(mddev));
+> +               goto out_put_page;
+> +       }
+> +
+> +       if (chunksize < DIV_ROUND_UP(mddev->resync_max_sectors,
+> +                                    mddev->bitmap_info.space << SECTOR_S=
+HIFT)) {
+> +               pr_err("md/llbitmap: %s: chunksize too small %lu < %llu /=
+ %lu",
+> +                      mdname(mddev), chunksize, mddev->resync_max_sector=
+s,
+> +                      mddev->bitmap_info.space);
+> +               goto out_put_page;
+> +       }
+> +
+> +       daemon_sleep =3D le32_to_cpu(sb->daemon_sleep);
+> +       if (daemon_sleep < 1 || daemon_sleep > MAX_SCHEDULE_TIMEOUT / HZ)=
+ {
+> +               pr_err("md/llbitmap: %s: daemon sleep %lu period out of r=
+ange",
+> +                      mdname(mddev), daemon_sleep);
+> +               goto out_put_page;
+> +       }
+> +
+> +       events =3D le64_to_cpu(sb->events);
+> +       if (events < mddev->events) {
+> +               pr_warn("md/llbitmap :%s: bitmap file is out of date (%lu=
+ < %llu) -- forcing full recovery",
+> +                       mdname(mddev), events, mddev->events);
+> +               set_bit(BITMAP_STALE, &llbitmap->flags);
+> +       }
+> +
+> +       sb->sync_size =3D cpu_to_le64(mddev->resync_max_sectors);
+> +       mddev->bitmap_info.chunksize =3D chunksize;
+> +       mddev->bitmap_info.daemon_sleep =3D daemon_sleep;
+> +
+> +       llbitmap->chunksize =3D chunksize;
+> +       llbitmap->chunks =3D DIV_ROUND_UP(mddev->resync_max_sectors, chun=
+ksize);
+> +       llbitmap->chunkshift =3D ffz(~chunksize);
+> +       ret =3D llbitmap_cache_pages(llbitmap);
+> +
+> +out_put_page:
+> +       __free_page(sb_page);
+> +out:
+> +       kunmap_local(sb);
+> +       return ret;
+> +}
+> +
+> +static void llbitmap_pending_timer_fn(struct timer_list *t)
+> +{
+> +       struct llbitmap *llbitmap =3D from_timer(llbitmap, t, pending_tim=
+er);
+> +
+> +       if (work_busy(&llbitmap->daemon_work)) {
+> +               pr_warn("daemon_work not finished\n");
+> +               set_bit(BITMAP_DAEMON_BUSY, &llbitmap->flags);
+> +               return;
+> +       }
+> +
+> +       queue_work(md_llbitmap_io_wq, &llbitmap->daemon_work);
+> +}
+> +
+> +static void md_llbitmap_daemon_fn(struct work_struct *work)
+> +{
+> +       struct llbitmap *llbitmap =3D
+> +               container_of(work, struct llbitmap, daemon_work);
+> +       unsigned long start;
+> +       unsigned long end;
+> +       bool restart;
+> +       int idx;
+> +
+> +       if (llbitmap->mddev->degraded)
+> +               return;
+> +
+> +retry:
+> +       start =3D 0;
+> +       end =3D min(llbitmap->chunks, PAGE_SIZE - BITMAP_SB_SIZE) - 1;
+> +       restart =3D false;
+> +
+> +       for (idx =3D 0; idx < llbitmap->nr_pages; idx++) {
+> +               struct llbitmap_page_ctl *pctl =3D llbitmap->pctl[idx];
+> +
+> +               if (idx > 0) {
+> +                       start =3D end + 1;
+> +                       end =3D min(end + PAGE_SIZE, llbitmap->chunks - 1=
+);
+> +               }
+> +
+> +               if (!test_bit(LLPageFlush, &pctl->flags) &&
+> +                   time_before(jiffies, pctl->expire)) {
+> +                       restart =3D true;
+> +                       continue;
+> +               }
+> +
+> +               llbitmap_suspend(llbitmap, idx);
+> +               llbitmap_state_machine(llbitmap, start, end, BitmapAction=
+Daemon);
+> +               llbitmap_resume(llbitmap, idx);
+> +       }
+> +
+> +       /*
+> +        * If the daemon took a long time to finish, retry to prevent mis=
+sing
+> +        * clearing dirty bits.
+> +        */
+> +       if (test_and_clear_bit(BITMAP_DAEMON_BUSY, &llbitmap->flags))
+> +               goto retry;
+> +
+> +       /* If some page is dirty but not expired, setup timer again */
+> +       if (restart)
+> +               mod_timer(&llbitmap->pending_timer,
+> +                         jiffies + llbitmap->mddev->bitmap_info.daemon_s=
+leep * HZ);
+> +}
+> +
+> +static int llbitmap_create(struct mddev *mddev)
+> +{
+> +       struct llbitmap *llbitmap;
+> +       int ret;
+> +
+> +       ret =3D llbitmap_check_support(mddev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       llbitmap =3D kzalloc(sizeof(*llbitmap), GFP_KERNEL);
+> +       if (!llbitmap)
+> +               return -ENOMEM;
+> +
+> +       llbitmap->mddev =3D mddev;
+> +       llbitmap->io_size =3D bdev_logical_block_size(mddev->gendisk->par=
+t0);
+> +       llbitmap->bits_per_page =3D PAGE_SIZE / llbitmap->io_size;
+> +
+> +       timer_setup(&llbitmap->pending_timer, llbitmap_pending_timer_fn, =
+0);
+> +       INIT_WORK(&llbitmap->daemon_work, md_llbitmap_daemon_fn);
+> +       atomic_set(&llbitmap->behind_writes, 0);
+> +       init_waitqueue_head(&llbitmap->behind_wait);
+> +
+> +       mutex_lock(&mddev->bitmap_info.mutex);
+> +       mddev->bitmap =3D llbitmap;
+> +       ret =3D llbitmap_read_sb(llbitmap);
+> +       mutex_unlock(&mddev->bitmap_info.mutex);
+> +       if (ret)
+> +               goto err_out;
+> +
+> +       return 0;
+> +
+> +err_out:
+> +       kfree(llbitmap);
+> +       return ret;
+> +}
+> +
+> +static int llbitmap_resize(struct mddev *mddev, sector_t blocks, int chu=
+nksize)
+> +{
+> +       struct llbitmap *llbitmap =3D mddev->bitmap;
+> +       unsigned long chunks;
+> +
+> +       if (chunksize =3D=3D 0)
+> +               chunksize =3D llbitmap->chunksize;
+> +
+> +       /* If there is enough space, leave the chunksize unchanged. */
+> +       chunks =3D DIV_ROUND_UP(blocks, chunksize);
+> +       while (chunks > mddev->bitmap_info.space << SECTOR_SHIFT) {
+> +               chunksize =3D chunksize << 1;
+> +               chunks =3D DIV_ROUND_UP(blocks, chunksize);
+> +       }
+> +
+> +       llbitmap->chunkshift =3D ffz(~chunksize);
+> +       llbitmap->chunksize =3D chunksize;
+> +       llbitmap->chunks =3D chunks;
+> +
+> +       return 0;
+> +}
+> +
+> +static int llbitmap_load(struct mddev *mddev)
+> +{
+> +       enum llbitmap_action action =3D BitmapActionReload;
+> +       struct llbitmap *llbitmap =3D mddev->bitmap;
+> +
+> +       if (test_and_clear_bit(BITMAP_STALE, &llbitmap->flags))
+> +               action =3D BitmapActionStale;
+> +
+> +       llbitmap_state_machine(llbitmap, 0, llbitmap->chunks - 1, action)=
+;
+> +       return 0;
+> +}
+> +
+> +static void llbitmap_destroy(struct mddev *mddev)
+> +{
+> +       struct llbitmap *llbitmap =3D mddev->bitmap;
+> +
+> +       if (!llbitmap)
+> +               return;
+> +
+> +       mutex_lock(&mddev->bitmap_info.mutex);
+> +
+> +       timer_delete_sync(&llbitmap->pending_timer);
+> +       flush_workqueue(md_llbitmap_io_wq);
+> +       flush_workqueue(md_llbitmap_unplug_wq);
+> +
+> +       mddev->bitmap =3D NULL;
+> +       llbitmap_free_pages(llbitmap);
+> +       kfree(llbitmap);
+> +       mutex_unlock(&mddev->bitmap_info.mutex);
+> +}
+> +
+>  #endif /* CONFIG_MD_LLBITMAP */
+> --
+> 2.39.2
+>
 
