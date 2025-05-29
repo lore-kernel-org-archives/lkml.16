@@ -1,76 +1,108 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2048.outbound.protection.outlook.com [40.107.93.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f65.google.com (mail-ed1-f65.google.com [209.85.208.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ABB224B1B;
-	Thu, 29 May 2025 12:35:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522144; cv=fail; b=I52JgtF4/Fi7SxGTEzAdn4hCZtEwmPFMB1bDZ0vl3Q4oNzqchaiFRc4BA3aKnmU2lCrjhh2J4eHv+ENyEtkHfxBNcL9hmgpwMNGkavwbyDoMkf6XmL0m7f6JAlENZl0RnqyxYUFKqidXt1M/Sp4E5QUwONRO5Or6wuJapOOjgxU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522144; c=relaxed/simple;
-	bh=8m2dYGOUHlHtbHXKM20enZzd9/uxNZ9OvkWKr7rzQ4Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IMeX2HLw7YIVyLLWdAHcZ6aygg9llmkCVXFHeuYOsa/BNMDpe5mwKn1IB/tcMlbIImS0TJWSxoQwyay44S03yOxzckGSWFdZBb8qZXJUSQK2ggD3mpFdDgU5T2R+Oc48DS0ZDtqJA2NjTl+IJi6Ao6uKHjnEPvo+/iFNpFWls4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wZcfiB2k; arc=fail smtp.client-ip=40.107.93.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8482248B4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748522554; cv=none; b=gpNqcdaOoEJidxJXRhLeM6XMcMuWaUY5gDFlYg73AyYJHptRb89ZT5bU7Ry/VtDSoklLzrG7P6p+GqlU0410ORrsNux9eS+H5E11JSu1JRhzv298qBnppO/8A63+iD3puhSFPLIe3LjsVx4PxTq1vThpfinAsopubox8RZRsGyc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748522554; c=relaxed/simple;
+	bh=J4if3MPmbylWo1ZVh61aotFj5BEvXmzuoQeC/6MOGrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CgEV55x524W8biuVIpJEGB0Rc+Agod3VciBn32SHWcI+CEEdTM3/1S56rKu+F0uCQFgC0b5mff2PQx5JB4ZqyjbmFr+caPKhf7UqyqXkQBYdVo/mBVDvIzAMJOUXSvobjyRNiCksdnOlK3dBfB3QG6zsurC4Jf79NeNh0EeZJyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D1N3bOkP; arc=none smtp.client-ip=209.85.208.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wZcfiB2k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bV8Q3qBEEnE/3OuXdmvLdEA0xI2/3O7Lt6wtA/J4Ipb//fwrJgud9JSAiz1xRS+q1pQc4WnoOBsrDlXN+UKC18G3ONRiMqbZKOiwbe2cYOLNbrIaT5fYoSmWxaUv6JFM616/rBAi/C2BgZ++5tse6+empe45T8uwz3KXBTjxqCMJtdBufC2Eexk1r18Xkj2mNkM9IttXLApd/37A6KWVlhm9LVQtOEdYQImSnWrrN26AoIcf78q5ESQgXaDoKQeYIgFNUuVeQIjDcGsDM4nlgBB8J0pNcBm3Mypd4YJr1TcmKfkUMTx5A937+fifyIk1H5rjem97c/8Nj0zyocvx0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DFAlZ/WkEXSqnCgSK1fYbKV/nr0l0cmpVFzf2Zq1NvI=;
- b=sRPh9Eu8T3JtvQc3wsl+ralliECkQRMXs6HW14LauWBJuF968gLskrbu/bhmRxBek4yOdSs916tpAoStRpMk2D4v9bi0Gcu8fL3Yqj/4KermiWOcgufI7966rQ0zCUq8y7yniIQ/O+1h8WVOXwmB/x+g5lK7dg/z6nAReMraK4kIoym9a3Je5lQ3WbNNmyXOy5GTGLPV/1wFwNPCCcypqGPHLrHGQP9Sn+sf9Zi/UYVACOqD9iMFUWKPeYmKSRJuOEO0Axbdq7zPD+oTPqtakt/uw/u386glrZdD9GasRKcNXHh7yK1NHrGFXcj+VjgpaaBcFgGb0eBvzIEblTjbEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DFAlZ/WkEXSqnCgSK1fYbKV/nr0l0cmpVFzf2Zq1NvI=;
- b=wZcfiB2k9wXrrFN/8W06+zSJGvtDiBEnlpQMuMrojwlGrFRnKt0HC16Z07kBrw3Uu/kFN9kMWYL7Y0bBlIMxwL478oWbOl4QhVoBvPZJzOTkzAWbzhA0eewk7M6Y1kuGo3PwBoUrIbFTnpnAWZMeenI8qoutd0Twm0HCfJ/IzfM=
-Received: from SJ0PR05CA0102.namprd05.prod.outlook.com (2603:10b6:a03:334::17)
- by IA0PR12MB8893.namprd12.prod.outlook.com (2603:10b6:208:484::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 29 May
- 2025 12:35:35 +0000
-Received: from SJ1PEPF00002313.namprd03.prod.outlook.com
- (2603:10b6:a03:334:cafe::27) by SJ0PR05CA0102.outlook.office365.com
- (2603:10b6:a03:334::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.17 via Frontend Transport; Thu,
- 29 May 2025 12:35:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002313.mail.protection.outlook.com (10.167.242.167) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 12:35:34 +0000
-Received: from BLR-L-RBANGORI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
- 2025 07:35:29 -0500
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-CC: Ravi Bangoria <ravi.bangoria@amd.com>, Ingo Molnar <mingo@redhat.com>,
-	Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, "Kan
- Liang" <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>,
-	"Leo Yan" <leo.yan@arm.com>, Joe Mario <jmario@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, "Santosh
- Shukla" <santosh.shukla@amd.com>, Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH 4/4] perf doc amd: Update perf-amd-ibs man page
-Date: Thu, 29 May 2025 12:34:56 +0000
-Message-ID: <20250529123456.1801-5-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250529123456.1801-1-ravi.bangoria@amd.com>
-References: <20250529123456.1801-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D1N3bOkP"
+Received: by mail-ed1-f65.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso1675017a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748522551; x=1749127351; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qcu3jY9KMaHOfphKfi7ZmlunMsnQwTpMnv18LDk4Xi8=;
+        b=D1N3bOkPKnLgVD9wWOfCCmTc+OX0t3GmRqESsf2sATpdzkfSMRQiV4UfnJkXndlVEk
+         gjDv50KpVqxubzPlsaQC3D06cnee5J/qCWoOAaKKl6vETLlQShC1IDi+Xsss17J7yvJQ
+         4mmCeVvhXvvITL9S54DbA4xyogaAjhVaVVh3B9KfsJ8Eh93iDnMILSpuP5HsQUi+OQbW
+         wauqZAv2vd1X7aBMx8yK02EE6bbt6ntxz4iTBP4RObLhlyEQUNvuzkBCZrYj++PvYjcf
+         mWp+EafLiDIxcC7ffppr5v7GtQ9+CnPT42PpHi1DKa7ifUqh+mr5a4v8HZbPieFUzFQI
+         g2hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748522551; x=1749127351;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qcu3jY9KMaHOfphKfi7ZmlunMsnQwTpMnv18LDk4Xi8=;
+        b=DzHQOZsySII+ihmHGIN27Lg9+PvbW+T5fKG/NO9toEJ8xOEn8HM0mIyFFvWoEeOMAz
+         bl06vYyjIZysBZoUFLIBDEF1UDBMvbMqacJ8Tjr5DhFqWIXYZ8zWQq4PeRHZ6L897b7i
+         6YSHYOyudRRbusGLBArQSRk/pSC4dj5C9XqKsPBR6Fh1FkMvq9+8oXMh1bk0zghmRmI7
+         qEZqv/idJfAT19V3QKAVz25zwTIQGxY61z8q4Y72tCkdVjsJ66fI+7glnwiQ3RryBHyH
+         2IeYx3PXQTo9USkFX3M5vp+KmCHHWrtEM5Nn00PtHAuEPA4RmHehw8/uR+4CzKgGqC6r
+         3dMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfmJFF4jnK3VfKWhCkdsKXBl87S+hHP6Y5Q6/v6Y/t6EDtF3kgjQ3eBblve8SWCFb2gSRNzbznZIyuwbc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIfBpaemPnDq2kuQqaRgdf1IzYbrHsuSfci4nNhTd2sRE9I5Qp
+	ZqIZ+rg4JBA30PZATjN7rPLX8TgZQpsRnW73hsQf06MWyBZ+vIMVtxA2Pp4+tY5rjiM=
+X-Gm-Gg: ASbGncvlDp3rO1Hd3I1nceS4c2seV73jMQIcDtgZit0sf8cYQLn1XL055ZgIxXtPira
+	JUvWgEV86msXa0vrFeO0jfShGzmskRlhO6cyC/DZOpmznJlYeceeL+pNKhDabmyMeFuCRt8XB2i
+	nLDNPQXzZP7yWm7SkPzlyAn2jQfC4T8EAaskox3DFIcHzEMyb1no/bfYQiAMsWyesf0J9K5cWw1
+	rhqsN/FeLTwFcDPtGIijvJ8fIUaF9r4MLwx1OzL+2oK4J0RL2bqeVwBSPYx48mSnFJZTP7BO31c
+	NsBqq2J6IoVU98Zc8ccwckJPa+D6eI1YxpRX+axX7IhzMKQ8QIUpwwA0XvKaYpEVuAOnK+zZ9ti
+	ywCNfhMvXCacgDz2QABtwRw==
+X-Google-Smtp-Source: AGHT+IFqGcVJXimhokIbZWiUHlNvx3UeN9lWivpfPwoPQiIRBEZgWSyIPHNWun7qhNncSYxPFC4O6g==
+X-Received: by 2002:a05:6402:2116:b0:601:965e:2a44 with SMTP id 4fb4d7f45d1cf-6051c377ff1mr4690338a12.12.1748522550782;
+        Thu, 29 May 2025 05:42:30 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5f22b3sm2339238a12.24.2025.05.29.05.42.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 05:42:30 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v11 01/13] dt-bindings: clock: Add RaspberryPi RP1 clock bindings
+Date: Thu, 29 May 2025 14:43:50 +0200
+Message-ID: <2fef6763499e2014f7df952162098357826e1f4a.1748514765.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1748522349.git.andrea.porta@suse.com>
+References: <cover.1748522349.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,170 +110,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002313:EE_|IA0PR12MB8893:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb74c1a6-248b-46ae-d71f-08dd9ead4f13
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Pypg4iiqTONLh3efz2iWa88TggrlsBdlsvdZuVAVvFvzGLi9OI8LFU1ik+BA?=
- =?us-ascii?Q?DQwYW2LRbbNoHcqt1r9BfiTiOwl99KjyLJqhFnU2U4nmaM3lvB52efWqdkbL?=
- =?us-ascii?Q?JpCuOaSclwm+ZWF2+iMejND3vYmEDZm/CkBNdGE7lozCvMLkNvXTPrqFVG2d?=
- =?us-ascii?Q?+4UbbfL/fMjQM+0WLf4iTRw351HnrPw6HHAcTMFczz/7SmR0rIKdE7j6QMfw?=
- =?us-ascii?Q?emD60zJp3/AvIvvZ0zkIjBgO4FzMD7BrOHmcuiU8mM/ovX0x39gRykw/GkI9?=
- =?us-ascii?Q?wpMPo5k+4k2xsd06AWjE8GtNoVMxgtRvDYM/vZfGYR1t2B3iXRxv+AEyVpfZ?=
- =?us-ascii?Q?KzwNTS7HJnQVnquhhhETZfBAZ3eYr/YRbs2TTgYnUQZjG8ewgOiSRieFMSUY?=
- =?us-ascii?Q?+zLaodUV1DPIxf2n7/mt9wj/m+R1MO3gxiJF0+GpM2g76VkETPj6K/vqXA1/?=
- =?us-ascii?Q?NdVot+b2Md8T1thw05VIY1pCCt5VJTxKFdUSGZ84hTRcpq8ULpY7FP/AYBNI?=
- =?us-ascii?Q?zpQlRb7YcixnaN4XvxQNVFV5l7NUcr3vb1BaDTMn5zflEkWBzZeK04awSPvB?=
- =?us-ascii?Q?YV6a9bwAm/JFuTdeBLYmd1Gpa5o5p8lsl2zgVIl3v/m1s+vqwAgIaxACFtzJ?=
- =?us-ascii?Q?9BlJ6BB8/mlFJigGyQe6N4X1Y87HJtkS+0JAnL5bk1zvlliOJJv2d3O/8hig?=
- =?us-ascii?Q?XrsH94pez5ApDjT4DTXXM/1LA6T8C7dsC1TRhlwABDkB25+euIuoHDYThTJ/?=
- =?us-ascii?Q?yI2mWeX0Ufc/2HHfJMeewPMz/+Px9tdBNHNCniVZlfFbIEsZVr6RildZEads?=
- =?us-ascii?Q?L7+U7L4c7lppgMctdVAko+mVwrqFuanltX+2FcVrWf/JX73p7Ufo4XIlQ1OF?=
- =?us-ascii?Q?l0JlMgf7mt+3BVUEcLubxvfJ3YocDDsZ5f+/Q6YAGE9PnUBmIRXxegvHXJ9a?=
- =?us-ascii?Q?8KDSfvl8ajy7o6ny/KT0+xhxZXttBNrP5ywU+Yf5QoFSSAYAFOkkEUJupN05?=
- =?us-ascii?Q?iX4y77gbbz2JyQX8a+l9gq4V8DIVcyeDzyIuq+rKli6dJ5YUPTkqCaDWSrr/?=
- =?us-ascii?Q?JLc/Wq+RSfBPpQehBuIbKDpyF/xBscEpH1mMXkvbSpY6+dH4Cix+HhyB5gSo?=
- =?us-ascii?Q?3MHD2hyQwsUC3gqLzvaH3TF74s/mUDj7eAnIf0vGAF8wRu0Baz82T/IJHr68?=
- =?us-ascii?Q?Uf7+l+nataGPt2kWW3sd4pvYcdiq3HzelB2WoEPmauteR+hPeYjSQLZsa2LT?=
- =?us-ascii?Q?yAu5yjrrKPiHr5ukzij1GUJAnclplvtYdcIzAvodPRF+z/uavrmH7vOLgTb/?=
- =?us-ascii?Q?s6WKXrxyw7pPx78TtpE8gFIg+4q4lFHwp6NJCdT7vpzTsSO6JEtdrxS4RP9Z?=
- =?us-ascii?Q?OF09pUQ4dY2+2uFN2S8bAxszeNBaka1aeZ1AOjhO3rSfqqCDekNp4G46q7AT?=
- =?us-ascii?Q?u4q59qvzGUnR8BXKH360FmMm9ht45dBAQ5jJa5vKwf/qvMEPtpqjb4xdUH2K?=
- =?us-ascii?Q?H5Kwzs1fSPaglhnXiWr9F+kGu5w6v+d6gG3R+T9tUAwGbrnoHmLObSFmEA?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:35:34.8355
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb74c1a6-248b-46ae-d71f-08dd9ead4f13
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002313.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8893
+Message-ID: <20250529124350.YTdp5zkYMVrVWB8idhxGWP2SWHCzotud2KnNzUzW6Dw@z>
 
-o Document software filtering capabilities provided by IBS kernel
-  driver.
-o After recent perf-mem hist updates [1], the perf-mem example command
-  in the perf-amd-ibs man page renders output differently. Unfortunately,
-  there is no way to get the same aggregated output now. So use alternate
-  command that can aggregate and show data at the command level.
+Add device tree bindings for the clock generator found in RP1 multi
+function device, and relative entries in MAINTAINERS file.
 
-[1]: https://lore.kernel.org/r/20250430205548.789750-1-namhyung@kernel.org
-
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- tools/perf/Documentation/perf-amd-ibs.txt | 72 +++++++++++++++++------
- 1 file changed, 54 insertions(+), 18 deletions(-)
+ .../clock/raspberrypi,rp1-clocks.yaml         | 58 ++++++++++++++++++
+ .../clock/raspberrypi,rp1-clocks.h            | 61 +++++++++++++++++++
+ 2 files changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+ create mode 100644 include/dt-bindings/clock/raspberrypi,rp1-clocks.h
 
-diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-index 55f80beae037..a543a68e3c94 100644
---- a/tools/perf/Documentation/perf-amd-ibs.txt
-+++ b/tools/perf/Documentation/perf-amd-ibs.txt
-@@ -33,9 +33,6 @@ if IBS is supported by the hardware and kernel.
- IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supports
- one event: fetch ops.
- 
--IBS PMUs do not have user/kernel filtering capability and thus it requires
--CAP_SYS_ADMIN or CAP_PERFMON privilege.
--
- IBS VS. REGULAR CORE PMU
- ------------------------
- 
-@@ -160,6 +157,38 @@ System-wide profile, fetch ops event, sampling period: 100000, Random enable
- 
- etc.
- 
-+IBS SW FILTERING
-+----------------
+diff --git a/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+new file mode 100644
+index 000000000000..cc4491f7ee5f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/raspberrypi,rp1-clocks.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/raspberrypi,rp1-clocks.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+IBS PMU driver provides few additional software filtering capabilities. When
-+supported, kernel exposes config format through the following files:
++title: RaspberryPi RP1 clock generator
 +
-+  /sys/bus/event_source/devices/ibs_fetch/format/swfilt
-+  /sys/bus/event_source/devices/ibs_op/format/swfilt
++maintainers:
++  - A. della Porta <andrea.porta@suse.com>
 +
-+1. Privilege (user/kernel) filtering. IBS PMUs do not support privilege
-+filtering in hardware so IBS driver supports it as a software filter.
++description: |
++  The RP1 contains a clock generator designed as three PLLs (CORE, AUDIO,
++  VIDEO), and each PLL output can be programmed through dividers to generate
++  the clocks to drive the sub-peripherals embedded inside the chipset.
 +
-+  ibs_op/swfilt=1/u               --> Only usermode samples
-+  ibs_op/swfilt=1/k               --> Only kernelmode samples
-+  ibs_fetch/swfilt=1/u            --> Only usermode samples
-+  ibs_fetch/swfilt=1/k            --> Only kernelmode samples
++  Link to datasheet:
++  https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
 +
-+  Privilege filtering is always available when "swfilt" is supported.
-+  So, kernel does not expose any separate PMU capability for this.
++properties:
++  compatible:
++    const: raspberrypi,rp1-clocks
 +
-+2. Load/Store sampling. IBS OP PMU do not support load/store filtering in
-+hardware, so IBS driver supports it as a software filter.
++  reg:
++    maxItems: 1
 +
-+  ibs_op/swfilt=1,ldop=1/         --> Only load samples
-+  ibs_op/swfilt=1,stop=1/         --> Only store samples
-+  ibs_op/swfilt=1,ldop=1,stop=1/  --> Load OR store samples
++  '#clock-cells':
++    const: 1
++    description:
++      The available clocks are defined in
++      include/dt-bindings/clock/raspberrypi,rp1-clocks.h.
 +
-+  Kernel creates following PMU capability file when load/store software
-+  filtering is supported:
++  clocks:
++    maxItems: 1
 +
-+  /sys/bus/event_source/devices/ibs_op/caps/swfilt_ldst
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++  - clocks
 +
- PERF MEM AND PERF C2C
- ---------------------
- 
-@@ -173,21 +202,28 @@ Below is a simple example of the perf mem tool.
- A normal perf mem report output will provide detailed memory access profile.
- However, it can also be aggregated based on output fields. For example:
- 
--	# perf mem report -F mem,sample,snoop
--	Samples: 3M of event 'ibs_op//', Event count (approx.): 23524876
--	Memory access                                 Samples  Snoop
--	N/A                                           1903343  N/A
--	L1 hit                                        1056754  N/A
--	L2 hit                                          75231  N/A
--	L3 hit                                           9496  HitM
--	L3 hit                                           2270  N/A
--	RAM hit                                          8710  N/A
--	Remote node, same socket RAM hit                 3241  N/A
--	Remote core, same node Any cache hit             1572  HitM
--	Remote core, same node Any cache hit              514  N/A
--	Remote node, same socket Any cache hit           1216  HitM
--	Remote node, same socket Any cache hit            350  N/A
--	Uncached hit                                       18  N/A
-+	# perf mem report -s comm,mem -H --stdio
-+	     Overhead       Samples  Command / Memory access
-+	  .........................  ..........................................
-+	    66.46%        471728     cc1
-+	       34.70%          1393     RAM hit
-+	       10.42%           370     Remote node, same socket RAM hit
-+		6.73%         10239     L2 hit
-+		5.84%        293953     N/A
-+		3.26%        163803     L1 hit
-+		3.16%          1796     L3 hit
-+		1.29%            95     Remote core, same node Any cache hit
-+		1.06%            73     Remote node, same socket Any cache hit
-+		0.00%             6     Uncached hit
-+	     9.45%         44994     sh
-+		2.60%           131     RAM hit
-+		2.21%           219     Remote core, same node Any cache hit
-+		1.89%           190     Remote node, same socket Any cache hit
-+		1.02%            52     Remote node, same socket RAM hit
-+		0.72%           785     L2 hit
-+		0.60%         30149     N/A
-+		0.27%         13340     L1 hit
-+             ...
- 
- Please refer to their man page for more detail.
- 
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
++
++    rp1 {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        clocks@c040018000 {
++            compatible = "raspberrypi,rp1-clocks";
++            reg = <0xc0 0x40018000 0x0 0x10038>;
++            #clock-cells = <1>;
++            clocks = <&clk_rp1_xosc>;
++        };
++    };
+diff --git a/include/dt-bindings/clock/raspberrypi,rp1-clocks.h b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+new file mode 100644
+index 000000000000..248efb895f35
+--- /dev/null
++++ b/include/dt-bindings/clock/raspberrypi,rp1-clocks.h
+@@ -0,0 +1,61 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (C) 2021 Raspberry Pi Ltd.
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
++#define __DT_BINDINGS_CLOCK_RASPBERRYPI_RP1
++
++#define RP1_PLL_SYS_CORE		0
++#define RP1_PLL_AUDIO_CORE		1
++#define RP1_PLL_VIDEO_CORE		2
++
++#define RP1_PLL_SYS			3
++#define RP1_PLL_AUDIO			4
++#define RP1_PLL_VIDEO			5
++
++#define RP1_PLL_SYS_PRI_PH		6
++#define RP1_PLL_SYS_SEC_PH		7
++#define RP1_PLL_AUDIO_PRI_PH		8
++
++#define RP1_PLL_SYS_SEC			9
++#define RP1_PLL_AUDIO_SEC		10
++#define RP1_PLL_VIDEO_SEC		11
++
++#define RP1_CLK_SYS			12
++#define RP1_CLK_SLOW_SYS		13
++#define RP1_CLK_DMA			14
++#define RP1_CLK_UART			15
++#define RP1_CLK_ETH			16
++#define RP1_CLK_PWM0			17
++#define RP1_CLK_PWM1			18
++#define RP1_CLK_AUDIO_IN		19
++#define RP1_CLK_AUDIO_OUT		20
++#define RP1_CLK_I2S			21
++#define RP1_CLK_MIPI0_CFG		22
++#define RP1_CLK_MIPI1_CFG		23
++#define RP1_CLK_PCIE_AUX		24
++#define RP1_CLK_USBH0_MICROFRAME	25
++#define RP1_CLK_USBH1_MICROFRAME	26
++#define RP1_CLK_USBH0_SUSPEND		27
++#define RP1_CLK_USBH1_SUSPEND		28
++#define RP1_CLK_ETH_TSU			29
++#define RP1_CLK_ADC			30
++#define RP1_CLK_SDIO_TIMER		31
++#define RP1_CLK_SDIO_ALT_SRC		32
++#define RP1_CLK_GP0			33
++#define RP1_CLK_GP1			34
++#define RP1_CLK_GP2			35
++#define RP1_CLK_GP3			36
++#define RP1_CLK_GP4			37
++#define RP1_CLK_GP5			38
++#define RP1_CLK_VEC			39
++#define RP1_CLK_DPI			40
++#define RP1_CLK_MIPI0_DPI		41
++#define RP1_CLK_MIPI1_DPI		42
++
++/* Extra PLL output channels - RP1B0 only */
++#define RP1_PLL_VIDEO_PRI_PH		43
++#define RP1_PLL_AUDIO_TERN		44
++
++#endif
 -- 
-2.43.0
+2.35.3
 
