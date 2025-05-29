@@ -1,138 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2257321B8F8;
-	Thu, 29 May 2025 09:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F464219E93
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509915; cv=none; b=ghYLN3lXIm4zuVS9fbXCBHbEorxK/2XNBotebUt2AtZw8NM7sGftCmd2s09BX8xJaHa5E3C44bdguzPxOSigew7MCaWDn1mfWGWV2iVHD5ExvpQTX1xATrrY1KaMr62VcHuS6KAM2VfVOfX1w6l5bTBuvxX3m4qyQwf0ciKzOhc=
+	t=1748509925; cv=none; b=XDo3F4dtDtGD6T4X34EBOh3HLtLVKwkKMPXtyUSZTgIFrhU2F8mjW70xLL/FmYTTapYme41k6P9GnVHm+fgcn7xiF8cyXaZ5VhMibn21YDVW/XUf4XNEEK79s5F5BsDPf30ZaqOr4FzFBSFQJT+42PvcAGOV3aC1YExGxxrWAtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509915; c=relaxed/simple;
-	bh=etCnNVCaZm8czOxADU77dWNdPQaJyUulC30i36OyVe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2Y1fPbAJ8c7oVXJWUA20l+8/B/oeXbWtZ2EuiFUs9zrpzC7a/an8n7NE/ZjC0jiSjHVmrE7Fq/ERm2K2eJDyOkUWXbqbjDLKGGR9/aKz/Pf5D37QbjcqNi5B6A6S0+DfvBwhQeAwsw8aHZiizFPU80oNIDPTh8srtpQHWU9ap0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RcriyvZB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RcriyvZB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6395C4CEE7;
-	Thu, 29 May 2025 09:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748509915;
-	bh=etCnNVCaZm8czOxADU77dWNdPQaJyUulC30i36OyVe8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RcriyvZB21YKR6aJPzQ60V5EfB1XaZ1CEg1pEFx5z+QaktkoSXrMi0m5xn5opXkfi
-	 ebZimSs7m+eO75ZzbQ0VVnPnqzm6KTArhl15l/mpWAu7ZkT/jgJFolRB5ZuU8ob15O
-	 fOESYdArrVuE3P7ccPm80MKhP3GdWXs4Tp3LAqjo=
-Date: Thu, 29 May 2025 11:11:47 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: zongjian <quic_zongjian@quicinc.com>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	quic_ztu@quicinc.com, quic_haixcui@quicinc.com,
-	quic_anupkulk@quicinc.com, quic_msavaliy@quicinc.com,
-	quic_vdadhani@quicinc.com
-Subject: Re: [PATCH v1] serial: qcom-geni: Add support to increase UART ports
- efficiently
-Message-ID: <2025052959-tingly-august-3560@gregkh>
-References: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
+	s=arc-20240116; t=1748509925; c=relaxed/simple;
+	bh=UJ6ezAlAShPnmVgIwZDMjYr9pcRvMP/YLoLr6IYK5UI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=H1hK2gYf7/vltSqN+kFNVW5G+HfwSFCSZYZyRfrddoYFnYsjzVRwjLKuvLDrpX/amrF4PfoP86T+lo8aebiunf7e+6Kz9l0kyjyA4N56Y/JcVruOC1xEZdZflWUXQrw3QQd3zSKHXwPfEdNBi/jMLmYVsqS8gsxwIIYSwhHjTx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3dc78b79129so6571065ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 02:12:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748509923; x=1749114723;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgqA6WYLlv6HaseaNManWLRCIGCkg9e+ZyO7LDpoLW4=;
+        b=mvzEEpv4owUrwLTPicO8dB3jtq6++lkiDrfwMdTQzX91m7ASlU32RUVi/aS36/Sz3a
+         kQEGZ6ucSgZVxj6qjuXOLxPwbD4JG9A9VApoqDa+4uJKDU2zYjcKZrbEducT+AdIFbTZ
+         E8H+9myJsWIP52NL+WL7xPh8HwE3LYiA4+sFr22qh+asAnX7fBVzLLJm2TccpinrC8/1
+         76U1By6eDZ9VenDHqPllPgL1GJSBeIVgbck2/g6FVO+z9juvlcntYQp0EsN2gtU+MrGw
+         fdmThzhMYnVtjv//ROj13xQMSUsKQbFLcwPQig99p+V2gRYcC+jLi/Bl49hQa0x1h4va
+         rVJA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8v0xeNpcnR4U0WbOekhZ06onjR7GjAAF06L/p+6nDvmA6GNaCHtJKXfFeoeboh1SzXypqsvzg+rv91cI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLddJ//ycbmjskyIjYl8+y/OGYVeW1ig+nN9s4+YOvyb45YSNd
+	0TUiZ06D+9X05COHBvMFPn30mBn4pvqh/xuz7IRtjygj4NY31tlC/ycIbRLqR3xDL8HjeqlSAPM
+	WrmtDvfGHSE30SqE86ZdL+x+z00MkFoRuq60vHQsnQRytfolm/MjDqQiYJPk=
+X-Google-Smtp-Source: AGHT+IEPWGixRGapfARq187CTUE/YoqnJN7QP3ehKMBybddukrFsnjZn6jS8HwW1x42NZGf+n7904+bb6BtixjU2v24A8EZ6CPJb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
+X-Received: by 2002:a05:6e02:160c:b0:3dc:8b29:3097 with SMTP id
+ e9e14a558f8ab-3dc9b697412mr224679275ab.12.1748509923226; Thu, 29 May 2025
+ 02:12:03 -0700 (PDT)
+Date: Thu, 29 May 2025 02:12:03 -0700
+In-Reply-To: <CAGR7w81Zq-HhXvfgXpRM9FPpy67uxQaM_DM8nwN5vEU23oPRqA@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683824e3.a00a0220.52848.0001.GAE@google.com>
+Subject: Re: [syzbot] [i2c?] KMSAN: uninit-value in __i2c_smbus_xfer
+From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
+To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 29, 2025 at 05:03:25PM +0800, zongjian wrote:
-> Populate members of qcom_geni_uart_ports through a loop for
-> better maintainability. 
+Hello,
 
-What does this mean exactly?
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+KMSAN: uninit-value in __i2c_smbus_xfer
 
-> 
-> Increase the UART ports to 5, as a few use cases require more than 3 UART ports.
+=====================================================
+BUG: KMSAN: uninit-value in i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:484 [inline]
+BUG: KMSAN: uninit-value in __i2c_smbus_xfer+0x2542/0x3140 drivers/i2c/i2c-core-smbus.c:610
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:484 [inline]
+ __i2c_smbus_xfer+0x2542/0x3140 drivers/i2c/i2c-core-smbus.c:610
+ i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:548
+ i2cdev_ioctl_smbus+0x4a1/0x660 drivers/i2c/i2c-dev.c:389
+ i2cdev_ioctl+0xa14/0xf40 drivers/i2c/i2c-dev.c:478
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:907 [inline]
+ __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
+ __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
+ x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-You are doing two different things here in the same patch.  As you know,
-this means this should be split up into multiple patches.
+Local variable msgbuf0.i created at:
+ i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:335 [inline]
+ __i2c_smbus_xfer+0x864/0x3140 drivers/i2c/i2c-core-smbus.c:610
+ i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:548
 
-> Signed-off-by: zongjian <quic_zongjian@quicinc.com>
+CPU: 0 UID: 0 PID: 7066 Comm: syz.0.33 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701-dirty #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
 
-We need a full name here, not just an email alias.
 
-> ---
->  drivers/tty/serial/qcom_geni_serial.c | 40 +++++++++------------------
->  1 file changed, 13 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 140c3ae5ead2..d969c96b9690 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -77,7 +77,7 @@
->  #define STALE_TIMEOUT			16
->  #define DEFAULT_BITS_PER_CHAR		10
->  #define GENI_UART_CONS_PORTS		1
-> -#define GENI_UART_PORTS			3
-> +#define GENI_UART_PORTS			5
+Tested on:
 
-You need a better justification for increasing the number of ports here
-in the changelog other than what you wrote :)
+commit:         90b83efa Merge tag 'bpf-next-6.16' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13654970580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1da44e3e5e6013db
+dashboard link: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12534ed4580000
 
->  #define DEF_FIFO_DEPTH_WORDS		16
->  #define DEF_TX_WM			2
->  #define DEF_FIFO_WIDTH_BITS		32
-> @@ -153,6 +153,7 @@ static const struct uart_ops qcom_geni_console_pops;
->  static const struct uart_ops qcom_geni_uart_pops;
->  static struct uart_driver qcom_geni_console_driver;
->  static struct uart_driver qcom_geni_uart_driver;
-> +static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS];
->  
->  static void __qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
->  static void qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
-> @@ -163,32 +164,15 @@ static inline struct qcom_geni_serial_port *to_dev_port(struct uart_port *uport)
->  	return container_of(uport, struct qcom_geni_serial_port, uport);
->  }
->  
-> -static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS] = {
-> -	[0] = {
-> -		.uport = {
-> -			.iotype = UPIO_MEM,
-> -			.ops = &qcom_geni_uart_pops,
-> -			.flags = UPF_BOOT_AUTOCONF,
-> -			.line = 0,
-> -		},
-> -	},
-> -	[1] = {
-> -		.uport = {
-> -			.iotype = UPIO_MEM,
-> -			.ops = &qcom_geni_uart_pops,
-> -			.flags = UPF_BOOT_AUTOCONF,
-> -			.line = 1,
-> -		},
-> -	},
-> -	[2] = {
-> -		.uport = {
-> -			.iotype = UPIO_MEM,
-> -			.ops = &qcom_geni_uart_pops,
-> -			.flags = UPF_BOOT_AUTOCONF,
-> -			.line = 2,
-> -		},
-> -	},
-> -};
-> +static void qcom_geni_serial_port_init(void)
-> +{
-> +	for (int i = 0; i < GENI_UART_PORTS; i++) {
-> +		qcom_geni_uart_ports[i].uport.iotype = UPIO_MEM;
-> +		qcom_geni_uart_ports[i].uport.ops = &qcom_geni_uart_pops;
-> +		qcom_geni_uart_ports[i].uport.flags = UPF_BOOT_AUTOCONF;
-> +		qcom_geni_uart_ports[i].uport.line = i;
-> +	}
-
-If this is such a simple structure, that never changes, why is it needed
-at all?  It can be easily determined from the "line" value, right?  Just
-remove it entirely please, as it's much better to have a dynamic number
-of ports (i.e. what is actually in the system), than a hard-coded one.
-
-thanks,
-
-greg k-h
