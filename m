@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15461266B5C
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EB7267711
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562049; cv=none; b=nqEVuO1P9vmm+FIw3CONFjzzclW4E6uqlbXHxuJ/5h8nwBct2oiaoYB30jtPbzwgZKdz1L/luns4nfGdeyCCt2+AyPkj+Ok/OnA7cn7JVqwMve752gIfseAcswryIX591H1/BrVb0KyHbOFcLSwG27My/Cwr45Y552m2Vc5kJLM=
+	t=1748562052; cv=none; b=scwFn6iXFo3+p/9R9prVtTyOlYWGB5knGqW6BVHfixkZBtV0FjsAzrLBF3QpKCF3Fxj4zSnfxV0p5p+qTOoa34mEGoi6+K9Znv2rtSNdmvHFY1JxNpTNn+2PKqUGd6MlXH11z2GdRqHos4Lw1J/OJglO7jchSZMXS7RdPKTad2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562049; c=relaxed/simple;
-	bh=ipd3PqNgKX6EiEMlkRwnAr7yR8L6HWmKo1llt0yzTC4=;
+	s=arc-20240116; t=1748562052; c=relaxed/simple;
+	bh=3Ss96AAD1zcLzWkvW+r+tlN+q9wQb93Ov1S2Eah97js=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ciZfl23BQhLSOILPGaP8XDpnLZpNCrJBwYzWOzamPhdvrDVJoMNztoaXNIVxU2asMHrdFv34AG/Zn97VaKhdnLDNNQOLgHu1exsJkPQeG0itKCeegEDsOSvfV7SXCpT3Njrr/cZncr89ui5SxASptKlhCtTldPt5hIdXTYt/o44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eUNY+Ygg; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=uOuHfdRVcEzf9TmwfrrBEiJoevAJ6qijM31i15zyM/BT4oTEYS0FY1WRJ+T5PzrTwAaWaRz+zxpwLEIlKvgRapXeEOobzCw6YIvHhJ63cG1Mb9rmuS5S16KpnBM05Rbdr1pt1ul8YUHREqavAaSy1VyLUYIp4r68RnmJLBFise8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b5P2PXIR; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eUNY+Ygg"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310a0668968so1332712a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:40:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5P2PXIR"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7377139d8b1so1203493b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:40:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748562046; x=1749166846; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748562050; x=1749166850; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=RqTWQjZVwQr5Q0PPr6wjVd4jvFiN8x0lNx4T8nW7sQg=;
-        b=eUNY+YggGAjQetCZHVO4752louL7vowlv0AI2dbEwvtUfLDsIIEjsjFbSjX5sS9B3n
-         cvOcj+S5e4GiM9Nb3YT9Sl7f5VBENgCWf7UXl6JAI/lGHqPPUaqE4SvdoeUlRUdA185H
-         0tTd6s6gtflXODynZaCgnzmmtiw9LoZyLowLv3FCM9tzMcRHosAyKKhEMjiwoUaGqo2K
-         wYcQsPeBRDiwEqsEI5N+0ouGAxonp5JeT6xYjoeTjzNHSsI7ZMb9uDcUJZA8Idox6ke9
-         U73dmjrXkdE6PvsFx4UdtqKfAS0aFLSErOneFuManpp1ahN6SdfFS6ZhNUnH7G2tciae
-         X5xg==
+        bh=ICiJiSxOLmQxtER1UTGYaICTPY0kJa+u8J+f2toknpc=;
+        b=b5P2PXIR4MBjxB7N5X+3FxGdyNrCepmaT7/H3Ycn2Bv9xBuwMuEKXwAm+Mz0qT0m0s
+         OI+oy6r71PTNn92SmJgmlOwttNr36wqKktwOyTUdu6oRp4hxTSVQzfb6gO/9h0j7r7R+
+         a9olOEJwu25TvT4W6AyVSObotmNdnf86MSTelEd3ovkyIEIF1HvCv4kTC9oWsAAIqdpa
+         F34vMwQdvoP7QTwO2E3TxVzKcVijJ1QGf3yCbrelWtqX1VHEXu5Gun0olJsMk02eHO1X
+         jnlOBivi5TMLvaBmdqBO3qFKVgwMrcURj/Mkm3El9AhKZYYi42EyhS8Wzkmmwrh7HdGt
+         4vIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562046; x=1749166846;
+        d=1e100.net; s=20230601; t=1748562050; x=1749166850;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=RqTWQjZVwQr5Q0PPr6wjVd4jvFiN8x0lNx4T8nW7sQg=;
-        b=rhjhFCg6lddYjW35BqWOqPTjArk6HNpBwsRzJANz1gFjNGDzyz7HNt0Z8atITEPWuN
-         2kzyRCDwsEY3g0/iH3yvOYaM3ZnlKCEUdi1O4OrrZglQuGfPQtkM53PENRTz5Ze3uR3Q
-         WPEZIjyHFkZbcVQ0M7tlDoR1tImYhmdAz5Ct0JsaoEvLKPQWfAIeapdrxIS5nOZbiFJX
-         2oCfWm/hj5uknUh24hN4B9d2Sudw/A64mc2LEOZYyp1AqphmDxf0b0q+Q69mGjvBSIJz
-         scePveZTPUU1pe79Zz4I5kTVNVC0A3Fg/NepjfqrUi8+6GBISubKGVWtOsLjpoRWH3y0
-         SxXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvfleGPydBipeALdMxf2qv7z/xgPN/Ie3P4XIs9lZTFo9LsZQJ3T9LW7tuSWsd/Icasbus/puhKre0/rg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/IxifoTWBndi0ZOOiAWqZhE72e/YsMWJDYAB4kgmQm9M998C6
-	U3u1403U1KJETV6Ten+dxT8K8kw2+3FTp7bIfGq6bJyEdX5/C1cyQQ3vX9Due1/2xK+a/meGCVZ
-	6AMImBg==
-X-Google-Smtp-Source: AGHT+IFs+u+XipOnoBwNAwXST/KXxFeLXiR93xuTQC778aXypTHx/u/r2nP7YeM5Z926+f7RnXMBFJJZ8OM=
-X-Received: from pjbli5.prod.google.com ([2002:a17:90b:48c5:b0:311:e2ef:f61a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2786:b0:311:df4b:4b8b
- with SMTP id 98e67ed59e1d1-3124187bab8mr1726927a91.26.1748562046653; Thu, 29
- May 2025 16:40:46 -0700 (PDT)
+        bh=ICiJiSxOLmQxtER1UTGYaICTPY0kJa+u8J+f2toknpc=;
+        b=dfLui7S3KqXdYf6otq4BsItUibl7jE8KEGQZfsPtEfOOg4th3pMeSL+j5WKCe2Cfh/
+         ttDmMt8L3jGTSTbifFEx5criZI3ryDZuvCkxVeuWoH4Pz9P454tENbDsRsdWiSVohXeh
+         aBCjsFTgKNKRFsl4AD5thTGoofUdRgdsTlQsuE5vDzpKEoYVrHeN2CG8rWX0C+Lt7xjt
+         nQTuDfPnpCmtl5PqZdLyGphh7OqazV00GcrfyVm5gWoRAYIajPE7WC5lVL/5ejzUhv/7
+         GbdM0jOCJ1Et+xnett6XZRjwQvHHvBQwHIuj3Lzi3sRLkl8d6cDuP+Jr50DA4gY3/a3b
+         3TsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjzw6aTKpoFB5PhS+UlzUTEFiP00OV+T96UX7EsaOae1UbWA3WadOh/DXHhAsf6jxWOPfZ6Oz/hw/kxvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlJr4btkPkpcuEWcA0pROM4MkMyANCCSRwh6FXf6+Qncj87ZUy
+	BSEyKHYYTAzcB64Twzf2k1GX1hEmcbMcvS4JGaTE2mO2b64VI+f8T3hU3q727ty5NFgHZ2qm8bJ
+	BA7UJbQ==
+X-Google-Smtp-Source: AGHT+IEkzQv92LgC6XPOHAO80Xw4IzD4slJRTbmhAV7VxAG9t7v05ThV8+ubj9WSHvkwXXpBOx2W0zebT8o=
+X-Received: from pgbdk1.prod.google.com ([2002:a05:6a02:c81:b0:b2e:bef7:3f03])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6494:b0:218:c22:e3e6
+ with SMTP id adf61e73a8af0-21ad952e37cmr2162295637.12.1748562049784; Thu, 29
+ May 2025 16:40:49 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 29 May 2025 16:40:03 -0700
+Date: Thu, 29 May 2025 16:40:04 -0700
 In-Reply-To: <20250529234013.3826933-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529234013.3826933-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529234013.3826933-19-seanjc@google.com>
-Subject: [PATCH 18/28] KVM: x86: Rename msr_filter_changed() => recalc_msr_intercepts()
+Message-ID: <20250529234013.3826933-20-seanjc@google.com>
+Subject: [PATCH 19/28] KVM: SVM: Rename init_vmcb_after_set_cpuid() to make it
+ intercepts specific
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -70,171 +71,50 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rename msr_filter_changed() to recalc_msr_intercepts() and drop the
-trampoline wrapper now that both SVM and VMX use a filter-agnostic recalc
-helper to react to the new userspace filter.
+Rename init_vmcb_after_set_cpuid() to svm_recalc_intercepts_after_set_cpuid()
+to more precisely describe its role.  Strictly speaking, the name isn't
+perfect as toggling virtual VM{LOAD,SAVE} is arguably not recalculating an
+intercept, but practically speaking it's close enough.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h | 2 +-
- arch/x86/include/asm/kvm_host.h    | 2 +-
- arch/x86/kvm/svm/svm.c             | 8 +-------
- arch/x86/kvm/vmx/main.c            | 6 +++---
- arch/x86/kvm/vmx/vmx.c             | 7 +------
- arch/x86/kvm/vmx/x86_ops.h         | 2 +-
- arch/x86/kvm/x86.c                 | 8 +++++++-
- 7 files changed, 15 insertions(+), 20 deletions(-)
+ arch/x86/kvm/svm/svm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 8d50e3e0a19b..19a6735d6dd8 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -139,7 +139,7 @@ KVM_X86_OP(check_emulate_instruction)
- KVM_X86_OP(apic_init_signal_blocked)
- KVM_X86_OP_OPTIONAL(enable_l2_tlb_flush)
- KVM_X86_OP_OPTIONAL(migrate_timers)
--KVM_X86_OP(msr_filter_changed)
-+KVM_X86_OP(recalc_msr_intercepts)
- KVM_X86_OP(complete_emulated_msr)
- KVM_X86_OP(vcpu_deliver_sipi_vector)
- KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 330cdcbed1a6..89a626e5b80f 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1885,7 +1885,7 @@ struct kvm_x86_ops {
- 	int (*enable_l2_tlb_flush)(struct kvm_vcpu *vcpu);
- 
- 	void (*migrate_timers)(struct kvm_vcpu *vcpu);
--	void (*msr_filter_changed)(struct kvm_vcpu *vcpu);
-+	void (*recalc_msr_intercepts)(struct kvm_vcpu *vcpu);
- 	int (*complete_emulated_msr)(struct kvm_vcpu *vcpu, int err);
- 
- 	void (*vcpu_deliver_sipi_vector)(struct kvm_vcpu *vcpu, u8 vector);
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 685d9fd4a4e1..a9a801bcc6d0 100644
+index a9a801bcc6d0..bbd1d89d9a3b 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -900,11 +900,6 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- 	 */
- }
- 
--static void svm_msr_filter_changed(struct kvm_vcpu *vcpu)
--{
--	svm_recalc_msr_intercepts(vcpu);
--}
--
- void svm_copy_lbrs(struct vmcb *to_vmcb, struct vmcb *from_vmcb)
- {
- 	to_vmcb->save.dbgctl		= from_vmcb->save.dbgctl;
-@@ -933,7 +928,6 @@ static void svm_disable_lbrv(struct kvm_vcpu *vcpu)
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
- 	KVM_BUG_ON(sev_es_guest(vcpu->kvm), vcpu->kvm);
--
- 	svm->vmcb->control.virt_ext &= ~LBR_CTL_ENABLE_MASK;
- 	svm_recalc_lbr_msr_intercepts(vcpu);
- 
-@@ -5231,7 +5225,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 
- 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
- 
--	.msr_filter_changed = svm_msr_filter_changed,
-+	.recalc_msr_intercepts = svm_recalc_msr_intercepts,
- 	.complete_emulated_msr = svm_complete_emulated_msr,
- 
- 	.vcpu_deliver_sipi_vector = svm_vcpu_deliver_sipi_vector,
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index d1e02e567b57..b3c58731a2f5 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -220,7 +220,7 @@ static int vt_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	return vmx_get_msr(vcpu, msr_info);
- }
- 
--static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
-+static void vt_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- {
- 	/*
- 	 * TDX doesn't allow VMM to configure interception of MSR accesses.
-@@ -231,7 +231,7 @@ static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
- 	if (is_td_vcpu(vcpu))
- 		return;
- 
--	vmx_msr_filter_changed(vcpu);
-+	vmx_recalc_msr_intercepts(vcpu);
- }
- 
- static int vt_complete_emulated_msr(struct kvm_vcpu *vcpu, int err)
-@@ -1034,7 +1034,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.apic_init_signal_blocked = vt_op(apic_init_signal_blocked),
- 	.migrate_timers = vmx_migrate_timers,
- 
--	.msr_filter_changed = vt_op(msr_filter_changed),
-+	.recalc_msr_intercepts = vt_op(recalc_msr_intercepts),
- 	.complete_emulated_msr = vt_op(complete_emulated_msr),
- 
- 	.vcpu_deliver_sipi_vector = kvm_vcpu_deliver_sipi_vector,
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6ffa2b2b85ce..826510a0b5bb 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4074,7 +4074,7 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
+@@ -1107,7 +1107,7 @@ static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu,
  	}
  }
  
--static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
-+void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
+-static inline void init_vmcb_after_set_cpuid(struct kvm_vcpu *vcpu)
++static void svm_recalc_intercepts_after_set_cpuid(struct kvm_vcpu *vcpu)
  {
- 	if (!cpu_has_vmx_msr_bitmap())
- 		return;
-@@ -4124,11 +4124,6 @@ static void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- 	 */
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
+@@ -1273,7 +1273,8 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+ 		sev_init_vmcb(svm);
+ 
+ 	svm_hv_init_vmcb(vmcb);
+-	init_vmcb_after_set_cpuid(vcpu);
++
++	svm_recalc_intercepts_after_set_cpuid(vcpu);
+ 
+ 	vmcb_mark_all_dirty(vmcb);
+ 
+@@ -4522,7 +4523,7 @@ static void svm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	if (sev_guest(vcpu->kvm))
+ 		sev_vcpu_after_set_cpuid(svm);
+ 
+-	init_vmcb_after_set_cpuid(vcpu);
++	svm_recalc_intercepts_after_set_cpuid(vcpu);
  }
  
--void vmx_msr_filter_changed(struct kvm_vcpu *vcpu)
--{
--	vmx_recalc_msr_intercepts(vcpu);
--}
--
- static int vmx_deliver_nested_posted_interrupt(struct kvm_vcpu *vcpu,
- 						int vector)
- {
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index b4596f651232..34c6e683e321 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -52,7 +52,7 @@ void vmx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
- 			   int trig_mode, int vector);
- void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu);
- bool vmx_has_emulated_msr(struct kvm *kvm, u32 index);
--void vmx_msr_filter_changed(struct kvm_vcpu *vcpu);
-+void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu);
- void vmx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
- void vmx_update_exception_bitmap(struct kvm_vcpu *vcpu);
- int vmx_get_feature_msr(u32 msr, u64 *data);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f9f798f286ce..6da6be8ff5fc 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10924,8 +10924,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 			kvm_vcpu_update_apicv(vcpu);
- 		if (kvm_check_request(KVM_REQ_APF_READY, vcpu))
- 			kvm_check_async_pf_completion(vcpu);
-+
-+		/*
-+		 * Recalc MSR intercepts as userspace may want to intercept
-+		 * accesses to MSRs that KVM would otherwise pass through to
-+		 * the guest.
-+		 */
- 		if (kvm_check_request(KVM_REQ_MSR_FILTER_CHANGED, vcpu))
--			kvm_x86_call(msr_filter_changed)(vcpu);
-+			kvm_x86_call(recalc_msr_intercepts)(vcpu);
- 
- 		if (kvm_check_request(KVM_REQ_UPDATE_CPU_DIRTY_LOGGING, vcpu))
- 			kvm_x86_call(update_cpu_dirty_logging)(vcpu);
+ static bool svm_has_wbinvd_exit(void)
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
