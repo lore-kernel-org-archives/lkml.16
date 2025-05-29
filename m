@@ -1,76 +1,74 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF36347B4
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21AB347B4;
+	Thu, 29 May 2025 08:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748508848; cv=none; b=dir0mszJXCE7ygWJ6+dXSoxDDUBxQ7I+w+d71G6rrcfVIH4Qq5N6kMEhFLu4GFrJ9X463ZAknKo0kpXhKwHhxtV/25zq18nNSL5ImuCkcC3b5T99V8wMqIg7w/zGF9+rus5do0p4Btx0cqEqQfV9xJCTWeDpPlI5oRmGN3WZbvQ=
+	t=1748508853; cv=none; b=HqWFYEtDrNIJC9/XtEuDqBBJ1LvXa1BgsbHGVATFNP3pLQFZpVJNyEoSrqM5fYuSkt3juLtFA+8KqWB97yGbnWBxsfQLXantfpeIE2TwYBp5lU3IRWhZI/Lm8KW0+IwGqEWTSM1S2Kf5tIJnlsp3rFUQaD/vh5gFdb2VP8AkjEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748508848; c=relaxed/simple;
-	bh=q91nuQGRRRhb1KNojdFH+w+wL21SpNT90+AHMNekIzU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mQGWzU5DRFvbmE1hKakZH56saiEfO6gYi9q01LGMUTc8rd/iCNgu9uT2AcSOqweRVUjXOQOPbbcZwZNL+1cq0CcLGzsKTvIez01GzSbAN5J4kyfoN0dyZ2ajUkHTV7uhJwIl72EYwEWmF3UsR6+tygUJKiCXFfep0d6kRdaWaZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86a50b5f5bdso46061339f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 01:54:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748508846; x=1749113646;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tBlyRIybHBaIqmeBc0FbsfGe2HQBjnmO3lAWrSbPihA=;
-        b=ML03lK0JY5v8ZEmQSoe0EsEoMbF6xYArK4Zhrcfj5ng51Q/IJtsOo/KDHZkzYiHah1
-         bENLFWRWACpzH4vmuhNyAQFErQufyMB/AvdhsK/Wie/CInU5qpeudkh/bMffyXw28RS7
-         zIN1sRnq13H0tWbWD7TRU73Avn+PpC8gEGhoM51jDj4MOB2GUuTBpSLLQ8w1/Ar/Rm1R
-         vqHIX/H+3OGuiL1/R00JlJXLDzgkpuDY7jiZOqd8TlaoMpfGxH6p7gjNlZRnIW1bp3W4
-         pwm49QuGUWdYHdqma43HBg+smO5dZAKVNlGhhgQbRpwrwmqH8Y/xYGXLEYjva8YyLB0C
-         UKDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUiinTq3mWO+gr3R3/DPKD2CoUYTRgxbk0m3GZD2Ov1+K0lnIVCTY390zisRWkhu04pAXABU9RD2vbFavg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuv04DceSo05lqN9n2zfNI8JIm5pjbwYmZBsCLrsegH89OmYTL
-	MuV5AdxBNbUxHUPncwShVBGhOCFzUicl1IEGF4aQvNkSpGHAkg/bHnUyHx7rd/Io2gwi74REG2p
-	hytS9rQfxbqOVHabqh7Dt1s1QZGubhfjbINpWnN5TxthXcu29/FHmNQwPqD0=
-X-Google-Smtp-Source: AGHT+IGTRXy7d/IwzDy1o86z0H8LJAGn0XcP6VlbyJf2BmWogsfJeseORsf9jwaJIDjRT/Nj1zLMsKYeHBkliNHOwaksJ1d653QC
+	s=arc-20240116; t=1748508853; c=relaxed/simple;
+	bh=WDxv2j8hLFwbgNu+HkSYh8bKjpv1x8FKIC4QbwCa63A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQ8v5h7G8a4zg0vznXB5GueCOls4Ew0iLjUUKUMhhq6NUBQoLhaT1frshMvol81yqEMaqO2iVwjcH7G6C7SgnHcjGm51nNTsYeOky81ORNjbu0g5wr5N8zrf8gFu9EQEtAOhpyB13dEjw7L4g3AzV9bh742kakEpzDt432ZsFb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VMPLC4n/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VMPLC4n/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hN1kbETS3aGUaklzGKMpRd++J1JSJtz4mhvGfXe5618=; b=VMPLC4n/9VoWqhO8poGd7oa+c+
+	SSFvqyJgZ8PZrr4Kupuv/AWaXgpEchVka98Qyj49NCl9n1eHXAVnzhaNUtduyjTVPa8ehHnoKiCPz
+	AVvLjyz+FIfuADWy4yhJkDJuNjwyw0ZO0f4tlycc1Z+8BmX8uOD8qML3nOd4l4OA3F+S6W0TEAU5a
+	xLlR8M7F/M7rsnI0Y7meibEzyoBC38oq43P7OoIYZyDtPm8akpbpBF8UBOkiRqBTCm1N+6D3Wfr9l
+	YVi/HUBhzCcJ/5WC4MAHZ4qu3LMyScCACzh75w4cl+9YrNCyGHFc5dyYmd9ITnuhwJY4yoBtWjMcQ
+	d/QyWvkQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKZ1T-000000006sL-1Wf9;
+	Thu, 29 May 2025 08:53:59 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7227730057C; Thu, 29 May 2025 10:53:58 +0200 (CEST)
+Date: Thu, 29 May 2025 10:53:58 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	x86 Maintainers <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by
+ commit 96040f7273e2
+Message-ID: <20250529085358.GY24938@noisy.programming.kicks-ass.net>
+References: <2006806.PYKUYFuaPT@rjwysocki.net>
+ <20250528131759.GA39944@noisy.programming.kicks-ass.net>
+ <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
+ <20250528133807.GC39944@noisy.programming.kicks-ass.net>
+ <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
+ <20250528160523.GE39944@noisy.programming.kicks-ass.net>
+ <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1488:b0:3dc:89e3:b882 with SMTP id
- e9e14a558f8ab-3dc9b6d4de6mr200720745ab.8.1748508845817; Thu, 29 May 2025
- 01:54:05 -0700 (PDT)
-Date: Thu, 29 May 2025 01:54:05 -0700
-In-Reply-To: <6746eaef.050a0220.21d33d.0020.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683820ad.a70a0220.1765ec.0184.GAE@google.com>
-Subject: Re: [syzbot] [hfs?] KASAN: slab-out-of-bounds Write in hfs_bnode_read
-From: syzbot <syzbot+c6811fc2262cec1e6266@syzkaller.appspotmail.com>
-To: brauner@kernel.org, cengiz.can@canonical.com, eadavis@qq.com, 
-	kovalev@altlinux.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
 
-syzbot suspects this issue was fixed by commit:
+On Wed, May 28, 2025 at 07:09:21PM +0200, Rafael J. Wysocki wrote:
 
-commit bb5e07cb927724e0b47be371fa081141cfb14414
-Author: Vasiliy Kovalev <kovalev@altlinux.org>
-Date:   Sat Oct 19 19:13:03 2024 +0000
+> And I object to leaving a user-visible regression behind.
 
-    hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+So we go fix it differently. 
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12794970580000
-start commit:   06afb0f36106 Merge tag 'trace-v6.13' of git://git.kernel.o..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=461a3713d88227a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=c6811fc2262cec1e6266
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=140e7b78580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129181c0580000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Why can't we initialize cpuidle before SMP bringup?
