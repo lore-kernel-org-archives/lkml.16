@@ -1,63 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6111F0E25
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A2119F10A;
+	Thu, 29 May 2025 16:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748536899; cv=none; b=lv0442noqB9z7GbT03QQOrZgJwXJj+LpZzfUE5M+z63RMC6q1/NUf1tOdHuNems2mYiSV0Bs97C/Uixc4fPmrJFZrRvswE5y9fp4exqpwjHQbKhBBxfD5vXZ4RsQISv8m+OyrNI1bTPdJwb+nLiPBPHP2hRZXTY4BaOyRT5bbl8=
+	t=1748536900; cv=none; b=lD6IJaNw7jehr1wHRCm/hyk/1ye0qVdMd6c0/9FuNNaXGZfLeZ5ob42dBJ93UfKJhyVsTqFAXYKcVXxNT6nv1tkn2oc04Z5C1nbZGrszY9iWqn1oZOZdFJqwshva5Bnhtp3zBfeFxLF94SG0ksE0ryBfDqrE5EDElwyiV/nny/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748536899; c=relaxed/simple;
-	bh=D0w3RCXmmlVRyFHa9Vla8s7ayJI3VrPdJ4JsY1gVeOM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=rOYKlM9Ore96uv1yQNllnrvxEmkk1G4AjQaSDLa8zG/INetZzRevQAYpsZ8N4cjC9q+BxKlcpcfgjxf5y5EMqsh0+DK3sjytuS2Z07Dc5mLo4R4zUi14dgL9S1fKWrBzeUt04jWfCj41jGYUZxbYiFsu8Fxmmsh9KexS+/ot+qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YN8mJU8e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748536900; c=relaxed/simple;
+	bh=XbHt1o9qz+QPaqIKZZnKujp7chpjrPOWYuczmhp3iVA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hH+fqRQSllL0CR30qqH39L1Y6d4DqubGoA2D2LpQDPpTnPgdFmH9L4XpawjTCtxWwWpbivZOluyXm06S5yNh7RvXpXoY45WBi4nLk9PNvXl2QbYahVk1Ze9dFj0Aqsr7L9vdaMzcX3v4IgUZoXYmXXcOhEfL/Momka4I3ILWH88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=VT68uo7O; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YN8mJU8e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BACC4CEE7;
-	Thu, 29 May 2025 16:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748536899;
-	bh=D0w3RCXmmlVRyFHa9Vla8s7ayJI3VrPdJ4JsY1gVeOM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YN8mJU8e7uYQVD9av7IQXTdnObNJC4sr1JGb4bgIy5kKpCI+yXgEEy7i2h/g2VLcL
-	 Ix1TI1LL3wUfJSMV6zi3RIJ1vkO9oBF4X8gAgLND2XIuP2DekQt2NOyd26nGhUV8Gc
-	 Y6KRziVnzUuNq6Gq6SsTp7Zdv+SAX3ybESlleP6pDdg7Wd97yHiEJbyKP6/DeIFs4b
-	 rP+c/KPJfoSA5qmO6hW1LbRteu4TGVEsyk1QMSzXvLO4nKQes5K75H8mzNJcQti3Fg
-	 MhzDOQN2nfCKS56eN4y2N7hbDAxvTMw9BK3CX5jLafctIVPbyjghVALspWAqrjgHmf
-	 Ajo7SiKjcKLDg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE0A380664F;
-	Thu, 29 May 2025 16:42:13 +0000 (UTC)
-Subject: Re: [GIT PULL] Driver core changes for 6.16-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aDcyRMojWUbAllVX@kroah.com>
-References: <aDcyRMojWUbAllVX@kroah.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aDcyRMojWUbAllVX@kroah.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.16-rc1
-X-PR-Tracked-Commit-Id: 071d8e4c2a3b0999a9b822e2eb8854784a350f8a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9d230d500b0e5f7be863e2bf2386be5f80dd18aa
-Message-Id: <174853693269.3320073.15764367237946119539.pr-tracker-bot@kernel.org>
-Date: Thu, 29 May 2025 16:42:12 +0000
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="VT68uo7O"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=XbHt1o9qz+QPaqIKZZnKujp7chpjrPOWYuczmhp3iVA=; b=VT68uo7OxcpBG5Rb0DbofuRIFm
+	HAcqrM3YPY9m6JIVfoKOmbK9XFYTpD1IKdHKZUHCK98Qa6nbXHILfXVN9hQ6Vot1J3YRaQDX1JYCx
+	ze5P105NN+MAq1dlElyV4pplH6ap96s8g+gDeGj+vqxisJAKn6a9SNx8j996AygpEhLb6JjD/XYK5
+	sTWjmk+AHr02MHVvxdUebmFgAKrbI1J81cjZDgCzyuzNZ5Umr+bNib7cb89x8lO1brg9bTiKDOvJC
+	Xavkd0Fz7lnZjrZ3uMVNOry3gBL/yDR9vdiTo4msJEW/qOIQGwVftQNBhbv6gClKTxiHwo6CRsJBZ
+	Rt6VGBCQ==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1uKgDz-000000003XO-2Ja4;
+	Thu, 29 May 2025 12:35:23 -0400
+Message-ID: <aa5f8dbbb5865e7eeb64628beef24fe05d161855.camel@surriel.com>
+Subject: Re: [PATCH] x86/mm: Fix paging-structure cache flush on kernel
+ table freeing
+From: Rik van Riel <riel@surriel.com>
+To: Jann Horn <jannh@google.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+  Andy Lutomirski	 <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Toshi Kani <toshi.kani@hpe.com>, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Date: Thu, 29 May 2025 12:35:23 -0400
+In-Reply-To: <20250528-x86-fix-vmap-pt-del-flush-v1-1-e250899ed160@google.com>
+References: 
+	<20250528-x86-fix-vmap-pt-del-flush-v1-1-e250899ed160@google.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-The pull request you sent on Wed, 28 May 2025 17:56:52 +0200:
+On Wed, 2025-05-28 at 22:30 +0200, Jann Horn wrote:
+>=20
+> Note that since I'm not touching invlpgb_kernel_range_flush() or
+> invlpgb_flush_addr_nosync() in this patch, the flush on PMD table
+> deletion
+> with INVLPGB might be a bit slow due to using PTE_STRIDE instead of
+> PMD_STRIDE. I don't think that matters.
+>=20
+Agreed that this is probably fine.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git tags/driver-core-6.16-rc1
+The performance sensitive kernel flushes mostly seem
+to be small, related to static key toggling, etc
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9d230d500b0e5f7be863e2bf2386be5f80dd18aa
+> Cc: stable@vger.kernel.org
+> Fixes: 28ee90fe6048 ("x86/mm: implement free pmd/pte page
+> interfaces")
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Thank you!
+Reviewed-by: Rik van Riel <riel@surriel.com>
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+All Rights Reversed.
