@@ -1,70 +1,60 @@
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A13840BF5;
-	Thu, 29 May 2025 14:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460EB1DE3D2
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748530726; cv=none; b=NOdce1Dj1GYdBEckkCFd8M5Vfo7ht/XJPUyVxbUghcu9qPM/57gJn9pbRlahPmNzbPdIICtydwm4vM6dKDq23sQkM0gIfAgIjQlAj+J84N3AGe+HdvgvIx1RJP7HQeO1v8lhbcOG5DNX/AC0oprAAyhNS1wpU2wg4jQoh5M4hPo=
+	t=1748531134; cv=none; b=Z/8ot51v7//juMY4WJfJRDgCreFqWKCSUvaIfcWGCzj5xmN7EZSvfVeU1PrJchhF8lodN7D68ngNx5DuxZ01qBeV5HeL5IQnUb2hnID+ABmpYxzW1Mpo5SdRqQgFV1nd+ACBxBukohbRqbmzuZTXhZH76z0Tu6l34fDW2dYr6mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748530726; c=relaxed/simple;
-	bh=Gj43M2OdGB7+ObhhmKp+QmuqAFhLuSNYp+6yibi2rPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHbdaFlH2H+St6YKfSjY9igFhSqTFj+xuHmB7ed+M4/17IW9m78O9qVGO3LFKAP5IQKAjXTT9CRVsL7fnJaI9aOfRUWg6dkX2rFZPQj86zLJpikzrY+/0pedKKFC3ik8r7NeZDKZ13DoljrRPaP3cU2Gtlw1/GQTY2p+JvHgkVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OX2JVplO; arc=none smtp.client-ip=209.85.210.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748531134; c=relaxed/simple;
+	bh=S2kKEOrydWMz6ngpURpxYC/wsqCkoDvEdaHjRnS2fyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ka2umPB1LsymyRtseREMK8P62oIIf79kfCX0vuPCwh2ERHBVVPvn9wL7swILICzwuLZxmCsC8rYoGAteohgpyXxqCwYQbI3o3/Wa2M/7p2ix3Q/rMGTsTD0MX2utMpLvlugxOUYLVNpKn+LZMSYJjrUz1zZHsYYKfVusLy3ujzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I9Y9NRfo; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OX2JVplO"
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1183417b3a.2;
-        Thu, 29 May 2025 07:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748530725; x=1749135525; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=62giXWg7WsEB0ulrJR1t2wvmt+DLs2PIJk6M7yXmcBE=;
-        b=OX2JVplOUZPrI9l9Aw3xboNOlQWTcYhCpeCxEabpxcxYOwe28Xk7jvcDJ16cd6xFjA
-         1b41WsylxpG6u+sausHQs9kFlvpQaPP1gT1iIzfx9riYhSBd+9GWLMhPzL/kN88NRcP8
-         APU61vHdG6iCoUtUTYoybD1GPaCLTSToE2/PJXOSEc/azJwIIuihWbc1emMXCFbgaUwn
-         8mFKk3GTzPqUJG6fT41Gglu/DAhqNu/OEZrgwPO3wJlSUvP290gQ7wWjYghRgF3HWv3e
-         fag4OnP1tpqeLkuZBJtMZpk25K41J6OKLM9gISpNxmvmDmELfAfFO5PV0KiAnTBeO6to
-         FAHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748530725; x=1749135525;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=62giXWg7WsEB0ulrJR1t2wvmt+DLs2PIJk6M7yXmcBE=;
-        b=rODEHE3F+45Eag9sAHV5ev/spxf1btQ4YBXbzLjNO81Ouv9qLb3PcahEYCh+usjrZY
-         ue6KLo7bfpManF+pI+GKiyixseDdnECKNiIoa6x+q/EQzpSXUV1Wtd2+MSBSvV8lZHrB
-         qCU2eHJV79rVycDotiO4etLOfY6SbKC7muhvia0to7NK48yp/aRWUCGmPAYPxE7CfzKl
-         AlWkkTDFx3othXw1fl5PTuBSyXYjN9EjogF+B3coLeZi7iBb/C+VJ9Crsckwp6lHtz5e
-         B7Au/8HagLQVC+7S0C2a8tbU6ZCcSkU9MIF38toURAzNov8Xidrphr5WWALnop1Elr01
-         D30Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXkRvC8DrF57zZpUefkVnIWXJ8LTmv+gPovgYFdV2XaGOU5RMs1zOKrO4jroD6+uSvOCcu4eqmIhqP+36H5@vger.kernel.org, AJvYcCXs7Gm+wKBYsGynj2Gif63HVw0K1QRV3OD70gUdHRDotcjFlZKWrwDvB9dzZhyGTWlY/cCVC62CBbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVRVW2CG1wjlUUpfnde+NXtqEMeOVjRrBOif0PVgTWk2W/aSDO
-	6o9txiBQSWMKrMFQ9yRxXBsiGm/tInmMCqHuEAOQjkxp/4u1GRIopucq
-X-Gm-Gg: ASbGncvcU/X8krheIPPExUdlQ1lBpE03F1pM3s3DGp9hmOUFe2/pGnCmpXRCLmSu8eo
-	BZJZ0h53Myo96TdtDwUFjrzRXqgHZWvjy31KXq/WnLENCUHlbBz3mXs6imQ7Mh1ML9eSHuDrUDj
-	B4m1MFHAsQ+1cW98KeuJkwov4nmghhtkzCjfk7bGFKRXwY7HrGmRRVkOAE8xvGx43vRCDAQzV1h
-	TKIpeQmTlMT6lMnyeLmuhBF9fg+Tt5XjD/iqdLEk54YmAi3oh1CFcNCq3PY6FtSbQqMNprEhJYU
-	LdGrMj+/haeNG7m+OpDGavDz3k8gK8YXqqH8rOjMWVQ=
-X-Google-Smtp-Source: AGHT+IGYOhDLZwULgZl6IXzdoOY5xQYtIs9vHAaR3rtKYgby02EA6jBpe6c7R8WjaS7P9RLaVvFF+A==
-X-Received: by 2002:a05:6a21:7a47:b0:201:b65:81ab with SMTP id adf61e73a8af0-21ad95ab750mr91459637.23.1748530724635;
-        Thu, 29 May 2025 07:58:44 -0700 (PDT)
-Received: from localhost ([2602:f919:106::1b8])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d672sm95547a12.60.2025.05.29.07.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 07:58:44 -0700 (PDT)
-Date: Thu, 29 May 2025 22:58:39 +0800
-From: Troy Mitchell <troymitchell988@gmail.com>
-To: Alex Elder <elder@riscstar.com>, andi.shyti@kernel.org, dlan@gentoo.org,
-	troymitchell988@gmail.comg
-Cc: spacemit@lists.linux.dev, linux-i2c@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: k1: check for transfer error
-Message-ID: <aDh2HxnGVez6T1Zc@troy-wujie14-pro>
-References: <20250529122227.1921611-1-elder@riscstar.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I9Y9NRfo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748531132; x=1780067132;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=S2kKEOrydWMz6ngpURpxYC/wsqCkoDvEdaHjRnS2fyM=;
+  b=I9Y9NRfoDNiHL9a1bD7Bx86LW3LK8focbQblzWgsTmV3+t/Ss7H8fPOY
+   RcF0KXPQKxzaIZ/Cd6D6sW7ayYwBVRkYT3+cSC4Owx5y3E8xrHR5fabm3
+   GeznPsh7wahUo1wk6XPhf5ljTjLibq8O/UP0WIrCq2uGXUx86OO160u/q
+   Hi6NkQoYHuFsN28yHS+pV+1+Tx+H18KBpz1LQzk5DDPQDRpw11TR6H/uC
+   hZmI4n7TJ1XjubOYjxIHEG30O2mxUL3JNw9I8vSwu7xARgz5AeCMQG2oo
+   nSnSZDo4ZOelhL7AFU22i5XWMEOSeD+AEc+TNwVQZeEBVNa78odkzFzot
+   w==;
+X-CSE-ConnectionGUID: z1a0HYiVR4++KlPme2gG3A==
+X-CSE-MsgGUID: Y5qMu77wTECw+UQOVFCJNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="54403262"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="54403262"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:04:26 -0700
+X-CSE-ConnectionGUID: s8QOdOCcQhyLYEWtbjceFg==
+X-CSE-MsgGUID: jX3ULlzbSfK6ISMXV4T3Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="144570745"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 29 May 2025 08:04:23 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKent-000Wnc-0w;
+	Thu, 29 May 2025 15:04:21 +0000
+Date: Thu, 29 May 2025 23:03:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Riana Tauro <riana.tauro@intel.com>
+Subject: drivers/gpu/drm/xe/xe_device_sysfs.c:118:66-71: WARNING: conversion
+ to bool not needed here
+Message-ID: <202505292205.MoljmkjQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,52 +63,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250529122227.1921611-1-elder@riscstar.com>
 
-On Thu, May 29, 2025 at 07:22:26AM -0500, Alex Elder wrote:
-> If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
-> complete, or if the hardware reports an error, it returns a negative
-> error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
-> 
-> The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
-> which is the i2c_algorithm->xfer callback function.  It currently
-> does not save the value returned by spacemit_i2c_xfer_msg().
-> 
-> The result is that transfer errors go unreported, and a caller
-> has no indication anything is wrong.
-> 
-> When this code was out for review, the return value *was* checked
-> in early versions.  But for some reason, that assignment got dropped
-> between versions 5 and 6 of the series, perhaps related to reworking
-> the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
-> 
-> Simply assigning the value returned to "ret" fixes the problem.
-> 
-> Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
->  drivers/i2c/busses/i2c-k1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
-> index 5965b4cf6220e..b68a21fff0b56 100644
-> --- a/drivers/i2c/busses/i2c-k1.c
-> +++ b/drivers/i2c/busses/i2c-k1.c
-> @@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
->  
->  	ret = spacemit_i2c_wait_bus_idle(i2c);
->  	if (!ret)
-> -		spacemit_i2c_xfer_msg(i2c);
-> +		ret = spacemit_i2c_xfer_msg(i2c);
-Sorry this is my mistake.
-Thanks for your fixes.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   90b83efa6701656e02c86e7df2cb1765ea602d07
+commit: 0e414bf7ad012e55c8a0aa4e91f68cb1cf5801ff drm/xe: Expose PCIe link downgrade attributes
+date:   3 weeks ago
+config: loongarch-randconfig-r053-20250529 (https://download.01.org/0day-ci/archive/20250529/202505292205.MoljmkjQ-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 15.1.0
 
-Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
->  	else if (ret < 0)
->  		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
->  	else
-> 
-> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-> -- 
-> 2.45.2
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505292205.MoljmkjQ-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> drivers/gpu/drm/xe/xe_device_sysfs.c:118:66-71: WARNING: conversion to bool not needed here
+
+vim +118 drivers/gpu/drm/xe/xe_device_sysfs.c
+
+    67	
+    68	/**
+    69	 * DOC: PCIe Gen5 Limitations
+    70	 *
+    71	 * Default link speed of discrete GPUs is determined by configuration parameters
+    72	 * stored in their flash memory, which are subject to override through user
+    73	 * initiated firmware updates. It has been observed that devices configured with
+    74	 * PCIe Gen5 as their default link speed can come across link quality issues due
+    75	 * to host or motherboard limitations and may have to auto-downgrade their link
+    76	 * to PCIe Gen4 speed when faced with unstable link at Gen5, which makes
+    77	 * firmware updates rather risky on such setups. It is required to ensure that
+    78	 * the device is capable of auto-downgrading its link to PCIe Gen4 speed before
+    79	 * pushing the firmware image with PCIe Gen5 as default configuration. This can
+    80	 * be done by reading ``auto_link_downgrade_capable`` sysfs entry, which will
+    81	 * denote if the device is capable of auto-downgrading its link to PCIe Gen4
+    82	 * speed with boolean output value of ``0`` or ``1``, meaning `incapable` or
+    83	 * `capable` respectively.
+    84	 *
+    85	 * .. code-block:: shell
+    86	 *
+    87	 *    $ cat /sys/bus/pci/devices/<bdf>/auto_link_downgrade_capable
+    88	 *
+    89	 * Pushing the firmware image with PCIe Gen5 as default configuration on a auto
+    90	 * link downgrade incapable device and facing link instability due to host or
+    91	 * motherboard limitations can result in driver failing to bind to the device,
+    92	 * making further firmware updates impossible with RMA being the only last
+    93	 * resort.
+    94	 *
+    95	 * Link downgrade status of auto link downgrade capable devices is available
+    96	 * through ``auto_link_downgrade_status`` sysfs entry with boolean output value
+    97	 * of ``0`` or ``1``, where ``0`` means no auto-downgrading was required during
+    98	 * link training (which is the optimal scenario) and ``1`` means the device has
+    99	 * auto-downgraded its link to PCIe Gen4 speed due to unstable Gen5 link.
+   100	 *
+   101	 * .. code-block:: shell
+   102	 *
+   103	 *    $ cat /sys/bus/pci/devices/<bdf>/auto_link_downgrade_status
+   104	 */
+   105	
+   106	static ssize_t
+   107	auto_link_downgrade_capable_show(struct device *dev, struct device_attribute *attr, char *buf)
+   108	{
+   109		struct pci_dev *pdev = to_pci_dev(dev);
+   110		struct xe_device *xe = pdev_to_xe_device(pdev);
+   111		u32 cap, val;
+   112	
+   113		xe_pm_runtime_get(xe);
+   114		val = xe_mmio_read32(xe_root_tile_mmio(xe), BMG_PCIE_CAP);
+   115		xe_pm_runtime_put(xe);
+   116	
+   117		cap = REG_FIELD_GET(LINK_DOWNGRADE, val);
+ > 118		return sysfs_emit(buf, "%u\n", cap == DOWNGRADE_CAPABLE ? true : false);
+   119	}
+   120	static DEVICE_ATTR_ADMIN_RO(auto_link_downgrade_capable);
+   121	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
