@@ -1,100 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04C021CC63;
-	Thu, 29 May 2025 15:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D0122CBF7
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748532489; cv=none; b=RMaXL5enEmjFwoBf1zxE+nkBsGN9HVGbWhUMb0ZUuDlznpSwGOjMlxH8TRDhQuqfA8XrDIZp5coiBo2nK9xWLIXEvcLvF1i5mTJ8uIkGkOaItDsaD6yqqUob9DInx0K7mbRoe9Bp+sY7ShP6pmhOw3hSdXbtrDkhd1OvieHtvPs=
+	t=1748532510; cv=none; b=rz2DmcY18s9VQiOMQnockRI29brCyrZZoag/28ej3ff+CwH7yY9vmjsoxBz+DEY5oY0xTENDEFnL6aHFZ8q+jYCosqMiqPhX5clTbq1c4aIgmsQdyBxa4j4g0uFYho87LJ9jPJwmiy6p2LCuYa2ioZEjlnH2Agmw0uFzGhTJni8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748532489; c=relaxed/simple;
-	bh=yPFET+cnqeHQaXJ8X3deZZadSpN1vopNPMuqCZp9UZw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7+T7ZKW1H0ccpRMAZsm0oDlKmY+sJnHzvTo499KgPICfBvu8RLQxTCt0bKfZwRkyl5pkwTRlQq4fD8DAnEyzlXM7z91YiF0jg5Wu/XhzuC9LS/jkz1Nyv5UR3LcH7mh5Ps1j+oHTWqXNvD6FGffkrguXD6ZGwSFrTKOX+UAaFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4m3XRav; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748532510; c=relaxed/simple;
+	bh=8uxml1kMzoiWO8d4mb5zk+neEveN0f+NthT2SxLL2HU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EVvwyPjIo8uZRbihpzFYfOxVPC9CuNRV/irDGubN7LvxBP+BRFxK/vWOesC+WpcwbYqlhvN5RGuTHIUJ5NYYT07LgV0QvaFT2PM79DjqJEwJlNoeh/CoYh9+1k895v0ZRy32zLKDYZBb2X+eo9kQWapANIepYAwAegcVLSGFDUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2osmZqIY; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4m3XRav"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748532488; x=1780068488;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yPFET+cnqeHQaXJ8X3deZZadSpN1vopNPMuqCZp9UZw=;
-  b=Q4m3XRavVOUydTSGQ5TeKzWXISYUBlxeN9YDTDR7phUJeB9W2kYcurXL
-   /LTQWmEJYSk0oWnfZU7iFrpwNsX6qf4cPzaN/Bjkpq9/vP3+gH5HFaywF
-   H0YCgw//oYVBC/mcdT2z4HgdfU3vEUUiE6XSyqllDgbcLDAaBOFAmXCUo
-   xPQ0IyvF23ZvhQrpJ0xH0PrFHUAWCfpS/tV4BL9eW9EDRnFwAUTuIe8LG
-   87VZCYXu4HUSwwiS+147jBcEiYGD0l/C2KvMpz0CpkFq5ZlAMXFPQJY1Y
-   yVPULqn55/OuTS1hpI+XXcK19FfJW+3AK3Ks2WqYw+2FrjwaSseQy/gzr
-   w==;
-X-CSE-ConnectionGUID: EfliI7OkRp21FrMbTq2MJw==
-X-CSE-MsgGUID: geIsYCG2SRqbzg5dbO1qug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50654520"
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="50654520"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:28:08 -0700
-X-CSE-ConnectionGUID: 5eqefe/rQSiqkWpb7m7BFQ==
-X-CSE-MsgGUID: r5RXPeHzS/W9NHUEnz/Y+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="148749765"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:28:07 -0700
-Date: Thu, 29 May 2025 08:28:05 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
-	robert.moore@intel.com, Jonathan.Cameron@huawei.com,
-	ira.weiny@intel.com, Benjamin.Cheatham@amd.com,
-	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com,
-	u.kleine-koenig@pengutronix.de, john.allen@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 6/9] ACPI: APEI: EINJ: Add einjv2 extension struct
-Message-ID: <aDh9BfyNXvJvduDr@agluck-desk3>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-7-zaidal@os.amperecomputing.com>
- <aDdYPf-4ru_cC-_D@agluck-desk3>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2osmZqIY"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311c5d9307eso1224078a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748532508; x=1749137308; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WU9RnG3prte+XfxV/XkwbzM4ROyF/nnLjJ6rboFsA7o=;
+        b=2osmZqIYu5rrYH5Rypis9rvLcc2g4P4UBgrR3ayNk4RwYi0int9wJFFUiFXiwWfSJA
+         1OVFNQBq9TagdbSJs8+947v+vs0geQRTA+MiyTI/ufq5bgyt3tzMDkdN4OgS+vRIcJcY
+         Lpc35sXKKkxq0Ddfit8skIW5uxwsdsRuKR9Xu9jQ0fQnQOH5DCq9J/9U8UcmsPiFNSLo
+         FiZhp0Hzx+OeLLCEHhDWUmVlSd3mVsSlbO9l1uLnTJk6YmP9hqLvNW6ZVpQf8YdvAHZC
+         IGOAml+i25YCViSCPx5wUnOGz1ZG0ogcfxwk3ZnIMFGMpa/qINjb8iJtJHOeZlR6p2Ve
+         gHDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748532508; x=1749137308;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WU9RnG3prte+XfxV/XkwbzM4ROyF/nnLjJ6rboFsA7o=;
+        b=NobYxDAS478x+qb9kbvwvDF6ljxb8AfFarGpa/hvQR2FhnyqiIPuIbKl0uoSqrjdro
+         URSMFQhV9VTACDaSXX0l5ykVuCKIl52pOPU17URQRdH1DONbmncLizqz6MoTMTCOtme4
+         xFcd8HI5B2qzc7L73hT+9guSsFKgdbJnMRauqt7ijxmPp5+fBkV0Xl8q5H8bSEB3mAi7
+         iSHXpNQOSfX8VrYtoRg6ph3Dx4i2rb0imgGqPjRb4/JtZKD6k6MhPGLS5tn19nzWgimH
+         3FNnjIF5FrvF3iGeLh6vXDqCTPI1kczfhWAMlv/IcOWH0udzjr22P4gm6gTuhk5bJmXe
+         aPRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQCAi+bOsW/Kd8yID5MQezSvvHNFsc99wQu3JykkNkwSMvXZ5sRLZOqjviVCD/21KvamGDvg5nHfdmjtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+R1/OgYVTBc5k6PpJ3ep6XMgm5eviIsPd3FqvNnK2mK2xUcT9
+	9Ojbq1+db0Aw81rBnI/qixppkhiV5trDhMZXM1btjzA/OcHdBcd/Atr8+zwP0dfBn6c/bGireuX
+	MrtdT8A==
+X-Google-Smtp-Source: AGHT+IHbtuprtUf3WXvE9In2+LJbs9yJtttrgnsqC0Q6ZRBKRVcjg83ZBIKBGMMJVz/hhN7+gaivfNuenbM=
+X-Received: from pjbpx18.prod.google.com ([2002:a17:90b:2712:b0:311:8076:14f1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dce:b0:312:26d9:d5a0
+ with SMTP id 98e67ed59e1d1-312413f60famr66406a91.3.1748532508047; Thu, 29 May
+ 2025 08:28:28 -0700 (PDT)
+Date: Thu, 29 May 2025 08:28:26 -0700
+In-Reply-To: <CADrL8HXjLjVyFiFee9Q58TQ9zBfXiO+VG=25Rw4UD+fbDmxQFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDdYPf-4ru_cC-_D@agluck-desk3>
+Mime-Version: 1.0
+References: <20250109204929.1106563-1-jthoughton@google.com>
+ <aBqlkz1bqhu-9toV@google.com> <CADrL8HXjLjVyFiFee9Q58TQ9zBfXiO+VG=25Rw4UD+fbDmxQFg@mail.gmail.com>
+Message-ID: <aDh9GtncjlVvvVJ1@google.com>
+Subject: Re: [PATCH v2 00/13] KVM: Introduce KVM Userfault
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	Jiaqi Yan <jiaqiyan@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 28, 2025 at 11:38:54AM -0700, Luck, Tony wrote:
-> On Tue, May 06, 2025 at 02:38:10PM -0700, Zaid Alali wrote:
-> >  struct set_error_type_with_address {
-> >  	u32	type;
-> >  	u32	vendor_extension;
-> > @@ -58,6 +80,7 @@ struct set_error_type_with_address {
-> >  	u64	memory_address;
-> >  	u64	memory_address_range;
-> >  	u32	pcie_sbdf;
-> > +	struct	einjv2_extension_struct einjv2_struct;
+On Wed, May 28, 2025, James Houghton wrote:
+> The only thing that I want to call out again is that this UAPI works
+> great for when we are going from userfault --> !userfault. That is, it
+> works well for postcopy (both for guest_memfd and for standard
+> memslots where userfaultfd scalability is a concern).
 > 
-> I can't make this match up with the ACPI v6.5 spec.  The spec defines
-> a whole new EINJV2_SET_ERROR_TYPE data structure in table 18.34 that
-> is NOT just a simple addition of new fields at the end of the existing
-> SET_ERROR_TYPE_WITH_ADDRESS data structure. E.g. the "flags" are now
-> in a 3-byte field at offset 5 instead of a 4-byte field at offset 8.
-> There is a new "length" field that descibes the total size of the
-> structure including the new flex array of syndrome values at the
-> end.
+> But there is another use case worth bringing up: unmapping pages that
+> the VMM is emulating as poisoned.
+> 
+> Normally this can be handled by mm (e.g. with UFFDIO_POISON), but for
+> 4K poison within a HugeTLB-backed memslot (if the HugeTLB page remains
+> mapped in userspace), KVM Userfault is the only option (if we don't
+> want to punch holes in memslots). This leaves us with three problems:
+> 
+> 1. If using KVM Userfault to emulate poison, we are stuck with small
+> pages in stage 2 for the entire memslot.
+> 2. We must unmap everything when toggling on KVM Userfault just to
+> unmap a single page.
+> 3. If KVM Userfault is already enabled, we have no choice but to
+> toggle KVM Userfault off and on again to unmap the newly poisoned
+> pages (i.e., there is no ioctl to scan the bitmap and unmap
+> newly-userfault pages).
+> 
+> All of these are non-issues if we emulate poison by removing memslots,
+> and I think that's possible. But if that proves too slow, we'd need to
+> be a little bit more clever with hugepage recovery and with unmapping
+> newly-userfault pages, both of which I think can be solved by adding
+> some kind of bitmap re-scan ioctl. We can do that later if the need
+> arises.
 
-Someone pointed me to the ACPI 6.5 Errata A spec: https://uefi.org/specs/ACPI/6.5_A/
+Hmm.
 
-This code does match with the description there.
+On the one hand, punching a hole in a memslot is generally gross, e.g. requires
+deleting the entire memslot and thus unmapping large swaths of guest memory (or
+all of guest memory for most x86 VMs).
 
-I'll continue looking at your patches with this as the reference.
+On the other hand, unless userspace sets KVM_MEM_USERFAULT from time zero, KVM
+will need to unmap guest memory (or demote the mapping size a la eager page
+splitting?) when KVM_MEM_USERFAULT is toggled from 0=>1.
 
-Please make sure to reference this spec directly (not buried in links
-to tianocore bugzilla entries) when you post next version.
+One thought would be to change the behavior of KVM's processing of the userfault
+bitmap, such that KVM doesn't infer *anything* about the mapping sizes, and instead
+give userspace more explicit control over the mapping size.  However, on non-x86
+architectures, implementing such a control would require a non-trivial amount of
+code and complexity, and would incur overhead that doesn't exist today (i.e. we'd
+need to implement equivalent infrastructure to x86's disallow_lpage tracking).
 
--Tony
+And IIUC, another problem with KVM Userfault is that it wouldn't Just Work for
+KVM accesses to guest memory.  E.g. if the HugeTLB page is still mapped into
+userspace, then depending on the flow that gets hit, I'm pretty sure that emulating
+an access to the poisoned memory would result in KVM_EXIT_INTERNAL_ERROR, whereas
+punching a hole in a memslot would result in a much more friendly KVM_EXIT_MMIO.
+
+All in all, given that KVM needs to correctly handle hugepage vs. memslot
+alignment/size issues no matter what, and that KVM has well-established behavior
+for handling no-memslot accesses, I'm leaning towards saying userspace should
+punch a hole in the memslot in order to emulate a poisoned page.  The only reason
+I can think of for preferring a different approach is if userspace can't provide
+the desired latency/performance characteristics when punching a hole in a memslot.
+Hopefully reacting to a poisoned page is a fairly slow path?
