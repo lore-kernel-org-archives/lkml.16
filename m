@@ -1,269 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D7D21ABCF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEB3225403;
+	Thu, 29 May 2025 13:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748526023; cv=none; b=VWvZxI+MdMUYS0SBe8MJi2niF70SPa8ygYfPcomXnVYn+w/L1uhF9z52n9Pe57MvU8avKTRpKsaV/vGwMzUmZBrWSgZCzwZ/tiWoaEOoBN1lfYLUtoiyJHVn3QTZ5MUCjHhGlNSRrwAGQrUNWYO8MOH5S7AbjZn2AfkzNLHYdQg=
+	t=1748526054; cv=none; b=RXkwJdQ1MIq4VQBbEWb2y34380OXtfI2ZmI/Gd8+ISI32rG1AAtBKzGeNwQbHSwmNJqvcAEs9U2Yhk1ytPLVLiYg5qxID1Wl6NX5b6Jy/topbM1DcBLTHEXRD7qMHJRMHPeAlolveW2/FllMGNzl+I3fYHNCKcWOfir5feGDyKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748526023; c=relaxed/simple;
-	bh=Bnd3FXOtJvXpU+jdhtpTqHCVKv4qdeP/LR8hQUJRSCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F9ehn/kxISKMZQhuCTL053UwyrOXisS3RP3/g7a4PyIS2/zvBAJ8wF/GWFjZwCM7Fq8OcvcaLxpnc7Ml8rkhomeaKIJyLFG+vHYY+ZYBqPUkXVbUxnsCNvSaxYLmPxmuM6IUjvvM4uXGNxdARo6KlbtVpY2AXoXtn1N8EH/AMgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B5A8C4CEE7;
-	Thu, 29 May 2025 13:40:20 +0000 (UTC)
-Date: Thu, 29 May 2025 09:41:22 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Andrew Morton
- <akpm@linux-foundation.org>, Devaansh Kumar <devaanshk840@gmail.com>, Ilya
- Leoshkevich <iii@linux.ibm.com>, Miaoqian Lin <linmq006@gmail.com>, Pan
- Taixi <pantaixi@huaweicloud.com>, Tomas Glozar <tglozar@redhat.com>, Yury
- Norov <yury.norov@gmail.com>
-Subject: [GIT PULL] tracing: Updates for v6.16
-Message-ID: <20250529094122.245fb887@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748526054; c=relaxed/simple;
+	bh=zi9CAd0UHwTnmwGtSb/HavByLsmoluZyCSlkqqj3zmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TjcaZuKzL6pFPKqLTzeQS2Vv0zWJKPcaxC+5wfxkiIrfI+OyucX3VAjV9Kq+pbyaFykIpRMUj4Hh0ayRFwQyEo8wisPR+2V0thEN+oxrLGwNzEOamGjBCq9Lodl3pZy/Lo45DDPzIgG/jEK1mxPojfZNmJLqijjqBxGkAkQFkPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=JHYx4pEF; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="JHYx4pEF"
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 72A98669948;
+	Thu, 29 May 2025 15:40:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1748526044;
+	bh=zi9CAd0UHwTnmwGtSb/HavByLsmoluZyCSlkqqj3zmc=;
+	h=From:Subject:Date;
+	b=JHYx4pEFCJrbFuI4gpcbab1Y8MNML5AyxgNj3RivHQPq27wMssK0uQeoxyOEyp8Yd
+	 hVm/pTd3aXf4LimM4ncYp8MkS88neALw9ZCmoFiRBjrxD9y+k5SY8qE+qUGgpl4L1w
+	 6ovTQWxRz25tsCdT+0wVaFWiEY8zu3Wdz/N67hY8OOPiIbeFAeIztyWyOafPh+U97q
+	 Q1JB/Y2H9hAzxw5JnIT1Qu1f0uJY3cjxe3p9x3tccSglXyJeFzPD/w+pSWT2tQCc7n
+	 bWX/BD0ApZ6cmZ6GXYQ4tc1c5M2IEl9v4weiokaq2OwE3UMYW2FvHET7YsSdOl4KI3
+	 u+B0z/v8hfZdA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: x86 Maintainers <x86@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
+ Len Brown <lenb@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>,
+ Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: [PATCH v2] Revert "x86/smp: Eliminate mwait_play_dead_cpuid_hint()"
+Date: Thu, 29 May 2025 15:40:43 +0200
+Message-ID: <12674167.O9o76ZdvQC@rjwysocki.net>
+In-Reply-To: <2006806.PYKUYFuaPT@rjwysocki.net>
+References: <2006806.PYKUYFuaPT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTFl0QnGpgeAjMEeSCFFZ+8HOWDB8vO95E+K52OCRkJysfFChtAuE6Oz9BdFCckBv2tQAvoFVlQ7bOsM1b2AFojVaIxc7c9AEc96CpmBH77jOe1uN5xyeGpOcnz/zOUTWYhqueZVgjNWse+VaoaY/rAeTu/tNbaVOyBJKZGMdPNq1Eu1ymd7zhCufFS8zL/pYQahjIPI6+shKknpdSEBW9wAHHFyMVe2zw4v4sCyrWSV698C+r81nG5gskyYEAxb3uQb/umZunxUvmP92o1zffhJZH66fsdEXaVOZr3CtISfg8UCFTdMV47/CEIQFm4ES7EPXxQXlDPff5gPiOsGhAtnf9qhKJHJ3ir1BAlO/zllvBD9l8UvK2TAMrvT/vEHn8Y63XT1DL8u44Q9cGOULjt6C81zUQRk/N+TA7KlmFwjABrLgBt1aspEjPXf36WISyZ+BODYOTdXVHuHD0WZKY3ehp+hI7jJY8RA8de1W0SoSFexYMukzEZrATn0jiSkMjdEoGU6VD1D19kAgDEGw8vINei2/XM1DMgezBL1oSNJdIJNtLrBmzSZ1fFUBAbanNeXppMRJKzheu2lWz/T21b13w0jvjm2lB3xNJGxtWc6fOScfLAmsWBr+NxDoEIp44iBsbjb5IqCHdIbN85JWsNZ/T7ing7VozFfi+ci7E/RnA
+X-DCC--Metrics: v370.home.net.pl 1024; Body=12 Fuz1=12 Fuz2=12
+
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+
+Revert commit 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()")
+because it introduced a significant power regression on systems that
+start with "nosmt" in the kernel command line.
+
+Namely, on such systems, SMT siblings permanently go offline early,
+when cpuidle has not been initialized yet, so after the above commit,
+hlt_play_dead() is called for them.  Later on, when the processor
+attempts to enter a deep package C-state, including PC10 which is
+requisite for reaching minimum power in suspend-to-idle, it is not
+able to do that because of the SMT siblings staying in C1 (which
+they have been put into by HLT).
+
+As a result, the idle power (including power in suspend-to-idle)
+rises quite dramatically on those systems with all of the possible
+consequences, which (needless to say) may not be expected by their
+users.
+
+This issue is hard to debug and potentially dangerous, so it needs to
+be addressed as soon as possible in a way that will work for 6.15.y,
+hence the revert.
+
+Of course, after this revert, the issue that commit 96040f7273e2
+attempted to address will be back and it will need to be fixed again
+later.
+
+Fixes: 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()")
+Reported-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
+Cc: 6.15+ <stable@vger.kernel.org> # 6.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This supersedes https://lore.kernel.org/linux-pm/7811828.EvYhyI6sBW@rjwysocki.net/
+
+v1 -> v2:
+   * Send as a standalone patch.
+   * Extend the changelog.
+
+I honestly don't think that there is any reasonable alternative to this
+revert that would be suitable for 6.15.y (y > 0), so I'm going to apply
+it and include it in a PR during the remaining part of this merge window
+unless somebody beats me to this.
+
+Thanks!
+
+---
+ arch/x86/kernel/smpboot.c |   54 ++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 47 insertions(+), 7 deletions(-)
+
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1238,10 +1238,6 @@
+ 	local_irq_disable();
+ }
+ 
+-/*
+- * We need to flush the caches before going to sleep, lest we have
+- * dirty data in our caches when we come back up.
+- */
+ void __noreturn mwait_play_dead(unsigned int eax_hint)
+ {
+ 	struct mwait_cpu_dead *md = this_cpu_ptr(&mwait_cpu_dead);
+@@ -1288,6 +1284,50 @@
+ }
+ 
+ /*
++ * We need to flush the caches before going to sleep, lest we have
++ * dirty data in our caches when we come back up.
++ */
++static inline void mwait_play_dead_cpuid_hint(void)
++{
++	unsigned int eax, ebx, ecx, edx;
++	unsigned int highest_cstate = 0;
++	unsigned int highest_subcstate = 0;
++	int i;
++
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
++		return;
++	if (!this_cpu_has(X86_FEATURE_MWAIT))
++		return;
++	if (!this_cpu_has(X86_FEATURE_CLFLUSH))
++		return;
++
++	eax = CPUID_LEAF_MWAIT;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++
++	/*
++	 * eax will be 0 if EDX enumeration is not valid.
++	 * Initialized below to cstate, sub_cstate value when EDX is valid.
++	 */
++	if (!(ecx & CPUID5_ECX_EXTENSIONS_SUPPORTED)) {
++		eax = 0;
++	} else {
++		edx >>= MWAIT_SUBSTATE_SIZE;
++		for (i = 0; i < 7 && edx; i++, edx >>= MWAIT_SUBSTATE_SIZE) {
++			if (edx & MWAIT_SUBSTATE_MASK) {
++				highest_cstate = i;
++				highest_subcstate = edx & MWAIT_SUBSTATE_MASK;
++			}
++		}
++		eax = (highest_cstate << MWAIT_SUBSTATE_SIZE) |
++			(highest_subcstate - 1);
++	}
++
++	mwait_play_dead(eax);
++}
++
++/*
+  * Kick all "offline" CPUs out of mwait on kexec(). See comment in
+  * mwait_play_dead().
+  */
+@@ -1337,9 +1377,9 @@
+ 	play_dead_common();
+ 	tboot_shutdown(TB_SHUTDOWN_WFS);
+ 
+-	/* Below returns only on error. */
+-	cpuidle_play_dead();
+-	hlt_play_dead();
++	mwait_play_dead_cpuid_hint();
++	if (cpuidle_play_dead())
++		hlt_play_dead();
+ }
+ 
+ #else /* ... !CONFIG_HOTPLUG_CPU */
 
 
-Linus,
 
-[
-  Note, this has a small merge conflict with include/trace/events/tcp.h
-  which should have:
-
- -DECLARE_TRACE(tcp_cwnd_reduction_tp,
- +DECLARE_TRACE(tcp_cwnd_reduction,
-
- As this series makes DECLARE_TRACE() always add the "_tp" suffix.
-]
-
-tracing updates for v6.16:
-
-- Have module addresses get updated in the persistent ring buffer
-
-  The addresses of the modules from the previous boot are saved in the
-  persistent ring buffer. If the same modules are loaded and an address is
-  in the old buffer points to an address that was both saved in the
-  persistent ring buffer and is loaded in memory, shift the address to point
-  to the address that is loaded in memory in the trace event.
-
-- Print function names for irqs off and preempt off callsites
-
-  When ignoring the print fmt of a trace event and just printing the fields
-  directly, have the fields for preempt off and irqs off events still show
-  the function name (via kallsyms) instead of just showing the raw address.
-
-- Clean ups of the histogram code
-
-  The histogram functions saved over 800 bytes on the stack to process
-  events as they come in. Instead, create per-cpu buffers that can hold this
-  information and have a separate location for each context level (thread,
-  softirq, IRQ and NMI).
-
-  Also add some more comments to the code.
-
-- Add "common_comm" field for histograms
-
-  Add "common_comm" that uses the current->comm as a field in an event
-  histogram and acts like any of the other fields of the event.
-
-- Show "subops" in the enabled_functions file
-
-  When the function graph infrastructure is used, a subsystem has a "subops"
-  that it attaches its callback function to. Instead of the
-  enabled_functions just showing a function calling the function that calls
-  the subops functions, also show the subops functions that will get called
-  for that function too.
-
-- Add "copy_trace_marker" option to instances
-
-  There are cases where an instance is created for tooling to write into,
-  but the old tooling has the top level instance hardcoded into the
-  application. New tools want to consume the data from an instance and not
-  the top level buffer. By adding a copy_trace_marker option, whenever the
-  top instance trace_marker is written into, a copy of it is also written
-  into the instance with this option set. This allows new tools to read what
-  old tools are writing into the top buffer.
-
-  If this option is cleared by the top instance, then what is written into
-  the trace_marker is not written into the top instance. This is a way to
-  redirect the trace_marker writes into another instance.
-
-- Have tracepoints created by DECLARE_TRACE() use trace_<name>_tp()
-
-  If a tracepoint is created by DECLARE_TRACE() instead of TRACE_EVENT(),
-  then it will not be exposed via tracefs. Currently there's no way to
-  differentiate in the kernel the tracepoint functions between those that
-  are exposed via tracefs or not. A calling convention has been made
-  manually to append a "_tp" prefix for events created by DECLARE_TRACE().
-  Instead of doing this manually, force it so that all DECLARE_TRACE()
-  events have this notation.
-
-- Use __string() for task->comm in some sched events
-
-  Instead of hardcoding the comm to be TASK_COMM_LEN in some of the
-  scheduler events use __string() which makes it dynamic. Note, if these
-  events are parsed by user space it they may break, and the event may have
-  to be converted back to the hardcoded size.
-
-- Have function graph "depth" be unsigned to the user
-
-  Internally to the kernel, the "depth" field of the function graph event is
-  signed due to -1 being used for end of boundary. What actually gets
-  recorded in the event itself is zero or positive. Reflect this to user
-  space by showing "depth" as unsigned int and be consistent across all
-  events.
-
-- Allow an arbitrary long CPU string to osnoise_cpus_write()
-
-  The filtering of which CPUs to write to can exceed 256 bytes. If a machine
-  has 256 CPUs, and the filter is to filter every other CPU, the write would
-  take a string larger than 256 bytes. Instead of using a fixed size buffer
-  on the stack that is 256 bytes, allocate it to handle what is passed in.
-
-- Stop having ftrace check the per-cpu data "disabled" flag
-
-  The "disabled" flag in the data structure passed to most ftrace functions
-  is checked to know if tracing has been disabled or not. This flag was
-  added back in 2008 before the ring buffer had its own way to disable
-  tracing. The "disable" flag is now not always set when needed, and the
-  ring buffer flag should be used in all locations where the disabled is
-  needed. Since the "disable" flag is redundant and incorrect, stop using it.
-  Fix up some locations that use the "disable" flag to use the ring buffer
-  info.
-
-- Use a new tracer_tracing_disable/enable() instead of data->disable flag
-
-  There's a few cases that set the data->disable flag to stop tracing, but
-  this flag is not consistently used. It is also an on/off switch where if a
-  function set it and calls another function that sets it, the called
-  function may incorrectly enable it.
-
-  Use a new trace_tracing_disable() and tracer_tracing_enable() that uses a
-  counter and can be nested. These use the ring buffer flags which are
-  always checked making the disabling more consistent.
-
-- Save the trace clock in the persistent ring buffer
-
-  Save what clock was used for tracing in the persistent ring buffer and set
-  it back to that clock after a reboot.
-
-- Remove unused reference to a per CPU data pointer in mmiotrace functions
-
-- Remove unused buffer_page field from trace_array_cpu structure
-
-- Remove more strncpy() instances
-
-- Other minor clean ups and fixes
-
-
-Please pull the latest trace-v6.16 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-v6.16
-
-Tag SHA1: f02d35b1e21423d6f9043f1b846f61ef9a42a30d
-Head SHA1: 2fbdb6d8e03b70668c0876e635506540ae92ab05
-
-
-Devaansh Kumar (1):
-      tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
-
-Ilya Leoshkevich (1):
-      ftrace: Expose call graph depth as unsigned int
-
-Masami Hiramatsu (Google) (1):
-      tracing: Record trace_clock and recover when reboot
-
-Miaoqian Lin (1):
-      tracing: Fix error handling in event_trigger_parse()
-
-Pan Taixi (1):
-      tracing: Fix compilation warning on arm32
-
-Steven Rostedt (29):
-      tracing: Update function trace addresses with module addresses
-      tracing: Show function names when possible when listing fields
-      tracing: Only return an adjusted address if it matches the kernel address
-      tracing: Adjust addresses for printing out fields
-      tracing: Show preempt and irq events callsites from the offsets in field print
-      tracing: Always use memcpy() in histogram add_to_key()
-      tracing: Move histogram trigger variables from stack to per CPU structure
-      tracing: Add common_comm to histograms
-      ftrace: Show subops in enabled_functions
-      ftrace: Comment that ftrace_func_mapper is freed with free_ftrace_hash()
-      tracing/mmiotrace: Remove reference to unused per CPU data pointer
-      ftrace: Do not bother checking per CPU "disabled" flag
-      tracing: Just use this_cpu_read() to access ignore_pid
-      tracing: Add tracer_tracing_disable/enable() functions
-      tracing: Use tracer_tracing_disable() instead of "disabled" field for ftrace_dump_one()
-      tracing: kdb: Use tracer_tracing_on/off() instead of setting per CPU disabled
-      ftrace: Do not disabled function graph based on "disabled" field
-      tracing: Do not use per CPU array_buffer.data->disabled for cpumask
-      ring-buffer: Add ring_buffer_record_is_on_cpu()
-      tracing: branch: Use trace_tracing_is_on_cpu() instead of "disabled" field
-      tracing: Convert the per CPU "disabled" counter to local from atomic
-      tracing: Use atomic_inc_return() for updating "disabled" counter in irqsoff tracer
-      tracing: Remove unused buffer_page field from trace_array_cpu structure
-      tracing: Rename event_trigger_alloc() to trigger_data_alloc()
-      tracing: Remove unnecessary "goto out" that simply returns ret is trigger code
-      tracing: Add a helper function to handle the dereference arg in verifier
-      tracing: Allow the top level trace_marker to write into another instances
-      tracepoint: Have tracepoints created with DECLARE_TRACE() have _tp suffix
-      tracing/sched: Use __string() instead of fixed lengths for task->comm
-
-Tomas Glozar (1):
-      tracing/osnoise: Allow arbitrarily long CPU string
-
-Yury Norov (1):
-      tracing: Cleanup upper_empty() in pid_list
-
-----
- Documentation/trace/ftrace.rst                     |  13 ++
- Documentation/trace/tracepoints.rst                |  17 +-
- include/linux/ftrace.h                             |   2 +
- include/linux/ring_buffer.h                        |   1 +
- include/linux/tracepoint.h                         |  38 ++--
- include/trace/bpf_probe.h                          |   8 +-
- include/trace/define_trace.h                       |  17 +-
- include/trace/events/sched.h                       | 124 ++++++------
- include/trace/events/tcp.h                         |   2 +-
- kernel/trace/fgraph.c                              |   2 +
- kernel/trace/ftrace.c                              |  45 ++++-
- kernel/trace/pid_list.c                            |   8 +-
- kernel/trace/ring_buffer.c                         |  18 ++
- kernel/trace/trace.c                               | 214 +++++++++++++++++----
- kernel/trace/trace.h                               |  30 ++-
- kernel/trace/trace_branch.c                        |   4 +-
- kernel/trace/trace_entries.h                       |  12 +-
- kernel/trace/trace_events.c                        |  39 ++--
- kernel/trace/trace_events_hist.c                   | 179 ++++++++++++++---
- kernel/trace/trace_events_trigger.c                |  64 +++---
- kernel/trace/trace_functions.c                     |  24 +--
- kernel/trace/trace_functions_graph.c               |  38 +---
- kernel/trace/trace_irqsoff.c                       |  47 +++--
- kernel/trace/trace_kdb.c                           |   9 +-
- kernel/trace/trace_mmiotrace.c                     |  12 +-
- kernel/trace/trace_osnoise.c                       |   9 +-
- kernel/trace/trace_output.c                        |  60 ++++--
- kernel/trace/trace_sched_wakeup.c                  |  18 +-
- kernel/trace/trace_stack.c                         |   2 +-
- tools/testing/selftests/bpf/progs/raw_tp_null.c    |   2 +-
- .../testing/selftests/bpf/progs/raw_tp_null_fail.c |   2 +-
- .../selftests/bpf/progs/test_module_attach.c       |   4 +-
- .../selftests/bpf/progs/test_tp_btf_nullable.c     |   4 +-
- .../testing/selftests/bpf/test_kmods/bpf_testmod.c |   8 +-
- 34 files changed, 720 insertions(+), 356 deletions(-)
----------------------------
