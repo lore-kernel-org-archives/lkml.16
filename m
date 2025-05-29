@@ -1,105 +1,125 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980DF335C7;
-	Thu, 29 May 2025 21:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FC422A811
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748555149; cv=none; b=NpoKMdrC+2jMG2TXGgKhISMa1cVD7q1IOG6rQGQLuOs7uDKf3z2EsMVeeR0/kxTaFQ4VnCwlvrueBsGJVKeqLRgC83Qkxzu4ZRtSbWFMQPsYf7aHzrlqXE8HUtH7ToFDLUT4c3oIkNudgA+Vkn92v0bZiv/WsTFMvr13/5Dk6jI=
+	t=1748555180; cv=none; b=ZlK11M382gLSv5CjW+jaLz/io746cPNkeO1zVcOFxbpMldr1xYokSfWs2Jdsfx3bllLZioPYOf3qRzQXGdWFmH/c3dDMQeqAdKhT9B/pQbTr2LjZS6gVW2hjtWbP6K3tXYjTaVFaOy5z/m+bU3cppJHy9+4KSscfDZEC1Lyv2Vs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748555149; c=relaxed/simple;
-	bh=2DTGJNDeEnztLqmhIx/aLYsYrnLFJZIbaEmPyafTHvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QbBmo6/9/UnL795bUkEtzb4/nEXNINSKn/y47IVkasotLRjWDBwtWy1+Ph9ghtC1zTAP7n3SkqhpFj1WI86iMxHxzq2EfCJhpaEa8xTdSICMcFsBMPFFpAfyTKmiOc0omWdXMGRK1DZMR8PjXn9Bgf+yDH2NlvRrXa3rIKj/p2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=pEkL9MGl; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1748555180; c=relaxed/simple;
+	bh=3FbM/5b/f6R7ql+h6I/ET3q5rvjJXKdSarztikH9TWE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KSBN4BwP0U/ZRttCfXMVkyWa1hAsgm5Gm/jRw0MeVjhGX/HLrSQ7IimKv6c9a9RToD8iC9S0926ggZH0zu3Ypgo0Aq3xcEuLCvyQD84OqK7r8G1NRYQpCk1Acy0AHN/gggwXDS5c29L267tTTSPQXB1PR4SSnhg6aNN+vT+2jN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FaOFK8hN; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="pEkL9MGl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=a0HjNPJVe3VQAsrvNF/01kO2AyxeRGrMnI+Q8znHR+E=; b=pEkL9MGlF0tsIUSzPMY6UglxZv
-	tB5c3QKQKP/R/zR8+/g5QgjEX8HDk2SBrI65Y51CF2Lm6wCv1xH/SmtVbB/b0Q0h/G/4d4r5KrXuI
-	2/wSUvEz1PgQjWqCCxULh6tdDU6+3XsuKT7knqBpF6vebrILmyLfXpCMPLATD5t4STpwBp2I2Ukkj
-	VgEuhLMLV+0THqLJcUlt5ROmYnoJx74OaFgZS1RLL0xax6pGajg/EXc7YtOrgt1gZmb5w3YMyoYoT
-	WXiqM1Jnom6NLFZW9XD/IVP+v6a2dpbbgDEYe66MVS2+KZdWaK9/R0nPyJWXJKpwVHqIkvSV+H6fg
-	+BajZFGA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKl4K-00000003qHk-0VTj;
-	Thu, 29 May 2025 21:45:44 +0000
-Date: Thu, 29 May 2025 22:45:44 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Song Liu <song@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, bpf@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, kernel-team@meta.com,
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org,
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com,
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com,
-	mic@digikod.net, gnoack@google.com
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <20250529214544.GO2023217@ZenIV>
-References: <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV>
- <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
- <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
- <20250529173810.GJ2023217@ZenIV>
- <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
- <20250529183536.GL2023217@ZenIV>
- <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
- <20250529201551.GN2023217@ZenIV>
- <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FaOFK8hN"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2345c60507bso9983895ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748555178; x=1749159978; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EnXkwa2sU7C5+9WFcS6JOR66fh1+6TmCOrRHRKwjJuE=;
+        b=FaOFK8hNB6E/wUdoqjwn2q9DKSqGqxNBfPe/XAGF4OhKwL47ulGajzhiWBX4uCl+BB
+         kTteH2tHQqmHD5crb+bwmTFcedo8x/jnxehe+kqqW18ejo7TvRCtVf06++bS+U51CVc/
+         XI9yup5ycHL8fpGaUU7VKZ+jMG2DrOyModbIo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748555178; x=1749159978;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EnXkwa2sU7C5+9WFcS6JOR66fh1+6TmCOrRHRKwjJuE=;
+        b=rOZHa2MxxIfLDEa3CmqJjiAUUARTiJFJCf0E23O0zWAzSU0Cu98xY1+k7bQu5Cd+tK
+         c/pOvqK7/2xjClFb8Ue3nRqWDq6DC6pFCiq5cYlJmNrk+6ISS1SbyhRWazyLppGWWf0s
+         QdPCXiEBOr4IKCVBrX66AapTbS9CrabNdhXbbEVuG7yCcIHWrkbo5s4fR52rvtfjZywW
+         Sy13fBbWssTERky8CzK0KV7UfExHLcz9uySz1bFPtFFUFn4AFbc5X9wMv0miOmUdAGe3
+         nDyey4QfGi7TAf4E2xnCSza53R1CPVKdfRt4VuUW0mnEZzZojthJJoqegtw/h7b5ReHj
+         Nw8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWRqMaaQE9LFi5CcQS/wLLIJS6ps/eOBw5ArKqt2DxYg8loNibMXQsJiuPAOnI7aO+/ihhsMIl++yTqzEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwokUy+sW6OhjtrF3YikmSvPp6sxwli/DwYyeAN29ab7i93S1Hl
+	xC6P+pA0bGJvbgFrpepKUWehhx8nPNKWEy3UXK7E8OVeMOMFl8criuh/p+OqoMv/8w==
+X-Gm-Gg: ASbGncv9KjyiW7ugkM+lecVRchw4bAoGi7Y9X8gx8huEPrb035+YxVrnKQSiGQ6oval
+	TAQ1Nn8IyhiRhv7NkHSnLd9TKiQ3mX3ezzpolh+xDtZODv2nvLMYchbWrLxIZbreUVtiIV2FPgY
+	7AZTVnyAGapPDSeibx03p7/+mC8l3RJkTODKv2J7vMBDSxEZwQlv4ruZrLODK1Xos03ByrkFnDA
+	MvIMo7GFRSegXxVyMbgWCSI7oM7lIfkks7zhsW2GOCOMYSRoWC3MIir8CcNDca08VTnDz0isfKM
+	K3mC9dnAe4TPOgPpDhwfMoDa7CGHqi3+el213nTpjg8lGM4237gJlwpMsvmcfOLbp5XUJsVpIT9
+	8nY4ECg==
+X-Google-Smtp-Source: AGHT+IFH4yiLjc7+rYpcNKeGFb0X58Lt8uVD7icqkiOq9jNa+l2IJnQL44ftXB+axaOdZQB+DLu65g==
+X-Received: by 2002:a17:902:f788:b0:234:bc9f:82f2 with SMTP id d9443c01a7336-2352a089905mr14711675ad.46.1748555178460;
+        Thu, 29 May 2025 14:46:18 -0700 (PDT)
+Received: from [10.69.40.38] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb28c98sm446643a12.19.2025.05.29.14.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 14:46:17 -0700 (PDT)
+Message-ID: <90e91a4f-56de-421d-8e4d-1e641a2ad430@broadcom.com>
+Date: Thu, 29 May 2025 14:46:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: dsa: tag_brcm: legacy: fix pskb_may_pull length
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ florian.fainelli@broadcom.com, jonas.gorski@gmail.com, dgcbueu@gmail.com,
+ andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250529124406.2513779-1-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250529124406.2513779-1-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 29, 2025 at 02:07:31PM -0700, Song Liu wrote:
 
-> We have made it very clear what is needed now: an iterator that iterates
-> towards the root. This has been discussed in LPC [1] and
-> LSF/MM/BPF [2].
+
+On 5/29/2025 5:44 AM, Álvaro Fernández Rojas wrote:
+> BRCM_LEG_PORT_ID was incorrectly used for pskb_may_pull length.
+> The correct check is BRCM_LEG_TAG_LEN + VLAN_HLEN, or 10 bytes.
 > 
-> We don't know what might be needed in the future. That's why nothing
-> is shared. If the problem is that this code looks extendible, we sure can
-> remove it for now. But we cannot promise there will never be use cases
-> that could benefit from a slightly different path iterator.
+> Fixes: 964dbf186eaa ("net: dsa: tag_brcm: add support for legacy tags")
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-For the record, "use cases that could benefit from X" != "sufficient reason
-to accept X".
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
-> Either way, if we
-> are adding/changing anything to the path iterator, you will always be
-> CC'ed. You are always welcome to NAK anything if there is real issue
-> with the code being developed.
-
-Umm...  What about walking into the mountpoint of MNT_LOCKED mount?
-That, BTW, is an example of non-trivial implications - at the moment
-you *can* check that in path->mnt->mnt_flags before walking rootwards
-and repeat the step if you walked into the parent.  Clumsy and easy
-to get wrong, but it's doable.
-
-OTOH, there's a good cause for moving some of the flags, MNT_LOCKED
-included, out of ->mnt_flags and into a separate field in struct mount.
-However, that would conflict with any code using that to deal with
-your iterator safely.
-
-What's more, AFAICS in case of a stack of mounts each covering the root
-of parent mount, you stop in each of those.  The trouble is, umount(2)
-propagation logics assumes that intermediate mounts can be pulled out of
-such stack without causing trouble.  For pathname resolution that is
-true; it goes through the entire stack atomically wrt that stuff.
-For your API that's not the case; somebody who has no idea about an
-intermediate mount being there might get caught on it while it's getting
-pulled from the stack.
-
-What exactly do you need around the mountpoint crossing?
