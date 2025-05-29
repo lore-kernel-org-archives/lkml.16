@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-oa1-f73.google.com (mail-oa1-f73.google.com [209.85.160.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A716825485A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A10E25D90D
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493646; cv=none; b=qUnys9iIVKIUR0Re0+c1HsYfuKdcwj8xMpI55R3zkTt2ErrjzQcVC0ATPhtdwUXyvV1I8OiHJHdD1P200u7MwquLc3Kno+8cRB7GfgULncfGRitirvvO3E6/YA5IED9iNY5kuDxkHhsvam+xmYZiUvXmkXPVqRidqDaylxVoPsU=
+	t=1748493649; cv=none; b=EZtMFeCxNRrI5+jGwgQTPrRe/AWB+awwYqpcpZhDnt3E65eFG27O/OqEi6IGU3BfCGRTs0oFGp2JqtyaveUx7F+lCev084w0n6ckfc+vkkmnaa/+ZNx4f9OmvLmOa7zj9IizVBwyK28Reis+LS/FqGax5P3V699u8BlLv5UYB64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493646; c=relaxed/simple;
-	bh=Ep/Fp0vDgaxUqq9eMuM3Wsrz2NnNpWEP85MA235QWHs=;
+	s=arc-20240116; t=1748493649; c=relaxed/simple;
+	bh=I0KfEuSKoaW88SLE2xfX/II6kEnnhOycNjsY3UTEYsQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ABsUDxjk3F/r4qJh6mVF80i9pnjINMXAyyOsp3yuMXbvRWOFUx+auoWlEgfP0ChyDgBpxG99iLYJaSbJznV9VZJbBvGyRTGfApr50KdJ2uFwd0MSyTvjD7pZX5YttkNvfyPYnJ6Lz09Kwfe5vjqPKw50IqpxY/Qmvu5hhjBJFc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hzEzpCJW; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=Awg2k5nzsg5/Yt/VEavQFf9yOT9GH+/lypdsjpOBVGtXucho9yAMemIHKgN9EbqXpHB6h9ZXuBh/h6HkVzVxMCoVyOFZq4zyiW8AnJLtIyI0ZOdhxBB/vjyJ+/nfkswM42h6KpUH3A9bb0L/BtrWJALyGfiVmPK18Ck6uurH9Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q3art21V; arc=none smtp.client-ip=209.85.160.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hzEzpCJW"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b1442e039eeso380261a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3art21V"
+Received: by mail-oa1-f73.google.com with SMTP id 586e51a60fabf-2e90e7f170eso76248fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493643; x=1749098443; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493647; x=1749098447; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UGVGmKJNvasoTYrhOBy2oajxfqrLWwjVEzeBncIdfQ8=;
-        b=hzEzpCJWvpyFnmVQzOpxu2FTs4yNeW0yxWGQzMGQWAqqvRCUeH9FKcDhOqw6nEer4P
-         H5prjc7qMoipfAaAAwOWxRTGE7NtUVq86MOX815rIfODR4uM1YWCv11siIg/zZdWNAHF
-         fkwE3kCjX6fSW7HI3Pn185sZBzZbut/d5FVmIlAy8qeLHBkFqPmR8C6AYxi3hzxJ+7jC
-         XEWP1xZxfI6m6Y7QakvI9sbdeDuF+ubkDCDvh4eFPKUeu6y/SKbB/cBhcYta2FvekBuR
-         qrtG6dmPtUpCRRWEN7UenXgTrQNsf4WLg47zsldoGrn9rkocL8avxSdgAT70QAkZx3A6
-         1+mQ==
+        bh=LL4UI9Ak9yHPX0+RiSe0aBEBn7zdKmhXGNAKhA0mqbU=;
+        b=q3art21VYRkppJt/szZbXS1Z8E2IiTKMY0FtY8aN/WHTqNihZdnMs4YoBLs92O3NOE
+         kdzC2LFHkBU2GQEZPPhethQIg2L8+kaCZ65Q56LfsVlLcLOP8jV2XCQ/XTmU1zENgjir
+         fQNwYq4kf6z4c63ZDq2zznHwFFFsRMq26kYTw2caMsSfMpxsXcZUtXTZHMa+r0ypylbI
+         J+vgC4bzbXoh7UcM9A7WSsfR35dyLBsOkAyvNp+BD46Sv1Gb4SSW/74u8/htBkL2BjGN
+         kBlSmMlrjjO3YeohIcj9Baxm49V4FzolhQuG37dHlot+RiK/7sIiGbIzPVQvWXPAUsV0
+         Xspg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493643; x=1749098443;
+        d=1e100.net; s=20230601; t=1748493647; x=1749098447;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UGVGmKJNvasoTYrhOBy2oajxfqrLWwjVEzeBncIdfQ8=;
-        b=HFn4rOlDP1x354tpcTdtYg1j6v+ABpuvml0+QG4UxpvRkyKCK4pc+zx/sku1IrzN1p
-         hDu5/YrHqrmGM71wkPajMhDOqxbIKIUmhA/0Mt4iFLAzmXU+JQf9ufHkjGVFDDh9ovOM
-         xFQm8/yKMgxz9bBy4Ijt5IDjwnC2tom5bxUO4xQ/Xcrrqf2B5Ot1JGj3NmeCwq2A3OUO
-         Ebi9eQanSyZ0yA1TEJROYFODSb17n1Bxj6gjM+5YVNjxwba3pCU1HgKmQ+4h5kvjRk1f
-         n7c7eDxqGOcrzu+fG4DrXKlELN+RiHvV8WqQaPIuuXcU+swCN8uXV+1m3pnuRLKLv4ZD
-         UpJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0tPMeq4/P79MvISaVpcsKFWXpglkK7StnIfbenLHCbdase2U2K6mx43shmUSNRgrxG4d5fqUd8Luvi7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5cWBMkDod5VSMbL7Fb/13U3ijg8Tpuj9qA1bLnzsCavk7T2tR
-	pOYgT6SYTVUYLiKxXevuhW/l5bK2l5GwQIVNWw0CL2rT4fkf+DwarYDnJPzHHpK1HBf1z7hwuhE
-	x/7+96H9WLg==
-X-Google-Smtp-Source: AGHT+IG2i7dBHliCjjVub5IEicWGVAH0xz6vzwi8Hb45u7BNhwsmG5KJAVfLIs+kRwPoowWgbUGs/WUFumxf
-X-Received: from pgbcp3.prod.google.com ([2002:a05:6a02:4003:b0:b2c:4287:b413])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9d94:b0:1f5:80a3:b003
- with SMTP id adf61e73a8af0-2188c3b2ff1mr30061584637.37.1748493642711; Wed, 28
- May 2025 21:40:42 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:54 -0700
+        bh=LL4UI9Ak9yHPX0+RiSe0aBEBn7zdKmhXGNAKhA0mqbU=;
+        b=pCoGLwxNJ63Dof1vgS/dllv4TUWLNXto8PW1XIlDeIM8t57FVN5oC7qQA9k+RtBTxF
+         sEsVjlt/Hnn8boSQguKVlAvTqTv8Qw4hP8rispYUW+RLcT3/4Dl6c8rPGGq+8DDjxVMX
+         SEQ2xKugCAuHQTz7cjoFplzFQTRNRbyovv4KmZZZ59jiQmr1Adcj/PXV9ZIfY8P5OHAX
+         CPF4kgXF1SVGWAahnF4y9p0382PjNeJ5BOL8kKkupjpLm/P/UpnoEF6FJEh4JLXZYOkY
+         N59VD2mp2j8ktm0ZvfWFnFbIdot+sc0GWj/7COfflX3xY+J2JsaT7+jXXmYAiAxcciqD
+         3/7A==
+X-Forwarded-Encrypted: i=1; AJvYcCXVCfWReEb8DVuIZp0ynLtB3/p0aEgkMO6wtrd9/ckafqOz0TbbwDHf7QElG7Ts4rZYbB2cYU0j14AmkPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yytd87sb8KVnISpYodUGeP5itNxjrUkSuGqcqWlP9JBVDXPnIKx
+	OuX9e5s8eM1Ck6OHJH+2+23p9fveIp0jj22EXsCEkuM/Zv+NdQjDfauy7biw1mDEkgKrh/zkvHX
+	xss0WiJ9+cw==
+X-Google-Smtp-Source: AGHT+IF/B4xbYCms04sU6/ziRl8z3n1U/RtRzWjX1PIW5CRINULWhPl3JsZ83qpBCY7gPqUUQKJwe7n6GeO8
+X-Received: from oabqw14.prod.google.com ([2002:a05:6870:6f0e:b0:2d6:b51:2d37])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6871:8005:b0:2d4:d820:6d82
+ with SMTP id 586e51a60fabf-2e8e10cd09bmr2652554fac.26.1748493646684; Wed, 28
+ May 2025 21:40:46 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:56 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-19-irogers@google.com>
-Subject: [PATCH v4 18/24] perf machine: Explicitly pass in host perf_env
+Message-ID: <20250529044000.759937-21-irogers@google.com>
+Subject: [PATCH v4 20/24] perf trace: Avoid global perf_env with evsel__env
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,410 +89,48 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-When creating a machine for the host explicitly pass in a scoped
-perf_env. This removes a use of the global perf_env.
+There is no session in perf trace unless in replay mode, so in host
+mode no session can be associated with the evlist. If the evsel__env
+call fails resort to the host_env that's part of the trace. Remove
+errno_to_name as it becomes a called once 1-line function once the
+argument is turned into a perf_env, just call perf_env__arch_strerrno
+directly.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-buildid-list.c     |  5 ++++-
- tools/perf/builtin-kallsyms.c         | 21 ++++++++++++++++-----
- tools/perf/builtin-trace.c            | 24 +++++++++++++++++-------
- tools/perf/tests/code-reading.c       |  3 +--
- tools/perf/tests/dlfilter-test.c      |  3 +--
- tools/perf/tests/dwarf-unwind.c       | 10 +++++++---
- tools/perf/tests/mmap-thread-lookup.c |  6 +++++-
- tools/perf/tests/symbols.c            |  8 +++++++-
- tools/perf/util/machine.c             |  8 ++++----
- tools/perf/util/machine.h             |  4 ++--
- tools/perf/util/probe-event.c         |  5 ++++-
- 11 files changed, 68 insertions(+), 29 deletions(-)
+ tools/perf/builtin-trace.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index 151cd84b6dfe..a91bbb34ac94 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -45,11 +45,14 @@ static int buildid__map_cb(struct map *map, void *arg __maybe_unused)
- 
- static void buildid__show_kernel_maps(void)
- {
-+	struct perf_env host_env;
- 	struct machine *machine;
- 
--	machine = machine__new_host();
-+	perf_env__init(&host_env);
-+	machine = machine__new_host(&host_env);
- 	machine__for_each_kernel_map(machine, buildid__map_cb, NULL);
- 	machine__delete(machine);
-+	perf_env__exit(&host_env);
- }
- 
- static int sysfs__fprintf_build_id(FILE *fp)
-diff --git a/tools/perf/builtin-kallsyms.c b/tools/perf/builtin-kallsyms.c
-index a3c2ffdc1af8..3c4339982b16 100644
---- a/tools/perf/builtin-kallsyms.c
-+++ b/tools/perf/builtin-kallsyms.c
-@@ -12,18 +12,28 @@
- #include <subcmd/parse-options.h>
- #include "debug.h"
- #include "dso.h"
-+#include "env.h"
- #include "machine.h"
- #include "map.h"
- #include "symbol.h"
- 
- static int __cmd_kallsyms(int argc, const char **argv)
- {
--	int i;
--	struct machine *machine = machine__new_kallsyms();
-+	int i, err;
-+	struct perf_env host_env;
-+	struct machine *machine = NULL;
- 
-+
-+	perf_env__init(&host_env);
-+	err = perf_env__set_cmdline(&host_env, argc, argv);
-+	if (err)
-+		goto out;
-+
-+	machine = machine__new_kallsyms(&host_env);
- 	if (machine == NULL) {
- 		pr_err("Couldn't read /proc/kallsyms\n");
--		return -1;
-+		err = -1;
-+		goto out;
- 	}
- 
- 	for (i = 0; i < argc; ++i) {
-@@ -42,9 +52,10 @@ static int __cmd_kallsyms(int argc, const char **argv)
- 			map__unmap_ip(map, symbol->start), map__unmap_ip(map, symbol->end),
- 			symbol->start, symbol->end);
- 	}
--
-+out:
- 	machine__delete(machine);
--	return 0;
-+	perf_env__exit(&host_env);
-+	return err;
- }
- 
- int cmd_kallsyms(int argc, const char **argv)
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index dc3a016f302d..af1cb6a5ba1c 100644
+index af1cb6a5ba1c..bf374844e200 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -143,6 +143,7 @@ struct syscall_fmt {
- };
- 
- struct trace {
-+	struct perf_env		host_env;
- 	struct perf_tool	tool;
- 	struct {
- 		/** Sorted sycall numbers used by the trace. */
-@@ -1980,17 +1981,24 @@ static char *trace__machine__resolve_kernel_addr(void *vmachine, unsigned long l
- 	return machine__resolve_kernel_addr(vmachine, addrp, modp);
+@@ -2901,13 +2901,6 @@ static int trace__fprintf_callchain(struct trace *trace, struct perf_sample *sam
+ 	return sample__fprintf_callchain(sample, 38, print_opts, get_tls_callchain_cursor(), symbol_conf.bt_stop_list, trace->output);
  }
  
--static int trace__symbols_init(struct trace *trace, struct evlist *evlist)
-+static int trace__symbols_init(struct trace *trace, int argc, const char **argv,
-+			       struct evlist *evlist)
- {
- 	int err = symbol__init(NULL);
- 
- 	if (err)
- 		return err;
- 
--	trace->host = machine__new_host();
--	if (trace->host == NULL)
--		return -ENOMEM;
-+	perf_env__init(&trace->host_env);
-+	err = perf_env__set_cmdline(&trace->host_env, argc, argv);
-+	if (err)
-+		goto out;
- 
-+	trace->host = machine__new_host(&trace->host_env);
-+	if (trace->host == NULL) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
- 	thread__set_priv_destructor(thread_trace__delete);
- 
- 	err = trace_event__register_resolver(trace->host, trace__machine__resolve_kernel_addr);
-@@ -2001,9 +2009,10 @@ static int trace__symbols_init(struct trace *trace, struct evlist *evlist)
- 					    evlist->core.threads, trace__tool_process,
- 					    true, false, 1);
- out:
--	if (err)
-+	if (err) {
-+		perf_env__exit(&trace->host_env);
- 		symbol__exit();
+-static const char *errno_to_name(struct evsel *evsel, int err)
+-{
+-	struct perf_env *env = evsel__env(evsel);
 -
-+	}
- 	return err;
- }
+-	return perf_env__arch_strerrno(env, err);
+-}
+-
+ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 			   union perf_event *event __maybe_unused,
+ 			   struct perf_sample *sample)
+@@ -2993,8 +2986,9 @@ static int trace__sys_exit(struct trace *trace, struct evsel *evsel,
+ 	} else if (ret < 0) {
+ errno_print: {
+ 		char bf[STRERR_BUFSIZE];
+-		const char *emsg = str_error_r(-ret, bf, sizeof(bf)),
+-			   *e = errno_to_name(evsel, -ret);
++		struct perf_env *env = evsel__env(evsel) ?: &trace->host_env;
++		const char *emsg = str_error_r(-ret, bf, sizeof(bf));
++		const char *e = perf_env__arch_strerrno(env, err);
  
-@@ -2012,6 +2021,7 @@ static void trace__symbols__exit(struct trace *trace)
- 	machine__exit(trace->host);
- 	trace->host = NULL;
- 
-+	perf_env__exit(&trace->host_env);
- 	symbol__exit();
- }
- 
-@@ -4453,7 +4463,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		goto out_delete_evlist;
+ 		fprintf(trace->output, "-1 %s (%s)", e, emsg);
  	}
- 
--	err = trace__symbols_init(trace, evlist);
-+	err = trace__symbols_init(trace, argc, argv, evlist);
- 	if (err < 0) {
- 		fprintf(trace->output, "Problems initializing symbol libraries!\n");
- 		goto out_delete_evlist;
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 4b2461e93b2b..e327d892c725 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -655,9 +655,8 @@ static int do_test_code_reading(bool try_kcore)
- 
- 	pid = getpid();
- 
--	machine = machine__new_host();
- 	perf_env__init(&host_env);
--	machine->env = &host_env;
-+	machine = machine__new_host(&host_env);
- 
- 	ret = machine__create_kernel_maps(machine);
- 	if (ret < 0) {
-diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
-index 6427e3382711..80a1c941138d 100644
---- a/tools/perf/tests/dlfilter-test.c
-+++ b/tools/perf/tests/dlfilter-test.c
-@@ -353,9 +353,8 @@ static int test__dlfilter_test(struct test_data *td)
- 		return test_result("Failed to find program symbols", TEST_FAIL);
- 
- 	pr_debug("Creating new host machine structure\n");
--	td->machine = machine__new_host();
- 	perf_env__init(&host_env);
--	td->machine->env = &host_env;
-+	td->machine = machine__new_host(&host_env);
- 
- 	td->fd = creat(td->perf_data_file_name, 0644);
- 	if (td->fd < 0)
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 4803ab2d97ba..5f98e29e21fd 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -7,6 +7,7 @@
- #include <unistd.h>
- #include "tests.h"
- #include "debug.h"
-+#include "env.h"
- #include "machine.h"
- #include "event.h"
- #include "../util/unwind.h"
-@@ -199,19 +200,21 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *th
- noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 				int subtest __maybe_unused)
- {
-+	struct perf_env host_env;
- 	struct machine *machine;
- 	struct thread *thread;
- 	int err = -1;
- 
--	machine = machine__new_host();
-+	perf_env__init(&host_env);
-+	machine = machine__new_host(&host_env);
- 	if (!machine) {
- 		pr_err("Could not get machine\n");
--		return -1;
-+		goto out;
- 	}
- 
- 	if (machine__create_kernel_maps(machine)) {
- 		pr_err("Failed to create kernel maps\n");
--		return -1;
-+		goto out;
- 	}
- 
- 	callchain_param.record_mode = CALLCHAIN_DWARF;
-@@ -236,6 +239,7 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 
-  out:
- 	machine__delete(machine);
-+	perf_env__exit(&host_env);
- 	return err;
- }
- 
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 446a3615d720..0c5619c6e6e9 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -8,6 +8,7 @@
- #include <stdlib.h>
- #include <stdio.h>
- #include "debug.h"
-+#include "env.h"
- #include "event.h"
- #include "tests.h"
- #include "machine.h"
-@@ -155,6 +156,7 @@ static int synth_process(struct machine *machine)
- 
- static int mmap_events(synth_cb synth)
- {
-+	struct perf_env host_env;
- 	struct machine *machine;
- 	int err, i;
- 
-@@ -167,7 +169,8 @@ static int mmap_events(synth_cb synth)
- 	 */
- 	TEST_ASSERT_VAL("failed to create threads", !threads_create());
- 
--	machine = machine__new_host();
-+	perf_env__init(&host_env);
-+	machine = machine__new_host(&host_env);
- 
- 	dump_trace = verbose > 1 ? 1 : 0;
- 
-@@ -209,6 +212,7 @@ static int mmap_events(synth_cb synth)
- 	}
- 
- 	machine__delete(machine);
-+	perf_env__exit(&host_env);
- 	return err;
- }
- 
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index b07fdf831868..f4ffe5804f40 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -5,6 +5,7 @@
- #include <limits.h>
- #include "debug.h"
- #include "dso.h"
-+#include "env.h"
- #include "machine.h"
- #include "thread.h"
- #include "symbol.h"
-@@ -13,15 +14,18 @@
- #include "tests.h"
- 
- struct test_info {
-+	struct perf_env host_env;
- 	struct machine *machine;
- 	struct thread *thread;
- };
- 
- static int init_test_info(struct test_info *ti)
- {
--	ti->machine = machine__new_host();
-+	perf_env__init(&ti->host_env);
-+	ti->machine = machine__new_host(&ti->host_env);
- 	if (!ti->machine) {
- 		pr_debug("machine__new_host() failed!\n");
-+		perf_env__exit(&ti->host_env);
- 		return TEST_FAIL;
- 	}
- 
-@@ -29,6 +33,7 @@ static int init_test_info(struct test_info *ti)
- 	ti->thread = machine__findnew_thread(ti->machine, 100, 100);
- 	if (!ti->thread) {
- 		pr_debug("machine__findnew_thread() failed!\n");
-+		perf_env__exit(&ti->host_env);
- 		return TEST_FAIL;
- 	}
- 
-@@ -39,6 +44,7 @@ static void exit_test_info(struct test_info *ti)
- {
- 	thread__put(ti->thread);
- 	machine__delete(ti->machine);
-+	perf_env__exit(&ti->host_env);
- }
- 
- struct dso_map {
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 04062148a9ec..7cb3d2bfc180 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -128,7 +128,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	return 0;
- }
- 
--struct machine *machine__new_host(void)
-+struct machine *machine__new_host(struct perf_env *host_env)
- {
- 	struct machine *machine = malloc(sizeof(*machine));
- 
-@@ -138,7 +138,7 @@ struct machine *machine__new_host(void)
- 		if (machine__create_kernel_maps(machine) < 0)
- 			goto out_delete;
- 
--		machine->env = &perf_env;
-+		machine->env = host_env;
- 	}
- 
- 	return machine;
-@@ -147,9 +147,9 @@ struct machine *machine__new_host(void)
- 	return NULL;
- }
- 
--struct machine *machine__new_kallsyms(void)
-+struct machine *machine__new_kallsyms(struct perf_env *host_env)
- {
--	struct machine *machine = machine__new_host();
-+	struct machine *machine = machine__new_host(host_env);
- 	/*
- 	 * FIXME:
- 	 * 1) We should switch to machine__load_kallsyms(), i.e. not explicitly
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index b56abec84fed..02641c1074db 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -169,8 +169,8 @@ struct thread *machine__findnew_guest_code(struct machine *machine, pid_t pid);
- void machines__set_id_hdr_size(struct machines *machines, u16 id_hdr_size);
- void machines__set_comm_exec(struct machines *machines, bool comm_exec);
- 
--struct machine *machine__new_host(void);
--struct machine *machine__new_kallsyms(void);
-+struct machine *machine__new_host(struct perf_env *host_env);
-+struct machine *machine__new_kallsyms(struct perf_env *host_env);
- int machine__init(struct machine *machine, const char *root_dir, pid_t pid);
- void machine__exit(struct machine *machine);
- void machine__delete_threads(struct machine *machine);
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 3c87aa6f7d3b..ac77ed0b7031 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -75,12 +75,14 @@ int e_snprintf(char *str, size_t size, const char *format, ...)
- }
- 
- static struct machine *host_machine;
-+static struct perf_env host_env;
- 
- /* Initialize symbol maps and path of vmlinux/modules */
- int init_probe_symbol_maps(bool user_only)
- {
- 	int ret;
- 
-+	perf_env__init(&host_env);
- 	symbol_conf.allow_aliases = true;
- 	ret = symbol__init(NULL);
- 	if (ret < 0) {
-@@ -94,7 +96,7 @@ int init_probe_symbol_maps(bool user_only)
- 	if (symbol_conf.vmlinux_name)
- 		pr_debug("Use vmlinux: %s\n", symbol_conf.vmlinux_name);
- 
--	host_machine = machine__new_host();
-+	host_machine = machine__new_host(&host_env);
- 	if (!host_machine) {
- 		pr_debug("machine__new_host() failed.\n");
- 		symbol__exit();
-@@ -111,6 +113,7 @@ void exit_probe_symbol_maps(void)
- 	machine__delete(host_machine);
- 	host_machine = NULL;
- 	symbol__exit();
-+	perf_env__exit(&host_env);
- }
- 
- static struct ref_reloc_sym *kernel_get_ref_reloc_sym(struct map **pmap)
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
