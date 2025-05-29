@@ -1,128 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D3E19E968;
-	Thu, 29 May 2025 09:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41FE21B8E7;
+	Thu, 29 May 2025 09:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509649; cv=none; b=sHkjgn4C5LpYhMyrnbaZuKo67a/UF/y/bZNyDH5XJ3SGKOn4Nid/1hyxg2QMoTjDC8Nkyfquev5KE0XX77h6n1QUnSf37AZ8cJeMO8ElnuBhCSfmCvhEZ/QynxhbZZdedbZqua8h/7khwwPG69aN7uFNlRYkNZ9lnoVDrFhrHzs=
+	t=1748509658; cv=none; b=XxK9tZBQyqyhaI7YZwPWO3JGB7bTnxeEYZfAyPPTPFutZxROPURe7pqn+1jfYleOeKjYx+HEH+x/rKtwObLiwvWe4YjO7DiFk584PiOGXacYzy6oLsAGPX0CwSPYPgmp/vu733i3OdCkyI+weR4IXiGwXcjw5lU2TGDXk1VKq3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509649; c=relaxed/simple;
-	bh=OA2B2lq2iE1SHMFUC3X0wRhqzvW5IdLq5T9FRXmrWl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGMQoJ8mf9Nl6siTd8k0GjGF1ENkTEpNR8zxb8B+owdBcNLusc2gONlUuRwpwBF8RwD2Emwz6LC1TaNFz3t/LLRYAEJxMm9U0uX0YHs0n+PXhcxLUJ7it0nN7rr4brZqENJYeVI7r/oKgjSvxXg062gBHCsJKs4TaNzKNj28csE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=C89UAGcE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748509658; c=relaxed/simple;
+	bh=kt06qG21bNiOO3942z5f6u5otZChTpCNpMBVPfOTL4g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RwqI0ecXKEdUa4rNdChpxdnnFBgTzcZmSnLdFC0ArUbprJSWO+RkrSFyf+NfAJ0aJ0nKsSd0hbjSawXGnc3zMW850qH5IS9he87H1/0lJx7aKf6DoVD4LC9GZbRdpbneCfsuK4qoD1jYMJnnNoH4P9ayvO2ceAZo68wbAUjugBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GjSyVNNh; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="C89UAGcE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25194C4CEE7;
-	Thu, 29 May 2025 09:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748509648;
-	bh=OA2B2lq2iE1SHMFUC3X0wRhqzvW5IdLq5T9FRXmrWl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C89UAGcEN/1d17kRhhFTpVn3kLxukLiaXdKz33551BCdC8Wi3gZ+2iXzUlovBEFCq
-	 6W3tfZFMpLjuARvtbvr8Ja+czc1XRa7AlF2Vij5FxRGF+sxO/YdMuaDLKiLDTw/b/3
-	 8AgKlr+7v1zLxsEzZ+YMfA1BctH8aI/ONsGXYGEE=
-Date: Thu, 29 May 2025 11:07:25 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Xin Chen <quic_cxin@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	liulzhao@qti.qualcomm.com, quic_chejiang@quicinc.com,
-	zaiyongc@qti.qualcomm.com, quic_zijuhu@quicinc.com,
-	quic_mohamull@quicinc.com,
-	Panicker Harish <quic_pharish@quicinc.com>
-Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
- ttyport_close() due to uninitialized serport->tty
-Message-ID: <2025052926-net-economist-a016@gregkh>
-References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
- <2025043022-rumbling-guy-26fb@gregkh>
- <d388b471-482b-48ba-a504-694529535362@quicinc.com>
- <2025050851-splatter-thesaurus-f54e@gregkh>
- <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
- <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GjSyVNNh"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D39D3432F7;
+	Thu, 29 May 2025 09:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748509652;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mPkPFeJr+GG2QcllwMOxn9k+r0jQZG2uRhor86+okS8=;
+	b=GjSyVNNhLuWD0eGfSgz+3Na5WuC2OLzLh+5UnSJNzmVrch94OoeOIFQsbUUciQ5mVMulgU
+	+QFiWpUrs3eTBRdCWjtrqiIWAj36uYmsahEcEjnm8tOxk/lEiniaH/9BTj1vf5is09GDXs
+	QPbSLpgKtUIPgHaUY8tGCqdYrdu4eLsPs7hI6I/dU8hb065JCHL5il/ka5TewcMuDSQZq6
+	6IRdyaD40n/GlpN7kwPFjaCuPnEDyVd2PPjEwaSf0GTe3aHp05g1uua356TOMb1nwSn53v
+	/7x3obzzl3JCMiCjQRlmex//ESAt1MC5dqgiGZaIkGiEfRUE0TZPmFZNt9izoA==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: [PATCH v4 0/2] net: stmmac: prevent div by 0
+Date: Thu, 29 May 2025 11:07:22 +0200
+Message-Id: <20250529-stmmac_tstamp_div-v4-0-d73340a794d5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAMojOGgC/23N0QqCMBTG8VeJXbfYzjxqXfUeEbLNmYN04sYox
+ HdvCoGRl/8Pzu9MxJvRGk8uh4mMJlpvXZ8iOx6IbmX/MNTWqQkwQIYA1Ieuk7oKPshuqGobaYP
+ IOTQsZ3Am6W4YTWNfq3m7p26tD258ry8iX9avJna0yCmnSstSohQyK4qrci48bX/SriOLF2FrF
+ HsGJCPPBSBXQmEG/4bYGuWeISijCgGNrpu6zPSvMc/zB2EIctk8AQAA
+X-Change-ID: 20250522-stmmac_tstamp_div-f55112f06029
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Phil Reid <preid@electromag.com.au>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jose Abreu <Jose.Abreu@synopsys.com>, Yanteng Si <si.yanteng@linux.dev>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvheejfeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefvdelledtfeekudelvdekvdeuffduieevkedviedtgeefueehgfdvuedthfeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekheenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehpdhhvghloheplgduledvrdduieekrddurddvtdekngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtoheprhhitghhrghruggtohgthhhrrghnsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrt
+ ghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeflohhsvgdrtegsrhgvuhesshihnhhophhshihsrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehjohgrsghrvghusehshihnohhpshihshdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Fri, May 23, 2025 at 10:52:27AM +0800, Xin Chen wrote:
-> 
-> 
-> On 5/14/2025 5:14 PM, Xin Chen wrote:
-> > 
-> > 
-> > On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
-> >> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
-> >>>
-> >>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
-> >>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
-> >>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
-> >>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
-> >>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
-> >>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
-> >>>>>  {
-> >>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
-> >>>>>  	struct tty_struct *tty = serport->tty;
-> >>>>> +	if (!tty) {
-> >>>>> +		dev_err(&ctrl->dev, "tty is null\n");
-> >>>>> +		return;
-> >>>>> +	}
-> >>>>
-> >>>> What prevents tty from going NULL right after you just checked this?
-> >>>
-> >>> First sorry for reply so late for I have a long statutory holidays.
-> >>> Maybe I don't get your point. From my side, there is nothing to prevent it.
-> >>> Check here is to avoid code go on if tty is NULL.
-> >>
-> >> Yes, but the problem is, serport->tty could change to be NULL right
-> >> after you check it, so you have not removed the real race that can
-> >> happen here.  There is no lock, so by adding this check you are only
-> >> reducing the risk of the problem happening, not actually fixing the
-> >> issue so that it will never happen.
-> >>
-> >> Please fix it so that this can never happen.
-> >>
-> > 
-> > Actually I have never thought the race condition issue since the crash I met is
-> > not caused by race condition. It's caused due to Bluetooth driver call
-> > ttyport_close() after ttyport_open() failed. This two action happen one after
-> > another in one thread and it seems impossible to have race condition. And with
-> > my fix the crash doesn't happen again in several test of same case.
-> > 
-> > Let me introduce the complete process for you:
-> >   1) hci_dev_open_sync()->
-> > hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
-> > here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
-> > serdev_device_close() to close tty normally. And then call serdev_device_open()
-> > to retry.
-> >   2) serdev_device_open() fails due to tty_init_dev() fails, then tty gets
-> > released, which means this time the tty has been freed succesfully.
-> >   3) Return back to upper func  hci_dev_open_sync(),
-> > hdev->close()(hci_uart_close) is called. And hci_uart_close calls
-> > hci_uart_flush() and serdev_device_close(). serdev_device_close() tries to close
-> > tty again, it's calltrace is serdev_device_close()->ttyport_close()->tty_lock(),
-> > tty_unlock(), tty_release_struct(). The four funcs hci_uart_flush(), tty_lock(),
-> > tty_unlock(), tty_release_struct() read tty pointer's value, which is invalid
-> > and causes crash.
-> > 
-> 
-> Hi Greg, could you please take some time to review my reply?
+Hello,
+this small series aims to fix a small splat I am observing on a STM32MP157
+platform at boot (see commit 1) due to a division by 0.
+There is no functional change in this revision, this has just been
+rebased on top of net/main.
 
-I am not disputing the fact that there is a bug here, I'm just saying
-that you can't test for a value and then act on it without a lock
-protecting that action because the value can be changed right after you
-test for it.
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+---
+Changes in v4:
+- collect RB tags
+- rebased on net/main
+- Link to v3: https://lore.kernel.org/r/20250528-stmmac_tstamp_div-v3-0-b525ecdfd84c@bootlin.com
 
-You might not see this in your testing, as you have narrowed the window
-that the value can change, but you have not solved the issue properly,
-right?
+Changes in v3:
+- remove now duplicate check
+- add ptp_rate check in est_configure
+- Link to v2: https://lore.kernel.org/r/20250527-stmmac_tstamp_div-v2-1-663251b3b542@bootlin.com
 
-thanks,
+Changes in v2:
+- Add Fixes tag
+- Reword commit message to clarify the triggering cause of the issue
+- Link to v1: https://lore.kernel.org/r/20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com
 
-greg k-h
+---
+Alexis Lothoré (2):
+      net: stmmac: make sure that ptp_rate is not 0 before configuring timestamping
+      net: stmmac: make sure that ptp_rate is not 0 before configuring EST
+
+ drivers/net/ethernet/stmicro/stmmac/stmmac_est.c  | 5 +++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c  | 2 +-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+---
+base-commit: 271683bb2cf32e5126c592b5d5e6a756fa374fd9
+change-id: 20250522-stmmac_tstamp_div-f55112f06029
+
+Best regards,
+-- 
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
