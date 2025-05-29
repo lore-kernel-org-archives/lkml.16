@@ -1,357 +1,332 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE2F22D9E5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E8B22D9E5;
+	Thu, 29 May 2025 20:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748549737; cv=none; b=XAm5dji2o1apD4eTAvTYRFtNJ1/HHXe6QUshub703SpZvlSuZzAbnRiL0T5WML9MZh56Lj/VyEkB+/OYwCqvMm114L8iLeTelCengTspKX2kGKK5yo3bp1FKkN2TUheSaAYc3clvPpo38txvQwE+Ip8DLCIr6xnr9GcZ4dTTVbk=
+	t=1748549754; cv=none; b=V8nVWZ8jUynIuCeh09yo4C7CQr93Gk4CWyoLUo3FPCe683hI9wQcAnQKYRGWOqaosS5qTUDTX28pCP/jKYQF7rCS+M2oEocowPOMs8ZnelUY4CeYMP9CM5FiI9kMtnaQql7/6wHX681/nGCgZrz6sTBM+yRGUB9Riso/AJZ0fQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748549737; c=relaxed/simple;
-	bh=Kr6N3RdEcQ6qOp8AuQ+2hzxCOKfAwEN7T0lki38NTpQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=I5AoJ2dN+iHPu4VC7CxuQV+YtGQg7/lke/2pUeg16ClfeDWaHE93eTbUtm8ltVVi3udzS5Om40Lu1wZzBv5hdZSzbf752eYQCSawk7vCS5gnSBsEng4ySPCSRd4Q853V4rXFhjzA6qZM9TVoA7pyHHS14h9Q72P9sY2U7V7PyFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86cf9bad8e9so77625639f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:15:34 -0700 (PDT)
+	s=arc-20240116; t=1748549754; c=relaxed/simple;
+	bh=WxXg2OJ/R6QQZXtUX/npv0ZuHFj9HzFHD/6d2xxLGwU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iAOQhTKvSqoCFQyrnDNPC1jr0z9K6F/B7gP2Z51RBjFknKldQmqKjA4Yp1txZe8DpuyD1PVwIDMcDk/WLLWrQOtWpskaIjC2SecE6AMiRh5022PBJL0ISirbj2D07ayZQtuuOc5Uf1U8sMeHiefDpz9y2mWoq6pUW//EHZIHBXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D12ZSjbx; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D12ZSjbx"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86feb84877aso345662241.3;
+        Thu, 29 May 2025 13:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748549750; x=1749154550; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=feoDuyj3wm8ANzQm10okhE/r2LfgWDr6a+GGqveBvZg=;
+        b=D12ZSjbxtu+L9uynio7QTEVUvhNf2cteuHWBnNpC6VqNkVZV4Rrq/CynztGiY9cooz
+         SlHeX+YanJcz8LeGks6Ss5cEmcHSuPqTMi7Z9AU7bMx1IjZzqfN/N0w/Q7cok/q1JAoC
+         sp29xwPJ7W/mxtbE1v48JCYjR+IVwbbTYnl2Y5tDZYTRES5az+kIVISf5G3K11qASQfA
+         p9bg6eEfuSD792KufQwC734IhVMplCBBh5l91ohNl5H07T1ccF68D0fcuOdFksf4E0Kr
+         w3k29wXd3Z69Bgcf+UpQqurcP6IuKs7IDVPoLThffsNv/xK/P8rKDV+JSxqwyYaT1G6D
+         Xr9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748549734; x=1749154534;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HrRJGsn63w01bDekqTAtZlhnPOVEpZ6sNmTssiBfG+4=;
-        b=QChmHHzHKEWoB2WyXBgddbUuHvrWx/uq1vHL69JRqgz0SHJsOB2PNHX+X8As8clJBg
-         pBjRsD/1Va5fUGorn86uguaWUIeQ3wt62/efsJd4sigNKWzc/0PQQSpgEc/itKrg9yGV
-         9tF81C2vf+FGcfxng0tAUfeVG/fh7XJXSTl4EwN00DRQEt5kHRo9ZwOo72YmUSGnraNG
-         nXtXj4CRlasCe4+DU4+X4mSx3AzIsmlu1aCOUdYllgIY1MRVR3i0n7EeF4nAA0/pvwac
-         kuGXTpuQZ0jTwxNyZgPhtBPRGgLDCDZsK3RE2gopEdeI9jmCxcrNnSBC2WOnyRZzjfYk
-         7zjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW4eJBzMkrHjZ9u2n6JF3yXlH5GukIenQuXZolDuKSfdxo6MzXK9DhiTeXXo0GXGkfNFUoZqOU+E4Hlajk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3uAY3xNWWpMdF7ykdX9u+4cFreYUetWBbKxroaGBw2Dk4uYyj
-	zZ0sV0/Z8SKnzXRJmp+TpvqYJEMLdL6ANl1i5kOv0k17MuxSKynckOgEqhFotJULF+ZNudtV64H
-	t/6rrufmsb2LpjvP6DPpGNJY3XiVnReijARG/KROJF0KCgbxjN74LEqZrWxs=
-X-Google-Smtp-Source: AGHT+IFcqDwgrUMm0lF0xkNDRYJykHxQjZkm2QBU2kjCkceQoSYNp0X6N86jfXGVG5clwKuh5x+kkFNbNWSIXDdKxx86/jVpl9H7
+        d=1e100.net; s=20230601; t=1748549750; x=1749154550;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=feoDuyj3wm8ANzQm10okhE/r2LfgWDr6a+GGqveBvZg=;
+        b=q9B0/BkCKL+VwMw8xfPlwTH/BbPBZQ+dtRCczB7oEU2i5N1CspffwFfecjcFJFZ52E
+         tIKh5YxvGPKW8xNVVH4OOG5dTv0DyWkHwG0fhFnCUJ+bzujrmKc9E3DE1e6EZR2y+fPj
+         QcaFnYDsRoSxnepmDruigWM/B+NiOOBc6ZCUXIA+k1vm5f66fqVpkzQjg8KwO0S+4Air
+         uBsoMFKpoidiJyPxkVZQw80N/snjRk3q+RHIZOL6Hg2R5SHWv5dGZIlGhf0LLyFHc7xz
+         wbtXmV4tSxU9BvlPV8eHkyIm8uJeP8fvr67DgQSCA+2SaWLdPBhypClzsOCU8fF2BQBM
+         LHEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGMwc0L1qDsoxxpd2zNDw4M+gMG9ZFGmPiJCyVx0B80vlQjd1G3xjnasXkgquSg74o+8Gs9/jXaqQ=@vger.kernel.org, AJvYcCUpKzyAvncvtnsOfn8ahvrQnZR1LPYLiY2ZKamu3AVABXFbD1LMCMnOGZCytI++BoiPfNSQlExJBaHoiQI=@vger.kernel.org, AJvYcCXnHGvURlTP4dUfQhTSxZGiRRk+3E15wGPXJmClQSm2zBuaCu9pI/3j6HmAOhQIqqxUXY0NJwXqVcPst1EJ2zinNQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxycWUZszMama5JL9r3Bx9FHasxfEp0lQb/0SoLIE0NyoFJWt4F
+	8oSsPo3NPPIsRIcqz4JqBtf/WgFKgrZneDF/X1YtzPQ5ES5PPQKRVpEv
+X-Gm-Gg: ASbGnctz7cHxncgY8H+msJ1y2Kb6XKPjz1PctXBPnXdb4KBjD46Uij8Buiiv2/u20PV
+	pvHUXg/AEzBnnNABeE56rbDMypzrPrRnHxOJ/dIxotDQs0A4LrDj3Awqw/atdv/1yLkmwzvgEAQ
+	4itMr6lvzIdirVYmRHAhF7hzSMLYsB9le8QwrxcvqqeU8OBaYKg468X5bptznDbQ975lcuKAdYu
+	fST+5fkrc4fLUwVvCM6rJnQ1vtveMvC5q1kQ9wGuHkrQqtA4NKzqv/bm3jF3uxMSMvJ+y+M5D3D
+	lVPznBPowGUjwM1JDa/vwaRl+ZaHu8uxPOOjKcXNUv4KlziFjw==
+X-Google-Smtp-Source: AGHT+IGwAq3hjktBz6xGfJGBPKp4OnbEDRwsJ/PGkc5U8ZAIJddZqt/FeICNOUoTO2GiAb/IluXZUA==
+X-Received: by 2002:a05:6102:441a:b0:4e2:eb32:247c with SMTP id ada2fe7eead31-4e6e40f719dmr1420185137.8.1748549750224;
+        Thu, 29 May 2025 13:15:50 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e2a3b63besm1655803241.30.2025.05.29.13.15.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 13:15:49 -0700 (PDT)
+Date: Thu, 29 May 2025 17:15:44 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	"Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
+ remote core attachment
+Message-ID: <20250529201544.azoqdrgnlqfxi6mb@hiago-nb>
+References: <20250521041840.GB28017@nxa18884-linux>
+ <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
+ <20250523191713.nylhi74jq6z4hqmr@hiago-nb>
+ <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
+ <20250527000510.fofehmsdhifcwlys@hiago-nb>
+ <20250527023921.GA14252@nxa18884-linux>
+ <CAPDyKFqZkcaGfss=Oi+H9UERFU29jY2t5uTPnGVGQgSAJSeCoA@mail.gmail.com>
+ <20250527134525.f7yzs4ww64xxmjmr@hiago-nb>
+ <20250528173813.rxqu6pzqgu4m5joo@hiago-nb>
+ <PAXPR04MB845941FFF347274012A0ECA88866A@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1785:b0:3dc:757b:3fb3 with SMTP id
- e9e14a558f8ab-3dd99c5889dmr14448555ab.20.1748549734146; Thu, 29 May 2025
- 13:15:34 -0700 (PDT)
-Date: Thu, 29 May 2025 13:15:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6838c066.a70a0220.1765ec.018b.GAE@google.com>
-Subject: [syzbot] [dri?] possible deadlock in drm_mode_get_lease_ioctl (2)
-From: syzbot <syzbot+4784e928cc299a6dd040@syzkaller.appspotmail.com>
-To: airlied@gmail.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, simona@ffwll.ch, syzkaller-bugs@googlegroups.com, 
-	tzimmermann@suse.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB845941FFF347274012A0ECA88866A@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-Hello,
+On Thu, May 29, 2025 at 03:54:47AM +0000, Peng Fan wrote:
 
-syzbot found the following issue on:
+[...]
 
-HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=125f1170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=4784e928cc299a6dd040
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+> > We are making progress ;-)
+> > 
+> > With the patches you shared Ulf (I added them on top of the current
+> > master branch), it works as expected, dev_pm_genpd_is_on() returns 0
+> > when I boot the kernel without M4 running and it returns 1 when I
+> > boot the kernel with M4 running with a hello-world demo.
+> > 
+> > However now I tried to, if dev_pm_genpd_is_on() returns 1, put the
+> > DETACHED state, something as
+> > 
+> > if (dev_pm_genpd_is_on(priv->pd_list->pd_devs[0]))
+> > 	priv->rproc->state = RPROC_DETACHED;
+> > 
+> > In this case I used 0 because I understand this is the
+> > IMX_SC_R_M4_0_PID0 defined in my device tree overlay:
+> > 
+> > 		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
+> > 				<&pd IMX_SC_R_M4_0_MU_1A>;
+> > 
+> > But in this case, the kernel does not boot anymore, I see the "Starting
+> > kernel..." and nothing else.
+> 
+> Please add "earlycon" in bootargs to see where it hangs.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Thanks Peng! I was able to catch the kernel panic yesterday, however I
+must say that today I was doing the tests again and the issue is gone.
+Sorry, I might have done something wrong yesterday with the tests.
+Anyway, here is the log:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+[    1.271163] remoteproc remoteproc0: imx-rproc is available
+[    1.280296] remoteproc remoteproc0: attaching to imx-rproc
+[    1.285756] Unable to handle kernel paging request at virtual address ffff80005ae3dd79
+[    1.293624] Mem abort info:
+[    1.294655] mmc0: SDHCI controller on 5b010000.mmc [5b010000.mmc] using ADMA
+[    1.296386]   ESR = 0x0000000096000005
+[    1.307194]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.312473]   SET = 0, FnV = 0
+[    1.315566]   EA = 0, S1PTW = 0
+[    1.318649]   FSC = 0x05: level 1 translation fault
+[    1.323510] Data abort info:
+[    1.326370]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+[    1.331846]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.336882]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.342182] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000096bc1000
+[    1.348870] [ffff80005ae3dd79] pgd=0000000000000000, p4d=1000000097054003, pud=0000000000000000
+[    1.357565] Internal error: Oops: 0000000096000005 [#1]  SMP
+[    1.363198] Modules linked in:
+[    1.366236] CPU: 2 UID: 0 PID: 47 Comm: kworker/u16:3 Not tainted 6.15.0-03667-g3f5f09105c40-dirty #826 PREEMPT
+[    1.376405] Hardware name: Toradex Colibri iMX8QXP on Colibri Evaluation Board V3 (DT)
+[    1.384313] Workqueue: events_unbound deferred_probe_work_func
+[    1.390128] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    1.397076] pc : rproc_handle_resources.constprop.0+0x78/0x1d0
+[    1.402896] lr : rproc_boot+0x368/0x56c
+[    1.406717] sp : ffff8000819c3990
+[    1.410017] x29: ffff8000819c3990 x28: ffff80005ae3dd7d x27: 0000000000000000
+[    1.417145] x26: 0000000000000000 x25: ffff0000015ec038 x24: ffff800080f0c0a8
+[    1.424268] x23: ffff8000813a6110 x22: 00000000d999ad79 x21: ffff0000015ec000
+[    1.431392] x20: 0000000026665683 x19: ffff80005ae3dd79 x18: 0000000000000006
+[    1.438516] x17: ffff000001799400 x16: ffff000001798e00 x15: 4addd15cca11c529
+[    1.445639] x14: 53ebce6d5564d787 x13: 4addd15cca11c529 x12: 53ebce6d5564d787
+[    1.452763] x11: 95a1e33b6b190674 x10: 9e3c9abdb41ca345 x9 : ab17b4eaffd6fd1c
+[    1.459887] x8 : d5da055de4cfbb87 x7 : dfd7fa31596acbbc x6 : 9946d97107d0dcca
+[    1.467011] x5 : ffff0000010c7800 x4 : 00000000000003fc x3 : ffff0000010c7780
+[    1.474134] x2 : fffffffffffffff0 x1 : ffff8000814a3000 x0 : ffff8000814a3000
+[    1.481261] Call trace:
+[    1.483690]  rproc_handle_resources.constprop.0+0x78/0x1d0 (P)
+[    1.487705] mmc0: new HS400 MMC card at address 0001
+[    1.489502]  rproc_boot+0x368/0x56c
+[    1.495349] mmcblk0: mmc0:0001 Q2J55L 7.09 GiB
+[    1.497929]  rproc_add+0x184/0x190
+[    1.504356]  mmcblk0: p1 p2
+[    1.505747]  imx_rproc_probe+0x458/0x528
+[    1.509238] mmcblk0boot0: mmc0:0001 Q2J55L 16.0 MiB
+[    1.512437]  platform_probe+0x68/0xc0
+[    1.512452]  really_probe+0xc0/0x38c
+[    1.520584] mmcblk0boot1: mmc0:0001 Q2J55L 16.0 MiB
+[    1.520951]  __driver_probe_device+0x7c/0x15c
+[    1.527522] mmcblk0rpmb: mmc0:0001 Q2J55L 4.00 MiB, chardev (242:0)
+[    1.529377]  driver_probe_device+0x3c/0x10c
+[    1.544263]  __device_attach_driver+0xbc/0x158
+[    1.548586]  bus_for_each_drv+0x84/0xe0
+[    1.552407]  __device_attach+0x9c/0x1ac
+[    1.556231]  device_initial_probe+0x14/0x20
+[    1.560401]  bus_probe_device+0xac/0xb0
+[    1.564221]  deferred_probe_work_func+0x9c/0xec
+[    1.568741]  process_one_work+0x14c/0x28c
+[    1.572735]  worker_thread+0x2cc/0x3d4
+[    1.576473]  kthread+0x12c/0x208
+[    1.579687]  ret_from_fork+0x10/0x20
+[    1.583253] Code: 8b36c033 9100127c 54000924 d503201f (b9400261)
+[    1.589337] ---[ end trace 0000000000000000 ]---
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4784e928cc299a6dd040@syzkaller.appspotmail.com
+But again, the issue is not happening anymore ;-) I will keep testing to
+see if the issue happens again, but for now is working fine, I can now
+attach to the remote processor.
 
-XFS (loop4): Ending clean mount
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 Not tainted
-------------------------------------------------------
-syz.4.374/8650 is trying to acquire lock:
-ffff0000d13456d0 (&mm->mmap_lock){++++}-{4:4}, at: __might_fault+0x9c/0x124 mm/memory.c:7150
+This is the git diff on top of Ulf patches I have been testing:
 
-but task is already holding lock:
-ffff0000c9ae65d0 (&dev->mode_config.idr_mutex){+.+.}-{4:4}, at: drm_mode_get_lease_ioctl+0x1c8/0x53c drivers/gpu/drm/drm_lease.c:660
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index 6da25e2c81d2..661a6aad40a8 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -599,6 +599,23 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
+ 
++bool dev_pm_genpd_is_on(struct device *dev)
++{
++        struct generic_pm_domain *genpd;
++        bool is_on;
++
++        genpd = dev_to_genpd_safe(dev);
++        if (!genpd)
++                return false;
++
++        genpd_lock(genpd);
++        is_on = genpd_status_on(genpd);
++        genpd_unlock(genpd);
++
++        return is_on;
++}
++EXPORT_SYMBOL_GPL(dev_pm_genpd_is_on);
++
+ /**
+  * dev_pm_genpd_set_next_wakeup - Notify PM framework of an impending wakeup.
+  *
+diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+index 627e57a88db2..9688370f9bb5 100644
+--- a/drivers/remoteproc/imx_rproc.c
++++ b/drivers/remoteproc/imx_rproc.c
+@@ -18,6 +18,7 @@
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
++#include <linux/pm_runtime.h>
+ #include <linux/reboot.h>
+ #include <linux/regmap.h>
+ #include <linux/remoteproc.h>
+@@ -891,9 +892,7 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+ {
+ 	struct device *dev = priv->dev;
+ 	int ret;
+-	struct dev_pm_domain_attach_data pd_data = {
+-		.pd_flags = PD_FLAG_DEV_LINK_ON,
+-	};
++	bool test;
+ 
+ 	/*
+ 	 * If there is only one power-domain entry, the platform driver framework
+@@ -902,7 +901,16 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+ 	if (dev->pm_domain)
+ 		return 0;
+ 
+-	ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
++	ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
++	printk("hfranco: returned pd devs is %d", ret);
++	for (int i = 0; i < ret; i++) {
++		test = dev_pm_genpd_is_on(priv->pd_list->pd_devs[i]);
++		printk("hfranco: returned value is %d", test);
++		if (test) {
++			priv->rproc->state = RPROC_DETACHED;
++			break;
++		}
++	}
+ 	return ret < 0 ? ret : 0;
+ }
+ 
+@@ -1146,6 +1154,9 @@ static int imx_rproc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	pm_runtime_enable(dev);
++	pm_runtime_get_sync(dev);
++
+ 	ret = rproc_add(rproc);
+ 	if (ret) {
+ 		dev_err(dev, "rproc_add failed\n");
+diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
+index 756b842dcd30..16d1fca2a8c5 100644
+--- a/include/linux/pm_runtime.h
++++ b/include/linux/pm_runtime.h
+@@ -95,6 +95,7 @@ extern void pm_runtime_put_suppliers(struct device *dev);
+ extern void pm_runtime_new_link(struct device *dev);
+ extern void pm_runtime_drop_link(struct device_link *link);
+ extern void pm_runtime_release_supplier(struct device_link *link);
++bool dev_pm_genpd_is_on(struct device *dev);
 
-which lock already depends on the new lock.
+ int devm_pm_runtime_set_active_enabled(struct device *dev);
+ extern int devm_pm_runtime_enable(struct device *dev);
 
+This is the rproc output when bootaux is used:
 
-the existing dependency chain (in reverse order) is:
+root@colibri-imx8x-07308754:~# dmesg | grep hfranco
+[    0.478475] hfranco: returned pd devs is 2
+[    0.478496] hfranco: returned value is 1
+root@colibri-imx8x-07308754:~# dmesg | grep rproc
+[    0.478797] remoteproc remoteproc0: imx-rproc is available
+[    0.478878] remoteproc remoteproc0: attaching to imx-rproc
+[    0.478961] remoteproc remoteproc0: remote processor imx-rproc is now attached
 
--> #5 (&dev->mode_config.idr_mutex){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_mode_object_add+0xa8/0x1f0 drivers/gpu/drm/drm_mode_object.c:47
-       drm_framebuffer_init+0x14c/0x2bc drivers/gpu/drm/drm_framebuffer.c:875
-       drm_gem_fb_init drivers/gpu/drm/drm_gem_framebuffer_helper.c:82 [inline]
-       drm_gem_fb_init_with_funcs+0xa60/0xda4 drivers/gpu/drm/drm_gem_framebuffer_helper.c:202
-       drm_gem_fb_create_with_funcs drivers/gpu/drm/drm_gem_framebuffer_helper.c:245 [inline]
-       drm_gem_fb_create+0x84/0xd4 drivers/gpu/drm/drm_gem_framebuffer_helper.c:286
-       drm_internal_framebuffer_create+0xfcc/0x19dc drivers/gpu/drm/drm_framebuffer.c:304
-       drm_mode_addfb2+0xac/0x2a0 drivers/gpu/drm/drm_framebuffer.c:338
-       drm_client_buffer_addfb drivers/gpu/drm/drm_client.c:386 [inline]
-       drm_client_framebuffer_create+0x2d0/0x55c drivers/gpu/drm/drm_client.c:428
-       drm_fbdev_shmem_driver_fbdev_probe+0x180/0x70c drivers/gpu/drm/drm_fbdev_shmem.c:151
-       drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1649 [inline]
-       __drm_fb_helper_initial_config_and_unlock+0xf94/0x159c drivers/gpu/drm/drm_fb_helper.c:1829
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+I will cleanup everything and try to come up with a patch. Ulf, in this
+case, as your patches have not yet been merged, should I wait for them?
 
--> #4 (&helper->lock){+.+.}-{4:4}:
-       __mutex_lock_common+0x1d0/0x2190 kernel/locking/mutex.c:601
-       __mutex_lock kernel/locking/mutex.c:746 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:798
-       __drm_fb_helper_restore_fbdev_mode_unlocked+0x74/0x198 drivers/gpu/drm/drm_fb_helper.c:228
-       drm_fb_helper_set_par+0xa4/0x108 drivers/gpu/drm/drm_fb_helper.c:1359
-       fbcon_init+0xe4c/0x1d18 drivers/video/fbdev/core/fbcon.c:1112
-       visual_init+0x27c/0x540 drivers/tty/vt/vt.c:1011
-       do_bind_con_driver+0x7b8/0xdd8 drivers/tty/vt/vt.c:3831
-       do_take_over_console+0x824/0x97c drivers/tty/vt/vt.c:4397
-       do_fbcon_takeover+0x158/0x25c drivers/video/fbdev/core/fbcon.c:548
-       do_fb_registered drivers/video/fbdev/core/fbcon.c:2989 [inline]
-       fbcon_fb_registered+0x354/0x4c8 drivers/video/fbdev/core/fbcon.c:3009
-       do_register_framebuffer drivers/video/fbdev/core/fbmem.c:449 [inline]
-       register_framebuffer+0x44c/0x5ec drivers/video/fbdev/core/fbmem.c:515
-       __drm_fb_helper_initial_config_and_unlock+0x103c/0x159c drivers/gpu/drm/drm_fb_helper.c:1851
-       drm_fb_helper_initial_config+0x3c/0x58 drivers/gpu/drm/drm_fb_helper.c:1916
-       drm_fbdev_client_hotplug+0x154/0x22c drivers/gpu/drm/clients/drm_fbdev_client.c:52
-       drm_client_register+0x13c/0x1d4 drivers/gpu/drm/drm_client.c:140
-       drm_fbdev_client_setup+0x194/0x3d0 drivers/gpu/drm/clients/drm_fbdev_client.c:159
-       drm_client_setup+0x78/0x140 drivers/gpu/drm/clients/drm_client_setup.c:39
-       vkms_create drivers/gpu/drm/vkms/vkms_drv.c:218 [inline]
-       vkms_init+0x4b8/0x5ac drivers/gpu/drm/vkms/vkms_drv.c:242
-       do_one_initcall+0x250/0x990 init/main.c:1257
-       do_initcall_level+0x154/0x214 init/main.c:1319
-       do_initcalls+0x84/0xf4 init/main.c:1335
-       do_basic_setup+0x8c/0xa0 init/main.c:1354
-       kernel_init_freeable+0x2dc/0x444 init/main.c:1567
-       kernel_init+0x24/0x1dc init/main.c:1457
-       ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
+Thanks for all the help guys.
 
--> #3 (console_lock){+.+.}-{0:0}:
-       console_lock+0x194/0x1ec kernel/printk/printk.c:2849
-       __bch2_print_string_as_lines fs/bcachefs/util.c:267 [inline]
-       bch2_print_string_as_lines+0x34/0x150 fs/bcachefs/util.c:286
-       bucket_ref_update_err+0x1c8/0x21c fs/bcachefs/buckets.c:417
-       bch2_bucket_ref_update+0x3d8/0x888 fs/bcachefs/buckets.c:-1
-       __mark_pointer fs/bcachefs/buckets.c:572 [inline]
-       bch2_trigger_pointer fs/bcachefs/buckets.c:618 [inline]
-       __trigger_extent+0xd90/0x35fc fs/bcachefs/buckets.c:763
-       bch2_trigger_extent+0x3e4/0x78c fs/bcachefs/buckets.c:881
-       run_one_trans_trigger fs/bcachefs/btree_trans_commit.c:-1 [inline]
-       bch2_trans_commit_run_triggers fs/bcachefs/btree_trans_commit.c:550 [inline]
-       __bch2_trans_commit+0x7e8/0x62d0 fs/bcachefs/btree_trans_commit.c:990
-       bch2_trans_commit fs/bcachefs/btree_update.h:195 [inline]
-       bch2_extent_update+0x2d8/0x7e8 fs/bcachefs/io_write.c:353
-       bch2_fpunch_at+0x4dc/0x98c fs/bcachefs/io_misc.c:187
-       __bch2_resume_logged_op_truncate+0x340/0x4b4 fs/bcachefs/io_misc.c:265
-       bch2_truncate+0x144/0x1e4 fs/bcachefs/io_misc.c:300
-       bchfs_truncate+0x648/0xa70 fs/bcachefs/fs-io.c:509
-       bch2_setattr+0x198/0x20c fs/bcachefs/fs.c:1245
-       notify_change+0x9a4/0xc50 fs/attr.c:552
-       do_truncate+0x178/0x1f0 fs/open.c:65
-       handle_truncate fs/namei.c:3501 [inline]
-       do_open fs/namei.c:3884 [inline]
-       path_openat+0x25a0/0x2c40 fs/namei.c:4039
-       do_filp_open+0x18c/0x36c fs/namei.c:4066
-       do_sys_openat2+0x11c/0x1b4 fs/open.c:1429
-       do_sys_open fs/open.c:1444 [inline]
-       __do_sys_openat fs/open.c:1460 [inline]
-       __se_sys_openat fs/open.c:1455 [inline]
-       __arm64_sys_openat+0x120/0x158 fs/open.c:1455
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> 
+> > 
+> > I am using the pm_runtime functions before rproc_add():
+> > 
+> > @@ -1146,6 +1154,9 @@ static int imx_rproc_probe(struct
+> > platform_device *pdev)
+> >                 }
+> >         }
+> > 
+> > +       pm_runtime_enable(dev);
+> > +       pm_runtime_get_sync(dev);
+> 
+> I think only make this apply for i.MX8QX/8QM/DX, then no
+> impact to other patforms.
 
--> #2 (bcachefs_btree){+.+.}-{0:0}:
-       trans_set_locked+0x94/0x200 fs/bcachefs/btree_locking.h:198
-       bch2_trans_begin+0x6f8/0xa40 fs/bcachefs/btree_iter.c:3288
-       bch2_read_err_msg_trans+0x64/0x298 fs/bcachefs/io_read.c:346
-       __bch2_read_extent+0x21fc/0x3694 fs/bcachefs/io_read.c:975
-       bch2_read_extent fs/bcachefs/io_read.h:140 [inline]
-       bchfs_read+0x1178/0x17dc fs/bcachefs/fs-io-buffered.c:226
-       bch2_readahead+0xa18/0xd88 fs/bcachefs/fs-io-buffered.c:316
-       read_pages+0x13c/0x4c8 mm/readahead.c:160
-       page_cache_ra_order+0x7b8/0xb34 mm/readahead.c:515
-       do_sync_mmap_readahead+0x2f0/0x660 mm/filemap.c:-1
-       filemap_fault+0x600/0x1278 mm/filemap.c:3403
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2cb0/0x4d18 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1dd4/0x30d8 mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+All right, I will check how to do this. Thanks.
 
--> #1 (mapping.invalidate_lock#4){.+.+}-{4:4}:
-       down_read+0x58/0x2f8 kernel/locking/rwsem.c:1524
-       filemap_invalidate_lock_shared include/linux/fs.h:922 [inline]
-       filemap_fault+0x564/0x1278 mm/filemap.c:3391
-       bch2_page_fault+0x2cc/0x700 fs/bcachefs/fs-io-pagecache.c:594
-       __do_fault+0xf8/0x498 mm/memory.c:5098
-       do_read_fault mm/memory.c:5518 [inline]
-       do_fault mm/memory.c:5652 [inline]
-       do_pte_missing mm/memory.c:4160 [inline]
-       handle_pte_fault mm/memory.c:5997 [inline]
-       __handle_mm_fault mm/memory.c:6140 [inline]
-       handle_mm_fault+0x2cb0/0x4d18 mm/memory.c:6309
-       faultin_page mm/gup.c:1193 [inline]
-       __get_user_pages+0x1dd4/0x30d8 mm/gup.c:1491
-       populate_vma_page_range+0x218/0x2e8 mm/gup.c:1929
-       __mm_populate+0x208/0x330 mm/gup.c:2032
-       mm_populate include/linux/mm.h:3487 [inline]
-       vm_mmap_pgoff+0x378/0x43c mm/util.c:584
-       ksys_mmap_pgoff+0x394/0x5b8 mm/mmap.c:607
-       __do_sys_mmap arch/arm64/kernel/sys.c:28 [inline]
-       __se_sys_mmap arch/arm64/kernel/sys.c:21 [inline]
-       __arm64_sys_mmap+0xf8/0x110 arch/arm64/kernel/sys.c:21
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> 
+> Regards,
+> Peng
 
--> #0 (&mm->mmap_lock){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain kernel/locking/lockdep.c:3909 [inline]
-       __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
-       lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
-       __might_fault+0xc4/0x124 mm/memory.c:7151
-       drm_mode_get_lease_ioctl+0x2bc/0x53c drivers/gpu/drm/drm_lease.c:673
-       drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
-       drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
-       vfs_ioctl fs/ioctl.c:51 [inline]
-       __do_sys_ioctl fs/ioctl.c:906 [inline]
-       __se_sys_ioctl fs/ioctl.c:892 [inline]
-       __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
-       __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
-       el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
-       el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
-       el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-other info that might help us debug this:
-
-Chain exists of:
-  &mm->mmap_lock --> &helper->lock --> &dev->mode_config.idr_mutex
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&dev->mode_config.idr_mutex);
-                               lock(&helper->lock);
-                               lock(&dev->mode_config.idr_mutex);
-  rlock(&mm->mmap_lock);
-
- *** DEADLOCK ***
-
-1 lock held by syz.4.374/8650:
- #0: ffff0000c9ae65d0 (&dev->mode_config.idr_mutex){+.+.}-{4:4}, at: drm_mode_get_lease_ioctl+0x1c8/0x53c drivers/gpu/drm/drm_lease.c:660
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 8650 Comm: syz.4.374 Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- print_circular_bug+0x324/0x32c kernel/locking/lockdep.c:2079
- check_noncircular+0x154/0x174 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain kernel/locking/lockdep.c:3909 [inline]
- __lock_acquire+0x1728/0x3058 kernel/locking/lockdep.c:5235
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- __might_fault+0xc4/0x124 mm/memory.c:7151
- drm_mode_get_lease_ioctl+0x2bc/0x53c drivers/gpu/drm/drm_lease.c:673
- drm_ioctl_kernel+0x238/0x310 drivers/gpu/drm/drm_ioctl.c:796
- drm_ioctl+0x65c/0xa5c drivers/gpu/drm/drm_ioctl.c:893
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __arm64_sys_ioctl+0x14c/0x1c4 fs/ioctl.c:892
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-netlink: 60 bytes leftover after parsing attributes in process `syz.4.374'.
-netlink: 72 bytes leftover after parsing attributes in process `syz.4.374'.
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+Hiago.
