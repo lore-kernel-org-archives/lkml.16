@@ -1,55 +1,44 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A7E13AC1;
-	Thu, 29 May 2025 18:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF808230264
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748542448; cv=none; b=N111FsRrPrmIFM6ln+Pw6fhvgdlWVNHz3p0uzEm06WIRgCLqYv/MnNY+J0Ui6HX0+g/6AV78t6mpMoRS3bZHgj9B8K48L7RqgAW3Nan0ZK9uoxxRxg02AjYpobPsu3WqTTpNffP/fPRNloUdAs5/eVrdHsT5N+lduPaWp0eo+2g=
+	t=1748542452; cv=none; b=EyKHHtEWfiC8SetBn4WQ5Xgrh14aUb/PFZONRqxbS8lUjcgg1n4XllF7nQeXbJs1ZnZnqgz8Asvc/TeRVQnHo+VjzfA6EZXKYcqpaw5CSNEf5Fi4B9gIlkLZ+kedSe31h/r9uc02WVKyosA0GQlEBYznVirXBX4d3rHrNN+TZO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748542448; c=relaxed/simple;
-	bh=6O2VD6LXcRM/QwPKUe63xCyjwAs/FrdfI3pExnZTb14=;
+	s=arc-20240116; t=1748542452; c=relaxed/simple;
+	bh=NemdL54bnOcp0tP6a+ElySUO8zbK/K1HzrBb2hqa4yE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bO4CWQVdbTq+i0+bzoxiNGqvsBCDNfcQkDnbnbfOw9osUhlXQ778UWhivmz6bPVY3Op1kHJhIAk858HADJEUGqXoLGZgh8I7ZkFSK51Lwt3kbpiLSwZ+1wAbN2+59go24bUt9BDTj622QWiOzIhuHfIb6LevsM8UWQlZDjuplv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A4O80ONX; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ReTra0AJfZVoB4GY6ZXiW04OFVzBseaIiIFeS0NKHXEG9ygp5Byib4BETrWYOowNdMgeqM9jZd2uf0nX70l/1w0Cqz1Vppvari6yaNA7tYFtRnkyyPFXFYWif5A0cCecMKzajUvNQd5jW3M+qJHvrL9+ab6TYeFtaYaWx8DnTLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sbjEQdxp; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A4O80ONX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=JsHVVGE7ieSHfCbQBVFyFeTA0LwLqupquZVk14tO7oA=; b=A4O80ONX6IHwk3u4GHiU4vvuRp
-	l74f6fcZygTPkGEitrjnrrS1bZlJ/L7suMys+yaEDzTZ9MHINyOmfMRGAMwXtlGzgECZMEUH+2rGd
-	pz3o8QwO38kr5QQmKrD23Ec83ZQEBQ6DhD315iQZoLqAohU8XaL8ary0zSgeVs/txpFflKzWQsayL
-	kQlnSWT99/SM8WoKyNmFQwn+TGivm6T8r1kWBj5tF78uGkmoltkyDYeFhqdC4LZ7Tq2FP+CP2tTn6
-	16AHInBnbO6vT5bOJZoPChoZs0IMncGgoLdoJWQ8J6wM+EtoYULvfoxosK/vBxm9bD/zS4vixdBr7
-	zTWX7t5A==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKhlO-0000000F03Z-04m6;
-	Thu, 29 May 2025 18:13:58 +0000
-Date: Thu, 29 May 2025 19:13:57 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <aDij5brAsGJVHCFK@casper.infradead.org>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
- <aDh9LtSLCiTLjg2X@casper.infradead.org>
- <c7fqqny5yv7smhxnxe5o4rc2wepmc6uei76teymfhxoana34nk@sfqnc2qclf23>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sbjEQdxp"
+Date: Thu, 29 May 2025 11:13:31 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748542437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AX+Z+FU7v3e67d6zdoj3TbbyWOI/VVebECq9cL7CD2s=;
+	b=sbjEQdxp2oh7NLmxDQfyE3K6ahSO5JIX4xvan1uNCVM+YUU6vqzQBNHtoX7/RYvpJhldEQ
+	hAWVaJuERmfTZkudZNofLJj7eCfCiUbSszeKfrJ5g7KXWSaEjZySh8oaJUBGOW8FRrUFSX
+	7Cdcyqh2TpNbGRcihf/J11DMxdCV+sw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
+	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Hongyu Ning <hongyu.ning@linux.intel.com>, stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>, 
+	Hannes Reinecke <hare@suse.de>, Johannes Thumshirn <johannes.thumshirn@wdc.com>, 
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
+Message-ID: <fhpxqctusqtn5cpyihf6z2esmujofi2ra7gknelms2ta4p2riv@3s7bxucy6quf>
+References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,36 +47,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c7fqqny5yv7smhxnxe5o4rc2wepmc6uei76teymfhxoana34nk@sfqnc2qclf23>
+In-Reply-To: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 29, 2025 at 10:54:34AM -0700, Shakeel Butt wrote:
-> On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
-> > People should put more effort into allocating THPs automatically and
-> > monitoring where they're helping performance and where they're hurting
-> > performance,
+On Thu, May 29, 2025 at 01:38:32PM +0300, Kirill A. Shutemov wrote:
+> Hongyu noticed that the nr_unaccepted counter kept growing even in the
+> absence of unaccepted memory on the machine.
 > 
-> Can you please expand on people putting more effort? Is it about
-> workloads or maybe malloc implementations (tcmalloc, jemalloc) being
-> more intelligent in managing their allocations/frees to keep more used
-> memory in hugepage aligned regions? And conveying to kernel which
-> regions they prefer hugepage backed and which they do not? Or something
-> else?
-
-We need infrastructure inside the kernel to monitor whether a task is
-making effective use of the THPs that it has, and if it's not then move
-those THPs over to where they will be better used.
-
-I don't necessarily object to userspace giving hints like "I think I'm
-going to use all of this 20MB region quite heavily", but the kernel should
-treat those hints with the appropriate skepticism, otherwise it's just
-a turbo button that nobody would ever _not_ press.
-
-> > instead of coming up with these baroque reasons to blame
-> > the sysadmin for not having tweaked some magic knob.
+> This happens due to a commit that removed NR_BOUNCE: it removed the
+> counter from the enum zone_stat_item, but left it in the vmstat_text
+> array.
 > 
-> To me this is not about blaming sysadmin but more about sysadmin wanting
-> more fine grained control on THP allocation policies for different
-> workloads running in a multi-tenant environment.
+> As a result, all counters below nr_bounce in /proc/vmstat are
+> shifted by one line, causing the numa_hit counter to be labeled as
+> nr_unaccepted.
+> 
+> To fix this issue, remove nr_bounce from the vmstat_text array.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+> Fixes: 194df9f66db8 ("mm: remove NR_BOUNCE zone stat")
+> Cc: stable@vger.kernel.org
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Hannes Reinecke <hare@suse.de>
+> Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
 
-That's the same thing.  Linux should be auto-tuning, not relying on some
-omniscient sysadmin to fix it up.
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+
+Can we put BUILD_BUG_ON() to avoid this situation in the future?
+
