@@ -1,113 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5602B1386DA;
-	Thu, 29 May 2025 20:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231FC1386DA;
+	Thu, 29 May 2025 20:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748551604; cv=none; b=lh66lg4XY8JZvKOG1llBIbhGkg2/3zKMq3qR+qR10YjQzOqXk50kN89Uz1J5IBdPOsDkS02qhZ11xk75L4CV7Evw4n4y6KAutumt19xpUzSFe5FTKrQ1oriR/KLJKoeei53losTPcbw9eca8nvtA4xw8dMcAxhEb7T0/Op6riw4=
+	t=1748551725; cv=none; b=kwrvnJTAByVyrct9QcsbCLMI2iXla4LGGXR9fFLUxvoL/ZDVfzgTiN/zQZwEa0g5memviXxZ9GrjLsR3RzG+ISGd22U5Uif3o/a7Suu/BmX4NXOCaQ3N+5l9C1JremFcYr5QvITZfRLN0IujIIBGJGrhxBCIAY8Dc664Cb24b/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748551604; c=relaxed/simple;
-	bh=nqhtusXOAD2ESeOvweDuRBGoLYSqb/NiBJlRY1flv78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TL0IaHxlfCeMHCAMQm3X69L7WzNKNZ+tl3ppnW77POXS2q/7RYxTNHLKGtONHRaysUSGp4Qy2jLaMeiQPFukjvKtZsMCJW9pHCEmRDFdm74J18ML9x7UUtnRuyuhlbkKi5UzZEXlzuU7xEyYD6wQVDHDvHKjkgICnA/sF1YVte4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxke7jHG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748551725; c=relaxed/simple;
+	bh=wxXnLfUrQMikEhxWsI2v5WrZK3UXkyQi5eN5iad6nPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4gA+1e0IDS1rVUDta8VSkD71tc/ZetpewTyijxvOv6WfFgkSdElQ3ggy3VPT1LLBFLdNzWWvtFPmJuj4ojy1kWk47DZz5kCHainFtnetVmr1IFh3/CK/3BX+333Gq3zCQs+sbkL6IaFm+JPUkrJzqCHWStiqo2q0lfftgTPFIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BP6K6QCn; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lxke7jHG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56AF8C4CEE7;
-	Thu, 29 May 2025 20:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748551603;
-	bh=nqhtusXOAD2ESeOvweDuRBGoLYSqb/NiBJlRY1flv78=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lxke7jHGpm4yTEelzwyCqQaIX27UmhKUUJef3W6qBcN65mL2Jc9phGQDQzp8DLHN1
-	 a4yIgsBwpwiY8E5JQPtS9L0n2zCob4Ht/PjdITRmWShTBFZjqirJo1hXoQKHqwnXJt
-	 1OCo49FwINd0k8OhfiCSn49iSn8TGMb5O7T0982p65eA4xVx2Giec9nbI/Ghq6aYtf
-	 MH+9uPKWZnlyJKsh5Vs/c/ANXInc81QkFZhacqPV2BAujJl0qfYLBgma+CWJqPABtx
-	 TZAeghZlz2PL8jJOZFVTKgynBuzW/4UzU0Zdt7INeKP4vg3lrAE5tnNxKZEAon/7TB
-	 vE3Ay4oUY2txA==
-Date: Thu, 29 May 2025 17:46:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-Message-ID: <aDjHsJqV7L24qjvT@x1>
-References: <20250522142551.1062417-1-namhyung@kernel.org>
- <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
- <aC9VoTL_Cv4R7J-j@x1>
- <aC-hHTgArwlF_zu9@x1>
- <aDDy4FQe7sBwECL8@google.com>
- <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BP6K6QCn"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-441ab63a415so14809225e9.3;
+        Thu, 29 May 2025 13:48:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748551722; x=1749156522; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2qIpcYfA1//GAtmsBWG/5uUEcJigGm+o9jyY6nduW1k=;
+        b=BP6K6QCnDqbPpD2SuTmQHYoKjwNGTmMf5qSUx7jtmUET7T0h1BA4FvBtT015hVzIGB
+         cPLc8SFqYB7vPh6FwDcJ+F0y53gl8cDuLr/xtFjhHeZwIcLhbHGF2RjyAs0iAhOE4zKO
+         xApGdN72x1tqCJBlligU/TLuLOyE7unXdZgrBZgUD3mYzhe+8jN7s4RZneqLR6LZpnIc
+         RQ6epJfHiPRtZnjebzhsHsw5r1CccwPLHMJFzLSZD1xRZuwiUbMdkRTrma68nt6KiLcH
+         5Wmr+mk/qTO2b9tW0ZI7psHTOz/61dXMJugV3JrC/C8hh9qvzasNyFNkakxtgQ1E3Gb3
+         wj0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748551722; x=1749156522;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2qIpcYfA1//GAtmsBWG/5uUEcJigGm+o9jyY6nduW1k=;
+        b=hCzNn94NRxx5l4rHr3HsAcZD+8DCPjzF8YUhhoN1OvSaYE9m9SQS3QR23iSn0WtXKA
+         nNcf+lafWjXreFCKtaWuXt69nzlNN/CZoSeW+BkALx2Rd5XS8A1Ocp9ivU4AICEEmSLc
+         0XH4KySVzHxoKqsxaevE7PtXRiiBhHucRXxJUdOSvOC0HAR7LuKBJMDUqeIoy/J6VpMe
+         XbPfvU0/fZQxyEgex5D7IpjK/MFOeBXFQBpL8IBEph4L9DRFJyzTGgvm+rbO1Aco+/BF
+         gTdhrnwQfVrfMilt8DaoiN9UopPgDSUJl+Hxm8HMvTV8xyjxO67tPj0CmpIdDO81FrDI
+         hQ9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUxK/uQxkMs3ehuueusmTuWzrOLCxNAPDL1Bbf3pNSTdeaKuGZADKO7pwOweRXcQRHWeJ8=@vger.kernel.org, AJvYcCVpoJCfORmCeU4bCU2MXjNYh9sCYb/P5dwTQunQS3pdu51U84EHiV6eQ5e9a1sp4N+zyXs4QDV5R1tk4g==@vger.kernel.org, AJvYcCWZjM7hOcDfne+m4qVvIfQasUzlRpT8VmC7FQZuPtvtESbiNDehYvqCtci6FTGKFYulHYJMxxgZC/t7BhlA@vger.kernel.org, AJvYcCXGAxqNjcBZhsEXYhCx6WCCJDmWzQ1sMA+axg3KxYk6adaHh41N0cJMwFO8EXHc2Oxugiy8Lc8f@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYVxN/KroHpa3JTR/ED4SMy/s5CnV36vy0Y4yRV4gypId6Z7dF
+	gReya0Xj1CJtkYqeZllm5JPYw0DjvjiEOF21xnR4ZoHOXUNSe6njEPQc
+X-Gm-Gg: ASbGnct8sFgvvspRGSr6Uq9GQCTjalAQRXESuQhJC5SKxhtkKUVYT2Q4kIXamYAOaVP
+	zg/xRPSbiepT5JZhiB2JUsSJe3NqLq54U6MPBUQ5agsOdmhj05rUlnG3a9pZtgY/1vDgLbITtsE
+	zw7aWSvsl89d1uVrg+5OhZZzDA2FiZqh3gNO/NMI90NlahqlgHpfTt0OQq6LDXpgSLKaUCQRSgd
+	JyCBTtkEEmUAK5aQqTUI/RJr7uUNaNbv0UufERUfCzKbwEGxTZTNBtUfoFyDRLlAoWBSn8OIOCW
+	dW/rzKJtL/a+cNGl/fDKIn9xsfuXEee5IWOZmtyx47A5aHBtlTh8qZ5/Q7jqUQ==
+X-Google-Smtp-Source: AGHT+IEn+9dMRrH8DN/e6Mt7FBhNbDQtsoQnNYsnfAv7aLn6S8/nHJo/gZniov+3n78HoXJEC+GV4g==
+X-Received: by 2002:a5d:5f84:0:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a4f7a3e50dmr580875f8f.6.1748551722255;
+        Thu, 29 May 2025 13:48:42 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.146.217])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfbf40casm29286315e9.4.2025.05.29.13.48.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 13:48:41 -0700 (PDT)
+Message-ID: <eb82d1c8-fc85-4bcb-aba2-f73c31d69cd3@gmail.com>
+Date: Thu, 29 May 2025 21:49:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v3 18/18] page_pool: access ->pp_magic through struct
+ netmem_desc in page_pool_page_is_pp()
+To: Mina Almasry <almasrymina@google.com>, Byungchul Park <byungchul@sk.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
+ kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
+ hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
+ john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
+ tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250529031047.7587-1-byungchul@sk.com>
+ <20250529031047.7587-19-byungchul@sk.com>
+ <CAHS8izNyXM_KQiySAw4hZQ+FU8yxAZmcqvjsO7P3pM0HNy0STA@mail.gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CAHS8izNyXM_KQiySAw4hZQ+FU8yxAZmcqvjsO7P3pM0HNy0STA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 11:59:44PM -0700, Howard Chu wrote:
-> On Fri, May 23, 2025 at 3:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Date: Thu, 22 May 2025 19:01:47 -0300
-> > > Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+On 5/29/25 20:54, Mina Almasry wrote:
+...>>   #endif /* _LINUX_MM_H */
+>> diff --git a/include/net/netmem.h b/include/net/netmem.h
+>> index f05a8b008d00..9e4ed3530788 100644
+>> --- a/include/net/netmem.h
+>> +++ b/include/net/netmem.h
+>> @@ -53,6 +53,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+>>    */
+>>   static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
+>>
+>> +#ifdef CONFIG_PAGE_POOL
+>> +static inline bool page_pool_page_is_pp(struct page *page)
+>> +{
+>> +       struct netmem_desc *desc = (__force struct netmem_desc *)page;
+>> +
+> 
+> Is it expected that page can be cast to netmem_desc freely? I know it
+> works now since netmem_desc and page have the same layout, but how is
+> it going to continue to work when page is shrunk and no longer has
+> 'pp_magic' inside of it? Is that series going to fixup all the places
+> where casts are done?
 
-> > > And it is being successfull only when running alone, probably because
-> > > there are some tests that add the vfs_getname probe that gets used by
-> > > 'perf trace' and alter how it does syscall arg pathname resolution.
+It's expected the struct page will have a type field once it's shrunk.
 
-> > > This should be removed or made a fallback to the preferred BPF mode of
-> > > getting syscall parameters, but till then, run this in exclusive mode.
 
-> > > For reference, here are some of the tests that run close to this one:
+> Is it also allowed that we can static cast netmem_desc to page?
+> 
+> Consider creating netmem_desc_page helper like ptdesc_page.
+> 
+> I'm not sure the __force is needed too.
+> 
 
-> > >   127: perf record offcpu profiling tests                              : Ok
-> > >   128: perf all PMU test                                               : Ok
-> > >   129: perf stat --bpf-counters test                                   : Ok
-> > >   130: Check Arm CoreSight trace data recording and synthesized samples: Skip
-> > >   131: Check Arm CoreSight disassembly script completes without errors : Skip
-> > >   132: Check Arm SPE trace data recording and synthesized samples      : Skip
-> > >   133: Test data symbol                                                : Ok
-> > >   134: Miscellaneous Intel PT testing                                  : Skip
-> > >   135: test Intel TPEBS counting mode                                  : Skip
-> > >   136: perf script task-analyzer tests                                 : Ok
-> > >   137: Check open filename arg using perf trace + vfs_getname          : Ok
-> > >   138: perf trace summary                                              : Ok
+-- 
+Pavel Begunkov
 
-> > Looks good to me.
-
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
- 
-> Nacked (sorry). I think running them tests in parallel is great
-> because it points out a problem that perf trace has. Please check out
-> this approach: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howardchu95@gmail.com/T/#u
-
-I'm not saying that perf trace shouldn't be used in parallel, but the
-vfs_getname code, IIRC, checks for the existence of that probe to do
-pathname collection (this predates the BPF method by a long time) and
-then counts on it to do.
-
-There are tests that put it in place and then at the end remove it,
-multiple tests.
-
-So there are possible races with that and out of being conservative I
-made it exclusive for the time being.
-
-The plan is to remove that vfs_getname code in builtin-trace.c and then
-the tests, as we have the BPF method that is way better and should allow
-for parallel use.
-
-Probably in the meantime it would be better to mark the vfs_getname ones
-as exclusive tho now that I that I wrote the above explanation... :-\
-
-- Arnaldo
