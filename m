@@ -1,205 +1,96 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD02225A3B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66B1DC997;
+	Thu, 29 May 2025 13:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525054; cv=none; b=p/oNlikwJ+IsCGkTcxu4KHLqyC4JNkPhycZFj5TcxpQyJA+veOdmMezu5OVndo4hekGVk7AXXzXVy6Ra63m3pRxG371+u7T9Y1TyyF/OFzGzBwVtP5rJ3POK6362aSn7ZApq4rSWmsLFioSSjXZX7bffXqUG/99PcROD4S3CArk=
+	t=1748525108; cv=none; b=rnmPekVLUx7y/9e+rIA4VK84xJqsSCRDQPKH2s+c7TYGpAZHj5++LBE+9mJ23i1Roly+8GQxfKUr+EFvq68AGFBxEFe0ywydqYcSHlWK+3WbUJZ0fxHRRO3tKhd/ZI3Af6xSXXAqLZ+0OOMk3gujHMnIXXP6hHHbZKT6p96332I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525054; c=relaxed/simple;
-	bh=u6PXl/iHQww6rD3fUk3v7gcYp1gk8Tk5zANeoTZrfyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qYFfnRhTP3twXDVlpEoWzh2Dk4bhaWDpVz6O0uKqGAsYzj8dp+E/TNRT4eC4lzIMX+aetj2QxltRUuXBEMau5FCIbNHD4bpiceYi/PPIwXbqOxa5JG4z8RSRoPtutAF91+qKoYFVvn+vKU/rsP52u6dh9Wl1wzOKDAqio60QZQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LQfEriaP; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748525108; c=relaxed/simple;
+	bh=SNBC/CW4BqGwUJUus9i0AbgvfWAY+4prT9ZBY6kNPMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nsIimc4UzX3Wgl571sWMV+xC7JzeaKoqYVld4MG80Z3AxZZlQRYKIgnk/u7br2ekP+u0nr81P6x4A1v0xW9UmphmUbYOLBiWfFB0+yMcryaf/cUNxN8oyBwE5tPT85zzM1GppUzq1YiK4ZQCNlg+bQWNrwBGpHqubsf1cRw9gDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WAGODEn4; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LQfEriaP"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-450cfb79177so3839665e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:24:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAGODEn4"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31232d5b1deso26705a91.3;
+        Thu, 29 May 2025 06:25:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748525050; x=1749129850; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zoLc4ELQIKOc5XDzCSKwyjSpDnw0shMoP1mujhtDXfU=;
-        b=LQfEriaPUgXmPwCes1ZyM9mAhpWhMQYwczl4UnC8VYlflt8yZIr07y1ZVutw1LBkm9
-         AMB7DrFxXW76q7fmQS1UCzqhy1wVc+f5/IYqtytMRnYtbXtsA4VaU5BG4C2SpHuUt57f
-         otqTn35YQwZzHbmfgB8wlArzJ67djr7B1iVAirt5Ia6QBYTrvxH8RlzKsNgBG/4JWZt5
-         zgO4jcICIyKGu4WgqCYmgvVG4zpUOdXeaaHxbk+Uu+KiaTtPN8BXK/02ktsxBydFbADs
-         NHNz+hiSthhfCg2zAMffFe+kDEGkgD2A8hFdyOGK6EtlQCPOAIm6ZzcUbOFabm6GHjEI
-         1V9A==
+        d=gmail.com; s=20230601; t=1748525107; x=1749129907; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SNBC/CW4BqGwUJUus9i0AbgvfWAY+4prT9ZBY6kNPMQ=;
+        b=WAGODEn4m9qryT2P/9cdGD5VBE+Mx+8sT67NDqRsTLGxIu6GZSIK62fC/sg6T4F+9w
+         uXb3BuKGkWHIS3LqOvBEvF+Hi5/H54MZ0qjdNsdOqLRSKN1XF9QHXK8iMaBX2OSOZ3uS
+         lS4Zka3e3GKMaQqi5XfsSRDr71p4BaQlpgxXtD0t/Ib7M3lHfzmdVG+YukeQ9BMm3cO8
+         RgtDHvlCmWewyFmNaBuQ4tmLalnysPhze9jTcmHJGdkxIKCXBFeqB8wxgVtzegQ64d6T
+         88/tLH6XIKQNO6nx4UG8bWBCn0C26Vjp3/Ge9LV9CHpQ734HXju0LhpnZmPn3ygGKWOv
+         bKVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748525050; x=1749129850;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zoLc4ELQIKOc5XDzCSKwyjSpDnw0shMoP1mujhtDXfU=;
-        b=KCuIbaqxuLhORZ9vJyYIfJ5vQrib3AKG7lhZ1xjTldnFZWTUOq2Eey1zET80htLbXp
-         +0XtRVZeJQkhu79xdgK0MgC9N98JBbxfC8Uzj6/0P37TWSaJNQVYk841VfGf1IpVV4bc
-         h0IT9zyNKRkuA1KifTBfX0O+LKLO/nWInWrQ+kOVupL4l5e3O/6zewlXb3Fy63133TqS
-         s8ShRh2IzWoeACANygpmKseibvF9APh//4k4eD4YDMITtg9vZS0Waz2JKdkD6Q/tsVCF
-         6f6AHuQr5xF5vvDhYyKl5ccBqtljclBGobZqlXOY0keJIndXl05wrSt4DUsks11VCMl0
-         nrZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiqmZTTUq4UVZbto81zWp1ffAldrerKjD3UxdrDXXSHvFCm9kHFcSe+gTytthsLL8UpSevV/CHpMEH/f0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxADzH1/TBDau71K+NFinBYxm14I1RQLesy3eU8hhbLsNFrkgFq
-	TfDyJdEiBiOzbCraAii1egkfHN5zl3Z4nIWRcFSmsL6x7+zvuXeU6GKRXlFimyFbnnY=
-X-Gm-Gg: ASbGncumwlTG3CnaflbCp2oOWMPCZuFpnWTLv5gTnFsFoazqxKTt8obHZZoTzwU/QgC
-	sacL3c4oHVJMFtJ+kjPg4vGsv0RWA67GISB+XaLpy7UAJfB3G/CV4J2ru3ZH5uAgvesxR7c4iGD
-	kk3ZuXT7Na8rrzH0blQdT+FC0/7twqXBY7lJlHIXPX0PqwkXZ0p6TyDyBsyQ7Bja/dS5mlGsRjS
-	rEOajTQdzjb0OQ7WcxprFoE5JZhT0zVFpdrCT1FFfndvxUCo61M5duKUoxqdnAAHCfE7UGMaHsF
-	WmLPZ2FeN3++N7Yepi/yJ3WySSOVQ/ES6srDy6b0rYcT8efwz6I=
-X-Google-Smtp-Source: AGHT+IGWA4BBkHB6xJjNhjPeH4ms8/V/tRLixJc1WNJXtJiU2mBdPy6sHFzIQWuccGGlqiqPKRQPnQ==
-X-Received: by 2002:a05:600c:1c8b:b0:450:cc3d:6a03 with SMTP id 5b1f17b1804b1-450cc3d6c38mr45073395e9.7.1748525050414;
-        Thu, 29 May 2025 06:24:10 -0700 (PDT)
-Received: from [192.168.0.34] ([37.222.66.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc15b6csm19894015e9.20.2025.05.29.06.24.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 06:24:10 -0700 (PDT)
-Message-ID: <bdd3fe2f-28eb-4c85-99b2-7220cb15b9bc@suse.com>
-Date: Thu, 29 May 2025 15:24:08 +0200
+        d=1e100.net; s=20230601; t=1748525107; x=1749129907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SNBC/CW4BqGwUJUus9i0AbgvfWAY+4prT9ZBY6kNPMQ=;
+        b=biTVkA+9w0aJB7cogmqjp+k0kQmfE6XEKb8aeUG57pnd9PP5tCULusZVLOcrrRV8fp
+         MvO0PBA4cf3aupFhFWC4dVn6lMQdYNNpk9rX4xX59/M0m5Myp4SbRoKDj3IG2VXQRBFq
+         8tZLP4e5UIrwxgMfc/fEYvuoQpw5MIrteFYBX1AZ8ZCnTyy4XUHJfRF1ASR1HUw1nx6q
+         FFOf2rrUGDb5JUYY04le39+dVcche1jbYpAuj+2yQTa+gchV+M04rkhDX8ubOeU4P0rm
+         UMU5lVua4HCOEdc91SiW9nSufL6T0gMk4Kb6YV6m5OWfD9tszR1uv99Kdo2DPbojRRGE
+         NYcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOEQfHHHXTYB/UROvPY5DNSoak1qAz7bYvowSHC+ncffvi+5oX7Dv3w8sZYMbuoguRKPsEs3ki1JEMC+YRKKY=@vger.kernel.org, AJvYcCXUi0UUM11b0fawqluyEEUK0E1CXRyl8dbpigL3/GYsee1i2SYr7QEKqgjqFu5dUZTGSW2gxvKoQpwLsug=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8Zw4y/vnRk+yVIAEks4/jFgR5rlIsc+AuZOCR6tMagtK2meYs
+	h3Iwf/KwJMI3uOe0qbP2otdmvWK7Jma0100T3lBmZgEUzwlMJUkiwbMWvhgwGhLtcPund3r9T0H
+	SnC4P+BVUaHtPgcAASv97dcyLiUCBdHE=
+X-Gm-Gg: ASbGnctZm0waDprIssVcLQg5yU234wCRevucg19x+ZaBNlitPDhj+AiVkOyjiTJNTtn
+	WEqMaegZhNdj/fPM6o7MWOScQrE1ek/fwNJiFX6za7H5Xea+WGdK+5ZkoiIkOKy0N0jLHUmPsQk
+	4V6ubZWsvtn+kiGB19hjFVEeTWrF8XWMCW
+X-Google-Smtp-Source: AGHT+IFUGeQX+wqDeFHIerYJF6j/noSc3Hz+tFljHNob4fC+SSfoannFSCVYB5WFfpAYw5HdpNcbfQdLk2aM98wRGLE=
+X-Received: by 2002:a17:90a:e7cd:b0:311:c5d9:2c8b with SMTP id
+ 98e67ed59e1d1-311c5d93147mr5290976a91.5.1748525106633; Thu, 29 May 2025
+ 06:25:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 07/13] misc: rp1: RaspberryPi RP1 misc driver
-To: Andrea della Porta <andrea.porta@suse.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- Krzysztof Wilczynski <kw@linux.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
- <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
- Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
- <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
-References: <cover.1748522349.git.andrea.porta@suse.com>
- <20250529124412.26311-2-andrea.porta@suse.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- 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
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250529124412.26311-2-andrea.porta@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
+In-Reply-To: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 15:24:52 +0200
+X-Gm-Features: AX0GCFtlCPwO-6oVfk4_3NAdN4BXBfT--uFREchAbAOR3pNMYgJR7LRJIKFes4Q
+Message-ID: <CANiq72mKAt0W_L2L8DX_xpTqxX9CVR_ZJA62C0VM40zF2qwCAg@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 29, 2025 at 3:11=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
+> Rename those placeholders for clarity.
 
+I had a variation of v1 already applied locally, let me push and you
+can take a look.
 
-On 29/05/2025 14:43, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
-> 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
-> 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
-> 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
-> 
->   rp1-pci.dtso <---- rp1-common.dtsi
-> 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
-> 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
-> 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
-> 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>   # quirks.c, pci_ids.h
+> +/// Helper for `container_of!`.
+> +#[doc(hidden)]
+> +pub fn assert_same_type<T>(_: T, _: T) {}
 
-What changed in this patch so that you didn't include the Acked-by from Greg 
-[1], or is this an oversight?
+I meant to have a proper function, possibly "public" (not hidden I
+mean). We can do that later, no worries.
 
-Regards,
-Matthias
-
-[1] https://lore.kernel.org/linux-arm-kernel/2025042551-agency-boozy-dc3b@gregkh/
-
+Cheers,
+Miguel
