@@ -1,406 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25D61C84A5;
-	Thu, 29 May 2025 20:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748550074; cv=none; b=YmcMtki1l9AlnF4sZDPSlvsLDgbOoafU+0S9nbEDExcy+HHv6LoSAtYIFVMV93go67rZOkQzwq1NBRMfECRFgu3nVqoD9/v7vierRoWNYZWxi6FB9Uyg2/fcD8VDfkAD7A3nm12fEYDA5WxVo6D5LmCXsEjh11jouXO/JVSORRY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748550074; c=relaxed/simple;
-	bh=Mxkyc1Eweteaq/me/D0tLLsof/Zblogn+F+qt26BKzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R2YRij9b5OZ70uQJH9w3tdMHVzCiYfHIxhzjjhEbjJQtg6pEfSwmOepU/n4CVz6aGUeJ+lJTK/CrnOf6iTIPZQjsF6SwfO0vIb7l8OlQgO985E53lsEiSLYzMtyZqsmIDuoUrisZhLGEAbIErlr+dHdfvJ9FztJir39DeXSgbRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9o3AUg1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7A71C84A5
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748550248; cv=fail; b=ZpEJJGWvlpAEXepIwBy+CJDV066wkIfcIgAxapQe7WXJs0ph7dy5Xrqt2JSLHHGY4xQIW39ECKmosDFL5T6j0evBmYRxtzMPiHmXIdKxfseVswyDZtzdFUEUYhenaHjQVgCPtRSn23Rk+CCJOr56znIEy4qLTwOQcQ08xN65Jjw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748550248; c=relaxed/simple;
+	bh=h4U/nk3qlIKjj0wFkoS/TYHpslkjBsuER/ddK4/HQEc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KyISxyLzbFCeAclMwNqECyXn8xauM8EzPDozXYmf9ZK4h4XkZcXDkw5k2D7yBhyZg99/NM46cFnnUPrfD0WwWKFFylBAgd3pg9xk/lloSsz+LqXsDeZNFD8hve0yEnORmhBu2dwDVLw+XIzCZG5v0Q6UBkmclZVCciBTBz+rGSY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JiXY5kz0; arc=fail smtp.client-ip=40.107.220.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9o3AUg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE00AC4CEE7;
-	Thu, 29 May 2025 20:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748550073;
-	bh=Mxkyc1Eweteaq/me/D0tLLsof/Zblogn+F+qt26BKzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9o3AUg1ACr4xLOh9Ev/AQAcKyemTSlCNMVJCtiEBPHPdO7gRfj4Xf5BOYzOHgUix
-	 mpNDIlrOy7Q6g7Dg3h/tKgSPxWU97XUaiRwdokNqrYprVVU3uj6AIamqKCd64xTtL1
-	 Te5y7XwDNtWINXpzGLfZ2ZTozbQluUB/kOoPuGXg5JQ64HRM9vu361viGe87AhmnU7
-	 QGiR8HXdmzHl4FmtrN5E9HKsUVfYd40RtZwObBUs5vON8ztSZHQLFuWMPD+uGbDovd
-	 95TUkwX0tgX5VGmO6aHjoOAKEI60QvlUJzCE3W1mepnI1/PuPPNkvTzelDBlupLfC3
-	 X9MhyS125bj1Q==
-Date: Thu, 29 May 2025 17:21:10 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Howard Chu <howardchu95@gmail.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Krzysztof =?utf-8?Q?=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
-Message-ID: <aDjBtuxyumBrn70B@x1>
-References: <20250529052322.381947-1-irogers@google.com>
- <20250529052322.381947-2-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JiXY5kz0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mcoBe6PUbbXUvDILWdAvCCXSK477pJ9WsDQbEy90ZCmGbtTT3IZwhx9AijcNDEwnT7o0rpBJ4bcW8WowljKZZFYZcfQSBEWmL+ed8sPqy0SqHR/b4wIgjbgaEDT3QwwWe/dSXwGWrYqNXqfFO6xd8hVGdjvfkOkv1jIu0rgqnelEgPjumQXzZ1szEvhkXgY0GAotrdyB2L9bUxgfDTBZN7GX9wjNyKEnHCVmIVar4HvPeTLrgk8nZRSJ9shXHEjRfC4xJ6Z4VfsYbFpcItb3wvig0HihViw/OJS0wtXOrrex3ZXj1gwZyfnXHA3CTxJ1z2I3cysRsksU7RiT3+ER5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h4U/nk3qlIKjj0wFkoS/TYHpslkjBsuER/ddK4/HQEc=;
+ b=eevrOy3OqyPf6ioD7KqBPkXrIpzdYIP9HiOYeTutNzjX2MJKIPebv5/U1ViAtvJcHIXGHWygFk/+Y/ddnk/Z5loR8ls2Oq56lSkGyO3zWO67I3uQksivmI5wVU/vuAmsnu10K0Xgmhny8xLK1ALbpV4Zsoq5GCIVwoRoxBCNccPs1PbToYhmdHi6VS7PP4zl0P/zEss5ijzWXKpdnGetvn9CACRWSVOfRGtUSSAgK7xbl4F06OBAXeOrIMv/rbcDZKlfvzJK5Dy2xPJN4nF0gfLYveWHPgUgL7sTHls7/DHABwpJivOuLkwnft7aDZkOrDacM1YEdLlPvV4hzJ/OsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h4U/nk3qlIKjj0wFkoS/TYHpslkjBsuER/ddK4/HQEc=;
+ b=JiXY5kz0rrLkQ/bAYvB3hzvg3Ou2TTTn9lQNX+tamPmmIr7whV/aeFHjAK/1WOenFMMvFE9XUadnhWIQiN93e5o8QnKych9t7fJf3xmEHuHxo4GylG1/DxXlEtVPbqgMDjMgq9N6JIsSf4zTDEakQYgghNr/4/h1I8rzHogENrI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com (2603:10b6:408:118::14)
+ by PH8PR12MB6865.namprd12.prod.outlook.com (2603:10b6:510:1c8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Thu, 29 May
+ 2025 20:24:01 +0000
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::9269:317f:e85:cf81]) by BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::9269:317f:e85:cf81%6]) with mapi id 15.20.8769.025; Thu, 29 May 2025
+ 20:24:01 +0000
+Message-ID: <dec6b213-5c55-426c-8003-2bbccfebcf75@amd.com>
+Date: Thu, 29 May 2025 16:23:57 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 RESEND] drm/amdkfd: enable kfd on RISCV systems
+To: liu.xuemei1@zte.com.cn
+Cc: alexander.deucher@amd.com, christian.koenig@amd.com, airlied@gmail.com,
+ simona@ffwll.ch, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250529102511926m1vYHloavTKK17e5_ZdsX@zte.com.cn>
+Content-Language: en-US
+From: Felix Kuehling <felix.kuehling@amd.com>
+In-Reply-To: <20250529102511926m1vYHloavTKK17e5_ZdsX@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CY5P221CA0107.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:930:9::34) To BN9PR12MB5115.namprd12.prod.outlook.com
+ (2603:10b6:408:118::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250529052322.381947-2-irogers@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5115:EE_|PH8PR12MB6865:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ef4f542-3aa9-4a76-7e2d-08dd9eeebf76
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R0F5TWRsc0pkUkF5YVFGRVBwcUJWdTNPRFlndjRLK2dYNU54cGF3Q2lNV0Np?=
+ =?utf-8?B?bW5ZaUNKRjlGTnJVQVVIek93Z1F5WkNDOW1QV2t3RUhXbURET0QzYWRiYXNT?=
+ =?utf-8?B?bkJEM3cxNWVWaEV5QTlKY2svWGRMTTNiMnkxZDY1RGRTZG5uMjJzRjExUGU1?=
+ =?utf-8?B?amhTSmcyaEZlTTlaQ2k3UEJjQk51TEdYNlk3YVpiR1RWM3FDMnFXdTNreFgv?=
+ =?utf-8?B?bllOeVZsVjQ1a1JRaGs4M0loeHVBRzdyNjl0aGhmaEVYWjh3bE1nbHVTMUZm?=
+ =?utf-8?B?enZtM2FUbFNUYUxFbFhnQTEvOU5HY3RubXVzSFZrd2p3L0ZsNUdUZVkySHBo?=
+ =?utf-8?B?SHp5T0hsNFd1VVptUlF6Zi90VnE3NVZPbzAzYXNmZUdFakhEL1g2bmNwcndr?=
+ =?utf-8?B?eHhjQ09RaVB3OFdsSHdFZWJJcS8wZnZFaGNTWEJ5SWU1OGxma1FJQmhiR3NK?=
+ =?utf-8?B?STNYOURINkpDbTZFMEVKRmh2VHI2YkYwL3d1N0ZLUm8vNnFkWUxGc2dkT0tS?=
+ =?utf-8?B?UjUxS0VvV0VGTnlmUk5YcG9EYUpORVNtdGYwS3dMc2wxdlZNc2pMSnp1aHZs?=
+ =?utf-8?B?dnp6ZVlvTEJWdmo2TmxjMUp1K0JoLzZxaUVTV1Rnb0ticUQrS1VQb1RreFJ5?=
+ =?utf-8?B?eFVrWnFGc0tYWEpnTm5Va0tGQWkyOGszd0RQc0l4NjlPd2ZleGZPcng1Ri8v?=
+ =?utf-8?B?RnVMWmdnVkY2WkpRNDhxUkVmOFd3WS9McjcrYnFDQmRFZkxGMXZTWitUdkUr?=
+ =?utf-8?B?bUpPbWh5MDJNVVVBbGx6ajdpM0pzUzU5Wit1QUkzQzAzeU01SWlSbWIzSjVj?=
+ =?utf-8?B?WVZUQzBEcFdTWTdZbEtqNlErTFhTSUQ4WWdNYjJxdmN5THZiZDhBaWIwSitY?=
+ =?utf-8?B?ZVBaajdvNktxMmt1aW43Qk5RR1ZQSzdiSWdjcDhMMVVEa2ZJRER4dFRuS3JW?=
+ =?utf-8?B?cnRqTCtjU3BtUUxzbFhEcnRhc3l1cCtQVHUzUGZaRG5PZVA1MFFUMEZvN05y?=
+ =?utf-8?B?Z3p3ZTFtelRtOGp0bUlWMWc5d0J1Y1RLd3o1NHA4c3F3L05Qc2NQY3ExS1lU?=
+ =?utf-8?B?UjA5cVcxYk8yVEIxWlIxaDV1cnlqQVB2c3dGV1ZUVHVkY2FCVG5ScFE5dTlJ?=
+ =?utf-8?B?T0dmeHZXbGRoZUh3aXAvRkxMdWFqRlo5NkZZSG9aZDg5eHZpU1cxMExGSVJ3?=
+ =?utf-8?B?bUV5Vm5NQndaSGNwUmY2YXdsbXpmV09CZG1uQnlXbHdRLzA3SmtER2hTaTha?=
+ =?utf-8?B?TmIrVTBtV0F2VXBmMU9HZWpVcFM1YjVQMFBLb0FzejdkbHh1MWM3ZFJUUEIz?=
+ =?utf-8?B?L1NVTVBrUkI3RE9aZXlzOVFZdVIvZDRpQUFiaEZtR0tIMHE5eUwvSFpHekJE?=
+ =?utf-8?B?NkFiV1VwZlZIZk1YRHVIMVFSV1VlS29wNUZ5NmMxcGg0elZyYmRtODd2NFFz?=
+ =?utf-8?B?OXRYWUNsNTFtWk5kaTVucGNGTzRSK1R2S1l0SFBJOE4vRlhNTjFMR2FKc1N5?=
+ =?utf-8?B?RzE5T3Ira3Z2ZHdPbEt6a3ltMzVIUUZQYVFsWTJROExONkV4Ynh1OGFGa2dy?=
+ =?utf-8?B?RU1nTS9aRUZ6SXpFMDFmU1dFOHREQmJ1aUN0NFBEbHJXUERCVkZoK2NCK29Z?=
+ =?utf-8?B?VmVRcGltRU50N3NDclZJeW4yQVlydW9uUUUzRHloN0dMMWlBQ1U2TkdjbklC?=
+ =?utf-8?B?eDRWUWV1YnVER3RwUmRzYUszUkdGSk5MaXZGY2szbytUUnJNTjZiNEZIY3hJ?=
+ =?utf-8?B?VzJNdlo4dEhlc001OHlOclRrN3FldXhOaHV3RUlzUU80azZRRGFiWjF3Tk1s?=
+ =?utf-8?B?WUhPbmx3a2dZcklvL1BLSlo5cFQ3V1E1OGdUcmxFdldJUlBhUG40SWhtOEtK?=
+ =?utf-8?B?U1ZaNU80OG1qclJzS3JNSVBQNTJKYXdDWUZGZkxZRzU5WFZOTzBtMkJZdmZw?=
+ =?utf-8?Q?nfUSx0PtMBo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5115.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2pXYlloNzdRSHBaTmc0T3o5K2Z4MmhKS0c2b1JpUzlSUzJWZkxBbFRSRG13?=
+ =?utf-8?B?NWU3YnNJaUd1eW5hcW03dlZTcDVKMUVySzliR3hJdHpEeTJ6cWRGUVNyRmZl?=
+ =?utf-8?B?TldYUklFNDlGNVlWR0huUFhNWjVNdVpONjNPcU9OYXp3WWRqamVEQWFUZzMr?=
+ =?utf-8?B?YmFjcktvaGc3a3MzY3dnWWJiYS9Qa3hKeExuZndVanRPSmorNjY0SHNGcWRT?=
+ =?utf-8?B?YTUvK2hSSlF2clc4Y0tNVyt0UGJ4VFF3bkY2N0VtZlJvTVBYb1Y4cDRDeG1M?=
+ =?utf-8?B?S3FOSGhCUUtBSEc1MThoQXRxZWZ2Qkw5THQrWVVVMkoxc0gxeHBzUHlTeFdp?=
+ =?utf-8?B?UlpiNWRTUUQvSHhJL2MvVktrRFZWMGtCVnF2TU5Gbm1pQ2x3eW9xWk9Hb2hW?=
+ =?utf-8?B?aG4wSzJ3d0p5cmcrSVFsVmpFU3M3ZDRkSUdSbm5NQ1pMWlpiZnBPVGMyT2p0?=
+ =?utf-8?B?dVRhU05wNnhMZjhDUWE5Y3hEVzhLZUc1dy9pcURUTHA5Mlc5M3pPR2YxdjZV?=
+ =?utf-8?B?SGxOU1hGYzBIM1lxTVJDSWdwK0Z6M1MvRXBEMmNEdnZJN2xXSmFrdVhsc3NP?=
+ =?utf-8?B?TGhQQ3JsZGhaSE9zT1ZWeGxvN2lPcXN4ZWczMHI2Q3pJUTBtcEFKSkozK3JJ?=
+ =?utf-8?B?aHhMYkc4ZURKQS9Ia3pVRTBHZkw2VVRlZ2F4WTdpTXRiL0NoU3lPck1JTWdH?=
+ =?utf-8?B?Mlc1U1E1Wm5nN05lTlRiV2JJclVsaHdvVVZVU1VyaWI3ZU42dnRrdUlZYWlQ?=
+ =?utf-8?B?aHFWTWdQYlNHSEN5NmVBUFlkWmZVOEgybHFFa1lwZ1dmQVJxekpGZUhqa3Fn?=
+ =?utf-8?B?NkxjdXZYWDhPTnE4YVo0UDB0MGp3K081V3gybU5FQnh2dllqbEE1NXRYUlFH?=
+ =?utf-8?B?aVdJbDRqQkpUM1pzSmoyT3NwdWVLTHZ6MWJCWklyRTdUTlBvSDhjZFlNMmNq?=
+ =?utf-8?B?OEZWUkZvL2dsWFdQQ1UyRnB5azRTSFFBYmxPTXZxc3NVMFlHSEtJZ0wvbzY0?=
+ =?utf-8?B?eXJIclEwMUVia3BITVJpb3dsaXdEc1NCUU5aOFY3L1MwcGgvbnBzN1dEVitK?=
+ =?utf-8?B?ZkY1aDRLeFpuSDNJRDJTREE3OGFFUjA5OUpiYjFGWnVxazlBbG9sa2dXanBT?=
+ =?utf-8?B?ZjFIanljNERFNS8xWFJFb1pFMHJGUnFkb0lWNGpGMjV3UGg5bnhTWDdXSGpi?=
+ =?utf-8?B?dlNZTVNCVmp2TFdpMjF4eERmZjN3VDJwSVU2TGJJRTZrcmFsTXhPWVpFWlRK?=
+ =?utf-8?B?MmFVZmljUWRweXBBbytVVWQ4bW9jbThnZkdaeTR2a2dEWDF2dkpmcDBaVHBO?=
+ =?utf-8?B?dXF5VjFML1FvcHpxZHJXQklJU0NQN2JFSFFXbEhJcm1EZmtzd1FlWlJvbFJ1?=
+ =?utf-8?B?MUZHNTRpQzdVaXlJY1Z2Z3NiZHF1eE5USkhoT213RlJUMVZ1WWVLRkZ5YXNm?=
+ =?utf-8?B?NElnd0F3WHBiT2I4T1NUQXIzcGZLVldwNVNFQnZPUkZSUEV6TXBJRDZZd2Fx?=
+ =?utf-8?B?WG1aWmFjM2EwUzRMbHF4bFQwUE9uaGhQcmJIZmF2N3l6dnBUSTArRWFnMEpu?=
+ =?utf-8?B?Y2pkZFFJT2tlVi9zek1tSGNVajNkQzMrbmV0eXk2QlRTZkxybHYvWGhnQTdr?=
+ =?utf-8?B?Z0UyU2lobXltYml4K3lERTVoWTFPTzdBSGlyUjNuQlNBMkJtTERWWEhSeDg3?=
+ =?utf-8?B?WXZWZU5ZVE9QaFpLVHVHZDhBQ0U1WWs3cG82SWdCeE5hNWhiSTNjY3lLQlRq?=
+ =?utf-8?B?NjJoVVdJRFh2bFkxODZGMWNtWkRxL1E0ZDA5bGgzS2hJYkxnTVN2T2RzUTdE?=
+ =?utf-8?B?clRqZllqYW92VWIrMTNRZ0NQeVNRNUMzNzUyYnRJcHA1NTdmRktEcjFLbEFw?=
+ =?utf-8?B?S0UxSEVTbnJpSzBNYTNxRWFoeWVvdzNHSFdZSlpFMWVOcmVQM0dtOTkvRkta?=
+ =?utf-8?B?dC9wKzhubXdLeWVjZVdWNGZaNzJKazRqWjNWZVpnMXYzemtTbzlnSVdVUXFt?=
+ =?utf-8?B?Y1dGdlVOVHhiVm5oZHhKMWpteWdac2xCSGxnNmkvdTF2NVFXcG9tdy9mbitQ?=
+ =?utf-8?B?aUZGdE1ITkhPQXFnR2xLUnVQcElBaVM0eTVhSk5lREdIcnIyN1IycldoRTVh?=
+ =?utf-8?Q?Y8aDpTVJmlH/w2YySpbFA8xRh?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ef4f542-3aa9-4a76-7e2d-08dd9eeebf76
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5115.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 20:24:01.1619
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3gdZ5+Cr6hrPYsEAnCJrBNGyiO3oPECWGldxnvHjhhwEqVlk620BFFJ8LtTPocLiC4BvXxqLwluUG2m9lRHWZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6865
 
-On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
-> Symbolize stack traces by creating a live machine. Add this
-> functionality to dump_stack and switch dump_stack users to use
-> it. Switch TUI to use it. Add stack traces to the child test function
-> which can be useful to diagnose blocked code.
-> 
-> Example output:
-> ```
->   8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-> ^C
-> Signal (2) while running tests.
-> Terminating tests with the same signal
-> Internal test harness failure. Completing any started tests:
-> :  8: PERF_RECORD_* events & perf_sample fields:
+Sorry for the delay. I merged the patch to amd-staging-drm-next.
 
-So you are testing it with:
+Regards,
+  Felix
 
-root@number:~# perf test PERF_RECORD 
-  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-  8: PERF_RECORD_* events & perf_sample fields                       : Skip (permissions)
-root@number:~# 
-
-?
-
-I built it with DEBUG=1 and without, and with your patch, following your
-example output, I'm not being able to reproduce.
-
-Tried it as well with:
-
-⬢ [acme@toolbx perf-tools-next]$ cat segv.patch 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_root_cached *symbols, u64 ip)
- {
- 	struct rb_node *n;
- 
-+	*(int *)NULL = 0;
-+
- 	if (symbols == NULL)
- 		return NULL;
- 
-⬢ [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch 
-patching file tools/perf/util/symbol.c
-⬢ [acme@toolbx perf-tools-next]$ m
-rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
-make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-  BUILD:   Doing 'make -j32' parallel build
-Warning: Kernel ABI header differences:
-  diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-
-  INSTALL libsubcmd_headers
-  INSTALL libperf_headers
-  INSTALL libapi_headers
-  INSTALL libsymbol_headers
-  INSTALL libbpf_headers
-  CC      /tmp/build/perf-tools-next/util/symbol.o
-  LD      /tmp/build/perf-tools-next/util/perf-util-in.o
-  LD      /tmp/build/perf-tools-next/perf-util-in.o
-  AR      /tmp/build/perf-tools-next/libperf-util.a
-  LINK    /tmp/build/perf-tools-next/perf
-  GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64-linux-gnu.so
-  INSTALL binaries
-  INSTALL tests
-  INSTALL libperf-jvmti.so
-  INSTALL libexec
-  INSTALL perf-archive
-  INSTALL perf-iostat
-  INSTALL perl-scripts
-  INSTALL python-scripts
-  INSTALL dlfilters
-  INSTALL perf_completion-script
-  INSTALL perf-tip
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
- 18: 'import perf' in python                                         : Ok
-⬢ [acme@toolbx perf-tools-next]$ 
-
-root@number:~# perf top
-perf: Segmentation fault
--------- backtrace --------
-Segmentation fault (core dumped)
-root@number:~#
-
-Tried also with this, but probably something else is at play:
-
-root@number:~# perf probe -x ~/bin/perf dump_stack
-Added new event:
-  probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
-
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_perf:dump_stack -aR sleep 1
-
-root@number:~# 
-root@number:~# perf trace -e probe_perf:dump_stack/max-stack=16/ perf top
-perf: Segmentation fault
--------- backtrace --------
-root@number:~#
-
-Running perf trace on a separate terminal it also doesn't catch
-dump_stack being called (that probe point).
-
-root@number:~# perf top --stdio
-   PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 drop: 0/0 [4000Hz cycles:P],  (all, 32 CPUs)
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-perf: Segmentation fault
-Segmentation fault (core dumped)
-root@number:~#
-
-root@number:~# nm ~/bin/perf | grep dump_stack
-0000000000637eaa T __dump_stack
-00000000006380fa T dump_stack
-000000000063816b T sighandler_dump_stack
-root@number:~#
-
-⬢ [acme@toolbx perf-tools-next]$ rpm -q glibc
-glibc-2.41-5.fc42.x86_64
-root@number:~# uname -a
-Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 22 19:26:02 UTC 2025 x86_64 GNU/Linux
-root@number:~# 
-
-What am I missing?
-
-- Arnaldo
- 
-> ____ unexpected signal (2) ____
->     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
->     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
->     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
->     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
->     #4 0x7f4a91f01f68 in __sleep sleep.c:55
->     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
->     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
->     #7 0x5590fb5b83ab in start_command run-command.c:127
->     #8 0x5590fb621572 in start_test builtin-test.c:467
->     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
->     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
->     #11 0x5590fb5a9099 in run_builtin perf.c:351
->     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
->     #13 0x5590fb5a9499 in run_argv perf.c:451
->     #14 0x5590fb5a97e2 in main perf.c:558
->     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
->     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
->     #17 0x5590fb4fd6d1 in _start perf[436d1]
-> ```
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+On 2025-05-28 22:25, liu.xuemei1@zte.com.cn wrote:
+> From: Xuemei Liu <liu.xuemei1@zte.com.cn>
+>
+> KFD has been confirmed that can run on RISCV systems. It's necessary to
+> support CONFIG_HSA_AMD on RISCV.
+>
+> Signed-off-by: Xuemei Liu <liu.xuemei1@zte.com.cn>
 > ---
-> v2: Fix NO_BACKTRACE=1 build (Arnaldo)
-> ---
->  tools/perf/tests/builtin-test.c | 15 +++++++-
->  tools/perf/ui/tui/setup.c       |  2 +-
->  tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++------
->  tools/perf/util/debug.h         |  1 +
->  4 files changed, 73 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 45d3d8b3317a..80375ca39a37 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -6,6 +6,9 @@
->   */
->  #include <fcntl.h>
->  #include <errno.h>
-> +#ifdef HAVE_BACKTRACE_SUPPORT
-> +#include <execinfo.h>
-> +#endif
->  #include <poll.h>
->  #include <unistd.h>
->  #include <setjmp.h>
-> @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
->  
->  static void child_test_sig_handler(int sig)
->  {
-> +#ifdef HAVE_BACKTRACE_SUPPORT
-> +	void *stackdump[32];
-> +	size_t stackdump_size;
-> +#endif
-> +
-> +	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-> +#ifdef HAVE_BACKTRACE_SUPPORT
-> +	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-> +	__dump_stack(stderr, stackdump, stackdump_size);
-> +#endif
->  	siglongjmp(run_test_jmp_buf, sig);
->  }
->  
-> @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
->  
->  	err = sigsetjmp(run_test_jmp_buf, 1);
->  	if (err) {
-> -		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-> +		/* Received signal. */
->  		err = err > 0 ? -err : -1;
->  		goto err_out;
->  	}
-> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> index 16c6eff4d241..022534eed68c 100644
-> --- a/tools/perf/ui/tui/setup.c
-> +++ b/tools/perf/ui/tui/setup.c
-> @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
->  
->  	printf("-------- backtrace --------\n");
->  	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-> -	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-> +	__dump_stack(stdout, stackdump, size);
->  
->  	exit(0);
->  }
-> diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-> index f9ef7d045c92..0c7c6a9e158b 100644
-> --- a/tools/perf/util/debug.c
-> +++ b/tools/perf/util/debug.c
-> @@ -14,11 +14,18 @@
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  #include <execinfo.h>
->  #endif
-> +#include "addr_location.h"
->  #include "color.h"
-> -#include "event.h"
->  #include "debug.h"
-> +#include "event.h"
-> +#include "machine.h"
-> +#include "map.h"
->  #include "print_binary.h"
-> +#include "srcline.h"
-> +#include "symbol.h"
-> +#include "synthetic-events.h"
->  #include "target.h"
-> +#include "thread.h"
->  #include "trace-event.h"
->  #include "ui/helpline.h"
->  #include "ui/ui.h"
-> @@ -298,21 +305,60 @@ void perf_debug_setup(void)
->  	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
->  }
->  
-> +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-> +{
-> +	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-> +	pid_t pid = getpid();
-> +	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-> +	struct thread *thread = NULL;
-> +
-> +	if (machine)
-> +		thread = machine__find_thread(machine, pid, pid);
-> +
-> +#ifdef HAVE_BACKTRACE_SUPPORT
-> +	if (!machine || !thread) {
-> +		/*
-> +		 * Backtrace functions are async signal safe. Fall back on them
-> +		 * if machine/thread creation fails.
-> +		 */
-> +		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-> +		machine__delete(machine);
-> +		return;
-> +	}
-> +#endif
-> +
-> +	for (size_t i = 0; i < stackdump_size; i++) {
-> +		struct addr_location al;
-> +		u64 addr = (u64)stackdump[i];
-> +		bool printed = false;
-> +
-> +		addr_location__init(&al);
-> +		if (thread && thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al)) {
-> +			al.sym = map__find_symbol(al.map, al.addr);
-> +			if (al.sym) {
-> +				fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-> +				printed = true;
-> +			}
-> +		}
-> +		if (!printed)
-> +			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-> +
-> +		map__fprintf_srcline(al.map, al.addr, "", file);
-> +		fprintf(file, "\n");
-> +		addr_location__exit(&al);
-> +	}
-> +	thread__put(thread);
-> +	machine__delete(machine);
-> +}
-> +
->  /* Obtain a backtrace and print it to stdout. */
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  void dump_stack(void)
->  {
-> -	void *array[16];
-> -	size_t size = backtrace(array, ARRAY_SIZE(array));
-> -	char **strings = backtrace_symbols(array, size);
-> -	size_t i;
-> -
-> -	printf("Obtained %zd stack frames.\n", size);
-> -
-> -	for (i = 0; i < size; i++)
-> -		printf("%s\n", strings[i]);
-> +	void *stackdump[32];
-> +	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
->  
-> -	free(strings);
-> +	__dump_stack(stdout, stackdump, size);
->  }
->  #else
->  void dump_stack(void) {}
-> diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-> index a4026d1fd6a3..6b737e195ce1 100644
-> --- a/tools/perf/util/debug.h
-> +++ b/tools/perf/util/debug.h
-> @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
->  void perf_debug_setup(void);
->  int perf_quiet_option(void);
->  
-> +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
->  void dump_stack(void);
->  void sighandler_dump_stack(int sig);
->  
-> -- 
-> 2.49.0.1204.g71687c7c1d-goog
-> 
+> drivers/gpu/drm/amd/amdkfd/Kconfig | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/Kconfig b/drivers/gpu/drm/amd/amdkfd/Kconfig
+> index d3c3d3ab7225..62e88e5362e9 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/Kconfig
+> +++ b/drivers/gpu/drm/amd/amdkfd/Kconfig
+> @@ -5,7 +5,7 @@
+>
+> config HSA_AMD
+> bool "HSA kernel driver for AMD GPU devices"
+> - depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64)
+> + depends on DRM_AMDGPU && (X86_64 || ARM64 || PPC64 || (RISCV && 64BIT))
+> select HMM_MIRROR
+> select MMU_NOTIFIER
+> select DRM_AMDGPU_USERPTR
+> --
+> 2.25.1
