@@ -1,172 +1,269 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011067.outbound.protection.outlook.com [52.101.129.67])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8016226527;
-	Thu, 29 May 2025 13:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748526010; cv=fail; b=nTHKSLqPw8vwIgf3NF7SeiwUHGys8aCaAB/+/B2R2qRLwyrmuSOXMNms9cTXaiiyA0zpyfVlIc5X87Rd+4Ea/D5Jlzrmbe02Zue0qzsUZdhTFL6JQjY5Xv4T/yIOF+UGp3G+LVHxqKJrqm6X8oh0xphrH77DJQfdxNz928lqYKU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748526010; c=relaxed/simple;
-	bh=sQw4txyb6Pm91TeS3woOHQ2ne+U2b7Xbqyy5tEOme7k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fWjCqzpTVaOG9zLxmsEqSvTurg2wAbpobKJYzbMq89ceY5leBIG0988SG3gnTFcBihk0Hz4FWudEzNklVXisCD2lfcZGtZaHTWhRQVRmz4U83s6rzjoKsbwfY19OAv6kQ+Ulyqm4hhPTCOn/ImQf4nN6H/HtHLd5UFlT1/SSaRA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=aZrOnnOx; arc=fail smtp.client-ip=52.101.129.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="aZrOnnOx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d45bNmLwRN+sCW5mfVVpPUuqqDwpgYl1jttEWU87b9Vs2ZSeROXBrhEVNq2xHICum8hxTvbzvpmMDqHDLuQvWcF8oPaVZYRKMoLXFINGvUxbQLKGwKOSBc0XU5a0OP7c921vMUFgbwvRaCB1QCoaCS/XVB4iKZN7FFk9GxbUYDtjxUClaBooJUTyjF1tcRSbMElUkxWrmB5l66v46MZ68KqLEkQV1Yis4XjeUVsZVAdJa+mXPUePScfdR2otfCd+4aQCvhPxS5kZyjIpQOkAEgYn1I0g3zuUz6uY6bgLo+0/GnZr9wsOV/sXfhSnONer43y0Xtjr55xr59r6273oaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z2NVLoKNyUSV6Ezr0JuWwpRhV61Zq9dQZNdSD445xBY=;
- b=AJ99sZJGf5tfFEyJZnb1ak/wnBoHIvrpvUYGq8EiDCcx7zDiSyS3p9C5adpJa8w5jMdmMYmsf6LFsqC81x5G5ceksMZUZOeIVY7itz02khiG41DigbJmVhYlUQLKhpaBqvleL+80PSxetpRkIg8PnTJBcWsjO7zxdpU91Q7/4K/IbXTH7HuQYjrIMn8K8kyS88v5bsX3ku3T+pbc5NjlRinvEtMlDEzljB8K9ie0qQF4MDCDHngjap6QeO7YBZ+Gzojf39PArhBVasD4bJphpHyWisaI5An7Iv1yyVAB/CwJTudrYhwCUb5D740qXvGXOXpfkK1p/9X25K2HoDvm0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z2NVLoKNyUSV6Ezr0JuWwpRhV61Zq9dQZNdSD445xBY=;
- b=aZrOnnOxgOMU52sbQehcsgcjVUXpxUSD3zIFOGGMlwstw9tJTwNizRBEg4M7sxy4q9iHIqVn1mPkP93rQJfuLC4Ipnhyw6AclZZlTOQwNxmAA7tekn/uHKXZzyRuX7mkhJKTWzwPrBGWXGbzgQ7eeBhmAl8O4JIuaiyoubCY0RB+5RnCG6aHB11PVv3OJ7jAZ2iiHLVYQkeo9FzfvBOy2yhgnvDybHSlk91n6GDhnNs7ny5o/jhg7KH2urQSHhZULYJxwFOxGXNcLY8n5rC4ZJ076ddAvXJ5NtHfL4vyrNTfiPrwosGXGBkbGnr5TxtjxOdt9ppReoLkzDAlfgN5ZQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by KL1PR06MB7034.apcprd06.prod.outlook.com (2603:1096:820:11e::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Thu, 29 May
- 2025 13:40:06 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::8c74:6703:81f7:9535%5]) with mapi id 15.20.8769.022; Thu, 29 May 2025
- 13:40:06 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de,
-	Yangtao Li <frank.li@vivo.com>,
-	Kees Cook <kees@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] hfs: make splice write available again
-Date: Thu, 29 May 2025 08:00:32 -0600
-Message-Id: <20250529140033.2296791-2-frank.li@vivo.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250529140033.2296791-1-frank.li@vivo.com>
-References: <20250529140033.2296791-1-frank.li@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TY2PR0101CA0023.apcprd01.prod.exchangelabs.com
- (2603:1096:404:92::35) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D7D21ABCF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748526023; cv=none; b=VWvZxI+MdMUYS0SBe8MJi2niF70SPa8ygYfPcomXnVYn+w/L1uhF9z52n9Pe57MvU8avKTRpKsaV/vGwMzUmZBrWSgZCzwZ/tiWoaEOoBN1lfYLUtoiyJHVn3QTZ5MUCjHhGlNSRrwAGQrUNWYO8MOH5S7AbjZn2AfkzNLHYdQg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748526023; c=relaxed/simple;
+	bh=Bnd3FXOtJvXpU+jdhtpTqHCVKv4qdeP/LR8hQUJRSCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F9ehn/kxISKMZQhuCTL053UwyrOXisS3RP3/g7a4PyIS2/zvBAJ8wF/GWFjZwCM7Fq8OcvcaLxpnc7Ml8rkhomeaKIJyLFG+vHYY+ZYBqPUkXVbUxnsCNvSaxYLmPxmuM6IUjvvM4uXGNxdARo6KlbtVpY2AXoXtn1N8EH/AMgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B5A8C4CEE7;
+	Thu, 29 May 2025 13:40:20 +0000 (UTC)
+Date: Thu, 29 May 2025 09:41:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Devaansh Kumar <devaanshk840@gmail.com>, Ilya
+ Leoshkevich <iii@linux.ibm.com>, Miaoqian Lin <linmq006@gmail.com>, Pan
+ Taixi <pantaixi@huaweicloud.com>, Tomas Glozar <tglozar@redhat.com>, Yury
+ Norov <yury.norov@gmail.com>
+Subject: [GIT PULL] tracing: Updates for v6.16
+Message-ID: <20250529094122.245fb887@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR06MB7034:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb1623a8-9d26-4971-820d-08dd9eb65260
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?fLlx38hSRfIsDvgGG4hIJ39fyYU5Dn7NeSZ3p6XcxE2p8RweHqp9uKuM47hI?=
- =?us-ascii?Q?LuI6doDZKlyBlSdWKJPNp6CBzxnr45mn8nAqW0KKkzkk56L1GVny4KO1CS2b?=
- =?us-ascii?Q?RM4gfA+44XsvnC13yV7vYBUDPkotbekTfAQCUw7SjmWVy5t6LjIiWUD5khqG?=
- =?us-ascii?Q?HmQnFfyD3wjh/YDcjAjjq6S5Q8R7IQuLAwENJBwceWZu0dsm+IU5P5sa0nFY?=
- =?us-ascii?Q?TuhGYDCo9IB8zU0w81iDb1JDkaX1ymUvlPEDiIIpUfsUdIFWvzfKciKb06fZ?=
- =?us-ascii?Q?D3Yym8H3wz6yY3YAo4UTpbNy9K/ajhesN/FdHeEmFtvjV85MZIMIw2GrsUEo?=
- =?us-ascii?Q?Q0dSI7IHy8apD+klXwAs6Z4YwW4n5F4veSa3jyN8ily39pms95T/X9Yv426N?=
- =?us-ascii?Q?eb7Y60K/j1FoGAPeRVfGyT7IwD0bZRe4Tz31cpbyF4d56A2qkKROYoM4Hiql?=
- =?us-ascii?Q?BlqDs7fMw+/dQWrmYhp+FXwyN/CHA4w9yoG0L6DfMezHM1dvZClvywevj/xQ?=
- =?us-ascii?Q?6v+c9wEeEMT3bct4pTf+wMtCLnlNkGxDZWkE3o1Kij34md716/74hWgmceq6?=
- =?us-ascii?Q?f6qXhqJKuYysVF0OMDfLoKhyBb9Q31FkXXXx/UBZh3OfSzpljE4w8RqZ89KO?=
- =?us-ascii?Q?HaRmUXi5murj4zy6a6iih0fKQxkQVeNmZe1N4yAcRBdjjmF4MOoSCTe8pbN8?=
- =?us-ascii?Q?vriS2op0tZ9TeeET245Hce0btyXT3XLSocNNzvQAuc1q+fJ9v887xTUeQ4ym?=
- =?us-ascii?Q?KevFKn44X3ZX3wK3EjaqabaYheU8dRvELx+DZiQdDrlLCTGVpj6f3K1wHIRq?=
- =?us-ascii?Q?KTWVDHDqERxL+ihzXsBY9DiHZloFDV6wLKPGNxbeo5eeF0Y8nRo5qFnPbR26?=
- =?us-ascii?Q?85XtA39cuajFOEcQWhCBRjZzviZENLnGKZdFGivb0pVtmrbR+/BIsjM7W61Z?=
- =?us-ascii?Q?6U4Zr3VH9t/dK67x7V1mURtruRn3LxTHD42fRNtvzf6DHTEk63NoUmzJ57rT?=
- =?us-ascii?Q?9KN07TZKOK+y/DJKtPS5Dak7JlyXBJbSx5XXBdocI9Iz/sRvpmMbLbhGSV35?=
- =?us-ascii?Q?GNre7Ui4DMR9zEpf7MsugCAenG8dH8qY5pUyWkFToHWqZa4MO04adzTmsp95?=
- =?us-ascii?Q?hzkZhrcZRBhemPGPZ3IMKtYnWwQ4NYWom/cixAf3Z/MNOjFETLVmREsCYv70?=
- =?us-ascii?Q?h5qBhZ9ek/Cc5qaCYi3rG6/TFqu6i4OctEh4LvRRbMhU+e4rkFmSH9Sguyvu?=
- =?us-ascii?Q?5H0yf9tNZ1nJPjjEtF2Qx4JKdy51nddI+ZWEnFZ3ftS5R3e2R2zWh6UKxc7E?=
- =?us-ascii?Q?+1XlnsMS9AKGMg+sZsPUYw3FqOYRoFOmwESGrrgPFlm52JL3w6gnrUGhu7Ab?=
- =?us-ascii?Q?4Ow4uBehzkQXlwc/IwUrYQ2/gBWc2V833pbMFsoINnVony3UTuwwSmLJ4nLu?=
- =?us-ascii?Q?0EGrNH3/OnwyqIZoBGzghWkDNTFk1OXdts6tsPl2d80y4icqdAzaOQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mB4UIdSdzqAd7sEkEfmbaGu6U9LGfHAH4RqcIh4MhrHzco/469+gJYNsWd1r?=
- =?us-ascii?Q?PLC4yq/YvIxaUXJz3A+rTstIt7aDE8XgqLrVyUsQ4YvyWMxEjAtArKvfWv60?=
- =?us-ascii?Q?XzzimRMtTXSosbeTqVS53hLBlsVrS79lURSUDp5wkvKrNKAZgfZNcHlXOCqr?=
- =?us-ascii?Q?qDpBxsEmhxDCLA/W6m5r/daI0/+Md/SRD6dhV8wrN1t47yEibvziSszja3sT?=
- =?us-ascii?Q?6hPHZVhHUeLWhqyeJewTFY++xWpgSjZ9dBMMjYggtyggQIRodw/+2+Mv/4yt?=
- =?us-ascii?Q?GcUPXSTcFtdWAKURR1g1p9az5snBEBo0L+FvIaKBRTkFTRCMn1lOJNW8b9sN?=
- =?us-ascii?Q?81Br8TEm6oBH9SfS3iv+A3dag8fMTShDgW32LqMrvAL1RmYXzeB2OiCvooot?=
- =?us-ascii?Q?qEvH4cor9wzH3VHWQ9praXNxzfkiiX4ZX/nmyMBjQqg0LkkAuLrnOThheSW3?=
- =?us-ascii?Q?EaKVgLjM3OPIAjRv6aB6Vu1NzhByjDL7XBvjLHdcUVF1dreXvgeu0HOpkh9S?=
- =?us-ascii?Q?8VtLhkmbTubZJ0+5BFG9PV00vKMqFHtEmUlXTEOyAiQ9v98IL7PtxsVT1o/4?=
- =?us-ascii?Q?YlD++xnkJTsXj+x5jpCElzNYNeRuKPVaXNqGLU4+yxBT8chUYkznVVKBMpHM?=
- =?us-ascii?Q?owl7SA6qDLO386nWeEMXdQvKVCqBkMD5kIqIEr7Ew8NCUaN1vcn8Ho7IwEWF?=
- =?us-ascii?Q?gCemA97/sZX1LmVQ9EMZoXs9Lrzo6c2cPqNzV7S7N1VdoTpk3pLvmklVwnRy?=
- =?us-ascii?Q?sVhwUDfq3lOImifuqI99lpa3JiITje/fvR1zMrSD0cm0ZKSMIbBER8fixKLn?=
- =?us-ascii?Q?dxYuxp6DTQ6lulSoV/9AFShlQRywfALiYcorxVsaUhJW2ozEkw4QoD8Am8wy?=
- =?us-ascii?Q?uVvehAhuxetjdWoiZJnlmWaIxJtKrMrsKLF2YqN+coBPVkKllzcULEjI3taQ?=
- =?us-ascii?Q?pQ3IxsBY0ceejS4h3sbS/Z7R03ZNkiLYb1t3yj8Cieg+5u+zoqaUuKLrrQvl?=
- =?us-ascii?Q?vEyZZNFqMlLiaVj3Rw4yBQsphi9xLfXcKq+Jnd4BYhGBcPAWE7phnqOBTccp?=
- =?us-ascii?Q?SE4ohhoCkuCNW95+uxtAu/IDwhBgXPCCgJdy7OZEAQg28e//whz63sqi2T8A?=
- =?us-ascii?Q?8suM1W4U5B3q/xPUt/V2CsWaGqa+c+QwNYlJeIHAgeWGQktSLTupqgHaaRMz?=
- =?us-ascii?Q?4Mpvv+3VvE+1r9TG2XnREktgvItSlcXRMx3uQuxNlY/JLdRymFN8XMsZq41x?=
- =?us-ascii?Q?QDYsdn+5ra/AnohNCJiIE+nmGCfhk9CcmSbBVKDmw6jeosY2yUKy9RoBEHOa?=
- =?us-ascii?Q?zaZWFdlEaFtqtiNVUtuVfPbCBnEX+txxUDRJsrkS6jZdX0fstnXqLpx9ZGfG?=
- =?us-ascii?Q?qKc7fS7blOPD8X+s8fD//ian0AvguBTpCLEob6owLcJRrqR68NBPh6MqPqD3?=
- =?us-ascii?Q?4bYryGePJ19tCcEy9ERoXMf19MkdUJdYVopQ1KWQbkyz1jYeWCnov0b8NCqQ?=
- =?us-ascii?Q?eAGNMpqGMaQEhveauCvR7fDBY5SX46bI02iq10b3VYEjAGvm5b5DQK/PrqH6?=
- =?us-ascii?Q?K5JLnZtGjvO7Hj/SzovKGrGyQ5XbhQu7OrViO9ew?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb1623a8-9d26-4971-820d-08dd9eb65260
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 13:40:06.2227
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HUV8DOBSj0ERV8x2/B9MrzeyvrRkRJ9Og72NhAWdsCGfyg4FecTa8Tk5FNrItMQms849/0lM38cgQWfai/aThA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7034
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Since 5.10, splice() or sendfile() return EINVAL. This was
-caused by commit 36e2c7421f02 ("fs: don't allow splice read/write
-without explicit ops").
 
-This patch initializes the splice_write field in file_operations, like
-most file systems do, to restore the functionality.
+Linus,
 
-Fixes: 36e2c7421f02 ("fs: don't allow splice read/write without explicit ops")
-Signed-off-by: Yangtao Li <frank.li@vivo.com>
----
- fs/hfs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+[
+  Note, this has a small merge conflict with include/trace/events/tcp.h
+  which should have:
 
-diff --git a/fs/hfs/inode.c b/fs/hfs/inode.c
-index a81ce7a740b9..451115360f73 100644
---- a/fs/hfs/inode.c
-+++ b/fs/hfs/inode.c
-@@ -692,6 +692,7 @@ static const struct file_operations hfs_file_operations = {
- 	.write_iter	= generic_file_write_iter,
- 	.mmap		= generic_file_mmap,
- 	.splice_read	= filemap_splice_read,
-+	.splice_write	= iter_file_splice_write,
- 	.fsync		= hfs_file_fsync,
- 	.open		= hfs_file_open,
- 	.release	= hfs_file_release,
--- 
-2.48.1
+ -DECLARE_TRACE(tcp_cwnd_reduction_tp,
+ +DECLARE_TRACE(tcp_cwnd_reduction,
 
+ As this series makes DECLARE_TRACE() always add the "_tp" suffix.
+]
+
+tracing updates for v6.16:
+
+- Have module addresses get updated in the persistent ring buffer
+
+  The addresses of the modules from the previous boot are saved in the
+  persistent ring buffer. If the same modules are loaded and an address is
+  in the old buffer points to an address that was both saved in the
+  persistent ring buffer and is loaded in memory, shift the address to point
+  to the address that is loaded in memory in the trace event.
+
+- Print function names for irqs off and preempt off callsites
+
+  When ignoring the print fmt of a trace event and just printing the fields
+  directly, have the fields for preempt off and irqs off events still show
+  the function name (via kallsyms) instead of just showing the raw address.
+
+- Clean ups of the histogram code
+
+  The histogram functions saved over 800 bytes on the stack to process
+  events as they come in. Instead, create per-cpu buffers that can hold this
+  information and have a separate location for each context level (thread,
+  softirq, IRQ and NMI).
+
+  Also add some more comments to the code.
+
+- Add "common_comm" field for histograms
+
+  Add "common_comm" that uses the current->comm as a field in an event
+  histogram and acts like any of the other fields of the event.
+
+- Show "subops" in the enabled_functions file
+
+  When the function graph infrastructure is used, a subsystem has a "subops"
+  that it attaches its callback function to. Instead of the
+  enabled_functions just showing a function calling the function that calls
+  the subops functions, also show the subops functions that will get called
+  for that function too.
+
+- Add "copy_trace_marker" option to instances
+
+  There are cases where an instance is created for tooling to write into,
+  but the old tooling has the top level instance hardcoded into the
+  application. New tools want to consume the data from an instance and not
+  the top level buffer. By adding a copy_trace_marker option, whenever the
+  top instance trace_marker is written into, a copy of it is also written
+  into the instance with this option set. This allows new tools to read what
+  old tools are writing into the top buffer.
+
+  If this option is cleared by the top instance, then what is written into
+  the trace_marker is not written into the top instance. This is a way to
+  redirect the trace_marker writes into another instance.
+
+- Have tracepoints created by DECLARE_TRACE() use trace_<name>_tp()
+
+  If a tracepoint is created by DECLARE_TRACE() instead of TRACE_EVENT(),
+  then it will not be exposed via tracefs. Currently there's no way to
+  differentiate in the kernel the tracepoint functions between those that
+  are exposed via tracefs or not. A calling convention has been made
+  manually to append a "_tp" prefix for events created by DECLARE_TRACE().
+  Instead of doing this manually, force it so that all DECLARE_TRACE()
+  events have this notation.
+
+- Use __string() for task->comm in some sched events
+
+  Instead of hardcoding the comm to be TASK_COMM_LEN in some of the
+  scheduler events use __string() which makes it dynamic. Note, if these
+  events are parsed by user space it they may break, and the event may have
+  to be converted back to the hardcoded size.
+
+- Have function graph "depth" be unsigned to the user
+
+  Internally to the kernel, the "depth" field of the function graph event is
+  signed due to -1 being used for end of boundary. What actually gets
+  recorded in the event itself is zero or positive. Reflect this to user
+  space by showing "depth" as unsigned int and be consistent across all
+  events.
+
+- Allow an arbitrary long CPU string to osnoise_cpus_write()
+
+  The filtering of which CPUs to write to can exceed 256 bytes. If a machine
+  has 256 CPUs, and the filter is to filter every other CPU, the write would
+  take a string larger than 256 bytes. Instead of using a fixed size buffer
+  on the stack that is 256 bytes, allocate it to handle what is passed in.
+
+- Stop having ftrace check the per-cpu data "disabled" flag
+
+  The "disabled" flag in the data structure passed to most ftrace functions
+  is checked to know if tracing has been disabled or not. This flag was
+  added back in 2008 before the ring buffer had its own way to disable
+  tracing. The "disable" flag is now not always set when needed, and the
+  ring buffer flag should be used in all locations where the disabled is
+  needed. Since the "disable" flag is redundant and incorrect, stop using it.
+  Fix up some locations that use the "disable" flag to use the ring buffer
+  info.
+
+- Use a new tracer_tracing_disable/enable() instead of data->disable flag
+
+  There's a few cases that set the data->disable flag to stop tracing, but
+  this flag is not consistently used. It is also an on/off switch where if a
+  function set it and calls another function that sets it, the called
+  function may incorrectly enable it.
+
+  Use a new trace_tracing_disable() and tracer_tracing_enable() that uses a
+  counter and can be nested. These use the ring buffer flags which are
+  always checked making the disabling more consistent.
+
+- Save the trace clock in the persistent ring buffer
+
+  Save what clock was used for tracing in the persistent ring buffer and set
+  it back to that clock after a reboot.
+
+- Remove unused reference to a per CPU data pointer in mmiotrace functions
+
+- Remove unused buffer_page field from trace_array_cpu structure
+
+- Remove more strncpy() instances
+
+- Other minor clean ups and fixes
+
+
+Please pull the latest trace-v6.16 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-v6.16
+
+Tag SHA1: f02d35b1e21423d6f9043f1b846f61ef9a42a30d
+Head SHA1: 2fbdb6d8e03b70668c0876e635506540ae92ab05
+
+
+Devaansh Kumar (1):
+      tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+
+Ilya Leoshkevich (1):
+      ftrace: Expose call graph depth as unsigned int
+
+Masami Hiramatsu (Google) (1):
+      tracing: Record trace_clock and recover when reboot
+
+Miaoqian Lin (1):
+      tracing: Fix error handling in event_trigger_parse()
+
+Pan Taixi (1):
+      tracing: Fix compilation warning on arm32
+
+Steven Rostedt (29):
+      tracing: Update function trace addresses with module addresses
+      tracing: Show function names when possible when listing fields
+      tracing: Only return an adjusted address if it matches the kernel address
+      tracing: Adjust addresses for printing out fields
+      tracing: Show preempt and irq events callsites from the offsets in field print
+      tracing: Always use memcpy() in histogram add_to_key()
+      tracing: Move histogram trigger variables from stack to per CPU structure
+      tracing: Add common_comm to histograms
+      ftrace: Show subops in enabled_functions
+      ftrace: Comment that ftrace_func_mapper is freed with free_ftrace_hash()
+      tracing/mmiotrace: Remove reference to unused per CPU data pointer
+      ftrace: Do not bother checking per CPU "disabled" flag
+      tracing: Just use this_cpu_read() to access ignore_pid
+      tracing: Add tracer_tracing_disable/enable() functions
+      tracing: Use tracer_tracing_disable() instead of "disabled" field for ftrace_dump_one()
+      tracing: kdb: Use tracer_tracing_on/off() instead of setting per CPU disabled
+      ftrace: Do not disabled function graph based on "disabled" field
+      tracing: Do not use per CPU array_buffer.data->disabled for cpumask
+      ring-buffer: Add ring_buffer_record_is_on_cpu()
+      tracing: branch: Use trace_tracing_is_on_cpu() instead of "disabled" field
+      tracing: Convert the per CPU "disabled" counter to local from atomic
+      tracing: Use atomic_inc_return() for updating "disabled" counter in irqsoff tracer
+      tracing: Remove unused buffer_page field from trace_array_cpu structure
+      tracing: Rename event_trigger_alloc() to trigger_data_alloc()
+      tracing: Remove unnecessary "goto out" that simply returns ret is trigger code
+      tracing: Add a helper function to handle the dereference arg in verifier
+      tracing: Allow the top level trace_marker to write into another instances
+      tracepoint: Have tracepoints created with DECLARE_TRACE() have _tp suffix
+      tracing/sched: Use __string() instead of fixed lengths for task->comm
+
+Tomas Glozar (1):
+      tracing/osnoise: Allow arbitrarily long CPU string
+
+Yury Norov (1):
+      tracing: Cleanup upper_empty() in pid_list
+
+----
+ Documentation/trace/ftrace.rst                     |  13 ++
+ Documentation/trace/tracepoints.rst                |  17 +-
+ include/linux/ftrace.h                             |   2 +
+ include/linux/ring_buffer.h                        |   1 +
+ include/linux/tracepoint.h                         |  38 ++--
+ include/trace/bpf_probe.h                          |   8 +-
+ include/trace/define_trace.h                       |  17 +-
+ include/trace/events/sched.h                       | 124 ++++++------
+ include/trace/events/tcp.h                         |   2 +-
+ kernel/trace/fgraph.c                              |   2 +
+ kernel/trace/ftrace.c                              |  45 ++++-
+ kernel/trace/pid_list.c                            |   8 +-
+ kernel/trace/ring_buffer.c                         |  18 ++
+ kernel/trace/trace.c                               | 214 +++++++++++++++++----
+ kernel/trace/trace.h                               |  30 ++-
+ kernel/trace/trace_branch.c                        |   4 +-
+ kernel/trace/trace_entries.h                       |  12 +-
+ kernel/trace/trace_events.c                        |  39 ++--
+ kernel/trace/trace_events_hist.c                   | 179 ++++++++++++++---
+ kernel/trace/trace_events_trigger.c                |  64 +++---
+ kernel/trace/trace_functions.c                     |  24 +--
+ kernel/trace/trace_functions_graph.c               |  38 +---
+ kernel/trace/trace_irqsoff.c                       |  47 +++--
+ kernel/trace/trace_kdb.c                           |   9 +-
+ kernel/trace/trace_mmiotrace.c                     |  12 +-
+ kernel/trace/trace_osnoise.c                       |   9 +-
+ kernel/trace/trace_output.c                        |  60 ++++--
+ kernel/trace/trace_sched_wakeup.c                  |  18 +-
+ kernel/trace/trace_stack.c                         |   2 +-
+ tools/testing/selftests/bpf/progs/raw_tp_null.c    |   2 +-
+ .../testing/selftests/bpf/progs/raw_tp_null_fail.c |   2 +-
+ .../selftests/bpf/progs/test_module_attach.c       |   4 +-
+ .../selftests/bpf/progs/test_tp_btf_nullable.c     |   4 +-
+ .../testing/selftests/bpf/test_kmods/bpf_testmod.c |   8 +-
+ 34 files changed, 720 insertions(+), 356 deletions(-)
+---------------------------
