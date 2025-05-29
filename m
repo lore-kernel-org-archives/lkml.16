@@ -1,134 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216451B6D06;
-	Thu, 29 May 2025 09:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE22F21B9F0;
+	Thu, 29 May 2025 09:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509308; cv=none; b=Eru3FLROrWzaK3Hi8ftj9flN4MO/Prlqugiok8q14Y9SuiTb4jIzzWHDuYe0Gwrf+RBBYSKu75n5auVW2pL++3EQ85PfCRbLTPwJ1kv4Z+5lg6Ce7daEUwRRrMNDCf117PCzIupYJDq3KeB1gQasAL48EyF9p6D4iKZBfVR1I0I=
+	t=1748509311; cv=none; b=gHwJmoyq++nfipycV83p/39PDkVQlVRp0LAf2DF2atMnJnMgIbOPrPtzec+3KTY0HyihPlh34DKkfLAp83hNTfzP0QL4+jqtkZ7baRKJhsb2iZ0JSFE0t+KsZ8FHLyopNO9woynSrAfZmTwbDWN5u8I2Urrv7jN1h6q/4mEPu6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509308; c=relaxed/simple;
-	bh=cmvLbyKtwXSsyts5o0RR2FI3M0/ZIWZMEocPoXjVbQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YrUaBTOHtLWY5dQhLjoIy/bMY1nIEGCfw/oOF2oXYrC2WG7TAOON/xnxj+UPFrkyI4tr+2yD9qSPDTsEWmmjvgCNP8n72VnzGIFl91JPmfVJHHKJY0YPoruoyWcilzMZxybUhrCIsSYx1YjXtLdyjl261RmyYX8QHPFr07khXVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=drZETqKX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748509311; c=relaxed/simple;
+	bh=HlPWaPKN/azxxyWf2k728K8i6uOX3dIuS3C2IPYFdIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcLpvxvhFvfwIHQMNqHPEYyvmG3YarBg6TPBf0tSuJMIA+m8UW2CvrNsGbv2DMqWbTbmztf87yNNk4T5zR2/HV7bt3b2HGBp9Dy14BT0uaOE3j3bWd7RFWexaCNdaA4pURXem6lti+VGhPNJ/5nVYKtaghTvsZ45nvkrW3q5gVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=D0p438Kf; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="drZETqKX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276A3C4CEE7;
-	Thu, 29 May 2025 09:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748509308;
-	bh=cmvLbyKtwXSsyts5o0RR2FI3M0/ZIWZMEocPoXjVbQw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=drZETqKXlgA/V3CUDK3etEu0hiRuzGsOsb69fY9pCdojKyxdY4SzBfIGsPTEdq7w8
-	 ZZgXKvWzVSVechyEQYLirh6AXqAPzbf2lqt84vlYeZv+LeJ4gMwJAtktl78Eu0jw/K
-	 7lg31kdgAOOZVrK4plJ0ZugV9vIRtlcf0Wi3yYRKQ/CQqScIhgVNkeScYcWEboKNtQ
-	 1MKhUOu+FJTjflZ/azgOJiAGDsL2dynDfPdUJ7AKzMGRr/WCvVSaKA1o/zM5Nk+wO5
-	 P5R7hoFbYkHV6SnrF53f7wWjMofhG8EruQC05958yP9PuLILuklYW8vbDRsjCX6DCo
-	 ykOW4ORBQuwGg==
-Message-ID: <ebf1eded-aa78-4d50-8aa3-b1b7004c10f8@kernel.org>
-Date: Thu, 29 May 2025 11:01:43 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D0p438Kf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4rPjHyO1ImjfX55E2k5VoZ01eHeMPnzv3/koD1bA2Rw=; b=D0p438Kf5mlprmqRVogIIHQsYh
+	HJ/q3CXjGlZZZrdL/+ZAPMrxAUTScM5jGy9h3tCvTNLkxK/VU7N4/+7T8Lv0upCxQs2tLHTa+YbE2
+	JDL+AuS2CNPgKy3JLdYs1zPOK3pjfknYNl+IRo10uQBbqb06b/9TWDPcN9MPmICUdXqOt04elWGcN
+	z1jPG0mi/V99rdCXNHWedorf/WEL4kQcpTON2TICuR0/yMMUV/GQHuuHiHKXZEgRmya/mNx9kd7gR
+	knobjRVBP894kXb000cjon+3g1Ow6ftff1ibC1Amz2siZIaiTgHVV+1VEXrlte8tU8EIiZ8cGvIs6
+	aVu3QTVw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKZ8k-0000000Eaug-2OvC;
+	Thu, 29 May 2025 09:01:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 964CA30057C; Thu, 29 May 2025 11:01:29 +0200 (CEST)
+Date: Thu, 29 May 2025 11:01:29 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville Syrjala <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+Message-ID: <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
+References: <20250526132755.166150-1-acarmina@redhat.com>
+ <20250526132755.166150-2-acarmina@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp15
-To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-6-bd6ca199466a@foss.st.com>
- <1c21f915-e067-4801-925a-3d4882f358f2@kernel.org>
- <ef481451-b7d2-4f9a-a3d0-c67e8f5061dd@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ef481451-b7d2-4f9a-a3d0-c67e8f5061dd@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526132755.166150-2-acarmina@redhat.com>
 
-On 28/05/2025 14:15, Clement LE GOFFIC wrote:
-> On 5/28/25 11:00, Krzysztof Kozlowski wrote:
->> On 23/05/2025 14:38, Clément Le Goffic wrote:
->>> Add the hdp devicetree node for stm32mp15 SoC family
->>>
->>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>> ---
->>>   arch/arm/boot/dts/st/stm32mp151.dtsi | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
->>> index 0daa8ffe2ff5..b1b568dfd126 100644
->>> --- a/arch/arm/boot/dts/st/stm32mp151.dtsi
->>> +++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
->>> @@ -270,6 +270,13 @@ dts: thermal@50028000 {
->>>   			status = "disabled";
->>>   		};
->>>   
->>> +		hdp: pinctrl@5002a000 {
->>> +			compatible = "st,stm32mp151-hdp";
->>> +			reg = <0x5002a000 0x400>;
->>> +			clocks = <&rcc HDP>;
->>> +			status = "disabled";
->>
->> Same questions here and in further patches.
-> 
-> Same, disabled by default and enable in board's dts file
+On Mon, May 26, 2025 at 01:27:51PM +0000, Alessandro Carminati wrote:
 
+>  #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
+>  #define __WARN_printf(taint, arg...) do {				\
+> -		instrumentation_begin();				\
+> -		__warn_printk(arg);					\
+> -		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+> -		instrumentation_end();					\
+> +		if (!KUNIT_IS_SUPPRESSED_WARNING(__func__)) {		\
+> +			instrumentation_begin();			\
+> +			__warn_printk(arg);				\
+> +			__WARN_FLAGS(BUGFLAG_NO_CUT_HERE |		\
+> +				BUGFLAG_TAINT(taint));			\
+> +			instrumentation_end();				\
+> +		}							\
+>  	} while (0)
+>  #define WARN_ON_ONCE(condition) ({				\
+>  	int __ret_warn_on = !!(condition);			\
+> -	if (unlikely(__ret_warn_on))				\
+> +	if (unlikely(__ret_warn_on) && !KUNIT_IS_SUPPRESSED_WARNING(__func__))	\
+>  		__WARN_FLAGS(BUGFLAG_ONCE |			\
+>  			     BUGFLAG_TAINT(TAINT_WARN));	\
+>  	unlikely(__ret_warn_on);				\
+> @@ -121,7 +130,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+>  #ifndef WARN_ON
+>  #define WARN_ON(condition) ({						\
+>  	int __ret_warn_on = !!(condition);				\
+> -	if (unlikely(__ret_warn_on))					\
+> +	if (unlikely(__ret_warn_on) && !KUNIT_IS_SUPPRESSED_WARNING(__func__))	\
+>  		__WARN();						\
+>  	unlikely(__ret_warn_on);					\
+>  })
+> @@ -138,7 +147,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+>  
+>  #define WARN_TAINT(condition, taint, format...) ({			\
+>  	int __ret_warn_on = !!(condition);				\
+> -	if (unlikely(__ret_warn_on))					\
+> +	if (unlikely(__ret_warn_on) && !KUNIT_IS_SUPPRESSED_WARNING(__func__))	\
+>  		__WARN_printf(taint, format);				\
+>  	unlikely(__ret_warn_on);					\
+>  })
+> @@ -157,8 +166,10 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+>  #else /* !CONFIG_BUG */
+>  #ifndef HAVE_ARCH_BUG
+>  #define BUG() do {		\
+> -	do {} while (1);	\
+> -	unreachable();		\
+> +	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__)) {			\
+> +		do {} while (1);					\
+> +		unreachable();						\
+> +	}								\
+>  } while (0)
+>  #endif
 
-So the same answer, node is complete so should it be enabled.
+NAK
 
-Best regards,
-Krzysztof
+This is again doing it wrong -- this will bloat every frigging bug/warn
+site for no reason. 
+
+Like I said before; you need to do this on the report_bug() size of
+things.
