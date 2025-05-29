@@ -1,131 +1,135 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EA41B21BF;
-	Thu, 29 May 2025 12:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCB91B21BF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748521873; cv=none; b=IqJ1slPDm1Kesy8liT81WEJizEXVNSR/Q24uH78iEYsRQ5nAGfxO3nCujezTXsdtq4aUVHO7V8+BDq75piTjrAJcP5fgnOzdBOkGNIug3iZ25TxDua9sOkIUn3K6k2A+cLXkCedD+eLcgwktwF3SAAtUGwVp3wiOY7gopjwPnQI=
+	t=1748522008; cv=none; b=TCAxpc/lmxeqB/ROnmoCIU+VnfoVIXLxqxiJlbt71gWGPOaVFa8bqVpsa9HSYBX5ZTMMRBAeTCZLAmzSvEVDFkEe5HJhi6VjfZoQZ+rd/wQJRaSdVO8h/DFFnjnifG8p5qRckef051RvGt6QfCPAzSJVkXnhaHQKIqQxkRXRFNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748521873; c=relaxed/simple;
-	bh=GmoWsPXXNONnNCn/pziHPId+sw7VHnYucb263mI8g+s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A6c1xt+3eFvrCNrWS0dDytUhZ+3Q8BC+3usygc2aYAZuzP018XjMDJZ5v8vjvPbVTL8q8HiDTGI5GdcTih7pDzeWZJUAk82HlrEPwCp7otoAqYrfux7Bl6MJ7Ig3yGdkfPk1/QLeIx/LoF6cwBxRqCMpohwT147tm1DTN0lGRUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEYp5lcB; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEYp5lcB"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-afc857702d1so661955a12.3;
-        Thu, 29 May 2025 05:31:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748521871; x=1749126671; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tq1cwOPaR4vKxoX32nv3/DyAYjBA3wRhSPzfXs5sjXU=;
-        b=mEYp5lcBCU/cbats7ME726Kz8efkMLJRlTeNrvuRXZ8aDKEwpLvLnbh+8Uv/7G4riC
-         p9BBCGkJouV2pWJw7XromVMzH3Ei32CfSHIzsCBFyPl/evNwvy7nc/mgk29iH2Yx3qXr
-         61zEis9ETF3LGOrGVxZTlu1cOYt1xKFRAsvCkf1dVVCw8umn8E2eeL+902ojAsAxtu9e
-         mvTwy7TLHQnT98lK2soDbvBRpG3cxJTt1U5PIqViJOOTH7yyuGi/+U1T/Mwqt63cTBqq
-         lAMyH++h80TuvLxKQz2QcunMFWNWPw3MeWqCj/FsxLMMmsY+vLjg+DPEo5r7MyJwfkAE
-         hPBA==
+	s=arc-20240116; t=1748522008; c=relaxed/simple;
+	bh=kIkmKcaPV98XKhRwOTAvnQhINvi2n4gSAdVyCSaFabU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=FlG4+3SzyyogQTWQKGB01radbWsvVQ/j1tkGJ8A9+xpZH2pVU2Og7PnbXMl6jrmypZMaqFCqqCIvLqYFsfOPrT8UyClYFhjM/cMOsrg70s1f9e/7kRPYAtuEyfS6bOUxd+fxa+C/+OHnaXAHLBkJB9135vuoZn/K/7E3yDY43WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85e15e32379so62676339f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:33:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748521871; x=1749126671;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tq1cwOPaR4vKxoX32nv3/DyAYjBA3wRhSPzfXs5sjXU=;
-        b=EFyaZ0KsI5XwXX1vlvq746R2RmNaugoezvJ9wDtGaKgcXhn9JR+TLD30e/VJA9OFBs
-         41mtCxaLXjmSzaK8leymKVIQQAQ7JMV9uHsyj0YrZwC5RiTF4IAw1eT/F9SnxPfFHW8N
-         k4aEOGY/x7er2UVDosVPzYFinW9Ok9Gmtc2YTCGi9WSenOVTAKmfpJFlh31IfVM6sK0H
-         KNur9ZqhtCoT9IWw7Mtc0VVywJKMcPoyb06CYN3YzR08b4dc3QnmTwf5yxQT88b5s7v1
-         ZZtkATNZs67JWKWSGIEj8pla54TYH0jA7KF4ld0Ks8Oiq7CHNRBJmEgNrfvRCMju/erd
-         hOkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpKX22mbR/yWm2PJme0sBc++R7MH8+lq/mQU0lic4BbcUwjtWQS6pIVCngKroRTWdIVYrLeGjcvA4odSg=@vger.kernel.org, AJvYcCV+NHmI6jpsy+XyBcfEdIoAw96QUHZbctIgBrCOOQCweZFsI0kcy8P9Pz3qgB73e3mAqAG/Xxn2@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9g94fjtt1oMSNsi2IXliI6yRjEClGNxUACTdRtuGMViRH9ZL6
-	LQV1s+sBRlic7w8Lto4WkbeEHRKvkChvFAmdIpn0Cp2OCmfvNiy8LEu22Zxc0HI4vGk53dBQcIq
-	iBTe1v73AwFDsEi1kq0043sMdaW5FXNc=
-X-Gm-Gg: ASbGnct6Bzf6ygi5VtjYTGCAlSbaQQjS8spP9Rsq8J/5r5aAEpczF1dzJoQ7Ysk1QWf
-	ZMsIuqDESswY2D88hJ2i5e17NgK4ZbHFWtB0lMp9Wb/cIxnzekXIadZW8n+zep6UqzEU5DQUbIg
-	LXXVDAgU/TSJ8+eqAUfaYqGTxrZz7jRLBwbIFuRRAaRN1ZmoK/zr7O97llxLieMOStsmmSDVYZf
-	WxM
-X-Google-Smtp-Source: AGHT+IGp4zLKOpGdYRvmDVdlnQvGHcsBhKQmRHDUVcglWg+1oqojMwVl/cOxeFOXeuqJpSpTyoxtX5MLpnOMxIiVSSs=
-X-Received: by 2002:a17:90b:2e83:b0:312:1516:5ef1 with SMTP id
- 98e67ed59e1d1-3121dc21454mr3407822a91.7.1748521870864; Thu, 29 May 2025
- 05:31:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748522006; x=1749126806;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5bml+Lhlb/ESJB7OB397E+URQXQmoC/VYahWRyI1KaM=;
+        b=qX79QzNCoa/8YAruVKERexpWGYGYMs+HNuQMVATpLO5LwrF0givqy/8kPFopV0Fk9P
+         TMdKZdBp7ywhqEYY91ezM/2Z84lj/XfBVWbaIwYxSmVzqbmC0stTelx7OyvalCG6gTKe
+         k9PqBbBKagZu9CY0U+Xp58lVupolsLGqh7jmTPWn2ph7tGxRFFsxc6qqRMabTGiHPDZE
+         MLC3Y0wv0OMa6qud4zZP3kLG9z32zwod9M5QdGEUDc7MK7G3Pr+P1LhsfE48MRhNq8d5
+         WIm1oBUay89s9HDHPKezoqCs7ELkGV7O2Hu00u3X0rkth64lVQ65uy5gf+a5NHmT2Mgu
+         s8kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKYxVY7Sbx1JXWHZj7Znq6FQ5cCMoYuj2KKj8kxaoj/cq3AmKm8ZZ2vJHTiB0hQN5vUi3tAqGoyAs49Eo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywn1Qtgdaw5dv2rLmZ0BwBICxljJuwEW4xc4robI5pNM5IIaxFj
+	3efQYZ5UoZaKAGXVJwPiTTRvOm0Cl2yBqT9i5lDcg0aca0pAErR3C6pnNesZ4O4Z3Iw4lj/AeSZ
+	rGFEZ0cBPA9bo8pICh6p+DvqAtpQjpwKYbLPS7IBthd/LTt3Yl+bD0Kd6ago=
+X-Google-Smtp-Source: AGHT+IHxHOKcAfW53VhsEwfYQe28Edle9Xwc641YqhY2if7TdOjOHCstkntXRFjfL61vR74DgjPJZSP093ib53p+cgjjwt7thbwV
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
- <7ae9e9f9-80e7-4285-83f0-a0946d238243@suse.cz> <ow3adiccumedegsm4agxlvaiaq3ypeto42hxr4ln6v3zzluhyu@2cdoez7of6ic>
- <scchmajjawfmmoreihui4yyzuyutzf3evhmmx2j4f2lhu6r62n@ovaamezmqgun>
-In-Reply-To: <scchmajjawfmmoreihui4yyzuyutzf3evhmmx2j4f2lhu6r62n@ovaamezmqgun>
-From: Konstantin Khlebnikov <koct9i@gmail.com>
-Date: Thu, 29 May 2025 14:30:58 +0200
-X-Gm-Features: AX0GCFuljSryuZeYsXkIUeJyWk2K7LZ8ro-jiJpu63bVcI17YSh4usFoQKWXwyE
-Message-ID: <CALYGNiMBP5C0-6c_3MXpAEswYn8P6CH4eG3Kr5asu70uJg+CXg@mail.gmail.com>
-Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Hongyu Ning <hongyu.ning@linux.intel.com>, 
-	stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>, 
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>, Jens Axboe <axboe@kernel.dk>
+X-Received: by 2002:a5d:9f50:0:b0:86c:ee8b:c089 with SMTP id
+ ca18e2360f4ac-86cee8bc1bbmr560370739f.3.1748522005946; Thu, 29 May 2025
+ 05:33:25 -0700 (PDT)
+Date: Thu, 29 May 2025 05:33:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68385415.a70a0220.29d4a0.082e.GAE@google.com>
+Subject: [syzbot] [wireless?] WARNING in ieee80211_tx_h_rate_ctrl
+From: syzbot <syzbot+0d516b33238bd97ee864@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 29 May 2025 at 12:51, Kirill A. Shutemov
-<kirill.shutemov@linux.intel.com> wrote:
->
-> On Thu, May 29, 2025 at 01:47:10PM +0300, Kirill A. Shutemov wrote:
-> > On Thu, May 29, 2025 at 12:40:21PM +0200, Vlastimil Babka wrote:
-> > > On 5/29/25 12:38, Kirill A. Shutemov wrote:
-> > > > Hongyu noticed that the nr_unaccepted counter kept growing even in the
-> > > > absence of unaccepted memory on the machine.
-> > > >
-> > > > This happens due to a commit that removed NR_BOUNCE: it removed the
-> > > > counter from the enum zone_stat_item, but left it in the vmstat_text
-> > > > array.
-> > > >
-> > > > As a result, all counters below nr_bounce in /proc/vmstat are
-> > > > shifted by one line, causing the numa_hit counter to be labeled as
-> > > > nr_unaccepted.
-> > > >
-> > > > To fix this issue, remove nr_bounce from the vmstat_text array.
-> > > >
-> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
-> > > > Fixes: 194df9f66db8 ("mm: remove NR_BOUNCE zone stat")
-> > > > Cc: stable@vger.kernel.org
-> > > > Cc: Christoph Hellwig <hch@lst.de>
-> > > > Cc: Hannes Reinecke <hare@suse.de>
-> > > > Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> > > > Cc: Jens Axboe <axboe@kernel.dk>
-> > >
-> > > Is there a way to add a BUILD_BUG_ON to catch a future case like this one?
-> >
-> > There's
-> >
-> >       BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS);
-> >
-> > in vmstat_start().
-> >
-> > Making it strict != seems to do the trick for my config. But it requires
-> > wider testing.
-> >
-> > I can prepare a patch for that.
->
-> There was a strict check before 9d7ea9a297e6 ("mm/vmstat: add helpers to
-> get vmstat item names for each enum type"). Not sure if changing != to <
-> was intentional.
->
-> Konstantin?
+Hello,
 
-I have no clue. Sorry.
+syzbot found the following issue on:
 
->
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+HEAD commit:    5cdb2c77c4c3 Merge tag 'net-6.15-rc8' of git://git.kernel...
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=14784df4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
+dashboard link: https://syzkaller.appspot.com/bug?extid=0d516b33238bd97ee864
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d90a868e19ee/disk-5cdb2c77.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3c5ff2a5a972/vmlinux-5cdb2c77.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f6a0db04ca42/bzImage-5cdb2c77.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0d516b33238bd97ee864@syzkaller.appspotmail.com
+
+wlan1: Created IBSS using preconfigured BSSID 50:50:50:50:50:50
+wlan1: Creating new IBSS network, BSSID 50:50:50:50:50:50
+------------[ cut here ]------------
+wlan1: Dropped data frame as no usable bitrate found while scanning and associated. Target station: 08:02:11:00:00:00 on 5 GHz band
+WARNING: CPU: 1 PID: 1111 at net/mac80211/tx.c:756 ieee80211_tx_h_rate_ctrl+0xc87/0x1780 net/mac80211/tx.c:749
+Modules linked in:
+CPU: 1 UID: 0 PID: 1111 Comm: kworker/u8:6 Not tainted 6.15.0-rc7-syzkaller-00082-g5cdb2c77c4c3 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: events_unbound cfg80211_wiphy_work
+RIP: 0010:ieee80211_tx_h_rate_ctrl+0xc87/0x1780 net/mac80211/tx.c:749
+Code: 31 f6 83 e6 07 41 0f 95 c6 31 ff e8 03 26 ea f6 43 8d 0c 76 83 c1 02 48 c7 c7 60 8b 8c 8c 48 89 de 4c 89 fa e8 3a 7e ae f6 90 <0f> 0b 90 90 41 bf 01 00 00 00 e9 eb 02 00 00 e8 95 21 ea f6 e9 6a
+RSP: 0018:ffffc90003c9f460 EFLAGS: 00010246
+RAX: caae12da654acc00 RBX: ffff888078a69738 RCX: ffff888026951e00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: ffffc90003c9f5d0 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bba984 R12: dffffc0000000000
+R13: ffffc90003c9f788 R14: 0000000000000001 R15: ffff888059534d44
+FS:  0000000000000000(0000) GS:ffff8881261c2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055557d9f3588 CR3: 0000000031484000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ invoke_tx_handlers_late+0xb6/0x1820 net/mac80211/tx.c:1850
+ ieee80211_tx+0x2ac/0x420 net/mac80211/tx.c:1971
+ __ieee80211_tx_skb_tid_band+0x50f/0x680 net/mac80211/tx.c:6107
+ ieee80211_tx_skb_tid_band net/mac80211/ieee80211_i.h:2338 [inline]
+ ieee80211_send_scan_probe_req net/mac80211/scan.c:655 [inline]
+ ieee80211_scan_state_send_probe+0x59a/0xa10 net/mac80211/scan.c:683
+ ieee80211_scan_work+0x5b1/0x1ce0 net/mac80211/scan.c:1143
+ cfg80211_wiphy_work+0x2dc/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
