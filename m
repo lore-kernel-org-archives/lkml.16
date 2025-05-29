@@ -1,140 +1,128 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD54213E76
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1837318991E;
+	Thu, 29 May 2025 14:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748527350; cv=none; b=V+Pnjy/mUM6wscL8H0zHH3JycJJ2uX+8Qn0GEUwb7rkmNw0WG1fmCPX1aWSSZKvh64Rf4j5zG7GHtsk4EyvtaA7A5uOMjq3jUrON8GqinHVgylq5CqfC/lohOV4pX6NpGrokzr3JsfKPQ854u0NjxyYRY3WBLhuFvNqnUPuvKqU=
+	t=1748528333; cv=none; b=dSe1BR62LO7vaEoe1IEZv9DRHrpoOBaBKQ2GDJbe/lY+2v6ktrJ+stzJn8GIVHq394sHRZhsvUVoE2YEtdwOzEdKrJkmgkv6PcjWz2fB9y+XUt37eRisPVQAPfx+SuEpvnml0Vl/oR24bguNfimZAnUTO1auXtY+rgraiI9zWHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748527350; c=relaxed/simple;
-	bh=yBKN8id0e8i0mID56sBX04JKOMEpNFcKtfCE5gt4YyQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=ZYNqTB4VpFfIA49EPKBgn1QHvQZ0BmHwEL4vvIJGTiJc8KNkTorYkJLV+rzjGU8JNyXVpBam7QxxK+0TYnNTce45nKtnxdrwFhFf27zuS4DWP5mFyXhMe6WmosRTH+LwntlA70jHZTKswKSM9l5rSYTVL8U/20ZjJGVSF3MzXWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pQRhGPFo; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748528333; c=relaxed/simple;
+	bh=LhuJp43UHfuJgWopEZQdZcVMhYlqjgvaLlH7RK+ujuE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p6zECdog6mAHBvKo76stoCTg6xidzG7D+/POGPyhwzNX2MJG0uKdWNeHxg8HwMAdKWEyOKzHiHvemAF7+t+DVop4iSfNnnpicvqov7daNsoN4Rlf7I4yd3lK05LbBR4jmsP9lRxQB+aQu5tbG9SzGXxfBhoGsL9EieQ2xldkRLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BRPze3B2; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pQRhGPFo"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250529140227epoutp02d5f1ae2f9b92d272e493d94704b2d0da~EBFuogmSV1921919219epoutp02B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:02:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250529140227epoutp02d5f1ae2f9b92d272e493d94704b2d0da~EBFuogmSV1921919219epoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748527347;
-	bh=gCzfbZekv4htNUijIC+SbkqBGyLEFOMaleFjXJEgatk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pQRhGPFoL+9I1NyzEAuNZMzXCCh+59SIW5X+Soj1sPdR/Kb+oC4OO89NDIUAXx9bt
-	 ojZh0s28UbNv4XP9xM/04xKAnL/ldctCENwxlKRiDy4xIWis8EmNPd5yA4pd9TafW8
-	 I91Y5viLqoNBVZxeYBKmIKzR9XDaX8GgZuZM31Pk=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250529140226epcas5p25bdafdf609607873ca08557b6ad3a85f~EBFt-QyMW1140911409epcas5p2c;
-	Thu, 29 May 2025 14:02:26 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4b7Sjr3GW2z2SSKX; Thu, 29 May
-	2025 14:02:24 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250529111718epcas5p4572d6aa7ae959b585b658d5a94f2b4ef~D_1iJ4i-t0282202822epcas5p4D;
-	Thu, 29 May 2025 11:17:18 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250529111718epsmtrp1257cc470d2823aa85b322766527d6595~D_1iJE18d1149011490epsmtrp1p;
-	Thu, 29 May 2025 11:17:18 +0000 (GMT)
-X-AuditID: b6c32a52-40bff70000004c16-35-6838423d6874
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	8D.D0.19478.D3248386; Thu, 29 May 2025 20:17:17 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250529111715epsmtip16ae03b6cb035bd17825b1eb64d85c26c~D_1fb-zLZ2103321033epsmtip1G;
-	Thu, 29 May 2025 11:17:14 +0000 (GMT)
-From: Raghav Sharma <raghav.s@samsung.com>
-To: krzk@kernel.org, s.nawrocki@samsung.com, cw00.choi@samsung.com,
-	alim.akhtar@samsung.com, mturquette@baylibre.com, sboyd@kernel.org,
-	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
-	sunyeal.hong@samsung.com, shin.son@samsung.com
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	chandan.vn@samsung.com, karthik.sun@samsung.com, dev.tailor@samsung.com,
-	Raghav Sharma <raghav.s@samsung.com>
-Subject: [PATCH v3 4/4] arm64: dts: exynosautov920: add CMU_HSI2 clock DT
- nodes
-Date: Thu, 29 May 2025 16:56:40 +0530
-Message-Id: <20250529112640.1646740-5-raghav.s@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250529112640.1646740-1-raghav.s@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRPze3B2"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso761106b3a.2;
+        Thu, 29 May 2025 07:18:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748528331; x=1749133131; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pRunouiRwWVQHZctMk1xqRA0wapXHcwDRKo88A9IWqc=;
+        b=BRPze3B2fDFDJUTgMAoYXSD5RsLkmHdJ3xqEpyjuDQ2Tgk4sJL3k1sAGmbxIAX2HF+
+         tovkkx3PYT3jm7kd8rfEnVtPomSLBpQqd++yy/hDIPnjWxOHgi+3x3b8Jfd4tRIUKQeQ
+         lVi8Igk7JWfq/5ibryfAy8v7vuk7mUjeXgqrUTa3baSFDU1ukRm0aFgTy6hN1R6G5d57
+         0E8TWKgn4/CVsh0ZJvxVml6b0Ho8Jtxv0KVxoZc4/E2PqlfrmOyGS2FSy0CotzXwCiA+
+         vTAJLnlRr/YscQJwcRzj9NB/rz6MZv3zWzRZz5XBLuPdqnxOm9W1BUjuiG/3KmK2oqZ5
+         l5cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748528331; x=1749133131;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pRunouiRwWVQHZctMk1xqRA0wapXHcwDRKo88A9IWqc=;
+        b=XrZYUJ4TpBltPLYcK4is0HeqvgnFxYEJF+CovYb4k/r2aZ/7XDxBcD8eFfmQ4o24fw
+         bNTZj7rtSUGDBpsufYgiCF+RGg6L+VG0SCZzp4wRbsxkLDjlNYtAJeEFeVLICvDbC4dS
+         CH+AjfFbQcT23Ke1+WNhcUrvf5VkEFfCzE5XPj4OAguW+zy6prtd/9F7oh13J7qxmCBS
+         R9CXeyOSIklm+HVvd1eduxvxXiVHX3pk0DiFeeNRv9oNocGKapZeVnzGDLPcTQeZDIrR
+         kQBjA9kWqRDS6rG5NHTXAjX/zppVrW9koj7nItpdhPDqpsRZrfPnfKnN+s97ZcEGZkfx
+         DKRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjaWckY5Lfz2n7EcVWzun3qImhy29NeFkxB9YhoSq1hcbcVZPrRhB3CrYt7FzYyeJ2iFwEhh5i2kCXGv8=@vger.kernel.org, AJvYcCW3Dj+oSwcktU4q73f8D4KzcccYBhtSMGjtnR46Bs+bNXiie7ZhRHh5ONovs1UPhLN3qZKssZOCrEmhB+XZjcRN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzGU/oGsWwKnwtvwqCT8dtgUhM3O9RqjyLhTWFQpACmmMIkkSW
+	ydXan3pMP/N0uuqTzYLJxMRQFDb0jmSx1ehWupGfZCIxm0lsLauZpAYK
+X-Gm-Gg: ASbGnct2BuVdWGKzymIhuOwkEA8xx869GXD3yOUkWJc+9i/YNsqWjTDd410tpUry1kB
+	Xobcc2/1Wkt6FxkM/SvUsU8S+5B+JVglM305AD64Nq+LcV0WmUF6KGAqw2MXFnTk5pIAJ9y+tCe
+	aOpBRGATXjK0dcR0z1g/mIZrP6pddY+XqHAPbbjGoMq4x1ej8QqZkxFT1u/HJtrJOcyQbZnJUIm
+	KdVYDV1e3RGevjZ2QHyBl745zJ6+rnBaGmkc60IV2caLDWJnvg+QfdyFkQDJs9o48fg3SxePtgI
+	yJ9lvjqhxIAhA/hTDVL7/rFBa5bMowAbdHQ4CmzRmsO49CX64VKbPj64yu2abDjXjxKlj11l2xx
+	7E+qliDYevAzXP23pEy4ZqGY4t0BbPd0xcEXH6ZWe
+X-Google-Smtp-Source: AGHT+IGfdfLI5yrqu3uRNs3TViw/L6x3XqNUSvANWhwkKKz496Sf8YJMkWbG86CqufgLVaRSKCX2WA==
+X-Received: by 2002:a05:6a21:330b:b0:217:feb5:631d with SMTP id adf61e73a8af0-2188c360125mr32385169637.26.1748528331316;
+        Thu, 29 May 2025 07:18:51 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9? ([2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe966c7sm1381268b3a.8.2025.05.29.07.18.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 07:18:50 -0700 (PDT)
+Message-ID: <06e27b37-1d70-4e93-bd12-05e3222adeee@gmail.com>
+Date: Thu, 29 May 2025 21:18:46 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] selftests: net: build net/lib dependency in all
+ target
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ Philip Li <philip.li@intel.com>, oliver.sang@intel.com,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250529070536.84491-1-minhquangbui99@gmail.com>
+ <20250529103221.GN1484967@horms.kernel.org>
+ <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
+ <20250529133424.GP1484967@horms.kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250529133424.GP1484967@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTtfWySLDYOMxK4sH87axWUz4EmGx
-	Zu85JovrX56zWtzbsYzdYv6Rc6wWjTPeMFmcP7+B3WLT42usFh977rFaXN41h81ixvl9TBYX
-	T7laHFsgZvF95R1GiyNnXjBb/N+zg93i8Jt2Vot/1zayWEw+vpbVomnZeiYHUY/3N1rZPXbO
-	usvusWlVJ5vH5iX1Hn1bVjF6fN4kF8AWxWWTkpqTWZZapG+XwJWxf3InW8EDzoqrvVvYGxjf
-	sncxcnJICJhIvGltY+5i5OIQEtjOKHFi12dmiISExL7/vxkhbGGJlf+es0MUvWWUaO7fD5Zg
-	E9CSuLL9HRtIQkSgi0ni3L9XLCAOs8BOJom2x9vAdggL+Ess/vIKbCyLgKrEre2P2EBsXgFr
-	iS+XN7JBrJCX2H/wLFgNp4CNxN2bz1lAbCGgmo/bzzBD1AtKnJz5BCzODFTfvHU28wRGgVlI
-	UrOQpBYwMq1iFE0tKM5Nz00uMNQrTswtLs1L10vOz93ECI4wraAdjMvW/9U7xMjEwXiIUYKD
-	WUmEt8neLEOINyWxsiq1KD++qDQntfgQozQHi5I4r3JOZ4qQQHpiSWp2ampBahFMlomDU6qB
-	idvibYjTjh3t77kylfP2Bt03DHy/lcnuflfZzI6fJV6Pftw7LKM2qzA+a8Nke72v5z/9nTd1
-	u+DuQzdO7jd5YNB9WlAxd/7iz1OcfhdHMh2w8A3am/Vzts8u4/bc1WnPTDIOWcn+ivy9VVVp
-	s/xtFRWV2X/v+uelL38i+UfFLUrhRl5Mw926w1V712uGzn+Wt3lZ9C3PD1M6TsfdXlF2+s7H
-	7KvX3m2QUZZvTp6cqFQ89X/RJls//8SLHim80dsuVLP8O6GhFtuknO45qXrpPsO5cpdUr/V6
-	7+3QnM7y6hzDGaW7zb+aLcNeeqQdSEiVWv8vqDrMPkj6icty1ZNfeVf01Ur+WPmn1MTU7IRH
-	gRJLcUaioRZzUXEiAAc6exQfAwAA
-X-CMS-MailID: 20250529111718epcas5p4572d6aa7ae959b585b658d5a94f2b4ef
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-543,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250529111718epcas5p4572d6aa7ae959b585b658d5a94f2b4ef
-References: <20250529112640.1646740-1-raghav.s@samsung.com>
-	<CGME20250529111718epcas5p4572d6aa7ae959b585b658d5a94f2b4ef@epcas5p4.samsung.com>
 
-Add required dt node for CMU_HSI2 block, which
-provides clocks to ufs and ethernet IPs
+On 5/29/25 20:34, Simon Horman wrote:
+> On Thu, May 29, 2025 at 06:04:17PM +0700, Bui Quang Minh wrote:
+>> On 5/29/25 17:32, Simon Horman wrote:
+>>> On Thu, May 29, 2025 at 02:05:36PM +0700, Bui Quang Minh wrote:
+>>>> Currently, we only build net/lib dependency in install target. This
+>>>> commit moves that to all target so that net/lib is included in in-tree
+>>>> build and run_tests.
+>>> Hi,
+>>>
+>>> The above describes what is being done.
+>>> I think it would be good to also describe why.
+>> Hi,
+>>
+>> Currently, when building net related selftests, we need to
+>>
+>>      make install
+>>
+>> so that the net/lib is compiled. In case we do
+>>
+>>      make
+>>
+>> or
+>>
+>>      make run_tests
+>>
+>> the net/lib is not compiled. So I move the INSTALL_DEP_TARGETS which is
+>> net/lib if the selftests is net related to all. As a result, all make/make
+>> install/make run_tests will have the net/lib compiled.
+> Thanks for the explanation, it is much appreciated.
+>
+> I think it would be good to include something along those lines
+> in the commit message of the patch.
+>
+> Please note, that if you post a v2, before doing so you should allow 24h to
+> elapse since the posting of v1.
+>
+> https://docs.kernel.org/process/maintainer-netdev.html
 
-Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynosautov920.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks for your review and for pointing me the document.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-index 2cb8041c8a9f..7890373f5da0 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
-@@ -1048,6 +1048,23 @@ pinctrl_hsi1: pinctrl@16450000 {
- 			interrupts = <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		cmu_hsi2: clock-controller@16b00000 {
-+			compatible = "samsung,exynosautov920-cmu-hsi2";
-+			reg = <0x16b00000 0x8000>;
-+			#clock-cells = <1>;
-+
-+			clocks = <&xtcxo>,
-+				 <&cmu_top DOUT_CLKCMU_HSI2_NOC>,
-+				 <&cmu_top DOUT_CLKCMU_HSI2_NOC_UFS>,
-+				 <&cmu_top DOUT_CLKCMU_HSI2_UFS_EMBD>,
-+				 <&cmu_top DOUT_CLKCMU_HSI2_ETHERNET>;
-+			clock-names = "oscclk",
-+				      "noc",
-+				      "ufs",
-+				      "embd",
-+				      "ethernet";
-+		};
-+
- 		pinctrl_hsi2: pinctrl@16c10000 {
- 			compatible = "samsung,exynosautov920-pinctrl";
- 			reg = <0x16c10000 0x10000>;
--- 
-2.34.1
+Quang Minh.
 
