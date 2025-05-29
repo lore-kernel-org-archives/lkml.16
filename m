@@ -1,347 +1,102 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B1C2222CB
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC71632C8;
+	Thu, 29 May 2025 17:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748539526; cv=none; b=eN47Z/zg1KuK6NwwCmRSYOwjN8UA+Lklb7jAxJ7pskermQB8e4HFtnjWTJPGFVapYdYrKe45GwPCCxWqYT36AHFDsFxCR4HDka5m6UC4MUq9rnUCUHnj2UDWAaa4vG+mNk6kJbQD9Aqmec6CnwYuVS+83It+BDwO+U23WN4QRxg=
+	t=1748539645; cv=none; b=SFoEzVWUX5TvFu66nCBu8hMgmjXXmeTbE8O1txqA8xeBN5ROSRQCW2AG0TSdqrSE8y+E+CV4ZBuvGKnNEfxDGpx9rdGIxRJ3bjaJP8M4HdKTYjbNOuGDMlKKHnhM+osGeOM/Gii2y/X2RtkHKJKlgxiVXJ/imOXrDWQKIRPDT6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748539526; c=relaxed/simple;
-	bh=R7W36fC9mqA2YImazGJzMilva/IX/vW7Fpjaef9QXRk=;
+	s=arc-20240116; t=1748539645; c=relaxed/simple;
+	bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lywh48LhTQZygdSCv58geeYsBF5b582/PJb0wdzFCmBxZXJh5UZ6niTROt7EzwTwnZRZLtrl+lQvJh6Ixt4zLKr0SIc4eTYz9xiqJToG1RShJgyRjcCE4UI60pMvm3OMbEHwGE+JQJmAg5lTQHAcQ0AUly+5i3zICGtUEXDcOM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FJAn4UXm; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=JiMKTRhSpMpZtK5zAxCnOn+fAXur79AsujwppK8+6C5sO0rEctRRBUIlKq+whqvbfvtzYEWv+Ra5/asNYufTpjjQ8n7aBMiMp5ty6/TyhR6sJc7IxOf3BQ7TpqURehR0P4mR6G7NghBlARtWBVB076BJhkNbn3uRhkf53lSE4jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBXHrB3N; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJAn4UXm"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dd89a85414so13555ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:25:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBXHrB3N"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dc7294716cso9480345ab.2;
+        Thu, 29 May 2025 10:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748539522; x=1749144322; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748539643; x=1749144443; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Aq5UWqCDWZg2jUBruTrKCignhLetlhTEoSWLRFlBvKY=;
-        b=FJAn4UXmJ5F2YEZhhj6T/KCixe1TGMF1njpw7gZuPOMxpCb0jGfNY9QBXF3m1qLc8F
-         QJLrDBYCch1Dbt3FuTopTR8HB/uJwmotD0Rq3QT1o2hdY/2xsyDieb1Nzrm5tofwbtQm
-         CLqd4DDmVTRrxqJuAQVaAVTIftTidT6eTcil/VSeFhU5IFIFcq3eCJ92wsJfUpw/Py1Q
-         7/fEFV3BPOExF6etTJ3O2K2Cm/0Zz6DA1PEqGNF0nPXiZ1A3Ry65zQgDSj/UbluErU4N
-         kBvrAdeFNNTToXdBExMVUR+XSG4xMv09Dzrkifr8dLoicPXIDc9JKCzVVg5GrxO/iPT8
-         vd7Q==
+        bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
+        b=IBXHrB3N1RrePZo4OYoOpczOqtRSOgHjm2g+1cpa3NvpT8fMOuf/i+VGE8Uyo+Kq9X
+         t7XxhXtSjibIjUfOAImQl8Fa2uUE4Nc/Utwwo2dVABOla3Wg/R7le5nC9MWi2m3++780
+         1wHr3CWseJ9ObdbpFxOEu0KB+nLJDlbaJXNybp6y1O9dBWoSXyQitw8fzTFCdAgdfVeS
+         rr8Wqg1Jp+TjZAG2Moe/P243kdPSHHi2+S77WuvQ+EC0TfGk0V4MYXWNrfJ+Lj6KLhbW
+         bJ92/ZeaayLkfwiGaLQ5bvisnUybMHsAQFf43BYTJ/Ezffnnl8MsDBhRZe19OPa9gfRd
+         v3Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748539522; x=1749144322;
+        d=1e100.net; s=20230601; t=1748539643; x=1749144443;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Aq5UWqCDWZg2jUBruTrKCignhLetlhTEoSWLRFlBvKY=;
-        b=hWh//Zf+G/WTAk4JjzTqmUgkLH9uhiAW35paNNhxA4fS43k53QUYNq16jCsGQFLnHM
-         44pn8Mzl0xaMhDY7AqA6eNW+dRVqg62vfR77HaWy6eNycyNT0kM9ZVU5ijleXt27idvl
-         MK9CbX2GpZSkvN6Hc++UutFQuI9P8fI86pbazgf/80XXp63ZjKikYc5BJ/hlbxhPACWf
-         doA0zqLAla2zteyWtfgY6IHzy/CiI+MlS0dRTY/bnS0EaTKOrR6c/0Ynt9WLnYH0gcpy
-         /Tg5V2ITw9IrrLZ6S5B6xlOYU/h3GIgu8l+i9TPbdzvvDhMfB9ITViuWX9iJkQLGKOBr
-         84AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmVbDj23vttgolkvy2LA/+t2Gd1Au40h7HHXiD6+YbRgf7k3De/qRUCXagEGB2bTDLi9mvYdk13OQQbwM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1Xm4rqUt1ZCc40S5SpiVcg5LTkWBGOtJc/Vx+L1Ewei7OrYRN
-	SsKrwd0TisZq6KWMV61Z8qiAYMAuGTNJL+jBD8ti5vNRLFLaBu22w6w2p4CMEXmv67k2XgzOaUI
-	19AbWDwrLwX3/cSXvRiAn7DITG7eSEbZED3BZzhNN
-X-Gm-Gg: ASbGncuuNlultu6C0etQe93SYzPt1PuawIF3e5AhhJPxhXT46zbhn43DZcNn/mMltHb
-	D+HTIy2w2Vo95ez8k27z9I2rB1QebfTWgxgp+5UKi/M4in/8/PFwET4/3XJLBLCXNxIZKGdK1iC
-	FN8hjXI0lKtkZRRwCeRTDxGU45YEGYTLv+DxLM5uJ8n2hKjIxZeIRI7b/r3paDPEj9O2O8Zv7JH
-	qcRR0fRJcM=
-X-Google-Smtp-Source: AGHT+IEieB0z/jaUQ85p0bxGKF/BsfxceTJbHzW2dlAAgUo/3U0hH7+izTddIgjUp6yv6WeWDg6P6NOKrSVA54Daxp0=
-X-Received: by 2002:a05:6e02:b4e:b0:3dc:8041:235b with SMTP id
- e9e14a558f8ab-3dd93102438mr3785775ab.5.1748539521790; Thu, 29 May 2025
- 10:25:21 -0700 (PDT)
+        bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
+        b=UWeXpICKyE4vQWkC//y63OjacWVrWoSB4mMD7AGtKn2TZkn6HGAxeBiAsf7YE4nduS
+         rgEawvqJCGhPFobiHn8Fl9CFUnr5OQ5Zejwyh8LVuC0MUHfrXFw/IO2QXQWdfO1tajhG
+         hZohrs0QvW6gg7BemD9VeVC70K5seMotZWEX4fCR+AOVsc8YmjQhQmcUWaGE97ldkToo
+         N8DSEikeRCG1lNz7RQySwZPKPrzCXeeuxbOaHn+sipceU4RTHiBhGFZTsGDSX6PvEBLB
+         HLso8JeGUXIxrK/oty6EjdAJY843yPKW8SJZmgKTLK3rpfRJrogiQQWUwW1erm1h+oTX
+         Y9Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSsjiHJNNh+Ej4hSTiJoZgrg3+l+QKHE6RJ3j8xlL8rv7ondurKfRg9VtCfKQabNfw9ZLs0gJHexeH@vger.kernel.org, AJvYcCWWNyeOJLovV7rtMh/WS6vHkqr74nnznGOj6/8AC7e9kC15D5/fXncs4G3pu5/tik53IXh9IwZL/v/zC82Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFymTobhfgWsq5hG+oGVCdUg26f96T7Uow53bZdMgKuv2wCUYh
+	Wj+Jf+64gMsh4h2A6KLk6xSS9ZHs6XmZvDGgeiCltWoWXGhDReOVwHPquOk3h9VME7yk5JU8AZO
+	XtYAVeESeaPvLDch8fEfZmQs4C15S2Ko=
+X-Gm-Gg: ASbGncskJd0YUTKPAr+Rgf7mhob4Ycyn9aXMwQw6p2rJZxO/tiw5cEAwp0vmkjJ7CEi
+	3FUPJVh3NxOeGH30wjzxJlaMrXx3b1v8xVK1W8CQf/Lw7pOefT9Cj9Cl98rr2d8XTcKD1E7zxWs
+	T1FXmg3PxhdQkX6TWbYs+sWpXzACAts6ywUKB5kqMXgA==
+X-Google-Smtp-Source: AGHT+IGmfLftFKbDjPUrwhZwicuqQxLIwzoCfWWeirKpn1IUl46FhVaamkvogKo9NxIBYcyFiWPlwqFTeQ9zfcW19XI=
+X-Received: by 2002:a05:6e02:3c86:b0:3dc:857c:c61e with SMTP id
+ e9e14a558f8ab-3dd99c289c0mr9051885ab.15.1748539643157; Thu, 29 May 2025
+ 10:27:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org> <20250529-james-perf-feat_spe_eft-v2-10-a01a9baad06a@linaro.org>
-In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-10-a01a9baad06a@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 May 2025 10:25:09 -0700
-X-Gm-Features: AX0GCFsMi0PuJSkUZIq3glS5t7yiPh54_nxoMbLwC4oi0UtVw-ij7ss9J0KioO4
-Message-ID: <CAP-5=fUOfEskPp_5myy167bpZ47NjavWU_8vAMpPo4TSWJRs-w@mail.gmail.com>
-Subject: Re: [PATCH v2 10/11] perf tools: Add support for perf_event_attr::config4
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
+References: <174735136138.1544989.11909422896170025756.robh@kernel.org>
+ <20250528221823.2974653-1-joseph.kogut@gmail.com> <20250528221823.2974653-2-joseph.kogut@gmail.com>
+ <20250529-impressive-real-monkey-a7818b@kuoka> <CAMWSM7i+eyV4t3xzSXdDyGrBr101V9rG1xMgsTbpjyqpu+hjYw@mail.gmail.com>
+ <3a2b9bfb-81b0-473a-b58c-76a2dd7f434e@kernel.org>
+In-Reply-To: <3a2b9bfb-81b0-473a-b58c-76a2dd7f434e@kernel.org>
+From: Joseph Kogut <joseph.kogut@gmail.com>
+Date: Thu, 29 May 2025 10:26:47 -0700
+X-Gm-Features: AX0GCFvNxRjPdyr8yhbcLu1TfazWvzDwAFaQdGZbh1fnbTEWqCXXjJppI9Ifugk
+Message-ID: <CAMWSM7h-naYcgy7hrfNd0tDLTx21jFmvV4X8vU1V4py21PNVPw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: rockchip: Add Radxa CM5 IO board
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Steve deRosier <derosier@cal-sierra.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 4:33=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
+On Thu, May 29, 2025 at 10:07=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
 >
-> perf_event_attr has gained a new field, config4, so add support for it
-> extending the existing configN support.
+> On 29/05/2025 19:00, Joseph Kogut wrote:
+> > I've reviewed the man page for git-send-email. If I'm understanding
+> > correctly, I should only thread the *cover letter* of the patch series
+> > when submitting a new version. That didn't work for me here because I
+> > didn't initially include a cover letter, then tried to thread the
+> > first patch in the series. I see now how that would be disruptive.
+> You should not thread manually anything. b4 does it for you. If you want
+> to use git-send-email, then you also don't care:
 >
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: James Clark <james.clark@linaro.org>
+> git format-patch -v3 -3 HEAD
+> git send-email <whatever-to-and-cc-arguments> v3*
+>
+> That's it. No manual threading.
+>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+I wasn't aware of b4, it looks like a great tool for this workflow.
+Thanks again for your help, I'll give it a try.
 
-Thanks,
-Ian
-
-> ---
->  tools/perf/tests/parse-events.c | 14 +++++++++++++-
->  tools/perf/util/parse-events.c  | 11 +++++++++++
->  tools/perf/util/parse-events.h  |  1 +
->  tools/perf/util/parse-events.l  |  1 +
->  tools/perf/util/pmu.c           |  8 ++++++++
->  tools/perf/util/pmu.h           |  1 +
->  6 files changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
-nts.c
-> index 5ec2e5607987..5f624a63d550 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -615,6 +615,8 @@ static int test__checkevent_pmu(struct evlist *evlist=
-)
->         TEST_ASSERT_VAL("wrong config1",    1 =3D=3D evsel->core.attr.con=
-fig1);
->         TEST_ASSERT_VAL("wrong config2",    3 =3D=3D evsel->core.attr.con=
-fig2);
->         TEST_ASSERT_VAL("wrong config3",    0 =3D=3D evsel->core.attr.con=
-fig3);
-> +       TEST_ASSERT_VAL("wrong config4",    0 =3D=3D evsel->core.attr.con=
-fig4);
-> +
->         /*
->          * The period value gets configured within evlist__config,
->          * while this test executes only parse events method.
-> @@ -637,6 +639,7 @@ static int test__checkevent_list(struct evlist *evlis=
-t)
->                 TEST_ASSERT_VAL("wrong config1", 0 =3D=3D evsel->core.att=
-r.config1);
->                 TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->core.att=
-r.config2);
->                 TEST_ASSERT_VAL("wrong config3", 0 =3D=3D evsel->core.att=
-r.config3);
-> +               TEST_ASSERT_VAL("wrong config4", 0 =3D=3D evsel->core.att=
-r.config4);
->                 TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.e=
-xclude_user);
->                 TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr=
-.exclude_kernel);
->                 TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exc=
-lude_hv);
-> @@ -813,6 +816,15 @@ static int test__checkterms_simple(struct parse_even=
-ts_terms *terms)
->         TEST_ASSERT_VAL("wrong val", term->val.num =3D=3D 4);
->         TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config3"))=
-;
->
-> +       /* config4=3D5 */
-> +       term =3D list_entry(term->list.next, struct parse_events_term, li=
-st);
-> +       TEST_ASSERT_VAL("wrong type term",
-> +                       term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_CO=
-NFIG4);
-> +       TEST_ASSERT_VAL("wrong type val",
-> +                       term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM=
-);
-> +       TEST_ASSERT_VAL("wrong val", term->val.num =3D=3D 5);
-> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config4"))=
-;
-> +
->         /* umask=3D1*/
->         term =3D list_entry(term->list.next, struct parse_events_term, li=
-st);
->         TEST_ASSERT_VAL("wrong type term",
-> @@ -2451,7 +2463,7 @@ struct terms_test {
->
->  static const struct terms_test test__terms[] =3D {
->         [0] =3D {
-> -               .str   =3D "config=3D10,config1,config2=3D3,config3=3D4,u=
-mask=3D1,read,r0xead",
-> +               .str   =3D "config=3D10,config1,config2=3D3,config3=3D4,c=
-onfig4=3D5,umask=3D1,read,r0xead",
->                 .check =3D test__checkterms_simple,
->         },
->  };
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index 5152fd5a6ead..7e37f91e7b49 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -247,6 +247,8 @@ __add_event(struct list_head *list, int *idx,
->                                               PERF_PMU_FORMAT_VALUE_CONFI=
-G2, "config2");
->                 perf_pmu__warn_invalid_config(pmu, attr->config3, name,
->                                               PERF_PMU_FORMAT_VALUE_CONFI=
-G3, "config3");
-> +               perf_pmu__warn_invalid_config(pmu, attr->config4, name,
-> +                                             PERF_PMU_FORMAT_VALUE_CONFI=
-G4, "config4");
->         }
->         if (init_attr)
->                 event_attr_init(attr);
-> @@ -783,6 +785,7 @@ const char *parse_events__term_type_str(enum parse_ev=
-ents__term_type term_type)
->                 [PARSE_EVENTS__TERM_TYPE_CONFIG1]               =3D "conf=
-ig1",
->                 [PARSE_EVENTS__TERM_TYPE_CONFIG2]               =3D "conf=
-ig2",
->                 [PARSE_EVENTS__TERM_TYPE_CONFIG3]               =3D "conf=
-ig3",
-> +               [PARSE_EVENTS__TERM_TYPE_CONFIG4]               =3D "conf=
-ig4",
->                 [PARSE_EVENTS__TERM_TYPE_NAME]                  =3D "name=
-",
->                 [PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD]         =3D "peri=
-od",
->                 [PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ]           =3D "freq=
-",
-> @@ -830,6 +833,7 @@ config_term_avail(enum parse_events__term_type term_t=
-ype, struct parse_events_er
->         case PARSE_EVENTS__TERM_TYPE_CONFIG1:
->         case PARSE_EVENTS__TERM_TYPE_CONFIG2:
->         case PARSE_EVENTS__TERM_TYPE_CONFIG3:
-> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
->         case PARSE_EVENTS__TERM_TYPE_NAME:
->         case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
->         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
-> @@ -898,6 +902,10 @@ do {                                                =
-                          \
->                 CHECK_TYPE_VAL(NUM);
->                 attr->config3 =3D term->val.num;
->                 break;
-> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
-> +               CHECK_TYPE_VAL(NUM);
-> +               attr->config4 =3D term->val.num;
-> +               break;
->         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
->                 CHECK_TYPE_VAL(NUM);
->                 break;
-> @@ -1097,6 +1105,7 @@ static int config_term_tracepoint(struct perf_event=
-_attr *attr,
->         case PARSE_EVENTS__TERM_TYPE_CONFIG1:
->         case PARSE_EVENTS__TERM_TYPE_CONFIG2:
->         case PARSE_EVENTS__TERM_TYPE_CONFIG3:
-> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
->         case PARSE_EVENTS__TERM_TYPE_NAME:
->         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
->         case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
-> @@ -1237,6 +1246,7 @@ do {                                               =
-               \
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG2:
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG3:
-> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
->                 case PARSE_EVENTS__TERM_TYPE_NAME:
->                 case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
->                 case PARSE_EVENTS__TERM_TYPE_RAW:
-> @@ -1274,6 +1284,7 @@ static int get_config_chgs(struct perf_pmu *pmu, st=
-ruct parse_events_terms *head
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG2:
->                 case PARSE_EVENTS__TERM_TYPE_CONFIG3:
-> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
->                 case PARSE_EVENTS__TERM_TYPE_NAME:
->                 case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
->                 case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-event=
-s.h
-> index e176a34ab088..6e90c26066d4 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -58,6 +58,7 @@ enum parse_events__term_type {
->         PARSE_EVENTS__TERM_TYPE_CONFIG1,
->         PARSE_EVENTS__TERM_TYPE_CONFIG2,
->         PARSE_EVENTS__TERM_TYPE_CONFIG3,
-> +       PARSE_EVENTS__TERM_TYPE_CONFIG4,
->         PARSE_EVENTS__TERM_TYPE_NAME,
->         PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD,
->         PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ,
-> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-event=
-s.l
-> index 7ed86e3e34e3..8e2986d55bc4 100644
-> --- a/tools/perf/util/parse-events.l
-> +++ b/tools/perf/util/parse-events.l
-> @@ -317,6 +317,7 @@ config                      { return term(yyscanner, =
-PARSE_EVENTS__TERM_TYPE_CONFIG); }
->  config1                        { return term(yyscanner, PARSE_EVENTS__TE=
-RM_TYPE_CONFIG1); }
->  config2                        { return term(yyscanner, PARSE_EVENTS__TE=
-RM_TYPE_CONFIG2); }
->  config3                        { return term(yyscanner, PARSE_EVENTS__TE=
-RM_TYPE_CONFIG3); }
-> +config4                        { return term(yyscanner, PARSE_EVENTS__TE=
-RM_TYPE_CONFIG4); }
->  name                   { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
-NAME); }
->  period                 { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
-SAMPLE_PERIOD); }
->  freq                   { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
-SAMPLE_FREQ); }
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index b7ebac5ab1d1..fc50df65d540 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1427,6 +1427,10 @@ static int pmu_config_term(const struct perf_pmu *=
-pmu,
->                         assert(term->type_val =3D=3D PARSE_EVENTS__TERM_T=
-YPE_NUM);
->                         pmu_format_value(bits, term->val.num, &attr->conf=
-ig3, zero);
->                         break;
-> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
-> +                       assert(term->type_val =3D=3D PARSE_EVENTS__TERM_T=
-YPE_NUM);
-> +                       pmu_format_value(bits, term->val.num, &attr->conf=
-ig4, zero);
-> +                       break;
->                 case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
->                         return -EINVAL;
->                 case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_=
-TYPE_HARDWARE:
-> @@ -1474,6 +1478,9 @@ static int pmu_config_term(const struct perf_pmu *p=
-mu,
->         case PERF_PMU_FORMAT_VALUE_CONFIG3:
->                 vp =3D &attr->config3;
->                 break;
-> +       case PERF_PMU_FORMAT_VALUE_CONFIG4:
-> +               vp =3D &attr->config4;
-> +               break;
->         default:
->                 return -EINVAL;
->         }
-> @@ -1787,6 +1794,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu,=
- void *state, pmu_format_call
->                 "config1=3D0..0xffffffffffffffff",
->                 "config2=3D0..0xffffffffffffffff",
->                 "config3=3D0..0xffffffffffffffff",
-> +               "config4=3D0..0xffffffffffffffff",
->                 "name=3Dstring",
->                 "period=3Dnumber",
->                 "freq=3Dnumber",
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index b93014cc3670..1ce5377935db 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -22,6 +22,7 @@ enum {
->         PERF_PMU_FORMAT_VALUE_CONFIG1,
->         PERF_PMU_FORMAT_VALUE_CONFIG2,
->         PERF_PMU_FORMAT_VALUE_CONFIG3,
-> +       PERF_PMU_FORMAT_VALUE_CONFIG4,
->         PERF_PMU_FORMAT_VALUE_CONFIG_END,
->  };
->
->
-> --
-> 2.34.1
->
+Best,
+Joseph
