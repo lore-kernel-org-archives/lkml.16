@@ -1,81 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAEE21B9F0;
-	Thu, 29 May 2025 09:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2257321B8F8;
+	Thu, 29 May 2025 09:11:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509804; cv=none; b=Ug6O5Cw/PAZTcZiJZ/KWAbJOHgBioBMf/UphDUXIkANl5QM+DFcgxfZLHPkFLKObUXfkqSjcFgsX2KPZ2uwZB9efNcg/FYZApEEe1Fwal/Mg9b4ilmM2JdZOMXDtN4GKZag3x9VYLLs9++8gWgbmOwgpQ8y7dOYUrrjjZMcQats=
+	t=1748509915; cv=none; b=ghYLN3lXIm4zuVS9fbXCBHbEorxK/2XNBotebUt2AtZw8NM7sGftCmd2s09BX8xJaHa5E3C44bdguzPxOSigew7MCaWDn1mfWGWV2iVHD5ExvpQTX1xATrrY1KaMr62VcHuS6KAM2VfVOfX1w6l5bTBuvxX3m4qyQwf0ciKzOhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509804; c=relaxed/simple;
-	bh=Yb2uSf81m/g9NlDY7wmvxatJgdvhAEkJ2SZriq2WmG8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=b247ZVg+uxg7diJuzszyAZ1i7ecgpJkcgr2ZuMUBCLimSmXipuNED+FTEnjn4FZq4VVheWRaamec3C+cnfPCIjS1CIaWKXnL8GQVI5Niwww5fPuyHhCe24Q+JdC8JInHoQuepgxCmRBOYZvpRLmKPmoi3RmQkoaG8aQsQ2zdSPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpuc0glj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748509915; c=relaxed/simple;
+	bh=etCnNVCaZm8czOxADU77dWNdPQaJyUulC30i36OyVe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o2Y1fPbAJ8c7oVXJWUA20l+8/B/oeXbWtZ2EuiFUs9zrpzC7a/an8n7NE/ZjC0jiSjHVmrE7Fq/ERm2K2eJDyOkUWXbqbjDLKGGR9/aKz/Pf5D37QbjcqNi5B6A6S0+DfvBwhQeAwsw8aHZiizFPU80oNIDPTh8srtpQHWU9ap0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RcriyvZB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpuc0glj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F9AC4CEEF;
-	Thu, 29 May 2025 09:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748509804;
-	bh=Yb2uSf81m/g9NlDY7wmvxatJgdvhAEkJ2SZriq2WmG8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cpuc0gljbw7Wel8lndc9mBJ6wKLR2x1eW0jJMO9g8nZ6QrREy5jr9bWDS2rnNd3Kt
-	 3828I2yiiEBHzYBGtEjCUyeVP8fzrFgNXi16tghzh2vxXuK/bMWwX5Idrh+rtK5Z1n
-	 5nlbEHz3Hj7+Shfs/mHCQefQK+L1buCyoz30c3Rk0n8B5sgpUV819bID9G8gY3B8T7
-	 bQQ34g5U9bfVDRUeYFlM3VC9HmFyYP9TSVof/Ij53VfJzkAci/d5G92IV0Igodh+b3
-	 Od5wZ/LIOitZJInY3nhFQK/WajIY83+/LsVv7rPR9HpBZeCetNdNa6dZGnnsTrHQdV
-	 MysXznv41IAfw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F2939F1DEE;
-	Thu, 29 May 2025 09:10:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RcriyvZB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6395C4CEE7;
+	Thu, 29 May 2025 09:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748509915;
+	bh=etCnNVCaZm8czOxADU77dWNdPQaJyUulC30i36OyVe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RcriyvZB21YKR6aJPzQ60V5EfB1XaZ1CEg1pEFx5z+QaktkoSXrMi0m5xn5opXkfi
+	 ebZimSs7m+eO75ZzbQ0VVnPnqzm6KTArhl15l/mpWAu7ZkT/jgJFolRB5ZuU8ob15O
+	 fOESYdArrVuE3P7ccPm80MKhP3GdWXs4Tp3LAqjo=
+Date: Thu, 29 May 2025 11:11:47 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: zongjian <quic_zongjian@quicinc.com>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_ztu@quicinc.com, quic_haixcui@quicinc.com,
+	quic_anupkulk@quicinc.com, quic_msavaliy@quicinc.com,
+	quic_vdadhani@quicinc.com
+Subject: Re: [PATCH v1] serial: qcom-geni: Add support to increase UART ports
+ efficiently
+Message-ID: <2025052959-tingly-august-3560@gregkh>
+References: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: stmmac: platform: guarantee uniqueness of
- bus_id
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174850983774.3198213.12132601744057177877.git-patchwork-notify@kernel.org>
-Date: Thu, 29 May 2025 09:10:37 +0000
-References: <20250527-stmmac-mdio-bus_id-v2-1-a5ca78454e3c@cherry.de>
-In-Reply-To: <20250527-stmmac-mdio-bus_id-v2-1-a5ca78454e3c@cherry.de>
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, jakob.unterwurzacher@cherry.de,
- heiko@sntech.de, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- quentin.schulz@cherry.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
 
-Hello:
+On Thu, May 29, 2025 at 05:03:25PM +0800, zongjian wrote:
+> Populate members of qcom_geni_uart_ports through a loop for
+> better maintainability. 
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+What does this mean exactly?
 
-On Tue, 27 May 2025 13:56:23 +0200 you wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> bus_id is currently derived from the ethernetX alias. If one is missing
-> for the device, 0 is used. If ethernet0 points to another stmmac device
-> or if there are 2+ stmmac devices without an ethernet alias, then bus_id
-> will be 0 for all of those.
+> Increase the UART ports to 5, as a few use cases require more than 3 UART ports.
+
+You are doing two different things here in the same patch.  As you know,
+this means this should be split up into multiple patches.
+
+> Signed-off-by: zongjian <quic_zongjian@quicinc.com>
+
+We need a full name here, not just an email alias.
+
+> ---
+>  drivers/tty/serial/qcom_geni_serial.c | 40 +++++++++------------------
+>  1 file changed, 13 insertions(+), 27 deletions(-)
 > 
-> [...]
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 140c3ae5ead2..d969c96b9690 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -77,7 +77,7 @@
+>  #define STALE_TIMEOUT			16
+>  #define DEFAULT_BITS_PER_CHAR		10
+>  #define GENI_UART_CONS_PORTS		1
+> -#define GENI_UART_PORTS			3
+> +#define GENI_UART_PORTS			5
 
-Here is the summary with links:
-  - [net,v2] net: stmmac: platform: guarantee uniqueness of bus_id
-    https://git.kernel.org/netdev/net/c/eb7fd7aa35bf
+You need a better justification for increasing the number of ports here
+in the changelog other than what you wrote :)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>  #define DEF_FIFO_DEPTH_WORDS		16
+>  #define DEF_TX_WM			2
+>  #define DEF_FIFO_WIDTH_BITS		32
+> @@ -153,6 +153,7 @@ static const struct uart_ops qcom_geni_console_pops;
+>  static const struct uart_ops qcom_geni_uart_pops;
+>  static struct uart_driver qcom_geni_console_driver;
+>  static struct uart_driver qcom_geni_uart_driver;
+> +static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS];
+>  
+>  static void __qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
+>  static void qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
+> @@ -163,32 +164,15 @@ static inline struct qcom_geni_serial_port *to_dev_port(struct uart_port *uport)
+>  	return container_of(uport, struct qcom_geni_serial_port, uport);
+>  }
+>  
+> -static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS] = {
+> -	[0] = {
+> -		.uport = {
+> -			.iotype = UPIO_MEM,
+> -			.ops = &qcom_geni_uart_pops,
+> -			.flags = UPF_BOOT_AUTOCONF,
+> -			.line = 0,
+> -		},
+> -	},
+> -	[1] = {
+> -		.uport = {
+> -			.iotype = UPIO_MEM,
+> -			.ops = &qcom_geni_uart_pops,
+> -			.flags = UPF_BOOT_AUTOCONF,
+> -			.line = 1,
+> -		},
+> -	},
+> -	[2] = {
+> -		.uport = {
+> -			.iotype = UPIO_MEM,
+> -			.ops = &qcom_geni_uart_pops,
+> -			.flags = UPF_BOOT_AUTOCONF,
+> -			.line = 2,
+> -		},
+> -	},
+> -};
+> +static void qcom_geni_serial_port_init(void)
+> +{
+> +	for (int i = 0; i < GENI_UART_PORTS; i++) {
+> +		qcom_geni_uart_ports[i].uport.iotype = UPIO_MEM;
+> +		qcom_geni_uart_ports[i].uport.ops = &qcom_geni_uart_pops;
+> +		qcom_geni_uart_ports[i].uport.flags = UPF_BOOT_AUTOCONF;
+> +		qcom_geni_uart_ports[i].uport.line = i;
+> +	}
 
+If this is such a simple structure, that never changes, why is it needed
+at all?  It can be easily determined from the "line" value, right?  Just
+remove it entirely please, as it's much better to have a dynamic number
+of ports (i.e. what is actually in the system), than a hard-coded one.
 
+thanks,
+
+greg k-h
