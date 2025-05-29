@@ -1,94 +1,102 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6263519F10A;
-	Thu, 29 May 2025 16:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1678C17A31B;
+	Thu, 29 May 2025 16:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537784; cv=none; b=F8+LWHuuiqsWSo4FXagO2fd+c0Qdi3uYk7a7g0yo0UMbLyX9jDfk1D/FlRLnEFHfC0i8Pv2HxqYqt1ueJs/57297mZFLwftqs0LIG9GuDWNnRuuPqMbntk+GwXquQGG2UFZ8F0z449b36ozKECt1/QjA4R/2neNQBz7yI8mNnwQ=
+	t=1748537817; cv=none; b=UcTBeF3MkcP8WxpGD1OtdNBXSTp2rAIj5MBg6k9FQP9TeqQiDlOF0R3ve3cAu64NV+4ZtN/twPtOg9TgHbrppEGbuNQQNMlhFGO3QE/KbIS68tEuA3DSsRwlpWK+Nm7oXAtLyFv+RL/qphJ+H/Ia/42G9p3rdRLomAOHQfi7qEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537784; c=relaxed/simple;
-	bh=ARnJfr05XHG7iQyo5Ewu7Aauq6BJusIxGyh41sGJnpk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gbiMRyiM73/2vsLk+PnGRWGZqn3hIhLoWPxl63UkaFcvAURmX5gBJbY+yfpNT0vbYYDokJZ8yPeEQR6Z2kMFObjd+BQV4nKRAUy4Gy+LaaSprm+u/yKqqeX+N5SnhxUNjhvoEnh/0N7sWUCp2iWnyH30A3EuorQKo3zHUTIxL2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A48aAP92; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748537817; c=relaxed/simple;
+	bh=l42ElIx0jEFUf4x4V+Rb9grbIJ6gKs/rJeQxiQhJGQ8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Rzs3HL6gu2UeoG8mG+7EbR2vuDPdT1wl7cpHh4uYPl+s0nX+lrXiQN+0OI9rrfIPpxbslFjP9rISyNbi1pI4azgyAJKG4/8QWtIzZhY+Itf95aqnMmMSZunM2SvpOw/cACblKk0+8yKaAImtGPgfPbBF0Z05k73kApWkxYC7cX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jojQbmXj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A48aAP92"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32a72cb7e4dso11604451fa.0;
-        Thu, 29 May 2025 09:56:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748537779; x=1749142579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ARnJfr05XHG7iQyo5Ewu7Aauq6BJusIxGyh41sGJnpk=;
-        b=A48aAP928UwfSrNpUvcq47/Dn4R0dogmTUtEGDuClin00sb2FdLBTAHzh7V70n2xVs
-         vTKRs4SM9IsveFzsBQp//eJJyK1ZiZK5kkViUuP5o3g7AY+nt7yBf1nplooWHMxpp1FF
-         UtqL1nqFc8Jj8ieCxTOGJLL7pxSus8M4pI1kixgLADv6j0ZP0AAbcN1/mQepnVbmwgmp
-         aUdtMaVcLHs/y765RO/grcve74KFBV2qgX7cW9X/LmkwzBdY3k4DS9hk7Zr4g3EI3duz
-         fB13/weCWxiku5eg4EcgtIHZ70yIiCMxnezFhciLqCqKdJzw86osqvzSXF+n/xCAyIrq
-         d/9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748537779; x=1749142579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ARnJfr05XHG7iQyo5Ewu7Aauq6BJusIxGyh41sGJnpk=;
-        b=X36FqjmqGrY7EMPtwMjwha7MPkGMmJbBkc+Ok9yAcN12m6mGyuWNTe+sygVdGlvJ2E
-         KqwuDcEKApXc6FQRa22KOxS0plJwTnJn/uyIzpmEukoh/yy7eSsZuCjrB5emUn2Mzwzu
-         kckAmX0IlggZz409pCkaDXVuwO82qS/AqQYTaqBS3PJS+Wm+yDWVgzzgbEKc1N9OVdxh
-         v72DRb5HjJ1jRobmyGO5VKYszJp/yj8jYVoekGwNAN0mHOhJWT5ZmydZq3arQpmxfyIM
-         Cmcdoz0ZQjVn+dbMnfWDYgTniXo+B6iS9wJC2TbArL9PbYJ0GRhfEqp1mtqGoAeJ2XrZ
-         axvg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7dMal0A/7uXnaS1c9s6SQ0MVkCSvCzr1Y63s1c1yu0SehBkgyDi8mbA6Si44HYykFOXHekz7M7cK7RPxTjas=@vger.kernel.org, AJvYcCWmInMACZbYrxC9JfRwafs7a9BJjAY/0ZUctMRIVJaVNmHDUPTUcMmfS3uPVTPcxIC1aGGaxFdpdUMH55I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGahXAwZEm8mjh4+mpnBRx34bIipu1VPmlQK8+Qa0W2y5fwT8G
-	MUQoWeUXy45gXlICogpQcncbxRwTyi+F72BuAr13gdHyuuySKU+reNR6yAPMutOYCUt4VsNsvp4
-	oVTs7W/HTJzzlyHCEtqgKeAR91s0Mc+U=
-X-Gm-Gg: ASbGncvRdZByAl6WbWMwiZ8hUz/uhiO1q5oyAqaFvSvaM1ZpgPOd7KuthsGXVSi3mPU
-	J65kIskLlzJ1XvHl4fnxH/9cVcxl8FhDWYbrgo4W24hU5Jg9+D40Mxu/sZ0RZ+nx0pLqsiijbLa
-	yXmh1YwXhiJXqLss6CMCe6xALax26W8tw764flD3RBNEi8V1kyMiTQKu+dEaRuymhpmQ==
-X-Google-Smtp-Source: AGHT+IFDgepQWhCkc/vEIU0aCiNxkKyZH/EgPLlDVBxNQgcXh4hWM4hiahWqE4zFOjMevGyE4ZkiRQdbU78QCNOcehg=
-X-Received: by 2002:a05:651c:2113:b0:32a:84f6:a868 with SMTP id
- 38308e7fff4ca-32a8ce49367mr2143221fa.37.1748537779123; Thu, 29 May 2025
- 09:56:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jojQbmXj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748537816; x=1780073816;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=l42ElIx0jEFUf4x4V+Rb9grbIJ6gKs/rJeQxiQhJGQ8=;
+  b=jojQbmXjd8mZ2GbrSxCDIUl6HXEtYZi4TwPI4m8HARWLSWT3DQWQOo1/
+   ZakYLUEsuQ3q+ycPpUIWVaz6rA0/1QlIQklQg/KlB793zGv7ixbvo8m/s
+   8tNCISjrYWulx6bgNlXTYJ18KGvnt8PXXoxcdvkFXTLhm67kMR2fVDC1W
+   opNUGvc6eRszR15M3sfFNzNFX7A6sYeW31gkIqxCbkUAVloZhzjgOSxio
+   59kXR7uyx83Wo3lfxVVIPX2MJcMFMnK0qV2fb1lIY3VAAZ35zCmK9Gtyv
+   dBkW7hekDOgVrWwmgSrJxKmkNyKx39vMT6KVQrkYFTnyKpOAQGmPBAxfp
+   Q==;
+X-CSE-ConnectionGUID: 1xXCtcfDR9u7qGcxqmACVA==
+X-CSE-MsgGUID: jdWP0TaeRm+jDVYIUBWzWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50536714"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="50536714"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 09:56:55 -0700
+X-CSE-ConnectionGUID: z5gM/RERTCSYINdK5BK51A==
+X-CSE-MsgGUID: FDEaArnpRmW3F9KJLpvYfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="148904724"
+Received: from jjgreens-desk15.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.186])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 09:56:55 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Yi Sun <yi.sun@intel.com>, dave.jiang@intel.com,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: yi.sun@intel.com, xueshuai@linux.alibaba.com, gordon.jin@intel.com
+Subject: Re: [PATCH 1/2] dmaengine: idxd: Remove improper idxd_free
+In-Reply-To: <20250529153431.1160067-1-yi.sun@intel.com>
+References: <20250529153431.1160067-1-yi.sun@intel.com>
+Date: Thu, 29 May 2025 09:56:53 -0700
+Message-ID: <87r0079wyy.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
- <CANiq72=B4JMK4eqK0tL5ECWFAKcBGm0O9LsZ74dd38N2GrZOMg@mail.gmail.com>
- <CAJ-ks9nTrOuDK1W-qFpsMow5Wf7XG9hGBbf6h_kS2Xo16wyHjA@mail.gmail.com> <CANiq72m6dCQafKUvF5k+Fc5jo1FnGAoDA4XpGU-qNkQe+e-gew@mail.gmail.com>
-In-Reply-To: <CANiq72m6dCQafKUvF5k+Fc5jo1FnGAoDA4XpGU-qNkQe+e-gew@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 29 May 2025 12:55:43 -0400
-X-Gm-Features: AX0GCFsH0QbqO5-XVQnhpHd8ruRFAWYZ_nS-4fbtF3g-7F7OXPvAY0aTZnVFRjo
-Message-ID: <CAJ-ks9kd73fYV2+u+7PequU4Ae5o1oCubZ6FemcTENP+U5-HhA@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, May 29, 2025 at 12:06=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, May 29, 2025 at 4:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > All fine. The only problem with the version you pushed is that it
-> > evaluates $ptr twice, which was flagged by Alice in the v1 review.
->
-> Right -- this one also has the `&raw` too, and Benno provided the tag,
-> so let me take this one. The error is a tiny bit worse with the
-> `$crate::` in front now, but I think it is still good enough.
+Hi,
 
-Great! Thanks!
+Yi Sun <yi.sun@intel.com> writes:
+
+> The put_device() call can be asynchronous cleanup via schedule_delayed_work
+> when CONFIG_DEBUG_KOBJECT_RELEASE is set. This results in a use-after-free
+> failure during module unloading if invoking idxd_free() immediately
+> afterward.
+>
+
+I think that adding the relevant part of the log would be helpful. (I am
+looking at either a similar, or this exact problem, so at least to me it
+would be helpful)
+
+> Removes the improper call idxd_free() to prevent potential memory
+> corruption.
+
+Thinking if it would be worth a Fixes: tag.
+
+>
+> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 760b7d81fcd8..504aca0fd597 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -1324,7 +1324,6 @@ static void idxd_remove(struct pci_dev *pdev)
+>  	idxd_cleanup(idxd);
+>  	pci_iounmap(pdev, idxd->reg_base);
+>  	put_device(idxd_confdev(idxd));
+> -	idxd_free(idxd);
+>  	pci_disable_device(pdev);
+>  }
+>  
+> -- 
+> 2.43.0
+>
+
+-- 
+Vinicius
