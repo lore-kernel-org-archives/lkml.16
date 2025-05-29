@@ -1,83 +1,99 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADF678F34;
-	Thu, 29 May 2025 16:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4763078F34;
+	Thu, 29 May 2025 16:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537533; cv=none; b=u/Fjk0Ga+IQzsw57fzNeQAFAGRCI3slvB9zdjciYbYXdgLMbPclrEhbRRiy8h0Y60S6XyVnAT82wxiX1l95u5cQwKGpupi2v2yu64O8uvxkL7YMxYZNtzZYrKn+s4nai4s/caDVqzFB5TxzG8q96a23JEU11TxfsKyuGAszbvdY=
+	t=1748537615; cv=none; b=H67+cVSNybtwJzTBqB9wRThT0N1y2Em1CJ51hGKS1e7xxch9uRdhr4lWsxiogsNIuB4DiwMGaWl6F8ltt1dpF94i7bge0qAi9y0kj1sNsDSZt+kJ1DHZj4geTOHMGazmbrYQrbYiMY3LoQ7OjC/eDb/9NaV+uaG/hiK1/0+ifTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537533; c=relaxed/simple;
-	bh=VHtqptbeURxA2oe07XMZKXucJY1J02Li9OYw/uFS5Pk=;
+	s=arc-20240116; t=1748537615; c=relaxed/simple;
+	bh=UtEunc93gX1CpA2f4qmI5Od6rQOn3rdgClOKZFQfFU4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n+2usYPUROPUICTcuR8+BPBdJxp3XSIGlV+YuzZDr9h2ajO+SbI6GFoeshI+su/jdYRo+zVPKXN9qcNLFt9LJih6ZOgPxzNrZk5mAdRx7o64fYSewXinBmXjfLVXCWHpUXH4RGtXZ4McthxBNW8RpSstAM+mpK877CWTH9FdZCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aWAWlH1o; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=B7RlfqV6uXcwPr0n25UyrmXKTAlRkqI+WGTyoQGKjubufQfxH2oaBL+5UVsUQ4pnAGnU/HuVj74MhXirj9uLSQDnY9lREhWN+/fNfURJl8L4JhcqOlMiVcCDWcjfFbDe6QQENwqi+JKXn4IvFKM9F6yTlOCex9u/KoFnqmJ2kW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2RC6zXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aWAWlH1o"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4c4e6a0ccso718545f8f.3;
-        Thu, 29 May 2025 09:52:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748537530; x=1749142330; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VHtqptbeURxA2oe07XMZKXucJY1J02Li9OYw/uFS5Pk=;
-        b=aWAWlH1oynmMdp9f+W0A5qDEHYcJAV2kZ+8nDZlQQi0E7BRk0f4pHATQfyHSIxQDT7
-         iY2EZh2hz+S+bR8T5mCLNtT0qQxcXoNTGD8q/eoctHuulyIpYadJNos/FoqYwEDlSsLr
-         cT/A9fyFEBeA3FWOJFwFhqmG66IN7nZaVWqZqdUv2ON9eWQYQg1J+NEbg4/bXuy0KIVV
-         iXsDdbvqaxC5uT/fM5+fYSEDzy/RoiMaAZXOFY9VwUkrI0RLkB8web/iq2j0VqjNZPPR
-         HygR2q/zdGJN+xlGri3DOcbGpUIGMvYOGPY0qFUmwk+31fv3Uk2iztK7hevIlGQWoLNW
-         bxyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748537530; x=1749142330;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VHtqptbeURxA2oe07XMZKXucJY1J02Li9OYw/uFS5Pk=;
-        b=tstR5IV/5S7bW5ABQzsaS1iKwxGH0aHUIHA1kjahWZpzyscX4bS3VbrMwFTm8cRmHE
-         1Viwp1+bMspXW81X82eeLIR2mckt9rEABhrFi8UoI+i+XpfrNFPMsG8nHsD0PU+foSAb
-         TgRGyf+LiMHA5YJf1wUQ0Ae/VWD8a5sHuHwP960FpjbBKSFdF7wLbgtVlc6HfXmKY+Yr
-         B7emsRvC3PyVw7iYgERAEF31eSG7JtlPavLluOms1wPe3AWCXXubxBfvZx5xwTbmPaou
-         gMAkD4oX0ZLPUGtYdsjrsn2akqjHSO/XvB51r6VtdnBZon47YqbWUz2UgfIphLwYV7Sq
-         KxgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdo9IapOPqPFqF3yYVuDAt00fVAAxwbdTI8tYKPy32xLmm5wHEb9C1D2Yc42I6Zr59It1Z5GN6v453cY8=@vger.kernel.org, AJvYcCUivLvnuZZCrs/mUEHaFutIKkW8nCqyj7L6JaTTAg7y8cdeayL5vPIE01izi8szyMo2GgOBOMms0rM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhMRRVP2+dJCnUnAUnKq14KTMU6M88h94H4FPhoSt+6FFo3/T/
-	uWB6/18FE/HbPdX7Gw5Vh3MCA//bs3cx9mjKgcURuMOH1FkcfElVUy8OIWSilIXmdSpI+pFgaBE
-	NSJwu/sofIltLjFHPB2Eet+EEK9iWMCg=
-X-Gm-Gg: ASbGnctR8y9RCTrwLS/HuxopN8uK3H+EEWFZcI1DdYnR8MxhnM8DZQowpRPVobx+VN8
-	BGqy4PKBXZM5jRIK6/sNi3BcqjYeBaV+Zf4OtPfwb8xuhqYpnGVP2p6m+hY4K2pEU0LL/Mwqh9P
-	hWNEhfbr+lf80x4zn5X9Yvb84VHSnmBuA=
-X-Google-Smtp-Source: AGHT+IHiOYVli2u3+XWq32ywtCO1v9x9p1LGinmmvM/+QYOusYp9n19EYKiYmFiV4BKOQkxdgTXw3k4JAwyiiPbm2rY=
-X-Received: by 2002:a05:6000:1a8f:b0:3a4:eec5:441c with SMTP id
- ffacd0b85a97d-3a4eec544femr3512442f8f.47.1748537529863; Thu, 29 May 2025
- 09:52:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2RC6zXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF25C4CEF0;
+	Thu, 29 May 2025 16:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748537614;
+	bh=UtEunc93gX1CpA2f4qmI5Od6rQOn3rdgClOKZFQfFU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q2RC6zXZ+4NCe342QGMpVJQFO5So6N4mTx0xcCsajie+aHBmCM4U8n6DdOXDJqjGN
+	 cq28+ffp2DgaQSbtgG9Qj0jPB+9cR6TU/Q5vKvQLVDCBjbeT4+N6o+If1R2JFSUngU
+	 mw71oJ7wJT9ZY7itmwLPrQMkuj0gaVziMoMnswLUBzemJw5SzNWzMu5F+JGu+3CK7U
+	 raoYIKRI/kmS6qaRG5U6pOk/46p4qUFOWfGXI40yXFJ4Q0diAv3ZayvwATSwdcDWVw
+	 QDH8aiba7sd1SoCK383H57mRZ2mj8soURHedwJUcM4SVgor6ZBlCsZow8NkFd6URMB
+	 LGNjcfk83DgdA==
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cd0a7b672bso75900885a.2;
+        Thu, 29 May 2025 09:53:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCURtjlWXzI+pQTCnHc6P9jhWxA3w+MeOGDx5PMTkYImaz552QDrWBhV2y2eer/UxLV/JwAymXo3PubJHBy7rNTFcHDpThfn@vger.kernel.org, AJvYcCUjfK2CzX8/NFomjYoPiMjcFrAThVMhZJG93QkmqPpF+gujIPlPEgfbr6fOjWkJVnst0Ya6xH3e4aemz7v8gg==@vger.kernel.org, AJvYcCW7xVOPzUYto2LtQUIwqQ+p5TEeZsdOtqUrYfquZFqhLRjnuVFcy7IM3IIfWApyc+Awbw2WTTeRfTjFwNUP@vger.kernel.org, AJvYcCXWw9qP0X5ySQ6e7tFHP6phjiUJ0r8mi+hoR+yUUoWkSnBl05U4W5hhCBjWPQ0DoHlklWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDembsVUhhkxUQ8NPSK1w9+5MatJQTsW+pkJX4XaDbLZibSl/e
+	Dg8zSR/Ct/Ri2a9D3WjJw4D3ABQ6vvwmmSrc97gvcHxONr5wFZni+uYd5mGIcUIxItHJThK+nUF
+	fxZTKwO6tSeOfIrcWea12Hfp3NuyCUPA=
+X-Google-Smtp-Source: AGHT+IEEEibPylYu3D1KsFoeefHSm++FNME0VmZZ+vB4utHS73EQFAKRtBg5oQAt1vvG9GKpYqeUbO/o3GjJTznkiew=
+X-Received: by 2002:a05:620a:170d:b0:7c5:9c12:fc8 with SMTP id
+ af79cd13be357-7d0a203e718mr29873985a.38.1748537613800; Thu, 29 May 2025
+ 09:53:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529085143.709-1-gautham.shenoy@amd.com> <CAJZ5v0h27Re4UwoyCrauNfQupojpfwKSOzSppC9mwR-ATWD3Vg@mail.gmail.com>
- <CAArYzrKT2zMBL54i6AKj1kEASLA3D8W4-d191cuqADaC6NGbjw@mail.gmail.com> <d3926d39-5981-4528-a505-ca478eb3de36@amd.com>
-In-Reply-To: <d3926d39-5981-4528-a505-ca478eb3de36@amd.com>
-From: Manu Bretelle <chantr4@gmail.com>
-Date: Thu, 29 May 2025 09:51:57 -0700
-X-Gm-Features: AX0GCFuu2xjBtxrStVFovQqCLRu32jM_H1ILfNSRjmy3kLlULEi5MPPmNiQOLiU
-Message-ID: <CAArYzr+-Owj2TPax-kFK6wi1bij+58OOLJR5T2uLY6gRHJn8Cg@mail.gmail.com>
-Subject: Re: [PATCH] acpi-cpufreq: Fix nominal_freq units to KHz in get_max_boost_ratio()
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
+ <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+In-Reply-To: <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+From: Song Liu <song@kernel.org>
+Date: Thu, 29 May 2025 09:53:21 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+X-Gm-Features: AX0GCFvYCS_xA9xNRqMdAIU4bXgKkiIvXrY3HrR-OxBWf_rIfVKBsXSnt7wWCFg
+Message-ID: <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+To: Jan Kara <jack@suse.cz>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, kernel-team@meta.com, 
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@linux.dev, brauner@kernel.org, kpsingh@kernel.org, 
+	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
+	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Here is the policy for stable:
-> https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+Hi Al and Jan,
+
+Thanks for your review!
+
+On Thu, May 29, 2025 at 4:58=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
 >
-> It doesn't explicitly contain a stable tag, but because it has a fixes
-> tag it's very likely that it gets backported by AUTOSEL later.
+> On Wed 28-05-25 23:37:24, Al Viro wrote:
+> > On Wed, May 28, 2025 at 03:26:22PM -0700, Song Liu wrote:
+> > > Introduce a path iterator, which reliably walk a struct path.
+> >
+> > No, it does not.  If you have no external warranty that mount
+> > *and* dentry trees are stable, it's not reliable at all.
 >
->
-Thanks Mario!
+> I agree that advertising this as "reliable walk" is misleading. It is
+> realiable in the sense that it will not dereference freed memory, leak
+> references etc. As you say it is also reliable in the sense that without
+> external modifications to dentry & mount tree, it will crawl the path to
+> root. But in presence of external modifications the only reliability it
+> offers is "it will not crash". E.g. malicious parallel modifications can
+> arbitrarily prolong the duration of the walk.
+
+How about we describe this as:
+
+Introduce a path iterator, which safely (no crash) walks a struct path.
+Without malicious parallel modifications, the walk is guaranteed to
+terminate. The sequence of dentries maybe surprising in presence
+of parallel directory or mount tree modifications and the iteration may
+not ever finish in face of parallel malicious directory tree manipulations.
+
+Current version of path iterator only supports walking towards the root,
+with helper path_parent. But the path iterator API can be extended
+to cover other use cases.
+
+Thanks,
+Song
