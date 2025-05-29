@@ -1,91 +1,233 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DC5219E93;
-	Thu, 29 May 2025 14:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9281219E93;
+	Thu, 29 May 2025 14:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748529630; cv=none; b=JJyc6U9tdVT51BC+6W10q4H/ur+C9oktVAGCKHCy4HC8+oWHfsbIxsIY7TbSsKzwXq3O266VvAGu6wizVeqsld5Vm07XssI3EgN3KpVsx4vBur6zKk73AIAvhtEcRRDZE9GuiyTWIGdVM5alwWMOXZ5vx4sNqzwIOLS/V74kz00=
+	t=1748529831; cv=none; b=rTkmMxq0Gj6BRGJ7pUzaKXcbfkc5MLZIgzTagWTd8kmGK6WBXx22zJQoisFvtAnTDi5Y/QlTCYlE6iLu+cUlnenWUQkCUYrffUbLCZzyFUeWpkkj27E+s8NllS1YpUTrVPOgiKtxC+om5qqIETjnhq9q/GjURDT495ct9pvTXoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748529630; c=relaxed/simple;
-	bh=+D/ua2DayKacabvOy+QeVljqypmxdT49CtH2UyTiVnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g82gd9d0icBEeROREEEN+FlPvwQE51GCL/3/siYa/dANsbDk5rg62EEAj89i5nURMGj/+AyGuggEJt9mlHOdQGlWf4qsWUKI6/4L5pe7s3yxdkTIyFvOM5OId9P+RspogS5Xf8EiF3dmvQftxI6nWOGIayPRld8EX7OivGDN78c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EdsUfVx8; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748529831; c=relaxed/simple;
+	bh=XU0oPyxZDzZDKkcXO359f69fX/bnl8KlGOXa8n56B4k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IhVGpbCDS+qj3bIEuliNzn/X6fn+s/G79f0LFnJAU9qVeRjkkwEa5gVgETPkuY+mb1vjqxfMZXWdldQ68YpfQIoBw3cMl//MYHy9a1YS8QLLWvlGr3V5P5nWhxp0/NOHo5cVzQBRfOUNZz8FV1fyd5ZCItPz/DIyCZ6llGePPFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jRaj2QLF; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdsUfVx8"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32a648b1300so5218391fa.3;
-        Thu, 29 May 2025 07:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748529627; x=1749134427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+D/ua2DayKacabvOy+QeVljqypmxdT49CtH2UyTiVnk=;
-        b=EdsUfVx8QrZFiL3sIN9LK6ZBgQKIyK6IZdSQFgorw+9ylO2FLQmGPAsDBtoph3TbPS
-         KoI/TElS+ntdtuREU2pjcXIQHKinA96qO9ebGVU/vbAY6MYeVqEffsb1iGZjTm0lhon+
-         vQPhsyRsBIzVpWFuaRYLD0m8zerF1E630A0E5cNjigsDhrLSo781qV2QPul/nAWI2Tni
-         Ir3x7WxYSZhSR6PdRjChrRVLvfA2mOP4TTX1VdnJKXskMZucxht/72mFstDnXf9Aap7c
-         48EaSKoLgMWMAon7CccsU+slR8gfQZgEG5aaPOM9Crm5+jjt1jaYtb7bLg5XIEMUsFal
-         FJ3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748529627; x=1749134427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+D/ua2DayKacabvOy+QeVljqypmxdT49CtH2UyTiVnk=;
-        b=jDIL9qB4JlzOAjZOLTqTvoxXEWzN6R0RpNqSHFgkZkykKiMVRF3frKJ3L7MS+9wmU6
-         zE+6s6qm4JiB3j4L4pU61RDLVGd2joJ68BCHJQnTceAj3tGnVuA1NgQNkVaAl+JGb6od
-         i9D4SWiFh74W8bIzdYlEmPcyPXe5VBhZK3gbnPwpAIkgB4CcJMe/BjvLW75pBiA2ZL5J
-         kBzVa3My+DwzjH5hgB/HFi/S6NoxoPh6EZAMuQlS4zhGDhKIs6hxkEtNF7c8CJ4xH0ql
-         HTEbnZ9wtj9HrKBnajIoqDtjBOhePW0ZxKCN3zwdKVn32REhFHBWxke6GL4WVip2eFxY
-         6yaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS06raeIHhVVpfiwaPb1mxCs51kMw+HVPzF/KZ/u0JBKLTqJenGdCxxwvLc4GUgNVREI//jN6FOjrqGqs=@vger.kernel.org, AJvYcCVDzLgSNLOahzCfnHAlfMKgYpCbfoUH13rb4kACvHAAXf2Dt/MZPOyjB0dNlSnHHoPqgr6QSVqJnBLnmGxV1Ds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlX4++ioUIwvuf42tkIMJ1W8yPbabFxdXaLbOtJKCMIrRApv+H
-	uRlRu94osjoh+Z8aAAeTgiQWQ/Qpq8cdk3HVtDvAaudsueFCX2mGpymLlT6GcQHd35YG2Xnedpv
-	e2p0vyed06HWJHSZePM8p9sIqmNagdQA=
-X-Gm-Gg: ASbGncvBTVPI/23x3GoDjq9mq/z7jhxo73Z9lxhiaNin8/rUBMuW/QSkpLnXie6jtcq
-	ilXXMYxhBuUmu2zSXg8gklN7CYt7Y7t6zQKBJhHNuULNgn6Cuu30GHz0tz+KxPP2qPImHxEwUFC
-	nHMi+Ft381UMdRwKImEkFx9yE+RhQfXGcV28ybGidfZsKiDusKd141dfoLB+FgM4c7/b0UZ6pqU
-	/ee
-X-Google-Smtp-Source: AGHT+IFIOsZlPLfXgxVBZMlZkFL+ShhOCVyRcVsmCdRASQwye7R6HGJ7F25pQsrgAc7az+7LsPsd35Q7hlRxdRlLmpc=
-X-Received: by 2002:a05:651c:b0d:b0:30c:50fd:9afe with SMTP id
- 38308e7fff4ca-32a8cd69223mr8661fa.9.1748529626577; Thu, 29 May 2025 07:40:26
- -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jRaj2QLF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=qP
+	ACzQdKmCGnEpy21os+Y6Anwn+AlAe9o0MJqcU0H8E=; b=jRaj2QLFmAKV+U0GUv
+	VUWV5t5XGHDMP3Rg98eFXtpdjKV4wEaOCjSbnOty0BMqZ3haD0Jw/B6FwLlHEIHy
+	TkPBaiGI7eGFheBjaoe5cGxZjOGU4UjnVV/mAy00DCWcz/uIMqJ/PYCurPVGlLWN
+	f8q0kcRUEdhqFlABe8MMw2egM=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDHH6B1cjhoX2CLAQ--.10005S4;
+	Thu, 29 May 2025 22:43:16 +0800 (CST)
+From: David Wang <00107082@163.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	David Wang <00107082@163.com>
+Subject: [RFC] ext4: use kmem_cache for short fname allocation in readdir
+Date: Thu, 29 May 2025 22:42:56 +0800
+Message-Id: <20250529144256.4517-1-00107082@163.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com> <CANiq72=B4JMK4eqK0tL5ECWFAKcBGm0O9LsZ74dd38N2GrZOMg@mail.gmail.com>
-In-Reply-To: <CANiq72=B4JMK4eqK0tL5ECWFAKcBGm0O9LsZ74dd38N2GrZOMg@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 29 May 2025 10:39:49 -0400
-X-Gm-Features: AX0GCFs8RwRoBePQBurTxBlqD-hIi994O8rqwQfy4IZ_mcLMn1HjxIjuEcyh0Ew
-Message-ID: <CAJ-ks9nTrOuDK1W-qFpsMow5Wf7XG9hGBbf6h_kS2Xo16wyHjA@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDHH6B1cjhoX2CLAQ--.10005S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKw4fuF1DXr18AF18uF43GFg_yoW7WF1UpF
+	Z3KwnxGw4xXw1DuwsxJr4kZr95Z3W8Ga1UW3s2gw43XrWUZF1kXFnFya4kXa45KrWkX3W3
+	XFW5Kw18ur1kKrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEb4SnUUUUU=
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0glcqmg4a3dDVAABs3
 
-On Thu, May 29, 2025 at 9:30=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, May 29, 2025 at 3:11=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > Rename those placeholders for clarity.
->
-> We can also put this in a separate one if it is OK with you.
+When searching files, ext4_readdir would kzalloc() a fname
+object for each entry. It would be faster if a dedicated
+kmem_cache is used for fname.
 
-All fine. The only problem with the version you pushed is that it
-evaluates $ptr twice, which was flagged by Alice in the v1 review.
+But fnames are of variable length.
+
+This patch suggests using kmem_cache for fname with short
+length, and resorting to kzalloc when fname needs larger buffer.
+Assuming long file names are not very common.
+
+Profiling when searching files in kernel code base, with following
+command:
+	# perf record -g -e cpu-clock --freq=max bash -c \
+	"for i in {1..100}; do find ./linux -name notfoundatall > /dev/null; done"
+And using sample counts as indicator of performance improvement.
+(The faster, the less samples collected. And the tests are carried out
+when system is under no memory pressure.)
+
+Before without the change:
+	1232868--ext4_readdir
+		 |
+		 |--839085--ext4_htree_fill_tree
+		 |          |
+		 |           --829223--htree_dirblock_to_tree
+		 |                     |
+		 |                     |--365869--ext4_htree_store_dirent
+		 |                     |          |
+		 |                     |          |--43169--0xffffffffa7f8d094
+		 |                     |          |
+		 |                     |           --21947--0xffffffffa7f8d0f7
+		 |                     |
+		 |                     |--213124--ext4fs_dirhash
+		 |                     |          |
+		 |                     |           --86339--str2hashbuf_signed
+		 |                     |
+		 |                     |--145839--__ext4_read_dirblock
+
+and with the change, ~3% less samples:
+	1202922--ext4_readdir
+		 |
+		 |--805105--ext4_htree_fill_tree
+		 |          |
+		 |           --795055--htree_dirblock_to_tree
+		 |                     |
+		 |                     |--328876--ext4_htree_store_dirent
+		 |                     |          |
+		 |                     |          |--123207--kmem_cache_alloc_noprof
+		 |                     |          |          |
+		 |                     |          |          |--26453--__alloc_tagging_slab_alloc_hook
+		 |                     |          |          |
+		 |                     |          |           --20413--__slab_alloc.isra.0
+		 |                     |          |
+		 |                     |           --31566--rb_insert_color
+		 |                     |
+		 |                     |--212915--ext4fs_dirhash
+		 |                     |          |
+		 |                     |           --86004--str2hashbuf_signed
+		 |                     |
+		 |                     |--149146--__ext4_read_dirblock
+
+readdir() would have sigfinicant improvement, but the overall
+improvements for searching files is only ~0.5%, might be more
+sigfinicant if the system is under some memory pressures.
+
+The slab stats after the test:
+ext4_dir_fname      1242   1242    176   23    1 : tunables    0    0    0 : slabdata     54     54      0
+
+Signed-off-by: David Wang <00107082@163.com>
+---
+ fs/ext4/dir.c   | 47 ++++++++++++++++++++++++++++++++++++++++++++---
+ fs/ext4/ext4.h  |  4 ++++
+ fs/ext4/super.c |  3 +++
+ 3 files changed, 51 insertions(+), 3 deletions(-)
+
+diff --git a/fs/ext4/dir.c b/fs/ext4/dir.c
+index d4164c507a90..3adfa0d038cd 100644
+--- a/fs/ext4/dir.c
++++ b/fs/ext4/dir.c
+@@ -424,6 +424,48 @@ struct fname {
+ 	char		name[] __counted_by(name_len);
+ };
+ 
++#define EXT4_DIR_FNAME_SHORT_LENGTH 127
++static struct kmem_cache *ext4_dir_fname_cachep;
++
++void __init ext4_init_dir(void)
++{
++	ext4_dir_fname_cachep = kmem_cache_create_usercopy("ext4_dir_fname",
++			struct_size_t(struct fname, name,  EXT4_DIR_FNAME_SHORT_LENGTH + 1),
++			0, SLAB_RECLAIM_ACCOUNT,
++			offsetof(struct fname, name), EXT4_DIR_FNAME_SHORT_LENGTH + 1,
++			NULL);
++}
++
++void ext4_exit_dir(void)
++{
++	if (ext4_dir_fname_cachep)
++		kmem_cache_destroy(ext4_dir_fname_cachep);
++}
++
++static struct fname *rb_node_fname_zalloc(__u8 name_len)
++{
++	struct fname *p;
++	if (ext4_dir_fname_cachep && name_len <= EXT4_DIR_FNAME_SHORT_LENGTH)
++		p = kmem_cache_alloc(ext4_dir_fname_cachep, GFP_KERNEL);
++	else
++		p = kmalloc(struct_size(p, name, name_len + 1), GFP_KERNEL);
++	if (p) {
++		/* no need to fill name with zeroes*/
++		memset(p, 0, offsetof(struct fname, name));
++		p->name[name_len] = 0;
++	}
++	return p;
++}
++
++static void rb_node_fname_free(struct fname *p) {
++	if (!p)
++		return;
++	if (ext4_dir_fname_cachep && p->name_len <= EXT4_DIR_FNAME_SHORT_LENGTH)
++		kmem_cache_free(ext4_dir_fname_cachep, p);
++	else
++		kfree(p);
++}
++
+ /*
+  * This function implements a non-recursive way of freeing all of the
+  * nodes in the red-black tree.
+@@ -436,7 +478,7 @@ static void free_rb_tree_fname(struct rb_root *root)
+ 		while (fname) {
+ 			struct fname *old = fname;
+ 			fname = fname->next;
+-			kfree(old);
++			rb_node_fname_free(old);
+ 		}
+ 
+ 	*root = RB_ROOT;
+@@ -479,8 +521,7 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
+ 	p = &info->root.rb_node;
+ 
+ 	/* Create and allocate the fname structure */
+-	new_fn = kzalloc(struct_size(new_fn, name, ent_name->len + 1),
+-			 GFP_KERNEL);
++	new_fn = rb_node_fname_zalloc(ent_name->len);
+ 	if (!new_fn)
+ 		return -ENOMEM;
+ 	new_fn->hash = hash;
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 5a20e9cd7184..33ab97143000 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3795,6 +3795,10 @@ extern void ext4_orphan_file_block_trigger(
+ 				struct buffer_head *bh,
+ 				void *data, size_t size);
+ 
++/* dir.c */
++extern void __init ext4_init_dir(void);
++extern void ext4_exit_dir(void);
++
+ /*
+  * Add new method to test whether block and inode bitmaps are properly
+  * initialized. With uninit_bg reading the block from disk is not enough
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 181934499624..21ce3d78912a 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -7457,6 +7457,8 @@ static int __init ext4_init_fs(void)
+ 	if (err)
+ 		goto out;
+ 
++	ext4_init_dir();
++
+ 	return 0;
+ out:
+ 	unregister_as_ext2();
+@@ -7497,6 +7499,7 @@ static void __exit ext4_exit_fs(void)
+ 	ext4_exit_post_read_processing();
+ 	ext4_exit_es();
+ 	ext4_exit_pending();
++	ext4_exit_dir();
+ }
+ 
+ MODULE_AUTHOR("Remy Card, Stephen Tweedie, Andrew Morton, Andreas Dilger, Theodore Ts'o and others");
+-- 
+2.39.2
+
