@@ -1,154 +1,94 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542ED2AD31;
-	Thu, 29 May 2025 18:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E6221A931;
+	Thu, 29 May 2025 18:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748542576; cv=none; b=q4/0VdAzoUODohX/dGXAgybQFIGwt2SfcQeEB53OVJsgoRPx5ATFE2ffrcTljW/x7GWcVooVdPnBOrZl/0lk8i3fquqnaSPv+yxexU4eL8z6GO0+JvBr6fXSnpNuE9bJihX68RC41j5AquGu1lP8zwW3ffLlUmI0V48GOPOXwhs=
+	t=1748542627; cv=none; b=mj4v/3qGr39MssIuRN7x3gOq2RJ+j/uPPMcwpYehkDUEglauInb4Q2IgcOozycYWrNf+DDaBiLtlc2S5lW3coXsVoW3XMdp8eoOz1Sb+qIUStusGm8CzNhLh/jQur0LwBvyRDK/3Q5Jx+iqVL9ehAhFAkO0hMiLJKFNm+saVDXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748542576; c=relaxed/simple;
-	bh=Ndkxafaee8/iJXBR/9wIrvk3wAPeoCIY5F3xoJ8MQeQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2Z0eXdv/udoD7ZFXYPZHbwLbR8dci5IPsLab39amjSretCTFeBIfDbz9rCoR2gf1CAlsRaEoJ5fr3j87z/C1pa5koGvQFR8wKsEKQ5ivgh3//HPbVC+EPkB0U5xXm3MQxt59DCJZJaP9hUkp+L/z5HTBDaRxa7BLSkBvaoUtNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvqwBrdI; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1748542627; c=relaxed/simple;
+	bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LCx9ylbwH3KKFhcwWS6FKL3Cubit7QGiTamlAzjnsRLyeZIDRrNg670LG3WXf7N3LdV3oCTXp2gc22R98SSpzcE5YybXD95qymPg2OkNFDaafpE2TJ++TegcyR/ivs57KLXo0z8bjBZmXHvWLiOArkd5o/rMxaCFdEvqtjXPK9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7G9CArz; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvqwBrdI"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-745fe311741so1335429b3a.0;
-        Thu, 29 May 2025 11:16:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7G9CArz"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so2202697a12.3;
+        Thu, 29 May 2025 11:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748542573; x=1749147373; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wLWFabGjnu2pjZUWCnlpH8NuxluCsu9GKNAcPMcaZ8M=;
-        b=fvqwBrdIzu3TLGhXH/iIadXVzkROACE+4svgiCk+BlyTO1YrSePeGwswJYcVQPCXpT
-         RfsIo+vo5wf10wdKlPvQyVLJ23Oj1tVoeCeAirUc1kwsHMIn38tdCZQUCegBUgiBtpSV
-         zddMFLJLyax5t6pBPuqkri8MdfqFd8pcYu9Qu1eetMKMzUksP5G8P3jmjzi8q3/OZ05L
-         iG70tfL4mvrELwVLetFusX7kEXti8Z19jct46BEpSjqFh+EQwEh25fm25Nn+Qcnpu4cV
-         B32FsLpxXTWfoJH/O/WA0b9tWizHoyVlK+9+blct44qpzec2Ggu3/FybUbzF30c/Qylz
-         P/Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748542573; x=1749147373;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748542624; x=1749147424; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wLWFabGjnu2pjZUWCnlpH8NuxluCsu9GKNAcPMcaZ8M=;
-        b=k/8nIgsfmgpS0g7cjN59o5SLc7LrXOWjwTjIpGTDPS9a80tj97Rb6jfVKfRGGevqrs
-         Z+q4EcFJNWxjISLJ6mMujB7CMvgwSidN28UQOZD+mE5sAh+H63ZkQNttJNsNy6j8eJEL
-         iekfC4zseNGBWq/UUKyEJp0fRXBCuyM5B1RLg91xWBcoQxIKf57RUAvqJrdH6F7CILDZ
-         4zhmozCQTrm9RxGLCxddn8aAqcNpvcM1io6BuRLakw0doYOWHNNq/YR3ih8MxIdW1yiE
-         qgciETwoz14qgwFjLX9irivuQRczjUWJ1drosNj/qqqbvZNxvT89YYqle9NyUPfuM3Ha
-         vtOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkGm35seAoYUDC0EXNnFmVP20Sf4BAwyiRNE9OAuHq/RyXaJiTQxgysSjP6mi8wwZY7NpXKi8M@vger.kernel.org, AJvYcCW5gBVhXhR/B1WJ/1I1hsEcDkYdUUDu1NEikJBpBW2wMvwrEAiu2kAU5aGqGXUvKg+vtplnHa4OUndtk6mPRXKv@vger.kernel.org, AJvYcCWXN0hbrhBqN+0uOWZHv42k3iHdHBweTTedNIuPKg+Rx3E+ZOiEWQLogVSGI531LoL2cF19RJLlnh1Sw88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBGSn11nQ42/niDtu2X7j3cmEjfoXXi0OjU00ySo44I1pV+453
-	mY2OU6PRSF4Hqmn3bGHD8wSq2e8iPnNuB1m3xaV7NYhhWCztXhb5et5r
-X-Gm-Gg: ASbGncs91nPD3h1fEWAXU3lO/w409YREEHOeVVHFVhf4m2Pm6uUrbmCzOEWwmJ6K8ya
-	IPAd0dJEyVDnPBVcZ0OXKLCsD4Zit3c/Xz1wPXPX+dsuup9T7/cphKY4KlxgCn2YTk6/KRThi+K
-	NVHkHXrNouRjHYg+nXf6lKYKEdhEH3VPloq6iaJHPIwODlD12PP9cLp6NsnZHpf/ADSyc6vHr5+
-	D4k4xA4L2ODy1hCVuEorQZPrfHlA1CuW2zStuji6KRTVxwy04iXlUuNvHBUwNOepvmOtGfn+1I3
-	YcJD4EoTdGq4G97YcDU387icMz1JcCTq0WBFQSRN/WakQqWxV3He+0g=
-X-Google-Smtp-Source: AGHT+IHJe1nExEO/Gk3fjmlnSLJlBBab7HsdJ5qF4WOhLnq5aGIP+ewfPH1xG2NndfuxJCuOLv8QZA==
-X-Received: by 2002:a05:6a00:847:b0:740:a52f:9652 with SMTP id d2e1a72fcca58-747bd969f9cmr491255b3a.6.1748542573505;
-        Thu, 29 May 2025 11:16:13 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe96781sm1630018b3a.29.2025.05.29.11.16.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 11:16:12 -0700 (PDT)
-Date: Thu, 29 May 2025 11:16:11 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>, Ihor Solodrai <isolodrai@meta.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1 1/2] bpf,ktls: Fix data corruption when using
- bpf_msg_pop_data() in ktls
-Message-ID: <aDika2FRd4n+VRmZ@pop-os.localdomain>
-References: <20250523131915.19349-1-jiayuan.chen@linux.dev>
- <20250523131915.19349-2-jiayuan.chen@linux.dev>
+        bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
+        b=i7G9CArz+gL9Pl4rlYLB3DyHQzea4jECCakT3jKiih4VwbDTwqcmCrR4KWU34oG+Fk
+         3l9MU68GDQKyONdlRtTod8Zw5s7bE8i17J+e3MecjOTQHSVu1t0nCer+Z3LmAL20W4FT
+         A2GnFimONnL0vdToX13UWs8Pp7FUCBPg6I3SA44Sor8ljIKyeFp6sp1LNn7v+0ykRJQi
+         NZpAyfp9ZBwUPO0Q0qlb1HCXovoDK3v4Xzo17koJqp3v+b1HqBUPjIbp/lRM+ZamQa4h
+         nHyURLtsewvgf4PWOg94vOYPdYq7yP48eP7zGhkgXV+iETTzcAbmGv6R7F0DbLYbEUfl
+         Hu6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748542624; x=1749147424;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
+        b=HDehTtzvoML7iFnsqfH+tLTiTmii2DVaW+dMrxCZf23Esx8Z5mMvaAvUarfcNghFUK
+         CShJ8a264qc7h8Hp+Hwro+VvfX0x/3euhHJZyNhgniQ+9BwZMT7w+VlCKd3dvaPK9RuQ
+         cMa5soaoZZH5oGYOUgqddFVyip/ZmeyMA1mWdaH5Xv3RCzdHritmdz7wpLAkr8E/p8t9
+         KZ1PdS8TCNy1mHITzWhYMGOi/K+lsNqmGeBxOW6CcyH8ACI2dsebjCMJKXjFA6oHerV3
+         JYQdLHQHhJzaoRTOLh09PZSFEOfe1Xcii3Q99rBALf1xeDnmaeMdwobb1p0M0BGDg8IH
+         M1yw==
+X-Forwarded-Encrypted: i=1; AJvYcCU37ftoJxuH400vxzjD4L/uPNfAvvDr5xIUIu2Qm9Qk6bSjZuo12yn/v3tWbOQw43d7OKe7YwbovMw=@vger.kernel.org, AJvYcCWGQt1fJ/0mHWsa0t7wkq372yaRcsbNFHEkSzf0NdpJ814TcwAEnfddOPeYbZ3dYp/b92oVHW8/nrs1m3dW@vger.kernel.org, AJvYcCXi5BVYGYWuUPruQVh0vORt5PSrw78qmHi2mUPrWERL3JV6SyMeR1BkR0SOmJfpg8yzfxR//lCJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX7fd6tsLQvDOOvTPxZJczGGN5La4gO/4SVBJQ+VTQnIw//3Ik
+	qEno/4f+/gXb7l5DvR5B+BKtFCOw09Ob4zkL2gdOGb3Ef6oKTsnoW6LJ8NrD0/MWK5FLyBAjwb/
+	zYOFg23d6Rlic9x3NaqIjBJKX5kstOeo=
+X-Gm-Gg: ASbGnctFxQzgSSmsawloGwI4GI9ilWu+X+WJLot4NqHQ9M4sN1iDWBotnIw0mhm+JR8
+	8zrL39B6xqkkGArsFkmd8jJnwapJzdtIJ/5CXOMWwEke//McPnyYn1Hj2LlGuOwudmRnmoIwNFu
+	ul7EGXx4XAxvTBwKeqXbk/Boi3STozMLCD
+X-Google-Smtp-Source: AGHT+IFM0+piKu1rGaqMi0pKdb0lI6X4rWTslZyASxD990s/7Muh8t2GyRz7YMaetwaRiDgn9YC/e5rYM4mNGJx8nag=
+X-Received: by 2002:a17:907:961a:b0:ad8:a935:b907 with SMTP id
+ a640c23a62f3a-adb322b3682mr39557766b.8.1748542623490; Thu, 29 May 2025
+ 11:17:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523131915.19349-2-jiayuan.chen@linux.dev>
+References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com> <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
+In-Reply-To: <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 29 May 2025 21:16:26 +0300
+X-Gm-Features: AX0GCFuFcVPQH9mVs9Dm7_Q62qwCfnDpYDtGhUfXX9m4Hv-KJrr05FhjEekc0OQ
+Message-ID: <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in fxls8962af_fifo_flush
+To: David Lechner <dlechner@baylibre.com>
+Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 09:18:58PM +0800, Jiayuan Chen wrote:
-> When sending plaintext data, we initially calculated the corresponding
-> ciphertext length. However, if we later reduced the plaintext data length
-> via socket policy, we failed to recalculate the ciphertext length.
-> 
-> This results in transmitting buffers containing uninitialized data during
-> ciphertext transmission.
-> 
-> This causes uninitialized bytes to be appended after a complete
-> "Application Data" packet, leading to errors on the receiving end when
-> parsing TLS record.
-> 
-> Fixes: d3b18ad31f93 ("tls: add bpf support to sk_msg handling")
-> Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> ---
->  net/tls/tls_sw.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-> index fc88e34b7f33..b23a4655be6a 100644
-> --- a/net/tls/tls_sw.c
-> +++ b/net/tls/tls_sw.c
-> @@ -872,6 +872,21 @@ static int bpf_exec_tx_verdict(struct sk_msg *msg, struct sock *sk,
->  		delta = msg->sg.size;
->  		psock->eval = sk_psock_msg_verdict(sk, psock, msg);
->  		delta -= msg->sg.size;
-> +
-> +		if ((s32)delta > 0) {
-> +			/* It indicates that we executed bpf_msg_pop_data(),
-> +			 * causing the plaintext data size to decrease.
-> +			 * Therefore the encrypted data size also needs to
-> +			 * correspondingly decrease. We only need to subtract
-> +			 * delta to calculate the new ciphertext length since
-> +			 * ktls does not support block encryption.
-> +			 */
-> +			if (!WARN_ON_ONCE(!ctx->open_rec)) {
+On Thu, May 29, 2025 at 7:02=E2=80=AFPM David Lechner <dlechner@baylibre.co=
+m> wrote:
+> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
 
-I am wondering if we need to WARN here? Because the code below this
-handles it gracefully:
+...
 
- 931                 bool reset_eval = !ctx->open_rec;
- 932 
- 933                 rec = ctx->open_rec;
- 934                 if (rec) {
- 935                         msg = &rec->msg_plaintext;
- 936                         if (!msg->apply_bytes)
- 937                                 reset_eval = true;
- 938                 }
- 939                 if (reset_eval) {
- 940                         psock->eval = __SK_NONE;
- 941                         if (psock->sk_redir) {
- 942                                 sock_put(psock->sk_redir);
- 943                                 psock->sk_redir = NULL;
- 944                         }
- 945                 }
+> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling t=
+he
+> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
+>
+> It seems like the order should be reversed.
 
+AFAIU the wake capability of IRQ line is orthogonal to the interrupt
+controller enabling (unmasking) / disabling (masking) the line itself.
+Or did you mean something else?
 
-Thanks for fixing it!
-Cong
+--=20
+With Best Regards,
+Andy Shevchenko
