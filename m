@@ -1,175 +1,170 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EDE293B51;
-	Thu, 29 May 2025 21:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748553514; cv=fail; b=MAYFDhf44Noaro/Plup367lELKa/ubgMoSw3Bu9+AKZYtNReyAdogy/MZtJz9vNW0zBEd1hRWSC38Ynyj3rwfSWCTtRQ4HbAiemVlHULgedZKO70uv8m+RU/iQ7odlORwhU1CA3l/Ijwdq6dq53j6JxvVpa8lcKNIXzRZIInxb8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748553514; c=relaxed/simple;
-	bh=okRprtViEXPA3y+d7c63XoOzHUERLnkj200Svu3AwHA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YXMipgR3lhDsWCJLDCYdbNlvCef0jqE5B/MNBQWERdNl97Jev7I40M9TY4ZvD88XBdZElysnUTRB718BWvMCtD6qp7Fl+a0GVsREZKXdayTfWArapEh/4E3ixCLYFUI//UG0lmyiem3BRnChcOUzyYeIjlfXmpJNU31/Sn0DKaA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZO7RPN9d; arc=fail smtp.client-ip=40.107.92.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B87F1DEFE8;
+	Thu, 29 May 2025 21:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748553604; cv=none; b=EOYy/bwLUWKXHA9VfJddElwCJhGKI4wU1YGN4zQv1ndL93NDHtvOjOJmWKsDOPDZVZn4nhe1cLTASQl+Ib8DpVe6YRmgJNSM8lRNcIhNTkzWjqck5z+j2pmiSfFwCGKYyxMeuKZIa4Km3V/eYQUTYmaordlw5rGHi8eiYiFdJlY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748553604; c=relaxed/simple;
+	bh=0++LZUZpJ3GvBids+E5UU/owBZZ4gJOS4xWxQrexAuQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lmkz/je6klQjSXTmUxTq6gSoH8E6f1qU4QTbvYxct/5lN8Og5wGZT63zJIfNNKifqwtzWqi6SxiO2bbwltU1otOvjyOG97CBEbTPKD2kcw4zTZO5da9rmOrpMNXHyy0Iu1kRPBI7ClTV+jDN334Um/bPsq9/2Vsc7vTOmb5+SSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gCJizGB5; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZO7RPN9d"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cYpcZopv3+w7VNxF/eryZsw7hbe0Q+whTCvBcOIWgrWlNzQqf8YTrBWc2/yjSf6OHEYVz6YnYDgcii9gto1pbuPqV1Bb9jrKy9jdjsxUaEMNM9aII2F3WBV1qKXJ7uCGh9sAyGacZltSAMBqytZCGCqTlydQOmF800RASENkifI4brKBgeNpkCZoAM4Pacuzg0GLksTeaJ6gYZSxTkb6AVsBUVjFHeg3jVs9luZLJ8Sd2SSDsLSHvfi3W//VDCfO17dA/BlrXkdc2p49O/f5BRE/x9pLoQo8c0dLcv5JnY6xDjatJtLVwi9LOGtF9bm+L6JEuwssG53YOeR954n83A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=04YchuE/rcAL+3R3LxMNNradNz9oOwhaFzQqXNwwEtg=;
- b=rdsqCRJSGFTnVoHFRZkSTzhA4T1rblUnD1JrfDAVjcGNwOJAhxk1LN/EMWy3Cuaxax9E4OBX/vH9sbihjJO8ZCklYUMuy0k3PmLGu6ONp3jgoFoeJixKX+k10j14VlyVoHSQylP0kR8Uc6I4U9xz+bh/3kHbg80GN9mUpTBKp9x3/UW9s/vfy14a3QL85KO7QdvyADFbUnaT5MGn43I+ZHKgq/SSeGIoR1VUY+izsPQ3bVN7xu+Ym3QBj3MMQkSvVjB5y8F4o14H5ic4zFV055VuRD+Z+FiL7YvKOnCKASak3PUdAQBMv+Czh/7vsGia5df6VrPvgbf5HITkgVBDaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=04YchuE/rcAL+3R3LxMNNradNz9oOwhaFzQqXNwwEtg=;
- b=ZO7RPN9dfQJjjzZmliYrIaxYhi+8mYEznc2p992qSZkRgF/4JEh0l11OUKce5XA+Q0ZnokyKR5o5ERxnaHAdAhUcACjCB9veFUjisieTFqBNEUYZRyv860BLaWZ+uxeONCwhnPVDz8IFCtjC26q+TFTrZpNsWfTzME5kNvA9Svg=
-Received: from CH0PR03CA0271.namprd03.prod.outlook.com (2603:10b6:610:e6::6)
- by CH1PPFF5B95D789.namprd12.prod.outlook.com (2603:10b6:61f:fc00::62a) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Thu, 29 May
- 2025 21:18:28 +0000
-Received: from CH2PEPF0000009D.namprd02.prod.outlook.com
- (2603:10b6:610:e6:cafe::9) by CH0PR03CA0271.outlook.office365.com
- (2603:10b6:610:e6::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.19 via Frontend Transport; Thu,
- 29 May 2025 21:18:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF0000009D.mail.protection.outlook.com (10.167.244.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 21:18:28 +0000
-Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
- 2025 16:18:27 -0500
-From: Tom Lendacky <thomas.lendacky@amd.com>
-To: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-CC: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
-	<seanjc@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
-Subject: [PATCH 2/2] KVM: SVM: Allow SNP guest policy to specify SINGLE_SOCKET
-Date: Thu, 29 May 2025 16:18:00 -0500
-Message-ID: <4c51018dd3e4f2c543935134d2c4f47076f109f6.1748553480.git.thomas.lendacky@amd.com>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <cover.1748553480.git.thomas.lendacky@amd.com>
-References: <cover.1748553480.git.thomas.lendacky@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gCJizGB5"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3087a70557bso186891a91.2;
+        Thu, 29 May 2025 14:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748553602; x=1749158402; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LULgnj8mgpeuIbU+1+RH9F8LPHyJxHaqsByN5Cl7VAY=;
+        b=gCJizGB55tzfwqwoQk/y+MLoBMS+Td68gmiQ1E6HY8LZrX+d0uIiaxFoEjZ7+RKcDX
+         2jaVIXAlscFfMfTpMhcZ8z/p0Ph4H9X4vPmkGhPxfpXpsulLSRsdrUD4c9HrVdGfX+ev
+         Sh3mys6GEJRCTml211U7iNyUgq5Ll2mVo5J1w8vqu3SPlfzaMH6gI2g8pVnbQcrNUTV1
+         5aFTQ6DfIImVM3j/CGqxzmPYoCO5Y+27ieiIkCC7LAqzT+p5c8XYtKJAZrCL/DwnK+a1
+         xAwZpQvvpimt/OOEtJqUBz/DQbvuj11iDXdm6MyXL7m1adDVpKK/ozuucmxWpvvCp3KQ
+         Xf7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748553602; x=1749158402;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LULgnj8mgpeuIbU+1+RH9F8LPHyJxHaqsByN5Cl7VAY=;
+        b=h7Rom9DtfsurdbrgeHoVL0RFibfwANJmry6urmLj5ZkmG6PZJjCqeG0NDUUMNcyuGe
+         kvAxdYoQ2bwVOONWF9CtqoC87vArL/sAPGDmHfXqcMwqRgm6FA+ffbN8cNtPIREvHWY7
+         lcXRilZtkjV50OxbdEWa5OoGeXqnsKXb6pJmU+4sSXXeqptG+HI9rvB3MKfrjVULoBZB
+         2/NyxDGdwIR49Sm3tiVYYOucOw7n9IXbGkV7Jm5xtIfgbpLq9nZqQRmHBfWiW3uA4vls
+         CgC+/IfLHn7UH32Q1Y33EcpKSdBkyBdeBUC2JcUYn4gm2JBkuDZdWZqNM30BrSegsRwb
+         lGWA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3leiP1soVqbvxm+qvMGErfHQHdiCLuGe7+mGoOyDwKPEZZZkDP6ODEsWX1SJ74oolqpvZdOfd6tENGXsoBOI=@vger.kernel.org, AJvYcCX3DyyjpK5VBqIIiAOv4Yk9UymwqppFo/JB1ZXhmRNgCAcfAu67B7u984TcJqxX+fW6aNYc9uYh7vxzcns=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0eZ5Vj5SZoL6F3KNxItaZK4FEHgH75i5MIdubJPyk9+P6io9x
+	LcgVBO6kN4i8tzgE5fE6v5SCabYw8pFJztJYE5/64FOnMj4uuOpeQv5Be9wqvx7r32ICfcflqcH
+	NSFSpbq5aGp7JwVAKCfT1/DNkRDchI10=
+X-Gm-Gg: ASbGncv6HDhuDqQIBW4mDAZRTOj2EVJT3RulYddI6nXSpD0tZv287G/KrvvDkWW5/un
+	0DEe7b4tg53h1W09ds19xYjSE9QNCaXR5hyNxwqKKeOawpgRRT9154xzO8V64m/tBgduBicNlpl
+	flMzL68AoGV+yCN+kFYE97dqOLa297oOwL+OrE1ha/NRf7jXTn+bPGtQ==
+X-Google-Smtp-Source: AGHT+IES40CgwS/YOf1l/IjgZf9QAjUIUwge87svyQafynEBoF9nUJVQIWezfhgcz4uExX9A7iXpfvv4mP9es0kcvxI=
+X-Received: by 2002:a17:90b:1f81:b0:311:e8cc:4250 with SMTP id
+ 98e67ed59e1d1-3124daf3e85mr26367a91.3.1748553602532; Thu, 29 May 2025
+ 14:20:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000009D:EE_|CH1PPFF5B95D789:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12f9d39a-81b2-495d-c13b-08dd9ef65b46
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Qm+ynDRGokrLSeEhR2qTcPUjf0SaClkkYpNxelN4YLJG8MPBAxRxtO/FsItC?=
- =?us-ascii?Q?We/QV13RuMyVGmnR9mNl92bHU7Jvj++Cvxf6poXDWOvCbfJ7n71tigSJPulM?=
- =?us-ascii?Q?BwL+NKjaoTMzB+F3DeFDmEgPIFMMWr54Awtmi+e7CbrsTdiiq+Yp7qGac5Uv?=
- =?us-ascii?Q?0JAa/6Crgq7rdtckn+/kYDwUNYoJuWpd2vp2b6Jwn4ePgNc34/gp2ZBqEaJd?=
- =?us-ascii?Q?QcSw9kbXPOxnUwJUl+X5a49bpQC56SKAPPatuTF4e/wqlWV5EqbCwXIlJCVc?=
- =?us-ascii?Q?jV/CAVqwN2g9TJ4xGbIC2giuPDq6h+9y9CjyJZvHWTdeZ0IS+bOngc/0t2GD?=
- =?us-ascii?Q?37jg0eG10KMVuaW0BrhkH8D608+vT9tFyMj7H9vmPs9WOIOvuLypIIu8dCbX?=
- =?us-ascii?Q?0EfbCpRWlta7m98p8ryE/MUoHKdKsZSNu9gHlkEaTWHp/Gr4rXuFD02CdyBy?=
- =?us-ascii?Q?jpfIt9IeoUxB2NxA37YCGlbHDbDzYpkgQroXEX5sFnPfq3g54b8nA62rQE32?=
- =?us-ascii?Q?MonVRcgqFvhNRqb0HbPb57J5SYZrnvC4Gisf4rNCUXRi6bpeG26LCJKGaCF8?=
- =?us-ascii?Q?hEIa5EPMdZ3hVFOmVmdcPjEmthV7f8Dj0KrS2AEgbxerwccks9SySMWUb5RA?=
- =?us-ascii?Q?EA8SsJuEXJOLgARJ3hTd+Yvm5W/KOp64in0cetjh3bSDODmIWojI9bR4d4Ss?=
- =?us-ascii?Q?K2N3oS+1BiiWZsgeQvLyE1h+X1YSweCmIZsf5QehFd6AFn51WmB9xDuImzcH?=
- =?us-ascii?Q?dOcxmpLv+L1zZ0JkmJilBu30dqe+5lC8Be63eJ9C+UZlWSHqpFxaHQu3YwsN?=
- =?us-ascii?Q?jvPxUzBj5wEny6U4Gmavb5D/5B6YQ0GMpudL9RUTHk558Z7zP+Gub2XgHMG6?=
- =?us-ascii?Q?ig+MsuDPeWp27oQDPcfouHhqCMxaOFEHjAQzRgLW7ddn3TmfUz1bqhrc7h/O?=
- =?us-ascii?Q?0e8Jn7Euo8c3fMe7ey6S/ZNDK1P4gnEUfR5NfuG066dNwVScIfldFBER3fav?=
- =?us-ascii?Q?LI/Nj5/RXoU0TVoIS3Vxp/GJ35AuolKpCGd8Li8e8dzGI61vfxIFjO7/foG+?=
- =?us-ascii?Q?pw6W2O5mdUz9Ahp7S3WgfPtsZTCBxpazcPx9LKeku+VlQ26KTrQLC+jZZBn0?=
- =?us-ascii?Q?L1V+QuZCyncC6h8vRT9UCaMMwIA4dKiOWl2C7cbNVUvcSrJL7k10bsnJcwcV?=
- =?us-ascii?Q?GrRPTqOgFgL6VsAf7hyAwkc23JUCRKbgttC8bHSpu7jrQIhDSDIWZkyw68d8?=
- =?us-ascii?Q?vvc5YAf2ZemDqcAbHG8ljG2S5vHQ2YJt+TeNGNtVvIlQ0jv0K1xdEiCBxLR/?=
- =?us-ascii?Q?2sokdF4PQRvitGoeZDcHLzMBo+yj4/sSb3nUaC7eYbIF5kNnbk1ashAkUDoZ?=
- =?us-ascii?Q?MIARkSj8V0OCYQdS052igTYQOSADTQWP5XvxvaVvDS73uCeer/fqhQ6UN2BY?=
- =?us-ascii?Q?ITBvTp2CgJrCgrktJLV4PoiP5w+pQ5TXovC43l14fhkSg97jL9JQ2hsTO/Qi?=
- =?us-ascii?Q?ChZw9GorTzm+nGg0Lz66LgOS6DuUp4u4l7tB?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 21:18:28.6425
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12f9d39a-81b2-495d-c13b-08dd9ef65b46
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000009D.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFF5B95D789
+References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
+In-Reply-To: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 23:19:49 +0200
+X-Gm-Features: AX0GCFu8AdUNF2fm6Omgj-O7DrSdoGzRyUjuJjYBjmiFifBnmxvk1MXSWCtJDsI
+Message-ID: <CANiq72mFiCrzawVUVOU2giJtBVsRdAO3sGtDsZptPuFvmid3EQ@mail.gmail.com>
+Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-KVM currently returns -EINVAL when it attempts to create an SNP guest if
-the SINGLE_SOCKET guest policy bit is set. The reason for this action is
-that KVM would need specific support (SNP_ACTIVATE_EX command support) to
-achieve this when running on a system with more than one socket. However,
-the SEV firmware will make the proper check and return POLICY_FAILURE
-during SNP_ACTIVATE if the single socket guest policy bit is set and the
-system has more than one socket:
+On Thu, May 29, 2025 at 3:11=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
+> Rename those placeholders for clarity.
+>
+> Given the incorrect usage:
+>
+> > diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+> > index 8d978c896747..6a7089149878 100644
+> > --- a/rust/kernel/rbtree.rs
+> > +++ b/rust/kernel/rbtree.rs
+> > @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) -> RawEntry<'_, K,=
+ V> {
+> >          while !(*child_field_of_parent).is_null() {
+> >              let curr =3D *child_field_of_parent;
+> >              // SAFETY: All links fields we create are in a `Node<K, V>=
+`.
+> > -            let node =3D unsafe { container_of!(curr, Node<K, V>, link=
+s) };
+> > +            let node =3D unsafe { container_of!(curr, Node<K, V>, key)=
+ };
+> >
+> >              // SAFETY: `node` is a non-null node so it is valid by the=
+ type invariants.
+> >              match key.cmp(unsafe { &(*node).key }) {
+>
+> this patch produces the compilation error:
+>
+> > error[E0308]: mismatched types
+> >    --> rust/kernel/lib.rs:220:45
+> >     |
+> > 220 |         $crate::assert_same_type(field_ptr, (&raw const (*contain=
+er_ptr).$($fields)*).cast_mut());
+> >     |         ------------------------ ---------  ^^^^^^^^^^^^^^^^^^^^^=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut rb_node`, found `*mut K`
+> >     |         |                        |
+> >     |         |                        expected all arguments to be thi=
+s `*mut bindings::rb_node` type because they need to match the type of this=
+ parameter
+> >     |         arguments to this function are incorrect
+> >     |
+> >    ::: rust/kernel/rbtree.rs:270:6
+> >     |
+> > 270 | impl<K, V> RBTree<K, V>
+> >     |      - found this type parameter
+> > ...
+> > 332 |             let node =3D unsafe { container_of!(curr, Node<K, V>,=
+ key) };
+> >     |                                 ---------------------------------=
+--- in this macro invocation
+> >     |
+> >     =3D note: expected raw pointer `*mut bindings::rb_node`
+> >                found raw pointer `*mut K`
+> > note: function defined here
+> >    --> rust/kernel/lib.rs:227:8
+> >     |
+> > 227 | pub fn assert_same_type<T>(_: T, _: T) {}
+> >     |        ^^^^^^^^^^^^^^^^ -  ----  ---- this parameter needs to mat=
+ch the `*mut bindings::rb_node` type of parameter #1
+> >     |                         |  |
+> >     |                         |  parameter #2 needs to match the `*mut =
+bindings::rb_node` type of this parameter
+> >     |                         parameter #1 and parameter #2 both refere=
+nce this parameter `T`
+> >     =3D note: this error originates in the macro `container_of` (in Nig=
+htly builds, run with -Z macro-backtrace for more info)
+>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wB=
+uGPYh9ZTAiww@mail.gmail.com/
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
- - System with one socket
-   - Guest policy SINGLE_SOCKET == 0 ==> SNP_ACTIVATE succeeds
-   - Guest policy SINGLE_SOCKET == 1 ==> SNP_ACTIVATE succeeds
+Applied to `rust-next` -- thanks everyone!
 
- - System with more than one socket
-   - Guest policy SINGLE_SOCKET == 0 ==> SNP_ACTIVATE succeeds
-   - Guest policy SINGLE_SOCKET == 1 ==> SNP_ACTIVATE fails with
-     POLICY_FAILURE
+    [ We decided to go with a variation of v1 [1] that became v4, since it
+      seems like the obvious approach, the error messages seem good enough
+      and the debug performance should be fine, given the kernel is always
+      built with -O2.
 
-Remove the check for the SINGLE_SOCKET policy bit from snp_launch_start()
-and allow the firmware to perform the proper checking.
+      In the future, we may want to make the helper non-hidden, with
+      proper documentation, for others to use.
 
-This does have the effect of allowing an SNP guest with the SINGLE_SOCKET
-policy bit set to run on a single socket system, but fail when run on a
-system with more than one socket. However, this should not affect existing
-SNP guests as setting the SINGLE_SOCKET policy bit is not allowed today.
+      [1] https://lore.kernel.org/rust-for-linux/CANiq72kQWNfSV0KK6qs6oJt+a=
+GdgY=3DhXg=3DwJcmK3zYcokY1LNw@mail.gmail.com/
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/kvm/svm/sev.c | 3 ---
- 1 file changed, 3 deletions(-)
+        - Miguel ]
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 77eb036cd6d4..4802edfc5d9e 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -2197,9 +2197,6 @@ static int snp_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	if (!(params.policy & SNP_POLICY_MASK_RSVD_MBO))
- 		return -EINVAL;
- 
--	if (params.policy & SNP_POLICY_MASK_SINGLE_SOCKET)
--		return -EINVAL;
--
- 	sev->policy = params.policy;
- 
- 	sev->snp_context = snp_context_create(kvm, argp);
--- 
-2.46.2
+    [ Added intra-doc link. - Miguel ]
 
+Cheers,
+Miguel
