@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0DF219E93;
-	Thu, 29 May 2025 09:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB9621B192;
+	Thu, 29 May 2025 09:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748510021; cv=none; b=gQ8AN/g/yy1vAUicL3uiKK08aIxsTB3mQmfYLM5Ndqj8hlLMRc/oifYezbvqpvaDrWZUg6zCFnmmpxlR4gBBp5dAuEfD3gMGxC4SYGVfqOkZRVr0i1/0rlAO9PH4+Pc7a85pH+FBG4ZFIguBoNqCfdSv4LsTFhewMH2so69jU9k=
+	t=1748510056; cv=none; b=i+G/zq6L8k6cdvEUH9++45TGapsNWmbCvNm4lp+BRmYflNJRdUj7un3DSEaU41i6Zb6JW71mnUhd9T+uaa2TpuZNS/QNzhIXAJ3/6YewYi5n94N3XugJ+WtAfoSzNbQHRsk6RB0cCPWNU9YkEQEbV0CfXO7xpwR/kT/R6RBFAd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748510021; c=relaxed/simple;
-	bh=STUwJDo6edB2rYB+1OgDpYTIjZtzhbvx4FZHvhQiXeA=;
+	s=arc-20240116; t=1748510056; c=relaxed/simple;
+	bh=nsB0nVxz+JJc3yI5M3RfBBdILPJfmZjk/4dwV4uYOAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m6GlgxjgSZfVjS5k+W38tLBo1GeF3/MGkGNrB+8bmST17DUiPiW0FpEVuuY/htJyvwGUaybONe2i29jWX/nBLOt9004auygibyj1dsQjoh0OrMQ1HlZ0i6JwhVCpoVBLtTRU+4v+noIMloj1TpYBXXGqbQA4pUcVWufFGbI7Afg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm9EHB9D; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IE7Qix8xCKdRDq1Hwsiiz4h6fX6nGB5af+AXZUPoSRouFgvOch9RG7FlmRtELqSC2Fl2a5cYKB/g2xFCh/PGyrxi/1XDQHDMD6IXoJ84PWu48+sRl4mfXTJlP1wtR/Z6HlAcFk7TeOE1pB1y9m7ItoA5tkPqQlZyHD9ExVJBhc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjEjNiMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm9EHB9D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25031C4CEEB;
-	Thu, 29 May 2025 09:13:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjEjNiMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C015C4CEE7;
+	Thu, 29 May 2025 09:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748510021;
-	bh=STUwJDo6edB2rYB+1OgDpYTIjZtzhbvx4FZHvhQiXeA=;
+	s=k20201202; t=1748510053;
+	bh=nsB0nVxz+JJc3yI5M3RfBBdILPJfmZjk/4dwV4uYOAg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Dm9EHB9Dym1P4YSNVcAw+j4JySIBaRBj7KwkbBbwFOKxXgrLYXFq9wwogw3AMj+SI
-	 5lluzAHzDnczCS2lAy49igbyZhsMt2DXVotzAP7mSgP7OR9JYxwxqzya03OX7JWd7d
-	 6vgU0t14XaCz1aWIMKek65jc/IrpjdSMohOBKqCdWnlWJ5ro6d1VR9iNHphlwJY4+A
-	 xzkhQAoRoMNujsiu9IARLgJepqidJWTYz3+Ugb1Lzsf2Sq4urg6YruSLvYqL/QwtYi
-	 1BPSRCUzgbxOyyqrMqtM4BnOeOhGFJXQZuj9WziJJv8v4Ib2/S8INK5ZbdVxkSrI6T
-	 MBXDD+5xQ8TxA==
-Message-ID: <e5b5a526-e710-4ed3-ae05-7c5bda55e293@kernel.org>
-Date: Thu, 29 May 2025 11:13:37 +0200
+	b=XjEjNiMmNF4QyQXKqZ96EBVPLdhph3Csowe2ehr9ecQcm2XIadsZIgL9YCdp32C0k
+	 CLRwHmltzlnY0rUqnrsRHaRXcLHbtCRfuJRYKTVJ4my7l7HAJCiJSorfqkoRf1PqzJ
+	 1f68M4vi/E9PDVHXF+6pCnr9bcXnXeJQ8+refWKu2w+54QJDkLJv+rkB7fwI7iB9Dn
+	 W90l0BB3jSJtlp77wiCIgNCB1UNGOqymRmi1fkcYeZCIJDH72wXRHw8R8q0qAHJyP6
+	 iprnfI4nFXLhMAsSWaMSMKHXAjU2QWGZ6dlVjsoOGUeLHgkV/aRIpB7Th+PfxejdYY
+	 v1uOTEgBJ25Sw==
+Message-ID: <57667ad9-d98f-4f8b-9b70-428960765ddb@kernel.org>
+Date: Thu, 29 May 2025 11:14:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp15
+Subject: Re: [PATCH v4 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
 To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
@@ -45,9 +44,10 @@ To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
  Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
+ linux-arm-kernel@lists.infradead.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
- <20250528-hdp-upstream-v4-6-7e9b3ad2036d@foss.st.com>
+ <20250528-hdp-upstream-v4-2-7e9b3ad2036d@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -93,32 +93,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528-hdp-upstream-v4-6-7e9b3ad2036d@foss.st.com>
+In-Reply-To: <20250528-hdp-upstream-v4-2-7e9b3ad2036d@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 28/05/2025 15:30, Clément Le Goffic wrote:
-> Add the hdp devicetree node for stm32mp15 SoC family
+> 'HDP' stands for Hardware Debug Port, it is an hardware block in
+> STMicrolectronics' MPUs that let the user decide which internal SoC's
+> signal to observe.
+> It provides 8 ports and for each port there is up to 16 different
+> signals that can be output.
+> Signals are different for each MPU.
 > 
 > Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  arch/arm/boot/dts/st/stm32mp151.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
-> index 0daa8ffe2ff5..b1b568dfd126 100644
-> --- a/arch/arm/boot/dts/st/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
-> @@ -270,6 +270,13 @@ dts: thermal@50028000 {
->  			status = "disabled";
->  		};
->  
-> +		hdp: pinctrl@5002a000 {
-> +			compatible = "st,stm32mp151-hdp";
-> +			reg = <0x5002a000 0x400>;
-> +			clocks = <&rcc HDP>;
-> +			status = "disabled";
-Same problem.
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Drop reviewed tag. It was given under assumption that you will test your
+code before sending.
+
 
 Best regards,
 Krzysztof
