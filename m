@@ -1,154 +1,315 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DA729292C
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748551742; cv=none; b=TIGwRkOa7JfSOVBcfQSjLSSrEhA79PYQGgOOy2g/JKYJsz3ibKV0aWyOS5lfszpHpjOWCmJkxcCWNYkHk65EO9dVDspeCZVyKunLl1YhLtDEyUd2kXCQVmWFvRM4cVEhhamJoy7hXfiwOsxln7cH+vSSXDz6qIg9PdK1/VPKU2E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748551742; c=relaxed/simple;
-	bh=ih8DlvU4tKofltliu46O2s62nPDCCu+VEeNQCQzA6Ko=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Cp1+EPRd//+6bUsR8hDWKzdu1OP9SPeSClb7u0VlD9DLT6oWh+W63SZNsDy2nUAcF48YAjzptQh5ahLwHb4Ob+ZT2CD3+q+/rNR3khWcYknlWVypy4CKT4LQTgBnk9GzkEoW2t+V+ppcyWm5SYU0BEaZQf44B/O8d/Q+ebT86YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hYphrWw4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAE24C92;
+	Thu, 29 May 2025 20:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748551840; cv=fail; b=llFS4DkMn88wK38YbAZpqFkGxv4pvgycGqSN7FTaAuUcJ0CnwDfaBxhD25QDoQ/7omtMu1dTc3LUa8ReZ3rea3YCx7i1grepiyJ0CD19jxB1dyVysu5/UWLwhvXbHX4kFbGbbXnZx5He0wtxqByH/Lr8ncJpChBWW1R+fA/+q7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748551840; c=relaxed/simple;
+	bh=2UdeekdbsA5cLJ0kZAZDgFLekAZXVKwlFVJgLeVdA9g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tSIAEG5axg1pRmOlXtjsOiHQSjL9kLuGUVJYTmVJity6S6n/Cqx8ZwsxeWuF88f7rVyWl1t5RuaJW9pi+rI+gd0nUEMdqmXEl0KP/t5NYo0LXggVk2OAlq7jEiiV0IuZ7IxxFRpmRrdOoaUMdm0AFVsY622XDrjEqSMj0n4XfOc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dObyXBWW; arc=fail smtp.client-ip=40.107.223.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hYphrWw4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748551739;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZeQ2Vo+oQZDQGCMwwHxe2K14O9sa4zRfd9DC9KDPWg4=;
-	b=hYphrWw4IWfzQguv9/NIp678rvSTmQRyP+NmSnis8tAB4QBye/uaSNsRnBGBANajKi09tV
-	deDQhHhsGEmVexGwQClbX7WffBFQ2qM56k3ZgK2wRTrtUuTE3j46iOhW8Ak6zyUWrtrAvi
-	5zGQ6l/WNL5/0+W8XAeO1lopZSH5qFE=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-fdZkioHSNl6JZ7s3GLWKxA-1; Thu, 29 May 2025 16:48:58 -0400
-X-MC-Unique: fdZkioHSNl6JZ7s3GLWKxA-1
-X-Mimecast-MFC-AGG-ID: fdZkioHSNl6JZ7s3GLWKxA_1748551737
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-8670d8907aaso22614639f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:48:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748551737; x=1749156537;
-        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZeQ2Vo+oQZDQGCMwwHxe2K14O9sa4zRfd9DC9KDPWg4=;
-        b=swZMe3R5pr+kqun8JKAyehUFT6MZhLg1/xGXmSzxbP5J+fCIG6R/Z2sFbQrJf2m75y
-         b8yDS2Jl0Zrkx0a8oYKMDZeRkiuAZ0jRWx2MPtoNajbbXIfDmlv4+7z18QxKFV1Od3gt
-         iPrV3+RPfl6EOMwNeHqUJL4wXfCUmcfpLEQVbp2iBxW+FvkDc2O+Op9M2FbqDVZZpFYP
-         /p82dwgEz0R7orupJLE0+XOVI9w8pPqTHtDgmx8Zud7FFFppOsKnAzNFXOJju/yU+mN8
-         NkHLASqlmV7waW1Q0cINwkcj4P9vR1LlEdXaKOfwEr6H9do3eCRSwwKI4xCNINCJ7MFq
-         40ag==
-X-Gm-Message-State: AOJu0YyxLpQCfTObJY44R/SH3pMa7oHRVh83bxCjaq1koiezJ6XUrL/o
-	ASIanNVRZ/jcKOb7cW/1p/nvh31tcc8qBQ5BTgPaKkjBX3Gn9qrPZEelsxT/9jc6Qe5vfzhParQ
-	oRCtUxyyABjgcdnd+ar/sIwC99MRzECfmGHOvhDpi/4qvM8vh82xmv26KSW991wtmDxh9n++VWg
-	==
-X-Gm-Gg: ASbGnct9tF4iW7Qc/L4zysBj/K9nBlznCMumFzcrlah3mzMIrjR5VubkfEevWFD8qmu
-	Ur0LASpMZMnxIwnHRxeHoHgubq0jNKw39XF80RQz6p9EBehzb5bj8egdjSFp4Tj6tt1KLlarkV/
-	zHcfsaekFiIWdvWOe995DOlwZDyRb5nPiOcXJkHi5gg2CBONVgc1RmiuIcRlG3ShEgzqAG9yMN2
-	trnCmDYffsHIfafdfEGtBpgoKFRsVN5qaX99DEBQBqG43Xi7yejXO3f1WkTpyVWhten5LdQTj/2
-	/0KWlD+Tgumzx5JLVeEsRBU87A==
-X-Received: by 2002:a05:6602:158e:b0:864:3df4:29e9 with SMTP id ca18e2360f4ac-86d026e6e05mr272039f.4.1748551736680;
-        Thu, 29 May 2025 13:48:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFs7nGM96u64Rohq1xYaZrhS0fIeg77cLR+/KgxB5GeNDPWvzAH+3nY+R63aPqOG0LhIRDjNA==
-X-Received: by 2002:a05:6602:158e:b0:864:3df4:29e9 with SMTP id ca18e2360f4ac-86d026e6e05mr271739f.4.1748551736317;
-        Thu, 29 May 2025 13:48:56 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86cf5e4fee3sm43971639f.10.2025.05.29.13.48.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 13:48:54 -0700 (PDT)
-Date: Thu, 29 May 2025 14:48:51 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>
-Subject: [GIT PULL] VFIO updates for v6.16-rc1
-Message-ID: <20250529144851.1ce2ce66.alex.williamson@redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dObyXBWW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mFbbI6fQe42xSv1fHBA8hWOA9sM3Z6o6Vua48brQ4r1IFJiBHbEgQUk8aMuFOcerv6IJfqY18xHkO42A7i7Ue2GczCvSviDC+w2ucpcqKqULvJB7jq2V/VOgyLufYlSbtnpEPuVS1lb/83cTAEsfIJTHmtx7EiY6dPYwYiAS94lE9Ty83gwROfBZa9ZY2hW/Jz9tX2C9ruOPnJwASqV4oudv10FAuPr7e5WH2zY+bQ5mJghnXzWEPht9BlNQH3Kb7vuVmoiQv5Si/eEWRO9BeT559OdZlIzlVtoMNtlcf0AgeTjbVMYdco0EyvINOH90i6PVk4VUoZdE++A6+GZgjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bLANavZrr1io3B03nTDOTGxCYetPt9qnoxrbaIbBsno=;
+ b=XnAaEXCUppp9WTgyxWTZaL8n9nBgX3ynlXQFww8nobsXY1CpTMoi+IIdohBT554s4BSwjIeHUDT+esA4/hIlLJvbeCMaW0ewZltKoEhSCtLHvtpO4yTyshelMBcF5pnlcDwnPM5Ti8kOxkenVZP8KgsFdLUepCvyNgHYifLg/CT94WS6XgVniETe0U3B9qTEG+LQ2msskpg++LsnsINwmN5457tATBvvY0RxkoLJnJ/qzwE32k7oq9tjF9SVCR/YzmaegZE1iNBYd02z6f6iKPTULufH/23EKQkFkl1F75gHERo8yCxUPyRpWccZMBIAEsEPvH4q3rQPP3FmwE7yHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bLANavZrr1io3B03nTDOTGxCYetPt9qnoxrbaIbBsno=;
+ b=dObyXBWWKJfHo/2GVFNHlDy1scrYDURkeuJ7YnJWpOygeYpkjyq9QQFvg6rpzxQKteyGhbkVYQsBIJG9Yv3bakQhEmcETkaSgywBDIV3yebAOBAlgtKC++IFY9F+c9rkAL+U9Ohg/WaPPWBqf4amdJF3pJEDIeYPCp295jqO31I=
+Received: from DS7PR03CA0119.namprd03.prod.outlook.com (2603:10b6:5:3b7::34)
+ by SJ0PR12MB8165.namprd12.prod.outlook.com (2603:10b6:a03:4e4::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Thu, 29 May
+ 2025 20:50:35 +0000
+Received: from DS3PEPF0000C37C.namprd04.prod.outlook.com
+ (2603:10b6:5:3b7:cafe::7c) by DS7PR03CA0119.outlook.office365.com
+ (2603:10b6:5:3b7::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.29 via Frontend Transport; Thu,
+ 29 May 2025 20:50:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF0000C37C.mail.protection.outlook.com (10.167.23.6) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 20:50:35 +0000
+Received: from titanite-d354host.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 29 May 2025 15:50:19 -0500
+From: Avadhut Naik <avadhut.naik@amd.com>
+To: <linux-edac@vger.kernel.org>
+CC: <bp@alien8.de>, <linux-kernel@vger.kernel.org>, <avadhut.naik@amd.com>,
+	=?UTF-8?q?=C5=BDilvinas=20=C5=BDaltiena?= <zilvinas@natrix.lt>, Yazen Ghannam
+	<yazen.ghannam@amd.com>
+Subject: [PATCH v5] EDAC/amd64: Fix size calculation for Non-Power-of-Two DIMMs
+Date: Thu, 29 May 2025 20:50:04 +0000
+Message-ID: <20250529205013.403450-1-avadhut.naik@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37C:EE_|SJ0PR12MB8165:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e8c2b7d-502f-4ee8-27ba-08dd9ef275d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SldJMC81STlWTDc2UlA3V3VlNXN6d3haQmxzekp1SDZqNzNSNlVqRHFCemdi?=
+ =?utf-8?B?aEY0c0xBSTlEOXorK0ZJSmkyY3JKQjdNRndKUW13alNRRjNkQ2kvRGYyNDQ0?=
+ =?utf-8?B?SEd1VmxFS0JCWlRycm05eTV2eC9ENW9tTlhNR3BiTnl1SkQwVWhzblpVZDA4?=
+ =?utf-8?B?QStMUjVUN1VFdTQ5OVh5cndCczdXV29tVG9aSjl3MTZSb25ObEFmSWZ4TFpw?=
+ =?utf-8?B?ZG5KbDdDekhSQU9HcDArMmcxaU1MQVZOSS9WR0s2VXpRcmZXeFhBQkoxZ3Rp?=
+ =?utf-8?B?TzVHUUI0b0hacTlRQy95RjgxY1pMd1pld1dkOGJDVERBSjNnem5zZ0VaOVpm?=
+ =?utf-8?B?bThCUkRaRjRIejQ2V2V0Z3RmcWxWbHlkaGd6TGJSS0ppUWRuQWpMU0svRGlQ?=
+ =?utf-8?B?amV6VUdBTmUwcmp5b0xCZndTWGRyTHM2R2xsZ0I1LzdKVWxha0FwSFJxTkc1?=
+ =?utf-8?B?WWlyN2tnaU1WeWkxTVdINkRmUVNZSENxenZNRTZzVitrSWhRYkFqL0hzaXpU?=
+ =?utf-8?B?SWZKMmlGbTk0V3dSTytZMm82Yi9qeU1Wd1JwNVVvS2kzTG5zNC9xWTM1UmVr?=
+ =?utf-8?B?R1BYYWd1S2RjZFVMNzA3T21FNytFN2ZOcEFOR092MkpFZEVia1V6S3NlUjRu?=
+ =?utf-8?B?Tm5zNGcyK1VSdjEwa3FuaEZvb2FmSnNHNmFNSWlsdHZCdG1qcmcrUmFqRk1z?=
+ =?utf-8?B?c1ZyYmViMkJaYlhKM3A0QXZ0WHhjWVV4MzBFVmkwR0FUMFZpeFZHb2RPMkwx?=
+ =?utf-8?B?aStRbU1PckxTdUZaVXcrNkd6NlRRQlZSb0dFMmlISnIrZDJVd1lqcFExVjJI?=
+ =?utf-8?B?NG1lVXpoelZDc3NaRUZUczVlLzNoTFlHTnpvNVJoR3JLSWwwMGFabU1aMzlq?=
+ =?utf-8?B?SXVRVExIc2NYc3dLL0oyMzZSSlhRbEhhVU5wdk5QVEtIc0pHSElTMXpuZ1ZX?=
+ =?utf-8?B?RVpmU0dQQmtFRE02NCt1ZjR2Q1QxcGw5ZU1VUGIrdHVkWDdJUGVSZEx5dFNk?=
+ =?utf-8?B?b1ZCdkNicWRsNGozUXc1SDQ0WTVhSVlESE5wSWE2TFBib0NrUGxDbzFERno3?=
+ =?utf-8?B?cDE1UGl5TlBRM1haMDkrdkc0ZEVhekk4WjBaUmdMa3BiamhLMDVyMzJXajZK?=
+ =?utf-8?B?VnB5SlBHNFJiMXRIMFBSeTkxMHRybVl0dERJR2hQSDJwSmR4QWJZK1hoclA0?=
+ =?utf-8?B?bDFObm9GL2RjMTd1eldzQTFYV0FHZFlqbis0d2IzNkpPSHpYRUVkeGpVVzU4?=
+ =?utf-8?B?a0NNRWs1b1ZacGU0UENpMk9kUTVxaldpV2xKNVZNSThIVHZCSFEwNXZ4UHZs?=
+ =?utf-8?B?ZkpLMytYQ1dWNmh1YlVIS2ZCK1d3K3pxRmdSQnp3Vkp0WEZ2elUwNUdQamZ3?=
+ =?utf-8?B?Z3libEU5N2txMTJpVjBvQ3J2MFp2Q3RBNU5hWiszZHREUDRHa2hXeFEyNHM2?=
+ =?utf-8?B?Y2JBcHhqbkV5cDJzOGxOYkpQVmM4YmtCOS9vRHZxdzVtU3FiUFVraGtHVkht?=
+ =?utf-8?B?SzF4WHg5WFU3Zzd2YllJR1oyd2JHSks4RDZ6UnEzZ0w1MCsxT3lzV3Nic2xo?=
+ =?utf-8?B?THA0SjV6SlI1bFQ1NFlpYnJQRkZYYjJ1MlhVMnRzOVhveVZ4d2ZPT1crTkpy?=
+ =?utf-8?B?ZXRJWEJmN0hlbWc3cVBpK0t1T2ZZNFU3SXA1bmFmNnUyc0l6aEZJL0RLcVRX?=
+ =?utf-8?B?SlA0RElNL0grNVJ2c2xTVmt5UFlPbXpSdjU5Z3ZCcHptZS9KUUdLdnZwQWVu?=
+ =?utf-8?B?NDNzRXVHTEZqbE9Ib3lSeTNRY3RodUZFTFJUSU5aa2dHNHlGL2F1WHFBd0VI?=
+ =?utf-8?B?M2F1NjhpcGtvTHMyM09iaEhDM2hzU3d5dmg5R2orU2kyNGVYZ0VHMHE3QXZX?=
+ =?utf-8?B?b2t3MXVKdUxGd3B5b01mTUE2VGFxV0dOYXkyZmN0Z2E4YnkyYThjZzN5SFo1?=
+ =?utf-8?B?aGJmVXZMak82UjJzS1Y0T000SzVheGpMdlVubVJTN0NYSFZEbU5wcEdVQUZV?=
+ =?utf-8?B?T3IzeEJtVmhTNlM3U0gxTzVsSEV0MTRFeGFYZ09iSWVtNnFmWUhlemZuQ3dw?=
+ =?utf-8?B?OFR3S3g0dzVxalp5bDdBV1djaFpQRkcvKzlEQT09?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 20:50:35.1531
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e8c2b7d-502f-4ee8-27ba-08dd9ef275d0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF0000C37C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8165
 
-Hi Linus,
+Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD's
+modern Zen-based SOCs has an Address Mask and a Secondary Address Mask
+register associated with it. The amd64_edac module logs DIMM sizes on a
+per-UMC per-CS granularity during init using these two registers.
 
-Please note the diffstat below is generated relative to a trial merge
-against mainline as the merged topic branch from Marek has already been
-pulled via 23022f545610.  Thanks,
+Currently, the module primarily considers only the Address Mask register
+for computing DIMM sizes. The Secondary Address Mask register is only
+considered for odd CS. Additionally, if it has been considered, the
+Address Mask register is ignored altogether for that CS. For
+power-of-two DIMMs i.e. DIMMs whose total capacity is a power of two
+(32GB, 64GB, etc.), this is not an issue since only the Address Mask
+register is used.
 
-Alex
+For non-power-of-two DIMMs i.e, DIMMs whose total capacity is not a power
+of two (48GB, 96GB, etc.), however, the Secondary Address Mask register
+is used in conjunction with the Address Mask register. However, since the
+module only considers either of the two registers for a CS, the size
+computed by the module is incorrect. The Secondary Address Mask register
+is not considered for even CS, and the Address Mask register is not
+considered for odd CS.
 
-The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd21:
+Introduce a new helper function so that both Address Mask and Secondary
+Address Mask registers are considered, when valid, for computing DIMM
+sizes. Furthermore, also rename some variables for greater clarity.
 
-  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
+Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
+Reported-by: Žilvinas Žaltiena <zilvinas@natrix.lt>
+Closes: https://lore.kernel.org/dbec22b6-00f2-498b-b70d-ab6f8a5ec87e@natrix.lt
+Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+Tested-by: Žilvinas Žaltiena <zilvinas@natrix.lt>
+Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: stable@vger.kernel.org
+---
+Changes in v2:
+1. Avoid unnecessary variable initialization.
+2. Modify commit message to accurately reflect the changes.
+3. Move check for non-zero Address Mask register into the new helper.
 
-are available in the Git repository at:
+Changes in v3:
+1. Add the missing Closes tag and rearrange tags per tip tree handbook.
+3. Slightly modify commit message to properly reflect the SOCs that may
+encounter this issue.
+4. Rebase on top of edac-for-next.
 
-  https://github.com/awilliam/linux-vfio.git tags/vfio-v6.16-rc1
+Changes in v4:
+1. Rebase on top of edac-for-next.
 
-for you to fetch changes up to 4518e5a60c7fbf0cdff393c2681db39d77b4f87e:
+Changes in v5:
+1. Change ordering of variable declarations to reverse fir tree.
+2. Explicitly state what power-of-two and non-power-of-two DIMMs are in
+the commit message and ensure that the changelog is ignored by patch
+handling tools.
+3. Rebase on top of edac-for-next.
 
-  vfio/type1: Fix error unwind in migration dirty bitmap allocation (2025-05-22 10:41:24 -0600)
+Links:
+v1: https://lore.kernel.org/all/20250327210718.1640762-1-avadhut.naik@amd.com/
+v2: https://lore.kernel.org/all/20250415213150.755255-1-avadhut.naik@amd.com/
+v3: https://lore.kernel.org/all/20250416222552.1686475-1-avadhut.naik@amd.com/
+v4: https://lore.kernel.org/all/20250513192221.784445-1-avadhut.naik@amd.com/
+---
+ drivers/edac/amd64_edac.c | 57 ++++++++++++++++++++++++---------------
+ 1 file changed, 36 insertions(+), 21 deletions(-)
 
-----------------------------------------------------------------
-VFIO updates for v6.16-rc1
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 90f0eb7cc5b9..35e59abef598 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -1209,7 +1209,9 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+ 	if (csrow_enabled(2 * dimm + 1, ctrl, pvt))
+ 		cs_mode |= CS_ODD_PRIMARY;
+ 
+-	/* Asymmetric dual-rank DIMM support. */
++	if (csrow_sec_enabled(2 * dimm, ctrl, pvt))
++		cs_mode |= CS_EVEN_SECONDARY;
++
+ 	if (csrow_sec_enabled(2 * dimm + 1, ctrl, pvt))
+ 		cs_mode |= CS_ODD_SECONDARY;
+ 
+@@ -1230,12 +1232,13 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+ 	return cs_mode;
+ }
+ 
+-static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+-				  int csrow_nr, int dimm)
++static int calculate_cs_size(u32 mask, unsigned int cs_mode)
+ {
+-	u32 msb, weight, num_zero_bits;
+-	u32 addr_mask_deinterleaved;
+-	int size = 0;
++	int msb, weight, num_zero_bits;
++	u32 deinterleaved_mask;
++
++	if (!mask)
++		return 0;
+ 
+ 	/*
+ 	 * The number of zero bits in the mask is equal to the number of bits
+@@ -1248,19 +1251,30 @@ static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+ 	 * without swapping with the most significant bit. This can be handled
+ 	 * by keeping the MSB where it is and ignoring the single zero bit.
+ 	 */
+-	msb = fls(addr_mask_orig) - 1;
+-	weight = hweight_long(addr_mask_orig);
++	msb = fls(mask) - 1;
++	weight = hweight_long(mask);
+ 	num_zero_bits = msb - weight - !!(cs_mode & CS_3R_INTERLEAVE);
+ 
+ 	/* Take the number of zero bits off from the top of the mask. */
+-	addr_mask_deinterleaved = GENMASK_ULL(msb - num_zero_bits, 1);
++	deinterleaved_mask = GENMASK(msb - num_zero_bits, 1);
++	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", deinterleaved_mask);
++
++	return (deinterleaved_mask >> 2) + 1;
++}
++
++static int __addr_mask_to_cs_size(u32 addr_mask, u32 addr_mask_sec,
++				  unsigned int cs_mode, int csrow_nr, int dimm)
++{
++	int size;
+ 
+ 	edac_dbg(1, "CS%d DIMM%d AddrMasks:\n", csrow_nr, dimm);
+-	edac_dbg(1, "  Original AddrMask: 0x%x\n", addr_mask_orig);
+-	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", addr_mask_deinterleaved);
++	edac_dbg(1, "  Primary AddrMask: 0x%x\n", addr_mask);
+ 
+ 	/* Register [31:1] = Address [39:9]. Size is in kBs here. */
+-	size = (addr_mask_deinterleaved >> 2) + 1;
++	size = calculate_cs_size(addr_mask, cs_mode);
++
++	edac_dbg(1, "  Secondary AddrMask: 0x%x\n", addr_mask_sec);
++	size += calculate_cs_size(addr_mask_sec, cs_mode);
+ 
+ 	/* Return size in MBs. */
+ 	return size >> 10;
+@@ -1269,8 +1283,8 @@ static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+ static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 				    unsigned int cs_mode, int csrow_nr)
+ {
++	u32 addr_mask = 0, addr_mask_sec = 0;
+ 	int cs_mask_nr = csrow_nr;
+-	u32 addr_mask_orig;
+ 	int dimm, size = 0;
+ 
+ 	/* No Chip Selects are enabled. */
+@@ -1308,13 +1322,13 @@ static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 	if (!pvt->flags.zn_regs_v2)
+ 		cs_mask_nr >>= 1;
+ 
+-	/* Asymmetric dual-rank DIMM support. */
+-	if ((csrow_nr & 1) && (cs_mode & CS_ODD_SECONDARY))
+-		addr_mask_orig = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+-	else
+-		addr_mask_orig = pvt->csels[umc].csmasks[cs_mask_nr];
++	if (cs_mode & (CS_EVEN_PRIMARY | CS_ODD_PRIMARY))
++		addr_mask = pvt->csels[umc].csmasks[cs_mask_nr];
++
++	if (cs_mode & (CS_EVEN_SECONDARY | CS_ODD_SECONDARY))
++		addr_mask_sec = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+ 
+-	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, dimm);
++	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, dimm);
+ }
+ 
+ static void umc_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
+@@ -3512,9 +3526,10 @@ static void gpu_get_err_info(struct mce *m, struct err_info *err)
+ static int gpu_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+ 				    unsigned int cs_mode, int csrow_nr)
+ {
+-	u32 addr_mask_orig = pvt->csels[umc].csmasks[csrow_nr];
++	u32 addr_mask		= pvt->csels[umc].csmasks[csrow_nr];
++	u32 addr_mask_sec	= pvt->csels[umc].csmasks_sec[csrow_nr];
+ 
+-	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, csrow_nr >> 1);
++	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, csrow_nr >> 1);
+ }
+ 
+ static void gpu_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
 
- - Remove an outdated DMA unmap optimization that relies on a feature
-   only implemented in AMDv1 page tables. (Jason Gunthorpe)
-
- - Fix various migration issues in the hisi_acc_vfio_pci variant
-   driver, including use of a wrong DMA address requiring an update to
-   the migration data structure, resending task completion interrupt
-   after migration to re-sync queues, fixing a write-back cache
-   sequencing issue, fixing a driver unload issue, behaving correctly
-   when the guest driver is not loaded, and avoiding to squash errors
-   from sub-functions. (Longfang Liu)
-
- - mlx5-vfio-pci variant driver update to make use of the new two-step
-   DMA API for migration, using a page array directly rather than
-   using a page list mapped across a scatter list. (Leon Romanovsky)
-
- - Fix an incorrect loop index used when unwinding allocation of dirty
-   page bitmaps on error, resulting in temporary failure in freeing
-   unused bitmaps. (Li RongQing)
-
-----------------------------------------------------------------
-Alex Williamson (1):
-      Merge branch 'dma-mapping-for-6.16-two-step-api' of git://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux into v6.16/vfio/next
-
-Jason Gunthorpe (1):
-      vfio/type1: Remove Fine Grained Superpages detection
-
-Leon Romanovsky (3):
-      vfio/mlx5: Explicitly use number of pages instead of allocated length
-      vfio/mlx5: Rewrite create mkey flow to allow better code reuse
-      vfio/mlx5: Enable the DMA link API
-
-Li RongQing (1):
-      vfio/type1: Fix error unwind in migration dirty bitmap allocation
-
-Longfang Liu (6):
-      hisi_acc_vfio_pci: fix XQE dma address error
-      hisi_acc_vfio_pci: add eq and aeq interruption restore
-      hisi_acc_vfio_pci: bugfix cache write-back issue
-      hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
-      hisi_acc_vfio_pci: bugfix live migration function without VF device driver
-      hisi_acc_vfio_pci: update function return values.
-
- drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 121 +++-----
- drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h |  14 +-
- drivers/vfio/pci/mlx5/cmd.c                    | 371 +++++++++++++------------
- drivers/vfio/pci/mlx5/cmd.h                    |  35 +--
- drivers/vfio/pci/mlx5/main.c                   |  87 +++---
- drivers/vfio/vfio_iommu_type1.c                |  51 +++-
- 6 files changed, 341 insertions(+), 338 deletions(-)
+base-commit: 855b5de2e562c07d6cda4deb08d09dc2e0e2b18d
+-- 
+2.43.0
 
