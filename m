@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17414219E93;
-	Thu, 29 May 2025 09:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A582219E93;
+	Thu, 29 May 2025 09:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748510011; cv=none; b=ppxEjefzKyBNgYWVbByTwjNZGmdN+sup2D7vxJXfAS9NlANa7BDlpSdEk5Z3BokuQ2JtDhbHMdLZZPYoTQ7I1HmmLRvzzbDTcLdEbY6MXQvZyWp/YhWekJA/9G0RstN7l2XZ7Z2RBMGY06VlD5b9w6qgfk4C0gAJEShdg+0CGqs=
+	t=1748510016; cv=none; b=ugnRRK8+Eh3VZLfgb1HI2v37wNgMsGzASUCChpRCa5RVAHz4qx3Xkb1ay1oVp0jyhXM3ctiSrRFesRFiWM8pEwiUiuq9i4r4u8jUNFFhJwYg1l+Edp4eqVQeGnWXLbrhkhOIvxRGKGbgCh1DtwThU5NUl4Hc9TcSVWx4yNHjc3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748510011; c=relaxed/simple;
-	bh=MX+gSHM40F/PurHWrbr1LSM8m2nkB/OI3izyzIeGG5E=;
+	s=arc-20240116; t=1748510016; c=relaxed/simple;
+	bh=gFDOG+jatwV6rYNZOZz9UhZcIaoeADx4JnPeT5iPYbQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NhU1sSYeOoA771eYX6IoTrDdxdlsEk2GQj9tGEGiBZRG28rAqCCq6OZmpTIsTB8O3MLgIeNIzQQN34DA22tY2qs07RZnej77fxPzecyqiB6MfzgaHWnEza6QUWomrCzI7ulglXcGmZYmm9l5isdOBhOdjJ8cfnDXdYkfyI2fPh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDA95176A;
-	Thu, 29 May 2025 02:13:12 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3FD13F5A1;
-	Thu, 29 May 2025 02:13:27 -0700 (PDT)
-Message-ID: <9a9f18e7-db69-48f2-916f-4565cdb59821@arm.com>
-Date: Thu, 29 May 2025 10:13:26 +0100
+	 In-Reply-To:Content-Type; b=PkYpi79YxIb0VI5+jvKPgJ/VdPnamX82QVOA3QbcOF5g8KaRXhIiR3OsXqzHpOizIYmGGxB8F41wy1BrNJGPjurpBAa21Y89eexFEyHbKU2CyyqF9xROU+DSY2JGMH9fEXat1+exlBaqSnbbgrSC4Vwg7Pu3Wt3xgz5YSNcmIps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxBT9WGs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxBT9WGs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE604C4CEE7;
+	Thu, 29 May 2025 09:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748510015;
+	bh=gFDOG+jatwV6rYNZOZz9UhZcIaoeADx4JnPeT5iPYbQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DxBT9WGsvST4NCVS3ui6dxSCWOzKzmr07o0PJOOHVhbKSsaO42ndoIDwgz77QEZMl
+	 XhsfXvs69G2kwWXxyhcZzgErhbs+xYE+n+q7s9uVpggOEFHHO26ZhcaNrgAi0Qzz7j
+	 nwxEFN3PJDKBlO36Xtb2UEyUrDpD9WBGyqQS434x7F5I5RXCrw0ipt2n+02v3aB0Fz
+	 QEWFmpmdB4JNbG1WL78Ma/hm0sHNySzwU9YLXksw39ZDQ67//gWEdTO/nLkXAZC6yF
+	 BuJ6BgRh4TL/RfG0V2J+d5BYqZzQgjIadz78g4Zl77Yx+2ZHWPRpsSWzpdD25LKiGy
+	 ceQ812x5YaNrQ==
+Message-ID: <c0336f46-1fbc-4766-9e0a-a3812d48083e@kernel.org>
+Date: Thu, 29 May 2025 11:13:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,81 +35,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: Restrict pagetable teardown to avoid false
- warning
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>, Dev Jain
- <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: david@redhat.com, mark.rutland@arm.com, yang@os.amperecomputing.com,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- stable@vger.kernel.org
-References: <20250527082633.61073-1-dev.jain@arm.com>
- <7b9a9ad4-7a7a-4e99-ba72-f5be0f609a21@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <7b9a9ad4-7a7a-4e99-ba72-f5be0f609a21@arm.com>
+Subject: Re: [PATCH v4 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
+ <20250528-hdp-upstream-v4-5-7e9b3ad2036d@foss.st.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250528-hdp-upstream-v4-5-7e9b3ad2036d@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29/05/2025 10:02, Anshuman Khandual wrote:
+On 28/05/2025 15:30, Clément Le Goffic wrote:
+> Add the hdp devicetree node for stm32mp13 SoC family
 > 
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+>  arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> On 5/27/25 13:56, Dev Jain wrote:
->> Commit 9c006972c3fe removes the pxd_present() checks because the caller
->> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
->> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
->> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
->> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
->> a pmd_present() check in pud_free_pmd_page().
->>
->> This problem was found by code inspection.
->>
->> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table())
->> Cc: <stable@vger.kernel.org>
->> Reported-by: Ryan Roberts <ryan.roberts@arm.com> 
->> Acked-by: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> index 8512a6e46b33..9e3797ee1f7b 100644
+> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
+> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+> @@ -954,6 +954,13 @@ dts: thermal@50028000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		hdp: pinctrl@5002a000 {
+> +			compatible = "st,stm32mp131-hdp";
+> +			reg = <0x5002a000 0x400>;
+> +			clocks = <&rcc HDP>;
+> +			status = "disabled";
+Don't send new versions while discussion is going.
 
-LGTM!
+My comments are still valid here.
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-
->> ---
->> This patch is based on 6.15-rc6.
->>
->> v2->v3:
->>  - Use pmdp_get()
->>
->> v1->v2:
->>  - Enforce check in caller
->>
->>  arch/arm64/mm/mmu.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index ea6695d53fb9..5a9bf291c649 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->>  	next = addr;
->>  	end = addr + PUD_SIZE;
->>  	do {
->> -		pmd_free_pte_page(pmdp, next);
->> +		if (pmd_present(pmdp_get(pmdp)))
-> 
-> This code path is only called for the kernel mapping. Hence should
-> pmd_valid() be used instead of pmd_present() which also checks for
-> present invalid scenarios as well ? 
-
-I think a similar question came up in a previous round, where we concluded that
-it's better to be consistent with what vmalloc is already doing. So personally
-I'd leave it as pmd_present():
-
-	if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
-		return 0;
-
-> 
->> +			pmd_free_pte_page(pmdp, next);
->>  	} while (pmdp++, next += PMD_SIZE, next != end);
->>  
->>  	pud_clear(pudp);
-
+Best regards,
+Krzysztof
