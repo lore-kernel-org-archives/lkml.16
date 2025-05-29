@@ -1,119 +1,88 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3888422B8B3
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6824D22D4F1
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748541139; cv=none; b=ofK/1yd3k2LQF27t9E9/ExPvfPSN/6tvSMmjMTfuBKaPMu+7rXHaLncNCyuW/gpsKu1JoLkQJjFo50nSI9tbedOqnQQk+Hq2HrK4oUD3jaywSOqpav2+IlvWwYXBZ7X6VhRLW1wpAf665aK+qc5Cx5f7WlZIKExcQU+ph2caB3Y=
+	t=1748541302; cv=none; b=IcLTGLVlsWrMVrRMIr3idqLd3vdksAXisGlAFvlUie8cdJS9w4Qs74fO7S5pX6FxoOlcaDI78x7ivYI8GQdhkCIznfWpRL4XKHNYGxMKaeBqoC9/wWXhBGXzGRCr8UfEp48mKvwh1JZv7Wk7MAfhSzwaj57LoxhvvndGtT2tqgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748541139; c=relaxed/simple;
-	bh=lZU9jQ+SXA+/p9RtnHyvE89sIS9AcJdWmjhJSFZMhng=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JBNZPajiOlqiieWYMy79K6ttpN93e+rVi/YFIkIcfXERs7zXAK3VscehSIer2OMntkjb6py76hX6tRFY7NDsLii9VeonQEXZjRsGW7UXHCe8uF2sJJoARtwBloLmeXu1+m9U2CsoZprH2AU+NYqBeziyCWrf+MhRW4cdqD6Sy4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oOL386Pf; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748541302; c=relaxed/simple;
+	bh=KBM4gDQL6RmWak7R11X4Mj8qjAtLTn7WlwV9XPIcAl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5tbru69iNDcPyDJ2NvcWFLZnx2zGckKMhwvr2dEzAi1hRn/LjlWNR/ZuOip8+a7xS5Vi47Xn/xA4irTeoYAPto1vebK94E9Ge1eETujNnVn6HKcQqwaTcCyAfJI0fGlTVuNgL6C9sP9oZ7x6BUMyAR7h+JG/PV3ApaTUJBAr4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lJS1AqDr; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oOL386Pf"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2e3dea42465so788741fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:52:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748541135; x=1749145935; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vC0sqM/mEIe/u85Iuk/8I2v+DAnDds+oTgi8MyInJSU=;
-        b=oOL386Pf1Cz4WYZyLViDtGZExqj2zH6P+a0QroIfvAhowyqNaCsTVR5oaREHg/71ho
-         5nerNe0xPDv4qcgpx2JuAZ/jFGsW9jsV12bIdRGw33ALENMy9cEtg/cNhewKBDKnjvsn
-         h2kXZe6zu2TMweaUMbHqG8LxgPqvBCbhBuMTnxz/UrDJT61Mb5pQxnOGEdJTFGlAZRfk
-         1lfZuXr34YqFtYJDzSQ39V0Rn1pD2C3gU9ZOPE57B9WtttuicwMdW8xRkFvL8Mytlqjb
-         8Ns0cEmJ63p/VUoD+mWQwUC1IfzjQ7aV8RlB+eAcz4WMWjMhWXpQpAym/SjE8iaa0uPt
-         Jsng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748541135; x=1749145935;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vC0sqM/mEIe/u85Iuk/8I2v+DAnDds+oTgi8MyInJSU=;
-        b=PhXBnc2Ke3oeB7Rsb2HUMAjT++HX0Pv5hjVgoU78VSGkFQ9kUGBcMQMs/2j7ahv9lP
-         BgB7y5nErhQExdV4Ha0kjvXEgNwG1y6bfAl4CXBDvuAhZ2jVW7+aSjGfsQUfmz6aaPIK
-         MgYDHI+bNpep0kcgHg9ySD7EGuXH/gizEyHM6NT2L8b5XGmTJ/EQVZ9U7OBDeF4MLwOd
-         wAove7xRfOZ6v4pzNBTuotu1nMlwb01ZISDJ33w2nxXqvcv1kL/y+KK2bDpPXxPpzM7f
-         C8PJlup+CMZSVmXLa6e16pBVfoGTlJJCq+D3OXGYbUzctf1bTMpCVlF8gvZH//DbR5+a
-         cvNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWLOHLzFowvZED9pQxNXkAIEL4kVvRGPZza2umqymr5A+jlVMN/X1mlrSWr4Oskxy1MSfbv4f/lYWXVlJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUKDoRizXtgSD+nM8bhVXhVBJUJBaF7B5+rzkWhGlX2YS1l0HW
-	rMMcecTmMBHRdE1HsXX3pj53HDLbyl0yj04zKTCt83Rhgi2k2XbVxMfsP9MA80H4rB0=
-X-Gm-Gg: ASbGncu/n8ATqHuroA8vx1xk8JXZDH5Yy0T1ArteT13u43ThCgKMg80xE021qeCEq/b
-	i0qqZ+Q+yC4l815qvhkmbfbOXPWwOaV4xpW/C0ympL77Gp6Zq1Fhw5SLlg7zQ8mJ71iV6rVeQtr
-	LVg2Jdr56XhD5mKbilEr96Vm67UrDPMnyBSS7OHeaWdYUnry79iTW+lJay8tBPuJ+v8u7Oem3s8
-	1ysOAOQ4yA3P+BrDZ98IvNmkkCp9FqQW28TU4MNI+SwtcWb0dIaSCQRaISJY7Ytr8KSMnvqDcWg
-	IX58Hpou/7CwPNeAvFbmrZ+X627Obq9T8PT7jFV19GHT87oeShzbdKdY9t8losQrRv8RfqTFBVR
-	Nz22I4a2XMefgctHCVX3hFRiYsw==
-X-Google-Smtp-Source: AGHT+IGt4UUSwC+w2devQaz+4TwMifJlJrW3G/nBO0+JgCycpD5mxw4Ay5R9igDfQN0hx19JjOCzAA==
-X-Received: by 2002:a05:687c:2ba2:b0:2e4:9c8e:f59c with SMTP id 586e51a60fabf-2e8fce259ffmr2234622fac.19.1748541135139;
-        Thu, 29 May 2025 10:52:15 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:928b:5d5c:6cd9:1a4? ([2600:8803:e7e4:1d00:928b:5d5c:6cd9:1a4])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e906c11210sm351409fac.44.2025.05.29.10.52.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 10:52:14 -0700 (PDT)
-Message-ID: <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
-Date: Thu, 29 May 2025 12:52:13 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lJS1AqDr"
+Date: Thu, 29 May 2025 10:54:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748541288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS2FSZ2IbKnKh7XDkalyzQrPqCzDhOSivlmDlIMu2js=;
+	b=lJS1AqDr42wTTOr9PD8EM9OAg0B5Cqik/XMtq3EZEb3gUBeQKu5BpfeKK+WFgVHf14DGtJ
+	CVx03AxfYYkg+zzK3ct/aZAlRzTnojel4FZzGOiKDf7c79R9hP3N8OEtZQXmleKpSoWeGH
+	FsBbdRisJ5bhu75MsdqKQ70U8lywP68=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, 
+	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>, 
+	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [DISCUSSION] proposed mctl() API
+Message-ID: <c7fqqny5yv7smhxnxe5o4rc2wepmc6uei76teymfhxoana34nk@sfqnc2qclf23>
+References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+ <aDh9LtSLCiTLjg2X@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: adc: ad7606: add enabling of optional Vrefin
- voltage
-To: Angelo Dureghello <adureghello@baylibre.com>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com>
- <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDh9LtSLCiTLjg2X@casper.infradead.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 5/29/25 4:13 AM, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
+Hi Willy,
+
+On Thu, May 29, 2025 at 04:28:46PM +0100, Matthew Wilcox wrote:
+> On Thu, May 29, 2025 at 03:43:26PM +0100, Lorenzo Stoakes wrote:
+> > After discussions in various threads (Usama's series adding a new prctl()
+> > in [0], and a proposal to adapt process_madvise() to do the same -
+> > conception in [1] and RFC in [2]), it seems fairly clear that it would make
+> > sense to explore a dedicated API to explicitly allow for actions which
+> > affect the virtual address space as a whole.
+> > 
+> > Also, Barry is implementing a feature (currently under RFC) which could
+> > additionally make use of this API (see [3]).
 > 
-> Add optional refin voltage enabling. The property "refin-supply" is
-> already available and optional in the current fdt dt_schema.
+> I think the reason that you're having trouble coming up with a good
+> place to put these ideas is because they are all bad ideas.  Do none of
+> them.  Problem solved.
 > 
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
->  drivers/iio/adc/ad7606.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index 3bbe9c05b5edbc11e8016c995c6ab64104836e7b..21e63260965c32988d0ab3b8bb1201aa2396f1ba 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -1335,6 +1335,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->  		return dev_err_probe(dev, ret,
->  				     "Failed to enable Vdrive supply\n");
->  
-> +	ret = devm_regulator_get_enable_optional(dev, "refin");
-> +	if (ret < 0 && ret != -ENODEV)
+> People should put more effort into allocating THPs automatically and
+> monitoring where they're helping performance and where they're hurting
+> performance,
 
-< 0 is probably not needed.
+Can you please expand on people putting more effort? Is it about
+workloads or maybe malloc implementations (tcmalloc, jemalloc) being
+more intelligent in managing their allocations/frees to keep more used
+memory in hugepage aligned regions? And conveying to kernel which
+regions they prefer hugepage backed and which they do not? Or something
+else?
 
-> +		return dev_err_probe(dev, ret, "failed to get refin voltage\n");
+> instead of coming up with these baroque reasons to blame
+> the sysadmin for not having tweaked some magic knob.
 
-We aren't reading the voltage, so the message doesn't make sense.
-
-> +
->  	st->chip_info = chip_info;
->  
->  	if (st->chip_info->oversampling_num) {
-> 
-
+To me this is not about blaming sysadmin but more about sysadmin wanting
+more fine grained control on THP allocation policies for different
+workloads running in a multi-tenant environment.
