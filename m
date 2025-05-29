@@ -1,120 +1,85 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BD020B80C;
-	Thu, 29 May 2025 03:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE5220B80C;
+	Thu, 29 May 2025 03:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748490287; cv=none; b=mvtcB2zPqJLUqQt1GHLxEdse8HOQqzgeMJ0Q++qfYu0cjmGJpyXgdhLBEkJVNUhUPbvlBgTrymgAC3pqxh40b+3sGXh9T2lv77m3xb7SsmKw5OB33PJmNusKDDK4LSMPEEUTcQxflXL6z9/6XDPFbM0jWCeT+T5QJ46ZZK6rFqM=
+	t=1748490299; cv=none; b=HMaNHTahjL7vOM3TLWHU1TTbMw/6r+n10kLYDZ1AOodtuwRrLEXUDh5l0B6PvreILiLf104aPNOB1wslFGcPafxFTLZYy9aht4FOC1cVuKgfDykbS/J3qygBYZ+WAHSFNJGfQ0oIBIqYMX1y2LgOgUwyQBzI2ka6Rpo2MdJMayk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748490287; c=relaxed/simple;
-	bh=qP5gjdbUL1UfLl8u+WQq9TWXaK1d3a5ARjTU0ouqSss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eJiFfTnfOtnpWnxNc889nqgKfNTtlyfYH/mvGBz9bOCmptU1Wy+2X1s8WvbYda64D56LXRnZWWIejpUtdZ013HoyOMdDAtaw0QJYEA5tnIZBIccd/JYrxlBYDfJPEWlJeDh6YKBBJ9+cXEPmiq8/0ARP7xvet+oMg1tLC2leons=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUQCn2S9; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUQCn2S9"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so382276b3a.1;
-        Wed, 28 May 2025 20:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748490285; x=1749095085; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nbJOS9RirTTM579TH3s6Zvz82kENRx54Nq1I6huQPgk=;
-        b=CUQCn2S93D3uOyzqE4bf/cLA5WxMlrUWWxPPuVmXDC2t88r0cM+pYf5xbw6kAbqCzv
-         DtvUneIiaodcymSefmiCzCojKN4Zmoc/JKWa4jzLs5n7tnXuPKiiOy4Unjnvcn8pMVkc
-         QIwjb8V+/BNY5C6G+xk2qvM0gthOjRCxJ3WppScvXNqsotsyageWoMN921DFsMlMCvCr
-         RS40B+/GIEdxUfDQVwir/jyQ9CkbXLTKH4sY4PDs4b1yklHBOesOi4zGoDGx+XOuwCt4
-         bNrkGHVZaBP1xDwiCkoNiLnFVZ6CdS0LPF42sCpOl6EXwRHctN2hcImqWNT+w1bfQnXi
-         wRGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748490285; x=1749095085;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nbJOS9RirTTM579TH3s6Zvz82kENRx54Nq1I6huQPgk=;
-        b=TEuRYZOwgty3Hznmn74Y3VZ7fMTCRopxySQTBP7LJVNAmuzBV5I3ghILfOKhKpJnSH
-         V6K8lQjo5Akk7tVU+S5CVN2MYswO98XYW5hwuNlSYtuC8eESABIVlxR5jTEV0+9rmj9y
-         YCYbRHimbenAf/6lcH+KIUKfRqz7t6ctryZ3KmGZGcHwFlyAtb9MJJgHonDWOZV52vNa
-         OLLQZ1U1g6Kcvt8cigsoElulGQSOJo1vaElLVkGXJyzwcMGBemI2fRWnCAZJZmsffYsr
-         6bBOmeqlCsgEZwJrLeCCpCnFvr1c6owehzyvMCoJOqDvSAwbOPTIDGhKWm3XqREnPKm4
-         UsfA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWtZq+m0ecINi1bcuGbz9V6XCYtFF6srrC9ZV4amcp1qhSh6bhPy0he09BJ9aei0+taX7r5/Mkq356bxgL@vger.kernel.org, AJvYcCX9Zy1hSkMfBBqeGy4HXtlQxAdxypYbfUGTRicdRmhTi+acZrUlIBwtKh6hUUQaLW2zQwsyPS7F@vger.kernel.org, AJvYcCXbSn/1qnkbPacUxv2o1MMADBzKqriS5cGW5UuxzH06gTuonO9acKGdeMg55OI6BQmX8kY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5PKIAA3/2RzyQ0DhiI90Z3MPiuU2kSHLewTRxrzQLuhj1i21+
-	RnRkTzs9bPHPw+/39pKUcSJXBcTyLHC65aA8cEBpT2DQKThUjwKuNjBM
-X-Gm-Gg: ASbGncs8tnhkmgnipnzmUgFoPSAxmG1DBO0WLADytxWi0h1r+4KSKtD0oxfR6CjJLBN
-	IgHfisqdW+vrf0RMKeTwxHl93CKsBEX1cZuDt/q2F6xMOGK9+ySj7GwevENnxdcsfqHCrGYVHuP
-	JSTfbHYp4HElhT/R3RrcYgYOJe2f7iuX87+o0IuF+pdREUf5YwH0QXHuVF3MLCM/CT1noVco6pu
-	zhszF5fz7gN4NzjntpVwI04+abhnwuRHzkscc5dAeYkmLyWV1j6QfSP81Alh+fGuCI9RdnkpPpj
-	lSYG3R4oEz3ZMv1Y1+2aoxb4QU2BmXW1fr46roilMRuSJ9abRINMSHlppok3CZ39SPGhi/wRA5M
-	Qe99/gvv94lBTvely8VeOUe0kNe1rWEfG+BYP
-X-Google-Smtp-Source: AGHT+IGzpp+yFzFB3LHe0wo9L12fBskGn3KUXtzadW4NYiqfzcITkoJlkzjviP3Km5G42o8xBZu06w==
-X-Received: by 2002:a05:6a00:234b:b0:740:595a:f9bf with SMTP id d2e1a72fcca58-747b0c8cademr1149905b3a.3.1748490285078;
-        Wed, 28 May 2025 20:44:45 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:76aa:9d32:607:b042? ([2001:ee0:4f0e:fb30:76aa:9d32:607:b042])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe966easm374915b3a.4.2025.05.28.20.44.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 20:44:44 -0700 (PDT)
-Message-ID: <3d9999b6-5c8b-4ab1-a9c6-e7cd09488779@gmail.com>
-Date: Thu, 29 May 2025 10:44:37 +0700
+	s=arc-20240116; t=1748490299; c=relaxed/simple;
+	bh=5bS2W4/zEIXzUiFAznWu+80l7WtTaUnP3K/p4gB4oBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D9vPN8XCdXMMzVYjd4A4EY1OPDbv2F2stay88FHIXHAFgh6nQ5/P6Yl1gt0SNKkujz2G/J+5o6BdIf1F7X0HxzBakDDMcrbxH6TxPbHisUZ4yNuhcc7PibobhEsgnOcApNUWdTGZByIIGLeaIl0aLPODZjq3QNNPwbIoxlTcHEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b7BzJ0SgvzvPsl;
+	Thu, 29 May 2025 11:43:08 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5D01B180492;
+	Thu, 29 May 2025 11:44:53 +0800 (CST)
+Received: from huawei.com (10.67.174.76) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 29 May
+ 2025 11:44:52 +0800
+From: Yuntao Liu <liuyuntao12@huawei.com>
+To: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
+CC: <airlied@redhat.com>, <jbarnes@virtuousgeek.org>,
+	<benh@kernel.crashing.org>, <bhelgaas@google.com>,
+	<tiago.vignatti@nokia.com>, <liuyuntao12@huawei.com>
+Subject: [PATCH -next] pci:vga fix race condition in vga_arb_write
+Date: Thu, 29 May 2025 03:32:10 +0000
+Message-ID: <20250529033210.182807-1-liuyuntao12@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v2 2/2] selftests: net: add XDP socket tests
- for virtio-net
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, netdev@vger.kernel.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250527161904.75259-1-minhquangbui99@gmail.com>
- <20250527161904.75259-3-minhquangbui99@gmail.com>
- <0a827263-7257-4ac6-89cf-d694c9d3ab65@oracle.com>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <0a827263-7257-4ac6-89cf-d694c9d3ab65@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On 5/29/25 00:04, ALOK TIWARI wrote:
->
->
-> On 27-05-2025 21:49, Bui Quang Minh wrote:
->> +def main():
->> +    with NetDrvEpEnv(__file__, nsim_test=False) as cfg:
->> +        cfg.bin_local = path.abspath(path.dirname(__file__)
->> +                            + "/../../../drivers/net/hw/xsk_receive")
->> +        cfg.bin_remote = cfg.remote.deploy(cfg.bin_local)
->> +
->> +        server_cmd = f"{cfg.bin_remote} -s -i {cfg.remote_ifname} "
->> +        server_cmd += f"-r {cfg.remote_addr_v["4"]} -l 
->> {cfg.addr_v["4"]}"
->> +        client_cmd = f"{cfg.bin_local} -c -r {cfg.remote_addr_v["4"]} "
->> +        client_cmd += f"-l {cfg.addr_v["4"]}"
->> +
->> +        ksft_run(globs=globals(), case_pfx={"test_"}, args=(cfg, 
->> server_cmd, client_cmd))
->> +    ksft_exit()
->
-> SyntaxError ?
-> inner ["4"] uses double quotes, which clash with the outer double 
-> quotes of the f-string
+The following code has a race condition under concurrency.
 
-This works just fine because the ["4"] is inside {}. But I can fix this 
-to avoid confusion.
+if (io_state & VGA_RSRC_LEGACY_IO)
+	uc->io_cnt--;
 
-Thanks,
-Quang Minh.
+in race condition:
+pre:  uc->io_cnt = 1
+post: uc->io_cnt = 4294967295
+
+move vga_put code below changing uc->io_cnt code.
+
+Fixes: deb2d2ecd43d ("PCI/GPU: implement VGA arbitration on Linux")
+Signed-off-by: Yuntao Liu <liuyuntao12@huawei.com>
+---
+ drivers/pci/vgaarb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+index 78748e8d2dba..2d0e6cf9eef8 100644
+--- a/drivers/pci/vgaarb.c
++++ b/drivers/pci/vgaarb.c
+@@ -1257,13 +1257,13 @@ static ssize_t vga_arb_write(struct file *file, const char __user *buf,
+ 			goto done;
+ 		}
+ 
+-		vga_put(pdev, io_state);
+-
+ 		if (io_state & VGA_RSRC_LEGACY_IO)
+ 			uc->io_cnt--;
+ 		if (io_state & VGA_RSRC_LEGACY_MEM)
+ 			uc->mem_cnt--;
+ 
++		vga_put(pdev, io_state);
++
+ 		ret_val = count;
+ 		goto done;
+ 	} else if (strncmp(curr_pos, "trylock ", 8) == 0) {
+-- 
+2.34.1
 
