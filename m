@@ -1,288 +1,190 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2052.outbound.protection.outlook.com [40.107.236.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A83014E2F2;
-	Thu, 29 May 2025 11:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748517114; cv=fail; b=e65fcXb4XyGtfhQbjCCDcv3lUnJv65oibLGLuHPj42nDEhABiplm+A0qAtL+eg2ORONJLj2zq8KtBoDUpO+xnUSZIt5NyHjsRQiV3B6DE2KZZZK4V90KxADuXFa6Z5ED1Xb22i7uBe+AUM3t/T+fUykR57c2+9S4onNlvVGgrKs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748517114; c=relaxed/simple;
-	bh=HtnSi5NOQkKLthtL4oDSXHuVN/QLyk9v8VIIRSyzw8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TLKwGezntzJmEEBVi2qGt/G7tggjAu0KTTcEyHB7TrXlVCBHYQxbbY8JDZcVcFYUc2uIKggjurrMUceoi9rEySaRcohanIWj/0uGPJ9GFx11Bn47bKTCcyJ7PnVpYP8ASstaKXNQQWDXfKYnZMkG6fLOeUTDTfZPXB+5gzO92tQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BbMK8Uot; arc=fail smtp.client-ip=40.107.236.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3699D207A0B;
+	Thu, 29 May 2025 11:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748517229; cv=none; b=MWuKBexXpjd+3PrmYb2ljcoRBOXtbgx5zk76VV0bvjBosRa5ES6tyG6opRX08ncFaMGpupnJD/CcanYa2xJMJEA+RCSuyyrZ/rhmrdqJwdyTWC6M1bdP3APGPYdz7YmNe/hs5/625OXepwMsE6NuZQ7shXW0s4ANHdgEcsYNQhs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748517229; c=relaxed/simple;
+	bh=zVRog1dgEdzJSKrjtDJMVJkHH7+/67hn+GXt1AhFJjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TklVU2ahuxbmmovQ2a3VsnrlhtmSuRjAxqMPys60qOVGLdGMj5NnasmenfHU+dbBMDc5zKXgzDFmsbDVM3esl6Lpyv7V32AszL5E6yg8X0nrux6EEGoLt9PaG6y/m7T+OwJ0snbr/T2xeAJEDRUvZWReY42QTO1TjZMIWXC10/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=axDttq9T; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BbMK8Uot"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CbsZCfUImagc2eOCYtLFM5JezdD11FnFRtf9BlZieRGCmu5SejOkqL8resmDMgeUxf5Trs16olYIOK7NI2DrL1/umbYZITIG0dTi7ibHqaooB+1tWkuQB9frfFnfwBHz7ueU9MEyEMEKgYd1eWKZSLr/bpjB8xO+n5prRbooghNKjvd2+HkVpwUhoMxoGrqde5nkk0N6iLXD2SgE1EWt4+ofxJ6+NmBtjE46WkPeGs5K66yHKAv69bBJTtFlkm73mdQEHiw+PdNe5vLjdu8Bl5o38lXNNd60KxbvnlX1Y6w9MF5Q3OnuE7Ly1eQapGB5Olqm2Y2HVcSIDWnZPfNJEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9KMT7OOhCo/E67mkAVo1CdLy0xx6KI9GU9rNGsWn12I=;
- b=oBfl55UfZi1wsHUplkKs2uG4jxwHn69YBsTMJiNJAMvm99EnE0WGZxb2XVh+SyGeqzRKwkjcgKh103tvIkZ+q6yuEd01cmzpcWSOgxdpPDekg9aY81Lnyhl1JJC1AAoptcHHTdJTK0tu7Ydauv4MsjUfvutjgX73ex0+2o9n6k4noAzrVZ+vrxAchoVyQ2QjHG5159pLy+fSV5WwLJXudHk3AdMbgaZvBlUB801/VywxVEqJDhbQo2ZACnaufNFepShItnqItPyW4j/sYcTW55WzZmFnNQXWUmmlK3PwMrCxdEfsUPamFCvPVxbudG8X+WNIe+iOKFDiOanYTyrPhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9KMT7OOhCo/E67mkAVo1CdLy0xx6KI9GU9rNGsWn12I=;
- b=BbMK8UotjtTLnT6G77MKISaEHv1eP7Tq/e1YQZQcKqDLGwWMUqbKTsLt4k58FtOSRpI+077Hg49XN8c/fKqvXAbpDi1Kmy6lY97Vm9c7nj9nTuxaurYsPyh7bVYARiqLiKN8YUyKdhW8ZG+Pm4FmGzSgtKnhqNi99Av625Ji7oFPLTP8N6Q/Zgx6uNOFouIaQnS7Z2uPZQUI4flruC3WIFwNNS075Zba2QoKKDGZOlX/HefMRXAk9r5AxaeEwnLV3nxMIQcqUcimu/PKpsMyLBa+8LMN3w1oLCVe7TREr1FlLOuObqAzYuYY9/UNeJwjxPIEyQXzgZnhuq78h+eJ2Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com (2603:10b6:208:3f9::19)
- by MN0PR12MB5932.namprd12.prod.outlook.com (2603:10b6:208:37f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Thu, 29 May
- 2025 11:11:49 +0000
-Received: from IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c]) by IA1PR12MB9031.namprd12.prod.outlook.com
- ([fe80::1fb7:5076:77b5:559c%5]) with mapi id 15.20.8769.022; Thu, 29 May 2025
- 11:11:48 +0000
-Date: Thu, 29 May 2025 11:11:44 +0000
-From: Dragos Tatulea <dtatulea@nvidia.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>, 
-	Mina Almasry <almasrymina@google.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, 
-	Gal Pressman <gal@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next V2 00/11] net/mlx5e: Add support for devmem and
- io_uring TCP zero-copy
-Message-ID: <phuigc2himixvyaxydukgupqy2oxpobj6qo4m4hb6vsr5qenfd@7q4ct2c5gjdq>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
- <aDXi3VpAOPHQ576e@mini-arch>
- <izjshibliwhxfqiidy24xmxsq6q6te4ydmcffucwrhikaokqgg@l5tn6arxiwgo>
- <aDcvfvLMN2y5xkbo@mini-arch>
- <CAHS8izMhCm1+UzmWK2Ju+hbA5U-7OYUcHpdd8yEuQEux3QZ74A@mail.gmail.com>
- <aDeWcntZgm7Je8TZ@mini-arch>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDeWcntZgm7Je8TZ@mini-arch>
-X-ClientProxiedBy: TLZP290CA0009.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:9::18) To IA1PR12MB9031.namprd12.prod.outlook.com
- (2603:10b6:208:3f9::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axDttq9T"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a375d758a0so685796f8f.0;
+        Thu, 29 May 2025 04:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748517225; x=1749122025; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yK9qxpphezwGnQuF+KskqWcGIK9SoXYFqqQnXtln7Y0=;
+        b=axDttq9TIKJbEp0JH5btXFjWTTP2gNCr4WCQIdFSkWSQ6qeyr6gEAlcDH1kLs5LNk0
+         3ToU0iVu2YDjma44CuXFxeoI4Rr4YwMhEAWy19lAMyLbD6T1tahIc3Xgnerzlp69zCwW
+         qhdxYjaKQ18Gt6+7eonDOQVre/yI5BsfbED4K+yrYcnUEpoulC45m5WIRA/SpJ/xHuX6
+         0tL1wBW3sHr1qttHZFLvaEqNGUE3sOvMyitvsEwdXB4oQDOmQBmc5rwzvGpiuk4Ho32L
+         JvB1WuJPNMwjX8IuwyUJ9ZtAkgRpBL4sgN1UitTJ8X7vwqfCxg/H7KA1Xh3gJ6Rz6GDh
+         OqcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748517225; x=1749122025;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yK9qxpphezwGnQuF+KskqWcGIK9SoXYFqqQnXtln7Y0=;
+        b=p6ByZdzksjPNVXaWA//b5aNq9sASTl8odVXKphzK1XbdCvYdZIlvojD+/IWoZSiNvP
+         VeY9164RW+7JqmlhoIfomf+qcbu01XGrioX6hVKV8IsBmuDs3mgDeNDe+8/HsPECHZ7F
+         WhnvEUTahS6Vt8pkIdzD+U2CttfwVPYyWNPZBJPQ0pTwllH+BdSlK0d+8UhbLutjhQu/
+         OHoI96nD5G4X6hPVQV75MXi3J+iwiRx24jhn6awUmWARKqqlND9VgwbGt2Cgp+NBe5jC
+         +hmbzMMcZCJdQi02gexO0YASpteGPHZbyq/NQArKD8Lk9lDyNWmtgRPm7r1TQfPe+QVy
+         RN1A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHW/wwfrsp1XJeWg+xBN/ogVbO7gJruNdgbZsPaKodYWr3a4mLk+vWKTwEj9iDgXUkDZp+/NCpQrhk@vger.kernel.org, AJvYcCW4EmdntBMNCz/5ukqucF7gQEKjKFiLoGCgKvoKIweBrkRMkc18qZjChqdyytrHhQkQ9hRyDjvAZ8frRv7A@vger.kernel.org, AJvYcCXUMdB6RN3Xb9ZBJwk4mW19otalvSv1rIS1FBXBY0yKvWGuJU5E6DbgjUzGAupthzKSjnEgLYiZ0lA7u8jBNQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+KZysIifoUYxOAqy66LYm5xlGIP1Jt3QagyaZu/8rg3IQOL+i
+	M7tYkxezKWRR42HH6uL5in39pDFrelL1wksyRmjCiNIBr8LJBgt2sxY=
+X-Gm-Gg: ASbGnct9kW2iTTBmMwFtPyYYkp1sI9RJLDO1jHCQXnQlQ8PA4F1doevnuc74CtVPgH0
+	VHTJhZbA0OwRUBtU54GpKjA3uwNoXIOHEUtWuzWNdtDxEnXdePgsmcdnEuUK+qLcfHRzb+/Rl8o
+	8+fykGMBRVaVZ+mDinrOYMW0Q+1c646TtBB6J47VwVfN7T0jSWfk/+Pxz5CTzPkATTXA1J7j3dC
+	LRb7Y/qem9p7FlCG1XacSF1I+7r3vvWadhzMmPRxU1JvLBUdnCuKgs1NAuw3DjXPHF/M3GNoKGE
+	ydVY7Z84r0WufvRncPvfGD+0ZnZBg/TFxm0+5NqSpQ6BTIvEH5mRYVhe57NrQA==
+X-Google-Smtp-Source: AGHT+IFtVOAYLaqimD0CxC6hc1kQSyzh4mu6P4w2Hy3B/G1NI/FXQGzDsNSqYq4Rk9kil0/t65js7A==
+X-Received: by 2002:a05:6000:4027:b0:39c:1f02:5409 with SMTP id ffacd0b85a97d-3a4cb4619camr15584768f8f.9.1748517225032;
+        Thu, 29 May 2025 04:13:45 -0700 (PDT)
+Received: from [192.168.2.104] ([66.205.92.118])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc02cf0sm17219285e9.11.2025.05.29.04.13.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 04:13:44 -0700 (PDT)
+Message-ID: <2df66542-90b7-487e-88bb-5433b500c518@gmail.com>
+Date: Thu, 29 May 2025 13:13:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB9031:EE_|MN0PR12MB5932:EE_
-X-MS-Office365-Filtering-Correlation-Id: b143d0f3-a332-42be-3d25-08dd9ea19b13
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L1hoa2xYOVFLS2srOHh3NGlCcWRIUHowK3VJVTRNQzVHcmx6dVJwWnU3am1V?=
- =?utf-8?B?WDQ4d1h5OFg4cTdGcHE4d2g1SWlhTDVIOU5rem9IaU11OVdqb3pIdlVWTjky?=
- =?utf-8?B?d1YydU5tTVhLVUVMWk9zNXRjQklkb21vdHYrOXlwMURMNUVwMjBOTmF3QmhP?=
- =?utf-8?B?bVlCRVlQbTRkcWxVUFl0ZEY2OXoyVTZuMytBdGFNUkhJSW5HZXVKdVhKejBi?=
- =?utf-8?B?bCtQTk9NTHhhcm9zV2hnR3NjcUlTWDQxU2tmbnpiNEFLWmF6YnN1L3d0VEJu?=
- =?utf-8?B?ZnA3MitQNnJ6dWNWQ0NKanZrOEpaQzI2MzBBUGVzWDNkTGM0TXc1bE1VT0ta?=
- =?utf-8?B?Z0NmZEpKVHdKdk44VklLSktsRkwrRnFGK3daN09veWFMNkJDTVdSMlJTRlVa?=
- =?utf-8?B?ZDl0U1FQSXhFRXZ5Qjg2MnFsUmpzZGFzR1FsVDJqd3NTbWpvOW5FWXNTVzNr?=
- =?utf-8?B?Y0ZHbkt5Y0lKUDhpYWZ2bXVmN1JmM0MxR1VqU3dFa05nU3VSNnBBd0grMW12?=
- =?utf-8?B?ZDdqbVFlUjd6QW01UlE3K3pHRjJRU1NFTmJ5REE2aXFnY1FJaHpLaDA2a0FZ?=
- =?utf-8?B?UlowMFpmb1dzVEJwU2d5dWRGZUdIV1VxSlQxUUhCVWllTXVpN0tYaVJpOXVv?=
- =?utf-8?B?akFYTzU5U21YMFRjWmtvNUEwTDY0b3I3MWJOc2Z0U3NVQ2F0VWVXYkJvL2RC?=
- =?utf-8?B?OXhOWVAyRENvNk43NVl4M1RkMjZnUkpzZGxLVlNXeklOVXpEVnk3K2pGSDh1?=
- =?utf-8?B?eW9mOXVnbWF2RHZCaGxtTmNERnYyUW9TTnljZjg3OXlGaUhLcWwzUUJhc3Bh?=
- =?utf-8?B?V0RjVEx5MUwzbDBDVm9DVTRoaW1hMFd2elZzZ3c5NGM1U1RHTE5tOUtkWG05?=
- =?utf-8?B?a0xnOVFNMklXM0VmVnRvMFpBMU0wdjhiVzlYczAvRnhreTJWb0JPS1pNcHZi?=
- =?utf-8?B?M2FpbXpxYWE4Mm1raUlHb2xTNUZaR0tQbDJuNzd1UXVCRVAzOCtVZFYwdjFP?=
- =?utf-8?B?aEJPQ1pEMWVKa1ZLTm03bEh5RHV5cFVVeHRlclhHYkxMYTk3SU1OUkFha1dU?=
- =?utf-8?B?QmJ0VTcwYmJUUVUrenE4L2p3d2J4bTZ5L3NjMFJ2dkZNV1V4NVJ5NDBqZWtK?=
- =?utf-8?B?Mm45b3diZXYxM1l5aXQyalEvL05qUGdtSXRzenNVczFyZWNrTDRzY3ZyTmQz?=
- =?utf-8?B?bmpiN0hIOC9OZEhrSHI3UDQxTC9pUitUZEtEdm5rSUJmemIrUEFHb1RTaGk2?=
- =?utf-8?B?YStlVTVBRjgvbmNoZlBVaVFaQTdERExsbVlGeWVycHRUbzQrd3duU3c0Y3hu?=
- =?utf-8?B?cGVNeHg2Z1ppd1lwMWNCVk9PVHlKV2JzZHN5N1owalh5dkRIQ3JXZHRYS1Rw?=
- =?utf-8?B?UitqaVI3QTBPVGIrbGlkdE9oWlBLL0g5VkxOTDU3S1BPeURuK0FIMmlFRHNm?=
- =?utf-8?B?d0Y1VGdySkNVVUlDRXBCNHlzRkIvYzlvNm5ZaTBuNFdVQzVkeUVmRnZVUkpq?=
- =?utf-8?B?dk4reGtNd0VpVkhwYjN2djhGSUIxbCtRODY0UCtVNkRjb0VvYzRZaVVuMGtO?=
- =?utf-8?B?bHpsZ0tZemh2UWxadVBtN08yRGdObmlaRDBZUFRyV2pFRk4zRkhCbG5NVjIw?=
- =?utf-8?B?eWhEaGhnQnpPTW5HTzExdnROYXh6cERqNXNhRzhvcWdBR2JPTmQ0RXFPd0lB?=
- =?utf-8?B?OEsvTXhFbytnUzZPcDVkdlQ1dGdndDVwa01nbVh5ZEVic2RkakUxR0QzZzlS?=
- =?utf-8?B?YVYxc1ZzQnVjbWhzRFBNOWxnTlhwWGttNnJBK3RmcW1Gd01jR2hoMWQrSGh2?=
- =?utf-8?B?cHVXdFh6dU44S3JvakJUNGdYYTFKT2hjUVU3QXVxUlRnd05zV0RUREdyazZS?=
- =?utf-8?B?cktkOWJFajc5UUpHVWc4Rnh6OW5yQmFxSVBpVWRHWmlMbnN0N0lkdkpPaUN0?=
- =?utf-8?Q?i71c+jT6s/U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9031.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a3Q1QS93T3dMNDJSaXA0Nk44MDFzWXU4VFl5cnhlaWZKWHRPY0hwUXhNT2ZV?=
- =?utf-8?B?UWNIVUY2c1haalNzTUl1cHZYMVNUZnRvbFRYNWZZeWpxUFF4YVJmNjhaZXRy?=
- =?utf-8?B?b2ZRNXV1ZFBVK3JOMWZLTmxRU3FCSzcrK0FZa3RjTXhTZTA0ZHkyTXVCeHpZ?=
- =?utf-8?B?KzUrak1aK3JFaTNBTkFJRzFMUk91SU1raFpSc0tRZFc5d0o3SDZZZkY3bXpk?=
- =?utf-8?B?TndEcXUxWmFiV2syYVF3WDJzcWlUNS9zWHQ0cTgxVUFUNUg2SnFuai9GNHRj?=
- =?utf-8?B?d0Y3U2pJTExDODRWNjVCc0VlMnhZRm5wUTY1UVloY3VlNjhqc1J6a3JINCt4?=
- =?utf-8?B?Sm9sZEZPYjJLZTl3NzNZalBNQ05tMXYrb1ZDWHFOT2NWN1Y1dGVGZU13QlFC?=
- =?utf-8?B?clZrNjJ5ZjZxamt4Ulo0TkR0Nnd0M1ZUU2hwMnpYeDFRSkZLeCs0YXZWZnNZ?=
- =?utf-8?B?N2dOQW1WTDJhdldtaGtaZnRqSklUZWd1UTY5WnpQQkc5TnY4ZmJ3OEU2ckJ1?=
- =?utf-8?B?U3JoczhOTDNGM0N0eXYzK1hyUm4rSUhSNjJXQ1BHZkxqT2xtNmFkV0dBQlJX?=
- =?utf-8?B?NTV2SkFaVjUybFlETFpKbmJWK01OeUcyeFF3QjFsYXN6NnkrM0xqQXJJVVJQ?=
- =?utf-8?B?em1EWVhOOHFUMmhjNGhtOER3ZWJFYXZvNDc3WEUxQ1FEb3FKY2ZwZUVyRnhr?=
- =?utf-8?B?R0F4SkhwdEFlS2ZlWHdnczFScFJGQzdpOUpVSGtac0hUbzZCUngvUUJVM0lI?=
- =?utf-8?B?ekJIZ1RZdGM1TDh4TFBYYmlETTZ1Y3pieWJwVklDRHloUTc4dUk3UFlId1BS?=
- =?utf-8?B?REk4MUdLNG1NSVZYcHNnanBRejQyeTRPZzJFbEFxMS8xeHlIc0Yza0ZXS2Jm?=
- =?utf-8?B?TnVuT1dUSTBYOG1jaWI2UXlDbXZQNjM5TjBvdWlxWDdLYTZRb1h6YitacUJy?=
- =?utf-8?B?WCsrVnVLQ2VMM0RXOHFCdjZTQWhrREovemtkS3RBRHc0Ymg3S0V3bXQzUmtG?=
- =?utf-8?B?eWRWZHBGMnQrWlFDa1FCc1I0cU02d1F4QU5Bc0dGSGE3bTVzNmpKUWxwVGlM?=
- =?utf-8?B?a1pIdk1jWlhzMHM5Y21QanRqMXRQNGNLaEo5ODhXUjZ3ZlByc0FYY3pmRVdh?=
- =?utf-8?B?TC9OMy9xbDR5cXBUT1dkY0F1Y1pnYjRMN2Rkaml1aTliMGNxd1J3YkV2MEVT?=
- =?utf-8?B?cTNlcUpGNFpOVUFsc1VzZVZ4OEZpODU1Z0RhTEVMaHBxVm5vVWVReVE1UW1O?=
- =?utf-8?B?NW5xa2xSeWtyeGU5YXp1STVvSHkxeEFSdVpBMmJ0UXNRc3ZoSHBSTkZvOWNZ?=
- =?utf-8?B?MW5Va3B2dnB1Ty9OVlJCQzRoRHA4NzUrV3lveUZPclFZSVg1WERqdWszTGt2?=
- =?utf-8?B?NHBxWHZ2R09kWkJoamQrN0U4VWtyOHBIMTk5UXNFQVNiVUkrSlBrbkp3aWxT?=
- =?utf-8?B?K1VlZzhCd0xlUWp0cXV6dGdVa0xXYTV4YWxtazF0TGh6RjNieitWVkFhQk42?=
- =?utf-8?B?a1ZhNlN2eVVrbDhTVWtPcnZnRWx5anhHZ1cxb3lkUVl0RWY1L3ZtMmt2b216?=
- =?utf-8?B?bjJhQ3VDMzAxdlViYjFON043YmlqSU82Skx0cHdHQ0swY3MzVTNGMk94ZUlO?=
- =?utf-8?B?eUdsdHR1MlVoK1JkdmN3VkpmdzRXTHZKTGJ1SXplRGl6K3FKand5KzZZdlNo?=
- =?utf-8?B?MTBqdEdPdjZjTnpJaXJjRGg4aXV2TkpjT1RQWmlxZ1dKUW5nUzl1VjV2ZitE?=
- =?utf-8?B?d2pMaTIxTkdRR21BQkxvVUF1bWNVK090U3FHZDB5dVFIUGVwczN1YVVwTnYx?=
- =?utf-8?B?a3YxRjBxdUlFM25CbDFNbnZ1bmJwZVcrTTRLR1YxNUx3ekdUNno5dlJyN0ts?=
- =?utf-8?B?Y0Z0KzZRZVN0R3hHWTVpTkJxNEdTNTJFT29ZNjdCZ1RMNVNwOGQ0d2NrV2Jm?=
- =?utf-8?B?YnRhWU9ONTR0TWRVaFBYdnNUWEdtRkRHODVZa2NGbG1sa3B2cFpidERmaVVu?=
- =?utf-8?B?c2MyRlMzTXpBb0RNcHZMdDhOaFNWcExTTFd6dXpoam5sSnU1bGNwclp5M3Q1?=
- =?utf-8?B?NGY3OVFvWVpGaWdRekYyb0k1L0t3c0Y0aVRjejJ3YVRCQzRLd24rRDVlVFh1?=
- =?utf-8?Q?ntM0ljUcMh0+S0RFjXs96Q3bg?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b143d0f3-a332-42be-3d25-08dd9ea19b13
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9031.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 11:11:48.7866
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HteyY1PhPexkb/7y7IIXE78SbPR1KW3sy+ksB9CRmLpMGBS486UXHCQtIr10atlAu2OkuuN7iKBck3fm4PkX+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5932
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+To: Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
+References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+Content-Language: en-US
+From: Alex <alex.vinarskis@gmail.com>
+In-Reply-To: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 04:04:18PM -0700, Stanislav Fomichev wrote:
-> On 05/28, Mina Almasry wrote:
-> > On Wed, May 28, 2025 at 8:45 AM Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> > >
-> > > On 05/28, Dragos Tatulea wrote:
-> > > > On Tue, May 27, 2025 at 09:05:49AM -0700, Stanislav Fomichev wrote:
-> > > > > On 05/23, Tariq Toukan wrote:
-> > > > > > This series from the team adds support for zerocopy rx TCP with devmem
-> > > > > > and io_uring for ConnectX7 NICs and above. For performance reasons and
-> > > > > > simplicity HW-GRO will also be turned on when header-data split mode is
-> > > > > > on.
-> > > > > >
-> > > > > > Find more details below.
-> > > > > >
-> > > > > > Regards,
-> > > > > > Tariq
-> > > > > >
-> > > > > > Performance
-> > > > > > ===========
-> > > > > >
-> > > > > > Test setup:
-> > > > > >
-> > > > > > * CPU: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz (single NUMA)
-> > > > > > * NIC: ConnectX7
-> > > > > > * Benchmarking tool: kperf [1]
-> > > > > > * Single TCP flow
-> > > > > > * Test duration: 60s
-> > > > > >
-> > > > > > With application thread and interrupts pinned to the *same* core:
-> > > > > >
-> > > > > > |------+-----------+----------|
-> > > > > > | MTU  | epoll     | io_uring |
-> > > > > > |------+-----------+----------|
-> > > > > > | 1500 | 61.6 Gbps | 114 Gbps |
-> > > > > > | 4096 | 69.3 Gbps | 151 Gbps |
-> > > > > > | 9000 | 67.8 Gbps | 187 Gbps |
-> > > > > > |------+-----------+----------|
-> > > > > >
-> > > > > > The CPU usage for io_uring is 95%.
-> > > > > >
-> > > > > > Reproduction steps for io_uring:
-> > > > > >
-> > > > > > server --no-daemon -a 2001:db8::1 --no-memcmp --iou --iou_sendzc \
-> > > > > >         --iou_zcrx --iou_dev_name eth2 --iou_zcrx_queue_id 2
-> > > > > >
-> > > > > > server --no-daemon -a 2001:db8::2 --no-memcmp --iou --iou_sendzc
-> > > > > >
-> > > > > > client --src 2001:db8::2 --dst 2001:db8::1 \
-> > > > > >         --msg-zerocopy -t 60 --cpu-min=2 --cpu-max=2
-> > > > > >
-> > > > > > Patch overview:
-> > > > > > ================
-> > > > > >
-> > > > > > First, a netmem API for skb_can_coalesce is added to the core to be able
-> > > > > > to do skb fragment coalescing on netmems.
-> > > > > >
-> > > > > > The next patches introduce some cleanups in the internal SHAMPO code and
-> > > > > > improvements to hw gro capability checks in FW.
-> > > > > >
-> > > > > > A separate page_pool is introduced for headers. Ethtool stats are added
-> > > > > > as well.
-> > > > > >
-> > > > > > Then the driver is converted to use the netmem API and to allow support
-> > > > > > for unreadable netmem page pool.
-> > > > > >
-> > > > > > The queue management ops are implemented.
-> > > > > >
-> > > > > > Finally, the tcp-data-split ring parameter is exposed.
-> > > > > >
-> > > > > > Changelog
-> > > > > > =========
-> > > > > >
-> > > > > > Changes from v1 [0]:
-> > > > > > - Added support for skb_can_coalesce_netmem().
-> > > > > > - Avoid netmem_to_page() casts in the driver.
-> > > > > > - Fixed code to abide 80 char limit with some exceptions to avoid
-> > > > > > code churn.
-> > > > >
-> > > > > Since there is gonna be 2-3 weeks of closed net-next, can you
-> > > > > also add a patch for the tx side? It should be trivial (skip dma unmap
-> > > > > for niovs in tx completions plus netdev->netmem_tx=1).
-> > > > >
-> > > > Seems indeed trivial. We will add it.
-> > > >
-> > > > > And, btw, what about the issue that Cosmin raised in [0]? Is it addressed
-> > > > > in this series?
-> > > > >
-> > > > > 0: https://lore.kernel.org/netdev/9322c3c4826ed1072ddc9a2103cc641060665864.camel@nvidia.com/
-> > > > We wanted to fix this afterwards as it needs to change a more subtle
-> > > > part in the code that replenishes pages. This needs more thinking and
-> > > > testing.
-> > >
-> > > Thanks! For my understanding: does the issue occur only during initial
-> > > queue refill? Or the same problem will happen any time there is a burst
-> > > of traffic that might exhaust all rx descriptors?
-> > >
-> > 
-> > Minor: a burst in traffic likely won't reproduce this case, I'm sure
-> > mlx5 can drive the hardware to line rate consistently. It's more if
-> > the machine is under extreme memory pressure, I think,
-> > page_pool_alloc_pages and friends may return ENOMEM, which reproduces
-> > the same edge case as the dma-buf being extremely small which also
-> > makes page_pool_alloc_netmems return -ENOMEM.
-> 
-> What I want to understand is whether the kernel/driver will oops when dmabuf
-> runs out of buffers after initial setup. Either traffic burst and/or userspace
-> being slow on refill - doesn't matter.
-There is no OOPS but the queue can't handle more traffic because it
-can't allocate more buffers and it can't release old buffers either.
 
-AFAIU from Cosmin the condition happened on initial queue fill when
-there are no buffers to be released for the current WQE.
+On 5/27/25 22:40, Konrad Dybcio wrote:
+> Register a typec mux in order to change the PHY mode on the Type-C
+> mux events depending on the mode and the svid when in Altmode setup.
+>
+> The DisplayPort phy should be left enabled if is still powered on
+> by the DRM DisplayPort controller, so bail out until the DisplayPort
+> PHY is not powered off.
+>
+> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
+> will be set in between of USB-Only, Combo and DisplayPort Only so
+> this will leave enough time to the DRM DisplayPort controller to
+> turn of the DisplayPort PHY.
+>
+> The patchset also includes bindings changes and DT changes.
+>
+> This has been successfully tested on an SM8550 board, but the
+> Thinkpad X13s deserved testing between non-PD USB, non-PD DisplayPort,
+> PD USB Hubs and PD Altmode Dongles to make sure the switch works
+> as expected.
+>
+> The DisplayPort 4 lanes setup can be check with:
+> $ cat /sys/kernel/debug/dri/ae01000.display-controller/DP-1/dp_debug
+> 	name = msm_dp
+> 	drm_dp_link
+> 		rate = 540000
+> 		num_lanes = 4
+> ...
 
-Thanks,
-Dragos
+
+Hi,
+
+
+Thanks for the respin. Together with `mode-switch;` for x1e80100.dtsi 
+and 4 lane DP change in respective .dts, successfully tested on Asus 
+Zenbook A14 (Parade PS8833 on both Type-C ports).
+
+Tested with:
+
+- Type-C USB3.0 pendrive
+
+- Type-C to DP cable (x4 DP lanes)
+
+- Type-C to HDMI/USB/... dongle (x2 USB3, x2 DP)
+
+All three variants work, in both orientations, on both ports. When 
+switching from x4 DP lanes cable to USB3 pendrive no re-plug was needed, 
+it works right away. Suspend and resume (to my surprise) also works.
+
+
+Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com> # x1e80100, 
+ps8833
+
+
+Regards,
+
+Alex
+
+
+>
+> This patchset depends on [1] to allow broadcasting the type-c mode
+> to the PHY, otherwise the PHY will keep the combo state while the
+> retimer would setup the 4 lanes in DP mode.
+>
+> [1] https://lore.kernel.org/all/20240527-topic-sm8x50-upstream-retimer-broadcast-mode-v1-0-79ec91381aba@linaro.org/
+> Changes in v3:
+> - Take the series from Neil
+> - Rebase
+> - Rename many variables
+> - Test on X1E & X13s
+> - Apply a number of small cosmetic/codestyle changes
+> - Remove some unused variables
+> - Some smaller bugfixes
+> - Link to v2: https://lore.kernel.org/lkml/20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org/
+> Changes in v2:
+> - Reference usb-switch.yaml in bindings patch
+> - Fix switch/case indenting
+> - Check svid for USB_TYPEC_DP_SID
+> - Fix X13s patch subject
+> - Update SM8650 patch to enable 4 lanes on HDK aswell
+> - Link to v1: https://lore.kernel.org/r/20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org
+>
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Konrad Dybcio (1):
+>        phy: qcom: qmp-combo: Rename 'mode' to 'phy_mode'
+>
+> Neil Armstrong (5):
+>        dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp: Reference usb-switch.yaml to allow mode-switch
+>        phy: qcom: qmp-combo: store DP phy power state
+>        phy: qcom: qmp-combo: introduce QMPPHY_MODE
+>        phy: qcom: qmp-combo: register a typec mux to change the QMPPHY_MODE
+>        arm64: dts: qcom: sc8280xp-lenovo-thinkpad-x13: Set up 4-lane DP
+>
+>   .../phy/qcom,sc8280xp-qmp-usb43dp-phy.yaml         |   7 +-
+>   .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |   6 +-
+>   drivers/phy/qualcomm/phy-qcom-qmp-combo.c          | 182 +++++++++++++++++++--
+>   3 files changed, 173 insertions(+), 22 deletions(-)
+> ---
+> base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
+> change-id: 20250527-topic-4ln_dp_respin-c6924a8825ce
+>
+> Best regards,
