@@ -1,147 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C9B67F;
-	Thu, 29 May 2025 08:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15261B67F;
+	Thu, 29 May 2025 08:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748505696; cv=none; b=UJZN/EI1kwjygEuyekaiYAbOZ0ncRBm4uRu+wxwq3qK/w+0gpLlcXXMg2N4B5Dx97QbE6nS25fwOIpA8zaZcEcWXRiaqnqJ/i18fZKNRc2iT+zwNfi2X3hwjLqkTDkwXRiaeZxMPCnVXY7TfDyHcyM4Y8fzGamoVSORvZD/vP8k=
+	t=1748506136; cv=none; b=JnYL0jmd0f4AUAi7VkAl2lZ/lv1noyPdbByuPTqCWmiljbLKgZzxT9UPehn6BfvbCUnwrnNrk2pwWvQNzxw63ficvQSZfeWKovWSsoD3Y2WG2fIHa1xJaaLOWB6CWWMJJe6bejlWXQrCz12yyGlRW+aNk5nrS8nnNqXuB4ga3QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748505696; c=relaxed/simple;
-	bh=XRLoSqmyoqw5/XwdG6FsxrALYtKJ3ELCysFhWxyY5y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JSsM8w0fVwjTD/s/mZYlrUWy24OLEDlhxSR6clQW6yOAOKk53i2+L2F2mT0TzvFXuP9bjN1RX3fncYrEAxFnlX8hqDNh8t1a0nqiB7Onr5yB4E3V6uTcQZpNhrQQ264eHvW9jbE3hsws27CnOGVxpmiacwQfdLFxZwhP7ZPQD4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vT4JkUp/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748506136; c=relaxed/simple;
+	bh=X6J2EZGtcDFFf1QChLOELilViAGYllQkhXFuw2otxaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=qQT8qb6QmOI/xEhkWhSBYnjwhA/RDnEPeYZoayc8o78TmTilN7bvoCvpWfiTA+kDlZH7HiRLvewcKFJCD/y5Wt1LagrdePs0cqMEaRKZfdXAH9/PjISUN4bMC0win+hV45Jf2U0dPQGSIN/4qzeWbz3Pu1BMDx1nmgo24KyE1GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=oaTwYbCg; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vT4JkUp/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC241C4CEE7;
-	Thu, 29 May 2025 08:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748505693;
-	bh=XRLoSqmyoqw5/XwdG6FsxrALYtKJ3ELCysFhWxyY5y4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vT4JkUp/rDGeiTbnnr++ysZYhM/vggIvDIwBe7zDkvgQ6rwMygSNaiehbnKdgwjzD
-	 DXBkXj0cx4TyjLe5gDw2gQ98kRsscJpKOK6ZYdIVMVeiosnQniOxWXe+MucO5T1Ppz
-	 CBJYzB5OttG6YvDj05j6gmdcLmq8yctmrZOF9joE=
-Date: Thu, 29 May 2025 10:01:30 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Timur Tabi <timur@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025052932-pyramid-unvisited-68f7@gregkh>
-References: <2025051532-gentleman-reset-58f2@gregkh>
- <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
- <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
- <2025051647-urology-think-b8e0@gregkh>
- <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
- <aCc_PSOPkLWTcTru@pollux>
- <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
- <CAOZdJXW+PoFgxH+wPEum-kYvRmSRd8c4kaxvbNAq5dfZJiXapA@mail.gmail.com>
- <D9Y0VJKOAQAY.2GJSAZ5II54VV@nvidia.com>
- <DA8G3G918FS4.X8D7PQMT4TGB@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="oaTwYbCg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1748506132; x=1749110932; i=wahrenst@gmx.net;
+	bh=5UdOdgiI5zxoMEjvek8mnmCqj8OoSdpXbP1HCHQdtxo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:Cc:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=oaTwYbCgkcGhpT4VUXzhhal2aGmlUD3F8gkQaVyopbdKkXsd7O3HPPZ0KFDJpVAv
+	 Dbfv2DY/29UcVOUX+6Pub4firuPyFx6TEtC/3ml8ziPyrDydoZoiKiH0BXDEL1E+I
+	 IunUSOZw+bsLxSAAus/B98G8M0h01Iht7V2O+R2Oo8NCKb3UBPZXon2jkclAstMrw
+	 /psFUd4tYPeR0rXUV14KECBT49SuUdVkdMZeWJSwsd3+SwzMt8CCUaOvk/qM+Qc6g
+	 sDiCb9sDMoCsNahVbRHvx5DgpG6X44AKaPSPN6IN3tIqf3H1a3wJOycQRvmEduFhG
+	 aAY7wlF4VB35f/ZURw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.104] ([91.41.216.208]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbzyJ-1utcI03T4x-00fQ8P; Thu, 29
+ May 2025 10:08:51 +0200
+Message-ID: <892d352c-8639-4837-a7b6-6706ec35ac7b@gmx.net>
+Date: Thu, 29 May 2025 10:08:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DA8G3G918FS4.X8D7PQMT4TGB@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] dt-bindings: mmc: mxs-mmc: change ref to
+ mmc-controller-common.yaml from mmc-controller.yaml
+To: Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>
+References: <20250528222433.727633-1-Frank.Li@nxp.com>
+Content-Language: en-US
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+ "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..."
+ <linux-mmc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250528222433.727633-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:EjTI9J4dGsDiQy9sInFfttZwWAJ1r5kykoL7b9hCsFgH5NbL1LX
+ 7OX+iqRNF3k69KTIV2tiLqXjUAwfPA1eV6+DkRF7dPyJNdhgLzGLEUvkNUj16xgjQP6DfUs
+ NusR/Hbyinp21BwcaRyGFVIg/TVelnH7R31Nd0TB+ICOqn9bd8RGgp9sH0JIkOlEJsFJnrd
+ 5mYDbSEb5LiIZU0X3LCdQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RvCdwBGOh/U=;MuzvyMicLeznzIzkbQWlBD99GgU
+ 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
 
-On Thu, May 29, 2025 at 03:53:42PM +0900, Alexandre Courbot wrote:
-> Hi Greg,
-> 
-> On Sat May 17, 2025 at 9:51 AM JST, Alexandre Courbot wrote:
-> > On Sat May 17, 2025 at 1:28 AM JST, Timur Tabi wrote:
-> >> On Fri, May 16, 2025 at 9:35 AM Alexandre Courbot <acourbot@nvidia.com> wrote:
-> >>>
-> >>> We use ELF as a container format to associate binary blobs with named
-> >>> sections. Can we extract these sections into individual files that we
-> >>> load using request_firmware()? Why yes, we could.
-> >>
-> >> Actually, I don't think we can.  This is the actual GSP-RM ELF image
-> >> you're talking about.  This comes packaged as one binary blob and it's
-> >> intended to be mostly opaque.  We can't just disassemble the ELF
-> >> sections and then re-assemble them in the driver.
-> >>
-> >> Unfortunately, for pre-Hopper booting, we need to do a little
-> >> pre-processing on the image, referencing the ELF sections, and based
-> >> on data from fuses that cannot be read in user-space.
-> >
-> > I'd like to reinforce Timur's point a bit because it is crucial to
-> > understanding why we need an ELF parser here.
-> >
-> > On post-Hopper, the GSP ELF binary is passed as-is to the booter
-> > firmware and it is the latter that performs the blob extraction from the
-> > ELF sections. So for these chips no ELF parsing takes place in the
-> > kernel which actually acts as a dumb pipe.
-> >
-> > However, pre-Hopper does not work like that, and for these the same GSP
-> > image (coming from the same ELF file) needs to be extracted by the
-> > kernel and handed out to booter. It's for these that we need to do the
-> > light parsing introduced by this patch.
-> >
-> > So while I believe this provides a strong justification for having the
-> > parser, I also understand Greg's reluctance to make this available to
-> > everyone when nova-core is the only user in sight and the general
-> > guideline is to avoid processing in the kernel.
-> >
-> > OTOH, it is quite short and trivial, and if some drivers need a
-> > packaging format then it might as well be ELF. The imagination DRM
-> > driver for instance appears to load firmware parts from an ELF binary
-> > obtained using request_firmware (lookup `process_elf_command_stream`) -
-> > very similar to what we are doing here.
-> >
-> > `drivers/remoteproc` also has what appears to be a complete ELF parser
-> > and loader, which it uses on firmware obtained using `request_firmware`
-> > (check `remoteproc_elf_loader.c` and how the arguments to the functions
-> > defined there are `struct firmware *`). Admittedly, it's probably easier
-> > to justify here, but the core principle is the same and we are just
-> > doing a much simpler version of that.
-> >
-> > And there are likely more examples, so there might be a case for a
-> > shared ELF parser. For nova-core purposes, either way would work.
-> 
-> Gentle ping on this, as you can there are other drivers using ELF as a
-> container format for firmware. In light of this information, I guess
-> there is a point for having a common parser in the kernel. What do you
-> think?
-> 
+Hi Frank,
 
-I think that the other examples should be fixed up to not do that :)
+thanks for the patch.
 
-remoteproc is one example, that elf logic should all be done in
-userspace, but as it's been in the tree "for forever", changing it is
-not going to be possible.
+Am 29.05.25 um 00:24 schrieb Frank Li:
+> Change ref to mmc-controller-common.yaml from mmc-controller.yaml becaus=
+e
+> imx23/imx28 use dual mode controller (spi and mmc). So default dts node
+> name use spi instead of mmc. The legancy reason, it use difference
+legacy reason ?
+> compatible string to distringuish work mode (spi / mmc).
+>
+> Fix below CHECK_DTB warnings:
+> arch/arm/boot/dts/nxp/mxs/imx23-olinuxino.dtb: spi@80010000 (fsl,imx23-m=
+mc): $nodename:0: 'spi@80010000' does not match '^mmc(@.*)?$'
+>
+> Additional add clocks property.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>   Documentation/devicetree/bindings/mmc/mxs-mmc.yaml | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml b/Docume=
+ntation/devicetree/bindings/mmc/mxs-mmc.yaml
+> index 32e512a68ed61..ca40ca92f858d 100644
+> --- a/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+> @@ -17,7 +17,7 @@ description: |
+>     and the properties used by the mxsmmc driver.
+>  =20
+>   allOf:
+> -  - $ref: mmc-controller.yaml
+> +  - $ref: mmc-controller-common.yaml#
+>  =20
+>   properties:
+>     compatible:
+> @@ -31,6 +31,9 @@ properties:
+>     interrupts:
+>       maxItems: 1
+>  =20
+> +  clocks:
+> +    maxItems: 1
+> +
+The patch looks good, but shouldn't "clocks" be a required property ?
+>     dmas:
+>       maxItems: 1
+>  =20
 
-Same for the existing users, changing their user/kernel api is not going
-to be a simple task given that there are running systems relying on
-them.
-
-But, going forward, I think you need an explicit "this is the ONLY way
-we can do this so it MUST be in the kernel" justification for adding
-this type of api.  AND if that happens, THEN it should be in generic
-code ONCE there are multiple users of it.
-
-But for now, doing it in generic code, that all systems end up loading,
-yet very very very few would ever actually use makes no sense.  And
-adding it to a driver also doesn't make sense as you can define your
-user/kernel api now, it's not set in stone at all given that there is no
-existing code merged.
-
-So again, I'm all for "do NOT do yet-another-elf-loader-in-the-kernel",
-if asked.
-
-thanks,
-
-greg k-h
