@@ -1,155 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299FA1F19A;
-	Thu, 29 May 2025 19:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F5BA4685
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 19:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748546472; cv=none; b=k8pGLarmKvBYiQ8/JrkfYLkIkbEhAKcYeMG+AVwEBbfQktNyGPWk15pFpOZFsq38t5wTW4eI7L27OCXnQ3WttEp12uHa+q1k9CLJGlUYOHJ5Vdj3OVf6EQxyRjeLilSCv0CtMOhBfqLCxESAozLYB6Zo/7pdehtUbJHt3h5pNd8=
+	t=1748546532; cv=none; b=fyBn72IcottgvtRCajjjbVT6x2z4qwdUF0EoplcYOUO0DPMemKuufAv/M8Gt4wCTcyZcrG0Yf+qIxwnwaPF450kRwUC5RSd33LRSmDyTEM8NneD0Y8bLsgt+orx3QS9JxBzEsCxntzEqvtfQBLweO4S2fG9r9vaxJa/GuQBoZEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748546472; c=relaxed/simple;
-	bh=6/7lIB6NeUWu/dHkq3BraSNFkiBew2d2Z+vXCwbFpmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YNczyK4uJ8RuKoEsSeUQcx+moddDlO7GFIgU5XYJgsXa6R2m0HPirIPKsqD6DlAb8l/pYnrq3bvk6w7YYvP6JzSBtSrqYdMywEZnoQCRT4Q2oM73gBd8422eOFHrDsvGXItMPxja62GdjEGG4YXBmpNol6+952M2xQS/URgY7RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F725C4CEE7;
-	Thu, 29 May 2025 19:21:09 +0000 (UTC)
-Date: Thu, 29 May 2025 15:22:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, nvdimm@lists.linux.dev
-Cc: Dan Williams <dan.j.williams@intel.com>, Shiyang Ruan 
- <ruansy.fnst@fujitsu.com>, "Darrick J. Wong" <djwong@kernel.org>, Ross 
- Zwisler <zwisler@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2] fsdax: Remove unused trace events for dax insert mapping
-Message-ID: <20250529152211.688800c9@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748546532; c=relaxed/simple;
+	bh=//kcQKhhyjZ+NR+DfjeU8tqQgiXwCObQJurJL8Ngmj4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=dtnsHFuKNMsDyg557gnEcJW3rePc5EW1JmBShd9cES7Chki4tvCVrxCJmnei29NNphJQ9qfVqstznGMTQtXFQehTo5jdkundReqSJgdqe4vazBBDPCKsFKx6NvGGSIiNoSrT10seRc0hjEFahmccsGM7IoHt7qU/UV4jMqW6wyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3dNQtnyq; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3dNQtnyq"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73bfc657aefso913832b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748546530; x=1749151330; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gLjZL1t5Rkyj1FbzmSx+BdHjQ+wVpVfHl2EB4V/19vA=;
+        b=3dNQtnyqsnUH4tk6f4+E+3nD/Lcg+p6fFy8PxZrVpugXQBzCzNLXLu1N+2XjgGARCn
+         0mxBp9RIYPV0a2aMPm+MZPYnORYsjppDbrpfn/5A0J5tBNwgMZir+4Ya5c+LaknX6/TD
+         8egD+J0kwnB9M7V8RrnAjH+u73IMvwou/OjaowHY/HYXIOJnHIBNP8N6N+DUIyiHOMvu
+         XvzTIgbTXJ08hnXUQP76nSf0cpfDGE31oh9oldEl530z5rasXWHSpGFp2COAxVck/TEb
+         EARzk27FccdDxcARcT48hA9d8571Udyfeu0ACl+Zds/QPcyCtIO+okprOM2wkHGNraGd
+         4jNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748546530; x=1749151330;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gLjZL1t5Rkyj1FbzmSx+BdHjQ+wVpVfHl2EB4V/19vA=;
+        b=GvUaRP8wlJAu0RZk5ZRLKQVQFPsVDHGYlysRiQs4r7KENkMKR5Dw89zCO1ypzH6Dhb
+         MO3OHWibWnwo2OcqqvYZWENhAea26Zx0z35W+wbu15y9Y7cBqPjHro22AhXhkexuMYQQ
+         L/pvpj00Lk6cqsYgKhWt/vD0eIWIJmSZCd/lOsMjId/1ucmcBoaAEE6dY0CQx1qqeELE
+         HizNmfbHRgRv6t0E6VgTJyJhsuTx2cdaf7ld4JEps0u1upIhK/uCSe1StIrvPRzv+1zU
+         TKc+3/UR+Fq7SAmtjTSCjnifQZ9VJ5Q5mFvCx/tibbKfXPNnQghKjTUag8skX6RUrJh7
+         znDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVWJdeQpRS2HFMpuwhX2UDaC3aVXqnY75fwV8cAHX9NN84L6uWFZTjEMXMlqnNLgs8hTS4YaVYf2NeyfI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5Z3XdW3S/6Db1fdTtT1Wtus8l2PFShlOqnIZe84okZ28CiKHi
+	ufaPBbSQRM8zLuSf6uDigQ6NbAu62vnqNoNxvaobnRF92kOWYP+j7AmPPm0CW6AwTRL/6gnJB2R
+	tFx7P4XnXOw==
+X-Google-Smtp-Source: AGHT+IF7272YsR+P0xvDbs8iwADyn+6vDrmzEe6NhB1nWukMJ2oLMyuozrn/Qkrmjm8I6s8SNkp6LjdPMmju
+X-Received: from pfbks22.prod.google.com ([2002:a05:6a00:4b96:b0:747:a305:836a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b8b:b0:73f:ff25:90b3
+ with SMTP id d2e1a72fcca58-747bda1b8e4mr861023b3a.24.1748546530327; Thu, 29
+ May 2025 12:22:10 -0700 (PDT)
+Date: Thu, 29 May 2025 12:22:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250529192206.971199-1-irogers@google.com>
+Subject: [PATCH v1] perf thread: Ensure comm_lock held for comm_list
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Add thread safety annotations for comm_list and add locking for two
+instances where the list is accessed without the lock held (in
+contradiction to ____thread__set_comm()).
 
-When the dax_fault_actor() helper was factored out, it removed the calls
-to the dax_pmd_insert_mapping and dax_insert_mapping events but never
-removed the events themselves. As each event created takes up memory
-(roughly 5K each), this is a waste as it is never used.
-
-Remove the unused dax_pmd_insert_mapping and dax_insert_mapping trace
-events.
-
-Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
-
-Fixes: c2436190e492 ("fsdax: factor out a dax_fault_actor() helper")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-Changes since v1: https://lore.kernel.org/all/20250529150722.19e04332@gandalf.local.home/
+This reverts commit 24bcc31fc75b760e7813e1c8257a7439e045e8ad and
+squashes it with the fix:
+https://lore.kernel.org/lkml/20250528032637.198960-8-irogers@google.com/
+---
+ tools/perf/util/comm.c   |  2 ++
+ tools/perf/util/thread.c | 26 ++++++++++++++++++++++----
+ tools/perf/util/thread.h |  9 +++++----
+ 3 files changed, 29 insertions(+), 8 deletions(-)
 
-- Removed dax_insert_mapping too
-
- include/trace/events/fs_dax.h | 78 -----------------------------------
- 1 file changed, 78 deletions(-)
-
-diff --git a/include/trace/events/fs_dax.h b/include/trace/events/fs_dax.h
-index 86fe6aecff1e..76b56f78abb0 100644
---- a/include/trace/events/fs_dax.h
-+++ b/include/trace/events/fs_dax.h
-@@ -102,54 +102,6 @@ DEFINE_EVENT(dax_pmd_load_hole_class, name, \
- DEFINE_PMD_LOAD_HOLE_EVENT(dax_pmd_load_hole);
- DEFINE_PMD_LOAD_HOLE_EVENT(dax_pmd_load_hole_fallback);
+diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+index 8aa456d7c2cd..9880247a2c33 100644
+--- a/tools/perf/util/comm.c
++++ b/tools/perf/util/comm.c
+@@ -24,6 +24,7 @@ static struct comm_strs {
+ static void comm_strs__remove_if_last(struct comm_str *cs);
  
--DECLARE_EVENT_CLASS(dax_pmd_insert_mapping_class,
--	TP_PROTO(struct inode *inode, struct vm_fault *vmf,
--		long length, pfn_t pfn, void *radix_entry),
--	TP_ARGS(inode, vmf, length, pfn, radix_entry),
--	TP_STRUCT__entry(
--		__field(unsigned long, ino)
--		__field(unsigned long, vm_flags)
--		__field(unsigned long, address)
--		__field(long, length)
--		__field(u64, pfn_val)
--		__field(void *, radix_entry)
--		__field(dev_t, dev)
--		__field(int, write)
--	),
--	TP_fast_assign(
--		__entry->dev = inode->i_sb->s_dev;
--		__entry->ino = inode->i_ino;
--		__entry->vm_flags = vmf->vma->vm_flags;
--		__entry->address = vmf->address;
--		__entry->write = vmf->flags & FAULT_FLAG_WRITE;
--		__entry->length = length;
--		__entry->pfn_val = pfn.val;
--		__entry->radix_entry = radix_entry;
--	),
--	TP_printk("dev %d:%d ino %#lx %s %s address %#lx length %#lx "
--			"pfn %#llx %s radix_entry %#lx",
--		MAJOR(__entry->dev),
--		MINOR(__entry->dev),
--		__entry->ino,
--		__entry->vm_flags & VM_SHARED ? "shared" : "private",
--		__entry->write ? "write" : "read",
--		__entry->address,
--		__entry->length,
--		__entry->pfn_val & ~PFN_FLAGS_MASK,
--		__print_flags_u64(__entry->pfn_val & PFN_FLAGS_MASK, "|",
--			PFN_FLAGS_TRACE),
--		(unsigned long)__entry->radix_entry
--	)
--)
--
--#define DEFINE_PMD_INSERT_MAPPING_EVENT(name) \
--DEFINE_EVENT(dax_pmd_insert_mapping_class, name, \
--	TP_PROTO(struct inode *inode, struct vm_fault *vmf, \
--		long length, pfn_t pfn, void *radix_entry), \
--	TP_ARGS(inode, vmf, length, pfn, radix_entry))
--
--DEFINE_PMD_INSERT_MAPPING_EVENT(dax_pmd_insert_mapping);
--
- DECLARE_EVENT_CLASS(dax_pte_fault_class,
- 	TP_PROTO(struct inode *inode, struct vm_fault *vmf, int result),
- 	TP_ARGS(inode, vmf, result),
-@@ -194,36 +146,6 @@ DEFINE_PTE_FAULT_EVENT(dax_load_hole);
- DEFINE_PTE_FAULT_EVENT(dax_insert_pfn_mkwrite_no_entry);
- DEFINE_PTE_FAULT_EVENT(dax_insert_pfn_mkwrite);
+ static void comm_strs__init(void)
++	NO_THREAD_SAFETY_ANALYSIS /* Inherently single threaded due to pthread_once. */
+ {
+ 	init_rwsem(&_comm_strs.lock);
+ 	_comm_strs.capacity = 16;
+@@ -119,6 +120,7 @@ static void comm_strs__remove_if_last(struct comm_str *cs)
+ }
  
--TRACE_EVENT(dax_insert_mapping,
--	TP_PROTO(struct inode *inode, struct vm_fault *vmf, void *radix_entry),
--	TP_ARGS(inode, vmf, radix_entry),
--	TP_STRUCT__entry(
--		__field(unsigned long, ino)
--		__field(unsigned long, vm_flags)
--		__field(unsigned long, address)
--		__field(void *, radix_entry)
--		__field(dev_t, dev)
--		__field(int, write)
--	),
--	TP_fast_assign(
--		__entry->dev = inode->i_sb->s_dev;
--		__entry->ino = inode->i_ino;
--		__entry->vm_flags = vmf->vma->vm_flags;
--		__entry->address = vmf->address;
--		__entry->write = vmf->flags & FAULT_FLAG_WRITE;
--		__entry->radix_entry = radix_entry;
--	),
--	TP_printk("dev %d:%d ino %#lx %s %s address %#lx radix_entry %#lx",
--		MAJOR(__entry->dev),
--		MINOR(__entry->dev),
--		__entry->ino,
--		__entry->vm_flags & VM_SHARED ? "shared" : "private",
--		__entry->write ? "write" : "read",
--		__entry->address,
--		(unsigned long)__entry->radix_entry
--	)
--)
--
- DECLARE_EVENT_CLASS(dax_writeback_range_class,
- 	TP_PROTO(struct inode *inode, pgoff_t start_index, pgoff_t end_index),
- 	TP_ARGS(inode, start_index, end_index),
+ static struct comm_str *__comm_strs__find(struct comm_strs *comm_strs, const char *str)
++	SHARED_LOCKS_REQUIRED(comm_strs->lock)
+ {
+ 	struct comm_str **result;
+ 
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 415c0e5d1e75..f4ad15e1e314 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -41,6 +41,7 @@ int thread__init_maps(struct thread *thread, struct machine *machine)
+ }
+ 
+ struct thread *thread__new(pid_t pid, pid_t tid)
++	NO_THREAD_SAFETY_ANALYSIS /* Allocation/creation is inherently single threaded. */
+ {
+ 	RC_STRUCT(thread) *_thread = zalloc(sizeof(*_thread));
+ 	struct thread *thread;
+@@ -200,7 +201,8 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
+ 	return ret;
+ }
+ 
+-struct comm *thread__comm(struct thread *thread)
++static struct comm *__thread__comm(struct thread *thread)
++	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+ 	if (list_empty(thread__comm_list(thread)))
+ 		return NULL;
+@@ -208,16 +210,30 @@ struct comm *thread__comm(struct thread *thread)
+ 	return list_first_entry(thread__comm_list(thread), struct comm, list);
+ }
+ 
++struct comm *thread__comm(struct thread *thread)
++{
++	struct comm *res = NULL;
++
++	down_read(thread__comm_lock(thread));
++	res = __thread__comm(thread);
++	up_read(thread__comm_lock(thread));
++	return res;
++}
++
+ struct comm *thread__exec_comm(struct thread *thread)
+ {
+ 	struct comm *comm, *last = NULL, *second_last = NULL;
+ 
++	down_read(thread__comm_lock(thread));
+ 	list_for_each_entry(comm, thread__comm_list(thread), list) {
+-		if (comm->exec)
++		if (comm->exec) {
++			up_read(thread__comm_lock(thread));
+ 			return comm;
++		}
+ 		second_last = last;
+ 		last = comm;
+ 	}
++	up_read(thread__comm_lock(thread));
+ 
+ 	/*
+ 	 * 'last' with no start time might be the parent's comm of a synthesized
+@@ -233,8 +249,9 @@ struct comm *thread__exec_comm(struct thread *thread)
+ 
+ static int ____thread__set_comm(struct thread *thread, const char *str,
+ 				u64 timestamp, bool exec)
++	EXCLUSIVE_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+-	struct comm *new, *curr = thread__comm(thread);
++	struct comm *new, *curr = __thread__comm(thread);
+ 
+ 	/* Override the default :tid entry */
+ 	if (!thread__comm_set(thread)) {
+@@ -285,8 +302,9 @@ int thread__set_comm_from_proc(struct thread *thread)
+ }
+ 
+ static const char *__thread__comm_str(struct thread *thread)
++	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+-	const struct comm *comm = thread__comm(thread);
++	const struct comm *comm = __thread__comm(thread);
+ 
+ 	if (!comm)
+ 		return NULL;
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index cd574a896418..56e08c8ae005 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -236,14 +236,15 @@ static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread
+ 	return &RC_CHK_ACCESS(thread)->namespaces_lock;
+ }
+ 
+-static inline struct list_head *thread__comm_list(struct thread *thread)
++static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
+ {
+-	return &RC_CHK_ACCESS(thread)->comm_list;
++	return &RC_CHK_ACCESS(thread)->comm_lock;
+ }
+ 
+-static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
++static inline struct list_head *thread__comm_list(struct thread *thread)
++	SHARED_LOCKS_REQUIRED(thread__comm_lock(thread))
+ {
+-	return &RC_CHK_ACCESS(thread)->comm_lock;
++	return &RC_CHK_ACCESS(thread)->comm_list;
+ }
+ 
+ static inline u64 thread__db_id(const struct thread *thread)
 -- 
-2.47.2
+2.49.0.1204.g71687c7c1d-goog
 
