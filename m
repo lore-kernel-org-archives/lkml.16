@@ -1,77 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC921362;
-	Thu, 29 May 2025 19:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299FA1F19A;
+	Thu, 29 May 2025 19:21:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748546386; cv=none; b=aiX441Co29NAhxiC3pqETFK5NNJ5US1nz37fe5S6s7y/ZlNgUng95FpOwOMY/xsclHUTyQY+m3LFm6BceFGmUPltnZUKoFbjg/FBGkIrUb4U+5RDzS/tFwtH4/6MwRAPkTGuUJvfhmYGBgPF++uY33P4wPpU2mvEKXyse/nIeIw=
+	t=1748546472; cv=none; b=k8pGLarmKvBYiQ8/JrkfYLkIkbEhAKcYeMG+AVwEBbfQktNyGPWk15pFpOZFsq38t5wTW4eI7L27OCXnQ3WttEp12uHa+q1k9CLJGlUYOHJ5Vdj3OVf6EQxyRjeLilSCv0CtMOhBfqLCxESAozLYB6Zo/7pdehtUbJHt3h5pNd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748546386; c=relaxed/simple;
-	bh=gjCiKDdfaEWII9jOdJ9+wKKH4AcrdcHQPnXnJ+qyn2w=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Wndhn+l9Di12I1WBbyXuXsLczVKqhTvTiECWmc4/Gx2XFEnUGlfYo4LEbnJ6AXJUcgDBtiO6hfVCyXs9IX0orM7xhRTH2GPunb895cHstgyL0mYhGNvmPKBeHjQKV7KCCNrwvfwhKIiFdhvJJn2Snc1WAL3AormB5TJjfwezBqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=00f82g2F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="00f82g2F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34D2C4CEE7;
-	Thu, 29 May 2025 19:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748546385;
-	bh=gjCiKDdfaEWII9jOdJ9+wKKH4AcrdcHQPnXnJ+qyn2w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=00f82g2FzzQZob2qEoFw/5W2wOvRfGP8OoYIQzmLEDYTfzn6QlXym2gM0VV8PTfdL
-	 9ww7NfRt1ksYE/cB6Du0hVhBnibmZyhRSggoqCBKjbCNwbmaOIyZCs1Yrm0OWksuFC
-	 G/oU5eQ4h0Y+Bo0/wyy7hbttbe5uNk8S+Clnv+t4=
-Date: Thu, 29 May 2025 12:19:44 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Pu Lehui <pulehui@huaweicloud.com>
-Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, pulehui@huawei.com
-Subject: Re: [PATCH v1 2/4] mm: Expose abnormal new_pte during move_ptes
-Message-Id: <20250529121944.3612511aa540b9711657e05a@linux-foundation.org>
-In-Reply-To: <20250529155650.4017699-3-pulehui@huaweicloud.com>
-References: <20250529155650.4017699-1-pulehui@huaweicloud.com>
-	<20250529155650.4017699-3-pulehui@huaweicloud.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748546472; c=relaxed/simple;
+	bh=6/7lIB6NeUWu/dHkq3BraSNFkiBew2d2Z+vXCwbFpmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YNczyK4uJ8RuKoEsSeUQcx+moddDlO7GFIgU5XYJgsXa6R2m0HPirIPKsqD6DlAb8l/pYnrq3bvk6w7YYvP6JzSBtSrqYdMywEZnoQCRT4Q2oM73gBd8422eOFHrDsvGXItMPxja62GdjEGG4YXBmpNol6+952M2xQS/URgY7RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F725C4CEE7;
+	Thu, 29 May 2025 19:21:09 +0000 (UTC)
+Date: Thu, 29 May 2025 15:22:11 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, nvdimm@lists.linux.dev
+Cc: Dan Williams <dan.j.williams@intel.com>, Shiyang Ruan 
+ <ruansy.fnst@fujitsu.com>, "Darrick J. Wong" <djwong@kernel.org>, Ross 
+ Zwisler <zwisler@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2] fsdax: Remove unused trace events for dax insert mapping
+Message-ID: <20250529152211.688800c9@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 29 May 2025 15:56:48 +0000 Pu Lehui <pulehui@huaweicloud.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> From: Pu Lehui <pulehui@huawei.com>
-> 
-> When executing move_ptes, the new_pte must be NULL, otherwise it will be
-> overwritten by the old_pte, and cause the abnormal new_pte to be leaked.
-> In order to make this problem to be more explicit, let's add
-> WARN_ON_ONCE when new_pte is not NULL.
-> 
-> ...
->
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -237,6 +237,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
->  
->  	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
->  				   new_pte++, new_addr += PAGE_SIZE) {
-> +		WARN_ON_ONCE(!pte_none(*new_pte));
-> +
->  		if (pte_none(ptep_get(old_pte)))
->  			continue;
->  
+When the dax_fault_actor() helper was factored out, it removed the calls
+to the dax_pmd_insert_mapping and dax_insert_mapping events but never
+removed the events themselves. As each event created takes up memory
+(roughly 5K each), this is a waste as it is never used.
 
-We now have no expectation that this will trigger, yes?  It's a sanity
-check that patch [1/4] is working?  Perhaps VM_WARN_ON_ONCE() would be
-more appropriate.  And maybe even a comment:
+Remove the unused dax_pmd_insert_mapping and dax_insert_mapping trace
+events.
 
-	/* temporary, remove this one day */
+Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
 
+Fixes: c2436190e492 ("fsdax: factor out a dax_fault_actor() helper")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/all/20250529150722.19e04332@gandalf.local.home/
+
+- Removed dax_insert_mapping too
+
+ include/trace/events/fs_dax.h | 78 -----------------------------------
+ 1 file changed, 78 deletions(-)
+
+diff --git a/include/trace/events/fs_dax.h b/include/trace/events/fs_dax.h
+index 86fe6aecff1e..76b56f78abb0 100644
+--- a/include/trace/events/fs_dax.h
++++ b/include/trace/events/fs_dax.h
+@@ -102,54 +102,6 @@ DEFINE_EVENT(dax_pmd_load_hole_class, name, \
+ DEFINE_PMD_LOAD_HOLE_EVENT(dax_pmd_load_hole);
+ DEFINE_PMD_LOAD_HOLE_EVENT(dax_pmd_load_hole_fallback);
+ 
+-DECLARE_EVENT_CLASS(dax_pmd_insert_mapping_class,
+-	TP_PROTO(struct inode *inode, struct vm_fault *vmf,
+-		long length, pfn_t pfn, void *radix_entry),
+-	TP_ARGS(inode, vmf, length, pfn, radix_entry),
+-	TP_STRUCT__entry(
+-		__field(unsigned long, ino)
+-		__field(unsigned long, vm_flags)
+-		__field(unsigned long, address)
+-		__field(long, length)
+-		__field(u64, pfn_val)
+-		__field(void *, radix_entry)
+-		__field(dev_t, dev)
+-		__field(int, write)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = inode->i_sb->s_dev;
+-		__entry->ino = inode->i_ino;
+-		__entry->vm_flags = vmf->vma->vm_flags;
+-		__entry->address = vmf->address;
+-		__entry->write = vmf->flags & FAULT_FLAG_WRITE;
+-		__entry->length = length;
+-		__entry->pfn_val = pfn.val;
+-		__entry->radix_entry = radix_entry;
+-	),
+-	TP_printk("dev %d:%d ino %#lx %s %s address %#lx length %#lx "
+-			"pfn %#llx %s radix_entry %#lx",
+-		MAJOR(__entry->dev),
+-		MINOR(__entry->dev),
+-		__entry->ino,
+-		__entry->vm_flags & VM_SHARED ? "shared" : "private",
+-		__entry->write ? "write" : "read",
+-		__entry->address,
+-		__entry->length,
+-		__entry->pfn_val & ~PFN_FLAGS_MASK,
+-		__print_flags_u64(__entry->pfn_val & PFN_FLAGS_MASK, "|",
+-			PFN_FLAGS_TRACE),
+-		(unsigned long)__entry->radix_entry
+-	)
+-)
+-
+-#define DEFINE_PMD_INSERT_MAPPING_EVENT(name) \
+-DEFINE_EVENT(dax_pmd_insert_mapping_class, name, \
+-	TP_PROTO(struct inode *inode, struct vm_fault *vmf, \
+-		long length, pfn_t pfn, void *radix_entry), \
+-	TP_ARGS(inode, vmf, length, pfn, radix_entry))
+-
+-DEFINE_PMD_INSERT_MAPPING_EVENT(dax_pmd_insert_mapping);
+-
+ DECLARE_EVENT_CLASS(dax_pte_fault_class,
+ 	TP_PROTO(struct inode *inode, struct vm_fault *vmf, int result),
+ 	TP_ARGS(inode, vmf, result),
+@@ -194,36 +146,6 @@ DEFINE_PTE_FAULT_EVENT(dax_load_hole);
+ DEFINE_PTE_FAULT_EVENT(dax_insert_pfn_mkwrite_no_entry);
+ DEFINE_PTE_FAULT_EVENT(dax_insert_pfn_mkwrite);
+ 
+-TRACE_EVENT(dax_insert_mapping,
+-	TP_PROTO(struct inode *inode, struct vm_fault *vmf, void *radix_entry),
+-	TP_ARGS(inode, vmf, radix_entry),
+-	TP_STRUCT__entry(
+-		__field(unsigned long, ino)
+-		__field(unsigned long, vm_flags)
+-		__field(unsigned long, address)
+-		__field(void *, radix_entry)
+-		__field(dev_t, dev)
+-		__field(int, write)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = inode->i_sb->s_dev;
+-		__entry->ino = inode->i_ino;
+-		__entry->vm_flags = vmf->vma->vm_flags;
+-		__entry->address = vmf->address;
+-		__entry->write = vmf->flags & FAULT_FLAG_WRITE;
+-		__entry->radix_entry = radix_entry;
+-	),
+-	TP_printk("dev %d:%d ino %#lx %s %s address %#lx radix_entry %#lx",
+-		MAJOR(__entry->dev),
+-		MINOR(__entry->dev),
+-		__entry->ino,
+-		__entry->vm_flags & VM_SHARED ? "shared" : "private",
+-		__entry->write ? "write" : "read",
+-		__entry->address,
+-		(unsigned long)__entry->radix_entry
+-	)
+-)
+-
+ DECLARE_EVENT_CLASS(dax_writeback_range_class,
+ 	TP_PROTO(struct inode *inode, pgoff_t start_index, pgoff_t end_index),
+ 	TP_ARGS(inode, start_index, end_index),
+-- 
+2.47.2
 
