@@ -1,124 +1,105 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0474A2629C;
-	Thu, 29 May 2025 22:55:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF5F20B806;
+	Thu, 29 May 2025 23:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748559341; cv=none; b=YBZoukVsAEw/XiZD+py6a8WfmQWVec8byYWaKocBXf+QLl0PzazYVDh7UxFyoRukytJ96zRZQsVt0mu5XzIpNJpT1rqDXAl6JWsrRtfmIynMtuSwgu60GpAbaUvVLD1uQmAmrpOT5m8hRvyHrtrC6usstlnKHD3+DVlVUuDj1VQ=
+	t=1748559785; cv=none; b=npovl6umFGXSFE91PulDmyr7rWvdVc8H2/uWxmZd7WzNNJe8DfrsmUFVXueDCsK56g+SRNFm3OWqooLbOTTbHhwj0VwJjrv2VGusq6SGGFxFiFpnXRmxU3/actwgz1epnISVyF6ux7OPgzBqfQ1Dlaj6z/c3KJh/6yuYb61+Y5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748559341; c=relaxed/simple;
-	bh=w3gjafHGRQ0pUvL/vFa3B9mNuehw++fg/Uf9FLi1Ovw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gnDIbkkWWPNOhY8UJgd+4qF3fgMBhgDFoahPoxm4dUdhmURJJBO7atFjbLODHt1n0YJcuYo8dAxEnoplHncbp1HIy4TCQ79PSVp/INeHzzb8EZQk0XfDZKFytSdf6cHa/HQYDDmx13AiAKLiQ/ORB0ENaqxQRC9k3OxNHDtECu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UvpJY80f; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748559785; c=relaxed/simple;
+	bh=6qhF68HE1ftdSgDFu+hBJobeV7v0fIYiQRZ+0S5XJnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVVWPWFpfL8El7KjMoJ5F50Z5YGiPBNLplj21CEyUO6eD/SJcrT74Z8e7+4UAeixaCaqf1Sr7fYs63phnrCZo6W6R++AzGnkLArX8868+Fc438h+E1iR7jTrSc4cUlWaU/MpYD58ycMHaQhI6rqX1ZtOIUIs7qg78VjbIMEwhpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CnVi6UAD; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvpJY80f"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3119822df05so1487971a91.0;
-        Thu, 29 May 2025 15:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748559339; x=1749164139; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIxlk/7XXpi/+G/vr1hpiAzjYKjdQamrqkoxioR8Y9w=;
-        b=UvpJY80feerxlj7HMSi2Bc0gFRIWZcF6OOgpAxV7Gh4AGGcISpB2/XT3bG0ABkWFSK
-         PFhCmrmCR/z7D+8v0dFeUFYEvIVks/d0MH1qGeDw8cyRVDzKfXGP9jKy6Wfzj6uj1zFb
-         Xq+fzCfMUDM8Yo/eQDCEShNtPD7rIIsp0JpC04wtlXuSDE5YALBdCJfCvnig73/JCtEj
-         KgRzm5clIIeGtZ4azMg6LxFOp243+sUjY3ZqVmiX7t+2SP+uMkRCx391ioH24/HBw8zZ
-         NclpfLCW41zysgD2DWtcbL/GF2wrZV/zAjMhMOpHgFGy9KH7ElPiSnes6+EkewHU3Fng
-         GOXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748559339; x=1749164139;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OIxlk/7XXpi/+G/vr1hpiAzjYKjdQamrqkoxioR8Y9w=;
-        b=QVym5CQPCj1IcTSUO+Llca0zbEO0eq1GNEmubDf1oOhT8y5Vq1681cdJGc/V4Pa6Pz
-         4o4k9w/cqQcVr2F0eGMl/rRTylYKkNlrp0ZExPucUw9rxSgdnlrgnG3/yYJc4GhW3omp
-         nDMClo1AfJLT7zCKgdb2SzYW0rhGOBKOm4NYp/I0uKBfBsWKq5jmQjQ9KInnhrxlwUD6
-         BbWf08O957+ksBXEP855Zqr4NZxUCwXiN2hW6DKwJPB0wivj0BocpG/cWAg2p1fHIgx4
-         TZxMxZATztsm/zI/T9H9WxGvL1QNY1t964LyJLwwqBlxk8x1oUR+1BA6jYdK7jYTl2LM
-         GW/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVoEDQrxabtcKT7BWQ5orxbEgB241hQZkZm/ZhKffaqEvNd23gwQrFb4iuDITQfn9da4Efm+44s++yvBpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHq5DpTLXGVqTv5iguILv5XSOjmS4BMd1cGdmj98B1nwt72XOs
-	0c5HYLf9P1eyS3v61nBsVo3+WnXsoK7NXIqpeM0iZObplCiEMjLkWMuC4c7skP8cBA==
-X-Gm-Gg: ASbGncsbol85XjxZWKYS0+iksRgPy6tjGmYGlJEp60Ale7plrhaJlALjNDNyjWRFZp7
-	i2QU4rcUC40fIEMg/9trYM10S/E5XJLYgw14BK0X7o8kj93/Xcki/6FV/5HlYgUfUn2bTgh6zif
-	RmT9SpsUfDjhBAToz9+JN9BlB4+cDyNUdAdKYz1Ge38PcqxPZhaQo0gX0ObMPrsJs6sorwbtxi8
-	KUreEMM3kYO34mnf0TdeI36TYICtkb7VfBgR6ZxtgWSz15V9JHD5soctG1EAQ44ONPq1IvTNJQd
-	5MtdV7OBSsMBd5upDRoAU7FckNA9BRX/ZLnwDDRsRj5TZ6vA2OsAVdaUH1i+9VhclZ5j5EGNc+I
-	s0gn9jWxTObZPqphCgcuK
-X-Google-Smtp-Source: AGHT+IGwswwx4/7cqqjPlzjnzsL4rSpWVuAaIUB0fvfsDxYPUnmFVM673MKZZmayYhpfGUR64pMkFQ==
-X-Received: by 2002:a17:90b:3c8a:b0:311:f684:d3d9 with SMTP id 98e67ed59e1d1-3124173bcc7mr2183803a91.18.1748559339098;
-        Thu, 29 May 2025 15:55:39 -0700 (PDT)
-Received: from samee-VMware-Virtual-Platform.. ([103.211.112.78])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e3219cdsm49009a91.41.2025.05.29.15.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 15:55:38 -0700 (PDT)
-From: Sameeksha Sankpal <sameekshasankpal@gmail.com>
-To: skhan@linuxfoundation.org,
-	kees@kernel.org,
-	luto@amacapital.net,
-	wad@chromium.org,
-	shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sameeksha Sankpal <sameekshasankpal@gmail.com>
-Subject: [PATCH v3] selftests/seccomp: Fix indentation and rebase error logging patch
-Date: Fri, 30 May 2025 04:25:24 +0530
-Message-ID: <20250529225525.12494-1-sameekshasankpal@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <202505280933.33EEDC4DC8@keescook>
-References: <202505280933.33EEDC4DC8@keescook>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CnVi6UAD"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DC05F40E01A3;
+	Thu, 29 May 2025 23:02:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id atm2818uktFj; Thu, 29 May 2025 23:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748559768; bh=wPDpKpHJ7VOTju4owFMc/rz0TIuDFKjFr21HY0fPmN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CnVi6UADBW/LUL0mVSlUWvUhj+r8P4xxoh+dfN4fwDQuFXhnsM7PqC8uTe7wBVk9g
+	 muXHC4nMiJvX6nbMX0JWIvbpSHouezBAJ+uf6gh0poMMYTAjqI6h0lhusLuOj/CqJ2
+	 ow2kamCczrJ0QNtJe5MNjEUQ/FADWLXRMBLVgT+mNt+N2cvMfmmglRNGe/Cp+bBHHa
+	 KV5JwsaSdDDmet8AVRIjz6q2TzNKbFv4Xtf3d7ouUxkjBt4ubqbZpJoJmzhulllTTo
+	 5pvHGRYlxhBzNHqOS4ukXKrtJivt/c0OLHedwIPZI2lmNk8pZzSyo8hiFcZtv3Mjop
+	 kqBsoC+uXpmfXD7UZDDfr/5aO+Kpk/h6yZPaU84kPPQra+xpGr42dx/l2N098mqJue
+	 pJ7ibnddghb9MtvdVpZFeuFk79G/ELE1NsN6BLoEw76vhDsa1x5YE/YUgQW+eskwmm
+	 ALIzP8B/Dd6Yk3ZhfDjfZ8LCWIBVxT0Z14PUzVgecbORVmafl/H0qAGkQLZH0xS2R9
+	 urfgr2AOB5G/tuTZtNOTcX31N3UMggPYHhKqEnyO7H6Q0K0t/mfu+Td52V8yWvivhT
+	 CvMUM+tTyZ22IR/TXDAAvc4uxj8kvluapJ6cNgmuMs6Yiv+f5UP4L01L/flM1Y+0rT
+	 UOweecLjIrwKch7lEsNehDqE=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7685C40E016E;
+	Thu, 29 May 2025 23:02:39 +0000 (UTC)
+Date: Fri, 30 May 2025 01:02:33 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/sev/vc: fix efi runtime instruction emulation
+Message-ID: <20250529230233.GEaDjniaXGlxAU0NzA@fat_crate.local>
+References: <20250527144546.42981-1-kraxel@redhat.com>
+ <20250527162151.GAaDXmn8O3f_HYgRju@fat_crate.local>
+ <77hywpberfkulac3q3hpupdmdpw2xbmlvzin4ks7xypikravkj@xjpi7gqscs6a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <77hywpberfkulac3q3hpupdmdpw2xbmlvzin4ks7xypikravkj@xjpi7gqscs6a>
 
-Rebase the error logging enhancement for get_proc_stat() against the upstream seccomp tree with proper indentation formatting.
+On Wed, May 28, 2025 at 09:38:24AM +0200, Gerd Hoffmann wrote:
+> Use case is coconut-svsm providing an uefi variable store and edk2
+> runtime code doing svsm protocol calls to send requests to the svsm
+> variable store.  edk2 needs a caa page mapping and a working rdmsr
+> instruction for that.
+> 
+> Another less critical but useful case is edk2 debug logging to qemu
+> debugcon port.  That needs a working cpuid instruction because edk2
+> uses that to figure whenever sev is active and adapt ioport access
+> accordingly.
 
-Suggested-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Sameeksha Sankpal <sameekshasankpal@gmail.com>
----
-v1 -> v2:
-- Used TH_LOG instead of printf for error logging  
-- Moved variable declaration to the top of the function
-- Applied review suggestion by Kees Cook
+Yeah, I'd like for those justifications be in the commit messages please.
 
-v2 -> v3:
-- Rebased against upstream seccomp tree (was previously against v1)
-- Fixed indentation to use tabs instead of spaces
-- Used scripts/checkpatch.pl to check the patch for common errors
-- Removed the blank line beforeS S-o-b added in v2
+> > We'd like to add them to our test pile.
+> 
+> That is a bit difficult right now because there are a number of pieces
+> which need to fall into place before this is easily testable.  You need:
+> 
+>  * host kernel with vmplanes patch series (for snp vmpl support).
+>  * coconut svsm with uefi variable store patches.
+>  * edk2 patches so it talks to svsm for variable access.
+>  * igvm support patches for qemu.
+> 
+> Hope I didn't forgot something ...
 
- tools/testing/selftests/seccomp/seccomp_bpf.c | 5 +++++
- 1 file changed, 5 insertions(+)
+So why are you sending those for the kernel now is so many other things are
+still moving?
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 61acbd45ffaa..dbd7e705a2af 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -4508,9 +4508,14 @@ static char get_proc_stat(struct __test_metadata *_metadata, pid_t pid)
- 	char proc_path[100] = {0};
- 	char status;
- 	char *line;
-+	int rc;
- 
- 	snprintf(proc_path, sizeof(proc_path), "/proc/%d/stat", pid);
- 	ASSERT_EQ(get_nth(_metadata, proc_path, 3, &line), 1);
-+	rc = get_nth(_metadata, proc_path, 3, &line);
-+	ASSERT_EQ(rc, 1) {
-+		TH_LOG("user_notification_fifo: failed to read stat for PID %d (rc=%d)", pid, rc);
-+	}
- 
- 	status = *line;
- 	free(line);
+What if something in those things change? Then you need to touch those
+again...
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
