@@ -1,80 +1,119 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EE7D2FF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FC32594
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748476867; cv=none; b=l5XwyYGcI2WmUSX2c5Md8y8Ak9HBCsLxdyYAQLldcW1q2ORE66amLQxNtaIzXvt+04Z6nHOXNbTTH6mdX4t4ZZZ1skmdUk4jwPk625QTnq9EStCQGhx6FtIr1UT/GL+lfMfqDj0lr6S1lYOZfukBJ0ZuEHDxBchwrIp55NW1cLI=
+	t=1748476905; cv=none; b=TeXKxen1fLUAtkm/ztsQL96l+692107RBBKpBsFBe2FEwif7eSQZlLJkyO/4h35L3AiarVhuZx2zsStdVSp2zuhw4JYdSRRltyUXiqX6G4lvfNdCLVPQKidNpxHRB6wlPjQJiOHmit4YBmPmimhCzElGIlkeozxWSAJD1L4Q9j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748476867; c=relaxed/simple;
-	bh=Fa0O1NjH1sjPtlGGyFIGirvKwYKd98rA44oZchWQu5s=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Yq6Gcs1eiIIC6IwRYbMvimanEYPe3YYKScMrM3UUm09tb1hLSUjc9qmYQ4innJzASAGC4/b+N6TgFy5XATECwJtQba4GS9auO8DtC8khK0K0x1F9Na5bbQYNQLiOhlI4BHPZr2XeBNFYjEu/bknwpWFEmiD3GmK8VOcC+fG8iyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b3a6c37e2so30347639f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:01:05 -0700 (PDT)
+	s=arc-20240116; t=1748476905; c=relaxed/simple;
+	bh=T3juE1hOUm6DFe5iT/pHd3UmRK7XfYewH+PUs5EwYN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKlHcPH+I7HP2uCBIeFdvfC9GA45sUeTB88NAmzclAEIV4YT0xhsM05yVzAL4ikaq9A8kge+FtqPJhVMX2lkcQoB/DaV+u1qS4L0/sQmW636arc9cqoCiMEmmrKkaumdPI/0cAWgBGsl0e5MhScwdZClTz9ibOUyuEIAG9Ug30Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=DV50x740; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="DV50x740"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c27df0daso225871b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1748476903; x=1749081703; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HHrYl8KlTDJV9fZehVT6wNYFoGVLZmH/YM7SP1Otey4=;
+        b=DV50x740ZiLdVCWqwMXcv60Mn8RJ2GTIDm9RssFMLLKlsTVJ7qvZwzKSQvTUMFKcDm
+         pX9NFcvIoO6gQTqCB/XXC+I4YTZDJf2DJaP1h2NtUzIB009Rr8fxhRLWX0mbOhsFihZJ
+         Ipefk4NVQBOSKfNa6+g3fpZlkts8X2YOoSY5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748476865; x=1749081665;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1748476903; x=1749081703;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=stvlnMbcdcBYZLpd3w6+KPyvEkXRg2zxOy6ZStT7IJM=;
-        b=E3iD3lgPLwn7an3NY8XruKLB1RVl8CmJO/R6Si8IGhcN+q2KTi4euB3DnNHGwwumgj
-         wUlSN0L3QFehk9XSESXnc238GWMw2V5gdTHzN931zRWZGvacs+kxuUXLOOj+t/BfJhF4
-         7oVp0GoAufLEK5H96j2VdMHeU6TYKBBxihRIDiEuYffgMwFfJRGT6PA1Ok583gIKnEuX
-         fn/2GPJTACBqAp6CSx3DmNzj6y7Fd2Lmm8sQPYTJJIrnQ+HlT4kPOei5OZ1takey9Hq7
-         U3JXJVc6DlpGNVXnt1+IEFyYtwnqJF54y4z9qgg/6+sS1HuyV+WGvzvqPJrOI/tSRiDd
-         masA==
-X-Forwarded-Encrypted: i=1; AJvYcCWCInt/OKlN5QgyYnnwMLcPzSClkZlFz5PmuQceP5THJN1xzZXitXrxmdnFQauQUvgkVteGqyPulhgbKtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzTPRBR3qwUUSvYGT48xzRH4AkehZDCA/9bqah4UYf/SlnWWnm
-	BNOMD0OBBk5yjycVuxyDjILd7BkG+HZoYm98tMn/j9zcWQLEhJ1vCxDZDEqy09p8y03mF7Bc4vt
-	3Pqgg/7tIWLIqJpJNQnRkCMvUptTFbCKj0ozxEeVV3Q98cLq92kM6vCydTGc=
-X-Google-Smtp-Source: AGHT+IE9VLpPsp2Q+7yXbHW9kBedtEHr+eCFJ1zkMmpIBTT0dGaXXX/zJ9vzHwbxhM7XEMjyiLyurnHeieiKw8oYYB24XJQopFoa
+        bh=HHrYl8KlTDJV9fZehVT6wNYFoGVLZmH/YM7SP1Otey4=;
+        b=oiSwbXjfuI2i81PCW6VBvw8onPUWz8POyDq4eZokPreqoXgW71LhhVKe/hfefVID3T
+         ixs3RUzK3vmST6MALJJKwxVOxkyx9aGy58JPi4S6HNajpCPSHWvkVWKbXUppGs1M4UlI
+         T+f3tE0FOszRf60yi6erSY/odb9QnbwBEEkh1iuKYufUbSSvf0LPDg2zrtIVN3kmFGD5
+         6kntn4GhDXB1x9l3Jt7s6ba+ly4ludPiNjWjlydezWzmvNt9ls1U44Q8lk69mnIRqFSx
+         HT3sD+VY0ZKnNBEvvlifD9n+edcJ+tHiOeFEFhy7wxRUpIvRdGBITxVsnP7sVr8LKD34
+         4Xbw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3K7FNGnrNV360NW+BI9soIPSuHmZ3PsSJjV41sFGcPS+uKqwRc/QIum4dlg11wEPLKmW5LIrDkCx/ndA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkF3kiksyZkVksN/kx2dRVqqlBW5zomx8VkFf1vABYZG6i+POr
+	gIrY2cmYJifh5SWirjpnm9avVWw5eBNPH/LjHoegoUcfjkheydgrwE1dngeS3+8EwWg=
+X-Gm-Gg: ASbGncuLzme8rd4PSUabYCa53hsXqm3UqJI/KcCctKJwvAkW6PBiyVoEmuzbwgec2IX
+	9EbIjaOznr2E4lx0iFRXYwwNs2xHrbNbfkj+WjwC5gO1OetlzqwuMpfNkHxLI/SINP5Z1zoRykx
+	8+/C5QnY54bPOFT9GsXKzNBU3AXUJ82/IucJK5UulXw66Q1PdJtScorJMjPkMOiW6ULmfoJMl6I
+	ZOsugwYvIRqRGLNTDdXd2L6H8mB0t23QXdPTOTins7m8xGzJNtrhS7uoG5RTbqVPIZ0v+QNzoBt
+	jNO6rcUGqTm2tCLg+ont/fo4WJHNvT6z40Hb2RHUoJ31XjGUsG5vCZs8vYnFiG7AW/vEewnaI1C
+	UOHhVb4K+skybKITuxb8i5LU=
+X-Google-Smtp-Source: AGHT+IGh6QFynq+YuUMFZqTG/73Ufan/2rkYRYNy6qC4rW91iir86PkvuJN/O02OksGF7UPuPg4WFQ==
+X-Received: by 2002:a05:6a00:1407:b0:742:a77b:8c3 with SMTP id d2e1a72fcca58-747b0c72ba6mr275550b3a.4.1748476901844;
+        Wed, 28 May 2025 17:01:41 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafaebsm165546b3a.87.2025.05.28.17.01.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 17:01:41 -0700 (PDT)
+Date: Wed, 28 May 2025 17:01:38 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: niklas.soderlund@ragnatech.se, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, richardcochran@gmail.com, netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: ethernet: rtsn: Fix a null pointer dereference in
+ rtsn_probe()
+Message-ID: <aDej4pD_ZzB8ZQdP@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	niklas.soderlund@ragnatech.se, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, richardcochran@gmail.com, netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+References: <20250524075825.3589001-1-haoxiang_li2024@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4c08:b0:85b:3f1a:30aa with SMTP id
- ca18e2360f4ac-86cbb8edda7mr2276380539f.9.1748476864762; Wed, 28 May 2025
- 17:01:04 -0700 (PDT)
-Date: Wed, 28 May 2025 17:01:04 -0700
-In-Reply-To: <00000000000039e8e1061bc7f16f@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6837a3c0.a70a0220.1765ec.017e.GAE@google.com>
-Subject: Re: [syzbot] [net?] possible deadlock in do_ip_setsockopt (4)
-From: syzbot <syzbot+e4c27043b9315839452d@syzkaller.appspotmail.com>
-To: alibuda@linux.alibaba.com, davem@davemloft.net, dsahern@kernel.org, 
-	dust.li@linux.alibaba.com, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, kuniyu@amazon.com, linux-kernel@vger.kernel.org, 
-	lkp@intel.com, netdev@vger.kernel.org, oe-lkp@lists.linux.dev, 
-	oliver.sang@intel.com, pabeni@redhat.com, schnelle@linux.ibm.com, 
-	srikarananta01@gmail.com, syzkaller-bugs@googlegroups.com, 
-	wenjia@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250524075825.3589001-1-haoxiang_li2024@163.com>
 
-syzbot suspects this issue was fixed by commit:
+On Sat, May 24, 2025 at 03:58:25PM +0800, Haoxiang Li wrote:
+> Add check for the return value of rcar_gen4_ptp_alloc()
+> to prevent potential null pointer dereference.
 
-commit 752e2217d789be2c6a6ac66554b981cd71cd9f31
-Author: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Mon Apr 7 17:03:17 2025 +0000
+Was the null deref observed in the wild? Asking because I am
+wondering if this is clean up instead of a Fixes ?
 
-    smc: Fix lockdep false-positive for IPPROTO_SMC.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17cd6bf4580000
-start commit:   88d324e69ea9 Merge tag 'spi-fix-v6.14-rc7' of git://git.ke..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27515cfdbafbb90d
-dashboard link: https://syzkaller.appspot.com/bug?extid=e4c27043b9315839452d
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12b13e98580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131d9c4c580000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: smc: Fix lockdep false-positive for IPPROTO_SMC.
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> Fixes: b0d3969d2b4d ("net: ethernet: rtsn: Add support for Renesas Ethernet-TSN")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> ---
+>  drivers/net/ethernet/renesas/rtsn.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/renesas/rtsn.c b/drivers/net/ethernet/renesas/rtsn.c
+> index 6b3f7fca8d15..f5df3374d279 100644
+> --- a/drivers/net/ethernet/renesas/rtsn.c
+> +++ b/drivers/net/ethernet/renesas/rtsn.c
+> @@ -1260,6 +1260,10 @@ static int rtsn_probe(struct platform_device *pdev)
+>  	priv->pdev = pdev;
+>  	priv->ndev = ndev;
+>  	priv->ptp_priv = rcar_gen4_ptp_alloc(pdev);
+> +	if (!priv->ptp_priv) {
+> +		ret = -ENOMEM;
+> +		goto error_free;
+> +	}
+>  
+>  	spin_lock_init(&priv->lock);
+>  	platform_set_drvdata(pdev, priv);
+> -- 
+> 2.25.1
+> 
+> 
