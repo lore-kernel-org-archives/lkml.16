@@ -1,115 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846C1A55
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104F3A55;
+	Thu, 29 May 2025 10:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748513453; cv=none; b=cUwQxjByRg1C4yM4P/kgoJJBpmpjrMan81oTZtCpOn/SYsG9/zkhmUtoArFc+biP/0lzlQW+cu9xf9ac26jAysiQjWRRSXyRb1YUKm/O4n6VihNLGoEU/TAdo9FcNy5LDkl3ZSzRLBq9Sx1zKK+uV4g0vE8wBMxgmz9GoETcyTQ=
+	t=1748513498; cv=none; b=Eas8Vj+WtBkJL6Nzykv3g5Ytegg6zGoLCBoMrMCDTn43zhYu0A1w/lwekve8XBajH2+6srHBAB+thY3GedQT6A+V1oR+Ux6qgVha28r2gidMh0b1TwiucInskpMnIvwli9ynkdS/ydw9qj1eMYn1IZ511tsYdL9Rr+AglM4Mgfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748513453; c=relaxed/simple;
-	bh=2SPYYnFsmGwjObQFoYHVAiWE4pV7Oa7ae04lMbI5XuU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ezEQFzZrgA4ZHZ1bSLsUooJ2Xg5FEXS2qEkzA8jfGPos2YdBx+h/KipNrd2Vl2XqSOK++9lrDs9EszHhPcFLZ8irWHoin5VNcMgtS5lkshIg2vtc980k4bkd+mH2M5ilLrNikGx0fcfBIe29xRQi9LUc+c57YQ5aGxDBlc9DGbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUcB3wHU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUcB3wHU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE49EC4CEE7;
-	Thu, 29 May 2025 10:10:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748513453;
-	bh=2SPYYnFsmGwjObQFoYHVAiWE4pV7Oa7ae04lMbI5XuU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TUcB3wHUmCVqLoGVnAoDIV50ON/bLiJCsR/YyoPh8q7CfuBzyFrVehALmhf78uCzV
-	 3MyNyUkspKXSiCzx92+WJZ3JtuPxW9taxrrj7LacpOocaOg+e0REJQXBsEiNYFgRqK
-	 MQNXU0tCc7R49U4ijpM+RMpnlYRtvTAbvf6F21UtMBcbHNfsj0ShSXN/15SW3DsNI8
-	 LDPsdcQ8Ox4kuw1UkE64ztiRTl8vgOGyoF80CtAZhkHYMV3h9WP2y7gbdc8oLWiVuc
-	 A517vrwk+Q6hDegIBhp7pGWNJw+XhSc+Ox6gzvPUDWHWgnqE/NirNtwMHS8RYNbltR
-	 cDfHEOpDsz6Hg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uKaDq-001WiE-HB;
-	Thu, 29 May 2025 11:10:50 +0100
-Date: Thu, 29 May 2025 11:10:50 +0100
-Message-ID: <86bjrbenh1.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: James Morse <james.morse@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Ben Horgan <ben.horgan@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Shaopeng Tan <tan.shaopeng@fujitsu.com>
-Subject: Re: [PATCH v3] arm64: Add override for MPAM
-In-Reply-To: <86cybrenvx.wl-maz@kernel.org>
-References: <20250516102556.9688-1-xry111@xry111.site>
-	<86cybrenvx.wl-maz@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1748513498; c=relaxed/simple;
+	bh=n1ZSZRRIrTneaJFYpJvpb9/RGVcZ0hY1kPCFwceGKRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqcdyyvr6O1qaScbqi4I/k7vzvGsJhxJCPRypF3S5TfLPkGZcM1kSZe+ualpBiaNS4AfBA6/ZSW0X+ebCyl1LSQ4A4+5d/8ZPindSEwCRuX6V6sy+69ry37+MN8xKT0EX1jMkl9B1Z7nC6UsdqJf3ptXT7F8sraHJa7bXnnbQD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 69A492C051D4;
+	Thu, 29 May 2025 12:11:33 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 4D594244B9E; Thu, 29 May 2025 12:11:33 +0200 (CEST)
+Date: Thu, 29 May 2025 12:11:33 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org,
+	zeffron@riotgames.com, xiyou.wangcong@gmail.com,
+	kysrinivasan@gmail.com, code@tyhicks.com,
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com,
+	James.Bottomley@hansenpartnership.com,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	Jason Xing <kerneljasonxing@gmail.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Anton Protopopov <aspsk@isovalent.com>,
+	Jordan Rome <linux@jordanrome.com>,
+	Martin Kelly <martin.kelly@crowdstrike.com>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 1/3] bpf: Add bpf_check_signature
+Message-ID: <aDgy1Wqn7WIFNXvb@wunner.de>
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <20250528215037.2081066-2-bboscaccy@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: xry111@xry111.site, james.morse@arm.com, anshuman.khandual@arm.com, ben.horgan@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com, jeffbai@aosc.io, tan.shaopeng@fujitsu.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528215037.2081066-2-bboscaccy@linux.microsoft.com>
 
-On Thu, 29 May 2025 11:01:54 +0100,
-Marc Zyngier <maz@kernel.org> wrote:
-> 
-> So you would need to:
-> 
-> - nuke both MPAM and MPAM_frac in their respective ID registers,
->   ensuring that we effectively advertise the absence of MPAM
-> 
-> - either check for both fields wherever we currently refer only to
->   MPAM, as what we have today looks fragile, or unconditionally
->   override both ID fields if the HW actually implements MPAMv0.1.
-> 
->   I personally think the former is easier to implement.
-> 
-> Note that these would be two separate changes, and that you only need
-> to implement the first one to achieve what you're after for the
-> current level of MPAM support.
+On Wed, May 28, 2025 at 02:49:03PM -0700, Blaise Boscaccy wrote:
+> +	if (!attr->signature_maps_size) {
+> +		sha256((u8 *)prog->insnsi, prog->len * sizeof(struct bpf_insn), (u8 *)&hash);
+> +		err = verify_pkcs7_signature(hash, sizeof(hash), signature, attr->signature_size,
+> +				     VERIFY_USE_SECONDARY_KEYRING,
+> +				     VERIFYING_EBPF_SIGNATURE,
+> +				     NULL, NULL);
 
-To be completely clear, the change for this patch could be as simple
-as this:
+Has this ever been tested?
 
-diff --git a/arch/arm64/kernel/pi/idreg-override.c b/arch/arm64/kernel/pi/idreg-override.c
-index 836e5a9b98d03..bc57b290e5e7b 100644
---- a/arch/arm64/kernel/pi/idreg-override.c
-+++ b/arch/arm64/kernel/pi/idreg-override.c
-@@ -155,6 +155,7 @@ static const struct ftr_set_desc pfr1 __prel64_initconst = {
- 		FIELD("gcs", ID_AA64PFR1_EL1_GCS_SHIFT, NULL),
- 		FIELD("mte", ID_AA64PFR1_EL1_MTE_SHIFT, NULL),
- 		FIELD("sme", ID_AA64PFR1_EL1_SME_SHIFT, pfr1_sme_filter),
-+		FIELD("mpam_frac", ID_AA64PFR1_EL1_MPAM_frac_SHIFT, NULL),
- 		{}
- 	},
- };
-@@ -247,7 +248,7 @@ static const struct {
- 	{ "rodata=off",			"arm64_sw.rodataoff=1" },
- 	{ "arm64.nolva",		"id_aa64mmfr2.varange=0" },
- 	{ "arm64.no32bit_el0",		"id_aa64pfr0.el0=1" },
--	{ "arm64.nompam",		"id_aa64pfr0.mpam=0" },
-+	{ "arm64.nompam",		"id_aa64pfr0.mpam=0 id_aa64pfr1.mpam_frac=0" },
- };
- 
- static int __init parse_hexdigit(const char *p, u64 *v)
+It looks like it will always return -EINVAL because:
 
+  verify_pkcs7_signature()
+    verify_pkcs7_message_sig()
+      pkcs7_verify()
 
-HTH,
+... pkcs7_verify() contains a switch statement which you're not
+amending with a "case VERIFYING_EBPF_SIGNATURE" but which returns
+-EINVAL in the "default" case.
 
-	M.
+Aside from that, you may want to consider introducing a new ".ebpf"
+keyring to allow adding trusted keys specifically for eBPF verification
+without having to rely on the system keyring.
 
--- 
-Without deviation from the norm, progress is not possible.
+Constraining oneself to sha256 doesn't seem future-proof.
+
+Some minor style issues in the commit message caught my eye:
+
+> This introduces signature verification for eBPF programs inside of the
+> bpf subsystem. Two signature validation schemes are included, one that
+
+Use imperative mood, avoid repetitive "This ...", e.g.
+"Introduce signature verification of eBPF programs..."
+
+> The signature check is performed before the call to
+> security_bpf_prog_load. This allows the LSM subsystem to be clued into
+> the result of the signature check, whilst granting knowledge of the
+> method and apparatus which was employed.
+
+"Perform the signature check before calling security_bpf_prog_load()
+to allow..."
+
+Thanks,
+
+Lukas
