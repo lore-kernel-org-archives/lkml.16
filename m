@@ -1,306 +1,909 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022132.outbound.protection.outlook.com [40.93.195.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F241F19A;
-	Thu, 29 May 2025 17:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748541046; cv=none; b=Ix7izTlUlx9ANYm+VY12PFQ3XUKHGojThgTMS6yiIBT/wmFZ27wGR3uyFA3ktGi2/fC1ptXGubtAgKaJKfLUCEsI2tPj9jP3+GctvN19LmgMcpee4TvcL6tWfF5v89VNI54h4C7giC8T2lnVBFl8dpJrRJ1NtO9YSbdcLBS01DM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748541046; c=relaxed/simple;
-	bh=+s2Cur19DP9hB0WYfCgKF5nOFgrmQPEhk9aC8V7MzFk=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=gJkz4z6d+yV3AEoc5AXxh5fVnDkYyJvQaeGN9122+0k0LWUsC+8temKYvpAMXFxVm2KZUG01aEBjLl6Oc5I/XZ6lVcRgpiP+2olSSqzMFTFA6JH/RKmFIYkFAzm0ppQIrkTwzZKx6C2EsNoCmJEiPPQNDOFnkr7qce03I/pgwm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=dBx3c09U; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0900322FDE6
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.132
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748541050; cv=fail; b=RZvJ+g3KjHivhRlzRDr49eTmNWFuAOo49pIXy8eqzbAeuhPpSud6tTp/lgaWSj9Gc+5LZipUt5+r8pub8MecEoqziTa9wMicP2MC4S6zbZS3adDvcrthKF7NeOivYS2KZqT5scWmyyWk0zPGd/uDNbxAeFUgSSim0orI1EM7DeQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748541050; c=relaxed/simple;
+	bh=JZ7JFDpHUNz2EzBwHLi5Aga14K674V9DgYrgdOH27NY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z2e3Yn5FKrPBKsLyDhuZwfhz0KkvyPj04NTj9clv8O5F66+ORbpHO1BVotWiDjcQvkGZyRnHdbucmqqQPNEV81Uo8/AEirq3eKFPfUKXc33ZJ6Upf72kRlrA/lRyy2y66nlsiubVw/xGZYWZR4DpWPLD345n7xAoF7qdSMExp+Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=TrBpkPfs; arc=fail smtp.client-ip=40.93.195.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dBx3c09U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1748541040;
-	bh=+s2Cur19DP9hB0WYfCgKF5nOFgrmQPEhk9aC8V7MzFk=;
-	h=Message-ID:Subject:From:To:Date:From;
-	b=dBx3c09UXp2LyfnEPP6+00AhTMrROQG5Br1oDmpWhQCqbQsD1qudg0k0ZQp07tbre
-	 qA+hm9Pzeq7IAnmCqkyJtJ4mi4dPraX2J/87yodH+UKMLTrNZnmsPrm7EJBrlMATTX
-	 ASnFbRSS3XgxrkcGGFIdpZ6fTzf8wQZEHgjUYXHI=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id C4C751C0103;
-	Thu, 29 May 2025 13:50:40 -0400 (EDT)
-Message-ID: <a68bfa4b6e75c8bfa2cb847d0b4867f44f9b8109.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI updates for the 6.14+ merge window
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
-	 <torvalds@linux-foundation.org>
-Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
-	 <linux-kernel@vger.kernel.org>
-Date: Thu, 29 May 2025 13:50:39 -0400
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="TrBpkPfs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iTPs4g2DqAwudbc5PqnsW12tzcHLtCZzXqzc/6sbLGUP4ltd2dubZyD8KITLu9AOI4F/yMSWxHX9q5Wmh1ndS/ept3n9cdA2t+tabBS7WIm/kqZ5K9Bc/yLBZpcGi0L7ozMgiXBFPHwlXlebMMpeA6dBdHc8SR+Aufwe4xXTrGaZlL40RRmqQlrosQvCa/SSjrWMQQsNwbhH8Zzt+7hUA1MOmFRfrt+fXLzg4MJEUtUYTPdqaqkHHVFZ4IGemIK9r4dOLjpYZbcwBctOsAxMuggwg1Nj0aoJpkkiwK+QmI3GxvVTY8E1bQ6X6a9AMN/p2bntQ4ejlhHvr8gc2/rQLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ozncyLErHhr1zGL/s2LCoe4C31ljcAbBJiRlzAoC904=;
+ b=aksCa6HHVWReHdt30pR0WLIxEUTwQ/5me6/DwpJYOqxRIPJnUVcFAvOJOhr7d055+Yk7YB1rgwzFGPrUf8NNbBfNHKwmxEAzuxomoTz96sk87Jh+OCzckLYlMo1a2jPlMEg92AOOKrX2LkoOqa4q4n2UJlB1NDBY01MahME452K+aG/ek6RkNp26aqFGDmalTfNeEv4lVYGZhjro1e2wK7/KT+7FosWLSgpVarQCbrP9BY2QASbdcKOsZwcXEJB53Wwkqpxnjx6MCFxAAm3o4v2sZjNlPBPgzUUlrpF9RBK4aODGQGIy+o2tw8ILUsYUHH7cqliDJimbY0Bv9bBZaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ozncyLErHhr1zGL/s2LCoe4C31ljcAbBJiRlzAoC904=;
+ b=TrBpkPfsO2nbIZGY2+L2Vtt2sy2gV4ciAgQNjGzN8y9C8CtpUpj8r1bTo7TMEut5HsIz626UqgHbMooY5aUq26fUsUUfAKeP8GC4zWooQsMNu7oZEoEvIrjSs1I3YkNK9FHqIn0GTBR3DDX7xsLPb8KheyfiIgG2zfXN1uXz1Ug=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
+ SA1PR01MB9164.prod.exchangelabs.com (2603:10b6:806:45a::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.26; Thu, 29 May 2025 17:50:44 +0000
+Received: from CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8769.029; Thu, 29 May 2025
+ 17:50:44 +0000
+Message-ID: <cc1522f8-85b9-48e5-951f-9a1bb2075918@os.amperecomputing.com>
+Date: Thu, 29 May 2025 10:50:38 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
+ mapping when rodata=full
+To: Ryan Roberts <ryan.roberts@arm.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250304222018.615808-1-yang@os.amperecomputing.com>
+ <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
+ <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
+ <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
+ <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
+ <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
+ <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
+ <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
+ <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
+ <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
+ <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
+ <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
+ <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
+ <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
+ <f31792bf-3b54-408c-9deb-7058a79c60d4@arm.com>
+ <a27776ed-4b45-4269-9e3c-5ca1463e4841@os.amperecomputing.com>
+ <bfae581e-3988-44b5-af5e-8e2de4db68ed@arm.com>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <bfae581e-3988-44b5-af5e-8e2de4db68ed@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN6PR08CA0032.namprd08.prod.outlook.com
+ (2603:10b6:805:66::45) To CH0PR01MB6873.prod.exchangelabs.com
+ (2603:10b6:610:112::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|SA1PR01MB9164:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97ed6e13-1694-488e-a7f4-08dd9ed955cf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TkY3UjdaSzFkcUN1bWVwTDBTQzRYY0k4Uk5QU3RLeExNQWxiUElrM1c0dVYw?=
+ =?utf-8?B?ZzQ0Wk5NVUp0NVlzNk9UUzdFdEJCZHlQN3NUMlg1cWtlYUtkOUxyYW1LV0V1?=
+ =?utf-8?B?Y2FvQVhCMXEwbS8zRlZ3dy9LY3JNNHpxRkRYUlhwSzdoQzUrWHVsY0E0UnAy?=
+ =?utf-8?B?Tm1CdUt6dzEySFJDV2hFdjlJL2s4YncxTFNwZEg4Z0pVbWUrejlwN05YaVpS?=
+ =?utf-8?B?NWlOSEZBdFVseWNYL0g1QSt5UlZNNk1XUWZQL1BYNC85YzZhT24zY3FJUVpE?=
+ =?utf-8?B?Umh5ei9hMGJaazV2SUZwVEJpU25UTVVRdzg2TG1zL1Z0blI2RVdVeVNyYTlO?=
+ =?utf-8?B?dEcwcklJR2NkcUhuZ1lCSUxnb3hYbmxFV01pMzZiMkxFdjhadDBRTkJiMkRE?=
+ =?utf-8?B?QjBaZ2lRQXMxOURQY2hwV0tuTXRScnlObEd6VG1URHNtNkNleDV3U0dmcHlT?=
+ =?utf-8?B?c2tVditjVGZZUGsyZ29zR2F5aTZnWGk4SWZocWZHWm9SejdJQ0F1UHZPTzlY?=
+ =?utf-8?B?Y1R6aFdoN3RoSG80SjZQQkFxL0srZDNrNksvSVVHSG9FYWVTSFJrUGIyeTV3?=
+ =?utf-8?B?aUtpSTJSQ002TW1MWWFxRTlENE1yTnZwRjlubVN0RVQrWEhMY3J3ZExlK3lZ?=
+ =?utf-8?B?d3dYcDBTdlhkU3hCWEhndmxIeGVJSUVhYkU5NHZ2dFV3Y2UrZkpkVWsvZUpB?=
+ =?utf-8?B?Z2xDUUQ3bWUwQTZsczJvbTE1RytzbTMrK3ZEWStqcVZNRzk3U3pZRlVrcVlw?=
+ =?utf-8?B?TnVYWGhoNVg4YkpBYlk0Ym5HSmNnUzZBcTBqNWU1SnZsSkIwOG5ZVzUvOGdX?=
+ =?utf-8?B?NDhoUkpBaThSZzhHcXVIMXliMnlvbisvbEZMLzNOeUpaN1l6blVGRis4MU9U?=
+ =?utf-8?B?ZTdmVWR2ekZaYmhRdmpGZEtNUFo0Slc2OU9vWEM0RFF4VGtkemZDZ3prZUFE?=
+ =?utf-8?B?Y2ZORGtzZHFlVjZmZWlnbFBwckMwdHR4YmZzMS9xY2UreU15aGpiOUlrcm40?=
+ =?utf-8?B?MWhQS1l0aW5ZZ1loRTR6ZmlWUWZkNDkwUG53WVovRjYxeUlJQm5QQk1vdjYr?=
+ =?utf-8?B?eUZzMW1SUGpaUzFrb1dLaVNOZ05CRVZIWmNjaVo4WXI3Z2Z5Q0RURjZOLzU2?=
+ =?utf-8?B?VUZzNlNscUlMMGRleFh2NTRiUXNEWlJGVE4zYXNhNmhZT3V0QTBteWd6ZjMz?=
+ =?utf-8?B?bUVzUXNXb3RocTdPYVNVUlNtK1pFaDVNdEdpSCtXMlpKd3UwNEJYNlN6NUJx?=
+ =?utf-8?B?a2k5R0EwSURjOGFBN0h6VEV1RUxzVHpobjRMREpqdTVpL3A0RzNRVmdNSW81?=
+ =?utf-8?B?UUNuQmVXTnQ2bENtbkJxZTBSY2FWdzQ0Z28vKzJHWnNyMVd0T1F2Q1pQb0Vs?=
+ =?utf-8?B?czRDMVIxOXY2cjJTa09UTHR4Vnh4R05tYkJDdEFVd3RJSnladTUvSjdud0lu?=
+ =?utf-8?B?d1o5NEpDWTNsRGhVeVlpaUp1RzM5WjVoNW8rcGZtMC8wS2xSYVZmYy9NakM0?=
+ =?utf-8?B?MEk2Z2ZVeVNkaHZ5YjR5S2F4bDJJNTI4RmUvc1IwYlJKUXpMMzVCVGpEM3hp?=
+ =?utf-8?B?V1hvbWY0UHAwS2JtbDY1RHJkcmFtMnE4RDNCS25Gd2pmSm1OMDQyY3ZNY3By?=
+ =?utf-8?B?NnpjQU5KblpOYUVjYzkyOHVnTXdpNG8xSG1qWlFiOGFuUUNRQjc3Yk9nZTZT?=
+ =?utf-8?B?UHlZaEtVeE1RV0xTdkVtZGZWc3pEczRIOHZXQisvbzVMUDhvdUFITEJsLyti?=
+ =?utf-8?B?MUJpNlVvanBDS00wWm94NGhJcENFTWUvRUp5ZHV2aXFhYndqR1hFazJtdmFX?=
+ =?utf-8?B?amxxQmV0SWVKTVZrRmdEcFlKKzFTU2RpMEJPT0taczhNNDMzZDF3UmQyaXV5?=
+ =?utf-8?B?em9hNWtNU04zcDdyUlRJb0tRak1jTmFXbnp4dTk5N1JxVkVWb3MrT3VxdGcz?=
+ =?utf-8?Q?+BmCOCiOeAE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?M1RxVkhUZVlEMzlKbFFQUnFZN3FOMERTdmJjZ1JaaGtVTzB2dTY0Y2hOTDRJ?=
+ =?utf-8?B?MGpnVS9UWEJHUTRCQStvdlBEWHdPSmNDK2s3dnBMUXJOT0FqaFF2aXl5RWha?=
+ =?utf-8?B?b3pWbkRuTkhpVkZ1RlkycVJ4OXVQeGFicjZhcHk3clppaUxwQnRYaEoxYU9w?=
+ =?utf-8?B?SmphdWVpR2VpY1pXL1BZY3B0SDQwV1RmSXE2Zm1tN29DcEFkdmVQYUdkUEdr?=
+ =?utf-8?B?QUtoYmxBdW1UYlQ5Q0RvZnpSZjJPRkFsOVZkREYwcmlmNndnNFZ0TEJ5dUFI?=
+ =?utf-8?B?MTcyTmRZOFNod2Y0OGd5S2F5SUZVSTBQS0dJQTg5T1l0ZGh3TCt5YVNoZDJH?=
+ =?utf-8?B?WUg0cXE3VnFHZG9NNis1ckYycEFVQjBzZ09IZDNMekxvSlllMUtGalFSYW1M?=
+ =?utf-8?B?d1NJTVQyOUUwRnBlQkJaY1E2RkdHY05DUVowZXlabFUxbzdSc0JRRzVNWTJD?=
+ =?utf-8?B?UFU0dVRibEJNNGF6eVpmdUhFNzNLNWpxelJGWU1rWk5rUnhTVGQ1Lyt2ZVBK?=
+ =?utf-8?B?SEt1a2NiN3VibzJmQ2I1dG9tckpaQ0lMM1kxSUlnV0ttRTlkQ0dNWkY3T3oy?=
+ =?utf-8?B?RFhDTm9HN2FCaWJSSXRwVVRhSGxpOUhkcVRYTDZacmNpUTQwM3lZL2RIeFds?=
+ =?utf-8?B?Z0NjR05iSVliNVFEaDU0UGgwNlAyWkFibVRYUHE1TXJFdW44UGhTMGpXNjRz?=
+ =?utf-8?B?T2dSK3pFQ2pCZEwwam5mTTlKMlFIRVJUMVpSbjVuU3hMUmJ5YkJPMndRSVRo?=
+ =?utf-8?B?TjFPdDU1V3ZqbnFrbkFaYmc1K3l3VFNiMERhOE5FeXE4czNkVmRTWitja2lC?=
+ =?utf-8?B?dHZxZ1dyQjhwcTZSSUdrOXNPUFRKbmsvT0ptNFhWU1hFOUc1aVJ6WVZYZ3Bu?=
+ =?utf-8?B?OUI3MVFqWlBmR3hnaytnc24zMmsvbUt5OGh4SXlYbmRNS01nYjhaV3g0azF5?=
+ =?utf-8?B?SStjOVNlTERqTFA4NklEeTdXSHYzRmVzeWZIQTFKcllYNlMvTUJRZUN5dG96?=
+ =?utf-8?B?dFpUa0RpcDlJSTlzSlZYbE5NdzlMSS9lV3MxZkFZVzdmWm54WE5TVVNDM091?=
+ =?utf-8?B?SmgzODBUS2VVdEF2dDF3UE9Wc2dES3AzZHZBWFA0Z1lEcE1FNWlQQ05CcFUy?=
+ =?utf-8?B?ZEZIL0dSZ09UczFOanJrUi9iS0g0NXRNOGdZT25vTEZYNEs2Vld4NlB1eHBa?=
+ =?utf-8?B?SkZaVW9LckMyam9wWUE5cjMwWmpvSDVCcE9KdWxSdUlDS1RjZ2V1MVVNZDFh?=
+ =?utf-8?B?Slh1aWNyK3hUR2RJcTZ5Kzk4UHFXdGdFRVoxQXk2cEFZZk40REd0Q0lkcHNJ?=
+ =?utf-8?B?Rlk4amdIMDZNYjhoOTVocWFmb2dNS08wcmxmVDBUcXlXOUpNc3FPaS9ueGZU?=
+ =?utf-8?B?b20rVmZ6QW81QVhaVGp4Sm03c0ZlVGs3bjgyN2JXOHVBN1ZhcVZ3L2tXM2tH?=
+ =?utf-8?B?dnlPT2lCRGVtZ2hqRXZTZ3pudUlFUzEyeDkzVnUzejNnanIrUzBlLzZkeFVk?=
+ =?utf-8?B?YjNYN0ppVmI2MlZlbnlyTTRNRFhER20vTTFGNWgwWldZRXpDdkhrdWhDVlh5?=
+ =?utf-8?B?QWlmZnlBUnQ5REtDaVF5RTJMT0pnZU5QSzB5WUVFYmwraXg4YjRTeEE3a1Y0?=
+ =?utf-8?B?V3diRlpwKzJwUGNFcHQ0TURpMEU5T2IzNzV2VzZ2WlBmRWdHRTc3Z2tsVGhk?=
+ =?utf-8?B?RFJRUVZMdFhkSXNEYm1MY0ZuVU1kWlZEWEErV0xlT1NMeXR0SHp6RTV5U1lI?=
+ =?utf-8?B?eXR4K1NOT0lVdEtoVVlVSnQ0WDJYblhzTnRDK0YzOUFSTC9hR0xoQnZYOHRS?=
+ =?utf-8?B?LzJkUVplcDhxY1Q1NmtEcjhxS0srSGI2eHZoWk9Pa09tWG9QMFJOK2QxQnUr?=
+ =?utf-8?B?TXpaTUNVeU04SzhPbDFiY3owQ3Z5djJDeFU2b0JpNG5OU2lBN0RLMU1oc3Bp?=
+ =?utf-8?B?Slo1L2E0ZkNBaCs2eXlKNUwwNkFEVEpYLzR2VmV5V0g2RjVNcmtRdVlOZGdV?=
+ =?utf-8?B?M0ZuVnpONDV6cEQwd0p5TDI5SnQ2OFdqRkhHRS9IVTNPc0dvUm1DeGZ5OTNa?=
+ =?utf-8?B?RE9DbVFRMkRSeUpEc01scmdQaHlsNllLNW1mRnZGcDg3RGVTWW55T0Z4Vm9U?=
+ =?utf-8?B?aVVyOWhMMVA2bGlEbmlIeEhOL0F6Vm5qRFpKRmJFY0VkdGJjenRuNWdMVE5I?=
+ =?utf-8?Q?jBq4HhoxHbSeDxVbtrXnGMA=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97ed6e13-1694-488e-a7f4-08dd9ed955cf
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 17:50:44.2811
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7hr1rULk4K1Cwg4YA1Jf4qzaPB0IE8U7pSXmqnG3svusnGqfu4XtTbcFKP3qoy0HdYwL7n3UPoSekqhCyDr/pj2A59VULAfzRhskbZchMSU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB9164
 
-Updates to the usual drivers (smartpqi, ufs, lpfc, scsi_debug, target,
-hisi_sas) with the only substantive core change being the removal of
-the stream_status member from the scsi_stream_status_header (to get rid
-of flex array members).
 
-The patch is available here:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+On 5/29/25 10:01 AM, Ryan Roberts wrote:
+> On 29/05/2025 17:37, Yang Shi wrote:
+>>
+>> On 5/29/25 12:36 AM, Ryan Roberts wrote:
+>>> On 28/05/2025 16:18, Yang Shi wrote:
+>>>> On 5/28/25 6:13 AM, Ryan Roberts wrote:
+>>>>> On 28/05/2025 01:00, Yang Shi wrote:
+>>>>>> Hi Ryan,
+>>>>>>
+>>>>>> I got a new spin ready in my local tree on top of v6.15-rc4. I noticed there
+>>>>>> were some more comments on Miko's BBML2 patch, it looks like a new spin is
+>>>>>> needed. But AFAICT there should be no significant change to how I advertise
+>>>>>> AmpereOne BBML2 in my patches. We will keep using MIDR list to check whether
+>>>>>> BBML2 is advertised or not and the erratum seems still be needed to fix up
+>>>>>> AA64MMFR2 BBML2 bits for AmpereOne IIUC.
+>>>>> Yes, I agree this should not impact you too much.
+>>>>>
+>>>>>> You also mentioned Dev was working on patches to have __change_memory_common()
+>>>>>> apply permission change on a contiguous range instead of on page basis (the
+>>>>>> status quo). But I have not seen the patches on mailing list yet. However I
+>>>>>> don't think this will result in any significant change to my patches either,
+>>>>>> particularly the split primitive and linear map repainting.
+>>>>> I think you would need Dev's series to be able to apply the permissions change
+>>>>> without needing to split the whole range to pte mappings? So I guess your
+>>>>> change
+>>>>> must either be implementing something similar to what Dev is working on or you
+>>>>> are splitting the entire range to ptes? If the latter, then I'm not keen on
+>>>>> that
+>>>>> approach.
+>>>> I don't think Dev's series is mandatory prerequisite for my patches. IIUC how
+>>>> the split primitive keeps block mapping if it is fully contained is independent
+>>>> from how to apply the permissions change on it.
+>>>> The new spin implemented keeping block mapping if it is fully contained as we
+>>>> discussed earlier. I'm supposed Dev's series just need to check whether the
+>>>> mapping is block or not when applying permission change.
+>>> The way I was thinking the split primitive would would, you would need Dev's
+>>> change as a prerequisite, so I suspect we both have a slightly different idea of
+>>> how this will work.
+>>>
+>>>> The flow just looks like as below conceptually:
+>>>>
+>>>> split_mapping(start, end)
+>>>> apply_permission_change(start, end)
+>>> The flow I was thinking of would be this:
+>>>
+>>> split_mapping(start)
+>>> split_mapping(end)
+>>> apply_permission_change(start, end)
+>>>
+>>> split_mapping() takes a virtual address that is at least page aligned and when
+>>> it returns, ensures that the address is at the start of a leaf mapping. And it
+>>> will only break the leaf mappings down so that they are the maximum size that
+>>> can still meet the requirement.
+>>>
+>>> As an example, let's suppose you initially start with a region that is composed
+>>> entirely of 2M mappings. Then you want to change permissions of a region [2052K,
+>>> 6208K).
+>>>
+>>> Before any splitting, you have:
+>>>
+>>>     - 2M   x4: [0, 8192K)
+>>>
+>>> Then you call split_mapping(start=2052K):
+>>>
+>>>     - 2M   x1: [0, 2048K)
+>>>     - 4K  x16: [2048K, 2112K)  << start is the start of the second 4K leaf mapping
+>>>     - 64K x31: [2112K, 4096K)
+>>>     - 2M:  x2: [4096K, 8192K)
+>>>
+>>> Then you call split_mapping(end=6208K):
+>>>
+>>>     - 2M   x1: [0, 2048K)
+>>>     - 4K  x16: [2048K, 2112K)
+>>>     - 64K x31: [2112K, 4096K)
+>>>     - 2M:  x1: [4096K, 6144K)
+>>>     - 64K x32: [6144K, 8192K)  << end is the end of the first 64K leaf mapping
+>>>
+>>> So then when you call apply_permission_change(start=2052K, end=6208K), the
+>>> following leaf mappings' permissions will be modified:
+>>>
+>>>     - 4K  x15: [2052K, 2112K)
+>>>     - 64K x31: [2112K, 4096K)
+>>>     - 2M:  x1: [4096K, 6144K)
+>>>     - 64K  x1: [6144K, 6208K)
+>>>
+>>> Since there are block mappings in this range, Dev's change is required to change
+>>> the permissions.
+>>>
+>>> This approach means that we only ever split the minimum required number of
+>>> mappings and we only split them to the largest size that still provides the
+>>> alignment requirement.
+>> I see your point. I believe we are on the same page: keep the block mappings in
+>> the range as possible as we can. My implementation actually ends up having the
+>> same result as your example shows. I guess we just have different ideas about
+>> how to implement it.
+> OK great!
+>
+>> However I do have hard time to understand why not just use split_mapping(start,
+>> end).
+> I don't really understand why you need to pass a range here. It's not like we
+> want to visit every leaf mapping in the range. We just want to walk down through
+> the page tables until we get to a leaf mapping that contains the address, then
+> keep splitting and walking deeper until the address is the start of a leaf
+> mapping. That's my thinking anyway. But you're the one doing the actual work
+> here so you probably have better insight than me.
 
-The short changelog is:
+split_mapping(start, end) actually does the same thing, and we just need 
+one call instead of two.
 
-Alok Tiwari (1):
-      scsi: mvsas: Fix typos in SAS/SATA VSP register comments
+>
+>> We can reuse some of the existing code easily with "end". Because the
+>> existing code does calculate the page table (PUD/PMD/CONT PMD/CONT PTE)
+>> boundary, so I reused it. Basically my implementation just skip to the next page
+>> table if:
+>>    * The start address is at page table boundary, and
+>>    * The "end" is greater than page table boundary
+>>
+>> The logic may be a little bit convoluted, not sure if I articulated myself or
+>> not. Anyway the code will explain everything.
+> OK I think I understand; I think you're saying that if you pass in end, there is
+> an optimization you can do for the case where end is contained within the same
+> (ultimate) leaf mapping as start to avoid rewalking the pgtables?
 
-Bart Van Assche (1):
-      scsi: ufs: core: Increase the UIC command timeout further
+Yes, we can just skip that page table to the next one because we know 
+the "end".
 
-Benjamin Block (1):
-      scsi: zfcp: Simplify workqueue allocation
+>
+>>>> The split_mapping() guarantees keep block mapping if it is fully contained in
+>>>> the range between start and end, this is my series's responsibility. I know the
+>>>> current code calls apply_to_page_range() to apply permission change and it just
+>>>> does it on PTE basis. So IIUC Dev's series will modify it or provide a new API,
+>>>> then __change_memory_common() will call it to change permission. There should be
+>>>> some overlap between mine and Dev's, but I don't see strong dependency.
+>>> But if you have a block mapping in the region you are calling
+>>> __change_memory_common() on, today that will fail because it can only handle
+>>> page mappings.
+>> IMHO letting __change_memory_common() manipulate on contiguous address range is
+>> another story and should be not a part of the split primitive.
+> I 100% agree that it should not be part of the split primitive.
+>
+> But your series *depends* upon __change_memory_common() being able to change
+> permissions on block mappings. Today it can only change permissions on page
+> mappings.
 
-Chelsy Ratnawat (1):
-      scsi: mpi3mr: Fix typo and grammar
+I don't think split primitive depends on it. Changing permission on 
+block mappings is just the user of the new split primitive IMHO. We just 
+have no real user right now.
 
-Chen Ni (2):
-      scsi: sg: Remove unnecessary NULL check before unregister_sysctl_tabl=
-e()
-      scsi: fnic: Replace memset() with eth_zero_addr()
+>
+> Your original v1 series solved this by splitting *all* of the mappings in a
+> given range to page mappings before calling __change_memory_common(), right?
 
-Christoph Hellwig (1):
-      scsi: sd: Remove the stream_status member from scsi_stream_status_hea=
-der
+Yes, but if the range is contiguous, the new split primitive doesn't 
+have to split to page mappings.
 
-Christophe JAILLET (2):
-      scsi: target: core: Constify struct target_opcode_descriptor
-      scsi: target: core: Constify enabled() in struct target_opcode_descri=
-ptor
+>
+> Remember it's not just vmalloc areas that are passed to
+> __change_memory_common(); virtually contiguous linear map regions can be passed
+> in as well. See (for example) set_direct_map_invalid_noflush(),
+> set_direct_map_default_noflush(), set_direct_map_valid_noflush(),
+> __kernel_map_pages(), realm_set_memory_encrypted(), realm_set_memory_decrypted().
 
-Dan Carpenter (1):
-      scsi: smartpqi: Delete a stray tab in pqi_is_parity_write_stream()
+Yes, no matter who the caller is, as long as the caller passes in 
+contiguous address range, the split primitive can keep block mappings.
 
-Daniel Wagner (1):
-      scsi: lpfc: Use memcpy() for BIOS version
+>
+>
+>> For example, we need to use vmalloc_huge() instead of vmalloc() to allocate huge
+>> memory, then does:
+>> split_mapping(start, start+HPAGE_PMD_SIZE);
+>> change_permission(start, start+HPAGE_PMD_SIZE);
+>>
+>> The split primitive will guarantee (start, start+HPAGE_PMD_SIZE) is kept as PMD
+>> mapping so that change_permission() can change it on PMD basis too.
+>>
+>> But this requires other kernel subsystems, for example, module, to allocate huge
+>> memory with proper APIs, for example, vmalloc_huge().
+> The longer term plan is to have vmalloc() always allocate using the
+> VM_ALLOW_HUGE_VMAP flag on systems that support BBML2. So there will be no need
+> to migrate users to vmalloc_huge(). We will just detect if we can split live
+> mappings safely and use huge mappings in that case.
 
-David Strahan (2):
-      scsi: smartpqi: Add new PCI IDs
-      scsi: smartpqi: Take drives offline when controller is offline
+Anyway this is the potential user of the new split primitive.
 
-Don Brace (1):
-      scsi: smartpqi: Update driver version to 2.1.34-035
+Thanks,
+Yang
 
-Dr. David Alan Gilbert (12):
-      scsi: core: Remove unused scsi_dev_info_list_del_keyed()
-      scsi: isci: Remove unused sci_remote_device_reset()
-      scsi: qedi: Remove unused qedi_get_proto_itt()
-      scsi: qedi: Remove unused sysfs functions
-      scsi: qla2xxx: Remove unused module parameters
-      scsi: qla2xxx: Remove unused qla2x00_gpsc()
-      scsi: qla2xxx: Remove unused ql_log_qp
-      scsi: qla2xxx: Remove unused qla82xx_wait_for_state_change()
-      scsi: qla2xxx: Remove unused qla82xx_pci_region_offset()
-      scsi: qla2xxx: Remove unused qlt_83xx_iospace_config()
-      scsi: qla2xxx: Remove unused qlt_fc_port_deleted()
-      scsi: qla2xxx: Remove unused qlt_free_qfull_cmds()
-
-Eric Biggers (2):
-      scsi: ufs: qcom: Add support for wrapped keys
-      scsi: soc: qcom: ice: Make qcom_ice_program_key() take struct blk_cry=
-pto_key
-
-Gaurav Kashyap (1):
-      scsi: soc: qcom: ice: Add HWKM support to the ICE driver
-
-Huan Tang (2):
-      scsi: ufs: core: Fix WB resize using wrong offset
-      scsi: ufs: core: Add WB buffer resize support
-
-John Garry (1):
-      scsi: scsi_debug: Reduce DEF_ATOMIC_WR_MAX_LENGTH
-
-Justin Tee (8):
-      scsi: lpfc: Copyright updates for 14.4.0.9 patches
-      scsi: lpfc: Update lpfc version to 14.4.0.9
-      scsi: lpfc: Create lpfc_vmid_info sysfs entry
-      scsi: lpfc: Avoid potential ndlp use-after-free in dev_loss_tmo_callb=
-k
-      scsi: lpfc: Prevent failure to reregister with NVMe transport after P=
-RLI retry
-      scsi: lpfc: Restart eratt_poll timer if HBA_SETUP flag still unset
-      scsi: lpfc: Notify FC transport of rport disappearance during PCI fcn=
- reset
-      scsi: lpfc: Fix lpfc_check_sli_ndlp() handling for GEN_REQUEST64 comm=
-ands
-
-Kai M=C3=A4kisara (5):
-      scsi: scsi_debug: Add ERASE for tapes
-      scsi: scsi_debug: Use scsi_device->type instead os sdebug_ptype where=
- possible
-      scsi: scsi_debug: Move some tape-specific commands to separate defini=
-tions
-      scsi: scsi_debug: Enable different command definitions for different =
-device types
-      scsi: scsi_debug: Fix two typos in command definitions
-
-Kees Cook (3):
-      scsi: qla4xxx: Remove duplicate struct crb_addr_pair
-      scsi: qla2xxx: Remove duplicate struct crb_addr_pair
-      scsi: pm80xx: Add __nonstring annotations for unterminated strings
-
-Manish Pandey (3):
-      scsi: ufs: ufs-qcom: Add support to dump testbus registers
-      scsi: ufs: ufs-qcom: Add support to dump MCQ registers
-      scsi: ufs: ufs-qcom: Add support to dump HW and SW hibern8 count
-
-Mike Christie (2):
-      scsi: target: Move delayed/ordered tracking to per CPU
-      scsi: target: Move I/O path stats to per CPU
-
-Nathan Chancellor (1):
-      scsi: dc395x: Remove leftover if statement in reselect()
-
-Neil Armstrong (3):
-      scsi: ufs: core: Delegate the interrupt service routine to a threaded=
- IRQ handler
-      scsi: ufs: core: Track when MCQ ESI is enabled
-      scsi: ufs: core: Drop last_intr_status/ts stats
-
-Nitin Rawat (1):
-      scsi: ufs: qcom: dt-bindings: Document the SM8750 UFS Controller
-
-Oliver Neukum (1):
-      scsi: dc395x: Remove DEBUG conditional compilation
-
-Peter Wang (2):
-      scsi: ufs: core: Support updating device command timeout
-      scsi: ufs: core: Change hwq_id type and value
-
-Randy Dunlap (1):
-      scsi: docs: Clean up some style in scsi_mid_low_api
-
-Ranjan Kumar (1):
-      scsi: mpi3mr: Event processing debug improvement
-
-Shivasharan S (1):
-      scsi: mpt3sas: Fix _ctl_get_mpt_mctp_passthru_adapter() to return IOC=
- pointer
-
-Thorsten Blum (3):
-      scsi: lpfc: Use secs_to_jiffies() instead of msecs_to_jiffies()
-      scsi: target: Remove size arguments when calling strscpy()
-      scsi: elx: sli4: Replace deprecated strncpy() with strscpy()
-
-Venkatesh Emparala (1):
-      scsi: smartpqi: Enhance WWID logging logic
-
-WangYuli (1):
-      scsi: scsi_transport_fc: Rename del_timer() in comment
-
-Wonkon Kim (1):
-      scsi: ufs: core: Print error value as hex format in ufshcd_err_handle=
-r()
-
-Yi Zhang (1):
-      scsi: smartpqi: Fix smp_processor_id() call trace for preemptible ker=
-nels
-
-Yihang Li (5):
-      scsi: hisi_sas: Fix warning detected by sparse
-      scsi: hisi_sas: Wait until error handling is complete
-      scsi: hisi_sas: Call I_T_nexus after soft reset for SATA disk
-      scsi: hisi_sas: Coding style cleanup
-      scsi: hisi_sas: Use macro instead of magic number
-
-ping.gao (1):
-      scsi: ufs: mcq: Delete ufshcd_release_scsi_cmd() in ufshcd_mcq_abort(=
-)
-
-And the diffstat:
-
- Documentation/ABI/testing/sysfs-driver-ufs         |  49 ++
- .../devicetree/bindings/ufs/qcom,ufs.yaml          |   2 +
- Documentation/scsi/scsi_mid_low_api.rst            |  18 +-
- drivers/mmc/host/sdhci-msm.c                       |  16 +-
- drivers/s390/scsi/zfcp_aux.c                       |  14 +-
- drivers/scsi/dc395x.c                              | 697 +----------------=
-----
- drivers/scsi/elx/libefc_sli/sli4.c                 |   6 +-
- drivers/scsi/fnic/fip.c                            |   8 +-
- drivers/scsi/hisi_sas/hisi_sas.h                   |  51 +-
- drivers/scsi/hisi_sas/hisi_sas_main.c              |  81 ++-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c             |   2 +-
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c             |   6 +-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             | 259 +++++---
- drivers/scsi/isci/remote_device.c                  |  30 -
- drivers/scsi/isci/remote_device.h                  |  15 -
- drivers/scsi/lpfc/lpfc_attr.c                      | 136 +++-
- drivers/scsi/lpfc/lpfc_bsg.c                       |   6 +-
- drivers/scsi/lpfc/lpfc_hbadisc.c                   |  38 +-
- drivers/scsi/lpfc/lpfc_init.c                      |   3 +
- drivers/scsi/lpfc/lpfc_nvme.c                      |  10 +-
- drivers/scsi/lpfc/lpfc_sli.c                       |  30 +-
- drivers/scsi/lpfc/lpfc_version.h                   |   2 +-
- drivers/scsi/lpfc/lpfc_vport.c                     |   4 +-
- drivers/scsi/mpi3mr/mpi3mr_os.c                    |  73 ++-
- drivers/scsi/mpt3sas/mpt3sas_ctl.c                 |   3 +-
- drivers/scsi/mvsas/mv_64xx.h                       |   4 +-
- drivers/scsi/pm8001/pm8001_ctl.c                   |   2 +-
- drivers/scsi/qedi/qedi_dbg.c                       |  22 -
- drivers/scsi/qedi/qedi_dbg.h                       |  12 -
- drivers/scsi/qedi/qedi_gbl.h                       |   1 -
- drivers/scsi/qedi/qedi_main.c                      |   8 -
- drivers/scsi/qla2xxx/qla_dbg.c                     |  53 --
- drivers/scsi/qla2xxx/qla_dbg.h                     |   3 -
- drivers/scsi/qla2xxx/qla_gbl.h                     |   5 -
- drivers/scsi/qla2xxx/qla_gs.c                      |  90 ---
- drivers/scsi/qla2xxx/qla_nx.c                      |  50 --
- drivers/scsi/qla2xxx/qla_os.c                      |  12 -
- drivers/scsi/qla2xxx/qla_target.c                  | 129 ----
- drivers/scsi/qla2xxx/qla_target.h                  |   3 -
- drivers/scsi/qla4xxx/ql4_nx.c                      |   5 -
- drivers/scsi/scsi_debug.c                          | 361 ++++++-----
- drivers/scsi/scsi_devinfo.c                        |  27 -
- drivers/scsi/scsi_priv.h                           |   2 -
- drivers/scsi/scsi_transport_fc.c                   |   2 +-
- drivers/scsi/sd.c                                  |   2 +-
- drivers/scsi/sg.c                                  |   3 +-
- drivers/scsi/smartpqi/smartpqi_init.c              | 140 ++++-
- drivers/soc/qcom/ice.c                             | 350 ++++++++++-
- drivers/target/target_core_configfs.c              |  20 +-
- drivers/target/target_core_device.c                |  89 ++-
- drivers/target/target_core_spc.c                   | 134 ++--
- drivers/target/target_core_stat.c                  |  69 +-
- drivers/target/target_core_transport.c             | 119 ++--
- drivers/ufs/core/ufs-mcq.c                         |   6 -
- drivers/ufs/core/ufs-sysfs.c                       | 133 ++++
- drivers/ufs/core/ufshcd.c                          | 103 ++-
- drivers/ufs/host/ufs-qcom.c                        | 181 +++++-
- drivers/ufs/host/ufs-qcom.h                        |  11 +
- include/scsi/scsi_proto.h                          |   3 +-
- include/soc/qcom/ice.h                             |  34 +-
- include/target/target_core_base.h                  |  26 +-
- include/ufs/ufs.h                                  |  32 +
- include/ufs/ufshcd.h                               |   8 +-
- 63 files changed, 1990 insertions(+), 1823 deletions(-)
-
-Regards,
-
-James
+>
+> Thanks,
+> Ryan
+>
+>> Thanks,
+>> Yang
+>>
+>>>>> Regarding the linear map repainting, I had a chat with Catalin, and he reminded
+>>>>> me of a potential problem; if you are doing the repainting with the machine
+>>>>> stopped, you can't allocate memory at that point; it's possible a CPU was
+>>>>> inside
+>>>>> the allocator when it stopped. And I think you need to allocate intermediate
+>>>>> pgtables, right? Do you have a solution to that problem? I guess one approach
+>>>>> would be to figure out how much memory you will need and pre-allocate prior to
+>>>>> stoping the machine?
+>>>> OK, I don't remember we discussed this problem before. I think we can do
+>>>> something like what kpti does. When creating the linear map we know how many PUD
+>>>> and PMD mappings are created, we can record the number, it will tell how many
+>>>> pages we need for repainting the linear map.
+>>> I saw a separate reply you sent for this. I'll read that and respond in that
+>>> context.
+>>>
+>>> Thanks,
+>>> Ryan
+>>>
+>>>>>> So I plan to post v4 patches to the mailing list. We can focus on reviewing
+>>>>>> the
+>>>>>> split primitive and linear map repainting. Does it sound good to you?
+>>>>> That works assuming you have a solution for the above.
+>>>> I think the only missing part is preallocating page tables for repainting. I
+>>>> will add this, then post the new spin to the mailing list.
+>>>>
+>>>> Thanks,
+>>>> Yang
+>>>>
+>>>>> Thanks,
+>>>>> Ryan
+>>>>>
+>>>>>> Thanks,
+>>>>>> Yang
+>>>>>>
+>>>>>>
+>>>>>> On 5/7/25 2:16 PM, Yang Shi wrote:
+>>>>>>> On 5/7/25 12:58 AM, Ryan Roberts wrote:
+>>>>>>>> On 05/05/2025 22:39, Yang Shi wrote:
+>>>>>>>>> On 5/2/25 4:51 AM, Ryan Roberts wrote:
+>>>>>>>>>> On 14/04/2025 22:24, Yang Shi wrote:
+>>>>>>>>>>> On 4/14/25 6:03 AM, Ryan Roberts wrote:
+>>>>>>>>>>>> On 10/04/2025 23:00, Yang Shi wrote:
+>>>>>>>>>>>>> Hi Ryan,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I know you may have a lot of things to follow up after LSF/MM. Just
+>>>>>>>>>>>>> gently
+>>>>>>>>>>>>> ping,
+>>>>>>>>>>>>> hopefully we can resume the review soon.
+>>>>>>>>>>>> Hi, I'm out on holiday at the moment, returning on the 22nd April. But
+>>>>>>>>>>>> I'm very
+>>>>>>>>>>>> keen to move this series forward so will come back to you next week.
+>>>>>>>>>>>> (although
+>>>>>>>>>>>> TBH, I thought I was waiting for you to respond to me... :-| )
+>>>>>>>>>>>>
+>>>>>>>>>>>> FWIW, having thought about it a bit more, I think some of the
+>>>>>>>>>>>> suggestions I
+>>>>>>>>>>>> previously made may not have been quite right, but I'll elaborate next
+>>>>>>>>>>>> week.
+>>>>>>>>>>>> I'm
+>>>>>>>>>>>> keen to build a pgtable splitting primitive here that we can reuse with
+>>>>>>>>>>>> vmalloc
+>>>>>>>>>>>> as well to enable huge mappings by default with vmalloc too.
+>>>>>>>>>>> Sounds good. I think the patches can support splitting vmalloc page table
+>>>>>>>>>>> too.
+>>>>>>>>>>> Anyway we can discuss more after you are back. Enjoy your holiday.
+>>>>>>>>>> Hi Yang,
+>>>>>>>>>>
+>>>>>>>>>> Sorry I've taken so long to get back to you. Here's what I'm currently
+>>>>>>>>>> thinking:
+>>>>>>>>>> I'd eventually like to get to the point where the linear map and most
+>>>>>>>>>> vmalloc
+>>>>>>>>>> memory is mapped using the largest possible mapping granularity (i.e.
+>>>>>>>>>> block
+>>>>>>>>>> mappings at PUD/PMD, and contiguous mappings at PMD/PTE level).
+>>>>>>>>>>
+>>>>>>>>>> vmalloc has history with trying to do huge mappings by default; it
+>>>>>>>>>> ended up
+>>>>>>>>>> having to be turned into an opt-in feature (instead of the original
+>>>>>>>>>> opt-out
+>>>>>>>>>> approach) because there were problems with some parts of the kernel
+>>>>>>>>>> expecting
+>>>>>>>>>> page mappings. I think we might be able to overcome those issues on arm64
+>>>>>>>>>> with
+>>>>>>>>>> BBML2.
+>>>>>>>>>>
+>>>>>>>>>> arm64 can already support vmalloc PUD and PMD block mappings, and I have a
+>>>>>>>>>> series (that should make v6.16) that enables contiguous PTE mappings in
+>>>>>>>>>> vmalloc
+>>>>>>>>>> too. But these are currently limited to when VM_ALLOW_HUGE is specified.
+>>>>>>>>>> To be
+>>>>>>>>>> able to use that by default, we need to be able to change permissions on
+>>>>>>>>>> sub-regions of an allocation, which is where BBML2 and your series come
+>>>>>>>>>> in.
+>>>>>>>>>> (there may be other things we need to solve as well; TBD).
+>>>>>>>>>>
+>>>>>>>>>> I think the key thing we need is a function that can take a page-aligned
+>>>>>>>>>> kernel
+>>>>>>>>>> VA, will walk to the leaf entry for that VA and if the VA is in the
+>>>>>>>>>> middle of
+>>>>>>>>>> the leaf entry, it will split it so that the VA is now on a boundary. This
+>>>>>>>>>> will
+>>>>>>>>>> work for PUD/PMD block entries and contiguous-PMD/contiguous-PTE entries.
+>>>>>>>>>> The
+>>>>>>>>>> function can assume BBML2 is present. And it will return 0 on success, -
+>>>>>>>>>> EINVAL
+>>>>>>>>>> if the VA is not mapped or -ENOMEM if it couldn't allocate a pgtable to
+>>>>>>>>>> perform
+>>>>>>>>>> the split.
+>>>>>>>>> OK, the v3 patches already handled page table allocation failure with
+>>>>>>>>> returning
+>>>>>>>>> -ENOMEM and BUG_ON if it is not mapped because kernel assumes linear
+>>>>>>>>> mapping
+>>>>>>>>> should be always present. It is easy to return -EINVAL instead of BUG_ON.
+>>>>>>>>> However I'm wondering what usecases you are thinking about? Splitting
+>>>>>>>>> vmalloc
+>>>>>>>>> area may run into unmapped VA?
+>>>>>>>> I don't think BUG_ON is the right behaviour; crashing the kernel should be
+>>>>>>>> discouraged. I think even for vmalloc under correct conditions we shouldn't
+>>>>>>>> see
+>>>>>>>> any unmapped VA. But vmalloc does handle it gracefully today; see (e.g.)
+>>>>>>>> vunmap_pmd_range() which skips the pmd if its none.
+>>>>>>>>
+>>>>>>>>>> Then we can use that primitive on the start and end address of any
+>>>>>>>>>> range for
+>>>>>>>>>> which we need exact mapping boundaries (e.g. when changing permissions on
+>>>>>>>>>> part
+>>>>>>>>>> of linear map or vmalloc allocation, when freeing part of a vmalloc
+>>>>>>>>>> allocation,
+>>>>>>>>>> etc). This way we only split enough to ensure the boundaries are precise,
+>>>>>>>>>> and
+>>>>>>>>>> keep larger mappings inside the range.
+>>>>>>>>> Yeah, makes sense to me.
+>>>>>>>>>
+>>>>>>>>>> Next we need to reimplement __change_memory_common() to not use
+>>>>>>>>>> apply_to_page_range(), because that assumes page mappings only. Dev
+>>>>>>>>>> Jain has
+>>>>>>>>>> been working on a series that converts this to use
+>>>>>>>>>> walk_page_range_novma() so
+>>>>>>>>>> that we can change permissions on the block/contig entries too. That's not
+>>>>>>>>>> posted publicly yet, but it's not huge so I'll ask if he is comfortable
+>>>>>>>>>> with
+>>>>>>>>>> posting an RFC early next week.
+>>>>>>>>> OK, so the new __change_memory_common() will change the permission of page
+>>>>>>>>> table, right?
+>>>>>>>> It will change permissions of all the leaf entries in the range of VAs it is
+>>>>>>>> passed. Currently it assumes that all the leaf entries are PTEs. But we will
+>>>>>>>> generalize to support all the other types of leaf entries too.,
+>>>>>>>>
+>>>>>>>>> If I remember correctly, you suggested change permissions in
+>>>>>>>>> __create_pgd_mapping_locked() for v3. So I can disregard it?
+>>>>>>>> Yes I did. I think this made sense (in my head at least) because in the
+>>>>>>>> context
+>>>>>>>> of the linear map, all the PFNs are contiguous so it kind-of makes sense to
+>>>>>>>> reuse that infrastructure. But it doesn't generalize to vmalloc because
+>>>>>>>> vmalloc
+>>>>>>>> PFNs are not contiguous. So for that reason, I think it's preferable to
+>>>>>>>> have an
+>>>>>>>> independent capability.
+>>>>>>> OK, sounds good to me.
+>>>>>>>
+>>>>>>>>> The current code assumes the address range passed in by
+>>>>>>>>> change_memory_common()
+>>>>>>>>> is *NOT* physically contiguous so __change_memory_common() handles page
+>>>>>>>>> table
+>>>>>>>>> permission on page basis. I'm supposed Dev's patches will handle this
+>>>>>>>>> then my
+>>>>>>>>> patch can safely assume the linear mapping address range for splitting is
+>>>>>>>>> physically contiguous too otherwise I can't keep large mappings inside the
+>>>>>>>>> range. Splitting vmalloc area doesn't need to worry about this.
+>>>>>>>> I'm not sure I fully understand the point you're making here...
+>>>>>>>>
+>>>>>>>> Dev's series aims to use walk_page_range_novma() similar to riscv's
+>>>>>>>> implementation so that it can walk a VA range and update the permissions on
+>>>>>>>> each
+>>>>>>>> leaf entry it visits, regadless of which level the leaf entry is at. This
+>>>>>>>> doesn't make any assumption of the physical contiguity of neighbouring leaf
+>>>>>>>> entries in the page table.
+>>>>>>>>
+>>>>>>>> So if we are changing permissions on the linear map, we have a range of
+>>>>>>>> VAs to
+>>>>>>>> walk and convert all the leaf entries, regardless of their size. The same
+>>>>>>>> goes
+>>>>>>>> for vmalloc... But for vmalloc, we will also want to change the underlying
+>>>>>>>> permissions in the linear map, so we will have to figure out the contiguous
+>>>>>>>> pieces of the linear map and call __change_memory_common() for each;
+>>>>>>>> there is
+>>>>>>>> definitely some detail to work out there!
+>>>>>>> Yes, this is my point. When changing underlying linear map permission for
+>>>>>>> vmalloc, the linear map address may be not contiguous. This is why
+>>>>>>> change_memory_common() calls __change_memory_common() on page basis.
+>>>>>>>
+>>>>>>> But how Dev's patch work should have no impact on how I implement the split
+>>>>>>> primitive by thinking it further. It should be the caller's responsibility to
+>>>>>>> make sure __create_pgd_mapping_locked() is called for contiguous linear map
+>>>>>>> address range.
+>>>>>>>
+>>>>>>>>>> You'll still need to repaint the whole linear map with page mappings
+>>>>>>>>>> for the
+>>>>>>>>>> case !BBML2 case, but I'm hoping __create_pgd_mapping_locked()
+>>>>>>>>>> (potentially
+>>>>>>>>>> with
+>>>>>>>>>> minor modifications?) can do that repainting on the live mappings;
+>>>>>>>>>> similar to
+>>>>>>>>>> how you are doing it in v3.
+>>>>>>>>> Yes, when repainting I need to split the page table all the way down to PTE
+>>>>>>>>> level. A simple flag should be good enough to tell
+>>>>>>>>> __create_pgd_mapping_locked()
+>>>>>>>>> do the right thing off the top of my head.
+>>>>>>>> Perhaps it may be sufficient to reuse the NO_BLOCK_MAPPINGS and
+>>>>>>>> NO_CONT_MAPPINGS
+>>>>>>>> flags? For example, if you are find a leaf mapping and NO_BLOCK_MAPPINGS is
+>>>>>>>> set,
+>>>>>>>> then you need to split it?
+>>>>>>> Yeah, sounds feasible. Anyway I will figure it out.
+>>>>>>>
+>>>>>>>>>> Miko's BBML2 series should hopefully get imminently queued for v6.16.
+>>>>>>>>> Great! Anyway my series is based on his advertising BBML2 patch.
+>>>>>>>>>
+>>>>>>>>>> So in summary, what I'm asking for your large block mapping the linear map
+>>>>>>>>>> series is:
+>>>>>>>>>>        - Paint linear map using blocks/contig if boot CPU supports BBML2
+>>>>>>>>>>        - Repaint linear map using page mappings if secondary CPUs don't
+>>>>>>>>>> support BBML2
+>>>>>>>>> OK, I just need to add some simple tweak to split down to PTE level to v3.
+>>>>>>>>>
+>>>>>>>>>>        - Integrate Dev's __change_memory_common() series
+>>>>>>>>> OK, I think I have to do my patches on top of it. Because Dev's patch need
+>>>>>>>>> guarantee the linear mapping address range is physically contiguous.
+>>>>>>>>>
+>>>>>>>>>>        - Create primitive to ensure mapping entry boundary at a given page-
+>>>>>>>>>> aligned VA
+>>>>>>>>>>        - Use primitive when changing permissions on linear map region
+>>>>>>>>> Sure.
+>>>>>>>>>
+>>>>>>>>>> This will be mergable on its own, but will also provide a great starting
+>>>>>>>>>> base
+>>>>>>>>>> for adding huge-vmalloc-by-default.
+>>>>>>>>>>
+>>>>>>>>>> What do you think?
+>>>>>>>>> Definitely makes sense to me.
+>>>>>>>>>
+>>>>>>>>> If I remember correctly, we still have some unsolved comments/questions
+>>>>>>>>> for v3
+>>>>>>>>> in my replies on March 17, particularly:
+>>>>>>>>> https://lore.kernel.org/linux-arm-kernel/2b715836-b566-4a9e-
+>>>>>>>>> b344-9401fa4c0feb@os.amperecomputing.com/
+>>>>>>>> Ahh sorry about that. I'll take a look now...
+>>>>>>> No problem.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Yang
+>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Ryan
+>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> Yang
+>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Ryan
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>> Thanks,
+>>>>>>>>>>> Yang
+>>>>>>>>>>>
+>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>> Ryan
+>>>>>>>>>>>>
+>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>> Yang
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 3/13/25 10:40 AM, Yang Shi wrote:
+>>>>>>>>>>>>>> On 3/13/25 10:36 AM, Ryan Roberts wrote:
+>>>>>>>>>>>>>>> On 13/03/2025 17:28, Yang Shi wrote:
+>>>>>>>>>>>>>>>> Hi Ryan,
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> I saw Miko posted a new spin of his patches. There are some slight
+>>>>>>>>>>>>>>>> changes
+>>>>>>>>>>>>>>>> that
+>>>>>>>>>>>>>>>> have impact to my patches (basically check the new boot parameter).
+>>>>>>>>>>>>>>>> Do you
+>>>>>>>>>>>>>>>> prefer I rebase my patches on top of his new spin right now then
+>>>>>>>>>>>>>>>> restart
+>>>>>>>>>>>>>>>> review
+>>>>>>>>>>>>>>>> from the new spin or review the current patches then solve the new
+>>>>>>>>>>>>>>>> review
+>>>>>>>>>>>>>>>> comments and rebase to Miko's new spin together?
+>>>>>>>>>>>>>>> Hi Yang,
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Sorry I haven't got to reviewing this version yet, it's in my queue!
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> I'm happy to review against v3 as it is. I'm familiar with Miko's
+>>>>>>>>>>>>>>> series
+>>>>>>>>>>>>>>> and am
+>>>>>>>>>>>>>>> not too bothered about the integration with that; I think it's pretty
+>>>>>>>>>>>>>>> straight
+>>>>>>>>>>>>>>> forward. I'm more interested in how you are handling the splitting,
+>>>>>>>>>>>>>>> which I
+>>>>>>>>>>>>>>> think is the bulk of the effort.
+>>>>>>>>>>>>>> Yeah, sure, thank you.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> I'm hoping to get to this next week before heading out to LSF/MM the
+>>>>>>>>>>>>>>> following
+>>>>>>>>>>>>>>> week (might I see you there?)
+>>>>>>>>>>>>>> Unfortunately I can't make it this year. Have a fun!
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>>> Yang
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>>>> Ryan
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>>>>> Yang
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>> On 3/4/25 2:19 PM, Yang Shi wrote:
+>>>>>>>>>>>>>>>>> Changelog
+>>>>>>>>>>>>>>>>> =========
+>>>>>>>>>>>>>>>>> v3:
+>>>>>>>>>>>>>>>>>           * Rebased to v6.14-rc4.
+>>>>>>>>>>>>>>>>>           * Based on Miko's BBML2 cpufeature patch (https://
+>>>>>>>>>>>>>>>>> lore.kernel.org/
+>>>>>>>>>>>>>>>>> linux-
+>>>>>>>>>>>>>>>>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
+>>>>>>>>>>>>>>>>>             Also included in this series in order to have the
+>>>>>>>>>>>>>>>>> complete
+>>>>>>>>>>>>>>>>> patchset.
+>>>>>>>>>>>>>>>>>           * Enhanced __create_pgd_mapping() to handle split as
+>>>>>>>>>>>>>>>>> well per
+>>>>>>>>>>>>>>>>> Ryan.
+>>>>>>>>>>>>>>>>>           * Supported CONT mappings per Ryan.
+>>>>>>>>>>>>>>>>>           * Supported asymmetric system by splitting kernel linear
+>>>>>>>>>>>>>>>>> mapping if
+>>>>>>>>>>>>>>>>> such
+>>>>>>>>>>>>>>>>>             system is detected per Ryan. I don't have such system to
+>>>>>>>>>>>>>>>>> test,
+>>>>>>>>>>>>>>>>> so the
+>>>>>>>>>>>>>>>>>             testing is done by hacking kernel to call linear mapping
+>>>>>>>>>>>>>>>>> repainting
+>>>>>>>>>>>>>>>>>             unconditionally. The linear mapping doesn't have any
+>>>>>>>>>>>>>>>>> block and
+>>>>>>>>>>>>>>>>> cont
+>>>>>>>>>>>>>>>>>             mappings after booting.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> RFC v2:
+>>>>>>>>>>>>>>>>>           * Used allowlist to advertise BBM lv2 on the CPUs which
+>>>>>>>>>>>>>>>>> can
+>>>>>>>>>>>>>>>>> handle TLB
+>>>>>>>>>>>>>>>>>             conflict gracefully per Will Deacon
+>>>>>>>>>>>>>>>>>           * Rebased onto v6.13-rc5
+>>>>>>>>>>>>>>>>>           * https://lore.kernel.org/linux-arm-
+>>>>>>>>>>>>>>>>> kernel/20250103011822.1257189-1-
+>>>>>>>>>>>>>>>>> yang@os.amperecomputing.com/
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
+>>>>>>>>>>>>>>>>> yang@os.amperecomputing.com/
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Description
+>>>>>>>>>>>>>>>>> ===========
+>>>>>>>>>>>>>>>>> When rodata=full kernel linear mapping is mapped by PTE due to
+>>>>>>>>>>>>>>>>> arm's
+>>>>>>>>>>>>>>>>> break-before-make rule.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> A number of performance issues arise when the kernel linear map is
+>>>>>>>>>>>>>>>>> using
+>>>>>>>>>>>>>>>>> PTE entries due to arm's break-before-make rule:
+>>>>>>>>>>>>>>>>>           - performance degradation
+>>>>>>>>>>>>>>>>>           - more TLB pressure
+>>>>>>>>>>>>>>>>>           - memory waste for kernel page table
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> These issues can be avoided by specifying rodata=on the kernel
+>>>>>>>>>>>>>>>>> command
+>>>>>>>>>>>>>>>>> line but this disables the alias checks on page table
+>>>>>>>>>>>>>>>>> permissions and
+>>>>>>>>>>>>>>>>> therefore compromises security somewhat.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> With FEAT_BBM level 2 support it is no longer necessary to
+>>>>>>>>>>>>>>>>> invalidate the
+>>>>>>>>>>>>>>>>> page table entry when changing page sizes. This allows the
+>>>>>>>>>>>>>>>>> kernel to
+>>>>>>>>>>>>>>>>> split large mappings after boot is complete.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> This patch adds support for splitting large mappings when FEAT_BBM
+>>>>>>>>>>>>>>>>> level 2
+>>>>>>>>>>>>>>>>> is available and rodata=full is used. This functionality will be
+>>>>>>>>>>>>>>>>> used
+>>>>>>>>>>>>>>>>> when modifying page permissions for individual page frames.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Without FEAT_BBM level 2 we will keep the kernel linear map using
+>>>>>>>>>>>>>>>>> PTEs
+>>>>>>>>>>>>>>>>> only.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> If the system is asymmetric, the kernel linear mapping may be
+>>>>>>>>>>>>>>>>> repainted
+>>>>>>>>>>>>>>>>> once
+>>>>>>>>>>>>>>>>> the BBML2 capability is finalized on all CPUs.  See patch #6 for
+>>>>>>>>>>>>>>>>> more
+>>>>>>>>>>>>>>>>> details.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> We saw significant performance increases in some benchmarks with
+>>>>>>>>>>>>>>>>> rodata=full without compromising the security features of the
+>>>>>>>>>>>>>>>>> kernel.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Testing
+>>>>>>>>>>>>>>>>> =======
+>>>>>>>>>>>>>>>>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB
+>>>>>>>>>>>>>>>>> memory and
+>>>>>>>>>>>>>>>>> 4K page size + 48 bit VA.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Function test (4K/16K/64K page size)
+>>>>>>>>>>>>>>>>>           - Kernel boot.  Kernel needs change kernel linear mapping
+>>>>>>>>>>>>>>>>> permission at
+>>>>>>>>>>>>>>>>>             boot stage, if the patch didn't work, kernel typically
+>>>>>>>>>>>>>>>>> didn't
+>>>>>>>>>>>>>>>>> boot.
+>>>>>>>>>>>>>>>>>           - Module stress from stress-ng. Kernel module load change
+>>>>>>>>>>>>>>>>> permission
+>>>>>>>>>>>>>>>>> for
+>>>>>>>>>>>>>>>>>             linear mapping.
+>>>>>>>>>>>>>>>>>           - A test kernel module which allocates 80% of total memory
+>>>>>>>>>>>>>>>>> via
+>>>>>>>>>>>>>>>>> vmalloc(),
+>>>>>>>>>>>>>>>>>             then change the vmalloc area permission to RO, this also
+>>>>>>>>>>>>>>>>> change
+>>>>>>>>>>>>>>>>> linear
+>>>>>>>>>>>>>>>>>             mapping permission to RO, then change it back before
+>>>>>>>>>>>>>>>>> vfree(). Then
+>>>>>>>>>>>>>>>>> launch
+>>>>>>>>>>>>>>>>>             a VM which consumes almost all physical memory.
+>>>>>>>>>>>>>>>>>           - VM with the patchset applied in guest kernel too.
+>>>>>>>>>>>>>>>>>           - Kernel build in VM with guest kernel which has this
+>>>>>>>>>>>>>>>>> series
+>>>>>>>>>>>>>>>>> applied.
+>>>>>>>>>>>>>>>>>           - rodata=on. Make sure other rodata mode is not broken.
+>>>>>>>>>>>>>>>>>           - Boot on the machine which doesn't support BBML2.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Performance
+>>>>>>>>>>>>>>>>> ===========
+>>>>>>>>>>>>>>>>> Memory consumption
+>>>>>>>>>>>>>>>>> Before:
+>>>>>>>>>>>>>>>>> MemTotal:       258988984 kB
+>>>>>>>>>>>>>>>>> MemFree:        254821700 kB
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> After:
+>>>>>>>>>>>>>>>>> MemTotal:       259505132 kB
+>>>>>>>>>>>>>>>>> MemFree:        255410264 kB
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Around 500MB more memory are free to use.  The larger the machine,
+>>>>>>>>>>>>>>>>> the
+>>>>>>>>>>>>>>>>> more memory saved.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Performance benchmarking
+>>>>>>>>>>>>>>>>> * Memcached
+>>>>>>>>>>>>>>>>> We saw performance degradation when running Memcached benchmark
+>>>>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>>>>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB
+>>>>>>>>>>>>>>>>> pressure.
+>>>>>>>>>>>>>>>>> With this patchset we saw ops/sec is increased by around 3.5%, P99
+>>>>>>>>>>>>>>>>> latency is reduced by around 9.6%.
+>>>>>>>>>>>>>>>>> The gain mainly came from reduced kernel TLB misses.  The kernel
+>>>>>>>>>>>>>>>>> TLB
+>>>>>>>>>>>>>>>>> MPKI is reduced by 28.5%.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> The benchmark data is now on par with rodata=on too.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> * Disk encryption (dm-crypt) benchmark
+>>>>>>>>>>>>>>>>> Ran fio benchmark with the below command on a 128G ramdisk (ext4)
+>>>>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>>>>> disk
+>>>>>>>>>>>>>>>>> encryption (by dm-crypt).
+>>>>>>>>>>>>>>>>> fio --directory=/data --random_generator=lfsr --norandommap --
+>>>>>>>>>>>>>>>>> randrepeat 1 \
+>>>>>>>>>>>>>>>>>             --status-interval=999 --rw=write --bs=4k --loops=1 --
+>>>>>>>>>>>>>>>>> ioengine=sync \
+>>>>>>>>>>>>>>>>>             --iodepth=1 --numjobs=1 --fsync_on_close=1 --
+>>>>>>>>>>>>>>>>> group_reporting --
+>>>>>>>>>>>>>>>>> thread \
+>>>>>>>>>>>>>>>>>             --name=iops-test-job --eta-newline=1 --size 100G
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> The IOPS is increased by 90% - 150% (the variance is high, but the
+>>>>>>>>>>>>>>>>> worst
+>>>>>>>>>>>>>>>>> number of good case is around 90% more than the best number of bad
+>>>>>>>>>>>>>>>>> case).
+>>>>>>>>>>>>>>>>> The bandwidth is increased and the avg clat is reduced
+>>>>>>>>>>>>>>>>> proportionally.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> * Sequential file read
+>>>>>>>>>>>>>>>>> Read 100G file sequentially on XFS (xfs_io read with page cache
+>>>>>>>>>>>>>>>>> populated).
+>>>>>>>>>>>>>>>>> The bandwidth is increased by 150%.
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Mikołaj Lenczewski (1):
+>>>>>>>>>>>>>>>>>               arm64: Add BBM Level 2 cpu feature
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>> Yang Shi (5):
+>>>>>>>>>>>>>>>>>               arm64: cpufeature: add AmpereOne to BBML2 allow list
+>>>>>>>>>>>>>>>>>               arm64: mm: make __create_pgd_mapping() and helpers
+>>>>>>>>>>>>>>>>> non-void
+>>>>>>>>>>>>>>>>>               arm64: mm: support large block mapping when
+>>>>>>>>>>>>>>>>> rodata=full
+>>>>>>>>>>>>>>>>>               arm64: mm: support split CONT mappings
+>>>>>>>>>>>>>>>>>               arm64: mm: split linear mapping if BBML2 is not
+>>>>>>>>>>>>>>>>> supported on
+>>>>>>>>>>>>>>>>> secondary
+>>>>>>>>>>>>>>>>> CPUs
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>          arch/arm64/Kconfig                  | 11 +++++
+>>>>>>>>>>>>>>>>>          arch/arm64/include/asm/cpucaps.h    | 2 +
+>>>>>>>>>>>>>>>>>          arch/arm64/include/asm/cpufeature.h | 15 ++++++
+>>>>>>>>>>>>>>>>>          arch/arm64/include/asm/mmu.h        | 4 ++
+>>>>>>>>>>>>>>>>>          arch/arm64/include/asm/pgtable.h    | 12 ++++-
+>>>>>>>>>>>>>>>>>          arch/arm64/kernel/cpufeature.c      | 95 ++++++++++++++++++
+>>>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>>>> +++++++
+>>>>>>>>>>>>>>>>>          arch/arm64/mm/mmu.c                 | 397 ++++++++++++++
+>>>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>>>> ++++
+>>>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>>>> ++++
+>>>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>>>>>>>> ++++
+>>>>>>>>>>>>>>>>> +++++
+>>>>>>>>>>>>>>>>> +++++
+>>>>>>>>>>>>>>>>> ++++++++++++++++++++++-------------------
+>>>>>>>>>>>>>>>>>          arch/arm64/mm/pageattr.c            | 37 ++++++++++++---
+>>>>>>>>>>>>>>>>>          arch/arm64/tools/cpucaps            | 1 +
+>>>>>>>>>>>>>>>>>          9 files changed, 518 insertions(+), 56 deletions(-)
+>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>
 
