@@ -1,63 +1,63 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F08022A4C5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23947227EAB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522565; cv=none; b=F0rUwnJOX8m4aquwPhKOdU82hHsocUeo68gnbZmqeZAFV/Hne7Z180OwYXjsNnJx8OK4BXR2XjQbfoApp+0n75942awfcyJq/7SoD5K7xvJKJqGi97U86j/YHNfVVfIZreB2KXOmVQ7zc8vo1+7Ye7jocx+p+9a2mcny8zOrAtE=
+	t=1748522565; cv=none; b=TmjinD8VITlPoCroi0aCuRX1qJdyuO3EN/jIyV/bZiA2gB2+6n6uJHEMVijIUo6jJ82AvHdZ1EH/dYNLB4dsR/sM3alUhFNqKGTPS99oB1RKk1H8PALtTCJqC1GwbNPIQOPFmkOSzmdTv52T3jDJ99d25/XQkPI2oZRHSyootks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748522565; c=relaxed/simple;
-	bh=VtQ1ljfmYtyXEA61aEiaZEeKdDz/H5SMisehIOwJ9No=;
+	bh=eMe4mQgSX9Szv7WKunt7QkqAZDsYcLcx7lYQqW43qQk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=G9/eNqz1ECTmYc7vmp40p2HzsAXX/riMqUBX+vyBt+55fiJWW0kCyAdylbOl+urTgaHzsIy9cisNie0pEaw2SNCKeVN7S9NwdSfaLZ0Xmg/iR40OCS2aTYQzkJhOspF3PWIyXpK0sR+L/r2AJmU3KNiWqG/Id4oiHirhcAx+fnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IXoLPF06; arc=none smtp.client-ip=209.85.218.51
+	 MIME-Version; b=ueM5lZVSnrKadCr7MTKmqgKKGesefFKcmkLf1sglKvT5xvY96tpCDdcDb6P7ZQIQNKDv4ZsvVclwUfsa1FzDhTbGQXt5McXrmaKJyhjmVQ9F6h5Pqd9ewyXKgwpRsEdO29hwvO04GlALzIxIib5dUpb3iApIAZtSZtApavLQzYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D+ny0eos; arc=none smtp.client-ip=209.85.208.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IXoLPF06"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad89d8a270fso408971266b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:42:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D+ny0eos"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fff52493e0so1272722a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748522560; x=1749127360; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1748522557; x=1749127357; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=IXoLPF06Wtm1mnRmNiZ2E7CTph3qpAYt7GTealiijdfLvygXpdrTf3j3tDZSy4ncJV
-         ZPmWXCGat8spdaQNQIaGo28iw6s3YuryGuJVrtdxX9mlaso24PPiXVWjCourLn91X157
-         FuAe/c7HV2CAkB/AxNNYyGDl7TUJspRTw34oWtXaceEW5EJfqrj8l6STbcq0mQHH8cub
-         BY3H4G84Y8wtnO1qXZdhfeXkp7TCFjUrQtH/LircMTpoI610A4GGz1y9tu5kRzg3y76l
-         vX9A/AL87HwNk7R1vmdH1A2NMmwi1t2B00u2N66qGsLOI8cjn0x+ztXknwyLOEuU0EET
-         99bw==
+        bh=RZmKSMbzA96hgjOUpKAldzAt0+MepqVPTK1rf+kG3Dk=;
+        b=D+ny0eosbGBnBvBOKSpvVhvT8hkI1A8v6qZuzGklvx/q8Ou6evy+XodecM8LxwpfPL
+         8gCu9ftFHpXrZVSrlEr5guMQ47LaJcOA83pYuy8nOm/91mHafm1rKdtXTMdO/DzAAWzw
+         qPffTvqhRWVZcajzH4WAPymjUnj9fGUWNfymiRQwW0mJdX2o+qpu/Uie/AjrOrtj4vsB
+         FE49hzwZhRJ+iHisUONB0oUN+fw7cXeQ34qq5aesidmmufvtHsxFdgmc0ehZ8xizCV36
+         FeJU6Hoxd0dYEfXL6CBc5hlaVbQXRZQZZDABc1HqjJepd5+MU2+HfSvUuMRbifTUNInl
+         S44Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748522560; x=1749127360;
+        d=1e100.net; s=20230601; t=1748522557; x=1749127357;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rB9s9VPJvR605hRqbfbYWWEdTsjP5s3VD85/JJVm1e8=;
-        b=av7UaabENSYjJJ/hahjnBMnsmqVZveekb/Kbndf27ifRcv51Isi0U1+v+K4rGEbikw
-         lEgy+QpVpM/uk3CpCrZjn2gO/DaLEhLs9FILDPxnRkNINNiJm3yW2v1jHNMtv0DXqobO
-         XP0CM6+sksw6FqqlQeRiwsXBENCRb84AfgaVi1BKxni64cWlZwXdvEC0urCWCzt6H/tf
-         Bm2XNfS919SQ9aNh58cjv99DcHJd6kPQUpERac3vdGo7QK06wMC7HMPjHfY/rQYzf0ea
-         eYnEz3oM48YliZr3fKmEsq7K17JDvYqwiqzBiJeNV2curIEDtzMHaSa7rL/e187Brh5Z
-         mplw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8A2NIWeIWh9lfDWSNDcDTgesaPh6jiPWE8pDdddArZADW3NoH9GJFINUAhcup60uSDj+/IUPR+tyS8Ss=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOD97mMGlz/Sn0vhVl4gfYM5d0mLRQk5fgJggUWzgVppjGi2t4
-	a5vENWUMlivZlLnDYpH8iDWx3hRxnRJWZvulrFKJvJX8UwyKcti5otonPX/IdphgobQ=
-X-Gm-Gg: ASbGnctEzXkahpzCDZHOr9rYrwCZO1rOz75FV3RKyefs5aoJoF+FeU08WLuqvoNHyHV
-	sNCKEcFZ/sZPC52X3QTs/axJe/D+d9VHa6mwTLC6bYjTCQfAbtOD44hPe12gG5ReCqtXvyVrZFN
-	VlQ+Ep3LooVYciARpnr5qupQTs0oxxIbSNc/mfJd3MYWTWJiIgOuvhyLAWJEutAtmIDeOt6KGQP
-	IbZsYfp1mQ2x9NvdXcUu8S3m+FJGBJZIJPQ562y6xrkpgmujcRzuuFfeaZYUOE+iedgU8Vnaxfe
-	Kp+Msr1BjNf9Gb8xr9W3Ps392nKVdx5QxTAZKzjFf1HjLcfkgDq3fR4VYwF+T/JJYdIAw+FQ09s
-	zK76cpzaTqj1Z6F2pkIODqMe4fL2TcO0y
-X-Google-Smtp-Source: AGHT+IGmBWL+ssQiDerV1S1/XxydSfAjqd0NvxPIChK+RKZPzFhr3ejbEm+LE6gwooRX73fUz2rmnA==
-X-Received: by 2002:a17:907:3d88:b0:ad2:27b1:7214 with SMTP id a640c23a62f3a-ad8b0e63c34mr325370166b.17.1748522559741;
-        Thu, 29 May 2025 05:42:39 -0700 (PDT)
+        bh=RZmKSMbzA96hgjOUpKAldzAt0+MepqVPTK1rf+kG3Dk=;
+        b=NGil+bIpeR7miAY2S4uJvj0SoSCTouuAOPOXZnCuu5ckH8iBwAdl+j2QqLdcGPTzwr
+         t6eGn22DURP3iCyxIFeF9FObREdFD/Z5krbxj6MA2eH7WVLamdF0ghMcDxQ7HlpgnAf4
+         VFhNdUlizZLFmfyJSzbhBLHILqZ6gL6+kHnPT2hEQ5HNGhwIZWBY3ttPjomz+3xzX932
+         VOLd3yr8V0V5u9Lbp4BHjMLcaC9/9U2QWva6yJXK4dxF0zLnHnsJ2Gv+Njfz+YK7shZJ
+         SP2qVBLFde8rTc9k7b9luUMNe/i5TsSZS5OD8VvXIiyAewFoCMJfo+Nf8Pq42Zj6k8n8
+         CCjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWv806msRL0GfZK6d4rwfKpl0e1BQfm5Iip4f1heYRsIkTrPfqLNO7EIR8OJe2fr4xOePdmKyvow8lfpWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAcZXYxyGx6978wVa0N1RUfHvIVYQ+7YRgjHsCGimRysXBXf7Y
+	OvQLjEQtyEzqvCOOmjbYRMNO0ir8TJB5cnnuB+e18KS5pCGvBrUZHMCi7P2gq4SLVJA=
+X-Gm-Gg: ASbGnctQgHwwFsOB9cl1hGkoG/Av/JHIab7naKbvmbXQcZuANNYu/WuTp752FfM8asI
+	baW97GPZ05oVgNVfWKzPGsuT9X65q4HteddyU9FQDc5hQrapyBEQRT8mnKr2fwpIqUYJ1ITR6+t
+	3owrsiJbpt9WPnwbD/NAgBCnuidiI59+AD7tp5aBVmXDGyNwC1Xd9v48+4PwvhCyUKGFJeA08ap
+	4rItjfN3MdDILwLaDsbt02cj5o/jsLIzpMQ9K9gQU2HK4k3d7PIiS6IX4rN5OUbzS36z8KP+114
+	DTvnOqNkls5wxEK4SFXRTGUoDNwnB9V3vlEBX1zl5n5/LFNxGv/xhthmI5h1Jsc4CsNzxFPdPUA
+	jQPf9YwpnGE1zpuFQRyPeQQ==
+X-Google-Smtp-Source: AGHT+IFgiCpfokGYPqFfNbRAwtykuDbZ9l9nPVNQ028I3fcbAmrbjnUjF4hg+nzReyJrKKzdPC5Qhw==
+X-Received: by 2002:a17:907:3f1b:b0:ad8:9d41:371e with SMTP id a640c23a62f3a-adadee36a88mr195092466b.36.1748522557299;
+        Thu, 29 May 2025 05:42:37 -0700 (PDT)
 Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fecebsm138373466b.1.2025.05.29.05.42.39
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad3952esm136308766b.126.2025.05.29.05.42.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 05:42:39 -0700 (PDT)
+        Thu, 29 May 2025 05:42:36 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -96,9 +96,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	kernel-list@raspberrypi.com,
 	Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH v11 08/13] arm64: dts: bcm2712: Add external clock for RP1 chipset on Rpi5
-Date: Thu, 29 May 2025 14:43:57 +0200
-Message-ID: <20250529124412.26311-3-andrea.porta@suse.com>
+Subject: [PATCH v11 06/13] arm64: dts: rp1: Add support for RaspberryPi's RP1 device
+Date: Thu, 29 May 2025 14:43:55 +0200
+Message-ID: <20250529124412.26311-1-andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1748522349.git.andrea.porta@suse.com>
 References: <cover.1748522349.git.andrea.porta@suse.com>
@@ -110,33 +110,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
-Add clk_rp1_xosc node to provide that.
+RaspberryPi RP1 is a multi function PCI endpoint device that
+exposes several subperipherals via PCI BAR.
+
+Add a dtb overlay that will be compiled into a binary blob
+and linked in the RP1 driver.
+
+This overlay offers just minimal support to represent the
+RP1 device itself, the sub-peripherals will be added by
+future patches.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/broadcom/rp1-common.dtsi | 42 ++++++++++++++++++++
+ arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi  | 14 +++++++
+ 2 files changed, 56 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1-common.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index fbc56309660f..1850a575e708 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -16,6 +16,13 @@ chosen: chosen {
- 		stdout-path = "serial10:115200n8";
- 	};
- 
-+	clk_rp1_xosc: clock-50000000 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-output-names = "rp1-xosc";
-+		clock-frequency = <50000000>;
+diff --git a/arch/arm64/boot/dts/broadcom/rp1-common.dtsi b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
+new file mode 100644
+index 000000000000..5002a375eb0b
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/clock/raspberrypi,rp1-clocks.h>
++
++pci_ep_bus: pci-ep-bus@1 {
++	compatible = "simple-bus";
++	ranges = <0x00 0x40000000  0x01 0x00 0x00000000  0x00 0x00400000>;
++	dma-ranges = <0x10 0x00000000  0x43000000 0x10 0x00000000  0x10 0x00000000>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	rp1_clocks: clocks@40018000 {
++		compatible = "raspberrypi,rp1-clocks";
++		reg = <0x00 0x40018000 0x0 0x10038>;
++		#clock-cells = <1>;
++		clocks = <&clk_rp1_xosc>;
++		assigned-clocks = <&rp1_clocks RP1_PLL_SYS_CORE>,
++				  <&rp1_clocks RP1_PLL_SYS>,
++				  <&rp1_clocks RP1_PLL_SYS_SEC>,
++				  <&rp1_clocks RP1_CLK_SYS>;
++		assigned-clock-rates = <1000000000>, // RP1_PLL_SYS_CORE
++				       <200000000>,  // RP1_PLL_SYS
++				       <125000000>,  // RP1_PLL_SYS_SEC
++				       <200000000>;  // RP1_CLK_SYS
 +	};
 +
- 	/* Will be filled by the bootloader */
- 	memory@0 {
- 		device_type = "memory";
++	rp1_gpio: pinctrl@400d0000 {
++		compatible = "raspberrypi,rp1-gpio";
++		reg = <0x00 0x400d0000  0x0 0xc000>,
++		      <0x00 0x400e0000  0x0 0xc000>,
++		      <0x00 0x400f0000  0x0 0xc000>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>,
++			     <1 IRQ_TYPE_LEVEL_HIGH>,
++			     <2 IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi b/arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi
+new file mode 100644
+index 000000000000..0ef30d7f1c35
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/rp1-nexus.dtsi
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++
++rp1_nexus {
++	compatible = "pci1de4,1";
++	#address-cells = <3>;
++	#size-cells = <2>;
++	ranges = <0x01 0x00 0x00000000
++		  0x02000000 0x00 0x00000000
++		  0x0 0x400000>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	#include "rp1-common.dtsi"
++};
 -- 
 2.35.3
 
