@@ -1,124 +1,212 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A86218AB3
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700F322A811
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748555340; cv=none; b=WXFLcHKdjycurGb6MMqBqz51jDe/YLa/MvntZbhKgE7edQV0PCBFWQt5PNahboKT5lSNtnuUZMvaoLCHq3XFQUzMcLHTv5FFUd5IG8TxEGcvviRBZEgcabmgkuzEhl5M4yDtQN74ZNtLBqhwG5DHmjXhVGJLHr+0Nf5RwpY9nYA=
+	t=1748555423; cv=none; b=dMtM+Bfgm0aj4boVpWgOGmGqHg2QPpE5jvF4ZbJ8fTg89QlbXDhLhVZoPpYbkU4ks1+IQNqzmYXJ4BIRqQA6JOgLZWooY5cuIj8bwJ/vzy4W3sICtbJv7qG2fwOKlADK6f/hRnZexgWFmY7z5zlumGPdCKxotsc/dh8wAkZNtvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748555340; c=relaxed/simple;
-	bh=ABQTqLGLlC3tANPQdemxVdZP6bntmM77J3igINat3t4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=r060f/Z5ryUU2ddprU9vONnK0Vo4E5OUQ4i16JryW0UqEum8RA8eUoA0nk3/JtzaDOCQo4pbr8w8eOJ9oGHGOUkbUq3uGIeoltljBHvi/wDOlBv4Fc3dMaYm+Zd0LeDsVw42CDpvPrlYbPzBVyLLuPOFzkynsR1Z7kvDYh7vkwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DdBREZot; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748555423; c=relaxed/simple;
+	bh=x+sIJSNwulo3ssa5P9RyaxIrMG2iFN9nT6hHod6g0Ho=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i1ePhnm+ZoZnIku8uBUfzJHAiCVL6GW+8KSk4+x49Ys3m9XjlYdPf+otpa/gXpVKQ3FE1RhM6Y3dn532BPXTa+ODFBmlSwuYKHXDIcn2XkHMZt7EiYvSasHdl12HVfn7Z8FkPuZR8UeP8Wp4SqgLqpmEraImcBet/jCI7QfLfYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=gDiKd1/7; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DdBREZot"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-73712952e1cso1065467b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:48:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="gDiKd1/7"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234c5b57557so14404345ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748555338; x=1749160138; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=7znCh6zDnVjvQkcjxiU/GSJCmce4JgiMV3o2WwlRE9U=;
-        b=DdBREZoto3srM2lsLfR8fbXTgiNqHqSwsh2mNKCUzs5HftzH7+7p63nI740AqoF3wX
-         JVwhkUSurMLEIUX3GzfdiXjGkSFZ9Bedixj3Gf1g9/99/HfRE4iPNtxfUmz5b+FGQCSd
-         slywfuVuXZ+wTSjESc47sbtYHFKqQZYv6eEo8=
+        d=purestorage.com; s=google2022; t=1748555420; x=1749160220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rP04lYlYhCzSKYbIYDEOX6Aw1AXsd7vtsQQ8TB3garM=;
+        b=gDiKd1/7T8j7pDdtqf1JV1RDGO7WzTj4GRjmAA8GThzbNv0gWlGihQufGgKBO4BvkQ
+         +Urvt6zTV6jMRcAmkNo4ekdFmdMNH1vIDNsTztLrJB7K8lFDl61a2JnN8Uz9u4D6FeyK
+         VHkJRPBWuzQYXYAxm59gLxIgHfVUQXiZV7RTQKEgu7PiXS9Th+JZZ8VpmynGvLTNQgdf
+         ddjk9sIt/yZcRoZqYFV8qHejmwnjYid3pEc+U12iSUvu+vY9eoavNjvUpQnSqagH92yF
+         dpDGa3Ja/+CBU0IJz1L1A5WoPFYJ2CF31ZyzZaS0H9l7junNduUHmEn26MundbQrv974
+         xbJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748555338; x=1749160138;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1748555420; x=1749160220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7znCh6zDnVjvQkcjxiU/GSJCmce4JgiMV3o2WwlRE9U=;
-        b=PEPch+QF5izunvApoOGoLOvAOj2EMtUNSdUJqfGFr51F4rVxzaoTb5ppYvcQqPtrPw
-         tDIsIMOtuhROqO95LQ7IHeS9EAlrCuDMMcOJYgVlgVcLYnU7HsPC/2abeqA/nccwAX2n
-         qxIyM5+kS2zhGrjewsGcx+a5g4wfCBVekUJIzZCas5Fj9NoD1MUvkznh0vYNrBLz6KIz
-         uchbAEifwUYs8nmkYKdb5LlDEjTWG8vMVpeVXzMrAj++RaNIysGeH/Th3ZEzvXXEYMWG
-         6c6wX+EAiSoncNbhJlNtOaqrBMvG5ZctWNW/L3f/jAq5qfANavP/rteLUI8aVRU3OECR
-         O6SA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQowW8HISSGjn9RTwhiAUDorCEA8dC2FFLeL6E7RJNjCkPiYebHME45yNLCX6QKXxk5foj/VXwlzY5260=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW3X0tmHYaWwX7W41zzBO/7gfXwVLXLimmPpHYixFXW4VpmclR
-	tIhMJX45c5ghY5hh+iPSg8fX6tW7FKjmpn9o0t4F+tFMpB3IulksGV7TPKlvzewg/A==
-X-Gm-Gg: ASbGnctfCrabEywkl4bVCTPBHmkAArSFPbJg+8GDhCeWO6oVvA6Zf5gXJQvbkHwG3Y5
-	dVSNj4imT3/JYuMikC3qDODummIy1rETjnHB0cWuLHxqar4ALAw2CjPGHjYLAvzRRCQvdw1HT/s
-	05DJxfhdUwz6eDktTj2uB/r97r8NMbOmiiM5LHtWWBlaFwPLPam9zLolHFMyMhZP2ITGlC72Ido
-	Jy7gp3l80TbRHzc7e+vL5bjOuCjx5Xd/unT1jC2LklVowXu2FSxINzDEDEMlK0c8eCNSNx7+LQQ
-	1u2ykjm4VuPjjNI2Mmmo7/Z65Q2Y181wMJLFaAytkoE47VP3c/TtGVApV6iarQ/PS+rKliihWsG
-	Ei2//ebqfJeqVa/8862FTtIS8wg==
-X-Google-Smtp-Source: AGHT+IHLQzUqXwC+6eoJQH8FpEmh8+zh1YVEa4qraw5X3qBwwjQyXGrhemm7JIaHqxee9ZUzekWCbg==
-X-Received: by 2002:a05:6a21:6d86:b0:1f5:7c6f:6c8b with SMTP id adf61e73a8af0-21ad954976dmr1844253637.10.1748555337827;
-        Thu, 29 May 2025 14:48:57 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff70b5sm1786617b3a.160.2025.05.29.14.48.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 14:48:57 -0700 (PDT)
-Message-ID: <ea01ab65-c33c-40e2-9a99-ed8307c9d89c@broadcom.com>
-Date: Thu, 29 May 2025 14:48:55 -0700
+        bh=rP04lYlYhCzSKYbIYDEOX6Aw1AXsd7vtsQQ8TB3garM=;
+        b=kjYvkdrba4UoqTxIaZzeYRBhW1KAOgC9HW98MEb6Ow3InAT2jEySlezFvds16wQPVb
+         LbTn/n8eRXSYE6NTUy1odVbLEp2oUEekjQD+DbLovJUsczIBAsYox6y5r8pft5FrC2Iq
+         1KxuXcCjoyw8RvYpWoceadGYGL9XadYPqnq3ekTKMoLz7mWzpC+BddGnjIsZUN/JCEEZ
+         YfAxe0fmepQwhT63oAiMJEG4pFnKirbW4B4C5P0bVB2WkjvXWBaLhm/d/4h3CAqNpE8P
+         cB0BAcsf60tYKzvxD/p/e4Gt/jjzB7G+JFr3QhR3GA2jWJCzs3yi8xuWHO1+I7GNmB2G
+         R2tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCrYULjXO2gO+/bp4VMkp4UmbbPAlnb2+wh6MYRLY+PR5OcNd9ijeY1ItVY50FLRmBCpqp4K9hexKmrk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu8a6AHG/OdbbFh2gMIHVw78V8iP9e2qU6ptcDMs3ZR1yGMz3V
+	9DuOXfEUtk9roRYOuQwpzsa+v6d/WIEZxkFR0pCWjeg5S6xCMR1CaFJ1ZtI6UTHmrjQ=
+X-Gm-Gg: ASbGncubE+T00iDOTb99sCa6H+2Tw2drADQ+7/mNoNfcvg1zm384rhQ/GGcKFUK5Ovb
+	boERqcfDQDGn/cGcrVX++N25iWymYX5UIsxoisU28GRmlgBLoqfl5RNkIdszPgPPxaEPtjOgedV
+	PknPcvvc+YCnKizyO62w8MF1YQGd6xZtwDbknWz8i5yE62+qZDV9NbcBEwkdhMYROcl++4QV0Ln
+	BnkcFW1cNokPtoji6GSJY9SvanFPTL6n0OBtvzxIVkajsnEHFGwaU6gvoBV6nyhDbZp0Hmw69Tf
+	3pr57F+V7KVb+wLbOgbWW5QIS5yQ0UWNUHypHjUM2kEy/sn3Ufn6/47iXtAZ0ORgqTjDHMA9nYc
+	=
+X-Google-Smtp-Source: AGHT+IG0nN5FxWPpsof9ZPbRsP2V6n/QqXkYMji1Ib8QOq0dFqjz8mtVxzH2o1QOtFy+/EyOLFY7nw==
+X-Received: by 2002:a17:902:d4c1:b0:235:7c6:ebbf with SMTP id d9443c01a7336-23529506db3mr16952215ad.35.1748555420519;
+        Thu, 29 May 2025 14:50:20 -0700 (PDT)
+Received: from dev-mkhalfella.purestorage.com ([2620:125:9007:640:ffff::a2e9])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-23506cf523esm16698255ad.170.2025.05.29.14.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 14:50:19 -0700 (PDT)
+From: Mohamed Khalfella <mkhalfella@purestorage.com>
+To: James Smart <james.smart@broadcom.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	Mohamed Khalfella <mkhalfella@purestorage.com>,
+	Yuanyuan Zhong <yzhong@purestorage.com>,
+	Michael Liang <mliang@purestorage.com>,
+	Randy Jennings <randyj@purestorage.com>
+Subject: [PATCH] block: Fix blk_sync_queue() to properly stop timeout timer
+Date: Thu, 29 May 2025 15:49:28 -0600
+Message-ID: <20250529214928.2112990-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: bcm63xx-hsspi: fix shared reset
-To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- dgcbueu@gmail.com, william.zhang@broadcom.com, kursad.oney@broadcom.com,
- jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
- broonie@kernel.org, p.zabel@pengutronix.de, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250529130915.2519590-1-noltari@gmail.com>
- <20250529130915.2519590-3-noltari@gmail.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250529130915.2519590-3-noltari@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 5/29/25 06:09, Álvaro Fernández Rojas wrote:
-> Some bmips SoCs (bcm6362, bcm63268) share the same SPI reset for both SPI
-> and HSSPI controllers, so reset shouldn't be exclusive.
-> 
-> Fixes: 0eeadddbf09a ("spi: bcm63xx-hsspi: add reset support")
-> Reported-by: Jonas Gorski <jonas.gorski@gmail.com>
-> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+[ 5084.255110] INFO: task kworker/42:1H:914 blocked for more than 917 seconds.
+[ 5084.255563]       Not tainted 5.14.0-503.22.1mk.el9.x86_64 #6
+[ 5084.255966] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 5084.256421] task:kworker/42:1H   state:D stack:0     pid:914   tgid:914   ppid:2      flags:0x00004000
+[ 5084.256794] Workqueue: kblockd blk_mq_timeout_work
+[ 5084.257200] Call Trace:
+[ 5084.257557]  <TASK>
+[ 5084.257909]  __schedule+0x229/0x550
+[ 5084.258322]  schedule+0x2e/0xd0
+[ 5084.258665]  schedule_timeout+0x11f/0x160
+[ 5084.259003]  __wait_for_common+0x90/0x1d0
+[ 5084.259414]  ? __pfx_schedule_timeout+0x10/0x10
+[ 5084.259740]  __flush_work.isra.0+0x160/0x230
+[ 5084.260072]  ? __pfx_wq_barrier_func+0x10/0x10
+[ 5084.260390]  __cancel_work_sync+0x104/0x1a0
+[ 5084.260701]  ? __timer_delete_sync+0x2c/0x40
+[ 5084.261008]  nvme_sync_io_queues+0x53/0xa0 [nvme_core]
+[ 5084.261399]  __nvme_fc_abort_outstanding_ios+0x1b8/0x250 [nvme_fc]
+[ 5084.261700]  nvme_fc_error_recovery+0x2d/0x50 [nvme_fc]
+[ 5084.261997]  nvme_fc_timeout.cold+0x12/0x24 [nvme_fc]
+[ 5084.262353]  blk_mq_handle_expired+0x7e/0x160
+[ 5084.262637]  bt_iter+0x8b/0xa0
+[ 5084.262912]  blk_mq_queue_tag_busy_iter+0x2b8/0x590
+[ 5084.263224]  ? __pfx_blk_mq_handle_expired+0x10/0x10
+[ 5084.263490]  ? __pfx_blk_mq_handle_expired+0x10/0x10
+[ 5084.263748]  ? __call_rcu_common.constprop.0+0x210/0x2b0
+[ 5084.264002]  blk_mq_timeout_work+0x162/0x1b0
+[ 5084.264307]  process_one_work+0x194/0x380
+[ 5084.264550]  worker_thread+0x2fe/0x410
+[ 5084.264788]  ? __pfx_worker_thread+0x10/0x10
+[ 5084.265019]  kthread+0xdd/0x100
+[ 5084.265306]  ? __pfx_kthread+0x10/0x10
+[ 5084.265527]  ret_from_fork+0x29/0x50
+[ 5084.265741]  </TASK>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+nvme-fc initiator hit hung_task with stacktrace above while handling
+request timeout call. The work thread is waiting for itself to finish
+which is never going to happen. From the stacktrace the nvme controller
+was in NVME_CTRL_CONNECTING state when nvme_fc_timeout() was called.
+We do not expect to get IO timeout call in NVME_CTRL_CONNECTING state
+because blk_sync_queue() must have been called on this queue before
+switching from NVME_CTRL_RESETTING to NVME_CTRL_CONNECTING.
+
+It turned out that blk_sync_queue() did not stop q->timeout_work from
+running as expected. nvme_fc_timeout() returned BLK_EH_RESET_TIMER
+causing q->timeout to be rearmed after it was canceled earlier.
+q->timeout queued q->timeout_work after the controller switched to
+NVME_CTRL_CONNECTING state causing deadlock above.
+
+Add QUEUE_FLAG_NOTIMEOUT queue flag to tell q->timeout not to queue
+q->timeout_work while queue is being synced. Update blk_sync_queue() to
+cancel q->timeout_work first and then cancel q->timeout.
+
+Fixes: 287922eb0b18 ("block: defer timeouts to a workqueue")
+Fixes: 4e9b6f20828a ("block: Fix a race between blk_cleanup_queue() and timeout handling")
+Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+Reviewed-by: Yuanyuan Zhong <yzhong@purestorage.com>
+Reviewed-by: Michael Liang <mliang@purestorage.com>
+Reviewed-by: Randy Jennings <randyj@purestorage.com>
+---
+ block/blk-core.c       | 10 ++++++++--
+ block/blk-mq-debugfs.c |  1 +
+ include/linux/blkdev.h |  2 ++
+ 3 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index b862c66018f2..8b70c0202f07 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -219,8 +219,11 @@ EXPORT_SYMBOL_GPL(blk_status_to_str);
+  */
+ void blk_sync_queue(struct request_queue *q)
+ {
+-	timer_delete_sync(&q->timeout);
++	blk_queue_flag_set(QUEUE_FLAG_NOTIMEOUT, q);
++	synchronize_rcu();
+ 	cancel_work_sync(&q->timeout_work);
++	timer_delete_sync(&q->timeout);
++	blk_queue_flag_clear(QUEUE_FLAG_NOTIMEOUT, q);
+ }
+ EXPORT_SYMBOL(blk_sync_queue);
+ 
+@@ -383,7 +386,10 @@ static void blk_rq_timed_out_timer(struct timer_list *t)
+ {
+ 	struct request_queue *q = from_timer(q, t, timeout);
+ 
+-	kblockd_schedule_work(&q->timeout_work);
++	rcu_read_lock();
++	if (!blk_queue_notimeout(q))
++		kblockd_schedule_work(&q->timeout_work);
++	rcu_read_unlock();
+ }
+ 
+ static void blk_timeout_work(struct work_struct *work)
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index 29b3540dd180..a98ff6fbf75d 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -81,6 +81,7 @@ static int queue_pm_only_show(void *data, struct seq_file *m)
+ #define QUEUE_FLAG_NAME(name) [QUEUE_FLAG_##name] = #name
+ static const char *const blk_queue_flag_name[] = {
+ 	QUEUE_FLAG_NAME(DYING),
++	QUEUE_FLAG_NAME(NOTIMEOUT),
+ 	QUEUE_FLAG_NAME(NOMERGES),
+ 	QUEUE_FLAG_NAME(SAME_COMP),
+ 	QUEUE_FLAG_NAME(FAIL_IO),
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index 332b56f323d9..c0e6a18f5325 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -633,6 +633,7 @@ struct request_queue {
+ /* Keep blk_queue_flag_name[] in sync with the definitions below */
+ enum {
+ 	QUEUE_FLAG_DYING,		/* queue being torn down */
++	QUEUE_FLAG_NOTIMEOUT,		/* do not schedule timeout work */
+ 	QUEUE_FLAG_NOMERGES,		/* disable merge attempts */
+ 	QUEUE_FLAG_SAME_COMP,		/* complete on same CPU-group */
+ 	QUEUE_FLAG_FAIL_IO,		/* fake timeout */
+@@ -657,6 +658,7 @@ void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);
+ 
+ #define blk_queue_dying(q)	test_bit(QUEUE_FLAG_DYING, &(q)->queue_flags)
+ #define blk_queue_init_done(q)	test_bit(QUEUE_FLAG_INIT_DONE, &(q)->queue_flags)
++#define blk_queue_notimeout(q)	test_bit(QUEUE_FLAG_NOTIMEOUT, &(q)->queue_flags)
+ #define blk_queue_nomerges(q)	test_bit(QUEUE_FLAG_NOMERGES, &(q)->queue_flags)
+ #define blk_queue_noxmerges(q)	\
+ 	test_bit(QUEUE_FLAG_NOXMERGES, &(q)->queue_flags)
 -- 
-Florian
+2.49.0
+
