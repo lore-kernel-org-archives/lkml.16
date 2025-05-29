@@ -1,116 +1,102 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A7C230264
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9661C84C6;
+	Thu, 29 May 2025 17:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748538067; cv=none; b=sur+odXgpcK+cHeOVc88oIukfEbxex32JudQZuWh145+LE4K4HHESVfAMn92GE9xNTfxv6n4hvoC19ajbzQgyYwg7y+pLd3PbagK1DfeJFFzHZCbzO2GktLyb0Ehy6I32dzZhECi/hcJ+eO7su79SwEdRqlqRTo3q/Bta5rHFs4=
+	t=1748538087; cv=none; b=pMRT3ZkKkeSZzspxwDhDWts1N92Kovv59lzWts51CGmlF+ww1Rv6cvzSpZ3RHxMM5cCAJ+PHSqraKlble04JE7fo9r1Q4zov0mTcpT+Cc+6GasTkwMomILyxPAUPbt8aNNaKTaZwG1MQOUqMpaYV+BqR2JNihyTMDEbpUA359kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748538067; c=relaxed/simple;
-	bh=uPum7yv/dAZtpDFCqHdVSBCWZGxdW+YMTMLQT39qaE4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bRWBMzL76M1j8h8+RrRdiX+3mYddXyoofMhw1f30VOS0kA/x95aMJGrg84skqa8f9nGjvVJF3sS9zlBKlg/2bh3EDleCEgCgl/QwhD6gVEbmzTaYOJblhouZxiehmv/+Wntg3njaavBhztXrgDNhK+DCFa6YRwOkQ+XcSnztsCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S85SxyHK; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748538087; c=relaxed/simple;
+	bh=Qon+5AIEhGN/U2Ml0PzbagpjZv5nBG0yly2bPaMLFYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iM6d5L18GO3OROTg5YNVFQq0g4tdreffAmX9TMdghhFTfYRJhR/JkMJXuDGsQ3k/00V8gJZORsOCqWNKbvbe13JFGgCKSDS8BPisM/jEd0KDHyizCQgkCfk3gPdkqIDisec4U37LB/iKjOJ9mPm7gPPJeo8CN8sdpdM8AS67Tuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TCiRTT0L; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S85SxyHK"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748538052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B2Db6aTs76/+FLLSB4vYJtBNL4/EggBTobsksTp3ywQ=;
-	b=S85SxyHKQ8gBkcwFuzwNP9qt3xWEVGNReKP5S7NC0ua6BVQAs9DgbVQavl6/zBGnTY29WR
-	tQ8aDJyMBSNn3jt5fYeWAWx4EelopbU61jDKGFrF4mI45uQzvHEzSg+0ROmSOV3HQcEycr
-	R5a14Tdd3OfqvXVPygJmzQaSkuuQOKU=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	qmo@kernel.org,
-	jolsa@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next  2/3] selftests/bpf: Add cookies check for raw_tp fill_link_info test
-Date: Fri, 30 May 2025 00:57:58 +0800
-Message-Id: <20250529165759.2536245-2-chen.dylane@linux.dev>
-In-Reply-To: <20250529165759.2536245-1-chen.dylane@linux.dev>
-References: <20250529165759.2536245-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCiRTT0L"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2349282084bso14875335ad.1;
+        Thu, 29 May 2025 10:01:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748538085; x=1749142885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qon+5AIEhGN/U2Ml0PzbagpjZv5nBG0yly2bPaMLFYg=;
+        b=TCiRTT0LLb2alGI/WCepl57tnl1FHeUOLbwD8UMmGNn97ldwSfHfvFW/pCXob38hj7
+         YzBdpqHYO3UOZzsHKAWNHFlyhUgaXpWpaGN8A66nFtgM0TjAKykrrATVPs8WIMeFx329
+         yQusXgpO0aoqLI8JLxA+ixlvg2JbUmMFFOKo3ZG4AqhSQuAqTmMZtfAFI8DyY7lbqEiU
+         t3Yn6WOsqFbq7u/Ybd4AZclV0ZBS9vX6K8QjFQ4bKIzOfQSvsBUwUvAlcpgLPbD3iJ+A
+         FsABXk61WQf20SrEIPkUWnzdsrf2fM2AxxaRvcAhU1QbwqO3iqEfF/i+WhloAQ0+VXe0
+         GiaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748538085; x=1749142885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qon+5AIEhGN/U2Ml0PzbagpjZv5nBG0yly2bPaMLFYg=;
+        b=wOekApubejW3U+9cXRcT7280uSQfHVjk5jGx3WPnOEpcZMxlOWSWu8zZq/bkQ62vrM
+         MDGTjXmPVIx2Z9XVAD3Y8FbwtFCVR3BCYMFjVIJr9Dcn40tnd+0g0Dky7G0f97joRnpX
+         4/w/PGO8+eozaTxZHrquWNheu6o+h7xqC6NaSUraURaxA7PgTh3thegY9wpaa6hfCbyY
+         rCkyLQ1pZ27qlyp9d5dKfDZ6UZ+lpv/50c0AW3jctB9INp7LcpJAnKR8Uv942+P/HpTE
+         eGQPfwaDvT1/VFqQZi5pZ1UNlxSNWUcMWpVoNgN4uAwMME7OwBu3ZY7akoRRpM36U5ym
+         Lzbg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5WcEyEwA9r9VKXPzBoRO/7YAKC1iI+3fEvFp6vlQTVuhWp+hzO8ibq+zRt6TQ3g4YukO9MOG50QOmbeH3@vger.kernel.org, AJvYcCVEbr5cTQqlSEJPu4AlnSbbLT+k9VwCQiXLsQwiPA/YAWYRB9v/E6KL1IeewQg0dcxdjuhYXFu2hf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw0+VWDaIZyTnVR3LMS0X2QcUied/KudfllHUoqTO0UjLNbK/h
+	C+r9B6546HS7wyJY8JtxRZ5SIGWm7E6WhSwX1vYAEjBuO8eYZfC77VyUtEFMEezYbZTYqTGiax6
+	8PcNVzXnwJXk/vNvCiz9YK76T9x04icQ=
+X-Gm-Gg: ASbGnctFLjoqJkigYYG1e7HiF1E/2U+oVky6dy3xyL3oX2fFL9ZjNVYsstrZvYhjTs1
+	Il9ceFObdF5n/l4RKCFYexYzIUHzYyctzFViVxd3NzFtnmx04MkMf0bloC/qBTjC1vqW23mi7Pb
+	0W7oJPHmvi8ZOcJnoyu+gDJRKlLEdOR7YKPtdurUpCwNFF
+X-Google-Smtp-Source: AGHT+IFgkNP7vkcrTlYYHlOtz69B/akTJbc6L2wvPEc1Ps7LHmn5FBeLxi/zMLqmHRyEptAlLY/KDlED/nG9Iabckpw=
+X-Received: by 2002:a17:90b:3b52:b0:311:c1ec:7d05 with SMTP id
+ 98e67ed59e1d1-31241a805femr414821a91.35.1748538083548; Thu, 29 May 2025
+ 10:01:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250528080119.9380-1-gye976@gmail.com> <CAHp75VdhgftCKAuBuoDJ4d9HcKLqkGJ+bdx5gxQmkCSWO7SBAw@mail.gmail.com>
+ <CAKbEznv+GCBOaWxkgcufJrX4knYT=JKQC3iekowFThs7b7CuXw@mail.gmail.com> <20250528180305.000079b7@huawei.com>
+In-Reply-To: <20250528180305.000079b7@huawei.com>
+From: Gyeyoung Baek <gye976@gmail.com>
+Date: Fri, 30 May 2025 02:01:11 +0900
+X-Gm-Features: AX0GCFuyJmo4JEbVA_vmmzf3ceUBnLThRWzdizDbc0waB5aWRAl4voTxru1_4FY
+Message-ID: <CAKbEznto+=5JQSrnEVM-n+svfsRSA_ebm9msj3gaoCjFkqPw8w@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: trigger: Avoid data race
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add tests for getting cookie with fill_link_info for raw_tp.
+On Thu, May 29, 2025 at 2:03=E2=80=AFAM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Wed, 28 May 2025 22:27:25 +0900
+> Gyeyoung Baek <gye976@gmail.com> wrote:
+>
+> > On Wed, May 28, 2025 at 6:22=E2=80=AFPM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Wed, May 28, 2025 at 10:01=E2=80=AFAM Gyeyoung Baek <gye976@gmail.=
+com> wrote:
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- .../selftests/bpf/prog_tests/bpf_cookie.c     | 26 ++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+> >
+> > Yes, then I'll send v3, thanks!
+> Slow down :)
+>
+> Reply to v1. In general don't rush new versions out so quickly.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
-index 6befa87043..0774ae6c1b 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
-@@ -635,10 +635,29 @@ static void tp_btf_subtest(struct test_bpf_cookie *skel)
- 	bpf_link__destroy(link);
- }
- 
-+static int verify_raw_tp_link_info(int fd, u64 cookie)
-+{
-+	struct bpf_link_info info;
-+	int err;
-+	u32 len = sizeof(info);
-+
-+	memset(&info, 0, sizeof(info));
-+	err = bpf_link_get_info_by_fd(fd, &info, &len);
-+	if (!ASSERT_OK(err, "get_link_info"))
-+		return -1;
-+
-+	if (!ASSERT_EQ(info.type, BPF_LINK_TYPE_RAW_TRACEPOINT, "link_type"))
-+		return -1;
-+
-+	ASSERT_EQ(info.raw_tracepoint.cookie, cookie, "raw_tp_cookie");
-+
-+	return 0;
-+}
-+
- static void raw_tp_subtest(struct test_bpf_cookie *skel)
- {
- 	__u64 cookie;
--	int prog_fd, link_fd = -1;
-+	int err, prog_fd, link_fd = -1;
- 	struct bpf_link *link = NULL;
- 	LIBBPF_OPTS(bpf_raw_tp_opts, raw_tp_opts);
- 	LIBBPF_OPTS(bpf_raw_tracepoint_opts, opts);
-@@ -656,6 +675,11 @@ static void raw_tp_subtest(struct test_bpf_cookie *skel)
- 		goto cleanup;
- 
- 	usleep(1); /* trigger */
-+
-+	err = verify_raw_tp_link_info(link_fd, cookie);
-+	if (!ASSERT_OK(err, "verify_raw_tp_link_info"))
-+		goto cleanup;
-+
- 	close(link_fd); /* detach */
- 	link_fd = -1;
- 
--- 
-2.43.0
+Yes, I should have waited for your review...
+I thought the situation was pretty simple,
+but there were many details as you pointed out.
+I'll be more careful going forward, thanks.
 
+--
+Best regards,
+Gyeyoung
