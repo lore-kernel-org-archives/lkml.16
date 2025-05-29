@@ -1,155 +1,230 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E135F224B1B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BF5E647;
+	Thu, 29 May 2025 13:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524660; cv=none; b=auyPqZp2K9cCBUKX0fBuyrV8OAP4QvvL0XNTTEYwTFMKsTnwIm5hetw0Goc0UMe7r+XumtDfB2I+7emGqBXNyBqNmsL/rei3WBLgnAHfG9sJjpBJJO32DbZadYuVeLcO9GBxxxrX8KvsEfCieFMhG9TrGw0HbnOQkEsDQp1F1Mk=
+	t=1748524718; cv=none; b=Koua3w1FlH9IE2dsKLSWHYOdP6kH+UkQexhAw4ojFkCoke8GKUQ5B2mR/nmExfYeqXQQURKfLhXLCFFQQqnZTpOPdl83eCazMOXR0+Z/CTcPj6QHnw5SaLFuMk5v5NU4VVGXnWRUpHl0Y6n9DHxYF98+RupRG1/c7qWhQO1X5Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524660; c=relaxed/simple;
-	bh=GOkt5yDdidXHbFaA/H5wtMl1jkL32V2Srw3qR/P+i6M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BohhvUY0pwfEHP5DeueEh7xHUlsTzYzNlU4fPT4C1yKa1Gjx0p4wj08y9bzldyhBVTIOuxNsKnTZQ8zz1nvnUGjD4lYMobbLZvdByfNe9uyZMPasuWpx5h5jjkI/eRPucDT4ef5BumpfVV/eBab8QzqZrB4cJpPYcZxAiTpAMyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vg5K71Ra; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748524718; c=relaxed/simple;
+	bh=dDR19bDC5JZUugujEx5B1RMPL8I48K99kOI0S/WVucA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vBmdjjNz81s0G2kgrQYxWN+Uw0pPvE7E2Gm4qhr45I1IWxOFme5KjjqZB4kBUbtSjDvu5QGgLNutRq0j53IU8aB2XYjvEOvySS2pCqmokyOAPEahrNlklB6iL3qeSgafi5Xwz6KfEwbK4AvibhuvdpwVlPtRdJjJI7f09SMtIew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=e/Aip7/d; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vg5K71Ra"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70e767ce72eso9534777b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748524658; x=1749129458; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LRoGRMBV7PqtgKTAeThep6xLjkOzYN0wpsMcbJOtKx4=;
-        b=vg5K71Racq09Kn0TNChtFoduf5yjNz8+RZVkek9oY2At0P/qlE6sHJIX2m7oUBE9b8
-         TEG1ymI6QpXkzxSurjQo+8IKi8nvhpSYuZWzIf2R9Jz21as6jigXxkFSxWT4gq7iXxUG
-         JqudrlJiAZTZN6DGh2ts5t4PnIewE3tWQpjmsLp/qS49LxEkzrGwL73CGOP1MK9RPTcA
-         yk6+Zh/5RDd1Z2UVGB/HNsxU9QelkJqKu47fYb0npP7eB84tLRzmw7P4thA2GRO0ms65
-         YCjRGie3NHOfS+A6iEckpqb8pmvtk7Pk6pswHlIXs+/6+at3RtAlNemwbN+qYSIUpUeo
-         Mwvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748524658; x=1749129458;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LRoGRMBV7PqtgKTAeThep6xLjkOzYN0wpsMcbJOtKx4=;
-        b=ANBn9JWmED1NsrH87zRibKSml3CEyPoKOJ47dZ1IPm4Y910FO5Bvvw4AfqaXK+lGvk
-         ML84VJcaANFXXisULvZ3DgaTzJbqYxeQJH1uaUngPjmBhNzPDehKC8iCmYfKs6ZaMj1+
-         Arv/noc28UVvlpEoRUs95naKy2LNhxLZlabBvAboRajDnDsKiy5xIUT6Y8CP6crsXawp
-         eBo+yE1OJaDo/c2g45sODSIb8BIWZ7KPScSh/fDw1V52zudlti2IJAJbxFSbdoVDYqP2
-         IleMfFu94Hk+860tyrF2NBrkSI0lX8itmK4HFOHDNaVY0RJyZ8qGSvKC5LcZAc9kwHYl
-         +EbA==
-X-Forwarded-Encrypted: i=1; AJvYcCWyZfaY9EUcb7hsEKbQKaZmOav7FARrHHMon2E5pVt1SRnzWXpitMmhvv2l8d7XcOxJDLpJGziHvwDSD6Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8/LZjYdLqCDs+/bHBtYTqDfKTQtM6Lh5tSzweXHwIlkJlySMC
-	PaH7kF5Xx0QkpuMDJ3Cs4uMJ/S+1d+PRfoEzRnoJkuyndizU095C8hppkUNPlRx3jquTVAkO9aE
-	dgLunkUwIE7J0i46nJv+jpypfLcZZkKfF/6PZShAv6w==
-X-Gm-Gg: ASbGncvELVltyzfThSHUe5IiDBuKbB+Q/0lz+WiA31UDK8n6VpSPt4Cq3AdXP8AoClJ
-	iNMLbiWVcrpHy5g+Quv6jy6K4v3oXc29sVxuA0PHD1JQn5PU61pQPbmm+2RqPKz9BwU4yxJfKRH
-	eX0WgxYptZ5USy8JPUquuDqVm9W8nV7uBAcQ==
-X-Google-Smtp-Source: AGHT+IFmyl1zNSP/1T1Fu+Ipq6e7NtBsNPd9Sq1kBRpXHvD2CvYn2FtBpyWhYLC/DqeY2/E2ImvPRZWBInKH8wClwcU=
-X-Received: by 2002:a05:690c:6905:b0:70e:2cba:868c with SMTP id
- 00721157ae682-70e2d9a6cb3mr318642537b3.11.1748524657490; Thu, 29 May 2025
- 06:17:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="e/Aip7/d"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id DC0722078620; Thu, 29 May 2025 06:18:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC0722078620
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748524716;
+	bh=0YIx+soRnsPMWQGXYcEonREXvzQfM2YauXJU2m6gWKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e/Aip7/dtNM7L0sG6qd1E3tSQY9Ihw52xBFbCJFTNqPoUFBdEKWzVGbowRjkfFkdo
+	 kyafS+8ThKIeByLNGsTjxlR50BkZibsHpkT5fW7diINAKUlE77lyeS8hPg8wsGDbAy
+	 Th6uipLzeRnHtLXhRiyE/lUs7WVYI0BruM1ZzgY0=
+Date: Thu, 29 May 2025 06:18:36 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4 5/5] net: mana: Allocate MSI-X vectors dynamically
+Message-ID: <20250529131836.GC27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1748361543-25845-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250528185235.GJ1484967@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org> <aDhWlytLCxONZdF9@lpieralisi>
-In-Reply-To: <aDhWlytLCxONZdF9@lpieralisi>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Thu, 29 May 2025 14:17:26 +0100
-X-Gm-Features: AX0GCFttNUvo5SsO8pMKnRvfFUtx-_6vAOX9kBCeKJ98X_-miBgBYJmCbmILETs
-Message-ID: <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
-Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, andre.przywara@arm.com, 
-	Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, 
-	Timothy Hayes <timothy.hayes@arm.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528185235.GJ1484967@horms.kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, 29 May 2025 at 13:44, Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
->
-> [+Andre, Peter]
->
-> On Tue, May 13, 2025 at 07:47:54PM +0200, Lorenzo Pieralisi wrote:
-> > +      reg:
-> > +        minItems: 1
-> > +        items:
-> > +          - description: IRS control frame
->
-> I came across it while testing EL3 firmware, raising the topic for
-> discussion.
->
-> The IRS (and the ITS) has a config frame (need to patch the typo
-> s/control/config, already done) per interrupt domain supported, that is,
-> it can have up to 4 config frames:
->
-> - EL3
-> - Secure
-> - Realm
-> - Non-Secure
->
-> The one described in this binding is the non-secure one.
->
-> IIUC, everything described in the DT represents the non-secure address
-> space.
+On Wed, May 28, 2025 at 07:52:35PM +0100, Simon Horman wrote:
+> On Tue, May 27, 2025 at 08:59:03AM -0700, Shradha Gupta wrote:
+> > Currently, the MANA driver allocates MSI-X vectors statically based on
+> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
+> > up allocating more vectors than it needs. This is because, by this time
+> > we do not have a HW channel and do not know how many IRQs should be
+> > allocated.
+> > 
+> > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
+> > after getting the value supported by hardware, dynamically add the
+> > remaining MSI-X vectors.
+> > 
+> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> 
+> ...
+> 
+> > +static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
+> > +{
+> > +	struct gdma_context *gc = pci_get_drvdata(pdev);
+> > +	struct gdma_irq_context *gic;
+> > +	int *irqs, *start_irqs, irq;
+> > +	unsigned int cpu;
+> > +	int err, i;
+> > +
+> > +	cpus_read_lock();
+> > +
+> > +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
+> > +	if (!irqs) {
+> >  		err = -ENOMEM;
+> > -		goto free_irq_array;
+> > +		goto free_irq_vector;
+> >  	}
+> >  
+> >  	for (i = 0; i < nvec; i++) {
+> > -		gic = &gc->irq_contexts[i];
+> > +		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
+> > +		if (!gic) {
+> > +			err = -ENOMEM;
+> > +			goto free_irq;
+> > +		}
+> > +
+> >  		gic->handler = mana_gd_process_eq_events;
+> >  		INIT_LIST_HEAD(&gic->eq_list);
+> >  		spin_lock_init(&gic->lock);
+> > @@ -1418,69 +1498,128 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+> >  			snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
+> >  				 i - 1, pci_name(pdev));
+> >  
+> > -		irq = pci_irq_vector(pdev, i);
+> > -		if (irq < 0) {
+> > -			err = irq;
+> > -			goto free_irq;
+> > +		irqs[i] = pci_irq_vector(pdev, i);
+> > +		if (irqs[i] < 0) {
+> > +			err = irqs[i];
+> > +			goto free_current_gic;
+> >  		}
+> >  
+> > -		if (!i) {
+> > -			err = request_irq(irq, mana_gd_intr, 0, gic->name, gic);
+> > -			if (err)
+> > -				goto free_irq;
+> > -
+> > -			/* If number of IRQ is one extra than number of online CPUs,
+> > -			 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
+> > -			 * same CPU.
+> > -			 * Else we will use different CPUs for IRQ0 and IRQ1.
+> > -			 * Also we are using cpumask_local_spread instead of
+> > -			 * cpumask_first for the node, because the node can be
+> > -			 * mem only.
+> > -			 */
+> > -			if (start_irq_index) {
+> > -				cpu = cpumask_local_spread(i, gc->numa_node);
+> > -				irq_set_affinity_and_hint(irq, cpumask_of(cpu));
+> > -			} else {
+> > -				irqs[start_irq_index] = irq;
+> > -			}
+> > -		} else {
+> > -			irqs[i - start_irq_index] = irq;
+> > -			err = request_irq(irqs[i - start_irq_index], mana_gd_intr, 0,
+> > -					  gic->name, gic);
+> > -			if (err)
+> > -				goto free_irq;
+> > -		}
+> > +		err = request_irq(irqs[i], mana_gd_intr, 0, gic->name, gic);
+> > +		if (err)
+> > +			goto free_current_gic;
+> 
+> Jumping to free_current_gic will free start_irqs.
+> However, start_irqs isn't initialised until a few lines below.
+> 
+> Flagged by Smatch.
+> 
 
-The dt bindings do allow for describing Secure-world devices:
-Documentation/devicetree/bindings/arm/secure.txt has the
-details. We use this in QEMU so we can provide a DTB to
-guest EL3 firmware that tells it where the hardware is
-(and which EL3 can then pass on to an NS kernel). It would
-be helpful for the GICv5 binding to be defined in a way that
-we can do this for a GICv5 system too.
+Thanks Simon, I'll get this in next version
 
-> Two questions:
->
-> - I don't have to spell out the IRS/ITS config frame (and SETLPI, by
->   the way) as non-secure, since that's implicit, is that correct ?
-
-Do you want the DT binding to handle the case of "CPU and GIC do not
-implement EL3, and the only implemented security state is Secure"
-without the kernel needing to do something different from "ditto ditto
-but the only implemented security state is Nonsecure" ?
-(Currently booting.html says you must be in NS, so we effectively
-say we don't support booting on this particular unicorn :-)
-But the secure.txt bindings envisage "kernel got booted in S",
-mostly for the benefit of aarch32.)
-
-> - How can the schema describe, if present, EL3, Secure and Realm frames ?
-
-The tempting thing to do is to have regs[] list the frames
-in some given order, but the spec makes them not simple
-supersets, allowing all of:
- * NS
- * S
- * NS, S, EL3
- * NS, Realm, EL3
- * NS, Realm, S, EL3
-
-secure.txt says:
-# The general principle of the naming scheme for Secure world bindings
-# is that any property that needs a different value in the Secure world
-# can be supported by prefixing the property name with "secure-". So for
-# instance "secure-foo" would override "foo".
-
-So maybe we could have
- reg : the NS frame(s)
- secure-reg : the S frame(s)
- realm-reg : the Realm frame(s)
- root-reg : the EL3 frame(s)
-
-??
-
-thanks
--- PMM
+> > +
+> > +		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
+> >  	}
+> >  
+> > -	err = irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
+> > +	/* If number of IRQ is one extra than number of online CPUs,
+> > +	 * then we need to assign IRQ0 (hwc irq) and IRQ1 to
+> > +	 * same CPU.
+> > +	 * Else we will use different CPUs for IRQ0 and IRQ1.
+> > +	 * Also we are using cpumask_local_spread instead of
+> > +	 * cpumask_first for the node, because the node can be
+> > +	 * mem only.
+> > +	 */
+> > +	start_irqs = irqs;
+> > +	if (nvec > num_online_cpus()) {
+> > +		cpu = cpumask_local_spread(0, gc->numa_node);
+> > +		irq_set_affinity_and_hint(irqs[0], cpumask_of(cpu));
+> > +		irqs++;
+> > +		nvec -= 1;
+> > +	}
+> > +
+> > +	err = irq_setup(irqs, nvec, gc->numa_node, false);
+> >  	if (err)
+> >  		goto free_irq;
+> >  
+> > -	gc->max_num_msix = nvec;
+> > -	gc->num_msix_usable = nvec;
+> >  	cpus_read_unlock();
+> > -	kfree(irqs);
+> > +	kfree(start_irqs);
+> >  	return 0;
+> >  
+> > +free_current_gic:
+> > +	kfree(gic);
+> >  free_irq:
+> > -	for (j = i - 1; j >= 0; j--) {
+> > -		irq = pci_irq_vector(pdev, j);
+> > -		gic = &gc->irq_contexts[j];
+> > +	for (i -= 1; i >= 0; i--) {
+> > +		irq = pci_irq_vector(pdev, i);
+> > +		gic = xa_load(&gc->irq_contexts, i);
+> > +		if (WARN_ON(!gic))
+> > +			continue;
+> >  
+> >  		irq_update_affinity_hint(irq, NULL);
+> >  		free_irq(irq, gic);
+> > +		xa_erase(&gc->irq_contexts, i);
+> > +		kfree(gic);
+> >  	}
+> >  
+> > -	kfree(gc->irq_contexts);
+> > -	gc->irq_contexts = NULL;
+> > -free_irq_array:
+> > -	kfree(irqs);
+> > +	kfree(start_irqs);
+> >  free_irq_vector:
+> >  	cpus_read_unlock();
+> > -	pci_free_irq_vectors(pdev);
+> >  	return err;
+> >  }
+> 
+> ...
