@@ -1,449 +1,106 @@
-Received: from mail-pj1-f98.google.com (mail-pj1-f98.google.com [209.85.216.98])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496F025EF94
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6A2247DEA
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562471; cv=none; b=KxKB5I6rmQ6xctU3GNI4aKupthsinc9BeQ/yCj9L/36TqVIC/vDt1brTHrO+O3eWKSfQpBR6r6Jio8MRqTROxOrQnH8yS+O0rl+veVzAFwtIMB5SS8XCY53aJXeiSPm7ryMbFBWRFzCMOy0xSgS2MQeUe2b8+jAdtV6aeYs8ReQ=
+	t=1748562611; cv=none; b=NVFR0FNjz5h2F0voQ/FycowimMDVq4RZyRen0iwvzK91V7KAfKyfq64nn2lJpPADQdpdd8YJmcP6343CkMeKpdqVgCorC3GMrZ/UYqxSeCpxCW0pS8VeackTXcDdvqJql4j+1D0lWYIlrlkCWoFRotHvXgV84P+mpfmEGh66tFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562471; c=relaxed/simple;
-	bh=cG6DwOTES7Wr1Mys+5MNrPViClJyvreq1N/+Wqx3nzw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HAT7mVKF7DioyCLj/dKJk1XQtfIifBpmCFDuv5K1iNnPPinDpu6rv+ytWgPD4R320YFuiemK1i1kKX6clJkmf7YL53AqV2oRqmMcjUTl15IO0+gvAAgWmxLQu6II9lc3XZSjQ36MBq7MQ0cgBWmzTacZn1AigoV2GL+O6avrcdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=e3yj3hpl; arc=none smtp.client-ip=209.85.216.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1748562611; c=relaxed/simple;
+	bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GPgQhIB8RyHc/VXnOc/1plWf+kQByhuZ2O2U5Xw31FCMhfsVRUFKHADHoN09pjZ6c/8bpUh3IbcT3j+Zm8WjfYTpoy4qM7ffNcu1kRtLVs0WZXd/fwmQqvWNLyIuzHQJTxMS9re0P179jq6V8UAzhmQrMsWgvD7jrE9YTUfsxkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5B1HEW0; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="e3yj3hpl"
-Received: by mail-pj1-f98.google.com with SMTP id 98e67ed59e1d1-3116db72bd7so1519691a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:47:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5B1HEW0"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e4564178bcso1624874137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1748562468; x=1749167268; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mqr8wPmXHui64U4BrsJfaf/eXjrHjuKhn37qP/UCybM=;
-        b=e3yj3hplIB5egdLA776Aq/L1+PD53TZzVL/t9Ql8/uUbW6prokdlWBewz/RQn7tVaT
-         hNLaSseDgEdKXkE40F+HPvXfiQD5YSvtBKrzxg/HH397tPAPdPr+QoL0YOE0wJdIMA+y
-         lAQ8jglztWGbjqkSzts1A1iVcrrL1YTpYxYbvzR4tVQiYyK/WJKvFjpXuHcn7pguWK2l
-         IzpZk3hJ5uRDtelB1y9OkXUnkiLbYv3a3QeSjisOY1ia+z64u2ao+yz04xxAIvK5czMQ
-         DU84MQiAD++Xu/5u3rooPewEDwWFoPAPgKWq9G0RYuA+6/l440O98dGlRsodX5BenufB
-         Axog==
+        d=google.com; s=20230601; t=1748562609; x=1749167409; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
+        b=G5B1HEW02erwdwrVBnU0j7QU3YNmjD8SJE4Infef6tDUNcPJ6erziSn3dZmvYwYa+l
+         Tyraw2OR3WkLv3sJ2l3U/c7F0J6QzNYFWG6vtuASlCuS7CU4QyPTb7s+BhHZIbO92BUI
+         i+iN9/NIdGZp3ig2wV5W7yfwoq0gFF4HVfQJCTwkXyapaDWBsen+oNK/N4TtT9nAQHyw
+         /Lji2GaUwutmzguW/idrIQZG2kavcs7L28AadE35+tHjwYXuk7cFvAxPykZw8Pp44NXi
+         EJv60MaSzjchHE7/m8tqCVoPoWARXuPz46coEj6wKnLxSZZwBdEFxf9RQhXWRcWHFGnn
+         KKag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562468; x=1749167268;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748562609; x=1749167409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mqr8wPmXHui64U4BrsJfaf/eXjrHjuKhn37qP/UCybM=;
-        b=ROs48jmGVD+YUgW0vyvy3pMAb7tsUwOk2Lpak0F43nZpXMdcHSdC5wRBENr24uhXRO
-         SY3PCuJqaFPWsy/E4jWL2YrYZaUXuFhS5Frb4cGRXXz7aVEV2mOhZVeCuwYwWsfHjnjG
-         9pbB6hJklGyCyRIXHx9JRrUGzU4iZVtyEqUUs/5mMFx78zcfsciZWpEj/HWSOVisb9QR
-         4u/qtj5nvJwqatBlutG/RTdhdkXG/45xykpSURxJR8pDruQ9ObEbdqqpHP7ATeCqg7Ml
-         eBwB3Jkxyh1ChDkmPlaD92RuyqZUUO2Jc2tIhBHU2hmC/3IKSZMYb2R+pMUL0dWQ+xLL
-         0lmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWVUSfRIX2P4uvh27PmNcEknVaB6mJSTbigyDBWUSXgVShCrHoTSmX2RMy3hBe8D6lvs4IeM2fJxzOVJ9c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycZTNJGOsIs7ghA0qSVcpuUU0JcYm25xumY18RpePUj5eRSkKW
-	9srNCIx4Y33sSOPKmLFbXShvEiTRWiZ2nLw3dpKHOh2UlvfPyELPZNCMSYQ1ZqvhpREodnKZrTN
-	9onI4WUkwDgfyrPJ6FJKOLzEnAeoCjf0/3msc
-X-Gm-Gg: ASbGncsYnuOshzzeKDegG1j7fDHTMcuTxai2OiJZHMNSMjmkRT7nQTD4SOcH2b5Gz1g
-	sbLtNZCEmSLU5RfXYDr6qlwJwGlrdUoD+XpV710RoGKiYK9e8CRaB2xMhErXU53LQ6ex9M0YnWh
-	jnYRiTXZD4PVl3WxQSWp6KGOqjhq5l0svUjaLsOt+FX5k+n7ErfO8gOOYFj8Bp94rp8+WqbPBfA
-	S/f9RJZS90NQXx16CpSxt8a/KHAzu8LYJfw5vm32cXXKktoZ88F//7l5+IHl8n0rqHhQGVQvq0u
-	ejwuhEPuP5xoaSSgPWtiIowebLQ6ttLR1Y3MC5G30N1rL/+UHu9B2htQ
-X-Google-Smtp-Source: AGHT+IG1ZPTXQp/BEvmIHUxdKJYm74BGOXdyiJgEIpYxUg7isBcxi57Ly1duzFJtzxTUubhEVl6D8HB0kQJI
-X-Received: by 2002:a05:6870:5baa:b0:2ba:11d5:ad64 with SMTP id 586e51a60fabf-2e921353e2fmr674071fac.23.1748562457590;
-        Thu, 29 May 2025 16:47:37 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 006d021491bc7-60c1ec07d44sm25115eaf.24.2025.05.29.16.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 16:47:37 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 34E313409F5;
-	Thu, 29 May 2025 17:47:35 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id C78EAE40FA4; Thu, 29 May 2025 17:47:34 -0600 (MDT)
-From: Uday Shankar <ushankar@purestorage.com>
-Date: Thu, 29 May 2025 17:47:15 -0600
-Subject: [PATCH v8 6/9] selftests: ublk: kublk: decouple ublk_queues from
- ublk server threads
+        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
+        b=V15PUdx0/BC4ITTXqJ31MVIPwq4cFVSe2vEYMF7GfIthoi0oqx8cigWbhH+mFuRMPU
+         bBLOnLYDQFNKP21Y99p+St5/9d/ZAtm2aSZ2Glsn6Gbe1tDq6sHzgJ1Iel0bWzwraDKQ
+         csw3sP2eunCP780+jI8DS7EDmYPeP5T5cLl3oFcm/k9JKP58yu0Fy7lwdZASuIV+6dQD
+         Tj3u6d/XSX9cWhaMwlfqr8/8XhZnPlF1Beozl2XnQkp5QRuRDpFGeNHoOUu3xXL3KhWS
+         5BvNmcTDfINNnt/iHF5XAjKxv5HWYLvtCz+hHqnVa494qPVgxyNxAOBMoenrNAwCKyhY
+         Gbxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNRVnkq8aS2XfxhZ+/6xamlb7AJXDPukJ/UzY1N7jBKjYe57wCGJDzlnLa2MPqe3Yv62cY5LrwenchUCc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP4vgzTQjHIrEgt28B71QGXb0PU4lXX0tlRVlzM+SwZYRp29gF
+	ZRPl5hqf14cZVmcbwsKTYXObfDF2Kb3HaFdbH3n4WV+dgXjD2ifhZu1cuR8NEouq12i+rn09P19
+	cgiA7eCwCefu/guwNCWZFiPJ2cg7I5J2oCdhcpl5u
+X-Gm-Gg: ASbGncsEDqnSWHHoAc3r2p74Bo1JQOBI1OY8Ffxminoq6CcrGmMBoZYnVcL/cuBu2K5
+	LNyCQmU4amj8dgovMr7qJcVh87cLPhmT/8MHnNxdfRX5Tx7aaQ4hrhJiaGytOKENwCcA5b19Z33
+	Ob03YBUH39hbSds7BmiU0sSGWgD4qIwgI/Py/RQayaEnA=
+X-Google-Smtp-Source: AGHT+IFt/ivTuvmPFrz20YmtJKKBjvwFbf5WtZzjBqYQF95rJUwlQrpq5rDMJHRKZAZ1A/zY+qqyl8WgCXnFzYIz3Uc=
+X-Received: by 2002:a05:6102:f9d:b0:4df:e510:242e with SMTP id
+ ada2fe7eead31-4e5ac0bc0e6mr7200256137.5.1748562608979; Thu, 29 May 2025
+ 16:50:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-ublk_task_per_io-v8-6-e9d3b119336a@purestorage.com>
-References: <20250529-ublk_task_per_io-v8-0-e9d3b119336a@purestorage.com>
-In-Reply-To: <20250529-ublk_task_per_io-v8-0-e9d3b119336a@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
- Caleb Sander Mateos <csander@purestorage.com>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
- Uday Shankar <ushankar@purestorage.com>
-X-Mailer: b4 0.14.2
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-4-blakejones@google.com> <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
+ <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com> <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
+From: Blake Jones <blakejones@google.com>
+Date: Thu, 29 May 2025 16:49:57 -0700
+X-Gm-Features: AX0GCFtrqvEMNdjlMwMgn5_lFeqF78T2xXt27TWAAtlEFWOjsQdw1dn9gHfduLI
+Message-ID: <CAP_z_Ci4X=GRJwKyUMUmypO-xvjuRUR-UPce5hzE_vPf2g_RLQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf: collect BPF metadata from new programs, and
+ display the new event
+To: Ian Rogers <irogers@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add support in kublk for decoupled ublk_queues and ublk server threads.
-kublk now has two modes of operation:
+On Thu, May 29, 2025 at 4:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+> It should be okay as you can compare the string against that reported
+> by `perf version`. On my build in `/tmp/perf`:
+> ```
+> $ /tmp/perf/perf version
+> perf version 6.15.rc7.gb9ac06abfde9
+> $ cat /tmp/perf/PERF-VERSION-FILE
+> #define PERF_VERSION "6.15.rc7.gb9ac06abfde9"
+> ```
 
-- (preexisting mode) threads and queues are paired 1:1, and each thread
-  services all the I/Os of one queue
-- (new mode) thread and queue counts are independently configurable.
-  threads service I/Os in a way that balances load across threads even
-  if load is not balanced over queues.
+Oh, nice! I'll switch the test to use that instead.
 
-The default is the preexisting mode. The new mode is activated by
-passing the --per_io_tasks flag.
-
-Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- tools/testing/selftests/ublk/file_backed.c |   4 +-
- tools/testing/selftests/ublk/kublk.c       | 105 ++++++++++++++++++++++++-----
- tools/testing/selftests/ublk/kublk.h       |   5 ++
- tools/testing/selftests/ublk/null.c        |   6 +-
- tools/testing/selftests/ublk/stripe.c      |   4 +-
- 5 files changed, 100 insertions(+), 24 deletions(-)
-
-diff --git a/tools/testing/selftests/ublk/file_backed.c b/tools/testing/selftests/ublk/file_backed.c
-index 922a87108b9f7bae53098e74602c7b1f3e0246bc..cfa59b631693793465f0e6909a6fbe1a364f4523 100644
---- a/tools/testing/selftests/ublk/file_backed.c
-+++ b/tools/testing/selftests/ublk/file_backed.c
-@@ -54,7 +54,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
- 
- 	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 3);
- 
--	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, tag);
-+	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
- 	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
- 	sqe[0]->user_data = build_user_data(tag,
- 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
-@@ -66,7 +66,7 @@ static int loop_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_de
- 	sqe[1]->flags |= IOSQE_FIXED_FILE | IOSQE_IO_HARDLINK;
- 	sqe[1]->user_data = build_user_data(tag, ublk_op, 0, q->q_id, 1);
- 
--	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, tag);
-+	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
- 	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
- 
- 	return 2;
-diff --git a/tools/testing/selftests/ublk/kublk.c b/tools/testing/selftests/ublk/kublk.c
-index 40431a8357a8f74d7d62e271e9090c8708c3ecc5..a98e14e4c245965d817b93843ff9a4011291223b 100644
---- a/tools/testing/selftests/ublk/kublk.c
-+++ b/tools/testing/selftests/ublk/kublk.c
-@@ -505,8 +505,11 @@ static int ublk_thread_init(struct ublk_thread *t)
- 	}
- 
- 	if (dev->dev_info.flags & (UBLK_F_SUPPORT_ZERO_COPY | UBLK_F_AUTO_BUF_REG)) {
-+		unsigned nr_ios = dev->dev_info.queue_depth * dev->dev_info.nr_hw_queues;
-+		unsigned max_nr_ios_per_thread = nr_ios / dev->nthreads;
-+		max_nr_ios_per_thread += !!(nr_ios % dev->nthreads);
- 		ret = io_uring_register_buffers_sparse(
--			&t->ring, dev->dev_info.queue_depth);
-+			&t->ring, max_nr_ios_per_thread);
- 		if (ret) {
- 			ublk_err("ublk dev %d thread %d register spare buffers failed %d",
- 					dev->dev_info.dev_id, t->idx, ret);
-@@ -578,7 +581,7 @@ static void ublk_set_auto_buf_reg(const struct ublk_queue *q,
- 	if (q->tgt_ops->buf_index)
- 		buf.index = q->tgt_ops->buf_index(q, tag);
- 	else
--		buf.index = tag;
-+		buf.index = q->ios[tag].buf_index;
- 
- 	if (q->state & UBLKSRV_AUTO_BUF_REG_FALLBACK)
- 		buf.flags = UBLK_AUTO_BUF_REG_FALLBACK;
-@@ -660,18 +663,44 @@ int ublk_queue_io_cmd(struct ublk_io *io)
- 
- static void ublk_submit_fetch_commands(struct ublk_thread *t)
- {
--	/*
--	 * Service exclusively the queue whose q_id matches our thread
--	 * index. This may change in the future.
--	 */
--	struct ublk_queue *q = &t->dev->q[t->idx];
-+	struct ublk_queue *q;
- 	struct ublk_io *io;
--	int i = 0;
-+	int i = 0, j = 0;
- 
--	for (i = 0; i < q->q_depth; i++) {
--		io = &q->ios[i];
--		io->t = t;
--		ublk_queue_io_cmd(io);
-+	if (t->dev->per_io_tasks) {
-+		/*
-+		 * Lexicographically order all the (qid,tag) pairs, with
-+		 * qid taking priority (so (1,0) > (0,1)). Then make
-+		 * this thread the daemon for every Nth entry in this
-+		 * list (N is the number of threads), starting at this
-+		 * thread's index. This ensures that each queue is
-+		 * handled by as many ublk server threads as possible,
-+		 * so that load that is concentrated on one or a few
-+		 * queues can make use of all ublk server threads.
-+		 */
-+		const struct ublksrv_ctrl_dev_info *dinfo = &t->dev->dev_info;
-+		int nr_ios = dinfo->nr_hw_queues * dinfo->queue_depth;
-+		for (i = t->idx; i < nr_ios; i += t->dev->nthreads) {
-+			int q_id = i / dinfo->queue_depth;
-+			int tag = i % dinfo->queue_depth;
-+			q = &t->dev->q[q_id];
-+			io = &q->ios[tag];
-+			io->t = t;
-+			io->buf_index = j++;
-+			ublk_queue_io_cmd(io);
-+		}
-+	} else {
-+		/*
-+		 * Service exclusively the queue whose q_id matches our
-+		 * thread index.
-+		 */
-+		struct ublk_queue *q = &t->dev->q[t->idx];
-+		for (i = 0; i < q->q_depth; i++) {
-+			io = &q->ios[i];
-+			io->t = t;
-+			io->buf_index = i;
-+			ublk_queue_io_cmd(io);
-+		}
- 	}
- }
- 
-@@ -826,7 +855,8 @@ static void *ublk_io_handler_fn(void *data)
- 		return NULL;
- 	}
- 	/* IO perf is sensitive with queue pthread affinity on NUMA machine*/
--	ublk_thread_set_sched_affinity(t, info->affinity);
-+	if (info->affinity)
-+		ublk_thread_set_sched_affinity(t, info->affinity);
- 	sem_post(info->ready);
- 
- 	ublk_dbg(UBLK_DBG_THREAD, "tid %d: ublk dev %d thread %u started\n",
-@@ -893,7 +923,7 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 
- 	ublk_dbg(UBLK_DBG_DEV, "%s enter\n", __func__);
- 
--	tinfo = calloc(sizeof(struct ublk_thread_info), dinfo->nr_hw_queues);
-+	tinfo = calloc(sizeof(struct ublk_thread_info), dev->nthreads);
- 	if (!tinfo)
- 		return -ENOMEM;
- 
-@@ -919,17 +949,29 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 				 dinfo->dev_id, i);
- 			goto fail;
- 		}
-+	}
- 
-+	for (i = 0; i < dev->nthreads; i++) {
- 		tinfo[i].dev = dev;
- 		tinfo[i].idx = i;
- 		tinfo[i].ready = &ready;
--		tinfo[i].affinity = &affinity_buf[i];
-+
-+		/*
-+		 * If threads are not tied 1:1 to queues, setting thread
-+		 * affinity based on queue affinity makes little sense.
-+		 * However, thread CPU affinity has significant impact
-+		 * on performance, so to compare fairly, we'll still set
-+		 * thread CPU affinity based on queue affinity where
-+		 * possible.
-+		 */
-+		if (dev->nthreads == dinfo->nr_hw_queues)
-+			tinfo[i].affinity = &affinity_buf[i];
- 		pthread_create(&dev->threads[i].thread, NULL,
- 				ublk_io_handler_fn,
- 				&tinfo[i]);
- 	}
- 
--	for (i = 0; i < dinfo->nr_hw_queues; i++)
-+	for (i = 0; i < dev->nthreads; i++)
- 		sem_wait(&ready);
- 	free(tinfo);
- 	free(affinity_buf);
-@@ -953,7 +995,7 @@ static int ublk_start_daemon(const struct dev_ctx *ctx, struct ublk_dev *dev)
- 		ublk_send_dev_event(ctx, dev, dev->dev_info.dev_id);
- 
- 	/* wait until we are terminated */
--	for (i = 0; i < dinfo->nr_hw_queues; i++)
-+	for (i = 0; i < dev->nthreads; i++)
- 		pthread_join(dev->threads[i].thread, &thread_ret);
-  fail:
- 	for (i = 0; i < dinfo->nr_hw_queues; i++)
-@@ -1063,6 +1105,7 @@ static int ublk_stop_io_daemon(const struct ublk_dev *dev)
- 
- static int __cmd_dev_add(const struct dev_ctx *ctx)
- {
-+	unsigned nthreads = ctx->nthreads;
- 	unsigned nr_queues = ctx->nr_hw_queues;
- 	const char *tgt_type = ctx->tgt_type;
- 	unsigned depth = ctx->queue_depth;
-@@ -1086,6 +1129,23 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- 		return -EINVAL;
- 	}
- 
-+	/* default to 1:1 threads:queues if nthreads is unspecified */
-+	if (!nthreads)
-+		nthreads = nr_queues;
-+
-+	if (nthreads > UBLK_MAX_THREADS) {
-+		ublk_err("%s: %u is too many threads (max %u)\n",
-+				__func__, nthreads, UBLK_MAX_THREADS);
-+		return -EINVAL;
-+	}
-+
-+	if (nthreads != nr_queues && !ctx->per_io_tasks) {
-+		ublk_err("%s: threads %u must be same as queues %u if "
-+			"not using per_io_tasks\n",
-+			__func__, nthreads, nr_queues);
-+		return -EINVAL;
-+	}
-+
- 	dev = ublk_ctrl_init();
- 	if (!dev) {
- 		ublk_err("%s: can't alloc dev id %d, type %s\n",
-@@ -1109,6 +1169,8 @@ static int __cmd_dev_add(const struct dev_ctx *ctx)
- 	if ((features & UBLK_F_QUIESCE) &&
- 			(info->flags & UBLK_F_USER_RECOVERY))
- 		info->flags |= UBLK_F_QUIESCE;
-+	dev->nthreads = nthreads;
-+	dev->per_io_tasks = ctx->per_io_tasks;
- 	dev->tgt.ops = ops;
- 	dev->tgt.sq_depth = depth;
- 	dev->tgt.cq_depth = depth;
-@@ -1307,6 +1369,7 @@ static int cmd_dev_get_features(void)
- 		[const_ilog2(UBLK_F_UPDATE_SIZE)] = "UPDATE_SIZE",
- 		[const_ilog2(UBLK_F_AUTO_BUF_REG)] = "AUTO_BUF_REG",
- 		[const_ilog2(UBLK_F_QUIESCE)] = "QUIESCE",
-+		[const_ilog2(UBLK_F_PER_IO_DAEMON)] = "PER_IO_DAEMON",
- 	};
- 	struct ublk_dev *dev;
- 	__u64 features = 0;
-@@ -1401,8 +1464,10 @@ static void __cmd_create_help(char *exe, bool recovery)
- 			exe, recovery ? "recover" : "add");
- 	printf("\t[--foreground] [--quiet] [-z] [--auto_zc] [--auto_zc_fallback] [--debug_mask mask] [-r 0|1 ] [-g]\n");
- 	printf("\t[-e 0|1 ] [-i 0|1]\n");
-+	printf("\t[--nthreads threads] [--per_io_tasks]\n");
- 	printf("\t[target options] [backfile1] [backfile2] ...\n");
- 	printf("\tdefault: nr_queues=2(max 32), depth=128(max 1024), dev_id=-1(auto allocation)\n");
-+	printf("\tdefault: nthreads=nr_queues");
- 
- 	for (i = 0; i < sizeof(tgt_ops_list) / sizeof(tgt_ops_list[0]); i++) {
- 		const struct ublk_tgt_ops *ops = tgt_ops_list[i];
-@@ -1459,6 +1524,8 @@ int main(int argc, char *argv[])
- 		{ "auto_zc",		0,	NULL,  0 },
- 		{ "auto_zc_fallback", 	0,	NULL,  0 },
- 		{ "size",		1,	NULL, 's'},
-+		{ "nthreads",		1,	NULL,  0 },
-+		{ "per_io_tasks",	0,	NULL,  0 },
- 		{ 0, 0, 0, 0 }
- 	};
- 	const struct ublk_tgt_ops *ops = NULL;
-@@ -1534,6 +1601,10 @@ int main(int argc, char *argv[])
- 				ctx.flags |= UBLK_F_AUTO_BUF_REG;
- 			if (!strcmp(longopts[option_idx].name, "auto_zc_fallback"))
- 				ctx.auto_zc_fallback = 1;
-+			if (!strcmp(longopts[option_idx].name, "nthreads"))
-+				ctx.nthreads = strtol(optarg, NULL, 10);
-+			if (!strcmp(longopts[option_idx].name, "per_io_tasks"))
-+				ctx.per_io_tasks = 1;
- 			break;
- 		case '?':
- 			/*
-diff --git a/tools/testing/selftests/ublk/kublk.h b/tools/testing/selftests/ublk/kublk.h
-index 3a2ae095bee18633acd5a9c923cfab2d14fe3bff..6be601536b3d2c095654da5fba0cf13a51142052 100644
---- a/tools/testing/selftests/ublk/kublk.h
-+++ b/tools/testing/selftests/ublk/kublk.h
-@@ -80,6 +80,7 @@ struct dev_ctx {
- 	char tgt_type[16];
- 	unsigned long flags;
- 	unsigned nr_hw_queues;
-+	unsigned short nthreads;
- 	unsigned queue_depth;
- 	int dev_id;
- 	int nr_files;
-@@ -89,6 +90,7 @@ struct dev_ctx {
- 	unsigned int	fg:1;
- 	unsigned int	recovery:1;
- 	unsigned int	auto_zc_fallback:1;
-+	unsigned int	per_io_tasks:1;
- 
- 	int _evtfd;
- 	int _shmid;
-@@ -131,6 +133,7 @@ struct ublk_io {
- 
- 	int result;
- 
-+	unsigned short buf_index;
- 	unsigned short tgt_ios;
- 	void *private_data;
- 	struct ublk_thread *t;
-@@ -203,6 +206,8 @@ struct ublk_dev {
- 	struct ublksrv_ctrl_dev_info  dev_info;
- 	struct ublk_queue q[UBLK_MAX_QUEUES];
- 	struct ublk_thread threads[UBLK_MAX_THREADS];
-+	unsigned nthreads;
-+	unsigned per_io_tasks;
- 
- 	int fds[MAX_BACK_FILES + 1];	/* fds[0] points to /dev/ublkcN */
- 	int nr_fds;
-diff --git a/tools/testing/selftests/ublk/null.c b/tools/testing/selftests/ublk/null.c
-index 9acc7e0d271b5ae52d6d31587cc5bfb63b19778d..afe0b99d77eec74acae04952a9af5348252bc599 100644
---- a/tools/testing/selftests/ublk/null.c
-+++ b/tools/testing/selftests/ublk/null.c
-@@ -62,7 +62,7 @@ static int null_queue_zc_io(struct ublk_queue *q, int tag)
- 
- 	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, 3);
- 
--	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, tag);
-+	io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
- 	sqe[0]->user_data = build_user_data(tag,
- 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
- 	sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
-@@ -70,7 +70,7 @@ static int null_queue_zc_io(struct ublk_queue *q, int tag)
- 	__setup_nop_io(tag, iod, sqe[1], q->q_id);
- 	sqe[1]->flags |= IOSQE_IO_HARDLINK;
- 
--	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, tag);
-+	io_uring_prep_buf_unregister(sqe[2], 0, tag, q->q_id, ublk_get_io(q, tag)->buf_index);
- 	sqe[2]->user_data = build_user_data(tag, ublk_cmd_op_nr(sqe[2]->cmd_op), 0, q->q_id, 1);
- 
- 	// buf register is marked as IOSQE_CQE_SKIP_SUCCESS
-@@ -136,7 +136,7 @@ static unsigned short ublk_null_buf_index(const struct ublk_queue *q, int tag)
- {
- 	if (q->state & UBLKSRV_AUTO_BUF_REG_FALLBACK)
- 		return (unsigned short)-1;
--	return tag;
-+	return q->ios[tag].buf_index;
- }
- 
- const struct ublk_tgt_ops null_tgt_ops = {
-diff --git a/tools/testing/selftests/ublk/stripe.c b/tools/testing/selftests/ublk/stripe.c
-index 97079c3121ef8d4edc71891a289dd40658ce3f2a..37d50bbf5f5e86a520efedc9228510f8e1273625 100644
---- a/tools/testing/selftests/ublk/stripe.c
-+++ b/tools/testing/selftests/ublk/stripe.c
-@@ -141,7 +141,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_
- 	ublk_io_alloc_sqes(ublk_get_io(q, tag), sqe, s->nr + extra);
- 
- 	if (zc) {
--		io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, tag);
-+		io_uring_prep_buf_register(sqe[0], 0, tag, q->q_id, io->buf_index);
- 		sqe[0]->flags |= IOSQE_CQE_SKIP_SUCCESS | IOSQE_IO_HARDLINK;
- 		sqe[0]->user_data = build_user_data(tag,
- 			ublk_cmd_op_nr(sqe[0]->cmd_op), 0, q->q_id, 1);
-@@ -167,7 +167,7 @@ static int stripe_queue_tgt_rw_io(struct ublk_queue *q, const struct ublksrv_io_
- 	if (zc) {
- 		struct io_uring_sqe *unreg = sqe[s->nr + 1];
- 
--		io_uring_prep_buf_unregister(unreg, 0, tag, q->q_id, tag);
-+		io_uring_prep_buf_unregister(unreg, 0, tag, q->q_id, io->buf_index);
- 		unreg->user_data = build_user_data(
- 			tag, ublk_cmd_op_nr(unreg->cmd_op), 0, q->q_id, 1);
- 	}
-
--- 
-2.34.1
-
+Blake
