@@ -1,406 +1,127 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F4622DA1B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE7C22F776
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748542820; cv=none; b=L0E9UGCrB2z4nXJX+QnF1983JrIXGuywLsxWRdK7j6/H+Ofo17xLnAoJDmuP+bhzYUJxa0tChyYwaZO7N1YluA48g7YoGjAPEWDuLjnIsZm0LMtCfPlUS/BnHhviZSPZ5xiB7qUp+bA9s+J7fW73h7DvRu+2Thv6sqxZxId12Iw=
+	t=1748542849; cv=none; b=ldvimEGxO/vwAS2xhbV/GtD8u/TFRhDoSpudHdHVJiDmTAHcCIijOZ6aZM/O1oAZuvn45U27F5+d+JfqPMBty/YAStUZI9s7qX9flcLDx/QTgkD+UJc/baChLn6mpZMtcMKpkWhiyE4xSC72pLEp254m/fIjGFhqV5fdvC/xPYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748542820; c=relaxed/simple;
-	bh=g3RIX2STW0NSdM5VX+XSDwgg+BfHvXIHc5xpLvtbDuE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fC8jj1j3LObTMs2oFofr/IVVVZsaJAdpdTviM9oJ7VuVuI7Pb6kBbeRT6NOFTk1+dcPFbF4+GvUCD3BL10EvUDOzaOAeqhymOpzkfCGQe5PxMj+lB9g6wGSKRLqW8plD6EuBsr/PXMTEn5X1Yj9/eiJxh0fldVigEL4a5avI9Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dZvBeYNJ; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1748542849; c=relaxed/simple;
+	bh=GrYdPthuuV4voe6ZYw1AGGyhQX9V5TzLF3ORYCvQhnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oFB4bYEiQ7N/8qQq5rkFz66LOjvz1JIUc1NVh2yKU2ovep9LqAdDIuBmkuOo9k2hieDyCp1vPa5XTRKZfc6B3OOec7uF56wLUYgTO4+aIftbDr/fnZjc5qqOyLhYZhBh2yKBDaA3T7c6Eamuc0GVKSBNJvJdBmAT/BUYLgcN0Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FblRZD3W; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dZvBeYNJ"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7429f7f9ee3so955822b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:20:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748542818; x=1749147618; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfbJ3SAMOI+96wfKOcoCTG/GNgODonkk4ldcKc8FS58=;
-        b=dZvBeYNJ/KiNonOHJ8Ezd5dwrJiT+vs+xpYW+Yc4odgmFvNnsdE3sqRTEK36yzQsJk
-         qOLsrlOzBulgxopB49XSYANiqQydG2FTIKWA364xMbBUNp2M56wocc3TU9FdMu0u/1b7
-         f7bA/puoA7tz0InoR30wY4jFCGKVmhKr8yLdYtTwL1EUGUrg9aBNwhh6QSZrRC98O8TB
-         Ydymi3QlkQd1gvqQKJbBsCzrgNiufjqYLrJ0NoVWi+jfSF+25954zmbawPxOlHvsgwEj
-         0er+QvHbwtpM5blQCW0PgbOed2vXOj87rsIVx5rGvqT212FPDRsg2qKAkTHd7hUq2cJ+
-         aRwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748542818; x=1749147618;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfbJ3SAMOI+96wfKOcoCTG/GNgODonkk4ldcKc8FS58=;
-        b=Tydt185EeJwVHjbEg2z7rXzz5p3JY0dZQCqLX3/VPMB1wywfZvkYXC3g6ep/eiLXMw
-         JuDvosZ0Vm+UC/xoO8zd9mNXWhYFwb0/4+KQZ36mJ7jW6L2vN4/u469h1QzoklsnwK1A
-         aGqhJ4d8K7G7w9GHwolFHXwDt2RIYNj6aObzRP88kdpjIt/OouHqgfBbax/HXRnpXDpE
-         yNV3ztYktt1H+rAoNrOA84fVpxxihTM32CvhuJhN9yAgdOAagcbOkIoiCZnpN8Y0Zvxz
-         B2vKSHTuPtAhThMo4eMeN8Wfv3naZVX1f257asbaUqdr8zrvhmjE67N0j8FGZvjkzxXe
-         ci/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXk44SPTNKWBFOx3VEmcjLhXizZj9uFmRVZbS+TdE+wWS4OBZKGgz8wlUXOOkuXViPwpJptQfibhjDZ6E8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIopIUvc9J66LeKn6mtfFhq58Bizx/AejCdz36VW7ddBHX6aXZ
-	IM0j2k0n9i+dxurY73rDdqo2HMraJeAST4bz0uMFv6JO2FiovckwafgQVlC8Mq8fSodv4PNnROh
-	wtujrhMH5UueuxZFTNps6+H1JDA==
-X-Google-Smtp-Source: AGHT+IEGQ99xCbo63ElioTP4TSOSQO9Qp/9XbqkHfPc1TG0hEr1RvfBOYX4D49wzFG2SKhNE6JPiZpB8so1iJjxGSQ==
-X-Received: from pfbhc10.prod.google.com ([2002:a05:6a00:650a:b0:747:adac:b0dd])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:7a47:b0:1f5:93b1:6a58 with SMTP id adf61e73a8af0-21ad94e2100mr1045007637.8.1748542817673;
- Thu, 29 May 2025 11:20:17 -0700 (PDT)
-Date: Thu, 29 May 2025 11:20:16 -0700
-In-Reply-To: <aDU3eL7qQYrXkE3T@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FblRZD3W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748542848; x=1780078848;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GrYdPthuuV4voe6ZYw1AGGyhQX9V5TzLF3ORYCvQhnA=;
+  b=FblRZD3WHWW3z+0BM39HDBfQUzQYBTzOKiONIP9wwWAxqdxiVbAL1spa
+   OyC5QDRXiTmX/d+v8LSJ7h7BtS1YtBCo4XWCoJwjpj8c/KwVDDrMKLycO
+   So9ug5Js88FYyhuUT3kbbrX8XZu2dMJdLar+Fb3+AVjG4AmtXD0Li8hhF
+   JZjnwuIfZuImGaP+z3wQMN97UoYJjW9gQ8NykYDpoalSE+Q9ORo9DGO85
+   NlAho+SqZb0v88IhJrP3e7jPr8L7so5lFB2p+ByN+mRzb6f80zR0C3Ltz
+   brL74gPwcEc7hteTozIzN0SZRHim8RpZJj9clNwdpZiuJy1LaCFQq4iLL
+   g==;
+X-CSE-ConnectionGUID: BzBCem9cTjSadk56OjKzGw==
+X-CSE-MsgGUID: /49GDQRHT2el8h5xQYndJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50724868"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="50724868"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 11:20:47 -0700
+X-CSE-ConnectionGUID: 3nNr2650ReKeeInqckBaSw==
+X-CSE-MsgGUID: s+hh8iSeQZGl5OUH0OMUlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="148795686"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 29 May 2025 11:20:41 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKhrr-000Wya-1G;
+	Thu, 29 May 2025 18:20:39 +0000
+Date: Fri, 30 May 2025 02:20:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jayesh Choudhary <j-choudhary@ti.com>, dianders@chromium.org,
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org,
+	rfoss@kernel.org, Laurent.pinchart@ideasonboard.com,
+	dri-devel@lists.freedesktop.org, tomi.valkeinen@ideasonboard.com,
+	andyshrk@163.com
+Cc: oe-kbuild-all@lists.linux.dev, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, lumag@kernel.org, lyude@redhat.com,
+	andy.yan@rock-chips.com, mordan@ispras.ru, linux@treblig.org,
+	viro@zeniv.linux.org.uk, a-bhatia1@ti.com, javierm@redhat.com,
+	linux-kernel@vger.kernel.org, devarsht@ti.com, j-choudhary@ti.com
+Subject: Re: [PATCH v3 1/5] drm/bridge: cadence: cdns-mhdp8546-core: Remove
+ legacy support for connector initialisation in bridge
+Message-ID: <202505300201.2s6r12yc-lkp@intel.com>
+References: <20250529142517.188786-2-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
- <aDU3eL7qQYrXkE3T@yzhao56-desk.sh.intel.com>
-Message-ID: <diqzcybr6zz3.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529142517.188786-2-j-choudhary@ti.com>
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+Hi Jayesh,
 
-> On Wed, May 14, 2025 at 04:41:41PM -0700, Ackerley Tng wrote:
->> Track guest_memfd memory's shareability status within the inode as
->> opposed to the file, since it is property of the guest_memfd's memory
->> contents.
->> 
->> Shareability is a property of the memory and is indexed using the
->> page's index in the inode. Because shareability is the memory's
->> property, it is stored within guest_memfd instead of within KVM, like
->> in kvm->mem_attr_array.
->> 
->> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
->> retained to allow VMs to only use guest_memfd for private memory and
->> some other memory for shared memory.
->> 
->> Not all use cases require guest_memfd() to be shared with the host
->> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
->> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
->> private to the guest, and therefore not mappable by the
->> host. Otherwise, memory is shared until explicitly converted to
->> private.
->> 
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
->> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
->> Co-developed-by: Fuad Tabba <tabba@google.com>
->> Signed-off-by: Fuad Tabba <tabba@google.com>
->> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
->> ---
->>  Documentation/virt/kvm/api.rst |   5 ++
->>  include/uapi/linux/kvm.h       |   2 +
->>  virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
->>  3 files changed, 129 insertions(+), 2 deletions(-)
->> 
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 86f74ce7f12a..f609337ae1c2 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
->>  The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
->>  This is validated when the guest_memfd instance is bound to the VM.
->>  
->> +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
->> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.  Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
->> +will initialize the memory for the guest_memfd as guest-only and not faultable
->> +by the host.
->> +
->>  See KVM_SET_USER_MEMORY_REGION2 for additional details.
->>  
->>  4.143 KVM_PRE_FAULT_MEMORY
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index 4cc824a3a7c9..d7df312479aa 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -1567,7 +1567,9 @@ struct kvm_memory_attributes {
->>  #define KVM_MEMORY_ATTRIBUTE_PRIVATE           (1ULL << 3)
->>  
->>  #define KVM_CREATE_GUEST_MEMFD	_IOWR(KVMIO,  0xd4, struct kvm_create_guest_memfd)
->> +
->>  #define GUEST_MEMFD_FLAG_SUPPORT_SHARED	(1UL << 0)
->> +#define GUEST_MEMFD_FLAG_INIT_PRIVATE	(1UL << 1)
->>  
->>  struct kvm_create_guest_memfd {
->>  	__u64 size;
->> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
->> index 239d0f13dcc1..590932499eba 100644
->> --- a/virt/kvm/guest_memfd.c
->> +++ b/virt/kvm/guest_memfd.c
->> @@ -4,6 +4,7 @@
->>  #include <linux/falloc.h>
->>  #include <linux/fs.h>
->>  #include <linux/kvm_host.h>
->> +#include <linux/maple_tree.h>
->>  #include <linux/pseudo_fs.h>
->>  #include <linux/pagemap.h>
->>  
->> @@ -17,6 +18,24 @@ struct kvm_gmem {
->>  	struct list_head entry;
->>  };
->>  
->> +struct kvm_gmem_inode_private {
->> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
->> +	struct maple_tree shareability;
->> +#endif
->> +};
->> +
->> +enum shareability {
->> +	SHAREABILITY_GUEST = 1,	/* Only the guest can map (fault) folios in this range. */
->> +	SHAREABILITY_ALL = 2,	/* Both guest and host can fault folios in this range. */
->> +};
->> +
->> +static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index);
->> +
->> +static struct kvm_gmem_inode_private *kvm_gmem_private(struct inode *inode)
->> +{
->> +	return inode->i_mapping->i_private_data;
->> +}
->> +
->>  /**
->>   * folio_file_pfn - like folio_file_page, but return a pfn.
->>   * @folio: The folio which contains this index.
->> @@ -29,6 +48,58 @@ static inline kvm_pfn_t folio_file_pfn(struct folio *folio, pgoff_t index)
->>  	return folio_pfn(folio) + (index & (folio_nr_pages(folio) - 1));
->>  }
->>  
->> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
->> +
->> +static int kvm_gmem_shareability_setup(struct kvm_gmem_inode_private *private,
->> +				      loff_t size, u64 flags)
->> +{
->> +	enum shareability m;
->> +	pgoff_t last;
->> +
->> +	last = (size >> PAGE_SHIFT) - 1;
->> +	m = flags & GUEST_MEMFD_FLAG_INIT_PRIVATE ? SHAREABILITY_GUEST :
->> +						    SHAREABILITY_ALL;
->> +	return mtree_store_range(&private->shareability, 0, last, xa_mk_value(m),
->> +				 GFP_KERNEL);
->> +}
->> +
->> +static enum shareability kvm_gmem_shareability_get(struct inode *inode,
->> +						 pgoff_t index)
->> +{
->> +	struct maple_tree *mt;
->> +	void *entry;
->> +
->> +	mt = &kvm_gmem_private(inode)->shareability;
->> +	entry = mtree_load(mt, index);
->> +	WARN(!entry,
->> +	     "Shareability should always be defined for all indices in inode.");
-> I noticed that in [1], the kvm_gmem_mmap() does not check the range.
-> So, the WARN() here can be hit when userspace mmap() an area larger than the
-> inode size and accesses the out of band HVA.
->
-> Maybe limit the mmap() range?
->
-> @@ -1609,6 +1620,10 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
->         if (!kvm_gmem_supports_shared(file_inode(file)))
->                 return -ENODEV;
->
-> +       if (vma->vm_end - vma->vm_start + (vma->vm_pgoff << PAGE_SHIFT) > i_size_read(file_inode(file)))
-> +               return -EINVAL;
-> +
->         if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) !=
->             (VM_SHARED | VM_MAYSHARE)) {
->                 return -EINVAL;
->
-> [1] https://lore.kernel.org/all/20250513163438.3942405-8-tabba@google.com/
->
+kernel test robot noticed the following build warnings:
 
-This is a good idea. Thanks! I also think it is a good idea to include
-this with the guest_memfd mmap base series that Fuad is working on [1],
-maybe in v11.
+[auto build test WARNING on drm-exynos/exynos-drm-next]
+[also build test WARNING on linus/master v6.15 next-20250529]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[1] https://lore.kernel.org/all/20250527180245.1413463-1-tabba@google.com/
+url:    https://github.com/intel-lab-lkp/linux/commits/Jayesh-Choudhary/drm-bridge-cadence-cdns-mhdp8546-core-Remove-legacy-support-for-connector-initialisation-in-bridge/20250529-222734
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git exynos-drm-next
+patch link:    https://lore.kernel.org/r/20250529142517.188786-2-j-choudhary%40ti.com
+patch subject: [PATCH v3 1/5] drm/bridge: cadence: cdns-mhdp8546-core: Remove legacy support for connector initialisation in bridge
+config: riscv-randconfig-002-20250530 (https://download.01.org/0day-ci/archive/20250530/202505300201.2s6r12yc-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505300201.2s6r12yc-lkp@intel.com/reproduce)
 
->> +	return xa_to_value(entry);
->> +}
->> +
->> +static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
->> +{
->> +	if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
->> +		return ERR_PTR(-EACCES);
->> +
->> +	return kvm_gmem_get_folio(inode, index);
->> +}
->> +
->> +#else
->> +
->> +static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
->> +{
->> +	return 0;
->> +}
->> +
->> +static inline struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
->> +{
->> +	WARN_ONCE("Unexpected call to get shared folio.")
->> +	return NULL;
->> +}
->> +
->> +#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
->> +
->>  static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  				    pgoff_t index, struct folio *folio)
->>  {
->> @@ -333,7 +404,7 @@ static vm_fault_t kvm_gmem_fault_shared(struct vm_fault *vmf)
->>  
->>  	filemap_invalidate_lock_shared(inode->i_mapping);
->>  
->> -	folio = kvm_gmem_get_folio(inode, vmf->pgoff);
->> +	folio = kvm_gmem_get_shared_folio(inode, vmf->pgoff);
->>  	if (IS_ERR(folio)) {
->>  		int err = PTR_ERR(folio);
->>  
->> @@ -420,8 +491,33 @@ static struct file_operations kvm_gmem_fops = {
->>  	.fallocate	= kvm_gmem_fallocate,
->>  };
->>  
->> +static void kvm_gmem_free_inode(struct inode *inode)
->> +{
->> +	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
->> +
->> +	kfree(private);
->> +
->> +	free_inode_nonrcu(inode);
->> +}
->> +
->> +static void kvm_gmem_destroy_inode(struct inode *inode)
->> +{
->> +	struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
->> +
->> +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
->> +	/*
->> +	 * mtree_destroy() can't be used within rcu callback, hence can't be
->> +	 * done in ->free_inode().
->> +	 */
->> +	if (private)
->> +		mtree_destroy(&private->shareability);
->> +#endif
->> +}
->> +
->>  static const struct super_operations kvm_gmem_super_operations = {
->>  	.statfs		= simple_statfs,
->> +	.destroy_inode	= kvm_gmem_destroy_inode,
->> +	.free_inode	= kvm_gmem_free_inode,
->>  };
->>  
->>  static int kvm_gmem_init_fs_context(struct fs_context *fc)
->> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
->>  static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>  						      loff_t size, u64 flags)
->>  {
->> +	struct kvm_gmem_inode_private *private;
->>  	struct inode *inode;
->> +	int err;
->>  
->>  	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
->>  	if (IS_ERR(inode))
->>  		return inode;
->>  
->> +	err = -ENOMEM;
->> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
->> +	if (!private)
->> +		goto out;
->> +
->> +	mt_init(&private->shareability);
-> Wrap the mt_init() inside "#ifdef CONFIG_KVM_GMEM_SHARED_MEM" ?
->
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505300201.2s6r12yc-lkp@intel.com/
 
-Will fix this in the next revision. Will also update this to only
-initialize shareability if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED).
+All warnings (new ones prefixed by >>):
 
->> +	inode->i_mapping->i_private_data = private;
->> +
->> +	err = kvm_gmem_shareability_setup(private, size, flags);
->> +	if (err)
->> +		goto out;
->> +
->>  	inode->i_private = (void *)(unsigned long)flags;
->>  	inode->i_op = &kvm_gmem_iops;
->>  	inode->i_mapping->a_ops = &kvm_gmem_aops;
->> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>  	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->>  
->>  	return inode;
->> +
->> +out:
->> +	iput(inode);
->> +
->> +	return ERR_PTR(err);
->>  }
->>  
->>  static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
->> @@ -654,6 +769,9 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
->>  	if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
->>  		valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
->>  
->> +	if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
->> +		valid_flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
->> +
->>  	if (flags & ~valid_flags)
->>  		return -EINVAL;
->>  
->> @@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  	if (!file)
->>  		return -EFAULT;
->>  
->> +	filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
->> +
->>  	folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
->>  	if (IS_ERR(folio)) {
->>  		r = PTR_ERR(folio);
->> @@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
->>  		*page = folio_file_page(folio, index);
->>  	else
->>  		folio_put(folio);
->> -
->>  out:
->> +	filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
->>  	fput(file);
->>  	return r;
->>  }
->> -- 
->> 2.49.0.1045.g170613ef41-goog
->> 
->> 
+   drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c: In function 'cdns_mhdp_hpd_work':
+>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c:2210:6: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
+    2210 |  int ret;
+         |      ^~~
+
+
+vim +/ret +2210 drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2204  
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2205  static void cdns_mhdp_hpd_work(struct work_struct *work)
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2206  {
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2207  	struct cdns_mhdp_device *mhdp = container_of(work,
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2208  						     struct cdns_mhdp_device,
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2209  						     hpd_work);
+6a3608eae6d33a Parshuram Thombare 2021-04-10 @2210  	int ret;
+6a3608eae6d33a Parshuram Thombare 2021-04-10  2211  
+fb43aa0acdfd60 Swapnil Jakhade    2020-09-18  2212  	ret = cdns_mhdp_update_link_status(mhdp);
+f25484d2ec5e5a Jayesh Choudhary   2025-05-29  2213  
+fb43aa0acdfd60 Swapnil Jakhade    2020-09-18  2214  	drm_bridge_hpd_notify(&mhdp->bridge, cdns_mhdp_detect(mhdp));
+fb43aa0acdfd60 Swapnil Jakhade    2020-09-18  2215  }
+fb43aa0acdfd60 Swapnil Jakhade    2020-09-18  2216  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
