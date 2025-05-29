@@ -1,111 +1,104 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail-m15588.qiye.163.com (mail-m15588.qiye.163.com [101.71.155.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E3B17C211;
-	Thu, 29 May 2025 01:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD1117C211
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 01:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748483829; cv=none; b=W7XKgYBJaDFWqDiKoiFs5Mj/T2h+YoI2HJDZIWS8aNr9id0PcgNCFVo0Hg2MMX2CvZnexH/TT4KixFVZm3kHzbgRLu9iTyTdqgmEk9UmS+gu760kPsugq7R6jopB2XQ+WDQHs4mxLmp9KvHJEN0KAHVoBCQ6x3838/uLED+Mlw8=
+	t=1748483892; cv=none; b=t0+JJRbqK/lVjRnh64gdyGk6PyNdFv21DWgh092gVipIa/+Ui3baYuYvfKDx9iNqPYlUbK+jRDaIdbvO2TxqWe3Vv0W5xYO540rVqdQ/Q2ayesAvUGEVdTzNlU6tl73Zgm4uKdWEli7WDbRsRp8id9FWNAKtNUbDcrl/3RQ56v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748483829; c=relaxed/simple;
-	bh=Ncn5jaXNwVyeZv0/ygMpI/OacZ4KlmisSrfcblDO6XA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UvIfkh8LRWag7XUtdy6H8SWQ8W/bxH3iTt62ck3byikI/1nsOU7Z53VAW2mt9dgcpVDToFku13TRPg2KNNoDFuEbyUO3Q+1okPLT/2t9rGMZIo06bTeZHr02XfZ7vXo8gMyjlfxMNPZYc3yZAmQNvEClafBo2/0DLVctIyqmVuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=esruFbqz; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748483892; c=relaxed/simple;
+	bh=XGKZmFmIRYh/pBylvJpwA2PoViinP4w8Q8nQm3wV0uE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eA9HJpYtiowG8sGxYT3/j6+aI/UyB/mT5vJHWgEaj1iBBqbbYQDV25aOsXFtPdqgL6CbN+x3RuqOEjK2FsVvnvA+qeDZzGXG+Xn0ZDhauyLdKXAzFOuPX/z2l+E+wbrX2pflWuMbClXMfbN7z1HX8KLGQhpHrGVQugL0ds8arvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hKr/jMDG; arc=none smtp.client-ip=101.71.155.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="esruFbqz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748483822;
-	bh=Y+PV0DSjZXwMOXO5tYQO7PIZvYK9a4FuJLs+o3frNc4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=esruFbqzqCEhOk0/79TMVxYzkg8jd7IIGd10lykwLPT4+MNh6vUC+ipF9CPZS1+Bo
-	 EZZzlqnrlvwh108kdppNNZ0PUwf06Yr9CmBth4V5/OexiSPFTjvI24N4YZnd2h/Wow
-	 HHNCR2eZrnyja8fGpz6a/twPCIDazWCtshWcSgcf85yih/w/JEIGcw0Eu2Z49jUKs1
-	 Atv3+P3dsjyovjlMgSY4D3NeFnxQ3apgyrlZoqhZhTJIkzJNe58iCrd/EQvAH/DyI4
-	 pHMyIpztg71QM2IYDrX1pFKt3tkCzzY0Nn37ePQN3gXA6c33TY/PLEN+m33Mho/7bw
-	 wKjEySGJKCaNw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b78ct61rhz4wy6;
-	Thu, 29 May 2025 11:57:02 +1000 (AEST)
-Date: Thu, 29 May 2025 11:57:02 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shivank Garg <shivankg@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the mm-hotfixes tree
-Message-ID: <20250529115702.3e4f8874@canb.auug.org.au>
-In-Reply-To: <20250528170256.8638353ab1b5b434a9ad7c11@linux-foundation.org>
-References: <20250529095938.43087534@canb.auug.org.au>
-	<20250528170256.8638353ab1b5b434a9ad7c11@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hKr/jMDG"
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16c60e019;
+	Thu, 29 May 2025 09:57:54 +0800 (GMT+08:00)
+Message-ID: <91d19262-05a1-4127-a66b-e141add02c3f@rock-chips.com>
+Date: Thu, 29 May 2025 09:57:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Jo7r+TaW1FDNmJCd6.ok2z1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] drm/rockchip: cdn-dp: Convert to drm bridge
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Chaoyi Chen <kernel@airkyi.com>, Sandy Huang <hjc@rock-chips.com>,
+ Heiko Stuebner <heiko@sntech.de>, Andy Yan <andy.yan@rock-chips.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250527081447.304-1-kernel@airkyi.com>
+ <e2dnvpbze4xuubggduqr3p5nnhg7huk3dnpdcb6tldxbrn2qtn@bfsewz5trfv3>
+ <bc321a71-1934-4889-bd8e-3bb593c8feba@rock-chips.com>
+ <CAO9ioeXLSQyBFuedtt4=_OjEWZW6T9HaaYr8_NiNy2eh4yw-qg@mail.gmail.com>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+In-Reply-To: <CAO9ioeXLSQyBFuedtt4=_OjEWZW6T9HaaYr8_NiNy2eh4yw-qg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0MZGlZIGElIGENNQ05CHRpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9719c29dab03abkunmb6e35c2d3ed6f0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OVE6Sxw5UTE#Ik5LTzoNAxop
+	SgEaFDJVSlVKTE9DT0NIQ0xCTE9PVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSElNSjcG
+DKIM-Signature:a=rsa-sha256;
+	b=hKr/jMDGb/QUNMUXmrYROwQsGX0fdWG6CFNzSLAsgz6yP2c9A4+03vNR/TDCHiDTBkbnoXzs5TNXL5C/DlnPCQ9evCjCr48FrSH+5RxP9DH9OR9yJSWaUE8Aphat5Cxd3HyEY9xd9pvI5d3sLOybjf+s9zBdjychWG4hKU3RcfQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=QH+9LbKgzSSxVg9sDNO4PK5Zcfbm6EKo7JyEYRq1ozI=;
+	h=date:mime-version:subject:message-id:from;
 
---Sig_/Jo7r+TaW1FDNmJCd6.ok2z1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dmitry,
 
-Hi Andrew,
+On 2025/5/29 0:09, Dmitry Baryshkov wrote:
+>>>> @@ -595,16 +546,41 @@ static bool cdn_dp_check_link_status(struct cdn_dp_device *dp)
+>>>>    static void cdn_dp_audio_handle_plugged_change(struct cdn_dp_device *dp,
+>>>>                                              bool plugged)
+>>>>    {
+>>>> -    if (dp->codec_dev)
+>>>> -            dp->plugged_cb(dp->codec_dev, plugged);
+>>>> +    if (dp->sink_has_audio)
+>>>> +            drm_connector_hdmi_audio_plugged_notify(dp->connector, plugged);
+>>> I'd say, notify always and let userspace figure it out via the ELD. Then
+>>> you shouldn't need sink_has_audio. This would match the behaviour of
+>>> HDMI drivers.
+>> Oh, I find that there are similar usages in qcom msm driver. Is there
+>> any more progress?
+> For msm driver it is required as DSP requires HDMI to be plugged for
+> the audio path to work.
 
-On Wed, 28 May 2025 17:02:56 -0700 Andrew Morton <akpm@linux-foundation.org=
-> wrote:
->
-> On Thu, 29 May 2025 09:59:38 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
->=20
-> > Hi all,
-> >=20
-> > After merging the mm-hotfixes tree, today's linux-next build (powerpc
-> > ppc64_defconfig) failed like this:
-> >=20
-> > mm/khugepaged.c: In function 'hpage_collapse_scan_file':
-> > mm/khugepaged.c:2337:21: error: implicit declaration of function 'folio=
-_expected_ref_count' [-Wimplicit-function-declaration]
-> >  2337 |                 if (folio_expected_ref_count(folio) + 1 !=3D fo=
-lio_ref_count(folio)) {
-> >       |                     ^~~~~~~~~~~~~~~~~~~~~~~~
-> >=20
-> > Caused by commit
-> >=20
-> >   3bdddbba5f02 ("mm/khugepaged: fix race with folio split/free using te=
-mporary reference")
-> >=20
-> > I have reverted that commit for today. =20
->=20
-> yup, thanks, that was dependent on an mm-stable patch!  I have
-> reordered things to plug the bisection hole.
+I see, will fix in v4.
 
-Snap!
+>>>> @@ -705,8 +681,6 @@ static int cdn_dp_encoder_atomic_check(struct drm_encoder *encoder,
+>>>>
+>>>>    static const struct drm_encoder_helper_funcs cdn_dp_encoder_helper_funcs = {
+>>>>       .mode_set = cdn_dp_encoder_mode_set,
+>>>> -    .enable = cdn_dp_encoder_enable,
+>>>> -    .disable = cdn_dp_encoder_disable,
+>>>>       .atomic_check = cdn_dp_encoder_atomic_check,
+>>> Nit: for the future cleanup, it should probably be possible to get rid
+>>> of these encoder ops too by moving them to the bridge ops.
+>> Interesting, have these patches been submitted upstream yet?
+> Everything is already there, see drm_bridge_funcs::mode_set() and
+> drm_bridge_funcs::atomic_check().
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks for the clarification. I will move mode_set() to bridge ops.
 
---Sig_/Jo7r+TaW1FDNmJCd6.ok2z1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+And for the drm_encoder_helper_funcs::atomic_check(), most Rockchip 
+drivers will set some Rockchip-specific properties here so that the VOP 
+driver can process them. In the future, we may integrate a new encoder 
+driver to process these private properties. So, I prefer to keep this as 
+it is.
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3vu4ACgkQAVBC80lX
-0GxraAf/R3yZ2KSC7QzC4FSVRm9FdnyXjQYAGsChoFS79qqmVClqS7wATfgOAjPB
-OyCyNaH/Cfza8JwN5juY93j2/cSEWNl6NJbuGUvbdzrtJQMCyqRwO51AC4ktPTKb
-OTflZInEeHlwy/tLks4Yh1opNym47UQtWJrfU1kQ9qVzijEFkUR0x/fk3CljYSCl
-/fabp1qpwPjkzUMqaRDe9v6IBxYJTY6i4D3Hi8kyGcaXg/CTf0DC5lkGYmsRL9/J
-qrBJ9OcBEKllT6GFsHb3m8XPlto7t6Pq8rJsHGbzHmhIzRPJPbz2aE0kY1qSK2r1
-1nT/PthkGrLL7w2LNyd+dHgyqNfcsg==
-=BAkX
------END PGP SIGNATURE-----
-
---Sig_/Jo7r+TaW1FDNmJCd6.ok2z1--
