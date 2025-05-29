@@ -1,128 +1,156 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B139917BA5;
-	Thu, 29 May 2025 13:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210B226527;
+	Thu, 29 May 2025 13:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525327; cv=none; b=hBGRIiPTvCzJ5rj+WStOtqxHDqIfMN9LYWhH/savQ98xKxqlH1Q4OFGlUYoxO3Bgvh0U6ubNOIsZoEWkPiyvczu1wE5oet2sRxYha46skGz0FW6bHY2BuDcTWAG5PV7F79ly98yrdCHfX+ZQMsXyV2xrGzuvCdOrS+OZWSdZGCA=
+	t=1748525338; cv=none; b=UmBMI9xTnGM76G+PMX26iuj2Lq7dmHVBWvltw2vtx7MoE7fh+993isZh928+pb5VQFixJHlKrFsHN5okZg346UTOGrkzouVm7eAyFS0VF8ED8UZiEEzuJVWTowW7oIXLNYMfVJRv0touc6+/JccfjEN2TKis6ZwCFaRWyPbTmIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525327; c=relaxed/simple;
-	bh=HjdeBbhhYpiTDQNeuKjppa/6OR8mdX2tAmkwgCAGDzw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HGwuDRZMzd0EUkeaBf5SodFuSaY21L+Z3iwjc5zjP9s9Ols8Wz19koKf2m1pKv56mXHM3/nSjac4seJ1xSfbPXUe6iVH9l8/QMrgTARU/sOqPLM7VVFzO3tc094eCpXibcrZiBC8PazbuJkgQvYYhi3i4wVkRHSZ50/cr2WLlvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=U5Z9toWh; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748525338; c=relaxed/simple;
+	bh=KkYz32Trfq7SamxgMNROeJDs8dDQfe+qHhSaPMbUW7c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gzh7Dbbihec2QLVxRuBorb/ainTwaeblPxGIAjsij8X8AWzPEdB5EMdOijxwKV2z+GFjq3BDx7KEI2JhXI91HTBwBmSVixvVWcdZdUO+xy6ObCGdU+bnaV5KPwMSyWSYvoY+WfVQx+qQvqFXUUSV0+fCcVuNqqL0LBCMNVe/11o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YscI2kTw; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="U5Z9toWh"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 3E20D207861D; Thu, 29 May 2025 06:28:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3E20D207861D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748525325;
-	bh=PowdyksgFeNGxjaYVXgfZt/agyGLy3RtEinohZnn13E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U5Z9toWhiQyAo1P5uORvpzDiRyD2tsbluG5TtPDUU+lIZr434j4ewrazjfeVR6bvL
-	 zBCbVW/l38UkV2MLvalZYHb4PQdNFUlG1Ze+c+LI1tFU3cgRGk/G99bYfsZ4JtA80F
-	 y5dMttkHk65rX2EpVWi2yfWUprYKKhKMxk2gM7lg=
-Date: Thu, 29 May 2025 06:28:45 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Simon Horman <horms@kernel.org>
-Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
-Message-ID: <20250529132845.GE27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250528185508.GK1484967@horms.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YscI2kTw"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-30e7ee5fe74so136446a91.3;
+        Thu, 29 May 2025 06:28:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748525336; x=1749130136; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PNGihgT4QhXhCGAq+zxWlUIvoWDD4hq4zx3pCShC04s=;
+        b=YscI2kTw/hsicYfEXSlJgyMdQI9L6Ojf7zF7fRUSE5S6FWY13HRrWRvUqVcf1/LmP5
+         lq8dVezR6KEyWSHZJREVmIgjvIYtZvTzOvE14f6MmEL4PYFC83acud5er1Pxoh8Sk0kw
+         Jt6XDzGe6BZNjqx9iYf4OvRQZvJ8BB02FC6ThVnr72PbmDeu6SIeqwtjlSObaxPnYsHa
+         8iUQQMoxu2QNtaRE+Syl3h2s1MOXurVr3F2fyYEMgTBGG8TTVEzZRnLoLMrFjGBktabb
+         Nc4S39UNI5S3yp8KHok06X8wsR3UWL8JQGqzp6ZPim0jI7W/LnNsSnnYq+2kDcmIHGKo
+         LCeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748525336; x=1749130136;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PNGihgT4QhXhCGAq+zxWlUIvoWDD4hq4zx3pCShC04s=;
+        b=dkwa2jZo+nafqGIehebq3jZ2FL2C6bHIWjRaX3OIdwwZ5IghYEX/JgtFm5pj+oNjmv
+         8Mh2XXa1Dx0l/DUhFJCQXBBb0NuIGa37g0l/qzzy8PWcRv79tOmJfpyrHigtExmt6M7G
+         dp21ZGdsTvB05C1KMqPhSY2D9oJXvHNt6QxledaJcIZ8k4BShIaLt8pS0HxIw7bDZUca
+         9+qADNJ/9n0qSR8UdpcaEY/pdIBanofTdx0FS1UUUsCTumrNHLrP+d6OyNDq2Y00M+oS
+         TIZbrcjXI0RcCHNz0Mz8rvs6Ixwy8PYVIXyhbyTRHmfLQjKXybxu0Tl4m1jqxUl7gFoT
+         WyGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIVkLznQxYFVOMiJabF6QzY6UywhYiMBHHTCr6fHKfoVOsoExm1UqE+6i7H5EnENuiH3HAUFWOV8Cai0I=@vger.kernel.org, AJvYcCVACqTmyF8KUv+NnQ+WAa6EKAEPDcWqa1s7u4Ie2twJx2dJI5M1wHAX1WoYSEXS2j598IGtAE0XnsblGl9NUFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu6B3gQcb8EvodmbNkEVz2pTkv9I9oaOfUQDc+q6y+VINCM+kS
+	NFeUFmlyEqJ6A9jXHadIFZqDBV3PA++CKTpgdvLeD87WX0ZWbUarRW0wy16xyeXCTgzvpOiLjF8
+	dYtjTnw7iVF/h6TbMrgVuc7dbr7uS43w=
+X-Gm-Gg: ASbGncst/7O7radwpgAZjE6Xs5dLb+aXTqJIZ95UlxRxX9hEO/A7tTtTH8zhEud3wIU
+	43m5Xju2sZnXPJThnb9LfWscVbNXmVAJzhVOGEEN3kZnx765ahm10Ptsj+ntMmQvJ8Le+WXYHH+
+	3TGvv2sy50HUzHAkGEGfi79s3dZlYgySFC4ixEP+j36+E=
+X-Google-Smtp-Source: AGHT+IFGDy2s1ce74qQC1vfTsdC+HO7buD9QG8v8iXEfu4mTCnJricWyj500BN8RnRhyunUsCvcZy6Q0gtV6D8o859Y=
+X-Received: by 2002:a17:90b:4d8f:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-311e03a7f6amr3834937a91.0.1748525336037; Thu, 29 May 2025
+ 06:28:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528185508.GK1484967@horms.kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20250411-b4-container-of-type-check-v1-1-08262ef67c95@gmail.com>
+In-Reply-To: <20250411-b4-container-of-type-check-v1-1-08262ef67c95@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 15:28:41 +0200
+X-Gm-Features: AX0GCFtaY6vYdcm5nKRryOdntfVU0xkoA_50wVTCFyygR0ApAbv0Du0o3tFbpIA
+Message-ID: <CANiq72kmGPF+MmYcYmPz93g5L2rr5AspZGYYLfG=gYSfF703+Q@mail.gmail.com>
+Subject: Re: [PATCH] rust: check type of `$ptr` in `container_of!`
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 07:55:08PM +0100, Simon Horman wrote:
-> On Tue, May 27, 2025 at 08:57:33AM -0700, Shradha Gupta wrote:
-> > In this patchset we want to enable the MANA driver to be able to
-> > allocate MSI-X vectors in PCI dynamically.
-> > 
-> > The first patch exports pci_msix_prepare_desc() in PCI to be able to
-> > correctly prepare descriptors for dynamically added MSI-X vectors.
-> > 
-> > The second patch adds the support of dynamic vector allocation in
-> > pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
-> > flag and using the pci_msix_prepare_desc() exported in first patch.
-> > 
-> > The third patch adds a detailed description of the irq_setup(), to
-> > help understand the function design better.
-> > 
-> > The fourth patch is a preparation patch for mana changes to support
-> > dynamic IRQ allocation. It contains changes in irq_setup() to allow
-> > skipping first sibling CPU sets, in case certain IRQs are already
-> > affinitized to them.
-> > 
-> > The fifth patch has the changes in MANA driver to be able to allocate
-> > MSI-X vectors dynamically. If the support does not exist it defaults to
-> > older behavior.
-> 
-> Hi Shradha,
-> 
-> It's unclear what the target tree for this patch-set is.
-> But if it is net-next, which seems likely given the code under
-> drivers/net/, then:
-> 
-> Please include that target in the subject of each patch in the patch-set.
-> 
-> 	Subject: [PATCH v5 net-next 0/5] ...
-> 
-> And, moreover, ...
-> 
-> ## Form letter - net-next-closed
-> 
-> The merge window for v6.16 has begun and therefore net-next is closed
-> for new drivers, features, code refactoring and optimizations. We are
-> currently accepting bug fixes only.
-> 
-> Please repost when net-next reopens after June 8th.
-> 
-> RFC patches sent for review only are obviously welcome at any time.
+On Fri, Apr 11, 2025 at 4:31=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
+>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wB=
+uGPYh9ZTAiww@mail.gmail.com/
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Thank you Simon.
+Applied to `rust-next` -- thanks!
 
-While posting this patchset I was a bit confused about what should be
-the target tree. That's why in the cover letter of the V1 for this
-series, I had requested more clarity on the same (since there are patches
-from PCI and net-next both).
+    [ I went with v1, since it seems to me like the obvious approach, the
+      error messages seemed good enough and the debug performance should be
+      fine, given the kernel is always built with -O2. Moreover, we could
+      move the function out of this -- see [1]:
 
-In such cases how do we decide which tree to target?
+        With v1, we could also just put `assert_same_type` outside as a
+        utility for others to use, i.e. in the `kernel` crate, which
+        simplifies things and makes the error a bit shorter. Moving the
+        function out makes the error slightly shorter, would also allow us =
+to
+        document its usage, including the suggestion to use `if false` in a=
+n
+        example.
 
-Also, noted about the next merge window for net-next :-)
+        Regarding the `if false`, the kernel is always built with at least
+        -O2. Benno mentioned debug performance -- was that related to
+        something like debug assertions being enabled or just optimization
+        level? Either way, even with the assertions enabled, I don't see it=
+ in
+        codegen.
 
-Regards,
-Shradha.
+      In particular, the error message for a example mistake like the one
+      showcased by Tamir in v2 and v3:
+
+          diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+          index 8d978c896747..6a7089149878 100644
+          --- a/rust/kernel/rbtree.rs
+          +++ b/rust/kernel/rbtree.rs
+          @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) ->
+RawEntry<'_, K, V> {
+                   while !(*child_field_of_parent).is_null() {
+                       let curr =3D *child_field_of_parent;
+                       // SAFETY: All links fields we create are in a
+`Node<K, V>`.
+          -            let node =3D unsafe { container_of!(curr, Node<K,
+V>, links) };
+          +            let node =3D unsafe { container_of!(curr, Node<K,
+V>, key) };
+
+                       // SAFETY: `node` is a non-null node so it is
+valid by the type invariants.
+                       match key.cmp(unsafe { &(*node).key }) {
+
+      looks like this (plus more details):
+
+          error[E0308]: mismatched types
+             --> rust/kernel/lib.rs:219:32
+              |
+          219 |         assert_same_type($ptr,
+::core::ptr::addr_of!((*container).$($f)*).cast_mut());
+              |         ----------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut
+rb_node`, found `*mut K`
+              |         |
+              |         arguments to this function are incorrect
+
+          - Miguel ]
+
+    [ Fixed `mem` -> `ptr`. - Miguel ]
+
+This caught three cases that require an extra cast in -next -- those
+will be fixed on merge.
+
+Cheers,
+Miguel
