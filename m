@@ -1,103 +1,102 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D4B647;
-	Thu, 29 May 2025 13:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54D91DC997;
+	Thu, 29 May 2025 13:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525020; cv=none; b=nhNSyTGLnihuDhh1xwTQ8o4ShJMN6KMpToTsYhd3AWikJngSCqeByj+Td8VBfWweYs1QPOiuWBDcBRn7wJrCfvkDS8taUbbUqArcLNDT6l96x6ZwyK9VOeBHuTLZ95nUGBhPDf2414Y9aCJNlPAFK5Y8Dsn2xiQvCMDwEzf6Lnk=
+	t=1748525035; cv=none; b=uq69opaoLogm/QYArJ0ROGRt5KKZwse6z/wWt7PyPlKwdSnkXKROR+H4ZBDtmQdx2PmSH0cEP/Nlpd0QNL4e9vuZ+3PhOJEgPWUI67aU3sfbSHElbqs8HS14Eg0nqTOJvAOywcUYFC+gnO3YJulIjLj0+TMTDCBhuUEGDX1mhcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525020; c=relaxed/simple;
-	bh=dDGVAlh58IXITtv4zoQJHm8V6+hjmVhqg6ZkAI+a+ks=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qxQZ9cLFgEdM5EM7COzIy4G7tcf2x52b4i/w0+b1LZEK64Bb0YqTSQbjgiMYVJiCSkYGxOkZIct5rQKqpUkd7fiqpKSW3WjPBG+pFPb7e2lIVlKOJYeVoSs71D/Xt0AxKwf9dUuOc2ArSswwPXSAihDM+2x/JN1fMzTuyWbTEpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HV2UtNB2; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1748525035; c=relaxed/simple;
+	bh=iPhBdE/tZhg6QxWqTyuAWCZ+5+zJ35pVWAcFE/CH26A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RE5UMcDv6m4FzGzT24H0f8qTKF1pP7Zyem55EoFWv5Qt6mm3f46V3IEwqw05+YU/eAyZKLOfTm4ojLgkFzzPxE7RsRaoQTMfrNXuHmdHCv8HNnjv6LC3DZhjUWySfxDufqE7QkXoOybIIqa3RrXTyAKFXGUMpaonbFYcptRgPrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pn0p1FlW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HV2UtNB2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=zBTL/STJmtvp2VqDgiDgK4iklSQ0paUUUgoWg/0K4tc=; b=HV2UtNB2S1YdQPm65D3plaVeJJ
-	rS8dbZCmEBE8hNa2SKqutR8/LSMMDcPJCzrBeKp7x9VeDvjUE8kZAiefsXQgFAYOyPLvpbJLscpb7
-	hsUlRtD+mvZ7xh5a58YHxqMIL0Edd26bJ513M5L6iHeoHzpJdmLiktSVODuAfOXtH6Yoj7aKBP9rf
-	bpFmXHijHgT4dfAYYFX+T1wiE+fxLo12DRGJOZJFDCAt//iquqt3pEiLLE4JnuwQkNeVIS1tJRC+K
-	ZaGnGtO/q++vAZWrS88u3tU0udE6CGIc+ctokgqA56J/0xF3HrI3DYNHi8u4kDZzY/9jIx5DhK9l5
-	UxuuEzjg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43512)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uKdEG-0001Qi-0z;
-	Thu, 29 May 2025 14:23:28 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uKdEA-0003Ti-1O;
-	Thu, 29 May 2025 14:23:22 +0100
-Date: Thu, 29 May 2025 14:23:22 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>, Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH net-next v6 06/14] net: phy: Introduce generic SFP
- handling for PHY drivers
-Message-ID: <aDhfyiSOnyA709oX@shell.armlinux.org.uk>
-References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
- <23936783.6Emhk5qWAg@fw-rgant>
- <20250523145457.07b1e7db@2a02-8428-0f40-1901-f412-2f85-a503-26ba.rev.sfr.net>
- <13770694.uLZWGnKmhe@fw-rgant>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pn0p1FlW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325C7C4AF0B;
+	Thu, 29 May 2025 13:23:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748525035;
+	bh=iPhBdE/tZhg6QxWqTyuAWCZ+5+zJ35pVWAcFE/CH26A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pn0p1FlWBLnCDhYfKsIN+PHT2N3XR7sGTjhZePQ7MoIyHiRXLmiij3MRdbHHPG+c3
+	 4O1x1i8wqrtHcGWK3i8c1Oq5lbyL+kzBQtLuG4Ob6FlaZd1R5kgCipNq2Md7oRmqf3
+	 VzgEesZK7EMnUbB3uHxjfuZymDQt+6P1tJkFYBmLvzei3y1sfzoZwai/qD1PKf5m37
+	 cjO3eDlk4WAXGfIOFURcLI5sUiDc8si7abE8PeXSbLwdFv21cTBhGB6Luf7+b1t9dy
+	 O4kkE3vF2wVVXJqNQWqep4uW65psHv+RnTRxB0sjVkjdc7fE+fSUnnAmVyoCaaUaTM
+	 Y06tKza9/HeYg==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60634f82d1aso250680eaf.3;
+        Thu, 29 May 2025 06:23:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVVdOxKTIYwcW4MpLfq+5cs8GWyh0bkyQnqQfqvWMe8KVK//gBO0QrI61laxiHM+TUyh8mYSIXF7CsKCTY=@vger.kernel.org, AJvYcCWNe8ZE76aLEjXUXR6IsNcjSX3O1YCan/3KKIA9HqLJ3U1gFVoSD5TIyaggtKyuNmvKIhlNqL6Faw4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKyZQHATc7q0vMI2FIOvOfI2tu7DvEEO93aElRrHXI7qSt7wN8
+	Ss+HxEdnkcXvj3nAzzonjYrAm0PnJbP46WoCZMCDYurtd++dpJnM0STkp1Zo0LZWzZI6fH5hmhn
+	S20L0ire/rlZUTdw7J3VvFT43dqFHVlg=
+X-Google-Smtp-Source: AGHT+IEY6jTOLee1Y7y3UrQGPfDW6z03FXJShLfN7yd223mbTlb/bw2LB14+S4L7LK5xEFbyl7YBTRRqf/5Evmu8mcs=
+X-Received: by 2002:a05:6820:a05:b0:60b:a4cd:c368 with SMTP id
+ 006d021491bc7-60be8ec81d9mr919626eaf.6.1748525034505; Thu, 29 May 2025
+ 06:23:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13770694.uLZWGnKmhe@fw-rgant>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250529085143.709-1-gautham.shenoy@amd.com>
+In-Reply-To: <20250529085143.709-1-gautham.shenoy@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 29 May 2025 15:23:42 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h27Re4UwoyCrauNfQupojpfwKSOzSppC9mwR-ATWD3Vg@mail.gmail.com>
+X-Gm-Features: AX0GCFuRoIkmbB83JxdjUmlpwoUD6U38Lff5covVl7m41Qt4OgEzJduE7dFPOcQ
+Message-ID: <CAJZ5v0h27Re4UwoyCrauNfQupojpfwKSOzSppC9mwR-ATWD3Vg@mail.gmail.com>
+Subject: Re: [PATCH] acpi-cpufreq: Fix nominal_freq units to KHz in get_max_boost_ratio()
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Manu Bretelle <chantr4@gmail.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 09:35:35AM +0200, Romain Gantois wrote:
-> > In that regard, you can consider 1000BaseX as a MII mode (we do have
-> > PHY_INTERFACE_MODE_1000BASEX).
-> > 
-> 
-> Ugh, the "1000BaseX" terminology never ceases to confuse me, but yes you're 
-> right.
+On Thu, May 29, 2025 at 10:52=E2=80=AFAM Gautham R. Shenoy
+<gautham.shenoy@amd.com> wrote:
+>
+> commit 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
+> modified get_max_boost_ratio() to return the nominal_freq advertised
+> in the _CPC object. This was for the purposes of computing the maximum
+> frequency. The frequencies advertised in _CPC objects are in
+> MHz. However, cpufreq expects the frequency to be in KHz. Since the
+> nominal_freq returned by get_max_boost_ratio() was not in KHz but
+> instead in MHz,the cpuinfo_max_frequency that was computed using this
+> nominal_freq was incorrect and an invalid value which resulted in
+> cpufreq reporting the P0 frequency as the cpuinfo_max_freq.
+>
+> Fix this by converting the nominal_freq to KHz before returning the
+> same from get_max_boost_ratio().
+>
+> Reported-by: Manu Bretelle <chantr4@gmail.com>
+> Closes: https://lore.kernel.org/lkml/aDaB63tDvbdcV0cg@HQ-GR2X1W2P57/
+> Fixes: 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
+> Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufre=
+q.c
+> index d26b610e4f24..76768fe213a9 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -660,7 +660,7 @@ static u64 get_max_boost_ratio(unsigned int cpu, u64 =
+*nominal_freq)
+>         nominal_perf =3D perf_caps.nominal_perf;
+>
+>         if (nominal_freq)
+> -               *nominal_freq =3D perf_caps.nominal_freq;
+> +               *nominal_freq =3D perf_caps.nominal_freq * 1000;
+>
+>         if (!highest_perf || !nominal_perf) {
+>                 pr_debug("CPU%d: highest or nominal performance missing\n=
+", cpu);
+> --
 
-1000BASE-X is exactly what is described in IEEE 802.3. It's a PHY
-interface mode because PHYs that use SerDes can connect to the host
-using SGMII or 1000BASE-X over the serial link.
-
-1000BASE-X's purpose in IEEE 802.3 is as a protocol for use over
-fibre links, as the basis for 1000BASE-SX, 1000BASE-LX, 1000BASE-EX
-etc where the S, L, E etc are all to do with the properties of the
-medium that the electrical 1000BASE-X is sent over. It even includes
-1000BASE-CX which is over copper cable.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Applied, thanks!
