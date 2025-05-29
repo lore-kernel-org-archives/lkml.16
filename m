@@ -1,72 +1,107 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0C513A3F7
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07F613A3F7;
+	Thu, 29 May 2025 11:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748519285; cv=none; b=irFPZmmledVayAJuyOWxas0673NEN3tu7+rlK9v/UsjBBcw/KamsZF1LLdu9nXt43xi8YCHmLK7HcYeGFp25cwFZyqv7qyLjnP1Yml/4JSPRStLMJBn9Kn/gDXVbSMe7Q34+oYx4Ij1QMwt5Ha4RnVR1SmiQisRypAlHAKOCIdc=
+	t=1748519288; cv=none; b=ipKPUqjzTqzNYjCFPjN/umqMLMf0fZD1RWD7aszNNkKWNTNDLWBnYr+phGBbE49h7vSe/gfHcrtHLb1p/n9Lb1z0qdj/VCAmfKC+1TPy3palcMQ6slPkmZ08jOj1aeYm+320Ayqcewck4OebTzKIxiUbbkuEfTc8fj3TUBWfM2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748519285; c=relaxed/simple;
-	bh=QQFnAYl2rFbhSZqujWfIHoWDg5HbfftyyXJExKBk4/E=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=LZ+yoArkvDqxGQECO2Z/6N3hODHSLa3dHcY6Oyp63RGH15cTOM1naTLdAO8S+FxDGJ/x44/r7J0qd48ySekORude/jECu8B7Tfw4MqQliZOQL6SxTZowfOYDzhuvqI0E93gZgvyBXwVmanTeI/4jtWgFqVGkH14uyy/IzVqLnjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc9d335fffso15793205ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:48:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748519282; x=1749124082;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ql16J6aj6hokHrJ5bV+dg0/DwTT7OO+dWoAaE/YQ+zM=;
-        b=HNyOrdJR8/+uLR9BKeNGHP3GLnIAfTiDyASWRKt/r4fd8SBJZZV103wsJ2jPLb59x5
-         sSwrF0furS/5gh/DjH7WIY10/bl+5BVHUX28Nv3ziKkEv6OeR58czB1rcj+z/C2lzek9
-         K9ZWi2REEBxBPConvkz3WB+G8U3kqK+/6Z6gYfEc7MQwnbFpnBJSYFyEyieb8DkyuADr
-         /FfnbHTnraNnl7G22Wx1X8JrvYbjzptqNVRVHxCiAAcliwuuN642f2JjXB9d0FZEXLey
-         +saydnFDTUtXSRXgZmVsZOhwXjk5k+GI9KAblHxOQO7msPmftSy9Bf+V0Y7NxjaWit89
-         5zZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1pr4DP6X72BcNJqfFmK8gs3LfvdxUhdbofjX/d82eYocmtTAAjCzApv82wHaqFkBqXHp2IRkXUdb7oI4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1HnN81zY06TN5K+ZaDq88xD2LtNYm11kcbjQfEEHnEYa1FoWg
-	0gi7e/8gbvXTIoP7BC8K60CZ0HqT4/Ydyecbtpr4c9viHw7sck1lxfzcrzSMAbpfx9puPahfQKZ
-	wPoL/qPSHz0wgwfa0u/K+anKbnHvk2A9uFYK1UJbi+Ev+St3bfnrZAiDS9PQ=
-X-Google-Smtp-Source: AGHT+IFREv4+GloQRCuf+3dE97Q5DJwXHZk0WJHlgTeCZ//dy0d4CmPqdhEhtTTq2DBDoH/mAq5eZVGk1utUFP7+qwTaDrODzTnm
+	s=arc-20240116; t=1748519288; c=relaxed/simple;
+	bh=P7souVYNDTCPcO1CXMYGoclN1/o/FL5aiEHy0SwZIR4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kjCi8wpm31DepW38Z5UhDhEiQhE2KbmtMSi0cL0wwMShbap1tts3cKmWCpvM0xruSErfd8cZRm8+7yC8eKP+B764258p0d53paa1alVgEdrGe/Rbf0KxXtVCdmR7tQFOpCWbmM/bgwEt4yr7sa6ACYjBVrnMMSmTI8Ospf7LsBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MsQQPjxS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MsQQPjxS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33FD2C4CEE7;
+	Thu, 29 May 2025 11:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748519288;
+	bh=P7souVYNDTCPcO1CXMYGoclN1/o/FL5aiEHy0SwZIR4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MsQQPjxSX+4DmYyhHGCpSURnuD0cmkl4qu3BbZUy07xbxOHBZySYUKM1CNg1Impvd
+	 jFhl1sras34WV5jDj2ARxFbselPnvdCeGBX/0eI3BxG4PiyVx1SF7vzJyCzS8/ycj7
+	 eWasMHhhL1/SsYfthIZpZfaeZi2TJiJ39y14cuMYeQh4h7KM8hNbUP7aowkQt6vEAr
+	 MRO4II492FsEbgtuY8bUWwQyWnhssfZR8sLVqQbbdeGUZQhFUylja5L081wmJfHUOJ
+	 zGzEmOcB/Cx+/YgfA8kD0lE0IMqIZyyqwE79fO3E0GntYoQXkNX4BneWixatifPs5I
+	 cQKUKuyc2tWRQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uKbjx-001YLY-Ia;
+	Thu, 29 May 2025 12:48:05 +0100
+Date: Thu, 29 May 2025 12:48:05 +0100
+Message-ID: <86a56veiyy.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Cc: Eric Auger <eauger@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	seanjc@google.com,
+	darren@os.amperecomputing.com
+Subject: Re: [RFC PATCH v2 0/9] KVM: Enable Nested Virt selftests
+In-Reply-To: <7bf7bd52-7553-42a7-afdb-a5e95f8699b5@os.amperecomputing.com>
+References: <20250512105251.577874-1-gankulkarni@os.amperecomputing.com>
+	<92c7e99c-5574-422c-92f1-62d5cde58fec@redhat.com>
+	<7bf7bd52-7553-42a7-afdb-a5e95f8699b5@os.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1686:b0:3dc:8b57:b759 with SMTP id
- e9e14a558f8ab-3dd944eacb3mr21603175ab.21.1748519282732; Thu, 29 May 2025
- 04:48:02 -0700 (PDT)
-Date: Thu, 29 May 2025 04:48:02 -0700
-In-Reply-To: <CAGR7w80dQ5hTj8ye0DLi7SwT9v53S+anDDpGjQw5suwEdGXVHw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68384972.a70a0220.1765ec.0187.GAE@google.com>
-Subject: Re: [syzbot] [i2c?] KMSAN: uninit-value in __i2c_smbus_xfer
-From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
-To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: gankulkarni@os.amperecomputing.com, eauger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, seanjc@google.com, darren@os.amperecomputing.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
+On Thu, 29 May 2025 11:29:58 +0100,
+Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com> wrote:
+> 
+> 
+> Hi Eric,
+> 
+> On 5/28/2025 6:58 PM, Eric Auger wrote:
+> > Hi Ganapatrao,
+> > 
+> > On 5/12/25 12:52 PM, Ganapatrao Kulkarni wrote:
+> >> This patch series makes the selftest work with NV enabled. The guest code
+> >> is run in vEL2 instead of EL1. We add a command line option to enable
+> >> testing of NV. The NV tests are disabled by default.
+> > 
+> > For commodity, I would add in the coverletter that for all tests
+> > enhanced with vEL2 testing "-g 1" option shall be added to force that mode.
+> 
+> Sure, will do.
+> 
+> > 
+> > I don't really get how you chose tests capable to run at vEL2 and
+> > excluded others? Wouldn't it make sense to have a way to run all tests
+> > in either mode?
+> There is no selection as such. I have worked on around 50% of the tests and sent for the early review.
+> Yes, almost all tests can/should run in vEL2 except few.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Define EL2. You are so far assuming a E2H RES1 guest, and I don't see
+anything that is even trying E2H RES0. After all the complaining that
+E2H0 wasn't initially supported, this is a bit... disappointing.
 
-Reported-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
-Tested-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
+Also, running EL2 is the least of our worries, because that's pretty
+easy to deal with. It is running at EL1/0 when EL2 is present that is
+interesting, and I see no coverage on that front.
 
-Tested on:
+	M.
 
-commit:         90b83efa Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=178d2482580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1da44e3e5e6013db
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10c8ced4580000
-
-Note: testing is done by a robot and is best-effort only.
+-- 
+Without deviation from the norm, progress is not possible.
