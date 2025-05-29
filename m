@@ -1,389 +1,324 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2BF2512D5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747E735957;
+	Thu, 29 May 2025 04:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748492819; cv=none; b=UE22yVrZhefj29xhahlI04K9gffQets3zK4XvZoliyzKdO/AD3tp0EFOrQmk+UvBVEZmYs1mh6LhyrMFYN6MvQgueKpsUEZy0wbQmK0cGynX9fy9iE7PWN6TvqDZYEram3fmfiaPkeDwPXE9pCh+beSSW7KKNKXtzI5gZ+85W4I=
+	t=1748492841; cv=none; b=EiZKTMVkOGVIzZMFIXuvsVSxKSByzkJ9eQrpnep+yjH+T0bbUbyNJZNj9d7+pZWqQ4Hs1yt0HWzSGvMNARzoJxAGYjsQU2R1oydB+Eg0+fDte0P7io+5YutWHbRDVx4dilAL/WdmsbO1RcYgWvg6lgtQ1hC+qzyzP5SSlaImNc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748492819; c=relaxed/simple;
-	bh=pYPKV5QdqytLtYiDi2Lew5nroHWz5XB/ByBnjfZiH9c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OYjrgWXCxlKrVrNgSP9kJ/oK+w6mUs7rGk2ooNSm0fvz7bNy7uvQ/1psb5MIMETNnYS7PKl5tXnkvOzg0rThOxw3Jw3wDXKtfTsnnNZMocvHq0wtU03qoGeQ4mLzi5A4uRwFTNTWCUPXDYg4aw1zKPS0pWxhLTTVcM8ZVvBVdko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ju9VzaF8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748492841; c=relaxed/simple;
+	bh=L5O901KRHAvHYa0ybdJQAt7qrlHkOolZqYMzzsrukZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=barlo5s0TrwUMXuhpBNjlzxNsw0n4eYoghLQd3mJ+4KNtNoDXPq7/Ax4F6+9jnPnyCJLklHvbFTNvhPAkiOwQl3ryIoPY6mwVFkD6WiLoC0om8l3WfwM/qQp2JDB4WSyw49+dKBjC2/P/ys1T43gqopDaUP02qAAVSUEY730hLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EaqPtWz9; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ju9VzaF8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748492816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ex3pdBmkOUDRqy601U9SQqEbyhPUzX43nDu/KUjEDkA=;
-	b=Ju9VzaF8Xby3vaMMdCMCrsj9DYaygwbW7nZX653hUvQEn6mREywo33rtk62TCSACHtXlGz
-	JWQjKYZB7+Y6NT4Ahct/4db7eipIWImOuaTOawcbu/1BQybhgOZnFc3v8OdyxpYZzYQRwy
-	eMt4fh6ykYN0921q6JsXOYG1Qq1wenE=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-DAq1tyWLPnaIlGX4ouz2RQ-1; Thu, 29 May 2025 00:26:53 -0400
-X-MC-Unique: DAq1tyWLPnaIlGX4ouz2RQ-1
-X-Mimecast-MFC-AGG-ID: DAq1tyWLPnaIlGX4ouz2RQ_1748492813
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70f841fb19dso8816177b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:26:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748492813; x=1749097613;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ex3pdBmkOUDRqy601U9SQqEbyhPUzX43nDu/KUjEDkA=;
-        b=xBNhX+dNZX2/cw16IB0cbRawkBbsT6MVPY4hUZ32/semBXopkPMJ1FFlP/z/F7OiJ9
-         pqs2RlmbG+nS0iak2r2gCCNtNG4qVgTful0gvpiE2c1b5F1ACytrvcR4N9Jbb+mlNB5q
-         jr7H0A+31c9H3jAM7maWJ0kzCVBAksVkTYuvjo+kcsGBXu5cbYncXVrlSp5dqaSQ0CI0
-         /IudRQlBhInlSUNiovglpABNDnTa4cr7GyjzcyEdroKfhbXZ68Fs+Nh0cbxbeDeuTGtn
-         4ytmP22cIVBTKdEXquMuL269+Nwpt9nE47Sq3em7KOGZEfcDfuW6p8IbcHrR0Vqdy9eE
-         Md4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUM6Fbb9z8wTimz1kBlrOX0j7XmBKn6sVEDX+ffUqRIqNaWeyntJ2EgRcZ1TBQsPmAzxzBjpfwZ3C37l80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPDc5uf8TfAHm86WkUnqN9N+146cgfCxztyzSxeiQVRikKfz9k
-	c5UBV0tgDAN7i+BwtWz5Gu+aFD2mOOI79VszFfYIXKZtMjr2eLcDN/K3fDN4yjif/IoOqEkwUMy
-	RcJpCkiyUGB0MgD5rU4SfXLcGmBhzXyGNmIxN5lFP40hORdV0op6x7ntVYvukBXye/59jV+IV0z
-	r5Dqx+wfz/bgQO3sWQw+kWVuQzOZKy0jRmajUa9fVcwk8tYrPltUpbTQ==
-X-Gm-Gg: ASbGncuRiKQ3i3JU3BXyw4YJeQJZDya8XheXdrIzBvR9a0V/w/dl4InNW1XZwHoe6lD
-	wIVk3gT2Q45YvpN400toL66lbxFF3yXAlvfOqHp1R848vnlhkJtwifQTxiCs4DcLBbgk5Lu0=
-X-Received: by 2002:a05:690c:15:b0:70e:7ff6:9fd0 with SMTP id 00721157ae682-70f3147ae7amr69347347b3.35.1748492812677;
-        Wed, 28 May 2025 21:26:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGa/qWJYpJ/+QQie7VzzCQqjW7fcD4CgkSyasKC81Gvwr9UAPZCZblvzZ/MNvjAq7MgTXKwRCRo7nhYrIssl3A=
-X-Received: by 2002:a05:690c:15:b0:70e:7ff6:9fd0 with SMTP id
- 00721157ae682-70f3147ae7amr69347107b3.35.1748492812231; Wed, 28 May 2025
- 21:26:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EaqPtWz9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748492840; x=1780028840;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L5O901KRHAvHYa0ybdJQAt7qrlHkOolZqYMzzsrukZ8=;
+  b=EaqPtWz9GECSzD3NHkLpVfqCBkTuPaY7kGM0p4xdarsn9Bx1tDXJipQy
+   iK4OFe9FB+hrBzq/8reot5eh+TYZccuIQoW0ngvRQxEN/E/3XiNl+0ZEn
+   k2igV0AUyRMT00PZtg8laaDJP6Or+ZXj71NNyTosH0WoLFqXaNXS3IadQ
+   ZyIZHxZNjD5K84EkCJPWVqMeV0HCQpvzGcT2UltEODU9F+1C3Luobf04h
+   kQpA6XOVpWaMeO837riSMNDxYyoaFtJfhRxLQWDnyet+yh51QFI9yqU70
+   P7019qdtlxHYeOPGlaasl+NdPTVIl0hISaf/sWRGMP2FBGrj7xdpp9k2i
+   g==;
+X-CSE-ConnectionGUID: TGDebsn0QDSK3dMYcmcMDw==
+X-CSE-MsgGUID: 5lfGNL+7RTW6aC5LiW4PAA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="54202886"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="54202886"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 21:27:18 -0700
+X-CSE-ConnectionGUID: XHqJGtUVRveuLBOaAYfHIw==
+X-CSE-MsgGUID: WSqhFQStSPOa0QeXEKG3Yg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="143769450"
+Received: from josephbr-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.30])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 21:27:17 -0700
+Date: Wed, 28 May 2025 21:27:10 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH 3/5] KVM: VMX: Apply MMIO Stale Data mitigation if KVM
+ maps MMIO into the guest
+Message-ID: <20250529042710.crjcc76dqpiak4pn@desk>
+References: <20250523011756.3243624-1-seanjc@google.com>
+ <20250523011756.3243624-4-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515033857.132535-1-npache@redhat.com> <a8bc6012-578b-412a-8dc9-fa9349feaa8b@lucifer.local>
- <CAA1CXcD8FCdCsBkyW=Ppbr-ZRD8PNmPu-3khipX0fVK3mxs-EQ@mail.gmail.com> <c027a3db-eb6d-4a3c-98b0-635f3f842ee6@lucifer.local>
-In-Reply-To: <c027a3db-eb6d-4a3c-98b0-635f3f842ee6@lucifer.local>
-From: Nico Pache <npache@redhat.com>
-Date: Wed, 28 May 2025 22:26:25 -0600
-X-Gm-Features: AX0GCFubEhLqG8ZmT5mBKytjQcZ__0Xo41eeNzsj8MkbhGwDDub_V9w5CoIgzsg
-Message-ID: <CAA1CXcAfbzwr7QC6JngPvTPtBSf=6WfnhVn+gK2rHMrSTuS8vw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] mm: introduce THP deferred setting
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	rientjes@google.com, hannes@cmpxchg.org, rdunlap@infradead.org, 
-	mhocko@suse.com, Liam.Howlett@oracle.com, zokeefe@google.com, 
-	surenb@google.com, jglisse@google.com, cl@gentwo.org, jack@suse.cz, 
-	dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
-	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
-	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
-	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
-	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
-	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
-	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	corbet@lwn.net, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523011756.3243624-4-seanjc@google.com>
 
-On Wed, May 21, 2025 at 5:25=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> To start with I do apologise for coming to this at v6, I realise it's
-> irritating to have push back at this late stage. This is more so my attem=
-pt
-> to understand where this series -sits- so I can properly review it.
+On Thu, May 22, 2025 at 06:17:54PM -0700, Sean Christopherson wrote:
+> Enforce the MMIO State Data mitigation if KVM has ever mapped host MMIO
+> into the VM, not if the VM has an assigned device.  VFIO is but one of
+> many ways to map host MMIO into a KVM guest, and even within VFIO,
+> formally attaching a device to a VM via KVM_DEV_VFIO_FILE_ADD is entirely
+> optional.
+> 
+> Track whether or not the guest can access host MMIO on a per-MMU basis,
+> i.e. based on whether or not the vCPU has a mapping to host MMIO.  For
+> simplicity, track MMIO mappings in "special" rools (those without a
+> kvm_mmu_page) at the VM level, as only Intel CPUs are vulnerable, and so
+> only legacy 32-bit shadow paging is affected, i.e. lack of precise
+> tracking is a complete non-issue.
+> 
+> Make the per-MMU and per-VM flags sticky.  Detecting when *all* MMIO
+> mappings have been removed would be absurdly complex.  And in practice,
+> removing MMIO from a guest will be done by deleting the associated memslot,
+> which by default will force KVM to re-allocate all roots.  Special roots
+> will forever be mitigated, but as above, the affected scenarios are not
+> expected to be performance sensitive.
+> 
+> Use a VMX_RUN flag to communicate the need for a buffers flush to
+> vmx_vcpu_enter_exit() so that kvm_vcpu_can_access_host_mmio() and all its
+> dependencies don't need to be marked __always_inline, e.g. so that KASAN
+> doesn't trigger a noinstr violation.
+> 
+> Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Fixes: 8cb861e9e3c9 ("x86/speculation/mmio: Add mitigation for Processor MMIO Stale Data")
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  1 +
+>  arch/x86/kvm/mmu/mmu_internal.h |  3 +++
+>  arch/x86/kvm/mmu/spte.c         | 21 +++++++++++++++++++++
+>  arch/x86/kvm/mmu/spte.h         | 10 ++++++++++
+>  arch/x86/kvm/vmx/run_flags.h    | 10 ++++++----
+>  arch/x86/kvm/vmx/vmx.c          |  8 +++++++-
+>  6 files changed, 48 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 01edcefbd937..043be00ec5b8 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1458,6 +1458,7 @@ struct kvm_arch {
+>  	bool x2apic_format;
+>  	bool x2apic_broadcast_quirk_disabled;
+>  
+> +	bool has_mapped_host_mmio;
+>  	bool guest_can_read_msr_platform_info;
+>  	bool exception_payload_enabled;
+>  
+> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+> index db8f33e4de62..65f3c89d7c5d 100644
+> --- a/arch/x86/kvm/mmu/mmu_internal.h
+> +++ b/arch/x86/kvm/mmu/mmu_internal.h
+> @@ -103,6 +103,9 @@ struct kvm_mmu_page {
+>  		int root_count;
+>  		refcount_t tdp_mmu_root_count;
+>  	};
+> +
+> +	bool has_mapped_host_mmio;
+> +
+>  	union {
+>  		/* These two members aren't used for TDP MMU */
+>  		struct {
+> diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+> index 3f16c91aa042..5fb43a834d48 100644
+> --- a/arch/x86/kvm/mmu/spte.c
+> +++ b/arch/x86/kvm/mmu/spte.c
+> @@ -138,6 +138,22 @@ static bool kvm_is_mmio_pfn(kvm_pfn_t pfn, int *is_host_mmio)
+>  	return *is_host_mmio;
+>  }
+>  
+> +static void kvm_track_host_mmio_mapping(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
+> +
+> +	if (root)
+> +		WRITE_ONCE(root->has_mapped_host_mmio, true);
+> +	else
+> +		WRITE_ONCE(vcpu->kvm->arch.has_mapped_host_mmio, true);
+> +
+> +	/*
+> +	 * Force vCPUs to exit and flush CPU buffers if the vCPU is using the
+> +	 * affected root(s).
+> +	 */
+> +	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_OUTSIDE_GUEST_MODE);
+> +}
+> +
+>  /*
+>   * Returns true if the SPTE needs to be updated atomically due to having bits
+>   * that may be changed without holding mmu_lock, and for which KVM must not
+> @@ -276,6 +292,11 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
+>  		mark_page_dirty_in_slot(vcpu->kvm, slot, gfn);
+>  	}
+>  
+> +	if (static_branch_unlikely(&mmio_stale_data_clear) &&
+> +	    !kvm_vcpu_can_access_host_mmio(vcpu) &&
+> +	    kvm_is_mmio_pfn(pfn, &is_host_mmio))
+> +		kvm_track_host_mmio_mapping(vcpu);
+> +
+>  	*new_spte = spte;
+>  	return wrprot;
+>  }
+> diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+> index 1e94f081bdaf..3133f066927e 100644
+> --- a/arch/x86/kvm/mmu/spte.h
+> +++ b/arch/x86/kvm/mmu/spte.h
+> @@ -280,6 +280,16 @@ static inline bool is_mirror_sptep(tdp_ptep_t sptep)
+>  	return is_mirror_sp(sptep_to_sp(rcu_dereference(sptep)));
+>  }
+>  
+> +static inline bool kvm_vcpu_can_access_host_mmio(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_mmu_page *root = root_to_sp(vcpu->arch.mmu->root.hpa);
+> +
+> +	if (root)
+> +		return READ_ONCE(root->has_mapped_host_mmio);
+> +
+> +	return READ_ONCE(vcpu->kvm->arch.has_mapped_host_mmio);
+> +}
+> +
+>  static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
+>  {
+>  	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
+> diff --git a/arch/x86/kvm/vmx/run_flags.h b/arch/x86/kvm/vmx/run_flags.h
+> index 6a9bfdfbb6e5..2f20fb170def 100644
+> --- a/arch/x86/kvm/vmx/run_flags.h
+> +++ b/arch/x86/kvm/vmx/run_flags.h
+> @@ -2,10 +2,12 @@
+>  #ifndef __KVM_X86_VMX_RUN_FLAGS_H
+>  #define __KVM_X86_VMX_RUN_FLAGS_H
+>  
+> -#define VMX_RUN_VMRESUME_SHIFT		0
+> -#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT	1
+> +#define VMX_RUN_VMRESUME_SHIFT				0
+> +#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT			1
+> +#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT	2
+>  
+> -#define VMX_RUN_VMRESUME		BIT(VMX_RUN_VMRESUME_SHIFT)
+> -#define VMX_RUN_SAVE_SPEC_CTRL		BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
+> +#define VMX_RUN_VMRESUME			BIT(VMX_RUN_VMRESUME_SHIFT)
+> +#define VMX_RUN_SAVE_SPEC_CTRL			BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
+> +#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO	BIT(VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT)
+>  
+>  #endif /* __KVM_X86_VMX_RUN_FLAGS_H */
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index f79604bc0127..27e870d83122 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -74,6 +74,8 @@
+>  #include "vmx_onhyperv.h"
+>  #include "posted_intr.h"
+>  
+> +#include "mmu/spte.h"
+> +
+>  MODULE_AUTHOR("Qumranet");
+>  MODULE_DESCRIPTION("KVM support for VMX (Intel VT-x) extensions");
+>  MODULE_LICENSE("GPL");
+> @@ -959,6 +961,10 @@ unsigned int __vmx_vcpu_run_flags(struct vcpu_vmx *vmx)
+>  	if (!msr_write_intercepted(vmx, MSR_IA32_SPEC_CTRL))
+>  		flags |= VMX_RUN_SAVE_SPEC_CTRL;
+>  
+> +	if (static_branch_unlikely(&mmio_stale_data_clear) &&
+> +	    kvm_vcpu_can_access_host_mmio(&vmx->vcpu))
+> +		flags |= VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO;
+> +
+>  	return flags;
+>  }
+>  
+> @@ -7282,7 +7288,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+>  	if (static_branch_unlikely(&vmx_l1d_should_flush))
+>  		vmx_l1d_flush(vcpu);
+>  	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
+> -		 kvm_arch_has_assigned_device(vcpu->kvm))
+> +		 (flags & VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO))
+>  		mds_clear_cpu_buffers();
 
-No worries at all! The only thing that frustrates/upsets me in
-upstream mailing lists is unprovoked rudeness (which you have not
-been).
->
-> So please bear with me here :)
->
-> So, I remain very confused. This may just be a _me_ thing here :)
->
-> So let me check my understanding:
->
-> 1. This series introduces this new THP deferred mode.
-> 2. By 'follow-up' really you mean 'inspired by' or 'related to' right?
-> 3. If this series lands before [1], commits 2 - 4 are 'undefined
->    behaviour'.
-The khugepaged mTHP support should land first as without it, adding a
-defer option to the global parameters, makes for undefined behavior in
-the sysctls from a admin perspective.
->
-> In my view if 3 is true this series should be RFC until [1] merges.
-Ideally I was trying to get them merged together (Andrew actually had
-them both in mm-new a few weeks ago, but a bug was found that got it
-pulled, but that is fixed now). The series' complement each other
-nicely.
->
-> If I've got it wrong and this needs to land first, we should RFC [1].
-The khugepaged series [1] should get merged first, but I was shooting
-for both at the same time.
->
-> That way we can un-RFC once the dependency is met.
->
-> We have about 5 [m]THP series in flight at the moment, all touching at
-> least vaguely related stuff, so any help for reviewers would be hugely
-> appreciated thanks :)
->
-> On Wed, May 21, 2025 at 04:41:54AM -0600, Nico Pache wrote:
-> > On Tue, May 20, 2025 at 3:43=E2=80=AFAM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
-> > >
-> > > On Wed, May 14, 2025 at 09:38:53PM -0600, Nico Pache wrote:
-> > > > This series is a follow-up to [1], which adds mTHP support to khuge=
-paged.
-> > > > mTHP khugepaged support is a "loose" dependency for the sysfs/sysct=
-l
-> > > > configs to make sense. Without it global=3D"defer" and  mTHP=3D"inh=
-erit" case
-> > > > is "undefined" behavior.
-> > >
-> > > How can this be a follow up to an unmerged series? I'm confused by th=
-at.
-> > Hi Lorenzo,
-> >
-> > follow up or loose dependency. Not sure the correct terminology.
-> >
->
-> See above. Let's nail this down please.
->
-> > Either way, as I was developing this as a potential solution for the
-> > THP internal fragmentation issue, upstream was working on adding
-> > mTHPs. By adding a new THP sysctl entry I noticed mTHP would now be
-> > missing the same entry. Furthermore I was told mTHP support for
-> > khugepaged was a desire, so I began working on it in conjunction. So
-> > given the undefined behavior of defer globally while any mix of mTHP
-> > settings, it became dependent on the khugepaged support. Either way
-> > patch 1 of this series is the core functionality. The rest is to fill
-> > the undefined behavior gap.
-> > >
-> > > And you're saying that you're introducing 'undefined behaviour' on th=
-e
-> > > assumption that another series which seems to have quite a bit of
-> > > discussion let to run will be merged?
-> > This could technically get merged without the mTHP khugepaged changes,
-> > but then the reviews would probably all be pointing out what I pointed
-> > out above. Chicken or Egg problem...
-> > >
-> > > While I'd understand if this was an RFC just to put the idea out ther=
-e,
-> > > you're not proposing it as such?
-> > Nope we've already discussed this in both the MM alignment and thp
-> > upstream meetings, no one was opposing it, and a lot of testing was
-> > done-- by me, RH's CI, and our perf teams. Ive posted several RFCs
-> > before posting a patchset.
-> > >
-> > > Unless there's a really good reason we're doing this way (I may be mi=
-ssing
-> > > something), can we just have this as an RFC until the series it depen=
-ds on
-> > > is settled?
-> > Hopefully paragraph one clears this up! They were built in
-> > conjunction, but posting them as one series didn't feel right (and
-> > IIRC this was also discussed, and this was decided).
->
-> 'This was also discussed and this was decided' :)
->
-> I'm guessing rather you mean discussion was had with other reviewers and =
-of
-> course our earstwhile THP maintainer David, and you guys decided this mad=
-e
-> more sense?
->
-> Obviously upstream discussion is what counts, but as annoying as it is, o=
-ne
-> does have to address the concerns of reviewers even if late to a series
-> (again, apologies for this).
->
-> So, to be clear - I'm not intending to hold up or block the series, I jus=
-t
-> want to understand how things are, this is the purpose here.
+I think this also paves way for buffer clear for MDS and MMIO to be done at
+a single place. Please let me know if below is feasible:
 
-Thanks I do appreciate the discussion around the process as I am
-fairly new to upstream work (at least to this magnitude). I have been
-mostly downstream focused for the last 6 years and I'm trying to shift
-upstream as much as possible. So please bear with me as I learn all
-the minor undocumented caveats!
->
-> Thanks!
->
-> > >
-> > > >
-> > > > We've seen cases were customers switching from RHEL7 to RHEL8 see a
-> > > > significant increase in the memory footprint for the same workloads=
-.
-> > > >
-> > > > Through our investigations we found that a large contributing facto=
-r to
-> > > > the increase in RSS was an increase in THP usage.
-> > > >
-> > > > For workloads like MySQL, or when using allocators like jemalloc, i=
-t is
-> > > > often recommended to set /transparent_hugepages/enabled=3Dnever. Th=
-is is
-> > > > in part due to performance degradations and increased memory waste.
-> > > >
-> > > > This series introduces enabled=3Ddefer, this setting acts as a midd=
-le
-> > > > ground between always and madvise. If the mapping is MADV_HUGEPAGE,=
- the
-> > > > page fault handler will act normally, making a hugepage if possible=
-. If
-> > > > the allocation is not MADV_HUGEPAGE, then the page fault handler wi=
-ll
-> > > > default to the base size allocation. The caveat is that khugepaged =
-can
-> > > > still operate on pages that are not MADV_HUGEPAGE.
-> > > >
-> > > > This allows for three things... one, applications specifically desi=
-gned to
-> > > > use hugepages will get them, and two, applications that don't use
-> > > > hugepages can still benefit from them without aggressively insertin=
-g
-> > > > THPs at every possible chance. This curbs the memory waste, and def=
-ers
-> > > > the use of hugepages to khugepaged. Khugepaged can then scan the me=
-mory
-> > > > for eligible collapsing. Lastly there is the added benefit for thos=
-e who
-> > > > want THPs but experience higher latency PFs. Now you can get base p=
-age
-> > > > performance at the PF handler and Hugepage performance for those ma=
-ppings
-> > > > after they collapse.
-> > > >
-> > > > Admins may want to lower max_ptes_none, if not, khugepaged may
-> > > > aggressively collapse single allocations into hugepages.
-> > > >
-> > > > TESTING:
-> > > > - Built for x86_64, aarch64, ppc64le, and s390x
-> > > > - selftests mm
-> > > > - In [1] I provided a script [2] that has multiple access patterns
-> > > > - lots of general use.
-> > >
-> > > OK so this truly is dependent on the unmerged series? Or isn't it?
-> > >
-> > > Is your testing based on that?
-> > Most of the testing was done in conjunction, but independent testing
-> > was also done on this series (including by a large customer that was
-> > itching to try the changes, and they were very satisfied with the
-> > results).
->
-> You should make this very clear in the cover letter.
-I will try to do better at updating and providing more information in
-my cover letters and patches. I was never sure how much information to
-include! I guess the more the merrier.
->
-> > >
-> > > Because again... that surely makes this series a no-go until we land =
-the
-> > > prior (which might be changed, and thus necessitate re-testing).
-> > >
-> > > Are you going to provide any of these numbers/data anywhere?
-> > There is a link to the results in this cover letter
-> > [3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput=
-2/output.html
-> > >
->
-> Ultimately it's not ok in mm to have a link to a website that might go aw=
-ay
-> any time, these cover letters are 'baked in' to the commit log. Are you
-> sure this website with 'testoutput2' will exist in 10 years time? :)
->
-> You should at the very least add a summary of this data in the cover
-> letter, perhaps referring back to this link as 'at the time of writing fu=
-ll
-> results are available at' or something like this.
 
-Ok good to know I will find a way to summarize the performance and
-result changes more cleanly in the cover letter.
->
-> > > > - redis testing. This test was my original case for the defer mode.=
- What I
-> > > >    was able to prove was that THP=3Dalways leads to increased max_l=
-atency
-> > > >    cases; hence why it is recommended to disable THPs for redis ser=
-vers.
-> > > >    However with 'defer' we dont have the max_latency spikes and can=
- still
-> > > >    get the system to utilize THPs. I further tested this with the m=
-THP
-> > > >    defer setting and found that redis (and probably other jmalloc u=
-sers)
-> > > >    can utilize THPs via defer (+mTHP defer) without a large latency
-> > > >    penalty and some potential gains. I uploaded some mmtest results
-> > > >    here[3] which compares:
-> > > >        stock+thp=3Dnever
-> > > >        stock+(m)thp=3Dalways
-> > > >        khugepaged-mthp + defer (max_ptes_none=3D64)
-> > > >
-> > > >   The results show that (m)THPs can cause some throughput regressio=
-n in
-> > > >   some cases, but also has gains in other cases. The mTHP+defer res=
-ults
-> > > >   have more gains and less losses over the (m)THP=3Dalways case.
-> > > >
-> > > > V6 Changes:
-> > > > - nits
-> > > > - rebased dependent series and added review tags
-> > > >
-> > > > V5 Changes:
-> > > > - rebased dependent series
-> > > > - added reviewed-by tag on 2/4
-> > > >
-> > > > V4 Changes:
-> > > > - Minor Documentation fixes
-> > > > - rebased the dependent series [1] onto mm-unstable
-> > > >     commit 0e68b850b1d3 ("vmalloc: use atomic_long_add_return_relax=
-ed()")
-> > > >
-> > > > V3 Changes:
-> > > > - Combined the documentation commits into one, and moved a section =
-to the
-> > > >   khugepaged mthp patchset
-> > > >
-> > > > V2 Changes:
-> > > > - base changes on mTHP khugepaged support
-> > > > - Fix selftests parsing issue
-> > > > - add mTHP defer option
-> > > > - add mTHP defer Documentation
-> > > >
-> > > > [1] - https://lore.kernel.org/all/20250515032226.128900-1-npache@re=
-dhat.com/
-> > > > [2] - https://gitlab.com/npache/khugepaged_mthp_test
-> > > > [3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testou=
-tput2/output.html
-> > > >
-> > > > Nico Pache (4):
-> > > >   mm: defer THP insertion to khugepaged
-> > > >   mm: document (m)THP defer usage
-> > > >   khugepaged: add defer option to mTHP options
-> > > >   selftests: mm: add defer to thp setting parser
-> > > >
-> > > >  Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
-> > > >  include/linux/huge_mm.h                    | 18 +++++-
-> > > >  mm/huge_memory.c                           | 69 ++++++++++++++++++=
-+---
-> > > >  mm/khugepaged.c                            |  8 +--
-> > > >  tools/testing/selftests/mm/thp_settings.c  |  1 +
-> > > >  tools/testing/selftests/mm/thp_settings.h  |  1 +
-> > > >  6 files changed, 106 insertions(+), 22 deletions(-)
-> > > >
-> > > > --
-> > > > 2.49.0
-> > > >
-> > >
-> >
->
-> Cheers, Lorenzo
->
-
+diff --git a/arch/x86/kvm/vmx/run_flags.h b/arch/x86/kvm/vmx/run_flags.h
+index 2f20fb170def..004fe1ca89f0 100644
+--- a/arch/x86/kvm/vmx/run_flags.h
++++ b/arch/x86/kvm/vmx/run_flags.h
+@@ -2,12 +2,12 @@
+ #ifndef __KVM_X86_VMX_RUN_FLAGS_H
+ #define __KVM_X86_VMX_RUN_FLAGS_H
+ 
+-#define VMX_RUN_VMRESUME_SHIFT				0
+-#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT			1
+-#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT	2
++#define VMX_RUN_VMRESUME_SHIFT			0
++#define VMX_RUN_SAVE_SPEC_CTRL_SHIFT		1
++#define VMX_RUN_CLEAR_CPU_BUFFERS_SHIFT		2
+ 
+-#define VMX_RUN_VMRESUME			BIT(VMX_RUN_VMRESUME_SHIFT)
+-#define VMX_RUN_SAVE_SPEC_CTRL			BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
+-#define VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO	BIT(VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO_SHIFT)
++#define VMX_RUN_VMRESUME		BIT(VMX_RUN_VMRESUME_SHIFT)
++#define VMX_RUN_SAVE_SPEC_CTRL		BIT(VMX_RUN_SAVE_SPEC_CTRL_SHIFT)
++#define VMX_RUN_CLEAR_CPU_BUFFERS	BIT(VMX_RUN_CLEAR_CPU_BUFFERS_SHIFT)
+ 
+ #endif /* __KVM_X86_VMX_RUN_FLAGS_H */
+diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+index f6986dee6f8c..ab602ce4967e 100644
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -141,6 +141,8 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 	/* Check if vmlaunch or vmresume is needed */
+ 	bt   $VMX_RUN_VMRESUME_SHIFT, %ebx
+ 
++	test $VMX_RUN_CLEAR_CPU_BUFFERS, %ebx
++
+ 	/* Load guest registers.  Don't clobber flags. */
+ 	mov VCPU_RCX(%_ASM_AX), %_ASM_CX
+ 	mov VCPU_RDX(%_ASM_AX), %_ASM_DX
+@@ -161,8 +163,11 @@ SYM_FUNC_START(__vmx_vcpu_run)
+ 	/* Load guest RAX.  This kills the @regs pointer! */
+ 	mov VCPU_RAX(%_ASM_AX), %_ASM_AX
+ 
++	/* Check EFLAGS.ZF from the VMX_RUN_CLEAR_CPU_BUFFERS bit test above */
++	jz .Lskip_clear_cpu_buffers
+ 	/* Clobbers EFLAGS.ZF */
+ 	CLEAR_CPU_BUFFERS
++.Lskip_clear_cpu_buffers:
+ 
+ 	/* Check EFLAGS.CF from the VMX_RUN_VMRESUME bit test above. */
+ 	jnc .Lvmlaunch
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 1e4790c8993a..1415aeea35f7 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -958,9 +958,10 @@ unsigned int __vmx_vcpu_run_flags(struct vcpu_vmx *vmx)
+ 	if (!msr_write_intercepted(vmx, MSR_IA32_SPEC_CTRL))
+ 		flags |= VMX_RUN_SAVE_SPEC_CTRL;
+ 
+-	if (static_branch_unlikely(&mmio_stale_data_clear) &&
+-	    kvm_vcpu_can_access_host_mmio(&vmx->vcpu))
+-		flags |= VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO;
++	if (cpu_feature_enabled(X86_FEATURE_CLEAR_CPU_BUF) ||
++	    (static_branch_unlikely(&mmio_stale_data_clear) &&
++	     kvm_vcpu_can_access_host_mmio(&vmx->vcpu)))
++		flags |= VMX_RUN_CLEAR_CPU_BUFFERS;
+ 
+ 	return flags;
+ }
+@@ -7296,9 +7297,6 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	 */
+ 	if (static_branch_unlikely(&vmx_l1d_should_flush))
+ 		vmx_l1d_flush(vcpu);
+-	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
+-		 (flags & VMX_RUN_CLEAR_CPU_BUFFERS_FOR_MMIO))
+-		mds_clear_cpu_buffers();
+ 
+ 	vmx_disable_fb_clear(vmx);
+ 
