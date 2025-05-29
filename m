@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44791D6DC5;
-	Thu, 29 May 2025 15:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4001D6DC5;
+	Thu, 29 May 2025 15:07:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748531224; cv=none; b=YsZ2shjWApRUi8AH8prS0pqT3dCONvTV/ekAGbZmX0s4Z+98PwUG5wve5XKj4n9+Lrg24NOS6Pb2szN8zadge6pE+k81PyTCCDcVlIEfxP9iB68wG0zd5K1eMf1pS+8VoaM7d0N4f9CNXygZhzXQzp4+qq/aXgT6wiVh7vi/79k=
+	t=1748531239; cv=none; b=XSlt1zsdRuByudzeF05UY7gLbljWC+za52oWF5BR4TqaMr/J/sO0io2x7rtPiFx+GaspgSJ2QYbyPEBCZIq50c/IHllnvxaeDcLXjLLZFSp6lV2/w1IuxrbalrECTSps9HW0dMjmD9dO5xBbbjGmVWUwkhrqL9YfHn1YbddLyJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748531224; c=relaxed/simple;
-	bh=B17gSMTmJonwWf7TxbUU/sxBJV9FHi9eQtKqckCJ7T0=;
+	s=arc-20240116; t=1748531239; c=relaxed/simple;
+	bh=7Uuer2ZMLk3n/otquF9YSCMQXFD4ZRTJB33B7pmdhyE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=s36HxhaNAI+y4K5fljYTO28B5nuEdhtG7FFvwlfMELXcokDYg59KlnhgpEjpqPoXNwGeluPPf9DjI+nsLaS8bTbcpHsLP/KAJPSfk1G5qz+JdTTLGGAyfKyiHoBOAaokNn9++QTY5ZwYAL5XXnhE5dWtuz3Ux5G3+F9s0cducjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6UXntf/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HSGAMtLtSlySQHDUjmzaO62CHpi353Rg8LEYT3BtGRdu/uiE8KCV9wnZDFvBVxURaZ43KGpdR/mwoAfGn4KPGfiPupbd/eVrZUDwGb56Hr0NahgZHFeclBt0E/Y+KzDZdscOjNJyIZjllDyrGaqSHKyQ5x/8uAOpdeuQjPoW8lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BOQS2LLM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6UXntf/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C83C4CEEB;
-	Thu, 29 May 2025 15:07:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BOQS2LLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A089CC4CEE7;
+	Thu, 29 May 2025 15:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748531224;
-	bh=B17gSMTmJonwWf7TxbUU/sxBJV9FHi9eQtKqckCJ7T0=;
+	s=k20201202; t=1748531238;
+	bh=7Uuer2ZMLk3n/otquF9YSCMQXFD4ZRTJB33B7pmdhyE=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=G6UXntf/RHsHo+g2VtIX3F8n7xVnHbnYKT/eCtlBXnjccZryjUvBpG5ABWWvCpfe+
-	 spayWeuRnLZeQGT8WuJU2ZACGUF/A8gvX5skpRLm5LjQc+la11Zz8CCD8HrapqJj4W
-	 mA7PuHFU9B+2vlIXdYkNQSoS39Qfk5SLUb5RBsFbztTdB1U1fdChS7eRDcRz9VTZb8
-	 /3Z9UAlhchQatLm0sk63Eg+USmjX8Yzo18Pjc6jalVrtBGDAxJkQhT/F9sRtPf0NQt
-	 XaRdpftOmvjXEpaJhPJoYx9Fl/ZBMLieLAnVIQuPuDOQDOPus3YUJm4vbhM+o5BOwD
-	 CoHZMyL69ivlw==
+	b=BOQS2LLMsIB/LXRcGH2mvdym55pwQ2s1SGKjy6t7HhjIh7v0bh0xsB2G0pYCheYvF
+	 Rq/28ZPNJPWrOvBLC6+wMsmLLn4YHrRcFQ+qj3UTLwMwQL0PpYV31Q3XmpmnTVaGio
+	 49/imMN9oV3gXI2McxBdqK/KOYoYjWfKtSpAN75+txfUj21HJ9X58PcM9rg/+mphZS
+	 4s08H8PdyI45QRKQkkPoKD/ntGt2QMKUke/xSVnr9kikUHJwSqytsWHpjsDg6uVPzi
+	 2V1voYIeVwVFvOOCvPCAoDxEECDAP9vDYiQmS57uQXFrtmSz9+v0weK1ALg9Rzmp0u
+	 /TplQizW+dxyA==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, meowmeowbeanz <meowmeowbeanz@gmx.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- mario.limonciello@amd.com, alsa-devel@alsa-project.org
-In-Reply-To: <20250528-yoga-7-16arp8-microphone-fix-v1-1-bfeed2ecd0c2@gmx.com>
-References: <20250528-yoga-7-16arp8-microphone-fix-v1-1-bfeed2ecd0c2@gmx.com>
-Subject: Re: [PATCH] ASoC: amd: yc: Add support for Lenovo Yoga 7 16ARP8
-Message-Id: <174853122256.49405.5926862101216384777.b4-ty@kernel.org>
-Date: Thu, 29 May 2025 16:07:02 +0100
+To: prime.zeng@hisilicon.com, fanghao11@huawei.com, f.fangjian@huawei.com, 
+ Yang Shen <shenyang39@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+In-Reply-To: <20250529061406.183992-1-shenyang39@huawei.com>
+References: <20250529061406.183992-1-shenyang39@huawei.com>
+Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon SPI Controller driver
+ maintainer
+Message-Id: <174853123734.49583.13550481147232391697.b4-ty@kernel.org>
+Date: Thu, 29 May 2025 16:07:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,24 +46,20 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 28 May 2025 10:56:58 -0700, meowmeowbeanz wrote:
-> Add DMI quirk entry for Lenovo Yoga 7 16ARP8 (83BS) to enable
-> digital microphone support via ACP driver.
-> 
-> Fixes microphone detection on this specific model which was
-> previously falling back to non-functional generic audio paths.
+On Thu, 29 May 2025 14:14:06 +0800, Yang Shen wrote:
+> Add Yang Shen as the maintainer of the HiSilicon SPI Controller driver,
+> replacing Jay Fang.
 > 
 > 
-> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] ASoC: amd: yc: Add support for Lenovo Yoga 7 16ARP8
-      commit: df7996076b1e1ba8a0690542d0e40f703f2f9eb7
+[1/1] MAINTAINERS: Update HiSilicon SPI Controller driver maintainer
+      commit: 3b5d1efc878adee4835165663297a75193343d37
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
