@@ -1,101 +1,183 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EACB25CC72;
-	Thu, 29 May 2025 05:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312514685
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748497503; cv=none; b=GZ5Kgl5dWqY/IIix66anZMRhYRMVT5iTnlvCbEFGzgD/b3R2kPAG9NCA9tzmOjVVvk/zn2aLXBxE3rbccZtsVEfICmySCyCmvVPJ3mulQUGcDVD0kvoFBohDvBRj4bM+29uT74QhGDuwJ9nw5OJNdjTTxKoC+ExNqEPYjU2Y8cA=
+	t=1748497690; cv=none; b=gk3CJyENRVGDY8VLn6whT4D9468H/kVao7EZ/iTUrfsrkHLZnuytBdn9wLTNiijdGgZgywbMN9P12Lpn4J0SnWSAFBeq7KZYfWo/lwDt6IHSEQs2DKlw2RyFiTJISUl4CpFbdfkGEHvXU69HkqAZLvqIAa9jI8vJTwwQkI89IWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748497503; c=relaxed/simple;
-	bh=sn8RqX6Rt8HNg3sQJQLMQjRLeGPHU0yvRzHxn3HXMXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oDSqjTHGBixQibGiK9ykuG+RPNBElFvcMGJI0KgWdOWwmOd/jtc0wjllm4DJeP/DgZR8j2mYJYj1NbAuRutAuArROV1VhTI2rDSThgkII18pVuzwidkwcP3PNoOzQHiQCvwdZLIFridU/4UTKhNi6W/TfvkpGMgh/7nzW1BWV0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRF+sfvL; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748497690; c=relaxed/simple;
+	bh=b3fqpqq9xOal3GHk5sCQHg4YeZtAbsFC0JfjC8/qt0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I/Ph1CGoqDNokn2pEP4fQ2Jf5AZhFuD4MzmExpCfq/tFQ3KzSTK7l1WDsmJ+j583eVy5dv4st/DVy1oY4K7PrqY3yOf0jM4+Cy/mm8DLFKqCp0tjrFpsXqfKUI2pB5cO9tV+oD+3My2el7u/y+KWVLm1x4HOdp4b27g1MJEByRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOd9v27Y; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRF+sfvL"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4dba2c767so1116928f8f.1;
-        Wed, 28 May 2025 22:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748497499; x=1749102299; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sn8RqX6Rt8HNg3sQJQLMQjRLeGPHU0yvRzHxn3HXMXc=;
-        b=lRF+sfvLXVuIeV60tyDhbm96H9sONhOGe1JwHnvVVwHwOqZlU29yjsKOnkiV/WBQ6C
-         sTLuwBJmQnP2FBJ6TfUPXL8M7zcwN6AnMJ5dH7IK6aZGKgDJ7uM8ZjjXozGdlXN/tgS1
-         qbUZZgM7Em88ItcdHgL6R9xeLtsfFZa4kEb+vKLTE7aRVHgySFwB6sjLbQqR3X5E92Xm
-         U7ofXmVCzc8o3FcQ8JWwHzmP+wYalkP1tD7l/A5ONitiCFpIVNgU/WdSha5qXnnCefqD
-         j196uZTkmOo28n85+UBo7Fqai5CRdSIZgdIO8yv9FXVKI/nqSC57S5w1g/c9iMbWGZBa
-         j2sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748497499; x=1749102299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sn8RqX6Rt8HNg3sQJQLMQjRLeGPHU0yvRzHxn3HXMXc=;
-        b=KR34pSfOl0uODDogXeqMGjR0nGCJb77onj17g569kcbFUPFkAf5GIfUS34d2bWd3Rc
-         EOcsYftUsZKW7mO/IK9ux3D5F3ULuMsskb5LdhCj52ovhRcQSMr7WRnPCh/WvUBEJ5jS
-         /BOaqVL4+8Awp8GMbWm1jHhEtnoXjg6rLO7sexbHty5H0oRBMbgxcU4TlIr3Fbo9pI7P
-         MnyI6W3AqviGwhtsk7l4QKmGvusyX6m07nuD7Oeyt5SB9HSUEvVOxYOgqzQumbJ1q2z1
-         ltg673paqmOzzJsiGcIPun/c8N8NfcJShYy+zSrYi0N2PKRJLRoxwnEEGvo1aAj0sswQ
-         5Jvg==
-X-Forwarded-Encrypted: i=1; AJvYcCVz310zKGgjJL8Bk+RKpvi9oZrtWANBmwXaX+jrqCHdKKq+1pmG8jcFkwnL4lj3dA7OHN+zvewgu9ZH0YPNJkcX@vger.kernel.org, AJvYcCWhDwti8719UxrO9bPMB9vOB1l2RJww+8upZFIijgniVjdoelT+HBiGSwcG83aJGyw9VI4=@vger.kernel.org, AJvYcCXQVWTTbHTKsOxIoDxYbDyIjyMQZh+oKeZWFmTfXe+Twajz3eFpPJRse882JfuNrl8ujigeRKBICy/3rCnL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYsfbOIxVskAgjPS0Ftf8i/i1/+WOBAOXJSEb+/WiUDTjD3X2v
-	hCEPB3leEZB6htPjiXHAG9BzEwiqC7kTddtL1usfFnz7fThQb9/mzJLOedmwh/w2JRwR/D5jrx6
-	45Qn1ss9aIl6xs/6gI1pXVBLmJ4UGzXA=
-X-Gm-Gg: ASbGnctgygrtKqO3cS5PKdoilqUH4ZA5C6qE8sFrXlWocr0dUqqpqqmP8z1Dua2DqCs
-	dqDxH3J7lQW510/B3stQG9KbjI29ZPQaBuYrdhGmWXRnltl8wWzyrXVH9a8qisES/ZyWOThu1eS
-	Hl8/9ZCOnaqYUXpRh/8HFpha1XMPmX5Sh0
-X-Google-Smtp-Source: AGHT+IHHkOgDRBoQ3p5rRRxYiAy+7qojGE+ZaX7/Dqnol4ahyLPM+Q2s8zZ0AMWmWijNtZjPCyiBHgmpolWsb2S+gro=
-X-Received: by 2002:adf:b356:0:b0:3a4:e238:6496 with SMTP id
- ffacd0b85a97d-3a4eedb8aabmr1291575f8f.18.1748497499279; Wed, 28 May 2025
- 22:44:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOd9v27Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748497689; x=1780033689;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=b3fqpqq9xOal3GHk5sCQHg4YeZtAbsFC0JfjC8/qt0Q=;
+  b=fOd9v27YpmVuw6axhdbzy1wNsTiElYRRMx0NLC+WtNaQvFq+Acbn7qxo
+   R4cJ5Z5RLeZpzbz6VGI1Y3OY+toprUm+r8lq/7x3LljKNh24tfbRaH9w6
+   g3QXkJPU3mJpDmsJAsYXP4IQLMq5jTUJY0tyNRPjf0tTdQypJMKjjLlMO
+   VDipHDFUo6bal1UMcnpmxu1VfqlrY7WaW208N4HuLK8PDh+1gO09uVjEk
+   GBLZ4cyHcbVN67EaDa/xZGessV+p3oBrdjftqnIPoa7+USKiFpYx70xYZ
+   Yhxzr7g9dW+CjrjIlz9BEvb6zm+f/1O8m6jph1dsKW1YvA4HU8r/E9khO
+   g==;
+X-CSE-ConnectionGUID: saJsghKpR5Owz6PVJyosUw==
+X-CSE-MsgGUID: fcsKlflHSZGeRZhdh7ndIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50544727"
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="50544727"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 22:48:08 -0700
+X-CSE-ConnectionGUID: TzcTpfEJQHqTsY/iq2IYCA==
+X-CSE-MsgGUID: uDsb0xsWQBODW/jOq8l+/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="180660749"
+Received: from yisun1-mobl.ccr.corp.intel.com (HELO [10.238.129.118]) ([10.238.129.118])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 22:48:06 -0700
+Message-ID: <01e5d0a9-715a-48d4-a2a4-2a0b5d99149b@linux.intel.com>
+Date: Thu, 29 May 2025 13:48:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1748488784.git.rtoax@foxmail.com> <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
-In-Reply-To: <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 28 May 2025 22:44:48 -0700
-X-Gm-Features: AX0GCFvdAazJcnjeIdtcKgCy4Hnh2NXiGCB1n6kru5atVUhx8JT-WyGFXdd_3ZM
-Message-ID: <CAADnVQ+hUk2wV3M+9mgv_i5sNt_FuHpAnDpkQJ22D37bxAJHsQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
-To: Rong Tao <rtoax@foxmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, rongtao@cestc.cn, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Juntong Deng <juntong.deng@outlook.com>, Amery Hung <amery.hung@bytedance.com>, 
-	Dave Marchevsky <davemarchevsky@fb.com>, Hou Tao <houtao1@huawei.com>, 
-	"open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] iommu/vt-d: Remove the redundant logic in
+ first_level_by_default()
+To: Wei Wang <wei.w.wang@intel.com>, baolu.lu@linux.intel.com,
+ kevin.tian@intel.com, yi.l.liu@intel.com, dwmw2@infradead.org,
+ jroedel@suse.de, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+References: <20250523081056.223082-1-wei.w.wang@intel.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
+ xsDNBGdk+/wBDADPlR5wKSRRgWDfH5+z+LUhBsFhuVPzmVBykmUECBwzIF/NgKeuRv2U0GT1
+ GpbF6bDQp6yJT8pdHj3kk612FqkHVLlMGHgrQ50KmwClPp7ml67ve8KvCnoC1hjymVj2mxnL
+ fdfjwLHObkCCUE58+NOCSimJOaicWr39No8t2hIDkahqSy4aN2UEqL/rqUumxh8nUFjMQQSR
+ RJtiek+goyH26YalOqGUsSfNF7oPhApD6iHETcUS6ZUlytqkenOn+epmBaTal8MA9/X2kLcr
+ IFr1X8wdt2HbCuiGIz8I3MPIad0Il6BBx/CS0NMdk1rMiIjogtEoDRCcICJYgLDs/FjX6XQK
+ xW27oaxtuzuc2WL/MiMTR59HLVqNT2jK/xRFHWcevNzIufeWkFLPAELMV+ODUNu2D+oGUn/6
+ BZ7SJ6N6MPNimjdu9bCYYbjnfbHmcy0ips9KW1ezjp2QD+huoYQQy82PaYUtIZQLztQrDBHP
+ 86k6iwCCkg3nCJw4zokDYqkAEQEAAc0pRXRoYW4gWmhhbyA8aGFpZmVuZy56aGFvQGxpbnV4
+ LmludGVsLmNvbT7CwQcEEwEIADEWIQSEaSGv5l4PT4Wg1DGpx5l9v2LpDQUCZ2T7/AIbAwQL
+ CQgHBRUICQoLBRYCAwEAAAoJEKnHmX2/YukNztAL/jkfXzpuYv5RFRqLLruRi4d8ZG4tjV2i
+ KppIaFxMmbBjJcHZCjd2Q9DtjjPQGUeCvDMwbzq1HkuzxPgjZcsV9OVYbXm1sqsKTMm9EneL
+ nCG0vgr1ZOpWayuKFF7zYxcF+4WM0nimCIbpKdvm/ru6nIXJl6ZsRunkWkPKLvs9E/vX5ZQ4
+ poN1yRLnSwi9VGV/TD1n7GnpIYiDhYVn856Xh6GoR+YCwa1EY2iSJnLj1k9inO3c5HrocZI9
+ xikXRsUAgParJxPK80234+TOg9HGdnJhNJ3DdyVrvOx333T0f6lute9lnscPEa2ELWHxFFAG
+ r4E89ePIa2ylAhENaQoSjjK9z04Osx2p6BQA0uZuz+fQh9TDqh4JRKaq50uPnM+uQ0Oss2Fx
+ 4ApWvrG13GsjGF5Qpd7vl0/gxHtztDcr5Kln6U1i5FW0MP1Z6z/JRI2WPED1dnieA6/tBqwj
+ oiHixmpw4Zp/5gITmGoUdF1jTwXcYC7cPM/dvsCZ1AGgdmk/ic7AzQRnZPv9AQwA0rdIWu25
+ zLsl9GLiZHGBVZIVut88S+5kkOQ8oIih6aQ8WJPwFXzFNrkceHiN5g16Uye8jl8g58yWP8T+
+ zpXLaPyq6cZ1bfjmxQ7bYAWFl74rRrdots5brSSBq3K7Q3W0v1SADXVVESjGa3FyaBMilvC/
+ kTrx2kqqG+jcJm871Lfdij0A5gT7sLytyEJ4GsyChsEL1wZETfmU7kqRpLYX+l44rNjOh7NO
+ DX3RqR6JagRNBUOBkvmwS5aljOMEWpb8i9Ze98AH2jjrlntDxPTc1TazE1cvSFkeVlx9NCDE
+ A6KDe0IoPB2X4WIDr58ETsgRNq6iJJjD3r6OFEJfb/zfd3W3JTlzfBXL1s2gTkcaz6qk/EJP
+ 2H7Uc2lEM+xBRTOp5LMEIoh2HLAqOLEfIr3sh1negsvQF5Ll1wW7/lbsSOOEnKhsAhFAQX+i
+ rUNkU8ihMJbZpIhYqrBuomE/7ghI/hs3F1GtijdM5wG7lrCvPeEPyKHYhcp3ASUrj8DMVEw/
+ ABEBAAHCwPYEGAEIACAWIQSEaSGv5l4PT4Wg1DGpx5l9v2LpDQUCZ2T7/QIbDAAKCRCpx5l9
+ v2LpDSePC/4zDfjFDg1Bl1r1BFpYGHtFqzAX/K4YBipFNOVWPvdr0eeKYEuDc7KUrUYxbOTV
+ I+31nLk6HQtGoRvyCl9y6vhaBvcrfxjsyKZ+llBR0pXRWT5yn33no90il1/ZHi3rwhgddQQE
+ 7AZJ6NGWXJz0iqV72Td8iRhgIym53cykWBakIPyf2mUFcMh/BuVZNj7+zdGHwkS+B9gIL3MD
+ GzPKkGmv7EntB0ccbFVWcxCSSyTO+uHXQlc4+0ViU/5zw49SYca8sh2HFch93JvAz+wZ3oDa
+ eNcrHQHsGqh5c0cnu0VdZabSE0+99awYBwjJi2znKp+KQfmJJvDeSsjya2iXQMhuRq9gXKOT
+ jK7etrO0Bba+vymPKW5+JGXoP0tQpNti8XvmpmBcVWLY4svGZLunmAjySfPp1yTjytVjWiaL
+ ZEKDJnVrZwxK0oMB69gWc772PFn/Sz9O7WU+yHdciwn0G5KOQ0bHt+OvynLNKWVR+ANGrybN
+ 8TCx1OJHpvWFmL4Deq8=
+In-Reply-To: <20250523081056.223082-1-wei.w.wang@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 8:37=E2=80=AFPM Rong Tao <rtoax@foxmail.com> wrote:
->
-> From: Rong Tao <rongtao@cestc.cn>
->
-> It is a bit troublesome to get cwd based on pid in bpf program, such as
-> bpftrace example [1].
->
-> This patch therefore adds a new bpf_task_cwd_from_pid() kfunc which
-> allows BPF programs to get cwd from a pid.
->
-> [1] https://github.com/bpftrace/bpftrace/issues/3314
 
-Yes. This is cumbersome, but adding a very specific kfunc
-to the kernel is not a solution.
-This is tracing, no need for precise cwd. probe_read_kernel
-can do the job. bpftrace needs to have better C interop.
-Once that happens any kind of tracing extraction will be
-easy to write in C. Like this bpf_task_cwd_from_pid()
-can already be written as C bpf program.
+在 2025/5/23 16:10, Wei Wang 写道:
+> This original implementation included redundant logic to determine whether
+> first-stage translation should be used by default. Simplify it and
+> preserve the original behavior:
+> - Returns false in legacy mode (no scalable mode support).
+> - Defaults to first-level translation when both FLTS and SLTS are
+>    supported.
+>
+> Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+> ---
+>   drivers/iommu/intel/iommu.c | 10 +---------
+>   1 file changed, 1 insertion(+), 9 deletions(-)
+>
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index cb0b993bebb4..228da47ab7cd 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1366,15 +1366,7 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
+>    */
+>   static bool first_level_by_default(struct intel_iommu *iommu)
+>   {
+> -	/* Only SL is available in legacy mode */
+> -	if (!sm_supported(iommu))
+> -		return false;
+> -
+> -	/* Only level (either FL or SL) is available, just use it */
+> -	if (ecap_flts(iommu->ecap) ^ ecap_slts(iommu->ecap))
+> -		return ecap_flts(iommu->ecap);
+> -
+> -	return true;
+
+The function works like a digital circurt has 3 single bit inputs  sm, 
+flts, slts and one bit output ret.
+
+so the true value table of the orignal function looks like
+
+    sm   flts   slts    ret
+a   0     x     x      false
+b   1     1     0      true
+c   1     0     1      false
+d   1     1     1      true
+e   1     0     0      true
+
+> +	return sm_supported(iommu) && ecap_flts(iommu->ecap);
+
+And the true value table of this new one looks like
+
+    sm  flts slts    ret
+
+f   1     1     x      true
+g   1     0     x      false
+
+h   0     1     x      false
+i    0     0     x      false
+
+h, i covers a
+g,   doesn't cover e, c
+f,   covers b, d
+
+So if we take them as two circurt blocks (chip), their functions aren't 
+equal to each other.
+
+If we don't make any assumption,  I wouldn't replace the old chip with 
+new one
+
+But, maybe all the new chip and old one all works well under specific 
+context that I
+
+didn't think deeper. :)
+
+
+
+Thanks,
+
+Ethan
+
+>   }
+>   
+>   int domain_attach_iommu(struct dmar_domain *domain, struct intel_iommu *iommu)
+
+-- 
+"firm, enduring, strong, and long-lived"
+
