@@ -1,212 +1,259 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A0013AA2F;
-	Thu, 29 May 2025 02:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAED2417FA;
+	Thu, 29 May 2025 02:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484238; cv=none; b=kaaQZzXoZVDmvo2l2biGFf62LB9Aav9AbfFIzazSWiItah0HIIGl7rpPFTUYBLEtJA96memltWbwZwGG+AV0AdBOzAeKxwfuVyxvK6qaqLl99mk7cRH1mq8+FHFimfZ8v1DhOv1h4wYyypxMjcLquCMLHsFStS3fdM7WSKm0XbU=
+	t=1748484253; cv=none; b=K/HHM3l51mXV4QPGWfV5ZOLKvzQ/FeVyf2bz63NrRFpDojMOVIsz941nWLvN5c3RjnvtYXp1FtUxPjSJO233lnVsa3ObZSq44Qv0G5JRINHlJfe+jZuQ/b06lCHvxht0uaZnEdQJLVumT7ScZISJZ7uM1uMAgAzCoB1ZqfMbwSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484238; c=relaxed/simple;
-	bh=HBc8Ud/IdDi0BkqcmQysCOW0ecbFWrLp1KmavCLxf2g=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OUPrLEF+PXLuR2jscWz67fE86HuV6HZaN+d/ztlAYrspDJlwAk1T+QTsNw4H2zn8H+0/SRXHninwXy5+MtTRLWyfPlkpJHYV3nf3+MdiTt9rx6dUWuYjiJ8xerRvcep5yMvTmhB8jbdiWPalOSVa1aQX6Nu8gXQ+J86cS9IaVZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5n/mzcw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748484253; c=relaxed/simple;
+	bh=JtzjRDKTVjL67ffPdQX14MIS2p1fLm1q4MyiTPbiltE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pRcuUMeuFqOHDXsCHRvf0D8988EiQwGj2v+1CqV5hu4hJ1vhxOmyS0+ilBcXEYooFUV3Jn/3ExP0ShJ0HbdHyIorHPQpOw8w5uMPYaeFGnmK0K8AJHzH6yg7DgSGwfchs1a3rtSaycDhPHJF4kTwX9O++kq56Epol9kAYNj1n1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JTHvUX3r; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5n/mzcw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2E5C4CEE3;
-	Thu, 29 May 2025 02:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748484238;
-	bh=HBc8Ud/IdDi0BkqcmQysCOW0ecbFWrLp1KmavCLxf2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f5n/mzcw39PMaENhngze8uVqtI/yWNHnwiiflXWN73F/IMXETeNrS1jfsaQG220PZ
-	 HqlOYJCQ+kxL8qALTkE5bU2PZDE4wXAdFDwESB004bRNgETwojCGpA6ItsfeJQ6ox2
-	 Fc99ueQPEChPyTnP72+N+VTuhnC9gA/5ypiELmr1pkcQJu6ZB5I2HbxzlcQEGMpw/6
-	 nH+QLYgfaiSpLiR4Y04YMCz7KUKWNfKcbGKdpQd/Fm4fAEEzMmz6UYDK2yzTngLs10
-	 mac133z+JKMVNYxQgPpVU2A1r33ovL1gpF8Mt+gYByVL632sMt0LXF5aQA4PiOBnkJ
-	 RhEf5aIYNGHkw==
-Date: Thu, 29 May 2025 11:03:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH v2] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-Id: <20250529110355.98fecf6d98765e794e0ba345@kernel.org>
-In-Reply-To: <20250528121555.2066527e@gandalf.local.home>
-References: <20250528121555.2066527e@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JTHvUX3r"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SJbCDr007970;
+	Thu, 29 May 2025 02:04:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	p5ixF+Bc5BFjy+M1gS3u2BSxRZsjEb4y4WkDseBBJdo=; b=JTHvUX3rrw/8PND/
+	BZknfWnc265mxMIAk8K141eqbE8zTM/6q1s/vSHfGhKUt0deL7q97GfeEby7exbs
+	IAhgLmOECrShbntGpLHXhi2u1orluhwHetXoMW7i4ingcIe47vQAyvjym892Y2eD
+	F4W6d41AA5Vg9tcQCdFoYQSzAmx3BeRjM4m170ogx7rSKe019VXlW7CBD1AnUcMI
+	TJfl8jtOyO0ajEwU4Y0KSXTOyWCNei0RJKdDk4v/0WqWWQCa3u5UTkBTMYqzQkmP
+	gA6oOkTq07fsas0+sX0p04kbaPjHn6cvExBNcAlWW68qzk67vxnkAQtkbLkDX2R1
+	Qfkbow==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ek40j2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 02:04:06 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T23xGr014631
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 02:03:59 GMT
+Received: from [10.231.216.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 28 May
+ 2025 19:03:56 -0700
+Message-ID: <ee143088-89fb-4d4e-bc47-816e90dc7fa7@quicinc.com>
+Date: Thu, 29 May 2025 10:03:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 28 May 2025 12:15:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When reading a memory mapped buffer the reader page is just swapped out
-> with the last page written in the write buffer. If the reader page is the
-> same as the commit buffer (the buffer that is currently being written to)
-> it was assumed that it should never have missed events. If it does, it
-> triggers a WARN_ON_ONCE().
-> 
-> But there just happens to be one scenario where this can legitimately
-> happen. That is on a commit_overrun. A commit overrun is when an interrupt
-> preempts an event being written to the buffer and then the interrupt adds
-> so many new events that it fills and wraps the buffer back to the commit.
-> Any new events would then be dropped and be reported as "missed_events".
-> 
-> In this case, the next page to read is the commit buffer and after the
-> swap of the reader page, the reader page will be the commit buffer, but
-> this time there will be missed events and this triggers the following
-> warning:
-> 
->  ------------[ cut here ]------------
->  WARNING: CPU: 2 PID: 1127 at kernel/trace/ring_buffer.c:7357 ring_buffer_map_get_reader+0x49a/0x780
->  Modules linked in: kvm_intel kvm irqbypass
->  CPU: 2 UID: 0 PID: 1127 Comm: trace-cmd Not tainted 6.15.0-rc7-test-00004-g478bc2824b45-dirty #564 PREEMPT
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
->  RIP: 0010:ring_buffer_map_get_reader+0x49a/0x780
->  Code: 00 00 00 48 89 fe 48 c1 ee 03 80 3c 2e 00 0f 85 ec 01 00 00 4d 3b a6 a8 00 00 00 0f 85 8a fd ff ff 48 85 c0 0f 84 55 fe ff ff <0f> 0b e9 4e fe ff ff be 08 00 00 00 4c 89 54 24 58 48 89 54 24 50
->  RSP: 0018:ffff888121787dc0 EFLAGS: 00010002
->  RAX: 00000000000006a2 RBX: ffff888100062800 RCX: ffffffff8190cb49
->  RDX: ffff888126934c00 RSI: 1ffff11020200a15 RDI: ffff8881010050a8
->  RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffed1024d26982
->  R10: ffff888126934c17 R11: ffff8881010050a8 R12: ffff888126934c00
->  R13: ffff8881010050b8 R14: ffff888101005000 R15: ffff888126930008
->  FS:  00007f95c8cd7540(0000) GS:ffff8882b576e000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f95c8de4dc0 CR3: 0000000128452002 CR4: 0000000000172ef0
->  Call Trace:
->   <TASK>
->   ? __pfx_ring_buffer_map_get_reader+0x10/0x10
->   tracing_buffers_ioctl+0x283/0x370
->   __x64_sys_ioctl+0x134/0x190
->   do_syscall_64+0x79/0x1c0
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->  RIP: 0033:0x7f95c8de48db
->  Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
->  RSP: 002b:00007ffe037ba110 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->  RAX: ffffffffffffffda RBX: 00007ffe037bb2b0 RCX: 00007f95c8de48db
->  RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
->  RBP: 00007ffe037ba180 R08: 0000000000000000 R09: 0000000000000000
->  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->  R13: 00007ffe037bb6f8 R14: 00007f95c9065000 R15: 00005575c7492c90
->   </TASK>
->  irq event stamp: 5080
->  hardirqs last  enabled at (5079): [<ffffffff83e0adb0>] _raw_spin_unlock_irqrestore+0x50/0x70
->  hardirqs last disabled at (5080): [<ffffffff83e0aa83>] _raw_spin_lock_irqsave+0x63/0x70
->  softirqs last  enabled at (4182): [<ffffffff81516122>] handle_softirqs+0x552/0x710
->  softirqs last disabled at (4159): [<ffffffff815163f7>] __irq_exit_rcu+0x107/0x210
->  ---[ end trace 0000000000000000 ]---
-> 
-> The above was triggered by running on a kernel with both lockdep and KASAN
-> as well as kmemleak enabled and executing the following command:
-> 
->  # perf record -o perf-test.dat -a -- trace-cmd record --nosplice  -e all -p function hackbench 50
-> 
-> With perf interjecting a lot of interrupts and trace-cmd enabling all
-> events as well as function tracing, with lockdep, KASAN and kmemleak
-> enabled, it could cause an interrupt preempting an event being written to
-> add enough events to wrap the buffer. trace-cmd was modified to have
-> --nosplice use mmap instead of reading the buffer.
-> 
-> The way to differentiate this case from the normal case of there only
-> being one page written to where the swap of the reader page received that
-> one page (which is the commit page), check if the tail page is on the
-> reader page. The difference between the commit page and the tail page is
-> that the tail page is where new writes go to, and the commit page holds
-> the first write that hasn't been committed yet. In the case of an
-> interrupt preempting the write of an event and filling the buffer, it
-> would move the tail page but not the commit page.
-> 
-> Have the warning only trigger if the tail page is also on the reader page,
-> and also print out the number of events dropped by a commit overrun as
-> that can not yet be safely added to the page so that the reader can see
-> there were events dropped.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: fe832be05a8ee ("ring-buffer: Have mmapped ring buffer keep track of missed events")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-This looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
-> Changes since v1: https://lore.kernel.org/20250527121140.0e7f0565@gandalf.local.home
-> 
-> - Added to the pr_info() the CPU that overflowed and the timestamp of the
->   page that overflowed, to make it easier for user space to know where it
->   happened.
-> 
-> - Restructured to have if (missed_events) be the main condition, as the sub
->   conditions only did something when missed_events was non-zero.
->   (Masami Hiramatsu)
-> 
->  kernel/trace/ring_buffer.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index ca1a8e706004..683aa57870fe 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7285,8 +7285,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
->  	/* Check if any events were dropped */
->  	missed_events = cpu_buffer->lost_events;
->  
-> -	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> -		if (missed_events) {
-> +	if (missed_events) {
-> +		if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
->  			struct buffer_data_page *bpage = reader->page;
->  			unsigned int commit;
->  			/*
-> @@ -7307,13 +7307,23 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
->  				local_add(RB_MISSED_STORED, &bpage->commit);
->  			}
->  			local_add(RB_MISSED_EVENTS, &bpage->commit);
-> +		} else if (!WARN_ONCE(cpu_buffer->reader_page == cpu_buffer->tail_page,
-> +				      "Reader on commit with %ld missed events",
-> +				      missed_events)) {
-> +			/*
-> +			 * There shouldn't be any missed events if the tail_page
-> +			 * is on the reader page. But if the tail page is not on the
-> +			 * reader page and the commit_page is, that would mean that
-> +			 * there's a commit_overrun (an interrupt preempted an
-> +			 * addition of an event and then filled the buffer
-> +			 * with new events). In this case it's not an
-> +			 * error, but it should still be reported.
-> +			 *
-> +			 * TODO: Add missed events to the page for user space to know.
-> +			 */
-> +			pr_info("Ring buffer [%d] commit overrun lost %ld events at timestamp:%lld\n",
-> +				cpu, missed_events, cpu_buffer->reader_page->page->time_stamp);
->  		}
-> -	} else {
-> -		/*
-> -		 * There really shouldn't be any missed events if the commit
-> -		 * is on the reader page.
-> -		 */
-> -		WARN_ON_ONCE(missed_events);
->  	}
->  
->  	cpu_buffer->lost_events = 0;
-> -- 
-> 2.47.2
-> 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] venus: pm_helpers: add compatibility for
+ dev_pm_genpd_set_hwmode on V4
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
+References: <20250218-switch_gdsc_mode-v4-0-546f6c925ae0@quicinc.com>
+ <20250218-switch_gdsc_mode-v4-1-546f6c925ae0@quicinc.com>
+ <zewub4somwmi6jvym5m44t6cumeonv2pcrtsntbkujlznotefp@bhfrerykhfqu>
+Content-Language: en-US
+From: Renjiang Han <quic_renjiang@quicinc.com>
+In-Reply-To: <zewub4somwmi6jvym5m44t6cumeonv2pcrtsntbkujlznotefp@bhfrerykhfqu>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=6837c096 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=qW5kxXaVTDtZ0SX8UZEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: uBAoquHlSN_q66YoVZ8qpmRquCSTdpnE
+X-Proofpoint-GUID: uBAoquHlSN_q66YoVZ8qpmRquCSTdpnE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDAxOSBTYWx0ZWRfX4QE9ulK4V1Z5
+ e141yGJmu038qN82cU51LqpTquEI+py2tnVoNtgErFCCEV2v1rIcock09MQ6l1CJ+LLd93wSDSh
+ 84pon/lxfcIhymiKTADShVsFW3v4O0PBDXynUTXKUDYGW+jDaBB4mY928kh+3MdMPP96cGizbA1
+ w29jYgjsw7WMkNHAjmJfKzewbvBdK/2Rbh01MGGHJAiKGspqiDsQ7wDDwsHIGPHLOXmfAXq0d9D
+ KjeBeILffm8/5wBgu6YGSI/MLNsaCActCiuZnFenOPjyHKOcz3+sobJw8yB08b9UtBfSozCoqpD
+ X/4C5Vz5Ux+oCdtuC7e3+x7JiSGmdZnRkPZJadjwEGdz+hp4pM0AANxB0QZWKQeOdG3/3rBIWC1
+ AcG5nhfYrr6RRBcfnAP0a1ibnuq39Bu/DiyNTb/Nz76LeQ0JSiEkWR4c3h7mXkxTGE/yKJqn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_01,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290019
 
 
+On 5/29/2025 3:27 AM, Dmitry Baryshkov wrote:
+> On Tue, Feb 18, 2025 at 04:03:20PM +0530, Renjiang Han wrote:
+>> There are two ways to switch GDSC mode. One is to write the POWER_CONTROL
+>> register and the other is to use dev_pm_genpd_set_hwmode(). However, they
+>> rely on different clock driver flags. dev_pm_genpd_set_hwmode() depends on
+>> the HW_CTRL_TRIGGER flag and POWER_CONTROL register depends on the HW_CTRL
+>> flag.
+>>
+>> By default, the dev_pm_genpd_set_hwmode() is used to switch the GDSC mode.
+>> If it fails and dev_pm_genpd_set_hwmode() returns -EOPNOTSUPP, it means
+>> that the clock driver uses the HW_CTRL flag. At this time, the GDSC mode
+>> is switched to write the POWER_CONTROL register.
+>>
+>> Clock driver is using HW_CTRL_TRIGGER flag with V6. So hwmode_dev is
+>> always true on using V6 platform. Conversely, if hwmode_dev is false, this
+>> platform must be not using V6. Therefore, replace IS_V6 in poweroff_coreid
+>> with hwmode_dev. Also, with HW_CTRL_TRIGGER flag, the vcodec gdsc gets
+>> enabled in SW mode by default. Therefore, before disabling the GDSC, GDSC
+>> should be switched to SW mode so that GDSC gets enabled in SW mode in the
+>> next enable.
+>>
+>> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
+>> ---
+>>   drivers/media/platform/qcom/venus/core.h       |  2 ++
+>>   drivers/media/platform/qcom/venus/pm_helpers.c | 38 ++++++++++++++------------
+>>   2 files changed, 23 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+>> index 43532543292280be15adf688fc0c30f44e207c7f..0ccce89d3f54cf685ecce5b339a51e44f6ea3704 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -168,6 +168,7 @@ struct venus_format {
+>>    * @root:	debugfs root directory
+>>    * @venus_ver:	the venus firmware version
+>>    * @dump_core:	a flag indicating that a core dump is required
+>> + * @hwmode_dev:	a flag indicating that HW_CTRL_TRIGGER is used in clock driver
+>>    */
+>>   struct venus_core {
+>>   	void __iomem *base;
+>> @@ -230,6 +231,7 @@ struct venus_core {
+>>   		u32 rev;
+>>   	} venus_ver;
+>>   	unsigned long dump_core;
+>> +	bool hwmode_dev;
+>>   };
+>>   
+>>   struct vdec_controls {
+>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+>> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..409aa9bd0b5d099c993eedb03177ec5ed918b4a0 100644
+>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+>> @@ -412,9 +412,17 @@ static int vcodec_control_v4(struct venus_core *core, u32 coreid, bool enable)
+>>   	u32 val;
+>>   	int ret;
+>>   
+>> -	if (IS_V6(core))
+>> -		return dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
+>> -	else if (coreid == VIDC_CORE_ID_1) {
+>> +	ret = dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
+>> +	if (ret == -EOPNOTSUPP) {
+>> +		core->hwmode_dev = false;
+>> +		goto legacy;
+>> +	}
+>> +
+>> +	core->hwmode_dev = true;
+>> +	return ret;
+>> +
+>> +legacy:
+>> +	if (coreid == VIDC_CORE_ID_1) {
+>>   		ctrl = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_CONTROL;
+>>   		stat = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_STATUS;
+>>   	} else {
+>> @@ -450,7 +458,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
+>>   
+>>   		vcodec_clks_disable(core, core->vcodec0_clks);
+>>   
+>> -		if (!IS_V6(core)) {
+>> +		if (!core->hwmode_dev) {
+>>   			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
+>>   			if (ret)
+>>   				return ret;
+>> @@ -468,7 +476,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
+>>   
+>>   		vcodec_clks_disable(core, core->vcodec1_clks);
+>>   
+>> -		if (!IS_V6(core)) {
+>> +		if (!core->hwmode_dev) {
+>>   			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
+>>   			if (ret)
+>>   				return ret;
+>> @@ -491,11 +499,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
+>>   		if (ret < 0)
+>>   			return ret;
+>>   
+>> -		if (!IS_V6(core)) {
+>> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
+>> -			if (ret)
+>> -				return ret;
+>> -		}
+>> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
+>> +		if (ret)
+>> +			return ret;
+>>   
+>>   		ret = vcodec_clks_enable(core, core->vcodec0_clks);
+>>   		if (ret)
+>> @@ -511,11 +517,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
+>>   		if (ret < 0)
+>>   			return ret;
+>>   
+>> -		if (!IS_V6(core)) {
+>> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
+>> -			if (ret)
+>> -				return ret;
+>> -		}
+>> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
+>> +		if (ret)
+>> +			return ret;
+>>   
+>>   		ret = vcodec_clks_enable(core, core->vcodec1_clks);
+>>   		if (ret)
+>> @@ -811,7 +815,7 @@ static int vdec_power_v4(struct device *dev, int on)
+>>   	else
+>>   		vcodec_clks_disable(core, core->vcodec0_clks);
+>>   
+>> -	vcodec_control_v4(core, VIDC_CORE_ID_1, false);
+>> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
+>
+> return vcodec_control_v4(...);
+OK, thanks for your comments. This patch has already been merged. I have
+another patch that cleans up code and removes dead code, but I haven’t
+submitted it yet. It depends on the videocc flag, so I plan to wait until
+the videocc patch is picked before submitting it.
+>
+>>   
+>>   	return ret;
+>>   }
+>> @@ -856,7 +860,7 @@ static int venc_power_v4(struct device *dev, int on)
+>>   	else
+>>   		vcodec_clks_disable(core, core->vcodec1_clks);
+>>   
+>> -	vcodec_control_v4(core, VIDC_CORE_ID_2, false);
+>> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
+> And here.
+>
+>>   
+>>   	return ret;
+>>   }
+>>
+>> -- 
+>> 2.34.1
+>>
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best Regards,
+Renjiang
+
