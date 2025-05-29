@@ -1,271 +1,365 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011069.outbound.protection.outlook.com [40.107.130.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A11DF25A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 19:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748546102; cv=none; b=mZHZjsxKktQU9XJhPDk2DqwY5LVqcDSpD/OwVVDXeJECcL1+A6F/72iwWU9DD1mNrhj5iOBaklhKC4j716cRuKqhesXcxxwWm86PeZ4K292X5M/oZWGffZ25aHPRMglwToqAv+oXGA9C8k4uhtd3wSqAZxw0Ylid4UIAytTeGMo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748546102; c=relaxed/simple;
-	bh=jxQBHnuX0eGLUrrbuSwhUrZgUXd7imm5V1HcYAUOa9A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sMMbtY5clgAftkEjZtYgogzq1PwLZfbjFARpklhwAo/Ptbihi+diQL3NrBASClvirlg2K/kArzIJ6wceNH9ig5PstBCrJQavydmEzc4uEM3zKnjN7OoAMj3xXaVNX/LXgVOyK91g3qr5b3ANH7vVYTJDWxQhXjPU5SETUUUJ/EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=kGrtJufm; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EB04685;
+	Thu, 29 May 2025 19:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748546272; cv=fail; b=S/qnJ9t/ZsLPWb6F24LO5JdiVWLy2u5Yj6tlGCJ5FVzFqKoDS45G4aiS/pNzI71NKE0Brey9vCERKMHNC6xBWDpRP5bEUNtwgCvuh/v5geEvkBxkDV+gUWLy0R1tzhwpraxzgiT1shc2kmqw1M00IPD4hsQX9gD4+KHfOLkbdBA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748546272; c=relaxed/simple;
+	bh=zHoIYoltDHzVsq+c/T2aFqrB72xgvLnveQGWWIQn4wU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=PcCTyKSIBxKXziW/QakVj2jwkN2XQIiv5UFkX27Dah7K4mGbnddOi3XFmwef2cFRabuOlXSl2UrzQxE/J8OTIcZ7PTZVKz3/Rg2JM/XcOivEhvoZF7A3Vw9qyTcvH3z11QFRo4FvPnTRZOwZoeyNGeRYmAjr7J6rW0XPsrEPOTs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=ReKOhiva; arc=fail smtp.client-ip=40.107.130.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="kGrtJufm"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a3771c0f8cso784998f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748546099; x=1749150899; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PETGhQTSZRzlo7qrX63Z+YHbFnHKtUVwIfZH3bLWHOY=;
-        b=kGrtJufmiTKrxK3UNeViqIo/wg5K5z2bdwmWHw4USap2SCtFHDkqIKt0AkwpjH23A4
-         voSqieWoU+scqCqw86ftvQubNCCdJQtdqBFCn339LxGjBLas4R6CrhQSjnc4/2ntyWgz
-         Clv+/kfpm6hivtock1ZGGi0xPXZdA+VXdbRoZgkj+lH/Wa0vrOLzIViWM+KRCAfNhAeO
-         7F8LXXUurICCoXfN2NgrqMEi1XBQCVVB33cKXbwbhfFgKDmLcQxqmuGg1rCHbKrtKv7a
-         zD4Y8ETAd2XsoPf5tA/xfuvqK1Bmgp1MXRtRbCP/89YbwWDCCvYLapxro5wpuRevqjRT
-         dsDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748546099; x=1749150899;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PETGhQTSZRzlo7qrX63Z+YHbFnHKtUVwIfZH3bLWHOY=;
-        b=HAYj6b6t20SPZspFqUYAs1npk/wSMK0BdKdPsMSMzmAsGN7kfWL9JnsQTSBcmIOOGE
-         k3H6TeI7IBqYrr797WUnd/R6BtKSUBXQYpmoUqSl5goQ7OF8ZsW1wueBx4LuG2odXbNi
-         oBy7wgAtCsf/OM3VMIS9E9jhKnwLUHqXc4ycraBFjn1tuPbrJxVDKgTjPtAWqu9/0vK4
-         aS8NnIzGkEoMByERiesZuLEoHyGsRzNImAzYKsW07ZagEUI6X1IwbPFdf4I5gyAvfF84
-         4DyGPdEg5klXzHh/5xebEEozx9r0qlQdNDYp30YYnZnLm8YLrmqtRereFFds7BEqefQi
-         GXRA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrdSkBAYC9WrKeU9lI/Mo800fvaRpsJ7OylHNw2vTzEismHSyvLUyEtOk88m7QOdAM6X8wWncz+PDH+Kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDBtrhbqNuFyqtkkFbBiX7DwMziZGGoV3svrG/1B1AfbKhjJUr
-	kOqE61rt4pnpvKxmTQ3SOKSLCTE0HOIx6xyQCumKkZHwXPDpCBeK7ahVWq8OKLX9K6U=
-X-Gm-Gg: ASbGncsnbr7XxKrZhSvY9866+8GhZKS4xTTo07C2iBuZB3ORXZ63MfdhaqO7S4w/iaj
-	bdvv4/eXPewSeEf8JNP5xUlwXfLYXeLXX24VxLsjY7SQHqzP3U/MkwoCA7lE1jjZ1phogMeIXok
-	ZYbdS3o0zM0L4KaUxrumaLfupZ5TvIgWQj72abw62faGSnQI3azHgzPipLV66qDCmBHv4eTC0ac
-	dOhPadQn8CPfY5dCSSAbcdNpVHYbpLBGxyz8bsWhN13Yaf9w0tPvlHD/mXHHqXeS6Ete8JoMqqb
-	aZmhi436xYVMayK71zs5kUyX7ONOHfvFOJBJ50gTYRL7lFN06TwVId3sCqk5CuaLN0A2PW/tl39
-	SWj1RYkC+wXyRkNo=
-X-Google-Smtp-Source: AGHT+IGhExYqvgFvSbs5q9ZpMpC1uzEuDKmNj/YazFyKTWl/Thue3B6m/H9d1jT5tZwjFvDXoPguhQ==
-X-Received: by 2002:a05:6000:430a:b0:3a4:f00b:69b6 with SMTP id ffacd0b85a97d-3a4f7ab15f4mr336349f8f.54.1748546098772;
-        Thu, 29 May 2025 12:14:58 -0700 (PDT)
-Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009fb0bsm2747906f8f.87.2025.05.29.12.14.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 12:14:58 -0700 (PDT)
-Date: Thu, 29 May 2025 21:14:57 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
-	Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
- 3.0
-Message-ID: <20250529-badd99c8168a8f607c84338a@orel>
-References: <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
- <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
- <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
- <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
- <20250526-224478e15ee50987124a47ac@orel>
- <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
- <20250528-ff9f6120de39c3e4eefc5365@orel>
- <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
- <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
- <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="ReKOhiva"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BX7OkvzHWC3X9QNgHdou0+B1Ybroq+XDr32seHldGw3zvnYyxxzV0obZj4DxwGkHQ2o2wKdOdTc+hTVDGTq9sRtUHrLdkwn5v6xH9TAz4fmmnR0knVq4Xc9dhUKsCL9Xzm/eDif1X2xU+GIOeoil9XLDxU/R4hvULAJC9nAwUAcYYtpt1UuzBmT8RZfbIv+5w27LDFmIVjL9fSEbgWce2vNHaZmJucJAueDPLsW5Zcn1gWwQalbHDTEz2ftNFSnXcSZJKfRFymIr98W60uBhO+enJTKnmLHlL+2aIZ+P4uAl0Gg9UZWCyTf1F5fFrweSJkzzcIUQDUJzuKIl4LJFVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qZABEvM9BA3cBp03HFKfk4iXp76JSmGdLSf1WUQdeBs=;
+ b=a8W2Kbo9Wi6SGIR9gB0+w2MTDlGHA6nybSsCBya+qqAR2NNzr7ia/3WNfdgZKYXuLbBWt/AzdOVc8WYyRLibKBEPHmsxzLUVqhawvWS+NILqUS72qsLGJ+OPeiiKqw0pBKy8QrnktvB/v/g+5ftirFZ1Dj6lZW+BXCCpOF+8yJ1EiS0DpV9qcTL0YaDk7MFpySODSJj8ju9srlIvG57HYLO1h1sCJ2Q1Xwhp9RN4KZjjWryrIpd2hIYWFVm/qRrthdVivmhru9XG2c7OBG3FARFtXGBHx6tCoH4Gf2wXrMT67sbRbAUcdnTbcINRjUrkwIodHIGgM+bo+FeImEngSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qZABEvM9BA3cBp03HFKfk4iXp76JSmGdLSf1WUQdeBs=;
+ b=ReKOhivacRhEBNdrIKbcBHvJ0U+6GKDD+ZdUZWu7QVRZHe0dM0m3RJMdVQ7q6vdDGxvFTpbpB1FamyTyJgcbGR7x7hCzXnehEvMZbiCMUwFhdX2bIC9u6U1n7yCmpgSKQ9d3qIc1RpRZpvH0HmXev2NpE3XwdLzuGdr1opMNRL76C9mtU5ei9XyM1y9b1rWD6i8zfRlfU/bG78xEWEnJSQo8RYY1TGyWHdtUGvFrJCvAu5f2RaEElUTdq6N929V0xMG1l7Vxj4kGtxE2leNmIkT/F2k/zcYvx6uwJGOwoqFhd/87KLkVVb97T5BDE6Js10T3KzcfFU7JYsGW3iZktw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB8947.eurprd04.prod.outlook.com (2603:10a6:20b:42e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Thu, 29 May
+ 2025 19:17:47 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Thu, 29 May 2025
+ 19:17:47 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: net: convert qca,qca7000.txt yaml format
+Date: Thu, 29 May 2025 15:17:26 -0400
+Message-Id: <20250529191727.789915-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0065.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB8947:EE_
+X-MS-Office365-Filtering-Correlation-Id: b27a43db-ac54-4f28-c0ac-08dd9ee57ee0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|52116014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tgAr9JxdsjS3JY27wqgZwmagF0cTZCF2GuF4IaHG4yp+kigkEd9G/gaSrDAx?=
+ =?us-ascii?Q?2o2m4Y/QfYHUb8fMX1huzCzgxSlJiy/mgphlD/ccVOUWdD8LJ4+Y2JOI625N?=
+ =?us-ascii?Q?mZZC4H7/Hgo/ELD19MO7kBalC/hEyTWpJ+f99uKbESm5wkmUUSkr0qe6/Ukn?=
+ =?us-ascii?Q?zsuUUqm+RHWWRqUn91rE7LnZvZH0dQuG2VBEKFn/UMNXY9ggH91pEP4E1yYA?=
+ =?us-ascii?Q?WyzXSVPatnHh3mu8yKR+1SQXcyGhKLeP7DfFTw2kulsYJB5lRxt7vvjtPnID?=
+ =?us-ascii?Q?DCUdeIBaDBT2OXax7aIn5QQU7DispRGdgrIlDVVL55DEYIzc2MlG3vOIroF0?=
+ =?us-ascii?Q?m8uKc8fl2g/jFiLbeCn4cfEHX+eAiOFW9lNR08a8DYUvEpafDFX8pwp1aXCy?=
+ =?us-ascii?Q?FAhLfnnAshKlx08T8Om9vJ4ViYdK0KoUMg+/nIcVgZa7oBDxk3q9zXJlb3yL?=
+ =?us-ascii?Q?j7QV5avO8yPmza/WmGRVYiDHRjkmjefcVy5JFh+rTkuj7p12Wb5xhB4TH3Y+?=
+ =?us-ascii?Q?HnM+Mqlo4KRPds32g7MZ3RE/5HSN+Q+LGwp87vYX94+DcBrY9mpHzqPCs0e7?=
+ =?us-ascii?Q?S1CVfAf8T7tlck22iIKV6pY/Dx2PXjFMsft/rlR0o5NrywKOIGKxt/TayLpw?=
+ =?us-ascii?Q?GfBEdZFj/G3gSa0MTtTCV6ULWll5vPCn26Xucb6uOLILw6CzTaFvocM4gjFZ?=
+ =?us-ascii?Q?/ROKwgKQXHAHZwNRsKAVKEYlrYpw/ym73JT1vIulI5g9eDxaP/Oh4kQ6seoL?=
+ =?us-ascii?Q?iNdn7E+7cReg7FwId0XdhAJbrADPFZVzxVIE2XTtVcNg9w05YnuVfTYl9N1m?=
+ =?us-ascii?Q?vhZ0j9TKk8TzjJrkyoG+iTdhpOzfb9gVnf/h3ks7buOscUiJ+tGb/AD3Mx7h?=
+ =?us-ascii?Q?hI0r+EDDQYKRynpZ07nZ1TuUNA/7i9AnP9neodoVZFElqNedFtP8/DGV8K2f?=
+ =?us-ascii?Q?K3aKWL8rAqY5k45JHh1xkS4sk6uAwdusLWplc0MJoMWqb878HTTHHKBFkeFz?=
+ =?us-ascii?Q?n5/+rAwbwgr/EefUjGnaQaTRrorKPXp1RMapC15LFtP34f+H8yj3TiElLA1Z?=
+ =?us-ascii?Q?xpGmbF7Qpjh9rN86css8R1xsFzwXQGe2DU4tfuAqhLUzAB5DTcO1tH7EQXLI?=
+ =?us-ascii?Q?IOE5CejmJ+NyCj3tkI4BvuaeKi5xB7dxFIuxDpfsjVloQvEC3vrF8i/Yxr4r?=
+ =?us-ascii?Q?o1ELvXv/C/y7tAwbdSBThPp03r34b279hd+xo/SQQ9B+zeFn0KVa/8xHRrho?=
+ =?us-ascii?Q?6PkLe7iC7duEMe1lEzzJb11VcbcQU4c6WpHRgJOdENhjCJtB1AoLEl2GZTGP?=
+ =?us-ascii?Q?uxPLWZ2EOMvLhJ1yWW2BZu0UR70RjJd3At32bpPBaPLaUkfA/gg5af3nV5D5?=
+ =?us-ascii?Q?wdQrJGBmu2iWifLU0F89iJZRGchuL8r1jlPRg0cd7NlaLuN3A51E5agop2v/?=
+ =?us-ascii?Q?1ar4LwAJpIp6a6XOboAVkM4IaK6YZuRc?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(52116014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NjcotN/aS+3GmiPO/BzuM/brMvCDUxALXKfnHTYURODLyVJLUwYiy1F/s9C6?=
+ =?us-ascii?Q?WwJHUHvb4U0Oe3x6OCHTSZFvZHvqQivEByv0UmoTP7YXJN3jXeRz0X/UerBp?=
+ =?us-ascii?Q?WVfWpp3Uc4B70k5vp7Xp5Sw11gJPcakpbkvn6BXNe8+bPyrRl/QAMsOexnCX?=
+ =?us-ascii?Q?/jlWwngDRxgylcYyIQrqNhS6Yp03h+9DVvNrnvAyEtrbdZ/qIITvr0Og8ekn?=
+ =?us-ascii?Q?90cE6PQcDyhAyLr4vF/OeZLybYf2YwWOgpKCHTmSfh/n+biRI+FzyDJwkks8?=
+ =?us-ascii?Q?FnIDHNPCIMafe1JLyw2S9UyU6tcPbd6t3iE6hXcxjyBJjt6WD97Ap6SxWvsG?=
+ =?us-ascii?Q?mjYoo7vKvq5vmSjLIyu8JLzieeji8za/GAxnjU5LsRv6W9cdGHBRb2F7NlVg?=
+ =?us-ascii?Q?qJNfNeOOmtqCMU5gKeYVlfwvVamP0+uH/BAsGzBWG8+gXZppOGMFxaifCT0t?=
+ =?us-ascii?Q?zugEWbegQ1vdF9gyWkG6DHH8rv7sY3XdNDtaGlZlXWl/UqVoguzfViL/ln6B?=
+ =?us-ascii?Q?ucrzx43nPRhI8VNNJ0UVQRszlF99sQrgBQuLas2q7YFc3GII1w1HE7UdYYbS?=
+ =?us-ascii?Q?QIxRaSzPJKwsoHYezIuwsxoAEIb/l13lNH4DZPm2AbXsAKdcR2mEPqyInZWq?=
+ =?us-ascii?Q?4hMJa0QK0hp9TuYQYGpQNMu7V1qYjShrzDvlk2KIfHGWjkhTwkd634DUDJda?=
+ =?us-ascii?Q?4D8R2uilcaT6OU5zzs6NIqOD1K2kYKAGbcylUHZq94Ga2C2qIWVpJ2gkF7R6?=
+ =?us-ascii?Q?0Bn+nlN4z2N3M+2zBw5FywepqX30S0+BcCPK75udWeffjU0X5q2BG97agnA6?=
+ =?us-ascii?Q?lKT1B+JQYJiLtLpcY1gAjhiVmztmTAgUTUETg4WklkyCy/1C3saORlDNu+eA?=
+ =?us-ascii?Q?gfx+L2iaCG41Stt7E/HMNl+N6xPDSiOlaBh/s7+o5B23SxV1sCR0ZFqNmjth?=
+ =?us-ascii?Q?blMRtS9z6RuU7QRK71sglVX0Ny5SCIXdlOY2dqmVUYS5w/16QwhJoqxaSwFb?=
+ =?us-ascii?Q?CYPQBFAK3nEaVqD4k1KsC+aiS1H35HOhBPi/lm8j4vN+IJKgFe/TEadr1jRk?=
+ =?us-ascii?Q?wG5hmyJMnW/ECn93+uxpeNSvsL9OV/Ex2YjWlUnV+rDc8CM0AyNymzbI+LD9?=
+ =?us-ascii?Q?yObQ1FyVGDX6KYZwCnfwLMKPotrbELmEOjsT+i+Exgyl6dg9HLW+AAQAKxUj?=
+ =?us-ascii?Q?IdPP5z+rPLYvySsG8MXMpRlmoasSSF004Hfdq4jUpu5C9WEUMNTXkNGjkX2s?=
+ =?us-ascii?Q?soa4HZfDQpEsiTiJiBcQC7OHMkTnYuUv6s8KVswNiQQIUPFja+L/EXHwAdR1?=
+ =?us-ascii?Q?GVMGwct7ALRDoE0L4A7+qW3Z/q3adHQHwx5rlH288g+QFuObMlfnwDnIZj6N?=
+ =?us-ascii?Q?gzlefoZGD79YqBzLgpj02r6xPpk5R5hSGNK8QqKhjv9enaaQiQxGObHQ41Gy?=
+ =?us-ascii?Q?naPJNrD4T0cdBdfczhqAfJ9yC5MQO+TtLrDCMsazm7in90ffWIyQViNLY2+y?=
+ =?us-ascii?Q?0J/YCmmbA0H09ypODI3pn8rea4VCpK/MZcPX7JLi7lZfxKwmOGhmUMShAMGB?=
+ =?us-ascii?Q?NdzOuku4CgIUrKsROp9NE5gRjk4u4fz2rP90rYJe?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b27a43db-ac54-4f28-c0ac-08dd9ee57ee0
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 19:17:47.4419
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xx61j5Q4I7JO998VffTYYvFwVSouNOJ/x8NQgPmlADyqAeBEnzXVq+lkDJjOw2iEjORAFmWh83BkOZCJ2y5Rmg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8947
 
-On Thu, May 29, 2025 at 11:44:38AM -0700, Atish Patra wrote:
-> 
-> On 5/29/25 3:24 AM, Radim Krčmář wrote:
-> > I originally gave up on the idea, but I feel kinda bad for Drew now, so
-> > trying again:
-> 
-> I am sorry if some of my replies came across in the wrong way. That was
-> never
-> the intention.
+Convert qca,qca7000.txt yaml format.
 
-Not at all. Radim only meant that I was defending his patches, even though
-he wasn't :-)
+Additional changes:
+- add refs: spi-peripheral-props.yaml, serial-peripheral-props.yaml and
+  ethernet-controller.yaml.
+- simple spi and uart node name.
+- use low case for mac address in examples.
 
-> 
-> 
-> > 2025-05-28T12:21:59-07:00, Atish Patra <atish.patra@linux.dev>:
-> > > On 5/28/25 8:09 AM, Andrew Jones wrote:
-> > > > On Wed, May 28, 2025 at 07:16:11AM -0700, Atish Patra wrote:
-> > > > > On 5/26/25 4:13 AM, Andrew Jones wrote:
-> > > > > > On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
-> > > > > > > 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
-> > > > > > > > On 5/23/25 6:31 AM, Radim Krčmář wrote:
-> > > > > > > > > 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
-> > > > > > > > > > Upgrade the SBI version to v3.0 so that corresponding features
-> > > > > > > > > > can be enabled in the guest.
-> > > > > > > > > > 
-> > > > > > > > > > Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> > > > > > > > > > ---
-> > > > > > > > > > diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> > > > > > > > > > -#define KVM_SBI_VERSION_MAJOR 2
-> > > > > > > > > > +#define KVM_SBI_VERSION_MAJOR 3
-> > > > > > > > > I think it's time to add versioning to KVM SBI implementation.
-> > > > > > > > > Userspace should be able to select the desired SBI version and KVM would
-> > > > > > > > > tell the guest that newer features are not supported.
-> > > > > > We need new code for this, but it's a good idea.
-> > > > > > 
-> > > > > > > > We can achieve that through onereg interface by disabling individual SBI
-> > > > > > > > extensions.
-> > > > > > > > We can extend the existing onereg interface to disable a specific SBI
-> > > > > > > > version directly
-> > > > > > > > instead of individual ones to save those IOCTL as well.
-> > > > > > > Yes, I am all in favor of letting userspace provide all values in the
-> > > > > > > BASE extension.
-> > > > > We already support vendorid/archid/impid through one reg. I think we just
-> > > > > need to add the SBI version support to that so that user space can set it.
-> > > > > 
-> > > > > > This is covered by your recent patch that provides userspace_sbi.
-> > > > > Why do we need to invent new IOCTL for this ? Once the user space sets the
-> > > > > SBI version, KVM can enforce it.
-> > > > If an SBI spec version provides an extension that can be emulated by
-> > > > userspace, then userspace could choose to advertise that spec version,
-> > > > implement a BASE probe function that advertises the extension, and
-> > > > implement the extension, even if the KVM version running is older
-> > > > and unaware of it. But, in order to do that, we need KVM to exit to
-> > > > userspace for all unknown SBI calls and to allow BASE to be overridden
-> > > You mean only the version field in BASE - Correct ?
-> > No, "BASE probe function" is the sbi_probe_extension() ecall.
-> > 
-> > > > by userspace. The new KVM CAP ioctl allows opting into that new behavior.
-> > > But why we need a new IOCTL for that ? We can achieve that with existing
-> > > one reg interface with improvements.
-> > It's an existing IOCTL with a new data payload, but I can easily use
-> > ONE_REG if you want to do everything through that.
-> > 
-> > KVM doesn't really need any other IOCTL than ONE_REGs, it's just
-> > sometimes more reasonable to use a different IOCTL, like ENABLE_CAP.
-> > 
-> > > > The old KVM with new VMM configuration isn't totally far-fetched. While
-> > > > host kernels tend to get updated regularly to include security fixes,
-> > > > enterprise kernels tend to stop adding features at some point in order
-> > > > to maximize stability. While enterprise VMMs would also eventually stop
-> > > > adding features, enterprise consumers are always free to use their own
-> > > > VMMs (at their own risk). So, there's a real chance we could have
-> > > I think we are years away from that happening (if it happens). My
-> > > suggestion was not to
-> > > try to build a world where no body lives ;). When we get to that
-> > > scenario, the default KVM
-> > > shipped will have many extension implemented. So there won't be much
-> > > advantage to
-> > > reimplement them in the user space. We can also take an informed
-> > > decision at that time
-> > > if the current selective forwarding approach is better
-> > Please don't repeat the design of SUSP/SRST/DBCN.
-> > Seeing them is one of the reasons why I proposed the new interface.
-> > 
-> > "Blindly" forwarding DBCN to userspace is even a minor optimization. :)
-> > 
-> > >                                                         or we need to
-> > > blindly forward any
-> > > unknown SBI calls to the user space.
-> > Yes, KVM has to do what userpace configures it to do.
-> > 
-> > I don't think that implementing unsupported SBI extensions in KVM is
-> > important -- they should not be a hot path.
-> > 
-> > > > deployments with older, stable KVM where users want to enable later SBI
-> > > > extensions, and, in some cases, that should be possible by just updating
-> > > > the VMM -- but only if KVM is only acting as an SBI implementation
-> > > > accelerator and not as a userspace SBI implementation gatekeeper.
-> > > But some of the SBI extensions are so fundamental that it must be
-> > > implemented in KVM
-> > > for various reasons pointed by Anup on other thread.
-> > No, SBI does not have to be implemented in KVM at all.
-> > 
-> > We do have a deep disagreement on what is virtualization and the role of
-> > KVM in it.  I think that userspace wants a generic ISA accelerator.
-> 
-> I think the disagreement is the role of SBI in KVM virtualization rather
-> than
-> a generic virtualization and the role of KVM in it. I completely agree that
-> KVM should act as an accelerator and defer the control to the user space in
-> most of the cases
-> such e.g I/O operations or system related functionalities. However, SBI
-> specification solves
-> much wider problems than those. Broadly we can categorize SBI
-> functionalities into the following
-> areas
-> 
-> 1. Bridging ISA GAP
-> 2. Higher Privilege Assistance
-> 3. Virtualization
-> 4. Platform abstraction
-> 5. Confidential computing
-> 
-> For #1, #3 and #5, I believe user space shouldn't be involved in
-> implementation
-> some of them are in hot path as well.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+ .../devicetree/bindings/net/qca,qca7000.txt   | 87 -------------------
+ .../devicetree/bindings/net/qca,qca7000.yaml  | 86 ++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 87 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.txt
+ create mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.yaml
 
-IMO, userspace should still be in control of whether or not it's involved
-in #1, #3, and #5. It may make little sense for it to be involved, but the
-choice should still be its.
+diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.txt b/Documentation/devicetree/bindings/net/qca,qca7000.txt
+deleted file mode 100644
+index 8f5ae0b84eec2..0000000000000
+--- a/Documentation/devicetree/bindings/net/qca,qca7000.txt
++++ /dev/null
+@@ -1,87 +0,0 @@
+-* Qualcomm QCA7000
+-
+-The QCA7000 is a serial-to-powerline bridge with a host interface which could
+-be configured either as SPI or UART slave. This configuration is done by
+-the QCA7000 firmware.
+-
+-(a) Ethernet over SPI
+-
+-In order to use the QCA7000 as SPI device it must be defined as a child of a
+-SPI master in the device tree.
+-
+-Required properties:
+-- compatible	    : Should be "qca,qca7000"
+-- reg		    : Should specify the SPI chip select
+-- interrupts	    : The first cell should specify the index of the source
+-		      interrupt and the second cell should specify the trigger
+-		      type as rising edge
+-- spi-cpha	    : Must be set
+-- spi-cpol	    : Must be set
+-
+-Optional properties:
+-- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
+-		      Numbers smaller than 1000000 or greater than 16000000
+-		      are invalid. Missing the property will set the SPI
+-		      frequency to 8000000 Hertz.
+-- qca,legacy-mode   : Set the SPI data transfer of the QCA7000 to legacy mode.
+-		      In this mode the SPI master must toggle the chip select
+-		      between each data word. In burst mode these gaps aren't
+-		      necessary, which is faster. This setting depends on how
+-		      the QCA7000 is setup via GPIO pin strapping. If the
+-		      property is missing the driver defaults to burst mode.
+-
+-The MAC address will be determined using the optional properties
+-defined in ethernet.txt.
+-
+-SPI Example:
+-
+-/* Freescale i.MX28 SPI master*/
+-ssp2: spi@80014000 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	compatible = "fsl,imx28-spi";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&spi2_pins_a>;
+-
+-	qca7000: ethernet@0 {
+-		compatible = "qca,qca7000";
+-		reg = <0x0>;
+-		interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
+-		interrupts = <25 0x1>;            /* Index: 25, rising edge */
+-		spi-cpha;                         /* SPI mode: CPHA=1 */
+-		spi-cpol;                         /* SPI mode: CPOL=1 */
+-		spi-max-frequency = <8000000>;    /* freq: 8 MHz */
+-		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+-	};
+-};
+-
+-(b) Ethernet over UART
+-
+-In order to use the QCA7000 as UART slave it must be defined as a child of a
+-UART master in the device tree. It is possible to preconfigure the UART
+-settings of the QCA7000 firmware, but it's not possible to change them during
+-runtime.
+-
+-Required properties:
+-- compatible        : Should be "qca,qca7000"
+-
+-Optional properties:
+-- local-mac-address : see ./ethernet.txt
+-- current-speed     : current baud rate of QCA7000 which defaults to 115200
+-		      if absent, see also ../serial/serial.yaml
+-
+-UART Example:
+-
+-/* Freescale i.MX28 UART */
+-auart0: serial@8006a000 {
+-	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+-	reg = <0x8006a000 0x2000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&auart0_2pins_a>;
+-
+-	qca7000: ethernet {
+-		compatible = "qca,qca7000";
+-		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+-		current-speed = <38400>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.yaml b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
+new file mode 100644
+index 0000000000000..348b8e9af975b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qca,qca7000.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm QCA7000
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description: |
++  The QCA7000 is a serial-to-powerline bridge with a host interface which could
++  be configured either as SPI or UART slave. This configuration is done by
++  the QCA7000 firmware.
++
++  (a) Ethernet over SPI
++
++  In order to use the QCA7000 as SPI device it must be defined as a child of a
++  SPI master in the device tree.
++
++properties:
++  compatible:
++    const: qca,qca7000
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  spi-cpha: true
++
++  spi-cpol: true
++
++  spi-max-frequency:
++    default: 8000000
++    maximum: 16000000
++    minimum: 1000000
++
++  qca,legacy-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Set the SPI data transfer of the QCA7000 to legacy mode.
++      In this mode the SPI master must toggle the chip select
++      between each data word. In burst mode these gaps aren't
++      necessary, which is faster. This setting depends on how
++      the QCA7000 is setup via GPIO pin strapping. If the
++      property is missing the driver defaults to burst mode.
++
++  current-speed:
++    default: 115200
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++  - $ref: /schemas/serial/serial-peripheral-props.yaml#
++  - $ref: ethernet-controller.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet@0 {
++            compatible = "qca,qca7000";
++            reg = <0x0>;
++            interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
++            interrupts = <25 0x1>;            /* Index: 25, rising edge */
++            spi-cpha;                         /* SPI mode: CPHA=1 */
++            spi-cpol;                         /* SPI mode: CPOL=1 */
++            spi-max-frequency = <8000000>;    /* freq: 8 MHz */
++            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
++        };
++    };
++
++  - |
++    serial {
++        ethernet {
++            compatible = "qca,qca7000";
++            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
++            current-speed = <38400>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7761b5ef87674..c163c80688c23 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20295,7 +20295,7 @@ QUALCOMM ATHEROS QCA7K ETHERNET DRIVER
+ M:	Stefan Wahren <wahrenst@gmx.net>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/qca,qca7000.txt
++F:	Documentation/devicetree/bindings/net/qca,qca7000.yaml
+ F:	drivers/net/ethernet/qualcomm/qca*
+ 
+ QUALCOMM BAM-DMUX WWAN NETWORK DRIVER
+-- 
+2.34.1
 
-> For #4 and #2, there are some
-> opportunities which
-> can be implemented in user space depending on the exact need. I am still not
-> clear what is the exact
-> motivation /right now/ to pursue such a path. May be I missed something.
-> As per my understanding from our discussion threads, there are two use cases
-> possible
-> 
-> 1. userspace wants to update more states in HSM. What are the states user
-> space should care about scounteren (fixed already in usptream) ?
-> 2. VMM vs KVM version difference - this may be true in the future depending
-> on the speed of RISC-V virtualization adoption in the industry.
-> But we are definitely not there yet. Please let me know if I misunderstood
-> any use cases.
-
-That's what I'm aware of as well, but I see giving userspace back full
-control of what gets accelerated by KVM, and what doesn't, as a fix, which
-is why I wouldn't want to delay it any longer.
-
-> 
-> > Even if userspace wants SBI for the M-mode interface, security minded
-> This is probably a 3rd one ? Why we want M-mode interface in the user space
-> ?
-> > userspace aims for as little kernel code as possible.
-> 
-> We trust VMM code more than KVM code ?
-
-We should be skeptical of both, which is why we'd rather put as much code
-in userspace as possible. Insecure/faulty userspace will hopefully have
-exploits/bugs contained to the single process. An insecure/faulty KVM
-means the host is compromised/crashed. On x86, Google put a lot of effort
-into moving instruction emulation out of KVM for security concerns[1]. In
-general, if it's not a hot path and there's a way to do it in userspace,
-then it should be done in userspace (or at least there should be an
-option to use userspace -- each use case can choose what's best for
-itself).
-
-[1] https://www.linux-kvm.org/images/3/3d/01x02-Steve_Rutherford-Performant_Security_Hardening_of_KVM.pdf
-
-Thanks,
-drew
-
-> 
-> > Userspace might want to accelerate some SBI extension in KVM, but it
-> > should not be KVM who decides what userspace wants.
