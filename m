@@ -1,274 +1,667 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F22F2F
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D29347B4
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748508390; cv=none; b=mcTjF2RLG/mmOkM4bXOhkI7DyBe3r8ShuBjQZJZYp6Jnoqd/+5SCiIcWnWnexWze0hIm9kiV5vViK1m7qpj7S7G9wsmA82nfnb7lACB+B3rLpOz3HUzgJnmmjmjs3uhpIEGv4o9ZvirmodLuS1Q1lES9GgI9KkwS9kXhYTeFHgI=
+	t=1748508523; cv=none; b=CjM4YtWsv9MacA9Fd7UwItXCyEEd8tDKfy2SUDGmPR3QLF96JcMemCHcOwTHABq8lzjoTI3/PagQE25EpGjI6iwm1Aka6ct9aEqP+taTCuUFXIriiYL0V2fcMgHN6Vw9rdmDVGPgJBpva+3bZtppeQ46PxcS8GHFosqIKBc2a0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748508390; c=relaxed/simple;
-	bh=2jDkw5oG8xAqINCZ3MIulPvpGnvIBB5NdGyoCXPHoRA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BbtBtmj8YbL+l9LV9mF2UowvWS5D9eDjANDMT8XhcTP03sivcTRy3BAtICsddDcx24u7CsLAemkbJwWavz9K7hdxWo7p4iB60TWv7mrgrZPgddeNgq9aPGJ060rR54Y3uPyxFNeyH4wteku5q50hmIyDrECIJU+OBXbubJsghUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=QVon60aX; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QVon60aX"
-X-UUID: 656755b43c6911f0813e4fe1310efc19-20250529
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Qrg6t/3pDIIo/J14HuIjlYHkLPkRQL268S0ybavfqxc=;
-	b=QVon60aX8hWZUIEu60EMIMCb/hH0jtbLxwSxh7kacMHXnlrB8FA743CWf8WOLECJkwIwL2Dp55yFZlun9P1Jl+PfcBVkYWJ8GGbr9v5h16R4HGRgDxyypdMB9EPnuj2dsodQdzy7zqwlvsUA2Lr9QMiB7aoSRW0eaZEyXa5zZSE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:4bdc2127-7fe2-454f-9dab-4ef66bae1f98,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:b3991b58-abad-4ac2-9923-3af0a8a9a079,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 656755b43c6911f0813e4fe1310efc19-20250529
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <kuyo.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 260664174; Thu, 29 May 2025 16:46:21 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 29 May 2025 16:46:05 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 29 May 2025 16:46:18 +0800
-From: Kuyo Chang <kuyo.chang@mediatek.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: kuyo chang <kuyo.chang@mediatek.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/1] stop_machine: Fix migrate_swap() vs. balance_push() racing
-Date: Thu, 29 May 2025 16:43:35 +0800
-Message-ID: <20250529084614.885184-1-kuyo.chang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	s=arc-20240116; t=1748508523; c=relaxed/simple;
+	bh=f4JK6RwkzALWQzanpwyYkABy9RsYhl7CSzx1RLv0Kak=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uRya/dAD6TpoRAVprnxvYN8hUIZEs6nRFqs0ZNSbbAaYX2pLt9HmKi/DiW/hlFKmYadDNdCIjXPc2ONxmz3qlA6bTYEFlpuB2BttI8W0j1dxjih0VQJl+KfQecVlbrPN4TzQWnGgL4NT29NcCg6JNryTFHwcRjzhyaADILDh3iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0EBFD176A;
+	Thu, 29 May 2025 01:48:23 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 051763F694;
+	Thu, 29 May 2025 01:48:37 -0700 (PDT)
+Message-ID: <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
+Date: Thu, 29 May 2025 09:48:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
+ mapping when rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250304222018.615808-1-yang@os.amperecomputing.com>
+ <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
+ <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
+ <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
+ <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
+ <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
+ <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
+ <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
+ <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
+ <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
+ <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
+ <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
+ <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
+ <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
+ <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-From: kuyo chang <kuyo.chang@mediatek.com>
+On 28/05/2025 18:12, Yang Shi wrote:
+> 
+> 
+> On 5/28/25 8:18 AM, Yang Shi wrote:
+>>
+>>
+>> On 5/28/25 6:13 AM, Ryan Roberts wrote:
+>>> On 28/05/2025 01:00, Yang Shi wrote:
+>>>> Hi Ryan,
+>>>>
+>>>> I got a new spin ready in my local tree on top of v6.15-rc4. I noticed there
+>>>> were some more comments on Miko's BBML2 patch, it looks like a new spin is
+>>>> needed. But AFAICT there should be no significant change to how I advertise
+>>>> AmpereOne BBML2 in my patches. We will keep using MIDR list to check whether
+>>>> BBML2 is advertised or not and the erratum seems still be needed to fix up
+>>>> AA64MMFR2 BBML2 bits for AmpereOne IIUC.
+>>> Yes, I agree this should not impact you too much.
+>>>
+>>>> You also mentioned Dev was working on patches to have __change_memory_common()
+>>>> apply permission change on a contiguous range instead of on page basis (the
+>>>> status quo). But I have not seen the patches on mailing list yet. However I
+>>>> don't think this will result in any significant change to my patches either,
+>>>> particularly the split primitive and linear map repainting.
+>>> I think you would need Dev's series to be able to apply the permissions change
+>>> without needing to split the whole range to pte mappings? So I guess your change
+>>> must either be implementing something similar to what Dev is working on or you
+>>> are splitting the entire range to ptes? If the latter, then I'm not keen on that
+>>> approach.
+>>
+>> I don't think Dev's series is mandatory prerequisite for my patches. IIUC how
+>> the split primitive keeps block mapping if it is fully contained is
+>> independent from how to apply the permissions change on it.
+>> The new spin implemented keeping block mapping if it is fully contained as we
+>> discussed earlier. I'm supposed Dev's series just need to check whether the
+>> mapping is block or not when applying permission change.
+>>
+>> The flow just looks like as below conceptually:
+>>
+>> split_mapping(start, end)
+>> apply_permission_change(start, end)
+>>
+>> The split_mapping() guarantees keep block mapping if it is fully contained in
+>> the range between start and end, this is my series's responsibility. I know
+>> the current code calls apply_to_page_range() to apply permission change and it
+>> just does it on PTE basis. So IIUC Dev's series will modify it or provide a
+>> new API, then __change_memory_common() will call it to change permission.
+>> There should be some overlap between mine and Dev's, but I don't see strong
+>> dependency.
+>>
+>>>
+>>> Regarding the linear map repainting, I had a chat with Catalin, and he reminded
+>>> me of a potential problem; if you are doing the repainting with the machine
+>>> stopped, you can't allocate memory at that point; it's possible a CPU was inside
+>>> the allocator when it stopped. And I think you need to allocate intermediate
+>>> pgtables, right? Do you have a solution to that problem? I guess one approach
+>>> would be to figure out how much memory you will need and pre-allocate prior to
+>>> stoping the machine?
+>>
+>> OK, I don't remember we discussed this problem before. I think we can do
+>> something like what kpti does. When creating the linear map we know how many
+>> PUD and PMD mappings are created, we can record the number, it will tell how
+>> many pages we need for repainting the linear map.
+> 
+> Looking the kpti code further, it looks like kpti also allocates memory with the
+> machine stopped, but it calls memory allocation on cpu 0 only. 
 
-Hi guys,
+Oh yes, I hadn't spotted that. It looks like a special case that may be ok for
+kpti though; it's allocating a fairly small amount of memory (max levels=5 so
+max order=3) and it's doing it with GFP_ATOMIC. So if my understanding of the
+page allocator is correct, then this should be allocated from a per-cpu reserve?
+Which means that it never needs to take a lock that other, stopped CPUs could be
+holding. And GFP_ATOMIC guarrantees that the thread will never sleep, which I
+think is not allowed while the machine is stopped.
 
-It encounters sporadic failures during CPU hotplug stress test.
+> IIUC this
+> guarantees the code will not be called on a CPU which was inside the allocator
+> when it stopped because CPU 0 is running stop_machine().
 
-[Syndrome]
-The kernel log shows list add fail as below.
+My concern was a bit more general; if any other CPU was inside the allocator
+holding a lock when the machine was stopped, then if CPU 0 comes along and makes
+a call to the allocator that requires the lock, then we have a deadlock.
 
-kmemleak: list_add corruption.
-prev->next should be next (ffffff82812c7a00),
-but was 0000000000000000. (prev=ffffff82812c3208).
+All that said, looking at the stop_machine() docs, it says:
 
-kmemleak: kernel BUG at lib/list_debug.c:34!
-kmemleak: Call trace:
-kmemleak:  __list_add_valid_or_report+0x11c/0x144
-kmemleak:  cpu_stop_queue_work+0x440/0x474
-kmemleak:  stop_one_cpu_nowait+0xe4/0x138
-kmemleak:  balance_push+0x1f4/0x3e4
-kmemleak:  __schedule+0x1adc/0x23bc
-kmemleak:  preempt_schedule_common+0x68/0xd0
-kmemleak:  preempt_schedule+0x60/0x80
-kmemleak:  _raw_spin_unlock_irqrestore+0x9c/0xa0
-kmemleak:  scan_gray_list+0x220/0x3e4
-kmemleak:  kmemleak_scan+0x410/0x740
-kmemleak:  kmemleak_scan_thread+0xb0/0xdc
-kmemleak:  kthread+0x2bc/0x494
-kmemleak:  ret_from_fork+0x10/0x20
+ * Description: This causes a thread to be scheduled on every cpu,
+ * each of which disables interrupts.  The result is that no one is
+ * holding a spinlock or inside any other preempt-disabled region when
+ * @fn() runs.
 
-[Analysis]
-In the failure case, by memory dump, we find
-cpu_stopper.enabled = TRUE
-but the wakeq is empty(the migrate/1 is at another wakeq)
-static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
-{
-...
-..
-	enabled = stopper->enabled;
-	if (enabled)
-		__cpu_stop_queue_work(stopper, work, &wakeq);
-...
-...
-	wake_up_q(&wakeq);  -> wakeq is empty !!
-	preempt_enable();
-	return enabled;
-}
+So I think my deadlock concern was unfounded. I think as long as you can
+garrantee that fn() won't try to sleep then you should be safe? So I guess
+allocating from within fn() should be safe as long as you use GFP_ATOMIC?
 
-Through analysis of the CPU0 call trace and memory dump
+Thanks,
+Ryan
 
-   CPU0: migration/0, pid: 43, priority: 99
-   Native callstack:
-	vmlinux  __kern_my_cpu_offset()           <arch/arm64/include/asm/percpu.h:40>
-	vmlinux  ct_state_inc(incby=8)            <include/linux/context_tracking.h:137>
-	vmlinux  rcu_momentary_eqs() + 72         <kernel/rcu/tree.c:375>
-	vmlinux  multi_cpu_stop() + 316           <kernel/stop_machine.c:278>
-	vmlinux  cpu_stopper_thread() + 676       <kernel/stop_machine.c:563>
-	vmlinux  smpboot_thread_fn(data=0) + 1188 <kernel/smpboot.c:164>
-	vmlinux  kthread() + 696                  <kernel/kthread.c:389>
-	vmlinux  0xFFFFFFC08005941C()             <arch/arm64/kernel/entry.S:845>
-
-  (struct migration_swap_arg *)0xFFFFFFC08FF87A40 (
-    src_task = 0xFFFFFF80FF519740 ,
-    dst_task = 0xFFFFFF802A579740 ,
-    src_cpu = 0x0,
-    dst_cpu = 0x1)
-
-  (struct multi_stop_data)*    0xFFFFFFC08FF87930 = (
-    fn = 0xFFFFFFC0802657F4 = migrate_swap_stop,
-    data = 0xFFFFFFC08FF87A40
-    num_threads = 0x2,
-    active_cpus = cpu_bit_bitmap[1] -> (
-      bits = (0x2)),
-    state = MULTI_STOP_PREPARE = 0x1,
-    thread_ack = (
-      counter = 0x1))
-
-By cpu mask memory dump:
-  ((const struct cpumask *)&__cpu_online_mask) (
-    bits = (0xFF))
-  ((const struct cpumask *)&__cpu_dying_mask)  (
-    bits = (0x2))
-  ((const struct cpumask *)&__cpu_active_mask)(
-    bits = (0xFD))
-  ((const struct cpumask *)&__cpu_possible_mask) (
-    bits = (0xFF))
-->Imply cpu1 is dying & non-active
-
-So, the potential race scenario is:
-
-	CPU0							CPU1
-	// doing migrate_swap(cpu0/cpu1)
-	stop_two_cpus()
-							  ...
-							 // doing _cpu_down()
-							      sched_cpu_deactivate()
-								set_cpu_active(cpu, false);
-								balance_push_set(cpu, true);
-	cpu_stop_queue_two_works
-	    __cpu_stop_queue_work(stopper1,...);
-	    __cpu_stop_queue_work(stopper2,..);
-	stop_cpus_in_progress -> true
-		preempt_enable();
-								...
-							1st balance_push
-							stop_one_cpu_nowait
-							cpu_stop_queue_work
-							__cpu_stop_queue_work
-							list_add_tail  -> 1st add push_work
-							wake_up_q(&wakeq);  -> "wakeq is empty. This implies that the stopper is at wakeq@migrate_swap."
-	preempt_disable
-	wake_up_q(&wakeq);
-	        wake_up_process // wakeup migrate/0
-		    try_to_wake_up
-		        ttwu_queue
-		            ttwu_queue_cond ->meet below case
-		                if (cpu == smp_processor_id())
-			         return false;
-			ttwu_do_activate
-			//migrate/0 wakeup done
-		wake_up_process // wakeup migrate/1
-	           try_to_wake_up
-		    ttwu_queue
-			ttwu_queue_cond
-		        ttwu_queue_wakelist
-			__ttwu_queue_wakelist
-			__smp_call_single_queue
-	preempt_enable();
-
-							2nd balance_push
-							stop_one_cpu_nowait
-							cpu_stop_queue_work
-							__cpu_stop_queue_work
-							list_add_tail  -> 2nd add push_work, so the double list add is detected
-							...
-							...
-							cpu1 get ipi, do sched_ttwu_pending, wakeup migrate/1
-
-[Solution]
-Maybe add queue status tracking in __cpu_stop_queue_work to avoid the corner case?
-Or don't use ttwu_queu_wakelist while wakeup migrate?
-
-Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
----
- include/linux/stop_machine.h |  7 +++++++
- kernel/stop_machine.c        | 12 +++++++++++-
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
-index 3132262a404d..a0748416dd69 100644
---- a/include/linux/stop_machine.h
-+++ b/include/linux/stop_machine.h
-@@ -21,11 +21,18 @@ typedef int (*cpu_stop_fn_t)(void *arg);
- 
- #ifdef CONFIG_SMP
- 
-+enum work_state {
-+	WORK_INIT = 0,
-+	WORK_QUEUE,
-+	WORK_EXEC,
-+};
-+
- struct cpu_stop_work {
- 	struct list_head	list;		/* cpu_stopper->works */
- 	cpu_stop_fn_t		fn;
- 	unsigned long		caller;
- 	void			*arg;
-+	enum work_state		state;
- 	struct cpu_stop_done	*done;
- };
- 
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index 5d2d0562115b..9ab6b07708e3 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -87,6 +87,7 @@ static void __cpu_stop_queue_work(struct cpu_stopper *stopper,
- {
- 	list_add_tail(&work->list, &stopper->works);
- 	wake_q_add(wakeq, stopper->thread);
-+	work->state = WORK_QUEUE;
- }
- 
- /* queue @work to @stopper.  if offline, @work is completed immediately */
-@@ -385,7 +386,15 @@ int stop_two_cpus(unsigned int cpu1, unsigned int cpu2, cpu_stop_fn_t fn, void *
- bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
- 			struct cpu_stop_work *work_buf)
- {
--	*work_buf = (struct cpu_stop_work){ .fn = fn, .arg = arg, .caller = _RET_IP_, };
-+	if (unlikely(work_buf->state == WORK_QUEUE))
-+		return true;
-+
-+	*work_buf = (struct cpu_stop_work){
-+	    .fn = fn,
-+	    .arg = arg,
-+	    .caller = _RET_IP_,
-+	    .state = WORK_INIT
-+	};
- 	return cpu_stop_queue_work(cpu, work_buf);
- }
- 
-@@ -496,6 +505,7 @@ static void cpu_stopper_thread(unsigned int cpu)
- 		work = list_first_entry(&stopper->works,
- 					struct cpu_stop_work, list);
- 		list_del_init(&work->list);
-+		work->state = WORK_EXEC;
- 	}
- 	raw_spin_unlock_irq(&stopper->lock);
- 
--- 
-2.45.2
+> 
+> My patch already guarantees repainting just run on CPU 0 (the boot CPU) because
+> we just can be sure the boot CPU supports BBML2 so that we can repaint the
+> linear map safely. This also guarantees the "stopped CPU was inside allocator"
+> problem won't happen IIUC.
+> 
+> Thanks,
+> Yang
+> 
+>>
+>>>
+>>>> So I plan to post v4 patches to the mailing list. We can focus on reviewing the
+>>>> split primitive and linear map repainting. Does it sound good to you?
+>>> That works assuming you have a solution for the above.
+>>
+>> I think the only missing part is preallocating page tables for repainting. I
+>> will add this, then post the new spin to the mailing list.
+>>
+>> Thanks,
+>> Yang
+>>
+>>>
+>>> Thanks,
+>>> Ryan
+>>>
+>>>> Thanks,
+>>>> Yang
+>>>>
+>>>>
+>>>> On 5/7/25 2:16 PM, Yang Shi wrote:
+>>>>>
+>>>>> On 5/7/25 12:58 AM, Ryan Roberts wrote:
+>>>>>> On 05/05/2025 22:39, Yang Shi wrote:
+>>>>>>> On 5/2/25 4:51 AM, Ryan Roberts wrote:
+>>>>>>>> On 14/04/2025 22:24, Yang Shi wrote:
+>>>>>>>>> On 4/14/25 6:03 AM, Ryan Roberts wrote:
+>>>>>>>>>> On 10/04/2025 23:00, Yang Shi wrote:
+>>>>>>>>>>> Hi Ryan,
+>>>>>>>>>>>
+>>>>>>>>>>> I know you may have a lot of things to follow up after LSF/MM. Just
+>>>>>>>>>>> gently
+>>>>>>>>>>> ping,
+>>>>>>>>>>> hopefully we can resume the review soon.
+>>>>>>>>>> Hi, I'm out on holiday at the moment, returning on the 22nd April. But
+>>>>>>>>>> I'm very
+>>>>>>>>>> keen to move this series forward so will come back to you next week.
+>>>>>>>>>> (although
+>>>>>>>>>> TBH, I thought I was waiting for you to respond to me... :-| )
+>>>>>>>>>>
+>>>>>>>>>> FWIW, having thought about it a bit more, I think some of the
+>>>>>>>>>> suggestions I
+>>>>>>>>>> previously made may not have been quite right, but I'll elaborate next
+>>>>>>>>>> week.
+>>>>>>>>>> I'm
+>>>>>>>>>> keen to build a pgtable splitting primitive here that we can reuse with
+>>>>>>>>>> vmalloc
+>>>>>>>>>> as well to enable huge mappings by default with vmalloc too.
+>>>>>>>>> Sounds good. I think the patches can support splitting vmalloc page table
+>>>>>>>>> too.
+>>>>>>>>> Anyway we can discuss more after you are back. Enjoy your holiday.
+>>>>>>>> Hi Yang,
+>>>>>>>>
+>>>>>>>> Sorry I've taken so long to get back to you. Here's what I'm currently
+>>>>>>>> thinking:
+>>>>>>>> I'd eventually like to get to the point where the linear map and most
+>>>>>>>> vmalloc
+>>>>>>>> memory is mapped using the largest possible mapping granularity (i.e. block
+>>>>>>>> mappings at PUD/PMD, and contiguous mappings at PMD/PTE level).
+>>>>>>>>
+>>>>>>>> vmalloc has history with trying to do huge mappings by default; it ended up
+>>>>>>>> having to be turned into an opt-in feature (instead of the original opt-out
+>>>>>>>> approach) because there were problems with some parts of the kernel
+>>>>>>>> expecting
+>>>>>>>> page mappings. I think we might be able to overcome those issues on
+>>>>>>>> arm64 with
+>>>>>>>> BBML2.
+>>>>>>>>
+>>>>>>>> arm64 can already support vmalloc PUD and PMD block mappings, and I have a
+>>>>>>>> series (that should make v6.16) that enables contiguous PTE mappings in
+>>>>>>>> vmalloc
+>>>>>>>> too. But these are currently limited to when VM_ALLOW_HUGE is specified.
+>>>>>>>> To be
+>>>>>>>> able to use that by default, we need to be able to change permissions on
+>>>>>>>> sub-regions of an allocation, which is where BBML2 and your series come in.
+>>>>>>>> (there may be other things we need to solve as well; TBD).
+>>>>>>>>
+>>>>>>>> I think the key thing we need is a function that can take a page-aligned
+>>>>>>>> kernel
+>>>>>>>> VA, will walk to the leaf entry for that VA and if the VA is in the
+>>>>>>>> middle of
+>>>>>>>> the leaf entry, it will split it so that the VA is now on a boundary. This
+>>>>>>>> will
+>>>>>>>> work for PUD/PMD block entries and contiguous-PMD/contiguous-PTE
+>>>>>>>> entries. The
+>>>>>>>> function can assume BBML2 is present. And it will return 0 on success, -
+>>>>>>>> EINVAL
+>>>>>>>> if the VA is not mapped or -ENOMEM if it couldn't allocate a pgtable to
+>>>>>>>> perform
+>>>>>>>> the split.
+>>>>>>> OK, the v3 patches already handled page table allocation failure with
+>>>>>>> returning
+>>>>>>> -ENOMEM and BUG_ON if it is not mapped because kernel assumes linear mapping
+>>>>>>> should be always present. It is easy to return -EINVAL instead of BUG_ON.
+>>>>>>> However I'm wondering what usecases you are thinking about? Splitting
+>>>>>>> vmalloc
+>>>>>>> area may run into unmapped VA?
+>>>>>> I don't think BUG_ON is the right behaviour; crashing the kernel should be
+>>>>>> discouraged. I think even for vmalloc under correct conditions we
+>>>>>> shouldn't see
+>>>>>> any unmapped VA. But vmalloc does handle it gracefully today; see (e.g.)
+>>>>>> vunmap_pmd_range() which skips the pmd if its none.
+>>>>>>
+>>>>>>>> Then we can use that primitive on the start and end address of any range
+>>>>>>>> for
+>>>>>>>> which we need exact mapping boundaries (e.g. when changing permissions
+>>>>>>>> on part
+>>>>>>>> of linear map or vmalloc allocation, when freeing part of a vmalloc
+>>>>>>>> allocation,
+>>>>>>>> etc). This way we only split enough to ensure the boundaries are
+>>>>>>>> precise, and
+>>>>>>>> keep larger mappings inside the range.
+>>>>>>> Yeah, makes sense to me.
+>>>>>>>
+>>>>>>>> Next we need to reimplement __change_memory_common() to not use
+>>>>>>>> apply_to_page_range(), because that assumes page mappings only. Dev Jain
+>>>>>>>> has
+>>>>>>>> been working on a series that converts this to use
+>>>>>>>> walk_page_range_novma() so
+>>>>>>>> that we can change permissions on the block/contig entries too. That's not
+>>>>>>>> posted publicly yet, but it's not huge so I'll ask if he is comfortable
+>>>>>>>> with
+>>>>>>>> posting an RFC early next week.
+>>>>>>> OK, so the new __change_memory_common() will change the permission of page
+>>>>>>> table, right?
+>>>>>> It will change permissions of all the leaf entries in the range of VAs it is
+>>>>>> passed. Currently it assumes that all the leaf entries are PTEs. But we will
+>>>>>> generalize to support all the other types of leaf entries too.,
+>>>>>>
+>>>>>>> If I remember correctly, you suggested change permissions in
+>>>>>>> __create_pgd_mapping_locked() for v3. So I can disregard it?
+>>>>>> Yes I did. I think this made sense (in my head at least) because in the
+>>>>>> context
+>>>>>> of the linear map, all the PFNs are contiguous so it kind-of makes sense to
+>>>>>> reuse that infrastructure. But it doesn't generalize to vmalloc because
+>>>>>> vmalloc
+>>>>>> PFNs are not contiguous. So for that reason, I think it's preferable to
+>>>>>> have an
+>>>>>> independent capability.
+>>>>> OK, sounds good to me.
+>>>>>
+>>>>>>> The current code assumes the address range passed in by
+>>>>>>> change_memory_common()
+>>>>>>> is *NOT* physically contiguous so __change_memory_common() handles page
+>>>>>>> table
+>>>>>>> permission on page basis. I'm supposed Dev's patches will handle this
+>>>>>>> then my
+>>>>>>> patch can safely assume the linear mapping address range for splitting is
+>>>>>>> physically contiguous too otherwise I can't keep large mappings inside the
+>>>>>>> range. Splitting vmalloc area doesn't need to worry about this.
+>>>>>> I'm not sure I fully understand the point you're making here...
+>>>>>>
+>>>>>> Dev's series aims to use walk_page_range_novma() similar to riscv's
+>>>>>> implementation so that it can walk a VA range and update the permissions
+>>>>>> on each
+>>>>>> leaf entry it visits, regadless of which level the leaf entry is at. This
+>>>>>> doesn't make any assumption of the physical contiguity of neighbouring leaf
+>>>>>> entries in the page table.
+>>>>>>
+>>>>>> So if we are changing permissions on the linear map, we have a range of
+>>>>>> VAs to
+>>>>>> walk and convert all the leaf entries, regardless of their size. The same
+>>>>>> goes
+>>>>>> for vmalloc... But for vmalloc, we will also want to change the underlying
+>>>>>> permissions in the linear map, so we will have to figure out the contiguous
+>>>>>> pieces of the linear map and call __change_memory_common() for each; there is
+>>>>>> definitely some detail to work out there!
+>>>>> Yes, this is my point. When changing underlying linear map permission for
+>>>>> vmalloc, the linear map address may be not contiguous. This is why
+>>>>> change_memory_common() calls __change_memory_common() on page basis.
+>>>>>
+>>>>> But how Dev's patch work should have no impact on how I implement the split
+>>>>> primitive by thinking it further. It should be the caller's responsibility to
+>>>>> make sure __create_pgd_mapping_locked() is called for contiguous linear map
+>>>>> address range.
+>>>>>
+>>>>>>>> You'll still need to repaint the whole linear map with page mappings for
+>>>>>>>> the
+>>>>>>>> case !BBML2 case, but I'm hoping __create_pgd_mapping_locked() (potentially
+>>>>>>>> with
+>>>>>>>> minor modifications?) can do that repainting on the live mappings;
+>>>>>>>> similar to
+>>>>>>>> how you are doing it in v3.
+>>>>>>> Yes, when repainting I need to split the page table all the way down to PTE
+>>>>>>> level. A simple flag should be good enough to tell
+>>>>>>> __create_pgd_mapping_locked()
+>>>>>>> do the right thing off the top of my head.
+>>>>>> Perhaps it may be sufficient to reuse the NO_BLOCK_MAPPINGS and
+>>>>>> NO_CONT_MAPPINGS
+>>>>>> flags? For example, if you are find a leaf mapping and NO_BLOCK_MAPPINGS
+>>>>>> is set,
+>>>>>> then you need to split it?
+>>>>> Yeah, sounds feasible. Anyway I will figure it out.
+>>>>>
+>>>>>>>> Miko's BBML2 series should hopefully get imminently queued for v6.16.
+>>>>>>> Great! Anyway my series is based on his advertising BBML2 patch.
+>>>>>>>
+>>>>>>>> So in summary, what I'm asking for your large block mapping the linear map
+>>>>>>>> series is:
+>>>>>>>>      - Paint linear map using blocks/contig if boot CPU supports BBML2
+>>>>>>>>      - Repaint linear map using page mappings if secondary CPUs don't
+>>>>>>>> support BBML2
+>>>>>>> OK, I just need to add some simple tweak to split down to PTE level to v3.
+>>>>>>>
+>>>>>>>>      - Integrate Dev's __change_memory_common() series
+>>>>>>> OK, I think I have to do my patches on top of it. Because Dev's patch need
+>>>>>>> guarantee the linear mapping address range is physically contiguous.
+>>>>>>>
+>>>>>>>>      - Create primitive to ensure mapping entry boundary at a given page-
+>>>>>>>> aligned VA
+>>>>>>>>      - Use primitive when changing permissions on linear map region
+>>>>>>> Sure.
+>>>>>>>
+>>>>>>>> This will be mergable on its own, but will also provide a great starting
+>>>>>>>> base
+>>>>>>>> for adding huge-vmalloc-by-default.
+>>>>>>>>
+>>>>>>>> What do you think?
+>>>>>>> Definitely makes sense to me.
+>>>>>>>
+>>>>>>> If I remember correctly, we still have some unsolved comments/questions
+>>>>>>> for v3
+>>>>>>> in my replies on March 17, particularly:
+>>>>>>> https://lore.kernel.org/linux-arm-kernel/2b715836-b566-4a9e-
+>>>>>>> b344-9401fa4c0feb@os.amperecomputing.com/
+>>>>>> Ahh sorry about that. I'll take a look now...
+>>>>> No problem.
+>>>>>
+>>>>> Thanks,
+>>>>> Yang
+>>>>>
+>>>>>> Thanks,
+>>>>>> Ryan
+>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Yang
+>>>>>>>
+>>>>>>>> Thanks,
+>>>>>>>> Ryan
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>> Thanks,
+>>>>>>>>> Yang
+>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Ryan
+>>>>>>>>>>
+>>>>>>>>>>> Thanks,
+>>>>>>>>>>> Yang
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> On 3/13/25 10:40 AM, Yang Shi wrote:
+>>>>>>>>>>>> On 3/13/25 10:36 AM, Ryan Roberts wrote:
+>>>>>>>>>>>>> On 13/03/2025 17:28, Yang Shi wrote:
+>>>>>>>>>>>>>> Hi Ryan,
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> I saw Miko posted a new spin of his patches. There are some slight
+>>>>>>>>>>>>>> changes
+>>>>>>>>>>>>>> that
+>>>>>>>>>>>>>> have impact to my patches (basically check the new boot parameter).
+>>>>>>>>>>>>>> Do you
+>>>>>>>>>>>>>> prefer I rebase my patches on top of his new spin right now then
+>>>>>>>>>>>>>> restart
+>>>>>>>>>>>>>> review
+>>>>>>>>>>>>>> from the new spin or review the current patches then solve the new
+>>>>>>>>>>>>>> review
+>>>>>>>>>>>>>> comments and rebase to Miko's new spin together?
+>>>>>>>>>>>>> Hi Yang,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Sorry I haven't got to reviewing this version yet, it's in my queue!
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I'm happy to review against v3 as it is. I'm familiar with Miko's
+>>>>>>>>>>>>> series
+>>>>>>>>>>>>> and am
+>>>>>>>>>>>>> not too bothered about the integration with that; I think it's pretty
+>>>>>>>>>>>>> straight
+>>>>>>>>>>>>> forward. I'm more interested in how you are handling the splitting,
+>>>>>>>>>>>>> which I
+>>>>>>>>>>>>> think is the bulk of the effort.
+>>>>>>>>>>>> Yeah, sure, thank you.
+>>>>>>>>>>>>
+>>>>>>>>>>>>> I'm hoping to get to this next week before heading out to LSF/MM the
+>>>>>>>>>>>>> following
+>>>>>>>>>>>>> week (might I see you there?)
+>>>>>>>>>>>> Unfortunately I can't make it this year. Have a fun!
+>>>>>>>>>>>>
+>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>> Yang
+>>>>>>>>>>>>
+>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>> Ryan
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Thanks,
+>>>>>>>>>>>>>> Yang
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 3/4/25 2:19 PM, Yang Shi wrote:
+>>>>>>>>>>>>>>> Changelog
+>>>>>>>>>>>>>>> =========
+>>>>>>>>>>>>>>> v3:
+>>>>>>>>>>>>>>>         * Rebased to v6.14-rc4.
+>>>>>>>>>>>>>>>         * Based on Miko's BBML2 cpufeature patch (https://
+>>>>>>>>>>>>>>> lore.kernel.org/
+>>>>>>>>>>>>>>> linux-
+>>>>>>>>>>>>>>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
+>>>>>>>>>>>>>>>           Also included in this series in order to have the complete
+>>>>>>>>>>>>>>> patchset.
+>>>>>>>>>>>>>>>         * Enhanced __create_pgd_mapping() to handle split as well
+>>>>>>>>>>>>>>> per
+>>>>>>>>>>>>>>> Ryan.
+>>>>>>>>>>>>>>>         * Supported CONT mappings per Ryan.
+>>>>>>>>>>>>>>>         * Supported asymmetric system by splitting kernel linear
+>>>>>>>>>>>>>>> mapping if
+>>>>>>>>>>>>>>> such
+>>>>>>>>>>>>>>>           system is detected per Ryan. I don't have such system
+>>>>>>>>>>>>>>> to test,
+>>>>>>>>>>>>>>> so the
+>>>>>>>>>>>>>>>           testing is done by hacking kernel to call linear mapping
+>>>>>>>>>>>>>>> repainting
+>>>>>>>>>>>>>>>           unconditionally. The linear mapping doesn't have any
+>>>>>>>>>>>>>>> block and
+>>>>>>>>>>>>>>> cont
+>>>>>>>>>>>>>>>           mappings after booting.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> RFC v2:
+>>>>>>>>>>>>>>>         * Used allowlist to advertise BBM lv2 on the CPUs which can
+>>>>>>>>>>>>>>> handle TLB
+>>>>>>>>>>>>>>>           conflict gracefully per Will Deacon
+>>>>>>>>>>>>>>>         * Rebased onto v6.13-rc5
+>>>>>>>>>>>>>>>         * https://lore.kernel.org/linux-arm-
+>>>>>>>>>>>>>>> kernel/20250103011822.1257189-1-
+>>>>>>>>>>>>>>> yang@os.amperecomputing.com/
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
+>>>>>>>>>>>>>>> yang@os.amperecomputing.com/
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Description
+>>>>>>>>>>>>>>> ===========
+>>>>>>>>>>>>>>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
+>>>>>>>>>>>>>>> break-before-make rule.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> A number of performance issues arise when the kernel linear map is
+>>>>>>>>>>>>>>> using
+>>>>>>>>>>>>>>> PTE entries due to arm's break-before-make rule:
+>>>>>>>>>>>>>>>         - performance degradation
+>>>>>>>>>>>>>>>         - more TLB pressure
+>>>>>>>>>>>>>>>         - memory waste for kernel page table
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> These issues can be avoided by specifying rodata=on the kernel
+>>>>>>>>>>>>>>> command
+>>>>>>>>>>>>>>> line but this disables the alias checks on page table permissions
+>>>>>>>>>>>>>>> and
+>>>>>>>>>>>>>>> therefore compromises security somewhat.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> With FEAT_BBM level 2 support it is no longer necessary to
+>>>>>>>>>>>>>>> invalidate the
+>>>>>>>>>>>>>>> page table entry when changing page sizes. This allows the kernel to
+>>>>>>>>>>>>>>> split large mappings after boot is complete.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> This patch adds support for splitting large mappings when FEAT_BBM
+>>>>>>>>>>>>>>> level 2
+>>>>>>>>>>>>>>> is available and rodata=full is used. This functionality will be
+>>>>>>>>>>>>>>> used
+>>>>>>>>>>>>>>> when modifying page permissions for individual page frames.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Without FEAT_BBM level 2 we will keep the kernel linear map using
+>>>>>>>>>>>>>>> PTEs
+>>>>>>>>>>>>>>> only.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> If the system is asymmetric, the kernel linear mapping may be
+>>>>>>>>>>>>>>> repainted
+>>>>>>>>>>>>>>> once
+>>>>>>>>>>>>>>> the BBML2 capability is finalized on all CPUs.  See patch #6 for
+>>>>>>>>>>>>>>> more
+>>>>>>>>>>>>>>> details.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> We saw significant performance increases in some benchmarks with
+>>>>>>>>>>>>>>> rodata=full without compromising the security features of the
+>>>>>>>>>>>>>>> kernel.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Testing
+>>>>>>>>>>>>>>> =======
+>>>>>>>>>>>>>>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB
+>>>>>>>>>>>>>>> memory and
+>>>>>>>>>>>>>>> 4K page size + 48 bit VA.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Function test (4K/16K/64K page size)
+>>>>>>>>>>>>>>>         - Kernel boot.  Kernel needs change kernel linear mapping
+>>>>>>>>>>>>>>> permission at
+>>>>>>>>>>>>>>>           boot stage, if the patch didn't work, kernel typically
+>>>>>>>>>>>>>>> didn't
+>>>>>>>>>>>>>>> boot.
+>>>>>>>>>>>>>>>         - Module stress from stress-ng. Kernel module load change
+>>>>>>>>>>>>>>> permission
+>>>>>>>>>>>>>>> for
+>>>>>>>>>>>>>>>           linear mapping.
+>>>>>>>>>>>>>>>         - A test kernel module which allocates 80% of total
+>>>>>>>>>>>>>>> memory via
+>>>>>>>>>>>>>>> vmalloc(),
+>>>>>>>>>>>>>>>           then change the vmalloc area permission to RO, this also
+>>>>>>>>>>>>>>> change
+>>>>>>>>>>>>>>> linear
+>>>>>>>>>>>>>>>           mapping permission to RO, then change it back before
+>>>>>>>>>>>>>>> vfree(). Then
+>>>>>>>>>>>>>>> launch
+>>>>>>>>>>>>>>>           a VM which consumes almost all physical memory.
+>>>>>>>>>>>>>>>         - VM with the patchset applied in guest kernel too.
+>>>>>>>>>>>>>>>         - Kernel build in VM with guest kernel which has this series
+>>>>>>>>>>>>>>> applied.
+>>>>>>>>>>>>>>>         - rodata=on. Make sure other rodata mode is not broken.
+>>>>>>>>>>>>>>>         - Boot on the machine which doesn't support BBML2.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Performance
+>>>>>>>>>>>>>>> ===========
+>>>>>>>>>>>>>>> Memory consumption
+>>>>>>>>>>>>>>> Before:
+>>>>>>>>>>>>>>> MemTotal:       258988984 kB
+>>>>>>>>>>>>>>> MemFree:        254821700 kB
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> After:
+>>>>>>>>>>>>>>> MemTotal:       259505132 kB
+>>>>>>>>>>>>>>> MemFree:        255410264 kB
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Around 500MB more memory are free to use.  The larger the
+>>>>>>>>>>>>>>> machine, the
+>>>>>>>>>>>>>>> more memory saved.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Performance benchmarking
+>>>>>>>>>>>>>>> * Memcached
+>>>>>>>>>>>>>>> We saw performance degradation when running Memcached benchmark with
+>>>>>>>>>>>>>>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB
+>>>>>>>>>>>>>>> pressure.
+>>>>>>>>>>>>>>> With this patchset we saw ops/sec is increased by around 3.5%, P99
+>>>>>>>>>>>>>>> latency is reduced by around 9.6%.
+>>>>>>>>>>>>>>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
+>>>>>>>>>>>>>>> MPKI is reduced by 28.5%.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> The benchmark data is now on par with rodata=on too.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> * Disk encryption (dm-crypt) benchmark
+>>>>>>>>>>>>>>> Ran fio benchmark with the below command on a 128G ramdisk (ext4)
+>>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>>> disk
+>>>>>>>>>>>>>>> encryption (by dm-crypt).
+>>>>>>>>>>>>>>> fio --directory=/data --random_generator=lfsr --norandommap --
+>>>>>>>>>>>>>>> randrepeat 1 \
+>>>>>>>>>>>>>>>           --status-interval=999 --rw=write --bs=4k --loops=1 --
+>>>>>>>>>>>>>>> ioengine=sync \
+>>>>>>>>>>>>>>>           --iodepth=1 --numjobs=1 --fsync_on_close=1 --
+>>>>>>>>>>>>>>> group_reporting --
+>>>>>>>>>>>>>>> thread \
+>>>>>>>>>>>>>>>           --name=iops-test-job --eta-newline=1 --size 100G
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> The IOPS is increased by 90% - 150% (the variance is high, but the
+>>>>>>>>>>>>>>> worst
+>>>>>>>>>>>>>>> number of good case is around 90% more than the best number of bad
+>>>>>>>>>>>>>>> case).
+>>>>>>>>>>>>>>> The bandwidth is increased and the avg clat is reduced
+>>>>>>>>>>>>>>> proportionally.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> * Sequential file read
+>>>>>>>>>>>>>>> Read 100G file sequentially on XFS (xfs_io read with page cache
+>>>>>>>>>>>>>>> populated).
+>>>>>>>>>>>>>>> The bandwidth is increased by 150%.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Mikołaj Lenczewski (1):
+>>>>>>>>>>>>>>>             arm64: Add BBM Level 2 cpu feature
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Yang Shi (5):
+>>>>>>>>>>>>>>>             arm64: cpufeature: add AmpereOne to BBML2 allow list
+>>>>>>>>>>>>>>>             arm64: mm: make __create_pgd_mapping() and helpers
+>>>>>>>>>>>>>>> non-void
+>>>>>>>>>>>>>>>             arm64: mm: support large block mapping when rodata=full
+>>>>>>>>>>>>>>>             arm64: mm: support split CONT mappings
+>>>>>>>>>>>>>>>             arm64: mm: split linear mapping if BBML2 is not
+>>>>>>>>>>>>>>> supported on
+>>>>>>>>>>>>>>> secondary
+>>>>>>>>>>>>>>> CPUs
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> arch/arm64/Kconfig                  | 11 +++++
+>>>>>>>>>>>>>>> arch/arm64/include/asm/cpucaps.h    | 2 +
+>>>>>>>>>>>>>>> arch/arm64/include/asm/cpufeature.h | 15 ++++++
+>>>>>>>>>>>>>>> arch/arm64/include/asm/mmu.h        | 4 ++
+>>>>>>>>>>>>>>> arch/arm64/include/asm/pgtable.h    | 12 ++++-
+>>>>>>>>>>>>>>> arch/arm64/kernel/cpufeature.c      | 95 ++++++++++++++++++++++++
+>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>> +++++++
+>>>>>>>>>>>>>>> arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++
+>>>>>>>>>>>>>>> ++++
+>>>>>>>>>>>>>>> ++++++
+>>>>>>>>>>>>>>> ++++
+>>>>>>>>>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>>>>>> +++++
+>>>>>>>>>>>>>>> +++++
+>>>>>>>>>>>>>>> ++++++++++++++++++++++-------------------
+>>>>>>>>>>>>>>> arch/arm64/mm/pageattr.c            | 37 ++++++++++++---
+>>>>>>>>>>>>>>> arch/arm64/tools/cpucaps            | 1 +
+>>>>>>>>>>>>>>>        9 files changed, 518 insertions(+), 56 deletions(-)
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>
+>>
+> 
 
