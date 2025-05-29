@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472E8226CE7;
-	Thu, 29 May 2025 13:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAC51DB551;
+	Thu, 29 May 2025 13:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525895; cv=none; b=ImYb0xgj5CPDnPYOnuswFxuVsSlZWMXwy9E0KrcLC1p7iWybsfQhLOzVCrWJus917d504zFs0jMeg8J3j8ANL37pYVjjkU56wcyYhvXRf1s2uwXsrn8soOwnqVMd+x2VDdnU8vFnc6c8GAmosPLkwx2az3b3ymn4x86SsOhLctA=
+	t=1748525936; cv=none; b=g77kZZpBmtRFFJof57U+XMG4y8IC5neNtv6uJj/i+vIyGUr2++aATuSaEbXBWUWsfv6ct+qj+BARNfFEJF0Me3cQ3EbuTeZoKju5IENtnLwzeWMZowZLSz5MyMSGvrMS5nYuJ5yn/QfIxyf9USsMw0daOqP4y/tyxFNTzFwWe5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525895; c=relaxed/simple;
-	bh=z3RAuLwIyuINQ8SMdDHWYwZ5RjodA6MXZTl5mOCso/k=;
+	s=arc-20240116; t=1748525936; c=relaxed/simple;
+	bh=fnxgv96uYDR73DM/spJxKTB+GgYx4dhdRH39JtU9Y2E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XH5NFKxdBy0LN032vkFAlLcld7uh2ecqG8+LAgi6v6YiuNyRMvrxeSCy+0ZSUasW72ll2Gh9nBPcV5c8AU8vB8RJDJOasDfp6IVbnWZ8VmJNezwLNJIPfqi+OpvRjCabLRkFBx5/qF5pjPdSSuLtBydcQqTH1vTChYdb5N+W5nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmibuwGj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WANYrwr7MRnJA7wHkkIQWvsWBD6vO0fqmbNCwDg55EfeKQ4772DKkGdSYqYcovCwv9sUjHAqWE1kfUVmIDLaeZboxbA0SlMF9hCJaWRahD4DGRvVcng4clvgr0g1B2NpVfZpoHFFPsl6aN2wMviX3gHsPGJxZ9bXbaGD7QjNpf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0o1Oo8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmibuwGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458F3C4CEED;
-	Thu, 29 May 2025 13:38:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0o1Oo8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD31C4CEE7;
+	Thu, 29 May 2025 13:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748525895;
-	bh=z3RAuLwIyuINQ8SMdDHWYwZ5RjodA6MXZTl5mOCso/k=;
+	s=k20201202; t=1748525935;
+	bh=fnxgv96uYDR73DM/spJxKTB+GgYx4dhdRH39JtU9Y2E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LmibuwGjuiKzIEiGjPseWgcbBeQzskbjxFKLY8oOw4uhgNbDmJyMzrfkEXxE0PCFO
-	 +ucsNa3TkzH2ZZv3IHHQTQ/eIszQfufcqrEK1n1oqeJdI4swTpREQsYkB2pyFVMz+8
-	 F6yUZcoEKXnzoepXFIwTGqVCrHJelMq/C6D+gVo6o44zgdRoafnFdEJfDVnWZqSQg0
-	 uBmb+TgaSBKHfDwT9/ThqdW1lgXI7nHtk4U8LXwxcbMRbTnybJDFqaa2DqhtwUuraA
-	 7dSv5tpnJs5jXy7CN/sMg4pRftuddc3KTBw36qrLV4qgpdyYxSY6l+nbRkf3n0paBl
-	 2T8/ENMFUMLvQ==
-Message-ID: <4d2eeedb-0b3e-485c-ba15-82fb78fca4c7@kernel.org>
-Date: Thu, 29 May 2025 15:38:10 +0200
+	b=q0o1Oo8CTcTekB2PEtBPcKfoLDzMvSgGelZEDChpNqEzWg+TjKMXQPLZE4cMQf5EA
+	 UXrjbUnW90MAO6tct3LQV32r2+2ZUATDPwxy1ETKhMBD255ig7dX09focEBwk/dydA
+	 aGG7rBMK60OQ2JdK+bE6AuFoSenYORzz5kMAERPcuo8AVLWqbWgFlmFEXanBip1LCW
+	 GDYDKNSB2Wt8xcofLQ7cHsrZYKrhKYxEKMXytcIsao4i2wf7zUhz/BqLWIdKxi+ktl
+	 fiIGr1r1okoJSkNYL1JRc5sW5Pvf/M2Gdi8gOfDnzBr9xSMewxadXv1FMOPWklG1kJ
+	 L2p3r1eq7t+vQ==
+Message-ID: <c0fdeecf-4a76-473d-9b66-e547d8fe9d1f@kernel.org>
+Date: Thu, 29 May 2025 15:38:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/13] arm64: dts: ti: k3-j721s2-mcu-wakeup: Disable
- "mcu_cpsw" in the SoC file
+Subject: Re: [PATCH 07/13] arm64: dts: ti: iot2050-common: Remove redundant
+ "mcu_cpsw" node status
 To: Siddharth Vadapalli <s-vadapalli@ti.com>, nm@ti.com, vigneshr@ti.com,
  kristo@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, srk@ti.com
 References: <20250529133443.1252293-1-s-vadapalli@ti.com>
- <20250529133443.1252293-14-s-vadapalli@ti.com>
+ <20250529133443.1252293-8-s-vadapalli@ti.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,20 +88,19 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250529133443.1252293-14-s-vadapalli@ti.com>
+In-Reply-To: <20250529133443.1252293-8-s-vadapalli@ti.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29/05/2025 15:34, Siddharth Vadapalli wrote:
-> Following the existing convention of disabling nodes in the SoC file and
-> enabling only the required ones in the board file, disable "mcu_cpsw" node.
-> 
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-j721s2-mcu-wakeup.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-Really all of this is fake split. One line per commit.
+> Now that the SoC file "k3-am65-mcu.dtsi" disables the "mcu_cpsw" node by
+> default, following the existing convention of disabling nodes in the SoC
+> file, remove the redundant section for disabling the "mcu_cpsw" node.
+
+It became redundant when you disabled it, so this must be part of that
+commit. Do not create redundant code with some artificial split of one
+logical work.
+
 
 Best regards,
 Krzysztof
