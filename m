@@ -1,102 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1678C17A31B;
-	Thu, 29 May 2025 16:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AEA22D4C9;
+	Thu, 29 May 2025 16:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537817; cv=none; b=UcTBeF3MkcP8WxpGD1OtdNBXSTp2rAIj5MBg6k9FQP9TeqQiDlOF0R3ve3cAu64NV+4ZtN/twPtOg9TgHbrppEGbuNQQNMlhFGO3QE/KbIS68tEuA3DSsRwlpWK+Nm7oXAtLyFv+RL/qphJ+H/Ia/42G9p3rdRLomAOHQfi7qEc=
+	t=1748537847; cv=none; b=uDKrJEHcXgXe3HLoyQ0PqyT+GZyEJRahUNiaYmRSHXz73GwaDog2rpmetxEfWtxwYJTSYBoE47cX+WCDIu7gsGyBaNaf1Qcbi7QQEbvwjuGMyaRXcIgqqMwFj2Myvn7lLcIxk99DEcn1OISb3Z3WhLyMQn4GwaPKbTZ938+7YZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537817; c=relaxed/simple;
-	bh=l42ElIx0jEFUf4x4V+Rb9grbIJ6gKs/rJeQxiQhJGQ8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Rzs3HL6gu2UeoG8mG+7EbR2vuDPdT1wl7cpHh4uYPl+s0nX+lrXiQN+0OI9rrfIPpxbslFjP9rISyNbi1pI4azgyAJKG4/8QWtIzZhY+Itf95aqnMmMSZunM2SvpOw/cACblKk0+8yKaAImtGPgfPbBF0Z05k73kApWkxYC7cX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jojQbmXj; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748537847; c=relaxed/simple;
+	bh=nTb8EzIrvGiW+oT3lk+HKRBUzG7cl6yVbYX2HGFS1wY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LKCq01mz1Wf6m67rBqFMpJj/bBJEyVK+FCQGIGFnQF4Eex0NDw1JqXwVWHWImAvjgqsRO5jgjSJJED9VjDkw9IczpN0I09KSUXkANrwQhtaNDd3KWe7EofJEZ5GFW46K35ixn5UuxlJjPo9wqSPZRHHvSPf0LF69hQm02iskd/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocydWOce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jojQbmXj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748537816; x=1780073816;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=l42ElIx0jEFUf4x4V+Rb9grbIJ6gKs/rJeQxiQhJGQ8=;
-  b=jojQbmXjd8mZ2GbrSxCDIUl6HXEtYZi4TwPI4m8HARWLSWT3DQWQOo1/
-   ZakYLUEsuQ3q+ycPpUIWVaz6rA0/1QlIQklQg/KlB793zGv7ixbvo8m/s
-   8tNCISjrYWulx6bgNlXTYJ18KGvnt8PXXoxcdvkFXTLhm67kMR2fVDC1W
-   opNUGvc6eRszR15M3sfFNzNFX7A6sYeW31gkIqxCbkUAVloZhzjgOSxio
-   59kXR7uyx83Wo3lfxVVIPX2MJcMFMnK0qV2fb1lIY3VAAZ35zCmK9Gtyv
-   dBkW7hekDOgVrWwmgSrJxKmkNyKx39vMT6KVQrkYFTnyKpOAQGmPBAxfp
-   Q==;
-X-CSE-ConnectionGUID: 1xXCtcfDR9u7qGcxqmACVA==
-X-CSE-MsgGUID: jdWP0TaeRm+jDVYIUBWzWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50536714"
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="50536714"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 09:56:55 -0700
-X-CSE-ConnectionGUID: z5gM/RERTCSYINdK5BK51A==
-X-CSE-MsgGUID: FDEaArnpRmW3F9KJLpvYfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="148904724"
-Received: from jjgreens-desk15.amr.corp.intel.com (HELO vcostago-mobl3) ([10.124.222.186])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 09:56:55 -0700
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Yi Sun <yi.sun@intel.com>, dave.jiang@intel.com,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: yi.sun@intel.com, xueshuai@linux.alibaba.com, gordon.jin@intel.com
-Subject: Re: [PATCH 1/2] dmaengine: idxd: Remove improper idxd_free
-In-Reply-To: <20250529153431.1160067-1-yi.sun@intel.com>
-References: <20250529153431.1160067-1-yi.sun@intel.com>
-Date: Thu, 29 May 2025 09:56:53 -0700
-Message-ID: <87r0079wyy.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocydWOce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3891FC4CEE7;
+	Thu, 29 May 2025 16:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748537847;
+	bh=nTb8EzIrvGiW+oT3lk+HKRBUzG7cl6yVbYX2HGFS1wY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ocydWOce2vgQ01StCxi2p8JIr5rtxb48tv1V7H37/y3VwgQFMz/G/OC8MgZFiAdK5
+	 5sLWjC4vr7ThGNaftjRtqwxLh1KmpBBcTMf0i+AzWSa31JT55xS+wPOw5oDF3DXVol
+	 +ktqh8a1R+ROKDCVXuT7JR64GyottFxcT+kVzap4ZJkhIqCaTpPsTTFd0I0AIev3hK
+	 lucd3K9DUfRO+vtFpXtBcn7uDeTY7FnrI20xUBr1wGCZv0Kykw2nAVn8voYXH0Ykv9
+	 tCNTNoIZAwJpB2bPTqrFoLra/CEEa9dCSMMz016V7PzpTxb0l0pKkNWyY6hOOKxwhU
+	 ryg4iHafOGHXw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uKgZI-001cmR-Ja;
+	Thu, 29 May 2025 17:57:24 +0100
+Date: Thu, 29 May 2025 17:57:24 +0100
+Message-ID: <865xhje4nf.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 05/11] arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
+In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-5-a01a9baad06a@linaro.org>
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
+	<20250529-james-perf-feat_spe_eft-v2-5-a01a9baad06a@linaro.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi,
-
-Yi Sun <yi.sun@intel.com> writes:
-
-> The put_device() call can be asynchronous cleanup via schedule_delayed_work
-> when CONFIG_DEBUG_KOBJECT_RELEASE is set. This results in a use-after-free
-> failure during module unloading if invoking idxd_free() immediately
-> afterward.
->
-
-I think that adding the relevant part of the log would be helpful. (I am
-looking at either a similar, or this exact problem, so at least to me it
-would be helpful)
-
-> Removes the improper call idxd_free() to prevent potential memory
-> corruption.
-
-Thinking if it would be worth a Fixes: tag.
-
->
-> Signed-off-by: Yi Sun <yi.sun@intel.com>
->
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index 760b7d81fcd8..504aca0fd597 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -1324,7 +1324,6 @@ static void idxd_remove(struct pci_dev *pdev)
->  	idxd_cleanup(idxd);
->  	pci_iounmap(pdev, idxd->reg_base);
->  	put_device(idxd_confdev(idxd));
-> -	idxd_free(idxd);
->  	pci_disable_device(pdev);
->  }
+On Thu, 29 May 2025 12:30:26 +0100,
+James Clark <james.clark@linaro.org> wrote:
+> 
+> SPE data source filtering (optional from Armv8.8) requires that traps to
+> the filter register PMSDSFR be disabled. Document the requirements and
+> disable the traps if the feature is present.
+> 
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  Documentation/arch/arm64/booting.rst | 11 +++++++++++
+>  arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+> index dee7b6de864f..abd75085a239 100644
+> --- a/Documentation/arch/arm64/booting.rst
+> +++ b/Documentation/arch/arm64/booting.rst
+> @@ -404,6 +404,17 @@ Before jumping into the kernel, the following conditions must be met:
+>      - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
+>      - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
 >  
-> -- 
-> 2.43.0
->
+> +  For CPUs with SPE data source filtering (FEAT_SPE_FDS):
+> +
+> +  - If EL3 is present:
+> +
+> +    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
+> +
+> +  - If the kernel is entered at EL1 and EL2 is present:
+> +
+> +    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+> +    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
+> +
+>    For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
+>  
+>    - If the kernel is entered at EL1 and EL2 is present:
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index f6d72ca03133..6d0d8c25e912 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -279,6 +279,20 @@
+>  	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
+>  	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
+>  .Lskip_pmuv3p9_\@:
+> +	mrs	x1, id_aa64dfr0_el1
+> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+> +	/* If SPE is implemented, */
+> +	cmp	x1, #ID_AA64DFR0_EL1_PMSVer_IMP
+> +	b.lt	.Lskip_spefds_\@
+> +	/* we can read PMSIDR and */
+> +	mrs_s	x1, SYS_PMSIDR_EL1
+> +	and	x1, x1,  #(1 << PMSIDR_EL1_FDS_SHIFT)
+
+Use PMSIDR_EL1_FDS directly, just like you do for the other register
+fields.
+
+	M.
 
 -- 
-Vinicius
+Without deviation from the norm, progress is not possible.
