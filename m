@@ -1,47 +1,46 @@
-Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2AC219302;
-	Thu, 29 May 2025 09:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74965217F2E;
+	Thu, 29 May 2025 09:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748510722; cv=none; b=EsFv9QsCsKvqx0TuxbPwqJ7LJRfzdFwmEMsAIl1KjyX/kI8A/MYO+hKXMxcytLz04LITVooMlCnL+iRwFj+CNn53nFZZuTzdOdyul7QVjgtJi23DZCrVHlytN0/2v91PShzHIE8tlRgqq95WoqZhGuOR9WoXcpK8AzzjDCoIv3I=
+	t=1748510760; cv=none; b=TLABmQk17Wci71l1swGjLvTGAReMeXBni8g3t1RwnjcfMPhqWE/rBfhMgyVw2bkAu5+v0W5NAnmeNislPc82SBGjEhVmqElptfHdoV03Xv9Oa6WkTobu3fVJAP/nGosvAA2/IWefwsLyFv0OE8Cw6ujygo2kOXcvLcKS/rwN2m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748510722; c=relaxed/simple;
-	bh=9c2gFsqymeTMgjQSpuDxPYXz1vt/sj891vlHdiB3At8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fM3qFJhBfU7uc/F+TbxzgsCcwyl/Y6/rxH9Td1uVGV8g54Zy954YXe+4pjmmfagWolXeqYWONsP+LKk4VJe1EokgPuA6xqyei2AD/SHsQze4DhYj3R7s1RTm+nZxcwDzRZ1v61YPFKGwjC5iWGLgrLCaHEN/ci8tElsmhMXw4eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-	by ni.piap.pl (Postfix) with ESMTPS id CC1DBC3EEAC9;
-	Thu, 29 May 2025 11:25:08 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl CC1DBC3EEAC9
-From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To: =?utf-8?Q?S=C3=A9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>,  Rui Miguel Silva <rmfrfs@gmail.com>,
-  Martin Kepplinger <martink@posteo.de>,  Purism Kernel Team
- <kernel@puri.sm>,  Mauro Carvalho Chehab <mchehab@kernel.org>,  Shawn Guo
- <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
- <festevam@gmail.com>,  <linux-media@vger.kernel.org>,
-  <imx@lists.linux.dev>,  <linux-arm-kernel@lists.infradead.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Enable MIPI filtering by DT on i.MX8M*
-In-Reply-To: <65670a02-e217-4d0f-955d-d13ca0240819@armadeus.com>
- (=?utf-8?Q?=22S=C3=A9bastien?=
-	Szymanski"'s message of "Fri, 23 May 2025 17:34:01 +0200")
-References: <m3h61u9jy2.fsf@t19.piap.pl>
-	<20250509103733.GE28896@pendragon.ideasonboard.com>
-	<m3o6vn8np5.fsf@t19.piap.pl>
-	<iegnn5xoosqpk52hvipcr73aliwhqtsq6r6ctvt5756bhy6yen@rqcdongb7fdf>
-	<m31psg97dy.fsf@t19.piap.pl> <m3plfz7io0.fsf@t19.piap.pl>
-	<65670a02-e217-4d0f-955d-d13ca0240819@armadeus.com>
-Sender: khalasa@piap.pl
-Date: Thu, 29 May 2025 11:25:08 +0200
-Message-ID: <m3v7pj6a6j.fsf@t19.piap.pl>
+	s=arc-20240116; t=1748510760; c=relaxed/simple;
+	bh=TPf17Srkj75OPuqtsL9XiNFW7BhWVGpAxkRKv9nx2DY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgfiqMwAJzu4z0q04EluiRqfwbamS9lxupQTmZuu2ALWGTRZWrnsUz+ZuduILQxrOf8uAydmxba4Iq3rV66CCuhqeN1B68QCQ51lbZkX8Bfmg/UchOVbM8d9df183cZdWZxO5xvz3VaS/JfDNR3M3/aP9WW/PBB2xyVZ0SI/49o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gzPkHh0J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gzPkHh0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D00BC4CEE7;
+	Thu, 29 May 2025 09:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748510759;
+	bh=TPf17Srkj75OPuqtsL9XiNFW7BhWVGpAxkRKv9nx2DY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gzPkHh0JgrDi8egvrx1TCx/NWCB+5MU+3/RKeh8pSPPdQsoj//UjplxYGfLBx+ztb
+	 2dfpKHuUjWLY+fzABF9VTpM6GZjBn452ScDpxCSlEy1ohd0u8Q/yvPD9ULwIZ9hgdH
+	 ZT9gJ47X6WU9LFLICUMkZ0SepFXB1tdrLh1YMfufI9ATy6Eo7Nxk43dEtbJbcgNNEh
+	 XqotuxKJvFhvxv6zg7LUHOAntWp1mj/DLT4PE15RPj+MY/wls9dN7IKMNyBM5Oj3zn
+	 9gaJk3suO4Y2YUvjqX+kkTfk55fcpVR4YlSCsNv4K+hJI6AoqECyo3jT49+9+z+uvT
+	 iLdVlYbYAMtIA==
+Date: Thu, 29 May 2025 11:25:57 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Job Sava <jsava@criticallink.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Julien Panis <jpanis@baylibre.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
+	jcormier@criticallink.com
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: Add power-button option for TI
+ TPS6594 PMIC
+Message-ID: <20250529-wise-tremendous-stork-a7d091@kuoka>
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+ <20250520-linux-stable-tps6594-pwrbutton-v1-1-0cc5c6e0415c@criticallink.com>
+ <20250521-wandering-tested-porpoise-acbef7@kuoka>
+ <CAKMwjwTP=xSsX3UuK02sKbXWaU7y-ErytNYCL_P0UveDytQW2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,54 +48,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAKMwjwTP=xSsX3UuK02sKbXWaU7y-ErytNYCL_P0UveDytQW2A@mail.gmail.com>
 
-Hi S=C3=A9bastien,
+On Fri, May 23, 2025 at 09:46:49AM GMT, Job Sava wrote:
+> On Wed, May 21, 2025 at 6:01=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.=
+org> wrote:
+> >
+> > On Tue, May 20, 2025 at 01:43:36PM GMT, Job Sava wrote:
+> > > The TPS6594 power-button option permits users to enter STANDBY or
+> > > ACTIVE state by a push, release, or short push button request.
+> > >
+> > > Signed-off-by: Job Sava <jsava@criticallink.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 15 +++++++++=
+++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/=
+Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> > > index 6341b6070366..a40808fd2747 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> > > +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> > > @@ -37,6 +37,21 @@ properties:
+> > >        device on the SPMI bus, and the secondary PMICs are the target=
+ devices
+> > >        on the SPMI bus.
+> > >
+> > > +  ti,power-button:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      Optional property that sets the EN/PB/VSENSE pin to be a
+> > > +      power-button.
+> > > +      TPS6594 has a multipurpose pin called EN/PB/VSENSE that can be=
+ either
+> > > +      1. EN in which case it functions as an enable pin.
+> > > +      2. VSENSE which compares the voltages and triggers an automatic
+> > > +      on/off request.
+> > > +      3. PB in which case it can be configured to trigger an interru=
+pt
+> > > +      to the SoC.
+> > > +      ti,power-button reflects the last one of those options
+> > > +      where the board has a button wired to the pin and triggers
+> > > +      an interrupt on pressing it.
+> >
+> > Don't you need to handle two other cases as well? I assume you copied
+> > this from the other binding, but all three options are valid?
+> >
+> > Best regards,
+> > Krzysztof
+> >
+> Hello Krzysztof,
+>=20
+> Thank you for your response!
+>=20
+> I agree that the other two cases are valid options. However, for this
+> particular patch series, they may be out of scope. The primary goal of
+> this patch is to enable push-button functionality, rather than
+> addressing the VSENSE or EN modes.
 
-S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com> writes:
+Binding should be complete, because if you design this as bool, it
+cannot be later changed to three-state (enum).
 
-> On i.MX8MM mipi_csi is at 32e30000. NXP kernel (6.12.3) with ov5640 camer=
-a:
->
-> # devmem 0x32E30000 32
-> 0x03060301
+I don't know if the EN and VSENSE modes are anyhow useful, maybe people
+interested in this hardware should say.
 
-Thanks a lot. So at least the version register is the same as on
-i.MX8MP.
-I wonder if you could test if the CSIC possibly supports filtering by
-DT.
+Best regards,
+Krzysztof
 
-How would such a test be performed?
-
-Maybe: while streaming (otherwise the system may lock up):
-
-I assume 'devmem 0x32E30004 32' shows 0x4305.
-# devmem 0x32E30004 32 0x14705
-
-and:
-- does it change anything? If the streaming stops, you may try
-  restarting and writing with devmem again - writing to this register
-  directly frequently stops streaming on my 8MP.
-
-- what does the register contain after write?
-
-- you may also try:
-  # devmem 0x32E30004 32 0xfffffffd
-  # devmem 0x32E30004 32
-
-On i.MX8MP the above returns:
-# ./devmem write32 0x32Ex0004 0xfffffffd
-# ./devmem read32 0x32Ex0004
-0x0000FF05
-(and the streaming still works, usually).
-
-The above is not a very good test, I admit, but it may show 8MM really
-doesn't have those/that bit.
-
-TIA.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
