@@ -1,514 +1,274 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6579A19E968;
-	Thu, 29 May 2025 08:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F22F2F
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748508331; cv=none; b=QGBsJPmI+GDHgXZTNEKw1zzRqIzQ4HuS+mYmw2SZF7+yAHDE810eepPMu9t4kDrEDX5bWkvlLxSiuN4hjw4NgNLyzwpcMXRrkoaCyghbYiKqjrilrNBu5Vvno6gkPTPK4+Dz2wvhVJ3nHrsCu5M7gxWr41oUmBpzEyCKrcXjreQ=
+	t=1748508390; cv=none; b=mcTjF2RLG/mmOkM4bXOhkI7DyBe3r8ShuBjQZJZYp6Jnoqd/+5SCiIcWnWnexWze0hIm9kiV5vViK1m7qpj7S7G9wsmA82nfnb7lACB+B3rLpOz3HUzgJnmmjmjs3uhpIEGv4o9ZvirmodLuS1Q1lES9GgI9KkwS9kXhYTeFHgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748508331; c=relaxed/simple;
-	bh=HGP+GxmLpRNBFMxG04enaO8zcOs703mt/ytGfR8mwTE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eelIu8qBD6d/cGW2LLJJoL5kuV8kw/0jfxeqC0udN8hBOKIKI9ec/CUR7D1PZNkjIgNadA4TrBWvPKEGiibc6z+Kw5mOjF2mhlaMNr+81Uh4zbhXBs4H0D+LET5pK/TVhCO7zY8jWlAz1eyq40ZfQsDC0rmFCJTLEpLL+HM2QMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7Kh14wmfz6D9Ln;
-	Thu, 29 May 2025 16:45:21 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8452E14037D;
-	Thu, 29 May 2025 16:45:25 +0800 (CST)
-Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
- (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 10:45:24 +0200
-Date: Thu, 29 May 2025 09:45:19 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Marc Zyngier
-	<maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff
-	<sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, Mark Rutland <mark.rutland@arm.com>, Jiri
- Slaby <jirislaby@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 21/26] irqchip/gic-v5: Add GICv5 IRS/SPI support
-Message-ID: <20250529094519.0000460e.alireza.sanaee@huawei.com>
-In-Reply-To: <aDgc7URS+jPBlfQX@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
-	<20250513-gicv5-host-v4-21-b36e9b15a6c3@kernel.org>
-	<20250528170318.00001dd8@huawei.com>
-	<aDgc7URS+jPBlfQX@lpieralisi>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748508390; c=relaxed/simple;
+	bh=2jDkw5oG8xAqINCZ3MIulPvpGnvIBB5NdGyoCXPHoRA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BbtBtmj8YbL+l9LV9mF2UowvWS5D9eDjANDMT8XhcTP03sivcTRy3BAtICsddDcx24u7CsLAemkbJwWavz9K7hdxWo7p4iB60TWv7mrgrZPgddeNgq9aPGJ060rR54Y3uPyxFNeyH4wteku5q50hmIyDrECIJU+OBXbubJsghUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=QVon60aX; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QVon60aX"
+X-UUID: 656755b43c6911f0813e4fe1310efc19-20250529
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Qrg6t/3pDIIo/J14HuIjlYHkLPkRQL268S0ybavfqxc=;
+	b=QVon60aX8hWZUIEu60EMIMCb/hH0jtbLxwSxh7kacMHXnlrB8FA743CWf8WOLECJkwIwL2Dp55yFZlun9P1Jl+PfcBVkYWJ8GGbr9v5h16R4HGRgDxyypdMB9EPnuj2dsodQdzy7zqwlvsUA2Lr9QMiB7aoSRW0eaZEyXa5zZSE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:4bdc2127-7fe2-454f-9dab-4ef66bae1f98,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:0ef645f,CLOUDID:b3991b58-abad-4ac2-9923-3af0a8a9a079,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 656755b43c6911f0813e4fe1310efc19-20250529
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 260664174; Thu, 29 May 2025 16:46:21 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 29 May 2025 16:46:05 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 29 May 2025 16:46:18 +0800
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: kuyo chang <kuyo.chang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 1/1] stop_machine: Fix migrate_swap() vs. balance_push() racing
+Date: Thu, 29 May 2025 16:43:35 +0800
+Message-ID: <20250529084614.885184-1-kuyo.chang@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-On Thu, 29 May 2025 10:38:05 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+From: kuyo chang <kuyo.chang@mediatek.com>
 
-> On Wed, May 28, 2025 at 05:03:18PM +0100, Jonathan Cameron wrote:
-> > On Tue, 13 May 2025 19:48:14 +0200
-> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> >   
-> > > The GICv5 Interrupt Routing Service (IRS) component implements
-> > > interrupt management and routing in the GICv5 architecture.
-> > > 
-> > > A GICv5 system comprises one or more IRSes, that together
-> > > handle the interrupt routing and state for the system.
-> > > 
-> > > An IRS supports Shared Peripheral Interrupts (SPIs), that are
-> > > interrupt sources directly connected to the IRS; they do not
-> > > rely on memory for storage. The number of supported SPIs is
-> > > fixed for a given implementation and can be probed through IRS
-> > > IDR registers.
-> > > 
-> > > SPI interrupt state and routing are managed through GICv5
-> > > instructions.
-> > > 
-> > > Each core (PE in GICv5 terms) in a GICv5 system is identified with
-> > > an Interrupt AFFinity ID (IAFFID).
-> > > 
-> > > An IRS manages a set of cores that are connected to it.
-> > > 
-> > > Firmware provides a topology description that the driver uses
-> > > to detect to which IRS a CPU (ie an IAFFID) is associated with.
-> > > 
-> > > Use probeable information and firmware description to initialize
-> > > the IRSes and implement GICv5 IRS SPIs support through an
-> > > SPI-specific IRQ domain.
-> > > 
-> > > The GICv5 IRS driver:
-> > > 
-> > > - Probes IRSes in the system to detect SPI ranges
-> > > - Associates an IRS with a set of cores connected to it
-> > > - Adds an IRQchip structure for SPI handling
-> > > 
-> > > SPIs priority is set to a value corresponding to the lowest
-> > > permissible priority in the system (taking into account the
-> > > implemented priority bits of the IRS and CPU interface).
-> > > 
-> > > Since all IRQs are set to the same priority value, the value
-> > > itself does not matter as long as it is a valid one.
-> > > 
-> > > Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> > > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> > > Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-> > > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> > > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > > Cc: Marc Zyngier <maz@kernel.org>  
-> > 
-> > A few comments inline. Mostly around of cpu phandle parsing.
-> > +CC Ali as there is a comment on his SMT DT patch set inline.
-> > 
-> >   
-> > > ---
-> > >  arch/arm64/include/asm/sysreg.h    |  36 +++
-> > >  drivers/irqchip/Makefile           |   2 +-
-> > >  drivers/irqchip/irq-gic-v5-irs.c   | 433
-> > > +++++++++++++++++++++++++++++++++++++
-> > > drivers/irqchip/irq-gic-v5.c       | 341
-> > > +++++++++++++++++++++++++++-- include/linux/irqchip/arm-gic-v5.h
-> > > | 130 +++++++++++ 5 files changed, 920 insertions(+), 22
-> > > deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/include/asm/sysreg.h
-> > > b/arch/arm64/include/asm/sysreg.h index
-> > > 9d28d408f9c6df24526dd8ecbf3c7d920246b22d..fbac3b6f056ae6fafd64457600d45808e4904ae3
-> > > 100644 --- a/arch/arm64/include/asm/sysreg.h +++
-> > > b/arch/arm64/include/asm/sysreg.h @@ -1082,14 +1082,50 @@
-> > >  /*
-> > >   * Definitions for GICv5 instructions
-> > >   */  
-> >   
-> > >  
-> > > +/* Shift and mask definitions for GIC CDAFF */  
-> > 
-> > Similar comment. Mask definitions seems more accurate to me.  
-> 
-> Fixed.
-> 
-> > > +/* Shift and mask definitions for GIC CDDIS */
-> > > +#define GICV5_GIC_CDDIS_TYPE_MASK	GENMASK_ULL(31, 29)
-> > > +#define GICV5_GIC_CDDIS_TYPE(r)
-> > > FIELD_GET(GICV5_GIC_CDDIS_TYPE_MASK, r) +#define
-> > > GICV5_GIC_CDDIS_ID_MASK		GENMASK_ULL(23, 0)
-> > > +#define GICV5_GIC_CDDIS_ID(r)
-> > > FIELD_GET(GICV5_GIC_CDDIS_ID_MASK, r)  
-> > 
-> > Similar to earlier comment. I'm not sure the shortened forms are
-> > worth the bother.  
-> 
-> Same as previous replies.
-> 
-> > > diff --git a/drivers/irqchip/irq-gic-v5-irs.c
-> > > b/drivers/irqchip/irq-gic-v5-irs.c new file mode 100644
-> > > index
-> > > 0000000000000000000000000000000000000000..8c448487b909c7d3b4e1f95a5bc02b741ecc40b3
-> > > --- /dev/null +++ b/drivers/irqchip/irq-gic-v5-irs.c
-> > > @@ -0,0 +1,433 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > +/*
-> > > + * Copyright (C) 2024-2025 ARM Limited, All Rights Reserved.
-> > > + */
-> > > +
-> > > +#define pr_fmt(fmt)	"GICv5 IRS: " fmt
-> > > +
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > > +
-> > > +#include <linux/irqchip.h>
-> > > +#include <linux/irqchip/arm-gic-v5.h>  
-> > 
-> > 
-> >   
-> > > +int gicv5_spi_irq_set_type(struct irq_data *d, unsigned int type)
-> > > +{
-> > > +	struct gicv5_irs_chip_data *irs_data = d->chip_data;
-> > > +	u32 selr, cfgr;
-> > > +	bool level;
-> > > +	int ret;
-> > > +
-> > > +	switch (type) {
-> > > +	case IRQ_TYPE_EDGE_RISING:
-> > > +	case IRQ_TYPE_EDGE_FALLING:
-> > > +		level = false;
-> > > +		break;
-> > > +	case IRQ_TYPE_LEVEL_HIGH:
-> > > +	case IRQ_TYPE_LEVEL_LOW:
-> > > +		level = true;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	guard(raw_spinlock)(&irs_data->spi_config_lock);
-> > > +
-> > > +	selr = FIELD_PREP(GICV5_IRS_SPI_SELR_ID, d->hwirq);
-> > > +	irs_writel_relaxed(irs_data, selr, GICV5_IRS_SPI_SELR);
-> > > +	ret = gicv5_irs_wait_for_spi_op(irs_data);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	cfgr = FIELD_PREP(GICV5_IRS_SPI_CFGR_TM, level);
-> > > +
-> > > +	irs_writel_relaxed(irs_data, cfgr, GICV5_IRS_SPI_CFGR);
-> > > +	ret = gicv5_irs_wait_for_spi_op(irs_data);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return 0;  
-> > 	return gicv5_irq_wait_for_spi_op()
-> > 
-> > unless more code turns up here in a later patch.  
-> 
-> Ok.
-> 
-> >   
-> > > +}  
-> >   
-> > > +
-> > > +static void __init gicv5_irs_init_bases(struct
-> > > gicv5_irs_chip_data *irs_data,
-> > > +					void __iomem *irs_base,
-> > > +					struct fwnode_handle
-> > > *handle) +{
-> > > +	struct device_node *np = to_of_node(handle);
-> > > +	u32 cr0, cr1;
-> > > +
-> > > +	irs_data->fwnode = handle;
-> > > +	irs_data->irs_base = irs_base;
-> > > +
-> > > +	if (of_property_read_bool(np, "dma-noncoherent")) {
-> > > +		/*
-> > > +		 * A non-coherent IRS implies that some cache
-> > > levels cannot be
-> > > +		 * used coherently by the cores and GIC. Our
-> > > only option is to mark
-> > > +		 * memory attributes for the GIC as
-> > > non-cacheable; by default,
-> > > +		 * non-cacheable memory attributes imply
-> > > outer-shareable
-> > > +		 * shareability, the value written into
-> > > IRS_CR1_SH is ignored.
-> > > +		 */
-> > > +		cr1 = FIELD_PREP(GICV5_IRS_CR1_VPED_WA,
-> > > GICV5_NO_WRITE_ALLOC)	|  
-> > As per earlier comments is this less clear as:
-> > 		cr1 = FIELD_PREP(GICV5_IRS_CR1_VPED_WA, 0)	|
-> > 
-> > To me, seems fine but up to you.
-> >   
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VPED_RA,
-> > > GICV5_NO_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMD_WA,
-> > > GICV5_NO_WRITE_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMD_RA,
-> > > GICV5_NO_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VPET_RA,
-> > > GICV5_NO_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMT_RA,
-> > > GICV5_NO_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IST_WA,
-> > > GICV5_NO_WRITE_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IST_RA,
-> > > GICV5_NO_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IC,
-> > > GICV5_NON_CACHE)		|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_OC,
-> > > GICV5_NON_CACHE);
-> > > +			irs_data->flags |=
-> > > IRS_FLAGS_NON_COHERENT;
-> > > +	} else {
-> > > +		cr1 = FIELD_PREP(GICV5_IRS_CR1_VPED_WA,
-> > > GICV5_WRITE_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VPED_RA,
-> > > GICV5_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMD_WA,
-> > > GICV5_WRITE_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMD_RA,
-> > > GICV5_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VPET_RA,
-> > > GICV5_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_VMT_RA,
-> > > GICV5_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IST_WA,
-> > > GICV5_WRITE_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IST_RA,
-> > > GICV5_READ_ALLOC)	|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_IC,
-> > > GICV5_WB_CACHE)		|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_OC,
-> > > GICV5_WB_CACHE)		|
-> > > +			FIELD_PREP(GICV5_IRS_CR1_SH,
-> > > GICV5_INNER_SHARE);
-> > > +	}
-> > > +
-> > > +	irs_writel_relaxed(irs_data, cr1, GICV5_IRS_CR1);
-> > > +
-> > > +	cr0 = FIELD_PREP(GICV5_IRS_CR0_IRSEN, 0x1);
-> > > +	irs_writel_relaxed(irs_data, cr0, GICV5_IRS_CR0);
-> > > +	gicv5_irs_wait_for_idle(irs_data);
-> > > +}
-> > > +
-> > > +static int __init gicv5_irs_of_init_affinity(struct device_node
-> > > *node,
-> > > +					     struct
-> > > gicv5_irs_chip_data *irs_data,
-> > > +					     u8 iaffid_bits)
-> > > +{
-> > > +	/*
-> > > +	 * Detect IAFFID<->CPU mappings from the device tree and
-> > > +	 * record IRS<->CPU topology information.
-> > > +	 */
-> > > +	u16 iaffid_mask = GENMASK(iaffid_bits - 1, 0);
-> > > +	u16 *iaffids __free(kfree) = NULL;  
-> > 
-> > See comments in cleanup.h.  Linus has been fairly clear he doesn't
-> > like separating the constructor and destructor like this - just
-> > declare iaffids where you construct it.  
-> 
-> Right.
-> 
-> > > +	int ret, i, ncpus, niaffids;
-> > > +  
-> >   
-> > > +	ncpus = of_property_count_elems_of_size(node, "cpus",
-> > > sizeof(u32));  
-> > 
-> > cpus is a phandle? I think this is going to run into current
-> > discussion on what phandles to CPUs on an SMT system look like (Rob
-> > Herring and Mark Rutland have different views)
-> > https://lore.kernel.org/linux-arm-kernel/20250512080715.82-1-alireza.sanaee@huawei.com/  
-> 
-> I will make sure to steer clear of that then ;-), whatever the outcome
-> the current "cpus" bindings should continue to work as-is, right ?
-> 
-> > Anyhow this doesn't look right to me.
-> > I think it should be of_count_phandle_with_args()   
-> 
-> Aren't they equivalent in functionality if
-> of_count_phandle_with_args() cells_name == NULL ?
-> 
-> I will update the code but if the functionality provided is not the
-> same there is kernel code to fix (it is an example, there are others):
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/irqchip/irq-apple-aic.c?h=v6.15#n903
+Hi guys,
 
-I think this is fine, as long as we have always len(reg) == 1 which
-is our current case in the dt.
-> 
-> > Potentially with cpu-cells as the argument depending on how that
-> > thread goes.
-> >   
-> > > +	if (ncpus < 0)
-> > > +		return -EINVAL;
-> > > +
-> > > +	niaffids = of_property_count_elems_of_size(node,
-> > > "arm,iaffids",
-> > > +						   sizeof(u16));
-> > > +	if (niaffids != ncpus)
-> > > +		return -EINVAL;
-> > > +  
-> > 	u16 *iaffids __free(kfree) = kcalloc(niaffids,
-> > sizeof(*iaffids), GFP_KERNEL);  
-> 
-> Maybe I should rewrite this in Rust :)
-> 
-> > > +	iaffids = kcalloc(niaffids, sizeof(*iaffids),
-> > > GFP_KERNEL);
-> > > +	if (!iaffids)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	ret = of_property_read_u16_array(node, "arm,iaffids",
-> > > iaffids, niaffids);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	for (i = 0; i < ncpus; i++) {
-> > > +		struct device_node *cpu_node;
-> > > +		u32 cpu_phandle;
-> > > +		int cpu;
-> > > +
-> > > +		if (of_property_read_u32_index(node, "cpus", i,
-> > > &cpu_phandle))
-> > > +			continue;
-> > > +
-> > > +		cpu_node = of_find_node_by_phandle(cpu_phandle);
-> > >  
-> > 
-> > 		cpu_node = of_parse_phandle(node, "cpus", i);
-> > 
-> > not work here?  
-> 
-> I think it would.
-> 
-> >    
-> > > +		if (WARN_ON(!cpu_node))
-> > > +			continue;
-> > > +
-> > > +		cpu = of_cpu_node_to_id(cpu_node);  
-> > 
-> > If this is all you want then Ali's series gives you a helper
-> > 
-> > 		cpu = of_cpu_phandle_to_id(node, &cpu_node, i);
-> > 
-> > Though even better to have a helper that allows
-> > 		cpu = of_cpu_phandle_to_id(node, NULL, i); and
-> > handles the node put as internally.
-> > 
-> > Ali, any reason we can't do that?  Seems to be a fairly common
-> > pattern.
-> > 
-> > 
-> >    
-> > > +		of_node_put(cpu_node);
-> > > +		if (WARN_ON(cpu < 0))
-> > > +			continue;
-> > > +
-> > > +		if (iaffids[i] & ~iaffid_mask) {
-> > > +			pr_warn("CPU %d iaffid 0x%x exceeds IRS
-> > > iaffid bits\n",
-> > > +				cpu, iaffids[i]);
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		per_cpu(cpu_iaffid, cpu).iaffid = iaffids[i];
-> > > +		per_cpu(cpu_iaffid, cpu).valid = true;
-> > > +
-> > > +		/* We also know that the CPU is connected to
-> > > this IRS */
-> > > +		per_cpu(per_cpu_irs_data, cpu) = irs_data;
-> > > +	}
-> > > +
-> > > +	return ret;
-> > > +}  
-> >   
-> > > diff --git a/drivers/irqchip/irq-gic-v5.c
-> > > b/drivers/irqchip/irq-gic-v5.c index
-> > > a50982e5d98816d88e4fca37cc0ac31684fb6c76..e58ff345dbfaf840b17ad63c4fdb6c227137cf4b
-> > > 100644 --- a/drivers/irqchip/irq-gic-v5.c +++
-> > > b/drivers/irqchip/irq-gic-v5.c
-> > >
-> > > +
-> > > +static int gicv5_spi_irq_set_irqchip_state(struct irq_data *d,
-> > > +					   enum
-> > > irqchip_irq_state which,
-> > > +					   bool val)
-> > > +{  
-> > 
-> > Similar to previous, I'd call the state parameter state rather than
-> > val.  
-> 
-> Right.
-> 
-> > > diff --git a/include/linux/irqchip/arm-gic-v5.h
-> > > b/include/linux/irqchip/arm-gic-v5.h index
-> > > 4ff0ba64d9840c3844671f7850bb3d81ba2eb1b6..187af307de9170d9569898cb1e50de376a38bd0a
-> > > 100644 --- a/include/linux/irqchip/arm-gic-v5.h +++
-> > > b/include/linux/irqchip/arm-gic-v5.h @@ -5,6 +5,8 @@
-> > >  #ifndef __LINUX_IRQCHIP_ARM_GIC_V5_H
-> > >  #define __LINUX_IRQCHIP_ARM_GIC_V5_H  
-> >   
-> > >  
-> > > +#define GICV5_NO_READ_ALLOC		0b0
-> > > +#define GICV5_READ_ALLOC		0b1
-> > > +#define GICV5_NO_WRITE_ALLOC		0b0
-> > > +#define GICV5_WRITE_ALLOC		0b1  
-> > 
-> > Given these are being written to fields called _RA and _WA
-> > so the defines provide value over 0 and 1 in appropriate places?
-> > Maybe just about. Anyhow, your code so on this up to you.
-> >   
-> > > +
-> > > +#define GICV5_NON_CACHE			0b00
-> > > +#define GICV5_WB_CACHE			0b01
-> > > +#define GICV5_WT_CACHE			0b10
-> > > +
-> > > +#define GICV5_NON_SHARE			0b00
-> > > +#define GICV5_OUTER_SHARE		0b10
-> > > +#define GICV5_INNER_SHARE		0b11
-> > > +
-> > > +#define GICV5_IRS_IDR1			0x0004
-> > > +#define GICV5_IRS_IDR2			0x0008
-> > > +#define GICV5_IRS_IDR5			0x0014
-> > > +#define GICV5_IRS_IDR6			0x0018
-> > > +#define GICV5_IRS_IDR7			0x001c
-> > > +#define GICV5_IRS_CR0			0x0080
-> > > +#define GICV5_IRS_CR1			0x0084
-> > > +#define GICV5_IRS_SPI_SELR		0x0108
-> > > +#define GICV5_IRS_SPI_CFGR		0x0114
-> > > +#define GICV5_IRS_SPI_STATUSR		0x0118
-> > > +#define GICV5_IRS_PE_SELR		0x0140
-> > > +#define GICV5_IRS_PE_STATUSR		0x0144
-> > > +#define GICV5_IRS_PE_CR0		0x0148  
-> > 
-> > Blank line here as this is end of register offsets.  
-> 
-> Yep, fixed it.
-> 
-> Thanks for having a look !
-> Lorenzo
-> 
-> > > +#define GICV5_IRS_IDR1_PRIORITY_BITS	GENMASK(22, 20)
-> > > +#define GICV5_IRS_IDR1_IAFFID_BITS	GENMASK(19, 16)  
-> > 
-> > 
-> >   
-> 
+It encounters sporadic failures during CPU hotplug stress test.
+
+[Syndrome]
+The kernel log shows list add fail as below.
+
+kmemleak: list_add corruption.
+prev->next should be next (ffffff82812c7a00),
+but was 0000000000000000. (prev=ffffff82812c3208).
+
+kmemleak: kernel BUG at lib/list_debug.c:34!
+kmemleak: Call trace:
+kmemleak:  __list_add_valid_or_report+0x11c/0x144
+kmemleak:  cpu_stop_queue_work+0x440/0x474
+kmemleak:  stop_one_cpu_nowait+0xe4/0x138
+kmemleak:  balance_push+0x1f4/0x3e4
+kmemleak:  __schedule+0x1adc/0x23bc
+kmemleak:  preempt_schedule_common+0x68/0xd0
+kmemleak:  preempt_schedule+0x60/0x80
+kmemleak:  _raw_spin_unlock_irqrestore+0x9c/0xa0
+kmemleak:  scan_gray_list+0x220/0x3e4
+kmemleak:  kmemleak_scan+0x410/0x740
+kmemleak:  kmemleak_scan_thread+0xb0/0xdc
+kmemleak:  kthread+0x2bc/0x494
+kmemleak:  ret_from_fork+0x10/0x20
+
+[Analysis]
+In the failure case, by memory dump, we find
+cpu_stopper.enabled = TRUE
+but the wakeq is empty(the migrate/1 is at another wakeq)
+static bool cpu_stop_queue_work(unsigned int cpu, struct cpu_stop_work *work)
+{
+...
+..
+	enabled = stopper->enabled;
+	if (enabled)
+		__cpu_stop_queue_work(stopper, work, &wakeq);
+...
+...
+	wake_up_q(&wakeq);  -> wakeq is empty !!
+	preempt_enable();
+	return enabled;
+}
+
+Through analysis of the CPU0 call trace and memory dump
+
+   CPU0: migration/0, pid: 43, priority: 99
+   Native callstack:
+	vmlinux  __kern_my_cpu_offset()           <arch/arm64/include/asm/percpu.h:40>
+	vmlinux  ct_state_inc(incby=8)            <include/linux/context_tracking.h:137>
+	vmlinux  rcu_momentary_eqs() + 72         <kernel/rcu/tree.c:375>
+	vmlinux  multi_cpu_stop() + 316           <kernel/stop_machine.c:278>
+	vmlinux  cpu_stopper_thread() + 676       <kernel/stop_machine.c:563>
+	vmlinux  smpboot_thread_fn(data=0) + 1188 <kernel/smpboot.c:164>
+	vmlinux  kthread() + 696                  <kernel/kthread.c:389>
+	vmlinux  0xFFFFFFC08005941C()             <arch/arm64/kernel/entry.S:845>
+
+  (struct migration_swap_arg *)0xFFFFFFC08FF87A40 (
+    src_task = 0xFFFFFF80FF519740 ,
+    dst_task = 0xFFFFFF802A579740 ,
+    src_cpu = 0x0,
+    dst_cpu = 0x1)
+
+  (struct multi_stop_data)*    0xFFFFFFC08FF87930 = (
+    fn = 0xFFFFFFC0802657F4 = migrate_swap_stop,
+    data = 0xFFFFFFC08FF87A40
+    num_threads = 0x2,
+    active_cpus = cpu_bit_bitmap[1] -> (
+      bits = (0x2)),
+    state = MULTI_STOP_PREPARE = 0x1,
+    thread_ack = (
+      counter = 0x1))
+
+By cpu mask memory dump:
+  ((const struct cpumask *)&__cpu_online_mask) (
+    bits = (0xFF))
+  ((const struct cpumask *)&__cpu_dying_mask)  (
+    bits = (0x2))
+  ((const struct cpumask *)&__cpu_active_mask)(
+    bits = (0xFD))
+  ((const struct cpumask *)&__cpu_possible_mask) (
+    bits = (0xFF))
+->Imply cpu1 is dying & non-active
+
+So, the potential race scenario is:
+
+	CPU0							CPU1
+	// doing migrate_swap(cpu0/cpu1)
+	stop_two_cpus()
+							  ...
+							 // doing _cpu_down()
+							      sched_cpu_deactivate()
+								set_cpu_active(cpu, false);
+								balance_push_set(cpu, true);
+	cpu_stop_queue_two_works
+	    __cpu_stop_queue_work(stopper1,...);
+	    __cpu_stop_queue_work(stopper2,..);
+	stop_cpus_in_progress -> true
+		preempt_enable();
+								...
+							1st balance_push
+							stop_one_cpu_nowait
+							cpu_stop_queue_work
+							__cpu_stop_queue_work
+							list_add_tail  -> 1st add push_work
+							wake_up_q(&wakeq);  -> "wakeq is empty. This implies that the stopper is at wakeq@migrate_swap."
+	preempt_disable
+	wake_up_q(&wakeq);
+	        wake_up_process // wakeup migrate/0
+		    try_to_wake_up
+		        ttwu_queue
+		            ttwu_queue_cond ->meet below case
+		                if (cpu == smp_processor_id())
+			         return false;
+			ttwu_do_activate
+			//migrate/0 wakeup done
+		wake_up_process // wakeup migrate/1
+	           try_to_wake_up
+		    ttwu_queue
+			ttwu_queue_cond
+		        ttwu_queue_wakelist
+			__ttwu_queue_wakelist
+			__smp_call_single_queue
+	preempt_enable();
+
+							2nd balance_push
+							stop_one_cpu_nowait
+							cpu_stop_queue_work
+							__cpu_stop_queue_work
+							list_add_tail  -> 2nd add push_work, so the double list add is detected
+							...
+							...
+							cpu1 get ipi, do sched_ttwu_pending, wakeup migrate/1
+
+[Solution]
+Maybe add queue status tracking in __cpu_stop_queue_work to avoid the corner case?
+Or don't use ttwu_queu_wakelist while wakeup migrate?
+
+Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+---
+ include/linux/stop_machine.h |  7 +++++++
+ kernel/stop_machine.c        | 12 +++++++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/stop_machine.h b/include/linux/stop_machine.h
+index 3132262a404d..a0748416dd69 100644
+--- a/include/linux/stop_machine.h
++++ b/include/linux/stop_machine.h
+@@ -21,11 +21,18 @@ typedef int (*cpu_stop_fn_t)(void *arg);
+ 
+ #ifdef CONFIG_SMP
+ 
++enum work_state {
++	WORK_INIT = 0,
++	WORK_QUEUE,
++	WORK_EXEC,
++};
++
+ struct cpu_stop_work {
+ 	struct list_head	list;		/* cpu_stopper->works */
+ 	cpu_stop_fn_t		fn;
+ 	unsigned long		caller;
+ 	void			*arg;
++	enum work_state		state;
+ 	struct cpu_stop_done	*done;
+ };
+ 
+diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
+index 5d2d0562115b..9ab6b07708e3 100644
+--- a/kernel/stop_machine.c
++++ b/kernel/stop_machine.c
+@@ -87,6 +87,7 @@ static void __cpu_stop_queue_work(struct cpu_stopper *stopper,
+ {
+ 	list_add_tail(&work->list, &stopper->works);
+ 	wake_q_add(wakeq, stopper->thread);
++	work->state = WORK_QUEUE;
+ }
+ 
+ /* queue @work to @stopper.  if offline, @work is completed immediately */
+@@ -385,7 +386,15 @@ int stop_two_cpus(unsigned int cpu1, unsigned int cpu2, cpu_stop_fn_t fn, void *
+ bool stop_one_cpu_nowait(unsigned int cpu, cpu_stop_fn_t fn, void *arg,
+ 			struct cpu_stop_work *work_buf)
+ {
+-	*work_buf = (struct cpu_stop_work){ .fn = fn, .arg = arg, .caller = _RET_IP_, };
++	if (unlikely(work_buf->state == WORK_QUEUE))
++		return true;
++
++	*work_buf = (struct cpu_stop_work){
++	    .fn = fn,
++	    .arg = arg,
++	    .caller = _RET_IP_,
++	    .state = WORK_INIT
++	};
+ 	return cpu_stop_queue_work(cpu, work_buf);
+ }
+ 
+@@ -496,6 +505,7 @@ static void cpu_stopper_thread(unsigned int cpu)
+ 		work = list_first_entry(&stopper->works,
+ 					struct cpu_stop_work, list);
+ 		list_del_init(&work->list);
++		work->state = WORK_EXEC;
+ 	}
+ 	raw_spin_unlock_irq(&stopper->lock);
+ 
+-- 
+2.45.2
 
