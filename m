@@ -1,194 +1,236 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D7722DA1A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622CD2D023;
+	Thu, 29 May 2025 17:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537916; cv=none; b=UYeUxUDVl5zdNXf+HfiZpbRdStqAOVtlYAqPmN2WtTrp3rl8xjOtnge/GEO1FgGdmzjlE5aF0a97pw2wN+Ns/mlMNO7na/y/E7K+5TailmY2RfLUGixPa7PIsTBNFf2qOYuDO+YvhoJfI8qQBPuZuKuz23KOn2p9gBO5WBUiL98=
+	t=1748538038; cv=none; b=p0YpTfuo9jTiE5J6R19OmCUiZnU/vS/crlYy8PH4p17/0Ci8H6nqWMVUvQcnRkt4BjfXoXtxsDzq0UGhRJKL8AwT1djGK+HdFLaw3P0l1knbgZphIMf496UBbTBeL+bwMKfdf3dioPHq5K54EWU9VRMyWlOzFG5sSzzolmigBB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537916; c=relaxed/simple;
-	bh=Mn25szTLd+/7UcIsObRFVnR0C+rGXhS/mFuBtkp1HBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qI+TektmLRWLL2cqtQ3G72BDrvw2JE4IM2b9ntoNG+rl91FEtQ5AUoAm+VTdw6jtGstYNcL/nfmTh6lyw2GabTZKW+aYTgsO1ZMVU4XjkpdWwy5dUraD21cvW395ZS3caFjbrvevXnqHkrw66BKxfy2SmAngYqcbXiw60U38q3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lQn+W4+P; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lQn+W4+P"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad55464ba80so16023766b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:58:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748537912; x=1749142712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=pt49z1zm5clp6OpH3KRmjYQBNRZSX8mdh4YUkX5ELQo=;
-        b=lQn+W4+P64Qsr3HHsueRl2uxrVJr+1yIP2j32v+o3/ffoBcwpJD31Oy1pUFxi873Hz
-         ElpQaugpspk+RVBgvx44Upuj8DHDqVK0Uk7MirnURYND8ZUzmKL/VZYy6JMy1lJ+6r6z
-         0JlenKIhupoTFjYCjZ/S23v96c6Fc4V8SXWgk2M0dKkJLgiw1+MiSdu6vp/QrLWTdwfm
-         O+xtp4Fr8udJa7gKi99z4cSlPoenCLeN0mSVJbdRMxq4Z+bJMXVdz9OLmiiKBQ53qYsm
-         C+z0X62WKJkUWtPZf/rnDdenCvCIk37ZMHDt+3fg9k7p5GXuj2TwznuFJaRI8XYVHtLa
-         qWRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748537912; x=1749142712;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pt49z1zm5clp6OpH3KRmjYQBNRZSX8mdh4YUkX5ELQo=;
-        b=i2EKoGEMlR2MO1Ctun/uOpOHhOyOcYQxqMDCgbrPMqKfMiPwIKcoXvharGfGZ3GfT3
-         0Qn4F9iyo0lnTVuRLTVecgHDDBF/V2iv36ZgKr6b0kxtCIJNRGYV14LsPWIEwsm6pxwU
-         pZKQqT2l9vhcaUbpuiA1rS61HtV7fQwkCu7hQAIvO501GiPjl0rtEBAKRo4Do+vtfI8M
-         fbFaNpig1Q0dCgjGOvewT164deLylALcB1UxCrbTAkDu8tDaFYVdQdgJYtld12CnBj5p
-         a99+2fu6E2DkTcdHYJmmcSuH3pfIWrmu8t6gqTX9uCyngckZPTNlosYnHqQ3ZfbJ7cNl
-         AeTA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3JeJwzBi1c4HNaM16i4OdDINW8tSx0LmnSjXOHDP1dA9gxSRVuDknPTzV6qZdCVyUpJ5+SxG6b5z+i1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yymns4xYPELubB/gSQgzdGEbVKjw2ff/Xbl94wT5WdOCX/J5lbB
-	6gGExxqqibWiPlcmXzIwYdHANf2xF9fnH9eAj5CCjCK/MQOr4iQAGAGVvJV+Nz4+8nA=
-X-Gm-Gg: ASbGncvk0KyM6TL2J+wiSQaH+rzSO4ciM/dodODQXtecqLnK7sRqNuMFdN0VQdF1Tg3
-	ApU2spmWz4Sic0Sa87H2Bc2W1bMJ2Zo/4edNtY2ycZDB1G2mCsnvfBqx0unFUBc+GabED9fXcoV
-	Xd0/yiYGkt756AJsZT5E1nc0v7uKEpBTRDwfn7FQcp2jGDxXVTbXrDeQ8nzJctgZXiOnt7LKHl5
-	SIR6m9xH68q9/fZbewBdSumuugcdbyzLof8m5C/m45F1w+H567iCgmPJSrcEcDewmZiveC3U42o
-	6CGcCGOCIy0bKkgkYeySeSXusgw4mJzU4UTUWCWPM+67ufA4s+YBYFHJVABZ7PeiRjZFuPHUhpj
-	MEBS7fQ==
-X-Google-Smtp-Source: AGHT+IHIk6xC/xP8CBZL2DsvKzsHlfRWJIaERxSwR/Iy1mqo3hR+EdBJCTlwv0dYBzOfKzEp91vyCQ==
-X-Received: by 2002:a17:907:3d42:b0:ad8:a43f:2ff with SMTP id a640c23a62f3a-adb32263a71mr7460266b.6.1748537912471;
-        Thu, 29 May 2025 09:58:32 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5dd045c8sm171769366b.103.2025.05.29.09.58.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 09:58:31 -0700 (PDT)
-Message-ID: <a0b381ac-3280-42df-bff1-1998e0b9c154@linaro.org>
-Date: Thu, 29 May 2025 18:58:30 +0200
+	s=arc-20240116; t=1748538038; c=relaxed/simple;
+	bh=KP29A+bm27Hs926Q93G9lcRijEzBve+AX+o3AGSPxvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rLeYjb2ZcMOZ/NW1zEQQamRLTsLXdneshWo0muW6vspBflmgm29uM6fCatUdX1O39pljC2b15qiG7hT8s7tx9nMtlC2X6KjseFZQCKvZ9fZ1S6yV+JIcg8Ezk1AOk4LrSxa/ycEnxBl3wBU79zxk1DSiks/vVmz1QrOBxrgoh8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC55C4CEEA;
+	Thu, 29 May 2025 17:00:36 +0000 (UTC)
+Date: Thu, 29 May 2025 13:01:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Caleb Sander Mateos <csander@purestorage.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov
+ <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org
+Subject: [RFC][PATCH] tracepoints: Add verifier that makes sure all defined
+ tracepoints are used
+Message-ID: <20250529130138.544ffec4@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Alexey Klimov <alexey.klimov@linaro.org>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
- <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
- <7938374e-85fb-42b9-893c-ec3f7274f9c0@oss.qualcomm.com>
- <9c8fe115-97e8-4966-b332-6de94015f832@kernel.org>
- <b4235317-97c0-4225-b6af-f79358cbf508@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <b4235317-97c0-4225-b6af-f79358cbf508@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 29/05/2025 18:34, Konrad Dybcio wrote:
-> On 5/29/25 8:58 AM, Krzysztof Kozlowski wrote:
->> On 28/05/2025 18:58, Konrad Dybcio wrote:
->>> On 5/28/25 4:37 PM, Alexey Klimov wrote:
->>>> On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
->>>>> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->>>>>> The pattern matching incorrectly selects "wsa" because of "sa" substring
->>>>>> and evaluates it as a SoC component or block.
->>>>>>
->>>>>> Wsa88xx are family of amplifiers and should not be evaluated here.
->>>>>>
->>>>>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a811c4a13143efce3 100644
->>>>>> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->>>>>> @@ -23,7 +23,7 @@ description: |
->>>>>>  select:
->>>>>>    properties:
->>>>>>      compatible:
->>>>>> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|sm|x1[ep])[0-9]+.*$"
->>>>>> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[amx]|smx1[ep])[0-9]+.*$"
->>>>>
->>>>> Why dropping front .*? Are you sure this matches what we want - so
->>>>> incorrect compatibles? To me it breaks the entire point of this select,
->>>>> so I am sure you did not test whether it still works. To remind: this is
->>>>> to select incorrect compatibles.
->>>>
->>>> Thanks, great point. I tested it with regular dtbs checks with different
->>>> dtb files but I didn't check if it selects incorrect compatibles.
->>>
->>> Maybe we can introduce a '-' before or after the socname, to also officially
->>> disallow using other connecting characters
->>
->> It is already there.
-> 
-> Pardon, but I don't see it, only in the 0-9 group
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Then maybe we talk about different things? Because the one to fulfill
-your request - to officially disallow using other characters, which is
-part of the goal of this binding - is here:
+If a tracepoint is defined via DECLARE_TRACE() or TRACE_EVENT() but never
+called (via the trace_<tracepoint>() function), its meta data is still
+around in memory and not discarded.
 
-"^qcom,(apq| <snip>  |sc|sd[amx]|sm|x1[ep])[0-9]+(pro)?-.*$
-                                            -----------^
+When created via TRACE_EVENT() the situation is worse because the
+TRACE_EVENT() creates meta data that can be around 5k per trace event.
+Having unused trace events causes several thousand of wasted bytes.
 
-That's the hyphen after soc name.
+Add a verifier that injects a pointer to the tracepoint structure in the
+functions that are used and added to a section called __tracepoint_check.
+Then on boot up, iterate over this section and for every tracepoint
+descriptor that is pointed to, update its ".funcs" field to (void *)1, as
+the .funcs field is only set when a tracepoint is registered. At this
+time, no tracepoints should be registered.
 
+Then iterate all tracepoints and if any tracepoints doesn't have its
+.funcs field set to (void*)1, trigger a warning, and list all tracepoints
+that are not found.
 
-Best regards,
-Krzysztof
+Enabling this currently with a given config produces:
+
+ Tracepoint x86_fpu_before_restore unused
+ Tracepoint x86_fpu_after_restore unused
+ Tracepoint x86_fpu_init_state unused
+ Tracepoint pelt_hw_tp unused
+ Tracepoint pelt_irq_tp unused
+ Tracepoint ipi_raise unused
+ Tracepoint ipi_entry unused
+ Tracepoint ipi_exit unused
+ Tracepoint irq_matrix_alloc_reserved unused
+ Tracepoint psci_domain_idle_enter unused
+ Tracepoint psci_domain_idle_exit unused
+ Tracepoint powernv_throttle unused
+ Tracepoint clock_enable unused
+ Tracepoint clock_disable unused
+ Tracepoint clock_set_rate unused
+ Tracepoint power_domain_target unused
+ Tracepoint xdp_bulk_tx unused
+ Tracepoint xdp_redirect_map unused
+ Tracepoint xdp_redirect_map_err unused
+ Tracepoint mem_return_failed unused
+ Tracepoint vma_mas_szero unused
+ Tracepoint vma_store unused
+ Tracepoint hugepage_set_pmd unused
+ Tracepoint hugepage_set_pud unused
+ Tracepoint hugepage_update_pmd unused
+ Tracepoint hugepage_update_pud unused
+ Tracepoint dax_pmd_insert_mapping unused
+ Tracepoint dax_insert_mapping unused
+ Tracepoint block_rq_remap unused
+ Tracepoint xhci_dbc_handle_event unused
+ Tracepoint xhci_dbc_handle_transfer unused
+ Tracepoint xhci_dbc_gadget_ep_queue unused
+ Tracepoint xhci_dbc_alloc_request unused
+ Tracepoint xhci_dbc_free_request unused
+ Tracepoint xhci_dbc_queue_request unused
+ Tracepoint xhci_dbc_giveback_request unused
+ Tracepoint tcp_ao_wrong_maclen unused
+ Tracepoint tcp_ao_mismatch unused
+ Tracepoint tcp_ao_key_not_found unused
+ Tracepoint tcp_ao_rnext_request unused
+ Tracepoint tcp_ao_synack_no_key unused
+ Tracepoint tcp_ao_snd_sne_update unused
+ Tracepoint tcp_ao_rcv_sne_update unused
+
+Some of the above is totally unused but others are not used due to their
+"trace_" functions being inside configs, in which case, the defined
+tracepoints should also be inside those same configs. Others are
+architecture specific but defined in generic code, where they should
+either be moved to the architecture or be surrounded by #ifdef for the
+architectures they are for.
+
+Note, currently this only handles tracepoints that are builtin. This can
+easily be extended to verify tracepoints used by modules, but it requires a
+slightly different approach as it needs updates to the module code.
+
+Link: https://lore.kernel.org/all/20250528114549.4d8a5e03@gandalf.local.home/
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/asm-generic/vmlinux.lds.h |  1 +
+ include/linux/tracepoint.h        | 10 ++++++++++
+ kernel/trace/Kconfig              |  8 ++++++++
+ kernel/tracepoint.c               | 26 ++++++++++++++++++++++++++
+ 4 files changed, 45 insertions(+)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index fa5f19b8d53a..600d8b51e315 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -708,6 +708,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+ 	MCOUNT_REC()							\
+ 	*(.init.rodata .init.rodata.*)					\
+ 	FTRACE_EVENTS()							\
++	BOUNDED_SECTION_BY(__tracepoint_check, ___tracepoint_check)	\
+ 	TRACE_SYSCALLS()						\
+ 	KPROBE_BLACKLIST()						\
+ 	ERROR_INJECT_WHITELIST()					\
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index a351763e6965..c9c03ec8e552 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -221,6 +221,14 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 		__do_trace_##name(args);				\
+ 	}
+ 
++#ifdef CONFIG_TRACEPOINT_VERIFY_USED
++# define TRACEPOINT_CHECK(name)						\
++	static void __used __section("__tracepoint_check") *__trace_check = \
++		&__tracepoint_##name;
++#else
++# define TRACEPOINT_CHECK(name)
++#endif
++
+ /*
+  * Make sure the alignment of the structure in the __tracepoints section will
+  * not add unwanted padding between the beginning of the section and the
+@@ -270,6 +278,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
+ 	static inline void __do_trace_##name(proto)			\
+ 	{								\
++		TRACEPOINT_CHECK(name)					\
+ 		if (cond) {						\
+ 			guard(preempt_notrace)();			\
+ 			__DO_TRACE_CALL(name, TP_ARGS(args));		\
+@@ -289,6 +298,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
+ 	static inline void __do_trace_##name(proto)			\
+ 	{								\
++		TRACEPOINT_CHECK(name)					\
+ 		guard(rcu_tasks_trace)();				\
+ 		__DO_TRACE_CALL(name, TP_ARGS(args));			\
+ 	}								\
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..8867eee5b58f 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1044,6 +1044,14 @@ config GCOV_PROFILE_FTRACE
+ 	  Note that on a kernel compiled with this config, ftrace will
+ 	  run significantly slower.
+ 
++config TRACEPOINT_VERIFY_USED
++	bool "Verify that all defined tracepoints are used"
++	depends on TRACEPOINTS
++	help
++	  This option checks if every builtin defined tracepoint is
++	  used in the code. If a tracepoint is defined but not used,
++	  it will waste memory as its meta data is still created.
++
+ config FTRACE_SELFTEST
+ 	bool
+ 
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 62719d2941c9..f354d3850a04 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -677,10 +677,36 @@ static struct notifier_block tracepoint_module_nb = {
+ 	.priority = 0,
+ };
+ 
++#ifdef CONFIG_TRACEPOINT_VERIFY_USED
++extern void * __start___tracepoint_check[];
++extern void * __stop___tracepoint_check[];
++
++#define VERIFIED_TRACEPOINT	((void *)1)
++
++static void check_tracepoint(struct tracepoint *tp, void *priv)
++{
++	if (WARN_ONCE(tp->funcs != VERIFIED_TRACEPOINT, "Unused tracepoints found"))
++		pr_warn("Tracepoint %s unused\n", tp->name);
++
++	tp->funcs = NULL;
++}
++#endif
++
+ static __init int init_tracepoints(void)
+ {
+ 	int ret;
+ 
++#ifdef CONFIG_TRACEPOINT_VERIFY_USED
++	for (void **ptr = __start___tracepoint_check;
++	     ptr < __stop___tracepoint_check; ptr++) {
++		struct tracepoint *tp = *ptr;
++
++		tp->funcs = VERIFIED_TRACEPOINT;
++	}
++
++	for_each_kernel_tracepoint(check_tracepoint, NULL);
++#endif
++
+ 	ret = register_module_notifier(&tracepoint_module_nb);
+ 	if (ret)
+ 		pr_warn("Failed to register tracepoint module enter notifier\n");
+-- 
+2.47.2
+
