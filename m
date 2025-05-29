@@ -1,141 +1,108 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F7E20E6E3
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F191DE89B
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748516392; cv=none; b=b+HXC65LGGrem53PHViY8fP8xZitSciihNaFqodFk1O3JVgWo/OHiWxuBzsZFbjmr+8xh1O79loSFokP2rGMFMNkePa+26tn/+9wFaTUVPx2Pa3mpXFIpvTVl1qo+hXDS/h9H63gNFO8rQCXOdZHUAL+xPdVGuAiJE3akn3KYpM=
+	t=1748516595; cv=none; b=XYGGs0d6jxvShgMtTYQK9b5LHB9i4QPsp/1V14gV0j68UbDJfkMFlZkKlBIduXfEFCP6W1Xz+YrXkFEV7chxwWkmizHdzIa0TAPDfhahP4TWv/hIlxxm+q26yioQ9wZsYlpX2/LkxkEglpw3vQ1G6tp1MLq3FGmvuCrYBuaN88w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748516392; c=relaxed/simple;
-	bh=uokOcpliAtsO0yPgDgaMCS61kumW1dce6ne6Ov1VvFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AFUgGEeJ6H36gKlYHtRsfxhIkvzxntqsHKQizi2WuG9jIjSYNk9UW6rVf6uxgO4Zq1xtxSXjVzph+mcV2ObgpFAnT8WZkUU1D1pW4Te5AwN3k+utA4r/1N2GAO9ED3w599TPH0fBS/tCVmN3tcCxuc/Qtni/TKm+egGI/fc1fDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u3Mvde2v; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748516595; c=relaxed/simple;
+	bh=Yn9dVZsvMXLIwbt/fspA5DsmNe/mbinsIxmwOYQ3jRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=ojzR3vKkQVewvb8BKi3Fkhu64kjtaNLuGUYBMYjctpbvjE/cDyv4b+cph7TNglX8DVBtnWDlv+JdYnHNjzlDO+e5T9GcvqYYNebHYuMxS87N2I1wm/mtsIF5Q0wt3SmcROPtbD2GFYt9BgxfoV+E36CAoeHEp5zwIEoAANkQeBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTl415la; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u3Mvde2v"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso6990005e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:59:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748516389; x=1749121189; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zIw9ZqjIqtglnQzbhkOCsGKq/yrA50x6t5WtTG1WnPI=;
-        b=u3Mvde2vIxJBag/MnIjAxlf4+nnq4KlMquSkzYdDjQxPGC9G4kdzXST65aGUMUsmwz
-         yYWk1zv2l2i5Esm5E5pzvUw20DHIsY7yQCYNXsE2GW5oWCf0y0UhuT6xcnFSn8aPyKl7
-         0GcHa6I35ZaFB/9AtFxG4xvcjeuSy+T8QvtgXiDwTEzi1LVHkZr1anW+sgufIZsqvBvd
-         lumeCmLs44H7Zmd+f4O7YEPgi7JM9d05+vNrSK6BnX+M1+yVKU0tZArrlg+FHBBWcRTo
-         IT1dRnTbbHRxowO2bm9iy6/uPfMBBB0yAQR93OH+bVP2rOFSUQpiunVbw5ZlxmQbdbfF
-         fIsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748516389; x=1749121189;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIw9ZqjIqtglnQzbhkOCsGKq/yrA50x6t5WtTG1WnPI=;
-        b=ueMZgK76s5hZN/ntLTJz08uPsUgxMyorFJ1TJY7u7o+CNBmM4T93anBeuDArfOel6U
-         1Ztt8013jGNSnS1AHYVuAK79I93CCdQm6w1CmFfwje3kdVF9ZQAy64X2gGh5/XMS9To5
-         qI5mtkD4p+VzkfNaJ9jS/CM8T+xWZmvr5QbhBRuUZe9hUL/kqj4vqNvVtQ5wZvWl9B9M
-         tsAwZzIkXZL2ahPOvGniIF87AJosFrWSlWSb8IgkMcb/BqoyKR+puewuYtRr4llpqTvb
-         +It7xmfSMVmxIGEm9WpFHexIQK15zTStCGCBQuwk5b6q3NYtoHkqJ9yE4dxP+XKSlRCE
-         qIDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOSBhXJ42PwBeXyK/diB6sMwXsvfMDPSykgqdDtHyLAbRASYuEbjsyr2nTew2pv8rlGf7JcVflnNl3ObU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwidhbO6fiVd0HR0W/2wLhLixxLj3CJxla6e9tkAbJnUtUc0sb
-	cra3gHAPsyAN074SshVWaP7hnHRIaelz0lBfLWsGEapfcGIqmCURhmh/Kqpg+YgWhoU=
-X-Gm-Gg: ASbGncv+5IRCZe8HKSjDKM+HfgusuRfpyY1igoJN6j4CBHfajI8PH8E/8T+DZoqpRz0
-	DF3t1wgEWmGlfpJtYqswryBVeCdodwRsY6BYPdahRPNdLHy+EJasY85+SJz13xaZWYpWv7bNiHu
-	Zch+NxY6qbLjVfXzttf0GyZvbMeOehvIzICxFUFONb16tvL+2aiSI1HuBXL7aMGop14OaAxH/RU
-	ddeKZdG4QEo9C73b1MPpDntl1dFO+mqSaRggFr4ijgnXzHiNXo3F7EcsrYrLRj/G6DcSXzR7jj6
-	Q/lvc93fxrvj3WczaD31Ay6vHijiPewEGSB7g+/sv7hgMptOBrCqwnbb7MMmfV61lBuGg/YAdgc
-	/iQKBbBz40SQc34Yx
-X-Google-Smtp-Source: AGHT+IGBNOksY0Dn1siJUEYw2Be2FNY53x04kcV72jN+DJxdz71cewTb6DwiVUGoW3jjAYY9Zdl7Yw==
-X-Received: by 2002:a05:600c:828f:b0:450:d3c6:84d8 with SMTP id 5b1f17b1804b1-450d3c68523mr10216405e9.14.1748516388671;
-        Thu, 29 May 2025 03:59:48 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc03430sm16779555e9.12.2025.05.29.03.59.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 03:59:48 -0700 (PDT)
-Message-ID: <07ecd160-5bb5-4e39-ab5c-9f761e7db0af@linaro.org>
-Date: Thu, 29 May 2025 11:59:47 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTl415la"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748516594; x=1780052594;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Yn9dVZsvMXLIwbt/fspA5DsmNe/mbinsIxmwOYQ3jRM=;
+  b=aTl415laUbhdnjd4XLLTkuCaAVQ2wut4c3OXPOdXYw0rD1OLbPO+k+mT
+   /cVrrLgwhvpZMYD0pBZaLRoI16wvme9mIROYhp3C57mkNz7V4zXfsdTvd
+   AAZZQ26wzjJUjFMEiwFqQ9mXLpFUMXTqL6Q6zr5eNSX/rum4Rwa7HXzYL
+   WhxVNLhVeshj4b4eVP38I5+ao8guEzKz8xv5XS0TAd/etRtzpuYTEeyFm
+   Tk8E4SBNRjxgpHWqizprN3y3Kqicw0tqx58S0fTeeuxaZcqCE0HbitjJv
+   xGiVCQVIJAKDLNXDt2UWImjq3VlzuD3n0SqB0yikNUndck/VbjXe2a5gM
+   A==;
+X-CSE-ConnectionGUID: 2S2iz9bWQz2aS8UNu4XmHQ==
+X-CSE-MsgGUID: P88SFPmHTEKw22AJD9CtpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="54369597"
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="54369597"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 04:03:13 -0700
+X-CSE-ConnectionGUID: 6kVKqstISrW7He3HzHIs1Q==
+X-CSE-MsgGUID: bTctGFv2QD62OegFqsdS/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
+   d="scan'208";a="148303605"
+Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
+  by orviesa003.jf.intel.com with ESMTP; 29 May 2025 04:03:11 -0700
+Received: from kbuild by b69e6467d450 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKb2S-0000Hk-2k;
+	Thu, 29 May 2025 11:03:08 +0000
+Date: Thu, 29 May 2025 19:00:51 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars:testing/wfamnae-next20250424 1/25]
+ kernel/bpf/core.c:2576:22: warning: comparison of distinct pointer types
+ lacks a cast
+Message-ID: <202505291933.IiIYX6Xj-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] thermal: qcom-spmi-temp-alarm: add support for
- GEN2 rev 2 PMIC peripherals
-To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
- amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
- daniel.lezcano@linaro.org
-Cc: rui.zhang@intel.com, lukasz.luba@arm.com, david.collins@oss.qualcomm.com,
- srinivas.kandagatla@linaro.org, stefan.schmidt@linaro.org,
- quic_tsoni@quicinc.com, linux-arm-msm@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- dmitry.baryshkov@linaro.org, dmitry.baryshkov@oss.qualcomm.com
-References: <20250528235026.4171109-1-anjelique.melendez@oss.qualcomm.com>
- <3niPa8t6TJc43heEDzbk3f9nuULmgPi0LavIEOdHufZwUvhipGZxrwj317kugr1GXnHZjtCwM_6trcPCQ3c4hQ==@protonmail.internalid>
- <20250528235026.4171109-5-anjelique.melendez@oss.qualcomm.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250528235026.4171109-5-anjelique.melendez@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 29/05/2025 00:50, Anjelique Melendez wrote:
-> +static int qpnp_tm_gen2_rev2_set_temp_thresh(struct qpnp_tm_chip *chip, int trip, int temp)
-> +{
-> +	int ret, temp_cfg;
-> +	u8 reg;
-> +
-> +	WARN_ON(!mutex_is_locked(&chip->lock));
-> +
-> +	if (trip < 0 || trip >= STAGE_COUNT) {
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/wfamnae-next20250424
+head:   604833e5a102945aa4596b80085ef9cada5e6d57
+commit: 117d6f3024817bf22efc8b81679e0b282ca9cc07 [1/25] treewide_some: fix multiple -Wfamnae warnings that must be audited separately
+config: alpha-randconfig-2006-20250504 (https://download.01.org/0day-ci/archive/20250529/202505291933.IiIYX6Xj-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505291933.IiIYX6Xj-lkp@intel.com/reproduce)
 
-trip < 0 can never be true because the value passed to this function 
-comes from an unsigned int
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505291933.IiIYX6Xj-lkp@intel.com/
 
-include/linux/thermal.h:#define THERMAL_TRIP_PRIV_TO_INT(_val_) 
-(uintptr_t)(_val_)
+All warnings (new ones prefixed by >>):
 
-actually why is it int trip here instead of unsigned int trip ?
+   cc1: note: -Wvla-larger-than=0 is meaningless
+   kernel/bpf/core.c: In function 'bpf_prog_array_free_sleepable':
+>> kernel/bpf/core.c:2576:22: warning: comparison of distinct pointer types lacks a cast
+     if (!progs || progs == &bpf_empty_prog_array.hdr)
+                         ^~
 
-> +		dev_err(chip->dev, "invalid TEMP_DAC trip = %d\n", trip);
-> +		return -EINVAL;
-> +	} else if (temp < TEMP_DAC_MIN || temp > temp_dac_max[trip]) {
-> +		dev_err(chip->dev, "invalid TEMP_DAC temp = %d\n", temp);
-> +		return -EINVAL;
-> +	}
-> +
-> +	reg = TEMP_DAC_TEMP_TO_REG(temp);
-> +	temp_cfg = TEMP_DAC_REG_TO_TEMP(reg);
-> +
-> +	ret = qpnp_tm_write(chip, QPNP_TM_REG_TEMP_DAC_STG1 + trip, reg);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "TEMP_DAC_STG write failed, ret=%d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	chip->temp_thresh_map[trip] = temp_cfg;
-> +
-> +	return 0;
-> +}
-> +
-> +static int qpnp_tm_gen2_rev2_set_trip_temp(struct thermal_zone_device *tz,
-> +					   const struct thermal_trip *trip, int temp)
-> +{
-> +	unsigned int trip_index = THERMAL_TRIP_PRIV_TO_INT(trip->priv);
-> +	struct qpnp_tm_chip *chip = thermal_zone_device_priv(tz);
-> +	int ret;
-> +
-> +	mutex_lock(&chip->lock);
-> +	ret = qpnp_tm_gen2_rev2_set_temp_thresh(chip, trip_index, temp);The sign conversion in the integer seems questionable. I see that the 
-intel code does the same thing but I think that's just an error being 
-replicated here.
----
-bod
 
+vim +2576 kernel/bpf/core.c
+
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2573  
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2574  void bpf_prog_array_free_sleepable(struct bpf_prog_array *progs)
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2575  {
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14 @2576  	if (!progs || progs == &bpf_empty_prog_array.hdr)
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2577  		return;
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2578  	call_rcu_tasks_trace(&progs->rcu, __bpf_prog_array_free_sleepable_cb);
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2579  }
+8c7dcb84e3b744 Delyan Kratunov 2022-06-14  2580  
+
+:::::: The code at line 2576 was first introduced by commit
+:::::: 8c7dcb84e3b744b2b70baa7a44a9b1881c33a9c9 bpf: implement sleepable uprobes by chaining gps
+
+:::::: TO: Delyan Kratunov <delyank@fb.com>
+:::::: CC: Alexei Starovoitov <ast@kernel.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
