@@ -1,261 +1,200 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C8021D3C6;
-	Thu, 29 May 2025 09:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8563A21E0AF;
+	Thu, 29 May 2025 09:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748511445; cv=none; b=tziXm0sqPuD/6ldyd3igTjt5wp/be60kWgaGmPH0pHMH2qMX1xyh2/2DEY5uz3dKmQqEYPPJLZPhEwbhW1dIWjqOJid95sJfFzDB9fnZCoKt4hFRA5sYWXZRvFudj7fSciyVWeFJwgqWYWB5FYKHQ8WaRAkXOhvUdkNKLxCMVeI=
+	t=1748511449; cv=none; b=ouwcqFqI8ibPBOvQWWLhsqfJoZkUN0RMjyKp5w1Ai5VgAqklxcIm8IbkxURYxd5b1enWB3LXLxpWZAeQZKrGqYjwEohs/kzWbp7/JnPXB+XWn5Cjxw6g1Tj/WB00pxJv4HjfkxNWe9He2KA8euR0416/nBa6agrRFerYC31i44Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748511445; c=relaxed/simple;
-	bh=ckcjcH5RN/vq5cZGzMfcO+kL0Om01F9qrfIsIyveExg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZZd4KdjxkZTG5WfrygoL/pDE3O37T0CE0r0ye00C15pHrb/8JxkDk3yPOEQDqpu2AmrLhMyituuwQ9xzHkAlxOR93aoAa7+f186slm2E3cWDQHFIuz/sudeL2xt6WejCUt0IrCKGe21cjeWhQGWw/R/wNSndjlFFdPC2Rz9mIDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=TqkvzByg; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="TqkvzByg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1748511444; x=1780047444;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ckcjcH5RN/vq5cZGzMfcO+kL0Om01F9qrfIsIyveExg=;
-  b=TqkvzByg3C0XolW4zGtvLjURC6kVykCx/FJHjRo6yxwfcoRh+3DiLVXv
-   bn5628/SmmeArBbzqK3mw1zxwnGGjI/Q/6N79B8p76brKmiTIyaYZqhkQ
-   FTwb6uwHbzgsvUBuXkflAYW9YLYQrMEdJTrXFWS82zd+rcNRvYSCZKjDX
-   4ax3NhlaMmK2HYjhqWHg9Bzbq3EJvtiYrlbqjzQZ/rd2jyNGvNygue4Wc
-   88fe1CshtoCPC+n5GEp5P0QbyNPG81xOuPZjjfG4Rhz5tYEcbj+RTLk/2
-   rxTj6SXOq7uW+B3fmNT4meUjGbXXQhVuHrBoMAKvLoU36kpGC1vAD7IIr
-   Q==;
-X-CSE-ConnectionGUID: xzbXPh2ETCSQJkZQFVVmZQ==
-X-CSE-MsgGUID: 7oJeWaJASmKo+9VV4kG2Cg==
-X-IronPort-AV: E=Sophos;i="6.15,192,1739862000"; 
-   d="scan'208";a="42753030"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 29 May 2025 02:37:14 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 29 May 2025 02:36:46 -0700
-Received: from vduicu-Virtual-Machine.mshome.net (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Thu, 29 May 2025 02:36:43 -0700
-From: <victor.duicu@microchip.com>
-To: <jic23@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
-	<andy@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>
-CC: <marius.cristea@microchip.com>, <victor.duicu@microchip.com>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: [PATCH v2 1/2] dt-bindings: iio: temperature: add support for MCP998X
-Date: Thu, 29 May 2025 12:36:27 +0300
-Message-ID: <20250529093628.15042-2-victor.duicu@microchip.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250529093628.15042-1-victor.duicu@microchip.com>
-References: <20250529093628.15042-1-victor.duicu@microchip.com>
+	s=arc-20240116; t=1748511449; c=relaxed/simple;
+	bh=0A2hvECib8AzzgAufejxO42tkHm5UBhV7QzN/YWOs3k=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=r6ev5xRjiL8glDpk/M07qtJug/xwXxtgA3kcA8zqirKNSVMWCfL1wMbXfI5h09ap1O21354/jaoVNFP/iYzJDjuacWdMtLrgvRjkNlqFBep+OB+pe9yCm4Ubn49BSoO//0lVUFDJMifurrCRww3nA6MrK41VmufpUPc/IH6aFGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
+ 2025 11:37:17 +0200
+Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
+ S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
+ 15.01.2507.039; Thu, 29 May 2025 11:37:17 +0200
+From: John Ernberg <john.ernberg@actia.se>
+To: Rob Herring <robh@kernel.org>
+CC: =?iso-8859-2?Q?Horia_Geant=E3?= <horia.geanta@nxp.com>, Pankaj Gupta
+	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
+	<herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	"Frank Li" <Frank.li@nxp.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, "Fabio Estevam" <festevam@gmail.com>, Thomas Richard
+	<thomas.richard@bootlin.com>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
+ domains for iMX8QM and iMX8QXP
+Thread-Topic: [PATCH v3 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
+ domains for iMX8QM and iMX8QXP
+Thread-Index: AQHbz97TDhLekXOKbkmerT2PfEO8vrPodECAgADE/QA=
+Date: Thu, 29 May 2025 09:37:17 +0000
+Message-ID: <aDgqyF7773LJjjJO@w447anl.localdomain>
+References: <20250528144259.2603914-1-john.ernberg@actia.se>
+ <20250528144259.2603914-4-john.ernberg@actia.se>
+ <20250528215209.GA862463-robh@kernel.org>
+In-Reply-To: <20250528215209.GA862463-robh@kernel.org>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-esetresult: clean, is OK
+x-esetid: 37303A2956B14453637562
+Content-Type: text/plain; charset="iso-8859-2"
+Content-ID: <11D1FBF7FEE64642BE637CBA54B3C320@actia.se>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Victor Duicu <victor.duicu@microchip.com>
+Hi Rob,
 
-This is the devicetree schema for Microchip MCP998X/33 and
-MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
+On Wed, May 28, 2025 at 04:52:09PM -0500, Rob Herring wrote:
+> On Wed, May 28, 2025 at 02:43:07PM +0000, John Ernberg wrote:
+> > NXP SoCs like the iMX8QM, iMX8QXP or iMX8DXP use power domains for
+> > resource management.
+> >=20
+> > Allow specifying them for such SoCs.
+> >=20
+> > Signed-off-by: John Ernberg <john.ernberg@actia.se>
+> >=20
+> > ---
+> >=20
+> > v3:
+> >  - Fix warnings discovered by Rob Herring's bot
+> >  - Declare the compatibles correctly (Krzysztof Kozlowski)
+> >=20
+> > v2:
+> >  - Adjust commit message (Frank Li)
+> >  - Only allow power-domains when compatible with imx8qm (Frank Li)
+> > ---
+> >  .../bindings/crypto/fsl,sec-v4.0.yaml         | 45 ++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml=
+ b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> > index 75afa441e019..a4ada0e2d97c 100644
+> > --- a/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> > +++ b/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml
+> > @@ -46,6 +46,7 @@ properties:
+> >        - items:
+> >            - enum:
+> >                - fsl,imx6ul-caam
+> > +              - fsl,imx8qm-caam
+> >                - fsl,sec-v5.0
+> >            - const: fsl,sec-v4.0
+> >        - const: fsl,sec-v4.0
+> > @@ -77,6 +78,9 @@ properties:
+> >    interrupts:
+> >      maxItems: 1
+> > =20
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> >    fsl,sec-era:
+> >      description: Defines the 'ERA' of the SEC device.
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> > @@ -106,7 +110,9 @@ patternProperties:
+> >                - const: fsl,sec-v5.0-job-ring
+> >                - const: fsl,sec-v4.0-job-ring
+> >            - items:
+> > -              - const: fsl,sec-v5.0-job-ring
+> > +              - enum:
+> > +                - fsl,imx8qm-job-ring
+> > +                - fsl,sec-v5.0-job-ring
+> >                - const: fsl,sec-v4.0-job-ring
+> >            - const: fsl,sec-v4.0-job-ring
+> > =20
+> > @@ -116,6 +122,9 @@ patternProperties:
+> >        interrupts:
+> >          maxItems: 1
+> > =20
+> > +      power-domains:
+> > +        maxItems: 1
+> > +
+> >        fsl,liodn:
+> >          description:
+> >            Specifies the LIODN to be used in conjunction with the ppid-=
+to-liodn
+> > @@ -212,6 +221,40 @@ required:
+> >    - reg
+> >    - ranges
+> > =20
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: fsl,imx8qm-caam
+> > +    then:
+> > +      required:
+> > +        - power-domains
+> > +    else:
+> > +      properties:
+> > +        power-domains: false
+> > +
+> > +  - if:
+>=20
+> This 'if' belongs under the '^jr@[0-9a-f]+$' subschema which will then=20
+> remote a level here.
+>=20
 
-Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
----
- .../iio/temperature/microchip,mcp9982.yaml    | 174 ++++++++++++++++++
- 1 file changed, 174 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+This is what I had in v2 [1], which your bot pointed out is an unexpected
+if-statement [2]. Or should I have wrapped it in an allOf: even though it
+was a single if:?
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-new file mode 100644
-index 000000000000..249470c8953b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-@@ -0,0 +1,174 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive
-+       Temperature Monitor Family
-+
-+maintainers:
-+  - Victor Duicu <victor.duicu@microchip.com>
-+
-+description: |
-+  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
-+  automotive temperature monitor.
-+  The datasheet can be found here:
-+    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - microchip,mcp9933
-+      - microchip,mcp9933d
-+      - microchip,mcp9982
-+      - microchip,mcp9982d
-+      - microchip,mcp9983
-+      - microchip,mcp9983d
-+      - microchip,mcp9984
-+      - microchip,mcp9984d
-+      - microchip,mcp9985
-+      - microchip,mcp9985d
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  interrupt-names:
-+    description:
-+      alert1 indicates a HIGH or LOW limit was exceeded.
-+      alert2 indicates a THERM limit was exceeded.
-+    items:
-+      - const: alert1
-+      - const: alert2
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  microchip,apdd-state:
-+    description:
-+      Enable anti-parallel diode mode operation.
-+      MCP9984/84D/85/85D and MCP9933/33D support reading two external diodes
-+      in anti-parallel connection on the same set of pins.
-+      Omit this tag to disable anti-parallel diode mode.
-+    type: boolean
-+
-+  microchip,recd12:
-+    description:
-+      Enable resistance error correction for external channels 1 and 2.
-+      Omit this tag to disable REC for channels 1 and 2.
-+    type: boolean
-+
-+  microchip,recd34:
-+    description:
-+      Enable resistance error correction for external channels 3 and 4.
-+      Omit this tag to disable REC for channels 3 and 4.
-+    type: boolean
-+
-+  label:
-+    description: Unique name to identify which device this is.
-+
-+  vdd-supply: true
-+
-+patternProperties:
-+  "^channel@[1-4]$":
-+    description:
-+      Represents the external temperature channels to which
-+      a remote diode is connected.
-+    type: object
-+
-+    properties:
-+      reg:
-+        items:
-+          minimum: 1
-+          maximum: 4
-+
-+      microchip,ideality-factor:
-+        description:
-+          Each channel has an ideality factor.
-+          Beta compensation and resistance error correction automatically
-+          correct for most ideality errors. So ideality factor does not need
-+          to be adjusted in general.
-+          Omit this tag in order to set the default value.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        default: 18
-+
-+      label:
-+        description: Unique name to identify which channel this is.
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - microchip,mcp9982
-+              - microchip,mcp9982d
-+              - microchip,mcp9983
-+              - microchip,mcp9983d
-+    then:
-+      properties:
-+        microchip,apdd-state: false
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - microchip,mcp9982
-+              - microchip,mcp9982d
-+              - microchip,mcp9933
-+              - microchip,mcp9933d
-+    then:
-+      properties:
-+        microchip,recd34: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        temperature-sensor@4c {
-+            compatible = "microchip,mcp9985";
-+            reg = <0x4c>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            label = "temperature-sensor";
-+
-+            microchip,apdd-state;
-+            microchip,recd12;
-+            microchip,recd34;
-+            vdd-supply = <&vdd>;
-+
-+            channel@1 {
-+                reg = <0x1>;
-+                label = "CPU Temperature";
-+            };
-+
-+            channel@2 {
-+                reg = <0x2>;
-+                label = "GPU Temperature";
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.48.1
+    jernberg % pip install --upgrade dtschema
+    Requirement already satisfied: dtschema in ./.venv/lib/python3.13/site-=
+packages (2025.2)
 
+[1]: https://lore.kernel.org/linux-crypto/20250527071552.1424997-4-john.ern=
+berg@actia.se/
+[2]: https://lore.kernel.org/linux-crypto/174833819381.3537254.550804710081=
+7417003.robh@kernel.org/
+
+Would you mind also letting me know the command line you run validation
+with in the CI? I didn't see the v2 (at first, needed W=3D1 for that) nor
+the v3 complaint in my runs before sending.
+
+Thanks! // John Ernberg
+
+> > +      patternProperties:
+> > +        '^jr@[0-9a-f]+$':
+> > +          type: object
+> > +          properties:
+> > +            compatible:
+> > +              contains:
+> > +                const: fsl,imx8qm-job-ring
+> > +    then:
+> > +      patternProperties:
+> > +        '^jr@[0-9a-f]+$':
+> > +          type: object
+> > +          required:
+> > +            - power-domains
+> > +    else:
+> > +      patternProperties:
+> > +        '^jr@[0-9a-f]+$':
+> > +          type: object
+> > +          properties:
+> > +            power-domains: false
+> > +
+> >  additionalProperties: false
+> > =20
+> >  examples:
+> > --=20
+> > 2.49.0=
