@@ -1,158 +1,108 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187B3C8EB;
-	Thu, 29 May 2025 07:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AFE1C8EB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748502467; cv=none; b=JSl1rR82WSu2QyXVRsQmFeukbnzv1YhrX+ULRZqK6iPjpzTT23a9EHmzYUKfiE3VpMMfUjQRik5+rK4zSR3cZ7dm+hIi0TZ6yEtlW192Wt/swXJQB2FgeWzP5qyqs7fdT5lqX3td20C0hwTGM8tP6YouuVyU+ou2XUZX1k45hHs=
+	t=1748502474; cv=none; b=dr4FC55U2112uDXsHoPoTb7zaEghE1O8N3D45j5z7Iuza3AI/y7n15/6nKhkvvA3Xd7DLKaojd7KGHhRf0DAXmSHuIt8PFImoA0p9cucu8dccHQVYyD+4FzU7ZfhH+y5or5pZ0nXnYqK/UCqsV3/WBAndWA4DzxniNFGINzh99w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748502467; c=relaxed/simple;
-	bh=6cIekbriWiWKfaXCYAeZSta271blHf9u+hSq5kD2qLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iLN3UIYj2X/wEXiD9JECw3WAUZQouXi5yPiQL+nZod9h4CaAnZ5LdUQ/di/zNqrAy7g0RCHHyv/yxuUbsnwS0cH9I7yEWve3Dl3A/qDj5ggqdOmYlDxOL8JLte7+BLA5Gs+vCCKBU2RmBVWZsuppbTpvc2F7ejKvoNZg0JjuBQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlMYABlf; arc=none smtp.client-ip=209.85.219.177
+	s=arc-20240116; t=1748502474; c=relaxed/simple;
+	bh=NKS7iHP1U8FaSTx+hE719FX8UcVVq3PKmV+dcHoNGb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JeT7o0IaYP4Cc9Ljj3p40jZXBWdueECldNdbHVOr0hvr80lm1VLei7Q6HDw9ZSbEpjmsTgNxOvodYSSRDlCSEsXGUascjRJ76zNddbWXHShnDZDd5YUWwL+uz20VRnqzexe8iq3I19gH8FoKfP5Cr2RFtYSh2PvnvhqMQGmB54M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RfuJaGSy; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlMYABlf"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e731a56e111so512898276.1;
-        Thu, 29 May 2025 00:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RfuJaGSy"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-527a2b89a11so252368e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:07:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748502464; x=1749107264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
-        b=SlMYABlfpapnzZbjZey7RE36bUXAZabI0IjJLr+em511CH/92x5uASEw15iYhIqDxK
-         EGoC2keudxkKPWgyvA5D2YMuu9TqS93lDqlG5Nhau3J88srLsM3+5D0iYcwA19Uvi9pY
-         8fucVTPRwtnewjHDRQb1e1pK/54QLqN1QgknnPY7RPsiQcAkdSRsTMjQYGJN94G78DxW
-         ckfJQGDJW3nehYVD8iUsKbQ9yO4WvO0i/InE4xvNLeZtCE16uy13y+WTJ/jtY7oFjF8E
-         lmEcqxQ5VKZ2wtqrQjLIPLwp3pjmuCffpsPFheYB6kh1oT7sjyjUyi/eBFhKhp/RtriC
-         4U9g==
+        d=gmail.com; s=20230601; t=1748502472; x=1749107272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ozEW/wrZwmWJJB1nILynGsjsZetweqaPIqApEnJSpLk=;
+        b=RfuJaGSy2bX3/YfheE6BzGfw2gMPMvyMwGicbbAsfPTHWPUpMUCKrqjHUuVdAvb+wn
+         PsSK82XRXsvw4YfEQbOcSOdENtCKsapZEYhHrIrVh8AD7hC+AvktveIUOCKcAAWDSnV1
+         dU2YiSc32C3E2oqXJ5mc1YaESyFZxtDADR1Wo0I3lQUaTyePqH3RbwzVsrqTINjxxLPw
+         ufEGGQTw/vBBfeheOaZ6JnrTeN1AaVHLEmxR40K2IbVE4erFojrxlAobuNAuUHMMefEW
+         ernVs/IaIuecnQ6oapNNk58KhfqHFY3BNd+sycEpU0wQ32Q0DHPWH/Q3jQ4BuRDMW4sx
+         tmHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748502464; x=1749107264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
-        b=eVk/BoplTAqaAXac7JOQ0RMOLH/vNghaTiot5XnDrovhGl4D+9bCe1YH+ou3+l6yxm
-         YQG68MR9tGyX3OZvpn93elCowfujIE/iQmk/g8+OaOPSD/CYtomu8KHbgs2vFl4ttecR
-         m6BBjFSF9fRDjbmgit7PdqKpsA39XEz23lRDEKjLDELx1O2q6yvPE9XgcN1QEo5Tib/l
-         IikpwE4XHcP5FsEyq4NZoIYUjRiYNSJh+UBszviLMZmQ045GXBYAbdR42GQrhf7mgPua
-         /0gcg+4IPXdMlUjZNGSicdpYnde9i9uI0yOH6nPO3Au0V5taQMfxFgS9qmUg5kQUfJ7d
-         dGow==
-X-Forwarded-Encrypted: i=1; AJvYcCVIiso0oMa6Lr9KFn2ApcwqiXE/0uQie9OT3oSFHjVZmKJSJsD2nkQnXMFHmP50BONPR8kTGdmG8aSgP/k/0P/Neg==@vger.kernel.org, AJvYcCXr40+sxf3HPl0FFmuJGWqjDgXomzEs/3IabxHy8W8WTOk2DxKpXTirzOuJ82GJvV2/RMsXCQ849znoJiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtbZeY/WY1v4e2kNYZ8ToUQ+88h+bN4n04+RN5OxR/ZUvDlOI5
-	fWnqOun9RlRDv4b6hqtwWv+IMTjTmbP3uXwEI+hmTxC9l3gR6EqZZhIxcCzlOGUJHB2LKC1j2mv
-	kvpKJDIWuejMM+q8lJvZ8thgRHnfpjPQ=
-X-Gm-Gg: ASbGncutmV1/IKr7niZQBGJ6c+eFLCECJcsR5YF47QqbwQPiWEAxtg9GuKNOl/Gxomc
-	Yum07ZBwW7GERO4QL2h653NvabWYti9eHPWBcZmfIpr8I4ZVmOYWBBEQ+J7Bmswc1uhfoNi8507
-	tcGVJKRmCdHYsdK8mmReZTJOGFGTheFac=
-X-Google-Smtp-Source: AGHT+IF2PD3oFwH+ZQPkCKJgOxl/2YbUzJRnx7lBd7GlzLkTmHFvlM+948C0FNI4foXBprodmm3x9TjEwqB8K0rdeU0=
-X-Received: by 2002:a05:6902:705:b0:e7d:9fa6:5fbd with SMTP id
- 3f1490d57ef6-e7d9fa661d8mr21744381276.30.1748502463961; Thu, 29 May 2025
- 00:07:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748502472; x=1749107272;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ozEW/wrZwmWJJB1nILynGsjsZetweqaPIqApEnJSpLk=;
+        b=fBLsT1f+a5PDPl8VHFyauPy3ufbj0C5SO+KuMwg/E8FyJhTqrbcQtvuN6nJHQKqCk4
+         OQ87pOs+jYDqbkhqAqjnEpj5Nftv4uUd3fOTsqCfhH4OFR8Z8is2mJNGpNNES3AmRWs3
+         fhJQeMcFuhjUDPIEmbMJF7T8am0fRZlv1UT6XMZqPnOj1ZCs4tPuzLKaa4RnSeK2TAJz
+         PRQMd/bZ4xlIv3IVxhqaKXSJpPsXPpDDIoJiSWZRz1Co9vzpLewa5DObN99uCsVf0QV9
+         g/v5DeqLgU08xbZynCYGZCzBYEMx8CvICBaDr5e+dFgCHsh6vSoLVbadrvjJtj26DQ4b
+         kdAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+h03cUUbpLFAoyX0Y2r0WZC8H1iaAUylDuZV9Sjus9ZJFYYSO9ijGye6e393SjkZ2my4NELhQejFsSSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+vQ9qaPFmiN/ev2pAC3wRwIf16CDttyCuKpUdvmGxHonx2Wdp
+	/deIFCuBdEFUj58Hj6EcjgrJrxinpWe9vuu0FlpdCgnNa/1CzQPt86zG
+X-Gm-Gg: ASbGncuwBq/horbrV5MEkeJsLn3Lc3tnu9hP3ot90cdDMR6yN3Wpsf7OkFKtHXTqQYf
+	0CImEd/dkdJsEdEbWxNacKrWMbszSJu6z2Od0xtw0sGAORcdKNd0ojJ18JCsF411aTBa6S/0OG5
+	DPRR+5ABOn1kuahHE9P0DEWZlVFEmH1t0RYYrEFY/eZK20zsF8ccQkiZswvPh6JjWVGjBh52usz
+	t20syARH9JtBODv143jGJ5J33l1zWwJUFgvoV2BlUndscbyRGB6KVrTB4IzNJmq7YWLS+bUiHHB
+	RUZ8kTdruXIwiyFG8KDfetXxr2/rSPHzZwNZl7/qQwU2RhDjm7e2mS8kmora5/Tpjhw=
+X-Google-Smtp-Source: AGHT+IFssffTkrdSk3dX7r+bIz/Bbwr+R2AK9rju9Jq8PGlJZCwjm+95jxbi1xYALjVUUH/LclZoNQ==
+X-Received: by 2002:a05:6122:8c15:b0:52a:7787:53d7 with SMTP id 71dfb90a1353d-53076a84ca9mr484230e0c.6.1748502471651;
+        Thu, 29 May 2025 00:07:51 -0700 (PDT)
+Received: from localhost.localdomain ([177.34.235.126])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53074b079e0sm695453e0c.24.2025.05.29.00.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 00:07:51 -0700 (PDT)
+From: Diego Viola <diego.viola@gmail.com>
+To: tytso@mit.edu
+Cc: adilger.kernel@dilger.ca,
+	corbet@lwn.net,
+	ritesh.list@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Diego Viola <diego.viola@gmail.com>
+Subject: [PATCH] Documentation: ext4: fix title underlines in atomic_writes.rst
+Date: Thu, 29 May 2025 04:06:55 -0300
+Message-ID: <20250529070655.21776-1-diego.viola@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 29 May 2025 00:07:33 -0700
-X-Gm-Features: AX0GCFs2lparwpsWTkYFeYSMnbmbNHDg-hi5m0VylnxpQl3BZQy3B72nVEkdAZU
-Message-ID: <CAH0uvojyKi6tN2RfEsG25fn8G5G3iz+pWqjprm9qYaD_sA+i_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
- error messages verbose
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello Ian,
+Match underline length to titles for consistency.
 
-On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
-m> wrote:
-> >
-> > Currently, BTF tests fail constantly, this series fixes two major reaso=
-ns
-> > why they fail, and makes the error messages acquired when using '-vv'
-> > more verbose, so when they fail, one can easily diagnose the problem.
-> >
-> > Before:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 783533
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint syscall
-> >     ---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > After:
-> >     $ sudo /tmp/perf test enum -vv
-> >     107: perf trace enum augmentation tests:
-> >     107: perf trace enum augmentation tests                            =
-  : Running
-> >     --- start ---
-> >     test child forked, pid 851658
-> >     Checking if vmlinux exists
-> >     Tracing syscall landlock_add_rule
-> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
-art
-> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
-,timer:hrtimer_start, output:
-> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
-> >                          \___ unknown tracepoint
-> >
-> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
-und.
-> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
-his feature?.
-> >
-> >     Run 'perf list' for a list of valid events
-> >
-> >      Usage: perf trace [<options>] [<command>]
-> >         or: perf trace [<options>] -- <command> [<options>]
-> >         or: perf trace record [<options>] [<command>]
-> >         or: perf trace record [<options>] -- <command> [<options>]
-> >
-> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
-o list available events---- end(-1) ----
-> >     107: perf trace enum augmentation tests                            =
-  : FAILED!
-> >
-> > Changes in v2:
-> > - Add an extra newline after error messages
-> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
-> > - Take the debug diff for explanation out of patch 5 to make it apply
-> >   normally
-> > - Add base-commit in this cover letter
->
-> Thanks Howard! I did some testing but see failures that may be
-> pre-existing issues:
+Signed-off-by: Diego Viola <diego.viola@gmail.com>
+---
+ Documentation/filesystems/ext4/atomic_writes.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Again, thank you for spending time testing this series! It has been
-some time... But hopefully this: [1] along with the BTF test v3: [2]
-can resolve the issues.
+diff --git a/Documentation/filesystems/ext4/atomic_writes.rst b/Documentation/filesystems/ext4/atomic_writes.rst
+index f65767df3620..1f7780924400 100644
+--- a/Documentation/filesystems/ext4/atomic_writes.rst
++++ b/Documentation/filesystems/ext4/atomic_writes.rst
+@@ -2,7 +2,7 @@
+ .. _atomic_writes:
+ 
+ Atomic Block Writes
+--------------------------
++-------------------
+ 
+ Introduction
+ ~~~~~~~~~~~~
+@@ -133,7 +133,7 @@ atomic writes are typically constrained to small sizes
+ 
+ 
+ Handling Journal transactions
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ To support multi-fsblock atomic writes, we ensure enough journal credits are
+ reserved during:
+-- 
+2.49.0
 
-[1]: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howar=
-dchu95@gmail.com/T/#u
-[2]: https://lore.kernel.org/linux-perf-users/20250528191148.89118-1-howard=
-chu95@gmail.com/T/#t
-
-Thanks,
-Howard
