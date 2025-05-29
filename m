@@ -1,123 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06212AE6F;
-	Thu, 29 May 2025 12:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A222AE6F
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748521013; cv=none; b=A36oercaefDLbiUcp6s8gk9NeINb9onvEF+uGomKfBCJdy8+xPSm28rGUZhRjO7PuiTUvQRqqPL5d+9JFYkuU+HYf+sa/aCCm9JNyGgZLp/pMAJZZATu1GxMw5k35xcAzRkCYgud8peoIP9tOghw95Tcov9XAEUQWTy+VXLyj/E=
+	t=1748521028; cv=none; b=dy4EeShFUOKjXmY12qjfSNX5O6QGBgQC+QLZFXJjzP5Y8jO37fleHhNKm7/Gz4/RFGd9ZDZK/AW/pF99UmWx7HU/Ej8OAvQ2Omr1s+R/6gXhBoK5xwcTL8Vt4eQQ7HWTrXL0rz+5Qyc2p6z8C9jNnoTonO1hgBPfNj/Cr9BY+pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748521013; c=relaxed/simple;
-	bh=3vBQXvVhwm+l42vUA7VErf/HtjbvkBPtjkIUBpaX6aE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=OHXCdq6QeWUlGWvpAZYh5o5A2Yaaze0047TRTicyWv8GfJhhSavO43b9bB60iASUTos8QGBnV7g4yIqt3yO7dPRvg8D2DBHL6yffUAm38IjQgLXVquz1dp962LeZB1FvGkAslaSyhhGgAmd+rvWOe1lDyxQRxvJfpo9snxOad/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emin7nZm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748521028; c=relaxed/simple;
+	bh=5qno7I4dMa09RWSxs2vQbNyyZr0/o35lzcL+Y3Q3L8U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OojSKiVNxgCrScWJzj3GzhyOxvtdaHPl4AG710NT5MyFff7u5GYwPRsg0qj3bcCmcoF8mRukwTMFCOAuCDfNmoW0TA+nf2OGQWvX9RlDAVLjwpTtD4/B1riPIt/qGSQ3cRG5H59SrZzZPJmHocsltStPEkzWm8U3IVP3gwI0KXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JXUzHNaH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=puK20j0N; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JXUzHNaH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=puK20j0N; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emin7nZm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0182C4CEE7;
-	Thu, 29 May 2025 12:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748521013;
-	bh=3vBQXvVhwm+l42vUA7VErf/HtjbvkBPtjkIUBpaX6aE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Emin7nZmG1MBDyfGk5b0zVeX60SaUJ8si00zytLt3P/W9vpaZXN+a+MxJQ+eDIYpM
-	 Fbqnw6PFolCPGnxq2OWzCoTS5VTZYDL0CDo9pBBCftQ4AJIwqYATHtL0WZQPQUgKSp
-	 aosK5cJXZjbhvoV0SIzgbttjzR0MksnMgpAh7qpSkB9rYiJ48GbI6J33PM/vSB+vjY
-	 XxmXXlg5Zefo01qtT19kk5B1gDNLV74/edrI2/J6hOWzkXDlc2xkiNGLajaUol2m9q
-	 lgUgmhNPnKGBvphEAwu0EKYxgGNHLvW6G6cIU8fNyFaWs2olHYDk8cYHkV+Rr3+qEl
-	 qSLHLEjV+4X/w==
-Date: Thu, 29 May 2025 07:16:51 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JXUzHNaH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="puK20j0N";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JXUzHNaH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="puK20j0N"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BBE8E1F38A;
+	Thu, 29 May 2025 12:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748521018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EpyOGu51sM3w0txWZkYdWnLmLNbxO0cQeTqdjYPrGMs=;
+	b=JXUzHNaHxeXKFLqBAMrnC1pl5xarJjJvd0ROSn+9sOP1T/VMbee8aH81Dk2l8R/k78KOqo
+	V014KjeN+4QaBsW0r90jIE/MVcCxRU7vbPyYBau10jJUuf/NN0u+RBM3rCexzSkiaXodXf
+	478M8e/fo5i978i39ph0q1MZyLcKEtM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748521018;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EpyOGu51sM3w0txWZkYdWnLmLNbxO0cQeTqdjYPrGMs=;
+	b=puK20j0NUQJ5r6UIynWtzgsWNeBDPcA8zMtFj1obYlrdeejykPJpoFNW0DMpHE20OiaP6H
+	UGn+I22C1Z4tp6DA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748521018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EpyOGu51sM3w0txWZkYdWnLmLNbxO0cQeTqdjYPrGMs=;
+	b=JXUzHNaHxeXKFLqBAMrnC1pl5xarJjJvd0ROSn+9sOP1T/VMbee8aH81Dk2l8R/k78KOqo
+	V014KjeN+4QaBsW0r90jIE/MVcCxRU7vbPyYBau10jJUuf/NN0u+RBM3rCexzSkiaXodXf
+	478M8e/fo5i978i39ph0q1MZyLcKEtM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748521018;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EpyOGu51sM3w0txWZkYdWnLmLNbxO0cQeTqdjYPrGMs=;
+	b=puK20j0NUQJ5r6UIynWtzgsWNeBDPcA8zMtFj1obYlrdeejykPJpoFNW0DMpHE20OiaP6H
+	UGn+I22C1Z4tp6DA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97AB413325;
+	Thu, 29 May 2025 12:16:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ru+3JDpQOGjNIgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 29 May 2025 12:16:58 +0000
+Message-ID: <31419fad-89ba-4d97-aeea-ecb6fa5136cf@suse.cz>
+Date: Thu, 29 May 2025 14:16:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>
-To: Yingchao Deng <quic_yingdeng@quicinc.com>
-In-Reply-To: <20250529085650.3594253-1-quic_yingdeng@quicinc.com>
-References: <20250529085650.3594253-1-quic_yingdeng@quicinc.com>
-Message-Id: <174852097693.2714455.3894207129970011283.robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: Add coresight node for SM8650
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Strictly check vmstat_text array size
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org,
+ surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Konstantin Khlebnikov <koct9i@gmail.com>
+References: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,kernel.org,google.com,suse.com,kvack.org,vger.kernel.org,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,suse.cz:email,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-
-On Thu, 29 May 2025 16:56:41 +0800, Yingchao Deng wrote:
-> Add coresight components on the path from stm to etr.
+On 5/29/25 13:05, Kirill A. Shutemov wrote:
+> The /proc/vmstat displays counters from various sources. It is easy to
+> forget to add or remove a label when a new counter is added or removed.
 > 
-> Signed-off-by: Yingchao Deng <quic_yingdeng@quicinc.com>
+> There is a BUILD_BUG_ON() function that catches missing labels. However,
+> for some reason, it ignores extra labels.
+> 
+> Let's make the check strict. This would help to catch issues when
+> a counter is removed.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+
+Yeah I don't see why it would be necessary to check only for missing labels.
+
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
->  arch/arm64/boot/dts/qcom/sm8650.dtsi | 250 +++++++++++++++++++++++++++
->  1 file changed, 250 insertions(+)
+>  mm/vmstat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: failed to guess base
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250529085650.3594253-1-quic_yingdeng@quicinc.com:
-
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: tmc@10048000 (arm,coresight-tmc): iommus: [[75, 1248, 0], [75, 1216, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: tmc@10048000 (arm,coresight-tmc): Unevaluated properties are not allowed ('dma-coherent', 'iommus' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: tmc@10048000 (arm,coresight-tmc): iommus: [[75, 1248, 0], [75, 1216, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: tmc@10048000 (arm,coresight-tmc): Unevaluated properties are not allowed ('dma-coherent', 'iommus' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-hdk.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-mtp.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: replicator@10046000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: tmc@10048000 (arm,coresight-tmc): iommus: [[75, 1248, 0], [75, 1216, 0]] is too long
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: tmc@10048000 (arm,coresight-tmc): Unevaluated properties are not allowed ('dma-coherent', 'iommus' were unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-tmc.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): out-ports:port@0: 'reg' is a required property
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-arch/arm64/boot/dts/qcom/sm8650-qrd.dtb: replicator@10b06000 (arm,coresight-dynamic-replicator): Unevaluated properties are not allowed ('out-ports' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-dynamic-replicator.yaml#
-
-
-
-
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index ae9882063d89..0903adace423 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1867,7 +1867,7 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
+>  	if (*pos >= NR_VMSTAT_ITEMS)
+>  		return NULL;
+>  
+> -	BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS);
+> +	BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) != NR_VMSTAT_ITEMS);
+>  	fold_vm_numa_events();
+>  	v = kmalloc_array(NR_VMSTAT_ITEMS, sizeof(unsigned long), GFP_KERNEL);
+>  	m->private = v;
 
