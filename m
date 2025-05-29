@@ -1,99 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4763078F34;
-	Thu, 29 May 2025 16:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C463622D9FC
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537615; cv=none; b=H67+cVSNybtwJzTBqB9wRThT0N1y2Em1CJ51hGKS1e7xxch9uRdhr4lWsxiogsNIuB4DiwMGaWl6F8ltt1dpF94i7bge0qAi9y0kj1sNsDSZt+kJ1DHZj4geTOHMGazmbrYQrbYiMY3LoQ7OjC/eDb/9NaV+uaG/hiK1/0+ifTk=
+	t=1748537635; cv=none; b=rGv1+woirY/1JKF+ANM8klvCAmMlU+3xymut2x5K0wH1k0eNAgW/hkruufGAyCthsgFF/dmmBHuZ0BSZKUnUEUJ9cECuuwKPfxwUYejXIACUMHUV3wqJqjxgZpBd4+BUpuJnPC1yO1NgbBXR2iqo8TDFbUyRL8Eu2BLoGty9GZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537615; c=relaxed/simple;
-	bh=UtEunc93gX1CpA2f4qmI5Od6rQOn3rdgClOKZFQfFU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B7RlfqV6uXcwPr0n25UyrmXKTAlRkqI+WGTyoQGKjubufQfxH2oaBL+5UVsUQ4pnAGnU/HuVj74MhXirj9uLSQDnY9lREhWN+/fNfURJl8L4JhcqOlMiVcCDWcjfFbDe6QQENwqi+JKXn4IvFKM9F6yTlOCex9u/KoFnqmJ2kW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q2RC6zXZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748537635; c=relaxed/simple;
+	bh=tXN/bUv5GGn68VfUhe3b6vC2z9pHKfDijFpQd04/NLw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qDICEEb8yn7qh7zxDW2rI717ibZTW02ekwDs/zlzq/vlSnob64RwnuUKMj7kLcW4eVDvg/JE7UtadlopoPeSgYLPH79fNSZVgOuYyP+3vxb5nd1Z+8A12J/QDdfOYMZFOb6w5FHWTgGrrqoaHZSZcfUmJnhWAQvYxSJqh7fDlmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Bw+fx9wm; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2RC6zXZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF25C4CEF0;
-	Thu, 29 May 2025 16:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748537614;
-	bh=UtEunc93gX1CpA2f4qmI5Od6rQOn3rdgClOKZFQfFU4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q2RC6zXZ+4NCe342QGMpVJQFO5So6N4mTx0xcCsajie+aHBmCM4U8n6DdOXDJqjGN
-	 cq28+ffp2DgaQSbtgG9Qj0jPB+9cR6TU/Q5vKvQLVDCBjbeT4+N6o+If1R2JFSUngU
-	 mw71oJ7wJT9ZY7itmwLPrQMkuj0gaVziMoMnswLUBzemJw5SzNWzMu5F+JGu+3CK7U
-	 raoYIKRI/kmS6qaRG5U6pOk/46p4qUFOWfGXI40yXFJ4Q0diAv3ZayvwATSwdcDWVw
-	 QDH8aiba7sd1SoCK383H57mRZ2mj8soURHedwJUcM4SVgor6ZBlCsZow8NkFd6URMB
-	 LGNjcfk83DgdA==
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7cd0a7b672bso75900885a.2;
-        Thu, 29 May 2025 09:53:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURtjlWXzI+pQTCnHc6P9jhWxA3w+MeOGDx5PMTkYImaz552QDrWBhV2y2eer/UxLV/JwAymXo3PubJHBy7rNTFcHDpThfn@vger.kernel.org, AJvYcCUjfK2CzX8/NFomjYoPiMjcFrAThVMhZJG93QkmqPpF+gujIPlPEgfbr6fOjWkJVnst0Ya6xH3e4aemz7v8gg==@vger.kernel.org, AJvYcCW7xVOPzUYto2LtQUIwqQ+p5TEeZsdOtqUrYfquZFqhLRjnuVFcy7IM3IIfWApyc+Awbw2WTTeRfTjFwNUP@vger.kernel.org, AJvYcCXWw9qP0X5ySQ6e7tFHP6phjiUJ0r8mi+hoR+yUUoWkSnBl05U4W5hhCBjWPQ0DoHlklWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDembsVUhhkxUQ8NPSK1w9+5MatJQTsW+pkJX4XaDbLZibSl/e
-	Dg8zSR/Ct/Ri2a9D3WjJw4D3ABQ6vvwmmSrc97gvcHxONr5wFZni+uYd5mGIcUIxItHJThK+nUF
-	fxZTKwO6tSeOfIrcWea12Hfp3NuyCUPA=
-X-Google-Smtp-Source: AGHT+IEEEibPylYu3D1KsFoeefHSm++FNME0VmZZ+vB4utHS73EQFAKRtBg5oQAt1vvG9GKpYqeUbO/o3GjJTznkiew=
-X-Received: by 2002:a05:620a:170d:b0:7c5:9c12:fc8 with SMTP id
- af79cd13be357-7d0a203e718mr29873985a.38.1748537613800; Thu, 29 May 2025
- 09:53:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Bw+fx9wm"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7304efb4b3bso671561a34.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:53:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748537632; x=1749142432; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PxRvSUzHeev+hBLLES5l8w1nd2OHwRLbMnpZSS6PLIU=;
+        b=Bw+fx9wmjb6Ymxt1d0h3TOj+qcW1ZmfSsWIZQ3eYpE9aiYlfDQa460FBWpejn33hm2
+         1d2jaA5brvHCOZ+LgWLhkArWqKfb2dgiVBMcDIVvhvSFz88XtlnvD0hiqLKkgtcxKssb
+         EGooA9wjJOdkkjWik1nCeu4U6BRSh7w1qzxDuAl8HxLF/aRrZkBhL4chD8BHf8FOQLpS
+         C619VC8JNQ7JEVM8V1FfC6DENiSPbnIM6H1QTaUx75tvLsP8Se6MwQ2uBT2u+xyxTugD
+         MR26xHhWn4wA+/1TpZdr8BWoFjJtYaPia464bbG385eJsAXNVmBUkpYxPH99wGkHzq+i
+         EIYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748537632; x=1749142432;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PxRvSUzHeev+hBLLES5l8w1nd2OHwRLbMnpZSS6PLIU=;
+        b=t9E/BOk2E9WFRMvxf8d+Fnxs9M/AoGcIa7rvHTt7YFxeTOfkmHa4TJ5OASbhtHGV4M
+         JhCun5wE9NXuahJ4tWn7OMOLmk7kEHUO4P0zXFGBO+IdF/0Zi3Vzm5gxeCQmvceJOJFL
+         nKdP/9mVd5RkN/KevKJfNarAzLQsbuq0ARDIOzCYGfZBkyKvQnq/s+VWxowywK4/SbE4
+         km5rcGY2erp3FrcKRAfi+AVl2RlkdJqvqKhusVwH0Q9aN8cMRifZqdEvQuxILqOpWMwu
+         lAI7kKKEtpXOLwR14fwWnwcSV5AlUW4aaRKmo8vt7MKtaNMvOCrMqg0k9/B2UagVITD0
+         90Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMGvpvBhH2kgEf/kJO0qA14oMPQtH5wTAaOSYYmi2by87ZqzZL5D5r9hZrXhgjsdJFsURXA2MjwP1fDuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEjeDgkGw9nwHFxzqFASVwscptBGQtviszIEUuxQFCPnvQ2gsx
+	5MHBx3Bap2huUiftGH6GXfzz2ENc+v0HCqVE+lxOEvmMz6+u8X55QDjp/RINPXyeGAa3tp+HByQ
+	czCD9
+X-Gm-Gg: ASbGncuetG+tu+yevYOpiUi4aehKD5jd7Z/cHnImTjzPVUh1I4Pg1iAXEBAEKEXHUl0
+	yX/2ZjTxeKvBKBfcNEcmlUbWwmfLdgx3WlcuwoQJrXUP2Q0TAEdyLN9iHATH8/wrwaRr9G9gOtA
+	n45haTz0D3Ewird2xAJF6VRx/eXUTKHulorYTD23gnkZLGJh8GFF/xVGao8toYbGyUReWHugXyO
+	pxfeFPjKgget94gImgCEfLE4e6eYOeFvwBxHyV+wY351qBBtm8tgPVxXIaEdSh9Nb75FdOfovZK
+	+hr0YaDjTmVuNkDiFziXxFDxrKkHGYjpDjDxDeFKsNoiw0D3GNpr7dfg
+X-Google-Smtp-Source: AGHT+IELS+hG7loPhc/Vw7Ryo09hGdzU1FX0Hl6otVIzbS6UeuyM3wrPyUK6DPm+l3cfGDB550/IyA==
+X-Received: by 2002:a05:6830:380c:b0:735:b0a3:e485 with SMTP id 46e09a7af769-73676b88f9bmr33364a34.25.1748537631732;
+        Thu, 29 May 2025 09:53:51 -0700 (PDT)
+Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:928b:5d5c:6cd9:1a4])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af82d2b8sm303265a34.3.2025.05.29.09.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 09:53:51 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v3 0/3] pwm: axi-pwmgen: add external clock
+Date: Thu, 29 May 2025 11:53:17 -0500
+Message-Id: <20250529-pwm-axi-pwmgen-add-external-clock-v3-0-5d8809a7da91@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
-In-Reply-To: <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
-From: Song Liu <song@kernel.org>
-Date: Thu, 29 May 2025 09:53:21 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
-X-Gm-Features: AX0GCFvYCS_xA9xNRqMdAIU4bXgKkiIvXrY3HrR-OxBWf_rIfVKBsXSnt7wWCFg
-Message-ID: <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-To: Jan Kara <jack@suse.cz>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, bpf@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, 
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, brauner@kernel.org, kpsingh@kernel.org, 
-	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP2QOGgC/43NsQ6CMBDG8VchnT1zFGnAyfcwDuV6QCNQUghCC
+ O9uIQ7Gyenyv+H3rWJgb3kQ12gVnic7WNeFSE6RoFp3FYM1oYVEmWIap9C/WtCz3W/FHWhjgOe
+ RfacboMbREzBRl7IwZYZ5IYLTey7tfGzcH6FrO4zOL8fkFO/fjy7xD32KAUGRUQkRYkzZrdBLY
+ wvPZ3Kt2Acm+Y3Kf1AZUMwU65wVU4k/6LZtb/a6lqIqAQAA
+X-Change-ID: 20250515-pwm-axi-pwmgen-add-external-clock-0364fbdf809b
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Trevor Gamblin <tgamblin@baylibre.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1878; i=dlechner@baylibre.com;
+ h=from:subject:message-id; bh=tXN/bUv5GGn68VfUhe3b6vC2z9pHKfDijFpQd04/NLw=;
+ b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoOJEEKE70jzqKOf4Xnw34nS2599BQ3qJVqgLc8
+ FVzfuLopIGJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaDiRBAAKCRDCzCAB/wGP
+ wLTFB/wKIgZf+3k4itUkgrYwKeZTnNIMlCRpHzg5K6gqrKGJ6BNnZtZu0q11gI8LNqgUDcUvbaP
+ WSPXeHak/8nytkml8SseXHsNxdfFCTu6ZaEwvO6OXY5eu6kENPqr4eZdm7QPB9OAw1rAP7BSJyV
+ i3PKemCGTJzozdhKtaMjvZ+0msanPHtH2LPhQwjDhozULjD8of6iQr5r3Y76YWRj2qR5gh/1rid
+ R/sMBc2N8z/0BfPEzwv3kQ4ziRlxDYZ3GPH9gFt1e1adiZVe2c0knjDo3KeA9LpW7qdMtYjCv1H
+ yyFjiI3dKhv6Am6IKHhr+4QOzNe1E2eL9xPkwsiMZVzQY1Bb
+X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
+ fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Hi Al and Jan,
+When we created the driver for the AXI PWMGEN IP block, we overlooked
+the fact that it can optionally be configured to use an external clock
+in addition to the AXI bus clock. This is easy to miss in testing
+because the bus clock is always on because it is driving other
+peripherals as well.
 
-Thanks for your review!
+Up to now, users were specifying the external clock if there was one and
+the AXI bus clock otherwise. But the proper way to do this is to would
+be to always specify the bus clock and only specify the external clock
+if the IP block has been configured to use it.
 
-On Thu, May 29, 2025 at 4:58=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
->
-> On Wed 28-05-25 23:37:24, Al Viro wrote:
-> > On Wed, May 28, 2025 at 03:26:22PM -0700, Song Liu wrote:
-> > > Introduce a path iterator, which reliably walk a struct path.
-> >
-> > No, it does not.  If you have no external warranty that mount
-> > *and* dentry trees are stable, it's not reliable at all.
->
-> I agree that advertising this as "reliable walk" is misleading. It is
-> realiable in the sense that it will not dereference freed memory, leak
-> references etc. As you say it is also reliable in the sense that without
-> external modifications to dentry & mount tree, it will crawl the path to
-> root. But in presence of external modifications the only reliability it
-> offers is "it will not crash". E.g. malicious parallel modifications can
-> arbitrarily prolong the duration of the walk.
+To fix this, we add clock-names to the devicetree bindings and change
+clocks to allow 1 or 2 clocks.
 
-How about we describe this as:
+---
+Changes in v3:
+- Fixed clock-names DT property restrictions (was failing dt_binding_check)
+- Added Cc: stable
+- Picked up trailers
+- Link to v2: https://lore.kernel.org/r/20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com
 
-Introduce a path iterator, which safely (no crash) walks a struct path.
-Without malicious parallel modifications, the walk is guaranteed to
-terminate. The sequence of dentries maybe surprising in presence
-of parallel directory or mount tree modifications and the iteration may
-not ever finish in face of parallel malicious directory tree manipulations.
+Changes in v2:
+- Consider this a fix rather than a new feature.
+- Make clock-names required.
+- Simplify the logic in the pwm driver to avoid needing to test if
+  clock-names is present in old dtbs that used the broken binding.
+- Link to v1: https://lore.kernel.org/r/20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com
 
-Current version of path iterator only supports walking towards the root,
-with helper path_parent. But the path iterator API can be extended
-to cover other use cases.
+---
+David Lechner (3):
+      dt-bindings: pwm: adi,axi-pwmgen: update documentation link
+      dt-bindings: pwm: adi,axi-pwmgen: fix clocks
+      pwm: axi-pwmgen: fix missing separate external clock
 
-Thanks,
-Song
+ .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 15 +++++++++++---
+ drivers/pwm/pwm-axi-pwmgen.c                       | 23 +++++++++++++++++++---
+ 2 files changed, 32 insertions(+), 6 deletions(-)
+---
+base-commit: 484803582c77061b470ac64a634f25f89715be3f
+change-id: 20250515-pwm-axi-pwmgen-add-external-clock-0364fbdf809b
+
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
