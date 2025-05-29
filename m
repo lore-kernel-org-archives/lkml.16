@@ -1,216 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3277C263F22;
-	Thu, 29 May 2025 05:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192C7265623;
+	Thu, 29 May 2025 05:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748497402; cv=none; b=EcH1q+IfAGMY6uIN2NUaMABhYDheST3y/aQnVQkQQb3tDn8qT90jgpM0wL3uUehpm+4YDqwk5ki9tzNyjsU3BS84fqySejdeV76IXFUOIQB88kTxWlT5hpp0Es+GbjQnm3CxWaACSBWVbymuUSA2aL4ffMtnP7YU+3PQ+//xjSo=
+	t=1748497406; cv=none; b=jf52/haKX2BurqfSl3xuCmc3aBDgLLGBjCnbptr2ooTJo8OxnCKUUoCKo0TfJ7mEmlRkBEmut1wON01j22+QGSh238BtrXDnJ+Roe0lq0ULJ595CRX7khdLUS6vU1XZP0O+oEcYhlCxkMHQNmvlXQWvMycO+uvQFJPvFzIHAm4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748497402; c=relaxed/simple;
-	bh=1sJ+poZNAA+vU0Y1aNtnd5Xw3yJEQigl4o9A/3/bVeQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h3P65zfX4M2Y87VbAyJmdOTUqLGOlJwKq3YhYkdwBqr3FEaQ/tO4g1RxBoQMXn4k5JgkPZC99hhsYgzsyJyzLPJ0uokm1WsKmrC27qf9Syh5aLrnziHm/H0R1gQ7RGerDoImEhgOXIZVuNO0/IMZFl4ADx8QLBiVCnqAQ9xZJR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YhjfCBpO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748497406; c=relaxed/simple;
+	bh=8h6UqYy6eQh8UhHHfZ1AnwFWgdsRIGY/Pnr4CW0Cie4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HqHmmDmqgOPy4vwnYxGDroZGqAlvpTUEZqutDMDPcNUQ7AIxYZhVv3UcK4kT8EnULHunOAiqIbYUgdlOz5Hjbydxs6/jByIKXRk9Sw4dBsFth2RWA8UmYi1i7fXdjtst8uq3330Fnhh+sQvxpPXx3goFZCHz+RZNhgl08WHee0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cvr+/7OF; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YhjfCBpO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748497402; x=1780033402;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=1sJ+poZNAA+vU0Y1aNtnd5Xw3yJEQigl4o9A/3/bVeQ=;
-  b=YhjfCBpOTPW+de7iNTJU+wvO38pD/PYRQ+No4dTYLdheXWgCb6zy/XDR
-   YJCE3m74BNZc/QplRep/kVitHZS8I9CXjxpGsNwNPeF/Ah7OOyUSc+lAt
-   u0r886sH+7/mh/okGt3UNEUwsCK/DeaVp7W4pzEBkEimLHhLxzmqZpHI9
-   OWtTdQUc8Nc/ZzbOz9Z5bnibqy6xLquhkVTPXy11jAVWqMgCcx9/KaMXS
-   MQI0WelXNUbq/wRzpVxZEEQu1bBbpwEM5CDBtZBrlExAl9AmlBri7Dpf1
-   X2e1rXVpcO12bebVvYkRflKDXUsyVnbLB37jNE3BZs4PfXzb+mvVCwxCL
-   Q==;
-X-CSE-ConnectionGUID: sOdH2yVKT6+eAEBcQ9TlPw==
-X-CSE-MsgGUID: /SncQ3dbRAu3ZnG95/sXqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="67963207"
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="67963207"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 22:43:21 -0700
-X-CSE-ConnectionGUID: V/DubCh8TMKiJEbyh03JUQ==
-X-CSE-MsgGUID: 19kO3jWHS7m725iMeywwhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="144443422"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
-  by fmviesa009.fm.intel.com with ESMTP; 28 May 2025 22:43:14 -0700
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: kvm@vger.kernel.org,
-	sumit.semwal@linaro.org,
-	christian.koenig@amd.com,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	alex.williamson@redhat.com,
-	jgg@nvidia.com,
-	dan.j.williams@intel.com,
-	aik@amd.com,
-	linux-coco@lists.linux.dev
-Cc: dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com,
-	yilun.xu@intel.com,
-	yilun.xu@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	lukas@wunner.de,
-	yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch,
-	leon@kernel.org,
-	baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com,
-	tao1.su@intel.com,
-	linux-pci@vger.kernel.org,
-	zhiw@nvidia.com,
-	simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com,
-	aneesh.kumar@kernel.org,
-	iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: [RFC PATCH 16/30] iommufd/viommu: track the kvm pointer & its refcount in viommu core
-Date: Thu, 29 May 2025 13:34:59 +0800
-Message-Id: <20250529053513.1592088-17-yilun.xu@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvr+/7OF"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad574992fcaso89314966b.1;
+        Wed, 28 May 2025 22:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748497403; x=1749102203; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=91m00KOPKqAhxAOXF7AdqmwKSx+GFz4yTWglZ94qqh0=;
+        b=cvr+/7OF/OYFTcgnGNzK/AZwvWF6I3jhCVG1nfFvsFhPR3ylhJKhwk7Ke7bon/b3ph
+         0ObTJvIn1/FyY5jl5ebo/cW2E451vWREtsbDA9pJfLYNSzuR/+77CsVNh+D37z1pkSiz
+         Ju+KfqnAcvpM1f6CLjduio6yhmItBQn29Pwm4Ib1lMFLpn1M42l21UiVY/FOke3Dp2uT
+         QWgvPGdiJw8mkFbA57vA7qXXLUqI/jW7n1C1mYnR+mL9jWclX+8ytgQupxqMf+2wY4X6
+         nSgjOjI/e8uuGeo+bjAav+CHMKI/PbHoWcTIXak7M1qoDL/XmKpuJ1uUklo18/qHn8g7
+         q/TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748497403; x=1749102203;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=91m00KOPKqAhxAOXF7AdqmwKSx+GFz4yTWglZ94qqh0=;
+        b=noc63he8KdWYFpogwiRmbJh+QRciUiRu0fxwM/EFX38iUp6yrniWURtBIMrUUExIsJ
+         08htKp9/afCVGjtsshzM2adt4BpUh+Z9ZMnXgXs+pksswlRe3InVyvGB+6k6KW/mUyBw
+         AuaZW7Bl6XN5cWOsSZPuVnmVDMGjCnhsg75fIWAr+EHLW4zAPJJh1ZF8lqWXC/ueHadp
+         CjB2eUhcQiv197a3QXkH0OH0yu5efKpq1AJgvk4dg48UZ8MwqEpd3PWxvCQwNo0/GNQa
+         AwIDPYwRPCvW+WJ+QXHTXEVNqCsvAGunDRpTq3XLHakAXaPf+mVco93n52pYmu8SuQPa
+         +v9g==
+X-Forwarded-Encrypted: i=1; AJvYcCWOS/bPaRCmqwM3z7kCkI5iOU6oSxwGkRjlouRSzBC6lQrKdYvuXcMoMdnCOkv7RbUHDNSULbYqDDm0hlQc@vger.kernel.org, AJvYcCX/2+JYgzeX9cNDZai4H8gKxBkaUSCE0OzDJcJ54rAkQoczFFy+ZcYnWy7KatA5hfep3+Ot0qW57Bc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3OjKkA61KP7P9SMmVwNW31ebwqiuH+XF1qVG+TqUE4TC9lOsS
+	vQdrsx0AkQ3tN9UiC6heR3WV8ZFR5kq36HxTXyd45QeRasEIGNYyKM8Sbyygoh34W1b/rDSuWxl
+	1jgh0jBsBpIYg1Ne5wKhdI308Zl9pKgg=
+X-Gm-Gg: ASbGncu7b6kfcdIYRBxy2OwYjMEZ1rCO4OFDcOB63jo+ZRSs1KkXvW0xBtzoyylmsnA
+	2ndoeddUlRvPLwREWsPaeYNBkjXEM4i4tKgY2Yp1WXMpjk8mJD+wL7yrepoe7hhTYsaHG/I/Zv1
+	9i/SEK40D3Cau05QyqHCA8H2t42VkZZP6ZPETG6OL7FBCY1w==
+X-Google-Smtp-Source: AGHT+IHFITTJqypSQIQUaeCvI5fCs+IEhoVxF5pNBP2RI9WF2ldNdg562/uwxhowfwbCkClGch7COKrW9k3nQiFO1oU=
+X-Received: by 2002:a17:907:868b:b0:ad8:aa2c:dfe3 with SMTP id
+ a640c23a62f3a-ad8aa2ce37cmr319177566b.59.1748497403101; Wed, 28 May 2025
+ 22:43:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250527200534.98689-1-gye976@gmail.com> <CAHp75VcUr7-X+F1f=wPH4=Z7q3kFffv8BgkmKWM4VTjy2w-tGg@mail.gmail.com>
+ <CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com>
+ <CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
+ <CAKbEznt7ZhN9gZWy-7wHhFhwbF8XtCGrukuxe4eAFZpfxfu6vg@mail.gmail.com> <20250528180214.00002253@huawei.com>
+In-Reply-To: <20250528180214.00002253@huawei.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Thu, 29 May 2025 07:42:46 +0200
+X-Gm-Features: AX0GCFsr-52UgU7OTbDHca2TsgtybzFgxtr1LZvlY1UivEOK3iUWkejYE_wv0is
+Message-ID: <CAHp75VdBMXCBYiDX8ocyOZBm_dhWJSU_NXJN6PmOwsZaJt=AHw@mail.gmail.com>
+Subject: Re: [PATCH] iio: trigger: Avoid data race
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Gyeyoung Baek <gye976@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Track the kvm pointer and its refcount in viommu core. The kvm pointer
-will be used later to support TSM Bind feature, which tells the secure
-firmware the connection between a vPCI device and a CoCo VM.
+On Wed, May 28, 2025 at 7:02=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+> On Wed, 28 May 2025 16:17:06 +0900
+> Gyeyoung Baek <gye976@gmail.com> wrote:
+> > On Wed, May 28, 2025 at 6:19=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, May 27, 2025 at 11:10=E2=80=AFPM Gyeyoung Baek <gye976@gmail.=
+com> wrote:
+> > > > On Wed, May 28, 2025 at 5:25=E2=80=AFAM Andy Shevchenko
+> > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > On Tue, May 27, 2025 at 10:05=E2=80=AFPM Gyeyoung Baek <gye976@gm=
+ail.com> wrote:
 
-There is existing need to reference kvm pointer in viommu [1], but in
-that series kvm pointer is used & tracked in platform iommu drivers.
-While in Confidential Computing (CC) case, viommu should manage a
-generic routine for TSM Bind, i.e. call pci_tsm_bind(pdev, kvm, tdi_id)
-So it is better the viommu core keeps and tracks the kvm pointer.
+...
 
-[1] https://lore.kernel.org/all/20250319173202.78988-5-shameerali.kolothum.thodi@huawei.com/
+> > > > > At bare minimum they are not relevant to the patch change and hav=
+en't
+> > > > > been described in the commit messages.
+> > > >
+> > > > I initially skipped this part as I thought it was minor.
+> > > > But on a second look, it seems better to separate the declaration f=
+rom
+> > > > the logic.
+> > > >
+> > > > What do you think about the data race logic? Would it make sense?
+> > >
+> > > The point is valid, the atomic_read() + atomic_set() is 101 thingy,
+> > > whoever did that doesn't really have a clue what atomic(ity) is.
+>
+> :)
+>
+> I'm trying to recall what this protection is actually for so this might
+> be a little vague as descriptions go...
+>
+> The key here is what can happen in that 'race' and hence why I'm still fa=
+irly
+> sure it isn't a real race.  Firstly this is called in an irq handler
+> so we can only have one call of this particular function at a time
+> for a given trigger.  So no race against itself.
+>
+> The atomic part is about decrements that can happen elsewhere, but there
+> can never be 'more' decrements than the value we set the counter to in th=
+is
+> function.  That is it never goes negative.
+>
+> Those decrements ultimately happen in calls that can't happen until after
+> the set (via various convoluted paths ultimately getting to
+> iio_trigger_notify_done()).  In many cases the trigger is masked until it
+> is reenabled on the counter =3D=3D 0 (elsewhere) - but not always...
+>
+> IIRC correctly aim is to not double trigger in cases where we can't mask
+> the trigger (a particularly rubbish trigger) - so if any of the downstrea=
+m
+> devices still hasn't called iio_trigger_notify_done() then we quietly
+> drop this particular irq on the floor. We don't mind dropping a few
+> too many, just dropping too few a then we end up loosing count of who
+> has to be 'done' with the trigger.
+>
+> Hence the counter won't change between atomic_get and the atomic_set
+> as it's always 0 which means no one else is left to decrement it.
+>
+> Atomics don't always need to be atomic all the time, they just are in
+> some states.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
----
- drivers/iommu/iommufd/viommu.c | 62 ++++++++++++++++++++++++++++++++++
- include/linux/iommufd.h        |  3 ++
- 2 files changed, 65 insertions(+)
+Yes, but this is confusing and/or buggy code to begin with (and
+independently on the background of its usage). Technically this patch
+(perhaps with a better commit message) is valid. Main two points here:
+1) avoiding potential (even theoretical) race; 2) do not spread a
+really wrong pattern to avoid people learning from it (in case
+somebody takes this code as an example for a new driver which might
+reside outside of IIO and hence might not be caught by the reviewers
+of _that_ subsystem).
 
-diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-index 488905989b7c..2fcef3f8d1a5 100644
---- a/drivers/iommu/iommufd/viommu.c
-+++ b/drivers/iommu/iommufd/viommu.c
-@@ -1,8 +1,68 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /* Copyright (c) 2024, NVIDIA CORPORATION & AFFILIATES
-  */
-+#if IS_ENABLED(CONFIG_KVM)
-+#include <linux/kvm_host.h>
-+#endif
-+
- #include "iommufd_private.h"
- 
-+#if IS_ENABLED(CONFIG_KVM)
-+static void viommu_get_kvm_safe(struct iommufd_viommu *viommu, struct kvm *kvm)
-+{
-+	void (*pfn)(struct kvm *kvm);
-+	bool (*fn)(struct kvm *kvm);
-+	bool ret;
-+
-+	if (!kvm)
-+		return;
-+
-+	pfn = symbol_get(kvm_put_kvm);
-+	if (WARN_ON(!pfn))
-+		return;
-+
-+	fn = symbol_get(kvm_get_kvm_safe);
-+	if (WARN_ON(!fn)) {
-+		symbol_put(kvm_put_kvm);
-+		return;
-+	}
-+
-+	ret = fn(kvm);
-+	symbol_put(kvm_get_kvm_safe);
-+	if (!ret) {
-+		symbol_put(kvm_put_kvm);
-+		return;
-+	}
-+
-+	viommu->put_kvm = pfn;
-+	viommu->kvm = kvm;
-+}
-+
-+static void viommu_put_kvm(struct iommufd_viommu *viommu)
-+{
-+	if (!viommu->kvm)
-+		return;
-+
-+	if (WARN_ON(!viommu->put_kvm))
-+		goto clear;
-+
-+	viommu->put_kvm(viommu->kvm);
-+	viommu->put_kvm = NULL;
-+	symbol_put(kvm_put_kvm);
-+
-+clear:
-+	viommu->kvm = NULL;
-+}
-+#else
-+static void viommu_get_kvm_safe(struct iommufd_viommu *viommu, struct kvm *kvm)
-+{
-+}
-+
-+static void viommu_put_kvm(struct iommufd_viommu *viommu)
-+{
-+}
-+#endif
-+
- void iommufd_viommu_destroy(struct iommufd_object *obj)
- {
- 	struct iommufd_viommu *viommu =
-@@ -10,6 +70,7 @@ void iommufd_viommu_destroy(struct iommufd_object *obj)
- 
- 	if (viommu->ops && viommu->ops->destroy)
- 		viommu->ops->destroy(viommu);
-+	viommu_put_kvm(viommu);
- 	refcount_dec(&viommu->hwpt->common.obj.users);
- 	xa_destroy(&viommu->vdevs);
- }
-@@ -68,6 +129,7 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd)
- 	 * on its own.
- 	 */
- 	viommu->iommu_dev = __iommu_get_iommu_dev(idev->dev);
-+	viommu_get_kvm_safe(viommu, idev->kvm);
- 
- 	cmd->out_viommu_id = viommu->obj.id;
- 	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
-diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
-index 2b2d6095309c..2712421802b9 100644
---- a/include/linux/iommufd.h
-+++ b/include/linux/iommufd.h
-@@ -104,6 +104,9 @@ struct iommufd_viommu {
- 	struct rw_semaphore veventqs_rwsem;
- 
- 	unsigned int type;
-+
-+	struct kvm *kvm;
-+	void (*put_kvm)(struct kvm *kvm);
- };
- 
- /**
--- 
-2.25.1
+Alternatively we need to get rid of atomic operations, but with the
+same effect as 2) above.
 
+> So, is this something that has caused observed problems, or based
+> on code inspection? My remembering of what was going on here might well
+> be flawed.
+>
+> There are some 'fun' corners for what happens after that set though
+> where a handler can run fast enough in race conditions we end up
+> hitting 0 in iio_trigger_notify_done_atomic() and have to schedule
+> restarting of the trigger because that might involve a bus write over
+> a sleeping bus.  That one was a painful bug report some years ago...
+
+--=20
+With Best Regards,
+Andy Shevchenko
