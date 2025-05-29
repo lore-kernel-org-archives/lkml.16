@@ -1,122 +1,160 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C7519ABB6;
-	Thu, 29 May 2025 13:15:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 937D4647;
+	Thu, 29 May 2025 13:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524515; cv=none; b=gCU1/wS8VURYiucZ0+ppxUHbMCHexXYy80HlR1STbwusnjTUjwLz14nuH5cKRrizNRXQaKEM/PaZWfMlpzlPyLNRWr1QBS5rJFewnCtX59zIYKq0inaJ+CKQZWs2OPrevl/DV15shIoSYozzVWXYpTwvpN60AfdStNSBavcXgzs=
+	t=1748524525; cv=none; b=L9NbPNKAypb+HqKV9dC7Bz2Jsqee2ntvNXnXTD8KN+y5IAqDgx+4XCWV8WjhRNQAhZ4ipkwg2UgReFE3gTepGFipwLehoa2pWalXaJr/3SbRBChQxfoUi6KnPwbZqjo09dv1cnxRETLIAjvs5cqxmxV/xDg6DwRVc8UoO2aE9TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524515; c=relaxed/simple;
-	bh=izTBMmwweAGuAnXHJtubgKrUDiBkjD0FY51OCVbyMBI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bDdwOpbguNMQUwygZcbxk0J8juANZObXdZfgHczgNhEYCc2FnDS9unU+HECy4z/XCFIwjRvpmu8AGWygNDwaC5KA1uUh47XCVl+FJdGT2vrIIBLTZUX7xdraNggU4fMvHfpro+uu3AUCNRQXmEdfxksgWiDRc5vHi6y3u+7tVgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTOFfuSB; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748524525; c=relaxed/simple;
+	bh=+aU5coUTqdWc4L2KpPHN9OKmnhKhXyOVMxJInCN/ebk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EN8T/+tu6tK1s6v2zfyRcBPeSU7yInYJG80VntWGM4HRO6tQCX4WKlc/Q0eGpFEYcFcm2bixZ3FH7WZwWBVG0GFWjdXugZ4DUQ8ptdF/dJdTi18vPbHs6WymvxNWNk7vQIM7AW7pbAvLxZoKngiZ9UYTtrUPaie6WaiX07Qn8pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=isufujcA; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTOFfuSB"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso1000876b3a.2;
-        Thu, 29 May 2025 06:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748524513; x=1749129313; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yDjprSXjpWj7IN/c9BrZgUvfGIdrnvmdvSk6h2l12/E=;
-        b=HTOFfuSBFocmpqb3FmcErkXaD9FaN0+X2HtlYB9TLwgEfuFnv6wIo3SnVru9208Rg7
-         LvS369+mX8kZQfIritMPDjZ0tLRo+U/DGtNPCqOM+Qy5O1GRwhMdAWZlVI7n7dJSmV8L
-         Qmg3YcG9gEsmdIGEflGwaTP/Jvb6rgiF9tGetxOb2E15v0iRIbWFind5m0NvLsoQUFAe
-         wXjevlqhvb2VPw7byGpaCKZ3hOeA/WAP5E9Lg/SEp4/2ds17oMSt5s/Ik+K5DMLhuPWl
-         01JcmZqrc/J9VDA83mXm+rw6bcEKIHnzPW7lv0fpvGRmQlrl6dskumrTV6yQSbtVz9/M
-         ntGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748524513; x=1749129313;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yDjprSXjpWj7IN/c9BrZgUvfGIdrnvmdvSk6h2l12/E=;
-        b=w3X4wXpRKF1267XH8BlvjK5Bdm5EGcVMyzRtraS+qjl9JEEINqcX3XDVIWjIIslkz5
-         8CpIeWwa3e9eq08vKTbzV/ai8FVwofL0BJPQFktKOkd7OwhdSOHhrFvbZ5td4isw3GKB
-         w30/pkvTQvzIqt3LE6WCEcNNdIVVvJB6NX8UPsPClsdzS8ROL9jn1vYQj5AngMA7M9n+
-         UzhvMU6KX1ATb5yb1hBrqcgo6RPDUlBVFADaPkT5FikQn9UB7OXLj/1FsgkEQXxTL3na
-         2EVkQAwMWX4J5Z92LrdDEIJFnSU4yCTUefg9wZ+qL1gKhzJuDgv8nALD4hEIlPQPRNj0
-         QdRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1qA8M+7jtKtgItw3t9nHV1EeaW8SfzY9zMEFEru31DmQMGkl0KWE2+iZswlvXytdioXeMH6k6UyL0D08=@vger.kernel.org, AJvYcCX2ar1PYiiuWPEtX1THb1mTh/qXX58uF2nIrTzupxt7Iy8r7zHBvtNry1k16YlQhuGlN2Z8+uBjKiwlZEncG6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYe3BNaY4nuKJUi788/GXkYVK1mJVvqJVp+ywfbRCt6e1w07Q0
-	Z26cyZHDmKuOmqjPFvznbSbMCNr5jEwpjl7HLzuVrsQHWlUAYJDhC2ywYf+69/B/TZI=
-X-Gm-Gg: ASbGnctC3rBMvbdVEPunTIpUzZtrgBd5ebMlpVzVuwXJwT/M1sBFhT/2VjBGZ9b8fiw
-	TMd2cwPwCoOb7Pqtm1vuEgYRFO4Zgfgh0rJLt54D0Jhx6dbUvDI4HPLjFxNcqi0bUG0rVHGjDE7
-	I0tOqQmAtnZGWzzpc5qOCB7J7P1ZAlm4IehP0/5KzZGwd3+dfoIB7LrRlzP9dE0jhHSXr2XZmYx
-	wuwqsuzBKmeAJnTXGYNayFdfthRCtBiYQT3uO1HLUNbim3HbJOHOcXTP00K/iM/37plSumEO40c
-	VUrEqZOboNbKHy+nm78/dnBl87aVmwswQLHS0MxmwwSguOq14rwmnXygsT92UZ5pcTRAhMJ3NIX
-	oq1fKbsUfzNhD9Q==
-X-Google-Smtp-Source: AGHT+IFZS4//fV7KzceypZuAS7jRaNoJwp5bqwCgeHwzNmiDtrX7cm9iZXd/41HxrzX2+eLp4Tw1Yg==
-X-Received: by 2002:a05:620a:4550:b0:7ca:ef12:966d with SMTP id af79cd13be357-7d09aba561dmr374330585a.56.1748524502690;
-        Thu, 29 May 2025 06:15:02 -0700 (PDT)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:da0:d9ee:5c71:a02a])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0f7d96sm91528285a.30.2025.05.29.06.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 06:15:02 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 29 May 2025 09:14:59 -0400
-Subject: [PATCH v2 2/2] rust: emit path candidates in panic message
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="isufujcA"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id E6D682078611; Thu, 29 May 2025 06:15:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E6D682078611
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748524522;
+	bh=Ezqk5Ddjq2iKkVzyKUvJjsCMCcife5igRAcu3O9LX2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=isufujcARZKa+Tr14FliUe/xB/VXxC27m1DAqmnuRWKLOm2Ltgy1mZ0cGbFwcGGyU
+	 CeK09cu9hOkaT2ru0eM9004OXeAe/E755bELXTHgo3EFO2Gpf2v+4BBDo8U0+On3rq
+	 MZl0wrfeUcVcIg9nivDlyfHFM9TTy7SiFqLxk7Yk=
+Date: Thu, 29 May 2025 06:15:22 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4 3/5] net: mana: explain irq_setup() algorithm
+Message-ID: <20250529131522.GA27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <aDYOFzQrfDFcti-u@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-idiomatic-match-slice-v2-2-4925ca2f1550@gmail.com>
-References: <20250529-idiomatic-match-slice-v2-0-4925ca2f1550@gmail.com>
-In-Reply-To: <20250529-idiomatic-match-slice-v2-0-4925ca2f1550@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDYOFzQrfDFcti-u@yury>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Include all information in the panic message rather than emit fragments
-to stderr.
+On Tue, May 27, 2025 at 03:10:15PM -0400, Yury Norov wrote:
+> So now git will think that you're the author of the patch.
+> 
+> If author and sender are different people, the first line in commit
+> message body should state that. In this case, it should be:
+> 
+> From: Yury Norov <yury.norov@gmail.com>
+> 
+> Please consider this one example
+> 
+> https://patchew.org/linux/20250326-fixed-type-genmasks-v8-0-24afed16ca00@wanadoo.fr/20250326-fixed-type-genmasks-v8-6-24afed16ca00@wanadoo.fr/
+> 
+> Thanks,
+> Yury
+>
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- scripts/rustdoc_test_gen.rs | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Understood, Thank you Yury. I'll make this change in the next version
 
-diff --git a/scripts/rustdoc_test_gen.rs b/scripts/rustdoc_test_gen.rs
-index d796481f4359..f95129b03cd8 100644
---- a/scripts/rustdoc_test_gen.rs
-+++ b/scripts/rustdoc_test_gen.rs
-@@ -92,13 +92,15 @@ fn find_candidates(
-         ),
-         [valid_path] => valid_path.to_str().unwrap(),
-         valid_paths => {
--            eprintln!("Several path candidates found:");
-+            use std::fmt::Write;
-+
-+            let mut candidates = String::new();
-             for path in valid_paths {
--                eprintln!("    {path:?}");
-+                write!(&mut candidates, "    {path:?}").unwrap();
-             }
-             panic!(
-                 "Several path candidates found for `{file}`, please resolve the ambiguity by \
--                renaming a file or folder."
-+                renaming a file or folder. Candidates:\n{candidates}",
-             );
-         }
-     }
-
--- 
-2.49.0
-
+Regards,
+Shradha. 
+> On Tue, May 27, 2025 at 08:58:25AM -0700, Shradha Gupta wrote:
+> > Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
+> > added the irq_setup() function that distributes IRQs on CPUs according
+> > to a tricky heuristic. The corresponding commit message explains the
+> > heuristic.
+> > 
+> > Duplicate it in the source code to make available for readers without
+> > digging git in history. Also, add more detailed explanation about how
+> > the heuristics is implemented.
+> > 
+> > Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> > ---
+> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > index 4ffaf7588885..f9e8d4d1ba3a 100644
+> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+> > @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+> >  	r->size = 0;
+> >  }
+> >  
+> > +/*
+> > + * Spread on CPUs with the following heuristics:
+> > + *
+> > + * 1. No more than one IRQ per CPU, if possible;
+> > + * 2. NUMA locality is the second priority;
+> > + * 3. Sibling dislocality is the last priority.
+> > + *
+> > + * Let's consider this topology:
+> > + *
+> > + * Node            0               1
+> > + * Core        0       1       2       3
+> > + * CPU       0   1   2   3   4   5   6   7
+> > + *
+> > + * The most performant IRQ distribution based on the above topology
+> > + * and heuristics may look like this:
+> > + *
+> > + * IRQ     Nodes   Cores   CPUs
+> > + * 0       1       0       0-1
+> > + * 1       1       1       2-3
+> > + * 2       1       0       0-1
+> > + * 3       1       1       2-3
+> > + * 4       2       2       4-5
+> > + * 5       2       3       6-7
+> > + * 6       2       2       4-5
+> > + * 7       2       3       6-7
+> > + *
+> > + * The heuristics is implemented as follows.
+> > + *
+> > + * The outer for_each() loop resets the 'weight' to the actual number
+> > + * of CPUs in the hop. Then inner for_each() loop decrements it by the
+> > + * number of sibling groups (cores) while assigning first set of IRQs
+> > + * to each group. IRQs 0 and 1 above are distributed this way.
+> > + *
+> > + * Now, because NUMA locality is more important, we should walk the
+> > + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
+> > + * implemented by the medium while() loop. We do like this unless the
+> > + * number of IRQs assigned on this hop will not become equal to number
+> > + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
+> > + * do the same thing.
+> > + */
+> > +
+> >  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+> >  {
+> >  	const struct cpumask *next, *prev = cpu_none_mask;
+> > -- 
+> > 2.34.1
