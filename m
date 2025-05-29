@@ -1,86 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B0B2343C0;
-	Thu, 29 May 2025 19:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AFE4C92;
+	Thu, 29 May 2025 20:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748548501; cv=none; b=QhRN3L5klSyUoeKHd5YyQpw2L/+GOXvTjda9QHat4+QE9veNw+fc6mlL0oGBB/ogagGRBUwzHPHtcItVG5xNL/PZBx6EbjYT0Hq8SpzaW7wuIJ4+9NSZjNHjjWLlCilSso5a6RBhNRh5oc6DWVV2aIyH1pJwkvuUWyOTDNFaiy0=
+	t=1748549090; cv=none; b=tkEDGJsjm7pvUe/wxfjVWginB6yyVkef9XlwTDTU2WMH9iDKuwtAJdzEyTfMLPWWb9MWJw0sjROtzI184I0g0/YVMMJR3+2Y4wPNvAcdfrfLQe/JshfTw/c/ed0NaPVpFyHsct7l5Ty0Y1LO1me+U712kUsWcaOahGB/4Il6LFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748548501; c=relaxed/simple;
-	bh=D8SsvetF0LkwPwk/o2VLlKNb33N8511Oz+YkmPV8GUY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DqhpmBVBpvxYSDY/O3GoJGCW7/sm7RwxDtDWbRy4+13ofx15g3iWA9Up8hazjhGKgk6W9iTJdxKDantwIyaF3ANvGG1l5jfvkQDhf6Vv/KHN9sX4uRMj4QFfoc7ceVZ0DwqbPW95kNFQ9zMRJWbPaMK4+eYpmbVuJjb6hZdN2eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oO8snhQs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oO8snhQs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F34FCC4CEE7;
-	Thu, 29 May 2025 19:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748548501;
-	bh=D8SsvetF0LkwPwk/o2VLlKNb33N8511Oz+YkmPV8GUY=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=oO8snhQswGTgq78meJIA9ZSu9eqOFykj215dnh4QwmSV+epEYU7IN6EzWpf7CZNNJ
-	 7vPEKCAzuq7hYpTn6yZavGV1hJzBXnVsB1G+OzyF8phQ+TmtPQAmfFBzHSJeAndtkh
-	 DHlEig9beK9+TTZtwIgTnbLseZji0SvEZS4ErDh0RqeHnIGR6ESNjhZACG/ydXcuC2
-	 0QfamjvRgYjtiLdMsn4t2hoho0R2KXX+IgRONNvkwQ7YJ2OcPEIHuiyHA3oK+g+y32
-	 EDxAzWY8nRcwV2lQOTU2zL7Uwb3NQl+tAhqAvVfvHX/wMY/y/ILi7TXCtuhAoY9xHr
-	 C8VzEvj6NRxvw==
+	s=arc-20240116; t=1748549090; c=relaxed/simple;
+	bh=MuS1id6dU73nm3BtKcly2PUJ4ElkKCQ/hx04pqK9rs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hhYb6X1el/WpIxX67AWjGj9KR3ffnAMvRnu7S2LcJrukg9gvSwZ2WCpcZwbjkQh2VWlNdLMNUoDnUTI9CcJ/+7x25GlJ5Ip13VwbVFSf0HNwJYr/0Y4NNp0u30pO2aMg+jnF9Nda1GsPB88PsYEyXcWF2aBZ+lGww34/m5OQXH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 510A6C4CEE7;
+	Thu, 29 May 2025 20:04:48 +0000 (UTC)
+Date: Thu, 29 May 2025 16:05:50 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+ bpf@vger.kernel.org
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>, Jonathan Lemon
+ <jonathan.lemon@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] xdp: Remove unused mem_return_failed event
+Message-ID: <20250529160550.1f888b15@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 29 May 2025 21:54:56 +0200
-Message-Id: <DA8WPLS2R7K3.2T94MJM71BXI0@kernel.org>
-Cc: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Alice Ryhl" <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>, "Jens
- Axboe" <axboe@kernel.dk>, "Fiona Behrens" <me@kloenk.dev>, "Christian
- Schrefl" <chrisi.schrefl@gmail.com>, <linux-block@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] change blanket impls for `[Pin]Init` and add one
- for `Result<T, E>`
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250529081027.297648-1-lossin@kernel.org>
- <20250529081027.297648-2-lossin@kernel.org>
- <aDixS9Fp-fZxet7m@winterfell.localdomain>
-In-Reply-To: <aDixS9Fp-fZxet7m@winterfell.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu May 29, 2025 at 9:11 PM CEST, Boqun Feng wrote:
-> On Thu, May 29, 2025 at 10:10:24AM +0200, Benno Lossin wrote:
->> Remove the error from the blanket implementations `impl<T, E> Init<T, E>
->> for T` (and also for `PinInit`). Add implementations for `Result<T, E>`.
->>=20
->> This allows one to easily construct (un)conditional failing
->> initializers. It also improves the compatibility with APIs that do not
->> use pin-init, because users can supply a `Result<T, E>` to a  function
->> taking an `impl PinInit<T, E>`.
->>=20
->> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->> Link: https://github.com/Rust-for-Linux/pin-init/pull/62/commits/5861251=
-4b256c6f4a4a0718be25298410e67387a
->> [ Also fix a compile error in block. - Benno ]
->> Signed-off-by: Benno Lossin <lossin@kernel.org>
->
-> The patch title is missing a "rust:" tag... but you can fix that in PR.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Good catch, I originally ported this patch with my script, but then I
-decided to squash upstream and then copied the commit message from
-there, removing the prefix...
+The change to allow page_poll to handle its own page destruction instead
+of relying on XDP removed the trace_mem_return_failed() tracepoint caller,
+but did not remove the mem_return_failed trace event. As trace events take
+up memory when they are created regardless of if they are used or not,
+having this unused event around wastes around 5K of memory.
 
+Remove the unused event.
 
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
 
-Thanks!
-
+Fixes: c3f812cea0d7 ("page_pool: do not release pool until inflight == 0.")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Cheers,
-Benno
+ include/trace/events/xdp.h | 26 --------------------------
+ 1 file changed, 26 deletions(-)
+
+diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+index a7e5452b5d21..d3ef86c97ae3 100644
+--- a/include/trace/events/xdp.h
++++ b/include/trace/events/xdp.h
+@@ -379,32 +379,6 @@ TRACE_EVENT(mem_connect,
+ 	)
+ );
+ 
+-TRACE_EVENT(mem_return_failed,
+-
+-	TP_PROTO(const struct xdp_mem_info *mem,
+-		 const struct page *page),
+-
+-	TP_ARGS(mem, page),
+-
+-	TP_STRUCT__entry(
+-		__field(const struct page *,	page)
+-		__field(u32,		mem_id)
+-		__field(u32,		mem_type)
+-	),
+-
+-	TP_fast_assign(
+-		__entry->page		= page;
+-		__entry->mem_id		= mem->id;
+-		__entry->mem_type	= mem->type;
+-	),
+-
+-	TP_printk("mem_id=%d mem_type=%s page=%p",
+-		  __entry->mem_id,
+-		  __print_symbolic(__entry->mem_type, __MEM_TYPE_SYM_TAB),
+-		  __entry->page
+-	)
+-);
+-
+ TRACE_EVENT(bpf_xdp_link_attach_failed,
+ 
+ 	TP_PROTO(const char *msg),
+-- 
+2.47.2
+
