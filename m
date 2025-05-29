@@ -1,121 +1,365 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601182222D1
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BAD382;
+	Thu, 29 May 2025 12:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748521596; cv=none; b=uvmnNWaXencGU91/I5Fb6o+2sDcYvQGfjpTdx03ngdff2TCVRC6AvRpFnC0KetnhjYmnbjE6sDFm2TVj091A14ILJgV5Q2Az+bWOvN5jqAY/U9Z7thDkp6iSN1MLDlAw+0xd3i5MEmYYzHIDbnsAtQoXrl9LAZcDczfK3B6u65k=
+	t=1748521705; cv=none; b=Ztw6R1PHUgVoWmFLcekfjdC6ne6d+Rdd4sP8UAT7QYJyjYnG3sHFWtycpDNLIi5Q0MDRbh/S4ccjSF7vtm2j5tlQMcgm+h42IPyBwtIby2X1ir2oVrGdWOmjzIBMzaAs5+gAL6BZxeTAu5Wxg154eEa3zpuYM3416PIwMdZIe4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748521596; c=relaxed/simple;
-	bh=Ips1ThzCTMC8otSrSexkSl52EhOw+XP3ODuE7HnPRFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cINEGLsFsDegUuvVFXzKpphff/jg4wAelavsuHCx0e2U0ervL+tEEo5ZVTcVRsJ8zZfuKXzf2+yY4UCjk8sKmg9Mes0ou9rbUBhQQA/x8JYEHJC9AhDzoDsZ8ebfJGw/BjH1cSw42YxrnnIUNUC0p2krtk3nVLAU6PSd0Ahk21Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=X8BfYew9; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748521705; c=relaxed/simple;
+	bh=eFlK4O/ApEpvXiMbnGQqkL7zGwcgDaXwX/hfmY0HsC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=USfjFSfg7TSUgBUDIi8dpi6xSO9W0WjZLckL8kdXqsHSmaruYPwzdyucx0lNLy5Og4v2w5HsJ+xjKF0mn8YmDx/kYkJXZkVPXQATKU4MTRjxGYYPvlGEYQg+elA8wq7/2yDF2okqBftNjjHSdhdS6BgjIbkhEhCzcKsOLUUzF4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0wc9nBh; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="X8BfYew9"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ede096d73so6596125e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:26:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0wc9nBh"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso624874b3a.0;
+        Thu, 29 May 2025 05:28:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748521592; x=1749126392; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iawn1vCo/HSjOc7UESxgkG0YCsSSV1rH3zlvPOdpZLI=;
-        b=X8BfYew9qPqP7APwScHBwh6y7TadnEOOMw492X7v9O5n3YbYox5C1D1y/Gcv8vn82M
-         h5P4y4fWBBwgaY+lXTqF8Ig1TK2h+jnJtKxPpZGWcNYVH17B3k5Qu5K66ufz872c48wL
-         xITDyj7qVgJC0gscZHGq7agOvzH5uefzOUx0U6bfM+zDxyBNzzLhPZ/CrrvyQlJUQ7jG
-         5W9vMUfZ6baiIN6TMTG8lsmQIAUrQo481qqVOKgIl19+YoVHT5XxBB2xmKPVjTWTW0+4
-         UxrI7t4RdNnab4rcVXQyanQJAoY38+9k72Gw8jv/2h0dztXmf2sK3VpOvSK9RDgPi9Ra
-         E3kg==
+        d=gmail.com; s=20230601; t=1748521702; x=1749126502; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GbRXSySOkeoAFSH1xoRdqp69bz3wjXg4GCHZGd5gC70=;
+        b=m0wc9nBh4DTpFIILv6TNC3wJLQdVZ/wGyGZJIuxMBSN9kKraCFwdCbD8TgWJuHsRdQ
+         nZtzZQLKzFLH/RTAZvqQ2Ybg50K6ESFCCRTkcvVY3qVa2xaBsBDBLgqgE6JLSNscUErh
+         uudWJNqcxbVjx2dZh9l1ZMHBBNwZgSmnUd5Ft1x0uLsOVfy5SjGqSrWob/DoCg2o4vBM
+         Ji6timcAPC/wFP/lqEJZeKYkk7qu3ahWuBd3PFzL4DHIWBppWm+IBrQA6or7PSuLEzPr
+         tcN45MQXw3EkojtMOgi4Buwf+KqjfcFCaNkxLlemdPjhdkeqNFEVL24Az/GYfJ9OPQsl
+         nkWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748521592; x=1749126392;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iawn1vCo/HSjOc7UESxgkG0YCsSSV1rH3zlvPOdpZLI=;
-        b=Bh3VUxEqd9Atw6Tx9LJqOm6P57kbbf4Yzq0hloWck2Wwqq/y3LSY208/90PFJ61uWG
-         YGtbUPGSdt9IE/nF4Mlw51VDd22Vg0jrkLQDeRQrfS3ekVSFjLwBclzOX2UZHpLh1kVv
-         9e7Uxcc4ClHxiBQfSGvOjDQl4N0ptvmOjSHCUcTqU7MaSOVMIWcnRjK3KggLjoJNxoRQ
-         /0u+nae2wwURIqz+OJ6JSvfuTwSdtNnV2h13Sw8VKMJNVIpBsFaYOleZOT/e3p0MJeT3
-         ogocfoT6tknGbcBwO3uUnAZMDB+Q/mPcOhfkh4B8CGMME9ZmkIoUtKBTX+6NVyUw7m68
-         prAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwsbfTQDmoGkCP3GTJVB/5Dqt8ryB0AOrby8luiYy+vvkRLd8ZILiujwrcLUzOKYN/hB4r3iYYP/H6GeE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYUQ1u5ZHYRH1+eceTkUyRNwwdrgdlRCt6M88pkcCI9+N9xBAV
-	raAkZT5/QMvJXDtU6+GeY1mvYF9WIyaNQGr5ajSa3qu39YeNqDg7rH0GtAP4soa36YM=
-X-Gm-Gg: ASbGncurg+nxJ50QTVyujun3XFqPrXOUaccjKh7IPY1puchltxr8dcBgbFLM/IcWI7F
-	5N9VwqlQeIhBksLFumzI0oM7uwxz9RNl7Ff1jJJEIwOnF2gq1v0MSDfzDSzGGWtfL8/7atNFrfi
-	t9miEMLwLNAvrbGg8rpyj8yOZhce08erO5zDFPXNnVHPgewCBEt/galwToP9uGre7PLo5kUa/rv
-	n4s5OWyWht6Dd03Ghz/8kKX9ohq+8wAaB+nu92viDGona3BHBAyFhmwcTzi38/d9hApV/52IaVC
-	XUpfJ9SgouFdI4x7xHyB5XPKWdJWwy3KgEezYWCMjwV1XgxZqc0iBbIxsKebKG2mawv01sDCfOA
-	=
-X-Google-Smtp-Source: AGHT+IHXrBW9wsWcyYeTvN6V5sLeEne3uGLtPZraC+YCMYBnXf21jqTUKNAyRc5UNx5R4SMvt/BHHg==
-X-Received: by 2002:a05:600c:1d28:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-44c9141d817mr185395945e9.6.1748521592539;
-        Thu, 29 May 2025 05:26:32 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450cfbf42c1sm19208575e9.3.2025.05.29.05.26.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 05:26:32 -0700 (PDT)
-Date: Thu, 29 May 2025 14:26:31 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Konstantin Khlebnikov <koct9i@gmail.com>
-Subject: Re: [PATCH] mm: Strictly check vmstat_text array size
-Message-ID: <aDhSdyzMD_e80zn5@tiehlicka>
-References: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+        d=1e100.net; s=20230601; t=1748521702; x=1749126502;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GbRXSySOkeoAFSH1xoRdqp69bz3wjXg4GCHZGd5gC70=;
+        b=sEG7L8sEzDnbtZaNUdNa08aKLm1NI91n+pKOSmxCNogC+a0R1QTFi8nHKA2UIPEX/Q
+         zXHuwq/hAwi7oNXBylcQ7yyAy2xnyHNh1JonC2yVAwA0c2IHKD5s8t9VKZHW0+3TmAhH
+         QhYAqHadJPhoVjUn2OTfIAXWj6Jb40YAlC9ZS7zZXg/G+3J+VJzQW5+R3iksi9G94Run
+         U13mEplh/SsEZwuFJ1yjKmWz82mlucfGfB1KXDTVvWTQufMvVnmfi7I+jBd4+LjYdDbZ
+         vXPpyWDoQBDr64GUZ/CjRpMLBFKjA0U4zAxIa5kOU/XSTJDeBmnNKUfWh8/80lr10B6o
+         tqOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU0xVqcwt71Ky68VG0DdV8TNzLT+uGpbllTi9wBS7U0E/7mvHZyvfVvq15SANzn9+FJaZs=@vger.kernel.org, AJvYcCXcVe0GLZ5vB4JliGMjJwITwUgrE6osmSEq0b69mI9YvJePEDBC33tG05xTdpS+SoMEbcWKPn2ltIOSRQpE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq7ngKV9cGKHHMSpOw/p6gtKmX1wMCNISICdtb3JNqNVfWXGYE
+	YcNROwOhxj7CF2g/kPpgTmYrSvg5IK0VFpNeo78O+UU9f9t6fq9Yg4Htpq9EekRkxIg=
+X-Gm-Gg: ASbGncuZSnrckgaITKIDM4sOOtnYbKF9qKkl0qUEYoX3Wu+JJnXyrm5f7HtWHQm3ste
+	fjHBbjqh2Hfk26StiJDcHqr0FgNAMt9Lrt6yG2TPcNoftlbI7PkGBrBDSnZ3azoNVLER3KkW+Gi
+	D6fCknUX8k1f0VsR71j/xGL+zOaER4ujnuNR0bM9teLX1C8qYJjyUtzQF7497Btc+ziYFGQ/3wJ
+	sdh6aP7Ef+yuS8ufMHQdOoRqc5l2Sx0RfDjMPUSuyHPfTeREt8P0HeRKDTDspkafTJSm9GcWJk0
+	05LD5VO4Rx26p5ry8uMu+E8/f/yMdeMmPyeWpgX0ZalwtuFsPm8OcddMjoUw96UQwFfLhGw/WG2
+	BPGUQ/eofiitFv1gWBn+nNqQQO/PQLg==
+X-Google-Smtp-Source: AGHT+IF9EI5HiLoMgWWyXHJIS/JBoJHldzFEQe2we+Bla5wTXSK4xuPJ45x9JQ5aUvtdEyKotaw9fQ==
+X-Received: by 2002:a05:6a21:1089:b0:216:6060:971d with SMTP id adf61e73a8af0-2188c3b49bemr33306179637.37.1748521702136;
+        Thu, 29 May 2025 05:28:22 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9? ([2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afed34fdsm1216650b3a.75.2025.05.29.05.28.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 05:28:21 -0700 (PDT)
+Message-ID: <d572e8b6-e25c-480e-9d05-8c7eeb396b12@gmail.com>
+Date: Thu, 29 May 2025 19:28:13 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v2 1/2] virtio-net: support zerocopy multi
+ buffer XDP in mergeable
+To: Jason Wang <jasowang@redhat.com>
+Cc: netdev@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250527161904.75259-1-minhquangbui99@gmail.com>
+ <20250527161904.75259-2-minhquangbui99@gmail.com>
+ <CACGkMEvAJziO3KW3Nk9+appXmR92ixcTeWY_XEZz4Qz1MwrhYA@mail.gmail.com>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <CACGkMEvAJziO3KW3Nk9+appXmR92ixcTeWY_XEZz4Qz1MwrhYA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu 29-05-25 14:05:41, Kirill A. Shutemov wrote:
-> The /proc/vmstat displays counters from various sources. It is easy to
-> forget to add or remove a label when a new counter is added or removed.
-> 
-> There is a BUILD_BUG_ON() function that catches missing labels. However,
-> for some reason, it ignores extra labels.
-> 
-> Let's make the check strict. This would help to catch issues when
-> a counter is removed.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+On 5/29/25 12:59, Jason Wang wrote:
+> On Wed, May 28, 2025 at 12:19 AM Bui Quang Minh
+> <minhquangbui99@gmail.com> wrote:
+>> Currently, in zerocopy mode with mergeable receive buffer, virtio-net
+>> does not support multi buffer but a single buffer only. This commit adds
+>> support for multi mergeable receive buffer in the zerocopy XDP path by
+>> utilizing XDP buffer with frags.
+>>
+>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>> ---
+>>   drivers/net/virtio_net.c | 123 +++++++++++++++++++++------------------
+>>   1 file changed, 66 insertions(+), 57 deletions(-)
+>>
+>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+>> index e53ba600605a..a9558650f205 100644
+>> --- a/drivers/net/virtio_net.c
+>> +++ b/drivers/net/virtio_net.c
+>> @@ -45,6 +45,8 @@ module_param(napi_tx, bool, 0644);
+>>   #define VIRTIO_XDP_TX          BIT(0)
+>>   #define VIRTIO_XDP_REDIR       BIT(1)
+>>
+>> +#define VIRTNET_MAX_ZC_SEGS    8
+>> +
+>>   /* RX packet size EWMA. The average packet size is used to determine the packet
+>>    * buffer size when refilling RX rings. As the entire RX ring may be refilled
+>>    * at once, the weight is chosen so that the EWMA will be insensitive to short-
+>> @@ -1232,65 +1234,53 @@ static void xsk_drop_follow_bufs(struct net_device *dev,
+>>          }
+>>   }
+>>
+>> -static int xsk_append_merge_buffer(struct virtnet_info *vi,
+>> -                                  struct receive_queue *rq,
+>> -                                  struct sk_buff *head_skb,
+>> -                                  u32 num_buf,
+>> -                                  struct virtio_net_hdr_mrg_rxbuf *hdr,
+>> -                                  struct virtnet_rq_stats *stats)
+>> +static int virtnet_build_xsk_buff_mrg(struct virtnet_info *vi,
+>> +                                     struct receive_queue *rq,
+>> +                                     u32 num_buf,
+>> +                                     struct xdp_buff *xdp,
+>> +                                     struct virtnet_rq_stats *stats)
+>>   {
+>> -       struct sk_buff *curr_skb;
+>> -       struct xdp_buff *xdp;
+>> -       u32 len, truesize;
+>> -       struct page *page;
+>> +       unsigned int len;
+>>          void *buf;
+>>
+>> -       curr_skb = head_skb;
+>> +       if (num_buf < 2)
+>> +               return 0;
+>> +
+>> +       while (num_buf > 1) {
+>> +               struct xdp_buff *new_xdp;
+>>
+>> -       while (--num_buf) {
+>>                  buf = virtqueue_get_buf(rq->vq, &len);
+>> -               if (unlikely(!buf)) {
+>> -                       pr_debug("%s: rx error: %d buffers out of %d missing\n",
+>> -                                vi->dev->name, num_buf,
+>> -                                virtio16_to_cpu(vi->vdev,
+>> -                                                hdr->num_buffers));
+>> +               if (!unlikely(buf)) {
+>> +                       pr_debug("%s: rx error: %d buffers missing\n",
+>> +                                vi->dev->name, num_buf);
+>>                          DEV_STATS_INC(vi->dev, rx_length_errors);
+>> -                       return -EINVAL;
+>> -               }
+>> -
+>> -               u64_stats_add(&stats->bytes, len);
+>> -
+>> -               xdp = buf_to_xdp(vi, rq, buf, len);
+>> -               if (!xdp)
+>> -                       goto err;
+>> -
+>> -               buf = napi_alloc_frag(len);
+>> -               if (!buf) {
+>> -                       xsk_buff_free(xdp);
+>> -                       goto err;
+>> +                       return -1;
+>>                  }
+>>
+>> -               memcpy(buf, xdp->data - vi->hdr_len, len);
+>> -
+>> -               xsk_buff_free(xdp);
+>> +               new_xdp = buf_to_xdp(vi, rq, buf, len);
+>> +               if (!new_xdp)
+>> +                       goto drop_bufs;
+>>
+>> -               page = virt_to_page(buf);
+>> +               /* In virtnet_add_recvbuf_xsk(), we ask the host to fill from
+>> +                * xdp->data - vi->hdr_len with both virtio_net_hdr and data.
+>> +                * However, only the first packet has the virtio_net_hdr, the
+>> +                * following ones do not. So we need to adjust the following
+> Typo here.
 
-LGTM
-Acked-by: Michal Hocko <mhocko@suse.com>
+I'm sorry, could you clarify which word contains the typo?
 
-Not sure why we have gone with the current check TBH.
+>
+>> +                * packets' data pointer to the correct place.
+>> +                */
+> I wonder what happens if we don't use this trick? I meant we don't
+> reuse the header room for the virtio-net header. This seems to be fine
+> for a mergeable buffer and can help to reduce the trick.
 
-> ---
->  mm/vmstat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index ae9882063d89..0903adace423 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1867,7 +1867,7 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
->  	if (*pos >= NR_VMSTAT_ITEMS)
->  		return NULL;
->  
-> -	BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS);
-> +	BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) != NR_VMSTAT_ITEMS);
->  	fold_vm_numa_events();
->  	v = kmalloc_array(NR_VMSTAT_ITEMS, sizeof(unsigned long), GFP_KERNEL);
->  	m->private = v;
-> -- 
-> 2.47.2
+I don't think using the header room for virtio-net header creates this 
+case handling. In my opinion, it comes from the slightly difference in 
+the recvbuf between single buffer and multi-buffer. When we have n 
+single-buffer packets, each buffer will have its own virtio-net header. 
+But when we have 1 multi-buffer packet (which spans across n buffers), 
+only the first buffer has virtio-net header, the following buffers do not.
 
--- 
-Michal Hocko
-SUSE Labs
+There 2 important pointers here. The pointer we announce to the vhost 
+side to fill the data, let's call it announced_addr, and xdp_buff->data 
+which is expected to point the the start of Ethernet frame. Currently,
+
+     announced_addr = xdp_buff->data - hdr_len
+
+The host side will write the virtio-net header to announced_addr then 
+the Ethernet frame's data in the first buffer. In case of multi-buffer 
+packet, in the following buffers, host side writes the Ethernet frame's 
+data to the announced_addr no virtio-net header. So in the virtio-net, 
+we need to subtract xdp_buff->data, otherwise, we lose some Ethernet 
+frame's data.
+
+I think a slightly better solution is that we set announced_addr = 
+xdp_buff->data then we only need to xdp_buff->data += hdr_len for the 
+first buffer and do need to adjust xdp_buff->data of the following buffers.
+
+>
+>> +               new_xdp->data -= vi->hdr_len;
+>> +               new_xdp->data_end = new_xdp->data + len;
+>>
+>> -               truesize = len;
+>> +               if (!xsk_buff_add_frag(xdp, new_xdp))
+>> +                       goto drop_bufs;
+>>
+>> -               curr_skb  = virtnet_skb_append_frag(head_skb, curr_skb, page,
+>> -                                                   buf, len, truesize);
+>> -               if (!curr_skb) {
+>> -                       put_page(page);
+>> -                       goto err;
+>> -               }
+>> +               num_buf--;
+>>          }
+>>
+>>          return 0;
+>>
+>> -err:
+>> +drop_bufs:
+>>          xsk_drop_follow_bufs(vi->dev, rq, num_buf, stats);
+>> -       return -EINVAL;
+>> +       return -1;
+>>   }
+>>
+>>   static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct virtnet_info *vi,
+>> @@ -1307,23 +1297,42 @@ static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct
+>>          num_buf = virtio16_to_cpu(vi->vdev, hdr->num_buffers);
+>>
+>>          ret = XDP_PASS;
+>> +       if (virtnet_build_xsk_buff_mrg(vi, rq, num_buf, xdp, stats))
+>> +               goto drop;
+>> +
+>>          rcu_read_lock();
+>>          prog = rcu_dereference(rq->xdp_prog);
+>> -       /* TODO: support multi buffer. */
+>> -       if (prog && num_buf == 1)
+>> -               ret = virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, stats);
+> Without this patch it looks like we had a bug:
+>
+>          ret = XDP_PASS;
+>          rcu_read_lock();
+>          prog = rcu_dereference(rq->xdp_prog);
+>          /* TODO: support multi buffer. */
+>          if (prog && num_buf == 1)
+>                  ret = virtnet_xdp_handler(prog, xdp, dev, xdp_xmit, stats);
+>          rcu_read_unlock();
+>
+> This implies if num_buf is greater than 1, we will assume XDP_PASS?
+
+Yes, I think XDP_DROP should be returned in that case.
+
+>
+>> +       if (prog) {
+>> +               /* We are in zerocopy mode so we cannot copy the multi-buffer
+>> +                * xdp buff to a single linear xdp buff. If we do so, in case
+>> +                * the BPF program decides to redirect to a XDP socket (XSK),
+>> +                * it will trigger the zerocopy receive logic in XDP socket.
+>> +                * The receive logic thinks it receives zerocopy buffer while
+>> +                * in fact, it is the copy one and everything is messed up.
+>> +                * So just drop the packet here if we have a multi-buffer xdp
+>> +                * buff and the BPF program does not support it.
+>> +                */
+>> +               if (xdp_buff_has_frags(xdp) && !prog->aux->xdp_has_frags)
+>> +                       ret = XDP_DROP;
+> Could we move the check before trying to build a multi-buffer XDP buff?
+
+Yes, I'll fix this in next version.
+
+>
+>> +               else
+>> +                       ret = virtnet_xdp_handler(prog, xdp, dev, xdp_xmit,
+>> +                                                 stats);
+>> +       }
+>>          rcu_read_unlock();
+>>
+>>          switch (ret) {
+>>          case XDP_PASS:
+>> -               skb = xsk_construct_skb(rq, xdp);
+>> +               skb = xdp_build_skb_from_zc(xdp);
+> Is this better to make this change a separate patch?
+
+Okay, I'll create a separate patch to convert the current XDP_PASS 
+handler to use xdp_build_skb_from_zc helper.
+
+>
+>>                  if (!skb)
+>> -                       goto drop_bufs;
+>> +                       break;
+>>
+>> -               if (xsk_append_merge_buffer(vi, rq, skb, num_buf, hdr, stats)) {
+>> -                       dev_kfree_skb(skb);
+>> -                       goto drop;
+>> -               }
+>> +               /* Later, in virtnet_receive_done(), eth_type_trans()
+>> +                * is called. However, in xdp_build_skb_from_zc(), it is called
+>> +                * already. As a result, we need to reset the data to before
+>> +                * the mac header so that the later call in
+>> +                * virtnet_receive_done() works correctly.
+>> +                */
+>> +               skb_push(skb, ETH_HLEN);
+>>
+>>                  return skb;
+>>
+>> @@ -1332,14 +1341,11 @@ static struct sk_buff *virtnet_receive_xsk_merge(struct net_device *dev, struct
+>>                  return NULL;
+>>
+>>          default:
+>> -               /* drop packet */
+>> -               xsk_buff_free(xdp);
+>> +               break;
+>>          }
+>>
+>> -drop_bufs:
+>> -       xsk_drop_follow_bufs(dev, rq, num_buf, stats);
+>> -
+>>   drop:
+>> +       xsk_buff_free(xdp);
+>>          u64_stats_inc(&stats->drops);
+>>          return NULL;
+>>   }
+>> @@ -1396,6 +1402,8 @@ static int virtnet_add_recvbuf_xsk(struct virtnet_info *vi, struct receive_queue
+>>                  return -ENOMEM;
+>>
+>>          len = xsk_pool_get_rx_frame_size(pool) + vi->hdr_len;
+>> +       /* Reserve some space for skb_shared_info */
+>> +       len -= SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+>>
+>>          for (i = 0; i < num; ++i) {
+>>                  /* Use the part of XDP_PACKET_HEADROOM as the virtnet hdr space.
+>> @@ -6734,6 +6742,7 @@ static int virtnet_probe(struct virtio_device *vdev)
+>>          dev->netdev_ops = &virtnet_netdev;
+>>          dev->stat_ops = &virtnet_stat_ops;
+>>          dev->features = NETIF_F_HIGHDMA;
+>> +       dev->xdp_zc_max_segs = VIRTNET_MAX_ZC_SEGS;
+>>
+>>          dev->ethtool_ops = &virtnet_ethtool_ops;
+>>          SET_NETDEV_DEV(dev, &vdev->dev);
+>> --
+>> 2.43.0
+>>
+> Thanks
+>
+
