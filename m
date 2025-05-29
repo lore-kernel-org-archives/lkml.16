@@ -1,219 +1,113 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4855219A8E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5602B1386DA;
+	Thu, 29 May 2025 20:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748551083; cv=none; b=YIspwsD+rBfxkuAYhAMDOr5R2mRz/cDVHJGTFLImIYBq0gJnXE75eLlSx/jwMa8Dj7kzQdQYa3DPuFqHop9wqDcutkOGg7/p3t1A45C1RPfpjB8sHh6CHoSv8D28kKK+Ywp4ktuZbEwRHfn63WCqxlObqh+DZ6o8WkcUGL7PA6s=
+	t=1748551604; cv=none; b=lh66lg4XY8JZvKOG1llBIbhGkg2/3zKMq3qR+qR10YjQzOqXk50kN89Uz1J5IBdPOsDkS02qhZ11xk75L4CV7Evw4n4y6KAutumt19xpUzSFe5FTKrQ1oriR/KLJKoeei53losTPcbw9eca8nvtA4xw8dMcAxhEb7T0/Op6riw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748551083; c=relaxed/simple;
-	bh=YlMZkgKT0PTtfAbkMV6chM1PgSM2gnGOq/j8wCCE5T0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=RPNe+sLrZrtYZh9VDhsHT/sLyNFsRBIchBKZZ7SL+Y+L07NhbFoYeBjhtWvcMh16v57c+OYfK2oOgWdvsKuyhqyFfRhjJzOxGcDHys/X+miCx9sP5AbJH+/qqgyGLpS0ycOg0ic4EfinhdkpgOBu09DPTHUdx9RVitXJ/kKLd8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qs46Qli6; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1748551604; c=relaxed/simple;
+	bh=nqhtusXOAD2ESeOvweDuRBGoLYSqb/NiBJlRY1flv78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TL0IaHxlfCeMHCAMQm3X69L7WzNKNZ+tl3ppnW77POXS2q/7RYxTNHLKGtONHRaysUSGp4Qy2jLaMeiQPFukjvKtZsMCJW9pHCEmRDFdm74J18ML9x7UUtnRuyuhlbkKi5UzZEXlzuU7xEyYD6wQVDHDvHKjkgICnA/sF1YVte4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lxke7jHG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qs46Qli6"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74292762324so1044618b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:38:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748551080; x=1749155880; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8V0aEgZlDdaEbVhQ7MZDJBQiQ6ReHKrQ1z+MrifNuLA=;
-        b=qs46Qli6aiR/YW2e7BoII3FqwZG4mgGOI9IdPrQ/I6xQWFNZRc0to4+7N+kzoQ/OiG
-         OmooqyzoJHNZ2x3MfgWRGFiS1sjXdpeSTs8ie3m8hgqVHxoG71sicKB3qN2f0BeL9nBV
-         bHfGtWJ46ZMb3rSVKx109Q6x0Cmwdf8hIvw8roJHdOGnCORwJczxhKhW1kvZS7tkOLKD
-         ij4ppshscVdkSO73PUfgqqGVxfJ49VxUN0UsXYUyhJ6DSrYx7u5A2UloKv42XOy3fJs8
-         GnlR8G19VTGsrb25Zv+/Y4Z3cACxxHDTJwL5Q/NldrKxFLNJ2rC4EAG556Ojk7oguMAN
-         N0Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748551080; x=1749155880;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8V0aEgZlDdaEbVhQ7MZDJBQiQ6ReHKrQ1z+MrifNuLA=;
-        b=BFOL8Lgiz2HH7v1zjfEJO3dXYZEvAobKNbhOVcXrDghhk8LgqTSlqPQrGo5+kVaA2b
-         eHAq9PiuFIvEKnY4/3RF9SbGsMrwnnMlKwcdDOBt0Qp9JNJG8O1dfbhGjZPKbg1qx9IB
-         NEC70U/TSiJwbG8sN6i+c4Jxm4bk/nlxwl10VzKsrKagVsk5tMkzUHUueuQhBCdTwTft
-         SwRxPZqSPxvhVkaKXgyDUmKEBiMgujdnXHoaEu3vj3y6kNW3tB+zmYYbETBnloOV6qNg
-         v0cas7PqOnvobP1AV96OLNGVxd+raLg3yad5KLA30InPAKnCnA5LCX0VLBobRKX5/Q/v
-         Ustg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNqbo+IqLqnbitZDJwHmX2eUTgqRzeWmjUuAnO7eWjrTgSYsNmNSITwZB2/pICOMOzsyBPbtBjOG6QloE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhdTmPGocnrvg+S+CA0vFTFpHzaq3DMusoST83hUbkcOSCX2aA
-	8nXJ15O0sGAhioE78u3E2C3WMcPJdat4yckYpOJ0eVfLEW+QtY77nG35fOeOB11V5XNAwVllNes
-	h23rI0hzAgGMF95rLWzEHiFaHXw==
-X-Google-Smtp-Source: AGHT+IFjOdk4yT4NM/QaqhOJD4gsMe2ihRDu+Gs7HGOAnaMlSmAglIltMP37EmZjJc9BSmEgYJS63ATu0p6hhP84/w==
-X-Received: from pfuw1.prod.google.com ([2002:a05:6a00:14c1:b0:746:32ae:99d5])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:aa7:8882:0:b0:742:3fb4:f992 with SMTP id d2e1a72fcca58-747bd97408amr1069146b3a.10.1748551079940;
- Thu, 29 May 2025 13:37:59 -0700 (PDT)
-Date: Thu, 29 May 2025 13:37:58 -0700
-In-Reply-To: <diqz7c1z6zp0.fsf@ackerleytng-ctop.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lxke7jHG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56AF8C4CEE7;
+	Thu, 29 May 2025 20:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748551603;
+	bh=nqhtusXOAD2ESeOvweDuRBGoLYSqb/NiBJlRY1flv78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lxke7jHGpm4yTEelzwyCqQaIX27UmhKUUJef3W6qBcN65mL2Jc9phGQDQzp8DLHN1
+	 a4yIgsBwpwiY8E5JQPtS9L0n2zCob4Ht/PjdITRmWShTBFZjqirJo1hXoQKHqwnXJt
+	 1OCo49FwINd0k8OhfiCSn49iSn8TGMb5O7T0982p65eA4xVx2Giec9nbI/Ghq6aYtf
+	 MH+9uPKWZnlyJKsh5Vs/c/ANXInc81QkFZhacqPV2BAujJl0qfYLBgma+CWJqPABtx
+	 TZAeghZlz2PL8jJOZFVTKgynBuzW/4UzU0Zdt7INeKP4vg3lrAE5tnNxKZEAon/7TB
+	 vE3Ay4oUY2txA==
+Date: Thu, 29 May 2025 17:46:40 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+Message-ID: <aDjHsJqV7L24qjvT@x1>
+References: <20250522142551.1062417-1-namhyung@kernel.org>
+ <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
+ <aC9VoTL_Cv4R7J-j@x1>
+ <aC-hHTgArwlF_zu9@x1>
+ <aDDy4FQe7sBwECL8@google.com>
+ <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
- <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com> <diqz7c1z6zp0.fsf@ackerleytng-ctop.c.googlers.com>
-Message-ID: <diqz34cn6tll.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-From: Ackerley Tng <ackerleytng@google.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com>
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Wed, May 28, 2025 at 11:59:44PM -0700, Howard Chu wrote:
+> On Fri, May 23, 2025 at 3:12 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
+> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Date: Thu, 22 May 2025 19:01:47 -0300
+> > > Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
 
-> Binbin Wu <binbin.wu@linux.intel.com> writes:
->
->> On 5/15/2025 7:41 AM, Ackerley Tng wrote:
->>> Track guest_memfd memory's shareability status within the inode as
->>> opposed to the file, since it is property of the guest_memfd's memory
->>> contents.
->>>
->>> Shareability is a property of the memory and is indexed using the
->>> page's index in the inode. Because shareability is the memory's
->>> property, it is stored within guest_memfd instead of within KVM, like
->>> in kvm->mem_attr_array.
->>>
->>> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
->>> retained to allow VMs to only use guest_memfd for private memory and
->>> some other memory for shared memory.
->>>
->>> Not all use cases require guest_memfd() to be shared with the host
->>> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
->>> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
->>> private to the guest, and therefore not mappable by the
->>> host. Otherwise, memory is shared until explicitly converted to
->>> private.
->>>
->>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->>> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
->>> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
->>> Co-developed-by: Fuad Tabba <tabba@google.com>
->>> Signed-off-by: Fuad Tabba <tabba@google.com>
->>> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
->>> ---
->>>   Documentation/virt/kvm/api.rst |   5 ++
->>>   include/uapi/linux/kvm.h       |   2 +
->>>   virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
->>>   3 files changed, 129 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->>> index 86f74ce7f12a..f609337ae1c2 100644
->>> --- a/Documentation/virt/kvm/api.rst
->>> +++ b/Documentation/virt/kvm/api.rst
->>> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
->>>   The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
->>>   This is validated when the guest_memfd instance is bound to the VM.
->>>   
->>> +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
->>> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
->>
->> It seems that the sentence is stale?
->> Didn't find the definition of KVM_CAP_GMEM_CONVERSIONS.
->>
->
-> Thanks. This should read
->
-> If the capability KVM_CAP_GMEM_SHARED_MEM is supported, and
-> GUEST_MEMFD_FLAG_SUPPORT_SHARED is specified, then the 'flags' field
-> supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
->
+> > > And it is being successfull only when running alone, probably because
+> > > there are some tests that add the vfs_getname probe that gets used by
+> > > 'perf trace' and alter how it does syscall arg pathname resolution.
 
-My bad, saw your other email. Fixing the above:
+> > > This should be removed or made a fallback to the preferred BPF mode of
+> > > getting syscall parameters, but till then, run this in exclusive mode.
 
-If the capability KVM_CAP_GMEM_CONVERSION is supported, and
-GUEST_MEMFD_FLAG_SUPPORT_SHARED is specified, then the 'flags' field
-supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
+> > > For reference, here are some of the tests that run close to this one:
 
->>> Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
->>> +will initialize the memory for the guest_memfd as guest-only and not faultable
->>> +by the host.
->>> +
->> [...]
->>>   
->>>   static int kvm_gmem_init_fs_context(struct fs_context *fc)
->>> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
->>>   static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>>   						      loff_t size, u64 flags)
->>>   {
->>> +	struct kvm_gmem_inode_private *private;
->>>   	struct inode *inode;
->>> +	int err;
->>>   
->>>   	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
->>>   	if (IS_ERR(inode))
->>>   		return inode;
->>>   
->>> +	err = -ENOMEM;
->>> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
->>> +	if (!private)
->>> +		goto out;
->>> +
->>> +	mt_init(&private->shareability);
->>
->> shareability is defined only when CONFIG_KVM_GMEM_SHARED_MEM enabled, should be done within CONFIG_KVM_GMEM_SHARED_MEM .
->>
->>
->
-> Yes, thank you! Will also update this to only initialize shareability if
-> (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED).
->
->>> +	inode->i_mapping->i_private_data = private;
->>> +
->>> +	err = kvm_gmem_shareability_setup(private, size, flags);
->>> +	if (err)
->>> +		goto out;
->>> +
->>>   	inode->i_private = (void *)(unsigned long)flags;
->>>   	inode->i_op = &kvm_gmem_iops;
->>>   	inode->i_mapping->a_ops = &kvm_gmem_aops;
->>> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>>   	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->>>   
->>>   	return inode;
->>> +
->>> +out:
->>> +	iput(inode);
->>> +
->>> +	return ERR_PTR(err);
->>>   }
->>>   
->>>
->> [...]
+> > >   127: perf record offcpu profiling tests                              : Ok
+> > >   128: perf all PMU test                                               : Ok
+> > >   129: perf stat --bpf-counters test                                   : Ok
+> > >   130: Check Arm CoreSight trace data recording and synthesized samples: Skip
+> > >   131: Check Arm CoreSight disassembly script completes without errors : Skip
+> > >   132: Check Arm SPE trace data recording and synthesized samples      : Skip
+> > >   133: Test data symbol                                                : Ok
+> > >   134: Miscellaneous Intel PT testing                                  : Skip
+> > >   135: test Intel TPEBS counting mode                                  : Skip
+> > >   136: perf script task-analyzer tests                                 : Ok
+> > >   137: Check open filename arg using perf trace + vfs_getname          : Ok
+> > >   138: perf trace summary                                              : Ok
+
+> > Looks good to me.
+
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+ 
+> Nacked (sorry). I think running them tests in parallel is great
+> because it points out a problem that perf trace has. Please check out
+> this approach: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howardchu95@gmail.com/T/#u
+
+I'm not saying that perf trace shouldn't be used in parallel, but the
+vfs_getname code, IIRC, checks for the existence of that probe to do
+pathname collection (this predates the BPF method by a long time) and
+then counts on it to do.
+
+There are tests that put it in place and then at the end remove it,
+multiple tests.
+
+So there are possible races with that and out of being conservative I
+made it exclusive for the time being.
+
+The plan is to remove that vfs_getname code in builtin-trace.c and then
+the tests, as we have the BPF method that is way better and should allow
+for parallel use.
+
+Probably in the meantime it would be better to mark the vfs_getname ones
+as exclusive tho now that I that I wrote the above explanation... :-\
+
+- Arnaldo
