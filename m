@@ -1,104 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6681D63D8;
-	Thu, 29 May 2025 21:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56271D63D8
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748554296; cv=none; b=nY4AT+S5gnGSHA+D+8A2q9QwU0r76bwYlDY5+o07cWzSvfU/Bsz2Jg/iiwHe1TrXmGaYnhgX4L4yLN0GFK6Y7rk/QoXHYGW1dtQBzZ8BmagsNJDreQlYx26L9Ro9/llwJh5Ex6O+JVqpmxvouas2eRwoclX3T6sgfO7R4jvhYhA=
+	t=1748554682; cv=none; b=OIOOf4kHiIEhpjV19lafT3AmCRgSLeGSRBiwQLyBHxWao87d7LZwzHVzkkrTqKNacJxJb3gFKRYyssZFg5pb2hrpOc+F1tCGNMLQMmMgiiy4avgjp+NiuuhDnaXDTInQjJtTNwQKr9KM04O90CZSE3qlJ1rEZJMajhUYk8PsJ6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748554296; c=relaxed/simple;
-	bh=24J7hnSNm1uw3mEgE31KPQL8dhDGCtL3IZ027WICqx8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=W0KCmmRLkDU0twC5yRw/A/Jy8rKXDga6Bd31OCh7b4ArVVswhEjv7zstgplFgozUeYch4FSOgBXo04kaHfZagO7XIyraX0mk2sJMsaZ19/euze5O5KN6+QQOCosDpnz4rnjUs5AY5JLq74G5hS48UTNaT1X16aXHNukuERBziuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OHMTkxR7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748554682; c=relaxed/simple;
+	bh=LXReZw2aLb2mQwYq1+eiv4FUfrhxU5/HnRkofd1TRJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zh3CrjgLrae3Vom8R82hpTyZO3SSblmJILv8q/XwFSoUuKfsz3sdtDI4vBLgLql+JQMtW3L2rjJ80DhmU1pZ8dNKnmsEpf+o/6nIJEiOzgkAspCuDmHUFIVYd4LMopeKkwa6RQXG8IxEZYuntcQHN3GPlj+GYgu2tVkgB1r7ml0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AtoRbvod; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OHMTkxR7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06688C4CEE7;
-	Thu, 29 May 2025 21:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748554293;
-	bh=24J7hnSNm1uw3mEgE31KPQL8dhDGCtL3IZ027WICqx8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OHMTkxR7OzCENCECw7Cm8RvBt0XqphjOkaMbzv34OUHnZ5R0CeJapNpDxOQTpjt5o
-	 +7unNKYQlFjV3mF1oB88TTmE90OZvStPudpLJqLjgTFLxbd+ymOlgeYBC1i6Riclw7
-	 k5yfzT/nZUoce5KTvqXh4FeLMXWW4vICXUUvbd3k=
-Date: Thu, 29 May 2025 14:31:32 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, Vlastimil
- Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann
- <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>, SeongJae Park
- <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>, Mike Rapoport
- <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Barry Song
- <21cnbao@gmail.com>, linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, Pedro Falcato
- <pfalcato@suse.de>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-Id: <20250529143132.b22099b8ce3452bbba25f813@linux-foundation.org>
-In-Reply-To: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtoRbvod"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1277501b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748554680; x=1749159480; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mqP4wvVgm10JM+a8NwlgAMzllqIFrJqqgUfwCFf2lHo=;
+        b=AtoRbvodc3WuHJSJMckxzBg5w3OqSRhcjRXPIWdyNWEeTXEzj9vHKCPX8oBXidv08l
+         xROFXmdyo4hYDnUMA0yMSc13CT2RkuvCs+Yh8mitCuuj8z1l5554d6yPul+wva0pnnWA
+         2CsoOdDlolhZ83sy9dt1YwUGBSkcNXNZMBLhLUlr0Zs0SFDMkokvVGNvT+5nr4tSxvhI
+         ZDUjxQRleqfxhi0WCztzzuDKtKNo5DReYjzfBgrHtUxACXIRq0hK24tFaYGZGl3IBbUQ
+         He3zwXbDU3CBxgd+0Tuy+CUULb0Tx1EXWp7MnHkzbErlFGgBY3lTYCOVHJZEecNjYI8x
+         WJzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748554680; x=1749159480;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mqP4wvVgm10JM+a8NwlgAMzllqIFrJqqgUfwCFf2lHo=;
+        b=aRodXaqnGGqBa9aaVi16cazrRXj7fUEm9k24oNj2jfUl7wby/rdEOe7ngjkhmstrRJ
+         z/Z4tdEqqzTNctb0wc+zBpMiqN3axvVP4gG3xXC367imBwgcQDFOTn1Pw2cRBw1imhHr
+         oKTJXkJLq5bJAzoynceKVLdSaK8nfbuxBBtih+Jsjy9Vu7/3jRKZwFfRzyQ3eKzvik+6
+         ZHezk1sqmjuYPPssaRWlt8uRkhj72qTqq/LyKkG4Gk5tYIbMT3hvmu2usC27RHEVSTlr
+         +HucqCacSyCaabT8EZ8xPM9tMJJ2MyHQkAQtDkFpDtBfyzR+xC83B/X8fGZftV7I3XeC
+         mWhA==
+X-Gm-Message-State: AOJu0YxjyGubWmRwaFjfnlBhq+mZW5sCwN1s2LMWHNhuU/I5SAThC5r2
+	hjbpQd8FVRYEciAiP6ulRfx/UOF8mlVHRK62LFCV/ea4NGhXB2nG56Sx/Mwt3Q==
+X-Gm-Gg: ASbGncv6j9QxsOEMgVSTSStzJKtRWgtbfOJQiy5SbLaT1bF+SvW/q6u1Ifc2aDuLgqr
+	OhXpodp/DCm6A99hphut6NgMp7qXHgIJSmXNzH6MT6bO61u6aA/entVx9siBIq+NNkLgDK21DNB
+	9YboImQ2OrnBf2W39ufqKgXnOjaZjaI1OLGkcM/pJ4DKnsHM9SLnFU9dJ/+oOCBKSM79mxXg1w0
+	RDcAIkPfUh4Nm6FYEt9EvSmb0ijRojH+1SKBy0YhndVYRApsl0xtLIKSn6cPWe4T49J46DrgVrV
+	/Us1mcI1t40XyGwTqUMyak+UgcR1cn5EcNALKW3MeyyzP2QoQMZOrKwu+ainSyOW8jC+0YlID1n
+	flOH51q55CsP4eJ8aAi7nDT5QY06O00nj1niXDZpGfbI=
+X-Google-Smtp-Source: AGHT+IFBuv+g34bmQWuVCb/OtmzFX0rA5tHGeOEftBT0F3jfs/WCM3yCBJpA+mSpwz6fYCAqQIkacA==
+X-Received: by 2002:a05:6a20:728c:b0:215:d1dd:df4c with SMTP id adf61e73a8af0-21adb11c2d7mr1423707637.6.1748554679780;
+        Thu, 29 May 2025 14:37:59 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a46d:d724:4557:2a3e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab109sm1778187b3a.40.2025.05.29.14.37.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 14:37:59 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: turn off one_time when forcibly set to foreground GC
+Date: Thu, 29 May 2025 14:37:50 -0700
+Message-ID: <20250529213750.1068920-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 May 2025 15:43:26 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+From: Daeho Jeong <daehojeong@google.com>
 
->
-> madvise()
->
-> ...
->
-> process_madvise()
->
-> ...
->
-> prctl()
->
-> ...
->
+one_time mode is only for background GC. So, we need to set it back to
+false when foreground GC is enforced.
 
-Yeah.  I think there has always been an attitude "ooh, new syscalls are
-scary and I probably need permission from someone so let's graft it
-onto something which is already there and hope nobody notices".
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/gc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-New syscalls are super easy and are cheap - it's just a table entry! 
-If it makes sense as a standalone thing, do that.
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 2b8f9239bede..f752dec71e45 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1893,6 +1893,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
+ 	/* Let's run FG_GC, if we don't have enough space. */
+ 	if (has_not_enough_free_secs(sbi, 0, 0)) {
+ 		gc_type = FG_GC;
++		gc_control->one_time = false;
+ 
+ 		/*
+ 		 * For example, if there are many prefree_segments below given
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
-> The proposed interface is simply:
-> 
-> int mctl(int pidfd, int action, unsigned int flags);
-
-Well, why `flags'?  One could even add a syscall per operation. 
-Debatable.
-
-> Of course, security will be of utmost concern (Jann's input is important
-> here :)
-> 
-> We can vary security requirements depending on the action taken.
-> 
-> For an initial version I suggest we simply limit operations which:
-> 
-> - Operate on a remote process
-> - Use the MCTL_SET_DEFAULT_EXEC flag
-> 
-> To those tasks which possess the CAP_SYS_ADMIN capability.
->
-> This may be too restrictive - be good to get some feedback on this.
-
-Permissions needs careful consideration on a case-by-case basis.
-Clearly in many cases, user A should be able to manipulate user A's
-mm's.
-
-And if different modes of mctl() end up with different permission
-structures, one wonders why everything was clumped under the same
-syscall!  mctl() becomes "prctl() for memory".
-
-Anyway, fun discussion.  I'm with willy ;)
