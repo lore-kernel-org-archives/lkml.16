@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52442459DD
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F1F253922
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493610; cv=none; b=RBLSVKxDX3Rn1zTZtFRXt/gVBbvK9KlZMBpRuFJ28F8tF+NpF5koV2ydKiJN95ZqBvfCDBNeyMMnlr3qSwutyrnYYj1gItirN4/p/9+GYRw43g2hTRGjVXSs+0QlVqOIfm3BH0nzYaWT9imecfsS7zPqk5w8CoovwZyCoxcS+Lw=
+	t=1748493612; cv=none; b=GWrt4nta2ULwZ4rdUQcByBjbuH68Nf5o6Qja0QGLN+ilwtQe/SfqpQYAt7vSz3oVuWYnXafHh5oQ6Dq9k8qL3YsVU9hbVqyIkTBFwTq/IOQ8d+juXb6FmmcxH+uV8gUB4Nb1gZ1ry0g6HdwiD7F58SjNJSlhDedc8eeJ5xEf1uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493610; c=relaxed/simple;
-	bh=9wPoSZifE1t3wUFjmwqAikT26nrZz1wb8X2FZPryshk=;
+	s=arc-20240116; t=1748493612; c=relaxed/simple;
+	bh=CANFhZkJgyGsnrInmGKjXkCZcjZ3YXzkDfH+xL7C5tk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=FldOi9PseExblPcFXdXG5on8dnJgrVQ/aTD/ZXr/8W00/XaQaQRFf6wGd6CyiP9LDLAg69uEBkiOw6QVAlAEBYTehAFVjfvxBU6QsmLK0XxP+wqJILdoQMxdyvZmIGwiluZqL6SSBxYUx4gsp8A0GS4GnWQOlHygjcyCo8rc3Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GcgC0BeX; arc=none smtp.client-ip=209.85.214.201
+	 To:Content-Type; b=r5g+IlAcgbOVSW823fmf+MLe7UYD93DT5O223ksNT51JommDkYuoGj9+xUq+YtWq6x7guF3o8XzXu8rSXhQXFjdoidEwBnSAUYYlCowCoXLenmjQxIJYZX5ThdTE0ad5D/gAnl5zjgGSQkwcDVxUakXgYHPuI69qfPj/18r4sMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yAmwy0ER; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GcgC0BeX"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22de54b0b97so5179765ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yAmwy0ER"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310a0668968so484035a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493608; x=1749098408; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493610; x=1749098410; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=722dErY8zW9Hiat6E75/pw12Xy7SEFMoHYruy8Cf3d0=;
-        b=GcgC0BeXzYems79xGgg3lT+6uQMkagif5+rMagHOOcz4QTWaRwtZSYRr2MK2BQU20+
-         EfxN+46vM5ZWjBlzqKTLsk0D4GDDspUyvJJcLYl5Fu3p9DmgHVprtq8oZIfpKMsqFzE9
-         kUGh+vDTXb3gDx2QnoJp5SkW1G/KtvwTYzeSDCgGpAEYJej9SndxUxFDBCu4WP9yY/Lq
-         dXMbsDYzLC3sahuGrvre50sTQyRo38X/Rz3FkiqtqTMcnja54Z0G/FL3fTMGzv1n+4zz
-         KpnrGT+kHTup84G1hq1lT4t+H/i/4kSymB4pdbLTwSBxLmcwVhedsMLetW2PyPx7/s1t
-         3gbA==
+        bh=q0+6lU8x18MkCnRglmEGZnHeaHUfbjOQhfXfqkjM75Q=;
+        b=yAmwy0ERJlTDnIK6W7sZ/Ho8PhIICBg9hOHE7ti9zzdopdbbcY+hisQBd3QCrmUz0K
+         xvNltDZoiUDCJrSxNouGuA3u4yhzkLprmbqQKVlwaEtmxEz3QYl6SrIT8BE3JthEhdcR
+         NS7lzuzRgXbv1vLvr9Cv0DvWKe3uHIJGJyl8wdZFunW4Xko/v+tpligiBY5SnYHgZ7a2
+         FuWqwUzZhaxaQHMhFu/INApPUUv40bHul1qcHoCsJ/Rp8zLoJWp2mjEKLPF8GXKH6a9z
+         6emzBp+2xmtsXbF0wY3yVBfF6y7jGNvHzdMdRIrqUcMz0rUBtubTDWFkchQq8Bwy3esP
+         D/2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493608; x=1749098408;
+        d=1e100.net; s=20230601; t=1748493610; x=1749098410;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=722dErY8zW9Hiat6E75/pw12Xy7SEFMoHYruy8Cf3d0=;
-        b=puMgvfjHkJn6P6aFapy75T5MIMQVZeRqdrUmuZEUDiC9/0R2q/bQjlH6L1aLnTOIcq
-         IPYgIGE8uFB65fuzmZbFI69aeb0DF7vxdFLN6KO8qJcYpniNdnyKzEsxBvY5tlOl9yt+
-         vriz3b1j7S6ajTGjfJ0tZb7xBP24uBQmyCWWZcjwXFZqj7QCL34uwuN0JzNkJiJzdIBp
-         LhiYIgoVEVjsryezy/5mP9LivGwptmX8Q1zC2O0DJHE0bXBS4gV7/sUJ2C5gwNI8XXvY
-         cDbgK8CohRXk8Eg3a5M+McYoT7reXmZQp13m8I03ZUB0Gv+qD02EARJ9MoErnhQwSKfG
-         fUUw==
-X-Forwarded-Encrypted: i=1; AJvYcCXh0P6UzURyIFwbJN67z5q/Twu6akUlGECWyFHncam2imOBltLa4fd7uqmghjD6UvPMzvxZpZ0zZTIxA6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf9x3AVfVjtBw7p4w9aS/bxIBLH0Q1T0UEPjKk+YzGluBv2ixZ
-	aaS3nZcaJHkxMZ8JjaFqwr9Vptz67IdlAAOlLhDBe7Z7WljQNLwdT3G3rzFxYwQ0e8/KyS98C8F
-	gjzcThtwU7A==
-X-Google-Smtp-Source: AGHT+IH7dpEuGoQg21MoVuoQ48ifpe0WcOWCZSF02Gb8i4e8aMbd0il+r7EkdIyA9k85aoSprRbowJvEHNyz
-X-Received: from ploy13.prod.google.com ([2002:a17:903:1b2d:b0:22e:5728:685d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea05:b0:234:e3b7:5d0f
- with SMTP id d9443c01a7336-234e3b75fabmr56521685ad.0.1748493607900; Wed, 28
- May 2025 21:40:07 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:37 -0700
+        bh=q0+6lU8x18MkCnRglmEGZnHeaHUfbjOQhfXfqkjM75Q=;
+        b=Y5unRNh3Jgxre6a3XXUs/2Q2qZ92lb0ZiVSxDCJ2yQqg2G5hlrbP7UGcVJQYQ0QdpC
+         8ryJ3it50+Ln8pKT/31iCa71WBvVjgpgfVG4NUE4p7VtO/IJAfAyrXIUqCgddrU0DzNU
+         yRxwtJn90DTkEab2Sj7WdxEeyid5SJJwJKbvHkEkykrfwa3BOtew7Zjta0fqp6fsslzn
+         VKYvy7sm0KjNl3ZpUg3VD9z1dqn2dGuhg1ukmPXVQNNSTnoTwBjlwqrgPdr2/RPTu/tO
+         VKd4Zci+UzYlJPB56Npu3xQ7NZB8EH7wm6p9Htwcqh/JxEFG+KoAvwBvNoFvyCUHXXtZ
+         jYhg==
+X-Forwarded-Encrypted: i=1; AJvYcCW93DwzvPuKVr4Fb6MmA02BLr8607rc9G7z6VMCIZE35q02IiaCYVvfTQ/n0OLYG3p4TMBIaRl1rwP9M8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeBeJXgHmkCDBZuGznx4/RnrX+XunaMZA7iDCnrWnVmLvoIdXt
+	OvXf4ydv9MfUV5pDTsnJvuVjd9IhWIHTsKuXYx+79DcXKCNWekh2Ox0l3vCnjw4tKBlmEQOiFrt
+	V4B9TZorSgQ==
+X-Google-Smtp-Source: AGHT+IE9ubP4EXyB04CdzN29eN45hiHLXKn9ZXif4h1X/irDCdN/4AOj6erkhGRhVueGltT8T+vgXt9OVBa/
+X-Received: from pjuj14.prod.google.com ([2002:a17:90a:d00e:b0:311:4201:4021])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:50:b0:311:e8cc:425d
+ with SMTP id 98e67ed59e1d1-3121dc54006mr1264393a91.10.1748493609979; Wed, 28
+ May 2025 21:40:09 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:38 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-2-irogers@google.com>
-Subject: [PATCH v4 01/24] perf callchain: Always populate the addr_location
- map when adding IP
+Message-ID: <20250529044000.759937-3-irogers@google.com>
+Subject: [PATCH v4 02/24] perf build-id: Reduce size of "size" variable
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -90,89 +89,55 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Dropping symbols also meant the callchain maps wasn't populated, but
-the callchain map is needed to find the DSO. Plumb the symbols option
-better, falling back to thread__find_map rather than
-thread__find_symbol when symbols are disabled.
+Later clean up of the dso_id to include a build_id will suffer from
+alignment and size issues. The size can only hold up to a value of
+BUILD_ID_SIZE (20) and the mmap2 event uses a byte for the value.
 
-Fixes: 02b2705017d2 ("perf callchain: Allow symbols to be optional when resolving a callchain")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/machine.c | 6 ++++--
- tools/perf/util/thread.c  | 8 ++++++--
- tools/perf/util/thread.h  | 2 +-
- 3 files changed, 11 insertions(+), 5 deletions(-)
+ tools/perf/util/build-id.h         | 2 +-
+ tools/perf/util/synthetic-events.c | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2531b373f2cf..b048165b10c1 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1976,7 +1976,7 @@ static void ip__resolve_ams(struct thread *thread,
- 	 * Thus, we have to try consecutively until we find a match
- 	 * or else, the symbol is unknown
- 	 */
--	thread__find_cpumode_addr_location(thread, ip, &al);
-+	thread__find_cpumode_addr_location(thread, ip, /*symbols=*/true, &al);
+diff --git a/tools/perf/util/build-id.h b/tools/perf/util/build-id.h
+index a212497bfdb0..e3e0a446ff0c 100644
+--- a/tools/perf/util/build-id.h
++++ b/tools/perf/util/build-id.h
+@@ -13,7 +13,7 @@
  
- 	ams->addr = ip;
- 	ams->al_addr = al.addr;
-@@ -2078,7 +2078,7 @@ static int add_callchain_ip(struct thread *thread,
- 	al.sym = NULL;
- 	al.srcline = NULL;
- 	if (!cpumode) {
--		thread__find_cpumode_addr_location(thread, ip, &al);
-+		thread__find_cpumode_addr_location(thread, ip, symbols, &al);
- 	} else {
- 		if (ip >= PERF_CONTEXT_MAX) {
- 			switch (ip) {
-@@ -2106,6 +2106,8 @@ static int add_callchain_ip(struct thread *thread,
- 		}
- 		if (symbols)
- 			thread__find_symbol(thread, *cpumode, ip, &al);
-+		else
-+			thread__find_map(thread, *cpumode, ip, &al);
- 	}
+ struct build_id {
+ 	u8	data[BUILD_ID_SIZE];
+-	size_t	size;
++	u8	size;
+ };
  
- 	if (al.sym != NULL) {
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index c202b98b36c2..f7df15c28bc3 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -419,7 +419,7 @@ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bo
- }
+ struct dso;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 2fc4d0537840..68bb7c5fe1b1 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -2248,7 +2248,9 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
  
- void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
--					struct addr_location *al)
-+					bool symbols, struct addr_location *al)
- {
- 	size_t i;
- 	const u8 cpumodes[] = {
-@@ -430,7 +430,11 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
- 	};
+ 	memset(&ev, 0, len);
  
- 	for (i = 0; i < ARRAY_SIZE(cpumodes); i++) {
--		thread__find_symbol(thread, cpumodes[i], addr, al);
-+		if (symbols)
-+			thread__find_symbol(thread, cpumodes[i], addr, al);
-+		else
-+			thread__find_map(thread, cpumodes[i], addr, al);
-+
- 		if (al->map)
- 			break;
- 	}
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 56e08c8ae005..310eaea344bb 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -126,7 +126,7 @@ struct symbol *thread__find_symbol_fb(struct thread *thread, u8 cpumode,
- 				      u64 addr, struct addr_location *al);
+-	ev.build_id.size = min(bid->size, sizeof(ev.build_id.build_id));
++	ev.build_id.size = bid->size;
++	if (ev.build_id.size > sizeof(ev.build_id.build_id))
++		ev.build_id.size = sizeof(ev.build_id.build_id);
+ 	memcpy(ev.build_id.build_id, bid->data, ev.build_id.size);
+ 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
+ 	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+@@ -2308,7 +2310,9 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 	ev.mmap2.len = len;
+ 	ev.mmap2.pgoff = pgoff;
  
- void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
--					struct addr_location *al);
-+					bool symbols, struct addr_location *al);
+-	ev.mmap2.build_id_size = min(bid->size, sizeof(ev.mmap2.build_id));
++	ev.mmap2.build_id_size = bid->size;
++	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
++		ev.build_id.size = sizeof(ev.mmap2.build_id);
+ 	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
  
- int thread__memcpy(struct thread *thread, struct machine *machine,
- 		   void *buf, u64 ip, int len, bool *is64bit);
+ 	ev.mmap2.prot = prot;
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
