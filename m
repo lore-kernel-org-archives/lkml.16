@@ -1,179 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3934C9D
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570E11DF738;
+	Thu, 29 May 2025 18:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748543446; cv=none; b=mHuX/+IpmWJBcg+5mh1kyvu2ehSh1lBXTwi52vWyat5mnrGKxpnYSHtEX1VVq6AMqRgnW3z2ozotouhaJObUTn2N5rSiA+bcrGqXyeetpWmQ8RdcCaDFoRbKLTlGb7jSS/R8ddI6foVihPLO00kgOScfGOEkGHifd6lJuD/btQ0=
+	t=1748543507; cv=none; b=UDcGpsUrdbZDLsAmIod/xl/gp7CG9bG9YhgohQ6+KWuKxnntH1MdWoMF1RtiUpBSMTKIKpaMYtJh+iIsb8gEglxD8PuuMf5/7ByTT6jIrf2bO510vx2R1tfuOePRqLo7dv81v5aNFYAIisCsmqkFrnJJp5dWoBKVOnDk+8cy1/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748543446; c=relaxed/simple;
-	bh=viWFs6iNNlHq9j8bu2VTqrFsdLcVz4eNaCVzp3N2EyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i0cR/PwRjItLHD8/Z8JBZjLc8xRpqUx1nVidRN7sMc2HKRCBzIXKMpAnB0uLqhDn3mKjPa2F5RuCe06V2ciif42/jAWBphJJRZtPAU06St9S7F+D+nLNvs+ftC+4LoydAl07oPRU2EFs8GoD1NvYMTZ0vhdgGfzVMR1kaX7zU18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 051121764;
-	Thu, 29 May 2025 11:30:27 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17E8F3F673;
-	Thu, 29 May 2025 11:30:41 -0700 (PDT)
-Message-ID: <d1226612-7ad8-4405-93a7-28148699ce45@arm.com>
-Date: Thu, 29 May 2025 19:30:40 +0100
+	s=arc-20240116; t=1748543507; c=relaxed/simple;
+	bh=tvdb9zj58cvDAS6PCxKYpi5glIKRt4zKu2kRcZVy9DQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=haB4F+/pySYPtvptMGCGkY0NuSRa5der7TPpD3CkaQ6EvKxKPbZFib50vDKX9F4PQRsjdyM/4iIwIvSvYhDf3jXsUd+Y+048GI0iL7YM+iZHxwGWCPEYdMuOQFK/PcIHNOJneY6EHBVFKEB0lSGTEe9/5i07MiRthnMDUtaxj64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fiZMtIuU; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fiZMtIuU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748543507; x=1780079507;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tvdb9zj58cvDAS6PCxKYpi5glIKRt4zKu2kRcZVy9DQ=;
+  b=fiZMtIuUAgKTAU+2dTe4YGP6XcXKtGy2hMhBJxrY4SXWRSlnsgGrdBoj
+   FowGOaVgRmqeK/XyqUp0zj/8jXu4ffa+Or4JbnB9brsbaV59GLxUcPicP
+   J0yG9F/yieFrwv9VvrgzYBoTetEY3VPehoni7bgJsGzQ3wqbs/kQwWh1Y
+   jqJVZu5qRYTq68MKv+PetG6v+xgdcj5SOaioic/IVfT0I6zZYgU6ynGDe
+   GphrDmM0AAAq6cax7WgFsqKBcKIGuQ9kCoE2inLi3mBsJJyWWMqiX0+S+
+   t+fzFzuMoqUYNH21H4vZ8wxRhshrMGJOquXPiCWk1myAc5rj1v1npzi3A
+   g==;
+X-CSE-ConnectionGUID: YeJOY621RHyVTHpcJnJ90Q==
+X-CSE-MsgGUID: tE3Stl7USDeBDo9x6xKZaA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50769479"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="50769479"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 11:31:46 -0700
+X-CSE-ConnectionGUID: bRKXYJWESgqIGlos4DB4sA==
+X-CSE-MsgGUID: 68CCrVNmQRKAO7a4zuL43Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="143472020"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 29 May 2025 11:31:42 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKi2W-000Wz6-14;
+	Thu, 29 May 2025 18:31:40 +0000
+Date: Fri, 30 May 2025 02:30:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Frank Li <Frank.Li@nxp.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: display: convert himax, hx8357d.txt to
+ yaml format
+Message-ID: <202505300219.7v1CVviw-lkp@intel.com>
+References: <20250529164822.777908-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
- <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
- <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
- <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
- <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
- <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
- <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
- <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
- <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
- <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
- <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
- <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
- <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
- <936cc91a-b345-4e52-9cb5-922c9810c469@arm.com>
- <a1ff2646-f429-4626-8541-19c7f301fc23@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <a1ff2646-f429-4626-8541-19c7f301fc23@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529164822.777908-1-Frank.Li@nxp.com>
 
-On 29/05/2025 18:35, Yang Shi wrote:
-> 
-> 
-> On 5/29/25 8:33 AM, Ryan Roberts wrote:
->> On 29/05/2025 09:48, Ryan Roberts wrote:
->>
->> [...]
->>
->>>>>> Regarding the linear map repainting, I had a chat with Catalin, and he
->>>>>> reminded
->>>>>> me of a potential problem; if you are doing the repainting with the machine
->>>>>> stopped, you can't allocate memory at that point; it's possible a CPU was
->>>>>> inside
->>>>>> the allocator when it stopped. And I think you need to allocate intermediate
->>>>>> pgtables, right? Do you have a solution to that problem? I guess one approach
->>>>>> would be to figure out how much memory you will need and pre-allocate
->>>>>> prior to
->>>>>> stoping the machine?
->>>>> OK, I don't remember we discussed this problem before. I think we can do
->>>>> something like what kpti does. When creating the linear map we know how many
->>>>> PUD and PMD mappings are created, we can record the number, it will tell how
->>>>> many pages we need for repainting the linear map.
->>>> Looking the kpti code further, it looks like kpti also allocates memory with
->>>> the
->>>> machine stopped, but it calls memory allocation on cpu 0 only.
->>> Oh yes, I hadn't spotted that. It looks like a special case that may be ok for
->>> kpti though; it's allocating a fairly small amount of memory (max levels=5 so
->>> max order=3) and it's doing it with GFP_ATOMIC. So if my understanding of the
->>> page allocator is correct, then this should be allocated from a per-cpu reserve?
->>> Which means that it never needs to take a lock that other, stopped CPUs could be
->>> holding. And GFP_ATOMIC guarrantees that the thread will never sleep, which I
->>> think is not allowed while the machine is stopped.
-> 
-> The pcp should be set up by then, but I don't think it is actually populated
-> until the first allocation happens IIRC.
-> 
->>>
->>>> IIUC this
->>>> guarantees the code will not be called on a CPU which was inside the allocator
->>>> when it stopped because CPU 0 is running stop_machine().
->>> My concern was a bit more general; if any other CPU was inside the allocator
->>> holding a lock when the machine was stopped, then if CPU 0 comes along and makes
->>> a call to the allocator that requires the lock, then we have a deadlock.
->>>
->>> All that said, looking at the stop_machine() docs, it says:
->>>
->>>   * Description: This causes a thread to be scheduled on every cpu,
->>>   * each of which disables interrupts.  The result is that no one is
->>>   * holding a spinlock or inside any other preempt-disabled region when
->>>   * @fn() runs.
->>>
->>> So I think my deadlock concern was unfounded. I think as long as you can
->>> garrantee that fn() won't try to sleep then you should be safe? So I guess
->>> allocating from within fn() should be safe as long as you use GFP_ATOMIC?
-> 
-> Yes, the deadlock should be not a concern.
-> 
-> The other comment also said:
-> 
->  * On each target cpu, @fn is run in a process context with the highest priority
->  * preempting any task on the cpu and monopolizing it.
-> 
-> Since the fn is running in a process context, so sleep should be ok? Sleep
-> should just can happen when allocation requires memory reclaim due to
-> insufficient memory for kpti and repainting linear map usecases. But I do agree
-> GFP_ATOMIC is safer.
+Hi Frank,
 
-Interrupts are disabled so I can't imagine sleeping is a good idea...
+kernel test robot noticed the following build warnings:
 
-> 
->> I just had another conversation about this internally, and there is another
->> concern; we obviously don't want to modify the pgtables while other CPUs that
->> don't support BBML2 could be accessing them. Even in stop_machine() this may be
->> possible if the CPU stacks and task structure (for example) are allocated out of
->> the linear map.
->>
->> So we need to be careful to follow the pattern used by kpti; all secondary CPUs
->> need to switch to the idmap (which is installed in TTBR0) then install the
->> reserved map in TTBR1, then wait for CPU 0 to repaint the linear map, then have
->> the secondary CPUs switch TTBR1 back to swapper then switch back out of idmap.
-> 
-> So the below code should be ok?
-> 
-> cpu_install_idmap()
-> Busy loop to wait for cpu 0 done
-> cpu_uninstall_idmap()
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on linus/master v6.15 next-20250529]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Once you have installed the idmap, you'll need to call a function by its PA so
-you are actually executing out of the idmap. And you will need to be in assembly
-so you don't need the stack, and you'll need to switch TTBR1 to the reserved
-pgtable, so that the CPU has no access to the swapper pgtable (which CPU 0 is
-able to modify).
+url:    https://github.com/intel-lab-lkp/linux/commits/Frank-Li/dt-bindings-display-convert-himax-hx8357d-txt-to-yaml-format/20250530-004954
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250529164822.777908-1-Frank.Li%40nxp.com
+patch subject: [PATCH 1/1] dt-bindings: display: convert himax, hx8357d.txt to yaml format
+reproduce: (https://download.01.org/0day-ci/archive/20250530/202505300219.7v1CVviw-lkp@intel.com/reproduce)
 
-You may well be able to reuse __idmap_kpti_secondary in proc.S, or lightly
-refactor it to work for both the existing idmap_kpti_install_ng_mappings case,
-and your case.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505300219.7v1CVviw-lkp@intel.com/
 
-Thanks,
-Ryan
+All warnings (new ones prefixed by >>):
 
-> 
->>
->> Given CPU 0 supports BBML2, I think it can just update the linear map live,
->> without needing to do the idmap dance?
-> 
-> Yes, I think so too.
-> 
-> Thanks,
-> Yang
-> 
->>
->> Thanks,
->> Ryan
->>
->>
->>> Thanks,
->>> Ryan
->>>
-> 
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
+>> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/himax,hx8357d.txt
+   Using alabaster theme
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
