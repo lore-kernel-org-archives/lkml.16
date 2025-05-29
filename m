@@ -1,163 +1,153 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945C7347B4;
-	Thu, 29 May 2025 08:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748508733; cv=fail; b=cILauYzv+HI6B9qqZKt4ZRn98gESLg2aaSdZyTVMLD6lIfbGTmeft38YOr8aUNEd4OK9JHcloqU3gMGJkEbrMFJoayZDCezqYarBcoz7sNFND3oLjc3shMR06VdSeOryQJWhCN5BhQz5doYJuoA7KEcmG5xkD9j2NOJwmL7zV2c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748508733; c=relaxed/simple;
-	bh=/blevvzc2PdLKsQlphXZPoPSc4b1cAfdtkeWmD99RYY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eexY1MaLQ9WL6LIEsHBLgtKZOyoUGElZ6HO08njAdkFkdZaH7jkcKrK3M+KIEP9a4+cozdC11a9XUw+meq01dXE6864iONIAGkPdNdj9cFJL/maOzRktLcu8eo4RFPuvlmGeiY5q/XyYCv8adVjGql9GaD4K6Z2Ih0nNPxmN2eY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KwCjaK0f; arc=fail smtp.client-ip=40.107.244.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE04347B4;
+	Thu, 29 May 2025 08:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748508739; cv=none; b=Rtaglv/Km+Pkh2XcPndDZNvEWQoXAfB1DJZ8EjaynGzRvyLJYa3pMQTGFiSabGVZNaGrB+Dc9bdFFA3GO99KyOCIk18U3+HB8zt/VirOn94nItJD4FkGndGiIpwaZYLXziHxmsedJsE/qax+3N1o9RHRBs6hKEV0YY5pPp/UZPE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748508739; c=relaxed/simple;
+	bh=i9D83x9qEDm+ynFghn98jR94nLejo4ozB0WivyuAUXY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p72KVxoXctUk1KXQ1F7G2PGyysBwHz28AiraWlT8b/qclct/6Slb5rMjKLL/OIaM1rrWpqgYo8FvcHftI4G7POytgoQMMSP1paREoFN/iMX7FYL5xvHkGBTLVoVtuWhM9sYPw+4a0pefsJIqb7++6Y+I/vKBwVzsZqm1i1xYx9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=N9eaB6mE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KwCjaK0f"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iRetkbp/Xj98PXck86WpJpUx+4l/wkYs6mvfkR+3LKoAjdkJDSqT2EO+ogE8EQLKZlyzDn8ZND0gGbEkp67cXAWlObxQPE/iMsmG5iWfw8uQoFAjavA3zG3Ji8Djq4XgX8ntJ/kkaL36cfdZTBaPYvCRBpj7UibHYuwCGwYMVkfx9ULzVsvfDuTdTD2n5203MsGIoBGf1G1lUJe7mgenpY53DVDySjIhJJo7hDg3gpGnphVHtP3UYo7JcN1+OvCYGyIid5fP115emnvrhe6C+VrwwW9W7s9ICu8i7IjZKNmqZKOwvzo/ggg3f7Qxft333EbWLh7AxqsMGCDOPmzLtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gdhf9us2KnTt9m4yregEFLinRY7Ev4Nz51E8i2LUYr0=;
- b=BusIvZQ/z/WhshRnUiUHed9+1YKgTO2O19BM2K1VYEhvpF+M+RiZ44hSlrZpOhouLQ+MNskHbeBjKkcXGraxUYuFtmgMbeRTCcPXRF4lrsBRgebkL44J39APmToO6LDQJEL/bloHsKFVn9IWzlFoav/LNUlC/I7ihCu49SGURLlw7Dk9WvF9RVqdIKBwcharmDLJKXJMZyLwVEzS2DCYZNUELsOH1yy79GyzMojBdCaxeRHJbW4FrVEdGTNH1Q2PMx38vE3LZdgzTGrIoDlR6Lb0uSAknzDQAIG3EQ4x26Yar8F7dmMRaauoTe/tSiAAQp0zbqUj6QWYOSSkTWSjdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gdhf9us2KnTt9m4yregEFLinRY7Ev4Nz51E8i2LUYr0=;
- b=KwCjaK0f0bpotuJaSaGYgPQ89MCpy5Pq1PteoZFfrHWnr0nUrRv5OWFaa7pUAJ6CvvVIm5SYvRgywvvufbw/c2QSHMGhXX+0R1it71AmC8XPaePAu9AqQa0bI3Z2WfWmqiHWyCgNLp8G23hMiRBeJuHPkUzB/RmQUQ+opNsdEbw=
-Received: from BY5PR04CA0007.namprd04.prod.outlook.com (2603:10b6:a03:1d0::17)
- by PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Thu, 29 May
- 2025 08:52:07 +0000
-Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::f7) by BY5PR04CA0007.outlook.office365.com
- (2603:10b6:a03:1d0::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Thu,
- 29 May 2025 08:52:06 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8813.0 via Frontend Transport; Thu, 29 May 2025 08:52:06 +0000
-Received: from BLRRASHENOY1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
- 2025 03:51:59 -0500
-From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>, Viresh Kumar
-	<viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>,
-	Manu Bretelle <chantr4@gmail.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Gautham R.
- Shenoy" <gautham.shenoy@amd.com>
-Subject: [PATCH] acpi-cpufreq: Fix nominal_freq units to KHz in get_max_boost_ratio()
-Date: Thu, 29 May 2025 14:21:43 +0530
-Message-ID: <20250529085143.709-1-gautham.shenoy@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="N9eaB6mE"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T5f7R1022432;
+	Thu, 29 May 2025 08:52:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=ofeUWmQoaOVzOgQ0nTCDfhG4
+	J/gseU9AWu6Gig3Ylyk=; b=N9eaB6mEYUAyh3m9B0VzTptihpuTqPYEhBAG3FRd
+	C7hXGsyUDYADIwFRU4QbZAfxgJN1yjVudT4TCRG7NZ90ARf3m59kcO4k0oZQZAIv
+	17rWOzcXjhE4OYTZUhKNYC+QgHoYrvmyp5NQWWJm5TdVpDRq8+09okyB+c5XNFWg
+	9CJ6k2HR2MFEbHPEightktq0d2EedFYNyL4Md64qU/ns8uXluv2BxOHX55TTq9AN
+	/jY33izB/eLjZlgJUns2LDqa3vS4zJzU5sDbm524mF6NEwRNjfChu16bXETrM1cZ
+	KJbHdDg2RANAmSbYGVAsGnAtDwgEkgbEepYRzx/Xb+e7zg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46x6xca26n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 08:52:15 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T8qEgA011081
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 08:52:14 GMT
+Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 29 May 2025 01:52:07 -0700
+Date: Thu, 29 May 2025 14:21:57 +0530
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Rob Herring <robh@kernel.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>
+Subject: Re: [PATCH v8 1/4] dt-bindings: arm: qcom: Add bindings for QCS9075
+ SOC based board
+Message-ID: <aDggHy/2ZwQGmXCw@hu-wasimn-hyd.qualcomm.com>
+References: <20250528122753.3623570-1-quic_wasimn@quicinc.com>
+ <20250528122753.3623570-2-quic_wasimn@quicinc.com>
+ <20250528222056.GA907125-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|PH7PR12MB5685:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00144a05-df53-48da-9f80-08dd9e8e16dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+06YKrLISKPx5q/9zAI+6iz7yf/AwX45PwyrK3tnc3varuCb5PL/YT4WO4py?=
- =?us-ascii?Q?6eiDJWuh8O+/edz7/PKtSXjZ00kbOnAhnDpFusPFSkXA5VYOGJ3b3ypqasWU?=
- =?us-ascii?Q?LqrGmOkEtYpQBoX254ZQgABIPrUELGE4kXEo1lQ+NeH/au/c82yUXoVqlXVK?=
- =?us-ascii?Q?X+UsPfieYgaoqqmfWHe9Ku2kinTFBewoBO77+fSY1qbqpQL8pk7OVZgmLdnh?=
- =?us-ascii?Q?HOtjICn1qfdUfwS19psbMXiuPPuD22pryyAv1LD1FC4WxAF9n0fD6V1M9pew?=
- =?us-ascii?Q?YRLzdKQTRsnIki+UWF/bx8kV8F25v8Oq2cPoQHaNRRih+ileD5zqM6VRmmAc?=
- =?us-ascii?Q?DvNBgtQlhsKvq7eSM2T5VnAcAJJNaK6pkftdYly8EtDzg69oyIlHFZtGhvoH?=
- =?us-ascii?Q?invQRnLSmD0Vi7itF/Gceoo+6Na+n+kmcgrxzXyGm+Em2iaKznLD4xxBuJSn?=
- =?us-ascii?Q?33+pd4K13LGFhfXCMk/bRrfXtb/imAHZpjD9yt5W4M6pQ4X/EOEbxW29tU5Y?=
- =?us-ascii?Q?fiEEdvJ2WTIj5E3yz/Ebe+jts+r32yDupH5sXG4IsS5T0YXTUHnIhV9/Fu5B?=
- =?us-ascii?Q?V/L7MQpJM3kvDsoFSK8w1oHF+kWHLBfuBufSKyEnLa6siP4kf2nwRlpWMgcI?=
- =?us-ascii?Q?HgThhhULoDlTwGQDYdHFWMsm2YrV0Ku+n7wfMUxS6foGf2SkP4EnGp/vREM0?=
- =?us-ascii?Q?dtVRtVC8fS8lC86zTT/3HKwIJ5BvQr1DVkp3YJdqL4CwrDXHMqQBo68gEJQH?=
- =?us-ascii?Q?ztk81GZ70HCyvzC7klBwRy8otW2LfdqaPxEYIWFH46XXD2UkSpsMzy/iBfOM?=
- =?us-ascii?Q?7xb7wX8ZR2JxwPHCfszezIdn+8D5INMKEOXZmdl+opvraiur3Rnf/vtnQFlG?=
- =?us-ascii?Q?hCxUzkhl9BmPCryxL1oC5Lg8ZGmSS7uixuxSuJcHysXKiJ1wKGloSM4Z75d5?=
- =?us-ascii?Q?xAl3VoBMm6L6k12O0Og5zcegdu7DVfK9k684zoteTzdNPpJqm/dbwQzpzN7h?=
- =?us-ascii?Q?OFKT7wTQ7etI6J/KpDN0rM4AU3jGqaUH5vqZFpXKKhmu2POYwpSqq8GwyCJ7?=
- =?us-ascii?Q?Ue90FUgdL7zKcF2DM/YPj0e3H732T2P/hjRA4WGcsw9gPtQOFtl8rLiO0xo+?=
- =?us-ascii?Q?f0uakFCE+71K52h3T9p2ayfUGabS21U8aejroR2NphNliAAlA8Jvu2kuvcga?=
- =?us-ascii?Q?5V0X3zzb+ZPILhLSAPP8L6R5wyS+yClbAJioJd3Pd6fMib/XFYLkXu7Pxl6R?=
- =?us-ascii?Q?/pIKp16rDELTNvz4hmQE9G62H0Zo/htcDiSEzBFaV4RpplcZ6PTucwRq1inT?=
- =?us-ascii?Q?VOJbc2nSgYNVH7cnKlfzt9TT8e3ahNeuRseLLabUJH//BAElxob2/QpjewMO?=
- =?us-ascii?Q?t8hlQYgGu6XvlphvzI25emZWZXENa2Pxk25LMOFbsYCDc14p6secy47XfD+2?=
- =?us-ascii?Q?j6kBG0h6+I3gNM7+Qwx9x9wCgaK06Q0bV03+G4XCdt0MraHZFFHuv0wzNYnF?=
- =?us-ascii?Q?+AFQUgwzLIjx94Ir6K+Qhd7GxtoazZbiB8G8usqA4151uBRmgk7ue8KK1A?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 08:52:06.1122
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00144a05-df53-48da-9f80-08dd9e8e16dc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F9.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5685
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250528222056.GA907125-robh@kernel.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4NSBTYWx0ZWRfX70iTSXN3iYb3
+ Ltx9n580JMi2Q30zdqvmKt8XnlKfwLDQMDx131LPT602t+2i9TsJdggl468WHKaSazITTybD8HI
+ C6yZ9Z2TAw6qlRXauz1kE+E+vFDf/2rbAr+4QqwRoqVWx7LlQQ28vWKMsS3PrLLlFI9WGuCPgH9
+ i1XGtIiQCt6aZuJNqfnJno9G7ArhlYlHGTrEbbaL9OeJS/6rww2lnmzP9EZPXd9KXCYPDJOHKFS
+ p3ICtkPb8OQ5GcPcTqtm7Z47Lx0xixAqBsNH6Dn4zJ/qSMeO7ZYFlJ90QnROrRXMq5qojnWoFo/
+ U39VjIYceySXbmse4VVP2N55ce3v4pUp2yqVsC1798i/g9nBO8d97kYYzXsDg9hKq+SG765kY10
+ ryQjIxzXiOGhXYuBhaCeVvYddUvYFjyNtxpl9yR4DayWuQYINIMOoc27IuvG2BHYBkDlI50N
+X-Proofpoint-GUID: FgGjcSC60Ytfg8mfcp4CLNCWUCDdyVls
+X-Proofpoint-ORIG-GUID: FgGjcSC60Ytfg8mfcp4CLNCWUCDdyVls
+X-Authority-Analysis: v=2.4 cv=bupMBFai c=1 sm=1 tr=0 ts=6838203f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=mH5dv50Od_yO2UK9uncA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505290085
 
-commit 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
-modified get_max_boost_ratio() to return the nominal_freq advertised
-in the _CPC object. This was for the purposes of computing the maximum
-frequency. The frequencies advertised in _CPC objects are in
-MHz. However, cpufreq expects the frequency to be in KHz. Since the
-nominal_freq returned by get_max_boost_ratio() was not in KHz but
-instead in MHz,the cpuinfo_max_frequency that was computed using this
-nominal_freq was incorrect and an invalid value which resulted in
-cpufreq reporting the P0 frequency as the cpuinfo_max_freq.
+On Wed, May 28, 2025 at 05:20:56PM -0500, Rob Herring wrote:
+> On Wed, May 28, 2025 at 05:57:48PM +0530, Wasim Nazir wrote:
+> > QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
+> > Unlike QCS9100, it doesn't have safety monitoring feature of
+> > Safety-Island(SAIL) subsystem, which affects thermal management.
+> > 
+> > qcs9075-iq-9075-evk board is based on QCS9075 SOC.
+> > 
+> > Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+> 
+> This is missing Krzysztof's ack.
 
-Fix this by converting the nominal_freq to KHz before returning the
-same from get_max_boost_ratio().
+Due to change in code I have removed the previous ack, as current patch
+is changing DT heirarchy to what Krzysztof has acked[1].
+I will re-add the tags in next series along with your's, because now
+the DT structure is same as what you have acked to[2], although there is
+change in board-name i.e rb8 to iq-9075-evk.
 
-Reported-by: Manu Bretelle <chantr4@gmail.com>
-Closes: https://lore.kernel.org/lkml/aDaB63tDvbdcV0cg@HQ-GR2X1W2P57/
-Fixes: 083466754596 ("cpufreq: ACPI: Fix max-frequency computation")
-Signed-off-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
----
- drivers/cpufreq/acpi-cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1] https://lore.kernel.org/all/20250430-enlightened-enchanted-jellyfish-7049d0@kuoka/
+[2] https://lore.kernel.org/all/173142574295.951085.7523517676553074543.robh@kernel.org/
 
-diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-index d26b610e4f24..76768fe213a9 100644
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -660,7 +660,7 @@ static u64 get_max_boost_ratio(unsigned int cpu, u64 *nominal_freq)
- 	nominal_perf = perf_caps.nominal_perf;
- 
- 	if (nominal_freq)
--		*nominal_freq = perf_caps.nominal_freq;
-+		*nominal_freq = perf_caps.nominal_freq * 1000;
- 
- 	if (!highest_perf || !nominal_perf) {
- 		pr_debug("CPU%d: highest or nominal performance missing\n", cpu);
--- 
-2.34.1
+> 
+> > ---
+> >  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> > index 56f78f0f3803..3b2c60af12cd 100644
+> > --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> > @@ -58,6 +58,7 @@ description: |
+> >          qcs8550
+> >          qcm2290
+> >          qcm6490
+> > +        qcs9075
+> >          qcs9100
+> >          qdu1000
+> >          qrb2210
+> > @@ -961,6 +962,12 @@ properties:
+> >                - qcom,sa8775p-ride-r3
+> >            - const: qcom,sa8775p
+> > 
+> > +      - items:
+> > +          - enum:
+> > +              - qcom,qcs9075-iq-9075-evk
+> > +          - const: qcom,qcs9075
+> > +          - const: qcom,sa8775p
+> > +
+> >        - items:
+> >            - enum:
+> >                - qcom,qcs9100-ride
+> > --
+> > 2.49.0
+> > 
 
+Regards,
+Wasim
