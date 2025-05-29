@@ -1,115 +1,77 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C9820CCF4;
-	Thu, 29 May 2025 11:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DF621638D;
+	Thu, 29 May 2025 11:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748518196; cv=none; b=VeG4YbgZyobEG5Sc1bH42w7kQujUWTMqmmUM6Dv4pyPIRvr+NHmMhlWRE31aug3GjfujoUjUAcIgxwLj1QmsJSn/9qCF3gCQhuqKyEuSb/YRnyBdKMPPX89Qtt5Mz3LFOKBXehj1sutV3xp9gwhjay0ZJKa7PscFSCYhl7Qudu4=
+	t=1748518288; cv=none; b=QvjFxUGKhJUYbxGGFD1jf+KwtX2JkGmBiNQZL0Yq9OGlJolyEh4ra91FlqfJgTPh1z0EEImSAEmbBmSaKa04Rs9jY6TZsa+RscISc1D+GgkQIiY8WE9x4W3TeHIHm/Msx9h7cSHh9kohAfZ6LAJ+dIcuXXkWiAb6V8rTuQS87js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748518196; c=relaxed/simple;
-	bh=/XTFgQucAxsh2T22QTJl1XSs/Bkg3FT0qfuo/JDH9DY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NBVBVx59MlOp3zLrbG4LOqSJi7xtDGS3y4sHi7X6iD1njunsUav2NjcCKywFCk8cjBzP1RvhJhjvwBRsILlxay9GjlP1d0yhaQ3ClBifuirBJ7exR6K+cK4usYDbsUA2xjavgX+NDgj8IYv2fW4PfQRgWkoKTnbcn14j7JFikCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7PJN5YnVz6L4sw;
-	Thu, 29 May 2025 19:28:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2939F1400CA;
-	Thu, 29 May 2025 19:29:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 13:29:51 +0200
-Date: Thu, 29 May 2025 12:29:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Songwei Chai <quic_songchai@quicinc.com>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 3/7] coresight-tgu: Add signal priority support
-Message-ID: <20250529122950.00001fe6@huawei.com>
-In-Reply-To: <20250529081949.26493-4-quic_songchai@quicinc.com>
-References: <20250529081949.26493-1-quic_songchai@quicinc.com>
-	<20250529081949.26493-4-quic_songchai@quicinc.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748518288; c=relaxed/simple;
+	bh=53yuKezs5ilpcnEdLeOi3VA/lnDiQmGthxtSC8SQoCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mYWTlh36LYp4M1HzunxGWEdhjYyaWHFxdwELy2o14/wtrL3Jjb8anFB6EUzeVCRwOiEW0/XDOd979ZVID6tzqtSNAAkKtoXaMPWa4ozbrERRPQli8KNDHukKOnWtrTFy27zxleFCgxuEhSYYI0vnqcB+PlVWw57P1uXhJi914eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Efq02rrH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Efq02rrH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1B1C4CEE7;
+	Thu, 29 May 2025 11:31:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748518287;
+	bh=53yuKezs5ilpcnEdLeOi3VA/lnDiQmGthxtSC8SQoCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Efq02rrHVKWrTVeTHqrfz4P8aBiP8S5VoeLVafK3DbQUgDAPNznko4YJddWg9VXT8
+	 ZG0GufYhF4BKGiQMjpIettK3p4JBRx9X1WLaFf6i0Y07LdqDYALVtbBNWgMty/AbBZ
+	 Jk7Ku0MOSK9fgRcyxZKhbBLbc0q0U6NzKCfeCKqE=
+Date: Thu, 29 May 2025 13:31:24 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH v10 0/13] Add support for RaspberryPi RP1 PCI device
+ using a DT overlay
+Message-ID: <2025052908-goldmine-ramp-b865@gregkh>
+References: <cover.1748516814.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1748516814.git.andrea.porta@suse.com>
 
-On Thu, 29 May 2025 16:19:44 +0800
-Songwei Chai <quic_songchai@quicinc.com> wrote:
+On Thu, May 29, 2025 at 01:23:35PM +0200, Andrea della Porta wrote:
+> *** RESENDING PATCHSET SINCE LAST ONE HAS CLOBBERED SEQUENCE NUMBER ***
 
-> Like circuit of a Logic analyzer, in TGU, the requirement could be
-> configured in each step and the trigger will be created once the
-> requirements are met. Add priority functionality here to sort the
-> signals into different priorities. The signal which is wanted could
-> be configured in each step's priority node, the larger number means
-> the higher priority and the signal with higher priority will be sensed
-> more preferentially.
-> 
-> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
+Then it needs to be a new version, not the same one please.
 
+thanks,
 
-> diff --git a/drivers/hwtracing/coresight/coresight-tgu.h b/drivers/hwtracing/coresight/coresight-tgu.h
-> index 6c849a2f78fa..f07ead505365 100644
-> --- a/drivers/hwtracing/coresight/coresight-tgu.h
-> +++ b/drivers/hwtracing/coresight/coresight-tgu.h
-> @@ -13,6 +13,112 @@
-
-> +enum operation_index {
-> +	TGU_PRIORITY0,
-> +	TGU_PRIORITY1,
-> +	TGU_PRIORITY2,
-> +	TGU_PRIORITY3
-No blank line.  Also convention on anything other than a terminating entry
-is to leave the trailing , 
-> +
-> +};
-
-> +
->  /**
->   * struct tgu_drvdata - Data structure for a TGU (Trigger Generator Unit)
->   * @base: Memory-mapped base address of the TGU device
-> @@ -20,6 +126,9 @@
->   * @csdev: Pointer to the associated coresight device
->   * @spinlock: Spinlock for handling concurrent access
->   * @enable: Flag indicating whether the TGU device is enabled
-> + * @value_table: Store given value based on relevant parameters.
-> + * @max_reg: Maximum number of registers
-> + * @max_step: Maximum step size
->   *
->   * This structure defines the data associated with a TGU device,
->   * including its base address, device pointers, clock, spinlock for
-> @@ -32,6 +141,9 @@ struct tgu_drvdata {
->  	struct coresight_device *csdev;
->  	spinlock_t spinlock;
->  	bool enable;
-> +	struct value_table *value_table;
-> +	int max_reg;
-> +	int max_step;
-
-Ah. Here some of the bits missing in previous patch that make
-the description make more sense.  Fair enough.
-
->  };
->  
->  #endif
-> 
-> 
-
+greg k-h
