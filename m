@@ -1,185 +1,150 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E728C2B9BF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C8B2B9BF
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748527274; cv=none; b=VBFfmfag2oJusCCJae25UAv+NFpEI0a2uYSKAYlMVFtdmTVW+8HJd2QsKsErgkdYkK8MqUvWd3RSr4LyXiyp9UrswQvlrjDRyNhGwyx3TMOK87/8/pB7nPhsNtCtkERMMJibjJOcg24Hbfs+CKfqpRDzwq+qxRNsX3sC5qMsRnU=
+	t=1748527337; cv=none; b=NQioySWLSp94mQ50iS0fXX4jN4qA0Pw3ZT604Qrj4DT7O60dUQ0AOmjw7NYoFBfYyOMr2PGWlQvy8XdiFq6Ruj41w2JgMpi8q0Hv9zfZCXWZkFVwYOSIhDwa8lPgyV8CyYxmr+LcPEVnDLrG2FE8uqe3Im6zVDbde8hr67ukbaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748527274; c=relaxed/simple;
-	bh=g1gNXcVhjjV4dW5zgBAEh3QCsIKqqyDAL+FNsqkSo1A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UErOaJchcyuTd4dugEoSI4gyHWtd5Z4CznEWX+LvO5C0v3ZiIDW1Q5yMR7uEGz7oq4Aoc5RdCktQG1dhpo1oAtEvRQy5eoOGx9oxfMt87niwZx9aeFP45zQS+davPPnxovvSTazocY+SpZ2O0Y0jFjjy+qo7sISnZrVK5sizzZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=130GdJ5c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dFXDC41F; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=130GdJ5c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dFXDC41F; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748527337; c=relaxed/simple;
+	bh=dJgXAUMVD6kSHiHh2uEYQaqs+kyvixpCu9uWnuNHBkA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=tq3ktaQ68GBIDkYgxCFxFv3U87JJ7ujvyws8LXk3OTLvEyWT2ySomkQ7Bl30VLB17ySZp+5wEMDxBqdnaJNRPLS5TTptotJFdFFO5n9nTkGbdPEiebk82F6ng/nTsWURkSLHInjMvXpMQBclsCbYyUnd6XVXDoTJEf7XcnW3Y/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=blvCc4EJ; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="130GdJ5c";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dFXDC41F";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="130GdJ5c";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dFXDC41F"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 03F8321289;
-	Thu, 29 May 2025 14:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748527271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HzKD6Z3Ci24yvF+zyHr5CxzHAsnGoITA4L7f9eOQtqA=;
-	b=130GdJ5cAepH2gRB0n6sYG3+mDF2JmGJW6twJ6tPDjwZACs+bYgF350fYulrcU2bYBtYVq
-	gz3S/hWF8qre6P+XG7xsh9z0AEK6/rfNlKGuYV+ijEeWtF1m+o9KNcPm8yf5RFwBqiTYAe
-	jalrHpGqMCU8u41C3MzzwQQF3/VH0VM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748527271;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HzKD6Z3Ci24yvF+zyHr5CxzHAsnGoITA4L7f9eOQtqA=;
-	b=dFXDC41Fe4W93Bj4CRAxF+GBKXb2gBn5IZ64u8lGoObehZr72n586Jo08SOk1ezKV86b5m
-	uo1gAVI8iLVysFAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=130GdJ5c;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=dFXDC41F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748527271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HzKD6Z3Ci24yvF+zyHr5CxzHAsnGoITA4L7f9eOQtqA=;
-	b=130GdJ5cAepH2gRB0n6sYG3+mDF2JmGJW6twJ6tPDjwZACs+bYgF350fYulrcU2bYBtYVq
-	gz3S/hWF8qre6P+XG7xsh9z0AEK6/rfNlKGuYV+ijEeWtF1m+o9KNcPm8yf5RFwBqiTYAe
-	jalrHpGqMCU8u41C3MzzwQQF3/VH0VM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748527271;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=HzKD6Z3Ci24yvF+zyHr5CxzHAsnGoITA4L7f9eOQtqA=;
-	b=dFXDC41Fe4W93Bj4CRAxF+GBKXb2gBn5IZ64u8lGoObehZr72n586Jo08SOk1ezKV86b5m
-	uo1gAVI8iLVysFAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB8D913AAD;
-	Thu, 29 May 2025 14:01:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6HNENaZoOGjlPgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 29 May 2025 14:01:10 +0000
-Message-ID: <4227e23b-b50f-4917-bd24-d2278116a383@suse.cz>
-Date: Thu, 29 May 2025 16:01:10 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="blvCc4EJ"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250529140212epoutp04b22d6731c22eb98cddba239b3c6142eb~EBFg74fAc2060820608epoutp04q
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:02:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250529140212epoutp04b22d6731c22eb98cddba239b3c6142eb~EBFg74fAc2060820608epoutp04q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748527332;
+	bh=y9pNydYdLfIWmaaXuT2nu0TA0EohmmnilFcfWIq0wUo=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=blvCc4EJ51xSusfMhXXLU7qKeFsyqR0mPzC3C9iyxjNIExPwR1MhzKtZstlwov12u
+	 NS/uglzOF7AZBrTXvvod0aI+gT8dNAvYH5ClRXJ1Iiqb/szB8YBNzYtJ9MRejDPOMC
+	 JzbALS1T52bmiXH87ordwEBb/X3bD29iUpuHnZp4=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250529140211epcas5p17e2ee7904959287d422f6c35d6ab75ad~EBFgZ6Atb3115231152epcas5p1y;
+	Thu, 29 May 2025 14:02:11 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4b7SjZ04HMz6B9m5; Thu, 29 May
+	2025 14:02:10 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250529111705epcas5p25e80695086d6dc0d37343082b7392be7~D_1W07KGo0063700637epcas5p2D;
+	Thu, 29 May 2025 11:17:05 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250529111705epsmtrp22e4cccc11d5fa110f20c3ea67f069624~D_1Wz9Gu92239822398epsmtrp2a;
+	Thu, 29 May 2025 11:17:05 +0000 (GMT)
+X-AuditID: b6c32a28-46cef70000001e8a-0b-683842312f0f
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	5F.AF.07818.13248386; Thu, 29 May 2025 20:17:05 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250529111702epsmtip161036a380bdac99085e24f053709caf6~D_1UDaLqw2002020020epsmtip1B;
+	Thu, 29 May 2025 11:17:02 +0000 (GMT)
+From: Raghav Sharma <raghav.s@samsung.com>
+To: krzk@kernel.org, s.nawrocki@samsung.com, cw00.choi@samsung.com,
+	alim.akhtar@samsung.com, mturquette@baylibre.com, sboyd@kernel.org,
+	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
+	sunyeal.hong@samsung.com, shin.son@samsung.com
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	chandan.vn@samsung.com, karthik.sun@samsung.com, dev.tailor@samsung.com,
+	Raghav Sharma <raghav.s@samsung.com>
+Subject: [PATCH v3 0/4] Add clock support for CMU_HSI2
+Date: Thu, 29 May 2025 16:56:36 +0530
+Message-Id: <20250529112640.1646740-1-raghav.s@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] mm: ksm: refer to special VMAs via VM_SPECIAL in
- ksm_compatible()
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Stefan Roesch <shr@devkernel.io>
-References: <cover.1747844463.git.lorenzo.stoakes@oracle.com>
- <e22d9582b0b334a1161ffa150708da370bffb537.1747844463.git.lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <e22d9582b0b334a1161ffa150708da370bffb537.1747844463.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 03F8321289
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim,suse.cz:email]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsWy7bCSnK6hk0WGQc93XYsH87axWUz4EmGx
+	Zu85JovrX56zWtzbsYzdYv6Rc6wWjTPeMFmcP7+B3WLT42usFh977rFaXN41h81ixvl9TBYX
+	T7laHFsgZvF95R1GiyNnXjBb/N+zg93i8Jt2Vot/1zayWEw+vpbVomnZeiYHUY/3N1rZPXbO
+	usvusWlVJ5vH5iX1Hn1bVjF6fN4kF8AWxWWTkpqTWZZapG+XwJXxe+0MxoJ2gYovPXPZGhg3
+	8nYxcnJICJhItC45ydjFyMUhJLCbUeLMjousEAkJiX3/fzNC2MISK/89Z4coesso0fKjiQkk
+	wSagJXFl+zs2kISIQBeTxLl/r1hAHGaBnUwSbY+3sYNUCQuYSTzfextoLAcHi4CqxIcDJiBh
+	XgFriZd/X0BtkJfYf/AsM0RcUOLkzCcsIDYzULx562zmCYx8s5CkZiFJLWBkWsUomVpQnJue
+	m2xYYJiXWq5XnJhbXJqXrpecn7uJERw3Who7GN99a9I/xMjEwXiIUYKDWUmEt8neLEOINyWx
+	siq1KD++qDQntfgQozQHi5I470rDiHQhgfTEktTs1NSC1CKYLBMHp1QDUxp/JA+XwsvLrlOt
+	lH+HbXKRtk9S5nzXfSTF1pb562yZ+LlLfs43UWJszeCsbYmamdpkYD9BwtTo6ZewR3Vhe+9I
+	923jzVi9zlRi92v7QyVi+yuitGfczGO+Y77BUnjdqiWRxmki15ckzS5Yc+R3fIewsGftxUlB
+	AuG3dm+Os9pd8VDgsL3xtJ+FFw8LCN1c/1p1Lpf47Gb7ybKb83oEGP/OO6a39qfUEb600099
+	u/y0f71IO3U37g7j2ZQnfs+bK5ed2/1ik3Qd75LUmakvAp52JSr5r878ubH69Pe10x6677mU
+	vk3y3NLQPZnzd88yYNDk/f3nW9yzvDdNKUw2r22up794mpHT6MQm/038uRJLcUaioRZzUXEi
+	AMj6OTEKAwAA
+X-CMS-MailID: 20250529111705epcas5p25e80695086d6dc0d37343082b7392be7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-543,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250529111705epcas5p25e80695086d6dc0d37343082b7392be7
+References: <CGME20250529111705epcas5p25e80695086d6dc0d37343082b7392be7@epcas5p2.samsung.com>
 
-On 5/21/25 20:20, Lorenzo Stoakes wrote:
-> There's no need to spell out all the special cases, also doing it this way
-> makes it absolutely clear that we preclude unmergeable VMAs in general, and
-> puts the other excluded flags in stark and clear contrast.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+This series sorts clock yaml and adds clock support for the CMU_HSI2 block.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Patch[1/4]: dt-bindings: clock: exynosautov920: sort clock definitions
+        - Sorts the compatible strings for clocks
+
+Patch[2/4]: dt-bindings: clock: exynosautov920: add hsi2 clock definitions
+        - Adds DT binding for CMU_HSI2 and clock definitions
+
+Patch[3/4]: clk: samsung: exynosautov920: add block hsi2 clock support
+        - Adds CMU_HSI2 clock driver support
+
+Patch[4/4]: arm64: dts: exynosautov920: add CMU_HSI2 clock DT nodes
+        - Adds dt node for CMU_HSI2
+
+Signed-off-by: Raghav Sharma <raghav.s@samsung.com>
+---
+Changes in v3:
+- Added a patch to sort the compatible strings for clock definitions
+  in yaml, as pointed by Krzysztof Kozlowski
+
+Link to v2: https://lore.kernel.org/all/20250514100214.2479552-1-raghav.s@samsung.com/
+
+Got a comment from Krzysztof Kozlowski
+Link: https://lore.kernel.org/all/20250521-resourceful-majestic-octopus-cfaad1@kuoka/
+
+Changes in v2:
+- Added cover letter with the patches
+- Submit the patches as a series as they are inter-dependent
+  as pointed by Krzysztof Kozlowski
+
+Links to v1:
+[1/3]: https://lore.kernel.org/all/20250509132414.3752159-1-raghav.s@samsung.com/
+[2/3]: https://lore.kernel.org/all/20250509131210.3192208-1-raghav.s@samsung.com/
+[3/3]: https://lore.kernel.org/all/20250509125646.2727393-1-raghav.s@samsung.com/
+
+Raghav Sharma (4):
+  dt-bindings: clock: exynosautov920: sort clock definitions
+  dt-bindings: clock: exynosautov920: add hsi2 clock definitions
+  clk: samsung: exynosautov920: add block hsi2 clock support
+  arm64: dts: exynosautov920: add cmu_hsi2 clock DT nodes
+
+ .../clock/samsung,exynosautov920-clock.yaml   | 37 ++++++++--
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi | 17 +++++
+ drivers/clk/samsung/clk-exynosautov920.c      | 72 +++++++++++++++++++
+ .../clock/samsung,exynosautov920.h            |  9 +++
+ 4 files changed, 129 insertions(+), 6 deletions(-)
+
+
+base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
+-- 
+2.34.1
 
