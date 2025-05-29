@@ -1,109 +1,72 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3699A1EB2F;
-	Thu, 29 May 2025 11:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0C513A3F7
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748519188; cv=none; b=uMoQvmNN8T8sfxqk0ywBYTm58OgGpff8E9iTKuyNqysh60fxWsZnCy8VnAH3meXKijXBfMkVKxT/5qLLyMQRQCABqdU+BpW7ttEWimzzpXfuU6A8VIEwh+wtUE4GnKe8cC5QepMTsLlSRrs+u2BOwWg+BH/uDGfSmjJSezWg0Io=
+	t=1748519285; cv=none; b=irFPZmmledVayAJuyOWxas0673NEN3tu7+rlK9v/UsjBBcw/KamsZF1LLdu9nXt43xi8YCHmLK7HcYeGFp25cwFZyqv7qyLjnP1Yml/4JSPRStLMJBn9Kn/gDXVbSMe7Q34+oYx4Ij1QMwt5Ha4RnVR1SmiQisRypAlHAKOCIdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748519188; c=relaxed/simple;
-	bh=SZRGWqDxWBg+a127g6TEEksjhuuQkczq2tvgRIb2DI4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RXYXR9lef3Di5WGiIdP4vDufHTXHRcl0zvFZbd7ncsdgkCWdGwTxw5/Btgr1IUPq5NlvQPOVMIiWa9bYSgqsfoxA6k4UBAm0RYH0Q/VaXB0kzilaK4prjvUb3v/+r8OSsomFw6fCTNZcg6Z9srfC5bXOSAPx+E8vWVymQ6E7L94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7PgR28wGz6L4tL;
-	Thu, 29 May 2025 19:45:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF2D9140519;
-	Thu, 29 May 2025 19:46:22 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 13:46:21 +0200
-Date: Thu, 29 May 2025 12:46:20 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alistair Popple <apopple@nvidia.com>
-CC: <linux-mm@kvack.org>, <gerald.schaefer@linux.ibm.com>,
-	<dan.j.williams@intel.com>, <jgg@ziepe.ca>, <willy@infradead.org>,
-	<david@redhat.com>, <linux-kernel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-fsdevel@vger.kernel.org>, <linux-ext4@vger.kernel.org>,
-	<linux-xfs@vger.kernel.org>, <jhubbard@nvidia.com>, <hch@lst.de>,
-	<zhang.lyra@gmail.com>, <debug@rivosinc.com>, <bjorn@kernel.org>,
-	<balbirs@nvidia.com>, <lorenzo.stoakes@oracle.com>,
-	<linux-arm-kernel@lists.infradead.org>, <loongarch@lists.linux.dev>,
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-	<linux-cxl@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<John@Groves.net>
-Subject: Re: [PATCH 01/12] mm: Remove PFN_MAP, PFN_SG_CHAIN and PFN_SG_LAST
-Message-ID: <20250529124620.00006ac7@huawei.com>
-In-Reply-To: <cb45fa705b2eefa1228e262778e784e9b3646827.1748500293.git-series.apopple@nvidia.com>
-References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
-	<cb45fa705b2eefa1228e262778e784e9b3646827.1748500293.git-series.apopple@nvidia.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748519285; c=relaxed/simple;
+	bh=QQFnAYl2rFbhSZqujWfIHoWDg5HbfftyyXJExKBk4/E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=LZ+yoArkvDqxGQECO2Z/6N3hODHSLa3dHcY6Oyp63RGH15cTOM1naTLdAO8S+FxDGJ/x44/r7J0qd48ySekORude/jECu8B7Tfw4MqQliZOQL6SxTZowfOYDzhuvqI0E93gZgvyBXwVmanTeI/4jtWgFqVGkH14uyy/IzVqLnjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc9d335fffso15793205ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:48:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748519282; x=1749124082;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ql16J6aj6hokHrJ5bV+dg0/DwTT7OO+dWoAaE/YQ+zM=;
+        b=HNyOrdJR8/+uLR9BKeNGHP3GLnIAfTiDyASWRKt/r4fd8SBJZZV103wsJ2jPLb59x5
+         sSwrF0furS/5gh/DjH7WIY10/bl+5BVHUX28Nv3ziKkEv6OeR58czB1rcj+z/C2lzek9
+         K9ZWi2REEBxBPConvkz3WB+G8U3kqK+/6Z6gYfEc7MQwnbFpnBJSYFyEyieb8DkyuADr
+         /FfnbHTnraNnl7G22Wx1X8JrvYbjzptqNVRVHxCiAAcliwuuN642f2JjXB9d0FZEXLey
+         +saydnFDTUtXSRXgZmVsZOhwXjk5k+GI9KAblHxOQO7msPmftSy9Bf+V0Y7NxjaWit89
+         5zZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1pr4DP6X72BcNJqfFmK8gs3LfvdxUhdbofjX/d82eYocmtTAAjCzApv82wHaqFkBqXHp2IRkXUdb7oI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1HnN81zY06TN5K+ZaDq88xD2LtNYm11kcbjQfEEHnEYa1FoWg
+	0gi7e/8gbvXTIoP7BC8K60CZ0HqT4/Ydyecbtpr4c9viHw7sck1lxfzcrzSMAbpfx9puPahfQKZ
+	wPoL/qPSHz0wgwfa0u/K+anKbnHvk2A9uFYK1UJbi+Ev+St3bfnrZAiDS9PQ=
+X-Google-Smtp-Source: AGHT+IFREv4+GloQRCuf+3dE97Q5DJwXHZk0WJHlgTeCZ//dy0d4CmPqdhEhtTTq2DBDoH/mAq5eZVGk1utUFP7+qwTaDrODzTnm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Received: by 2002:a05:6e02:1686:b0:3dc:8b57:b759 with SMTP id
+ e9e14a558f8ab-3dd944eacb3mr21603175ab.21.1748519282732; Thu, 29 May 2025
+ 04:48:02 -0700 (PDT)
+Date: Thu, 29 May 2025 04:48:02 -0700
+In-Reply-To: <CAGR7w80dQ5hTj8ye0DLi7SwT9v53S+anDDpGjQw5suwEdGXVHw@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68384972.a70a0220.1765ec.0187.GAE@google.com>
+Subject: Re: [syzbot] [i2c?] KMSAN: uninit-value in __i2c_smbus_xfer
+From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
+To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 29 May 2025 16:32:02 +1000
-Alistair Popple <apopple@nvidia.com> wrote:
+Hello,
 
-> The PFN_MAP flag is no longer used for anything, so remove it. The
-> PFN_SG_CHAIN and PFN_SG_LAST flags never appear to have been used so
-> also remove them.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Superficial thing but you seem to be be removing PFN_SPECIAL as well and
-this description and patche description don't mention that.
+Reported-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
+Tested-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
 
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Tested on:
 
-On superficial comment inline.
+commit:         90b83efa Merge tag 'bpf-next-6.16' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=178d2482580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1da44e3e5e6013db
+dashboard link: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10c8ced4580000
 
-> ---
->  include/linux/pfn_t.h             | 31 +++----------------------------
->  mm/memory.c                       |  2 --
->  tools/testing/nvdimm/test/iomap.c |  4 ----
->  3 files changed, 3 insertions(+), 34 deletions(-)
-> 
-> diff --git a/include/linux/pfn_t.h b/include/linux/pfn_t.h
-> index 2d91482..46afa12 100644
-> --- a/include/linux/pfn_t.h
-> +++ b/include/linux/pfn_t.h
-> @@ -5,26 +5,13 @@
-
-
-
-> diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-> index e431372..ddceb04 100644
-> --- a/tools/testing/nvdimm/test/iomap.c
-> +++ b/tools/testing/nvdimm/test/iomap.c
-> @@ -137,10 +137,6 @@ EXPORT_SYMBOL_GPL(__wrap_devm_memremap_pages);
->  
->  pfn_t __wrap_phys_to_pfn_t(phys_addr_t addr, unsigned long flags)
->  {
-> -	struct nfit_test_resource *nfit_res = get_nfit_res(addr);
-> -
-> -	if (nfit_res)
-> -		flags &= ~PFN_MAP;
->          return phys_to_pfn_t(addr, flags);
-
-Maybe not the time to point it out, but what is going on with indent here?
-Looks like some spaces snuck in for that last line.
-
-
-
->  }
->  EXPORT_SYMBOL(__wrap_phys_to_pfn_t);
-
+Note: testing is done by a robot and is best-effort only.
