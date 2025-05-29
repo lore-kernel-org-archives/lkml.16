@@ -1,94 +1,112 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E6221A931;
-	Thu, 29 May 2025 18:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5B91DA5F;
+	Thu, 29 May 2025 18:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748542627; cv=none; b=mj4v/3qGr39MssIuRN7x3gOq2RJ+j/uPPMcwpYehkDUEglauInb4Q2IgcOozycYWrNf+DDaBiLtlc2S5lW3coXsVoW3XMdp8eoOz1Sb+qIUStusGm8CzNhLh/jQur0LwBvyRDK/3Q5Jx+iqVL9ehAhFAkO0hMiLJKFNm+saVDXA=
+	t=1748542669; cv=none; b=a5YvFx6dNSdwB56qyp6QlhON5rn8cQLPKOw8uUCHm5Epm335/yXoEQFEwxgIIPAUF2ASAXvF0jgQ94Lct4krrEoXqGGe2behFIMrbT16G21hzEUynBuyWFYiwZKaZI+OwDM2O0fe7LMvbOTheb+Hf092svI683mi4rlMgbCnV+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748542627; c=relaxed/simple;
-	bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LCx9ylbwH3KKFhcwWS6FKL3Cubit7QGiTamlAzjnsRLyeZIDRrNg670LG3WXf7N3LdV3oCTXp2gc22R98SSpzcE5YybXD95qymPg2OkNFDaafpE2TJ++TegcyR/ivs57KLXo0z8bjBZmXHvWLiOArkd5o/rMxaCFdEvqtjXPK9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7G9CArz; arc=none smtp.client-ip=209.85.208.46
+	s=arc-20240116; t=1748542669; c=relaxed/simple;
+	bh=E7t4ziTT3wF/689+gwT++HqhjP1/cK2PxAJ+YqFkDgQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sENaqtnWHJhQRbRLPMKI0PszPC5Wm5tMPJWhQJSIv7TKHfUOAFwO18NixAqPgf0AL5ElJJfRef525sQ+HuZYroTg7cFvQV0LFfo7SRM0cbyCJCff7DhZq93K7AjqSDs8AQuXCOJFIK59J1aY+3jL+arbjRDdKoqZ34fPv9LlaCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrvIA3RN; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7G9CArz"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so2202697a12.3;
-        Thu, 29 May 2025 11:17:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrvIA3RN"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso980319b3a.2;
+        Thu, 29 May 2025 11:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748542624; x=1749147424; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
-        b=i7G9CArz+gL9Pl4rlYLB3DyHQzea4jECCakT3jKiih4VwbDTwqcmCrR4KWU34oG+Fk
-         3l9MU68GDQKyONdlRtTod8Zw5s7bE8i17J+e3MecjOTQHSVu1t0nCer+Z3LmAL20W4FT
-         A2GnFimONnL0vdToX13UWs8Pp7FUCBPg6I3SA44Sor8ljIKyeFp6sp1LNn7v+0ykRJQi
-         NZpAyfp9ZBwUPO0Q0qlb1HCXovoDK3v4Xzo17koJqp3v+b1HqBUPjIbp/lRM+ZamQa4h
-         nHyURLtsewvgf4PWOg94vOYPdYq7yP48eP7zGhkgXV+iETTzcAbmGv6R7F0DbLYbEUfl
-         Hu6Q==
+        d=gmail.com; s=20230601; t=1748542667; x=1749147467; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
+        b=JrvIA3RNrdTgNWUigvXz2wA2oKsXFeOtR5A+1jYv5KcDg0cZm8SW8NbnlhVRMjhHwp
+         +OmoJUH1zHT23brZZRKYFvmP+3e2VJZ7QoZZ+8mhGKnnjFDNCmUZyfvKpwjF3l9JWytz
+         6niIgCimrTD+cqJuz91q/gl2UgCuXZZNW7b9ImlLoMSxrTAh79nb+F1//18DXZWjfQYT
+         r4Mz6iytxO7uUA1bgFqKpwVZjZoU2BqWAYdEw//IMPN/ewESa6Snk47vtlrIpGSXlyBp
+         rCx1vXYj/q0xuZ+8saEyBr31bHyagJq59BsLFdQxRH1kP61R+Qv0AzGmp070P87rUKqp
+         Ddcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748542624; x=1749147424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qpoBvtm6ea8l0MnxcBFqYjnL6/WyamPPJfPi8ccdDFQ=;
-        b=HDehTtzvoML7iFnsqfH+tLTiTmii2DVaW+dMrxCZf23Esx8Z5mMvaAvUarfcNghFUK
-         CShJ8a264qc7h8Hp+Hwro+VvfX0x/3euhHJZyNhgniQ+9BwZMT7w+VlCKd3dvaPK9RuQ
-         cMa5soaoZZH5oGYOUgqddFVyip/ZmeyMA1mWdaH5Xv3RCzdHritmdz7wpLAkr8E/p8t9
-         KZ1PdS8TCNy1mHITzWhYMGOi/K+lsNqmGeBxOW6CcyH8ACI2dsebjCMJKXjFA6oHerV3
-         JYQdLHQHhJzaoRTOLh09PZSFEOfe1Xcii3Q99rBALf1xeDnmaeMdwobb1p0M0BGDg8IH
-         M1yw==
-X-Forwarded-Encrypted: i=1; AJvYcCU37ftoJxuH400vxzjD4L/uPNfAvvDr5xIUIu2Qm9Qk6bSjZuo12yn/v3tWbOQw43d7OKe7YwbovMw=@vger.kernel.org, AJvYcCWGQt1fJ/0mHWsa0t7wkq372yaRcsbNFHEkSzf0NdpJ814TcwAEnfddOPeYbZ3dYp/b92oVHW8/nrs1m3dW@vger.kernel.org, AJvYcCXi5BVYGYWuUPruQVh0vORt5PSrw78qmHi2mUPrWERL3JV6SyMeR1BkR0SOmJfpg8yzfxR//lCJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwX7fd6tsLQvDOOvTPxZJczGGN5La4gO/4SVBJQ+VTQnIw//3Ik
-	qEno/4f+/gXb7l5DvR5B+BKtFCOw09Ob4zkL2gdOGb3Ef6oKTsnoW6LJ8NrD0/MWK5FLyBAjwb/
-	zYOFg23d6Rlic9x3NaqIjBJKX5kstOeo=
-X-Gm-Gg: ASbGnctFxQzgSSmsawloGwI4GI9ilWu+X+WJLot4NqHQ9M4sN1iDWBotnIw0mhm+JR8
-	8zrL39B6xqkkGArsFkmd8jJnwapJzdtIJ/5CXOMWwEke//McPnyYn1Hj2LlGuOwudmRnmoIwNFu
-	ul7EGXx4XAxvTBwKeqXbk/Boi3STozMLCD
-X-Google-Smtp-Source: AGHT+IFM0+piKu1rGaqMi0pKdb0lI6X4rWTslZyASxD990s/7Muh8t2GyRz7YMaetwaRiDgn9YC/e5rYM4mNGJx8nag=
-X-Received: by 2002:a17:907:961a:b0:ad8:a935:b907 with SMTP id
- a640c23a62f3a-adb322b3682mr39557766b.8.1748542623490; Thu, 29 May 2025
- 11:17:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748542667; x=1749147467;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
+        b=CBhpKNswgJndvydmY/Id3hvSifQtH3qQs6jLtfor27eS9PjpQ2lc0bToDibbkashVn
+         ieDTPmvBA/dqer/IuL+hWgGkD6MRL7WPv65/4Sxl8mARwoz9RDZtbDfS6iILe4/Y8Y0y
+         njpxlVjivS+76Jr2l00Oo600Z7MMA4z6qiXj4TxDcMLxONFjMbTAnGYLZQHH2mVVCz07
+         +gniC+p3Rx7ORFaEAzvPAJobjYh1llvEwUDRFRQhSyEJx6S1AL4jtyDF9/IQH5rrEggZ
+         WIkw9yqx0hu3TJj4RtsroOhmZzcjgENkhUx8F1xGAcCb6cyMmZ9REEWlOX8PylVhKtQd
+         y37Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXkMl4EQfdRD2we7EJbK9+IOh5sV97ia2ccTHsUKBpGH/sTBTycBaWwJ1PU4WSzWlCNufKqnkVyoc2pSdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3LjJ7eK9hoejGc4++kVvyCeYLq1i8ICIsztOlBYCN8sGN+ddp
+	LiBKxij6QkIAKTihZfCpJQm2w3WT4+HtRfTrOmQ9C93jlTs/xGhhFUB2
+X-Gm-Gg: ASbGncu4P2q+nweGn4ZyP9tok/m4rD//4+poo2UDyeZ8DcofL6q1WoJalThwixIF6NW
+	UKXg04LTxTVLCwi5PJsGHYecrmmY5spFSgwuiNIiOlWlbnWpnPmqwuOkEN+U15XosxO3WhdmH1+
+	A115s9Q3aCtBKjwlPfCU1VN8fazWeZsltReQEXztBTYkUOyU2vOmmCljabjMTqONvn8zAlyaZ5b
+	5vIDgqwWPPkbcKLl/bVUyZbIJ7aX4CJ1NWV+1f+Mau6i0ZTu6ARbuj30EcHAZNTgAfO3cI9ibpE
+	pa+SI4/al2Vhv7TzgwvXEVU3vJ92XSB/yavG7E/tyLkclLuUqlg=
+X-Google-Smtp-Source: AGHT+IF/n2OErfZ1Jjo+/rD+yuZf0ShecGAPEnjn9Bm4hpsZ56QyABjH7ecsToaN+1MrSuOTlEwvVg==
+X-Received: by 2002:a05:6a21:4508:b0:206:aa42:8e7c with SMTP id adf61e73a8af0-21ad9548831mr956312637.18.1748542667276;
+        Thu, 29 May 2025 11:17:47 -0700 (PDT)
+Received: from pop-os.. ([2401:4900:1c94:c9cf:cfb1:28a5:fd7:978])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d33csm287056a12.47.2025.05.29.11.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 11:17:46 -0700 (PDT)
+From: Abhinav Ananthu <abhinav.ogl@gmail.com>
+To: wsa+renesas@sang-engineering.com
+Cc: linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com,
+	abhinav.ogl@gmail.com
+Subject: [PATCH] i2c: core: Fix uninit-value in i2c_smbus_xfer_emulated
+Date: Thu, 29 May 2025 23:45:35 +0530
+Message-Id: <20250529181535.15220-1-abhinav.ogl@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com> <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
-In-Reply-To: <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 29 May 2025 21:16:26 +0300
-X-Gm-Features: AX0GCFuFcVPQH9mVs9Dm7_Q62qwCfnDpYDtGhUfXX9m4Hv-KJrr05FhjEekc0OQ
-Message-ID: <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
-Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in fxls8962af_fifo_flush
-To: David Lechner <dlechner@baylibre.com>
-Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 29, 2025 at 7:02=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
-> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
+BUG: KMSAN: uninit-value in i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:481 [inline]
+BUG: KMSAN: uninit-value in __i2c_smbus_xfer+0x23e7/0x2f60
 
-...
+KMSAN reported an uninitialized value access in i2c_smbus_xfer_emulated at
+drivers/i2c/i2c-core-smbus.c:481, triggered during an SMBus transfer via
+i2cdev_ioctl_smbus. The issue occurs because the local buffers msgbuf0 and
+msgbuf1 are not initialized before use, leading to potential undefined
+behavior when their contents are accessed.
 
-> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling t=
-he
-> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
->
-> It seems like the order should be reversed.
+Initialize msgbuf0 and msgbuf1 with zeros using memset to ensure all buffer
+contents are defined before they are used in the SMBus transfer. This
+prevents the uninitialized value access reported by KMSAN.
 
-AFAIU the wake capability of IRQ line is orthogonal to the interrupt
-controller enabling (unmasking) / disabling (masking) the line itself.
-Or did you mean something else?
+Reported-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
+Fixes: 02ddfb981de8 ("KMSAN : Fix uninit-value in i2c_smbus_xfer_emulated")
+Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+---
+ drivers/i2c/i2c-core-smbus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index e73afbefe222..a3ee30b72f75 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -332,6 +332,8 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
+ 	 */
+ 	unsigned char msgbuf0[I2C_SMBUS_BLOCK_MAX+3];
+ 	unsigned char msgbuf1[I2C_SMBUS_BLOCK_MAX+2];
++	memset(msgbuf0, 0, sizeof(msgbuf0));
++	memset(msgbuf1, 0, sizeof(msgbuf1));
+ 	int nmsgs = read_write == I2C_SMBUS_READ ? 2 : 1;
+ 	u8 partial_pec = 0;
+ 	int status;
+-- 
+2.34.1
+
