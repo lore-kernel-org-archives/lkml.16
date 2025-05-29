@@ -1,83 +1,156 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18262222CB;
-	Thu, 29 May 2025 15:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0208F193062;
+	Thu, 29 May 2025 15:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748532548; cv=none; b=XQtg0tc/4sl8fHmiVppxVmGFpivj5FdKE062EWUDZejJMe3M6J8ZQQkQ4mF23E5uJnBEsv8WXD0Zkf6yDDCw4egRHyfq8wp+vDM31PrQwZyRBC2JFkfiJo27TghOmzotZ/lBxeqB82MjTifg+wdbydP+3hSAayTi4iMw2NXAef0=
+	t=1748532722; cv=none; b=OVJAiyu+XxvE9yQb/kit5ZKiO+z04RK/fCgB59A4TRdTSvKp0JFamXcCh0cwR1vB0ev0tW1Ixj2up/2f/VAFKq+dmgHsJM8enIt30nLKdM3RGC8EmzKkAiI7rjvYYFw0AAPUz0HcoZRUewPudHaMCsmHRv03HNLmRY6ez3wqhzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748532548; c=relaxed/simple;
-	bh=T3kf1bylpivmvvNZAoeowa/ONY5r0UXNar+dX11WCQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nrMHjF/PIV/dbP7G/8fXhFCGOxq9VJzrx0XpfBQh+j3jX6XwlurcPXnt0bunzpyHb08C4gSc7Q2XI32ifdJTmcC2ZCduJ3LVFSXf2OYSvIIs/QmdZQhODl96jr9ukN8ZAdVCyWJVQ8KeUxq0kfJznKEgQJ5tgU8RU0oJDP4GzN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J/Ewa8cH; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748532722; c=relaxed/simple;
+	bh=JnQAvMylwZtpa5EhFORjb44aBv934LT+uOUV5qfL2yI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ZtXWp9gM3+33I5K0NKVZ3gQzgvVGfNE8i2I3DT9VF8vIHLjAcoiyavyYrmp5pKaz94TjUYdboERH0mYfy2go8vAVHTJ7duN/fmlDcoDvuLYqyCYLskqF/9XXHh9ZHIPkEDxlf5525aqBF+XDyWZJhwBK0PYgq3hkwojlLBmzm5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L965RAaj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J/Ewa8cH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wJZLfn4ZaURESqFeVB+O8o84gVldERzJFI4UXR2X8FE=; b=J/Ewa8cHz3ojyuCXZY3B0cH6k6
-	OQytojKqmoTlAVSIwnRF5HkInw/RCdeII+NcbMEIpG9al1SfaLTVy24914xVsA2NZGhu9QdhrirfB
-	GKc/o5bqQRxYrsJ27ed+JgDab6jbhzjmKUJMoko/EuYgVYql+0YAYoHAoR9BFfnInFhK/HUJ9QGEl
-	0uSfzFmehqagP3urQKcSLIoKLcmDaMEW8Mzui+I5IfonjHsVi6J6JD1+vnqRcw8wZicD54FcurzVx
-	67ErSZTY9xOMM1GxUJWLVVMxJYf4+CijjF7gZPJfFgJBskMX/F+gZgAz3O3V1cl4AcKPFUuLV2kQz
-	dZWZT7gw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKfBW-0000000EsXB-3Mi0;
-	Thu, 29 May 2025 15:28:46 +0000
-Date: Thu, 29 May 2025 16:28:46 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Barry Song <21cnbao@gmail.com>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [DISCUSSION] proposed mctl() API
-Message-ID: <aDh9LtSLCiTLjg2X@casper.infradead.org>
-References: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L965RAaj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA78C4CEE7;
+	Thu, 29 May 2025 15:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748532721;
+	bh=JnQAvMylwZtpa5EhFORjb44aBv934LT+uOUV5qfL2yI=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=L965RAajIHrP4rROHeGuafOkcSpLL9JC4sooqbPYk/mwzfkB5b3ezUIkg2PA5aWBF
+	 ASfy1AG6kbEOvY5suuTkn44TaNrVr+vyVf7V04Hsctz642dQag3yL3Xql5IblVFGid
+	 Bglm96yBQhgL11YrkNp49+IKJcUNUDwg4WBLnPXPwqZ6i5dfE5fdtvnU97nZl4D4QF
+	 XSRxfUTgMZdJLzJbZCPS8ISvsedUwa75BAlAzAUfEhya3rs3Uwhm6YJve1OvgfpCng
+	 cJWE4d0RynExFQc6JlAM3hsIctZAPStZ7o+fd84lw37/jA34+mZf4kjbdNi47p0aq9
+	 CLiqJIcLcHx/w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85778a76-7dc8-4ea8-8827-acb45f74ee05@lucifer.local>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 May 2025 17:31:57 +0200
+Message-Id: <DA8R4900CNVG.1IMAV3SFPFS0B@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
+In-Reply-To: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
 
-On Thu, May 29, 2025 at 03:43:26PM +0100, Lorenzo Stoakes wrote:
-> After discussions in various threads (Usama's series adding a new prctl()
-> in [0], and a proposal to adapt process_madvise() to do the same -
-> conception in [1] and RFC in [2]), it seems fairly clear that it would make
-> sense to explore a dedicated API to explicitly allow for actions which
-> affect the virtual address space as a whole.
-> 
-> Also, Barry is implementing a feature (currently under RFC) which could
-> additionally make use of this API (see [3]).
+On Thu May 29, 2025 at 3:11 PM CEST, Tamir Duberstein wrote:
+> Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
+> Rename those placeholders for clarity.
+>
+> Given the incorrect usage:
+>
+>> diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+>> index 8d978c896747..6a7089149878 100644
+>> --- a/rust/kernel/rbtree.rs
+>> +++ b/rust/kernel/rbtree.rs
+>> @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) -> RawEntry<'_, K, =
+V> {
+>>          while !(*child_field_of_parent).is_null() {
+>>              let curr =3D *child_field_of_parent;
+>>              // SAFETY: All links fields we create are in a `Node<K, V>`=
+.
+>> -            let node =3D unsafe { container_of!(curr, Node<K, V>, links=
+) };
+>> +            let node =3D unsafe { container_of!(curr, Node<K, V>, key) =
+};
+>>
+>>              // SAFETY: `node` is a non-null node so it is valid by the =
+type invariants.
+>>              match key.cmp(unsafe { &(*node).key }) {
+>
+> this patch produces the compilation error:
+>
+>> error[E0308]: mismatched types
+>>    --> rust/kernel/lib.rs:220:45
+>>     |
+>> 220 |         $crate::assert_same_type(field_ptr, (&raw const (*containe=
+r_ptr).$($fields)*).cast_mut());
+>>     |         ------------------------ ---------  ^^^^^^^^^^^^^^^^^^^^^^=
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut rb_node`, found `*mut K`
+>>     |         |                        |
+>>     |         |                        expected all arguments to be this=
+ `*mut bindings::rb_node` type because they need to match the type of this =
+parameter
+>>     |         arguments to this function are incorrect
+>>     |
+>>    ::: rust/kernel/rbtree.rs:270:6
+>>     |
+>> 270 | impl<K, V> RBTree<K, V>
+>>     |      - found this type parameter
+>> ...
+>> 332 |             let node =3D unsafe { container_of!(curr, Node<K, V>, =
+key) };
+>>     |                                 ----------------------------------=
+-- in this macro invocation
+>>     |
+>>     =3D note: expected raw pointer `*mut bindings::rb_node`
+>>                found raw pointer `*mut K`
+>> note: function defined here
+>>    --> rust/kernel/lib.rs:227:8
+>>     |
+>> 227 | pub fn assert_same_type<T>(_: T, _: T) {}
+>>     |        ^^^^^^^^^^^^^^^^ -  ----  ---- this parameter needs to matc=
+h the `*mut bindings::rb_node` type of parameter #1
+>>     |                         |  |
+>>     |                         |  parameter #2 needs to match the `*mut b=
+indings::rb_node` type of this parameter
+>>     |                         parameter #1 and parameter #2 both referen=
+ce this parameter `T`
+>>     =3D note: this error originates in the macro `container_of` (in Nigh=
+tly builds, run with -Z macro-backtrace for more info)
 
-I think the reason that you're having trouble coming up with a good
-place to put these ideas is because they are all bad ideas.  Do none of
-them.  Problem solved.
+In the future we could make this a proc-macro and improve the error
+message by creating the function inline and setting the spans for the
+parameter of the function to the spans coming from the input.
 
-People should put more effort into allocating THPs automatically and
-monitoring where they're helping performance and where they're hurting
-performance, instead of coming up with these baroque reasons to blame
-the sysadmin for not having tweaked some magic knob.
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wB=
+uGPYh9ZTAiww@mail.gmail.com/
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Barry's problem is that we're all nervous about possibly regressing
-performance on some unknown workloads.  Just try Barry's proposal, see
-if anyone actually compains or if we're just afraid of our own shadows.
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
+---
+Cheers,
+Benno
+
+> ---
+> Changes in v4:
+> - Revert back to v1 with assert_same_type extracted out of the macro. (Mi=
+guel Ojeda)
+> - Drop Benno's RB since the implementation changed.
+> - Rebase on rust-next.
+> - Link to v3: https://lore.kernel.org/r/20250423-b4-container-of-type-che=
+ck-v3-1-7994c56cf359@gmail.com
+>
+> Changes in v3:
+> - Fix comment typo.
+> - s/^;/   / in commit message and cover letter. (Miguel Ojeda)
+> - Evaluate $ptr only once. (Alice Ryhl)
+> - Link to v2: https://lore.kernel.org/r/20250412-b4-container-of-type-che=
+ck-v2-1-f3cc9934c160@gmail.com
+>
+> Changes in v2:
+> - Wrap in `if false` to improve unoptimized codegen. (Alice Ryhl)
+> - Shrink implementation using an array literal instead of a function.
+> - Link to v1: https://lore.kernel.org/r/20250411-b4-container-of-type-che=
+ck-v1-1-08262ef67c95@gmail.com
+> ---
+>  rust/kernel/lib.rs | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
