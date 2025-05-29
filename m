@@ -1,75 +1,41 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099B4293725;
-	Thu, 29 May 2025 20:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174AB218AB3;
+	Thu, 29 May 2025 20:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748550512; cv=none; b=Ilp1LmibRQeOucOIYNYFynaPEw8mz34pc7T03SULTt338ZvtShR+53OyQ3u0Ke0jEevEWkrDhDhWmKNZApC4EU+c9t0+pDgbksvNX11XxtWYrNBM8FQ43cVlmmB4ZrDSZHwG9yYSzRqmtzCSOwtudut3yHX//Gz/moCQ6w3CJTo=
+	t=1748550575; cv=none; b=U5T2Kj0plLstiMlY0vqQy1WYsBQx8w+uf5jYVEA6IqRhUEqhHEZSvYkzBulO2p0uvupwaoptodchAc/j/l+bB0lg+/8gnyUZSzPbpOwLKXzYtyf0+Uo0ep9p/9bO09vrErbkcvJq1tAFsdE0kzXavr9PzRRn6udb2unz228P8YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748550512; c=relaxed/simple;
-	bh=QBX0wKas8hMg8UqxUJo8euFBcQTuFEJmE6HLDNOpMw0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fbD5ZIsVlEkUXcRTDP2osxhPaUpO7KV0TaPn9p3G7Wwdl9hZEb50qrS5hI8GtcRFIetFzf4xK2LSnokJOcy+UbKDgsJ4qC8qJwxfpkSi0YjtMI6rYlbErPwoJfbzTnoVehQCZHR1FTR9MBQRK9N1x2opRI+Wyf8Wbs9be0frcBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mgLlF2KE; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748550575; c=relaxed/simple;
+	bh=rAjeOMdG5cObUVQQ8/MeFIE1ckwj7tXKoE6KJ1ho04I=;
+	h=From:To:Cc:Date:Message-Id:MIME-Version:Subject; b=GlmcTEoAaCH0DuzJASWKvBfa7ODsjIAwYFq0v7GhzZY9K+uV2GUBXGwzxy+zQg135+wW6o8GMaq/oFwLQd8+iSjolFq2pVVHPyvqbuK4bhWtrc+Y01w+twyf1ETiF7yrIegyu6mCXqBtvkMTPqDpC0cBzQHtT8+h0G1KcKQNexc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=jwc4lhal; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgLlF2KE"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60be827f2b7so649920eaf.0;
-        Thu, 29 May 2025 13:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748550510; x=1749155310; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
-        b=mgLlF2KE4kiT7EeQNzUWohqOqKFzDWBpRcihOHrvD49Z3iwKGxbEOxhBnRijKtIpCh
-         5SjCdE0mioEnAyOtvYBFZIpIrLxde0dzFCo0zroEnSegDGT51SfxGt6sFTWTHhLF0Ks0
-         gmgCpEFgbeb4/1572Vn4fVlt2gfCxWnHMs4iWE3d6fOVcu652wDcryoNexdfS7XVkRhJ
-         j2iO/Dwdp7WVkRjiPmgFKiaQsRvwyktuI6urdecR3PJlpfNvvhi3Ky4teDSZ3gXC5q/k
-         6/CpAMXTlhaNL5KFCaElNtgkWFP3txzlTIEwy/YqQcTUo8QM95P4pvPsOYUOMTDuAXPF
-         aMTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748550510; x=1749155310;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DDwrjOc2P0lgnjjq9Q/Gy/AuUSnuvG7kFTIq26PL/EI=;
-        b=bmmxB4dH2PTOO4RoCzuSgUEmII0geOQ1kD4szDGD/3GA4IRxAvsxJvwpO53n1tg/as
-         3H/tglcDWQOCBLaJnW2RkSwrKUw3p1EOj9VmtxZX2TVx5chCBSc+k/wnRTKdWOza6Oej
-         GR5GTIFsz9SmX+NBPBZWGn484JVh8SH4DH+hHkEwhISuLP1wIrV5DVsvaIHUZEftARst
-         DjR//ZJydOhu1KRBdQBI7WH6y0551kUbH+8VyCgdJu7xqQ195+K9ARqTvaWJIIeisg64
-         1WaPZ3G2kvzCRxCJJj1P13KIqxm5bJLEf4Q2yBKpt6z7oUklD10oUMRPu13MzBq1eGZO
-         iU6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUA5g4jhglAjj0FDFGhBzHbonQ7zFwClmii6V3YkS+EAWMiTDVY7BaS2uqhiwdzfrluFDL7q2S6KWs9z3C5/HWCx9Jh@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBU8hEEMf1/WY7OersqRBMhXfjo76xEibDhDT+KeNiRxembOSE
-	EVLFJQDNdstdqKLQ11XfhdGGHipGq1oxlV4fpDIaO9xc/ZVVM+Ws9UWiQlXS/Q==
-X-Gm-Gg: ASbGncv5dIZV7UxHXXji3TDgenlz5Fji17vCi5fHoncsK+r7n40Ex3FDPnrLSfppcjx
-	uaDNj1Hq1BU3Qcx+By5x2EB1J3Qj/P9TNW+Xc3vajmhPYb1RO60pMAD3Ap4UyhhV5jSCFXH9CJx
-	4roI46QpbGHaxI/O/D3t0RMFgvewqdh+7c58ap86wt8+0jVv0i+hhDJkjXGzw/aYPlzXCkk4tj4
-	1ktIu7U8QfxDwC/KgKa+ILp+fVYoOoFNRTnwWdNY3sXMDDxk1GhYKHrdG3ZeMNWuxYhXy09b+K8
-	+74kr+gt97nO0OKlInOsn9AIBhZjKJp3HEPrh52Hnlyav0P8eLa8ofoa36plk1/Gx5284UEeuV4
-	VQYT5M6iz7Pv6RnXr2w==
-X-Google-Smtp-Source: AGHT+IHF4HZ++L8kM1VGf0rEhKmV59LLBJotobAimHoIQQjkhamAF/oB3sGTdm8zOhi7vwQ9xI9hSg==
-X-Received: by 2002:a05:6808:6a87:b0:3f8:18a3:b1cc with SMTP id 5614622812f47-40679fd1c7cmr484415b6e.12.1748550509905;
-        Thu, 29 May 2025 13:28:29 -0700 (PDT)
-Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678bf36e7sm129240b6e.1.2025.05.29.13.28.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 13:28:29 -0700 (PDT)
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v3 4/4] platform/x86: dell_rbu: Bump version
-Date: Thu, 29 May 2025 15:27:58 -0500
-Message-ID: <20250529202758.8440-5-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="jwc4lhal"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
+	:From:subject:date:message-id:reply-to;
+	bh=cGpOZ37oUywAFbdjZoqBpZeSJcqvhzQfs0Mw1L7sNtY=; b=jwc4lhalKA1PucheGSK6IdvnH9
+	BO0fCmGjazfCtxLwSLiaMAr5uE9lFzdNBerD/UV66J0zyG9hxrgSixLjan9YyWWQajQQpvZ8Vq9iX
+	7GXtlIH/6Hsiy4IC+M5wKX4ePjFtuUtsTjwB0xWq1BZB+B6fbYKyrDNzunZSHcJcv8rE=;
+Received: from modemcable061.19-161-184.mc.videotron.ca ([184.161.19.61]:43532 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uKjsY-0004fF-5V; Thu, 29 May 2025 16:29:30 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>
+Cc: hugo@hugovil.com,
+	stable@vger.kernel.org,
+	Elena Popa <elena.popa@nxp.com>,
+	linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Date: Thu, 29 May 2025 16:29:22 -0400
+Message-Id: <20250529202923.1552560-1-hugo@hugovil.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,27 +43,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 184.161.19.61
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+Subject: [PATCH] rtc: pcf2127: add missing semicolon after statement
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Bump the module version.
+From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Replace comma with semicolon at the end of the statement when setting
+config.max_register.
+
+Fixes: fd28ceb4603f ("rtc: pcf2127: add variant-specific configuration structure")
+Cc: stable@vger.kernel.org
+Cc: Elena Popa <elena.popa@nxp.com>
+Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 ---
- drivers/platform/x86/dell/dell_rbu.c | 2 +-
+ drivers/rtc/rtc-pcf2127.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index 7d5b26735a20..45c0a72e494a 100644
---- a/drivers/platform/x86/dell/dell_rbu.c
-+++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -45,7 +45,7 @@
- MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
- MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
- MODULE_LICENSE("GPL");
--MODULE_VERSION("3.2");
-+MODULE_VERSION("3.3");
+diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+index 31c7dca8f469..2bfebe3eba0c 100644
+--- a/drivers/rtc/rtc-pcf2127.c
++++ b/drivers/rtc/rtc-pcf2127.c
+@@ -1538,7 +1538,7 @@ static int pcf2127_spi_probe(struct spi_device *spi)
+ 		variant = &pcf21xx_cfg[type];
+ 	}
  
- #define BIOS_SCAN_LIMIT 0xffffffff
- #define MAX_IMAGE_LENGTH 16
+-	config.max_register = variant->max_register,
++	config.max_register = variant->max_register;
+ 
+ 	regmap = devm_regmap_init_spi(spi, &config);
+ 	if (IS_ERR(regmap)) {
+
+base-commit: c7622a4e44d9d008e0e5edcc46c71854c50cf4a8
 -- 
-2.47.1
+2.39.5
 
