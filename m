@@ -1,146 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4230D4315C;
-	Thu, 29 May 2025 16:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523378F34;
+	Thu, 29 May 2025 16:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537172; cv=none; b=i46xqYHkdbN16DP1BH1SjK23Q/53C++gj8RAttrcrfPp74A0iIYH50qZ//5K9pYjnqN3arBlvt+wxPZDLToOR/43kovHvdaCv3Kqb7/mDC5YOXHYoWYI3QIcanlrhOb009fXF8LBzjxhos+jgOoN80UPQ+GWYMVCuJjHzwE9fSk=
+	t=1748537224; cv=none; b=lCseMTtIX+AhVf5feD6BNejj/oXvfm8ZXJK6WsHdxpOaL9I5zXx53WcblQYlCpMTNbxQ60/3s+HqDNW23fzl37mc11A2HLLf8+GUocYHz5SMltJyiuops+7pdQg4Qal/CfbwUjoNtuE6VSCvtytgUfBnuXnZRtsAS2xhWaMqzsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537172; c=relaxed/simple;
-	bh=D7pFpHFbd8b9b6GPBLqRyR4yWUChqilaV2dAhA1yxo0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J0DMWm5i8fmhdxIlXhGYjw8eF+7n7Uezg2aVf32hCHM5Q2e2P4jOkJsZQrLDYKLyy2ZbD/RcGOn9vEd//G5Hc9H97F/HjqKIhmkkSepuHc9QaDJv7MM+lVV70ZStGGCicq/eN+3RHf7cdo7L2v7a5adWd6LFEObqdZgxd8Y44x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNoXC0Of; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748537224; c=relaxed/simple;
+	bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OZrXVTXZHqcdOJb2ooWHaFTm9AnNnGzEu949gwiciUCO/cxN2LR23UemCUZophaVYDg4VP3G3FO3VEd/BOcXhNRXjr/HPMab+drSUakxjhPFaMEZn8SkDVreC1Z/BrvpqGMn9xohMxXkc3bY0BeqdFsiGGPdIwhY5rm6Y+wjUE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQilQXQy; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNoXC0Of"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 885A7C4CEE7;
-	Thu, 29 May 2025 16:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748537171;
-	bh=D7pFpHFbd8b9b6GPBLqRyR4yWUChqilaV2dAhA1yxo0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MNoXC0Of+W7Rlb+xYYkg3fguM3Ih+wwonXIIsuIBtTQeRJo1TEv/jHK6sZnKfNYdf
-	 LOMl8AT6R32sh6g52AooPSC/bIiTLuFNcNfRS/s0blF85OCFqZfUpmehCWTQvcNBqb
-	 Hnz7JTFEVWlmLzgMEof8ArMJWttIO6/nxclfsqGWzq3P0KJA+GKs5c/wPClYpwTlsq
-	 v1RGqE/vlAhJwrN7UTsBBazzogD5awz+FGTOK926cOZpWVOOuhK7EBzrJuLZNSROzB
-	 h5E6p0BBlUedujtByc8GPSauywi2KcuFq+Zu5zg8vAZPEUz5ku9m29iqS7nZLcaZIN
-	 iDTwrDY8wBkQQ==
-From: SeongJae Park <sj@kernel.org>
-To: Simon Wang <wangchuanguo@inspur.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-	"david@redhat.com" <david@redhat.com>,
-	"mhocko@kernel.org" <mhocko@kernel.org>,
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
-	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"damon@lists.linux.dev" <damon@lists.linux.dev>
-Subject: Re: [PATCH 2/2] mm/damon/sysfs-schemes: add use_nodes_of_tier on sysfs-schemes
-Date: Thu, 29 May 2025 09:46:08 -0700
-Message-Id: <20250529164608.37594-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <a3f041d817534652a3e1e6545432016b@inspur.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQilQXQy"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450d37d4699so3392225e9.0;
+        Thu, 29 May 2025 09:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748537221; x=1749142021; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
+        b=aQilQXQydHyIVSU6QINEMMe+ASq4799MoT55DUVDRcKTLyrPjD9Rer0o5+eyszXL5A
+         kWz7Zq7rBosDPCPkYtN4Yk0qQdOvmqAGL0CzOCoCa4/wVixPkP6W8+ahjyU8J97e3DsV
+         Fhj3/PpaGgstNuUeitEbv7WnNQPDTrz4tzgtEDTfNkP2OMrcEQYOnXFyXXrYZvwhkLjJ
+         H1fn10dFHfND98vuo3qBhacXOfZALjdZaRExaxkQti3nby5boZNfghS0vsX7yA4XwNrc
+         S7LrNuuNdSGSSY35J78lFg0uT9c/s1VCTf7I/hiShf1SekLa5crECja4Pc6AdIoQre5P
+         y7qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748537221; x=1749142021;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
+        b=m718dhgbpP8tIGAroNRMpywW2gRNOB8pT9LaGqF9EDT21qY/8B2z8yq4Or9z6poNq/
+         uef/pBRp8cByN/x3h+fnJSw6mB+BaIV52epXxF3OIqrx1n0jwO2xwuHoKNhmgQ5kKOJj
+         x0C9lNGFe4pPSgPGNCXCb1kHQ9hIYqej8bsJmoH9bLZ8UO7r4AcSAk2V44y5S1etHRCT
+         ICqvPbns7ZxjVJvmbnSIzHeZSMcN9jNbcLEvROqQ0DqJemh+yGeRqp2ouZ5fqnKHuWB1
+         dHzoZtJ3dZ0JzuWfrt8Isle0HHY1JS7PvSgrFSUppZTTtoCWUoCxgv94tNy1RBk0d6gK
+         D1sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVR3ojlzrfamjNS+5S/38ACulGTKwGaKNaSrYNOdr15TmOUkoDn+WTq5cCwt6KALP4NcCZGlOF08t40xJHN6mPK@vger.kernel.org, AJvYcCWcZEbqaO8ICKlW4MkvD+hO37reeTx3viOsBnO7sAOpcu35nEWTIv/Kd3UdCfNu89hwoIfyWqGisW2Rebc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxxa3xQqmhL6YZSBYDe9gegfRGoHuthtmK37ZqmLBYaUP1MYDP4
+	FP8NJJHiQ0Tg27DdBAg29emeB905qubv1p8ePuG+C9yPBEK5z9F3VGr2i2BqAs+5+AIHpOPRiL3
+	WSnHeZ78uY34+T3iOWld5ddEHG+48b5E=
+X-Gm-Gg: ASbGnct8U3YixDXAl9wDOsk34ndmzdoqwFReaU1F2rM1B74YllgBwkVEJ2Qcl9bQ2/X
+	HCm6NZbHs8YfkAEsG8z2KT1QG4n/6xQi+G73o60Ejr4Ljasbn/BZUc764CF3BdOvNu0WPNNHlJN
+	NJIGh7xT4X2fH58Q3Ms/beuHya335mWhhiGrvjnTCmKDu2fj2IuathlU4PO5g=
+X-Google-Smtp-Source: AGHT+IHQ+BRyC5kZfuSwmuc+jsFUskhxJSftVM0yFnsmSz4uOzMkH4dr5F8CYkhdw+m7CRwwAGJvX66cRIlLL+lbKNY=
+X-Received: by 2002:a05:600c:5249:b0:43c:f81d:34 with SMTP id
+ 5b1f17b1804b1-450d64d3fbemr4950115e9.9.1748537220853; Thu, 29 May 2025
+ 09:47:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250528161653.55162-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250528161653.55162-1-jiayuan.chen@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 29 May 2025 09:46:49 -0700
+X-Gm-Features: AX0GCFv2fO_u7DrzrMdRbFgY7j1cPOxchmaXJRuhBASFjmjKWsCf7blknPJjxf4
+Message-ID: <CAADnVQ+hP9xYH2f4hiUtEcG8NGETTO7BicbRfpd9zxMPnosLHg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 1/2] bpf: Restrict usage scope of bpf_get_cgroup_classid
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf <bpf@vger.kernel.org>, 
+	syzbot+9767c7ed68b95cfa69e6@syzkaller.appspotmail.com, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Feng Yang <yangfeng@kylinos.cn>, Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 May 2025 03:12:13 +0000 Simon Wang (王传国) <wangchuanguo@inspur.com> wrote:
+On Wed, May 28, 2025 at 9:17=E2=80=AFAM Jiayuan Chen <jiayuan.chen@linux.de=
+v> wrote:
+>
+> A previous commit expanded the usage scope of bpf_get_cgroup_classid() to
+> all contexts (see Fixes tag), but this was inappropriate.
+>
+> First, syzkaller reported a bug [1].
+> Second, it uses skb as an argument, but its implementation varies across
+> different bpf prog types. For example, in sock_filter and sock_addr, it
+> retrieves the classid from the current context
+> (bpf_get_cgroup_classid_curr_proto) instead of from skb. In tc egress and
+> lwt, it fetches the classid from skb->sk, but in tc ingress, it returns 0=
+.
+>
+> In summary, the definition of bpf_get_cgroup_classid() is ambiguous and
+> its usage scenarios are limited. It should not be treated as a
+> general-purpose helper. This patch reverts part of the previous commit.
 
-> > > This patch adds use_nodes_of_tier under
-> > >
-> > /sys/kernel/mm/damon/admin/kdamonds/<N>/contexts/<N>/schemes/<N>/
-> > >
-> > > The 'use_nodes_of_tier' can be used to select nodes within the same
-> > > memory tier of target_nid for DAMOS actions such as
-> > DAMOS_MIGRATE_{HOT,COLD}.
-> > 
-> > Could you please elaborate in what setup you think this option is useful, and
-> > measurement of the usefulness if you have?
-> > 
-> > I'm asking the above question because of below reasons.  My anticiapted
-> > usage of DAMOS_MIGRATE_{HOT,COLD} is for not only memory tiering but
-> > generic NUMA node management.  And my proposed usage of these for
-> > memory tiering is making per-node promotion/demotion for gradually
-> > promoting and demoting pages step by step between node.  It could be slow
-> > but I anticipate such slow but continued promotion/demotion is more
-> > important for reliable performance on production systems of large time scale.
-> > And I believe the approach can be applied to general NUMA nodes
-> > management, once DAMON is extended for per-CPU access monitoring.
-> > 
-> > I'm not saying this change is not useful, but asking you to give me a chance to
-> > learn your changes, better.
-> 
-> I believe some users may want to ​​use only the target node's
-> memory​​ and reserve other nodes in the same tier for specific
-> applications. Therefore, I added a switch file use_nodes_of_tier.
+I think it's better to make it generic enough instead
+of reintroducing a bunch of prog specific proto handlers.
+See this discussion:
+https://lore.kernel.org/bpf/20250528020755.33182-1-yangfeng59949@163.com/
 
-Thank you for clarifying, Simon.
-
-Because this is an ABI change that difficult to revert and therefore we may
-need to support for long term, I'd like to have more clear theory and/or data
-if possible.  In my humble opinion, above clarification doesn't sound like a
-strong enough justification for ABI change.
-
-More specifically, it would be better if you could answer below questions.  Who
-would be such users, how common the use case would be, and what are the benefit
-of doing so?  Is that only theory?  Or, a real existing use case?  Can you
-share measurement of the benefit from this change that measured from real
-workloads or benchmarks?  Is there an alternative way to do this without ABI
-change?
-
-> I think it might be better to set the default value of use_nodes_of_tier to
-> true (i.e., allow using fallback nodes). What do you think
-
-In my humble opinion, we can consider setting it true by default, if we agree
-the benefit of the change is significant.  With only currently given
-information, I cannot easily say if I think this can really be useful.  As
-asked abovely, more clear thoery and/or real data would be helpful.
-
-> 
-> > >
-> > > Signed-off-by: wangchuanguo <wangchuanguo@inspur.com>
-> > > ---
-> > >  include/linux/damon.h        |  9 ++++++++-
-> > >  include/linux/memory-tiers.h |  5 +++++
-> > >  mm/damon/core.c              |  6 ++++--
-> > >  mm/damon/lru_sort.c          |  3 ++-
-> > >  mm/damon/paddr.c             | 19 ++++++++++++-------
-> > >  mm/damon/reclaim.c           |  3 ++-
-> > >  mm/damon/sysfs-schemes.c     | 31
-> > ++++++++++++++++++++++++++++++-
-> > >  mm/memory-tiers.c            | 13 +++++++++++++
-> > >  samples/damon/mtier.c        |  3 ++-
-> > >  samples/damon/prcl.c         |  3 ++-
-> > >  10 files changed, 80 insertions(+), 15 deletions(-)
-> > 
-> > Can we please make this change more separated?  Maybe we can split the
-> > change for memory-tiers.c, DAMON core layer, and DAMON sysfs interface.
-> > That will make review much easier.
-> 
-> Yes,I'll split this patch to be 2 patches.
-
-Thank you for accepting my suggestion.  But I think it deserves 3 patches, each
-for
-
-- memory-tiers.c,
-- DAMON core layer, and
-- and DAMON sysfs interface.
-
-But, let's further discuss on the high level topic (if this change is really
-beneficial enough to make ABI change).
-
-
-Thanks,
-SJ
-
-[...]
+pw-bot: cr
