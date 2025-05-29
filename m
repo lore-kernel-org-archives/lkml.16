@@ -1,316 +1,175 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012055.outbound.protection.outlook.com [52.101.71.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5B2F872;
-	Thu, 29 May 2025 02:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748486550; cv=none; b=Nuy3YeaEpLZQ4T5pCv2GMy9I99NaYQnkn7Vyj1LKrp9rEz6igXMJsiuGGDIAO4Zd6oP3ERIaWhvaE26KCN/z7KH5pawGqczUmaPam4V28QVT5jA3bz753TsXux3tAT5gV2ntKRJLDxryiFk5atXOsGsMCSSoRLMyCapmB+0K6/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748486550; c=relaxed/simple;
-	bh=GNLRYQUJcKmHRLXQoGd5L1xafjjvL1agDYEiwlM6VJw=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=tKdz0hmAN7UfY65U9MhjoKgw8EG6mCOErsy6serLPSf638/ODrVMcMOGP7Zo3CZqXFdorq0UM1JbxF80H+z01x4+ai+T/CvrYX9LVBObJB21UigoEi+jg+kEYL2wg9P4SHBtS0Nbj3CpFLcVgpmh7voYIdYR8SCdTrtMmiXgg74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GwbTNOWG; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41762036E9;
+	Thu, 29 May 2025 02:43:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748486639; cv=fail; b=PrOhkKG/3vmS+tGTLy5uATBNzwrUUY5X1qDU9UvTgO/2fOaG+HCNQpCumIO5wCJ0eMxDYZuF0pGxYdu05u0kaiAn0DoqMORfa55NAz3SU9cJeaPHexihG/kflosz9wojJewAclQYpxDGs4/AB0sWtx9l8ThFAE41Du3FlQ8iXi0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748486639; c=relaxed/simple;
+	bh=TpFTIxf90d+LE2hSkJHaTrjN0UPFHxK48UOBa8DjTPk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nLOpniynAb2uEih1pFrhkqAjPw1Soay3IW2bKal9HttZRLgfgDY/CqC87E2RB1VAdPHf9UrxzH7qAlLPiLJfvp6pOKv0MuKSoWFSxX/TX8isJWq4IcAxuLSXS0EGtrVJsoheLp33OO4WYNSZijZvHl1mQRKyx+/7Sv4T2Lwugw8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=D08zh8yd; arc=fail smtp.client-ip=52.101.71.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GwbTNOWG"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="D08zh8yd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qMXPgYiVfAmbtD7VFjREkoCrbHgW4KqHEB0BziRQ9NVwxtJBJySJPMHfWbQjNbg2XLHqFjGHDRsRTObADVf73v85pm/qN20ygucPYjZ4NEp61o9HF+4f/SYX1/uTZIbFOfXKUH7Z6yEF7r2rBLq6Fl7iI9OM1jJ6f/gCY6OFZ3T+k1zg5Hi5HRbzHLO4xKx+peZXWYoqMV2J3sGs2c4QqCXAuPe6fgJJ2suj3kw2iAqjRcqKdLqnRvmisMZgQvCAN3hMmYwhtaK9yBLEu8FE3dBDiWs9bwkAT96NrL5I9Kb5J+tERjMog3WK7xjREEmHHaIEtsU7QUtXSnZuxcGVZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KTl2zzKEZEIa9LupzpMGMjFQ76YYg/rtCebDmGRw2lU=;
+ b=HVU6aX92IRT8mP/+WztoWLZF52iu9M5Lj9Si7xnmsXi1Boe71Lif8X0QFcSfukh6DtsokgCqcNWEluV4fGKpAPduZJvn6YeOvTg3+FwR3Z+R5QpPqB62reWeRL4zzoOF/8NYUxENz7sbeUfe1bfrR2YYwfG9yO1UZZubgyklhMrwtB2dRhKS8iw7Zlux61AWuTqlaw1Ggf7TkYJsYId6g77uSnRLUZv+0g/XMPOxXaQgemRjwCbGfxa/JT2oefYSafgW9mdl8+BqCb5wxJdvTYuTVMbTaCVHhusJnU0iCrTMcqGkEvq7ukQyfbxN0VrulRbmv3uarFhXaKKLPDBpWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KTl2zzKEZEIa9LupzpMGMjFQ76YYg/rtCebDmGRw2lU=;
+ b=D08zh8yd1o0WslxA7Il9a6aXS9kcNhZBml7LAHvdj7OnE1gbqWxjHUSy1BUifDeqgvlFvTsjZ8D6U7sZVGQ3GxMBzYuzbhYZauMjLCXmLN/hu3YMiEbxtZDLvoENPIzs9U6ocuJnIMAa7P8t27u+SLED0tocJ700YEyCcWIMwVfbNldr6EHmy2qxfeoP+PpcSklZNmW5gGbbRmEing+bpR/178kttgz3tpv0Nbw5Z0idkH1d1jg9o6dYLQqhmxTNcVfYVL93WMH5uE+nFR0qy6+XkkN3gHu4USdrfh7S1W8cBBRR0eYgkbJipMal1biuc8lpbxy+jthztNoAApvB/g==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by PA4PR04MB7567.eurprd04.prod.outlook.com (2603:10a6:102:e5::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Thu, 29 May
+ 2025 02:43:54 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
+ 02:43:54 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
+	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 3/3] arm64: dts: imx95: add SMMU support for NETC
+Thread-Topic: [PATCH 3/3] arm64: dts: imx95: add SMMU support for NETC
+Thread-Index: AQHbz64pIjTJw74aN0mAPdVJ1SXq+LPoJbIAgADBOrA=
+Date: Thu, 29 May 2025 02:43:54 +0000
+Message-ID:
+ <PAXPR04MB85107963A54F916FFACAE7B28866A@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20250528083433.3861625-1-wei.fang@nxp.com>
+ <20250528083433.3861625-4-wei.fang@nxp.com>
+ <aDcnMnAJO+YVQ6rJ@lizhi-Precision-Tower-5810>
+In-Reply-To: <aDcnMnAJO+YVQ6rJ@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|PA4PR04MB7567:EE_
+x-ms-office365-filtering-correlation-id: f7e4da31-fece-4f22-afdd-08dd9e5aa718
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?gCDhofnWZ9k7M+ATw0hvD0m6uE0nbS/pVnSa8xPd2g7fYdXS4uZdatsQGz5Y?=
+ =?us-ascii?Q?baqJvlbSrQAPGVrsbFvOIZdjk+d/O3oURTstDIu3qENF1LmoJ+yrBX+3NIK+?=
+ =?us-ascii?Q?izx5voaYeG8L7dzll0UcIAMkzfX0GZFxwGGfCLGqq1ajLmQ9DZXfXQelqR+p?=
+ =?us-ascii?Q?yCtNhKeyIvx0qsYHAKlCrq0tYn+Ygh6O9A3i8IeAFp+InzcinPlPAhtFIgTz?=
+ =?us-ascii?Q?KCBsC7uxe9q5BMLtNc+hV7Q2EAIhUnvTHdCRNxqGMz0JCcvByjVrmHQIkx76?=
+ =?us-ascii?Q?zbQ8/FJ4K5eLF257bHmMeib3YNgOXJbRE1ZrQv9TFUtg5fWl7BZdQZeY+/MY?=
+ =?us-ascii?Q?mqmyFeuHoOhVgdMjbwGlCOJvsnK9DERUEmw8OFDCYAC5XoHdDN8ZErNYomsY?=
+ =?us-ascii?Q?g3mVuhHyE4qeLmrQmnm+T91a6iV2TWvkORaIsHgM7dgkR+3abRayjD7Y9/Se?=
+ =?us-ascii?Q?8zzWjeJCCWfp1dpTNjICU3ZltdtlM1cuuSu4ytmg1QufPGNRGgQXLXl47eWp?=
+ =?us-ascii?Q?7j9HUNFbaAPBq18xc/IEQAbA8COnG+oz7HJdziAdUpl1WZHSGjP4nARqK361?=
+ =?us-ascii?Q?BpCX2krr1WfG7OW+J67rXjavqyUHaNPDlgesLgr8dQUZGMwNW1TqkR7ftguJ?=
+ =?us-ascii?Q?nSYXJDtka/e3cogBva6v05sQUxAMNXIRsyBWMI3fzcOh6+gJjOI7p6T7iDuc?=
+ =?us-ascii?Q?VRKmjg+A3190yod10zTMqukT9RRcmBe+7LjiROe8PQs8flV1kc5U6/nPE3u7?=
+ =?us-ascii?Q?Xyx2DE1bTc8zraq8oUp7nktI5vTnfDQtfrd4F/MIOGhJpZGKP0Rd3qCFANxS?=
+ =?us-ascii?Q?oejZsJPWc5kxKLl1ptSvWFc0MwCkIR+/h166XI4lbOXbOEgflbIXnXl8uVe/?=
+ =?us-ascii?Q?K2ikFuzFzoH10rEnJAvAkdJKUlqKeftyAfvu76HVmoPZnP+XWiTv+3ROBAgP?=
+ =?us-ascii?Q?GqeM0D9lm6vIIhbFwliIXI5f33i3922xZYLQw5l6DxtDahrGUe4SV7c3bxRy?=
+ =?us-ascii?Q?Yx2cahCrxpNr6hubKdu8HDnBoh9d68K4FJ9VcWLK/PIGlAWsiAtBH+krX+lG?=
+ =?us-ascii?Q?KcyQ1clIhV7VrqUT/M2PGuMKNEutV1rhsD3BKPAoAZalMYscCkvLZ0cbejZs?=
+ =?us-ascii?Q?gL2MWHQuD3Na/n0xoKSxhAGVEe5AmTExQAfAwSdZnl6Mq6dSu92VfDDAoHtQ?=
+ =?us-ascii?Q?JSmqoX0HnI27pfok2oA0iw6Qn5fNq2MwixolQOx7w9z5+uYiu9Xr5PT0M0gX?=
+ =?us-ascii?Q?6nUxZfItdqEtOEiCGtcKecAPHnSzhJPanBPSytlGDVEbmLhnq1fJ6ApJtcjw?=
+ =?us-ascii?Q?socnMgAEjo1F9CwFoZDL41Q/m5+H5wZhfiKCyQEBA1fV3lp8UUHfr+xhdRLU?=
+ =?us-ascii?Q?WnH7FQGraEonGatTxSgeDxuQd4npllDjNsX2hOAwvMnq4u1aIs8Sa9lvqMRh?=
+ =?us-ascii?Q?raSBwYVWhtn+oR3qGWWKBeJcJMx0a8Xl5kPA2vjumB1p4hAImVmtRQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?677JqMEJMIdIvdewJMaITP63Wa4pwgJkZkHKdiVMFwRU/QHaM5fwZuwl+1Dz?=
+ =?us-ascii?Q?Grf522vXSKw4qlNU5ljctL3Y/ibINgSdzvRtF5o50nKjRDxxNVGmfCvQ+2yW?=
+ =?us-ascii?Q?uZBufFG+VtE5Ex8w0y0jM3JNkJSg5VxGXDk97a1jyNGHa31cIW4wBm7gZng6?=
+ =?us-ascii?Q?7ikWuWKcevqXiNeYBr3ofqDbPrmvSmad9kg87mgKLQkkKzxy/oU5O7L5ERnE?=
+ =?us-ascii?Q?LD4O2SZAH50zT/+fCvoB1eIDbtTc9B+9/G6YB+mtJWPQg/M4NpquaRoovkG4?=
+ =?us-ascii?Q?LqyneKTs7G4r8GW1eho2t2bKc8FE8RcXaBdbKbQpiIJ0lLzctEEHrsLl7jOZ?=
+ =?us-ascii?Q?E0UxQR2qBKRUOBw8sgP5XqJtt+aXErsYxUTqxf21hWuHLfzyp6NZZVFQ0X8q?=
+ =?us-ascii?Q?IMtrBdhhTnAKgTcPuCkcm4BGIKn5lI3//73PfkQ1vhFK+znPU/Izrlcty6aA?=
+ =?us-ascii?Q?QbI80MDtmbqmtItgk87LN6we05uqP1BpfebYIsOlWJnwIq9T0jN71Jx1tw5l?=
+ =?us-ascii?Q?D6yHFW6LbWW8ziv5pRHiA9jjHKvSXPZ7vBttXbfKEggn/2sbBmjUUps3lXTu?=
+ =?us-ascii?Q?y2VBexQGNIjO9wYkoqGhdRxUgCAC3xKFYA2rc14S8+AYqpw3haPCrPBprNcU?=
+ =?us-ascii?Q?mhqiVXV/3gX3VTG4g1hAu8OArTxvUaQ2vVGqaVQq4dKnjpsvz61vKu274Ta4?=
+ =?us-ascii?Q?S3YruqWly1wnukziBKX4HMCTF2gsnm0fqT8efiBIr/v8l/VL74GihDyBogEk?=
+ =?us-ascii?Q?vSGNTsgq279suWEPjO42CTIic+xiWMU5ny3qp5xrPphVs2EELYe/ecODbJET?=
+ =?us-ascii?Q?PB29+yvQog41gGV4uFbjYd4ggTF7fyltXJQAnRWc+zdnNtBYtpxf+84WBA/G?=
+ =?us-ascii?Q?lA3Y9aXyK6Mj9zDx3xfcEEtbQtYXSCdPGl1KzQYs19x3hygFXg/2dpcMtcaO?=
+ =?us-ascii?Q?BRNzoaPu920IV3Gr613uLs8FaJpj3S2MWA2HIuO6Zm5nCow4zMh1h28Amgx5?=
+ =?us-ascii?Q?o9cFhzCfOTpDILoMhTwT6198r5CMZWqUI3CLYNQt43SS3jnaMyGcZosN3/mz?=
+ =?us-ascii?Q?gD1Hr52UkZ5/h/hIQ5sDxMGwWwY4SZMyX1qtq5D9bIN/MSRy7IAS81oa2Dom?=
+ =?us-ascii?Q?ICXn8mqsjjNpE5Uc60/ujbKC3jyYym7nfGk7CVTYMV66VqtxzERy0uCJJ9GG?=
+ =?us-ascii?Q?35/MZ7gJ53ZeQxGJHu0LIMxKdue+CLlLzF5XWIS+L7dFTkEXTO7q8qNM77ME?=
+ =?us-ascii?Q?/kT0DmzYQQ7PTF6LKIETf5S3LBcFu4aCoCDLxkJ1f8Kwx19Remz+CjFqgQtT?=
+ =?us-ascii?Q?bsYTAnQ5pPPnCU0YL6ARXYPUMfLG0b0HSOyeMgjY5VqeEeSRcKf0ndsE8CAO?=
+ =?us-ascii?Q?U0hDAiaXJRoPBQtt/n2WeyQCteaqRwigj/Wb6jP/7L1O191qyo3M5p2E/cIL?=
+ =?us-ascii?Q?XbKfIsP4vQbNCtMtPnDu6cTgppzxZVeEWbHNNJvWlOhIxT1DWFH0hWBTUL6L?=
+ =?us-ascii?Q?/XLHndvYOim1kFry2ExIG/xjzVH5qS1h2JVFc5I0mk1sXjzjr2/M9Ez2f8QA?=
+ =?us-ascii?Q?oDFbpgU5UTb4E65V25M=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748486544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f7vrs6bHYMJbGrO5/ULBT0VnsxBQ4VzjvKqhI3ES3E4=;
-	b=GwbTNOWGRLn5YQ0S+STemjaPdr+AT42nVc0pOwx0hrMCbgHWoX/XDdHTyjB8NyTL6QqNW8
-	NJSqned0g1KAMapS4YSvovRSpXCv6zwK0lrKYYrw4OSO/hcdFCEzohoy2qVKrxSiaX7vR6
-	XBm8UiNt/yUzJLF/4S97A30uWboAu1c=
-Date: Thu, 29 May 2025 02:42:14 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <fefe50c6ec558074ec7de944175cec82bb426f10@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix psock incorrectly pointing
- to sk
-To: "John Fastabend" <john.fastabend@gmail.com>
-Cc: bpf@vger.kernel.org, "Jakub Sitnicki" <jakub@cloudflare.com>, "David S.
- Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250528234650.n5orke2yq55qnoen@gmail.com>
-References: <20250523162220.52291-1-jiayuan.chen@linux.dev>
- <20250528234650.n5orke2yq55qnoen@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7e4da31-fece-4f22-afdd-08dd9e5aa718
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2025 02:43:54.3903
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: d66fYRePMj8IKL1tGKQE97CAcXeEEucZ0npus+2V9hU3YjqbksTLollb+hHTl/qsKoYufSlgHD/zSoY8L4tShQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7567
 
-May 29, 2025 at 07:46, "John Fastabend" <john.fastabend@gmail.com> wrote:
+> > diff --git a/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> b/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > index 9f4d0899a94d..e9a5fb36f5d0 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx95-15x15-evk.dts
+> > @@ -494,6 +494,14 @@ &netc_bus0 {
+> >  		  <0x60 &its 0x66 0x1>, //ENETC1 VF1
+> >  		  <0x80 &its 0x64 0x1>, //ENETC2 PF
+> >  		  <0xc0 &its 0x67 0x1>;
+> > +	iommu-map =3D <0x0 &smmu 0x20 0x1>,
+> > +		    <0x10 &smmu 0x21 0x1>,
+> > +		    <0x20 &smmu 0x22 0x1>,
+> > +		    <0x40 &smmu 0x23 0x1>,
+> > +		    <0x50 &smmu 0x25 0x1>,
+> > +		    <0x60 &smmu 0x26 0x1>,
+> > +		    <0x80 &smmu 0x24 0x1>,
+> > +		    <0xc0 &smmu 0x27 0x1>;
+>=20
+> Do you need iommu-map-mask to mask bus id in case difference probe order
+> with pcie node?
+>=20
+No, the bus id is fixed for NETC devices.
 
-
-
->=20
->=20On 2025-05-24 00:22:19, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> We observed an issue from the latest selftest: sockmap_redir where
-> >=20
->=20>  sk_psock(psock->sk) !=3D psock in the backlog. The root cause is t=
-he special
-> >=20
->=20>  behavior in sockmap_redir - it frequently performs map_update() an=
-d
-> >=20
->=20>  map_delete() on the same socket. During map_update(), we create a =
-new
-> >=20
->=20>  psock and during map_delete(), we eventually free the psock via rc=
-u_work
-> >=20
->=20>  in sk_psock_drop(). However, pending workqueues might still exist =
-and not
-> >=20
->=20>  be processed yet. If users immediately perform another map_update(=
-), a new
-> >=20
->=20>  psock will be allocated for the same sk, resulting in two psocks p=
-ointing
-> >=20
->=20>  to the same sk.
-> >=20
->=20>=20=20
->=20>=20
->=20>  When the pending workqueue is later triggered, it uses the old pso=
-ck to
-> >=20
->=20>  access sk for I/O operations, which is incorrect.
-> >=20
->=20>=20=20
->=20>=20
->=20>  Timing Diagram:
-> >=20
->=20>=20=20
->=20>=20
->=20>  cpu0 cpu1
-> >=20
->=20>=20=20
->=20>=20
->=20>  map_update(sk):
-> >=20
->=20>  sk->psock =3D psock1
-> >=20
->=20>  psock1->sk =3D sk
-> >=20
->=20>  map_delete(sk):
-> >=20
->=20>  rcu_work_free(psock1)
-> >=20
->=20>=20=20
->=20>=20
->=20>  map_update(sk):
-> >=20
->=20>  sk->psock =3D psock2
-> >=20
->=20>  psock2->sk =3D sk
-> >=20
->=20>  workqueue:
-> >=20
->=20>  wakeup with psock1, but the sk of psock1
-> >=20
->=20>  doesn't belong to psock1
-> >=20
->=20>  rcu_handler:
-> >=20
->=20>  clean psock1
-> >=20
->=20>  free(psock1)
-> >=20
->=20>=20=20
->=20>=20
->=20>  Previously, we used reference counting to address the concurrency =
-issue
-> >=20
->=20>  between backlog and sock_map_close(). This logic remains necessary=
- as it
-> >=20
->=20>  prevents the sk from being freed while processing the backlog. But=
- this
-> >=20
->=20>  patch prevents pending backlogs from using a psock after it has be=
-en
-> >=20
->=20>  freed.
-> >=20
->=20
-> Nit, its not that psock would be freed because we do have the
->=20
->=20cancel_delayed_work_sync() before the kfree(psock). But this
->=20
->=20is not a good state with two psocks referenceing the same sk.
->=20
->=20>=20
->=20> Note: We cannot call cancel_delayed_work_sync() in map_delete() sin=
-ce this
-> >=20
->=20>  might be invoked in BPF context by BPF helper, and the function ma=
-y sleep.
-> >=20
->=20>=20=20
->=20>=20
->=20>  Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg inte=
-rface")
-> >=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>=20=20
->=20>=20
->=20>  ---
-> >=20
->=20>  Thanks to Michal Luczaj for providing the sockmap_redir test case,=
- which
-> >=20
->=20>  indeed covers almost all sockmap forwarding paths.
-> >=20
->=20>  ---
-> >=20
->=20>  include/linux/skmsg.h | 1 +
-> >=20
->=20>  net/core/skmsg.c | 5 ++++-
-> >=20
->=20>  2 files changed, 5 insertions(+), 1 deletion(-)
-> >=20
->=20>=20=20
->=20>=20
->=20>  diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-> >=20
->=20>  index 0b9095a281b8..b17221eef2f4 100644
-> >=20
->=20>  --- a/include/linux/skmsg.h
-> >=20
->=20>  +++ b/include/linux/skmsg.h
-> >=20
->=20>  @@ -67,6 +67,7 @@ struct sk_psock_progs {
-> >=20
->=20>  enum sk_psock_state_bits {
-> >=20
->=20>  SK_PSOCK_TX_ENABLED,
-> >=20
->=20>  SK_PSOCK_RX_STRP_ENABLED,
-> >=20
->=20>  + SK_PSOCK_DROPPED,
-> >=20
->=20>  };
-> >=20
->=20>=20=20
->=20>=20
->=20>  struct sk_psock_link {
-> >=20
->=20>  diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-> >=20
->=20>  index 34c51eb1a14f..bd58a693ce9a 100644
-> >=20
->=20>  --- a/net/core/skmsg.c
-> >=20
->=20>  +++ b/net/core/skmsg.c
-> >=20
->=20>  @@ -656,6 +656,9 @@ static void sk_psock_backlog(struct work_struc=
-t *work)
-> >=20
->=20>  bool ingress;
-> >=20
->=20>  int ret;
-> >=20
->=20>=20=20
->=20>=20
->=20>  + if (sk_psock_test_state(psock, SK_PSOCK_DROPPED))
-> >=20
->=20>  + return;
-> >=20
->=20
-> Could we use the SK_PSOCK_TX_ENABLED bit here? Its already used to
->=20
->=20ensure we wont requeue work after the psock has started being
->=20
->=20removed. Seems like we don't need two flags? wdyt?
->=20
->=20>=20
->=20> +
-> >=20
->=20>  /* Increment the psock refcnt to synchronize with close(fd) path i=
-n
-> >=20
->=20>  * sock_map_close(), ensuring we wait for backlog thread completion
-> >=20
->=20>  * before sk_socket freed. If refcnt increment fails, it indicates
-> >=20
->=20>  @@ -867,7 +870,7 @@ void sk_psock_drop(struct sock *sk, struct sk_=
-psock *psock)
-> >=20
->=20>  write_unlock_bh(&sk->sk_callback_lock);
-> >=20
->=20>=20=20
->=20>=20
->=20>  sk_psock_stop(psock);
-> >=20
->=20
-> Can we add this to sk_psock_stop where we have the TX_ENABLED bit
->=20
->=20cleared.
-
-
-
-Thanks, I just add SK_PSOCK_TX_ENABLED checking at the start of sk_psock_=
-backlog().
-Every works fine, and truly no more flag needed !
-
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 34c51eb1a14f..83c78379932e 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *wor=
-k)
-        bool ingress;
-        int ret;
-
-+       /* If sk is quickly removed from the map and then added back, the=
- old
-+        * psock should not be scheduled, because there are now two psock=
-s
-+        * pointing to the same sk.
-+        */
-+       if (!sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
-+               return;
-+
-        /* Increment the psock refcnt to synchronize with close(fd) path =
-in
-         * sock_map_close(), ensuring we wait for backlog thread completi=
-on
-         * before sk_socket freed. If refcnt increment fails, it indicate=
-s
-
-
-
-> >=20
->=20> -
-> >=20
->=20>  + sk_psock_set_state(psock, SK_PSOCK_DROPPED);
-> >=20
->=20>  INIT_RCU_WORK(&psock->rwork, sk_psock_destroy);
-> >=20
->=20>  queue_rcu_work(system_wq, &psock->rwork);
-> >=20
->=20>  }
-> >=20
->=20>  --=20
->=20>=20
->=20>  2.47.1
-> >
->
