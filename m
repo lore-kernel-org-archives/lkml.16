@@ -1,117 +1,136 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2173C78F3E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E9A3244686;
+	Thu, 29 May 2025 03:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748487810; cv=none; b=udLGw2TeLZKCxQxHEsm5ZjmB13y0NjpxjkGPBi/vemaDJadVx0+s5xlzrx8r7nkZ+Y6G/rnQdPHyyRGe9WADH9K0/asT0i9oeWzOcjsISYW9SN2BBQDqQ9HZHSwPCon8zkVa+kMz0Xho81t5vVBB8VI12K+dEVs7tl71Z6AiqG4=
+	t=1748488270; cv=none; b=BoA6pKKMot2o2T1bu+1R75JNudqbhf8+L04DgOfYb+zje8vhmrAO1Xsv0Su2UviqA56K0L9Y15MOo/3jOplNYlzRBvcGuDlus966oNva9mVr2kjp1+82pwMpjKDlo5/rMRKs7rQDC3w3Ajpx5IiWc6iYHstY5WNh0pYzBXaqPYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748487810; c=relaxed/simple;
-	bh=08/XzBLWIpvmBY8MzPKL4X/ZbJPrBVcaBnFHJnu7NCk=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EX7qe/WllebDd1nmpNruipC/uX6w/mYs2mjoCeJOKKLnmjLtlVedLMCCgRRu9nO7Baug05zFNM9mKMLuqqwi3cgJP7Bdq2jk3kYdlAot7I2SEmyV2V1knzv9kcXBGgawHDT8pDpQyrlu0iW9tvSFVgsExttc4C+YuYZTHy1gAGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201602.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505291103138957;
-        Thu, 29 May 2025 11:03:13 +0800
-Received: from jtjnmail201604.home.langchao.com (10.100.2.4) by
- jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 29 May 2025 11:03:12 +0800
-Received: from jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322])
- by jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322%5]) with mapi
- id 15.01.2507.039; Thu, 29 May 2025 11:03:12 +0800
-From: =?utf-8?B?U2ltb24gV2FuZyAo546L5Lyg5Zu9KQ==?= <wangchuanguo@inspur.com>
-To: SeongJae Park <sj@kernel.org>
-CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "david@redhat.com"
-	<david@redhat.com>, "mhocko@kernel.org" <mhocko@kernel.org>,
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
-	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "damon@lists.linux.dev"
-	<damon@lists.linux.dev>, Jagdish Gediya <jvgediya.oss@gmail.com>
-Subject: Re: [PATCH 1/2] mm: migrate: restore the nmask after successfully
- allocating on the  target node
-Thread-Topic: [PATCH 1/2] mm: migrate: restore the nmask after successfully
- allocating on the  target node
-Thread-Index: AdvQRjVtZMhxwwSPJk6B+hEhw2gIwA==
-Date: Thu, 29 May 2025 03:03:12 +0000
-Message-ID: <059b42b154f04b50833743c513733089@inspur.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1748488270; c=relaxed/simple;
+	bh=SDe1VEQrwVcvHP/Is4Ib5Ed6DMUS2sAGUcUuJZ4BOfo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aH/IoS2X5O/w9hFteFPAFxWAb/RjX8b8c9VD/oDrwvshAeZ21faLuVc4JJIa6Ce+PMyUdXtEAsjSqnMT3Nj6y6sjIhUh1MKyRnbgBWQTVUHTV94YztdI3fbwCT93pXGVuBtV8rAYAjoun9/nC4q6un9ZVyrjtM0DAebAp6h5I78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-14-6837d042823b
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com,
+	kuba@kernel.org,
+	almasrymina@google.com,
+	ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com,
+	hawk@kernel.org,
+	akpm@linux-foundation.org,
+	davem@davemloft.net,
+	john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch,
+	asml.silence@gmail.com,
+	toke@redhat.com,
+	tariqt@nvidia.com,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	horms@kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: [RFC v3 08/18] page_pool: rename __page_pool_release_page_dma() to __page_pool_release_netmem_dma()
+Date: Thu, 29 May 2025 12:10:37 +0900
+Message-Id: <20250529031047.7587-9-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250529031047.7587-1-byungchul@sk.com>
+References: <20250529031047.7587-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRjG++/8z9lxuTpNsaPd2CIKKzNTez+UWZGcPhX0QagPNdrBM5yX
+	ZnkJCjVDHHnBsstasMp7wXSKm+El59CZUV5QVlqWMa0sJaemzTCn9O3H8zzv78tLEzI7DqLV
+	iZd5baJSo6AkWPLT9/HeYz0HhVB9bgAYTM8peDafDhWfrCQYqhsQzCwMicFt76Tg6eM5Agxv
+	czDMmv4Q4OoYFcNI+RiGplwLAaOFDgryczwEZFsrRdDTUEDCnT9lBFgyP4mh/4WBgo/Pl0gY
+	s+Vj6NJXYRgpiIYOYwDMdf9AYDdZRDB36xEFt/uMFHzJGUHQ1z6K4WFWAQJTi5MEz7yBipZz
+	9VXvRFyj/oOYM5qvcHWVwZzO2Udw5uo8ijNPF4u54cEminPc92Cu0eoWcfk3Jinul+s95qZa
+	BijOVD+AuddGu5hzm7eeZs5KDql4jTqV1+6LuiAR5vX3ULJNmm5pqxNloqq1OuRDs0w4+3ug
+	ntAheoXftNDemGJ2sk7nAuFlf2Y/6x7txDokoQlmkmRdBo/IW/gxGnbcMER6GTM72Ard3ZVc
+	uuwpmbotWvVvY5/VvFwR+TAR7N261Y1sefNA10Z5pSwzK2YnulrJ1YNAtq3SiYuQ1IjWVCOZ
+	OjE1QanWhIcIGYnq9JCLSQlmtPzb8muL56xouueMDTE0UvhKHeigICOVqSkZCTbE0oTCX5p9
+	JFKQSVXKjKu8Num89oqGT7GhTTRWbJSGzaWpZEyc8jIfz/PJvPZ/K6J9gjJR7ImwV0Eei3yf
+	o/ROILkh10/ePFzqHJcevRRHzVpxq2Ii9FhzkdB3OKCg5uvYevJL4eDk994WrUpwbwmtzSo7
+	NfMkGMuXsOtmltDblhbz+cTf2PjN148fCC+rzRP0kUslEbL+PXGt69ojTy5uJ5d2dU8FfjDG
+	DMfsFhdPfyuOUuAUQbk/mNCmKP8BVYvX3tcCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRyG/e/8d3acro5L6mAfjIEIgpbk5SdFmn3oUCFFH4IMcuWpLeeF
+	TU0jw8sgW6mlZmnHmog6LzFR8ZZZzuUFpURZzDQVS5O8X1NnlBp9e3jfh/fLSxHSMuxCKaNi
+	OXWUXCUjxVgccizNM7jPX3Ek6yUFvLGKhMr1BCgbaxQCX1GPYGVjSATL5k4SiovWCOA/aTGs
+	GjcJmOgYF8Fo6SSGlvsNBIxndZGQobURkNpoEEB7YbcQ+uozhZC7WUJAQ/KYCAaaeRJGqv4I
+	YdKUgaG7oBzDaGYQdOj3w1rPDAKzsUEAa48KScjp15PwTTuKoL99HMOLlEwExlarEGzrPBkk
+	Y+vKBwVsU8FXEauviWNrDR6sztpPsDUVD0i2ZilbxA5/biHZruc2zDY1LgvYjLQ5kl2c+ILZ
+	+VYLyRZPLQhYY50Fs716s+i802Xx8XBOpYzn1IdPhIkV6wXPUIxJktDQVitIRuUOOkRRDO3D
+	fGyldMieIml3xmrdIHbYmfZmlsc7sQ6JKYKeEzITvE2wU+yjVcwPfki4w5h2Y8p0ebu5ZHvn
+	6XzOLjO0K1NZ/X53yJ72ZfJq/znSbSdf10Y+RmI9sqtAzsqo+Ei5UuXrpYlQJEYpE7yuR0fW
+	oO37SpO2njSilYHTJkRTSOYo6UL+CqlQHq9JjDQhhiJkzpLUQD+FVBIuT7zDqaOvquNUnMaE
+	DlJYdkBy5hIXJqVvymO5CI6L4dT/WwFl75KMil5bIm7x2MmgH7S5LhRfcXsXPHMR/V48FGfn
+	Ua233N2bdPZNs+KD98MS82oKHxQQeq91T/4vP9+lmdtTyqLvIym9AYXDP9WmUG+sTXd29xyR
+	R89uDV0oUgf7ZI/lZs+5BxZMT56ynpxOd7SVzHr0HNW+Omcw3LBIHUKuvcU5VTKsUci9PQi1
+	Rv4XffZxV7oCAAA=
+X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-tUid: 2025529110313107a323530c5d25c2247465030471052
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
 
-DQo+ICsgSmFnZGlzaCwgc2luY2Ugc2VlbXMgdGhlIGJlaGF2aW9yIHRoYXQgdGhpcyBwYXRjaCB0
-cmllcyB0byBjaGFuZ2UgaXMNCj4gYXBwYXJlbnRseSBtYWRlIGJ5IEphZ2Rpc2gncyBjb21taXQg
-MzIwMDgwMjcyODkyICgibW0vZGVtb3Rpb246DQo+IGRlbW90ZSBwYWdlcyBhY2NvcmRpbmcgdG8g
-YWxsb2NhdGlvbiBmYWxsYmFjayBvcmRlciIpLg0KPiANCj4gT24gV2VkLCAyOCBNYXkgMjAyNSAx
-OToxMDozNyArMDgwMCB3YW5nY2h1YW5ndW8NCj4gPHdhbmdjaHVhbmd1b0BpbnNwdXIuY29tPiB3
-cm90ZToNCj4gDQo+ID4gSWYgbWVtb3J5IGlzIHN1Y2Nlc3NmdWxseSBhbGxvY2F0ZWQgb24gdGhl
-IHRhcmdldCBub2RlIGFuZCB0aGUNCj4gPiBmdW5jdGlvbiBkaXJlY3RseSByZXR1cm5zIHdpdGhv
-dXQgdmFsdWUgcmVzdG9yZSBmb3Igbm1hc2ssIG5vbi1maXJzdA0KPiA+IG1pZ3JhdGlvbiBvcGVy
-YXRpb25zIGluIG1pZ3JhdGVfcGFnZXMoKSBieSBhZ2FpbiBsYWJlbCBtYXkgaWdub3JlIHRoZQ0K
-PiA+IG5tYXNrIHNldHRpbmdzLA0KPiANCj4gTmljZSBmaW5kaW5nIQ0KPiANCj4gPiB0aGVyZWJ5
-IGFsbG93aW5nIG5ldyBtZW1vcnkNCj4gPiBhbGxvY2F0aW9ucyBmb3IgbWlncmF0aW9uIG9uIGFu
-eSBub2RlLg0KPiANCj4gQnV0LCBpc24ndCB0aGUgY29uc2VxdWVuY2Ugb2YgdGhpcyBiZWhhdmlv
-ciBpcyB0aGUgb3Bwb3NpdGU/ICBUaGF0IGlzLCBJIHRoaW5rDQo+IHRoaXMgYmVoYXZpb3IgcmVz
-dHJpY3RzIHRvIHVzZSBvbmx5IHRoZSBzcGVjaWZpZWQgbm9kZSAobXRjLT5uaWQpIGluIHRoZSBj
-YXNlLA0KPiBpZ25vcmluZyBtb3JlIGFsbG93ZWQgZmFsbGJhY2sgbm9kZXMgKG10Yy0+bm1hc2sp
-Pw0KPiANCj4gQW55d2F5LCB0byBtZSwgdGhpcyBzZWVtcyBub3QgYW4gaW50ZW5kZWQgYmVoYXZp
-b3IgYnV0IGEgYnVnLiAgQ2MtaW5nDQo+IEphZ2Rpc2gsIHdobyBhdXRob3JlZCB0aGUgY29tbWl0
-IDMyMDA4MDI3Mjg5MiAoIm1tL2RlbW90aW9uOiBkZW1vdGUNCj4gcGFnZXMgYWNjb3JkaW5nIHRv
-IGFsbG9jYXRpb24gZmFsbGJhY2sgb3JkZXIiKSwgd2hpY2ggYXBwYXJlbnRseSBtYWRlIHRoaXMN
-Cj4gYmVoYXZpb3IgaW5pdGlhbGx5LCB0aG91Z2gsIHNpbmNlIEkgbWF5IG1pc3JlYWRpbmcgdGhl
-IG9yaWdpbmFsIGF1dGhvcidzDQo+IGludGVudGlvbi4NCj4gDQoNClVuZGVyIHRoZSBvcmlnaW5h
-bCBsb2dpYywgdGhlIGFsbG9jX21pZ3JhdGVfZm9saW8gZnVuY3Rpb24gd291bGQgYXR0ZW1wdCB0
-byBhbGxvY2F0ZSBuZXcgbWVtb3J5IOKAi+KAi3NlcXVlbnRpYWxseSBhY3Jvc3MgYWxsIG5vZGVz
-IGJhc2VkIG9uIGRpc3RhbmNl4oCL4oCLLCBldmVuIGZvciBub2RlcyBhdCB0aGUgc2FtZSB0aWVy
-LCB3aGljaCBpcyBub25zZW5zaWNhbC4gRm9yIGV4YW1wbGUsIGlmIG5vZGVzIDAgYW5kIDEgYXJl
-IERSQU0gbm9kZXMgYW5kIG5vZGVzIDIgYW5kIDMgYXJlIENYTCBub2RlcywgYXR0ZW1wdGluZyB0
-byBwcm9tb3RlIGEgaG90IHBhZ2UgZnJvbSBub2RlIDIgdG8gbm9kZSAwIHdvdWxkIOKAi+KAi2Vy
-cm9uZW91c2x5IGZhbGwgYmFjayB0byBub2RlcyAyIGFuZCAz4oCL4oCLICh0aGUgc2FtZSB0aWVy
-IGFzIHRoZSBzb3VyY2Ugbm9kZSkgaWYgbm9kZXMgMCBhbmQgMSBhcmUgb3V0IG9mIHNwYWNlLiBU
-aGlzIGlzIGEgQlVHLkluIOKAi+KAi1BhdGNoIDHigIvigIssIEkgZml4IHRoaXMgQlVHLiANCg0K
-SW4g4oCL4oCLUGF0Y2ggMuKAi+KAiywgSSBleHRlbmQgdGhlIHRhcmdldCBub2RlIHJhbmdlIGZy
-b20gbm9kZSAwIHRvIG5vZGVzIDAgYW5kIDEuIFRvIGFjY29tbW9kYXRlIHVzZXJzIHdobyByZXF1
-aXJlIHN0cmljdCBtaWdyYXRpb24gKGUuZy4sIG1pZ3JhdGluZyBvbmx5IHRvIG5vZGUgMCBhbmQg
-YWJvcnRpbmcgaWYgaXQgaXMgZnVsbCksIEkgYWRkZWQgYSDigIvigItzeXNmcyB0b2dnbGXigIvi
-gIsgaW4gUGF0Y2ggMi4NCuKAi+KAi1F1ZXN0aW9u4oCL4oCLOiBTaG91bGQgdGhpcyBzeXNmcyB0
-b2dnbGUgZGVmYXVsdCB0byB0cnVlIChhbGxvdyBmYWxsYmFjayB0byBvdGhlciBub2Rlcykgb3Ig
-ZmFsc2UgKHN0cmljdCBtb2RlOiBtaWdyYXRlIG9ubHkgdG8gbm9kZSAwLCBhYm9ydCBpZiBmdWxs
-KT8gSSB3b3VsZCBhcHByZWNpYXRlIHlvdXIgYWR2aWNlIG9uIHRoZSBkZWZhdWx0IHZhbHVlLCBj
-b25zaWRlcmluZyBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IGFuZCB1c2UgY2FzZXMuDQoNCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IHdhbmdjaHVhbmd1byA8d2FuZ2NodWFuZ3VvQGluc3B1ci5jb20+
-DQo+ID4gLS0tDQo+ID4gIG1tL3Ztc2Nhbi5jIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9tbS92
-bXNjYW4uYyBiL21tL3Ztc2Nhbi5jIGluZGV4DQo+ID4gZjhkZmQyODY0YmJmLi5lMTNmMTcyNDQy
-NzkgMTAwNjQ0DQo+ID4gLS0tIGEvbW0vdm1zY2FuLmMNCj4gPiArKysgYi9tbS92bXNjYW4uYw0K
-PiA+IEBAIC0xMDM1LDExICsxMDM1LDExIEBAIHN0cnVjdCBmb2xpbyAqYWxsb2NfbWlncmF0ZV9m
-b2xpbyhzdHJ1Y3QgZm9saW8NCj4gKnNyYywgdW5zaWduZWQgbG9uZyBwcml2YXRlKQ0KPiA+ICAJ
-bXRjLT5ubWFzayA9IE5VTEw7DQo+ID4gIAltdGMtPmdmcF9tYXNrIHw9IF9fR0ZQX1RISVNOT0RF
-Ow0KPiA+ICAJZHN0ID0gYWxsb2NfbWlncmF0aW9uX3RhcmdldChzcmMsICh1bnNpZ25lZCBsb25n
-KW10Yyk7DQo+ID4gKwltdGMtPm5tYXNrID0gYWxsb3dlZF9tYXNrOw0KPiA+ICAJaWYgKGRzdCkN
-Cj4gPiAgCQlyZXR1cm4gZHN0Ow0KPiANCj4gUmVzdG9yaW5nIC0+bm1hc2sgbG9va3MgcmlnaHQg
-YmVoYXZpb3IgdG8gbWUuICBCdXQsIGlmIHNvLCBzaG91bGRuJ3Qgd2UgYWxzbw0KPiByZXN0b3Jl
-IC0+Z2ZwX21hc2s/DQoNClllcywgaXQncyBhIGdvb2QgaWRlYS4gSSB3aWxsIGRvIGl0Lg0KIA0K
-DQo+ID4NCj4gPiAgCW10Yy0+Z2ZwX21hc2sgJj0gfl9fR0ZQX1RISVNOT0RFOw0KPiA+IC0JbXRj
-LT5ubWFzayA9IGFsbG93ZWRfbWFzazsNCj4gPg0KPiA+ICAJcmV0dXJuIGFsbG9jX21pZ3JhdGlv
-bl90YXJnZXQoc3JjLCAodW5zaWduZWQgbG9uZyltdGMpOyAgfQ0KPiA+IC0tDQo+ID4gMi4zOS4z
-DQo+IA0KPiANCj4gVGhhbmtzLA0KPiBTSg0K
+Now that __page_pool_release_page_dma() is for releasing netmem, not
+struct page, rename it to __page_pool_release_netmem_dma() to reflect
+what it does.
+
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+---
+ net/core/page_pool.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 4368beda1e08..0a5e008df744 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -674,8 +674,8 @@ void page_pool_clear_pp_info(netmem_ref netmem)
+ 	netmem_set_pp(netmem, NULL);
+ }
+ 
+-static __always_inline void __page_pool_release_page_dma(struct page_pool *pool,
+-							 netmem_ref netmem)
++static __always_inline void __page_pool_release_netmem_dma(struct page_pool *pool,
++							   netmem_ref netmem)
+ {
+ 	struct page *old, *page = netmem_to_page(netmem);
+ 	unsigned long id;
+@@ -722,7 +722,7 @@ static void page_pool_return_netmem(struct page_pool *pool, netmem_ref netmem)
+ 	if (static_branch_unlikely(&page_pool_mem_providers) && pool->mp_ops)
+ 		put = pool->mp_ops->release_netmem(pool, netmem);
+ 	else
+-		__page_pool_release_page_dma(pool, netmem);
++		__page_pool_release_netmem_dma(pool, netmem);
+ 
+ 	/* This may be the last page returned, releasing the pool, so
+ 	 * it is not safe to reference pool afterwards.
+@@ -1140,7 +1140,7 @@ static void page_pool_scrub(struct page_pool *pool)
+ 		}
+ 
+ 		xa_for_each(&pool->dma_mapped, id, ptr)
+-			__page_pool_release_page_dma(pool, page_to_netmem(ptr));
++			__page_pool_release_netmem_dma(pool, page_to_netmem((struct page *)ptr));
+ 	}
+ 
+ 	/* No more consumers should exist, but producers could still
+-- 
+2.17.1
+
