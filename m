@@ -1,198 +1,117 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 193071DC075;
-	Thu, 29 May 2025 01:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D801A4F3C;
+	Thu, 29 May 2025 01:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748481079; cv=none; b=tph2kGzPSdadaAU7QiyRSwgVJ0AgHOLX8UBwZK1lglPdCbLzSkfEth68+GZR+Zn6/FxSA8loDALz8wD3aiGWJphs7IaNjzyaN1xL+F6mEiauDMiF1MgoT+TItBeZLX9Mg1dkzNo8Jbk6fqsV1qp33ygV3PrUynMjZ5hQ7auOA50=
+	t=1748481150; cv=none; b=V7XveythJVCK2E4KuynhR1TOwxAnGuCMRpwJ0AsIxvVkQ8vTGDE6YzAPocB11bBQoj0906XCeUywfAalmT+0wyJM9IhaGt3xyr3uNMDQPJqZa3Ml2Z3ipZg/50p3LVr5E1D7DErVPJ+bNlZdCsNoSXDiYbCsDVHY4qUcD5KMgsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748481079; c=relaxed/simple;
-	bh=Lu/7nn/fEjYK1HkFh41Kcy4grrK+Sve8UySAd3L8+Us=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=soJoPQ7nZlaBS45pr+VZLPCWx7LDSzL4EzK1admwnMgasx129hmhjypn6GMEJ9qBh/Li7TJcS+mxf7pwoQloc9fKTOu7PUqfuM2GWxRrL+Z/H9oJDBVGtdrKYWohkDrRIXCEzQHZysiLHCwzHZgOyV6kMFHEEIa43d9eED3SuqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Axz3MytDdoxx4BAQ--.19838S3;
-	Thu, 29 May 2025 09:11:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMCx_cYmtDdoR0P5AA--.57458S7;
-	Thu, 29 May 2025 09:11:13 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xianglai Li <lixianglai@loongson.cn>
-Cc: kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] LoongArch: KVM: Add stat information with kernel irqchip
-Date: Thu, 29 May 2025 09:11:02 +0800
-Message-Id: <20250529011102.378749-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20250529011102.378749-1-maobibo@loongson.cn>
-References: <20250529011102.378749-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1748481150; c=relaxed/simple;
+	bh=W/S7R1mtJB+BZRbHsdLA7U4+0le/3LuMTFYgZ0vonqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T/f8xDAvhm5vJWlkaIDpHLUEVgTsX/7OYlx3JkkoZad846ncOg9BalbJKxsoq6coZqOkG5FxFrxK7lsDQjY56NuQj+hJA5BDdlHkVBZ6k5EHHHnid2gEbbAbtPdx+gf0KXiM8DUN4ld5wR626ZbLeiw6skTtJ7jw6HYMd16NqC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=mfpHHONd; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mfpHHONd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748481144;
+	bh=YNMtwzp5uE0H1mZvj/jpdaNMrt7nyrZu9vZxYoZ0kI4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mfpHHONd5rDZk5saCQOCNufEhdSjz7YaEhy0zEj8vvVBq+QO4sLM4ihGSKNzNupJ5
+	 m9+pGBn1zm1gWygvaAcRmkxjAXw+d81EUMt6afEvHDSpI500QSLePT2xpFTu4QJdBu
+	 MoNckw9sDsqGWlqWUApzB1OQRVIRxzK9nZxA5hfkRgro4Lqu/7FFPGp1W+eLskwyzQ
+	 wVSmRBsSsah4WZdKNby2Laxh2+Xua5e5lZ+CTEWzcHuS6N3wCsClkn02y6u9jBihcS
+	 TdAMl+i3sdm+45OzmHv4fOYKZCU5fEO0MtJ9jclHsNf+JtrQhsTnop2NIXkWyB4Nt7
+	 BiI/nj8Z+lzpQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b77dN2slsz4x8P;
+	Thu, 29 May 2025 11:12:24 +1000 (AEST)
+Date: Thu, 29 May 2025 11:12:23 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: JP Kobryn <inwardvessel@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Shakeel Butt <shakeel.butt@linux.dev>, Tejun
+ Heo <tj@kernel.org>
+Subject: linux-next: manual merge of the mm-unstable tree with Linus' tree
+Message-ID: <20250529111223.3987a514@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx_cYmtDdoR0P5AA--.57458S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
+Content-Type: multipart/signed; boundary="Sig_/bodWnFVirzXDFl5rScR3H/v";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Move stat information about kernel irqchip from VM to vCPU, and add
-entry with structure kvm_vcpu_stats_desc[], so that it can display
-with directory /sys/kernel/debug/kvm.
+--Sig_/bodWnFVirzXDFl5rScR3H/v
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Also unify stat information about eiointc_read_exits and
-eiointc_write_exits into eiointc_emu_exits, to avoid two many entries
-about stat information output.
+Hi all,
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h |  9 +++------
- arch/loongarch/kvm/intc/eiointc.c     |  4 ++--
- arch/loongarch/kvm/intc/ipi.c         | 28 ++++-----------------------
- arch/loongarch/kvm/intc/pch_pic.c     |  4 ++--
- arch/loongarch/kvm/vcpu.c             |  5 ++++-
- 5 files changed, 15 insertions(+), 35 deletions(-)
+Today's linux-next merge of the mm-unstable tree got a conflict in:
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index f457c2662e2f..959e8df44612 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -50,12 +50,6 @@ struct kvm_vm_stat {
- 	struct kvm_vm_stat_generic generic;
- 	u64 pages;
- 	u64 hugepages;
--	u64 ipi_read_exits;
--	u64 ipi_write_exits;
--	u64 eiointc_read_exits;
--	u64 eiointc_write_exits;
--	u64 pch_pic_read_exits;
--	u64 pch_pic_write_exits;
- };
- 
- struct kvm_vcpu_stat {
-@@ -65,6 +59,9 @@ struct kvm_vcpu_stat {
- 	u64 cpucfg_exits;
- 	u64 signal_exits;
- 	u64 hypercall_exits;
-+	u64 ipi_emu_exits;
-+	u64 eiointc_emu_exits;
-+	u64 pch_pic_emu_exits;
- };
- 
- #define KVM_MEM_HUGEPAGE_CAPABLE	(1UL << 0)
-diff --git a/arch/loongarch/kvm/intc/eiointc.c b/arch/loongarch/kvm/intc/eiointc.c
-index 41fe1e6e9d3b..8f844828a308 100644
---- a/arch/loongarch/kvm/intc/eiointc.c
-+++ b/arch/loongarch/kvm/intc/eiointc.c
-@@ -311,7 +311,7 @@ static int kvm_eiointc_read(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
--	vcpu->kvm->stat.eiointc_read_exits++;
-+	vcpu->stat.eiointc_emu_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
- 	case 1:
-@@ -685,7 +685,7 @@ static int kvm_eiointc_write(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	}
- 
--	vcpu->kvm->stat.eiointc_write_exits++;
-+	vcpu->stat.eiointc_emu_exits++;
- 	spin_lock_irqsave(&eiointc->lock, flags);
- 	switch (len) {
- 	case 1:
-diff --git a/arch/loongarch/kvm/intc/ipi.c b/arch/loongarch/kvm/intc/ipi.c
-index fe734dc062ed..b66f91209940 100644
---- a/arch/loongarch/kvm/intc/ipi.c
-+++ b/arch/loongarch/kvm/intc/ipi.c
-@@ -268,36 +268,16 @@ static int kvm_ipi_read(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, void *val)
- {
--	int ret;
--	struct loongarch_ipi *ipi;
--
--	ipi = vcpu->kvm->arch.ipi;
--	if (!ipi) {
--		kvm_err("%s: ipi irqchip not valid!\n", __func__);
--		return -EINVAL;
--	}
--	ipi->kvm->stat.ipi_read_exits++;
--	ret = loongarch_ipi_readl(vcpu, addr, len, val);
--
--	return ret;
-+	vcpu->stat.ipi_emu_exits++;
-+	return loongarch_ipi_readl(vcpu, addr, len, val);
- }
- 
- static int kvm_ipi_write(struct kvm_vcpu *vcpu,
- 			struct kvm_io_device *dev,
- 			gpa_t addr, int len, const void *val)
- {
--	int ret;
--	struct loongarch_ipi *ipi;
--
--	ipi = vcpu->kvm->arch.ipi;
--	if (!ipi) {
--		kvm_err("%s: ipi irqchip not valid!\n", __func__);
--		return -EINVAL;
--	}
--	ipi->kvm->stat.ipi_write_exits++;
--	ret = loongarch_ipi_writel(vcpu, addr, len, val);
--
--	return ret;
-+	vcpu->stat.ipi_emu_exits++;
-+	return loongarch_ipi_writel(vcpu, addr, len, val);
- }
- 
- static const struct kvm_io_device_ops kvm_ipi_ops = {
-diff --git a/arch/loongarch/kvm/intc/pch_pic.c b/arch/loongarch/kvm/intc/pch_pic.c
-index 08fce845f668..6dba2ec79c16 100644
---- a/arch/loongarch/kvm/intc/pch_pic.c
-+++ b/arch/loongarch/kvm/intc/pch_pic.c
-@@ -196,7 +196,7 @@ static int kvm_pch_pic_read(struct kvm_vcpu *vcpu,
- 	}
- 
- 	/* statistics of pch pic reading */
--	vcpu->kvm->stat.pch_pic_read_exits++;
-+	vcpu->stat.pch_pic_emu_exits++;
- 	ret = loongarch_pch_pic_read(s, addr, len, val);
- 
- 	return ret;
-@@ -303,7 +303,7 @@ static int kvm_pch_pic_write(struct kvm_vcpu *vcpu,
- 	}
- 
- 	/* statistics of pch pic writing */
--	vcpu->kvm->stat.pch_pic_write_exits++;
-+	vcpu->stat.pch_pic_emu_exits++;
- 	ret = loongarch_pch_pic_write(s, addr, len, val);
- 
- 	return ret;
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 5af32ec62cb1..06397ae70811 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -20,7 +20,10 @@ const struct _kvm_stats_desc kvm_vcpu_stats_desc[] = {
- 	STATS_DESC_COUNTER(VCPU, idle_exits),
- 	STATS_DESC_COUNTER(VCPU, cpucfg_exits),
- 	STATS_DESC_COUNTER(VCPU, signal_exits),
--	STATS_DESC_COUNTER(VCPU, hypercall_exits)
-+	STATS_DESC_COUNTER(VCPU, hypercall_exits),
-+	STATS_DESC_COUNTER(VCPU, ipi_emu_exits),
-+	STATS_DESC_COUNTER(VCPU, eiointc_emu_exits),
-+	STATS_DESC_COUNTER(VCPU, pch_pic_emu_exits)
- };
- 
- const struct kvm_stats_header kvm_vcpu_stats_header = {
--- 
-2.39.3
+  mm/memcontrol.c
 
+between commit:
+
+  a97915559f5c ("cgroup: change rstat function signatures from cgroup-based=
+ to css-based")
+
+from Linus' tree and commit:
+
+  202cf1817f29 ("memcg: make memcg_rstat_updated nmi safe")
+
+from the mm-unstable tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc mm/memcontrol.c
+index b90aa3075950,a268690cd07b..000000000000
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@@ -571,7 -571,9 +571,9 @@@ static inline void memcg_rstat_updated(
+  	if (!val)
+  		return;
+ =20
+- 	css_rstat_updated(&memcg->css, cpu);
++ 	/* TODO: add to cgroup update tree once it is nmi-safe. */
++ 	if (!in_nmi())
+ -		cgroup_rstat_updated(memcg->css.cgroup, cpu);
+++		css_rstat_updated(&memcg->css, cpu);
+  	statc_pcpu =3D memcg->vmstats_percpu;
+  	for (; statc_pcpu; statc_pcpu =3D statc->parent_pcpu) {
+  		statc =3D this_cpu_ptr(statc_pcpu);
+
+--Sig_/bodWnFVirzXDFl5rScR3H/v
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3tHcACgkQAVBC80lX
+0GyPdgf/SIwJEFGl0XDdsc5zt54CU6PR9452H8afZsILCLtrsjWotTWIVXP6TiTD
+yG5X6il7K82DKXVfkbTJMFdZzrKT909p7jvaUtsRYbtBEvOqxv3CcknHoM8MRxcm
+YC5/3udkNpV68VMIpmTmf1V4XHd25edkfNuMLCgCcjNY/zy8e5jMr1Ojate8sT8k
+S/7iDEsiofy7vrNQ+kCrRb3Vzne4ZBhDIt2l3n/4ftQZFo85X+cb3/xUlflQRMM7
+vHjqxU0FRacy2MBh+MaD/7qqkoCnHBHWH7nbfuGAPC20anmop4A7XuSaeYclvhlg
+b51+cmDRfXKwSg4D8K0oQ0KNqjiWaQ==
+=dQam
+-----END PGP SIGNATURE-----
+
+--Sig_/bodWnFVirzXDFl5rScR3H/v--
