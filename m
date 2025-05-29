@@ -1,186 +1,143 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC00F7263A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAC77263A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748560091; cv=none; b=bD0rrjWG03hjeCO2BZ3jRO5CrAcL7rmo1iXJOcGmn5WD8t8rfNzyHORdmW5ax7RPopBiVUE+3rgHdW9jnlvp8bJUDn49xrTKhPv3/vtUEg5KKEPtPspXzUMOvOeqi4Md+ly/+TzMV0AraXSnqmnH6fGLtJ8LYu+9k6g0Dpa3T7Q=
+	t=1748560167; cv=none; b=hzYv1O55zrdomTqc2AFSE73WilYo4EwDbaJyWKVDKJujsCkIf6b/90atdlwHy5FISpZHxAI23lg+GCBQ9Kz9BF0wSmZYU7sUxmDuc7izyMg2PCLTIKOOUCQwFgf3j1UMpBNQgYQwFSpKBl2w4VPlkJMAHWrmEviLWZPcyV1qX8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748560091; c=relaxed/simple;
-	bh=Ga4ixeHjWc0kl5EHrAQUHylI16bJElehK1WrCsTnH38=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nfLzPCUkX9vMvOFKJZKfMoAHEO1+kNpNbUgPT7ADWg33yZ7x2bRiqZu4IB88Zn1MfMPIzAXmgH9VwuUL+DiEgmG1k4knm83WQ2fxIbnhOkOlvWgnYyH221fFW2l92O3rIm1Dc8a6NfkcLnLVhKo3iIXOCs7q8mY7LcQVw0uLaeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zW94CmwE; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1748560167; c=relaxed/simple;
+	bh=GajOjrak31hz+z4NbE6saOyWhweppL99J6iTMsMMSE8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gOQRfapczI+FWaJlxkZM/bpte2PN33ZUfJPTnKacYUW3DakauMG7AvNBr00lnuTLa6+u+j9OBMcEOzJn9vugUeLd72dvMbWj4W2xkJ1046VMsuAEWyBuQyTB6zBbqkMygyqyTDx/oShAr/58G8T6Jv7zAsWv60S/7bnsoB8cQK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0AYzsTex; arc=none smtp.client-ip=209.85.217.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zW94CmwE"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747adea6ddbso1134318b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:08:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0AYzsTex"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e59012c7eeso923025137.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748560089; x=1749164889; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WWQT92vYYiaC+lxmNKagAXWxRs8ao22U9MaAqLN+cH4=;
-        b=zW94CmwEubGV1ZKeyaorWKjffjDpZSGa8hzyw767n3DW2hsqHLgBN/ESh3SAEM5u/S
-         mxYEKXp8En1dvo7KZhjPfqEDoQuEiwgtNwFvybWqbs/qNz6U9tf/3iSaI/TlyOWcaUSs
-         I1EuVWrwWdnFMz/bffe4WASpq8plE4KglJ8qZxu7oSYKWCQfaUwJ51RuHClYY2Nxwcf9
-         8620HaZWOx09SfYI37z02ULzbJRrIxo4pLxCU11pO49Qjh7kiJ5k8eLHm3j761QLpAAR
-         liW8Jc8XweqvM4iFlNphtCJQRQ3bZ7MdXdOiNG3XcYbvKQpckxW1fbxcV7OaK1eALLVX
-         fahg==
+        d=google.com; s=20230601; t=1748560164; x=1749164964; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GajOjrak31hz+z4NbE6saOyWhweppL99J6iTMsMMSE8=;
+        b=0AYzsTexr72+7FI7h2T4HR1aJm2NeGVt+RYnaJ3QGYoSj4eK+OHPa22V+iEEut6hC1
+         QzTZ1oY6z7De8+7QWkLXpjVYcHmMwX3R6J47+hVxMl96wdZUJ+AU+lmgDqWOJbwCKpHc
+         8RVZ86EVWc2oXsg3C+za0hHfCpObsWvtIgcmgx7tb736tygMhxb7Hkvz2S+lBjC0EhhF
+         dbqXLrLQCNrWT5ms1UoQqvyKseORHKm1JeTGchv+RTLmV5nsGqYr9/Gy+KMP4qvw6h7F
+         bWGrxwUBXA1bgIEls/gfEoWSP/4uhtlepeuCvBh8kXWaSxOJpjUYM1pVUpkmffI5Xsos
+         rWrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748560089; x=1749164889;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WWQT92vYYiaC+lxmNKagAXWxRs8ao22U9MaAqLN+cH4=;
-        b=CmFedevZ1fJB1Wx6tmSAuHrmwyBV+B6CX69TR8ijkmK5JvGTSFnNt8ql9re6BkSLlo
-         GzVNTNocclGVqUCQnVdY0vV/Rqwc8QK1aqfRlwYFOLoyCSzj8ExJG0scs9kvRw3R/51y
-         jrfQnfpeohH0GVnsXPiWAvnO+nb3fshAbaAXruh3RD4Vi59xAG14mKgKly7tVsmXP2sV
-         u+vTeng6eyzCPyUV1asTcJIH6NTALy6sJiTYk8M3mjPkM9dnkYG62d9dsYm6qSALKuDe
-         DmK8d7sfKmIR9gg1ZZEDrsjEIQqJYYlDuSQHov38Nckj3zzzweBsapVqglVcU8yO8eoC
-         4ZiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJjr4aKzusZt55D5/ozpB1bvQNrTYvmbfxhkGFsCaZ2JEgHumaGzRFSepszIJzpXn0dBFdqzNGGLGKzb8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9HA7ynsaPKbtdDRA5RpFo+uYo8cp2kjPuBETqUTLxJbaND5tz
-	vCXxuifHY4HLrd0u7Fhdgbz0QBBIbnO9cV/XlpZhD1g8N5ckQ0D/ZQ5+ntVr673wntr2wxI46xS
-	di+z7Wg==
-X-Google-Smtp-Source: AGHT+IFyNnF3N9qo+8t5isM7o5tVxkSUB9ncohiiPZsNdoq3EI2z81ANG4JC82ouNV+RJVlSKp7aEnxQiq0=
-X-Received: from pfbhb7.prod.google.com ([2002:a05:6a00:8587:b0:746:2d5e:7936])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b43:b0:742:a4e0:6476
- with SMTP id d2e1a72fcca58-747bd954bd2mr1627939b3a.4.1748560088942; Thu, 29
- May 2025 16:08:08 -0700 (PDT)
-Date: Thu, 29 May 2025 16:08:07 -0700
-In-Reply-To: <58a580b0f3274f6a7bba8431b2a6e6fef152b237.camel@intel.com>
+        d=1e100.net; s=20230601; t=1748560164; x=1749164964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GajOjrak31hz+z4NbE6saOyWhweppL99J6iTMsMMSE8=;
+        b=LDolHMoDX7dz33aJU33bkNLd9WQpUDa8624RmhuDlPrIMFmk4Wbm/PUWxQJ/9Sulmv
+         62+62/6JCAk+oBj1g/Y2kdCZ33CN7izMUQo8ivjUGxm9WpbYQCsJplDzbIShJWxpDWha
+         gzT4Kcm2+bVn0XALrfVYVTRdeuMTRHAs3mEzpZ15NTyOIdpmP8WowkWqkgC2hMLTlkU5
+         vUQOJraKOgOd6Ehov7UvqSFg1UIHOMnBOoP3E9UIA8FW2A5XonVjhn/qlGo+q76FmYlu
+         pPHju2ks2OB3C+AEy6eG34DJ4tW81Fl1+Kk5Ty8H6EK6EC5QgReYGs1NOffZAFvzGOY5
+         tyoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWa/QqUTGTCS8qErCbMl0+lOzxGbaBuwp19KEruj5aGGIr3IWOQfXcOIJPEnEHsPO5newLLMKWXqnPqhpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOcW4+c7dobhLKAoQgX+tMZYbqd/J3vF/ZOJMrJqkQI+RVT0RH
+	tkDfsIuDBzgc1/ghTT00ZtL1E8/SwmcpE/pv46OXyMRFoS+1vGN3DRwNF9N7GN5hhFSD4bUoY5A
+	MAD3ZgK3xiBU719bV1MXMvq9UdC4IHYj/j73LakQE
+X-Gm-Gg: ASbGncskZu3xxSc/w7F3SefcSOddEjQWyp/uVDM+zcUMA/OuLKIw9gzL4I1E60rxTTd
+	W5EevCFvNT9ZAWkl6rDIZsz5H+Bnc3y+kK2C6E1UuRp+UiJrSpO4+AEe0Iab33W3HBfX19pYPKi
+	txg3n/IvRWe/lOnJQb2BKA0dzc7nKgN4U8r5UutGR9t5kSqyIaSclziWhk3yTBtcBxd73bSH6KG
+	w==
+X-Google-Smtp-Source: AGHT+IG6BQA0I630mRZfaOvWCCUcIMdbtiue7trw5etAjQ+fq0zA+UtWqiz/UuEf1zqxPU9NUikhqGT7EEBX4W6fxqU=
+X-Received: by 2002:a05:6102:38c8:b0:4e4:f503:6675 with SMTP id
+ ada2fe7eead31-4e6e41a8063mr1697324137.18.1748560163881; Thu, 29 May 2025
+ 16:09:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519232808.2745331-1-seanjc@google.com> <20250519232808.2745331-12-seanjc@google.com>
- <d131524927ffe1ec70300296343acdebd31c35b3.camel@intel.com>
- <019c1023c26e827dc538f24d885ec9a8530ad4af.camel@intel.com>
- <aDhvs1tXH6pv8MxN@google.com> <58a580b0f3274f6a7bba8431b2a6e6fef152b237.camel@intel.com>
-Message-ID: <aDjo16EcJiWx9Nfa@google.com>
-Subject: Re: [PATCH 11/15] KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling
- in-kernel I/O APIC
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vkuznets@redhat.com" <vkuznets@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250521222725.3895192-1-blakejones@google.com>
+ <20250521222725.3895192-4-blakejones@google.com> <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
+In-Reply-To: <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
+From: Blake Jones <blakejones@google.com>
+Date: Thu, 29 May 2025 16:09:13 -0700
+X-Gm-Features: AX0GCFuGir3GW6UHq3oIxIPaTP0vr6jrzzbbxjveLO3-Hr0ZfzoynVlNv6aTEO4
+Message-ID: <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf: collect BPF metadata from new programs, and
+ display the new event
+To: Ian Rogers <irogers@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025, Kai Huang wrote:
-> On Thu, 2025-05-29 at 07:31 -0700, Sean Christopherson wrote:
-> > On Thu, May 29, 2025, Kai Huang wrote:
-> > > On Thu, 2025-05-29 at 23:55 +1200, Kai Huang wrote:
-> > > > On Mon, 2025-05-19 at 16:28 -0700, Sean Christopherson wrote:
-> > > > > Add a Kconfig to allowing building KVM without support for emulat=
-ing an
-> > > > 		   ^
-> > > > 		   allow
-> > > >=20
-> > > > > I/O APIC, PIC, and PIT, which is desirable for deployments that e=
-ffectively
-> > > > > don't support a fully in-kernel IRQ chip, i.e. never expect any V=
-MM to
-> > > > > create an in-kernel I/O APIC. =C2=A0
-> > > >=20
-> > > > Do you happen to know what developments don't support a full in-ker=
-nel IRQ chip?
-> >=20
-> > Google Cloud, for one.  I suspect/assume many/most CSPs don't utilize a=
-n in-kernel
-> > I/O APIC.
-> >=20
-> > > > Do they only support userspace IRQ chip, or not support any IRQ chi=
-p at all?
-> >=20
-> > The former, only userspace I/O APIC (and associated devices), though so=
-me VM
-> > shapes, e.g. TDX, don't provide an I/O APIC or PIC.
->=20
-> Thanks for the info.
->=20
-> Just wondering what's the benefit of using userspace IRQCHIP instead of
-> emulating in the kernel?
+Hi Ian,
 
-Reduced kernel attack surface (this was especially true years ago, before K=
-VM's
-I/O APIC emulation was well-tested) and more flexibility (e.g. shipping use=
-rspace
-changes is typically easier than shipping new kernels.  I'm pretty sure the=
-re's
-one more big one that I'm blanking on at the moment.
+Thanks for your comments!
 
-> I thought one should either use in-kernel IRQCHIP or doesn't use any.
->=20
-> >=20
-> > > Forgot to ask:
-> > >=20
-> > > Since this new Kconfig option is not only for IOAPIC but also include=
-s PIC and
-> > > PIT, is CONFIG_KVM_IRQCHIP a better name?
-> >=20
-> > I much prefer IOAPIC, because IRQCHIP is far too ambiguous and confusin=
-g, e.g.
-> > just look at KVM's internal APIs, where these:
-> >=20
-> >   irqchip_in_kernel()
-> >   irqchip_kernel()
-> >=20
-> > are not equivalent.  In practice, no modern guest kernel is going to ut=
-ilize the
-> > PIC, and the PIT isn't an IRQ chip, i.e. isn't strictly covered by IRQC=
-HIP either.
->=20
-> Right.
->=20
-> Maybe it is worth to further have dedicated Kconfig for PIC, PIT and IOAP=
-IC?
+On Thu, May 29, 2025 at 11:12=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+> On Wed, May 21, 2025 at 3:27=E2=80=AFPM Blake Jones <blakejones@google.co=
+m> wrote:
+> > diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/=
+util/bpf_skel/sample_filter.bpf.c
+> > [...]
+> > +// This is used by tests/shell/record_bpf_metadata.sh
+> > +// to verify that BPF metadata generation works.
+> > +const int bpf_metadata_test_value SEC(".rodata") =3D 42;
+>
+> This is a bit random.
 
-Nah.  PIC and I/O APIC can't be split (without new uAPI and non-trivial com=
-plexity),
-and I highly doubt there is any use case that would want an in-kernel I/O A=
-PIC
-with a userspace PIT.  I.e. in practice, the threealmost always come as a g=
-roup;
-either a setup wants all, or a setup wants none.
+Yeah, that's fair. I added it because it was a straightforward way to relia=
+bly
+get a known value that I could observe from tests/shell/test_bpf_metadata.s=
+h.
 
-> But hmm, I am not sure whether emulating IOAPIC has more value than PIC.
+> For the non-BPF C code we have a build generated
+> PERF-VERSION-FILE that contains something like `#define PERF_VERSION
+> "6.15.rc7.ge450e74276d2"`. I wonder having something like
+]> [...]
+> would be more useful/meaningful. Perhaps the build could inject the
+> variable to avoid duplicating it all the BPF skeletons.
 
-AIUI, it's not really an either or, since most software expects both an I/O=
- APIC
-and PIC.  Any remotely modern kernel will definitely prefer the I/O APIC, b=
-ut I
-don't think it's something that can be guaranteed.
+I could do this if you'd like. It would make it harder for my test to check
+that it was reporting the right value, because the PERF-VERSION-FILE define=
+s
+PERF_VERSION in a way that's useful for C programs but not shell scripts.
+I'd just have the test check that it was reporting some string (maybe one
+with at least one dot in it, if I can stably make that assumption). WDYT?
 
-> For modern guests all emulated/assigned devices should just use MSI/MSI-X=
-?
+> nit: I wonder for testing it would be interesting to have 0 and >1
+> metadata values tested too. We may want to have test programs
+> explicitly for that, in tools/perf/tests.
 
-Not all emulated devices, since some legacy hang off the I/O APIC, i.e. are=
-n't
-capable of generating MISs.
+My testing right now depends pretty heavily on the fact that perf will load
+sample_filter.bpf.o for me; this seems much better than trying to load a
+BPF program manually from a test.
 
-> > So I think/hope the vast majority of users/readers will be able to intu=
-it that
-> > CONFIG_KVM_IOAPIC also covers the PIC and PIT.
->=20
-> Sure.
->=20
-> Btw, I also find irqchip_in_kernel() and irqchip_kernel() confusing.  I a=
-m not
-> sure the value of having irqchip_in_kernel() in fact.  The guest should a=
-lways
-> have an in-kernel APIC for modern guests.  I am wondering whether we can =
-get rid
-> of it completely (the logic will be it is always be true), or we can have=
- a
-> Kconfig to only build it when user truly wants it.
+If I could find other perf invocations that would load other BPF programs
+automatically, I could potentially test the "0 metadata" and ">1 metadata"
+cases. That would involve more BPF-program-specific modifications, though,
+which would be closer to the thing you objected to above. So to me this
+doesn't seem worth the effort.
 
-For better or worse, an in-kernel local APIC is still optional.  I do hope/=
-want
-to make it mandatory, but that's not a small ABI change.
+Blake
