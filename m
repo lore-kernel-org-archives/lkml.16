@@ -1,107 +1,91 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC171E2858
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F49622DF97;
+	Thu, 29 May 2025 17:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748538680; cv=none; b=YYu0XJetXRhHPaVs+6OeWZUT/d2H5JmnwPM9EWSGQJ4myr8n/EK/mK6SBiOFW5FRnK1Q2t5ZOs61HqNbkSWXwlxSlJGiz87p7LE+ay8VPuSixIiTtQi3WQozZbD1RjNSr3kGRj67sm1msJa4Zk0C5LQaNmmkwTP3ihMmf1E8poc=
+	t=1748538702; cv=none; b=rLMGg7zHFeaXe0QDzoGBKnSwApNGAetk1Ij+DHiT0I1wmSp40HVxF1kdBgo4jkiBk+9cvbPs96oKtiCXkF/JxKjrYRPTAabZMG4n+Hq3Uj0een5aByhqnQ/eQKGg39ZL1aDiV5n/JWfnfWjb9d3QARxDycGel7sud6mgsNx6h24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748538680; c=relaxed/simple;
-	bh=40Su1GnwAmr6AztcWQ60IL+CHixZCWxdkTxtFsfZWuc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=LuKi+/puTnJyHI18AUECB/26KoY42PaI25nZOolojUna9oggPO9fb56GaocLdd324kV43iOKAxoTL3sxSWmdEbE0q5HX89MGVCAuSiokYAQc8r2lu2/cg3kTT2BqR+xszXYQnPwGWpZOlwgNaHnVveOAgA7p2PogSLx9ZvqNGlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Y+lCTofo; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748538702; c=relaxed/simple;
+	bh=UGG8vparqy07o1+6smtpNiEl1tPiawOred5ZAVfO68k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lmJVZdhVEuo9zd/4MIg+6MVZNeV8eGPFQTMWxtVRd+5lw8/eV1eyVqqyGhXlhAsColOlZEArkBcdNlAPtbr25Bz9Se12vPuzpfDfzbs0D4roZDcmzpxXOQ/vS0UtmLxNf41STNC+r5yUfA6YKrU4GdzEMcOjlkRLI6Pnho/MSXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C5x6RAB5; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Y+lCTofo"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b271f3ae786so841043a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:11:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5x6RAB5"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442ea341570so8239375e9.1;
+        Thu, 29 May 2025 10:11:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748538678; x=1749143478; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748538699; x=1749143499; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qNwkLAnqK894as9s9mKIIiJB+bRwSGT/2fsFsNmBFKc=;
-        b=Y+lCTofo6i6HhYJIQv9F+7fG5dGHrSFqw16TSd6KO5BmxhlYDo/cKYe0DjYcoMwMUR
-         cqoDO8QsKI04I+MXdrOLiL9I1W3cQEcfhi6QyBN4WZePdF++AVI4+R/V4hg9zExS600h
-         aFeNXZh2ycFtYt263p/yCeIYrQ8eg6r/NCFQOMHjdPAoym4ysbbRM3+yJBPHCxOQiSlT
-         VMvBBwvRpi0dHU9aopAUXoP07H7QyjtLOKSFMKeB7F+nd1B/jJobAJwLSjnYH6d80Duz
-         QhisGSS+7XeI7CYkVwY5QeK9iB01PPUnvjK7hqlHlgDgUDoULELfHMPC/U500iWjKIHu
-         cZig==
+        bh=AcxRGkknHlmO89+OI4WQ5Gv1s0uYNEV56LYQ/5eeYmc=;
+        b=C5x6RAB5rZlVylGAdMJcvyQG7koQV4yck+c6xefYiGk27sroVR5VDUM/VXIiuLY9oY
+         a7ivixd4iGn1OJ5Zr7vd17th0Dk1RTCh7Ohc9dV+QcbgmuCDm5w0FReC35X2rUoh530B
+         5AqKwvJYgn8UKEd7JZn6NpBzMLq42FOZKk5sb5vu0/6RZ03PUaCecTmkyTwD0XYqlt74
+         amsN2WchSIMcCir/VpzYJbkVyN80JfV4XUv49aHxz7mlXE3cKc7vRylCKyCCXbJOmCBV
+         632MGucyupEvq7r39tgd7imDDFP9RSusJ0d6jdAmsyMSZyxIoy6kjUfb0GzB9Hv5Nsvf
+         Ry/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748538678; x=1749143478;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748538699; x=1749143499;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qNwkLAnqK894as9s9mKIIiJB+bRwSGT/2fsFsNmBFKc=;
-        b=QwDvuu9//5yPLAQyPqeMU7TsFrsSnpyc/tu1lliOIns7Dnu1WMLQU63ztFz1ke+RmG
-         MhwHdFqthD0OK0qOcgwDYwRTbEPdeQ8ZsKOqtF+EUV0YeG2gC7A3L/RxRUm13FVYNix0
-         yTeY0vJ1qbkSQ/Q1pQn57/VfcS23DAlOrJ0UDhxzWFuDYAG47/PnLNDGIQLswmvs1pes
-         8cXnqyugAHdVFpl/u0IXB73iLs2l2hwlzebyQsW1Y/UuPOLkFnQbKvHIoj4gpfmK/CJR
-         Z8KcT0V0mdV5lYD+/23EHKzUsHc7op4nOHG8eJVRjRiX8bAmZwKVUEG0ks+pHxbm/cwD
-         70SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXM0/UIPh6xqWiNCiN0sk6QnkDQFoGFcQ0v8pgti+bnFNqRH9uZf57RMdYerznB0zNkuSh2S4XzjdqaZ9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9TZEg4CxO3bLrAcgTtU/En1Q06CdOoHx7iK/X1Lf8yExd1AHi
-	W8jvIxG0OlCEygqBt40ts+ekJFV4spMbGJ8btHnGaw3GcBfNv3c7T0OYXTMJHI9/nmQ=
-X-Gm-Gg: ASbGncsThrjEmt/jvQUOM7EX2gtoQfIovmoX7t+k0cCRTB7Fy0TU7uu8auefAObqGJi
-	ATvfCnSvrTC8EaRwhLVj6QZ6xmceDif8KlPo+U6ta/BkymLKJpRJ20Mebot4z6g1OPvnKRKM+ZI
-	Q/Bw0mrkNUCnR7+lsAinIl5ZkAoE8iCSY6WqeBs90G1oVaGCtAb608GnyIyo/zIrm/9pJ9QjI8P
-	+HhxHx59ajnYp8a/P6qqaYaszCPWkCjHHCZfKy0BJNFTZdtQDN8UiS0r9qZOh1xhWBeMpJl6hyc
-	P3GI8oq4e1SaULFUZPFe943GwSMWW8+j2gIn6+lyxmTT/7GTXQ==
-X-Google-Smtp-Source: AGHT+IF8U4LS5Ha4ZVJlb6Xexvhz/gVZeJ8PZz0LFT+vBQf4rmFuB/wcLf4M5M+AqpPj3eAYBAnv6w==
-X-Received: by 2002:a05:6a21:516:b0:20d:5076:dd78 with SMTP id adf61e73a8af0-21ad9966437mr590567637.42.1748538677957;
-        Thu, 29 May 2025 10:11:17 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb29b20sm217068a12.30.2025.05.29.10.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 10:11:17 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: s-vadapalli@ti.com, Frank Li <Frank.Li@nxp.com>
-Cc: bhelgaas@google.com, conor+dt@kernel.org, devicetree@vger.kernel.org, 
- krzk+dt@kernel.org, kw@linux.com, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, 
- linux-pci@vger.kernel.org, lpieralisi@kernel.org, 
- manivannan.sadhasivam@linaro.org, robh@kernel.org, tony@atomide.com, 
- vigneshr@ti.com
-In-Reply-To: <20250411153454.3258098-1-Frank.Li@nxp.com>
-References: <20250411153454.3258098-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Message-Id: <174853867693.3632160.17627654159190851191.b4-ty@baylibre.com>
-Date: Thu, 29 May 2025 10:11:16 -0700
+        bh=AcxRGkknHlmO89+OI4WQ5Gv1s0uYNEV56LYQ/5eeYmc=;
+        b=nTtnBCpinWtuVFEdkQsKkJHkqsDHgZT7KMkZiA92Qc/f9LFLifAQdJarfrGD69ZxNB
+         E2nP+6uvmDl4lXEUqR3ykPKVr9k1eZ0Rs5RAx/6Bw2hau3+fyQoYpWXj1qzOmHf2xmeJ
+         fEYy0xh9A0p7DaNZEGbedq85Flva5riNMJqTPNyWSx10Q7OL6rIRg8GXLpi+bDr5p4gp
+         92IH/DS0TZgAkJ0I+XQGBGgbMBMBUWVQ7UW+lGyb+3rM28rye/XewdaXMHq+8A7P7uIS
+         6iTlSgg32DdS1QD5LXh+i2FLAWk3l2nhYaspY4VBPNPnd6diKQ9VfSwhZ/2b2HfCVOI7
+         IUzA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6m42J395F7Iz1tubh55YEKXaaOc1IFzBw1dDBW8EuGG035jkVwiPJ2B39FeSOE6MLqFI=@vger.kernel.org, AJvYcCXRbMa9X/FDYEcm+sP6TNE9uaa4zxafPcqd65jugelYu4TdhlfTVLskxQ++SDCSdh0kQRyi1YdpVCMw8SJC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWNUqd5FD7BILl3swwAcNn79Lpj9MC2HfaWubXq9s9nk62NQlh
+	UZAP/oEDAAZNdGqikKDsKG5v3zrWifHTFrVwwdxXSVXNSPBM4kTZABgKwv3DS/j9Gh2mQQ3Vw2y
+	7eJ0KmGF9hGkq7tFReB+OMvsevrpkA7jSXlkoz2I=
+X-Gm-Gg: ASbGncsaAjmLQOIRF+CfOK2y9aTxaGVz0dLQ1GQTCI9cFRCsvrTIDtR11IoNqqULSJn
+	QFAbBA49ZjwFrFzmIaiixqQ310do3lgAkmlmqZe3E3BdzPo3trWW85ikzYBkRS1f7iuFVFoGKdS
+	WQTTolQQRInGkfIXBixkc1DGUQNxIzGraxXbIK7wOncRtHRMQu
+X-Google-Smtp-Source: AGHT+IEZP4hA1hHWNy6nkogPWv/E7bIr+wWkOHEhFt2PXAi0aunsQJPFNpgXr30zNtckMdCgIbXWdf4GYhW/AnNWVO8=
+X-Received: by 2002:a05:6000:144b:b0:3a4:f024:6717 with SMTP id
+ ffacd0b85a97d-3a4f7ab1482mr45445f8f.53.1748538699468; Thu, 29 May 2025
+ 10:11:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-d7477
+References: <20250529165759.2536245-1-chen.dylane@linux.dev> <20250529165759.2536245-3-chen.dylane@linux.dev>
+In-Reply-To: <20250529165759.2536245-3-chen.dylane@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 29 May 2025 10:11:28 -0700
+X-Gm-Features: AX0GCFsem3dNWwgsvHPzq79iBP4n64GkCxcULbbU_P1i8ossVZYTzddUy7TXsDM
+Message-ID: <CAADnVQJVFffjzgZ0o_gAGJHwHHXn+UjawhAwknaTfgdQpjY3xA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/3] bpftool: Display cookie for raw_tp link probe
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Quentin Monnet <qmo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 29, 2025 at 10:01=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> w=
+rote:
+>
+> Display cookie for raw_tp link probe, in plain mode:
+>
+>  #bpftool link
+>
+> 22: raw_tracepoint  prog 14
+>         tp 'sys_enter'  cookie 23925373020405760
+>         pids test_progs(176)
 
-On Fri, 11 Apr 2025 11:34:54 -0400, Frank Li wrote:
-> This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
-> 
-> The commit being reverted updated the "ranges" property for the sake of
-> readability. However, this change is no longer appropriate due to the
-> following reasons:
-> 
-> - On many SoCs, the PCIe parent bus translates CPU addresses to different
-> values before passing them to the PCIe controller.
-> - The reverted commit introduced a fake address translation, which violates
-> the fundamental DTS principle: the device tree should reflect actual
-> hardware behavior.
-> 
-> [...]
-
-Applied, thanks!
-
-[1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-      commit: 8c178057e734188eeeceaec33848eaca2766ca07
-
-Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
-
+Curious number.
+What 0x55000000000000 was used for ?
