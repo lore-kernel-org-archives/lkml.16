@@ -1,245 +1,204 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D154F274FCE
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BCD227E86
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748514754; cv=none; b=tNmb69CINm0DJEpikQZQlToo3iVZQDNpLbkbrpNJeFbB5K+0CKnlaNUPB1ILRVW8vANBDGuMxZux5icTerLV2aKoO1YcGHO0iye8xT6P06m4B/dJyqfp2STaOJntRU2/QniBRMXa886atS7kb/N4cVRNrRMtovBFt9B6V9BkNmo=
+	t=1748514873; cv=none; b=r88/Ht+lrbLtndqE1xpVJhQ6eZyabyV6EfVs7rtcZ5XVlIem9aSOKdArFnbAeltcXEJHIpnWlZ5EVQCEz6FskVRlnbz0jiH2X6/XlGsiBpcC7huK2ebtr6VmP8v+2w1NTbhTbe+aQKqRhS21UWQiLgdg3soXBioAKNqnzBdDo5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748514754; c=relaxed/simple;
-	bh=B9cHShXgTKU6W0nG6CDZEJA9cXRMAnzuf5P0DjJj/6w=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=K1JYD8110yglX0Dv8DRqOd2F1H+50N/Gs8Az5r0YbxFXicEb8CJIfFhdtFWXR/lfppfjUYOqz9iaDHWNhik290XbgybtRWRhuMX6YPKpYEcuBSFlEea5+r02hpHcZgPWaJKtiXkqsLgPeeCpKzGM0VuRE8oXVIDIxl19sDsEymM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b3888569bso73596839f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:32:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748514752; x=1749119552;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1748514873; c=relaxed/simple;
+	bh=OLn0yjcyfm3UkHNoQjh9sE/IUKOkrxifgngY5zpEWGY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QMeDcgRXmq6R1vQtR1Z64JA26AC1ZLsvD7zB8asgZ0IM1IRrG3CPr3sIS+Bx0yiY/ZEMZil4q4BqY7NoNL3PJo2mkhdKsjCzvkMLcjuQFtCAVXEK4TRPXQG4lNiCMdYsHW2DkSakGi5OCW3iK10N9LCheGgolms0X/68MDIO0N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LNJeyZPm; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNJeyZPm"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4d877dfb3so768789f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748514869; x=1749119669; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SIB75AphkviE4DdAXUe35d5ziOwxwbvCLCqMyrSlpqo=;
-        b=exUF1/kjs0FvWbHhzC6hgS2gTt5LhVLhziHLhiGMb/zTWKFt0XyDL1NHNY+cp8Vqrv
-         iuquslH+leQYphrVmwWgWtXk9AGUQcBUz5FInk7chWwAAdvHw05b08QCQVpABmk4RwBS
-         gFEaym5DGnlT4mcJ+OjqrNggqJYDBDRRctaYNUx0jxFe4+62GNqElli3Z1xh7C6neDvU
-         AnvmkBbYf0B7No2Q0hWwfX3q7wRB/myA/Swu//g1ivBzFKevVkptulZF9X94XwoaRAVr
-         w6L61TtLcRj4Z5/QRhSlTCIFbqKIxroke4dkoNS5AesZqGH29ccFNpQFK4MxsHsjPC5p
-         P2Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfHFb1VcCh7H/R3fHUE8BuHRRSpje7NftBFWhyoHZBKg9YWDYBabo+HP7GpmjoD/gjplRCO8iHTZ0mRGE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyruenE3XqHsH0OVMzopafP3kbBSp1bd9dGXMcB7w/fVGqY8i9x
-	Z/C6fJi1wN/7oUir50QCZfR8dNICTQ1R/fP3uRXaLaBGWoKEC9k1f4VKdONpll+j92aoXellQsU
-	OjoDSk3QU/Y1IOYZfEovUr3zBJ8GDZiVBC8AO1F5JAh3kZB3LsmGk11bb6uM=
-X-Google-Smtp-Source: AGHT+IGXxtIeqVwOswUJKw1+GWS5rvNxkG4J3O3TS+MOrp5YJsQ1rqKnkOnc2FEbzSej+wMOYhe2h5HivfFegxlQ6NJCRixwiE5h
+        bh=H7XnyQzNX/drKQR10T94L+svKrfDQz7i/jR99c0lhmI=;
+        b=LNJeyZPm1K/iLajVr5KmTdUHgV+UcxBw5bINJY5W0ehco53C8wkQxWL4SPMMplkJST
+         piww+DS9fHtON7PJm5aH5ZHNtJBVsEMPD6JrINtbaNILQBlMX01VNnJSrHeGdsZDrugJ
+         DJpkdpyC9x7Ms2X1PMzAiCJaLimsU1F+m9pmhIW01IYhWj8dtsaA3SSBd8T+uusKu9L3
+         BN/vbTeel/s0QCfnN5V8EA2HRsE3U/Qx0REtugwVA5loWqnSvquSs3qRE8oUNUfwOppC
+         4yB/eLP9Y/bSa048KO4bkYDFuQ9H9yFgI5OXmbU1M2+VxiQMTZRJ/6BOb7Cb6ZuqCL6t
+         4Cug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748514869; x=1749119669;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H7XnyQzNX/drKQR10T94L+svKrfDQz7i/jR99c0lhmI=;
+        b=GvNLW4IULt2ZpaCmVAXzsIJrcJMVAfSxkgqAo3bxco5W9BCpTaQcvMYQGD0GekFpSs
+         /bo/PTIKwYIhsIruTs0n6X5aU0vJwx1YXAOyotl0z0vYHZw9KGidZ7RpoJIKA711SRhT
+         qEE1H5QRhcAdNkGnUbsjNemeUdUJ79GZaPwFOYmzKnW/j89aptKdSej94Lhh4P3m18AR
+         hoGDDfvED685gcByrWXN8Crit0uBuDlbV0WB37ex4DlLBWDTs/7JlZ8WTE625fvFjRah
+         i6SII7YAAbJiySg0QRxjoKt57NbzlMjgC4mzCN0RhKJyuSCEuT3ExmFJvnitaajFLRwe
+         RW2g==
+X-Forwarded-Encrypted: i=1; AJvYcCU7M9uRQTggnlouknELlXDCfjkN+NbBUalrFAqn4400PD0hNPHCX0/tpk0TsBGM6U7N/f88f+Uxa1IWvHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzGe7AEVhn1wpkQzrIsifiJet4mTtX4rQj+tZeLHAclFXpzaUL
+	dvCvGr7ttZ9cA7Cf4gMCm6DQK5igsiUChVfIqE8Tl7st4Qs/NML8zeIuwcjCLkdhsmQ=
+X-Gm-Gg: ASbGnct2OhPgl/6jwbkgFRBvqzKg/hLFVzm7CKP6D00uYVJrC9azI4J9FGVr0GyHXOi
+	ysV5eaM+25ktJTI1da34Yo3ny5enjegFeiB/kM/q3xrgXnjzM8ocvW/CuFyrtE3a7bYBTIfHpeH
+	5Mv2j6bpNVqJ3+2DziEqw758K4sqPNTAcFLqvd3ygEn+BP9uALYHm4BkDhaPLa0wm88YHzVbESV
+	iZA7tFaChlPWFmo2aqIn1rWFZLXHDV65qIpt1frk4JpBH5OiX1crfmsXW6CX7R1QKFo8nDQ1tfH
+	he5wfI2y5LgHpt+aCOKfztYjxruBsb6vw2wFRcV3Kl/PEfR5Qi6T8YnGI+8idETqJOwW79C3DqU
+	BG+z8+dI6P23DsY0dCSfJP9N4yj8=
+X-Google-Smtp-Source: AGHT+IFJ+vCc0Saq1NPdw5Cj12pfvhYMrQ1F1BPZvlG/AECXTZSodeN9++HB8oVZB4vb/Avl2dr7XQ==
+X-Received: by 2002:a05:6000:288b:b0:3a4:e65d:b6d5 with SMTP id ffacd0b85a97d-3a4e65db6demr6935306f8f.1.1748514869111;
+        Thu, 29 May 2025 03:34:29 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc03147sm16037435e9.14.2025.05.29.03.34.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 03:34:28 -0700 (PDT)
+Message-ID: <895a0004-04df-4b7e-9855-bc0033ca650b@linaro.org>
+Date: Thu, 29 May 2025 11:34:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:f0e:b0:86c:f0b1:8dd7 with SMTP id
- ca18e2360f4ac-86cf240edc5mr288801039f.0.1748514751924; Thu, 29 May 2025
- 03:32:31 -0700 (PDT)
-Date: Thu, 29 May 2025 03:32:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683837bf.a00a0220.52848.0003.GAE@google.com>
-Subject: [syzbot] [net?] possible deadlock in rtnl_newlink
-From: syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] thermal: qcom-spmi-temp-alarm: enable stage 2
+ shutdown when required
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>,
+ amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
+ daniel.lezcano@linaro.org
+Cc: rui.zhang@intel.com, lukasz.luba@arm.com, david.collins@oss.qualcomm.com,
+ srinivas.kandagatla@linaro.org, stefan.schmidt@linaro.org,
+ quic_tsoni@quicinc.com, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dmitry.baryshkov@linaro.org, dmitry.baryshkov@oss.qualcomm.com
+References: <20250528235026.4171109-1-anjelique.melendez@oss.qualcomm.com>
+ <0nJRx6-RgYybx3jhgUDcxC9hIxr02feRJuYYgLa6lpO3DOSuQidQkRKKoqvQoV0x26UVeiV6G5XN8cMTZ9Ol5g==@protonmail.internalid>
+ <20250528235026.4171109-2-anjelique.melendez@oss.qualcomm.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250528235026.4171109-2-anjelique.melendez@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 29/05/2025 00:50, Anjelique Melendez wrote:
+> From: David Collins <david.collins@oss.qualcomm.com>
+> 
+> Certain TEMP_ALARM GEN2 PMIC peripherals need over-temperature
+> stage 2 automatic PMIC partial shutdown to be enabled in order to
 
-syzbot found the following issue on:
+stage 2 should be hyphenated to stage-2
 
-HEAD commit:    b1427432d3b6 Merge tag 'iommu-fixes-v6.15-rc7' of git://gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=161ef5f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=846bb38dc67fe62cc733
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d21170580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d9a8e8580000
+> avoid repeated faults in the event of reaching over-temperature
+> stage 3.  Modify the stage 2 shutdown control logic to ensure that
+> stage 2 shutdown is enabled on all affected PMICs.  Read the
+> digital major and minor revision registers to identify these
+> PMICs.
+> 
+> Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
+> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> ---
+>   drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 32 +++++++++++++++++++--
+>   1 file changed, 29 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> index a81e7d6e865f..47248a843591 100644
+> --- a/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> +++ b/drivers/thermal/qcom/qcom-spmi-temp-alarm.c
+> @@ -1,6 +1,7 @@
+>   // SPDX-License-Identifier: GPL-2.0-only
+>   /*
+>    * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+> + * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b1427432.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/47b0c66c70d9/vmlinux-b1427432.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a2df6bfabd3c/bzImage-b1427432.xz
+Should have the year in it.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com
+grep -r Copyright * | grep Qualcomm
 
-ifb0: entered allmulticast mode
-ifb1: entered allmulticast mode
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc7-syzkaller-00144-gb1427432d3b6 #0 Not tainted
-------------------------------------------------------
-syz-executor216/5313 is trying to acquire lock:
-ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
-ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
-ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4150 [inline]
-ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: __flush_work+0xd2/0xbc0 kernel/workqueue.c:4208
-
-but task is already holding lock:
-ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
-ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
-ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x8db/0x1c70 net/core/rtnetlink.c:4064
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (rtnl_mutex){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       e1000_reset_task+0x56/0xc0 drivers/net/ethernet/intel/e1000/e1000_main.c:3512
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
-       worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       touch_work_lockdep_map kernel/workqueue.c:3922 [inline]
-       start_flush_work kernel/workqueue.c:4176 [inline]
-       __flush_work+0x6b8/0xbc0 kernel/workqueue.c:4208
-       __cancel_work_sync+0xbe/0x110 kernel/workqueue.c:4364
-       e1000_down+0x402/0x6b0 drivers/net/ethernet/intel/e1000/e1000_main.c:526
-       e1000_close+0x17b/0xa10 drivers/net/ethernet/intel/e1000/e1000_main.c:1448
-       __dev_close_many+0x361/0x6f0 net/core/dev.c:1702
-       __dev_close net/core/dev.c:1714 [inline]
-       __dev_change_flags+0x2c7/0x6d0 net/core/dev.c:9352
-       netif_change_flags+0x88/0x1a0 net/core/dev.c:9417
-       do_setlink+0xcb9/0x40d0 net/core/rtnetlink.c:3152
-       rtnl_group_changelink net/core/rtnetlink.c:3783 [inline]
-       __rtnl_newlink net/core/rtnetlink.c:3937 [inline]
-       rtnl_newlink+0x149f/0x1c70 net/core/rtnetlink.c:4065
-       rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
-       netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x21c/0x270 net/socket.c:727
-       ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-       ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-       __sys_sendmsg net/socket.c:2652 [inline]
-       __do_sys_sendmsg net/socket.c:2657 [inline]
-       __se_sys_sendmsg net/socket.c:2655 [inline]
-       __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(rtnl_mutex);
-                               lock((work_completion)(&adapter->reset_task));
-                               lock(rtnl_mutex);
-  lock((work_completion)(&adapter->reset_task));
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor216/5313:
- #0: ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
- #0: ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
- #0: ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x8db/0x1c70 net/core/rtnetlink.c:4064
- #1: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #1: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #1: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: start_flush_work kernel/workqueue.c:4150 [inline]
- #1: ffffffff8df3dee0 (rcu_read_lock){....}-{1:3}, at: __flush_work+0xd2/0xbc0 kernel/workqueue.c:4208
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5313 Comm: syz-executor216 Not tainted 6.15.0-rc7-syzkaller-00144-gb1427432d3b6 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
- __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- touch_work_lockdep_map kernel/workqueue.c:3922 [inline]
- start_flush_work kernel/workqueue.c:4176 [inline]
- __flush_work+0x6b8/0xbc0 kernel/workqueue.c:4208
- __cancel_work_sync+0xbe/0x110 kernel/workqueue.c:4364
- e1000_down+0x402/0x6b0 drivers/net/ethernet/intel/e1000/e1000_main.c:526
- e1000_close+0x17b/0xa10 drivers/net/ethernet/intel/e1000/e1000_main.c:1448
- __dev_close_many+0x361/0x6f0 net/core/dev.c:1702
- __dev_close net/core/dev.c:1714 [inline]
- __dev_change_flags+0x2c7/0x6d0 net/core/dev.c:9352
- netif_change_flags+0x88/0x1a0 net/core/dev.c:9417
- do_setlink+0xcb9/0x40d0 net/core/rtnetlink.c:3152
- rtnl_group_changelink net/core/rtnetlink.c:3783 [inline]
- __rtnl_newlink net/core/rtnetlink.c:3937 [inline]
- rtnl_newlink+0x149f/0x1c70 net/core/rtnetlink.c:4065
- rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
- netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f09c1caf4a9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f09c1c47198 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f09c1d39318 RCX: 00007f09c1caf4a9
-RDX: 0000000000000000 RSI: 0000200000000140 RDI: 0000000000000005
-RBP: 00007f09c1d39310 R08: 0000000000000008 R09: 0000000000000000
-R10: 0000000000000004 R11: 0000000000000246 R12: 00007f09c1d060ac
-R13: 000000000000006e R14: 0000200000000080 R15: 0000200000000150
- </TASK>
-
-
+>    */
+> 
+>   #include <linux/bitops.h>
+> @@ -16,6 +17,7 @@
+> 
+>   #include "../thermal_hwmon.h"
+> 
+> +#define QPNP_TM_REG_DIG_MINOR		0x00
+>   #define QPNP_TM_REG_DIG_MAJOR		0x01
+>   #define QPNP_TM_REG_TYPE		0x04
+>   #define QPNP_TM_REG_SUBTYPE		0x05
+> @@ -78,6 +80,7 @@ struct qpnp_tm_chip {
+>   	/* protects .thresh, .stage and chip registers */
+>   	struct mutex			lock;
+>   	bool				initialized;
+> +	bool				require_s2_shutdown;
+> 
+>   	struct iio_channel		*adc;
+>   	const long			(*temp_map)[THRESH_COUNT][STAGE_COUNT];
+> @@ -255,7 +258,7 @@ static int qpnp_tm_update_critical_trip_temp(struct qpnp_tm_chip *chip,
+> 
+>   skip:
+>   	reg |= chip->thresh;
+> -	if (disable_s2_shutdown)
+> +	if (disable_s2_shutdown && !chip->require_s2_shutdown)
+>   		reg |= SHUTDOWN_CTRL1_OVERRIDE_S2;
+> 
+>   	return qpnp_tm_write(chip, QPNP_TM_REG_SHUTDOWN_CTRL1, reg);
+> @@ -350,8 +353,8 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>   {
+>   	struct qpnp_tm_chip *chip;
+>   	struct device_node *node;
+> -	u8 type, subtype, dig_major;
+> -	u32 res;
+> +	u8 type, subtype, dig_major, dig_minor;
+> +	u32 res, dig_revision;
+>   	int ret, irq;
+> 
+>   	node = pdev->dev.of_node;
+> @@ -402,6 +405,12 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>   		return dev_err_probe(&pdev->dev, ret,
+>   				     "could not read dig_major\n");
+> 
+> +	ret = qpnp_tm_read(chip, QPNP_TM_REG_DIG_MINOR, &dig_minor);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "could not read dig_minor\n");
+> +		return ret;
+> +	}
+> +
+>   	if (type != QPNP_TM_TYPE || (subtype != QPNP_TM_SUBTYPE_GEN1
+>   				     && subtype != QPNP_TM_SUBTYPE_GEN2)) {
+>   		dev_err(&pdev->dev, "invalid type 0x%02x or subtype 0x%02x\n",
+> @@ -415,6 +424,23 @@ static int qpnp_tm_probe(struct platform_device *pdev)
+>   	else
+>   		chip->temp_map = &temp_map_gen1;
+> 
+> +	if (chip->subtype == QPNP_TM_SUBTYPE_GEN2) {
+> +		dig_revision = (dig_major << 8) | dig_minor;
+> +		/*
+> +		 * Check if stage 2 automatic partial shutdown must remain
+> +		 * enabled to avoid potential repeated faults upon reaching
+> +		 * over-temperature stage 3.
+> +		 */
+> +		switch (dig_revision) {
+> +		case 0x0001:
+> +		case 0x0002:
+> +		case 0x0100:
+> +		case 0x0101:
+> +			chip->require_s2_shutdown = true;
+> +			break;
+> +		}
+> +	}
+> +
+>   	/*
+>   	 * Register the sensor before initializing the hardware to be able to
+>   	 * read the trip points. get_temp() returns the default temperature
+> --
+> 2.34.1
+> 
+> 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+bod
