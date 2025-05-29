@@ -1,97 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B6FB67F;
-	Thu, 29 May 2025 23:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272011519A6;
+	Thu, 29 May 2025 23:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748561626; cv=none; b=dtCG0rvyqvMBJPA7blWaMuMtbXvr/uyjFszovYstZvFMQSyfpPVRkk8KvsYBSMFYtJbKQn+zYP2MRb3Ba2TKb7UMPxwTuqOu1ASO1SmH51dB+5YeRRrQ7caLm9ogfrJx80SjiXZ2fcBjWVCdKtJaJFVZmbZWlkxh+SSm+U9//gg=
+	t=1748561636; cv=none; b=SmAELlGkXoHKyJ2koNOW9Xggcda5OkWXZX9TWTNEr0wRs8hOYsH1lGn2O+vq/IQB4zedEbEHafgxtqNtxqappbCRBssONl9nRpcCmAzh1Y/tCbTH2yphFufRYTZ7mRm0TpW29Zv7oz4IKsAJd5XUj+SufZnlOzUsvcbS375DHuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748561626; c=relaxed/simple;
-	bh=F5kC2T+fQRVkShX/0xHqMLA779YOSE1H8edcWM3ERg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BLFKqQwvcnxPLm8YJ39TcXPATDSebTMqXw8+sfJ/NNwzeT8oTUtwMrZr9KStwoFPEYxSnrdKVExH2TOYwXxTq2RcPl6kErMY9zKnFnZLLmISCrxhKkEEQT5L8KXAX4ZaiSUPnYHd5SRVW5lrIkICTYyvkvk+RGwhVin94H1ZQxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LibHDXoG; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748561636; c=relaxed/simple;
+	bh=JGOvHR0zbWV6fGzH/RkKspAF8MTXBQDEvWWJNWuU4Ec=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MftzgHTrs8E8vIuvG3aPJIleWpIn7njC9BW9dPbgTO5fiW3r28VRFeWfzMtAglrw6WTZuVQ+/fH1vkNwN7cGteSbZtCgUTfOpSjhKv34kwFrhpNeNIg/4X6C06FN6NvzcGqU2kpTe/FokLcbPO7nu1Beo/yfI3q0dmMGMZV3wTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGgeUpF6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LibHDXoG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748561625; x=1780097625;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=F5kC2T+fQRVkShX/0xHqMLA779YOSE1H8edcWM3ERg4=;
-  b=LibHDXoG8Cck+7FfVZojTAEUdM4rYt8+mko/Ol1dN0GcfRVO+1x2pF69
-   7uYHZsqHYRCJZ2cSp7sUN//QfZBBVpBwesi9taYt4TGhDLqzBJFwtQTw5
-   H2jVMi46mERrogpFm8/xN2wYbkRyOwaD8Z+xV2JfAOvqQla0ktF8jfbL4
-   otnCQQ/JJuzX7tGyIaJs51rbV4Wlwyten8rjLdoOJv811Z8z+0QeLd8zD
-   Z3LLYPViZ9i73THNRF+r7bi7+K+SCn7uNCj2p0ifVwi7rYUzJcEeGolY1
-   +zU2E2oU0CdGtRfJvpZBbCZo/J32zclGCE6kDoDQpr8XU6ysDuezrLPn7
-   w==;
-X-CSE-ConnectionGUID: 3cthqj9LTHSPeeEff4Wieg==
-X-CSE-MsgGUID: gCoqkBRURmmk0kHBKOAOqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="76038523"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="76038523"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 16:33:44 -0700
-X-CSE-ConnectionGUID: 89wOSwpoStC2dKBA3sLkAQ==
-X-CSE-MsgGUID: kn6bkt0gRp2PCMkVHB6A2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="148864299"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 16:33:44 -0700
-Date: Thu, 29 May 2025 16:33:43 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
-	robert.moore@intel.com, Jonathan.Cameron@huawei.com,
-	ira.weiny@intel.com, Benjamin.Cheatham@amd.com,
-	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com,
-	u.kleine-koenig@pengutronix.de, john.allen@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <aDju183CpNozCj1-@agluck-desk3>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGgeUpF6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A514C4CEE7;
+	Thu, 29 May 2025 23:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748561635;
+	bh=JGOvHR0zbWV6fGzH/RkKspAF8MTXBQDEvWWJNWuU4Ec=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZGgeUpF6NBC7E+6PlDXKBAgOwv82Qn+dbT3nZJPZiBZFJ6ekgwY+zh/huYqOYDM4A
+	 BclEgDTmG6B9TC5MyySWSxk7yuCd+fncY/QvlLZrKBIDZGHv61pDkqQhtsggNHIuUo
+	 0aKT1QstV+CU7iEj2eboFyXA2ESM6k6gvMaYZwzGv6eqDAwyR/G9SIkhPaD7GcQIA4
+	 qnz4H+k/110H19SiYVb5LkXJ661+JQXiu5qht5e1OErz2By9YFqjvv4sH4xb5hJsBt
+	 3ZSJrY51Ay4InehQRaYf1S+smDalCwdxOFVOJKlbVlM0Xx8DCihWkQ9Z6t7EWs5q4s
+	 hKF9XsJHXBmmw==
+Date: Thu, 29 May 2025 16:33:54 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, Guolin Yang
+ <guolin.yang@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] vmxnet3: correctly report gso type for UDP tunnels
+Message-ID: <20250529163354.1d85c025@kernel.org>
+In-Reply-To: <CAP1Q3XQcYD3nGdojPWS7K4fczNYsNzv0S0O4P8DJvQtRM9Ef1g@mail.gmail.com>
+References: <20250513210504.1866-1-ronak.doshi@broadcom.com>
+	<20250515070250.7c277988@kernel.org>
+	<71d0fbf8-00f7-4e0b-819d-d0b6efb01f03@redhat.com>
+	<CAP1Q3XTLbk0XgAJOUSGv03dXfPxcUR=VFt=mXiqP9rjc9yhVrw@mail.gmail.com>
+	<CAP1Q3XQcYD3nGdojPWS7K4fczNYsNzv0S0O4P8DJvQtRM9Ef1g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 06, 2025 at 02:38:13PM -0700, Zaid Alali wrote:
-> +  # echo 0x12345000 > param1			# Set memory address for injection
-> +  # echo 0xfffffffffffff000 > param2		# Range - anywhere in this page
-> +  # comp_arr="0x1 0x2				# Fill in the component array
-> +    >0x1 0x4
-> +    >0x2 0x4"
-> +  # echo "$comp_arr" > einjv2_component_array
+On Thu, 29 May 2025 14:55:20 -0700 Ronak Doshi wrote:
+> On Tue, May 27, 2025 at 9:10=E2=80=AFAM Ronak Doshi <ronak.doshi@broadcom=
+.com> wrote:
+> > On Mon, May 19, 2025 at 12:30=E2=80=AFAM Paolo Abeni <pabeni@redhat.com=
+> wrote: =20
+> > >
+> > > If otherwise the traffic goes into the UDP tunnel rx path, such
+> > > processing will set the needed field correctly and no issue could/sho=
+uld
+> > > be observed AFAICS.
+> > >
+> > > @Ronak: I think the problem pre-exists this specific patch, but since
+> > > you are fixing the relevant offload, I think it should be better to
+> > > address the problem now.
+> > > =20
+> > Can we apply this fix which unblocks one of our customer case and addre=
+ss this
+> > concern as a separate patch as it has been there for a while and it
+> > has a workaround
+> > of enabling tnl segmentation on the redirected interface? I think it
+> > might require quite
+> > some change in vmxnet3 to address this concern and can be done as a
+> > different patch.
+> > Meanwhile, I will raise an internal (broadcom) PR for recreating this
+> > specific issue.
+> > =20
+> Hello Jakub,
+> Any update on this? Can you help apply this patch?
 
-Seems complex (and may confuse people as the ">" in the lines setting
-up the comp_arr are secondary prompts from bash, not part if the input).
-
-If they miss the "" around $comp_arr in the last line they will
-get all the values on one line which will be rejected with -EINVAL
-during injection.
-
-This works better (and is shorter too!):
-
-# echo -e '0x1 0x2\n0x1 0x4\n0x2 0x4\n\0' > einjv2_component_array
-
-I think explicitly terminating the input with '\0' is needed (and that
-the kernel should NOT zero out the einjv2_component_array blob
-on each injection.  That's unlike the other einj paramaters which
-are "sticky". The user can repeat the same injection without resetting
-all the parameters each time, just "echo 1 > error_inject" to do the
-same thing again.
-
--Tony
+You put Paolo in the To: field, so I assumed your messages are directed
+to him. I'm not entirely sure what you're proposing, to apply this
+patch as is? Whether your driver supports segmentation or not - it
+should not send mangled skbs into the stack. Maybe send a v2 and
+explain next steps in the commit message, less guessing the better..
