@@ -1,138 +1,169 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011067.outbound.protection.outlook.com [52.101.129.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A24863CB
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525974; cv=none; b=eojkOwuREmkJzC0N5Ka7flFx+32VHOgFYAAXL+bH6VE8g+W3jacdh1EgxowiRbVqsem/ru8g2S6ydJ7iEC/tpVSNEvIwUlVw4/Kl79upmnYkL3fUaSr10Wfcj5JN6Yr8PmjG4gcPzTwMUfgJkSqmvKJTlgRWawr1vEY6xu0dstI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525974; c=relaxed/simple;
-	bh=yGQZgTTHSVx3PhFr8VKMt4lFCsY/Jmf4/Qqjo4jC7sU=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=BR9RUbeYnK6wKoiax7hjai7isHNhFKBvY+7H9cSxi/E01tQsc6bLe0BLWx57+ARPtEf7/rdwLYLYw6TGAUegMXR1Q0Tm6ATvcHS8LA932XCSsKdh380sKkbu8Ao/fcWpk58aBmNYqLBNB1QMyDaK6sXhKRxOuF5rbr9gs+GwYjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86a3d964d9fso175729239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:39:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748525969; x=1749130769;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8ADf1egfEArdae73a3H+BcUdsMSrewOrhnfelJZcO8w=;
-        b=SSxUw7IG+qijMbBVgfPCmX3YTROQU6OQ1MxQb1jfsLKWAivKcvuyzpyPyTGxQTNs+n
-         gaPNf9jve10NCQnt7qh8yi8eitE7RWMXZLNdPHXBlNGXnO3NbwbCa+CqIWTM6fDBAk28
-         m/F8Mt3vFecOlh/sF4M8QNCjlsfvFxHIVIXksQyoAZZoAnlhyJNLx+bVvvwdLvYp6ep/
-         3HDF/SxNh8//Y+groMyqE1zpOoVDJWA0WErZTaRy76IqLQXuup2ubeg0JKdKzjPIztXa
-         5uQnak4pQaT2OERiX9mAzpCXjhLMMh9cPQw2s23eVMK16L6pKQ/GLCSuGiO+O8basAZQ
-         1/sA==
-X-Gm-Message-State: AOJu0YwPxpPk/qsvBqOYiQJUGdwF4Hzx4H/1i/1n3A9oLDdAoCsH0UUG
-	4hCuYmelZClfsviZ+25/iGgTuZNdbvEYT8nQUQp2PK6ZxmBZfCbxsFOtxMkgzyHcqF4OuB7o6rB
-	z+b4CtPpmIduhINl9mCq7WlVkBsCmjqbd2VuUm1a5AIX2Z9SIwbAR1qTvfiDxNw==
-X-Google-Smtp-Source: AGHT+IFhSMpVhEhxUjV1TwvOUsxXh6I7yMPgQgjlpav2sXDD6oDkuCzgQBOJxiGdBVH2d+GutAkydgXC7k+wrCB5sD/ztBvXWINd
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A247B63CB;
+	Thu, 29 May 2025 13:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748526007; cv=fail; b=oXBFM5jbbzDimtyKaFpBTXRmLu49+DCzQyOUcmmA/PLn9OwFt6esAv6pFFwYU6K0B0hBaMfXVSirntcTk11BmH+ujjYxTHJJUgSHDt7GE3yGsnx00Lj2xx5x5TiMDUE6mhWcyhr3srDndX8SfuVC3YfJ9eD7bqiUmHkzbGMJ38E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748526007; c=relaxed/simple;
+	bh=RYEsfFWKEwdCLf5T6Ief6paPZDaA3jsUYazwCkEYDcs=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=oM55IAC+vctb84jNELkoW3yytAM1JntbGVRb/6qnwIdanAiOysjZFKgj28S0YZqxSbR0UNj+NTKBGdRQnJAtBiThDwhei6iiRDb8YB+tGY//D38XSZyDZbf2HDd+awMVTmRH6Z/aKhiIZzwnbciijGciZl7DZ3adm+8Rb1S+alU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=Mi1qYD77; arc=fail smtp.client-ip=52.101.129.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="Mi1qYD77"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A9zC1W4kKZDDNR7e3+02f0Dh6LkP9BovqOlrC4vO+GD4pMZtO9+N4Hzrmx3KqFwCGLGSB44XdXD1tuxJUrZmSOK+6z1HpiZ8Yol3V/qOf291AvM8rL+jBqtwJpG/joyq+3LgO4WgOcSDvZRWis+8Z985DIiq0gdNfcfD4+2F5MoAE4pLtwgE/MBUwVRBUb+BICNZrrFCppALEj4zhXzKpmbfpkQXeeJ5scc4TrefRklXYK+LY+UftI2kIl22HN0lPvQEQ7MeqOnPzb0vdnRZOC+u/OEbKm7RDqGQtf4qUVLKQn9h2mi+5CJ+A9H40Q8NyQvQ1DxP79jlS6Aatk+3Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=js7UCecyJNMeVjcQcDxqD62C9u0kvoOc4EEL2z56hbU=;
+ b=iHfU2laoDjt7+tF/wrkw3vgS13mgEWPDpyVciJ4nOBL5sposbPI6y5Z4oLQlSeUtE6bfaA6tTrXotuQ0HuH2ABI+0VZUTphITlSHoQWdAEM0npd+sD9mN7iuU+OPw1m6HVxR/ERQOxyKxX90ULq6HBg5orKbq7Uqw7AhP3SAvZ5RHPsDJIe/DGFFIDJ54/zKW8h0eTloKGxQ5rmfMwS41xJWcjxscWr4tw7MZefZUA7WVVWAHgwNMXALC+gY8UOBM5r26ikFSLXhC2V/bRydKVNnfAIgcNNUB19xTEZPzfDa/gJKQfuUH2BEeca6Ef72+FE3p1jfG9jpObOb0XU+VA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=js7UCecyJNMeVjcQcDxqD62C9u0kvoOc4EEL2z56hbU=;
+ b=Mi1qYD77vVO0v4Zi0OUT4ZUY/6sDC+n1KUQjTDoWZ6hJ8aMOIE9slpyuCSTOCxzrV1IfoFi155P5lP24pWq5DMB0oB/Wukbo8ie2K+yYA5m1VPDtZy36Au5BPMN1ubRifPt1ZTr3Nx9DO3EiXyHUqXx/hko5LVFPewU8/0ndL9i24dZg/JCjMetiX31/y+woPcF/+P56KWXPbUgMH8gDzX3RA8IA1GhqWy5Sy27mDz7Q4JPnE7OetWSwhYt1jPIG0vON3VU012KsDmngCdl2Q/QFDcD01qZTSlxKgN1wrJrsjZR2dR3CT9cpuESgdooc6YVK05tCPyadIwoW7Qc85g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by KL1PR06MB7034.apcprd06.prod.outlook.com (2603:1096:820:11e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Thu, 29 May
+ 2025 13:40:02 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%5]) with mapi id 15.20.8769.022; Thu, 29 May 2025
+ 13:40:01 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: slava@dubeyko.com,
+	glaubitz@physik.fu-berlin.de,
+	Yangtao Li <frank.li@vivo.com>,
+	Kees Cook <kees@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] hfsplus: make splice write available again
+Date: Thu, 29 May 2025 08:00:31 -0600
+Message-Id: <20250529140033.2296791-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR0101CA0023.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:92::35) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:c88:b0:864:a1fe:1e4a with SMTP id
- ca18e2360f4ac-86cf29fdec5mr465546739f.3.1748525969214; Thu, 29 May 2025
- 06:39:29 -0700 (PDT)
-Date: Thu, 29 May 2025 06:39:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68386391.a70a0220.1765ec.0189.GAE@google.com>
-Subject: [syzbot] [media?] WARNING in az6007_i2c_xfer
-From: syzbot <syzbot+a43c95e5c2c9ed88e966@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR06MB7034:EE_
+X-MS-Office365-Filtering-Correlation-Id: b33affb0-e726-4306-d6fc-08dd9eb64f26
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|366016|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fifFUX8COozdVtA56LPl93X5b0SHjDxA2Q0h3ZU3mo3JHrizrJcohhaw8xD+?=
+ =?us-ascii?Q?timr7Ty3bFm9s7151vc56/D2FlIWs3L5sZG6Ijo6OrZuvAI3MgdfFq91kzTN?=
+ =?us-ascii?Q?ceNP8dOBuTeSJqb6PViake+r19fQTXSUioc3aBc+0o7YRbW++mELRGf0ZwXH?=
+ =?us-ascii?Q?uYcKj+IDVrbxWXis7/JjlrDsK+38H2GmwZmNV4vqMhb9eFLr8D0XvCKDmWkU?=
+ =?us-ascii?Q?jaAfDdpDAXGA4gUQ0ZswfUp8ajbAxLEsirqVYvQI9mVGyrcdLe9Q/D/EulXu?=
+ =?us-ascii?Q?K2nAM3DaN3+hAXhtxLCYqk37jcI5z9T/KlEWj+NpF8wkQNeU9uYbhvi8JnEi?=
+ =?us-ascii?Q?B4krlIkt3j8EMNm8IfdE1p8y3EVaOix3i/CjUV2G1l/O7BhIpSTiIUTrMEH+?=
+ =?us-ascii?Q?b09UO23BL02Rm1JAr2PHNVbitapxeXU4lxn19r1mWjD1r9s86JvR3gY1Le+2?=
+ =?us-ascii?Q?OZ1tvkRAJApqT7b6IMho7uIDi3cbL54rOFjEnAWVGRDz9OomWtkAjTGI1buQ?=
+ =?us-ascii?Q?vZx0SLJ2xbCn5eBEDdS0SLjsbmPJi4h1kM/4042v+QTuz7/OMUclmr9sHBGq?=
+ =?us-ascii?Q?vgdUJQ3zmJSQXsdcbOCVPKUVN2KbQ5Xbl6ISh06nRlB3o0kv+MxzVSs8bGc1?=
+ =?us-ascii?Q?WHw8jYiRM2l6DYysWQDoGP+IZTFvFOFw7dUmTSfx5Mz8OvuUm2RnFtpbZXg2?=
+ =?us-ascii?Q?M/zDRa7SvF/HQ/vSYzSrbWE91TcOqyh4zFB382d/HIp7G8EYdXnDvihwfnAB?=
+ =?us-ascii?Q?I7u37fvPMGUVLyC9uFGaDuJl/cziw78IAMYqSR+WvZ4SaR4gzLfQnDhnBdBL?=
+ =?us-ascii?Q?ozac7o35uwH0ga7SGtwPYInGBXB3FzbB19TfEFuQP67UVmPD4S+g84WJlMMm?=
+ =?us-ascii?Q?WXE4jLTocvuUwrfC/sKtoQib1kefjP2ywC7XEIQcmJOjuqf+tZ086/9liMka?=
+ =?us-ascii?Q?xy0Vj/NS+NCEauF7GxPuc0uKCytFFqUK1xPoptXP1mKGulKoIBL9ZHfLP4vi?=
+ =?us-ascii?Q?+sn0kzAZaw8GhDjpP8VwMfg8ztC9bEljYZFCQj20wfVE56k3j7Tlv+3A4YkF?=
+ =?us-ascii?Q?ozYxAW7/o6eKnZGGbE6PuwszXU+DO0NlFvaubL1soYd8t4ODI4xRM3J2aBCO?=
+ =?us-ascii?Q?1cB3QrJ9OVfkEQ4CuzXe3ocpuLk5Xkw5VBVBbdtOkrWcJoiF6VOqEVyrpI2G?=
+ =?us-ascii?Q?GRZIycqoN+n+QXXr8B3PjkMeG5UEOVqVTfvwZ937fctIVO9iRAwcNLmT4qKE?=
+ =?us-ascii?Q?lx4DC2rqBsD+qaf2TMD1bqYs+e44Xrblew0/O4qHqUYlEUBP6oQV/3m2gTDt?=
+ =?us-ascii?Q?pTNaXAx2YBj/LKw5JSEmT2K2iTtehFSeMXaBpX69RUr7yVfoiVVwcOnt5fE+?=
+ =?us-ascii?Q?IkKkB67cI0ziFQWctj18wBEcRgut6esEG5BrRfPYGYyihFjg4UG+RFJMJAqM?=
+ =?us-ascii?Q?i05pTHk0kxExl5vcDi7ToghG1ehnyWZF2sCSDDjJfRjDx515WQ4nPw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jzJu8YjW0tMgt9Ur6jUUE3r1cSRUmOxaUXr7HMdlEUzLGu1E9jr3GGK1ABJz?=
+ =?us-ascii?Q?6A9dNOZtnav5aAV4KJ2fEzFQWXrJ4iwBPF4sGIwvFHp1KDw8e2wMcufabel6?=
+ =?us-ascii?Q?G5DWwTi5PLrOcYbG6rOvHSFAysckfDNhhClUiD1HJWrCZm1kBitszJnDifMF?=
+ =?us-ascii?Q?vBmO42XZosWXktc61KNnduPUUvTvEO19MP/aR5b2qjoA5XXXe7hMJnkOzapy?=
+ =?us-ascii?Q?JcKhbjCAD7epl1o3EVNE9AoPeGwd3M7aoF2tNn85vQj5ksBUzUlCqfAwi3tF?=
+ =?us-ascii?Q?vRijlfx9t+sNIXOR8hSBo0qqGlcljepkw0l1/Upmo7MLMpxsss0XapigihM4?=
+ =?us-ascii?Q?GV4GOeP+oiBoY+tS840XZrgDTKagV3PrcAFMQQ+ZUvK2Ww996nXS1DW1rVZR?=
+ =?us-ascii?Q?3Z6c+dOlhznfkugMH8KD/9crlfFw7cOMl2swwsRCq7e1bck97pMMjfTyiCno?=
+ =?us-ascii?Q?xKLzQIII9hu7myK66WhQ1csBCACCQr5tcrs1Zkir4bzRKMpQ47aHbtcrwmdy?=
+ =?us-ascii?Q?xRRxe7R2aatDDzuEbn9bZJTo4kDh4GQAD4EgKrzRWDLmKADVo0jiIS9BxA3S?=
+ =?us-ascii?Q?aOBGGYQX4YSo7TeAgMmcfLpJvwmFSw0kazHq7Fnr+L+VdSvI/UhuIHGdvVz4?=
+ =?us-ascii?Q?9o8dAIEAsL6zN/SKisQbjgwxqScvU8viMl29c5n7cD3ukUwgQaAQWN9BHUyi?=
+ =?us-ascii?Q?emRpWwYugAxV3M+pcPYvZ6Q+jo4yu8lGZ3KC+4X+wz8UpzMb5XLQ9FPsU+nM?=
+ =?us-ascii?Q?JWgZbz7nzQEkMoJUDRNqznxOzQIbdRz5+t+yTnV7qOZRVZvpzu+CIc7GBW6b?=
+ =?us-ascii?Q?n2Rwa1isrE964m1ek3xRGjt16OkHVvGLK/QkPSlmPoBa3zGmIWyrz9SUJifg?=
+ =?us-ascii?Q?oodvO9zZfJBo0HEiB5THRYhw3PBLdV9xFnuGQ+jW4/YvknLNlCWLUr5VhN1w?=
+ =?us-ascii?Q?cLbrffWy8q9NJr3fQXp+AnJn3WTE+FeRoqprsgagIUzVGHzrJ7yUDsxMCnKR?=
+ =?us-ascii?Q?8h9wEQRxuhn5GA1yEe3CIF/rQTwmSNdI89R4E+20ryElX96Wn6xz8n3YcVB1?=
+ =?us-ascii?Q?IPFXXHZ+iJ6NIMXmrX9F6tT3yOQV2HkfSTRlf94DUT7dwDjyXKnzTb52WTYm?=
+ =?us-ascii?Q?toAVvjQaOtdCYVnVTL1yVkgROpoKj0S108pXEiJrxeUSwULgc6HrZu/Rq88Z?=
+ =?us-ascii?Q?bHSDvAF8MnCbjBdazA2j3ZaJdrD1sF+A4z9Ps5/T2XYn0mfzmnUzKXPHnrUj?=
+ =?us-ascii?Q?9bwuTK4w5cDx988ly1graZn4nrEvfvb1MFqAo4h2g5NOGtJ9EEyEeJyHKbuq?=
+ =?us-ascii?Q?vrALWyh54u/q91TShRAYP5dnzhgZstEEazWjiVXUIjlkNP93KwoK65KOV024?=
+ =?us-ascii?Q?5ed2qfhSiWyG0gULGrheEb9X5XOFi65TJymgnsCtDqKAVdkZuPUyhtGHRhov?=
+ =?us-ascii?Q?3BqCcNZi/FXyPp0/EBtwbbWuHM0k1WopqUrm4y8a2IrO7GzVgO29I5+qGE2Y?=
+ =?us-ascii?Q?soKFuIdgQ7UdG8GE5p+V3vIIoo/jtJR0CfAyY2MxiVWeYkxPQedSw3L53Wdj?=
+ =?us-ascii?Q?xnT68UrCEhtwNPbYZ01xeUfrYFGRxBuuOsQ6beuP?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b33affb0-e726-4306-d6fc-08dd9eb64f26
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 13:40:00.9168
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7JVV4A3HaIhYAhezhHUTeEm/Iq69pbZN5y61IYs8YGbK7d0cMPXaNHKbQoeLpTAeCELtCmqOcM95CWZm6Qh2bQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7034
 
-Hello,
+Since 5.10, splice() or sendfile() return EINVAL. This was
+caused by commit 36e2c7421f02 ("fs: don't allow splice read/write
+without explicit ops").
 
-syzbot found the following issue on:
+This patch initializes the splice_write field in file_operations, like
+most file systems do, to restore the functionality.
 
-HEAD commit:    d0c22de9995b Merge tag 'input-for-v6.15-rc7' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=148a1170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=a43c95e5c2c9ed88e966
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0badcba87366/disk-d0c22de9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1447956c1e1e/vmlinux-d0c22de9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/55af41f29bbe/bzImage-d0c22de9.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a43c95e5c2c9ed88e966@syzkaller.appspotmail.com
-
-usb read operation failed. (-71)
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(__owner_task(owner) != get_current())
-WARNING: CPU: 0 PID: 8723 at kernel/locking/mutex.c:918 __mutex_unlock_slowpath+0x22e/0x700 kernel/locking/mutex.c:918
-Modules linked in:
-CPU: 0 UID: 0 PID: 8723 Comm: syz.3.840 Not tainted 6.15.0-rc7-syzkaller-00152-gd0c22de9995b #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:__mutex_unlock_slowpath+0x22e/0x700 kernel/locking/mutex.c:918
-Code: 0f b6 04 03 84 c0 0f 85 d1 00 00 00 83 3d 7d 74 27 04 00 75 19 90 48 c7 c7 e0 d1 6a 8b 48 c7 c6 60 d9 6a 8b e8 73 5e 2c f6 90 <0f> 0b 90 90 90 48 89 da e9 29 ff ff ff 48 89 d3 90 e8 ac b9 5d f9
-RSP: 0018:ffffc90003a3f700 EFLAGS: 00010246
-RAX: abeb948675ff2100 RBX: 1ffffffff1efec8a RCX: 0000000000080000
-RDX: ffffc9000c84b000 RSI: 000000000000ac87 RDI: 000000000000ac88
-RBP: ffffc90003a3f810 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bba984 R12: ffffc90003a3f7a0
-R13: 1ffff92000747ee8 R14: 1ffffffff33020d4 R15: ffff88807c620000
-FS:  00007f8f910ac6c0(0000) GS:ffff8881260c2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8f9108bd58 CR3: 0000000027662000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- az6007_i2c_xfer+0xb65/0xb90 drivers/media/usb/dvb-usb-v2/az6007.c:827
- __i2c_transfer+0x871/0x2170 drivers/i2c/i2c-core-base.c:-1
- i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:469 [inline]
- __i2c_smbus_xfer+0xfb0/0x1e50 drivers/i2c/i2c-core-smbus.c:607
- i2c_smbus_xfer+0x275/0x3c0 drivers/i2c/i2c-core-smbus.c:545
- i2cdev_ioctl_smbus+0x43d/0x6d0 drivers/i2c/i2c-dev.c:389
- i2cdev_ioctl+0x5d3/0x7f0 drivers/i2c/i2c-dev.c:478
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8f9018e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f8f910ac038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f8f903b5fa0 RCX: 00007f8f9018e969
-RDX: 00002000000000c0 RSI: 0000000000000720 RDI: 0000000000000006
-RBP: 00007f8f90210ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f8f903b5fa0 R15: 00007f8f904dfa28
- </TASK>
-
-
+Fixes: 36e2c7421f02 ("fs: don't allow splice read/write without explicit ops")
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/hfsplus/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/fs/hfsplus/inode.c b/fs/hfsplus/inode.c
+index f331e9574217..c85b5802ec0f 100644
+--- a/fs/hfsplus/inode.c
++++ b/fs/hfsplus/inode.c
+@@ -368,6 +368,7 @@ static const struct file_operations hfsplus_file_operations = {
+ 	.write_iter	= generic_file_write_iter,
+ 	.mmap		= generic_file_mmap,
+ 	.splice_read	= filemap_splice_read,
++	.splice_write	= iter_file_splice_write,
+ 	.fsync		= hfsplus_file_fsync,
+ 	.open		= hfsplus_file_open,
+ 	.release	= hfsplus_file_release,
+-- 
+2.48.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
