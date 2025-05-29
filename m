@@ -1,142 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E68382;
-	Thu, 29 May 2025 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E3621884B;
+	Thu, 29 May 2025 12:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748520013; cv=none; b=fc2HyNSbUvhsVnn5jwRezM0YGgIyIGQas7WH2Nh8OcNZuqhhgACd0I0PAs30Z5iPWFcsBNbjD8Ok3JaBm9OZtAD9Xeth8YOTT8F99MsKQw7asjwtmHOQkM1erk0ZpXff41dQdta5ATohBXqzs2bpnfEJao43PBfOKjlsg16QTMU=
+	t=1748520027; cv=none; b=EyrodI/JXMq/zm3yFdYf/puMeAwEwSuk+HdD8C+XPGJelGgC3LiQPIZbTevP686Yr3uIx0pn0KutuZsWof/6OlnJ+wqJ4YoyHVJwQPXPRupeY7J+3mmNWAjQW6YbUDnXnW+uiJ55O1SQRvOX+7bwWGYbIp8JYFpbSp/09sW66OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748520013; c=relaxed/simple;
-	bh=qsyx5szXg/RLR/SYQRYSoPWYWeRd9Dz2wDzGauGsOnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nzHbaU+6ynzN4jcKRrGiguLQ9EMloHf5VfeXB0bGUlBeI0jr7swg6IU6edpCqsT/kx2lfv4WhQ5yn1s2BEB06uEIdCYbETkX4/Stcutve39TFIPk0IcjvWe0RNDBgjOaCBrXtofKHczCTHuWRUJtHN6+USUSKk+86iEPET4TpdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KZ//IFEx; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748520027; c=relaxed/simple;
+	bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hELPqV9pw0VSs+/7Hhl/LkDQbBYt8fx5P+lmlCM7xM6lDarajN8C/UbLeW1rW4a3qMQe984XBDIlFa1NO16nEYo4HV5JimUQvSk5Ak3n2jLAtd2FhEQPPUy9lEhv9jPx18j4RTLaQARzpRojU9MTw1bp7cxvHKT8oThReO1QF3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jA9QiceY; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KZ//IFEx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748520012; x=1780056012;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qsyx5szXg/RLR/SYQRYSoPWYWeRd9Dz2wDzGauGsOnE=;
-  b=KZ//IFExtp9Egbet5FrqGkGB2m+PkuTvMe71pHSM+jAI3dZiqRKQiOp+
-   2IdFsIcrkTzxAJPtAyq3AYXgBFgIG/eVehTq0sH/eixlV6WjiWZNoSSqU
-   tzIthhujdF8G2r09PHAjOboW5ox2y7tnAKFfqmD0rI9s7C+1XB/PR3uQ7
-   N4c+a05bOXz5a0H6UposA8sI1g/9gNwd3sHEaeMwx5oVEmPks5IScVN8J
-   UUEi2PZtuTXifZAia8lPth0+n5GrOyGpsqOLmwoNrwymfoCemsgbnHI5d
-   m+XHZVRgoT5/XZVF6ZAbWDgC1p31i5A7exZ/FloC8BI/ncMAv2hMrx7LW
-   g==;
-X-CSE-ConnectionGUID: mvIUR9/6Sg65vw0pqe9AiA==
-X-CSE-MsgGUID: h7m8X1vyQRCTz6izZiirSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50275132"
-X-IronPort-AV: E=Sophos;i="6.16,192,1744095600"; 
-   d="scan'208";a="50275132"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 05:00:11 -0700
-X-CSE-ConnectionGUID: whAdq3RYS32r/OfE1EvC8A==
-X-CSE-MsgGUID: qVB8dGHDRqCMZYdCKKAgBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,192,1744095600"; 
-   d="scan'208";a="143882685"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 29 May 2025 05:00:06 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKbvX-000Weq-2l;
-	Thu, 29 May 2025 12:00:03 +0000
-Date: Thu, 29 May 2025 19:59:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Hongyu Ning <hongyu.ning@linux.intel.com>, stable@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
-Message-ID: <202505291930.NDyeQ06g-lkp@intel.com>
-References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jA9QiceY"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-311f6be42f1so153016a91.0;
+        Thu, 29 May 2025 05:00:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748520025; x=1749124825; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
+        b=jA9QiceYi5qUxmtjnVnF2meNRK0tBdP8Jx/xqFnFY6XhFMwUfvu3bl0YgUh5DAExXT
+         XOaTdOkp7iTkEvfluugjCCBRB2A6ATh0z9YzSFlsHJtM9M7CzT50uCW0WOxL53gmTCR4
+         4lhKdAUCsdTkudBMDLZl0iu9a+LMV3hpwnJFYBKYmiEbd4uHvIXBZLI9AK2W69sjmBN3
+         Zp6Z1h0j5JnDw9pWd34mAKUvIsqusQ4XNvs1IQaWOukaNE3U/822JJHwzpNsN7hSdsYx
+         wfhJFabo7oUMTWAlgb9m3dDbbWRkXy3FiNT2d8GRH9gH34XezJGKCzfRiqgyRYriTSld
+         nmSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748520025; x=1749124825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
+        b=GGRm9BJ0RNAGWynU0DccWEk5Cd5LF5jxUpcOkgZikfPBcVOCdo6kOa+COTweZvzY3l
+         cLRTy/EUEnWKxvq2QUjSl2iaCkHUCDxBKLQJatJJEvC8ujIpg1ObNxlSDU4wSzwXwc85
+         2tLQDqZq2Dr600D+yL5g5/yZVMjN7RgGFZbkqVaFlje5e2Zb9hYjoia/F42Ndv4dcA21
+         OhGOWEsU4XzbwtneN72ps8qERz50HTGgNaHd7lmNTHJ0BF//h2M83NRq1cXOYhNpdk+W
+         yDYSXpRAKV6FObpqjzNxCERqsxpDJt3m7BeXU7MQFlK4lyLr3K8TL8UNbXDVQMaGH/p7
+         VmQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9vqoS+jSZ4DLT9Sp05xOnB2Vyr85VR40rVXicjM04Qsm5K1teylWtMMNAM3JluQ/tdyKvfjE8KP/6fng=@vger.kernel.org, AJvYcCWjUBSJ1VHxO7w7lCiwDKW/PtGUOzIxil2c8+CsdnnYbgyQ3OpAjLWrkxqXRna6JhE8zsi7W1i+kT0x7vyqXws=@vger.kernel.org, AJvYcCXfyPkJRr9xDjs3caX9PKB1PcI2o2TEj4Q+4544jjUNVcsag1RRiiY9R6wqwDyODp55dDK/sjNZ8Hp6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+5d2qyw+8QLZK7IaCOlwCDjKyrXGVhCF07NxE9uciHaYGOiOM
+	hu+0NSXJ8PQu9yaAUZtPeWC8PszJuTvGmoKOfj1wXn4Li8QlKAKMP4kq35jGO7sMf6zZ6tq43cI
+	n/tGZVgoz+5Lp5xJD+Sry5LXL0FYS9yw=
+X-Gm-Gg: ASbGncto2kBmxZ4fGdyh1EoQWK23vtM6TDJXeLeQaVOv7nmCKEqDZ78cQLajqKjv/TZ
+	0jua6OWhRyq+BX17nxsUFv/Wsv98z+JNzyRfjhl2GYls7EJXSF7m/8ioNqx2HttOxHr9WVLHnvi
+	vEc+CDhLBISMtbIKuXbnUSJRHmbESvf2HW
+X-Google-Smtp-Source: AGHT+IF75ho/kgNnnTXuMAltdbtGZYLJZ/94+KUjiLaubj79XSsKCgqw3GVpE6j+S857NIT9CPov9gHyW/6fKcp47Kw=
+X-Received: by 2002:a17:90b:4d8f:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-311e03a7f6amr3684332a91.0.1748520024854; Thu, 29 May 2025
+ 05:00:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
+References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+In-Reply-To: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 14:00:12 +0200
+X-Gm-Features: AX0GCFt-4gSlJ1etQ1r7td4PbY9q2MXspqbPouc-iPgb8c26SqL1WVCj3ZLqUvw
+Message-ID: <CANiq72n-ccQ5D+0m1TAs64tcOJB-QtLwyru2b1NK6tCP-atyuw@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kirill,
+On Fri, Apr 11, 2025 at 4:08=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
+> the interface of `HasWork` and replacing pointer arithmetic with
+> `container_of!`. Remove the provided implementation of
+> `HasWork::get_work_offset` without replacement; an implementation is
+> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
+> `HasWork::work_container_of` which was apparently necessary to access
+> `OFFSET` as `OFFSET` no longer exists.
+>
+> A similar API change was discussed on the hrtimer series[1].
+>
+> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3=
+bf0ce6cc@kernel.org/ [1]
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Tested-by: Alice Ryhl <aliceryhl@google.com>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-kernel test robot noticed the following build errors:
+Applied to `rust-next` -- thanks everyone!
 
-[auto build test ERROR on akpm-mm/mm-everything]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Kirill-A-Shutemov/mm-Fix-vmstat-after-removing-NR_BOUNCE/20250529-184044
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250529103832.2937460-1-kirill.shutemov%40linux.intel.com
-patch subject: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
-config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20250529/202505291930.NDyeQ06g-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505291930.NDyeQ06g-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505291930.NDyeQ06g-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from <command-line>:
-   mm/vmstat.c: In function 'vmstat_start':
->> include/linux/compiler_types.h:563:45: error: call to '__compiletime_assert_318' declared with attribute error: BUILD_BUG_ON failed: ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS
-     563 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/compiler_types.h:544:25: note: in definition of macro '__compiletime_assert'
-     544 |                         prefix ## suffix();                             \
-         |                         ^~~~~~
-   include/linux/compiler_types.h:563:9: note: in expansion of macro '_compiletime_assert'
-     563 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-      39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   mm/vmstat.c:1872:9: note: in expansion of macro 'BUILD_BUG_ON'
-    1872 |         BUILD_BUG_ON(ARRAY_SIZE(vmstat_text) < NR_VMSTAT_ITEMS);
-         |         ^~~~~~~~~~~~
-
-
-vim +/__compiletime_assert_318 +563 include/linux/compiler_types.h
-
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  549  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  550  #define _compiletime_assert(condition, msg, prefix, suffix) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  551  	__compiletime_assert(condition, msg, prefix, suffix)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  552  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  553  /**
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  554   * compiletime_assert - break build and emit msg if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  555   * @condition: a compile-time constant condition to check
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  556   * @msg:       a message to emit if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  557   *
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  558   * In tradition of POSIX assert, this macro will break the build if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  559   * supplied condition is *false*, emitting the supplied error message if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  560   * compiler has support to do so.
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  561   */
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  562  #define compiletime_assert(condition, msg) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21 @563  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  564  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Miguel
