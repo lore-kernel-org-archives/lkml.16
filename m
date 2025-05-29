@@ -1,114 +1,105 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4368D242925;
-	Thu, 29 May 2025 02:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4895220E00A;
+	Thu, 29 May 2025 02:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484675; cv=none; b=h5PrAXSGwLewqBa6lmaPmMAjXqxiWbBBsKXwXMF/uF8rHcNMj1DjOzTwjBLOnVpJKXvivOewTI0ZvF+2kv3YgwnE1SSLun++oWDdEdUKyyUCAZD/FfNeDxQy9mV4VHoxzrLnDhgpaEqXdVS059dSl39jgfb8a5kwU1vTzK8xdCg=
+	t=1748484809; cv=none; b=ekwpvuWATQvd1Xim3rqC+6WIvsICmeFNUvwBi19OJWHWMHPr1V0WtX/4edcxUJSyMO5u0v95ScwJYS3Oh7tVqm7SVowFVXLjHdS2Lw6xKzA0+rRXmooza6lndBr3DLi/mIb4A8/AjDjz0MKjP/hf6BC1NW2RXaoavsCn6T1T6UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484675; c=relaxed/simple;
-	bh=/kpo9SQ1vYV93fww5bfHNNFHwJ4Hgoj4NQu1ArmQ6EU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0adRaGZeBhIStj2zTSPxk+PCV/JHJ39egU8RgkzvU1y/e8FpPPUzzhnkJsDm9nET87FadeXzECmlYWq8QHhn6zioyE84flwT6WytcT2Zst0lKt607Ox1g4dEaIabsVOQ1OGlQfXv7IkZlZHaS+pa22KPKvMtYVT84FjvnFA7ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=B1k6D/5b; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="B1k6D/5b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=HX
-	kroScO731YysIkRwX3d9/C26ywtwVZT6POrVn7TVg=; b=B1k6D/5bgLH9YGy/8l
-	pqv7YodeP92aFLUKJ000rqTCdajnRO0xGGhTli46wk5lfu7ab2B83MwaaqV3x7ar
-	z5EIVyG2X2GP2lGbDjim1Zwp+P6t6QvSyrU247XAoKCTe0XDOk8p9zcjo+oiKrkg
-	UZpQ77Hm52XmlZrokEp5rWLwY=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wC3we4Uwjdot_dqEg--.40331S2;
-	Thu, 29 May 2025 10:10:30 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	lpieralisi@kernel.org,
-	kw@linux.com,
-	krzk+dt@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	conor+dt@kernel.org
-Cc: robh@kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 0/3] Relax max-link-speed check to support PCIe Gen5/Gen6
-Date: Thu, 29 May 2025 10:10:23 +0800
-Message-Id: <20250529021026.475861-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1748484809; c=relaxed/simple;
+	bh=mZSanUQe638eriD7FH82IeJDDHhT6E7XOweAzZTdoiY=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=an+J1qvjG1u7/EE/ZheecSioOZcBZuFa239fxUyKHf6jxK8p1xiB6BwvQw0ZjAgFBLNXuGd1xWTVAn8DE1uHo2q9TeiwUW9LHhd8l2gx3moZ6vLwIXPvEMPJbIe9uy23p0sJErocmnio77++g2yo5amIcWohC3eFziBMsIqmzHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b78zj6vF7z51SYf;
+	Thu, 29 May 2025 10:13:21 +0800 (CST)
+Received: from xaxapp04.zte.com.cn ([10.99.98.157])
+	by mse-fl2.zte.com.cn with SMTP id 54T2D4GR008680;
+	Thu, 29 May 2025 10:13:04 +0800 (+08)
+	(envelope-from shao.mingyin@zte.com.cn)
+Received: from mapi (xaxapp04[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 29 May 2025 10:13:05 +0800 (CST)
+Date: Thu, 29 May 2025 10:13:05 +0800 (CST)
+X-Zmail-TransId: 2afb6837c2b10a1-40778
+X-Mailer: Zmail v1.0
+Message-ID: <20250529101305686S2ehGmiFg5bnKwSa__96W@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3we4Uwjdot_dqEg--.40331S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7tF4UJF18JrWxtr1rCF4DArb_yoW8ur18pF
-	W3Gry8tF18Cw15XwsrZ3WF9FyUWFn3Aa1rtr15W3srJ3ZxGFyftFWIvF1fXF9rWFWfur1x
-	ZF4jvwn3GFy8Aw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pMoGHUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxxco2g3vlq9+gAAsQ
+Mime-Version: 1.0
+From: <shao.mingyin@zte.com.cn>
+To: <ulf.hansson@linaro.org>
+Cc: <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
+        <linux-pm@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?cG1kb21haW46IHJlbmVzYXM6IHJjYXI6IFVzZSBzdHJfb25fb2ZmKCkgaGVscGVyIGluwqByY2FyX3N5c2NfcG93ZXIoKSBhbmQgcmNhcl9nZW40X3N5c2NfcG93ZXIoKQ==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 54T2D4GR008680
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6837C2C1.000/4b78zj6vF7z51SYf
 
-This patch series extends PCIe Gen5/Gen6 support for the max-link-speed
-property across device tree bindings and kernel validation logic.
+From: Shao Mingyin <shao.mingyin@zte.com.cn>
 
-With PCIe 6.0 now supported in the Linux kernel and industry IP providers
-like Synopsys/Cadence offering PCIe 6.0-compatible IPs, existing device
-tree bindings and checks for max-link-speed (limited to Gen1~Gen4) no
-longer align with hardware capabilities.
+Remove hard-coded strings by using the str_on_off() helper function.
 
-Documentation updates:
-
-Patch 1/3 extends the PCI host controller binding (pci-bus-common.yaml) to
-explicitly include Gen5/Gen6.
-
-Patch 2/3 updates the PCI endpoint binding (pci-ep.yaml) with the same
-extension.
-
-Kernel validation fix:
-
-Patch 3/3 relaxes the max-link-speed check in of_pci_get_max_link_speed()
-to accept values up to 6, ensuring compatibility with newer generations.
-
-These changes ensure that device tree configurations for modern PCIe
-controllers (e.g., Synopsys/Cadence IP-based designs) can fully utilize
-Gen5/Gen6 speeds without DT validation errors.
-
+Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
 ---
-In my impression, they have already obtained the relevant certifications.
+ drivers/pmdomain/renesas/rcar-gen4-sysc.c | 3 ++-
+ drivers/pmdomain/renesas/rcar-sysc.c      | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-e.g.:
-Synopsys:
-https://www.synopsys.com/dw/ipdir.php?ds=dwc_pcie6_controller
+diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+index e001b5c25bed..c8aa7538e95f 100644
+--- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
++#include <linux/string_choices.h>
 
-Cadence:
-https://www.cadence.com/en_US/home/tools/silicon-solutions/protocol-ip/pcie-and-compute-express-link/controller-for-pcie-and-cxl/controller-for-pcie.html
----
+ #include "rcar-gen4-sysc.h"
 
----
-Changes for v2:
-- The following files have been deleted:
-  Documentation/devicetree/bindings/pci/pci.txt
+@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
+  out:
+ 	spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
 
-  Update to this file again:
-  dtschema/schemas/pci/pci-bus-common.yaml
----
+-	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+ 		 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
+ 	return ret;
+ }
+diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
+index 047495f54e8a..dae01ca0ef6a 100644
+--- a/drivers/pmdomain/renesas/rcar-sysc.c
++++ b/drivers/pmdomain/renesas/rcar-sysc.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/soc/renesas/rcar-sysc.h>
++#include <linux/string_choices.h>
 
-Hans Zhang (3):
-  dt-bindings: PCI: Extend max-link-speed to support PCIe Gen5/Gen6
-  dt-bindings: PCI: pci-ep: Extend max-link-speed to PCIe Gen5/Gen6
-  PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
+ #include "rcar-sysc.h"
 
- dtschema/schemas/pci/pci-bus-common.yaml          | 2 +-
- Documentation/devicetree/bindings/pci/pci.txt     | 5 +++--
- drivers/pci/of.c                                  | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
 
+ 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
 
-base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+-	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
++	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
+ 		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
+ 	return ret;
+ }
 -- 
 2.25.1
-
