@@ -1,224 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B319E215F7D;
-	Thu, 29 May 2025 07:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748503317; cv=fail; b=A7EjxxwQUHeKFRT0JBQX0VJYYSw0Vot0SAx6+kJRK8E7YWIovxxGuOOpEZjr5ZXom6KxPah4+satoWu94kQG/aEOmjFZB964bph+wxPZaX6d9u1OJdOefciEHF89bcpjtq45bkEl5HNKG2kQxUQjN5k/8cWl4dOMz94dcrz4zTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748503317; c=relaxed/simple;
-	bh=5D3wpUFUcKYc7bsCwsOjuA4nmUr/r8QTXbw5+AfLxdo=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=O7QYj8TFtDCspDtDGMmW8WLxdO86ldbWlGCwAGAsZWG1QrAitXDN5YxI+2VJBjgND8eGOHzBYQyH8CS9oTl3zbXUvOXoGVNTB+zfrlThocNthYK02j3wZjWaIWZ5FsrLQJiLwz6ANgSz69W6SvGw98i7h3zgdPNxiLsIFFSCso4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B8sY6f5q; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B8sY6f5q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748503316; x=1780039316;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=5D3wpUFUcKYc7bsCwsOjuA4nmUr/r8QTXbw5+AfLxdo=;
-  b=B8sY6f5q6kM6Hkd+I22vhuO00s6A6aHQBNehVT1VnjKz9BGN9kcQqjp/
-   80uWoM6ZOsg3IubOUFKkvZvQ/gobpqcVnRFZ+9JWF38nnr2wQYGMJO+id
-   Q7TdVqItaXQLC8Ui5KGLpBxn0qQueBO8QZFmyg0xI11/ROJ/aSOFYZJrW
-   h0v/h6oq1Qieq1/Gm1cRp7k6wci9J/o2LpmJ1C5ijuTFINASvFkswdPvT
-   ilvOkA1xf2ZUzLJKP9dWb951p4RPthSF757nW9pVAVfx+EztqxGRBEjM9
-   KEtzWuAzft8Dy1Ptr1MpJGbjAuHyDaXYmeKztdsRRt3ia0E66K4xXAi56
-   Q==;
-X-CSE-ConnectionGUID: /5C6tukKQ5Sp3k1o1gBUCw==
-X-CSE-MsgGUID: kFvEOKJQRcCffeaw/m2IBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50704398"
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="50704398"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:21:55 -0700
-X-CSE-ConnectionGUID: 44hv7ufWQzelqPZ1qbb00Q==
-X-CSE-MsgGUID: eewsJyr5THGADvXV373IXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="143814193"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:21:55 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 00:21:54 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 00:21:54 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.46)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 00:21:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sp6cax+Net5lcylbCOfXXFEbGjvqVx8X91j6XiuHiXD3G5wt+kZEqcSDtHgu14+5IiKWyzJe5lNUTyjrPIYRGfjrEeBZ+Jtj2yXfMvYXBAySln1xPg5KUmsnl/HqsO/p9JzI/7hYsNSl9gloniWqKc6GSEEAz8JBvjsv9zindusDu4EmzgdORq0jg+rQemGWwX6QRWxtSmGSMipNR+I/innT6H4+vfj9NNGFmL97fPtRxdcpy/N7SdKwCfcO7okTjViwX03WIQbBv+qLzzfWfX7au5aw+YBAU2yVVUaPfDdH0wb4DjpuW/87VlmqRYsJ+4Y4U7ygSuT1g7I77mIlFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5TqNwlxHe66OyLoEILswYmROKtl4BZLg9RlzfX6gIqo=;
- b=METZi5lCew6VwK1I2rP0WNnZviQlhkpQUQvCBGX+AMCrYhl8OQ5GFaTG+6UFTif2zQzFZ1uOuDZhjYow8LiU7ghcMwpuSZS/sj9hS0WKa4JQeRUqP5KBGr5juOhx05lywWx9Yq3BHTOKvsWs3nEwbSaH1E5vc0BGebZOUjalmEtwRF0dLcGDYoBRLLa1zZU7281uPY0CxR9LIbCc+5NCYM7sk2whYpxZwriT6PP1fJwy5JrUqs/CbElLgFuSkvo5ry72y4HWPKsQ3FfYrErBWUgrgpGEhtxBqxBqJgfB5tCI+kvnR+HwE1x7yROs/X/s0D+VLde3vpY2UresV1B+aQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
- by LV8PR11MB8461.namprd11.prod.outlook.com (2603:10b6:408:1e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Thu, 29 May
- 2025 07:21:19 +0000
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14]) by CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 07:21:18 +0000
-Message-ID: <f401d386-3ee0-4f15-b20e-d83623d2975d@intel.com>
-Date: Thu, 29 May 2025 10:21:12 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v3 4/7] igc: assign highest TX
- queue number as highest priority in mqprio
-To: "Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean
-	<vladimir.oltean@nxp.com>
-CC: <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Simon Horman <horms@kernel.org>, Faizal Rahim
-	<faizal.abdul.rahim@linux.intel.com>, Aleksandr Loktionov
-	<aleksandr.loktionov@intel.com>, Chwee-Lin Choong
-	<chwee.lin.choong@intel.com>
-References: <20250519071911.2748406-1-faizal.abdul.rahim@intel.com>
- <20250519071911.2748406-5-faizal.abdul.rahim@intel.com>
-Content-Language: en-US
-From: Mor Bar-Gabay <morx.bar.gabay@intel.com>
-In-Reply-To: <20250519071911.2748406-5-faizal.abdul.rahim@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0017.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:3::7)
- To CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83092571C6
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748503332; cv=none; b=bCS9kNmdedEvnt0ifyN5vlQUDaKfhItR2sCy3kp6Ob/gpw5WKVlXlMOWm9DGxX/+NNvQgsTBtlwfqjfDmXUpjILvmA9wzLw76ogxiMO5I59swTOHZDMuK45bRN3VkMveZ/60izbTtitzN3K3x97ytTD/FR7jkk0c7NKblEpXGR8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748503332; c=relaxed/simple;
+	bh=jfv+NTW0O3j/I++L+ykOCO1+n4We/JjtJonxd2ZQVMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YowbeohjW7bAqwl19e2sHFrdLeb0/G54jrxXUEtwnsrLJELNtx6C+OJ8X5CkHvYcbBqXPHhj166aerigM9h6aHGfKZksGpztxtVEEgsjWymZ+UBHLpGEtGCpVYApj6DPhkL8/YZ5dJGVFLEx4nL3aIe+PdGmG0Nqcl9Jd1tQSBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-b5-68380b1fab6c
+Date: Thu, 29 May 2025 16:22:02 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Alexander Aring <aahringo@redhat.com>
+Cc: kernel_team@skhynix.com, linux-kernel@vger.kernel.org,
+	gfs2 <gfs2@lists.linux.dev>
+Subject: Re: [RFC] DEPT(DEPendency Tracker) with DLM(Distributed Lock Manager)
+Message-ID: <20250529072202.GA13739@system.software.com>
+References: <20250522052453.GA42746@system.software.com>
+ <20250522052806.GB42746@system.software.com>
+ <CAK-6q+hOCq8aksDp33utOGwfFngnTbJo-mY3+FiCJVPzwP-xsg@mail.gmail.com>
+ <CAK-6q+j3QJCB6XERbJfEkvro=Kucq0PQHrCyrZ+LxDq5yHx+=g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6307:EE_|LV8PR11MB8461:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05adc9ca-a266-4f8a-9d4f-08dd9e8167cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SktkQUd5Y3lUUzRITUI5ZDdMc2ROL1l3VVZhcXAvQnBuY2VCQTZsUElneStt?=
- =?utf-8?B?R3Znd2VhZ3FZOC9zYU9yOEsxU3NyMnBKa1JlUlpCSTYwSnFTeGNOdkF6ZENp?=
- =?utf-8?B?NU1QaGFvbnlvdDl4anRabDBDYUE2Mjk5N2dKQkRxUEdSYzQ1QWN5RzJrTEpV?=
- =?utf-8?B?SHlaclJOMUV5ai94Y3BrMTFtcnJTbmd4OHU5SFZWMTZFaW5WOFE5TGRHa2c5?=
- =?utf-8?B?ejZ1dnBTVVJzeUEvdXZkR3ViNTNRMWZPRDAvYk1HMlB4eFpHK3ErRHNINDBO?=
- =?utf-8?B?TFNnaXhLcWl3VWlTSk81NThXZTlEM2ZWUytqU0I1dnlkLzh4bGlpZ3JUS3Rs?=
- =?utf-8?B?ZGxDajUxbnJDcmJpb1gydGJ5Nis5UzF2RTlDaVlNRlNXZVFqbWt2UmhFekhh?=
- =?utf-8?B?WStXM0NoVkEwQW1DZ3dBZzVmVFRWNjV4Q0wyZEtFbXpxUnVkWU1yT083OGpm?=
- =?utf-8?B?ZDY5UFhoUEhWVHZycVhiR2Q1RUROUWNoaitSeHJqR2lUNmhzUGhhQlpDOTMz?=
- =?utf-8?B?SkpITHh1dmtraWRqbnpVZjUrWWFRNXQwWWZIVkh1TUpLWUdGb2RJTWE5WDVN?=
- =?utf-8?B?NnBYOG4xbW5mQk45TlVRRnBLUXg5M25FeXIwbTBSVG5XMm1NZmJsbjZabzdY?=
- =?utf-8?B?U3FrSEdKNGNkZkFnRVdtZHIzNVQvVXlpNHd6cWRpaEpheG9XTi9KdDR0eHR2?=
- =?utf-8?B?ZVNESzlJYmVsZVorZE5kRHpHcFltVnFQY1R3YW8ram5pNkZNSGphQmNEcDNp?=
- =?utf-8?B?M2hvMk8ydE1ZTk55V0hOMFZyNXVkb2k4VjIvKzJJczZOZFFjWkZGNW4wUjdO?=
- =?utf-8?B?WEtyZTFPeGw1eEdnTy84TG5IaVltUTcrd3c5OG42WTkxZ1ZteGk0TEh2dHBD?=
- =?utf-8?B?bDYzbVZwQ0VWZkxMMlZ1WFF2dlNmbXlWVGtqWXpzSFFWYWNoRFJqdnRXWVJU?=
- =?utf-8?B?bm1IaDBNTzJDQ3pYSmNycVZlWVVTWElyS0VZbWs4ZXhFVkRKckthQ0kwdXNn?=
- =?utf-8?B?bmVrSlFsemR0dzlxcXdTR3hxN0xISEZmbFhLaGwvZnNHeS8wUDNmUm9ObnVr?=
- =?utf-8?B?TnBWLzhJQ0tnOFZRUGNqNzBWK0c0TEVoa3BaNm1xUUNVV0N6bDU5a3g1eUpu?=
- =?utf-8?B?MmlEOXdJSjdRN3E1eDJVdngzSk8xTGFRVEF0RXFldWgwTXJwWngxdlNEaWNV?=
- =?utf-8?B?dlM4Y0hDYmlOeHJneE9SNnQ2OVNET0VRdXRIRTNURlZ4WmQvSExPdk1LeDM5?=
- =?utf-8?B?aWdwNk5aeTlkVEorU3RsODhjZkMwdEJiVkhFaFg2VW9vODYwbG5JZ1JMUG9o?=
- =?utf-8?B?cDhFSW54bGR4ZGN6Tnp6Vm5LQTJJK3lIR25QOTI2U0l5M21JL01zUElyNlVR?=
- =?utf-8?B?N1VZV2ZhSDlvS25kUEJHanFESmRHODd3ZTZibEF4cVd5N3k4d3FMY25xYUVL?=
- =?utf-8?B?RWFWRG9mNHFNZmZQTHBVUW1BRDhkeXNPL1d3QWFUdEN6Z242bW5BVU9pUm1i?=
- =?utf-8?B?STh3ekg4bUQyVHVFWWptUFdaM1A2NE1jeVVpUHk1dGwzTkh4S3VMeEZUUXdW?=
- =?utf-8?B?Q3BHdithaTFyMi8zczBjbnh4MWhhS01ZUThmb1RoUnZjWjh4cEFEbFFleGZn?=
- =?utf-8?B?YXpLUHVMZHhTckVmbE9YWDl4amQvYnBsSFM0V3VTc0FEako2UnhIQ3lQWlhX?=
- =?utf-8?B?akg5SGxGL05pY2JOa0s1Rk9TSXg1RjVCWm5vdkZ0czN6UXd1OGxpTkRLaVJw?=
- =?utf-8?B?cG1VbDc0MDFsQUtEUzNSMjhDQi9saG1VZEhzM21ONkQ1R01wcHpRTzMzSlo1?=
- =?utf-8?B?SWdra2l6WHdoWnpZYWc5bGZCa3YwYmx4R3B3VU1ubnQ3NU9XcSt1d3JocklY?=
- =?utf-8?B?NG1yR1lNL08vODMwdHNmWjVxU1owbXBNWFh2ZE9odnRlTzlBd0RFK1gxZGxy?=
- =?utf-8?B?ZHQ2NHA5YUpucTJieVcwNXE4WC9vS2M4TmZIQ0lzb09pTGVMbXYxeGtXT24w?=
- =?utf-8?B?YTN2UEpPSU5nPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QXNjYXh4N05FZEFzM2NSQ1J1cm1DZm1MZzIrd1FLSTBXcmtmZFBmSUFoV1BX?=
- =?utf-8?B?bDZlM1g4WnJOcVRqQ1Z6M0JycWdXMkFQT2FLMWxmcWdpWEJEMU1QT0N0Q2Fk?=
- =?utf-8?B?WEFaQXJMZkR5TGhnK2l1MkE3c09ReENKZ0JUbmowSXhRQ3h2bnRYTTZ4NlBP?=
- =?utf-8?B?ZmZqejEvbzVZd1FuZE9hYTBPS00wN3ltVUwxQ2YrbGxIZi84MTVJdytlK3ZC?=
- =?utf-8?B?SWpxWGJSQk0xVW9lcllhV0lzNnhZenAzMm1NYzBBaERXMWVOSUNZMHNhbUc3?=
- =?utf-8?B?ZHJscHZ2LytZTkNzWjRqQjZLS1pWbld1eXlSeVhwUDF2clFMTzdvVVlnOUMy?=
- =?utf-8?B?S2hCVERVSGJPUTllM0g1a0FKVE9IMmJ2aXIyTUZ5K1JiS3Y1U0hjYzFISS9q?=
- =?utf-8?B?aGFra3RsT3dFQUx5YXk5b1paZ0E5UVcxeEFxaFg4UHg1KzE5UE1jL0Y5WFZl?=
- =?utf-8?B?N0FyU0k4ejViT3Yrc3VFclM3WjZydlNsSjJFeG1YZzBJRGNEcWVIaHB6YWdJ?=
- =?utf-8?B?TVV5SS8rVVRRRi9WTnB1a1Awc3NGM29SbENqam5wT21NYVJDSE5uRFVQSUd3?=
- =?utf-8?B?bVNRSkV3WWpmcGM2a3hYR0RQU3NzdkpWK3VBbnJaNTdBVjJKQjFhNUxOd0tm?=
- =?utf-8?B?SncxU2lId3dZWENUY214c1Z2WkxKd090b3V4MHl3WGZROUNxUU1QTjhoY0RD?=
- =?utf-8?B?WnZkUlhzL0Fla1l4YnJZT01yOGRtNEV3aUtsdGlIYklhVldBZmN1ajVFUDlO?=
- =?utf-8?B?aXlqZG5JblNWUTcxalRFNTFVVkJFR0xxcDN4c0pUc2tVSTFyY29QK0YzOUZW?=
- =?utf-8?B?cG1MOTN2NkFZejBTYXdPSEYrekRTd1gxSjBkU1NUWnBQbjVhSW54MDloY016?=
- =?utf-8?B?anpIOURZMGMwTkFFTkF3MGNsK1o3MTdCRENrbTFsdXZhTTlZb0s0aDEwSTZC?=
- =?utf-8?B?ckFNUGZGWFloRXAxcldnaGdxSTg4K21MbDRBdDNnanlRNWhqRXZmejFadnov?=
- =?utf-8?B?c0RuSmZ6Q3UvWGNBZ0ZlVGE4dTlwZmhocjd1Q3N1aXg2N3NLT2xVN01HeGdn?=
- =?utf-8?B?QWQ2WEJIZEhjY1N6bnVSOC9xL1lPWTZWQzFTYUx3ZGVjMHBhNjlxSXNCWFdL?=
- =?utf-8?B?SHlCc1lDTmJjNVhraVNORnlOcnp2L1VoQVRseU1kdENQMmtGdnl3K1AzdEhI?=
- =?utf-8?B?TVdNS3FESG9CR1AwVU94RWlnalNPb2ZPaGMzTFRPQXNreHp4WWtuWXNTbDZ4?=
- =?utf-8?B?b1k2S3I0cnlIcHR3NVpiNDJHR2x1SGpwdm11bzN2ZXJxR1J0NCtaU0R2WWJx?=
- =?utf-8?B?QjJSWTF5VXJVYVFLSVZFa2NsRHlIYVg0Sk92d3VVQlNBMDBZNjlDWlRSajZO?=
- =?utf-8?B?dkE1TkMwcW9nWVFTakJMMmx2ekJEU0s1VllNYTRtMWZiSCtlaERuTmRYNjlE?=
- =?utf-8?B?MWYyelIxbEdYSUxzckhnODIwZ0I3RUJrTWI4ajhRYndrdEFDRmtIMlJHdDJE?=
- =?utf-8?B?alF4MVdVOHlaWk8vZ0FQMzgxYkhWM2lSa3NXUnY4UFNsZ1hYM082aTVMeVlq?=
- =?utf-8?B?TEVVcUlicGpxNUpOSWYyMTRORmdPSGxkVU94V081RHo0ODRnM2RkbmhxcWVl?=
- =?utf-8?B?b2VqNS8yOHM4amUrbkRtOGt2OER6ZkpnYU1CNHVRUUo5RzlDanJkcWVRZDlh?=
- =?utf-8?B?NDlTWGlWNnZhcTcrTHVINnpxQVgxTnFpbStIRUdoaUpLOHFMUlllMjU3bU1V?=
- =?utf-8?B?R0tleUpsWTZsM2o2WHBCK1A5b2VjTHJNVGgzanVxQVc2SFhLRDAxZjZ2QVpQ?=
- =?utf-8?B?NHFlNnpmbXgxS1hGWitZSWR6ZXJDYnhLT3NqMlhEWFNyaWdTNlp3Zzk5cENi?=
- =?utf-8?B?QjJjR3NjOVYrR3BSdFdWaFgrRHFDai9nZ0pHTS9ESmN4Tk52T1NaVlhnNm4x?=
- =?utf-8?B?aGdweUhYM2JpanV5d0V4aS9vMjdNbjBYVDltNHZ1dWZTMW5hWk5qMTd2Qzla?=
- =?utf-8?B?QzlqM2tyR1hYa3FRZytXQlBxSTdNSlhJb3hMMmhpTXFxZU45ajJ2WHA5QTM1?=
- =?utf-8?B?cTlEQ0tMQUIvREFENkM0T0EvR1ZRbEFacVNWeUdsei9NYXlUOE9TSk9PdHBZ?=
- =?utf-8?B?cDJOZHJxSTlLWGtyOFNhOGlSd2wyYmZyRFlEN3YzNDZDTW1GR2NKQUlyRnFX?=
- =?utf-8?B?L1E9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05adc9ca-a266-4f8a-9d4f-08dd9e8167cb
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6307.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 07:21:18.8690
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZZmZtqgRLXdOvbB6A+m1LiDBzfreu9H6MrLZR5wJaU9Vgb5MORy7uw6dZKqTkKvnhS5Nc6W3QYa7LI3e/w8Rk6GgdoBXA54XRRh1npZDwIU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8461
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK-6q+j3QJCB6XERbJfEkvro=Kucq0PQHrCyrZ+LxDq5yHx+=g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsXC9ZZnoa48t0WGwf4uZYuv14Mtdk//x2px
+	edccNgdmjxebZzJ6vN93lc3j8ya5AOYoLpuU1JzMstQifbsEroyO3mnsBQ9lK/bemsfYwPhL
+	rIuRk0NCwESid+9ddhj7/KKzbCA2i4CqxIllT1lAbDYBdYkbN34yg9giApoSEy/1gNUzC0RI
+	/P59gqmLkYNDWMBPontRAEiYV8BC4s7Bk6xdjFwcQgJfGSW+zZzGApEQlDg58wkLRK+6xJ95
+	l5hBepkFpCWW/+OACMtLNG+dDbaKUyBQYs+CNrBVogLKEge2HWcCmSkhMIVNomkmRJGEgKTE
+	wRU3WCYwCs5CsmIWkhWzEFbMQrJiASPLKkahzLyy3MTMHBO9jMq8zAq95PzcTYzAYF5W+yd6
+	B+OnC8GHGAU4GJV4eE8wmmcIsSaWFVfmHmKU4GBWEuFtsjfLEOJNSaysSi3Kjy8qzUktPsQo
+	zcGiJM5r9K08RUggPbEkNTs1tSC1CCbLxMEp1cDI53D20q3Ouk5TjtrolVP25H1gkb0pzGYp
+	99toU83T7GYervUsxXWt15mYJ60yulla8iWvsfd1jdwvs29XLHJcEx9sfy/9Yn+u/ubZJ75F
+	hTrX1X/7O4tx4uqg5LWNssp311snSE/Rez/zwLpT+aIVkhFyQqLflxjPu+hsHDp18YfASQdl
+	F5gpsRRnJBpqMRcVJwIAT/AOvWICAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGLMWRmVeSWpSXmKPExsXC5WfdrCvPbZFh8OyJmMXX68EWu6f/Y7U4
+	PPckq8XlXXPYHFg8Xmyeyejxft9VNo/FLz4weXzeJBfAEsVlk5Kak1mWWqRvl8CV0dE7jb3g
+	oWzF3lvzGBsYf4l1MXJySAiYSJxfdJYNxGYRUJU4sewpC4jNJqAucePGT2YQW0RAU2LipR52
+	EJtZIELi9+8TTF2MHBzCAn4S3YsCQMK8AhYSdw6eZO1i5OIQEvjKKPFt5jQWiISgxMmZT1gg
+	etUl/sy7xAzSyywgLbH8HwdEWF6ieetssFWcAoESexa0ga0SFVCWOLDtONMERr5ZSCbNQjJp
+	FsKkWUgmLWBkWcUokplXlpuYmWOqV5ydUZmXWaGXnJ+7iREYmstq/0zcwfjlsvshRgEORiUe
+	3hOM5hlCrIllxZW5hxglOJiVRHib7M0yhHhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmk
+	J5akZqemFqQWwWSZODilGhgjg/dPYJ3+8oKLc7PL8ivc3vu4gk97K3Da3vb1KrPiKl0tsyRK
+	4+fCuo0tCkevSP79qf6M9eW++KY9SWs8bGY+9Ns9Z8k/g7+Hd2vUs0dFnP54+/WFxtv2h+++
+	YhFu4nZJCfXP/HPj20TFcrY26xm1R4rfbeP9x3q10Ct+Q3LBpSNPnSfPqxJTYinOSDTUYi4q
+	TgQA8R41ZkkCAAA=
+X-CFilter-Loop: Reflected
 
-On 19/05/2025 10:19, Abdul Rahim, Faizal wrote:
-> From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+On Wed, May 28, 2025 at 08:00:02AM -0400, Alexander Aring wrote:
+> Hi,
 > 
-> Previously, TX arbitration prioritized queues based on the TC they were
-> mapped to. A queue mapped to TC 3 had higher priority than one mapped to
-> TC 0.
+> On Sun, May 25, 2025 at 8:13 PM Alexander Aring <aahringo@redhat.com> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, May 22, 2025 at 1:28 AM Byungchul Park <byungchul@sk.com> wrote:
+> > >
+> > > On Thu, May 22, 2025 at 02:24:53PM +0900, Byungchul Park wrote:
+> > > > Hi Alexander,
+> > > >
+> > > > We briefly talked about dept with DLM in an external channel.  However,
+> > > > it'd be great to discuss what to aim and how to make it in more detail,
+> > > > in this mailing list.
+> > > >
+> > > > It's worth noting that dept doesn't track dependencies beyond different
+> > > > contexts to avoid adding false dependencies by any chance, which means
+> > > > though dept checks the dependency sanity *globally*, when it comes to
+> > > > creating dependencies, it happens only within e.g. each single system
+> > > > call context, each single irq context, each worker context, and so on,
+> > > > with its unique context id assigned to each independent context.
+> > > >
+> > > > In order for dept to work on DLM, we need a way to assign a unique
+> > > > context id to each interesting context in DLM's point of view, and let
+> > > > dept know the id.  Once making it done, I think dept can work on DLM
+> > > > perfectly.
+> > >
+> > > Plus, we need a way to share the global dependency graph used by dept
+> > > between nodes too.
+> > >
+> >
+> > Having everything simulated and having nodes separated as
+> > net-namespaces in one Linux kernel instance is I think at first
+> > simpler to do and will show the "proof of concepts".
+> > Sharing data between nodes is then just some memory area that is not
+> > separated by per "struct net" context.
 > 
-> To improve code reuse for upcoming patches and align with typical NIC
-> behavior, this patch updates the logic to prioritize higher queue numbers
-> when mqprio is used. As a result, queue 0 becomes the lowest priority and
-> queue 3 becomes the highest.
+> Alternatively the master node of the lock (this node knows everything
+> about the lock operations being done including the nodes that are
+> waiting to get the lock granted) can be used to detect cycles, we
+
+Sounds good.
+
+> already do that for some simple cases when converting locks directly
+> [0]. Maybe this is already enough to have all the information, but it
+
+It seems that DLM already tries to detect a deadlock.  Can you provide
+an example scenario where the current detection logic doesn't work?
+It'd help me define what to do for better DLM and dept.
+
+> is not just a "wait_event()" mechanism, there needs to be some other
+> API to use DEPT for this case?
+
+It'd be required to modify dept to work with isolated context ids - each
+id corresponding to each node, not simple kernel contexts e.g. system
+call or irq context.  Which is not that hard to implement I think.
+
+Answering to your question, We might need to add a few dept annotations.
+Even though I'm afraid I don't understand how DLM works enough, for
+example:
+
+   1. when recieving a lock(L1) request from a node(N1), that might wait,
+   
+      annotate dept_wait(L1, events that can wake up N1) for N1 context,
+      where events are all the events that can wake up N1 from waiting.
+
+   2. when recieving a lock(L1) request from a node(N1), that does not
+      involve wait but just tries,
+
+      no need to annotate.
+
+   3. when the request is granted,
+
+      annotate dept_request_event(L1) which means there might be waiters
+      for L1 to be released from now on.
+
+   4. when releasing the lock(L1) no matter who releases the lock - the
+      releaser doesn't have to be N1,
+
+      annotate dept_event(L1) for the releaser.
+
+Roughly, these annotations are needed, but again, it'd be helpful if you
+provide an example scenario where the current detection logic you have
+doesn't work, for better discussion.
+
+	Byungchul
+
 > 
-> This patch also introduces igc_tsn_is_tc_to_queue_priority_ordered() to
-> preserve the original TC-based priority rule and reject configurations
-> where a higher TC maps to a lower queue offset.
+> - Alex
 > 
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> ---
->   drivers/net/ethernet/intel/igc/igc_main.c | 19 ++++++++++++
->   drivers/net/ethernet/intel/igc/igc_tsn.c  | 35 ++++++++++++++---------
->   2 files changed, 41 insertions(+), 13 deletions(-)
-> 
-Tested-by: Mor Bar-Gabay <morx.bar.gabay@intel.com>
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/dlm/lock.c?h=v6.15#n2163
