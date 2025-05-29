@@ -1,322 +1,94 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE640647;
-	Thu, 29 May 2025 13:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931E3647;
+	Thu, 29 May 2025 13:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524817; cv=none; b=Z3eQ+c52a4nt9MOo5Qj4qYPpmWXEkk8fSUUjSkxI1qSWyvfoKRF8w/DNtdj3/cSdK3ozhky0agkJEearvwtlKvV+qWDOYT+l28w9NuGbRdX9SnsSU1eI9Zw1BApvYLCcvlBbTpp4XoIctEjky50F2XNVHg5NBr0JQ67syrtUPIo=
+	t=1748524917; cv=none; b=hCGrAVQaZDhPcXwBnmqq4tVCDfqG1YvgElUC0exJr7Nzc8IKZK/NWioNeFgU43azKy/zjV5txTS49vEJ8fscF7lsJiUiNQauQv6SIcjYd85D7VWRxn9ZRNgiNjEhTy7aCZJH+CsJrb81mzYaxDo2xjNIF8NdByrIE6f6lV8TLuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524817; c=relaxed/simple;
-	bh=LzIPn3DhyVATONiE59+tHDUz9hKodqlTe/+z7bnQeQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TuYKI6e4j8/X6ymDXETmaASg9q/hXszZ2qiwQVvCJqVeMiVNNVXiZIzammOf2c/NEYX0ZyGSFwehxEd8en6RznI9X9Ft7pIgu09Y8UvgU8YiOTseTY8yfFHjwo3z0pdIvk4Zyn1RKqiU3QjrIloSKVKrxxbQChSaX9JhInPj2bM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=eO3z9utI; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748524917; c=relaxed/simple;
+	bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CaCYG+09J4SvWK+UVkDAtDbb3c8o5/YECdVKamyp9jO9MepRt4B51tVZGgv7ZKnGuvHI2DXs3aqtalfLW7+188gS3ilXy1RYzOFznhDXxowMl/pHVemyxAUj8hX9zw/4GL+iVrVSEsyQLmHAQwm2GG2DmoLp6eNeOksQSRT77b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRqL0uu5; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eO3z9utI"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id 57FA9203EE1D; Thu, 29 May 2025 06:20:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 57FA9203EE1D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748524815;
-	bh=6CYhEKN+tNQGicdA8uCujCzDYwaEWR9yJMr8ejURV9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eO3z9utI4b23Ttx5L3F/BtcYOMSFFQPEPwK1hpSxWfRVG16wkB93rBeumIfwzz/b/
-	 KxavQ+nXehetAhoC6SeZG95qZUxYBgveNH4nP48rDKPGxMCCQ4iHnlHktdGiuvdeKW
-	 x9BzNMyybHlssra4fNLAT4RyZlgxsC9zoWKq69Pc=
-Date: Thu, 29 May 2025 06:20:15 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 5/5] net: mana: Allocate MSI-X vectors dynamically
-Message-ID: <20250529132015.GD27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1748361543-25845-1-git-send-email-shradhagupta@linux.microsoft.com>
- <20250529034520.GA5898@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRqL0uu5"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2322d8316f6so1064625ad.3;
+        Thu, 29 May 2025 06:21:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748524916; x=1749129716; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
+        b=SRqL0uu5UAiK7emC6cU3gG1kTyFmeDOAkog3G7bqgiWZf3nymoSkgD7fD8nRNZTkAv
+         KPzkKSzvzfk9rRZdcPoiNxjvFRIhgSMlmDj7+Nf91xDbXqPY1ywZMi8utd66xU16Ozah
+         mT142MNJG22R8on6sKbWBk5doSWXfy/mCOFdz8OFGuY+lloLXLxGuqLhtzUTj1hPCi/b
+         3dDQCmtDu2vDw5wqOWgVMjgdpLkBigmM42FDRCDoN+hZ9oW6YAjrlZNpMbJaq73phttb
+         VjdG3Nqs9sU17OMOhT2SYrH7TKbGvKtcBylBS8dAKMeqgxShhbIMKm9z+NloLwHuNDeT
+         GNvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748524916; x=1749129716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
+        b=HlPcarBHtDOouMWnTud4raUml0o2y05DIrTH2bgEqPeQzAg7L7mW4fSbFfBCYunv6F
+         LXYFt56KEzOx6t4p3+l+cp5ax60Q71F0rIYFKZnpIK7riQj3+F3fHFB2KqK7pQFLzAg8
+         GjVmVFpzvLMyY/6FxLkHDm8a2q4810qvtq3IYGAGcZgErLQtsKGHQTdE6Y6zY2vNPbo5
+         LyzuM+ovFxznddiyv3uog32xl5v0MFSaD+QjyqpUJ7dcQI/W05p7wSP14NvvdOf71dlS
+         vW7lSOmE9BpVgLLA+oUfwSnGdndzBkqG7o0b/M2CN1PClBmcDD3yALrAB9dBviNqy9cV
+         mbeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8mjN0P4R1HOw9J/MzA1O/ecbeNcpKguYzN4pj0n9saP6/46jBaIYqUjus9arhJT0/EKcY+NlElLNiWn+Vj7Wv@vger.kernel.org, AJvYcCUawHqA8nBZ/g0lw90QYbTGNAc7Q5b5XDzzp+d9ovgpmjhZO7IPmJ9Rs0TjDanj7+aqMeUuVtp/ZNFB/sc=@vger.kernel.org, AJvYcCX37SLC84ahPhqiP6jgPqqHzDUFoTU7vH+USxBmmWoZcMYMolCReb/5qkwnF9AXP47zJWRQwCwChjMFqpVT8gg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4oM3xycSzTmma30bGyXgic90dsG2bFJb3pzcYYNSPVwxwAU5T
+	8GXz8t/boDBgrbDFzA9B/SRHMXgdhE3KDVAgQSn/WRZOKufl8S8NkKwEqY+m+ClORNUCL4oiI5z
+	LSMZklEFWpX3MroLesj2f0DOkUW0deFc=
+X-Gm-Gg: ASbGncvmLsY5/IJOVyGCyh2ga3Y2PqtyzlNeFb/Iby01saqmgbkRj7vxRZUfz9e+2L8
+	JYeI2TGbU01qAsXn7p8xxf+htBh82FzgKN8iYFPN5z7FWfmPbkvlxGwXWd3lH/kZUYV37jfO3zr
+	dpQ46FaUdnpBtvh94JQu5E/fitIaI+7pchFB7Ke82yMWc=
+X-Google-Smtp-Source: AGHT+IEw3IfjRiVmB9B6f5XuML+7UkncMFZmzabzcloIvrow/Wn2iV4+leCCTt22pE+x9RCQAjX6Ih6PN46tqK1oGuI=
+X-Received: by 2002:a17:902:c407:b0:235:737:7a8 with SMTP id
+ d9443c01a7336-23507370992mr13730985ad.3.1748524915877; Thu, 29 May 2025
+ 06:21:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529034520.GA5898@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20250529-idiomatic-match-slice-v2-0-4925ca2f1550@gmail.com> <20250529-idiomatic-match-slice-v2-2-4925ca2f1550@gmail.com>
+In-Reply-To: <20250529-idiomatic-match-slice-v2-2-4925ca2f1550@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 15:21:43 +0200
+X-Gm-Features: AX0GCFuco26rV0hLqSzHou5ShkVizO8CV01DHgm65dtjBe0oghAxdH5dFDdhRcA
+Message-ID: <CANiq72nigDV2R_9PNOv98nGBxDZ=46WcRM7V05nQWni5VQRw6w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] rust: emit path candidates in panic message
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 08:45:20PM -0700, Saurabh Singh Sengar wrote:
-> On Tue, May 27, 2025 at 08:59:03AM -0700, Shradha Gupta wrote:
-> > Currently, the MANA driver allocates MSI-X vectors statically based on
-> > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
-> > up allocating more vectors than it needs. This is because, by this time
-> > we do not have a HW channel and do not know how many IRQs should be
-> > allocated.
-> > 
-> > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
-> > after getting the value supported by hardware, dynamically add the
-> > remaining MSI-X vectors.
-> > 
-> > Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> > Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> >  Changes in v4:
-> >  * added BUG_ON at appropriate places
-> >  * moved xa_destroy to mana_gd_remove()
-> >  * rearragned the cleanup logic in mana_gd_setup_dyn_irqs()
-> >  * simplified processing around start_irq_index in mana_gd_setup_irqs()
-> >  * return 0 instead of return err as appropriate
-> > ---
-> >  Changes in v3:
-> >  * implemented irq_contexts as xarrays rather than list
-> >  * split the patch to create a perparation patch around irq_setup()
-> >  * add log when IRQ allocation/setup for remaining IRQs fails
-> > ---
-> >  Changes in v2:
-> >  * Use string 'MSI-X vectors' instead of 'pci vectors'
-> >  * make skip-cpu a bool instead of int
-> >  * rearrange the comment arout skip_cpu variable appropriately
-> >  * update the capability bit for driver indicating dynamic IRQ allocation
-> >  * enforced max line length to 80
-> >  * enforced RCT convention
-> >  * initialized gic to NULL, for when there is a possibility of gic
-> >    not being populated correctly
-> > ---
-> >  .../net/ethernet/microsoft/mana/gdma_main.c   | 306 +++++++++++++-----
-> >  include/net/mana/gdma.h                       |   8 +-
-> >  2 files changed, 235 insertions(+), 79 deletions(-)
-> > 
-> > diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > index 763a548c4a2b..98ebecbec9a7 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> > @@ -6,6 +6,8 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/utsname.h>
-> >  #include <linux/version.h>
-> > +#include <linux/msi.h>
-> > +#include <linux/irqdomain.h>
-> >  
-> >  #include <net/mana/mana.h>
-> >  
-> > @@ -80,8 +82,15 @@ static int mana_gd_query_max_resources(struct pci_dev *pdev)
-> >  		return err ? err : -EPROTO;
-> >  	}
-> >  
-> > -	if (gc->num_msix_usable > resp.max_msix)
-> > -		gc->num_msix_usable = resp.max_msix;
-> > +	if (!pci_msix_can_alloc_dyn(pdev)) {
-> > +		if (gc->num_msix_usable > resp.max_msix)
-> > +			gc->num_msix_usable = resp.max_msix;
-> > +	} else {
-> > +		/* If dynamic allocation is enabled we have already allocated
-> > +		 * hwc msi
-> > +		 */
-> > +		gc->num_msix_usable = min(resp.max_msix, num_online_cpus() + 1);
-> > +	}
-> >  
-> >  	if (gc->num_msix_usable <= 1)
-> >  		return -ENOSPC;
-> > @@ -482,7 +491,9 @@ static int mana_gd_register_irq(struct gdma_queue *queue,
-> >  	}
-> >  
-> >  	queue->eq.msix_index = msi_index;
-> > -	gic = &gc->irq_contexts[msi_index];
-> > +	gic = xa_load(&gc->irq_contexts, msi_index);
-> > +	if (WARN_ON(!gic))
-> > +		return -EINVAL;
-> >  
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_add_rcu(&queue->entry, &gic->eq_list);
-> > @@ -507,7 +518,10 @@ static void mana_gd_deregiser_irq(struct gdma_queue *queue)
-> >  	if (WARN_ON(msix_index >= gc->num_msix_usable))
-> >  		return;
-> >  
-> > -	gic = &gc->irq_contexts[msix_index];
-> > +	gic = xa_load(&gc->irq_contexts, msix_index);
-> > +	if (WARN_ON(!gic))
-> > +		return;
-> > +
-> >  	spin_lock_irqsave(&gic->lock, flags);
-> >  	list_for_each_entry_rcu(eq, &gic->eq_list, entry) {
-> >  		if (queue == eq) {
-> > @@ -1366,47 +1380,113 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node,
-> >  	return 0;
-> >  }
-> >  
-> > -static int mana_gd_setup_irqs(struct pci_dev *pdev)
-> > +static int mana_gd_setup_dyn_irqs(struct pci_dev *pdev, int nvec)
-> >  {
-> >  	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > -	unsigned int max_queues_per_port;
-> >  	struct gdma_irq_context *gic;
-> > -	unsigned int max_irqs, cpu;
-> > -	int start_irq_index = 1;
-> > -	int nvec, *irqs, irq;
-> > -	int err, i = 0, j;
-> > +	bool skip_first_cpu = false;
-> > +	int *irqs, irq, err, i;
-> >  
-> >  	cpus_read_lock();
-> 
-> Now that num_online_cpus is moved further down in this new logic,
-> do we want to reduce the critical section ?
-> 
-> I don't think we want kmalloc_array to be protected.
-> 
-> 
-> > -	max_queues_per_port = num_online_cpus();
-> > -	if (max_queues_per_port > MANA_MAX_NUM_QUEUES)
-> > -		max_queues_per_port = MANA_MAX_NUM_QUEUES;
-> >  
-> > -	/* Need 1 interrupt for the Hardware communication Channel (HWC) */
-> > -	max_irqs = max_queues_per_port + 1;
-> > -
-> > -	nvec = pci_alloc_irq_vectors(pdev, 2, max_irqs, PCI_IRQ_MSIX);
-> > -	if (nvec < 0) {
-> > -		cpus_read_unlock();
-> > -		return nvec;
-> > -	}
-> > -	if (nvec <= num_online_cpus())
-> > -		start_irq_index = 0;
-> > -
-> > -	irqs = kmalloc_array((nvec - start_irq_index), sizeof(int), GFP_KERNEL);
-> > +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> >  	if (!irqs) {
-> >  		err = -ENOMEM;
-> >  		goto free_irq_vector;
-> >  	}
-> >  
-> > -	gc->irq_contexts = kcalloc(nvec, sizeof(struct gdma_irq_context),
-> > -				   GFP_KERNEL);
-> > -	if (!gc->irq_contexts) {
-> > +	/*
-> > +	 * While processing the next pci irq vector, we start with index 1,
-> > +	 * as IRQ vector at index 0 is already processed for HWC.
-> > +	 * However, the population of irqs array starts with index 0, to be
-> > +	 * further used in irq_setup()
-> > +	 */
-> > +	for (i = 1; i <= nvec; i++) {
-> > +		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-> > +		if (!gic) {
-> > +			err = -ENOMEM;
-> > +			goto free_irq;
-> > +		}
-> > +		gic->handler = mana_gd_process_eq_events;
-> > +		INIT_LIST_HEAD(&gic->eq_list);
-> > +		spin_lock_init(&gic->lock);
-> > +
-> > +		snprintf(gic->name, MANA_IRQ_NAME_SZ, "mana_q%d@pci:%s",
-> > +			 i - 1, pci_name(pdev));
-> > +
-> > +		/* one pci vector is already allocated for HWC */
-> > +		irqs[i - 1] = pci_irq_vector(pdev, i);
-> > +		if (irqs[i - 1] < 0) {
-> > +			err = irqs[i - 1];
-> > +			goto free_current_gic;
-> > +		}
-> > +
-> > +		err = request_irq(irqs[i - 1], mana_gd_intr, 0, gic->name, gic);
-> > +		if (err)
-> > +			goto free_current_gic;
-> > +
-> > +		xa_store(&gc->irq_contexts, i, gic, GFP_KERNEL);
-> > +	}
-> > +
-> > +	/*
-> > +	 * When calling irq_setup() for dynamically added IRQs, if number of
-> > +	 * CPUs is more than or equal to allocated MSI-X, we need to skip the
-> > +	 * first CPU sibling group since they are already affinitized to HWC IRQ
-> > +	 */
-> > +	if (gc->num_msix_usable <= num_online_cpus())
-> > +		skip_first_cpu = true;
-> > +
-> > +	err = irq_setup(irqs, nvec, gc->numa_node, skip_first_cpu);
-> > +	if (err)
-> > +		goto free_irq;
-> > +
-> > +	cpus_read_unlock();
-> > +	kfree(irqs);
-> > +	return 0;
-> > +
-> > +free_current_gic:
-> > +	kfree(gic);
-> > +free_irq:
-> > +	for (i -= 1; i > 0; i--) {
-> > +		irq = pci_irq_vector(pdev, i);
-> > +		gic = xa_load(&gc->irq_contexts, i);
-> > +		if (WARN_ON(!gic))
-> > +			continue;
-> > +
-> > +		irq_update_affinity_hint(irq, NULL);
-> > +		free_irq(irq, gic);
-> > +		xa_erase(&gc->irq_contexts, i);
-> > +		kfree(gic);
-> > +	}
-> > +	kfree(irqs);
-> > +free_irq_vector:
-> > +	cpus_read_unlock();
-> > +	return err;
-> > +}
-> > +
-> > +static int mana_gd_setup_irqs(struct pci_dev *pdev, int nvec)
-> > +{
-> > +	struct gdma_context *gc = pci_get_drvdata(pdev);
-> > +	struct gdma_irq_context *gic;
-> > +	int *irqs, *start_irqs, irq;
-> > +	unsigned int cpu;
-> > +	int err, i;
-> > +
-> > +	cpus_read_lock();
-> 
-> Same here
-> 
-> > +	irqs = kmalloc_array(nvec, sizeof(int), GFP_KERNEL);
-> > +	if (!irqs) {
-> >  		err = -ENOMEM;
-> > -		goto free_irq_array;
-> > +		goto free_irq_vector;
-> >  	}
-> >  
-> >  	for (i = 0; i < nvec; i++) {
-> > -		gic = &gc->irq_contexts[i];
-> > +		gic = kzalloc(sizeof(*gic), GFP_KERNEL);
-> > +		if (!gic) {
-> > +			err = -ENOMEM;
-> > +			goto free_irq;
-> > +		}
-> > +
-> >  		gic->handler = mana_gd_process_eq_events;
-> >  		INIT_LIST_HEAD(&gic->eq_list);
-> >  		spin_lock_init(&gic->lock);
-> 
-> <snip>
-> 
-> - Saurabh
+On Thu, May 29, 2025 at 3:15=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Include all information in the panic message rather than emit fragments
+> to stderr.
 
-Thanks Saurabh, will get these too
+Could we explain the "why" as well in the message? (i.e. not just the "what=
+")
 
+Thanks!
+
+Cheers,
+Miguel
