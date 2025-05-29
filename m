@@ -1,74 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B84A94F;
-	Thu, 29 May 2025 00:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BDC0B67A;
+	Thu, 29 May 2025 00:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748477566; cv=none; b=pXxN6WLuHNz6CtSboICYHxwhrruf/qvIxon7OgUztxNbXWCn+YkBQuE3TaWKKodtqH8Qnm9sJGeXlofmhsL0NjtgawBnpM7g+1mBxhKuL1NLD2y5ho+5PK18A5voCIoPpta/QuwQstFo3sTeYwEJity283mxgktVQLOR7DFS/F0=
+	t=1748477631; cv=none; b=kJvI/ZXy3kOCmBW41PBRHv2kYje3+/YQ0S4GPC9M43wNJkSe69BCo7B+GYGwj3N1JyO3nW4t663H42d9OjGCeubhfrIsDN120U+ZjxUl7jBKRsB9FOr7bIWnPpIU2AnjxuqgJHumE9dG5HwSGQgilTP39ge8bTMjh+UpAH3u/tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748477566; c=relaxed/simple;
-	bh=jNERr1Xk5bpz4F/WT2JXlFK4lNMh7d3tBp6wYSlqrVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nVh/OM0WFecLPW8nCOrsq4LLyt8qJE2Y7kAbkataHOtoN+OvyxOyib8OiXjCOz9YHsqhee7FmgHg0CyVv2rWxsLMuOxZalUj+hKXREV2E1EpVjGkTizyeCl4vTcI6MxQyitxf669GSB201GYbNK7rh4oalUyPU+NvXKTHuD6x+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMmTlEsV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748477631; c=relaxed/simple;
+	bh=pfoihrmJaBwob8Uxd4IBwrStoIpAw40dXmyPLPV6VkM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qwlw3SN3y0Q1CcQEcankv/SQLPVTMSVR4L1co3uGgy/xOzlyn7su76QWFVTdio5mEHUlingEW2bHYhonl8FjzW01CP/f1Up8Hd5ocXxhi/7/VoDD5WsQzUCDtj52pWubcAUGfSajiPA7aceQ9n/4QdvljcUMGRyegTlJWW5KB3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DZt0xvdX; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMmTlEsV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68460C4CEE3;
-	Thu, 29 May 2025 00:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748477566;
-	bh=jNERr1Xk5bpz4F/WT2JXlFK4lNMh7d3tBp6wYSlqrVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XMmTlEsVcghWCw7O9F26+oCZiJ1IynDUpqCiLg9N75XpabPkeLtlh25LGrBFMFvcg
-	 LCqj8uYt3hGoXa3RbRA/M2aSxWpkZglZeSd0LxO62g50udAgEMgMigIHdPQHMbWb7u
-	 r8eN7UOss7LN0HSZKBAjWqeXktDFOiqjLLhS+HrtVM2eDwTuZBl3iyGcDQ5ZGxGKKE
-	 XEKG2N8hZiuJqKzyacZt/SShPL7REDjiz6TVgbuTM8pjUgBtNDMAjALVByQ3njdNVQ
-	 spnBLn2+5CnQAwm5MC9KgBp3NFzgbojB5Bfqop3KbL9B6+hFxN/oKZgfB/S0g79x35
-	 Feo8pjtCf5kvA==
-Date: Wed, 28 May 2025 17:12:44 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Gal Pressman <gal@nvidia.com>
-Cc: Saeed Mahameed <saeed@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org, Moshe Shemesh
- <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Cosmin Ratiu
- <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
-Subject: Re: [PATCH net-next V2 11/11] net/mlx5e: Support ethtool
- tcp-data-split settings
-Message-ID: <20250528171244.188534ec@kernel.org>
-In-Reply-To: <676de326-df44-45c4-8ca2-3d1a2758abf2@nvidia.com>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
-	<1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
-	<20250522155518.47ab81d3@kernel.org>
-	<aC-xAK0Unw2XE-2T@x130>
-	<20250527091023.206faecb@kernel.org>
-	<676de326-df44-45c4-8ca2-3d1a2758abf2@nvidia.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DZt0xvdX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=GAuvo8PIxtiaaRlvQH9XX/+Yf1c/3eZM6pxfqz02uJ0=; b=DZt0xvdX8CGGevbizc3aQo4yzr
+	9BOZbNXdzve41rNDgGo0vulfXu3heM4ejeeWhqDSUKJ4HK37D5uJofAFt2znKciaNfRPew577gAZf
+	Dut9UkQk6JJIgNlGoCJQVFPPjKmokWBS0xsw+mImO1Cvyv69XcMXk5DwaNyrp9GlOn66UsMzEBDQ7
+	wQWIDa1j/e+BXJSmft32FOHEWcpx9uuVCPYT2ckycvlxfsYWsKi/X8M1b73ACUteCpwvDqmaVm5Ds
+	cFeIZSNbHNM6QQS1/DE1JlYbzlmp60LvHlsf5PHCjQaODnMH8djqk90Z5oXpbd1236CvmvtSKHgCE
+	lqPQRH2Q==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uKQti-00EZvY-05; Thu, 29 May 2025 02:13:27 +0200
+From: Changwoo Min <changwoo@igalia.com>
+To: lukasz.luba@arm.com,
+	rafael@kernel.org,
+	len.brown@intel.com,
+	pavel@kernel.org
+Cc: christian.loehle@arm.com,
+	tj@kernel.org,
+	kernel-dev@igalia.com,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 00/11] PM: EM: Add netlink support for the energy model.
+Date: Thu, 29 May 2025 09:13:04 +0900
+Message-ID: <20250529001315.233492-1-changwoo@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 28 May 2025 08:10:46 +0300 Gal Pressman wrote:
-> >    features = on
-> > hw_features = off
-> > 
-> > is how we indicate the feature is "on [fixed]"
-> > Tho, I'm not sure how much precedent there is for making things fixed
-> > at runtime.  
-> 
-> Isn't this something that should be handled through fix_features?
+There is a need to access the energy model from the userspace. One such
+example is the sched_ext schedulers [1]. The userspace part of the
+sched_ext schedules could feed the (post-processed) energy-model
+information to the BPF part of the scheduler.
 
-Yes, should work.
-Off the top of my head after setting HDS to enabled and trying 
-to disable HW-GRO we should see: "on [requested off]" right?
+Currently, debugfs is the only way to read the energy model from userspace;
+however, it lacks proper notification mechanisms when a performance domain
+and its associated energy model change.
+
+This patch set introduces a generic netlink for the energy model, as
+discussed in [2]. It allows a userspace program to read the performance
+domain and its energy model. It notifies the userspace program when a
+performance domain is created or deleted or its energy model is updated
+through a multicast interface.
+
+Specifically, it supports two commands:
+  - EM_GENL_CMD_PD_GET_ID: Get the list of information for all performance domains.
+  - EM_GENL_CMD_PD_GET_TBL: Get the energy model table of a performance domain.
+
+Also, it supports three notification events:
+  - EM_GENL_EVENT_PD_CREATE: When a performance domain is created.
+  - EM_GENL_EVENT_PD_DELETE: When a performance domain is deleted.
+  - EM_GENL_EVENT_PD_UPDATE: When the energy model table of a performance domain is updated.
+
+The userspace code example using the EM netlink interface is at [3].
+
+[1] https://lwn.net/Articles/922405/
+[2] https://lore.kernel.org/lkml/a82423bc-8c38-4d57-93da-c4f20011cc92@arm.com/
+[3] https://github.com/multics69/em-netlink/tree/patch-v1
+
+CC: Lukasz Luba <lukasz.luba@arm.com>
+CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+CC: Tejun Heo <tj@kernel.org>
+Signed-off-by: Changwoo Min <changwoo@igalia.com>
+
+Changwoo Min (11):
+  PM: EM: Add ENERGY_MODEL_NETLINK Kconfig.
+  PM: EM: Add a skeleton code for netlink notification.
+  PM: EM: Initialize the netlink notification during booting.
+  PM: EM: Add the infrastructure for command processing.
+  PM: EM: Assign a unique ID when creating a performance domain.
+  PM: EM: Expose the ID of a performance domain via debugfs.
+  PM: EM: Add an iterator and accessor for the performance domain.
+  PM: EM: Implement EM_GENL_CMD_PD_GET_ID.
+  PM: EM: Implement EM_GENL_CMD_PD_GET_TBL.
+  PM: EM: Implement event notification.
+  PM: EM: Notify an event when the performance domain changes.
+
+ include/linux/energy_model.h      |  20 +-
+ include/uapi/linux/energy_model.h |  89 ++++++++
+ kernel/power/Kconfig              |  10 +
+ kernel/power/Makefile             |   1 +
+ kernel/power/em_netlink.c         | 324 ++++++++++++++++++++++++++++++
+ kernel/power/em_netlink.h         |  45 +++++
+ kernel/power/energy_model.c       |  99 ++++++++-
+ 7 files changed, 586 insertions(+), 2 deletions(-)
+ create mode 100644 include/uapi/linux/energy_model.h
+ create mode 100644 kernel/power/em_netlink.c
+ create mode 100644 kernel/power/em_netlink.h
+
+-- 
+2.49.0
+
