@@ -1,365 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731A021ABA0
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3009C21ADAB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748508245; cv=none; b=ttF6pgdh3BO4syHlHbceuZcDdYtBdwhBa+B/RggFHMxRjHrN2wl26EmbE6tXyWkGrKTtk5GoDUWOT25r9219GBEO8k1sEbxh5I+k8AX/8yUX5K0sphqWyFGbDuR+zcAKA29p7EjDxkNpULweMv5zQWQCIQJj1ZvikjlLLr2DGeQ=
+	t=1748508246; cv=none; b=T3REX3EqYVBm/fMia2kdHDeyJLQld/GnXfIRDgWVb+uzlbIDdQUOdcjsf4XWyTSDcd80h/DtWAPSjLZ7WNhAAGZWbCpcRHMXGu+LNajuAMwgqtarc6nSghxs2qaB/EUDW39ad48pktp8QeXvS09W1NgiWQgbcE+Hhhu7vOgjkPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748508245; c=relaxed/simple;
-	bh=P988X+j2cpjXTunHdywSt5widwrftav4mCwicXbZReQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lqRK0ho0P0YqPC5ph2nPpuay4wEk/LVZcCvODn/DzI+5T4cx7AfHe9eBIFeXCVZ8hMYdZoTPy2W9OwtXwhEXd4V0mS6cnirREjFmTRRWgCh6E6KIf8JebB3WAZdmkbIZTzOjzD2dr2ZL87AqMRORQNDOeQBKdJU7q5c4emBhJK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VfiqJC3M; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748508246; c=relaxed/simple;
+	bh=XmGdEU36BUAiC7kUZrGnekLq2NsKJ2cGEQT5mOw/Xbk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vl3SguHfrjC+Kn8DS1fYppAJPnwv5nET9eacxN2EOoYWIzqDIlDw6jVRWXV/NLe/Uu4CDBgYdUHgmSvtnmru1o3NuOm3Tthx2TOHYhEqtPTutl1Uz/hhqPDF04C/X1VQ/yS/j+6SGKzCocYfGehdHqCkg/UauGRL78hJSZDeIYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=NgCwMIE9; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VfiqJC3M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748508242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9F1AyUc8E8n9yeZIf5vw56v5InQeBZLcKuG+dGd7CQc=;
-	b=VfiqJC3MP619VaA0Brr5dg0ySTW2DbwbHcb19w82CQQ8Hf3PUZo5mJ4LUzEfrFiQY17wLr
-	iSH/Ir+VihLlcPXyTvDvragKPhpl2ooHIAf3aOxcSr5+6760lsgdnMWjQ1XvGC61IeC44C
-	J/3UFctgCCO9BDjO+x/PK0i1+G1V+J8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-694-S-ObhSkrPT-cvLOVis21ug-1; Thu, 29 May 2025 04:44:00 -0400
-X-MC-Unique: S-ObhSkrPT-cvLOVis21ug-1
-X-Mimecast-MFC-AGG-ID: S-ObhSkrPT-cvLOVis21ug_1748508240
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-440667e7f92so5128525e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 01:44:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748508239; x=1749113039;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9F1AyUc8E8n9yeZIf5vw56v5InQeBZLcKuG+dGd7CQc=;
-        b=LPGfDz6HAWisluiIbpGwUypO+39jEdFHbesEd8af1TCVK+KkPqVmvNtjVdn+CsQCVe
-         BcsQj6rYSmnKuQIe3RTI/0DNbW6mfRmcyGedbd+ZxbqbcaipC+4Gb4sHUtKoxw4AaR5m
-         imRvDbfE3KPHac1FAdHjarmCO1o4+cXkVREZg58MI5B3d4Zr2igsgDKZyOHFXR7fIBG7
-         bJNf6odJ1px2r8ydn165jvcT3yAhlSTPuTFrBNjInrGntOv0uMqf3vYxhooml4nULN+Z
-         RGIarebtLs21U6mjolyaeHDcc6pZvn5YONfjkV3pntnW64ZzBS6lv1Xht1Kal7VR8K3D
-         s3kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXF5x6nbt+sAPieAG+vVOcyVwiMdVOZy75aRB9hnXMjuobr1L9uD3cRCCUO1AcobS0jo3U6lzEF3RMm2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2W4efDPonOavhbwoZqZs6nigNYR5qQeuxKqGtwiAj9FN4ytm6
-	p4KlhMKsP37YFg5zcoVoUEm0J8CjgE+e07hr98lJ/Cy3Ro+qLFmooRrzgwNq7bttA0g19QRfeRq
-	OfeP44GsYFlnPcVLj7jwksm3hpoQ9/aa3M23jKGx9NmPPPdo98yMgKucLqTNs+sOcUw==
-X-Gm-Gg: ASbGnctk56lr2liTjQ580q0w3mKkpTk18urnpCZwd2bc3ypK0tkmjKbcUZIVrfOnrWy
-	A6Oow2DsEtfFNghbjuPCF+CM1sHQjf9vhkLeroYWEDfMAzHRZkSgxARwCN+cpW3tjqJh1vO1B0G
-	zQ8JPnOm/7l5gfg3Y6KFJNJnNvWXkafA65ARrf0mQ6rLGLJvWxwjQM+gzXt9IPTHbRdBRXuLXPJ
-	NaAGycTtiI0bjzs4ApCypmCB1h03EsZlXLuhOTfyajILDhVCvOrnyxY+jEMp7teDuqfS+nXoHdw
-	lCdEvtSD3nAbucikqTnvqu7cNwq2qb7b3ey0LI+aW92EOlW2RLt6uKCZi4k=
-X-Received: by 2002:a05:600c:6215:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-44c933ed932mr180609205e9.33.1748508239271;
-        Thu, 29 May 2025 01:43:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFswQtvfSvNa9PDN1FqTqNOAN2DsMJlj+GqnmV0wxODM5kDCL47pz79wZsKUTl0iK8d06a4FA==
-X-Received: by 2002:a05:600c:6215:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-44c933ed932mr180609025e9.33.1748508238797;
-        Thu, 29 May 2025 01:43:58 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cce5:2e10:5e9b:1ef6:e9f3:6bc4? ([2a0d:3341:cce5:2e10:5e9b:1ef6:e9f3:6bc4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c9d4sm1325738f8f.38.2025.05.29.01.43.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 01:43:58 -0700 (PDT)
-Message-ID: <0df20c3e-bd51-415f-bfdf-f88bbd39f260@redhat.com>
-Date: Thu, 29 May 2025 10:43:55 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NgCwMIE9"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T7uEIf012665;
+	Thu, 29 May 2025 08:43:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2025-04-25; bh=w36aE
+	uz2rTPydr4H8wvvcPpzatbtsXmBXQl9a/AhbNw=; b=NgCwMIE9oGE9EYx6Arr3o
+	QUhkD0g9o9SUTU6VPwFwkCK/TgY9HSZH/nxaoyLWTfG62zvYePZhzcugRglBXr+E
+	kryIRRFrqTDbesNP9A/ftEh5EDUnvXL7JoQyn5f1K6o4HwTuDroX8rXQMx+1RHF0
+	Y1akowUlYpF6KjGgsbpakOtz/Zdk+kNbpKmXZFqOIYNvYr8W1zVCu9JubSMOCyyO
+	lSpthwiuzgU4wMM1yM0Z9OQOoN484u8HO2OFj4OBoZ3Tpy+fLdnbhPHG5FL3N1Xk
+	AWEiA7Cuz/Fs91PfsrloAx9zWB0AFIq1Ku7SR10spjz3y/ejXYYCPNwUnBywtebT
+	g==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v21s7nxa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 May 2025 08:43:56 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54T7JSx1023202;
+	Thu, 29 May 2025 08:43:56 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46u4jbe80q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 May 2025 08:43:56 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54T8hsd4040383;
+	Thu, 29 May 2025 08:43:55 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 46u4jbe7xf-2;
+	Thu, 29 May 2025 08:43:55 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: david@redhat.com, mst@redhat.com, jasowang@redhat.com,
+        xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+        virtualization@lists.linux.dev
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH v2 2/3] virtio-mem: fix multiple typos in struct comments and function docs
+Date: Thu, 29 May 2025 01:42:40 -0700
+Message-ID: <20250529084350.3145699-2-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250529084350.3145699-1-alok.a.tiwari@oracle.com>
+References: <20250529084350.3145699-1-alok.a.tiwari@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v12 4/7] net: mtip: The L2 switch driver for imx287
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20250522075455.1723560-1-lukma@denx.de>
- <20250522075455.1723560-5-lukma@denx.de>
- <f738d1ed-7ade-4a37-b8fd-25178f7c1dee@redhat.com>
- <20250528125329.084ab649@wsk>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250528125329.084ab649@wsk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505290084
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4NCBTYWx0ZWRfXwAYQ0N2XM1IX iS91jvKkFKASlidScYjxGC1t482nWvIVkwW5q+za4774/QgthWSDq2416z48ax4pWyRSKuNWWkx QqO35RYSGx2H9FSwM0/lvSMSGvvaxZEFAz6CScoALmq07dh8OVIoGMSCJQ8oj+S2IxHx/npqNKF
+ icPtQKWZPlfEA6gKOf2QpYeAg6MnCp99Xtdy2cHU4kGWDBmax8agkBechsqLPXJ+xkAW2ROo3xd paUMgIbbIWL9raLyZl7fkEbZL/B0vDrDuj26RthyHrGrAaFnpBdPB2YJ98pEQyJFVwo2+yJV3QA ea88pCSxdj41l5VSDdjIgQSAQYonttc4Mq3ZcT58dUQVcnwQWLI0rXSSU1dlw7d6rOUopmUM7u1
+ QZCZzF3U0LUBqfZGsXwrhA64uwnEAu8zX79cJTIF5LpJ9g97Wb0I5lieZ4jySnbnL0yLHFTf
+X-Proofpoint-GUID: _uX3FlOrlrZ4-DTZxfawIYaQ1QxdC_sS
+X-Authority-Analysis: v=2.4 cv=UvhjN/wB c=1 sm=1 tr=0 ts=68381e4d b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=g6tw7J_2hcjgWMFmvSMA:9 cc=ntf awl=host:14714
+X-Proofpoint-ORIG-GUID: _uX3FlOrlrZ4-DTZxfawIYaQ1QxdC_sS
 
-On 5/28/25 12:53 PM, Lukasz Majewski wrote:
->> On 5/22/25 9:54 AM, Lukasz Majewski wrote:
->>> +/* dynamicms MAC address table learn and migration */
->>> +static void mtip_aging_timer(struct timer_list *t)
->>> +{
->>> +	struct switch_enet_private *fep = from_timer(fep, t,
->>> timer_aging); +
->>> +	fep->curr_time = mtip_timeincrement(fep->curr_time);
->>> +
->>> +	mod_timer(&fep->timer_aging,
->>> +		  jiffies +
->>> msecs_to_jiffies(LEARNING_AGING_INTERVAL)); +}  
->>
->> It's unclear to me why you need to maintain a timer just to update a
->> timestamp?!?
->>
-> 
-> This timestamp is afterwards used in:
-> mtip_atable_dynamicms_learn_migration(), which in turn manages the
-> entries in switch "dynamic" table (it is one of the fields in the
-> record.
-> 
->> (jiffies >> msecs_to_jiffies(LEARNING_AGING_INTERVAL)) & ((1 <<
->> AT_DENTRY_TIMESTAMP_WIDTH) - 1)
->>
-> 
-> If I understood you correctly - I shall remove the timer and then just
-> use the above line (based on jiffies) when
-> mtip_atable_dynamicms_learn_migration() is called (and it requires the
-> timestamp)?
-> 
-> Otherwise the mtip_timeincrement() seems like a nice wrapper on
-> incrementing the timestamp.
+Corrected several spelling mistakes in code comments, including:
+- "bock" -> "block"
+- "valued" -> "value"
+- "actipn" -> "action"
+- "accidentially" -> "accidentally"
+- Improved grammar in a few places for clarity.
 
-Scheduling a timer to obtain a value you can have for free is not a good
-resource usage strategy. Note that is a pending question/check above:
-verify that the suggested expression yield the expected value in all the
-possible use-case.
+These changes are purely cosmetic and do not affect functionality.
 
->>> +	if (!fep->link[0] && !fep->link[1]) {
->>> +		/* Link is down or autonegotiation is in progress.
->>> */
->>> +		netif_stop_queue(dev);
->>> +		spin_unlock_irqrestore(&fep->hw_lock, flags);
->>> +		return NETDEV_TX_BUSY;  
->>
->> Intead you should probably stop the queue when such events happen
-> 
-> Please correct me if I'm wrong - the netif_stop_queue(dev); is called
-> before return. Shall something different be also done?
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+v1 -> v2
+retained original wording "getting onlined" per David's comment.
+---
+ drivers/virtio/virtio_mem.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-The xmit routine should assume the link is up and the tx ring has enough
-free slot to enqueue a packet. After enqueueing it should check for
-enough space availble for the next xmit and stop the queue, likely using
-the netif_txq_maybe_stop() helper.
-
-Documentation/networking/driver.rst
-
->>> +	}
->>> +
->>> +	/* Clear all of the status flags */
->>> +	status &= ~BD_ENET_TX_STATS;
->>> +
->>> +	/* Set buffer length and buffer pointer */
->>> +	bufaddr = skb->data;
->>> +	bdp->cbd_datlen = skb->len;
->>> +
->>> +	/* On some FEC implementations data must be aligned on
->>> +	 * 4-byte boundaries. Use bounce buffers to copy data
->>> +	 * and get it aligned.
->>> +	 */
->>> +	if ((unsigned long)bufaddr & MTIP_ALIGNMENT) {
->>> +		unsigned int index;
->>> +
->>> +		index = bdp - fep->tx_bd_base;
->>> +		memcpy(fep->tx_bounce[index],
->>> +		       (void *)skb->data, skb->len);
->>> +		bufaddr = fep->tx_bounce[index];
->>> +	}
->>> +
->>> +	if (fep->quirks & FEC_QUIRK_SWAP_FRAME)
->>> +		swap_buffer(bufaddr, skb->len);  
->>
->> Ouch, the above will kill performances.
-> 
-> This unfortunately must be done in such a way (the same approach is
-> present on fec_main.c) as the IP block is implemented in such a way
-> (explicit conversion from big endian to little endian).
-> 
->> Also it looks like it will
->> access uninitialized memory if skb->len is not 4 bytes aligned.
->>
-> 
-> There is a few lines above a special code to prevent from such a
-> situation ((unsigned long)bufaddr & MTIP_ALIGNMENT).
-
-The problem here is not with memory buffer alignment, but with the
-packet length, that can be not a multiple of 4. In such a case the last
-swap will do an out-of-bound read touching uninitialized data.
-
->>> +	bdp->cbd_sc = status;
->>> +
->>> +	netif_trans_update(dev);
->>> +	skb_tx_timestamp(skb);
->>> +
->>> +	/* For port separation - force sending via specified port
->>> */
->>> +	if (!fep->br_offload && port != 0)
->>> +		mtip_forced_forward(fep, port, 1);
->>> +
->>> +	/* Trigger transmission start */
->>> +	writel(MCF_ESW_TDAR_X_DES_ACTIVE, fep->hwp + ESW_TDAR);  
->>
->> Possibly you should check skb->xmit_more to avoid ringing the doorbell
->> when not needed.
-> 
-> I couldn't find skb->xmit_more in the current sources. Instead, there
-> is netdev_xmit_more().
-
-Yeah, I referred to the old code, sorry.
-
-> However, the TX code just is supposed to setup one frame transmission
-> and hence there is no risk that we trigger "empty" transmission.
-
-The point is that doorbell ringing is usually very expensive (slow) for
-the H/W. And is not needed when netdev_xmit_more() is true, because the
-another xmit operation will follow. If you care about performances you
-should leverage such info.
-
-> 
->>> +	/* First, grab all of the stats for the incoming packet.
->>> +	 * These get messed up if we get called due to a busy
->>> condition.
->>> +	 */
->>> +	bdp = fep->cur_rx;
->>> +
->>> +	while (!((status = bdp->cbd_sc) & BD_ENET_RX_EMPTY)) {
->>> +		if (pkt_received >= budget)
->>> +			break;
->>> +
->>> +		pkt_received++;
->>> +		/* Since we have allocated space to hold a
->>> complete frame,
->>> +		 * the last indicator should be set.
->>> +		 */
->>> +		if ((status & BD_ENET_RX_LAST) == 0)
->>> +			dev_warn_ratelimited(&dev->dev,
->>> +					     "SWITCH ENET: rcv is
->>> not +last\n"); +
->>> +		if (!fep->usage_count)
->>> +			goto rx_processing_done;
->>> +
->>> +		/* Check for errors. */
->>> +		if (status & (BD_ENET_RX_LG | BD_ENET_RX_SH |
->>> BD_ENET_RX_NO |
->>> +			      BD_ENET_RX_CR | BD_ENET_RX_OV)) {
->>> +			dev->stats.rx_errors++;
->>> +			if (status & (BD_ENET_RX_LG |
->>> BD_ENET_RX_SH)) {
->>> +				/* Frame too long or too short. */
->>> +				dev->stats.rx_length_errors++;
->>> +			}
->>> +			if (status & BD_ENET_RX_NO)	/*
->>> Frame alignment */
->>> +				dev->stats.rx_frame_errors++;
->>> +			if (status & BD_ENET_RX_CR)	/* CRC
->>> Error */
->>> +				dev->stats.rx_crc_errors++;
->>> +			if (status & BD_ENET_RX_OV)	/* FIFO
->>> overrun */
->>> +				dev->stats.rx_fifo_errors++;
->>> +		}
->>> +
->>> +		/* Report late collisions as a frame error.
->>> +		 * On this error, the BD is closed, but we don't
->>> know what we
->>> +		 * have in the buffer.  So, just drop this frame
->>> on the floor.
->>> +		 */
->>> +		if (status & BD_ENET_RX_CL) {
->>> +			dev->stats.rx_errors++;
->>> +			dev->stats.rx_frame_errors++;
->>> +			goto rx_processing_done;
->>> +		}
->>> +
->>> +		/* Process the incoming frame */
->>> +		pkt_len = bdp->cbd_datlen;
->>> +		data = (__u8 *)__va(bdp->cbd_bufaddr);
->>> +
->>> +		dma_unmap_single(&fep->pdev->dev, bdp->cbd_bufaddr,
->>> +				 bdp->cbd_datlen,
->>> DMA_FROM_DEVICE);  
->>
->> I have read your explaination WRT unmap/map. Actually you don't need
->> to do any mapping here, 
-> 
-> There are 16 cbd_t descriptors allocated (as dma_alloc_coherent). Those
-> descriptors contain pointer to data (being read in this case).
-
-I'm referring to the actual packet payload, that is the buffer at
-bdp-cbd_bufaddr with len bdp->cbd_datlen; I'm not discussing the
-descriptors contents.
-
-> Hence the need to perform dma_map_single() for each descriptor, 
-
-You are not unmapping the descriptor, you are unmapping the packet payload.
-
->> since you are unconditionally copying the
->> whole buffer (why???)
-> 
-> Only the value of 
-> pkt_len = bdp->cbd_datlen; is copied to SKB (after byte swap_buffer()).
-
-The relevant line is:
-
-		skb_copy_to_linear_data(skb, data, pkt_len);
-
-AFAICS that copies whole packet contents, which is usually quite
-sub-optimal from performance PoV.
-
->> and re-using it.
->>
->> Still you need a dma_sync_single() to ensure the CPUs see the correct
->> data.
-> 
-> The descriptors - i.e. struct cbd_t fields are allocated with
-> dma_alloc_coherent(), so this is OK.
-
-I'm talking about packets contents, not packet descriptors. Please
-re-read the above and have a look at other drivers code.
-
-An additional point that I missed in the previous review is that the rx
-allocation schema is quite uncorrect. At ring initialization time you
-allocate full skbs, while what you need and use is just raw buffers for
-the packet payload. Instead you could/should use the page pool:
-
-Documentation/networking/page_pool.rst
-
-That will also help doing the right thing WRT DMA handling.
-
->> This patch is really too big, I'm pretty sure I missed some relevant
->> issues. You should split it in multiple ones: i.e. initialization and
->> h/w access, rx/tx, others ndos.
-> 
-> It is quite hard to "scatter" this patch as:
-> 
-> 1. I've already split it to several files (which correspond to
-> different "logical" entities - like mtipl2sw_br.c).
-> 2. The mtipl2sw.c file is the smallest part of the "core" of the
-> driver.
-> 3. If I split it, then at some point I would break bisectability for
-> imx28.
-
-Note that each patch don't need to provide complete functionality. i.e.
-patch 1 could implement ndo_open()/close and related helper, leaving
-ndo_start_xmit() and napi_poll empty and avoid allocating the rx
-buffers. patch 2 could implement the rx patch, patch 3 the tx path.
-
-The only constraint is that each patch will build successufully, which
-is usually easy to achieve.
-
-A 2K lines patches will probably lead to many more iterations and
-unhappy (or no) reviewers.
-
-/P
+diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+index 56d0dbe62163..90f7739858e0 100644
+--- a/drivers/virtio/virtio_mem.c
++++ b/drivers/virtio/virtio_mem.c
+@@ -164,7 +164,7 @@ struct virtio_mem {
+ 			unsigned long first_mb_id;
+ 			/* Id of the last usable memory block of this device. */
+ 			unsigned long last_usable_mb_id;
+-			/* Id of the next memory bock to prepare when needed. */
++			/* Id of the next memory block to prepare when needed. */
+ 			unsigned long next_mb_id;
+ 
+ 			/* The subblock size. */
+@@ -209,7 +209,7 @@ struct virtio_mem {
+ 			unsigned long first_bb_id;
+ 			/* Id of the last usable big block of this device. */
+ 			unsigned long last_usable_bb_id;
+-			/* Id of the next device bock to prepare when needed. */
++			/* Id of the next device block to prepare when needed. */
+ 			unsigned long next_bb_id;
+ 
+ 			/* Summary of all big block states. */
+@@ -240,7 +240,7 @@ struct virtio_mem {
+ 	/* An error occurred we cannot handle - stop processing requests. */
+ 	bool broken;
+ 
+-	/* Cached valued of is_kdump_kernel() when the device was probed. */
++	/* Cached value of is_kdump_kernel() when the device was probed. */
+ 	bool in_kdump;
+ 
+ 	/* The driver is being removed. */
+@@ -808,7 +808,7 @@ static int virtio_mem_sbm_try_remove_unplugged_mb(struct virtio_mem *vm,
+ }
+ 
+ /*
+- * See virtio_mem_offline_and_remove_memory(): Try to offline and remove a
++ * See virtio_mem_offline_and_remove_memory(): Try to offline and remove
+  * all Linux memory blocks covered by the big block.
+  */
+ static int virtio_mem_bbm_offline_and_remove_bb(struct virtio_mem *vm,
+@@ -1080,7 +1080,7 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
+ 		atomic64_sub(size, &vm->offline_size);
+ 		/*
+ 		 * Start adding more memory once we onlined half of our
+-		 * threshold. Don't trigger if it's possibly due to our actipn
++		 * threshold. Don't trigger if it's possibly due to our action
+ 		 * (e.g., us adding memory which gets onlined immediately from
+ 		 * the core).
+ 		 */
+@@ -2124,7 +2124,7 @@ static int virtio_mem_sbm_unplug_request(struct virtio_mem *vm, uint64_t diff)
+ 	 * whole memory blocks along with metadata. We prioritize ZONE_MOVABLE
+ 	 * as it's more reliable to unplug memory and remove whole memory
+ 	 * blocks, and we don't want to trigger a zone imbalances by
+-	 * accidentially removing too much kernel memory.
++	 * accidentally removing too much kernel memory.
+ 	 */
+ 	for (i = 0; i < ARRAY_SIZE(mb_states); i++) {
+ 		virtio_mem_sbm_for_each_mb_rev(vm, mb_id, mb_states[i]) {
+-- 
+2.47.1
 
