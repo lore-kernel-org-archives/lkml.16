@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8767C2571C6
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98632580F0
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493625; cv=none; b=ZoYZkLn/SYdZoiNb1TlOkb9iXexZF7X+AAyJEPsIaD3AYJchwDC9JmxW8AeTmvuywb8SNjV/cQrPkR1Pi85pakZrH4fJ35TnvWNf058+JvrwJJGsTpWltW+5DhOHl+9oHbx2yOH5EGpx97bXZpdgnVXHF44XyFYRpu47PSb47R0=
+	t=1748493627; cv=none; b=lyfHynZO33qniWg4S7N8Qx3rE85QT/0HiFb+3T8WU/W0KTosIhhLqSErIrhHP685uF05D2fJ4MPBUSaQNN5LPj/R3GT7XjbY7rwJcJxoabLxhRU0YmzM8gpGvFEvIcd6bvvPhfpyRNRFqGWc5fQn70a0U7Hjs//6hZlhl1Yqk1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493625; c=relaxed/simple;
-	bh=jsmqbC1vJZbprPguR7zwDCDHxB4zTIIrDoxTqEFx1LE=;
+	s=arc-20240116; t=1748493627; c=relaxed/simple;
+	bh=FlYGrHzVgLK7iexU49iqr1iQhFuIcnGo6aQmY/tgup0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=C560GgjamqMMXbkdLAi1AMjbsZ7aSOBWP83JaPhbcDceZVuOuj6aItIQ1mLSNPVj94dH7rgBD6AAuW+S4rQPdLSItybie527gze/C+u5aeg4bw4YHqEa1/P0+dbhEKhzDJZL1R6poRbLXWFcjyE4/c8r01C77NNuxAw5VTVAfE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IKZ74dQb; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=jphbNi90p2gpssSSSNPG0yu6bntnXVU8tRnYf/YKPeRTBborMyrQ1jbRQRqvBY2E9Cag6BSxco6IjysM+HWK8VzgkCCTKZA/GZSdFf9TiZpylJ5qkuoBrl6gEv0JxL43tt5ROny3Gak9ky4wDfJx9yQ4JxHXQJpMOz6AZ33ik4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VBlRnvtC; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IKZ74dQb"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747a9ef52a4so605339b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBlRnvtC"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747a9ef52a4so605401b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493623; x=1749098423; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493625; x=1749098425; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5JPEQx1UgA1kK0W1Kyi7k61uvOJ0V0RbXR9RGxgMDm8=;
-        b=IKZ74dQbqtQhtAx25lDdHPwJTlggU2wkcLgJclnBJQ0EA3Qa2+RcHIN4Qj3Jf+AzSg
-         0y0GX14mzJL8qzW8tko9HSCj1r7ZuogfSVf5EZK69MxZp0hnMaU1s4JBjPYzAY68wMmt
-         5hP0SCAb3bbVTn1msWzfusUa8AX38cuxGj/p59NgplppR2DIHCmx3mc3QQLt/0P1KeYJ
-         Dtn/A6shrzS6ReFS1ZJw+au002BhkRMdEqWdPK/FVVx6IViB90t7ySkhwkOOnX+T2NSL
-         pRnh8NUEZnoIsjhx3sInOlrCnZiSMFHcHfapBi8lBe7Ijj1qyfzMpXBxXEupQJiCxnaj
-         L0Gw==
+        bh=YRPcM65B5++XjOtLF59PpukMIedzXTkG3hM8fYdAKms=;
+        b=VBlRnvtCS3VRBaNOuGCuf8LbnCZEYIMIBXDDcC+MS1JE3lwQsIXR8L0OWan9n7MeCS
+         6l9/7x+1mF0mSfVobRh5H8++XphCC1cQXtigB/ix+KecsjXavqheBCeRIn1LP2FYTKhd
+         wkMrlo+heOosQauSFRqzzWfVQpW087u9kNssumKsCwVMOK8ci50AucfBOR1DAnv+mVsj
+         gnNz8PUWGo7MFCm1Am6NFLH2HTDrdlhwrXBJQHu+x8Efd5c/IUkuW5/QqhXnMDHZSspk
+         NOo+otv7M3cJ/MZibe6pdQ5k6Ox/xCJcZPCgeThZ6hb1VJfp56YbAlSBa0QSxibwjpYK
+         waWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493623; x=1749098423;
+        d=1e100.net; s=20230601; t=1748493625; x=1749098425;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5JPEQx1UgA1kK0W1Kyi7k61uvOJ0V0RbXR9RGxgMDm8=;
-        b=EAyCVcyF3ClIKUWdJ6FZEozcIWQL1uHJqKe/GBGgy1IDLaPZksPboA7GM3QZVpVG3a
-         AsZDu8oDwmKbhRmujrSQMAiqk05lQfdeL0fO8SZqGvfoo5I4zY7AKBd7vdfOSf+O5x3o
-         EMM6bECrggmZGICnlxK+b2ojLZFYgjts1p4RSqurFB47JgT4H4b0t0+PqlHkkOFR+36E
-         rKZZ3ee9kwtad0ycJEZ+/OseAEACqUm4Ev1O+UaTyr3wgv4d3IpSl5akrXzAX7CNuEnK
-         q819v3Zz4GXCdL9yntkycw5ZMZa8QxdCwMjefw2CuK/Hr/pSJTJ5kV8VA2dS9swYRegA
-         5HYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyJ8EcSIYMWQrq07yVrJ671AnNfiQhtDQpU4I3dXectypnQCJs9/BORJdSbDGR8uzRPTtJYVdXoF93R6I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtcKgzTzpB89pa46FA92HeIDOiN+oLuwkD2wrIuHqJQjhz14Oi
-	rzO9rAqdMJGtyT0xe+0TdkQ+mbJUAq5ir8dUG/qECYcdOIN4qNh98C1kmLgCk2giTjQ842iDVQp
-	vHOANnUtUeg==
-X-Google-Smtp-Source: AGHT+IFW4ud+zMcCHcIRcWhv614Og93PmqbrPfMTEVygcvH8Yldeies4S+HKGdGovs+R0RbQObY2hlDVTQ72
-X-Received: from pgbcp3.prod.google.com ([2002:a05:6a02:4003:b0:b2c:4287:b413])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9984:b0:215:de13:e212
- with SMTP id adf61e73a8af0-2188c2406a3mr30902424637.15.1748493622489; Wed, 28
- May 2025 21:40:22 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:44 -0700
+        bh=YRPcM65B5++XjOtLF59PpukMIedzXTkG3hM8fYdAKms=;
+        b=fhjGfCVD56GVnVHd4+MBzbvxmfhZ0ikQgDVDWmUCyrP15lSz0KGhyl/1ZaefsZnYV0
+         lRvCp/NEno5MO6ZchdYpbayk5lrqdbPcCPieqs3C4q/0rggyIb+2mRXeuYRzw4p2KQJI
+         iczFltHSPOu4PnAFrowNZxyg6J2CDfNWiosdDeMaqWgw8YwJyPjKLg6Cge836lvYdu4L
+         YXNn/Za3wBd0ro9C/GSM3HX/F1KLHu0smN82PVlKJxS+ynAvET3+VebAro/l/erEIYJQ
+         dGWdcU4bGVJPe4Ic0ODYmg4bgkOvqcX8Hefxf3Va/oZJ2Cy9S48BQ9C3lvXCUvkmuUoC
+         bQtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCwEXAG+RZWq12svUkKE2w4xuuMiHxbLTs714X8D26vD2W9h57zVkA0VnQLLcB5LY17IcMX87xYbBrCvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyhIxqShgtXKllCqrR9xCSY2rj5bvUan22lIFvzJhkCy+aoDl+
+	6iH9Va6Eh/QyvYgKkdGMBlgav5Cv1W+IA5JtMhbQoc2G3M5OJCNA16eJ57UBhTHHdMheJzDMlgb
+	XDWtrM4xSjQ==
+X-Google-Smtp-Source: AGHT+IGE97/4brak2jWWXbsOUIwxxMZsIVSSHJHsfJ1PKZTY+HX2kt+s0A7ggZSXWQhigBEpRQEb7aXdAepl
+X-Received: from pglr29.prod.google.com ([2002:a63:515d:0:b0:b2c:e7:ee61])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3953:b0:1f5:790c:94a
+ with SMTP id adf61e73a8af0-2188c28d57amr29649428637.25.1748493624601; Wed, 28
+ May 2025 21:40:24 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:45 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-9-irogers@google.com>
-Subject: [PATCH v4 08/24] perf jitdump: Directly mark the jitdump DSO
+Message-ID: <20250529044000.759937-10-irogers@google.com>
+Subject: [PATCH v4 09/24] perf record: Make --buildid-mmap the default
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,57 +89,180 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The DSO being generated was being accessed through a thread's maps,
-this is unnecessary as the dso can just be directly found. This avoids
-problems with passing a NULL evsel which may be inspected to determine
-properties of a callchain when using the buildid DSO marking code.
+Support for build IDs in mmap2 perf events has been present since
+Linux v5.12:
+https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
+Build ID mmap events don't avoid the need to inject build IDs for DSO
+touched by samples as the build ID cache is populated by perf
+record. They can avoid some cases of symbol mis-resolution caused by
+the file system changing from when a sample occurred and when the DSO
+is sought. To disable build ID scanning
+
+Unlike the --buildid-mmap option, this doesn't disable the build ID
+cache but it does disable the processing of samples looking for DSOs
+to inject build IDs for. To disable the build ID cache the -B
+(--no-buildid) option should be used.
+
+Making this option the default was raised on the list in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/jitdump.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ tools/perf/builtin-record.c        | 33 +++++++++++++++++++-----------
+ tools/perf/util/symbol_conf.h      |  2 +-
+ tools/perf/util/synthetic-events.c | 16 +++++++--------
+ 3 files changed, 30 insertions(+), 21 deletions(-)
 
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 624964f01b5f..b062b1f234b6 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -14,9 +14,9 @@
- #include <sys/mman.h>
- #include <linux/stringify.h>
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 136c0172799a..fe70f55fd172 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -171,6 +171,7 @@ struct record {
+ 	bool			no_buildid_cache_set;
+ 	bool			buildid_all;
+ 	bool			buildid_mmap;
++	bool			buildid_mmap_set;
+ 	bool			timestamp_filename;
+ 	bool			timestamp_boundary;
+ 	bool			off_cpu;
+@@ -1810,6 +1811,7 @@ record__finish_output(struct record *rec)
+ 			data->dir.files[i].size = lseek(data->dir.files[i].fd, 0, SEEK_CUR);
+ 	}
  
--#include "build-id.h"
- #include "event.h"
- #include "debug.h"
-+#include "dso.h"
- #include "evlist.h"
- #include "namespaces.h"
- #include "symbol.h"
-@@ -531,9 +531,22 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 	/*
- 	 * mark dso as use to generate buildid in the header
- 	 */
--	if (!ret)
--		build_id__mark_dso_hit(tool, event, &sample, NULL, jd->machine);
--
-+	if (!ret) {
-+		struct dso_id dso_id = {
-+			{
-+				.maj = event->mmap2.maj,
-+				.min = event->mmap2.min,
-+				.ino = event->mmap2.ino,
-+				.ino_generation = event->mmap2.ino_generation,
-+			},
-+			.mmap2_valid = true,
-+			.mmap2_ino_generation_valid = true,
-+		};
-+		struct dso *dso = machine__findnew_dso_id(jd->machine, filename, &dso_id);
-+
-+		if (dso)
-+			dso__set_hit(dso);
++	/* Buildid scanning disabled or build ID in kernel and synthesized map events. */
+ 	if (!rec->no_buildid) {
+ 		process_buildids(rec);
+ 
+@@ -2994,6 +2996,8 @@ static int perf_record_config(const char *var, const char *value, void *cb)
+ 			rec->no_buildid = true;
+ 		else if (!strcmp(value, "mmap"))
+ 			rec->buildid_mmap = true;
++		else if (!strcmp(value, "no-mmap"))
++			rec->buildid_mmap = false;
+ 		else
+ 			return -1;
+ 		return 0;
+@@ -3400,6 +3404,7 @@ static struct record record = {
+ 		.synth               = PERF_SYNTH_ALL,
+ 		.off_cpu_thresh_ns   = OFFCPU_THRESH,
+ 	},
++	.buildid_mmap = true,
+ };
+ 
+ const char record_callchain_help[] = CALLCHAIN_RECORD_HELP
+@@ -3567,8 +3572,8 @@ static struct option __record_options[] = {
+ 		   "file", "vmlinux pathname"),
+ 	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
+ 		    "Record build-id of all DSOs regardless of hits"),
+-	OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
+-		    "Record build-id in map events"),
++	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
++			"Legacy record build-id in map events option which is now the default. Behaves indentically to --no-buildid. Disable with --no-buildid-mmap"),
+ 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
+ 		    "append timestamp to output filename"),
+ 	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
+@@ -4098,19 +4103,23 @@ int cmd_record(int argc, const char **argv)
+ 		record.opts.record_switch_events = true;
+ 	}
+ 
++	if (!rec->buildid_mmap) {
++		pr_debug("Disabling build id in synthesized mmap2 events.\n");
++		symbol_conf.no_buildid_mmap2 = true;
++	} else if (rec->buildid_mmap_set) {
++		/*
++		 * Explicitly passing --buildid-mmap disables buildid processing
++		 * and cache generation.
++		 */
++		rec->no_buildid = true;
 +	}
- out:
- 	perf_sample__exit(&sample);
- 	free(event);
++	if (rec->buildid_mmap && !perf_can_record_build_id()) {
++		pr_warning("Missing support for build id in kernel mmap events. Disable this warning with --no-buildid-mmap\n");
++		rec->buildid_mmap = false;
++	}
+ 	if (rec->buildid_mmap) {
+-		if (!perf_can_record_build_id()) {
+-			pr_err("Failed: no support to record build id in mmap events, update your kernel.\n");
+-			err = -EINVAL;
+-			goto out_opts;
+-		}
+-		pr_debug("Enabling build id in mmap2 events.\n");
+-		/* Enable mmap build id synthesizing. */
+-		symbol_conf.buildid_mmap2 = true;
+ 		/* Enable perf_event_attr::build_id bit. */
+ 		rec->opts.build_id = true;
+-		/* Disable build id cache. */
+-		rec->no_buildid = true;
+ 	}
+ 
+ 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index cd9aa82c7d5a..7a80d2c14d9b 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -43,7 +43,7 @@ struct symbol_conf {
+ 			report_individual_block,
+ 			inline_name,
+ 			disable_add2line_warn,
+-			buildid_mmap2,
++			no_buildid_mmap2,
+ 			guest_code,
+ 			lazy_load_kernel_maps,
+ 			keep_exited_threads,
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 69b98023ce74..638d7dd7fa4b 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
+ 		event->mmap2.pid = tgid;
+ 		event->mmap2.tid = pid;
+ 
+-		if (symbol_conf.buildid_mmap2)
++		if (!symbol_conf.no_buildid_mmap2)
+ 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
+ 
+ 		if (perf_tool__process_synth_event(tool, event, machine, process) != 0) {
+@@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+ 		return 0;
+ 
+ 	dso = map__dso(map);
+-	if (symbol_conf.buildid_mmap2) {
++	if (!symbol_conf.no_buildid_mmap2) {
+ 		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
+ 		event->mmap2.header.type = PERF_RECORD_MMAP2;
+ 		event->mmap2.header.size = (sizeof(event->mmap2) -
+@@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
+ 		.process = process,
+ 		.machine = machine,
+ 	};
+-	size_t size = symbol_conf.buildid_mmap2
+-		? sizeof(args.event->mmap2)
+-		: sizeof(args.event->mmap);
++	size_t size = symbol_conf.no_buildid_mmap2
++		? sizeof(args.event->mmap)
++		: sizeof(args.event->mmap2);
+ 
+ 	args.event = zalloc(size + machine->id_hdr_size);
+ 	if (args.event == NULL) {
+@@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
+ 						struct machine *machine)
+ {
+ 	union perf_event *event;
+-	size_t size = symbol_conf.buildid_mmap2 ?
+-			sizeof(event->mmap2) : sizeof(event->mmap);
++	size_t size = symbol_conf.no_buildid_mmap2 ?
++			sizeof(event->mmap) : sizeof(event->mmap2);
+ 	struct map *map = machine__kernel_map(machine);
+ 	struct kmap *kmap;
+ 	int err;
+@@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(const struct perf_tool *tool,
+ 		event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
+ 	}
+ 
+-	if (symbol_conf.buildid_mmap2) {
++	if (!symbol_conf.no_buildid_mmap2) {
+ 		size = snprintf(event->mmap2.filename, sizeof(event->mmap2.filename),
+ 				"%s%s", machine->mmap_name, kmap->ref_reloc_sym->name) + 1;
+ 		size = PERF_ALIGN(size, sizeof(u64));
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
