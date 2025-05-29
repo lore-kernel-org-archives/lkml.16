@@ -1,167 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2079.outbound.protection.outlook.com [40.107.95.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164C020C469;
-	Thu, 29 May 2025 21:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748553418; cv=none; b=uVjK1ilo1hlViR3XEbg698u5MPs/s3MGXyQtSY05YPa58eqPBJk0r/esdZ5Uf4hSEGu+1N0YFN7V2w0qS4yyDQec0X4tdJl8A/5JTy9uTd+fEHDSAJ0IRnW4Bh4VDYL6n9tuiN44v9K15XQtEjLZd4QXeiK7QzNyvE7m1PuH16A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748553418; c=relaxed/simple;
-	bh=XwSNpCLmOFYgZlT+vqB/zkYXZoNvF9LKBVo7R5SnQvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKzyoZxXP13Kv9lVMHX4rafLlUBf+c1feBxn0HrVF0Pr15kH/ZtPZCRhFQzIx3OqGwancjwnwqGg3KH1KBhWX0WUN89G5AePD8MmDqCrwKAfRWnhvQ3JqZpqF7JdZ2xs1rR5cFobK2Qip3UFqbJOx95gKBcgnP1xUIIZMS9LhxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QE8FafhO; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF29920C469;
+	Thu, 29 May 2025 21:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748553498; cv=fail; b=o+furSRnxHSSTPVj0CG7Zhp4Mt9+OlE7RN6QAsQIs7bwfwUS4MTHTeeqMmaeHz0htc+E1gNqMGV87/Kq+x8yg/EG91kIhGp1rIuclkLS+l3VTvLQApa3vNKkYmYl6qfQrilqfwFBlKQ9V4RSR3k6zlGdgaplYHewm8bX0eS5sDo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748553498; c=relaxed/simple;
+	bh=okWTGLFG5Ee1q6ejgQe/ild2rVG9jCtJoRd6sOrEQkI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KzBk77ApgxQr2A8vOE0b1DAAqoaqxe72fCUa+pwI2dwugdspU5OuG+MB4mgHsWS589WKlvXdkb9zrisbjONlmCyuoFbifx2ZDmPeyUf5YIzoskzVwZp8MeV2rVib2cpUyyVcHM0bMntxXKiOd95RRhQN5TLHvfJ2Ca48GzyxY+I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NfDXDblx; arc=fail smtp.client-ip=40.107.95.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QE8FafhO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1369DC4CEE7;
-	Thu, 29 May 2025 21:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748553416;
-	bh=XwSNpCLmOFYgZlT+vqB/zkYXZoNvF9LKBVo7R5SnQvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QE8FafhOJkbO0j8ajuGRE3oOAuSmqOSe7+1Bbv1xaRWE+GEqFHoQqKjHSPvlNvh8X
-	 xaUXj42tdidF41Kr/O4VBBHdBcT46ME5JSAvysORACebdBaYt/za2ZLB9918zp+HG/
-	 MnTpyOhxty75uU+RXJ/hyhZ6ZnSbvFM0C/SEeS/SzucQNcldj5qInocL0jscgQrZRV
-	 HhOFx1gcMCLB7GCwEsyACsRzhuz4ZFAVektyXrTVvZu3lyC0ag9CwrjioZ4ERbFnpv
-	 2HihaHdw1NUs7EO0PJ+YiMAi46LzXEFvynTHxRPB6/YcS/xwivV8yxQqvqZb39Kokc
-	 VTl+yzDZkdWRA==
-Date: Thu, 29 May 2025 14:16:39 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-	linux-s390@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>
-Subject: Re: [PATCH v4 08/13] crypto: s390/sha256 - implement library instead
- of shash
-Message-ID: <20250529211639.GD23614@sol>
-References: <20250428170040.423825-1-ebiggers@kernel.org>
- <20250428170040.423825-9-ebiggers@kernel.org>
- <20250529110526.6d2959a9.alex.williamson@redhat.com>
- <20250529173702.GA3840196@google.com>
- <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NfDXDblx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wdyEfztahxevI81rR0tFSdRqeG0L6p2KOpFSgitVIirgQzQKc//XtE4qxWa+3/Z5e062QrOABtY5sSk+QgNO8Lk89gMrXnRw4RIUJcEHQgpt/UguAZaoDskAA4+L/+bAVF818l5chEasOan7VF1iAavMa/UGCsPvZHTVVUVtp1UNXlCEIxAj4Zm5RyTwknfcfxlm/mycDTLFdbNJYf4h2YGY9WfQRmneUVyI996C5CG7kpYUo8VItBw3Ns2nKwfWlVvA21Qg3rO3uV6MA4Dpf4iKVCVvNAWc/iOGgMVJI1CETDwwbhp/ly6xVPJ95/YX9qJABPLjZPVjyIe58ag1Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LMg7YOdqnhhgV42SXhna/lh7FLM0idOOKhp4n+XyFmQ=;
+ b=auXl7yGDCIF1XZf1WnFiOLoOIDiDh3N8pbubZshF0cNZwRNoyN8IlQvDEcxVIr85qZ9aORjFFKpQUawVrlETA2OZpVAliHVJI0TihT9dVfCbo6DZk7VxUgI0dgr/Cz02W0iLZGcwHH+Az1DGufcJpBhOH3nWG+RdU/mTIsBlaxca8TpfPJty1JGedsdr5i/6gT75i3SNo4LPeU2+ZsgwREF/s+6Roi/PTMn7zJph78XyioExf1OKtlei2w9zirWRs4VEUIFzyr36ucvzlMUESKBlFQXS7Ck5/Z/oGl7i4M4hhJoIYjA4nNIwcYJDFtc9cV+1NMXe9EjeLBGQxl3AFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LMg7YOdqnhhgV42SXhna/lh7FLM0idOOKhp4n+XyFmQ=;
+ b=NfDXDblx5J6C2j7p6ecyX619m2gLKVEvKE7hEEfNDuxsVG1uvQij20EMUIx44G7kRG41HyyDFSD8JNZqJBtEPs6tX/CB229XfFqf381hfpizmmHqVdMVlqeJ7AbLLTSZ3UJFqiWwp4XNcJBGtRZbklXdWHjBp+5Lzam0nFoDKQw=
+Received: from CH0PR04CA0054.namprd04.prod.outlook.com (2603:10b6:610:77::29)
+ by SJ0PR12MB6784.namprd12.prod.outlook.com (2603:10b6:a03:44f::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 29 May
+ 2025 21:18:14 +0000
+Received: from CH2PEPF0000009A.namprd02.prod.outlook.com
+ (2603:10b6:610:77:cafe::46) by CH0PR04CA0054.outlook.office365.com
+ (2603:10b6:610:77::29) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.27 via Frontend Transport; Thu,
+ 29 May 2025 21:18:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH2PEPF0000009A.mail.protection.outlook.com (10.167.244.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025 21:18:12 +0000
+Received: from tlendack-t1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 29 May
+ 2025 16:18:11 -0500
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
+	<seanjc@google.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+Subject: [PATCH 0/2] Remove some hardcoded SEV-SNP guest policy checks during guest launch
+Date: Thu, 29 May 2025 16:17:58 -0500
+Message-ID: <cover.1748553480.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.46.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PEPF0000009A:EE_|SJ0PR12MB6784:EE_
+X-MS-Office365-Filtering-Correlation-Id: adc9dbb8-58ea-410c-8172-08dd9ef651cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?c246hm6wA235FT1/zmyHLBmzZM2DsYXeCRhlUedH2P7z44IjUYDappbJqCsE?=
+ =?us-ascii?Q?Lnah2cOo/5AU69qvclFJ1d7y2WhqA4OheQu5hKgmUhvwjOqChTXBd8zINsWy?=
+ =?us-ascii?Q?jDIhKvjhHK7UBgjxl7xTVkoLOIjA/s4KpLaFqywl1QwczIFlDyYO+WzWTXBO?=
+ =?us-ascii?Q?dchQRG+1/OfEVvi/4aDpmrvka7zatq55Ik0q6FWCNM537mlXZUahvmNgOWLS?=
+ =?us-ascii?Q?lhP5c1UBm9ebMLK3jwLTgX33ak2yubY8YDAT/OUCzvHy4CZ/QGPsAdnv/hBL?=
+ =?us-ascii?Q?+sbBZukzPmUd2xsehmghyMjrAGyjMFVJhVxJkK5E4UnlIeNJrrwOJIfAvnG4?=
+ =?us-ascii?Q?p94YUigpwNTVpxl+30ji+4zyj+uoHy4/SJ1qFlfZV70bbqz+OvTDg1ZJ7QFI?=
+ =?us-ascii?Q?aCOa7/d4T4OJ0nSuF+8hhjRRla6HKxW5B1hryRONqce2LlVa09x/ZtxND/k4?=
+ =?us-ascii?Q?t9hFCBNfAc9aFXPRG7NkR6XrjqEhn176VvZEGH+aHyG44P6wWcgBUYbcDfaX?=
+ =?us-ascii?Q?9L8uzZV2drva0vInR46V3GUdZzkRQlcMelt1gZUtP8RUJFDgKbLl8AVsI00V?=
+ =?us-ascii?Q?BYKGWDjyFK+WfRatEbsxy2XIyoZn3CcpqGJnA3R0rNn8pgwnpCB6NKFNx3/n?=
+ =?us-ascii?Q?13jgBOPRDT0Ti/tVKtN/l64I3rWE0FgV5yU20bW4cI5i6z982hhVm0a+0J0R?=
+ =?us-ascii?Q?nU3JFWuu86o6upS73T6Sp4AJrAC99cpP90snrQoP4X2XgP1VkZztPdX3o+34?=
+ =?us-ascii?Q?V5fgz5ClV47ILxEbWYq/83Y+LfSbg6wuqmdjkmJ3wCRpxhg7Jx+MkW6OGPpP?=
+ =?us-ascii?Q?/5/7XCtJEf8IDXYUwO3hr6cu9CarLf3f+4+mtYKGT5/tLFnsaoMoUcVNQKXe?=
+ =?us-ascii?Q?8Iy+SDcoXmexdYXGcZFhtEUVNzn4/avy2MW3owCJyAyfHqEyv80fb96YkYv2?=
+ =?us-ascii?Q?Zl7JulhsgmjJ/M7PlvabzRKu9LSCGtthWaKVBtll9Tqq9lCekLfDQh1nEaWc?=
+ =?us-ascii?Q?TKER/3x5oMBEvBmgXn+aWiEbHfo85UDMMJcNCe4ViV2+10DH24O8W4ExF0k7?=
+ =?us-ascii?Q?Rnmz7ciCkylBjx9dzs5SqkiNwQhbPP/XAdTPXvD+J/osumcpg2bNUXmZs7tD?=
+ =?us-ascii?Q?4dSHTqDT/T0ifWT05DOpxxwRSEQjwPe2Ru9RRO1lNJDNtsjcwM2jOvnKNE4G?=
+ =?us-ascii?Q?W2Q/ArV/0dTWKgoZ60Nu1OMxjXQkvMGQpmH0CLGLP/EVLKkfga59v1rgQ0ED?=
+ =?us-ascii?Q?Plzmu3rbaJJxK67zQKw3slTakS5t2wvKeHy6r6QbZiRRa40iAg9tZjDCF7b+?=
+ =?us-ascii?Q?gMSfR/Xz7ayKOLZ/b8PWWJc5tsu7SSG6rit43X9NkBRElsK3FqzvtJZq5nLO?=
+ =?us-ascii?Q?TLfx8gtHRy7qdNrOcJYL+c4yWbSWbK0EF0wz6txq+ZLz0oKmYX2FK/OoYoJ9?=
+ =?us-ascii?Q?ukRDVSegx7o0G+BbkS/Cnm88CK/UG4KLis63GCPGL1gFPHcN91GWXf0iR/hK?=
+ =?us-ascii?Q?Vl1Fdl/P/OZnvwjpXj7VRGDIAt2aRflSBWkd?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 21:18:12.7443
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: adc9dbb8-58ea-410c-8172-08dd9ef651cc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH2PEPF0000009A.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6784
 
-On Thu, May 29, 2025 at 01:14:31PM -0700, Linus Torvalds wrote:
-> On Thu, 29 May 2025 at 10:37, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > Long-term, I'd like to find a clean way to consolidate the library code for each
-> > algorithm into a single module.
-> 
-> No, while I think the current situation isn't great, I think the "make
-> it one single module" is even worse.
-> 
-> For most architectures - including s390 - you end up being in the
-> situation that these kinds of hw accelerated crypto things depend on
-> some CPU capability, and aren't necessarily statically always
-> available.
-> 
-> So these things end up having stupid extra overhead due to having some
-> conditional.
-> 
-> That extra overhead is then in turn minimized with tricks like static
-> branches, but that's all just just piling more ugly hacks on top
-> because it picked a bad choice to begin with.
-> 
-> So what's the *right* thing to do?
-> 
-> The right thing to do is to just link the right routine in the first
-> place, and *not* have static branch hackery at all. Because you didn't
-> need it.
-> 
-> And we already do runtime linking at module loading time. So if it's a
-> module, if the hardware acceleration doesn't exist, the module load
-> should just fail, and the loader should go on to load the next option.
+This series removes some guest policy checks that can be better controlled
+by the SEV firmware.
 
-So using crc32c() + ext4 + x86 as an example (but SHA-256 would be very
-similar), the current behavior is that ext4.ko depends on the crc32c_arch()
-symbol.  That causes crc32-x86.ko to be loaded, which then depends on the
-crc32c_base() symbol as a fallback, which causes crc32.ko to be loaded too.  My
-idea is to consolidate the two crc32 modules into one (they always go together,
-after all), keeping the same symbols.  The main challenge is just the current
-directory structure.
+- Remove the check for the SMT policy bit. Currently, a check is made to
+  ensure the SMT policy bit is set to 1. However, there is no reason for
+  KVM to do this. The SMT policy bit, when 0, is used to ensure that SMT
+  has been disabled *in the BIOS.* As this does not require any special
+  support within KVM, the check can be safely removed to allow the SEV
+  firmware to determine whether the system meets the policy.
 
-Your suggestion sounds like: ext4.ko would depend on the crc32c() symbol, which
-would be defined in *both* crc32-x86.ko and crc32.ko.  The module loader would
-try to load crc32-x86.ko first.  If the CPU does not support any of the x86
-accelerated CRC32 code, then loading that module would fail.  The module loader
-would then load crc32.ko instead.
+- Remove the check for the SINGLE_SOCKET policy bit. Currently, a check
+  is made to ensure the SINGLE_SOCKET policy bit is set to 0. However,
+  there is no reason for KVM to do this. The SINGLE_SOCKET policy bit,
+  when 1, is used to ensure that an SNP guest is only run on a single
+  socket. When the system only consists of a single socket, the SEV
+  firmware allows guest activation to succeed. However, if the system
+  has more than one socket, the SEV firmware will fail guest activation
+  when the SNP_ACTIVATE command is used (which is the activation command
+  used by KVM).
 
-Does any of the infrastructure to handle "this symbol is in multiple modules and
-they must be loaded in this particular order" actually exist, though?
+The SMT policy patch should not be controversial. The SINGLE_SOCKET policy
+patch could be a bit controversial, since, when you have the SINGLE_SOCKET
+policy bit set, you can have a guest that can run without issue on a
+single socket system, but suddenly fail when attempted to be started on a
+system with more than one socket. But, as this is opt-in behavior from
+userspace, this could be viewed as providing the protection that the guest
+owner desires.
 
-And how do we avoid the issues the crypto API often has where the accelerated
-modules don't get loaded, causing slow generic code to unnecessarily be used?
+In order to support use of the SINGLE_SOCKET policy bit on a system with
+more than one socket, the SNP_ACTIVATE_EX command must be used and proper
+scheduling support performed.
 
-IMO this sounds questionable compared to just using static keys and/or branches,
-which we'd need anyway to support the non-modular case.
+The series is based off of:
+  https://github.com/kvm-x86/linux.git next
 
-> Not any silly "one module to rule them all" hackery that only results
-> in worse code. Just a simple "if this module loads successfully,
-> you'll link the optimal hw acceleration".
-> 
-> Now, the problem with this all is the *non*modular case.
-> 
-> For modules, we already have the optimal solution in the form of
-> init-module error handling and runtime linking.
-> 
-> So I think the module case is "solved" (except the solution is not
-> what we actually do).
-> 
-> For the non-module case, the problem is that "I linked this
-> unconditionally, and now it turns out I run on hardware that doesn't
-> have the capability to run this".
-> 
-> And that's when you need to do things like static_call_update() to
-> basically do runtime re-linking of a static decision.
-> 
-> And currently we very much do this wrong. See how s390 and x86-64 (and
-> presumably others) basically have the *exact* same problems, but they
-> then mix static branches and static calls (in the case of x86-64) and
-> just have non-optimal code in general.
-> 
-> What I think the generic code should do (for the built-in case) is just have
-> 
->         DEFINE_STATIC_CALL(sha256_blocks_fn, sha256_blocks_generic);
-> 
-> and do
-> 
->         static_call(sha256_blocks_fn)(args..);
-> 
-> and then architecture code can do the static_call_update() to set
-> their optimal version.
-> 
-> And yeah, we'd presumably need multiple versions, since there's the
-> whole "is simd usable" thing. Although maybe that's going away?
+Tom Lendacky (2):
+  KVM: SVM: Allow SNP guest policy disallow running with SMT enabled
+  KVM: SVM: Allow SNP guest policy to specify SINGLE_SOCKET
 
-Moving the static_call into the generic code might make sense.  I don't think
-it's a win in all cases currently, though.  Only x86 and PPC32 actually have a
-real static_call implementation; everywhere else it's an indirect call which is
-slower than a static branch.  Also, some arch code is just usable
-unconditionally without any CPU feature check, e.g. the MIPS ChaCha code.  That
-doesn't use (or need to use) a static call or branch at all.
+ arch/x86/kvm/svm/sev.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-Also, while the centralized static_call would *allow* for the generic code to be
-loaded while the arch code is not, in the vast majority of cases that would be a
-bug, not a feature.  The generic crypto infrastructure has that bug, and this
-has caused a huge amount of pain over the years.  People have to go out of the
-way to ensure that the arch-optimized crypto code gets loaded.  And they often
-forget, resulting in the slow generic code being used unnecessarily...
 
-Making the arch-optimized code be loaded through a direct symbol dependency
-solves that problem.
+base-commit: 3f7b307757ecffc1c18ede9ee3cf9ce8101f3cc9
+-- 
+2.46.2
 
-- Eric
