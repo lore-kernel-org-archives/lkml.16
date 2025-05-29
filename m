@@ -1,180 +1,251 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C81647;
-	Thu, 29 May 2025 19:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A520232368;
+	Thu, 29 May 2025 19:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748545868; cv=none; b=hN9gnFb19i1Rl8+C6wmtYV/jiVdCbcsFK/arzv4z78Uv2ZulghRLNhOxy6xn4/K8LAayaQDKK4haesTy/3DLaszv6cBQSotS6+2dS27MQPBjh68w/FnUA3Vs3qqFeWSzzSf2xLv4IFeO/helD0fFy1EvZoT7pHDvmG3YXs6T5SE=
+	t=1748545873; cv=none; b=tMqEmyWHeiCGkpR4D88HLi4s/xxmwcMpEsRevF0evxWewtSHmPTcClK0w7SS3ox/KWkrilq+E530+fRJ8/IF0zia1xM68BuHKccNCFhO3ESivaUloi020y7SEdc8kJSGGInwVrMWv3kSRUTeO7BVOQIdI2M8VnbMBQ5LxjSdu2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748545868; c=relaxed/simple;
-	bh=pr4M0bvpcxHz1vilhmzwplUEFexryIXuDkfJMqZx/bU=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=DFuVT0ByLVOtEDFTPrKa6bDmr8OaoCVXVzl9MEeCIRX03NXluLj0OYDUjvOrfufq3jXgAHVnjgnw+w2aYfnAfQe275RA3qW+KRChKMXAsqRj0JSBRqL8R85ny2pkXPbTVor3mTqiAXN/8cAttxWMrVGnee4S5gmJbKbHKQA4Aho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YMHEHjD9; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748545873; c=relaxed/simple;
+	bh=ewfvm9AG10NcpYFLSBRgReLeChzHJXRTqAPWFu8ltYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JMGbkp0sMRQWP9KAw9IiGYp+PpvEnlAj6GiB4U5RsE3vQ1ycpNakIXx5P/+zZbm6VzsTZAxDCMonzyAXL56H29a66+7KGnmkus17+uD61yj9jjK0Vnl+96kFa21FdZsRjgbVJnfDxZh1hZXyNrXTn4WRq9B7UqaMVvrjzu1YeKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV0HGoae; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YMHEHjD9"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TD33TB004354;
-	Thu, 29 May 2025 19:10:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=8DpMau
-	1p7Ew4goUjGI6Xb7TMFJSj1/RZemgjGWectyo=; b=YMHEHjD9H2tX1LDD5bPw0e
-	LmkKly4h0Sfhi5jspkLQLX47VAJ2Lw4H60euxqlO1gEGSsoeTdM+xyciCUAbDoxw
-	277jeo9dwk9DuUsylKUacVD5Tt+2jBNdZNqgrK1RmKXLaPa7QQGhpNzMXdOORS37
-	8zrWIKBJyeW/fMs/K2fsFFvJ6fiuz6uvOz9zVquMtVICOHFIzjfAgl9lTrvTfHnX
-	lG0312SWdlwToq7EhmC8mOroTmZPh9/zO3NKl6TACHB1KwCmPDjol9gF7s6LLZLD
-	JpoMc4GD0/LKpvBjF1Yl6Ta2xn4LH3MNcdUrt0enE/BIyZaLASuCBJYgSMaS+FWw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40hqhgm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 19:10:56 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54TJ94YZ029153;
-	Thu, 29 May 2025 19:10:56 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40hqhgg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 19:10:56 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54THYxVF026914;
-	Thu, 29 May 2025 19:10:55 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu53djxh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 19:10:55 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54TJAsi233817158
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 29 May 2025 19:10:54 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AF4A05804B;
-	Thu, 29 May 2025 19:10:54 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D9A2758065;
-	Thu, 29 May 2025 19:10:53 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 29 May 2025 19:10:53 +0000 (GMT)
-Message-ID: <c17b1932657164acfbf98f8ab9ec08d88ba827e8.camel@linux.ibm.com>
-Subject: Re: linux-next: manual merge of the integrity tree with the
- mm-nonmm-unstable tree
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton
-	 <akpm@linux-foundation.org>
-Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin	
- <dmitry.kasatkin@gmail.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List
- <linux-next@vger.kernel.org>,
-        Steven Chen	 <chenste@linux.microsoft.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <20250529142748.052c3d2b@canb.auug.org.au>
-References: <20250430142331.468074f1@canb.auug.org.au>
-	 <20250529142748.052c3d2b@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 29 May 2025 15:10:53 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV0HGoae"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6faa60c983fso11729926d6.2;
+        Thu, 29 May 2025 12:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748545870; x=1749150670; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OeLAlwcVXUCxgZFIZN3PbutPoyXtuBhygdYPZ4P8Nqk=;
+        b=OV0HGoae8++qEfYqsee9oA37dtfWCRYKaCKIR6WlAakynCH7BcNeTVNUHlu/9eqSL8
+         dX+MAxTzkT4BcSlfODdzdYPx8Fy9EfKGOOlLHGcHFisICYhqkhUeHvZ+lG+/cQNMxfK1
+         atswy3RQ054jLQ3vzYh7vKrutl4Ak/1I/WV61HKHhhpeSbCIejVaB8ODPjBQe15GNL6n
+         vcRPLgtFhHWllxjssO44SRwz9cogAFrgHBczy7e8NuXtyoeJBu5oTGdDsdJvzH5xP7nN
+         0r9kIOGMG7IAFLyFjw1aT1BAD5Q+e1sw323rxHCjsKNqcPAzssrtQXFtOxO5Hh6A6TBE
+         6UJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748545870; x=1749150670;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OeLAlwcVXUCxgZFIZN3PbutPoyXtuBhygdYPZ4P8Nqk=;
+        b=wM/WB6wwyI8qQcjWo2sKiDI2fzmwHW3gkdyshmuCnt8Y1jekTLNfeklWHwNZWBXtZk
+         Gpt3NuoUH0mTQ38V1iATlb8l2jvDhaWJlNjXRbfnkdnINBxQZl/q6gayR/tve3PzgM7/
+         PIMSdtJnozaBdZRduxl9a3ocY74Ym5cpfEF9W7g4yMo40zox4RzWzFkudt2KgBAWUbVY
+         fxjEF1SLnKUBazJcOvExoXLUwhvYmbkm2hCO25deXvrbpogkAwz4h+kKkosALmB0o1z+
+         EIMPgrjuoB5yMmDNE1P/3ntdudp5Vh54zMM8ZZd8LBSP+uOnfHAY7dH6cgxbxVevSL28
+         lPRg==
+X-Forwarded-Encrypted: i=1; AJvYcCURWWD15I1PYwHRLW7SpU+XNGU0dRDoVoGvnno69sMG/GpbeP+g1c6u0jc9wPdVqXFZFGYBX5qxQ/cPrA==@vger.kernel.org, AJvYcCUovHyBTvg7q0Ooa7TSzhrPyp9xQIojhteTiacSyb+WIJTn8NvwtyyLj07GOMKDAj/yKB07yU30ZItYyl4l9VQ=@vger.kernel.org, AJvYcCXlyH/VtycsSjFou6xsblh2qjT4Fm1MjyOWnKbgIulG8zpgo2BnIGTLvQ1KUY33AeeFdyi65N9pWXv660zz@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX4QxvZUkzXhijVNnS9MYp8eYvLdO+CA3YkLWAkOdQE3lcTakQ
+	m75GG/uj4fuLk5iClKX/bjGJYXItGzMXct37FM5vXT7iKYkd9vTxwAXo
+X-Gm-Gg: ASbGncs36WvlJ+s0KJ7j4rLDgsLzl8oa2yvkdeMpSG3rcXylAlW/tuGGSCCMLSZAWQe
+	X7J5S6eYZ5c5bunJ6CkZ4I24rFgYAFxhzRM+sXY3+kZfa0Z0UM3MZ8p2AMJaWCP4T6LGt8JJugT
+	rPLWwR0jd3pvtQY6wPqFBsLzuNkZGTgkvh0DBoHZC3p/MOuzN4qYhiyMue7wNhlQgfPemqks7bw
+	JoSuINwObQj1Ovx9iY3TXY9QFtDxPHuFTKr3bp8PU7ZFXNu573mND176YBK3RTvW3yo1pedMEAl
+	qfORB9jnrGWnZsFySMvD2Y4aIJmDZYIWCv+Q74jaYRVu4/EJSmME/kgwvUk1tJI6wE4zFW0UDeJ
+	DOc/0jQaK66b3OZPKGVsX45p1ZSzGj4gK2lhrx5E1QQ==
+X-Google-Smtp-Source: AGHT+IGWjPMtZyJ9npuW5Lc/hC7qcjejDjWYBlfk45fCEcDAzlnVNwVeJ1/HJYt3wXHFINYEIQGsOQ==
+X-Received: by 2002:a05:6214:c62:b0:6fa:ce87:2302 with SMTP id 6a1803df08f44-6facebf5b9fmr10913356d6.40.1748545870146;
+        Thu, 29 May 2025 12:11:10 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d5b139sm12470196d6.53.2025.05.29.12.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 12:11:09 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id A5C0E1200043;
+	Thu, 29 May 2025 15:11:08 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Thu, 29 May 2025 15:11:08 -0400
+X-ME-Sender: <xms:TLE4aIfy4JC4A5njVtsuPX04aKrnjTaNZQclWKA5MNtXuz1jDEdPiA>
+    <xme:TLE4aKOpFrhiHlFTG79IgOKl7fBP0K79ga7OKdQHxble8y8YijXAGKaqRZQOpF-jv
+    4NPZWIc4nFzXbfWHQ>
+X-ME-Received: <xmr:TLE4aJgEs3GOdYvXG4AF8MJTdpuVi5Qz3PDoEPM9b1sBD4bCR4sQcvXJhJtwjbqrVdDW3IL9f78N>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieelgeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquh
+    hnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepffdtiefhieeg
+    tddvueeuffeiteevtdegjeeuhffhgfdugfefgefgfedtieeghedvnecuffhomhgrihhnpe
+    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
+    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
+    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudeipdhmohguvgepsh
+    hmthhpohhuthdprhgtphhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojh
+    gvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehg
+    mhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtg
+    hpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthht
+    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhroh
+    hsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:TLE4aN_wXJBg9GxWKCWGZ-5uMT5wEMWzA7uaHIT4IBhXhjp35vToKQ>
+    <xmx:TLE4aEut0qO6qsitJG0yBitd9jM4zTAmQCvLGsRkvXRylt7-f2InqA>
+    <xmx:TLE4aEHHb1SklZBlkrGbMuAj8lS16uZ3DoZWYNPyFiAFU0Rw0Ckcww>
+    <xmx:TLE4aDPOJeEZwW-b7d7PiyLrDOKlff5NRCxc5_Rncxc2Td6_kXcWsA>
+    <xmx:TLE4aJNqDy5ARXMMz7SKP2NAb0yF4lMd5uzm8k9EU-bNErEBpEahGbjJ>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 29 May 2025 15:11:08 -0400 (EDT)
+Date: Thu, 29 May 2025 12:11:07 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Fiona Behrens <me@kloenk.dev>,
+	Christian Schrefl <chrisi.schrefl@gmail.com>,
+	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] change blanket impls for `[Pin]Init` and add one for
+ `Result<T, E>`
+Message-ID: <aDixS9Fp-fZxet7m@winterfell.localdomain>
+References: <20250529081027.297648-1-lossin@kernel.org>
+ <20250529081027.297648-2-lossin@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDE4NSBTYWx0ZWRfXwHOxsuY7JviX g6n7R9Wy233jwWqcLntY4bZbKdsfXixGD5XLqi1pKLTwyW7DDhj2WZmr8nqYIiCH9ZECK7xPzwF qKjegprIQ+yNrX5akHesJq++CNXe3Jxz+hTPcI0o8QvG74Z8L20fNfYO1PNNLEQCAwfXcWcXhRL
- tgva/PWskg6GWVNdAm8bDKVru/N0lRoIO6wYA1Jrpde1ScY/MkINZ7+fJAHLYntioWViJLYeEhu fnVvsz7ZyCj/Afb2XuNpwvhAHJN5U6xJFXT34KYoHacXbqd5dNmjmNQ4IciYtSRVb1NwF+xyP6w kn7y/PG5Rx7bLkCI+Nm0eT6/RYhTI/HAQI8XKy860n25+EeFVlmAuZoiNddE5j3Z+BoV9UBEN0H
- oAhCsDrreaiAg9wWGzVmpHo3n3n65ouOHpG3jOiIywAYTIThfIf+oOsG8PopYbLEaS6DFlks
-X-Proofpoint-GUID: iDBvIEBlbJKMsff0imNYL6Ggd0gjG48X
-X-Authority-Analysis: v=2.4 cv=WOd/XmsR c=1 sm=1 tr=0 ts=6838b140 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=rOUgymgbAAAA:8 a=217aLbuwkW1_cpe-OwgA:9 a=QEXdDO2ut3YA:10
- a=MP9ZtiD8KjrkvI0BhSjB:22
-X-Proofpoint-ORIG-GUID: boPgGoO6w8sEsqXFvjlrQ7p90sg-B8Vh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_08,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 clxscore=1011 malwarescore=0 priorityscore=1501
- adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290185
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529081027.297648-2-lossin@kernel.org>
 
-On Thu, 2025-05-29 at 14:27 +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> On Wed, 30 Apr 2025 14:23:31 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
->
-> wrote:
-> >=20
-> > Today's linux-next merge of the integrity tree got a conflict in:
-> >=20
-> > =C2=A0=C2=A0 kernel/kexec_file.c
-> >=20
-> > between commit:
-> >=20
-> > =C2=A0=C2=A0 912e32afb858 ("kexec_file: use SHA-256 library API instead=
- of
-> > crypto_shash API")
-> >=20
-> > from the mm-nonmm-unstable tree and commit:
-> >=20
-> > =C2=A0=C2=A0 9ee8888a80fe ("ima: kexec: skip IMA segment validation aft=
-er kexec soft
-> > reboot")
-> >=20
-> > from the integrity tree.
-> >=20
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tre=
-e
-> > is submitted for merging.=C2=A0 You may also want to consider cooperati=
-ng
-> > with the maintainer of the conflicting tree to minimise any particularl=
-y
-> > complex conflicts.
-> >=20
-> > --=20
-> > Cheers,
-> > Stephen Rothwell
-> >=20
-> > diff --cc kernel/kexec_file.c
-> > index ac915eabb901,0adb645072aa..000000000000
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@@ -762,7 -800,17 +786,14 @@@ static int kexec_calculate_store_digest
-> > =C2=A0=C2=A0=C2=A0		if (ksegment->kbuf =3D=3D pi->purgatory_buf)
-> > =C2=A0=C2=A0=C2=A0			continue;
-> > =C2=A0=C2=A0=20
-> > +=C2=A0		/*
-> > +=C2=A0		 * Skip the segment if ima_segment_index is set and matches
-> > +=C2=A0		 * the current index
-> > +=C2=A0		 */
-> > +=C2=A0		if (check_ima_segment_index(image, i))
-> > +=C2=A0			continue;
-> > +=20
-> > =C2=A0 -		ret =3D crypto_shash_update(desc, ksegment->kbuf,
-> > =C2=A0 -					=C2=A0 ksegment->bufsz);
-> > =C2=A0 -		if (ret)
-> > =C2=A0 -			break;
-> > =C2=A0 +		sha256_update(&state, ksegment->kbuf, ksegment->bufsz);
-> > =C2=A0=C2=A0=20
-> > =C2=A0=C2=A0=C2=A0		/*
-> > =C2=A0=C2=A0=C2=A0		 * Assume rest of the buffer is filled with zero an=
-d
->=20
-> This is now a conflict between the mm-nonmm-stable tree and Linus' tree.
+On Thu, May 29, 2025 at 10:10:24AM +0200, Benno Lossin wrote:
+> Remove the error from the blanket implementations `impl<T, E> Init<T, E>
+> for T` (and also for `PinInit`). Add implementations for `Result<T, E>`.
+> 
+> This allows one to easily construct (un)conditional failing
+> initializers. It also improves the compatibility with APIs that do not
+> use pin-init, because users can supply a `Result<T, E>` to a  function
+> taking an `impl PinInit<T, E>`.
+> 
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Link: https://github.com/Rust-for-Linux/pin-init/pull/62/commits/58612514b256c6f4a4a0718be25298410e67387a
+> [ Also fix a compile error in block. - Benno ]
+> Signed-off-by: Benno Lossin <lossin@kernel.org>
 
-Thanks Stephen.  It looks good to me.
+The patch title is missing a "rust:" tag... but you can fix that in PR.
 
-Mimi
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
+Regards,
+Boqun
+
+> ---
+> 
+> This patch is also needed by Danilo for initializing `Devres`
+> ergonomically.
+> 
+> ---
+>  rust/kernel/block/mq/tag_set.rs | 12 +++++++-----
+>  rust/pin-init/src/lib.rs        | 30 ++++++++++++++++++++++++++----
+>  2 files changed, 33 insertions(+), 9 deletions(-)
+> 
+> diff --git a/rust/kernel/block/mq/tag_set.rs b/rust/kernel/block/mq/tag_set.rs
+> index bcf4214ad149..c3cf56d52bee 100644
+> --- a/rust/kernel/block/mq/tag_set.rs
+> +++ b/rust/kernel/block/mq/tag_set.rs
+> @@ -9,7 +9,7 @@
+>  use crate::{
+>      bindings,
+>      block::mq::{operations::OperationsVTable, request::RequestDataWrapper, Operations},
+> -    error,
+> +    error::{self, Result},
+>      prelude::try_pin_init,
+>      types::Opaque,
+>  };
+> @@ -41,7 +41,7 @@ pub fn new(
+>          // SAFETY: `blk_mq_tag_set` only contains integers and pointers, which
+>          // all are allowed to be 0.
+>          let tag_set: bindings::blk_mq_tag_set = unsafe { core::mem::zeroed() };
+> -        let tag_set = core::mem::size_of::<RequestDataWrapper>()
+> +        let tag_set: Result<_> = core::mem::size_of::<RequestDataWrapper>()
+>              .try_into()
+>              .map(|cmd_size| {
+>                  bindings::blk_mq_tag_set {
+> @@ -56,12 +56,14 @@ pub fn new(
+>                      nr_maps: num_maps,
+>                      ..tag_set
+>                  }
+> -            });
+> +            })
+> +            .map(Opaque::new)
+> +            .map_err(|e| e.into());
+>  
+>          try_pin_init!(TagSet {
+> -            inner <- PinInit::<_, error::Error>::pin_chain(Opaque::new(tag_set?), |tag_set| {
+> +            inner <- tag_set.pin_chain(|tag_set| {
+>                  // SAFETY: we do not move out of `tag_set`.
+> -                let tag_set = unsafe { Pin::get_unchecked_mut(tag_set) };
+> +                let tag_set: &mut Opaque<_> = unsafe { Pin::get_unchecked_mut(tag_set) };
+>                  // SAFETY: `tag_set` is a reference to an initialized `blk_mq_tag_set`.
+>                  error::to_result( unsafe { bindings::blk_mq_alloc_tag_set(tag_set.get())})
+>              }),
+> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+> index d1c3ca5cfff4..f4e034497cdd 100644
+> --- a/rust/pin-init/src/lib.rs
+> +++ b/rust/pin-init/src/lib.rs
+> @@ -1391,8 +1391,8 @@ pub fn pin_init_array_from_fn<I, const N: usize, T, E>(
+>  }
+>  
+>  // SAFETY: the `__init` function always returns `Ok(())` and initializes every field of `slot`.
+> -unsafe impl<T, E> Init<T, E> for T {
+> -    unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
+> +unsafe impl<T> Init<T> for T {
+> +    unsafe fn __init(self, slot: *mut T) -> Result<(), Infallible> {
+>          // SAFETY: `slot` is valid for writes by the safety requirements of this function.
+>          unsafe { slot.write(self) };
+>          Ok(())
+> @@ -1401,14 +1401,36 @@ unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
+>  
+>  // SAFETY: the `__pinned_init` function always returns `Ok(())` and initializes every field of
+>  // `slot`. Additionally, all pinning invariants of `T` are upheld.
+> -unsafe impl<T, E> PinInit<T, E> for T {
+> -    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> {
+> +unsafe impl<T> PinInit<T> for T {
+> +    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), Infallible> {
+>          // SAFETY: `slot` is valid for writes by the safety requirements of this function.
+>          unsafe { slot.write(self) };
+>          Ok(())
+>      }
+>  }
+>  
+> +// SAFETY: when the `__init` function returns with
+> +// - `Ok(())`, `slot` was initialized and all pinned invariants of `T` are upheld.
+> +// - `Err(err)`, slot was not written to.
+> +unsafe impl<T, E> Init<T, E> for Result<T, E> {
+> +    unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
+> +        // SAFETY: `slot` is valid for writes by the safety requirements of this function.
+> +        unsafe { slot.write(self?) };
+> +        Ok(())
+> +    }
+> +}
+> +
+> +// SAFETY: when the `__pinned_init` function returns with
+> +// - `Ok(())`, `slot` was initialized and all pinned invariants of `T` are upheld.
+> +// - `Err(err)`, slot was not written to.
+> +unsafe impl<T, E> PinInit<T, E> for Result<T, E> {
+> +    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> {
+> +        // SAFETY: `slot` is valid for writes by the safety requirements of this function.
+> +        unsafe { slot.write(self?) };
+> +        Ok(())
+> +    }
+> +}
+> +
+>  /// Smart pointer containing uninitialized memory and that can write a value.
+>  pub trait InPlaceWrite<T> {
+>      /// The type `Self` turns into when the contents are initialized.
+> -- 
+> 2.49.0
+> 
