@@ -1,77 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DF621638D;
-	Thu, 29 May 2025 11:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C0520F062;
+	Thu, 29 May 2025 11:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748518288; cv=none; b=QvjFxUGKhJUYbxGGFD1jf+KwtX2JkGmBiNQZL0Yq9OGlJolyEh4ra91FlqfJgTPh1z0EEImSAEmbBmSaKa04Rs9jY6TZsa+RscISc1D+GgkQIiY8WE9x4W3TeHIHm/Msx9h7cSHh9kohAfZ6LAJ+dIcuXXkWiAb6V8rTuQS87js=
+	t=1748518331; cv=none; b=SsmyhACKk4wO1CkdZ4kIpVkDLn+8ekexgDAdHZwMkUxIh20nLbBNcEQ9Nicjkt/8hX+KHm9bo11tCN9RPtsHZaKigwu8ei/D+a61IUUJEnB+vM4SZyoc7Ty+kvTaxdxiVU67wmjlvfFSFYz1Q/ETIgKmMRhq5HRvbkVyv0Rf/2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748518288; c=relaxed/simple;
-	bh=53yuKezs5ilpcnEdLeOi3VA/lnDiQmGthxtSC8SQoCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mYWTlh36LYp4M1HzunxGWEdhjYyaWHFxdwELy2o14/wtrL3Jjb8anFB6EUzeVCRwOiEW0/XDOd979ZVID6tzqtSNAAkKtoXaMPWa4ozbrERRPQli8KNDHukKOnWtrTFy27zxleFCgxuEhSYYI0vnqcB+PlVWw57P1uXhJi914eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Efq02rrH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Efq02rrH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1B1C4CEE7;
-	Thu, 29 May 2025 11:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748518287;
-	bh=53yuKezs5ilpcnEdLeOi3VA/lnDiQmGthxtSC8SQoCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Efq02rrHVKWrTVeTHqrfz4P8aBiP8S5VoeLVafK3DbQUgDAPNznko4YJddWg9VXT8
-	 ZG0GufYhF4BKGiQMjpIettK3p4JBRx9X1WLaFf6i0Y07LdqDYALVtbBNWgMty/AbBZ
-	 Jk7Ku0MOSK9fgRcyxZKhbBLbc0q0U6NzKCfeCKqE=
-Date: Thu, 29 May 2025 13:31:24 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v10 0/13] Add support for RaspberryPi RP1 PCI device
- using a DT overlay
-Message-ID: <2025052908-goldmine-ramp-b865@gregkh>
-References: <cover.1748516814.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1748518331; c=relaxed/simple;
+	bh=LLCGHmDewdKE5445AIC0pfX5Vc1itVyKydymaIpwztg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s1NTue9MMGDVl7Bu+Ps9e6vYdl6JcHxuFLnsdvQ10QkTUHFmbGmvh1dtkqLY6IHVBlXGUybI+dBIFutKh9/lNBKyUimD8prTaxjqeCznhY15zn3nwSGS8ewoQp7t132+znlFrJPKy56pxaVkWugHFj9I+ow/lleS18HBwO/4uIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7PJG3z5wz6L5kh;
+	Thu, 29 May 2025 19:28:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1036614022E;
+	Thu, 29 May 2025 19:32:07 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
+ 2025 13:32:06 +0200
+Date: Thu, 29 May 2025 12:32:04 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Songwei Chai <quic_songchai@quicinc.com>
+CC: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v5 4/7] coresight-tgu: Add TGU decode support
+Message-ID: <20250529123204.00005b78@huawei.com>
+In-Reply-To: <20250529081949.26493-5-quic_songchai@quicinc.com>
+References: <20250529081949.26493-1-quic_songchai@quicinc.com>
+	<20250529081949.26493-5-quic_songchai@quicinc.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1748516814.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, May 29, 2025 at 01:23:35PM +0200, Andrea della Porta wrote:
-> *** RESENDING PATCHSET SINCE LAST ONE HAS CLOBBERED SEQUENCE NUMBER ***
+On Thu, 29 May 2025 16:19:45 +0800
+Songwei Chai <quic_songchai@quicinc.com> wrote:
 
-Then it needs to be a new version, not the same one please.
+> Decoding is when all the potential pieces for creating a trigger
+> are brought together for a given step. Example - there may be a
+> counter keeping track of some occurrences and a priority-group that
+> is being used to detect a pattern on the sense inputs. These 2
+> inputs to condition_decode must be programmed, for a given step,
+> to establish the condition for the trigger, or movement to another
+> steps.
+>=20
+> Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
 
-thanks,
+> diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtrac=
+ing/coresight/coresight-tgu.c
+> index 6dbfd4c604b1..8dbe8ab30174 100644
+> --- a/drivers/hwtracing/coresight/coresight-tgu.c
+> +++ b/drivers/hwtracing/coresight/coresight-tgu.c
+> @@ -21,13 +21,35 @@ static int calculate_array_location(struct tgu_drvdat=
+a *drvdata,
 
-greg k-h
+> +
+>  static int tgu_enable(struct coresight_device *csdev, enum cs_mode mode,
+>  		      void *data)
+>  {
+> +	int ret =3D 0;
+=46rom what can be seen here, looks like ret is always set, so no need to ini=
+t.
+>  	struct tgu_drvdata *drvdata =3D dev_get_drvdata(csdev->dev.parent);
+> =20
+>  	spin_lock(&drvdata->spinlock);
+> @@ -150,11 +264,15 @@ static int tgu_enable(struct coresight_device *csde=
+v, enum cs_mode mode,
+>  		spin_unlock(&drvdata->spinlock);
+>  		return -EBUSY;
+>  	}
+> -	tgu_write_all_hw_regs(drvdata);
+> +	ret =3D tgu_write_all_hw_regs(drvdata);
+> +
+> +	if (ret =3D=3D -EINVAL)
+> +		goto exit;
+>  	drvdata->enable =3D true;
+> =20
+> +exit:
+>  	spin_unlock(&drvdata->spinlock);
+> -	return 0;
+> +	return ret;
+>  }
+
+> diff --git a/drivers/hwtracing/coresight/coresight-tgu.h b/drivers/hwtrac=
+ing/coresight/coresight-tgu.h
+> index f07ead505365..691da393ffa3 100644
+> --- a/drivers/hwtracing/coresight/coresight-tgu.h
+> +++ b/drivers/hwtracing/coresight/coresight-tgu.h
+
+>  enum operation_index {
+>  	TGU_PRIORITY0,
+>  	TGU_PRIORITY1,
+>  	TGU_PRIORITY2,
+> -	TGU_PRIORITY3
+> +	TGU_PRIORITY3,
+
+And here is why the previous patch should definitely have had the ,
+
+> +	TGU_CONDITION_DECODE
+> =20
+>  };
+
+>=20
+>=20
+
