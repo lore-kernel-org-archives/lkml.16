@@ -1,73 +1,245 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44C4F25A648;
-	Thu, 29 May 2025 05:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4EA2690D5;
+	Thu, 29 May 2025 05:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748497434; cv=none; b=HpNBS3lsMqP2dMr68z4MGyXKWVEInsJP6OeWpJv6Y4hZH2ZmFZ/sofB0uBVO+7xG6jvI4gtH990r8PTvRWnCeaDyMCWTKd51wPWBVxv49Am2QYgLCTFqrmIN5Jmc3nYaB3iacntkwRO/IPp8Cww+ACNsnmnhu4LJY2mOFf0UOjE=
+	t=1748497436; cv=none; b=tIOB9n+OVfax6tyQmBRtg+G15f8OF04GZb9/v9I3Dc0PLHJi8Yj93Mw1u91nEdFfzjhp7N9Hppv4T368G5HJmJr4zp6vcYFtOEFpZW6XY2p8F1KUvrrDE/ta+N7pVckiBs8OQSuZjaQcuzNlxqzBw/BMk0YG+Nj2RKHgTpwH2nU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748497434; c=relaxed/simple;
-	bh=Hf/9FWJoGCnVz+n/KZJ+U0j43CoQU/bpcDA8QcEuAAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euH0p0xiWljfz71nsJy7jDvWGNBySzOOPoHpGgrD1ASv5vIlcKJm00ccAj99RKv0lY4luOy6bNwV8RVFrAPP6RnZWu0AtVIj9fDB/Rwt5JY97yHsAIYgji6qAn0WSCUKxFTtbNcN9YVvS4Gsy6xzI8/prcwKgLktvrHLBTY3pqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TZkt8Kj4; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748497436; c=relaxed/simple;
+	bh=ZFjs4Khd7IU0ICvoXheVso0w6spur8+isJHyAW1QoRM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FmCtp7KNLrg5zQPGq383X+8O7k9uOPqePO6l8y51UkxG7wUyburXUcs4fkfvdQZB95EyXDBsGjWSLGB0UCV+vwS1VsDsRkdK1EdLd8o84+/e43CqemqLkZxaP59OWyNnEbjWJ720PNcLUvEz7YAz9MA5ohR5Otr5wrM2/r4kIn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsH+ngUD; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TZkt8Kj4"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id B3406203EE1B; Wed, 28 May 2025 22:43:52 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B3406203EE1B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748497432;
-	bh=cBY/3tzV7eYWwlwoKVvpDZ7aI+M46lAum5z741O0Bls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TZkt8Kj4tSj0D8BKj2tV5hLpdjxF3oD1oMu6T9rO6sNYnT7tYTTBYWx2cLMoEHNPF
-	 4QqqM5JdvJIwh6sMnvJ9+ZBC57wXKx5mz49l1Xiji/o8KR19wZhqAWn34qDdSpEo9f
-	 RCwb3q/BYV+Qqj8nyw0zpJzxyt2N15L10tP7UcFU=
-Date: Wed, 28 May 2025 22:43:52 -0700
-From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, romank@linux.microsoft.com,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org, ssengar@microsoft.com, apais@microsoft.com
-Subject: Re: [PATCH] vmbus: retrieve connection-id from device tree
-Message-ID: <20250529054352.GA29740@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsH+ngUD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748497435; x=1780033435;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZFjs4Khd7IU0ICvoXheVso0w6spur8+isJHyAW1QoRM=;
+  b=UsH+ngUDuwtVmpyjY6Fw6qfMMF0XCHYvi4pdbWcFsGhDtmJaZwEwL+Tk
+   ggfJ885zjmlBZEm50grXcM853WblDNl04vVG0/cY2+FZ6gF21kBKdToEw
+   YOSU2ADkIQPgh0WqwZ392RZ9iT2FDyts1ZQJcYlFHSeP/0qE+Ic3aNGEF
+   D9w6BULzZDhBox6raJKkKcXsUJVItOlqVzaHXluRpFNdi243url2iP+V+
+   fp1dkFWXzsX+Y9DeuWYQHTZaKLHsa9mL+aMxrznVBhtwk2ihP7N/llWmE
+   7+rpK2GEDm2ah0tFYXIgopiQcXfIGsqUgNoHaT6+MzIpSbvwO697P3Us3
+   w==;
+X-CSE-ConnectionGUID: jgmbCRzNSWSw5gcBI1XYiQ==
+X-CSE-MsgGUID: ghcu6mFhTEimInlHItbPhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="67963305"
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="67963305"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 22:43:54 -0700
+X-CSE-ConnectionGUID: eeF3BdF1Si2VogXNH8xFMA==
+X-CSE-MsgGUID: 9iw3/0VWQOWyF22z10R/Vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="144443541"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
+  by fmviesa009.fm.intel.com with ESMTP; 28 May 2025 22:43:47 -0700
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: kvm@vger.kernel.org,
+	sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	alex.williamson@redhat.com,
+	jgg@nvidia.com,
+	dan.j.williams@intel.com,
+	aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com,
+	yilun.xu@intel.com,
+	yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch,
+	leon@kernel.org,
+	baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com,
+	tao1.su@intel.com,
+	linux-pci@vger.kernel.org,
+	zhiw@nvidia.com,
+	simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com,
+	aneesh.kumar@kernel.org,
+	iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: [RFC PATCH 21/30] iommufd/vdevice: Add TSM Guest request uAPI
+Date: Thu, 29 May 2025 13:35:04 +0800
+Message-Id: <20250529053513.1592088-22-yilun.xu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6acee4bf-cb04-43b9-9476-e8d811d26dfd@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 02:33:25PM -0700, Hardik Garg wrote:
-> The connection-id determines which hypervisor communication channel the
-> guest should use to talk to the VMBus host. This patch adds support to
-> read this value from the device tree where it exists as a property under
-> the vmbus node with the compatible ID "microsoft,message-connection-id".
+From: Alexey Kardashevskiy <aik@amd.com>
 
-Add Documentation for "microsoft,message-connection-id"
+Add TSM Guest request uAPI against iommufd_vdevice to forward various
+TSM attestation & acceptance requests from guest to TSM driver/secure
+firmware. This uAPI takes function only after TSM Bind.
 
-> 
-> Reading from device tree allows platforms to specify their preferred
-> communication channel, making it more flexible. If the property is
-> not found in the device tree, use the default connection ID
-> (VMBUS_MESSAGE_CONNECTION_ID or VMBUS_MESSAGE_CONNECTION_ID_4
-> based on protocol version).
-> 
-> Cc: <stable@kernel.org> # 6.14, 6.12
+After a vPCI device is locked down by TSM Bind, CoCo VM should attest
+and accept the device in its TEE. These operations needs interaction
+with secure firmware and the device, but doesn't impact the device
+management from host's POV. It doesn't change the fact that host should
+not touch some part of the device (see TDISP spec) to keep the trusted
+assignment, and host could exit trusted assignment and roll back
+everything by TSM Unbind.
 
-I don't see it as as bug which needs to be backported on certain branches only.
-You can rebase your changes on linux-next or hyperv-next and resend.
+So the TSM Guest request becomes a passthrough channel for CoCo VM to
+exchange request/response blobs with TSM driver/secure firmware. The
+definition of this IOCTL illustates this idea.
 
-Also,
+Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
+Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+---
+ drivers/iommu/iommufd/iommufd_private.h |  1 +
+ drivers/iommu/iommufd/main.c            |  3 ++
+ drivers/iommu/iommufd/viommu.c          | 39 +++++++++++++++++++++++++
+ include/uapi/linux/iommufd.h            | 28 ++++++++++++++++++
+ 4 files changed, 71 insertions(+)
 
-s/device tree/DeviceTree/g
+diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+index 0db9a0e53a77..610dc2efcdd5 100644
+--- a/drivers/iommu/iommufd/iommufd_private.h
++++ b/drivers/iommu/iommufd/iommufd_private.h
+@@ -609,6 +609,7 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd);
+ void iommufd_viommu_destroy(struct iommufd_object *obj);
+ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd);
+ void iommufd_vdevice_destroy(struct iommufd_object *obj);
++int iommufd_vdevice_tsm_guest_request_ioctl(struct iommufd_ucmd *ucmd);
+ 
+ struct iommufd_vdevice {
+ 	struct iommufd_object obj;
+diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+index 3df468f64e7d..17c5b2cb6ab1 100644
+--- a/drivers/iommu/iommufd/main.c
++++ b/drivers/iommu/iommufd/main.c
+@@ -320,6 +320,7 @@ union ucmd_buffer {
+ 	struct iommu_veventq_alloc veventq;
+ 	struct iommu_vfio_ioas vfio_ioas;
+ 	struct iommu_viommu_alloc viommu;
++	struct iommu_vdevice_tsm_guest_request gr;
+ #ifdef CONFIG_IOMMUFD_TEST
+ 	struct iommu_test_cmd test;
+ #endif
+@@ -379,6 +380,8 @@ static const struct iommufd_ioctl_op iommufd_ioctl_ops[] = {
+ 		 __reserved),
+ 	IOCTL_OP(IOMMU_VIOMMU_ALLOC, iommufd_viommu_alloc_ioctl,
+ 		 struct iommu_viommu_alloc, out_viommu_id),
++	IOCTL_OP(IOMMU_VDEVICE_TSM_GUEST_REQUEST, iommufd_vdevice_tsm_guest_request_ioctl,
++		 struct iommu_vdevice_tsm_guest_request, resp_uptr),
+ #ifdef CONFIG_IOMMUFD_TEST
+ 	IOCTL_OP(IOMMU_TEST_CMD, iommufd_test, struct iommu_test_cmd, last),
+ #endif
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 8437e936c278..c64ce1a9f87d 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -303,3 +303,42 @@ void iommufd_vdevice_tsm_unbind(struct iommufd_vdevice *vdev)
+ out_unlock:
+ 	mutex_unlock(&vdev->tsm_lock);
+ }
++
++int iommufd_vdevice_tsm_guest_request_ioctl(struct iommufd_ucmd *ucmd)
++{
++	struct iommu_vdevice_tsm_guest_request *cmd = ucmd->cmd;
++	struct pci_tsm_guest_req_info info = {
++		.type = cmd->type,
++		.type_info = u64_to_user_ptr(cmd->type_info_uptr),
++		.type_info_len = cmd->type_info_len,
++		.req = u64_to_user_ptr(cmd->req_uptr),
++		.req_len = cmd->req_len,
++		.resp = u64_to_user_ptr(cmd->resp_uptr),
++		.resp_len = cmd->resp_len,
++	};
++	struct iommufd_vdevice *vdev;
++	int rc;
++
++	vdev = container_of(iommufd_get_object(ucmd->ictx, cmd->vdevice_id,
++					       IOMMUFD_OBJ_VDEVICE),
++			    struct iommufd_vdevice, obj);
++	if (IS_ERR(vdev))
++		return PTR_ERR(vdev);
++
++	mutex_lock(&vdev->tsm_lock);
++	if (!vdev->tsm_bound) {
++		rc = -ENOENT;
++		goto out_unlock;
++	}
++
++	rc = pci_tsm_guest_req(to_pci_dev(vdev->dev), &info);
++	if (rc)
++		goto out_unlock;
++
++	cmd->resp_len = info.resp_len;
++	rc = iommufd_ucmd_respond(ucmd, sizeof(*cmd));
++out_unlock:
++	mutex_unlock(&vdev->tsm_lock);
++	iommufd_put_object(ucmd->ictx, &vdev->obj);
++	return rc;
++}
+diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+index f29b6c44655e..b8170fe3d700 100644
+--- a/include/uapi/linux/iommufd.h
++++ b/include/uapi/linux/iommufd.h
+@@ -56,6 +56,7 @@ enum {
+ 	IOMMUFD_CMD_VDEVICE_ALLOC = 0x91,
+ 	IOMMUFD_CMD_IOAS_CHANGE_PROCESS = 0x92,
+ 	IOMMUFD_CMD_VEVENTQ_ALLOC = 0x93,
++	IOMMUFD_CMD_VDEVICE_TSM_GUEST_REQUEST = 0x94,
+ };
+ 
+ /**
+@@ -1141,4 +1142,31 @@ struct iommu_veventq_alloc {
+ 	__u32 __reserved;
+ };
+ #define IOMMU_VEVENTQ_ALLOC _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VEVENTQ_ALLOC)
++
++/**
++ * struct iommu_vdevice_tsm_guest_request - ioctl(IOMMU_VDEVICE_TSM_GUEST_REQUEST)
++ * @size: sizeof(struct iommu_vdevice_tsm_guest_request)
++ * @vdevice_id: vDevice ID the guest request is for
++ * @type: identify the format of the following blobs
++ * @type_info_len: the blob size for @type_info_uptr
++ * @req_len: the blob size for @req_uptr, filled by guest
++ * @resp_len: for input, the blob size for @resp_uptr, filled by guest
++ *	      for output, the size of actual response data, filled by host
++ * @type_info_uptr: extra input/output info, e.g. firmware error code
++ * @req_uptr: request data buffer filled by guest
++ * @resp_uptr: response data buffer filled by host
++ */
++struct iommu_vdevice_tsm_guest_request {
++	__u32 size;
++	__u32 vdevice_id;
++	__u32 type;
++	__u32 type_info_len;
++	__u32 req_len;
++	__u32 resp_len;
++	__aligned_u64 type_info_uptr;
++	__aligned_u64 req_uptr;
++	__aligned_u64 resp_uptr;
++};
++#define IOMMU_VDEVICE_TSM_GUEST_REQUEST _IO(IOMMUFD_TYPE, IOMMUFD_CMD_VDEVICE_TSM_GUEST_REQUEST)
++
+ #endif
+-- 
+2.25.1
 
-
-- Saurabh
