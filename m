@@ -1,111 +1,139 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D2621E0B7
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD649246762
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562861; cv=none; b=I3bvelW+fpxK1R6SLNmFfwEf+WK8s3RvBy/rPSXnF7aiTFYDBEHE8BUf2/GytgdZTMh+si7L7zB5XqUmvwQHQJfErBDcd8g6xKa8xaX7IRowIqep+W6JDg3Kyl7U6f0Jb7oqF6rVB0Vf/X72hgaOUi+n42Yh8Gkesvm/gHeXroU=
+	t=1748562898; cv=none; b=mX6wFsX1zK/8blS0qOmP16EC/lY7mul6zF5/2FMEwGD2sCj7U+7TS4eR+0YdV+zurpFVN+rFBgJ/a9eC5CtvAxe4gQg76TW4HakII5GSn5oVjh6E4yt81r7Va3mmFb9hbtr5wYgMnUSsyimS63cwO2Lml07t2HKdb17OKrxwDXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562861; c=relaxed/simple;
-	bh=fzBmoU/GBNrBZNry8iZF8TyWz5qhRHlF8PO8t/PwcGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWOHzj3zxUhrWEM+jB2G30kLFyMKPPX08NlgD7K6Pf43Am5GG68kzcNwBm6pL9yZoMKRLxZLbG9xuDo5+b/mWXlLGweegZRe3hHR9DdzdIORrK5KXT1aR+0rgUTXSud109l3LHXZ6Ulj+d3J3LhR6cyzc3LHhEBbHq5DitRt1+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=sTswQAmL; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1748562898; c=relaxed/simple;
+	bh=mQ2X3C83MrQ+ifFd0cXmKRdvIysb8KwRrZHJnS3dFHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qdW+0KJPiCvVzhqivkPr3Z8+NyXALTxh/sz7XL3WaFok/1sm2xnesbagc1EohztRJrcWpgxYZty9nkD6vOt0fGUVlpn9oGt2uh+gwkp4Us4uAAeEbCsQNBAC2va2FJnBiqErznFHOhwEuMrvVEbrmjnSI6qrBS/nSUXBrjePmNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FACeITo7; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="sTswQAmL"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c27df0daso1198641b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:54:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FACeITo7"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad8a8da2376so245851566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:54:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1748562856; x=1749167656; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XN6gTy630QM8CTJZaRMOSiOMF0uSjwbW1midZ/W3Pq8=;
-        b=sTswQAmLopSf6mslRPiyoxyWCsE8Qv7oU7wvQLo6EwSH2q/fUzw8hu9KAv1ePXPR5l
-         WhwsUz4k/LpxRhzJR7ATAsoc6uAQAcOcc7MDFOsBczd3c1ysoV3Y4w9+S7vAXL1e1jXG
-         AEe1emN/IZLAC4dfAF59QhdpKLvcQYKd5uX0E=
+        d=linux-foundation.org; s=google; t=1748562895; x=1749167695; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VCpgeKXbWpRtz3XeS2MBk7nO0oA3f7brSdzLdQTvzhc=;
+        b=FACeITo74TuC6ghqI6jLj61IS8sJVnmEhnjJOF/OaNuScJrYY77jwNz54F9Q0j50/6
+         NzhMPav9ThmtohVTHEEd+J+bxpD2YQPl2GnX3cs6DJ++Gy9nLCVJgD5juwYyCCbMXAMw
+         55wYUFXI43eMBKZWHlW/bAszWebPf5AQFVyRk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562856; x=1749167656;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XN6gTy630QM8CTJZaRMOSiOMF0uSjwbW1midZ/W3Pq8=;
-        b=SJRQT5OM20P6wV2PtWcBpDY3SmHYDMGTEKSbLEom/Bz/B/DtlhFYkti4ArmGvVRQHO
-         QiUj4NLjddZbwWSYIqz+d1+XeMq/7B7yZk4c2Puq4d5rRFYWJZbamlQ2wtXO3RdcEIYw
-         2TErYlcier+QhYABEmrPe4va2ZzctzmzEb+j5f/5MCY1M1jOJekItpSs0AFeSp1/0ATl
-         FSVuM0PD2g8Vyof27KMWjpy/u6C6lE2EK2Rc7WOJIauoAC7LCNnkRBezWp7HLKl+4pTu
-         /z7qlcTqCWLHdy+1vdKJWJJVDm5roEH8UAKkpHrU0KhCNO+Hi24kYrM4FbL/53b5DXN7
-         lKJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/B641gqgNyBGAHS0sgBtrRHl7xfdweTib2+JR2/nuaV0eH0+LRiW6N9HuaP2M3KU/JjhQ1TvdmUvo/ac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnZv0DLKQ8uh5skNkiAUFSNpw5zO9xYuCZO10hD1uqMr+plM2S
-	aE2hfJ+UIx2DmdZtGCqMhT3/x4gCvE2Dpd/vDdJ0zRK4H76e6pARQ/hZRS2JMKIrLiw=
-X-Gm-Gg: ASbGncsL0Ykhw+halId0z5Sf1DyT9n9KSVYMbDTF0WtkTDnu5Qm2VDpVWmqtyv3MnPj
-	H+PwsspIv5jg6zJ7SQMbSEBsexwp5Qb1mkN8drySQ2jdvx8Da87TT0p7nSlqysuFoam4UpHEMaz
-	gSs0rr9rks6O4WOMLunTo2Xc1FzUoomOdOV1mlsWzYMygfZJwjLoY+Q+z9K++EwXX7PYCIlqTRx
-	UFOMctYu99/DF3y7F92gE/M47aOZ/XNaoJiB96puGRtzEa9dDWgBgXvwLVHYSIEe8Us78HWHiS5
-	VtSblNazdYxm572UtlDc4Bzx90xu/TmokO+OPYNMUir213qIA2uYy/uF8caMmUugptJADyXMJ8l
-	Ka9j8envCDTSxGutg6yMn0h37QbTBNvo8fQ==
-X-Google-Smtp-Source: AGHT+IHRL6MZaRCV2qyHdIA1Ey0rZLl6zqYTvtI9TzqaPZDL2PqmYa7bTx0E2QQp2U5dgOaO4Eq8Hw==
-X-Received: by 2002:a05:6a21:6494:b0:1f5:5ca4:2744 with SMTP id adf61e73a8af0-21ad9572f95mr2027987637.17.1748562855934;
-        Thu, 29 May 2025 16:54:15 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affadf5asm1874242b3a.115.2025.05.29.16.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 16:54:15 -0700 (PDT)
-Date: Thu, 29 May 2025 16:54:12 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>,
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] possible deadlock in rtnl_newlink
-Message-ID: <aDjzpDHwcFuGhAqp@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Stanislav Fomichev <stfomichev@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>,
-	davem@davemloft.net, edumazet@google.com, horms@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-References: <683837bf.a00a0220.52848.0003.GAE@google.com>
- <aDiEby8WRjJ9Gyfx@mini-arch>
- <20250529091003.3423378b@kernel.org>
- <aDiPFiLrhUI0M2MI@mini-arch>
+        d=1e100.net; s=20230601; t=1748562895; x=1749167695;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VCpgeKXbWpRtz3XeS2MBk7nO0oA3f7brSdzLdQTvzhc=;
+        b=k7Ok3MJypF3Y7WE0GWpp0A0z6BGDBbjsbbIqm+HGEwXtWqQf+GldPVZAJykilsQnZP
+         YO+++hl/+FbXsB2vWCoQ0xFUgPVAIhamcc4VB2GSDTOZVCKJYJwZX7ARKUDdxEgxYqRr
+         rF0r9w61enFkLdxJWHcT13T93Icdf9wd8bz4zfBVfDdjoZ++E9AnPrmaX5Ymt6WPn4Sw
+         r4jQP8h2XggAcO7NwFMKFHDYp4qL6l5Uu7fYBQv1Qarb+L3H7Laf+4QkWlFOhmaMNrFf
+         VctsofSU7lYle2GXc62bT7oi/1UDb6hm8zqZClSyLWWLNDaHElc0IpQA45NoFXcPqfni
+         Q2+w==
+X-Forwarded-Encrypted: i=1; AJvYcCU9tSJh9x4z5tOc8e/3vicZpnyXgnyDYSy8PkIbtQ58NOaVf3s2wQPwzEwhqQPfv3vuOSVJdIhTu+ZdR1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfrYGjjUb80b5wc7+pglqy9+8hSCOd8v8pVHgJ7JyVEV802a0C
+	B6XHYyePFv7miL4MUzC0bDvyAJOhFMyw91o/aYn96uY5C5NAU0CXhqwZOX9j8bZe8J4YH0tuVNK
+	ZUvInIXg=
+X-Gm-Gg: ASbGncs5dNf5X/Y8W4+4oTtvgHQpLGgm4tHR1v1oVga1RHLWazeyqEhm9+sLg7IDdd0
+	6tDbrb2xpEohZAB8cgjLl5n/ee2tnVGums8S2zDKWyd0kQFfTTGO9Bc6xy/HWfFWHAnYCf83eiS
+	8i4vkMQoHbsxPuG094F5M+sBTtPe9NyPbDkaUL6nw0GfpbyhcSEVGd1nFEbW0ImxmGjlKi3788E
+	KEd7EwYGgcgpUWzJ2amTqVqO2h+pwo/sgKOzs74vz9hTde6m1UCYNj87IqSDqX6R7MynpyL3Bg2
+	Qo19d8nyArkGQBVTKdTsCrJ59X2y69GQ+rd9aRl2oPCz/rwG7iecV6ISKGIXE4T9o6jKPGzOrvg
+	bSAY5mHHY5SA9+9GIXKOtB05tE1hdD/UI0k0I
+X-Google-Smtp-Source: AGHT+IG7mi2o0QKHZVTBdmzUBdNolGEsb9R4eltFgE/55cVrWGGukVo3FIiAg95zXSNIUzG0zYokZA==
+X-Received: by 2002:a17:907:7fa4:b0:ad8:a935:b8eb with SMTP id a640c23a62f3a-adb32245808mr117763566b.3.1748562894855;
+        Thu, 29 May 2025 16:54:54 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82de76sm227002066b.65.2025.05.29.16.54.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 16:54:51 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6049431b409so2425097a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:54:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXqZ8m0bHhUOzrC+E5mSnkprEiv0Z/8S7tap5aYgJKdEMxZUBlTtt8Sxn4IgaSKyS6F/CQ7chbNMPzDh5M=@vger.kernel.org
+X-Received: by 2002:a05:6402:35c6:b0:5f8:357e:bb1 with SMTP id
+ 4fb4d7f45d1cf-6056e1597eamr926476a12.22.1748562890813; Thu, 29 May 2025
+ 16:54:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDiPFiLrhUI0M2MI@mini-arch>
+References: <20250428170040.423825-1-ebiggers@kernel.org> <20250428170040.423825-9-ebiggers@kernel.org>
+ <20250529110526.6d2959a9.alex.williamson@redhat.com> <20250529173702.GA3840196@google.com>
+ <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com> <20250529211639.GD23614@sol>
+In-Reply-To: <20250529211639.GD23614@sol>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 29 May 2025 16:54:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh+H-9649NHK5cayNKn0pmReH41rvG6hWee+oposb3EUg@mail.gmail.com>
+X-Gm-Features: AX0GCFuuQZJkBnHy-mtAufGSUKbxBrKrMtOhVAT8ZxGCHwWeq3lbFPW0g13cPtE
+Message-ID: <CAHk-=wh+H-9649NHK5cayNKn0pmReH41rvG6hWee+oposb3EUg@mail.gmail.com>
+Subject: Re: [PATCH v4 08/13] crypto: s390/sha256 - implement library instead
+ of shash
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org, x86@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, "Jason A . Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 29, 2025 at 09:45:10AM -0700, Stanislav Fomichev wrote:
-> On 05/29, Jakub Kicinski wrote:
-> > On Thu, 29 May 2025 08:59:43 -0700 Stanislav Fomichev wrote:
-> > > So this is internal WQ entry lock that is being reordered with rtnl
-> > > lock. But looking at process_one_work, I don't see actual locks, mostly
-> > > lock_map_acquire/lock_map_release calls to enforce some internal WQ
-> > > invariants. Not sure what to do with it, will try to read more.
-> > 
-> > Basically a flush_work() happens while holding rtnl_lock,
-> > but the work itself takes that lock. It's a driver bug.
-> 
-> e400c7444d84 ("e1000: Hold RTNL when e1000_down can be called") ?
-> I think similar things (but wrt netdev instance lock) are happening
-> with iavf: iavf_remove calls cancel_work_sync while holding the
-> instance lock and the work callbacks grab the instance lock as well :-/
+On Thu, 29 May 2025 at 14:16, Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> So using crc32c() + ext4 + x86 as an example (but SHA-256 would be very
+> similar), the current behavior is that ext4.ko depends on the crc32c_arch()
+> symbol.
 
-I think this is probably the same thread as:
+Yes, I think that's a good example.
 
- https://lore.kernel.org/netdev/CAP=Rh=OEsn4y_2LvkO3UtDWurKcGPnZ_NPSXK=FbgygNXL37Sw@mail.gmail.com/
+I think it's an example of something that "works", but it certainly is
+a bit hacky.
 
-I posted a response there about how to possibly avoid the problem
-(based on my rough reading of the driver code), but am still
-thinking more on this.
+Wouldn't it be nicer if just plain "crc32c()" did the right thing,
+instead of users having to do strange hacks just to get the optimized
+version that they are looking for?
+
+> Does any of the infrastructure to handle "this symbol is in multiple modules and
+> they must be loaded in this particular order" actually exist, though?
+
+Hmm. I was sure we already did that for other things, but looking
+around, I'm not finding any cases.
+
+Or rather, I _am_ finding cases where we export the same symbol from
+different code, but all the ones I found were being careful to not be
+active at the same time.
+
+I really thought we had cases where depending on which module you
+loaded you got different implementations, but it looks like it either
+was some historical thing that no longer exists - or that I need to go
+take my meds.
+
+> IMO this sounds questionable compared to just using static keys and/or branches,
+> which we'd need anyway to support the non-modular case.
+
+I really wish the non-modular case used static calls, not static keys
+like it does now.
+
+In fact, that should work even for modular users.
+
+Of course, not all architectures actually do the optimized thing, and
+the generic fallback uses indirect calls through a function pointer,
+but hey, if an architecture didn't bother with the rewriting code that
+is fixable - if the architecture maintainer cares.
+
+(On some architectures, indirect calls are not noticeably slower than
+direct calls - because you have to load the address from some global
+pointer area anyway - so not having the rewriting can be a "we don't
+need it" thing)
+
+               Linus
