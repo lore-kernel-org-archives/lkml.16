@@ -1,189 +1,115 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31C1373;
-	Thu, 29 May 2025 07:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD0AC8EB;
+	Thu, 29 May 2025 07:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748503661; cv=none; b=qJBPL4E2T8Utxxb0cEmoR/9vbJJY36jcfJdTbXZdXEpKTtf54fsuZO89Nv/otQUhx6lFdHCF/JrwJunrZFJWtMhmu623ijTEZlGNMB15y4RAS4AaHQfI+aLwsqclvEByaSf/W09I9BXV+g8yPMohiLrEsF+0xQ9Wy06ey4oGEsM=
+	t=1748503748; cv=none; b=Jz8vampKrRYAZlUj3dbfMI6/DDtYy/nrOyEV96nLJ18vsiq+NXwLPx66vWMzWYPMcRFWRSJk7+zbRzl2X9Bm0/gbYjsl+fRpTR/weROn09fHM2SpKNvGalAaEii6YhdBeYYJpRvENR2/KjZsyCpKUovsb8s+TK7Ja+P0ICzBRYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748503661; c=relaxed/simple;
-	bh=s6s6ARYurnzqxgQbwLV10a+xTKOthHY4uyCNDCpcO+Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=C6qrHmyFjiXk882IreeI9ne+OkqXPcvImbsP4H/o9odJdzjXG5J+eDvFPkfbsBynonUmxcC3JpEiBrdmmrSqGJd4Ntp7xmPCnfBSOlNUYPY3PeLlxmDEa7TY54e0MEiwB9hYOE0NPFtIosX32w5akWYbx6qqm7gp09+nELfHgWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMpEeeVo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748503748; c=relaxed/simple;
+	bh=zY7AevNOFS9TEshuDuOylukI2serkJwHWCarA28tqpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qQawkfhY8F/hXy6haxdpcDe5X7GpkjPiF3nv3vQPVjn/GaBTKi4aulpL8zfRCqBlKa/+ATgnHia1bXXb5/ACQIJy8QGDss4aAkPLcWzwwYvDueNMyM/rD+s7fQXVm0JIwQS3q51eqNKC3u1qQ7MROx5xotcdVss4pRznZNNIR8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZdeeY/T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMpEeeVo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530A4C4CEE7;
-	Thu, 29 May 2025 07:27:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZdeeY/T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB9EC4CEE7;
+	Thu, 29 May 2025 07:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748503660;
-	bh=s6s6ARYurnzqxgQbwLV10a+xTKOthHY4uyCNDCpcO+Y=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=qMpEeeVoObJ4LXrmnAI6HhhTQnWyL4trC4W2xAaEynolLiOyEIaXO9yrQPdG/gcKj
-	 zI4Q23eUy2bD7gfPx6tMhtQaRvyCnHGvwVon2VSerZc0qxt4Rp/QjxKEmqSUKa2DBd
-	 YkYE1+w6BAxQzA1FR41e5JsBHzNRgP2r/jHRrWDfc+5qknnAG/7aF2XvZAUiRC4qNq
-	 5nmKqyc39jos7ZK6dRgaeO6AHW1SR23eFDi0FnZI8+Lg7JMwKZcW9vKkot8Quhs+Y5
-	 pwaFtzUPhcmpiT5Oq+t2wdOSV174YxaroTBIp5vYK7Fh25Yy2YdYHjk+OqVGtC6OEE
-	 kdmsCvhTsnWEg==
+	s=k20201202; t=1748503747;
+	bh=zY7AevNOFS9TEshuDuOylukI2serkJwHWCarA28tqpA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EZdeeY/T7ziWk0BhI8pAJCexMHBbFo0GAUfPk8v07a1qYG0vh6CWeaB9qPVdsNh6W
+	 2rRd+HruvSNbydcbwxvoy1/+kRvBoIJ7Z6+Qis7vVKisrOjmoS7i9wWKXNOkYSNKAn
+	 /UmLiLCYCWAUBvkHA04kgdG5cbEA2KBKvL962lZzaG0PuCrD9owZVxoCsKszbZyEvY
+	 3WNyPuXg5z40Wlb4lgKC5iNI6AE8vTa9GVPd53QD4ZYRX9aAQMyyS/wI6OzrFi0WRH
+	 gBB0WxRIuyXWu3oQM2UyQa3ay5CvbXQ/XYdbBzkyiByyQnZ/DpNfGYh16gSeNWEzQ4
+	 Qum1PhAcTi+Yw==
+Message-ID: <dc01c5cd-7c6b-424c-902d-9ce6ebd212cb@kernel.org>
+Date: Thu, 29 May 2025 09:29:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] dt-bindings: vendor-prefixes: Add TouchNetix AS
+To: Marco Felsch <m.felsch@pengutronix.de>,
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>,
+ Danilo Krummrich <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
+ <20250529-v6-10-topic-touchscreen-axiom-v2-2-a5edb105a600@pengutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250529-v6-10-topic-touchscreen-axiom-v2-2-a5edb105a600@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 29 May 2025 09:27:33 +0200
-Message-Id: <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-X-Mailer: aerc 0.20.1
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
- <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
-In-Reply-To: <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
+Content-Transfer-Encoding: 7bit
 
-On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
-> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
->> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
->>> Introduce the `num` module, featuring the `NumExt` extension trait
->>> that expands unsigned integers with useful operations for the kernel.
->>>
->>> These are to be used by the nova-core driver, but they are so ubiquitou=
-s
->>> that other drivers should be able to take advantage of them as well.
->>>
->>> The currently implemented operations are:
->>>
->>> - align_down()
->>> - align_up()
->>> - fls()
->>>
->>> But this trait is expected to be expanded further.
->>>
->>> `NumExt` is on unsigned types using a macro. An approach using another
->>> trait constrained by the operator traits that we need (`Add`, `Sub`,
->>> etc) was also considered, but had to be dropped as we need to use
->>> wrapping operations, which are not provided by any trait.
->>>
->>> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
->>> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->>> ---
->>>  rust/kernel/lib.rs |  1 +
->>>  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++
->>>  2 files changed, 83 insertions(+)
->>
->> Have you proposed `align_down` to upstream rust? Not saying that we
->> shouldn't do it here, but if we haven't tried yet, it might be a good
->> idea to just get them upstreamed. (if you do, it should probably be
->> named `prev_multiple_of`)
->
-> I haven't yet - haven't ever contributed anything to upstream Rust, so
-> I'll have to look that one up first. :) But I agree a `prev_multiple_of`
-> could be useful.
+On 29/05/2025 00:08, Marco Felsch wrote:
+> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> 
+> Add vendor prefix for TouchNetix AS (https://www.touchnetix.com/products/).
+> 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+Last message was: Keep only ack.
 
-I'd recommend opening a thread on Zulip before you go implement stuff.
-Then you can also get a more rusty name for `fls` :)
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
->>> +    /// Align `self` up to `alignment`.
->>> +    ///
->>> +    /// `alignment` must be a power of 2 for accurate results.
->>> +    ///
->>> +    /// Wraps around to `0` if the requested alignment pushes the resu=
-lt above the type's limits.
->>> +    ///
->>> +    /// # Examples
->>> +    ///
->>> +    /// ```
->>> +    /// use kernel::num::NumExt;
->>> +    ///
->>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
->>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
->>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
->>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
->>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
->>> +    /// ```
->>> +    fn align_up(self, alignment: Self) -> Self;
->>
->> Isn't this `next_multiple_of` [1] (it also allows non power of 2
->> inputs).
->>
->> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_multip=
-le_of
->
-> It is, however the fact that `next_multiple_of` works with non powers of
-> two also means it needs to perform a modulo operation. That operation
-> might well be optimized away by the compiler, but ACAICT we have no way
-> of proving it will always be the case, hence the always-optimal
-> implementation here.
-
-When you use a power of 2 constant, then I'm very sure that it will get
-optimized [1]. Even with non-powers of 2, you don't get a division [2].
-If you find some code that is not optimized, then sure add a custom
-function.
-
-[1]: https://godbolt.org/z/57M9e36T3
-[2]: https://godbolt.org/z/9P4P8zExh
-
-> Also in the kernel we tend to use the `align` nomenclature and I think we
-> should preserve that for clarity.
-
-That's also fair, but we lose the constness of `next_multiple_of`, so
-you can't use `align_up` in a const function. That might confuse people
-and then they write their own const helper function... I'd prefer we use
-all functions that are available in the stdlib.
-
->>> +
->>> +    /// Find Last Set Bit: return the 1-based index of the last (i.e. =
-most significant) set bit in
->>> +    /// `self`.
->>> +    ///
->>> +    /// Equivalent to the C `fls` function.
->>> +    ///
->>> +    /// # Examples
->>> +    ///
->>> +    /// ```
->>> +    /// use kernel::num::NumExt;
->>> +    ///
->>> +    /// assert_eq!(0x0u32.fls(), 0);
->>> +    /// assert_eq!(0x1u32.fls(), 1);
->>> +    /// assert_eq!(0x10u32.fls(), 5);
->>> +    /// assert_eq!(0xffffu32.fls(), 16);
->>> +    /// assert_eq!(0x8000_0000u32.fls(), 32);
->>> +    /// ```
->>> +    fn fls(self) -> u32;
->>
->> Isn't this just `trailing_zeros` [2]?
->>
->> [2]: https://doc.rust-lang.org/std/primitive.u32.html#method.trailing_ze=
-ros
->
-> No, `trailing_zeros` counts from the LSB up to the first bit set to 1,
-> whereas fls does that from the MSB. For instance, `0xffffu32.fls() =3D=3D
-> 16` but `0xffffu32.trailing_zeros() =3D=3D 0`.
-
-Ah right... Then maybe add that to the upstream suggestion :)
-
----
-Cheers,
-Benno
+Best regards,
+Krzysztof
