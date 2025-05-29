@@ -1,137 +1,168 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34D1C84A5
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBE319AD90;
+	Thu, 29 May 2025 16:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748535741; cv=none; b=UWAY+WEbP+iHyJvSUHC3sEpK/OU1NZzdEduW/As46jGNL4sxV2Eag0mrFce5Ay7ly3HMDdI0K44rgDfw5nLg2V1IYFvaeh9wQtyTgHduubT2rWh5Q6Ou+UIi9jO8bGLLIldXnSh0L2kRIToimGNAG0qO2HJzZYVbStVNzP6PKig=
+	t=1748535809; cv=none; b=SaIcUALRVbFJOSzQ2zQxtvtFJ0olto4nbnjp/v6I3E7D7w9TtMEzBDzG1gUghd/VZfhI7Elh7MNKdG2xCyLERtRxC1PL/VTqc/GOc83ZrGj1gGQLp+eJ9KXmPHj8cX/EK19+8j0k2syLyWHYY2xNkDyZU0bk0VqxcFTebpEet7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748535741; c=relaxed/simple;
-	bh=gEN6lDiE/kCz3cCG2dJKfYLxZRUu4dDH9wBtEEEyVDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8yHcDOXXXGcAyI5aNkpVG05Hn6/CFGrHj75ZK/nvooF3+6rSWAFIBiKooUOCXm7OdDJVwoTxN/49zkL5Tja+bvBq/zpxijBVWs1SAkAX4mR8v+1pv5j7gGyXdeaajh6HxpmpDLnyeyTbvVAKsUOeTljR7CK9yKwg9AaX8S48oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sBDJfhX3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZmNkjHj8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=HyWeMu9Y; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=RwxxuEJc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748535809; c=relaxed/simple;
+	bh=y88bWnjdDmH8A53C7ItcbB51L4+6m81K5nRKHO9GgrA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u0BySTveLefhPHN0F8r/KHvNXXRKcrmu5/5Y/ixnnK7LwEARY8cwiCAGqP3RWe9aW6Jiydk6eRbvC9/lt2qhpESuK6Qoci5KKZe6KlvQXRGPs6+rUee2M49OZQmB7Gv9hP6dwGXdhPG4TR1tqyq3sW2yknjQEOnow2QumhL2YSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEJG8klE; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sBDJfhX3";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZmNkjHj8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="HyWeMu9Y";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="RwxxuEJc"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 2056C1F7FD;
-	Thu, 29 May 2025 16:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748535738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
-	b=sBDJfhX3Y7hxNm73MjTCy8cOUZFBO+1H9PTsiBSdpFJbvGnD8LFqdERh6FjHkdqd1Rs5+T
-	94/LAbVkiXR5w5vCbvSWqeSGsLBgEWh6Ut6GX3G7WMbwd8TiCQinATZq0iMU3xKOUQo9+o
-	kuFdhsMgCU36SIazL7tY/sjsFflFWyw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748535738;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
-	b=ZmNkjHj8bAxMuM1k4d/PmVCTnKfzz6qvhVHLsy6MLqqENbRKhcU2ORVV1nXb8/FAfFlyqb
-	EWtHjc725TZj4eBg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748535737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
-	b=HyWeMu9YcwqeeQzYwEs/utEANntZukEq9sj6D/Er8T6xoOt0q6sI7wcXlLZW/qQDM/zwSU
-	sojF3uIngONwwW9RV9D1QWO9GD2nXfn6eu0KjDCSEdJhL3Lc0GvwmO/fD5u+IAN3+f+iPm
-	fMolCFWCMc1igv3XPjs0rNAVaeKchG0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748535737;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lxDeu3h5/e2Dor4zcf2wwpUXfX47eUvG4MdqHLFkL9k=;
-	b=RwxxuEJcN2NYA+yEGgTFL/der/+nYn3XpTYQ7nqgc53g3AYM+pu0xBiv+at96XSN3r2MTl
-	D8QVTDTICyJhFOAg==
-Date: Thu, 29 May 2025 18:22:17 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: David Hildenbrand <david@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aDiJuZgUC2CYtdxi@dwarf.suse.cz>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
- <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
- <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
- <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
- <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEJG8klE"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e7d74904be7so100445276.2;
+        Thu, 29 May 2025 09:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748535807; x=1749140607; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y628e+r5J46wCH9AZO34Qtcv0eqO1tFbg737Vp+QQ1Y=;
+        b=OEJG8klEQhlmOtNzEHNzSxTg910dfpQYm662Fu2bgV9PZiNGsYdp7aP9+AJBLk+gsV
+         7iw2GLhCD/RzxzQCBs8b8/dCausxiVfm2nD+D46aDhpxu6g9m98khKkntMfyWbKkSRJ9
+         UAAfOifq8udnqZoRFu747oJL9Qa+d6F+eOGURLvthFa8zXGVPq28Qf+OssKa7uTnUDLA
+         FssbFKOaDpVYMY6fPWeModP+v5/ujYijQfEbsjlWjoL/id24Ne42FZlghI9eEJVFGgkS
+         cfAoCNxNNQL3AOKHXRMfdFN22IOFunuLLaLsY0MPqY6ra0DC4xFexNxK7J0jmr2KhdZ1
+         KXbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748535807; x=1749140607;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y628e+r5J46wCH9AZO34Qtcv0eqO1tFbg737Vp+QQ1Y=;
+        b=W9FRigxgjyc52ZjQ5ngdy4DNWuALRwv78EgdffsjNDye6LCWT4V8Q9pFGPCuMIMyz1
+         gL/r9k0VvSN1IWYGMJM2o3oSTJwN5K/BEBURUDNNe2LY8GssBeSmVrdSHhj4D/Uhg53R
+         8oxyVsm19KMjoOKBeEwZDj/wdkWXfh4+U8CvApa3lN+U6r+5NwckGmWBoKA/Q74ZwS10
+         mdnh9ip98PmzrCPurqEuKi7/ZNEwXDS0OnKFLAsV1S9JfUqGRSjZxsLtlHa/maRuoRzv
+         DXgJmz5Q6SQPArjn9ODPyA8A6RpAdb3PTH0NOpHU02mL9Oeh2o3VkMmeuviCApMDW3a5
+         1Aeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQEP628BKSm0tK3JWpmzyaeIzlT1oLjxSUAj/ehVrPMIumqu5eNDyWrIyfqrewJ77wBgvC01Hz01JNCJVo@vger.kernel.org, AJvYcCUTfRq5iKzHJqgV1a/CCm/isaPQ3PvN7wsZHuIuKAAHVKupEZ4EllPRX9v5GQz/d5bwEybtICsjcKWj@vger.kernel.org, AJvYcCVEoXQpquGZuUZqe24t3tGZBKE71+ye5s8yb0ZOnBqMp6r4FTEnodW/mQYsqTznwuek4xWZAmoRSMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4SCSsskHYWpp9KMrE71/vPyhq2fz2NpUjNjy7s7LactQuVf5R
+	NnlHE/frK2+NnH3lkf1tHMHJnw+D3jEUF7dBy9gjCF01RNMMXtD9JFrpoptXWV/CCcxzPu+Yc3r
+	GV/38RjoZIXqFJcwk4YnNcePXZhzKwcA=
+X-Gm-Gg: ASbGncunAxwSGEA+BLFSeOFYe5OHCTnH5YLWBmYjNTyeHpsLI+DFxiJiJt7nH1CgWK2
+	L2Ykm/ynm+lPUdIPlW/Z+RsdRAGN+1VjiWGh0ggZWn6KvAOd5DYkPN5VMHI16VZoWIbY2bi0SE9
+	g39Crh0GDG7IMzZ0s1rTEDRG5UigmZy60I
+X-Google-Smtp-Source: AGHT+IGhObu3W6mQruMR/+MrCuHMLXN9Vg4M2aXNyeRCnDSL2N9NCp8mknXUuMRRBVrSuN72UeazYuMSeQSlYdpxwvA=
+X-Received: by 2002:a05:690c:4808:b0:70e:923:217d with SMTP id
+ 00721157ae682-70f97e11cbbmr481117b3.1.1748535806730; Thu, 29 May 2025
+ 09:23:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost:helo,suse.cz:email,dwarf.suse.cz:mid]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+References: <20250523223523.35218-1-l.rubusch@gmail.com> <20250523223523.35218-10-l.rubusch@gmail.com>
+ <20250525140351.559be514@jic23-huawei>
+In-Reply-To: <20250525140351.559be514@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Thu, 29 May 2025 18:22:50 +0200
+X-Gm-Features: AX0GCFvzeuawi05YPC7HpbpaM7CtaLMYnQbBAczI4RTC1RjBW97G2T84TwCz5CA
+Message-ID: <CAFXKEHb96Kyr_L_Mw3UQxxD=nR8X2bU3TCcgH6OWsqYfaQtE+Q@mail.gmail.com>
+Subject: Re: [PATCH v3 09/12] iio: accel: adxl313: add activity sensing
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 11:01:04PM +0200, David Hildenbrand wrote:
-> I think we just have to be careful to document it properly -- especially the
-> shortcomings and that this feature might become a problem in the future.
-> Movable user-space page tables getting placed on CMA memory would probably
-> not be a problem if we don't care about ... user-space data either way.
+Hi Jonathan,
 
-Agreed; in the v3 series [1] I amended the documentation part [2] to
-explicitly mention that kernel movable allocations could be
-missing from the vmcore.
+On Sun, May 25, 2025 at 3:04=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Fri, 23 May 2025 22:35:20 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Add possibilities to set a threshold for activity sensing. Extend the
+> > interrupt handler to process activity interrupts. Provide functions to =
+set
+> > the activity threshold and to enable/disable activity sensing. Further =
+add
+> > a fake channel for having x, y and z axis anded on the iio channel.
+> >
+> > This is a preparatory patch. Some of the definitions and functions are
+> > supposed to be extended for inactivity later on.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> One comment I found confusing.
+>
+> I see this hardware is similar to our friend the axl345 so some of the ou=
+tcomes
+> of final reviews on that series may apply here as well.
 
-The risks associated with pending DMA are also mentioned.
+Yes. To be honest with you, I already saw several places, where I
+probably need to send you some refac for the ADXL345 as well.
+Implementing the same type of source a second time, sometimes leads
+[me] to different[/better?] solutions and brings different insights.
 
-Is there anything you're still missing from the v3 documentation?
+>
+> > ---
+> >  drivers/iio/accel/adxl313_core.c | 229 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 227 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
+13_core.c
+> > index 80991cd9bd79..74bb7cfe8a55 100644
+> > --- a/drivers/iio/accel/adxl313_core.c
+> > +++ b/drivers/iio/accel/adxl313_core.c
+>
+> >  static const unsigned long adxl313_scan_masks[] =3D {
+> > @@ -300,6 +334,60 @@ static int adxl313_read_freq_avail(struct iio_dev =
+*indio_dev,
+> >       }
+> >  }
+> >
+> > +static int adxl313_is_act_inact_en(struct adxl313_data *data,
+> > +                                enum adxl313_activity_type type)
+> > +{
+> > +     unsigned int axis_ctrl;
+> > +     unsigned int regval;
+> > +     int axis_en, int_en, ret;
+> > +
+> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axi=
+s_ctrl);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* Check if axis for activity are enabled */
+>
+> If all 3 axis perhaps?  Or If any axis?  I'm not sure what intent is here=
+.
 
-> The whole "Direct I/O takes max 1s" part is a bit shaky. Maybe it could be
-> configurable how long to wait? 10s is certainly "safer".
+For the ADXL313 I do generally all axis, i.e. x-, y-, z-axis - enabled
+and disabled, respectively. I'll modify the comment.
 
-I have nothing against making this configurable, or just setting
-the fixed/default delay to 10s. Which would you prefer?
-Would you prefer a command-line option, config option or a sysfs
-file?
+Sry about spamming the ML with my emails about the reset function. I
+oversaw your other mail. Patches will be merged.
 
-Thanks!
+Best,
+L
 
-[1] https://lore.kernel.org/lkml/Z9H10pYIFLBHNKpr@dwarf.suse.cz/
-[2] https://lore.kernel.org/lkml/Z9H4E82EslkGR7pV@dwarf.suse.cz/
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+>
+> > +     if (type !=3D ADXL313_ACTIVITY)
+> > +             return 0;
+> > +
+> > +     axis_en =3D FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> > +
+> > +     /* The axis are enabled, now check if specific interrupt is enabl=
+ed */
+> > +     ret =3D regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval=
+);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     int_en =3D adxl313_act_int_reg[type] & regval;
+> > +
+> > +     return axis_en && int_en;
+> > +}
+>
