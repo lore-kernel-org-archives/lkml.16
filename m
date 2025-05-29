@@ -1,167 +1,327 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192C7265623;
-	Thu, 29 May 2025 05:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B700B265CAC;
+	Thu, 29 May 2025 05:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748497406; cv=none; b=jf52/haKX2BurqfSl3xuCmc3aBDgLLGBjCnbptr2ooTJo8OxnCKUUoCKo0TfJ7mEmlRkBEmut1wON01j22+QGSh238BtrXDnJ+Roe0lq0ULJ595CRX7khdLUS6vU1XZP0O+oEcYhlCxkMHQNmvlXQWvMycO+uvQFJPvFzIHAm4k=
+	t=1748497409; cv=none; b=juDBgLYXcs6syWupac0dr6haibZejjxBY9p+5UVXaBq9/NwULY2H9/Z2sNmxMpngZcbPRU9QnujHxhzAZAL7jnChdzzw6mTFXs4hzloOElD3W+NeoUzhaIUD057artMq3n2TREoTwGiJ6Y95ASRtlSnMvcNEC2vdjmDzTHUeZIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748497406; c=relaxed/simple;
-	bh=8h6UqYy6eQh8UhHHfZ1AnwFWgdsRIGY/Pnr4CW0Cie4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HqHmmDmqgOPy4vwnYxGDroZGqAlvpTUEZqutDMDPcNUQ7AIxYZhVv3UcK4kT8EnULHunOAiqIbYUgdlOz5Hjbydxs6/jByIKXRk9Sw4dBsFth2RWA8UmYi1i7fXdjtst8uq3330Fnhh+sQvxpPXx3goFZCHz+RZNhgl08WHee0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cvr+/7OF; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748497409; c=relaxed/simple;
+	bh=vP92koKVunofrqlnPlqCNDul5Llw0DB0fsaPd9kiOSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oAZs+tM7Qnp5nUVl70gHZWuewvxyOpZuID4BYkwO72EINN3I27w5W9UeZcfPdb9jzKtDTZO4rNWHjZlMyvY1W96zUzpkV16tb5ewqluKUpS+PscEqsSPDU6di/IKxmK73yFZIPGib2b2OoOPmijT92eRHNdfI4akwInwAXsBO74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KuvkG8Eu; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvr+/7OF"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad574992fcaso89314966b.1;
-        Wed, 28 May 2025 22:43:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748497403; x=1749102203; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=91m00KOPKqAhxAOXF7AdqmwKSx+GFz4yTWglZ94qqh0=;
-        b=cvr+/7OF/OYFTcgnGNzK/AZwvWF6I3jhCVG1nfFvsFhPR3ylhJKhwk7Ke7bon/b3ph
-         0ObTJvIn1/FyY5jl5ebo/cW2E451vWREtsbDA9pJfLYNSzuR/+77CsVNh+D37z1pkSiz
-         Ju+KfqnAcvpM1f6CLjduio6yhmItBQn29Pwm4Ib1lMFLpn1M42l21UiVY/FOke3Dp2uT
-         QWgvPGdiJw8mkFbA57vA7qXXLUqI/jW7n1C1mYnR+mL9jWclX+8ytgQupxqMf+2wY4X6
-         nSgjOjI/e8uuGeo+bjAav+CHMKI/PbHoWcTIXak7M1qoDL/XmKpuJ1uUklo18/qHn8g7
-         q/TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748497403; x=1749102203;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=91m00KOPKqAhxAOXF7AdqmwKSx+GFz4yTWglZ94qqh0=;
-        b=noc63he8KdWYFpogwiRmbJh+QRciUiRu0fxwM/EFX38iUp6yrniWURtBIMrUUExIsJ
-         08htKp9/afCVGjtsshzM2adt4BpUh+Z9ZMnXgXs+pksswlRe3InVyvGB+6k6KW/mUyBw
-         AuaZW7Bl6XN5cWOsSZPuVnmVDMGjCnhsg75fIWAr+EHLW4zAPJJh1ZF8lqWXC/ueHadp
-         CjB2eUhcQiv197a3QXkH0OH0yu5efKpq1AJgvk4dg48UZ8MwqEpd3PWxvCQwNo0/GNQa
-         AwIDPYwRPCvW+WJ+QXHTXEVNqCsvAGunDRpTq3XLHakAXaPf+mVco93n52pYmu8SuQPa
-         +v9g==
-X-Forwarded-Encrypted: i=1; AJvYcCWOS/bPaRCmqwM3z7kCkI5iOU6oSxwGkRjlouRSzBC6lQrKdYvuXcMoMdnCOkv7RbUHDNSULbYqDDm0hlQc@vger.kernel.org, AJvYcCX/2+JYgzeX9cNDZai4H8gKxBkaUSCE0OzDJcJ54rAkQoczFFy+ZcYnWy7KatA5hfep3+Ot0qW57Bc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3OjKkA61KP7P9SMmVwNW31ebwqiuH+XF1qVG+TqUE4TC9lOsS
-	vQdrsx0AkQ3tN9UiC6heR3WV8ZFR5kq36HxTXyd45QeRasEIGNYyKM8Sbyygoh34W1b/rDSuWxl
-	1jgh0jBsBpIYg1Ne5wKhdI308Zl9pKgg=
-X-Gm-Gg: ASbGncu7b6kfcdIYRBxy2OwYjMEZ1rCO4OFDcOB63jo+ZRSs1KkXvW0xBtzoyylmsnA
-	2ndoeddUlRvPLwREWsPaeYNBkjXEM4i4tKgY2Yp1WXMpjk8mJD+wL7yrepoe7hhTYsaHG/I/Zv1
-	9i/SEK40D3Cau05QyqHCA8H2t42VkZZP6ZPETG6OL7FBCY1w==
-X-Google-Smtp-Source: AGHT+IHFITTJqypSQIQUaeCvI5fCs+IEhoVxF5pNBP2RI9WF2ldNdg562/uwxhowfwbCkClGch7COKrW9k3nQiFO1oU=
-X-Received: by 2002:a17:907:868b:b0:ad8:aa2c:dfe3 with SMTP id
- a640c23a62f3a-ad8aa2ce37cmr319177566b.59.1748497403101; Wed, 28 May 2025
- 22:43:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KuvkG8Eu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748497408; x=1780033408;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vP92koKVunofrqlnPlqCNDul5Llw0DB0fsaPd9kiOSU=;
+  b=KuvkG8Euhf2itkJHNfV0ur3MFHtrSmOyapDJipIAAmYskcuyw8KEUrnI
+   N//evaynJNTiY48lfc9oW79haov9S0QXm74IAhlOwn40RtcpylhAZTaGq
+   7eaL5tnu50ts4pByRREajT9lF7QcwXxDQW8fE5HHjUULSFyP/HiWlpMen
+   KsGbK+nycRInVgbVjwUSMsXFYf768BcPcJsh3vRHfI8KskRKa0nqjSOTD
+   30xATh9SHW4VGabK2Fuitdh9/K2P2RY2EWYqyUEX6jrqFaKbBWbc4WJhi
+   Lu/QcQLtZsVB8G+z4quQQZnhFp6rGkxZc2i/Cr4bxxf5Yycc4K/97WXI5
+   w==;
+X-CSE-ConnectionGUID: GUvb0evXR1OnFqT+HoN8ZQ==
+X-CSE-MsgGUID: ZRkpEC89RfaQZY2sMz6SKw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="67963223"
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="67963223"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 22:43:28 -0700
+X-CSE-ConnectionGUID: dg5mUtXITPSP2NYLPwER9w==
+X-CSE-MsgGUID: f+/Gs+kRTsKqO/91QWb0IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
+   d="scan'208";a="144443443"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.165])
+  by fmviesa009.fm.intel.com with ESMTP; 28 May 2025 22:43:21 -0700
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: kvm@vger.kernel.org,
+	sumit.semwal@linaro.org,
+	christian.koenig@amd.com,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	alex.williamson@redhat.com,
+	jgg@nvidia.com,
+	dan.j.williams@intel.com,
+	aik@amd.com,
+	linux-coco@lists.linux.dev
+Cc: dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org,
+	vivek.kasireddy@intel.com,
+	yilun.xu@intel.com,
+	yilun.xu@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch,
+	leon@kernel.org,
+	baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com,
+	tao1.su@intel.com,
+	linux-pci@vger.kernel.org,
+	zhiw@nvidia.com,
+	simona.vetter@ffwll.ch,
+	shameerali.kolothum.thodi@huawei.com,
+	aneesh.kumar@kernel.org,
+	iommu@lists.linux.dev,
+	kevin.tian@intel.com
+Subject: [RFC PATCH 17/30] iommufd/device: Add TSM Bind/Unbind for TIO support
+Date: Thu, 29 May 2025 13:35:00 +0800
+Message-Id: <20250529053513.1592088-18-yilun.xu@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
+References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527200534.98689-1-gye976@gmail.com> <CAHp75VcUr7-X+F1f=wPH4=Z7q3kFffv8BgkmKWM4VTjy2w-tGg@mail.gmail.com>
- <CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com>
- <CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
- <CAKbEznt7ZhN9gZWy-7wHhFhwbF8XtCGrukuxe4eAFZpfxfu6vg@mail.gmail.com> <20250528180214.00002253@huawei.com>
-In-Reply-To: <20250528180214.00002253@huawei.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 29 May 2025 07:42:46 +0200
-X-Gm-Features: AX0GCFsr-52UgU7OTbDHca2TsgtybzFgxtr1LZvlY1UivEOK3iUWkejYE_wv0is
-Message-ID: <CAHp75VdBMXCBYiDX8ocyOZBm_dhWJSU_NXJN6PmOwsZaJt=AHw@mail.gmail.com>
-Subject: Re: [PATCH] iio: trigger: Avoid data race
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Gyeyoung Baek <gye976@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 7:02=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
-> On Wed, 28 May 2025 16:17:06 +0900
-> Gyeyoung Baek <gye976@gmail.com> wrote:
-> > On Wed, May 28, 2025 at 6:19=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, May 27, 2025 at 11:10=E2=80=AFPM Gyeyoung Baek <gye976@gmail.=
-com> wrote:
-> > > > On Wed, May 28, 2025 at 5:25=E2=80=AFAM Andy Shevchenko
-> > > > <andy.shevchenko@gmail.com> wrote:
-> > > > > On Tue, May 27, 2025 at 10:05=E2=80=AFPM Gyeyoung Baek <gye976@gm=
-ail.com> wrote:
+Add new kAPIs against iommufd_device to support TSM Bind/Unbind
+commands issued by CoCo-VM. The TSM bind means VMM does all
+preparations for private device assignement, lock down the device by
+transiting it to TDISP CONFIG_LOCKED or RUN state (when in RUN state,
+TSM could still block any accessing to/from device), so that the device
+is ready for attestation by CoCo-VM.
 
-...
+The interfaces are added against IOMMUFD because IOMMUFD builds several
+abstract objects applicable for private device assignment, e.g. viommu
+for secure iommu & kvm, vdevice for vBDF. IOMMUFD links them up to
+finish all configurations required by secure firmware. That also means
+TSM Bind interface should be called after viommu & vdevice allocation.
 
-> > > > > At bare minimum they are not relevant to the patch change and hav=
-en't
-> > > > > been described in the commit messages.
-> > > >
-> > > > I initially skipped this part as I thought it was minor.
-> > > > But on a second look, it seems better to separate the declaration f=
-rom
-> > > > the logic.
-> > > >
-> > > > What do you think about the data race logic? Would it make sense?
-> > >
-> > > The point is valid, the atomic_read() + atomic_set() is 101 thingy,
-> > > whoever did that doesn't really have a clue what atomic(ity) is.
->
-> :)
->
-> I'm trying to recall what this protection is actually for so this might
-> be a little vague as descriptions go...
->
-> The key here is what can happen in that 'race' and hence why I'm still fa=
-irly
-> sure it isn't a real race.  Firstly this is called in an irq handler
-> so we can only have one call of this particular function at a time
-> for a given trigger.  So no race against itself.
->
-> The atomic part is about decrements that can happen elsewhere, but there
-> can never be 'more' decrements than the value we set the counter to in th=
-is
-> function.  That is it never goes negative.
->
-> Those decrements ultimately happen in calls that can't happen until after
-> the set (via various convoluted paths ultimately getting to
-> iio_trigger_notify_done()).  In many cases the trigger is masked until it
-> is reenabled on the counter =3D=3D 0 (elsewhere) - but not always...
->
-> IIRC correctly aim is to not double trigger in cases where we can't mask
-> the trigger (a particularly rubbish trigger) - so if any of the downstrea=
-m
-> devices still hasn't called iio_trigger_notify_done() then we quietly
-> drop this particular irq on the floor. We don't mind dropping a few
-> too many, just dropping too few a then we end up loosing count of who
-> has to be 'done' with the trigger.
->
-> Hence the counter won't change between atomic_get and the atomic_set
-> as it's always 0 which means no one else is left to decrement it.
->
-> Atomics don't always need to be atomic all the time, they just are in
-> some states.
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Originally-by: Alexey Kardashevskiy <aik@amd.com>
+Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+---
+ drivers/iommu/iommufd/device.c          | 84 +++++++++++++++++++++++++
+ drivers/iommu/iommufd/iommufd_private.h |  6 ++
+ drivers/iommu/iommufd/viommu.c          | 44 +++++++++++++
+ include/linux/iommufd.h                 |  3 +
+ 4 files changed, 137 insertions(+)
 
-Yes, but this is confusing and/or buggy code to begin with (and
-independently on the background of its usage). Technically this patch
-(perhaps with a better commit message) is valid. Main two points here:
-1) avoiding potential (even theoretical) race; 2) do not spread a
-really wrong pattern to avoid people learning from it (in case
-somebody takes this code as an example for a new driver which might
-reside outside of IIO and hence might not be caught by the reviewers
-of _that_ subsystem).
+diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+index 37ef6bec2009..984780c66ab2 100644
+--- a/drivers/iommu/iommufd/device.c
++++ b/drivers/iommu/iommufd/device.c
+@@ -3,6 +3,7 @@
+  */
+ #include <linux/iommu.h>
+ #include <linux/iommufd.h>
++#include <linux/pci.h>
+ #include <linux/pci-ats.h>
+ #include <linux/slab.h>
+ #include <uapi/linux/iommufd.h>
+@@ -1561,3 +1562,86 @@ int iommufd_get_hw_info(struct iommufd_ucmd *ucmd)
+ 	iommufd_put_object(ucmd->ictx, &idev->obj);
+ 	return rc;
+ }
++
++/**
++ * iommufd_device_tsm_bind - Move a device to TSM Bind state
++ * @idev: device to attach
++ * @vdev_id: Input a IOMMUFD_OBJ_VDEVICE
++ *
++ * This configures for device Confidential Computing(CC), and moves the device
++ * to the TSM Bind state. Once this completes the device is locked down (TDISP
++ * CONFIG_LOCKED or RUN), waiting for guest's attestation.
++ *
++ * This function is undone by calling iommufd_device_tsm_unbind().
++ */
++int iommufd_device_tsm_bind(struct iommufd_device *idev, u32 vdevice_id)
++{
++	struct iommufd_vdevice *vdev;
++	int rc;
++
++	if (!dev_is_pci(idev->dev))
++		return -ENODEV;
++
++	vdev = container_of(iommufd_get_object(idev->ictx, vdevice_id, IOMMUFD_OBJ_VDEVICE),
++			    struct iommufd_vdevice, obj);
++	if (IS_ERR(vdev))
++		return PTR_ERR(vdev);
++
++	if (vdev->dev != idev->dev) {
++		rc = -EINVAL;
++		goto out_put_vdev;
++	}
++
++	mutex_lock(&idev->igroup->lock);
++	if (idev->vdev) {
++		rc = -EEXIST;
++		goto out_unlock;
++	}
++
++	rc = iommufd_vdevice_tsm_bind(vdev);
++	if (rc)
++		goto out_unlock;
++
++	idev->vdev = vdev;
++	refcount_inc(&vdev->obj.users);
++	mutex_unlock(&idev->igroup->lock);
++
++	/*
++	 * Pairs with iommufd_device_tsm_unbind() - catches caller bugs attempting
++	 * to destroy a bound device.
++	 */
++	refcount_inc(&idev->obj.users);
++	goto out_put_vdev;
++
++out_unlock:
++	mutex_unlock(&idev->igroup->lock);
++out_put_vdev:
++	iommufd_put_object(idev->ictx, &vdev->obj);
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(iommufd_device_tsm_bind, "IOMMUFD");
++
++/**
++ * iommufd_device_tsm_unbind - Move a device out of TSM bind state
++ * @idev: device to detach
++ *
++ * Undo iommufd_device_tsm_bind(). This removes all Confidential Computing
++ * configurations, Once this completes the device is unlocked (TDISP
++ * CONFIG_UNLOCKED).
++ */
++void iommufd_device_tsm_unbind(struct iommufd_device *idev)
++{
++	mutex_lock(&idev->igroup->lock);
++	if (!idev->vdev) {
++		mutex_unlock(&idev->igroup->lock);
++		return;
++	}
++
++	iommufd_vdevice_tsm_unbind(idev->vdev);
++	refcount_dec(&idev->vdev->obj.users);
++	idev->vdev = NULL;
++	mutex_unlock(&idev->igroup->lock);
++
++	refcount_dec(&idev->obj.users);
++}
++EXPORT_SYMBOL_NS_GPL(iommufd_device_tsm_unbind, "IOMMUFD");
+diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+index 297e4e2a12d1..29af8616e4aa 100644
+--- a/drivers/iommu/iommufd/iommufd_private.h
++++ b/drivers/iommu/iommufd/iommufd_private.h
+@@ -430,6 +430,7 @@ struct iommufd_device {
+ 	/* protect iopf_enabled counter */
+ 	struct mutex iopf_lock;
+ 	unsigned int iopf_enabled;
++	struct iommufd_vdevice *vdev;
+ };
+ 
+ static inline struct iommufd_device *
+@@ -615,8 +616,13 @@ struct iommufd_vdevice {
+ 	struct iommufd_viommu *viommu;
+ 	struct device *dev;
+ 	u64 id; /* per-vIOMMU virtual ID */
++	struct mutex tsm_lock;
++	bool tsm_bound;
+ };
+ 
++int iommufd_vdevice_tsm_bind(struct iommufd_vdevice *vdev);
++void iommufd_vdevice_tsm_unbind(struct iommufd_vdevice *vdev);
++
+ #ifdef CONFIG_IOMMUFD_TEST
+ int iommufd_test(struct iommufd_ucmd *ucmd);
+ void iommufd_selftest_destroy(struct iommufd_object *obj);
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 2fcef3f8d1a5..296143e21368 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -4,6 +4,7 @@
+ #if IS_ENABLED(CONFIG_KVM)
+ #include <linux/kvm_host.h>
+ #endif
++#include <linux/pci-tsm.h>
+ 
+ #include "iommufd_private.h"
+ 
+@@ -193,11 +194,13 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 		goto out_put_idev;
+ 	}
+ 
++	vdev->ictx = ucmd->ictx; //This is a unrelated fix for vdevice alloc
+ 	vdev->id = virt_id;
+ 	vdev->dev = idev->dev;
+ 	get_device(idev->dev);
+ 	vdev->viommu = viommu;
+ 	refcount_inc(&viommu->obj.users);
++	mutex_init(&vdev->tsm_lock);
+ 
+ 	curr = xa_cmpxchg(&viommu->vdevs, virt_id, NULL, vdev, GFP_KERNEL);
+ 	if (curr) {
+@@ -220,3 +223,44 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 	iommufd_put_object(ucmd->ictx, &viommu->obj);
+ 	return rc;
+ }
++
++int iommufd_vdevice_tsm_bind(struct iommufd_vdevice *vdev)
++{
++	struct kvm *kvm;
++	int rc;
++
++	mutex_lock(&vdev->tsm_lock);
++	if (vdev->tsm_bound) {
++		rc = -EEXIST;
++		goto out_unlock;
++	}
++
++	kvm = vdev->viommu->kvm;
++	if (!kvm) {
++		rc = -ENOENT;
++		goto out_unlock;
++	}
++
++	rc = pci_tsm_bind(to_pci_dev(vdev->dev), kvm, vdev->id);
++	if (rc)
++		goto out_unlock;
++
++	vdev->tsm_bound = true;
++
++out_unlock:
++	mutex_unlock(&vdev->tsm_lock);
++	return rc;
++}
++
++void iommufd_vdevice_tsm_unbind(struct iommufd_vdevice *vdev)
++{
++	mutex_lock(&vdev->tsm_lock);
++	if (!vdev->tsm_bound)
++		goto out_unlock;
++
++	pci_tsm_unbind(to_pci_dev(vdev->dev));
++	vdev->tsm_bound = false;
++
++out_unlock:
++	mutex_unlock(&vdev->tsm_lock);
++}
+diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+index 2712421802b9..5f9a286232ac 100644
+--- a/include/linux/iommufd.h
++++ b/include/linux/iommufd.h
+@@ -63,6 +63,9 @@ int iommufd_device_replace(struct iommufd_device *idev, ioasid_t pasid,
+ 			   u32 *pt_id);
+ void iommufd_device_detach(struct iommufd_device *idev, ioasid_t pasid);
+ 
++int iommufd_device_tsm_bind(struct iommufd_device *idev, u32 vdevice_id);
++void iommufd_device_tsm_unbind(struct iommufd_device *idev);
++
+ struct iommufd_ctx *iommufd_device_to_ictx(struct iommufd_device *idev);
+ u32 iommufd_device_to_id(struct iommufd_device *idev);
+ 
+-- 
+2.25.1
 
-Alternatively we need to get rid of atomic operations, but with the
-same effect as 2) above.
-
-> So, is this something that has caused observed problems, or based
-> on code inspection? My remembering of what was going on here might well
-> be flawed.
->
-> There are some 'fun' corners for what happens after that set though
-> where a handler can run fast enough in race conditions we end up
-> hitting 0 in iio_trigger_notify_done_atomic() and have to schedule
-> restarting of the trigger because that might involve a bus write over
-> a sleeping bus.  That one was a painful bug report some years ago...
-
---=20
-With Best Regards,
-Andy Shevchenko
