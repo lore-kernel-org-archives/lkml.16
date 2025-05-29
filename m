@@ -1,282 +1,563 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4B3610B
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748556120; cv=fail; b=sAs8Wzt0cdamvj6lukxi43YwDDf7BDxb+tYTMZC6Gr5NfYLhiMQc9N4rwzEwGfsj0jsDKrt/SiRvUYCOBCwkcUS1v98uN3kL2pXlBJyr8MojGbIPyVNfQ/JfNByeqa3TyOBedt6vzbOfKXEYWmkj6RrH2s+RYPzkhjQcaiQK7Iw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748556120; c=relaxed/simple;
-	bh=J3XiSK/7/YuTFf7f3vs3bsIKeye3Go4uuxaPV6f2Mbc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=H/d9IlKySlJnvu4f9FSEOHtaNtMFZ1NJYGRN6GuiG7zyHH24NO/z6VUO4RsIrNGWO+s7Xz3dfD+C+mdN/8eZmUcHbFeDwPbD2s3cUEOVFudc9udpUm8DKd3RXegido2EJ4Y4kWXVTTdCjXfZzbwgBz0vFjxfP41G2LQOrPSsEn0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VDfydZ+d; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1417610B
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748556157; cv=none; b=jMhKswEz28ey9pwthpLDGQtFOYivdJsaZSTb4nZE87Y1e3w/QU2OW34W8nBf4+kh9sbLbBBsh3dkToPNM9fO01sLkDoFtS4Uj2UC4Dm2R0c/UnCEL3+1Q7Rd6PvJ41/gbk4rUw1eyMM6VaYJSgRPap2d+9Q5Zz1HcMvZ6fWgqFc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748556157; c=relaxed/simple;
+	bh=++87OKnuf9VuOSOFmW6+BculkS2MjmUHgou/pQAD96E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JI5+2wET15MVp9QhNs8cagAj6RJuV4ZdvXr50A3zLx1NPuNR23DCvMjXIWAR2TyxPzENlhgcisCz77Fhv+NiZWcCyCl3TRp1NeyWphUtDl1iP+ltS1ReBJPlaEqnt1B3D7AZRMZcH91ZyJpMZ6U7rsdT6TvQK+PfU/PFDCE1NVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dkucqPec; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VDfydZ+d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748556118; x=1780092118;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=J3XiSK/7/YuTFf7f3vs3bsIKeye3Go4uuxaPV6f2Mbc=;
-  b=VDfydZ+duCHZz8qyTVODBDNUxd1bC6l3GJE5yufT2EF6HdwIOM1tlrDP
-   UCKo8bUNQD/0Pk3c526zRfT2CexzH78C1LCHJWad3R4AW1manZdio1Zto
-   i/vuwCJqPPjnVh8lt8aoCh1Gav8keIv7AZqu+NxrueIMJDFBa7DnOsBUc
-   an4+6RSVv63b987EinCDWZwwAdbS002kb2yRlTuLrBUY+PNLmBksLtR6E
-   RAX1yKQ9JhFbyMF46YKggyJthUaZTBYLeccM56lJJm12KPjyXt5FTC56t
-   gaEsU1AYrPxg+bia35Ie0NMF4xhvDz0MEOWfBOwUs2tez7Dfy4uiFI5io
-   A==;
-X-CSE-ConnectionGUID: uZGok9wZQAqn0ntrIr3bjw==
-X-CSE-MsgGUID: 5wuxBoKTRJe8yy3T5tO85g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="61269470"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="61269470"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 15:01:50 -0700
-X-CSE-ConnectionGUID: UyDQKqJATc6yFZ/+miAVgw==
-X-CSE-MsgGUID: yABG0IwaSQ6HMDwDQ0etUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="174683240"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 15:01:50 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 15:01:49 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 15:01:49 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.77)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 15:01:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=O8ZWFhxCG8TZoPs/AbUNKcyKwMumaT8xyweKmbUKHmtcs0Rq8yudmRlNd1iQ/wopob56GuZMUsgadwFykXnepdXkaPEPIKjdlLzYpu405tlk9b6qFfwIpsQEiHARVC1hPnyQAVeBKulwDGgHehoWJjRSwa/KuA5TMoI26buLcyriw3OzPZVwpS1d4SsfB9bZRprFqgAqrmTfqSlWkSv0f85RDrTrlsw9KYOah5oXK3Wh5iubrmQOttMWsTzhG9YNcwhPfYR9Y1d91oxx1L4A5Zh2vTccdXiZQ6ky2RQntsIWTegRVHxW20BBcTZWuth+vppE95fZcSXXw6RfOk2XeA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VZ4/SrmCOxkHkLflh93TMjxZ3MFLmlmUwa6Kr6ai5OE=;
- b=A9xRXe53j+8XmkpeDMm99Lvqysl5MRgvwAfT/bcNXM82vb4WSnzdqr/9gIB8P0qBAAHxzxiLVt9DP/dhpL7Ak/3UqGCyCLO9UUT2JWFP2s+LztUSiljE6Ov1zQ3ouPJnjTlXKrMKO7NPUrTGBPAGu70QCREWz9mkgcwbzmMrk7YioHt9KUJ+qKFYyX2zdpePFWcRGOnwRV7G1Xvq6ZRUZk9r/JGwDZY5pv5B7iYv8CcDS0vmpxiPr1302nizfmHiPl2Pt+OQgI3xuueXt3/IKbA6tuxy2WrHXgumdlxAzsQ2Ba5Rm7bzujv04SWjOt1zPcbaD8R6RXGKmy3jHeVVJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by CH2PR11MB8836.namprd11.prod.outlook.com (2603:10b6:610:283::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Thu, 29 May
- 2025 22:01:42 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8769.021; Thu, 29 May 2025
- 22:01:41 +0000
-Message-ID: <44a4f211-6723-4fde-822c-d739fa2d603d@intel.com>
-Date: Thu, 29 May 2025 15:01:40 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/resctrl: Restore the missing rdt_last_cmd_clear()
-To: Zeng Heng <zengheng4@huawei.com>, <Dave.Martin@arm.com>, <bp@suse.de>,
-	<tony.luck@intel.com>, <james.morse@arm.com>, <xiaochen.shen@intel.com>,
-	<fenghua.yu@intel.com>
-CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>
-References: <20250529113353.3275066-1-zengheng4@huawei.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20250529113353.3275066-1-zengheng4@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0217.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::12) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkucqPec"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3da76aea6d5so22425ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748556155; x=1749160955; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jJay22rD/a9Dofka0/+ttd8xgGUExjRWiW4AtlP3q9A=;
+        b=dkucqPeci7C331VmUkd99fjTVT9ULUWZBkx40XS/z6e87UIh7l2kE6mWlZ7gr+soAW
+         0tZ4TtXNwF1pJdGnjfcn2Io9CPQ6Ho6p6gpNR86V2nZgBMkfnUawrlRXfmkAb/6Hrmnr
+         iZ+9HUZza5ptvY8eMf28EbNGVprRJbORqw45ZQlhcUI43U1WqOB66qySXy2BYSDfKqwg
+         b2/Ecbsff2R/A+TuIlCH/tKkNsRPbLvcbq5fNNRIuO5zJAQhwrnM5XQjxTL72Z5lkmJA
+         fprl026lNaa0GvkXzvBnw1vzp/sVQe/Ca4rFbN5CVL8nZa7rTGGm7Pp+RDabcvt7G9d8
+         cuEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748556155; x=1749160955;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jJay22rD/a9Dofka0/+ttd8xgGUExjRWiW4AtlP3q9A=;
+        b=UOvcS8huuiPhMyN3jGN8jLw/tt2JM4Jd3FP08gx1l12pMj/pqp7NieQ97DnAv3Ht0Q
+         3zW9+kzCBAeH5KJYlUmRyGw+fsOtfs65vnzzxAw76+ELxQ4ARH86AbvPxokvUwrV8u39
+         5JkzmtSh0yepjKmcIP/ju37GnYaEdCsNVMMWoV2Lsv8qIBwIRh/MTQ2qCelxrDtoqA2I
+         azC/08Yzxl+jajVtILgaXrT92H/NVCVFfniW6JOzWwJ3aLNa/Cxv0sAtQtOi6nzKANmw
+         FibB+j1qw8272kQAZEELXQjzWcrSA5SiL3cPYuq755xtPGCVloUJvS4tT3CLnvws5JHS
+         LxJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWt9ojDbEeXBmFak4XuIM//vWPQ05oDyD5MY9l68zqk5Tt+HnOI0+sVbl53v3yZXMRNR57XXikOlQxGeDQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1wd/WaK52gEoe7a5EJ//ybnfvg2WBXoX1bAEvkYi8J0/WsR+F
+	bGPUim2KZzN2EHejYpfENPmiK1+fWOfo6ZESsIeMDcB0B/ZTYjnwBfSdQnJoZHZ//EM8ocQNuM6
+	AeOZJWIFQjgBcTvCn51Zzcz+wpfDQZfggXH/knbPk
+X-Gm-Gg: ASbGncsvO8/qTmR/0rskCKr67BYWyGmN63DCAiBZF7wNhXIIlc/FAkrVuEn/cfaTiCV
+	QZK1KcxeyRIXpIZWHUOoVupH+9sza02raVZZMKg75vL4c59J3GAJNoCcoMLQCGJonaxxnCoriNF
+	/wFsjCJ0hdkgBB4fu7ukS7l8rm/4Ci0zKdz74MDXm23rvl
+X-Google-Smtp-Source: AGHT+IFa6ZwrlFO0cJ7CnHtzx7vPSvPq7SdXCVVxLLLgtpzoNGTzY/hrr9zWNjsubO7PnwetD3oq9T0jhNzZgp9hx/w=
+X-Received: by 2002:a92:cd85:0:b0:3dc:830e:1ce6 with SMTP id
+ e9e14a558f8ab-3dd9a7339e5mr1218455ab.22.1748556154334; Thu, 29 May 2025
+ 15:02:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|CH2PR11MB8836:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d049c1d-d244-441d-846f-08dd9efc64cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?c1NOcGdITnBIVGZXQWpobERjTHozMm1mUlZ6YVZEQno2blpyOWU5Y0pZbXhh?=
- =?utf-8?B?UnZkV2g4YWo3YkQ0V25POFZmUFNBN0NGUmVka0Z5QjVyVjhWU2s1OHg0L1VS?=
- =?utf-8?B?NHBIWXA4eGhMUTB3c1EyeTAvaVNMaE5wNHdZTEc5SlhrNHdvV2tOZlBXYURJ?=
- =?utf-8?B?dmkxdkJsTWdOQTJhYVdUblloU2dSdkczOXpKTHh3YzZhUG1Pa2wzTWR0WDh2?=
- =?utf-8?B?a2tHV1AvQmd5UUFGWk1MQTZsN1VzdklZWDM1bUJCNGtLOHJPZC9vYlZxalpN?=
- =?utf-8?B?WUxhZkkyczZQM1NrQ0Vyc0JMa2Y4WHlJMThaTWRYNndLV3BweHM2eU9yTDMy?=
- =?utf-8?B?UnJRUkNENFBqQ3B0TUtUYkszL05aOUt4cDROck1EY2o4bFRON1QyeGxTZExC?=
- =?utf-8?B?eFhBVkVEcDM2NXB4M1FUZ2xjLysxNC9XanF6ZWJSUy91anlubzYyVUpLTFVu?=
- =?utf-8?B?VUxzZzdpSHNLQ1BlUWtiOWZwQllTUHI5Y2tvMThObXg0Z0k4RXloM3B3UDZw?=
- =?utf-8?B?aGZSU2lvMUttZEF0THYyTU9HaWFheFF6b25OZm90dElMK3ZWTTJlK1VBa3ZX?=
- =?utf-8?B?WU5NKy9lblN4TE4vT09BZ2dvUWczNmcwTDUxZjJNbVBES0hhR1lCZWV5blhZ?=
- =?utf-8?B?TnY1Sy9xRks3aDk0dzVHVktRWk5aNFdXRy9sWTJMSlhFUE05Y2toTGRnZmlj?=
- =?utf-8?B?RWk2NGZVZCtRdHJQcUFiNFE0QlpPdjkyT1JkeE01bm82T0ZkcjU3blRlQWlt?=
- =?utf-8?B?bFdSWU45bzY5dVFTWEM4MlVJMm5KK2E4R0FpZnhoMm96bUcrWERvYmgrL0tY?=
- =?utf-8?B?ejNhU0tjR2hsZUhBalNBalYrUW9ZSk00UHNscEdMWnZXMjROZ1ZqeXE5U09N?=
- =?utf-8?B?d1c0V3F4L0p5NDdVQmRpVkdWNVk4UzZzRkFyYTYxei9pY3hsbTU1Z3h5REZK?=
- =?utf-8?B?ak5YYTRPcmQ5OXo2TUczdTBodzhYK0ZhNmFuTUxZMDZaWWhsRDBLVU1ucXla?=
- =?utf-8?B?em8vZnBWRGtWSkVKM2k3QlgzdEdxendmVG5RRjllMzMrZldjUnJTUGJmRU44?=
- =?utf-8?B?d0ViZnNOajdpNFVuaGZIMGE5R0RPbzJoZWVuRXo1RngzNXhKZW92UjRlbFVu?=
- =?utf-8?B?dmV2K2NVU3FUeDhmWkVZTS9UVXJHZ1pMNWZWRTNBYVdvZGRxYVU5SnoxaFB2?=
- =?utf-8?B?aVJsRThPakJsZ3FSYWRMd3BNZ24reTdTazBQTmFkV3JEVm5XeDFsaFZEaE5Q?=
- =?utf-8?B?cWluRlZwSE04Rk9TaVNrQkVtVU5HQ1hnb0VqcXUxVndiSUZ3bmFtVytBbkFZ?=
- =?utf-8?B?a0ZFM24wR2liSEpjS29IczJxemp4N0x2ekFXcnR2UGdCTDRCdVkyZ1VjOTZx?=
- =?utf-8?B?TkZBdTR2WmI3MUloZVlCOStIZm1NenBoNk1BRHkvUTlRL1B2YnBaalljRm9y?=
- =?utf-8?B?ZGJsRXh5cjNhWW5GMlBERkxmN1JpWXZ5SFE4Y25hc2VaelJwamdxaER3c3Bs?=
- =?utf-8?B?Zk90RFdVQVU0RktIOFhxdjNmSG9Cd0xKN2g4TEhUQUJXaVFrYlloZ2l6VTJZ?=
- =?utf-8?B?Q3Q0ekhWV09FOVFzRDdGeE4zSG9ycnJqY0FVMHZDZlVmY0Uzak9HOTlMZFlF?=
- =?utf-8?B?VnRmZzFSMERKayt2RHpJRUdJMUpoRlpZb0JJU05ITHN1SFVFWW94VGx2b3NR?=
- =?utf-8?B?aU9wTzBVc29BbGtPc2YraXpYelQxNGdXK1RPYzk3LzVjeTdHOWRxYmo4MzJj?=
- =?utf-8?B?ZnZqaUUrbW45Z2x1bzFsNHZFelNEZ3d3bVRmSkg2ajBhaGwremM0bUFLbHli?=
- =?utf-8?B?bDZIazN5UjdhSllyMjlqSUdOK0RjNFF4eUVuRlRVc2owQklsbERhSm83T3I4?=
- =?utf-8?B?NVJUR3RhVXBWcSs5TFp6TUtydXVvcjBDNk1ocW9yRklxdkcxcmpGMC9Lbmd1?=
- =?utf-8?Q?6wgiTKYURwg=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ODZCUkh3NEFyT3d5M2NnM21INmpNL1cvNkxQeHkyQ1N5M2d2dmRKK3ZkVHEv?=
- =?utf-8?B?NGZYVkt5K3dWaWhkaFJXeGY1RlFENUVaQkd5cUFsckZjamJLbUdkRmhjd2dt?=
- =?utf-8?B?bHFIUlVEWmlGWmRMWS96YUN6eEcwN3NKVTFPVE5ZYnhLWWFDNWNvdFVkcHpT?=
- =?utf-8?B?MWRFR3pEK2FKOHlKaW93WGhtMWY1Rzk4cGxZbm16Mm94MCsreHB1WStlaU0x?=
- =?utf-8?B?ZVFrYXNPMExJRDB1bjRIYzVEaG0rRzRxVXdmeE13NFIwSU5kdnZNc282N0p5?=
- =?utf-8?B?b3N3SVBPN25HQVhyK1JmS0J3SEdJc0d5VE41NHhlZHpZWFBBcUZzY0JicTdz?=
- =?utf-8?B?RkVZcGJFMzJaN0EySEdEbjFHaC9QOXBHOHdBb1k1aFFiNXB3NmhFU1FFWkI1?=
- =?utf-8?B?Ti96SVY5U2h4dDVwblBteEl6L0NIdENMS08zYm5HNmQvK1gzWkhYVThROGpu?=
- =?utf-8?B?cEt0SDM0Vi9VY0dQcElzVXlMU3NuSnN2QlhPY2lTVlhYR25hNTJGQlZRNFNQ?=
- =?utf-8?B?aEFBRUNBOUdXc2dIa1hlYU5KdGNSMThNT1dvSGJWUmx6LzR6dXZYQkduN2lz?=
- =?utf-8?B?ajFCV0V0MGM0VU5wK0NTZXMzclJUdzNrb0JTSW9SaS9WbllBRkFXd2oyMURY?=
- =?utf-8?B?aTc4S2dCZ3dwcThuVUJXaEdjMjJBdWRWUURoYkdsUlBKS2RHdFIvQkNVejVH?=
- =?utf-8?B?STJ3ZmRwNWR4Q3ozUFVyeEFTUHRMaHJCYkRoS2FUMHB0RXdrM2owK05FL1BD?=
- =?utf-8?B?UTIvTFBTY1dWcHBVVzExcTF2cStRR2s0YllxZ1hhdzVGQVRiV2g5TXI0aDhJ?=
- =?utf-8?B?eDdpMVA3ejN3K3dRZjdsNFRodFk1Q2lYbCtoNHJDU1JSaVJ3TGwzRWVzdXE0?=
- =?utf-8?B?MFlTbkliVzFLQWZNZUNWTE1xY3RCMDhUTmwwS3NHazdXZCtGTnRtTHZ4WGdh?=
- =?utf-8?B?d1BVa09aQ1FkN0lrQlN3MndnWDQ1Ykd1bVpiZHZQMkhrdDVTa3FnUzlDa2hw?=
- =?utf-8?B?YVk4VnFZMk1FaXdJM0k1ZkwrNHdWL3J3VmZFcUxOWWVLMjRqMW9MSzg5d09N?=
- =?utf-8?B?UEdIYms0WTNLS0c4MDgyN2lFSFFydWZUZmdPWkxITWY0OW53T3o3RjRiVnJs?=
- =?utf-8?B?UmUyNEl3OHJZUE9zWDlEejhKQy95RVMzaHRob3d2L3JadmtkN1RoSlZheHAy?=
- =?utf-8?B?ZGJjU0JjeS9QeVExS3NWNG5FM2hEa0lyNTRRQjFXMDRXVGVrQVZtdWgyYytY?=
- =?utf-8?B?UXZnU3prbjFPQUhlMUR1S3lkMUtLN2N4ZnBzZU5IUmszaTliREh6RlhSaEVT?=
- =?utf-8?B?UXU2bkpzRTY0WE5xL1lHVnVjWkR5cjJsMi83QzE2SDF2aGZGSnlzUVErdjVK?=
- =?utf-8?B?dTR1L3Bic1lQYnVNdVcxTWF0dE00RmZ2UTNkWmFOZmVySmpaUkNoRHlhcGdk?=
- =?utf-8?B?QXFtYzBiV2FvSDNBbGJaWkM2UDRZU1J2ZzA5WmJvVnFxVk9HMDFLNC9QZ3JX?=
- =?utf-8?B?aHFGbGFlc01yNUFJdzZHZWZKQmJhcWlQclBqNnpGV1BYd2tvVm5uOTJLblVv?=
- =?utf-8?B?M2NtZ2ZNVmNsRUFMOFUvSlVOUGRvdUlabTdOeUR1T2VVc2RwZ2VwZTBTSVV0?=
- =?utf-8?B?aURFc095bjZBZ28xa3ptU2xCUTBDL3ZlU0I0ZkFtOWFyeThnQnNDVlRySWh3?=
- =?utf-8?B?WGZiN1BybEN1eWRQK0FBMUFEc3dSZGxrdy9BSkxTV2ZGWElBcTdNVnpXRFVR?=
- =?utf-8?B?NjBFMDErdzMyNVNobUMzMVFLQVkvTyszZUR6dGc5N3FPVHh4THdLMEpmMElD?=
- =?utf-8?B?ZnVPTDVXUGticVZkWXNkZ3Y0MlJISG5BdDVIVTllNHlkTkVhVi9ZVlJYKzlD?=
- =?utf-8?B?K1pqVjBkamZQR0lSbFcxMnVJS1ZRZnlJbitJdGMwSEhVS1V5S2VSNUFsL3FC?=
- =?utf-8?B?WTdpUkQxQkJqVVZFaWh2UWRzTS9oTUh3SWJmTU4rU0czemRhNDNSTDAvQk1M?=
- =?utf-8?B?VkUxTXpQbXNST1hyTlJ3WkxyeGhCeUhHR0xYZi93cUtPZWw4UXFiSDZpVlFP?=
- =?utf-8?B?TFFMT216azVwRmJxMmlVNGNYVHhLOW4waWlMUEMrRThVMkdHOGpCbVE3ck9Y?=
- =?utf-8?B?dnd0VUhoaFJtQlp6QXd6L0dtZjdqQ1B5ZWxEeDd0UjNGaW95bXF5T3oxVWNv?=
- =?utf-8?B?Mmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d049c1d-d244-441d-846f-08dd9efc64cb
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 22:01:41.8456
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ozZuICd6awVNqgjYQcjWiCEJp/Ufd9/K+/xoZoJvKYKIYmqVvceTihfX+Cxv4fSUSxU//dDMhkhHDXQ0QmO0B30OkaFRYhOgMKPHfNquocc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB8836
-X-OriginatorOrg: intel.com
+References: <20250529052322.381947-1-irogers@google.com> <20250529052322.381947-2-irogers@google.com>
+ <aDjBtuxyumBrn70B@x1>
+In-Reply-To: <aDjBtuxyumBrn70B@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 29 May 2025 15:02:23 -0700
+X-Gm-Features: AX0GCFsASawUPe2facASPJcRTHVlrvu68mPdqu9Uwzz7NaZmhPEYW08It2udgMs
+Message-ID: <CAP-5=fXonwoMOqfK30bo1i438cDa7oTWOOWFwJNXY9UOMBpkCQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Andi Kleen <ak@linux.intel.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, 
+	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Zeng Heng,
+On Thu, May 29, 2025 at 1:21=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, May 28, 2025 at 10:23:22PM -0700, Ian Rogers wrote:
+> > Symbolize stack traces by creating a live machine. Add this
+> > functionality to dump_stack and switch dump_stack users to use
+> > it. Switch TUI to use it. Add stack traces to the child test function
+> > which can be useful to diagnose blocked code.
+> >
+> > Example output:
+> > ```
+> >   8: PERF_RECORD_* events & perf_sample fields                       : =
+Running (1 active)
+> > ^C
+> > Signal (2) while running tests.
+> > Terminating tests with the same signal
+> > Internal test harness failure. Completing any started tests:
+> > :  8: PERF_RECORD_* events & perf_sample fields:
+>
+> So you are testing it with:
+>
+> root@number:~# perf test PERF_RECORD
+>   8: PERF_RECORD_* events & perf_sample fields                       : Ru=
+nning (1 active)
+> ^C
+> Signal (2) while running tests.
+> Terminating tests with the same signal
+> Internal test harness failure. Completing any started tests:
+>   8: PERF_RECORD_* events & perf_sample fields                       : Sk=
+ip (permissions)
+> root@number:~#
+>
+> ?
 
-Thank you very much for catching this and providing a fix.
+You are running the test as a child and by default the child test
+output is only displayed if verbose is enabled. I use verbose=3D2 below
+as verbose=3D1 won't display anything unless the child test gives a fail
+exit value:
+```
+$ git log --oneline
+b9ac06abfde9 perf debug: Add function symbols to dump_stack
+e561806265ed perf machine: Factor creating a "live" machine out of dwarf-un=
+wind
+628e124404b3 perf tests switch-tracking: Fix timestamp comparison
+$ make -C tools/perf O=3D/tmp/perf
+...
+$ sudo /tmp/perf/perf test -vv PERF_RECORD
+ 8: PERF_RECORD_* events & perf_sample fields:
+ 8: PERF_RECORD_* events & perf_sample fields                       :
+Running (1 active)
+^C
+Signal (2) while running tests.
+Terminating tests with the same signal
+Internal test harness failure. Completing any started tests:
+:  8: PERF_RECORD_* events & perf_sample fields:
 
-On 5/29/25 4:33 AM, Zeng Heng wrote:
-> The fixes tag patch resolves the lockdep warning. However, directly
-> removing rdt_last_cmd_clear() would leave the last_cmd_status interface
-> with stale logs, which does not conform to the functional definition before
-> the fix. Therefore, the rdt_last_cmd_clear() operation is performed after
-> successfully acquiring the rdtgroup_mutex.
+---- unexpected signal (2) ----
+   #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+   #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+   #2 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+   #3 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
+   #4 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+   #5 0x7f855c702d68 in __sleep sleep.c:55
+   #6 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+   #7 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+   #8 0x5617ec3faf0d in start_command run-command.c:127
+   #9 0x5617ec45f433 in __cmd_test builtin-test.c:0
+   #10 0x5617ec45faff in cmd_test perf[147aff]
+   #11 0x5617ec3ed960 in run_builtin perf.c:0
+   #12 0x5617ec3edc7b in handle_internal_command perf.c:0
+   #13 0x5617ec368d33 in main perf[50d33]
+   #14 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
+   #15 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+   #16 0x5617ec369381 in _start perf[51381]
 
-I would like to suggest some rework to changelog to meet requirements from
-Documentation/process/maintainer-tip.rst. Specifically the rules about
-imperative tone and structure of the changelog. Below attempts to address
-those requirements but please feel free to rework after you considered the
-rules yourself:
+---- unexpected signal (2) ----
+   #0 0x5617ec45e5e3 in child_test_sig_handler builtin-test.c:0
+   #1 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+   #2 0x7f855c6a3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c:45
+   #3 0x7f855c649fd9 in __GI___sigprocmask sigprocmask.c:26
+   #4 0x7f855c72601b in __longjmp_chk longjmp.c:36
+   #5 0x5617ec45e600 in print_test_result.isra.0 builtin-test.c:0
+   #6 0x7f855c649df0 in __restore_rt libc_sigaction.c:0
+   #7 0x7f855c699687 in __internal_syscall_cancel cancellation.c:64
+   #8 0x7f855c6e5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:72
+   #9 0x7f855c6f1393 in __nanosleep nanosleep.c:26
+   #10 0x7f855c702d68 in __sleep sleep.c:55
+   #11 0x5617ec46ebfb in test__PERF_RECORD perf-record.c:0
+   #12 0x5617ec45e4f0 in run_test_child builtin-test.c:0
+   #13 0x5617ec3faf0d in start_command run-command.c:127
+   #14 0x5617ec45f433 in __cmd_test builtin-test.c:0
+   #15 0x5617ec45faff in cmd_test perf[147aff]
+   #16 0x5617ec3ed960 in run_builtin perf.c:0
+   #17 0x5617ec3edc7b in handle_internal_command perf.c:0
+   #18 0x5617ec368d33 in main perf[50d33]
+   #19 0x7f855c633ca8 in __libc_start_call_main libc_start_call_main.h:74
+   #20 0x7f855c633d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+   #21 0x5617ec369381 in _start perf[51381]
+ 8: PERF_RECORD_* events & perf_sample fields                       :
+Skip (permissions)
+```
 
-	A lockdep fix removed two rdt_last_cmd_clear() calls that were used
-	to clear the last_cmd_status buffer but called without holding the 
-	required rdtgroup_mutex. The impacted resctrl commands are:
-	writing to the cpus or cpus_list files and creating a new monitor
-	or control group. With stale data in the last_cmd_status buffer the
-	impacted resctrl commands report the stale error on success, or append
-	its own failure message to the stale error on failure.
 
-	Restore the rdt_last_cmd_clear() calls after acquiring rdtgroup_mutex.
-
-> 
-> Fixes: c8eafe149530 ("x86/resctrl: Fix potential lockdep warning")
-> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
-> ---
->  fs/resctrl/rdtgroup.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> index cc37f58b47dd..4aae9eb74215 100644
-> --- a/fs/resctrl/rdtgroup.c
-> +++ b/fs/resctrl/rdtgroup.c
-> @@ -536,6 +536,8 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
->  		goto unlock;
->  	}
->  
-> +	rdt_last_cmd_clear();
+> I built it with DEBUG=3D1 and without, and with your patch, following you=
+r
+> example output, I'm not being able to reproduce.
+>
+> Tried it as well with:
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ cat segv.patch
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 8b30c6f16a9eeac1..e55d86f1097d6d79 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -402,6 +402,8 @@ static struct symbol *symbols__find(struct rb_root_ca=
+ched *symbols, u64 ip)
+>  {
+>         struct rb_node *n;
+>
+> +       *(int *)NULL =3D 0;
 > +
->  	if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED ||
->  	    rdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP) {
->  		ret = -EINVAL;
-> @@ -3481,6 +3483,8 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
->  		goto out_unlock;
->  	}
->  
-> +	rdt_last_cmd_clear();
-> +
+>         if (symbols =3D=3D NULL)
+>                 return NULL;
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ patch -p1 < segv.patch
+> patching file tools/perf/util/symbol.c
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ m
+> rm: cannot remove '/home/acme/libexec/perf-core/scripts/python/Perf-Trace=
+-Util/lib/Perf/Trace/__pycache__/Core.cpython-313.pyc': Permission denied
+> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+>   BUILD:   Doing 'make -j32' parallel build
+> Warning: Kernel ABI header differences:
+>   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
+putype.h
+>
+> Auto-detecting system features:
+> ...                                   libdw: [ on  ]
+> ...                                   glibc: [ on  ]
+> ...                                  libelf: [ on  ]
+> ...                                 libnuma: [ on  ]
+> ...                  numa_num_possible_cpus: [ on  ]
+> ...                                 libperl: [ on  ]
+> ...                               libpython: [ on  ]
+> ...                               libcrypto: [ on  ]
+> ...                             libcapstone: [ on  ]
+> ...                               llvm-perf: [ on  ]
+> ...                                    zlib: [ on  ]
+> ...                                    lzma: [ on  ]
+> ...                               get_cpuid: [ on  ]
+> ...                                     bpf: [ on  ]
+> ...                                  libaio: [ on  ]
+> ...                                 libzstd: [ on  ]
+>
+>   INSTALL libsubcmd_headers
+>   INSTALL libperf_headers
+>   INSTALL libapi_headers
+>   INSTALL libsymbol_headers
+>   INSTALL libbpf_headers
+>   CC      /tmp/build/perf-tools-next/util/symbol.o
+>   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
+>   LD      /tmp/build/perf-tools-next/perf-util-in.o
+>   AR      /tmp/build/perf-tools-next/libperf-util.a
+>   LINK    /tmp/build/perf-tools-next/perf
+>   GEN     /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64-linux=
+-gnu.so
+>   INSTALL binaries
+>   INSTALL tests
+>   INSTALL libperf-jvmti.so
+>   INSTALL libexec
+>   INSTALL perf-archive
+>   INSTALL perf-iostat
+>   INSTALL perl-scripts
+>   INSTALL python-scripts
+>   INSTALL dlfilters
+>   INSTALL perf_completion-script
+>   INSTALL perf-tip
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+>  18: 'import perf' in python                                         : Ok
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$
+>
+> root@number:~# perf top
+> perf: Segmentation fault
+> -------- backtrace --------
+> Segmentation fault (core dumped)
+> root@number:~#
+>
+> Tried also with this, but probably something else is at play:
+>
+> root@number:~# perf probe -x ~/bin/perf dump_stack
+> Added new event:
+>   probe_perf:dump_stack (on dump_stack in /home/acme/bin/perf)
+>
+> You can now use it in all perf tools, such as:
+>
+>         perf record -e probe_perf:dump_stack -aR sleep 1
+>
+> root@number:~#
+> root@number:~# perf trace -e probe_perf:dump_stack/max-stack=3D16/ perf t=
+op
+> perf: Segmentation fault
+> -------- backtrace --------
+> root@number:~#
+>
+> Running perf trace on a separate terminal it also doesn't catch
+> dump_stack being called (that probe point).
+>
+> root@number:~# perf top --stdio
+>    PerfTop:       0 irqs/sec  kernel: 0.0%  exact:  0.0% lost: 0/0 drop: =
+0/0 [4000Hz cycles:P],  (all, 32 CPUs)
+> -------------------------------------------------------------------------=
+---------------------------------------------------------------------------=
+--------------------
+>
+> perf: Segmentation fault
+> Segmentation fault (core dumped)
+> root@number:~#
+>
+> root@number:~# nm ~/bin/perf | grep dump_stack
+> 0000000000637eaa T __dump_stack
+> 00000000006380fa T dump_stack
+> 000000000063816b T sighandler_dump_stack
+> root@number:~#
+>
+> =E2=AC=A2 [acme@toolbx perf-tools-next]$ rpm -q glibc
+> glibc-2.41-5.fc42.x86_64
+> root@number:~# uname -a
+> Linux number 6.14.8-300.fc42.x86_64 #1 SMP PREEMPT_DYNAMIC Thu May 22 19:=
+26:02 UTC 2025 x86_64 GNU/Linux
+> root@number:~#
+>
+> What am I missing?
 
-Could you please move this to be right after acquiring the mutex? I think clearing
-last_cmd_status at beginning of a resctrl command's work is a good pattern to follow.
-Thus a change like:
+For perf top I can do:
+```
+$ sudo /tmp/perf/perf top
+```
+in a different terminal:
+```
+$ sudo killall -11 perf
+```
+then back in the first terminal:
+```
+perf: Segmentation fault
+-------- backtrace --------
+   #0 0x55ee68647918 in ui__signal_backtrace setup.c:110
+   #1 0x7fe2d3849df0 in __restore_rt libc_sigaction.c:0
+   #2 0x7fe2d38a49ee in __syscall_cancel_arch syscall_cancel.S:56
+   #3 0x7fe2d3899668 in __internal_syscall_cancel cancellation.c:54
+   #4 0x7fe2d38996ad in __syscall_cancel cancellation.c:79
+   #5 0x7fe2d390d9c6 in __poll poll.c:43
+   #6 0x55ee6855dfcb in fdarray__poll array.c:139
+   #7 0x55ee68565a05 in perf_evlist__poll evlist.c:391
+   #8 0x55ee68673b5a in evlist__poll evlist.c:594
+   #9 0x55ee684e7a61 in __cmd_top builtin-top.c:1369
+   #10 0x55ee684e9a6c in cmd_top builtin-top.c:1856
+   #11 0x55ee6855d1f0 in run_builtin perf.c:351
+   #12 0x55ee6855d497 in handle_internal_command perf.c:404
+   #13 0x55ee6855d5f0 in run_argv perf.c:451
+   #14 0x55ee6855d939 in main perf.c:558
+   #15 0x7fe2d3833ca8 in __libc_start_call_main libc_start_call_main.h:74
+   #16 0x7fe2d3833d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
+   #17 0x55ee684b0a91 in _start perf[4ca91]
+```
+As the same symbol code is used for the backtrace then adding the segv
+there is likely causing a segv in the signal handler in __dump_stack.
 
----8<---
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 7410321d01ff..77d08229d855 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -3474,6 +3474,8 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 		goto out_unlock;
- 	}
- 
-+	rdt_last_cmd_clear();
-+
- 	/*
- 	 * Check that the parent directory for a monitor group is a "mon_groups"
- 	 * directory.
-@@ -3483,8 +3485,6 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 		goto out_unlock;
- 	}
- 
--	rdt_last_cmd_clear();
--
- 	if (rtype == RDTMON_GROUP &&
- 	    (prdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
- 	     prdtgrp->mode == RDT_MODE_PSEUDO_LOCKED)) {
----8<---
+Thanks,
+Ian
 
->  	if (rtype == RDTMON_GROUP &&
->  	    (prdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
->  	     prdtgrp->mode == RDT_MODE_PSEUDO_LOCKED)) {
-
-Thank you very much.
-
-Reinette
-
+> - Arnaldo
+>
+> > ____ unexpected signal (2) ____
+> >     #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
+> >     #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
+> >     #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:=
+71
+> >     #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
+> >     #4 0x7f4a91f01f68 in __sleep sleep.c:55
+> >     #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
+> >     #6 0x5590fb620b43 in run_test_child builtin-test.c:269
+> >     #7 0x5590fb5b83ab in start_command run-command.c:127
+> >     #8 0x5590fb621572 in start_test builtin-test.c:467
+> >     #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
+> >     #10 0x5590fb6225ea in cmd_test builtin-test.c:775
+> >     #11 0x5590fb5a9099 in run_builtin perf.c:351
+> >     #12 0x5590fb5a9340 in handle_internal_command perf.c:404
+> >     #13 0x5590fb5a9499 in run_argv perf.c:451
+> >     #14 0x5590fb5a97e2 in main perf.c:558
+> >     #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h=
+:74
+> >     #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:12=
+8
+> >     #17 0x5590fb4fd6d1 in _start perf[436d1]
+> > ```
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> > v2: Fix NO_BACKTRACE=3D1 build (Arnaldo)
+> > ---
+> >  tools/perf/tests/builtin-test.c | 15 +++++++-
+> >  tools/perf/ui/tui/setup.c       |  2 +-
+> >  tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++------
+> >  tools/perf/util/debug.h         |  1 +
+> >  4 files changed, 73 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
+-test.c
+> > index 45d3d8b3317a..80375ca39a37 100644
+> > --- a/tools/perf/tests/builtin-test.c
+> > +++ b/tools/perf/tests/builtin-test.c
+> > @@ -6,6 +6,9 @@
+> >   */
+> >  #include <fcntl.h>
+> >  #include <errno.h>
+> > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > +#include <execinfo.h>
+> > +#endif
+> >  #include <poll.h>
+> >  #include <unistd.h>
+> >  #include <setjmp.h>
+> > @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
+> >
+> >  static void child_test_sig_handler(int sig)
+> >  {
+> > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > +     void *stackdump[32];
+> > +     size_t stackdump_size;
+> > +#endif
+> > +
+> > +     fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
+> > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > +     stackdump_size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> > +     __dump_stack(stderr, stackdump, stackdump_size);
+> > +#endif
+> >       siglongjmp(run_test_jmp_buf, sig);
+> >  }
+> >
+> > @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *pro=
+cess)
+> >
+> >       err =3D sigsetjmp(run_test_jmp_buf, 1);
+> >       if (err) {
+> > -             fprintf(stderr, "\n---- unexpected signal (%d) ----\n", e=
+rr);
+> > +             /* Received signal. */
+> >               err =3D err > 0 ? -err : -1;
+> >               goto err_out;
+> >       }
+> > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> > index 16c6eff4d241..022534eed68c 100644
+> > --- a/tools/perf/ui/tui/setup.c
+> > +++ b/tools/perf/ui/tui/setup.c
+> > @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
+> >
+> >       printf("-------- backtrace --------\n");
+> >       size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> > -     backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
+> > +     __dump_stack(stdout, stackdump, size);
+> >
+> >       exit(0);
+> >  }
+> > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+> > index f9ef7d045c92..0c7c6a9e158b 100644
+> > --- a/tools/perf/util/debug.c
+> > +++ b/tools/perf/util/debug.c
+> > @@ -14,11 +14,18 @@
+> >  #ifdef HAVE_BACKTRACE_SUPPORT
+> >  #include <execinfo.h>
+> >  #endif
+> > +#include "addr_location.h"
+> >  #include "color.h"
+> > -#include "event.h"
+> >  #include "debug.h"
+> > +#include "event.h"
+> > +#include "machine.h"
+> > +#include "map.h"
+> >  #include "print_binary.h"
+> > +#include "srcline.h"
+> > +#include "symbol.h"
+> > +#include "synthetic-events.h"
+> >  #include "target.h"
+> > +#include "thread.h"
+> >  #include "trace-event.h"
+> >  #include "ui/helpline.h"
+> >  #include "ui/ui.h"
+> > @@ -298,21 +305,60 @@ void perf_debug_setup(void)
+> >       libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug=
+_wrapper);
+> >  }
+> >
+> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
+> > +{
+> > +     /* TODO: async safety. printf, malloc, etc. aren't safe inside a =
+signal handler. */
+> > +     pid_t pid =3D getpid();
+> > +     struct machine *machine =3D machine__new_live(/*kernel_maps=3D*/f=
+alse, pid);
+> > +     struct thread *thread =3D NULL;
+> > +
+> > +     if (machine)
+> > +             thread =3D machine__find_thread(machine, pid, pid);
+> > +
+> > +#ifdef HAVE_BACKTRACE_SUPPORT
+> > +     if (!machine || !thread) {
+> > +             /*
+> > +              * Backtrace functions are async signal safe. Fall back o=
+n them
+> > +              * if machine/thread creation fails.
+> > +              */
+> > +             backtrace_symbols_fd(stackdump, stackdump_size, fileno(fi=
+le));
+> > +             machine__delete(machine);
+> > +             return;
+> > +     }
+> > +#endif
+> > +
+> > +     for (size_t i =3D 0; i < stackdump_size; i++) {
+> > +             struct addr_location al;
+> > +             u64 addr =3D (u64)stackdump[i];
+> > +             bool printed =3D false;
+> > +
+> > +             addr_location__init(&al);
+> > +             if (thread && thread__find_map(thread, PERF_RECORD_MISC_U=
+SER, addr, &al)) {
+> > +                     al.sym =3D map__find_symbol(al.map, al.addr);
+> > +                     if (al.sym) {
+> > +                             fprintf(file, "    #%zd %p in %s ", i, st=
+ackdump[i], al.sym->name);
+> > +                             printed =3D true;
+> > +                     }
+> > +             }
+> > +             if (!printed)
+> > +                     fprintf(file, "    #%zd %p ", i, stackdump[i]);
+> > +
+> > +             map__fprintf_srcline(al.map, al.addr, "", file);
+> > +             fprintf(file, "\n");
+> > +             addr_location__exit(&al);
+> > +     }
+> > +     thread__put(thread);
+> > +     machine__delete(machine);
+> > +}
+> > +
+> >  /* Obtain a backtrace and print it to stdout. */
+> >  #ifdef HAVE_BACKTRACE_SUPPORT
+> >  void dump_stack(void)
+> >  {
+> > -     void *array[16];
+> > -     size_t size =3D backtrace(array, ARRAY_SIZE(array));
+> > -     char **strings =3D backtrace_symbols(array, size);
+> > -     size_t i;
+> > -
+> > -     printf("Obtained %zd stack frames.\n", size);
+> > -
+> > -     for (i =3D 0; i < size; i++)
+> > -             printf("%s\n", strings[i]);
+> > +     void *stackdump[32];
+> > +     size_t size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
+> >
+> > -     free(strings);
+> > +     __dump_stack(stdout, stackdump, size);
+> >  }
+> >  #else
+> >  void dump_stack(void) {}
+> > diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+> > index a4026d1fd6a3..6b737e195ce1 100644
+> > --- a/tools/perf/util/debug.h
+> > +++ b/tools/perf/util/debug.h
+> > @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
+> >  void perf_debug_setup(void);
+> >  int perf_quiet_option(void);
+> >
+> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)=
+;
+> >  void dump_stack(void);
+> >  void sighandler_dump_stack(int sig);
+> >
+> > --
+> > 2.49.0.1204.g71687c7c1d-goog
+> >
