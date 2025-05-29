@@ -1,69 +1,49 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E9721E096;
-	Thu, 29 May 2025 08:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE54B1EB2F;
+	Thu, 29 May 2025 08:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748506842; cv=none; b=qkzOp4PhqYcAylGchAd98QTJt4pWRMin2+sJfR3Ir01SMh717Or+ciUj66pQD351FFYXv6/HrOPILazjkdCfd+X7NJrd0gYyOoHoqGPIcRcDLYelcrX1uDbZHNGral/bWJmw01xZXjsd5NkqJFgyVGtz5TngFICnE/lAEIJ4Uwk=
+	t=1748507052; cv=none; b=oBNDbokM/LJHYXFb8tdkoTNzFPbX8CjlQn7wGhjVoRY5+cwExhg0TkGN5+z24kaWHN3lZmuHTrF705W5iv/yaPi3LtNKETpt1qhUu5mAkprWSSUVsX/+SBwoioBWSIEScnbYfpWUTjAlzLp+fsOYyyUVHx+nHTO86d1/CIulO0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748506842; c=relaxed/simple;
-	bh=2z37chIP6CUOXuNFbTdSLCPmKZCIGUSHnFi9sZZ45u4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SXxe+oSQuANTGv/Cckimkp4fMzQxROLfpSVJrKlSQyxzv0a7JQwoSt/Y4NnXEEfKwFKhvhEWEgWSGP44ix+O/pZ5DaOGLR7+m7Fih6xzI5ba2jpms/Iu+f72e+JIKCd/FGO5CUuXyKHbMJETGc9gTZgJLcMjbzBCxCGBWcqq9NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q+QiM7F8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748507052; c=relaxed/simple;
+	bh=RIJKgny14IykmPjf5Bf9kyBbM164mxDIhs0UrJ22eDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qp9+vCFU1kExuY2OkVHOtRqo9ci9fB0Ff2/UE/EOHqvxSBQs4J/iEBS6yiFVrgKDNXB3jEZx/f4upZxeeN1ugEDLMzCLlrI3H5vtyw8xZjFgqPnVVnnsuHr+Z4t00JDUwP+ji4HpxclzXQXTRTegcahhWWlEuPLLxwTaKWySE3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=G8E6sIz7; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q+QiM7F8"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T6QjHb002083;
-	Thu, 29 May 2025 08:20:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6ZZbQqITX4V5DhUz5Y42LgItybb3ZP8JrnvJUPZFDlE=; b=Q+QiM7F83IQrhJ0Q
-	x00ikGS0rPI0OPQZWC9B0t01pQ/92XUwAATtGeCQ3tlvxxBD7oNtm/cF4mXLGnHo
-	/ggBRUhOTiSZ/AeV5To+W8ybNLURGy48raawuMiFCxlIy8y8R7YiGs5WrJtKT+0J
-	W/Lvd8l30mldCoYlc2Mrnv1UhSvfHDBzd7YW5GDUcVpjJ4rPvsCTxUhsi53u62Q5
-	sycAd5Rhm4msKDAtO6ohkZbYxvabUXXkfZ5YI6Xa+Kc3P6k9zAqz5BmfZqq7aJz0
-	tBoyqxEvPCk5dWH6uGvPWmW5gyYbzMY3o5UEkRBzfUSjFWoQ2ZRF6AfXYICH368b
-	SAtzew==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g950ry-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 08:20:30 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T8KTmR021934
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 08:20:29 GMT
-Received: from ap-cloud-sh02-lnx.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 29 May 2025 01:20:25 -0700
-From: Songwei Chai <quic_songchai@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Andy Gross
-	<agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <quic_songchai@quicinc.com>
-CC: <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v5 7/7] coresight-tgu: add reset node to initialize
-Date: Thu, 29 May 2025 16:19:48 +0800
-Message-ID: <20250529081949.26493-8-quic_songchai@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250529081949.26493-1-quic_songchai@quicinc.com>
-References: <20250529081949.26493-1-quic_songchai@quicinc.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="G8E6sIz7"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748507046; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=HepIRzU9yVfyc0yQbJg8CFCDS1fs2gXvJNO7QTz5Ovs=;
+	b=G8E6sIz7puwJ/OZer7Hdvi/DmUH9PaCh3Vh0Cr0DywuXQvUiqRq+GgLws7DKfzr+99rhSFN3J4DrdEGzMCRbHSUubCS8eAXWDXTmRB9XKS/kbreDiGCryU3vmKMZEsDvM8yAyMVjSj5DUlWXRSB6SHYeYwqlZpDUIiek+eeXUSk=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcGcFkd_1748507044 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 29 May 2025 16:24:05 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com,
+	david@redhat.com
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] mm: shmem: disallow hugepages if the system-wide shmem THP sysfs settings are disabled
+Date: Thu, 29 May 2025 16:23:55 +0800
+Message-ID: <c1a6fe55f668cfe87ad113faa49120f049ba9cb5.1748506520.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,148 +51,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=683818ce cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=TW7uPGGm3D3UErKGQS8A:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: po0mh-4ggdha4aJw8w5NxKF4P2j3WLZv
-X-Proofpoint-GUID: po0mh-4ggdha4aJw8w5NxKF4P2j3WLZv
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4MCBTYWx0ZWRfX+QHWSvPKGMM2
- Fr9d6aGANvztle8TwIaGGgOJpdH8z1q6e/TgHKwivpXsMU5eLe4+NoaSfyhTNpFoF83V8bwGHR/
- n9+wG+3nYCm/UselHmayMRDwP9myme4dGdKPAEDhBtMiI5PZJGLLuxhhT43ZW1lR668GvbLBfUR
- /NIvtBOWVPmsVBYCbOluNDpPBLHvLsRm9UBmCm06xLB1JxbAJS23TV2RyTlqjnddQtwYyaNm77g
- uvggYGE8PUcyt6HwK6Az4zvakssKEHVnUPMPi84A7EHIZW58wZNpqedxPVWfq+t7mqY0LGz84i8
- qUAkQ1Ssq+rGJiu+DGweV7A0MIfIeXipgZc+RM2N1vmpi8A1XgW7TRL2mwwD1cZHneSnpXoqLii
- E3HYWu16O7LTAEA4iwSONkPk78ZHK07vMFTLNCg5YnbDFDVv9+8LHVpsO1b+Q+KhFLyyw4WY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290080
 
-Add reset node to initialize the value of
-priority/condition_decode/condition_select/timer/counter nodes.
+The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
+means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
+will still attempt to collapse into a shmem THP. This violates the rule we have
+agreed upon: never means never.
 
-Signed-off-by: Songwei Chai <quic_songchai@quicinc.com>
+Then the current strategy is:
+For shmem, if none of always, madvise, within_size, and inherit have enabled
+PMD-sized mTHP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+
+For tmpfs, if the mount option is set with the 'huge=never' parameter, then
+MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- .../testing/sysfs-bus-coresight-devices-tgu   |  7 ++
- drivers/hwtracing/coresight/coresight-tgu.c   | 75 +++++++++++++++++++
- 2 files changed, 82 insertions(+)
+ mm/huge_memory.c |  2 +-
+ mm/shmem.c       | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
-index cfdc80ab1cea..be83ec9c5da6 100644
---- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
-+++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tgu
-@@ -42,3 +42,10 @@ KernelVersion	6.16
- Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
- Description:
- 		(RW) Set/Get the counter value with specific step for TGU.
-+
-+What:		/sys/bus/coresight/devices/<tgu-name>/reset_tgu
-+Date:		May 2025
-+KernelVersion	6.16
-+Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Sam Chai (QUIC) <quic_songchai@quicinc.com>
-+Description:
-+		(Write) Write 1 to reset the dataset for TGU.
-diff --git a/drivers/hwtracing/coresight/coresight-tgu.c b/drivers/hwtracing/coresight/coresight-tgu.c
-index 4a58f2cb8d8c..b44c876e7cc7 100644
---- a/drivers/hwtracing/coresight/coresight-tgu.c
-+++ b/drivers/hwtracing/coresight/coresight-tgu.c
-@@ -477,6 +477,80 @@ static ssize_t enable_tgu_store(struct device *dev,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d3e66136e41a..a8cfa37cae72 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+ 	 * own flags.
+ 	 */
+ 	if (!in_pf && shmem_file(vma->vm_file))
+-		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
++		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+ 						   vma, vma->vm_pgoff, 0,
+ 						   !enforce_sysfs);
+ 
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 4b42419ce6b2..4dbb28d85cd9 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -613,7 +613,7 @@ static unsigned int shmem_get_orders_within_size(struct inode *inode,
  }
- static DEVICE_ATTR_RW(enable_tgu);
  
-+/* reset_tgu_store - Reset Trace and Gating Unit (TGU) configuration. */
-+static ssize_t reset_tgu_store(struct device *dev,
-+			       struct device_attribute *attr, const char *buf,
-+			       size_t size)
-+{
-+	unsigned long value;
-+	struct tgu_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	int i, j, ret;
-+
-+	if (kstrtoul(buf, 0, &value) || value == 0)
-+		return -EINVAL;
-+
-+	if (!drvdata->enable) {
-+		ret = pm_runtime_get_sync(drvdata->dev);
-+		if (ret < 0) {
-+			pm_runtime_put(drvdata->dev);
-+			return ret;
-+		}
-+	}
-+
-+	spin_lock(&drvdata->spinlock);
-+	CS_UNLOCK(drvdata->base);
-+
-+	tgu_writel(drvdata, 0, TGU_CONTROL);
-+
-+	if (drvdata->value_table->priority)
-+		memset(drvdata->value_table->priority, 0,
-+			    MAX_PRIORITY * drvdata->max_step *
-+				drvdata->max_reg * sizeof(unsigned int));
-+
-+	if (drvdata->value_table->condition_decode)
-+		memset(drvdata->value_table->condition_decode, 0,
-+			    drvdata->max_condition_decode * drvdata->max_step *
-+				sizeof(unsigned int));
-+
-+		/* Initialize all condition registers to NOT(value=0x1000000) */
-+	for (i = 0; i < drvdata->max_step; i++) {
-+		for (j = 0; j < drvdata->max_condition_decode; j++) {
-+			drvdata->value_table
-+			->condition_decode[calculate_array_location(
-+			drvdata, i, TGU_CONDITION_DECODE, j)] =
-+			0x1000000;
-+		}
-+	}
-+
-+	if (drvdata->value_table->condition_select)
-+		memset(drvdata->value_table->condition_select, 0,
-+				drvdata->max_condition_select * drvdata->max_step *
-+				sizeof(unsigned int));
-+
-+	if (drvdata->value_table->timer)
-+		memset(drvdata->value_table->timer, 0,
-+			    (drvdata->max_step) *
-+				(drvdata->max_timer) *
-+				sizeof(unsigned int));
-+
-+	if (drvdata->value_table->counter)
-+		memset(drvdata->value_table->counter, 0,
-+			    (drvdata->max_step) *
-+				(drvdata->max_counter) *
-+				sizeof(unsigned int));
-+
-+	dev_dbg(dev, "Coresight-TGU reset complete\n");
-+
-+	CS_LOCK(drvdata->base);
-+
-+	drvdata->enable = false;
-+	spin_unlock(&drvdata->spinlock);
-+	pm_runtime_put(drvdata->dev);
-+
-+	return size;
-+}
-+static DEVICE_ATTR_WO(reset_tgu);
-+
- static const struct coresight_ops_helper tgu_helper_ops = {
- 	.enable = tgu_enable,
- 	.disable = tgu_disable,
-@@ -488,6 +562,7 @@ static const struct coresight_ops tgu_ops = {
+ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+-					      loff_t write_end, bool shmem_huge_force,
++					      loff_t write_end,
+ 					      struct vm_area_struct *vma,
+ 					      unsigned long vm_flags)
+ {
+@@ -625,7 +625,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+ 		return 0;
+ 	if (shmem_huge == SHMEM_HUGE_DENY)
+ 		return 0;
+-	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
++	if (shmem_huge == SHMEM_HUGE_FORCE)
+ 		return maybe_pmd_order;
  
- static struct attribute *tgu_common_attrs[] = {
- 	&dev_attr_enable_tgu.attr,
-+	&dev_attr_reset_tgu.attr,
- 	NULL,
- };
+ 	/*
+@@ -860,7 +860,7 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
+ }
  
+ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+-					      loff_t write_end, bool shmem_huge_force,
++					      loff_t write_end,
+ 					      struct vm_area_struct *vma,
+ 					      unsigned long vm_flags)
+ {
+@@ -1261,7 +1261,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
+ 			STATX_ATTR_NODUMP);
+ 	generic_fillattr(idmap, request_mask, inode, stat);
+ 
+-	if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
++	if (shmem_huge_global_enabled(inode, 0, 0, NULL, 0))
+ 		stat->blksize = HPAGE_PMD_SIZE;
+ 
+ 	if (request_mask & STATX_BTIME) {
+@@ -1768,7 +1768,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+ 		return 0;
+ 
+ 	global_orders = shmem_huge_global_enabled(inode, index, write_end,
+-						  shmem_huge_force, vma, vm_flags);
++						  vma, vm_flags);
+ 	/* Tmpfs huge pages allocation */
+ 	if (!vma || !vma_is_anon_shmem(vma))
+ 		return global_orders;
+@@ -1790,7 +1790,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+ 	/* Allow mTHP that will be fully within i_size. */
+ 	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
+ 
+-	if (vm_flags & VM_HUGEPAGE)
++	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+ 		mask |= READ_ONCE(huge_shmem_orders_madvise);
+ 
+ 	if (global_orders > 0)
+-- 
+2.43.5
+
