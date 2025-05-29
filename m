@@ -1,227 +1,186 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2071.outbound.protection.outlook.com [40.107.243.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A361120B806;
-	Thu, 29 May 2025 23:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748559901; cv=fail; b=fY1E2H2yxqYN/tF1AvsCh0R2yzJNfu/U0/1Wakn+33ExLqgjU8+q3iO8tyrUj0PzAZCSmA0N4uwnVy1I6P967zUYq6YXSXgQRK1kasHmytr9e3tCtqlZKK46CPc1yogvdtWVRm5f3aFDHKHhFgIwWQqPShIXJDKBEm0H1yVOCAI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748559901; c=relaxed/simple;
-	bh=mrsCPbK2I+mxC1+Myhqkj6QNJXt0KQPyRKhLJ5ItL2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IaGLxtjVESvUCp7URX/GM72R6Lec5SfxvOeGzWP1IW3aVptXGfxvrLIxAKu3kmGeQDNCDyqke32sE/W2apqLH+joHlyp2svx81mF1A7EuW90KL+FwNQ/k+3JUzlO6j2uRLPp3QnSPaYq/Gc35b3lxBT1t7qaxyPXE+CSR7CyB78=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=MMCmax/G; arc=fail smtp.client-ip=40.107.243.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC00F7263A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748560091; cv=none; b=bD0rrjWG03hjeCO2BZ3jRO5CrAcL7rmo1iXJOcGmn5WD8t8rfNzyHORdmW5ax7RPopBiVUE+3rgHdW9jnlvp8bJUDn49xrTKhPv3/vtUEg5KKEPtPspXzUMOvOeqi4Md+ly/+TzMV0AraXSnqmnH6fGLtJ8LYu+9k6g0Dpa3T7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748560091; c=relaxed/simple;
+	bh=Ga4ixeHjWc0kl5EHrAQUHylI16bJElehK1WrCsTnH38=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=nfLzPCUkX9vMvOFKJZKfMoAHEO1+kNpNbUgPT7ADWg33yZ7x2bRiqZu4IB88Zn1MfMPIzAXmgH9VwuUL+DiEgmG1k4knm83WQ2fxIbnhOkOlvWgnYyH221fFW2l92O3rIm1Dc8a6NfkcLnLVhKo3iIXOCs7q8mY7LcQVw0uLaeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zW94CmwE; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="MMCmax/G"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MXByJCkldMfTo8KBYzctS63hVesYSk4l0FrIfSOvN5BedYRTE4C4eTQ4wqqPPk6neHY4e7i2DzTD2LCjEcCHc6Q4gy6mvBCnliIqmDOPXnlw7VP4r7o/yZJm4DjCvjakjKJGx/CcIAyO76lczaOcBRv4duU3oabsfF54neUe7+SZw1taXY7YhtHjclFjK5AiSC7msSfGJmWGxG9uAAuEtYl3Y9CN7mmzRcofLj8QSC+roF6oE5PTpxYP21K6We9gRG1HKt051KX2S3xLyxRldNoPMpy3RqsbYC+QsNVoRPtG85/Gl4jdx96K2q/ysVq5HBjiI5MBzhzTbhPMuF2cCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JB00Fz4xoNy/0xzkWbI2SpSdQpLt0v3AUORZFO5OYPM=;
- b=dIR5mpHTpVYcZy50T/kCm6f/W5tJyeYpr2uVsuGKDke9kLsvVvjqsAl7pQhmxLxWwRHjEulPniZfpurMx6I2Lf+KpcAM/Aj6D0ThRljcjbf7nzJR78QFivExyKGDw6PCvWPAREPAMGBUUOeXHWqb/Nl01lIrBRUuV0xAvhqXMmMJIivY78VbBE1wEYf3eOoBBEwgTWkm44CXUjcEjqH3vd5DDVPpp9xlacBs9hd9JJSFNh+uTiVaMwQ7G8if15n3Zw1iAZ+IxWJ/i6cSaLhuh1lZlpiKVGtdqnqjno/yh8bjQD3yjDf7sWAIejFpyjtDrnhZUs+dIRgitK0g1g9Fjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JB00Fz4xoNy/0xzkWbI2SpSdQpLt0v3AUORZFO5OYPM=;
- b=MMCmax/G7O/g0KKMknhd+eg+RanrM4do9S2zSSOHHxGVe5BJ1fGv16u6a5qaMXKsycjdAZhINEntf2nXV+jQUU7KVVc0QbYRH6eLXtwiVqTDr4J30iIdYFOiyUensB7kOXNOer+q02fNYBT07iTR4PGKoyQ/QSGkUJwgb2AoNjZooUnhIViauYDQxCgmjQpc3rBF7aUQieplv73y1LdzxRKHSLndDinmALy6sQDtHdBfrwZ/t58iHXfll8/7UkwKkjwQXlJa7mImoJc7E7oz1K4kiw6x28pdrRgGAhcDgy3oaTUfQrRRUsMDp7HqsEuLlh82eyy+dZjre45FF8WuHg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- IA0PR12MB8254.namprd12.prod.outlook.com (2603:10b6:208:408::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.26; Thu, 29 May 2025 23:04:56 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 23:04:56 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: <akpm@linux-foundation.org>, <willy@infradead.org>,
- <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
- <linux-kernel@vger.kernel.org>, <david@redhat.com>,
- <anshuman.khandual@arm.com>, <ryan.roberts@arm.com>
-Subject: Re: [PATCH] xarray: Add a BUG_ON() to ensure caller is not sibling
-Date: Thu, 29 May 2025 19:04:53 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <DB991DB3-A3AF-4D4B-B198-F116A280E5A6@nvidia.com>
-In-Reply-To: <B3C9C9EA-2B76-4AE5-8F1F-425FEB8560FD@nvidia.com>
-References: <20250528113124.87084-1-dev.jain@arm.com>
- <30EECA35-4622-46B5-857D-484282E92AAF@nvidia.com>
- <4fb15ee4-1049-4459-a10e-9f4544545a20@arm.com>
- <B3C9C9EA-2B76-4AE5-8F1F-425FEB8560FD@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MN0PR03CA0015.namprd03.prod.outlook.com
- (2603:10b6:208:52f::17) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zW94CmwE"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747adea6ddbso1134318b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748560089; x=1749164889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WWQT92vYYiaC+lxmNKagAXWxRs8ao22U9MaAqLN+cH4=;
+        b=zW94CmwEubGV1ZKeyaorWKjffjDpZSGa8hzyw767n3DW2hsqHLgBN/ESh3SAEM5u/S
+         mxYEKXp8En1dvo7KZhjPfqEDoQuEiwgtNwFvybWqbs/qNz6U9tf/3iSaI/TlyOWcaUSs
+         I1EuVWrwWdnFMz/bffe4WASpq8plE4KglJ8qZxu7oSYKWCQfaUwJ51RuHClYY2Nxwcf9
+         8620HaZWOx09SfYI37z02ULzbJRrIxo4pLxCU11pO49Qjh7kiJ5k8eLHm3j761QLpAAR
+         liW8Jc8XweqvM4iFlNphtCJQRQ3bZ7MdXdOiNG3XcYbvKQpckxW1fbxcV7OaK1eALLVX
+         fahg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748560089; x=1749164889;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WWQT92vYYiaC+lxmNKagAXWxRs8ao22U9MaAqLN+cH4=;
+        b=CmFedevZ1fJB1Wx6tmSAuHrmwyBV+B6CX69TR8ijkmK5JvGTSFnNt8ql9re6BkSLlo
+         GzVNTNocclGVqUCQnVdY0vV/Rqwc8QK1aqfRlwYFOLoyCSzj8ExJG0scs9kvRw3R/51y
+         jrfQnfpeohH0GVnsXPiWAvnO+nb3fshAbaAXruh3RD4Vi59xAG14mKgKly7tVsmXP2sV
+         u+vTeng6eyzCPyUV1asTcJIH6NTALy6sJiTYk8M3mjPkM9dnkYG62d9dsYm6qSALKuDe
+         DmK8d7sfKmIR9gg1ZZEDrsjEIQqJYYlDuSQHov38Nckj3zzzweBsapVqglVcU8yO8eoC
+         4ZiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXJjr4aKzusZt55D5/ozpB1bvQNrTYvmbfxhkGFsCaZ2JEgHumaGzRFSepszIJzpXn0dBFdqzNGGLGKzb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9HA7ynsaPKbtdDRA5RpFo+uYo8cp2kjPuBETqUTLxJbaND5tz
+	vCXxuifHY4HLrd0u7Fhdgbz0QBBIbnO9cV/XlpZhD1g8N5ckQ0D/ZQ5+ntVr673wntr2wxI46xS
+	di+z7Wg==
+X-Google-Smtp-Source: AGHT+IFyNnF3N9qo+8t5isM7o5tVxkSUB9ncohiiPZsNdoq3EI2z81ANG4JC82ouNV+RJVlSKp7aEnxQiq0=
+X-Received: from pfbhb7.prod.google.com ([2002:a05:6a00:8587:b0:746:2d5e:7936])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:b43:b0:742:a4e0:6476
+ with SMTP id d2e1a72fcca58-747bd954bd2mr1627939b3a.4.1748560088942; Thu, 29
+ May 2025 16:08:08 -0700 (PDT)
+Date: Thu, 29 May 2025 16:08:07 -0700
+In-Reply-To: <58a580b0f3274f6a7bba8431b2a6e6fef152b237.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|IA0PR12MB8254:EE_
-X-MS-Office365-Filtering-Correlation-Id: 41345700-5c99-446e-d5dc-08dd9f053a6f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NldLR21ITUZnWVFqZC9mbnI4QmFTMnhkejMxL3Rxa3R2M1JuLzhucS9HK0Y5?=
- =?utf-8?B?NVBuQzl2WWhvYXdMYSt2a2JsVDFoZFRKa2t2aXoyL1BWcHNvOVhtcHhGSTRF?=
- =?utf-8?B?TVJWTWRBM0lvK2VyZXdHdXJnTStjVDB1N2JNSmpTVDR0Mm9KZW1hRnNvTk1t?=
- =?utf-8?B?Q1BlcWNXSXdYMHRVaXhKbFNwQUlmVVBMMFBqWnNhZXNWRGFqSFhLYzNSakdI?=
- =?utf-8?B?R2M4aEZlY1ExZ1RCajQwQVlQOFo3SFhSS2JJTGxFUDVTcnArVUtodk9Cczdn?=
- =?utf-8?B?ZXBVMDV1R0pkK3lOenFrYklXekRpTXk5MzFCRkErd3RFY1pQTjFYaWltektO?=
- =?utf-8?B?eERkenZNb1c5Mm1wY2J3dGRhbm9DYU1KN1lXWmhrOTJzZFI5V21aYmdReWVv?=
- =?utf-8?B?Y3RYZXBQYWFOUVdkVHV0WnZpcGtPR3V0YkNwemtVdHBnNHhNK3B3anVXaE1r?=
- =?utf-8?B?b1g3T1M0TEUzZWJmVHRsTkE1NnBPRVkrc3QvY3ZnWkJYVjM0OHhwcytPTUUw?=
- =?utf-8?B?aDB3WXZhSTFqUGhRVHprcnZqM2xEeDVDMHhCNVFrRGJUcUlieVI0SWQ2TmxX?=
- =?utf-8?B?c1FqMElBZnRHMVNZSmI0MFg4QlRkbHpkck5TYUpRMmtpVUh1MXJoVmp3ZTVy?=
- =?utf-8?B?ajZaSzMzVS9MN3UvYzlqSExrcStHaDA4ZklMV3dNclpyR01PRDBYK3pDd01x?=
- =?utf-8?B?VUgzNGUyRElnYWdZOEltT1cvU1NSYktSTzE4eFM4NHJMczVkc0g4QWQ3ZUdZ?=
- =?utf-8?B?ZmFrTEFyVEw2YlhZby9YY1RUZWhYeXo4VlhrM3BML2haMmM5dDRTaTRjNU5y?=
- =?utf-8?B?RER2RE5nMHZ3UkZjQjRvWFYxTE5Ic3ZNcktQeEpYNnpxWHpWYVBoeGhjamtG?=
- =?utf-8?B?eVZhdFZ1ME01L2NuZTh6TlFVdW95QllOeG1uM2Nwek52aDVSc1k1OERGK3lY?=
- =?utf-8?B?aDdPSmg1SnFxTjZrUm51NVYyMjhlUzVsdS9ZVGFmWk4rUVZxYmVpN2I1ZDA1?=
- =?utf-8?B?R1FEQ1I3OW9FWjBrR1ZkaWVpN0ZUY095MEZsRkZvblN0UXhzWXFhanlkRlpN?=
- =?utf-8?B?c1JVbml4elp0K0Zqbk1UbFFVTU93Z2dIMkN1NExDUllUQnFEc3kyV0k3NHJz?=
- =?utf-8?B?dzNuRDZCUTFjV0ZaUFB3cDdyWjM5RDIyWFdGU2JCM3pqK3RtOXJYRE9yME9Q?=
- =?utf-8?B?a0h5N1o0a21YcmhrYWgxdVpzVFhSaTdhNnQwRjc3c2RCWnphNUVrQUJuclBn?=
- =?utf-8?B?ZXRHN0lzdlRTZkIzUDlabEZaeE90TjZXVjNaMWE0RXdXNytJWkgyVG1LREtl?=
- =?utf-8?B?MjZJNWRSZEpnV3ExYTR6bDM2cUdFSzQzSVZuSlhtWFZEd2M4ZVpwSEtWS1Rp?=
- =?utf-8?B?TVloS0ZtMnpqYWlqbWZsLzdKZklYQ1hoZzdkYWJkQWZtc2RYRkZkY0ZNMHRO?=
- =?utf-8?B?U3QxeVlUekRIcmt1cFJGN3lGRnFnSDJjOERjaXp6ZElaRWFIWUo0YnFFQ1BN?=
- =?utf-8?B?UU8rSFZhUjErTkxLekVDN1BlU3k4aHp1U1VzWWozREVjTFQvRnBWRk16VjI0?=
- =?utf-8?B?WlRKaXllVCtTYlUrMWNSdi9BQ2lqQ3orYUhUQVZGVWlIaThVUUY3TmF6RTY5?=
- =?utf-8?B?Nk1BbFZmQ2RYYVFvMlNSOEVVY29JTHpWR082aTFwVXk1dmZDQXA5c3dpaG5k?=
- =?utf-8?B?WXVmeVdFQk01LzNaMlkxTlJmbTJ1a0psaW52eUFYM05qOFcwNE9lYXhkYkM5?=
- =?utf-8?B?Um56bHc4YW5VUXU4V3h1RnIrZ1Nubm9pcklMaWl5TndxREkvanM5NWNsbDBi?=
- =?utf-8?B?bHcxT2tQVk56YThhMkkydFpDSzl5bUxYa1lNYTRPQUVPZnNpVkxObXRYR0VR?=
- =?utf-8?B?dDlvejBDa3djNXVaZ3JuOWhtTElBZ2xOLzdwdmI3U3lXZUdIZG92V0c2T09a?=
- =?utf-8?Q?VrlbBu7ILiA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TmlHUGdUVmp0TG5IK2plSGIzVDY0NDJkNmpKWUJnUVRVdUN3YzQwUUc3VFFo?=
- =?utf-8?B?TlpndVA4YUMzdVlSNDdUczdqL1g2VUd2RjgveTVuMEVXZ3VzeUJQblJmNWgv?=
- =?utf-8?B?dWx0YzZ5cXVGSldUMWVBbjY1Y25DamdlY0cvTllRdkhQaFZIT2h6TEFQR0pK?=
- =?utf-8?B?bG45YlcrZDkyblRjZDVkak1RTHJjQVFKZ080OVk4Qmw3c041U2ZzTFNPK3BS?=
- =?utf-8?B?aGtqVU5lZ2IvaXhLWi8weTM1NjE4dUZQMzdtczhCbFY2eU9FVnNPMWlZam94?=
- =?utf-8?B?cmorM2ZYRlgxaWVIeEhrbFRRbFpyNGExNzlHNWRFY1NxeERlWWxkUU1mTnZq?=
- =?utf-8?B?Mlk4UDFZamJoSUsxQW91Wkt1NnFCV0Fxdi9jZUNzWldLV3J0Y0RpK1d1R3R2?=
- =?utf-8?B?QjhrT3FkOWxPbGo3WTd5Vkg1bkFYazFpdEVGNnJWVW1hRWpIcFJHaStPNjc5?=
- =?utf-8?B?ZFRpQ05pekdRK2ZtMEcyc2wrY2RkK1A1b1BDWVJTcEdLeC9nYVNhSTcwRE8v?=
- =?utf-8?B?bEw5Tkw0c3JSbFROSjlKY3ZmNWhPUWRLVUJRNVU5NzRPRFJhMEhSOC83a1Jl?=
- =?utf-8?B?SjF6U2NvRkZ5QUFmYnVLK2lwUnpLL3YrOUwrTEx4N0hqRjhJd00wenQrOUpl?=
- =?utf-8?B?T1A4K2tlU3ExcGRUOFBDMTkvNDAwaUtBSDE2MGJ2K210bXh1NEZ0Y0Y1UlZQ?=
- =?utf-8?B?dERkaFlJM0I4R1JzNU00clZ5OEVaU3pSOHBwNTZPL3FSVkhUdnE1RnVkRVVV?=
- =?utf-8?B?azNmUW1rY0xqZXphaEtkSnFBbVFyTHVjclZqTndwa1Rwd05mM3h2S29BSWF0?=
- =?utf-8?B?b0I5ZmNNc1FBNWJtd2tvQ2dmSERyV3d6RUV6a05WbWtmWUtGNkxheDl1dm0y?=
- =?utf-8?B?b1F1emVLb09vZjA3OVoyMFNjT1U4VVQrZWJWam11WEhHV3dnaTRoY3NTaWdi?=
- =?utf-8?B?d1lHM2FTaDFSTkFFUnArL1pHckYvNVAyYk9ybG1ic0cwdWlFSk1XMHNVQm04?=
- =?utf-8?B?eXpMbDQ2SzlvM0s1VzFYYXYxMk9pay9TSlkrQUN3aTlFQ0lxRzc5bnd2Q1RO?=
- =?utf-8?B?WXpRVmZ5VUIreVpONVRwYk9sOUJxRjdzR0pzdjM2TXZITDJKL1hrb3ZtNVFN?=
- =?utf-8?B?Z3RxRFpJQ2REMHpHRHpxMHdTd2JzZmpLTVR6dU9ibFhCNEFOeW41MWF2OEV3?=
- =?utf-8?B?bTQrVUsxVXQwOU8vdGhzUDJzZGFETncxaEZ6c1B5dVMwRHpWNTRzcDhLY1Q1?=
- =?utf-8?B?Tk80ZVh4cXpicGhES3Y5aFZ1dmtjd0JDamN3Z2Y3UTk2ZWtrcW1naVBrVUdt?=
- =?utf-8?B?SlA2bWI4VStEcWI5bUVPUGk2dnE2eTRDRmlmbW5Kd2hzMzRaS3l2QU94eEUx?=
- =?utf-8?B?YWVUY2Vqb2ZNd1MxK1dDSlBYSnB1Qyt0WlhHa3VGbUNFc3VubmpneEs1TENX?=
- =?utf-8?B?UGREOWhURUpMdFhUK1JTRGh0QTBZd2tObnZaRFNtOEdKUFFVS0FkaEw2cjlF?=
- =?utf-8?B?N0M1MjZhWXZBbHhZbEY2YnpiejN5TDVjR1pUVnlBUDBrRmRlZCtDSWtPTnJ2?=
- =?utf-8?B?R0JhVmhFZnZIb3ZmNlNtRmprZitLdTdSZGdZaXE0eWlIaXkvN3NEUDZCZjJF?=
- =?utf-8?B?OVlVZFhvcW1sYzMvT2RPMzJoQ1hiQ3FGWkIzMVo1cERlVFpHWnd6bDFUVk1L?=
- =?utf-8?B?aExVaVFTOE9ucWZDQmhHbExOYkwzdG04a2VtTGptTk02Tlg0MTZ0dEN1UWJ0?=
- =?utf-8?B?Nkk0QW5xQ1RONEVLVFZSdE5odSt0Z1hvZWZTM1YyQ1E1dW1Qb2E0NlhjdndW?=
- =?utf-8?B?czRDblUzU1dzbGU4V3lIeHdDUHp1alNPR3RjVUpwa2xaVFJvQUdKVkxxem94?=
- =?utf-8?B?NTNOMmJTWFNyd3ZjWGswczMxajFqSm1NVkhPdHQ5dmxNdkZMSWIyejNUa3Ji?=
- =?utf-8?B?VkpaZFhDNEFCR2ZiL2JCR0diV1d6aVl3TzBhbDI4djl0QTZpODV1eHc1Wkw4?=
- =?utf-8?B?cXdyVkNXbUkvUmtUTktmOEVRR0J0VTA2aTFqbktNK3U2NEJEdC9LYjkyMDB4?=
- =?utf-8?B?ZEZZYW85cld6dnRYRUgxdnBTVlRuaEVCcFJqYWNzSlEvRG9kenJIK2ZzZU5Q?=
- =?utf-8?Q?ZW1PP1Owsf/l31SbNF9Gtqrrx?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41345700-5c99-446e-d5dc-08dd9f053a6f
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 23:04:56.1607
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pGFYfbuXvUgnHaW3CxbsrhEB/A4kihQbg07DwS40XDsI+DzsgPi+EDGPQKX5eb2Z
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8254
+Mime-Version: 1.0
+References: <20250519232808.2745331-1-seanjc@google.com> <20250519232808.2745331-12-seanjc@google.com>
+ <d131524927ffe1ec70300296343acdebd31c35b3.camel@intel.com>
+ <019c1023c26e827dc538f24d885ec9a8530ad4af.camel@intel.com>
+ <aDhvs1tXH6pv8MxN@google.com> <58a580b0f3274f6a7bba8431b2a6e6fef152b237.camel@intel.com>
+Message-ID: <aDjo16EcJiWx9Nfa@google.com>
+Subject: Re: [PATCH 11/15] KVM: x86: Add CONFIG_KVM_IOAPIC to allow disabling
+ in-kernel I/O APIC
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "vkuznets@redhat.com" <vkuznets@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 29 May 2025, at 18:47, Zi Yan wrote:
+On Thu, May 29, 2025, Kai Huang wrote:
+> On Thu, 2025-05-29 at 07:31 -0700, Sean Christopherson wrote:
+> > On Thu, May 29, 2025, Kai Huang wrote:
+> > > On Thu, 2025-05-29 at 23:55 +1200, Kai Huang wrote:
+> > > > On Mon, 2025-05-19 at 16:28 -0700, Sean Christopherson wrote:
+> > > > > Add a Kconfig to allowing building KVM without support for emulat=
+ing an
+> > > > 		   ^
+> > > > 		   allow
+> > > >=20
+> > > > > I/O APIC, PIC, and PIT, which is desirable for deployments that e=
+ffectively
+> > > > > don't support a fully in-kernel IRQ chip, i.e. never expect any V=
+MM to
+> > > > > create an in-kernel I/O APIC. =C2=A0
+> > > >=20
+> > > > Do you happen to know what developments don't support a full in-ker=
+nel IRQ chip?
+> >=20
+> > Google Cloud, for one.  I suspect/assume many/most CSPs don't utilize a=
+n in-kernel
+> > I/O APIC.
+> >=20
+> > > > Do they only support userspace IRQ chip, or not support any IRQ chi=
+p at all?
+> >=20
+> > The former, only userspace I/O APIC (and associated devices), though so=
+me VM
+> > shapes, e.g. TDX, don't provide an I/O APIC or PIC.
+>=20
+> Thanks for the info.
+>=20
+> Just wondering what's the benefit of using userspace IRQCHIP instead of
+> emulating in the kernel?
 
-> On 28 May 2025, at 23:17, Dev Jain wrote:
->
->> On 28/05/25 10:42 pm, Zi Yan wrote:
->>> On 28 May 2025, at 7:31, Dev Jain wrote:
->>>
->>>> Suppose xas is pointing somewhere near the end of the multi-entry batch.
->>>> Then it may happen that the computed slot already falls beyond the batch,
->>>> thus breaking the loop due to !xa_is_sibling(), and computing the wrong
->>>> order. Thus ensure that the caller is aware of this by triggering a BUG
->>>> when the entry is a sibling entry.
->>> Is it possible to add a test case in lib/test_xarray.c for this?
->>> You can compile the tests with “make -C tools/testing/radix-tree”
->>> and run “./tools/testing/radix-tree/xarray”.
->>
->>
->> Sorry forgot to Cc you.
->> I can surely do that later, but does this patch look fine?
->
-> I am not sure the exact situation you are describing, so I asked you
-> to write a test case to demonstrate the issue. :)
->
+Reduced kernel attack surface (this was especially true years ago, before K=
+VM's
+I/O APIC emulation was well-tested) and more flexibility (e.g. shipping use=
+rspace
+changes is typically easier than shipping new kernels.  I'm pretty sure the=
+re's
+one more big one that I'm blanking on at the moment.
 
-IIUC, you mean xas needs to be a non sibling to make xas_get_order()
-work? I wonder if you can use xas_prev() to find the first entry
-in the multi-index batch then get the right order.
+> I thought one should either use in-kernel IRQCHIP or doesn't use any.
+>=20
+> >=20
+> > > Forgot to ask:
+> > >=20
+> > > Since this new Kconfig option is not only for IOAPIC but also include=
+s PIC and
+> > > PIT, is CONFIG_KVM_IRQCHIP a better name?
+> >=20
+> > I much prefer IOAPIC, because IRQCHIP is far too ambiguous and confusin=
+g, e.g.
+> > just look at KVM's internal APIs, where these:
+> >=20
+> >   irqchip_in_kernel()
+> >   irqchip_kernel()
+> >=20
+> > are not equivalent.  In practice, no modern guest kernel is going to ut=
+ilize the
+> > PIC, and the PIT isn't an IRQ chip, i.e. isn't strictly covered by IRQC=
+HIP either.
+>=20
+> Right.
+>=20
+> Maybe it is worth to further have dedicated Kconfig for PIC, PIT and IOAP=
+IC?
 
->>
->>
->>>
->>>> This patch is motivated by code inspection and not a real bug report.
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>> The patch applies on 6.15 kernel.
->>>>
->>>>   lib/xarray.c | 2 ++
->>>>   1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/lib/xarray.c b/lib/xarray.c
->>>> index 9644b18af18d..0f699766c24f 100644
->>>> --- a/lib/xarray.c
->>>> +++ b/lib/xarray.c
->>>> @@ -1917,6 +1917,8 @@ int xas_get_order(struct xa_state *xas)
->>>>   	if (!xas->xa_node)
->>>>   		return 0;
->>>>
->>>> +	XA_NODE_BUG_ON(xas->xa_node, xa_is_sibling(xa_entry(xas->xa,
->>>> +		       xas->xa_node, xas->xa_offset)));
->>>>   	for (;;) {
->>>>   		unsigned int slot = xas->xa_offset + (1 << order);
->>>>
->>>> -- 
->>>> 2.30.2
->>>
->>> Best Regards,
->>> Yan, Zi
->
->
-> Best Regards,
-> Yan, Zi
+Nah.  PIC and I/O APIC can't be split (without new uAPI and non-trivial com=
+plexity),
+and I highly doubt there is any use case that would want an in-kernel I/O A=
+PIC
+with a userspace PIT.  I.e. in practice, the threealmost always come as a g=
+roup;
+either a setup wants all, or a setup wants none.
 
+> But hmm, I am not sure whether emulating IOAPIC has more value than PIC.
 
-Best Regards,
-Yan, Zi
+AIUI, it's not really an either or, since most software expects both an I/O=
+ APIC
+and PIC.  Any remotely modern kernel will definitely prefer the I/O APIC, b=
+ut I
+don't think it's something that can be guaranteed.
+
+> For modern guests all emulated/assigned devices should just use MSI/MSI-X=
+?
+
+Not all emulated devices, since some legacy hang off the I/O APIC, i.e. are=
+n't
+capable of generating MISs.
+
+> > So I think/hope the vast majority of users/readers will be able to intu=
+it that
+> > CONFIG_KVM_IOAPIC also covers the PIC and PIT.
+>=20
+> Sure.
+>=20
+> Btw, I also find irqchip_in_kernel() and irqchip_kernel() confusing.  I a=
+m not
+> sure the value of having irqchip_in_kernel() in fact.  The guest should a=
+lways
+> have an in-kernel APIC for modern guests.  I am wondering whether we can =
+get rid
+> of it completely (the logic will be it is always be true), or we can have=
+ a
+> Kconfig to only build it when user truly wants it.
+
+For better or worse, an in-kernel local APIC is still optional.  I do hope/=
+want
+to make it mandatory, but that's not a small ABI change.
