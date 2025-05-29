@@ -1,285 +1,205 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3692A253957
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C31C212B3D;
+	Thu, 29 May 2025 05:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748496217; cv=none; b=c04fI0JHCfM0EFOq5sCiFbH09u+9ZH9XwyxSNqYkV7oUzcZrgV3Va7yTMYquGAl7Cnx+l1MyPAvO4hDNd1Llh/I8CGqzHNHtZjb0F2kcFCiAJf3z729jyJAzLMGhlQS/TSTCUEpcZP9Og6tehxLpX11NtzW9v5/+8DRhXrGEGQk=
+	t=1748496355; cv=none; b=Mh7dxuAK1Ikt2VWwcT4TSyMKtLqQaKiMzW+In4QobaQjD8cSAH/O78GYSOc1L9r9xdfMl7RQC8mhwh52R+PjuHcE0+NUxtxKy9KWTqAtwdZo+XGa8QTD/gXyR2liT8SHCYYcAgupsHyJDQdp5LMulm1lecwu2pt86vUjgitbQyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748496217; c=relaxed/simple;
-	bh=0YK11AKqhjoRKYDxHvSIEJcOYyta3COzMYDd4Um1i7g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=f5krxVNiabE2KCKJ91Ik/luIacRampnLiiwP4diVYjtnziu/ML50/zajU6VNWg5jeI/EkgUenWTI1Y3OSvtKYdqmMsiAeUwmJcD2X24E8H16WPgYt44TCvjjpnxi1Cyqgm01V/ANNiRGRIKWZQEqAAVJJPvOyG3YByGCiqZFiXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n5bDGRiA; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1748496355; c=relaxed/simple;
+	bh=iZVBJrkksb1yJxQ0iRCSBWW4c1nVnbLOB4xN8Bu0ES4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jxkbeZnVvXzTFYowglW3ex5Mz4GrbMHlcZ7Dd/uN9EHgeZ4K0C0iOlkrpTRtoiVUCSBmL4Z7T6FJHCtZHS4Knkt3irBnrcMHr4679WTQJupiJCyDU/AbIrA0mAxmG6cTXG6LGEg8z0vL1SQHEHK5FIv4b/lgcyBv6EQUr9fsgAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gfuFudMP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n5bDGRiA"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310c5c2c38cso523548a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748496215; x=1749101015; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M0tZJWunWeOBIfa57iIk43kpKwVpCuyAkS2URVOmbEY=;
-        b=n5bDGRiA3BBPOcsZdtRfb5DgDRuv5HIYgVY8wm3GmlGtErcltKe8koToDUzPzjkFtC
-         z6VsjOftBqDcjPjejmnrEzUmiCnr5kJ8TF33pHpAmAfQkFEA605qPbwoZ7GQS61XitFQ
-         hSYE+dU+uSS2eymhXCsgyZHxpcBs1dNYjTPf2ukeqxnuCs1a1z+WQGI09RLyLAM6u5iy
-         zOEfKOs5227SrsOQXIcW/7vDN4CIpFNqF8E98ks3Bw70RhImJLDol3s7yBvwHMUai0HK
-         MW2Tu1/VpYCzrbIO7ie/m5bdoCttAxAt9G7rH2JBg3vttB68f5kKHw5QlO7VRiGRiv9b
-         NE1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748496215; x=1749101015;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M0tZJWunWeOBIfa57iIk43kpKwVpCuyAkS2URVOmbEY=;
-        b=iIyoOceyDO+YCh7bbfCz5c6rI9JZwvWw4/ZtRpcFiFM/LFhTXUj6sAH1xU3pkp7TPR
-         njkIwcKChtUifcnRofPPA38ILQzcdiRk1hUlMhZZkr+uEbhiGGFJ9C21IRlOvRqhoBQA
-         783g/+0h5qDcBPj6gFMK+isNouvPUyNnaWnJk/u1TKDnVOQ1W/Z2DDZ0rj1u6Sx5DKlO
-         iet4lt2toBll4SVWiTWOEJnXy6NibqtrMz4hxFxFxrAEqNpx7wyyp+dedeedexL1uIIT
-         g8+ck5yc1gRO1Uq3HUHcTGYiPD/WutZqgs82IsFqqIO5PlFiF3H2CHSVngGWKqiBmwkR
-         hOZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWk60QP5ylb84yFlSyyZSdH0Mh2oKionT2goESOdqmjvR9hWfCmMtRbKbhyZjwceHAe79BF0Qt5FCZzsks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUv3051dNgQj251eul/dLSwcwPK5otM1mDyWGmd2Xy0drojQ3L
-	8oDflgUk4wfzrXJqULD62ZCYp3snLcWh+ZnqFNFxu1MbiVJw7x7gt0qaC2qn+liSxUgE5H0r/St
-	fZ+u/2qwxrQ==
-X-Google-Smtp-Source: AGHT+IGTOXLMiSNzffXo3eesVNT7Gt1URo0B2f1tJZBy9jPPxv0O8tKXfajV4puFgEzIPfcTl/LVU2hcNQRo
-X-Received: from pjur3.prod.google.com ([2002:a17:90a:d403:b0:311:b070:3683])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f8c:b0:311:ea13:2e6e
- with SMTP id 98e67ed59e1d1-311ea13318cmr7219271a91.28.1748496215517; Wed, 28
- May 2025 22:23:35 -0700 (PDT)
-Date: Wed, 28 May 2025 22:23:22 -0700
-In-Reply-To: <20250529052322.381947-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gfuFudMP"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T1v4g6027799;
+	Thu, 29 May 2025 05:25:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0bclMJflGoDpC6u6S0sgwywANy1Dvb6NmfRTSgcnga8=; b=gfuFudMPZX8QmICH
+	lK/MDFO/urA3YUB7PUkY9heR7oKbGEVLtf/b4GZ/NbXAIR7ZHy5ppV/RahbmZdFj
+	rCke3UDlY78wOEyOkxWI3AtXI70LKoZPWPwqnjAeYm/gfXFU+Z0NblKGhOyKs45z
+	3ACa6+JHjmhD17+sr52YSr7IQBEVWj4+XmizShblWHk3q3aNp1uPFNJA1LerWMf4
+	q8XKkwcvzKOF0sFXt/D6jxA+w1Dqz5TbfIJv7U4a4azrXBKyd5KXzVWDpZTK9owa
+	Whgi431bc1xvNaAkk6F4srEOTIKl1yO4gYHOrCrQwvYTUsaTYrqILCr3w2qvxZCC
+	Z+HbiA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992pn2j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 05:25:03 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T5P2KF001100
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 05:25:02 GMT
+Received: from [10.110.61.81] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 28 May
+ 2025 22:24:59 -0700
+Message-ID: <4a2d8151-9dfe-4876-8216-85211bc393bf@quicinc.com>
+Date: Wed, 28 May 2025 22:24:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250529052322.381947-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529052322.381947-2-irogers@google.com>
-Subject: [PATCH v2 2/2] perf debug: Add function symbols to dump_stack
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Michael Petlan <mpetlan@redhat.com>, Andi Kleen <ak@linux.intel.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 0/5] net: stmmac: Add PCI driver support for
+ BCM8958x
+To: Yanteng Si <si.yanteng@linux.dev>,
+        Jitendra Vegiraju
+	<jitendra.vegiraju@broadcom.com>
+CC: Andrew Lunn <andrew@lunn.ch>,
+        "Russell King (Oracle)"
+	<rmk+kernel@armlinux.org.uk>,
+        <netdev@vger.kernel.org>, <alexandre.torgue@foss.st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <mcoquelin.stm32@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>, <richardcochran@gmail.com>,
+        <ast@kernel.org>, <daniel@iogearbox.net>, <hawk@kernel.org>,
+        <john.fastabend@gmail.com>, <fancer.lancer@gmail.com>,
+        <ahalaney@redhat.com>, <xiaolei.wang@windriver.com>,
+        <rohan.g.thomas@intel.com>, <Jianheng.Zhang@synopsys.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <bpf@vger.kernel.org>,
+        <linux@armlinux.org.uk>, <horms@kernel.org>,
+        <florian.fainelli@broadcom.com>,
+        Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+References: <20241018205332.525595-1-jitendra.vegiraju@broadcom.com>
+ <CAMdnO-+FjsRX4fjbCE_RVNY4pEoArD68dAWoEM+oaEZNJiuA3g@mail.gmail.com>
+ <67919001-1cb7-4e9b-9992-5b3dd9b03406@quicinc.com>
+ <CAMdnO-+HwXf7c=igt2j6VHcki3cYanXpFApZDcEe7DibDz810g@mail.gmail.com>
+ <7ac5c034-9e6d-45c4-b20a-2a386b4d9117@quicinc.com>
+ <51768fa6-007e-4f30-ac1f-eed01ae1a3c5@linux.dev>
+ <CAMdnO-KNfH79PG1=21Dbyaart2JN_e1XcF+tTG93BG5BobX+Gg@mail.gmail.com>
+ <eb591c65-0106-45f4-9e57-434dac54e923@linux.dev>
+Content-Language: en-US
+From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
+In-Reply-To: <eb591c65-0106-45f4-9e57-434dac54e923@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA1MiBTYWx0ZWRfX9bwkRqe3K7hG
+ kT3bBMtM8uLQJVSK417IAU/yZF63z2rQ9MKu6HMC1yx4K1qKM8kM0pesMcTFWNz7JPBOHiLiSoL
+ 6MuctcgekxCHSeBUTXfkWOkgurqK9WssRnT45uQaqyAWl41mkdp3hsg93TZ//s5OVDusK1x5plv
+ APDKLiOkUiB9WmsCUGsvDWHtPf4ZYzDJt4/4qB6I0GToxwOdFR+WAJJ3umMVrGE3UDb+qtuAyF/
+ TVSLWVyY/G+8+LXCW9Z0I2IUo0jNdOJa7ardbZKN/75/iUEiwfTPrAD8G/nVWYRGKfGAnUXdoka
+ EwOrPWtHoA88mt+u1YJmoGD5/YWwqaR6Q6vf5epjIHh5b0MneOOjIamii5K4BpJcEmY9jHfbcuK
+ 3fnxSdsHlkvDI6cd60spXD+eDbyTlOlWaPHSy06FPitmU8yZVaTi+8rx22GBtjbI1hL1agtK
+X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=6837efaf cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=Q-fNiiVtAAAA:8 a=COk6AnOGAAAA:8 a=CyOmcBoVXlxtOUliTrsA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: ta8-0ys4Gq8QeTxmA8W3M6poBTkirC5h
+X-Proofpoint-ORIG-GUID: ta8-0ys4Gq8QeTxmA8W3M6poBTkirC5h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_02,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290052
 
-Symbolize stack traces by creating a live machine. Add this
-functionality to dump_stack and switch dump_stack users to use
-it. Switch TUI to use it. Add stack traces to the child test function
-which can be useful to diagnose blocked code.
 
-Example output:
-```
-  8: PERF_RECORD_* events & perf_sample fields                       : Running (1 active)
-^C
-Signal (2) while running tests.
-Terminating tests with the same signal
-Internal test harness failure. Completing any started tests:
-:  8: PERF_RECORD_* events & perf_sample fields:
 
-____ unexpected signal (2) ____
-    #0 0x5590fb6209b6 in child_test_sig_handler builtin-test.c:243
-    #1 0x7f4a91e49e20 in __restore_rt libc_sigaction.c:0
-    #2 0x7f4a91ee4f33 in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:71
-    #3 0x7f4a91ef0333 in __nanosleep nanosleep.c:26
-    #4 0x7f4a91f01f68 in __sleep sleep.c:55
-    #5 0x5590fb638c63 in test__PERF_RECORD perf-record.c:295
-    #6 0x5590fb620b43 in run_test_child builtin-test.c:269
-    #7 0x5590fb5b83ab in start_command run-command.c:127
-    #8 0x5590fb621572 in start_test builtin-test.c:467
-    #9 0x5590fb621a47 in __cmd_test builtin-test.c:573
-    #10 0x5590fb6225ea in cmd_test builtin-test.c:775
-    #11 0x5590fb5a9099 in run_builtin perf.c:351
-    #12 0x5590fb5a9340 in handle_internal_command perf.c:404
-    #13 0x5590fb5a9499 in run_argv perf.c:451
-    #14 0x5590fb5a97e2 in main perf.c:558
-    #15 0x7f4a91e33d68 in __libc_start_call_main libc_start_call_main.h:74
-    #16 0x7f4a91e33e25 in __libc_start_main@@GLIBC_2.34 libc-start.c:128
-    #17 0x5590fb4fd6d1 in _start perf[436d1]
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v2: Fix NO_BACKTRACE=1 build (Arnaldo)
----
- tools/perf/tests/builtin-test.c | 15 +++++++-
- tools/perf/ui/tui/setup.c       |  2 +-
- tools/perf/util/debug.c         | 68 +++++++++++++++++++++++++++------
- tools/perf/util/debug.h         |  1 +
- 4 files changed, 73 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 45d3d8b3317a..80375ca39a37 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -6,6 +6,9 @@
-  */
- #include <fcntl.h>
- #include <errno.h>
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+#include <execinfo.h>
-+#endif
- #include <poll.h>
- #include <unistd.h>
- #include <setjmp.h>
-@@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
- 
- static void child_test_sig_handler(int sig)
- {
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	void *stackdump[32];
-+	size_t stackdump_size;
-+#endif
-+
-+	fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	stackdump_size = backtrace(stackdump, ARRAY_SIZE(stackdump));
-+	__dump_stack(stderr, stackdump, stackdump_size);
-+#endif
- 	siglongjmp(run_test_jmp_buf, sig);
- }
- 
-@@ -244,7 +257,7 @@ static int run_test_child(struct child_process *process)
- 
- 	err = sigsetjmp(run_test_jmp_buf, 1);
- 	if (err) {
--		fprintf(stderr, "\n---- unexpected signal (%d) ----\n", err);
-+		/* Received signal. */
- 		err = err > 0 ? -err : -1;
- 		goto err_out;
- 	}
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index 16c6eff4d241..022534eed68c 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
- 
- 	printf("-------- backtrace --------\n");
- 	size = backtrace(stackdump, ARRAY_SIZE(stackdump));
--	backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-+	__dump_stack(stdout, stackdump, size);
- 
- 	exit(0);
- }
-diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-index f9ef7d045c92..0c7c6a9e158b 100644
---- a/tools/perf/util/debug.c
-+++ b/tools/perf/util/debug.c
-@@ -14,11 +14,18 @@
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-+#include "addr_location.h"
- #include "color.h"
--#include "event.h"
- #include "debug.h"
-+#include "event.h"
-+#include "machine.h"
-+#include "map.h"
- #include "print_binary.h"
-+#include "srcline.h"
-+#include "symbol.h"
-+#include "synthetic-events.h"
- #include "target.h"
-+#include "thread.h"
- #include "trace-event.h"
- #include "ui/helpline.h"
- #include "ui/ui.h"
-@@ -298,21 +305,60 @@ void perf_debug_setup(void)
- 	libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug_wrapper);
- }
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-+{
-+	/* TODO: async safety. printf, malloc, etc. aren't safe inside a signal handler. */
-+	pid_t pid = getpid();
-+	struct machine *machine = machine__new_live(/*kernel_maps=*/false, pid);
-+	struct thread *thread = NULL;
-+
-+	if (machine)
-+		thread = machine__find_thread(machine, pid, pid);
-+
-+#ifdef HAVE_BACKTRACE_SUPPORT
-+	if (!machine || !thread) {
-+		/*
-+		 * Backtrace functions are async signal safe. Fall back on them
-+		 * if machine/thread creation fails.
-+		 */
-+		backtrace_symbols_fd(stackdump, stackdump_size, fileno(file));
-+		machine__delete(machine);
-+		return;
-+	}
-+#endif
-+
-+	for (size_t i = 0; i < stackdump_size; i++) {
-+		struct addr_location al;
-+		u64 addr = (u64)stackdump[i];
-+		bool printed = false;
-+
-+		addr_location__init(&al);
-+		if (thread && thread__find_map(thread, PERF_RECORD_MISC_USER, addr, &al)) {
-+			al.sym = map__find_symbol(al.map, al.addr);
-+			if (al.sym) {
-+				fprintf(file, "    #%zd %p in %s ", i, stackdump[i], al.sym->name);
-+				printed = true;
-+			}
-+		}
-+		if (!printed)
-+			fprintf(file, "    #%zd %p ", i, stackdump[i]);
-+
-+		map__fprintf_srcline(al.map, al.addr, "", file);
-+		fprintf(file, "\n");
-+		addr_location__exit(&al);
-+	}
-+	thread__put(thread);
-+	machine__delete(machine);
-+}
-+
- /* Obtain a backtrace and print it to stdout. */
- #ifdef HAVE_BACKTRACE_SUPPORT
- void dump_stack(void)
- {
--	void *array[16];
--	size_t size = backtrace(array, ARRAY_SIZE(array));
--	char **strings = backtrace_symbols(array, size);
--	size_t i;
--
--	printf("Obtained %zd stack frames.\n", size);
--
--	for (i = 0; i < size; i++)
--		printf("%s\n", strings[i]);
-+	void *stackdump[32];
-+	size_t size = backtrace(stackdump, ARRAY_SIZE(stackdump));
- 
--	free(strings);
-+	__dump_stack(stdout, stackdump, size);
- }
- #else
- void dump_stack(void) {}
-diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-index a4026d1fd6a3..6b737e195ce1 100644
---- a/tools/perf/util/debug.h
-+++ b/tools/perf/util/debug.h
-@@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
- void perf_debug_setup(void);
- int perf_quiet_option(void);
- 
-+void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size);
- void dump_stack(void);
- void sighandler_dump_stack(int sig);
- 
--- 
-2.49.0.1204.g71687c7c1d-goog
-
+On 5/28/2025 10:14 PM, Yanteng Si wrote:
+> 
+> 在 5/29/25 10:56 AM, Jitendra Vegiraju 写道:
+>> Hi Yanteng,
+>>
+>> On Wed, May 28, 2025 at 6:36 PM Yanteng Si <si.yanteng@linux.dev> wrote:
+>>> 在 5/28/25 8:04 AM, Abhishek Chauhan (ABC) 写道:
+>>>>
+>>>> On 2/7/2025 3:18 PM, Jitendra Vegiraju wrote:
+>>>>> Hi Abhishek,
+>>>>>
+>>>>> On Fri, Feb 7, 2025 at 10:21 AM Abhishek Chauhan (ABC) <
+>>>>> quic_abchauha@quicinc.com> wrote:
+>>>>>
+>>>>>>
+>>>>>> On 11/5/2024 8:12 AM, Jitendra Vegiraju wrote:
+>>>>>>> Hi netdev team,
+>>>>>>>
+>>>>>>> On Fri, Oct 18, 2024 at 1:53 PM <jitendra.vegiraju@broadcom.com> wrote:
+>>>>>>>> From: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>
+>>>>>>>>
+>>>>>>>> This patchset adds basic PCI ethernet device driver support for Broadcom
+>>>>>>>> BCM8958x Automotive Ethernet switch SoC devices.
+>>>>>>>>
+>>>>>>> I would like to seek your guidance on how to take this patch series
+>>>>>> forward.
+>>>>>>> Thanks to your feedback and Serge's suggestions, we made some forward
+>>>>>>> progress on this patch series.
+>>>>>>> Please make any suggestions to enable us to upstream driver support
+>>>>>>> for BCM8958x.
+>>>>>> Jitendra,
+>>>>>>            Have we resent this patch or got it approved ? I dont see any
+>>>>>> updates after this patch.
+>>>>>>
+>>>>>>
+>>>>> Thank you for inquiring about the status of this patch.
+>>>>> As stmmac driver is going through a maintainer transition, we wanted to
+>>>>> wait until a new maintainer is identified.
+>>>>> We would like to send the updated patch as soon as possible.
+>>>>> Thanks,
+>>>>> Jitendra
+>>>> Thanks Jitendra, I am sorry but just a follow up.
+>>>>
+>>>> Do we know if stmmac maintainer are identified now ?
+>>> I'm curious why such a precondition is added？
+>>>
+>> It's not a precondition. Let me give some context.
+>> This patch series adds support for a new Hyper DMA(HDMA) MAC from Synopsis.
+>> Many of the netdev community members reviewed the patches at that time.
+>> Being the module maintainer at that time, Serge took the initiative to
+>> guide us through integrating the new MAC into the stmmac driver.
+>> We addressed all the review comments and submitted the last patch series.
+>> Without an official maintainer, we didn't get feedback on the last patch series.
+>> Because of this, we wanted to wait until a new maintainer is assigned
+>> to this module.
+>> As Abhishek expressed in his email, it appears the HDMA MAC is
+>> becoming more mainstream.
+>> We are hoping to rebase the patch series and resubmit for review if
+>> netdev team members show interest.
+> 
+> 
+> https://lore.kernel.org/netdev/20241018205332.525595-1-jitendra.vegiraju@broadcom.com/
+> 
+> In my opinion, the precondition for waiting for a maintainer is that
+> 
+> the patch set has passed the review. I checked lore and did not find
+> 
+> any R&B tags in the patch set, which means your patch set has not
+> 
+> yet met the merging requirements.
+> 
+> Therefore, I think you can continue to push forward with this patch
+> 
+> set and not let it stagnate. I will take some time to review the previous
+> 
+> versions (which may take a while) and hope to be helpful.
+> 
+> Thanks,
+> 
+> Yanteng
+> 
+I will review the patch in the coming few days as well. As this patch also helps Qualcomm to develop the 
+HDMA arch for 25XGMAC EMAC controller. 
+This patch is validated/verfied/tested on Qualcomm platform devices which are not PCIE based. 
+>> Thanks,
+>> Jitendra
+>>> Thanks,
+>>> Yanteng
