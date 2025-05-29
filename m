@@ -1,65 +1,67 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6B722FE0F
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A39A22D4F1;
+	Thu, 29 May 2025 17:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748541417; cv=none; b=V2spGPwMamoVf3sF3jomnwkcXc+U8l0yqJi0/98QqM/qgDrenmJfaQHX/0XBuSx8gD0NhPuCV6OhJqwrmkWDWHLj1C1j9/BkZnvifiQnRuXaX4w3bP43FTExwtc/+lTJ/p4+K6SCnwMaXGRSbXRDCYh/1uPh2Ge5LaBAKIlnUbE=
+	t=1748541468; cv=none; b=gpcivykYGQUrr10djQhexZ7QEBnW3Pge76+1xajQt0UEjOT8xtyga+0DXAX1oddb9PSulkAfCfrt6zIVQnMcc71a+WAwI8c2DQtATZraauUsS/k2FVQeExrb9QaylUSgsw6uty0bR1c4O1Epsw1gYVRPjGowtlKNXKNqWZIRIA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748541417; c=relaxed/simple;
-	bh=kS9GiviriiCchrXct0uEKMDSd5rA7xErne29tXNsIjs=;
+	s=arc-20240116; t=1748541468; c=relaxed/simple;
+	bh=Wz3ASx+bgv6vNtcVe3W5KiiP6F3X8ZQUO5eAYaTD+4s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=llbcwWCQriYa5IRPEwW22OlurLCEgAMZs8UnChdw81A4/VW0rXqjcL1hWUgmLoT03y6uubNVVapsEx5lQ9msBeXy9yik5XqNX8U4Pzn4hp+AsyqUBBx3JbNh8s0JBf5mCLCcAV3ZHmEupM7LZgPpRlQ1VmqGa7dqa+7pjZeEWf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T6M5c+0K; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ZTNdsBYoJBwHBOtnVSa3Aiaj6bPK8f0yDVoTRyAZrn4DQRqLHs47mmXfu0/WoCd8fOmwQVuFq8fUlh0Q0VLlxsTbdRSy4xY5dQVjH+8PcIcB0GH6wuVYVW9yY+Tfd3UTN7udPxiTMIwc/ZqtbRGe6B91ihmvSNHFqrW0VVoqQCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AkTm4zxM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T6M5c+0K"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6faa60c983fso11193986d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748541414; x=1749146214; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Cnq3317eLDD3aX+MPu1x7nQnkfxgO3IBGujg8LJkV6U=;
-        b=T6M5c+0KpJoPw6T3s1dzxMIQTzAqHfa6Hnz3do3TKGJrakZZhcci7Xt8b0GYawYRQO
-         kmrSnVA8GPUS20gdUm4or5JUweJ5YKOBYGqSWRAzZDSg1eL59RkR1bq4JhlgQ7dvaz1j
-         3TvmeD5mDxyILHoR9/ZHJSbjd2eXF4MTZABOsZHqedy4Bwk2DojIogjtMoPLQSquAfbQ
-         M72AjWpzppzplvD58MUjdQnaOx+oGYnkFXTYtOKQF5NwbYdsRQM9SlMQepNpvXNZDFzG
-         KsrnI8QvKiKfSk5zEMdJftHxw4vT6CLkEPNayYzOIyLndjU640ufbVZA3jc+94m7Fvny
-         nAdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748541414; x=1749146214;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cnq3317eLDD3aX+MPu1x7nQnkfxgO3IBGujg8LJkV6U=;
-        b=KjGJrZvxidvsBxi5iYJ5Mi23JTQnJgre4lvm6+MMY/PilDx19bqqxxm2hrV2tug8hE
-         4EdfyHUBbR5ov3F9mx5yjfbefgYUgYIDXQ6Rj5GZDAIzjDQ1W1MkTPJ8O8wgk0s2PYcL
-         +BJhnuCEJszAgm+0vuwgdr/t9qAW/0HyXROf7mTUr/jeBpXudBiUpwco7D5ezkGqiFjk
-         ycGtJZW7CBt1Wpge5sHatEHejIMWjspEyyQGxfuaelRUE4YvNd2GY/8EONtOmpUalI0f
-         xBa0yFFTw/H63psJx9WG4kAE0b2rYF0Y1x2ivY8T7kgNZjilSyE2jV5aAmFyv2V9iTnN
-         hHmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNxslOjYZZVa22EI2/bHuTcLwc1ThAkcsIe3zlQFoZ/Mw0RR7oQc0Wrm0HdGBZQA+hvh1B1/HTjQqxwcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ8NYVCfoG6N0LpPWEG2wsXevQl2+0CRycuROUK15lIZljKlsk
-	olNyZmQRl4jRMGmUlsuuHLWaMfoOidB6hRoJ/yoTdt/cyrgOFpKimMuPIUFwqihSqLI=
-X-Gm-Gg: ASbGncvM4S6zxG+nAMB3yjEfh1LdSfqLQAHN6tvs8NGPjNslq4kDq7/G7Oqxlytzfxe
-	6exSjVVe+Cb6Hbdbujbim9YgPZWf7+CXAAQ4Jb+quDbyVAjsyKq3EqQOkOfyGWq6Dx34uta/Bq3
-	oQGUWE/qCyBQ24yBZNoluIzP0h9ExPqZTIgGg/1bgUU+IhE8V6lOpI4sj5J7zeAVYmkK7mcmR1z
-	/bsesTRqrHI2pcXtfl73HhWcodS6bgdGnnjyTeR/3EFKJxFBDFX+WO3TFisMUEmwWrTvlamG7ih
-	8H/MoQRk84mlO6RcqsQrEcl2154XLP0HS1r2c5M6VcQnairRRE7y/zAMNYwiQ/H5wAX2JyO/b+u
-	yqF3mmkgDjTwdIVXQb1TG8AobGg==
-X-Google-Smtp-Source: AGHT+IFRbPY9FcCpkFcar+WohXHkz8dPIXN2wRIAXXxo4Xlx3qkGIE/m8rbx0C9NzOjslxqzybdnaQ==
-X-Received: by 2002:a05:6214:f6a:b0:6fa:c6c0:47da with SMTP id 6a1803df08f44-6facebf8bb8mr9098066d6.42.1748541414556;
-        Thu, 29 May 2025 10:56:54 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:d79:3250:12f6:aa0:e9ea:e0da? ([2a01:e0a:d79:3250:12f6:aa0:e9ea:e0da])
-        by smtp.googlemail.com with ESMTPSA id 6a1803df08f44-6fac6e1c68fsm11859116d6.110.2025.05.29.10.56.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 10:56:53 -0700 (PDT)
-Message-ID: <62092013-1c15-4b43-b045-f8915bfc2d2c@linaro.org>
-Date: Thu, 29 May 2025 19:56:50 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AkTm4zxM"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TCnwuO013450;
+	Thu, 29 May 2025 17:57:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=MMSPzb
+	4oQ+h918UwB1Z3SCKlZ/8CX7OHWRXLne8aVQg=; b=AkTm4zxMnMqciznNBqK1XZ
+	SWfoiAjlw2KRQsjXoBOiRZGhr4kitR2pHNmknen18ZYWyCuXY/qDnws72f+EqKE6
+	xKOFSFeXLzXdv4kRrOeuS3JP6rQ1uP8Fyi4zHgUM4Y+9P+hyG1MmYMMIb5J7oqM2
+	LqvFvuX0sN26gaAVNtA1HQ4AepB1xHSHoHYZz4gsi2ZYCLyOwm3eOXHhN0P2wG50
+	O7VEL6r3k/a7VMay3ASi+Rr0kGedEjs/Cs90MFSQehdsTNcc2HJUZbGYa7AYrpsY
+	vfDRLePq+SUlM7E5JFtP+RKv6pbGrheWuRpWtq6QEdwlK4gqtvK6R4DOT9jqCinw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40h7611-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 17:57:31 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54THlPPJ031719;
+	Thu, 29 May 2025 17:57:30 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40h760u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 17:57:30 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54THYkRY001617;
+	Thu, 29 May 2025 17:57:30 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46utnmwd6h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 17:57:30 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54THvSY531261230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 May 2025 17:57:28 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 207BC5805C;
+	Thu, 29 May 2025 17:57:28 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 93AF45805A;
+	Thu, 29 May 2025 17:57:24 +0000 (GMT)
+Received: from [9.39.17.148] (unknown [9.39.17.148])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 29 May 2025 17:57:24 +0000 (GMT)
+Message-ID: <fd6846dc-a2b3-42fa-9d75-8ff41b4ca531@linux.ibm.com>
+Date: Thu, 29 May 2025 23:27:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,66 +69,229 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Add the NXP S32 Watchdog
-To: Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org,
- alexandru-catalin.ionita@nxp.com
-References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
- <650c336b-a698-42f5-ad59-7dcdf24667f4@linaro.org>
- <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
- <a6d64948-e713-4a50-9d4e-6de02a550d06@linaro.org>
- <20250528192450.GA15816@www.linux-watchdog.org>
+Subject: Re: [PATCH v2 1/3] powerpc/pseries: Correct secvar format
+ representation for static key management
+To: Andrew Donnellan <ajd@linux.ibm.com>, linux-integrity@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, naveen@kernel.org, zohar@linux.ibm.com,
+        nayna@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20250521105759.8408-1-ssrish@linux.ibm.com>
+ <20250521105759.8408-2-ssrish@linux.ibm.com>
+ <c06c6a36356ce803654a441d4b8b2901b5f78007.camel@linux.ibm.com>
 Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250528192450.GA15816@www.linux-watchdog.org>
+From: Srish Srinivasan <ssrish@linux.ibm.com>
+In-Reply-To: <c06c6a36356ce803654a441d4b8b2901b5f78007.camel@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AUXR36wK3LTPreFspGwVbMMCyC3l3qlR
+X-Proofpoint-ORIG-GUID: JF3PRAuRSYXGXqu-q3qMkGojeNhW5YVa
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDE3MCBTYWx0ZWRfX/zUGsrPo6Evh bBBOo+oIVcx0gKfOT0l5ojOttlZwLRx/5UqwttBM9UX4kugfk7u3Rrp0uSAE+3r82sx4S884GG5 ynoGN3/ZWJ0qVDLBtr1m8nW/OYvhbg0c156G4jV1nNAtpk4A0uSE5mlzHx79irIncWFMuk22VIZ
+ 5BFPQHBDGHLTbSk8YGtY9hgQhvDcR0Nfgns7SXeDE0JIsyXiC/Xu0RKuD4ZpfYOwiOf6/Nc+BB3 ZcDHPyywNxzNqeiS+fvvl0Wbsj9aoh1plvfRtM13HEAHURXFWD6KeVPGniWOUSDLgmFwS9dDB8O yVjowsr1AV1rnJLPcOxfs5qaxvEl1g7gLS9D8ArCtHhl2D/qeH//oAtwC0zYMn1yJoWU66/U3I9
+ amIU5Z6MleGOyWGhhMB2uMy8kffw+6aVE9huX6suTqU9vzEJy2/ASNDuocSmjdl+PYBM6czE
+X-Authority-Analysis: v=2.4 cv=L8MdQ/T8 c=1 sm=1 tr=0 ts=6838a00b cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=egBsNbqSnoRc1Z-rUywA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_08,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290170
 
-Hi Wim,
 
-thanks for the update
-
-   -- Daniel
-
-On 5/28/25 21:24, Wim Van Sebroeck wrote:
-> Hi Daniel,
-> 
->> Hi Guenter, Wim,
+On 5/23/25 11:27 AM, Andrew Donnellan wrote:
+> On Wed, 2025-05-21 at 16:27 +0530, Srish Srinivasan wrote:
+>> On a PLPKS enabled PowerVM LPAR, the secvar format property for
+>> static
+>> key management is misrepresented as "ibm,plpks-sb-unknown", creating
+>> reason for confusion.
 >>
->> On 14/05/2025 20:09, Guenter Roeck wrote:
+>> Static key management mode uses fixed, built-in keys. Dynamic key
+>> management mode allows keys to be updated in production to handle
+>> security updates without firmware rebuilds.
 >>
->> [ ... ]
+>> Define a function named plpks_get_sb_keymgmt_mode() to retrieve the
+>> key management mode based on the existence of the SB_VERSION property
+>> in the firmware.
 >>
->>> AFAICS the patches do have Reviewed-by: tags, so this is just
->>> waiting for Wim
->>> to pick it up.
+>> Set the secvar format property to either "ibm,plpks-sb-v<version>" or
+>> "ibm,plpks-sb-v0" based on the key management mode, and return the
+>> length of the secvar format property.
 >>
->> I fetched the watchdog tree and saw it was updated from May 23th but
->> I don't see this watchdog series.
+>> Co-developed-by: Souradeep <soura@imap.linux.ibm.com>
+>> Signed-off-by: Souradeep <soura@imap.linux.ibm.com>
+>> Signed-off-by: Srish Srinivasan <ssrish@linux.ibm.com>
+>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+> Thanks for the fixes, minor comment about the docs below.
+>
+> Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+>
+>> ---
+>>   Documentation/ABI/testing/sysfs-secvar        |  9 ++-
+>>   arch/powerpc/platforms/pseries/plpks-secvar.c | 76 +++++++++++------
+>> --
+>>   2 files changed, 52 insertions(+), 33 deletions(-)
 >>
->> Is it possible to give a status about it ?
-> 
-> commit bd3f54ec559b554671e5a683e05794abe3a609df
-> Author: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Date:   Thu Apr 10 10:26:14 2025 +0200
-> 
->      watchdog: Add the Watchdog Timer for the NXP S32 platform
-> 
-> 
-> It's in linux-watchdog-next since the 24th.
-> It will be sent to Linus probably this weekend.
-> 
-> Kind regards,
-> Wim.
-> 
+>> diff --git a/Documentation/ABI/testing/sysfs-secvar
+>> b/Documentation/ABI/testing/sysfs-secvar
+>> index 857cf12b0904..45281888e520 100644
+>> --- a/Documentation/ABI/testing/sysfs-secvar
+>> +++ b/Documentation/ABI/testing/sysfs-secvar
+>> @@ -22,9 +22,12 @@ Description:	A string indicating which backend is
+>> in use by the firmware.
+>>   		and is expected to be "ibm,edk2-compat-v1".
+>>   
+>>   		On pseries/PLPKS, this is generated by the kernel
+>> based on the
+>> -		version number in the SB_VERSION variable in the
+>> keystore, and
+>> -		has the form "ibm,plpks-sb-v<version>", or
+>> -		"ibm,plpks-sb-unknown" if there is no SB_VERSION
+>> variable.
+>> +		version number in the SB_VERSION variable in the
+>> keystore. The
+>> +		version numbering in the SB_VERSION variable starts
+>> from 1. The
+>> +		format string takes the form "ibm,plpks-sb-
+>> v<version>" in the
+>> +		case of dynamic key management mode. Otherwise, for
+>> any error in
+>> +		reading SB_VERSION it takes the form "ibm,plpks-sb-
+>> v0",
+>> +		indicating that the key management mode is static.
+> This last sentence is true, but makes it sound like static mode is only
+> used in case of errors.
+>
+> Something like:
+>
+> "If the SB_VERSION variable does not exist (or there is an error while
+> reading it), it takes the form "ibm,plpks-sb-v0", indicating that the
+> key management mode is static."
+>
+> might be slightly clearer?
 
+Hi Andrew,
+Sure, will take this up in v3.
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Thank You.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>
+>>   
+>>   What:		/sys/firmware/secvar/vars/<variable name>
+>>   Date:		August 2019
+>> diff --git a/arch/powerpc/platforms/pseries/plpks-secvar.c
+>> b/arch/powerpc/platforms/pseries/plpks-secvar.c
+>> index 257fd1f8bc19..767e5e8c6990 100644
+>> --- a/arch/powerpc/platforms/pseries/plpks-secvar.c
+>> +++ b/arch/powerpc/platforms/pseries/plpks-secvar.c
+>> @@ -152,39 +152,55 @@ static int plpks_set_variable(const char *key,
+>> u64 key_len, u8 *data,
+>>   	return rc;
+>>   }
+>>   
+>> -// PLPKS dynamic secure boot doesn't give us a format string in the
+>> same way OPAL does.
+>> -// Instead, report the format using the SB_VERSION variable in the
+>> keystore.
+>> -// The string is made up by us, and takes the form "ibm,plpks-sb-
+>> v<n>" (or "ibm,plpks-sb-unknown"
+>> -// if the SB_VERSION variable doesn't exist). Hypervisor defines the
+>> SB_VERSION variable as a
+>> -// "1 byte unsigned integer value".
+>> -static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
+>> +/*
+>> + * Return the key management mode.
+>> + *
+>> + * SB_VERSION is defined as a "1 byte unsigned integer value",
+>> taking values
+>> + * starting from 1. It is owned by the Partition Firmware and its
+>> presence
+>> + * indicates that the key management mode is dynamic. Any failure in
+>> + * reading SB_VERSION defaults the key management mode to static.
+>> The error
+>> + * codes -ENOENT or -EPERM are expected in static key management
+>> mode. An
+>> + * unexpected error code will have to be investigated. Only signed
+>> variables
+>> + * have null bytes in their names, SB_VERSION does not.
+>> + *
+>> + * Return 0 to indicate that the key management mode is static.
+>> Otherwise
+>> + * return the SB_VERSION value to indicate that the key management
+>> mode is
+>> + * dynamic.
+>> + */
+>> +static u8 plpks_get_sb_keymgmt_mode(void)
+>>   {
+>> -	struct plpks_var var = {0};
+>> -	ssize_t ret;
+>> -	u8 version;
+>> -
+>> -	var.component = NULL;
+>> -	// Only the signed variables have null bytes in their names,
+>> this one doesn't
+>> -	var.name = "SB_VERSION";
+>> -	var.namelen = strlen(var.name);
+>> -	var.datalen = 1;
+>> -	var.data = &version;
+>> -
+>> -	// Unlike the other vars, SB_VERSION is owned by firmware
+>> instead of the OS
+>> -	ret = plpks_read_fw_var(&var);
+>> -	if (ret) {
+>> -		if (ret == -ENOENT) {
+>> -			ret = snprintf(buf, bufsize, "ibm,plpks-sb-
+>> unknown");
+>> -		} else {
+>> -			pr_err("Error %ld reading SB_VERSION from
+>> firmware\n", ret);
+>> -			ret = -EIO;
+>> -		}
+>> -		goto err;
+>> +	u8 mode;
+>> +	ssize_t rc;
+>> +	struct plpks_var var = {
+>> +		.component = NULL,
+>> +		.name = "SB_VERSION",
+>> +		.namelen = 10,
+>> +		.datalen = 1,
+>> +		.data = &mode,
+>> +	};
+>> +
+>> +	rc = plpks_read_fw_var(&var);
+>> +	if (rc) {
+>> +		if (rc != -ENOENT && rc != -EPERM)
+>> +			pr_info("Error %ld reading SB_VERSION from
+>> firmware\n", rc);
+>> +		mode = 0;
+>>   	}
+>> +	return mode;
+>> +}
+>>   
+>> -	ret = snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", version);
+>> -err:
+>> -	return ret;
+>> +/*
+>> + * PLPKS dynamic secure boot doesn't give us a format string in the
+>> same way
+>> + * OPAL does. Instead, report the format using the SB_VERSION
+>> variable in the
+>> + * keystore. The string, made up by us, takes the form of either
+>> + * "ibm,plpks-sb-v<n>" or "ibm,plpks-sb-v0", based on the key
+>> management mode,
+>> + * and return the length of the secvar format property.
+>> + */
+>> +static ssize_t plpks_secvar_format(char *buf, size_t bufsize)
+>> +{
+>> +	u8 mode;
+>> +
+>> +	mode = plpks_get_sb_keymgmt_mode();
+>> +	return snprintf(buf, bufsize, "ibm,plpks-sb-v%hhu", mode);
+>>   }
+>>   
+>>   static int plpks_max_size(u64 *max_size)
