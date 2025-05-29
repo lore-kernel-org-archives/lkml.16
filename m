@@ -1,143 +1,110 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45622576A
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73B92248AB;
+	Thu, 29 May 2025 12:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522591; cv=none; b=cB989Zs4bW6vVJCL2r3kIoydcAnk34KmXjVQSTukX6tZDkTg/Yplc6r53GZzYe+2YlvdCXICoAE36B0Xwyd7szKE25ynxXfbYZcQR+TyjGbXcn1DHPVslo1jyhEgMInwT54vzBduPOado+TetsFM5JO2Q4EFHjYnM0HZ/L5yG28=
+	t=1748522653; cv=none; b=f7Fiza4bGuLBC9HT4oT1OLwLU6gMIAnpHouJ8dAU0HqBs1MPTCe7+spYtPAQgAcEjqqIGmgF/4V9FZO6AV0GxpD0ZW1pEoRh7iq51U/2Iwa7R/Lc1izALhKL+VHpLKza+sTgdvwPGVxiPIy5ALxA5Ut80mHdsRJCjZRnbin1+Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522591; c=relaxed/simple;
-	bh=V+k0YYVajMtJvjJHVuTTJYUaZiiFudh9Jn7Ksm1pgoU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=slUg5a4quTwE8UEHHqI+hGGHgUydGRgTnE564VxwHMcP55MlcTfLvGg+k6xFJHswyQ+mzy1PYuh4iDES7D7AiFWZWaGYzAOoFegkZ7hIkB2361k94rfAKqVbLP8bDerUIsJsquDvIqrj2ulnk+f70o86LfDfs8Pw7SfscKUN2Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=kP6lhdRG; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748522653; c=relaxed/simple;
+	bh=DU0IJ0+/nwSm/K9hGP4DcuS6ep/cTHu1pVRhL43vVBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YI+S1HnZPekuMvQoape8p63/LKKNIzZ0S2CJ9tufLvBhKMWTbhN85eXxEU2yxktbhq68PPaSdrEmc9ACJqeSoFcsFNgQaYqJDhaeV864kGla9cVyppAJ6Jc1gKJs9FjrMhuhDLkW7G536WhBNEuqW3/oOp5vp+oV3+XNisam3II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OfcfmGIR; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="kP6lhdRG"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a375d758a0so755847f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:43:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfcfmGIR"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-450cf214200so7074665e9.1;
+        Thu, 29 May 2025 05:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748522587; x=1749127387; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mJYtTflbkn898/BLxpK7QKxJtXnTWVg7vYFavAXp8EE=;
-        b=kP6lhdRGJGkdXgQzXxmy1ksFt5oU4/5W/LyM1p1LngNC0bZNtI6jROQSrP3jnzjdZl
-         Ltb4flIV+bPyYT4hvSKuuYQlJUy/DM0Md4TFDwk5L4NjClsQ6l1qDNUWDWe6lzTsdZpy
-         mn0Cfy3cb2NHpD8nn3RLAVLf2l92ajODi23NtUwlVuAWCE7jCSTGZYiACsJNke7l2UWp
-         4e0h7xJXJEiEXIHo+Z2yKwQ1Ufmx6b2msJXicZ7ZMiSntjaJe/6qHwg6rbVnwXHWaSEF
-         0lnFZdOJW5YBrDMEzPzs0jl7pIvSOiRNqxJgrnS7oCDjqER8i4o/K99GZAGiTaSc48U6
-         1YAw==
+        d=gmail.com; s=20230601; t=1748522650; x=1749127450; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xy9+1WxqxPkcvDSbf/PL1XyrGbcJDd9HZLFKhqLgSaA=;
+        b=OfcfmGIRaxkKqM63wYjLsLfLiy464mxreNY/d0yOFqNe9IUqWYsQj1FwQXS8Njtvra
+         LYbj7R9tUii4jRFpk2gmKdBqcFtwOWnUXJ9TKFptX8cy00foj5oEE/q3afopEuYvZ1vi
+         mGEtEzcDBIbR6l4F4JH7uy5ZOOmdJ9mMDkK4c2RkXSw6OgMMqLEQp3xL5cBwO3GgyUq7
+         IDAxEDkyjwpeUIfoSp0RkXmXjinGoAe4EL/ApkP6sjcdLb1l54ob2SFrWBOJ8iq8L8W0
+         jfs+rp4bBySElS1nagAETKZlRhrZN+5rMD9N1S+31EO65LK/tHXtV6DPTAPwrl+MLgkH
+         e8OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748522587; x=1749127387;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJYtTflbkn898/BLxpK7QKxJtXnTWVg7vYFavAXp8EE=;
-        b=H66zbUGeyKZ3y801mn9v12d3RFPPHChAUBrSAJb34LX3cnqdW9KOKLFxl8JJrQWl4O
-         tUCI/6D1uOaxAUskjPb5WLhan1vBhgikTF/Kz83f7w1nNHWiRvyuC3UhB6Fqh8VRYezQ
-         9Ds2BflS9UcE3OvH4m4wQgOHKopprNb3SswHMqRc5dWRSikexugsnGzwgxiT61t8qWVa
-         jRo45GnyjPd1+JeVniGxnVAdjq4fflzAicxlBilnxPMvVtsqWR5ssbE0VeZ9KVSA5PYD
-         y4uynIiDxtv7dxabQvNKnrzK5JwZrkT2u5j0WzWH3U6gqhmIC2s3BEf2ka2Pqw9DbKYT
-         L59A==
-X-Forwarded-Encrypted: i=1; AJvYcCVtA7KKaSptbX7R8Qpaorl+sOQ4IDHn+EzrEqJa/vHJIMbf+WnDh79OMG1fLOHzsKZ5Ogbryvm8er+pTiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+vA/jiH1tmIRQJrAzEUXjY/kVx7kV6Kq9GwCcKWIwTqrCOV6X
-	IADYN8ssFpoCF7k+FZIuRaKsNHU/DzkoXDBVxdLhv/6fth7Xt7QgyHSU6VjmeLfhWhc=
-X-Gm-Gg: ASbGnctU/7/OcDb+tQUzGUED791mO7bGaJZi/I5aGxl0CsXep3Dhs4nSCPuCMZ+7qlN
-	rm7PuxXvzlw2QYyZNPuUe4nuKoP4WfhanlEbBGOc1Q8ubUAbFyWvfLjT5YFAWOl+FB/ddT3TzYK
-	x+xhbdHWePqlzV/CRm4uD0IlShhwBwQIkdwyHMy47Qg1EQ8Sd5CgpFPj2zy/X0q7aWdYorw027I
-	i5TKr5sXGFpUuaESeNv0diurzNJuSfq5r6jU4uc/jFLgZv6nmUneA6TNr9/L81nIX8k3e2+8es5
-	iszFJYxjzBq+s2swSG1ENQnKHtCMMpQFChqu0ks=
-X-Google-Smtp-Source: AGHT+IH1qVc7QxmWdlIwYswNWc2JM2wrCY/fhXTQ9RO7aSAjTmjiWe3//9USHzfv3DqUERGinpMtXg==
-X-Received: by 2002:a05:6000:26c8:b0:3a4:ef70:e0e1 with SMTP id ffacd0b85a97d-3a4ef70e20dmr1890290f8f.55.1748522586703;
-        Thu, 29 May 2025 05:43:06 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::ce80])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe7415asm1948902f8f.57.2025.05.29.05.43.05
+        d=1e100.net; s=20230601; t=1748522650; x=1749127450;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xy9+1WxqxPkcvDSbf/PL1XyrGbcJDd9HZLFKhqLgSaA=;
+        b=QIp/RdDb44BawYm05cqNgBBbc6L4Sc/NBn+e7QnmhXv3l2V1v4ASjgKxvuyP2WkpTY
+         YfRwvte9D4xVJBXZ+bKWMxh2z4JxNnmlqwf9exgYzzABh0P3rC58acu6aI0HgSEeEIVd
+         rBIVuwAOQpg7UEN7xE20oR2X1FPmfXJJysQAR+UGCK4msYsyBhw5iXltkE3mTFhe4Y02
+         04WOglgNqcxpIpnZWPEQdQOcH1/eF5IAXKUh6fQjERYUjhKK77fkY7IUxGzJxlTNMRva
+         uQr4JDVc5eEn0f6wEC07+P4oJpXVsK5/EvGoEeCV1vmrDZds+X72Y5Wjiprvj6yTz1ZP
+         dZLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVt3uOowbVtDj2gQu63t8i7SizPWk8QgD4Gy0MPeLs6tHT9Z8w/nPpb/fl/mcEbo+SXk4lxvSrY@vger.kernel.org, AJvYcCWPJxLD249a6MAf8j3AhkSUL+Tl0U01HNFen/+ho/0aoyTiwv265zlYEi49CMY4PL5ftJLOCiZt/PJ0VXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1MqwaJcM9BbIwRZ8DVkP81IUXv/AfVdQfsG2AJ33cpNs5Njcp
+	10e12/Opy000+7LzVuFVZ0kEZrADu9/8fkxuqG85QqJ37XCTOz0xGrh6
+X-Gm-Gg: ASbGncv2O30L3mClnxYsJFOvdHsAdKTisJ8SIhq9dNMwvzljvx171FJnFKoyt/8ccVB
+	5dSuK4N29uGiq0eUQvsv7FGA+QzxTkbfXEETpA0YoSu+gd1G9nOkDP9UOyeu/6qzzDVq+uvk54l
+	GCOG4P+ttU4WBXLLICh6I6td6E4NTpCO4C7rpek/s7NIl2kglnqCR/i+TjO2dniwK8jaYqVRj2z
+	Djk58nmvhpZp3lSLCNAQpQuzoU63OdwECHIMZGr22v0I9k8XXdOjd2A0Da+ZOLJTA2IGEBHs74+
+	v0loO91Y5B2lRewJISPj6XuO48PhSdk/DSWnuaVjTZCgK3vCqEhreqK4xQL+xltYV0eXeFOPUKF
+	9Rk6rKcjCC3CsyAn4DY8QqeQ+d6yNpZwSzWRCeAiIgQ/CJiRMn7/W
+X-Google-Smtp-Source: AGHT+IFm45df0BWkQmTyGVJH2ytFPDLC0UF5D4hMKR1QOL/2DurqQM0+1Q3vJcgPQRfZYQwJ3uQOng==
+X-Received: by 2002:a05:600c:6216:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-44c955dbdddmr159836115e9.20.1748522649482;
+        Thu, 29 May 2025 05:44:09 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-1200-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1200::8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcbe5c4edsm55146915e9.2.2025.05.29.05.44.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 05:43:06 -0700 (PDT)
-Date: Thu, 29 May 2025 14:43:05 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>, Deepak Gupta <debug@rivosinc.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>
-Subject: Re: [PATCH v8 08/14] riscv: misaligned: declare
- misaligned_access_speed under CONFIG_RISCV_MISALIGNED
-Message-ID: <20250529-84d9bececfab561dfc68b723@orel>
-References: <20250523101932.1594077-1-cleger@rivosinc.com>
- <20250523101932.1594077-9-cleger@rivosinc.com>
+        Thu, 29 May 2025 05:44:08 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: florian.fainelli@broadcom.com,
+	jonas.gorski@gmail.com,
+	dgcbueu@gmail.com,
+	andrew@lunn.ch,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH] net: dsa: tag_brcm: legacy: fix pskb_may_pull length
+Date: Thu, 29 May 2025 14:44:06 +0200
+Message-Id: <20250529124406.2513779-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250523101932.1594077-9-cleger@rivosinc.com>
 
-On Fri, May 23, 2025 at 12:19:25PM +0200, ClÈment LÈger wrote:
-> While misaligned_access_speed was defined in a file compile with
-> CONFIG_RISCV_MISALIGNED, its definition was under
-> CONFIG_RISCV_SCALAR_MISALIGNED. This resulted in compilation problems
-> when using it in a file compiled with CONFIG_RISCV_MISALIGNED.
-> 
-> Move the declaration under CONFIG_RISCV_MISALIGNED so that it can be
-> used unconditionnally when compiled with that config and remove the check
-> for that variable in traps_misaligned.c.
-> 
-> Signed-off-by: ClÈment LÈger <cleger@rivosinc.com>
-> ---
->  arch/riscv/include/asm/cpufeature.h  | 5 ++++-
->  arch/riscv/kernel/traps_misaligned.c | 2 --
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-> index dbe5970d4fe6..2bfa4ef383ed 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -72,7 +72,6 @@ int cpu_online_unaligned_access_init(unsigned int cpu);
->  #if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
->  void unaligned_emulation_finish(void);
->  bool unaligned_ctl_available(void);
-> -DECLARE_PER_CPU(long, misaligned_access_speed);
->  #else
->  static inline bool unaligned_ctl_available(void)
->  {
-> @@ -80,6 +79,10 @@ static inline bool unaligned_ctl_available(void)
->  }
->  #endif
->  
-> +#if defined(CONFIG_RISCV_MISALIGNED)
-> +DECLARE_PER_CPU(long, misaligned_access_speed);
-> +#endif
-> +
->  bool __init check_vector_unaligned_access_emulated_all_cpus(void);
->  #if defined(CONFIG_RISCV_VECTOR_MISALIGNED)
->  void check_vector_unaligned_access_emulated(struct work_struct *work __always_unused);
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-> index 34b4a4e9dfca..f1b2af515592 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -369,9 +369,7 @@ static int handle_scalar_misaligned_load(struct pt_regs *regs)
->  
->  	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
->  
-> -#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
->  	*this_cpu_ptr(&misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED;
-> -#endif
->  
->  	if (!unaligned_enabled)
->  		return -1;
-> -- 
-> 2.49.0
->
+BRCM_LEG_PORT_ID was incorrectly used for pskb_may_pull length.
+The correct check is BRCM_LEG_TAG_LEN + VLAN_HLEN, or 10 bytes.
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Fixes: 964dbf186eaa ("net: dsa: tag_brcm: add support for legacy tags")
+Signed-off-by: √Ålvaro Fern√°ndez Rojas <noltari@gmail.com>
+---
+ net/dsa/tag_brcm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/dsa/tag_brcm.c b/net/dsa/tag_brcm.c
+index 8c3c068728e5..fe75821623a4 100644
+--- a/net/dsa/tag_brcm.c
++++ b/net/dsa/tag_brcm.c
+@@ -257,7 +257,7 @@ static struct sk_buff *brcm_leg_tag_rcv(struct sk_buff *skb,
+ 	int source_port;
+ 	u8 *brcm_tag;
+ 
+-	if (unlikely(!pskb_may_pull(skb, BRCM_LEG_PORT_ID)))
++	if (unlikely(!pskb_may_pull(skb, BRCM_LEG_TAG_LEN + VLAN_HLEN)))
+ 		return NULL;
+ 
+ 	brcm_tag = dsa_etype_header_pos_rx(skb);
+-- 
+2.39.5
+
