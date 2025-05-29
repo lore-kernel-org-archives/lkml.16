@@ -1,216 +1,179 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05354A06;
-	Thu, 29 May 2025 18:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.156.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748543314; cv=fail; b=QWSCT79AVPfpyK+T8QhjwGXgAZ0y+ycnlweP7AikYv0pLFW5vCmUoYCbW2z0Dc4kk5m+Z1bNX/D+z2H2XRsgGny2nGZRDyb+6myUj84i3oQPnBw8WDIuGO60b1Suo+lJsPS6ALG/hxk45ZytysiqoNH+kgMWfwUyl0hrai5N6lY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748543314; c=relaxed/simple;
-	bh=sZl2CBaz8QXibA5IUx99kmotdoK+WX5+z9hxHj2dLDc=;
-	h=From:To:CC:Date:Message-ID:References:In-Reply-To:Content-Type:
-	 MIME-Version:Subject; b=qbLsAPkeNnbaFkAfH0+U6uapD3iDIFL0p5VJj8i7krPfg2rZAHuL9YxnHh5SzWTkiRmEeze8o/xreM6N505D/7pwTXNWJvV6wE5Q6MqCDf5Xfx9Pt6GXDQDeW+Sr47BEveYf72RJw9blQmg7rCIBX0fXxj7G6+l7EgfKQnM04sw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com; spf=pass smtp.mailfrom=ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=P+BriQaD; arc=fail smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="P+BriQaD"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TDZReh012304;
-	Thu, 29 May 2025 18:28:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-id:content-transfer-encoding:content-type:date:from
-	:in-reply-to:message-id:mime-version:references:subject:to; s=
-	pp1; bh=sZl2CBaz8QXibA5IUx99kmotdoK+WX5+z9hxHj2dLDc=; b=P+BriQaD
-	Wy97IhdGKrFqHH6Gr4BmHfRGz8c4XxscfGyLUbGkwiDUTNEAX9zfTOl9l2zf7x+O
-	o+7LRYB1u+1AW/6fhRafDjdVEXgnsVNY7jnUswMxfe9B0JEMTewDX5WyS7ZeNMxa
-	GJaCKm0E15k/jAv/qMfjxKb7OGfQW9w7KXtFjXZ9486S9Jr+i+gcUUfA+pOBXz5U
-	EavPDZYr4Wgd21yMr7Ntihj0dnqzt3zPUiVghNmx/9SyQksDKMg6qY6ixpLl5/Lh
-	AVipK1VCA0Q3KwW9Q9VnA7zkA9FYfToKpDGbqIIfxcYB6HlsxVILB/d/S5avhx0G
-	Af/h38a20xUGlQ==
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40kfa06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 18:28:25 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UvmjmKAjOAm+vOgS1PoPS3WOTEeHuD3B2FwLll8aqQnbVRr6gn8xpcCk1ipoG2Pj4Kh9OEFFdTl+Tq3m8cXskcKEevXhe0qdsLz2aj37lnbcXdbYLaz20/qiQEueiIQ6kOiu1P4qoK34Wxp54N2baEZfH2IF//vvW0Zi5fxiOg6tQbdQ5Ksl60nNnpVHxG3Zy8QB1nGPgN0wNdXVN2AxjARHViy5+LsDuQBwaJ1tLFugbvKAlN5a0laAlgrUo4gnO0233p9TBJbixirw6ki6IIaBK/clM2JBpygeMVVNpzuPM5/M3vSs6qzY/yyyyUFvWKpEieAEU1mOW7lXqSm2kg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sZl2CBaz8QXibA5IUx99kmotdoK+WX5+z9hxHj2dLDc=;
- b=av11lJh0XxG/u0tGteBMz9ry2dryKJAbnq8xXGE1jU6keMGBAN7/IIKPr1ENhyTIjpjH8KZV9i9lMQIim4fZvisgo17FfoK1vspnan58F33Hzkn16x2dPO9SMDh7eph2+pR47G9hLB+tRJKbvdUYg/rnZBrdGr96WyoHsOeQ+Uc2q3RmbRYdjbg0XCkr1m18l5ZGM0ULNTMKJYVDQQHmmkm5Mz3C6yT/5+sc5lECQSOgdX+YQbS+kcssdgWYuIjSZB701MFG7pu2etOre031ddrRf3K429G2YYUoNAX+tHoFv5R0fYBi/vegx4Taw3zz1G7IkV0sQQ1bjs3qkqh7nA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ibm.com; dmarc=pass action=none header.from=ibm.com; dkim=pass
- header.d=ibm.com; arc=none
-Received: from SA1PR15MB5819.namprd15.prod.outlook.com (2603:10b6:806:338::8)
- by PH0PR15MB5712.namprd15.prod.outlook.com (2603:10b6:510:28c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Thu, 29 May
- 2025 18:28:19 +0000
-Received: from SA1PR15MB5819.namprd15.prod.outlook.com
- ([fe80::6fd6:67be:7178:d89b]) by SA1PR15MB5819.namprd15.prod.outlook.com
- ([fe80::6fd6:67be:7178:d89b%6]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 18:28:19 +0000
-From: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-To: "frank.li@vivo.com" <frank.li@vivo.com>,
-        "glaubitz@physik.fu-berlin.de"
-	<glaubitz@physik.fu-berlin.de>,
-        "slava@dubeyko.com" <slava@dubeyko.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "kees@kernel.org"
-	<kees@kernel.org>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Thread-Topic: [EXTERNAL] [PATCH 2/2] hfs: make splice write available again
-Thread-Index: AQHb0J8/5h6eX6Yw9EGZv/fjr+tfvrPp7aiA
-Date: Thu, 29 May 2025 18:28:19 +0000
-Message-ID: <604cca238cdecbbe3dee499b8363f31ddd9e63bc.camel@ibm.com>
-References: <20250529140033.2296791-1-frank.li@vivo.com>
-	 <20250529140033.2296791-2-frank.li@vivo.com>
-In-Reply-To: <20250529140033.2296791-2-frank.li@vivo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR15MB5819:EE_|PH0PR15MB5712:EE_
-x-ms-office365-filtering-correlation-id: 00d38a70-9c36-4531-0ef8-08dd9ede9658
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?c2FzOFg4NGlJT0VNL0trNjl4dnNJeW9yemhqcVZJYUhrdTVObUxkd3lyREFv?=
- =?utf-8?B?M2J1OU0ralFCUW5BVWZRZVlGSzNDSm51UisrbWZxZy9BbHNSMzBaWjRhcm5a?=
- =?utf-8?B?VE9GSFZoaFlCWk9MTy9nOEc1cmFiNXAxclRnRnJ5eGdsNTA0cU5YS1FnOHpS?=
- =?utf-8?B?dXpPMWVBQjh3TUJLUXE0dk5BaVpFcktMTGs3NXVWbnlRd1QyMXJ3SlFkY3la?=
- =?utf-8?B?R3FZNlgxZE42TXBjb3ViajFreXdsL29wQjdybThzMzl4U0ZadFdva3M0cng4?=
- =?utf-8?B?VHhvRE8xcVVlYWhMN1FCVTU0Qkg4MjZnazJ2Z3NHVDRTY3lCZENycUd3dFF3?=
- =?utf-8?B?d2x3N3RDQTZaZW5pdTVpQzZUbm5UMVgrQStLbkdUcXVTVkdNREdmTkhQazBH?=
- =?utf-8?B?L2JVeEdRVDNiLzA5aUN1WjE5SjBjQk0zSjFzNDNJUktFOXZYc0U1R1NvZlBI?=
- =?utf-8?B?ZzIxSzg4VHpHREVJeDkxRjNPajZuTElkNUZLVlVXMWZJWG9qMUsxNUd1YnQ0?=
- =?utf-8?B?K1FjRFd5UmxGakxTUHRvbTVyb2FIVkg1T1NvdnBhL0FVK3JVM04vVnBkUXVk?=
- =?utf-8?B?R1ZnYnowZlFvMzV1L0QrdFMwUVNJc0oxR3hXQmx6TE1nS2wwdVlhbi9wK2Rk?=
- =?utf-8?B?SGlvSDNpWElHT1Y3ZVp1TFZqNXQwbStiV0thUWpydStDNGEwU25DOGpnUjVX?=
- =?utf-8?B?OHptWk5XQzJmK1JLZjJ3WnhJM0hBSmo0WHVHQmxFeExpUTVWa3k3Rlp2MjJZ?=
- =?utf-8?B?emVGTFQ2S0tJWHFzWHp5cVFEMElWWDZGM1NRWWh2ckNtMWJQKzhyVUsxRFZt?=
- =?utf-8?B?Uno1TlRSbEhOWlJZMnZkaXlGaUY5aDZ0MjExa0RaS01Fd2Z0UVJpamQ4SG5v?=
- =?utf-8?B?aWlqZXFQd3dsZXB0VVU5V3RzMG9MYVVnWWZRNUxSL0xyMHVXOG16RmNTUTl6?=
- =?utf-8?B?UzFEbldMcmFPOStmRmtnMGh2QmlKMkFQZVlYWW1mdWpxbElORFhaSzBnVFd2?=
- =?utf-8?B?eXlUOGltUFVTcVEyRGdOSlNtQTdLOVhTbzVXNVh3ZjNsb3U3aHcxMDBqQ0Z6?=
- =?utf-8?B?MERHN0xDVE9UUnRUQmJFSmlacHNiOHFhYXRpaFFNR2FLTG5oVW9IdmFvTUJI?=
- =?utf-8?B?OElFTUlHdlV1dDJZc0xiWTREbGhHUnFNZmhsem1TM3NKYWsrcjZmTllQTEor?=
- =?utf-8?B?L0lSRURvL2YxanhMYk1CMlhtVVk2WFRlZUJTWHllZzZjempuS1hqM3poVXk4?=
- =?utf-8?B?azMrU1FLajI0VWRFZ1hzamFDaWE2d2NFb2pibnlIRU0rTUZYd0lXNm50Tm9s?=
- =?utf-8?B?RzBoWjVMcHNlSElrMnNYeFh4bldHL3RRZFJlN3V2dy94cnByOWVyemdXZDR6?=
- =?utf-8?B?bTQ0dGFIWnZJZXNuaFdZakJUbExnMWNRTEh1Z0poSUxRZUVrODNuenoyWSta?=
- =?utf-8?B?MXAvWUNSQ096T2tOWG1tZ1RjUjNMV2NhREZTQXFETGF5Vmt1alNQeVdhY2ZN?=
- =?utf-8?B?M21HZUJBU1E5NzJSL2VPczIrRnVvY1g4VHc3NzN1Z05ER2ZBd3c4bDV2c01K?=
- =?utf-8?B?RFV1aVMxVk1qNG9xRjVBMXljaUNKRGJLak5oeis0QWpod1RSYng1M2xGZmVy?=
- =?utf-8?B?eVU3UXZoSm9uOXlraTNjMTNRYysyMEtERWdwK3FaN1NMaksxMVIzS0pOZ0Uv?=
- =?utf-8?B?UVphc2lZdzYxUlZVZGZqOWdnazNRYjN2WmhFN1F5bXI4UlIzaDJFQ2hpak5W?=
- =?utf-8?B?VjFMb0RTTzVCTjJ3UTdqZlJ5bUJtL3VLY3JaOU9hM3R1dEZZTTd2aXdEWTRH?=
- =?utf-8?B?M1ZDSUtUNGpJOG0yY3FjSU83K3FsT0tneUJraEVpT1ZZMllwcys3Q01hVFVm?=
- =?utf-8?B?bG9sQjNQdjlkYTBtVjlrRytpeFFoUDdJWi9EYThRVmtxQUxmVWJxTmQzWmVE?=
- =?utf-8?B?eWtnZWFsRFBoSVpLTm5xay85RmZmbS9ybVh5YWgyTUhCM0cxM3JtZVdhYzBZ?=
- =?utf-8?B?bGE3RlB6bWN3PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR15MB5819.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SW9nSTd1WDRuMjRxMjY2aksxS3pzN1RyRXltT2NKK3FqWE5OOCsvZ3k4TkMx?=
- =?utf-8?B?ZlMwVnFrc1VwdEJxdlVjb2lCUWNITDVyanZqNUlaMUgzaEJ3VFk4b1BNVG5T?=
- =?utf-8?B?MHBCYkNVOHA2dzc3MWZPQW5QZGVMdFRQNW9yQi83TVh3cjhtUkc5aVpQMG5a?=
- =?utf-8?B?WDN5cUFoTjYwWDNJRFBkenVKZk44Qnc4YWpsKzltVU90MXUrUFFJQWtUSGNW?=
- =?utf-8?B?bEFsYUxQUlhWSFlJTmZ4UTVCV3RmRkxWZU0waTVjTUxPZmpNRFAyM1VvZ3B4?=
- =?utf-8?B?cHBlL1hxK2xLV2NnMm1FTS93SEdYR1Z4ODVhUUd0L1hSbzgrdlFSaEpBc0FB?=
- =?utf-8?B?T3EvK0x0UzNScG9DZmoya0U2OTFlcnowTGRDWmZ6SHlOL0haNGorcHp1NnZO?=
- =?utf-8?B?UjhRVEZpMitVNnNEanR5V3VTVGhvTDJaeHUxZUFYckRFL1IvVnVicFd3aE05?=
- =?utf-8?B?QnhnSG9xYWxuVHQ2TzFaenNMU2F3Uzh1OG1vbjhEU2pjc0kxMDdBdzVjR3kz?=
- =?utf-8?B?eENnbjR5ejcyN1RTbFpPeDVOdmxQNnl4WStwSlR3eHZncGNiVDdGM3pJL3VB?=
- =?utf-8?B?b0E0Nnd3MWFEMWZLZGZQZEFoaTVXS0tSOVl5UWkrN1NURndWSDJCcnFxbXpF?=
- =?utf-8?B?T1BmRUV0SThuSVJ0YjZEd0pUdG8rakNqTGRNWXJhaXBDc294K21DZmNrUkxp?=
- =?utf-8?B?cXJQbTd5dnhiL1Q1dTFpTmZSRUNJZU9WSFd6Z05VbTlZNmN1empvZkI0SlFt?=
- =?utf-8?B?SDhUMDlFcUxNWW1xMkY1MS9rY1J3aCtvWTJvN2lhNTJUcENqM1puRVJGVDlD?=
- =?utf-8?B?RzU1L1oyK0ZZQWw2N2M2MVNnNWxnTDdGaDJ3M1hEVnZCeFdIRTZiRXB4bmJK?=
- =?utf-8?B?aTlDeldMWG9nSTdmSzZsM1pxUFRaWmgrYWhJZ2RSYTdKNVd0K0I0YWt3QVV4?=
- =?utf-8?B?aTF1c3FiZS96VUZRdWZRZEk1RnZVZVhNSEJDNkV0M3k0SEJnNi9SQTcwRUFs?=
- =?utf-8?B?aFVBNXl5NGZKQkkxbTh4R2VybzA1NU9wOGZRQXJyNDloZGhHZ0VuVnRkV1VW?=
- =?utf-8?B?VlNFWmNmaTRiVHYvcGxzNi9VODNIUWNUMjJRME1KWjBndTJEdytKN1BNdVh1?=
- =?utf-8?B?YU11SEQzTFplYzB3dmdNREdmMUNDNGsyQUltbW9TUnZQR3VvUzM1STY1clI0?=
- =?utf-8?B?UG5Nb2N5MTZLWVNpdEU5aFU1Y0V1RU5JWnl4N3Fsdm9NM1d1akZ1RVN2NXpB?=
- =?utf-8?B?T3dLenFLNWdmTEpXODFUaDI5ck1vM0d4OWJoS2twZ0VLZjJCakdRbFJlNCtD?=
- =?utf-8?B?MHB1eHlSL296MWtjL0NJMjJ2TUZ5cTBtZGF2RFp2ekZDNHBSZXE0bE45bEwy?=
- =?utf-8?B?dVd2N1MwZXhubEFoT2E0SEgxTGZUT0ZJdkVEYmJWa0l3cWRyRWh1b016Qlpi?=
- =?utf-8?B?M3dVK3BmUHlBVmRKNkVQSUVWajJhSGx6QTNjc1pvcWVVQ3p4MG5vUkJxZ0Qv?=
- =?utf-8?B?RWdDUk84cm16dE1TbTZqUFJYMS9ZTkNicENjWmVaZTg5UFpDMCtQTEFuUnJn?=
- =?utf-8?B?UE9Oc0I4SEo2eTg0M281NWN0aU9NTGxGd29RM1VEOWtXOG5RcFduVTJKUHA0?=
- =?utf-8?B?R0pCYUxsN2xmNTYwMyt3dHI1VmpEaC9xREdEUzA3enloVy8yQU5Rbi8xM0tN?=
- =?utf-8?B?MEIwUVNRSlkzSHpVSUMvVFFNUGVoZmo3OG5aNVRmSzllM2I1NEROWUpydnJH?=
- =?utf-8?B?RU51YkZMVXNNTndscGYxZzhreGxMMUdMSlRqeUpoWVpDUHJhZkV5b2tKS0Fr?=
- =?utf-8?B?VGNhVmdzdnJJNjZLdUtzR0owM1ZqT2VQMDJGWmhERzZUdFZSQVNHekN0S2RD?=
- =?utf-8?B?SkpxZ2p1Y3JWaWZvTEdRQkZ1QkpoZ2hQbHZsRUt0OE1Qck5Tanp5cHdZZGZa?=
- =?utf-8?B?MmF0S2xTejFPRWZlUVpheHArTjM5ZGFKaXJVa2lWRGIyTGUwbmhmL2o0NkNi?=
- =?utf-8?B?ZEpON3FTTjZTd2tuN2hmR0Jxa2pRb0xkeWpsOWlOYytuVUFDWVE5WUFwSFEz?=
- =?utf-8?B?d244MHdPWC9YNytVUTluWm9TempocXYwclE5N1hvZkF3Qy9kaHNvU1lYV1hY?=
- =?utf-8?B?Zlkvbm1vcXFxQ1M3VktMWStuM2xqY2d1bDNIa2ZEa1FBT0JvMEZRQlV2N3ZI?=
- =?utf-8?Q?DjrBzNS/hXDo7+6qxplCUcY=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D4826A5C9700FB42A77C25809DA4D867@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C3934C9D
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748543446; cv=none; b=mHuX/+IpmWJBcg+5mh1kyvu2ehSh1lBXTwi52vWyat5mnrGKxpnYSHtEX1VVq6AMqRgnW3z2ozotouhaJObUTn2N5rSiA+bcrGqXyeetpWmQ8RdcCaDFoRbKLTlGb7jSS/R8ddI6foVihPLO00kgOScfGOEkGHifd6lJuD/btQ0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748543446; c=relaxed/simple;
+	bh=viWFs6iNNlHq9j8bu2VTqrFsdLcVz4eNaCVzp3N2EyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i0cR/PwRjItLHD8/Z8JBZjLc8xRpqUx1nVidRN7sMc2HKRCBzIXKMpAnB0uLqhDn3mKjPa2F5RuCe06V2ciif42/jAWBphJJRZtPAU06St9S7F+D+nLNvs+ftC+4LoydAl07oPRU2EFs8GoD1NvYMTZ0vhdgGfzVMR1kaX7zU18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 051121764;
+	Thu, 29 May 2025 11:30:27 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17E8F3F673;
+	Thu, 29 May 2025 11:30:41 -0700 (PDT)
+Message-ID: <d1226612-7ad8-4405-93a7-28148699ce45@arm.com>
+Date: Thu, 29 May 2025 19:30:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: ibm.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR15MB5819.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d38a70-9c36-4531-0ef8-08dd9ede9658
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 May 2025 18:28:19.8499
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fcf67057-50c9-4ad4-98f3-ffca64add9e9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xzkHOyvXkK5Cs+ho42vl8VvKjym44m2t6dROPU72EB+DpQYo6ZR4lD7I2GUyW9RwhkCFaWl8IiRgNOpycqJnFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR15MB5712
-X-Proofpoint-ORIG-GUID: iJDmhIr7StlVpZCBgketdrUw_FBabOpK
-X-Authority-Analysis: v=2.4 cv=fuPcZE4f c=1 sm=1 tr=0 ts=6838a749 cx=c_pps p=wCmvBT1CAAAA:8 a=0de+TxTBwdPc9w0nPmKirg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=1WtWmnkvAAAA:8 a=SYwEjaAwvO_-fa4-q80A:9 a=QEXdDO2ut3YA:10 a=6z96SAwNL0f8klobD5od:22
-X-Proofpoint-GUID: iJDmhIr7StlVpZCBgketdrUw_FBabOpK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDE3NSBTYWx0ZWRfXysb73XAmM8xW bSUxHVYcMyZGkXeMDYmfXNRihZh0WrauvIAF2Vn56YGgQPXtmYEJTJA2/4+AA1A7bpBCAYA+NgF occXQRJ0uD23uxjBwq0XMWfn5rPD4EySZp2dB5z7IMeFg+Gr5jjThDVWfWDDpLhD73EO9Peie7L
- NiWVk14qwX/Te8tFPF4bo89pjuHd0WQGG36gRzPtkgFJkF8SBjYw+13sDcCj0AZB/8F2W5hvPBp pbnvJg2odstpagEvWIrG9ojKaBAOHcoW00e9aEW2WrfqzDOPT4HdTj22axjNFjmAT9eSdNogklT rpyXUFd33Ut+6fRRaa1xkFVXzryghU3AHeAJpRo2iFN3n/0+Ap7jsH/H1ffgfPeDXkDvFockmNT
- EthXMw6u1+XnqDDrxTa2414DngrVUV0pNoHNPwhmRiiPGXLbllKGOnf5AMM9mFGwtNm1m962
-Subject: Re:  [PATCH 2/2] hfs: make splice write available again
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_08,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- mlxlogscore=964 priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam authscore=99 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290175
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
+ mapping when rodata=full
+Content-Language: en-GB
+To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Dev Jain <dev.jain@arm.com>
+References: <20250304222018.615808-1-yang@os.amperecomputing.com>
+ <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
+ <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
+ <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
+ <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
+ <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
+ <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
+ <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
+ <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
+ <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
+ <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
+ <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
+ <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
+ <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
+ <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
+ <936cc91a-b345-4e52-9cb5-922c9810c469@arm.com>
+ <a1ff2646-f429-4626-8541-19c7f301fc23@os.amperecomputing.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <a1ff2646-f429-4626-8541-19c7f301fc23@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-T24gVGh1LCAyMDI1LTA1LTI5IGF0IDA4OjAwIC0wNjAwLCBZYW5ndGFvIExpIHdyb3RlOg0KPiBT
-aW5jZSA1LjEwLCBzcGxpY2UoKSBvciBzZW5kZmlsZSgpIHJldHVybiBFSU5WQUwuIFRoaXMgd2Fz
-DQo+IGNhdXNlZCBieSBjb21taXQgMzZlMmM3NDIxZjAyICgiZnM6IGRvbid0IGFsbG93IHNwbGlj
-ZSByZWFkL3dyaXRlDQo+IHdpdGhvdXQgZXhwbGljaXQgb3BzIikuDQo+IA0KPiBUaGlzIHBhdGNo
-IGluaXRpYWxpemVzIHRoZSBzcGxpY2Vfd3JpdGUgZmllbGQgaW4gZmlsZV9vcGVyYXRpb25zLCBs
-aWtlDQo+IG1vc3QgZmlsZSBzeXN0ZW1zIGRvLCB0byByZXN0b3JlIHRoZSBmdW5jdGlvbmFsaXR5
-Lg0KPiANCj4gRml4ZXM6IDM2ZTJjNzQyMWYwMiAoImZzOiBkb24ndCBhbGxvdyBzcGxpY2UgcmVh
-ZC93cml0ZSB3aXRob3V0IGV4cGxpY2l0IG9wcyIpDQo+IFNpZ25lZC1vZmYtYnk6IFlhbmd0YW8g
-TGkgPGZyYW5rLmxpQHZpdm8uY29tPg0KPiAtLS0NCj4gIGZzL2hmcy9pbm9kZS5jIHwgMSArDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9mcy9o
-ZnMvaW5vZGUuYyBiL2ZzL2hmcy9pbm9kZS5jDQo+IGluZGV4IGE4MWNlN2E3NDBiOS4uNDUxMTE1
-MzYwZjczIDEwMDY0NA0KPiAtLS0gYS9mcy9oZnMvaW5vZGUuYw0KPiArKysgYi9mcy9oZnMvaW5v
-ZGUuYw0KPiBAQCAtNjkyLDYgKzY5Miw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZmlsZV9vcGVy
-YXRpb25zIGhmc19maWxlX29wZXJhdGlvbnMgPSB7DQo+ICAJLndyaXRlX2l0ZXIJPSBnZW5lcmlj
-X2ZpbGVfd3JpdGVfaXRlciwNCj4gIAkubW1hcAkJPSBnZW5lcmljX2ZpbGVfbW1hcCwNCj4gIAku
-c3BsaWNlX3JlYWQJPSBmaWxlbWFwX3NwbGljZV9yZWFkLA0KPiArCS5zcGxpY2Vfd3JpdGUJPSBp
-dGVyX2ZpbGVfc3BsaWNlX3dyaXRlLA0KPiAgCS5mc3luYwkJPSBoZnNfZmlsZV9mc3luYywNCj4g
-IAkub3BlbgkJPSBoZnNfZmlsZV9vcGVuLA0KPiAgCS5yZWxlYXNlCT0gaGZzX2ZpbGVfcmVsZWFz
-ZSwNCg0KTWFrZXMgc2Vuc2UuDQoNClJldmlld2VkLWJ5OiBWaWFjaGVzbGF2IER1YmV5a28gPHNs
-YXZhQGR1YmV5a28uY29tPg0KDQpUaGFua3MsDQpTbGF2YS4NCg==
+On 29/05/2025 18:35, Yang Shi wrote:
+> 
+> 
+> On 5/29/25 8:33 AM, Ryan Roberts wrote:
+>> On 29/05/2025 09:48, Ryan Roberts wrote:
+>>
+>> [...]
+>>
+>>>>>> Regarding the linear map repainting, I had a chat with Catalin, and he
+>>>>>> reminded
+>>>>>> me of a potential problem; if you are doing the repainting with the machine
+>>>>>> stopped, you can't allocate memory at that point; it's possible a CPU was
+>>>>>> inside
+>>>>>> the allocator when it stopped. And I think you need to allocate intermediate
+>>>>>> pgtables, right? Do you have a solution to that problem? I guess one approach
+>>>>>> would be to figure out how much memory you will need and pre-allocate
+>>>>>> prior to
+>>>>>> stoping the machine?
+>>>>> OK, I don't remember we discussed this problem before. I think we can do
+>>>>> something like what kpti does. When creating the linear map we know how many
+>>>>> PUD and PMD mappings are created, we can record the number, it will tell how
+>>>>> many pages we need for repainting the linear map.
+>>>> Looking the kpti code further, it looks like kpti also allocates memory with
+>>>> the
+>>>> machine stopped, but it calls memory allocation on cpu 0 only.
+>>> Oh yes, I hadn't spotted that. It looks like a special case that may be ok for
+>>> kpti though; it's allocating a fairly small amount of memory (max levels=5 so
+>>> max order=3) and it's doing it with GFP_ATOMIC. So if my understanding of the
+>>> page allocator is correct, then this should be allocated from a per-cpu reserve?
+>>> Which means that it never needs to take a lock that other, stopped CPUs could be
+>>> holding. And GFP_ATOMIC guarrantees that the thread will never sleep, which I
+>>> think is not allowed while the machine is stopped.
+> 
+> The pcp should be set up by then, but I don't think it is actually populated
+> until the first allocation happens IIRC.
+> 
+>>>
+>>>> IIUC this
+>>>> guarantees the code will not be called on a CPU which was inside the allocator
+>>>> when it stopped because CPU 0 is running stop_machine().
+>>> My concern was a bit more general; if any other CPU was inside the allocator
+>>> holding a lock when the machine was stopped, then if CPU 0 comes along and makes
+>>> a call to the allocator that requires the lock, then we have a deadlock.
+>>>
+>>> All that said, looking at the stop_machine() docs, it says:
+>>>
+>>>   * Description: This causes a thread to be scheduled on every cpu,
+>>>   * each of which disables interrupts.  The result is that no one is
+>>>   * holding a spinlock or inside any other preempt-disabled region when
+>>>   * @fn() runs.
+>>>
+>>> So I think my deadlock concern was unfounded. I think as long as you can
+>>> garrantee that fn() won't try to sleep then you should be safe? So I guess
+>>> allocating from within fn() should be safe as long as you use GFP_ATOMIC?
+> 
+> Yes, the deadlock should be not a concern.
+> 
+> The other comment also said:
+> 
+>  * On each target cpu, @fn is run in a process context with the highest priority
+>  * preempting any task on the cpu and monopolizing it.
+> 
+> Since the fn is running in a process context, so sleep should be ok? Sleep
+> should just can happen when allocation requires memory reclaim due to
+> insufficient memory for kpti and repainting linear map usecases. But I do agree
+> GFP_ATOMIC is safer.
+
+Interrupts are disabled so I can't imagine sleeping is a good idea...
+
+> 
+>> I just had another conversation about this internally, and there is another
+>> concern; we obviously don't want to modify the pgtables while other CPUs that
+>> don't support BBML2 could be accessing them. Even in stop_machine() this may be
+>> possible if the CPU stacks and task structure (for example) are allocated out of
+>> the linear map.
+>>
+>> So we need to be careful to follow the pattern used by kpti; all secondary CPUs
+>> need to switch to the idmap (which is installed in TTBR0) then install the
+>> reserved map in TTBR1, then wait for CPU 0 to repaint the linear map, then have
+>> the secondary CPUs switch TTBR1 back to swapper then switch back out of idmap.
+> 
+> So the below code should be ok?
+> 
+> cpu_install_idmap()
+> Busy loop to wait for cpu 0 done
+> cpu_uninstall_idmap()
+
+Once you have installed the idmap, you'll need to call a function by its PA so
+you are actually executing out of the idmap. And you will need to be in assembly
+so you don't need the stack, and you'll need to switch TTBR1 to the reserved
+pgtable, so that the CPU has no access to the swapper pgtable (which CPU 0 is
+able to modify).
+
+You may well be able to reuse __idmap_kpti_secondary in proc.S, or lightly
+refactor it to work for both the existing idmap_kpti_install_ng_mappings case,
+and your case.
+
+Thanks,
+Ryan
+
+> 
+>>
+>> Given CPU 0 supports BBML2, I think it can just update the linear map live,
+>> without needing to do the idmap dance?
+> 
+> Yes, I think so too.
+> 
+> Thanks,
+> Yang
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>
+>>> Thanks,
+>>> Ryan
+>>>
+> 
+
