@@ -1,331 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2053.outbound.protection.outlook.com [40.107.220.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC695293479
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748553911; cv=none; b=F7qduG+L7DJ2oX7c6cbbwd4Z4IwNkxu02XABc6fMKfGQV09RYxmS7w9QIIi4Sn5xUlkLqsumEwZKmw5g+eJC5kCJ6Io4TXtZanXEKyZCDItJ5KoPBsPAlfXWfwnzs46p1MbJLOqmt0mRGWt3Oqrsr/ucENsr0GwFR+c1jZZdE+o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748553911; c=relaxed/simple;
-	bh=Uram4Fpi1hBv1Z+OwHvJmDzIibcFUZMD0Zn/Y3uVAiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lBOJ2tOKJx6P6UvUZt06kKAValOCNB8DSKourAj6Ycf/7Owu2t7NXF54P6xADdf5jCQscTGHMCwaJ4Bz5Ye3WY+NZzEh8cDwTForU8e/uyPqrxs5yKmpKlpTt0ve4LgAsYAJCVxVspc/Pckx8nzpXFPXwHeXZ/UBkURrP254MAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDLHSQD/; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8512343BE;
+	Thu, 29 May 2025 21:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748553933; cv=fail; b=L7UAgQtRNInZyDozJEE+HLDfGnfZZ7KKa+8JtqOYXmeayjxYp7Y8/L7jRpFV8MgcqRwJLoX8KUGT38YUs8+r2R9oBcSWd9baYhW174iE8XyqF66VXv/2tnPD/PxnqhyzVpqfVjxEAjJVFnAjGL5DiMzteomrbuCDEuqMzt7GFO0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748553933; c=relaxed/simple;
+	bh=bY2wCt2URBvgS60DtlPaC9j2rFQpJczn1Tk05fXlM88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pHVaT8TQz8dmD1QqPWC68OQGLWx2LKvtpJ07OOYJY96QjG4nm1wToJCvlKkUomIrXNRKqTb01PTv+JLc+SdMJFZf/yBw9ljmfpUfsLMVzLDGWb3VB9REfwHC+hjG082RzxeqKl/zim9m1DDiYK/ExVDzf/rUdfTer7XmIkMnWjQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rXmm9niJ; arc=fail smtp.client-ip=40.107.220.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDLHSQD/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1376BC4CEE7;
-	Thu, 29 May 2025 21:25:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748553911;
-	bh=Uram4Fpi1hBv1Z+OwHvJmDzIibcFUZMD0Zn/Y3uVAiY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MDLHSQD/lzaQH+AUWDvtIZJV6B3ZdXxY+ABWE4g50PzocX/qul4nQ9V/OU73r8pEr
-	 XhuXVkkjLILa5q52rdnH1Y+tdCAY+EsimTWpMra+A9hP+vBnCch9wWkE957+inhQUg
-	 KCm4FY5xQ0YDosRGzlp+b5UFuWRCbywJaCyIXgDSBniDKiRKxchEow15+FvNE0ZXhw
-	 AdYEEFllAzMbCShV5yJQbcOul3A09GRPQHcpW50SWBJYB0vjtwUUPFAmg8kGI3eQ27
-	 WPZSlz+StssmR8hY84TAQm7RxtkWg7E5Suh8uPvW1HK9UnoS8tGby+zNwVWyL2yD1h
-	 dYSI55miBLdQw==
-Date: Thu, 29 May 2025 21:25:09 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux F2FS Dev Mailing List <linux-f2fs-devel@lists.sourceforge.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] f2fs update for 6.16-rc1
-Message-ID: <aDjQtZy0oknTlgmG@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rXmm9niJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SZHbwJJSzr7O4jfDtSR2lY12VAEeO5JOfRZnXomPSVP/ID0uOPHmF9SOzkT6phnJDkbq063g5HQVVcnwoSTBkzcsxYzAynm9MZGNdKcHz3kXAWoVN1Tqriq/xHIn0W1NzlAy0PV4AaQTPZoleVCI4uY0VBozghQQQbHbUpp0hdZ7f0ShPU4+T7awyYlhuYTjWo7KXoTUL2JKHN7HnO+oE8qUG2Lon/hbWwOEVE/DkVraW5oFDv1DHgEUQVs0m8KGJiEMEjLX/yJ+KRgQizFAORhpKXbhO5gbwgm4NmKDOwIr2CzBxBdcnwbibn18ZtSgdaEJ0/xR+2o3zRPVnHBT1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4JPZS4zIq+8/LH5c17XBNmrdGwx+dpdfTttCxeHHoao=;
+ b=TyvgIekZm2mw2n7mOgLCTvDd7m5EUwTyYE4kK4ooYlZYyZaIYgPEYsiORX2uOP5Uj3TmKM9V8clzgOnLbF+eRnHEQ7zFIMSLna/xAcBlTeb/PHHycSQzLpoWg1648amJkO1yQdPtomM6S3cpBRD+sU9JuMp/KL2P2lLdx1ri14lPH8q+19Lh8/v1ujECkyztV9GyWpuaw0GuJacPSsb7EV/fhzIXgD02q5VoCuaJoNA2dbOYP8cIkjOjreyyDrdv+7C7vEJ0R9QHZ/Dn9rpZ6Q+rsS6fYe5REkXaJx32sJjAuaOjsiP7lg++bVoTAa4zQW1uIGgHisTbZf3KjzpaOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4JPZS4zIq+8/LH5c17XBNmrdGwx+dpdfTttCxeHHoao=;
+ b=rXmm9niJbT/IrrWrAIuj3VXXnsgh0CkphQNQoP9/zMCDtyPFURIUMExaxn46xrbsMHzTSxUbCvB3+r6UKESgjHXDzV6DfCrbSNViJZQDGn2dmWOeLpehaaxptq4FMKsS64F1CwHSB2Cg17RD+4ZGNYyCavSDKY+mLYa2RbOmxV4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5995.namprd12.prod.outlook.com (2603:10b6:208:39b::20)
+ by IA1PR12MB7495.namprd12.prod.outlook.com (2603:10b6:208:419::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Thu, 29 May
+ 2025 21:25:29 +0000
+Received: from BL1PR12MB5995.namprd12.prod.outlook.com
+ ([fe80::7298:510:d37d:fa92]) by BL1PR12MB5995.namprd12.prod.outlook.com
+ ([fe80::7298:510:d37d:fa92%3]) with mapi id 15.20.8769.025; Thu, 29 May 2025
+ 21:25:28 +0000
+Date: Thu, 29 May 2025 16:25:15 -0500
+From: John Allen <john.allen@amd.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	tglx@linutronix.de, dave.hansen@intel.com, seanjc@google.com,
+	pbonzini@redhat.com, peterz@infradead.org,
+	rick.p.edgecombe@intel.com, weijiang.yang@intel.com, bp@alien8.de,
+	chang.seok.bae@intel.com, xin3.li@intel.com,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>,
+	Stanislav Spassov <stanspas@amazon.de>,
+	Oleg Nesterov <oleg@redhat.com>, Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH v8 3/6] x86/fpu: Initialize guest fpstate and FPU pseudo
+ container from guest defaults
+Message-ID: <aDjQu1cxLP9DiyuY@AUSJOHALLEN.amd.com>
+References: <20250522151031.426788-1-chao.gao@intel.com>
+ <20250522151031.426788-4-chao.gao@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522151031.426788-4-chao.gao@intel.com>
+X-ClientProxiedBy: MW4PR04CA0179.namprd04.prod.outlook.com
+ (2603:10b6:303:85::34) To BL1PR12MB5995.namprd12.prod.outlook.com
+ (2603:10b6:208:39b::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5995:EE_|IA1PR12MB7495:EE_
+X-MS-Office365-Filtering-Correlation-Id: d084b811-ad8a-4d82-22da-08dd9ef7558f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ic7e1cDcAPApRw/I5UG60d/nP1XF54vda0Zf6boZC0O/YrCRa6EoAst5p7LQ?=
+ =?us-ascii?Q?MHzkOTLUuI2CwEdiCi7jau8diGyiYFaTN/xsz90VwtMJMm/cxnBFe6nkupdK?=
+ =?us-ascii?Q?oz+zqIfOohsYROxPJneX0nrs9x+uxkJWPFQQfVupxt/w+gSH1Gas/763wgLE?=
+ =?us-ascii?Q?tVh+KQeGl4lGyAdZ9iXrD7iIyWLAFoZ02hwMS4XfwPZpsNRGSIyLJ7HHyV+q?=
+ =?us-ascii?Q?8IwfsJkieSzYeczQ11mPfcds8izo22HKABq8u2myMXTKhORSsUF9GOl45exG?=
+ =?us-ascii?Q?+9IDZZgOV1+avRDPyZNFxYvAsPoRWrZ8BM8JydybtXr5/uXODdN3oHlrrout?=
+ =?us-ascii?Q?3tweny3D6dhscwxRQifURPX9MN71bpZ4Y7u5TIuEeFlChUgeSex4G/5xP9LM?=
+ =?us-ascii?Q?BVcsuwax7vI9let2/foZPjLb1VmqJ8sdWXl+MiuHF3gR3N7aeWprU7fvEQ6K?=
+ =?us-ascii?Q?KTuBArP6H2MHqalczufID1UiMKzNcYQebOAb6c2+bVAckDSE2Ghxx3s6EcZh?=
+ =?us-ascii?Q?bM4WlO8pAdDmeDx469zmmSlNuXQHrSmpZPPXV+rYK1wmWA6JZidmZQq2D+OE?=
+ =?us-ascii?Q?pUHoigR64rPPp8HF3rh51p/5w3tUy/zASiAYnHpiBT9WBfEqRA953FnZNw/y?=
+ =?us-ascii?Q?P3Nc58SdO7GRMRHJwQxNmJrOaIBUShPVX1WHo8XDlCGyN2z48aZUF0Rw7KBn?=
+ =?us-ascii?Q?UsTqVMw09fWJT4hWgLlJqXsRy8Y4xfBSdGtG3J+WxfZYcEPyorEviLIL1r5D?=
+ =?us-ascii?Q?AHWRx+pbrYnbv/POe50lpuH0NPs79dBvhO1M0VMYfjjIONwGle6OoL4rFIuc?=
+ =?us-ascii?Q?81Gzg9j2cirt4W6i0kY/YRZ+1qPpbL4x3Hdt8O3GLgIQazD0QsUapo9EOabq?=
+ =?us-ascii?Q?D5VUNXc4vOtFxv/hJBbbtnDmfTzkrCTFweYHCix/axSp8o0bUG1LWEcwyZkb?=
+ =?us-ascii?Q?GX+nWwXoSN2KVxA2QsRfJo6vYThHYQu0pJv7kmPdyC//TdyASXerEFX5+HkY?=
+ =?us-ascii?Q?5clBjtcY0Jffjo5o8cJuQjR0SFmAv6lnHSCwyF9erVcxuWgRa/NzMt8TpD5Z?=
+ =?us-ascii?Q?6XjX5oVY5PfJREOqPACZlNaMooXP5O9Bow4a1OIpIgaCdNyFNrKCpK1h1h+z?=
+ =?us-ascii?Q?4PmD94iyDOL12HJ/Uf7d4wSFk0wsK0ekn9pniMwYaF8iEt9HkJxz5EKA6Rar?=
+ =?us-ascii?Q?H+Y320noSwiasIm5GZvlmvuQDj3m0bcdFkQ2NHCchVNd+K0m3fLN+efyyWgh?=
+ =?us-ascii?Q?sa4nc36auWNBRX0bWaL6xCJ7iZSz9YXxq0KjkS7MTJir05vzP6V1WOB9GvLJ?=
+ =?us-ascii?Q?iW9J4UxTtrvAY1ooGTvEcCgEcebi0e9leZaLT9X0FLdDyiKqsO96bBA+L08d?=
+ =?us-ascii?Q?YpZaecksF5nBnS9d3Qu7AQ2mShQdsv2idNkmEE33eoJKlvKIG0noyXVot6j/?=
+ =?us-ascii?Q?RpUnP8kgB84=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5995.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jpkZa5PF5wmZP1PUNUxMzgI1woPONlMWJCYrLLbIQG/1eFZTX4wqdjwhipdc?=
+ =?us-ascii?Q?s/odrJajr03dExl8wFHc1MButV0YmdX/LZzjM8eqbPAqdIWWNhzb/2H2IrMT?=
+ =?us-ascii?Q?/TAmxXBw/TGwGzMriM3cOlNCoPd4NkNFyeTT5wj1WzUQfDKs2pd9h3H7NFoI?=
+ =?us-ascii?Q?Fs1eZ6YgCHW5PFSRktcArlvnTiRiIPCIXeHqJfOLuV1Jrk/+KScFjz3pktRd?=
+ =?us-ascii?Q?6a8zdjm4guvVP8nmrOe756A5+xg/aadE39c7GqStbbWbwArJBsHDRN24mc6A?=
+ =?us-ascii?Q?IIVcVhid6Z/T0bSil7eYWNxr4CovO4xlljG9hhp4sesWBxmZ4uyPOQIHENif?=
+ =?us-ascii?Q?SVNjHGTCROhyTPGsFgc7EfOnOx3QEbUqsrWyHvj8OHvtIsYZnHo6xfhoa2Ed?=
+ =?us-ascii?Q?nG7Zq8SwVx93a2YhOYwPOUTuRYWo1awX8Yi2ZVrbSRaukcbZe9EuqLRv6Esx?=
+ =?us-ascii?Q?FWRZU4c5RhaDJz+35L/tSre11LjjLRmV4qZzPOPNz152Psiwpky2oI5UvhWo?=
+ =?us-ascii?Q?XkVbfKD9pnQ/dBLmL1Tst2MRTedTgfhfOeQONdPoJG0VjBujQIFsxzMXGrVF?=
+ =?us-ascii?Q?pVPg6ZH0hr56rxEZbMiIItNTU6boM0VIDaK+m9ZvRiXLDlSekcBtz64Ol3IL?=
+ =?us-ascii?Q?Iyhy5lFy6ud34Eu+WOCQ+LHNrZwcHeAo5IB/zEDlhotuqnwJBX2A1Yheends?=
+ =?us-ascii?Q?O5I2S3AXVbZwXZUdj/8ICJnaMa+DLCDqaTuX6x2JLFzO6LlyjAGglroHWycb?=
+ =?us-ascii?Q?9KmwGnVzKxqVmm5o3hEvBaDeh/E+9RLwFuhBvrm5W2sQ0idxhbZVGKxCWl03?=
+ =?us-ascii?Q?7+SfVlE58YMcszC8Y0o9qdX8hiAOLHi+cdZKt72gjF0rWGCZ+Flq8WEAti7n?=
+ =?us-ascii?Q?pQmJaMtkVigJa0xII19TwHHkTAfjtz1A+a5yYZZHVJta5w40JSsPRZSCMZMM?=
+ =?us-ascii?Q?Kp/KtK0TACXsU1XR60OfBxv3a0I/WbXxL1fmIchhU6xypVLcI48zprlpeD7o?=
+ =?us-ascii?Q?uPzhtniUHx+WCjJ3KdzGAIzrQ4CTV5YotHVh0B9hVbTBFBTT6xnAfKFdjcrl?=
+ =?us-ascii?Q?lfripOl5yfGp4PwgE/u8oYxSXdMsE9hk9tXGqTRGbflb4BqxyWVAOKgCEvmj?=
+ =?us-ascii?Q?Zo2TT4lEqmrKsscoQXClUdQ3GmMuw1bQznrTj1EZzuo9pI3Sjb8WDraeeMs3?=
+ =?us-ascii?Q?p0hZSTK5Q+G8PeLyZ+ijDc7M1NZnEhiG1etZJO9RDzVtORSCCVdh/3Z0sKeu?=
+ =?us-ascii?Q?DeZZhCyiHF2LsewmBRlB75TmB1eTlptMx1opBOYDChpmRSopEuVPPLo+JRWj?=
+ =?us-ascii?Q?eV41uq/sFhLA99cpON1RQj+OFiCjgr8wVnh9bDBJFxHGn2P69ao1EXT8hH0D?=
+ =?us-ascii?Q?dvwdrq1OyijCOTM7T/t7xNJpmLUXH0VpZsGbhswDjwg4sQrNqEMiOOUBt2mE?=
+ =?us-ascii?Q?u07GOunKevF9/BCUz90azZQx6unGEAWTtl6RxrAgwrvrHiPKczpTiN0/VC5U?=
+ =?us-ascii?Q?gK3jPnp1G1f7yJR9Y4tQFhYqCaZyawf33hmByPPCMXGBWptoSCAc+30rRBfk?=
+ =?us-ascii?Q?iGKOVuZ7emzJjjD5NQAt508i/+ui0V+Vy4SqCvkv?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d084b811-ad8a-4d82-22da-08dd9ef7558f
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5995.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 21:25:28.7532
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4oARMYzz1cpv6M2788KuZe3ho4dqdYTlPqpbPUW4TgtBNliRaIplvZ4IwNPTc3Z1OhwpsI8JO594cUIi6O1HTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7495
 
-Hi Linus,
+On Thu, May 22, 2025 at 08:10:06AM -0700, Chao Gao wrote:
+> fpu_alloc_guest_fpstate() currently uses host defaults to initialize guest
+> fpstate and pseudo containers. Guest defaults were introduced to
+> differentiate the features and sizes of host and guest FPUs. Switch to
+> using guest defaults instead.
+> 
+> Adjust __fpstate_reset() to handle different defaults for host and guest
+> FPUs. And to distinguish between the types of FPUs, move the initialization
+> of indicators (is_guest and is_valloc) before the reset.
+> 
+> Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 
-Could you please consider this pull request?
-
-Thanks,
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-6.16-rc1
-
-for you to fetch changes up to 9883494c45a13dc88d27dde4f988c04823b42a2f:
-
-  f2fs: fix to correct check conditions in f2fs_cross_rename (2025-05-28 16:05:25 +0000)
-
-----------------------------------------------------------------
-f2fs-for-6.16-rc1
-
-In this round, Matthew converted most of page operations to using folio. Beyond
-the work, we've applied some performance tunings such as GC and linear lookup,
-in addition to enhancing fault injection and sanity checks.
-
-Enhancement:
- - large number of folio conversions
- - add a control to turn on/off the linear lookup for performance
- - tune GC logics for zoned block device
- - improve fault injection and sanity checks
-
-Bug fix:
- - handle error cases of memory donation
- - fix to correct check conditions in f2fs_cross_rename
- - fix to skip f2fs_balance_fs() if checkpoint is disabled
- - don't over-report free space or inodes in statvfs
- - prevent the current section from being selected as a victim during GC
- - fix to calculate first_zoned_segno correctly
- - fix to avoid inconsistence in between SIT and SSA for zoned block device
-
-As usual, there are several debugging patches and clean-ups as well.
-
-----------------------------------------------------------------
-Chao Yu (26):
-      f2fs: add a proc entry show inject stats
-      f2fs: fix to update injection attrs according to fault_option
-      f2fs: fix to set atomic write status more clear
-      f2fs: zone: fix to avoid inconsistence in between SIT and SSA
-      f2fs: add a fast path in finish_preallocate_blocks()
-      f2fs: fix to do sanity check on ino and xnid
-      f2fs: support to disable linear lookup fallback
-      f2fs: fix to do sanity check on sbi->total_valid_block_count
-      f2fs: clean up w/ fscrypt_is_bounce_page()
-      f2fs: fix to detect gcing page in f2fs_is_cp_guaranteed()
-      f2fs: fix to do sanity check on sit_bitmap_size
-      f2fs: zone: fix to calculate first_zoned_segno correctly
-      f2fs: sysfs: add encoding_flags entry
-      f2fs: sysfs: export linear_lookup in features directory
-      f2fs: fix to bail out in get_new_segment()
-      f2fs: support FAULT_TIMEOUT
-      f2fs: fix to return correct error number in f2fs_sync_node_pages()
-      f2fs: don't over-report free space or inodes in statvfs
-      f2fs: fix 32-bits hexademical number in fault injection doc
-      f2fs: add f2fs_bug_on() to detect potential bug
-      f2fs: add f2fs_bug_on() in f2fs_quota_read()
-      f2fs: use vmalloc instead of kvmalloc in .init_{,de}compress_ctx
-      f2fs: introduce FAULT_VMALLOC
-      f2fs: introduce is_{meta,node}_folio
-      f2fs: clean up to check bi_status w/ BLK_STS_OK
-      f2fs: fix to skip f2fs_balance_fs() if checkpoint is disabled
-
-Christoph Hellwig (5):
-      f2fs: return bool from __f2fs_write_meta_folio
-      f2fs: remove wbc->for_reclaim handling
-      f2fs: always unlock the page in f2fs_write_single_data_page
-      f2fs: simplify return value handling in f2fs_fsync_node_pages
-      f2fs: return bool from __write_node_folio
-
-Colin Ian King (1):
-      f2fs: remove redundant assignment to variable err
-
-Daeho Jeong (1):
-      f2fs: handle error cases of memory donation
-
-Eric Biggers (1):
-      f2fs: remove unused sbi argument from checksum functions
-
-Jaegeuk Kim (2):
-      f2fs: clean up unnecessary indentation
-      f2fs: prevent kernel warning due to negative i_nlink from corrupted image
-
-Kairui Song (1):
-      f2fs: drop usage of folio_index
-
-Matthew Wilcox (Oracle) (153):
-      f2fs: Use a folio in f2fs_compress_free_page()
-      f2fs: Use a folio in f2fs_write_raw_pages()
-      f2fs: Introduce fio_inode()
-      f2fs: Use F2FS_P_SB() in f2fs_is_compressed_page()
-      f2fs: Use bio_for_each_folio_all() in __has_merged_page()
-      f2fs: Use a folio in add_ipu_page()
-      f2fs: Remove access to page->mapping in f2fs_is_cp_guaranteed()
-      f2fs: Use a folio in move_data_block()
-      f2fs: Use a folio in f2fs_quota_read()
-      f2fs: Add f2fs_grab_meta_folio()
-      f2fs: Use a folio in commit_checkpoint()
-      f2fs: Convert __f2fs_write_meta_page() to __f2fs_write_meta_folio()
-      f2fs: Use f2fs_folio_wait_writeback()
-      f2fs: Pass a folio to f2fs_submit_merged_ipu_write()
-      f2fs: Convert __get_meta_page() to __get_meta_folio()
-      f2fs: Convert f2fs_get_tmp_page() to f2fs_get_tmp_folio()
-      f2fs: Pass a folio to next_blkaddr_of_node()
-      f2fs: Use a folio in f2fs_ra_meta_pages()
-      f2fs: Use a folio in f2fs_ra_meta_pages_cond()
-      f2fs: Use a folio in write_orphan_inodes()
-      f2fs: Use a folio in get_next_nat_page()
-      f2fs: Convert get_next_sit_page() to get_next_sit_folio()
-      f2fs: Use a folio in f2fs_update_meta_page()
-      f2fs: Use a folio in write_current_sum_page()
-      f2fs: Use a folio in write_compacted_summaries()
-      f2fs: Remove f2fs_grab_meta_page()
-      f2fs: Add f2fs_get_meta_folio()
-      f2fs: Use a folio in build_sit_entries()
-      f2fs: Use a folio in f2fs_recover_orphan_inodes()
-      f2fs: Use a folio in validate_checkpoint()
-      f2fs: Use a folio in f2fs_get_valid_checkpoint()
-      f2fs: Use a folio in f2fs_get_node_info()
-      f2fs: Use a folio in __get_nat_bitmaps()
-      f2fs: Use a folio in read_compacted_summaries()
-      f2fs: Use a folio in read_normal_summaries()
-      f2fs: Remove f2fs_get_meta_page()
-      f2fs: Convert f2fs_get_meta_page_retry() to f2fs_get_meta_folio_retry()
-      f2fs: Pass an address to scan_nat_page()
-      f2fs: Add f2fs_get_sum_folio()
-      f2fs: Use folios in do_garbage_collect()
-      f2fs: Use a folio in check_index_in_prev_nodes()
-      f2fs: Use a folio in change_curseg()
-      f2fs: Remove f2fs_get_sum_page()
-      f2fs: Use a folio in find_in_level()
-      f2fs: Use a folio in f2fs_delete_entry()
-      f2fs: Use a folio in f2fs_readdir()
-      f2fs: Remove f2fs_find_data_page()
-      f2fs: Use a folio in f2fs_get_new_data_page()
-      f2fs: Use a folio in f2fs_migrate_blocks()
-      f2fs: Add f2fs_get_new_data_folio()
-      highmem: Add memcpy_folio()
-      f2fs: Use a folio in __clone_blkaddrs()
-      f2fs: Use a folio in f2fs_defragment_range()
-      f2fs: Remove f2fs_get_lock_data_page()
-      f2fs: Use a folio in fill_zero()
-      f2fs: Use a folio in f2fs_add_regular_entry()
-      f2fs: Use a folio in make_empty_dir()
-      f2fs: Remove f2fs_get_new_data_page()
-      f2fs: Use a folio in f2fs_xattr_fiemap()
-      f2fs: Use a folio in ra_data_block()
-      f2fs: Use a folio in move_data_block()
-      f2fs: Use a folio in f2fs_convert_inline_inode()
-      f2fs: Use a folio in f2fs_move_inline_dirents()
-      f2fs: Add f2fs_new_node_folio()
-      f2fs: Use a folio in f2fs_ra_node_page()
-      f2fs: Convert read_node_page() to read_node_folio()
-      f2fs: Pass a folio to f2fs_inode_chksum_verify()
-      f2fs: Use a folio in f2fs_recover_inode_page()
-      f2fs: Remove f2fs_grab_cache_page()
-      f2fs: Add f2fs_get_xnode_folio()
-      f2fs: Use a folio in write_all_xattrs()
-      f2fs: Use a folio in f2fs_recover_xattr_data()
-      f2fs: Add f2fs_get_node_folio()
-      f2fs: Use folios in f2fs_get_dnode_of_data()
-      f2fs: Use a folio in truncate_node()
-      f2fs: Use a folio in truncate_nodes()
-      f2fs: Use folios in truncate_partial_nodes()
-      f2fs: Pass a folio to f2fs_ra_node_pages()
-      f2fs: Use a folio in gc_node_segment()
-      f2fs: Convert f2fs_move_node_page() to f2fs_move_node_folio()
-      f2fs: Convert __write_node_page() to __write_node_folio()
-      f2fs: Use a folio in is_alive()
-      f2fs: Use a folio in check_index_in_prev_nodes()
-      f2fs: Remove f2fs_get_node_page()
-      f2fs: Use a folio in prepare_write_begin
-      f2fs: Use a folio in __find_data_block()
-      f2fs: Use a folio in f2fs_init_inode_metadata()
-      f2fs: Pass a folio to make_empty_dir()
-      f2fs: Use a folio in f2fs_try_convert_inline_dir()
-      f2fs: Use a folio in f2fs_add_inline_entry()
-      f2fs: Pass a folio to f2fs_move_inline_dirents()
-      f2fs: Pass a folio to f2fs_move_rehashed_dirents()
-      f2fs: Use a folio in f2fs_do_truncate_blocks()
-      f2fs: Use a folio in f2fs_truncate_xattr_node()
-      f2fs: Pass folios to set_new_dnode()
-      f2fs: Convert f2fs_convert_inline_page() to f2fs_convert_inline_folio()
-      f2fs: Use a folio in read_xattr_block()
-      f2fs: Remove f2fs_get_xnode_page()
-      f2fs: Use a folio in f2fs_write_inline_data()
-      f2fs: Use a folio in f2fs_read_inline_data()
-      f2fs: Use a folio in f2fs_recover_inline_data()
-      f2fs: Use a folio in f2fs_find_in_inline_dir()
-      f2fs: Use a folio in f2fs_empty_inline_dir()
-      f2fs: Use a folio in f2fs_read_inline_dir()
-      f2fs: Use a folio in f2fs_inline_data_fiemap()
-      f2fs: Use a folio in f2fs_update_inode_page()
-      f2fs: Use a folio in do_read_inode()
-      f2fs: Pass folios to f2fs_init_acl()
-      f2fs: Pass a folio to f2fs_setxattr()
-      f2fs: Pass a folio to __f2fs_setxattr()
-      f2fs: Pass a folio to write_all_xattrs()
-      f2fs: Use a folio in read_inline_xattr()
-      f2fs: Use a folio in f2fs_recover_inline_xattr()
-      f2fs: Remove f2fs_get_inode_page()
-      f2fs: Pass a folio to f2fs_getxattr()
-      f2fs: Pass a folio to read_inline_xattr()
-      f2fs: Pass a folio to do_recover_data()
-      f2fs: Pass a folio to f2fs_recover_inline_xattr()
-      f2fs: Pass a folio to inline_xattr_addr()
-      f2fs: Pass a folio to init_dent_inode()
-      f2fs: Pass a folio to f2fs_make_empty_inline_dir()
-      f2fs: Pass a folio to f2fs_has_enough_room()
-      f2fs: Convert dnode_of_data->inode_page to inode_folio
-      f2fs: Pass a folio to f2fs_do_read_inline_data()
-      f2fs: Pass a folio to f2fs_truncate_inline_inode()
-      f2fs: Pass a folio to __f2fs_find_entry()
-      f2fs: Pass a folio to f2fs_find_entry()
-      f2fs: Pass a folio to f2fs_parent_dir()
-      f2fs: Pass a folio to f2fs_delete_entry()
-      f2fs: Pass a folio to f2fs_delete_inline_entry()
-      f2fs: Pass a folio to f2fs_recover_inline_data()
-      f2fs: Pass a folio to __recover_inline_status()
-      f2fs: Pass a folio to inline_data_addr()
-      f2fs: Convert f2fs_put_page_dic() to f2fs_put_folio_dic()
-      f2fs: Pass a folio to f2fs_set_link()
-      f2fs: Use a folio in need_inode_page_update()
-      f2fs: Use a folio in f2fs_truncate_meta_inode_pages()
-      f2fs: Use a folio in f2fs_cache_compressed_page()
-      f2fs: Use a folio in prepare_compress_overwrite()
-      f2fs: Convert f2fs_load_compressed_page() to f2fs_load_compressed_folio()
-      f2fs: Use a folio in f2fs_encrypt_one_page()
-      f2fs: Use a folio in redirty_blocks()
-      f2fs: Use a folio in f2fs_wait_on_block_writeback()
-      f2fs: Pass a folio to f2fs_init_read_extent_tree()
-      f2fs: Return a folio from f2fs_init_inode_metadata()
-      f2fs: Pass a folio to f2fs_update_inode()
-      f2fs: Pass a folio to set_nid()
-      f2fs: Convert dnode_of_data->node_page to node_folio
-      f2fs: Pass a folio to get_dnode_addr()
-      f2fs: Convert fsync_node_entry->page to folio
-      f2fs: Remove f2fs_new_node_page()
-      f2fs: Use a folio in flush_inline_data()
-      f2fs: Convert clear_node_page_dirty() to clear_node_folio_dirty()
-
-Zhiguo Niu (2):
-      f2fs: use d_inode(dentry) cleanup dentry->d_inode
-      f2fs: fix to correct check conditions in f2fs_cross_rename
-
-yohan.joung (3):
-      f2fs: prevent the current section from being selected as a victim during GC
-      f2fs: add a method for calculating the remaining blocks in the current segment in LFS mode.
-      f2fs: add ckpt_valid_blocks to the section entry
-
- Documentation/ABI/testing/sysfs-fs-f2fs |  67 ++--
- Documentation/filesystems/f2fs.rst      |  52 +--
- fs/f2fs/acl.c                           |  33 +-
- fs/f2fs/acl.h                           |  10 +-
- fs/f2fs/checkpoint.c                    | 242 ++++++-------
- fs/f2fs/compress.c                      | 166 ++++-----
- fs/f2fs/data.c                          | 248 ++++++-------
- fs/f2fs/dir.c                           | 243 +++++++------
- fs/f2fs/extent_cache.c                  |  10 +-
- fs/f2fs/f2fs.h                          | 307 +++++++++-------
- fs/f2fs/file.c                          | 216 +++++------
- fs/f2fs/gc.c                            | 143 ++++----
- fs/f2fs/inline.c                        | 310 ++++++++--------
- fs/f2fs/inode.c                         | 117 +++---
- fs/f2fs/namei.c                         | 131 +++----
- fs/f2fs/node.c                          | 610 +++++++++++++++-----------------
- fs/f2fs/node.h                          |  12 +-
- fs/f2fs/recovery.c                      | 178 +++++-----
- fs/f2fs/segment.c                       | 219 +++++++-----
- fs/f2fs/segment.h                       | 132 +++++--
- fs/f2fs/shrinker.c                      |  13 +-
- fs/f2fs/super.c                         | 168 ++++++---
- fs/f2fs/sysfs.c                         |  41 ++-
- fs/f2fs/xattr.c                         | 116 +++---
- fs/f2fs/xattr.h                         |  24 +-
- include/linux/f2fs_fs.h                 |   1 +
- include/linux/highmem.h                 |  27 ++
- include/trace/events/f2fs.h             |   5 +-
- 28 files changed, 2057 insertions(+), 1784 deletions(-)
+Reviewed-by: John Allen <john.allen@amd.com>
