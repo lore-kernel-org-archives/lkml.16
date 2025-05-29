@@ -1,204 +1,262 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD5022CBFA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2927A1C1F22
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748535467; cv=none; b=C/x7WODTgqEbfivWl40CaTvs/0FwcUR0TWOEsLeSiMGr2kyeejQkTSLHmZoUcawm11vHa8U7uZRHWcUQFeRI7PNK2uQ1uchTopkT/Jg9BaOX2hCTMYUpUBIt+f7/HHDzaoPvCdDxjoeHUax5uD8xZMrUF5X8dkXNvg0xAZZ1Xvw=
+	t=1748535494; cv=none; b=t4eUdOCTibjOlw7X6YmZQbdQDMIFI7+YrKE+mWanpcb5OHqck5S6sB9/k4RZa693U2vv5ZkpzhxVSZgq5XSFNyCXZyKbOC0FKzruwtbChVqUbjXqWUYTqhgy6+YX07xMp11VDONCaO+KMKsID4DQWzYDH+g8mMPLu8OSXfYPr8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748535467; c=relaxed/simple;
-	bh=qdz6hBl1zKNtjJs9q/5z5I8Zm2mnRaEEneEX4tmGMvo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B4ZdelE86CFQc7a3dW4vAW76ZcWt9P8icDk4jCNKn2Wb+rRMO145Xi2baKHlKLQd/zbGtafTr64iFWYCE9TSMvGJbKxVNahl3J0vEXm1RsXn2McRxnzojjW2QnlNcp+CgfWW0zWrORz118TonQCjY9kYVRhCY7cvEy6N/kAMBYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WSo3BFXe; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748535494; c=relaxed/simple;
+	bh=e5f/RdHUmFxGvGsAcNxaI7dckvX/o0m+rw9GHxwBUhA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uJoH/PQNCNavTJtJvrJ73DDPK9zCXZBBKSMT32mlPMZ+juS+i54lLzVgipf7n+k3PMIMTascf//TyvN/jF0gmaJGXW5xWmqq98oXBMyRhDuxmbkp0IJd0AHKJ2bf8Uxk/6O15NIeyybum3XMmzgXVz5U7U/415oJYf2zFUGENpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fRZLaRWG; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WSo3BFXe"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e731a56e111so992271276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748535465; x=1749140265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nFXz1a5AzZ0BGVhwiRYx2U+xdcfYzrs9yjeyMb/mIK4=;
-        b=WSo3BFXe2njQAne/kwJ26wC+OeLiKtjPMZuIHtg3pB0p1wc+1m7vlSZaAB4OIX1OJe
-         QaHk9kNc+q0VgEdJNA8j4AMnszIHzQZmeq/1IIVpYVE7jX7LcNBeYVu/oHjkRmrIuYFq
-         dgFBuwcjBhWQt3cKF1KUIsBzmlevQ4dPCbOlgJgPy11LWEWQZLo1WeuZpeNCmh/N6oS7
-         53J/CYEYiTJGMLpFKUPRciyI06/n+GmBiMl3kD+VtAe+uyMHWP3E2fFzDhRMQ+n98NXg
-         /xMCc1mFpk8P/DEdfhg7FPjCZEIZAWSzqqoOBp2tMN/2I1iZYwFMwfBXifZB7YCJUNYs
-         V+BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748535465; x=1749140265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nFXz1a5AzZ0BGVhwiRYx2U+xdcfYzrs9yjeyMb/mIK4=;
-        b=mv+Be9TUwb5UB312U9Fgxbwao7t+XsXnLd+sOvPYCAUw+we5Q9pVkVVHtAh1WLhDg3
-         rDeDwCnevzuI2f0zOA41acSIfiqK+0YFKQ3jUhzDqIbvs4raaZvRFmwpvt4OwE1k+Z8E
-         kZMa1AyPDyZUPezcMNvyjjU/mp0KyPoZR90TgcRHTzkcjHLpDFqHeBOoSrq3u0elSIWk
-         //jn+BaTRJ0nM20bzIvv6buwKBVWzF0Nb2vQ76nagRuMcovfGtmCWT79EMKJkrlnEqPr
-         jrXfIs72G1HC1IGLZBKObRDdfV0p1cVsmYBGjBW1IjxenGVp+/YJDxm/j8mGHa7M0zvu
-         z9DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAzoF+XAtAY7PKlpA3BWDSPWU+WD06dmnQZQV+oXquiDeVI8M/xbqtBBJdL9F5KNMR7AJBOtQN0YFuM/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJ2zCT1KaKv+XeWtYhP/+TL3vtwdzJZqMihHorsWBDhWIMJX+t
-	nfFupm/53vPVxjZWy3kjBmM1anWmxa1cgs8aIf1X4y51lOvbI1tkf2p4/S0sZ/4sFZsak+CO5A5
-	bmDnG74tDbYc49CbmJ2imtl3VyJYFO7oA4V2ivxKI
-X-Gm-Gg: ASbGncvOA9qMw2Zm/gSPiRdlfkbaf3obny43NdZobIVg8uH/sGoJH00NzxZZqsAtRxJ
-	xVheAWQMmxHfHXYojaYgdSXeRlFwxJucn2CULT74OTNAdUKXQIdlYxGuVConhF7C2s2ROeSl12F
-	LIrdOX5IxOTS5F12C7pFUD/XhnbRoe70JVYJZbVC4h7ETUjM2UsnYgyt4+/4XPPVtEbc6zzDIfV
-	95Ihg==
-X-Google-Smtp-Source: AGHT+IF2r9KlCyWj26WmElOEW91mfbdAeVcd/eA82K9ZIcXgbLmgmEn0mrSZRnVH71gS/1JkigbmLcuptMyfDe0ic3c=
-X-Received: by 2002:a05:6902:2b10:b0:e7a:b37b:725e with SMTP id
- 3f1490d57ef6-e7f81e54c0bmr349501276.24.1748535464377; Thu, 29 May 2025
- 09:17:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fRZLaRWG"
+Message-ID: <d5be7218-8ec1-4208-ac24-94d4831bfdb6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748535480;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1tSel3scbAebqAGaqx0WAdDuK59jgb/Kgus0RNUA+zc=;
+	b=fRZLaRWG0s9LorTzK+I2Z89Vbphji7APvt/VS0CeeHvrPpv+E8wYcxtcXhT4liPtTHaBxU
+	j9YC6A2GgoX81qroo8JCpr2wkLW0H/LoQWveGpUnUDK6an2phNi/uxLLgE+oNDbKffOuV5
+	QYYN/2OjYhEGS1mnJzxGPsmyCfOAyEQ=
+Date: Thu, 29 May 2025 12:17:55 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <aBqlkz1bqhu-9toV@google.com> <CADrL8HXjLjVyFiFee9Q58TQ9zBfXiO+VG=25Rw4UD+fbDmxQFg@mail.gmail.com>
- <aDh9GtncjlVvvVJ1@google.com>
-In-Reply-To: <aDh9GtncjlVvvVJ1@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Thu, 29 May 2025 12:17:07 -0400
-X-Gm-Features: AX0GCFtfh9MpZ-FDeJh2HrOczvbP9Hqyb2MdkVjRGdhWtHrFMpUcFHJvfRdVctg
-Message-ID: <CADrL8HUVf0wekmZHfZeb59w1j1=gFhs6oRZgNkufB3gOL-TENQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/13] KVM: Introduce KVM Userfault
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	Jiaqi Yan <jiaqiyan@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report
+ coalesce parameters in DMAengine flow
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>,
+ "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>,
+ "edumazet@google.com" <edumazet@google.com>,
+ "kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com"
+ <pabeni@redhat.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+ "horms@kernel.org" <horms@kernel.org>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "git (AMD-Xilinx)" <git@amd.com>, "Katakam, Harini" <harini.katakam@amd.com>
+References: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+ <679d6810-9e76-425c-9d4e-d4b372928cc3@linux.dev>
+ <BL3PR12MB6571ABA490895FDB8225CAEBC967A@BL3PR12MB6571.namprd12.prod.outlook.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <BL3PR12MB6571ABA490895FDB8225CAEBC967A@BL3PR12MB6571.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 29, 2025 at 11:28=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
->
-> On Wed, May 28, 2025, James Houghton wrote:
-> > The only thing that I want to call out again is that this UAPI works
-> > great for when we are going from userfault --> !userfault. That is, it
-> > works well for postcopy (both for guest_memfd and for standard
-> > memslots where userfaultfd scalability is a concern).
-> >
-> > But there is another use case worth bringing up: unmapping pages that
-> > the VMM is emulating as poisoned.
-> >
-> > Normally this can be handled by mm (e.g. with UFFDIO_POISON), but for
-> > 4K poison within a HugeTLB-backed memslot (if the HugeTLB page remains
-> > mapped in userspace), KVM Userfault is the only option (if we don't
-> > want to punch holes in memslots). This leaves us with three problems:
-> >
-> > 1. If using KVM Userfault to emulate poison, we are stuck with small
-> > pages in stage 2 for the entire memslot.
-> > 2. We must unmap everything when toggling on KVM Userfault just to
-> > unmap a single page.
-> > 3. If KVM Userfault is already enabled, we have no choice but to
-> > toggle KVM Userfault off and on again to unmap the newly poisoned
-> > pages (i.e., there is no ioctl to scan the bitmap and unmap
-> > newly-userfault pages).
-> >
-> > All of these are non-issues if we emulate poison by removing memslots,
-> > and I think that's possible. But if that proves too slow, we'd need to
-> > be a little bit more clever with hugepage recovery and with unmapping
-> > newly-userfault pages, both of which I think can be solved by adding
-> > some kind of bitmap re-scan ioctl. We can do that later if the need
-> > arises.
->
-> Hmm.
->
-> On the one hand, punching a hole in a memslot is generally gross, e.g. re=
-quires
-> deleting the entire memslot and thus unmapping large swaths of guest memo=
-ry (or
-> all of guest memory for most x86 VMs).
->
-> On the other hand, unless userspace sets KVM_MEM_USERFAULT from time zero=
-, KVM
-> will need to unmap guest memory (or demote the mapping size a la eager pa=
-ge
-> splitting?) when KVM_MEM_USERFAULT is toggled from 0=3D>1.
->
-> One thought would be to change the behavior of KVM's processing of the us=
-erfault
-> bitmap, such that KVM doesn't infer *anything* about the mapping sizes, a=
-nd instead
-> give userspace more explicit control over the mapping size.  However, on =
-non-x86
-> architectures, implementing such a control would require a non-trivial am=
-ount of
-> code and complexity, and would incur overhead that doesn't exist today (i=
-.e. we'd
-> need to implement equivalent infrastructure to x86's disallow_lpage track=
-ing).
->
-> And IIUC, another problem with KVM Userfault is that it wouldn't Just Wor=
-k for
-> KVM accesses to guest memory.  E.g. if the HugeTLB page is still mapped i=
-nto
-> userspace, then depending on the flow that gets hit, I'm pretty sure that=
- emulating
-> an access to the poisoned memory would result in KVM_EXIT_INTERNAL_ERROR,=
- whereas
-> punching a hole in a memslot would result in a much more friendly KVM_EXI=
-T_MMIO.
+On 5/28/25 08:00, Gupta, Suraj wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+>> -----Original Message-----
+>> From: Sean Anderson <sean.anderson@linux.dev>
+>> Sent: Tuesday, May 27, 2025 9:47 PM
+>> To: Gupta, Suraj <Suraj.Gupta2@amd.com>; andrew+netdev@lunn.ch;
+>> davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+>> pabeni@redhat.com; vkoul@kernel.org; Simek, Michal <michal.simek@amd.com>;
+>> Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>; horms@kernel.org
+>> Cc: netdev@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+>> kernel@vger.kernel.org; git (AMD-Xilinx) <git@amd.com>; Katakam, Harini
+>> <harini.katakam@amd.com>
+>> Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report coalesce
+>> parameters in DMAengine flow
+>>
+>> Caution: This message originated from an External Source. Use proper caution
+>> when opening attachments, clicking links, or responding.
+>>
+>>
+>> On 5/25/25 06:22, Suraj Gupta wrote:
+>> > Add support to configure / report interrupt coalesce count and delay
+>> > via ethtool in DMAEngine flow.
+>> > Netperf numbers are not good when using non-dmaengine default values,
+>> > so tuned coalesce count and delay and defined separate default values
+>> > in dmaengine flow.
+>> >
+>> > Netperf numbers and CPU utilisation change in DMAengine flow after
+>> > introducing coalescing with default parameters:
+>> > coalesce parameters:
+>> >    Transfer type        Before(w/o coalescing)  After(with coalescing)
+>> > TCP Tx, CPU utilisation%      925, 27                 941, 22
+>> > TCP Rx, CPU utilisation%      607, 32                 741, 36
+>> > UDP Tx, CPU utilisation%      857, 31                 960, 28
+>> > UDP Rx, CPU utilisation%      762, 26                 783, 18
+>> >
+>> > Above numbers are observed with 4x Cortex-a53.
+>>
+>> How does this affect latency? I would expect these RX settings to increase latency
+>> around 5-10x. I only use these settings with DIM since it will disable coalescing
+>> during periods of light load for better latency.
+>>
+>> (of course the way to fix this in general is RSS or some other method involving
+>> multiple queues).
+>>
+> 
+> I took values before NAPI addition in legacy flow (rx_threshold: 24, rx_usec: 50) as reference. But netperf numbers were low with them, so tried tuning both and selected the pair which gives good numbers.
 
-Oh, yes, of course. KVM Userfault is not enough for memory poison
-emulation for non-guest-memfd memslots. Like how for these memslots we
-need userfaultfd to do post-copy properly, for memory poison, we still
-need userfaultfd (so 4K emulated poison within a HugeTLB memslot is
-not possible).
+Yeah, but the reason is that you are trading latency for throughput.
+There is only one queue, so when the interface is saturated you will not
+get good latency anyway (since latency-sensitive packets will get
+head-of-line blocked). But when activity is sparse you can good latency
+if there is no coalescing. So I think coalescing should only be used
+when there is a lot of traffic. Hence why I only adjusted the settings
+once I implemented DIM. I think you should be able to implement it by
+calling net_dim from axienet_dma_rx_cb, but it will not be as efficient
+without NAPI.
 
-So yeah in this case (4K poison in a still-mapped HugeTLB page), we
-would need to punch a hole and get KVM_EXIT_MMIO. SGTM.
+Actually, if you are looking into improving performance, I think lack of
+NAPI is probably the biggest limitation with the dmaengine backend.
 
-For guest_memfd memslots, we can handle uaccess to emulated poison
-like tmpfs: with UFFDIO_POISON (Nikita has already started on
-UFFDIO_CONTINUE support[1]). We *could* make the gmem page fault
-handler (what Fuad is implementing) respect KVM Userfault, but that
-isn't necessary (and would look quite like a reimplementation of
-userfaultfd).
+>> > Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+>> > ---
+>> > This patch depend on following AXI DMA dmengine driver changes sent to
+>> > dmaengine mailing list as pre-requisit series:
+>> > https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.
+>> > com/
+>> > ---
+>> >  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
+>> > .../net/ethernet/xilinx/xilinx_axienet_main.c | 53 +++++++++++++++++++
+>> >  2 files changed, 59 insertions(+)
+>> >
+>> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> > b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> > index 5ff742103beb..cdf6cbb6f2fd 100644
+>> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+>> > @@ -126,6 +126,12 @@
+>> >  #define XAXIDMA_DFT_TX_USEC          50
+>> >  #define XAXIDMA_DFT_RX_USEC          16
+>> >
+>> > +/* Default TX/RX Threshold and delay timer values for SGDMA mode with
+>> DMAEngine */
+>> > +#define XAXIDMAENGINE_DFT_TX_THRESHOLD       16
+>> > +#define XAXIDMAENGINE_DFT_TX_USEC    5
+>> > +#define XAXIDMAENGINE_DFT_RX_THRESHOLD       24
+>> > +#define XAXIDMAENGINE_DFT_RX_USEC    16
+>> > +
+>> >  #define XAXIDMA_BD_CTRL_TXSOF_MASK   0x08000000 /* First tx packet */
+>> >  #define XAXIDMA_BD_CTRL_TXEOF_MASK   0x04000000 /* Last tx packet */
+>> >  #define XAXIDMA_BD_CTRL_ALL_MASK     0x0C000000 /* All control bits */
+>> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> > index 1b7a653c1f4e..f9c7d90d4ecb 100644
+>> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+>> > @@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct
+>> > net_device *ndev)  {
+>> >       struct axienet_local *lp = netdev_priv(ndev);
+>> >       struct skbuf_dma_descriptor *skbuf_dma;
+>> > +     struct dma_slave_config tx_config, rx_config;
+>> >       int i, ret;
+>> >
+>> >       lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0"); @@ -1520,6
+>> > +1521,22 @@ static int axienet_init_dmaengine(struct net_device *ndev)
+>> >               goto err_dma_release_tx;
+>> >       }
+>> >
+>> > +     tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
+>> > +     tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
+>> > +     rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
+>> > +     rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
+>>
+>> I think it would be clearer to just do something like
+>>
+>>         struct dma_slave_config tx_config = {
+>>                 .coalesce_cnt = 16,
+>>                 .coalesce_usecs = 5,
+>>         };
+>>
+>> since these are only used once. And this ensures that you initialize the whole struct.
+>>
+>> But what tree are you using? I don't see these members on net-next or dmaengine.
+> 
+> These changes are proposed in separate series in dmaengine https://lore.kernel.org/all/20250525101617.1168991-2-suraj.gupta2@amd.com/ and I described it here below my SOB.
 
-[1]: https://lore.kernel.org/kvm/20250404154352.23078-1-kalyazin@amazon.com=
-/
+I think you should post those patches with this series to allow them to
+be reviewed appropriately.
 
-> All in all, given that KVM needs to correctly handle hugepage vs. memslot
-> alignment/size issues no matter what, and that KVM has well-established b=
-ehavior
-> for handling no-memslot accesses, I'm leaning towards saying userspace sh=
-ould
-> punch a hole in the memslot in order to emulate a poisoned page.  The onl=
-y reason
-> I can think of for preferring a different approach is if userspace can't =
-provide
-> the desired latency/performance characteristics when punching a hole in a=
- memslot.
-> Hopefully reacting to a poisoned page is a fairly slow path?
+--Sean
 
-In general, yes it is. Memory poison is rare.
-
-For non-HugeTLB (tmpfs or guest_memfd), I don't think we need to punch
-a hole, so that's good. For HugeTLB, there are two circumstances that
-are perhaps concerning:
-
-1. Learning about poison during post-copy? This should be vanishingly
-rare, as most poison is discovered in the first pre-copy pass. If we
-didn't do *any* pre-copy passes, then it could be a concern.
-2. Learning about poison during pre-copy after shattering? If doing
-lazy page splitting with incremental dirty log clearing, this isn't a
-*huge* problem, otherwise it could be.
-
-I think userspace has two ways out: (1) don't make super large
-memslots, or (2) don't use HugeTLB.
-
-Just to be clear, this isn't really an issue with KVM Userfault -- in
-its current form (not preventing KVM's uaccess), it cannot help here.
+>>
+>> > +     ret = dmaengine_slave_config(lp->tx_chan, &tx_config);
+>> > +     if (ret) {
+>> > +             dev_err(lp->dev, "Failed to configure Tx coalesce parameters\n");
+>> > +             goto err_dma_release_tx;
+>> > +     }
+>> > +     ret = dmaengine_slave_config(lp->rx_chan, &rx_config);
+>> > +     if (ret) {
+>> > +             dev_err(lp->dev, "Failed to configure Rx coalesce parameters\n");
+>> > +             goto err_dma_release_tx;
+>> > +     }
+>> > +
+>> >       lp->tx_ring_tail = 0;
+>> >       lp->tx_ring_head = 0;
+>> >       lp->rx_ring_tail = 0;
+>> > @@ -2170,6 +2187,19 @@ axienet_ethtools_get_coalesce(struct net_device
+>> *ndev,
+>> >       struct axienet_local *lp = netdev_priv(ndev);
+>> >       u32 cr;
+>> >
+>> > +     if (lp->use_dmaengine) {
+>> > +             struct dma_slave_caps tx_caps, rx_caps;
+>> > +
+>> > +             dma_get_slave_caps(lp->tx_chan, &tx_caps);
+>> > +             dma_get_slave_caps(lp->rx_chan, &rx_caps);
+>> > +
+>> > +             ecoalesce->tx_max_coalesced_frames = tx_caps.coalesce_cnt;
+>> > +             ecoalesce->tx_coalesce_usecs = tx_caps.coalesce_usecs;
+>> > +             ecoalesce->rx_max_coalesced_frames = rx_caps.coalesce_cnt;
+>> > +             ecoalesce->rx_coalesce_usecs = rx_caps.coalesce_usecs;
+>> > +             return 0;
+>> > +     }
+>> > +
+>> >       ecoalesce->use_adaptive_rx_coalesce = lp->rx_dim_enabled;
+>> >
+>> >       spin_lock_irq(&lp->rx_cr_lock);
+>> > @@ -2233,6 +2263,29 @@ axienet_ethtools_set_coalesce(struct net_device
+>> *ndev,
+>> >               return -EINVAL;
+>> >       }
+>> >
+>> > +     if (lp->use_dmaengine)  {
+>> > +             struct dma_slave_config tx_cfg, rx_cfg;
+>> > +             int ret;
+>> > +
+>> > +             tx_cfg.coalesce_cnt = ecoalesce->tx_max_coalesced_frames;
+>> > +             tx_cfg.coalesce_usecs = ecoalesce->tx_coalesce_usecs;
+>> > +             rx_cfg.coalesce_cnt = ecoalesce->rx_max_coalesced_frames;
+>> > +             rx_cfg.coalesce_usecs = ecoalesce->rx_coalesce_usecs;
+>> > +
+>> > +             ret = dmaengine_slave_config(lp->tx_chan, &tx_cfg);
+>> > +             if (ret) {
+>> > +                     NL_SET_ERR_MSG(extack, "failed to set tx coalesce parameters");
+>> > +                     return ret;
+>> > +             }
+>> > +
+>> > +             ret = dmaengine_slave_config(lp->rx_chan, &rx_cfg);
+>> > +             if (ret) {
+>> > +                     NL_SET_ERR_MSG(extack, "failed to set rx coalesce
+>> parameters");
+>> > +                     return ret;
+>> > +             }
+>> > +             return 0;
+>> > +     }
+>> > +
+>> >       if (new_dim && !old_dim) {
+>> >               cr = axienet_calc_cr(lp, axienet_dim_coalesce_count_rx(lp),
+>> >                                    ecoalesce->rx_coalesce_usecs);
