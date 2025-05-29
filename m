@@ -1,210 +1,168 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A689246762
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE5221770A;
+	Thu, 29 May 2025 23:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562623; cv=none; b=qZ81Bb6U9OK5sDyz7C7qsSrvVT9HGmJfwkGQ/E6mwQCviYJlfc3Q4HpDPFIWrmzhtZiyVqOhCdhKa22wWZjUfsFpAqdQR03TJOXVNFByjl80IhRTLUigoBIur4ytMW8aMZoT83kZ7CvrB1HtB98EVltJJMFYNtkOrQ4EUW35vHA=
+	t=1748562799; cv=none; b=kRV4Ycj2b0O9cNEjJIVWI5MeHwubD9dKvXWZlK7JmVKryyrRAmluoIDiW0Pj0YcXpwNNxSb0vA0WAxguSxFNu9Di9m91m+yEdpwRmSx6jJbAmRIm+GqtnBgzC8jgbkhZDeeaEvPuv6+mcn1zDTFPsgpQZFWPCcIUXilc9k6jSLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562623; c=relaxed/simple;
-	bh=CYs1g0ekdBblN/jK1cAIme489gvuXetb79Xt6LZ/mUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P1WpYhicaGuz251qoJbXN+/GnmwXHe0k41UeqlhoS1KtSbHvLSyHcamrtTn4GcmjdxBlpY/8QI2Sf7fFmxrzNfj2iFm3t5b0wkPDXJMOxm2b/ZhfrG9WupviDgDrnUnMlAKbUQ9zp9miVB1x5k6Qh+SPPZKzKbCUQDffO8aFvYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=kVDTFufO; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1748562799; c=relaxed/simple;
+	bh=JOC4w+zue4FTMoTi6ERNkb+SeYMApstV7lkRuxVtVv0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dnqLvrsCw7rU+ZuOdX5WQTbzNTzC5MvfSg5wjypKIoMFanlUuBne7SnYsd4N8u2AdQYI524FZ+DjQU6G/A9mvGAmEzuRJ0y1pkPIOmpxgS//EMht9VbNJ7bUd4eiTiLXyv1Kerwmi1/H8lLh9+y9qe818oIogr8j1D41+ISzZlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=YxDZKzGf; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="kVDTFufO"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234d2d914bcso10852975ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1748562621; x=1749167421; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HbPqPQiDWRer0P2e/HJQrUigZTmf22Qe/ORDOfEZJcI=;
-        b=kVDTFufOOAXwPirL5C5BaySyE9K7blW6V3EGXnWX1GdNDfNK39RLWabv7ZQJsbE6WY
-         X8xaeEJSYkxi0UCAdZu3HPdDm756gGbpi9lzvJjHQvJVYLeG8g2uciuUEsFH7byWzHuk
-         0nw/5YNuEmDwiER8nvzw+lcldT2zIsxq8h1YI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562621; x=1749167421;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HbPqPQiDWRer0P2e/HJQrUigZTmf22Qe/ORDOfEZJcI=;
-        b=S0QTLpTi/9cXy/IK6l+YQnGUErEbqHKzAgafXAn8iMXtPK+nJ2wjddiTSXVgCw8ipy
-         lgnqcgiid6OCzA1gdHSqlVF/2NTGg+J2TJyQ3DulaycjZvyuVi4bhR2KMqFTZplofoB7
-         zr+2yQQCOS7UCJ4VPsMiEn9ntgEReyj9Lh9nCfctIbrhXy/u1hgDbPoy+EWzLlCyZ4bJ
-         2iXIhxjF2O1cIq3xOEnuImUxZm3gnABjUSicc2ttmMIiMQ9oR5ImcDq/wvDlpfDY6TB5
-         /ZpWWMQ5ES1xLbHc0Ug3cQBMQkVp3G0IbomoiRYpQxRjDod9GzvCNghotRe/2FFqQ8o6
-         XZMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWb8U6ESyKBUMsVcZgtWQ3DTZZqTiCmc++bo/7M65xeNqgvOM2+xd7IYjS8bA2TpYVTnHfuJ321K8hSKcQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwekbnFDuE5EoZaQlGfLwqFL31Qa7/BE47MrQGnU1gxytBm/Kgy
-	vdEsCU2EXGlqoGCsAMqoBfhr2u07dQEGMeLrNgFK9e79973Yb7wIfppgeACEgxf9/q8=
-X-Gm-Gg: ASbGnctdPcX5CMHRAJd53AngvvHlF6MehM1gOsFbp79gkwWG9qPTYmS7bEgwnR+roJv
-	17qxMi/hcWMereHvCy2i10gvXgeEFOSouGCGhByFDgUqNa5F9YnE50od9EKlB2m705x1pfQ13zw
-	sHYjAaCtbyU2fav5Fqx7c5VZQoaUbs/yY5eOtWE+wsTFHxvUVmpVZ7gYC4tNz/zsFHCoDeQSEBP
-	hLtlQ7qInlJ1UCIpFV6hs0K+5dQyRhOpJE3aX3C7e+wTwPhPjnZGMpNQjwx5/VNZj/qJ7BzjZtO
-	DIUvXTKbuButNHT9p5HvWzlSKv0nWQx2wAOzDmlB8lp44xOTau8T4dxotMIy1dTyoHFMKJzUuWe
-	+yzOXhzuBRqtHcJ8JNJWXAYo=
-X-Google-Smtp-Source: AGHT+IHEsxjJuENX6L+gwyU6IIgM3kSEYP7UoEirxCoFSx20PDVXZPjPogvWOHA0V2n2wPouICBg8g==
-X-Received: by 2002:a17:902:f611:b0:224:76f:9e4a with SMTP id d9443c01a7336-235291f59aamr22225185ad.14.1748562620648;
-        Thu, 29 May 2025 16:50:20 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd36b7sm17379365ad.117.2025.05.29.16.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 16:50:20 -0700 (PDT)
-Date: Thu, 29 May 2025 16:50:17 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: John <john.cs.hey@gmail.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="YxDZKzGf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1748562794; x=1749167594; i=w_armin@gmx.de;
+	bh=e9xuln1SvriLHl8ZltQCd3nro3KjfHT21Kdvd6/SSG8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=YxDZKzGf3wjoM9kdskdRpXTGwNXBkFkDXzp3ZZZ+DZeCXWgSHWMYPTdsgGg6TJn7
+	 GTXDqPYRHIK/lEdqjPQta8q2SE8xPhcyAvH7Hlx9r/oFtIh3dFnDKwjQM++szsL9Q
+	 wbfKEtdqaKCeytWsoLxOgTTuX1+G8zD7219KmX2YySHBJnA26f98H9Lc2MnDJJk+Y
+	 oS77GkeKGCR9viLwbCf0vdZuzR2SRD7mgmml63tHlU6u4MmOAz1jTLoiIm3wZY3y/
+	 Okf2kmdjzhoVbM7Jy4uEFWIVDoSoC/P0UItHcZqNt6F8xfJ+JnoJjGZ2jw3KEci7+
+	 EMgOna/m/hKBRcs40Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1M5QJD-1uMAVL1htF-001y4D; Fri, 30 May 2025 01:53:14 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	glpnk@proton.me
+Cc: linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [Bug] "possible deadlock in rtnl_newlink" in Linux kernel v6.13
-Message-ID: <aDjyua1-GYt8mNa1@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	John <john.cs.hey@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-References: <CAP=Rh=OEsn4y_2LvkO3UtDWurKcGPnZ_NPSXK=FbgygNXL37Sw@mail.gmail.com>
- <c9b62eaa-e05e-4958-bbf5-73b1e3c46b33@intel.com>
+Subject: [PATCH] ACPI: EC: Ignore ECDT tables with an invalid ID string
+Date: Fri, 30 May 2025 01:53:10 +0200
+Message-Id: <20250529235310.540530-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <c9b62eaa-e05e-4958-bbf5-73b1e3c46b33@intel.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:XAOejiPRm/Ixf+GhQ1c0z3To6JH8BeqCT/OJtDiT0EymRO5stWb
+ p1HW9GgypqWAdjGGFBZsGgomE5YpylmV+6Mwop5QfxKS0aWaSS+QIS4/D5H35JZ20/YTa5q
+ Mrxy9jux/d1RYvZQogMfggk7EfapKAu/y/8iS5qVp7y4AjC7Zhr86Gn3WMnAo3y1/U3Vtvo
+ sE59GvXkJViXzrRlV7ovg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:nY97imZsYwU=;N9k4ToxvN6q9vTvrpOpcAMsTC0Y
+ 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
+ JVJarF/h6KSrMSfm
 
-On Thu, May 22, 2025 at 04:05:05PM -0700, Jacob Keller wrote:
-> 
-> 
-> On 5/21/2025 5:52 PM, John wrote:
-> > Dear Linux Kernel Maintainers,
-> > 
-> > I hope this message finds you well.
-> > 
-> > I am writing to report a potential vulnerability I encountered during
-> > testing of the Linux Kernel version v6.13.
-> > 
-> > Git Commit: ffd294d346d185b70e28b1a28abe367bbfe53c04 (tag: v6.13)
-> > 
-> > Bug Location: rtnl_newlink+0x86c/0x1dd0 net/core/rtnetlink.c:4011
-> > 
-> > Bug report: https://hastebin.com/share/ajavibofik.bash
-> > 
-> > Complete log: https://hastebin.com/share/derufumuxu.perl
-> > 
-> > Entire kernel config:  https://hastebin.com/share/lovayaqidu.ini
-> > 
-> > Root Cause Analysis:
-> > The deadlock warning is caused by a circular locking dependency
-> > between two subsystems:
-> > 
-> > Path A (CPU 0):
-> > Holds rtnl_mutex in rtnl_newlink() ->
-> > Then calls e1000_close() ->
-> > Triggers e1000_down_and_stop() ->
-> > Calls __cancel_work_sync() ->
-> > Tries to flush adapter->reset_task (-> needs work_completion lock)
-> > 
-> > Path B (CPU 1):
-> > Holds work_completion lock while running e1000_reset_task() ->
-> > Then calls e1000_down() ->
-> > Which tries to acquire rtnl_mutex
-> > These two execution paths result in a circular dependency:
-> > 
-> 
-> I guess this implies you can't cancel_work_sync while holding RTNL lock?
-> Hmm. Or maybe its because calling e1000_down from the e1000_reset_task
-> is a problem.
-> 
-> > CPU 0: rtnl_mutex -> work_completion
-> > CPU 1: work_completion -> rtnl_mutex
-> > 
-> > This violates lock ordering and can lead to a deadlock under contention.
-> > This bug represents a classic case of lock inversion between
-> > networking core (rtnl_mutex) and a device driver (e1000 workqueue
-> > reset`).
-> > It is a design-level concurrency flaw that can lead to deadlocks under
-> > stress or fuzzing workloads.
-> > 
-> > At present, I have not yet obtained a minimal reproducer for this
-> > issue. However, I am actively working on reproducing it, and I will
-> > promptly share any additional findings or a working reproducer as soon
-> > as it becomes available.
-> > 
-> 
-> This is likely a regression in e400c7444d84 ("e1000: Hold RTNL when
-> e1000_down can be called")
-> 
-> @Joe, thoughts?
+On the MSI Modern 14 C5M the ECDT table contains invalid data:
 
-Sorry for the delay, was out of the office for a bit. I agree with
-the report that the locking order is problematic and with your
-report that it was introduced by the above commit.
+	UID : 00000000
+ GPE Number : 00	/* Invalid, 03 would be correct */
+   Namepath : ""	/* Invalid, "\_SB.PCI0.SBRG.EC" would
+			 * be correct
+			 */
 
-I wonder if e1000_down needs to cancel the reset_task at all?
+This slows down the EC access as the wrong GPE event is used for
+communication. Additionally the ID string is invalid.
 
-If you look a layer below the original bug report, you'll note that
-e1000_down calls e1000_reinit_locked which itself has the following
-code:
+Ignore such faulty ECDT tables by verifying that the ID string has
+a valid format.
 
-  /* only run the task if not already down */
-  if (!test_bit(__E1000_DOWN, &adapter->flags)) {
-          e1000_down(adapter);
-          e1000_up(adapter);
-  }
+Tested-by: glpnk@proton.me
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+ drivers/acpi/ec.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-So, it seems like the flow in the e1000_down case would be something like this
-(please correct me if I've gotten it wrong):
-
-e1000_down -> e1000_down_and_stop (which sets the __E1000_DOWN bit) ->
-  cancel_work_sync -> e1000_reset_task -> grabs RTNL, calls e1000_reinit_locked
-   e1000_reinit_locked -> checks the bit via the code above and does nothing
-
-I could be totally off here, but it seems like in the e1000_down case, calling
-e1000_reinit_locked is unnecessary since the __E1000_DOWN bit prevents anything
-from happening.
-
-Maybe a potential solution might be to move the cancel_work_sync out of
-e1000_down_and_stop and move it into e1000_remove directly?
-
-Something vaguely like (untested):
-
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 3f089c3d47b2..62a77b34c9ff 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -477,10 +477,6 @@ static void e1000_down_and_stop(struct e1000_adapter *adapter)
-
-        cancel_delayed_work_sync(&adapter->phy_info_task);
-        cancel_delayed_work_sync(&adapter->fifo_stall_task);
--
--       /* Only kill reset task if adapter is not resetting */
--       if (!test_bit(__E1000_RESETTING, &adapter->flags))
--               cancel_work_sync(&adapter->reset_task);
- }
-
- void e1000_down(struct e1000_adapter *adapter)
-@@ -1262,6 +1258,11 @@ static void e1000_remove(struct pci_dev *pdev)
-        bool disable_dev;
-
-        e1000_down_and_stop(adapter);
+diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+index 6f4203716b53..75c7db8b156a 100644
+=2D-- a/drivers/acpi/ec.c
++++ b/drivers/acpi/ec.c
+@@ -23,8 +23,10 @@
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/list.h>
++#include <linux/printk.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/suspend.h>
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
+@@ -2031,6 +2033,21 @@ void __init acpi_ec_ecdt_probe(void)
+ 		goto out;
+ 	}
+=20
++	if (!strstarts(ecdt_ptr->id, "\\")) {
++		/*
++		 * The ECDT table on some MSI notebooks contains invalid data, together
++		 * with an empty ID string ("").
++		 *
++		 * Section 5.2.15 of the ACPI specification requires the ID string to b=
+e
++		 * a "fully qualified reference to the (...) embedded controller device=
+",
++		 * so this string always has to start with a backslash.
++		 *
++		 * By verifying this we can avoid such faulty ECDT tables in a safe way=
+.
++		 */
++		pr_err(FW_BUG "Ignoring ECDT due to invalid ID string \"%s\"\n", ecdt_p=
+tr->id);
++		goto out;
++	}
 +
-+       /* Only kill reset task if adapter is not resetting */
-+       if (!test_bit(__E1000_RESETTING, &adapter->flags))
-+               cancel_work_sync(&adapter->reset_task);
-+
-        e1000_release_manageability(adapter);
+ 	ec =3D acpi_ec_alloc();
+ 	if (!ec)
+ 		goto out;
+=2D-=20
+2.39.5
 
-        unregister_netdev(netdev);
