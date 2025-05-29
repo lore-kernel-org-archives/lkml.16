@@ -1,200 +1,187 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23C6347B4
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D0922D4F3;
+	Thu, 29 May 2025 15:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748534387; cv=none; b=UORr3lb8ATDcPpc1yrlirREVWF8y9SfWm5zIvY0pVqd4oPBWecO4B88Ax0GvPGCO0gjWgdDXGmX9WVAeK/UXhS9UgSRS42n7sO12G282x5orwvXdCmqpRxB+mj1uHsd3W49I5ehpakQr0MpUDRVNIbeob3NdSlt8F1RnNrb0F/4=
+	t=1748534387; cv=none; b=L93Z5qF/evsZlXHhXZFFBwnpbzgG1FikkCObAfARTMaDh+d1Cf5osqpQVBvLilbaUrz4vjQobT0IH65I3DaYgHyD2XfhmJwNT902Jcqu9qmSHltf8IHfHRsT6VPbvl0Nm7+dzFvfHZ695ezpLG6VDeTu2bfFmaWzR+/lmWdf6aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748534387; c=relaxed/simple;
-	bh=/cSzfKhxqA8RV3aAB/FGRk9d6QDQpF9AKYSmtG/y0rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VrOR2XeZdSG5eZYvSZ/WJ/WLgPZvfXTYm99EXeNQu4Fx2OcxcHFqgX4QwXEMqbOETBLSy44WViPuJXEXTjZnFu+Ob9LvHJ5BU1FSyk704PzK/FrJ25H86ISRcdYUgum28Lho6v8f68Ss3pURbWb/7NTVo/Yc1auUkG9uQn/w6FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qR8NjGsA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wl2zwXGd; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qR8NjGsA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wl2zwXGd; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	bh=Pl3LGmkCwfg7gTCA3AsSP2awNVEV2AzkZ84mXZuXslY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iuoE3ymuYVky6qFpOymy66N4ML7FdaNpRUY4huD+JLVe83fStaM9Ha6oOZgJYZ9LMd92KWhsmsPNlJXMAAA+VxrdXgqRZ90qmUiVazZcax20WtRd14U5yIwhEmduzu/2T7bMQeufe4nXJ8D+Wdi/JUAEm3iWsQCiGTS76vA3Y6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YzMr95gQ; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qR8NjGsA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wl2zwXGd";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qR8NjGsA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wl2zwXGd"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7731B1FD19;
-	Thu, 29 May 2025 15:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748534383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ygoaZkXVsuF6OucKuUJ/ojj7zlIyJJr+jLbXhb7mx+k=;
-	b=qR8NjGsAPIXrLtpQgx4h6dSVdR2ptLaZDkw2CoBItYxB+h690JhSf14zuFLS6hoyPgOKpC
-	/cUryC87hGq/SapEigwvvtzT8P72aTqohJ9H59I6G2mYjCuUIr/zCWKOvC7X4cASPDP3JE
-	5TusBLrN1jk415ROUPRrpvkq5LvbKRA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748534383;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ygoaZkXVsuF6OucKuUJ/ojj7zlIyJJr+jLbXhb7mx+k=;
-	b=Wl2zwXGd6UlIILH5N5GJF+sF6TctyzPr+ApjO5pTB8AwYah+7KuXsnuBoZBj6i+MAAbua8
-	c8iAKUUMoM1daACg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qR8NjGsA;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Wl2zwXGd
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748534383; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ygoaZkXVsuF6OucKuUJ/ojj7zlIyJJr+jLbXhb7mx+k=;
-	b=qR8NjGsAPIXrLtpQgx4h6dSVdR2ptLaZDkw2CoBItYxB+h690JhSf14zuFLS6hoyPgOKpC
-	/cUryC87hGq/SapEigwvvtzT8P72aTqohJ9H59I6G2mYjCuUIr/zCWKOvC7X4cASPDP3JE
-	5TusBLrN1jk415ROUPRrpvkq5LvbKRA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748534383;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ygoaZkXVsuF6OucKuUJ/ojj7zlIyJJr+jLbXhb7mx+k=;
-	b=Wl2zwXGd6UlIILH5N5GJF+sF6TctyzPr+ApjO5pTB8AwYah+7KuXsnuBoZBj6i+MAAbua8
-	c8iAKUUMoM1daACg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6447713325;
-	Thu, 29 May 2025 15:59:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oyskGG+EOGhaXgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 29 May 2025 15:59:43 +0000
-Message-ID: <b8a5dc9d-3697-47b3-bf66-f9bd726389fb@suse.cz>
-Date: Thu, 29 May 2025 17:59:43 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzMr95gQ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2351227b098so4965825ad.2;
+        Thu, 29 May 2025 08:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748534385; x=1749139185; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9d3/XMHaJT7MXZLQQikwQ6fSkoA+ShCfpN8VkDVAL0w=;
+        b=YzMr95gQsrpVXhqTEQd7CItHmygaDZ+ltsx+i9m0x2UY+fvhZU2RQvaC65OkS/ELEG
+         ilWN4MwxQkmJsFdzah9PK+k9qeZaoB4urjpQMnZPUIs1i4bvWbfxy2j0AxGjX3CtwLkT
+         LZV3A9GtsEfUe+32cvT5LaCcb6UIvAWvSwKBhZLyvSEurcB6rtHeMUM8zXBsIcT014YL
+         Q8k435UPWOl8gOGgHmX66+Qyli7FzO5om/rxQYFGn8U3RoRMIfq3G00uWpFEhzhU7crU
+         +iXxlV3CEl8uo74ldB1iH1TDIsEpjEJl9T17LACqTJ2HzF/ci5Sds0ZdIP/D+Ie2+Opr
+         ZLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748534385; x=1749139185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9d3/XMHaJT7MXZLQQikwQ6fSkoA+ShCfpN8VkDVAL0w=;
+        b=sxUVSoezW8wxEUXY1HBgYcIHpTPFWwYInwKTY3n0KzMFchjd8ZSQBd3muNRZzuqmSY
+         u0he0fzrw9fdqRbG0hSUQIYvxDe/+OYocC8aI4m/yy6K8+gOkm6DjgOTf7kem9S0Wcc2
+         gXrIqgraP8vIxvelN/Pr8NT4jN0yXUC/4RiVMBHlc9m1nO68OMsU++UUOD87lkDYf29x
+         wBPybnOuwAHzZ6s5qielqNs43UgFBK5+rCmPbF/BbJWuE5/7EEFxUXlSfRjSsxUpIEYw
+         ScGq9uMcQmfrYHMbC4MNLWB1p1QlD9sx6+lfSh1EOZ2qre2QV3jLEDzzOGUmJeVPJZbz
+         UkuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpPWRtwRoMfn7lnx4crRKrnxU72dpW2WQ0prI59fboT97H9HwNAe4pCHoA4FrlF+tJctIF9DNV@vger.kernel.org, AJvYcCX3hRkTLM2pERwLy5stWgZs1Anu0alMvvigLo6sE2kzn2U0Iv6ShzD4lnpMq8YYKcKiSZ0ZJL/iXqA/Oco=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFV15je0kcQ5+mXDjQtGll/2bsKVHc2DWW53qVOmIYBWsYbxGF
+	W4pSyMSRSDhZy8ZOuweb5Adp39zdKQo1n2BL027C1hK+hj1I7B3kuBE=
+X-Gm-Gg: ASbGnctD2xk1JDSav2osw1RoOcBoj5E99dcjjlgRAyJFbY0GlbwsyrqlqNaZcP1U/zH
+	Db5mU/5RiPcDTBbjcAxylyf8tdWqT6pcunSZatcexzNt9eVyjMReZayHwNmZzVXvUwUZwTw3WJ7
+	robXpuZR37sdzDq9iMr+OV3ppPkC2u7qfOyqtZlZZg6B+31tKFNqDSKIMygWXIjCPcoO7NZ3qf7
+	qUOMr3apjE124u0yuXCkUqV9NzhH2ebR5sH3iYfrLkiYxdJgqbEIbnrYRKCA8SFuaVCIZ7qcdvN
+	6Voack+InbFxf2MiEF0fi2PwlNw/OQMnHN7t8OMY8Zq0+xXkiPz2NMhWv+WS0FaLcFega3Ki3Np
+	o+SsjNmIDvl8P
+X-Google-Smtp-Source: AGHT+IFtrrtjmX3YsvPidGU5eGxbbMDyGkFE11Jn24qLyQPKtG85oSGxOh3adg0lM0/UlxS40ougiw==
+X-Received: by 2002:a17:903:2283:b0:234:f4da:7ecf with SMTP id d9443c01a7336-235289d4a9bmr1792705ad.8.1748534385071;
+        Thu, 29 May 2025 08:59:45 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-23506cdb9b3sm13959895ad.140.2025.05.29.08.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 08:59:44 -0700 (PDT)
+Date: Thu, 29 May 2025 08:59:43 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] possible deadlock in rtnl_newlink
+Message-ID: <aDiEby8WRjJ9Gyfx@mini-arch>
+References: <683837bf.a00a0220.52848.0003.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm, slab: support NUMA policy for large kmalloc
-Content-Language: en-US
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: David Rientjes <rientjes@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz>
- <20250529-frozen-pages-for-large-kmalloc-v1-2-b3aa52a8fa17@suse.cz>
- <e391fe8a-6bef-4067-86d8-b75ece441b75@gentwo.org>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <e391fe8a-6bef-4067-86d8-b75ece441b75@gentwo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 7731B1FD19
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:mid];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <683837bf.a00a0220.52848.0003.GAE@google.com>
 
-On 5/29/25 16:57, Christoph Lameter (Ampere) wrote:
-> On Thu, 29 May 2025, Vlastimil Babka wrote:
+On 05/29, syzbot wrote:
+> Hello,
 > 
->> The slab allocator observes the task's numa policy in various places
->> such as allocating slab pages. Large kmalloc allocations currently do
->> not, which seems to be an unintended omission. It is simple to correct
->> that, so make ___kmalloc_large_node() behave the same way as
->> alloc_slab_page().
+> syzbot found the following issue on:
 > 
-> Large kmalloc allocation lead to the use of the page allocator which
-> implements the NUMA policies for the allocations.
->
-> This patch is not necessary.
+> HEAD commit:    b1427432d3b6 Merge tag 'iommu-fixes-v6.15-rc7' of git://gi..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=161ef5f4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
+> dashboard link: https://syzkaller.appspot.com/bug?extid=846bb38dc67fe62cc733
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d21170580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d9a8e8580000
+> 
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-b1427432.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/47b0c66c70d9/vmlinux-b1427432.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/a2df6bfabd3c/bzImage-b1427432.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com
+> 
+> ifb0: entered allmulticast mode
+> ifb1: entered allmulticast mode
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 6.15.0-rc7-syzkaller-00144-gb1427432d3b6 #0 Not tainted
+> ------------------------------------------------------
+> syz-executor216/5313 is trying to acquire lock:
+> ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+> ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+> ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: start_flush_work kernel/workqueue.c:4150 [inline]
+> ffff888033f496f0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}, at: __flush_work+0xd2/0xbc0 kernel/workqueue.c:4208
+> 
+> but task is already holding lock:
+> ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+> ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:341 [inline]
+> ffffffff8f2fab48 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x8db/0x1c70 net/core/rtnetlink.c:4064
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (rtnl_mutex){+.+.}-{4:4}:
+>        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>        __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+>        __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
+>        e1000_reset_task+0x56/0xc0 drivers/net/ethernet/intel/e1000/e1000_main.c:3512
+>        process_one_work kernel/workqueue.c:3238 [inline]
+>        process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+>        worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+>        kthread+0x70e/0x8a0 kernel/kthread.c:464
+>        ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+>        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+> 
+> -> #0 ((work_completion)(&adapter->reset_task)){+.+.}-{0:0}:
+>        check_prev_add kernel/locking/lockdep.c:3166 [inline]
+>        check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+>        validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
+>        __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
+>        lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
+>        touch_work_lockdep_map kernel/workqueue.c:3922 [inline]
+>        start_flush_work kernel/workqueue.c:4176 [inline]
+>        __flush_work+0x6b8/0xbc0 kernel/workqueue.c:4208
+>        __cancel_work_sync+0xbe/0x110 kernel/workqueue.c:4364
+>        e1000_down+0x402/0x6b0 drivers/net/ethernet/intel/e1000/e1000_main.c:526
+>        e1000_close+0x17b/0xa10 drivers/net/ethernet/intel/e1000/e1000_main.c:1448
+>        __dev_close_many+0x361/0x6f0 net/core/dev.c:1702
+>        __dev_close net/core/dev.c:1714 [inline]
+>        __dev_change_flags+0x2c7/0x6d0 net/core/dev.c:9352
+>        netif_change_flags+0x88/0x1a0 net/core/dev.c:9417
+>        do_setlink+0xcb9/0x40d0 net/core/rtnetlink.c:3152
+>        rtnl_group_changelink net/core/rtnetlink.c:3783 [inline]
+>        __rtnl_newlink net/core/rtnetlink.c:3937 [inline]
+>        rtnl_newlink+0x149f/0x1c70 net/core/rtnetlink.c:4065
+>        rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
+>        netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+>        netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+>        netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+>        netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+>        sock_sendmsg_nosec net/socket.c:712 [inline]
+>        __sock_sendmsg+0x21c/0x270 net/socket.c:727
+>        ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+>        ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+>        __sys_sendmsg net/socket.c:2652 [inline]
+>        __do_sys_sendmsg net/socket.c:2657 [inline]
+>        __se_sys_sendmsg net/socket.c:2655 [inline]
+>        __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+>        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>        do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+>        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> other info that might help us debug this:
+> 
+>  Possible unsafe locking scenario:
+> 
+>        CPU0                    CPU1
+>        ----                    ----
+>   lock(rtnl_mutex);
+>                                lock((work_completion)(&adapter->reset_task));
+>                                lock(rtnl_mutex);
+>   lock((work_completion)(&adapter->reset_task));
 
-I'm confused, as that's only true depending on which page allocator entry
-point you use. AFAICS before this series, it's using
-alloc_pages_node_noprof() which only does
-
-
-        if (nid == NUMA_NO_NODE)
-                nid = numa_mem_id();
-
-and no mempolicies.
-
-I see this patch as analogical to your commit 1941b31482a6 ("Reenable NUMA
-policy support in the slab allocator")
-
-Am I missing something?
+So this is internal WQ entry lock that is being reordered with rtnl
+lock. But looking at process_one_work, I don't see actual locks, mostly
+lock_map_acquire/lock_map_release calls to enforce some internal WQ
+invariants. Not sure what to do with it, will try to read more.
