@@ -1,106 +1,71 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523378F34;
-	Thu, 29 May 2025 16:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2570D22D4EB;
+	Thu, 29 May 2025 16:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537224; cv=none; b=lCseMTtIX+AhVf5feD6BNejj/oXvfm8ZXJK6WsHdxpOaL9I5zXx53WcblQYlCpMTNbxQ60/3s+HqDNW23fzl37mc11A2HLLf8+GUocYHz5SMltJyiuops+7pdQg4Qal/CfbwUjoNtuE6VSCvtytgUfBnuXnZRtsAS2xhWaMqzsk=
+	t=1748537323; cv=none; b=H4px/8ZfmTPni65fVta/DjYF0Ht2p1vEZmCsbiX3wa75qxh0Z+UhXIlLkNHEsPz1J7V/BKboutmI66d8JogX+V9391FHoz2c0GN9d4Z65USK4mX/tln7Uw6VA9Nht3//Xo0/G5UYEOxo8fw/86jSCkhKEH7DTcP9plyZRqVMrtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537224; c=relaxed/simple;
-	bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OZrXVTXZHqcdOJb2ooWHaFTm9AnNnGzEu949gwiciUCO/cxN2LR23UemCUZophaVYDg4VP3G3FO3VEd/BOcXhNRXjr/HPMab+drSUakxjhPFaMEZn8SkDVreC1Z/BrvpqGMn9xohMxXkc3bY0BeqdFsiGGPdIwhY5rm6Y+wjUE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aQilQXQy; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQilQXQy"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450d37d4699so3392225e9.0;
-        Thu, 29 May 2025 09:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748537221; x=1749142021; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
-        b=aQilQXQydHyIVSU6QINEMMe+ASq4799MoT55DUVDRcKTLyrPjD9Rer0o5+eyszXL5A
-         kWz7Zq7rBosDPCPkYtN4Yk0qQdOvmqAGL0CzOCoCa4/wVixPkP6W8+ahjyU8J97e3DsV
-         Fhj3/PpaGgstNuUeitEbv7WnNQPDTrz4tzgtEDTfNkP2OMrcEQYOnXFyXXrYZvwhkLjJ
-         H1fn10dFHfND98vuo3qBhacXOfZALjdZaRExaxkQti3nby5boZNfghS0vsX7yA4XwNrc
-         S7LrNuuNdSGSSY35J78lFg0uT9c/s1VCTf7I/hiShf1SekLa5crECja4Pc6AdIoQre5P
-         y7qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748537221; x=1749142021;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IvWgcjpM+MG6FTrrPS5zXOf0K/wcnP/inkpyL761qmM=;
-        b=m718dhgbpP8tIGAroNRMpywW2gRNOB8pT9LaGqF9EDT21qY/8B2z8yq4Or9z6poNq/
-         uef/pBRp8cByN/x3h+fnJSw6mB+BaIV52epXxF3OIqrx1n0jwO2xwuHoKNhmgQ5kKOJj
-         x0C9lNGFe4pPSgPGNCXCb1kHQ9hIYqej8bsJmoH9bLZ8UO7r4AcSAk2V44y5S1etHRCT
-         ICqvPbns7ZxjVJvmbnSIzHeZSMcN9jNbcLEvROqQ0DqJemh+yGeRqp2ouZ5fqnKHuWB1
-         dHzoZtJ3dZ0JzuWfrt8Isle0HHY1JS7PvSgrFSUppZTTtoCWUoCxgv94tNy1RBk0d6gK
-         D1sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVR3ojlzrfamjNS+5S/38ACulGTKwGaKNaSrYNOdr15TmOUkoDn+WTq5cCwt6KALP4NcCZGlOF08t40xJHN6mPK@vger.kernel.org, AJvYcCWcZEbqaO8ICKlW4MkvD+hO37reeTx3viOsBnO7sAOpcu35nEWTIv/Kd3UdCfNu89hwoIfyWqGisW2Rebc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxxa3xQqmhL6YZSBYDe9gegfRGoHuthtmK37ZqmLBYaUP1MYDP4
-	FP8NJJHiQ0Tg27DdBAg29emeB905qubv1p8ePuG+C9yPBEK5z9F3VGr2i2BqAs+5+AIHpOPRiL3
-	WSnHeZ78uY34+T3iOWld5ddEHG+48b5E=
-X-Gm-Gg: ASbGnct8U3YixDXAl9wDOsk34ndmzdoqwFReaU1F2rM1B74YllgBwkVEJ2Qcl9bQ2/X
-	HCm6NZbHs8YfkAEsG8z2KT1QG4n/6xQi+G73o60Ejr4Ljasbn/BZUc764CF3BdOvNu0WPNNHlJN
-	NJIGh7xT4X2fH58Q3Ms/beuHya335mWhhiGrvjnTCmKDu2fj2IuathlU4PO5g=
-X-Google-Smtp-Source: AGHT+IHQ+BRyC5kZfuSwmuc+jsFUskhxJSftVM0yFnsmSz4uOzMkH4dr5F8CYkhdw+m7CRwwAGJvX66cRIlLL+lbKNY=
-X-Received: by 2002:a05:600c:5249:b0:43c:f81d:34 with SMTP id
- 5b1f17b1804b1-450d64d3fbemr4950115e9.9.1748537220853; Thu, 29 May 2025
- 09:47:00 -0700 (PDT)
+	s=arc-20240116; t=1748537323; c=relaxed/simple;
+	bh=VMJUu7GA7yCr7klV0J6AkeQHLeLdi1qD21FabNndM5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FnqE45BtVQkLTkDNxYdqOo5G0e6fAQ1e5wKLXV6oRq8ETIkpbuUhDn1J6rB0hEDI0RjzAXldQKhKZK1O4QpxEDApykI3HPrWb9uRB2c1wwNBgRpyt4hXkYZWqi1Y9olaVr2HbaAtMAA8YlothtBLTHOj7Af6BhfK5NA+gY6gl9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE3211764;
+	Thu, 29 May 2025 09:48:24 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3FA03F673;
+	Thu, 29 May 2025 09:48:40 -0700 (PDT)
+Date: Thu, 29 May 2025 17:48:39 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 00/11] perf: arm_spe: Armv8.8 SPE features
+Message-ID: <20250529164839.GN2566836@e132581.arm.com>
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528161653.55162-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20250528161653.55162-1-jiayuan.chen@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 29 May 2025 09:46:49 -0700
-X-Gm-Features: AX0GCFv2fO_u7DrzrMdRbFgY7j1cPOxchmaXJRuhBASFjmjKWsCf7blknPJjxf4
-Message-ID: <CAADnVQ+hP9xYH2f4hiUtEcG8NGETTO7BicbRfpd9zxMPnosLHg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 1/2] bpf: Restrict usage scope of bpf_get_cgroup_classid
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf <bpf@vger.kernel.org>, 
-	syzbot+9767c7ed68b95cfa69e6@syzkaller.appspotmail.com, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Feng Yang <yangfeng@kylinos.cn>, Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
 
-On Wed, May 28, 2025 at 9:17=E2=80=AFAM Jiayuan Chen <jiayuan.chen@linux.de=
-v> wrote:
->
-> A previous commit expanded the usage scope of bpf_get_cgroup_classid() to
-> all contexts (see Fixes tag), but this was inappropriate.
->
-> First, syzkaller reported a bug [1].
-> Second, it uses skb as an argument, but its implementation varies across
-> different bpf prog types. For example, in sock_filter and sock_addr, it
-> retrieves the classid from the current context
-> (bpf_get_cgroup_classid_curr_proto) instead of from skb. In tc egress and
-> lwt, it fetches the classid from skb->sk, but in tc ingress, it returns 0=
-.
->
-> In summary, the definition of bpf_get_cgroup_classid() is ambiguous and
-> its usage scenarios are limited. It should not be treated as a
-> general-purpose helper. This patch reverts part of the previous commit.
+On Thu, May 29, 2025 at 12:30:21PM +0100, James Clark wrote:
+> Support 3 new SPE features: FEAT_SPEv1p4 filters, FEAT_SPE_EFT extended
+> filtering, and SPE_FEAT_FDS data source filtering. The features are
+> independent can be applied separately:
+> 
+>   * Prerequisite sysreg changes - patches 1 - 2
+>   * FEAT_SPEv1p4 - patch 3
+>   * FEAT_SPE_EFT - patch 4
+>   * FEAT_SPE_FDS - patches 5 - 8
+>   * FEAT_SPE_FDS Perf tool changes - patches 9 - 11
+> 
+> The first two features will work with old Perfs but a Perf change to
+> parse the new config4 is required for the last feature.
 
-I think it's better to make it generic enough instead
-of reintroducing a bunch of prog specific proto handlers.
-See this discussion:
-https://lore.kernel.org/bpf/20250528020755.33182-1-yangfeng59949@163.com/
+I tested the load_filter_mask / store_filter_mask (FEAT_SPE_EFT) and
+data_src_filter (SPE_FEAT_FDS), all of them work as expected.
 
-pw-bot: cr
+Tested-by: Leo Yan <leo.yan@arm.com>
