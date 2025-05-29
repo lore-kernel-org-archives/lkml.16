@@ -1,171 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B7F1EB5FA;
-	Thu, 29 May 2025 09:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB8D215F53;
+	Thu, 29 May 2025 09:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509447; cv=none; b=Q5qmXSKciRuhdM9GRcqgxHQxcyloPdeEHSNiaoujyekw8s+i8pLSqPXvFaNPUmAqbAYm0bxxB95XiJdhRKZMOmifo6ggEUo0uLRPOTUu1mdT/z7t/gqlhu5DYGowrq3Y9IClE1L2JV8OEvKBV7Q4fNCRJmmKZzfiN2z7au/vGbU=
+	t=1748509459; cv=none; b=God/qLJ3evJTTwdLS7BF+y0iW/KfuSiAGDPqSM4Kme0kWauyzFTLJ2dYRsgJoXboAB6RVFJkO2d7O3xobqwF0QoSOmxWh8Ic+VdkOrMx8QjgLPaiC+AefCQ9YNFf5aDK85FsPmefnG74F52TCoTy8RuClA/drJ9nGorB0fzbsHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509447; c=relaxed/simple;
-	bh=uik7CVAfylf4Zns01Xl/e4tYqWdzKhabVx4q5X0bwss=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jHJZq/L5jVAbKenrPlG/T5z4LWSnRulJtUSCZlezIdUSUji5cO3F3/hs5pQnPnIHsmUfAE4xW4kyyqPs7vX+ecETiqtdOj/sfJv3/jaoith7NlEgEicjxbAawOfSBt8ZUAe7Xc/XNWbLH7BzzhjF3sPkqmgrII+i6ZsMDoDS4Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ix347Nd6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748509459; c=relaxed/simple;
+	bh=m8JIOAJjyQG/OknuJGeN0vkewi5sVDBo1PFDvRss9Oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SlQCG4J4jLGuf4Krdi4ezgcYl6L0sAR7h4rBrhFxciJCaRvbt5RoGLNi5Co2lr5BvM6SLXnnL1PFEcGHE8Om3nk1M14zAN3AjC6T+TeewnWRP3ZlQSb2cSx+Fow34ZYV2q1NVvR8fzcYVTSS5ZZNBnsCWpv05I+p2Iajn17BBAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyvykenZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ix347Nd6"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T8GuWK013744;
-	Thu, 29 May 2025 09:03:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=QYitLenvKdMMoSXMFdk5ar
-	dpn4Q/7ywfa6pxQK9lrIQ=; b=ix347Nd6ze2cJCRJ2daKFNkDEcyo/tzCC7NeJt
-	K/KAoEQgnYf3/gt2BweZZCQVUux7x1KD28Zpwd976k/8eoIuE0TAG6rTHeggWa6s
-	LP91YyyeyEOblsuz/99DB14hwEWDFaGcwas13TUrbXtBnESJwu+N7tpWhK8s/0qb
-	SosBY9K4cjCdQNjjF627SX9BSbVqPJ5P8y9zyfxBaHOIJ5RdH050bd8T/sKekk0i
-	g1h/mJgIJTRzGakXKKgkO8azlUperwde7sovCH1WE9AG1P99yigaRrA+B00gNrm+
-	TEOezc+9iivizexOfBjB2VnSCSaTwkXmxmQnbFflqGHZnGmw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w691fnew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 09:03:59 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T93wFm032025
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 09:03:58 GMT
-Received: from zongjian-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 29 May 2025 02:03:56 -0700
-From: zongjian <quic_zongjian@quicinc.com>
-To: <quic_zongjian@quicinc.com>, <linux-serial@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <quic_ztu@quicinc.com>, <quic_haixcui@quicinc.com>,
-        <quic_anupkulk@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vdadhani@quicinc.com>
-Subject: [PATCH v1] serial: qcom-geni: Add support to increase UART ports efficiently
-Date: Thu, 29 May 2025 17:03:25 +0800
-Message-ID: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyvykenZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 990BDC4CEE7;
+	Thu, 29 May 2025 09:04:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748509456;
+	bh=m8JIOAJjyQG/OknuJGeN0vkewi5sVDBo1PFDvRss9Oc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gyvykenZ2FwGcV/On66Cc7zvjQu/DhxfM8lfpQXhgXcW4RqZmfF4PSNibMWqcBM4v
+	 W7L7FbCJyUjOhBgfQNH0/kOeulHipWGOtC1jCbSdZ6BscHt25sVroLhM2rjbvn28u3
+	 N9Vu5koOtG5WwFp5a8C671spWHlfrnECc+oXmOJ4uYm6XrXy3J2Frc7z5IfnfLW3SP
+	 rYE3h8XK5sxuxBZ73zZm+FNvpND3TOU5olKtev+VIOvF7FJhcmWS88CJbk2eAx83Tl
+	 lY5lp+NpN7xasXNs1ap9lKMZRG0sZp5z5zzF6VagV0RdmQgmf0MCydwi3Rj8qJVRvm
+	 IAzeSQ6ZYtGzg==
+Message-ID: <0e10b7d2-b917-48b7-a3c0-eb265c82a974@kernel.org>
+Date: Thu, 29 May 2025 11:04:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=WfoMa1hX c=1 sm=1 tr=0 ts=683822ff cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=fp4JcETvSatQGfsmKXEA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: QUXfGPdFBAar2tK12GA043gYDYLz3ZLC
-X-Proofpoint-ORIG-GUID: QUXfGPdFBAar2tK12GA043gYDYLz3ZLC
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4NyBTYWx0ZWRfXx8YG/8vr467x
- jn8EFj1ad/WPZG3p7cpNgxgOyRTGyJYdmhlp2CnL+5Pz7zOzKsKF3/oFwSo50/mePGnqSYmgf6a
- 8qMntEZytHDC/prRxOf9ZDed+NiDhWDwqlK6MG9Eb6URER7MhmghkooZwnWOpbD6llxn572IeU9
- XOeZlX6S5CMbs+xu5Usd4eHf5nCNInLWLfSCEE6on7YQkuyAggfGw0chKlBOm2+41+Jzt6VlUM0
- YRgPLAiO2Vxi78H8MkeysqYUlpBS0bDNdZxTS2YD1eHdN85JdZQOMyoF2dRDLRd3Gf5iDzuTk3D
- 5Xn6VLnj6j1gI6wtok0QMPgERguhEWPgUpAFxrEJ3fxXM3rsR+c6tgdBJHdokX31zlhl8YU7EgE
- LPb9PTqHbL5CBtcy77Flr2LbUuo8ESu+XsGsmgEP6oQbhXCcs/ZOSAYEFQP7j0j6Mr40B9jF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
- bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
- clxscore=1011 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290087
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: panel: Add Himax HX83112B
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250225-fp3-display-v2-0-0b1f05915fae@lucaweiss.eu>
+ <20250225-fp3-display-v2-2-0b1f05915fae@lucaweiss.eu>
+ <20250226-speedy-dark-mushroom-5d7c4b@krzk-bin>
+ <932d5cc223f8d1ff1bb09c68990e4a82@lucaweiss.eu>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <932d5cc223f8d1ff1bb09c68990e4a82@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Populate members of qcom_geni_uart_ports through a loop for
-better maintainability. 
+On 14/05/2025 16:31, Luca Weiss wrote:
+> Hi Krzysztof,
+> 
+> On 2025-02-26 07:46, Krzysztof Kozlowski wrote:
+>> On Tue, Feb 25, 2025 at 10:14:30PM +0100, Luca Weiss wrote:
+>>> Himax HX83112B is a display driver IC used to drive LCD DSI panels.
+>>> Describe it and the Fairphone 3 panel (98-03057-6598B-I) from DJN 
+>>> using
+>>> it.
+>>>
+>>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>>> ---
+>>>  .../bindings/display/panel/himax,hx83112b.yaml     | 75 
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 75 insertions(+)
+>>>
+>>
+>> Discussion is still going. Sending v2 after two days is hiding that
+>> previous talk, so that makes me sad.
+>>
+>> I am still at v1 and I am not going to review this one here.
+> 
+> Apart from [0] there was also no other activity in v1, could you take 
+> another look now?
+> 
+Keep only one compatible, so no himax fallback. This patchset rolled out
+of my inbox, so please send v3 or resend with short explanation in
+commit msg (no init sequence for generic himax, like you described in v1
+discussion).
 
-Increase the UART ports to 5, as a few use cases require more than 3 UART ports.
-
-Signed-off-by: zongjian <quic_zongjian@quicinc.com>
----
- drivers/tty/serial/qcom_geni_serial.c | 40 +++++++++------------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 140c3ae5ead2..d969c96b9690 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -77,7 +77,7 @@
- #define STALE_TIMEOUT			16
- #define DEFAULT_BITS_PER_CHAR		10
- #define GENI_UART_CONS_PORTS		1
--#define GENI_UART_PORTS			3
-+#define GENI_UART_PORTS			5
- #define DEF_FIFO_DEPTH_WORDS		16
- #define DEF_TX_WM			2
- #define DEF_FIFO_WIDTH_BITS		32
-@@ -153,6 +153,7 @@ static const struct uart_ops qcom_geni_console_pops;
- static const struct uart_ops qcom_geni_uart_pops;
- static struct uart_driver qcom_geni_console_driver;
- static struct uart_driver qcom_geni_uart_driver;
-+static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS];
- 
- static void __qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
- static void qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
-@@ -163,32 +164,15 @@ static inline struct qcom_geni_serial_port *to_dev_port(struct uart_port *uport)
- 	return container_of(uport, struct qcom_geni_serial_port, uport);
- }
- 
--static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS] = {
--	[0] = {
--		.uport = {
--			.iotype = UPIO_MEM,
--			.ops = &qcom_geni_uart_pops,
--			.flags = UPF_BOOT_AUTOCONF,
--			.line = 0,
--		},
--	},
--	[1] = {
--		.uport = {
--			.iotype = UPIO_MEM,
--			.ops = &qcom_geni_uart_pops,
--			.flags = UPF_BOOT_AUTOCONF,
--			.line = 1,
--		},
--	},
--	[2] = {
--		.uport = {
--			.iotype = UPIO_MEM,
--			.ops = &qcom_geni_uart_pops,
--			.flags = UPF_BOOT_AUTOCONF,
--			.line = 2,
--		},
--	},
--};
-+static void qcom_geni_serial_port_init(void)
-+{
-+	for (int i = 0; i < GENI_UART_PORTS; i++) {
-+		qcom_geni_uart_ports[i].uport.iotype = UPIO_MEM;
-+		qcom_geni_uart_ports[i].uport.ops = &qcom_geni_uart_pops;
-+		qcom_geni_uart_ports[i].uport.flags = UPF_BOOT_AUTOCONF;
-+		qcom_geni_uart_ports[i].uport.line = i;
-+	}
-+}
- 
- static struct qcom_geni_serial_port qcom_geni_console_port = {
- 	.uport = {
-@@ -2048,6 +2032,8 @@ static int __init qcom_geni_serial_init(void)
- {
- 	int ret;
- 
-+	qcom_geni_serial_port_init();
-+
- 	ret = console_register(&qcom_geni_console_driver);
- 	if (ret)
- 		return ret;
--- 
-2.34.1
-
+Best regards,
+Krzysztof
