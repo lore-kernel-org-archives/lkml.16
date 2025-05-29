@@ -1,109 +1,142 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8E42DCBE6
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88F6E55B;
+	Thu, 29 May 2025 07:33:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748503911; cv=none; b=JtuZUIvzE/r35eGC05stjhLyjmH2uSa5mU5lAC3T7z/sZcnhXqzMKL4oNnmeG5Kg0j0gkw6yezGs3In6JQR8WXgRzRjyU4j95WXniGPOSAQ/tXwSg/4TVsbxbADAXWhPUPu99gPNLNDHoMqsGIGgP6/Vup6qoYYawIvTvpAhjTk=
+	t=1748504001; cv=none; b=mjoFkr4rLbkBElWVWG3bq1Nj39oU59t+TVoHdApOucgcEp6FG8biWoDRe88QgLkbvHypAJV5gKOAfR3dn8UMQu4Zy7cJtfWD3DAqT+VodosEOd2bcLM67qQlXE928dh8XWIac658JpZXssSTt31Sg/1ByM4LmFppDEHbM5y10dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748503911; c=relaxed/simple;
-	bh=BFxCceWMxY0SEICuf5EA0saOeCuLQXtonksnjpgX6+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G10Brbh7U46aNSRno10kjOXB+h14PQ1OK3kJAAg+b1H+vSC887QFsV3zgVb/CKy03Xtm8Rt3cGF7zmCkZ7jBdUHRe8I7XHxVuneSRNot1VrNA/gjwTEzGgkoyKkNxwkq6XYkUvmoC7Ku2VpdnhPD7OpPhMEwLjpPML18pzSQXCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EOvxWJ3u; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748504001; c=relaxed/simple;
+	bh=7IP5ekTSLSlMe7UZeEBqVxWHnB94sfAN/0wo9YrsFfQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dVGNsH6iMVP15dmGKQ7M9v0Uo6RP7QJH53/U4UcujxcgcDNxgGWbHvUfCmAQh5iO7r5EBFxKXZYXWnhIeMrYMnVKDrtTblDPoYBjJgoXlr0OW07TfDbW5NY9yA3YnYvSiahgLTmaGYTrJvO8uBxVwZn8QbN0FCU+14JKBTm+sbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4HJisqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EOvxWJ3u"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-74068f95d9fso421229b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748503909; x=1749108709; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=62y5vxiX9AVUW2V52SBBgeurxZxG3fCF/i4ngW1ZYV8=;
-        b=EOvxWJ3uv88bCaXYGGZPhPYuQwLLhLvKeE6cqUFRXFv15QSpySVW+Q5b5eiGHQ29J/
-         +cs7IZ6cjNm6tgP/LXSHVBXxLblIaGGqNdz0ZcnvDDRQp8bOb0IoNEe1sNzt8QP1LkMR
-         N0OEu02LyIzKOrXIQh8PiIl/zj/01Y1oAogaJISLeGxEZi5aVqoSaXtT3Z2gsGu53QBv
-         MMNqXj0rD+y+ONgBzTkjI5H0CBNbI60efU2TyoF9wtrS6rLencx5BtowDHxEEeDBuSux
-         CUirAhNdr4L57VtRMuFKcY+gHVjVmqTwnFT1Ampj5qJ8DQUsZclbleDcVL0SYkRUTU0V
-         nkNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748503909; x=1749108709;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=62y5vxiX9AVUW2V52SBBgeurxZxG3fCF/i4ngW1ZYV8=;
-        b=RYw8DNNiBQEFY6fBYEHGaIHfZ0bdI6CooA+Ik4EQNsOsYXV8HiWISSwK8Ac6umbi/0
-         wLPg5yLbxn3d1qaciYJ1ESeH9Cbw6CgLqPjumxF4OO6cbvL2Jc58Om9JmnGW5glw9Gar
-         Nm3KH6oxELRd7NijfEr+FeOZd/nsZBLD1wFz9UPLXnILrpUCwH9LWy8kBHc+jbEY4d6L
-         r6dWl0SxUqX40kFlO2gt2jjfR4MWL/5WjimdWZEYi/SZIkEaM2T8N+Fls67CgoOsKtDJ
-         CgRSQAI9IfkaBPQiZIMO52disD1aBDE623UlHcduem/9GJwCXfCeQ+yeMgfmz0SGMqCU
-         7+VA==
-X-Forwarded-Encrypted: i=1; AJvYcCW0CdR4hUgeWGUqMiu7Gkt7pBB5HhQFnCbaBeVeBdSVxXzXQI4S7GjnB7ZNaj2zUN4rhbsgEzB+aMcKXc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM1McpIT7yWRJF9I25riOZyOjXofltNnxxoCxnv5Eg1CNQRGm1
-	mrdVL2M82o04CfXl+u1GjnnU41jnGzGlpqeBp/8zxvgIceZ/3j20rnW535ifgrzRftQ=
-X-Gm-Gg: ASbGncsbcgy5a5hbD7e20n2Wnqj+uQMUfRKs9fmVXerY9Ra6iKD1Drr7uUdpYtM0S7G
-	7N+D4MhJYJFDsX9ExchSwdJQ7AAFoh22ivfMe24qQ6DY4Mk1IIvuzNblE+/AxanM738ssLXFaTG
-	rOoonPd1XHZy6smv6GcBuJUknvoSqJtaVIEMWhGOeJGfDX7HHwur6ox++oTDoq/wQSgamOdgcpS
-	noj9mIHOUqv1Ae8AzTvB6ZlMgaEHLHerT6wXHWRQgeJrBmEy/lddEJtoDhl3xgwG6QFzZoAcvMF
-	mjQ+dio0MEPOujm086f6VhFtoYsEjqjKI+NSNFODM/CxGgWaqkvxANhpshuxJoE=
-X-Google-Smtp-Source: AGHT+IFdl3yeDqGbsySeFH3EsP9AcF6U1idqzjnmwCHgn9ExUS6KfoHWBKHAHvMS270b21x4Yy7Hwg==
-X-Received: by 2002:a05:6a21:3409:b0:1f5:8e94:2e83 with SMTP id adf61e73a8af0-2188c1eddbfmr31156339637.8.1748503908727;
-        Thu, 29 May 2025 00:31:48 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2d99ec762dsm2149640a12.52.2025.05.29.00.31.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 00:31:48 -0700 (PDT)
-Date: Thu, 29 May 2025 13:01:45 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Jason Wang <jasowang@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Bill Mills <bill.mills@linaro.org>, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] virtio-mmio: Remove virtqueue list from mmio device
-Message-ID: <20250529073145.ss5ejipnlbl6v5fj@vireshk-i7>
-References: <3e56c6f74002987e22f364d883cbad177cd9ad9c.1747827066.git.viresh.kumar@linaro.org>
- <CACGkMEsfgGU99_NC3NTYgyH89=6eADKPFiChVW0kZkfF1Js7NA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4HJisqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5BFC4CEE7;
+	Thu, 29 May 2025 07:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748503999;
+	bh=7IP5ekTSLSlMe7UZeEBqVxWHnB94sfAN/0wo9YrsFfQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t4HJisqUERWQWV9h+Amw32OF0pTsmDE96XmcPBxbvVOg/py1QWV9TtR+9BViDHEYp
+	 ByAZ+j5R/Y4E4yUeAbpA/8HdTM6p0mdaOt8G5JZwsgWUM+6kHzl1wBXrQGgcyZuUkh
+	 fPLLVrSLWq7MMuTYsCCmjFGvrRpAKOkA7CoHttSPW4b1vjrcpFLw2N2YWuhLZQrSlq
+	 SHpPNgdJNeCSh3MJRTgSLSn21AMW4lbqroK5HABvrJg9p1s4sbF6kPsVOC75QRIXuw
+	 Wukb7OBXgcBYdwJ2OEhFKPlZE/eaB4rcaaLM7PSK2OAHRjZ8ub4psKcyGqGg6XKgrc
+	 26sm05j0dYaBA==
+Message-ID: <119eba0a-2c81-4232-8b20-acc0a0eea969@kernel.org>
+Date: Thu, 29 May 2025 09:33:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEsfgGU99_NC3NTYgyH89=6eADKPFiChVW0kZkfF1Js7NA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] dt-bindings: input: Add TouchNetix axiom
+ touchscreen
+To: Marco Felsch <m.felsch@pengutronix.de>,
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>,
+ Danilo Krummrich <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
+ <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 29-05-25, 14:05, Jason Wang wrote:
-> On Wed, May 21, 2025 at 7:34 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > The MMIO transport implementation creates a list of virtqueues for a
-> > virtio device, while the same is already available in the struct
-> > virtio_device.
-> >
-> > Don't create a duplicate list, and use the other one instead.
-> >
-> > While at it, fix the virtio_device_for_each_vq() macro to accept an
-> > argument like "&vm_dev->vdev" (which currently fails to build).
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> 
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> 
-> Btw, virtio-vdpa may need the same optimization.
+On 29/05/2025 00:08, Marco Felsch wrote:
+> +maintainers:
+> +  - Marco Felsch <kernel@pengutronix.de>
+> +
+> +allOf:
+> +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
+> +  - $ref: /schemas/input/input.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: touchnetix,ax54a
+> +
+> +  reg:
+> +    enum: [ 0x66, 0x67 ]
 
-Sent a patch for that now.
+Isn't this the same address? You just added the write bit.
 
-https://lore.kernel.org/all/7808f2f7e484987b95f172fffb6c71a5da20ed1e.1748503784.git.viresh.kumar@linaro.org/
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  panel: true
 
--- 
-viresh
+So that was the reason of dropping tag?
+https://lore.kernel.org/lkml/821ce1d4-bc15-4764-bbe0-315c57e8536e@linaro.org/
+
+Anyway, drop the property. Redundant.
+
+> +
+> +  vdda-supply:
+> +    description: Analog power supply regulator on VDDA pin
+> +
+> +  vddi-supply:
+> +    description: I/O power supply regulator on VDDI pin
+> +
+Best regards,
+Krzysztof
