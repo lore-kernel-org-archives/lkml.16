@@ -1,105 +1,119 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4895220E00A;
-	Thu, 29 May 2025 02:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496C9242D9C;
+	Thu, 29 May 2025 02:15:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484809; cv=none; b=ekwpvuWATQvd1Xim3rqC+6WIvsICmeFNUvwBi19OJWHWMHPr1V0WtX/4edcxUJSyMO5u0v95ScwJYS3Oh7tVqm7SVowFVXLjHdS2Lw6xKzA0+rRXmooza6lndBr3DLi/mIb4A8/AjDjz0MKjP/hf6BC1NW2RXaoavsCn6T1T6UA=
+	t=1748484912; cv=none; b=WcRhTMUoksgQ2EEsouooe6b7IWsNhonzYFL/2Fb8xn5BBHR/iZszb+rN/847R+HI7Zxrf5w+oP/Hg0ysmnaw1xFj88SqwTC+M3VRllEEZA+Rdaeu9MaEVAEJPsM+hqHwpXEnbK4vcxYEVxG1Ce4v4w1bpqsQ1HLmKmPlMjeQ26A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484809; c=relaxed/simple;
-	bh=mZSanUQe638eriD7FH82IeJDDHhT6E7XOweAzZTdoiY=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=an+J1qvjG1u7/EE/ZheecSioOZcBZuFa239fxUyKHf6jxK8p1xiB6BwvQw0ZjAgFBLNXuGd1xWTVAn8DE1uHo2q9TeiwUW9LHhd8l2gx3moZ6vLwIXPvEMPJbIe9uy23p0sJErocmnio77++g2yo5amIcWohC3eFziBMsIqmzHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b78zj6vF7z51SYf;
-	Thu, 29 May 2025 10:13:21 +0800 (CST)
-Received: from xaxapp04.zte.com.cn ([10.99.98.157])
-	by mse-fl2.zte.com.cn with SMTP id 54T2D4GR008680;
-	Thu, 29 May 2025 10:13:04 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 29 May 2025 10:13:05 +0800 (CST)
-Date: Thu, 29 May 2025 10:13:05 +0800 (CST)
-X-Zmail-TransId: 2afb6837c2b10a1-40778
-X-Mailer: Zmail v1.0
-Message-ID: <20250529101305686S2ehGmiFg5bnKwSa__96W@zte.com.cn>
+	s=arc-20240116; t=1748484912; c=relaxed/simple;
+	bh=EoxXfjqQJa+uHDl+0+Ut+pp+gFvEpTPo9s3CoiFDFzM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nA92BOszu09ZsepbDgG6S1pHW1byvIBnil4Tv0sMkrJzDJ/m6WMJO4g+FdG0thC9KdqbJh7AvXCGAzGJX4bZpw9n3yYo7I/BeI6K7hgl+CK1u9UCGduDmxpRPRyqUZghKVpoBFrJcLIQUOaJtXgjVWsVEvD8HWP7rGm9An/mgJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Y5c6fJnI; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Y5c6fJnI"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54T2F4rtC641728, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1748484904; bh=RZOIfzAkp8jg2F0xwhigrEjaJYkmXDcOlNoLliD4Q44=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=Y5c6fJnI215YLOiajTcZXpYCi34dwERe1Vz/RI2/TprWzYfznsYSJNe4j0JVBFAgp
+	 IgWoogKTKtGNb46xKtWzarzaFv6S+2uaXrAx7iGx0/Z6hF87qLf8v7/0J/X/YLMocV
+	 w4w+GBXUFqpx772ymVH5zKzkt0UubqDKDvHUNlLbizMQp3LxSdIdE8Wyo5LcBTPCIA
+	 CozFTBy6R5OW/c5Ps+yAActBQVMly56pY57efp9PvEGGOBWajQNm5UIyHf4ngORRw9
+	 kSYneRG8ST4YmMcprsQRreTKM/SThFtDqvaM9b9hNcBY/CPqYaocNZguj6LEuRTDjJ
+	 pb/ABesh6oMzg==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54T2F4rtC641728
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 29 May 2025 10:15:04 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 29 May 2025 10:15:04 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 29 May 2025 10:15:03 +0800
+Received: from RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488]) by
+ RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488%2]) with mapi id
+ 15.01.2507.035; Thu, 29 May 2025 10:15:03 +0800
+From: Zong-Zhe Yang <kevin_yang@realtek.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Ping-Ke Shih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org"
+	<kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH v2 next] wifi: rtw89: mcc: prevent shift wrapping in rtw89_core_mlsr_switch()
+Thread-Topic: [PATCH v2 next] wifi: rtw89: mcc: prevent shift wrapping in
+ rtw89_core_mlsr_switch()
+Thread-Index: AQHbz6gTUgII+UrlxUO/ACeh6NJnC7Po3Hwg
+Date: Thu, 29 May 2025 02:15:03 +0000
+Message-ID: <a46c420109f0440a987d28c531dd39d6@realtek.com>
+References: <aDbFFkX09K7FrL9h@stanley.mountain>
+In-Reply-To: <aDbFFkX09K7FrL9h@stanley.mountain>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <ulf.hansson@linaro.org>
-Cc: <geert+renesas@glider.be>, <magnus.damm@gmail.com>,
-        <linux-pm@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <yang.tao172@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?cG1kb21haW46IHJlbmVzYXM6IHJjYXI6IFVzZSBzdHJfb25fb2ZmKCkgaGVscGVyIGluwqByY2FyX3N5c2NfcG93ZXIoKSBhbmQgcmNhcl9nZW40X3N5c2NfcG93ZXIoKQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 54T2D4GR008680
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6837C2C1.000/4b78zj6vF7z51SYf
+MIME-Version: 1.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-From: Shao Mingyin <shao.mingyin@zte.com.cn>
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>=20
+> The "link_id" value comes from the user via debugfs.  If it's larger than=
+ BITS_PER_LONG then
+> that would result in shift wrapping and potentially an out of bounds acce=
+ss later.  In fact, we
+> can limit it to IEEE80211_MLD_MAX_NUM_LINKS (15).
+>=20
+> Fortunately, only root can write to debugfs files so the security impact =
+is minimal.
+>=20
+> Fixes: 9dd85e739ce0 ("wifi: rtw89: debug: add mlo_mode dbgfs")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> Use IEEE80211_MLD_MAX_NUM_LINKS as a limit instead of BITS_PER_LONG.
+> It's stricter and also more informative.
+>=20
+>  drivers/net/wireless/realtek/rtw89/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/wireless/realtek/rtw89/core.c
+> b/drivers/net/wireless/realtek/rtw89/core.c
+> index 49447668cbf3..3604a8e15df0 100644
+> --- a/drivers/net/wireless/realtek/rtw89/core.c
+> +++ b/drivers/net/wireless/realtek/rtw89/core.c
+> @@ -5239,7 +5239,8 @@ int rtw89_core_mlsr_switch(struct rtw89_dev *rtwdev=
+, struct
+> rtw89_vif *rtwvif,
+>         if (unlikely(!ieee80211_vif_is_mld(vif)))
+>                 return -EOPNOTSUPP;
+>=20
+> -       if (unlikely(!(usable_links & BIT(link_id)))) {
+> +       if (unlikely(link_id >=3D IEEE80211_MLD_MAX_NUM_LINKS ||
+> +                    !(usable_links & BIT(link_id)))) {
+>                 rtw89_warn(rtwdev, "%s: link id %u is not usable\n", __fu=
+nc__,
+>                            link_id);
+>                 return -ENOLINK;
+> --
+> 2.47.2
 
-Remove hard-coded strings by using the str_on_off() helper function.
-
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- drivers/pmdomain/renesas/rcar-gen4-sysc.c | 3 ++-
- drivers/pmdomain/renesas/rcar-sysc.c      | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pmdomain/renesas/rcar-gen4-sysc.c b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-index e001b5c25bed..c8aa7538e95f 100644
---- a/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-gen4-sysc.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-+#include <linux/string_choices.h>
-
- #include "rcar-gen4-sysc.h"
-
-@@ -171,7 +172,7 @@ static int rcar_gen4_sysc_power(u8 pdr, bool on)
-  out:
- 	spin_unlock_irqrestore(&rcar_gen4_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pdr, ioread32(rcar_gen4_sysc_base + SYSCISCR(reg_idx)), ret);
- 	return ret;
- }
-diff --git a/drivers/pmdomain/renesas/rcar-sysc.c b/drivers/pmdomain/renesas/rcar-sysc.c
-index 047495f54e8a..dae01ca0ef6a 100644
---- a/drivers/pmdomain/renesas/rcar-sysc.c
-+++ b/drivers/pmdomain/renesas/rcar-sysc.c
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/iopoll.h>
- #include <linux/soc/renesas/rcar-sysc.h>
-+#include <linux/string_choices.h>
-
- #include "rcar-sysc.h"
-
-@@ -162,7 +163,7 @@ static int rcar_sysc_power(const struct rcar_sysc_pd *pd, bool on)
-
- 	spin_unlock_irqrestore(&rcar_sysc_lock, flags);
-
--	pr_debug("sysc power %s domain %d: %08x -> %d\n", on ? "on" : "off",
-+	pr_debug("sysc power %s domain %d: %08x -> %d\n", str_on_off(on),
- 		 pd->isr_bit, ioread32(rcar_sysc_base + SYSCISR), ret);
- 	return ret;
- }
--- 
-2.25.1
+It looks good to me.
+Thank you.
