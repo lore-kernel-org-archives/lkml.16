@@ -1,110 +1,132 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90EC71AF0C8;
-	Thu, 29 May 2025 22:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323E71AF0C8;
+	Thu, 29 May 2025 22:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748556754; cv=none; b=CU8g+mhruXl7t6YK2FEAhYOQIzChOeWk81Y4YXJSRF8yKhGmGR1ta0CAnZQM+ddV1xNfuExjjR4QgBJtX2PUje0n1QBettwM+Ypo6EtVAdGfXtROOgnwGA3HToLrEr5GIs4b3wSR/WWHP2dTZctNvKxC1nkMToZAVHeiNYKdSgA=
+	t=1748556803; cv=none; b=nUtP9lo/4vJspBDNqboqj2+fdNoZLCDkS4XR0u7Ra4LsMhs9S8lp/s0n50WFsS+GHCVT595kMVn78D21O0jeUUhOMpTVY/kAJcpf37+MorfrTh7cXhVK8cWs9BjcWiZpQUEpj8iC/FXnNmmhh6o0w1xot1GOslwTxN2nA+7WoF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748556754; c=relaxed/simple;
-	bh=4Iupiln/BgqshBDEn9yBfvIRrelaFb7lXwcLDuVcWvc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZMxkP5iKw0sRsljGNAxrJ107HkT46Q11allwm3fV+EeatpCzzZcJRX2Ch4UuMD9fctcMgTEBKMHWluGBkHt8HgnAV9nGO/dMmRM4jmSzk5y33pMdmlgoPIoSLtV7NyNySUR0iAt/6BIfoNK+vodGP0nNja+JljGWpTuyE3R+3HQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XbZO3H6e; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748556803; c=relaxed/simple;
+	bh=xxY0mcJQ2sbFaJYuTeLbn9Sqey4KIEkshMfxBVexDuM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FOX3KM4AGXbrcg7gVEi+JtfgS5cBevdx/nrw33ur7ZDp3delvJziLlQ4er1ngKdlb4eBcARfvbSeJLvTksrJ32ujAVlg1nPLZMbwy/NgCTbHexQE8RpEtzkoyjjn6kiADrtxeqY+sPyO7/Ov60AaR8RnsIPKiZ3tGlI//3EETa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQOec9eJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XbZO3H6e"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60b8a9be8a3so662651eaf.3;
-        Thu, 29 May 2025 15:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748556751; x=1749161551; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ue6o1C6d/kSRNPWgK84kUQwoXawmCLOvT1ulIKWZSR4=;
-        b=XbZO3H6efuHpFpt9UGKzT0BWlCuXDrFpINrJQ835ZqCsU0NL0Q3HX6oTF6M+Z8Q/xd
-         PwL9RqPWVLgZVT9UuN+ZJyYbuqRd4mRnVkJSlxgJU98pMcCWxKmgmwpKgHWp44iWzKUG
-         DXJWkuWOsdODYOMv2Yi7Y9C5zzsmfbroiJBkb6cALc1WE/tHecpJ3OxLJKLFn2HTvAmm
-         yLNYiErz/7RTTiePtIqylDg804xUGlWulri+fF6utiZRMrkDgHHvLTNSLAVzcGdH3ULF
-         8gOTwds4Aocvjtm6T+pH2dSDMkNWO+9utrT/Za2Sr+/Qryn56WDzYGVUocBmDDO0Hq2l
-         5qwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748556751; x=1749161551;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ue6o1C6d/kSRNPWgK84kUQwoXawmCLOvT1ulIKWZSR4=;
-        b=ShqcisW6iqeWEPr0NUlWKQdifAvJMszrdnlBJ+/pDQfne77cwdjQj5yc6nAfRHe02q
-         /8NCdsliLGYdA+wfXWG0DBZSxV+UlHCszJbu0L4mrDYvm9s5dQW5Schjo+ngEuyewjEa
-         EbsMr1pdl1ypWGCKXa7QDr4L1FSd++io1NDzhg5mnA+90Sd4rigHzT8+8sys2s5voqZ4
-         wlUDUElEjBlZkAYO9fgiR+wJNdyhT0kKnml3zE2nL+1UHIll0P6oiuQRZv+SmaD2nLfm
-         iEI2eQAVgE/wqI9h184CJA7UXJ6r+pA640bBdj41i8NKoZ2yWwVf1q1rXnzfkcTGN3k1
-         Nfig==
-X-Forwarded-Encrypted: i=1; AJvYcCU0ZsiShhDsHxy8G78qtaZZukR5xJOwzUHhPbwEE/U9sWtXEnOMYjLSqz7xO7k7NMM1gTKgGHi2SP2ve8Xq5sixjW18@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFPF2moPlfU/ShGWeLlPcevA4K+f2drowCQbBMrvw1ioltDGqi
-	tFOC9Svgx0NHaC0DLZI9812Y0hgm3iM6noJDO8zjg7EqLFfmQwrbDnHJ
-X-Gm-Gg: ASbGncsKbZt8FbVZDNxh45mmh5du0NpM2PM2xmkj1r7C9Ot/xfOdmzhOW71+r3dfFQc
-	zq2RSW6Xf1ZlXEnsQvveSjHk6etS7AQyRYPCJeNt2G5CQlPbc1ycklVKeNZ1l9FGhZahDcloRYh
-	oWzVYx6a/fEIhpx9i/4B+B2cG7getwl67PlaqdcPOtfQkOqwG1gko2aVfFiIK4L2MX4XwYIDE8X
-	k6Z4wBLmyY28OHpe+tmAXLTodepARY4s/+HJ3E1vHWqcu1lfoC4xAarpg26kgxr2nClTz/mF38h
-	7SQwtPEaG9r/oZNiZbLGl1dJp2LomM3eFJ5cXTehZ6Oi3sRWjzv+bVK6A5fXJ61ytt9+x1VdhD3
-	RzI7ji0FbDQg+cAC4NXhAaI0EErrehWEyivBTHXf/J63iW9A=
-X-Google-Smtp-Source: AGHT+IGOcQUephSzzgz2CHW+pPQ2opWwxKd9OY10/tYlSUj7AUQB1i4y6lml9sZHFa8PZ3aYyVAIpQ==
-X-Received: by 2002:a05:6820:1e0a:b0:60b:9d5b:e94b with SMTP id 006d021491bc7-60c4d729658mr951701eaf.4.1748556751341;
-        Thu, 29 May 2025 15:12:31 -0700 (PDT)
-Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c6fc02sm164228eaf.11.2025.05.29.15.12.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 15:12:30 -0700 (PDT)
-Message-ID: <9a1a1d6e-4d0b-4c0a-aa5c-31ee9ad65da2@gmail.com>
-Date: Thu, 29 May 2025 17:12:29 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQOec9eJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F8D9C4AF0B;
+	Thu, 29 May 2025 22:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748556802;
+	bh=xxY0mcJQ2sbFaJYuTeLbn9Sqey4KIEkshMfxBVexDuM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oQOec9eJ4w9Xuu+A5DX+SmBouTwXEqtwvVGPIEsvAQG6DcJKIxLx2+tUpNB4D6PEY
+	 +qfUOnfwwcbtt91YZlx+GAytlQHKcnirzIoJo8bISebN3p0N8rc1uZp4oZv5qNqpJ5
+	 hzhd4YBZGCOj5oGY1allWqh7NFiPITw8jQJYYuhzmj324DSAz0eGNqPU434/yI3LMU
+	 Be3uAg44Vxglt8inR+iTBCyBNYM23T6U1fAquDtLO4qX+aRL3ti7JwPViIz4nCA/gW
+	 8zJMwd4yYZS9n4cakhRA5GYPcW5rDKlFmDewTGOquETm01nwQVddJUkYyEoN3CNOPf
+	 K+1by/PRzYEFA==
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f8a87f0c0fso16064456d6.0;
+        Thu, 29 May 2025 15:13:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8WI/1eJWEgGeBigLjPdLPg0SBY/s+n9E9tg1ko/QZVqD0abhYr/pv/hQFDwS0p1RteW0V0StGVxAGa7Y+CFB0ST8LcqGr@vger.kernel.org, AJvYcCX+x9BIhOuGEMiGhfrQKlkxy+BREPeJd8qpyOLYusofQFQ8WvFTeHXLVbtB02px45BbQI8=@vger.kernel.org, AJvYcCXprOPteDQhS7YeT1QbwyTvf5BIClsiv/6Rv5PPNN2OLuz+g9qO6XJsNz4esxslccdmDnM9SvzFl3QDIHvC@vger.kernel.org, AJvYcCXqojrPSdvDLQQA5MFi576tRtxm1i84niN5dGLL4muR+DTNSdwjfl3YWBzKyDUWwil9Ze0pwde0LWJkwvFTyA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOPE9U7Pi1PFLOBRirXaH3xrBRK1ZXnMKSKc269pLIpW8XIZb+
+	N3zRHy6XOWXNfNi3j+h4TtVOwgX8eEf9w95MomVUQ7cg19JEeybCDYZfybkjg31Q/KLtsk/grVm
+	bQoRCwwrnHJdlWrWYPYgv9+BEkHKpe78=
+X-Google-Smtp-Source: AGHT+IFx/Rjj8wl+fEhyYFTmqqdXX4WjcWL3/wlDqc+AASjZ1F3EAsg9AtbK9ryGntD2sTCwzeCHdjrKPS6FPhMFZs0=
+X-Received: by 2002:a05:6214:1bc6:b0:6e8:fcde:58d5 with SMTP id
+ 6a1803df08f44-6faced53c8bmr22037216d6.42.1748556801752; Thu, 29 May 2025
+ 15:13:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] platform/x86: dell_rbu: Stop overwriting data
- buffer
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org
-References: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
- <20250522200937.9578-4-stuart.w.hayes@gmail.com>
- <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
-Content-Language: en-US
-From: stuart hayes <stuart.w.hayes@gmail.com>
-In-Reply-To: <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250528222623.1373000-4-song@kernel.org> <20250528223724.GE2023217@ZenIV>
+ <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+ <20250529173810.GJ2023217@ZenIV> <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
+ <20250529183536.GL2023217@ZenIV> <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
+ <20250529201551.GN2023217@ZenIV> <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
+ <20250529214544.GO2023217@ZenIV>
+In-Reply-To: <20250529214544.GO2023217@ZenIV>
+From: Song Liu <song@kernel.org>
+Date: Thu, 29 May 2025 15:13:10 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
+X-Gm-Features: AX0GCFvMB_asX2tV9a__ZYbs1_lQ1ls4xkVuw40QAjFRQukLvmEVfndQdfivv8o
+Message-ID: <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org, 
+	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
+	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, 
+	gnoack@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/25/2025 5:14 PM, Ilpo Järvinen wrote:
-> On Thu, 22 May 2025, Stuart Hayes wrote:
-> 
->> The dell_rbu driver will use memset to clear the data held by each packet
-> 
-> Please add () after function names.
-> 
->> when it is no longer needed (when the driver is unloaded, the packet size
->> is changed, etc).
->>
->> The amount of memory that is cleared is (currently) the normal packet
->> size.  However, the last packet in the list may be smaller.  Fix this to
-> 
-> One space is enough after .
-> 
->> only clear the memory actually used by each packet, to prevent it from
->> writing past the end of data buffer.
->>
->> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-> 
-> Fixes tag?
-> 
->> ---
+On Thu, May 29, 2025 at 2:45=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
+>
+> On Thu, May 29, 2025 at 02:07:31PM -0700, Song Liu wrote:
+>
+> > We have made it very clear what is needed now: an iterator that iterate=
+s
+> > towards the root. This has been discussed in LPC [1] and
+> > LSF/MM/BPF [2].
+> >
+> > We don't know what might be needed in the future. That's why nothing
+> > is shared. If the problem is that this code looks extendible, we sure c=
+an
+> > remove it for now. But we cannot promise there will never be use cases
+> > that could benefit from a slightly different path iterator.
+>
+> For the record, "use cases that could benefit from X" !=3D "sufficient re=
+ason
+> to accept X".
 
-Thank you for reviewing this! I sent a new version (V3) with these fixes 
-(and a module version bump).
+Agreed.
 
+>
+> > Either way, if we
+> > are adding/changing anything to the path iterator, you will always be
+> > CC'ed. You are always welcome to NAK anything if there is real issue
+> > with the code being developed.
+>
+> Umm...  What about walking into the mountpoint of MNT_LOCKED mount?
+> That, BTW, is an example of non-trivial implications - at the moment
+> you *can* check that in path->mnt->mnt_flags before walking rootwards
+> and repeat the step if you walked into the parent.  Clumsy and easy
+> to get wrong, but it's doable.
+
+Is it an issue if we only hold a reference to a MNT_LOCKED mount for
+short period of time? "Short period" means it may get interrupted, page
+faults, or wait for an IO (read xattr), but it won't hold a reference to th=
+e
+mount and sleep indefinitely.
+
+>
+> OTOH, there's a good cause for moving some of the flags, MNT_LOCKED
+> included, out of ->mnt_flags and into a separate field in struct mount.
+> However, that would conflict with any code using that to deal with
+> your iterator safely.
+>
+> What's more, AFAICS in case of a stack of mounts each covering the root
+> of parent mount, you stop in each of those.  The trouble is, umount(2)
+> propagation logics assumes that intermediate mounts can be pulled out of
+> such stack without causing trouble.  For pathname resolution that is
+> true; it goes through the entire stack atomically wrt that stuff.
+> For your API that's not the case; somebody who has no idea about an
+> intermediate mount being there might get caught on it while it's getting
+> pulled from the stack.
+>
+> What exactly do you need around the mountpoint crossing?
+
+I thought about skipping intermediate mounts (that are hidden by
+other mounts). AFAICT, not skipping them will not cause any issue.
+So I got the API to also show these mounts.
+
+Thanks,
+Song
