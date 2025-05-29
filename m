@@ -1,175 +1,189 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6892F3E;
-	Thu, 29 May 2025 01:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748481454; cv=none; b=g7yrwpv9w4vKdER7CU9G6e/9U2skXu9VWhhbfG8mIO0J0wNcX4RVkp9hkUnlQKNnVrFV0ZjqEVNlizhLOj/0xhezF6ahhjTtWcs5m2Wu3Cvpyl1GVpzx30thRIMw4Gift6VATJFM93Ttkyj/oI4AXQ1dCDz4K3CRcsPotNj273o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748481454; c=relaxed/simple;
-	bh=I+s5c7M9UXD5VAtyYRXYHGHT2EGBD11K/FtbBc6lSdw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=b1+ig6h2xOUnIzDkPYcMo97Y6bvnXYh2c9wVEH6zVS02TqOMvMcvwk3FX63ieEFm5cZgj+h+zU3kdV6KEana0g+9ehTk2RMYpyXQ+covnKX1a6cNFhtGZI+UgTM42j1FhaEyhHhealX6Zhj0xr+8w+TZqLlYCHYe5YIUywkGM0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tdjxoYDy; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E721CD2C;
+	Thu, 29 May 2025 01:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748481583; cv=fail; b=VAP5DqO2pEHzt3wCaFZ7H+/RRFlhmRTG2jUSxqXJYyvaUVRlJ+v5vRrpQGZh+rfMEfn8pRs54bkTiqeOZrnHlqP3TOGR2p+SEImPw7ImND+aaTWdmhGFImhKPOh907hVdUBr+7XLSQLswkVbL28Zq8PRlFG1IXUUdr/6BTzdLSY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748481583; c=relaxed/simple;
+	bh=w8sMi6CPO8WuwYYb5mssfTvg3BbgO/V0MTlECe7z2Ls=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sb6gXiRweiDlQF2VJOkfm2e8EP3/YqOZIoklil73FFZ+VtfGSZr/4/yZ1uGSvehPkKK45VIOPTeMTh39YXyytRZ7ndhBSUWIgqoPQO29IlSWonXBAazU3wGTM0fxKJXpSIxbS90vI4HHhj54ojQFqm8TukKpgnj72EJIqcoQDeY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vFRZpc9v; arc=fail smtp.client-ip=40.107.102.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tdjxoYDy"
-Message-ID: <de7bb6aa-543f-4bfa-a76c-722871a8f0f2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748481449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8uJJOQ8lxfvmIQ5Wkp1c8cgXJ9Z8D5V6tF2OpxE4+0s=;
-	b=tdjxoYDyfihDSKK53F2QPE25Xi4RHvl/i+uko67IN20AfTqw/yYy+C4v8Peh5pcKsbMf9e
-	DqICBUuPyrC0fJezQDQIQzdsOdd3ikrpy93YRfZUDQu1JhzCkuUcWP61I6hCtM26xHO7VW
-	nK/7rphkN1n8T56/5QltKyT5Tz/7VSE=
-Date: Wed, 28 May 2025 18:17:23 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vFRZpc9v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RGY4EdM+1QbOZTEgpi2JjfRXXu+cb84KGKNhVNiPDv/zcSK8L8oMhrCF5U40WMKT6vm0oT/Bnxczzth/dY0Urn+DcCG+Sw+qUrjCoLQEzM1B+iS4aESUXQSN9SBkCAVsUvNZDXCof4PXSJp++jfj4ywqp27o95Z7bdIki1pkT2B/Pscb2KcJ+bliHJLJPgMtwsEbbsZO5IeWVg6LqZYBg5dEzGI3QYiSNj4aZtU158LCIxk/TPRe8JK6WdxnkjIukgqU1KplWLTgyv3JuC9MPmc+pwiuVtoQCe1WKf6f2GobwMn1LmgoWSpO323J6UnDXC7JL3wHsU5vOjFFZUndtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g7IyjSgm+NNeE+29aQOctAXa4IJX1W7MNhxjn1DAV4Y=;
+ b=SEISaVUuHsPuJsFW5J6mnLdyMeqQDnht8oesIqqQ+gVnN3PicT19rbuLB5BtNzeYR7MvQ2iOlYbuVnGzMu3oahWN7gUu+P+udh+N+SeYd/E1MbPoyRbyfnibxz3E9KwWzNiubdmzNwCqu8/baitSbVAp5/MrM8vkY8rAy/LDdVOVghAO9VBGOWULKSFK+AGgLQ+9b8ULxGUqbLWvAfGxehO26iC3k55N9ghZDdaNLpYBIQUZ0siOMMhX46GHr9uvRkFkEWJ6wgZgsoJ6Cnqa5ZY5+u/8duJ2eiSPtmFCFedYhI1tGl4dL5033SqeYz62RiH6IlcYEdWfouyPOaWnog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g7IyjSgm+NNeE+29aQOctAXa4IJX1W7MNhxjn1DAV4Y=;
+ b=vFRZpc9vN0zTJeTB/mEd8y9lE/20Tq7sRsRkykoxTD7tt5Z0elk/altiHeWH2IhXj19sLIr3WnGdCJVX2lr5tgofwLsyYL7x1OqBoPnFB8Uce7jfKHOtu894DYqdwB9WFFapsn7zXM/Ky3EqZ197eBSuTdfXPeYpUqJ75v4BfKE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
+ by SA0PR12MB4382.namprd12.prod.outlook.com (2603:10b6:806:9a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Thu, 29 May
+ 2025 01:19:39 +0000
+Received: from BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
+ ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
+ 01:19:38 +0000
+Message-ID: <3ffa8780-f985-40ac-b011-e31c2cbfc8ba@amd.com>
+Date: Wed, 28 May 2025 20:19:34 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] crypto: ccp: Fix dereferencing uninitialized error
+ pointer
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: thomas.lendacky@amd.com, john.allen@amd.com, davem@davemloft.net,
+ dan.carpenter@linaro.org, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250528202018.78192-1-Ashish.Kalra@amd.com>
+ <aDebwj8rcuWPIKOa@gondor.apana.org.au>
+Content-Language: en-US
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <aDebwj8rcuWPIKOa@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P220CA0152.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:33b::10) To BL3PR12MB9049.namprd12.prod.outlook.com
+ (2603:10b6:208:3b8::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
- 3.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
- Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Mayuresh Chitale <mchitale@ventanamicro.com>,
- linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org,
- linux-riscv <linux-riscv-bounces@lists.infradead.org>
-References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
- <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
- <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
- <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
- <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
- <20250526-224478e15ee50987124a47ac@orel>
- <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
- <20250528-ff9f6120de39c3e4eefc5365@orel>
- <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
-Content-Language: en-US
-In-Reply-To: <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|SA0PR12MB4382:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e3939b9-1174-48bd-d1b6-08dd9e4ee126
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SDVDWmd1a2hWU3N6T2xMZXJJbDdOeDhOTUxHcU96OW1DZW5RaUpCTWdYSHM4?=
+ =?utf-8?B?eXRmNVUycVBXdWZvR3BQOWt5M2F2UDZORnByQXlxbU5neVlIZG9HbWZvOVgv?=
+ =?utf-8?B?ajlDWVRCTVhOWXU2a1NmUHRaQ1VZRXZmaExUWmk0Y3gvZjFydDNoaTRGSkRB?=
+ =?utf-8?B?V2hMTmpCenpoQVdsTU40c01WWHg3QUZuTjBFTXB2Y2dVSXRac0NyV0ZYakZy?=
+ =?utf-8?B?emZhTis2aEFLWk0vL3A3S2NmZDhRdW9NOGptY3NQdE5teFZ1ZDMwTVQ3eWRm?=
+ =?utf-8?B?VWxNOVFlQXZNMlVZWjRXTWhpUDdybWxVbm9XQy9PTm9CZzVxZDVSS3M2T2xQ?=
+ =?utf-8?B?UlVxYUZoWjJjbU1hd0hnc1lFc09xdjE5eU5wZFRMMEZIakw3VUdwdXhWeVJp?=
+ =?utf-8?B?M2g2ckZPMU5HZ3lJYXU4a0NaK0d3cHBrejF5ejhkN25tZnFBejdqTVpQRWh2?=
+ =?utf-8?B?M05ZMmgzd0g1aThYbmNSVlhGT0dXcWVXbGlWZjk3S0ZCMDdXaEVRcEYrOFFQ?=
+ =?utf-8?B?MFRXTTMrRW5lSGEwM1hPQkhqYktNYVhKTzRGbGJBQXB6b1lBenRvYzU5bmdG?=
+ =?utf-8?B?eUZMRFNwUllWdVpDaytlZ1A5enJtaUIyTGh0Y3QrM3BIckFiMi93ZFhMWlhx?=
+ =?utf-8?B?WGFjS2J1R0lNbU0wOU16eGlVNUp3SlFWeVBoendHcjhQcXFjWFlORTliL2o3?=
+ =?utf-8?B?QUV1aDFjMU0wbklqenRDTVFLUmVnSE04V2E4endKbjFDcG1MRndmdTJnQUIw?=
+ =?utf-8?B?aVVTOTdUQTFjMTkwWVFIMzNwVjFiYTF1TlZOV2tTVVVkUDRaeTVla1JmcmZP?=
+ =?utf-8?B?bUNsQ1BzalU0UEpWOFJrWnhVNVAyTTJZazU0eVZ1d0NCZ0w0Wm10SG5EeVAy?=
+ =?utf-8?B?eVJmZGI5WEFwT24xWGgyRWE2T1J5Smxsb0wvWUI4R1hVbDVVN1F4bTZuczF3?=
+ =?utf-8?B?T2s0K1IwRHBoN094YzdReWNNbXJCeEZJV1VBRjlvK2NTb2FhMnE3NlE2VXM0?=
+ =?utf-8?B?by9WVTgrUFlxd05oU2QyRFRxaFgvMXNmUGpIclBWWG9NK1pJVmJLbGNNRmVB?=
+ =?utf-8?B?OWdreENBRnFwTGlJb2NWYVZQYVFLMkk3ZldwcUs2WnQ1ZTJKOWNGUy91TTVV?=
+ =?utf-8?B?TXNDNmNlL21QMVRhUHRta2ZNUy9Pa1dldzRrUVBrSWJCZFdwV2FlckVuZ3NM?=
+ =?utf-8?B?SkhlRk9KaTEvRGJmSnlJZFB0SFc2NWdwb0VweDJMTVVxdjU1L2ZzTS9wNzgv?=
+ =?utf-8?B?Q3lrQkxMcVdFWTg1ZEZvYm5acGhWclZIZ1BNeTVscmFoUUFSMDZJNlptYzNV?=
+ =?utf-8?B?T1NyVjFybExFVjhaK003SDlwRUZMZHZRUk5lUm9vNGNzRVFLcmlHdGM4Nks1?=
+ =?utf-8?B?Nk9EVHp6Y0lqSUk5NVJrNTdBWU9YWVdmOGtoa3laUlUrYXNna3R2TGp0Rnl1?=
+ =?utf-8?B?b05JR1RacDdSOFMzZmVZUTMrZ0lscWpoYWJHajNYejlJelZ5bHNGdFpJYVN6?=
+ =?utf-8?B?K1ZWNkNPSXVpYWtGcGROSHFsdXp0K3E5QnQ0L1cwVTBLdjRxVkF5NjFGZjNj?=
+ =?utf-8?B?NXIzNlB3cm9hTDJkbFNib2k3UkZnY1prYlVVZXk2YmN2eUlRblFReHg3VDNa?=
+ =?utf-8?B?RHFUOW9LQ0hUN3g5QmwraUhkNjJpdUwxREFpSmJoYytnK3B2ZE5pMURWdkE1?=
+ =?utf-8?B?VzRMSmt3N0VHUmdOTWl2MW90VlhRSnZyZ0g0NEJRK053Tlg2QmN0aTJCZFJG?=
+ =?utf-8?B?Zkc2cUFYV0hGSlJwem4rbHZWcUJpS0EvL0dlS3hsdjM1a1IvRlpYT25NMFZX?=
+ =?utf-8?B?cE8zQ2krWU1NYm00R0tldUg4NmxpdVk2YjBwMklpWEtxZVkxYUM2SzY1RnlI?=
+ =?utf-8?B?QXNpd0liRjNUWnorWFYvd0VPUHl3ZzlGYW9UdEZtWFJVVGc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZG5VQ1kvVDNvNkNXdzY1R2luL1d3RUl3S2VCZ1N5OWN6NVphWU5BN1VLdDNI?=
+ =?utf-8?B?MmhEVGF3L0NSR2kxZ3BBTGFJcFE0MXhib1AyY2xDTXhLNFFFd1AySzlLQXo3?=
+ =?utf-8?B?aVQ4QytmYXU0UTFuT3VrQUdjUytuRHl2bHVxR0JNY1VPVC8vR2hqak13RDlx?=
+ =?utf-8?B?bk9MU05BSGhOTmZxTCt0dmZyT1pvdElWanFLMU9PaWdQdFA3eVFLSHF5YkYv?=
+ =?utf-8?B?TmZiK3p2Ti9aa2o0SVhDZVd2NG54NEJwaEpHSDE3YW9sS2VhSEgzVSsySG5h?=
+ =?utf-8?B?T3N1MWg0eDJ1ckJrQWNLWE1SUm55UlJLQmYvd3ljRzN3dGl6Q29lb2xUL2lr?=
+ =?utf-8?B?MVZKU25Vb2Z0cndYd3ZmUHFRR0VNYVNUQ3NITEFYVGZ6N2liMlhtMTY5dURz?=
+ =?utf-8?B?TlREaEN6YzJIYzB4Um5sQ3o3Ky85YTVUbW85UkwvZVB0SXlaZk5raUlneE5v?=
+ =?utf-8?B?MW40V0d5eTIzcHhVS0RHMkt0R1BtR3Fmd0loZzZsVGFOUDlPcW5FSGlzbitn?=
+ =?utf-8?B?ZXRvTURlQ1JQVDlYRkJqUElGQm50Mm1hNzVib3M2TTZNVlBFWkhxMnJTS0I5?=
+ =?utf-8?B?SnpTNEJwdFA1VndtaThkeGhYNHFQTDFaYnRVNEUweDdGb3BPUHVDM0F5NlZO?=
+ =?utf-8?B?aWw3QURjd1JoY0g3K0pSRzFyTWZ6TGNkYmowUkxPcVRwdlI3THFPZmR6ZEx6?=
+ =?utf-8?B?YStSZE8xRzZxR04xY3JNczczUDQ4MlFwSk1hdU5mbUFwcW5YdUVZVFZlTlRs?=
+ =?utf-8?B?T0FGWkx2THdNYmxXUisrclpJZ2luQUFPV0ZPKzdvVk8vamNVQmo3OTVrdUFs?=
+ =?utf-8?B?bTlOYlU1Z0p3SE5mNnJ6NmQ1Yms3eXJoTWVWbG1LMkxleUdKeTNkZ2NkWUVF?=
+ =?utf-8?B?WkZxdDhBMlNOUGxWbTVxYU5mWXRFMzJ3RW85WVpYQlMyUXpqZWdnUkIzd2V0?=
+ =?utf-8?B?MVc1Y3JOMjd3cGVWeU5xRTR3QnJDNVhlOGlzRHB6YXhsQkZrNlRkekMzQ0Mr?=
+ =?utf-8?B?WHhhT1kwSmMxaEk0TEh1Ry8rbkF3RGt3MFdtUDU1Ri9nSFVXaVpseWNLL0Nq?=
+ =?utf-8?B?M0RndXdkc0RFVjdrUm84M0dTUHlBYk1qaThUQTE1VHFvSlFpTmpiSGhNbGtt?=
+ =?utf-8?B?dGI4RUNISWpqYTNiUU9wMDdYdmJENmxlS0xSYURHTytmbzVEbjhLN1U4UkZk?=
+ =?utf-8?B?SjNKV1dsamhYOTM4MmJSZVUzOURDVnpGMzdUaEJiYlFnS0t5RHpZS05hcVRo?=
+ =?utf-8?B?dkJ1TlNzTnk4SmU4SEdoRlIvcEhYNmUraXpnalI5c3dSaGFXejZERThhVXBx?=
+ =?utf-8?B?TXd1Y3VoNUtQQVpTS2VrVThDcEtpbTR1akhNTGd0TEh5ZVBYWWlTTTh4cmlq?=
+ =?utf-8?B?ZEczNlozUjRCbHBweEpkZ0h5MDRhY3ExeEhSRmpWNGU3MDRGMzVzbGV5dW5T?=
+ =?utf-8?B?QTJCajlDeUNhaDlxNzN6MXhkRmE1akl3TXFQcTdIWHBqbzlWRGlPVU9WM1FU?=
+ =?utf-8?B?NGdFbzFaalcrZkF1TC90QUJyNUw4bzF4VGhuOHExWHhPOXRMR25OVFhuWUJa?=
+ =?utf-8?B?S1dCblRhdnRCK1lPMkg5a2dZeXNsS2VNSGh0dVQyMlVPTDZreFN1QXNLVnRB?=
+ =?utf-8?B?eEcreGQvVmxYSzA2RitpS1poTzJVcW51U2hKa3VyVnNkckFoSmdLMFFnTUtj?=
+ =?utf-8?B?OEhWdmpzSkoxWFB1T1VmYVJVRTBpR1E2cFJ3dGVGSy9SdWFralU0NUdjdUxB?=
+ =?utf-8?B?elNWMlhIYkVWZmZNaGdBYXc2V1p1K1RLU2Y0RjlpRlY0S1ZEbGgyYXNwWm85?=
+ =?utf-8?B?ZVNaK2J4VjRHS0lVRDBscjRrRGlrMGt3YVcrMFR4Z3VqR08weHJyTDhhOHl5?=
+ =?utf-8?B?WG9OWjQ3cmJReFEvNWlXeTJhRFNGTHBWanN3alNDQ1RMOHpoN0RkSENhWEpK?=
+ =?utf-8?B?UldCb1ZhMmg2YTVFc3FIbVlYTlA2RS9tL2dDQVVIdU1tcnd0OVlSTm05NW5m?=
+ =?utf-8?B?eU5HVXFrNVo0bjhndTZVZERNeFdDdnUxUitvMlJXK21kOVYwWVV6d0tCSUVO?=
+ =?utf-8?B?elpTUk8xTVZJS0g1NWIxaTZvaElSbEIxc1pvekR0S2xwaVpoaGpTYXJ3V3BH?=
+ =?utf-8?Q?qkO8T8NaTT7al8ly/XKx9Pjlc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e3939b9-1174-48bd-d1b6-08dd9e4ee126
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 01:19:38.1009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 48mdyb1whf8G1xyy8Tw2Hyo3cRXyX350EdSQaYrnAKlW0UIUIwA94aiw2IymncLwlYq5wC4hFPYuWD1ATZ8qbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4382
 
 
-
-On 5/28/25 12:21 PM, Atish Patra wrote:
-> <Removing Palmer's rivos email address to avoid bouncing>
-> 
-> On 5/28/25 8:09 AM, Andrew Jones wrote:
->> On Wed, May 28, 2025 at 07:16:11AM -0700, Atish Patra wrote:
->>> On 5/26/25 4:13 AM, Andrew Jones wrote:
->>>> On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
->>>>> 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
->>>>>> On 5/23/25 6:31 AM, Radim Krčmář wrote:
->>>>>>> 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
->>>>>>>> Upgrade the SBI version to v3.0 so that corresponding features
->>>>>>>> can be enabled in the guest.
->>>>>>>>
->>>>>>>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
->>>>>>>> ---
->>>>>>>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/ 
->>>>>>>> include/asm/kvm_vcpu_sbi.h
->>>>>>>> -#define KVM_SBI_VERSION_MAJOR 2
->>>>>>>> +#define KVM_SBI_VERSION_MAJOR 3
->>>>>>> I think it's time to add versioning to KVM SBI implementation.
->>>>>>> Userspace should be able to select the desired SBI version and 
->>>>>>> KVM would
->>>>>>> tell the guest that newer features are not supported.
->>>> We need new code for this, but it's a good idea.
->>>>
->>>>>> We can achieve that through onereg interface by disabling 
->>>>>> individual SBI
->>>>>> extensions.
->>>>>> We can extend the existing onereg interface to disable a specific SBI
->>>>>> version directly
->>>>>> instead of individual ones to save those IOCTL as well.
->>>>> Yes, I am all in favor of letting userspace provide all values in the
->>>>> BASE extension.
->>> We already support vendorid/archid/impid through one reg. I think we 
->>> just
->>> need to add the SBI version support to that so that user space can 
->>> set it.
->>>
->>>> This is covered by your recent patch that provides userspace_sbi.
->>> Why do we need to invent new IOCTL for this ? Once the user space 
->>> sets the
->>> SBI version, KVM can enforce it.
->> If an SBI spec version provides an extension that can be emulated by
->> userspace, then userspace could choose to advertise that spec version,
->> implement a BASE probe function that advertises the extension, and
->> implement the extension, even if the KVM version running is older
->> and unaware of it. But, in order to do that, we need KVM to exit to
->> userspace for all unknown SBI calls and to allow BASE to be overridden
-> You mean only the version field in BASE - Correct ?
-> 
-> We already support vendorid/archid/impid through one reg. I don't see the
-> point of overriding SBI implementation ID & version.
-> 
->> by userspace. The new KVM CAP ioctl allows opting into that new behavior.
-> 
-> But why we need a new IOCTL for that ? We can achieve that with existing
-> one reg interface with improvements.
-> 
->> The old KVM with new VMM configuration isn't totally far-fetched. While
->> host kernels tend to get updated regularly to include security fixes,
->> enterprise kernels tend to stop adding features at some point in order
->> to maximize stability. While enterprise VMMs would also eventually stop
->> adding features, enterprise consumers are always free to use their own
->> VMMs (at their own risk). So, there's a real chance we could have
-> 
-> I think we are years away from that happening (if it happens). My 
-> suggestion was not to
-> try to build a world where no body lives ;). When we get to that 
-
-We also support KVM as a kernel module. So it is relatively easier to 
-update the RISC-V KVM module for enterprise consumers.
-
-> scenario, the default KVM
-> shipped will have many extension implemented. So there won't be much 
-> advantage to
-> reimplement them in the user space. We can also take an informed 
-> decision at that time
-> if the current selective forwarding approach is better or we need to 
-> blindly forward any
-> unknown SBI calls to the user space.
-> 
->> deployments with older, stable KVM where users want to enable later SBI
->> extensions, and, in some cases, that should be possible by just updating
->> the VMM -- but only if KVM is only acting as an SBI implementation
->> accelerator and not as a userspace SBI implementation gatekeeper.
-> 
-> But some of the SBI extensions are so fundamental that it must be 
-> implemented in KVM
-> for various reasons pointed by Anup on other thread.
-> 
->> Thanks,
->> drew
+On 5/28/2025 6:26 PM, Herbert Xu wrote:
+> On Wed, May 28, 2025 at 08:20:18PM +0000, Ashish Kalra wrote:
 >>
->>>> With that, userspace can disable all extensions that aren't
->>>> supported by a given spec version, disable BASE and then provide
->>>> a BASE that advertises the version it wants. The new code is needed
->>>> for extensions that userspace still wants KVM to accelerate, but then
->>>> KVM needs to be informed it should deny all functions not included in
->>>> the selected spec version.
->>>>
->>>> Thanks,
->>>> drew
->>>>
->>>> _______________________________________________
->>>> linux-riscv mailing list
->>>> linux-riscv@lists.infradead.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>> @@ -1320,10 +1322,10 @@ static int __sev_platform_init_locked(int *error)
+>>  
+>>  	/* Prepare for first SEV guest launch after INIT */
+>>  	wbinvd_on_all_cpus();
+>> -	rc = __sev_do_cmd_locked(SEV_CMD_DF_FLUSH, NULL, error);
+>> +	rc = __sev_do_cmd_locked(SEV_CMD_DF_FLUSH, NULL, &dfflush_error);
+>>  	if (rc) {
+>>  		dev_err(sev->dev, "SEV: DF_FLUSH failed %#x, rc %d\n",
+>> -			*error, rc);
+>> +			dfflush_error, rc);
+> 
+> dfflush_error is never returned to the caller unlike psp_ret, is
+> this intentional?
+
+Yes, this is intentional. 
+
+As this function does SEV_INIT, it needs to return the firmware error (psp_ret) of SEV_INIT back to the caller.
+
+For DF_FLUSH failures, errors are indicated only via the log and for that dfflush_error is used.
+
+Thanks,
+Ashish
+
+> 
+> Thanks,
 
