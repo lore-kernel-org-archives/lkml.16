@@ -1,63 +1,63 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FC422A811
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB74218AB3
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748555180; cv=none; b=ZlK11M382gLSv5CjW+jaLz/io746cPNkeO1zVcOFxbpMldr1xYokSfWs2Jdsfx3bllLZioPYOf3qRzQXGdWFmH/c3dDMQeqAdKhT9B/pQbTr2LjZS6gVW2hjtWbP6K3tXYjTaVFaOy5z/m+bU3cppJHy9+4KSscfDZEC1Lyv2Vs=
+	t=1748555332; cv=none; b=nfMEAPasfcqcljniDdRxlj5XmOyBRjUcfD7DR4ssADCbc2m3F/7HYd1WHPcSERVkuY+aQArMZey8ZKdCMlWfGorjvd+G8HLMdE9PZMdi4S7cs4UPog0Tt23l1nFBVLyDc5ay0jZG2Hcw4TrwmE0ymsel6MGlVuE2yJyRdvlVgaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748555180; c=relaxed/simple;
-	bh=3FbM/5b/f6R7ql+h6I/ET3q5rvjJXKdSarztikH9TWE=;
+	s=arc-20240116; t=1748555332; c=relaxed/simple;
+	bh=dJOYjPMUXFyM/9ihamvsM91Mu+OZMNo9b2u4FSLpFgs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KSBN4BwP0U/ZRttCfXMVkyWa1hAsgm5Gm/jRw0MeVjhGX/HLrSQ7IimKv6c9a9RToD8iC9S0926ggZH0zu3Ypgo0Aq3xcEuLCvyQD84OqK7r8G1NRYQpCk1Acy0AHN/gggwXDS5c29L267tTTSPQXB1PR4SSnhg6aNN+vT+2jN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=FaOFK8hN; arc=none smtp.client-ip=209.85.214.171
+	 In-Reply-To:Content-Type; b=MetTQdY3J+XBkbP082bR9GJm1aGr9QnMEBv1Sh5qTgTO5xqaI49uLIjbmxuYgEbUJXJypiExVO+Z4ulqtBI9UlfeBAmuXrIbIF8/lfWp33VEc3v3vPe3NzNTNZOkasG8fYWgYMDJ2UZvpVUHdUNVsDsT9iIHw6lCeg3iNy/0ju0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=g/ub5XcA; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FaOFK8hN"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2345c60507bso9983895ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:46:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="g/ub5XcA"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso975833b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748555178; x=1749159978; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1748555330; x=1749160130; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=EnXkwa2sU7C5+9WFcS6JOR66fh1+6TmCOrRHRKwjJuE=;
-        b=FaOFK8hNB6E/wUdoqjwn2q9DKSqGqxNBfPe/XAGF4OhKwL47ulGajzhiWBX4uCl+BB
-         kTteH2tHQqmHD5crb+bwmTFcedo8x/jnxehe+kqqW18ejo7TvRCtVf06++bS+U51CVc/
-         XI9yup5ycHL8fpGaUU7VKZ+jMG2DrOyModbIo=
+        bh=X0dZteGZJJIJ9Qm1S27Qbb5Af2ayRJsCBBhcuN4pSnY=;
+        b=g/ub5XcAKwW107IpP6u20lENpTTnGpZ4c+t0nNgkkDa+u1OBAub4EkXWhK3HnCtZ+a
+         b6Y8u3yuJ36GYrsOF/1YIf60qit/y5ZcAFiAggUbc9XTeTo+igHz1Dj+7O2w5x5dGTB4
+         49jp+gJf3GPWAmZTpGESHsbcYzhdru3a2Hebs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748555178; x=1749159978;
+        d=1e100.net; s=20230601; t=1748555330; x=1749160130;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EnXkwa2sU7C5+9WFcS6JOR66fh1+6TmCOrRHRKwjJuE=;
-        b=rOZHa2MxxIfLDEa3CmqJjiAUUARTiJFJCf0E23O0zWAzSU0Cu98xY1+k7bQu5Cd+tK
-         c/pOvqK7/2xjClFb8Ue3nRqWDq6DC6pFCiq5cYlJmNrk+6ISS1SbyhRWazyLppGWWf0s
-         QdPCXiEBOr4IKCVBrX66AapTbS9CrabNdhXbbEVuG7yCcIHWrkbo5s4fR52rvtfjZywW
-         Sy13fBbWssTERky8CzK0KV7UfExHLcz9uySz1bFPtFFUFn4AFbc5X9wMv0miOmUdAGe3
-         nDyey4QfGi7TAf4E2xnCSza53R1CPVKdfRt4VuUW0mnEZzZojthJJoqegtw/h7b5ReHj
-         Nw8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRqMaaQE9LFi5CcQS/wLLIJS6ps/eOBw5ArKqt2DxYg8loNibMXQsJiuPAOnI7aO+/ihhsMIl++yTqzEs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwokUy+sW6OhjtrF3YikmSvPp6sxwli/DwYyeAN29ab7i93S1Hl
-	xC6P+pA0bGJvbgFrpepKUWehhx8nPNKWEy3UXK7E8OVeMOMFl8criuh/p+OqoMv/8w==
-X-Gm-Gg: ASbGncv9KjyiW7ugkM+lecVRchw4bAoGi7Y9X8gx8huEPrb035+YxVrnKQSiGQ6oval
-	TAQ1Nn8IyhiRhv7NkHSnLd9TKiQ3mX3ezzpolh+xDtZODv2nvLMYchbWrLxIZbreUVtiIV2FPgY
-	7AZTVnyAGapPDSeibx03p7/+mC8l3RJkTODKv2J7vMBDSxEZwQlv4ruZrLODK1Xos03ByrkFnDA
-	MvIMo7GFRSegXxVyMbgWCSI7oM7lIfkks7zhsW2GOCOMYSRoWC3MIir8CcNDca08VTnDz0isfKM
-	K3mC9dnAe4TPOgPpDhwfMoDa7CGHqi3+el213nTpjg8lGM4237gJlwpMsvmcfOLbp5XUJsVpIT9
-	8nY4ECg==
-X-Google-Smtp-Source: AGHT+IFH4yiLjc7+rYpcNKeGFb0X58Lt8uVD7icqkiOq9jNa+l2IJnQL44ftXB+axaOdZQB+DLu65g==
-X-Received: by 2002:a17:902:f788:b0:234:bc9f:82f2 with SMTP id d9443c01a7336-2352a089905mr14711675ad.46.1748555178460;
-        Thu, 29 May 2025 14:46:18 -0700 (PDT)
-Received: from [10.69.40.38] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb28c98sm446643a12.19.2025.05.29.14.46.16
+        bh=X0dZteGZJJIJ9Qm1S27Qbb5Af2ayRJsCBBhcuN4pSnY=;
+        b=pm7kSPI4YFXxdBjgobUfZV88PpPHu+7lfawolEck1Jt3CAo6qoun+5SGBNQG/jxzgc
+         ePLAwFg4LyO7ReCmvPCPvvsSf6NBioqdcgJ/QUzULUByBS2SunZjkJ2Q1CQ0rEVMG4MV
+         OPQ3H9MhcsKDfj+ktOd2hecTdv4M42epH3oJHnBNMJjZwowqQYZ48H0OGjs+BcHWiCTg
+         7o7p+RIkDc+eHNmu5Z3p0Ma91sNyEluLTEYwRnTv9nMpb0dCJxqNIqH4jsOrXaLESTW2
+         aziJyBfUDvlySwqp5a3yFM+W+Am6Yy6aMOswaur+gw7SiySB41FQnjRM9j3e4sgi9oE+
+         lW/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX3aZPtqjbdSbxf9OyMgQBL5joYz/68EEfdZ6apmz+ZUP75oev8+QMKN07YEsnZhQabcjfPsc4l69Kbnqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxbzbXhnsFImTxZ8QHIwhjIm9c4eQbN5BHsYV1vqzFu3hCHrwW
+	VXyiFmBQ5DSArX4lhC/dRWrGIICndC/Dgo0ryROTfhYQDSpkKonM5KQnhqj7jZ/Rsw==
+X-Gm-Gg: ASbGnctG4cpseKiqqZlZ1ggW8rBf1ibT+AVYQi0dd/Z6ln9xaAdARR89l918V76jjBJ
+	89jDrr+AHZeqhZSOlumIq1GecYU3N8QwXpO1VkuUFxzKVjk/bRfbBZQ77oaAwfc4bzcfXzpGoM/
+	9Z2/39VZkt7zcFe7lAYVg80KDQ4A0PLCuwN9qGwm8mqMCY4oVsgbnJsqW7qdx4UzEr9BPqaEFWC
+	+U0A8mdyFA9hcVlq4u1spzJ2WsdqGPjwnfVlymwdHFlMMjZEEr7IkxSvhIDnOhtnqyjpkz+eshv
+	btKkKtFJnJRHBRebPMdeKYY2RbsaPEWgxH241bHc6sofV22wuSW8fW0gPMfj/4OBRluA0s+5mIL
+	I5FKQvQ6blBKPof4=
+X-Google-Smtp-Source: AGHT+IECQIFuFJQIQo7spxow/4rGedbVwpZnB5OC15Us4YjxIv3h8MLW6G8nfxsK55TvvCyuYzkq7A==
+X-Received: by 2002:a05:6a00:b43:b0:742:a4e0:6476 with SMTP id d2e1a72fcca58-747bd954bd2mr1371245b3a.4.1748555329862;
+        Thu, 29 May 2025 14:48:49 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afff70b5sm1786617b3a.160.2025.05.29.14.48.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 14:46:17 -0700 (PDT)
-Message-ID: <90e91a4f-56de-421d-8e4d-1e641a2ad430@broadcom.com>
-Date: Thu, 29 May 2025 14:46:16 -0700
+        Thu, 29 May 2025 14:48:48 -0700 (PDT)
+Message-ID: <31ffaaed-b52a-4756-a53c-103b09241582@broadcom.com>
+Date: Thu, 29 May 2025 14:48:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,13 +65,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: dsa: tag_brcm: legacy: fix pskb_may_pull length
+Subject: Re: [PATCH] spi: bcm63xx-spi: fix shared reset
 To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
- florian.fainelli@broadcom.com, jonas.gorski@gmail.com, dgcbueu@gmail.com,
- andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529124406.2513779-1-noltari@gmail.com>
+ dgcbueu@gmail.com, william.zhang@broadcom.com, kursad.oney@broadcom.com,
+ jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+ broonie@kernel.org, p.zabel@pengutronix.de, linux-spi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250529130915.2519590-1-noltari@gmail.com>
+ <20250529130915.2519590-2-noltari@gmail.com>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -106,20 +107,18 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250529124406.2513779-1-noltari@gmail.com>
+In-Reply-To: <20250529130915.2519590-2-noltari@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-
-On 5/29/2025 5:44 AM, Álvaro Fernández Rojas wrote:
-> BRCM_LEG_PORT_ID was incorrectly used for pskb_may_pull length.
-> The correct check is BRCM_LEG_TAG_LEN + VLAN_HLEN, or 10 bytes.
+On 5/29/25 06:09, Álvaro Fernández Rojas wrote:
+> Some bmips SoCs (bcm6362, bcm63268) share the same SPI reset for both SPI
+> and HSSPI controllers, so reset shouldn't be exclusive.
 > 
-> Fixes: 964dbf186eaa ("net: dsa: tag_brcm: add support for legacy tags")
+> Fixes: 38807adeaf1e ("spi: bcm63xx-spi: add reset support")
+> Reported-by: Jonas Gorski <jonas.gorski@gmail.com>
 > Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
 Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
 Florian
-
