@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787751B6D06;
-	Thu, 29 May 2025 09:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1743C1B6D06;
+	Thu, 29 May 2025 09:01:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509244; cv=none; b=dxjG0s9Dxoxmj6X9rxbfjSF/y+yIp5qHV6aVuqRWf0ynGHDdNk5LrwP6ilt9IIN+sqtaqbmuVNrH9hWm7QFTf9elgYgBezC3jGax95tN9SuLrYf9VoXx8FrnoalFhVF3PylKPnXDLLLzxyWAOWPy3iX/fz4V7nhkw2llY+x/CQo=
+	t=1748509295; cv=none; b=TXurk30SDM4vnUpoINX938FI2nOpaKf44fPIRzm5B9vns8F3epWU8ZhQ9PeGCm+QjdxtgdbfqKx1yPC8GH1huSEowiFHWKOWA/k14EJ1XbAzH5n82IpPzkooKbhmT6nrnY36ap2nC0/HZH31s/AvSBee4uyCNDy9bZNkoCNE5L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509244; c=relaxed/simple;
-	bh=z6rn8oeHUdTWK5F9qwdWd7GFhM+29i6k/K02iAi8NjY=;
+	s=arc-20240116; t=1748509295; c=relaxed/simple;
+	bh=/F6/DXzn9Rhch+OmnF6nx0kwrtWRRAJCYSnxlsc0kYE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UqBL1NR7oactxSUSug4cGpJYZx+i1twJxDSZXAhAabdbK8MgQ10DDzTqn2Pky/dNGEV5uNDsJW/NEQJZMveEZke4jkoKYLtmHhz+yUBoDWJtjy4SD4bXy9w/TL/D37Bm1wB1Ehsfxttz/UsjJjMSgNoYrJhTNg3U60Go2yloOPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3C7bxoG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KI3gzL6LKgV7w5oToDZEG7dIw4x/0mKp+ppPnS27/wZOaBkdb9Y0bT7/mp8THp/edfMGuaKgH7jUVYi0RRhhyCcfExZ0KbQaEb1KDnfHU6PCZED/UUtZp2Zx+sxPdWFcaCktMnQhwuC2A548t6MOIbVjGxjpspwL2CZAdKicS5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ISYwJir1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3C7bxoG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E8EC4CEE7;
-	Thu, 29 May 2025 09:00:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ISYwJir1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABC2C4CEE7;
+	Thu, 29 May 2025 09:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748509244;
-	bh=z6rn8oeHUdTWK5F9qwdWd7GFhM+29i6k/K02iAi8NjY=;
+	s=k20201202; t=1748509292;
+	bh=/F6/DXzn9Rhch+OmnF6nx0kwrtWRRAJCYSnxlsc0kYE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g3C7bxoGUoOdpvGlkqcYQDn6dC+O5ojEWiuQRaQKIc9ej0Qq2saE4UCEnQSXqrgDA
-	 +DhXyaw8Y3f+O1zdbt23n3MMD/vXbGV3a2bAKSt5DcM94pBmLhtY+biMG8b3wY40j3
-	 kXpuB63OXBhkGYCyk/JJFdl/ECYAWqqCGqzzJA34g/E+rxmIEaiPYTS+hCe0qI/05t
-	 agrZ3U0aKlM1bQ9vApxjSTIlY3CRZc9khH7PBtd+iGF+tiVgIyyW0m8LD4JFzmiasM
-	 vu7aosqlIU27R10eC/YIjsk3QwBH+anBTrNw+cvki/jystFwMn0dBRqIvQoAxPElLI
-	 ixikskPP3qjrA==
-Message-ID: <3fb8ad2b-016d-4eee-af57-be7dec659f4c@kernel.org>
-Date: Thu, 29 May 2025 11:00:39 +0200
+	b=ISYwJir1bMRAPsuMiZOBJHVVkxaZF85KGfFJsJsp49oT+xk6HqQaqBs3Pi7zqRMA5
+	 jcu1X7IijkpyDWLOTnSAaux41T0/n7WH2MF7JSiBuJqv4CZgWCS/nbxVliZlcsbYs5
+	 GIgrWYAImzqd5lVN44E8pwXiRTZUgH5z9TVmKqTgr1soXWIeEyNGOKbiFi3vkhy1Lf
+	 8b+kgjJCjn1DnbD/KP96B7gHj+zypMqndAHMg4aNay296uIcL6ukFurz/njylxbQoo
+	 MQQTEttQGfqcd/8sltBHVGCzcSUWP2RtP7H+HKsXpIA/+UqKverteDBCzaExQG2Jqh
+	 f+/+qRWY3Bhsg==
+Message-ID: <3ba588ed-1614-4877-b6fc-b5aa853b8c2e@kernel.org>
+Date: Thu, 29 May 2025 11:01:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] dt-bindings: clock: airoha: Document support for
- AN7583 clock
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH v3 5/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp13
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250528004924.19970-1-ansuelsmth@gmail.com>
- <20250528004924.19970-5-ansuelsmth@gmail.com>
- <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
- <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
- <969c42d7-0a40-4daf-a074-f2713d0d0412@kernel.org>
- <6837084c.050a0220.1e474f.3f20@mx.google.com>
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
+ <20250523-hdp-upstream-v3-5-bd6ca199466a@foss.st.com>
+ <5b7a2102-ff68-4aab-a88d-0c4f9195ef95@kernel.org>
+ <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,150 +95,26 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <6837084c.050a0220.1e474f.3f20@mx.google.com>
+In-Reply-To: <3c868c4b-8a0e-44b5-9d6e-3a0526d9deeb@foss.st.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 14:57, Christian Marangi wrote:
->>> Again sorry if this question keeps coming around and I can totally
->>> understand if you are getting annoyed by this. The reason I always ask
->>> this is because it's a total PAIN to implement this with the driver
->>> structure due to the old "simple-mfd" model.
+On 28/05/2025 14:14, Clement LE GOFFIC wrote:
 >>
->> ... and Rob was saying multiple times: be careful when adding
->> simple-mfd. If it bites back, then I am sorry, but everyone were warned,
->> weren't they?
+>>> +		};
+>>> +
+>>> +		hdp: pinctrl@5002a000 {
+>>> +			compatible = "st,stm32mp131-hdp";
+>>> +			reg = <0x5002a000 0x400>;
+>>> +			clocks = <&rcc HDP>;
+>>>   			status = "disabled";
 >>
->> What is exactly the pain anyway? You cannot instantiate children from
->> SCU driver?
->>
+>> Why are you disabling it? What is missing?
 > 
-> Answering below since they are related.
-> 
->>>
->>> (as again putting everything in a single node conflicts with the OF
->>> principle of autoprobing stuff with compatible property)
->>
->> I am not sure if I follow. What principle? Where is this principle
->> expressed?
->>
->> And you do not have in your second example additional compatibles, so
->> even if such principle exists it is not broken: everything autoprobes, I
->> think.
->>
->>>
->>
->>
-> 
-> The principle I'm talking about is one driver for one compatible.
-
-There is no such principle. One compatible can map to many drivers and
-many compatibles can map to one driver.
-
-> (to be more precise excluding syscon compatible that is actually
-> ignored, if a driver for the compatible is found, any other compatible
-> is ignored.)
-> 
-> This means that declaring multiple compatible as:
-> 
-> compatible = "airoha,clock", "airoha,mdio"
-> 
-> doesn't result in the clock driver and the mdio driver probed but only
-> one of the 2 (probably only clock since it does have priority)
-
-I don't understand this example. It makes no sense - clock is not
-compatible with mdio.
-
-> 
-> The "simple-mfd" compatible is just a simple compatible that indicate to
-> the OF system that every child (with a compatible) should be also probed.
-> And then automagically the driver gets probed.
-> 
-> Now the ""PAIN"" explaination. Not using the "simple-mfd" way with the
-> child with compatible and putting everything in the node means having to
-> create a dedicated MFD driver that just instruct to manually probe the
-> clock and mdio driver. (cause the compatible system can't be used)
-
-You already have that driver - SCU. No need for new MFD driver...
-
-
-> 
-> So it's 3 driver instead of 2 with the extra effort of MFD driver
-> maintainer saying "Why simple-mfd is not used?"
-
-Sorry, that's a wrong argument. You can use simple-mfd, iff it follows
-standard practices. If it does not fit standard practices, you cannot
-use an argument "now I need more complicated solution".
-
-> 
-> 
-> There is a solution for this but I always feel it's more of a workaround
-> since it doesn't really describe the HW with the DT node.
-
-Really? All arguments you used here are driver arguments - that
-something is a pain in drivers. Now you mention that hardware would not
-match description.
-
-Then let's change entire talk towards hardware description and send
-patches matching hardware, not matching your MFD driver structure.
-
-> 
-> The workaround is:
-> 
-> 		system-controller@1fa20000 {
->                         /* The parent SCU node implement the clock driver */
->                         compatible = "airoha,an7583-scu", "syscon";
->                         reg = <0x0 0x1fb00000 0x0 0x970>;
-> 
->                         #clock-cells = <1>;
->                         #reset-cells = <1>;
-> 
->                         /* Clock driver is instructed to probe child */
->                         mdio {
->                                 compatible = "airoha,an7583-mdio";
-
-Again, drop compatible.
-
->                                 #address-cells = <1>;
->                                 #size-cells = <0>;
-> 
->                                 mdio_0: bus@0 {
->                                         reg = <0>;
->                                         resets = <&scuclk AN7583_MDIO0>;
->                                 };
-> 
->                                 mdio_1: bus@1 {
->                                         reg = <1>;
->                                         resets = <&scuclk AN7583_MDIO1>;
->                                 };
->                         };
->                 };
-> 
-> 
-> But this really moves the probe from the simple-mfd to the clock driver.
-> 
-> So it's either 3 solution
-> 1. 2 driver + "simple-mfd"
-> 2. 3 driver + PAIN (due to MFD required driver)
-> 3. 2 driver + not very correct DT node structure
-
-Option 4:
-Describe it correctly. You have one device which is the SCU which is
-clock provider and has subnode for MDIO bus. I don't care how many
-drivers you have there (but I am sure one can do it in a simple way).
-
-> 
-> Maybe option 3. is more acceptable?
-> 
-> The SCU node is mainly clock + reset controller and the MDIO bus is an
-> expansion of it?
-> 
-> Hope the long explaination makes sense to you (especially about the
-> OF principle thing)
-> 
-> --
-> Ansuel
-
+> Nothing is missing just disabled by default.
+> The node is then enabled when needed in board's dts file.
+Nodes should not be disabled by default if they are complete. That's why
+I asked what is missing. Drop.
 
 Best regards,
 Krzysztof
