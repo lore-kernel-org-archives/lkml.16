@@ -1,55 +1,55 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F7C258CD9
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F5725B694
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493630; cv=none; b=QYOYUE88hJ6QDJ7CyMt2nFEiveSAnoweJYHlhcff0xdTzzWz0C19h8qt3WuY/0mYPH1FmmossnKbQDOBM/tmIN7PVjwAzFdP/N4dpp8OaS/R1BSD3Px66vsof8AZbvH/lULDgKse00I2SgH3IZiYcOjrhFa96LIw1UuphItgyrU=
+	t=1748493635; cv=none; b=sww+3ue4a0USXgowmdDuhs7bJL0rDAQmPenUKSAMbMU3MxoMiFj+a4j9C+0X3ubOjkz0pflJFaKEi3d0Zz1Im/lIV0PXbh3k7pKMahAB4t67+yh14UnObfCUa+y1g25+HbfXJxqlATer4S72MWHAAT3Ujbtq2oNcq41kkQyOrMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493630; c=relaxed/simple;
-	bh=M5M9ye5F0FJF65FYFrjZ9vt5rb2bEBifYQyamYzaT7Y=;
+	s=arc-20240116; t=1748493635; c=relaxed/simple;
+	bh=JY2a2d5vFdTqqDzjexlzy3Nj8OgtAMcziLNo0hZmdJ0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Za+oGbRvMPh3OVkoKZ+tV9gxdJWamme396tNbZ7kWYAxYx3SlsJYIM5oSZQu9tOYr6AH8Di6Y55aUDWRGyhuvNTW8hUYgKLpCjEO9WtVrnX2X7mVCqUcXBFTjlFU//5AlNgWkIOCknPNyvvH2MVBTuAEnj3lC547+jN+aNqyESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zuvL9zVy; arc=none smtp.client-ip=209.85.215.202
+	 To:Content-Type; b=HtIR8lMGMWhlwT9C0/ub4VNd+NZFgvjZyHhkoX9lah4JakI/pAGhqhxDQCfFfv+lx4klJOb0TSKGcMb7X5ktRlXB3QyWObZglnxa6L793enC4QBXiOeipQBrFwbBZpDgvPFn3VC+4DMMBKPpKsVTjI/bdIKuRmbeZ8tZfF5NHL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hgp2dQRU; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zuvL9zVy"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26eec6da92so1243518a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hgp2dQRU"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-311dbea6c10so701554a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493627; x=1749098427; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493632; x=1749098432; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ut75WEyWq89fAbRvISklTvbsNDy7PpJu27a2wp+U/T4=;
-        b=zuvL9zVyqUM0UDa4JcRytbG5i/RSDJa4VFPwzpknjPyVrD+Q6MXzzj9GbK86TXfwGZ
-         W+nvd6pwgGLlcGX7cuZFvbBgjpCjdCriCBle1VQLBXMFjGNcB0vQNnSgLPDCXnD+Dis5
-         /L1WJomWTQaMKYd2uDYnTJRecd/xbgATLLMeecBmXYxdEFZ5IkC+Uk2nFICxumHAyc1u
-         TldQIMDsoEB1iJCx7uUb7q2EsROZc3emU3xVbFIifbGxce5hf6wkhFk6P68n+SO2hgTU
-         QAkzonPkE+EzQCM0oclX/ZUiHSwXAR9pTNSe/Of7IWmLjZ+83ohpcf2l2Q9Pu2CKOTkj
-         6uqg==
+        bh=8LK7iDpNNVVXiwLz6xcBPyvta4UJ5eaUxuovNk4JAts=;
+        b=Hgp2dQRUE3auNfsWjzAMraI+kvJAaWDlgI0MhpJ67bTwfidBo3OM2bv5/oHT4tJWeJ
+         7Wk/xLyYDEj9OxRjlWIZQKhi0PqUAweVWT+dOsUlJBi3XxvuDf8U7PF6CCqe2HHTEHkm
+         UWtyYQLdNQND5pHYzpxJlax2daKYnWdHM2K4Nqm1+xOqxpvcwR6KkXe1QCliJWuIhji9
+         tHNXhhRILopxi5EztX9HEUjfy8SokEd4iXoQM9cyQgHIiLhLtyV0erqHVcmElrVoRujg
+         upq6EyAfgBjMJxT7U/qAowInONaLKQW8bqP3BcCorArOCQno8yzT7yRg3RV/7fqhce7M
+         Ue+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493627; x=1749098427;
+        d=1e100.net; s=20230601; t=1748493632; x=1749098432;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ut75WEyWq89fAbRvISklTvbsNDy7PpJu27a2wp+U/T4=;
-        b=TjgYL2vGCGfXY+gwUP+b2SzmdvHw6WSbVsvoXXrGsrtshCZUP9DROMM4oPbD9Z215J
-         v++ZFXArsvYWZCrCnCqQNNDZxgWa2k38T1YwZGFuNECZLNh38WBQS3wJBNoI5jF6oiPQ
-         jUDNHPGR/FuKHhY0SWL0fRjPvtzJ3tOt8VPtcPcwT15T78tNTQaZmtanqNdP9rb6cpop
-         Y+nJAX/i6hvrH4zwHWtKIRu40oqkKSX7jVSg4sV1QA2obVtEnnDBkTmmtvecBdTsDN5R
-         pkUzh7Ny+4OlG/vdTXaIXO+wrqJKRzSOzhOODRYXDVzwRdaap+IjA7KtHmVGbE21zPuM
-         /QLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvcRGbjRU3YJn7z4MxkEB+tztkp7DWJUdnSicFdhjJWqWnS1zxqCjU80qHoE7TT1G8gWjvGZD0X+NPhhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMxhUiTDpELxDwcWy8Ce8Mx5n84nPZNzQdEJJRxesOlv/poKQZ
-	+4ZdfezFLBOPmg6lIBxx+WS8QRhWINUtZjiS1T0VbtVVC6Wh8yzLkroR5YspEo8XbTuq+b8JO7i
-	yWBTI8hQL4w==
-X-Google-Smtp-Source: AGHT+IGUJHXSsIZFZSmgdRe1ztb3MySVK7WIr5jrQa2pUDIcQrAFX7VUUDx8N+7XqN568eZkCFY8vCVfoTdF
-X-Received: from pjbsb16.prod.google.com ([2002:a17:90b:50d0:b0:311:37af:c5d6])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3848:b0:311:be43:f09a
- with SMTP id 98e67ed59e1d1-31214e6e01dmr2774381a91.9.1748493626616; Wed, 28
- May 2025 21:40:26 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:46 -0700
+        bh=8LK7iDpNNVVXiwLz6xcBPyvta4UJ5eaUxuovNk4JAts=;
+        b=FuNDc3dabFubIIKk8ahKMVDJgzT29w9QLd56KbAP+2BjBy/xj7d1eUFRQDuGGA7tYr
+         Ogjj9h3JJl6YO1bltSBvNDRrsMjErFlYQM/t9BnT0z1u7547IVKLCbi9Zu9UDvJ08Grd
+         kWdQMKD86ZbSnJqSQCq+SHJjy/HQnyeUylhZX9HUMspws6hkUy4R4PbQcMaC6ZrRIvlx
+         iUvY7rq2il3s0SO3/ZB4BxHp1wFn/JvpyYcU7oYQuMJWY03Bck47vz2Ex8tBtFBfO3Vv
+         BbD7Ee3zG7yRzVb3M4zLgmd/UrKOAYiP7hgFzjig+9a4Xt0Ao9keMXekiUURlpziFeku
+         qdwg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8BD4NmMp25kRKqUkU/3w2+/jM75md6EshK0vea13OI7nkbcaKJDn8voTX1duWEuyqfQoYhtsXm8iEPTc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwUNwhbr71qx8vp70lB42d8TZZJaWfzUkJqMmOK9ZDKlAu6Gao
+	m+b3xO79r+IN0/W8RFewp9ObevSy4vl7+iwEC8UUPakKWLu9V3+iFVD8L2GLZx4BRUYfZ0HhQ1I
+	wikWvt3sLag==
+X-Google-Smtp-Source: AGHT+IFiVUEgqDm22MHTvJ1Dg53rZerkDm4fxHMhqC8mmFJSMu6m1dbh9+wdRefdElVRgB2MYP+yLZCBMZy2
+X-Received: from pjf8.prod.google.com ([2002:a17:90b:3f08:b0:311:e9bb:f8d4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:e710:b0:311:c1ec:7d05
+ with SMTP id 98e67ed59e1d1-3121dcc7360mr1188641a91.35.1748493632569; Wed, 28
+ May 2025 21:40:32 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:49 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-11-irogers@google.com>
-Subject: [PATCH v4 10/24] perf session: Add accessor for session->header.env
+Message-ID: <20250529044000.759937-14-irogers@google.com>
+Subject: [PATCH v4 13/24] perf header: Clean up use of perf_env
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -89,918 +89,586 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-The perf_env from the header in the session is frequently accessed,
-add an accessor function rather than access directly. Cache the value
-to avoid repeated calls. No behavioral change.
+Always use the perf_env from the feat_fd's perf_header. Cache the
+value on entry to a function in `env` and use `env->` consistently in
+the code. Ensure the header is initialized for use in
+perf_session__do_write_header.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-annotate.c       |  4 +--
- tools/perf/builtin-buildid-cache.c  |  2 +-
- tools/perf/builtin-c2c.c            | 16 ++++++------
- tools/perf/builtin-inject.c         |  2 +-
- tools/perf/builtin-kmem.c           |  2 +-
- tools/perf/builtin-kvm.c            |  4 +--
- tools/perf/builtin-kwork.c          |  2 +-
- tools/perf/builtin-lock.c           |  4 +--
- tools/perf/builtin-mem.c            |  2 +-
- tools/perf/builtin-record.c         | 22 +++++++++--------
- tools/perf/builtin-report.c         |  8 +++---
- tools/perf/builtin-sched.c          |  8 +++---
- tools/perf/builtin-script.c         | 14 ++++++-----
- tools/perf/builtin-stat.c           | 23 ++++++++---------
- tools/perf/builtin-timechart.c      |  2 +-
- tools/perf/builtin-top.c            |  5 ++--
- tools/perf/builtin-trace.c          |  2 +-
- tools/perf/tests/topology.c         | 38 +++++++++++++----------------
- tools/perf/util/bpf-event.c         |  2 +-
- tools/perf/util/branch.c            |  2 +-
- tools/perf/util/data-convert-bt.c   | 16 ++++++------
- tools/perf/util/data-convert-json.c | 36 +++++++++++++--------------
- tools/perf/util/session.c           |  7 +++++-
- tools/perf/util/session.h           |  2 ++
- tools/perf/util/tool.c              |  2 +-
- 25 files changed, 120 insertions(+), 107 deletions(-)
+ tools/perf/util/header.c | 178 ++++++++++++++++++++++-----------------
+ 1 file changed, 100 insertions(+), 78 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9833c2c82a2f..326593862998 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -562,7 +562,7 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 	}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b078abe8e492..830a622723b3 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -557,6 +557,7 @@ static int write_event_desc(struct feat_fd *ff,
+ static int write_cmdline(struct feat_fd *ff,
+ 			 struct evlist *evlist __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	char pbuf[MAXPATHLEN], *buf;
+ 	int i, ret, n;
  
- 	if (!annotate_opts.objdump_path) {
--		ret = perf_env__lookup_objdump(&session->header.env,
-+		ret = perf_env__lookup_objdump(perf_session__env(session),
- 					       &annotate_opts.objdump_path);
- 		if (ret)
- 			goto out;
-@@ -896,7 +896,7 @@ int cmd_annotate(int argc, const char **argv)
+@@ -564,7 +565,7 @@ static int write_cmdline(struct feat_fd *ff,
+ 	buf = perf_exe(pbuf, MAXPATHLEN);
  
- 	symbol_conf.try_vmlinux_path = true;
+ 	/* account for binary path */
+-	n = perf_env.nr_cmdline + 1;
++	n = env->nr_cmdline + 1;
  
--	ret = symbol__init(&annotate.session->header.env);
-+	ret = symbol__init(perf_session__env(annotate.session));
+ 	ret = do_write(ff, &n, sizeof(n));
  	if (ret < 0)
- 		goto out_delete;
- 
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index e936a34b7d37..c98104481c8a 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -453,7 +453,7 @@ int cmd_buildid_cache(int argc, const char **argv)
- 			return PTR_ERR(session);
- 	}
- 
--	if (symbol__init(session ? &session->header.env : NULL) < 0)
-+	if (symbol__init(session ? perf_session__env(session) : NULL) < 0)
- 		goto out;
- 
- 	setup_pager();
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e2e257bcc461..8cb36d9433f8 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2267,14 +2267,15 @@ static int setup_nodes(struct perf_session *session)
- 	int node, idx;
- 	struct perf_cpu cpu;
- 	int *cpu2node;
-+	struct perf_env *env = perf_session__env(session);
- 
- 	if (c2c.node_info > 2)
- 		c2c.node_info = 2;
- 
--	c2c.nodes_cnt = session->header.env.nr_numa_nodes;
--	c2c.cpus_cnt  = session->header.env.nr_cpus_avail;
-+	c2c.nodes_cnt = env->nr_numa_nodes;
-+	c2c.cpus_cnt  = env->nr_cpus_avail;
- 
--	n = session->header.env.numa_nodes;
-+	n = env->numa_nodes;
- 	if (!n)
- 		return -EINVAL;
- 
-@@ -3030,6 +3031,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 	};
- 	int err = 0;
- 	const char *output_str, *sort_str = NULL;
-+	struct perf_env *env;
- 
- 	argc = parse_options(argc, argv, options, report_c2c_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
-@@ -3072,14 +3074,14 @@ static int perf_c2c__report(int argc, const char **argv)
- 		pr_debug("Error creating perf session\n");
- 		goto out;
- 	}
--
-+	env = perf_session__env(session);
- 	/*
- 	 * Use the 'tot' as default display type if user doesn't specify it;
- 	 * since Arm64 platform doesn't support HITMs flag, use 'peer' as the
- 	 * default display type.
- 	 */
- 	if (!display) {
--		if (!strcmp(perf_env__arch(&session->header.env), "arm64"))
-+		if (!strcmp(perf_env__arch(env), "arm64"))
- 			display = "peer";
- 		else
- 			display = "tot";
-@@ -3109,7 +3111,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out_session;
- 	}
- 
--	err = mem2node__init(&c2c.mem2node, &session->header.env);
-+	err = mem2node__init(&c2c.mem2node, env);
- 	if (err)
- 		goto out_session;
- 
-@@ -3117,7 +3119,7 @@ static int perf_c2c__report(int argc, const char **argv)
- 	if (err)
- 		goto out_mem2node;
- 
--	if (symbol__init(&session->header.env) < 0)
-+	if (symbol__init(env) < 0)
- 		goto out_mem2node;
- 
- 	/* No pipe support at the moment. */
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index bdd51fc1685c..17dd0b906898 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2607,7 +2607,7 @@ int cmd_inject(int argc, const char **argv)
- 		inject.tool.finished_round = perf_event__drop_oe;
- 	}
- #endif
--	ret = symbol__init(&inject.session->header.env);
-+	ret = symbol__init(perf_session__env(inject.session));
+@@ -574,8 +575,8 @@ static int write_cmdline(struct feat_fd *ff,
  	if (ret < 0)
- 		goto out_delete;
+ 		return ret;
  
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 67fb1946ef13..7929a5fa5f46 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -2024,7 +2024,7 @@ int cmd_kmem(int argc, const char **argv)
- 		symbol_conf.use_callchain = true;
+-	for (i = 0 ; i < perf_env.nr_cmdline; i++) {
+-		ret = do_write_string(ff, perf_env.cmdline_argv[i]);
++	for (i = 0 ; i < env->nr_cmdline; i++) {
++		ret = do_write_string(ff, env->cmdline_argv[i]);
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -586,6 +587,7 @@ static int write_cmdline(struct feat_fd *ff,
+ static int write_cpu_topology(struct feat_fd *ff,
+ 			      struct evlist *evlist __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct cpu_topology *tp;
+ 	u32 i;
+ 	int ret, j;
+@@ -613,17 +615,17 @@ static int write_cpu_topology(struct feat_fd *ff,
+ 			break;
  	}
  
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	if (perf_time__parse_str(&ptime, time_str) != 0) {
- 		pr_err("Invalid time string\n");
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 67fd2b006b0b..b3f4797d4342 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1175,7 +1175,7 @@ static int cpu_isa_config(struct perf_kvm_stat *kvm)
- 		}
- 		cpuid = buf;
- 	} else
--		cpuid = kvm->session->header.env.cpuid;
-+		cpuid = perf_session__env(kvm->session)->cpuid;
- 
- 	if (!cpuid) {
- 		pr_err("Failed to look up CPU type\n");
-@@ -1561,7 +1561,7 @@ static int read_events(struct perf_kvm_stat *kvm)
- 		return PTR_ERR(kvm->session);
- 	}
- 
--	symbol__init(&kvm->session->header.env);
-+	symbol__init(perf_session__env(kvm->session));
- 
- 	if (!perf_session__has_traces(kvm->session, "kvm record")) {
- 		ret = -EINVAL;
-diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
-index c41a68d073de..d2e08de5976d 100644
---- a/tools/perf/builtin-kwork.c
-+++ b/tools/perf/builtin-kwork.c
-@@ -1804,7 +1804,7 @@ static int perf_kwork__read_events(struct perf_kwork *kwork)
- 		return PTR_ERR(session);
- 	}
- 
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	if (perf_kwork__check_config(kwork, session) != 0)
- 		goto out_delete;
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 41f6f3d2b779..d525a25fa84e 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1876,7 +1876,7 @@ static int __cmd_report(bool display_info)
- 	}
- 
- 	symbol_conf.allow_aliases = true;
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	if (!data.is_pipe) {
- 		if (!perf_session__has_traces(session, "lock record"))
-@@ -2042,7 +2042,7 @@ static int __cmd_contention(int argc, const char **argv)
- 		con.save_callstack = true;
- 
- 	symbol_conf.allow_aliases = true;
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	if (use_bpf) {
- 		err = target__validate(&target);
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 5ec83cd85650..c6496adff3fe 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -304,7 +304,7 @@ static int report_raw_events(struct perf_mem *mem)
- 			goto out_delete;
- 	}
- 
--	ret = symbol__init(&session->header.env);
-+	ret = symbol__init(perf_session__env(session));
+-	ret = perf_env__read_cpu_topology_map(&perf_env);
++	ret = perf_env__read_cpu_topology_map(env);
  	if (ret < 0)
- 		goto out_delete;
+ 		goto done;
  
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fe70f55fd172..66569ec4410e 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2194,7 +2194,7 @@ static int record__setup_sb_evlist(struct record *rec)
- 			}
- 		}
+-	for (j = 0; j < perf_env.nr_cpus_avail; j++) {
+-		ret = do_write(ff, &perf_env.cpu[j].core_id,
+-			       sizeof(perf_env.cpu[j].core_id));
++	for (j = 0; j < env->nr_cpus_avail; j++) {
++		ret = do_write(ff, &env->cpu[j].core_id,
++			       sizeof(env->cpu[j].core_id));
+ 		if (ret < 0)
+ 			return ret;
+-		ret = do_write(ff, &perf_env.cpu[j].socket_id,
+-			       sizeof(perf_env.cpu[j].socket_id));
++		ret = do_write(ff, &env->cpu[j].socket_id,
++			       sizeof(env->cpu[j].socket_id));
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -641,9 +643,9 @@ static int write_cpu_topology(struct feat_fd *ff,
+ 			goto done;
+ 	}
  
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, perf_session__env(rec->session))) {
- 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
- 			return -1;
- 		}
-@@ -2213,15 +2213,16 @@ static int record__init_clock(struct record *rec)
- 	struct perf_session *session = rec->session;
- 	struct timespec ref_clockid;
- 	struct timeval ref_tod;
-+	struct perf_env *env = perf_session__env(session);
- 	u64 ref;
+-	for (j = 0; j < perf_env.nr_cpus_avail; j++) {
+-		ret = do_write(ff, &perf_env.cpu[j].die_id,
+-			       sizeof(perf_env.cpu[j].die_id));
++	for (j = 0; j < env->nr_cpus_avail; j++) {
++		ret = do_write(ff, &env->cpu[j].die_id,
++			       sizeof(env->cpu[j].die_id));
+ 		if (ret < 0)
+ 			return ret;
+ 	}
+@@ -2111,17 +2113,18 @@ static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
  
- 	if (!rec->opts.use_clockid)
- 		return 0;
+ static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct pmu_caps *pmu_caps;
  
- 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
--		session->header.env.clock.clockid_res_ns = rec->opts.clockid_res_ns;
-+		env->clock.clockid_res_ns = rec->opts.clockid_res_ns;
+-	for (int i = 0; i < ff->ph->env.nr_pmus_with_caps; i++) {
+-		pmu_caps = &ff->ph->env.pmu_caps[i];
++	for (int i = 0; i < env->nr_pmus_with_caps; i++) {
++		pmu_caps = &env->pmu_caps[i];
+ 		__print_pmu_caps(fp, pmu_caps->nr_caps, pmu_caps->caps,
+ 				 pmu_caps->pmu_name);
+ 	}
  
--	session->header.env.clock.clockid = rec->opts.clockid;
-+	env->clock.clockid = rec->opts.clockid;
+-	if (strcmp(perf_env__arch(&ff->ph->env), "x86") == 0 &&
+-	    perf_env__has_pmu_mapping(&ff->ph->env, "ibs_op")) {
+-		char *max_precise = perf_env__find_pmu_cap(&ff->ph->env, "cpu", "max_precise");
++	if (strcmp(perf_env__arch(env), "x86") == 0 &&
++	    perf_env__has_pmu_mapping(env, "ibs_op")) {
++		char *max_precise = perf_env__find_pmu_cap(env, "cpu", "max_precise");
  
- 	if (gettimeofday(&ref_tod, NULL) != 0) {
- 		pr_err("gettimeofday failed, cannot set reference time.\n");
-@@ -2236,12 +2237,12 @@ static int record__init_clock(struct record *rec)
- 	ref = (u64) ref_tod.tv_sec * NSEC_PER_SEC +
- 	      (u64) ref_tod.tv_usec * NSEC_PER_USEC;
+ 		if (max_precise != NULL && atoi(max_precise) == 0)
+ 			fprintf(fp, "# AMD systems uses ibs_op// PMU for some precise events, e.g.: cycles:p, see the 'perf list' man page for further details.\n");
+@@ -2130,18 +2133,19 @@ static void print_pmu_caps(struct feat_fd *ff, FILE *fp)
  
--	session->header.env.clock.tod_ns = ref;
-+	env->clock.tod_ns = ref;
+ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	const char *delimiter = "# pmu mappings: ";
+ 	char *str, *tmp;
+ 	u32 pmu_num;
+ 	u32 type;
  
- 	ref = (u64) ref_clockid.tv_sec * NSEC_PER_SEC +
- 	      (u64) ref_clockid.tv_nsec;
+-	pmu_num = ff->ph->env.nr_pmu_mappings;
++	pmu_num = env->nr_pmu_mappings;
+ 	if (!pmu_num) {
+ 		fprintf(fp, "# pmu mappings: not available\n");
+ 		return;
+ 	}
  
--	session->header.env.clock.clockid_ns = ref;
-+	env->clock.clockid_ns = ref;
+-	str = ff->ph->env.pmu_mappings;
++	str = env->pmu_mappings;
+ 
+ 	while (pmu_num) {
+ 		type = strtoul(str, &tmp, 0);
+@@ -2223,17 +2227,18 @@ static void memory_node__fprintf(struct memory_node *n,
+ 
+ static void print_mem_topology(struct feat_fd *ff, FILE *fp)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct memory_node *nodes;
+ 	int i, nr;
+ 
+-	nodes = ff->ph->env.memory_nodes;
+-	nr    = ff->ph->env.nr_memory_nodes;
++	nodes = env->memory_nodes;
++	nr    = env->nr_memory_nodes;
+ 
+ 	fprintf(fp, "# memory nodes (nr %d, block size 0x%llx):\n",
+-		nr, ff->ph->env.memory_bsize);
++		nr, env->memory_bsize);
+ 
+ 	for (i = 0; i < nr; i++) {
+-		memory_node__fprintf(&nodes[i], ff->ph->env.memory_bsize, fp);
++		memory_node__fprintf(&nodes[i], env->memory_bsize, fp);
+ 	}
+ }
+ 
+@@ -2431,6 +2436,7 @@ static int process_build_id(struct feat_fd *ff, void *data __maybe_unused)
+ 
+ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	int ret;
+ 	u32 nr_cpus_avail, nr_cpus_online;
+ 
+@@ -2441,20 +2447,21 @@ static int process_nrcpus(struct feat_fd *ff, void *data __maybe_unused)
+ 	ret = do_read_u32(ff, &nr_cpus_online);
+ 	if (ret)
+ 		return ret;
+-	ff->ph->env.nr_cpus_avail = (int)nr_cpus_avail;
+-	ff->ph->env.nr_cpus_online = (int)nr_cpus_online;
++	env->nr_cpus_avail = (int)nr_cpus_avail;
++	env->nr_cpus_online = (int)nr_cpus_online;
  	return 0;
  }
  
-@@ -2387,6 +2388,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	int fd;
- 	float ratio = 0;
- 	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
-+	struct perf_env *env;
+ static int process_total_mem(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	u64 total_mem;
+ 	int ret;
  
- 	atexit(record__sig_exit);
- 	signal(SIGCHLD, sig_handler);
-@@ -2428,7 +2430,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		pr_err("Perf session creation failed.\n");
- 		return PTR_ERR(session);
- 	}
--
-+	env = perf_session__env(session);
- 	if (record__threads_enabled(rec)) {
- 		if (perf_data__is_pipe(&rec->data)) {
- 			pr_err("Parallel trace streaming is not available in pipe mode.\n");
-@@ -2462,8 +2464,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	}
- #endif // HAVE_EVENTFD_SUPPORT
- 
--	session->header.env.comp_type  = PERF_COMP_ZSTD;
--	session->header.env.comp_level = rec->opts.comp_level;
-+	env->comp_type  = PERF_COMP_ZSTD;
-+	env->comp_level = rec->opts.comp_level;
- 
- 	if (rec->opts.kcore &&
- 	    !record__kcore_readable(&session->machines.host)) {
-@@ -2516,7 +2518,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	}
- 	/* Debug message used by test scripts */
- 	pr_debug3("perf record done opening and mmapping events\n");
--	session->header.env.comp_mmap_len = session->evlist->core.mmap_len;
-+	env->comp_mmap_len = session->evlist->core.mmap_len;
- 
- 	if (rec->opts.kcore) {
- 		err = record__kcore_copy(&session->machines.host, data);
-@@ -2844,7 +2846,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 
- 	if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
- 		ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
--		session->header.env.comp_ratio = ratio + 0.5;
-+		env->comp_ratio = ratio + 0.5;
- 	}
- 
- 	if (forks) {
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 98b1f73c28da..49dc86d86b19 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -447,7 +447,7 @@ static int report__setup_sample_type(struct report *rep)
- 		}
- 	}
- 
--	callchain_param_setup(sample_type, perf_env__arch(&rep->session->header.env));
-+	callchain_param_setup(sample_type, perf_env__arch(perf_session__env(rep->session)));
- 
- 	if (rep->stitch_lbr && (callchain_param.record_mode != CALLCHAIN_LBR)) {
- 		ui__warning("Can't find LBR callchain. Switch off --stitch-lbr.\n"
-@@ -547,7 +547,7 @@ static int evlist__tui_block_hists_browse(struct evlist *evlist, struct report *
- 	evlist__for_each_entry(evlist, pos) {
- 		ret = report__browse_block_hists(&rep->block_reports[i++].hist,
- 						 rep->min_percent, pos,
--						 &rep->session->header.env);
-+						 perf_session__env(rep->session));
- 		if (ret != 0)
- 			return ret;
- 	}
-@@ -682,7 +682,7 @@ static int report__browse_hists(struct report *rep)
- 		}
- 
- 		ret = evlist__tui_browse_hists(evlist, help, NULL, rep->min_percent,
--					       &session->header.env, true);
-+					       perf_session__env(session), true);
- 		/*
- 		 * Usually "ret" is the last pressed key, and we only
- 		 * care if the key notifies us to switch data file.
-@@ -1839,7 +1839,7 @@ int cmd_report(int argc, const char **argv)
- 		annotation_config__init();
- 	}
- 
--	if (symbol__init(&session->header.env) < 0)
-+	if (symbol__init(perf_session__env(session)) < 0)
- 		goto error;
- 
- 	if (report.time_str) {
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 26ece6e9bfd1..9b5c2f693bbe 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1922,7 +1922,7 @@ static int perf_sched__read_events(struct perf_sched *sched)
- 		return PTR_ERR(session);
- 	}
- 
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	/* prefer sched_waking if it is captured */
- 	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
-@@ -3236,6 +3236,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
- 	};
- 
- 	struct perf_session *session;
-+	struct perf_env *env;
- 	struct evlist *evlist;
- 	int err = -1;
- 
-@@ -3260,6 +3261,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
- 
-+	env = perf_session__env(session);
- 	if (cpu_list) {
- 		err = perf_session__cpu_bitmap(session, cpu_list, cpu_bitmap);
- 		if (err < 0)
-@@ -3268,7 +3270,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
- 
- 	evlist = session->evlist;
- 
--	symbol__init(&session->header.env);
-+	symbol__init(env);
- 
- 	if (perf_time__parse_str(&sched->ptime, sched->time_str) != 0) {
- 		pr_err("Invalid time string\n");
-@@ -3305,7 +3307,7 @@ static int perf_sched__timehist(struct perf_sched *sched)
- 		goto out;
- 
- 	/* pre-allocate struct for per-CPU idle stats */
--	sched->max_cpu.cpu = session->header.env.nr_cpus_online;
-+	sched->max_cpu.cpu = env->nr_cpus_online;
- 	if (sched->max_cpu.cpu == 0)
- 		sched->max_cpu.cpu = 4;
- 	if (init_idle_threads(sched->max_cpu.cpu))
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6c3bf74dd78c..55b7c5ed8245 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -712,7 +712,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
- 		}
- 	}
- 
--	if (tod && !session->header.env.clock.enabled) {
-+	if (tod && !perf_session__env(session)->clock.enabled) {
- 		pr_err("Can't provide 'tod' time, missing clock data. "
- 		       "Please record with -k/--clockid option.\n");
+ 	ret = do_read_u64(ff, &total_mem);
+ 	if (ret)
  		return -1;
-@@ -757,7 +757,7 @@ tod_scnprintf(struct perf_script *script, char *buf, int buflen,
- 	if (buflen < 64 || !script)
- 		return buf;
- 
--	env = &script->session->header.env;
-+	env = perf_session__env(script->session);
- 	if (!env->clock.enabled) {
- 		scnprintf(buf, buflen, "disabled");
- 		return buf;
-@@ -3853,6 +3853,7 @@ int cmd_script(int argc, const char **argv)
- 		"perf script [<options>] <top-script> [script-args]",
- 		NULL
- 	};
-+	struct perf_env *env;
- 
- 	perf_set_singlethreaded();
- 
-@@ -4099,6 +4100,7 @@ int cmd_script(int argc, const char **argv)
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
- 
-+	env = perf_session__env(session);
- 	if (header || header_only) {
- 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER;
- 		perf_session__fprintf_info(session, stdout, show_full_info);
-@@ -4108,17 +4110,17 @@ int cmd_script(int argc, const char **argv)
- 	if (show_full_info)
- 		script.tool.show_feat_hdr = SHOW_FEAT_HEADER_FULL_INFO;
- 
--	if (symbol__init(&session->header.env) < 0)
-+	if (symbol__init(env) < 0)
- 		goto out_delete;
- 
- 	uname(&uts);
- 	if (data.is_pipe) { /* Assume pipe_mode indicates native_arch */
- 		native_arch = true;
--	} else if (session->header.env.arch) {
--		if (!strcmp(uts.machine, session->header.env.arch))
-+	} else if (env->arch) {
-+		if (!strcmp(uts.machine, env->arch))
- 			native_arch = true;
- 		else if (!strcmp(uts.machine, "x86_64") &&
--			 !strcmp(session->header.env.arch, "i386"))
-+			 !strcmp(env->arch, "i386"))
- 			native_arch = true;
- 	}
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index bf0e5e12d992..be5f1f8204c9 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1694,48 +1694,48 @@ static struct aggr_cpu_id perf_env__get_global_aggr_by_cpu(struct perf_cpu cpu _
- static struct aggr_cpu_id perf_stat__get_socket_file(struct perf_stat_config *config __maybe_unused,
- 						     struct perf_cpu cpu)
- {
--	return perf_env__get_socket_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_socket_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- static struct aggr_cpu_id perf_stat__get_die_file(struct perf_stat_config *config __maybe_unused,
- 						  struct perf_cpu cpu)
- {
--	return perf_env__get_die_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_die_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_cluster_file(struct perf_stat_config *config __maybe_unused,
- 						      struct perf_cpu cpu)
- {
--	return perf_env__get_cluster_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_cluster_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_cache_file(struct perf_stat_config *config __maybe_unused,
- 						    struct perf_cpu cpu)
- {
--	return perf_env__get_cache_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_cache_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_core_file(struct perf_stat_config *config __maybe_unused,
- 						   struct perf_cpu cpu)
- {
--	return perf_env__get_core_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_core_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_cpu_file(struct perf_stat_config *config __maybe_unused,
- 						  struct perf_cpu cpu)
- {
--	return perf_env__get_cpu_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_cpu_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_node_file(struct perf_stat_config *config __maybe_unused,
- 						   struct perf_cpu cpu)
- {
--	return perf_env__get_node_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_node_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static struct aggr_cpu_id perf_stat__get_global_file(struct perf_stat_config *config __maybe_unused,
- 						     struct perf_cpu cpu)
- {
--	return perf_env__get_global_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+	return perf_env__get_global_aggr_by_cpu(cpu, perf_session__env(perf_stat.session));
- }
- 
- static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
-@@ -1794,7 +1794,7 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
- 
- static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- {
--	struct perf_env *env = &st->session->header.env;
-+	struct perf_env *env = perf_session__env(st->session);
- 	aggr_cpu_id_get_t get_id = aggr_mode__get_aggr_file(stat_config.aggr_mode);
- 	bool needs_sort = stat_config.aggr_mode != AGGR_NONE;
- 
-@@ -2115,8 +2115,9 @@ static int process_stat_round_event(struct perf_session *session,
- {
- 	struct perf_record_stat_round *stat_round = &event->stat_round;
- 	struct timespec tsh, *ts = NULL;
--	const char **argv = session->header.env.cmdline_argv;
--	int argc = session->header.env.nr_cmdline;
-+	struct perf_env *env = perf_session__env(session);
-+	const char **argv = env->cmdline_argv;
-+	int argc = env->nr_cmdline;
- 
- 	process_counters();
- 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 068d297aaf44..22050c640dfa 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -1618,7 +1618,7 @@ static int __cmd_timechart(struct timechart *tchart, const char *output_name)
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
- 
--	symbol__init(&session->header.env);
-+	symbol__init(perf_session__env(session));
- 
- 	(void)perf_header__process_sections(&session->header,
- 					    perf_data__fd(session->data),
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 7b6cde87d2af..0427dc027519 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -647,7 +647,8 @@ static void *display_thread_tui(void *arg)
- 	}
- 
- 	ret = evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
--				       &top->session->header.env, !top->record_opts.overwrite);
-+				       perf_session__env(top->session),
-+				       !top->record_opts.overwrite);
- 	if (ret == K_RELOAD) {
- 		top->zero = true;
- 		goto repeat;
-@@ -1253,7 +1254,7 @@ static int __cmd_top(struct perf_top *top)
- 	int ret;
- 
- 	if (!annotate_opts.objdump_path) {
--		ret = perf_env__lookup_objdump(&top->session->header.env,
-+		ret = perf_env__lookup_objdump(perf_session__env(top->session),
- 					       &annotate_opts.objdump_path);
- 		if (ret)
- 			return ret;
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 07eddd5c0baa..dc3a016f302d 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -4749,7 +4749,7 @@ static int trace__replay(struct trace *trace)
- 	if (trace->opts.target.tid)
- 		symbol_conf.tid_list_str = strdup(trace->opts.target.tid);
- 
--	if (symbol__init(&session->header.env) < 0)
-+	if (symbol__init(perf_session__env(session)) < 0)
- 		goto out;
- 
- 	trace->host = &session->machines.host;
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index a8cb5ba898ab..bc7d10630dad 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -69,9 +69,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	int i;
- 	struct aggr_cpu_id id;
- 	struct perf_cpu cpu;
-+	struct perf_env *env;
- 
- 	session = perf_session__new(&data, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-+	env = perf_session__env(session);
- 	cpu__setup_cpunode_map();
- 
- 	/* On platforms with large numbers of CPUs process_cpu_topology()
-@@ -95,9 +97,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	 *  condition is true (see do_core_id_test in header.c). So always
- 	 *  run this test on those platforms.
- 	 */
--	if (!session->header.env.cpu
--			&& strncmp(session->header.env.arch, "s390", 4)
--			&& strncmp(session->header.env.arch, "aarch64", 7))
-+	if (!env->cpu && strncmp(env->arch, "s390", 4) && strncmp(env->arch, "aarch64", 7))
- 		return TEST_SKIP;
- 
- 	/*
-@@ -106,20 +106,20 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	 * physical_package_id will be set to -1. Hence skip this
- 	 * test if physical_package_id returns -1 for cpu from perf_cpu_map.
- 	 */
--	if (!strncmp(session->header.env.arch, "ppc64le", 7)) {
-+	if (!strncmp(env->arch, "ppc64le", 7)) {
- 		if (cpu__get_socket_id(perf_cpu_map__cpu(map, 0)) == -1)
- 			return TEST_SKIP;
- 	}
- 
--	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
-+	TEST_ASSERT_VAL("Session header CPU map not set", env->cpu);
- 
--	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
-+	for (i = 0; i < env->nr_cpus_avail; i++) {
- 		cpu.cpu = i;
- 		if (!perf_cpu_map__has(map, cpu))
- 			continue;
- 		pr_debug("CPU %d, core %d, socket %d\n", i,
--			 session->header.env.cpu[i].core_id,
--			 session->header.env.cpu[i].socket_id);
-+			 env->cpu[i].core_id,
-+			 env->cpu[i].socket_id);
- 	}
- 
- 	// Test that CPU ID contains socket, die, core and CPU
-@@ -129,13 +129,12 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 				cpu.cpu == id.cpu.cpu);
- 
- 		TEST_ASSERT_VAL("Cpu map - Core ID doesn't match",
--			session->header.env.cpu[cpu.cpu].core_id == id.core);
-+			env->cpu[cpu.cpu].core_id == id.core);
- 		TEST_ASSERT_VAL("Cpu map - Socket ID doesn't match",
--			session->header.env.cpu[cpu.cpu].socket_id ==
--			id.socket);
-+			env->cpu[cpu.cpu].socket_id == id.socket);
- 
- 		TEST_ASSERT_VAL("Cpu map - Die ID doesn't match",
--			session->header.env.cpu[cpu.cpu].die_id == id.die);
-+			env->cpu[cpu.cpu].die_id == id.die);
- 		TEST_ASSERT_VAL("Cpu map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Cpu map - Thread IDX is set", id.thread_idx == -1);
- 	}
-@@ -144,14 +143,13 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	perf_cpu_map__for_each_cpu(cpu, i, map) {
- 		id = aggr_cpu_id__core(cpu, NULL);
- 		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
--			session->header.env.cpu[cpu.cpu].core_id == id.core);
-+			env->cpu[cpu.cpu].core_id == id.core);
- 
- 		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
--			session->header.env.cpu[cpu.cpu].socket_id ==
--			id.socket);
-+			env->cpu[cpu.cpu].socket_id == id.socket);
- 
- 		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
--			session->header.env.cpu[cpu.cpu].die_id == id.die);
-+			env->cpu[cpu.cpu].die_id == id.die);
- 		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Core map - Thread IDX is set", id.thread_idx == -1);
- 	}
-@@ -160,11 +158,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	perf_cpu_map__for_each_cpu(cpu, i, map) {
- 		id = aggr_cpu_id__die(cpu, NULL);
- 		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
--			session->header.env.cpu[cpu.cpu].socket_id ==
--			id.socket);
-+			env->cpu[cpu.cpu].socket_id == id.socket);
- 
- 		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
--			session->header.env.cpu[cpu.cpu].die_id == id.die);
-+			env->cpu[cpu.cpu].die_id == id.die);
- 
- 		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
-@@ -176,8 +173,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	perf_cpu_map__for_each_cpu(cpu, i, map) {
- 		id = aggr_cpu_id__socket(cpu, NULL);
- 		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
--			session->header.env.cpu[cpu.cpu].socket_id ==
--			id.socket);
-+			env->cpu[cpu.cpu].socket_id == id.socket);
- 
- 		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
- 		TEST_ASSERT_VAL("Socket map - Die ID is set", id.die == -1);
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index c81444059ad0..c67e3ec938d0 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -184,7 +184,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	 * for perf-record and perf-report use header.env;
- 	 * otherwise, use global perf_env.
- 	 */
--	env = session->data ? &session->header.env : &perf_env;
-+	env = session->data ? perf_session__env(session) : &perf_env;
- 
- 	arrays = 1UL << PERF_BPIL_JITED_KSYMS;
- 	arrays |= 1UL << PERF_BPIL_JITED_FUNC_LENS;
-diff --git a/tools/perf/util/branch.c b/tools/perf/util/branch.c
-index ab760e267d41..3712be067464 100644
---- a/tools/perf/util/branch.c
-+++ b/tools/perf/util/branch.c
-@@ -46,7 +46,7 @@ const char *branch_new_type_name(int new_type)
- 		"FAULT_DATA",
- 		"FAULT_INST",
- /*
-- * TODO: This switch should happen on 'session->header.env.arch'
-+ * TODO: This switch should happen on 'perf_session__env(session)->arch'
-  * instead, because an arm64 platform perf recording could be
-  * opened for analysis on other platforms as well.
-  */
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 5e7ff09fbc95..3d2e437e1354 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -1338,14 +1338,14 @@ static void cleanup_events(struct perf_session *session)
- static int setup_streams(struct ctf_writer *cw, struct perf_session *session)
- {
- 	struct ctf_stream **stream;
--	struct perf_header *ph = &session->header;
-+	struct perf_env *env = perf_session__env(session);
- 	int ncpus;
- 
- 	/*
- 	 * Try to get the number of cpus used in the data file,
- 	 * if not present fallback to the MAX_CPUS.
- 	 */
--	ncpus = ph->env.nr_cpus_avail ?: MAX_CPUS;
-+	ncpus = env->nr_cpus_avail ?: MAX_CPUS;
- 
- 	stream = zalloc(sizeof(*stream) * ncpus);
- 	if (!stream) {
-@@ -1371,7 +1371,7 @@ static void free_streams(struct ctf_writer *cw)
- static int ctf_writer__setup_env(struct ctf_writer *cw,
- 				 struct perf_session *session)
- {
--	struct perf_header *header = &session->header;
-+	struct perf_env *env = perf_session__env(session);
- 	struct bt_ctf_writer *writer = cw->writer;
- 
- #define ADD(__n, __v)							\
-@@ -1380,11 +1380,11 @@ do {									\
- 		return -1;						\
- } while (0)
- 
--	ADD("host",    header->env.hostname);
-+	ADD("host",    env->hostname);
- 	ADD("sysname", "Linux");
--	ADD("release", header->env.os_release);
--	ADD("version", header->env.version);
--	ADD("machine", header->env.arch);
-+	ADD("release", env->os_release);
-+	ADD("version", env->version);
-+	ADD("machine", env->arch);
- 	ADD("domain", "kernel");
- 	ADD("tracer_name", "perf");
- 
-@@ -1401,7 +1401,7 @@ static int ctf_writer__setup_clock(struct ctf_writer *cw,
- 	int64_t offset = 0;
- 
- 	if (tod) {
--		struct perf_env *env = &session->header.env;
-+		struct perf_env *env = perf_session__env(session);
- 
- 		if (!env->clock.enabled) {
- 			pr_err("Can't provide --tod time, missing clock data. "
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index d9f805bf6fb0..9dc1e184cf3c 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -257,7 +257,8 @@ static int process_sample_event(const struct perf_tool *tool,
- static void output_headers(struct perf_session *session, struct convert_json *c)
- {
- 	struct stat st;
--	struct perf_header *header = &session->header;
-+	const struct perf_header *header = &session->header;
-+	const struct perf_env *env = perf_session__env(session);
- 	int ret;
- 	int fd = perf_data__fd(session->data);
- 	int i;
-@@ -280,32 +281,32 @@ static void output_headers(struct perf_session *session, struct convert_json *c)
- 	output_json_key_format(out, true, 2, "data-size", "%" PRIu64, header->data_size);
- 	output_json_key_format(out, true, 2, "feat-offset", "%" PRIu64, header->feat_offset);
- 
--	output_json_key_string(out, true, 2, "hostname", header->env.hostname);
--	output_json_key_string(out, true, 2, "os-release", header->env.os_release);
--	output_json_key_string(out, true, 2, "arch", header->env.arch);
-+	output_json_key_string(out, true, 2, "hostname", env->hostname);
-+	output_json_key_string(out, true, 2, "os-release", env->os_release);
-+	output_json_key_string(out, true, 2, "arch", env->arch);
- 
--	if (header->env.cpu_desc)
--		output_json_key_string(out, true, 2, "cpu-desc", header->env.cpu_desc);
-+	if (env->cpu_desc)
-+		output_json_key_string(out, true, 2, "cpu-desc", env->cpu_desc);
- 
--	output_json_key_string(out, true, 2, "cpuid", header->env.cpuid);
--	output_json_key_format(out, true, 2, "nrcpus-online", "%u", header->env.nr_cpus_online);
--	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", header->env.nr_cpus_avail);
-+	output_json_key_string(out, true, 2, "cpuid", env->cpuid);
-+	output_json_key_format(out, true, 2, "nrcpus-online", "%u", env->nr_cpus_online);
-+	output_json_key_format(out, true, 2, "nrcpus-avail", "%u", env->nr_cpus_avail);
- 
--	if (header->env.clock.enabled) {
-+	if (env->clock.enabled) {
- 		output_json_key_format(out, true, 2, "clockid",
--				"%u", header->env.clock.clockid);
-+				"%u", env->clock.clockid);
- 		output_json_key_format(out, true, 2, "clock-time",
--				"%" PRIu64, header->env.clock.clockid_ns);
-+				"%" PRIu64, env->clock.clockid_ns);
- 		output_json_key_format(out, true, 2, "real-time",
--				"%" PRIu64, header->env.clock.tod_ns);
-+				"%" PRIu64, env->clock.tod_ns);
- 	}
- 
--	output_json_key_string(out, true, 2, "perf-version", header->env.version);
-+	output_json_key_string(out, true, 2, "perf-version", env->version);
- 
- 	output_json_key_format(out, true, 2, "cmdline", "[");
--	for (i = 0; i < header->env.nr_cmdline; i++) {
-+	for (i = 0; i < env->nr_cmdline; i++) {
- 		output_json_delimiters(out, i != 0, 3);
--		output_json_string(c->out, header->env.cmdline_argv[i]);
-+		output_json_string(c->out, env->cmdline_argv[i]);
- 	}
- 	output_json_format(out, false, 2, "]");
- }
-@@ -376,8 +377,7 @@ int bt_convert__perf2json(const char *input_name, const char *output_name,
- 		fprintf(stderr, "Error creating perf session!\n");
- 		goto err_fclose;
- 	}
--
--	if (symbol__init(&session->header.env) < 0) {
-+	if (symbol__init(perf_session__env(session)) < 0) {
- 		fprintf(stderr, "Symbol init error!\n");
- 		goto err_session_delete;
- 	}
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index a320672c264e..d3888b78ed50 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2554,7 +2554,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
- {
- 	int i, err = -1;
- 	struct perf_cpu_map *map;
--	int nr_cpus = min(session->header.env.nr_cpus_avail, MAX_NR_CPUS);
-+	int nr_cpus = min(perf_session__env(session)->nr_cpus_avail, MAX_NR_CPUS);
- 	struct perf_cpu cpu;
- 
- 	for (i = 0; i < PERF_TYPE_MAX; ++i) {
-@@ -2743,3 +2743,8 @@ int perf_session__dsos_hit_all(struct perf_session *session)
- 
+-	ff->ph->env.total_mem = (unsigned long long)total_mem;
++	env->total_mem = (unsigned long long)total_mem;
  	return 0;
  }
-+
-+struct perf_env *perf_session__env(struct perf_session *session)
-+{
-+	return &session->header.env;
-+}
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index db1c120a9e67..e7f7464b838f 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -208,4 +208,6 @@ int perf_event__process_finished_round(const struct perf_tool *tool,
- 				       union perf_event *event,
- 				       struct ordered_events *oe);
  
-+struct perf_env *perf_session__env(struct perf_session *session);
-+
- #endif /* __PERF_SESSION_H */
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 37bd8ac63b01..903efa107a3c 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -17,7 +17,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	void *src;
- 	size_t decomp_size, src_size;
- 	u64 decomp_last_rem = 0;
--	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
-+	size_t mmap_len, decomp_len = perf_session__env(session)->comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->active_decomp->decomp_last;
+@@ -2515,13 +2522,14 @@ process_event_desc(struct feat_fd *ff, void *data __maybe_unused)
  
- 	if (decomp_last) {
+ static int process_cmdline(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	char *str, *cmdline = NULL, **argv = NULL;
+ 	u32 nr, i, len = 0;
+ 
+ 	if (do_read_u32(ff, &nr))
+ 		return -1;
+ 
+-	ff->ph->env.nr_cmdline = nr;
++	env->nr_cmdline = nr;
+ 
+ 	cmdline = zalloc(ff->size + nr + 1);
+ 	if (!cmdline)
+@@ -2541,8 +2549,8 @@ static int process_cmdline(struct feat_fd *ff, void *data __maybe_unused)
+ 		len += strlen(str) + 1;
+ 		free(str);
+ 	}
+-	ff->ph->env.cmdline = cmdline;
+-	ff->ph->env.cmdline_argv = (const char **) argv;
++	env->cmdline = cmdline;
++	env->cmdline_argv = (const char **) argv;
+ 	return 0;
+ 
+ error:
+@@ -2556,19 +2564,19 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	u32 nr, i;
+ 	char *str = NULL;
+ 	struct strbuf sb;
+-	int cpu_nr = ff->ph->env.nr_cpus_avail;
++	struct perf_env *env = &ff->ph->env;
++	int cpu_nr = env->nr_cpus_avail;
+ 	u64 size = 0;
+-	struct perf_header *ph = ff->ph;
+ 	bool do_core_id_test = true;
+ 
+-	ph->env.cpu = calloc(cpu_nr, sizeof(*ph->env.cpu));
+-	if (!ph->env.cpu)
++	env->cpu = calloc(cpu_nr, sizeof(*env->cpu));
++	if (!env->cpu)
+ 		return -1;
+ 
+ 	if (do_read_u32(ff, &nr))
+ 		goto free_cpu;
+ 
+-	ph->env.nr_sibling_cores = nr;
++	env->nr_sibling_cores = nr;
+ 	size += sizeof(u32);
+ 	if (strbuf_init(&sb, 128) < 0)
+ 		goto free_cpu;
+@@ -2584,12 +2592,12 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		size += string_size(str);
+ 		zfree(&str);
+ 	}
+-	ph->env.sibling_cores = strbuf_detach(&sb, NULL);
++	env->sibling_cores = strbuf_detach(&sb, NULL);
+ 
+ 	if (do_read_u32(ff, &nr))
+ 		return -1;
+ 
+-	ph->env.nr_sibling_threads = nr;
++	env->nr_sibling_threads = nr;
+ 	size += sizeof(u32);
+ 
+ 	for (i = 0; i < nr; i++) {
+@@ -2603,14 +2611,14 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		size += string_size(str);
+ 		zfree(&str);
+ 	}
+-	ph->env.sibling_threads = strbuf_detach(&sb, NULL);
++	env->sibling_threads = strbuf_detach(&sb, NULL);
+ 
+ 	/*
+ 	 * The header may be from old perf,
+ 	 * which doesn't include core id and socket id information.
+ 	 */
+ 	if (ff->size <= size) {
+-		zfree(&ph->env.cpu);
++		zfree(&env->cpu);
+ 		return 0;
+ 	}
+ 
+@@ -2619,15 +2627,15 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	 * This depends on the configuration.
+ 	 * AArch64 is the same.
+ 	 */
+-	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
+-			  || !strncmp(ph->env.arch, "aarch64", 7)))
++	if (env->arch && (!strncmp(env->arch, "s390", 4)
++		       || !strncmp(env->arch, "aarch64", 7)))
+ 		do_core_id_test = false;
+ 
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+ 
+-		ph->env.cpu[i].core_id = nr;
++		env->cpu[i].core_id = nr;
+ 		size += sizeof(u32);
+ 
+ 		if (do_read_u32(ff, &nr))
+@@ -2639,7 +2647,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 			goto free_cpu;
+ 		}
+ 
+-		ph->env.cpu[i].socket_id = nr;
++		env->cpu[i].socket_id = nr;
+ 		size += sizeof(u32);
+ 	}
+ 
+@@ -2653,7 +2661,7 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	if (do_read_u32(ff, &nr))
+ 		return -1;
+ 
+-	ph->env.nr_sibling_dies = nr;
++	env->nr_sibling_dies = nr;
+ 	size += sizeof(u32);
+ 
+ 	for (i = 0; i < nr; i++) {
+@@ -2667,13 +2675,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		size += string_size(str);
+ 		zfree(&str);
+ 	}
+-	ph->env.sibling_dies = strbuf_detach(&sb, NULL);
++	env->sibling_dies = strbuf_detach(&sb, NULL);
+ 
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
+ 		if (do_read_u32(ff, &nr))
+ 			goto free_cpu;
+ 
+-		ph->env.cpu[i].die_id = nr;
++		env->cpu[i].die_id = nr;
+ 	}
+ 
+ 	return 0;
+@@ -2682,12 +2690,13 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	strbuf_release(&sb);
+ 	zfree(&str);
+ free_cpu:
+-	zfree(&ph->env.cpu);
++	zfree(&env->cpu);
+ 	return -1;
+ }
+ 
+ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct numa_node *nodes, *n;
+ 	u32 nr, i;
+ 	char *str;
+@@ -2722,8 +2731,8 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 		if (!n->map)
+ 			goto error;
+ 	}
+-	ff->ph->env.nr_numa_nodes = nr;
+-	ff->ph->env.numa_nodes = nodes;
++	env->nr_numa_nodes = nr;
++	env->numa_nodes = nodes;
+ 	return 0;
+ 
+ error:
+@@ -2733,6 +2742,7 @@ static int process_numa_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 
+ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	char *name;
+ 	u32 pmu_num;
+ 	u32 type;
+@@ -2746,7 +2756,7 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
+ 		return 0;
+ 	}
+ 
+-	ff->ph->env.nr_pmu_mappings = pmu_num;
++	env->nr_pmu_mappings = pmu_num;
+ 	if (strbuf_init(&sb, 128) < 0)
+ 		return -1;
+ 
+@@ -2765,14 +2775,14 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
+ 			goto error;
+ 
+ 		if (!strcmp(name, "msr"))
+-			ff->ph->env.msr_pmu_type = type;
++			env->msr_pmu_type = type;
+ 
+ 		free(name);
+ 		pmu_num--;
+ 	}
+ 	/* AMD may set it by evlist__has_amd_ibs() from perf_session__new() */
+-	free(ff->ph->env.pmu_mappings);
+-	ff->ph->env.pmu_mappings = strbuf_detach(&sb, NULL);
++	free(env->pmu_mappings);
++	env->pmu_mappings = strbuf_detach(&sb, NULL);
+ 	return 0;
+ 
+ error:
+@@ -2782,6 +2792,7 @@ static int process_pmu_mappings(struct feat_fd *ff, void *data __maybe_unused)
+ 
+ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	size_t ret = -1;
+ 	u32 i, nr, nr_groups;
+ 	struct perf_session *session;
+@@ -2795,7 +2806,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
+ 	if (do_read_u32(ff, &nr_groups))
+ 		return -1;
+ 
+-	ff->ph->env.nr_groups = nr_groups;
++	env->nr_groups = nr_groups;
+ 	if (!nr_groups) {
+ 		pr_debug("group desc not available\n");
+ 		return 0;
+@@ -2879,6 +2890,7 @@ static int process_auxtrace(struct feat_fd *ff, void *data __maybe_unused)
+ 
+ static int process_cache(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct cpu_cache_level *caches;
+ 	u32 cnt, i, version;
+ 
+@@ -2919,8 +2931,8 @@ static int process_cache(struct feat_fd *ff, void *data __maybe_unused)
+ 		#undef _R
+ 	}
+ 
+-	ff->ph->env.caches = caches;
+-	ff->ph->env.caches_cnt = cnt;
++	env->caches = caches;
++	env->caches_cnt = cnt;
+ 	return 0;
+ out_free_caches:
+ 	for (i = 0; i < cnt; i++) {
+@@ -2956,6 +2968,7 @@ static int process_sample_time(struct feat_fd *ff, void *data __maybe_unused)
+ static int process_mem_topology(struct feat_fd *ff,
+ 				void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct memory_node *nodes;
+ 	u64 version, i, nr, bsize;
+ 	int ret = -1;
+@@ -2994,9 +3007,9 @@ static int process_mem_topology(struct feat_fd *ff,
+ 		nodes[i] = n;
+ 	}
+ 
+-	ff->ph->env.memory_bsize    = bsize;
+-	ff->ph->env.memory_nodes    = nodes;
+-	ff->ph->env.nr_memory_nodes = nr;
++	env->memory_bsize    = bsize;
++	env->memory_nodes    = nodes;
++	env->nr_memory_nodes = nr;
+ 	ret = 0;
+ 
+ out:
+@@ -3008,7 +3021,9 @@ static int process_mem_topology(struct feat_fd *ff,
+ static int process_clockid(struct feat_fd *ff,
+ 			   void *data __maybe_unused)
+ {
+-	if (do_read_u64(ff, &ff->ph->env.clock.clockid_res_ns))
++	struct perf_env *env = &ff->ph->env;
++
++	if (do_read_u64(ff, &env->clock.clockid_res_ns))
+ 		return -1;
+ 
+ 	return 0;
+@@ -3017,6 +3032,7 @@ static int process_clockid(struct feat_fd *ff,
+ static int process_clock_data(struct feat_fd *ff,
+ 			      void *_data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	u32 data32;
+ 	u64 data64;
+ 
+@@ -3031,26 +3047,27 @@ static int process_clock_data(struct feat_fd *ff,
+ 	if (do_read_u32(ff, &data32))
+ 		return -1;
+ 
+-	ff->ph->env.clock.clockid = data32;
++	env->clock.clockid = data32;
+ 
+ 	/* TOD ref time */
+ 	if (do_read_u64(ff, &data64))
+ 		return -1;
+ 
+-	ff->ph->env.clock.tod_ns = data64;
++	env->clock.tod_ns = data64;
+ 
+ 	/* clockid ref time */
+ 	if (do_read_u64(ff, &data64))
+ 		return -1;
+ 
+-	ff->ph->env.clock.clockid_ns = data64;
+-	ff->ph->env.clock.enabled = true;
++	env->clock.clockid_ns = data64;
++	env->clock.enabled = true;
+ 	return 0;
+ }
+ 
+ static int process_hybrid_topology(struct feat_fd *ff,
+ 				   void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct hybrid_node *nodes, *n;
+ 	u32 nr, i;
+ 
+@@ -3074,8 +3091,8 @@ static int process_hybrid_topology(struct feat_fd *ff,
+ 			goto error;
+ 	}
+ 
+-	ff->ph->env.nr_hybrid_nodes = nr;
+-	ff->ph->env.hybrid_nodes = nodes;
++	env->nr_hybrid_nodes = nr;
++	env->hybrid_nodes = nodes;
+ 	return 0;
+ 
+ error:
+@@ -3227,19 +3244,21 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+ static int process_compressed(struct feat_fd *ff,
+ 			      void *data __maybe_unused)
+ {
+-	if (do_read_u32(ff, &(ff->ph->env.comp_ver)))
++	struct perf_env *env = &ff->ph->env;
++
++	if (do_read_u32(ff, &(env->comp_ver)))
+ 		return -1;
+ 
+-	if (do_read_u32(ff, &(ff->ph->env.comp_type)))
++	if (do_read_u32(ff, &(env->comp_type)))
+ 		return -1;
+ 
+-	if (do_read_u32(ff, &(ff->ph->env.comp_level)))
++	if (do_read_u32(ff, &(env->comp_level)))
+ 		return -1;
+ 
+-	if (do_read_u32(ff, &(ff->ph->env.comp_ratio)))
++	if (do_read_u32(ff, &(env->comp_ratio)))
+ 		return -1;
+ 
+-	if (do_read_u32(ff, &(ff->ph->env.comp_mmap_len)))
++	if (do_read_u32(ff, &(env->comp_mmap_len)))
+ 		return -1;
+ 
+ 	return 0;
+@@ -3311,19 +3330,21 @@ static int __process_pmu_caps(struct feat_fd *ff, int *nr_caps,
+ static int process_cpu_pmu_caps(struct feat_fd *ff,
+ 				void *data __maybe_unused)
+ {
+-	int ret = __process_pmu_caps(ff, &ff->ph->env.nr_cpu_pmu_caps,
+-				     &ff->ph->env.cpu_pmu_caps,
+-				     &ff->ph->env.max_branches,
+-				     &ff->ph->env.br_cntr_nr,
+-				     &ff->ph->env.br_cntr_width);
++	struct perf_env *env = &ff->ph->env;
++	int ret = __process_pmu_caps(ff, &env->nr_cpu_pmu_caps,
++				     &env->cpu_pmu_caps,
++				     &env->max_branches,
++				     &env->br_cntr_nr,
++				     &env->br_cntr_width);
+ 
+-	if (!ret && !ff->ph->env.cpu_pmu_caps)
++	if (!ret && !env->cpu_pmu_caps)
+ 		pr_debug("cpu pmu capabilities not available\n");
+ 	return ret;
+ }
+ 
+ static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
+ {
++	struct perf_env *env = &ff->ph->env;
+ 	struct pmu_caps *pmu_caps;
+ 	u32 nr_pmu, i;
+ 	int ret;
+@@ -3361,8 +3382,8 @@ static int process_pmu_caps(struct feat_fd *ff, void *data __maybe_unused)
+ 		}
+ 	}
+ 
+-	ff->ph->env.nr_pmus_with_caps = nr_pmu;
+-	ff->ph->env.pmu_caps = pmu_caps;
++	env->nr_pmus_with_caps = nr_pmu;
++	env->pmu_caps = pmu_caps;
+ 	return 0;
+ 
+ err:
+@@ -3660,6 +3681,7 @@ static int perf_session__do_write_header(struct perf_session *session,
+ 	struct perf_header *header = &session->header;
+ 	struct evsel *evsel;
+ 	struct feat_fd ff = {
++		.ph = header,
+ 		.fd = fd,
+ 	};
+ 	u64 attr_offset = sizeof(f_header), attr_size = 0;
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
