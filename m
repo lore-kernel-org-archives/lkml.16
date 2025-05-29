@@ -1,121 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E84728E607
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5471B20E6E3;
+	Thu, 29 May 2025 11:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748516609; cv=none; b=BLIC04dOlrgTZHWYBHaLSg5zx3y1KU8YjHocJ1/L5nfQY3Dlb+c/bfgH9QVNkqJvn2h7Jt9JKRrNef/kW5udImqWoeY/fgM0TNTVT50fFO6I9MquWgClLAfTsYOk7m5khE4kQeuSkK+UGz4nclsvhP16q0u1kJ5A50LK6cwzGew=
+	t=1748516664; cv=none; b=uMjPcPo2EloMIXpDg3blLNcx3coZ5AJrCznnCxEAjWf/OyaNDZKHWI3r3UAFVlC3NwXEQVl775FYdRfxojLMJYDkWyjF5Csj8LOZBxSF0411C5LpUyP0ImBeEq3rJHszguCoSSmOx0aEKW9hYsZZQASkA0nx7ODvPBRbjjLxwT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748516609; c=relaxed/simple;
-	bh=s3kLHlPLrrZeRXlk3YkZaow5KWz21p34OcrgcaSGFO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KtNUqeibtYpNtCzw0SxA5goLZkIsdSslk1ufifh1LhWnkjOZnOGAP9HeJz74pUOsESTaQpmIZBxLnSBW2FypY01PwEmjtFbz+Ip5AgaTOSZ82JnAg+bpv9vulobiGboqQp2ZCCHcX2uKT+NQQBsz9vh6bRbkNxhEWWVbdmDRlBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SjQSoDyC; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748516664; c=relaxed/simple;
+	bh=bjFdJf+Dm1UZ3P8YltWnNwfPAQJXnYFs0CGmDjW+6gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rMvp+qcPDUgTNS/094+akJup6pWoOUT1f4LEqsk8YsBchB7Q+ArCKxkXfMV76Yn/hS+XUffIIXMj4g6tnEetZRf8LoH7P8V9br2sDsN3ckjMtK+Cun3XwDMNWep2a0EGzR8e/aydwc2tg2ofvjQ4Ivvbt3mqMFHLOjDTyHCrbXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bT4PDFxS; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SjQSoDyC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748516608; x=1780052608;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=s3kLHlPLrrZeRXlk3YkZaow5KWz21p34OcrgcaSGFO4=;
-  b=SjQSoDyClUlPlL06MjO+rSCyGJQzkyITxTCno85OKxvIDxyXNjDN3Ok6
-   4Esz0VpK9k7j/cTK4mSkojZxlisL3x1hkZFTYD7JIMKSKFQkO7U9OdUeg
-   hd6oKcW3WqCyDY0BcRreNokmWOhQ4Ngz44ukIa1ngCsLP0/d1XegbkCRA
-   rqGjcvmTjKFBCQZ0+EXTMR9Y0dkXWtsQnH/RVg90hmgPg+kKjdKex5Y8W
-   Y7wiUCjUdAfdVpzy4lcApw1ZwOCsyQsbLgLPm+d3dzoqUmMgx/6+nAvmE
-   NAUg9IcJAq/+z5URPJnuB+zjnhiK1Y5gI4YqyrLOATrPs1UtvWzKxI4Xi
-   Q==;
-X-CSE-ConnectionGUID: RYvoQHh2Tgqwh9YUPueC6w==
-X-CSE-MsgGUID: X6jIAy1DR62nYcc8Lw4TRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="54369626"
-X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
-   d="scan'208";a="54369626"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 04:03:25 -0700
-X-CSE-ConnectionGUID: VWkEW/d6SXKctO0kRvVLEA==
-X-CSE-MsgGUID: hSF/z7HuTlGOKNpozqDT5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,192,1739865600"; 
-   d="scan'208";a="148303912"
-Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
-  by orviesa003.jf.intel.com with ESMTP; 29 May 2025 04:03:23 -0700
-Received: from kbuild by b69e6467d450 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKb2f-0000h9-0x;
-	Thu, 29 May 2025 11:03:21 +0000
-Date: Tue, 27 May 2025 11:53:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
-Subject: include/linux/ftrace.h:138:16: error: implicit declaration of
- function 'arch_ftrace_get_regs'; did you mean 'ftrace_get_regs'?
-Message-ID: <202505271121.BqGFyRfB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bT4PDFxS"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-74264d1832eso717091b3a.0;
+        Thu, 29 May 2025 04:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748516662; x=1749121462; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=elb0IQnO73maUG0NJbzoI/IOVIfGmzvtWXJxilsL9mo=;
+        b=bT4PDFxSfvmgLjkax8HlZpNGFRpXvuXbiHB4brlQ/s0/cILmS+My+pcUm17A5Lo/Uz
+         yCmaQqe+05VHFUkdLx4rP4SDBMgawtLQhkNXQgUAZm0VGdGydWYiMoNOb3HQhFVzxbGX
+         cwxNrafds7eHeKtT3zcQXFmRMZI5URVHpKigPvoTMjtant5d5v/1cO7mM4C0bK7DDzXi
+         yIGIa2780WJzbtz3nyaxqepERLpRq4Hl7l/cihqlLmdnHMkjTTySEQLWUMlKuGRWHfDh
+         D+DlZXPXLa+/ZXHRdz4EAx3Z8RccVDAkOWJE4LCB8JHh48MA8thrTnE5zBpT130xAYpj
+         SOXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748516662; x=1749121462;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=elb0IQnO73maUG0NJbzoI/IOVIfGmzvtWXJxilsL9mo=;
+        b=jKtnVl0OGaSKguIopFcsdOPst1VUjE5plURlL14KsJ820NtqmOu+9f0IGvbd1emXDq
+         MBR8vENCgdVcVkyNGapxYCTs1YHRBZd1bFPzbbJOfle3S2R5T0fgQcgiAYG6Ts+krW/2
+         Mfdmm7hD/gTOiOdB/RyCGd8MhP1B4jIPGc+S4MRHD0PdOIDqN3skJRV87cHxqPZjJwBC
+         sOztgsh1ZBs8QWjQrAEJcwjfjXlSMgujcNo66Lby8KDALF334d0Iw2Fqg8qQhJeBVObs
+         Q6lcLWvgexEVIiYEsH7Rh6MurOGczLoQIxcAbdj1tMqjlOZ6FpvPQBfCdlDMqQyi2jLi
+         sFcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOwjXxKw0Tt4z6QzdTG0haL1QNuHKCot9btggVc2GP+KVf1yQwWMxQoBaAIHtqB3KsEMuWLYhb4UR1Mfc=@vger.kernel.org, AJvYcCXkX8Se80XbVneWKXCK7mj1cAsyfQ+/qChwGQS+8NoojgJkOZUXe6TVVg1DxXxVKGi+jq0YMfDhwvyP+TlB8jJ6@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCayYqIfIQRl0m4Xvli86UjgmxUu1JiaoM/MrfwrvWYxcfk6LL
+	4pZsbcEsBFBNtOlSp8FFP1sJdvn1ZB/QPQZAWD9Dr1OzxAuIGaU1BgF8
+X-Gm-Gg: ASbGncthwXx2fhalPIgfb/Q3IzMRX34RA9oOsAgO+6Aimur99+XKtx3rTE4Z9azkSOs
+	WS2b6nGqBDrrdGqnOojqP2iq9wWRFlmRHtQ5LCl+S+Q1m+GIB+CV4lD3+UlxTGBE+E6rUZAGDb4
+	AsLvMDior48m2toj9grPooK1KmTADYDteOk3v7vc+vMXAusKq1czhFx2mV9HvGyjV8XSOrIpwSt
+	kpXbMK1pV11G2Rh5B/Ni4cuu2M+y+u0Q5Ic2B8FJIMAFZqLudW554ROgGeFhWcOwrVPSACzs7p+
+	r8T0e1lI0H/Cy0WyfkPetyV2Yh9oL4B9fUVYMQ01mkWLgNbyShG1D7DbJHGOYIXnVcLMn31CeXt
+	VOWuT0LmY+fGylYvLASazzmjTbTYpDf8zAp4j8M31
+X-Google-Smtp-Source: AGHT+IH5zfeo/HBOiXWizEuXHO3WU2MEzyWgONfZvWvMMvUVOiVgGFx3iOqK4PF3pd4B0YjP702rFQ==
+X-Received: by 2002:a05:6a00:1381:b0:740:9d7c:8f5c with SMTP id d2e1a72fcca58-745fe036213mr33229676b3a.18.1748516662427;
+        Thu, 29 May 2025 04:04:22 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9? ([2001:ee0:4f0e:fb30:d434:b1b6:e451:f5d9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafb44sm1113913b3a.107.2025.05.29.04.04.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 04:04:21 -0700 (PDT)
+Message-ID: <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
+Date: Thu, 29 May 2025 18:04:17 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] selftests: net: build net/lib dependency in all
+ target
+To: Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ Philip Li <philip.li@intel.com>, oliver.sang@intel.com,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250529070536.84491-1-minhquangbui99@gmail.com>
+ <20250529103221.GN1484967@horms.kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250529103221.GN1484967@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   785cdec46e9227f9433884ed3b436471e944007c
-commit: 7caa9765465f60b6d88e22264892cee12d971888 ftrace: riscv: move from REGS to ARGS
-date:   1 year ago
-config: riscv-randconfig-2001-20250514 (https://download.01.org/0day-ci/archive/20250527/202505271121.BqGFyRfB-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505271121.BqGFyRfB-lkp@intel.com/reproduce)
+On 5/29/25 17:32, Simon Horman wrote:
+> On Thu, May 29, 2025 at 02:05:36PM +0700, Bui Quang Minh wrote:
+>> Currently, we only build net/lib dependency in install target. This
+>> commit moves that to all target so that net/lib is included in in-tree
+>> build and run_tests.
+> Hi,
+>
+> The above describes what is being done.
+> I think it would be good to also describe why.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505271121.BqGFyRfB-lkp@intel.com/
+Hi,
 
-All errors (new ones prefixed by >>):
+Currently, when building net related selftests, we need to
 
-   In file included from arch/riscv/kernel/asm-offsets.c:12:
-   include/linux/ftrace.h: In function 'ftrace_get_regs':
->> include/linux/ftrace.h:138:16: error: implicit declaration of function 'arch_ftrace_get_regs'; did you mean 'ftrace_get_regs'? [-Wimplicit-function-declaration]
-     138 |         return arch_ftrace_get_regs(fregs);
-         |                ^~~~~~~~~~~~~~~~~~~~
-         |                ftrace_get_regs
->> include/linux/ftrace.h:138:16: error: returning 'int' from a function with return type 'struct pt_regs *' makes pointer from integer without a cast [-Wint-conversion]
-     138 |         return arch_ftrace_get_regs(fregs);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   make[3]: *** [scripts/Makefile.build:117: arch/riscv/kernel/asm-offsets.s] Error 1 shuffle=145074831
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1203: prepare0] Error 2 shuffle=145074831
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:240: __sub-make] Error 2 shuffle=145074831
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:240: __sub-make] Error 2 shuffle=145074831
-   make: Target 'prepare' not remade because of errors.
+     make install
 
+so that the net/lib is compiled. In case we do
 
-vim +138 include/linux/ftrace.h
+     make
 
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  132) 
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  133) static __always_inline struct pt_regs *ftrace_get_regs(struct ftrace_regs *fregs)
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  134) {
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  135) 	if (!fregs)
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  136) 		return NULL;
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  137) 
-02a474ca266a47 Steven Rostedt (VMware  2020-10-27 @138) 	return arch_ftrace_get_regs(fregs);
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  139) }
-d19ad0775dcd64 Steven Rostedt (VMware  2020-10-28  140) 
+or
 
-:::::: The code at line 138 was first introduced by commit
-:::::: 02a474ca266a47ea8f4d5a11f4ffa120f83730ad ftrace/x86: Allow for arguments to be passed in to ftrace_regs by default
+     make run_tests
 
-:::::: TO: Steven Rostedt (VMware) <rostedt@goodmis.org>
-:::::: CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+the net/lib is not compiled. So I move the INSTALL_DEP_TARGETS which is 
+net/lib if the selftests is net related to all. As a result, all 
+make/make install/make run_tests will have the net/lib compiled.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Quang Minh.
