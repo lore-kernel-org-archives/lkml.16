@@ -1,96 +1,107 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F464219E93
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17414219E93;
+	Thu, 29 May 2025 09:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509925; cv=none; b=XDo3F4dtDtGD6T4X34EBOh3HLtLVKwkKMPXtyUSZTgIFrhU2F8mjW70xLL/FmYTTapYme41k6P9GnVHm+fgcn7xiF8cyXaZ5VhMibn21YDVW/XUf4XNEEK79s5F5BsDPf30ZaqOr4FzFBSFQJT+42PvcAGOV3aC1YExGxxrWAtg=
+	t=1748510011; cv=none; b=ppxEjefzKyBNgYWVbByTwjNZGmdN+sup2D7vxJXfAS9NlANa7BDlpSdEk5Z3BokuQ2JtDhbHMdLZZPYoTQ7I1HmmLRvzzbDTcLdEbY6MXQvZyWp/YhWekJA/9G0RstN7l2XZ7Z2RBMGY06VlD5b9w6qgfk4C0gAJEShdg+0CGqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509925; c=relaxed/simple;
-	bh=UJ6ezAlAShPnmVgIwZDMjYr9pcRvMP/YLoLr6IYK5UI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=H1hK2gYf7/vltSqN+kFNVW5G+HfwSFCSZYZyRfrddoYFnYsjzVRwjLKuvLDrpX/amrF4PfoP86T+lo8aebiunf7e+6Kz9l0kyjyA4N56Y/JcVruOC1xEZdZflWUXQrw3QQd3zSKHXwPfEdNBi/jMLmYVsqS8gsxwIIYSwhHjTx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3dc78b79129so6571065ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 02:12:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748509923; x=1749114723;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgqA6WYLlv6HaseaNManWLRCIGCkg9e+ZyO7LDpoLW4=;
-        b=mvzEEpv4owUrwLTPicO8dB3jtq6++lkiDrfwMdTQzX91m7ASlU32RUVi/aS36/Sz3a
-         kQEGZ6ucSgZVxj6qjuXOLxPwbD4JG9A9VApoqDa+4uJKDU2zYjcKZrbEducT+AdIFbTZ
-         E8H+9myJsWIP52NL+WL7xPh8HwE3LYiA4+sFr22qh+asAnX7fBVzLLJm2TccpinrC8/1
-         76U1By6eDZ9VenDHqPllPgL1GJSBeIVgbck2/g6FVO+z9juvlcntYQp0EsN2gtU+MrGw
-         fdmThzhMYnVtjv//ROj13xQMSUsKQbFLcwPQig99p+V2gRYcC+jLi/Bl49hQa0x1h4va
-         rVJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8v0xeNpcnR4U0WbOekhZ06onjR7GjAAF06L/p+6nDvmA6GNaCHtJKXfFeoeboh1SzXypqsvzg+rv91cI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLddJ//ycbmjskyIjYl8+y/OGYVeW1ig+nN9s4+YOvyb45YSNd
-	0TUiZ06D+9X05COHBvMFPn30mBn4pvqh/xuz7IRtjygj4NY31tlC/ycIbRLqR3xDL8HjeqlSAPM
-	WrmtDvfGHSE30SqE86ZdL+x+z00MkFoRuq60vHQsnQRytfolm/MjDqQiYJPk=
-X-Google-Smtp-Source: AGHT+IEPWGixRGapfARq187CTUE/YoqnJN7QP3ehKMBybddukrFsnjZn6jS8HwW1x42NZGf+n7904+bb6BtixjU2v24A8EZ6CPJb
+	s=arc-20240116; t=1748510011; c=relaxed/simple;
+	bh=MX+gSHM40F/PurHWrbr1LSM8m2nkB/OI3izyzIeGG5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NhU1sSYeOoA771eYX6IoTrDdxdlsEk2GQj9tGEGiBZRG28rAqCCq6OZmpTIsTB8O3MLgIeNIzQQN34DA22tY2qs07RZnej77fxPzecyqiB6MfzgaHWnEza6QUWomrCzI7ulglXcGmZYmm9l5isdOBhOdjJ8cfnDXdYkfyI2fPh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDA95176A;
+	Thu, 29 May 2025 02:13:12 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3FD13F5A1;
+	Thu, 29 May 2025 02:13:27 -0700 (PDT)
+Message-ID: <9a9f18e7-db69-48f2-916f-4565cdb59821@arm.com>
+Date: Thu, 29 May 2025 10:13:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:160c:b0:3dc:8b29:3097 with SMTP id
- e9e14a558f8ab-3dc9b697412mr224679275ab.12.1748509923226; Thu, 29 May 2025
- 02:12:03 -0700 (PDT)
-Date: Thu, 29 May 2025 02:12:03 -0700
-In-Reply-To: <CAGR7w81Zq-HhXvfgXpRM9FPpy67uxQaM_DM8nwN5vEU23oPRqA@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683824e3.a00a0220.52848.0001.GAE@google.com>
-Subject: Re: [syzbot] [i2c?] KMSAN: uninit-value in __i2c_smbus_xfer
-From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
-To: abhinav.ogl@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: Restrict pagetable teardown to avoid false
+ warning
+Content-Language: en-GB
+To: Anshuman Khandual <anshuman.khandual@arm.com>, Dev Jain
+ <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: david@redhat.com, mark.rutland@arm.com, yang@os.amperecomputing.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ stable@vger.kernel.org
+References: <20250527082633.61073-1-dev.jain@arm.com>
+ <7b9a9ad4-7a7a-4e99-ba72-f5be0f609a21@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <7b9a9ad4-7a7a-4e99-ba72-f5be0f609a21@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 29/05/2025 10:02, Anshuman Khandual wrote:
+> 
+> 
+> On 5/27/25 13:56, Dev Jain wrote:
+>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+>> a pmd_present() check in pud_free_pmd_page().
+>>
+>> This problem was found by code inspection.
+>>
+>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table())
+>> Cc: <stable@vger.kernel.org>
+>> Reported-by: Ryan Roberts <ryan.roberts@arm.com> 
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in __i2c_smbus_xfer
+LGTM!
 
-=====================================================
-BUG: KMSAN: uninit-value in i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:484 [inline]
-BUG: KMSAN: uninit-value in __i2c_smbus_xfer+0x2542/0x3140 drivers/i2c/i2c-core-smbus.c:610
- i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:484 [inline]
- __i2c_smbus_xfer+0x2542/0x3140 drivers/i2c/i2c-core-smbus.c:610
- i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:548
- i2cdev_ioctl_smbus+0x4a1/0x660 drivers/i2c/i2c-dev.c:389
- i2cdev_ioctl+0xa14/0xf40 drivers/i2c/i2c-dev.c:478
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0x239/0x400 fs/ioctl.c:893
- __x64_sys_ioctl+0x97/0xe0 fs/ioctl.c:893
- x64_sys_call+0x1ebe/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 
-Local variable msgbuf0.i created at:
- i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:335 [inline]
- __i2c_smbus_xfer+0x864/0x3140 drivers/i2c/i2c-core-smbus.c:610
- i2c_smbus_xfer+0x31d/0x4d0 drivers/i2c/i2c-core-smbus.c:548
+>> ---
+>> This patch is based on 6.15-rc6.
+>>
+>> v2->v3:
+>>  - Use pmdp_get()
+>>
+>> v1->v2:
+>>  - Enforce check in caller
+>>
+>>  arch/arm64/mm/mmu.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index ea6695d53fb9..5a9bf291c649 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>  	next = addr;
+>>  	end = addr + PUD_SIZE;
+>>  	do {
+>> -		pmd_free_pte_page(pmdp, next);
+>> +		if (pmd_present(pmdp_get(pmdp)))
+> 
+> This code path is only called for the kernel mapping. Hence should
+> pmd_valid() be used instead of pmd_present() which also checks for
+> present invalid scenarios as well ? 
 
-CPU: 0 UID: 0 PID: 7066 Comm: syz.0.33 Not tainted 6.15.0-syzkaller-07774-g90b83efa6701-dirty #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
+I think a similar question came up in a previous round, where we concluded that
+it's better to be consistent with what vmalloc is already doing. So personally
+I'd leave it as pmd_present():
 
+	if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+		return 0;
 
-Tested on:
-
-commit:         90b83efa Merge tag 'bpf-next-6.16' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13654970580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1da44e3e5e6013db
-dashboard link: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12534ed4580000
+> 
+>> +			pmd_free_pte_page(pmdp, next);
+>>  	} while (pmdp++, next += PMD_SIZE, next != end);
+>>  
+>>  	pud_clear(pudp);
 
