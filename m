@@ -1,90 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9B42110;
-	Thu, 29 May 2025 13:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4811C3F36;
+	Thu, 29 May 2025 13:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525669; cv=none; b=kPVOPu3DUqD3JFUdrvNbbyVGga1VYUGw6nnrFVqA+qwQ3DFRVf/HZd0VZs3vvH0L5yZyVpLzotanGj5Tm9X9n/S+zVJ8WLv4UxZYL+JdR/F2fllihe/y4FYo8AbPpt3hAfqXhv9mWdwEaJ+1ifGV3PwZDNPek6K/Rdt0yNFF3N8=
+	t=1748525700; cv=none; b=mSfXBg2caYJze8CqAuUrQXNRt8EfroBf6UJo9oqU24XYol6Ue3UItaXxQ/yxEntTypiPZ0NHSj2P3hRTR/1MaOg7jv96tgpYkav+nTcDquwSJclKgXJg49iZU52FO0KGgR7A4f8RK9cO4oH6/hL5wiTmYjH2AFMED2xs7aFpq3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525669; c=relaxed/simple;
-	bh=qSwHf/0hRR8r8l/aqMBLXHUG5kVyzYMtHPPbws4VCPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KQJ4nMeSgdGYeZ+5P7Agl5lKzmq6dCwbEwb2gCxASG1tRrMBvAmT2iOSOzQGGbhuLJrHJ8SGZhKEOCWjLqeJOZzPXnDCK5P5eMP4aisrbhgCrvHtK7rmV8uJ8DSjkZX+/1Vnu3v1a5ouXBPxlowztLz6BWZNCfy7CCKLSHtXino=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVD9jU2v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748525700; c=relaxed/simple;
+	bh=vaOZMCvLCmBp6mhm9kcgj12R05vDdhdjK/O0apb5kVI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B771snGtrGOeYWkSDBB4NgLWNR3A3e6gAxhH5HGMLDDeZFAshdPLcuTaT6MV771BmtMLsWof/h6eQAqL9XrDumefCIK35Tr1a0KgWWNRpiP6qGqgd/td7YnD9r9Bkq/1N3WyCFQy/6fKpflejhaE2xNqtQ17Nw3WObmLWgojYss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fMK3zD1I; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVD9jU2v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11428C4CEEB;
-	Thu, 29 May 2025 13:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748525669;
-	bh=qSwHf/0hRR8r8l/aqMBLXHUG5kVyzYMtHPPbws4VCPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rVD9jU2vkC5O+czjI4YNGVu7mT3WJ5l1e8/AxzP6UA78OhmfsRKWvsKfnCNug9wVm
-	 665A+5vCLR02gv2qgOxgF12Ad1OAN6sZEzJbOYkWnUdX4SXtLLMgHoE8x6KQ2Ggnvp
-	 UB2n+u/Unx1LZ/wbOVqWdXvCE6oDWlaeiCOPRZ9r7M0fBUIO39cpLshrREGZ+wn80M
-	 GgI9qLMHuEcxeNLNzq/T0ZB//UfNv53r9WOlbmJwtkcuhwvsvjF+PLUbW31eGH8dOc
-	 yx+zDOBM/1ZW0i3UevmBnKgTmd6y4Dd0xcthdYHJQEZzIz0WSOwcD2L6+NGhtjp4cw
-	 mnEwWjryD3D1Q==
-Date: Thu, 29 May 2025 14:34:24 +0100
-From: Simon Horman <horms@kernel.org>
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Philip Li <philip.li@intel.com>, oliver.sang@intel.com,
-	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] selftests: net: build net/lib dependency in all
- target
-Message-ID: <20250529133424.GP1484967@horms.kernel.org>
-References: <20250529070536.84491-1-minhquangbui99@gmail.com>
- <20250529103221.GN1484967@horms.kernel.org>
- <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fMK3zD1I"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54TDYpYQ2407009;
+	Thu, 29 May 2025 08:34:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748525691;
+	bh=CMupLjWd2gTIRNUkkhAjmLP4EX857cqSjwQTFVZ2qhI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=fMK3zD1IP7KzaJX1n0elp8xIOHfHYe5nBrUhElxCirsCpcf7ffTUQbG1MmyrfIxyt
+	 luD3/B5pD3U6svw3wZiVvCaX+FPNwB/69bnbYOzMUUulP6NIgN3ecMK5eyC4iNgNPn
+	 lkUCfC/qDyHsXblCd2KL9yp4dCxXx93IPB7HA2H0=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54TDYpj7063926
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 29 May 2025 08:34:51 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
+ May 2025 08:34:51 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 29 May 2025 08:34:51 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.169])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54TDYi8h1650971;
+	Thu, 29 May 2025 08:34:48 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH 01/13] arm64: dts: ti: k3-am625-beagleplay: Enable "cpsw3g" in the board file
+Date: Thu, 29 May 2025 19:04:31 +0530
+Message-ID: <20250529133443.1252293-2-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250529133443.1252293-1-s-vadapalli@ti.com>
+References: <20250529133443.1252293-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, May 29, 2025 at 06:04:17PM +0700, Bui Quang Minh wrote:
-> On 5/29/25 17:32, Simon Horman wrote:
-> > On Thu, May 29, 2025 at 02:05:36PM +0700, Bui Quang Minh wrote:
-> > > Currently, we only build net/lib dependency in install target. This
-> > > commit moves that to all target so that net/lib is included in in-tree
-> > > build and run_tests.
-> > Hi,
-> > 
-> > The above describes what is being done.
-> > I think it would be good to also describe why.
-> 
-> Hi,
-> 
-> Currently, when building net related selftests, we need to
-> 
->     make install
-> 
-> so that the net/lib is compiled. In case we do
-> 
->     make
-> 
-> or
-> 
->     make run_tests
-> 
-> the net/lib is not compiled. So I move the INSTALL_DEP_TARGETS which is
-> net/lib if the selftests is net related to all. As a result, all make/make
-> install/make run_tests will have the net/lib compiled.
+In preparation for disabling "cpsw3g" device-tree node in the SoC file,
+namely "k3-am62-main.dtsi", enable it in the board file. The motivation
+for this change is that of following the existing convention of disabling
+nodes in the SoC file and only enabling the required ones in the board
+file.
 
-Thanks for the explanation, it is much appreciated.
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think it would be good to include something along those lines
-in the commit message of the patch.
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index 72b09f9c69d8..999f5baaba1a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -585,6 +585,7 @@ &usb1 {
+ };
+ 
+ &cpsw3g {
++	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii1_pins_default>, <&spe_pins_default>,
+ 		    <&gbe_pmx_obsclk>;
+-- 
+2.34.1
 
-Please note, that if you post a v2, before doing so you should allow 24h to
-elapse since the posting of v1.
-
-https://docs.kernel.org/process/maintainer-netdev.html
