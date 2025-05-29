@@ -1,172 +1,115 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6CF37160;
-	Thu, 29 May 2025 03:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDA737160;
+	Thu, 29 May 2025 03:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748489649; cv=none; b=jwWPZxHTaE/fF+hDkHgV5ahrYofxW6sTArKTG1n2DXjUsVAlpCyHJPzGlE9PksVa6cbvFEpXSXT6Y4CLpBh9YlX3efHdo6yt16sO5dqkLL43WsEWE+hO8kBsHJ1perc/354rgsw93j7mWBxrzXSCrWZ3yWSc5Oh1JhqHtg/+orI=
+	t=1748489776; cv=none; b=ajl0EPbVmjPFKBjVGvGi7iWzeKmlfFiX8GJ/iHMoyeiZy44j0l3O1FPl/boaum5JX6yL+N0Fdx4p2J+hc/8TRlB4Onug5Fy2TB/bVYdzzBt5NCdUgBrw6bQRn5ZCkFbPa1wEVclIND+o3C4P5tmXo/DYK4Od8yhHymS+vFrP4q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748489649; c=relaxed/simple;
-	bh=CBupvWDj+bp8c+zW9n63VQLzHs/I520TET911IbwSbY=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=IoYUiozUh0NNlZ/q2zlXieiVfrzw3XyCUn1KLTNElBkv/+EK/BMuZtFeBiberh9q8wR+z5hA1ecR3FbvC4qIHubYhPCmKkhs4y4gZaOqF2qtD+Y7WDsXDnQkN4Jun4GM+DN4uFOJurMq4YFk1hNL4snSnVeg56XMsAN3J7NzVTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=CbPH+b+m; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1748489776; c=relaxed/simple;
+	bh=lRqn/UeUDAVuP4Z63wj0d9rZVJKOlvjsWLtn1Fw9j3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j66O+SH1VEOUZ9ykCJTKt/c7m79xPss0amXf/52v7VXs36QELUjHmRBVP6Rv1OoQGGyas+qXqRzLkiE5SuG72Vd0PbW6wIToZyoKPp0BSwH8ChjaaL5JASb+skTxanISdGjeQQzIHzgTmehpXK4ZGHqzHzNCW6JygWZnTfOcUfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQrC9X+w; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="CbPH+b+m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1748489634;
-	bh=0yxfgjZsIWQnTUAUtq7liyCcqoh9g0BEu9JK+IiDETg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CbPH+b+mfvJOlLDU+X4gv8iv/wxOVsJRnq97ZVJLhBswkb0BXU0+Hr/ZvzPcd0ifE
-	 tN8nsGCFXL1YtlnUUDFdzceFsYYcLSDCKfoiTbtUlq1q6guWSNv5grQjp5uBxIbD7F
-	 RIsha4f2wjaEeUqGTk6LtiTyAKAKWY/vx9aZkFJs=
-Received: from NUC10.. ([39.156.73.10])
-	by newxmesmtplogicsvrszgpua8-0.qq.com (NewEsmtp) with SMTP
-	id 8293B21C; Thu, 29 May 2025 11:32:41 +0800
-X-QQ-mid: xmsmtpt1748489561teyck2g0p
-Message-ID: <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
-X-QQ-XMAILINFO: NnYhxYSyuBnLGYxP4juhxZppL5xEnQkJZl/jDuQ+1KvyfyFpE1SifIj+1iHcPr
-	 CerkoZOaWSmDclDEG/vhipekyH7tjamvBg94Hm5I13vVEWsqDAhDhVJp9Dft4s4t3dAGcmIjyHwE
-	 tUkiytTHBzIgyqv98CkSQ260zuPMKNREBVvZ/ObMl0WU9H2K3AMCUM5LxTaUfm6YrJNZWRMxRwSx
-	 0nPaDdZZt0sEa9Mvw/7I8HIp5gbkwe2nLUPKN8eIQNLbhXNjzjN3sQciWPqdVTAVa3vFc6fUp6Rj
-	 j+KpJYdkLApLbDE3JroYsbTkM8ICao8tdLzh07b3EoXCjQeAO97H7lxWu1dhyTa9GhPJyqefgYuO
-	 xfgSfrXfs54a1ZftUQLXjaJPWtVLCaP5jd27OpTcg2eNYDj2KyQny3kramdHr8ITn0gGfREA/g/j
-	 bUbHjGeZu9iDW0vhf5pv6IE3NbS/roFK5CL9khZLibwtvJhVyYWt1lOg15bF44ygaHzb8jYE1WA3
-	 3Rmnj3t6YTa1RrWRb66YAov6AERrGvJyqC0JAHRMaWOaS6V8eQhs8BQVoJCwn3cyeqJT9b9u7xqD
-	 IymO8WkU50kUy/M6e6g3V6q2eZyzgPYn2a8nz2LY2ScvYPRhKOMiC61GGR3X6gOprHfG0B1Ocmge
-	 nBL1kiz5UDUuC99i720N/OLTsFx00CQFCF9tUGsqcevfF4CBGe88cUA2R5QLXZ333cG1OEjpRyUb
-	 p6cJc1Zdgcqse55albhvaTH54YT6+z0WKJEOFR/QQHhiIgxgVxckQofL8myivlEXnEoNROu1nkk+
-	 L78BeeIyHDifRggkqnKYmccm9q259f9Au4x/DdAsmpw2aQp/kSCDfyJkCxAPQi+eAtG3GAZo+D/f
-	 Kk8O3KW5WVUMq7vU3dUjv9l76O8qbapSZSvYEfCGF6UJNEFX/zyp8ZZMDwI/PNcyqTdGbKmHTJc2
-	 tQWrDf5oQd6z2FdRKPjDhEdS/jx+ZaABaZwioqsZowAlxNXJGMpUYle09NgbaCnRCu/OBM2D+SFN
-	 v6K0RPyWK0dS5ntiWddrTdTr7mFMLi6mIzFeevLnkb1Gdl4i5E
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Rong Tao <rtoax@foxmail.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net
-Cc: rtoax@foxmail.com,
-	rongtao@cestc.cn,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Juntong Deng <juntong.deng@outlook.com>,
-	Amery Hung <amery.hung@bytedance.com>,
-	Dave Marchevsky <davemarchevsky@fb.com>,
-	Hou Tao <houtao1@huawei.com>,
-	bpf@vger.kernel.org (open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)),
-	linux-kernel@vger.kernel.org (open list),
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK)
-Subject: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
-Date: Thu, 29 May 2025 11:32:34 +0800
-X-OQ-MSGID: <5af7a0a04f467df05d2e4cd54a0a7ebf396c3888.1748488784.git.rtoax@foxmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1748488784.git.rtoax@foxmail.com>
-References: <cover.1748488784.git.rtoax@foxmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQrC9X+w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748489774; x=1780025774;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lRqn/UeUDAVuP4Z63wj0d9rZVJKOlvjsWLtn1Fw9j3I=;
+  b=PQrC9X+wtEPCNP0XD/NgOppEKG4EFs8rtxCA+xQ2Ni39toQcqIImnIDp
+   coNJAYBtelYVcziX92H0tZYSAX/adN88h/H6TFT5J8OAWIeKrXqIgWylB
+   bGwRu5cfL//VFYxqqDjseGLdyJ+PIfa5CjdFWvPzNgIwd5SOI0X2WqApX
+   i1dOVo4IE9/lxC+JhS2YBIZlwts8e8Gw3+CX89LX55OOws7VCxNf7egsW
+   WNMDmlrOQIuqkGBY/JCFltfYpYJJpgoVvMirHY7nf/0ONXkCxPT2zi699
+   3JaMWBxc3tu2CJ+rEFRgE0RhTjrkFiiO6lOlXXzIAWe/ANr8f8T7C39UI
+   A==;
+X-CSE-ConnectionGUID: T6uzHaGTS56KYy+cy+cQmQ==
+X-CSE-MsgGUID: eq2KFc62RVGL/RnNl6qslA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61590587"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="61590587"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 20:36:13 -0700
+X-CSE-ConnectionGUID: zvZ7gGsSQmyFeT8T4zDykw==
+X-CSE-MsgGUID: scmTQcoETPaJwBpOc1tknQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="148476112"
+Received: from josephbr-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.30])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 20:36:14 -0700
+Date: Wed, 28 May 2025 20:36:07 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH 0/5] KVM: VMX: Fix MMIO Stale Data Mitigation
+Message-ID: <20250529033546.dhf3ittxsc3qcysc@desk>
+References: <20250523011756.3243624-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523011756.3243624-1-seanjc@google.com>
 
-From: Rong Tao <rongtao@cestc.cn>
+On Thu, May 22, 2025 at 06:17:51PM -0700, Sean Christopherson wrote:
+> Fix KVM's mitigation of the MMIO Stale Data bug, as the current approach
+> doesn't actually detect whether or not a guest has access to MMIO.  E.g.
+> KVM_DEV_VFIO_FILE_ADD is entirely optional, and obviously only covers VFIO
 
-It is a bit troublesome to get cwd based on pid in bpf program, such as
-bpftrace example [1].
+I believe this needs userspace co-operation?
 
-This patch therefore adds a new bpf_task_cwd_from_pid() kfunc which
-allows BPF programs to get cwd from a pid.
+> devices, and so is a terrible heuristic for "can this vCPU access MMIO?"
+> 
+> To fix the flaw (hopefully), track whether or not a vCPU has access to MMIO
+> based on the MMU it will run with.  KVM already detects host MMIO when
+> installing PTEs in order to force host MMIO to UC (EPT bypasses MTRRs), so
+> feeding that information into the MMU is rather straightforward.
+> 
+> Note, I haven't actually verified this mitigates the MMIO Stale Data bug, but
+> I think it's safe to say no has verified the existing code works either.
 
-[1] https://github.com/bpftrace/bpftrace/issues/3314
+Mitigation was verifed for VFIO devices, but ofcourse not for the cases you
+mentioned above. Typically, it is the PCI config registers on some faulty
+devices (that don't respect byte-enable) are subject to MMIO Stale Data.
+But, it is impossible to test and confirm with absolute certainity that all
+other cases are not affected. Your patches should rule out those cases as
+well.
 
-Signed-off-by: Rong Tao <rongtao@cestc.cn>
----
- kernel/bpf/helpers.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+Regarding validating this, if VERW is executed at VMenter, mitigation was
+found to be effective. This is similar to other bugs like MDS. I am not a
+virtualization expert, but I will try to validate whatever I can.
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index b71e428ad936..0f32fbc997bb 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -24,6 +24,10 @@
- #include <linux/bpf_mem_alloc.h>
- #include <linux/kasan.h>
- #include <linux/bpf_verifier.h>
-+#include <linux/fs.h>
-+#include <linux/fs_struct.h>
-+#include <linux/path.h>
-+#include <linux/string.h>
- 
- #include "../../lib/kstrtox.h"
- 
-@@ -2643,6 +2647,46 @@ __bpf_kfunc struct task_struct *bpf_task_from_vpid(s32 vpid)
- 	return p;
- }
- 
-+/**
-+ * bpf_task_cwd_from_pid - Get a task's absolute pathname of the current
-+ * working directory from its pid.
-+ * @pid: The pid of the task being looked up.
-+ * @buf: The array pointed to by buf.
-+ * @buf_len: buf length.
-+ */
-+__bpf_kfunc int bpf_task_cwd_from_pid(s32 pid, char *buf, u32 buf_len)
-+{
-+	struct path pwd;
-+	char kpath[256], *path;
-+	struct task_struct *task;
-+
-+	if (!buf || buf_len == 0)
-+		return -EINVAL;
-+
-+	rcu_read_lock();
-+	task = pid_task(find_vpid(pid), PIDTYPE_PID);
-+	if (!task) {
-+		rcu_read_unlock();
-+		return -ESRCH;
-+	}
-+	task_lock(task);
-+	if (!task->fs) {
-+		task_unlock(task);
-+		return -ENOENT;
-+	}
-+	get_fs_pwd(task->fs, &pwd);
-+	task_unlock(task);
-+	rcu_read_unlock();
-+
-+	path = d_path(&pwd, kpath, sizeof(kpath));
-+	path_put(&pwd);
-+	if (IS_ERR(path))
-+		return PTR_ERR(path);
-+
-+	strncpy(buf, path, buf_len);
-+	return 0;
-+}
-+
- /**
-  * bpf_dynptr_slice() - Obtain a read-only pointer to the dynptr data.
-  * @p: The dynptr whose data slice to retrieve
-@@ -3314,6 +3358,7 @@ BTF_ID_FLAGS(func, bpf_task_get_cgroup1, KF_ACQUIRE | KF_RCU | KF_RET_NULL)
- #endif
- BTF_ID_FLAGS(func, bpf_task_from_pid, KF_ACQUIRE | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_task_from_vpid, KF_ACQUIRE | KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_task_cwd_from_pid, KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_throw)
- #ifdef CONFIG_BPF_EVENTS
- BTF_ID_FLAGS(func, bpf_send_signal_task, KF_TRUSTED_ARGS)
--- 
-2.49.0
+> All that said, and despite what the subject says, my real interest in this
+> series it to kill off kvm_arch_{start,end}_assignment().  I.e. preciesly
+> identifying MMIO is a means to an end.  Because as evidenced by the MMIO mess
+> and other bugs (e.g. vDPA device not getting device posted interrupts),
+> keying off KVM_DEV_VFIO_FILE_ADD for anything is a bad idea.
+> 
+> The last two patches of this series depend on the stupidly large device
+> posted interrupts rework:
+> 
+>   https://lore.kernel.org/all/20250523010004.3240643-1-seanjc@google.com
+> 
+> which in turn depends on a not-tiny prep series:
+> 
+>   https://lore.kernel.org/all/20250519232808.2745331-1-seanjc@google.com
+> 
+> Unless you care deeply about those patches, I honestly recommend just ignoring
+> them.  I posted them as part of this series, because post two patches that
+> depends on *four* series seemed even more ridiculousr :-)
+> 
+> Side topic: Pawan, I haven't forgotten about your mmio_stale_data_clear =>
+> cpu_buf_vm_clear rename, I promise I'll review it soon.
 
+No problem.
