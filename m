@@ -1,81 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39B322CBCB;
-	Thu, 29 May 2025 15:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E050322AE5E
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748531240; cv=none; b=Co+QI6zfijAdy/k3DZE+S2c/id8QzZIEfiCAguKRoY4cFRkA//TSVkCgJQm4S/JBV4IqWJWb10urCcW+84WcyVOZSPEN3WFUyNADp1EglbJZYX1/DzUnkxetpt4AM8vwIUk2HpWrn5jfoj60QlnDyr2h3u7uJhQ7OWr54lLvj8k=
+	t=1748531255; cv=none; b=f8O2xsR8zmxJ7re6b3EU7DZJowIZsB8qgvYC+R2z8Lzi3njg5YopemoHM48oIK0nvFFWmg5emT9KRMtVQnic4WV/woyGKuVHatquegaZ/GNsfPRIHDPRbkiAqKzZS/C1phWndM3A9uXO/CajD6Bd5PQ71ljqlj46Wjs9zwzVI+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748531240; c=relaxed/simple;
-	bh=oIikqErvY0/2Yw/HLI970NexWLLJ2jSpoVZKtL13Ib4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=SNvVlBuDZHvNoprjq8Mc38l5/hXSSKqgeIxRTylv67MB4XqP5P9ZUOLv6vXQtuqfXXWZyN2ilPxvO8mxlOgOz3u8kMz7lu9v0oSs3W1Au5Dv+l811uqZ5EutfRtfpDHyG4+YAXAdqqQ9CXH5dYUTAUYF+/WSsUitsav0ncyobHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uiPKhwjJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748531255; c=relaxed/simple;
+	bh=nRqV/m3gANnnW7jwp4ZVNLa3vDIOYWrPSDQCnpgN7n4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JfsOm0ObtyzTfZKV2wAuwlscluqTNR8+tLBkL02Uq2FhKQ5yxDAUDd527qyOXbMCmSyL5wNi4f7XUz3e19QzshV03umB1juYp09AO6fVGvHQ4Nu4842oiClTyH9Eks8EJ2tfRxT5oG7yzgjAi8w04Mqk5F7vrvtFSkQkSyTy7To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=io46lwWB; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uiPKhwjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D702C4CEEB;
-	Thu, 29 May 2025 15:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748531240;
-	bh=oIikqErvY0/2Yw/HLI970NexWLLJ2jSpoVZKtL13Ib4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=uiPKhwjJuYwyK/zuMgpElLDGS3i4ExNLt0O8h3MjAF8Mr+t9Wx7X/tmtqtohiW7aE
-	 YW3srUc5qpkkSxVKBq7e7tPYQ31GCCmOtLICTkfE6XWnAPB+7uXqxmTqubDOEX7QGM
-	 kBuwpmsvZn/pS/TpuIT5/kqo2JfyHAlMwoodCX2MMBLEdkxnkSAJjOK+JXhDsvL+pf
-	 wxqSCezhltVEC+WwQZcBNQ0/ewaJxk42nOVtRGvWnJ5Nxt3MAxjREfXboE9b5sIfPZ
-	 y+nJEMx3xY9LMwB0q4ZHeVwHW1K0USjC3cQ++DUi00Z+bVdqxn/Aijx/c0iQ83mICG
-	 CzmLgDdbXZmqA==
-From: Mark Brown <broonie@kernel.org>
-To: prime.zeng@hisilicon.com, fanghao11@huawei.com, f.fangjian@huawei.com, 
- Yang Shen <shenyang39@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-In-Reply-To: <20250529061704.190725-1-shenyang39@huawei.com>
-References: <20250529061704.190725-1-shenyang39@huawei.com>
-Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon SFC driver maintainer
-Message-Id: <174853123887.49583.10719064798255686718.b4-ty@kernel.org>
-Date: Thu, 29 May 2025 16:07:18 +0100
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="io46lwWB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1748530644;
+	bh=nRqV/m3gANnnW7jwp4ZVNLa3vDIOYWrPSDQCnpgN7n4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=io46lwWB5b6mfowKjoQYKbImgvorQ/ro5x7XuJIuSurDSsH1iRVvHDNHpSIJy/oVW
+	 iP24cdf3GuleGETRgkMQzHOQE277nqS8LPxg3q62cRJpe5nHhzHU8ggCybZg5+Dz28
+	 V3lnWlwuLTvuo/e+PyPHCyyiMP8xP5DFHoL06FNk=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 4DFCD400C6; Thu, 29 May 2025 07:57:24 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 49651400C4;
+	Thu, 29 May 2025 07:57:24 -0700 (PDT)
+Date: Thu, 29 May 2025 07:57:24 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: Vlastimil Babka <vbabka@suse.cz>
+cc: David Rientjes <rientjes@google.com>, 
+    Andrew Morton <akpm@linux-foundation.org>, 
+    Roman Gushchin <roman.gushchin@linux.dev>, 
+    Harry Yoo <harry.yoo@oracle.com>, Matthew Wilcox <willy@infradead.org>, 
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm, slab: support NUMA policy for large kmalloc
+In-Reply-To: <20250529-frozen-pages-for-large-kmalloc-v1-2-b3aa52a8fa17@suse.cz>
+Message-ID: <e391fe8a-6bef-4067-86d8-b75ece441b75@gentwo.org>
+References: <20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz> <20250529-frozen-pages-for-large-kmalloc-v1-2-b3aa52a8fa17@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 29 May 2025 14:17:04 +0800, Yang Shen wrote:
-> Add Yang Shen as the maintainer of the HiSilicon SFC driver,
-> replacing Jay Fang.
-> 
-> 
+On Thu, 29 May 2025, Vlastimil Babka wrote:
 
-Applied to
+> The slab allocator observes the task's numa policy in various places
+> such as allocating slab pages. Large kmalloc allocations currently do
+> not, which seems to be an unintended omission. It is simple to correct
+> that, so make ___kmalloc_large_node() behave the same way as
+> alloc_slab_page().
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Large kmalloc allocation lead to the use of the page allocator which
+implements the NUMA policies for the allocations.
 
-Thanks!
-
-[1/1] MAINTAINERS: Update HiSilicon SFC driver maintainer
-      commit: 589561cb455189154a7110a39d9fcc39965f3104
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+This patch is not necessary.
