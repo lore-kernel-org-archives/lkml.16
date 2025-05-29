@@ -1,220 +1,347 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F41622FDEC;
-	Thu, 29 May 2025 17:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B1C2222CB
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748539527; cv=none; b=bPycR1g0PUgoFqrqSOD+cFlcXOLH5w2fiLdrUeUiBUWlDGpmehz2hio22bbzhxOzdgENl8iJvhHkN+NimOwrZFs44yqbZoi5BOsJESZXDZ+sQ3KiXy5Y4LeOXT37wRf/FpZ/599IdqcV02/j0/HX3QUc6dnJxf+v2wwa8CpOpSI=
+	t=1748539526; cv=none; b=eN47Z/zg1KuK6NwwCmRSYOwjN8UA+Lklb7jAxJ7pskermQB8e4HFtnjWTJPGFVapYdYrKe45GwPCCxWqYT36AHFDsFxCR4HDka5m6UC4MUq9rnUCUHnj2UDWAaa4vG+mNk6kJbQD9Aqmec6CnwYuVS+83It+BDwO+U23WN4QRxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748539527; c=relaxed/simple;
-	bh=cUCOSDkZVKViBX+XB8/cLIW/bIM7FFUfwedr8//UWEg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LUxAZiFrBsDaYpt0QSiU3w6u25kDfG83h7HPhS+CmpedolwftePuZOIvODz3S26X1yLoerAtbE1ZOPfv2O/+HhffW1w9rqV5DILJzVhkUK2d2fO5ra0Ykzub43EL2kAcxxWRdnnO+OA8hRp50Qs7Ecy2usRTvcvOe3aaQSd6BQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kCxO5Ppr; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748539526; c=relaxed/simple;
+	bh=R7W36fC9mqA2YImazGJzMilva/IX/vW7Fpjaef9QXRk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lywh48LhTQZygdSCv58geeYsBF5b582/PJb0wdzFCmBxZXJh5UZ6niTROt7EzwTwnZRZLtrl+lQvJh6Ixt4zLKr0SIc4eTYz9xiqJToG1RShJgyRjcCE4UI60pMvm3OMbEHwGE+JQJmAg5lTQHAcQ0AUly+5i3zICGtUEXDcOM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FJAn4UXm; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kCxO5Ppr"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad56829fabdso168755066b.1;
-        Thu, 29 May 2025 10:25:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FJAn4UXm"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dd89a85414so13555ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:25:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748539524; x=1749144324; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XV2butVDw2bUeLpVaXq6xRsCyjyAgxB8qAYckam2iV4=;
-        b=kCxO5PprU258A60L3f6TunCGE9yoyZXH2flX95r6b0Ek1t4YXCzT2Oe7LzPmn9crph
-         ZObesni/faBqWfxqzyjk+FyEpZFpu+yVRaUAlHqXOB6Q45hi8BoTUKHoqrv8L7BSNcWY
-         JH40YSHHymEzH1g+3T6L/Xhc8kpYsxp1yQUOrlHzEhoVx19QUv27krf+yUApP41mnTaV
-         8Sf4Ud1ZAJD+0FVHrrA2GuJYhogDkLEX42E8wxcVRGgKV0mKXKQWrskx3BA8B7lUtrCp
-         5rkM5pApR+956JMBT+mynXXOKnzRe3eo3d1SfyM0ihyGwsbsobmggxCqQMeAaoLbuBhc
-         WZBw==
+        d=google.com; s=20230601; t=1748539522; x=1749144322; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Aq5UWqCDWZg2jUBruTrKCignhLetlhTEoSWLRFlBvKY=;
+        b=FJAn4UXmJ5F2YEZhhj6T/KCixe1TGMF1njpw7gZuPOMxpCb0jGfNY9QBXF3m1qLc8F
+         QJLrDBYCch1Dbt3FuTopTR8HB/uJwmotD0Rq3QT1o2hdY/2xsyDieb1Nzrm5tofwbtQm
+         CLqd4DDmVTRrxqJuAQVaAVTIftTidT6eTcil/VSeFhU5IFIFcq3eCJ92wsJfUpw/Py1Q
+         7/fEFV3BPOExF6etTJ3O2K2Cm/0Zz6DA1PEqGNF0nPXiZ1A3Ry65zQgDSj/UbluErU4N
+         kBvrAdeFNNTToXdBExMVUR+XSG4xMv09Dzrkifr8dLoicPXIDc9JKCzVVg5GrxO/iPT8
+         vd7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748539524; x=1749144324;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748539522; x=1749144322;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XV2butVDw2bUeLpVaXq6xRsCyjyAgxB8qAYckam2iV4=;
-        b=R5XQn508QyagcR9hdj2szy5QBFdrSXVy/qMiYttMqRrchgwbG5YoNB9/IkIVWiyduw
-         bnG9A5uHkDQzx7DROaTdwfK6tAPb2+QF6EQn9BdicTt6qHiE0VLdOlLYiXsd6Olmw+TP
-         yg/5BiCmkK3YQ1CyqNiJDSjLZP4ldODke3+7L3Ljsd1djDhcVpw4daqPHndwvje9HU1t
-         q21SWHc3iDaCFYtPqMwrAH9bhmVvv5NaNI771i/Yik1DbBIq9C3yDcQ2KKR2qAWbmIZp
-         5JsV8ukuK8+4h5S2f7meBWYMA98oUOYwII4ryKQaSw/KdN4RBICSJ+p+tsdh92K8SAam
-         bk7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVfpjvB1rS1HerkgrSBNOe4FUXc8fZ9ipWdVORoB8eUtg3INvG/n804KETSzA0xfoBQgh2xva86gsck1MyJ@vger.kernel.org, AJvYcCXYSSGmwDBtscrmtNX2AM0RAb+EH/Kzjv7hwXP0Xv3Hud021uv8C6mhCau93m2K9N9FYoVw/CvGP4zcskjV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaH9UUKw9dlvDuHr88ChdaCCnfBpEhwXdRC8eYr2ybzS6l59ci
-	5ZJgFPzvW8YmlsxnNYC06zX/CP9MLpW/pSU4mLy+izVsY9LMLZRPWg0d
-X-Gm-Gg: ASbGnctlNtP2vwRMH66WEk0JWEnHV92goPoW4ekn4vgRBmQqPd4dQgZiZWToPjhYI+T
-	7FVWvtZ76GGXNh8EgLNo9zHv4+o4cRKjL9Fn1gJEoA3F/i07v6H6pgBis8sEWDJFvJIRwL82EPt
-	Av5NMH4Wc9iEYbzHoSnL/FN8kUP69THnrn7OQ/2wilyf6ZEXHvQhdVHoGRZWcUwZl3U+KfRD8t4
-	WlHmgRcC/14IRGk65KRljoKMLlTqTTUTJFrKNyzWFdpBHpbO9iUz99jaZUoS+kb3joMe0kef7DC
-	so86rrdCZFz/yE4AbGXQy0iaLRhBpXbnx6N/6LkBRTmc6SLkrIEtqzPquAhuUw+lyVeyc3H9NX1
-	jcB0b698CB5nXtxQ=
-X-Google-Smtp-Source: AGHT+IEZkkD1K+H0tmuFbouKJ3viSpyOf9KVWq/Uggp+KKsRk/X1ojEXByAsL9hV2hKgOrH6f6eaTQ==
-X-Received: by 2002:a17:907:7fa4:b0:ad8:8529:4f9b with SMTP id a640c23a62f3a-adb325838e8mr28059366b.38.1748539523503;
-        Thu, 29 May 2025 10:25:23 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ada5d82d95bsm177793366b.57.2025.05.29.10.25.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 10:25:23 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Thu, 29 May 2025 19:25:11 +0200
-Subject: [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds
- access of BAM arrays
+        bh=Aq5UWqCDWZg2jUBruTrKCignhLetlhTEoSWLRFlBvKY=;
+        b=hWh//Zf+G/WTAk4JjzTqmUgkLH9uhiAW35paNNhxA4fS43k53QUYNq16jCsGQFLnHM
+         44pn8Mzl0xaMhDY7AqA6eNW+dRVqg62vfR77HaWy6eNycyNT0kM9ZVU5ijleXt27idvl
+         MK9CbX2GpZSkvN6Hc++UutFQuI9P8fI86pbazgf/80XXp63ZjKikYc5BJ/hlbxhPACWf
+         doA0zqLAla2zteyWtfgY6IHzy/CiI+MlS0dRTY/bnS0EaTKOrR6c/0Ynt9WLnYH0gcpy
+         /Tg5V2ITw9IrrLZ6S5B6xlOYU/h3GIgu8l+i9TPbdzvvDhMfB9ITViuWX9iJkQLGKOBr
+         84AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXmVbDj23vttgolkvy2LA/+t2Gd1Au40h7HHXiD6+YbRgf7k3De/qRUCXagEGB2bTDLi9mvYdk13OQQbwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1Xm4rqUt1ZCc40S5SpiVcg5LTkWBGOtJc/Vx+L1Ewei7OrYRN
+	SsKrwd0TisZq6KWMV61Z8qiAYMAuGTNJL+jBD8ti5vNRLFLaBu22w6w2p4CMEXmv67k2XgzOaUI
+	19AbWDwrLwX3/cSXvRiAn7DITG7eSEbZED3BZzhNN
+X-Gm-Gg: ASbGncuuNlultu6C0etQe93SYzPt1PuawIF3e5AhhJPxhXT46zbhn43DZcNn/mMltHb
+	D+HTIy2w2Vo95ez8k27z9I2rB1QebfTWgxgp+5UKi/M4in/8/PFwET4/3XJLBLCXNxIZKGdK1iC
+	FN8hjXI0lKtkZRRwCeRTDxGU45YEGYTLv+DxLM5uJ8n2hKjIxZeIRI7b/r3paDPEj9O2O8Zv7JH
+	qcRR0fRJcM=
+X-Google-Smtp-Source: AGHT+IEieB0z/jaUQ85p0bxGKF/BsfxceTJbHzW2dlAAgUo/3U0hH7+izTddIgjUp6yv6WeWDg6P6NOKrSVA54Daxp0=
+X-Received: by 2002:a05:6e02:b4e:b0:3dc:8041:235b with SMTP id
+ e9e14a558f8ab-3dd93102438mr3785775ab.5.1748539521790; Thu, 29 May 2025
+ 10:25:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-qpic-snand-avoid-mem-corruption-v2-2-2f0d13afc7d2@gmail.com>
-References: <20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com>
-In-Reply-To: <20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com>
-To: Mark Brown <broonie@kernel.org>, 
- Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- Miquel Raynal <miquel.raynal@bootlin.com>, 
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Gabor Juhos <j4g8y7@gmail.com>, Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-X-Mailer: b4 0.14.2
+References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org> <20250529-james-perf-feat_spe_eft-v2-10-a01a9baad06a@linaro.org>
+In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-10-a01a9baad06a@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 29 May 2025 10:25:09 -0700
+X-Gm-Features: AX0GCFsMi0PuJSkUZIq3glS5t7yiPh54_nxoMbLwC4oi0UtVw-ij7ss9J0KioO4
+Message-ID: <CAP-5=fUOfEskPp_5myy167bpZ47NjavWU_8vAMpPo4TSWJRs-w@mail.gmail.com>
+Subject: Re: [PATCH v2 10/11] perf tools: Add support for perf_event_attr::config4
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The common QPIC code does not do any boundary checking when it handles
-the command elements and scatter gater list arrays of a BAM transaction,
-thus it allows to access out of bounds elements in those.
+On Thu, May 29, 2025 at 4:33=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
+>
+> perf_event_attr has gained a new field, config4, so add support for it
+> extending the existing configN support.
+>
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Although it is the responsibility of the given driver to allocate enough
-space for all possible BAM transaction variations, however there can be
-mistakes in the driver code which can lead to hidden memory corruption
-issues which are hard to debug.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-This kind of problem has been observed during testing the 'spi-qpic-snand'
-driver. Although the driver has been fixed with a preceding patch, but it
-still makes sense to reduce the chance of having such errors again later.
+Thanks,
+Ian
 
-In order to prevent such errors, change the qcom_alloc_bam_transaction()
-function to store the number of elements of the arrays in the
-'bam_transaction' strucutre during allocation. Also, add sanity checks to
-the qcom_prep_bam_dma_desc_{cmd,data}() functions to avoid using out of
-bounds indices for the arrays.
-
-Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>     # on SDX75
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
-Changes in v2:
-  - remove the inline qcom_err_bam_array_full() function and print the error
-    messages directly from the respective functions instead
-  - add 'Tested-by' tag from Lakshmi Sowjanya D, and remove the
-    "Tested with the 'spi-qpic-snand' driver only." line from the
-    commit message as SDX75 uses the qcom_nandc driver
-  - move the note about of the preferred merging order into the cover letter
----
- drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
- include/linux/mtd/nand-qpic-common.h |  8 ++++++++
- 2 files changed, 34 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
-index e0ed25b5afea9b289b767cd3d9c2d7572ed52008..30f17d959300cc7448d0c2e9e2516c52655494f0 100644
---- a/drivers/mtd/nand/qpic_common.c
-+++ b/drivers/mtd/nand/qpic_common.c
-@@ -57,14 +57,15 @@ qcom_alloc_bam_transaction(struct qcom_nand_controller *nandc)
- 	bam_txn_buf += sizeof(*bam_txn);
- 
- 	bam_txn->bam_ce = bam_txn_buf;
--	bam_txn_buf +=
--		sizeof(*bam_txn->bam_ce) * QPIC_PER_CW_CMD_ELEMENTS * num_cw;
-+	bam_txn->bam_ce_nitems = QPIC_PER_CW_CMD_ELEMENTS * num_cw;
-+	bam_txn_buf += sizeof(*bam_txn->bam_ce) * bam_txn->bam_ce_nitems;
- 
- 	bam_txn->cmd_sgl = bam_txn_buf;
--	bam_txn_buf +=
--		sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL * num_cw;
-+	bam_txn->cmd_sgl_nitems = QPIC_PER_CW_CMD_SGL * num_cw;
-+	bam_txn_buf += sizeof(*bam_txn->cmd_sgl) * bam_txn->cmd_sgl_nitems;
- 
- 	bam_txn->data_sgl = bam_txn_buf;
-+	bam_txn->data_sgl_nitems = QPIC_PER_CW_DATA_SGL * num_cw;
- 
- 	init_completion(&bam_txn->txn_done);
- 
-@@ -237,6 +238,11 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
- 	struct bam_cmd_element *bam_ce_buffer;
- 	struct bam_transaction *bam_txn = nandc->bam_txn;
- 
-+	if (bam_txn->bam_ce_pos + size > bam_txn->bam_ce_nitems) {
-+		dev_err(nandc->dev, "BAM %s array is full\n", "CE");
-+		return -EINVAL;
-+	}
-+
- 	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
- 
- 	/* fill the command desc */
-@@ -258,6 +264,12 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
- 
- 	/* use the separate sgl after this command */
- 	if (flags & NAND_BAM_NEXT_SGL) {
-+		if (bam_txn->cmd_sgl_pos >= bam_txn->cmd_sgl_nitems) {
-+			dev_err(nandc->dev, "BAM %s array is full\n",
-+				"CMD sgl");
-+			return -EINVAL;
-+		}
-+
- 		bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_start];
- 		bam_ce_size = (bam_txn->bam_ce_pos -
- 				bam_txn->bam_ce_start) *
-@@ -297,10 +309,20 @@ int qcom_prep_bam_dma_desc_data(struct qcom_nand_controller *nandc, bool read,
- 	struct bam_transaction *bam_txn = nandc->bam_txn;
- 
- 	if (read) {
-+		if (bam_txn->rx_sgl_pos >= bam_txn->data_sgl_nitems) {
-+			dev_err(nandc->dev, "BAM %s array is full\n", "RX sgl");
-+			return -EINVAL;
-+		}
-+
- 		sg_set_buf(&bam_txn->data_sgl[bam_txn->rx_sgl_pos],
- 			   vaddr, size);
- 		bam_txn->rx_sgl_pos++;
- 	} else {
-+		if (bam_txn->tx_sgl_pos >= bam_txn->data_sgl_nitems) {
-+			dev_err(nandc->dev, "BAM %s array is full\n", "TX sgl");
-+			return -EINVAL;
-+		}
-+
- 		sg_set_buf(&bam_txn->data_sgl[bam_txn->tx_sgl_pos],
- 			   vaddr, size);
- 		bam_txn->tx_sgl_pos++;
-diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/nand-qpic-common.h
-index cd7172e6c1bbffeee0363a14044980a72ea17723..3ca4073a496b8fd2a99112a9caefd3f110260568 100644
---- a/include/linux/mtd/nand-qpic-common.h
-+++ b/include/linux/mtd/nand-qpic-common.h
-@@ -240,6 +240,9 @@
-  * @last_data_desc - last DMA desc in data channel (tx/rx).
-  * @last_cmd_desc - last DMA desc in command channel.
-  * @txn_done - completion for NAND transfer.
-+ * @bam_ce_nitems - the number of elements in the @bam_ce array
-+ * @cmd_sgl_nitems - the number of elements in the @cmd_sgl array
-+ * @data_sgl_nitems - the number of elements in the @data_sgl array
-  * @bam_ce_pos - the index in bam_ce which is available for next sgl
-  * @bam_ce_start - the index in bam_ce which marks the start position ce
-  *		   for current sgl. It will be used for size calculation
-@@ -258,6 +261,11 @@ struct bam_transaction {
- 	struct dma_async_tx_descriptor *last_data_desc;
- 	struct dma_async_tx_descriptor *last_cmd_desc;
- 	struct completion txn_done;
-+
-+	unsigned int bam_ce_nitems;
-+	unsigned int cmd_sgl_nitems;
-+	unsigned int data_sgl_nitems;
-+
- 	struct_group(bam_positions,
- 		u32 bam_ce_pos;
- 		u32 bam_ce_start;
-
--- 
-2.49.0
-
+> ---
+>  tools/perf/tests/parse-events.c | 14 +++++++++++++-
+>  tools/perf/util/parse-events.c  | 11 +++++++++++
+>  tools/perf/util/parse-events.h  |  1 +
+>  tools/perf/util/parse-events.l  |  1 +
+>  tools/perf/util/pmu.c           |  8 ++++++++
+>  tools/perf/util/pmu.h           |  1 +
+>  6 files changed, 35 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index 5ec2e5607987..5f624a63d550 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -615,6 +615,8 @@ static int test__checkevent_pmu(struct evlist *evlist=
+)
+>         TEST_ASSERT_VAL("wrong config1",    1 =3D=3D evsel->core.attr.con=
+fig1);
+>         TEST_ASSERT_VAL("wrong config2",    3 =3D=3D evsel->core.attr.con=
+fig2);
+>         TEST_ASSERT_VAL("wrong config3",    0 =3D=3D evsel->core.attr.con=
+fig3);
+> +       TEST_ASSERT_VAL("wrong config4",    0 =3D=3D evsel->core.attr.con=
+fig4);
+> +
+>         /*
+>          * The period value gets configured within evlist__config,
+>          * while this test executes only parse events method.
+> @@ -637,6 +639,7 @@ static int test__checkevent_list(struct evlist *evlis=
+t)
+>                 TEST_ASSERT_VAL("wrong config1", 0 =3D=3D evsel->core.att=
+r.config1);
+>                 TEST_ASSERT_VAL("wrong config2", 0 =3D=3D evsel->core.att=
+r.config2);
+>                 TEST_ASSERT_VAL("wrong config3", 0 =3D=3D evsel->core.att=
+r.config3);
+> +               TEST_ASSERT_VAL("wrong config4", 0 =3D=3D evsel->core.att=
+r.config4);
+>                 TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.e=
+xclude_user);
+>                 TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr=
+.exclude_kernel);
+>                 TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exc=
+lude_hv);
+> @@ -813,6 +816,15 @@ static int test__checkterms_simple(struct parse_even=
+ts_terms *terms)
+>         TEST_ASSERT_VAL("wrong val", term->val.num =3D=3D 4);
+>         TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config3"))=
+;
+>
+> +       /* config4=3D5 */
+> +       term =3D list_entry(term->list.next, struct parse_events_term, li=
+st);
+> +       TEST_ASSERT_VAL("wrong type term",
+> +                       term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_CO=
+NFIG4);
+> +       TEST_ASSERT_VAL("wrong type val",
+> +                       term->type_val =3D=3D PARSE_EVENTS__TERM_TYPE_NUM=
+);
+> +       TEST_ASSERT_VAL("wrong val", term->val.num =3D=3D 5);
+> +       TEST_ASSERT_VAL("wrong config", !strcmp(term->config, "config4"))=
+;
+> +
+>         /* umask=3D1*/
+>         term =3D list_entry(term->list.next, struct parse_events_term, li=
+st);
+>         TEST_ASSERT_VAL("wrong type term",
+> @@ -2451,7 +2463,7 @@ struct terms_test {
+>
+>  static const struct terms_test test__terms[] =3D {
+>         [0] =3D {
+> -               .str   =3D "config=3D10,config1,config2=3D3,config3=3D4,u=
+mask=3D1,read,r0xead",
+> +               .str   =3D "config=3D10,config1,config2=3D3,config3=3D4,c=
+onfig4=3D5,umask=3D1,read,r0xead",
+>                 .check =3D test__checkterms_simple,
+>         },
+>  };
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index 5152fd5a6ead..7e37f91e7b49 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -247,6 +247,8 @@ __add_event(struct list_head *list, int *idx,
+>                                               PERF_PMU_FORMAT_VALUE_CONFI=
+G2, "config2");
+>                 perf_pmu__warn_invalid_config(pmu, attr->config3, name,
+>                                               PERF_PMU_FORMAT_VALUE_CONFI=
+G3, "config3");
+> +               perf_pmu__warn_invalid_config(pmu, attr->config4, name,
+> +                                             PERF_PMU_FORMAT_VALUE_CONFI=
+G4, "config4");
+>         }
+>         if (init_attr)
+>                 event_attr_init(attr);
+> @@ -783,6 +785,7 @@ const char *parse_events__term_type_str(enum parse_ev=
+ents__term_type term_type)
+>                 [PARSE_EVENTS__TERM_TYPE_CONFIG1]               =3D "conf=
+ig1",
+>                 [PARSE_EVENTS__TERM_TYPE_CONFIG2]               =3D "conf=
+ig2",
+>                 [PARSE_EVENTS__TERM_TYPE_CONFIG3]               =3D "conf=
+ig3",
+> +               [PARSE_EVENTS__TERM_TYPE_CONFIG4]               =3D "conf=
+ig4",
+>                 [PARSE_EVENTS__TERM_TYPE_NAME]                  =3D "name=
+",
+>                 [PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD]         =3D "peri=
+od",
+>                 [PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ]           =3D "freq=
+",
+> @@ -830,6 +833,7 @@ config_term_avail(enum parse_events__term_type term_t=
+ype, struct parse_events_er
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+>         case PARSE_EVENTS__TERM_TYPE_NAME:
+>         case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
+>         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+> @@ -898,6 +902,10 @@ do {                                                =
+                          \
+>                 CHECK_TYPE_VAL(NUM);
+>                 attr->config3 =3D term->val.num;
+>                 break;
+> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+> +               CHECK_TYPE_VAL(NUM);
+> +               attr->config4 =3D term->val.num;
+> +               break;
+>         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+>                 CHECK_TYPE_VAL(NUM);
+>                 break;
+> @@ -1097,6 +1105,7 @@ static int config_term_tracepoint(struct perf_event=
+_attr *attr,
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+>         case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+> +       case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+>         case PARSE_EVENTS__TERM_TYPE_NAME:
+>         case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+>         case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+> @@ -1237,6 +1246,7 @@ do {                                               =
+               \
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+>                 case PARSE_EVENTS__TERM_TYPE_NAME:
+>                 case PARSE_EVENTS__TERM_TYPE_METRIC_ID:
+>                 case PARSE_EVENTS__TERM_TYPE_RAW:
+> @@ -1274,6 +1284,7 @@ static int get_config_chgs(struct perf_pmu *pmu, st=
+ruct parse_events_terms *head
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG1:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG2:
+>                 case PARSE_EVENTS__TERM_TYPE_CONFIG3:
+> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+>                 case PARSE_EVENTS__TERM_TYPE_NAME:
+>                 case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+>                 case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-event=
+s.h
+> index e176a34ab088..6e90c26066d4 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -58,6 +58,7 @@ enum parse_events__term_type {
+>         PARSE_EVENTS__TERM_TYPE_CONFIG1,
+>         PARSE_EVENTS__TERM_TYPE_CONFIG2,
+>         PARSE_EVENTS__TERM_TYPE_CONFIG3,
+> +       PARSE_EVENTS__TERM_TYPE_CONFIG4,
+>         PARSE_EVENTS__TERM_TYPE_NAME,
+>         PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD,
+>         PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ,
+> diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-event=
+s.l
+> index 7ed86e3e34e3..8e2986d55bc4 100644
+> --- a/tools/perf/util/parse-events.l
+> +++ b/tools/perf/util/parse-events.l
+> @@ -317,6 +317,7 @@ config                      { return term(yyscanner, =
+PARSE_EVENTS__TERM_TYPE_CONFIG); }
+>  config1                        { return term(yyscanner, PARSE_EVENTS__TE=
+RM_TYPE_CONFIG1); }
+>  config2                        { return term(yyscanner, PARSE_EVENTS__TE=
+RM_TYPE_CONFIG2); }
+>  config3                        { return term(yyscanner, PARSE_EVENTS__TE=
+RM_TYPE_CONFIG3); }
+> +config4                        { return term(yyscanner, PARSE_EVENTS__TE=
+RM_TYPE_CONFIG4); }
+>  name                   { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+NAME); }
+>  period                 { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+SAMPLE_PERIOD); }
+>  freq                   { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
+SAMPLE_FREQ); }
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index b7ebac5ab1d1..fc50df65d540 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1427,6 +1427,10 @@ static int pmu_config_term(const struct perf_pmu *=
+pmu,
+>                         assert(term->type_val =3D=3D PARSE_EVENTS__TERM_T=
+YPE_NUM);
+>                         pmu_format_value(bits, term->val.num, &attr->conf=
+ig3, zero);
+>                         break;
+> +               case PARSE_EVENTS__TERM_TYPE_CONFIG4:
+> +                       assert(term->type_val =3D=3D PARSE_EVENTS__TERM_T=
+YPE_NUM);
+> +                       pmu_format_value(bits, term->val.num, &attr->conf=
+ig4, zero);
+> +                       break;
+>                 case PARSE_EVENTS__TERM_TYPE_USER: /* Not hardcoded. */
+>                         return -EINVAL;
+>                 case PARSE_EVENTS__TERM_TYPE_NAME ... PARSE_EVENTS__TERM_=
+TYPE_HARDWARE:
+> @@ -1474,6 +1478,9 @@ static int pmu_config_term(const struct perf_pmu *p=
+mu,
+>         case PERF_PMU_FORMAT_VALUE_CONFIG3:
+>                 vp =3D &attr->config3;
+>                 break;
+> +       case PERF_PMU_FORMAT_VALUE_CONFIG4:
+> +               vp =3D &attr->config4;
+> +               break;
+>         default:
+>                 return -EINVAL;
+>         }
+> @@ -1787,6 +1794,7 @@ int perf_pmu__for_each_format(struct perf_pmu *pmu,=
+ void *state, pmu_format_call
+>                 "config1=3D0..0xffffffffffffffff",
+>                 "config2=3D0..0xffffffffffffffff",
+>                 "config3=3D0..0xffffffffffffffff",
+> +               "config4=3D0..0xffffffffffffffff",
+>                 "name=3Dstring",
+>                 "period=3Dnumber",
+>                 "freq=3Dnumber",
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index b93014cc3670..1ce5377935db 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -22,6 +22,7 @@ enum {
+>         PERF_PMU_FORMAT_VALUE_CONFIG1,
+>         PERF_PMU_FORMAT_VALUE_CONFIG2,
+>         PERF_PMU_FORMAT_VALUE_CONFIG3,
+> +       PERF_PMU_FORMAT_VALUE_CONFIG4,
+>         PERF_PMU_FORMAT_VALUE_CONFIG_END,
+>  };
+>
+>
+> --
+> 2.34.1
+>
