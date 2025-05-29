@@ -1,364 +1,117 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1337578F3E;
-	Thu, 29 May 2025 03:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2173C78F3E
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748487631; cv=none; b=H9JX/+Cs0eOd6c0eR9lMm9jmb9o2BPDcvDIbcQqX+lMNAXFp0hzwwdaPc7IWUI5ou5nfCa26TadyWUewGhhRfvDxXRRBdKRLbQ2Dm7GUR/JQuQIs5R5jPvQF2CatTVmJ2fbM8Byb8HFfjMS/f7/f/7V5iyeCVmmBnaUQRT3E2oU=
+	t=1748487810; cv=none; b=udLGw2TeLZKCxQxHEsm5ZjmB13y0NjpxjkGPBi/vemaDJadVx0+s5xlzrx8r7nkZ+Y6G/rnQdPHyyRGe9WADH9K0/asT0i9oeWzOcjsISYW9SN2BBQDqQ9HZHSwPCon8zkVa+kMz0Xho81t5vVBB8VI12K+dEVs7tl71Z6AiqG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748487631; c=relaxed/simple;
-	bh=gTkRfnzhcdWtIzT3G6QAopV5LUlB3RPiHgS7Og1A8jU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=kYGB5OQTL5u3daQAAZ5pUF76m+vYKMYkfrw9iv6bPFD/EnH+V7wnkK3N1owYdzq0n6FddbWROIVTkFNREoLn4i7yBKvwR7CLvYT0+0pNkjQ+VoiJKxZ1QGe/wzGGlxuoU8ev/k63mTsY735pqUzQ8wyhAOH3PQD73XPAOtUkHg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EnLOQr6m; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EnLOQr6m"
-Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id A00BB210B14E; Wed, 28 May 2025 20:00:28 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A00BB210B14E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748487628;
-	bh=P9rsRLFHgIynPWVNoRZBkfwY0Lc1lIuwQ0ZPOssYhOo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EnLOQr6m1SXe9Dj2qq00bkNLf6WI0ykTsaRSpwsrOneNR8L1gCzc4uT6aDiEgy9Dl
-	 OmCuoEZkRiNaLsBN046ZEQjDWk19kWtnSeYTFUesIJCIStzqMnmYbXrheywqmbTgdn
-	 c8EYGBBslsLYAndhzZKDp2Kkys5wfeTDDcQ8vCWI=
-From: Vijay Balakrishna <vijayb@linux.microsoft.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [v11 PATCH 1/2] EDAC: Add EDAC driver for ARM Cortex A72 cores
-Date: Wed, 28 May 2025 20:00:27 -0700
-Message-Id: <1748487628-30123-2-git-send-email-vijayb@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1748487628-30123-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1748487628-30123-1-git-send-email-vijayb@linux.microsoft.com>
+	s=arc-20240116; t=1748487810; c=relaxed/simple;
+	bh=08/XzBLWIpvmBY8MzPKL4X/ZbJPrBVcaBnFHJnu7NCk=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=EX7qe/WllebDd1nmpNruipC/uX6w/mYs2mjoCeJOKKLnmjLtlVedLMCCgRRu9nO7Baug05zFNM9mKMLuqqwi3cgJP7Bdq2jk3kYdlAot7I2SEmyV2V1knzv9kcXBGgawHDT8pDpQyrlu0iW9tvSFVgsExttc4C+YuYZTHy1gAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201602.home.langchao.com
+        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505291103138957;
+        Thu, 29 May 2025 11:03:13 +0800
+Received: from jtjnmail201604.home.langchao.com (10.100.2.4) by
+ jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 29 May 2025 11:03:12 +0800
+Received: from jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322])
+ by jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322%5]) with mapi
+ id 15.01.2507.039; Thu, 29 May 2025 11:03:12 +0800
+From: =?utf-8?B?U2ltb24gV2FuZyAo546L5Lyg5Zu9KQ==?= <wangchuanguo@inspur.com>
+To: SeongJae Park <sj@kernel.org>
+CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "david@redhat.com"
+	<david@redhat.com>, "mhocko@kernel.org" <mhocko@kernel.org>,
+	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
+	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
+	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "damon@lists.linux.dev"
+	<damon@lists.linux.dev>, Jagdish Gediya <jvgediya.oss@gmail.com>
+Subject: Re: [PATCH 1/2] mm: migrate: restore the nmask after successfully
+ allocating on the  target node
+Thread-Topic: [PATCH 1/2] mm: migrate: restore the nmask after successfully
+ allocating on the  target node
+Thread-Index: AdvQRjVtZMhxwwSPJk6B+hEhw2gIwA==
+Date: Thu, 29 May 2025 03:03:12 +0000
+Message-ID: <059b42b154f04b50833743c513733089@inspur.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+tUid: 2025529110313107a323530c5d25c2247465030471052
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
-
-The driver is designed to support error detection and reporting for
-Cortex A72 cores, specifically within their L1 and L2 cache systems.
-The errors are detected by reading CPU/L2 memory error syndrome
-registers.
-
-Unfortunately there is no robust way to inject errors into the caches,
-so this driver doesn't contain any code to actually test it. It has
-been tested though with code taken from an older version [1] of this
-driver. For reasons stated in thread [1], the error injection code is
-not suitable for mainline, so it is removed from the driver.
-
-[1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- MAINTAINERS             |   7 ++
- drivers/edac/Kconfig    |   8 ++
- drivers/edac/Makefile   |   1 +
- drivers/edac/edac_a72.c | 230 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 246 insertions(+)
- create mode 100644 drivers/edac/edac_a72.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..dac4692c10c8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8429,6 +8429,13 @@ F:	Documentation/driver-api/edac.rst
- F:	drivers/edac/
- F:	include/linux/edac.h
- 
-+EDAC-A72
-+M:	Vijay Balakrishna <vijayb@linux.microsoft.com>
-+M:	Tyler Hicks <code@tyhicks.com>
-+L:	linux-edac@vger.kernel.org
-+S:	Supported
-+F:	drivers/edac/edac_a72.c
-+
- EDAC-DMC520
- M:	Lei Wang <lewan@microsoft.com>
- L:	linux-edac@vger.kernel.org
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 19ad3c3b675d..b824472208c4 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -576,4 +576,12 @@ config EDAC_LOONGSON
- 	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
- 	  are compatible.
- 
-+config EDAC_CORTEX_A72
-+	tristate "ARM Cortex A72"
-+	depends on ARM64
-+	help
-+	  Support for L1/L2 cache error detection for ARM Cortex A72 processor.
-+	  The detected and reported errors are from reading CPU/L2 memory error
-+	  syndrome registers.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index a8f2d8f6c894..136416f43b44 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
- obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_A72)		+= edac_a72.o
-diff --git a/drivers/edac/edac_a72.c b/drivers/edac/edac_a72.c
-new file mode 100644
-index 000000000000..4f40616d40a0
---- /dev/null
-+++ b/drivers/edac/edac_a72.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cortex A72 EDAC L1 and L2 cache error detection
-+ *
-+ * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
-+ * Copyright (c) 2025 Microsoft Corporation, <vijayb@linux.microsoft.com>
-+ *
-+ * Based on Code from:
-+ * Copyright (c) 2018, NXP Semiconductor
-+ * Author: York Sun <york.sun@nxp.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/bitfield.h>
-+#include <asm/smp_plat.h>
-+
-+#include "edac_module.h"
-+
-+#define DRVNAME		"edac-a72"
-+
-+#define SYS_CPUMERRSR_EL1	sys_reg(3, 1, 15, 2, 2)
-+#define SYS_L2MERRSR_EL1	sys_reg(3, 1, 15, 2, 3)
-+
-+#define CPUMERRSR_EL1_RAMID		GENMASK(30, 24)
-+#define L2MERRSR_EL1_CPUID_WAY	GENMASK(21, 18)
-+
-+#define CPUMERRSR_EL1_VALID		BIT(31)
-+#define CPUMERRSR_EL1_FATAL		BIT(63)
-+#define L2MERRSR_EL1_VALID		BIT(31)
-+#define L2MERRSR_EL1_FATAL		BIT(63)
-+
-+#define L1_I_TAG_RAM	0x00
-+#define L1_I_DATA_RAM	0x01
-+#define L1_D_TAG_RAM	0x08
-+#define L1_D_DATA_RAM	0x09
-+#define TLB_RAM			0x18
-+
-+#define MESSAGE_SIZE	64
-+
-+struct mem_err_synd_reg {
-+	u64 cpu_mesr;
-+	u64 l2_mesr;
-+};
-+
-+static struct cpumask compat_mask;
-+
-+static void report_errors(struct edac_device_ctl_info *edac_ctl, int cpu,
-+			  struct mem_err_synd_reg *mesr)
-+{
-+	u64 cpu_mesr = mesr->cpu_mesr;
-+	u64 l2_mesr = mesr->l2_mesr;
-+	char msg[MESSAGE_SIZE];
-+
-+	if (cpu_mesr & CPUMERRSR_EL1_VALID) {
-+		const char *str;
-+		bool fatal = cpu_mesr & CPUMERRSR_EL1_FATAL;
-+
-+		switch (FIELD_GET(CPUMERRSR_EL1_RAMID, cpu_mesr)) {
-+		case L1_I_TAG_RAM:
-+			str = "L1-I Tag RAM";
-+			break;
-+		case L1_I_DATA_RAM:
-+			str = "L1-I Data RAM";
-+			break;
-+		case L1_D_TAG_RAM:
-+			str = "L1-D Tag RAM";
-+			break;
-+		case L1_D_DATA_RAM:
-+			str = "L1-D Data RAM";
-+			break;
-+		case TLB_RAM:
-+			str = "TLB RAM";
-+			break;
-+		default:
-+			str = "Unspecified";
-+			break;
-+		}
-+
-+		snprintf(msg, MESSAGE_SIZE, "%s %s error(s) on CPU %d",
-+			 str, fatal ? "fatal" : "correctable", cpu);
-+
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 0, msg);
-+	}
-+
-+	if (l2_mesr & L2MERRSR_EL1_VALID) {
-+		bool fatal = l2_mesr & L2MERRSR_EL1_FATAL;
-+
-+		snprintf(msg, MESSAGE_SIZE, "L2 %s error(s) on CPU %d CPUID/WAY 0x%lx",
-+			 fatal ? "fatal" : "correctable", cpu,
-+			 FIELD_GET(L2MERRSR_EL1_CPUID_WAY, l2_mesr));
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 1, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 1, msg);
-+	}
-+}
-+
-+static void read_errors(void *data)
-+{
-+	struct mem_err_synd_reg *mesr = data;
-+
-+	mesr->cpu_mesr = read_sysreg_s(SYS_CPUMERRSR_EL1);
-+	if (mesr->cpu_mesr & CPUMERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_CPUMERRSR_EL1);
-+		isb();
-+	}
-+	mesr->l2_mesr = read_sysreg_s(SYS_L2MERRSR_EL1);
-+	if (mesr->l2_mesr & L2MERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_L2MERRSR_EL1);
-+		isb();
-+	}
-+}
-+
-+static void a72_edac_check(struct edac_device_ctl_info *edac_ctl)
-+{
-+	struct mem_err_synd_reg mesr;
-+	int cpu;
-+
-+	cpus_read_lock();
-+	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-+		smp_call_function_single(cpu, read_errors, &mesr, true);
-+		report_errors(edac_ctl, cpu, &mesr);
-+	}
-+	cpus_read_unlock();
-+}
-+
-+static int a72_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl;
-+	struct device *dev = &pdev->dev;
-+	int rc;
-+
-+	edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-+					      num_possible_cpus(), "L", 2, 1,
-+					      edac_device_alloc_index());
-+	if (!edac_ctl)
-+		return -ENOMEM;
-+
-+	edac_ctl->edac_check = a72_edac_check;
-+	edac_ctl->dev = dev;
-+	edac_ctl->mod_name = dev_name(dev);
-+	edac_ctl->dev_name = dev_name(dev);
-+	edac_ctl->ctl_name = DRVNAME;
-+	dev_set_drvdata(dev, edac_ctl);
-+
-+	rc = edac_device_add_device(edac_ctl);
-+	if (rc)
-+		goto out_dev;
-+
-+	return 0;
-+
-+out_dev:
-+	edac_device_free_ctl_info(edac_ctl);
-+
-+	return rc;
-+}
-+
-+static void a72_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-+
-+	edac_device_del_device(edac_ctl->dev);
-+	edac_device_free_ctl_info(edac_ctl);
-+}
-+
-+static const struct of_device_id cortex_arm64_edac_of_match[] = {
-+	{ .compatible = "arm,cortex-a72" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-+
-+static struct platform_driver a72_edac_driver = {
-+	.probe = a72_edac_probe,
-+	.remove = a72_edac_remove,
-+	.driver = {
-+		.name = DRVNAME,
-+	},
-+};
-+
-+static int __init a72_edac_driver_init(void)
-+{
-+	struct platform_device *pdev;
-+	int cpu, err;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct device_node *np __free(device_node) =
-+				of_cpu_device_node_get(cpu);
-+
-+		if (np) {
-+			if (of_match_node(cortex_arm64_edac_of_match, np) &&
-+			    of_property_read_bool(np, "edac-enabled")) {
-+				cpumask_set_cpu(cpu, &compat_mask);
-+			}
-+		} else {
-+			pr_warn("failed to find device node for CPU %d\n", cpu);
-+		}
-+	}
-+
-+	if (cpumask_empty(&compat_mask))
-+		return 0;
-+
-+	err = platform_driver_register(&a72_edac_driver);
-+	if (err)
-+		return err;
-+
-+	pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		pr_err("failed to register a72 edac device\n");
-+		platform_driver_unregister(&a72_edac_driver);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit a72_edac_driver_exit(void)
-+{
-+	platform_driver_unregister(&a72_edac_driver);
-+}
-+
-+module_init(a72_edac_driver_init);
-+module_exit(a72_edac_driver_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
-+MODULE_DESCRIPTION("Cortex A72 L1 and L2 cache EDAC driver");
--- 
-2.49.0
-
+DQo+ICsgSmFnZGlzaCwgc2luY2Ugc2VlbXMgdGhlIGJlaGF2aW9yIHRoYXQgdGhpcyBwYXRjaCB0
+cmllcyB0byBjaGFuZ2UgaXMNCj4gYXBwYXJlbnRseSBtYWRlIGJ5IEphZ2Rpc2gncyBjb21taXQg
+MzIwMDgwMjcyODkyICgibW0vZGVtb3Rpb246DQo+IGRlbW90ZSBwYWdlcyBhY2NvcmRpbmcgdG8g
+YWxsb2NhdGlvbiBmYWxsYmFjayBvcmRlciIpLg0KPiANCj4gT24gV2VkLCAyOCBNYXkgMjAyNSAx
+OToxMDozNyArMDgwMCB3YW5nY2h1YW5ndW8NCj4gPHdhbmdjaHVhbmd1b0BpbnNwdXIuY29tPiB3
+cm90ZToNCj4gDQo+ID4gSWYgbWVtb3J5IGlzIHN1Y2Nlc3NmdWxseSBhbGxvY2F0ZWQgb24gdGhl
+IHRhcmdldCBub2RlIGFuZCB0aGUNCj4gPiBmdW5jdGlvbiBkaXJlY3RseSByZXR1cm5zIHdpdGhv
+dXQgdmFsdWUgcmVzdG9yZSBmb3Igbm1hc2ssIG5vbi1maXJzdA0KPiA+IG1pZ3JhdGlvbiBvcGVy
+YXRpb25zIGluIG1pZ3JhdGVfcGFnZXMoKSBieSBhZ2FpbiBsYWJlbCBtYXkgaWdub3JlIHRoZQ0K
+PiA+IG5tYXNrIHNldHRpbmdzLA0KPiANCj4gTmljZSBmaW5kaW5nIQ0KPiANCj4gPiB0aGVyZWJ5
+IGFsbG93aW5nIG5ldyBtZW1vcnkNCj4gPiBhbGxvY2F0aW9ucyBmb3IgbWlncmF0aW9uIG9uIGFu
+eSBub2RlLg0KPiANCj4gQnV0LCBpc24ndCB0aGUgY29uc2VxdWVuY2Ugb2YgdGhpcyBiZWhhdmlv
+ciBpcyB0aGUgb3Bwb3NpdGU/ICBUaGF0IGlzLCBJIHRoaW5rDQo+IHRoaXMgYmVoYXZpb3IgcmVz
+dHJpY3RzIHRvIHVzZSBvbmx5IHRoZSBzcGVjaWZpZWQgbm9kZSAobXRjLT5uaWQpIGluIHRoZSBj
+YXNlLA0KPiBpZ25vcmluZyBtb3JlIGFsbG93ZWQgZmFsbGJhY2sgbm9kZXMgKG10Yy0+bm1hc2sp
+Pw0KPiANCj4gQW55d2F5LCB0byBtZSwgdGhpcyBzZWVtcyBub3QgYW4gaW50ZW5kZWQgYmVoYXZp
+b3IgYnV0IGEgYnVnLiAgQ2MtaW5nDQo+IEphZ2Rpc2gsIHdobyBhdXRob3JlZCB0aGUgY29tbWl0
+IDMyMDA4MDI3Mjg5MiAoIm1tL2RlbW90aW9uOiBkZW1vdGUNCj4gcGFnZXMgYWNjb3JkaW5nIHRv
+IGFsbG9jYXRpb24gZmFsbGJhY2sgb3JkZXIiKSwgd2hpY2ggYXBwYXJlbnRseSBtYWRlIHRoaXMN
+Cj4gYmVoYXZpb3IgaW5pdGlhbGx5LCB0aG91Z2gsIHNpbmNlIEkgbWF5IG1pc3JlYWRpbmcgdGhl
+IG9yaWdpbmFsIGF1dGhvcidzDQo+IGludGVudGlvbi4NCj4gDQoNClVuZGVyIHRoZSBvcmlnaW5h
+bCBsb2dpYywgdGhlIGFsbG9jX21pZ3JhdGVfZm9saW8gZnVuY3Rpb24gd291bGQgYXR0ZW1wdCB0
+byBhbGxvY2F0ZSBuZXcgbWVtb3J5IOKAi+KAi3NlcXVlbnRpYWxseSBhY3Jvc3MgYWxsIG5vZGVz
+IGJhc2VkIG9uIGRpc3RhbmNl4oCL4oCLLCBldmVuIGZvciBub2RlcyBhdCB0aGUgc2FtZSB0aWVy
+LCB3aGljaCBpcyBub25zZW5zaWNhbC4gRm9yIGV4YW1wbGUsIGlmIG5vZGVzIDAgYW5kIDEgYXJl
+IERSQU0gbm9kZXMgYW5kIG5vZGVzIDIgYW5kIDMgYXJlIENYTCBub2RlcywgYXR0ZW1wdGluZyB0
+byBwcm9tb3RlIGEgaG90IHBhZ2UgZnJvbSBub2RlIDIgdG8gbm9kZSAwIHdvdWxkIOKAi+KAi2Vy
+cm9uZW91c2x5IGZhbGwgYmFjayB0byBub2RlcyAyIGFuZCAz4oCL4oCLICh0aGUgc2FtZSB0aWVy
+IGFzIHRoZSBzb3VyY2Ugbm9kZSkgaWYgbm9kZXMgMCBhbmQgMSBhcmUgb3V0IG9mIHNwYWNlLiBU
+aGlzIGlzIGEgQlVHLkluIOKAi+KAi1BhdGNoIDHigIvigIssIEkgZml4IHRoaXMgQlVHLiANCg0K
+SW4g4oCL4oCLUGF0Y2ggMuKAi+KAiywgSSBleHRlbmQgdGhlIHRhcmdldCBub2RlIHJhbmdlIGZy
+b20gbm9kZSAwIHRvIG5vZGVzIDAgYW5kIDEuIFRvIGFjY29tbW9kYXRlIHVzZXJzIHdobyByZXF1
+aXJlIHN0cmljdCBtaWdyYXRpb24gKGUuZy4sIG1pZ3JhdGluZyBvbmx5IHRvIG5vZGUgMCBhbmQg
+YWJvcnRpbmcgaWYgaXQgaXMgZnVsbCksIEkgYWRkZWQgYSDigIvigItzeXNmcyB0b2dnbGXigIvi
+gIsgaW4gUGF0Y2ggMi4NCuKAi+KAi1F1ZXN0aW9u4oCL4oCLOiBTaG91bGQgdGhpcyBzeXNmcyB0
+b2dnbGUgZGVmYXVsdCB0byB0cnVlIChhbGxvdyBmYWxsYmFjayB0byBvdGhlciBub2Rlcykgb3Ig
+ZmFsc2UgKHN0cmljdCBtb2RlOiBtaWdyYXRlIG9ubHkgdG8gbm9kZSAwLCBhYm9ydCBpZiBmdWxs
+KT8gSSB3b3VsZCBhcHByZWNpYXRlIHlvdXIgYWR2aWNlIG9uIHRoZSBkZWZhdWx0IHZhbHVlLCBj
+b25zaWRlcmluZyBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IGFuZCB1c2UgY2FzZXMuDQoNCj4gPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IHdhbmdjaHVhbmd1byA8d2FuZ2NodWFuZ3VvQGluc3B1ci5jb20+
+DQo+ID4gLS0tDQo+ID4gIG1tL3Ztc2Nhbi5jIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
+MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9tbS92
+bXNjYW4uYyBiL21tL3Ztc2Nhbi5jIGluZGV4DQo+ID4gZjhkZmQyODY0YmJmLi5lMTNmMTcyNDQy
+NzkgMTAwNjQ0DQo+ID4gLS0tIGEvbW0vdm1zY2FuLmMNCj4gPiArKysgYi9tbS92bXNjYW4uYw0K
+PiA+IEBAIC0xMDM1LDExICsxMDM1LDExIEBAIHN0cnVjdCBmb2xpbyAqYWxsb2NfbWlncmF0ZV9m
+b2xpbyhzdHJ1Y3QgZm9saW8NCj4gKnNyYywgdW5zaWduZWQgbG9uZyBwcml2YXRlKQ0KPiA+ICAJ
+bXRjLT5ubWFzayA9IE5VTEw7DQo+ID4gIAltdGMtPmdmcF9tYXNrIHw9IF9fR0ZQX1RISVNOT0RF
+Ow0KPiA+ICAJZHN0ID0gYWxsb2NfbWlncmF0aW9uX3RhcmdldChzcmMsICh1bnNpZ25lZCBsb25n
+KW10Yyk7DQo+ID4gKwltdGMtPm5tYXNrID0gYWxsb3dlZF9tYXNrOw0KPiA+ICAJaWYgKGRzdCkN
+Cj4gPiAgCQlyZXR1cm4gZHN0Ow0KPiANCj4gUmVzdG9yaW5nIC0+bm1hc2sgbG9va3MgcmlnaHQg
+YmVoYXZpb3IgdG8gbWUuICBCdXQsIGlmIHNvLCBzaG91bGRuJ3Qgd2UgYWxzbw0KPiByZXN0b3Jl
+IC0+Z2ZwX21hc2s/DQoNClllcywgaXQncyBhIGdvb2QgaWRlYS4gSSB3aWxsIGRvIGl0Lg0KIA0K
+DQo+ID4NCj4gPiAgCW10Yy0+Z2ZwX21hc2sgJj0gfl9fR0ZQX1RISVNOT0RFOw0KPiA+IC0JbXRj
+LT5ubWFzayA9IGFsbG93ZWRfbWFzazsNCj4gPg0KPiA+ICAJcmV0dXJuIGFsbG9jX21pZ3JhdGlv
+bl90YXJnZXQoc3JjLCAodW5zaWduZWQgbG9uZyltdGMpOyAgfQ0KPiA+IC0tDQo+ID4gMi4zOS4z
+DQo+IA0KPiANCj4gVGhhbmtzLA0KPiBTSg0K
