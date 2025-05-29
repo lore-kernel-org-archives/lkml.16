@@ -1,251 +1,271 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A520232368;
-	Thu, 29 May 2025 19:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A11DF25A
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 19:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748545873; cv=none; b=tMqEmyWHeiCGkpR4D88HLi4s/xxmwcMpEsRevF0evxWewtSHmPTcClK0w7SS3ox/KWkrilq+E530+fRJ8/IF0zia1xM68BuHKccNCFhO3ESivaUloi020y7SEdc8kJSGGInwVrMWv3kSRUTeO7BVOQIdI2M8VnbMBQ5LxjSdu2U=
+	t=1748546102; cv=none; b=mZHZjsxKktQU9XJhPDk2DqwY5LVqcDSpD/OwVVDXeJECcL1+A6F/72iwWU9DD1mNrhj5iOBaklhKC4j716cRuKqhesXcxxwWm86PeZ4K292X5M/oZWGffZ25aHPRMglwToqAv+oXGA9C8k4uhtd3wSqAZxw0Ylid4UIAytTeGMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748545873; c=relaxed/simple;
-	bh=ewfvm9AG10NcpYFLSBRgReLeChzHJXRTqAPWFu8ltYs=;
+	s=arc-20240116; t=1748546102; c=relaxed/simple;
+	bh=jxQBHnuX0eGLUrrbuSwhUrZgUXd7imm5V1HcYAUOa9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMGbkp0sMRQWP9KAw9IiGYp+PpvEnlAj6GiB4U5RsE3vQ1ycpNakIXx5P/+zZbm6VzsTZAxDCMonzyAXL56H29a66+7KGnmkus17+uD61yj9jjK0Vnl+96kFa21FdZsRjgbVJnfDxZh1hZXyNrXTn4WRq9B7UqaMVvrjzu1YeKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OV0HGoae; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sMMbtY5clgAftkEjZtYgogzq1PwLZfbjFARpklhwAo/Ptbihi+diQL3NrBASClvirlg2K/kArzIJ6wceNH9ig5PstBCrJQavydmEzc4uEM3zKnjN7OoAMj3xXaVNX/LXgVOyK91g3qr5b3ANH7vVYTJDWxQhXjPU5SETUUUJ/EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=kGrtJufm; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OV0HGoae"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6faa60c983fso11729926d6.2;
-        Thu, 29 May 2025 12:11:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="kGrtJufm"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a3771c0f8cso784998f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748545870; x=1749150670; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OeLAlwcVXUCxgZFIZN3PbutPoyXtuBhygdYPZ4P8Nqk=;
-        b=OV0HGoae8++qEfYqsee9oA37dtfWCRYKaCKIR6WlAakynCH7BcNeTVNUHlu/9eqSL8
-         dX+MAxTzkT4BcSlfODdzdYPx8Fy9EfKGOOlLHGcHFisICYhqkhUeHvZ+lG+/cQNMxfK1
-         atswy3RQ054jLQ3vzYh7vKrutl4Ak/1I/WV61HKHhhpeSbCIejVaB8ODPjBQe15GNL6n
-         vcRPLgtFhHWllxjssO44SRwz9cogAFrgHBczy7e8NuXtyoeJBu5oTGdDsdJvzH5xP7nN
-         0r9kIOGMG7IAFLyFjw1aT1BAD5Q+e1sw323rxHCjsKNqcPAzssrtQXFtOxO5Hh6A6TBE
-         6UJg==
+        d=ventanamicro.com; s=google; t=1748546099; x=1749150899; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PETGhQTSZRzlo7qrX63Z+YHbFnHKtUVwIfZH3bLWHOY=;
+        b=kGrtJufmiTKrxK3UNeViqIo/wg5K5z2bdwmWHw4USap2SCtFHDkqIKt0AkwpjH23A4
+         voSqieWoU+scqCqw86ftvQubNCCdJQtdqBFCn339LxGjBLas4R6CrhQSjnc4/2ntyWgz
+         Clv+/kfpm6hivtock1ZGGi0xPXZdA+VXdbRoZgkj+lH/Wa0vrOLzIViWM+KRCAfNhAeO
+         7F8LXXUurICCoXfN2NgrqMEi1XBQCVVB33cKXbwbhfFgKDmLcQxqmuGg1rCHbKrtKv7a
+         zD4Y8ETAd2XsoPf5tA/xfuvqK1Bmgp1MXRtRbCP/89YbwWDCCvYLapxro5wpuRevqjRT
+         dsDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748545870; x=1749150670;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OeLAlwcVXUCxgZFIZN3PbutPoyXtuBhygdYPZ4P8Nqk=;
-        b=wM/WB6wwyI8qQcjWo2sKiDI2fzmwHW3gkdyshmuCnt8Y1jekTLNfeklWHwNZWBXtZk
-         Gpt3NuoUH0mTQ38V1iATlb8l2jvDhaWJlNjXRbfnkdnINBxQZl/q6gayR/tve3PzgM7/
-         PIMSdtJnozaBdZRduxl9a3ocY74Ym5cpfEF9W7g4yMo40zox4RzWzFkudt2KgBAWUbVY
-         fxjEF1SLnKUBazJcOvExoXLUwhvYmbkm2hCO25deXvrbpogkAwz4h+kKkosALmB0o1z+
-         EIMPgrjuoB5yMmDNE1P/3ntdudp5Vh54zMM8ZZd8LBSP+uOnfHAY7dH6cgxbxVevSL28
-         lPRg==
-X-Forwarded-Encrypted: i=1; AJvYcCURWWD15I1PYwHRLW7SpU+XNGU0dRDoVoGvnno69sMG/GpbeP+g1c6u0jc9wPdVqXFZFGYBX5qxQ/cPrA==@vger.kernel.org, AJvYcCUovHyBTvg7q0Ooa7TSzhrPyp9xQIojhteTiacSyb+WIJTn8NvwtyyLj07GOMKDAj/yKB07yU30ZItYyl4l9VQ=@vger.kernel.org, AJvYcCXlyH/VtycsSjFou6xsblh2qjT4Fm1MjyOWnKbgIulG8zpgo2BnIGTLvQ1KUY33AeeFdyi65N9pWXv660zz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX4QxvZUkzXhijVNnS9MYp8eYvLdO+CA3YkLWAkOdQE3lcTakQ
-	m75GG/uj4fuLk5iClKX/bjGJYXItGzMXct37FM5vXT7iKYkd9vTxwAXo
-X-Gm-Gg: ASbGncs36WvlJ+s0KJ7j4rLDgsLzl8oa2yvkdeMpSG3rcXylAlW/tuGGSCCMLSZAWQe
-	X7J5S6eYZ5c5bunJ6CkZ4I24rFgYAFxhzRM+sXY3+kZfa0Z0UM3MZ8p2AMJaWCP4T6LGt8JJugT
-	rPLWwR0jd3pvtQY6wPqFBsLzuNkZGTgkvh0DBoHZC3p/MOuzN4qYhiyMue7wNhlQgfPemqks7bw
-	JoSuINwObQj1Ovx9iY3TXY9QFtDxPHuFTKr3bp8PU7ZFXNu573mND176YBK3RTvW3yo1pedMEAl
-	qfORB9jnrGWnZsFySMvD2Y4aIJmDZYIWCv+Q74jaYRVu4/EJSmME/kgwvUk1tJI6wE4zFW0UDeJ
-	DOc/0jQaK66b3OZPKGVsX45p1ZSzGj4gK2lhrx5E1QQ==
-X-Google-Smtp-Source: AGHT+IGWjPMtZyJ9npuW5Lc/hC7qcjejDjWYBlfk45fCEcDAzlnVNwVeJ1/HJYt3wXHFINYEIQGsOQ==
-X-Received: by 2002:a05:6214:c62:b0:6fa:ce87:2302 with SMTP id 6a1803df08f44-6facebf5b9fmr10913356d6.40.1748545870146;
-        Thu, 29 May 2025 12:11:10 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d5b139sm12470196d6.53.2025.05.29.12.11.08
+        d=1e100.net; s=20230601; t=1748546099; x=1749150899;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PETGhQTSZRzlo7qrX63Z+YHbFnHKtUVwIfZH3bLWHOY=;
+        b=HAYj6b6t20SPZspFqUYAs1npk/wSMK0BdKdPsMSMzmAsGN7kfWL9JnsQTSBcmIOOGE
+         k3H6TeI7IBqYrr797WUnd/R6BtKSUBXQYpmoUqSl5goQ7OF8ZsW1wueBx4LuG2odXbNi
+         oBy7wgAtCsf/OM3VMIS9E9jhKnwLUHqXc4ycraBFjn1tuPbrJxVDKgTjPtAWqu9/0vK4
+         aS8NnIzGkEoMByERiesZuLEoHyGsRzNImAzYKsW07ZagEUI6X1IwbPFdf4I5gyAvfF84
+         4DyGPdEg5klXzHh/5xebEEozx9r0qlQdNDYp30YYnZnLm8YLrmqtRereFFds7BEqefQi
+         GXRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWrdSkBAYC9WrKeU9lI/Mo800fvaRpsJ7OylHNw2vTzEismHSyvLUyEtOk88m7QOdAM6X8wWncz+PDH+Kk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDBtrhbqNuFyqtkkFbBiX7DwMziZGGoV3svrG/1B1AfbKhjJUr
+	kOqE61rt4pnpvKxmTQ3SOKSLCTE0HOIx6xyQCumKkZHwXPDpCBeK7ahVWq8OKLX9K6U=
+X-Gm-Gg: ASbGncsnbr7XxKrZhSvY9866+8GhZKS4xTTo07C2iBuZB3ORXZ63MfdhaqO7S4w/iaj
+	bdvv4/eXPewSeEf8JNP5xUlwXfLYXeLXX24VxLsjY7SQHqzP3U/MkwoCA7lE1jjZ1phogMeIXok
+	ZYbdS3o0zM0L4KaUxrumaLfupZ5TvIgWQj72abw62faGSnQI3azHgzPipLV66qDCmBHv4eTC0ac
+	dOhPadQn8CPfY5dCSSAbcdNpVHYbpLBGxyz8bsWhN13Yaf9w0tPvlHD/mXHHqXeS6Ete8JoMqqb
+	aZmhi436xYVMayK71zs5kUyX7ONOHfvFOJBJ50gTYRL7lFN06TwVId3sCqk5CuaLN0A2PW/tl39
+	SWj1RYkC+wXyRkNo=
+X-Google-Smtp-Source: AGHT+IGhExYqvgFvSbs5q9ZpMpC1uzEuDKmNj/YazFyKTWl/Thue3B6m/H9d1jT5tZwjFvDXoPguhQ==
+X-Received: by 2002:a05:6000:430a:b0:3a4:f00b:69b6 with SMTP id ffacd0b85a97d-3a4f7ab15f4mr336349f8f.54.1748546098772;
+        Thu, 29 May 2025 12:14:58 -0700 (PDT)
+Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009fb0bsm2747906f8f.87.2025.05.29.12.14.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 12:11:09 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A5C0E1200043;
-	Thu, 29 May 2025 15:11:08 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Thu, 29 May 2025 15:11:08 -0400
-X-ME-Sender: <xms:TLE4aIfy4JC4A5njVtsuPX04aKrnjTaNZQclWKA5MNtXuz1jDEdPiA>
-    <xme:TLE4aKOpFrhiHlFTG79IgOKl7fBP0K79ga7OKdQHxble8y8YijXAGKaqRZQOpF-jv
-    4NPZWIc4nFzXbfWHQ>
-X-ME-Received: <xmr:TLE4aJgEs3GOdYvXG4AF8MJTdpuVi5Qz3PDoEPM9b1sBD4bCR4sQcvXJhJtwjbqrVdDW3IL9f78N>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieelgeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquh
-    hnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepffdtiefhieeg
-    tddvueeuffeiteevtdegjeeuhffhgfdugfefgefgfedtieeghedvnecuffhomhgrihhnpe
-    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
-    eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
-    rdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudeipdhmohguvgepsh
-    hmthhpohhuthdprhgtphhtthhopehlohhsshhinheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojh
-    gvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehg
-    mhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtg
-    hpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthht
-    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhroh
-    hsshesuhhmihgthhdrvgguuhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:TLE4aN_wXJBg9GxWKCWGZ-5uMT5wEMWzA7uaHIT4IBhXhjp35vToKQ>
-    <xmx:TLE4aEut0qO6qsitJG0yBitd9jM4zTAmQCvLGsRkvXRylt7-f2InqA>
-    <xmx:TLE4aEHHb1SklZBlkrGbMuAj8lS16uZ3DoZWYNPyFiAFU0Rw0Ckcww>
-    <xmx:TLE4aDPOJeEZwW-b7d7PiyLrDOKlff5NRCxc5_Rncxc2Td6_kXcWsA>
-    <xmx:TLE4aJNqDy5ARXMMz7SKP2NAb0yF4lMd5uzm8k9EU-bNErEBpEahGbjJ>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 29 May 2025 15:11:08 -0400 (EDT)
-Date: Thu, 29 May 2025 12:11:07 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Fiona Behrens <me@kloenk.dev>,
-	Christian Schrefl <chrisi.schrefl@gmail.com>,
-	linux-block@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] change blanket impls for `[Pin]Init` and add one for
- `Result<T, E>`
-Message-ID: <aDixS9Fp-fZxet7m@winterfell.localdomain>
-References: <20250529081027.297648-1-lossin@kernel.org>
- <20250529081027.297648-2-lossin@kernel.org>
+        Thu, 29 May 2025 12:14:58 -0700 (PDT)
+Date: Thu, 29 May 2025 21:14:57 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atish.patra@linux.dev>
+Cc: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Mayuresh Chitale <mchitale@ventanamicro.com>, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
+ 3.0
+Message-ID: <20250529-badd99c8168a8f607c84338a@orel>
+References: <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+ <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+ <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+ <20250526-224478e15ee50987124a47ac@orel>
+ <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
+ <20250528-ff9f6120de39c3e4eefc5365@orel>
+ <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
+ <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
+ <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250529081027.297648-2-lossin@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
 
-On Thu, May 29, 2025 at 10:10:24AM +0200, Benno Lossin wrote:
-> Remove the error from the blanket implementations `impl<T, E> Init<T, E>
-> for T` (and also for `PinInit`). Add implementations for `Result<T, E>`.
+On Thu, May 29, 2025 at 11:44:38AM -0700, Atish Patra wrote:
 > 
-> This allows one to easily construct (un)conditional failing
-> initializers. It also improves the compatibility with APIs that do not
-> use pin-init, because users can supply a `Result<T, E>` to a  function
-> taking an `impl PinInit<T, E>`.
+> On 5/29/25 3:24 AM, Radim Krčmář wrote:
+> > I originally gave up on the idea, but I feel kinda bad for Drew now, so
+> > trying again:
 > 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Link: https://github.com/Rust-for-Linux/pin-init/pull/62/commits/58612514b256c6f4a4a0718be25298410e67387a
-> [ Also fix a compile error in block. - Benno ]
-> Signed-off-by: Benno Lossin <lossin@kernel.org>
+> I am sorry if some of my replies came across in the wrong way. That was
+> never
+> the intention.
 
-The patch title is missing a "rust:" tag... but you can fix that in PR.
+Not at all. Radim only meant that I was defending his patches, even though
+he wasn't :-)
 
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> 
+> 
+> > 2025-05-28T12:21:59-07:00, Atish Patra <atish.patra@linux.dev>:
+> > > On 5/28/25 8:09 AM, Andrew Jones wrote:
+> > > > On Wed, May 28, 2025 at 07:16:11AM -0700, Atish Patra wrote:
+> > > > > On 5/26/25 4:13 AM, Andrew Jones wrote:
+> > > > > > On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
+> > > > > > > 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
+> > > > > > > > On 5/23/25 6:31 AM, Radim Krčmář wrote:
+> > > > > > > > > 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
+> > > > > > > > > > Upgrade the SBI version to v3.0 so that corresponding features
+> > > > > > > > > > can be enabled in the guest.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> > > > > > > > > > ---
+> > > > > > > > > > diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
+> > > > > > > > > > -#define KVM_SBI_VERSION_MAJOR 2
+> > > > > > > > > > +#define KVM_SBI_VERSION_MAJOR 3
+> > > > > > > > > I think it's time to add versioning to KVM SBI implementation.
+> > > > > > > > > Userspace should be able to select the desired SBI version and KVM would
+> > > > > > > > > tell the guest that newer features are not supported.
+> > > > > > We need new code for this, but it's a good idea.
+> > > > > > 
+> > > > > > > > We can achieve that through onereg interface by disabling individual SBI
+> > > > > > > > extensions.
+> > > > > > > > We can extend the existing onereg interface to disable a specific SBI
+> > > > > > > > version directly
+> > > > > > > > instead of individual ones to save those IOCTL as well.
+> > > > > > > Yes, I am all in favor of letting userspace provide all values in the
+> > > > > > > BASE extension.
+> > > > > We already support vendorid/archid/impid through one reg. I think we just
+> > > > > need to add the SBI version support to that so that user space can set it.
+> > > > > 
+> > > > > > This is covered by your recent patch that provides userspace_sbi.
+> > > > > Why do we need to invent new IOCTL for this ? Once the user space sets the
+> > > > > SBI version, KVM can enforce it.
+> > > > If an SBI spec version provides an extension that can be emulated by
+> > > > userspace, then userspace could choose to advertise that spec version,
+> > > > implement a BASE probe function that advertises the extension, and
+> > > > implement the extension, even if the KVM version running is older
+> > > > and unaware of it. But, in order to do that, we need KVM to exit to
+> > > > userspace for all unknown SBI calls and to allow BASE to be overridden
+> > > You mean only the version field in BASE - Correct ?
+> > No, "BASE probe function" is the sbi_probe_extension() ecall.
+> > 
+> > > > by userspace. The new KVM CAP ioctl allows opting into that new behavior.
+> > > But why we need a new IOCTL for that ? We can achieve that with existing
+> > > one reg interface with improvements.
+> > It's an existing IOCTL with a new data payload, but I can easily use
+> > ONE_REG if you want to do everything through that.
+> > 
+> > KVM doesn't really need any other IOCTL than ONE_REGs, it's just
+> > sometimes more reasonable to use a different IOCTL, like ENABLE_CAP.
+> > 
+> > > > The old KVM with new VMM configuration isn't totally far-fetched. While
+> > > > host kernels tend to get updated regularly to include security fixes,
+> > > > enterprise kernels tend to stop adding features at some point in order
+> > > > to maximize stability. While enterprise VMMs would also eventually stop
+> > > > adding features, enterprise consumers are always free to use their own
+> > > > VMMs (at their own risk). So, there's a real chance we could have
+> > > I think we are years away from that happening (if it happens). My
+> > > suggestion was not to
+> > > try to build a world where no body lives ;). When we get to that
+> > > scenario, the default KVM
+> > > shipped will have many extension implemented. So there won't be much
+> > > advantage to
+> > > reimplement them in the user space. We can also take an informed
+> > > decision at that time
+> > > if the current selective forwarding approach is better
+> > Please don't repeat the design of SUSP/SRST/DBCN.
+> > Seeing them is one of the reasons why I proposed the new interface.
+> > 
+> > "Blindly" forwarding DBCN to userspace is even a minor optimization. :)
+> > 
+> > >                                                         or we need to
+> > > blindly forward any
+> > > unknown SBI calls to the user space.
+> > Yes, KVM has to do what userpace configures it to do.
+> > 
+> > I don't think that implementing unsupported SBI extensions in KVM is
+> > important -- they should not be a hot path.
+> > 
+> > > > deployments with older, stable KVM where users want to enable later SBI
+> > > > extensions, and, in some cases, that should be possible by just updating
+> > > > the VMM -- but only if KVM is only acting as an SBI implementation
+> > > > accelerator and not as a userspace SBI implementation gatekeeper.
+> > > But some of the SBI extensions are so fundamental that it must be
+> > > implemented in KVM
+> > > for various reasons pointed by Anup on other thread.
+> > No, SBI does not have to be implemented in KVM at all.
+> > 
+> > We do have a deep disagreement on what is virtualization and the role of
+> > KVM in it.  I think that userspace wants a generic ISA accelerator.
+> 
+> I think the disagreement is the role of SBI in KVM virtualization rather
+> than
+> a generic virtualization and the role of KVM in it. I completely agree that
+> KVM should act as an accelerator and defer the control to the user space in
+> most of the cases
+> such e.g I/O operations or system related functionalities. However, SBI
+> specification solves
+> much wider problems than those. Broadly we can categorize SBI
+> functionalities into the following
+> areas
+> 
+> 1. Bridging ISA GAP
+> 2. Higher Privilege Assistance
+> 3. Virtualization
+> 4. Platform abstraction
+> 5. Confidential computing
+> 
+> For #1, #3 and #5, I believe user space shouldn't be involved in
+> implementation
+> some of them are in hot path as well.
 
-Regards,
-Boqun
+IMO, userspace should still be in control of whether or not it's involved
+in #1, #3, and #5. It may make little sense for it to be involved, but the
+choice should still be its.
 
-> ---
+> For #4 and #2, there are some
+> opportunities which
+> can be implemented in user space depending on the exact need. I am still not
+> clear what is the exact
+> motivation /right now/ to pursue such a path. May be I missed something.
+> As per my understanding from our discussion threads, there are two use cases
+> possible
 > 
-> This patch is also needed by Danilo for initializing `Devres`
-> ergonomically.
+> 1. userspace wants to update more states in HSM. What are the states user
+> space should care about scounteren (fixed already in usptream) ?
+> 2. VMM vs KVM version difference - this may be true in the future depending
+> on the speed of RISC-V virtualization adoption in the industry.
+> But we are definitely not there yet. Please let me know if I misunderstood
+> any use cases.
+
+That's what I'm aware of as well, but I see giving userspace back full
+control of what gets accelerated by KVM, and what doesn't, as a fix, which
+is why I wouldn't want to delay it any longer.
+
 > 
-> ---
->  rust/kernel/block/mq/tag_set.rs | 12 +++++++-----
->  rust/pin-init/src/lib.rs        | 30 ++++++++++++++++++++++++++----
->  2 files changed, 33 insertions(+), 9 deletions(-)
+> > Even if userspace wants SBI for the M-mode interface, security minded
+> This is probably a 3rd one ? Why we want M-mode interface in the user space
+> ?
+> > userspace aims for as little kernel code as possible.
 > 
-> diff --git a/rust/kernel/block/mq/tag_set.rs b/rust/kernel/block/mq/tag_set.rs
-> index bcf4214ad149..c3cf56d52bee 100644
-> --- a/rust/kernel/block/mq/tag_set.rs
-> +++ b/rust/kernel/block/mq/tag_set.rs
-> @@ -9,7 +9,7 @@
->  use crate::{
->      bindings,
->      block::mq::{operations::OperationsVTable, request::RequestDataWrapper, Operations},
-> -    error,
-> +    error::{self, Result},
->      prelude::try_pin_init,
->      types::Opaque,
->  };
-> @@ -41,7 +41,7 @@ pub fn new(
->          // SAFETY: `blk_mq_tag_set` only contains integers and pointers, which
->          // all are allowed to be 0.
->          let tag_set: bindings::blk_mq_tag_set = unsafe { core::mem::zeroed() };
-> -        let tag_set = core::mem::size_of::<RequestDataWrapper>()
-> +        let tag_set: Result<_> = core::mem::size_of::<RequestDataWrapper>()
->              .try_into()
->              .map(|cmd_size| {
->                  bindings::blk_mq_tag_set {
-> @@ -56,12 +56,14 @@ pub fn new(
->                      nr_maps: num_maps,
->                      ..tag_set
->                  }
-> -            });
-> +            })
-> +            .map(Opaque::new)
-> +            .map_err(|e| e.into());
->  
->          try_pin_init!(TagSet {
-> -            inner <- PinInit::<_, error::Error>::pin_chain(Opaque::new(tag_set?), |tag_set| {
-> +            inner <- tag_set.pin_chain(|tag_set| {
->                  // SAFETY: we do not move out of `tag_set`.
-> -                let tag_set = unsafe { Pin::get_unchecked_mut(tag_set) };
-> +                let tag_set: &mut Opaque<_> = unsafe { Pin::get_unchecked_mut(tag_set) };
->                  // SAFETY: `tag_set` is a reference to an initialized `blk_mq_tag_set`.
->                  error::to_result( unsafe { bindings::blk_mq_alloc_tag_set(tag_set.get())})
->              }),
-> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
-> index d1c3ca5cfff4..f4e034497cdd 100644
-> --- a/rust/pin-init/src/lib.rs
-> +++ b/rust/pin-init/src/lib.rs
-> @@ -1391,8 +1391,8 @@ pub fn pin_init_array_from_fn<I, const N: usize, T, E>(
->  }
->  
->  // SAFETY: the `__init` function always returns `Ok(())` and initializes every field of `slot`.
-> -unsafe impl<T, E> Init<T, E> for T {
-> -    unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
-> +unsafe impl<T> Init<T> for T {
-> +    unsafe fn __init(self, slot: *mut T) -> Result<(), Infallible> {
->          // SAFETY: `slot` is valid for writes by the safety requirements of this function.
->          unsafe { slot.write(self) };
->          Ok(())
-> @@ -1401,14 +1401,36 @@ unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
->  
->  // SAFETY: the `__pinned_init` function always returns `Ok(())` and initializes every field of
->  // `slot`. Additionally, all pinning invariants of `T` are upheld.
-> -unsafe impl<T, E> PinInit<T, E> for T {
-> -    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> {
-> +unsafe impl<T> PinInit<T> for T {
-> +    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), Infallible> {
->          // SAFETY: `slot` is valid for writes by the safety requirements of this function.
->          unsafe { slot.write(self) };
->          Ok(())
->      }
->  }
->  
-> +// SAFETY: when the `__init` function returns with
-> +// - `Ok(())`, `slot` was initialized and all pinned invariants of `T` are upheld.
-> +// - `Err(err)`, slot was not written to.
-> +unsafe impl<T, E> Init<T, E> for Result<T, E> {
-> +    unsafe fn __init(self, slot: *mut T) -> Result<(), E> {
-> +        // SAFETY: `slot` is valid for writes by the safety requirements of this function.
-> +        unsafe { slot.write(self?) };
-> +        Ok(())
-> +    }
-> +}
-> +
-> +// SAFETY: when the `__pinned_init` function returns with
-> +// - `Ok(())`, `slot` was initialized and all pinned invariants of `T` are upheld.
-> +// - `Err(err)`, slot was not written to.
-> +unsafe impl<T, E> PinInit<T, E> for Result<T, E> {
-> +    unsafe fn __pinned_init(self, slot: *mut T) -> Result<(), E> {
-> +        // SAFETY: `slot` is valid for writes by the safety requirements of this function.
-> +        unsafe { slot.write(self?) };
-> +        Ok(())
-> +    }
-> +}
-> +
->  /// Smart pointer containing uninitialized memory and that can write a value.
->  pub trait InPlaceWrite<T> {
->      /// The type `Self` turns into when the contents are initialized.
-> -- 
-> 2.49.0
+> We trust VMM code more than KVM code ?
+
+We should be skeptical of both, which is why we'd rather put as much code
+in userspace as possible. Insecure/faulty userspace will hopefully have
+exploits/bugs contained to the single process. An insecure/faulty KVM
+means the host is compromised/crashed. On x86, Google put a lot of effort
+into moving instruction emulation out of KVM for security concerns[1]. In
+general, if it's not a hot path and there's a way to do it in userspace,
+then it should be done in userspace (or at least there should be an
+option to use userspace -- each use case can choose what's best for
+itself).
+
+[1] https://www.linux-kvm.org/images/3/3d/01x02-Steve_Rutherford-Performant_Security_Hardening_of_KVM.pdf
+
+Thanks,
+drew
+
 > 
+> > Userspace might want to accelerate some SBI extension in KVM, but it
+> > should not be KVM who decides what userspace wants.
