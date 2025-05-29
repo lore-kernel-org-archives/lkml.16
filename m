@@ -1,133 +1,124 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59339FD9
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A13840BF5;
+	Thu, 29 May 2025 14:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748530614; cv=none; b=sYNtXS4vaKzJGd01LVa6VS/JvXd6SH18RXAXpcSYsnkttTKJsYKFMyHkaUL8aREdNETd3OZEQoo7ZUwg05ROkMtAnviEDck7nCOklp51YPEvzTt4H0Pnh3+BSe291JSSgycTmKMt6DgPQGk8/+oRfHWYIPDiCssJ5k3QM27ZRyw=
+	t=1748530726; cv=none; b=NOdce1Dj1GYdBEckkCFd8M5Vfo7ht/XJPUyVxbUghcu9qPM/57gJn9pbRlahPmNzbPdIICtydwm4vM6dKDq23sQkM0gIfAgIjQlAj+J84N3AGe+HdvgvIx1RJP7HQeO1v8lhbcOG5DNX/AC0oprAAyhNS1wpU2wg4jQoh5M4hPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748530614; c=relaxed/simple;
-	bh=B1zsO3xLB87dBpNzAoGuj+8RJlTANU2xKvOZOU1twOU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sNqyf3HLg/WCziaFt38YWruUcmvBGxa/xvKqDBpktYLiCW76SgoraLjoTqBxjrjz8rZnv+gvjrQdt7SSA1M+yJxvOSEnbMB0hbJkK0iUdy01G+u5L73ANvuRLUJJNPGnVkHYVE76n3NUWPlueMy2tPUw2vPpE/Pf8NoTeswpYR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hyXLQnv7; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748530726; c=relaxed/simple;
+	bh=Gj43M2OdGB7+ObhhmKp+QmuqAFhLuSNYp+6yibi2rPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHbdaFlH2H+St6YKfSjY9igFhSqTFj+xuHmB7ed+M4/17IW9m78O9qVGO3LFKAP5IQKAjXTT9CRVsL7fnJaI9aOfRUWg6dkX2rFZPQj86zLJpikzrY+/0pedKKFC3ik8r7NeZDKZ13DoljrRPaP3cU2Gtlw1/GQTY2p+JvHgkVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OX2JVplO; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hyXLQnv7"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-310efb64693so992048a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:56:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OX2JVplO"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1183417b3a.2;
+        Thu, 29 May 2025 07:58:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748530612; x=1749135412; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wtc8z1lt0l7J7qwleBMoPVIkOE4MKmf5AJAUWp638/g=;
-        b=hyXLQnv7oXEntBAzMTAPyUhwAnRTHCci3ptm+H6vpNjcZ1SBsaYZSIS29rQ37BWRpM
-         nKzmyry1m8ComuGB7/wEP6B9vDah1u8dqm/H3gOFh3VDFjK+ZSlbcGMOtKXMiDAiiZku
-         lFOo3WOLxA5IzhFi5bgUXGTJ9TwfWXvBU+aLki3q/k4yE2nNC9zwlpZtzd2ekdFrrr6F
-         lxP5/6WNKc8IgRWY+EBOE9ZCn2LQW90EoDlj3uMzQsRSgqXilJEdL7hiMmIHjMHoxxUT
-         4w/Hetq61CgISID1WKgCiGeboNyuxjhIplPTnToCLy1X9M/Rxgqn181FNyXpnmzxy1RM
-         miwQ==
+        d=gmail.com; s=20230601; t=1748530725; x=1749135525; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=62giXWg7WsEB0ulrJR1t2wvmt+DLs2PIJk6M7yXmcBE=;
+        b=OX2JVplOUZPrI9l9Aw3xboNOlQWTcYhCpeCxEabpxcxYOwe28Xk7jvcDJ16cd6xFjA
+         1b41WsylxpG6u+sausHQs9kFlvpQaPP1gT1iIzfx9riYhSBd+9GWLMhPzL/kN88NRcP8
+         APU61vHdG6iCoUtUTYoybD1GPaCLTSToE2/PJXOSEc/azJwIIuihWbc1emMXCFbgaUwn
+         8mFKk3GTzPqUJG6fT41Gglu/DAhqNu/OEZrgwPO3wJlSUvP290gQ7wWjYghRgF3HWv3e
+         fag4OnP1tpqeLkuZBJtMZpk25K41J6OKLM9gISpNxmvmDmELfAfFO5PV0KiAnTBeO6to
+         FAHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748530612; x=1749135412;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wtc8z1lt0l7J7qwleBMoPVIkOE4MKmf5AJAUWp638/g=;
-        b=vxi0Bi58XexKrVrYwrASg6tWWSCkpEaRg/2agNEgLqWX+pKfR366dYr85Fx+5K668h
-         kqQMUC4lmjgFCvDwaP7dJEs8VZyVPFjWqcq/ri1POiIk/zkrGcc4SxbRLjDRQsyyo3PA
-         DqQ36boZoJYcgXBfnltgjyBQAjFJRnz/snFIkf7MylOyNNDDLH0QIG74FN8bzM9lByQP
-         vElGaURlfrWR/3CJ05k1BRQanWKGNegrMl1K9vdhL4UGAjJb5aJWiH0FMfZ7mErgdVm6
-         vRxoXBVRPFJF6xh7NUI83AQ1L3n5rs1pscTbYSD+itOUAoYIgVv+M4TuiG1fIrgE49q9
-         2AKw==
-X-Forwarded-Encrypted: i=1; AJvYcCViMziWvkHiGJSKl22eV0O4cA7pW7FE4x2Edvu4Urlu/a6pI28YAE99Wz0lbexhBCwdOSGED83JBRxwH1Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywsc8CQoLC3nBV43PZIiQa4pSLxiAbnrmRTz03lV+ZFLvzMU/T0
-	l7fkHjaN8X+jQrtKVVoUQi0ErzjTlhZfpdrmjYFKwuCkviIJhoWjWApMnXTSaVNvBdfPDr4ZtS4
-	D+nTovw==
-X-Google-Smtp-Source: AGHT+IEOksNt6WLBVwwH9cCjd/EZtQ2Y3bLCTU4Al9fuM3w6GA9Cf3/1B4op9exa2/CpdjOTCglkD0RIbFs=
-X-Received: from pjbpq14.prod.google.com ([2002:a17:90b:3d8e:b0:311:2c1f:b0d8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:30c:4b1d:330
- with SMTP id 98e67ed59e1d1-311e7460123mr9878567a91.27.1748530611851; Thu, 29
- May 2025 07:56:51 -0700 (PDT)
-Date: Thu, 29 May 2025 07:56:50 -0700
-In-Reply-To: <aDd-lbrJAX62UQLn@google.com>
+        d=1e100.net; s=20230601; t=1748530725; x=1749135525;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=62giXWg7WsEB0ulrJR1t2wvmt+DLs2PIJk6M7yXmcBE=;
+        b=rODEHE3F+45Eag9sAHV5ev/spxf1btQ4YBXbzLjNO81Ouv9qLb3PcahEYCh+usjrZY
+         ue6KLo7bfpManF+pI+GKiyixseDdnECKNiIoa6x+q/EQzpSXUV1Wtd2+MSBSvV8lZHrB
+         qCU2eHJV79rVycDotiO4etLOfY6SbKC7muhvia0to7NK48yp/aRWUCGmPAYPxE7CfzKl
+         AlWkkTDFx3othXw1fl5PTuBSyXYjN9EjogF+B3coLeZi7iBb/C+VJ9Crsckwp6lHtz5e
+         B7Au/8HagLQVC+7S0C2a8tbU6ZCcSkU9MIF38toURAzNov8Xidrphr5WWALnop1Elr01
+         D30Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXkRvC8DrF57zZpUefkVnIWXJ8LTmv+gPovgYFdV2XaGOU5RMs1zOKrO4jroD6+uSvOCcu4eqmIhqP+36H5@vger.kernel.org, AJvYcCXs7Gm+wKBYsGynj2Gif63HVw0K1QRV3OD70gUdHRDotcjFlZKWrwDvB9dzZhyGTWlY/cCVC62CBbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVRVW2CG1wjlUUpfnde+NXtqEMeOVjRrBOif0PVgTWk2W/aSDO
+	6o9txiBQSWMKrMFQ9yRxXBsiGm/tInmMCqHuEAOQjkxp/4u1GRIopucq
+X-Gm-Gg: ASbGncvcU/X8krheIPPExUdlQ1lBpE03F1pM3s3DGp9hmOUFe2/pGnCmpXRCLmSu8eo
+	BZJZ0h53Myo96TdtDwUFjrzRXqgHZWvjy31KXq/WnLENCUHlbBz3mXs6imQ7Mh1ML9eSHuDrUDj
+	B4m1MFHAsQ+1cW98KeuJkwov4nmghhtkzCjfk7bGFKRXwY7HrGmRRVkOAE8xvGx43vRCDAQzV1h
+	TKIpeQmTlMT6lMnyeLmuhBF9fg+Tt5XjD/iqdLEk54YmAi3oh1CFcNCq3PY6FtSbQqMNprEhJYU
+	LdGrMj+/haeNG7m+OpDGavDz3k8gK8YXqqH8rOjMWVQ=
+X-Google-Smtp-Source: AGHT+IGYOhDLZwULgZl6IXzdoOY5xQYtIs9vHAaR3rtKYgby02EA6jBpe6c7R8WjaS7P9RLaVvFF+A==
+X-Received: by 2002:a05:6a21:7a47:b0:201:b65:81ab with SMTP id adf61e73a8af0-21ad95ab750mr91459637.23.1748530724635;
+        Thu, 29 May 2025 07:58:44 -0700 (PDT)
+Received: from localhost ([2602:f919:106::1b8])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d672sm95547a12.60.2025.05.29.07.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 07:58:44 -0700 (PDT)
+Date: Thu, 29 May 2025 22:58:39 +0800
+From: Troy Mitchell <troymitchell988@gmail.com>
+To: Alex Elder <elder@riscstar.com>, andi.shyti@kernel.org, dlan@gentoo.org,
+	troymitchell988@gmail.comg
+Cc: spacemit@lists.linux.dev, linux-i2c@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: k1: check for transfer error
+Message-ID: <aDh2HxnGVez6T1Zc@troy-wujie14-pro>
+References: <20250529122227.1921611-1-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <20250109204929.1106563-6-jthoughton@google.com> <aBqj3s8THH9SFzLO@google.com>
- <aDdwXrbAHmVqu0kA@linux.dev> <aDd-lbrJAX62UQLn@google.com>
-Message-ID: <aDh1sgc5oAYDfGnF@google.com>
-Subject: Re: [PATCH v2 05/13] KVM: x86/mmu: Add support for KVM_MEM_USERFAULT
-From: Sean Christopherson <seanjc@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Houghton <jthoughton@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529122227.1921611-1-elder@riscstar.com>
 
-On Wed, May 28, 2025, Sean Christopherson wrote:
-> On Wed, May 28, 2025, Oliver Upton wrote:
-> > On Tue, May 06, 2025 at 05:05:50PM -0700, Sean Christopherson wrote:
-> > > > +	if ((old_flags ^ new_flags) & KVM_MEM_USERFAULT &&
-> > > > +	    (change == KVM_MR_FLAGS_ONLY)) {
-> > > > +		if (old_flags & KVM_MEM_USERFAULT)
-> > > > +			kvm_mmu_recover_huge_pages(kvm, new);
-> > > > +		else
-> > > > +			kvm_arch_flush_shadow_memslot(kvm, old);
-> > > 
-> > > The call to kvm_arch_flush_shadow_memslot() should definitely go in common code.
-> > > The fancy recovery logic is arch specific, but blasting the memslot when userfault
-> > > is toggled on is not.
-> > 
-> > Not like anything in KVM is consistent but sprinkling translation
-> > changes / invalidations between arch and generic code feels
-> > error-prone.
+On Thu, May 29, 2025 at 07:22:26AM -0500, Alex Elder wrote:
+> If spacemit_i2c_xfer_msg() times out waiting for a message transfer to
+> complete, or if the hardware reports an error, it returns a negative
+> error code (-ETIMEDOUT, -EAGAIN, -ENXIO. or -EIO).
 > 
-> Eh, leaving critical operations to arch code isn't exactly error free either :-)
+> The sole caller of spacemit_i2c_xfer_msg() is spacemit_i2c_xfer(),
+> which is the i2c_algorithm->xfer callback function.  It currently
+> does not save the value returned by spacemit_i2c_xfer_msg().
 > 
-> > Especially if there isn't clear ownership of a particular flag, e.g. 0 -> 1
-> > transitions happen in generic code and 1 -> 0 happens in arch code.
+> The result is that transfer errors go unreported, and a caller
+> has no indication anything is wrong.
 > 
-> The difference I see is that removing access to the memslot on 0=>1 is mandatory,
-> whereas any action on 1=>0 is not.  So IMO it's not arbitrary sprinkling of
-> invalidations, it's deliberately putting the common, mandatory logic in generic
-> code, while leaving optional performance tweaks to arch code.
+> When this code was out for review, the return value *was* checked
+> in early versions.  But for some reason, that assignment got dropped
+> between versions 5 and 6 of the series, perhaps related to reworking
+> the code to merge spacemit_i2c_xfer_core() into spacemit_i2c_xfer().
 > 
-> > Even in the case of KVM_MEM_USERFAULT, an architecture could potentially
-> > preserve the stage-2 translations but reap access permissions without
-> > modifying page tables / TLBs.
+> Simply assigning the value returned to "ret" fixes the problem.
 > 
-> Yes, but that wouldn't be strictly unique to KVM_MEM_USERFAULT.
+> Fixes: 5ea558473fa31 ("i2c: spacemit: add support for SpacemiT K1 SoC")
+> Signed-off-by: Alex Elder <elder@riscstar.com>
+> ---
+>  drivers/i2c/busses/i2c-k1.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> E.g. for NUMA balancing faults (or rather, the PROT_NONE conversions), KVM could
-> handle the mmu_notifier invalidations by removing access while keeping the PTEs,
-> so that faulting the memory back would be a lighter weight operation.  Ditto for
-> reacting to other protection changes that come through mmu_notifiers.
-> 
-> If we want to go down that general path, my preference would be to put the control
-> logic in generic code, and then call dedicated arch APIs for removing protections.
-> 
-> > I'm happy with arch interfaces that clearly express intent (make this
-> > memslot inaccessible), then the architecture can make an informed
-> > decision about how to best achieve that. Otherwise we're always going to
-> > use the largest possible hammer potentially overinvalidate.
-> 
-> Yeah, definitely no argument there given x86's history in this area.  Though if
-> we want to tackle that problem straightaway, I think I'd vote to add the
-> aforementioned dedicated APIs for removing protections, with a generic default
-> implementation that simply invokes kvm_arch_flush_shadow_memslot().
+> diff --git a/drivers/i2c/busses/i2c-k1.c b/drivers/i2c/busses/i2c-k1.c
+> index 5965b4cf6220e..b68a21fff0b56 100644
+> --- a/drivers/i2c/busses/i2c-k1.c
+> +++ b/drivers/i2c/busses/i2c-k1.c
+> @@ -477,7 +477,7 @@ static int spacemit_i2c_xfer(struct i2c_adapter *adapt, struct i2c_msg *msgs, in
+>  
+>  	ret = spacemit_i2c_wait_bus_idle(i2c);
+>  	if (!ret)
+> -		spacemit_i2c_xfer_msg(i2c);
+> +		ret = spacemit_i2c_xfer_msg(i2c);
+Sorry this is my mistake.
+Thanks for your fixes.
 
-Alternatively, we could punt on this issue entirely by not allowing userspace to
-set KVM_MEM_USERFAULT on anything but KVM_MR_CREATE.  I.e. allow a FLAGS_ONLY
-update to clear USERFAULT, but not set USERFAULT.
-
-Other than emulating poisoned pages, is there a (potential) use case for setting
-KVM_MEM_USERFAULT after a VM has been created?
+Reviewed-by: Troy Mitchell <troymitchell988@gmail.com>
+>  	else if (ret < 0)
+>  		dev_dbg(i2c->dev, "i2c transfer error: %d\n", ret);
+>  	else
+> 
+> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+> -- 
+> 2.45.2
+> 
