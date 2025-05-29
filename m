@@ -1,102 +1,179 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC71632C8;
-	Thu, 29 May 2025 17:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176522DFE3;
+	Thu, 29 May 2025 17:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748539645; cv=none; b=SFoEzVWUX5TvFu66nCBu8hMgmjXXmeTbE8O1txqA8xeBN5ROSRQCW2AG0TSdqrSE8y+E+CV4ZBuvGKnNEfxDGpx9rdGIxRJ3bjaJP8M4HdKTYjbNOuGDMlKKHnhM+osGeOM/Gii2y/X2RtkHKJKlgxiVXJ/imOXrDWQKIRPDT6A=
+	t=1748539654; cv=none; b=dNvgYmEwyyJXKv4bIYwzaab7XczpPLvnhYf5QTQ/DA8L8cOhEQ+SCOWo5KBWb13Avj++SwQLo9jni2AvNswJrIyDqPMro5YAj62bTI+nojyl6gfsUUEyMP0Q8DGVldYKBKguPljgcyUO3zoNibAQi9XZ0+VFDYXqU7wntyHIV8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748539645; c=relaxed/simple;
-	bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
+	s=arc-20240116; t=1748539654; c=relaxed/simple;
+	bh=qH4v453/dendpSvOjjh1ZKW/R1SsJgK2XoSkPc/H1O4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JiMKTRhSpMpZtK5zAxCnOn+fAXur79AsujwppK8+6C5sO0rEctRRBUIlKq+whqvbfvtzYEWv+Ra5/asNYufTpjjQ8n7aBMiMp5ty6/TyhR6sJc7IxOf3BQ7TpqURehR0P4mR6G7NghBlARtWBVB076BJhkNbn3uRhkf53lSE4jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBXHrB3N; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pEpWIYtxXwD8MstZqiq/3SfCigvJFrm9M8LLHgo+evJ6PEPbZ9N3iSXPSafwTBDhpTlIedJezETJ7eDSKMy4VEYD5g1+zBnujfdu2T50y2nZR/r69Z2m/T6Ghttso3u5ohF3eeLNHpOuBZM9CT+neDAbNNdsNkTJW4iIJVInatc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8+N4dZw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBXHrB3N"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dc7294716cso9480345ab.2;
-        Thu, 29 May 2025 10:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748539643; x=1749144443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
-        b=IBXHrB3N1RrePZo4OYoOpczOqtRSOgHjm2g+1cpa3NvpT8fMOuf/i+VGE8Uyo+Kq9X
-         t7XxhXtSjibIjUfOAImQl8Fa2uUE4Nc/Utwwo2dVABOla3Wg/R7le5nC9MWi2m3++780
-         1wHr3CWseJ9ObdbpFxOEu0KB+nLJDlbaJXNybp6y1O9dBWoSXyQitw8fzTFCdAgdfVeS
-         rr8Wqg1Jp+TjZAG2Moe/P243kdPSHHi2+S77WuvQ+EC0TfGk0V4MYXWNrfJ+Lj6KLhbW
-         bJ92/ZeaayLkfwiGaLQ5bvisnUybMHsAQFf43BYTJ/Ezffnnl8MsDBhRZe19OPa9gfRd
-         v3Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748539643; x=1749144443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ajQTKsp2k+COAp8eVCvXoYherc4TbcmqdYiY2XM3q3g=;
-        b=UWeXpICKyE4vQWkC//y63OjacWVrWoSB4mMD7AGtKn2TZkn6HGAxeBiAsf7YE4nduS
-         rgEawvqJCGhPFobiHn8Fl9CFUnr5OQ5Zejwyh8LVuC0MUHfrXFw/IO2QXQWdfO1tajhG
-         hZohrs0QvW6gg7BemD9VeVC70K5seMotZWEX4fCR+AOVsc8YmjQhQmcUWaGE97ldkToo
-         N8DSEikeRCG1lNz7RQySwZPKPrzCXeeuxbOaHn+sipceU4RTHiBhGFZTsGDSX6PvEBLB
-         HLso8JeGUXIxrK/oty6EjdAJY843yPKW8SJZmgKTLK3rpfRJrogiQQWUwW1erm1h+oTX
-         Y9Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSsjiHJNNh+Ej4hSTiJoZgrg3+l+QKHE6RJ3j8xlL8rv7ondurKfRg9VtCfKQabNfw9ZLs0gJHexeH@vger.kernel.org, AJvYcCWWNyeOJLovV7rtMh/WS6vHkqr74nnznGOj6/8AC7e9kC15D5/fXncs4G3pu5/tik53IXh9IwZL/v/zC82Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFymTobhfgWsq5hG+oGVCdUg26f96T7Uow53bZdMgKuv2wCUYh
-	Wj+Jf+64gMsh4h2A6KLk6xSS9ZHs6XmZvDGgeiCltWoWXGhDReOVwHPquOk3h9VME7yk5JU8AZO
-	XtYAVeESeaPvLDch8fEfZmQs4C15S2Ko=
-X-Gm-Gg: ASbGncskJd0YUTKPAr+Rgf7mhob4Ycyn9aXMwQw6p2rJZxO/tiw5cEAwp0vmkjJ7CEi
-	3FUPJVh3NxOeGH30wjzxJlaMrXx3b1v8xVK1W8CQf/Lw7pOefT9Cj9Cl98rr2d8XTcKD1E7zxWs
-	T1FXmg3PxhdQkX6TWbYs+sWpXzACAts6ywUKB5kqMXgA==
-X-Google-Smtp-Source: AGHT+IGmfLftFKbDjPUrwhZwicuqQxLIwzoCfWWeirKpn1IUl46FhVaamkvogKo9NxIBYcyFiWPlwqFTeQ9zfcW19XI=
-X-Received: by 2002:a05:6e02:3c86:b0:3dc:857c:c61e with SMTP id
- e9e14a558f8ab-3dd99c289c0mr9051885ab.15.1748539643157; Thu, 29 May 2025
- 10:27:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8+N4dZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9035DC4AF0B;
+	Thu, 29 May 2025 17:27:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748539653;
+	bh=qH4v453/dendpSvOjjh1ZKW/R1SsJgK2XoSkPc/H1O4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=t8+N4dZwEfhe+LFdQdFK8MJrzNy7bvLmeld55BQDnlTZUtyshocGIoHG9Q40WZcPw
+	 sQjwhnS0pE4+6v1cuKiyCYdZNSqdystTTX9qPQa/JQQDunaV7D1OTBHrpYfvBH8rWR
+	 I4bt4WKKQRFnD7KDw5+1is9ziv9jMmW2lYcwx7DVz4OyepjgwIVGLz3qMzuVnQMnjr
+	 lifyHr/Wgb/uXXY+3Jej4XdsCuWpCspYzVUXaxBgQIBkyw3VPsoQZuxuMNcjWZ9TSB
+	 lectM9/hGEwmawfAB/TYKRzSY600fKZ22CRpVeBgU8mxb/yFrwZrYK8/55QJg8x0RB
+	 JrBjN0tSGQ21Q==
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so185683566b.0;
+        Thu, 29 May 2025 10:27:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV47vZBhUogi3jw0Z79NFGHlWSkOrNPLXh7P+IP2patGwGsRn7zzxrNf2p4O7o/mW9bnuyYOuyNNjQJSohe@vger.kernel.org, AJvYcCVnd/y6J5RMaoPrTAEiWGBAPHve7VkkQNmStxPFCq/EsToGIzlKfRryoX1nZ9g0uc2YVTnTUdkqiag=@vger.kernel.org, AJvYcCXCkxl9iBIIy6nfHXKjGEk9LhV8aRU9T5Jv7xJJpPvdC8VqKyCrForSGiBVMxI78sl0zFGHlxNDsHDpZygjrQZ+0w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YynIqiuz33z4RW/2VKah5JqUhzf7cIjymz8E76CSfvT7m/VB62E
+	cf0aEEYKhu8FXwk0JtDNfWEF672AOR11syk4hlYc/WwVrAMQEz7lCFUaPbI/YRYxBwiC3On2mol
+	Yt82JWDRI5hpFucRy7dU6z9t1sGLjkQ==
+X-Google-Smtp-Source: AGHT+IG8vuuuHmnAkDYhc0wSUHyMMZZ4pVnP2sLktIt9BGUIiU4Wla89J8p0IqYHCL/M3OMkUGaMQGKSpkLntPI8/WI=
+X-Received: by 2002:a17:907:2d12:b0:ad2:2d75:d7fb with SMTP id
+ a640c23a62f3a-adb322fa1c2mr29287066b.55.1748539652145; Thu, 29 May 2025
+ 10:27:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <174735136138.1544989.11909422896170025756.robh@kernel.org>
- <20250528221823.2974653-1-joseph.kogut@gmail.com> <20250528221823.2974653-2-joseph.kogut@gmail.com>
- <20250529-impressive-real-monkey-a7818b@kuoka> <CAMWSM7i+eyV4t3xzSXdDyGrBr101V9rG1xMgsTbpjyqpu+hjYw@mail.gmail.com>
- <3a2b9bfb-81b0-473a-b58c-76a2dd7f434e@kernel.org>
-In-Reply-To: <3a2b9bfb-81b0-473a-b58c-76a2dd7f434e@kernel.org>
-From: Joseph Kogut <joseph.kogut@gmail.com>
-Date: Thu, 29 May 2025 10:26:47 -0700
-X-Gm-Features: AX0GCFvNxRjPdyr8yhbcLu1TfazWvzDwAFaQdGZbh1fnbTEWqCXXjJppI9Ifugk
-Message-ID: <CAMWSM7h-naYcgy7hrfNd0tDLTx21jFmvV4X8vU1V4py21PNVPw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: arm: rockchip: Add Radxa CM5 IO board
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Steve deRosier <derosier@cal-sierra.com>
+References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
+ <20250520-arm-brbe-v19-v22-5-c1ddde38e7f8@kernel.org> <925bf014-cea8-4cf0-9517-46291db729f2@linaro.org>
+In-Reply-To: <925bf014-cea8-4cf0-9517-46291db729f2@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 29 May 2025 12:27:18 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ3t5UvWMBgLEkm_-sD_S7NEor+vWfVkU-d7va6u9xsmQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuZiRqbTownBtX9p_AAnxqssjZP9dZ9VucncBlXoHjZthrkTUHlQWalK88
+Message-ID: <CAL_JsqJ3t5UvWMBgLEkm_-sD_S7NEor+vWfVkU-d7va6u9xsmQ@mail.gmail.com>
+Subject: Re: [PATCH v22 5/5] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: James Clark <james.clark@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvmarm@lists.linux.dev, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Anshuman Khandual <anshuman.khandual@arm.com>, 
+	Leo Yan <leo.yan@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 29, 2025 at 10:07=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
->
-> On 29/05/2025 19:00, Joseph Kogut wrote:
-> > I've reviewed the man page for git-send-email. If I'm understanding
-> > correctly, I should only thread the *cover letter* of the patch series
-> > when submitting a new version. That didn't work for me here because I
-> > didn't initially include a cover letter, then tried to thread the
-> > first patch in the series. I see now how that would be disruptive.
-> You should not thread manually anything. b4 does it for you. If you want
-> to use git-send-email, then you also don't care:
->
-> git format-patch -v3 -3 HEAD
-> git send-email <whatever-to-and-cc-arguments> v3*
->
-> That's it. No manual threading.
->
+On Wed, May 21, 2025 at 11:03=E2=80=AFAM James Clark <james.clark@linaro.or=
+g> wrote:
+> On 20/05/2025 11:27 pm, Rob Herring (Arm) wrote:
+> > The ARMv9.2 architecture introduces the optional Branch Record Buffer
+> > Extension (BRBE), which records information about branches as they are
+> > executed into set of branch record registers. BRBE is similar to x86's
+> > Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+> > (BHRB).
 
-I wasn't aware of b4, it looks like a great tool for this workflow.
-Thanks again for your help, I'll give it a try.
+[...]
 
-Best,
-Joseph
+> > +/*
+> > + * BRBE is configured with an OR of permissions from all events, so th=
+ere may
+> > + * be events which have to be dropped or events where just the source =
+or target
+> > + * address has to be zeroed.
+> > + */
+> > +static bool filter_branch_privilege(struct perf_branch_entry *entry, u=
+64 branch_sample_type)
+> > +{
+> > +     /* We can only have a half record if permissions have not been ex=
+panded */
+> > +     if (!entry->from || !entry->to)
+> > +             return true;
+> > +
+> > +     bool from_user =3D access_ok((void __user *)(unsigned long)entry-=
+>from, 4);
+> > +     bool to_user =3D access_ok((void __user *)(unsigned long)entry->t=
+o, 4);
+> > +     bool exclude_kernel =3D !((branch_sample_type & PERF_SAMPLE_BRANC=
+H_KERNEL) ||
+> > +             (is_kernel_in_hyp_mode() && (branch_sample_type & PERF_SA=
+MPLE_BRANCH_HV)));
+> > +
+> > +     /*
+> > +      * If record is within a single exception level, just need to eit=
+her
+> > +      * drop or keep the entire record.
+> > +      */
+> > +     if (from_user =3D=3D to_user)
+> > +             return ((entry->priv =3D=3D PERF_BR_PRIV_KERNEL) && !excl=
+ude_kernel) ||
+> > +                     ((entry->priv =3D=3D PERF_BR_PRIV_USER) &&
+> > +                      (branch_sample_type & PERF_SAMPLE_BRANCH_USER));
+> > +
+> > +     // Fixup calls which are syscalls
+> > +     if (entry->type =3D=3D PERF_BR_CALL && from_user && !to_user)
+> > +             entry->type =3D PERF_BR_SYSCALL;
+> > +
+> > +     /*
+> > +      * Record is across exception levels, mask addresses for the exce=
+ption
+> > +      * level we're not capturing.
+> > +      */
+> > +     if (!(branch_sample_type & PERF_SAMPLE_BRANCH_USER)) {
+> > +             if (from_user)
+> > +                     entry->from =3D 0;
+> > +             if (to_user)
+> > +                     entry->to =3D 0;
+> > +     }
+> > +
+> > +     if (exclude_kernel) {
+> > +             if (!from_user)
+> > +                     entry->from =3D 0;
+> > +             if (!to_user)
+> > +                     entry->to =3D 0;
+> > +     }
+> > +     return true;
+> > +}
+> > +
+> > +static bool filter_branch_type(struct perf_branch_entry *entry,
+> > +                            const unsigned long *event_type_mask)
+> > +{
+> > +     if (entry->type =3D=3D PERF_BR_EXTEND_ABI)
+> > +             return test_bit(PERF_BR_MAX + entry->new_type, event_type=
+_mask);
+> > +     else
+> > +             return test_bit(entry->type, event_type_mask);
+> > +}
+> > +
+> > +static bool filter_branch_record(struct perf_branch_entry *entry,
+> > +                              u64 branch_sample,
+> > +                              const unsigned long *event_type_mask)
+> > +{
+> > +     return filter_branch_type(entry, event_type_mask) &&
+> > +             filter_branch_privilege(entry, branch_sample);
+>
+> filter_branch_privilege() sometimes changes the branch type for
+> PERF_BR_SYSCALL so I think it should come before filter_branch_type(). I
+> didn't see any actual issue caused by this, but it's a bit hard to
+> review to see if it's working correctly.
+
+Looking at this again, I think we can drop that with this change:
+
+diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+index 2f254bd40af3..acdde61a8559 100644
+--- a/drivers/perf/arm_brbe.c
++++ b/drivers/perf/arm_brbe.c
+@@ -546,7 +546,7 @@ static const int
+brbe_type_to_perf_type_map[BRBINFx_EL1_TYPE_DEBUG_EXIT + 1][2]
+        [BRBINFx_EL1_TYPE_INDIRECT_LINK] =3D { PERF_BR_IND_CALL, 0 },
+        [BRBINFx_EL1_TYPE_RET] =3D { PERF_BR_RET, 0 },
+        [BRBINFx_EL1_TYPE_DIRECT_COND] =3D { PERF_BR_COND, 0 },
+-       [BRBINFx_EL1_TYPE_CALL] =3D { PERF_BR_CALL, 0 },
++       [BRBINFx_EL1_TYPE_CALL] =3D { PERF_BR_SYSCALL, 0 },
+        [BRBINFx_EL1_TYPE_ERET] =3D { PERF_BR_ERET, 0 },
+        [BRBINFx_EL1_TYPE_IRQ] =3D { PERF_BR_IRQ, 0 },
+        [BRBINFx_EL1_TYPE_TRAP] =3D { PERF_BR_IRQ, 0 },
+
+AFAICT, the only cases for BRBINFx_EL1_TYPE_CALL are SVC, SMC, and HVC.
+
+Rob
