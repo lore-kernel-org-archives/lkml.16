@@ -1,278 +1,201 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2049.outbound.protection.outlook.com [40.107.220.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE50A1C6FE1;
-	Thu, 29 May 2025 01:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748481659; cv=fail; b=ml5S1XXg4XFlkmvKrw31//waBSD3zgJ0J/t+Z66DHFt8ulhro1fdcAbqdPxrky7RiJFmE/Ej6cFPDHhwoX2UnlR800fZRPVyVpf6bmhdUz2aNkoqsjOorhZ3FDmGw5pJkG4SFWj8gPjOLJ/SUHb6PM3HlmXs2wbk8PqZ4Jxkykk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748481659; c=relaxed/simple;
-	bh=OmCiV1gdzPXLj0lST0BYfmolRdxT6bzwuxhv4U5Y3HI=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=Jx+0iO1NZAO2wqM46euUdAT+FhoL0uTJ14KhRHEOCPcxQ8HC/srgQXaPj2lGCFoYAjDO9ECeRUJRunAUQoKkd5TCLh2eexvUY3kdoFkxH0BADRtnjQuv9UPwCvJm3VqY+yqHJ6+FViD+QudP1tS4jsJjanlsgEwtXToUBl5u2o0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qGVnR7Y7; arc=fail smtp.client-ip=40.107.220.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9461B042C;
+	Thu, 29 May 2025 01:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748481786; cv=none; b=eCuWCYzxGLWTHOx74HysWuKtgCBAJyWUfvTdmPrIW9zL9jOncsRS0j8AJt40kPomvOQYgKFMPBKfWgfCLqqjEqax08mkwJCFVVyIjfda98qEK0zjwD7+ku/5OCi5cjH5B0r+I+BcErmT1kaZIHGvdYn4Soxp5PJyJtLoZhrDDcQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748481786; c=relaxed/simple;
+	bh=5y7CveGbYGod76OFGDf+v0QSkzJi7YLcrk5H2SLo95E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCG85WU5W6DqHD4HJVUg9XKpk28pAPsN4YkhlD5kEdGh2TI5sZMqkVnDikhWr5fI0oSRu/i3tTpxV38liRj0O/TLqP+Z5eMxBNG1sbM1uyTY8Fg4Mt69BMuU/PeV5uR6bmusu/n2Xgw2TbmBVmids02MKrs6X+a+ga6q5Cl13A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Janl0Hws; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qGVnR7Y7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n8BjzHbEqh9A9g1sl7YcsrnFZuAVRmIvvMxxV0V9LZTvFsRH1tWW2+f0jF3AZAPs8srLBgwrP4K/OJ30geXyfcrex+aTJAWyVQvKJjc/zC2Z6+DJBwcneJGnj9kG4Mm07GhpBa+Xiqlpeo0Bi8sdSgwngkZQP/xg4DUeV/DFLeDrpoJ8ukPjnkCs9KIUdSPkh7ePBdLk79rzUKyURCLAQDV6q2U8uysFNPWVF/pDIg7VyZyGxwJDAc+rIZLCpA3lr7+bkb5r3pSUNLD/CwWH0Ik1E/dHWi3T+proGtuqU7UcXxEqJi1vwFybRRrNWxRhQs0WkZ22d8MkPDbdci40Zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wNnEAYP1G0JJ/1rxclYeZTN7LVGW5xNU70sN9MXZKtk=;
- b=vf9JdViKFPdSHlFFraY4J2jJWb0IesujhvpcQb7UrZi+6/5fSccldr4KZdKFGhJY4/7t4mTEPgnvgv4KgC5qheZaHl8vlsgVWz39NJ/7NoChn7n0/yYVWdPI9G74uxXpCWObjIkcWwEQpoxMssy3k/ffWlHIEZovwCbYsSOab3W7UEImiZ3tdEBduFqVh3WH1qMeEQkaxPF9H7/5bghjo3L9ifhPiAXb7KQqY4Hi+0NexBiiN3CLyShWYGEUmeHnErImCdP69IweLbTLiSDyRCPiOAR0BETCVuRzwqAyHZv/MurSubpFTDyQcoz4cGvKcdGWPrD2+ePZ6fhOY+ZNjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wNnEAYP1G0JJ/1rxclYeZTN7LVGW5xNU70sN9MXZKtk=;
- b=qGVnR7Y7eHRK9UwYYeoH6qiYRXMHJhD52ACJFJcfpXG9BgSpcpQD6eSxgrK9FLDn5kI8BL9lEl7I6H/BX0NUh3b5sgjqwmO3LMT11Uz3OLm+sk/dOyHV7yifKzdnSOa5facpYeUAUQLDrmYkRbF9MSMOeXtag282e7vsJVEgS6aSjy6ArPqUPNWsxriewbhWXn+QMwf+aFof58sNZBR5Hh1OFZFOW5ywZzfcBNM3/xvGXUOAoQR5E/U0dacDEFv65hx+4yncvUoktuPj7LQl/S6oURiGLlpCOnyes8/wBF56GaQ2fUXMLl8HCCrQ0WqGtx42Yj9YQ+KprxYYCZBlwQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by PH8PR12MB7208.namprd12.prod.outlook.com (2603:10b6:510:224::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Thu, 29 May
- 2025 01:20:53 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 01:20:53 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 29 May 2025 10:18:06 +0900
-Message-Id: <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
- operations
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Benno Lossin" <lossin@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
- <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
-In-Reply-To: <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
-X-ClientProxiedBy: TYAPR01CA0215.jpnprd01.prod.outlook.com
- (2603:1096:404:29::35) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Janl0Hws"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7370a2d1981so205648b3a.2;
+        Wed, 28 May 2025 18:23:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748481784; x=1749086584; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNcpQ6iTd23Fuh0WUpnzSmEEECvnd8gbAVf510WE3Vg=;
+        b=Janl0HwszOVx4THtVmpFX07vI3Oufv2zP6Se2kZxMTWYV8nLvWHle6GYN8q97HoBye
+         y4BoDfx6U22lzAxOukOsLsTP/xPTwXDyg+z5ymI10JX8H8s9feF9at669cSQQ4Zix/5L
+         iqy6+1RVTh2EEYwPBUTtN3toutAWnpuUP1DXc0QPZQOVOyUdmSH8dIPQ5pTf6DtWHBF2
+         rNnx4os2d79OW94DJ4RmLbfmqTUOTAuum+Yidj99FM4WEdN1HmYYcY56PqwLoefXm8G4
+         0tlpu8oqNG9jSkY7su3SzK0nyUfKQ0N0fmRazoFhnevdR5xPBURkriEXMfZqbnylzmQX
+         BFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748481784; x=1749086584;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yNcpQ6iTd23Fuh0WUpnzSmEEECvnd8gbAVf510WE3Vg=;
+        b=H+Xfo7qO+IzDaYNT28FccnLkwURyY69R/0EiiVEvIVxaPJYnLoKvVHqqRzYIHjSoyJ
+         NJTGRHFAl5DAGfNJPkGAGD+A+nRmJbolHHVAGQne2qmMgfxjlVK238uMmoQohDgLP2BI
+         x590+SsFiYzu+rWAwT6FK6WIyZfxtiPhnjOvp9Kg4tIK6iW5NrtaHFOs/IqZ8l5N5cG2
+         O7ayEgSl6mbVEfSeMJFKjWGNymdfqrehe6ZPSPJ4pMaOJQuDJosxikMD/m4kMr+eyuwE
+         VZr+FLLJKAjV9ekb4M95Zv5tkf7Lr+Pm+cwFvEnwpY7EIOciNBZCOaL1G5Dpe1M4Rxlb
+         zRQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiFdL+baZNQ/gcYO+aELiwUNSn79+AjMTsVnLVu5ZriYoJmh6MDCikVwiPfKO6uiZNNTwF4XDn3Zs=@vger.kernel.org, AJvYcCWIygPOLwCWWsKryAdrMPJ6AaNNb+IoosCH0p0TaFMll58wxLvZ0u2+yuLxSDf6mXcewRTOjMODFM82/FVX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/GMd0AHf85p/xMrrS/F3NJW5hfo5mjLmu13wUucjhfO+Zxiul
+	Muin8p/MB6u1UA4Ik5wyqPt5VDh7gwW4uTfzgLbnYDTNw6piHcVj7TW1
+X-Gm-Gg: ASbGncu0CDtHCdUMmPitlroKCqejvPl/+KDdbCgrK3EnrhKgGcu0OkC4ANIwQBNdQRn
+	AUgsRy1lzBWlO6lh1Wet22cOZ+PZXt6vzrfzw+UF21lCBKIZQYr4aBIF+xKceaIPh1yCfSKtgaf
+	q6BM8ntnE31t0POw8mnPMu8KbcpvHlWLApVjYGzfB/SqGOyEL69TcmLg7Z1dzV13wEUgcQdm7HF
+	eYJei9xWUT1H9xIoKi8PQ+/PN4DQ5nXeDpyioNB4t9ARh5WpJlO0XceBBJLby2qKRSkaNMvWf0D
+	UCIRz0JiX7flfDZCO7uf1m45qXjUtAeEf9f0I9tB+D880cTfVvg=
+X-Google-Smtp-Source: AGHT+IEq7cO8TC8Du8MUlyjcSTXy0CPrk1am1y/cD3TkFUUKjnPvY8xKVFDO7oe1jBnbh2UVTJ4sXg==
+X-Received: by 2002:a05:6a20:d70f:b0:1f5:9098:e42e with SMTP id adf61e73a8af0-2188c1e8dfamr33868375637.7.1748481784332;
+        Wed, 28 May 2025 18:23:04 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe9639csm248215b3a.17.2025.05.28.18.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 18:23:03 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id C918B41E4844; Thu, 29 May 2025 08:23:01 +0700 (WIB)
+Date: Thu, 29 May 2025 08:23:01 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: George Anthony Vernon <contact@gvernon.com>, dmitry.torokhov@gmail.com,
+	corbet@lwn.net, skhan@linuxfoundation.org
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2 3/4] input: docs: Fix Amiga joysticks grammar
+Message-ID: <aDe29U-JljGPpKiK@archie.me>
+References: <20250526135957.180254-1-contact@gvernon.com>
+ <20250526135957.180254-4-contact@gvernon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|PH8PR12MB7208:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1b2d198-6adc-4d5d-2a1b-08dd9e4f0d41
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bTRiM3pjRkxFbTNrUFk3b1hsa0pxTXdRNFhtYUI3WkV6dWtIRCsyRkJRWkhK?=
- =?utf-8?B?N0lnRlFuSVgybjU5Z3BRWXIzaFpETEt4ZlZFdVlvaTc4YzdaWHp6MHR0cmhD?=
- =?utf-8?B?M3AyQnEydFdGd0tFRVlBUFJkUFAvMXJaQnVzdk1wZzBVZk9sN2NhRGdGdDZt?=
- =?utf-8?B?aUJNZHpyd0N5bkdQUzNCZzRDSjRCcHRmMHRoSUpBeSs0eTFFK3dMVWdhdk80?=
- =?utf-8?B?ZENjWFZPU0pvbVpqV1VkZWhhczZtcW1Da0Nzc0xiRzE3cDNXc3dUWXVyUEVZ?=
- =?utf-8?B?R1ZqbE85TUtnMGQzM2ZTWWY3K1hjc1M1MHN4bGhUSjE5VGNlS0loN1pBK1pR?=
- =?utf-8?B?UEYwWlA3Y2NSWk9adk1tOFFtSDRVVFdiT2l1cFgwOFEwb2c4c2JybnNpeFhN?=
- =?utf-8?B?bVFpbmlWc3Bhd2RwU0Jjcm9FNzlBeVlkTnFRRUhIMFNYL01DZmlpREJ5ZEpz?=
- =?utf-8?B?c0RvK0FmSFJSTGtvWk8zbHdzQ2VlR2k3M2M2SU5iSXZpWGszYUlYSVZnL3c4?=
- =?utf-8?B?R0w4Ymk5Z2swWXZGcUIyUjF5NVZaZnpLMEM2RFBKekM0dE03ZXZ2dGpVWDFN?=
- =?utf-8?B?R3gxR1BVZTkrc0diMElzRC9LNSszU3ZHOFArVTdzbXF1cGhhdDloOGRmVmpP?=
- =?utf-8?B?S3VqUzc3V1pxSEtaY0ZaNEl3eWtENlgzU0Z0VVoxUE0xd0ZlQzQ5WTdITVdt?=
- =?utf-8?B?MGovV3dmYzRsdm5EbVgrMWJyVzZHZUN5WUdNeC9VNWZ5WEhTU0IyODJpeUh4?=
- =?utf-8?B?Uzl5b1g1eVllYWZpTHNCL2dlSFY1elFVa2VFTHdSZmgva3RRdHFjNmltM3F0?=
- =?utf-8?B?d0J3N1VmYkM4MWV2bS8wOWJVdk5MWHk0bDU4RTZ5VzY2RnZjT3ptNkY3aERF?=
- =?utf-8?B?Wkt6ZENwK2krNzUzc3Z2VGhxcUpFOHhYYzBtVHAxWVV3dkZBcTQwRk1nVHVV?=
- =?utf-8?B?MEtNUHZlejJZdEM3SndCaUxzN1lna1FPejJZMGpxbW1pYWNWMFNzL0JDbXQ5?=
- =?utf-8?B?SGZnVE9oMURXY25kVWdSZXlMaTBHRi9vazZJQm9veUNNNHp3MDhKUFpaandV?=
- =?utf-8?B?dHZoYWF6cExWNld5ajdvSjRXQXFmMFJFVWVkeG13amV3NFRjdndKQ3NBb3pK?=
- =?utf-8?B?ZW1McFJwRlJOQ0IrZXRPeWQrSEVaUlpyMTVYaTdTcFdjbVlLbFJkWmVCKzlq?=
- =?utf-8?B?akpjNGFzMlpZWWw3cGlvaThnYzczT1hZcU94VjNOa3VYNUVFNW1uWXRmMW1u?=
- =?utf-8?B?UXc4Vjh3RjNsRC9YOUpVNzVLeGdEMCtIeDVtV3ArWmdSeklDVXJtRVhYRllh?=
- =?utf-8?B?T0d6Y3Zab2pyUEZlWmcxcFRFdGkyWlNabDJhUitwTUhTaFNqc2FpbktwQjh6?=
- =?utf-8?B?NFFGMHVIdlRaL3FjY2ROYUhEWWQ0NjNMejJzRlNUTWdSOEJ3TjQ1bUlUQnR1?=
- =?utf-8?B?dXhkQlZ4aDBZV0kzSlFSUk9sOFRVNWxYQ1preGZuRVdtc1d2WXdiR1U4T1Jw?=
- =?utf-8?B?b1Z1Vi84R08zMkNwR0Vqb3BMN0tLd1JjQ3RnSFJ4MzhkMTc5YTFqaHlka0Z6?=
- =?utf-8?B?SWFhMHZqcEFqM04rblIxbWVCSytDMjgveEcwcysrSi9HTXVXOWYxcXA5VXJn?=
- =?utf-8?B?MW1leXZhYTV3KytSYlJsNlVNaG1hdGF1RitMNkVrdDQzbEt5K1MzTmxZTE5l?=
- =?utf-8?B?MTJaelA3Y0lSTW9jamMyN1cyeU52V0d0K0dDVElEbG52UWFNKzdHVURMT2Er?=
- =?utf-8?B?d3g3Z3lyZHczcU11cHZQeFp5N1lrK3ZpNkJzcUpBWk9JUlpyZGpIQjIyK1F3?=
- =?utf-8?B?VXhmVG5XMkVOR243a01oelJTMU1JY0dVM2d4Mm9lM0ZUV0JNZWFBS2RGem8z?=
- =?utf-8?B?VmdFTUdNbjRFUGxRZWlaeUg3d3NXY0pLYnlhSHdWT1lsRWpWV2MxSzdyT2gx?=
- =?utf-8?B?eUM0NUNKUUZ3akFsTlZVVDMwcmdiUnp6UUJ1L09qenBLZFQ0THdUTWhOVDhC?=
- =?utf-8?B?Sytvd21GRi93PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TkFvVHdUdlp5QVNJMGRvWEFuMEdac3IraXdITVEvenRSOTJCUnVkVEJWSUN2?=
- =?utf-8?B?VG1uOWwzWXZlMWI4cVJSamE3aS9aQmJwaytGWmVqQklFRW5HRHdua2l2RGE2?=
- =?utf-8?B?RzRUTFdyay9FLzJmQlBuekFaUWM2Si8xeTg0ZzNZcjk2Y0ZTaHdyaU1MeE9Z?=
- =?utf-8?B?OFRtSWgxRnVOWjNMaGRta2NtRUZnSUVoQlJRdVM4TXBqazhKajNhSWNrc2dJ?=
- =?utf-8?B?TU43dWN0K09rRExhYmt4UnBBa1B5aDJNajJHWkZyYjl4NlkzcHAvRkFXTnJ5?=
- =?utf-8?B?TzBlSkdyeXUzMmZib0JHa0p4UmNxQWt0UnlFRjBjd2hxTmFVY3EwUSs0UkEr?=
- =?utf-8?B?L0VGS2RVNUJMaFZiNXVJcXpQbnYzNHpQcnVBN0w0OFppNUZHQ0FEa01WYk9D?=
- =?utf-8?B?SUxyVk8rYkQvWU9NaGgvWW5tdFlXZElEajFxa2IzZTViSTJXd0Mremt1dDR6?=
- =?utf-8?B?Wk9GbHBzR05FUUxDL3paMS9lREhDd3EyaGxPUmU1KzV1VVp6RHNUUEdxZ3BF?=
- =?utf-8?B?Wk1SMjFuNENVaFhUSytWeGtjOXRsZytZZ2pmaHlKRzd5YkI4SUg0aUNoMzJG?=
- =?utf-8?B?NlZyWG9LRlh0TTdBKzRwUERoU1NpM0ZwaXZYOHl2T2RTL3ZVWWE0RW5OMWpa?=
- =?utf-8?B?WGNPeGFHY2U4OHNQbE55R2pZV2V5N3lhbjBYa0k2dzEwVVBiVWVrTjlFL3lz?=
- =?utf-8?B?Y3B0aFhyU3dLZGFJemZsdXNwTWdjd0s2N1ROU0lSZVFmc2hRZzZRWTkrcUMv?=
- =?utf-8?B?eFhWWjhiRG1nWHRVN2xKZ2lXeVE1eXpVcnVENnZsTzE3QTY1c2xyMk1tTDJx?=
- =?utf-8?B?d1hWNVdqU3diY01maVFNVWRnTGhxaVRuZEV0K3Y1QVk3QVVWeGxhbU1Yd2ht?=
- =?utf-8?B?QjZEMmxCcFUzcks2Zm5qelI1VS9DVzBmd1QvQkk2WFlQUDU4L1AzV3FQWUho?=
- =?utf-8?B?YXpkcGR1YS9qaWVyOU96eFRNRTI1bCtXSUlDY1RPUlk0WEJsUlE0N0hxS01k?=
- =?utf-8?B?SWxFYVVhYlFoY1ptaC9aOUdxOFNnbFlLQ1hTK045K3RiaUhPcVpGc1pDekV6?=
- =?utf-8?B?RGE4RmZRaGZZUUo0WmFJWW9RaXcyMG5jcnF1d3B6RUlnZ3BrRU1vSHZsWk91?=
- =?utf-8?B?L0IycFI0aHh0aUY1MG5VU3M1YkQ2cWJOdnBoSGd1QlMvVldyMGgwYXBCTzc1?=
- =?utf-8?B?UDRpamprd1ZEblVxUHR1alNhZ3JyWVVBcS9LVVlTQ3REaFE0Q1ZYWkhWZHVJ?=
- =?utf-8?B?Mzk3OFhnVHNhSzZBR0hldHRjN09pck9VTzltL0JmL2xJdmh3YzBmTi9ISWto?=
- =?utf-8?B?UXRrbkpDZ0VjV29pK1ZPcFpyMGFFZW51eCsyekhxbU5DckZmL1doWkpaZUlz?=
- =?utf-8?B?QzloVUUrMFV1NkhSeG1TUWpCM1V0djQrMFMwbCt2L09ISjM0c1V1OUpzM2tr?=
- =?utf-8?B?bEF5eEIxcDh0SWptREsvdWY0WUxpM21HcDBDN2NaYW9LZWl2WUdSTjc5dk44?=
- =?utf-8?B?TU84V0RUR2ZDaGwzVlNFZXNmMXpsdXZDMUZ6U1dUQTA4emlNZzI1ckZabSth?=
- =?utf-8?B?cENoejZKeGVuTUpTekhkTmR4WHFGUks4TXN3emp5dm8vTjhFMWd0dmRhUlcr?=
- =?utf-8?B?cFhXai9lZkd4Y0JBdEROQ0dyUy9KTGdhSE12NE9HamFjaHN2bXNYZUp0NlFE?=
- =?utf-8?B?Nk95WnZkSnkrUXhVOTc2QnZkcG45VGl5WVpRYjhmd0RVZmxCRUFoakRuREh0?=
- =?utf-8?B?SUhscVRacUxUa0hUa3NvbzVtbjV1Q3JyUWxKemZ2ZnVvTDArQkp4UFRaaXlI?=
- =?utf-8?B?UzhsR0FXZ3pOL1pTUjc2NnhZK3A5eDZCNXl6ZW5ZdFhYZHhYUHIvVEZPc0Rr?=
- =?utf-8?B?aEtnZncxY3NyeEVqNVRUSWR3VS9xQUFPNmp6UW9xNEVJeWtTWW9yT0NxcVNY?=
- =?utf-8?B?US9HdVZ3TEs0NisxZ2lscllKdGhUdlY0WnZDNmRjM0RVY0VtZnh6RmdWQzh0?=
- =?utf-8?B?elBWUWFqazhVWXppWktLNHpvTGUxWUxvV1EyWkN2cjVtYUxKek1WeTE0ZEs5?=
- =?utf-8?B?ZFYvWlduRE1YVm9LR2dTRTlQdW5pY2wwa09Ub1Q4cy9FWFhhSEh4WXcxQlMv?=
- =?utf-8?Q?trO6unq2zt3+BOFAJR1J4YInu?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1b2d198-6adc-4d5d-2a1b-08dd9e4f0d41
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 01:20:53.5281
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OrTfE14Y68oIBNBAb/gYVxoCEkJW9PO+SxQIZoaS20DeiGnGV1gk5kXupzkMYNPiR9mMW0kv2IqhVuaQkZIfRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7208
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="K4011M0stGA66i1P"
+Content-Disposition: inline
+In-Reply-To: <20250526135957.180254-4-contact@gvernon.com>
 
-On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
-> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
->> Introduce the `num` module, featuring the `NumExt` extension trait
->> that expands unsigned integers with useful operations for the kernel.
->>
->> These are to be used by the nova-core driver, but they are so ubiquitous
->> that other drivers should be able to take advantage of them as well.
->>
->> The currently implemented operations are:
->>
->> - align_down()
->> - align_up()
->> - fls()
->>
->> But this trait is expected to be expanded further.
->>
->> `NumExt` is on unsigned types using a macro. An approach using another
->> trait constrained by the operator traits that we need (`Add`, `Sub`,
->> etc) was also considered, but had to be dropped as we need to use
->> wrapping operations, which are not provided by any trait.
->>
->> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
->> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->> ---
->>  rust/kernel/lib.rs |  1 +
->>  rust/kernel/num.rs | 82 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++++++
->>  2 files changed, 83 insertions(+)
->
-> Have you proposed `align_down` to upstream rust? Not saying that we
-> shouldn't do it here, but if we haven't tried yet, it might be a good
-> idea to just get them upstreamed. (if you do, it should probably be
-> named `prev_multiple_of`)
 
-I haven't yet - haven't ever contributed anything to upstream Rust, so
-I'll have to look that one up first. :) But I agree a `prev_multiple_of`
-could be useful.
+--K4011M0stGA66i1P
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> +    /// Align `self` up to `alignment`.
->> +    ///
->> +    /// `alignment` must be a power of 2 for accurate results.
->> +    ///
->> +    /// Wraps around to `0` if the requested alignment pushes the resul=
-t above the type's limits.
->> +    ///
->> +    /// # Examples
->> +    ///
->> +    /// ```
->> +    /// use kernel::num::NumExt;
->> +    ///
->> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
->> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
->> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
->> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
->> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
->> +    /// ```
->> +    fn align_up(self, alignment: Self) -> Self;
->
-> Isn't this `next_multiple_of` [1] (it also allows non power of 2
-> inputs).
->
-> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_multipl=
-e_of
+On Mon, May 26, 2025 at 02:59:51PM +0100, George Anthony Vernon wrote:
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | BIT#  | FUNCTION | DESCRIPTION                               =
+  |
+> -         +=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+
+> -         | 15    | OUTRY    | Output enable for Paula pin 33            =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 14    | DATRY    | I/O data Paula pin 33                     =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 13    | OUTRX    | Output enable for Paula pin 32            =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 12    | DATRX    | I/O data Paula pin 32                     =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 11    | OUTLY    | Out put enable for Paula pin 36           =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 10    | DATLY    | I/O data Paula pin 36                     =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 09    | OUTLX    | Output enable for Paula pin 35            =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 08    | DATLX    | I/O data  Paula pin 35                    =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 07-01 |   X      | Not used                                  =
+  |
+> -         +-------+----------+-------------------------------------------=
+--+
+> -         | 00    | START    | Start pots (dump capacitors,start counters=
+) |
+> -         +-------+----------+-------------------------------------------=
+--+
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | BIT#  | FUNCTION | DESCRIPTION                               =
+   |
+> +         +=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+
+> +         | 15    | OUTRY    | Output enable for Paula pin 33            =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 14    | DATRY    | I/O data Paula pin 33                     =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 13    | OUTRX    | Output enable for Paula pin 32            =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 12    | DATRX    | I/O data Paula pin 32                     =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 11    | OUTLY    | Out put enable for Paula pin 36           =
+   |
+                                "Output"
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 10    | DATLY    | I/O data Paula pin 36                     =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 09    | OUTLX    | Output enable for Paula pin 35            =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 08    | DATLX    | I/O data  Paula pin 35                    =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 07-01 |   X      | Not used                                  =
+   |
+> +         +-------+----------+-------------------------------------------=
+---+
+> +         | 00    | START    | Start pots (dump capacitors, start counter=
+s) |
+> +         +-------+----------+-------------------------------------------=
+---+
 
-It is, however the fact that `next_multiple_of` works with non powers of
-two also means it needs to perform a modulo operation. That operation
-might well be optimized away by the compiler, but ACAICT we have no way
-of proving it will always be the case, hence the always-optimal
-implementation here.
+Thanks.
 
-Also in the kernel we tend to use the `align` nomenclature and I think we
-should preserve that for clarity.
+--=20
+An old man doll... just what I always wanted! - Clara
 
->
->> +
->> +    /// Find Last Set Bit: return the 1-based index of the last (i.e. m=
-ost significant) set bit in
->> +    /// `self`.
->> +    ///
->> +    /// Equivalent to the C `fls` function.
->> +    ///
->> +    /// # Examples
->> +    ///
->> +    /// ```
->> +    /// use kernel::num::NumExt;
->> +    ///
->> +    /// assert_eq!(0x0u32.fls(), 0);
->> +    /// assert_eq!(0x1u32.fls(), 1);
->> +    /// assert_eq!(0x10u32.fls(), 5);
->> +    /// assert_eq!(0xffffu32.fls(), 16);
->> +    /// assert_eq!(0x8000_0000u32.fls(), 32);
->> +    /// ```
->> +    fn fls(self) -> u32;
->
-> Isn't this just `trailing_zeros` [2]?
->
-> [2]: https://doc.rust-lang.org/std/primitive.u32.html#method.trailing_zer=
-os
+--K4011M0stGA66i1P
+Content-Type: application/pgp-signature; name=signature.asc
 
-No, `trailing_zeros` counts from the LSB up to the first bit set to 1,
-whereas fls does that from the MSB. For instance, `0xffffu32.fls() =3D=3D
-16` but `0xffffu32.trailing_zeros() =3D=3D 0`.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDe29QAKCRD2uYlJVVFO
+o2NgAQD2R4HfOj4KSacO1xNyyC/L6FQDftc+OlaWuS7P7PjNHwEAqxD7T/wXLCmO
+uKixNwmxZN2NxZBvJnkaw7Dn7Q2jQw0=
+=pYvh
+-----END PGP SIGNATURE-----
+
+--K4011M0stGA66i1P--
