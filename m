@@ -1,57 +1,57 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C77C267F64
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDD42686B3
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562054; cv=none; b=U1DyLBvJVV+uBwFRn2onDKhyn++vS4voNXI7pIHJQ/gRaXogIsChLd5JO9S4bFqVfiX3Ij2dUBL+LXC846JnB54akOJ6dyIdVkwr/JYX5EFzNjKOXO34sVWBe82qycsQq7+wflmOiM6A1f9AVU8NIDJUfwJgV3p9R9TDjs0hROQ=
+	t=1748562055; cv=none; b=bwfMVPTYV9OLcfgNDTfJjiVABtAPxy61oO+fE+ejAb4FavX/YGDbUNGyVnOSPdawTIBerlXk7rhi3YjDRXgxoAmoBTR9eCzrVyPYeuTVH1wBQFVNE3o2g3LwTp844nyhomNwXEbEXmbEgoUtbkHPdmi3ErlScaiMRmSE1EpSmV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562054; c=relaxed/simple;
-	bh=NMpozlc+ss875qK0wUIqjUpEbG1y7oMO4uIXzZ+fxbw=;
+	s=arc-20240116; t=1748562055; c=relaxed/simple;
+	bh=++Ox5d+DXiCY42PnE8lmaGXv0oH4mN+WmEJPpvVyn14=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BE4UHWub2SGDCCOYAp3q/Cz/UOfOKSheeFcaL/kXbZwTbe+EPEt9CWcDETESHm0j1iLOFgdPYiVw7cwbaSv644vUub0bZRpFyE6CItA8GKaQ0zHyo3wxDueQ9Px8Kae1fM0te1iR+mfqn1Q0NZX8Iz9GO1jLc/arvd+3iioQW98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LEO4PJKo; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=riWBHp0tOaRjzeS4f85w7Urhsd/zC0MWllJAbjxae8GPRhXXbM2gKwBZHM9FWhQuqbIp6NAhvIV5I1P+TSY9cyXHblucip39P1p0ju5L5fF8Zgzza2Wtl3KCc1aIWU1MZ0urkv+P8Ue5BLtDkC5E8ER1hnRcADT2pbaEwr3Nw54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lsLcAcMB; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEO4PJKo"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3119ba092aeso2166857a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:40:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lsLcAcMB"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31202bbaafaso1437935a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:40:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748562051; x=1749166851; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748562053; x=1749166853; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=3U6kOnBx1q2vhTYY8N27dofDiZJr3M0o4KlDwfSt6+A=;
-        b=LEO4PJKo3vcOVVPly/IqjjQL88b59QSvaVcKngV7J8caai7iW/fkJ2GvguAMqHykQs
-         qq3KuvGcSCu8LoiStRU0/+OoJmJj7K5oSplc7jYXRp/WA0nlwV8Twh8kC5oXrSFsy1wt
-         UoZO2g5aBagJvpjt+xWyMqlFIMNPwf1y13W2/SkL2hMl+bf7TX+T1g5GlQgGzc/txVW5
-         +QS+Zkn39BnS2DrOe9KepkjyKoo5xbN6xswx+6R+Q4F0IdF2maKkBilG1QvYUMsdWNyb
-         Vhm1MH9U4BNNqvVxmKi/wHQmyiMeiaIr+5yoyq2be8v8qiL/FNmlOnN+Dtfd9fSnCUTa
-         PYkQ==
+        bh=GxDEH2I3zlAqvCgosNWe3M4dcdToh1WoWvh1SBj+HqY=;
+        b=lsLcAcMBv8W5G345XF04wCXTMnmLUqmEIzh72+kN8PFE6FQGBfrK2/rxFEnG8u5Mwq
+         niwv/AQq1K/GiQU75fn+3Cb8YbPHE9CewQjwiWd/8VK8JnWNCLmTcRRfejnSmOSEXhdK
+         pGpXMBlTBgRb80Vv5vAcjjN9e3B+XeS+9U/vndopSlE/8zX2ffEXh6KySyCB15ytrTZq
+         IS9M5Z6bpH2CCF4MBJnKe7jWfrjnfVfonGZZw7/BZz85YbRaLZ4t5SuXiNagNG1zy94l
+         3asXMEH1FM2/Cp15sgd0VAV8YvsUDiMVVkoHChoNS8lpxfBv7tTsmOpgFo8dzmzx6Mb8
+         RbMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562051; x=1749166851;
+        d=1e100.net; s=20230601; t=1748562053; x=1749166853;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3U6kOnBx1q2vhTYY8N27dofDiZJr3M0o4KlDwfSt6+A=;
-        b=uw70MBDR96Sj+ZJu00emjFX4RVz+IlOp45y21logwt3/lFv4ApA6KwtZyDOD0kKB0c
-         UFXkAkKS3BsDU/SBVy8kL0BypEvSTk9fPNlenhKpo1p4jQTflEU6XTfMRrSELIdWiac5
-         QZBfEp3le6YA97icnZGKMPRAYMc6lwEPEFeTsKvESSCx1iHa6++OjEIkeZO4CkyGDAtt
-         WJPW1g7kYSO2a/YfmOmlap5xlKUDKxVBowSNC8smuFG7OB8CrAGJMVUkJONHdh1vCBzt
-         /UUkRJlBS6HgT6f/tL5x1vraes6jSJEA1ItZ9zLV4Jgay1csg2+q0sy1KMeTGYnVpi3q
-         ziCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHNXP0PE1mdCRLasn/L38RNCkzrsr33E0oj1t+R0CVOaPR6MTXMXDiO+BUnFHGQ5UCRyB3IJlUnNIv6s4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwB2i82XA778D4TxRkRzvafdPqAoP96H5plGdkfL0prbWAkPjxe
-	HaC4o0YMjfkF4vySFScX6PERFBCaqRAcqp5DbUvtyaG9t9BYIW6Ip9ukkCthpfpbnJ2ZlO1O1gR
-	HKd+/vA==
-X-Google-Smtp-Source: AGHT+IFOI3AcdrOSreQhGPi1kh2avodZ537x4ilDYyYFqVyh9QPEJSmEBTDx34aDzyQtf/NUW2PW7hmhSdc=
-X-Received: from pjbss4.prod.google.com ([2002:a17:90b:2ec4:b0:311:2058:21e7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5448:b0:311:f05b:869a
- with SMTP id 98e67ed59e1d1-312415334f2mr1913449a91.8.1748562051548; Thu, 29
- May 2025 16:40:51 -0700 (PDT)
+        bh=GxDEH2I3zlAqvCgosNWe3M4dcdToh1WoWvh1SBj+HqY=;
+        b=E/dJ4HAxxZJlrHowPyNlqHV6tc23Uxk/7nmE1I5ygIzeYAvdR3CVJy4OTv0OCzXj/2
+         Z5QlswfmZ73ip+e9/oigUOzW/BJV83k3CDfNlpoPcwTalJqSSBeZ6bhNER90+8NIuHTA
+         FFsnQ8yTXjsz7o31scI7DCrGj7OUS2Q6kzH1z5Tph/yPB1l7xawjdF01OLF/lgEciKMS
+         6q5HbbBBsdwSsVR74o36l08ne9LJLi8fCnIWrOc1eYJKbwLBI6SgS+WlY1tO+BRBAOUs
+         2DBjgEDuOwY8nf8XgdEDH4cWK2zVwWSiXXjRU6CxLvTnkyfFAyhEeCd7hscA4ugFz+YK
+         NoqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUL9vtr3YQoiquDXaxqi719t/NuETjKqpRDH5PK4SDMQIXOzgHELbeCQGBJJa5yMGoyYzr9mjh9Kukeik=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4dFo2rQb34//ZG59FrhqV/EWHBF032DYi6HgSMafyR28+I8TF
+	pI0BX28wpMqIVbXAgINYhJwQvdVH8YbnoPuSvNpDyh6RuCYCu6xFLWXgtpaqH0upQtsa2c1ixyk
+	k74UK3Q==
+X-Google-Smtp-Source: AGHT+IFMMaWfKh45B1kec3L3aN0Q9ZzH6mNMeDqxBwlJYzUDz/YDra+mEZJ0TLYD5rwMsIShwj6cIab0VZU=
+X-Received: from pjbsn11.prod.google.com ([2002:a17:90b:2e8b:b0:311:1a09:11ff])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:55cb:b0:312:26d9:d59c
+ with SMTP id 98e67ed59e1d1-31241e8e674mr1666711a91.22.1748562053215; Thu, 29
+ May 2025 16:40:53 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 29 May 2025 16:40:05 -0700
+Date: Thu, 29 May 2025 16:40:06 -0700
 In-Reply-To: <20250529234013.3826933-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529234013.3826933-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529234013.3826933-21-seanjc@google.com>
-Subject: [PATCH 20/28] KVM: SVM: Fold svm_vcpu_init_msrpm() into its sole caller
+Message-ID: <20250529234013.3826933-22-seanjc@google.com>
+Subject: [PATCH 21/28] KVM: SVM: Merge "after set CPUID" intercept recalc helpers
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -70,62 +70,78 @@ Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Fold svm_vcpu_init_msrpm() into svm_recalc_msr_intercepts() now that there
-is only the one caller (and because the "init" misnomer is even more
-misleading than it was in the past).
+Merge svm_recalc_intercepts_after_set_cpuid() and
+svm_recalc_instruction_intercepts() such that the "after set CPUID" helper
+simply invokes the type-specific helpers (MSRs vs. instructions), i.e.
+make svm_recalc_intercepts_after_set_cpuid() a single entry point for all
+intercept updates that need to be performed after a CPUID change.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/svm/svm.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ arch/x86/kvm/svm/svm.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index bbd1d89d9a3b..12fbfbf9acad 100644
+index 12fbfbf9acad..2ebac30a337a 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -787,21 +787,6 @@ static void svm_recalc_lbr_msr_intercepts(struct kvm_vcpu *vcpu)
- 
+@@ -1079,9 +1079,10 @@ void svm_write_tsc_multiplier(struct kvm_vcpu *vcpu)
  }
  
--static void svm_vcpu_init_msrpm(struct kvm_vcpu *vcpu)
--{
--	svm_disable_intercept_for_msr(vcpu, MSR_STAR, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
--
--#ifdef CONFIG_X86_64
--	svm_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_LSTAR, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_CSTAR, MSR_TYPE_RW);
--	svm_disable_intercept_for_msr(vcpu, MSR_SYSCALL_MASK, MSR_TYPE_RW);
--#endif
+ /* Evaluate instruction intercepts that depend on guest CPUID features. */
+-static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu,
+-					      struct vcpu_svm *svm)
++static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu)
+ {
++	struct vcpu_svm *svm = to_svm(vcpu);
++
+ 	/*
+ 	 * Intercept INVPCID if shadow paging is enabled to sync/free shadow
+ 	 * roots, or if INVPCID is disabled in the guest to inject #UD.
+@@ -1100,11 +1101,6 @@ static void svm_recalc_instruction_intercepts(struct kvm_vcpu *vcpu,
+ 		else
+ 			svm_set_intercept(svm, INTERCEPT_RDTSCP);
+ 	}
 -}
 -
- void svm_set_x2apic_msr_interception(struct vcpu_svm *svm, bool intercept)
- {
- 	static const u32 x2avic_passthrough_msrs[] = {
-@@ -860,7 +845,17 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
+-static void svm_recalc_intercepts_after_set_cpuid(struct kvm_vcpu *vcpu)
+-{
+-	struct vcpu_svm *svm = to_svm(vcpu);
  
--	svm_vcpu_init_msrpm(vcpu);
-+	svm_disable_intercept_for_msr(vcpu, MSR_STAR, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_CS, MSR_TYPE_RW);
-+
-+#ifdef CONFIG_X86_64
-+	svm_disable_intercept_for_msr(vcpu, MSR_GS_BASE, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_FS_BASE, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_KERNEL_GS_BASE, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_LSTAR, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_CSTAR, MSR_TYPE_RW);
-+	svm_disable_intercept_for_msr(vcpu, MSR_SYSCALL_MASK, MSR_TYPE_RW);
-+#endif
+ 	if (guest_cpuid_is_intel_compatible(vcpu)) {
+ 		svm_set_intercept(svm, INTERCEPT_VMLOAD);
+@@ -1121,7 +1117,11 @@ static void svm_recalc_intercepts_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 			svm->vmcb->control.virt_ext |= VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK;
+ 		}
+ 	}
++}
  
- 	if (lbrv)
- 		svm_recalc_lbr_msr_intercepts(vcpu);
++static void svm_recalc_intercepts_after_set_cpuid(struct kvm_vcpu *vcpu)
++{
++	svm_recalc_instruction_intercepts(vcpu);
+ 	svm_recalc_msr_intercepts(vcpu);
+ }
+ 
+@@ -1247,8 +1247,6 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+ 		svm_clr_intercept(svm, INTERCEPT_PAUSE);
+ 	}
+ 
+-	svm_recalc_instruction_intercepts(vcpu, svm);
+-
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		avic_init_vmcb(svm, vmcb);
+ 
+@@ -4513,8 +4511,6 @@ static void svm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
+ 	if (guest_cpuid_is_intel_compatible(vcpu))
+ 		guest_cpu_cap_clear(vcpu, X86_FEATURE_V_VMSAVE_VMLOAD);
+ 
+-	svm_recalc_instruction_intercepts(vcpu, svm);
+-
+ 	if (sev_guest(vcpu->kvm))
+ 		sev_vcpu_after_set_cpuid(svm);
+ 
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
