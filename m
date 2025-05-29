@@ -1,122 +1,64 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D4B2288C3;
-	Thu, 29 May 2025 16:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB53819AD90;
+	Thu, 29 May 2025 16:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748536328; cv=none; b=CZ1hMAmzZfKDjAH1SpbV2VbY1+6cOj4TM9YMLnqBTWht0mO1i9pYNTMiOg1SzeS4T3kV+sMjBIEkv2YFPOw98htPTcZXYJ8GJdFUug/WVMx4cy4KXZOFG0yogMSBCPT8dow3cL6Zn/s2u79kjlJDYb2YhvXcj1jnLN9hazOlDHA=
+	t=1748536350; cv=none; b=kg0bZRAL3LyGqnnccE1p2yg6HOVz+NY53TM6FOQwbx4WlisR6YUaaEt4QxmxURJIRMlkPz8T5xWBYO3X+ZWLgqAsl9ZvVPFY7KBLlHSLr+IaPS09lvLbz2/8+fMv5+1M4M3kWoQO2R2op8UBiOBZtxuaIDTnbojEogr6COx+jrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748536328; c=relaxed/simple;
-	bh=6BLCx+5MPlkzOTxHiphi/Qzy0q2UMfB5Z+Ufuf/uG8E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QKpgytfpVLbAXJAexwULe485XdE72BTW4a3qIRaLPPJ24rCKwnyw506aolLays/A+IqrbckyU6WBhhcfEXJgzv+ievItvPBSHmR4UlDSY+K0c0K87efP0l6inOKR/9HxCT97Jovzqrd7EvpAvj34KVsVGSkCA9J0DQErCuRT7MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TtX2/Q4p; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748536350; c=relaxed/simple;
+	bh=taRdKkSQwOKY/OEvkrVJA0VbwwqV228tpXXmDh7i+oM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=GNonk3ypk0ZK9AO3/rFSSlg+99/Yjc+0tEYfRk89CitHPuHVVrTUVbyAJmbxbFeILRHr2jphRH7dH55tjqLRAP42+netArXbJm56p5BB/6tZPXisXF2wVsqQQR6nQurLa3SZsAJ6YY0gCtoT+kTUFlGY5S+7bAEPvLWI+d723so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYyiDq5B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TtX2/Q4p"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6fab54e8bbeso12029276d6.0;
-        Thu, 29 May 2025 09:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748536325; x=1749141125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gkBRRqJSagqyTkfCz1bAUQKHe0riFK6F2xCu+0q7Xlg=;
-        b=TtX2/Q4pkRgLamUshac4EJW2SF8BnVrMJsvKhdeB4q7FIR/A7DTKvr+5GlthU+LuKc
-         jEwGsfzcJwB8W92HOIStRXqQnMWyDFd8DL1G4NJREt68WCvA4828hvawV98WQCaeVzoy
-         zuDRwBgQLXn+1jYuij6TOU7vUfOyjosx8k2o1vULP/iGLT6N+FVswi+fLLCAmnLQzsz8
-         xgXMf7UvY4+Z9WuiwL+l2pWEfYVyK2+xbyHSLZE9Ga65G4ByEbv5BkLfH0SMUYHtLkJV
-         cnXT6eJeaoncbdSKviVXVnjM636fqO4eRRga3qUe5QU9k9Gd9icBpwIXuh1TkoLJDeOi
-         xtLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748536325; x=1749141125;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gkBRRqJSagqyTkfCz1bAUQKHe0riFK6F2xCu+0q7Xlg=;
-        b=PFfWffGFLaRq8/h6w0JrNAyz7NMNP+0kbA7r4gDGm4vMzV87YpkaXLHvW1qxKaFxST
-         GOkAmYBRXPrfkwVAl7o3i6CsrWo+mC4B8vZu4yE/zwiAhwz6dbEmQEM7+STt8TcLbfPc
-         VnxBUqlPg/t7mlrHdF0AXntakSSgG9RohSgAVSBo0+XwaRkC17kO0Rd1C18Z4MXJbkUP
-         kUfF59nEGqS0AjNYadUDnus1M5vHNYir3YxEAV2ULDncF5qj3gEgOE4VrHviwQxA6Fm5
-         cizzxUwFeeGLv2rqhNBOPJf5dt+ohotOtWA+RSIrNPseNDLSj9fm46M89og0Im7pYctl
-         gilQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXnTftlOABOah4HEL74oRQ1hmFxpf2Ew2JoRquhAik4v9vrVgKzde4PJNPsnECWAJ1C1rLSqN7vE7p4hTE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA12XjCe0C/EnUPFDhl/ndA9AenHExAr7/w6YKQKhOtBOzN+NG
-	JvivhQqGGAjqOpIBykpn77iYulK2/vWm0tFZM/2c8oBxTrkB7m6iFhAH
-X-Gm-Gg: ASbGncvevJi2rrGFgeXOgHauFqHAIXzxZex97kSDFkwX/lQ6/fdTS2zeraRMAi66D76
-	8HGiU2c9plUiMNSoxo/jFz442WCL2ltYSE+Sfc3Jcj52Q6runZDnjH3ea9uESLF0LaRm8Gz0va2
-	w1D3wWzVhq9Mxf2nrZXHNocqDxys2ADU+u39JqPpZ0Sg87hmnrLggGqeJaiyUOWUzn8gZgG/Z/H
-	3CkhqwXz4m2SfyqkQp0WrsHish11DrnMmIa7E5dT2Cm7C40w7/bXnN+mdmkmQ7v8ya807V4TukA
-	Gb+J7XMF2NzAwIHh0dxficPsoa9p12+1TmBYcfMs7AgXuakCjBXtYPf1equjsXSsBCbngsHoVJB
-	DESi5vpzV1CuG45eqXdit7MeF88rugtYAeg==
-X-Google-Smtp-Source: AGHT+IHaIdB1RVflLTevGHMAX/FYpi5gxsFdRsWzGtbC7W5+u10H7UL53E2oLvuyzL5g0UngxWnC2w==
-X-Received: by 2002:a05:6214:d88:b0:6fa:bb44:fddf with SMTP id 6a1803df08f44-6facebb6d12mr4355526d6.16.1748536325506;
-        Thu, 29 May 2025 09:32:05 -0700 (PDT)
-Received: from localhost.localdomain (static-198-44-159-42.cust.tzulo.com. [198.44.159.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d5b3e7sm11208276d6.61.2025.05.29.09.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 09:32:05 -0700 (PDT)
-Sender: George Gaidarov <gdgaidarov@gmail.com>
-From: George Gaidarov <gdgaidarov+lkml@gmail.com>
-To: Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Jason Baron <jbaron@akamai.com>
-Cc: linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Robert Richter <rric@kernel.org>,
-	George Gaidarov <gdgaidarov+lkml@gmail.com>
-Subject: [PATCH 2/2] EDAC/ie31200: Document which CPUs correspond to each Raptor Lake-S device ID
-Date: Thu, 29 May 2025 16:29:33 +0000
-Message-ID: <20250529162933.1228735-2-gdgaidarov+lkml@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250529162933.1228735-1-gdgaidarov+lkml@gmail.com>
-References: <20250529162933.1228735-1-gdgaidarov+lkml@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYyiDq5B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 401F6C4CEE7;
+	Thu, 29 May 2025 16:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748536349;
+	bh=taRdKkSQwOKY/OEvkrVJA0VbwwqV228tpXXmDh7i+oM=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=NYyiDq5BL3GkXe+1+BK1lnzR/9de/waZ9+0rXNUmdKAxeODZC6rHhTnYbBPNrSkSa
+	 LIV56mZ1AWPrL1Hm5PvBaPZp0gloX8nCzVbXzOgQYXtw568cyvLRLjyGzOGfq2vhc+
+	 LaR99vz1J3XbMw8VvuLwBWDOacjsIN5ZdJCW57h/h8cix+ZcZAhw8e5fv3lwLrOTbY
+	 S/xzQVVfVMSVI/QS89FdLtfcNc4O3pg1T4BKyc3eaBx6FXbtMTBiNZSVaM/h/P/zcw
+	 8kI5igj+xc5Wcz1klB9im70Y4uVXXv5qpSmX5rVtwEDSpUv0iGFsiUEEB4HmZjjz8V
+	 kE/6g/Tpf/8Ng==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 May 2025 18:32:26 +0200
+Message-Id: <DA8SEKBVI06P.1WT47YD413KNX@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>
+Subject: Re: [PATCH] rust: list: Fix typo `much` in arc.rs
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Sylvan Smit" <sylvan@sylvansmit.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250529162923.434978-1-sylvan@sylvansmit.com>
+In-Reply-To: <20250529162923.434978-1-sylvan@sylvansmit.com>
 
-Based on table 103 ("Host Device ID (DID0)") in [1], document which CPUs
-correspond to each Raptor Lake-S device ID for better readability.
+On Thu May 29, 2025 at 6:29 PM CEST, Sylvan Smit wrote:
+> Correct the typo (s/much/must) in the ListArc documentation.
+>
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Fixes: a48026315cd7 ("rust: list: add tracking for ListArc")
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1166
+> Signed-off-by: Sylvan Smit <sylvan@sylvansmit.com>
 
-[1] https://www.intel.com/content/www/us/en/content-details/743844/13th-generation-intel-core-intel-core-14th-generation-intel-core-processor-series-1-and-series-2-and-intel-xeon-e-2400-processor-datasheet-volume-1-of-2.html
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
-Signed-off-by: George Gaidarov <gdgaidarov+lkml@gmail.com>
 ---
- drivers/edac/ie31200_edac.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Cheers,
+Benno
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 1812ebd19ece..42e332ecd6d0 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -86,12 +86,12 @@
- #define PCI_DEVICE_ID_INTEL_IE31200_HB_CFL_10   0x3eca
- 
- /* Raptor Lake-S */
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_1	0xa703
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_2	0x4640
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_3	0x4630
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_4	0xa700
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_5	0xa740
--#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_6	0xa704
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_1	0xa703 /* 8P+8E,  e.g. i7-13700 */
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_2	0x4640 /* 6P+8E,  e.g. i5-13500, i5-13600, i5-14500 */
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_3	0x4630 /* 4P+0E,  e.g. i3-13100E */
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_4	0xa700 /* 8P+16E, e.g. i9-13900, i9-14900 */
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_5	0xa740 /* 8P+12E, e.g. i7-14700 */
-+#define PCI_DEVICE_ID_INTEL_IE31200_RPL_S_6	0xa704 /* 6P+8E,  e.g. i5-14600 */
- 
- /* Alder Lake-S */
- #define PCI_DEVICE_ID_INTEL_IE31200_ADL_S_1	0x4660
--- 
-2.49.0
-
+> ---
+>  rust/kernel/list/arc.rs | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
