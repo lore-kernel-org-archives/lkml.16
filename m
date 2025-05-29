@@ -1,219 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C13824A07F;
-	Thu, 29 May 2025 07:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748503250; cv=fail; b=dhedwJjsohz3Ky1GxRAVRArGwPnxfgsDhqujKR0cJOCbEQAbNdLYZ5PBe6LCopWyzV5CMdOryQiTL1LrXfdGvM9k5/fvDAxIvBSdnS3Ug+9MUZxFMBaCaNkS+Is4g4TRy6fUia8Zx+S+9IXLo8FhXMdozuBW1qb3MiBzomc5AZc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748503250; c=relaxed/simple;
-	bh=6b+aAwGp/DzNqRobtq8MPU9oSyqxFn+AaykMHRVozHU=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=VM2+q5UHiYaP8f47874gQc8cJ2i1y+uaANpXUKMpvoTRd2TVqcYPRIddpdn3B211ZAPCpuSMbcYv4Dm6WNHpamGvn/d4/hHcuKE3v1xY53Q27I6J1D29NQFcImsO02EqS1Ne/4GXgOoWTjIfIHg94JAOTppBoCn4sj8Xhm9JrMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iNPOL6d7; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iNPOL6d7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748503249; x=1780039249;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=6b+aAwGp/DzNqRobtq8MPU9oSyqxFn+AaykMHRVozHU=;
-  b=iNPOL6d76c0WvKdQ3kERdDG9tpGDzzs7gwGn4W3BV0nLwLH8BfAcaslu
-   8PN8Y3E9p6C/opghbKZ1hAhtNNpPcdj4pXhVTXMBtUmNXbeC0U7uvNy0H
-   52FlGWk+pDAAmlVR6/AJpW79b8EZ86Tn7UvlJBJ+zJKcyvWoTp8OkzT7Y
-   zxbUwJPCQkuK3KJU+um/fF9NGC+hDvwwTOHiPbPvlEvSeoZcDnai4lXc4
-   j2bLvQ27BlrxZBLxPrGOChXcnUIw3ScLFj4aC2sP4MX5OAARBf4RY4Ydq
-   Nhsjt7tAhsvsZo/cLKDjox6oVkGulyTJTn9+hkA8jz9uHMERNwSMzl+dB
-   Q==;
-X-CSE-ConnectionGUID: xYGo8GyXTfmNheDwAbGyYw==
-X-CSE-MsgGUID: 3Zvpra3DTCeMA56q1EWgSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50704278"
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="50704278"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:20:49 -0700
-X-CSE-ConnectionGUID: KvdbzQWoRqWqzAMFJEl+7Q==
-X-CSE-MsgGUID: CRk+4LvZRDaylFDzhCsSwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="143813918"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:20:48 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 00:20:47 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 00:20:47 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.63)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 00:20:45 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DMAe3uapVqqVg/NGXRQnAU7c8oBm00lLr/Z/zhkWz3veNGo4XNWBfyE/AbXlkPV0uaNQGFvYvBeykspIhgx0Kb9lZyCqeP0aOq6hAubWkQqp+tFChHycpeme6bZu2AE9Ij+LnnBTzw4rYk2ilqXLKWC+s+IxJWqlU3aUVQ2GLLrFqVJsgELKKoTKy82wW6/KXp94KBW/SIq/S2PbVUC5U/oTp9AIigRqrxdmrUOBzvgiPpu3JbBFoSYXqXXp1R1/D3mf0Gb1bahmqGnNYoDoQkJ/EzuJZiGxThSCUnOBEky/iSgcH9q8KYv+7AEkFzMeMN0r5SqhvrgcyCRRi0uQgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YV0USUjI/t1RTBgCXJkITn1F8gBmtnjFhfGZVqs+gFo=;
- b=CD8Jfa5d78Fxe/BJiOp3DHn5pwfJIV5AXGCeOoPjPA8f8KFGzlPQlDvwF1et0SYqTtcUQQNuhBNyooQp/wUZpmCF4+9coOpycSwuHpr1Q9ZDiakjc9kLF0PXE2tCb3e9aTau20c5WzX7fqEqWnpdnHf1GnueTf/oiUdKb1H7ywguDWk1vnecGTBXP7HaT6PrNmpeBpR5qaZpzjmve5EphlfL0934vBJhriOmmvyIUoTDuOB/px/ev0g5BX+Bon2giJtIBFqror4LDLKtSU4VzF50h3cUMJFcD4RGW/yRIhmFEiFZQWB+S9HDOQD+Alwnqn72douWpGgXLej6l/q0Ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
- by SJ0PR11MB6696.namprd11.prod.outlook.com (2603:10b6:a03:44f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 29 May
- 2025 07:20:16 +0000
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14]) by CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 07:20:16 +0000
-Message-ID: <3b6bf120-44a3-4b08-bfe4-ee7cbe6a2a86@intel.com>
-Date: Thu, 29 May 2025 10:20:09 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v3 3/7] igc: refactor TXDCTL
- macros to use FIELD_PREP and GEN_MASK
-To: "Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean
-	<vladimir.oltean@nxp.com>
-CC: <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Simon Horman <horms@kernel.org>, Faizal Rahim
-	<faizal.abdul.rahim@linux.intel.com>, Aleksandr Loktionov
-	<aleksandr.loktionov@intel.com>, Chwee-Lin Choong
-	<chwee.lin.choong@intel.com>
-References: <20250519071911.2748406-1-faizal.abdul.rahim@intel.com>
- <20250519071911.2748406-4-faizal.abdul.rahim@intel.com>
-Content-Language: en-US
-From: Mor Bar-Gabay <morx.bar.gabay@intel.com>
-In-Reply-To: <20250519071911.2748406-4-faizal.abdul.rahim@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0023.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:3::12) To CY5PR11MB6307.namprd11.prod.outlook.com
- (2603:10b6:930:21::20)
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4356D215F7D;
+	Thu, 29 May 2025 07:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748503308; cv=none; b=tVBwWNTG4X4cSOK6OFFKIxe4dsoNVTu6P3HO/ARrNb8wdDQRYg1bsOpekwAEjPxf+JLmQqgf6LZ377hpGD1edZe0Nn/y4tECcWOjYcH9/rnZOWt6BKPvbe3pnOtoikba9dfRzUaQOhw56fpTHRMthi/zvny5rUANHMVR72avyZo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748503308; c=relaxed/simple;
+	bh=4r8s018V6hpEZ8hKjDggDlJrjQWWMqz83TXHccd+u2Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BV4sdjjvDW4WLmwzHWWKKXnoBD8M/buAPD2jxUamgqt0/iOuEc+HhfDb+g54RwHMAq6i3TUBvYrLpM1GryVPRLdHIi5/ZFBIQckDQt7shci2sNXhopNH9jZozK7aEZXTeyDjJtQmfjjpAHki0YtcUFXm1xlvCgzVYf52JFJAsAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-6a-68380b04bd67
+Message-ID: <82ea9158-c71e-4c11-a46d-397e9ec9349b@sk.com>
+Date: Thu, 29 May 2025 16:21:39 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6307:EE_|SJ0PR11MB6696:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d135a73-9ee5-4564-827a-08dd9e81428d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?TDlHaW92VDI5bXBPcXpTVmtDZU5KSmpZWmJBRGxWN2lHaXZ2eUFRd2huc08w?=
- =?utf-8?B?VGNpVzMrRHpqYk9OVnl4N2NpV0xITmtTZFNXVTZBNUZnaFFEZUJmRzZXL01t?=
- =?utf-8?B?N3lzK3F3V29zdnhmeE9JemJ2TTU3b2J1WGpEZWd2UHBqRHBweG9rRHhBbWo3?=
- =?utf-8?B?a25OdG83VW51VDh0bGZRUi9WR1lJdXJKVDR5enhIT2x6blVMc3VHT1JSVjA1?=
- =?utf-8?B?MGJKWTlIUDE1WlhrMXlUNExWOXNzZ0UwUzdVK295ZURzRlJ6bGFkd0dOTEYw?=
- =?utf-8?B?RlA1YTJKVHZFQ25LWm1nelBwNk9YSjJyZDRoMXI2aHNpKytmRUlZVVJUdStz?=
- =?utf-8?B?YTRJazZIYTdKZnBpM1ViUHF2aDRVQ29BSUQzK1JpcS8vZlVlaFFDb3dXOE4z?=
- =?utf-8?B?VFRnRitDcGxnb2VoZkoxSlEvbmczam84UjNPN1VxTXc2cVRDVlhKZ1R0OTNp?=
- =?utf-8?B?d256b2NTOCt6dDRPNW43TWdwcGdUWVRGaGdzdTVyOFZCYm1xbExyWlJUTUQ3?=
- =?utf-8?B?Q0h3SnBSOXNrZGZFYThvU1VmbU9XRW9uZmdTZ2xMM1cxTE45RmpDN0pia1M5?=
- =?utf-8?B?cU5pOGFtMG83UkdPZDJ2YUVvSktseDZXQitTeWdEMUJhT05icG1UZDIzVWdU?=
- =?utf-8?B?KzUwci9KeXRwcTd6YmoyU1Q5YTkydU5SN3BtTkp6ZjRSVkprdWFFNXQ0eW9R?=
- =?utf-8?B?Vk9FRWdtbmswSGt4YmZybmRtdCtNMENYYnptTU1FNVVGTHZXaTVLcjNzZUV5?=
- =?utf-8?B?cHNjK1Z1S1pIdlJTbFVnai8vdjE1RGZzRlFLM3MrdHhsTDBTUUMxTXhGMkp3?=
- =?utf-8?B?VFNZYWZ0aXQ3SlRXWW5JdUtZMVdmQm9oa0x4S3NIang3eisxdWZvdEVQVnZK?=
- =?utf-8?B?TGVIVFlxajdWTjArZ2lhRU1FeU5DQlRSQmFHUW0wcWQrR0VPK1lOMWFtRDVZ?=
- =?utf-8?B?R1RyWUt0Z293TkwrNW5nbTQwaU40RWgzdG8wWHhVVkpRZ1BQSUxsTmx2VUpY?=
- =?utf-8?B?NmhxcWN3enUwbTdNdTZ2OVRyL1FCREUySDZsR2crMkNqNFk3enZSZkROMmtr?=
- =?utf-8?B?R1NxSDM1azFJTnpzTzJiMUxsYzYrL1YvL1krdW5PM1cyR3NuVzNaY0ptWHJn?=
- =?utf-8?B?TnF2R2lUaGp4emNnWlJhbUVnQ0VXcTZ1UUtpajExQU56eWMzVnpqSERwUTY2?=
- =?utf-8?B?Q3NQQmpiNmdaQzlBVUVZNU9ObGhUZVpjV3VEaVVxeFVFUUVuOS9PVEZQT25F?=
- =?utf-8?B?SW1PTVdXVi9hMFl6VzloYlNXSEFCS3hzR1NMVGlxL2VwRXdKcHg5Z0N3RC83?=
- =?utf-8?B?d2syVTlCZVNmclUvenIreitWNklnRkRidWRQajVtZVJVK25xU1BSNnlZdSsw?=
- =?utf-8?B?ZlVsWGdwNFRnb1hERzhaZGxTV2ViUWQvenUyclorb2NuV1h5TWhjK1VqekJI?=
- =?utf-8?B?Z0MvWUdadjJsYm5POC9ZdnY4YkdlSEFJdFh1NisvRGk5dmk0aXgyOEdyejZ3?=
- =?utf-8?B?YVdXcU5zOVIyZW85N2RqdVJQU2t4b0E3WndGSGY5R1crTkd6WHNYUS9QbTMy?=
- =?utf-8?B?R25VNzh3cXRsVTJsbHhPOU56dTVxTlJGQUhUbFphQXdycVdGcnZTcVpCT0w0?=
- =?utf-8?B?V1lLaUU3blprYU83NTRKS3l0Zk4wS1FXSHB0OThKVlE2anFPV0hZbDVlQ3Ez?=
- =?utf-8?B?V1ZiM2YwSWRvM3dHVjJFSUFnREs4dmhHMlRNVDdpTnEyTytMVUcwSXN1UzVv?=
- =?utf-8?B?WlROekI0R2tSb3BZZlFGNHBvWFY4OGczV3FCYnBwR2UvelNFRSsydDJoVDBB?=
- =?utf-8?B?clQrSGM0dEZnT3RHaFdsZ2pHWUFFMWlscFFjWWFGd25ldW43S3d2dTNoS3ha?=
- =?utf-8?B?UWRJWHdSak5XYzJRV0pJbGZiSHpGZ0pTd092US9nYS8zVWtONC9jTlNGN29H?=
- =?utf-8?B?OGRFaVBBN0lOaHNraDZCUDdNWXZsRktESTNRYTFJZ1dZNVpyWHdzb1Nra0ZM?=
- =?utf-8?B?Q2IyNHhoS3hRPT0=?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TmgrOUZ2SG1GYUFJeUk1S25UbVhqLzh4cDVMZ2tXbHpLU2pEVGdzd2loeGpv?=
- =?utf-8?B?R2ZKSWFmbDJkTy9TdURMaFZ3US85R2ZvclAxdndWNmFsRXd1cjBteVFsTi9B?=
- =?utf-8?B?SFlwRzZCbkVHZ0Q2T3pua0Q0bWVEWWo0YlByeXBZaXY1Ty9JR1pZSDhtbWlr?=
- =?utf-8?B?MnZlbTNCUnlSTzlFVnd2bllCN0xUckU1REpuRU5Tc2Q3dGMxMnZHRFhpTXYx?=
- =?utf-8?B?RXhSK3UwTmZ1aGtnVmQ0ckxseFRObUthNDArWDBJaHIvTVlXNERsZmkvK3ha?=
- =?utf-8?B?KzZGQm9GU05WUDBnN2RDamltbzlQQWJjVHBZakdTTytOUjNmNjVPc0ZuMVhX?=
- =?utf-8?B?K0tYVmczZVVHN0dXZVJubmVNT2JvaFBHOWQ4M1Mxdm9HSkdqS0pRWjB1OHY0?=
- =?utf-8?B?NE9BMDlaTTdXdVBjaHdoellQU0Q0Zjl5citlOXR1QVIreG9ndS9jYWN3cys3?=
- =?utf-8?B?NzRBMTBmMjJqdFZYY2ZUb0pmL09TUTArZmFaMVBjZmpIL1lKUzc1aWE2ZkNh?=
- =?utf-8?B?b1grWkw3dUZZSk5JbTNaKzU3cjBScW1yM2xseUFBeFZBR3R3N2tKbEZsczli?=
- =?utf-8?B?ZGJZNU5vd3VPL2JHZ1ZwN3J0c0ZHMzhyUFNmNXBiVllyWW5EaVVXVXZRQkhG?=
- =?utf-8?B?c0YybHpxcndTcG1GY3JhVnpQM3ZQb3JsVWxGWHprK1djMXFwZTFxQlVCcFov?=
- =?utf-8?B?M2Vmc3lKNS8wZktHVEdlMUdtemxkTXgzckxtVWxxaUxmM2JZNVV4WDJYRGkr?=
- =?utf-8?B?blR6VEs0b29iL010LzBSWWRyUEwvL2VHaCtlcEc1K1hlaW9aQmZVUStiSGVB?=
- =?utf-8?B?QkpWcmxWOVFqSVRLMlVZK1FaT3lvUUs1dnFDbFhoU3FIZHRIRXp3dExwRkNU?=
- =?utf-8?B?MlZQRjFQbkNuYzJIcWhoMHJnQ25GQVg5U0ExWXNoUXlleFBmazl0Vml6bjky?=
- =?utf-8?B?K3NvazZXS2JTQitoWWsxcmtYWTIxWWdxbDkyeFkrNVA2eUtPMmZ6UHdqL0hm?=
- =?utf-8?B?SzZ0aERsYUpWVW5WRGFWNlVZNGZCWTBTSG5QdDZpNG03cG1abnk1VUN1R2Y1?=
- =?utf-8?B?OGRwUzFpSjFEOERvTWNmZ1ByeXVoejkrbW0yV1QyMVNnT1cxdW1zaXBsYVRW?=
- =?utf-8?B?bHlIaHdMZ1hhZEdaM3AzblQ0N0cyenBxb0hEUWFDVkFITmNld0k2R211c3Iw?=
- =?utf-8?B?RzJEaHZDQWp5bG1hQXYxdit5MXltM2hnQk9oeEtCMndTUm5VRThxdTdWSUkr?=
- =?utf-8?B?SkcyWDQxaUk4MGZtQ3pjYklIR3hMQ2wyY0MrT092S0lDVG9RWjlHTk1VdC9W?=
- =?utf-8?B?U1U5d3V6RG45MEpHQWw5REgraVZuZmMrQ09tV2tZdXRULzBmTEJwTUxxL2t1?=
- =?utf-8?B?Uk1NRmd0U1N3ZFBMdjJIZ2p0eXhBSzRpQkMzVlU0TWFKdnptaXBOeUR5MkdJ?=
- =?utf-8?B?d3RZS3F0cVpqZXdxZVVETkxZdTlwOTNFNGFJOW05dml2K3pGdDhZb0NTWGZC?=
- =?utf-8?B?WEVYQ21wNDdrMTZJZWx6Q0Nmd1YwbXlmL1pLZFhzaGtHL0NDTkFlWmRTRVZw?=
- =?utf-8?B?R2pYekZNbVBDemQ4R2g4SEpyei9COWNwaHl5NDhrTmxCR1VMTk45VldTYnZB?=
- =?utf-8?B?MVh2K0REUStKSjEzQVVHbzBJSmNzbEZ1WEVpZVNNME80TDkreEJKMndwd0M1?=
- =?utf-8?B?ak41VzhPa3NNNURDdVJvQkRveVVmektRS3NaSnRCVmVBSWJFZHFvUVJETEZy?=
- =?utf-8?B?RDE2Q1NPQXBLNGVrMFgrUTcxMjUreFlremxRK2cwd051T1N4WVk4NGhKK2xP?=
- =?utf-8?B?SC9pYmwvU1ZTbkpEQ2VZclpwcGdTQ2djMkhHN1FBdGNXVTJGdHp2em9nM3Bj?=
- =?utf-8?B?SWFjaWY3bUNSUlU0RVQwVjU3SXRpenlQT0JLQjRTN1lXMTkydGhySEQvZmpx?=
- =?utf-8?B?cGdpa3ZRWDdKY3FraTVrdFNPaG9wRTFnalpHbSs0VzRIWDNvUVJTa2kwaXpO?=
- =?utf-8?B?NEhOWTNEZDF3SS9KZTEwTU1QazgyQTRPbVphaThGNG1nbnB3cWJXNGF5bFRy?=
- =?utf-8?B?SnZJOGcxekFuSElQOWNmQS9WcW9nVjBmSDJlMno1TWs5eDF0di91UzdRN05X?=
- =?utf-8?B?MzJkZE1nbDlya2YyV05QWEgwUDhxb1pVUUUvWk1tTTQ1RnVNYmtTZUlHOTRI?=
- =?utf-8?B?QVE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d135a73-9ee5-4564-827a-08dd9e81428d
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6307.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 07:20:16.3940
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dR675Eb58WfFALLGEL33Uv554Isi81j6L/nhbujh6+KT7FJo9riCp2zvwj/f6CysueF17mz9gOyXGkx85FelCctTEX2bL2irrky3qfuYvgc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6696
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Jonathan Corbet <corbet@lwn.net>,
+ damon@lists.linux.dev, kernel-team@meta.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/4] mm/damon: introduce DAMON_STAT for simple and
+ practical access monitoring
+Content-Language: ko
+To: SeongJae Park <sj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+References: <20250526210936.2744-1-sj@kernel.org>
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <20250526210936.2744-1-sj@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsXC9ZZnkS4Lt0WGwYlzUhZz1q9hs3hyoJ3R
+	4sn/36wW+y4CuQvblrBYXN41h83i3pr/rBaHv75hcuDw2LSqk81j06dJ7B4nZvxm8XixeSaj
+	x+K+yawe5y5WeHzeJBfAHsVlk5Kak1mWWqRvl8CVMf/obuaCv2oVyxf/ZWlgbJbvYuTkkBAw
+	kZiw5DgzjH2+9y47iM0rYCmx7PZV1i5GDg4WAVWJdztcIcKCEidnPmEBsUUF5CXu35oBVs4s
+	sJtRYmKrLogtLJAi8Wz5DUaIuIjE7M42ZpAxIgI+Ei3LE0HCQgKGErN+7mEFsdkE1CSuvJzE
+	BGJzChhJfN7XygTRaibRtbULaoy8xPa3c4DGcAFdeYJN4uWbVhaIkyUlDq64wTKBUXAWkvNm
+	IVk9C8msWUhmLWBkWcUolJlXlpuYmWOil1GZl1mhl5yfu4kRGCfLav9E72D8dCH4EKMAB6MS
+	D+8JRvMMIdbEsuLK3EOMEhzMSiK8TfZmGUK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJ
+	pCeWpGanphakFsFkmTg4pRoY09NsPCpSuB9NnCEj0c8T6Jz83Uvpx9710gt7Yp7KvFg4v7zA
+	esqfGX/7f6w9HcBffqz0ynxB7QlX1TrDXoVzLrNSN+UUbxHgXVAWu/1v+N+MV65BV5SXdLzJ
+	Dm1v1TSc/Mrl57xPNf7HDrEf4v8yWe8R/7EUM8ntt9S5ppafyeLS7VhRt2+uEktxRqKhFnNR
+	cSIALASJrI8CAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsXCNUNLT5eF2yLDYP9yPos569ewWTw50M5o
+	8eT/b1aLfReB3MNzT7JaLGxbwmJxedccNot7a/6zWhz++obJgdNj06pONo9Nnyaxe5yY8ZvF
+	48XmmYwei/sms3qcu1jhsfjFByaPz5vkAjiiuGxSUnMyy1KL9O0SuDLmH93NXPBXrWL54r8s
+	DYzN8l2MnBwSAiYS53vvsoPYvAKWEstuX2XtYuTgYBFQlXi3wxUiLChxcuYTFhBbVEBe4v6t
+	GWDlzAK7GSUmtuqC2MICKRLPlt9ghIiLSMzubGMGGSMi4CPRsjwRJCwkYCgx6+ceVhCbTUBN
+	4srLSUwgNqeAkcTnfa1MEK1mEl1bu6DGyEtsfzuHeQIj3ywkV8xCsmEWkpZZSFoWMLKsYhTJ
+	zCvLTczMMdUrzs6ozMus0EvOz93ECAz6ZbV/Ju5g/HLZ/RCjAAejEg/vCUbzDCHWxLLiytxD
+	jBIczEoivE32ZhlCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb3CUxOEBNITS1KzU1MLUotgskwc
+	nFINjPvnbQ6vu8EvJ2WUyu1fkL0iqULqfKA8X9RRB3PR7mbeu8cEjwQrnanwYQgLD92b+3Xt
+	9VPfqmMNrUJmcLmKGVrdP1efyDJtNXvD2hS11euMEhbExTK9ub++LV+nUGFL/5e3Ruu3iX7Z
+	1HD3yf1ekfl3hcK3Fb798i++evJKrsMf3a8sUHMLVmIpzkg01GIuKk4EAEBzpEJ2AgAA
+X-CFilter-Loop: Reflected
 
-On 19/05/2025 10:19, Abdul Rahim, Faizal wrote:
-> From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
+Hi SeongJae,
+
+Thanks for your work.
+
+On 5/27/2025 6:09 AM, SeongJae Park wrote:
+> DAMON-based access monitoring is not simple due to required DAMON
+> control and results visualizations.  Introduce a static kernel module
+> for making it simple.  The module can be enabled without manual setup
+> and provides access pattern metrics that easy to fetch and understand
+> the practical access pattern information, namely estimated memory
+> bandwidth and memory idle time percentiles.
 > 
-> Refactor TXDCTL macro handling to use FIELD_PREP and GENMASK macros.
-> This prepares the code for adding a new TXDCTL priority field in an
-> upcoming patch.
+> Background and Problems
+> =======================
 > 
-> Verified that the macro values remain unchanged before and after
-> refactoring.
+> DAMON can be used for monitoring data access patterns of the system and
+> workloads.  Specifically, users can start DAMON to monitor access events
+> on specific address space with fine controls including address ranges to
+> monitor and time intervals between samplings and aggregations.  The
+> resulting access information snapshot contains access frequency
+> (nr_accesses) and how long the frequency was kept (age) for each byte.
 > 
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> ---
->   drivers/net/ethernet/intel/igc/igc.h      | 15 ++++++++++-----
->   drivers/net/ethernet/intel/igc/igc_main.c |  6 ++----
->   2 files changed, 12 insertions(+), 9 deletions(-)
+> The monitoring usage is not simple and practical enough for production
+> usage.  Users should first start DAMON with a number of parameters, and
+> wait until DAMON's monitoring results capture a reasonable amount of the
+> time data (age).  In production, such manual start and wait is
+> impractical to capture useful information from a high number of machines
+> in a timely manner.
 > 
-Tested-by: Mor Bar-Gabay <morx.bar.gabay@intel.com>
+> The monitoring result is also too detailed to be used on production
+> environments.  The raw results are hard to be aggregated and/or compared
+> for production environments having a large scale of time, space and
+> machines fleet.
+> 
+> Users have to implement and use their own automation of DAMON control
+> and results processing.  It is repetitive and challenging since there is
+> no good reference or guideline for such automation.
+> 
+> Solution: DAMON_STAT
+> ====================
+> 
+> Implement such automation in kernel space as a static kernel module,
+> namely DAMON_STAT.  It can be enabled at build, boot, or run time via
+> its build configuration or module parameter.  It monitors the entire
+> physical address space with monitoring intervals that auto-tuned for a
+> reasonable amount of access observations and minimum overhead.  It
+> converts the raw monitoring results into simpler metrics that can easily
+> be aggregated and compared, namely estimated memory bandwidth and idle
+> time percentiles.  Refer to the commit messages of the second and the
+> third patches of this patch series for more details about the metrics.
+
+I see the description looks good but it'd be useful if you could share some
+execution commands and expected output examples that some newbies can get better
+ideas.
+
+I honestly do not have a clear idea how I can use this kind of static kernel
+modules as general users although I have developed some features of DAMON.
+
+So could you please help?
+
+Thanks,
+Honggyu
+
+> 
+> Discussions
+> ===========
+> 
+> The module aims to be useful on production environments constructed with
+> a large number of machines that run a long time.  The auto-tuned
+> monitoring intervals ensure a reasonable quality of the outputs.  The
+> auto-tuning also ensures its overhead be reasonable and low enough to be
+> enabled always on the production.  The simplified monitoring results
+> metrics can be useful for showing both coldness (idle time percentiles)
+> and hotness (memory bandwidth) of the system's access pattern.  We
+> expect the information can be useful for assessing system memory
+> utilization and inspiring optimizations or investigations on both kernel
+> and user space memory management logics for large scale fleets.
+> 
+> We hence expect the module is good enough to be just used in most
+> environments.  For special cases that require a custom access monitoring
+> automation, users will still benefit by using DAMON_STAT as a reference
+> or a guideline for their specialized automation.
+> 
+> Revision History
+> ================
+> 
+> Changes from RFC
+> (https://lore.kernel.org/20250519164415.43935-1-sj@kernel.org)
+> - Add an admin-guide documentation
+> - Wordsmith commit messages
+> - Rebase to latest mm-new
+> 
+> SeongJae Park (4):
+>    mm/damon: introduce DAMON_STAT module
+>    mm/damon/stat: calculate and expose estimated memory bandwidth
+>    mm/damon/stat: calculate and expose idle time percentiles
+>    Docs/admin-guide/mm/damon: add DAMON_STAT usage document
+> 
+>   Documentation/admin-guide/mm/damon/index.rst |   1 +
+>   Documentation/admin-guide/mm/damon/stat.rst  |  69 ++++++
+>   mm/damon/Kconfig                             |  16 ++
+>   mm/damon/Makefile                            |   1 +
+>   mm/damon/stat.c                              | 245 +++++++++++++++++++
+>   5 files changed, 332 insertions(+)
+>   create mode 100644 Documentation/admin-guide/mm/damon/stat.rst
+>   create mode 100644 mm/damon/stat.c
+> 
+> 
+> base-commit: 90887f57d7a67917136e7c70d26fb3f2fcdc6f53
+
