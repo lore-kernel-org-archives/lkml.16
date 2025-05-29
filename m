@@ -1,87 +1,90 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CF22110;
-	Thu, 29 May 2025 13:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9B42110;
+	Thu, 29 May 2025 13:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748525433; cv=none; b=dByYNpou4dZOxQMn91oTPYHiWMW7hXyJy6uFOUWCbMsA4aVJ/cnlGmdaYv/AhYrDvGlIuOp+eCfueeI+bJZ4+e56AtrKeyPWMBM2LQenfnO4FCMpk9EipMlLDkaYkifKRwvrRHn4SvvrXV55xHMgaqzto2X85bn2umrVsj5gmj4=
+	t=1748525669; cv=none; b=kPVOPu3DUqD3JFUdrvNbbyVGga1VYUGw6nnrFVqA+qwQ3DFRVf/HZd0VZs3vvH0L5yZyVpLzotanGj5Tm9X9n/S+zVJ8WLv4UxZYL+JdR/F2fllihe/y4FYo8AbPpt3hAfqXhv9mWdwEaJ+1ifGV3PwZDNPek6K/Rdt0yNFF3N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748525433; c=relaxed/simple;
-	bh=ZT7w7/9WqERVPhIfgjoGwgmM4JWQtA4HnTEcCDgG0RQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pIT/QqZBoy5sGES5adGRd1Q7A9AZZOCI7a4mQQXZZFSH+8kziIYr0+QoaYHDwQap7YIcCWqpaSrcf7fJpjJBYEbPHy47IihSRUBeI4G/Z6NnLRMU5o+iK29cgwNoN1QP5PpZDZTW7Fux+IadVD9GH1ZEIIUtl/xvhn/H3sx+CmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kf8M9NLI; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748525669; c=relaxed/simple;
+	bh=qSwHf/0hRR8r8l/aqMBLXHUG5kVyzYMtHPPbws4VCPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQJ4nMeSgdGYeZ+5P7Agl5lKzmq6dCwbEwb2gCxASG1tRrMBvAmT2iOSOzQGGbhuLJrHJ8SGZhKEOCWjLqeJOZzPXnDCK5P5eMP4aisrbhgCrvHtK7rmV8uJ8DSjkZX+/1Vnu3v1a5ouXBPxlowztLz6BWZNCfy7CCKLSHtXino=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVD9jU2v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf8M9NLI"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af5499ca131so63561a12.3;
-        Thu, 29 May 2025 06:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748525432; x=1749130232; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZT7w7/9WqERVPhIfgjoGwgmM4JWQtA4HnTEcCDgG0RQ=;
-        b=Kf8M9NLI8wdrK27ygm84eDP++YTyyObdvcFVQSEie4DIZ1kE3nxsAg3haQsY1Rn2If
-         MEB1OVlp9nGZK9WOxsZ6DQNIMrZ3K0mRBiU5rFptlksRHml3nwtGyL16DCE8B07KpbSu
-         5vgZsyQIkbxZPAdqVCq01Kl2RYAb1YST/dxo/kmH6+99E7eNU8OIs4hqjv17svDUkilt
-         hbKeyqoSmsDomEeMbDXdcWi/VTsxCn4AesvDeQgzbheaRaLg95JR9zkO1djWd4LPoOJl
-         GIsVdzVEgBK4L2XjnXSPmetsEPjP9EKgGZ3mOIdUKqZHurIV10+vU3qJuSmbeofucR8a
-         BnUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748525432; x=1749130232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZT7w7/9WqERVPhIfgjoGwgmM4JWQtA4HnTEcCDgG0RQ=;
-        b=ww3My8vp3v3Pims1Wqp+zOf51NeAwchI8NrGE0MgHp6emf+Xw+lyv+pZ1gDBXohdDO
-         Vahnc+B7gP7zHI11SSRjRqThBbzWPkglwZQrBsTIf3Pq+WjGiPnaW1TghjAWCYcgivgC
-         lBd2t+NJyGKRY5QOtFWjZFyscMpBzsoFpc/gIxEzmB1udkqIpPOCQJO50LxNIfue9WR/
-         cr6E8J1KPOi6b7u+GIHT3JtWQPL7j0VK5MoXrqvolRHpqleFtYfDsQW5qHxzsAU6eKpG
-         av7MvX4g7pDpmRdb+IgoUiJy6tYdT6ywNiA9M6zOxVUoZynbyZSQ/Yp1vBTFzIiQrSlX
-         V3vA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXwypJaLbdZ4OJUs7ne+81zfuyc+W7YlxPKg0fAexBmGMFe/q6XS+V63df3fcdnsfLkx4t1w6ys1tyxzxAZ3I=@vger.kernel.org, AJvYcCX7qgNDWPmE0kiDJGQP3BNxNLIKAWeUiAQde2qhCauIZ0DjlLwF3Pa3gfo/DF/Pl2g0+867QXj92I6n+DE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAckCdaXuYjTaAaIYq7QySJ5y93hYzDX1bZLQGKPMV0ulXTY2g
-	ncYMm5zXec5Fxo1QCSDrDd3DhBc3vbkkHMToqry9ummP2MhSKC6OuVNMS2iup19wDsjFoP3Zwfo
-	NjdRPj51jUG3oXPing6X1lfw+wQtiLg0=
-X-Gm-Gg: ASbGncs6abziPABAJCYTCkIVYvWMXkf7adi6tqC7FQlGJxvDszC5PrPUDpxgyuMyl94
-	6hZAKsmTExHe1qbnKzGyLkM1HGoz6TNkG2MC2J3eSv9OfZlrsbPHBG8bAla7gIxe+EZPAD4GVbA
-	yISu2Ma0qP59kzdWRjMbwcy5w5FmLcQ+M6
-X-Google-Smtp-Source: AGHT+IHfdLnUKRvfqlELJCJ0Udxc65zPlkv8UToZYSDVHu2cp1ITYBIwQYwcXEf9f+jZ3/a3jrM28T1bfpuJIrntbrQ=
-X-Received: by 2002:a17:90b:48c8:b0:312:db8:dbd3 with SMTP id
- 98e67ed59e1d1-3120db8dda2mr2420260a91.6.1748525431764; Thu, 29 May 2025
- 06:30:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVD9jU2v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11428C4CEEB;
+	Thu, 29 May 2025 13:34:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748525669;
+	bh=qSwHf/0hRR8r8l/aqMBLXHUG5kVyzYMtHPPbws4VCPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rVD9jU2vkC5O+czjI4YNGVu7mT3WJ5l1e8/AxzP6UA78OhmfsRKWvsKfnCNug9wVm
+	 665A+5vCLR02gv2qgOxgF12Ad1OAN6sZEzJbOYkWnUdX4SXtLLMgHoE8x6KQ2Ggnvp
+	 UB2n+u/Unx1LZ/wbOVqWdXvCE6oDWlaeiCOPRZ9r7M0fBUIO39cpLshrREGZ+wn80M
+	 GgI9qLMHuEcxeNLNzq/T0ZB//UfNv53r9WOlbmJwtkcuhwvsvjF+PLUbW31eGH8dOc
+	 yx+zDOBM/1ZW0i3UevmBnKgTmd6y4Dd0xcthdYHJQEZzIz0WSOwcD2L6+NGhtjp4cw
+	 mnEwWjryD3D1Q==
+Date: Thu, 29 May 2025 14:34:24 +0100
+From: Simon Horman <horms@kernel.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	Philip Li <philip.li@intel.com>, oliver.sang@intel.com,
+	Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] selftests: net: build net/lib dependency in all
+ target
+Message-ID: <20250529133424.GP1484967@horms.kernel.org>
+References: <20250529070536.84491-1-minhquangbui99@gmail.com>
+ <20250529103221.GN1484967@horms.kernel.org>
+ <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
-In-Reply-To: <20250529-b4-container-of-type-check-v4-1-bf3a7ad73cec@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 29 May 2025 15:30:18 +0200
-X-Gm-Features: AX0GCFu6Xl2n7m15zwWobbmy25VhW-G5CXelPx2RiN2KsUnfylzAkGkAQ7gGDQs
-Message-ID: <CANiq72=B4JMK4eqK0tL5ECWFAKcBGm0O9LsZ74dd38N2GrZOMg@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: check type of `$ptr` in `container_of!`
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Benno Lossin <lossin@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <da0339d6-b6a3-44d8-8ed4-b99249fa0fd1@gmail.com>
 
-On Thu, May 29, 2025 at 3:11=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Rename those placeholders for clarity.
+On Thu, May 29, 2025 at 06:04:17PM +0700, Bui Quang Minh wrote:
+> On 5/29/25 17:32, Simon Horman wrote:
+> > On Thu, May 29, 2025 at 02:05:36PM +0700, Bui Quang Minh wrote:
+> > > Currently, we only build net/lib dependency in install target. This
+> > > commit moves that to all target so that net/lib is included in in-tree
+> > > build and run_tests.
+> > Hi,
+> > 
+> > The above describes what is being done.
+> > I think it would be good to also describe why.
+> 
+> Hi,
+> 
+> Currently, when building net related selftests, we need to
+> 
+>     make install
+> 
+> so that the net/lib is compiled. In case we do
+> 
+>     make
+> 
+> or
+> 
+>     make run_tests
+> 
+> the net/lib is not compiled. So I move the INSTALL_DEP_TARGETS which is
+> net/lib if the selftests is net related to all. As a result, all make/make
+> install/make run_tests will have the net/lib compiled.
 
-We can also put this in a separate one if it is OK with you.
+Thanks for the explanation, it is much appreciated.
 
-Cheers,
-Miguel
+I think it would be good to include something along those lines
+in the commit message of the patch.
+
+Please note, that if you post a v2, before doing so you should allow 24h to
+elapse since the posting of v1.
+
+https://docs.kernel.org/process/maintainer-netdev.html
