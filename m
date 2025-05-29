@@ -1,81 +1,122 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE141F473C
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6619C1F473C;
+	Thu, 29 May 2025 07:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748504199; cv=none; b=jwvbcQ/OaQ7xMn0x3Sk+3nLhxmvR3XfButDg82uZK+3NtzRCAV7w8HUtev6HcU37L1Q5IJhl7RIuhBrWBqKmerpAnjZykGaFa7sdw+FVfc/PkoobxI4LIGyvV/wHWY+peW5c5dUzp3j57hER/5Bf6vc5+rYOydz6BWQF1A+C2Fs=
+	t=1748504211; cv=none; b=HYCGNSZhLDyLvK+MS8f3niuWaIsejOb1zCPRzgKymOOky9JepZFMi81S7bHlOXA8NoM3PbrUxyfo2yeiAXY0sWn1tBjtiFRuzJ9nnVxPSImY+cC0n3wkWMjm6rZdaT0J//5mIr8o0kXzLo9pQuKMNopWSkN+Xxc5w8WLomPLH68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748504199; c=relaxed/simple;
-	bh=lmPe8qnxi6dZJHocmx4UbkJoOWbm6xLQzU7MY/WRoTE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CK0EvZNSjXUhPLlew4QWx9OM+lOM9xbRcuIdvTHvSakN5B50Lsv13J+v0ZHqs6qtRo6+jVQ6sI3o5b1ncriY3RHepcbaqRSsnjIEfVJjHFmMiK9ZIrtpcyxG4YxsoWmBOO1RCFPQ4EUCarl0srrvZbqko+YiffxVhtyDI6BkRkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PEPRLCsd; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748504211; c=relaxed/simple;
+	bh=RaXwXoM/5nPNhp3N37Y2BSh5m+ESrnrv294uVJnG9OQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CwOPfmxtmX4qUoGd63wma93t81YvvXh1hzVQVJYa0D9Vs5f1eEC5U3/ut7m/0ZaZzlAsi3cPMdyCHblpLF9X64KXAZLIiMSys8QvZUtHjqYKyei0sX1s7FCpCj1ZjA5aQxKyhedj3qb0gnd7Dk1mz5v2qZjGFc/f6kUQD8+Z07A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scyunoqq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PEPRLCsd"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748504193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g3yfCSpUgeUYllT9+YsC7uMJM4TMBS3FfIJphgXoakc=;
-	b=PEPRLCsddhmFuVuT8ftwf87WCQquSnZPKnLG2SqMiHBDAKFd3UVgEAnWnct0MgQKFh3g9r
-	5t+JH2wthLvO4EuTfM4Cym0TnzRQqSHcLwQ0Pxz8u3SP2dx7Tc6fil0SuqVHkGKMkeVxJh
-	S44Bpn7qRoEwOyAJKD5mjdjFhIPm6uY=
-From: Hao Ge <hao.ge@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Hao Ge <hao.ge@linux.dev>,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH] mm/alloc_tag: add the ARCH_NEEDS_WEAK_PER_CPU macro when statically defining the percpu variable alloc_tag_counters.
-Date: Thu, 29 May 2025 15:35:37 +0800
-Message-Id: <20250529073537.563107-1-hao.ge@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scyunoqq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41181C4CEE7;
+	Thu, 29 May 2025 07:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748504210;
+	bh=RaXwXoM/5nPNhp3N37Y2BSh5m+ESrnrv294uVJnG9OQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=scyunoqqwIWtQPB3ZY+1BRUQyGlxbCrJ2VwNJyqyqT+Wm4xZYm6HQCjX7TVTcE+hz
+	 kGLYi4xmsB6j0OZuh2b0D97gjIRthRBKFoG+nBYkFU+wL9ZkxsvZ9qsMaw97b2a20v
+	 JMtSuxxolBLIksB2aMXR7XpVt1BDuE6RsNFAa1SU/6QR8S7SwAPTqv+hnv88L8zvRX
+	 WKI92oDhT3JP9EA1hsYvZueZmTK6nICeuHZoj+BO9pF65rg9ZkqnBCd7Elw6z3z5Zu
+	 BG4f4SmzLdwuZi/d8ciMf5vvVnQOsVJqF9WNk2WBITMOwbrO7ysRMfluPB4lmNqGL3
+	 gGnhpPVrf/YiA==
+Message-ID: <c4514a7e-d5d5-416e-bc4d-d91476bebb35@kernel.org>
+Date: Thu, 29 May 2025 09:36:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] dt-bindings: input: Add TouchNetix axiom
+ touchscreen
+To: Marco Felsch <m.felsch@pengutronix.de>,
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Kamel Bouhara <kamel.bouhara@bootlin.com>,
+ Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>,
+ Danilo Krummrich <dakr@redhat.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org
+References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
+ <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Hao Ge <gehao@kylinos.cn>
+On 29/05/2025 00:08, Marco Felsch wrote:
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      touchscreen@66 {
+> +        compatible = "touchnetix,ax54a";
+> +        reg = <0x66>;
+> +        interrupt-parent = <&gpio2>;
+> +        interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +        reset-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+I have doubts that it works. It is perfectly possible that you inverted
+the signal, but rather rare, and datasheet clearly says active low.
 
-Recently discovered this entry while checking kallsyms on ARM64:
-ffff800083e509c0 D _shared_alloc_tag
-
-If ARCH_NEEDS_WEAK_PER_CPU is not defined,there's no need to statically
-define the percpu variable alloc_tag_counters.
-
-Therefore,add therelevant macro guards at the appropriate location.
-
-Fixes: 22d407b164ff ("lib: add allocation tagging support for memory allocation profiling")
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
----
- lib/alloc_tag.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index c7f602fa7b23..d1dab80b70ad 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -24,8 +24,10 @@ static bool mem_profiling_support;
- 
- static struct codetag_type *alloc_tag_cttype;
- 
-+#ifdef ARCH_NEEDS_WEAK_PER_CPU
- DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
- EXPORT_SYMBOL(_shared_alloc_tag);
-+#endif /* ARCH_NEEDS_WEAK_PER_CPU */
- 
- DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
- 			mem_alloc_profiling_key);
--- 
-2.25.1
-
+Best regards,
+Krzysztof
