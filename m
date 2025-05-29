@@ -1,115 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDA737160;
-	Thu, 29 May 2025 03:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2E41DF98D
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 03:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748489776; cv=none; b=ajl0EPbVmjPFKBjVGvGi7iWzeKmlfFiX8GJ/iHMoyeiZy44j0l3O1FPl/boaum5JX6yL+N0Fdx4p2J+hc/8TRlB4Onug5Fy2TB/bVYdzzBt5NCdUgBrw6bQRn5ZCkFbPa1wEVclIND+o3C4P5tmXo/DYK4Od8yhHymS+vFrP4q4=
+	t=1748489988; cv=none; b=g4dLtsPMUAM3nE2enb5sL3WOYfhvUvD1XnuKnWuFJ0ysoy2gmFbqGLXqV6I4K0l4vOXAnuCFbPAD0fFEcf/uegmE/F9RWJcVhm8ulvCCUZ223bALAgwlLUuH3HCTo5xvGVERXO3iahRvA98aQzpjQl8vkfc/E1C0McdDzcjpZZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748489776; c=relaxed/simple;
-	bh=lRqn/UeUDAVuP4Z63wj0d9rZVJKOlvjsWLtn1Fw9j3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j66O+SH1VEOUZ9ykCJTKt/c7m79xPss0amXf/52v7VXs36QELUjHmRBVP6Rv1OoQGGyas+qXqRzLkiE5SuG72Vd0PbW6wIToZyoKPp0BSwH8ChjaaL5JASb+skTxanISdGjeQQzIHzgTmehpXK4ZGHqzHzNCW6JygWZnTfOcUfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQrC9X+w; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748489988; c=relaxed/simple;
+	bh=aW0RTWdvtM1w6UkkBNYoSa1kspYBY6nDibe+OrzxZuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tqLqpDO/YS6fPCMeSjix/Ruyb37DrVSaPeWZdWCxkiuNghldKLaMYUWQqi4Yt9n2SuKWcfqdUBDz8020DdfzUOut76oUtOWzhH2BuW79nCKoiUrHqh1QTgvR2gEAahziQJUn/F2DsGnIZkasWsFMjYU2bG4DAWRrKTjtj+sN9og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YokUf0jV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQrC9X+w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748489774; x=1780025774;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lRqn/UeUDAVuP4Z63wj0d9rZVJKOlvjsWLtn1Fw9j3I=;
-  b=PQrC9X+wtEPCNP0XD/NgOppEKG4EFs8rtxCA+xQ2Ni39toQcqIImnIDp
-   coNJAYBtelYVcziX92H0tZYSAX/adN88h/H6TFT5J8OAWIeKrXqIgWylB
-   bGwRu5cfL//VFYxqqDjseGLdyJ+PIfa5CjdFWvPzNgIwd5SOI0X2WqApX
-   i1dOVo4IE9/lxC+JhS2YBIZlwts8e8Gw3+CX89LX55OOws7VCxNf7egsW
-   WNMDmlrOQIuqkGBY/JCFltfYpYJJpgoVvMirHY7nf/0ONXkCxPT2zi699
-   3JaMWBxc3tu2CJ+rEFRgE0RhTjrkFiiO6lOlXXzIAWe/ANr8f8T7C39UI
-   A==;
-X-CSE-ConnectionGUID: T6uzHaGTS56KYy+cy+cQmQ==
-X-CSE-MsgGUID: eq2KFc62RVGL/RnNl6qslA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="61590587"
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="scan'208";a="61590587"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 20:36:13 -0700
-X-CSE-ConnectionGUID: zvZ7gGsSQmyFeT8T4zDykw==
-X-CSE-MsgGUID: scmTQcoETPaJwBpOc1tknQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="scan'208";a="148476112"
-Received: from josephbr-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.30])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 20:36:14 -0700
-Date: Wed, 28 May 2025 20:36:07 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-	Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH 0/5] KVM: VMX: Fix MMIO Stale Data Mitigation
-Message-ID: <20250529033546.dhf3ittxsc3qcysc@desk>
-References: <20250523011756.3243624-1-seanjc@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YokUf0jV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748489985;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=w1X44SCuPTfj5D1IbAzKgKS5OuFXYEFBS/1q8JBmFyc=;
+	b=YokUf0jVANX1qZCgg4EbF3TzC/QLFytJua08aqi+zuuvxWI54yThlaJ5BsXFaMc7TJyaCx
+	CsyEZMFNgkcvsTxNEhuNpWeIFLl9HIT4yELVQcoaFcDGqnI56YWvUxiSRn3tBccImITUtH
+	SLxH8trHndkOiO5Wbr/wDSQY4O7nEys=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-103-T0tVun3OOLO9Lvygm9M7bQ-1; Wed, 28 May 2025 23:39:44 -0400
+X-MC-Unique: T0tVun3OOLO9Lvygm9M7bQ-1
+X-Mimecast-MFC-AGG-ID: T0tVun3OOLO9Lvygm9M7bQ_1748489983
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ad8adc22e88so35989266b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:39:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748489983; x=1749094783;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w1X44SCuPTfj5D1IbAzKgKS5OuFXYEFBS/1q8JBmFyc=;
+        b=DQUFIuBG1uxEdWq+5vH9plX1Yf7S/thCvOpIgQdMB4waXOehKcgaIrhNbWI69fPJ5H
+         Rc7/G8xXNNx7C98Lx5G8Zj4uOD5Vkqcfc39We7NZdUcP5iCnhepVZl+7JTwlNrp9GQoC
+         oiAOuWrNLfn5TL8wj4mfexsg4DHFVL8XHtGSclLt47nvQ6JdKWbRJqm2c2GrnYLtludA
+         WiTkFvf5jHrxLjTibpVGVK50XmpX8E5m/RHuu5DnoVJ7raK1WLqf7KvFU/3pwiPOQBim
+         883cgt7yKMpEp4F+FckJWa7/HB06ihA1kACQfi5VunV5v6xJ0jfqSJgu/wW3pW0vst5n
+         Uzgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzTX+YN7F+aZ3KbKfwUrmuwNMSphh2tEhvKlevx4D2MqUAmhp48xeY/Ya1gvKzM6/n4EuziirCspePpjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKFVNeYw3Ha0PTJIWsOmnK1+wM3asOWD5CClxb9fxxEDQaN05H
+	guG4/MI0s9sh9dXdr7n+9LisDceyyEXzmlvOJzaiE1S/gAqzC3j6rtXT+UaIO3CbR+KET+Fhzmj
+	cgqA1nttnNefdhCfnHJeicAS7WsclQyYLjpOyWc59vwGE0dcX4d0qxk0LCHJogiQtdw==
+X-Gm-Gg: ASbGncu/hThO52ZIkmIB5GS4s/c0TVSwefMxGsY10iRk14H8wfwju9xSGllhMp9xt6H
+	rD43ztttC+uvQBeDllNk4jpervqhU38plTOs/klzMaZApSy5JfQlHa/XmXwJ8J1Ub6mhw5S7Crh
+	XGAVhU0LXoFbkjMUO61t8gkjTFyhDnCIQ4F6jbiw0MCjNad9a5kuDr1qiNHPhoSifV6Q4HxW8U1
+	sfrTlU8HmIgrKHrUHKnwbu6uf4Dg07aBsiertAm3/1RFls/6HR62xYZ+t4pWvK//WwFRHWT24Vi
+	9C/XFyJE7Id0wOcWO1Fke4ckr7H5zLmm75wzgDP63Xum+CO4LlyNOeTo6A==
+X-Received: by 2002:a17:906:9fcc:b0:ad5:10d9:9061 with SMTP id a640c23a62f3a-ad85b2799cdmr1912493566b.54.1748489982852;
+        Wed, 28 May 2025 20:39:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGvpqqAZuFEZNhtkIGDjJnONQJ3hQN1ikYduqSMmBqKDYUX8JsBp/1HPjY5wTGLHJ5InFanQ==
+X-Received: by 2002:a17:906:9fcc:b0:ad5:10d9:9061 with SMTP id a640c23a62f3a-ad85b2799cdmr1912492266b.54.1748489982516;
+        Wed, 28 May 2025 20:39:42 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e01:ef00:b52:2ad9:f357:f709])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5e2beff7sm56525466b.111.2025.05.28.20.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 20:39:41 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Akshay Gupta <akshay.gupta@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] hwmon: clean up Makefile after sbrmi driver movement
+Date: Thu, 29 May 2025 05:39:33 +0200
+Message-ID: <20250529033933.281845-1-lukas.bulwahn@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523011756.3243624-1-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 06:17:51PM -0700, Sean Christopherson wrote:
-> Fix KVM's mitigation of the MMIO Stale Data bug, as the current approach
-> doesn't actually detect whether or not a guest has access to MMIO.  E.g.
-> KVM_DEV_VFIO_FILE_ADD is entirely optional, and obviously only covers VFIO
+From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 
-I believe this needs userspace co-operation?
+Commit e15658676405 ("hwmon/misc: amd-sbi: Move core sbrmi from hwmon to
+misc") removes the config SENSORS_SBRMI, but misses the reference to that
+config in the Makefile.
 
-> devices, and so is a terrible heuristic for "can this vCPU access MMIO?"
-> 
-> To fix the flaw (hopefully), track whether or not a vCPU has access to MMIO
-> based on the MMU it will run with.  KVM already detects host MMIO when
-> installing PTEs in order to force host MMIO to UC (EPT bypasses MTRRs), so
-> feeding that information into the MMU is rather straightforward.
-> 
-> Note, I haven't actually verified this mitigates the MMIO Stale Data bug, but
-> I think it's safe to say no has verified the existing code works either.
+Clean up that obsolete line in the Makefile.
 
-Mitigation was verifed for VFIO devices, but ofcourse not for the cases you
-mentioned above. Typically, it is the PCI config registers on some faulty
-devices (that don't respect byte-enable) are subject to MMIO Stale Data.
-But, it is impossible to test and confirm with absolute certainity that all
-other cases are not affected. Your patches should rule out those cases as
-well.
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+---
+ drivers/hwmon/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
 
-Regarding validating this, if VERW is executed at VMenter, mitigation was
-found to be effective. This is similar to other bugs like MDS. I am not a
-virtualization expert, but I will try to validate whatever I can.
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 48e5866c0c9a..726ffd9f6a1b 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -196,7 +196,6 @@ obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
+ obj-$(CONFIG_SENSORS_QNAP_MCU_HWMON)	+= qnap-mcu-hwmon.o
+ obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)	+= raspberrypi-hwmon.o
+ obj-$(CONFIG_SENSORS_SBTSI)	+= sbtsi_temp.o
+-obj-$(CONFIG_SENSORS_SBRMI)	+= sbrmi.o
+ obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+ obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+ obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+-- 
+2.49.0
 
-> All that said, and despite what the subject says, my real interest in this
-> series it to kill off kvm_arch_{start,end}_assignment().  I.e. preciesly
-> identifying MMIO is a means to an end.  Because as evidenced by the MMIO mess
-> and other bugs (e.g. vDPA device not getting device posted interrupts),
-> keying off KVM_DEV_VFIO_FILE_ADD for anything is a bad idea.
-> 
-> The last two patches of this series depend on the stupidly large device
-> posted interrupts rework:
-> 
->   https://lore.kernel.org/all/20250523010004.3240643-1-seanjc@google.com
-> 
-> which in turn depends on a not-tiny prep series:
-> 
->   https://lore.kernel.org/all/20250519232808.2745331-1-seanjc@google.com
-> 
-> Unless you care deeply about those patches, I honestly recommend just ignoring
-> them.  I posted them as part of this series, because post two patches that
-> depends on *four* series seemed even more ridiculousr :-)
-> 
-> Side topic: Pawan, I haven't forgotten about your mmio_stale_data_clear =>
-> cpu_buf_vm_clear rename, I promise I'll review it soon.
-
-No problem.
