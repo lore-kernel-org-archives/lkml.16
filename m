@@ -1,158 +1,316 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558CB2B9AA;
-	Thu, 29 May 2025 02:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5B2F872;
+	Thu, 29 May 2025 02:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748486439; cv=none; b=inq7ZNadwGJ9/kJ2WwbV1eTeZ6MVhMu2TRFCsFmrf5V9SqjyGJyLBGX+PZDVXLvHo3UiAOsbayfqNnbeu6J5mLQ9AUd9CA6wqaDZQX78BbeIxNSuI/3UnEHSwR3VWQMgh0rf5Rq/X/+gE2O8P9+6G9CuW07K0yrn03vFoY+fWsc=
+	t=1748486550; cv=none; b=Nuy3YeaEpLZQ4T5pCv2GMy9I99NaYQnkn7Vyj1LKrp9rEz6igXMJsiuGGDIAO4Zd6oP3ERIaWhvaE26KCN/z7KH5pawGqczUmaPam4V28QVT5jA3bz753TsXux3tAT5gV2ntKRJLDxryiFk5atXOsGsMCSSoRLMyCapmB+0K6/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748486439; c=relaxed/simple;
-	bh=kZkIsj//YnP/gJGA/K2VrDKorBDjNhvFh2BZJpQwTuA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N0foL5O9FKbA7nOq8ypKDJhvLaWfm9CLDimjPhOdtaqZbGd+4o0le+u7jSHRv1KPi/AA3oseEbUoiqECiq4VBkoDMMfKj0hwR/DdhpK+NkAUXVSR/NOo9u791lhbm6ydcjMzI1TnNqyqg+7cKaLOK1SOcPUFrJL6aKcsSOghoUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: esmtpsz20t1748486418t37745060
-X-QQ-Originating-IP: C58kyhMUl+MpUv+PvpsaEsUe55NDqcLZLFJp/428sj8=
-Received: from [127.0.0.1] ( [112.54.164.151])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 29 May 2025 10:40:13 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14936503294835675896
-Message-ID: <4E62D52FC6135E5B+a6b1634e-5c66-4db5-bb1e-bf64e2e8d8a2@radxa.com>
-Date: Thu, 29 May 2025 10:40:12 +0800
+	s=arc-20240116; t=1748486550; c=relaxed/simple;
+	bh=GNLRYQUJcKmHRLXQoGd5L1xafjjvL1agDYEiwlM6VJw=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=tKdz0hmAN7UfY65U9MhjoKgw8EG6mCOErsy6serLPSf638/ODrVMcMOGP7Zo3CZqXFdorq0UM1JbxF80H+z01x4+ai+T/CvrYX9LVBObJB21UigoEi+jg+kEYL2wg9P4SHBtS0Nbj3CpFLcVgpmh7voYIdYR8SCdTrtMmiXgg74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GwbTNOWG; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GwbTNOWG"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] drm/msm/dp: reuse generic HDMI codec implementation
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
- Hermes Wu <Hermes.wu@ite.com.tw>, Dmitry Baryshkov <lumag@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
-References: <20250423-dp-hdmi-audio-v7-1-8407a23e55b2@oss.qualcomm.com>
-From: Xilin Wu <sophon@radxa.com>
-Content-Language: en-US
-In-Reply-To: <20250423-dp-hdmi-audio-v7-1-8407a23e55b2@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NcPpWZPsRpiEezHEwuGB9fOmbxJWZnNkTUflW7oLyrPm29VNkAu+i4jK
-	lWnakt+QhWUCydglaeEREz1s2bbgJGgrr3q4J+ZKE//DOtRXSUjxeg+kb5Cz7Zha9/VqqUg
-	iIIdbwWw32JCsAQNhwXvQh186dCY32WBmaGQkZSveCN4gENb7IceSJl8Tljz6KklnjtjSDh
-	byt/xg7MhmzWVLkbbQiAdQVsqf0uZ2l2eF530ApBvwg5jBGpMgZ94AkiM1Ek6+6ZIvQF5Sd
-	LMhganmlJ97cE5HKDm/9icSq7jQhuwyspOI5x6uELJaRBS3W/BC/ZILk6e15OfkPqxLv420
-	kH5owwBPOiqBqIT9Fh/7wHoZbbGnRrNLAi3rgevV0smbriyRRBwBfN0U5xagCaaJQFLb38D
-	vpmYPiGJ3wt9E5sPSnMh2nfTnHFfxmqbYddehnPhZPMh7MTWT7+C+aMgmirDfApKWVFfcGw
-	tFQllC6MoLb+fQBKD5M9sxAhJoOfE7M4FlLI605WZGmfmBSoCppl0QN2vN/oKkGC7LhrpM8
-	IxlbyQQ5LesJAlMj3oVghO++rzV6Vc4iQMCSYwowDxIeJIfbEDLzjPEMbliETuCCX2xmVPN
-	rK+/IsuhreKR5zVsqSNrahKG5Kb1mz3kGk/EyOo4+kTu3uA9pzzz/XvGy7rJvPVTyenwgF6
-	n8dn4kX6g/Ns0MXVFoACy2IQONsqbmtE4+ffD96eqFocWc9rrEodet0fbeyZ3RmF6e3H6aT
-	pGGyLLW+hJFD0m0wc5PNjOEDZpd+xvhrUwKgARHokX2W/kY98jL92Gq6zpoBTRn7/xkGdsQ
-	WMNFmWwrwSxot1aQwosjN1ws3cttHCnZy9/nigSK7CUyK/P8Cc4vVG0/gXmDnG6o4KnF6UK
-	c5WELVY3lw94KvZt4ZhIfPEeRoPe0ZFZ56InV6MYjoOC2me99zEqD7Fd/LuWBrNCRnc+TvU
-	Zu1Z7H8LCcDKtRuu1M/9UQYvbOhxY73ssVAfakVuqQ2igIV30ZrNsiSPa
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748486544;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f7vrs6bHYMJbGrO5/ULBT0VnsxBQ4VzjvKqhI3ES3E4=;
+	b=GwbTNOWGRLn5YQ0S+STemjaPdr+AT42nVc0pOwx0hrMCbgHWoX/XDdHTyjB8NyTL6QqNW8
+	NJSqned0g1KAMapS4YSvovRSpXCv6zwK0lrKYYrw4OSO/hcdFCEzohoy2qVKrxSiaX7vR6
+	XBm8UiNt/yUzJLF/4S97A30uWboAu1c=
+Date: Thu, 29 May 2025 02:42:14 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <fefe50c6ec558074ec7de944175cec82bb426f10@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix psock incorrectly pointing
+ to sk
+To: "John Fastabend" <john.fastabend@gmail.com>
+Cc: bpf@vger.kernel.org, "Jakub Sitnicki" <jakub@cloudflare.com>, "David S.
+ Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Simon Horman" <horms@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>,
+ "Daniel Borkmann" <daniel@iogearbox.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250528234650.n5orke2yq55qnoen@gmail.com>
+References: <20250523162220.52291-1-jiayuan.chen@linux.dev>
+ <20250528234650.n5orke2yq55qnoen@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 2025/4/24 01:52:45, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <lumag@kernel.org>
-> 
-> The MSM DisplayPort driver implements several HDMI codec functions
-> in the driver, e.g. it manually manages HDMI codec device registration,
-> returning ELD and plugged_cb support. In order to reduce code
-> duplication reuse drm_hdmi_audio_* helpers and drm_bridge_connector
-> integration.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
-> A lot of DisplayPort bridges use HDMI Codec in order to provide audio
-> support. Present DRM HDMI Audio support has been written with the HDMI
-> and in particular DRM HDMI Connector framework support, however those
-> audio helpers can be easily reused for DisplayPort drivers too.
-> 
-> Patches by Hermes Wu that targeted implementing HDMI Audio support in
-> the iTE IT6506 driver pointed out the necessity of allowing one to use
-> generic audio helpers for DisplayPort drivers, as otherwise each driver
-> has to manually (and correctly) implement the get_eld() and plugged_cb
-> support.
-> 
-> Implement necessary integration in drm_bridge_connector and provide an
-> example implementation in the msm/dp driver.
-> ---
-> Changes in v7:
-> - Dropped applied patches
-> - Link to v6: https://lore.kernel.org/r/20250314-dp-hdmi-audio-v6-0-dbd228fa73d7@oss.qualcomm.com
-> 
-> Changes in v6:
-> - Added DRM_BRIDGE_OP_DP_AUDIO and separate set of DisplayPort audio
->    callbacks to the drm_bridge interface (Maxime)
-> - Link to v5: https://lore.kernel.org/r/20250307-dp-hdmi-audio-v5-0-f3be215fdb78@linaro.org
-> 
-> Changes in v5:
-> - Rebased on top of linux-next, also handling HDMI audio piece of the
->    MSM HDMI driver.
-> - Link to v4: https://lore.kernel.org/r/20250301-dp-hdmi-audio-v4-0-82739daf28cc@linaro.org
-> 
-> Changes in v4:
-> - Rebased on linux-next, adding DRM_BRIDGE_OP_HDMI_AUDIO to Synopsys QP
->    HDMI driver.
-> - Drop outdated comment regarding subconnector from the commit message.
-> - Link to v3: https://lore.kernel.org/r/20250219-dp-hdmi-audio-v3-0-42900f034b40@linaro.org
-> 
-> Changes in v3:
-> - Dropped DRM_BRIDGE_OP_DisplayPort, added DRM_BRIDGE_OP_HDMI_AUDIO
->    (Laurent, Maxime)
-> - Dropped the subconnector patch (again)
-> - Link to v2: https://lore.kernel.org/r/20250209-dp-hdmi-audio-v2-0-16db6ebf22ff@linaro.org
-> 
-> Changes in v2:
-> - Added drm_connector_attach_dp_subconnector_property() patches
-> - Link to v1: https://lore.kernel.org/r/20250206-dp-hdmi-audio-v1-0-8aa14a8c0d4d@linaro.org
-> ---
->   drivers/gpu/drm/msm/Kconfig         |   1 +
->   drivers/gpu/drm/msm/dp/dp_audio.c   | 131 ++++--------------------------------
->   drivers/gpu/drm/msm/dp/dp_audio.h   |  27 ++------
->   drivers/gpu/drm/msm/dp/dp_display.c |  28 ++------
->   drivers/gpu/drm/msm/dp/dp_display.h |   6 --
->   drivers/gpu/drm/msm/dp/dp_drm.c     |   8 +++
->   6 files changed, 31 insertions(+), 170 deletions(-)
-> 
+May 29, 2025 at 07:46, "John Fastabend" <john.fastabend@gmail.com> wrote:
 
-This change breaks DP audio on the qcs6490 platform, tested on kernel 
-next-20250528.
 
-[    0.368035] [drm:dpu_kms_hw_init:1173] dpu hardware revision:0x70020000
-[    0.369359] hdmi-audio-codec hdmi-audio-codec.0.auto: 
-hdmi_codec_probe: dai_count 0
-[    0.369362] hdmi-audio-codec hdmi-audio-codec.0.auto: 
-hdmi_codec_probe: Missing hw_params
-[    0.369364] hdmi-audio-codec hdmi-audio-codec.0.auto: 
-hdmi_codec_probe: Invalid parameters
-[    0.369366] hdmi-audio-codec hdmi-audio-codec.0.auto: probe with 
-driver hdmi-audio-codec failed with error -22
-[    0.370536] [drm] Initialized msm 1.12.0 for 
-ae01000.display-controller on minor 0
 
-Manually reverting this change solves the problem.
+>=20
+>=20On 2025-05-24 00:22:19, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> We observed an issue from the latest selftest: sockmap_redir where
+> >=20
+>=20>  sk_psock(psock->sk) !=3D psock in the backlog. The root cause is t=
+he special
+> >=20
+>=20>  behavior in sockmap_redir - it frequently performs map_update() an=
+d
+> >=20
+>=20>  map_delete() on the same socket. During map_update(), we create a =
+new
+> >=20
+>=20>  psock and during map_delete(), we eventually free the psock via rc=
+u_work
+> >=20
+>=20>  in sk_psock_drop(). However, pending workqueues might still exist =
+and not
+> >=20
+>=20>  be processed yet. If users immediately perform another map_update(=
+), a new
+> >=20
+>=20>  psock will be allocated for the same sk, resulting in two psocks p=
+ointing
+> >=20
+>=20>  to the same sk.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  When the pending workqueue is later triggered, it uses the old pso=
+ck to
+> >=20
+>=20>  access sk for I/O operations, which is incorrect.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Timing Diagram:
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  cpu0 cpu1
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  map_update(sk):
+> >=20
+>=20>  sk->psock =3D psock1
+> >=20
+>=20>  psock1->sk =3D sk
+> >=20
+>=20>  map_delete(sk):
+> >=20
+>=20>  rcu_work_free(psock1)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  map_update(sk):
+> >=20
+>=20>  sk->psock =3D psock2
+> >=20
+>=20>  psock2->sk =3D sk
+> >=20
+>=20>  workqueue:
+> >=20
+>=20>  wakeup with psock1, but the sk of psock1
+> >=20
+>=20>  doesn't belong to psock1
+> >=20
+>=20>  rcu_handler:
+> >=20
+>=20>  clean psock1
+> >=20
+>=20>  free(psock1)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Previously, we used reference counting to address the concurrency =
+issue
+> >=20
+>=20>  between backlog and sock_map_close(). This logic remains necessary=
+ as it
+> >=20
+>=20>  prevents the sk from being freed while processing the backlog. But=
+ this
+> >=20
+>=20>  patch prevents pending backlogs from using a psock after it has be=
+en
+> >=20
+>=20>  freed.
+> >=20
+>=20
+> Nit, its not that psock would be freed because we do have the
+>=20
+>=20cancel_delayed_work_sync() before the kfree(psock). But this
+>=20
+>=20is not a good state with two psocks referenceing the same sk.
+>=20
+>=20>=20
+>=20> Note: We cannot call cancel_delayed_work_sync() in map_delete() sin=
+ce this
+> >=20
+>=20>  might be invoked in BPF context by BPF helper, and the function ma=
+y sleep.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg inte=
+rface")
+> >=20
+>=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  ---
+> >=20
+>=20>  Thanks to Michal Luczaj for providing the sockmap_redir test case,=
+ which
+> >=20
+>=20>  indeed covers almost all sockmap forwarding paths.
+> >=20
+>=20>  ---
+> >=20
+>=20>  include/linux/skmsg.h | 1 +
+> >=20
+>=20>  net/core/skmsg.c | 5 ++++-
+> >=20
+>=20>  2 files changed, 5 insertions(+), 1 deletion(-)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+> >=20
+>=20>  index 0b9095a281b8..b17221eef2f4 100644
+> >=20
+>=20>  --- a/include/linux/skmsg.h
+> >=20
+>=20>  +++ b/include/linux/skmsg.h
+> >=20
+>=20>  @@ -67,6 +67,7 @@ struct sk_psock_progs {
+> >=20
+>=20>  enum sk_psock_state_bits {
+> >=20
+>=20>  SK_PSOCK_TX_ENABLED,
+> >=20
+>=20>  SK_PSOCK_RX_STRP_ENABLED,
+> >=20
+>=20>  + SK_PSOCK_DROPPED,
+> >=20
+>=20>  };
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  struct sk_psock_link {
+> >=20
+>=20>  diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+> >=20
+>=20>  index 34c51eb1a14f..bd58a693ce9a 100644
+> >=20
+>=20>  --- a/net/core/skmsg.c
+> >=20
+>=20>  +++ b/net/core/skmsg.c
+> >=20
+>=20>  @@ -656,6 +656,9 @@ static void sk_psock_backlog(struct work_struc=
+t *work)
+> >=20
+>=20>  bool ingress;
+> >=20
+>=20>  int ret;
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  + if (sk_psock_test_state(psock, SK_PSOCK_DROPPED))
+> >=20
+>=20>  + return;
+> >=20
+>=20
+> Could we use the SK_PSOCK_TX_ENABLED bit here? Its already used to
+>=20
+>=20ensure we wont requeue work after the psock has started being
+>=20
+>=20removed. Seems like we don't need two flags? wdyt?
+>=20
+>=20>=20
+>=20> +
+> >=20
+>=20>  /* Increment the psock refcnt to synchronize with close(fd) path i=
+n
+> >=20
+>=20>  * sock_map_close(), ensuring we wait for backlog thread completion
+> >=20
+>=20>  * before sk_socket freed. If refcnt increment fails, it indicates
+> >=20
+>=20>  @@ -867,7 +870,7 @@ void sk_psock_drop(struct sock *sk, struct sk_=
+psock *psock)
+> >=20
+>=20>  write_unlock_bh(&sk->sk_callback_lock);
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  sk_psock_stop(psock);
+> >=20
+>=20
+> Can we add this to sk_psock_stop where we have the TX_ENABLED bit
+>=20
+>=20cleared.
 
--- 
-Best regards,
-Xilin Wu <sophon@radxa.com>
+
+
+Thanks, I just add SK_PSOCK_TX_ENABLED checking at the start of sk_psock_=
+backlog().
+Every works fine, and truly no more flag needed !
+
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 34c51eb1a14f..83c78379932e 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *wor=
+k)
+        bool ingress;
+        int ret;
+
++       /* If sk is quickly removed from the map and then added back, the=
+ old
++        * psock should not be scheduled, because there are now two psock=
+s
++        * pointing to the same sk.
++        */
++       if (!sk_psock_test_state(psock, SK_PSOCK_TX_ENABLED))
++               return;
++
+        /* Increment the psock refcnt to synchronize with close(fd) path =
+in
+         * sock_map_close(), ensuring we wait for backlog thread completi=
+on
+         * before sk_socket freed. If refcnt increment fails, it indicate=
+s
+
+
+
+> >=20
+>=20> -
+> >=20
+>=20>  + sk_psock_set_state(psock, SK_PSOCK_DROPPED);
+> >=20
+>=20>  INIT_RCU_WORK(&psock->rwork, sk_psock_destroy);
+> >=20
+>=20>  queue_rcu_work(system_wq, &psock->rwork);
+> >=20
+>=20>  }
+> >=20
+>=20>  --=20
+>=20>=20
+>=20>  2.47.1
+> >
+>
