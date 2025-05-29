@@ -1,129 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A151C6FFA;
-	Thu, 29 May 2025 14:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6721D3E1
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748528746; cv=none; b=KGWEzkmZg83pxDGhKmsVXzyNeSWe820udyqyJw6q6RuW6wvEYZv6rFDsZyDZqBHgvLNUp6JN8v36F6VcZ50Z+dThlrMkyAqTm+FbT+EEsfysI+jp6huneVr4Lrkc3voXiWtWEoKVWaHP+mljWlbyxeZjABsirohhZVmMdOlwyOM=
+	t=1748528751; cv=none; b=cV6izQADOVAlPh4tjkyvjpEbc09EpK1FnJYo678DSdGSdiO5UiwhlN1UD3tor/Bo7pPP/uaUf2+ldo3g/sq2wU7BuQVQ7vgTx147T5ve0U/Kz8NmQqYrwuAh2hAqKd+2gAxfCQ5PlncfM7M4hZffMrw37FoXVIwfxTwPIKh4zYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748528746; c=relaxed/simple;
-	bh=OGi7sn9K6OQPFSu7WG5eQtZqq2KuowxEXitvkm1HZbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PDHxoYLbW2polhDohnSBRiWeuDSCKiNG7AwSO/QKEyfUpI+mxPCFcRBmfN4GAMh5yQGz3HBIzxrs+6u3l0hNyhVmC2rAxYHd2CQkyjniWLkdpG+gpzENL5wzKMoX0o9NEaYMIbXFw84z9+kdRn0AEnVgQygPrHgxl8S1AVgDYlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=elpyQxeW; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748528751; c=relaxed/simple;
+	bh=5q/Nt03mW2tHN1oqlNyTEbWsrQ7GhC569w51AxZGonc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c1vHSIjnLoYtLHdQ3bIlcugG71Ueg/7S9vfwIO3cnj8wvmGMRrsKgUD9Ph7/x9Cd+9slhZJj8wRSNvafi6FMq0/ohmX2W8uJriO7JxbnTKlzWQ/4y4xlp9aAL5BVwCpJeKJnxW58UvJhDdx59D/16/k+OgtFdAOQdNnmFY/1KMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NXeHWYWk; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="elpyQxeW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748528745; x=1780064745;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OGi7sn9K6OQPFSu7WG5eQtZqq2KuowxEXitvkm1HZbk=;
-  b=elpyQxeW/Eq2nnzoqs0Urv4i76FhAtABitDfVDQV1QnmWpaEmp7G9mWG
-   7tJCbarzW3utByBxPRIqgZCLXv3YylULkhTJRBVSgr1rNT9SurHguXdP5
-   mjcAeP71znJvye4NT/MMbq0dsrZcemw7Nz0sPkf9dLYfRfiEwbtqiSqM2
-   6lTyQyEJK4zGWzGducR2trVXUU3xxbWSciBhslZmo532PzxCrbh9NXNXr
-   3XKjRjiRU2qEs0hg37lcLhE/6EKev7MlZ0APFlelsJNPmYtxgelvf4Glz
-   N/eHyAMGxsVSkh9eAML0NWl/D2hDgy9bgzM/aISkDtQkQ6k0cmWHTmn/7
-   A==;
-X-CSE-ConnectionGUID: zj3RYsqRQCiBCGIV2DPSnQ==
-X-CSE-MsgGUID: UM2pLoIQR3CMslG60LT7HQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="60854814"
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="60854814"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 07:25:44 -0700
-X-CSE-ConnectionGUID: IXc2gtAwTCqahhfQTH8qdA==
-X-CSE-MsgGUID: mJ49Hp4qRhmL+fZK9xJUTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
-   d="scan'208";a="143610695"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.110.54]) ([10.125.110.54])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 07:25:44 -0700
-Message-ID: <a72c38b2-c52f-446a-bf0f-2bae7d6021f8@intel.com>
-Date: Thu, 29 May 2025 07:25:43 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NXeHWYWk"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54TEPKYa2393261;
+	Thu, 29 May 2025 09:25:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748528720;
+	bh=dY8BfBTTWayfadhN1o+/naocUo6MT0YpRR4g2Uwl7JY=;
+	h=From:To:CC:Subject:Date;
+	b=NXeHWYWkg1qkdYRtRnUQfCjHqOGVoQO+pU4k47qKmnZ3tvVoSVx00HXEXHJ6MWVv8
+	 BnxNUUVcsCa+nSfxlMT43olyu9QJGd7IURyoXajFoLWKSXETJI1tggBLIJG9EorZEf
+	 DrLBv294Ola0EBcEwIGnigYZu4T0I2ikO1sygTRE=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54TEPK2a090740
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 29 May 2025 09:25:20 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
+ May 2025 09:25:18 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 29 May 2025 09:25:18 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54TEPHml1703962;
+	Thu, 29 May 2025 09:25:18 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <dianders@chromium.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ideasonboard.com>, <andyshrk@163.com>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <lumag@kernel.org>, <lyude@redhat.com>, <andy.yan@rock-chips.com>,
+        <mordan@ispras.ru>, <linux@treblig.org>, <viro@zeniv.linux.org.uk>,
+        <a-bhatia1@ti.com>, <javierm@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>,
+        <j-choudhary@ti.com>
+Subject: [PATCH v3 0/5] MHDP8546 fixes related to DBANC usecase
+Date: Thu, 29 May 2025 19:55:12 +0530
+Message-ID: <20250529142517.188786-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Revert "x86/smp: Eliminate
- mwait_play_dead_cpuid_hint()"
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Len Brown <lenb@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
- "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar
- <mingo@redhat.com>, Todd Brandt <todd.e.brandt@linux.intel.com>
-References: <2006806.PYKUYFuaPT@rjwysocki.net>
- <12674167.O9o76ZdvQC@rjwysocki.net>
-Content-Language: en-US
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <12674167.O9o76ZdvQC@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 5/29/25 06:40, Rafael J. Wysocki wrote:
-> This issue is hard to debug and potentially dangerous, so it needs to
-> be addressed as soon as possible in a way that will work for 6.15.y,
-> hence the revert.
+With the introduction of DBANC framework, the connector is no longer
+initialised in bridge_attach if that flag is set by the display
+controller.
 
-Ugh.
+This series does some cleanup for legacy !(DRM_BRIDGE_ATTACH_NO_CONNECTOR)
+usecase and adds fixes for DRM_BRIDGE_ATTACH_NO_CONNECTOR usecase.
 
-I don't like the idea of reintroducing known buggy code. But the revert
-does seem like the lesser of the two evils.
+v2 patch lnk:
+<https://lore.kernel.org/all/20250521073237.366463-1-j-choudhary@ti.com/>
 
-Seems like we should revert this for the time being and then try to fix
-it properly again.
+Changelog v2->v3:
+- Add mode_valid in drm_bridge_funcs to a separate patch
+- Remove "if (mhdp->connector.dev)" conditions that were missed in v2
+- Split out the move of drm_atomic_get_new_connector_for_encoder()
+  to a separate patch
+- Drop "R-by" considering the changes in v2[1/3]
+- Add Fixes tag to first 4 patches:
+  commit c932ced6b585 ("drm/tidss: Update encoder/bridge chain connect model")
+  This added DBANC flag in tidss while attaching bridge to the encoder
+- Drop RFC prefix
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Jayesh Choudhary (5):
+  drm/bridge: cadence: cdns-mhdp8546-core: Remove legacy support for
+    connector initialisation in bridge
+  drm/bridge: cadence: cdns-mhdp8546*: Change drm_connector from
+    structure to pointer
+  drm/bridge: cadence: cdns-mhdp8546-core: Set the mhdp connector
+    earlier in atomic_enable()
+  drm/bridge: cadence: cdns-mhdp8546-core: Add mode_valid hook to
+    drm_bridge_funcs
+  drm/bridge: cadence: cdns-mhdp8546-core: Reduce log level for DPCD
+    read/write
+
+ .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 232 ++++--------------
+ .../drm/bridge/cadence/cdns-mhdp8546-core.h   |   2 +-
+ .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |   8 +-
+ 3 files changed, 48 insertions(+), 194 deletions(-)
+
+-- 
+2.34.1
+
