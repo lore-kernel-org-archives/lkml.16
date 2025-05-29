@@ -1,136 +1,157 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06FB4242D74;
-	Thu, 29 May 2025 02:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5598221282;
+	Thu, 29 May 2025 02:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748485033; cv=none; b=hf/BylIZec8EUF3doJpotMgnJ6B+ci2fay7IUKvzFZS3LKRlCjz1oj6EWaP+lDFE1pE3GaTMFZZfP1mpZeuHQpHYrfnUtnXiZVnjHig+klJu/R7Jk8GaxQzxsH4f3WnvIiJu0An1sQjuzVl1Mnopcj+t1UmitGtXKDxkLbRXx4Y=
+	t=1748485092; cv=none; b=Igxx3geGVN9Eq+Q+WI97yvGDBqguFrUlbKkMq4Gn0uYaunWCQk1PnvSSIocnDA3PNrdLtwKDc8GgunB9/stDh6IrmJYRRD9XMBeumduqq/a5Qi2NiOHsfaLZtm/hQlYy44bLWdFGMDGF4u8Ea5KKZGuGg+F6rm67wTeIGcCTaeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748485033; c=relaxed/simple;
-	bh=BXnpxy5x+WlgemioBql8EwhnNFniZqjZLbYpZqfqrmY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=j/MHGqe4KtcOyOSP+5Bt60FPbmSi+RACsKTU1BiNqLzRdxhQ79d9v7QG7Ud3UvPPZ5QMDQqS/c+4SNqkAbmg3zr+yxSgdFw6J/RvWeaTrUBUOX6HBGkIK3dQQF0tx5mIRJHFr7dHswW/9fO6WWKNnIbNLJ0HbYDz8auoVOtrRh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8BxrnKjwzdoZzQBAQ--.21261S3;
-	Thu, 29 May 2025 10:17:07 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMCxasSewzdoE2L5AA--.61626S2;
-	Thu, 29 May 2025 10:17:04 +0800 (CST)
-Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
- <20250528065944.4511-5-zhaoqunqin@loongson.cn>
- <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
- <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
- <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
- <ccb1927d-c06a-9fde-6cbb-652974464f4b@loongson.cn>
- <cfaf2fbb-5c6a-9f85-fdc9-325d82fb7821@loongson.cn>
- <45xqguhrecn57cwc66hfws4eeqrb6rlijvh2z35e56ogojc2q4@pnlrgx57353b>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <7a0c5eae-f6c7-f2dc-9356-5419c7df4f6a@loongson.cn>
-Date: Thu, 29 May 2025 10:16:05 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1748485092; c=relaxed/simple;
+	bh=wzXTPhnaf8UnOSiDczkX4nqVWczs/b3zKCpq50MEHvU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=K+IX1gxay2u2w+GfNeXJfDJpDiX8H8K9O7aBnOYDsaD5U4MBWUIT7oRj0ShK+zCAQCiqCIkjxQqI/FkUVmSy32+gOzyHXb/6Af7hEWa6/AtDVzyZ197a0vQRR8/cJeJrmqHVRFjPNDYwK5iwaWgOVO1kGSPahJGFI7AqgyBfFrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DrzrajQp; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrzrajQp"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c5675dec99so40167485a.0;
+        Wed, 28 May 2025 19:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748485089; x=1749089889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AsVHBqp0MlQW6nz5AgO2rzoOSJPH8levSMCbfCpQoLc=;
+        b=DrzrajQp6WY9/TtiCCcrnvGsyVrSUj4CtIUIaiHmkCrOrZeE/O213Rgd/VCR4OTOcC
+         4yT1mrrjugwu/rX9eCp0NuGdAXFCpeLccvf76Rjix7HTFVWrB4BX5r4yt0seZ5J1fjrD
+         3Vr/ucRzeIiJDxm23vsC5EFN9SRS5B7yUJkhsgsLnJyuA7kF/3q547Ur4Bz9d5NH7Y4Q
+         X1HiHCr4JbFRF5XTzWa5RqIYMiIe+aGavgKudLEd5kYC2lZHqbfHuSb2O7sKQuQ3fnXE
+         Pqp3W4J8B8cMKfPAdcI81ADcDjakmHMY0BZK0dBTnWGlAzEJRS2FpZAC68ClIyeAow0c
+         vAFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748485089; x=1749089889;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=AsVHBqp0MlQW6nz5AgO2rzoOSJPH8levSMCbfCpQoLc=;
+        b=j4qr7J7vfVblYrsyyO23zHDGc/BOFMlc0qp1cISIE+NnkdPQ/Pd12y/UAxnU5WhTkc
+         Z+7DTFlHPIHuXjWBK0iq+FedjF+ZpUqjZ1C3dMN8g5t3gnKv0L8izg+KNZqjBJkCuT41
+         WiW48zK+3istZeP3GuGFS/JkSKkxKHChz9hjCQGND+KihAUlR6GgfLMRMs+eOgR7Rc4Q
+         KG0fcJyAwhsEDACb3raNT54vu2Di+n6tlfOAs5+bA+YVUhWkPsEzQqjyuIOkqJ+6q6/a
+         fF845FcUMTU13M3gH2uvNZDiC5wtie0E3UFwLYCeCBynpQSF4PKxtUaWok0zUR3Zoi/1
+         QPvw==
+X-Forwarded-Encrypted: i=1; AJvYcCXnRCW8jJUiqBPGNakzoic86xJ9qWPtzRvjB5R5OYeXesCQ0BxMosjWbVfs7ptIKG/WONm0QR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqFKdj/BNHrN4AzIGFmtWnbxE3AJKceIe1sd8Z9743GRQHR+Mz
+	pnATmK2BOHZ/HjYemM4QO2py0nlTyIufWZkR+jJKfgRgxd31NGqvPnFX
+X-Gm-Gg: ASbGncszAmpgWo19x3nKsUb5Ug1noHGN0xb8Mg8kZSN5CnQ7JXnwPwq02r22vw0db5d
+	S9QHSNJ95YzCdx8spcFxkRDz7Kgm8BcTXwy6q8Jr2avgVb6erLj264+t1myjU0XeUrMTwasdYTq
+	GKg19Q691bRCOa4nseltTf8iR6j7zlpL1/FVg2KL2E9KdFxtkfNrpKP4rMt4OS0wEutZCzj4oON
+	TbXqZS+KWR3aJyQ9Ext357FTq1J0soVsEbaxFNOeBdS0acNNrfwFqOQ4XNmw7Q3A75OZjIc4TYU
+	ipuFnwL3CgpiWVLRnLwv2Unt1ViQCIdQxPyI97rQZVQW2CKpAlg+WY5v4Lhg/K8wbMbyQxnsubm
+	5BQe1e7L6IeZvqbAuxvihk0U=
+X-Google-Smtp-Source: AGHT+IHlLxi1rKlpmZcTkimlqtP3oGzbm3q4GPcwSk66cc4lAJEYgh8leLsJ2ZzRFVn1HK9DkGZ1sQ==
+X-Received: by 2002:a05:620a:1922:b0:7ca:c9cb:ac1 with SMTP id af79cd13be357-7ceecba454amr2628073085a.4.1748485088562;
+        Wed, 28 May 2025 19:18:08 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d09a1a7663sm31476185a.92.2025.05.28.19.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 19:18:07 -0700 (PDT)
+Date: Wed, 28 May 2025 22:18:07 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Shiming Cheng <shiming.cheng@mediatek.com>, 
+ willemdebruijn.kernel@gmail.com, 
+ willemb@google.com, 
+ edumazet@google.com, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ matthias.bgg@gmail.com
+Cc: linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ shiming.cheng@mediatek.com, 
+ lena.wang@mediatek.com
+Message-ID: <6837c3df6b1a7_39fc9c29492@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250529015901.3814-1-shiming.cheng@mediatek.com>
+References: <20250529015901.3814-1-shiming.cheng@mediatek.com>
+Subject: Re: [PATCH net v5] net: fix udp gso skb_segment after pull from
+ frag_list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <45xqguhrecn57cwc66hfws4eeqrb6rlijvh2z35e56ogojc2q4@pnlrgx57353b>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxasSewzdoE2L5AA--.61626S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cr4UWFyrtF4fGFW8WrWkXwc_yoW5Jr1rpr
-	y7W3W7GFWDJr48tr1qqw4jyFZFkF4kAw45ZryrXr93J34qyrnaqF1UtrsY9rZF9r4xJ34x
-	XF4Yv3y3Wa45ZrXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
-	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
-	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
-	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
-	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8_gA5UUUU
-	U==
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
+Shiming Cheng wrote:
+> Commit a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after
+> pull from frag_list") detected invalid geometry in frag_list skbs and
+> redirects them from skb_segment_list to more robust skb_segment. But some
+> packets with modified geometry can also hit bugs in that code. We don't
+> know how many such cases exist. Addressing each one by one also requires
+> touching the complex skb_segment code, which risks introducing bugs for
+> other types of skbs. Instead, linearize all these packets that fail the
+> basic invariants on gso fraglist skbs. That is more robust.
+> 
+> If only part of the fraglist payload is pulled into head_skb, it will
+> always cause exception when splitting skbs by skb_segment. For detailed
+> call stack information, see below.
+> 
+> Valid SKB_GSO_FRAGLIST skbs
+> - consist of two or more segments
+> - the head_skb holds the protocol headers plus first gso_size
+> - one or more frag_list skbs hold exactly one segment
+> - all but the last must be gso_size
+> 
+> Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
+> modify fraglist skbs, breaking these invariants.
+> 
+> In extreme cases they pull one part of data into skb linear. For UDP,
+> this  causes three payloads with lengths of (11,11,10) bytes were
+> pulled tail to become (12,10,10) bytes.
+> 
+> The skbs no longer meets the above SKB_GSO_FRAGLIST conditions because
+> payload was pulled into head_skb, it needs to be linearized before pass
+> to regular skb_segment.
+> 
+>     skb_segment+0xcd0/0xd14
+>     __udp_gso_segment+0x334/0x5f4
+>     udp4_ufo_fragment+0x118/0x15c
+>     inet_gso_segment+0x164/0x338
+>     skb_mac_gso_segment+0xc4/0x13c
+>     __skb_gso_segment+0xc4/0x124
+>     validate_xmit_skb+0x9c/0x2c0
+>     validate_xmit_skb_list+0x4c/0x80
+>     sch_direct_xmit+0x70/0x404
+>     __dev_queue_xmit+0x64c/0xe5c
+>     neigh_resolve_output+0x178/0x1c4
+>     ip_finish_output2+0x37c/0x47c
+>     __ip_finish_output+0x194/0x240
+>     ip_finish_output+0x20/0xf4
+>     ip_output+0x100/0x1a0
+>     NF_HOOK+0xc4/0x16c
+>     ip_forward+0x314/0x32c
+>     ip_rcv+0x90/0x118
+>     __netif_receive_skb+0x74/0x124
+>     process_backlog+0xe8/0x1a4
+>     __napi_poll+0x5c/0x1f8
+>     net_rx_action+0x154/0x314
+>     handle_softirqs+0x154/0x4b8
+> 
+>     [118.376811] [C201134] rxq0_pus: [name:bug&]kernel BUG at net/core/skbuff.c:4278!
+>     [118.376829] [C201134] rxq0_pus: [name:traps&]Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>     [118.470774] [C201134] rxq0_pus: [name:mrdump&]Kernel Offset: 0x178cc00000 from 0xffffffc008000000
+>     [118.470810] [C201134] rxq0_pus: [name:mrdump&]PHYS_OFFSET: 0x40000000
+>     [118.470827] [C201134] rxq0_pus: [name:mrdump&]pstate: 60400005 (nZCv daif +PAN -UAO)
+>     [118.470848] [C201134] rxq0_pus: [name:mrdump&]pc : [0xffffffd79598aefc] skb_segment+0xcd0/0xd14
+>     [118.470900] [C201134] rxq0_pus: [name:mrdump&]lr : [0xffffffd79598a5e8] skb_segment+0x3bc/0xd14
+>     [118.470928] [C201134] rxq0_pus: [name:mrdump&]sp : ffffffc008013770
+> 
+> Fixes: a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after pull from frag_list")
+> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
 
-在 2025/5/28 下午5:53, Stefano Garzarella 写道:
-> On Wed, May 28, 2025 at 05:34:49PM +0800, Qunqin Zhao wrote:
->>
->> 在 2025/5/28 下午5:24, Qunqin Zhao 写道:
->>>
->>> 在 2025/5/28 下午5:00, Stefano Garzarella 写道:
->>>> On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
->>>>>
->>>>> 在 2025/5/28 下午3:57, Stefano Garzarella 写道:
->>>>>>> +    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->>>>>>> +    if (IS_ERR(chip))
->>>>>>> +        return PTR_ERR(chip);
->>>>>>> +    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
->>>>>>
->>>>>> Why setting TPM_CHIP_FLAG_IRQ?
->>>>>
->>>>> When tpm_engine completes  TPM_CC* command,
->>>>>
->>>>> the hardware will indeed trigger an interrupt to the kernel.
->>>>
->>>> IIUC that is hidden by loongson_se_send_engine_cmd(), that for this 
->>>> driver is completely synchronous, no?
->>>>
->>>>>
->>>>>>
->>>>>> IIUC this driver is similar to ftpm and svsm where the send is 
->>>>>> synchronous so having .status, .cancel, etc. set to 0 should be 
->>>>>> enough to call .recv() just after send() in tpm_try_transmit(). 
->>>>>> See commit 980a573621ea ("tpm: Make 
->>>>>> chip->{status,cancel,req_canceled} opt")
->>>>> The send callback would wait until the TPM_CC* command complete. 
->>>>> We don't need a poll.
->>>>
->>>> Right, that's what I was saying too, send() is synchronous (as in 
->>>> ftpm and svsm). The polling in tpm_try_transmit() is already 
->>>> skipped since we are setting .status = 0, .req_complete_mask = 0, 
->>>> .req_complete_val = 0, etc. so IMHO this is exactly the same of 
->>>> ftpm and svsm, so we don't need to set TPM_CHIP_FLAG_IRQ.
->>>
->>> I see,  but why not skip polling directly in "if (chip->flags & 
->>> TPM_CHIP_FLAG_IRQ)"  instead of do while?
->>
->> I mean, why not skip polling directly in "if (chip->flags & 
->> TPM_CHIP_FLAG_IRQ)"?
->>
->> And In my opinion, TPM_CHIP_FLAG_SYNC and TPM_CHIP_FLAG_IRQ are 
->> essentially the same, only with different names.
->
-> When TPM_CHIP_FLAG_SYNC is defined, the .recv() is not invoked and 
-> .send() will send the command and retrieve the response. For some 
-> driver like ftpm this will save an extra copy/buffer.
-
-I need to copy the data to the DMA data buffer. So my suggestion is to 
-let the vendor specific driver  decide whether to use the SYNC or IRQ flag.
-
-IRQ flag is fine for me.
-
-Thanks,
-
-Qunqin.
-
->
-> Stefano
-
+Reviewed-by: Willem de Bruijn <willemb@google.com>
