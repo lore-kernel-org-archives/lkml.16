@@ -1,83 +1,87 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DE529290B;
-	Thu, 29 May 2025 20:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AB922FE0D;
+	Thu, 29 May 2025 20:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748549758; cv=none; b=R8u1TtPD6ymjAMhbWBzVSw4oQpPxHfik8MhXO8mp8Z4dq5QuO9YwarHruIXaoH2K8GBA4yTFS2mZplnE+BRUXX1dlq9/8S7QA/Fg2Nk4HwFjUQ8LgXiJEn1rndD4WMLztETHoQb376muB5ua4/UXE44vp1MO16VXVInjaZw1q8U=
+	t=1748549774; cv=none; b=DG+aE+Oep8O9Ha4Q6yK5e7Plb61Z0zWBvl0ZoFBe0syVlN2vUc/XVyj+ww98L4c5JH5/q92xrPDhiditVUUSOzJAdKIiphWn/1T74NrK0GgTbRoDPBegQ8JaYPBv6dewulwoRd438zoWqUv4Pbh1n5eorwhdZbtl6PfEDX8vLbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748549758; c=relaxed/simple;
-	bh=AxEUEJtSsXYQkYRCPbp1bT4ANi2whzF8qEjdPxzosWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jiF2kOxVesnTzXuzFQZK302QICS30JiSwmR3rCrYBAGPCYI/i001JzONSlG0gko+/7yl5G3NhSknVY4Am4UD2B1cYwo+TT/CeDX1jvZ801/Ui5mxTkJ7HrM0klUiLODLhcNtB3lBxI7NfzgiF35rLuMbE5r1V5lFOIh4+KeTf1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=WI+0VGxL; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="WI+0VGxL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dQ+n7cQU5+xMShg0sP1ix7HAXGCsb92WvGzDX6dnJFQ=; b=WI+0VGxLXzk1JH7Xv5hME05JyZ
-	8zmrU2Y4w4egnDVyQchexQjKPK25ueis/g1KiICk7FsjQVH4weIjsRHyVlUXXZG5i1w+wVKyjnzzB
-	MqzqvA1WnSHqT/tCER7iZWwGuTZNit/ujcbayQYUgjyUZ4yBXudZQgCIgcOuhmlkGbskwbowSbkPk
-	ifgqdJX8XnY0yK5E/vQc/9x2hjes0O2Hmmzs/fkCWLJPwQ+I+IKNLZDaKAUP5atLP/9lqHJitg0XH
-	y0WZ1/8cRm6J8GiuSzaeB5qiLOmC56FQOisxqpm8GCd8r8qRK555s7NNMLAxzpOXaKkkDNbqXiFu+
-	Yjs+hNSA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKjfL-00000003911-1GOO;
-	Thu, 29 May 2025 20:15:51 +0000
-Date: Thu, 29 May 2025 21:15:51 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Song Liu <song@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, bpf@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, kernel-team@meta.com,
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org,
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com,
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com,
-	mic@digikod.net, gnoack@google.com
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <20250529201551.GN2023217@ZenIV>
-References: <20250528222623.1373000-1-song@kernel.org>
- <20250528222623.1373000-4-song@kernel.org>
- <20250528223724.GE2023217@ZenIV>
- <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
- <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
- <20250529173810.GJ2023217@ZenIV>
- <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
- <20250529183536.GL2023217@ZenIV>
- <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
+	s=arc-20240116; t=1748549774; c=relaxed/simple;
+	bh=/qasvl+nVcRZ79yu/U8D2LnlWxObjlfQGc1xvyOkYKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i2JyGmKtsIxk1SA64TSGAIg6R1Q9fivwtKDiX+Byw7adYu7KwloLEqP9GSc3bU7iG+fUsce/Vf/g2Vj1J2GNILnEKXmwnwHReGb+ejOzRHd+LaHJLvBd5JvSfaT40chRTD1SaWUf2wiuGZI/KwMSNac29sbQg6ukph2FCd7HS3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A9CC4CEE7;
+	Thu, 29 May 2025 20:16:12 +0000 (UTC)
+Date: Thu, 29 May 2025 16:17:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH] mm: remove unused mmap tracepoints
+Message-ID: <20250529161714.1d172189@gandalf.local.home>
+In-Reply-To: <20250529144327.1633825e@gandalf.local.home>
+References: <20250411161746.1043239-1-csander@purestorage.com>
+	<3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
+	<CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
+	<20250528114549.4d8a5e03@gandalf.local.home>
+	<b694c72b-0873-4123-869c-134709341e19@lucifer.local>
+	<20250528122411.16a551b1@gandalf.local.home>
+	<20250529144327.1633825e@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 29, 2025 at 12:46:00PM -0700, Song Liu wrote:
+On Thu, 29 May 2025 14:43:27 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > Basically, you are creating a spot we will need to watch very carefully
-> > from now on.  And the rationale appears to include "so that we could
-> > expose that to random out-of-tree code that decided to call itself LSM",
-> > so pardon me for being rather suspicious about the details.
+> On Wed, 28 May 2025 12:24:11 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> No matter what we call them, these use cases exist, out-of-tree or
-> in-tree, as BPF programs or kernel modules. We are learning from
-> Landlock here, simply because it is probably the best way to achieve
-> this.
+> > Yeah, I have a patch that shows how many static key instances exist and I
+> > test that. But I probably could also add an option to the macro that
+> > creates the trace function to also add something to a section when used,
+> > and report when it isn't. Shouldn't be too hard.  
+> 
+> Done:  https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
+> 
 
-If out-of-tree code breaks from something we do kernel-side, it's the
-problem of that out-of-tree code.  You are asking for a considerable
-buy-in, without even bothering to spell out what it is that we are
-supposed to care about supporting.
+And going through the list, I almost sent a patch that removed the two
+events that this patch removes!
 
-If you want cooperation, explain what is needed, and do it first, so that
-there's no goalpost shifting afterwards.
+Luckily, when I ran "get_maintainers.pl" on the patch, I noticed you were
+one of the maintainers and then I thought "Hmm, is this the events that are
+removed that started all this?" And sure enough, it was!
+
+This was going to be my change log:
+
+Subject: [PATCH] mmap: Remove unused events vma_mas_szero and vma_store
+
+When the __vma_adjust() was converted to use the vma iterator it removed
+the functions vma_mas_store() and vma_mas_remove(). These functions called
+the tracepoints trace_vma_mas_store() and trace_vma_mas_szero()
+respectively. The calls to these tracepoints were removed but the trace
+events that created the tracepoints were not removed. Each trace event can
+take up to 5K of memory, and it is allocated regardless of if they are
+called or not.
+
+Remove the unused trace events.
+
+Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
+
+Fixes: fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
