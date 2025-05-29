@@ -1,101 +1,100 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F81C22CBE2
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04C021CC63;
+	Thu, 29 May 2025 15:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748532410; cv=none; b=OX0hMV0oRdGYbiH6BRhcDRhBqew8Zrpt/P75EKaoUgHTeGUP8FW3rsxT1JXQjfDypMM2dJvCmGWH77yWQ0x7OPBQKvNVFWbyklucjeglGMRze1Bse0mXB10xNA2LQZDJ3NK1mMeGGNWN+ujS8CHPXKCJV2bPGUu5gkDtN4PDhy4=
+	t=1748532489; cv=none; b=RMaXL5enEmjFwoBf1zxE+nkBsGN9HVGbWhUMb0ZUuDlznpSwGOjMlxH8TRDhQuqfA8XrDIZp5coiBo2nK9xWLIXEvcLvF1i5mTJ8uIkGkOaItDsaD6yqqUob9DInx0K7mbRoe9Bp+sY7ShP6pmhOw3hSdXbtrDkhd1OvieHtvPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748532410; c=relaxed/simple;
-	bh=XEg1T5QfcPcZ/HVp8dE3KjQ2QZb3eLEg8fe6ilAvAvU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FTJykGM+akvZTGjy8H+8lJhY+fQ4ooarQfO2gNIGrKYCYvVwB2oeUAnJivL6/w2VO83zbc4JNS13M+uXYyQS8zGkrGWtfTB7lmHOu2Qs7bdldrnJ41orcyDfdrDDJxbznqR9G05Wa+YTmMfrbz7MPJzi28FChZQxHnlhyjK3Rtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jRXGYYtk; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748532489; c=relaxed/simple;
+	bh=yPFET+cnqeHQaXJ8X3deZZadSpN1vopNPMuqCZp9UZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7+T7ZKW1H0ccpRMAZsm0oDlKmY+sJnHzvTo499KgPICfBvu8RLQxTCt0bKfZwRkyl5pkwTRlQq4fD8DAnEyzlXM7z91YiF0jg5Wu/XhzuC9LS/jkz1Nyv5UR3LcH7mh5Ps1j+oHTWqXNvD6FGffkrguXD6ZGwSFrTKOX+UAaFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q4m3XRav; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jRXGYYtk"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-606668f8d51so661408eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:26:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748532407; x=1749137207; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VwNV9XkLQhzGy3LnwouyowzyNAVfOZn4v9Uo2M+zdnA=;
-        b=jRXGYYtk94DlPui8hRvVIkt2HwcEeSKt+e3k4iwPxhcrSFCbHYEykYrUUB3YH5vIdU
-         kAzEJM8C/gr55LoYl55VH6hfwN6hds1/fzfdPf/4roec+yIrBGRnAaICJ+I5jq/VDZM4
-         bitwNW8svI+CTkqjTNzXetiKdC/gDtZh4eExIjCwzZrbZ5CRVKltu51VIEQVNi3gfKCc
-         3KrBjJDKLCJnpSYSoj8zUzTEibPi0r9a/1gS5pgNAhm0IQBlOk1M5kvt1naFrUC1+SMq
-         weXEeaE/bCVNctfQOKfWw//w+0/NeerSLh36Uq78Jg7M8kFdxvyh0s/eIplVs0Qj2Y9N
-         4jbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748532407; x=1749137207;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VwNV9XkLQhzGy3LnwouyowzyNAVfOZn4v9Uo2M+zdnA=;
-        b=qMu2iEzsZMkAzJK7HW541Ru+MC0oxYH81TjQZXUhQqAD4wn8R8Qhf7t94l6U1gEGtu
-         qaTt1XgvOwShdjNRfnCSKYb0gr6lijP9sFqxJkw1bPPqcJdn/KYHym1Al0Aa5P4zDTQM
-         Mli7DEx5JxDkuURn/JXqnPqCi0F8oDrv5qGrklM7xjKlsIROkCIculX3xRp8x8p91IMA
-         DkSsMNv+HbPIHdKAt4Xs+Adpu5OhsDbnaIzH6E/fETCK/3GuV9BvSURNRroRTPn1W63x
-         Dz0lb5bjjvBa9CqO/T2O01q/zciukp4vMP3Btq2tDMBOZp7Gxn7L8bITk2c9j4oN43w1
-         OXSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXwyDVGOCEnl3PZXSZhTsBzLAKqRkQsVeHfahKb/WIoal8jcncUnv/jqu4RHtc+ZNrVM3xQV0lHtlu8Jg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA3L+I1w4Ve4UPFeur5RBUFxQP1zc3RS3CfdvUr3GVtpdA/OSo
-	+5DJuJmyLW/VusgiKPp8CCN946DbEdBtwprbo2ccnIGDcTef2f+kHQyb+k03v/o9J/iwORmlPyK
-	2pi0L
-X-Gm-Gg: ASbGncvEskUFcS6K4MRErnL4PCHPepUMB9gCpTB8N8nGofeix8Awf8+pwT+Pe0KCKN+
-	++nwgcYDPR4lGJ/SqYSqpbtKmwkSJ6Rt3R3mFq1tpEs9FDAsDzjnWfC1X/2AXX/5RVhp1cdHaGG
-	SQrbVMMVbgpoxwnRNSHcwN54jxc2oalTObetVixhJxGAnPxAWYOXwXhQNRpJ9U3w+t5JP/7HzXF
-	xembloJsLcddmMAXFNW9BEflP7bh5eKTwTi5AVCbyt4ESojsKwMOkl1Go6oDWsCBrYvdqs4ShYK
-	EbeDDzy3hNJ7rqis+eIIlfHU6uOkXMXd+/44gY8Gz7tIJPSOmhKtjDTDF1Xgf3SsA6tHNsw3Acv
-	UifxWkHpgjtBrelCHkPD3a7qadA==
-X-Google-Smtp-Source: AGHT+IGPjvnGC1YvRZH9st24obs6F5iZRk8vdE60S7IXw1MFMfmFFESs0FdIBrXXqrBC8I/S4dstZQ==
-X-Received: by 2002:a05:6820:d11:b0:60b:cd42:7a0c with SMTP id 006d021491bc7-60be4de19eamr1424084eaf.3.1748532407038;
-        Thu, 29 May 2025 08:26:47 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:928b:5d5c:6cd9:1a4? ([2600:8803:e7e4:1d00:928b:5d5c:6cd9:1a4])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c42c16sm30504eaf.7.2025.05.29.08.26.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 08:26:45 -0700 (PDT)
-Message-ID: <b9b9aea9-e02d-4d5f-9f07-ef1c54e46b89@baylibre.com>
-Date: Thu, 29 May 2025 10:26:44 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q4m3XRav"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748532488; x=1780068488;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yPFET+cnqeHQaXJ8X3deZZadSpN1vopNPMuqCZp9UZw=;
+  b=Q4m3XRavVOUydTSGQ5TeKzWXISYUBlxeN9YDTDR7phUJeB9W2kYcurXL
+   /LTQWmEJYSk0oWnfZU7iFrpwNsX6qf4cPzaN/Bjkpq9/vP3+gH5HFaywF
+   H0YCgw//oYVBC/mcdT2z4HgdfU3vEUUiE6XSyqllDgbcLDAaBOFAmXCUo
+   xPQ0IyvF23ZvhQrpJ0xH0PrFHUAWCfpS/tV4BL9eW9EDRnFwAUTuIe8LG
+   87VZCYXu4HUSwwiS+147jBcEiYGD0l/C2KvMpz0CpkFq5ZlAMXFPQJY1Y
+   yVPULqn55/OuTS1hpI+XXcK19FfJW+3AK3Ks2WqYw+2FrjwaSseQy/gzr
+   w==;
+X-CSE-ConnectionGUID: EfliI7OkRp21FrMbTq2MJw==
+X-CSE-MsgGUID: geIsYCG2SRqbzg5dbO1qug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50654520"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="50654520"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:28:08 -0700
+X-CSE-ConnectionGUID: 5eqefe/rQSiqkWpb7m7BFQ==
+X-CSE-MsgGUID: r5RXPeHzS/W9NHUEnz/Y+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="148749765"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:28:07 -0700
+Date: Thu, 29 May 2025 08:28:05 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Zaid Alali <zaidal@os.amperecomputing.com>
+Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
+	robert.moore@intel.com, Jonathan.Cameron@huawei.com,
+	ira.weiny@intel.com, Benjamin.Cheatham@amd.com,
+	dan.j.williams@intel.com, arnd@arndb.de, Avadhut.Naik@amd.com,
+	u.kleine-koenig@pengutronix.de, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v7 6/9] ACPI: APEI: EINJ: Add einjv2 extension struct
+Message-ID: <aDh9BfyNXvJvduDr@agluck-desk3>
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-7-zaidal@os.amperecomputing.com>
+ <aDdYPf-4ru_cC-_D@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] TCB: Add DMA support to read the capture register AB
-To: Dharma Balasubiramani <dharma.b@microchip.com>,
- Kamel Bouhara <kamel.bouhara@bootlin.com>,
- William Breathitt Gray <wbg@kernel.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250528-mchp-tcb-dma-v1-0-083a41fb7b51@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDdYPf-4ru_cC-_D@agluck-desk3>
 
-Please include the counter: prefix in the subject of the cover letter
-as well. It makes it easier to see at a glance what this series might
-be about.
-
-On 5/28/25 1:13 AM, Dharma Balasubiramani wrote:
-> This patch series adds support to enable the DMA support for TCB.
+On Wed, May 28, 2025 at 11:38:54AM -0700, Luck, Tony wrote:
+> On Tue, May 06, 2025 at 02:38:10PM -0700, Zaid Alali wrote:
+> >  struct set_error_type_with_address {
+> >  	u32	type;
+> >  	u32	vendor_extension;
+> > @@ -58,6 +80,7 @@ struct set_error_type_with_address {
+> >  	u64	memory_address;
+> >  	u64	memory_address_range;
+> >  	u32	pcie_sbdf;
+> > +	struct	einjv2_extension_struct einjv2_struct;
 > 
-> When DMA is used, the Register AB (TC_RAB) address must be configured as
-> source address of the transfer. TC_RAB provides the next unread value from
-> TC_RA and TC_RB. It may be read by the DMA after a request has been
-> triggered upon loading TC_RA or TC_RB.
+> I can't make this match up with the ACPI v6.5 spec.  The spec defines
+> a whole new EINJV2_SET_ERROR_TYPE data structure in table 18.34 that
+> is NOT just a simple addition of new fields at the end of the existing
+> SET_ERROR_TYPE_WITH_ADDRESS data structure. E.g. the "flags" are now
+> in a 3-byte field at offset 5 instead of a 4-byte field at offset 8.
+> There is a new "length" field that descibes the total size of the
+> structure including the new flex array of syndrome values at the
+> end.
 
-Can you please explain what problem this series is solving and why we
-need this change?
+Someone pointed me to the ACPI 6.5 Errata A spec: https://uefi.org/specs/ACPI/6.5_A/
 
+This code does match with the description there.
+
+I'll continue looking at your patches with this as the reference.
+
+Please make sure to reference this spec directly (not buried in links
+to tianocore bugzilla entries) when you post next version.
+
+-Tony
