@@ -1,115 +1,122 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178BF26C39F;
-	Thu, 29 May 2025 09:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41FE26C385;
+	Thu, 29 May 2025 09:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748511656; cv=none; b=sNIqlg45/sox8xhGjhn8mg3bMhB4/FFe2VxEbx4BrRdUo8gKGzM1i1Qh9BVz+sr6dW9jiiE2pj2yauomZ6CHZPlVjA0769ezZWKjTLwx8F7wl3iD9WJrGZDsPh/KGu/w4QBoCFNjL6dULuvDMI328a7+isEOU9oo+uxfyEuNA8s=
+	t=1748511683; cv=none; b=o/Ssg2JA8cgnANR7SjJkPHZGseZVhKur9RWjagnzXBfOwB48QjNgYKi3eZLFtm/MuVtb/XZB83Aj/KzkDsnFqDJviXoPy998/aaeJKUb+ChJQzdHJ3fGNkuNMol8mOEKDjdPT7OuYvncRfHU3+rNaGzy+0Rp+l85OLUljHBK7EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748511656; c=relaxed/simple;
-	bh=/kjav/+bPaoZVE53qCcjzniWgN+ZFHEb8BrZDJLHJL8=;
+	s=arc-20240116; t=1748511683; c=relaxed/simple;
+	bh=vqz1KKkvB6H1LZFKlZUMTSWgxZ8RSU8LtK7z1Z9LEmQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msrayiRAprxENLdDtLPXyLq2NpW3ftzn3NIqXVyVXJp3QCOR8tR8R4H0n0QakGBYqXkcVAtPdOqLKROf5r3OGhwnPWGAdXXVLeK9rBxl1osZLxoNoqk3aj7lu0RY9c2uLOZmh1diuyvtEcL7TA2P09N3d4spCmhwLGecciiXByk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=QZQy4S+j; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=RVsendOMYTbBTdACLKywIvu94Qms4yYNgimCw1fdw8nNkSjJ5EpMoTRfWve/rXUqi0rjQBWmBUKrFjSxHnlM90HAy/hx9N1pRhkwm3GpwS46241Too7ba9qv2EJ5gPbftO/lVpo4PCDwMmRhbDgnKIVhy0dezAX0cT4JgxlpC1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Vu9samcg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="QZQy4S+j"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=62BhX69mt+FQ1/nAowHZZeanKaiAAITWTNXpapK76TM=; b=QZQy4S+jSFdT1G4qH1jtTKXTOD
-	lR8nYl95sgn39OWK5pGfqFmkCqc0xzJGoFWVa+uZj8edkdflc4whX+K0QDMWeFrGV21x04XlvgDCF
-	1xSWYA4vSVInQg+J74NM6QmErNMDvNNXEKSiSQ55chLmIUdU2CVDumOowl4P5wgclk1VUxwpXUpjL
-	M60fXXjEKMJRA29pIlWk9DNtfaPnS9eRyYACu4vnogjU3m4a93hH678R1x24PDc5L8o9FJYO602eZ
-	fy61JMEkdHF17UHHWvLxebiLQtpGAvVMiBw13AiluwLevN3/NzFFY7XbbiRM3eGRPNCZQPi76NU6p
-	HCMxvAHA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41504)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uKZkc-0001CY-2z;
-	Thu, 29 May 2025 10:40:39 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uKZkY-0003Ln-2W;
-	Thu, 29 May 2025 10:40:34 +0100
-Date: Thu, 29 May 2025 10:40:34 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	"shenjian15@huawei.com" <shenjian15@huawei.com>
-Subject: Re: [PATCH net-next v5 07/13] net: phy: phy_caps: Allow looking-up
- link caps based on speed and duplex
-Message-ID: <aDgrkog2BcLjF1VV@shell.armlinux.org.uk>
-References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
- <20250307173611.129125-8-maxime.chevallier@bootlin.com>
- <5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Vu9samcg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0047C4CEE7;
+	Thu, 29 May 2025 09:41:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748511681;
+	bh=vqz1KKkvB6H1LZFKlZUMTSWgxZ8RSU8LtK7z1Z9LEmQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vu9samcgBLiopDcLf8NGMLCaUB7wHCjKn23ucLXw+yMIbLWsYQSdt/9HYUrrrUY2d
+	 zjnlc0Te0cRHN1Aiq162BcfXXQ9CJbZ4Diym22QA9KXBrO+su2BO55UYaY4TWuId90
+	 4U4r1LaTRDLzFSIdThtuolyZT4m8G/cS/1LH9QA8=
+Date: Thu, 29 May 2025 11:41:18 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Xin Chen <quic_cxin@quicinc.com>
+Cc: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liulzhao@qti.qualcomm.com, quic_chejiang@quicinc.com,
+	zaiyongc@qti.qualcomm.com, quic_zijuhu@quicinc.com,
+	quic_mohamull@quicinc.com,
+	Panicker Harish <quic_pharish@quicinc.com>
+Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
+ ttyport_close() due to uninitialized serport->tty
+Message-ID: <2025052957-jawless-superhero-09be@gregkh>
+References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+ <2025043022-rumbling-guy-26fb@gregkh>
+ <d388b471-482b-48ba-a504-694529535362@quicinc.com>
+ <2025050851-splatter-thesaurus-f54e@gregkh>
+ <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
+ <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+ <2025052926-net-economist-a016@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <2025052926-net-economist-a016@gregkh>
 
-On Thu, May 29, 2025 at 05:36:11PM +0800, Jijie Shao wrote:
-> Hi Maxime,  fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps based on speed and duplex") might have different behavior than the modification.
-> My case is set 10M Half with disable autoneg both sides and I expect it is
-> link in 10M Half. But now, it is link in 10M Full，which is not what I
-> expect.
-> 
-> I used followed command and trace how phy worked.
-> 	ethtool -s eth1 autoneg off speed 10 duplex half
-> The log is showed as followed:
-> ethtool-13127	[067]	6164.771853: phy_ethtool_ksettings set: (phy_ethtool ksettings set+0x0/0x200) duplex=0 speed=10
-> kworker/u322:2-11096	[070]	6164.771853:	_phy_start_aneq: ( _phy_start_aneg+0x0/0xb8) duplex=0 speed=10
-> kworker/u322:2-11096	[070]	6164.771854:	phy_caps_lookup: (phy_caps_lookup+0x0/0xf0) duplex=0 speed=10
-> kworker/u322:2-11096	[070]	6164.771855:	phy_config_aneg: (phy_config_aneg+0x0/0x70) duplex=1 speed=10
-> kworker/u322:2-11096	[070]	6164.771856:	genphy_config_aneg:	(__genphy_config_aneg+0X0/0X270) duplex=1 speed=10
-> 
-> I also try to fixed it and it works. Do you have any idea about it.
-> 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index 0e762fc3a529..2986c41c42a8 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -258,7 +258,7 @@ static void phy_sanitize_settings(struct phy_device *phydev)
->         const struct link_capabilities *c;
-> 
->         c = phy_caps_lookup(phydev->speed, phydev->duplex, phydev->supported,
-> -                           false);
-> +                           true);
+On Thu, May 29, 2025 at 11:07:25AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, May 23, 2025 at 10:52:27AM +0800, Xin Chen wrote:
+> > 
+> > 
+> > On 5/14/2025 5:14 PM, Xin Chen wrote:
+> > > 
+> > > 
+> > > On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
+> > >> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
+> > >>>
+> > >>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
+> > >>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
+> > >>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
+> > >>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
+> > >>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
+> > >>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
+> > >>>>>  {
+> > >>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+> > >>>>>  	struct tty_struct *tty = serport->tty;
+> > >>>>> +	if (!tty) {
+> > >>>>> +		dev_err(&ctrl->dev, "tty is null\n");
+> > >>>>> +		return;
+> > >>>>> +	}
+> > >>>>
+> > >>>> What prevents tty from going NULL right after you just checked this?
+> > >>>
+> > >>> First sorry for reply so late for I have a long statutory holidays.
+> > >>> Maybe I don't get your point. From my side, there is nothing to prevent it.
+> > >>> Check here is to avoid code go on if tty is NULL.
+> > >>
+> > >> Yes, but the problem is, serport->tty could change to be NULL right
+> > >> after you check it, so you have not removed the real race that can
+> > >> happen here.  There is no lock, so by adding this check you are only
+> > >> reducing the risk of the problem happening, not actually fixing the
+> > >> issue so that it will never happen.
+> > >>
+> > >> Please fix it so that this can never happen.
+> > >>
+> > > 
+> > > Actually I have never thought the race condition issue since the crash I met is
+> > > not caused by race condition. It's caused due to Bluetooth driver call
+> > > ttyport_close() after ttyport_open() failed. This two action happen one after
+> > > another in one thread and it seems impossible to have race condition. And with
+> > > my fix the crash doesn't happen again in several test of same case.
+> > > 
+> > > Let me introduce the complete process for you:
+> > >   1) hci_dev_open_sync()->
+> > > hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
+> > > here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
+> > > serdev_device_close() to close tty normally. And then call serdev_device_open()
+> > > to retry.
 
-This isn't the correct fix, as:
+Wait, what?  Why is qca_read_soc_version() failing?  Why are you
+retrying multiple times until either you run out of attempts?  Why are
+you closing the port and then opening it again right away?  What
+close/open pair seems totally unnecessary, why do that at all?
 
-+ * When @exact is not set, we return either an exact match, or matching capabilities
-+ * at lower speed, or the lowest matching speed, or NULL.
+If I read that function qca_setup(), it can NEVER detect if a failure
+really happened (i.e. if it does run out of retries, you just plow on
+and keep going and keep on registering things and THEN return an error
+for some reason.
 
-So it isn't returning the exact match but apparently ignoring the
-duplex.
+In other words, the error handling in qca_setup() is very suspect, why
+not fix all of that up first?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+thanks,
+
+greg k-h
