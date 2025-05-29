@@ -1,71 +1,75 @@
 Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DA6218AB3;
-	Thu, 29 May 2025 20:28:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B78218AB3;
+	Thu, 29 May 2025 20:28:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748550503; cv=none; b=gOWPun/IrwT+KEbCQRz6bpnyCeLG3B5fXaEZOZLaZ+aviZ2kw8x9WFA4z3kauzffqEYl9pDUuou24S89wO2rStovLwsntSp81e9Y55GzH4JzYgFoqEq6bB6wgwoXLPiGEO7QvvAkAQ6avauzVeVJiVgEBJMtUTz/jdB5MWfnMrQ=
+	t=1748550508; cv=none; b=NuJA1rjdNKgRPJJQ2DAN1fQ85rz+CFhhyxrJxa0yt08M/dIY7Lqd4zCavXh1tL10L9PHpTYy/pxRFJzKBIYs810YRBbpUug9cFYy2RxAJJEUQhsmN/TG7V6VEleCm5154DoWwS9j/gchynEJY+UbRkwUiHGlNs333zg6cfyCOXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748550503; c=relaxed/simple;
-	bh=2lFERKKwf0Bgilc2fCylezhiNI0OaN5OjXUiUrHMMfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uz3vZptfHNedHq4C8naMaV9M1BA/rB7kaW2A1nDIP89804bFKzV2/cnJuIAfFXV2z2R/BH8IuiELwX8sGbWDexTh6bDStv/MBVVnTrQa84AW/MFUfhn3pJH+xq1kaEHsLUHrfRg07EXWr4x5t2rq/9K9gkLfX3jao+/2/StyR3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V/NNZO7F; arc=none smtp.client-ip=209.85.167.171
+	s=arc-20240116; t=1748550508; c=relaxed/simple;
+	bh=HktfipjCtbNhdpQdjG/jx9IyuttYJiKuu2cQchPP5AQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XyY4HkgI/GOa9EorEEUg3KNwt/RHrUQesP3yu8leiPSTXtTgvOWwpBf1d4qL/+Srfl75U+O1IMsq3vSE/7mxO5ZTMQe5/GNPGD4vTvMc3nOMf5Sjcdt+9BP6huMv080S/JEHtCx0UY+oJi3tFUPYUKJURwwz3vv0CTD2nFkrD98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jiB/cQhb; arc=none smtp.client-ip=209.85.167.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/NNZO7F"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-4067ac8f6cdso64679b6e.2;
-        Thu, 29 May 2025 13:28:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiB/cQhb"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-40337dd3847so821965b6e.0;
+        Thu, 29 May 2025 13:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748550501; x=1749155301; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ze7pV/eckgg8GQ4RrwQCS5RopGlZ0EcL5AOHMc7b6xc=;
-        b=V/NNZO7F/U7est0gmXidbKj3H3CmLz3ABKXbKPHcYpbgMOfS1DLx48OImP2pYg/C+B
-         b4sQUE3F3UgJ8Aoi4Fs0c/+zd+WV5wDEEz5QuJKjleDW2UGBN7n63tjlMGp92MbSg8M6
-         kal/hQBZBFjV5DUqmvUUEid503mQiVrvbmFkXKPKrUtNyhxnG2XZ2Z56eVHXsVeXsjQF
-         YdsP41WYgiXx3GVSl/Qsfqg2G5+8Byl892xPJv7cOB8KSiXkSZlTRcW004FizG/1xdoN
-         k55nh8iRHPqUNoR8uUQtSL3igp/C5Qndq6HRauApgV5IsmWB0t/8lfJK4cT1ZJPY4Xn4
-         49ew==
+        d=gmail.com; s=20230601; t=1748550506; x=1749155306; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=80W2fxDPnqr3BsAdMQ1F8twH1xONkZpWztd0paXrfPc=;
+        b=jiB/cQhb78Cq/MYQpECsAwKNcc/VqrvV1kSyA5phtElYnJF5Zq5322viBwAWczpy9a
+         mEXL1BMYL26dAF8zG0cuJbmL3yQVegzpjfrV/rmuKhDI8oUcPcjS9qw/zsmHYcfTxD/j
+         7YonSClF09xNmF3XgF93Na4Ce0ol/yy/yEovyLdjufnftemAdsmuzZX79K+Qp5RY7/WH
+         +wWo3B7X07oTl0lrtF1agOeTcSYPT/Zb+ihGTmtr91jrIuwVBCCML1XM6oTd2DxXlSZL
+         /0RoEI73MVtWjc9XK1u72MtkjoJQDXgJOGCZtZcTzF3R6eja5uGBAUsSwkFLU48oHomp
+         KFRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748550501; x=1749155301;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ze7pV/eckgg8GQ4RrwQCS5RopGlZ0EcL5AOHMc7b6xc=;
-        b=RqtKmHbMPXE2pIcrFgqg0x1Mgr3ad2Ao/3znT4Aw9l+U8UVYOl3TFSvfDTpB/Wcv5+
-         J4nuw6UGpB0XGwyqU1JoP3bJBX39s/BkXFCCosjVwegk3/V4cPA8TiwS6anJstsTEPhe
-         cLsLQVRKU1ZwFUP6y94TPrPMAlAVnGtx79IyMqND/EqTHERG/hh6BX4ix8dDijbubX5s
-         8P2P7G1pWgLv7RO8i5aYRWdRu1nCGJAW8F/fSNnw/+StUUMMI8wn3KUmGWvYJqK84ISp
-         pqgFW+41aY5ILuqijOdSYE9ode8qgYvxH9b/uTG9+IPG0s9JEdfdCekzW6JusXcReJX3
-         Ca9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVT6IoFguzpsUkKLLKnjeHqrhwNQX+Mx1M0oypWRxYmm1VsB5BVtAyYSix/SmHqx91MZmgKRuxt/hbBimnOAhuwbxUc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpfkOlVOCZr5Jyh1wTayj4fPmaLPzeQdGpWjl7Sroz/sEZEBXn
-	wBCOijMBuzYundbovu8mDB6UGiDMx/JhWlfy1JrKekCvsHrxLAMMuY/GymWTiw==
-X-Gm-Gg: ASbGnctGiZ5JYKmV+7hpAMepCeJJOZl9bzU4NYNL40wx5wRnpwLij3gc9QQk2ymwyUR
-	0M1oCaLY4JbkfjKBkqi1eK3wXSWfyJebOwG8X4aJk0VlbBNoh8M8kSpwNqtOnce0YmV2Q27ue61
-	ZhrlaNxxkJOpNBIO4aW9Kk+ZEiLP9CitRgHwzdxOENR8tdpaJxu3GLQNctX5eZAcfxUfMqeGEH/
-	O6e1991DZ7uUx3jVC76pT+f4EQIWFQlZyjJMAxJ1+HfOIcEcgnKOZy+DPTatLWoJSEKlRlQQNjm
-	tFddpLVW5OWNfQ3uWGobb1TZJElZY5EujBRBwM1FhGq4Ax6AHcvr6iTeQPkPwNH0dmHMAEjakOg
-	94yOfCyHRFljP5CO+YQ==
-X-Google-Smtp-Source: AGHT+IF5EyyKevgQlDAL5+43z/UP19l2PHURuLA+Ho6sbu8B1WX/LVQkZ+7QW8yOC0tKZRmqOWG/wA==
-X-Received: by 2002:a05:6808:228e:b0:3f9:d5a2:8999 with SMTP id 5614622812f47-406796741f4mr608922b6e.3.1748550501239;
-        Thu, 29 May 2025 13:28:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748550506; x=1749155306;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=80W2fxDPnqr3BsAdMQ1F8twH1xONkZpWztd0paXrfPc=;
+        b=SKoDdUcmIs8aCrRVd5NcKb3Pod62/+6MQjrWaRO8HivoKLw1zqxnwO0BXyktJFBVgn
+         FS8F9iiInplM1vaRueafTDQq+OqJvp19xqYaAr0WxinTHhIwj4CYCTNAxKGSmFY0G2bo
+         6l5vjkCVbK0BZE+ZXmL4PhvR/2Pi2LM01jKVYzxW0fy6JTBnWOGCSGw26AbqmRJEitrY
+         5cskn0550G5UkzOEe0IutsRnFkBBRlORdnS95YFmMMWNKYd4mqk7h9Um+etK0sAfsRZz
+         HKN1kTOHkkX5xSML/k+kcmoeJDCBPh7RSN3C6RmwlDsIOx3HUAdcL+fk6r49K4qjvhOj
+         ZZIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYdm9T9wHyhsy6W1m2J3LOPOw++Hs2Xl/zCom9ZTD45eEvCiwA6U2FwmdcWBcMRCigQY/MXb82jQqxyqqYD6WRLW1b@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqq5lXoyjhNIpyy10gDP/EtQOzpZDf0y3LPv9jEN6oGXJIBbIG
+	9h44/YuUV3fONELZWxJJyQU+7kk3RbWdfyXzufovnENnbE6KEsXU0nwozkukTA==
+X-Gm-Gg: ASbGncsa4jOztJjCosWS0HbJobXW/XqO3EnzQS8wPRvLgczS1MFVHolA9m0L9hH0yfq
+	5f5Fq/fe8YgNZKOArV9uT7cMGBoJ79hBEOSLEu2xxdmy9kGnYKWhKfSZUsAZDRktR5kvk4k9hDA
+	JY5tQqbpg9eA+GroXqfl2dONLbeVNVri3WA9kML1cp9gdKkJa6OTvVqG414UI6wY2w0f3ydsTnC
+	sMZvCT+lwDaYJltZVuehzYDJrSbwjfB5QB47SQUsbnL/lXJrOQXpukdf7nqXj/vbMEd86Rp4Hv0
+	1M15VIdtn3CxwqxTEwOh1EowEfINj2mmdwAGJL6n3rcHqB5v9/Yb4rqNkRu002ECw4SjwHOVKVo
+	b0j2b2zA9gUpJz+lQlzS4fRxwveIH
+X-Google-Smtp-Source: AGHT+IHxaknsXmZ//EqapzVARMwWBL6kJPnekK+QuGfKiKPeEPq2HebqX/wW+TibfpKE9ZIKmGR5qw==
+X-Received: by 2002:a05:6808:3205:b0:3f6:abbf:bb88 with SMTP id 5614622812f47-406797191cbmr641215b6e.29.1748550506170;
+        Thu, 29 May 2025 13:28:26 -0700 (PDT)
 Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678bf36e7sm129240b6e.1.2025.05.29.13.28.20
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40678bf36e7sm129240b6e.1.2025.05.29.13.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 13:28:20 -0700 (PDT)
+        Thu, 29 May 2025 13:28:25 -0700 (PDT)
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	platform-driver-x86@vger.kernel.org
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v3 0/4] platform/x86: dell_rbu: Packet data fixes
-Date: Thu, 29 May 2025 15:27:54 -0500
-Message-ID: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+Subject: [PATCH v3 1/4] platform/x86: dell_rbu: Fix lock context warning
+Date: Thu, 29 May 2025 15:27:55 -0500
+Message-ID: <20250529202758.8440-2-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
+References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,29 +78,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make two fixes related to packet data and fix a sparse warning.
+Fix a sparse lock context warning.
 
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-
 ---
+ drivers/platform/x86/dell/dell_rbu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v3:
- -  Cosmetic changes to commit messages
- -  Bump module version
-
-v2:
- -  Add "__must_hold" to create_packet to remove sparse warning.
- -  Make struct packet_data_list static.
-
-Stuart Hayes (4):
-  platform/x86: dell_rbu: Fix sparse warning
-  platform/x86: dell_rbu: Fix list usage
-  platform/x86: dell_rbu: Stop overwriting data buffer
-  platform/x86: dell_rbu: Bump version
-
- drivers/platform/x86/dell/dell_rbu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+index e30ca325938c..7b019fb72e86 100644
+--- a/drivers/platform/x86/dell/dell_rbu.c
++++ b/drivers/platform/x86/dell/dell_rbu.c
+@@ -91,7 +91,7 @@ static void init_packet_head(void)
+ 	rbu_data.imagesize = 0;
+ }
+ 
+-static int create_packet(void *data, size_t length)
++static int create_packet(void *data, size_t length) __must_hold(&rbu_data.lock)
+ {
+ 	struct packet_data *newpacket;
+ 	int ordernum = 0;
 -- 
 2.47.1
 
