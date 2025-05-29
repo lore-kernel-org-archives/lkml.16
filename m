@@ -1,94 +1,103 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931E3647;
-	Thu, 29 May 2025 13:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D4B647;
+	Thu, 29 May 2025 13:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748524917; cv=none; b=hCGrAVQaZDhPcXwBnmqq4tVCDfqG1YvgElUC0exJr7Nzc8IKZK/NWioNeFgU43azKy/zjV5txTS49vEJ8fscF7lsJiUiNQauQv6SIcjYd85D7VWRxn9ZRNgiNjEhTy7aCZJH+CsJrb81mzYaxDo2xjNIF8NdByrIE6f6lV8TLuU=
+	t=1748525020; cv=none; b=nhNSyTGLnihuDhh1xwTQ8o4ShJMN6KMpToTsYhd3AWikJngSCqeByj+Td8VBfWweYs1QPOiuWBDcBRn7wJrCfvkDS8taUbbUqArcLNDT6l96x6ZwyK9VOeBHuTLZ95nUGBhPDf2414Y9aCJNlPAFK5Y8Dsn2xiQvCMDwEzf6Lnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748524917; c=relaxed/simple;
-	bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CaCYG+09J4SvWK+UVkDAtDbb3c8o5/YECdVKamyp9jO9MepRt4B51tVZGgv7ZKnGuvHI2DXs3aqtalfLW7+188gS3ilXy1RYzOFznhDXxowMl/pHVemyxAUj8hX9zw/4GL+iVrVSEsyQLmHAQwm2GG2DmoLp6eNeOksQSRT77b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SRqL0uu5; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748525020; c=relaxed/simple;
+	bh=dDGVAlh58IXITtv4zoQJHm8V6+hjmVhqg6ZkAI+a+ks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxQZ9cLFgEdM5EM7COzIy4G7tcf2x52b4i/w0+b1LZEK64Bb0YqTSQbjgiMYVJiCSkYGxOkZIct5rQKqpUkd7fiqpKSW3WjPBG+pFPb7e2lIVlKOJYeVoSs71D/Xt0AxKwf9dUuOc2ArSswwPXSAihDM+2x/JN1fMzTuyWbTEpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HV2UtNB2; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRqL0uu5"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2322d8316f6so1064625ad.3;
-        Thu, 29 May 2025 06:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748524916; x=1749129716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
-        b=SRqL0uu5UAiK7emC6cU3gG1kTyFmeDOAkog3G7bqgiWZf3nymoSkgD7fD8nRNZTkAv
-         KPzkKSzvzfk9rRZdcPoiNxjvFRIhgSMlmDj7+Nf91xDbXqPY1ywZMi8utd66xU16Ozah
-         mT142MNJG22R8on6sKbWBk5doSWXfy/mCOFdz8OFGuY+lloLXLxGuqLhtzUTj1hPCi/b
-         3dDQCmtDu2vDw5wqOWgVMjgdpLkBigmM42FDRCDoN+hZ9oW6YAjrlZNpMbJaq73phttb
-         VjdG3Nqs9sU17OMOhT2SYrH7TKbGvKtcBylBS8dAKMeqgxShhbIMKm9z+NloLwHuNDeT
-         GNvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748524916; x=1749129716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SN6Mu4JxvkIGTbp2VoyF8l025poz7YYnqBe3byiyb+Q=;
-        b=HlPcarBHtDOouMWnTud4raUml0o2y05DIrTH2bgEqPeQzAg7L7mW4fSbFfBCYunv6F
-         LXYFt56KEzOx6t4p3+l+cp5ax60Q71F0rIYFKZnpIK7riQj3+F3fHFB2KqK7pQFLzAg8
-         GjVmVFpzvLMyY/6FxLkHDm8a2q4810qvtq3IYGAGcZgErLQtsKGHQTdE6Y6zY2vNPbo5
-         LyzuM+ovFxznddiyv3uog32xl5v0MFSaD+QjyqpUJ7dcQI/W05p7wSP14NvvdOf71dlS
-         vW7lSOmE9BpVgLLA+oUfwSnGdndzBkqG7o0b/M2CN1PClBmcDD3yALrAB9dBviNqy9cV
-         mbeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8mjN0P4R1HOw9J/MzA1O/ecbeNcpKguYzN4pj0n9saP6/46jBaIYqUjus9arhJT0/EKcY+NlElLNiWn+Vj7Wv@vger.kernel.org, AJvYcCUawHqA8nBZ/g0lw90QYbTGNAc7Q5b5XDzzp+d9ovgpmjhZO7IPmJ9Rs0TjDanj7+aqMeUuVtp/ZNFB/sc=@vger.kernel.org, AJvYcCX37SLC84ahPhqiP6jgPqqHzDUFoTU7vH+USxBmmWoZcMYMolCReb/5qkwnF9AXP47zJWRQwCwChjMFqpVT8gg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4oM3xycSzTmma30bGyXgic90dsG2bFJb3pzcYYNSPVwxwAU5T
-	8GXz8t/boDBgrbDFzA9B/SRHMXgdhE3KDVAgQSn/WRZOKufl8S8NkKwEqY+m+ClORNUCL4oiI5z
-	LSMZklEFWpX3MroLesj2f0DOkUW0deFc=
-X-Gm-Gg: ASbGncvmLsY5/IJOVyGCyh2ga3Y2PqtyzlNeFb/Iby01saqmgbkRj7vxRZUfz9e+2L8
-	JYeI2TGbU01qAsXn7p8xxf+htBh82FzgKN8iYFPN5z7FWfmPbkvlxGwXWd3lH/kZUYV37jfO3zr
-	dpQ46FaUdnpBtvh94JQu5E/fitIaI+7pchFB7Ke82yMWc=
-X-Google-Smtp-Source: AGHT+IEw3IfjRiVmB9B6f5XuML+7UkncMFZmzabzcloIvrow/Wn2iV4+leCCTt22pE+x9RCQAjX6Ih6PN46tqK1oGuI=
-X-Received: by 2002:a17:902:c407:b0:235:737:7a8 with SMTP id
- d9443c01a7336-23507370992mr13730985ad.3.1748524915877; Thu, 29 May 2025
- 06:21:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HV2UtNB2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=zBTL/STJmtvp2VqDgiDgK4iklSQ0paUUUgoWg/0K4tc=; b=HV2UtNB2S1YdQPm65D3plaVeJJ
+	rS8dbZCmEBE8hNa2SKqutR8/LSMMDcPJCzrBeKp7x9VeDvjUE8kZAiefsXQgFAYOyPLvpbJLscpb7
+	hsUlRtD+mvZ7xh5a58YHxqMIL0Edd26bJ513M5L6iHeoHzpJdmLiktSVODuAfOXtH6Yoj7aKBP9rf
+	bpFmXHijHgT4dfAYYFX+T1wiE+fxLo12DRGJOZJFDCAt//iquqt3pEiLLE4JnuwQkNeVIS1tJRC+K
+	ZaGnGtO/q++vAZWrS88u3tU0udE6CGIc+ctokgqA56J/0xF3HrI3DYNHi8u4kDZzY/9jIx5DhK9l5
+	UxuuEzjg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43512)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uKdEG-0001Qi-0z;
+	Thu, 29 May 2025 14:23:28 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uKdEA-0003Ti-1O;
+	Thu, 29 May 2025 14:23:22 +0100
+Date: Thu, 29 May 2025 14:23:22 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>, Daniel Golle <daniel@makrotopia.org>,
+	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject: Re: [PATCH net-next v6 06/14] net: phy: Introduce generic SFP
+ handling for PHY drivers
+Message-ID: <aDhfyiSOnyA709oX@shell.armlinux.org.uk>
+References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+ <23936783.6Emhk5qWAg@fw-rgant>
+ <20250523145457.07b1e7db@2a02-8428-0f40-1901-f412-2f85-a503-26ba.rev.sfr.net>
+ <13770694.uLZWGnKmhe@fw-rgant>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-idiomatic-match-slice-v2-0-4925ca2f1550@gmail.com> <20250529-idiomatic-match-slice-v2-2-4925ca2f1550@gmail.com>
-In-Reply-To: <20250529-idiomatic-match-slice-v2-2-4925ca2f1550@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 29 May 2025 15:21:43 +0200
-X-Gm-Features: AX0GCFuco26rV0hLqSzHou5ShkVizO8CV01DHgm65dtjBe0oghAxdH5dFDdhRcA
-Message-ID: <CANiq72nigDV2R_9PNOv98nGBxDZ=46WcRM7V05nQWni5VQRw6w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] rust: emit path candidates in panic message
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13770694.uLZWGnKmhe@fw-rgant>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, May 29, 2025 at 3:15=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Include all information in the panic message rather than emit fragments
-> to stderr.
+On Wed, May 28, 2025 at 09:35:35AM +0200, Romain Gantois wrote:
+> > In that regard, you can consider 1000BaseX as a MII mode (we do have
+> > PHY_INTERFACE_MODE_1000BASEX).
+> > 
+> 
+> Ugh, the "1000BaseX" terminology never ceases to confuse me, but yes you're 
+> right.
 
-Could we explain the "why" as well in the message? (i.e. not just the "what=
-")
+1000BASE-X is exactly what is described in IEEE 802.3. It's a PHY
+interface mode because PHYs that use SerDes can connect to the host
+using SGMII or 1000BASE-X over the serial link.
 
-Thanks!
+1000BASE-X's purpose in IEEE 802.3 is as a protocol for use over
+fibre links, as the basis for 1000BASE-SX, 1000BASE-LX, 1000BASE-EX
+etc where the S, L, E etc are all to do with the properties of the
+medium that the electrical 1000BASE-X is sent over. It even includes
+1000BASE-CX which is over copper cable.
 
-Cheers,
-Miguel
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
