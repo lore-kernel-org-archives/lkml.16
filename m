@@ -1,99 +1,90 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56271D63D8
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798141D63D8;
+	Thu, 29 May 2025 21:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748554682; cv=none; b=OIOOf4kHiIEhpjV19lafT3AmCRgSLeGSRBiwQLyBHxWao87d7LZwzHVzkkrTqKNacJxJb3gFKRYyssZFg5pb2hrpOc+F1tCGNMLQMmMgiiy4avgjp+NiuuhDnaXDTInQjJtTNwQKr9KM04O90CZSE3qlJ1rEZJMajhUYk8PsJ6M=
+	t=1748554808; cv=none; b=CFH4xPzoHd+m1KF0vm+Cw8uz0BomB+EnU3AcQ8pw33VnZ5gwv0PAJkUX9o54+morSZQhlJVjmS6u4U46izZ+IE1hWyQ/o8XPd1Bj5+Q4F4tn8zcapb6wzX6J4IwV4gjtzim6bAlDgZ+pOzBjfJYSEP34svLWql0822vLyLRcV8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748554682; c=relaxed/simple;
-	bh=LXReZw2aLb2mQwYq1+eiv4FUfrhxU5/HnRkofd1TRJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zh3CrjgLrae3Vom8R82hpTyZO3SSblmJILv8q/XwFSoUuKfsz3sdtDI4vBLgLql+JQMtW3L2rjJ80DhmU1pZ8dNKnmsEpf+o/6nIJEiOzgkAspCuDmHUFIVYd4LMopeKkwa6RQXG8IxEZYuntcQHN3GPlj+GYgu2tVkgB1r7ml0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AtoRbvod; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1748554808; c=relaxed/simple;
+	bh=XZdWpx0S7I9UBNLfkfEM2fQSaxD6Z5eT5JgMAWAszRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sfG/ka7Mmjq93EhjZGFasPLaKmy6iNY/MtqClCp1FiFUXK44wMBe+uHN9exK9yMzILNyiPVhXnQE2nRphJxRoCFOzJLrX9/7zNSu2fiTc94yX2stQb/bSBO01qx5oIJeSAUwMVTErdxp1ogSeWHQsUxbSEec43C/VEBEhWuYFBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S8aLqAVa; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtoRbvod"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso1277501b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 14:38:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S8aLqAVa"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742766ebaa7so104368b3a.0;
+        Thu, 29 May 2025 14:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748554680; x=1749159480; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqP4wvVgm10JM+a8NwlgAMzllqIFrJqqgUfwCFf2lHo=;
-        b=AtoRbvodc3WuHJSJMckxzBg5w3OqSRhcjRXPIWdyNWEeTXEzj9vHKCPX8oBXidv08l
-         xROFXmdyo4hYDnUMA0yMSc13CT2RkuvCs+Yh8mitCuuj8z1l5554d6yPul+wva0pnnWA
-         2CsoOdDlolhZ83sy9dt1YwUGBSkcNXNZMBLhLUlr0Zs0SFDMkokvVGNvT+5nr4tSxvhI
-         ZDUjxQRleqfxhi0WCztzzuDKtKNo5DReYjzfBgrHtUxACXIRq0hK24tFaYGZGl3IBbUQ
-         He3zwXbDU3CBxgd+0Tuy+CUULb0Tx1EXWp7MnHkzbErlFGgBY3lTYCOVHJZEecNjYI8x
-         WJzA==
+        d=gmail.com; s=20230601; t=1748554807; x=1749159607; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jl1f2B0MQ+VON7tPtwun2UDMESatk+eEgrsywjF8/4c=;
+        b=S8aLqAVa4lAiW+zL+QVAOreQ11E2wsZ8yVqeOoeXmnMDT0e6idNPzuHD62u7w8mdhz
+         MveK0gYzzY4lcW7CN7IdAndFc+DGknPdaYLTtthFYEcdWNk0H4xEyS1pGce5qawS/PBq
+         VVS9Ap3hKnWsqxCYgoP4Wl80OcPoi2EE9ib8gufNY39r3X7K9GiAB+8akuoTmOb6dd0+
+         RL/OxqYtlTfjX3YnVK70GojZNjwFiw8HTuTyMbEWmILDR8sNamZYvd36bNDvK/rhsqfb
+         eNHtmXsxjyUMchUEuD6X+I32YgAFqnZbdiFNsa9yXnfHjn6TKmT69Su7Ffvv6QtbX3QM
+         TRKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748554680; x=1749159480;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mqP4wvVgm10JM+a8NwlgAMzllqIFrJqqgUfwCFf2lHo=;
-        b=aRodXaqnGGqBa9aaVi16cazrRXj7fUEm9k24oNj2jfUl7wby/rdEOe7ngjkhmstrRJ
-         z/Z4tdEqqzTNctb0wc+zBpMiqN3axvVP4gG3xXC367imBwgcQDFOTn1Pw2cRBw1imhHr
-         oKTJXkJLq5bJAzoynceKVLdSaK8nfbuxBBtih+Jsjy9Vu7/3jRKZwFfRzyQ3eKzvik+6
-         ZHezk1sqmjuYPPssaRWlt8uRkhj72qTqq/LyKkG4Gk5tYIbMT3hvmu2usC27RHEVSTlr
-         +HucqCacSyCaabT8EZ8xPM9tMJJ2MyHQkAQtDkFpDtBfyzR+xC83B/X8fGZftV7I3XeC
-         mWhA==
-X-Gm-Message-State: AOJu0YxjyGubWmRwaFjfnlBhq+mZW5sCwN1s2LMWHNhuU/I5SAThC5r2
-	hjbpQd8FVRYEciAiP6ulRfx/UOF8mlVHRK62LFCV/ea4NGhXB2nG56Sx/Mwt3Q==
-X-Gm-Gg: ASbGncv6j9QxsOEMgVSTSStzJKtRWgtbfOJQiy5SbLaT1bF+SvW/q6u1Ifc2aDuLgqr
-	OhXpodp/DCm6A99hphut6NgMp7qXHgIJSmXNzH6MT6bO61u6aA/entVx9siBIq+NNkLgDK21DNB
-	9YboImQ2OrnBf2W39ufqKgXnOjaZjaI1OLGkcM/pJ4DKnsHM9SLnFU9dJ/+oOCBKSM79mxXg1w0
-	RDcAIkPfUh4Nm6FYEt9EvSmb0ijRojH+1SKBy0YhndVYRApsl0xtLIKSn6cPWe4T49J46DrgVrV
-	/Us1mcI1t40XyGwTqUMyak+UgcR1cn5EcNALKW3MeyyzP2QoQMZOrKwu+ainSyOW8jC+0YlID1n
-	flOH51q55CsP4eJ8aAi7nDT5QY06O00nj1niXDZpGfbI=
-X-Google-Smtp-Source: AGHT+IFBuv+g34bmQWuVCb/OtmzFX0rA5tHGeOEftBT0F3jfs/WCM3yCBJpA+mSpwz6fYCAqQIkacA==
-X-Received: by 2002:a05:6a20:728c:b0:215:d1dd:df4c with SMTP id adf61e73a8af0-21adb11c2d7mr1423707637.6.1748554679780;
-        Thu, 29 May 2025 14:37:59 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a46d:d724:4557:2a3e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afeab109sm1778187b3a.40.2025.05.29.14.37.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 14:37:59 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: turn off one_time when forcibly set to foreground GC
-Date: Thu, 29 May 2025 14:37:50 -0700
-Message-ID: <20250529213750.1068920-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+        d=1e100.net; s=20230601; t=1748554807; x=1749159607;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jl1f2B0MQ+VON7tPtwun2UDMESatk+eEgrsywjF8/4c=;
+        b=NGtbMhv45cQ2N23YM7Ln1W12CrPGoyUeefFzb9Uq0qelTDvjCFPsNJgRdE88OPFpUT
+         tHZ0bDYRFNNSIaXrNhM9vq5Emv9Al5H1omC29+nuAklAGh58UhVWRn01CKIRU0Wpn7to
+         BdfN9Fdn85YC9zVHy7o/CZVOdQs7rhfFaNKko07IjfAZsLgeq1iNLFDLxj1z7NfdpmAn
+         aJYe/71oPE5b8z6QHexfQdO2r/tNsgWC1meJENIdiJ36R6aJGZ0Oj0PZMeFwwh8SaKVp
+         rmlPZnqNHeZ89FmiZ602pJrPobT9fu9hVDeLo5+cpciVovL8U4/ZOzO0k6+BFLXqEC65
+         O9nA==
+X-Forwarded-Encrypted: i=1; AJvYcCXld/84yM6rPcq+pOBoQsWoAqjY92hmv6v/uCYOMAlrtcPabM2Njxz5SZhxtD5YNEfMZ82K5DBajvMxZWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3c8pPNOK0lMwz067hWYcA+M+n+MOL7mISCFpK+iFxEj6l1Wo6
+	xgFnqMwtAwk+2Bi3jw4+cSO3Fg+44eLm/YguDDUUpCdGYeURX9qbgecsgmtsYW6UDc9dxGzuh1c
+	bL2jmWoRgbo4qpn9nn4qGQezMElRvAQxOgzRhwtK/ZQ==
+X-Gm-Gg: ASbGncsQJ+eG/NGEbyncGZ9gGf7z/NcU/Y45kSEiDBbXUU7OfCyXqJNT3lkSL7tWos6
+	vDELQAx1XipqU9uEiXCIro0c1KGrTXurkVJrzYpZqWm3ZcOhY5R+mKgPzY3cMBgRkcPxGuyPXau
+	AU3DstXBuoLbibZq20vWxzT/psbzgs1oGE
+X-Google-Smtp-Source: AGHT+IF2l+57iGtSifKJbB7KOZrfOi2S8iZgdOKGEgsw3+chaI97hU9fFyvCoUDYt41/BDVwDVpeRqpEc21FQed/iEg=
+X-Received: by 2002:a17:90b:2b48:b0:312:ec:411a with SMTP id
+ 98e67ed59e1d1-3124db0a630mr48211a91.3.1748554806614; Thu, 29 May 2025
+ 14:40:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250529162923.434978-1-sylvan@sylvansmit.com>
+In-Reply-To: <20250529162923.434978-1-sylvan@sylvansmit.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 29 May 2025 23:39:54 +0200
+X-Gm-Features: AX0GCFu8_w538P0gLuxpyHTWpsHd-Iic2hzHb2Yjqahd9Osr4j8m46n_sSqHWec
+Message-ID: <CANiq72m9hM_wpfahdHDXdCKpzVg=qiMj7t4g60H6at78gyZkSQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: list: Fix typo `much` in arc.rs
+To: Sylvan Smit <sylvan@sylvansmit.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Daeho Jeong <daehojeong@google.com>
+On Thu, May 29, 2025 at 6:29=E2=80=AFPM Sylvan Smit <sylvan@sylvansmit.com>=
+ wrote:
+>
+> Correct the typo (s/much/must) in the ListArc documentation.
+>
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Fixes: a48026315cd7 ("rust: list: add tracking for ListArc")
+> Closes: https://github.com/Rust-for-Linux/linux/issues/1166
+> Signed-off-by: Sylvan Smit <sylvan@sylvansmit.com>
 
-one_time mode is only for background GC. So, we need to set it back to
-false when foreground GC is enforced.
+Applied to `rust-next` -- thanks!
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fs/f2fs/gc.c | 1 +
- 1 file changed, 1 insertion(+)
+    [ Changed tag to "Reported-by" and sorted. - Miguel ]
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 2b8f9239bede..f752dec71e45 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -1893,6 +1893,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, struct f2fs_gc_control *gc_control)
- 	/* Let's run FG_GC, if we don't have enough space. */
- 	if (has_not_enough_free_secs(sbi, 0, 0)) {
- 		gc_type = FG_GC;
-+		gc_control->one_time = false;
- 
- 		/*
- 		 * For example, if there are many prefree_segments below given
--- 
-2.49.0.1204.g71687c7c1d-goog
-
+Cheers,
+Miguel
