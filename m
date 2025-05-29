@@ -1,176 +1,90 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5AA2192FB;
-	Thu, 29 May 2025 09:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4712192FB;
+	Thu, 29 May 2025 09:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509351; cv=none; b=Ord4PchMtW3YJmT6WcqRK3cXrx+alQojHCXmuBF0zCVg4FlHQykc8O8z+8JynkPT/fjC+aSlBkHMS2ZmhlOVB1zA+ZVm+rlFXWeqifUwtoQ8wb2+iQIajo1pauFX9qB+tlSYFFR32rkE/C2BWBlGHC8Zpzw3R6DFi1EVOTMHzFQ=
+	t=1748509360; cv=none; b=u4CCie66OJvbytzcWFXiqNZtz1ymuVQlqG41+v0SAkslHkYZtK7c8OwNaOUskKcVXcHFYkvCJ+oMOCYnkt8cUjHXo+SvpPHgSNFNh+dUNTuiOdGr2lpx9EbbbD+CSdCVBLFbjmERX828G+oWG2WWU4Vet/+bDsGpi+fzNQCLenA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509351; c=relaxed/simple;
-	bh=sMkdftC0+Tx/IZelfW2inRhlPRbTlYeUucKCNb7CRMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iuWRJ6Cc8KrHZu1U5MzTX8L5Pemcm+Gqa7l9g/8cN/lHIAbgJGbOt23URgCcZ1janGgRvWEghRcF44vPaGkyes1ZxFHNBA0YQH+yLCJVWxB8WYJe74zXCas+xfoubaQaKr23247KbqHpoArZ8cBkB4ouOqXkaO7+foXRNePqrqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JNFiDfnm; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JNFiDfnm"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so7263405e9.1;
-        Thu, 29 May 2025 02:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748509348; x=1749114148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8AXfRWEnLXngbO6ozFx9Vdj+sRj7LpGEVmnez0nbKG8=;
-        b=JNFiDfnmrDT7w1plt23ylGhR00wAkKHlbXfiMaCspLQKscn9bg4b3ML4nVae1XGPIk
-         RCQeGUlSi/AG/Y85vnsjsB4Gv8OqubUCGRApEG6C8iVFPOek7mezRXLnaeMY3A6pq84Y
-         dvV53si2iZqzXGCHXxXiH+0DjEWSMfQRp9wwk5lBjAd6xjwBvmIGlmhRF0LO5duyf3BT
-         64JjINN+nfUKHss3Eqz8gq73qT2G5rV4qSh/zcwo54FaGgl/v4ecGrhnpUcMpyBcOIn6
-         +fRjwbai9TfYj1WQmiOg0+bYR5Du1fFiOZ+8Mo3ynyrnwVI4Ztsunnuda5V2/ZWsNcN5
-         FxyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748509348; x=1749114148;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8AXfRWEnLXngbO6ozFx9Vdj+sRj7LpGEVmnez0nbKG8=;
-        b=bOssOGdAiUmMhNFg+8T50+71K9CZpXa8zTQsbOyoXWgQzmE7gPt7Ifm6Has/p1JSFG
-         9ubZscNiMSY9MCWDgLpX5c/Ko/9IBwrB9C4izN2MP9fMsI1tKryyk/bp63dw50alGYs8
-         M0VPiITEtOr0f0y5i1CiprmE+WQvVXN5Yucjt6MRY6lesn7MW8eRJ/EecsES6CpIRlzy
-         SfTVa0n/PfqZZ4s74S6mi3kwWfgGPgX28RxCwEs4gqePLNmTrheu2xLoCF4gbEPCwZRB
-         TFXPvYldjY0xiCDYk+/w+cETRt4UlePt1PAwdRQAXaxOJiTM5g4hT+Y9bYVs0samjmpw
-         k3HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD8Oak8C3hyPujTQp7p5qQNtKuQvqlqftJUudaHp7Yc2PyN8Wt/2MTvV/w2YCaDykbafy9wulboHo=@vger.kernel.org, AJvYcCX3y+PRBK866Uc/7JHfNpBaMc0TulswOxt5u3vBFnrq/VXpuWnCkOvM6BzxJhn/oxYNmfNA339KUdCHKcu6@vger.kernel.org, AJvYcCXg+K1WHPCYjRF6OrC7h5eX+Al/u70kboWo37GnaWo1RwKbpnjF4Z1HH5EgVop/Qtu8/irK/jpug+CfmPk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCAX6KtIlAq/QuE2pjIHzLHSGkDzq0k0kgJwNT/O4Gxj2AatJ+
-	RlplPL1oo6k2nYIvJD2mqh6L3bV3JAnXayEWFJYU4i6Gil8NFs6f4Nc7
-X-Gm-Gg: ASbGncsBOr44S/yeeusPcAiS1bL+VhN7tnS2YyYmgJn3/F0+eV8GPBpqMrVdnPuQkNq
-	BzgryWv3UXZFmkqVdZ/TVWBoaQAvjBGN4zATCiIcbBtehnCLoBzOOH5Y+2PEODmfbuub0XeAWfc
-	+ugIAcsc+G1cGLQKreBn880UCFTEmnogV7kMFLEWnBW69C1WTWJTdIFbDKcwmNTV8sI8i/TUD3i
-	vaAhf+VMnUS/gUipqeckbbOSZ15E+S5qcimgSI173V8DNDZAZ6VOlHnEFvuL8AMEaDpxi2WVpzW
-	SGbGaQld7Q5qh1l2PWM0pYN+Ckq6HWwro5JX7RE1GZRnJVYh2VELcVOpGgYLRR95SqrWYBPqmm3
-	DcBIikE/EvNQ8hd89PIIZMVMHLf2xLZQNyejQGpXED+obknwGBewq1A==
-X-Google-Smtp-Source: AGHT+IFS+6s+jXMSUM+bVy+Oz+xiERYfpm6I7yWMzURvuDDqqqnXdeEsGmmT/Co0X8obLIFaytbc0g==
-X-Received: by 2002:a05:600c:3b25:b0:450:b240:aaab with SMTP id 5b1f17b1804b1-450d0566ea5mr13600055e9.8.1748509348003;
-        Thu, 29 May 2025 02:02:28 -0700 (PDT)
-Received: from puma.museclub.art (p200300cf9f4db30084345851a1a1c45b.dip0.t-ipconnect.de. [2003:cf:9f4d:b300:8434:5851:a1a1:c45b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc17a04sm14057565e9.24.2025.05.29.02.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 02:02:27 -0700 (PDT)
-From: Eugene Shalygin <eugene.shalygin@gmail.com>
-To: eugene.shalygin@gmail.com
-Cc: Roy Seitz <royseitz@bluewin.ch>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hwmon: (asus-ec-sensors) add support for ROG STRIX Z490-F GAMING
-Date: Thu, 29 May 2025 11:01:41 +0200
-Message-ID: <20250529090222.154696-1-eugene.shalygin@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1748509360; c=relaxed/simple;
+	bh=DXcA32gLvtkB+1oDhLo8ikwLTnpgTyUtZRvK1bpu+3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MXyUKNiPDl5KXhzcnOGOk8lh3WwVjYsRYjNK5gsyCftXPglh30jkl1nHLT24ethki3JWlm5W1FUriK8Sdw2s/2feKCJruA17wa6L9O7NIfzExcyVcavRPMq/iqBZOllJKEjYCgB7PVxvBONE3zEtCFMyza/3ncIqx/IBMdfiv1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0632176A;
+	Thu, 29 May 2025 02:02:15 -0700 (PDT)
+Received: from [10.163.62.34] (unknown [10.163.62.34])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 024513F5A1;
+	Thu, 29 May 2025 02:02:25 -0700 (PDT)
+Message-ID: <7b9a9ad4-7a7a-4e99-ba72-f5be0f609a21@arm.com>
+Date: Thu, 29 May 2025 14:32:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: Restrict pagetable teardown to avoid false
+ warning
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: david@redhat.com, ryan.roberts@arm.com, mark.rutland@arm.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+References: <20250527082633.61073-1-dev.jain@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250527082633.61073-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Roy Seitz <royseitz@bluewin.ch>
 
-This adds support for the ROG STRIX Z490-F GAMING board.
 
-Signed-off-by: Roy Seitz <royseitz@bluewin.ch>
-Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
----
- Documentation/hwmon/asus_ec_sensors.rst |  1 +
- drivers/hwmon/asus-ec-sensors.c         | 32 +++++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
+On 5/27/25 13:56, Dev Jain wrote:
+> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+> a pmd_present() check in pud_free_pmd_page().
+> 
+> This problem was found by code inspection.
+> 
+> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table())
+> Cc: <stable@vger.kernel.org>
+> Reported-by: Ryan Roberts <ryan.roberts@arm.com> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+> This patch is based on 6.15-rc6.
+> 
+> v2->v3:
+>  - Use pmdp_get()
+> 
+> v1->v2:
+>  - Enforce check in caller
+> 
+>  arch/arm64/mm/mmu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index ea6695d53fb9..5a9bf291c649 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>  	next = addr;
+>  	end = addr + PUD_SIZE;
+>  	do {
+> -		pmd_free_pte_page(pmdp, next);
+> +		if (pmd_present(pmdp_get(pmdp)))
 
-diff --git a/Documentation/hwmon/asus_ec_sensors.rst b/Documentation/hwmon/asus_ec_sensors.rst
-index 816d1f9947ea..502b0faf3b31 100644
---- a/Documentation/hwmon/asus_ec_sensors.rst
-+++ b/Documentation/hwmon/asus_ec_sensors.rst
-@@ -29,6 +29,7 @@ Supported boards:
-  * ROG STRIX X570-F GAMING
-  * ROG STRIX X570-I GAMING
-  * ROG STRIX Z390-F GAMING
-+ * ROG STRIX Z490-F GAMING
-  * ROG STRIX Z690-A GAMING WIFI D4
-  * ROG ZENITH II EXTREME
-  * ROG ZENITH II EXTREME ALPHA
-diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
-index e0a95197c71b..c3d5bcbd63f8 100644
---- a/drivers/hwmon/asus-ec-sensors.c
-+++ b/drivers/hwmon/asus-ec-sensors.c
-@@ -166,6 +166,7 @@ enum board_family {
- 	family_amd_500_series,
- 	family_amd_600_series,
- 	family_intel_300_series,
-+	family_intel_400_series,
- 	family_intel_600_series
- };
- 
-@@ -279,6 +280,20 @@ static const struct ec_sensor_info sensors_family_intel_300[] = {
- 		EC_SENSOR("Water_Out", hwmon_temp, 1, 0x01, 0x01),
- };
- 
-+static const struct ec_sensor_info sensors_family_intel_400[] = {
-+	[ec_sensor_temp_chipset] =
-+		EC_SENSOR("Chipset", hwmon_temp, 1, 0x00, 0x3a),
-+	[ec_sensor_temp_cpu] = EC_SENSOR("CPU", hwmon_temp, 1, 0x00, 0x3b),
-+	[ec_sensor_temp_mb] =
-+		EC_SENSOR("Motherboard", hwmon_temp, 1, 0x00, 0x3c),
-+	[ec_sensor_temp_t_sensor] =
-+		EC_SENSOR("T_Sensor", hwmon_temp, 1, 0x00, 0x3d),
-+	[ec_sensor_temp_vrm] = EC_SENSOR("VRM", hwmon_temp, 1, 0x00, 0x3e),
-+	[ec_sensor_fan_cpu_opt] =
-+		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xb0),
-+	[ec_sensor_fan_vrm_hs] = EC_SENSOR("VRM HS", hwmon_fan, 2, 0x00, 0xb2),
-+};
-+
- static const struct ec_sensor_info sensors_family_intel_600[] = {
- 	[ec_sensor_temp_t_sensor] =
- 		EC_SENSOR("T_Sensor", hwmon_temp, 1, 0x00, 0x3d),
-@@ -498,6 +513,18 @@ static const struct ec_board_info board_info_strix_z390_f_gaming = {
- 	.family = family_intel_300_series,
- };
- 
-+static const struct ec_board_info board_info_strix_z490_f_gaming = {
-+	.sensors = SENSOR_TEMP_CHIPSET |
-+		SENSOR_TEMP_CPU |
-+		SENSOR_TEMP_MB |
-+		SENSOR_TEMP_T_SENSOR |
-+		SENSOR_TEMP_VRM |
-+		SENSOR_FAN_CPU_OPT |
-+		SENSOR_FAN_VRM_HS,
-+	.mutex_path = ASUS_HW_ACCESS_MUTEX_ASMX,
-+	.family = family_intel_400_series,
-+};
-+
- static const struct ec_board_info board_info_strix_z690_a_gaming_wifi_d4 = {
- 	.sensors = SENSOR_TEMP_T_SENSOR | SENSOR_TEMP_VRM,
- 	.mutex_path = ASUS_HW_ACCESS_MUTEX_RMTW_ASMX,
-@@ -586,6 +613,8 @@ static const struct dmi_system_id dmi_table[] = {
- 					&board_info_strix_x570_i_gaming),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG STRIX Z390-F GAMING",
- 					&board_info_strix_z390_f_gaming),
-+	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG STRIX Z490-F GAMING",
-+					&board_info_strix_z490_f_gaming),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG STRIX Z690-A GAMING WIFI D4",
- 					&board_info_strix_z690_a_gaming_wifi_d4),
- 	DMI_EXACT_MATCH_ASUS_BOARD_NAME("ROG ZENITH II EXTREME",
-@@ -1061,6 +1090,9 @@ static int asus_ec_probe(struct platform_device *pdev)
- 	case family_intel_300_series:
- 		ec_data->sensors_info = sensors_family_intel_300;
- 		break;
-+	case family_intel_400_series:
-+		ec_data->sensors_info = sensors_family_intel_400;
-+		break;
- 	case family_intel_600_series:
- 		ec_data->sensors_info = sensors_family_intel_600;
- 		break;
--- 
-2.49.0
+This code path is only called for the kernel mapping. Hence should
+pmd_valid() be used instead of pmd_present() which also checks for
+present invalid scenarios as well ? 
 
+> +			pmd_free_pte_page(pmdp, next);
+>  	} while (pmdp++, next += PMD_SIZE, next != end);
+>  
+>  	pud_clear(pudp);
