@@ -1,164 +1,382 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499C11474CC
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1FA218EBE;
+	Thu, 29 May 2025 08:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509024; cv=none; b=dtJe2IA8qHhodQmmYST9tiPTSAl19jmMOYFTYLhRHBh+PzKZfmPG39A59HC+1Bq1xv6IJGoLdZFGJM4DaU7nuxd0DYRcpufly6L8jybqGYiQD5mRpDgdOP6glyWnIcRmFOEo2WAQVCeV8e1b9H98ATYhPV+R2UfodOyHj4Z5JUU=
+	t=1748509067; cv=none; b=GMNcZk2qB8ASFtZoSiL/d1eaJ+bisIZ9m+t0dOfqStYSfncU0bxESvpEL5azz40hHEGZChD1Y8ZmcZ4s7Fto4M1n416z8GnKJfRJwr2fpC8oLVo+PwnubcyFeqUH9WHgmQbopUvBkMQphVlYhLheIuP8ZUKdU36X1p3lrWZ4vPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509024; c=relaxed/simple;
-	bh=a98gp0kg1iMA/bz6QdciDajVGzzk/CUNrQZOQuQ1K5I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pCpSLJxAGT9yoSiGfshapVNgPiGYHDLic4kPgzoRzmRszTZEMIKEC6bX9H+7bXdea8HACs7VXBLgiRKJ2ujdR7pzxDy42A+RnF3+ch5HbmighbaaSyHhIW8JC6BqbGrJ8Vam9Veb7eIQoD0GD89AhQ8GfZtlo594qUyXfM6fPME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xLHEUufK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qAxP/Tgb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xLHEUufK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=qAxP/Tgb; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748509067; c=relaxed/simple;
+	bh=gwhVLbZF099eROMkEC8XE0b2klcexfLcuN96AHPbblo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c2qOLDoQMCsX9se35HYtbX7Llno0nUQDssrxHra9jMSU81/G9tC/ArRVpigg3N3EdXhm5C+iHH56C36AEkKu1H9hkUTGXbQHQieaJjTjGKFPx8AEJi4bnTC+tulCCwqhiK1JVqJbbR8I0jB64JpBfTy2RQiI1x29K9go5B6zgd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TRi+P/zG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xLHEUufK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qAxP/Tgb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xLHEUufK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="qAxP/Tgb"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 250961F82A;
-	Thu, 29 May 2025 08:56:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748509009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Vnold/atbSNdl8iC6MpcIMnsul0rxS/gPOmT+RYJUM=;
-	b=xLHEUufKJ5SPoEvJdoI0gBDDR1OP/9By1MiuoyHEhHCDgLNYKeypJ3qKnlzy19kBYeW/0x
-	kSrj/CDvUC1Ns+Fw6m9aYPZfreyoGB4ef/F6DOhDyEWP1PmokQ6eHT5eJnU5K4FdQkS28F
-	wupmrawpT1AABCXvHzBPj+igJVAdc84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748509009;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Vnold/atbSNdl8iC6MpcIMnsul0rxS/gPOmT+RYJUM=;
-	b=qAxP/Tgbfds6XOsSTt7HTn/FOoGdnbocHsuJYIXfRoOc+NADNZFXsoJbDbMJBWUt0L5vT5
-	UccQ0/gtb5Zd8bAA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748509009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Vnold/atbSNdl8iC6MpcIMnsul0rxS/gPOmT+RYJUM=;
-	b=xLHEUufKJ5SPoEvJdoI0gBDDR1OP/9By1MiuoyHEhHCDgLNYKeypJ3qKnlzy19kBYeW/0x
-	kSrj/CDvUC1Ns+Fw6m9aYPZfreyoGB4ef/F6DOhDyEWP1PmokQ6eHT5eJnU5K4FdQkS28F
-	wupmrawpT1AABCXvHzBPj+igJVAdc84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748509009;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Vnold/atbSNdl8iC6MpcIMnsul0rxS/gPOmT+RYJUM=;
-	b=qAxP/Tgbfds6XOsSTt7HTn/FOoGdnbocHsuJYIXfRoOc+NADNZFXsoJbDbMJBWUt0L5vT5
-	UccQ0/gtb5Zd8bAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1303913AC0;
-	Thu, 29 May 2025 08:56:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aE5jBFEhOGj5aQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 29 May 2025 08:56:49 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Thu, 29 May 2025 10:56:27 +0200
-Subject: [PATCH 2/2] mm, slab: support NUMA policy for large kmalloc
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TRi+P/zG"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T7RWnX005124;
+	Thu, 29 May 2025 08:57:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=yVVUvl6WX+u50QYLWwyjaK
+	t8OPieUs6wFPOv8ArJM+8=; b=TRi+P/zGvZMr7W3aoBW/iprJsBXgo+qb1RBgaI
+	pruu4aQ7goG1KXGTj0Wqj9FMew6F8hEy4x4gLiZu8skDTllzPODvH9aFXMtekBYb
+	spxL+11V6dtNZb82PU44WBWK1HC836+GAryxKlc6X8Rxnf5RYUkLe8aVqih1Iwag
+	KLA145WQFFXvR7kAhGX4J8SxnV3i2wKlLXqbXsmcQaxGW/RLb1nqfvA+4PFV2plb
+	uPoYdzUxZzts34Q+X6JEFzSL1+AoaCaO4AJp16V57ZBVBXD8XldqIWS5j7w/J5Jy
+	ilxICOPK/Aw4YeT9NUVjBcIJQ2E8vIVgEOkOJ96/nsmClmWw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46x8d79sff-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 08:57:41 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T8veag014358
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 08:57:40 GMT
+Received: from yingdeng-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 29 May 2025 01:57:37 -0700
+From: Yingchao Deng <quic_yingdeng@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Yingchao Deng <quic_yingdeng@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] arm64: dts: qcom: Add coresight node for SM8650
+Date: Thu, 29 May 2025 16:56:41 +0800
+Message-ID: <20250529085650.3594253-1-quic_yingdeng@quicinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-frozen-pages-for-large-kmalloc-v1-2-b3aa52a8fa17@suse.cz>
-References: <20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz>
-In-Reply-To: <20250529-frozen-pages-for-large-kmalloc-v1-0-b3aa52a8fa17@suse.cz>
-To: Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>, 
- Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1248; i=vbabka@suse.cz;
- h=from:subject:message-id; bh=a98gp0kg1iMA/bz6QdciDajVGzzk/CUNrQZOQuQ1K5I=;
- b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBoOCFOYsFS9i8S6vYyCP7KE3yRti79xDhUn8WSI
- cWCkwSOxRaJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCaDghTgAKCRC74LB10kWI
- mgVvCACcMqqZ0kPKUICmReWJRDoVwdSaXsgFLTJPBqH0MqpFiQSN+oZcpzqhQOKsxlhonxc472X
- vc3QOFbSingeJsF4gaYJx/Pr/4491B+ruhFVTvJMqnqRFKzeh8oYTDGy1OAZlsMAqsfN7zFahlj
- ruLPGdlnD0ID2bTo391i6SYySaUpXJNKiWhrAX8sZdSLeR7GzBA94sCFuRCEJv8tlcdijGu2DLS
- r/ZEz/oYE9GJ6OFaSV44dqkbRne8oIxU2kwBBTkflfPH788LbDkFf4PCaL8UkIdRS3a0NMYXOOO
- EpNbPX5dXBQo+GfR6CxDIoRvBhsl4Po/MbunH/bvhP+mZMvg
-X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
- fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.988];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: igMDbegCjo3uoejD20p-5fltLfXokkrU
+X-Proofpoint-ORIG-GUID: igMDbegCjo3uoejD20p-5fltLfXokkrU
+X-Authority-Analysis: v=2.4 cv=X8pSKHTe c=1 sm=1 tr=0 ts=68382185 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=Ha4kKTd9ViBVhOXr9W0A:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4NiBTYWx0ZWRfXyMBQ/vNRTDe7
+ FkZRv/WRMqG5s2tGmkNcp5rmRQILKYFRaZOmdotNaIxK9zAF66h9CvG9q4GdNVa1y3V1asO2m18
+ LoXKiJsBLirC+TGT8tD78AD5mTki9qH7cgayJSZQlXBI8UAFd0quIglWp5S3ilcR0ap6pgzWsln
+ Wzw0KzGuSOX2TD3xzY5egGKmRQbkPD5wHLKUqUdw4HI0MmBln7CN8auwBoNPil3aNn+dP3gIkMp
+ qerl1xjCVotvGmcxWFYA2lbaf2d73cChZy6EsRvy5PriihBp0dWNb2LreTGT/2mWGuNmQRyitWD
+ bVXfH9YO+sm+v58J6T4mVtdA9k1JImxR5O1ld6BKyrbliJgzEpxfScGW82DOWAwvuSyyAnk8EkZ
+ PgkxUTmHzWYd9it93CLFoxOc2Zh2bNxV23zUBdo862FPTUXpMRkx/5bs50FFM3oW8CIEcDlO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=676 suspectscore=0
+ clxscore=1011 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290086
 
-The slab allocator observes the task's numa policy in various places
-such as allocating slab pages. Large kmalloc allocations currently do
-not, which seems to be an unintended omission. It is simple to correct
-that, so make ___kmalloc_large_node() behave the same way as
-alloc_slab_page().
+Add coresight components on the path from stm to etr.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Yingchao Deng <quic_yingdeng@quicinc.com>
 ---
- mm/slub.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 250 +++++++++++++++++++++++++++
+ 1 file changed, 250 insertions(+)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index d7a62063a1676a327e13536bf724f0160f1fc8dc..d87015fad2df65629050d9bcd224facd3d2f4033 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4281,11 +4281,13 @@ static void *___kmalloc_large_node(size_t size, gfp_t flags, int node)
- 	if (unlikely(flags & GFP_SLAB_BUG_MASK))
- 		flags = kmalloc_fix_flags(flags);
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index 86684cb9a932..5e1854a0e15f 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -5052,6 +5052,82 @@ data-pins {
+ 			};
+ 		};
  
-+	flags |= __GFP_COMP;
++		ctcu@10001000 {
++			compatible = "qcom,sa8775p-ctcu";
++			reg = <0x0 0x10001000 0x0 0x1000>;
 +
- 	if (node == NUMA_NO_NODE)
--		node = numa_mem_id();
-+		folio = (struct folio *)alloc_frozen_pages_noprof(flags, order);
-+	else
-+		folio = (struct folio *)__alloc_frozen_pages_noprof(flags, order, node, NULL);
++			clocks = <&aoss_qmp>;
++			clock-names = "apb";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					ctcu_in0: endpoint {
++					remote-endpoint = <&etr0_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					ctcu_in1: endpoint {
++					remote-endpoint = <&etr1_out>;
++					};
++				};
++			};
++		};
++
++		stm@10002000 {
++			compatible = "arm,coresight-stm", "arm,primecell";
++			reg = <0x0 0x10002000 0x0 0x1000>,
++				<0x0 0x16280000 0x0 0x180000>;
++			reg-names = "stm-base", "stm-stimulus-base";
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			out-ports {
++				port {
++					stm_out_funnel_in0: endpoint {
++						remote-endpoint =
++						<&funnel_in0_in_stm>;
++					};
++				};
++			};
++		};
++
++		funnel@10041000 {
++			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
++			reg = <0x0 0x10041000 0x0 0x1000>;
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@7 {
++					reg = <7>;
++					funnel_in0_in_stm: endpoint {
++						remote-endpoint =
++						<&stm_out_funnel_in0>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					funnel_in0_out_funnel_qdss: endpoint {
++						remote-endpoint =
++						<&funnel_qdss_in_funnel_in0>;
++					};
++				};
++			};
++		};
++
+ 		funnel@10042000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
  
--	flags |= __GFP_COMP;
--	folio = (struct folio *)__alloc_frozen_pages_noprof(flags, order, node, NULL);
- 	if (folio) {
- 		ptr = folio_address(folio);
- 		lruvec_stat_mod_folio(folio, NR_SLAB_UNRECLAIMABLE_B,
-
+@@ -5094,6 +5170,14 @@ in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
++				port@0 {
++					reg = <0>;
++
++					funnel_qdss_in_funnel_in0: endpoint {
++						remote-endpoint = <&funnel_in0_out_funnel_qdss>;
++					};
++				};
++
+ 				port@1 {
+ 					reg = <1>;
+ 
+@@ -5112,6 +5196,133 @@ funnel_qdss_out_funnel_aoss: endpoint {
+ 			};
+ 		};
+ 
++		replicator@10046000 {
++			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
++			reg = <0x0 0x10046000 0x0 0x1000>;
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				port {
++					replicator_qdss_in_replicator_swao: endpoint {
++						remote-endpoint =
++						<&replicator_swao_out_replicator_qdss>;
++					};
++				};
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					replicator_qdss_out_replicator_etr: endpoint {
++						remote-endpoint =
++						<&replicator_etr_in_replicator_qdss>;
++					};
++				};
++			};
++		};
++
++		tmc@10048000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x0 0x10048000 0x0 0x1000>;
++
++			iommus = <&apps_smmu 0x04e0 0>,
++				<&apps_smmu 0x04c0 0>;
++			dma-coherent;
++			arm,scatter-gather;
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				port {
++					tmc_etr_in_replicator_etr: endpoint {
++						remote-endpoint =
++						<&replicator_etr_out_tmc_etr>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					etr0_out: endpoint {
++						remote-endpoint =
++						<&ctcu_in0>;
++					};
++				};
++			};
++		};
++
++		replicator@1004e000 {
++			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
++			reg = <0x0 0x1004e000 0x0 0x1000>;
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				port {
++					replicator_etr_in_replicator_qdss: endpoint {
++						remote-endpoint =
++						<&replicator_qdss_out_replicator_etr>;
++					};
++				};
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					replicator_etr_out_tmc_etr: endpoint {
++						remote-endpoint =
++						<&tmc_etr_in_replicator_etr>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					replicator_etr_out_tmc_etr1: endpoint {
++						remote-endpoint =
++						<&tmc_etr1_in_replicator_etr>;
++					};
++				};
++			};
++		};
++
++		tmc@1004f000 {
++			compatible = "arm,primecell";
++			reg = <0x0 0x1004f000 0x0 0x1000>;
++
++			iommus = <&apps_smmu 0x0500 0x0>;
++			dma-coherent;
++			arm,scatter-gather;
++
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				port {
++					tmc_etr1_in_replicator_etr: endpoint {
++						remote-endpoint =
++						<&replicator_etr_out_tmc_etr1>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					etr1_out: endpoint {
++						remote-endpoint =
++						<&ctcu_in1>;
++					};
++				};
++			};
++		};
++
+ 		funnel@10b04000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 
+@@ -5157,6 +5368,45 @@ tmc_etf_in_funnel_aoss: endpoint {
+ 					};
+ 				};
+ 			};
++
++			out-ports {
++				port {
++					tmc_etf_out_replicator_swao: endpoint {
++						remote-endpoint =
++						<&replicator_swao_in_tmc_etf>;
++					};
++				};
++			};
++		};
++
++		replicator@10b06000 {
++			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
++			reg = <0x0 0x10b06000 0x0 0x1000>;
++
++			qcom,replicator-loses-context;
++			clocks = <&aoss_qmp>;
++			clock-names = "apb_pclk";
++
++			in-ports {
++				port {
++					replicator_swao_in_tmc_etf: endpoint {
++						remote-endpoint =
++						<&tmc_etf_out_replicator_swao>;
++					};
++				};
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					replicator_swao_out_replicator_qdss: endpoint {
++						remote-endpoint =
++						<&replicator_qdss_in_replicator_swao>;
++					};
++				};
++			};
+ 		};
+ 
+ 		funnel@13810000 {
 -- 
-2.49.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
