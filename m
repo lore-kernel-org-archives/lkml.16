@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E265324BD00;
-	Thu, 29 May 2025 03:11:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FC55253F22;
+	Thu, 29 May 2025 03:11:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748488274; cv=none; b=VOhY9ZIdSdBFFJRGBMlSE6AcsGVNOaMb/9M7c3QLqjwMT9L3qvPSuT2Gth3JiWhHIj9scQg14aPuD7fvWmcGsr6xedBhq7k7zcpRZU5YgKNBG36Myu2zCywf3gt2j0ImNvR/FP/4F0JMpWH9o6Tz/JJXqxl9hxUpAgbVGIK1EHQ=
+	t=1748488274; cv=none; b=V6v2CErsFxF9kQvfdRUrXYTmiTp9ECWxji4zRE2SimXxy93O/CkQc+ohvCQ6z1KvD4jcUmJwVtGxKeKp+UkSGUKJozFysKq7qbqYbs3rCRnlH84B2TyoYxQFGHDPxiZ2aTT4xNmGoDaygsAXwXKIWl3vBO8lprLkvW87hE5W0Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748488274; c=relaxed/simple;
-	bh=7zC/36ooVLBFCzQX6UCj1AUYzrfHYBeqvMujF7ao+zY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=EqnOnsldALVLY+y61mbkCjbgb3zSyD5ki3QeDQYrAJlSMombzFVw/x7urVq9dRUQeJQt+QH456F3XQpyNF6i5z3R/VmGptpTz8WxQlNaaUOOQBuwlm0HX5hpLMX3F+1HpTwrCMnCQH5Qif0uf7w7Rt9rlHzBsPuj3Ajspcs05mE=
+	bh=Q61n92PSF6nkMDXjrMAO+5P+TPRY8etYRrZye4mpY8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aS/NXhkmRyYQB0cGtT/oEb2a+hBrpUKHgyWRiTl7PjBjZWnD0k6zZdIepr/hIKfq9/1fgYtnwJx4revTvTtAqnqgCMY9Rn7lhGOGYAI+KzGkaIZCg6X/Mdq0EculYGy0CDmcMlOrKw8+f86REBDRPGCmpDfklwqgtLEznfGI6uM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-37-6837d042e999
+X-AuditID: a67dfc5b-681ff7000002311f-7b-6837d04350d9
 From: Byungchul Park <byungchul@sk.com>
 To: willy@infradead.org,
 	netdev@vger.kernel.org
@@ -47,40 +47,40 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	bpf@vger.kernel.org,
 	vishal.moola@gmail.com
-Subject: [RFC v3 11/18] mlx4: use netmem descriptor and APIs for page pool
-Date: Thu, 29 May 2025 12:10:40 +0900
-Message-Id: <20250529031047.7587-12-byungchul@sk.com>
+Subject: [RFC v3 18/18] page_pool: access ->pp_magic through struct netmem_desc in page_pool_page_is_pp()
+Date: Thu, 29 May 2025 12:10:47 +0900
+Message-Id: <20250529031047.7587-19-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250529031047.7587-1-byungchul@sk.com>
 References: <20250529031047.7587-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRjG++/8d3YcGx2W1MlEc5WVlaZovpSYGMSpvhRBHyrK0U5uOKcd
-	L6kUeJnktJlUiukJVqZ5g8UKnSWSa6hR4DK0mZVmaUJe8ja8BOaUvv14Hp7f++GlCIUD+1Ba
-	fSrH61U6JSnF0gnZowOxzkjNwR/GHSBYGkloWMiAp0M2MQj1TQjmFgckMOvoJKHqkZsAoduA
-	Yd6yRMBIx7AEBmtGMbTeaiZg+E4XCSbDMgG5tloROJuKxXB/qZqA5uwhCXx8KZDwrXFFDKN2
-	E4a3FXUYBotjoMO8GdzvxhE4LM0icN9+SMK9HjMJPwyDCHreDGOozClGYGlziWF5QSBjAtgX
-	df0itqXiq4Q1W9PY57VBbKGrh2Ct9UaStc7clbBf+lpJtqt8GbMttlkRa8qbJNnpkc+YnWrr
-	JVnLi17Mvjc7JOys1e80fV4apeZ02nSOD4mOk2ryKn/h5OrDGVXTj1E2MoYUIi+KocMZx58P
-	4v881ZCPPEzSuxmXa5HwsDcdyswOd+JCJKUIelLMjAjLIk+xiT7JfO8TsIcxvYvp/9S6mlOU
-	nI5g5ib4dac/0/Ds9ZrHazUue162NlWs3npQ2E56nAw9L2F+lxtF64OtTHutC5cguRltqEcK
-	rT49UaXVhQdrMvXajOArSYlWtPrbmpt/L9jQjPOsHdEUUsrkXShSoxCr0lMyE+2IoQiltzz3
-	6CGNQq5WZWZxfNJlPk3HpdjRNgort8jD3NfVCjpelcolcFwyx/9vRZSXTzbKlEUV7XH6h16s
-	m7kUf2Sf/4Q3aGsaR8b27vwZWFqX218RdPWJhpfY/bLGDBFwzRHYOXGq01fNG9W+3QWx/kUr
-	BdMzJULT/o0JC5UGWeK5yoyA7bnHNG/1VtPlOJMuffxD2Jn8afVAWZultCXHHX3qVXe0LVmG
-	T9iWhBvdzuNKnKJRhQYRfIrqH4Ymy0zXAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRe0hTcRzF/e3e3V2Hg9uceTVBGIYkpAmZX0rK6o+uEmFvqECHXtxwc7qp
-	uB5gapTDLXtJ6YSV+JrCajM3Q0Sn+KAkUzQfNV9pgaXpzHyRbUb/fTiHc84fh8SENXggKUvP
-	YlXpErmY4OP8M0cK9p/oj5Ye2O7zA4O5gYD6tVyombRzwWBqQrCyPs4DV2c3AZXPVzEwvC/E
-	4Zd5A4PZrmkeTFTP4dBy14bB9P0eAnSFmxjk22s50FHRy4X+Jj0XHm9UYWDLm+TB4BsDAc6G
-	bS7MOXQ49JbV4TChj4Uu425YffsdQafZxoHV4goCHg0YCZgpnEAw0DGNQ/ltPQJz6wgXNtcM
-	RKyYaawb5TDNZZ95jNGSzVhrwxjtyADGWExFBGNZfshjPg23EEzP002caba7OIyuYIFglmbH
-	cGaxdYhgKr/95DDmxiGceWfs5CXsusKPSWHlshxWFXE0iS8tKP+KZ1Qdzq1ceoHyUFGEFnmT
-	NHWQXqy/gzxMUKH0yMg65mERFUm7prtxLeKTGLXApWcNmxyP4UvF01PDBtzDOLWXHv3Y4tZJ
-	UkBF0Ss/VP86g+n6l207Pd5uudRauhMVureeaduJEsQ3Ii8TEsnScxQSmTwqXJ0m1aTLcsOT
-	lQoLct9XfWvrgR2tDJ5yIIpEYh9BD4qWCrmSHLVG4UA0iYlFgvxjh6RCQYpEc51VKRNV2XJW
-	7UB7SFzsL4i/zCYJqVRJFpvGshms6r/LIb0D85DXlE/GeJC5IuBsal9yNlJkzgfH+120sbWN
-	s0Ehbee3YorG2s9d8P1zL8RxQxRdLChFbWEx+vmF0791y3Fqv2vOPwGJZR9MV9vHAi2xYV9e
-	WZ/0Hxe5TorG+c76mUTxPkOdaMbfanRlFs1nKEtWE53K15fibhKhFm13XYJmoFmMq6WSyDBM
-	pZb8BSk6e5K6AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRa0hTcRjG+++cnXOczk7L6mSgtQhN0DQs3w+amlDnQ0FpFGmQI09teW1T
+	m91QM03JZd7IuWBa3oXFtDlFLU28lKB4iXkpRVFIUktzeMnKiX778Tw8v/fDS2GiNtyekkXF
+	cvIoSYSYEOCCWZti14BeL6l7t9EaNLpqAqqWlVA2buSDptKA4PfKCAmLbR0EvC4yY6DpScFh
+	SbeKwVT7BAljpdM4NKbVYTDxvJOAzJQ1DJKN5TzoNaj4kLtagkFd4jgJ/Q0aAr5V/+PDdGsm
+	Dl3qChzGVH7Qrt0L5s8/ELTp6nhgfvaKgJw+LQGTKWMI+j5O4FCYpEKgazbxYW1ZQ/gdYmsr
+	hnhsvforyWr1cWxNuQubYerDWH1lOsHqF7JJdvRLI8F2vlzD2XrjIo/NfDxHsL+mhnF2vnmQ
+	YHW1gzjbrW0j2UW9wwU6WOAdxkXI4jn5sVOhAmlaYTMvZlSk1NfPkolocmcGsqIY2pN52l9I
+	bvP4p1zCwgTtxJhMK5iF7WgPZnGiA89AAgqj5/jMlGaNZyl20zIm19C5wRSF00eYvlwfSyyk
+	TzA5pYYtpyNT9fbDpsdqI8+vyd+cijZuFWS0EBYnQy+RTNL8+tZgP9NSbsKzkFCLdlQikSwq
+	PlIii/B0kyZEyZRuN6Ij9Wjjt6UP/4QY0UJvUCuiKSS2EXYiL6mIL4lXJES2IobCxHbCZN+T
+	UpEwTJJwj5NHX5fHRXCKVnSAwsX7hMfNd8NE9C1JLBfOcTGcfLvlUVb2icgpP6nEP3rA1vrB
+	zfrVy4qWkHOlZVm2wZdmzroHvhhw9lAO+w5ljcSFBw56f1cp17uyQ4OcTwc0XZtR4XvU5qOP
+	emyzh5waXA/vGi9WL8nTS8ryzvMuOvpPY+lNDYrUpOn7Dgev9r4jBMKivNSKO098z0S+L7ji
+	8Dda5fPT5o3h9pQYV0glHi6YXCH5D8nIS/zXAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWRe0hTcRzF/d17d3cdzW5L8mJ/BIMoCjXN5beslCi6+Ucq9PSfvOjVDeeU
+	TZdLxPkAzdRSh88JK8k3TTaZU3zUFJ0VJIpiZSoTRSLt4QN1QanRfx/O4Zzzx6FwSRPhSylU
+	abxaxSmlpIgQ3QzN87syFiI/U2g+D0ZzOwltWxnQNG8XgLHVhmB9+7MQ1oZGSGh4vomD8UM+
+	ARvmHRwWh11CmGtcIqC3oAsH11MnCSX5bhxy7c0YDNaPCmDMVioAw85LHLr080KY6DGSMNv+
+	RwBLjhICRmtbCJgrDYdh0xHYfPcNwZC5C4PN4noSKsZNJCzkzyEYH3QRUJdTisDcPy0A95aR
+	DJeynS0fMba79ouQNVnSWWvzKbZoehxnLa2PSdbyq1zIzkz1kqyz2k2w3fY1jC3JWyXZn4uf
+	CPZ7/yTJNiz/wFhz5yTBvjcNCaMOxYguxvNKhZZXB1yOFckL6vqx1BlJhqV7RahHCweLkCfF
+	0MHM/FsDucckfYKZnt7G99ibDmTWXCNEERJROL0qYBaNbmzPOEwrGIPNucsURdDHmXHDpT1Z
+	TMuYikab8F/nMaat4/V+j+euXmmt3I9Kdrdqit6Qz5DIhDxakbdCpU3mFEqZvyZJrlMpMvzj
+	UpItaPe+xqzfZXa0PnHdgWgKSQ+InShELhFwWo0u2YEYCpd6i3PDzskl4nhO94hXpzxQpyt5
+	jQMdpQipjzjiLh8roRO5ND6J51N59X8Xozx99SizD1xV9dnXIjK9guV+WX1TbaHF87MPQ4J1
+	0SkVhspyWecrR1yMCpuMDQrA8K/3Q1p8Eysj8/KD7gxwvn2346tk9ls3fAaq9YPRGy8Efsvd
+	Vwv8JdaphISzqg5bdJmo/V6hNr3nZOcFL11COPekZiMn6nRotnnFw7odttMXuS4lNHIu8BSu
+	1nB/AUwxzXe6AgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -91,204 +91,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 To simplify struct page, the effort to separate its own descriptor from
 struct page is required and the work for page pool is on going.
 
-Use netmem descriptor and APIs for page pool in mlx4 code.
+To achieve that, all the code should avoid directly accessing page pool
+members of struct page.
+
+Access ->pp_magic through struct netmem_desc instead of directly
+accessing it through struct page in page_pool_page_is_pp().  Plus, move
+page_pool_page_is_pp() from mm.h to netmem.h to use struct netmem_desc
+without header dependency issue.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_rx.c   | 48 +++++++++++---------
- drivers/net/ethernet/mellanox/mlx4/en_tx.c   |  8 ++--
- drivers/net/ethernet/mellanox/mlx4/mlx4_en.h |  4 +-
- 3 files changed, 32 insertions(+), 28 deletions(-)
+ include/linux/mm.h   | 12 ------------
+ include/net/netmem.h | 14 ++++++++++++++
+ mm/page_alloc.c      |  1 +
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-index b33285d755b9..7cf0d2dc5011 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -62,18 +62,18 @@ static int mlx4_en_alloc_frags(struct mlx4_en_priv *priv,
- 	int i;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8dc012e84033..de10ad386592 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4311,16 +4311,4 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+  */
+ #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
  
- 	for (i = 0; i < priv->num_frags; i++, frags++) {
--		if (!frags->page) {
--			frags->page = page_pool_alloc_pages(ring->pp, gfp);
--			if (!frags->page) {
-+		if (!frags->netmem) {
-+			frags->netmem = page_pool_alloc_netmems(ring->pp, gfp);
-+			if (!frags->netmem) {
- 				ring->alloc_fail++;
- 				return -ENOMEM;
- 			}
--			page_pool_fragment_page(frags->page, 1);
-+			page_pool_fragment_netmem(frags->netmem, 1);
- 			frags->page_offset = priv->rx_headroom;
+-#ifdef CONFIG_PAGE_POOL
+-static inline bool page_pool_page_is_pp(struct page *page)
+-{
+-	return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+-}
+-#else
+-static inline bool page_pool_page_is_pp(struct page *page)
+-{
+-	return false;
+-}
+-#endif
+-
+ #endif /* _LINUX_MM_H */
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index f05a8b008d00..9e4ed3530788 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -53,6 +53,20 @@ NETMEM_DESC_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
+  */
+ static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
  
- 			ring->rx_alloc_pages++;
- 		}
--		dma = page_pool_get_dma_addr(frags->page);
-+		dma = page_pool_get_dma_addr_netmem(frags->netmem);
- 		rx_desc->data[i].addr = cpu_to_be64(dma + frags->page_offset);
- 	}
- 	return 0;
-@@ -83,10 +83,10 @@ static void mlx4_en_free_frag(const struct mlx4_en_priv *priv,
- 			      struct mlx4_en_rx_ring *ring,
- 			      struct mlx4_en_rx_alloc *frag)
- {
--	if (frag->page)
--		page_pool_put_full_page(ring->pp, frag->page, false);
-+	if (frag->netmem)
-+		page_pool_put_full_netmem(ring->pp, frag->netmem, false);
- 	/* We need to clear all fields, otherwise a change of priv->log_rx_info
--	 * could lead to see garbage later in frag->page.
-+	 * could lead to see garbage later in frag->netmem.
- 	 */
- 	memset(frag, 0, sizeof(*frag));
- }
-@@ -440,29 +440,33 @@ static int mlx4_en_complete_rx_desc(struct mlx4_en_priv *priv,
- 	unsigned int truesize = 0;
- 	bool release = true;
- 	int nr, frag_size;
--	struct page *page;
-+	netmem_ref netmem;
- 	dma_addr_t dma;
- 
- 	/* Collect used fragments while replacing them in the HW descriptors */
- 	for (nr = 0;; frags++) {
- 		frag_size = min_t(int, length, frag_info->frag_size);
- 
--		page = frags->page;
--		if (unlikely(!page))
-+		netmem = frags->netmem;
-+		if (unlikely(!netmem))
- 			goto fail;
- 
--		dma = page_pool_get_dma_addr(page);
-+		dma = page_pool_get_dma_addr_netmem(netmem);
- 		dma_sync_single_range_for_cpu(priv->ddev, dma, frags->page_offset,
- 					      frag_size, priv->dma_dir);
- 
--		__skb_fill_page_desc(skb, nr, page, frags->page_offset,
--				     frag_size);
-+		__skb_fill_netmem_desc(skb, nr, netmem, frags->page_offset,
-+				       frag_size);
- 
- 		truesize += frag_info->frag_stride;
- 		if (frag_info->frag_stride == PAGE_SIZE / 2) {
-+			struct page *page = netmem_to_page(netmem);
-+			atomic_long_t *pp_ref_count =
-+				netmem_get_pp_ref_count_ref(netmem);
++#ifdef CONFIG_PAGE_POOL
++static inline bool page_pool_page_is_pp(struct page *page)
++{
++	struct netmem_desc *desc = (__force struct netmem_desc *)page;
 +
- 			frags->page_offset ^= PAGE_SIZE / 2;
- 			release = page_count(page) != 1 ||
--				  atomic_long_read(&page->pp_ref_count) != 1 ||
-+				  atomic_long_read(pp_ref_count) != 1 ||
- 				  page_is_pfmemalloc(page) ||
- 				  page_to_nid(page) != numa_mem_id();
- 		} else if (!priv->rx_headroom) {
-@@ -476,9 +480,9 @@ static int mlx4_en_complete_rx_desc(struct mlx4_en_priv *priv,
- 			release = frags->page_offset + frag_info->frag_size > PAGE_SIZE;
- 		}
- 		if (release) {
--			frags->page = NULL;
-+			frags->netmem = 0;
- 		} else {
--			page_pool_ref_page(page);
-+			page_pool_ref_netmem(netmem);
- 		}
++	return (desc->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
++}
++#else
++static inline bool page_pool_page_is_pp(struct page *page)
++{
++	return false;
++}
++#endif
++
+ /* net_iov */
  
- 		nr++;
-@@ -719,7 +723,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 		int nr;
- 
- 		frags = ring->rx_info + (index << priv->log_rx_info);
--		va = page_address(frags[0].page) + frags[0].page_offset;
-+		va = netmem_address(frags[0].netmem) + frags[0].page_offset;
- 		net_prefetchw(va);
- 		/*
- 		 * make sure we read the CQE after we read the ownership bit
-@@ -748,7 +752,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 			/* Get pointer to first fragment since we haven't
- 			 * skb yet and cast it to ethhdr struct
- 			 */
--			dma = page_pool_get_dma_addr(frags[0].page);
-+			dma = page_pool_get_dma_addr_netmem(frags[0].netmem);
- 			dma += frags[0].page_offset;
- 			dma_sync_single_for_cpu(priv->ddev, dma, sizeof(*ethh),
- 						DMA_FROM_DEVICE);
-@@ -788,7 +792,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 			void *orig_data;
- 			u32 act;
- 
--			dma = page_pool_get_dma_addr(frags[0].page);
-+			dma = page_pool_get_dma_addr_netmem(frags[0].netmem);
- 			dma += frags[0].page_offset;
- 			dma_sync_single_for_cpu(priv->ddev, dma,
- 						priv->frag_info[0].frag_size,
-@@ -818,7 +822,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 				if (likely(!xdp_do_redirect(dev, &mxbuf.xdp, xdp_prog))) {
- 					ring->xdp_redirect++;
- 					xdp_redir_flush = true;
--					frags[0].page = NULL;
-+					frags[0].netmem = 0;
- 					goto next;
- 				}
- 				ring->xdp_redirect_fail++;
-@@ -828,7 +832,7 @@ int mlx4_en_process_rx_cq(struct net_device *dev, struct mlx4_en_cq *cq, int bud
- 				if (likely(!mlx4_en_xmit_frame(ring, frags, priv,
- 							length, cq_ring,
- 							&doorbell_pending))) {
--					frags[0].page = NULL;
-+					frags[0].netmem = 0;
- 					goto next;
- 				}
- 				trace_xdp_exception(dev, xdp_prog, act);
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_tx.c b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-index 87f35bcbeff8..b564a953da09 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-@@ -354,7 +354,7 @@ u32 mlx4_en_recycle_tx_desc(struct mlx4_en_priv *priv,
- 	struct page_pool *pool = ring->recycle_ring->pp;
- 
- 	/* Note that napi_mode = 0 means ndo_close() path, not budget = 0 */
--	page_pool_put_full_page(pool, tx_info->page, !!napi_mode);
-+	page_pool_put_full_netmem(pool, tx_info->netmem, !!napi_mode);
- 
- 	return tx_info->nr_txbb;
- }
-@@ -1191,10 +1191,10 @@ netdev_tx_t mlx4_en_xmit_frame(struct mlx4_en_rx_ring *rx_ring,
- 	tx_desc = ring->buf + (index << LOG_TXBB_SIZE);
- 	data = &tx_desc->data;
- 
--	dma = page_pool_get_dma_addr(frame->page);
-+	dma = page_pool_get_dma_addr_netmem(frame->netmem);
- 
--	tx_info->page = frame->page;
--	frame->page = NULL;
-+	tx_info->netmem = frame->netmem;
-+	frame->netmem = 0;
- 	tx_info->map0_dma = dma;
- 	tx_info->nr_bytes = max_t(unsigned int, length, ETH_ZLEN);
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-index ad0d91a75184..3ef9a0a1f783 100644
---- a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-+++ b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-@@ -213,7 +213,7 @@ enum cq_type {
- struct mlx4_en_tx_info {
- 	union {
- 		struct sk_buff *skb;
--		struct page *page;
-+		netmem_ref netmem;
- 	};
- 	dma_addr_t	map0_dma;
- 	u32		map0_byte_count;
-@@ -246,7 +246,7 @@ struct mlx4_en_tx_desc {
- #define MLX4_EN_CX3_HIGH_ID	0x1005
- 
- struct mlx4_en_rx_alloc {
--	struct page	*page;
-+	netmem_ref	netmem;
- 	u32		page_offset;
- };
- 
+ DECLARE_STATIC_KEY_FALSE(page_pool_mem_providers);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 8c75433ff9a4..40f956cee2d8 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -55,6 +55,7 @@
+ #include <linux/delayacct.h>
+ #include <linux/cacheinfo.h>
+ #include <linux/pgalloc_tag.h>
++#include <net/netmem.h>
+ #include <asm/div64.h>
+ #include "internal.h"
+ #include "shuffle.h"
 -- 
 2.17.1
 
