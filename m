@@ -1,115 +1,131 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9044721D5BA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DBE21C16A;
+	Thu, 29 May 2025 22:28:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748557541; cv=none; b=JE3mVYjZlxUvBWmCkYlAucD/GqRgp/J9FCmfE+rO66AtQkqOOX/42NiCkPYXwqtfUe/nb5aGdKyiLJ3E1h+F+h2sHk9IvH5V4dknYaFmRXsON6K4MuiE495UWDbyK04TB7kVC4/LGsAUtrxIE1q+vX/Zb/B9SyIgVG8gwyMC0hE=
+	t=1748557731; cv=none; b=sE5O5EcYNcKAr/ujSykowYh1GD012JOmzzkGV/D7vIqRoRfYLzmAWh+2lUolVsHHnmZqJWASts/NGsQubW+K1Y9SFenQ34rJBoKeCBu8M7EV+/HHiUXUtJkXeeeom5OgCegfk5TBTRtKCzWby+x+ObGkrDU1uhg/G2WenLxMoWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748557541; c=relaxed/simple;
-	bh=9fHccOzCoT3PXuJMnHBxoEcOvKmcudsQQ0DLMoG/Xgk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yo9lWOBl6eNdgzI5VUzqttS1TcjnXA+eXyjv3bBY2wTSoKNjCnE0LbsLdbGrkKsERkad7Osnn9yCbeaJ3yLllHgXFdBgnuXSqp1v6rfMceWpCHPgqI0yZfP6+J7hAbmXvOaF+Pwu5ItMM5VpZRbuia/KKtzCzHI5ZH7daGnfmFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fg1iDOf1; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748557731; c=relaxed/simple;
+	bh=e8TEEjSp0s5O/t4hPJKOBKjjl39Qm/MlC3Px+bz4X6M=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=ENOh+dClhhwED90+EUBH23gT+d1XpTVu44TB1nTKQ/4qmvLVURQBWGBkGYktslBkmecWB2mZg3na+Hzf+TMZ2CabhTPIJkcxOXN9dUNhvJQiERboDOPY8u8YXhp5h0tvKSO58mFV3SQx9JsNzRXmO8IlLwvMIxhTO/XGlvICYxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSE+Qogj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fg1iDOf1"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73712952e1cso1082415b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748557538; x=1749162338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=drHrrRT39Op87szRQpY/iTZqFXixV7SuUvHON4DmPJk=;
-        b=fg1iDOf1f1JG+haM8R/s0LwWADElYhhBg1q9YbqtW1putPlQ5xlBFkukHNmd2lk6xN
-         mIoc91sfXc6eu96Q08TgcL0YLWHQuY1MzCtE6MLJcQsNX3k+lSn11wxIwqrfVn1Wl4TL
-         pmvt8Lu4OIn/ylafo8CSYcGpBwtIQclwSfrFYgdvFqIoICidcGw04mXUJH4itviR4t0G
-         3PPaCYSxmx5OhH5OYJdZPmUzsAACz8XS7wmtSPGI+OsHdZ/B/imbmHS75or6mLMDkCdg
-         ir4LTBqnBJJZ8uT1USKlTclyFrKMJtTzBMGiD+PLM+CQ9VnNhNsDckqz5U+fcGjXCprm
-         bNVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748557538; x=1749162338;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=drHrrRT39Op87szRQpY/iTZqFXixV7SuUvHON4DmPJk=;
-        b=XWPxrJ7sflg04GFGaZKYjyMT6OlGZhE0TXrFKHT7VkTsh6dCxa/wAd1pdCefWTN9UK
-         oA4cUoyO79HqjGemRHT4smJxTeQzs/yBw+tQHIJ9hV6Wxo4HzWKDb68nC+R39RFoShE3
-         MOmo+ZBAd0Uq2aiYhEGWU0l5zqyw4WCadeMWZb0ZpYzoeBNkt7nJkytmxLR4sM+D35cv
-         TACxjMFSFBnteeMHn1S/p1ZSkRx6pj8dpPy9ugLvcobChFYeCjhfqd6HgPnGURhB2HqI
-         2TWVvdGKDgpm248VxcDyHaVsybtmQU707FFpFWyRkVnbebcgP3KmirL8+DZN5tYXZSON
-         ByAw==
-X-Gm-Message-State: AOJu0YzeeDKuU6geShk0EdNbiiIkjlSv9VIu5Pe0uyEv+JhpWzqMFJZg
-	jVipbv232V2u6Ejl1aGI8mf5OYJutPLh6L+dsctZePyWvC6CJjTTFinfeagwAg==
-X-Gm-Gg: ASbGncuIxxnskvGfb+JWvJT5imfYi7jSBl0X/smTHjiG5aGClnGrjnGMfDSM14InWoE
-	HBn2ZqyfbNPsBxsX7VrFDXLvOyGfY4ejO81aeuoKEuBhYarLk5EXoe15CTnO3X9aQkMg2L3UfJq
-	T97qL1rYUp4z2CGKPNOI18UuF8fUeK2E1U5W8++tUkP6v+W77k14jYS/M/gM7Zs4iNiC69GxCOW
-	2c7Q9RTKOqdhxBWMijldJNFHxdbC26PA4VlU4S1hJ1UkLotzOj/or02M+5DAT79XbhsgeLy4772
-	Q1lx8mJHljc3KMnGJ4SJpyHZIeo4mbxvM8F/rBKE8isb/L5ZEK9ULF2xRl+Y08HEk8m2wLTZ7Oz
-	Q4HIZ52FV/2j6jK2gVpPXAj6opLYjozr/pmlMkRQUkYHZN1ki4bY7CA==
-X-Google-Smtp-Source: AGHT+IHlBHPluOs//bqnUjchs07T0PB+X5G4b+ihLaWDzs+KYZzqJ2rb5/G1M4hLSxKiNhQG9WzP+A==
-X-Received: by 2002:a05:6a00:4f8b:b0:734:b136:9c39 with SMTP id d2e1a72fcca58-747bd9f148emr1247882b3a.19.1748557538421;
-        Thu, 29 May 2025 15:25:38 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a46d:d724:4557:2a3e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affcf25fsm1802750b3a.121.2025.05.29.15.25.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 15:25:38 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: make sure zoned device GC to use FG_GC in shortage of free section
-Date: Thu, 29 May 2025 15:25:32 -0700
-Message-ID: <20250529222532.1088106-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSE+Qogj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D1BC4CEE7;
+	Thu, 29 May 2025 22:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748557730;
+	bh=e8TEEjSp0s5O/t4hPJKOBKjjl39Qm/MlC3Px+bz4X6M=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=LSE+QogjEYxkiI3sLL/2EWF227oOpNqqRoZADdjan2fcCNc9UUQS4OdWtWVe/ergC
+	 1R1Sx85xFvZXUEYlIzWn1sSyL0FVVMn5ur0w5vTebKCYhUrnk9ONcxoYZssfGFTZc1
+	 jdV+lxkgQI9JODNCb7eV6uxeVlFJxq2wk9EGxpXI7JmY0dhMsy+fFiUZM5Rs+2Zhmz
+	 0Hy2mfoLEHBR0TkPikAF4nJBe4f0f+E2nKvjJx5CG3V5vJSePFppIjZpm0Rsc5IDB7
+	 Pw1TBBR2VABrd6+Goqd0O2vhvtFoR+IlRcGCQHedBRhDomXoDHAAiG1KvUPKMx/JJq
+	 pktQJ6hgr2jUA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 May 2025 00:28:37 +0200
+Message-Id: <DA8ZZA7P2QUW.ODHEX4NB0RTB@kernel.org>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Michal Rostecki"
+ <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
+ Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
+ Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Trevor Gross" <tmgross@umich.edu>, "Brendan Higgins"
+ <brendan.higgins@linux.dev>, "David Gow" <davidgow@google.com>, "Rae Moar"
+ <rmoar@google.com>, "Danilo Krummrich" <dakr@kernel.org>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>, "Russ Weight"
+ <russ.weight@linux.dev>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
+ "Rob Herring" <robh@kernel.org>, "Saravana Kannan" <saravanak@google.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Will Deacon" <will@kernel.org>, "Waiman Long" <longman@redhat.com>,
+ "Nathan Chancellor" <nathan@kernel.org>, "Nick Desaulniers"
+ <nick.desaulniers+lkml@gmail.com>, "Bill Wendling" <morbo@google.com>,
+ "Justin Stitt" <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>,
+ "Heiner Kallweit" <hkallweit1@gmail.com>, "Russell King"
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, "Bjorn Helgaas" <bhelgaas@google.com>, "Arnd
+ Bergmann" <arnd@arndb.de>, "Jens Axboe" <axboe@kernel.dk>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
+ <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
+ <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v10 4/5] rust: replace `kernel::c_str!` with C-Strings
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Tamir Duberstein" <tamird@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-4-6412a94d9d75@gmail.com>
+ <DA66NJXU86M4.1HU12P6E79JLO@kernel.org>
+ <CAJ-ks9nd6_iGK+ie-f+F0x4kwpyEGJ-kQiQGt-ffdbVN5S6kOg@mail.gmail.com>
+ <aDbnLzPIGiAZISOq@google.com> <DA7WJYNAN5AI.2HE6B953GR16A@kernel.org>
+ <CAJ-ks9nmxdSKtEuzT=yBU-WEuZXBupr5N6tainzrk=w3U_enXw@mail.gmail.com>
+In-Reply-To: <CAJ-ks9nmxdSKtEuzT=yBU-WEuZXBupr5N6tainzrk=w3U_enXw@mail.gmail.com>
 
-From: Daeho Jeong <daehojeong@google.com>
+On Fri May 30, 2025 at 12:21 AM CEST, Tamir Duberstein wrote:
+> On Wed, May 28, 2025 at 11:35=E2=80=AFAM Benno Lossin <lossin@kernel.org>=
+ wrote:
+>> On Wed May 28, 2025 at 12:36 PM CEST, Alice Ryhl wrote:
+>> > On Mon, May 26, 2025 at 06:29:46PM -0400, Tamir Duberstein wrote:
+>> >> On Mon, May 26, 2025 at 11:04=E2=80=AFAM Benno Lossin <lossin@kernel.=
+org> wrote:
+>> >> >
+>> >> > On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+>> >> > > +macro_rules! c_str_avoid_literals {
+>> >> >
+>> >> > I don't like this name, how about `concat_to_c_str` or
+>> >> > `concat_with_nul`?
+>> >> >
+>> >> > This macro also is useful from macros that have a normal string lit=
+eral,
+>> >> > but can't turn it into a `c""` one.
+>> >>
+>> >> Uh, can you give an example? I'm not attached to the name.
+>> >
+>> > I also think it should be renamed. Right now it sounds like it creates=
+ a
+>> > c string while avoiding literals in the input ... whatever that means.
+>>
+>> Yeah that's a good way to put why the name is weird.
+>>
+>> > I like Benno's suggestions, but str_to_cstr! could also work?
+>>
+>> Hmm, I think then people won't know that it can also concat? I don't
+>> think it matters too much, the macro probably won't be used that often
+>> and if someone needs to use it, they probably wouldn't fine it by name
+>> alone.
+>
+> What do you mean by "it can also concat"? This macro by itself doesn't
+> concat, it takes only a single expr.
 
-We already use FG_GC when we have free sections under
-gc_boost_zoned_gc_percent. So, let's make it consistent.
+Oh right, seems like I thought it took `$($t:tt)*`...
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> The example in the docs illustrates:
+>
+>     const MY_CSTR: &CStr =3D c_str_avoid_literals!(concat!(...));
+>
+> I think str_to_cstr is ok - I'll do that in v11.
+
+Sounds good!
+
 ---
- fs/f2fs/gc.c      | 2 +-
- fs/f2fs/segment.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index f752dec71e45..cd13a642055b 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -144,7 +144,7 @@ static int gc_thread_func(void *data)
- 				gc_control.one_time;
- 
- 		/* foreground GC was been triggered via f2fs_balance_fs() */
--		if (foreground)
-+		if (foreground && !f2fs_sb_has_blkzoned(sbi))
- 			sync_mode = false;
- 
- 		gc_control.init_gc_type = sync_mode ? FG_GC : BG_GC;
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 396ef71f41e3..030540df3550 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -446,7 +446,8 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
- 	} else {
- 		struct f2fs_gc_control gc_control = {
- 			.victim_segno = NULL_SEGNO,
--			.init_gc_type = BG_GC,
-+			.init_gc_type = f2fs_sb_has_blkzoned(sbi) ?
-+				FG_GC : BG_GC,
- 			.no_bg_gc = true,
- 			.should_migrate_blocks = false,
- 			.err_gc_skipped = false,
--- 
-2.49.0.1204.g71687c7c1d-goog
-
+Cheers,
+Benno
