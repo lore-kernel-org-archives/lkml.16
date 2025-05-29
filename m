@@ -1,106 +1,129 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6A2247DEA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055F32586C5;
+	Thu, 29 May 2025 23:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748562611; cv=none; b=NVFR0FNjz5h2F0voQ/FycowimMDVq4RZyRen0iwvzK91V7KAfKyfq64nn2lJpPADQdpdd8YJmcP6343CkMeKpdqVgCorC3GMrZ/UYqxSeCpxCW0pS8VeackTXcDdvqJql4j+1D0lWYIlrlkCWoFRotHvXgV84P+mpfmEGh66tFo=
+	t=1748562615; cv=none; b=WpFmzqITp3aTCW3QxOit4J1r7067kFLWvlKOzzw7AdPJKloF+3PXOfsop82Wnhzn8jSKiy3mP69p0yV3LZhW7EyiQ+crREiBK3VkKSsOfA2c3mC8F7hi5hdgm8r90uzaZMNxqvSmsVwJjNxBJbDHWs4S3vxDUTI1rFJiR6hCif8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748562611; c=relaxed/simple;
-	bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPgQhIB8RyHc/VXnOc/1plWf+kQByhuZ2O2U5Xw31FCMhfsVRUFKHADHoN09pjZ6c/8bpUh3IbcT3j+Zm8WjfYTpoy4qM7ffNcu1kRtLVs0WZXd/fwmQqvWNLyIuzHQJTxMS9re0P179jq6V8UAzhmQrMsWgvD7jrE9YTUfsxkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G5B1HEW0; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748562615; c=relaxed/simple;
+	bh=3fHCqpJzOQ+faj5dcuseeWJ7RAmHY34XO4V4FBCxvYg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TutLcZHupsTdBLdjX7Js/HlKP8GwxeZVf8xTwVbICPa8VB3Fn8jkytOrRdDxstObSCly1F6kzhKemofX2ZnCAcyegHiIV1JUmOo90oCaLckzPUUdnBDeUAjYiKe+bZBnweZGzl2PhwW30slQf0uTmPwhWrkzfn2ztNdLPpPS+8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTqhqfA0; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G5B1HEW0"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e4564178bcso1624874137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 16:50:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748562609; x=1749167409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
-        b=G5B1HEW02erwdwrVBnU0j7QU3YNmjD8SJE4Infef6tDUNcPJ6erziSn3dZmvYwYa+l
-         Tyraw2OR3WkLv3sJ2l3U/c7F0J6QzNYFWG6vtuASlCuS7CU4QyPTb7s+BhHZIbO92BUI
-         i+iN9/NIdGZp3ig2wV5W7yfwoq0gFF4HVfQJCTwkXyapaDWBsen+oNK/N4TtT9nAQHyw
-         /Lji2GaUwutmzguW/idrIQZG2kavcs7L28AadE35+tHjwYXuk7cFvAxPykZw8Pp44NXi
-         EJv60MaSzjchHE7/m8tqCVoPoWARXuPz46coEj6wKnLxSZZwBdEFxf9RQhXWRcWHFGnn
-         KKag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748562609; x=1749167409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/jQS5XQrcSTiYiRSc/N6qNicSbjEH5tvMkYg0lH6Wq0=;
-        b=V15PUdx0/BC4ITTXqJ31MVIPwq4cFVSe2vEYMF7GfIthoi0oqx8cigWbhH+mFuRMPU
-         bBLOnLYDQFNKP21Y99p+St5/9d/ZAtm2aSZ2Glsn6Gbe1tDq6sHzgJ1Iel0bWzwraDKQ
-         csw3sP2eunCP780+jI8DS7EDmYPeP5T5cLl3oFcm/k9JKP58yu0Fy7lwdZASuIV+6dQD
-         Tj3u6d/XSX9cWhaMwlfqr8/8XhZnPlF1Beozl2XnQkp5QRuRDpFGeNHoOUu3xXL3KhWS
-         5BvNmcTDfINNnt/iHF5XAjKxv5HWYLvtCz+hHqnVa494qPVgxyNxAOBMoenrNAwCKyhY
-         Gbxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNRVnkq8aS2XfxhZ+/6xamlb7AJXDPukJ/UzY1N7jBKjYe57wCGJDzlnLa2MPqe3Yv62cY5LrwenchUCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP4vgzTQjHIrEgt28B71QGXb0PU4lXX0tlRVlzM+SwZYRp29gF
-	ZRPl5hqf14cZVmcbwsKTYXObfDF2Kb3HaFdbH3n4WV+dgXjD2ifhZu1cuR8NEouq12i+rn09P19
-	cgiA7eCwCefu/guwNCWZFiPJ2cg7I5J2oCdhcpl5u
-X-Gm-Gg: ASbGncsEDqnSWHHoAc3r2p74Bo1JQOBI1OY8Ffxminoq6CcrGmMBoZYnVcL/cuBu2K5
-	LNyCQmU4amj8dgovMr7qJcVh87cLPhmT/8MHnNxdfRX5Tx7aaQ4hrhJiaGytOKENwCcA5b19Z33
-	Ob03YBUH39hbSds7BmiU0sSGWgD4qIwgI/Py/RQayaEnA=
-X-Google-Smtp-Source: AGHT+IFt/ivTuvmPFrz20YmtJKKBjvwFbf5WtZzjBqYQF95rJUwlQrpq5rDMJHRKZAZ1A/zY+qqyl8WgCXnFzYIz3Uc=
-X-Received: by 2002:a05:6102:f9d:b0:4df:e510:242e with SMTP id
- ada2fe7eead31-4e5ac0bc0e6mr7200256137.5.1748562608979; Thu, 29 May 2025
- 16:50:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTqhqfA0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748562614; x=1780098614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3fHCqpJzOQ+faj5dcuseeWJ7RAmHY34XO4V4FBCxvYg=;
+  b=WTqhqfA0U/V08pMrip8bpbX9GJLbEeaN7SU8olAQn+bv9/EtHNhY1MCt
+   AwfGvE7TvetwstAaZhwtDDe36b0hyuW0vvdRo2+lF8vhRIjRkQbk/xT0w
+   tVoEPVI3yQvPLhjW7H5O4XdCOeXWuRM8dXLInfysW62bJenE6lv4tz72P
+   msXG9x2mnG09GXv2VRXGsG4siW1yI8ubQ2ukdtJRzUdKqhTiW12SkaoVq
+   7wi2/XPE4qPeqevvDWUM/Uot8S4wWNUL+2A8FUVoFGfwWbypZcBarVp5s
+   l0foIJNZjuaN8xaPAarsiDy3JL+hX5xheSva0E2B4SnH91lf3wTySRD1T
+   g==;
+X-CSE-ConnectionGUID: tZASSIo1STyd9MS8JhSEdw==
+X-CSE-MsgGUID: LAaaFLxbSyaVbqU9XtdLZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="54311377"
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="54311377"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 16:50:13 -0700
+X-CSE-ConnectionGUID: d1o50jMVSfqcz2ZWzD/YTA==
+X-CSE-MsgGUID: RJ8nT1nTRmaoGoo97sRlfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="143694823"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 29 May 2025 16:50:11 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKn0i-000XC8-30;
+	Thu, 29 May 2025 23:50:08 +0000
+Date: Fri, 30 May 2025 07:49:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Hilda Wu <hildawu@realtek.com>, marcel@holtmann.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org, max.chou@realtek.com,
+	alex_lu@realsil.com.cn
+Subject: Re: [PATCH 1/2] Bluetooth: btrtl: Firmware format v3 support
+Message-ID: <202505300705.KsxzVLt6-lkp@intel.com>
+References: <20250529124816.4186320-2-hildawu@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521222725.3895192-1-blakejones@google.com>
- <20250521222725.3895192-4-blakejones@google.com> <CAP-5=fWZG-N8ZzRh6h1qRuEgFbxTCyEwGu1sZZy+YmnSeGgSSw@mail.gmail.com>
- <CAP_z_Ch2SKwVcSV7ffV1Lbp=6TuKLyofSs1gpfBPMf6mV9-wHA@mail.gmail.com> <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fXkfVb4gwuSXr_yZMj8ctPr8LHs-Js7g9hP46dhkU_kQQ@mail.gmail.com>
-From: Blake Jones <blakejones@google.com>
-Date: Thu, 29 May 2025 16:49:57 -0700
-X-Gm-Features: AX0GCFtrqvEMNdjlMwMgn5_lFeqF78T2xXt27TWAAtlEFWOjsQdw1dn9gHfduLI
-Message-ID: <CAP_z_Ci4X=GRJwKyUMUmypO-xvjuRUR-UPce5hzE_vPf2g_RLQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf: collect BPF metadata from new programs, and
- display the new event
-To: Ian Rogers <irogers@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Andi Kleen <ak@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Ben Gainey <ben.gainey@arm.com>, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529124816.4186320-2-hildawu@realtek.com>
 
-On Thu, May 29, 2025 at 4:27=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
-> It should be okay as you can compare the string against that reported
-> by `perf version`. On my build in `/tmp/perf`:
-> ```
-> $ /tmp/perf/perf version
-> perf version 6.15.rc7.gb9ac06abfde9
-> $ cat /tmp/perf/PERF-VERSION-FILE
-> #define PERF_VERSION "6.15.rc7.gb9ac06abfde9"
-> ```
+Hi Hilda,
 
-Oh, nice! I'll switch the test to use that instead.
+kernel test robot noticed the following build errors:
 
-Blake
+[auto build test ERROR on bluetooth/master]
+[also build test ERROR on bluetooth-next/master linus/master v6.15 next-20250529]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hilda-Wu/Bluetooth-btrtl-Firmware-format-v3-support/20250529-205020
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git master
+patch link:    https://lore.kernel.org/r/20250529124816.4186320-2-hildawu%40realtek.com
+patch subject: [PATCH 1/2] Bluetooth: btrtl: Firmware format v3 support
+config: arm-randconfig-004-20250530 (https://download.01.org/0day-ci/archive/20250530/202505300705.KsxzVLt6-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505300705.KsxzVLt6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505300705.KsxzVLt6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/bluetooth/btusb.c:2707:10: error: call to undeclared function 'btrtl_recv_event'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    2707 |                 return btrtl_recv_event(hdev, skb);
+         |                        ^
+   1 error generated.
+
+
+vim +/btrtl_recv_event +2707 drivers/bluetooth/btusb.c
+
+  2689	
+  2690	static int btusb_recv_event_realtek(struct hci_dev *hdev, struct sk_buff *skb)
+  2691	{
+  2692		if (skb->data[0] == HCI_VENDOR_PKT && skb->data[2] == RTK_SUB_EVENT_CODE_COREDUMP) {
+  2693			struct rtk_dev_coredump_hdr hdr = {
+  2694				.code = RTK_DEVCOREDUMP_CODE_MEMDUMP,
+  2695			};
+  2696	
+  2697			bt_dev_dbg(hdev, "RTL: received coredump vendor evt, len %u",
+  2698				skb->len);
+  2699	
+  2700			btusb_rtl_alloc_devcoredump(hdev, &hdr, skb->data, skb->len);
+  2701			kfree_skb(skb);
+  2702	
+  2703			return 0;
+  2704		}
+  2705	
+  2706		if (skb->data[0] == HCI_VENDOR_PKT)
+> 2707			return btrtl_recv_event(hdev, skb);
+  2708	
+  2709		return hci_recv_frame(hdev, skb);
+  2710	}
+  2711	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
