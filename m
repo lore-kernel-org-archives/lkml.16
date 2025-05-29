@@ -1,157 +1,84 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB5301F1527;
-	Thu, 29 May 2025 10:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68B42A55
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 10:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748513915; cv=none; b=sLMSstEwDQdCYIKLRKyYZ1A8joLkpA73uKEe7TAkX3K63ukgO47g6im9DkAIP5Dyxi73HfK8qdZwnVD0nFNQWmV2CK1T8MSa843/Txjbrdv5UBRyRssvu49DUnzMjJaW2QvuwwU1zKqUew7KLV9sX5eDSA63v1hu/SlXixEenlE=
+	t=1748513945; cv=none; b=OQNS/Noe+h/0akCRjE3TaWNmHgbflJ2PoeR8yHGFzyx1Kbqm/bFRvmarxRaJRHpPjxJol0DBpGZkObt125sv3A5peLrcgOHlbRRy7832CyJapD82oF7Y8E+5N8/rilz5/ZpWae7J5CwKmWnAREOYd6JzfWyUtw8Y+D9Ya59gAdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748513915; c=relaxed/simple;
-	bh=5i/hDAQBSkwYVpOy1/ZC5ugPq70Hq06cHWW43vLth00=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=UHjHod6qxaQOXN5ze9mT3KrVzCDxmz/gIdC4xl8q1tfCMhH7Zu9uvEO50WWSS3uSYUywBULld6hfH9kzA3saE7+GCOLaUaWq2hV8JzI2RTIOeEsiNyfyLg/rE5GpIHRV9AkRvnBh0OsXYXUJFnJjS+1RM45JVO/RP5FOevMrK5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GBcKC/4A; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GBcKC/4A"
-Received: by linux.microsoft.com (Postfix, from userid 1127)
-	id 2D5F5203EE15; Thu, 29 May 2025 03:18:33 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2D5F5203EE15
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748513913;
-	bh=3O+r7rjK0Z7UCd5rC/P3E0rsfGqbO+aPvR8Qk26+QUU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GBcKC/4AzpGsK248NlSiWI82KViX/AHEk9rigBc6HF17A3Q59wNP1ftlJb6RkegXr
-	 n5YUu8SzNBuSBpIt4GxR5JwrzOlscEvU0Z3WbR1rTpeI9vmPQvD+1n5J5O3ujcnjxl
-	 VScqEuM3b7tiTTm4VjykXBgs2Lm0R93H9en+I+zc=
-From: Saurabh Sengar <ssengar@linux.microsoft.com>
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	hawk@kernel.org,
-	john.fastabend@gmail.com,
-	sdf@fomichev.me,
-	kuniyu@amazon.com,
-	ahmed.zaki@intel.com,
-	aleksander.lobakin@intel.com,
-	linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Cc: ssengar@microsoft.com,
-	stable@vger.kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>
-Subject: [PATCH net,v3] hv_netvsc: fix potential deadlock in netvsc_vf_setxdp()
-Date: Thu, 29 May 2025 03:18:30 -0700
-Message-Id: <1748513910-23963-1-git-send-email-ssengar@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1748513945; c=relaxed/simple;
+	bh=leRUt0lr1lFv3OB0+CJ56Wv2chSMZk1VwdIKjgIDiPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MnODSj8LEDb0T6Wgc6yo0QJPGLxv+F7gKOaFyMxxwnyo6oIEG0ohE53u+isOwyjCl7of2eDdCUKa66+vLU5oewXCbdfpG95UPom1jpUCDX7THdXrCctt/uhqUHiNKz3zKzgnCNCRnk+maF8HQObv/2qywTFQf2R7NTPjiXwgiMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2AA4113E;
+	Thu, 29 May 2025 03:18:44 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A71873F673;
+	Thu, 29 May 2025 03:18:58 -0700 (PDT)
+Date: Thu, 29 May 2025 12:18:54 +0200
+From: Beata Michalska <beata.michalska@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, clm@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 0/5] sched: Try and address some recent-ish
+ regressions
+Message-ID: <aDg0jp4DiPTGnmq5@arm.com>
+References: <20250520094538.086709102@infradead.org>
+ <20250528195944.GB19261@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528195944.GB19261@noisy.programming.kicks-ass.net>
 
-The MANA driver's probe registers netdevice via the following call chain:
+On Wed, May 28, 2025 at 09:59:44PM +0200, Peter Zijlstra wrote:
+> On Tue, May 20, 2025 at 11:45:38AM +0200, Peter Zijlstra wrote:
+> 
+> > Anyway, the patches are stable (finally!, I hope, knock on wood) but in a
+> > somewhat rough state. At the very least the last patch is missing ttwu_stat(),
+> > still need to figure out how to account it ;-)
+> > 
+> > Chris, I'm hoping your machine will agree with these numbers; it hasn't been
+> > straight sailing in that regard.
+> 
+> Anybody? -- If no comments I'll just stick them in sched/core or so.
+>
+Hi Peter,
 
-mana_probe()
-  register_netdev()
-    register_netdevice()
+I've tried out your series on top of 6.15 on an Ampere Altra Mt Jade
+dual-socket (160-core) system, which enables SCHED_CLUSTER (2-core MC domains).
+Sharing preliminary test results of 50 runs per setup as, so far, the data
+show quite a bit of run-to-run variability - not sure how useful those will be.
+At this point without any deep dive, which is probably needed and hopefully
+will come later on.
 
-register_netdevice() calls notifier callback for netvsc driver,
-holding the netdev mutex via netdev_lock_ops().
 
-Further this netvsc notifier callback end up attempting to acquire the
-same lock again in dev_xdp_propagate() leading to deadlock.
+Results for average rps (60s) sorted based on P90
 
-netvsc_netdev_event()
-  netvsc_vf_setxdp()
-    dev_xdp_propagate()
+CFG |   min      |  max       |   stdev    |   90th
+----+------------+------------+------------+-----------
+ 1  | 704577.50  | 942665.67  | 46439.49   | 891272.09
+ 4  | 656313.48  | 877223.85  | 47871.43   | 837693.28
+ 3  | 658665.75  | 859520.32  | 50257.35   | 832174.80
+ 5  | 630419.62  | 842170.47  | 47267.52   | 815911.81
+ 2  | 647163.57  | 815392.65  | 35559.98   | 783884.00
 
-This deadlock was not observed so far because net_shaper_ops was never set,
-and thus the lock was effectively a no-op in this case. Fix this by using
-netif_xdp_propagate() instead of dev_xdp_propagate() to avoid recursive
-locking in this path.
+Legend:
+#1 : kernel 6.9
+#2 : kernel 6.15
+#3 : kernel 6.15 patched def (TTWU_QUEUE_ON_CPU + NO_TTWU_QUEUE_DEFAULT)
+#4 : kernel 6.15 patched + TTWU_QUEUE_ON_CPU + TTWU_QUEUE_DEFAULT
+#5 : kernel 6.15 patched + NO_TTWU_QUEUE_ON_CPU + NO_TTWU_QUEUE_DEFAULT
 
-And, since no deadlock is observed on the other path which is via
-netvsc_probe, add the lock exclusivly for that path.
-
-Also, clean up the unregistration path by removing the unnecessary call to
-netvsc_vf_setxdp(), since unregister_netdevice_many_notify() already
-performs this cleanup via dev_xdp_uninstall().
-
-Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-Cc: stable@vger.kernel.org
-Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Tested-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Subbaraya Sundeep <sbhatta@marvell.com>
 ---
-[V3]
-- Add the lock for netvsc probe path
-
-[V2]
- - Modified commit message
-
- drivers/net/hyperv/netvsc_bpf.c | 2 +-
- drivers/net/hyperv/netvsc_drv.c | 4 ++--
- net/core/dev.c                  | 1 +
- 3 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/hyperv/netvsc_bpf.c b/drivers/net/hyperv/netvsc_bpf.c
-index e01c5997a551..1dd3755d9e6d 100644
---- a/drivers/net/hyperv/netvsc_bpf.c
-+++ b/drivers/net/hyperv/netvsc_bpf.c
-@@ -183,7 +183,7 @@ int netvsc_vf_setxdp(struct net_device *vf_netdev, struct bpf_prog *prog)
- 	xdp.command = XDP_SETUP_PROG;
- 	xdp.prog = prog;
- 
--	ret = dev_xdp_propagate(vf_netdev, &xdp);
-+	ret = netif_xdp_propagate(vf_netdev, &xdp);
- 
- 	if (ret && prog)
- 		bpf_prog_put(prog);
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 14a0d04e21ae..c41a025c66f0 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2462,8 +2462,6 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
- 
- 	netdev_info(ndev, "VF unregistering: %s\n", vf_netdev->name);
- 
--	netvsc_vf_setxdp(vf_netdev, NULL);
--
- 	reinit_completion(&net_device_ctx->vf_add);
- 	netdev_rx_handler_unregister(vf_netdev);
- 	netdev_upper_dev_unlink(vf_netdev, ndev);
-@@ -2631,7 +2629,9 @@ static int netvsc_probe(struct hv_device *dev,
- 			continue;
- 
- 		netvsc_prepare_bonding(vf_netdev);
-+		netdev_lock_ops(vf_netdev);
- 		netvsc_register_vf(vf_netdev, VF_REG_IN_PROBE);
-+		netdev_unlock_ops(vf_netdev);
- 		__netvsc_vf_setup(net, vf_netdev);
- 		break;
- 	}
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 2b514d95c528..a388f459a366 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9968,6 +9968,7 @@ int netif_xdp_propagate(struct net_device *dev, struct netdev_bpf *bpf)
- 
- 	return dev->netdev_ops->ndo_bpf(dev, bpf);
- }
-+EXPORT_SYMBOL_GPL(netif_xdp_propagate);
- 
- u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
- {
--- 
-2.43.0
-
+BR
+Beata
