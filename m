@@ -1,49 +1,90 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A1E1EB2F;
-	Thu, 29 May 2025 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EDF1FDA7B
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 08:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748507369; cv=none; b=XAEihMibYZScncSGFg5XFAV1wVZguY3bsKeXE0qKMU0jAz0cX2R9fNMwKTTapae7aLWgBG6aBzsWqy+kXtAVepGrXHUqie3Kovjmk4+RUhdeGa57loBB9CxVQqopkYU7UEMq/dv/j3ky1aaBY3KBsZu6HE0XAxEbUtNNS8HX5Vk=
+	t=1748507529; cv=none; b=hzLy8IxawPv6mFgD2R0gS6iG2f+ud6Mh2pHDJ05KgQnb9qzlB5jy28+UXR6JPuEYwYiFt8iJ1O97l55Se/2TJ2Jlfgx0ZW+Naqk1DG3zudtEnJYAWUnb+U6VMoxG864Bj5/QZY3X1F/YfKuT5v5FehHIzvESD6N74SeG1DcyUn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748507369; c=relaxed/simple;
-	bh=oWMfWr38IyfL2mt6nbNwh36u88niY/zrghcvsR120Hk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r9izBJWwQaYyG5EUzMAhGEC+T+wNsvetgtU3YfM8D1ZKS/iBANR7D3UjHsW4k/+LavR+jKuO4UIT2pVb/VsEKKmiECi5H0vrZVxFYLVxJyOha29o3Wt7fqtiyeJOobVtmMuEqgV9pcDnE481/1jlqJXUdQ5ug3zqaAMcP3dZhxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SiAyZXoL; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748507529; c=relaxed/simple;
+	bh=SVloibZzQ4wI3ACpPrgps5nlN9IVxSsCtt4+bvmRtAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=neYYDPwuV12w787Csq2KoFMJs8vf1Zh0HxtRbjF9Zd/D2dMGoE6RDol+khuVrW6J8p5/6XNdpdJhen6WKaB517Uom2eifyPCrJW70rH8wpfMBYv5VA6V8Fves3AGSb0hGJyfYVudtNMRVtqbcs5y7eeLQWcxSQSHASayDC+6Xfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=jI5/L4t3; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SiAyZXoL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748507363; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=0SELs1h7jaP7V5rEcYlTVB8+PGf5ZsGKYSIxuyINI8U=;
-	b=SiAyZXoLVGCBW9XtJtM56PYuJUmcQnOUzClvfgM7tVIvyomYf297q7TpO6DKb1Q2GJUwXihKME2rlSKKVrMvZkv7CpkB3ChLURi+duiyzY78CH0ld/ZrCKrVtrjgEwqBTK7m9kpeBZ0ePgCGg5LCwoaDjje6EC9IID8XbgO3Kz4=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcGls7-_1748507043 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 29 May 2025 16:24:03 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org,
-	hughd@google.com,
-	david@redhat.com
-Cc: lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] mm: huge_memory: disallow hugepages if the system-wide THP sysfs settings are disabled
-Date: Thu, 29 May 2025 16:23:54 +0800
-Message-ID: <d97a9e359ae914e788867b263bb9737afcd3d59d.1748506520.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
-References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="jI5/L4t3"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad574992fcaso111950166b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 01:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748507526; x=1749112326; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+yd0OdHrM2Itm96/YuqXehoTn8EREnI2dfLKcvCeLuM=;
+        b=jI5/L4t3DHoFHs+OSqhHJ1HNzLil4PI2U3V2qHamws2Hg9ncCEhOqD6fTrxZzkmB4f
+         27k0Nwe7CTb9NZ3OoppPJL1+qfNj/Zp9ysHqoWZD0VcZeBvbBqWkS12EVLdSA6tqMO4j
+         W1/CeGKYpboeQUor7vkPpxCzy+ixD8m3bnbA0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748507526; x=1749112326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+yd0OdHrM2Itm96/YuqXehoTn8EREnI2dfLKcvCeLuM=;
+        b=AKCm1Nr2eVr0lvl9K4qKSadpg9eqDKIvjV14OCiCfdWAiilZP2usAa7hOMR7fV+lcK
+         3lmcCNm1VVt32BC5ulJmJ388aAQzOL8uUjYnLhfY+aaCPlidNsMNgSHdfgHQ6B3/lrs0
+         gp9foiEWZUabU9VUP1a8lV/oqg8j+PV30Xi9u47ht6zHRzs5ZxeG0tlMIK4Bf6QQdq/T
+         yxq/zhSlvXE+GBiVZkT98Yn+6Ft4f/HdYK+kDLJKqUUqRvwbBnqvvaAJfF+Jyq2o0NQg
+         AuXe3YX0GNhUTglzrWcqb4RdRxBvaQbsp8R+8EUQdwVQZFFSP1ta7X9+DjhJWFZvN/Lz
+         FAPw==
+X-Gm-Message-State: AOJu0YxsiNw79aPBn92mJs3C9pkz+yvUdiXgX9F/7fG90If7XH4D54qd
+	usm3BAY2GRI2+UFRq8EN4RmWSCA6Bc87VCVrYaZaUdULAsM48JybwdjGdcO0HBEomSw2YC/3GFV
+	FX8Z0
+X-Gm-Gg: ASbGnctlp6ZRsv8YGRqpwTRcTEWhS1cGzDbcsZ4nrRKzGRnuSkjopVKWZZf8drkXtlB
+	OvTWeXxEpp8PLzdFKN90d1Vh/+3K9ZHcg4u2SsCZ30mtU4G8j24EIu4TscMtJa3rPo6bM+heYcx
+	TNDBPBu04pN+84OpXCKeVQWBroUJMkbtQ9Rc0c/UUVFHQrOm8hpW+UkWaur4aX8dQ6FpRuVQ1kI
+	T3RzJLykz8ZFxqwcjzbvXhA7TvQSy1C1WUPszmn/pOwl6y90mzlOXCFwRYH91e1eeyOIEZFlJnR
+	eLju30+QgPT9eAeUKPN8Qm1LEuhJdjtupax+Nw8FBYImWGtZeMO6/lXG0Ac1u12A9nlA8PZWKnq
+	BQJUQ5Qm1cNbaE45K
+X-Google-Smtp-Source: AGHT+IHJPmyMvrXWwF+oJ+y1YEj0csZRYNNz7OEbL3/Z3gW/L6Zao3qlTysBk8RNZogBxgTqOB++Gw==
+X-Received: by 2002:a17:907:9611:b0:adb:1b2b:fe1c with SMTP id a640c23a62f3a-adb1b2c0f71mr86246766b.2.1748507526094;
+        Thu, 29 May 2025 01:32:06 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.42.248])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d82e87esm100609866b.63.2025.05.29.01.32.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 01:32:05 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: michael@amarulasolutions.com,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
+	=?UTF-8?q?Jo=C3=A3o=20Paulo=20Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 0/4] Support i.MX28 Amarula rmm board
+Date: Thu, 29 May 2025 10:31:03 +0200
+Message-ID: <20250529083201.2286915-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,63 +93,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The MADV_COLLAPSE will ignore the system-wide Anon THP sysfs settings, which
-means that even though we have disabled the Anon THP configuration, MADV_COLLAPSE
-will still attempt to collapse into a Anon THP. This violates the rule we have
-agreed upon: never means never.
+The series adds support for i.MX28 Amarula rmm board.
 
-To address this issue, should check whether the Anon THP configuration is disabled
-in thp_vma_allowable_orders(), even when the TVA_ENFORCE_SYSFS flag is set.
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 128 Mbytes DRAM DDR2
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- include/linux/huge_mm.h | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+Changes in v3:
+- In imx28-amarula-rmm.dts:
+  - Drop xceiver-supply property from can0 node.
+  - Rearrange the order of specific nodes and properties
+    alphabetically.
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 2f190c90192d..199ddc9f04a1 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -287,20 +287,35 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
- 				       unsigned long orders)
- {
- 	/* Optimization to check if required orders are enabled early. */
--	if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
--		unsigned long mask = READ_ONCE(huge_anon_orders_always);
-+	if (vma_is_anonymous(vma)) {
-+		unsigned long always = READ_ONCE(huge_anon_orders_always);
-+		unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
-+		unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
-+		unsigned long mask = always | madvise;
-+
-+		/*
-+		 * If the system-wide THP/mTHP sysfs settings are disabled,
-+		 * then we should never allow hugepages.
-+		 */
-+		if (!(mask & orders) && !(hugepage_global_enabled() && (inherit & orders)))
-+			return 0;
-+
-+		if (!(tva_flags & TVA_ENFORCE_SYSFS))
-+			goto skip;
- 
-+		mask = always;
- 		if (vm_flags & VM_HUGEPAGE)
--			mask |= READ_ONCE(huge_anon_orders_madvise);
-+			mask |= madvise;
- 		if (hugepage_global_always() ||
- 		    ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
--			mask |= READ_ONCE(huge_anon_orders_inherit);
-+			mask |= inherit;
- 
- 		orders &= mask;
- 		if (!orders)
- 			return 0;
- 	}
- 
-+skip:
- 	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
- }
- 
+Changes in v2:
+- In imx28-amarula-rmm.dts:
+  - Replace '-' with '@' for the pinctrl sub-nodes.
+  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
+  - Drop LCD reset hog pin.
+  - Add correct #address-cells and #size-cells to gpmi node.
+  - Replace edt-ft5x06@38 with touchscreen@38.
+- Drop from commit messages all references to LCD display.
+- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
+  json-schema".
+
+Dario Binacchi (4):
+  dt-bindings: mfd: convert mxs-lradc bindings to json-schema
+  ARM: dts: imx28: add pwm7 muxing options
+  dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+  ARM: dts: mxs: support i.MX28 Amarula rmm board
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ .../devicetree/bindings/mfd/mxs-lradc.txt     |  45 ---
+ .../devicetree/bindings/mfd/mxs-lradc.yaml    | 106 ++++++
+ arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+ .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 303 ++++++++++++++++++
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |  10 +
+ 6 files changed, 421 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.yaml
+ create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+
 -- 
-2.43.5
+2.43.0
 
+base-commit: 2d1e9b3978bc041336f1bf6c611fbbf435a297f5
+branch: imx28-amarula-rmm
