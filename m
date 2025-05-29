@@ -1,176 +1,186 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D179615E97;
-	Thu, 29 May 2025 09:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB53521C9E0
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748511163; cv=none; b=heVJWWAT/QBiIkzpHp0oO0FRh3JMnwWihzD1zQytoQ3SXGqiDZOzQ5gU8nPHZRN3lDA/ZUhIE9FViweRF20xypRklVwR8aw/wxOmA51Fp3UjezBv6iLPnluWlyJ4i1YTjcjcdTx/YbbOZBFOkAKjkqPyYCPhrfBNEZVMVUKGfGw=
+	t=1748511199; cv=none; b=uPHjOouJGAZ/ztVi6O317vahMU/tQeKJa6+GM2kRuANLH2seDQvaqndjFNGfYDpBaFOJjZ0utcljyg8/ck6f5bbnSFbUxJlcBEAkWpVz7coKvc6U3bPIrlJFd1/4Tuz99Bd18ISG8SGrGZh8sSAv26XoMyMhQlp8K7C9WEjp0K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748511163; c=relaxed/simple;
-	bh=mcjR3gQ+VgRUfhP02WimDDfywq/u9GcQQll4HVvoscY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sBr96zgU6gmyvbvI2au6SJDpyCEEep7Avy+rPl+Jkbpqarv74HIibnV7UYkfckM/vBNk3AplnqI9s0YPhH4Sh0bzThkjfGNKo/7rd8N4Khg08IxGJPatFLhQ/eOG/wxtO8ZotTNLrt9OQ3EqI5cp43d8dQvzzYYDZH2vY09DtIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b7Lj60y2dz6L5Fs;
-	Thu, 29 May 2025 17:31:22 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 484571402FE;
-	Thu, 29 May 2025 17:32:37 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 29 May
- 2025 11:32:36 +0200
-Date: Thu, 29 May 2025 10:32:35 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: Gyeyoung Baek <gye976@gmail.com>, Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iio: trigger: Avoid data race
-Message-ID: <20250529103235.0000144a@huawei.com>
-In-Reply-To: <CAHp75VdBMXCBYiDX8ocyOZBm_dhWJSU_NXJN6PmOwsZaJt=AHw@mail.gmail.com>
-References: <20250527200534.98689-1-gye976@gmail.com>
-	<CAHp75VcUr7-X+F1f=wPH4=Z7q3kFffv8BgkmKWM4VTjy2w-tGg@mail.gmail.com>
-	<CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com>
-	<CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
-	<CAKbEznt7ZhN9gZWy-7wHhFhwbF8XtCGrukuxe4eAFZpfxfu6vg@mail.gmail.com>
-	<20250528180214.00002253@huawei.com>
-	<CAHp75VdBMXCBYiDX8ocyOZBm_dhWJSU_NXJN6PmOwsZaJt=AHw@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748511199; c=relaxed/simple;
+	bh=upaHpcoQNaYRpzfjT5IJF09oP9mPC/4FHbCQA5gbkaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lcLadJUXq1FMqnF4axdVzzWrKSl32m7EUZ4SgcjANGkYgB2JVV85uxt/j6VzPOsxBIeCkaSD1yRsk4AHXexOSXCq1gFOBY2/vvprjInDMY/sJKemnT4E2UMyrkTeMBhKCiP8515nrvLoKtmHBq6AX0KNfxyfu+CaEMkFB7pPNSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G78IVkSj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G78IVkSj"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T2AfQE028239
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:33:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	J19CTIdOjN4o9N+SR4QD26ilvGTAu4kkXOBnmt8QyYw=; b=G78IVkSjKa2cFUdG
+	TQimbwKv8Sbzgk/GS0OyD9/a1LlaBbCdVjBWFXr8yM3OX5WigqO0oMsV+etu5rNX
+	ens3zoETm/wB7RwxyKTIxhvivztq8I01kS3KqZT+snFp7srDPWorfR0va2ZokDKg
+	mJMT8zgo9xx2YMmCTlkhUmrclZW1LA2x0Gfbrg6xTokzvgIRjMBW9ODBwhrPxNQy
+	9pszzhrFoi4zyS6eIaWLsl7HMr9ZnVaDkJ5GEyKPgKRqX4b0O1tYxGQpV+1JBhCO
+	IG02JIHj1Bkavgu3tpzrz+jA1y7XF8WpvpifHS3dKvZxXRCH8X4T6Mozc4w9wuQx
+	pnqbDg==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992q9t2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:33:17 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6faa53cbc74so12255226d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 02:33:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748511196; x=1749115996;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J19CTIdOjN4o9N+SR4QD26ilvGTAu4kkXOBnmt8QyYw=;
+        b=OCLqoRrgHlCqQp85I+6z2BYmhgNknbRfFcGbW83kk8WepHO88/HdrmDj+pAoAv7orc
+         AaLjoQ7UWSxwK5hsZshVItiT2XaliZ1qbxkP66EodUoVJZM29jnI1rHG0xoDbsksXuh7
+         EadbihPynI6lMrEW0LBTUG01NfvntfIblF7k5NaSl9hObuPz4KkOqo1A61s07m//OVhC
+         QI8R5vZt9gySs0bpcaO6ezAMmj8Fcy/esuyXXgBzfFDiqXFhB7Vx0u56bVKg0iHJWMJg
+         mtuS7KL2u4bb7mji/hxhNFCpp/s/XCL1hUiq9Z3+3jE9TED3SFLAOWzHszkx2IIlt5it
+         cXSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTArkKjl1umxzp4BfIPn/Kfuill2LVW/nFqORzPX41y0V741gJLpV8e30EkDJA6vPb8sSZTcfxMu/gi/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQdMWMSViY+P2ZVybDl3pHzhtol7l1f9cFCvOCooOyUOLqQdwF
+	4BTdxAZfSnQ06zWTRf2edLUlYN0yeDJdWlIIARtasMLxBxC02dxlWkQ/fkqbQfhbwRPLaVjfSZR
+	C4MqznbexzXLNnuwq2tWnZ52TqNkdr1CTLBMI02D/URSj+ugLcG5UQCkTVKSQmsijn/o=
+X-Gm-Gg: ASbGncv3PonUpeDLfBvKgVAGhO2GoRSPD7JO75/oEmXheHs7XTfYn7do1MObVH6bSYe
+	cRKpO7ay0hvVIUN5yHcbTUimzYxem5ACtesOKWxlIaX+izmuHcTk4be47VVOxXugsuClZnemk6Y
+	faoiKLbCAOcQmH847Cx/EvBk8AyMz2gcMcS4FIPoCv3ZCaCTE3SE/WS2+QDUQeKa2JxUfmVu6kc
+	O/qKS60CYgB+4XRJ0pSq3iXmIM4cPFn7xVVFRj9ywDn8Yin4bcx3CDOcg2YQsjaYsSDPKpcwcQ6
+	UfDmv68W7SZc8a2nepA/3+tCDQGCITTe/GiLwQ==
+X-Received: by 2002:ad4:5ccb:0:b0:6fa:c697:97a5 with SMTP id 6a1803df08f44-6fac841db7emr19528606d6.15.1748511195792;
+        Thu, 29 May 2025 02:33:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGA79GLpD3HZiK/IRAurUe6TU66mlX4HbtpUZm3DMIN5fjfS4J9m+gB7K+ZJszdXMACo2cUIQ==
+X-Received: by 2002:ad4:5ccb:0:b0:6fa:c697:97a5 with SMTP id 6a1803df08f44-6fac841db7emr19528356d6.15.1748511195376;
+        Thu, 29 May 2025 02:33:15 -0700 (PDT)
+Received: from [192.168.68.109] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-450cfbf498bsm15179805e9.1.2025.05.29.02.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 02:33:14 -0700 (PDT)
+Message-ID: <a4c0d421-9062-4424-a750-ee74e2f0407f@oss.qualcomm.com>
+Date: Thu, 29 May 2025 10:33:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- frapeml500008.china.huawei.com (7.182.85.71)
-
-On Thu, 29 May 2025 07:42:46 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> On Wed, May 28, 2025 at 7:02=E2=80=AFPM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
-> > On Wed, 28 May 2025 16:17:06 +0900
-> > Gyeyoung Baek <gye976@gmail.com> wrote: =20
-> > > On Wed, May 28, 2025 at 6:19=E2=80=AFAM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote: =20
-> > > > On Tue, May 27, 2025 at 11:10=E2=80=AFPM Gyeyoung Baek <gye976@gmai=
-l.com> wrote: =20
-> > > > > On Wed, May 28, 2025 at 5:25=E2=80=AFAM Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com> wrote: =20
-> > > > > > On Tue, May 27, 2025 at 10:05=E2=80=AFPM Gyeyoung Baek <gye976@=
-gmail.com> wrote: =20
->=20
-> ...
->=20
-> > > > > > At bare minimum they are not relevant to the patch change and h=
-aven't
-> > > > > > been described in the commit messages. =20
-> > > > >
-> > > > > I initially skipped this part as I thought it was minor.
-> > > > > But on a second look, it seems better to separate the declaration=
- from
-> > > > > the logic.
-> > > > >
-> > > > > What do you think about the data race logic? Would it make sense?=
- =20
-> > > >
-> > > > The point is valid, the atomic_read() + atomic_set() is 101 thingy,
-> > > > whoever did that doesn't really have a clue what atomic(ity) is. =20
-> >
-> > :)
-> >
-> > I'm trying to recall what this protection is actually for so this might
-> > be a little vague as descriptions go...
-> >
-> > The key here is what can happen in that 'race' and hence why I'm still =
-fairly
-> > sure it isn't a real race.  Firstly this is called in an irq handler
-> > so we can only have one call of this particular function at a time
-> > for a given trigger.  So no race against itself.
-> >
-> > The atomic part is about decrements that can happen elsewhere, but there
-> > can never be 'more' decrements than the value we set the counter to in =
-this
-> > function.  That is it never goes negative.
-> >
-> > Those decrements ultimately happen in calls that can't happen until aft=
-er
-> > the set (via various convoluted paths ultimately getting to
-> > iio_trigger_notify_done()).  In many cases the trigger is masked until =
-it
-> > is reenabled on the counter =3D=3D 0 (elsewhere) - but not always...
-> >
-> > IIRC correctly aim is to not double trigger in cases where we can't mask
-> > the trigger (a particularly rubbish trigger) - so if any of the downstr=
-eam
-> > devices still hasn't called iio_trigger_notify_done() then we quietly
-> > drop this particular irq on the floor. We don't mind dropping a few
-> > too many, just dropping too few a then we end up loosing count of who
-> > has to be 'done' with the trigger.
-> >
-> > Hence the counter won't change between atomic_get and the atomic_set
-> > as it's always 0 which means no one else is left to decrement it.
-> >
-> > Atomics don't always need to be atomic all the time, they just are in
-> > some states. =20
->=20
-> Yes, but this is confusing and/or buggy code to begin with (and
-> independently on the background of its usage). Technically this patch
-> (perhaps with a better commit message) is valid. Main two points here:
-> 1) avoiding potential (even theoretical) race;=20
-
-Not a race, even a theoretical one, that I can establish.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] ASoC: codecs: More const and unused member cleanups
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        David Rhodes <david.rhodes@cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+References: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+In-Reply-To: <20250528-asoc-const-unused-v1-0-19a5d07b9d5c@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA5MSBTYWx0ZWRfX4K0g51p5on0H
+ JvA63Yb2nfDRYXCi4UxNBFe+C1ZTuzLD3qKv3yDZDM5NJxaEOUkuyFwE4R32+77as1iAaXZ33Mi
+ tBNzZMY+A4ug1oPi0w/qxm9um0klwPK+09dcRzY8yAxx9nOvAJHCMsiISsWyTa+AB1kcS+pi2Vi
+ edm46nlSAkY7QJbbXnJ6+lI8WQBLKWVAtrpsDian74MQSssNUpAT2oP7vCs3ZXOK2/bBGtsxdNQ
+ rCGyljyWvCtYLOuuXXeMGK+/BYv1mVO1lcPDwrdGrrS0gkjHVHqkkIGsVJ9fPWu1D6HM4UkCYSp
+ XO+i1w1Qxt5EC3kgpHJVajKZ7DYt/ZdfS7C4/Jk+W2L0LVgvyUusJbg8hJbi5t/2ZV68Oo78+nn
+ W9GZxfZtREEZ925+4MdDvAnML4EqWeDrJRNtC13F2XldbdUd0nyL2uV1XMjAtrAKaX+oZIpB
+X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=683829dd cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=b5hiRvTwp8EW11ydFUEA:9
+ a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-GUID: bJL83D-q5aN6JzPKEplN85B2MRV40Uzk
+X-Proofpoint-ORIG-GUID: bJL83D-q5aN6JzPKEplN85B2MRV40Uzk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=965 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290091
 
 
-> 2) do not spread a
-> really wrong pattern to avoid people learning from it (in case
-> somebody takes this code as an example for a new driver which might
-> reside outside of IIO and hence might not be caught by the reviewers
-> of _that_ subsystem).
 
-Hmm. I'd conjecture (I'll pester some uarch folk later to confirm)
-that an implementation of cmpxchg might be considerably more costly
-than a get followed by a set. Might be cheaper too depending on
-implementation.  The compiler should be able to fuse them anyway
-if that makes sense for a given uarch (guess I'll pester compiler
-folk as well.)
+On 5/28/25 8:59 PM, Krzysztof Kozlowski wrote:
+> Make static data const for code safety and drop some unused fields in
+> structs.
+> 
+> This is based on for-v6.16 branch in ASoC tree for context in wcd938x
+> driver.
+> 
+> Best regards,
+> Krzysztof
+> 
+> ---
+> Krzysztof Kozlowski (8):
+>       ASoC: codecs: Constify regmap configuration static variables
+>       ASoC: fsl: Constify reg_default array
+>       ASoC: codecs: wcd9335: Drop unused sido_input_src field
+>       ASoC: codecs: wcd934x: Drop unused num_rx_port/num_tx_port fields
+>       ASoC: codecs: wcd937x: Drop unused 'struct wcd937x_priv' fields
+>       ASoC: codecs: wcd938x: Drop unused 'struct wcd938x_priv' fields
+>       ASoC: codecs: wcd938x: Drop unused variant field
+>       ASoC: codecs: wcd939x: Drop unused 'struct wcd939x_priv' fields
 
->=20
-> Alternatively we need to get rid of atomic operations, but with the
-> same effect as 2) above.
 
-IIRC to access atomics, atomic the atomic get / set have to be used and
-in the decrement path we must ensure only one winner of the race to 0
-(because there is an operation to perform on that which must happen only
-once).
+Thanks Krzysztof for the cleanups, its surprising to see so many unused
+stuct members in qcom codecs. Did you use any static analysis tool to do
+this or was this manually done?
 
-I'm not against some changes here to make sure the code isn't cut
-and paste for other uses (it's pretty specific so I doubt it, but you never
-know). That might either be switching to cmpxchg or just adding some commen=
-ts
-on the logic.
 
-Without a clear path to bugs this isn't a fix, so fixes tag isn't appropria=
-te.
-=20
->=20
-> > So, is this something that has caused observed problems, or based
-> > on code inspection? My remembering of what was going on here might well
-> > be flawed.
-> >
-> > There are some 'fun' corners for what happens after that set though
-> > where a handler can run fast enough in race conditions we end up
-> > hitting 0 in iio_trigger_notify_done_atomic() and have to schedule
-> > restarting of the trigger because that might involve a bus write over
-> > a sleeping bus.  That one was a painful bug report some years ago... =20
->=20
+--Srini
+> 
+>  sound/soc/codecs/cs35l36.c        |  2 +-
+>  sound/soc/codecs/da7218.c         |  2 +-
+>  sound/soc/codecs/da7219.c         |  4 ++--
+>  sound/soc/codecs/es8375.c         |  2 +-
+>  sound/soc/codecs/max98363.c       |  2 +-
+>  sound/soc/codecs/max98373-i2c.c   |  2 +-
+>  sound/soc/codecs/max98373-sdw.c   |  2 +-
+>  sound/soc/codecs/max98388.c       |  2 +-
+>  sound/soc/codecs/max98390.c       |  2 +-
+>  sound/soc/codecs/max98396.c       |  4 ++--
+>  sound/soc/codecs/max98504.c       |  2 +-
+>  sound/soc/codecs/max98520.c       |  2 +-
+>  sound/soc/codecs/max98927.c       |  2 +-
+>  sound/soc/codecs/rt722-sdca-sdw.c |  2 +-
+>  sound/soc/codecs/wcd9335.c        |  5 -----
+>  sound/soc/codecs/wcd934x.c        |  4 ----
+>  sound/soc/codecs/wcd937x.c        |  2 --
+>  sound/soc/codecs/wcd938x.c        | 18 ++++++++----------
+>  sound/soc/codecs/wcd939x.c        |  2 --
+>  sound/soc/codecs/wsa881x.c        |  4 ++--
+>  sound/soc/codecs/wsa883x.c        |  2 +-
+>  sound/soc/codecs/wsa884x.c        |  2 +-
+>  sound/soc/fsl/fsl_asrc.c          |  2 +-
+>  sound/soc/fsl/fsl_sai.c           |  4 ++--
+>  24 files changed, 31 insertions(+), 46 deletions(-)
+> ---
+> base-commit: 22d449bcd69e66f25fe847b678738950dcf9301e
+> change-id: 20250528-asoc-const-unused-1e39b434e427
+> prerequisite-change-id: 20250526-b4-b4-asoc-wcd9395-vdd-px-fixes-0ce64398f9cc:v1
+> prerequisite-patch-id: 104000f7254b9cc81be49af9ca584544718e52f1
+> prerequisite-patch-id: 230fcd1b712c5a3199e7c9d8250e98e5d55c0a40
+> prerequisite-patch-id: ecdbe74955eb7b710f72af1e3cf32ccac52890d5
+> 
+> Best regards,
 
