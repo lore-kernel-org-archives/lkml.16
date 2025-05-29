@@ -1,108 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7226A28EA69;
-	Thu, 29 May 2025 11:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E0C28E5E5;
+	Thu, 29 May 2025 11:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748517772; cv=none; b=NLZgNTIgO5XRbDIPidrQGzebv+7dii0fPHe4l4g52cuAYyuJuL4RdyWOo/LD3eFleFmn/oLUS4JCCotgjGzSG7A+VBzgKm6IQAiTz/ZJffg+eM46iJsaEBNbsorN9g8TxA31FoqLjY2JRltI5NLy+lPhx8ScKldG1v79B8gfMxU=
+	t=1748517908; cv=none; b=bYO6CP5pBhKCkFHFGx658Z40GYxFwEIUIH4nM0y1vVQPk8uaBW1rStjxvcK9TINRP9klQ+BYOXf17KZzYpwxhdA92gE6ZKXASy8c2PUz3hcNQ5AMmqIFyfvQMx3qz1pxNvljMYLZttVO8gcwNytqLuRknpkgMRnrM7CipXrVo8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748517772; c=relaxed/simple;
-	bh=dV/0sTKRb/rUIweWWF6haVE0P/cXtjrDmiNmJdFO6YM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCyyKtKe6IMOlYQr2IogiX068YbPWq8FOi2bZaHPfGdfwkTXNpdJoD+ykPX7ZWW3ssFuFmoR9D+3E4i+4XymrYRg3egG3Alm2QMbamUtC3i4b+0PvOfhgnAiRdn5DWcCbMg4sp24RA0cL3ciWVy5ySx/Ul+v/1w+M3pvPwQpKd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dc3It4qA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748517908; c=relaxed/simple;
+	bh=rpsm8eRyeXGMHwqH0z4/V4yOz4McjMeLdc1aaKfmJAM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hv25DDDS0Z42QRqC0JAcoBc0JgDNReNC7vr2AnV14K6hVle7uy+qapNkuKf65vOCiyvv+x5ESOLWNry45exVxNVbg1rIV0lOIYPA8zWkkum/5r1kOolq4ff3O8JUjlRk0LhaA5COz2hd+79PGMdfOhmBy6ufb8VSV+J03TRAcNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=luI5Snan; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dc3It4qA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3EAC4CEE7;
-	Thu, 29 May 2025 11:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748517771;
-	bh=dV/0sTKRb/rUIweWWF6haVE0P/cXtjrDmiNmJdFO6YM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dc3It4qAFErG8zaqtNNMFIyKNhXsHwAGEtvPrUIKhSiDOgXLUTnliqgcIf+ulWeDx
-	 FZFPyrxkI/ixqR0nVC1BqdEm0poRWiAA1Ko+LA/E0mrDCcAYORlKhu4/pqX1TYFKgK
-	 bIfSqPUKiULm6L5HoWwX7c9YWZW3kibcmaoUq4m2v4xrQfHFqWBVIadj0wuGjDbBpi
-	 AtIEE8lhtIDid0oQ/XC+RgmquZcVH6XbOlGFSDPXyH8LjbIaxSUXUOTVdrxLf/y2QY
-	 9F2LH+V4GVS5uZFumAEjqNZpgjccCKv31D9X2O2gdwotlffSDz56b3t23vMoedTeCU
-	 D3Q5ivPKDqDDA==
-Date: Thu, 29 May 2025 13:22:47 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Nylon Chen <nylon.chen@sifive.com>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v15 0/5] Change PWM-controlled LED pin active mode and
- algorithm
-Message-ID: <jfql74ayb42fzmakpz4sfyr2mnv62srpzh3ut4tdmnmipwoboy@uxumfy5kq54j>
-References: <20250529035341.51736-1-nylon.chen@sifive.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="luI5Snan"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54TBOPh03504642;
+	Thu, 29 May 2025 06:24:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748517865;
+	bh=56qRrAtL/a6koU+ClmQ0T5MnkBdpWG/sJANgtbap56g=;
+	h=From:To:CC:Subject:Date;
+	b=luI5Snan38kNQ+vphh1lKji9/YO3x7//X4p4oebHZ8lkEjIF2yvQsciBH8yUkuK9k
+	 AMLL08bddYOX598TBZijLKU8dGX1Ixll7VZVftQHBWHRij2nORFQbFkhkLBTXk31NU
+	 siM9pFG3dXuCOKZx68YdFvsYdlscM/r5n1TufYYc=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54TBOPT2061510
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Thu, 29 May 2025 06:24:25 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 29
+ May 2025 06:24:24 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 29 May 2025 06:24:24 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54TBONkn1516428;
+	Thu, 29 May 2025 06:24:24 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <neil.armstrong@linaro.org>, <khilman@baylibre.com>,
+        <devicetree@vger.kernel.org>
+CC: <jbrunet@baylibre.com>, <martin.blumenstingl@googlemail.com>,
+        <shawnguo@kernel.org>, <s.hauer@pengutronix.de>,
+        <kernel@pengutronix.de>, <festevam@gmail.com>,
+        <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <geert+renesas@glider.be>,
+        <magnus.damm@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <imx@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <dianders@chromium.org>, <linux-kernel@vger.kernel.org>,
+        <max.krummenacher@toradex.com>, <j-choudhary@ti.com>,
+        <ernestvanhoecke@gmail.com>
+Subject: [PATCH] arm64: dts: Add no-hpd property for all ti-sn65dsi86 bridge consumers
+Date: Thu, 29 May 2025 16:54:23 +0530
+Message-ID: <20250529112423.484232-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="t7jb6esylkpa6lhn"
-Content-Disposition: inline
-In-Reply-To: <20250529035341.51736-1-nylon.chen@sifive.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+In the SN65DSI86 DSI-2-eDP bridge, HPD is not supported as of now.
+But DisplayPort connector_type usecases does need hpd to be enabled.
+In order not to break any platform from those driver changes, add
+"no-hpd" property to all the existing sn65dsi86 nodes (that don't
+have it already) as hpd is not being used there anyways.
 
---t7jb6esylkpa6lhn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v15 0/5] Change PWM-controlled LED pin active mode and
- algorithm
-MIME-Version: 1.0
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
-Hello Nylon,
+Upcoming driver changes that will break platforms if we do not have this
+property in all the existing sn65dsi86 nodes that assumes hpd is disabled:
+<https://lore.kernel.org/all/20250529110418.481756-1-j-choudhary@ti.com/>
 
-On Thu, May 29, 2025 at 11:53:38AM +0800, Nylon Chen wrote:
-> According to the circuit diagram of User LEDs - RGB described in the
-> manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf=
-[1].
->=20
-> The behavior of PWM is acitve-high.
->=20
-> According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual=
-[2].
->=20
-> The pwm algorithm is (PW) pulse active time  =3D (D) duty * (T) period.
-> The `frac` variable is pulse "inactive" time so we need to invert it.
->=20
-> So this patchset removes active-low in DTS and adds reverse logic to the =
-driver.
+(sc7180-trogdor-ti-sn65dsi86.dtsi, sdm850-lenovo-yoga-c630.dts and
+sdm845-cheza.dtsi already have this property.)
 
-Applied to
+NOTE: Grouping the logical changes together in a single patch even though
+we have multiple vendor dts. I hope that is not an issue.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--nexxt
+ .../boot/dts/amlogic/meson-g12b-bananapi-cm4-mnt-reform2.dts     | 1 +
+ arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts             | 1 +
+ arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts                 | 1 +
+ arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi             | 1 +
+ arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts            | 1 +
+ arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts        | 1 +
+ arch/arm64/boot/dts/renesas/white-hawk-cpu-common.dtsi           | 1 +
+ 7 files changed, 7 insertions(+)
 
-as 6.17-rc1 material. I pondered if this should go in earlier and/or
-should get marked for stable. I'm unsure and willing to consider input
-here. The problem I see is that while this is a fix, the change is a
-breaking one and you need the dts change and the code change applied
-either both or none.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4-mnt-reform2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4-mnt-reform2.dts
+index 0f48c32bec97..6a7d7db3ef8f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4-mnt-reform2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-bananapi-cm4-mnt-reform2.dts
+@@ -292,6 +292,7 @@ edp_bridge: bridge@2c {
+ 		vpll-supply = <&reg_main_1v8>;
+ 		vcca-supply = <&reg_main_1v2>;
+ 		vcc-supply = <&reg_main_1v2>;
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts b/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
+index 3ae3824be027..599a53969326 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-mnt-reform2.dts
+@@ -147,6 +147,7 @@ edp_bridge: bridge@2c {
+ 		vpll-supply = <&reg_main_1v8>;
+ 		vcca-supply = <&reg_main_1v2>;
+ 		vcc-supply = <&reg_main_1v2>;
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+index 672ac4c3afa3..8fa18273684f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-acer-aspire1.dts
+@@ -384,6 +384,7 @@ sn65dsi86_bridge: bridge@2c {
+ 
+ 		clocks = <&rpmhcc RPMH_LN_BB_CLK3>;
+ 		clock-names = "refclk";
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi b/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
+index 0916fd57d1f1..a115e3fc4cb9 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a779a0-falcon-cpu.dtsi
+@@ -214,6 +214,7 @@ bridge@2c {
+ 		vpll-supply = <&reg_1p8v>;
+ 		vcca-supply = <&reg_1p2v>;
+ 		vcc-supply = <&reg_1p2v>;
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+index 6955eafd8d6a..fcc2d8edd464 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
++++ b/arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk.dts
+@@ -349,6 +349,7 @@ bridge@2c {
+ 				vpll-supply = <&reg_1p8v>;
+ 				vcca-supply = <&reg_1p2v>;
+ 				vcc-supply = <&reg_1p2v>;
++				no-hpd;
+ 
+ 				ports {
+ 					#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts b/arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts
+index 4d890e0617af..8b9592b87366 100644
+--- a/arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts
++++ b/arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts
+@@ -460,6 +460,7 @@ bridge@2c {
+ 		vpll-supply = <&reg_1p8v>;
+ 		vcca-supply = <&reg_1p2v>;
+ 		vcc-supply = <&reg_1p2v>;
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/renesas/white-hawk-cpu-common.dtsi b/arch/arm64/boot/dts/renesas/white-hawk-cpu-common.dtsi
+index b4024e85ae5a..686a37a8680f 100644
+--- a/arch/arm64/boot/dts/renesas/white-hawk-cpu-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/white-hawk-cpu-common.dtsi
+@@ -256,6 +256,7 @@ bridge@2c {
+ 		vpll-supply = <&reg_1p8v>;
+ 		vcca-supply = <&reg_1p2v>;
+ 		vcc-supply = <&reg_1p2v>;
++		no-hpd;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+-- 
+2.34.1
 
-Best regards
-Uwe
-
---t7jb6esylkpa6lhn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg4Q4QACgkQj4D7WH0S
-/k5Lgwf/SP6TM6iinfR+nLxITKK64by0Ws8lMmVkyjSrhRXh82uC0AGWdbgwYdK/
-PG/mYXTKZ5HCxZSKN6tLrwBlv7274OvSlMHKm5ECqfx2SfOVVonLNGPFPHqSio5T
-fuxD5PyJyJfArppWLvZDc53PZLoXyRWVWMVIQTAz6xsbZSwg46HFKnKKW8gdi+pp
-xGf62lktVUk42OfBKcs4naXobSACqiyG1BES/W+s5Z3o1rWghbdNCj3d/zNtLsUu
-6kGM/uh5xmcM804K0N44LUGmfBFuVNyGepR75baQxSB//3OCrQ9X24M1QfEH8WC4
-swfkxqbXkPf0v5zpt7Rq0afo+gNZ+w==
-=nB9p
------END PGP SIGNATURE-----
-
---t7jb6esylkpa6lhn--
