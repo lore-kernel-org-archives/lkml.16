@@ -1,183 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8909324A06F;
-	Thu, 29 May 2025 04:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CAE24A07F
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748491830; cv=none; b=sQjsKga/78YDaA5+in+PQKXelCQ04ZGfQHiG+KBitqlcT+pEmPXpxRQ+b6SnrnEGS8bpahaQLZsJhkoWO1dvFUzCpeEHvj0VVP3m2CI8A5RKqLv810evEII9owQrNURLIRZiLs58ub1v5lJ161pos5oSWcp5o7QpoO/4iVcL96g=
+	t=1748492054; cv=none; b=vDhMBU2fZyuNAP4p0FdVquymYmVq5vzEzEALx4IYshL64q7SkW1yy5onD9SvgCxJfVoFTvVITzhmX24FFnjnesv0Daw1Xg0g2KnzpYlJ4XrKUw3tky+S6AnGJ++DB7p5LKV6TEnhIHAGrqqqGAzylZRPadSNmAr4XtcJK6xFnzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748491830; c=relaxed/simple;
-	bh=SJuvA/C+Z8/BjsjREOqXFo7k0ZLVmXu/MbjVcwYY0lA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RKT8qo5mpXyb9tcPmwOr7Bp1TONJ+N2b8/eVK7hZ9E6baraYmgLyYvMIQakFOUaL5jKmk3/bO3jYtCMmI3RszmjlbaSI9dabJEpxK27PT1sBKLG91dN0Yu12uz/F5XESJpXciObT+PCfDjSxsT4SVcuHKhLBosN0oP/8V5akKzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VaRfZniK; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748492054; c=relaxed/simple;
+	bh=TRiBrZtZLp7fMUSE080O6cwCKmkxt3TgoZAV9VRK0iY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OIqmRya5P5ASlZCVilSq1Xsuv+4CsvPKc8CVMDHy6llQ6BqLqqLIMMk16A13jT0/Xolv5rvS9+RfsCo3v9Wiz1P5BIJVq41LKSLJjxYgLsyD8V8bp0V0WMrruwaKfJ1UuvjE8FweO2AgS9mlDO7dEUXtdetX1GmOMlmyOAyA92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fiJy4fdN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VaRfZniK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748491829; x=1780027829;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SJuvA/C+Z8/BjsjREOqXFo7k0ZLVmXu/MbjVcwYY0lA=;
-  b=VaRfZniKEpl+g1bk+IAd4X9kw7uPZiRQYLCSicnlqdamI2Oakj2oZnV8
-   HyhR3nFyrTBB7gHuGEqyC5GZWGPtIaPqlRbcnl4DeAcW8TvCohKjGYcCb
-   qwTZpf0ffgbixyV4nhmrXsFZ5lu0l4NlKPQxoq6sw7PUUIip2Oy3vqRSJ
-   9//KcYXH3fXcSO6CEqvu8IoPUBTijwaIJXXy2XMZnR2PckyVvfJZART0V
-   JouxAClr+baPTvnGhiebA72SDOyTDrYEkdMy9I2Bmly/BorSeBAS0Y1CC
-   DcKQdMYG2QHi5Z+qijhk46mZFDbkq2cmkZ1BejiOvsyIMViM89bKn8GS5
-   g==;
-X-CSE-ConnectionGUID: lXEpUUetQ5+1+u/AFh3uDg==
-X-CSE-MsgGUID: FKMr5m5SSMWFxf1U/qhvmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="60799753"
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="scan'208";a="60799753"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 21:10:28 -0700
-X-CSE-ConnectionGUID: iQ5U1i82SSKqtzYHqGYglw==
-X-CSE-MsgGUID: EimyRNP5QRCCimvkLdAKXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
-   d="scan'208";a="143908909"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 28 May 2025 21:10:24 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKUb0-000WJW-1b;
-	Thu, 29 May 2025 04:10:22 +0000
-Date: Thu, 29 May 2025 12:09:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, xin@zytor.com,
-	Juergen Gross <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
-Message-ID: <202505291124.eAZ7fgbG-lkp@intel.com>
-References: <20250528123557.12847-4-jgross@suse.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fiJy4fdN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748492051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FTuUac/kp25gU0dpv6T903TN/Brxa98Rb4iI8HbABdo=;
+	b=fiJy4fdNr1dB8l/YQokxIGjXtE99Hsn3gLhsfzSRzfdR+Xj0vhaHgHsU/fVEKPKThs2zT9
+	e3cNpyNP9f/3auVUgIoGs4ABpPDByHoB6YGBzwRbA/4uAJy2Hgr/EhTKyupPbN9gDWKQVX
+	W7PYB4IBxn9ScMrvprjtaN4cGy6AWx4=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-8-kecQk4A4NC-rGfvnyQpexA-1; Thu, 29 May 2025 00:14:09 -0400
+X-MC-Unique: kecQk4A4NC-rGfvnyQpexA-1
+X-Mimecast-MFC-AGG-ID: kecQk4A4NC-rGfvnyQpexA_1748492048
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-b0f807421c9so378336a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:14:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748492048; x=1749096848;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FTuUac/kp25gU0dpv6T903TN/Brxa98Rb4iI8HbABdo=;
+        b=Z8e5qLt77EVGUKTVyPbUr0gm7ausb54lUcDlbYB155FJXdxPSbVw4n+Aov9zOYbNzq
+         HdX5+R/eV1v2bdbFl/S21RWOVixW89P6BBsmK+dI5Nd62S7Gh2mEv/W19pdeVwjRl+3Q
+         3fQpfmV1RrTeLK672/POoe9Mhnzpr5uesJjO4QsTlNqDZuYB2ZUWnnX+bSOCNBpvmMvu
+         fKZOCc2vMNNarLIb7rD9mDdOag8+cuhaypV3tAOwZkFosnMfdEM8cvYzFpCzyQDVVhm8
+         ymbCGHU3DILtf9PZBnTJL6d48WjoX9qXxmUm/2+xaYOt8YymNsJVsTPxJvLMBa/uymSC
+         WpgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX0ywAnARijU3x4v/cg/8ylp6nBW1mSE31EL6yG9AUqTs8Bu1KFxAyNqFVZ7mcnuoV0SS5PbuWJhANEkag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyuYaXTRv4xQW05XP4QBwd9Yi+Shhm9PGnsXp/xG2PhBLXzw1t
+	2UMzb+/IgXyYhkAG4AbGrywfTJAz8qA8dPjT77yOYDg4Fc9BcYh/Bf3Z10UvruUWUVCCcPIJ5KI
+	/jIgB8UnhNDIfhAgztdpLHSQjg8Yhp0utzrVKQ5cmoqnz34o0h4OU3jZN10W6BqMktbiYx0fXPH
+	0R33xkyEb0zk2/SiBdaBWFyzqVLprnjcWhd5fCa/hC
+X-Gm-Gg: ASbGncuhZ+CdcwEY8El0sO1SMoM5WENq4y3C/VhvBwMDg9bZ/HLaSjzKSP1nOIDsQwW
+	e0/AfvNMgrOqXFKZIobU8pebA3OJFPqDFynQ8dhoD32uaUx2Tsi/tzuN6To0Yegtc+nt07Q==
+X-Received: by 2002:a17:90b:350f:b0:311:b3e7:fb3c with SMTP id 98e67ed59e1d1-311e7470ad2mr6043683a91.31.1748492047892;
+        Wed, 28 May 2025 21:14:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHJlBab55b5zw2yF/0qOrDv/7rcdItifY9mMu1pnfIqfsxVzRej8fOLqwH/iIyya4HFe28Cu7wYMPHCD64nqOo=
+X-Received: by 2002:a17:90b:350f:b0:311:b3e7:fb3c with SMTP id
+ 98e67ed59e1d1-311e7470ad2mr6043655a91.31.1748492047430; Wed, 28 May 2025
+ 21:14:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528123557.12847-4-jgross@suse.com>
+References: <20250515233953.14685-1-bhe@redhat.com> <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+ <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+ <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv> <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+ <aC86NSypHlER2C3L@MiWiFi-R3L-srv> <CAF+s44QHJs8J27TEy0AW1m2wT=LRSz59nHf-8AuqL8px_zKGUg@mail.gmail.com>
+ <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
+In-Reply-To: <0e794fc984c8f37a6d3eb5acdb6cc094f14df940.camel@linux.ibm.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Thu, 29 May 2025 12:13:56 +0800
+X-Gm-Features: AX0GCFsd4RqYWFQIJl58p55SOSnLlBoBDcDzdR7DF_r9JTI4jvZQrXBHdfSkduk
+Message-ID: <CAF+s44Q6ZJ8rdi1VG40JVJmxX-1hmss5eNaKvGhJSOS6xYLx-g@mail.gmail.com>
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Baoquan He <bhe@redhat.com>, prudo@redhat.com, linux-integrity@vger.kernel.org, 
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	pmenzel@molgen.mpg.de, coxu@redhat.com, ruyang@redhat.com, 
+	chenste@linux.microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Juergen,
+On Tue, May 27, 2025 at 10:18=E2=80=AFPM Mimi Zohar <zohar@linux.ibm.com> w=
+rote:
+>
+> On Tue, 2025-05-27 at 11:25 +0800, Pingfan Liu wrote
+>
+> When responding to kernel mailing lists, please use plain text not Mime e=
+ncoded.
+>
+> > On Thu, May 22, 2025 at 10:52=E2=80=AFPM Baoquan He <bhe@redhat.com> wr=
+ote:
+> > > On 05/22/25 at 07:08am, Mimi Zohar wrote:
+> > > > On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
+> > > > > On 05/21/25 at 08:54am, Mimi Zohar wrote:
+> > > > > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+> > > > > > > CC kexec list.
+> > > > > > >
+> > > > > > > On 05/16/25 at 07:39am, Baoquan He wrote:
+> > > > > > > > Kdump kernel doesn't need IMA functionality, and enabling I=
+MA will
+> > > > > > > > cost
+> > > > > > > > extra memory. It would be very helpful to allow IMA to be d=
+isabled
+> > > > > > > > for
+> > > > > > > > kdump kernel.
+> > > > >
+> > > > > Thanks a lot for careufl reviewing and great suggestions.
+> > > > >
+> > > > > >
+> > > > > > The real question is not whether kdump needs "IMA", but whether=
+ not
+> > > > > > enabling
+> > > > > > IMA in the kdump kernel could be abused.  The comments below do=
+n't
+> > > > > > address
+> > > > > > that question but limit/emphasize, as much as possible, turning=
+ IMA
+> > > > > > off is
+> > > > > > limited to the kdump kernel.
+> > > > >
+> > > > > Are you suggesting removing below paragraph from patch log becaus=
+e they
+> > > > > are redundant? I can remove it in v2 if yes.
+> > > >
+> > > > "The comments below" was referring to my comments on the patch, not=
+ the
+> > > > next
+> > > > paragraph.  "don't address that question" refers to whether the kdu=
+mp
+> > > > kernel
+> > > > could be abused.
+> > > >
+> > > > We're trying to close integrity gaps, not add new ones.  Verifying =
+the
+> > > > UKI's
+> > > > signature addresses the integrity of the initramfs.  What about the
+> > > > integrity of
+> > > > the kdump initramfs (or for that matter the kexec initramfs)?  If t=
+he
+> > > > kdump
+> > > > initramfs was signed, IMA would be able to verify it before the kex=
+ec.
+> >
+> > IMHO, from the higher level, if there is a requirement on the integrity=
+ of the
+> > initramfs, it should take a similar approach as UKI. And the system adm=
+in can
+> > choose whether to disable the unsafe format loader or not.
+>
+> Yes, that is a possibility, probably a good aim, but in the case of kexec=
+/kdump
+> that isn't really necessary.  As filesystem(s) support xattrs, IMA polici=
+es
+> could be written in terms of "func=3DKEXEC_INITRAMFS_CHECK" to include th=
+e
+> initramfs.
+>
 
-kernel test robot noticed the following build errors:
+Just aware that we have such a cool feature. Thanks!
 
-[auto build test ERROR on tip/master]
-[also build test ERROR on tip/x86/core linus/master v6.15 next-20250528]
-[cannot apply to tip/x86/mm tip/auto-latest]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I checked the code. IIUC, the relevant code has already been in the
+kernel. And the thing left to do is to install an IMA policy, right?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Juergen-Gross/x86-execmem-don-t-use-PAGE_KERNEL-protection-for-code-pages/20250528-204423
-base:   tip/master
-patch link:    https://lore.kernel.org/r/20250528123557.12847-4-jgross%40suse.com
-patch subject: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
-config: x86_64-buildonly-randconfig-002-20250529 (https://download.01.org/0day-ci/archive/20250529/202505291124.eAZ7fgbG-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505291124.eAZ7fgbG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505291124.eAZ7fgbG-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/x86/kernel/alternative.c:2353:6: error: use of undeclared identifier 'its_page'
-    2353 |         if (its_page)
-         |             ^
->> arch/x86/kernel/alternative.c:2354:3: error: call to undeclared function 'its_set_kernel_ro'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2354 |                 its_set_kernel_ro(its_page);
-         |                 ^
-   arch/x86/kernel/alternative.c:2354:21: error: use of undeclared identifier 'its_page'
-    2354 |                 its_set_kernel_ro(its_page);
-         |                                   ^
-   arch/x86/kernel/alternative.c:2355:2: error: use of undeclared identifier 'its_page'
-    2355 |         its_page = NULL;
-         |         ^
-   4 errors generated.
+But there are still two things to be considered.
+-1.The UEFI partition is FAT format, which can not support xattr
+-2. Just like in the UKI case, the kernel fd content is not necessary
+for the kernel image itself. The initramfs fd can be used to pass some
+extra data if we use a temp file as a package. So checking the
+signatures at the initramfs level will block this usage
 
 
-vim +/its_page +2353 arch/x86/kernel/alternative.c
+> >
+> > This other thing is how to make a handy signature on initramfs? It is n=
+either
+> > PE nor ELF.
+>
+> IMA supports signatures stored in the security.ima xattr or as an appende=
+d
+> signatures.
+>
 
-  2308	
-  2309	void __init alternative_instructions(void)
-  2310	{
-  2311		u64 ibt;
-  2312	
-  2313		int3_selftest();
-  2314	
-  2315		/*
-  2316		 * The patching is not fully atomic, so try to avoid local
-  2317		 * interruptions that might execute the to be patched code.
-  2318		 * Other CPUs are not running.
-  2319		 */
-  2320		stop_nmi();
-  2321	
-  2322		/*
-  2323		 * Don't stop machine check exceptions while patching.
-  2324		 * MCEs only happen when something got corrupted and in this
-  2325		 * case we must do something about the corruption.
-  2326		 * Ignoring it is worse than an unlikely patching race.
-  2327		 * Also machine checks tend to be broadcast and if one CPU
-  2328		 * goes into machine check the others follow quickly, so we don't
-  2329		 * expect a machine check to cause undue problems during to code
-  2330		 * patching.
-  2331		 */
-  2332	
-  2333		/*
-  2334		 * Make sure to set (artificial) features depending on used paravirt
-  2335		 * functions which can later influence alternative patching.
-  2336		 */
-  2337		paravirt_set_cap();
-  2338	
-  2339		/* Keep CET-IBT disabled until caller/callee are patched */
-  2340		ibt = ibt_save(/*disable*/ true);
-  2341	
-  2342		__apply_fineibt(__retpoline_sites, __retpoline_sites_end,
-  2343				__cfi_sites, __cfi_sites_end, true);
-  2344	
-  2345		/*
-  2346		 * Rewrite the retpolines, must be done before alternatives since
-  2347		 * those can rewrite the retpoline thunks.
-  2348		 */
-  2349		apply_retpolines(__retpoline_sites, __retpoline_sites_end);
-  2350		apply_returns(__return_sites, __return_sites_end);
-  2351	
-  2352		/* Make potential last thunk page read-only. */
-> 2353		if (its_page)
-> 2354			its_set_kernel_ro(its_page);
-  2355		its_page = NULL;
-  2356	
-  2357		/*
-  2358		 * Adjust all CALL instructions to point to func()-10, including
-  2359		 * those in .altinstr_replacement.
-  2360		 */
-  2361		callthunks_patch_builtin_calls();
-  2362	
-  2363		apply_alternatives(__alt_instructions, __alt_instructions_end);
-  2364	
-  2365		/*
-  2366		 * Seal all functions that do not have their address taken.
-  2367		 */
-  2368		apply_seal_endbr(__ibt_endbr_seal, __ibt_endbr_seal_end);
-  2369	
-  2370		ibt_restore(ibt);
-  2371	
+Good to know it.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best Regards,
+
+Pingfan
+
