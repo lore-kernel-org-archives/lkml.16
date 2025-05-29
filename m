@@ -1,80 +1,79 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B3721B9C4
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4968C21B9C0;
+	Thu, 29 May 2025 09:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509798; cv=none; b=Fddad5vim0E0OCU0ByGOppDBQX4+epj9kmmnSGvX6Wa4deRjbyZ8ZemsfDj0rVHXs7d+5HAxiCP9pJsgojOr+QIftMKbsTytRL6nTvVHapAXPvcQk4mx14smWGXQzJ/DTtKWBHA1iGcBNbVccGp3ok5I4c93tCfjzoZUDTrP5sE=
+	t=1748509803; cv=none; b=N0JWxAmj7zcMu4MJXXF3A6nTxOJwKF8zKL9OQ75weqpAokDr0cQ3ZZ/UJuObe8fGzt7TVyYzih+drAMirH8Gv+MqUQaWl5dq8kwu6Btnz9+D1IoXCu4/fqsGzzKcYRJOtDb/nOfmJuH2SA7jYmcS+TpQped8zK9fP5UerAlViHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509798; c=relaxed/simple;
-	bh=8x9/93+KkG39Ch5DJbQzH5mIGwAJ3JC8ir4cVwBdKC4=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=cCrnr+foUWECE9mMp9rCCPBx3iaLk3BzUDFB2SXo5YaK6Is3jqsJcfv2YeB/3lDOPRVlMzTmCLVifb1LftsA2CoWr3JHt6l3IQanlG3bEkaQbjH/tGs4lveHPC+6QbsEPAzPr7PUXjCpP1ZgRNT/skZofeCAR7U1azc2q+UeqRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4b7LDJ3bZvz5B1Ct;
-	Thu, 29 May 2025 17:09:52 +0800 (CST)
-Received: from njb2app06.zte.com.cn ([10.55.23.119])
-	by mse-fl2.zte.com.cn with SMTP id 54T99TV3093258;
-	Thu, 29 May 2025 17:09:29 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njy2app03[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Thu, 29 May 2025 17:09:32 +0800 (CST)
-Date: Thu, 29 May 2025 17:09:32 +0800 (CST)
-X-Zmail-TransId: 2afb6838244cffffffffee4-070fa
-X-Mailer: Zmail v1.0
-Message-ID: <20250529170932156bHp8FtRc-KjUKWmV17JyR@zte.com.cn>
+	s=arc-20240116; t=1748509803; c=relaxed/simple;
+	bh=DTj6uWiPsn8GtCJkZjxO8YPinv+prlpP7PTUsZf9rbg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PA7QKTyKkY7kwurih93xjqQiVKz9XZdiHUfLQqBEEb+nACqg3gxUwR2OCOR8uHnwGU54m9Vl2b7OZaepS5WtfacZxfcMEhTm0unDzpaK7x3KIxTebYOcAg+SPPkvqZh3swZVkgSBxAJoGGlNCAjHBJC7rhknjTdDbL1HLbJwBww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yf7gjIzl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yf7gjIzl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1911C4CEE7;
+	Thu, 29 May 2025 09:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748509802;
+	bh=DTj6uWiPsn8GtCJkZjxO8YPinv+prlpP7PTUsZf9rbg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Yf7gjIzlqyNjrc/oFfLHUsTnwe40lSNwMUUaHSHcSOiM+t+utyt1Mvl9N0dCLKNDF
+	 2od5uWF5gZ92guCC1otYR30eLmAchIaV3pLCqs5N8UgdOpfee2g9+evRey06zlhHQG
+	 pc3bhHN0oSjzx1SF6UPW4cbjcmOp1V3B/y5A3O+kFoqDuas3QE31rEbYGro/ryQLZs
+	 nr/zAzRjeYfQWn38wriv/+QiJcVAnW+EZSxgbeG7lyZbrIXrSy5XR/AkKkKQ44ZgOc
+	 yKGyygVt9ion3rFP5jg7DUBRE4u5rqMVsyLU8d9xqVYE+EddUkciXRxZFOQKJGE1ig
+	 NqUd7CWxkQjYw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC3139F1DEE;
+	Thu, 29 May 2025 09:10:37 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <oleg@redhat.com>, <tglx@linutronix.de>, <frederic@kernel.org>,
-        <peterz@infradead.org>, <brauner@kernel.org>,
-        <viro@zeniv.linux.org.uk>, <joel.granados@kernel.org>,
-        <lorenzo.stoakes@oracle.com>, <linux-kernel@vger.kernel.org>
-Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHRdIHNpZ25hbDogVXBkYXRlIHRoZSBjb21tZW50IG9uIF9fc2VuZF9zaWduYWxfbG9ja2VkKCkgaW4KIGRvX25vdGlmeV9wYXJlbnQoKQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 54T99TV3093258
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68382460.002/4b7LDJ3bZvz5B1Ct
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] gve: Fix RX_BUFFERS_POSTED stat to report per-queue fill_cnt
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174850983650.3198213.13925537483150249724.git-patchwork-notify@kernel.org>
+Date: Thu, 29 May 2025 09:10:36 +0000
+References: <20250527130830.1812903-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250527130830.1812903-1-alok.a.tiwari@oracle.com>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: ziweixiao@google.com, joshwash@google.com, willemb@google.com,
+ pkaligineedi@google.com, pabeni@redhat.com, kuba@kernel.org,
+ jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, darren.kenny@oracle.com
 
-From: Qiu Yutan <qiu.yutan@zte.com.cn>
+Hello:
 
-Update the comments for the call to __send_signal_locked()
-in do_notify_parent() based on community discussions.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, 27 May 2025 06:08:16 -0700 you wrote:
+> Previously, the RX_BUFFERS_POSTED stat incorrectly reported the
+> fill_cnt from RX queue 0 for all queues, resulting in inaccurate
+> per-queue statistics.
+> Fix this by correctly indexing priv->rx[idx].fill_cnt for each RX queue.
+> 
+> Fixes: 24aeb56f2d38 ("gve: Add Gvnic stats AQ command and ethtool show/set-priv-flags.")
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> 
+> [...]
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 148082db9a55..45dc60f8b833 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2252,8 +2252,8 @@ bool do_notify_parent(struct task_struct *tsk, int sig)
- 			sig = 0;
- 	}
- 	/*
--	 * Send with __send_signal as si_pid and si_uid are in the
--	 * parent's namespaces.
-+	 * Use __send_signal_locked() instead of send_signal_locked()
-+	 * because the latter can wrongly change si_pid/si_uid
- 	 */
- 	if (valid_signal(sig) && sig)
- 		__send_signal_locked(sig, &info, tsk->parent, PIDTYPE_TGID, false);
+Here is the summary with links:
+  - gve: Fix RX_BUFFERS_POSTED stat to report per-queue fill_cnt
+    https://git.kernel.org/netdev/net/c/f41a94aade12
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
