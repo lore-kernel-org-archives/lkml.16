@@ -1,112 +1,158 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7CF212B3D;
-	Thu, 29 May 2025 07:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187B3C8EB;
+	Thu, 29 May 2025 07:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748502357; cv=none; b=tC0eztd/+Yh4cPQ02cMhKXe87JE5jYY1wFk7RP8DxEys4vXjmFIkSIJ59uaFIwsn1NrP3SnCgunMVY+q6v4BygejrElcu0PN6cQLwbypI7+2TyAbAbtC66nomwtc/EHLhkWT27K2K85fk2X1d4EAjioXxxER8Yi3CZBnK/CXp9M=
+	t=1748502467; cv=none; b=JSl1rR82WSu2QyXVRsQmFeukbnzv1YhrX+ULRZqK6iPjpzTT23a9EHmzYUKfiE3VpMMfUjQRik5+rK4zSR3cZ7dm+hIi0TZ6yEtlW192Wt/swXJQB2FgeWzP5qyqs7fdT5lqX3td20C0hwTGM8tP6YouuVyU+ou2XUZX1k45hHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748502357; c=relaxed/simple;
-	bh=5TrVPrAK7rpTKSGugDGq+SZDZu+iXs6UclBSsVcDhNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FUHlbeDXOsYQ2fM8PaL5+31P7lGh+xRWC7DZ8zZAd0f/DRZN1Gezf0Kk5JH0PGANeFyjDZK6wSNBNo+Mobf8AHgyXtdzo2xhJ8MoH7sRuoo6LmkXfk4JpamVVaZEbx9owuIVp5tvARQJpFE4ZyFrc05ZZdF4dcBjA41uM/2Z23g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WST0yq8z; arc=none smtp.client-ip=209.85.215.170
+	s=arc-20240116; t=1748502467; c=relaxed/simple;
+	bh=6cIekbriWiWKfaXCYAeZSta271blHf9u+hSq5kD2qLU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iLN3UIYj2X/wEXiD9JECw3WAUZQouXi5yPiQL+nZod9h4CaAnZ5LdUQ/di/zNqrAy7g0RCHHyv/yxuUbsnwS0cH9I7yEWve3Dl3A/qDj5ggqdOmYlDxOL8JLte7+BLA5Gs+vCCKBU2RmBVWZsuppbTpvc2F7ejKvoNZg0JjuBQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SlMYABlf; arc=none smtp.client-ip=209.85.219.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WST0yq8z"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b170c99aa49so405089a12.1;
-        Thu, 29 May 2025 00:05:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SlMYABlf"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e731a56e111so512898276.1;
+        Thu, 29 May 2025 00:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748502355; x=1749107155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vygoR3OW1EpaD6XWLfUQKQivNJs0wYN0BzwAQeCuCjI=;
-        b=WST0yq8zQPpiGxKKZF8zN8Qi+TZkBONnL0IDT7g4GWwfxYWFqGH6yc9T7Ss7ijGIZL
-         BjGv3zoj+yiBR1X/C8kp/yDVCS+CoJk/f3pq5vBlJX1SdDXR9i4VX96/+yi3l0jPclcZ
-         YgL9Eu3M7qqjr9LmrEWvyohEzgLY4o3dAUI3QpbNm3VRw171sffHqYe3u2LtZ4+ocUif
-         NlupAYN1YdvjZtUk2kMUiZhIX7eP72aeIWbtPtlX/pgSXjuFzh/jnm/SHQJfKCXoLg91
-         z7h+7WqdTOVkDq7SHCrbtbFD5enQkbI7M2b9YHvX1b1mLq5dXmNWSq8Kk6zkxFCfCi3v
-         MfSw==
+        d=gmail.com; s=20230601; t=1748502464; x=1749107264; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
+        b=SlMYABlfpapnzZbjZey7RE36bUXAZabI0IjJLr+em511CH/92x5uASEw15iYhIqDxK
+         EGoC2keudxkKPWgyvA5D2YMuu9TqS93lDqlG5Nhau3J88srLsM3+5D0iYcwA19Uvi9pY
+         8fucVTPRwtnewjHDRQb1e1pK/54QLqN1QgknnPY7RPsiQcAkdSRsTMjQYGJN94G78DxW
+         ckfJQGDJW3nehYVD8iUsKbQ9yO4WvO0i/InE4xvNLeZtCE16uy13y+WTJ/jtY7oFjF8E
+         lmEcqxQ5VKZ2wtqrQjLIPLwp3pjmuCffpsPFheYB6kh1oT7sjyjUyi/eBFhKhp/RtriC
+         4U9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748502355; x=1749107155;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vygoR3OW1EpaD6XWLfUQKQivNJs0wYN0BzwAQeCuCjI=;
-        b=FlxdwQqfFrJ+wLPILEhayBJzHrWItk5X8XJ4RRvSrpigCg12dp74Xv8MkA5ko3qWOd
-         2ANi242KylaSGqkujmqBkJ+J1zNhOYr4EA04PQuP0ZSXdMzXKyD5dIAlCfBrBAk46/Ks
-         jB+yLKqHNuCVUg4dOKVdH+3PyDsoJbuITnKK6msq7DHVAwoFMhioHZxhVfRzSLF498rc
-         qJGRphtnjPagCtA18gHcOb2I6RhfF/8l2vJdsuKRnBAp45NKGmQkn4chvsUkyaVctIIL
-         TZIzYj8bgZwK3vJrLHgXkCGsRROtq7Z/hb1ibdZJ3l0gS6op8Y27kP6/SkgcS6kV9F8J
-         vOOw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/HcxeH2VOD0gpRTE705Q8/S4tN51S0T9Qt0yjBHuJsWiFraRSAepyDKr31qlz4FB9zCVlscghcCO4JDGkztkq@vger.kernel.org, AJvYcCUDhwuIx0Zfmbt+Msmisn40UPHOiRbEwRolWsgr9W0Er3QYdl9KI/EhfyGvJp+S9U5Hr+rAjAHVekWqa/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzubcCqWM8oz3xub6krBofukR/qm9uDHvAuNEBT264gt75uoiz+
-	PBLCcvbAWIlWO+AzshBn2WOrIOn3oiMDtFhL79Vu8MmiSwQZYkcMdUSuzMZytA==
-X-Gm-Gg: ASbGncu1s/+iG8B1U89vIA0Wc6/EEcb1VvaRCmXyPtaMH4ny4lYbHq2F3qwbgmgAotH
-	N7xHISHlmQdKNmJTV2eK+QyqU9wpTnLBrMed8jNzFygL8bcHZKVVHvWme5kkzhxDmXkW6W1ZgSq
-	W3ieGqkUcEbre11f0kUraUh1UbKObcibyx/laeTmOeqYsLCzJl4gBwZYN7pMiwKrobY6JSAvFPl
-	xwJDyVWRfweCyCdZoRYe8SFARFryDFbFWbFDhuHvAa9Oo9QU7Hk2hB6ofq4OVEyVRHOemVkJLde
-	RkYkqTEaSCjMjHADp0CyT1vcUHG0RkzC54UZL2VyJf+WjeDm0ZinsY5YLgvbpQgd4lg=
-X-Google-Smtp-Source: AGHT+IEkTYWVBJnJ84viQRHPGK9Qjw6ttcJ11tJRdotc+lhKyG+5oc6ulftZ2azWJ08KuGrUH4qDbQ==
-X-Received: by 2002:a17:90a:d446:b0:311:df4b:4b8c with SMTP id 98e67ed59e1d1-3121dc3d302mr1735555a91.7.1748502354891;
-        Thu, 29 May 2025 00:05:54 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:9a39:811d:64fd:12a7])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3121b71c7c4sm743070a91.13.2025.05.29.00.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 00:05:54 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Philip Li <philip.li@intel.com>,
-	oliver.sang@intel.com,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net] selftests: net: build net/lib dependency in all target
-Date: Thu, 29 May 2025 14:05:36 +0700
-Message-ID: <20250529070536.84491-1-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1748502464; x=1749107264;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZlzqSwcojgI0VbGKS+qdPoR/KI0f7D4BNFlWU3U/FlM=;
+        b=eVk/BoplTAqaAXac7JOQ0RMOLH/vNghaTiot5XnDrovhGl4D+9bCe1YH+ou3+l6yxm
+         YQG68MR9tGyX3OZvpn93elCowfujIE/iQmk/g8+OaOPSD/CYtomu8KHbgs2vFl4ttecR
+         m6BBjFSF9fRDjbmgit7PdqKpsA39XEz23lRDEKjLDELx1O2q6yvPE9XgcN1QEo5Tib/l
+         IikpwE4XHcP5FsEyq4NZoIYUjRiYNSJh+UBszviLMZmQ045GXBYAbdR42GQrhf7mgPua
+         /0gcg+4IPXdMlUjZNGSicdpYnde9i9uI0yOH6nPO3Au0V5taQMfxFgS9qmUg5kQUfJ7d
+         dGow==
+X-Forwarded-Encrypted: i=1; AJvYcCVIiso0oMa6Lr9KFn2ApcwqiXE/0uQie9OT3oSFHjVZmKJSJsD2nkQnXMFHmP50BONPR8kTGdmG8aSgP/k/0P/Neg==@vger.kernel.org, AJvYcCXr40+sxf3HPl0FFmuJGWqjDgXomzEs/3IabxHy8W8WTOk2DxKpXTirzOuJ82GJvV2/RMsXCQ849znoJiY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtbZeY/WY1v4e2kNYZ8ToUQ+88h+bN4n04+RN5OxR/ZUvDlOI5
+	fWnqOun9RlRDv4b6hqtwWv+IMTjTmbP3uXwEI+hmTxC9l3gR6EqZZhIxcCzlOGUJHB2LKC1j2mv
+	kvpKJDIWuejMM+q8lJvZ8thgRHnfpjPQ=
+X-Gm-Gg: ASbGncutmV1/IKr7niZQBGJ6c+eFLCECJcsR5YF47QqbwQPiWEAxtg9GuKNOl/Gxomc
+	Yum07ZBwW7GERO4QL2h653NvabWYti9eHPWBcZmfIpr8I4ZVmOYWBBEQ+J7Bmswc1uhfoNi8507
+	tcGVJKRmCdHYsdK8mmReZTJOGFGTheFac=
+X-Google-Smtp-Source: AGHT+IF2PD3oFwH+ZQPkCKJgOxl/2YbUzJRnx7lBd7GlzLkTmHFvlM+948C0FNI4foXBprodmm3x9TjEwqB8K0rdeU0=
+X-Received: by 2002:a05:6902:705:b0:e7d:9fa6:5fbd with SMTP id
+ 3f1490d57ef6-e7d9fa661d8mr21744381276.30.1748502463961; Thu, 29 May 2025
+ 00:07:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250518190957.58932-1-howardchu95@gmail.com> <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+In-Reply-To: <CAP-5=fUs9ZVa3z54w1GyKrR=D0YF5GmSZEQ4dh=cKehTPD_w1g@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 29 May 2025 00:07:33 -0700
+X-Gm-Features: AX0GCFs2lparwpsWTkYFeYSMnbmbNHDg-hi5m0VylnxpQl3BZQy3B72nVEkdAZU
+Message-ID: <CAH0uvojyKi6tN2RfEsG25fn8G5G3iz+pWqjprm9qYaD_sA+i_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf test trace: Reduce test failures and make
+ error messages verbose
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, we only build net/lib dependency in install target. This
-commit moves that to all target so that net/lib is included in in-tree
-build and run_tests.
+Hello Ian,
 
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
- tools/testing/selftests/Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Sun, May 18, 2025 at 3:18=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Sun, May 18, 2025 at 12:10=E2=80=AFPM Howard Chu <howardchu95@gmail.co=
+m> wrote:
+> >
+> > Currently, BTF tests fail constantly, this series fixes two major reaso=
+ns
+> > why they fail, and makes the error messages acquired when using '-vv'
+> > more verbose, so when they fail, one can easily diagnose the problem.
+> >
+> > Before:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 783533
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint syscall
+> >     ---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
+> >
+> > After:
+> >     $ sudo /tmp/perf test enum -vv
+> >     107: perf trace enum augmentation tests:
+> >     107: perf trace enum augmentation tests                            =
+  : Running
+> >     --- start ---
+> >     test child forked, pid 851658
+> >     Checking if vmlinux exists
+> >     Tracing syscall landlock_add_rule
+> >     Tracing non-syscall tracepoint timer:hrtimer_setup,timer:hrtimer_st=
+art
+> >     [tracepoint failure] Failed to trace tracepoint timer:hrtimer_setup=
+,timer:hrtimer_start, output:
+> >     event syntax error: 'timer:hrtimer_setup,timer:hrtimer_start'
+> >                          \___ unknown tracepoint
+> >
+> >     Error:  File /sys/kernel/tracing//events/timer/hrtimer_setup not fo=
+und.
+> >     Hint:   Perhaps this kernel misses some CONFIG_ setting to enable t=
+his feature?.
+> >
+> >     Run 'perf list' for a list of valid events
+> >
+> >      Usage: perf trace [<options>] [<command>]
+> >         or: perf trace [<options>] -- <command> [<options>]
+> >         or: perf trace record [<options>] [<command>]
+> >         or: perf trace record [<options>] -- <command> [<options>]
+> >
+> >         -e, --event <event>   event/syscall selector. use 'perf list' t=
+o list available events---- end(-1) ----
+> >     107: perf trace enum augmentation tests                            =
+  : FAILED!
+> >
+> > Changes in v2:
+> > - Add an extra newline after error messages
+> > - Rename the title of patch 3 to 'Stop tracing hrtimer_setup...'
+> > - Take the debug diff for explanation out of patch 5 to make it apply
+> >   normally
+> > - Add base-commit in this cover letter
+>
+> Thanks Howard! I did some testing but see failures that may be
+> pre-existing issues:
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 6aa11cd3db42..5b04d83ad9a1 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -205,7 +205,7 @@ export KHDR_INCLUDES
- 
- all:
- 	@ret=1;							\
--	for TARGET in $(TARGETS); do				\
-+	for TARGET in $(TARGETS) $(INSTALL_DEP_TARGETS); do	\
- 		BUILD_TARGET=$$BUILD/$$TARGET;			\
- 		mkdir $$BUILD_TARGET  -p;			\
- 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET	\
-@@ -270,7 +270,7 @@ ifdef INSTALL_PATH
- 	install -m 744 run_kselftest.sh $(INSTALL_PATH)/
- 	rm -f $(TEST_LIST)
- 	@ret=1;	\
--	for TARGET in $(TARGETS) $(INSTALL_DEP_TARGETS); do \
-+	for TARGET in $(TARGETS); do \
- 		BUILD_TARGET=$$BUILD/$$TARGET;	\
- 		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET install \
- 				INSTALL_PATH=$(INSTALL_PATH)/$$TARGET \
--- 
-2.43.0
+Again, thank you for spending time testing this series! It has been
+some time... But hopefully this: [1] along with the BTF test v3: [2]
+can resolve the issues.
 
+[1]: https://lore.kernel.org/linux-perf-users/20250529065537.529937-1-howar=
+dchu95@gmail.com/T/#u
+[2]: https://lore.kernel.org/linux-perf-users/20250528191148.89118-1-howard=
+chu95@gmail.com/T/#t
+
+Thanks,
+Howard
