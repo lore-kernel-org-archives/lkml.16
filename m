@@ -1,169 +1,167 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E411292094;
-	Thu, 29 May 2025 21:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748553271; cv=fail; b=TM0x4vC5yaR77S8xRQBzDSAdG8azCXHwaSqGXkJAo9n4nZGb9d55N3Ka8KJXqzcL8hevjTjND6fI9zk9WVhtQkebO3lxLfWwi6FwKpRz4w6bEyXj23QFhIdtzgHHhbDbyF/hRh24qUHI1jdjzSxUm7Ja0P6bnKHDrAdXVywLT1Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748553271; c=relaxed/simple;
-	bh=pumEXtSLbxYBXCjLNrq2LHbFCGPt+JFSXRiUzYzbAnY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dymi9bXClqJe9W9glVnyWKaO53Xe4dfNfawpS06rr3/3rLuJNBGAGwptDYgYUrRsa14e5Ydp3xenT1EVrjfKYl6tGykrELxBhDqoZQ2WxY5TMMLdsipGAvzReQx7Q7j+XBEyL5Kqzqicw2kVCxcPnyOpwZWUxkb/0yTpakMaOAY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fGtMCj9S; arc=fail smtp.client-ip=40.107.237.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164C020C469;
+	Thu, 29 May 2025 21:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748553418; cv=none; b=uVjK1ilo1hlViR3XEbg698u5MPs/s3MGXyQtSY05YPa58eqPBJk0r/esdZ5Uf4hSEGu+1N0YFN7V2w0qS4yyDQec0X4tdJl8A/5JTy9uTd+fEHDSAJ0IRnW4Bh4VDYL6n9tuiN44v9K15XQtEjLZd4QXeiK7QzNyvE7m1PuH16A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748553418; c=relaxed/simple;
+	bh=XwSNpCLmOFYgZlT+vqB/zkYXZoNvF9LKBVo7R5SnQvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BKzyoZxXP13Kv9lVMHX4rafLlUBf+c1feBxn0HrVF0Pr15kH/ZtPZCRhFQzIx3OqGwancjwnwqGg3KH1KBhWX0WUN89G5AePD8MmDqCrwKAfRWnhvQ3JqZpqF7JdZ2xs1rR5cFobK2Qip3UFqbJOx95gKBcgnP1xUIIZMS9LhxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QE8FafhO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fGtMCj9S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gG3/qDBDJnEEuixGFtg1VRF+fiY95xj346gOhUN9xjeGhnQGmHE+biwoRc7JQmOcSSGJ/Gvd81GRdPCzT21r+IttrKhP6v1qKudSi/ASEou3+OH/gJF0LPL5LsdDSFq1jyIlC8iYlND+FMbdZPIV13jA0fNLaGVyZ1iGL6/tJUN68BbxlD3pc/T+D9F7A7lp6cIvBiuEUTdUBs6RrPG9g05/wZDad6TAV0C86/9yi/1UTe70LFd+/OxOWe4h4DGtn4XlSZ/iAeiqFID8uakCG3Y3JHGd3jphLQvfv6FSsdTZa05or51JodROT9g9c6pbGFwt+1zA90qbrvHI8GXnzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P/v/BDQlbdAZaJ6YimsCccxJ7v+Ts7+9G2CNvj4pkG0=;
- b=G1aNVycMz0uhTet368JXHyRuzp/wpc18fJ02a1QZKxbeTKa2XalMqRjt8aQg/hs66ERSQlaoHlXabRFTwDuE4/JRvJv3Z87cKWMvhh0KmlpYTNxA7q16sXpIkd90AlMKFr8wNA789kHMRshI+KFircBEVf/Cm/0wbslu/+FxurKJ70rihsPetJFDxKI7ebTEah+hnIoo+sKUOQXN8Xs/kPi6YDl3LVdRhn25S9m+uO4dciZHWFizW2IyHVoi/N8aFgV5x9zyn6UFqG+H3N2e+a224Gzr4t4YvWuiUGlnpf0AU8MtTWv+RgX23jYyOcKRZ3eDeKn1YAE6tADSV9Mzkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P/v/BDQlbdAZaJ6YimsCccxJ7v+Ts7+9G2CNvj4pkG0=;
- b=fGtMCj9SLFQYH/QndDFpeHGY1TNM5xNj0ynfC573rcHvojM80kwL6eKfu0nbWRR4G8q4MQf/MzzY5oodOH9d391AVMyOEVfFhVPPBU+e5vygu/MQL1S2dfPitDDKgsvZarCa8JmRFuI0EQndkS2irYKDkBJUjML7iwYiiwS8CG0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5995.namprd12.prod.outlook.com (2603:10b6:208:39b::20)
- by BN7PPF7C0ACC722.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6d5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 29 May
- 2025 21:14:27 +0000
-Received: from BL1PR12MB5995.namprd12.prod.outlook.com
- ([fe80::7298:510:d37d:fa92]) by BL1PR12MB5995.namprd12.prod.outlook.com
- ([fe80::7298:510:d37d:fa92%3]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 21:14:27 +0000
-Date: Thu, 29 May 2025 16:14:15 -0500
-From: John Allen <john.allen@amd.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	tglx@linutronix.de, dave.hansen@intel.com, seanjc@google.com,
-	pbonzini@redhat.com, peterz@infradead.org,
-	rick.p.edgecombe@intel.com, weijiang.yang@intel.com, bp@alien8.de,
-	chang.seok.bae@intel.com, xin3.li@intel.com,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Stanislav Spassov <stanspas@amazon.de>,
-	Eric Biggers <ebiggers@google.com>, Oleg Nesterov <oleg@redhat.com>,
-	Kees Cook <kees@kernel.org>
-Subject: Re: [PATCH v8 2/6] x86/fpu: Initialize guest FPU permissions from
- guest defaults
-Message-ID: <aDjOJ4tQAmHwBiXg@AUSJOHALLEN.amd.com>
-References: <20250522151031.426788-1-chao.gao@intel.com>
- <20250522151031.426788-3-chao.gao@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522151031.426788-3-chao.gao@intel.com>
-X-ClientProxiedBy: PH8PR21CA0014.namprd21.prod.outlook.com
- (2603:10b6:510:2ce::28) To BL1PR12MB5995.namprd12.prod.outlook.com
- (2603:10b6:208:39b::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QE8FafhO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1369DC4CEE7;
+	Thu, 29 May 2025 21:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748553416;
+	bh=XwSNpCLmOFYgZlT+vqB/zkYXZoNvF9LKBVo7R5SnQvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QE8FafhOJkbO0j8ajuGRE3oOAuSmqOSe7+1Bbv1xaRWE+GEqFHoQqKjHSPvlNvh8X
+	 xaUXj42tdidF41Kr/O4VBBHdBcT46ME5JSAvysORACebdBaYt/za2ZLB9918zp+HG/
+	 MnTpyOhxty75uU+RXJ/hyhZ6ZnSbvFM0C/SEeS/SzucQNcldj5qInocL0jscgQrZRV
+	 HhOFx1gcMCLB7GCwEsyACsRzhuz4ZFAVektyXrTVvZu3lyC0ag9CwrjioZ4ERbFnpv
+	 2HihaHdw1NUs7EO0PJ+YiMAi46LzXEFvynTHxRPB6/YcS/xwivV8yxQqvqZb39Kokc
+	 VTl+yzDZkdWRA==
+Date: Thu, 29 May 2025 14:16:39 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
+	linux-s390@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v4 08/13] crypto: s390/sha256 - implement library instead
+ of shash
+Message-ID: <20250529211639.GD23614@sol>
+References: <20250428170040.423825-1-ebiggers@kernel.org>
+ <20250428170040.423825-9-ebiggers@kernel.org>
+ <20250529110526.6d2959a9.alex.williamson@redhat.com>
+ <20250529173702.GA3840196@google.com>
+ <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5995:EE_|BN7PPF7C0ACC722:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a392328-8989-4075-85b2-08dd9ef5cb45
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PDTJgaIDN9i796rBMAChL/hmqrmucXz9PfV76Io3gGjNnAQeDrP+0A/ROUQ3?=
- =?us-ascii?Q?T0GtxP5d0ztpXmQxYpD6mPtbZeMjyJ0piuLzkS3H4jp/kPhS+rUsu8r07ytk?=
- =?us-ascii?Q?Y4pFCZXfoBz1hdbfcbhtIs3F5p6toqk+3Y7S6Qv6Yxq0etdX7VhJcBS/GVMf?=
- =?us-ascii?Q?HEyXH5+0inPXeqhDsGnfBa65iUqXIjRMW8d+lFGRxQ/n3SFJJhnbQkGfhSZI?=
- =?us-ascii?Q?W/RJE4eJOXhLyHFgwzqY4oMNn0s7D3ulZV/5WB8CdvIwGW3cXMOqVhRSAQrd?=
- =?us-ascii?Q?IIhRMKFqAxBOJ6+zyFS6e9nPoHgLQdKouYyZdJjKXW+unimxl+WSyIA5Jo/J?=
- =?us-ascii?Q?DNVFWe27IMcf6bkgnwGZL1AeXRFFp1S6FUcHq8elM7NOwxnoeC7Nf/ynfYb7?=
- =?us-ascii?Q?DczQmkIHv9Q5zNyc0/CcowFpGOTF1pDorETLn8JJ18wrYIoaa55cTBNIwCaX?=
- =?us-ascii?Q?WLXqG8XDnwcHcoQga3Grr9x091fmv6rGaRaSBT1DQA1/dCDQpdOxYLHNw4TG?=
- =?us-ascii?Q?CicSCsLVyjldHCSnMQRX71jpoPfjpv+Qpp3GzuFgpgipxqD+6P3b0U7IZVPX?=
- =?us-ascii?Q?Cr1GNTbm/U7qqGeLeP9w8ZALZboyQZZspT/N83T2f3YeNuf1IDldSdrlRCLo?=
- =?us-ascii?Q?9+roFqrDmPbdFXUidcaoaFR8QgBae+Bn28NwJ3c0aFMniXQFOecY4Xab1aUG?=
- =?us-ascii?Q?EFBJA02I0TsppSDCcpLoNGGXB3NWgiZuVpyD197glfKnuQ+ogn0KKrkTnnF/?=
- =?us-ascii?Q?njuOycXNrwPb71kXm6rSzkGaobsXHRpHNruyivyVnCe2NWqWSx3OdJF+Phkb?=
- =?us-ascii?Q?6tCTVZ/2Wp04h8f7M+3/gR7m7vPOwmX4/uInXL/AyFFqkmYwUJpbd4enxd4U?=
- =?us-ascii?Q?T+5OixcrDWqCWQYcVNaLghj/XkMfMEk2vBBQ/QKpjwAYfAuy5dNvaDYHNCFk?=
- =?us-ascii?Q?+OJLnBxW3VUKkN/khrfparHdTGz/Pgtt4lma13bFDlxZKwBbdiNocmbkGwhM?=
- =?us-ascii?Q?adF98djRRec8Flz9y1hNycUgpGtD6Fq2kmZDUz8Kce2kd+e39/8XVYKgzV0B?=
- =?us-ascii?Q?GCN/pNm2Kw4VcMh35jkS2T4/eTHXwrkz5XjThxxFWPx/XHLb/UKHUiF9Pslr?=
- =?us-ascii?Q?0UNasPmt87l8tdizN2H/422pGHvM5gZ30YvkpfwL1gRunGnNLhyfrHKGqe4Q?=
- =?us-ascii?Q?e8pAyPq7Hoa+D208+k6s353/f6KqqaJ5zUaSTRyyU+sNLTEhaYX3pjfJ59iZ?=
- =?us-ascii?Q?VHoWMraNL1NDitn/vILdvZcrJ2kuIoed1u4uw7YKZxeH/RMAJQDDHeW+4oxa?=
- =?us-ascii?Q?pfVtAzarvue24pgp34Y4l8LbOpS9dVSf74C/4EhdUJBnYbQAXdmeTnTK0Owf?=
- =?us-ascii?Q?yZq8PXtaWUf2cJfTJgEgDJA9SeOyjL5AtbRP5Jqg8h/nAZKG9Z/AE0P2Yzx6?=
- =?us-ascii?Q?gNv/vr7yAhg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5995.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bM+3X607lnC+OnpDUF0F2N1fwi8JdcNNpFi3yvk/gqxxCJ5j0+4vJO6buBow?=
- =?us-ascii?Q?8snplzFzEUE9utWHUP7svaB7B7iGJR79ncnRm3jClBBO0Qq0zRnL4Gy3ZUKS?=
- =?us-ascii?Q?neDPBEAnxPGRCPy+ust00GukO6iTYZyedBYJoy2DQD7OqKU7tmAk4cCqKP+X?=
- =?us-ascii?Q?gmEgWUv+1DZ51AHdFU9bBt5w/TXq2GOgm/J1nf1eDh0CeY6bmjwap/iW+nPd?=
- =?us-ascii?Q?3nX8vwjGJASqSy1yIbb0xM61fz08Frr43pi6JLDGtUINPKkNj4mghAJQQQpP?=
- =?us-ascii?Q?sEc0L6RbLLndVNhEuP2KuOYzeexb27Dvcy4XeHp8bN+YvA9hOGrDpmLn3sY9?=
- =?us-ascii?Q?aSvAvz2h8MbzX5GuQCquwh7I4etVD/HgYIMpN5YbWuK92NBZYy2BjV9/zDyS?=
- =?us-ascii?Q?oW+a+OvL3O7/cjEQ3mcHhu3C6n/cagidXcCP1kZ87gGA2IoiQSzCgKa/RdC7?=
- =?us-ascii?Q?hTOL1x+LK4iKJEN+bePqePTEXHLhQs2p+REDWvCLWcAa/NTuiuKFG9D52mGK?=
- =?us-ascii?Q?jKod8hY+OuA20d3+R7Xj8UagaB+JChOfGJO0FgrxW4W5RawJne+MHNGt+5AN?=
- =?us-ascii?Q?1yK7wn8yAE/leIU2dMwm7iwX7dcRabNAo6vNPPRiIoLn2b+WuWaTz+CA4oab?=
- =?us-ascii?Q?0R7IIJ0WIVoLHK/588Z8jSitsAI439iIylH7mxZhx9V7YBYecb+DXdgm6upN?=
- =?us-ascii?Q?2aBrOrNuXvhOFWyutULYpsVtrTLfsM4MdTE7pqg9UncinjPnxiyzZs3awe8+?=
- =?us-ascii?Q?uCG0hF6Y765gzu+ELLyhRk+6KHkOxhESBLGxpuOJ73QmalU94L4woG24ip/y?=
- =?us-ascii?Q?V5c9Uxm3SiJdOHfzaTfALH5ZX7ID/O7xVx8yMuFO82HGH7X6//D3KK/ATLDk?=
- =?us-ascii?Q?oiMlqbmhRPC7wAAUiloBx6+13osD9m4MWRFgeP8UbXa1CTNFSBaNttor/D9e?=
- =?us-ascii?Q?aH/j4lnEvlcOf8JZ/j501en82sZEsTvWP98yXcKezqLNrZmmL262J4xhy/pm?=
- =?us-ascii?Q?YWtk51u5G82zJ/2vZz7h54XRSlRu5ojMR9k74/FkMPhosgZdvr9baLZKAN9h?=
- =?us-ascii?Q?p/MO/AEbTg2mcCgQ/0xqY8RbmBzZL/vi/C3V5jo//kvsj6u+H8k748I842g+?=
- =?us-ascii?Q?WI0XEPZCHRQRxEtt/ZlBZlDWDDFG2yU7Vse9ZCmbsYtiZfM+z3/9qiL/8ZKn?=
- =?us-ascii?Q?vJieyqUzd1faZhHipFvJlsLmZbIZlbw2wvGVNWa7FrbRJTz221ZBMZN1RZct?=
- =?us-ascii?Q?Z72CUL+mgLCWdGpVya3pz38IwFA6Xk9dvh7XkVZqpAYPWnRXK9hAbhB7sUxj?=
- =?us-ascii?Q?NcC5trt2mKKAYd5uzp8QSflMvoxQGLyh4lPaIkRVGxbdvkuUlfZ28tTySLRx?=
- =?us-ascii?Q?4G+hzG+II8l/4DH0rzi6dEMshJ87UwHYesYAE/lFZViACVcCRqHdqmOJbPi+?=
- =?us-ascii?Q?QuJuTtsdWfK8PZGwkaXsyBpObXEtXsNxwW0bqsEQ4IzBXn7lFYa4onh7Tn1J?=
- =?us-ascii?Q?gsFGQ5LIh5zXhFKBSeaXY05wzz9pPAh8K/q5w3wbm/RjnM0yOBzMJQr6IYD6?=
- =?us-ascii?Q?1PjxF7ku9Dhrckzb72R1X2Cw4wIs7Nn5HzRTqcoQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a392328-8989-4075-85b2-08dd9ef5cb45
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5995.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 21:14:27.2287
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j3T5GHI3ephFBfnrM4TroP7lOTGBhcQ21AyBKz5N3SIhYCNHmQYgyd4wKa6h5q1fU9SJwLg2afNjp/1ttXA7mA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF7C0ACC722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whCp-nMWyLxAot4e6yVMCGANTUCWErGfvmwqNkEfTQ=Sw@mail.gmail.com>
 
-On Thu, May 22, 2025 at 08:10:05AM -0700, Chao Gao wrote:
-> Currently, fpu->guest_perm is copied from fpu->perm, which is derived from
-> fpu_kernel_cfg.default_features.
+On Thu, May 29, 2025 at 01:14:31PM -0700, Linus Torvalds wrote:
+> On Thu, 29 May 2025 at 10:37, Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > Long-term, I'd like to find a clean way to consolidate the library code for each
+> > algorithm into a single module.
 > 
-> Guest defaults were introduced to differentiate the features and sizes of
-> host and guest FPUs. Copying guest FPU permissions from the host will lead
-> to inconsistencies between the guest default features and permissions.
+> No, while I think the current situation isn't great, I think the "make
+> it one single module" is even worse.
 > 
-> Initialize guest FPU permissions from guest defaults instead of host
-> defaults. This ensures that any changes to guest default features are
-> automatically reflected in guest permissions, which in turn guarantees
-> that fpstate_realloc() allocates a correctly sized XSAVE buffer for guest
-> FPUs.
+> For most architectures - including s390 - you end up being in the
+> situation that these kinds of hw accelerated crypto things depend on
+> some CPU capability, and aren't necessarily statically always
+> available.
 > 
-> Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
-> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> So these things end up having stupid extra overhead due to having some
+> conditional.
+> 
+> That extra overhead is then in turn minimized with tricks like static
+> branches, but that's all just just piling more ugly hacks on top
+> because it picked a bad choice to begin with.
+> 
+> So what's the *right* thing to do?
+> 
+> The right thing to do is to just link the right routine in the first
+> place, and *not* have static branch hackery at all. Because you didn't
+> need it.
+> 
+> And we already do runtime linking at module loading time. So if it's a
+> module, if the hardware acceleration doesn't exist, the module load
+> should just fail, and the loader should go on to load the next option.
 
-Reviewed-by: John Allen <john.allen@amd.com>
+So using crc32c() + ext4 + x86 as an example (but SHA-256 would be very
+similar), the current behavior is that ext4.ko depends on the crc32c_arch()
+symbol.  That causes crc32-x86.ko to be loaded, which then depends on the
+crc32c_base() symbol as a fallback, which causes crc32.ko to be loaded too.  My
+idea is to consolidate the two crc32 modules into one (they always go together,
+after all), keeping the same symbols.  The main challenge is just the current
+directory structure.
+
+Your suggestion sounds like: ext4.ko would depend on the crc32c() symbol, which
+would be defined in *both* crc32-x86.ko and crc32.ko.  The module loader would
+try to load crc32-x86.ko first.  If the CPU does not support any of the x86
+accelerated CRC32 code, then loading that module would fail.  The module loader
+would then load crc32.ko instead.
+
+Does any of the infrastructure to handle "this symbol is in multiple modules and
+they must be loaded in this particular order" actually exist, though?
+
+And how do we avoid the issues the crypto API often has where the accelerated
+modules don't get loaded, causing slow generic code to unnecessarily be used?
+
+IMO this sounds questionable compared to just using static keys and/or branches,
+which we'd need anyway to support the non-modular case.
+
+> Not any silly "one module to rule them all" hackery that only results
+> in worse code. Just a simple "if this module loads successfully,
+> you'll link the optimal hw acceleration".
+> 
+> Now, the problem with this all is the *non*modular case.
+> 
+> For modules, we already have the optimal solution in the form of
+> init-module error handling and runtime linking.
+> 
+> So I think the module case is "solved" (except the solution is not
+> what we actually do).
+> 
+> For the non-module case, the problem is that "I linked this
+> unconditionally, and now it turns out I run on hardware that doesn't
+> have the capability to run this".
+> 
+> And that's when you need to do things like static_call_update() to
+> basically do runtime re-linking of a static decision.
+> 
+> And currently we very much do this wrong. See how s390 and x86-64 (and
+> presumably others) basically have the *exact* same problems, but they
+> then mix static branches and static calls (in the case of x86-64) and
+> just have non-optimal code in general.
+> 
+> What I think the generic code should do (for the built-in case) is just have
+> 
+>         DEFINE_STATIC_CALL(sha256_blocks_fn, sha256_blocks_generic);
+> 
+> and do
+> 
+>         static_call(sha256_blocks_fn)(args..);
+> 
+> and then architecture code can do the static_call_update() to set
+> their optimal version.
+> 
+> And yeah, we'd presumably need multiple versions, since there's the
+> whole "is simd usable" thing. Although maybe that's going away?
+
+Moving the static_call into the generic code might make sense.  I don't think
+it's a win in all cases currently, though.  Only x86 and PPC32 actually have a
+real static_call implementation; everywhere else it's an indirect call which is
+slower than a static branch.  Also, some arch code is just usable
+unconditionally without any CPU feature check, e.g. the MIPS ChaCha code.  That
+doesn't use (or need to use) a static call or branch at all.
+
+Also, while the centralized static_call would *allow* for the generic code to be
+loaded while the arch code is not, in the vast majority of cases that would be a
+bug, not a feature.  The generic crypto infrastructure has that bug, and this
+has caused a huge amount of pain over the years.  People have to go out of the
+way to ensure that the arch-optimized crypto code gets loaded.  And they often
+forget, resulting in the slow generic code being used unnecessarily...
+
+Making the arch-optimized code be loaded through a direct symbol dependency
+solves that problem.
+
+- Eric
