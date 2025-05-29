@@ -1,142 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88F6E55B;
-	Thu, 29 May 2025 07:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2CB2DCBE6
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 07:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748504001; cv=none; b=mjoFkr4rLbkBElWVWG3bq1Nj39oU59t+TVoHdApOucgcEp6FG8biWoDRe88QgLkbvHypAJV5gKOAfR3dn8UMQu4Zy7cJtfWD3DAqT+VodosEOd2bcLM67qQlXE928dh8XWIac658JpZXssSTt31Sg/1ByM4LmFppDEHbM5y10dk=
+	t=1748504116; cv=none; b=VhQbuYy2t+oZeqtfDRGTvBdvXu3laSSsRgLEA2+5y5o7+IaSH6GDXlMmPXj3LyPONkH2N7oijkhEf1NKe9wuEqWGa/9JXLiggm/faGbm0cCti3gIYRwgxhtx0Mf+UrMlYgm4x7rk3Hh/qJogAZdeLORb4Z+PCo3J/7zUlwUn+E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748504001; c=relaxed/simple;
-	bh=7IP5ekTSLSlMe7UZeEBqVxWHnB94sfAN/0wo9YrsFfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dVGNsH6iMVP15dmGKQ7M9v0Uo6RP7QJH53/U4UcujxcgcDNxgGWbHvUfCmAQh5iO7r5EBFxKXZYXWnhIeMrYMnVKDrtTblDPoYBjJgoXlr0OW07TfDbW5NY9yA3YnYvSiahgLTmaGYTrJvO8uBxVwZn8QbN0FCU+14JKBTm+sbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4HJisqU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748504116; c=relaxed/simple;
+	bh=FxiGK0m4sF+Iy0qaP75FOEtroibjZfeuWs5XT7JobEk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=D95mZ2bH4yKfn6vz/5zytVibh/seGGUg3hd5r8ad/sqsarh3kC2k0nE/Vfs8ZNs4Gp1bXyxgFRrn2faOR8R5OvXn6YNGlHbzLuacP1npE3kQnGwoGaAXsqf2DTphoCWnG8I+2jlPctpPG0XI12zB9jPXny4ts5yivYmOuUB6bXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jNBF8eCm; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4HJisqU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5BFC4CEE7;
-	Thu, 29 May 2025 07:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748503999;
-	bh=7IP5ekTSLSlMe7UZeEBqVxWHnB94sfAN/0wo9YrsFfQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t4HJisqUERWQWV9h+Amw32OF0pTsmDE96XmcPBxbvVOg/py1QWV9TtR+9BViDHEYp
-	 ByAZ+j5R/Y4E4yUeAbpA/8HdTM6p0mdaOt8G5JZwsgWUM+6kHzl1wBXrQGgcyZuUkh
-	 fPLLVrSLWq7MMuTYsCCmjFGvrRpAKOkA7CoHttSPW4b1vjrcpFLw2N2YWuhLZQrSlq
-	 SHpPNgdJNeCSh3MJRTgSLSn21AMW4lbqroK5HABvrJg9p1s4sbF6kPsVOC75QRIXuw
-	 Wukb7OBXgcBYdwJ2OEhFKPlZE/eaB4rcaaLM7PSK2OAHRjZ8ub4psKcyGqGg6XKgrc
-	 26sm05j0dYaBA==
-Message-ID: <119eba0a-2c81-4232-8b20-acc0a0eea969@kernel.org>
-Date: Thu, 29 May 2025 09:33:13 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jNBF8eCm"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a3591847a5so224344f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 00:35:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748504113; x=1749108913; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lcQZPNOwVritWIDtMp41b7bB5T4gHCJ575UDlNYCGTU=;
+        b=jNBF8eCm0sg2kYyZyfS210RgVWuliKn2EUSmk+Uzi2VPKebAMiF2mik4NMah8Nda2U
+         an8w35M8peQHgghz2XKHtkm3CoIqhw39ojxZX2Idsrz1i0HnBeG1UWBJuugJXm7bQHcs
+         w3+zgWHddtL1lTpFrsRcWpAbbaJROsYJ6LAJi0bmhA5GLIs4/xFde6fyNrDFG7hG2GDb
+         iO8u6gJfo+9XvC6pODuFikCGx8G5/YWi2mHLHnUMbFdkSIQURQS6Ap1z0s29+fl/d+Ck
+         tEbigkXTc+WRBPutzd3ABKDW1mNRzpYBNMiNh3d7DzRQBK9h8LYcvT+oV9BNEEOLtyja
+         t5mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748504113; x=1749108913;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lcQZPNOwVritWIDtMp41b7bB5T4gHCJ575UDlNYCGTU=;
+        b=vOd8L4cnyy6TnNRAxauVtXa4rfpw5+gWilHEjJO0/2bATrOX4nPaSAdX/kbJ+7dHOn
+         Kli8bVUoATgSZVwqr3zPS22jKu34Ztkv8bzd/QLcUlRUYpyPepjVQpYmrtD+WMR4M1B9
+         jAbfjkIfU46bVLyAa7kKjR4F0RjJ1pJNGYVODLo8KSAb0DNDDVsUJc/yaaisfuiPO180
+         LsFN7k1km033kdefYelAGUUQgDiJXwWBRP+ircsAbMiFmt8BNtC7RCRJzkWphmC/HMJZ
+         ebFY2UlD0w6KmxKP6jGl4AU+YNnna1JrJF+JhfV635FeVE8jVGSWKEzlfyTZqX2b1V5r
+         IXsA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPc6hKMbi8RrF9FGfKW1e96/ZSH118EJWoc33nDB8wgL0QoxhUXUinklE0GwLwUyoNtr6+oZ00mC6nphg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw17l43UHlUKNUL6jSljUSN0qqnYczPZCiT0CB5ODsWsaS67s1p
+	HW1fLfIcJCi1tQXVNgkm9jTITFRpnZyzfgxrNHtNEz2Y7nFPSq+2wS3TulU81N48q5zPjrZsWA=
+	=
+X-Google-Smtp-Source: AGHT+IEjieu1PVP6lrScJ37wIH5pXuxZNzIy4/yXl2IhlnKgrGkcAzIB+hUnC+Uf0+4+b4ccTu67Tb52
+X-Received: from wrbgz6.prod.google.com ([2002:a05:6000:4806:b0:3a3:62c7:3b9b])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:430a:b0:3a4:e6e4:6ee7
+ with SMTP id ffacd0b85a97d-3a4f35e1c93mr941938f8f.45.1748504113015; Thu, 29
+ May 2025 00:35:13 -0700 (PDT)
+Date: Thu, 29 May 2025 09:35:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] dt-bindings: input: Add TouchNetix axiom
- touchscreen
-To: Marco Felsch <m.felsch@pengutronix.de>,
- Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Kamel Bouhara <kamel.bouhara@bootlin.com>,
- Marco Felsch <kernel@pengutronix.de>, Henrik Rydberg <rydberg@bitmath.org>,
- Danilo Krummrich <dakr@redhat.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-input@vger.kernel.org
-References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
- <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1145; i=ardb@kernel.org;
+ h=from:subject; bh=H0IRuCkh1pL6XzUoM1zoycMKPDG3rt06UIiGp6YYXNM=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIcOCT+eV/PQbb3Y++uR4799xfrUfRzZNiU+7XO/WWWp0d
+ 8/fkxOEOkpZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEBK0Z/vArbN31x7K9yT7k
+ bpuPGof5t4qK/96T/HY2X4j6tcGa5RAjw3e1WIdvL0sM/Lcc/5fEaTU7Yu2zFQf2S7cz7lrX6JI 3lQsA
+X-Mailer: git-send-email 2.49.0.1238.gf8c92423fb-goog
+Message-ID: <20250529073507.2984959-2-ardb+git@google.com>
+Subject: [PATCH] arm64: Disable LLD linker ASSERT()s for the time being
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, will@kernel.org, 
+	catalin.marinas@arm.com, nathan@kernel.org, Ard Biesheuvel <ardb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 29/05/2025 00:08, Marco Felsch wrote:
-> +maintainers:
-> +  - Marco Felsch <kernel@pengutronix.de>
-> +
-> +allOf:
-> +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-> +  - $ref: /schemas/input/input.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: touchnetix,ax54a
-> +
-> +  reg:
-> +    enum: [ 0x66, 0x67 ]
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Isn't this the same address? You just added the write bit.
+It turns out that the way LLD handles ASSERT()s in the linker script can
+result in spurious failures, so disable them for the newly introduced
+BSS symbol export checks.
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  panel: true
+Link: https://github.com/ClangBuiltLinux/linux/issues/2094
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/arm64/kernel/image-vars.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-So that was the reason of dropping tag?
-https://lore.kernel.org/lkml/821ce1d4-bc15-4764-bbe0-315c57e8536e@linaro.org/
+diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
+index c5266430284b..86f088a16147 100644
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@ -10,6 +10,10 @@
+ #error This file should only be included in vmlinux.lds.S
+ #endif
+ 
++#if defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 210000
++#define ASSERT(...)
++#endif
++
+ #define PI_EXPORT_SYM(sym)		\
+ 	__PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
+ #define __PI_EXPORT_SYM(sym, pisym, msg)\
+@@ -142,4 +146,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
+ _kernel_codesize = ABSOLUTE(__inittext_end - _text);
+ #endif
+ 
++#undef ASSERT
++
+ #endif /* __ARM64_KERNEL_IMAGE_VARS_H */
+-- 
+2.49.0.1238.gf8c92423fb-goog
 
-Anyway, drop the property. Redundant.
-
-> +
-> +  vdda-supply:
-> +    description: Analog power supply regulator on VDDA pin
-> +
-> +  vddi-supply:
-> +    description: I/O power supply regulator on VDDI pin
-> +
-Best regards,
-Krzysztof
