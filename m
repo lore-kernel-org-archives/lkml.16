@@ -1,324 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2138.outbound.protection.outlook.com [40.107.20.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81A02248AB;
-	Thu, 29 May 2025 12:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748522656; cv=none; b=Tbb24VVIr0wSDo8s3zAjvSL86OvS5djtjgldWe+Pm1qnsVG04ldrxpSZTa5Oy3eoFNm6xp0Gm3qtOUbQVyYpkqODet8eMvFHZP4CFzAu6Oi7DaywPa3A01leFW3Wsl67K3e2oierSOmyuWnRdqq0gLTR6NeMsF4P/RDL69fVEnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748522656; c=relaxed/simple;
-	bh=/jrSP6yN6Ik99p3pz+dkFU53s4pI3KuRDwCiogvnSkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADwNfUszE9c2ldQspYOnZqpTlBoytX2z5kLbmZNK+yrJ98/mKf09zCXSz+t89zG0ksFBgSXZRgE6BOnjO1YFFje9jNF8WJ6LPGAK1FYQcpayJ1tpyKHeM/1BDcUUyYviu3bm1L318+Zs3XrO84f1qKC/hpD9AVN7bAxtmnfot+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tETzAO10; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489CA194A65;
+	Thu, 29 May 2025 12:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748522717; cv=fail; b=rXcaTXK1jMfTLJpuCBptPDc4Ojm9Bl5d5I6BJDJbofCmySOFQOpvmIl8hrzWJs5JM8Jo/jcTSUAXaZRp7HWQ+560VXBFg0b4Y8hMdWYBXyRXPh7Xz/9Q3HuNoYdcy6oWTp8ShOkHfZls+a8TEfKGOblJMHeUh75j4I2xIdZr2uA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748522717; c=relaxed/simple;
+	bh=OsGyXasEVbE0WwYAv8SlTiGVlyxQLqHh6bHU9ms7aEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ljdpCNjSdpDHm46IqRY+Ee5PDk/VUs+Nlw6HCWFrlHs+f0lPWHeLakEmKq94Z2x0msY7r5acr/5IHF9h34NttHRiXO7rfRbAomOCJ17BIhupKEeRVKG2dBs0d7QywOtvqg/MYAsywrETn+oR0gI9SiwjWxozGE+t/Tp2p1QWKgo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de; spf=pass smtp.mailfrom=technica-engineering.de; dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b=ByFlisuD; arc=fail smtp.client-ip=40.107.20.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=technica-engineering.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=technica-engineering.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tETzAO10"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 807BEC4CEE7;
-	Thu, 29 May 2025 12:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748522656;
-	bh=/jrSP6yN6Ik99p3pz+dkFU53s4pI3KuRDwCiogvnSkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tETzAO10Nvjt+ZyDwwUYkxnnb7k7IPlXoWK0Ou9nutJvpwHXbL9PQPAIHdQWbW9P+
-	 i/eKv/pr7s9QmdP41aPEWgM9A1BLa8m/cyc8El7qvA2GtyQz8PKm1R6yTGLBDyFOta
-	 4phECYvwGjO2aQZVaExHqm+ukxROq3sfYT0PRpViXoa4PsSHRijcQ8ckoLMCGNAt5C
-	 pBSF4q2gc+fAVCi2rQy6DejsAeJmNHEBWIjD9q2qnt9HpO1OsCTiMY8sBlvhdNCdy1
-	 EnEYwiEGclOCWJ6biGq3THhiAJSHHOWU6oMcqqYx4yd0bM+Bhs1Bt4z1x/5Aes4BKR
-	 REM8TjLEqH00w==
-Date: Thu, 29 May 2025 14:44:07 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, peter.maydell@linaro.org,
-	andre.przywara@arm.com
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
-Message-ID: <aDhWlytLCxONZdF9@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
+	dkim=pass (1024-bit key) header.d=technica-engineering.de header.i=@technica-engineering.de header.b="ByFlisuD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ditju0a488UGLtHlX1GdB7uygsdAJdBBSUM+Y2CdcOsCOq2gfROgMSm6n19/LpUDYT2+nmUK++yVymwaHrFBeXYygLq+WyB0JOqSBCar+O+uBRWlTSt8e2SeMe2by8+T5WCM8heFI30qu06zo1prV1jv0GbkWYAT1KRskxVt0/1yMe2g9ljvnbrht79WgOs8zF4HyGqnho/iuq1f9BnQIQ6hCQJXNMcVrcPj14sq2zQ4Wity+W5TYVKXtMxakQfQcNGgbkpVEiKN4PhLg0d/omlYZ3SUF0GNoZrihdJNbx5cz48WwtCHZDw+rW+RmpzQPamyBCXK44BNSXzmrqV+rQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WTA3fLQ6zkqAD0yZvFTJo1R9tLUuAoq5zM56jKmsiP8=;
+ b=kNk+YMolHcAdS/zPr4rkERI9oIDAVbYO1x78hi+qU0UqExts1ky8HTewLQJPkxaiRKNRppr/4Gb1RXh/uG7mESYuUlfF9ES/fwZCViOq+1FqbIz8Yxq8qLnLCDvl3tJHH5Ug6wJTgmCyHJzbGHxnh71HvwBLDFxqZta6oOcadGB9laYXvQ/QkAUrLC/VFXXh4jPGFF/zfKGAuDFnJ7zMWYYIJkrJFmLcE9fD2qBmgEql27BjS5D+1q1J+YHkMrGubI+UNNmkcuYcYoD6Hxt5u5DtSR1fXKqH8Pho/s03c9mvjSfp77DYTr9pglsAYmaP5ytZhCmwClBneVopNrGgcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 2.136.200.136) smtp.rcpttodomain=davemloft.net
+ smtp.mailfrom=technica-engineering.de; dmarc=fail (p=reject sp=reject
+ pct=100) action=oreject header.from=technica-engineering.de; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=technica-engineering.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WTA3fLQ6zkqAD0yZvFTJo1R9tLUuAoq5zM56jKmsiP8=;
+ b=ByFlisuDK8nHAntKjanb/sewEmVzhP69FtqhVE2Wji8OwRa7UdMn9MaHgxoOvaiferKwV/BGdHupeOdk7BuOMIL6L44PcQbE02ZU1HDwXLMsR0flzGEgIFZ6z5sj4PLYVII1I0SfMxjWxiIaH/nSMgCbpGWF6UutI5Sv3IGiaiA=
+Received: from AS9PR04CA0078.eurprd04.prod.outlook.com (2603:10a6:20b:48b::25)
+ by PA4PR08MB6093.eurprd08.prod.outlook.com (2603:10a6:102:e8::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Thu, 29 May
+ 2025 12:45:12 +0000
+Received: from AM4PEPF00027A60.eurprd04.prod.outlook.com
+ (2603:10a6:20b:48b:cafe::42) by AS9PR04CA0078.outlook.office365.com
+ (2603:10a6:20b:48b::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.26 via Frontend Transport; Thu,
+ 29 May 2025 12:45:12 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 2.136.200.136)
+ smtp.mailfrom=technica-engineering.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=technica-engineering.de;
+Received-SPF: Fail (protection.outlook.com: domain of technica-engineering.de
+ does not designate 2.136.200.136 as permitted sender)
+ receiver=protection.outlook.com; client-ip=2.136.200.136;
+ helo=jump.ad.technica-electronics.es;
+Received: from jump.ad.technica-electronics.es (2.136.200.136) by
+ AM4PEPF00027A60.mail.protection.outlook.com (10.167.16.68) with Microsoft
+ SMTP Server id 15.20.8769.18 via Frontend Transport; Thu, 29 May 2025
+ 12:45:11 +0000
+Received: from dalek.ad.technica-electronics.es (unknown [10.10.2.101])
+	by jump.ad.technica-electronics.es (Postfix) with ESMTP id 0A04E4019C;
+	Thu, 29 May 2025 14:45:11 +0200 (CEST)
+From: carlos.fernandez@technica-engineering.de
+To: linux-kernel@vger.kernel.org
+Cc: carlos.fernandez@technica-engineering.de,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org
+Subject: [PATCH net] macsec: MACsec SCI assignment for ES = 0
+Date: Thu, 29 May 2025 14:44:42 +0200
+Message-ID: <20250529124455.2761783-1-carlos.fernandez@technica-engineering.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A60:EE_|PA4PR08MB6093:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: cc947e84-1f53-4256-9787-08dd9eaea6cc
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/1IAeI76qdZWQ25HZNMOeTkpcWB66yTJ2ug3ONq8dnyb0Ms6jLlnRXEN1eRU?=
+ =?us-ascii?Q?ecn6IhFNf1/whAtpd5QsmBRxeV2Kumi6/yGpF7Ud5T7ASVDjuPH0/aJlXOG9?=
+ =?us-ascii?Q?kSQhQC2NuC10gJzdgUgUdwwCdQHR8r7hdUDFVT6e0tJHIUpaQOvn1ewgaWk9?=
+ =?us-ascii?Q?FpxMM/7b+p8VHRqjcGTuxRXyMzYA3ND7CBCdTYCqtZH1VzzS+qnEUHtTLNjJ?=
+ =?us-ascii?Q?9LDxzOZknDpXcASgHrlaoSsOY7w5Q2YnJJaRG/TBUOrS7SXUfxCMd3xnzn+t?=
+ =?us-ascii?Q?jPIQmt3Hhxdv7JBfEi49PvgY+zrDS+b4Rg9fjwoxslp2PpDgWTKiizLrFmTi?=
+ =?us-ascii?Q?etcARZ1z71+d8gcXEYzOh0d2doCHEYLk141MZmuUfwJm4f1bKCBU3RRr4xHn?=
+ =?us-ascii?Q?XMMDDFQF8ttp4Cq2pK06k4Egzqyitq8WqvJEaSYnreOXC5lYTPwe1uQe1dFZ?=
+ =?us-ascii?Q?C7luUmyI1pYI2ajvA8LGBuQAqsRR8aaWyGDwoenrZ2dV3o1ZfpXVNdq6+8U+?=
+ =?us-ascii?Q?DC7re25+26evysedHyKmCxh/RY4XQIbkzkeMCM1w5DNQzWptCACUWM7ziWbj?=
+ =?us-ascii?Q?kpAxnduWChh0ubG4TBsTF8zOyj5PYi45jhVbkkeI2OTVPhRFkgFU2s108gKp?=
+ =?us-ascii?Q?z4SIqpm23BFzrmkX9oJ907uAe4EUZ1xup8dKsb/BmKsH0g4e0QlV8apsYQfP?=
+ =?us-ascii?Q?tL+AwKfBtZNmbtALG5xjXjAhLnia1VOXmocqhxBHgiBPOFvJB0euIEJjjeY6?=
+ =?us-ascii?Q?Ferpsm/nvs6JJhmmA1pLIO+QYLUd3AS7r1/7K6oybVU6F0nDZjZDax627rjb?=
+ =?us-ascii?Q?ptVQwzXA6WKms15ESsfkYFg1qd4diIIjRe8y7WTITPIqwNkXmVw6tf7cnxEm?=
+ =?us-ascii?Q?KJ90hZWajL19t6VgFGllmkWTnsS6HLQjaN5DZNMvT3Wa5NXFiDeKivgXMDfO?=
+ =?us-ascii?Q?y/ONf7DO2prJlW0CRVHVv8bC1szL5dC4v8p0fjvoTadxwxRyspL9KLTrz9ME?=
+ =?us-ascii?Q?41cnE6CMEDLPT3aaAlfyNBfJ8JfsAm+mfd+FPnXnkj5J2N5kyXEC5RFKoZeT?=
+ =?us-ascii?Q?FC8J3TmeilEjEfacXVIOO7VfhgPiLK2JVZbq8L6ydK+goxq/WVu7nIAyXlgc?=
+ =?us-ascii?Q?F693GgUACI2RrSgSS5qIsKHW3rym+jB2H9Gkn6SKkemKUCw5nJm4IwuiXt4w?=
+ =?us-ascii?Q?ffhlkjqp44AS19Q4Q29RALRT29xKw33VhoIE54ofBTq1AXksgPF/ohMEJUTb?=
+ =?us-ascii?Q?E0utPgU1O7wjG2/tZwKaeAopcScS3lI+w1fGq2kzzBDjSw6AExdWDzoDgA9I?=
+ =?us-ascii?Q?NtNMjxS8y9NRf+6/hYXeAeCw7B9M4w+08l+BGP/kUaK+1TTscqqY/M9Bec+3?=
+ =?us-ascii?Q?PEjQ4kjV3UoNa8Yr9I7olygUEBesXobjJqLCKR5MnrR6/YdTAUzLlnZrFUnh?=
+ =?us-ascii?Q?WGv4akUImGMOpx9Fusb9IAI8e6b28vSkvKgCq7MPgSVoCXJFDl8KZUDCP5aR?=
+ =?us-ascii?Q?EgZjojhTVx8ppPjmBsJqeVf3D5yIepXV/CHM?=
+X-Forefront-Antispam-Report:
+	CIP:2.136.200.136;CTRY:ES;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:jump.ad.technica-electronics.es;PTR:136.red-2-136-200.staticip.rima-tde.net;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: technica-engineering.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 12:45:11.5199
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc947e84-1f53-4256-9787-08dd9eaea6cc
+X-MS-Exchange-CrossTenant-Id: 1f04372a-6892-44e3-8f58-03845e1a70c1
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1f04372a-6892-44e3-8f58-03845e1a70c1;Ip=[2.136.200.136];Helo=[jump.ad.technica-electronics.es]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM4PEPF00027A60.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6093
 
-[+Andre, Peter]
+From: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
 
-On Tue, May 13, 2025 at 07:47:54PM +0200, Lorenzo Pieralisi wrote:
+According to 802.1AE standard, when ES and SC flags in TCI are zero, used
+SCI should be the current active SC_RX but current code uses the header
+MAC address.
 
-[...]
+Without this patch, when ES flag is 0 (using a bridge or switch), header
+MAC will not be equal to the SCI and MACSec frames will be discarted.
 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..c8d124c3aa63fd1ec24acb40de72ac2164adeebd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
-> @@ -0,0 +1,202 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/arm,gic-v5.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM Generic Interrupt Controller, version 5
-> +
-> +maintainers:
-> +  - Lorenzo Pieralisi <lpieralisi@kernel.org>
-> +  - Marc Zyngier <maz@kernel.org>
-> +
-> +description: |
-> +  The GICv5 architecture defines the guidelines to implement GICv5
-> +  compliant interrupt controllers for AArch64 systems.
-> +
-> +  The GICv5 specification can be found at
-> +  https://developer.arm.com/documentation/aes0070
-> +
-> +  The GICv5 architecture is composed of multiple components:
-> +    - one or more IRS (Interrupt Routing Service)
-> +    - zero or more ITS (Interrupt Translation Service)
-> +
-> +  The architecture defines:
-> +    - PE-Private Peripheral Interrupts (PPI)
-> +    - Shared Peripheral Interrupts (SPI)
-> +    - Logical Peripheral Interrupts (LPI)
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: arm,gic-v5
-> +
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  ranges: true
-> +
-> +  "#interrupt-cells":
-> +    description: |
-> +      The 1st cell corresponds to the INTID.Type field in the INTID; 1 for PPI,
-> +      3 for SPI. LPI interrupts must not be described in the bindings since
-> +      they are allocated dynamically by the software component managing them.
-> +
-> +      The 2nd cell contains the interrupt INTID.ID field.
-> +
-> +      The 3rd cell is the flags, encoded as follows:
-> +      bits[3:0] trigger type and level flags.
-> +
-> +        1 = low-to-high edge triggered
-> +        2 = high-to-low edge triggered
-> +        4 = active high level-sensitive
-> +        8 = active low level-sensitive
-> +
-> +    const: 3
-> +
-> +  interrupt-controller: true
-> +
-> +  interrupts:
-> +    description:
-> +      The VGIC maintenance interrupt.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +  - "#interrupt-cells"
-> +  - interrupt-controller
-> +
-> +patternProperties:
-> +  "^irs@[0-9a-f]+$":
-> +    type: object
-> +    description:
-> +      GICv5 has one or more Interrupt Routing Services (IRS) that are
-> +      responsible for handling IRQ state and routing.
-> +
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      compatible:
-> +        const: arm,gic-v5-irs
-> +
-> +      reg:
-> +        minItems: 1
-> +        items:
-> +          - description: IRS control frame
+Signed-off-by: Carlos Fernandez <carlos.fernandez@technica-engineering.de>
+---
+ drivers/net/macsec.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-I came across it while testing EL3 firmware, raising the topic for
-discussion.
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 3d315e30ee47..9a743aee2cea 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -247,15 +247,29 @@ static sci_t make_sci(const u8 *addr, __be16 port)
+ 	return sci;
+ }
+ 
+-static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present)
++static sci_t macsec_frame_sci(struct macsec_eth_header *hdr, bool sci_present,
++			      struct macsec_rxh_data *rxd)
+ {
+-	sci_t sci;
++	struct macsec_dev *macsec_device;
++	sci_t sci = 0;
+ 
+-	if (sci_present)
++	if (sci_present) {
+ 		memcpy(&sci, hdr->secure_channel_id,
+ 		       sizeof(hdr->secure_channel_id));
+-	else
++	} else if (!(hdr->tci_an & (MACSEC_TCI_ES | MACSEC_TCI_SC))) {
++		list_for_each_entry_rcu(macsec_device, &rxd->secys, secys) {
++			struct macsec_secy *secy = &macsec_device->secy;
++			struct macsec_rx_sc *rx_sc;
++
++			for_each_rxsc(secy, rx_sc) {
++				rx_sc = rx_sc ? macsec_rxsc_get(rx_sc) : NULL;
++				if (rx_sc && rx_sc->active)
++					sci = rx_sc->sci;
++			}
++		}
++	} else {
+ 		sci = make_sci(hdr->eth.h_source, MACSEC_PORT_ES);
++	}
+ 
+ 	return sci;
+ }
+@@ -1156,11 +1170,12 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
+ 
+ 	macsec_skb_cb(skb)->has_sci = !!(hdr->tci_an & MACSEC_TCI_SC);
+ 	macsec_skb_cb(skb)->assoc_num = hdr->tci_an & MACSEC_AN_MASK;
+-	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci);
+ 
+ 	rcu_read_lock();
+ 	rxd = macsec_data_rcu(skb->dev);
+ 
++	sci = macsec_frame_sci(hdr, macsec_skb_cb(skb)->has_sci, rxd);
++
+ 	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
+ 		struct macsec_rx_sc *sc = find_rx_sc(&macsec->secy, sci);
+ 
+-- 
+2.43.0
 
-The IRS (and the ITS) has a config frame (need to patch the typo
-s/control/config, already done) per interrupt domain supported, that is,
-it can have up to 4 config frames:
-
-- EL3
-- Secure
-- Realm
-- Non-Secure
-
-The one described in this binding is the non-secure one.
-
-IIUC, everything described in the DT represents the non-secure address
-space. Two questions:
-
-- I don't have to spell out the IRS/ITS config frame (and SETLPI, by
-  the way) as non-secure, since that's implicit, is that correct ?
-- How can the schema describe, if present, EL3, Secure and Realm frames ?
-
-It would be good if this schema could be reused in firmware to describe
-the platform, for that to happen we need to have the questions above
-resolved.
-
-Thanks,
-Lorenzo
-
-> +          - description: IRS setlpi frame
-> +
-> +      "#address-cells":
-> +        enum: [ 1, 2 ]
-> +
-> +      "#size-cells":
-> +        enum: [ 1, 2 ]
-> +
-> +      ranges: true
-> +
-> +      dma-noncoherent:
-> +        description:
-> +          Present if the GIC IRS permits programming shareability and
-> +          cacheability attributes but is connected to a non-coherent
-> +          downstream interconnect.
-> +
-> +      cpus:
-> +        description:
-> +          CPUs managed by the IRS.
-> +
-> +      arm,iaffids:
-> +        $ref: /schemas/types.yaml#/definitions/uint16-array
-> +        description:
-> +          Interrupt AFFinity ID (IAFFID) associated with the CPU whose
-> +          CPU node phandle is at the same index in the cpus array.
-> +
-> +    patternProperties:
-> +      "^msi-controller@[0-9a-f]+$":
-> +        type: object
-> +        description:
-> +          GICv5 has zero or more Interrupt Translation Services (ITS) that are
-> +          used to route Message Signalled Interrupts (MSI) to the CPUs. Each
-> +          ITS is connected to an IRS.
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          compatible:
-> +            const: arm,gic-v5-its
-> +
-> +          reg:
-> +            items:
-> +              - description: ITS control frame
-> +              - description: ITS translate frame
-> +
-> +          dma-noncoherent:
-> +            description:
-> +              Present if the GIC ITS permits programming shareability and
-> +              cacheability attributes but is connected to a non-coherent
-> +              downstream interconnect.
-> +
-> +          "#msi-cells":
-> +            description:
-> +              The single msi-cell is the DeviceID of the device which will
-> +              generate the MSI.
-> +            const: 1
-> +
-> +          msi-controller: true
-> +
-> +        required:
-> +          - compatible
-> +          - reg
-> +          - "#msi-cells"
-> +          - msi-controller
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - cpus
-> +      - arm,iaffids
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    interrupt-controller {
-> +      compatible = "arm,gic-v5";
-> +
-> +      #interrupt-cells = <3>;
-> +      interrupt-controller;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges;
-> +
-> +      interrupts = <1 25 4>;
-> +
-> +      irs@2f1a0000 {
-> +        compatible = "arm,gic-v5-irs";
-> +        reg = <0x2f1a0000 0x10000>;  // IRS_CONFIG_FRAME for NS
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges;
-> +
-> +        cpus = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>, <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
-> +        arm,iaffids = /bits/ 16 <0 1 2 3 4 5 6 7>;
-> +
-> +        msi-controller@2f120000 {
-> +          compatible = "arm,gic-v5-its";
-> +          reg = <0x2f120000 0x10000>,   // ITS_CONFIG_FRAME for NS
-> +                <0x2f130000 0x10000>;   // ITS_TRANSLATE_FRAME
-> +
-> +          #msi-cells = <1>;
-> +          msi-controller;
-> +
-> +        };
-> +      };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 69511c3b2b76fb7090a2a550f4c59a7daf188493..d51efac8f9aa21629a0486977fdc76a2eaf5c52f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1901,6 +1901,13 @@ F:	drivers/irqchip/irq-gic*.[ch]
->  F:	include/linux/irqchip/arm-gic*.h
->  F:	include/linux/irqchip/arm-vgic-info.h
->  
-> +ARM GENERIC INTERRUPT CONTROLLER V5 DRIVERS
-> +M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
-> +M:	Marc Zyngier <maz@kernel.org>
-> +L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5*.yaml
-> +
->  ARM HDLCD DRM DRIVER
->  M:	Liviu Dudau <liviu.dudau@arm.com>
->  S:	Supported
-> 
-> -- 
-> 2.48.0
-> 
