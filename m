@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06761254846
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260DF252296
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 04:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748493614; cv=none; b=EoRJ/o0oGyGqIrmmb00UL+rOKuaGknVZJ3mIYoX/y3tIBO0JIKCEwZYQrE8yKQnmcXPBRahYDcFK4jO1rxlKcgsxHbNQLsBCU6E0CwD8tdycTWxoJVgZ2tutAoBJHXxtNJrvr/LCS+TbwuShnv/i+P4bdlm7zu+2PRVEy44gs2Y=
+	t=1748493618; cv=none; b=j1PGwBRNBbgNK1X46irR4rQxrbkkJ2yxusksiBvq51OQtDd1C8WchtiC4B64NuZtG2B3FdRgQvUuRZWjWFofaJswOg2EAAcNzQVTHEBg0k7Azv2r61+aD2Ld3Him7beZ2xrlBIWrZPlm6Xbs24H0WLgpz7NvTEXCTb3xZF3uU1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748493614; c=relaxed/simple;
-	bh=cjf2fdD0rE5LRjT1VfJDou3dEpA6ok2BqEt1s5yCE/o=;
+	s=arc-20240116; t=1748493618; c=relaxed/simple;
+	bh=8sjuAjOj2orpAYr10kkA5Z/nzFBBjR+5CoUq/1YdQGA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=EeSH3uWsU+x06neKUEo2yY2OGL3pPtystKW70HM5LH1CzW/575uTWI37R+4FUf0PzyEzC7/ip2FvSjXFPXKHNdBgEKIJdEcUdD4eKLsp9M0G90Y8oxTzd5bPZLMSMcnEwzCPBMAv+xjNi7xjG3AFa8XtqNEyYw4Dsel1aCSmjI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wogGTUHN; arc=none smtp.client-ip=209.85.210.202
+	 To:Content-Type; b=kL5fnLuTwvuhPoZqK7xPUWqkTJ+zKwfzLHJjR9DRGbRoVQ07UlIni7GHX/nATbpTTy9emxRLh/BNmifbhbR6oD2WBF6ZUPB5Fo9x+dydWq2j488CE32e1nOPU1FEyJ3PQyLMGE3B/WvHvYSe7A1jVRbf764wr7oTMvJtrW/XbaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hA5dK5me; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wogGTUHN"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394792f83cso390377b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hA5dK5me"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231d13ac4d4so7625295ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748493612; x=1749098412; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748493616; x=1749098416; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9aS71aJOPEt1sm6kO8E07x1jFtf8Q1JUjXvJGHfQ3qA=;
-        b=wogGTUHNrDIU+iVL94US5lFwyK4mGKJPQYMB+HQC8ui+QVv+9LpvzqnK7ksHnvWhz7
-         gxRXD3rRXmaI2vh6XVhk7m9im0103Yzvv5Z6rb+acnChjBi+vd6cCPZ4mqMBOyyb28dL
-         jeZRdX/FirD2KqGtk2fzrcQaCbfwPGEYkn3dA5Bk141uytbQq8VEaeHNDSrtWCxBjFoo
-         k+uS72788HUwV7IFEfgp9qHURLivTxgmXQMExO0aPsFNUzyzXaJ7paYODlqgxJ2T86Ci
-         UGCs2Vgbxc2vFiNMiXgBZcCTABqQEuxr5Phn9SgGlHZT+Zuy1yh5BxY6nTSYzGyfq9S2
-         PlMw==
+        bh=J3cc4XfHjT63tW0sHOE7oV+T/kyDzOGhrcNlU3mn958=;
+        b=hA5dK5me8MybiChD+cFQ2wvGDS8mnZjvhADjQsPFDtCpGnm+rFIVhgsHb7aDPPnBZr
+         OWfCLdf2dhBDxM87YtYGseGoNNB61ouxMTAon9/QBtMXP3lbKQC/kMWwH+zTRsA3dMij
+         kokdgJeUd3LQuKg+XM3FBWETAgGIx4T/rM0gVk5wv/8EBEcBjEosF4uOHNal7Fj/zVzN
+         9sfUjsI73zBADvJCE5oqjxYf20rE6Dx6f+2QLQ+mStLxQO4ABZPLTeQCiX7t6i5szeOg
+         JgAk6iFpHzrLe3tMFUdHo4jagXEHoG2e8h98gJmXxMwoFAGy/5uBLDQ953JHrqYCqIgO
+         Np+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748493612; x=1749098412;
+        d=1e100.net; s=20230601; t=1748493616; x=1749098416;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9aS71aJOPEt1sm6kO8E07x1jFtf8Q1JUjXvJGHfQ3qA=;
-        b=WrOuFnJxIj+cBGqQH8X0Op3btR9P5s01caxKfHuP481wEkPCij75eedAL3KtLOK5p2
-         7swdB1hiUgen2IhbSI61csEt1cqOjfJm6AJIl9ygcoS51xI8+CwwYoKRbEnobqKr5VDV
-         1ZOYfJIWq+S6+dOsh1IRyzV1ig6fDMGzQF1sDJ/NUFmeK6WYkewsYODIHiHXDXtTKixe
-         Ld4VifezJaFfu2fvsYiKTBtBlse+oHBTbP1qrPZBRzsGSjH39EwNDR66faO5K9Nxuiaf
-         KvYSpspM28peUteMHMYBIvBZyNDreGt2ZiNZQMBJ3pmd81i4M6XUO6CSTSMeqzOy5SFk
-         Ow3A==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ6R2bAUTzlpEkLau1vZguew9fGgUi9lWJjMqqs/EQEIi+AoCEELAk77fUiZjdSvAZ2d3dhjd0fc7iMYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3L8zB0iYR0EcvTNZzgcoHbXO9H6dw2JO6kEGLuKGvRwUau73x
-	Vag8Dbo6ygVDcDFOcmH22/3eFB0quGGEnkgIlh462ZLlx0P0wDuO3qv1ZVANQPsDFmyUq5ekD+H
-	IIeT3whAdJQ==
-X-Google-Smtp-Source: AGHT+IFlKCkEqX1XRqJjw3YEn4vn41KmuiPbLqe3e6dAoMnichsXHqoCMaXHDL0e/0IqWUt2otPig48NXi89
-X-Received: from pfbik10.prod.google.com ([2002:a05:6a00:8d0a:b0:746:fd4c:1fcf])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4654:b0:736:4e67:d631
- with SMTP id d2e1a72fcca58-747b0e79bacmr1311000b3a.23.1748493612073; Wed, 28
- May 2025 21:40:12 -0700 (PDT)
-Date: Wed, 28 May 2025 21:39:39 -0700
+        bh=J3cc4XfHjT63tW0sHOE7oV+T/kyDzOGhrcNlU3mn958=;
+        b=vqPQ5/bXBbLYJ5zoE5LbFyfjk7LUTWszICNOQek179E5PjAjZ1zm/U2u7/fQKh8DZE
+         15v/cWTe7M9KLodE1V7hSaX+c+Rc8rxw6hnQfvcZZaqM+d1EnpFaQSEhhHZQOI+5D+0Z
+         xWL8+DJGThV9m2kNaurct389mbslx3uw7m0ZVkUf0TKYDOwDeYdT/evyBt13/3uoBfxW
+         WRwXmAgiXqnycArB61jrP7dm7aa1IB6zjIVtHZ6fIkXv5LUJHpnS9eCOxmJ2DBkskKe1
+         /VOuuanHoMwUovCMwTqCsoZHqMsQR1ufSqc9HX1WhfvgFQaJ3X00K5TB7TqB0xIRVPbZ
+         xIPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNLE5KcIg+KKW3ev6sz3/+7Vqs29k5YIOZA3P7WgR0e2C+NSXEQvyv0t4BqqqTPpXBNOFLHMo1gmcAvRk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLsBtK1A6xxBtnb3raZ2dhf9P4uUabJql+cOXpR75n5eckkj9Y
+	Ky/o+lo4P6O5f5O9mazKJSCBeI9NS8PX/pS0KO/1WKvC6AsJs2fitY6aiuevWVGyUkJgSbccFgQ
+	rny6fmydv0Q==
+X-Google-Smtp-Source: AGHT+IH+nZZXQ1e5vfxdxY87E7j36c97TAZI0T6FIGcXkXjpMxDQyv++Eq5U9c3zbazcw0Gy3vnoxfpD0cNc
+X-Received: from plbp4.prod.google.com ([2002:a17:903:1744:b0:223:225b:3d83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1311:b0:234:bca7:2921
+ with SMTP id d9443c01a7336-234bca736d0mr74929435ad.33.1748493616471; Wed, 28
+ May 2025 21:40:16 -0700 (PDT)
+Date: Wed, 28 May 2025 21:39:41 -0700
 In-Reply-To: <20250529044000.759937-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250529044000.759937-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250529044000.759937-4-irogers@google.com>
-Subject: [PATCH v4 03/24] perf build-id: Truncate to avoid overflowing the
- build_id data
+Message-ID: <20250529044000.759937-6-irogers@google.com>
+Subject: [PATCH v4 05/24] perf build-id: Mark DSO in sample callchains
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -90,29 +89,52 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Warning when the build_id data would be overflowed would lead to
-memory corruption, switch to truncation.
+Previously only the sample IP's map DSO would be marked hit for the
+purposes of populating the build ID cache. Walk the call chain to mark
+all IPs and DSOs.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/build-id.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/build-id.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index e763e8d99a43..5bc2040bdd0d 100644
+index aa35dceace90..3386fa8e1e7e 100644
 --- a/tools/perf/util/build-id.c
 +++ b/tools/perf/util/build-id.c
-@@ -951,7 +951,10 @@ bool perf_session__read_build_ids(struct perf_session *session, bool with_hits)
+@@ -42,10 +42,20 @@
  
- void build_id__init(struct build_id *bid, const u8 *data, size_t size)
+ static bool no_buildid_cache;
+ 
++static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data __maybe_unused)
++{
++	struct map *map = node->ms.map;
++
++	if (map)
++		dso__set_hit(map__dso(map));
++
++	return 0;
++}
++
+ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 			   union perf_event *event,
+ 			   struct perf_sample *sample,
+-			   struct evsel *evsel __maybe_unused,
++			   struct evsel *evsel,
+ 			   struct machine *machine)
  {
--	WARN_ON(size > BUILD_ID_SIZE);
-+	if (size > BUILD_ID_SIZE) {
-+		pr_debug("Truncating build_id size from %zd\n", size);
-+		size = BUILD_ID_SIZE;
-+	}
- 	memcpy(bid->data, data, size);
- 	bid->size = size;
+ 	struct addr_location al;
+@@ -63,6 +73,11 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
+ 		dso__set_hit(map__dso(al.map));
+ 
+ 	addr_location__exit(&al);
++
++	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
++					/*symbols=*/false, mark_dso_hit_callback, /*data=*/NULL);
++
++
+ 	thread__put(thread);
+ 	return 0;
  }
 -- 
 2.49.0.1204.g71687c7c1d-goog
