@@ -1,69 +1,42 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5B91DA5F;
-	Thu, 29 May 2025 18:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14251DA5F;
+	Thu, 29 May 2025 18:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748542669; cv=none; b=a5YvFx6dNSdwB56qyp6QlhON5rn8cQLPKOw8uUCHm5Epm335/yXoEQFEwxgIIPAUF2ASAXvF0jgQ94Lct4krrEoXqGGe2behFIMrbT16G21hzEUynBuyWFYiwZKaZI+OwDM2O0fe7LMvbOTheb+Hf092svI683mi4rlMgbCnV+4=
+	t=1748542723; cv=none; b=u1u6alhHtze5GOeXWQDUEXZYNdI8nvx4kv1hFzrt7eKQNIndrRpk1CS1YdD86L3S2USD36phP+IPm+0AamhoVsFNOtlpjxsZUoeCbExckO+xyetj3HjDlR7HffAW57QaKyehrGS3BVdHRbqh8ejubtQhhKt/fDYTyyUhv8Sw3Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748542669; c=relaxed/simple;
-	bh=E7t4ziTT3wF/689+gwT++HqhjP1/cK2PxAJ+YqFkDgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sENaqtnWHJhQRbRLPMKI0PszPC5Wm5tMPJWhQJSIv7TKHfUOAFwO18NixAqPgf0AL5ElJJfRef525sQ+HuZYroTg7cFvQV0LFfo7SRM0cbyCJCff7DhZq93K7AjqSDs8AQuXCOJFIK59J1aY+3jL+arbjRDdKoqZ34fPv9LlaCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrvIA3RN; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748542723; c=relaxed/simple;
+	bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ai0SyCzXsYm8VpRvmdthAY7yBUG/S8+am5WuQ58boJqpHYferkaDHeiNCtzc99IOxps4090fLjU5Nv61oXQelE6kgxCCcPOOMKdaNcM0HB+13uiAFuTgh8psCJuFQ/a4cUnBXndkX424zxlFrGLj+9gB/M18tyySW2epwr78crE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8ir0CSE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrvIA3RN"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso980319b3a.2;
-        Thu, 29 May 2025 11:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748542667; x=1749147467; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
-        b=JrvIA3RNrdTgNWUigvXz2wA2oKsXFeOtR5A+1jYv5KcDg0cZm8SW8NbnlhVRMjhHwp
-         +OmoJUH1zHT23brZZRKYFvmP+3e2VJZ7QoZZ+8mhGKnnjFDNCmUZyfvKpwjF3l9JWytz
-         6niIgCimrTD+cqJuz91q/gl2UgCuXZZNW7b9ImlLoMSxrTAh79nb+F1//18DXZWjfQYT
-         r4Mz6iytxO7uUA1bgFqKpwVZjZoU2BqWAYdEw//IMPN/ewESa6Snk47vtlrIpGSXlyBp
-         rCx1vXYj/q0xuZ+8saEyBr31bHyagJq59BsLFdQxRH1kP61R+Qv0AzGmp070P87rUKqp
-         Ddcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748542667; x=1749147467;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wECMIUhZX+RAEutiSlsIQW+PxVMgIoUiBXiClAXqQgA=;
-        b=CBhpKNswgJndvydmY/Id3hvSifQtH3qQs6jLtfor27eS9PjpQ2lc0bToDibbkashVn
-         ieDTPmvBA/dqer/IuL+hWgGkD6MRL7WPv65/4Sxl8mARwoz9RDZtbDfS6iILe4/Y8Y0y
-         njpxlVjivS+76Jr2l00Oo600Z7MMA4z6qiXj4TxDcMLxONFjMbTAnGYLZQHH2mVVCz07
-         +gniC+p3Rx7ORFaEAzvPAJobjYh1llvEwUDRFRQhSyEJx6S1AL4jtyDF9/IQH5rrEggZ
-         WIkw9yqx0hu3TJj4RtsroOhmZzcjgENkhUx8F1xGAcCb6cyMmZ9REEWlOX8PylVhKtQd
-         y37Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXkMl4EQfdRD2we7EJbK9+IOh5sV97ia2ccTHsUKBpGH/sTBTycBaWwJ1PU4WSzWlCNufKqnkVyoc2pSdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3LjJ7eK9hoejGc4++kVvyCeYLq1i8ICIsztOlBYCN8sGN+ddp
-	LiBKxij6QkIAKTihZfCpJQm2w3WT4+HtRfTrOmQ9C93jlTs/xGhhFUB2
-X-Gm-Gg: ASbGncu4P2q+nweGn4ZyP9tok/m4rD//4+poo2UDyeZ8DcofL6q1WoJalThwixIF6NW
-	UKXg04LTxTVLCwi5PJsGHYecrmmY5spFSgwuiNIiOlWlbnWpnPmqwuOkEN+U15XosxO3WhdmH1+
-	A115s9Q3aCtBKjwlPfCU1VN8fazWeZsltReQEXztBTYkUOyU2vOmmCljabjMTqONvn8zAlyaZ5b
-	5vIDgqwWPPkbcKLl/bVUyZbIJ7aX4CJ1NWV+1f+Mau6i0ZTu6ARbuj30EcHAZNTgAfO3cI9ibpE
-	pa+SI4/al2Vhv7TzgwvXEVU3vJ92XSB/yavG7E/tyLkclLuUqlg=
-X-Google-Smtp-Source: AGHT+IF/n2OErfZ1Jjo+/rD+yuZf0ShecGAPEnjn9Bm4hpsZ56QyABjH7ecsToaN+1MrSuOTlEwvVg==
-X-Received: by 2002:a05:6a21:4508:b0:206:aa42:8e7c with SMTP id adf61e73a8af0-21ad9548831mr956312637.18.1748542667276;
-        Thu, 29 May 2025 11:17:47 -0700 (PDT)
-Received: from pop-os.. ([2401:4900:1c94:c9cf:cfb1:28a5:fd7:978])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9d33csm287056a12.47.2025.05.29.11.17.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 11:17:46 -0700 (PDT)
-From: Abhinav Ananthu <abhinav.ogl@gmail.com>
-To: wsa+renesas@sang-engineering.com
-Cc: linux-i2c@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8ir0CSE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DDA0C4CEE7;
+	Thu, 29 May 2025 18:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748542722;
+	bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n8ir0CSEmy6bIGSbyNxD10QqoifIt1Gqxh7Gsx2sy29RycjNVgQot7RAjiXILql+h
+	 dgvd3gNc9TJf6pTq8octJa1POiGhfYajEyzjhrsMBHLXpHXtIoJBUByaqH95IoA3sS
+	 EyZJyaTpFbZXD1ojb1hGLKR7D5M77siOx1ly8NIQ8pWwvWRt1WjFDwblhTUmE1sGtN
+	 QY6yvGjvx3zb6QE8DWyrRSxkDqrBgmdXrZpgA1hK8UyusKrIfJLqof9ti/aC/yq5sx
+	 FIqUjXo7nAGgj2QHGvX2YTaq51rZIok/ptXhcWl68upja5/c/fN/FiW5Yl7/bSdd8n
+	 Mul12ddO5PGGg==
+From: Kees Cook <kees@kernel.org>
+To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
+	Hans de Goede <hdegoede@redhat.com>,
+	ibm-acpi-devel@lists.sourceforge.net,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com,
-	abhinav.ogl@gmail.com
-Subject: [PATCH] i2c: core: Fix uninit-value in i2c_smbus_xfer_emulated
-Date: Thu, 29 May 2025 23:45:35 +0530
-Message-Id: <20250529181535.15220-1-abhinav.ogl@gmail.com>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] platform/x86: thinkpad_acpi: Handle KCOV __init vs inline mismatches
+Date: Thu, 29 May 2025 11:18:37 -0700
+Message-Id: <20250529181831.work.439-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,42 +44,52 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1643; i=kees@kernel.org; h=from:subject:message-id; bh=ESVRc0/V8iZYcObbnzBJGUVQAxbYbamjKdKKM7L9Qyg=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkWS/58TEh4pBSa6nHtuPec9MuRK25fyY4P+XTViv338 0xjo+xHHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOJ/cbI0JccesCqUu3Ypa/R Br3Paj58//nziGb4e+HbWjV8AdFXNjL8s+58tDZzdrCh+byfG1ZvVTScrpfy4f2Dginpt+aJKW7 byw4A
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-BUG: KMSAN: uninit-value in i2c_smbus_xfer_emulated drivers/i2c/i2c-core-smbus.c:481 [inline]
-BUG: KMSAN: uninit-value in __i2c_smbus_xfer+0x23e7/0x2f60
+When KCOV is enabled all functions get instrumented, unless the
+__no_sanitize_coverage attribute is used. To prepare for
+__no_sanitize_coverage being applied to __init functions[1], we have
+to handle differences in how GCC's inline optimizations get resolved.
+For thinkpad_acpi routines, this means forcing two functions to be
+inline with __always_inline.
 
-KMSAN reported an uninitialized value access in i2c_smbus_xfer_emulated at
-drivers/i2c/i2c-core-smbus.c:481, triggered during an SMBus transfer via
-i2cdev_ioctl_smbus. The issue occurs because the local buffers msgbuf0 and
-msgbuf1 are not initialized before use, leading to potential undefined
-behavior when their contents are accessed.
-
-Initialize msgbuf0 and msgbuf1 with zeros using memset to ensure all buffer
-contents are defined before they are used in the SMBus transfer. This
-prevents the uninitialized value access reported by KMSAN.
-
-Reported-by: syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=0a36c1fec090c67a9885
-Fixes: 02ddfb981de8 ("KMSAN : Fix uninit-value in i2c_smbus_xfer_emulated")
-Signed-off-by: Abhinav Ananthu <abhinav.ogl@gmail.com>
+Link: https://lore.kernel.org/lkml/20250523043935.2009972-11-kees@kernel.org/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/i2c/i2c-core-smbus.c | 2 ++
- 1 file changed, 2 insertions(+)
+This is split out of https://lore.kernel.org/lkml/20250523043935.2009972-4-kees@kernel.org/
+at Ilpo's request.
+---
+Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
+Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>
+Cc: <platform-driver-x86@vger.kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
-index e73afbefe222..a3ee30b72f75 100644
---- a/drivers/i2c/i2c-core-smbus.c
-+++ b/drivers/i2c/i2c-core-smbus.c
-@@ -332,6 +332,8 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
- 	 */
- 	unsigned char msgbuf0[I2C_SMBUS_BLOCK_MAX+3];
- 	unsigned char msgbuf1[I2C_SMBUS_BLOCK_MAX+2];
-+	memset(msgbuf0, 0, sizeof(msgbuf0));
-+	memset(msgbuf1, 0, sizeof(msgbuf1));
- 	int nmsgs = read_write == I2C_SMBUS_READ ? 2 : 1;
- 	u8 partial_pec = 0;
- 	int status;
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 657625dd60a0..dc1fc069fed9 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -558,12 +558,12 @@ static unsigned long __init tpacpi_check_quirks(
+ 	return 0;
+ }
+ 
+-static inline bool __pure __init tpacpi_is_lenovo(void)
++static __always_inline bool __pure __init tpacpi_is_lenovo(void)
+ {
+ 	return thinkpad_id.vendor == PCI_VENDOR_ID_LENOVO;
+ }
+ 
+-static inline bool __pure __init tpacpi_is_ibm(void)
++static __always_inline bool __pure __init tpacpi_is_ibm(void)
+ {
+ 	return thinkpad_id.vendor == PCI_VENDOR_ID_IBM;
+ }
 -- 
 2.34.1
 
