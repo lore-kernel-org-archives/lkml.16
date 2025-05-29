@@ -1,63 +1,63 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53A222DFBB
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5950222D796
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 13:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748526573; cv=none; b=qsjOG3+QdCZE1GhOhS/dlHiTceBq8MV4es1EF3ybrdIodDfk3cm1L3TJuuCZnShSv6dVQg1cJJK5uTh8Dx/SNklaJWExitBW5fIdkTdxpgEcZc3+Xi/GYMXZfcmI2cndzqUaZ8Ufha0Uk5SP7rFB67/3T9KthJLer68NR79qJnA=
+	t=1748526572; cv=none; b=qlC+y4auzddb1I6+rt8NCj9o52tTMbTdC+KBqYXWiCBp2Hme3merAuGmbGI0k5715yaw5VszY97uNTTTUD3N8MWzJS2jr3W12EOnswMJ6g4/ZZathikH1IkRP8mQloYVu356ZUbdhgq+BgUBmp4iQU9qTOMJpVa6mC0qCD7L85U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748526573; c=relaxed/simple;
-	bh=tcS1OdtYYeMI7g/XHAbOHs513PqKnIFqXgFxXuW43MM=;
+	s=arc-20240116; t=1748526572; c=relaxed/simple;
+	bh=QW7VTm572jmsB5I7p8SLx6Wb3evUoSSkHBGzBXDeejA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QirLTGE8O90VUe+XC+WumpVgflTQzGVcB40I4ty/qq8kCNOKMO8xtRraSixSuzrIgzWmX1lkA56yLV6jjOex4OUgwfSAa8CZS6T5mhH9Rfz3es7T+5SOGhoQAWlIL3IsdmVn0CHJsUGZPWEImOKlM+6oFejv4vrrsQZRFBvvtgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XZuInRcD; arc=none smtp.client-ip=209.85.218.54
+	 MIME-Version; b=eEgqTCmqTNovzP5sPUAP8x1emBVjpcs3+ofLN/TPmz7XQA3IzPr/pkcrt6mD2PUGbfCnShrOsA4m7eZ8wxl4UlFQah1s3JrreAxrE69+GZngTlk40eNzKM+QN+u5ccvNxj3G2baPU04JWl3c6t4FnHoBUuHCKQj0oNga1jgAJhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GVgRqDCI; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XZuInRcD"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ad8a8da2376so150554066b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:49:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GVgRqDCI"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad89333d603so177046166b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 06:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748526569; x=1749131369; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1748526567; x=1749131367; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kLh4eS1a0IWerdW1Bha9yJdjwbF94WZ0emKgMLeoZKQ=;
-        b=XZuInRcDEzGWFNPYuYg71y3LUCbHB822XAXmtr3F0XXTI1wyeblNHFgyIMe8vqovL+
-         UMapZzqHD9iqfdaebnqTu/NBleLBFKAk4GxNrXkhi7XHMb9kw0pi4wx3cDZGe/TzXozL
-         CRYenAlQ9Yy7vf2kTKPZ6e3RykHIdgmhnljXPdQ9H6til0uJbO17mwL1wXvteJcuu2yV
-         v2T0ywPJAJvN+CXFB7lyJyhCfKCCjNXHgYSfROQox04A1KRe0sXD3iuifVoE+8n/TE38
-         Hfv6aHFGP8BGoNRS+dmWdqA3ImwUk8JNRHStWLhNFqCJJ9csFdzeiq+zL3k42uk2HIKv
-         +rQg==
+        bh=WZ7xUfAXguvsPdu5QAJbu8MyCaxUyBGB0j1AZF9I7as=;
+        b=GVgRqDCIA9LWQz7/7PQy3ZR6x8csv8p8zlx1/MlvLBwPugxMyr3ghB11m+sjnCqkKy
+         tC+V7CsLNFp/nwhBywL7CEM2Q6YuVmISmU+Oobzsl8iTiLv9FP3JIqO/5Lv2XIYue6wO
+         m3vnmFtZ9qYMGJDZHSLNeRV5w6wM0hRuvN2RS/fDreO8bjrr8YxDKBsbvi506S1+sgG5
+         MRIMACLc3mGEPGAeBzxhtDoHiNejk+NQYZRHOJDZf42gjBxEkzo0bgcDsrTRjZOXYbD8
+         Kw4+T6DhZzIXMIiYIzS9DeM5sXK4zfpchoxa3GDQFnkBRVm0oi+vvzl+gwV96f3/fhLu
+         4CZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748526569; x=1749131369;
+        d=1e100.net; s=20230601; t=1748526567; x=1749131367;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kLh4eS1a0IWerdW1Bha9yJdjwbF94WZ0emKgMLeoZKQ=;
-        b=nL+1km1Z6YhlYIpTQ+vdv15Zo3OvaezPY9PwxFIUYQ0yU4EU9NNlk1r36kV6cWNyQk
-         4YR7XbK8BlDqI4W2/2G2EbLFSSpkYQbhvpiXjF1fhP5DLcaZ1FoNClB/elfKrflmj+t9
-         Lvm7Qt6RycMohVKAuXuLuzad2Kj2Kw2hFhrcR1lw7YjhWZRuA/SwzA5Bp7GSDjO9Btjf
-         /xgfk/VhmjDO9eQ7nliWI4VHnLC2aRN3WNGGj147lXDxATUWFbbdf0aXCYrWumyAISIr
-         RHjkOnF2tA9nKIzK8PFwwoihhL3svB8FR2uWwTm3lqs1cwbdH0oRwpiEZ1mWBFy3oOvU
-         ivUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWFX+A3DHUxnnIvFKCSzviQBy6cwkrxm1568Hbyd1yJcXngKnskub8eCMkhJNOxUYNzkhg8kEIthHwk1U4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqEY47fCL3Py+jGhfBsM8RWwh8IPt7H+HS7xUZ1jhAoWwd9YKW
-	GMdeJ55/iJk2cU6GrDzSbUB8x5ynTNXewRtNuYIn4gbUhkbA8xI6kjdnT+sfcMPhtcY=
-X-Gm-Gg: ASbGncvidZXB9uhYWJlicmX9N01eX2VkZabEGxlWZp3J8VZyD93t2X6RCMEonkHHQRc
-	ZGU3FYT0in0v00rVK8eL7wFvqCJkYdcc3U0JKkJWzqUFWuqX6U1HOgLlO9PQy8ramXUliKqZ+7x
-	bXT5p2SsU9Uo4CuvEYmEnEwCHGkUotbdX7kjUNyPRf5vJf7aIiJZ4PWSsWz8qklQwExWlm+weFH
-	iyY0c6QmcYAdOBO78cFYFUQucDn1hr9E4UGAs9uBk6zefZ8rSw1/wOEAW2lKoDjPQ0KGgKza/DL
-	dSuH6parUqfG7YzX3H8gdbavqe210hZ4muRukQ1sBmAmHFdYLv0AJ7S2MjY+kv/qtI2X0yMd6L1
-	FgU+ZZ/cjmk/BMWNTsMTzKg==
-X-Google-Smtp-Source: AGHT+IGVz4lZI380iOeZ0sAk76r1bOVlu9hZAX/4jbO1OiKLTkmzMHxAI8gYVfXoqODUDof6526HpQ==
-X-Received: by 2002:a17:907:60d2:b0:ada:99ed:67a3 with SMTP id a640c23a62f3a-ada99ed7fd1mr251769666b.27.1748526568650;
-        Thu, 29 May 2025 06:49:28 -0700 (PDT)
+        bh=WZ7xUfAXguvsPdu5QAJbu8MyCaxUyBGB0j1AZF9I7as=;
+        b=rZ6vtv3Edfd1nJOPSmvrIgzhrrX8u/gYq1dZchBNuxpUthI5zuff7/JtDyar6viTbe
+         G++YZcrCR4/hbm66DF2Z0Chp82rXbp5yGyMrm7R8gOovwKEj0YW51rwvQPDtcYfKQihl
+         0BBiBfpTUbjyEOvGivqBtB7zo5buA/J91aw+ue37HA7smO/hgeCTwIW/c7YDVLPnarxn
+         +Ll0nlxtQwbEVz40ZBhl6yYPitLmNg1g8ggBFJ+1SB0P1GT6U0FoxwE3QXTyk8nhRxDa
+         oY4I/0M7K5UNiLFo7OSxQ6CXhdScsk+q9eE/9kXKHmZrvbaEgoLBcQJKwCCHtqRVm7NE
+         zrEA==
+X-Forwarded-Encrypted: i=1; AJvYcCW61K7kdcQ4bVAsBvBL/MKWI0/IR5bjpaWcIhBWQZa3ONxCXqQPC9aWDClDKPEV1qb1Ip/uC/ILhrLsqcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeTjra1vPfJ0XwnNJxfljzVipnSkNllioxZFcejgzWSzFb4K6q
+	k9v7NABZAmaNW/bo5HSryJLs3F9KAZTgYjWWw0p5zUEAMa6xiakw8Uf1x4ivLzAqbpM=
+X-Gm-Gg: ASbGnctZwZKHjO4KomiTObe3n5mf6/7dlQmx45KxD/0GlNzdSxWKda483I1ZIatczpi
+	Knbep9SvKrnRD/+urfRz4NOhwiHj3+slXllFBq014y0djrLPwEFim1YKN3NCQdT6JV8POb8b9Dz
+	OEi8cQqQ6ur9bupaMN+71SZTPeJbVNWALe2PCzlHuuS5zccNn0i+fFu4gxf3DfONyTIz7V7MUD7
+	n65S1JuLvYYP0FbmvyLNAq8ApFobSsD0BrP5SjqABXR+3RL97Kpzv++GcUoExNWvTWy0UMatieQ
+	fLZSZRoTNJlCtdanNq9fzBExFAjswWIjOsdU5Vy0XlsPrFNKxoeDHXIixzXAIeBhy7h/F4cp8ar
+	dWpurdcVsJ6ZsQ76FT45/zg==
+X-Google-Smtp-Source: AGHT+IHD9ehMsGBOiU40iJ8kLNl1j0z4elPacZbIb41z7eRJ/6rHrtyfXPYNrk9T0jcdSMovqg/Xug==
+X-Received: by 2002:a17:907:1c8c:b0:ad8:8b51:ddb4 with SMTP id a640c23a62f3a-adadee40376mr219268766b.25.1748526566468;
+        Thu, 29 May 2025 06:49:26 -0700 (PDT)
 Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb2e220548sm26619966b.109.2025.05.29.06.49.28
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada5d7fee29sm148580866b.19.2025.05.29.06.49.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 06:49:28 -0700 (PDT)
+        Thu, 29 May 2025 06:49:26 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: Andrea della Porta <andrea.porta@suse.com>,
 	Michael Turquette <mturquette@baylibre.com>,
@@ -96,9 +96,9 @@ To: Andrea della Porta <andrea.porta@suse.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	kernel-list@raspberrypi.com,
 	Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH v12 11/13] arm64: defconfig: Enable RP1 misc/clock/gpio drivers
-Date: Thu, 29 May 2025 15:50:48 +0200
-Message-ID: <20250529135052.28398-11-andrea.porta@suse.com>
+Subject: [PATCH v12 09/13] arm64: dts: broadcom: Add board DTS for Rpi5 which includes RP1 node
+Date: Thu, 29 May 2025 15:50:46 +0200
+Message-ID: <20250529135052.28398-9-andrea.porta@suse.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1748526284.git.andrea.porta@suse.com>
 References: <cover.1748526284.git.andrea.porta@suse.com>
@@ -110,45 +110,300 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Select the RP1 drivers needed to operate the PCI endpoint containing
-several peripherals such as Ethernet and USB Controller. This chip is
-present on RaspberryPi 5.
+Add the fully populated DTS for RaspberryPi 5 which includes
+the RP1 node definition. The inclusion tree is as follow (the
+arrow points to the includer):
+
+rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b.dts
+                                               ^
+                                               |
+                                           bcm2712-rpi-5-b-ovl-rp1.dts
+
+This is designed to maximize the compatibility with downstream DT
+while ensuring that a fully defined DT (one which includes the RP1
+node as opposed to load it from overlay at runtime) is present
+since early boot stage.
+
+Since the preferred board DT is the fully populated one, name it
+bcm2712-rpi-5-b.dts and move the previous one into
+bcm2712-rpi-5-b-ovl-rp1.dts.
 
 Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/broadcom/Makefile         |   1 +
+ .../dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts  | 121 ++++++++++++++++++
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     | 118 ++---------------
+ 3 files changed, 133 insertions(+), 107 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5bb8f09422a2..f6e9bb2a3578 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -620,6 +620,7 @@ CONFIG_PINCTRL_QCS615=y
- CONFIG_PINCTRL_QCS8300=y
- CONFIG_PINCTRL_QDF2XXX=y
- CONFIG_PINCTRL_QDU1000=y
-+CONFIG_PINCTRL_RP1=m
- CONFIG_PINCTRL_SA8775P=y
- CONFIG_PINCTRL_SC7180=y
- CONFIG_PINCTRL_SC7280=y
-@@ -702,6 +703,7 @@ CONFIG_SENSORS_RASPBERRYPI_HWMON=m
- CONFIG_SENSORS_SL28CPLD=m
- CONFIG_SENSORS_INA2XX=m
- CONFIG_SENSORS_INA3221=m
-+CONFIG_MISC_RP1=m
- CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
- CONFIG_CPU_THERMAL=y
- CONFIG_DEVFREQ_THERMAL=y
-@@ -1299,6 +1301,7 @@ CONFIG_COMMON_CLK_CS2000_CP=y
- CONFIG_COMMON_CLK_FSL_SAI=y
- CONFIG_COMMON_CLK_S2MPS11=y
- CONFIG_COMMON_CLK_PWM=y
-+CONFIG_COMMON_CLK_RP1=m
- CONFIG_COMMON_CLK_RS9_PCIE=y
- CONFIG_COMMON_CLK_VC3=y
- CONFIG_COMMON_CLK_VC5=y
+diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+index 01ecfa304184..031875a277d7 100644
+--- a/arch/arm64/boot/dts/broadcom/Makefile
++++ b/arch/arm64/boot/dts/broadcom/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += bcm2711-rpi-400.dtb \
+ 			      bcm2711-rpi-4-b.dtb \
+ 			      bcm2711-rpi-cm4-io.dtb \
+ 			      bcm2712-rpi-5-b.dtb \
++			      bcm2712-rpi-5-b-ovl-rp1.dtb \
+ 			      bcm2712-d-rpi-5-b.dtb \
+ 			      bcm2837-rpi-2-b.dtb \
+ 			      bcm2837-rpi-3-a-plus.dtb \
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
+new file mode 100644
+index 000000000000..6ea3c102e0d6
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-ovl-rp1.dts
+@@ -0,0 +1,121 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "bcm2712.dtsi"
++
++/ {
++	compatible = "raspberrypi,5-model-b", "brcm,bcm2712";
++	model = "Raspberry Pi 5";
++
++	aliases {
++		serial10 = &uart10;
++	};
++
++	chosen: chosen {
++		stdout-path = "serial10:115200n8";
++	};
++
++	clk_rp1_xosc: clock-50000000 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-output-names = "rp1-xosc";
++		clock-frequency = <50000000>;
++	};
++
++	/* Will be filled by the bootloader */
++	memory@0 {
++		device_type = "memory";
++		reg = <0 0 0 0x28000000>;
++	};
++
++	sd_io_1v8_reg: sd-io-1v8-reg {
++		compatible = "regulator-gpio";
++		regulator-name = "vdd-sd-io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-settling-time-us = <5000>;
++		gpios = <&gio_aon 3 GPIO_ACTIVE_HIGH>;
++		states = <1800000 1>,
++			 <3300000 0>;
++	};
++
++	sd_vcc_reg: sd-vcc-reg {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc-sd";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		enable-active-high;
++		gpios = <&gio_aon 4 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++/* The Debug UART, on Rpi5 it's on JST-SH 1.0mm 3-pin connector
++ * labeled "UART", i.e. the interface with the system console.
++ */
++&uart10 {
++	status = "okay";
++};
++
++/* SDIO1 is used to drive the SD card */
++&sdio1 {
++	vqmmc-supply = <&sd_io_1v8_reg>;
++	vmmc-supply = <&sd_vcc_reg>;
++	bus-width = <4>;
++	sd-uhs-sdr50;
++	sd-uhs-ddr50;
++	sd-uhs-sdr104;
++};
++
++&soc {
++	firmware: firmware {
++		compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		mboxes = <&mailbox>;
++		dma-ranges;
++
++		firmware_clocks: clocks {
++			compatible = "raspberrypi,firmware-clocks";
++			#clock-cells = <1>;
++		};
++
++		reset: reset {
++			compatible = "raspberrypi,firmware-reset";
++			#reset-cells = <1>;
++		};
++	};
++
++	power: power {
++		compatible = "raspberrypi,bcm2835-power";
++		firmware = <&firmware>;
++		#power-domain-cells = <1>;
++	};
++};
++
++&hvs {
++	clocks = <&firmware_clocks 4>, <&firmware_clocks 16>;
++	clock-names = "core", "disp";
++};
++
++&hdmi0 {
++	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 0>, <&clk_27MHz>;
++	clock-names = "hdmi", "bvb", "audio", "cec";
++};
++
++&hdmi1 {
++	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 1>, <&clk_27MHz>;
++	clock-names = "hdmi", "bvb", "audio", "cec";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
++&pcie2 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+index 1850a575e708..adad85e68f1b 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+@@ -1,113 +1,17 @@
+ // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+-/dts-v1/;
+-
+-#include <dt-bindings/gpio/gpio.h>
+-#include "bcm2712.dtsi"
+-
+-/ {
+-	compatible = "raspberrypi,5-model-b", "brcm,bcm2712";
+-	model = "Raspberry Pi 5";
+-
+-	aliases {
+-		serial10 = &uart10;
+-	};
+-
+-	chosen: chosen {
+-		stdout-path = "serial10:115200n8";
+-	};
+-
+-	clk_rp1_xosc: clock-50000000 {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-output-names = "rp1-xosc";
+-		clock-frequency = <50000000>;
+-	};
+-
+-	/* Will be filled by the bootloader */
+-	memory@0 {
+-		device_type = "memory";
+-		reg = <0 0 0 0x28000000>;
+-	};
+-
+-	sd_io_1v8_reg: sd-io-1v8-reg {
+-		compatible = "regulator-gpio";
+-		regulator-name = "vdd-sd-io";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-settling-time-us = <5000>;
+-		gpios = <&gio_aon 3 GPIO_ACTIVE_HIGH>;
+-		states = <1800000 1>,
+-			 <3300000 0>;
+-	};
+-
+-	sd_vcc_reg: sd-vcc-reg {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc-sd";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-		enable-active-high;
+-		gpios = <&gio_aon 4 GPIO_ACTIVE_HIGH>;
+-	};
+-};
+-
+-/* The Debug UART, on Rpi5 it's on JST-SH 1.0mm 3-pin connector
+- * labeled "UART", i.e. the interface with the system console.
++/*
++ * bcm2712-rpi-5-b-ovl-rp1.dts is the overlay-ready DT which will make
++ * the RP1 driver to load the RP1 dtb overlay at runtime, while
++ * bcm2712-rpi-5-b.dts (this file) is the fully defined one (i.e. it
++ * already contains RP1 node, so no overlay is loaded nor needed).
++ * This file is not intended to be modified, nodes should be added
++ * to the included bcm2712-rpi-5-b-ovl-rp1.dts.
+  */
+-&uart10 {
+-	status = "okay";
+-};
+ 
+-/* SDIO1 is used to drive the SD card */
+-&sdio1 {
+-	vqmmc-supply = <&sd_io_1v8_reg>;
+-	vmmc-supply = <&sd_vcc_reg>;
+-	bus-width = <4>;
+-	sd-uhs-sdr50;
+-	sd-uhs-ddr50;
+-	sd-uhs-sdr104;
+-};
+-
+-&soc {
+-	firmware: firmware {
+-		compatible = "raspberrypi,bcm2835-firmware", "simple-mfd";
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-
+-		mboxes = <&mailbox>;
+-		dma-ranges;
+-
+-		firmware_clocks: clocks {
+-			compatible = "raspberrypi,firmware-clocks";
+-			#clock-cells = <1>;
+-		};
+-
+-		reset: reset {
+-			compatible = "raspberrypi,firmware-reset";
+-			#reset-cells = <1>;
+-		};
+-	};
+-
+-	power: power {
+-		compatible = "raspberrypi,bcm2835-power";
+-		firmware = <&firmware>;
+-		#power-domain-cells = <1>;
+-	};
+-};
+-
+-&hvs {
+-	clocks = <&firmware_clocks 4>, <&firmware_clocks 16>;
+-	clock-names = "core", "disp";
+-};
++/dts-v1/;
+ 
+-&hdmi0 {
+-	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 0>, <&clk_27MHz>;
+-	clock-names = "hdmi", "bvb", "audio", "cec";
+-};
++#include "bcm2712-rpi-5-b-ovl-rp1.dts"
+ 
+-&hdmi1 {
+-	clocks = <&firmware_clocks 13>, <&firmware_clocks 14>, <&dvp 1>, <&clk_27MHz>;
+-	clock-names = "hdmi", "bvb", "audio", "cec";
++&pcie2 {
++	#include "rp1-nexus.dtsi"
+ };
 -- 
 2.35.3
 
