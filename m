@@ -1,137 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AEA22D4C9;
-	Thu, 29 May 2025 16:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232F519F10A;
+	Thu, 29 May 2025 16:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748537847; cv=none; b=uDKrJEHcXgXe3HLoyQ0PqyT+GZyEJRahUNiaYmRSHXz73GwaDog2rpmetxEfWtxwYJTSYBoE47cX+WCDIu7gsGyBaNaf1Qcbi7QQEbvwjuGMyaRXcIgqqMwFj2Myvn7lLcIxk99DEcn1OISb3Z3WhLyMQn4GwaPKbTZ938+7YZ0=
+	t=1748537864; cv=none; b=UYwSY7buHkhH+dELnAkbnZEXSvOYs12n970bOI06zy44QrLkL8dNjM7nLOfmfDXQWyAnkPcSv4hkDOWzWm9OnD1Suj/OefAFtOJUmp+bWqJodaqqRQPdRroHOCY2YDqSV68c6v5ss8TWL/9jh+vzNgnpLSgYQPCs9l4UmdIoWW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748537847; c=relaxed/simple;
-	bh=nTb8EzIrvGiW+oT3lk+HKRBUzG7cl6yVbYX2HGFS1wY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LKCq01mz1Wf6m67rBqFMpJj/bBJEyVK+FCQGIGFnQF4Eex0NDw1JqXwVWHWImAvjgqsRO5jgjSJJED9VjDkw9IczpN0I09KSUXkANrwQhtaNDd3KWe7EofJEZ5GFW46K35ixn5UuxlJjPo9wqSPZRHHvSPf0LF69hQm02iskd/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocydWOce; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748537864; c=relaxed/simple;
+	bh=9DkbmaEIvNk0ugkMfkqcpOOKnf3ro24TRtCPW4ya6yc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G8IBbcoGTK8P8/4yWgzpp2uuLywrOUSfR3k7nEsuTzmo+7wIxZ0Til+2HMz/LTYp85YAt8J9a+eU6la5UOMgJefNZklWJZbEyhWgSpwHm95+6tMiEFxMUEZbTE0NN54Td7owpSSLGUM2n9Ody16rkERcu0DHzUH7MD1zXgPyv6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=acMS++PZ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocydWOce"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3891FC4CEE7;
-	Thu, 29 May 2025 16:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748537847;
-	bh=nTb8EzIrvGiW+oT3lk+HKRBUzG7cl6yVbYX2HGFS1wY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ocydWOce2vgQ01StCxi2p8JIr5rtxb48tv1V7H37/y3VwgQFMz/G/OC8MgZFiAdK5
-	 5sLWjC4vr7ThGNaftjRtqwxLh1KmpBBcTMf0i+AzWSa31JT55xS+wPOw5oDF3DXVol
-	 +ktqh8a1R+ROKDCVXuT7JR64GyottFxcT+kVzap4ZJkhIqCaTpPsTTFd0I0AIev3hK
-	 lucd3K9DUfRO+vtFpXtBcn7uDeTY7FnrI20xUBr1wGCZv0Kykw2nAVn8voYXH0Ykv9
-	 tCNTNoIZAwJpB2bPTqrFoLra/CEEa9dCSMMz016V7PzpTxb0l0pKkNWyY6hOOKxwhU
-	 ryg4iHafOGHXw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uKgZI-001cmR-Ja;
-	Thu, 29 May 2025 17:57:24 +0100
-Date: Thu, 29 May 2025 17:57:24 +0100
-Message-ID: <865xhje4nf.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 05/11] arm64/boot: Enable EL2 requirements for SPE_FEAT_FDS
-In-Reply-To: <20250529-james-perf-feat_spe_eft-v2-5-a01a9baad06a@linaro.org>
-References: <20250529-james-perf-feat_spe_eft-v2-0-a01a9baad06a@linaro.org>
-	<20250529-james-perf-feat_spe_eft-v2-5-a01a9baad06a@linaro.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acMS++PZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so7482355e9.3;
+        Thu, 29 May 2025 09:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748537861; x=1749142661; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tlaedw1wPG+l7WJkoD3ml2WNnXiVLOkbbwWSAjtPghU=;
+        b=acMS++PZB6s9FBkal/XQyF+vj6HwDm1je1OXoa/LQ78BlqynkpgrQHk6OMyh5CRgYz
+         Y53bbzS2/m6lVTeOuEigHYgrIHYsmmJDZi0XOSsjnFBLhxeQjsoBF2oiLthpacaGVUOQ
+         kAtMxgYYWZiMh6lbulId3BcXIvkwWxu+eOvXLfD50dL1L6MAXsP4c4LANe9vmovCbrfR
+         AeKpDkPGN/kfxRZnnS9eDMtXgyPwzUIPdtnUNhANssms7NdIZNw0ZhAjwdpO0Ga+XT5R
+         ngjskjXUTl3Sr/XcI9GzhjUuMZfv9sz8Kzy80a9UG5DhizQq8KBdFNfbHdkSe4V8DQ8p
+         iJXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748537861; x=1749142661;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tlaedw1wPG+l7WJkoD3ml2WNnXiVLOkbbwWSAjtPghU=;
+        b=TPnfkzHhrMvhd5KNWDgR29xUuamgeW6FgVTaz7P5Q3ByzQ/+DND3/x+8xcFYn8k3if
+         dVRODvNMqrT+uw1QyoauOf7OyRFK30de/cWWpq8pFuFYmOIwbM0WjIZ/0HtK5ybv+zFb
+         CsNOVm94iYt4860M8B8ont+h21S3AK9j8l2wERo7tX7RFF+EJ3SNqoKw+cLK4oWPmEJd
+         rq9E9gNUIjIMnmV8BzD80FOD3xA1gX/6efM6TVvHlS5BeKB0SZytQq0ma6v//kFetMAm
+         L0CkpFQiLc5h0uzzHcqpK9XvOjlqmsTEBXBAGDO6dUwVoIJj/4E525ALtsg/d8SJNDYX
+         Xdhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUslMmOWSXKNWIB9B4lyqGw/TA8yuqHnavRMfGZgQ7zrYCabJ6kekWWFAbLk7CUuYaBbP04vRD1jK1oJVp1@vger.kernel.org, AJvYcCWn8MNluOrmPVu5L0pWWS0IWpkcpZqi9aRYIriulCAQUgZdSyXBJ68/I43inaajQVOJ0Wk=@vger.kernel.org, AJvYcCWnlIO7XOpVsJqHPEhYHDskgIWRpQjGJxr1G65AZO2Y7WEQu5TkHAekgR0+umouRaoT9qOcfGK/CUeNXzKx2Q==@vger.kernel.org, AJvYcCXrx9UJPwVdrJvj5R4caSh8B8rnShZ4i1GC42oIGXRtaN+T3G76bWebX+Th3gYteTNSZGWxOmBAOCx+VbTJIivGPHsV0qKu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwW9Ho1zvKya6rLmbyjnJJ+9mKn477M0gEbRomvlZSrvQRxjHNn
+	7WMcG/YTofgYL/zWhYuD/jFF651/6z0LQuDOEFxq4yvSk83mRPOl003TmIHy3KJEaS+AjUDvuRy
+	HaOjWGDSO7mlfE2nEQ9v90dT4KOUACeA=
+X-Gm-Gg: ASbGnctan2wtUk+juVrteDUiAv/em7vOYIS9BItyWc26h3/ZGqPDf2QDXefeqg27uhy
+	WCZI7lGHK6SkAvyLExfLiw2bldwqNiNZb8EIrnvRdgSi3t2LyfPnfo4OGcMOXkAq3hiJxTnZa5U
+	4eamIAnOlPMOok9QcQybeLQ/N7vL1L+cAmx+E2JgBsaA1eVEvw
+X-Google-Smtp-Source: AGHT+IExBPpbdOvNzLi5XmcXjVoFDVQ3Fa2Ox6f/v0xfdDLiI1Xt2+uCkz187dZtfZj4dGt0B7FB+o+wLI5A7Fq1d3o=
+X-Received: by 2002:a05:6000:1447:b0:3a4:e6b4:9c4b with SMTP id
+ ffacd0b85a97d-3a4f7a3dfe7mr18288f8f.1.1748537861078; Thu, 29 May 2025
+ 09:57:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: james.clark@linaro.org, catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250528222623.1373000-1-song@kernel.org> <20250528222623.1373000-4-song@kernel.org>
+ <20250528223724.GE2023217@ZenIV> <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+In-Reply-To: <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 29 May 2025 09:57:29 -0700
+X-Gm-Features: AX0GCFuy_ylN-SekKUAz6Fy4L1iXyZs5NIEFUwj27OIrmibgjehEcBRz2eM78vo
+Message-ID: <CAADnVQ+UGsvfAM8-E8Ft3neFkz4+TjE=rPbP1sw1m5_4H9BPNg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+To: Song Liu <song@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>, 
+	Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	LSM List <linux-security-module@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard <eddyz87@gmail.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Christian Brauner <brauner@kernel.org>, KP Singh <kpsingh@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Amir Goldstein <amir73il@gmail.com>, repnop@google.com, 
+	Jeff Layton <jlayton@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 May 2025 12:30:26 +0100,
-James Clark <james.clark@linaro.org> wrote:
-> 
-> SPE data source filtering (optional from Armv8.8) requires that traps to
-> the filter register PMSDSFR be disabled. Document the requirements and
-> disable the traps if the feature is present.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  Documentation/arch/arm64/booting.rst | 11 +++++++++++
->  arch/arm64/include/asm/el2_setup.h   | 14 ++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
-> index dee7b6de864f..abd75085a239 100644
-> --- a/Documentation/arch/arm64/booting.rst
-> +++ b/Documentation/arch/arm64/booting.rst
-> @@ -404,6 +404,17 @@ Before jumping into the kernel, the following conditions must be met:
->      - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
->      - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
->  
-> +  For CPUs with SPE data source filtering (FEAT_SPE_FDS):
-> +
-> +  - If EL3 is present:
-> +
-> +    - MDCR_EL3.EnPMS3 (bit 42) must be initialised to 0b1.
-> +
-> +  - If the kernel is entered at EL1 and EL2 is present:
-> +
-> +    - HDFGRTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-> +    - HDFGWTR2_EL2.nPMSDSFR_EL1 (bit 19) must be initialised to 0b1.
-> +
->    For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
->  
->    - If the kernel is entered at EL1 and EL2 is present:
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index f6d72ca03133..6d0d8c25e912 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -279,6 +279,20 @@
->  	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
->  	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
->  .Lskip_pmuv3p9_\@:
-> +	mrs	x1, id_aa64dfr0_el1
-> +	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
-> +	/* If SPE is implemented, */
-> +	cmp	x1, #ID_AA64DFR0_EL1_PMSVer_IMP
-> +	b.lt	.Lskip_spefds_\@
-> +	/* we can read PMSIDR and */
-> +	mrs_s	x1, SYS_PMSIDR_EL1
-> +	and	x1, x1,  #(1 << PMSIDR_EL1_FDS_SHIFT)
+On Thu, May 29, 2025 at 9:53=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>
+> Hi Al and Jan,
+>
+> Thanks for your review!
+>
+> On Thu, May 29, 2025 at 4:58=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
+> >
+> > On Wed 28-05-25 23:37:24, Al Viro wrote:
+> > > On Wed, May 28, 2025 at 03:26:22PM -0700, Song Liu wrote:
+> > > > Introduce a path iterator, which reliably walk a struct path.
+> > >
+> > > No, it does not.  If you have no external warranty that mount
+> > > *and* dentry trees are stable, it's not reliable at all.
+> >
+> > I agree that advertising this as "reliable walk" is misleading. It is
+> > realiable in the sense that it will not dereference freed memory, leak
+> > references etc. As you say it is also reliable in the sense that withou=
+t
+> > external modifications to dentry & mount tree, it will crawl the path t=
+o
+> > root. But in presence of external modifications the only reliability it
+> > offers is "it will not crash". E.g. malicious parallel modifications ca=
+n
+> > arbitrarily prolong the duration of the walk.
+>
+> How about we describe this as:
+>
+> Introduce a path iterator, which safely (no crash) walks a struct path.
+> Without malicious parallel modifications, the walk is guaranteed to
+> terminate. The sequence of dentries maybe surprising in presence
+> of parallel directory or mount tree modifications and the iteration may
+> not ever finish in face of parallel malicious directory tree manipulation=
+s.
 
-Use PMSIDR_EL1_FDS directly, just like you do for the other register
-fields.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Hold on. If it's really the case then is the landlock susceptible
+to this type of attack already ?
+landlock may infinitely loop in the kernel ?
