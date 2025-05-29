@@ -1,210 +1,98 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76EDD218EBA
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DCF1A0B08;
+	Thu, 29 May 2025 18:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748543183; cv=none; b=YpBsnqxhfisR5Z5RaBRst46tL2IvpB/Z4Amwjhf1gvb4we2AVSMofBepoLOpGbHMeUEoJG9ikMDRTNorSh6bSsfg06xP4mIWRfwGKuN/dhmFwqU2fXIA2oNjelbxHN4dWrhfu3RSnd/89SlBTHtF9fp9iAIk77MJZSnhdll/eOU=
+	t=1748543260; cv=none; b=ShbX0K1laf26ysZ5rkJSDHpx+1/peYrlksyfsvQhlTcRhLyL9s/wjM67/ssvXb+VZd1La1wF1iks0etWVPcy+CCjeFvgVOd1pWNz0RXg6jfyQuy2rAQja/792qTnCxmlBEDc+O9O6yCqYExmiuuY4l43ho02p+HjDauGV61jeks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748543183; c=relaxed/simple;
-	bh=HRPOn1meoE3XwDlWZS9bRRz1m47Q+lkEUYw+u1TxoQ4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nfs2FtzgJAk1brNibjdgzUZMvk3sa8EFXmutNTcFUfv1Q+y8e0icPQ4IHqihlIKP0qT8kAOD76fvCvU6VJLqNkzLW/6BebHz6RiZva8QOan6hhhUUnwuVHRhw1coerAqIu/qisIN3jzQTn+fen4Ue8WVbBSj5t/vcZrUyaNmgV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4xbphVhH; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1748543260; c=relaxed/simple;
+	bh=tUOd0i9aWh62z/M/bOtetrCc2SMGSBcYIhoErkaGfCQ=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=LdAiiQwJd9rvs7UvSNs4DnKBzwZ7yR3fSDe2ZB99SviFNI/cyFDJ2+wj15TG9LzeUlEE6VZ8hpnrCqAUtCYSOXvsfhOYU7qlRBmVEsGlqVMz9SNgBSw1MhkfN0/RLyA0xkLB9CO4cuX13rVYH2hqxpfeWI30l8IoJg4/0cJ1IGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5+bEy2q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4xbphVhH"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742cc20e11eso817504b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 11:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748543181; x=1749147981; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIz4VHixxBnPERxzo7x/dFPIiGKuMB366F2mMctZln0=;
-        b=4xbphVhHNXA6yZbetoaVij+4KNPK54hyCUs/hpeo7rdcXAnr3JDi0nhmSUqGZQTvlR
-         EZAjsY0mZoosFQ/QFMHhSBzO3veeYhHPV16GUGjxLnvJiqXP7mjO003D66gsMES7P08/
-         rFglmdTGrJ0UFYeusyqVe5ncDZ9axlvJnUozo0rjPjJXyC7QIxxQo3a/Xa+GX8Cplkhb
-         2XL1ywqYpfKq84OsPTI5kFSKdBDhXvPnpiBlAOAoBtzzeJYheXrPHFUr8slhBnjAVlV4
-         WQQPrmedUrCW6X81UOZdcMQq1pT+0Lpowoh7hPLo292VVFjtqNEfV5wIIdDMXClJI4NB
-         mqQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748543181; x=1749147981;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lIz4VHixxBnPERxzo7x/dFPIiGKuMB366F2mMctZln0=;
-        b=VB2ZnIVTmeIaJAVRwUdJ63mbk13I+jpMDWdtjmvAf98Sv3CspxkDiPK6FBiCq8mooa
-         SfD3uS6B95xpXpcgW3WqWBOXMjpRsDt+g2CYN+F2E3vr7QYkyCM9HJa3n9WWTKdTff9K
-         k+2OUlFHqLzpuPxYTttCf+rgjXqwDM1ZQ7PEEVHpeyhKNhU9Ijgwt/HrsyFR0V8ttLwH
-         kFFHsYTmLOe8Vsg8hJfoWIvWAbAK8IE0UrLs/ayD8TwQI2PIAeT5+gv4Ythj1cxjYtJD
-         XutL7dG01OkDVuop7ODqp1r6b6DAoOtvJrcJb6W5qjmZ6zq0M6lWh0t3qbpcDdRqP5rT
-         b1aA==
-X-Forwarded-Encrypted: i=1; AJvYcCUfHcOqyYO0ckTx71k5A52k1Htn5RG4ZZUQ7Jndv9dgy4Kpdrdzj2sQuVK+1F1AMQSpv+uJyyOVQfdtKn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/F26p8gazrHWMn90cqwPmBsGyPOoy54esK/rwySlkCs8KVeob
-	4PK5EUM54pLxNOvNTwI1OoM2Q3pM1fSJz3ueNojDINuJfGSniG551+5Q6aSEBh5ZGut9b62VBGN
-	BrHBiKa6LxK+JVKIHGYd1RfoLpQ==
-X-Google-Smtp-Source: AGHT+IGjY0JDCBO+9ghg+QzLazgbH2ijeDdvz/kcUyol+8Id7VYmeYH8PDj4sd4Uw3Qudd2dyxDoTCTFkpAd+/2KBw==
-X-Received: from pfve9.prod.google.com ([2002:a05:6a00:1a89:b0:73c:26eb:39b0])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:4fc9:b0:742:8d52:62f1 with SMTP id d2e1a72fcca58-747bd97d3abmr694232b3a.8.1748543180604;
- Thu, 29 May 2025 11:26:20 -0700 (PDT)
-Date: Thu, 29 May 2025 11:26:19 -0700
-In-Reply-To: <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5+bEy2q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC670C4CEE7;
+	Thu, 29 May 2025 18:27:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748543260;
+	bh=tUOd0i9aWh62z/M/bOtetrCc2SMGSBcYIhoErkaGfCQ=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=A5+bEy2qePCV8yhkkEUkuAJXwp7ssYOxnY4DRDNXrRySqVYq/nj1yky0Gj1X6oSUj
+	 643A7syOHwYmaSCtb9ttZubWFzSR8yOxkHt441Qa+2K7LeUcUVVCVagA+MngJyS0YJ
+	 yiTGsAx1xrgVd4u6tFsuPZgxqnWEjy0Cbpm2Tb0JX/07iMJm65zTA7vHKq33qqddEA
+	 ZWhp94VWaXHS3hcEtZZYO8wi6lCPUlmYa5pb6UIiTdkCog26rAP+HV85Q7SVrOAYy6
+	 BMux35qsRSjTyCR2G2fjqRTB41Qr2Upw1aYYK42hpVP0si6Mu/patsuAVaTqyZBJLm
+	 UytRZvmITofLA==
+Date: Thu, 29 May 2025 13:27:38 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
- <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com>
-Message-ID: <diqz7c1z6zp0.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-From: Ackerley Tng <ackerleytng@google.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, imx@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, 
+ dri-devel@lists.freedesktop.org, Simona Vetter <simona@ffwll.ch>, 
+ David Airlie <airlied@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Frank Li <Frank.Li@nxp.com>
+In-Reply-To: <20250529164822.777908-1-Frank.Li@nxp.com>
+References: <20250529164822.777908-1-Frank.Li@nxp.com>
+Message-Id: <174854325819.3595451.10273154567966477690.robh@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: display: convert himax,hx8357d.txt to
+ yaml format
 
-Binbin Wu <binbin.wu@linux.intel.com> writes:
 
-> On 5/15/2025 7:41 AM, Ackerley Tng wrote:
->> Track guest_memfd memory's shareability status within the inode as
->> opposed to the file, since it is property of the guest_memfd's memory
->> contents.
->>
->> Shareability is a property of the memory and is indexed using the
->> page's index in the inode. Because shareability is the memory's
->> property, it is stored within guest_memfd instead of within KVM, like
->> in kvm->mem_attr_array.
->>
->> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
->> retained to allow VMs to only use guest_memfd for private memory and
->> some other memory for shared memory.
->>
->> Not all use cases require guest_memfd() to be shared with the host
->> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
->> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
->> private to the guest, and therefore not mappable by the
->> host. Otherwise, memory is shared until explicitly converted to
->> private.
->>
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
->> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
->> Co-developed-by: Fuad Tabba <tabba@google.com>
->> Signed-off-by: Fuad Tabba <tabba@google.com>
->> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
->> ---
->>   Documentation/virt/kvm/api.rst |   5 ++
->>   include/uapi/linux/kvm.h       |   2 +
->>   virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
->>   3 files changed, 129 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 86f74ce7f12a..f609337ae1c2 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
->>   The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
->>   This is validated when the guest_memfd instance is bound to the VM.
->>   
->> +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
->> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
->
-> It seems that the sentence is stale?
-> Didn't find the definition of KVM_CAP_GMEM_CONVERSIONS.
->
+On Thu, 29 May 2025 12:48:21 -0400, Frank Li wrote:
+> Convert himax,hx8357d.txt to yaml format.
+> 
+> Additional changes:
+> - add spi parent node in examples.
+> - ref to spi-peripheral-props.yaml.
+> - change himax,hx8357a to himax,hx8357 to align driver and existed dts.
+> - add himax,hx8369a and fallback to himax,hx8369.
+> - allow gpios-reset, spi-cpha and spi-cpol to align existed dts.
+> - add im-gpios for interface selections.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../bindings/display/himax,hx8357.yaml        | 77 +++++++++++++++++++
+>  .../bindings/display/himax,hx8357d.txt        | 26 -------
+>  2 files changed, 77 insertions(+), 26 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/himax,hx8357.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/himax,hx8357d.txt
+> 
 
-Thanks. This should read
+My bot found errors running 'make dt_binding_check' on your patch:
 
-If the capability KVM_CAP_GMEM_SHARED_MEM is supported, and
-GUEST_MEMFD_FLAG_SUPPORT_SHARED is specified, then the 'flags' field
-supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
+yamllint warnings/errors:
 
->> Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
->> +will initialize the memory for the guest_memfd as guest-only and not faultable
->> +by the host.
->> +
-> [...]
->>   
->>   static int kvm_gmem_init_fs_context(struct fs_context *fc)
->> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
->>   static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>   						      loff_t size, u64 flags)
->>   {
->> +	struct kvm_gmem_inode_private *private;
->>   	struct inode *inode;
->> +	int err;
->>   
->>   	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
->>   	if (IS_ERR(inode))
->>   		return inode;
->>   
->> +	err = -ENOMEM;
->> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
->> +	if (!private)
->> +		goto out;
->> +
->> +	mt_init(&private->shareability);
->
-> shareability is defined only when CONFIG_KVM_GMEM_SHARED_MEM enabled, should be done within CONFIG_KVM_GMEM_SHARED_MEM .
->
->
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/himax,hx8357.yaml: gpios-reset: missing type definition
 
-Yes, thank you! Will also update this to only initialize shareability if
-(flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED).
+doc reference errors (make refcheckdocs):
+Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/display/himax,hx8357d.txt
+MAINTAINERS: Documentation/devicetree/bindings/display/himax,hx8357d.txt
 
->> +	inode->i_mapping->i_private_data = private;
->> +
->> +	err = kvm_gmem_shareability_setup(private, size, flags);
->> +	if (err)
->> +		goto out;
->> +
->>   	inode->i_private = (void *)(unsigned long)flags;
->>   	inode->i_op = &kvm_gmem_iops;
->>   	inode->i_mapping->a_ops = &kvm_gmem_aops;
->> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>   	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->>   
->>   	return inode;
->> +
->> +out:
->> +	iput(inode);
->> +
->> +	return ERR_PTR(err);
->>   }
->>   
->>
-> [...]
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250529164822.777908-1-Frank.Li@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
