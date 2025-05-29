@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A50921B19E
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 09:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648CB19E968;
+	Thu, 29 May 2025 09:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509502; cv=none; b=h788Fbxby7FGj17ikIzYeIAilCVmarQR5/+mTLX/ygsa88h0a4lWlXdInlmivvnfD8BmZv2c+IMg5vX5kP5cnZhZ6/K3bGu/LKVyovS9FkHFvxnNGtMcoU1qYGhTjLGxMcaYB8N2D8Jix9wpl+TNh2NYiyr+suJTMTJFzWJjxpo=
+	t=1748509563; cv=none; b=NGUTY9rdlG8BBRBum5bjqrmCr+BpmfwQ4W/sIkN8buMI9wezIpqjGb18QUUT864WR+ZCGBqoNLP7CL0itaaOp+F3IjfRxIS3kxCzzmbE/+q/Iw4s5plvXe/qbFGXXYt9ZSNYWa7qk5Q4Cmed/JZW1sE5EtiXJHZaGqUxfqkiMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509502; c=relaxed/simple;
-	bh=Cgz25Gzc3ikuzbLU64kAUZzKbKGdxSdYOra6tP3NOI0=;
+	s=arc-20240116; t=1748509563; c=relaxed/simple;
+	bh=TnBdwfMU35dwvTgOcU49mAwWEmcwsZg4PtscRxp7BZE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jQGsQ9/mOcl0IRVUimPCOHNNLLsJ+eq5mRvOR5MXHJYO3J4Xm7deR50aGletDbK2gkk8WHRIMVDu8bNm89kY1MEQg35+cvsjSxHFGRw7Z4dPL9iUxoO7VaTXtwcWwX1UcF+273e6wzW4tk7dLPBbil4QsgIdS6EVcBRFA62j81E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bAl41rfn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=AeGXocx7h/UA9uAT7BcUjhYlFKFLWwrfzWhDd2OZUDJPNVWwYEjR1GNLe3/aYajNkLjISzQh1OzAlPbN7zZ5PXsNqLbutMmlqa21pIFCegWDmgPNLDg8kOPW/kbpyR/FzyHSfSTwZutRpOSImsPQdDWsvsa/U/jleqiapxezOk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdJJLyB0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bAl41rfn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748509499;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Rf94fEja4fPZDVYXlb9N2+GViHCNDZtS2H0JkfyPmy0=;
-	b=bAl41rfnGIuOzIOiHaUllkNO25p6lvCxzS178UXKJreZ5BQsNZZ10QoQ8B+IaTy8/PCC2Q
-	7aJXdwQqzdLiCNa19835OoVOniZYO/PugyVqM7MV/XSrn+IB4/u6eaNHHy9XRCub0MO/KP
-	a3LY3rIeA203FOOIAabIF6Cks7IHyRU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-375-gbpzRNSWNEulGC9frvkeOg-1; Thu, 29 May 2025 05:04:57 -0400
-X-MC-Unique: gbpzRNSWNEulGC9frvkeOg-1
-X-Mimecast-MFC-AGG-ID: gbpzRNSWNEulGC9frvkeOg_1748509496
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f65a705dso25548f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 02:04:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748509496; x=1749114296;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rf94fEja4fPZDVYXlb9N2+GViHCNDZtS2H0JkfyPmy0=;
-        b=Oa+iogdI9wbFH2JNwyVjImI13bRCZco2pR9b7+fghqjKlzHZaMD3avEdqKMiwv0GtC
-         GjL7B4ihwhYKdhsi1RUQ1sJiWH/g7USOF20TyRtC94a4IavKQzfPkz4MUMJU/7LOIl54
-         BnGJTxfTg0UmBpp6IH+VaOzr6Ih/rAB5agA4nvFQS8VuyuLqklQPyT+DfHsXIQdsBNgD
-         Ke5q3c2xa9qzrugEIEjARXRqKRswIGz01mpRsykbjCZYRZjYKPEZBW/J62dnZPse+M3K
-         mr1M0FlKEW4nOrdSeQ0Ttq19s5Nb3kPllE8GRQerIeCCwhq6HqSypipXlFBlePfOyUWv
-         ogMg==
-X-Forwarded-Encrypted: i=1; AJvYcCXBNEbRytaDZsFvJkDs3pcaRXKD1iBj+SXmB6deL09IklGr73+p0uoVYCPpuZryP3l7GToWxW/Tu6N1GKk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDjOdPnIuU6fpkEMao1Yci4ol2jgrIdLSlsOr45Vw6egqK7bdl
-	HQ8IOBxyaPMU/xzOMKaA8XUed1ecWUCMPxbU+cF8H2dfeGCMWtIHymzR06MHxy11G3CmhNGYkcn
-	s2FsZC98OzLLqcl3ixSH3rekDXzUrG4CJLa/PZaeX4mEeFp4TKYonbt81fjcK5MKTWw==
-X-Gm-Gg: ASbGncusm2mYnVjKFQhZuCTmpkuNIhEgU4TWC/2f6HRG878pMLRFOx8HU4yap30JnFn
-	O/eNUMX9GRW/ad81UULqX9DgBP+y7D93hW/2CD1paxTQlPR9l87KbDOXZD4o95kMIr9YIonC8YL
-	TGCA1EUq57zNWUMLU1JROwM1JyRx9GRNMIc7ZyE062Jo8jLpg39bbdMRN9BhKYbR6SuA0YtDbCL
-	wt7vs6PIzt+hxaM7yn95LDvDLGT+mxxehh9LqZkOG8+i4HTdGMH0XTxQIJxjrax5By5eX5Mrska
-	fQGpBQWNTiDYYt5LUw6+gtNe6tGvM08kMUkDglpel9J88fDpFIYTlA==
-X-Received: by 2002:a05:6000:24c8:b0:3a4:ec32:e4f3 with SMTP id ffacd0b85a97d-3a4ec32e648mr3929677f8f.17.1748509496351;
-        Thu, 29 May 2025 02:04:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFaMMS0GBdbp7zwM960jC58+Zia37daqyv2xwFNLBHAE11BRz+qy2WAsZgsUd9WyykrMJAGrw==
-X-Received: by 2002:a05:6000:24c8:b0:3a4:ec32:e4f3 with SMTP id ffacd0b85a97d-3a4ec32e648mr3929645f8f.17.1748509495896;
-        Thu, 29 May 2025 02:04:55 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009f9d6sm1331020f8f.84.2025.05.29.02.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 May 2025 02:04:54 -0700 (PDT)
-Message-ID: <9552d3eb-c01b-4ff2-84f0-deec5e12b92a@redhat.com>
-Date: Thu, 29 May 2025 11:04:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdJJLyB0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4EBDC4CEED;
+	Thu, 29 May 2025 09:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748509562;
+	bh=TnBdwfMU35dwvTgOcU49mAwWEmcwsZg4PtscRxp7BZE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mdJJLyB0mNoFoew7xh7nQyQ6kwRPijxdlCpPPwYGaK8qIx0V7cCop/SZXbcEFoguo
+	 tF5U355g7C+ele+r70WEO/ROVKjJBt/T0It2xcY//Z6xVeI/eqqj9uph1MzVZZ3zxz
+	 Y/Y1s0FTk4EvxunfLRtLCOV5wpTFg4b2p9bYuu0S423/w2r3iPKoNMmFLl6/QLIW0K
+	 mBuKl6d4+EtrXUSvnMRB0UtGAxFiHfwQ8IKPtPIiDvNYcBQjqpE+pVz+vs2oRkugeg
+	 Lq69O9hDxfP56ujzTXxVYlCzfC3BMqm0/xK3hIczy0s9Bnw2JKHLLksJ5SdLa2h6Rk
+	 bhA5KTURX1MIQ==
+Message-ID: <0c87223d-4b4e-4e82-b7ed-3c694393b1b0@kernel.org>
+Date: Thu, 29 May 2025 11:05:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,359 +35,286 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 1/9] KVM: arm64: nv: selftests: Add support to run
- guest code in vEL2.
+Subject: Re: [PATCH] arm64: dts: qcom: Add coresight node for SM8650
+To: Yingchao Deng <quic_yingdeng@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250529085650.3594253-1-quic_yingdeng@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Itaru Kitayama <itaru.kitayama@linux.dev>,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
- suzuki.poulose@arm.com, yuzenghui@huawei.com, seanjc@google.com,
- darren@os.amperecomputing.com
-References: <20250512105251.577874-1-gankulkarni@os.amperecomputing.com>
- <20250512105251.577874-2-gankulkarni@os.amperecomputing.com>
- <aDeeqMQ3JvAayTJF@vm4>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <aDeeqMQ3JvAayTJF@vm4>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250529085650.3594253-1-quic_yingdeng@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Itaru,
-
-On 5/29/25 1:39 AM, Itaru Kitayama wrote:
-> Hi Ganapatrao
-> On Mon, May 12, 2025 at 03:52:43AM -0700, Ganapatrao Kulkarni wrote:
->> This patch adds required changes to vcpu init to run a guest code
->> in vEL2 context and also adds NV specific helper functions.
->>
->> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+On 29/05/2025 10:56, Yingchao Deng wrote:
+> Add coresight components on the path from stm to etr.
 > 
-> I'm interested in testing this, but is this series against kvmarm? which
-> branch I can cleanly do git am?
-
-I gave it a try on kvm-next. There is a minor conflict to resolve when
-applying.
-
-Thanks
-
-Eric
+> Signed-off-by: Yingchao Deng <quic_yingdeng@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8650.dtsi | 250 +++++++++++++++++++++++++++
+>  1 file changed, 250 insertions(+)
 > 
-> Thanks,
-> Itaru.
-> 
->> ---
->>  tools/testing/selftests/kvm/Makefile.kvm      |  2 +
->>  .../kvm/include/arm64/kvm_util_arch.h         |  3 +
->>  .../selftests/kvm/include/arm64/nv_util.h     | 45 ++++++++++++++
->>  .../selftests/kvm/include/arm64/vgic.h        |  1 +
->>  .../testing/selftests/kvm/include/kvm_util.h  |  3 +
->>  tools/testing/selftests/kvm/lib/arm64/nv.c    | 46 ++++++++++++++
->>  .../selftests/kvm/lib/arm64/processor.c       | 61 ++++++++++++++-----
->>  tools/testing/selftests/kvm/lib/arm64/vgic.c  |  8 +++
->>  8 files changed, 155 insertions(+), 14 deletions(-)
->>  create mode 100644 tools/testing/selftests/kvm/include/arm64/nv_util.h
->>  create mode 100644 tools/testing/selftests/kvm/lib/arm64/nv.c
->>
->> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
->> index f773f8f99249..3348f729d3b2 100644
->> --- a/tools/testing/selftests/kvm/Makefile.kvm
->> +++ b/tools/testing/selftests/kvm/Makefile.kvm
->> @@ -37,6 +37,7 @@ LIBKVM_arm64 += lib/arm64/processor.c
->>  LIBKVM_arm64 += lib/arm64/spinlock.c
->>  LIBKVM_arm64 += lib/arm64/ucall.c
->>  LIBKVM_arm64 += lib/arm64/vgic.c
->> +LIBKVM_arm64 += lib/arm64/nv.c
->>  
->>  LIBKVM_s390 += lib/s390/diag318_test_handler.c
->>  LIBKVM_s390 += lib/s390/processor.c
->> @@ -155,6 +156,7 @@ TEST_GEN_PROGS_arm64 += arm64/vgic_irq
->>  TEST_GEN_PROGS_arm64 += arm64/vgic_lpi_stress
->>  TEST_GEN_PROGS_arm64 += arm64/vpmu_counter_access
->>  TEST_GEN_PROGS_arm64 += arm64/no-vgic-v3
->> +TEST_GEN_PROGS_arm64 += arm64/nv_guest_hypervisor
->>  TEST_GEN_PROGS_arm64 += access_tracking_perf_test
->>  TEST_GEN_PROGS_arm64 += arch_timer
->>  TEST_GEN_PROGS_arm64 += coalesced_io_test
->> diff --git a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
->> index e43a57d99b56..ab5279c24413 100644
->> --- a/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
->> +++ b/tools/testing/selftests/kvm/include/arm64/kvm_util_arch.h
->> @@ -2,6 +2,9 @@
->>  #ifndef SELFTEST_KVM_UTIL_ARCH_H
->>  #define SELFTEST_KVM_UTIL_ARCH_H
->>  
->> +#define CurrentEL_EL1		(1 << 2)
->> +#define CurrentEL_EL2		(2 << 2)
->> +
->>  struct kvm_vm_arch {};
->>  
->>  #endif  // SELFTEST_KVM_UTIL_ARCH_H
->> diff --git a/tools/testing/selftests/kvm/include/arm64/nv_util.h b/tools/testing/selftests/kvm/include/arm64/nv_util.h
->> new file mode 100644
->> index 000000000000..622a17c9d142
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/include/arm64/nv_util.h
->> @@ -0,0 +1,45 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * Copyright (c) 2025 Ampere Computing
->> + */
->> +#ifndef SELFTEST_NV_UTIL_H
->> +#define SELFTEST_NV_UTIL_H
->> +
->> +#include <linux/bitmap.h>
->> +#include <vgic.h>
->> +
->> +#define HCR_NV2		(UL(1) << 45)
->> +#define HCR_AT		(UL(1) << 44)
->> +#define HCR_NV		(UL(1) << 42)
->> +#define HCR_E2H		(UL(1) << 34)
->> +#define HCR_TTLB        (UL(1) << 25)
->> +
->> +/* Enable NV2 and guest in VHE mode */
->> +#define HCR_EL2_NV_EANBLE (HCR_E2H | HCR_NV | HCR_NV2 | HCR_AT | HCR_TTLB)
->> +
->> +struct kvm_vm *nv_vm_create_with_vcpus_gic(uint32_t nr_vcpus,
->> +		struct kvm_vcpu **vcpus, int *gic_fd, void *guest_code);
->> +
->> +struct kvm_vm *__nv_vm_create_with_vcpus_gic(struct vm_shape shape,
->> +		uint32_t nr_vcpus, struct kvm_vcpu **vcpus,
->> +		uint64_t extra_mem_pages, int *gic_fd, void *guest_code);
->> +
->> +/* NV helpers */
->> +static inline void init_vcpu_nested(struct kvm_vcpu_init *init)
->> +{
->> +	init->features[0] |= (1 << KVM_ARM_VCPU_HAS_EL2);
->> +}
->> +
->> +static inline bool kvm_arm_vcpu_has_el2(struct kvm_vcpu_init *init)
->> +{
->> +	unsigned long features = init->features[0];
->> +
->> +	return test_bit(KVM_ARM_VCPU_HAS_EL2, &features);
->> +}
->> +
->> +static inline bool is_vcpu_nested(struct kvm_vcpu *vcpu)
->> +{
->> +	return vcpu->nested;
->> +}
->> +
->> +#endif /* SELFTEST_NV_UTIL_H */
->> diff --git a/tools/testing/selftests/kvm/include/arm64/vgic.h b/tools/testing/selftests/kvm/include/arm64/vgic.h
->> index c481d0c00a5d..46142fa36199 100644
->> --- a/tools/testing/selftests/kvm/include/arm64/vgic.h
->> +++ b/tools/testing/selftests/kvm/include/arm64/vgic.h
->> @@ -17,6 +17,7 @@
->>  	index)
->>  
->>  int vgic_v3_setup(struct kvm_vm *vm, unsigned int nr_vcpus, uint32_t nr_irqs);
->> +void vgic_v3_close(int gic_fd);
->>  
->>  #define VGIC_MAX_RESERVED	1023
->>  
->> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
->> index 373912464fb4..9b26b9124dc3 100644
->> --- a/tools/testing/selftests/kvm/include/kvm_util.h
->> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
->> @@ -65,6 +65,9 @@ struct kvm_vcpu {
->>  	struct kvm_dirty_gfn *dirty_gfns;
->>  	uint32_t fetch_index;
->>  	uint32_t dirty_gfns_count;
->> +#ifdef __aarch64__
->> +	bool nested;
->> +#endif
->>  };
->>  
->>  struct userspace_mem_regions {
->> diff --git a/tools/testing/selftests/kvm/lib/arm64/nv.c b/tools/testing/selftests/kvm/lib/arm64/nv.c
->> new file mode 100644
->> index 000000000000..e930808a7ed4
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/lib/arm64/nv.c
->> @@ -0,0 +1,46 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2025 Ampere Computing LLC
->> + */
->> +
->> +#include <linux/compiler.h>
->> +#include <assert.h>
->> +
->> +#include "guest_modes.h"
->> +#include "kvm_util.h"
->> +#include "nv_util.h"
->> +#include "processor.h"
->> +
->> +struct kvm_vm *__nv_vm_create_with_vcpus_gic(struct vm_shape shape, uint32_t nr_vcpus,
->> +		struct kvm_vcpu **vcpus, uint64_t extra_mem_pages, int *gic_fd, void *guest_code)
->> +{
->> +	struct kvm_vcpu_init init;
->> +	struct kvm_vm *vm;
->> +	int i;
->> +
->> +	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_EL2));
->> +
->> +	vm = __vm_create(shape, nr_vcpus, extra_mem_pages);
->> +	vm_ioctl(vm, KVM_ARM_PREFERRED_TARGET, &init);
->> +	init_vcpu_nested(&init);
->> +
->> +	for (i = 0; i < nr_vcpus; ++i) {
->> +		vcpus[i] = aarch64_vcpu_add(vm, i, &init, guest_code);
->> +		__TEST_REQUIRE(is_vcpu_nested(vcpus[i]), "Failed to Enable NV");
->> +	}
->> +
->> +	/* vgic is not created, If gic_fd argument is NULL */
->> +	if (gic_fd) {
->> +		*gic_fd = vgic_v3_setup(vm, nr_vcpus, 64);
->> +		__TEST_REQUIRE(*gic_fd >= 0, "Failed to create vgic-v3");
->> +	}
->> +
->> +	return vm;
->> +}
->> +
->> +struct kvm_vm *nv_vm_create_with_vcpus_gic(uint32_t nr_vcpus,
->> +		struct kvm_vcpu **vcpus, int *gic_fd, void *guest_code)
->> +{
->> +	return __nv_vm_create_with_vcpus_gic(VM_SHAPE_DEFAULT,
->> +				nr_vcpus, vcpus, 0, gic_fd, guest_code);
->> +}
->> diff --git a/tools/testing/selftests/kvm/lib/arm64/processor.c b/tools/testing/selftests/kvm/lib/arm64/processor.c
->> index 7ba3aa3755f3..6e759981bf9e 100644
->> --- a/tools/testing/selftests/kvm/lib/arm64/processor.c
->> +++ b/tools/testing/selftests/kvm/lib/arm64/processor.c
->> @@ -10,6 +10,7 @@
->>  
->>  #include "guest_modes.h"
->>  #include "kvm_util.h"
->> +#include "nv_util.h"
->>  #include "processor.h"
->>  #include "ucall_common.h"
->>  
->> @@ -258,14 +259,49 @@ void virt_arch_dump(FILE *stream, struct kvm_vm *vm, uint8_t indent)
->>  	}
->>  }
->>  
->> +static void aarch64_vcpu_set_reg(struct kvm_vcpu *vcpu, uint64_t sctlr_el1,
->> +			uint64_t tcr_el1, uint64_t ttbr0_el1)
->> +{
->> +	uint64_t fpen;
->> +
->> +	/*
->> +	 * Enable FP/ASIMD to avoid trapping when accessing Q0-Q15
->> +	 * registers, which the variable argument list macros do.
->> +	 */
->> +	fpen = 3 << 20;
->> +
->> +	if (is_vcpu_nested(vcpu)) {
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_CPTR_EL2), fpen);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL2), sctlr_el1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL2), tcr_el1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MAIR_EL2), DEFAULT_MAIR_EL1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TTBR0_EL2), ttbr0_el1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_HCR_EL2), HCR_EL2_NV_EANBLE);
->> +	} else {
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_CPACR_EL1), fpen);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL1), sctlr_el1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL1), tcr_el1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MAIR_EL1), DEFAULT_MAIR_EL1);
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TTBR0_EL1), ttbr0_el1);
->> +
->> +	}
->> +
->> +	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TPIDR_EL1), vcpu->id);
->> +}
->> +
->>  void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
->>  {
->>  	struct kvm_vcpu_init default_init = { .target = -1, };
->>  	struct kvm_vm *vm = vcpu->vm;
->>  	uint64_t sctlr_el1, tcr_el1, ttbr0_el1;
->>  
->> -	if (!init)
->> +	if (!init) {
->>  		init = &default_init;
->> +	} else {
->> +		/* Is this vcpu a Guest-Hypersior */
->> +		if (kvm_arm_vcpu_has_el2(init))
->> +			vcpu->nested = true;
->> +	}
->>  
->>  	if (init->target == -1) {
->>  		struct kvm_vcpu_init preferred;
->> @@ -275,12 +311,6 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
->>  
->>  	vcpu_ioctl(vcpu, KVM_ARM_VCPU_INIT, init);
->>  
->> -	/*
->> -	 * Enable FP/ASIMD to avoid trapping when accessing Q0-Q15
->> -	 * registers, which the variable argument list macros do.
->> -	 */
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_CPACR_EL1), 3 << 20);
->> -
->>  	sctlr_el1 = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL1));
->>  	tcr_el1 = vcpu_get_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL1));
->>  
->> @@ -349,11 +379,7 @@ void aarch64_vcpu_setup(struct kvm_vcpu *vcpu, struct kvm_vcpu_init *init)
->>  	if (use_lpa2_pte_format(vm))
->>  		tcr_el1 |= (1ul << 59) /* DS */;
->>  
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SCTLR_EL1), sctlr_el1);
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TCR_EL1), tcr_el1);
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_MAIR_EL1), DEFAULT_MAIR_EL1);
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TTBR0_EL1), ttbr0_el1);
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_TPIDR_EL1), vcpu->id);
->> +	aarch64_vcpu_set_reg(vcpu, sctlr_el1, tcr_el1, ttbr0_el1);
->>  }
->>  
->>  void vcpu_arch_dump(FILE *stream, struct kvm_vcpu *vcpu, uint8_t indent)
->> @@ -387,7 +413,11 @@ static struct kvm_vcpu *__aarch64_vcpu_add(struct kvm_vm *vm, uint32_t vcpu_id,
->>  
->>  	aarch64_vcpu_setup(vcpu, init);
->>  
->> -	vcpu_set_reg(vcpu, ARM64_CORE_REG(sp_el1), stack_vaddr + stack_size);
->> +	if (is_vcpu_nested(vcpu))
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_SP_EL2), stack_vaddr + stack_size);
->> +	else
->> +		vcpu_set_reg(vcpu, ARM64_CORE_REG(sp_el1), stack_vaddr + stack_size);
->> +
->>  	return vcpu;
->>  }
->>  
->> @@ -457,7 +487,10 @@ void vcpu_init_descriptor_tables(struct kvm_vcpu *vcpu)
->>  {
->>  	extern char vectors;
->>  
->> -	vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_VBAR_EL1), (uint64_t)&vectors);
->> +	if (is_vcpu_nested(vcpu))
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_VBAR_EL2), (uint64_t)&vectors);
->> +	else
->> +		vcpu_set_reg(vcpu, KVM_ARM64_SYS_REG(SYS_VBAR_EL1), (uint64_t)&vectors);
->>  }
->>  
->>  void route_exception(struct ex_regs *regs, int vector)
->> diff --git a/tools/testing/selftests/kvm/lib/arm64/vgic.c b/tools/testing/selftests/kvm/lib/arm64/vgic.c
->> index 4427f43f73ea..67822b803d0f 100644
->> --- a/tools/testing/selftests/kvm/lib/arm64/vgic.c
->> +++ b/tools/testing/selftests/kvm/lib/arm64/vgic.c
->> @@ -79,6 +79,14 @@ int vgic_v3_setup(struct kvm_vm *vm, unsigned int nr_vcpus, uint32_t nr_irqs)
->>  	return gic_fd;
->>  }
->>  
->> +void  vgic_v3_close(int gic_fd)
->> +{
->> +	if (gic_fd < 0)
->> +		return;
->> +
->> +	close(gic_fd);
->> +}
->> +
->>  /* should only work for level sensitive interrupts */
->>  int _kvm_irq_set_level_info(int gic_fd, uint32_t intid, int level)
->>  {
->>
->> -- 
->> 2.48.1
->>
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> index 86684cb9a932..5e1854a0e15f 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+> @@ -5052,6 +5052,82 @@ data-pins {
+>  			};
+>  		};
+>  
+> +		ctcu@10001000 {
+> +			compatible = "qcom,sa8775p-ctcu";
 
+Wrong compatible.
+
+> +			reg = <0x0 0x10001000 0x0 0x1000>;
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb";
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					ctcu_in0: endpoint {
+> +					remote-endpoint = <&etr0_out>;
+
+Fix indentation.
+
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					ctcu_in1: endpoint {
+> +					remote-endpoint = <&etr1_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		stm@10002000 {
+> +			compatible = "arm,coresight-stm", "arm,primecell";
+> +			reg = <0x0 0x10002000 0x0 0x1000>,
+> +				<0x0 0x16280000 0x0 0x180000>;
+> +			reg-names = "stm-base", "stm-stimulus-base";
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
+> +
+> +			out-ports {
+> +				port {
+> +					stm_out_funnel_in0: endpoint {
+> +						remote-endpoint =
+> +						<&funnel_in0_in_stm>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		funnel@10041000 {
+> +			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+> +			reg = <0x0 0x10041000 0x0 0x1000>;
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@7 {
+> +					reg = <7>;
+> +					funnel_in0_in_stm: endpoint {
+> +						remote-endpoint =
+> +						<&stm_out_funnel_in0>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				port {
+> +					funnel_in0_out_funnel_qdss: endpoint {
+> +						remote-endpoint =
+> +						<&funnel_qdss_in_funnel_in0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+>  		funnel@10042000 {
+>  			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+>  
+> @@ -5094,6 +5170,14 @@ in-ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+> +				port@0 {
+> +					reg = <0>;
+> +
+> +					funnel_qdss_in_funnel_in0: endpoint {
+> +						remote-endpoint = <&funnel_in0_out_funnel_qdss>;
+> +					};
+> +				};
+> +
+>  				port@1 {
+>  					reg = <1>;
+>  
+> @@ -5112,6 +5196,133 @@ funnel_qdss_out_funnel_aoss: endpoint {
+>  			};
+>  		};
+>  
+> +		replicator@10046000 {
+> +			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+> +			reg = <0x0 0x10046000 0x0 0x1000>;
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					replicator_qdss_in_replicator_swao: endpoint {
+> +						remote-endpoint =
+> +						<&replicator_swao_out_replicator_qdss>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					replicator_qdss_out_replicator_etr: endpoint {
+> +						remote-endpoint =
+> +						<&replicator_etr_in_replicator_qdss>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tmc@10048000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0x0 0x10048000 0x0 0x1000>;
+> +
+> +			iommus = <&apps_smmu 0x04e0 0>,
+> +				<&apps_smmu 0x04c0 0>;
+> +			dma-coherent;
+> +			arm,scatter-gather;
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					tmc_etr_in_replicator_etr: endpoint {
+> +						remote-endpoint =
+> +						<&replicator_etr_out_tmc_etr>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				port {
+> +					etr0_out: endpoint {
+> +						remote-endpoint =
+> +						<&ctcu_in0>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		replicator@1004e000 {
+> +			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+> +			reg = <0x0 0x1004e000 0x0 0x1000>;
+> +
+> +			clocks = <&aoss_qmp>;
+> +			clock-names = "apb_pclk";
+> +
+> +			in-ports {
+> +				port {
+> +					replicator_etr_in_replicator_qdss: endpoint {
+> +						remote-endpoint =
+> +						<&replicator_qdss_out_replicator_etr>;
+> +					};
+> +				};
+> +			};
+> +
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					replicator_etr_out_tmc_etr: endpoint {
+> +						remote-endpoint =
+> +						<&tmc_etr_in_replicator_etr>;
+> +					};
+> +				};
+> +				port@1 {
+> +					reg = <1>;
+> +					replicator_etr_out_tmc_etr1: endpoint {
+> +						remote-endpoint =
+> +						<&tmc_etr1_in_replicator_etr>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		tmc@1004f000 {
+> +			compatible = "arm,primecell";
+
+That's also wrong.
+
+Plus I suspect this was not tested against bindings.
+
+Best regards,
+Krzysztof
