@@ -1,127 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37F0D21C194
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B9333E4;
+	Thu, 29 May 2025 15:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748532827; cv=none; b=ROr9El749bJXYMtIqK5wVUIjPJXOkSfphsnTl5VpeIvW8gC2HegmyiWMK2HFuL6EWcxXEQpT+mOYkWel0cmWmRl84l0qdBnhcQnOVwlzT2WQE7sIysiNqmTt1D1Z9PFpuYxmvUOfUuy4GdtWownRtSwtjxMsjsLO+VnLVOhVqLQ=
+	t=1748532892; cv=none; b=lsjmMg6b8DtbEIsX7VtpICTDSsSsSE+ICU8zhoaa5GvwIPN2rlIqKHFlh2QGWFu1jGNrjyg4iu4QCTVji7kvihaiof6tF4Mlj/3OtW/mbB5Qv4vJ1AdhjQnwtusN59pB6q2duwkgMvJZ1JTa8x+GVclvsEiaDP1B8qLFD0El5vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748532827; c=relaxed/simple;
-	bh=pd4XXtz2PUborh9kHLKUXqTZP8kWaG1HeYOsk/nd0Gk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tELo7Kr/qqPk9PWe+DWdVyMjrmGL4PBAw6iVYGm4NCN41L/WhemR2tw3Odr22jWh84WqDhGn0GaB0OECYXkkkC/BIgt/UbJq5Z24IMF+YZB+dKTXOg3PFRNxqoCRAO+af7o/X0SJ1sEOF+rTXdzSdGahTqEc3Q3Dkwpak9vwWeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 876B1176A;
-	Thu, 29 May 2025 08:33:27 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90C953F5A1;
-	Thu, 29 May 2025 08:33:42 -0700 (PDT)
-Message-ID: <936cc91a-b345-4e52-9cb5-922c9810c469@arm.com>
-Date: Thu, 29 May 2025 16:33:41 +0100
+	s=arc-20240116; t=1748532892; c=relaxed/simple;
+	bh=OmqvxbTmgHDFbmZZW/23t+UTwlDWRXcjeVhGALxjOhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSWSjEheWSybNz6folYX/RBUrvdOALpcJr1LbX5vMF5VN4KvK4q58gewMBEgLPcpIQycrN7n23OjTF+32x0y7VSL6l1gXVwI0n1EWeBJwzgr5UWCNEKX4zjhEPTlfIrLWkVujJn/AOAAhiDKVPTDO0twU+WOfjrmSxH4dW3EE8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mtzrg0Ir; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mtzrg0Ir"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748532891; x=1780068891;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OmqvxbTmgHDFbmZZW/23t+UTwlDWRXcjeVhGALxjOhY=;
+  b=Mtzrg0Ir2CYd+9DO07twljHCTh26oQPM7vBKkAgBTrZ+qtLXL8i5JWLB
+   4d0gSbWCgeLrC93dayKr0hn3XQcCtoKcB2ay/N0wbT3BEBHG8nT5TDyi8
+   JzfSbCALJKyE68G5rg51AZseewC97e+z6xEKUYbxNiFglRZFt8VDQbnCD
+   4oi0WGtXJaTIkcECfHDK+ILPn1bB9suPfVUmCpH7NNtAwlJUIL+50Gc+t
+   uW/TzKZ0RyjB2xZrMxbeRul28Xe/72ny+W0MJnXixX6MfmbaPpbFCs6pY
+   9r6yMjicI9LEtt83kqxV1xd6AV14Kn6Pe8EVdMHwZlkHhH40wDuwZv8Qa
+   A==;
+X-CSE-ConnectionGUID: vJYQ8LiYRAO/hR2Zi3k9KA==
+X-CSE-MsgGUID: yDw+eUT8RHqIOzp2k1CxxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50488552"
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="50488552"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 08:34:45 -0700
+X-CSE-ConnectionGUID: Ux0jqsZoRRGqJO/1l/BB5A==
+X-CSE-MsgGUID: hsBA7rrVSye5dQxyWsTi2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,193,1744095600"; 
+   d="scan'208";a="147478961"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by fmviesa003.fm.intel.com with ESMTP; 29 May 2025 08:34:43 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: dave.jiang@intel.com,
+	vinicius.gomes@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yi.sun@intel.com,
+	xueshuai@linux.alibaba.com,
+	gordon.jin@intel.com
+Subject: [PATCH 1/2] dmaengine: idxd: Remove improper idxd_free
+Date: Thu, 29 May 2025 23:34:30 +0800
+Message-ID: <20250529153431.1160067-1-yi.sun@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
- <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
- <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
- <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
- <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
- <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
- <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
- <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
- <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
- <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
- <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
- <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
- <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
- <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
-In-Reply-To: <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29/05/2025 09:48, Ryan Roberts wrote:
+The put_device() call can be asynchronous cleanup via schedule_delayed_work
+when CONFIG_DEBUG_KOBJECT_RELEASE is set. This results in a use-after-free
+failure during module unloading if invoking idxd_free() immediately
+afterward.
 
-[...]
+Removes the improper call idxd_free() to prevent potential memory
+corruption.
 
->>>> Regarding the linear map repainting, I had a chat with Catalin, and he reminded
->>>> me of a potential problem; if you are doing the repainting with the machine
->>>> stopped, you can't allocate memory at that point; it's possible a CPU was inside
->>>> the allocator when it stopped. And I think you need to allocate intermediate
->>>> pgtables, right? Do you have a solution to that problem? I guess one approach
->>>> would be to figure out how much memory you will need and pre-allocate prior to
->>>> stoping the machine?
->>>
->>> OK, I don't remember we discussed this problem before. I think we can do
->>> something like what kpti does. When creating the linear map we know how many
->>> PUD and PMD mappings are created, we can record the number, it will tell how
->>> many pages we need for repainting the linear map.
->>
->> Looking the kpti code further, it looks like kpti also allocates memory with the
->> machine stopped, but it calls memory allocation on cpu 0 only. 
-> 
-> Oh yes, I hadn't spotted that. It looks like a special case that may be ok for
-> kpti though; it's allocating a fairly small amount of memory (max levels=5 so
-> max order=3) and it's doing it with GFP_ATOMIC. So if my understanding of the
-> page allocator is correct, then this should be allocated from a per-cpu reserve?
-> Which means that it never needs to take a lock that other, stopped CPUs could be
-> holding. And GFP_ATOMIC guarrantees that the thread will never sleep, which I
-> think is not allowed while the machine is stopped.
-> 
->> IIUC this
->> guarantees the code will not be called on a CPU which was inside the allocator
->> when it stopped because CPU 0 is running stop_machine().
-> 
-> My concern was a bit more general; if any other CPU was inside the allocator
-> holding a lock when the machine was stopped, then if CPU 0 comes along and makes
-> a call to the allocator that requires the lock, then we have a deadlock.
-> 
-> All that said, looking at the stop_machine() docs, it says:
-> 
->  * Description: This causes a thread to be scheduled on every cpu,
->  * each of which disables interrupts.  The result is that no one is
->  * holding a spinlock or inside any other preempt-disabled region when
->  * @fn() runs.
-> 
-> So I think my deadlock concern was unfounded. I think as long as you can
-> garrantee that fn() won't try to sleep then you should be safe? So I guess
-> allocating from within fn() should be safe as long as you use GFP_ATOMIC?
+Signed-off-by: Yi Sun <yi.sun@intel.com>
 
-I just had another conversation about this internally, and there is another
-concern; we obviously don't want to modify the pgtables while other CPUs that
-don't support BBML2 could be accessing them. Even in stop_machine() this may be
-possible if the CPU stacks and task structure (for example) are allocated out of
-the linear map.
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 760b7d81fcd8..504aca0fd597 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -1324,7 +1324,6 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	idxd_cleanup(idxd);
+ 	pci_iounmap(pdev, idxd->reg_base);
+ 	put_device(idxd_confdev(idxd));
+-	idxd_free(idxd);
+ 	pci_disable_device(pdev);
+ }
+ 
+-- 
+2.43.0
 
-So we need to be careful to follow the pattern used by kpti; all secondary CPUs
-need to switch to the idmap (which is installed in TTBR0) then install the
-reserved map in TTBR1, then wait for CPU 0 to repaint the linear map, then have
-the secondary CPUs switch TTBR1 back to swapper then switch back out of idmap.
-
-Given CPU 0 supports BBML2, I think it can just update the linear map live,
-without needing to do the idmap dance?
-
-Thanks,
-Ryan
-
-
-> 
-> Thanks,
-> Ryan
-> 
