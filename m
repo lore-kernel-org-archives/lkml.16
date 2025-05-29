@@ -1,259 +1,278 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAED2417FA;
-	Thu, 29 May 2025 02:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84962221FA1;
+	Thu, 29 May 2025 02:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484253; cv=none; b=K/HHM3l51mXV4QPGWfV5ZOLKvzQ/FeVyf2bz63NrRFpDojMOVIsz941nWLvN5c3RjnvtYXp1FtUxPjSJO233lnVsa3ObZSq44Qv0G5JRINHlJfe+jZuQ/b06lCHvxht0uaZnEdQJLVumT7ScZISJZ7uM1uMAgAzCoB1ZqfMbwSQ=
+	t=1748484311; cv=none; b=BidO5CTUbhzZzgwq364xyja1asbKVQheFYfkfBi9R5r8jxlCIuR9o938Rc4p+mmQQIw/d/Fe+DSQ/42ndFgUEM/6Ee4uo5zymVe/ufXTgpwo8RVXTfXESbKQ8ztytBnZptRIFCcxfx8q8hBUcOlwQPG3sm/vHy1a5nXTlfVR7Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484253; c=relaxed/simple;
-	bh=JtzjRDKTVjL67ffPdQX14MIS2p1fLm1q4MyiTPbiltE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pRcuUMeuFqOHDXsCHRvf0D8988EiQwGj2v+1CqV5hu4hJ1vhxOmyS0+ilBcXEYooFUV3Jn/3ExP0ShJ0HbdHyIorHPQpOw8w5uMPYaeFGnmK0K8AJHzH6yg7DgSGwfchs1a3rtSaycDhPHJF4kTwX9O++kq56Epol9kAYNj1n1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JTHvUX3r; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JTHvUX3r"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SJbCDr007970;
-	Thu, 29 May 2025 02:04:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	p5ixF+Bc5BFjy+M1gS3u2BSxRZsjEb4y4WkDseBBJdo=; b=JTHvUX3rrw/8PND/
-	BZknfWnc265mxMIAk8K141eqbE8zTM/6q1s/vSHfGhKUt0deL7q97GfeEby7exbs
-	IAhgLmOECrShbntGpLHXhi2u1orluhwHetXoMW7i4ingcIe47vQAyvjym892Y2eD
-	F4W6d41AA5Vg9tcQCdFoYQSzAmx3BeRjM4m170ogx7rSKe019VXlW7CBD1AnUcMI
-	TJfl8jtOyO0ajEwU4Y0KSXTOyWCNei0RJKdDk4v/0WqWWQCa3u5UTkBTMYqzQkmP
-	gA6oOkTq07fsas0+sX0p04kbaPjHn6cvExBNcAlWW68qzk67vxnkAQtkbLkDX2R1
-	Qfkbow==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ek40j2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 02:04:06 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T23xGr014631
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 29 May 2025 02:03:59 GMT
-Received: from [10.231.216.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 28 May
- 2025 19:03:56 -0700
-Message-ID: <ee143088-89fb-4d4e-bc47-816e90dc7fa7@quicinc.com>
-Date: Thu, 29 May 2025 10:03:53 +0800
+	s=arc-20240116; t=1748484311; c=relaxed/simple;
+	bh=7sPL5/FI8t7+TuYRYb75JbvOXzTudEPh6k8nC3y6Pgk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YvuI51zfrwTjU3CtrRMpg+La62j3++8ip2Bam4uKcw9tKyj/H+CYeuqsC5/Lc0s0E76orf9DoDNZN46cCXNkGetJYCn0SeEWFPfFkPLDfJVh95UeCI5U3T8vGvofUORVtMcOSZfp5XnSt8s8iuC7oQGp9jeyvPpJzFicSsVCHOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8BxXWvPwDdoFDEBAQ--.20441S3;
+	Thu, 29 May 2025 10:05:03 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMBxXRvHwDdot1z5AA--.27553S2;
+	Thu, 29 May 2025 10:04:57 +0800 (CST)
+Subject: Re: [PATCH v5 3/4] tpm/tpm_ftpm_tee: support TPM_CHIP_FLAG_SYNC
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+ Peter Huewe <peterhuewe@gmx.de>, Jens Wiklander <jens.wiklander@linaro.org>,
+ linux-integrity@vger.kernel.org,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Nicholas Piggin <npiggin@gmail.com>, Sumit Garg <sumit.garg@kernel.org>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ linux-kernel@vger.kernel.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Sumit Garg <sumit.garg@oss.qualcomm.com>
+References: <20250514134630.137621-1-sgarzare@redhat.com>
+ <20250514134630.137621-4-sgarzare@redhat.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <3569b41c-123b-4fd4-458d-f7b2d2ec00f7@loongson.cn>
+Date: Thu, 29 May 2025 10:03:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] venus: pm_helpers: add compatibility for
- dev_pm_genpd_set_hwmode on V4
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20250218-switch_gdsc_mode-v4-0-546f6c925ae0@quicinc.com>
- <20250218-switch_gdsc_mode-v4-1-546f6c925ae0@quicinc.com>
- <zewub4somwmi6jvym5m44t6cumeonv2pcrtsntbkujlznotefp@bhfrerykhfqu>
-Content-Language: en-US
-From: Renjiang Han <quic_renjiang@quicinc.com>
-In-Reply-To: <zewub4somwmi6jvym5m44t6cumeonv2pcrtsntbkujlznotefp@bhfrerykhfqu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <20250514134630.137621-4-sgarzare@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=6837c096 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=qW5kxXaVTDtZ0SX8UZEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: uBAoquHlSN_q66YoVZ8qpmRquCSTdpnE
-X-Proofpoint-GUID: uBAoquHlSN_q66YoVZ8qpmRquCSTdpnE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDAxOSBTYWx0ZWRfX4QE9ulK4V1Z5
- e141yGJmu038qN82cU51LqpTquEI+py2tnVoNtgErFCCEV2v1rIcock09MQ6l1CJ+LLd93wSDSh
- 84pon/lxfcIhymiKTADShVsFW3v4O0PBDXynUTXKUDYGW+jDaBB4mY928kh+3MdMPP96cGizbA1
- w29jYgjsw7WMkNHAjmJfKzewbvBdK/2Rbh01MGGHJAiKGspqiDsQ7wDDwsHIGPHLOXmfAXq0d9D
- KjeBeILffm8/5wBgu6YGSI/MLNsaCActCiuZnFenOPjyHKOcz3+sobJw8yB08b9UtBfSozCoqpD
- X/4C5Vz5Ux+oCdtuC7e3+x7JiSGmdZnRkPZJadjwEGdz+hp4pM0AANxB0QZWKQeOdG3/3rBIWC1
- AcG5nhfYrr6RRBcfnAP0a1ibnuq39Bu/DiyNTb/Nz76LeQ0JSiEkWR4c3h7mXkxTGE/yKJqn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-29_01,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505290019
+Content-Language: en-US
+X-CM-TRANSID:qMiowMBxXRvHwDdot1z5AA--.27553S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Gw1xZF4rXFyUGry7uFyUJwc_yoWxury5pF
+	Z8G39rAFZ3t3WkJr97tFs7ZrWa9w48KFWUJay8Gas3Ar1qkr90gFyqgFy0qFy5trs7Gr1f
+	tF4qgFy5Z3WUZrcCm3ZEXasCq-sJn29KB7ZKAUJUUUUt529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+	WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUU
+	U==
 
 
-On 5/29/2025 3:27 AM, Dmitry Baryshkov wrote:
-> On Tue, Feb 18, 2025 at 04:03:20PM +0530, Renjiang Han wrote:
->> There are two ways to switch GDSC mode. One is to write the POWER_CONTROL
->> register and the other is to use dev_pm_genpd_set_hwmode(). However, they
->> rely on different clock driver flags. dev_pm_genpd_set_hwmode() depends on
->> the HW_CTRL_TRIGGER flag and POWER_CONTROL register depends on the HW_CTRL
->> flag.
->>
->> By default, the dev_pm_genpd_set_hwmode() is used to switch the GDSC mode.
->> If it fails and dev_pm_genpd_set_hwmode() returns -EOPNOTSUPP, it means
->> that the clock driver uses the HW_CTRL flag. At this time, the GDSC mode
->> is switched to write the POWER_CONTROL register.
->>
->> Clock driver is using HW_CTRL_TRIGGER flag with V6. So hwmode_dev is
->> always true on using V6 platform. Conversely, if hwmode_dev is false, this
->> platform must be not using V6. Therefore, replace IS_V6 in poweroff_coreid
->> with hwmode_dev. Also, with HW_CTRL_TRIGGER flag, the vcodec gdsc gets
->> enabled in SW mode by default. Therefore, before disabling the GDSC, GDSC
->> should be switched to SW mode so that GDSC gets enabled in SW mode in the
->> next enable.
->>
->> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
->> ---
->>   drivers/media/platform/qcom/venus/core.h       |  2 ++
->>   drivers/media/platform/qcom/venus/pm_helpers.c | 38 ++++++++++++++------------
->>   2 files changed, 23 insertions(+), 17 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
->> index 43532543292280be15adf688fc0c30f44e207c7f..0ccce89d3f54cf685ecce5b339a51e44f6ea3704 100644
->> --- a/drivers/media/platform/qcom/venus/core.h
->> +++ b/drivers/media/platform/qcom/venus/core.h
->> @@ -168,6 +168,7 @@ struct venus_format {
->>    * @root:	debugfs root directory
->>    * @venus_ver:	the venus firmware version
->>    * @dump_core:	a flag indicating that a core dump is required
->> + * @hwmode_dev:	a flag indicating that HW_CTRL_TRIGGER is used in clock driver
->>    */
->>   struct venus_core {
->>   	void __iomem *base;
->> @@ -230,6 +231,7 @@ struct venus_core {
->>   		u32 rev;
->>   	} venus_ver;
->>   	unsigned long dump_core;
->> +	bool hwmode_dev;
->>   };
->>   
->>   struct vdec_controls {
->> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..409aa9bd0b5d099c993eedb03177ec5ed918b4a0 100644
->> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->> @@ -412,9 +412,17 @@ static int vcodec_control_v4(struct venus_core *core, u32 coreid, bool enable)
->>   	u32 val;
->>   	int ret;
->>   
->> -	if (IS_V6(core))
->> -		return dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
->> -	else if (coreid == VIDC_CORE_ID_1) {
->> +	ret = dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
->> +	if (ret == -EOPNOTSUPP) {
->> +		core->hwmode_dev = false;
->> +		goto legacy;
->> +	}
->> +
->> +	core->hwmode_dev = true;
->> +	return ret;
->> +
->> +legacy:
->> +	if (coreid == VIDC_CORE_ID_1) {
->>   		ctrl = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_CONTROL;
->>   		stat = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_STATUS;
->>   	} else {
->> @@ -450,7 +458,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   
->>   		vcodec_clks_disable(core, core->vcodec0_clks);
->>   
->> -		if (!IS_V6(core)) {
->> +		if (!core->hwmode_dev) {
->>   			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
->>   			if (ret)
->>   				return ret;
->> @@ -468,7 +476,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   
->>   		vcodec_clks_disable(core, core->vcodec1_clks);
->>   
->> -		if (!IS_V6(core)) {
->> +		if (!core->hwmode_dev) {
->>   			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->>   			if (ret)
->>   				return ret;
->> @@ -491,11 +499,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   		if (ret < 0)
->>   			return ret;
->>   
->> -		if (!IS_V6(core)) {
->> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
->> -			if (ret)
->> -				return ret;
->> -		}
->> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
->> +		if (ret)
->> +			return ret;
->>   
->>   		ret = vcodec_clks_enable(core, core->vcodec0_clks);
->>   		if (ret)
->> @@ -511,11 +517,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
->>   		if (ret < 0)
->>   			return ret;
->>   
->> -		if (!IS_V6(core)) {
->> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
->> -			if (ret)
->> -				return ret;
->> -		}
->> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
->> +		if (ret)
->> +			return ret;
->>   
->>   		ret = vcodec_clks_enable(core, core->vcodec1_clks);
->>   		if (ret)
->> @@ -811,7 +815,7 @@ static int vdec_power_v4(struct device *dev, int on)
->>   	else
->>   		vcodec_clks_disable(core, core->vcodec0_clks);
->>   
->> -	vcodec_control_v4(core, VIDC_CORE_ID_1, false);
->> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
+在 2025/5/14 下午9:46, Stefano Garzarella 写道:
+> From: Stefano Garzarella <sgarzare@redhat.com>
 >
-> return vcodec_control_v4(...);
-OK, thanks for your comments. This patch has already been merged. I have
-another patch that cleans up code and removes dead code, but I haven’t
-submitted it yet. It depends on the videocc flag, so I plan to wait until
-the videocc patch is picked before submitting it.
+> This driver does not support interrupts, and receiving the response is
+> synchronous with sending the command.
 >
->>   
->>   	return ret;
->>   }
->> @@ -856,7 +860,7 @@ static int venc_power_v4(struct device *dev, int on)
->>   	else
->>   		vcodec_clks_disable(core, core->vcodec1_clks);
->>   
->> -	vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
-> And here.
+> Enable synchronous send() with TPM_CHIP_FLAG_SYNC, which implies that
+> ->send() already fills the provided buffer with a response, and ->recv()
+> is not implemented.
 >
->>   
->>   	return ret;
->>   }
->>
->> -- 
->> 2.34.1
->>
--- 
-Best Regards,
-Renjiang
+> Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> v5:
+> - changed order and parameter names to match tpm_try_transmit() [Jarkko]
+> v4:
+> - added Sumit's R-b
+> - reworked commit description [Jarkko]
+> v2:
+> - set TPM_CHIP_FLAG_SYNC and support it in the new send()
+> - removed Jens' T-b
+> v1:
+> - added Jens' T-b
+> ---
+>   drivers/char/tpm/tpm_ftpm_tee.h |  4 ---
+>   drivers/char/tpm/tpm_ftpm_tee.c | 64 ++++++++++-----------------------
+>   2 files changed, 19 insertions(+), 49 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.h b/drivers/char/tpm/tpm_ftpm_tee.h
+> index e39903b7ea07..8d5c3f0d2879 100644
+> --- a/drivers/char/tpm/tpm_ftpm_tee.h
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.h
+> @@ -22,16 +22,12 @@
+>    * struct ftpm_tee_private - fTPM's private data
+>    * @chip:     struct tpm_chip instance registered with tpm framework.
+>    * @session:  fTPM TA session identifier.
+> - * @resp_len: cached response buffer length.
+> - * @resp_buf: cached response buffer.
+>    * @ctx:      TEE context handler.
+>    * @shm:      Memory pool shared with fTPM TA in TEE.
+>    */
+>   struct ftpm_tee_private {
+>   	struct tpm_chip *chip;
+>   	u32 session;
+> -	size_t resp_len;
+> -	u8 resp_buf[MAX_RESPONSE_SIZE];
+>   	struct tee_context *ctx;
+>   	struct tee_shm *shm;
+>   };
+> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+> index dbad83bf798e..4e63c30aeaf1 100644
+> --- a/drivers/char/tpm/tpm_ftpm_tee.c
+> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
+> @@ -31,47 +31,19 @@ static const uuid_t ftpm_ta_uuid =
+>   		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
+>   
+>   /**
+> - * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
+> - * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
+> - * @buf:	the buffer to store data.
+> - * @count:	the number of bytes to read.
+> - *
+> - * Return:
+> - *	In case of success the number of bytes received.
+> - *	On failure, -errno.
+> - */
+> -static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> -{
+> -	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+> -	size_t len;
+> -
+> -	len = pvt_data->resp_len;
+> -	if (count < len) {
+> -		dev_err(&chip->dev,
+> -			"%s: Invalid size in recv: count=%zd, resp_len=%zd\n",
+> -			__func__, count, len);
+> -		return -EIO;
+> -	}
+> -
+> -	memcpy(buf, pvt_data->resp_buf, len);
+> -	pvt_data->resp_len = 0;
+> -
+> -	return len;
+> -}
+> -
+> -/**
+> - * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
+> + * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory
+> + * and retrieve the response.
+>    * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
+> - * @buf:	the buffer to send.
+> + * @buf:	the buffer to send and to store the response.
+>    * @bufsiz:	the size of the buffer.
+> - * @len:	the number of bytes to send.
+> + * @cmd_len:	the number of bytes to send.
+>    *
+>    * Return:
+> - *	In case of success, returns 0.
+> + *	In case of success, returns the number of bytes received.
+>    *	On failure, -errno
+>    */
+>   static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+> -				size_t len)
+> +				size_t cmd_len)
+>   {
+>   	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
+>   	size_t resp_len;
+> @@ -82,16 +54,15 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+>   	struct tee_param command_params[4];
+>   	struct tee_shm *shm = pvt_data->shm;
+>   
+> -	if (len > MAX_COMMAND_SIZE) {
+> +	if (cmd_len > MAX_COMMAND_SIZE) {
+>   		dev_err(&chip->dev,
+>   			"%s: len=%zd exceeds MAX_COMMAND_SIZE supported by fTPM TA\n",
+> -			__func__, len);
+> +			__func__, cmd_len);
+>   		return -EIO;
+>   	}
+>   
+>   	memset(&transceive_args, 0, sizeof(transceive_args));
+>   	memset(command_params, 0, sizeof(command_params));
+> -	pvt_data->resp_len = 0;
+>   
+>   	/* Invoke FTPM_OPTEE_TA_SUBMIT_COMMAND function of fTPM TA */
+>   	transceive_args = (struct tee_ioctl_invoke_arg) {
+> @@ -105,7 +76,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+>   		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT,
+>   		.u.memref = {
+>   			.shm = shm,
+> -			.size = len,
+> +			.size = cmd_len,
+>   			.shm_offs = 0,
+>   		},
+>   	};
+> @@ -117,7 +88,7 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+>   		return PTR_ERR(temp_buf);
+>   	}
+>   	memset(temp_buf, 0, (MAX_COMMAND_SIZE + MAX_RESPONSE_SIZE));
+> -	memcpy(temp_buf, buf, len);
+> +	memcpy(temp_buf, buf, cmd_len);
+>   
+>   	command_params[1] = (struct tee_param) {
+>   		.attr = TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
+> @@ -158,17 +129,20 @@ static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
+>   			__func__, resp_len);
+>   		return -EIO;
+>   	}
+> +	if (resp_len > bufsiz) {
+> +		dev_err(&chip->dev,
+> +			"%s: resp_len=%zd exceeds bufsiz=%zd\n",
+> +			__func__, resp_len, bufsiz);
+> +		return -EIO;
+> +	}
+>   
+> -	/* sanity checks look good, cache the response */
+> -	memcpy(pvt_data->resp_buf, temp_buf, resp_len);
+> -	pvt_data->resp_len = resp_len;
+> +	memcpy(buf, temp_buf, resp_len);
+
+We are confusing the callback name.  Prototype of the send function 
+should be:
+
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300..063126711 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -87,7 +87,7 @@ struct tpm_class_ops {
+         const u8 req_complete_val;
+         bool (*req_canceled)(struct tpm_chip *chip, u8 status);
+         int (*recv) (struct tpm_chip *chip, u8 *buf, size_t len);
+-       int (*send) (struct tpm_chip *chip, u8 *buf, size_t len);
++       int (*send) (struct tpm_chip *chip, const u8 *buf, size_t len);
+         void (*cancel) (struct tpm_chip *chip);
+         u8 (*status) (struct tpm_chip *chip);
+         void (*update_timeouts)(struct tpm_chip *chip,
+
+
+But if Jarkko insist not use a send_recv callback, everything is fine.
+
+BR, Qunqin
+
+>   
+> -	return 0;
+> +	return resp_len;
+>   }
+>   
+>   static const struct tpm_class_ops ftpm_tee_tpm_ops = {
+>   	.flags = TPM_OPS_AUTO_STARTUP,
+> -	.recv = ftpm_tee_tpm_op_recv,
+>   	.send = ftpm_tee_tpm_op_send,
+>   };
+>   
+> @@ -253,7 +227,7 @@ static int ftpm_tee_probe(struct device *dev)
+>   	}
+>   
+>   	pvt_data->chip = chip;
+> -	pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2;
+> +	pvt_data->chip->flags |= TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_SYNC;
+>   
+>   	/* Create a character device for the fTPM */
+>   	rc = tpm_chip_register(pvt_data->chip);
 
