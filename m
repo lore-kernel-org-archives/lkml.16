@@ -1,222 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16341C8638;
-	Thu, 29 May 2025 07:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748503602; cv=fail; b=PQD6umLtaAha1DSW+iLK1uTwwIwLupNS0Basl3pj9H1kTM11nDPYBms4jT3CS41Ub493SBxdOGWXP1OfR4m/E1sAE16iR+w6gTCIQxlAMLFE8hM16WAQkD1r4ZJxdLOg4ntAf9BhwbY88gRak7UMZQFd/2yrfqbE5WAeAt6S0bA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748503602; c=relaxed/simple;
-	bh=ltAO64blgq7AtB5FnyjdAmXiv8z2AxorDaWnkJlcEkQ=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rWINZ6Ie+DDC5bpYkPfLsRkBzIe+t7oO4g1DKgUCb6In4UAmiOCwC+YFPktM6wOTGu4UAIqn90a6DAGgHxLTGVTk0oWJtF/xe96Q5b7l6A0B2dnAMYrsUhYdQEEy9p93snf9P7FFsvn/yrAX1truVQQieY/xKAcAuDoDgFGE9IY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nDr4Xz9x; arc=fail smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE31C1373;
+	Thu, 29 May 2025 07:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748503661; cv=none; b=qJBPL4E2T8Utxxb0cEmoR/9vbJJY36jcfJdTbXZdXEpKTtf54fsuZO89Nv/otQUhx6lFdHCF/JrwJunrZFJWtMhmu623ijTEZlGNMB15y4RAS4AaHQfI+aLwsqclvEByaSf/W09I9BXV+g8yPMohiLrEsF+0xQ9Wy06ey4oGEsM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748503661; c=relaxed/simple;
+	bh=s6s6ARYurnzqxgQbwLV10a+xTKOthHY4uyCNDCpcO+Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=C6qrHmyFjiXk882IreeI9ne+OkqXPcvImbsP4H/o9odJdzjXG5J+eDvFPkfbsBynonUmxcC3JpEiBrdmmrSqGJd4Ntp7xmPCnfBSOlNUYPY3PeLlxmDEa7TY54e0MEiwB9hYOE0NPFtIosX32w5akWYbx6qqm7gp09+nELfHgWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qMpEeeVo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nDr4Xz9x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748503601; x=1780039601;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=ltAO64blgq7AtB5FnyjdAmXiv8z2AxorDaWnkJlcEkQ=;
-  b=nDr4Xz9xZDFPRIZxYQcBQ6+2jL4J6Zx+EpC6ALZAyUXYaBHmg89hppev
-   vyOgFFx5WorBtlzYglhxpeUelUZQ1wug8HxPuj7R0tT1YKcdTAB9JTVCf
-   nUKZVZsuSAMF1vkNCMwiuYX/SSTrISPeH2X/DHhd2RkdizqAfiW01SUhc
-   5rCjD+Nmi85KPM8q1wcF/pKj19rKBmcGDDZYzXhGKSqSKlxKtdjMSBjxF
-   c7oP0NRwC0qNhiCgwS5KF/XdNJ8GtksbScZuV/3NjfBNKMOlB1RA8wlHd
-   aYfcD0qfaokQO1i+/dBgDIJjaIwgyzBI8MLsLDjzuy3OTtQkR56fc+Bfs
-   g==;
-X-CSE-ConnectionGUID: L5gl/e4VTJe2A0lYzsV6Fg==
-X-CSE-MsgGUID: LlHALKILSnWC8ChGJhI1oA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="50705328"
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="50705328"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:26:41 -0700
-X-CSE-ConnectionGUID: q0K99Y1QS0CmbN8ktFu1Dw==
-X-CSE-MsgGUID: xM0Cjew+QS6K3j+KR5DWfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,323,1739865600"; 
-   d="scan'208";a="143815107"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 00:26:40 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 00:26:39 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 00:26:39 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (40.107.243.56)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 00:26:37 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bnqPo5JARnqMWsNo4FahXjgJvLm486IxYqYNJFdrd23dHrr1xaXIxTWGtH0KShVK9o7SNYnx6UTveL2JtpzniC9vih/NR6bUfudqjCqavjoKt81NjR4vq/D3VjWrj3ukOv8Y/b+SVk7pzmqBkEsQMIj6WWv8X7xqP9ddulH6vZK9wjHXPnD+gjnudz77yoxOpVIz0OYFBFHJC+qTgZN7xo/ZBg8bS4Lvq3TVXIteSpN4SLE5bzAvQDpDeZzcZ3P+xEcDHARI19iXr2Q+FFI1cyV2GXchpRnUAXyN5CexI4rk5iCzK0mKBPSEweZQfTRal0BwH9Be/HepPq3dYt4WTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8hs66BXGYWAVQVQ1J0JJLux7zwR7BKaPEQ0BWiHfXyw=;
- b=YlEakhgNO5kUtpK/svsFw4+TetimCywRdzrt/tT6SFUSsalSMkcin8imYwZbteJVEXmYmO1SgOP6M5f5UKvDmFxPFFZnYSrMzJXFdUNQobSQr29YOH+10zg91yFD+Ll10fHfzi+UQzeCR55RCWfNc0sVY5/EpsxgqlfuGQvhCrEWwt9jaXqrWFItTapQRDIeJ1TWmFfvAO3qVPMMimYzvDJTsawWNO+GPpzorRWHNArrm8r1l1LKe1I3N5bSEOyKiJ1cZK7woXKTDNVHrMfPqc2WyGJLE2CxNFoD0NsgpEexMaaztBL4+4WHjnef/+r4WhEHRzK5tCsTbyCxLc0rAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
- by LV8PR11MB8461.namprd11.prod.outlook.com (2603:10b6:408:1e6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Thu, 29 May
- 2025 07:25:55 +0000
-Received: from CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14]) by CY5PR11MB6307.namprd11.prod.outlook.com
- ([fe80::1fa2:d2f9:5904:2a14%5]) with mapi id 15.20.8769.025; Thu, 29 May 2025
- 07:25:55 +0000
-Message-ID: <9bd084ef-9118-4d15-8515-328449b2dd42@intel.com>
-Date: Thu, 29 May 2025 10:25:49 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v3 7/7] igc: add preemptible
- queue support in mqprio
-To: "Abdul Rahim, Faizal" <faizal.abdul.rahim@intel.com>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean
-	<vladimir.oltean@nxp.com>
-CC: <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Simon Horman <horms@kernel.org>, Faizal Rahim
-	<faizal.abdul.rahim@linux.intel.com>, Aleksandr Loktionov
-	<aleksandr.loktionov@intel.com>, Chwee-Lin Choong
-	<chwee.lin.choong@intel.com>
-References: <20250519071911.2748406-1-faizal.abdul.rahim@intel.com>
- <20250519071911.2748406-8-faizal.abdul.rahim@intel.com>
-Content-Language: en-US
-From: Mor Bar-Gabay <morx.bar.gabay@intel.com>
-In-Reply-To: <20250519071911.2748406-8-faizal.abdul.rahim@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0017.ISRP290.PROD.OUTLOOK.COM (2603:1096:950:3::7)
- To CY5PR11MB6307.namprd11.prod.outlook.com (2603:10b6:930:21::20)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qMpEeeVo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530A4C4CEE7;
+	Thu, 29 May 2025 07:27:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748503660;
+	bh=s6s6ARYurnzqxgQbwLV10a+xTKOthHY4uyCNDCpcO+Y=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=qMpEeeVoObJ4LXrmnAI6HhhTQnWyL4trC4W2xAaEynolLiOyEIaXO9yrQPdG/gcKj
+	 zI4Q23eUy2bD7gfPx6tMhtQaRvyCnHGvwVon2VSerZc0qxt4Rp/QjxKEmqSUKa2DBd
+	 YkYE1+w6BAxQzA1FR41e5JsBHzNRgP2r/jHRrWDfc+5qknnAG/7aF2XvZAUiRC4qNq
+	 5nmKqyc39jos7ZK6dRgaeO6AHW1SR23eFDi0FnZI8+Lg7JMwKZcW9vKkot8Quhs+Y5
+	 pwaFtzUPhcmpiT5Oq+t2wdOSV174YxaroTBIp5vYK7Fh25Yy2YdYHjk+OqVGtC6OEE
+	 kdmsCvhTsnWEg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6307:EE_|LV8PR11MB8461:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8083c66-d348-4d83-72de-08dd9e820c93
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?bDJQVUowOVlibTRRbnhac1pTbitndURPVG1RQ0JiWkJ3TitDd1JIL2tmL2Mw?=
- =?utf-8?B?VGFkSzNPdUlNcUFDZWpvY21sb1luakpqUFlUTkFHSmR1U3IwR3l5ZkdMUE5O?=
- =?utf-8?B?R3pXMHdMNXlQNmRKcE1nRUlDMkEwLy9kcXkvRDlkWmVxWkczaVp3aGZBZnVJ?=
- =?utf-8?B?OHEwL3lqNkdYelY4MWRtQXI5NlV0anBMUnpDYXplL1huYjg3d2Q0OFN5aUJv?=
- =?utf-8?B?RE1acjZPSnRIbWM2MXRtZUk3L083WGgzeHlCMy8zLzVQdmJQNUJDR3pPdGZX?=
- =?utf-8?B?dGJ5b0dGUHovMzhoRHNCU2FGVUpJL3U2Q0dGQXdMb2hlSHFsbzJmM2N6K0hP?=
- =?utf-8?B?eUxaUVZoeXA1cjBCbHBVc1kzR0hvQzlwZWVmeFZDWFZ1NXg5NHJnUXJNcHpw?=
- =?utf-8?B?aE5SaEZBc0tkVkUzR2dERXIzWnp3Z0llbjA4akwwcEN3bzc1cjR0UlpFTnZk?=
- =?utf-8?B?OFkvZE9LT2Y2WUp4cDBqTExWWlVuTWx4clYrQ1I5TnVqeHNvTWpmS2VXaVdK?=
- =?utf-8?B?aEkzODUvYm9ZOGJjMUs0emZ2eUlKSjArSC9LUHU5aVk3dngzYVRMRjlrVkR2?=
- =?utf-8?B?ZVRRUjc3VXV3YmhZWUY1eUl3MDZpNXdnd2pkT1V5QWkvY2tRN1g0dUxuQUJW?=
- =?utf-8?B?ZDJDaHd0VFhYZkVxaG1nalN4TlB4ZW43MU4vZjNEYys0Wi93YXRPS3UxbjlO?=
- =?utf-8?B?ZHZKY3VEbndtRTFwcStqS1V4K0pTdWdTbk5UOW81VERFazhGc3hLVjRRVjQ3?=
- =?utf-8?B?dWRtNk1WS3VnUGpxUkNmR3VtTzdZUk1VdkdNZkVmc2tnMzdVa3VxM2ZpWUZj?=
- =?utf-8?B?WVE1bzdOcHpmSlRWMWVXM1dMS3FjbVZqUkcwZFVPRzhDZnFxRGVCZjBjekhB?=
- =?utf-8?B?Y1l6ZjBpcTlWNUhlWmhYNzlCa2NpTFNhQVkvOURKTEl2UEg1K2FhR1BEbGkx?=
- =?utf-8?B?Y251UGJnQUJNY085TVFqSnBpSk5zYW5lT1hDVVZIZ3JyeTJCSnVvZWxRRFd2?=
- =?utf-8?B?L3BnT3hSS1VTNlpGUUczaG01ekE5OGpEcU8ya0hLRlA0THlYMll0L0ZsK213?=
- =?utf-8?B?RDFoSDBlSlZzY0tycFE3cGlaZ2RoVU5SV0NITkprampnQ1pmQTBlRXo2b1FD?=
- =?utf-8?B?OEZCODJlaldKT1B6Tk5UQ0dTdVNjZERJaG9zL09vOFMwTnpNclNDZ0Z4dmhx?=
- =?utf-8?B?SkNuaStpcUU1UWZua2RuQ3lPMGRUdFBwdGJrVkx4Z0Qzdk9GWjMydmFucDBt?=
- =?utf-8?B?VlcvdGVqcFcvSWNvcllIcSszWkVoMWh4OWFXWHhGV0c5dmE3TE1IOHYyaGZi?=
- =?utf-8?B?Mzc3Y1pnQUEwZm9Xb0V0cExjc0Q2WS9CTUhlUm5tVUsxNzBpb1R6TVNORmNQ?=
- =?utf-8?B?U1JiWVQ2Ync3Nkw1Y1JmNVVhaWZPNFpaajZDY2t4YmQzOUlEdzNTZmxud0xs?=
- =?utf-8?B?L1F3NjMrakZMZ2NFR3B6YUFHajlSeWNKOXZVVWZxY1NmcWlxVVFlTXNBTnZI?=
- =?utf-8?B?bzc0QXRNbWs1QUhjM0E5Zkg2dE1ndmpMRzBnLzBDSG1qQW1qS3V2VjRiaG1M?=
- =?utf-8?B?MmhXd2ZhRDJGU2cvL2V4bWpxSHNQeEN0dGZFNkxCN3NWSXRMeEZVNTRSbGsz?=
- =?utf-8?B?M2xFSTdtS0l3eTlvV1dnSjNGTUJQNEt0QUdiTmU1RmZkWGkyUm5aV1haOHVk?=
- =?utf-8?B?aXpDTGlyK05sQTBLSGJWbDRxQWRCWHhzNVhxZGxJTnpkeTZYdWdyQytyQU1Y?=
- =?utf-8?B?cUVldjNwSkgyeTlhd3dscEFOc3JyLzh5d0dEOUQrOTNJSHlwbjl4bThHYzAz?=
- =?utf-8?B?KzRYVTdab1l4U0FTYkdsYmdEZEtsdkgyUUNIQzBqcmlXdDEzZnhkNGk4YmZl?=
- =?utf-8?B?SkZhTVN5bGduY3MxS1FmWTZkYzd1a0Q2VklLUTVwMGhQTm1IWHYrczd3ejZU?=
- =?utf-8?Q?+UBoz1Pp2+37HqfW6BEY6yi3s4gu1ftF?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6307.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RnpaVFJ0V0E3V2FQUUI4REV0cms2cnZjUzZMWGJaY2NMSjY0eWRqZmlidWdG?=
- =?utf-8?B?SEh6Q0szdWhQdDZhaXZvM3JhQ1pvUlUxWks2dUVKT2pKRlkwOXhyMWdtOXNt?=
- =?utf-8?B?NTY3NXlYQURIemFUc2VqNklQVi9hMS9sSUg1QnNQL0pWSWpGUFByY1R4SThr?=
- =?utf-8?B?am5VN2ttbTdReEphUVMxcXUxcDhwR1JNRk85Z0U1NVRwSWN4QXU2endiMGk4?=
- =?utf-8?B?OXZYVTRuZ0tweFEwejJHanViUkNtWWR5OGdLdXBXUkJOQ0dsc1VYWUlvYUc2?=
- =?utf-8?B?eEUxUVFRdUVjS05NblZjQ3RPVUh2RjgvSVVwcnNxcFBRYWFoZmkwa2VDUlEz?=
- =?utf-8?B?TzExVWhFVEVSd2d2OEFoNitUdGVlOVZKY3RqL0NUaWV2NjN2Q3Npd3FVbVdM?=
- =?utf-8?B?WGFIMlNDenRRZ0w4TGhtSXVhck12ajdHVVRJUFRLS2J3a0FWQ20rYmNuRnhV?=
- =?utf-8?B?SnY2WlZ2SCtBaVFCcTllVUhYdm54c05WbjlBOFdNODh3T2VsVGtDTlVra1o4?=
- =?utf-8?B?ZUIzeWgzK3dRWVROQ3dMd2UzU0xjNkdhem5vbTFZLzdtSVFzellodlZvTU4v?=
- =?utf-8?B?VytUMFFibE4ydXo4QlZIMXdlZkNNRXNuelRJS2VFWWZvK1BSQzF1b2JsZGhj?=
- =?utf-8?B?dWVlNzlSWmw4R2VDTHpsd1hWMlF4VmdxeFkwUndaMzVzU0NWMFRZT0xaL0JO?=
- =?utf-8?B?QzBzeEsydU1WUDFCZzNuSTBrUS95MSt2V1EwVm1YUWR6cHRSZEVIYXo3aWhz?=
- =?utf-8?B?Z2Q5YkJXUmh0dkVJOEVXdGlXWE5tZE9ZZHUxekNSUHp4VG9nTHVSamFKeSts?=
- =?utf-8?B?VVhNUVNkTWxhNkh1SDFWc3IvUlVtaWMvaTRTeWt1OGkwS1dXM3FLRGIvSUk1?=
- =?utf-8?B?cWYzSnlHays3SFRTRmVRaW1zL0VoWDlxWS9pMzVYY0l5cXp2RTZZYTM4V2c1?=
- =?utf-8?B?bCtiSFNKaytCZ0VUR2JFN0p1MGgrNWZpSkl3eFJUQmRRZUM0QkR6K2FGV1R0?=
- =?utf-8?B?TTFQR2FKUFh4MmJmeUh0cUhmUUIrSlA2bkF6U21CZkEvUTNIazlSQ2liOWxn?=
- =?utf-8?B?VHZnS0h4cGwvdkxvd1orb3lWZjg5enJnZ0srWkdOTnpJSHFDcHpMT2J5YThM?=
- =?utf-8?B?MFdDTVlNR1ZKY21TL256TnUzeGs0L3lxcU5PVTl1Y3l0RFhwNmVyMEM0UDBo?=
- =?utf-8?B?RVBXaU1DMk1CcmVISmZXZGc0TXZDbndTZGlCY2s3Yy8zQkZnRUxJVHJBUHly?=
- =?utf-8?B?bU02RTk3S0traUxhZDA2aWpmdldOSEkva1RHVVNkd2pOR3VoY0o4ZU9vOU81?=
- =?utf-8?B?SFpWWWtTZVRUblNnU0xMcWhoeTBqLzJIdkl6d3dLMzdweXdLc0MyOVZZbnNW?=
- =?utf-8?B?REY3UWNVYWJpa0djejcxUUtUNGV1MnVlTHBEa2h5SDRLc3NxWVlHNlJVRHM4?=
- =?utf-8?B?U0Q1b2RRUnFacnZUTGJoSCtmV3ZhMFl6bFQzK3FWMThmTnIvQVBUcFlmR09J?=
- =?utf-8?B?TUxZNExlb2JTWHRTVFc1YVN6WUFIbVViRStLSkNlaGhSdE95ZjE2L0xZelhI?=
- =?utf-8?B?YklxdW1uUWJUV2RXTE4waG53aHllZG9LOGZVZ3k3QzZNcWYySk9oZnJoeG9o?=
- =?utf-8?B?RDllZld4KzBpZGNRQlhsMlNkNHNETTIrNVJ3d1M3aFR3UFB0Z3pybjFMNjI2?=
- =?utf-8?B?a1A1bzdobno2TklHWHBDamp6dkQvZDUyanY2OXVyNnFDZUpFUkNraVdpVS9j?=
- =?utf-8?B?TmtqUFdJYllkS3RXaDBUeUczWDZ1STR0SW9RU0hHTnNJQklBRzNPcVVyVnZu?=
- =?utf-8?B?TSt6cDJGYUIrTFl1WnFnRVdHR2J0S09rME9GV2YvZEZJbWovT0NwZnF6L1NB?=
- =?utf-8?B?QkROeXZIeEwwZ012SkhrRS9hUmF3c0Q1Z2tkNTU4WnNkZHZRYUNiNmpzV0Ry?=
- =?utf-8?B?dkY2bVEySm9mSDFON2dtZjVoY2ozbyt2akltcWZYc0N5b1Zqb0RMM0J3ckxr?=
- =?utf-8?B?dS8wVEVZTkZxSHR3SGtQM2ZndXVaa3FFM1Z3bDlqWVFpdlVDSkt3U0FPUWxL?=
- =?utf-8?B?aElmT05tdFhLZTlTN0p0cWxqdWtoY2dKYXJqcUhNR2FQMkZKWkphOUlJdVl1?=
- =?utf-8?B?NlljWHBpSXZBVjAvL203TWFacGp2Y2NWSUFyOWlkM2wxUGRPWWhwK3JnWWNw?=
- =?utf-8?B?YkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8083c66-d348-4d83-72de-08dd9e820c93
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6307.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2025 07:25:55.3266
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sXlXpi6qqN3riQRERLQTd0LBik+qGy/6jO4SynZYJqNLNzcbVNWYk6TAEQ6Zz1/0UrljOJNu6DW0aeoRZok6Td9jnlOFbrtt5c2Ir19+9Uk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR11MB8461
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 29 May 2025 09:27:33 +0200
+Message-Id: <DA8GTD7LT7KO.1A3LBQGEQTCEW@kernel.org>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
+ operations
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+ <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
+ <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
+In-Reply-To: <DA88YHU4AZT7.B8JGZHW9P9L9@nvidia.com>
 
-On 19/05/2025 10:19, Abdul Rahim, Faizal wrote:
-> From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> 
-> igc already supports enabling MAC Merge for FPE. This patch adds
-> support for preemptible queues in mqprio.
-> 
-> Tested preemption with mqprio by:
-> 1. Enable FPE:
->     ethtool --set-mm enp1s0 pmac-enabled on tx-enabled on verify-enabled on
-> 2. Enable preemptible queue in mqprio:
->     mqprio num_tc 4 map 0 1 2 3 0 0 0 0 0 0 0 0 0 0 0 0 \
->     queues 1@0 1@1 1@2 1@3 \
->     fp P P P E
-> 
-> Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> ---
->   drivers/net/ethernet/intel/igc/igc_main.c | 9 ++-------
->   drivers/net/ethernet/intel/igc/igc_tsn.c  | 9 +++++++++
->   drivers/net/ethernet/intel/igc/igc_tsn.h  | 1 +
->   3 files changed, 12 insertions(+), 7 deletions(-)
-> 
-Tested-by: Mor Bar-Gabay <morx.bar.gabay@intel.com>
+On Thu May 29, 2025 at 3:18 AM CEST, Alexandre Courbot wrote:
+> On Thu May 29, 2025 at 5:17 AM JST, Benno Lossin wrote:
+>> On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
+>>> Introduce the `num` module, featuring the `NumExt` extension trait
+>>> that expands unsigned integers with useful operations for the kernel.
+>>>
+>>> These are to be used by the nova-core driver, but they are so ubiquitou=
+s
+>>> that other drivers should be able to take advantage of them as well.
+>>>
+>>> The currently implemented operations are:
+>>>
+>>> - align_down()
+>>> - align_up()
+>>> - fls()
+>>>
+>>> But this trait is expected to be expanded further.
+>>>
+>>> `NumExt` is on unsigned types using a macro. An approach using another
+>>> trait constrained by the operator traits that we need (`Add`, `Sub`,
+>>> etc) was also considered, but had to be dropped as we need to use
+>>> wrapping operations, which are not provided by any trait.
+>>>
+>>> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
+>>> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+>>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>>> ---
+>>>  rust/kernel/lib.rs |  1 +
+>>>  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++
+>>>  2 files changed, 83 insertions(+)
+>>
+>> Have you proposed `align_down` to upstream rust? Not saying that we
+>> shouldn't do it here, but if we haven't tried yet, it might be a good
+>> idea to just get them upstreamed. (if you do, it should probably be
+>> named `prev_multiple_of`)
+>
+> I haven't yet - haven't ever contributed anything to upstream Rust, so
+> I'll have to look that one up first. :) But I agree a `prev_multiple_of`
+> could be useful.
+
+I'd recommend opening a thread on Zulip before you go implement stuff.
+Then you can also get a more rusty name for `fls` :)
+
+>>> +    /// Align `self` up to `alignment`.
+>>> +    ///
+>>> +    /// `alignment` must be a power of 2 for accurate results.
+>>> +    ///
+>>> +    /// Wraps around to `0` if the requested alignment pushes the resu=
+lt above the type's limits.
+>>> +    ///
+>>> +    /// # Examples
+>>> +    ///
+>>> +    /// ```
+>>> +    /// use kernel::num::NumExt;
+>>> +    ///
+>>> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+>>> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+>>> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+>>> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+>>> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+>>> +    /// ```
+>>> +    fn align_up(self, alignment: Self) -> Self;
+>>
+>> Isn't this `next_multiple_of` [1] (it also allows non power of 2
+>> inputs).
+>>
+>> [1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_multip=
+le_of
+>
+> It is, however the fact that `next_multiple_of` works with non powers of
+> two also means it needs to perform a modulo operation. That operation
+> might well be optimized away by the compiler, but ACAICT we have no way
+> of proving it will always be the case, hence the always-optimal
+> implementation here.
+
+When you use a power of 2 constant, then I'm very sure that it will get
+optimized [1]. Even with non-powers of 2, you don't get a division [2].
+If you find some code that is not optimized, then sure add a custom
+function.
+
+[1]: https://godbolt.org/z/57M9e36T3
+[2]: https://godbolt.org/z/9P4P8zExh
+
+> Also in the kernel we tend to use the `align` nomenclature and I think we
+> should preserve that for clarity.
+
+That's also fair, but we lose the constness of `next_multiple_of`, so
+you can't use `align_up` in a const function. That might confuse people
+and then they write their own const helper function... I'd prefer we use
+all functions that are available in the stdlib.
+
+>>> +
+>>> +    /// Find Last Set Bit: return the 1-based index of the last (i.e. =
+most significant) set bit in
+>>> +    /// `self`.
+>>> +    ///
+>>> +    /// Equivalent to the C `fls` function.
+>>> +    ///
+>>> +    /// # Examples
+>>> +    ///
+>>> +    /// ```
+>>> +    /// use kernel::num::NumExt;
+>>> +    ///
+>>> +    /// assert_eq!(0x0u32.fls(), 0);
+>>> +    /// assert_eq!(0x1u32.fls(), 1);
+>>> +    /// assert_eq!(0x10u32.fls(), 5);
+>>> +    /// assert_eq!(0xffffu32.fls(), 16);
+>>> +    /// assert_eq!(0x8000_0000u32.fls(), 32);
+>>> +    /// ```
+>>> +    fn fls(self) -> u32;
+>>
+>> Isn't this just `trailing_zeros` [2]?
+>>
+>> [2]: https://doc.rust-lang.org/std/primitive.u32.html#method.trailing_ze=
+ros
+>
+> No, `trailing_zeros` counts from the LSB up to the first bit set to 1,
+> whereas fls does that from the MSB. For instance, `0xffffu32.fls() =3D=3D
+> 16` but `0xffffu32.trailing_zeros() =3D=3D 0`.
+
+Ah right... Then maybe add that to the upstream suggestion :)
+
+---
+Cheers,
+Benno
