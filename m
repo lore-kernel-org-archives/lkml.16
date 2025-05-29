@@ -1,441 +1,171 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13927215F53;
-	Thu, 29 May 2025 09:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91B7F1EB5FA;
+	Thu, 29 May 2025 09:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748509412; cv=none; b=CpAmfqz66TxHATFjAZtWHgSJjCW6hPt/Ps5ZGuDvydl8QtlI1+TP6YBWXs2Qs0+bSXG9uVwW/kQc/UXFIxmNJchpZpzdujEZsNizOJVNrjEesY+LBNfT6q84ouJh5oy3F8l4xHlne0cklxwQPSmlE5TX2JBEJLf+mNCRy9owFbM=
+	t=1748509447; cv=none; b=Q5qmXSKciRuhdM9GRcqgxHQxcyloPdeEHSNiaoujyekw8s+i8pLSqPXvFaNPUmAqbAYm0bxxB95XiJdhRKZMOmifo6ggEUo0uLRPOTUu1mdT/z7t/gqlhu5DYGowrq3Y9IClE1L2JV8OEvKBV7Q4fNCRJmmKZzfiN2z7au/vGbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748509412; c=relaxed/simple;
-	bh=J7NxoBMtaTkBpaBj4y6PZe06UU2bm+m2zYAG/Bh2SAY=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=P+e5khNrEkUaav3u0kcHxtgm48saOoPnpMHtdnRUUyMANwn3/aI15gjelDLc2VFc23Jk+hZMlr+ewfZ467iow5WWM0c/Z5zCuADMII1hSNM3gRQcLcQCR7xw8hbvta139IayMhmV1RZpTUzdLS/XB5cOXg31qvSd8juvwMfiA98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4b7L4G416gz4f3jJG;
-	Thu, 29 May 2025 17:02:54 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id DE4D71A0B0A;
-	Thu, 29 May 2025 17:03:19 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_VIjho4gVzNw--.64257S3;
-	Thu, 29 May 2025 17:03:19 +0800 (CST)
-Subject: Re: [PATCH 18/23] md/md-llbitmap: implement APIs to mange bitmap
- lifetime
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-19-yukuai1@huaweicloud.com>
- <CALTww2-+0h2Pxq0PJLZQxcoYpMJuiKuv6CZQ3kgX5PeqBkxKsQ@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <0f5b4641-cd4a-dccc-6f13-f2fa3221dee1@huaweicloud.com>
-Date: Thu, 29 May 2025 17:03:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748509447; c=relaxed/simple;
+	bh=uik7CVAfylf4Zns01Xl/e4tYqWdzKhabVx4q5X0bwss=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jHJZq/L5jVAbKenrPlG/T5z4LWSnRulJtUSCZlezIdUSUji5cO3F3/hs5pQnPnIHsmUfAE4xW4kyyqPs7vX+ecETiqtdOj/sfJv3/jaoith7NlEgEicjxbAawOfSBt8ZUAe7Xc/XNWbLH7BzzhjF3sPkqmgrII+i6ZsMDoDS4Bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ix347Nd6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ix347Nd6"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54T8GuWK013744;
+	Thu, 29 May 2025 09:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=QYitLenvKdMMoSXMFdk5ar
+	dpn4Q/7ywfa6pxQK9lrIQ=; b=ix347Nd6ze2cJCRJ2daKFNkDEcyo/tzCC7NeJt
+	K/KAoEQgnYf3/gt2BweZZCQVUux7x1KD28Zpwd976k/8eoIuE0TAG6rTHeggWa6s
+	LP91YyyeyEOblsuz/99DB14hwEWDFaGcwas13TUrbXtBnESJwu+N7tpWhK8s/0qb
+	SosBY9K4cjCdQNjjF627SX9BSbVqPJ5P8y9zyfxBaHOIJ5RdH050bd8T/sKekk0i
+	g1h/mJgIJTRzGakXKKgkO8azlUperwde7sovCH1WE9AG1P99yigaRrA+B00gNrm+
+	TEOezc+9iivizexOfBjB2VnSCSaTwkXmxmQnbFflqGHZnGmw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w691fnew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 09:03:59 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54T93wFm032025
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 09:03:58 GMT
+Received: from zongjian-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 29 May 2025 02:03:56 -0700
+From: zongjian <quic_zongjian@quicinc.com>
+To: <quic_zongjian@quicinc.com>, <linux-serial@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_ztu@quicinc.com>, <quic_haixcui@quicinc.com>,
+        <quic_anupkulk@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vdadhani@quicinc.com>
+Subject: [PATCH v1] serial: qcom-geni: Add support to increase UART ports efficiently
+Date: Thu, 29 May 2025 17:03:25 +0800
+Message-ID: <20250529090325.1479702-1-quic_zongjian@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww2-+0h2Pxq0PJLZQxcoYpMJuiKuv6CZQ3kgX5PeqBkxKsQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl_VIjho4gVzNw--.64257S3
-X-Coremail-Antispam: 1UD129KBjvJXoWfGF4fGw1xWw47Ar1DJw4fXwb_yoWDtF4rpF
-	WxXFn8Ka13JryrXr17Xr97ZFWFqr4ktr9Fvr97Aa4rGr1qkrs3KryrGFyUG34kZr1rGF4k
-	A3W5GrsxuF18WFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=WfoMa1hX c=1 sm=1 tr=0 ts=683822ff cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=fp4JcETvSatQGfsmKXEA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: QUXfGPdFBAar2tK12GA043gYDYLz3ZLC
+X-Proofpoint-ORIG-GUID: QUXfGPdFBAar2tK12GA043gYDYLz3ZLC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI5MDA4NyBTYWx0ZWRfXx8YG/8vr467x
+ jn8EFj1ad/WPZG3p7cpNgxgOyRTGyJYdmhlp2CnL+5Pz7zOzKsKF3/oFwSo50/mePGnqSYmgf6a
+ 8qMntEZytHDC/prRxOf9ZDed+NiDhWDwqlK6MG9Eb6URER7MhmghkooZwnWOpbD6llxn572IeU9
+ XOeZlX6S5CMbs+xu5Usd4eHf5nCNInLWLfSCEE6on7YQkuyAggfGw0chKlBOm2+41+Jzt6VlUM0
+ YRgPLAiO2Vxi78H8MkeysqYUlpBS0bDNdZxTS2YD1eHdN85JdZQOMyoF2dRDLRd3Gf5iDzuTk3D
+ 5Xn6VLnj6j1gI6wtok0QMPgERguhEWPgUpAFxrEJ3fxXM3rsR+c6tgdBJHdokX31zlhl8YU7EgE
+ LPb9PTqHbL5CBtcy77Flr2LbUuo8ESu+XsGsmgEP6oQbhXCcs/ZOSAYEFQP7j0j6Mr40B9jF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_04,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505290087
 
-Hi,
+Populate members of qcom_geni_uart_ports through a loop for
+better maintainability. 
 
-在 2025/05/29 15:03, Xiao Ni 写道:
-> Hi Kuai
-> 
-> Is it better to put this patch before patch15. I'm reading patch15.
-> But I need to read this patch first to understand how llbitmap is
-> created and loaded. Then I can go to read the io related part.
+Increase the UART ports to 5, as a few use cases require more than 3 UART ports.
 
-Never mind, I'll merge patch 15-23 into one single patch in the next
-version, it's better for review.
+Signed-off-by: zongjian <quic_zongjian@quicinc.com>
+---
+ drivers/tty/serial/qcom_geni_serial.c | 40 +++++++++------------------
+ 1 file changed, 13 insertions(+), 27 deletions(-)
 
-Thanks,
-Kuai
-
-> 
-> Regards
-> Xiao
-> 
-> On Sat, May 24, 2025 at 2:18 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Include following APIs:
->>   - llbitmap_create
->>   - llbitmap_resize
->>   - llbitmap_load
->>   - llbitmap_destroy
->>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> ---
->>   drivers/md/md-llbitmap.c | 322 +++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 322 insertions(+)
->>
->> diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
->> index 4d5f9a139a25..23283c4f7263 100644
->> --- a/drivers/md/md-llbitmap.c
->> +++ b/drivers/md/md-llbitmap.c
->> @@ -689,4 +689,326 @@ static void llbitmap_resume(struct llbitmap *llbitmap, int page_idx)
->>          wake_up(&pctl->wait);
->>   }
->>
->> +static int llbitmap_check_support(struct mddev *mddev)
->> +{
->> +       if (test_bit(MD_HAS_JOURNAL, &mddev->flags)) {
->> +               pr_notice("md/llbitmap: %s: array with journal cannot have bitmap\n",
->> +                         mdname(mddev));
->> +               return -EBUSY;
->> +       }
->> +
->> +       if (mddev->bitmap_info.space == 0) {
->> +               if (mddev->bitmap_info.default_space == 0) {
->> +                       pr_notice("md/llbitmap: %s: no space for bitmap\n",
->> +                                 mdname(mddev));
->> +                       return -ENOSPC;
->> +               }
->> +       }
->> +
->> +       if (!mddev->persistent) {
->> +               pr_notice("md/llbitmap: %s: array must be persistent\n",
->> +                         mdname(mddev));
->> +               return -EOPNOTSUPP;
->> +       }
->> +
->> +       if (mddev->bitmap_info.file) {
->> +               pr_notice("md/llbitmap: %s: doesn't support bitmap file\n",
->> +                         mdname(mddev));
->> +               return -EOPNOTSUPP;
->> +       }
->> +
->> +       if (mddev->bitmap_info.external) {
->> +               pr_notice("md/llbitmap: %s: doesn't support external metadata\n",
->> +                         mdname(mddev));
->> +               return -EOPNOTSUPP;
->> +       }
->> +
->> +       if (mddev_is_dm(mddev)) {
->> +               pr_notice("md/llbitmap: %s: doesn't support dm-raid\n",
->> +                         mdname(mddev));
->> +               return -EOPNOTSUPP;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static int llbitmap_init(struct llbitmap *llbitmap)
->> +{
->> +       struct mddev *mddev = llbitmap->mddev;
->> +       sector_t blocks = mddev->resync_max_sectors;
->> +       unsigned long chunksize = MIN_CHUNK_SIZE;
->> +       unsigned long chunks = DIV_ROUND_UP(blocks, chunksize);
->> +       unsigned long space = mddev->bitmap_info.space << SECTOR_SHIFT;
->> +       int ret;
->> +
->> +       while (chunks > space) {
->> +               chunksize = chunksize << 1;
->> +               chunks = DIV_ROUND_UP(blocks, chunksize);
->> +       }
->> +
->> +       llbitmap->chunkshift = ffz(~chunksize);
->> +       llbitmap->chunksize = chunksize;
->> +       llbitmap->chunks = chunks;
->> +       mddev->bitmap_info.daemon_sleep = DEFAULT_DAEMON_SLEEP;
->> +
->> +       ret = llbitmap_cache_pages(llbitmap);
->> +       if (ret)
->> +               return ret;
->> +
->> +       llbitmap_state_machine(llbitmap, 0, llbitmap->chunks - 1, BitmapActionInit);
->> +       return 0;
->> +}
->> +
->> +static int llbitmap_read_sb(struct llbitmap *llbitmap)
->> +{
->> +       struct mddev *mddev = llbitmap->mddev;
->> +       unsigned long daemon_sleep;
->> +       unsigned long chunksize;
->> +       unsigned long events;
->> +       struct page *sb_page;
->> +       bitmap_super_t *sb;
->> +       int ret = -EINVAL;
->> +
->> +       if (!mddev->bitmap_info.offset) {
->> +               pr_err("md/llbitmap: %s: no super block found", mdname(mddev));
->> +               return -EINVAL;
->> +       }
->> +
->> +       sb_page = llbitmap_read_page(llbitmap, 0);
->> +       if (IS_ERR(sb_page)) {
->> +               pr_err("md/llbitmap: %s: read super block failed",
->> +                      mdname(mddev));
->> +               ret = -EIO;
->> +               goto out;
->> +       }
->> +
->> +       sb = kmap_local_page(sb_page);
->> +       if (sb->magic != cpu_to_le32(BITMAP_MAGIC)) {
->> +               pr_err("md/llbitmap: %s: invalid super block magic number",
->> +                      mdname(mddev));
->> +               goto out_put_page;
->> +       }
->> +
->> +       if (sb->version != cpu_to_le32(BITMAP_MAJOR_LOCKLESS)) {
->> +               pr_err("md/llbitmap: %s: invalid super block version",
->> +                      mdname(mddev));
->> +               goto out_put_page;
->> +       }
->> +
->> +       if (memcmp(sb->uuid, mddev->uuid, 16)) {
->> +               pr_err("md/llbitmap: %s: bitmap superblock UUID mismatch\n",
->> +                      mdname(mddev));
->> +               goto out_put_page;
->> +       }
->> +
->> +       if (mddev->bitmap_info.space == 0) {
->> +               int room = le32_to_cpu(sb->sectors_reserved);
->> +
->> +               if (room)
->> +                       mddev->bitmap_info.space = room;
->> +               else
->> +                       mddev->bitmap_info.space = mddev->bitmap_info.default_space;
->> +       }
->> +       llbitmap->flags = le32_to_cpu(sb->state);
->> +       if (test_and_clear_bit(BITMAP_FIRST_USE, &llbitmap->flags)) {
->> +               ret = llbitmap_init(llbitmap);
->> +               goto out_put_page;
->> +       }
->> +
->> +       chunksize = le32_to_cpu(sb->chunksize);
->> +       if (!is_power_of_2(chunksize)) {
->> +               pr_err("md/llbitmap: %s: chunksize not a power of 2",
->> +                      mdname(mddev));
->> +               goto out_put_page;
->> +       }
->> +
->> +       if (chunksize < DIV_ROUND_UP(mddev->resync_max_sectors,
->> +                                    mddev->bitmap_info.space << SECTOR_SHIFT)) {
->> +               pr_err("md/llbitmap: %s: chunksize too small %lu < %llu / %lu",
->> +                      mdname(mddev), chunksize, mddev->resync_max_sectors,
->> +                      mddev->bitmap_info.space);
->> +               goto out_put_page;
->> +       }
->> +
->> +       daemon_sleep = le32_to_cpu(sb->daemon_sleep);
->> +       if (daemon_sleep < 1 || daemon_sleep > MAX_SCHEDULE_TIMEOUT / HZ) {
->> +               pr_err("md/llbitmap: %s: daemon sleep %lu period out of range",
->> +                      mdname(mddev), daemon_sleep);
->> +               goto out_put_page;
->> +       }
->> +
->> +       events = le64_to_cpu(sb->events);
->> +       if (events < mddev->events) {
->> +               pr_warn("md/llbitmap :%s: bitmap file is out of date (%lu < %llu) -- forcing full recovery",
->> +                       mdname(mddev), events, mddev->events);
->> +               set_bit(BITMAP_STALE, &llbitmap->flags);
->> +       }
->> +
->> +       sb->sync_size = cpu_to_le64(mddev->resync_max_sectors);
->> +       mddev->bitmap_info.chunksize = chunksize;
->> +       mddev->bitmap_info.daemon_sleep = daemon_sleep;
->> +
->> +       llbitmap->chunksize = chunksize;
->> +       llbitmap->chunks = DIV_ROUND_UP(mddev->resync_max_sectors, chunksize);
->> +       llbitmap->chunkshift = ffz(~chunksize);
->> +       ret = llbitmap_cache_pages(llbitmap);
->> +
->> +out_put_page:
->> +       __free_page(sb_page);
->> +out:
->> +       kunmap_local(sb);
->> +       return ret;
->> +}
->> +
->> +static void llbitmap_pending_timer_fn(struct timer_list *t)
->> +{
->> +       struct llbitmap *llbitmap = from_timer(llbitmap, t, pending_timer);
->> +
->> +       if (work_busy(&llbitmap->daemon_work)) {
->> +               pr_warn("daemon_work not finished\n");
->> +               set_bit(BITMAP_DAEMON_BUSY, &llbitmap->flags);
->> +               return;
->> +       }
->> +
->> +       queue_work(md_llbitmap_io_wq, &llbitmap->daemon_work);
->> +}
->> +
->> +static void md_llbitmap_daemon_fn(struct work_struct *work)
->> +{
->> +       struct llbitmap *llbitmap =
->> +               container_of(work, struct llbitmap, daemon_work);
->> +       unsigned long start;
->> +       unsigned long end;
->> +       bool restart;
->> +       int idx;
->> +
->> +       if (llbitmap->mddev->degraded)
->> +               return;
->> +
->> +retry:
->> +       start = 0;
->> +       end = min(llbitmap->chunks, PAGE_SIZE - BITMAP_SB_SIZE) - 1;
->> +       restart = false;
->> +
->> +       for (idx = 0; idx < llbitmap->nr_pages; idx++) {
->> +               struct llbitmap_page_ctl *pctl = llbitmap->pctl[idx];
->> +
->> +               if (idx > 0) {
->> +                       start = end + 1;
->> +                       end = min(end + PAGE_SIZE, llbitmap->chunks - 1);
->> +               }
->> +
->> +               if (!test_bit(LLPageFlush, &pctl->flags) &&
->> +                   time_before(jiffies, pctl->expire)) {
->> +                       restart = true;
->> +                       continue;
->> +               }
->> +
->> +               llbitmap_suspend(llbitmap, idx);
->> +               llbitmap_state_machine(llbitmap, start, end, BitmapActionDaemon);
->> +               llbitmap_resume(llbitmap, idx);
->> +       }
->> +
->> +       /*
->> +        * If the daemon took a long time to finish, retry to prevent missing
->> +        * clearing dirty bits.
->> +        */
->> +       if (test_and_clear_bit(BITMAP_DAEMON_BUSY, &llbitmap->flags))
->> +               goto retry;
->> +
->> +       /* If some page is dirty but not expired, setup timer again */
->> +       if (restart)
->> +               mod_timer(&llbitmap->pending_timer,
->> +                         jiffies + llbitmap->mddev->bitmap_info.daemon_sleep * HZ);
->> +}
->> +
->> +static int llbitmap_create(struct mddev *mddev)
->> +{
->> +       struct llbitmap *llbitmap;
->> +       int ret;
->> +
->> +       ret = llbitmap_check_support(mddev);
->> +       if (ret)
->> +               return ret;
->> +
->> +       llbitmap = kzalloc(sizeof(*llbitmap), GFP_KERNEL);
->> +       if (!llbitmap)
->> +               return -ENOMEM;
->> +
->> +       llbitmap->mddev = mddev;
->> +       llbitmap->io_size = bdev_logical_block_size(mddev->gendisk->part0);
->> +       llbitmap->bits_per_page = PAGE_SIZE / llbitmap->io_size;
->> +
->> +       timer_setup(&llbitmap->pending_timer, llbitmap_pending_timer_fn, 0);
->> +       INIT_WORK(&llbitmap->daemon_work, md_llbitmap_daemon_fn);
->> +       atomic_set(&llbitmap->behind_writes, 0);
->> +       init_waitqueue_head(&llbitmap->behind_wait);
->> +
->> +       mutex_lock(&mddev->bitmap_info.mutex);
->> +       mddev->bitmap = llbitmap;
->> +       ret = llbitmap_read_sb(llbitmap);
->> +       mutex_unlock(&mddev->bitmap_info.mutex);
->> +       if (ret)
->> +               goto err_out;
->> +
->> +       return 0;
->> +
->> +err_out:
->> +       kfree(llbitmap);
->> +       return ret;
->> +}
->> +
->> +static int llbitmap_resize(struct mddev *mddev, sector_t blocks, int chunksize)
->> +{
->> +       struct llbitmap *llbitmap = mddev->bitmap;
->> +       unsigned long chunks;
->> +
->> +       if (chunksize == 0)
->> +               chunksize = llbitmap->chunksize;
->> +
->> +       /* If there is enough space, leave the chunksize unchanged. */
->> +       chunks = DIV_ROUND_UP(blocks, chunksize);
->> +       while (chunks > mddev->bitmap_info.space << SECTOR_SHIFT) {
->> +               chunksize = chunksize << 1;
->> +               chunks = DIV_ROUND_UP(blocks, chunksize);
->> +       }
->> +
->> +       llbitmap->chunkshift = ffz(~chunksize);
->> +       llbitmap->chunksize = chunksize;
->> +       llbitmap->chunks = chunks;
->> +
->> +       return 0;
->> +}
->> +
->> +static int llbitmap_load(struct mddev *mddev)
->> +{
->> +       enum llbitmap_action action = BitmapActionReload;
->> +       struct llbitmap *llbitmap = mddev->bitmap;
->> +
->> +       if (test_and_clear_bit(BITMAP_STALE, &llbitmap->flags))
->> +               action = BitmapActionStale;
->> +
->> +       llbitmap_state_machine(llbitmap, 0, llbitmap->chunks - 1, action);
->> +       return 0;
->> +}
->> +
->> +static void llbitmap_destroy(struct mddev *mddev)
->> +{
->> +       struct llbitmap *llbitmap = mddev->bitmap;
->> +
->> +       if (!llbitmap)
->> +               return;
->> +
->> +       mutex_lock(&mddev->bitmap_info.mutex);
->> +
->> +       timer_delete_sync(&llbitmap->pending_timer);
->> +       flush_workqueue(md_llbitmap_io_wq);
->> +       flush_workqueue(md_llbitmap_unplug_wq);
->> +
->> +       mddev->bitmap = NULL;
->> +       llbitmap_free_pages(llbitmap);
->> +       kfree(llbitmap);
->> +       mutex_unlock(&mddev->bitmap_info.mutex);
->> +}
->> +
->>   #endif /* CONFIG_MD_LLBITMAP */
->> --
->> 2.39.2
->>
-> 
-> 
-> .
-> 
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 140c3ae5ead2..d969c96b9690 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -77,7 +77,7 @@
+ #define STALE_TIMEOUT			16
+ #define DEFAULT_BITS_PER_CHAR		10
+ #define GENI_UART_CONS_PORTS		1
+-#define GENI_UART_PORTS			3
++#define GENI_UART_PORTS			5
+ #define DEF_FIFO_DEPTH_WORDS		16
+ #define DEF_TX_WM			2
+ #define DEF_FIFO_WIDTH_BITS		32
+@@ -153,6 +153,7 @@ static const struct uart_ops qcom_geni_console_pops;
+ static const struct uart_ops qcom_geni_uart_pops;
+ static struct uart_driver qcom_geni_console_driver;
+ static struct uart_driver qcom_geni_uart_driver;
++static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS];
+ 
+ static void __qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
+ static void qcom_geni_serial_cancel_tx_cmd(struct uart_port *uport);
+@@ -163,32 +164,15 @@ static inline struct qcom_geni_serial_port *to_dev_port(struct uart_port *uport)
+ 	return container_of(uport, struct qcom_geni_serial_port, uport);
+ }
+ 
+-static struct qcom_geni_serial_port qcom_geni_uart_ports[GENI_UART_PORTS] = {
+-	[0] = {
+-		.uport = {
+-			.iotype = UPIO_MEM,
+-			.ops = &qcom_geni_uart_pops,
+-			.flags = UPF_BOOT_AUTOCONF,
+-			.line = 0,
+-		},
+-	},
+-	[1] = {
+-		.uport = {
+-			.iotype = UPIO_MEM,
+-			.ops = &qcom_geni_uart_pops,
+-			.flags = UPF_BOOT_AUTOCONF,
+-			.line = 1,
+-		},
+-	},
+-	[2] = {
+-		.uport = {
+-			.iotype = UPIO_MEM,
+-			.ops = &qcom_geni_uart_pops,
+-			.flags = UPF_BOOT_AUTOCONF,
+-			.line = 2,
+-		},
+-	},
+-};
++static void qcom_geni_serial_port_init(void)
++{
++	for (int i = 0; i < GENI_UART_PORTS; i++) {
++		qcom_geni_uart_ports[i].uport.iotype = UPIO_MEM;
++		qcom_geni_uart_ports[i].uport.ops = &qcom_geni_uart_pops;
++		qcom_geni_uart_ports[i].uport.flags = UPF_BOOT_AUTOCONF;
++		qcom_geni_uart_ports[i].uport.line = i;
++	}
++}
+ 
+ static struct qcom_geni_serial_port qcom_geni_console_port = {
+ 	.uport = {
+@@ -2048,6 +2032,8 @@ static int __init qcom_geni_serial_init(void)
+ {
+ 	int ret;
+ 
++	qcom_geni_serial_port_init();
++
+ 	ret = console_register(&qcom_geni_console_driver);
+ 	if (ret)
+ 		return ret;
+-- 
+2.34.1
 
