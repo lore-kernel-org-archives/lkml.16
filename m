@@ -1,105 +1,115 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C22566DF
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9044721D5BA
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748557461; cv=none; b=KawnB6WGdRxmCnO/yjuZnJKH5wlnK4RmFFoIZkYcGI3H93sXxYkAR1RZsa4+sWU3lvCdzYZeFSOqOEKw2yMT1ZNP4QvmR6O+ihl/bkOU+pj0WFWOSNZkPLnJ42vMUj5+AErZDq0HozoNEwPEySGkm4mCp3bxGCNeT2sUDHh076Q=
+	t=1748557541; cv=none; b=JE3mVYjZlxUvBWmCkYlAucD/GqRgp/J9FCmfE+rO66AtQkqOOX/42NiCkPYXwqtfUe/nb5aGdKyiLJ3E1h+F+h2sHk9IvH5V4dknYaFmRXsON6K4MuiE495UWDbyK04TB7kVC4/LGsAUtrxIE1q+vX/Zb/B9SyIgVG8gwyMC0hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748557461; c=relaxed/simple;
-	bh=1FOB/tgbWbr2J9qY9wwVwJjFsVMUQQmh0+XPdLjMp74=;
-	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=FPpypbHBLsoswpWCE+oTRkeu7r7SZ57pjWrcWY3N8SUcAOEGDdcNRvMiRp4oeNQz7ldoyEe9oiQ7lKOzaSPbsq4gEje/NeMMLTf4DbG1RknE9dEqSvCqYC6P+BxZdtk63j9Rxh6jNqm990FTqNdxroyV74VikWsaqsWOblEb360=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=R1dO6qIx; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748557541; c=relaxed/simple;
+	bh=9fHccOzCoT3PXuJMnHBxoEcOvKmcudsQQ0DLMoG/Xgk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yo9lWOBl6eNdgzI5VUzqttS1TcjnXA+eXyjv3bBY2wTSoKNjCnE0LbsLdbGrkKsERkad7Osnn9yCbeaJ3yLllHgXFdBgnuXSqp1v6rfMceWpCHPgqI0yZfP6+J7hAbmXvOaF+Pwu5ItMM5VpZRbuia/KKtzCzHI5ZH7daGnfmFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fg1iDOf1; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R1dO6qIx"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250529222411euoutp0263e109bb157fa2de13ca3e58e8fbc153~EH7z8t7ou0242202422euoutp02U
-	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:24:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250529222411euoutp0263e109bb157fa2de13ca3e58e8fbc153~EH7z8t7ou0242202422euoutp02U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748557451;
-	bh=5egH5KWzs9ZC7lOWXRNh1it6vTUa7BxSAQZBLKObvZA=;
-	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=R1dO6qIxkW3CQsa3OH9T1WJ45bAArBU4Lvvl6sEs95fbeHIspElrYf5YTB3AFTBQA
-	 nMPk73pelIdwVOusfMHmVC1V5r/mhYtwbUQ/EsNdfpiCXMHVGZ4rKWt5gW4QN7vLE+
-	 triOhRZmPZ3e+G+IFMeNVjYHwlwYvKVyD7LLhMDo=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250529222411eucas1p27e4b662d6f120c4e83d808cb03e4bb1e~EH7zNTci01565915659eucas1p2w;
-	Thu, 29 May 2025 22:24:11 +0000 (GMT)
-Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
-	[106.210.136.40]) by eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250529222410eusmtip2679dfbe0e8921c3283af235ded40b4f8~EH7ySR5a32867928679eusmtip2W;
-	Thu, 29 May 2025 22:24:10 +0000 (GMT)
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Fri, 30 May 2025 00:23:55 +0200
-Subject: [PATCH v3 8/8] drm/imagination: Enable PowerVR driver for RISC-V
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fg1iDOf1"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73712952e1cso1082415b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 15:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748557538; x=1749162338; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=drHrrRT39Op87szRQpY/iTZqFXixV7SuUvHON4DmPJk=;
+        b=fg1iDOf1f1JG+haM8R/s0LwWADElYhhBg1q9YbqtW1putPlQ5xlBFkukHNmd2lk6xN
+         mIoc91sfXc6eu96Q08TgcL0YLWHQuY1MzCtE6MLJcQsNX3k+lSn11wxIwqrfVn1Wl4TL
+         pmvt8Lu4OIn/ylafo8CSYcGpBwtIQclwSfrFYgdvFqIoICidcGw04mXUJH4itviR4t0G
+         3PPaCYSxmx5OhH5OYJdZPmUzsAACz8XS7wmtSPGI+OsHdZ/B/imbmHS75or6mLMDkCdg
+         ir4LTBqnBJJZ8uT1USKlTclyFrKMJtTzBMGiD+PLM+CQ9VnNhNsDckqz5U+fcGjXCprm
+         bNVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748557538; x=1749162338;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=drHrrRT39Op87szRQpY/iTZqFXixV7SuUvHON4DmPJk=;
+        b=XWPxrJ7sflg04GFGaZKYjyMT6OlGZhE0TXrFKHT7VkTsh6dCxa/wAd1pdCefWTN9UK
+         oA4cUoyO79HqjGemRHT4smJxTeQzs/yBw+tQHIJ9hV6Wxo4HzWKDb68nC+R39RFoShE3
+         MOmo+ZBAd0Uq2aiYhEGWU0l5zqyw4WCadeMWZb0ZpYzoeBNkt7nJkytmxLR4sM+D35cv
+         TACxjMFSFBnteeMHn1S/p1ZSkRx6pj8dpPy9ugLvcobChFYeCjhfqd6HgPnGURhB2HqI
+         2TWVvdGKDgpm248VxcDyHaVsybtmQU707FFpFWyRkVnbebcgP3KmirL8+DZN5tYXZSON
+         ByAw==
+X-Gm-Message-State: AOJu0YzeeDKuU6geShk0EdNbiiIkjlSv9VIu5Pe0uyEv+JhpWzqMFJZg
+	jVipbv232V2u6Ejl1aGI8mf5OYJutPLh6L+dsctZePyWvC6CJjTTFinfeagwAg==
+X-Gm-Gg: ASbGncuIxxnskvGfb+JWvJT5imfYi7jSBl0X/smTHjiG5aGClnGrjnGMfDSM14InWoE
+	HBn2ZqyfbNPsBxsX7VrFDXLvOyGfY4ejO81aeuoKEuBhYarLk5EXoe15CTnO3X9aQkMg2L3UfJq
+	T97qL1rYUp4z2CGKPNOI18UuF8fUeK2E1U5W8++tUkP6v+W77k14jYS/M/gM7Zs4iNiC69GxCOW
+	2c7Q9RTKOqdhxBWMijldJNFHxdbC26PA4VlU4S1hJ1UkLotzOj/or02M+5DAT79XbhsgeLy4772
+	Q1lx8mJHljc3KMnGJ4SJpyHZIeo4mbxvM8F/rBKE8isb/L5ZEK9ULF2xRl+Y08HEk8m2wLTZ7Oz
+	Q4HIZ52FV/2j6jK2gVpPXAj6opLYjozr/pmlMkRQUkYHZN1ki4bY7CA==
+X-Google-Smtp-Source: AGHT+IHlBHPluOs//bqnUjchs07T0PB+X5G4b+ihLaWDzs+KYZzqJ2rb5/G1M4hLSxKiNhQG9WzP+A==
+X-Received: by 2002:a05:6a00:4f8b:b0:734:b136:9c39 with SMTP id d2e1a72fcca58-747bd9f148emr1247882b3a.19.1748557538421;
+        Thu, 29 May 2025 15:25:38 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a46d:d724:4557:2a3e])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affcf25fsm1802750b3a.121.2025.05.29.15.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 15:25:38 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] f2fs: make sure zoned device GC to use FG_GC in shortage of free section
+Date: Thu, 29 May 2025 15:25:32 -0700
+Message-ID: <20250529222532.1088106-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-apr_14_for_sending-v3-8-83d5744d997c@samsung.com>
-In-Reply-To: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Michal
-	Wilczynski <m.wilczynski@samsung.com>,  Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,  Frank Binns
-	<frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,  Maarten
-	Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,  Paul Walmsley
-	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
-	<ulf.hansson@linaro.org>,  Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250529222411eucas1p27e4b662d6f120c4e83d808cb03e4bb1e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250529222411eucas1p27e4b662d6f120c4e83d808cb03e4bb1e
-X-EPHeader: CA
-X-CMS-RootMailID: 20250529222411eucas1p27e4b662d6f120c4e83d808cb03e4bb1e
-References: <20250530-apr_14_for_sending-v3-0-83d5744d997c@samsung.com>
-	<CGME20250529222411eucas1p27e4b662d6f120c4e83d808cb03e4bb1e@eucas1p2.samsung.com>
+Content-Transfer-Encoding: 8bit
 
-Several RISC-V boards feature Imagination GPUs that are compatible with
-the PowerVR driver. An example is the IMG BXM-4-64 GPU on the Lichee Pi
-4A board. This commit adjusts the driver's Kconfig dependencies to allow
-the PowerVR driver to be compiled on the RISC-V architecture.
+From: Daeho Jeong <daehojeong@google.com>
 
-By enabling compilation on RISC-V, we expand support for these GPUs,
-providing graphics acceleration capabilities and enhancing hardware
-compatibility on RISC-V platforms.
+We already use FG_GC when we have free sections under
+gc_boost_zoned_gc_percent. So, let's make it consistent.
 
-Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
 ---
- drivers/gpu/drm/imagination/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/gc.c      | 2 +-
+ fs/f2fs/segment.c | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/Kconfig b/drivers/gpu/drm/imagination/Kconfig
-index 737ace77c4f1247c687cc1fde2f139fc2e118c50..3b773879d781b17549455fac252cec8adfd3a9c8 100644
---- a/drivers/gpu/drm/imagination/Kconfig
-+++ b/drivers/gpu/drm/imagination/Kconfig
-@@ -3,7 +3,7 @@
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index f752dec71e45..cd13a642055b 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -144,7 +144,7 @@ static int gc_thread_func(void *data)
+ 				gc_control.one_time;
  
- config DRM_POWERVR
- 	tristate "Imagination Technologies PowerVR (Series 6 and later) & IMG Graphics"
--	depends on ARM64
-+	depends on (ARM64 || RISCV)
- 	depends on DRM
- 	depends on PM
- 	select DRM_EXEC
-
+ 		/* foreground GC was been triggered via f2fs_balance_fs() */
+-		if (foreground)
++		if (foreground && !f2fs_sb_has_blkzoned(sbi))
+ 			sync_mode = false;
+ 
+ 		gc_control.init_gc_type = sync_mode ? FG_GC : BG_GC;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 396ef71f41e3..030540df3550 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -446,7 +446,8 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+ 	} else {
+ 		struct f2fs_gc_control gc_control = {
+ 			.victim_segno = NULL_SEGNO,
+-			.init_gc_type = BG_GC,
++			.init_gc_type = f2fs_sb_has_blkzoned(sbi) ?
++				FG_GC : BG_GC,
+ 			.no_bg_gc = true,
+ 			.should_migrate_blocks = false,
+ 			.err_gc_skipped = false,
 -- 
-2.34.1
+2.49.0.1204.g71687c7c1d-goog
 
