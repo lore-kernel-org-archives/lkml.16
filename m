@@ -1,106 +1,100 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E3621884B;
-	Thu, 29 May 2025 12:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455E622256F;
+	Thu, 29 May 2025 12:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748520027; cv=none; b=EyrodI/JXMq/zm3yFdYf/puMeAwEwSuk+HdD8C+XPGJelGgC3LiQPIZbTevP686Yr3uIx0pn0KutuZsWof/6OlnJ+wqJ4YoyHVJwQPXPRupeY7J+3mmNWAjQW6YbUDnXnW+uiJ55O1SQRvOX+7bwWGYbIp8JYFpbSp/09sW66OQ=
+	t=1748520332; cv=none; b=Z/4WHmRJfiiUYnwG9Tc3YEtWgghwX4vuK4LJ38zwndFemYiA/u98PQ/TqVUb7e/M95C0mBsulBi1Dmhnmwbznf2Puh2ekslocEcXcw/M3wPkce20phyWaBJeMHlgerBf6rUtsea2E66lYF8BoPt8kt6KeETn6oIPYO5FHw0uXVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748520027; c=relaxed/simple;
-	bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hELPqV9pw0VSs+/7Hhl/LkDQbBYt8fx5P+lmlCM7xM6lDarajN8C/UbLeW1rW4a3qMQe984XBDIlFa1NO16nEYo4HV5JimUQvSk5Ak3n2jLAtd2FhEQPPUy9lEhv9jPx18j4RTLaQARzpRojU9MTw1bp7cxvHKT8oThReO1QF3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jA9QiceY; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748520332; c=relaxed/simple;
+	bh=8I/UWuszTYHqaey/kP67a900h+P9udkFPXSQpcAGIl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELbBpObFEO5505pqULUuS6zt9J+mp1F5w1RQwVENxAfU3cvFvj/wHeDZa9i1t1CJN3PnOiDNJiCElb5zqorbAwMjDdl9W+MgFGG6FWt11e5hGzLkmyrZCyYbX7se5kuOrsIQaokDdlAo5dpttuv7r0+pkfGvWTXHMz8z/zY3OuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4dxqYAv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jA9QiceY"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-311f6be42f1so153016a91.0;
-        Thu, 29 May 2025 05:00:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748520025; x=1749124825; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
-        b=jA9QiceYi5qUxmtjnVnF2meNRK0tBdP8Jx/xqFnFY6XhFMwUfvu3bl0YgUh5DAExXT
-         XOaTdOkp7iTkEvfluugjCCBRB2A6ATh0z9YzSFlsHJtM9M7CzT50uCW0WOxL53gmTCR4
-         4lhKdAUCsdTkudBMDLZl0iu9a+LMV3hpwnJFYBKYmiEbd4uHvIXBZLI9AK2W69sjmBN3
-         Zp6Z1h0j5JnDw9pWd34mAKUvIsqusQ4XNvs1IQaWOukaNE3U/822JJHwzpNsN7hSdsYx
-         wfhJFabo7oUMTWAlgb9m3dDbbWRkXy3FiNT2d8GRH9gH34XezJGKCzfRiqgyRYriTSld
-         nmSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748520025; x=1749124825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=60FYkyD6do9p4UudiOmbEoZ1xKf8mgTv2wUpIq/BSHo=;
-        b=GGRm9BJ0RNAGWynU0DccWEk5Cd5LF5jxUpcOkgZikfPBcVOCdo6kOa+COTweZvzY3l
-         cLRTy/EUEnWKxvq2QUjSl2iaCkHUCDxBKLQJatJJEvC8ujIpg1ObNxlSDU4wSzwXwc85
-         2tLQDqZq2Dr600D+yL5g5/yZVMjN7RgGFZbkqVaFlje5e2Zb9hYjoia/F42Ndv4dcA21
-         OhGOWEsU4XzbwtneN72ps8qERz50HTGgNaHd7lmNTHJ0BF//h2M83NRq1cXOYhNpdk+W
-         yDYSXpRAKV6FObpqjzNxCERqsxpDJt3m7BeXU7MQFlK4lyLr3K8TL8UNbXDVQMaGH/p7
-         VmQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV9vqoS+jSZ4DLT9Sp05xOnB2Vyr85VR40rVXicjM04Qsm5K1teylWtMMNAM3JluQ/tdyKvfjE8KP/6fng=@vger.kernel.org, AJvYcCWjUBSJ1VHxO7w7lCiwDKW/PtGUOzIxil2c8+CsdnnYbgyQ3OpAjLWrkxqXRna6JhE8zsi7W1i+kT0x7vyqXws=@vger.kernel.org, AJvYcCXfyPkJRr9xDjs3caX9PKB1PcI2o2TEj4Q+4544jjUNVcsag1RRiiY9R6wqwDyODp55dDK/sjNZ8Hp6@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+5d2qyw+8QLZK7IaCOlwCDjKyrXGVhCF07NxE9uciHaYGOiOM
-	hu+0NSXJ8PQu9yaAUZtPeWC8PszJuTvGmoKOfj1wXn4Li8QlKAKMP4kq35jGO7sMf6zZ6tq43cI
-	n/tGZVgoz+5Lp5xJD+Sry5LXL0FYS9yw=
-X-Gm-Gg: ASbGncto2kBmxZ4fGdyh1EoQWK23vtM6TDJXeLeQaVOv7nmCKEqDZ78cQLajqKjv/TZ
-	0jua6OWhRyq+BX17nxsUFv/Wsv98z+JNzyRfjhl2GYls7EJXSF7m/8ioNqx2HttOxHr9WVLHnvi
-	vEc+CDhLBISMtbIKuXbnUSJRHmbESvf2HW
-X-Google-Smtp-Source: AGHT+IF75ho/kgNnnTXuMAltdbtGZYLJZ/94+KUjiLaubj79XSsKCgqw3GVpE6j+S857NIT9CPov9gHyW/6fKcp47Kw=
-X-Received: by 2002:a17:90b:4d8f:b0:30a:80bc:ad4 with SMTP id
- 98e67ed59e1d1-311e03a7f6amr3684332a91.0.1748520024854; Thu, 29 May 2025
- 05:00:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4dxqYAv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCB5C4CEE7;
+	Thu, 29 May 2025 12:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748520331;
+	bh=8I/UWuszTYHqaey/kP67a900h+P9udkFPXSQpcAGIl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T4dxqYAvZ54FKoVTj+yydgfIVvF/MnkLhnLXZnTR4ayNz5QvjWEoq4myi5AvbFfAm
+	 DUik26A7WJfdEZn2Oavw5VB35a7oD37DLB6bACy/AcZYQJ1FsQhdQ6z874mM+rKNyK
+	 NE9lT1NtdwjTyJULJvVgf3R175yapp8HcDemurLEuVAOniMKakZp7ko/pODiWSIRLw
+	 mfQMlaQP9ooRzSAvU+QH//MLMNUffj17tLGYdBF5hLOb66qByfsDMtQ5zRdSqDfZMx
+	 AaBAGFzMQFa8zQ6ZBpjrTm+58HiFVK+uyN40qv4cgPpby02raRrBdrtmWjJjBDzkZv
+	 MwR/NA+c4+urA==
+Date: Thu, 29 May 2025 13:05:24 +0100
+From: Will Deacon <will@kernel.org>
+To: perlarsen@google.com
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, sebastianene@google.com,
+	qperret@google.com, qwandor@google.com, arve@android.com,
+	perl@immunant.com, lpieralisi@kernel.org, kernel-team@android.com,
+	tabba@google.com, james.morse@arm.com, armellel@google.com,
+	jean-philippe@linaro.org, ahomescu@google.com
+Subject: Re: [PATCH v4 3/5] KVM: arm64: Mark FFA_NOTIFICATION_* calls as
+ unsupported
+Message-ID: <20250529120523.GA29242@willie-the-truck>
+References: <20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com>
+ <20250516-virtio-msg-ffa-v4-3-580ee70e5081@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
-In-Reply-To: <20250411-no-offset-v3-1-c0b174640ec3@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 29 May 2025 14:00:12 +0200
-X-Gm-Features: AX0GCFt-4gSlJ1etQ1r7td4PbY9q2MXspqbPouc-iPgb8c26SqL1WVCj3ZLqUvw
-Message-ID: <CANiq72n-ccQ5D+0m1TAs64tcOJB-QtLwyru2b1NK6tCP-atyuw@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: workqueue: remove HasWork::OFFSET
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516-virtio-msg-ffa-v4-3-580ee70e5081@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, Apr 11, 2025 at 4:08=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Implement `HasWork::work_container_of` in `impl_has_work!`, narrowing
-> the interface of `HasWork` and replacing pointer arithmetic with
-> `container_of!`. Remove the provided implementation of
-> `HasWork::get_work_offset` without replacement; an implementation is
-> already generated in `impl_has_work!`. Remove the `Self: Sized` bound on
-> `HasWork::work_container_of` which was apparently necessary to access
-> `OFFSET` as `OFFSET` no longer exists.
->
-> A similar API change was discussed on the hrtimer series[1].
->
-> Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3=
-bf0ce6cc@kernel.org/ [1]
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Tested-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+On Fri, May 16, 2025 at 12:14:02PM +0000, Per Larsen via B4 Relay wrote:
+> From: Per Larsen <perlarsen@google.com>
+> 
+> Prevent FFA_NOTIFICATION_* interfaces from being passed through to TZ.
+> 
+> Signed-off-by: Per Larsen <perlarsen@google.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index b3d016bee404ce3f8c72cc57befb4ef4e6c1657f..a545d25002c85b79a8d281739479dab7838a7cd3 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -632,6 +632,14 @@ static bool ffa_call_supported(u64 func_id)
+>  	case FFA_RXTX_MAP:
+>  	case FFA_MEM_DONATE:
+>  	case FFA_MEM_RETRIEVE_REQ:
+> +       /* Optional notification interfaces added in FF-A 1.1 */
+> +	case FFA_NOTIFICATION_BITMAP_CREATE:
+> +	case FFA_NOTIFICATION_BITMAP_DESTROY:
+> +	case FFA_NOTIFICATION_BIND:
+> +	case FFA_NOTIFICATION_UNBIND:
+> +	case FFA_NOTIFICATION_SET:
+> +	case FFA_NOTIFICATION_GET:
+> +	case FFA_NOTIFICATION_INFO_GET:
+>  		return false;
 
-Applied to `rust-next` -- thanks everyone!
+Acked-by: Will Deacon <will@kernel.org>
 
-Cheers,
-Miguel
+That said, I wonder if we should revisit this denylist along the lines
+of the discussion with Oliver on the initial FF-A proxy series:
+
+https://lore.kernel.org/kvmarm/ZGx0QBZzFCmm636r@linux.dev/
+
+We check for is_ffa_call() already, so we could invert the above to be
+an allow-list for calls within the FF-A range rather than a deny-list.
+
+What do you think?
+
+Will
