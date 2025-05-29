@@ -1,50 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2853D21ABC1;
-	Thu, 29 May 2025 12:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66ACB7F7FC
+	for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 12:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748521080; cv=none; b=OLevuZiyMG+8TDJvy/pr/UZdk0H22uqY/GNhtxQLe977XvRiQ7wpkmQQ6C6mKq0oyW/ph6DyyRZRHFj81+6n3Tjti+0wFZpZqSGntQCn6+EjCLv3gTqtDdXRgm2NOd+ZSM2Ezc21nCL0NdqN5YeEGAqAYJmFp8riJvka85W4OOk=
+	t=1748521334; cv=none; b=DUrZ69M3/9g6fyZRozjUQJCsZSBQCacvv8OxAnlsJoQuFVoY8j9qtVOil8RTMaplx7qyvNzhUHA7nypzN8Bb5X9cXX5J0alXutHtto9b+6p0xMsdWH+I8/z0/gB9zZ+mcYFXwrVg5nFS9c7bXAjYoIP4ObFSR8igcufypm2vQi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748521080; c=relaxed/simple;
-	bh=T9ZQY4CGugD2MH+iTUeDacs8pgXvAPcZYmxnuyRAiSU=;
+	s=arc-20240116; t=1748521334; c=relaxed/simple;
+	bh=K7qjULalyjMkAxL7PVeGCHXQouk2F6broaGq36eQD0c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CCtYhs0UmgVO1scFKx3y7GDxR+GvDj75A6cR53+jUaOwTUnjOV2SB0eIu/fGTRXixE4EwBuPDALeNhNAgDsRTECD9elumIuVactNV1qqjr0I17ErTetuaxZzW5xZkUMiwuJTDY+S0LVVr/V0Y57mQL7kmV4aA06BojmwSATzo68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ASMqB7f4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWZPx2zBw4a+VnTX04y7My2LMK3euvuufxESOd/Xo5Inswod6rdU8+pNEuQ7mokwTh9BFw9NH0p1T1r034aS6Hed8T0IhaajUTAacdxsbrB4M/QQXs6vReWS4mcZoGRleUvfXukpwhH26YuUT0IHwkLEQWYdVFw02CONFZEv03g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QCwpzbep; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ASMqB7f4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91365C4CEE7;
-	Thu, 29 May 2025 12:17:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748521079;
-	bh=T9ZQY4CGugD2MH+iTUeDacs8pgXvAPcZYmxnuyRAiSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ASMqB7f4OJsnn10KsXlKeQM/6y2euEGVS1tST7xQP41q2zFYIFm2pMkZYy0KeKxlv
-	 lRyrOX1aodcUCzR/FXUyNQcsj8bPBY7XP+lKehhvIqua5iyr05BmGjtt6STEtWzXOX
-	 2esSec+XG+Iy5UQE4hSECHcaRkfe278g2RlaECY+mljC000Rh33knCq0XcPookZng5
-	 mOhHU8huR6bsWDo29BaNgX6/pYnltWyWmdtlxLPpYmyzIMSRN9Q8T8TFKjgLsaZawi
-	 Bz/yI4DVbNjiqyL8vru1iItVnVjH43YjHF/4CDlhcD5BBTZjdUQaG+e5woFS2c+wbV
-	 rAKKNUd3UN83g==
-Date: Thu, 29 May 2025 13:17:52 +0100
-From: Will Deacon <will@kernel.org>
-To: perlarsen@google.com
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, sebastianene@google.com,
-	qperret@google.com, qwandor@google.com, arve@android.com,
-	perl@immunant.com, lpieralisi@kernel.org, kernel-team@android.com,
-	tabba@google.com, james.morse@arm.com, armellel@google.com,
-	jean-philippe@linaro.org, ahomescu@google.com
-Subject: Re: [PATCH v4 2/5] KVM: arm64: Zero x4-x7 in ffa_set_retval
-Message-ID: <20250529121751.GB29242@willie-the-truck>
-References: <20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com>
- <20250516-virtio-msg-ffa-v4-2-580ee70e5081@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QCwpzbep"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450cd6b511cso5276415e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 05:22:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748521330; x=1749126130; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=al8287RxjgUX+nRH6wDLFLDnBZ/mAzEmTjClCtJoDew=;
+        b=QCwpzbepmjUqNLhiIsZsfzmN79FdLnNpzM534qoCvbZuLDVa83mlgV9cacr32shmeA
+         94QV3Lyq62DHmYZxHh6+TrRIqsGvs74W2BkO95kI2YnAxc6CUCNBwvX2BxyWPmCCCXK9
+         mGzjmDTFASnxTra0fkuc4JgABj6mI5U02/o8aFCnMlksNDkYyycpwD3YM1/03WaeU8Hk
+         o8fCKlSr2H0nOn68/c0fHozsv2tAd9A13BaNNrvBeW6NCiCfAQh3d/1nL5HstjZUl2my
+         D3UgTBophu9ZdwsGHVxu4WgcRx/n18pqHz4h6jB4P/wenCn5MCMrPa2NcyiUVRrSoRJO
+         z4jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748521330; x=1749126130;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=al8287RxjgUX+nRH6wDLFLDnBZ/mAzEmTjClCtJoDew=;
+        b=QYJIRWGB9I0b9d6EzLTQxY0/F1FZNDFlsN5QqfCohF1SueuQGi4l6tE5K1Xb4v1VlE
+         F/pIS2Szs3hA71itTUI5YGwSAaNxY277Hzja9zB947fGv+dGQa0nvIMUm8z2t2GTrRNR
+         nBmqJf3ciHULl7wfIync2d07efH3Fdna6uIYcc1knSJBMsQFDKqvQ768L1gPK/hjfCIX
+         2TpSnqLhKdSaNedyURmaInjjo0PGaPTHwDETBUd7Knfh76YdMZHaihdd6NcoUnQgYqrJ
+         GjptGu8LyD+IsvjzKYlR5p1adBDWDWscfOhqRk8e8aOFGVvSH05wet0D03t9T13Yka3c
+         OZWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUnwBdLqd1m9W0vuHW9KP3T9M7SzHetF0kP2hkofJmXYrwvsWS4KsWW1ARQAVcZPKuZdT96JfHZWrn1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1UaxMMV4oSewcTFgPuySWCf4xGZ3T74/qLZLC6nD3nT3KO1TK
+	GFXW/aIlmw9QcJrKOJKgf8u3vKR8WC5DOXdalLARndInHNyuAHHAu8ClH0zBpop4nNI=
+X-Gm-Gg: ASbGncvf6SM5CVVZ0BLbebetyLtuauTov4Hl5RRwyQegxctV/b6P5KE7f9SvFhnPKJ4
+	9Idy8N231V8/FkeWkyQPoNwrvgegHTFKsDrUuFj6wQgk5SSQWjeC7CU3WrpV4MF1nteCruYzpWK
+	AMR2nvFXkBWsLuIRig+sNBFNHwLpHbwj5qodlMgi1H6CoA9Dhgo4CW3puh4FrFJSt0gO5BkU0nn
+	cm8Ajn8bEKcfdZ5hNZEXt8PPUJPf6vwxSkL7N554scm+9XYr4i1zzR5fa8fkIQxfCZPRzztA6Uh
+	ASHZCcCYb0BhMvqXLgCipdbfPCyFr3oovsjvr0u301JLsKeDDFYUWApdt4fjUk9H
+X-Google-Smtp-Source: AGHT+IEi5QGaE/L2kia77TwpAy38jFwnSSaQnSkGGXHD3NLBpfAk7antH461TuYl2AZ2tzXQyeDH2w==
+X-Received: by 2002:a05:600c:a00e:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-45072553bb3mr59385965e9.14.1748521330468;
+        Thu, 29 May 2025 05:22:10 -0700 (PDT)
+Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450cfc16275sm18627795e9.22.2025.05.29.05.22.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 05:22:10 -0700 (PDT)
+Date: Thu, 29 May 2025 14:22:09 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Hongyu Ning <hongyu.ning@linux.intel.com>, stable@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] mm: Fix vmstat after removing NR_BOUNCE
+Message-ID: <aDhRcXcqctogIITw@tiehlicka>
+References: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,62 +78,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516-virtio-msg-ffa-v4-2-580ee70e5081@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250529103832.2937460-1-kirill.shutemov@linux.intel.com>
 
-On Fri, May 16, 2025 at 12:14:01PM +0000, Per Larsen via B4 Relay wrote:
-> From: Per Larsen <perlarsen@google.com>
+On Thu 29-05-25 13:38:32, Kirill A. Shutemov wrote:
+> Hongyu noticed that the nr_unaccepted counter kept growing even in the
+> absence of unaccepted memory on the machine.
 > 
-> FF-A 1.0 references SMCCC 1.2 (reference [4] on page xi). The results of
-> an SMC32/HVC32 are returned in W1-W7 in SMCCC 1.2. However, W4-W7 must be
-> preserved unless they contain results according to the function definition.
+> This happens due to a commit that removed NR_BOUNCE: it removed the
+> counter from the enum zone_stat_item, but left it in the vmstat_text
+> array.
 > 
-> ffa_set_retval is commonly used to report FFA_SUCCESS or FFA_ERROR back to
-> the caller. FFA_SUCCESS requires that x2-x7 must be zero (MBZ) unless a
-> register is explicitly used in the function response. FFA_ERROR requires
-> x3-x7 MBZ.
+> As a result, all counters below nr_bounce in /proc/vmstat are
+> shifted by one line, causing the numa_hit counter to be labeled as
+> nr_unaccepted.
 > 
-> ffa_set_retval is also used to return results of:
-> - FFA_VERSION which requires x1-x7 MBZ
-> - FFA_MEM_FRAG_TX which returns FFA_MEM_FRAG_RX or FFA_ERROR.
->   FFA_MEM_FRAG_RAX always requires that x5-x7 MBZ and x4 MBZ
->   at any virtual FF-A instance (applies to kvm).
+> To fix this issue, remove nr_bounce from the vmstat_text array.
 > 
-> Messaging interfaces such as FFA_MSG_SEND_DIRECT_{REQ,REQ2}, will not use
-> ffa_set_retval.
-> 
-> Given the above, it is safe to zero x4-x7 in ffa_set_retval.
-> 
-> Signed-off-by: Per Larsen <perlarsen@google.com>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reported-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+> Fixes: 194df9f66db8 ("mm: remove NR_BOUNCE zone stat")
+> Cc: stable@vger.kernel.org
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Hannes Reinecke <hare@suse.de>
+> Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+Unfortunatelly a common mistake to make. I have seen you have a followup
+fix with a stricter build time check. Will have a look.
+
+Thanks!
+
 > ---
->  arch/arm64/kvm/hyp/nvhe/ffa.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  mm/vmstat.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> index 2c199d40811efb5bfae199c4a67d8ae3d9307357..b3d016bee404ce3f8c72cc57befb4ef4e6c1657f 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> @@ -101,6 +101,10 @@ static void ffa_set_retval(struct kvm_cpu_context *ctxt,
->  	cpu_reg(ctxt, 1) = res->a1;
->  	cpu_reg(ctxt, 2) = res->a2;
->  	cpu_reg(ctxt, 3) = res->a3;
-> +	cpu_reg(ctxt, 4) = 0;
-> +	cpu_reg(ctxt, 5) = 0;
-> +	cpu_reg(ctxt, 6) = 0;
-> +	cpu_reg(ctxt, 7) = 0;
->  }
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 4c268ce39ff2..ae9882063d89 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1201,7 +1201,6 @@ const char * const vmstat_text[] = {
+>  	"nr_zone_unevictable",
+>  	"nr_zone_write_pending",
+>  	"nr_mlock",
+> -	"nr_bounce",
+>  #if IS_ENABLED(CONFIG_ZSMALLOC)
+>  	"nr_zspages",
+>  #endif
+> -- 
+> 2.47.2
 
-Hmm. On reflection, isn't the root of the problem actually that we're
-using SMCCC 1.1 to communicate with TZ, whereas FF-A requires SMCCC 1.2
-(and we even enforce that in hyp_ffa_init())?
-
-If we moved all of the hyp FF-A code over to SMCCC 1.2 unconditionally,
-then we could just assign everything from res back to the CPU context
-without having to worry about zeroing. That would also simplify your
-later patches because we wouldn't have to deal with SMCCC 1.1 at all.
-
-I'm aware that we're carrying a patch in Android to permit SMCCC 1.1,
-but that's only for Pixel 6 iirc and we shouldn't worry about that
-upstream.
-
-Will
+-- 
+Michal Hocko
+SUSE Labs
