@@ -1,283 +1,170 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341CC17A2F5;
-	Fri, 30 May 2025 13:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5869F21517C;
+	Fri, 30 May 2025 13:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612639; cv=none; b=GfExJfj5cG8K3Y+c2tRKSuylPCh2UdZaUrXmMy1Lx2TnPdXuomnvj7qBa6oWf1/QLROq1VUFfPfg+9uGy8TRpw5FcRB2WOdJ2KOJPTtNlbuQO7dDc/VvnfWHUYxRANw9YrJwcv8HbpaVi9OGOLzJ9wutAFzvTakZvU6xzzqxpoQ=
+	t=1748612652; cv=none; b=C4m6akU5D8BWvuKVmPDogssJTIRwO7iUOd1JFmrIMwGj+J4EIw99GPf8x9YtqQIvfbv1B2UTzAffDs9MLXeM/suYcf9JL3Vn1K95XY1BYfs7jgvLsuR1aOLGQtkVShafmLtYgy+kVMReV8xJTPXnBF9an2l3xfZOUHrxvPy+3yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612639; c=relaxed/simple;
-	bh=QjSHNJemlr/cCBeYAFj5VuIcFvzHgKsz0ql6A50+TTE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIVSslnpv+aU1wtmPOJDGkw+bp2gwd2an662Cb4MibPkW1ch1/69GGnb68//bWmblwdi/5dFecsqhb/IBceSIK8q3iSPgDCGXmMTDnWGEV46Cbm3IdVFWERfTBlDjoLHuaSh7/NjOYuCCcmfP8c2lWNnDKFgbg3IBPzFVUZcZaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IuxaBeRf; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748612652; c=relaxed/simple;
+	bh=GzYoAIWTFmgIn+wCMJ71Bjo9eHEgpY3fZvvllpFtNlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CAHl+xILOwRqc3UN22IWD8dSBLKTWrP7ixAHwPCE6FlYmosu0GK6OfYlwh4SPKA4M2clfsq18KwaJWzKpZYjesQrOomwkuDMnG9yl13P+pwm07btJxKWQSEleCEdZUiZ/UfheXnOkP5Jv0jk7HqGdIfC1DSh6gOPQDsuqo4+oWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DC2EdB1v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuxaBeRf"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad572ba1347so311796866b.1;
-        Fri, 30 May 2025 06:43:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748612634; x=1749217434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cg27jRbqgT6Vx96cOZmKzT7mRTBBHTh/rcABmd3nHl0=;
-        b=IuxaBeRf4QM+uTXGvHnvFsXmDdyWhz4MoH+x8mT8j6KFAWGkRZgI74THgzqhjdXXRn
-         pWt4KLonV81vrT8UkFrnd0LHThfkgXvIjf6SwP1oQ2Z1WxqbOdR68Rjx0c7P4gsLn3UV
-         nzcjOqY2zzbxn7B92cC9m8Cv9sxm8eVIAOAMt6IeMnepx+Nh4fDD1dlGoxoXNDTNws7A
-         411eoSyXCz3DKdosX//90XdiYPTfq9RkOSCuZBoOF4mMkL+XdeUYJekm9Oe0gxvl3X1w
-         ELjsMn36HguhK4O60fjUnBGJV2kSY272Ih7PjeyThV0YVfKB9ehfOZ3sU2iqDOWRlMsq
-         s36g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748612634; x=1749217434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cg27jRbqgT6Vx96cOZmKzT7mRTBBHTh/rcABmd3nHl0=;
-        b=AtLOjOmsWZh34Dkd+HGjG+zaDyJ83P+1SCnVUiqfnPcY+C85n1J/7cYyTjpRBck8Wo
-         8kboM2Jhnl7Tj9pdvRkozlelop9kvyFE2ohPPNVr0tJCKLL33ZzZSH++GHSyUe8uNk+U
-         6QaxMDdcRhKJmXiWo91q8PxzkDLkfX004PCMbTA25GqLb5S2uTqc7Srx3+eOORS3l+9W
-         t1U3Ok4ZOynuM2XhnkW9JVDTXkUmmmGbwDI7cpSSPBDGvMju14PTivraJ6X/VkuaaVug
-         nrKkyUBO6hipza6udVAC/BeySiUtJMPAxrY+djd9XR2Pz9v4qdZGnZqTuOB787AlkeFG
-         eg1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUg9aB2+ooDnDNLCHpThien9AgURJA7xGgffEvAMfJPVhO2DIJUL/ZgtX03hMQkas1Vqkr0egx75BSp/Eo=@vger.kernel.org, AJvYcCVhFchcC6nb5dTndkkAuHup8nV8jZh/XdTg56ReLe3H73V5jni1qfxVABpi4OX0eMw9HXtTR4HJMg+0I22q@vger.kernel.org, AJvYcCVwMR6/StDUcJ6oi4UkZlqU169/UqLmJNbzGFoRsvIXs73agUBbqFYjLUgA2G0DHV0W5f6UrByHC6fa0Q1e@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeZoCAAes2EzDumzqgQCpcakKRPMX4btmN2EXn1fRujV5w+08L
-	OiqfXJSTsEx51XP2ychTBcecAUyXAbH7F/V8ppSKet6gxvGvWY3lWT5HX+VJEwFV7hp6hCkMKdG
-	mS/K4EZ/PFC8AVs4TGp+4aPQqb0EPgDU=
-X-Gm-Gg: ASbGncvmo0mLEYV5bH5Ehv73Cm+ktzXuguoi8SlmF4y0PolszRZAv6rLAZSFKetMAxE
-	AYn44ExuojL/kVaqYZ+Baao/eW451EK3bTTrkkyFggNZZ5YmnOC/Jr05cAuDe8+OWZ+oRoaqi+c
-	XksggAoZWM45ybSZahRon1v7o3qm+l9bvC
-X-Google-Smtp-Source: AGHT+IHvBpjR/endSRQUt5FTF0eDLYH+Kdk5Qc8W51rWZR6eg4HtuFzDot8VeE8MsEjFbuxlldLzfxh7KxymP/Pqh8M=
-X-Received: by 2002:a17:907:9282:b0:ad8:959c:c55d with SMTP id
- a640c23a62f3a-adb322457f2mr313580966b.2.1748612634069; Fri, 30 May 2025
- 06:43:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DC2EdB1v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D3C4CEE9;
+	Fri, 30 May 2025 13:44:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748612649;
+	bh=GzYoAIWTFmgIn+wCMJ71Bjo9eHEgpY3fZvvllpFtNlI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DC2EdB1vtdkpGOZMMsKx/kpyFYb4kswSJcd1XqeGzxXAnTuPdQIBXtcYPlbZvRqlu
+	 pMa0CK8OlPD5oI5U2s/euD+DSR5ZH5OS6hF1KDGAQyQLRfMjoL9SDvfkaeWH3LWEq2
+	 4qkjbHgtim+qvaXkM5RnpzMS/0FoAbQSt/od8YZM=
+Date: Fri, 30 May 2025 15:44:06 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
+Message-ID: <2025053001-navigate-worry-c75b@gregkh>
+References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530103941.11092-1-tao.wangtao@honor.com> <20250530103941.11092-2-tao.wangtao@honor.com>
-In-Reply-To: <20250530103941.11092-2-tao.wangtao@honor.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 30 May 2025 15:43:43 +0200
-X-Gm-Features: AX0GCFshwnygoYp9lqAc5QflEKgeVEHCIAtDwsKnm5KS2y3iB6_sX14JgNpIns4
-Message-ID: <CAOQ4uxid9dn3akvN3gMBVOJXoazF5gm6xO+=eaRCzDaC62K5OA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] fs: allow cross-FS copy_file_range for
- memory-backed files
-To: wangtao <tao.wangtao@honor.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, kraxel@redhat.com, 
-	vivek.kasireddy@intel.com, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	hughd@google.com, akpm@linux-foundation.org, benjamin.gaignard@collabora.com, 
-	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com, jack@suse.cz, 
-	baolin.wang@linux.alibaba.com, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, bintian.wang@honor.com, yipengxiang@honor.com, 
-	liulu.liu@honor.com, feng.han@honor.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
 
-On Fri, May 30, 2025 at 12:40=E2=80=AFPM wangtao <tao.wangtao@honor.com> wr=
-ote:
->
-> Memory-backed files can optimize copy performance via
-> copy_file_range callbacks. Compared to mmap&read: reduces
-> GUP (get_user_pages) overhead; vs sendfile/splice: eliminates
-> one memory copy; supports dmabuf zero-copy implementation.
->
-> Signed-off-by: wangtao <tao.wangtao@honor.com>
+On Fri, May 30, 2025 at 01:38:06PM +0100, Igor Korotin wrote:
+> `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
+> 
+> This is used by subsequent patches, in particular the i2c driver
+> abstractions, to create ACPI device ID tables.
+> 
+> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
 > ---
+>  MAINTAINERS         |  1 +
+>  rust/kernel/acpi.rs | 63 +++++++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs  |  1 +
+>  3 files changed, 65 insertions(+)
+>  create mode 100644 rust/kernel/acpi.rs
 
-Hi wangtao,
+I'm not seeing any "subsequent patches" here.  Is this part of a patch
+series that didn't all get sent out properly?
 
-Let me rephrase my reaction gently:
-Regardless of the proposed API extension, and referring to the
-implementation itself -
-I wrote the current code and I can barely understand the logic every time
-I come back to read it.
+thanks,
 
-Your changes make it too messy to be reviewed/maintained.
-I have a few suggestions for simplifications (see below).
+greg k-h
 
-The complication arise from the fact that normally the destination fops
-are used to call the copy_range() method and this case is a deviation
-from this standard, we need to make the cope simpler using a helper
-to choose the fops to use.
 
->  fs/read_write.c    | 71 +++++++++++++++++++++++++++++++++-------------
->  include/linux/fs.h |  2 ++
->  2 files changed, 54 insertions(+), 19 deletions(-)
->
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index bb0ed26a0b3a..591c6db7b785 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -1469,6 +1469,20 @@ COMPAT_SYSCALL_DEFINE4(sendfile64, int, out_fd, in=
-t, in_fd,
->  }
->  #endif
->
-> +static inline bool is_copy_memory_file_to_file(struct file *file_in,
-> +                               struct file *file_out)
-> +{
-> +       return (file_in->f_op->fop_flags & FOP_MEMORY_FILE) &&
-> +               file_in->f_op->copy_file_range && file_out->f_op->write_i=
-ter;
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b659fb27ab63..5f8dfae08454 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -302,6 +302,7 @@ F:	include/linux/acpi.h
+>  F:	include/linux/fwnode.h
+>  F:	include/linux/fw_table.h
+>  F:	lib/fw_table.c
+> +F:	rust/kernel/acpi.rs
+>  F:	tools/power/acpi/
+>  
+>  ACPI APEI
+> diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
+> new file mode 100644
+> index 000000000000..bbd38910736c
+> --- /dev/null
+> +++ b/rust/kernel/acpi.rs
+> @@ -0,0 +1,63 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Advanced Configuration and Power Interface abstractions.
+> +
+> +use crate::{bindings, device_id::RawDeviceId, prelude::*};
+> +
+> +/// IdTable type for ACPI drivers.
+> +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
+> +
+> +/// An ACPI device id.
+> +#[repr(transparent)]
+> +#[derive(Clone, Copy)]
+> +pub struct DeviceId(bindings::acpi_device_id);
+> +
+> +// SAFETY:
+> +// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
+> +//   additional invariants, so it's safe to transmute to `RawType`.
+> +// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
+> +unsafe impl RawDeviceId for DeviceId {
+> +    type RawType = bindings::acpi_device_id;
+> +
+> +    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
+> +
+> +    fn index(&self) -> usize {
+> +        self.0.driver_data as _
+> +    }
 > +}
 > +
-> +static inline bool is_copy_file_to_memory_file(struct file *file_in,
-> +                               struct file *file_out)
-> +{
-> +       return (file_out->f_op->fop_flags & FOP_MEMORY_FILE) &&
-> +               file_in->f_op->read_iter && file_out->f_op->copy_file_ran=
-ge;
+> +impl DeviceId {
+> +    const ACPI_ID_LEN: usize = 16;
+> +
+> +    /// Create a new device id from an ACPI 'id' string.
+> +    pub const fn new(id: &'static CStr) -> Self {
+> +        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
+> +        let src = id.as_bytes_with_nul();
+> +        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
+> +        // SAFETY: FFI type is valid to be zero-initialized.
+> +        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
+> +        // TODO: Use `clone_from_slice` once the corresponding types do match.
+> +        let mut i = 0;
+> +        while i < src.len() {
+> +            acpi.id[i] = src[i] as _;
+> +            i += 1;
+> +        }
+> +
+> +        Self(acpi)
+> +    }
 > +}
 > +
+> +/// Create an ACPI `IdTable` with an "alias" for modpost.
+> +#[macro_export]
+> +macro_rules! acpi_device_table {
+> +    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
+> +        const $table_name: $crate::device_id::IdArray<
+> +            $crate::acpi::DeviceId,
+> +            $id_info_type,
+> +            { $table_data.len() },
+> +        > = $crate::device_id::IdArray::new($table_data);
+> +
+> +        $crate::module_device_table!("acpi", $module_table_name, $table_name);
+> +    };
+> +}
+> +
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 15c5f72976cd..05f1d3870bf7 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -78,6 +78,7 @@
+>  #[cfg(CONFIG_NET)]
+>  pub mod net;
+>  pub mod of;
+> +pub mod acpi;
 
-Please combine that to a helper:
-const struct file_operations *memory_copy_file_ops(struct file
-*file_in, struct file *file_out)
-which returns either file_in->f_op, file_out->f_op or NULL.
+Aren't these supposed to be sorted?
 
+thanks,
 
->  /*
->   * Performs necessary checks before doing a file copy
->   *
-> @@ -1484,11 +1498,23 @@ static int generic_copy_file_checks(struct file *=
-file_in, loff_t pos_in,
->         struct inode *inode_out =3D file_inode(file_out);
->         uint64_t count =3D *req_count;
->         loff_t size_in;
-> +       bool splice =3D flags & COPY_FILE_SPLICE;
-> +       bool has_memory_file;
->         int ret;
->
-> -       ret =3D generic_file_rw_checks(file_in, file_out);
-> -       if (ret)
-> -               return ret;
-> +       /* Skip generic checks, allow cross-sb copies for dma-buf/tmpfs *=
-/
-> +       has_memory_file =3D is_copy_memory_file_to_file(file_in, file_out=
-) ||
-> +                         is_copy_file_to_memory_file(file_in, file_out);
-> +       if (!splice && has_memory_file) {
-> +               if (!(file_in->f_mode & FMODE_READ) ||
-> +                   !(file_out->f_mode & FMODE_WRITE) ||
-> +                   (file_out->f_flags & O_APPEND))
-> +                       return -EBADF;
-
-I don't like that this both duplicates code and does not check all the chec=
-ks in
-generic_file_rw_checks() for the non-memory file side.
-I do not currently have a suggestion how to make this less messy,
-more human readable and correct.
-
-> +       } else {
-> +               ret =3D generic_file_rw_checks(file_in, file_out);
-> +               if (ret)
-> +                       return ret;
-> +       }
->
->         /*
->          * We allow some filesystems to handle cross sb copy, but passing
-> @@ -1500,7 +1526,7 @@ static int generic_copy_file_checks(struct file *fi=
-le_in, loff_t pos_in,
->          * and several different sets of file_operations, but they all en=
-d up
->          * using the same ->copy_file_range() function pointer.
->          */
-> -       if (flags & COPY_FILE_SPLICE) {
-> +       if (splice || has_memory_file) {
->                 /* cross sb splice is allowed */
-
-This comment is not accurate - it should say "cross fs-type", because it sk=
-ips
-the test that compares the ->copy_file_range pointers, not the sb.
-If you are making changes to this function, this should be clarified.
-
->         } else if (file_out->f_op->copy_file_range) {
->                 if (file_in->f_op->copy_file_range !=3D
-> @@ -1581,23 +1607,30 @@ ssize_t vfs_copy_file_range(struct file *file_in,=
- loff_t pos_in,
->          * same sb using clone, but for filesystems where both clone and =
-copy
->          * are supported (e.g. nfs,cifs), we only call the copy method.
->          */
-> -       if (!splice && file_out->f_op->copy_file_range) {
-> -               ret =3D file_out->f_op->copy_file_range(file_in, pos_in,
-> -                                                     file_out, pos_out,
-> -                                                     len, flags);
-> -       } else if (!splice && file_in->f_op->remap_file_range && samesb) =
-{
-> -               ret =3D file_in->f_op->remap_file_range(file_in, pos_in,
-> -                               file_out, pos_out,
-> -                               min_t(loff_t, MAX_RW_COUNT, len),
-> -                               REMAP_FILE_CAN_SHORTEN);
-> -               /* fallback to splice */
-> -               if (ret <=3D 0)
-> +       if (!splice) {
-> +               if (is_copy_memory_file_to_file(file_in, file_out)) {
-> +                       ret =3D file_in->f_op->copy_file_range(file_in, p=
-os_in,
-> +                                       file_out, pos_out, len, flags);
-> +               } else if (is_copy_file_to_memory_file(file_in, file_out)=
-) {
-> +                       ret =3D file_out->f_op->copy_file_range(file_in, =
-pos_in,
-> +                                       file_out, pos_out, len, flags);
-> +               } else if (file_out->f_op->copy_file_range) {
-> +                       ret =3D file_out->f_op->copy_file_range(file_in, =
-pos_in,
-> +                                                       file_out, pos_out=
-,
-> +                                                       len, flags);
-> +               } else if (file_in->f_op->remap_file_range && samesb) {
-> +                       ret =3D file_in->f_op->remap_file_range(file_in, =
-pos_in,
-> +                                       file_out, pos_out,
-> +                                       min_t(loff_t, MAX_RW_COUNT, len),
-> +                                       REMAP_FILE_CAN_SHORTEN);
-> +                       /* fallback to splice */
-> +                       if (ret <=3D 0)
-> +                               splice =3D true;
-> +               } else if (samesb) {
-> +                       /* Fallback to splice for same sb copy for backwa=
-rd compat */
->                         splice =3D true;
-> -       } else if (samesb) {
-> -               /* Fallback to splice for same sb copy for backward compa=
-t */
-> -               splice =3D true;
-> +               }
-
-This is the way-too-ugly-to-live part.
-Was pretty bad before and now it is unacceptable.
-way too much unneeded nesting and too hard to follow.
-
-First of all, please use splice label and call goto splice (before the comm=
-ent)
-instead of adding another nesting level.
-I would do that even if not adding memory fd copy support.
-
-Second, please store result of mem_fops =3D memory_copy_file_ops()
-and start with:
-+    if (mem_fops) {
-+        ret =3D mem_fops->copy_file_range(file_in, pos_in,
-+
-file_out, pos_out,
-+                                                               len, flags)=
-;
- +   } else if (file_out->f_op->copy_file_range) { ...
-
-and update the comment above to say that:
-+ * For copy to/from memory fd, we alway call the copy method of the memory=
- fd.
-   */
-
-I think that makes the code not more ugly than it already is.
-
-Thanks,
-Amir.
+greg k-h
