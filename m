@@ -1,128 +1,181 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2E72750E5
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 23:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8BE21772B;
+	Fri, 30 May 2025 23:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648046; cv=none; b=NyUEj59ufftxJozRaMt0EvfqRa/TZCtJqkM8HyXiiYQDOpwXh2UKydlScCozyRcKp7RPqqa1m/4T6LapduVArvcOsGvwEiXEFTom/DSHR18YWXFTgBCt9PVmVfftNtFJGxs7DXp9jH80Wb/7nlWu+mfW2mO7UYK05udIpTnZX6g=
+	t=1748648270; cv=none; b=JLr0JL5THN7Rj1NEwpQynqvLmYWEC7W8EX7IFebjJ07HVVTL3qoph5UWhB2qaC0KPNmdLcZVMvqVrMH/Hzlk8dYPIgtYr9+uU1MI/JJt6LdLkpjd5MJhtyS1s5IhZfK/w936+UeSYdvY/XX88IX/m6UZwxwin7P3JLYTn1WLKcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748648046; c=relaxed/simple;
-	bh=ElSbyZQHAdZtVaIBNqlbVN8swLObIp6FMGMvuzQjxho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LoYY/kYqsT75/kUVqvgeXn+Sbbn20TVOUAGUJzCbZ8K9mkhgA9rCD1deQlX9WciChm7BGifuczEFgLxgKT8BwYzSv14pOw2mdItfceZP5PLOXC82QUw7PkVC5PzOGMP5xVA/eEY/V6R4xikFZlOkljcdXv/hOP/GX5hnC++Mx9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PF9j/UgG; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748648270; c=relaxed/simple;
+	bh=/UXsCZtc2O9lDOjvM3FiWNPNPFkOA+JStRUHC/bqQhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ux4n7ZP14BTenrrSXa3Y1/Mq79dgdX2W94KFq30w4xB3eoXjE93am13jNS1vXkZgQMuEwwaltDBdaqvmGRTm0k1fFc+9Oze0I5zywb6JdG8ym3zuP6srnm6P/UafT2nGCYqJdyEoq4uTbgdZ7eVvkeNNnZmFSOpnGpDtPZfFtPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f3AYWn5b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PF9j/UgG"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3127cc662e2so15049a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748648044; x=1749252844; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/crfMUaUSr7Hvxl7AwB/ydPc7uMgzGaWk+2fxYyCuRQ=;
-        b=PF9j/UgGT8l/FkHRm2G3QqDJEauK12bYaujcN/BeScr/8HoMin9vJVs6x2m2uI7SdI
-         Z6Vg8uohrhYyBsEXPZqy2ICN7gUUYPZrZGT699m5swEFw5YnEL05iSZv9eVALx+8JIEc
-         ncM+Lug/Stw+5ethqFycrAJHOG1rT/alkKl9A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748648044; x=1749252844;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/crfMUaUSr7Hvxl7AwB/ydPc7uMgzGaWk+2fxYyCuRQ=;
-        b=XdgQh3WBPUexJK9sMtG4xrOzP1Wnhosl4BqqEA4qw9A5YbwzxF+z4QgLv3ODabpf3y
-         FMN+akmiuAgqGys5Tu8gaLizhbPoxXZjwEcjxDCmrWahCW/g8bX307Ik1Pm96ennSg45
-         o8NEWWw8MngGFdNIBjBZv8tauxwQeI93deZ+aapMI37aS4bZlbSMefn3DFLr//Da+DxZ
-         BJkM8KvaptHv4AdNDivSS3kiHpj5zjRvK4HMCVvPSGwhqRUQ5+qzvm7XIrmeTUphrltD
-         KpFXrGVRpPLROCuU7Q5OWQp0UQufMsPDcNSxVJArvW1D/gUcDxKUrFWr1De3wBPL6ezX
-         DBfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWg1X59SwuRsGyNxd/9akI7rKR643EJPqgxU4JRKF4mGTjIh2c/r1pSKaOjTw6lqFDgaiTxLAF9atJd0SM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmP9ZNOXHqEFBJftwNlu7AI1A5hBmC4SD7cHPOrtgy5/H9K+sk
-	FTLc/RZGIrzGN2nU2EhvWULo9hWmMRAh2FRfcBFS1vDFnl/u6vvgC/QYnaWmPk3YlA==
-X-Gm-Gg: ASbGncudxS0PMbneaDqCWGoD5fCxhYU4kW/oDBaIepAoYB6vuQ/SlFRo8+gFEGai+S8
-	ahm6kEekdYDEdn/A9hOlu/QCR9Wv5DLx/AeOrdPLlBdk5Gq4wuOQVo4Y+1kuB8IhOFOIwNQkuTH
-	mPGBT4PuXOVMwUZdZpxPSNsPdtEXfsOW8NbD/dgFJTiI2+GLVOb/CzqbuA1loD/Yum0xmMLX9QE
-	4WtGz4pfTwta+HldNxzEzI9zqMqfaGZPFRTe4ZT7mmnXfLqD51emFRK+uZ86ZRE9z5cZqruPcwg
-	GWz4QePc8Gd4MeIhiLhMTaUdcudpGxHVzfy2txbr6ZRtx4SNthUtCO3LlX52brvoLjb8Ay72Grh
-	sWPWWZ2DqhilHpCnxfBq91LFyTQ==
-X-Google-Smtp-Source: AGHT+IH8xoUQ7HZKe3s4g11l9T+D/ytNA2kGbgDPz7ZW8AsmVJXcmTTpj9J9ACTwaSJgs0MLJB3hAA==
-X-Received: by 2002:a17:90b:2f03:b0:30a:9feb:1e15 with SMTP id 98e67ed59e1d1-31214e2efabmr15616943a91.8.1748648043815;
-        Fri, 30 May 2025 16:34:03 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e2b51f5sm1728093a91.9.2025.05.30.16.34.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 16:34:02 -0700 (PDT)
-Message-ID: <7b4f2dfb-cf4d-495b-8bcf-82e802bd3eca@broadcom.com>
-Date: Fri, 30 May 2025 16:34:01 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f3AYWn5b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C590C4CEE9;
+	Fri, 30 May 2025 23:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748648270;
+	bh=/UXsCZtc2O9lDOjvM3FiWNPNPFkOA+JStRUHC/bqQhw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f3AYWn5baEO9P3WFOaH6Nm98ZsXgL0PXyBrav1T1w40usoGFfu7HfeU2JuPn3xefL
+	 zhJiOz1vywFieUxCqVsB1wRCw2gNzMK0mpGMCWyUXZQp7/j9FubOAUroLMHguAbFcF
+	 O/Cj0ZDHgQRrbx1Wdjl9MPsvmnz0UJHpu/oDRt6OYr3qFSlzeZQGwNFIVk0NBxK+KP
+	 72mVQa2Bh0K3pE1KpE/m30mcNUV7DNPWAAf207RkrvCmDr+0Tqb0PCL8DLMkfazXoD
+	 ZPO7YBlLIled2gvaIx7d03A9lmO0kZ624NNbAYW4pmADBiV4vPmdegx/u1zC8Y0oSu
+	 2eOiXY5vfPZZQ==
+Date: Fri, 30 May 2025 16:37:48 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Song Liu <song@kernel.org>
+Subject: Re: [RFC PATCH v1] perf trace: Mitigate failures in parallel perf
+ trace instances
+Message-ID: <aDpBTLoeOJ3NAw_-@google.com>
+References: <20250529065537.529937-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] PCI: brcmstb: Use "num-lanes" DT property if present
-To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
- Nicolas Saenz Julienne <nsaenz@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
-Cc: Rob Herring <robh@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
- <linux-rpi-kernel@lists.infradead.org>
-References: <20250530224035.41886-1-james.quinlan@broadcom.com>
-Content-Language: en-US
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250530224035.41886-1-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250529065537.529937-1-howardchu95@gmail.com>
 
-On 5/30/25 15:40, Jim Quinlan wrote:
-> v2:
->    -- DT bindings: Add default, maximum values for 'num-lanes' (Rob)
->    -- Add 'if' clause to clamp maximum requested num-lanes
+Hello,
 
-Subjects should have been "PATCH v2", FWIW.
--- 
-Florian
+(Adding tracing folks)
+
+On Wed, May 28, 2025 at 11:55:36PM -0700, Howard Chu wrote:
+> perf trace utilizes the tracepoint utility, the only filter in perf
+> trace is a filter on syscall type. For example, if perf traces only
+> openat, then it filters all the other syscalls, such as readlinkat,
+> readv, etc.
+> 
+> This filtering is flawed. Consider this case: two perf trace
+> instances are running at the same time, trace instance A tracing
+> readlinkat, trace instance B tracing openat. When an openat syscall
+> enters, it triggers both BPF programs (sys_enter) in both perf trace
+> instances, these kernel functions will be executed:
+> 
+> perf_syscall_enter
+>   perf_call_bpf_enter
+>     trace_call_bpf
+>       bpf_prog_run_array
+> 
+> In bpf_prog_run_array:
+> ~~~
+> while ((prog = READ_ONCE(item->prog))) {
+> 	run_ctx.bpf_cookie = item->bpf_cookie;
+> 	ret &= run_prog(prog, ctx);
+> 	item++;
+> }
+> ~~~
+> 
+> I'm not a BPF expert, but by tinkering I found that if one of the BPF
+> programs returns 0, there will be no tracepoint sample. That is,
+> 
+> (Is there a sample?) = ProgRetA & ProgRetB & ProgRetC
+> 
+> Where ProgRetA is the return value of one of the BPF programs in the BPF
+> program array.
+> 
+> Go back to the case, when two perf trace instances are tracing two
+> different syscalls, again, A is tracing readlinkat, B is tracing openat,
+> when an openat syscall enters, it triggers the sys_enter program in
+> instance A, call it ProgA, and the sys_enter program in instance B,
+> ProgB, now ProgA will return 0 because ProgA cares about readlinkat only,
+> even though ProgB returns 1; (Is there a sample?) = ProgRetA (0) &
+> ProgRetB (1) = 0. So there won't be a tracepoint sample in B's output,
+> when there really should be one.
+
+Sounds like a bug.  I think it should run bpf programs attached to the
+current perf_event only.  Isn't it the case for tracepoint + perf + bpf?
+
+> 
+> I also want to point out that openat and readlinkat have augmented
+> output, so my example might not be accurate, but it does explain the
+> current perf-trace-in-parallel dilemma.
+> 
+> Now for augmented output, it is different. When it calls
+> bpf_perf_event_output, there is a sample. There won't be no ProgRetA &
+> ProgRetB... thing. So I will send another RFC patch to enable
+> parallelism using this feature. Also, augmented_output creates a sample
+> on it's own, so returning 1 will create a duplicated sample, when
+> augmented, just return 0 instead.
+
+Yes, it's bpf-output and tracepoint respectively.  Maybe we should
+always return 1 not to drop syscalls unintentionally and perf can
+discard duplicated samples.
+
+Another approach would be return 0 always and use bpf-output for
+unaugmented syscalls too.  But I'm afraid it'd affect other perf tools
+using tracepoints.
+
+> 
+> Is this approach perfect? Absolutely not, there will likely be some
+> performance overhead on the kernel side. It is just a quick dirty fix
+> that makes perf trace run in parallel without failing. This patch is an
+> explanation on the reason of failures and possibly, a link used in a
+> nack comment.
+
+Thanks for your work, but I'm afraid it'd still miss some syscalls as it
+returns 0 sometimes.
+
+Thanks,
+Namhyung
+
+> 
+> Cc: Song Liu <song@kernel.org>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  .../util/bpf_skel/augmented_raw_syscalls.bpf.c   | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> index e4352881e3fa..315fadf01321 100644
+> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> @@ -546,13 +546,14 @@ int sys_enter(struct syscall_enter_args *args)
+>  	/*
+>  	 * Jump to syscall specific augmenter, even if the default one,
+>  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+> -	 * unaugmented tracepoint payload.
+> +	 * unaugmented tracepoint payload. If augmented, return 0 to reduce a
+> +	 * duplicated tracepoint sample.
+>  	 */
+> -	if (augment_sys_enter(args, &augmented_args->args))
+> -		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
+> +	if (!augment_sys_enter(args, &augmented_args->args))
+> +		return 0;
+>  
+> -	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+> -	return 0;
+> +	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
+> +	return 1;
+>  }
+>  
+>  SEC("tp/raw_syscalls/sys_exit")
+> @@ -570,10 +571,7 @@ int sys_exit(struct syscall_exit_args *args)
+>  	 * unaugmented tracepoint payload.
+>  	 */
+>  	bpf_tail_call(args, &syscalls_sys_exit, exit_args.syscall_nr);
+> -	/*
+> -	 * If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+> -	 */
+> -	return 0;
+> +	return 1;
+>  }
+>  
+>  char _license[] SEC("license") = "GPL";
+> -- 
+> 2.45.2
+> 
