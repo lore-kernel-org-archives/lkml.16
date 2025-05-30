@@ -1,114 +1,116 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FF2021CA04
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D96D221FC9
 	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599421; cv=none; b=jDmnuUAetMBz3N4lb5SEFPw1uy+RxFDQMvGxpjwWTAwoRDCEvLqNbpqIVRevOanvwgLJEIA+6JnJoJYkWNlhkUyMxMwnYIjUPGUqVgGtERAeLoBxW2tCecn7gVuF/6lD491vPPmQYHe2HFKIHR9FMhXpCsOCM9oQzSzaZYnyRcs=
+	t=1748599422; cv=none; b=jagIo+HOs44OPQSTon5GMoPS5AqosWEJkv16rcThT8cP+PPxGZCsRFCACQTkxhLkCzVgD3w+d7xBZTo7btkntP8hEsP/1xCfPd15vZMsbRUTdWcNAkVPxbR2g8m3wagLaCACj3MyucuPNjgXDhx8td5j1jHuCQT3gOYJrgAmUa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599421; c=relaxed/simple;
-	bh=2LH4iFhDDgSYMqV8yfQVIoPaIsbL9fWVCumZgbaSGbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u7Uo2UWFbDP0O7gk1r5aK0fssC2G/LLpl7MKLSy1xr+5SQ4nAe7ronHtQlfobXsXk9f2mx4reKlLIFqoizYkQt6h/H8Ke5TeDxd2kixHLegd68eI/khEMM1bnTek4Kie3M/9HR0YO/5btKhy0eOfsyFiwf7BRBgzLZTg/tM0yBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FC4A16F2;
-	Fri, 30 May 2025 03:03:22 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F40B53F694;
-	Fri, 30 May 2025 03:03:35 -0700 (PDT)
-Message-ID: <adfe981a-ec9a-4051-a26f-91b691230161@arm.com>
-Date: Fri, 30 May 2025 11:03:34 +0100
+	s=arc-20240116; t=1748599422; c=relaxed/simple;
+	bh=8it403lhkvaN3M2kdx0D7sGFD/Y9wx01vswL0y7oAqg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nxYqqZxDPpYYUQejmNtzt42s+grz6BQnMd1sKbDPtEKAXE1jg58iCnsTC5lSiytt9GeW2p8yK7nlLVKriX3he8Fzg8w9jpam7GvGLjcjMTrWtXQ7jK99MCrgo0AFiIiEueAuFo4kGZwecepXyH5xkKjgVm7igP91Y0bHeM5eAxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4b7zLd2g58z23jkK;
+	Fri, 30 May 2025 18:02:33 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id D35B8140113;
+	Fri, 30 May 2025 18:03:36 +0800 (CST)
+Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 30 May 2025 18:03:36 +0800
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 30 May 2025 18:03:36 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <libaihan@huawei.com>, <shenjian15@huawei.com>,
+	<shaojijie@huawei.com>, <jani.nikula@linux.intel.com>,
+	<dmitry.baryshkov@oss.qualcomm.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH drm-dp 03/10] drm/hisilicon/hibmc: fix irq_request()'s irq name variable is local
+Date: Fri, 30 May 2025 17:54:25 +0800
+Message-ID: <20250530095432.1206966-4-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250530095432.1206966-1-shiyongbang@huawei.com>
+References: <20250530095432.1206966-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Enable huge-vmalloc permission change
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
- catalin.marinas@arm.com, will@kernel.org
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
- gshan@redhat.com, linux-arm-kernel@lists.infradead.org
-References: <20250530090407.19237-1-dev.jain@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250530090407.19237-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemq100007.china.huawei.com (7.202.195.175)
 
-On 30/05/2025 10:04, Dev Jain wrote:
-> This series paves the path to enable huge mappings in vmalloc space by
-> default on arm64. > For this we must ensure that we can handle any permission
-> games on vmalloc space. 
+From: Baihan Li <libaihan@huawei.com>
 
-And the linear map :)
+The local variable of irq name is passed to devm_request_threaded_irq(),
+which will make request_irq failed. Using the global irq name instead
+of it to fix.
 
-> Currently, __change_memory_common() uses
-> apply_to_page_range() which does not support changing permissions for
-> leaf mappings. 
+Fixes: b11bc1ae4658 ("drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD")
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-nit: A "leaf mapping" is the lowest level entry in the page tables for a given
-address - i.e. it maps an address to some actual memory rather than to another
-pgtable. It includes what the Arm ARM calls "page mappings" (PTE level) and
-"block mappings" (PMD/PUD/.. level). apply_to_page_range() does support page
-mappings, so saying it doesn't support leaf mappings is incorrect. It doesn't
-support block mappings.
-
-> We attempt to move away from this by using walk_page_range_novma(),
-> similar to what riscv does right now; however, it is the responsibility
-> of the caller to ensure that we do not pass a range, or split the range
-> covering a partial leaf mapping.
-> 
-> This series is tied with Yang Shi's attempt [1] at using huge mappings
-> in the linear mapping in case the system supports BBML2, in which case
-> we will be able to split the linear mapping if needed without break-before-make.
-> Thus, Yang's series, IIUC, will be one such user of my series; suppose we
-> are changing permissions on a range of the linear map backed by PMD-hugepages,
-> then the sequence of operations should look like the following:
-> 
-> split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
-> split_range(end & ~HPAGE_PMD_MASK, end);
-
-I don't understand what the HPAGE_PMD_MASK twiddling is doing? That's not right.
-It's going to give you the offset within the 2M region. You just want:
-
-split_range(start)
-split_range(end)
-
-right?
-
-> __change_memory_common(start, end);
-> 
-> However, this series can be used independently of Yang's; since currently
-> permission games are being played only on pte mappings (due to apply_to_page_range
-> not supporting otherwise), this series provides the mechanism for enabling
-> huge mappings for various kernel mappings like linear map and vmalloc.
-
-In other words, you are saying that this series is a prerequisite for Yang's
-series (and both are prerequisites for huge vmalloc by default). Your series
-adds a new capability that Yang's series will rely on (the ability to change
-permissions on block mappings).
-
-Thanks,
-Ryan
-
-> 
-> [1] https://lore.kernel.org/all/20250304222018.615808-1-yang@os.amperecomputing.com/
-> 
-> Dev Jain (3):
->   mm: Allow pagewalk without locks
->   arm64: pageattr: Use walk_page_range_novma() to change memory
->     permissions
->   mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
-> 
->  arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
->  include/linux/pagewalk.h |  4 ++
->  mm/pagewalk.c            | 18 +++++++--
->  3 files changed, 94 insertions(+), 9 deletions(-)
-> 
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 768b97f9e74a..4cdcc34070ee 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -32,7 +32,7 @@
+ 
+ DEFINE_DRM_GEM_FOPS(hibmc_fops);
+ 
+-static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "vblank", "hpd" };
++static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "hibmc-vblank", "hibmc-hpd" };
+ 
+ static irqreturn_t hibmc_interrupt(int irq, void *arg)
+ {
+@@ -277,7 +277,6 @@ static void hibmc_unload(struct drm_device *dev)
+ static int hibmc_msi_init(struct drm_device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+-	char name[32] = {0};
+ 	int valid_irq_num;
+ 	int irq;
+ 	int ret;
+@@ -292,9 +291,6 @@ static int hibmc_msi_init(struct drm_device *dev)
+ 	valid_irq_num = ret;
+ 
+ 	for (int i = 0; i < valid_irq_num; i++) {
+-		snprintf(name, ARRAY_SIZE(name) - 1, "%s-%s-%s",
+-			 dev->driver->name, pci_name(pdev), g_irqs_names_map[i]);
+-
+ 		irq = pci_irq_vector(pdev, i);
+ 
+ 		if (i)
+@@ -302,10 +298,10 @@ static int hibmc_msi_init(struct drm_device *dev)
+ 			ret = devm_request_threaded_irq(&pdev->dev, irq,
+ 							hibmc_dp_interrupt,
+ 							hibmc_dp_hpd_isr,
+-							IRQF_SHARED, name, dev);
++							IRQF_SHARED, g_irqs_names_map[i], dev);
+ 		else
+ 			ret = devm_request_irq(&pdev->dev, irq, hibmc_interrupt,
+-					       IRQF_SHARED, name, dev);
++					       IRQF_SHARED, g_irqs_names_map[i], dev);
+ 		if (ret) {
+ 			drm_err(dev, "install irq failed: %d\n", ret);
+ 			return ret;
+-- 
+2.33.0
 
