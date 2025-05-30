@@ -1,177 +1,265 @@
-Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [83.166.143.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FB322ACD1
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0F121CC55;
+	Fri, 30 May 2025 12:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608046; cv=none; b=ckWxyREEN6T2GAsCPiell1u6r/aXUS8TSkZ3wNj0Oo9d7EgouRWS8w1RyVQX89kWZNAfmlDyAWytVSFpY+faW7IN5Gm3woEd5scEJeu4C0KjZe3wTyHXZY6Zt4cUA6hpu5ZcSvViUpQnGWLnn1Ygaf0KaQdC5115Hz87lQfXonc=
+	t=1748608072; cv=none; b=XPtZhdXr5t+zzp0BxgwwVhQEk13pArTHLnW75/zpA/Vwk3HeWve5lrIcWJmRNEZuyUl3/nEOXIsVAiLqgdcedMv+ZwT0CJHFkGRv66+jElvrma+6Hl4BkYn1TT6rk/rVh2YiGUuBe/hPBOCgdBVw+WstdOKvtWergVXuuNAYBPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608046; c=relaxed/simple;
-	bh=usNAqfNU05yWDD1nnvMBPsO4jB44WecabSLtQa+JE+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwBdcpc7m8MZDQ32+9ZwzQjMRu6lxe/vekR0HUbhpYOPqOWRv8TUYP+gaXCIeCtBjC/kQm/2cj/4QQJpEYLI/zCPD3wnG+HQ4HNAUnQ1tY1+bV2Lz5mtMI6B2SezfyyIvqoX13FrrbJqAS5DCt5y/LnTdDSPHq9G3jr1dkMCaG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=Iixtc6xD; arc=none smtp.client-ip=83.166.143.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1748608072; c=relaxed/simple;
+	bh=5NRw2BPuzd4CaSoFhQyS92NyyJZbEuiSnoR6lbAl7A4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uQzJ30FA101TFGS+FQhbVKfaK9sBRKuG7lconKZb/UUocDElN3oVrSFB/4z+/RXx3a6uSLEEchWVId07FwpdADC7Ce8K4LNh488yVNzdpL8m6dSnVr/4G1hDepSBTHc5QETfUUEsblWCD7JHiCOWve9Sz5/zUULIpQF8ovAN1cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c94cqCVD; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="Iixtc6xD"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6b])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b82Q12q1xz8g8;
-	Fri, 30 May 2025 14:20:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748607641;
-	bh=XnOAINnFb0Z0ZcHabmc3qHltopvQ1m/OtdV1pvd9//U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iixtc6xDq8SMxPtPVz3eEfOFPJq6OSNq9mg0j6DPkcvi1r3iE8Ae4vp8qmodYpgAd
-	 HXk+DJ0PXp2s2uT0p/i1fexLNBhuGQ3aVgdkzut+dav0tI6ZVZNtYRVNlUE0Z/wEnU
-	 JtxL5Y7j3xXmCtz0YpVzCWEiXLWncOjsEQ2BghOM=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b82Q01gBszjtL;
-	Fri, 30 May 2025 14:20:40 +0200 (CEST)
-Date: Fri, 30 May 2025 14:20:39 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, 
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
-	jlayton@kernel.org, josef@toxicpanda.com, gnoack@google.com, 
-	Tingmao Wang <m@maowtm.org>
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <20250530.euz5beesaSha@digikod.net>
-References: <20250529173810.GJ2023217@ZenIV>
- <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
- <20250529183536.GL2023217@ZenIV>
- <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
- <20250529201551.GN2023217@ZenIV>
- <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
- <20250529214544.GO2023217@ZenIV>
- <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
- <20250529231018.GP2023217@ZenIV>
- <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c94cqCVD"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476a720e806so17404431cf.0;
+        Fri, 30 May 2025 05:27:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748608069; x=1749212869; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EjF77eIXn5rbCgQ6Jld+tzlhhos22ijDGstzJKXraFM=;
+        b=c94cqCVDaf6Ub322i2pWlWQI4XfqymhpTiMJv11frOAInthKvvuh4WUXeXud1IkQHL
+         EvegB1mLHEIxL2325kAqewdhyD/YaQfIIfkF/zQTM/+h6am7Z8dOKS4gC9tsNoIE/8GZ
+         uMhC551WSfYzxNacoQwFDAOaAW4IgTFotyq+nz0jKzZLZ49SIoWQMJxjSRoae9CkjkVa
+         TYlOfjod/uXa0NvLxMOcgw13qtRGy/FE47YLTc0PDaHfvOrntVVbMbhrKVp38Ntzvyxd
+         b8PYqZMxv6/a60anDP3cCCuDk4jmkleS7L2lEA2ExRS4iI/tXjUA1+keGkexm5shInvD
+         BIbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748608069; x=1749212869;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EjF77eIXn5rbCgQ6Jld+tzlhhos22ijDGstzJKXraFM=;
+        b=oFgWVmOWRO9gudITKgeEs3UKhW8BBX4GcVNoFRBqZc/XhYU65yVIzVD0BQ4ukRiyLA
+         uQwkvEXDJ8itx4x3elIEvtq0nwLgZ6TpPxnxYlcQWv5U3Rs0nMh2G4Fc1aJKHxF+gg93
+         nchbWaw0tfcTyI1KET2ut8vJSHMoRKo3UUt04aMAV5cDxWVFqYecQVLhufvy3btB/9Yt
+         qh4YqerIPZvJg6kj2XFgKGZ4OGRYo67KXhKSP8iU3PAHBEqnNG8hjfJb6/Oc3eKLr/BX
+         Xosp5YTmcJPXQkDVW7p31Oc4CkJJJbvTXPXm5LwwQdb6mzrM/izI6MMkSkwMCSSUSAyM
+         14yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ztCYEJNpmaOjGcqunnecoNspUXqO6VGUaSdDByF3TwlVhj7QSTVuUasKT0a0yZZGtkUmDgcVR7Z3SEix@vger.kernel.org, AJvYcCVP5PwiGe9yn1W6f0Tzyc7dyz1USpYzRc/Sj1p5XuD6L6kOEukHCDMJamOwXT0ctQTI+W4KNPqzB7pnB/s=@vger.kernel.org, AJvYcCVdCyP2hR9B0WCUAOiKqa2d6AjtauBBxlHiaqrBOKPn2wNkDgiXbW/QWtJSSb/iIRQvtiVsac9pLIht@vger.kernel.org, AJvYcCW8n5mSLoh3W+8aejBnNeptm/mM4w+BUgDkI0vHsoOIZYUwqVgP2D06S6XkBa/FN1Q/NipGpaOU@vger.kernel.org, AJvYcCWsF20vm92hmV3lO5jhOXai2lUUG3XjH1jp8bZjeQo/f8dXMl14VminpUbR73DageueQ0nnFjaI/joq@vger.kernel.org, AJvYcCXLVR3FedNeN5cFujFw1GnSjak5RD1/mzgsX4DOCiQENuQTTwZXwgUI47TNnoMYXXHvxDZbG58MMQt8amayjXeU@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHfpgTGT1cys3PiZOIv4Sa0JWoMMcVGsxzv97F2B/jyG9+1zjY
+	CIKSPqbQ7T9Z90LIkRpSxCGlgjQy9RWHtK27fQNQpzu5a5IXgPJbj65Q
+X-Gm-Gg: ASbGncsf3iJWm9N3uEFTdZpQ/xqNBtwlgqPzcY9COqtJhdP05va8HmTpmRsn1Iqm/Yr
+	Pr9oSbu5Zx4YYGW8R3zASyz+lehcIg9u+3c04ERuVMlGKFpXLjMYwXdno/gvoheQZgaJjnrtY0D
+	c2L7fHcCbIlIuvkWnZ0X3a9YGpjmKV10CHi6JMXNLU4M4qEhMQhA8A+QJ8Z5PYwPkT9Wv04ocG+
+	wphZeAFDGUSN4Yzn2DRV6dF0PPKADhWHQb0TMWWxEA5yBgt1nFBlsP3dxutbRrXj6LEADkO+6Zh
+	RxlatYVTIxAGn71NHu2IheG+vSsXtDl2uh1eYUnZ/lrpju8SlfXKJuFeyBPlnQHuLRvNXQ4Uzil
+	7C9QsKH07XStktK58vLrR/46V/X0T/Yl47oWQYuGAz6mSGrmL07w/xkaJ6S2A
+X-Google-Smtp-Source: AGHT+IGfjgQI2SYiqTDZZqtk6xAv1YDFCzHe/hIZJctpyviQ3ufizyFRYxRIuu0rnsdysg0lQBJL9A==
+X-Received: by 2002:a05:622a:1f0f:b0:494:adde:e3f4 with SMTP id d75a77b69052e-4a44005415bmr52541221cf.25.1748608069240;
+        Fri, 30 May 2025 05:27:49 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:fbe8])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a4358ad334sm19700201cf.27.2025.05.30.05.27.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 05:27:47 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v11 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
+Date: Fri, 30 May 2025 08:27:41 -0400
+Message-Id: <20250530-cstr-core-v11-0-cd9c0cbcb902@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD6kOWgC/3XOy27DIBAF0F+JvC4RjGGArvIfVReYR4zamAgs1
+ CjyvxdHSmNZ6nIe5+reu+Jz9KV7P9y77GssMU1tYOzt0NnRTGdPomuLDigICpQRW+ZMbMqeOD7
+ oATUDakPX/q/Zh/jzCPv4bHPI6ULmMXvzTOBUMc1EjwKPoBSVBEg1LuVUy9ftdM1pTtPFxO+jT
+ Zc1coxlTvn2qFdxDX4WgU2RioQSxVFbhw50cKfzX8hapMp/pWzSGabaCSjv1V6qrey3UjVphz4
+ AeqlQ4V7ql+yZ3ErdpGAOrRUAAWEvGX1RAXxLGW0WOQOjudNOiq1dluUXREeHvdABAAA=
+X-Change-ID: 20250201-cstr-core-d4b9b69120cf
+To: Michal Rostecki <vadorovsky@protonmail.com>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+ Danilo Krummrich <dakr@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+ Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+ nouveau@lists.freedesktop.org, linux-block@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-On Thu, May 29, 2025 at 05:42:16PM -0700, Song Liu wrote:
-> On Thu, May 29, 2025 at 4:10 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > On Thu, May 29, 2025 at 03:13:10PM -0700, Song Liu wrote:
-> >
-> > > Is it an issue if we only hold a reference to a MNT_LOCKED mount for
-> > > short period of time? "Short period" means it may get interrupted, page
-> > > faults, or wait for an IO (read xattr), but it won't hold a reference to the
-> > > mount and sleep indefinitely.
-> >
-> > MNT_LOCKED mount itself is not a problem.  What shouldn't be done is
-> > looking around in the mountpoint it covers.  It depends upon the things
-> > you are going to do with that, but it's very easy to get an infoleak
-> > that way.
-> >
-> > > > OTOH, there's a good cause for moving some of the flags, MNT_LOCKED
-> > > > included, out of ->mnt_flags and into a separate field in struct mount.
-> > > > However, that would conflict with any code using that to deal with
-> > > > your iterator safely.
-> > > >
-> > > > What's more, AFAICS in case of a stack of mounts each covering the root
-> > > > of parent mount, you stop in each of those.  The trouble is, umount(2)
-> > > > propagation logics assumes that intermediate mounts can be pulled out of
-> > > > such stack without causing trouble.  For pathname resolution that is
-> > > > true; it goes through the entire stack atomically wrt that stuff.
-> > > > For your API that's not the case; somebody who has no idea about an
-> > > > intermediate mount being there might get caught on it while it's getting
-> > > > pulled from the stack.
-> > > >
-> > > > What exactly do you need around the mountpoint crossing?
-> > >
-> > > I thought about skipping intermediate mounts (that are hidden by
-> > > other mounts). AFAICT, not skipping them will not cause any issue.
-> >
-> > It can.  Suppose e.g. that /mnt gets propagation from another namespace,
-> > but not the other way round and you mount something on /mnt.
-> >
-> > Later, in that another namespace, somebody mounts something on wherever
-> > your /mnt gets propagation to.  A copy will be propagated _between_
-> > your /mnt and whatever you've mounted on top of it; it will be entirely
-> > invisible until you umount your /mnt.  At that point the propagated
-> > copy will show up there, same as if it had appeared just after your
-> > umount.  Prior to that it's entirely invisible.  If its original
-> > counterpart in another namespace gets unmounted first, the copy will
-> > be quietly pulled out.
-> 
-> Thanks for sharing this information!
-> 
-> > Note that choose_mountpoint_rcu() callers (including choose_mountpoint())
-> > will have mount_lock seqcount sampled before the traversal _and_ recheck
-> > it after having reached the bottom of stack.  IOW, if you traverse ..
-> > on the way to root, you won't get caught on the sucker being pulled out.
-> 
-> In some of our internal discussions, we talked about using
-> choose_mountpoint() instead of follow_up(). I didn't go that direction in this
-> version because it requires holding "root". But if it makes more sense
-> to use, choose_mountpoint(), we sure can hold "root".
-> 
-> Alternatively, I think it is also OK to pass a zero'ed root to
-> choose_mountpoint().
-> 
-> > Your iterator, OTOH, would stop in that intermediate mount - and get
-> > an unpleasant surprise when it comes back to do the next step (towards
-> > /mnt on root filesystem, that is) and finds that path->mnt points
-> > to something that is detached from everything - no way to get from
-> > it any further.  That - despite the fact that location you've started
-> > from is still mounted, still has the same pathname, etc. and nothing
-> > had been disrupted for it.
-> >
-> > And yes, landlock has a narrow race in the matching place.  Needs to
-> > be fixed.  At least it does ignore those as far as any decisions are
-> > concerned...
+This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
+have omitted Co-authored tags, as the end result is quite different.
 
-Thanks for pointing this out.  In the case of Landlock, walking to a
-disconnected mount point (because of this umount race condition) would
-deny the requested access whereas it may be allowed otherwise.  This is
-not a security issue but still an issue because an event unrelated to
-the request (umount) can abort a path resolution, which should not be
-the case.
+Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
+Closes: https://github.com/Rust-for-Linux/linux/issues/1075
 
-Without access to mount_lock, what would be the best way to fix this
-Landlock issue while making it backportable?
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v11:
+- Use `quote_spanned!` to avoid `use<'a, T>` and generally reduce manual
+  token construction.
+- Add a commit to simplify `quote_spanned!`.
+- Drop first commit in favor of
+  https://lore.kernel.org/rust-for-linux/20240906164448.2268368-1-paddymills@proton.me/.
+  (Miguel Ojeda)
+- Correctly handle expressions such as `pr_info!("{a}", a = a = a)`.
+  (Benno Lossin)
+- Avoid dealing with `}}` escapes, which is not needed. (Benno Lossin)
+- Revert some unnecessary changes. (Benno Lossin)
+- Rename `c_str_avoid_literals!` to `str_to_cstr!`. (Benno Lossin &
+  Alice Ryhl).
+- Link to v10: https://lore.kernel.org/r/20250524-cstr-core-v10-0-6412a94d9d75@gmail.com
 
-> 
-> If we update path_parent in this patchset with choose_mountpoint(),
-> and use it in Landlock, we will close this race condition, right?
+Changes in v10:
+- Rebase on cbeaa41dfe26b72639141e87183cb23e00d4b0dd.
+- Implement Alice's suggestion to use a proc macro to work around orphan
+  rules otherwise preventing `core::ffi::CStr` to be directly printed
+  with `{}`.
+- Link to v9: https://lore.kernel.org/r/20250317-cstr-core-v9-0-51d6cc522f62@gmail.com
 
-choose_mountpoint() is currently private, but if we add a new filesystem
-helper, I think the right approach would be to expose follow_dotdot(),
-updating its arguments with public types.  This way the intermediates
-mount points will not be exposed, RCU optimization will be leveraged,
-and usage of this new helper will be simplified.
+Changes in v9:
+- Rebase on rust-next.
+- Restore `impl Display for BStr` which exists upstream[1].
+- Link: https://doc.rust-lang.org/nightly/std/bstr/struct.ByteStr.html#impl-Display-for-ByteStr [1]
+- Link to v8: https://lore.kernel.org/r/20250203-cstr-core-v8-0-cb3f26e78686@gmail.com
 
-> 
-> >
-> > Note, BTW, that it might be better off by doing that similar to
-> > d_path.c - without arseloads of dget_parent/dput et.al.; not sure
-> > how feasible it is, but if everything in it can be done under
-> > rcu_read_lock(), that's something to look into.
-> 
-> I don't think we can do everything here inside rcu_read_lock().
-> But d_path.c does have some code we can probably reuse or
-> learn from. Also, we probably need two variations of iterators,
-> one walk until absolute root, while the other walk until root of
-> current->fs, just like d_path() vs. d_absolute_path(). Does this
-> sound reasonable?
+Changes in v8:
+- Move `{from,as}_char_ptr` back to `CStrExt`. This reduces the diff
+  some.
+- Restore `from_bytes_with_nul_unchecked_mut`, `to_cstring`.
+- Link to v7: https://lore.kernel.org/r/20250202-cstr-core-v7-0-da1802520438@gmail.com
 
-Passing the root to a public follow_dotdot() helper should do the job.
+Changes in v7:
+- Rebased on mainline.
+- Restore functionality added in commit a321f3ad0a5d ("rust: str: add
+  {make,to}_{upper,lower}case() to CString").
+- Used `diff.algorithm patience` to improve diff readability.
+- Link to v6: https://lore.kernel.org/r/20250202-cstr-core-v6-0-8469cd6d29fd@gmail.com
 
-> 
-> Thanks,
-> Song
-> 
+Changes in v6:
+- Split the work into several commits for ease of review.
+- Restore `{from,as}_char_ptr` to allow building on ARM (see commit
+  message).
+- Add `CStrExt` to `kernel::prelude`. (Alice Ryhl)
+- Remove `CStrExt::from_bytes_with_nul_unchecked_mut` and restore
+  `DerefMut for CString`. (Alice Ryhl)
+- Rename and hide `kernel::c_str!` to encourage use of C-String
+  literals.
+- Drop implementation and invocation changes in kunit.rs. (Trevor Gross)
+- Drop docs on `Display` impl. (Trevor Gross)
+- Rewrite docs in the style of the standard library.
+- Restore the `test_cstr_debug` unit tests to demonstrate that the
+  implementation has changed.
+
+Changes in v5:
+- Keep the `test_cstr_display*` unit tests.
+
+Changes in v4:
+- Provide the `CStrExt` trait with `display()` method, which returns a
+   `CStrDisplay` wrapper with `Display` implementation. This addresses
+   the lack of `Display` implementation for `core::ffi::CStr`.
+- Provide `from_bytes_with_nul_unchecked_mut()` method in `CStrExt`,
+   which might be useful and is going to prevent manual, unsafe casts.
+- Fix a typo (s/preffered/prefered/).
+
+Changes in v3:
+- Fix the commit message.
+- Remove redundant braces in `use`, when only one item is imported.
+
+Changes in v2:
+- Do not remove `c_str` macro. While it's preferred to use C-string
+   literals, there are two cases where `c_str` is helpful:
+   - When working with macros, which already return a Rust string literal
+     (e.g. `stringify!`).
+   - When building macros, where we want to take a Rust string literal as an
+     argument (for caller's convenience), but still use it as a C-string
+     internally.
+- Use Rust literals as arguments in macros (`new_mutex`, `new_condvar`,
+   `new_mutex`). Use the `c_str` macro to convert these literals to C-string
+   literals.
+- Use `c_str` in kunit.rs for converting the output of `stringify!` to a
+   `CStr`.
+- Remove `DerefMut` implementation for `CString`.
+
+---
+Tamir Duberstein (5):
+      rust: macros: reduce collections in `quote!` macro
+      rust: support formatting of foreign types
+      rust: replace `CStr` with `core::ffi::CStr`
+      rust: replace `kernel::c_str!` with C-Strings
+      rust: remove core::ffi::CStr reexport
+
+ drivers/block/rnull.rs               |   4 +-
+ drivers/gpu/drm/drm_panic_qr.rs      |   5 +-
+ drivers/gpu/nova-core/driver.rs      |   2 +-
+ drivers/gpu/nova-core/firmware.rs    |   2 +-
+ drivers/net/phy/ax88796b_rust.rs     |   8 +-
+ drivers/net/phy/qt2025.rs            |   6 +-
+ rust/kernel/block/mq.rs              |   2 +-
+ rust/kernel/device.rs                |   9 +-
+ rust/kernel/devres.rs                |   2 +-
+ rust/kernel/driver.rs                |   4 +-
+ rust/kernel/error.rs                 |  10 +-
+ rust/kernel/faux.rs                  |   5 +-
+ rust/kernel/firmware.rs              |  16 +-
+ rust/kernel/fmt.rs                   |  77 ++++++
+ rust/kernel/kunit.rs                 |  21 +-
+ rust/kernel/lib.rs                   |   3 +-
+ rust/kernel/miscdevice.rs            |   5 +-
+ rust/kernel/net/phy.rs               |  12 +-
+ rust/kernel/of.rs                    |   5 +-
+ rust/kernel/pci.rs                   |   2 +-
+ rust/kernel/platform.rs              |   6 +-
+ rust/kernel/prelude.rs               |   5 +-
+ rust/kernel/print.rs                 |   4 +-
+ rust/kernel/seq_file.rs              |   6 +-
+ rust/kernel/str.rs                   | 443 ++++++++++-------------------------
+ rust/kernel/sync.rs                  |   7 +-
+ rust/kernel/sync/condvar.rs          |   4 +-
+ rust/kernel/sync/lock.rs             |   4 +-
+ rust/kernel/sync/lock/global.rs      |   6 +-
+ rust/kernel/sync/poll.rs             |   1 +
+ rust/kernel/workqueue.rs             |   9 +-
+ rust/macros/fmt.rs                   |  99 ++++++++
+ rust/macros/kunit.rs                 |  10 +-
+ rust/macros/lib.rs                   |  19 ++
+ rust/macros/module.rs                |   2 +-
+ rust/macros/quote.rs                 | 111 ++++-----
+ samples/rust/rust_driver_faux.rs     |   4 +-
+ samples/rust/rust_driver_pci.rs      |   4 +-
+ samples/rust/rust_driver_platform.rs |   4 +-
+ samples/rust/rust_misc_device.rs     |   3 +-
+ scripts/rustdoc_test_gen.rs          |   6 +-
+ 41 files changed, 485 insertions(+), 472 deletions(-)
+---
+base-commit: 7a17bbc1d952057898cb0739e60665908fbb8c72
+change-id: 20250201-cstr-core-d4b9b69120cf
+
+Best regards,
+-- 
+Tamir Duberstein <tamird@gmail.com>
+
