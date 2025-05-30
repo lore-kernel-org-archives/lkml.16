@@ -1,322 +1,155 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B96222562
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4010A2206BB
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597400; cv=none; b=cSDtoDO1RgGBhmB1lKshupq1FuNLViznCtclqM0+R+ZmYfcTnlCEw475PB7gCkjCRju4UayXz3QKaXDUDzsYazT7AYWDmSptRFueU/XSJobi9TxffU4DfhSdqd8vWDN/h/sL1exidYJT+blFTP0qtuZM5m/gAML1dLTlPFUnRyA=
+	t=1748597411; cv=none; b=by5Cu+cPW/90OwiKAs+V8+q1GAB76hx9a7xtpXSOZfUYR4hFWz/Fweuj78ZMZKydQxOnMBc2ArKZ1WNcPM7FO/ijp1+FgifdoUsGwfFx1dQ21/2vM3RMVBk04gvoau06dMUsfRvw81YkHQOXw1UUl8AqC7j5VO/p2/rlnzdu3Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597400; c=relaxed/simple;
-	bh=VIZG5AiWC/s7En/XmKPIO2DjZgsCQ6G5W9Jx/My9WHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fvpkuSnPGtfbg/BAhDejjUOM2QLUZMMUAWAwlgDG9HvjY3wtshiUP1dlk0gyF+r0X3FaZrONnIMmTp9sU1LDkj57SQQuUfhH691/kWXU+YqgBMz4J9ni1Q1uRDOj2WWf27v0ru2VgMCIDluEbQ26/M5FmZm21VNPOD+JXwW65cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=WB6z6OIw; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1748597411; c=relaxed/simple;
+	bh=nMA6BOKNQortAfZjTY+8NXKVM4Z8Hukb0WuDxYV4S0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGUGva8WufawxxY2vUHMLe75ryTqBaAXzDZ6T/C75qW/HbIxh25z3eGwaxp0GoskiwVyLZTYPvDO+xUyoE4Tb6AszGuMShNDr6LJViiraO/+Fj9j5vCwJQhbz3xKA8Eat6hIuXs+n53UCdkyRhk6tEvIB8jRmbe04FmRGTTikuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L3OEBkIb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="WB6z6OIw"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-312116d75a6so1581828a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597398; x=1749202198; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rxNHqqJshuS1h1cgjJgJ0ZrC1Xqsxa5tk/BB5ji3hvs=;
-        b=WB6z6OIw5FMSobnxLBt+fPmPsX/NsOiTiisAYiUGKxuhRaLdy/ylTQVQVyf4Dg6kI/
-         Jx/wkwLFji+l2wZ7nS6xPiWQDqHH5Bv23q2M8bNC3MBIMq22NYwZcwzGKug2VkHWcFW5
-         Yhlmw5c+XWobbD+qMo7S/YQs4FZrJy3B/FQACXZ8HebyhjqZ8bH3u4Hlqs7/jglQejc4
-         rZiaNVK4g5bik6IOs5wiJQ13/WYUNFY3iiMIF1wvviEcKkIjVt8CnlhFQGEy0Vx3Bc6L
-         yTpm9aJ+BemoU+Pg6tleE3oHLwOY6LW4/wjv7hEosq+BxU+lCwMCi+6B0l+CcjM6f3Yh
-         GJgw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L3OEBkIb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748597408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0RNzhwsqUku1xsJElyNHLGqFPxx7/6+2t/Rn5eNr9pY=;
+	b=L3OEBkIbVlM/qinu0CvWlKb4eKT2iycTEiGBmVVVsscYWTx/AVC36IBzQOzSDwjfRv/KEY
+	IVXRTDHswsvRzjs+eQB7T1LilDKFCu0xT/f2ijsmyd0nhQ6Pv1rx9v/xLw4iUwjqbdXlpV
+	7KDk2ZiYxYsHmRX8P8CNpNJpTsUWvcc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-604-fRnALyDZMay1iMvn-vPq7Q-1; Fri, 30 May 2025 05:30:07 -0400
+X-MC-Unique: fRnALyDZMay1iMvn-vPq7Q-1
+X-Mimecast-MFC-AGG-ID: fRnALyDZMay1iMvn-vPq7Q_1748597406
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so14782585e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:30:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597398; x=1749202198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rxNHqqJshuS1h1cgjJgJ0ZrC1Xqsxa5tk/BB5ji3hvs=;
-        b=odk1AsfM+CdUV8Q/gaRkfOt4zCVOTLMOYxxcAbwjAX7VhLNZEnJHhPsBzOTjCnlWRG
-         6ROU8oVugf556Chi/4BW2W5O0MWGMESMVHy/lAl7+pL+uA86rEqZUsBzVFnntxm6qKM1
-         CI8nwcIo0r9S9B0uY2OJN0r0MlIG+zgkiCMMXWfh11GonrdBh/ppHDOMkeU7b2ibmKhd
-         MTs2D6b0iiUYFRz5vCEHGj/Z5WFgfak3KATv8JozYXpwVMhLKSgETCY0t6qTsV+FIDAS
-         IceQQnopLoodIWUrMdIUc6jOUhCCujSQYn6uFUzWzMJt5nhNi7HvPEeOzBrtCwq6rQeD
-         F4aA==
-X-Forwarded-Encrypted: i=1; AJvYcCW44j5GxawEuxTUQEOHAsPhBE7Fpfek1ZDonAVQ6XMp7XtacNv4jNgP1IkwK42ZUsrwJhhBCUQ9DHe6NPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG2+za+waH3z2qZCRBLNOzTs2t5cR+ap7czTadw4k7iQ8eYx3W
-	a8etKc6riXAfvxEDeqEgwDpQc0dO0jGxUU4uMSZx/CdkMhqlW13/Pinne+inGr8jRGI=
-X-Gm-Gg: ASbGncs0IPDWF8MNewPKfnBua2jsQPW9lTEeX0LVFopSj51OFjaf5/sVlDuVqcMMwse
-	NvFOukxdCJuY3+g2EvB1/sPtyH6bM5/V315F6ZR6Sr1qDH5zLy49pVNTbUhWRa73t4a/GK7co/Z
-	uGlIaLpqey5uRjddl5p2c++xl7kgCAVrYNckjza+NkXk631bmwBSwOIXCMpewUpgP9YuG/ddqWu
-	zkjDKnx6i/v49krkbdsW9k7cSnhf+a/mVh4zKZQ738psoILKQcqBsPjRBGnoiPVWP7nSDwmAH0V
-	i8pmle4nDBfvfE33nUTJMskZjpnaEZ3ytu2lwlrWIRYGYJdondbHeAIgsci6Ce1i+eGd6qQBwfj
-	iKy6kiFhCww==
-X-Google-Smtp-Source: AGHT+IGBCG8Y5BoAzUhA//fCiLwTsxIymub8I3vmhNOr1M4fJfMNuuh617dJ5r3jIttsydinbIXPuQ==
-X-Received: by 2002:a17:90b:39c5:b0:311:b5ac:6f5d with SMTP id 98e67ed59e1d1-31241e975d6mr4419282a91.29.1748597398101;
-        Fri, 30 May 2025 02:29:58 -0700 (PDT)
-Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.29.43
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:29:57 -0700 (PDT)
-From: Bo Li <libo.gcs85@bytedance.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	luto@kernel.org,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	peterz@infradead.org
-Cc: dietmar.eggemann@arm.com,
-	hpa@zytor.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	riel@surriel.com,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com,
-	dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com,
-	chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com,
-	yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com,
-	sunjiadong.lff@bytedance.com,
-	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 06/35] RPAL: add user interface
-Date: Fri, 30 May 2025 17:27:34 +0800
-Message-Id: <de89b7dbd8277f809c61b1220cdca29875863fd6.1748594840.git.libo.gcs85@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+        d=1e100.net; s=20230601; t=1748597406; x=1749202206;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0RNzhwsqUku1xsJElyNHLGqFPxx7/6+2t/Rn5eNr9pY=;
+        b=FPgcVjb8L/QW84Tv3YLlYKXd3PY4OxEhMYvpR37IkxJTmnzKC3uw3TznaxNAUcGuf1
+         xIb3cM9WPZArcaTjtLjmKuqVxJlIZccYaVrtCwUeamAh46sBWjfYS29FRjXlMRYiJj2C
+         NkZTHS8TOqSaKx8zGdM+JCtVr5yq7LbtCvwPk9vy+KSlfJ+uXkJPRRm8p0qG1d/y93Zg
+         6cFnQNCyYBkryp3BDIB72FWeH+zhxTkcGwf6KXGtQqZAUqsLZ/3pnCF1tjQe6tj/rm6l
+         oy2rr2H7SXnBCrqHgKmQMSy8RHgBIcUAEKRMa5NGS5N/fKugmMslk0lDNorHEP83eNx1
+         6B7A==
+X-Gm-Message-State: AOJu0YwYa8v12eLpzhARgVhjn8W0C1QreNhDcmXFkNeI3paESzsI6Bx3
+	7L0HgTn+v2qSokmW8A8IrXZGYK2/1YE/H0aG8msp/AQ2H5QjyrMcSIzKKiIBUmsgI1UjRX8nV45
+	MrLTiP8ljx0xfv0mBsjHYdpyEBYJTuS0Hs/XL2E6uQ/Isx1VfrifqNZdAKXKxis+596vuuJpoZK
+	ko
+X-Gm-Gg: ASbGncvvFCS4J0WmY32JYf/h0ctRL9/eR5ohIJrAqmn1NI3U7PC9mX4VjG/jqzXdrQD
+	x0Ay3bFyomhmcOzhzvBh/Zy3OspRsfvJFP8QqYfVpjm/yxssCMCDj1VNoAEBNmHGa1IlwDjf2BM
+	0ozdpWVV7dp6EcH6cT5fovNtj3uhJZNF5KU3X96nFCssXp2yJWy1yTYudmdZFUBASqWmdrWwYZ2
+	F1gWdJRdEw376orgpoPHF5gTVR6agolnVfPeVU71/MHlWc7hLCR1c+IqPTvDqItWDdo8kd3aseM
+	sMVxtj50KiSEJVTu1k7P5BipDmPvIaFYsg8gZ9sI7X26NITAvXk0F/xNX3Dq0TKTsIdg9dPhmO7
+	+UpPXGlidvxA3KtwyIVRTENcKl8jeiakVZQ/en1g=
+X-Received: by 2002:a05:600c:a088:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-450d6547524mr26073855e9.18.1748597405843;
+        Fri, 30 May 2025 02:30:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF2BOtiydMOfq1UD1dFaTSdbt9kgs6g/FvHe0NUDZiW/Mb+ZwIUaJljI/hl7D5dUDFLJdO/0w==
+X-Received: by 2002:a05:600c:a088:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-450d6547524mr26073605e9.18.1748597405404;
+        Fri, 30 May 2025 02:30:05 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c525sm4319304f8f.23.2025.05.30.02.30.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 02:30:04 -0700 (PDT)
+Message-ID: <40c773a3-e1d7-4c8c-a6e4-793f8aa7f983@redhat.com>
+Date: Fri, 30 May 2025 11:30:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] virtio-mem: fix multiple typos in struct comments
+ and function docs
+To: Alok Tiwari <alok.a.tiwari@oracle.com>, mst@redhat.com,
+ jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+ virtualization@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, darren.kenny@oracle.com
+References: <20250529084350.3145699-1-alok.a.tiwari@oracle.com>
+ <20250529084350.3145699-2-alok.a.tiwari@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250529084350.3145699-2-alok.a.tiwari@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the userspace interface of RPAL. The interface makes use of /proc
-files. Compared with adding syscalls, /proc files provide more interfaces,
-such as mmap, poll, etc. These interfaces can facilitate RPAL to implement
-more complex kernel-space/user-space interaction functions in the future.
+On 29.05.25 10:42, Alok Tiwari wrote:
+> Corrected several spelling mistakes in code comments, including:
+> - "bock" -> "block"
+> - "valued" -> "value"
+> - "actipn" -> "action"
+> - "accidentially" -> "accidentally"
+> - Improved grammar in a few places for clarity.
+> 
+> These changes are purely cosmetic and do not affect functionality.
+> 
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 
-This patch implements the ioctl interface, The interfaces initially
-implemented include obtaining the RPAL version, and retrieving the key and
-ID of the RPAL service.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
----
- arch/x86/rpal/Makefile   |  2 +-
- arch/x86/rpal/core.c     |  3 ++
- arch/x86/rpal/internal.h |  3 ++
- arch/x86/rpal/proc.c     | 71 ++++++++++++++++++++++++++++++++++++++++
- include/linux/rpal.h     | 34 +++++++++++++++++++
- 5 files changed, 112 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/rpal/proc.c
-
-diff --git a/arch/x86/rpal/Makefile b/arch/x86/rpal/Makefile
-index 2c858a8d7b9e..a5926fc19334 100644
---- a/arch/x86/rpal/Makefile
-+++ b/arch/x86/rpal/Makefile
-@@ -2,4 +2,4 @@
- 
- obj-$(CONFIG_RPAL)		+= rpal.o
- 
--rpal-y := service.o core.o mm.o
-+rpal-y := service.o core.o mm.o proc.o
-diff --git a/arch/x86/rpal/core.c b/arch/x86/rpal/core.c
-index 495dbc1b1536..61f5d40b0157 100644
---- a/arch/x86/rpal/core.c
-+++ b/arch/x86/rpal/core.c
-@@ -13,11 +13,14 @@
- int __init rpal_init(void);
- 
- bool rpal_inited;
-+unsigned long rpal_cap;
- 
- int __init rpal_init(void)
- {
- 	int ret = 0;
- 
-+	rpal_cap = 0;
-+
- 	ret = rpal_service_init();
- 	if (ret)
- 		goto fail;
-diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
-index e44e6fc79677..c102a4c50515 100644
---- a/arch/x86/rpal/internal.h
-+++ b/arch/x86/rpal/internal.h
-@@ -6,6 +6,9 @@
-  *     Author: Jiadong Sun <sunjiadong.lff@bytedance.com>
-  */
- 
-+#define RPAL_COMPAT_VERSION 1
-+#define RPAL_API_VERSION 1
-+
- extern bool rpal_inited;
- 
- /* service.c */
-diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
-new file mode 100644
-index 000000000000..1ced30e25c15
---- /dev/null
-+++ b/arch/x86/rpal/proc.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * RPAL service level operations
-+ * Copyright (c) 2025, ByteDance. All rights reserved.
-+ *
-+ *     Author: Jiadong Sun <sunjiadong.lff@bytedance.com>
-+ */
-+
-+#include <linux/rpal.h>
-+#include <linux/proc_fs.h>
-+
-+#include "internal.h"
-+
-+static int rpal_open(struct inode *inode,
-+			     struct file *file)
-+{
-+	return 0;
-+}
-+
-+static int rpal_get_api_version_and_cap(void __user *p)
-+{
-+	struct rpal_version_info rvi;
-+	int ret;
-+
-+	rvi.compat_version = RPAL_COMPAT_VERSION;
-+	rvi.api_version = RPAL_API_VERSION;
-+	rvi.cap = rpal_cap;
-+
-+	ret = copy_to_user(p, &rvi, sizeof(rvi));
-+	if (ret)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+	int ret = 0;
-+
-+	if (!cur)
-+		return -EINVAL;
-+
-+	switch (cmd) {
-+	case RPAL_IOCTL_GET_API_VERSION_AND_CAP:
-+		ret = rpal_get_api_version_and_cap((void __user *)arg);
-+		break;
-+	case RPAL_IOCTL_GET_SERVICE_KEY:
-+		ret = put_user(cur->key, (u64 __user *)arg);
-+		break;
-+	case RPAL_IOCTL_GET_SERVICE_ID:
-+		ret = put_user(cur->id, (int __user *)arg);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+const struct proc_ops proc_rpal_operations = {
-+	.proc_open = rpal_open,
-+	.proc_ioctl = rpal_ioctl,
-+};
-+
-+static int __init proc_rpal_init(void)
-+{
-+	proc_create("rpal", 0644, NULL, &proc_rpal_operations);
-+	return 0;
-+}
-+fs_initcall(proc_rpal_init);
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index f7c0de747f55..3bc2a2a44265 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -77,6 +77,8 @@
- #define RPAL_ADDRESS_SPACE_LOW  ((0UL) + RPAL_ADDR_SPACE_SIZE)
- #define RPAL_ADDRESS_SPACE_HIGH ((0UL) + RPAL_NR_ADDR_SPACE * RPAL_ADDR_SPACE_SIZE)
- 
-+extern unsigned long rpal_cap;
-+
- /*
-  * Each RPAL process (a.k.a RPAL service) should have a pointer to
-  * struct rpal_service in all its tasks' task_struct.
-@@ -118,6 +120,38 @@ struct rpal_service {
- 	atomic_t refcnt;
- };
- 
-+/*
-+ * Following structures should have the same memory layout with user.
-+ * It seems nothing being different between kernel and user structure
-+ * padding by different C compilers on x86_64, so we need to do nothing
-+ * special here.
-+ */
-+/* Begin */
-+struct rpal_version_info {
-+	int compat_version;
-+	int api_version;
-+	unsigned long cap;
-+};
-+
-+/* End */
-+
-+enum rpal_command_type {
-+	RPAL_CMD_GET_API_VERSION_AND_CAP,
-+	RPAL_CMD_GET_SERVICE_KEY,
-+	RPAL_CMD_GET_SERVICE_ID,
-+	RPAL_NR_CMD,
-+};
-+
-+/* RPAL ioctl macro */
-+#define RPAL_IOCTL_MAGIC 0x33
-+#define RPAL_IOCTL_GET_API_VERSION_AND_CAP                        \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_API_VERSION_AND_CAP, \
-+	      struct rpal_version_info *)
-+#define RPAL_IOCTL_GET_SERVICE_KEY \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_KEY, u64 *)
-+#define RPAL_IOCTL_GET_SERVICE_ID \
-+	_IOWR(RPAL_IOCTL_MAGIC, RPAL_CMD_GET_SERVICE_ID, int *)
-+
- /**
-  * @brief get new reference to a rpal service, a corresponding
-  *  rpal_put_service() should be called later by the caller.
 -- 
-2.20.1
+Cheers,
+
+David / dhildenb
 
