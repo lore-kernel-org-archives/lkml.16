@@ -1,403 +1,264 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B57F55E69
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 14:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748617147; cv=none; b=HCnMqlxCd/YV6DzHbk/5M6+2Fm//PS1gbqEr1MtH8IeiWLZBmGNBwdd+hsdqr0Z04sl0t8tIO4rYSs9tnpXlSIiFfcz0Fb29Lv8zbal2B6uL5l7Cbb0utqAiLdoLN68pAh7GQVMaadLPnh4h59X9Vm+EEt9CxJZQExm+t8RHRx8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748617147; c=relaxed/simple;
-	bh=PRnBjKq3Vs55NWdoCQ0z/ak6ycROnhYhMqCmI83qiUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pG1+KR+UwkqyyqMhg/QG6Inn/uWmQ/7ZGD5AtlyohHQHY/VKlJ5lOzMR5C43R6SV3O2KovdlLKJajz4/Enfc+nf1MEhapZJYnp0kM+aNAfnCOMegsrO9gulQCz4yrrQRY92CxqF+W0nWc50p1MIvV9DRjTT4icTntzZW17z1i1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bF3818Ku; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D4F1E515;
+	Fri, 30 May 2025 15:00:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748617211; cv=fail; b=HyWaKoDb6flYPvXLtVLZRWrTYfp60syU35Xu6W7KfkUGQid3Q0y5O21mZBxnpPOJ0VLLcpZBYkH2Tfe96ynHTLH/Ndcw8nEBukh9+pnqxDR/QyWlfUCiBKZ/GiAysb1LbKfWPm8Cv26ftw90BxWhdksvM8xbSrzs+sWteS62eBI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748617211; c=relaxed/simple;
+	bh=VAh+Kd48Tpm0YT93JUnRva+L7SdwWYD5YdnAw3uTUdU=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cuOT32e84brXxzSusXL4d9wa/+0xUyKUH8cHYGoxxdxcTPYRuXeaTHkwyAYcPGOP8JJvQg9MSIywhPhDFtqh0aEJbEzpB/EGgPkAOj898n7fWmxwi3fBJskVg5mX9K4+qR1jqi9VxivPwOZy9x6aNwmREj6MWpUIjZ8Jis0mBtk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hyUrhLPC; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bF3818Ku"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70e6bddc30aso21376117b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748617144; x=1749221944; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F40ejr5VtTWUVu2ZmI0k1V/v4j0cLgLE4WaZnAIPVrw=;
-        b=bF3818KuoN05LiOm1Fvq+LHKvVpOCeOqoRVevndaS6sAVcbgIbWfb0lgnQEBRqDoi+
-         t7pj3dtcWXdyQJ0Zhn7qk8gg/xLFv01GsyO9t9y9aK2jx29JGq7P64YKz3QN5pczlMox
-         I3DcV4UC6k4vqdVlTnulZaToNmhWfLHH0VqkZJhBQbirAuhTqa1nkuuQte2LtDfrlagU
-         gFO0HGxzlVR2pJQdq0qI1GvmJQSVIzqQ06u54ucBdiWQhqtn/JipOPJg1tjXHZ/TPbto
-         Fcqp2t0F2hnxUlgxjvdUUDNvB5PG+cybQEeSR4Vfq+3rKwGxBkAtnI8y0VqQ/8virX6r
-         HB3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748617144; x=1749221944;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F40ejr5VtTWUVu2ZmI0k1V/v4j0cLgLE4WaZnAIPVrw=;
-        b=jRFupolnXi5gTcU9llkpnKCZRbz+62wnJlXimpt3X8NhIc8Ki2RPX6LVuSxRPj7VRd
-         ddV/fP3Q3+lm/xOtar3/vGyfCnMTuQDgdzpnzsFIMtmRy0xaRISBhfZI+bZ+3yWp7s3u
-         mIfVpo3WYIbLZAwtYVq7f5+cZW1mHc2lYJAgVXHGFqe4wQysDVBIkhoxWxhHTVdzgUXR
-         wRaUcZgPbFMWEEXp80Gy2SWvVmOQ3hxY/XcadLzwm+go0yTT6EqI4SnEs/wUpyG8+qYj
-         lswyxZgYNA5BK1y7JWqr+PTrpa82s1knw9niAGaONAmizu5Jx2t9faI6kpBxPg7rBM/I
-         I2ZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0gOv2JCm3CG9pbzknJbcGRbvr7+vqdOCB9TTnYXhCZk0geKjRtYZMcO4rM08AKt1VLW/vyHUf4a0x70Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFmv2hWWhIgZfsMiiUb7sdkjfbcyqvDi7mhRMkeax5rEwr2QWh
-	2+ChOtJEZ7yyhO71ffPl2El0nHEUwvsRXYePMr/j+w6vR+0tgG6NqV29NHcBB29QHcZEuFiZcWT
-	E97gv2flO1yMVIl6Q06yfNs5vLlYnquFRFxJFasY9rQ==
-X-Gm-Gg: ASbGncvDzrzTcJ5sf8PgxBgAH6gwusCn+r5n2wEIap7+dhWwyDF1uZBbua9MqnUY58Z
-	ry5p0mn0R18iyA16wJotzQFsoqP1WJd68X9pk3IyDhfQFINxvV8yAEz72f0qnzORSa3TvdNoNwY
-	KhOnwTgdW/KtiEYNpeQzqUVBGb3W49BaLm1ZSsHjtStZAJ4JXaxQteIguOTtjQbE0mrgQKKkxZ2
-	++BLA==
-X-Google-Smtp-Source: AGHT+IGgNAVjj4IxjNpEQj0RCxPeO78NwasppbZVwvKX/SoxUnWbNk0DiJf246mwv4t676hAuZm20jwM2OLFfiitHIc=
-X-Received: by 2002:a05:690c:dd6:b0:70d:ecdd:9bd3 with SMTP id
- 00721157ae682-70f97effb18mr60432017b3.27.1748617144185; Fri, 30 May 2025
- 07:59:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hyUrhLPC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748617210; x=1780153210;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=VAh+Kd48Tpm0YT93JUnRva+L7SdwWYD5YdnAw3uTUdU=;
+  b=hyUrhLPCx3syD7SDbp9MUWFOw4BQz0wzR2mqLf/SJAIWd12gbEhdqpfY
+   OegHEoBe2yFeTeqmyfibkAe4TxklTUTDQGb/TV87yns8W1XDXaJnfYMPE
+   rsKkcvszP78REHF2oSwQ5kDFWxltq45RoFiu5ugVHFfP5VBSst+ORKPND
+   IszwI25aqU+Ew4YH231B/4v9a3TKOvtae4M8vij0rZ8XWNNs201gAY1oM
+   hSiBgtp43b8kjdfjMrLYf39VCzxYUFmL4222rLxmed2yDcSjBdd5iCWqV
+   gFT2IjtPvkAsJjI8aWAlVIVu4anMRKOV/HcUOpBu9RFx6ydSbWrytAGu5
+   Q==;
+X-CSE-ConnectionGUID: l5OGP6UHRYqgJQDsyA2WCg==
+X-CSE-MsgGUID: m6Nf+6BkQiqR6k4lOz/Z8A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="54377704"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="54377704"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:00:02 -0700
+X-CSE-ConnectionGUID: X8zVCdR9SDe2QzTgWWjGiA==
+X-CSE-MsgGUID: oBuaI9nRRvSVfEAwrxMXew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="148685255"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 07:59:59 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 30 May 2025 07:59:58 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 30 May 2025 07:59:58 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.62)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 30 May 2025 07:59:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O1xW7nU/HAwNQ751KzdgeT1/NrHe7ITQG3zOYMzPrpinsheCZDR48LWFQkMJ41xmtuqK7tk2/Vxr0k2X3PQbw1yRWYelFhoSWzTDYQPG9dNft+In4YZdNr5+n27XvKQXtDzvvaRfIjYcibvUq7dy+f4pydFETX4uyCmLSr6NFhVmVn3XwF9cAjzmXLZ3UM4msb0ICRwAPwIufwclfq84IJCeAR+R1UUthoTBxAwtes+hmx+72HXTJ+EkSE8Z/ysGqXDq4PWiR8AmlT9huS1KYmrWmiBSlZjQ3qlAzUD+vJiNM0UQALnKew31CZ0UmeNFx+0ixv3LkkVYqz5belbD0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/6HM1HLASBxD/+/vyWdcppDMiShydkYOEqLI5PcrxZc=;
+ b=izY6VhtpLfvam/HZabr0vnNHIcscaGBdf5l7erXjYCuI3jFV6uzjCfjp/QirjSXbT4ELKs43QUO6QvMWX3F4yhTTDvW3UBKjz7+nGOexCefATOMF++97NaRwYVitI3tnMrdNQ9b3HLJS2mlO3TPmkNFz2FwyvTw4hUwg1HwZo4Zo6iFZENTYdj9/Zuoqe3fqMSFi6ZVjaE276RjYeXslxeuihk5JNL9jProEXgCkeDhYO9R9awkKr0uQQTKaJfc9i7Opcw0vdshQQhhF9hs7CcCZgETbTeYsnSaunGnG+Tj9j5+pwSdXhUXoaccqIkmwtqPLokN89jhiXNySXslnMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by MN2PR11MB4567.namprd11.prod.outlook.com (2603:10b6:208:26d::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Fri, 30 May
+ 2025 14:59:40 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%3]) with mapi id 15.20.8769.025; Fri, 30 May 2025
+ 14:59:40 +0000
+Message-ID: <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
+Date: Fri, 30 May 2025 16:59:35 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
+ initialization in _DEFINE_FLEX()
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>
+CC: <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <aBQVeyKfLOkO9Yss@kspp>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Content-Language: en-US
+In-Reply-To: <aBQVeyKfLOkO9Yss@kspp>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MI1P293CA0027.ITAP293.PROD.OUTLOOK.COM (2603:10a6:290:3::7)
+ To DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526-v6-15-quad-pipe-upstream-v10-0-5fed4f8897c4@linaro.org>
- <20250526-v6-15-quad-pipe-upstream-v10-10-5fed4f8897c4@linaro.org> <45hk22fdghaqnilukvqayjcbnf3btntknqrwf5ivx346vrgag3@aebzt76tkjzw>
-In-Reply-To: <45hk22fdghaqnilukvqayjcbnf3btntknqrwf5ivx346vrgag3@aebzt76tkjzw>
-From: Jun Nie <jun.nie@linaro.org>
-Date: Fri, 30 May 2025 22:58:51 +0800
-X-Gm-Features: AX0GCFslvbFYpcTCVRsoPzq1BK9-uq6X4fVoG8uX4cmCA6kcXjeno6A7befYAHg
-Message-ID: <CABymUCNuYDjmytbb+HLg1KF5eOyQVNczcq_wqFdo51cr0Y6BdQ@mail.gmail.com>
-Subject: Re: [PATCH v10 10/12] drm/msm/dpu: support SSPP assignment for
- quad-pipe case
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|MN2PR11MB4567:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33550a31-7b13-41ba-b269-08dd9f8a9a4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?TFJKSXlYT095NDlIcCtGeWJ3TTU5NDBkL09HSUUwRXNab1N0VmVubWpmdjc2?=
+ =?utf-8?B?UUpQTFlLNHNmcy9vRXBjWUJmL2paK3pDSExGZ1VpZDFraGJpRzh6akVuYlR5?=
+ =?utf-8?B?Nk44TUo1ZG1KVkJLZWwvZVpwYnFDOEF2Q1lIU0FrVStiOUNKQ09NcXVsTExY?=
+ =?utf-8?B?dWFaSVZkRTBoZ242ait3WlVWTll2L0dYTnZrbW9UemZJVU1naUprT0dyUVFx?=
+ =?utf-8?B?aFBiYm5wTExYY2JJbFQrQm5Wa3JwcldrZWJja3lxL0lCS0haQmZ0WjM3MVJ2?=
+ =?utf-8?B?N01rdXFFQlRYM0QvUHg1WitRMmxXQ1NkWWhFU003Z1Yxb0ZVMm5MOGs3SUIv?=
+ =?utf-8?B?VTY4ZTFjK0VDMDZIWWVXS010RGZVMUhEbUFLcnQzNlMxVDhyYnlCMmUrdjEr?=
+ =?utf-8?B?MndsZC9PVDVjbjBlbC9yL0twaTI4V2RIZGdMMVpNT3NxSEphVCtJNnpCMUZa?=
+ =?utf-8?B?a2dEd0ZTR2hKb0Q4RTZ4QWlmQ2JPOWt3QlFUM0JmOGpkaXdzK3o5SURHTHFW?=
+ =?utf-8?B?MDZQb3NNOUVneU9CYndtWlhuTlh0ZGwzWDlWM1ZodFU0Wm1aU3IwMnptK0hz?=
+ =?utf-8?B?Vk4xUUdweEFFNWZnbzh0M0pKenZpUmRRUDdKbFEwSE81VmlCb2VGRC93M3hu?=
+ =?utf-8?B?Qks0V1dVclRGdk9TWTZrclROcjRXeC93UkZWSlYwLzEwZnJhbTJXZ21mbGRB?=
+ =?utf-8?B?YjVzWThtL2w5MDdyV2Y4Q3NlNkVmbVI5RWxzQ3VhUFY2Z2R1ZmI1UXBxdjNL?=
+ =?utf-8?B?Z04ydjF3UHdlQlNndkpLSEx3aW9VbStNRUZ4blJpb2N0QlNIYjdBTXpkTWVh?=
+ =?utf-8?B?VmR1U3ozYStMNCt3N0c2UWFPa3ppaTRPZVIrb21DN3M0OTYxS2h1eks1SFB5?=
+ =?utf-8?B?eTMzUWhyNWVKTENRRkFmQ2tWMFNmK3JDUWlKS2xCaEwyTzdJOHVwWXdpY3lE?=
+ =?utf-8?B?eG4xVElPTUYyNDZ4L1laUlNzcllhNk9QREtuUWNvZXI5YVdpcHlKenJ1OHlE?=
+ =?utf-8?B?ajVOM3NXTTNUbmc0d3c5bHdKdnNmVzdLazBmVnBNRlBjSXEwQW00MFhROVdK?=
+ =?utf-8?B?bEYwNjErTzR6bXRtRjlWQ0UxTnVTUXlGKzViN3RSbTBacGVSTHBmTVZiOTdM?=
+ =?utf-8?B?Tk5xOXEzNkdHWkJkRnlQaFAxMjB5eFQvdXY2NENFQ0VqdlRQczl5b1RrbmZ6?=
+ =?utf-8?B?V0c4Q3FQNGNJMkpOU3VUU1c5SHh6c3FQTW96cE1Qc29GZEpZbmxubHdoZ1dh?=
+ =?utf-8?B?WFZGTTUzOFp5TGltYytoNmJEdE9lMnY1dmcwejB2SWtacnExUTBZekkyTEZz?=
+ =?utf-8?B?cWdYcWllaUVHdFVBRHd4YXloNnp4UHVyOTdPaGtpZURvbXFMcS9YNjRxZml1?=
+ =?utf-8?B?TWV5cW1TZmxST0pDYUpxQStOUi9JK2lDWHpWL2pjTDQwQ0YvNkhvMTdRLy9n?=
+ =?utf-8?B?NG9PY2VIUWRkdlF0SXJRcmxLM0JRcjBEZXBVRG9HTnF6UHdUeXR0QmZ2NldZ?=
+ =?utf-8?B?NGdZbUhtb3NqTFd4enRabFA5bjFsZ3g1QlcrSEFnL2ZHcnZUYlhieVNCQlJR?=
+ =?utf-8?B?dHEyeDkwWjFjRGpXaUxhc0pyb1ovcUhjNGlzZVF2NUNrM3U1NWpDRHExdEJO?=
+ =?utf-8?B?b0ZSbnlzanc5azV6SFExYm5uUXhxSHZHaTU1UDM3TFBUZ2cvMkFBa1k3T2V0?=
+ =?utf-8?B?dVdJSzU4WHBqOENEVUJPQk5aZ3ZhNE83L0M0OVIycUJyNFgvdTh0amNzSUMv?=
+ =?utf-8?B?OHBnTTQyanE5ZVplbDhKVXZJRWJhQWlVR0VXM1hpZHpyenFiaHFreXV4S01H?=
+ =?utf-8?B?bExPd2Y0QWIzK1dJN2VUNlJmS3J0c1RoOFhOZjdyNW5mT1JOaTRnbDZvUlJh?=
+ =?utf-8?B?WDFmYzVPT0I0QmxwT2NQYmJVWU11ZXNQWnRlZnFIaGk4YW1vbzlWZE9GS1B6?=
+ =?utf-8?Q?m40/AnHkj0o=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NkF2ZWZxaDlWYTMvcnEzT04reVVQbnV1RGF1WU41RzhyM2ExQmdramVBV1gz?=
+ =?utf-8?B?QXhzdHVNa0NtSkNRUy95OFhPT0hPYzNtQ1M1NG9rRjZQcFJKeWFoZDRSdEY2?=
+ =?utf-8?B?anBGbFZmeHhsSll6eGlYWXQ4NHk0R0ZnUmYxdkhuQXJJQm1QelovaHFld2ps?=
+ =?utf-8?B?V3JLSnlHU2R5cnFJNHRrekJWdDIwdzRETnRnUHQwMzNPK1VvOHkwL3A5MjdY?=
+ =?utf-8?B?K053M0M2Z2ZSNjBZSVJZSFJycUdXckQxMXU2YzY5STl3SjZKOWVmeHRnMXdU?=
+ =?utf-8?B?alV1U1VyMFBXK3cycWVFR0c5dEltbURoMWVhTlViYnJyMGNYam51KzlMb05p?=
+ =?utf-8?B?WCtGMUdERmgxc1FUVndhcDZqZ1RhVysxY01DYXFMamhJUmJWVE4vQ0lwR29s?=
+ =?utf-8?B?QmNRUVV5VEowNXgvV1E3akZvbHhYQ1puK3JYeXNFQnh0a3lUeXB3bGh6YXl2?=
+ =?utf-8?B?d2JzaGRvaU15YUJzWk1rdWtaZXprWVlOUFErUFlQeVg4VkI4YndqaytJUmNl?=
+ =?utf-8?B?Y2xNM2EwMUNNMXZOMFhIcm4yajkyYkN0Ky9mcWpUblUreFdmU0k5aldRNHFk?=
+ =?utf-8?B?NFNPbG1nK3ZBRWZTM1ViaHJLS283M3VzS1EycWpwc0c2VVFXc1lrdlpSZWM3?=
+ =?utf-8?B?blFTZzVtWUdJeTlFU0s5a2JDcVZKdDBGRVNEMGhUcnZYQWNSWXJMNlNNaFlx?=
+ =?utf-8?B?TUYwbWV4WG5SQXZEZkd0enJLY0lsRWFOOVVBRURwa2RuWU9PMlB3eitTVXFt?=
+ =?utf-8?B?VDc5bVhoSnZjaEozaFlHenVqSlZJRXA4SUpHNXdLei9LbXJoT05WMTV4dHBU?=
+ =?utf-8?B?MGJMYmZrU2ttRFR5TlB4T0RBZHdaQXpSbkhJZFdWU2ZXa2tNMVhkVVpxaDQx?=
+ =?utf-8?B?ZGoxMUhMU3I2T1ZkdVBpSlkwWUVHVWlLVXBUeGdWcmFpZWFJZENEMW5CaG4v?=
+ =?utf-8?B?YmRlU3VtVVZDOGI2QURjSE55NUpPUUg0ZlFxZEdOS0ZtRkI5K3VLQU00MFJU?=
+ =?utf-8?B?QkJPdE9EUlJjZFdqVW5vVlNhYlFnTlNxeDJ4aWxTL1UvTFl2dkJuQXE1WXJ1?=
+ =?utf-8?B?eWYvVGVETk5DM2tvemY1Q2VaMFVaQm8xdFl4cmcyenU4MzhqVnA3ZjFJM0Ny?=
+ =?utf-8?B?UlB6YmpycWN6dU1QdUppdTM5ZEFraHNGUmZXblMyMnhBUFFoQ2hocFMyaGYw?=
+ =?utf-8?B?YTZnanBIbDQwSEREcWZVbGhUbWlPcldKNmxJdEczTHFoUFVhNWlZWXhXdUIy?=
+ =?utf-8?B?TWU0MnMwZ3prT0FvWjVtc1dlekx1Z0ZMa1RtNE9RSFFhZ3pPMEp1OVVnS0RI?=
+ =?utf-8?B?RXE4QWFuTk1CV0xYMDYyMGFtbkUrTkFRRG5DeHNPRXdvRFdhd09FVkhMY0ky?=
+ =?utf-8?B?QXdDV1FMRHgvWnlEOWMyVjZLamNsWGNnY2EzaGxpQU9JRzB3Q2hYUlBWc0M4?=
+ =?utf-8?B?eXRQNVJ4TTlSajYrdmMyZG9aNi84UlB6U3BGcDBaKzdnbFJLcFhVWldNOUZq?=
+ =?utf-8?B?M3RSWUNxbTNsZzJiVEg4U0FvWWt0dm85K3FoV3JTNUsyQWxQNENzaUg3dEZn?=
+ =?utf-8?B?QW54aTJoanM0N2RjKzdiQ1hPWlRSMnVxY2xPM1RZRjc0WGF5OEw2a0hrczlv?=
+ =?utf-8?B?ME83eFBwd25rUU1zcjVnMkJEYmhnWm5VSmw2WnAzbVBoYnV0TjUvNVE2VDdi?=
+ =?utf-8?B?YjVLdkRsUzNDZGM2YitFT3c2V1QzY2sydEcvWnFGdjNNOEdDc0ZMb3ZhbjYy?=
+ =?utf-8?B?SGdlSHVkejZBWnVCMXVoRC9ubWw4ZFBLSkRVZ0FvbWowaUl3QjlDcnZuaTQv?=
+ =?utf-8?B?MWpWL2hGZVVQRmFPZ1I3aU42SkdlWGJpN1pya21mdTE2anNVZkJmVGV1K0Mz?=
+ =?utf-8?B?QXVJZVk0OU1Lc21XQlIzZ3lTdU14Y2M2azhkMzRsamhjR2xMclBkZTZKTDhy?=
+ =?utf-8?B?NWxrOGgwTEtKc1g0cE0yZ3VJY1pKMm1wcGFxMUtYRlplanYvUmwzN3NXRlQ1?=
+ =?utf-8?B?amVQa0UzMjJnK3d2T1ltaVJkblNRa1pWYkNSczlWSWpZWEVLaEtrd1NRVHF3?=
+ =?utf-8?B?cUxxaENSOXlodHh0cUJsZmNWWFNackRjREczTFlIa2MyMGx2NVZxeXBhK1hI?=
+ =?utf-8?B?OWowQ0VGOGxzZGJlczVFeWMvYzZXSVdrMEpEQXpWN0lLMFBMUk16ZTVIOVBG?=
+ =?utf-8?B?M3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33550a31-7b13-41ba-b269-08dd9f8a9a4c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 14:59:40.2823
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OD7aAj23ZY4EGyqESMauRhH2X8AVGv9kZJgLLlc6JiMpgCU4Ty96FOh0wVgpOeCY90L+q/aMXR2Mnq1+1m7p0XYctVr0ghkcTFU39A39XYM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4567
+X-OriginatorOrg: intel.com
 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> =E4=BA=8E2025=E5=B9=B4=
-5=E6=9C=8829=E6=97=A5=E5=91=A8=E5=9B=9B 02:22=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Mon, May 26, 2025 at 05:28:28PM +0800, Jun Nie wrote:
-> > Currently, SSPPs are assigned to a maximum of two pipes. However,
-> > quad-pipe usage scenarios require four pipes and involve configuring
-> > two stages. In quad-pipe case, the first two pipes share a set of
-> > mixer configurations and enable multi-rect mode when certain
-> > conditions are met. The same applies to the subsequent two pipes.
-> >
-> > Assign SSPPs to the pipes in each stage using a unified method and
-> > to loop the stages accordingly.
-> >
-> > Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  11 +++
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h  |   2 +
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 126 ++++++++++++++++++----=
---------
-> >  3 files changed, 88 insertions(+), 51 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm=
-/msm/disp/dpu1/dpu_crtc.c
-> > index 85f585206218f4578e18b00452762dbada060e9c..47ab43dfec76acc058fb275=
-d1928603e8e8e7fc6 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > @@ -1562,6 +1562,17 @@ int dpu_crtc_vblank(struct drm_crtc *crtc, bool =
-en)
-> >       return 0;
-> >  }
-> >
-> > +/**
-> > + * dpu_crtc_get_num_lm - Get mixer number in this CRTC pipeline
-> > + * @state: Pointer to drm crtc state object
-> > + */
-> > +unsigned int dpu_crtc_get_num_lm(const struct drm_crtc_state *state)
-> > +{
-> > +     struct dpu_crtc_state *cstate =3D to_dpu_crtc_state(state);
-> > +
-> > +     return cstate->num_mixers;
-> > +}
-> > +
-> >  #ifdef CONFIG_DEBUG_FS
-> >  static int _dpu_debugfs_status_show(struct seq_file *s, void *data)
-> >  {
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm=
-/msm/disp/dpu1/dpu_crtc.h
-> > index 94392b9b924546f96e738ae20920cf9afd568e6b..6eaba5696e8e6bd1246a989=
-5c4c8714ca6589b10 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-> > @@ -267,4 +267,6 @@ static inline enum dpu_crtc_client_type dpu_crtc_ge=
-t_client_type(
-> >
-> >  void dpu_crtc_frame_event_cb(struct drm_crtc *crtc, u32 event);
-> >
-> > +unsigned int dpu_crtc_get_num_lm(const struct drm_crtc_state *state);
-> > +
-> >  #endif /* _DPU_CRTC_H_ */
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_plane.c
-> > index 0bb153a71353ca9eaca138ebbee4cd699414771d..f721dc504bbbe3a49986239=
-adee113bfb6790f70 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > @@ -961,6 +961,33 @@ static int dpu_plane_is_multirect_parallel_capable=
-(struct dpu_hw_sspp *sspp,
-> >               dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidt=
-h);
-> >  }
-> >
-> > +static bool dpu_plane_check_single_pipe(struct dpu_plane_state *pstate=
-,
-> > +                                     struct dpu_sw_pipe **single_pipe,
-> > +                                     struct dpu_sw_pipe_cfg **single_p=
-ipe_cfg,
-> > +                                     bool config_pipe)
-> > +{
-> > +     int i, valid_pipe =3D 0;
-> > +     struct dpu_sw_pipe *pipe;
-> > +
-> > +     for (i =3D 0; i < PIPES_PER_PLANE; i++) {
-> > +             if (drm_rect_width(&pstate->pipe_cfg[i].src_rect) !=3D 0)=
- {
-> > +                     valid_pipe++;
-> > +                     if (valid_pipe > 1)
-> > +                             return false;
-> > +                     *single_pipe =3D &pstate->pipe[i];
-> > +                     *single_pipe_cfg =3D &pstate->pipe_cfg[i];
-> > +             } else {
-> > +                     if (!config_pipe)
-> > +                             continue;
-> > +                     pipe =3D &pstate->pipe[i];
-> > +                     pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > +                     pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NONE;
-> > +                     pipe->sspp =3D NULL;
->
-> If this function is 'check', then why does it change something in the
-> pipe configuration?
+From: Gustavo A. R. Silva <gustavoars@kernel.org>
+Date: Thu, 1 May 2025 18:44:43 -0600
 
-I see modification is made in other check functions, like
-dpu_plane_atomic_check_nosspp(). So
-the name is referenced. Do you think dpu_plane_get_single_pipe() is OK here=
-?
->
-> > +             }
-> > +     }
-> > +
-> > +     return true;
-> > +}
-> >
-> >  static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
-> >                                      struct drm_atomic_state *state,
-> > @@ -1028,15 +1055,15 @@ static int dpu_plane_try_multirect_shared(struc=
-t dpu_plane_state *pstate,
-> >                                         const struct msm_format *fmt,
-> >                                         uint32_t max_linewidth)
-> >  {
-> > -     struct dpu_sw_pipe *pipe =3D &pstate->pipe[0];
-> > -     struct dpu_sw_pipe *r_pipe =3D &pstate->pipe[1];
-> > -     struct dpu_sw_pipe_cfg *pipe_cfg =3D &pstate->pipe_cfg[0];
-> > -     struct dpu_sw_pipe *prev_pipe =3D &prev_adjacent_pstate->pipe[0];
-> > -     struct dpu_sw_pipe_cfg *prev_pipe_cfg =3D &prev_adjacent_pstate->=
-pipe_cfg[0];
-> > +     struct dpu_sw_pipe *pipe, *prev_pipe;
-> > +     struct dpu_sw_pipe_cfg *pipe_cfg, *prev_pipe_cfg;
-> >       const struct msm_format *prev_fmt =3D msm_framebuffer_format(prev=
-_adjacent_pstate->base.fb);
-> >       u16 max_tile_height =3D 1;
-> >
-> > -     if (prev_adjacent_pstate->pipe[1].sspp !=3D NULL ||
-> > +     if (!dpu_plane_check_single_pipe(pstate, &pipe, &pipe_cfg, true))
-> > +             return false;
-> > +
-> > +     if (!dpu_plane_check_single_pipe(prev_adjacent_pstate, &prev_pipe=
-, &prev_pipe_cfg, false) ||
-> >           prev_pipe->multirect_mode !=3D DPU_SSPP_MULTIRECT_NONE)
-> >               return false;
-> >
-> > @@ -1050,11 +1077,6 @@ static int dpu_plane_try_multirect_shared(struct=
- dpu_plane_state *pstate,
-> >       if (MSM_FORMAT_IS_UBWC(prev_fmt))
-> >               max_tile_height =3D max(max_tile_height, prev_fmt->tile_h=
-eight);
-> >
-> > -     r_pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > -     r_pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NONE;
-> > -
-> > -     r_pipe->sspp =3D NULL;
-> > -
-> >       if (dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth) &=
-&
-> >           dpu_plane_is_parallel_capable(prev_pipe_cfg, prev_fmt, max_li=
-newidth) &&
-> >           (pipe_cfg->dst_rect.x1 >=3D prev_pipe_cfg->dst_rect.x2 ||
-> > @@ -1194,12 +1216,11 @@ static int dpu_plane_virtual_assign_resources(s=
-truct drm_crtc *crtc,
-> >       struct dpu_kms *dpu_kms =3D _dpu_plane_get_kms(plane);
-> >       struct dpu_rm_sspp_requirements reqs;
-> >       struct dpu_plane_state *pstate, *prev_adjacent_pstate;
-> > -     struct dpu_sw_pipe *pipe;
-> > -     struct dpu_sw_pipe *r_pipe;
-> > -     struct dpu_sw_pipe_cfg *pipe_cfg;
-> > -     struct dpu_sw_pipe_cfg *r_pipe_cfg;
-> > +     struct dpu_sw_pipe *pipe, *r_pipe;
-> > +     struct dpu_sw_pipe_cfg *pipe_cfg, *r_pipe_cfg;
-> > +     struct dpu_plane *pdpu =3D to_dpu_plane(plane);
-> >       const struct msm_format *fmt;
-> > -     int i;
-> > +     int i, num_lm, stage_id, num_stages;
-> >
-> >       if (plane_state->crtc)
-> >               crtc_state =3D drm_atomic_get_new_crtc_state(state,
-> > @@ -1209,11 +1230,6 @@ static int dpu_plane_virtual_assign_resources(st=
-ruct drm_crtc *crtc,
-> >       prev_adjacent_pstate =3D prev_adjacent_plane_state ?
-> >               to_dpu_plane_state(prev_adjacent_plane_state) : NULL;
-> >
-> > -     pipe =3D &pstate->pipe[0];
-> > -     r_pipe =3D &pstate->pipe[1];
-> > -     pipe_cfg =3D &pstate->pipe_cfg[0];
-> > -     r_pipe_cfg =3D &pstate->pipe_cfg[1];
-> > -
-> >       for (i =3D 0; i < PIPES_PER_PLANE; i++)
-> >               pstate->pipe[i].sspp =3D NULL;
-> >
-> > @@ -1227,44 +1243,52 @@ static int dpu_plane_virtual_assign_resources(s=
-truct drm_crtc *crtc,
-> >
-> >       reqs.rot90 =3D drm_rotation_90_or_270(plane_state->rotation);
-> >
-> > -     if (drm_rect_width(&r_pipe_cfg->src_rect) =3D=3D 0) {
-> > -             if (!prev_adjacent_pstate ||
-> > -                 !dpu_plane_try_multirect_shared(pstate, prev_adjacent=
-_pstate, fmt,
-> > -                                                 dpu_kms->catalog->cap=
-s->max_linewidth)) {
-> > -                     pipe->sspp =3D dpu_rm_reserve_sspp(&dpu_kms->rm, =
-global_state, crtc, &reqs);
-> > -                     if (!pipe->sspp)
-> > -                             return -ENODEV;
-> > +     if (prev_adjacent_pstate &&
-> > +         dpu_plane_try_multirect_shared(pstate, prev_adjacent_pstate, =
-fmt,
-> > +                                         dpu_kms->catalog->caps->max_l=
-inewidth)) {
-> > +             goto assigned;
-> > +     }
-> >
-> > -                     r_pipe->sspp =3D NULL;
-> > +     num_lm =3D dpu_crtc_get_num_lm(crtc_state);
-> > +     num_stages =3D (num_lm + 1) / 2;
-> > +     for (stage_id =3D 0; stage_id < num_stages; stage_id++) {
->
-> Can't we just loop through all possible stages? Same result, but makes
-> the logic somewhat easier.
+Hey Gustavo, Kees,
 
-Yeah, that's doable. Will revise it in next version.
->
-> > +             for (i =3D stage_id * PIPES_PER_STAGE; i < (stage_id + 1)=
- * PIPES_PER_STAGE; i++) {
->
-> I still really don't like this idea (and especially the part with
-> (i % PIPES_PER_STAGE =3D=3D 0) condition). Extract current code which dea=
-ls
-> with two planes and a single stage. Call it for each stage. That's it.
+> Currently, to statically initialize the struct members of the `type`
+> object created by _DEFINE_FLEX(), the internal `obj` member must be
+> explicitly referenced at the call site. See:
+> 
+> struct flex {
+>         int a;
+>         int b;
+>         struct foo flex_array[];
+> };
+> 
+> _DEFINE_FLEX(struct flex, instance, flex_array,
+>                  FIXED_SIZE, = {
+>                         .obj = {
+>                                 .a = 0,
+>                                 .b = 1,
+>                         },
+>                 });
+> 
+> This leaks _DEFINE_FLEX() internal implementation details and make
+> the helper harder to use and read.
+> 
+> Fix this and allow for a more natural and intuitive C99 init-style:
+> 
+> _DEFINE_FLEX(struct flex, instance, flex_array,
+>                  FIXED_SIZE, = {
+>                         .a = 0,
+>                         .b = 1,
+>                 });
+> 
+> Note that before these changes, the `initializer` argument was optional,
+> but now it's required.
 
-Will do.
->
-> > +                     pipe =3D &pstate->pipe[i];
-> > +                     pipe_cfg =3D &pstate->pipe_cfg[i];
-> >
-> > -                     pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > -                     pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NONE;
-> > +                     if (drm_rect_width(&pipe_cfg->src_rect) =3D=3D 0)
-> > +                             break;
-> >
-> > -                     r_pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > -                     r_pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NON=
-E;
-> > -             }
-> > -     } else {
-> > -             pipe->sspp =3D dpu_rm_reserve_sspp(&dpu_kms->rm, global_s=
-tate, crtc, &reqs);
-> > -             if (!pipe->sspp)
-> > -                     return -ENODEV;
-> > -
-> > -             if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_p=
-ipe, r_pipe_cfg,
-> > -                                                   pipe->sspp,
-> > -                                                   msm_framebuffer_for=
-mat(plane_state->fb),
-> > -                                                   dpu_kms->catalog->c=
-aps->max_linewidth)) {
-> > -                     /* multirect is not possible, use two SSPP blocks=
- */
-> > -                     r_pipe->sspp =3D dpu_rm_reserve_sspp(&dpu_kms->rm=
-, global_state, crtc, &reqs);
-> > -                     if (!r_pipe->sspp)
-> > +                     pipe->sspp =3D dpu_rm_reserve_sspp(&dpu_kms->rm, =
-global_state, crtc, &reqs);
-> > +                     if (!pipe->sspp)
-> >                               return -ENODEV;
-> >
-> > -                     pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > -                     pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NONE;
-> > -
-> > -                     r_pipe->multirect_index =3D DPU_SSPP_RECT_SOLO;
-> > -                     r_pipe->multirect_mode =3D DPU_SSPP_MULTIRECT_NON=
-E;
-> > +                     r_pipe =3D &pstate->pipe[i + 1];
-> > +                     r_pipe_cfg =3D &pstate->pipe_cfg[i + 1];
-> > +
-> > +                     /*
-> > +                      * If current pipe is the first pipe in pipe pair=
-, check
-> > +                      * multi-rect opportunity for the 2nd pipe in the=
- pair.
-> > +                      * SSPP multi-rect mode cross mixer pairs is not =
-supported.
-> > +                      */
-> > +                     if ((i % PIPES_PER_STAGE =3D=3D 0) &&
-> > +                         drm_rect_width(&r_pipe_cfg->src_rect) !=3D 0 =
-&&
-> > +                         dpu_plane_try_multirect_parallel(pipe, pipe_c=
-fg, r_pipe, r_pipe_cfg,
-> > +                                                           pipe->sspp,
-> > +                                                           msm_framebu=
-ffer_format(plane_state->fb),
-> > +                                                           dpu_kms->ca=
-talog->caps->max_linewidth)) {
-> > +                             i++;
-> > +                     } else {
-> > +                             /* multirect is not possible, use two SSP=
-P blocks */
-> > +                             pipe->multirect_index =3D DPU_SSPP_RECT_S=
-OLO;
-> > +                             pipe->multirect_mode =3D DPU_SSPP_MULTIRE=
-CT_NONE;
-> > +                             DPU_DEBUG_PLANE(pdpu, "allocating sspp_%d=
- for pipe %d.\n",
-> > +                                             pipe->sspp->idx - SSPP_NO=
-NE, i);
-> > +                     }
-> >               }
-> >       }
-> >
-> > +assigned:
-> >       return dpu_plane_atomic_check_sspp(plane, state, crtc_state);
-> >  }
-> >
-> >
-> > --
-> > 2.34.1
-> >
->
-> --
-> With best wishes
-> Dmitry
+Unfortunately this can hurt performance on my setup.
+In XDP, we usually place &xdp_buff on the stack. It's 56 bytes. We
+initialize it only during the packet processing, not in advance.
+
+In libeth_xdp, see [1], I provide a small extension for this struct.
+This extension is 64 byte, plus I added a definition (see
+`__LIBETH_XDP_ONSTACK_BUFF()`) to be able to define a bigger one in case
+a driver might need more fields there.
+The same as with &xdp_buff, it shouldn't be initialized in advance, only
+during the packet processing. Otherwise, it can really decrease
+performance, you might've seen recent Mellanox report that even
+CONFIG_INIT_STACK_ZERO provokes this.
+
+What would be the best option to resolve this? This flex XDP buff on the
+stack is fully safe, there are a couple checks that its size does not
+exceed the maximum (defined by xdp_buff_xsk) etc. And we really need to
+initialize it field-by-field in a loop on a per-packet basis -- we are
+sure that there will be no garbage.
+
+It's even worse that most drivers will most likely not want to add any
+additional fields, i.e. this flex array at the end will be empty, IOW
+they just want a plain libeth_xdp_buff, but I made a unified definition,
+with which you can declare them on the stack both with and without
+additional fields. So, even if the drivers doesn't want any additional
+fields and the flex array is empty, the struct will be zero-initialized
+and the same perf hit will apply.
+
+> 
+> Also, update "counter" member initialization in DEFINE_FLEX().
+> 
+> Fixes: 26dd68d293fd ("overflow: add DEFINE_FLEX() for on-stack allocs")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+[1]
+https://lore.kernel.org/netdev/20250520205920.2134829-9-anthony.l.nguyen@intel.com
+
+Thanks,
+Olek
