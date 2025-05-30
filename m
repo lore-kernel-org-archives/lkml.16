@@ -1,137 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27021D5BE;
-	Fri, 30 May 2025 09:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3014021B9FD
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597912; cv=none; b=tVWu17GHlKlmpDj7En4aEekW76bYWAN6pooFhDE2ZvDoil94KSsUYPhw+e1KQ9wM9NACHylMJ82eFctnz4gX7AVecSeVvgY8mAe22mCGnKrUS2kcfwyNOuwOe2qPBXnRRKSrAkiUBV+AQ1MVaUpYLGXtQ8ukwLM/kBbEOpQFejU=
+	t=1748598058; cv=none; b=AQk6INVCoKmML7R6nazt1CrgC+B+mK/A0J5C3s9pXj89npPQ3nu+Pu/cdHMS08QPlXXY6fjpZTehFIei1LMv6VnWY5oiUo2doj7YxSSePg9/RVpVkkCjM1smaXsDoC7VMaStH3Tsi3wfAiBwICc7HHBYVZFvS9vfydxdYrHo9MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597912; c=relaxed/simple;
-	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
+	s=arc-20240116; t=1748598058; c=relaxed/simple;
+	bh=9L46h2bC/ZzRvJPhqqnbE6d9vQTHTHOjJrh/9UoHbpk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRsH+xDKixXLZ0tlL7p36OM/vsDJUfB7StBh36e/qOgamJPeYOeFFT7JFOm9GeS/XuHOWOQZhmjaIihaeVSlo+HVpv9DsgkCl4Uowzw1BAoB8ngbItmQjE4hKwmG2zzRrl++KyEWFbWYEXZj7zo/sZhfWsldz1LUklwSBxOiNQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inxk4Yp8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inxk4Yp8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C537CC4CEE9;
-	Fri, 30 May 2025 09:38:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748597912;
-	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=inxk4Yp8xtNFcmPalhY09ck1qo1uYRCOcIWDRzIjZrLR7sPqhhXwCHPFDqMHLJd9g
-	 sHZFVXK6FD1UizbfB6DLmzqePp11GrU+bAvzTM2yyDUq4QFT+Mmn1w1ZCzuMd3Z++r
-	 2rfN38whXYJrJfbDDPu65/kN4bHjMqPADKnsMQtO+wyQwtLzyKI5dwaU3yVgl+CY6c
-	 mwSjpaGlZA383yCa/07eaFq5rD2szRfYhwQl84F4vK2iGD8hYyW2MfktL8fRWru7Gh
-	 0Cd2BNMrPJjHKZ+QZivVRi85ri4A4dqVmlF2ll/8UBkqvHhrhjueT0WLFbZE49Ec2S
-	 It9sSic/aD+Tg==
-Date: Fri, 30 May 2025 11:38:29 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: "jdelvare@suse.com" <jdelvare@suse.com>, 
-	"linux@roeck-us.net" <linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
- <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
- <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
- <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
- <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SGggUStCKgnRistLmeDPkHqY1unK4mJZVdE6VmMyXKFfvOLDsjWUVzOZ10hNI38kPLwgELGCCxlLxQQ/jFsg4UXYhxfKji6BmjnVJ8z1w0xmoemOPJxNeJEqvQpzrB2q50Xwk/+vnzAz9Vkb+Tbpyc+c7Lrzj9UuoVFLQx3kTSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uKwED-0000T2-LD; Fri, 30 May 2025 11:40:41 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uKwEB-000xGk-2I;
+	Fri, 30 May 2025 11:40:39 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uKwEB-000pOI-1s;
+	Fri, 30 May 2025 11:40:39 +0200
+Date: Fri, 30 May 2025 11:40:39 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Marco Felsch <kernel@pengutronix.de>,
+	Henrik Rydberg <rydberg@bitmath.org>,
+	Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] Input: Add TouchNetix aXiom I2C Touchscreen
+ support
+Message-ID: <20250530094039.n5236kxskha4vrhd@pengutronix.de>
+References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
+ <20250529-v6-10-topic-touchscreen-axiom-v2-4-a5edb105a600@pengutronix.de>
+ <2025052902-dizzy-baggie-15ee@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iwycug4hm3mtqr5n"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
+In-Reply-To: <2025052902-dizzy-baggie-15ee@gregkh>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+On 25-05-29, Greg Kroah-Hartman wrote:
+> On Thu, May 29, 2025 at 12:08:45AM +0200, Marco Felsch wrote:
+> > +	if (!entry->info)
+> > +		WARN(1, "Unsupported usage u%x used, driver bug!", i);
+> 
+> You just crashed the system and caused all data to be lost if this is
+> ever hit :(
+> 
+> As you did detect this, please handle the error and recover.  It's a bit
+> rude for a single i2c driver to take down a whole system, right?
 
---iwycug4hm3mtqr5n
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-MIME-Version: 1.0
+Good point.
 
-Hello Chris,
+> > +#define AXIOM_SIMPLE_FW_DEVICE_ATTR(attr)					\
+> > +	static ssize_t								\
+> > +	fw_ ## attr ## _show(struct device *dev,				\
+> > +			     struct device_attribute *_attr, char *buf)		\
+> > +	{									\
+> > +		struct i2c_client *i2c = to_i2c_client(dev);			\
+> > +		struct axiom_data *ts = i2c_get_clientdata(i2c);		\
+> > +										\
+> > +		return sprintf(buf, "%u\n", ts->fw_##attr);			\
+> 
+> sysfs_emit() please for all sysfs show functions.
 
-On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
-> On 28/05/2025 18:10, Uwe Kleine-K=F6nig wrote:
-> > If I understand correctly you need the default value for duty to
-> > statically setup (or only initialize?) a fan, right?
->=20
-> Correct.
->=20
-> > I'm not sure I like
-> > extending #pwm-cells for a default duty value. Thinking about that a
-> > while I'd prefer a binding that looks more like the clock configuration
-> > stuff because actually having the period and flags as part of the
-> > reference to the PWM to be used is also a bit strange. So I imagine
-> > something like:
-> >
-> > 	mypwm: pwm {
-> > 		compatible =3D "...."
-> > 		#pwm-cells =3D <1>;
-> > 	};
-> >
-> > 	fan {
-> > 		compatible =3D "pwm-fan";
-> > 		pwms =3D <&mypwm 1>;
-> > 		assigned-pwms =3D <&mypwm>;
-> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
-> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
-> > 	};
-> >
-> > Then specifying a period (or later a duty cycle length) would be
-> > optional and could be provided iff the device needs that for operation.
->=20
-> The frequency and flags were already part of the standard #pwm-cells=20
-> which I think is why I was encouraged to use them.
+Sure.
 
-Yeah, that part is fine. This might not be the long-term future, but
-today that's the norm.
+> > +	axiom_u42_get_touchslots(ts);
+> > +	if (!ts->num_slots && update_in_process) {
+> > +		input_free_device(input);
+> > +		/*
+> > +		 * Skip input device registration but don't throw an error to
+> > +		 * not abort the update since some FW updates require a
+> > +		 * following CFG update to re-initialize the touchslot handling.
+> > +		 */
+> > +		if (update_in_process) {
+> > +			dev_info(dev, "No touchslots found after FW or CFG update, skip registering input device\n");
+> 
+> Why is this info?  What can a user do with this?  Shouldn't this be a
+> dev_warn() call at the least?
 
-> I was also trying to get something that would work as an ACPI overlay
-> which turned out to be really hard.
+Please see below.
 
-I don't know enough about ACPI to be helpful with this quest.
+> > +			return 0;
+> 
+> You return success, but the device is NOT set up properly, how is that
+> going to work?
 
-> > My mail was just me being frustrated about another special case that I'd
-> > have to handle if I go into that direction. I should have been more
-> > attentive to that development before it entered the mainline.
->=20
-> I'd be happy to deprecate the 4 cell thing and replace it with 3 cell +=
-=20
-> vendor property for the default period if that helps.
+As explained in the comment. If a firmware update changes the register
+layout you may end up in such a situation. A subsequent CFG update is
+required to provide a correct FW+CFG match.
 
-I wonder how other similar devices determine the default duty cycle.
-Isn't the norm to make the fan rotate at max speed and then when
-userspace takes over it's speeded down?
+We don't throw an error because the FW update itself was successful but
+a CFG update is required, therefore I went with the dev_info() but I can
+change this to dev_warn().
 
-Best regards
-Uwe
+We don't know which combination requires a subsequent CFG update, e.g.
+there is a FW version 4.8.9 which comes in a 2D and a 3D flavour. Tests
+showed that updating from a 4.8.9 2D FW to a 4.8.9 3D FW don't require
+updating the CFG. Also minor FW updates may not require to update the
+CFG.
 
---iwycug4hm3mtqr5n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5fJIACgkQj4D7WH0S
-/k7Q/QgAhpRbbtxTmdd1TU+JKciJM1ubiQ6suwb+RqEXC/4zfLvLc7QwkWAm16v3
-MMCqJxvwSwXVWPxPoaaFEU9k4S9YHi5ggLfT4/1Bde79ynsdCFHbL6zfaH3Fq3gH
-m15Q2/Z9yPQ2z3tWe0b2PskubMtRGXpzWsEk3M2SwTb09J421hWW8qFxV//OqMf+
-PM8qkChq3fe9ZZgkHzNepPYfmJEl6uhs1mEN7FinZi6ZHqxRSF2L92celgIcmYWK
-6VqNq8381esfPA9OeA2oLFEuz2sQv5DtDE2PVsSea8iGggRFrYbGMC/oYTBLwjBp
-1WTJLq7hrYJSTtyNu1HKGvIDfj+Gew==
-=y7cT
------END PGP SIGNATURE-----
-
---iwycug4hm3mtqr5n--
+Regards,
+  Marco
