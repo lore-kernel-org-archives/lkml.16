@@ -1,122 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA8C22B8CE;
-	Fri, 30 May 2025 13:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA9622C331;
+	Fri, 30 May 2025 13:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748610252; cv=none; b=Aa6H8Al65zE1mb0e6WGg+5qDpduS2ZCPfrPvVM9AejYwrfOhImAJFeOdaOS1bwJ4t4o4XYfCxlpmLn+K0Gua6NNm25FK/tWkb+PX+8cAkzZomYSh4+5Rdf7PGQzg3T+ECh8Lsrw1CjfUxFrRgpSh2DC4yUG8mitrqRSDn2ypIYo=
+	t=1748610265; cv=none; b=TtDIosZAz865hctOMJeTI2DIsD7xkwGEyhEmkierFJeXYKTpBHNa2XFNhw/+9Gu1Vec+yjd/4+qy5AUHhHSY4c3bQze+eSbr+KdyGdPH+wwgG7+T7aj9ydmHm+oq8kB+BaQvxZ9QV0yRpcU7Wu/7hjOzxQXDjTto+8X9zB0u7Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748610252; c=relaxed/simple;
-	bh=TSFFCaTGVpTReD3OGz/HgMRwMGOHnyJiu4Qmrd8yvy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kZo/ujLp/5qHYpE3YYYM9Zw6QZ8JsDQ0iu/thKxj/+mD12sxVHjqvhAAT9IrmtmJkaqNZ4kRmk6FnZGVmM83TZm7Fzglp8gwnRM4qadZZFqqx8z4a3Ut1J8a/EQhOiTTbDaNcOgXMcnIQWxq5jhtdb8YMDvcBQ8VCyVKQQ3qmGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/4GnauI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748610265; c=relaxed/simple;
+	bh=rxyy6MH+lICAnNMu40itNdqUAOMLFXcLUJqirFyTMu4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PcEMdtszizsnDuSKTexP4PJ/y/L+VM7OLoioFAsECgk8PCRUi/nmAMz7rJVG/3opm3HBuXHBnuGadQdYcsbLHc5dQEbzFGEm+lw0zIKS8QPeUQBHGpP/4Yd1fX86dFfRaqeh1Uz49hstmKe7K7HD4qA/f1Z54yVr/VNA2i0Osk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZJvTEyAx; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/4GnauI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7272FC4CEEF;
-	Fri, 30 May 2025 13:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748610251;
-	bh=TSFFCaTGVpTReD3OGz/HgMRwMGOHnyJiu4Qmrd8yvy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=G/4GnauIGa3SfNyVofF473di2JujrsbcqWOsZ9NG5eWiviud9xUsRY2QdO6Ds+Ehp
-	 bVJu0MomeqpkeekopDyYQN/8FDkSXK3fIS3j7eyy0G74W++0FWtuKuQwp4qpl8Xu3b
-	 ggN8hoBlKcpdLbLdQo39FFLxnQCNDqofwmMs/h94+M+hpnEM4xKMR6j7TBzOe6mgBZ
-	 ML0soiPrHnPd4WdxYSJCD7aKJq4H7bXqSd3hTr+Lx3Wfgwtn6rU046K/5sUKJFeDDg
-	 ePKcQxmfjq6pV9SDSxqgPCwVy+1QNRhhLcVDoB1q5S3KZajyK7DNyRhvnBfINM5Fqv
-	 5Xvg0AXW64fNA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,  boqun.feng@gmail.com,
-  frederic@kernel.org,  lyude@redhat.com,  tglx@linutronix.de,
-  anna-maria@linutronix.de,  jstultz@google.com,  sboyd@kernel.org,
-  ojeda@kernel.org,  alex.gaynor@gmail.com,  gary@garyguo.net,
-  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,  aliceryhl@google.com,
-  tmgross@umich.edu,  dakr@kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/5] rust: time: Add HrTimerExpires trait
-In-Reply-To: <20250504045959.238068-4-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Sun, 4 May 2025 13:59:56 +0900")
-References: <20250504045959.238068-1-fujita.tomonori@gmail.com>
-	<20250504045959.238068-4-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Fri, 30 May 2025 15:04:00 +0200
-Message-ID: <87ecw61c8v.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZJvTEyAx"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B1E3C89A;
+	Fri, 30 May 2025 15:03:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748610233;
+	bh=rxyy6MH+lICAnNMu40itNdqUAOMLFXcLUJqirFyTMu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZJvTEyAxU4C2kcg6TfXf/Brhuz+7z82nr5ln9EESQO5xWrPtpKiaudzeB0f/kXBZr
+	 TZGJ5laLljYvSPqMSULaKolWpXYjthOaXlNRVMpwmKuy5Ey5l66P2lyH7gNq+9qhZs
+	 uImJc46k32329564g/O41Vvj4pKBcD4kHTWMXDmw=
+Date: Fri, 30 May 2025 16:04:14 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] media: rcar-csi2: Clarify usage of mbps and msps
+Message-ID: <20250530130414.GA18205@pendragon.ideasonboard.com>
+References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250511174730.944524-2-niklas.soderlund+renesas@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250511174730.944524-2-niklas.soderlund+renesas@ragnatech.se>
 
-Hi Tomonori,
+Hi Niklas,
 
-Thanks for fixing this.
+Thank you for the patch.
 
-FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
+On Sun, May 11, 2025 at 07:47:27PM +0200, Niklas Söderlund wrote:
+> The helper function to deal with calculating the link speed is designed
+> in such a way that it returns the correct type bps (bits per second) for
+> D-PHY and sps (symbols per second) for C-PHY. And for historical reasons
+> the function kept the name mbps.
+> 
+> This is confusing, fix it by having the function only deal with bps
+> values as this is the most common use-case and convert bps to sps in the
+> only function where it is needed to configure the C-PHY.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-> Introduce the `HrTimerExpires` trait to represent types that can be
-> used as expiration values for high-resolution timers. Define a
-> required method, `as_nanos()`, which returns the expiration time as a
-> raw nanosecond value suitable for use with C's hrtimer APIs.
->
-> Also extend the `HrTimerMode` to use the `HrTimerExpires` trait.
->
-> This refactoring is a preparation for enabling hrtimer code to work
-> uniformly with both absolute and relative expiration modes.
->
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
 > ---
->  rust/kernel/time.rs         |   5 +
->  rust/kernel/time/hrtimer.rs | 181 ++++++++++++++++++++++++------------
->  2 files changed, 128 insertions(+), 58 deletions(-)
->
-> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-> index deca2999ced6..ac9551fca14f 100644
-> --- a/rust/kernel/time.rs
-> +++ b/rust/kernel/time.rs
-> @@ -194,6 +194,11 @@ pub fn now() -> Self {
->      pub fn elapsed(&self) -> Delta {
->          Self::now() - *self
->      }
-> +
-> +    #[inline]
-> +    pub(crate) fn as_nanos(&self) -> i64 {
-> +        self.inner
-> +    }
+>  drivers/media/platform/renesas/rcar-csi2.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
+> index 9979de4f6ef1..358e7470befc 100644
+> --- a/drivers/media/platform/renesas/rcar-csi2.c
+> +++ b/drivers/media/platform/renesas/rcar-csi2.c
+> @@ -975,10 +975,6 @@ static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
+>  
+>  	mbps = div_u64(freq * 2, MEGA);
+>  
+> -	/* Adjust for C-PHY, divide by 2.8. */
+> -	if (priv->cphy)
+> -		mbps = div_u64(mbps * 5, 14);
+> -
+>  	return mbps;
 >  }
 >  
->  impl<C: ClockSource> core::ops::Sub for Instant<C> {
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index 24d013e47c7b..55e1825425b6 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -1203,9 +1199,13 @@ static int rcsi2_wait_phy_start_v4h(struct rcar_csi2 *priv, u32 match)
+>  	return -ETIMEDOUT;
+>  }
+>  
+> -static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int msps)
+> +static int rcsi2_c_phy_setting_v4h(struct rcar_csi2 *priv, int mbps)
+>  {
+>  	const struct rcsi2_cphy_setting *conf;
+> +	int msps;
+> +
+> +	/* Adjust for C-PHY symbols, divide by 2.8. */
+> +	msps = div_u64(mbps * 5, 14);
+>  
+>  	for (conf = cphy_setting_table_r8a779g0; conf->msps != 0; conf++) {
+>  		if (conf->msps > msps)
+> @@ -1301,7 +1301,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	const struct rcar_csi2_format *format;
+>  	const struct v4l2_mbus_framefmt *fmt;
+>  	unsigned int lanes;
+> -	int msps;
+> +	int mbps;
+>  	int ret;
+>  
+>  	/* Use the format on the sink pad to compute the receiver config. */
+> @@ -1314,9 +1314,9 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	if (ret)
+>  		return ret;
+>  
+> -	msps = rcsi2_calc_mbps(priv, format->bpp, lanes);
+> -	if (msps < 0)
+> -		return msps;
+> +	mbps = rcsi2_calc_mbps(priv, format->bpp, lanes);
+> +	if (mbps < 0)
+> +		return mbps;
+>  
+>  	/* Reset LINK and PHY*/
+>  	rcsi2_write(priv, V4H_CSI2_RESETN_REG, 0);
+> @@ -1352,7 +1352,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	rcsi2_write16(priv, V4H_PPI_RW_COMMON_CFG_REG, 0x0003);
+>  
+>  	/* C-PHY settings */
+> -	ret = rcsi2_c_phy_setting_v4h(priv, msps);
+> +	ret = rcsi2_c_phy_setting_v4h(priv, mbps);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1363,7 +1363,7 @@ static int rcsi2_start_receiver_v4h(struct rcar_csi2 *priv,
+>  	return 0;
+>  }
+>  
+> -static int rcsi2_d_phy_setting_v4m(struct rcar_csi2 *priv, int data_rate)
+> +static int rcsi2_d_phy_setting_v4m(struct rcar_csi2 *priv, int mbps)
+>  {
+>  	unsigned int timeout;
+>  	int ret;
 
-<cut>
+-- 
+Regards,
 
-> +/// Defines a new `HrTimerMode` implementation with a given expiration type and C mode.
-> +#[doc(hidden)]
-> +macro_rules! define_hrtimer_mode {
-> +    (
-> +        $(#[$meta:meta])*
-> +        $vis:vis struct $name:ident<$clock:ident> {
-> +            c = $mode:ident,
-> +            expires = $expires:ty
-> +        }
-> +    ) => {
-> +        $(#[$meta])*
-> +        $vis struct $name<$clock: $crate::time::ClockSource>(
-> +            ::core::marker::PhantomData<$clock>
-> +        );
-
-I think a macro is too much here. The code would be easier to read
-without the macro, and the macro does not remove much code here.
-
-Could you try to do the trait implementations without the macro?
-
-
-Best regards,
-Andreas Hindborg
-
-
+Laurent Pinchart
