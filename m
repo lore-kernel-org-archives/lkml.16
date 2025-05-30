@@ -1,97 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB8623E35B;
-	Fri, 30 May 2025 17:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF8B27703E;
+	Fri, 30 May 2025 17:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627727; cv=none; b=dTFFD5haLdpcFuCeLmskP8Tg9YL/hhd8L0y1YGzKlMRrpp2Rew2ubdgY1X+NGhpZXggQMguZh1qFkmToP3IgMJZ8Q6I2KfuAlhxsK+UeIUnzC7ZjLZGIPTSsIgddVy1AOAP8DcNjq33Lwr76m2ygG+qTcT1EiLyGEuXAzQSpgfw=
+	t=1748627730; cv=none; b=ksgOoj+U/pdZXvV9hg9NcCLNXMHOx0Vb4FE7Trz/GkOCVqR6q7fwpKkGddxbdvi8YesUVxkYulFGVjVBcQcIf1Q1VlUSeCFdr8h2z+9erdtZJXOQR0ET8AwuF6lw8Um2dDbnRgftBXeojqH1kfu7Sm1LACnNJF6LCqmTvNx/DnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627727; c=relaxed/simple;
-	bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojv/uP5q/P1Llz6ZQJDpabjgaRi4q6glhOkYnfM1d+RryHi45P67BySmyGounfBiaN158OdNEXkDIvsIQOnHD17PeRsejgmRRXnKqsf83+MRFKIzMb/cUHG7FlPSX/tlL7sWah5fF00R5ot4Qedrzxl6O4AVX9iSEFq2ORnGRVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IAoAB/yo; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748627730; c=relaxed/simple;
+	bh=Z4p8j6JP93DU8zs/CtD8Et1EBHP1OS4LXOhdqxk3m5w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p2GmIkz4iENUnJnOpI4DskqXVHaJ6GlLJq5PibYbTcWHaYk2GV/AHQkXWK6NwjW9F/fqlTwb28uVJydGmOHenLERG8b2zhFts5T2IfJXHre3X1JGxmdtITeWCzHb3fr6qiiceftrcHYekjyZ2/EdhTRlEdb7WtXM4uCapq7lNIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azKIMfjj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IAoAB/yo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748627726; x=1780163726;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZSmFHBwhFGzgKE51DBXBeP8jyHst6UlJH9/neaURwa8=;
-  b=IAoAB/yoP4Eiia0bS6/ZTyXirQvzL8nHiAvCkA2vByq1P4A6zEiAPFru
-   InmFmokCGZ1iBiYcxZLqgyhGQtiyu/zxB/A6L/veIdPgjBAmZ9pYRH+ID
-   xsilGfRdeKJaWoJ98AS4tOeZnpuZivOoiGO1qXnV5JiHLmR4S5TiipjKb
-   fEO4iMAkIN7ZubOsuRV2aoTkBaG297YpXnxcqlKQ8aKoCTPYs5I0Uoh0n
-   yue2dXA2PjkOshRLn8nNdZG3ZRpv4woa7LlIGDCgSHk+uORHcOT5EmEin
-   OPvhrcdVs73ITtosOPMsmbOlXy2coamx4xeil4mFoJyVcqUJdo+nVdj4p
-   g==;
-X-CSE-ConnectionGUID: 7DDJOM5QQ5ijiB1nj3GfRg==
-X-CSE-MsgGUID: tkidEDKWQve8OiO7luFxWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="73259211"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="73259211"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:25 -0700
-X-CSE-ConnectionGUID: 5KdW+ZeYR3Kf/KTr2z0UcA==
-X-CSE-MsgGUID: SrlmHzGNQOugwsmwJqrvAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="148726373"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:55:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uL3wr-000000024ej-1SEu;
-	Fri, 30 May 2025 20:55:17 +0300
-Date: Fri, 30 May 2025 20:55:17 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v10 02/11] mfd: Add max7360 support
-Message-ID: <aDnxBUDOYLQYiVaP@smile.fi.intel.com>
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azKIMfjj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CE7C4AF0B;
+	Fri, 30 May 2025 17:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748627729;
+	bh=Z4p8j6JP93DU8zs/CtD8Et1EBHP1OS4LXOhdqxk3m5w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=azKIMfjjN+SMq6qHg3GBtCWTha0xQuQMeX05VElokprKykfCfjO38W7qDt8nLRZjM
+	 eU+l2hW6YUkysQiQHJAWFoyk0zxKIaAKDOuI0hGLOaTrSx0Kj01VJxqIDsD3Qv2CCf
+	 jBhTaoNozRgmadqP5E8urLtMZlr76ZiwaIgpEsS4iyTYTvte4o9Zsq1PRzHT0dXx9/
+	 bh/IyjSY02c7o5oUBVMWVdV4rO5RMM7rItSoUnLKRyCKIJyejNK2oNwaLPx0MwzkWu
+	 YW5xbFxIvLWaGJZJ7qJ22aQW3eMAW2N1JGG4mA4M31+tgMDauwm3Y0uBEBX5KJlOrW
+	 tOFynIknGO2yQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-606648c3f9eso657539eaf.3;
+        Fri, 30 May 2025 10:55:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXizlaSWGEPbY91yTAAFPwFGP/5IMnKJLXcf0kROetjAUrfmQE+3DNF1W67oRifefd61Ul37KZnnzM=@vger.kernel.org, AJvYcCXnZFU152Oq2leR+quI0bw3URMm09r4liGhsY/Vg3n1GavdEy3gNrEw2QW1wa4mqA3zfRxzrg8rsh/Bul8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRcTrCSFqai3TOkmzfUliIwYoFLzXwhGzEWmjnwL3X43fBFpGM
+	Vmy0QRDKhSPJR5hRKoLBvLb8nR3tnmBUVZK+hb4QZh8wG2KwRh80covmKZHgJbuAERV51tfJzzJ
+	JkS20s/LhgSRZnd1Snd+XJaH5UX9Mzh4=
+X-Google-Smtp-Source: AGHT+IFEyOOJa6iXg9lMxIVjt9GNXMhZtVhOhypEJV+km46HwPL10FvWa4XooMoBZknnFFbDVGH37lgrgOZDRil611I=
+X-Received: by 2002:a05:6820:98b:b0:60b:edbb:1f50 with SMTP id
+ 006d021491bc7-60d52d6db2fmr1810112eaf.4.1748627728646; Fri, 30 May 2025
+ 10:55:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530-mdb-max7360-support-v10-2-ce3b9e60a588@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <2006806.PYKUYFuaPT@rjwysocki.net> <20250528131759.GA39944@noisy.programming.kicks-ass.net>
+ <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
+ <20250528133807.GC39944@noisy.programming.kicks-ass.net> <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
+ <20250528160523.GE39944@noisy.programming.kicks-ass.net> <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
+ <20250529085358.GY24938@noisy.programming.kicks-ass.net> <CAJZ5v0hw1910Gsb57POVhax1hAbEGHa7xksr_FygNd_JL-oeOA@mail.gmail.com>
+ <20250530080733.GH39944@noisy.programming.kicks-ass.net> <CAJZ5v0irHEZEbZVrd-tiaXBvxM4aD9spJg1cVRcjrDQ0_HMJAg@mail.gmail.com>
+ <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 30 May 2025 19:55:17 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iokGEr6y38P0ic-hqa0A8VVRhxvsUz38m5douwiX+MKA@mail.gmail.com>
+X-Gm-Features: AX0GCFsQrnVODltGlciG3S922ccgXSZcHHQZIoCIDExIe5PcXuzqVG3UFmN5Xp0
+Message-ID: <CAJZ5v0iokGEr6y38P0ic-hqa0A8VVRhxvsUz38m5douwiX+MKA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit 96040f7273e2
+To: Peter Zijlstra <peterz@infradead.org>, x86 Maintainers <x86@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
+	Todd Brandt <todd.e.brandt@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 12:00:10PM +0200, mathieu.dubois-briand@bootlin.com wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> 
-> Add core driver to support MAX7360 i2c chip, multi function device
-> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+On Fri, May 30, 2025 at 6:59=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Fri, May 30, 2025 at 11:18=E2=80=AFAM Rafael J. Wysocki <rafael@kernel=
+.org> wrote:
+> >
+> > On Fri, May 30, 2025 at 10:07=E2=80=AFAM Peter Zijlstra <peterz@infrade=
+ad.org> wrote:
+> > >
+> > > On Thu, May 29, 2025 at 11:38:05AM +0200, Rafael J. Wysocki wrote:
+> > >
+> > > > First off, I'm not sure if all of the requisite things are ready th=
+en
+> > > > (sysfs etc.).
+> > >
+> > > Pretty much everything is already running at early_initcall(). Sysfs
+> > > certainly is.
+> > >
+> > > > We may end up doing this eventually, but it may not be straightforw=
+ard.
+> > > >
+> > > > More importantly, this is not a change for 6.15.y (y > 0).
+> > >
+> > > Seriously, have you even tried?
+> > >
+> > > AFAICT the below is all that is needed.  That boots just fine on the =
+one
+> > > randon system I tried, and seems to still work.
+> > >
+> > > And this is plenty small enough to go into 6.15.y
+> >
+> > But there is still intel_idle_init() which is device_initcall() ATM
+> > and this needs to be tested on other arches too.
+>
+> intel_idle_init() depends on ACPI which initializes via a
+> subsys_initcall() and doing that earlier would mean a major redesign.
+>
+> Pretty much same for reordering APs initialization past ACPI initializati=
+on.
+>
+> One more option is to kick the "dead" SMT siblings after the idle
+> driver initializes and let them do "play dead" again, but who'd be
+> responsible for doing that?
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Interestingly enough, a similar issue is there during resume from
+hibernation and that's why there is arch_resume_nosmt().
 
--- 
-With Best Regards,
-Andy Shevchenko
+So arguably intel_idle_init() could do something analogous to it after
+successfully registering the idle driver.  In principle, the ACPI idle
+driver could do that too on x86.
 
-
+Opinions?
