@@ -1,638 +1,198 @@
-Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B4F9476
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846159476;
+	Fri, 30 May 2025 03:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748576405; cv=none; b=uAthDrEwc75XOf2pg0gUZtnrmxBTHjHWvsPg9tN8rqpNVkOaMDpaXLGWcB5o8Gxo/G+mfNvgvs1K+ODSiCpPAvcmpsvgtuZEbu8BQ2Aly+9Ys7YNIFE+tOyfkQWMjlnqUBwkvSohiKIx5SjZwaF5cO2L8kYjYf9B6ccVce5UAVI=
+	t=1748576677; cv=none; b=PPEYejwwBXazojZj8yI46pQ796ZFLc0k8/nZwoSPitoQxnXqsoE98lvq4Zm2Og+bG+opddXCFUQVZHyf/yHsk+WDrBHJjyOuJ4UQHpXLS6+mN94Py6cuXappusOz27VUiJh8r1HayZNItv04i8x0PFWlXOZrfwXXaj1l4dYw/0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748576405; c=relaxed/simple;
-	bh=GyUV7bLn/HTU22qbvo7UefZxU4nor3RjtCww2BGZTE4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=MvRw95XAnL+8tnstmXkpehDHFcEE9zgVbSK8967ZikTEb2cGagoEAS+iBsAb2CuPs632DSPSUcFKt+eVQ08d2lENw7xZxwJzhEDj1acFpIWmoYidhxaxiYvdzv6S+4rTPF4mEp3qNlER0oi7tc1P/YgJmB4MvI8U4h7kV+B67r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aON8EjVJ; arc=none smtp.client-ip=209.85.219.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aON8EjVJ"
-Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e7dc4e44b47so1475383276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748576402; x=1749181202; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xraGzWdvUoorT3tZfXLJVMix4djMGCZ8PFJh4eGegvg=;
-        b=aON8EjVJjN04y5hzChZnaaiEtSzq/v1wsKvoOyHnPGXgQkMnhn6vAGVwTTv8KcXSbg
-         MAA9KQfrLvIKUEHpusAmmPlWflymGhchY5eU+oyowe8MJCtugsPs+RguY56C0pDO68aN
-         WP2ZFlnLCjVAhSRvfrRHQ4I/2xJzVBQIyPNRGBm59g+0V3UJ8ibBJWm+n53MFF0FXStR
-         ItF72vo3oo6Kd5uh89GRZiWY1P3nZUJo+IYvtYut30+C+/J7Pg8jTFCmzwABI3MW/7MU
-         GB+qCG3gK8ZjUQRH6IgLQbJ+UwGOYLmxfgSjyXwRPOEO3Dk4sFCf7lKX8zP/E8t78eke
-         wejQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748576402; x=1749181202;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xraGzWdvUoorT3tZfXLJVMix4djMGCZ8PFJh4eGegvg=;
-        b=ZBhzcV4uUC18Dnj1HI+IXhGMw4gNa3Lu8aa13zs6fiEAeANueQMxCar7zNAhH0PD/r
-         SK059Cx/DA2rEjMFkZase0STIUJj3KWHB6QKZnsHnDL/1pFknPulKkExg4N09O8zZVSy
-         PZwtv+GTBi+42NW8TLEqMNojLDs8Q1Z5VpWxBpl113Cfw64dFAHJXhGkVJLGbceanayo
-         glWdAMAHxlRDlS0FSs0LJ+1HYBd2pIJiSPUay7bhR2f4ggyKvrvEVFjnndLuyzWnTrkH
-         KD11nAelBalP92hb5cs48EeGeaBsPJxXq3qnTl53LetxrT20lHh4IGmZzb53uvt4YdvU
-         r9Xg==
-X-Gm-Message-State: AOJu0YxxYKYJP+bjo2nu7zVwbdk2Z2Vr5TuOkuzS1UnsOROs+iGVcMMl
-	6MnBoNl0/5Kgx0ZGia0TiKRvAMYKWieTkMz8CWGyESN6PglCWaz5mcGIGBWoXKiUQikdLfKrHyZ
-	kHFKbhYPc8yW1aS5ndkgvc+JIInh5G3uYFWaQ
-X-Gm-Gg: ASbGncseIk/t8HndAEozTjyVd2Obj//ivpJ7pLGP4/4CS8tTRe2s9Qzj9qmocpSY24k
-	626yDuI0xQgY1wQ6XizPkDc2lawB86WWliIcN7kvno8phNInY4El+6FfKW7CDxHkieWeTytU3k+
-	XG1+dHm0IPnsjG6l1E1FJxkFc8nQ6azr44SJcQ/ovc+y1NM4tI4lksj4dK/7KbaHkewA==
-X-Google-Smtp-Source: AGHT+IGtIrwM6ORdneipU3/f3bHIs5e0s0WIUNs89UfXFBEAt53vtfYj5RJogYhubfu2nFN1AniIHPRGOGzVVHCREGs=
-X-Received: by 2002:a05:6902:461a:b0:e7d:6791:9c23 with SMTP id
- 3f1490d57ef6-e7f81e0bb9emr2787305276.16.1748576401616; Thu, 29 May 2025
- 20:40:01 -0700 (PDT)
+	s=arc-20240116; t=1748576677; c=relaxed/simple;
+	bh=dIGjffcg6YtgnsPBnx4IS1i7Bnt38cmcuHBI6hTjwtE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J3iUowGouJz6PMjk2rIW/CxtCT2H5J7clqVfohEe7Ow+LkHMEuTNPQmRo1eg2Y94MraDP/NwTezBr/KyRSAVS1oXJ1FlmZVDbjlUlqWf5E3QJDEzatoLKAyASMR8g+MQZJu/WzZdJ5Ebe8xJMjTakyFGxgtWe7Iw3PNLgGWGGvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=52.229.168.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
+Received: from hust.edu.cn (unknown [172.16.0.52])
+	by app1 (Coremail) with SMTP id HgEQrAB3WR6HKTlo0MPfCQ--.54948S2;
+	Fri, 30 May 2025 11:44:07 +0800 (CST)
+Received: from [10.12.164.29] (unknown [10.12.164.29])
+	by gateway (Coremail) with SMTP id _____wAXHwOCKTlofER3Aw--.14052S2;
+	Fri, 30 May 2025 11:44:06 +0800 (CST)
+Message-ID: <d38e5648-1700-4d8f-896d-58053a5393ba@hust.edu.cn>
+Date: Fri, 30 May 2025 11:44:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFf+5ziWAmgK=nPnh4ndLiefGNXYJqEM7moiq7UAQiui48=Vdw@mail.gmail.com>
-In-Reply-To: <CAFf+5ziWAmgK=nPnh4ndLiefGNXYJqEM7moiq7UAQiui48=Vdw@mail.gmail.com>
-From: Amit <amitchoudhary0523@gmail.com>
-Date: Fri, 30 May 2025 09:09:49 +0530
-X-Gm-Features: AX0GCFv3kPbsDZeZTQO0-uZgqShNViD-VRuhuIo1HjrqME6LZp2Y3bwCZMwmylk
-Message-ID: <CAFf+5ziw9MZ9VOx27XFy=4B6BwsacvsKDcg7USjqK4wJeYFUwg@mail.gmail.com>
-Subject: Simple tcp client and server (Four files: simple_tcp_server.c,
- simple_tcp_client.c, simple_tcp_client_server_common.h, and README).
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux next] Docs/zh_CN: Translate vxlan.rst to Simplified
+ Chinese
+To: jiang.kun2@zte.com.cn, alexs@kernel.org, si.yanteng@linux.dev,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: xu.xin16@zte.com.cn, yang.yang29@zte.com.cn, fan.yu9@zte.com.cn,
+ qiu.yutan@zte.com.cn, wang.yaxin@zte.com.cn
+References: <202505301132492152dM75edlCkVrcPL71Omc5@zte.com.cn>
+Content-Language: en-US
+From: =?UTF-8?B?5oWV5Yas5Lqu?= <dzm91@hust.edu.cn>
+In-Reply-To: <202505301132492152dM75edlCkVrcPL71Omc5@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:HgEQrAB3WR6HKTlo0MPfCQ--.54948S2
+Authentication-Results: app1; spf=neutral smtp.mail=dzm91@hust.edu.cn;
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF13Gr4xtF1UJFWrXF18Zrb_yoW7GF1fpF
+	Wqgryxtw47KFyFkrW8Ga15Jrn0kFykCan7GFyxK3Wktr4fG3yktry7Krn8GrZagryrZFyF
+	va1kGry5u3yIyaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm0b7Iv0xC_Cr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+	v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
+	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r
+	1Y6r17M2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI
+	12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxV
+	W8Jr0_Cr1UMcIj6x8ErcxFaVAv8VW8uFyUJr1UMcIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1U
+	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCF04k20x
+	vE74AGY7Cv6cx26r4fZr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
+	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
+	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
+	vjDU0xZFpf9x07jfpndUUUUU=
+X-CM-SenderInfo: asqsiiirqrkko6kx23oohg3hdfq/
+
+
+在 2025/5/30 11:32, jiang.kun2@zte.com.cn 写道:
+> From: Qiu Yutan <qiu.yutan@zte.com.cn>
+>
+> translate the "vxlan.rst" into Simplified Chinese
+>
+> Update to commit 33a1aaf82bcf("docs: vxlan: add info
+> about device features")
+>
+> Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
+> Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+> Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+> ---
+>   .../translations/zh_CN/networking/index.rst   |  2 +-
+>   .../translations/zh_CN/networking/vxlan.rst   | 85 +++++++++++++++++++
+>   2 files changed, 86 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/translations/zh_CN/networking/vxlan.rst
+>
+> diff --git a/Documentation/translations/zh_CN/networking/index.rst b/Documentation/translations/zh_CN/networking/index.rst
+> index d07dd69f980b..ed62950c6a1b 100644
+> --- a/Documentation/translations/zh_CN/networking/index.rst
+> +++ b/Documentation/translations/zh_CN/networking/index.rst
+> @@ -21,6 +21,7 @@
+>      :maxdepth: 1
+>
+>      msg_zerocopy
+> +   vxlan.rst
+
+How about using vxlan other than vxlan.rst, consistent with others?
+
+Dongliang Mu
+
+>
+>   Todolist:
+>
+> @@ -142,7 +143,6 @@ Todolist:
+>   *   tuntap
+>   *   udplite
+>   *   vrf
+> -*   vxlan
+>   *   x25
+>   *   x25-iface
+>   *   xfrm_device
+> diff --git a/Documentation/translations/zh_CN/networking/vxlan.rst b/Documentation/translations/zh_CN/networking/vxlan.rst
+> new file mode 100644
+> index 000000000000..b1a67d2e7b8e
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/networking/vxlan.rst
+> @@ -0,0 +1,85 @@
+> +.. SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +.. include:: ../disclaimer-zh_CN.rst
+> +
+> +:Original: Documentation/networking/vxlan.rst
+> +
+> +:翻译:
+> +
+> + 范雨 Fan Yu <fan.yu9@zte.com.cn>
+> +
+> +:校译:
+> +
+> + - 邱禹潭 Qiu Yutan <qiu.yutan@zte.com.cn>
+> + - 徐鑫 xu xin <xu.xin16@zte.com.cn>
+> +
+> +==========================
+> +虚拟扩展本地局域网协议文档
+> +==========================
+> +
+> +VXLAN 协议是一种隧道协议，旨在解决 IEEE 802.1q 中 VLAN ID（4096）有限的问题。
+> +VXLAN 将标识符的大小扩展到 24 位（16777216）。
+> +
+> +VXLAN 在 IETF RFC 7348 中进行了描述，并已由多家供应商设计实现。
+> +该协议通过 UDP 协议运行，并使用特定目的端口。
+> +本文档介绍了 Linux 内核隧道设备，Openvswitch 也有单独的 VXLAN 实现。
+> +
+> +与大多数隧道不同，VXLAN 是 1 对 N 的网络，而不仅仅是点对点网络。
+> +VXLAN 设备可以通过类似于学习桥接器的方式动态学习另一端点的 IP 地址，也可以利用静态配置的转发条目。
+> +
+> +VXLAN 的管理方式与它的两个近邻 GRE 和 VLAN 相似。
+> +配置 VXLAN 需要 iproute2 的版本与 VXLAN 首次向上游合并的内核版本相匹配。
+> +
+> +1. 创建 vxlan 设备::
+> +
+> +	# ip link add vxlan0 type vxlan id 42 group 239.1.1.1 dev eth1 dstport 4789
+> +
+> +这将创建一个名为 vxlan0 的网络设备，该设备通过 eth1 使用组播组 239.1.1.1 处理转发表中没有条目的流量。
+> +目标端口号设置为 IANA 分配的值 4789，VXLAN 的 Linux 实现早于 IANA 选择标准目的端口号的时间。
+> +因此默认使用 Linux 选择的值，以保持向后兼容性。
+> +
+> +2. 删除 vxlan 设备::
+> +
+> +	# ip link delete vxlan0
+> +
+> +3. 查看 vxlan 设备信息::
+> +
+> +	# ip -d link show vxlan0
+> +
+> +使用新的 bridge 命令可以创建、销毁和显示 vxlan 转发表。
+> +
+> +1. 创建vxlan转发表项::
+> +
+> +	# bridge fdb add to 00:17:42:8a:b4:05 dst 192.19.0.2 dev vxlan0
+> +
+> +2. 删除vxlan转发表项::
+> +
+> +	# bridge fdb delete 00:17:42:8a:b4:05 dev vxlan0
+> +
+> +3. 显示vxlan转发表项::
+> +
+> +	# bridge fdb show dev vxlan0
+> +
+> +以下网络接口控制器特性可能表明对 UDP 隧道相关的卸载支持（最常见的是 VXLAN 功能，
+> +但是对特定封装协议的支持取决于网络接口控制器）：
+> +
+> + - `tx-udp_tnl-segmentation`
+> + - `tx-udp_tnl-csum-segmentation`
+> +    对 UDP 封装帧执行 TCP 分段卸载的能力
+> +
+> + - `rx-udp_tunnel-port-offload`
+> +    在接收端解析 UDP 封装帧，使网络接口控制器能够执行协议感知卸载，
+> +    例如内部帧的校验和验证卸载（只有不带协议感知卸载的网络接口控制器才需要）
+> +
+> +对于支持 `rx-udp_tunnel-port-offload` 的设备，可使用 `ethtool` 查询当前卸载端口的列表::
+> +
+> +  $ ethtool --show-tunnels eth0
+> +  Tunnel information for eth0:
+> +    UDP port table 0:
+> +      Size: 4
+> +      Types: vxlan
+> +      No entries
+> +    UDP port table 1:
+> +      Size: 4
+> +      Types: geneve, vxlan-gpe
+> +      Entries (1):
+> +          port 1230, vxlan-gpe
 
-Simple tcp client and server (Four files: simple_tcp_server.c,
-simple_tcp_client.c, simple_tcp_client_server_common.h, and README).
-
----------------------------
-simple_tcp_server.c
----------------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "simple_tcp_client_server_common.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-static void print_usage_and_exit(int argc, char *argv[], FILE *out);
-static char *get_input_from_stdin_and_discard_extra_characters(char *str,
-                                        int size, int min_size, int max_size);
-static void recv_and_send(int newsockfd, FILE *out);
-
-static void recv_and_send(int newsockfd, FILE *out)
-{
-
-    char msg[MAX_MSG_SIZE] = {0};
-    int retval_int = -1;
-    char *retval_char_ptr = NULL;
-
-    fprintf(out, "\nWaiting for a message from the client...\n");
-
-    while (1) {
-
-        memset(msg, 0, MAX_MSG_SIZE);
-
-        retval_int = (int)(recv(newsockfd, msg, MAX_MSG_SIZE, 0));
-
-        msg[MAX_MSG_SIZE - 1] = '\0';
-
-        fprintf(out, "\nMessage received from the client: %s\n", msg);
-
-        if (retval_int < 0) { // some error happened
-            fprintf(out, "\nError: recv() returned error: %s. Closing the"
-                         " server socket.\n", strerror(errno));
-            close(newsockfd);
-            return;
-        }
-
-        if (retval_int == 0) { // client socket is closed
-            fprintf(out, "\nError: Client socket is closed. Closing the server"
-                         " socket.\n");
-            close(newsockfd);
-            return;
-        }
-
-        fprintf(out, "\nPlease input a message to send to the client(max %d"
-                     " characters else the input message will be truncated to"
-                     " %d characters): ", MAX_MSG_SIZE - 1, MAX_MSG_SIZE - 1);
-
-        memset(msg, 0, MAX_MSG_SIZE);
-
-        retval_char_ptr = get_input_from_stdin_and_discard_extra_characters(msg,
-                                    MAX_MSG_SIZE, MIN_MSG_SIZE, MAX_MSG_SIZE);
-
-        if (retval_char_ptr == NULL) {
-            fprintf(out, "\nError: No input received. Sending null byte to the"
-                         " client.\n");
-            msg[0] = '\0';
-        }
-
-        // At this point, msg is null terminated, so strlen can be used safely.
-        // Extra 1 byte for null terminating character.
-        retval_int = (int)(send(newsockfd, msg, strlen(msg) + 1, 0));
-
-        if (retval_int < 0) { // some error happened
-            fprintf(out, "\nError: send() returned error: %s. Closing the"
-                         " server socket.\n", strerror(errno));
-            close(newsockfd);
-            return;
-        }
-
-        fprintf(out, "\nMessage sent to the client. Waiting for a message from"
-                     " the client...\n");
-
-    } // end of outer while (1) loop
-
-    return;
-
-} // end of function recv_and_send()
-
-int main(int argc, char *argv[])
-{
-
-    FILE *out = stdout;
-    int sockfd = -1;
-    int newsockfd = -1;
-    struct sockaddr_in serv_addr, client_addr;
-    int client_addr_len = -1;
-    int reuse_addr = 1;
-    char client_ipv4_address[IPv4_ADDR_LEN] = {0};
-
-    if (argc != 3) {
-        print_usage_and_exit(argc, argv, out);
-    }
-
-    //create socket
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        fprintf(out, "\nError: Could not create socket: %s. Exiting..\n\n",
-                strerror(errno));
-        exit(1);
-    }
-
-    // Set SO_REUSEADDR on the socket so that the server's address is available
-    // immediately to reuse, in case the server restarts or is restarted.
-    // Normally, the TCP connection will enter TIME_WAIT/CLOSE_WAIT state on
-    // connection close and the server's address will not be available
-    // immediately for reuse. But setting SO_REUSEADDR on the socket makes the
-    // server's address available immediately for reuse. For setting
-    // SO_REUSEADDR, setsockopt() should be called before bind(). Actually, it
-    // is best to call setsockopt() just after the socket has been created using
-    // the socket() call.
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
-                   (const char *)(&reuse_addr), sizeof(reuse_addr)) < 0) {
-        fprintf(out, "\nError: Could not set SO_REUSEADDR on the socket: %s."
-                     " Exiting..\n\n", strerror(errno));
-        exit(1);
-    }
-
-    // fill in the server's address
-    memset(&serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons((uint16_t)(atoi(argv[2])));
-
-    // bind the server's address to the socket
-    if (bind(sockfd, (struct sockaddr *)(&serv_addr), sizeof(serv_addr)) < 0) {
-        fprintf(out, "\nError: Could not bind the server's address to the"
-                     " socket: %s. Exiting..\n\n", strerror(errno));
-        exit(1);
-    }
-
-    // enable sockfd for accepting new incoming connection requests using
-    // accept()
-    if (listen(sockfd, 5) < 0) {
-        fprintf(out, "\nError: listen() call failed: %s. Exiting..\n\n",
-                strerror(errno));
-        exit(1);
-    }
-
-    memset(&client_addr, 0, sizeof(client_addr));
-    client_addr_len = sizeof(client_addr);
-
-    while (1) {
-
-        fprintf(out, "\nWaiting for a new connection...\n");
-
-        // accept new incoming connection
-        newsockfd = accept(sockfd, (struct sockaddr *)(&client_addr),
-                           (socklen_t *)(&client_addr_len));
-
-        if (newsockfd < 0)
-        {
-            fprintf(out, "\nError: accept() call failed: %s. Exiting..\n\n",
-                    strerror(errno));
-            exit(1);
-        }
-
-        fprintf(out, "\nGot a new connection.\n");
-
-        if (inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,
-                      client_ipv4_address, IPv4_ADDR_LEN) != NULL) {
-            client_ipv4_address[IPv4_ADDR_LEN - 1] = '\0';
-            fprintf(out, "\nClient's IPv4 address: %s\n", client_ipv4_address);
-            fprintf(out, "Client's port number: %d\n",
-                    ntohs(client_addr.sin_port));
-        }
-
-        // communicate with the client
-        recv_and_send(newsockfd, out);
-
-    } // end of while(1) loop
-
-    // close the socket
-    close(sockfd);
-
-    return 0;
-
-} // end of function main()
-
-static void print_usage_and_exit(int argc, char *argv[], FILE *out)
-{
-
-    if (argc != 3) {
-        fprintf(out, "\nError: Incorrect usage.\n\n");
-        fprintf(out, "USAGE: %s server_ipv4_address server_port_number\n\n",
-                argv[0]);
-        fprintf(out, "This program takes two arguments. The first is the TCP"
-                     " server's IPv4 address and the second is the port number"
-                     " on which the TCP server will listen for new"
-                     " connections.\n\n");
-        fprintf(out, "This program doesn't check the validity of the arguments."
-                     " So, please give valid arguments else this program may"
-                     " behave in unexpected manner and it may crash also.\n\n");
-        fprintf(out, "Please try again. Exiting..\n\n");
-        exit(1);
-    }
-
-} // end of function print_usage_and_exit()
-
-/*
- * get_input_from_stdin_and_discard_extra_characters():
- *
- *      Function get_input_from_stdin_and_discard_extra_characters() reads at
- *      most (size - 1) characters from stdin and stores them in 'str'.
- *      One character is used to null terminate 'str'. The rest of the
- *      remaining characters in stdin are read and discarded, they are not
- *      stored in 'str'. So, when this function returns then there is no
- *      input/characters left in stdin.
- *
- *      If 'str' is NULL then it is an error and nothing is read from stdin and
- *      NULL is returned.
- *
- *      If 'size' is greater than 'max_size' or less than 'min_size' then it is
- *      an error and nothing is read from stdin and NULL is returned.
- */
-static char *get_input_from_stdin_and_discard_extra_characters(char *str,
-                                        int size, int min_size, int max_size)
-{
-
-    int c = 0;
-    int i = 0;
-
-    if (str == NULL) {
-        return NULL;
-    }
-
-    if ((size < min_size) || (size > max_size)) {
-        return NULL;
-    }
-
-    for (i = 0; i < (size - 1); i = i + 1) {
-
-        c = getchar();
-
-        if ((c == '\n') || (c == EOF)) {
-            str[i] = 0;
-            return str;
-        }
-
-        str[i] = (char)(c);
-
-    } // end of for loop
-
-    str[i] = 0;
-
-    // discard the rest of the input
-    while ((c = getchar()) && (c != '\n') && (c != EOF));
-
-    return str;
-
-} // end of function get_input_from_stdin_and_discard_extra_characters()
-
---------------------------
-simple_tcp_client.c
---------------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#include "simple_tcp_client_server_common.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-
-static void print_usage_and_exit(int argc, char *argv[], FILE *out);
-static char *get_input_from_stdin_and_discard_extra_characters(char *str,
-                                        int size, int min_size, int max_size);
-static void send_and_recv(int sockfd, FILE *out);
-
-static void send_and_recv(int sockfd, FILE *out)
-{
-
-    char msg[MAX_MSG_SIZE] = {0};
-    int retval_int = -1;
-    char *retval_char_ptr = NULL;
-
-    while (1) {
-
-        fprintf(out, "\nPlease input a message to send to the server(max %d"
-                     " characters else the input message will be truncated to"
-                     " %d characters): ", MAX_MSG_SIZE - 1, MAX_MSG_SIZE - 1);
-
-        memset(msg, 0, MAX_MSG_SIZE);
-
-        retval_char_ptr = get_input_from_stdin_and_discard_extra_characters(msg,
-                                    MAX_MSG_SIZE, MIN_MSG_SIZE, MAX_MSG_SIZE);
-
-        if (retval_char_ptr == NULL) {
-            fprintf(out, "\nError: No input received. Sending null byte to the"
-                         " server.\n");
-            msg[0] = '\0';
-        }
-
-        // At this point, msg is null terminated, so strlen can be used safely.
-        // Extra 1 byte for null terminating character.
-        retval_int = (int)(send(sockfd, msg, strlen(msg) + 1, 0));
-
-        if (retval_int < 0) { // some error happened
-            fprintf(out, "\nError: send() returned error: %s.\n",
-                    strerror(errno));
-            return;
-        }
-
-        fprintf(out, "\nMessage sent to the server. Waiting for a message from"
-                     " the server...\n");
-
-        memset(msg, 0, MAX_MSG_SIZE);
-
-        retval_int = (int)(recv(sockfd, msg, MAX_MSG_SIZE, 0));
-
-        msg[MAX_MSG_SIZE - 1] = '\0';
-
-        fprintf(out, "\nMessage received from the server: %s\n", msg);
-
-        if (retval_int < 0) { // some error happened
-            fprintf(out, "\nError: recv() returned error: %s.\n",
-                    strerror(errno));
-            return;
-        }
-
-        if (retval_int == 0) { // server socket is closed
-            fprintf(out, "\nError: Server socket is closed.\n");
-            return;
-        }
-
-    } // end of outer while (1) loop
-
-    return;
-
-} // end of function recv_and_send()
-
-int main(int argc, char *argv[])
-{
-
-    FILE *out = stdout;
-    int sockfd = -1;
-    struct sockaddr_in server;
-
-    if (argc != 3) {
-        print_usage_and_exit(argc, argv, out);
-    }
-
-    fprintf(out, "\n");
-
-    //create socket
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        fprintf(out, "\nError: Could not create socket: %s. Exiting..\n\n",
-                strerror(errno));
-        exit(1);
-    }
-
-    // fill in the server's address
-    memset(&server, 0, sizeof(server));
-    server.sin_addr.s_addr = inet_addr(argv[1]);
-    server.sin_family = AF_INET;
-    server.sin_port = htons((uint16_t)(atoi(argv[2])));
-
-    fprintf(out, "Initiating connection with the server...\n");
-
-    // connect to server
-    if (connect(sockfd, (struct sockaddr *)(&server), sizeof(server)) < 0) {
-        fprintf(out, "\nError: Could not connect to server: %s. Exiting..\n\n",
-                strerror(errno));
-        exit(1);
-    }
-
-    fprintf(out, "\nConnected with the server...\n");
-
-    // communicate with the server
-    send_and_recv(sockfd, out);
-
-    // close the socket
-    fprintf(out, "\nClosing the client socket.\n\n");
-
-    close(sockfd);
-
-    return 0;
-
-} // end of function main()
-
-static void print_usage_and_exit(int argc, char *argv[], FILE *out)
-{
-
-    if (argc != 3) {
-        fprintf(out, "\nError: Incorrect usage.\n\n");
-        fprintf(out, "USAGE: %s server_ipv4_address server_port_number\n\n",
-                argv[0]);
-        fprintf(out, "This program takes two arguments. The first is the TCP"
-                     " server's IPV4 address and the second is the port number"
-                     " on which the TCP server is listening for new"
-                     " connections.\n\n");
-        fprintf(out, "This program doesn't check the validity of the arguments."
-                     " So, please give valid arguments else this program may"
-                     " behave in unexpected manner and it may crash also.\n\n");
-        fprintf(out, "Please try again. Exiting..\n\n");
-        exit(1);
-    }
-
-} // end of function print_usage_and_exit()
-
-/*
- * get_input_from_stdin_and_discard_extra_characters():
- *
- *      Function get_input_from_stdin_and_discard_extra_characters() reads at
- *      most (size - 1) characters from stdin and stores them in 'str'.
- *      One character is used to null terminate 'str'. The rest of the
- *      remaining characters in stdin are read and discarded, they are not
- *      stored in 'str'. So, when this function returns then there is no
- *      input/characters left in stdin.
- *
- *      If 'str' is NULL then it is an error and nothing is read from stdin and
- *      NULL is returned.
- *
- *      If 'size' is greater than 'max_size' or less than 'min_size' then it is
- *      an error and nothing is read from stdin and NULL is returned.
- */
-static char *get_input_from_stdin_and_discard_extra_characters(char *str,
-                                        int size, int min_size, int max_size)
-{
-
-    int c = 0;
-    int i = 0;
-
-    if (str == NULL) {
-        return NULL;
-    }
-
-    if ((size < min_size) || (size > max_size)) {
-        return NULL;
-    }
-
-    for (i = 0; i < (size - 1); i = i + 1) {
-
-        c = getchar();
-
-        if ((c == '\n') || (c == EOF)) {
-            str[i] = 0;
-            return str;
-        }
-
-        str[i] = (char)(c);
-
-    } // end of for loop
-
-    str[i] = 0;
-
-    // discard the rest of the input
-    while ((c = getchar()) && (c != '\n') && (c != EOF));
-
-    return str;
-
-} // end of function get_input_from_stdin_and_discard_extra_characters()
-
--------------------------------------------------
-simple_tcp_client_server_common.h
--------------------------------------------------
-
-/*
- * License:
- *
- * This file has been released under "unlicense" license
- * (https://unlicense.org).
- *
- * This is free and unencumbered software released into the public domain.
- *
- * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
- * this software, either in source code form or as a compiled binary, for any
- * purpose, commercial or non-commercial, and by any means.
- *
- * For more information about this license, please visit - https://unlicense.org
- */
-
-/*
- * Author: Amit Choudhary
- * Email: amitchoudhary0523 AT gmail DOT com
- */
-
-#ifndef _SIMPLE_TCP_CLIENT_SERVER_COMMON_H_
-#define _SIMPLE_TCP_CLIENT_SERVER_COMMON_H_
-
-#define IPv4_ADDR_LEN 16 // includes null terminating character
-
-#define MAX_MSG_SIZE 1024 // includes null terminating character
-
-#define MIN_MSG_SIZE 1 // includes null terminating character
-
-#endif
-
--------------
-README
--------------
-
-File simple_tcp_client.c implements a simple tcp client and file
-simple_tcp_server.c implements a simple tcp server.
-
-Both programs take the same two arguments: server's IPv4 address and the
-server's port number on which the server will/is listen/listening for new
-connections.
-
-The user can connect the server and the client and then send messages to each
-other.
-
-Although the tcp server runs in an infinite loop, it accepts only one connection
-at a time and communicates with that client only at a time. Only when this
-client closes the connection, then the tcp server will accept another
-connection.
-
-However, when you try to connect the second client to the server, the
-connection will succeed but you won't be able to send/recv messages to/from the
-server. The second client will connect to the server because the linux kernel
-will complete TCP's 3-way handshake between the client and the server and then
-put this connection in the server's backlog queue for the sever to accept. But
-this tcp server won't accept any new connection until the current client has
-closed the connection, so the second client won't be able to communicate with
-the server. Same will be the case for all other clients.
-
----- End of README ----
