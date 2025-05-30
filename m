@@ -1,116 +1,163 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37092185E7F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F29D27E;
+	Fri, 30 May 2025 01:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748570180; cv=none; b=ldfQsMTc2ZFU8S7l34yznrKXc1r3Gdyui6NBLc2l+KTlLJQ5av5TI6NSeWQWPY+b7THhPVWF+Zfh+qTiJJGuC4DnV3fEDByRxHU8zTVDFDRQEXrVHR2kAb6PRt6YDw7eC6CCveiI+0W8ytGjc9kQqXxiRBd/iAkrShLhcPEFZwo=
+	t=1748570308; cv=none; b=C54O8MPtY953OgiRVSc6yUj+Mxio21vnMzozUB4HRKMWEqR7fmqJFN6zuHUFV6h2qrUwFWWs8H84VqMjoDA6IG9bFaMNWj2Uu73Qv0pIucT0O5tQmlTMeEeKpkxNjFqIXstJyr8o/cDay7QjvWgIqujbknC8dFdnzREDP9n/zRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748570180; c=relaxed/simple;
-	bh=u7VyUFhkpp3iahCut82BwLg3+2sCvnO38zqnNgASCpY=;
+	s=arc-20240116; t=1748570308; c=relaxed/simple;
+	bh=jK356KX3q69ZTJwEnZiU9rbuhIM3Iq5jJ2lLNkTH0pE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WXP+UXH7P9skRvSWtm1ADVgEvtUFdw0R2oFAkT1Gwq2NfqNaev6zY3vg7cw//NFtBubUmqsW5DeOqp5zfkbc5T8IJkaRK4JKPFqGNj3FY5mAzHt5Glk1Z5cvtrjmePe5lqj9ZJBwLmZ5uv+mfYdLXntDHbOKjmZS9Kjq18MNNGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=MOqa+S2B; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=DYGpeQoemufmw5CFeKi37fmGTFX3RRRSw6Qvad8cuB2KEyaxMG79vHZa6DzYYW8uC777sLZvuwnox0rHhSspkGuYm/HvBEPSN4mvRzIGAwTi0N0y5ZF7837dgncriKO8N+BVHohOJI58k+VcmvLRnJwHDxcKKxJEZ1CDDk2rnbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=deRJ4ye6; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="MOqa+S2B"
-Message-ID: <599838d4-7faf-41ce-9a7f-6eebd5173db7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748570165;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q9wJXvfCN3kwmaDp7fZIzUrWKt3creevaq+W6CDqyW4=;
-	b=MOqa+S2BTvgi6QE6ogqD4uge/Rm/j4oBEMhrH97yjl3kSkpfGECd1sUEHG1E56arwPsoDu
-	0oaMn1mT2NjMCDm91Q8Re4F+tDZrG1JsHEzNfofBmLeEKu1yjg0QuFes2mLVodBqfdN2Tr
-	HhKCuqZxxN57W6Kppw50A+vHDw+wGyE=
-Date: Thu, 29 May 2025 18:55:56 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="deRJ4ye6"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748570296; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=yy5/fgwWGRWQFc3zPba+l8G/Wl8NsYpv5LjubYSD8qY=;
+	b=deRJ4ye6ZSCP0Tobl9QmAF9gKpT4GVrfF7YMM8C0KJsBXSbkVHcyMeDZRIp9beCLx/9vy+GfKjMlPP0RzGuNa1AXJmKXIlU6vjKjJP0xGq9Ef6JIDe5SeMhPl/k5W432HcpCqxb5hMkmo8r96UXgzSTEGvSSAfemtksHbV481G0=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcJNvj6_1748570294 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 09:58:15 +0800
+Message-ID: <bd89651e-0ee0-4819-87da-d3a5db04c5b3@linux.alibaba.com>
+Date: Fri, 30 May 2025 09:58:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
-Content-Language: en-GB
-To: Rong Tao <rtoax@foxmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, rongtao@cestc.cn,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Juntong Deng <juntong.deng@outlook.com>,
- Amery Hung <amery.hung@bytedance.com>,
- Dave Marchevsky <davemarchevsky@fb.com>, Hou Tao <houtao1@huawei.com>,
- "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)"
- <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-References: <cover.1748488784.git.rtoax@foxmail.com>
- <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
- <CAADnVQ+hUk2wV3M+9mgv_i5sNt_FuHpAnDpkQJ22D37bxAJHsQ@mail.gmail.com>
- <tencent_C8CF57BAD10D440E8308A19E2C894B341507@qq.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <tencent_C8CF57BAD10D440E8308A19E2C894B341507@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: shmem: disallow hugepages if the system-wide
+ shmem THP sysfs settings are disabled
+To: Zi Yan <ziy@nvidia.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <c1a6fe55f668cfe87ad113faa49120f049ba9cb5.1748506520.git.baolin.wang@linux.alibaba.com>
+ <BB3BDA79-3185-4346-9260-BA5E1B9C9949@nvidia.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <BB3BDA79-3185-4346-9260-BA5E1B9C9949@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7bit
 
 
 
-On 5/29/25 6:28 PM, Rong Tao wrote:
->
-> On 5/29/25 13:44, Alexei Starovoitov wrote:
->> On Wed, May 28, 2025 at 8:37 PM Rong Tao <rtoax@foxmail.com> wrote:
->>> From: Rong Tao <rongtao@cestc.cn>
->>>
->>> It is a bit troublesome to get cwd based on pid in bpf program, such as
->>> bpftrace example [1].
->>>
->>> This patch therefore adds a new bpf_task_cwd_from_pid() kfunc which
->>> allows BPF programs to get cwd from a pid.
->>>
->>> [1] https://github.com/bpftrace/bpftrace/issues/3314
->> Yes. This is cumbersome, but adding a very specific kfunc
->> to the kernel is not a solution.
->> This is tracing, no need for precise cwd. probe_read_kernel
->> can do the job. bpftrace needs to have better C interop.
->> Once that happens any kind of tracing extraction will be
->> easy to write in C. Like this bpf_task_cwd_from_pid()
->> can already be written as C bpf program.
-> Thanks for your reply, Yesterday I tried many ways to implement
-> the solution of getting cwd from pid/task, but all failed. The basic
-> idea is to rewrite the d_path() code, but in the bpf program, there
-> will be various memory security access problems, even if enough
->  `if (!ptr)` are added, the program cannot be loaded successfully.
->
-> https://github.com/Rtoax/bcc/commit/2ba7a2389fc1183264e5195ff26561d93038886c 
->
->
->     bcc/tools$ sudo ./opensnoop.py -F
->
->     ; if (dentry == vfsmnt->mnt_root || dentry == dentry->d_parent) { 
-> @ main.c:174
->     109: (79) r2 = *(u64 *)(r7 +0)
->     R7 invalid mem access 'scalar'
+On 2025/5/29 23:21, Zi Yan wrote:
+> On 29 May 2025, at 4:23, Baolin Wang wrote:
+> 
+>> The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
+>> means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
+>> will still attempt to collapse into a shmem THP. This violates the rule we have
+>> agreed upon: never means never.
+>>
+>> Then the current strategy is:
+>> For shmem, if none of always, madvise, within_size, and inherit have enabled
+>> PMD-sized mTHP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>>
+>> For tmpfs, if the mount option is set with the 'huge=never' parameter, then
+>> MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   mm/huge_memory.c |  2 +-
+>>   mm/shmem.c       | 12 ++++++------
+>>   2 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index d3e66136e41a..a8cfa37cae72 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>   	 * own flags.
+>>   	 */
+>>   	if (!in_pf && shmem_file(vma->vm_file))
+>> -		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>> +		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
+>>   						   vma, vma->vm_pgoff, 0,
+>>   						   !enforce_sysfs);
+> 
+> OK, here orders is checked against allowed orders.
+> 
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 4b42419ce6b2..4dbb28d85cd9 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -613,7 +613,7 @@ static unsigned int shmem_get_orders_within_size(struct inode *inode,
+>>   }
+>>
+>>   static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>> -					      loff_t write_end, bool shmem_huge_force,
+>> +					      loff_t write_end,
+>>   					      struct vm_area_struct *vma,
+>>   					      unsigned long vm_flags)
+>>   {
+>> @@ -625,7 +625,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+>>   		return 0;
+>>   	if (shmem_huge == SHMEM_HUGE_DENY)
+>>   		return 0;
+>> -	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
+>> +	if (shmem_huge == SHMEM_HUGE_FORCE)
+>>   		return maybe_pmd_order;
+> 
+> shmem_huge is set by sysfs?
 
-I think you can use bpf_probe_read_kernel() helper to get r2?
+Yes, through the '/sys/kernel/mm/transparent_hugepage/shmem_enabled' 
+interface.
 
->
-> At the same time, bpf_d_path cannot be used because it can only be
-> applied to functions in btf_allowlist_d_path. Currently, it is
-> impossible to get cwd from pid/task in user mode. Any suggestions?
->
-> In addition, I fully tested this patch yesterday and it performed well.
->
-> Rong Tao
->
->
+>>   	/*
+>> @@ -860,7 +860,7 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
+>>   }
+>>
+>>   static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
+>> -					      loff_t write_end, bool shmem_huge_force,
+>> +					      loff_t write_end,
+>>   					      struct vm_area_struct *vma,
+>>   					      unsigned long vm_flags)
+>>   {
+>> @@ -1261,7 +1261,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
+>>   			STATX_ATTR_NODUMP);
+>>   	generic_fillattr(idmap, request_mask, inode, stat);
+>>
+>> -	if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
+>> +	if (shmem_huge_global_enabled(inode, 0, 0, NULL, 0))
+>>   		stat->blksize = HPAGE_PMD_SIZE;
+>>
+>>   	if (request_mask & STATX_BTIME) {
+>> @@ -1768,7 +1768,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>   		return 0;
+>>
+>>   	global_orders = shmem_huge_global_enabled(inode, index, write_end,
+>> -						  shmem_huge_force, vma, vm_flags);
+>> +						  vma, vm_flags);
+>>   	/* Tmpfs huge pages allocation */
+>>   	if (!vma || !vma_is_anon_shmem(vma))
+>>   		return global_orders;
+>> @@ -1790,7 +1790,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+>>   	/* Allow mTHP that will be fully within i_size. */
+>>   	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
+>>
+>> -	if (vm_flags & VM_HUGEPAGE)
+>> +	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+>>   		mask |= READ_ONCE(huge_shmem_orders_madvise);
+>>
+>>   	if (global_orders > 0)
+>> -- 
+>> 2.43.5
+> 
+> shmem_huge_force comes from !enforce_sysfs in __thp_vma_allowable_orders().
+> Do you know when sysfs is not enforced and why?
 
+IIUC, shmem_huge_force will only be set during MADV_COLLAPSE. 
+Originally, MADV_COLLAPSE was intended to ignore the system-wide THP 
+sysfs settings. However, if all system-wide shmem THP settings are 
+disabled, we should not allow MADV_COLLAPSE to collapse a THP. This is 
+the issue this patchset aims to fix. Thanks for the review.
