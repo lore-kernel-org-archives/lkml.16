@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DBC61EA7C8
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C7571EA7C8
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:04:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748595880; cv=none; b=ptmSV55szqoFmnsDZRF5LjvrkW09xxEGSUa6/2T9QsNv9gZ6nBXUgmL7S7vEhgYjK7oUcDn+iNorGJ1amCp2oC8NWK0Xuh4uxOqU6H1fuiGqA/8TIr13zsa9KSI+tLLiFeuvqlCzzSOj+yq2EwdBNS6y74QGRgljxUgwaPmb6Tw=
+	t=1748595885; cv=none; b=GZsGN48hHRZIk6y6gdnl2KSIWqvK8ieUbpfHINT4gAedHWPj1upibNvyN8hdG4jkBUiqyMiQC/UKMuJKOxs/GfyFVDQmGfPRv0I9S0R3TWvmumuUpjBiVirbWNAfLiGit6pMt1KoEeuFAohT7PQoI0B32x14tCj02tLJs1GlWCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748595880; c=relaxed/simple;
-	bh=yOFcaTxur21zbSiID2EWQvG4SWrWx29LLjAgy8jkHkU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sVL4vfgP3XJ6Gqtz8WVFi5lTUs5/L2wCmjljwi3Hyk52/g7s21jPdpsEVxxDfdbkdsV3MJXCtklDKJqMtlYjsAMcXOYBwJxWZi5IM42zkpzscDejmnLRnj9jZeqhf5zP6fZktLqrV2wf8tVnMrmNoXYbCB0x6477AR8z3VQrtGY=
+	s=arc-20240116; t=1748595885; c=relaxed/simple;
+	bh=6i4rPvsVO9h/V46TCoPoAC/yg8N1XCm+jf/47OrvZJI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fZA6xd7okBsBH76+aznHVjPtSM8EZ2g/WmIJVlxuzeI7F0IL1MEGic2pFCnNVUDS9QpciTeFIwiuBFIKtSVCfLGUQBYyuNLNlgO2AuYKntNf/M0bMcwUL04/5c2g5Xf312XmlEWrkdJxf9n86KTNmKl2/yLKX2YDoDMC0V89170=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27EB116F2;
-	Fri, 30 May 2025 02:04:15 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (unknown [10.164.18.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5CF463F5A1;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CDAC16F2;
 	Fri, 30 May 2025 02:04:26 -0700 (PDT)
+Received: from MacBook-Pro.blr.arm.com (unknown [10.164.18.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9ED583F5A1;
+	Fri, 30 May 2025 02:04:37 -0700 (PDT)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org,
 	david@redhat.com,
@@ -35,10 +36,12 @@ Cc: lorenzo.stoakes@oracle.com,
 	gshan@redhat.com,
 	linux-arm-kernel@lists.infradead.org,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH 0/3] Enable huge-vmalloc permission change
-Date: Fri, 30 May 2025 14:34:04 +0530
-Message-Id: <20250530090407.19237-1-dev.jain@arm.com>
+Subject: [PATCH 2/3] arm64: pageattr: Use walk_page_range_novma() to change memory permissions
+Date: Fri, 30 May 2025 14:34:06 +0530
+Message-Id: <20250530090407.19237-3-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250530090407.19237-1-dev.jain@arm.com>
+References: <20250530090407.19237-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,44 +50,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series paves the path to enable huge mappings in vmalloc space by
-default on arm64. For this we must ensure that we can handle any permission
-games on vmalloc space. Currently, __change_memory_common() uses
-apply_to_page_range() which does not support changing permissions for
-leaf mappings. We attempt to move away from this by using walk_page_range_novma(),
-similar to what riscv does right now; however, it is the responsibility
-of the caller to ensure that we do not pass a range, or split the range
-covering a partial leaf mapping.
+Move away from apply_to_page_range(), which does not honour leaf mappings,
+to walk_page_range_novma(). The callbacks emit a warning and return EINVAL
+if a partial range is detected.
 
-This series is tied with Yang Shi's attempt [1] at using huge mappings
-in the linear mapping in case the system supports BBML2, in which case
-we will be able to split the linear mapping if needed without break-before-make.
-Thus, Yang's series, IIUC, will be one such user of my series; suppose we
-are changing permissions on a range of the linear map backed by PMD-hugepages,
-then the sequence of operations should look like the following:
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ arch/arm64/mm/pageattr.c | 69 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 64 insertions(+), 5 deletions(-)
 
-split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
-split_range(end & ~HPAGE_PMD_MASK, end);
-__change_memory_common(start, end);
-
-However, this series can be used independently of Yang's; since currently
-permission games are being played only on pte mappings (due to apply_to_page_range
-not supporting otherwise), this series provides the mechanism for enabling
-huge mappings for various kernel mappings like linear map and vmalloc.
-
-[1] https://lore.kernel.org/all/20250304222018.615808-1-yang@os.amperecomputing.com/
-
-Dev Jain (3):
-  mm: Allow pagewalk without locks
-  arm64: pageattr: Use walk_page_range_novma() to change memory
-    permissions
-  mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
-
- arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
- include/linux/pagewalk.h |  4 ++
- mm/pagewalk.c            | 18 +++++++--
- 3 files changed, 94 insertions(+), 9 deletions(-)
-
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 39fd1f7ff02a..a5c829c64969 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -8,6 +8,7 @@
+ #include <linux/mem_encrypt.h>
+ #include <linux/sched.h>
+ #include <linux/vmalloc.h>
++#include <linux/pagewalk.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/pgtable-prot.h>
+@@ -20,6 +21,67 @@ struct page_change_data {
+ 	pgprot_t clear_mask;
+ };
+ 
++static pteval_t set_pageattr_masks(unsigned long val, struct mm_walk *walk)
++{
++	struct page_change_data *masks = walk->private;
++	unsigned long new_val = val;
++
++	new_val &= ~(pgprot_val(masks->clear_mask));
++	new_val |= (pgprot_val(masks->set_mask));
++
++	return new_val;
++}
++
++static int pageattr_pud_entry(pud_t *pud, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pud_t val = pudp_get(pud);
++
++	if (pud_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != PUD_SIZE))
++			return -EINVAL;
++		val = __pud(set_pageattr_masks(pud_val(val), walk));
++		set_pud(pud, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_pmd_entry(pmd_t *pmd, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pmd_t val = pmdp_get(pmd);
++
++	if (pmd_leaf(val)) {
++		if (WARN_ON_ONCE((next - addr) != PMD_SIZE))
++			return -EINVAL;
++		val = __pmd(set_pageattr_masks(pmd_val(val), walk));
++		set_pmd(pmd, val);
++		walk->action = ACTION_CONTINUE;
++	}
++
++	return 0;
++}
++
++static int pageattr_pte_entry(pte_t *pte, unsigned long addr,
++			      unsigned long next, struct mm_walk *walk)
++{
++	pte_t val = ptep_get(pte);
++
++	val = __pte(set_pageattr_masks(pte_val(val), walk));
++	set_pte(pte, val);
++
++	return 0;
++}
++
++static const struct mm_walk_ops pageattr_ops = {
++	.pud_entry	= pageattr_pud_entry,
++	.pmd_entry	= pageattr_pmd_entry,
++	.pte_entry	= pageattr_pte_entry,
++	.walk_lock	= PGWALK_NOLOCK,
++};
++
+ bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
+ 
+ bool can_set_direct_map(void)
+@@ -49,9 +111,6 @@ static int change_page_range(pte_t *ptep, unsigned long addr, void *data)
+ 	return 0;
+ }
+ 
+-/*
+- * This function assumes that the range is mapped with PAGE_SIZE pages.
+- */
+ static int __change_memory_common(unsigned long start, unsigned long size,
+ 				pgprot_t set_mask, pgprot_t clear_mask)
+ {
+@@ -61,8 +120,8 @@ static int __change_memory_common(unsigned long start, unsigned long size,
+ 	data.set_mask = set_mask;
+ 	data.clear_mask = clear_mask;
+ 
+-	ret = apply_to_page_range(&init_mm, start, size, change_page_range,
+-					&data);
++	ret = walk_page_range_novma(&init_mm, start, start + size,
++				    &pageattr_ops, NULL, &data);
+ 
+ 	/*
+ 	 * If the memory is being made valid without changing any other bits
 -- 
 2.30.2
 
