@@ -1,121 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF8B27703E;
-	Fri, 30 May 2025 17:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A32825DCFD
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:57:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627730; cv=none; b=ksgOoj+U/pdZXvV9hg9NcCLNXMHOx0Vb4FE7Trz/GkOCVqR6q7fwpKkGddxbdvi8YesUVxkYulFGVjVBcQcIf1Q1VlUSeCFdr8h2z+9erdtZJXOQR0ET8AwuF6lw8Um2dDbnRgftBXeojqH1kfu7Sm1LACnNJF6LCqmTvNx/DnI=
+	t=1748627824; cv=none; b=oSYXylqG0lUS2O1g45XafK7B/Nr7Qa4kkz8Vj3MZwtzvxGxXlqPv2/FS0i4Pkw/uhPlXUYJGmCDj4v8z8YgAlAY87q/wt2Jzf1jigYDEHU3++zboarxOnjLedX8TrkWO9Xp43uboOB5U51E+n/stLtVyWxPAcf/pa7LSGpbQR2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627730; c=relaxed/simple;
-	bh=Z4p8j6JP93DU8zs/CtD8Et1EBHP1OS4LXOhdqxk3m5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p2GmIkz4iENUnJnOpI4DskqXVHaJ6GlLJq5PibYbTcWHaYk2GV/AHQkXWK6NwjW9F/fqlTwb28uVJydGmOHenLERG8b2zhFts5T2IfJXHre3X1JGxmdtITeWCzHb3fr6qiiceftrcHYekjyZ2/EdhTRlEdb7WtXM4uCapq7lNIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azKIMfjj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748627824; c=relaxed/simple;
+	bh=nm9X/o0rnIPx+UiF+N8RenENBKrI6eSudR1LE2HsIS8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TWROYeCFipeRxh2sO0wp0KRlfieKpCATmbQMfq+m+AepWsxhlq1lL0XthBSzf8C5ILYrPrgMmHpZeWHgJkmGFK96v9xExGNpULdzAuViyGgBBch0/XpSIFH7XMGosG6ik+gA4sl9ULptCYnXgfqmPVMBOjeq2L+1ux6VNUyy9H8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UzFaXL9t; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azKIMfjj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CE7C4AF0B;
-	Fri, 30 May 2025 17:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748627729;
-	bh=Z4p8j6JP93DU8zs/CtD8Et1EBHP1OS4LXOhdqxk3m5w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=azKIMfjjN+SMq6qHg3GBtCWTha0xQuQMeX05VElokprKykfCfjO38W7qDt8nLRZjM
-	 eU+l2hW6YUkysQiQHJAWFoyk0zxKIaAKDOuI0hGLOaTrSx0Kj01VJxqIDsD3Qv2CCf
-	 jBhTaoNozRgmadqP5E8urLtMZlr76ZiwaIgpEsS4iyTYTvte4o9Zsq1PRzHT0dXx9/
-	 bh/IyjSY02c7o5oUBVMWVdV4rO5RMM7rItSoUnLKRyCKIJyejNK2oNwaLPx0MwzkWu
-	 YW5xbFxIvLWaGJZJ7qJ22aQW3eMAW2N1JGG4mA4M31+tgMDauwm3Y0uBEBX5KJlOrW
-	 tOFynIknGO2yQ==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-606648c3f9eso657539eaf.3;
-        Fri, 30 May 2025 10:55:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXizlaSWGEPbY91yTAAFPwFGP/5IMnKJLXcf0kROetjAUrfmQE+3DNF1W67oRifefd61Ul37KZnnzM=@vger.kernel.org, AJvYcCXnZFU152Oq2leR+quI0bw3URMm09r4liGhsY/Vg3n1GavdEy3gNrEw2QW1wa4mqA3zfRxzrg8rsh/Bul8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRcTrCSFqai3TOkmzfUliIwYoFLzXwhGzEWmjnwL3X43fBFpGM
-	Vmy0QRDKhSPJR5hRKoLBvLb8nR3tnmBUVZK+hb4QZh8wG2KwRh80covmKZHgJbuAERV51tfJzzJ
-	JkS20s/LhgSRZnd1Snd+XJaH5UX9Mzh4=
-X-Google-Smtp-Source: AGHT+IFEyOOJa6iXg9lMxIVjt9GNXMhZtVhOhypEJV+km46HwPL10FvWa4XooMoBZknnFFbDVGH37lgrgOZDRil611I=
-X-Received: by 2002:a05:6820:98b:b0:60b:edbb:1f50 with SMTP id
- 006d021491bc7-60d52d6db2fmr1810112eaf.4.1748627728646; Fri, 30 May 2025
- 10:55:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UzFaXL9t"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-407a0050f07so147489b6e.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748627821; x=1749232621; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PeZnYkfCVMff3UHyU0Pr3VD4cGSKzPYxsrEG6mLaXt0=;
+        b=UzFaXL9tc2CvtuinYhfpUkYmy7FUevGBFBqRXDCekPSbZSoxg38cdEAoipwsAzxvUh
+         5h++Ig9D2UHfwg+Ak+VcPu35lFspVHiJiarKAwcIju+dCytaK2hgLjMlSL2GGfIBlSOA
+         4vxQMoNZl93vrMSlCaSEBlC2ii7nRyeIY3hMUVZKcJhBrE3G3gXhNytHYX7aSxX9YPCr
+         4ZtH0SHUUzSxzp6EDwuFzCPutIF6cRo6fgtO+p6Q6BoEsjyLpahXtVl8p169i9za7gh4
+         4saHZGNPrBlWj9MxpRi6t4t+rYt4WiiFOmuMUyQTf9otXFyAm25l+aMVIcMaaj5vI55K
+         645A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748627821; x=1749232621;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PeZnYkfCVMff3UHyU0Pr3VD4cGSKzPYxsrEG6mLaXt0=;
+        b=sDrRVr6I5uYnwaB4iOtoRWk/PE8RL3SYupVRm5/Mdei8HPYq3PyepEcAhM9WV7YZkN
+         33QCYeIC5HL5KclSHw6eY+LAlHbv+DlBFBTN4RDpy3L9bheZJvHw1vFEElRgDyGRKkcQ
+         +yJw8CylwdavlP/jGumE+TYMy5GSTYM1apZIib5GbZfXPZssq2uLS/2qLoA4cAJepTU3
+         wVYHftsvfOl4xiocMk70QL1VPotFg1NBbCciv7vzjDRdZ1uPDW5lJT0bKbqLymzKJ0If
+         gK8KNaVYyFOdBDn7PPwKUIBhplUSAGj8PRMp7JmYpalw4SjuA+nLE751BbgQImv1ThAP
+         JKNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVltEw1QilcVqlz2pbAmVsKSopSBrk58sIG1rC0G/S/ZrI6COqzqukIBizoXSl9EMGYmke7oet5zdxbTSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0a4+IbNx5lN+efyvt6k0Ev2GruXNTMzbELWCwFfAWpd4twXF2
+	+7Ri04o+tEW3/LHW0rUP/GshGpQqViZZwGbHKdTeoKBIwYi2nR32UdM5cG1Al8GRcMg=
+X-Gm-Gg: ASbGncvOQqB6LeRUCKganbaoPEHaV72U1zdG8aP1BkZXNejEHhL69QAXQbULjOQ4UsN
+	TUM+1gXU5u1q2xa0w76oJvDqpoIJ2d+es7PAjDv5Ng53xZ266pXKj6UyqPJBVbPlP8I3rwPFSAP
+	x7Qwp4cJH0Kgiusx9Rt2aJzqBkOqKSUjMlUBHCpuoreIxWXEBjrVj6QeFVfZBJeGWebSsFs9EGf
+	TspqPLrGVrtDS/t24fSpNqBr6v7k1XlOw+QqHvmLSvzeSOlNUt6/uUAf76Bn4ZasVpcagx/aKpA
+	aunkEs+xNpfMj9zJM5OY/ewkkU0jlQHvsmy7RONz8AR7gIjEriAHWAsW0wCFbxIadL7ELPvSrPs
+	8V4Nxc8f9R5pUzFbq6ix4BKvfj4UL
+X-Google-Smtp-Source: AGHT+IFeZges+t7xbl1VwiaLWGoDo7alb7u+ilJSAME1U6eD/uMKl4m8/mgL+Q3wzRQTnPYPMB9OHA==
+X-Received: by 2002:a05:6808:81c3:b0:402:1016:e9cf with SMTP id 5614622812f47-4067974cd95mr2499573b6e.34.1748627821322;
+        Fri, 30 May 2025 10:57:01 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777? ([2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af8522a9sm658347a34.18.2025.05.30.10.57.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 10:57:00 -0700 (PDT)
+Message-ID: <6825fc30-d8ef-4a10-98ec-79ed303dd145@baylibre.com>
+Date: Fri, 30 May 2025 12:57:00 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2006806.PYKUYFuaPT@rjwysocki.net> <20250528131759.GA39944@noisy.programming.kicks-ass.net>
- <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
- <20250528133807.GC39944@noisy.programming.kicks-ass.net> <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
- <20250528160523.GE39944@noisy.programming.kicks-ass.net> <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
- <20250529085358.GY24938@noisy.programming.kicks-ass.net> <CAJZ5v0hw1910Gsb57POVhax1hAbEGHa7xksr_FygNd_JL-oeOA@mail.gmail.com>
- <20250530080733.GH39944@noisy.programming.kicks-ass.net> <CAJZ5v0irHEZEbZVrd-tiaXBvxM4aD9spJg1cVRcjrDQ0_HMJAg@mail.gmail.com>
- <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 30 May 2025 19:55:17 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iokGEr6y38P0ic-hqa0A8VVRhxvsUz38m5douwiX+MKA@mail.gmail.com>
-X-Gm-Features: AX0GCFsQrnVODltGlciG3S922ccgXSZcHHQZIoCIDExIe5PcXuzqVG3UFmN5Xp0
-Message-ID: <CAJZ5v0iokGEr6y38P0ic-hqa0A8VVRhxvsUz38m5douwiX+MKA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit 96040f7273e2
-To: Peter Zijlstra <peterz@infradead.org>, x86 Maintainers <x86@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in
+ fxls8962af_fifo_flush
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com>
+ <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
+ <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
+ <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
+ <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 6:59=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Fri, May 30, 2025 at 11:18=E2=80=AFAM Rafael J. Wysocki <rafael@kernel=
-.org> wrote:
-> >
-> > On Fri, May 30, 2025 at 10:07=E2=80=AFAM Peter Zijlstra <peterz@infrade=
-ad.org> wrote:
-> > >
-> > > On Thu, May 29, 2025 at 11:38:05AM +0200, Rafael J. Wysocki wrote:
-> > >
-> > > > First off, I'm not sure if all of the requisite things are ready th=
-en
-> > > > (sysfs etc.).
-> > >
-> > > Pretty much everything is already running at early_initcall(). Sysfs
-> > > certainly is.
-> > >
-> > > > We may end up doing this eventually, but it may not be straightforw=
-ard.
-> > > >
-> > > > More importantly, this is not a change for 6.15.y (y > 0).
-> > >
-> > > Seriously, have you even tried?
-> > >
-> > > AFAICT the below is all that is needed.  That boots just fine on the =
-one
-> > > randon system I tried, and seems to still work.
-> > >
-> > > And this is plenty small enough to go into 6.15.y
-> >
-> > But there is still intel_idle_init() which is device_initcall() ATM
-> > and this needs to be tested on other arches too.
->
-> intel_idle_init() depends on ACPI which initializes via a
-> subsys_initcall() and doing that earlier would mean a major redesign.
->
-> Pretty much same for reordering APs initialization past ACPI initializati=
-on.
->
-> One more option is to kick the "dead" SMT siblings after the idle
-> driver initializes and let them do "play dead" again, but who'd be
-> responsible for doing that?
+On 5/30/25 12:51 PM, Andy Shevchenko wrote:
+> On Thu, May 29, 2025 at 01:49:16PM -0500, David Lechner wrote:
+>> On 5/29/25 1:16 PM, Andy Shevchenko wrote:
+>>> On Thu, May 29, 2025 at 7:02 PM David Lechner <dlechner@baylibre.com> wrote:
+>>>> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
+> 
+> ...
+> 
+>>>> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling the
+>>>> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
+>>>>
+>>>> It seems like the order should be reversed.
+>>>
+>>> AFAIU the wake capability of IRQ line is orthogonal to the interrupt
+>>> controller enabling (unmasking) / disabling (masking) the line itself.
+>>> Or did you mean something else?
+>>
+>> I don't know enough about how suspend/wake stuff works to say for sure.
+>>
+>> I just saw the comment:
+>>
+>> 	/*
+>> 	 * Disable buffer, as the buffer is so small the device will wake
+>> 	 * almost immediately.
+>> 	 */
+>>
+>> so I assumed someone had observed something like this happening already.
+>> If an interrupt occurs between enable_irq_wake() and actually
+>> going into a low power mode, what effect does it have? I ask because I
+>> don't know.
+> 
+> To be a "wake source" means to be capable of signaling to the system that wake
+> is needed. If an event comes after enabling an IRQ line to be a wake source,
+> that should wakeup the system (independently if that IRQ line is disabled or
+> not on the IRQ controller side).
+> 
 
-Interestingly enough, a similar issue is there during resume from
-hibernation and that's why there is arch_resume_nosmt().
-
-So arguably intel_idle_init() could do something analogous to it after
-successfully registering the idle driver.  In principle, the ACPI idle
-driver could do that too on x86.
-
-Opinions?
+OK, more clear now. So I should have been more specific with my previous
+comment. When I said, "before disabling the interrupt", I didn't mean
+calling disable_irq(). I meant disabling the actual output pin on the
+accelerometer chip.
