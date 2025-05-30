@@ -1,171 +1,85 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9961D63D8;
-	Fri, 30 May 2025 23:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804521D63D8;
+	Fri, 30 May 2025 23:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748646486; cv=none; b=EB9jP1fEVXxK4n6f2NhgtwLjGguA8LtK05yAHggiAO1sVNvog/9+PKjwmfnjIOX/VY7hNAKYpZx/LYEokt6Uel6ztZu7Yn23XUMisFaL0TtlbWaBusdyWzI9e3rFUFMoJOQo7UZBnjHCcP5FIMoXSyIElRNkrlbQSTwO+nw9ZiY=
+	t=1748646575; cv=none; b=WR6SGTj/aeA0amT1OSNR0TjUCHBydUAbgDnzVb8kqeq+9vpgXmg8F3hmAlAY8HStK4bA8GcPc4QEnqS2xFvhuZMTlsr/OIlnFdBL0T64hrApJ4wIttCL20t13EE6a8JC+dLVlPCFmabMytnfnLu2VXGyvKT35iEAeHpCQSWKjK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748646486; c=relaxed/simple;
-	bh=9HPEh+Br1rzEf9lU6sCptTm9+D/VZfrB2D8TQBsTKUo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F/PNii94LwwtAAHDhy0539ItF3Sfirp0uvnBBpOMcis+mLVPLPa1u1LJjN+gh2V9wEp0085ORRV1S+87f4BEAeGRhNKhKAXJP0m0Dt2KSneGqyHghM7cw+oM+rm5IqCKviNNJ5i1oVJIqgDaDr31DbVm4av4d2nLrsBc1QXhV38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Pzlztozu; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1748646575; c=relaxed/simple;
+	bh=LoyjE9kdzjoi6fevHiJCdYiahDxSoe9dp4RhP57cdSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ipA7zbQHamwvjuZ6G1PQEhvJGuUd9bWZCB4FdfwC+2KtIb3c18vz0ACaJzbUK+KVGReqjeKP6NEvtsaZ7pVPyYNlo+Hcdr5udPQvBey5QmNf+cELENR/BnXwFiviohNY1eKoV7o+EbBIxt4MwRKCGdb0QMebH4HqfyFXw5Hjcfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GlNTLfW8; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Pzlztozu"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54UN77JC2528926
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 30 May 2025 16:07:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54UN77JC2528926
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1748646431;
-	bh=HfZD7U9L2RUtUR5Z5tSj8MTtW/oWribwJyC+zC4yD4M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Pzlztozu2JYvdVdyR8bDgrTaTQ3bHFjq1fh0FRoU9qYcMaXT/k+REtSVI6jWRtDN2
-	 WWXBYbyBiZnH1RU0ARtC8E/woDei8fQ4g28b9uTwVxJo5W9viAhLv5vLx1g9lkbd9m
-	 uVMD5J+FAyJtRPqQCfkPzH3qALTuceb1sZpKxFSMUAIMkVbU0+/i3YQ5PPuCsTJRkf
-	 pN0mlrxxvzhzJS04zhVhDpv3YoksWk6DhnpYDkH7XSZ5OtTqTghYhXp2kZbIjAUbvm
-	 uCa5LmXcygNw0NYCNt8Arls/LY/dBfPE7fGCW+U1a8YeExNbL834AtptwzatoW9kPr
-	 lXU7P6gLqBVzA==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        shuah@kernel.org, andrew.cooper3@citrix.com
-Subject: [PATCH v1 1/1] selftests/x86: Add a test to detect infinite sigtrap handler loop
-Date: Fri, 30 May 2025 16:07:07 -0700
-Message-ID: <20250530230707.2528916-1-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlNTLfW8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748646573; x=1780182573;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LoyjE9kdzjoi6fevHiJCdYiahDxSoe9dp4RhP57cdSs=;
+  b=GlNTLfW8ubkwkGspOoogMz5HL3tpDkJvwprQqx467Vg4w68Cq4u5XvCg
+   Onh2B9TFfjeRtPWhrmuWsYpvNSVqOKYII8iboixyKnQyhifgj3qoZf0In
+   0mGhDxoLerD767vReRM8OTdpNEhKWz6L4oQ/YomcHv5LozA9nBI3n1Kpm
+   SDZveGx9+woLagF4lDQOpP5NY2/9JajG+SA5oaY89EFwESV5YKMC4lxV1
+   bKon5dGwvHc2CQ3hI8R1/yR7zIXeaHlEsHNNh0y3JOeEcVCIzWDKmNLd6
+   IExH3k9GmqCFjBupeQ9inW19N/mHKEHK0OkHCLbnO/DGU7PiMnw5zK97M
+   g==;
+X-CSE-ConnectionGUID: gxiRDxEoRmmDfidzFrcZXA==
+X-CSE-MsgGUID: Q4Wf3ucvQCeZc18X8ff4Dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50618276"
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="50618276"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 16:09:33 -0700
+X-CSE-ConnectionGUID: OK7YvfbETYid7DukXd+cRg==
+X-CSE-MsgGUID: HAogEd4dS2+ky+skW9xPcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="147885592"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 16:09:33 -0700
+Date: Fri, 30 May 2025 16:09:31 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
+	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
+	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
+	Avadhut.Naik@amd.com, john.allen@amd.com,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
+ EINJv2 support
+Message-ID: <aDo6q74ADqfUXjO3@agluck-desk3>
+References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
+ <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
+ <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
+ <aDoal24J-BMTIBCq@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDoal24J-BMTIBCq@agluck-desk3>
 
-When FRED is enabled, if the Trap Flag (TF) is set without an external
-debugger attached, it can lead to an infinite loop in the SIGTRAP
-handler.  To avoid this, the software event flag in the augmented SS
-must be cleared, ensuring that no single-step trap remains pending when
-ERETU completes.
+On Fri, May 30, 2025 at 01:52:41PM -0700, Luck, Tony wrote:
+> On Fri, May 30, 2025 at 12:27:11PM +0200, Borislav Petkov wrote:
+> > On Tue, May 06, 2025 at 02:38:13PM -0700, Zaid Alali wrote:
+> There isn't a fancy "debugfs_create_x128_le()" helper to manage these
+> 128-bit little endian numbers. So I've coded with the basic building
+> blocks (though using copy_from_user() and copy_to_user() feels like
+> back in the stone age). If there some helpers that I missed I'd be
+> happy to see that part simplified.
 
-This test checks for that specific scenario—verifying whether the kernel
-correctly prevents an infinite SIGTRAP loop in this edge case.
+simple_read_from_buffer() and simple_write_to_buffer() may be the
+helpers that I didn't spot earlier.
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- tools/testing/selftests/x86/Makefile          |  2 +-
- .../selftests/x86/test_sigtrap_handler.c      | 80 +++++++++++++++++++
- 2 files changed, 81 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/x86/test_sigtrap_handler.c
-
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index f703fcfe9f7c..c486fd88ebb1 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -12,7 +12,7 @@ CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh "$(CC)" trivial_program.c -no-pie)
- 
- TARGETS_C_BOTHBITS := single_step_syscall sysret_ss_attrs syscall_nt test_mremap_vdso \
- 			check_initial_reg_state sigreturn iopl ioperm \
--			test_vsyscall mov_ss_trap \
-+			test_vsyscall mov_ss_trap test_sigtrap_handler \
- 			syscall_arg_fault fsgsbase_restore sigaltstack
- TARGETS_C_BOTHBITS += nx_stack
- TARGETS_C_32BIT_ONLY := entry_from_vm86 test_syscall_vdso unwind_vdso \
-diff --git a/tools/testing/selftests/x86/test_sigtrap_handler.c b/tools/testing/selftests/x86/test_sigtrap_handler.c
-new file mode 100644
-index 000000000000..9c5c2cf0cf88
---- /dev/null
-+++ b/tools/testing/selftests/x86/test_sigtrap_handler.c
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  Copyright (C) 2025 Intel Corporation
-+ */
-+#define _GNU_SOURCE
-+
-+#include <err.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ucontext.h>
-+
-+#ifdef __x86_64__
-+# define REG_IP REG_RIP
-+#else
-+# define REG_IP REG_EIP
-+#endif
-+
-+static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *), int flags)
-+{
-+	struct sigaction sa;
-+
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_sigaction = handler;
-+	sa.sa_flags = SA_SIGINFO | flags;
-+	sigemptyset(&sa.sa_mask);
-+
-+	if (sigaction(sig, &sa, 0))
-+		err(1, "sigaction");
-+
-+	return;
-+}
-+
-+static unsigned int loop_count_on_same_ip;
-+
-+static void sigtrap(int sig, siginfo_t *info, void *ctx_void)
-+{
-+	ucontext_t *ctx = (ucontext_t *)ctx_void;
-+	static unsigned long last_trap_ip;
-+
-+	if (last_trap_ip == ctx->uc_mcontext.gregs[REG_IP]) {
-+		printf("trapped on %016lx\n", last_trap_ip);
-+
-+		if (++loop_count_on_same_ip > 10) {
-+			printf("trap loop detected, test failed\n");
-+			exit(2);
-+		}
-+
-+		return;
-+	}
-+
-+	loop_count_on_same_ip = 0;
-+	last_trap_ip = ctx->uc_mcontext.gregs[REG_IP];
-+	printf("trapped on %016lx\n", last_trap_ip);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	sethandler(SIGTRAP, sigtrap, 0);
-+
-+	asm volatile(
-+#ifdef __x86_64__
-+		/* Avoid clobbering the redzone */
-+		"sub $128, %rsp\n\t"
-+#endif
-+		"push $0x302\n\t"
-+		"popf\n\t"
-+		"nop\n\t"
-+		"nop\n\t"
-+		"push $0x202\n\t"
-+		"popf\n\t"
-+#ifdef __x86_64__
-+		"add $128, %rsp\n\t"
-+#endif
-+	);
-+
-+	printf("test passed\n");
-+	return 0;
-+}
-
-base-commit: 485d11d84a2452ac16466cc7ae041c93d38929bc
--- 
-2.49.0
-
+-Tony
