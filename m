@@ -1,155 +1,435 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4010A2206BB
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABB9224AFE
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597411; cv=none; b=by5Cu+cPW/90OwiKAs+V8+q1GAB76hx9a7xtpXSOZfUYR4hFWz/Fweuj78ZMZKydQxOnMBc2ArKZ1WNcPM7FO/ijp1+FgifdoUsGwfFx1dQ21/2vM3RMVBk04gvoau06dMUsfRvw81YkHQOXw1UUl8AqC7j5VO/p2/rlnzdu3Ec=
+	t=1748597416; cv=none; b=HuyhCgYmYBqTIw8MfeuLJJTYLJiYgxomcal5lQckgywWHjeKMUGrPvUd6iWJ5vfQki217kZ5r8RNIu/IQjgXVg7FycBjJ0O3vWhP+mxb6CwnnaGVkdmj+5O9SwI/0GSgW0pkPXr0jIcDvIEnI0dhCA/4JbABoewovSLR1RIYlDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597411; c=relaxed/simple;
-	bh=nMA6BOKNQortAfZjTY+8NXKVM4Z8Hukb0WuDxYV4S0c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WGUGva8WufawxxY2vUHMLe75ryTqBaAXzDZ6T/C75qW/HbIxh25z3eGwaxp0GoskiwVyLZTYPvDO+xUyoE4Tb6AszGuMShNDr6LJViiraO/+Fj9j5vCwJQhbz3xKA8Eat6hIuXs+n53UCdkyRhk6tEvIB8jRmbe04FmRGTTikuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L3OEBkIb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748597416; c=relaxed/simple;
+	bh=422OX9nkZoEDUi615uXpiGE4CKGrzo9OxUzw3vP+lYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ltk6sz9rq45cTXaWbk8xoB0+gc/+J0pdc2533eDIe9RbTqEnPqU4onp87RlB+mzP7TMD0WpQYh2v29bqprCCU1xYTLNnLNkw1tsZJol+A+TZgaJMHySxekalLcMqY/chnLb7XOEP+VOVK2yk2N0Tvk+nWxRDdQKiuOaONsfdfiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=YmPlmkBx; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L3OEBkIb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748597408;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0RNzhwsqUku1xsJElyNHLGqFPxx7/6+2t/Rn5eNr9pY=;
-	b=L3OEBkIbVlM/qinu0CvWlKb4eKT2iycTEiGBmVVVsscYWTx/AVC36IBzQOzSDwjfRv/KEY
-	IVXRTDHswsvRzjs+eQB7T1LilDKFCu0xT/f2ijsmyd0nhQ6Pv1rx9v/xLw4iUwjqbdXlpV
-	7KDk2ZiYxYsHmRX8P8CNpNJpTsUWvcc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-604-fRnALyDZMay1iMvn-vPq7Q-1; Fri, 30 May 2025 05:30:07 -0400
-X-MC-Unique: fRnALyDZMay1iMvn-vPq7Q-1
-X-Mimecast-MFC-AGG-ID: fRnALyDZMay1iMvn-vPq7Q_1748597406
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so14782585e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="YmPlmkBx"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742c3d06de3so2055688b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748597413; x=1749202213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=flixYT7qZa2BQQysi97LfHe75SLaTmZqxePIcANrNj8=;
+        b=YmPlmkBx4f/H8kQ0ZSI35VDZkWg/orrROUWKIlf7Aycmim9cqmVwVuIduIQTOwcP4f
+         TCSZbKbCGTlElnr3Q/Dm+6xt9JaMCPiYZA6C21WTQl2Dy2CKCzE/YbSd86UgSmHjeQal
+         1hmkOFVD0plnR4eqIjjgLoB66bknFnLXnLS6hnVrDb+sJH56gW7c8rBEwT9QPMkbfS2t
+         NPyolzsP/U82hAIXrgEwlYno8BQ4P0VrUpWjMoB9Ea2csF+sI6je3SSkxBtf/5UCTJcB
+         olpZZNTnwtpXc+laNjtJTjf3bh1vLLT8VzBzf6miP71a8RqHxVokecWnL4etjfNR1y0S
+         yb4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597406; x=1749202206;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0RNzhwsqUku1xsJElyNHLGqFPxx7/6+2t/Rn5eNr9pY=;
-        b=FPgcVjb8L/QW84Tv3YLlYKXd3PY4OxEhMYvpR37IkxJTmnzKC3uw3TznaxNAUcGuf1
-         xIb3cM9WPZArcaTjtLjmKuqVxJlIZccYaVrtCwUeamAh46sBWjfYS29FRjXlMRYiJj2C
-         NkZTHS8TOqSaKx8zGdM+JCtVr5yq7LbtCvwPk9vy+KSlfJ+uXkJPRRm8p0qG1d/y93Zg
-         6cFnQNCyYBkryp3BDIB72FWeH+zhxTkcGwf6KXGtQqZAUqsLZ/3pnCF1tjQe6tj/rm6l
-         oy2rr2H7SXnBCrqHgKmQMSy8RHgBIcUAEKRMa5NGS5N/fKugmMslk0lDNorHEP83eNx1
-         6B7A==
-X-Gm-Message-State: AOJu0YwYa8v12eLpzhARgVhjn8W0C1QreNhDcmXFkNeI3paESzsI6Bx3
-	7L0HgTn+v2qSokmW8A8IrXZGYK2/1YE/H0aG8msp/AQ2H5QjyrMcSIzKKiIBUmsgI1UjRX8nV45
-	MrLTiP8ljx0xfv0mBsjHYdpyEBYJTuS0Hs/XL2E6uQ/Isx1VfrifqNZdAKXKxis+596vuuJpoZK
-	ko
-X-Gm-Gg: ASbGncvvFCS4J0WmY32JYf/h0ctRL9/eR5ohIJrAqmn1NI3U7PC9mX4VjG/jqzXdrQD
-	x0Ay3bFyomhmcOzhzvBh/Zy3OspRsfvJFP8QqYfVpjm/yxssCMCDj1VNoAEBNmHGa1IlwDjf2BM
-	0ozdpWVV7dp6EcH6cT5fovNtj3uhJZNF5KU3X96nFCssXp2yJWy1yTYudmdZFUBASqWmdrWwYZ2
-	F1gWdJRdEw376orgpoPHF5gTVR6agolnVfPeVU71/MHlWc7hLCR1c+IqPTvDqItWDdo8kd3aseM
-	sMVxtj50KiSEJVTu1k7P5BipDmPvIaFYsg8gZ9sI7X26NITAvXk0F/xNX3Dq0TKTsIdg9dPhmO7
-	+UpPXGlidvxA3KtwyIVRTENcKl8jeiakVZQ/en1g=
-X-Received: by 2002:a05:600c:a088:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-450d6547524mr26073855e9.18.1748597405843;
-        Fri, 30 May 2025 02:30:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2BOtiydMOfq1UD1dFaTSdbt9kgs6g/FvHe0NUDZiW/Mb+ZwIUaJljI/hl7D5dUDFLJdO/0w==
-X-Received: by 2002:a05:600c:a088:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-450d6547524mr26073605e9.18.1748597405404;
-        Fri, 30 May 2025 02:30:05 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c525sm4319304f8f.23.2025.05.30.02.30.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 02:30:04 -0700 (PDT)
-Message-ID: <40c773a3-e1d7-4c8c-a6e4-793f8aa7f983@redhat.com>
-Date: Fri, 30 May 2025 11:30:04 +0200
+        d=1e100.net; s=20230601; t=1748597413; x=1749202213;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=flixYT7qZa2BQQysi97LfHe75SLaTmZqxePIcANrNj8=;
+        b=lA0ZOwSX4NPXMC/jhbrvt7RrMBlCsMP0sHh9WFduGcTx8CSLnKZliVl+y+7deh7Lxl
+         a8+1F8AlV4be1fRC7LUzBsHtSaGaXlo4XjmVAr2MADoYsblvoKTOTHI7dWBTG67oHalg
+         NnyxI/19s7dNwWNquFU6IuEDDe3CmNMuhTit68Q/K4Kxm+XtyL9KUWxuIzgUIXoO/8dm
+         Wr3veeUvXhB7yyF8SMO0aebkRhO2ml07JMiwx3e1V8rpFGubwpQ6yU0VaERtIOKwI9o8
+         9MJXPSVK2+yLzhgdmOivi2uLtuMKWmUpRJ9FUbKk+BTnn/45EcyG1pQC+PjvEanqryJJ
+         tQaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzkRFAyZVGpEivzXhoR8eqRS6QMCTIi6tw+jtvyPgJC7p2a/G27b5PF5rTJ4z3gfK9c8yye1rRI1J35MI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3C3HCbyI4K81zBpqkGJOURWgn9kzZMxsKoUOt6SQg1DBsPOme
+	X2kEacSGp/5C0Zqn0Uz6aAQAmPtOylf0EPz+FieUrEFjIPtQxsoQJL9npy3PmA4jP/w=
+X-Gm-Gg: ASbGncu58AAPlcRd2u829YMLianqjUzxsAmDrFaO29N1F3ybi5RfsB87IOcwWRFYorE
+	Vq+/9LzzN+BjRndlAKaCX1A+p528Z45pAs+dqj2yI4CemIuPIv5MfYOe27839u6RQSIX2iLK/Gj
+	RoI/kFbIwMQ4EwWWV79/9RgLdi2DS4no8/YR4WQBFkz9lpDYhPCkeuJ9zVW22TQCKOLNiPq8SKi
+	BX4apHQAhjhcvZrrYSRJ0RxiVxLo85Xl7lvO33ontcnmVsbhvIJoNeS6AUnJNOa4Fbamzmoz1Vz
+	Iku06x2Ycn72DQnD8YHPaNQP/MWwSGf8L1V7oqV+Toew8LgPSRwL9NKlSjYM7cetzAXyYY3/GHY
+	Fi+x65FqoVFNFp0ZNHvP0
+X-Google-Smtp-Source: AGHT+IHA2yGD8wMUj4lSxB67R095/h8/6O6yJ7zAmlSwm5/Pic/viWYeW3kwOjE2By4p9s+RPQhz5w==
+X-Received: by 2002:a17:90b:1d50:b0:311:fde5:c4b6 with SMTP id 98e67ed59e1d1-31250344995mr2204788a91.6.1748597413513;
+        Fri, 30 May 2025 02:30:13 -0700 (PDT)
+Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.29.58
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 30 May 2025 02:30:13 -0700 (PDT)
+From: Bo Li <libo.gcs85@bytedance.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	luto@kernel.org,
+	kees@kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	peterz@infradead.org
+Cc: dietmar.eggemann@arm.com,
+	hpa@zytor.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	riel@surriel.com,
+	harry.yoo@oracle.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	duanxiongchun@bytedance.com,
+	yinhongbo@bytedance.com,
+	dengliang.1214@bytedance.com,
+	xieyongji@bytedance.com,
+	chaiwen.cc@bytedance.com,
+	songmuchun@bytedance.com,
+	yuanzhu@bytedance.com,
+	chengguozhu@bytedance.com,
+	sunjiadong.lff@bytedance.com,
+	Bo Li <libo.gcs85@bytedance.com>
+Subject: [RFC v2 07/35] RPAL: enable shared page mmap
+Date: Fri, 30 May 2025 17:27:35 +0800
+Message-Id: <11d4a94318efc8af41f77235f5117aabb8795afe.1748594840.git.libo.gcs85@bytedance.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] virtio-mem: fix multiple typos in struct comments
- and function docs
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, mst@redhat.com,
- jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
- virtualization@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, darren.kenny@oracle.com
-References: <20250529084350.3145699-1-alok.a.tiwari@oracle.com>
- <20250529084350.3145699-2-alok.a.tiwari@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250529084350.3145699-2-alok.a.tiwari@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 29.05.25 10:42, Alok Tiwari wrote:
-> Corrected several spelling mistakes in code comments, including:
-> - "bock" -> "block"
-> - "valued" -> "value"
-> - "actipn" -> "action"
-> - "accidentially" -> "accidentally"
-> - Improved grammar in a few places for clarity.
-> 
-> These changes are purely cosmetic and do not affect functionality.
-> 
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+RPAL needs to create shared memory between the kernel and user space for
+the transfer of states and data.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+This patch implements the rpal_mmap() interface. User processes can create
+shared memory by calling mmap() on /proc/rpal. To prevent users from
+creating excessive memory, rpal_mmap() limits the total size of the shared
+memory that can be created. The shared memory is maintained through
+reference counting, and rpal_munmap() is implemented for the release of
+the shared memory.
 
+Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
+---
+ arch/x86/rpal/internal.h |  20 ++++++
+ arch/x86/rpal/mm.c       | 147 +++++++++++++++++++++++++++++++++++++++
+ arch/x86/rpal/proc.c     |   1 +
+ arch/x86/rpal/service.c  |   4 ++
+ include/linux/rpal.h     |  15 ++++
+ mm/mmap.c                |   4 ++
+ 6 files changed, 191 insertions(+)
+
+diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
+index c102a4c50515..65fd14a26f0e 100644
+--- a/arch/x86/rpal/internal.h
++++ b/arch/x86/rpal/internal.h
+@@ -9,8 +9,28 @@
+ #define RPAL_COMPAT_VERSION 1
+ #define RPAL_API_VERSION 1
+ 
++#include <linux/mm.h>
++#include <linux/file.h>
++
+ extern bool rpal_inited;
+ 
+ /* service.c */
+ int __init rpal_service_init(void);
+ void __init rpal_service_exit(void);
++
++/* mm.c */
++static inline struct rpal_shared_page *
++rpal_get_shared_page(struct rpal_shared_page *rsp)
++{
++	atomic_inc(&rsp->refcnt);
++	return rsp;
++}
++
++static inline void rpal_put_shared_page(struct rpal_shared_page *rsp)
++{
++	atomic_dec(&rsp->refcnt);
++}
++
++int rpal_mmap(struct file *filp, struct vm_area_struct *vma);
++struct rpal_shared_page *rpal_find_shared_page(struct rpal_service *rs,
++					       unsigned long addr);
+diff --git a/arch/x86/rpal/mm.c b/arch/x86/rpal/mm.c
+index f469bcf57b66..8a738c502d1d 100644
+--- a/arch/x86/rpal/mm.c
++++ b/arch/x86/rpal/mm.c
+@@ -11,6 +11,8 @@
+ #include <linux/mman.h>
+ #include <linux/mm.h>
+ 
++#include "internal.h"
++
+ static inline int rpal_balloon_mapping(unsigned long base, unsigned long size)
+ {
+ 	struct vm_area_struct *vma;
+@@ -68,3 +70,148 @@ int rpal_balloon_init(unsigned long base)
+ 
+ 	return ret;
+ }
++
++static void rpal_munmap(struct vm_area_struct *area)
++{
++	struct mm_struct *mm = area->vm_mm;
++	struct rpal_service *rs = mm->rpal_rs;
++	struct rpal_shared_page *rsp = area->vm_private_data;
++
++	if (!rs) {
++		rpal_err(
++			"free shared page after exit_mmap or fork a child process\n");
++		return;
++	}
++
++	mutex_lock(&rs->mutex);
++	if (unlikely(!atomic_dec_and_test(&rsp->refcnt))) {
++		rpal_err("refcnt(%d) of shared page is not 0\n", atomic_read(&rsp->refcnt));
++		send_sig_info(SIGKILL, SEND_SIG_PRIV, rs->group_leader);
++	}
++
++	list_del(&rsp->list);
++	rs->nr_shared_pages -= rsp->npage;
++	__free_pages(virt_to_page(rsp->kernel_start), get_order(rsp->npage));
++	kfree(rsp);
++	mutex_unlock(&rs->mutex);
++}
++
++const struct vm_operations_struct rpal_vm_ops = { .close = rpal_munmap };
++
++#define RPAL_MAX_SHARED_PAGES 8192
++
++int rpal_mmap(struct file *filp, struct vm_area_struct *vma)
++{
++	struct rpal_service *cur = rpal_current_service();
++	struct rpal_shared_page *rsp;
++	struct page *page = NULL;
++	unsigned long size = (unsigned long)(vma->vm_end - vma->vm_start);
++	int npage;
++	int order = -1;
++	int ret = 0;
++
++	if (!cur) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/*
++	 * Check whether the vma is aligned and whether the page number
++	 * is power of 2. This makes shared pages easy to manage.
++	 */
++	if (!IS_ALIGNED(size, PAGE_SIZE) ||
++	    !IS_ALIGNED(vma->vm_start, PAGE_SIZE)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	npage = size >> PAGE_SHIFT;
++	if (!is_power_of_2(npage)) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	order = get_order(size);
++
++	mutex_lock(&cur->mutex);
++
++	/* make sure user does not alloc too much pages */
++	if (cur->nr_shared_pages + npage > RPAL_MAX_SHARED_PAGES) {
++		ret = -ENOMEM;
++		goto unlock;
++	}
++
++	rsp = kmalloc(sizeof(*rsp), GFP_KERNEL);
++	if (!rsp) {
++		ret = -EAGAIN;
++		goto unlock;
++	}
++
++	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
++	if (!page) {
++		ret = -ENOMEM;
++		goto free_rsp;
++	}
++
++	rsp->user_start = vma->vm_start;
++	rsp->kernel_start = (unsigned long)page_address(page);
++	rsp->npage = npage;
++	atomic_set(&rsp->refcnt, 1);
++	INIT_LIST_HEAD(&rsp->list);
++	list_add(&rsp->list, &cur->shared_pages);
++
++	vma->vm_ops = &rpal_vm_ops;
++	vma->vm_private_data = rsp;
++
++	/* map to shared pages userspace */
++	ret = remap_pfn_range(vma, vma->vm_start, page_to_pfn(page), size,
++			      vma->vm_page_prot);
++	if (ret)
++		goto free_page;
++
++	cur->nr_shared_pages += npage;
++	mutex_unlock(&cur->mutex);
++
++	return 0;
++
++free_page:
++	__free_pages(page, order);
++	list_del(&rsp->list);
++free_rsp:
++	kfree(rsp);
++unlock:
++	mutex_unlock(&cur->mutex);
++out:
++	return ret;
++}
++
++struct rpal_shared_page *rpal_find_shared_page(struct rpal_service *rs,
++					       unsigned long addr)
++{
++	struct rpal_service *cur = rpal_current_service();
++	struct rpal_shared_page *rsp, *ret = NULL;
++
++	mutex_lock(&cur->mutex);
++	list_for_each_entry(rsp, &rs->shared_pages, list) {
++		if (rsp->user_start <= addr &&
++		    addr < rsp->user_start + rsp->npage * PAGE_SIZE) {
++			ret = rpal_get_shared_page(rsp);
++			break;
++		}
++	}
++	mutex_unlock(&cur->mutex);
++
++	return ret;
++}
++
++void rpal_exit_mmap(struct mm_struct *mm)
++{
++	struct rpal_service *rs = mm->rpal_rs;
++
++	if (rs) {
++		mm->rpal_rs = NULL;
++		/* all shared pages should be freed at this time */
++		WARN_ON_ONCE(rs->nr_shared_pages != 0);
++		rpal_put_service(rs);
++	}
++}
+diff --git a/arch/x86/rpal/proc.c b/arch/x86/rpal/proc.c
+index 1ced30e25c15..86947dc233d0 100644
+--- a/arch/x86/rpal/proc.c
++++ b/arch/x86/rpal/proc.c
+@@ -61,6 +61,7 @@ static long rpal_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ const struct proc_ops proc_rpal_operations = {
+ 	.proc_open = rpal_open,
+ 	.proc_ioctl = rpal_ioctl,
++	.proc_mmap = rpal_mmap,
+ };
+ 
+ static int __init proc_rpal_init(void)
+diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
+index caa4afa5a2c6..f29a046fc22f 100644
+--- a/arch/x86/rpal/service.c
++++ b/arch/x86/rpal/service.c
+@@ -173,6 +173,10 @@ struct rpal_service *rpal_register_service(void)
+ 	if (unlikely(rs->key == RPAL_INVALID_KEY))
+ 		goto key_fail;
+ 
++	mutex_init(&rs->mutex);
++	rs->nr_shared_pages = 0;
++	INIT_LIST_HEAD(&rs->shared_pages);
++
+ 	rs->bad_service = false;
+ 	rs->base = calculate_base_address(rs->id);
+ 
+diff --git a/include/linux/rpal.h b/include/linux/rpal.h
+index 3bc2a2a44265..986dfbd16fc9 100644
+--- a/include/linux/rpal.h
++++ b/include/linux/rpal.h
+@@ -110,6 +110,12 @@ struct rpal_service {
+      * Fields above should never change after initialization.
+      * Fields below may change after initialization.
+      */
++	/* Mutex for time consuming operations */
++	struct mutex mutex;
++
++	/* pinned pages */
++	int nr_shared_pages;
++	struct list_head shared_pages;
+ 
+ 	/* delayed service put work */
+ 	struct delayed_work delayed_put_work;
+@@ -135,6 +141,14 @@ struct rpal_version_info {
+ 
+ /* End */
+ 
++struct rpal_shared_page {
++	unsigned long user_start;
++	unsigned long kernel_start;
++	int npage;
++	atomic_t refcnt;
++	struct list_head list;
++};
++
+ enum rpal_command_type {
+ 	RPAL_CMD_GET_API_VERSION_AND_CAP,
+ 	RPAL_CMD_GET_SERVICE_KEY,
+@@ -196,6 +210,7 @@ struct rpal_service *rpal_get_service_by_key(u64 key);
+ void copy_rpal(struct task_struct *p);
+ void exit_rpal(bool group_dead);
+ int rpal_balloon_init(unsigned long base);
++void rpal_exit_mmap(struct mm_struct *mm);
+ 
+ extern void rpal_pick_mmap_base(struct mm_struct *mm,
+ 	struct rlimit *rlim_stack);
+diff --git a/mm/mmap.c b/mm/mmap.c
+index bd210aaf7ebd..98bb33d2091e 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -48,6 +48,7 @@
+ #include <linux/sched/mm.h>
+ #include <linux/ksm.h>
+ #include <linux/memfd.h>
++#include <linux/rpal.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/cacheflush.h>
+@@ -1319,6 +1320,9 @@ void exit_mmap(struct mm_struct *mm)
+ 	__mt_destroy(&mm->mm_mt);
+ 	mmap_write_unlock(mm);
+ 	vm_unacct_memory(nr_accounted);
++#if IS_ENABLED(CONFIG_RPAL)
++	rpal_exit_mmap(mm);
++#endif
+ }
+ 
+ /* Insert vm structure into process list sorted by address
 -- 
-Cheers,
-
-David / dhildenb
+2.20.1
 
