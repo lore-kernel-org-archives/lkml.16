@@ -1,242 +1,158 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E282750FB
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468642116F2
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748637687; cv=none; b=caTuErUm0N/tyTQcTyBCgbPexuDiughZj+91jKcMVvVHAQNEAdxWwLwBglYss4mOtuvaAiXiYc4sVABVsdksILneLpf/Ylm1p42blYLowqtDjgK1bkNz+RKnWRDC8zyZeyKLq+E429AIkK0wITrwkUzJ+IwCmeDbMHWlaR6QYL8=
+	t=1748637885; cv=none; b=C0bZPgWtFeRof7SgFq1sha9Lre8CfkttrRFaxlVU1J20SKjIJaA1f/PKbu55GfzDhs8XdmD7evz8vLLJA8nr4bdLtY6N6wqowege0Q9JBLyQEkF5QmgQSwqwSgAQ/gHmfO07rtuBie5TnyNk9lq6zpznhKcJ7TJ/LzurABle5WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748637687; c=relaxed/simple;
-	bh=Aft2BwLYQCN5CXqIQ7L9H8EmLm/8RU1dJXBxcZpGCWk=;
+	s=arc-20240116; t=1748637885; c=relaxed/simple;
+	bh=WKODy9FgXDgbxxqWIA/IwTJOy8VJdioFU2ccnli5Qqw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YtmwC7kpqEdHyZM/UoTwEv19uaYuRhpuMBHLDWQqMVa6GOLQLig8Dgd6QvuENoCNNweYlBtOigIupL0btPpTIloHd39guuvZX+VmOMtDWgpkrahZ0uUKqr5QvB1mSNdjOEPIwIzhDXV5qoybaUbPxBuyTLcfOOyGZq6ywNSJN6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bOdzoiFu; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=NDd92YVnewYhCfon9xVvW7wgg7DfSKBldcj0Th71iWTB6mqgcqzMaUiGNY75WMJAnJAglmZKONFOTRR9HHVvhdkR8ZPv7mrV3hhZs2KBdJVqiYT076hsJkgK9S7im3g1uOOdyz068L8WMk1PYb30A5yhAmUPKVEfSyhmDLHMvsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhULeYnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bOdzoiFu"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso897a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748637683; x=1749242483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UZ+fMUsaHfvo2SozDYxIz7fGRWQ2EutqwsUhlBfkD7E=;
-        b=bOdzoiFu08/L1UgkO2iwURGe7hxZG45S9GYkaSol2SvbYB+c7w6KvtFFGehBsGUuiO
-         NEWKkJsAH1Ai9iL3eAINozJn4CkSnRyfuHESoHSlmzu/UsMmPKEfrut0QA4I4E8id83g
-         jwTZUVPOt87f7vrC49Ez3+VabsoBq4WKfoUsV1qMVI91zMQjQDOAVnIwLP47k1cZaq8n
-         o/QW5O/vr7UZmdXPQ6ITDgtDIn8IJf5vbawgSoECG1fjNn1PQwkC1UYAUEE9fOdGm1he
-         CZ+vojJ18IYjDmkl3SXjOCbI3ALsBwh2IycU3+8lmc4aTp5jEMBmm8GUEPizBjZ+RrJ3
-         EsCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748637683; x=1749242483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UZ+fMUsaHfvo2SozDYxIz7fGRWQ2EutqwsUhlBfkD7E=;
-        b=XmDcCPmoaClEuaBz+kEBEOfKgv8TIrMkDQ5all5G0Me6RzfcHwY7/woY2eYznk9d+J
-         vzFnymzvhGdo9+DCLKuwb56aN0/GWXCEgiLORRMApxtmTc/jyTVjELaw0dEYAPijytFz
-         IIC5mVicwkM2za6zOnQqEa15g5WjxBCrywlJ59L4hitP4uvtuaBCe34/2tTFKEbbK6Kb
-         enB1wPOipby+cCCs7q2aFqGsOZd3qhvp2kNM8/3bmv1FUwk+/BMXnPc8sQUMQP6WqggR
-         2tW5WvXbhN7p/4VAbm1UyxQHyUsQ3XDudIQU2gnCA4bf/rPexqV4WNn6r88JgojPsyBX
-         qkHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtrW9244u5+Yjv60+8/Gn3Z6K++tTdAuqcUDXF96+q/7CWCblcHJWyDORo48E9rw4s0LhTfD+aCqZsips=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0GdKbhDfSt5q7si+VtYk3sbODJeZjjdrviuAF5K7HcfFP8SL/
-	eHe/tn/tMg4d1NwztqbR4La9r/EPiH+/Iq1Ak9ahMhxtJyrq6We8WnC1sE5JEXbDvrPimaaoLDE
-	/jgp+6Coi3hSzeqhowWxLPaVeZq+QOFFOAWJ5SCwo
-X-Gm-Gg: ASbGncszsTMMZJoWia2izmtMLk6lnyj0a5QyqkbbIjHtpmP6nmyVLG8mvo1zLp/emBS
-	6gVJW7TQkNDxPK108ITFBMySQDqbuhPdkC2eNUdtxMOH4kzTNZN5RG8t7r1HwgAJTzU9gtEhRVu
-	83TwZAEYR+QC1GICRASh64RZHVHqiCbSBdkciAR7HOGgiuXhlfP8Yw+0UKb/32/jxoIACHJ8OaK
-	rbOe6N8
-X-Google-Smtp-Source: AGHT+IHs3E34RoNhUSw7HhD+qRy8tkateGf+6/YvHLUuDqovim/6aypcRZUjMmT8/ezjQIUbyqJ6Y6U2BqHuROdtrK4=
-X-Received: by 2002:a50:d494:0:b0:600:9008:4a40 with SMTP id
- 4fb4d7f45d1cf-605adffe9ecmr23910a12.4.1748637682985; Fri, 30 May 2025
- 13:41:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhULeYnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09072C19422
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748637885;
+	bh=WKODy9FgXDgbxxqWIA/IwTJOy8VJdioFU2ccnli5Qqw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NhULeYnkFIv8cAnghglb0olb6942P2eUOgBTcSPoCqvYSI9VWlXaHDmzmvMw/d6IS
+	 sakjIhQH05D5ba2tnHyjonBdVLG8oavmTFd8X+PvrKdkMvm5nFrE7pwAMChr8Uu9Bp
+	 gEb4wUESy/jQ96iLD8+DTtUkpN0TjL+YnYPZiFxUj9EPKARF+swgKKV1aV/3XPVMMZ
+	 6u2CoLsZfiisq38mvSURbNHQKN6o6m0K9qhfJvvOpmIOboxy0BeiUiqWZ8hd877UAd
+	 FuFAgk3yU1NFKdI6WwWiwLHJr0+gkgH9ymcZA1panimkYAyweBu1GXrZBTHGAy1uNf
+	 8lTzufpS4BdzQ==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so501707066b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:44:44 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXFZmvVt9WRBKl8XDcSLvMkHijv99mEgjZVv0VRwcNwJZ8mFzULrMLZT8Sf2F/Vl+xpBWgwkq88Hr7NosA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0DMYsiVGcSUpfG68djYLbU479++01pmknQ6zp3Mwzj3qVXzRY
+	MDPaHX4aCedMOYWmRknNRixlx+2W2hbYnvX8aqdW3nyFC5wy/5P9CgXz3hVjNsOR7NG3uDcIbQu
+	ei9rs0AJKmUaSinGuUdoaz3uwiPfKlY5JQ1mxy87f
+X-Google-Smtp-Source: AGHT+IFYPjLrtRmSUw02l8acZu75ZEk31voCEunbDz/ggHhtTlCZtv6L/sdj5D+DMpzfEs9+aMo/5KET1xbavpqajeo=
+X-Received: by 2002:a17:907:3d16:b0:ad8:a935:b8f9 with SMTP id
+ a640c23a62f3a-adb36ba4a97mr335177366b.32.1748637883137; Fri, 30 May 2025
+ 13:44:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530104439.64841-1-21cnbao@gmail.com> <CAG48ez11zi-1jicHUZtLhyoNPGGVB+ROeAJCUw48bsjk4bbEkA@mail.gmail.com>
- <002aa917-d952-491d-800c-88a0476ac02f@lucifer.local>
-In-Reply-To: <002aa917-d952-491d-800c-88a0476ac02f@lucifer.local>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 30 May 2025 22:40:47 +0200
-X-Gm-Features: AX0GCFvDWkEoZpflVNcH3G_c--yr3b6OvmHSlYd_eMhXYL9WXt3wqgJDaJLq0no
-Message-ID: <CAG48ez0kb+on=erofZL2ZwB9CqtrSCJVND7K7=ww1prMUGXDRg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>, 
-	Lokesh Gidra <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com> <CAHC9VhSLOjQr4Ph2CefyEZGiB-Vqd4a8Y9=uA2YPo79Xo=Qopg@mail.gmail.com>
+In-Reply-To: <CAHC9VhSLOjQr4Ph2CefyEZGiB-Vqd4a8Y9=uA2YPo79Xo=Qopg@mail.gmail.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Fri, 30 May 2025 22:44:32 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ4W9yhET8AnwvU5hhbP8nsH12sneqzKexVs6p4C596+sA@mail.gmail.com>
+X-Gm-Features: AX0GCFtEzKd5icGNP9zMXhh3w0IjhKTZ4H9XX606OWYKl73LpaAxQPOFCdjO9vc
+Message-ID: <CACYkzJ4W9yhET8AnwvU5hhbP8nsH12sneqzKexVs6p4C596+sA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] BPF signature verification
+To: Paul Moore <paul@paul-moore.com>
+Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, jarkko@kernel.org, zeffron@riotgames.com, 
+	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
+	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
+	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 30, 2025 at 4:34=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> Barry - I was going to come back to this later, but Jann's sort of bumped
-> this in my inbox.
+On Fri, May 30, 2025 at 10:15=E2=80=AFPM Paul Moore <paul@paul-moore.com> w=
+rote:
 >
-> This implementation isn't quite what I was after, would you give me a
-> little bit before a respin so I can have a think about this and make
-> sensible suggestions?
+> On Fri, May 30, 2025 at 12:42=E2=80=AFPM KP Singh <kpsingh@kernel.org> wr=
+ote:
+> > On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
+> > <bboscaccy@linux.microsoft.com> wrote:
 >
-> Thanks!
+> ...
 >
-> On Fri, May 30, 2025 at 04:06:30PM +0200, Jann Horn wrote:
-> > On Fri, May 30, 2025 at 12:44=E2=80=AFPM Barry Song <21cnbao@gmail.com>=
- wrote:
-> > One important quirk of this is that it can, from what I can see, cause
-> > freeing of page tables (through pt_reclaim) without holding the mmap
-> > lock at all:
-> >
-> > do_madvise [behavior=3DMADV_DONTNEED]
-> >   madvise_lock
-> >     lock_vma_under_rcu
-> >   madvise_do_behavior
-> >     madvise_single_locked_vma
-> >       madvise_vma_behavior
-> >         madvise_dontneed_free
-> >           madvise_dontneed_single_vma
-> >             zap_page_range_single_batched [.reclaim_pt =3D true]
-> >               unmap_single_vma
-> >                 unmap_page_range
-> >                   zap_p4d_range
-> >                     zap_pud_range
-> >                       zap_pmd_range
-> >                         zap_pte_range
-> >                           try_get_and_clear_pmd
-> >                           free_pte
-> >
-> > This clashes with the assumption in walk_page_range_novma() that
-> > holding the mmap lock in write mode is sufficient to prevent
-> > concurrent page table freeing, so it can probably lead to page table
-> > UAF through the ptdump interface (see ptdump_walk_pgd()).
+> > Please hold off on further iterations, I am working on a series and
+> > will share these patches based on the design that was proposed.
 >
-> Hmmmmmm is this because of the series that allows page table freeing on
-> zap... I think Zi's?
+> I don't think there is any harm in Blaise continuing his work in this
+> area, especially as he seems to be making reasonable progress towards
+> a solution that satisfies everyone's needs.  Considering all of the
+> work that Blaise has already invested in this, and his continued
+> willingness to try to work with everyone in the community to converge
+> on a solution, wouldn't it be more beneficial to work with Blaise on
+> further developing/refining his patchset instead of posting a parallel
+> effort?  It's your call of course, I'm not going to tell you, or
+> anyone else, to refrain from posting patches upstream, but it seems
+> like this is a good opportunity to help foster the development of a
+> new contributor.
 
-Yeah, that was Qi Zheng's
-https://lore.kernel.org/all/92aba2b319a734913f18ba41e7d86a265f0b84e2.173330=
-5182.git.zhengqi.arch@bytedance.com/
-.
+I think Blaise's interactions leave a lot to be desired, especially as
+a new contributor with the replies being unnecessarily abrasive, which
+I am choosing to ignore.
 
-> We need to update the documentation on this then... which currently state=
-s
-> the VMA need only be stable.
->
-> I guess this is still the case except for the novma walker you mention.
->
-> Relatedly, It's worth looking at Dev's series which introduces a concerni=
-ng
-> new 'no lock at all' mode to the page table walker explicitly for novma. =
-I
-> cc'd you :) See [0].
->
-> [0]: https://lore.kernel.org/linux-mm/6a60c052-9935-489e-a38e-1b03a1a7915=
-5@lucifer.local/
-
-Yeah, I saw that you CC'ed me; at a first glance that seems relatively
-innocuous to me as long as it's only done for kernel mappings where
-all the rules are different.
+Regardless, it would be more efficient to handle the subtleties here
+if someone from the core BPF community implements this. This is why I
+volunteered myself, but I need some time to wrap up the code and send
+it on the list. Blaise can continue to send patches that don't
+incorporate the feedback, it will only delay me further.
 
 >
-> >
-> > I think before this patch can land, you'll have to introduce some new
-> > helper like:
-> >
-> > void mmap_write_lock_with_all_vmas(struct mm_struct *mm)
-> > {
-> >   mmap_write_lock(mm);
-> >   for_each_vma(vmi, vma)
-> >     vma_start_write(vma);
-> > }
-> >
-> > and use that in walk_page_range_novma() for user virtual address space
-> > walks, and update the comment in there.
->
-> What dude? No, what? Marking literally all VMAs write locked? :/
->
-> I think this could have unexpected impact no? We're basically disabling V=
-MA
-> locking when we're in novma, that seems... really silly?
-
-I mean, walk_page_range_novma() being used on user virtual address
-space is pretty much a debug-only thing, I don't think it matters if
-it has to spend time poking flags in a few thousand VMAs. I guess the
-alternative would be to say "ptdump just doesn't show entries between
-VMAs, which shouldn't exist in the first place", and change ptdump to
-do a normal walk that skips over userspace areas not covered by a VMA.
-Maybe that's cleaner.
-
-But FWIW, we already do worse than what I proposed here when
-installing MMU notifiers, with mm_take_all_locks().
-
-> > > +       else
-> > > +               __madvise_unlock(mm, madv_behavior->behavior);
-> > > +}
-> > > +
-> > >  static bool madvise_batch_tlb_flush(int behavior)
-> > >  {
-> > >         switch (behavior) {
-> > > @@ -1714,19 +1770,24 @@ static int madvise_do_behavior(struct mm_stru=
-ct *mm,
-> > >                 unsigned long start, size_t len_in,
-> > >                 struct madvise_behavior *madv_behavior)
-> > >  {
-> > > +       struct vm_area_struct *vma =3D madv_behavior->vma;
-> > >         int behavior =3D madv_behavior->behavior;
-> > > +
-> > >         struct blk_plug plug;
-> > >         unsigned long end;
-> > >         int error;
+> > > 2. Timing of Signature Check
 > > >
-> > >         if (is_memory_failure(behavior))
-> > >                 return madvise_inject_error(behavior, start, start + =
-len_in);
-> > > -       start =3D untagged_addr_remote(mm, start);
-> > > +       start =3D untagged_addr(start);
+> > > This patchset moves the signature check to a point before
+> > > security_bpf_prog_load is invoked, due to an unresolved discussion
+> > > here:
 > >
-> > Why is this okay? I see that X86's untagged_addr_remote() asserts that
-> > the mmap lock is held, which is no longer the case here with your
-> > patch, but untagged_addr() seems wrong here, since we can be operating
-> > on another process. I think especially on X86 with 5-level paging and
-> > LAM, there can probably be cases where address bits are used for part
-> > of the virtual address in one task while they need to be masked off in
-> > another task?
-> >
-> > I wonder if you'll have to refactor X86 and Risc-V first to make this
-> > work... ideally by making sure that their address tagging state
-> > updates are atomic and untagged_area_remote() works locklessly.
+> > This is fine and what I had in mind, signature verification does not
+> > need to happen in the verifier and the existing hooks are good enough.
 >
-> Yeah I don't know why we're doing this at all? This seems new unless I
-> missed it?
-
-Because untagged_addr_remote() has a mmap_assert_locked(mm) on x86 and
-reads data that is updated under the mmap lock, I think? So without
-this change you should get a lockdep splat on x86.
-
-> > (Or you could try to use something like the
-> > mmap_write_lock_with_all_vmas() I proposed above for synchronizing
-> > against untagged_addr(), first write-lock the MM and then write-lock
-> > all VMAs in it...)
+> Excellent, I'm glad we can agree on the relative placement of the
+> signature verification and the LSM hook.  Perhaps I misunderstood your
+> design idea, but I took your comment:
 >
-> This would completely eliminate the point of this patch no? The whole poi=
-nt
-> is not taking these locks... And I'm very much not in favour of
-> write-locking literally every single VMA. under any circumstances.
+> "The signature check in the verifier (during BPF_PROG_LOAD):
 
-I'm talking about doing this heavyweight locking in places like
-arch_prctl(ARCH_ENABLE_TAGGED_ADDR, ...) that can, if I understand
-correctly, essentially reconfigure the size of the virtual address
-space of a running process from 56-bit to 47-bit at the hardware level
-and cause address bits that were previously part of the virtual
-address to be ignored. READ_ONCE()/WRITE_ONCE() might do the job too,
-but then we'll have to keep in mind that two subsequent invocations of
-untagged_addr() can translate a userspace-specified virtual address
-into two different virtual addresses at the page table level.
+I meant during BPF_PROG_LOAD i.e. before the bpf_check is triggered,
+as I said this is better explained when implemented.
+
+>> trust me, friend=E2=80=9D aspect of the original design.
+
+The kernel is the TCB, both LSM and BPF are a part of the kernel and
+part of the same trust domain, LSM has sufficient information in the
+existing LSM hooks to enforce a signature policy and there is no need
+for a boolean:
+
+* If attr.signature is set, it's enforced, a new boolean does not
+convey any new information here.
+* If we specifically need auditing here, we can add an audit call in
+the signature_verification method, this can be done in a follow-up
+series.
+
+
+>
+>  verify_pkcs7_signature(prog->aux->sha, sizeof(prog->aux->sha),
+>    sig_from_bpf_attr, =E2=80=A6);"
+>
+> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmXz46=
+GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/
+>
+> ... to mean that the PKCS7 signature verification was going to happen
+> *in* the verifier, with the verifier being bpf_check().  Simply for my
+> own education, if bpf_check() and/or the bpf_check() call in
+> bpf_prog_load() is not the verifier, it would be helpful to know that,
+> and also what code is considered the be the BPF verifier.  Regardless,
+> it's a good step forward that we are all on the same page with respect
+> to the authorization of signed/unsigned BPF programs.  We still have a
+> ways to go it looks like, but we're making good progress.
+>
+> --
+> paul-moore.com
