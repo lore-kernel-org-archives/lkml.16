@@ -1,80 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95739198845;
-	Fri, 30 May 2025 15:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE01235346;
+	Fri, 30 May 2025 15:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748620582; cv=none; b=R9Vy+idWnEeUUNJusqrMvwp9n8citY3E5ZCG5G7PuLEOuL+2GPeQLoFCCbyH2d2vBk0x2OXOswCQXNfZnXzgMXCAnCd7v9hTL7MINe4upRCJCbuyxq6AcjvA4vg1Rdn/YAx5eioKVo2Od6hVt8EaWog5DDR3o0sg6SWzl14LImI=
+	t=1748620584; cv=none; b=CCbGYK58jxxMs97rCv+4eOi4JAYes226UN0Dtn/jj+aENIje6RfIEyUaq3xUiycmNeeIXG0LIPHnfJkzlFywHidmuwEk6Qet62MiP4sUkTjaHcRCbpvDuputRBtHpNCmQb66wEYyV7es418ehcV0BdlViFchlnmB3vfGLCE89yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748620582; c=relaxed/simple;
-	bh=46qdYaXfdnGmUSTdfd10vh5+aJpfEeugxFSJgWUzVd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kbo6Id49WgbH32/ytkGYyyaPb6ONP2bwbg4RGUZinEvEa15ZVS1dZh1sAcN5qVHTW05kCHnDidYthhjdIiO3HcuUAxIboKIPY+WeXMYrHeXv2xqK5qO+mFTpss3KbyVfHFPKGtBqgSMsOPmtQB7pQdzoG48rWmuu32PyvCrXDIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbncBUVI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748620584; c=relaxed/simple;
+	bh=AD0Ki6SWTzpLn8aU7fwOntIH55X1QYvwkqjUoszGwGY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KxgH3TJoh9z1uyZ4nlkzcCXdst17jw4VHV3R2GBf2ieqB65oqP+4ZTNa/+KyUpGaIKJT2Q/C5viukSX/uWzasCVU1kSHpFDZ/PqSD4+0YLtciGLLi8VOkdWYkkGmxIl8x98tISXK6CHEs/RiIX3LqKln9NVOH51SqsW003fdqWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOP/+MQU; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbncBUVI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 971A3C4CEE9;
-	Fri, 30 May 2025 15:56:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748620582;
-	bh=46qdYaXfdnGmUSTdfd10vh5+aJpfEeugxFSJgWUzVd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CbncBUVIpau3pBBVFWQnDrbREUKTE439bV41vy0htEqozNxpULTPxV2jFxopej/oZ
-	 ySDmIQJyJU7Lxt6zMBdX6IkVvNp6dAtd0P/hHEVBUqY6Y13/lzhSYZfP50Jv1rbkp9
-	 nihx0L3eSB0tTyCVOetyo1h8pxBQIhn4qlrrhmZswAFze7YEyiifV7vSBLotECA2Hv
-	 bpxLX3EGMyxiXO+rGWRC0HRYCdiElCmhslyXShB42gzlh7eQJyPSpDfTbT9e9FZL42
-	 PrQWSiBJFPoY5bddiAKhmikS5daaeY07Cz+lXNBChr6JEI7df+RnF/fLGTDuO//Dpm
-	 whV8V0S7o0/4w==
-Date: Fri, 30 May 2025 16:56:18 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" <linux-kernel@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v2 1/1] dt-bindings: timer: Add fsl,timrot.yaml
-Message-ID: <20250530-underdone-sitcom-3aee9f1ec277@spud>
-References: <20250528165351.691848-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOP/+MQU"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a361b8a664so2155137f8f.3;
+        Fri, 30 May 2025 08:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748620582; x=1749225382; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iy1tt218F4IwK8PlrWhyBFc9NYA/5PWiYpKnhTWXkAA=;
+        b=fOP/+MQUST9ZnriGBL89QDu8ZHVBAIFoUtP+gKA3JU9NWKdK/xlyb+DhGBfDzRfd5Y
+         kWfbGVxEmj8lWMI6TfTR/6KzkE//DbIfqJyJzQWdleqrTOwAsC5IGqRpHX87Jx9/WKvn
+         dqF3RB+58lbdAn1OuFsAjVsN0qgOm4vVbkd/AkInpvq7o1b7UU42ThdiZRnk9jApZ4Yr
+         5m8GEGQhdD8lPKTEgP4nqh5HuM1/hns6dh6GhwyzA4OBERXoPAzu49l7GurIUnijZyIV
+         BsO/7vWRybdlqogNXh7CxePtZ61SY2q/0GtTTrjfJvGUEvR9nq/jaDC58NOYYDcRmHXe
+         bgzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748620582; x=1749225382;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iy1tt218F4IwK8PlrWhyBFc9NYA/5PWiYpKnhTWXkAA=;
+        b=cW4bja9ZOhSYUboXICJghkj/GIxAn0yGreB/iwyqK/fyH3JTWVdETflNfXJkyDHP1T
+         si94T0YB7aoiOl7jWyt6o7V6HWQOhJafTUF51VgT1+GWmwAJAEP8IBBVX/7KMvkvj973
+         EQpDtD/+gq52WaZHd5TKaWqyDRWVV45LJlx+uHG5NnQcoTFCaWV3VK/1aIdjd6uYO1aJ
+         hsn1XUsJGT3yTfx5IbUMNBikc0jjwYhVIGQLOqeDHB03xf31JG6nftEiAVWkXBRuWKBL
+         KEMwKm32kXQ2IIc5SWZzOlJv7mNkK2inQM1N88nT/Bkf7I0eVjdniRRIDfq3DzMjDZo9
+         BXOg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/N3qEtg8yFAOOBXjcL3Yes/jGDKWq0XE/fmps/xrI+HKfCPe9U1B6xvdgDzpc3DhW2c/cMN3uiOTsED0=@vger.kernel.org, AJvYcCWGqWGi8fxgl4lKF5zRmG+GKV0M7WKK0BgCfPrxOS51jo0u5loOrHtvyLIRiyPIefcQPyWQx0Kx@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpmrxxBwJfv94fwmLt6Od59Jse4JzzIoGMUJcBSDmvsAL6AkZM
+	s8A0/Wb7jVB5LUyT8njTLtkSB8F6o02SfHQE7IqhZwKUKtAkPjnE9PtuH4GXRA==
+X-Gm-Gg: ASbGnctykGL8hStA7IJGEv0wkAJvalzCqhM+aymTtRx4JA1O7PGvcdweU928Bc5/bju
+	Gj71n6hxuRtVyDjlq/a5hHtEsQdnhOoRCdMU33dDODPkKlwLERmWKeXzlxkk+QobxM0JvxToHS1
+	VZMNoTq6t2gmsv3Li5ICDf6Py49WmiuGkps1W4EvJb8USKoO846y8OK5nt3Udqum0/C6gRC3kQU
+	Wp43Dlz7xtl2fUoNeEyEWrKhRw3iYfUUNUcU3z04/s+F6Pje2JdpaFQouIOueJ1S51Gn9/DSa9r
+	7R0JeYN4GBv1YqGIwQE8jYKt/v8aMV2Fw5yNDZWupDwzmT7yY414Ut8NcwZu79Fb/rK3TQBPlmE
+	QvOQv//CqaaHb+id7Y6kT8X0cHIlUxyNIKPVE6t0eB8CpCVJ+uVsq015/KpMb/nI=
+X-Google-Smtp-Source: AGHT+IEJDQy3UlayczvuvcXAish7JNZeKcxGj1Hbh3xGg4s4JGgnZ8HlbSdwU38Zijw+TLhv6OFlCA==
+X-Received: by 2002:a05:6000:240b:b0:3a4:f24c:d719 with SMTP id ffacd0b85a97d-3a4f7a816a9mr2841552f8f.29.1748620581395;
+        Fri, 30 May 2025 08:56:21 -0700 (PDT)
+Received: from skynet.lan (2a02-9142-4580-1200-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:1200::8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe74165sm5211620f8f.53.2025.05.30.08.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 08:56:20 -0700 (PDT)
+From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+To: jonas.gorski@gmail.com,
+	florian.fainelli@broadcom.com,
+	andrew@lunn.ch,
+	olteanv@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dgcbueu@gmail.com
+Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Subject: [PATCH] net: dsa: brcm: add legacy FCS tag
+Date: Fri, 30 May 2025 17:56:15 +0200
+Message-Id: <20250530155618.273567-1-noltari@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="STlooZGqUue+sWwC"
-Content-Disposition: inline
-In-Reply-To: <20250528165351.691848-1-Frank.Li@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The existing brcm legacy tag only works with BCM63xx switches.
+These patches add a new legacy tag for BCM5325 and BCM5365 switches, which
+require including the FCS and length.
 
---STlooZGqUue+sWwC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Álvaro Fernández Rojas (3):
+  net: dsa: tag_brcm: legacy: reorganize functions
+  net: dsa: tag_brcm: add support for legacy FCS tags
+  net: dsa: b53: support legacy FCS tags
 
-On Wed, May 28, 2025 at 12:53:50PM -0400, Frank Li wrote:
-> Add fsl,timrot.yaml for i.MX23/i.MX28 timer.
->=20
-> Also add a generic fallback compatible string "fsl,timrot" for legacy
-> devices, which have existed for over 15 years.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+ drivers/net/dsa/b53/Kconfig      |   1 +
+ drivers/net/dsa/b53/b53_common.c |   7 +-
+ include/net/dsa.h                |   2 +
+ net/dsa/Kconfig                  |   8 +++
+ net/dsa/tag_brcm.c               | 117 ++++++++++++++++++++++++-------
+ 5 files changed, 109 insertions(+), 26 deletions(-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+-- 
+2.39.5
 
---STlooZGqUue+sWwC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDnVIgAKCRB4tDGHoIJi
-0njhAP9bp9G1YnaQ2XCar8NXVTIs/sRffXHGqqJ7IVPO3IcdQAEA4jWLWiYdaYfP
-fcP0ItXIC2Gh1MVhID81vUevEuvC7wI=
-=fFke
------END PGP SIGNATURE-----
-
---STlooZGqUue+sWwC--
