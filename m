@@ -1,141 +1,200 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C460A21C19B
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:35:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC7D21C19B;
+	Fri, 30 May 2025 12:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608533; cv=none; b=EBrx5b+9yRvlHnfr+V3syNEAGv7lfdyV4Q1hHmu8UkzQM0FM9LCTBwDBATKAVGrKq4C2WM3D/C8YJg+X8eJv/r0QNrN7/NiHeqkTgkX8uvYH5ug8w7Rf7vu60y4GL+61Qk+mhr5/VGXuKMWcg53BXCguFRmkyTvSyDpXwh/iqLU=
+	t=1748608735; cv=none; b=HusD40L+Ee5uF0A3BpckfeBKBP91+Ub4XPiYXB+UsVRWhvDHXPQSBfI5GuAhjTa8hx8qlKHgB8PnoAhLk9hmz7jVuCwgUSC31lWFi63j4EhXO2qCyat5ZqRMrWwKPZolm8bjdbRJQy706mbhaphJZFuxiqBLvUitWKTutE+Eafg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608533; c=relaxed/simple;
-	bh=ssTBq1hnRKFWeYNHahYmURnTBykROGxk7IhvzIj6zSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LvSBfCtp/q4FOOaEjrXd9kKUHnkIEQ/4TmUxjjGQ0ocK/tMq5zA40+tE6uTVc3/OJ67k/JB/dqj63rWwxf5wBhYa7fSIN/3wsbAjnEyEm8SY3II6llwpRB4i2UvvwYc0lM0eFI7pntJt22ByRh978gacCnBmK6lmfmLBWnt2FYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibTYds5o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748608735; c=relaxed/simple;
+	bh=16wZIjI3rM+SR9jJf6FfDXb7wOEnVPcIjK1MwsxP91c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MmW+4MUKd2MOatKb+NrUbaq+v5P9OwFck0NLnLYt2v1iVgIp9lhQssMr+agpgqsUkyj1+BLuNyWWjChqKCRpklrGvCa1aU37u31NWHSFLWIbu2AW8RmV1hUlyHAq3HJHFfDJTyj+zhaGtbSsSQeO9C4Tut4Z5ZRvkqu/lXx1buA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m4leAmUe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibTYds5o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B697C4CEE9;
-	Fri, 30 May 2025 12:35:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m4leAmUe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F0CC4CEE9;
+	Fri, 30 May 2025 12:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608533;
-	bh=ssTBq1hnRKFWeYNHahYmURnTBykROGxk7IhvzIj6zSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ibTYds5oHy71GpvqRKYKhl7QbdfMCJ8rZgwuC+JgUtutTq9xmKUjDYyM7SpQOhnWX
-	 43/C6b5cKYALcAENNiFdXH40W3lq0R05X6JQzdFbHf/0IDVtYUnBOprYgxrmQdQB3o
-	 MSu8vJ3AswFJpY12+Ne8UFpM2jSXQTxMbHfyCTPpfBalzSJVDMi37h5QoKl0Oamh2Q
-	 fvE/QDST/ygc20cS76zL9979qO2HSttovfdRNCDOEi7X2DrYbSK119DFMFwjl2UDHi
-	 d5GrnnLG8h03RIqzKIkv8Y8UXtmaqlSfBHfwwTVG1NygFOdB5/gia6G+8yiwSxD7D9
-	 fblFqOy65X/nA==
-Date: Fri, 30 May 2025 13:35:27 +0100
-From: Will Deacon <will@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
-	anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
-	kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	david@redhat.com
-Subject: Re: [PATCH] arm64: Enable vmalloc-huge with ptdump
-Message-ID: <20250530123527.GA30463@willie-the-truck>
-References: <20250530082021.18182-1-dev.jain@arm.com>
- <d2b63b97-232e-4d2e-816b-71fd5b0ffcfa@arm.com>
- <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
- <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
+	s=k20201202; t=1748608735;
+	bh=16wZIjI3rM+SR9jJf6FfDXb7wOEnVPcIjK1MwsxP91c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=m4leAmUeZ3VJ7H45htY+KMG0Cg0L+7+8Uu7gPItHSt6WSNbUFYuAZZKOJzf6TViiN
+	 ChuDnSn3NHJMEUHqosuHeFBF6jND+PrmVKW5wpRcD/4UzMEpJHw8j0wbX3j1VPzSEJ
+	 bIw2gKr2XPJxPtrc8w1uQR8c1+v2gD5pxMiRtJ+SexeUbDcc1baZDeoav/r4HdW8qx
+	 ibbSAfq256sQEPQXqrWRDDDK8q5sjJpMm31YQ5dFSwwl3HNqscmCjzwz9KBON9RLLE
+	 GpPrFIDa+7CPXNLtNEeXzHLOM65UqPQwDY7GBeV99eM2dVJpSufaDyfqM0Qy5mfGTq
+	 ssiWrZgDAeepg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Seunghun Han <kkamagui@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	robert.moore@intel.com,
+	erik.schmauss@intel.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	devel@acpica.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.15 01/30] ACPICA: fix acpi operand cache leak in dswstate.c
+Date: Fri, 30 May 2025 08:38:23 -0400
+Message-Id: <20250530123852.2574030-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.15
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, May 30, 2025 at 12:50:40PM +0100, Ryan Roberts wrote:
-> On 30/05/2025 10:14, Dev Jain wrote:
-> > 
-> > On 30/05/25 2:10 pm, Ryan Roberts wrote:
-> >> On 30/05/2025 09:20, Dev Jain wrote:
-> >>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
-> >>> because an intermediate table may be removed, potentially causing the
-> >>> ptdump code to dereference an invalid address. We want to be able to
-> >>> analyze block vs page mappings for kernel mappings with ptdump, so to
-> >>> enable vmalloc-huge with ptdump, synchronize between page table removal in
-> >>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
-> >>> use mmap_read_lock and not write lock because we don't need to synchronize
-> >>> between two different vm_structs; two vmalloc objects running this same
-> >>> code path will point to different page tables, hence there is no race.
-> > 
-> > My "correction" from race->no problem was incorrect after all :) There will
-> > be no race too since the vm_struct object has exclusive access to whatever
-> > table it is clearing.
-> > 
-> >>>
-> >>> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> >>> ---
-> >>>   arch/arm64/include/asm/vmalloc.h | 6 ++----
-> >>>   arch/arm64/mm/mmu.c              | 7 +++++++
-> >>>   2 files changed, 9 insertions(+), 4 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
-> >>> index 38fafffe699f..28b7173d8693 100644
-> >>> --- a/arch/arm64/include/asm/vmalloc.h
-> >>> +++ b/arch/arm64/include/asm/vmalloc.h
-> >>> @@ -12,15 +12,13 @@ static inline bool arch_vmap_pud_supported(pgprot_t prot)
-> >>>       /*
-> >>>        * SW table walks can't handle removal of intermediate entries.
-> >>>        */
-> >>> -    return pud_sect_supported() &&
-> >>> -           !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
-> >>> +    return pud_sect_supported();
-> >>>   }
-> >>>     #define arch_vmap_pmd_supported arch_vmap_pmd_supported
-> >>>   static inline bool arch_vmap_pmd_supported(pgprot_t prot)
-> >>>   {
-> >>> -    /* See arch_vmap_pud_supported() */
-> >>> -    return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
-> >>> +    return true;
-> >>>   }
-> >>>     #endif
-> >>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> >>> index ea6695d53fb9..798cebd9e147 100644
-> >>> --- a/arch/arm64/mm/mmu.c
-> >>> +++ b/arch/arm64/mm/mmu.c
-> >>> @@ -1261,7 +1261,11 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
-> >>>       }
-> >>>         table = pte_offset_kernel(pmdp, addr);
-> >>> +
-> >>> +    /* Synchronize against ptdump_walk_pgd() */
-> >>> +    mmap_read_lock(&init_mm);
-> >>>       pmd_clear(pmdp);
-> >>> +    mmap_read_unlock(&init_mm);
-> >> So this works because ptdump_walk_pgd() takes the write_lock (which is mutually
-> >> exclusive with any read_lock holders) for the duration of the table walk, so it
-> >> will either consistently see the pgtables before or after this removal. It will
-> >> never disappear during the walk, correct?
-> >>
-> >> I guess there is a risk of this showing up as contention with other init_mm
-> >> write_lock holders. But I expect that pmd_free_pte_page()/pud_free_pmd_page()
-> >> are called sufficiently rarely that the risk is very small. Let's fix any perf
-> >> problem if/when we see it.
-> > 
-> > We can avoid all of that by my initial approach - to wrap the lock around
-> > CONFIG_PTDUMP_DEBUGFS.
-> > I don't have a strong opinion, just putting it out there.
-> 
-> (I wrote then failed to send earlier):
-> 
-> It's ugly though. Personally I'd prefer to keep it simple unless we have clear
-> evidence that its needed. I was just laying out my justification for not needing
-> to doing the conditional wrapping in this comment.
+From: Seunghun Han <kkamagui@gmail.com>
 
-I really don't think we should be adding unconditional locking overhead
-to core mm routines purely to facilitate a rarely used debug option.
+[ Upstream commit 156fd20a41e776bbf334bd5e45c4f78dfc90ce1c ]
 
-Instead, can we either adopt something like the RCU-like walk used by
-fast GUP or stick the locking behind a static key that's only enabled
-when a ptdump walk is in progress (a bit like how
-hugetlb_vmemmap_optimize_folio() manipulates hugetlb_optimize_vmemmap_key)?
+ACPICA commit 987a3b5cf7175916e2a4b6ea5b8e70f830dfe732
 
-Will
+I found an ACPI cache leak in ACPI early termination and boot continuing case.
+
+When early termination occurs due to malicious ACPI table, Linux kernel
+terminates ACPI function and continues to boot process. While kernel terminates
+ACPI function, kmem_cache_destroy() reports Acpi-Operand cache leak.
+
+Boot log of ACPI operand cache leak is as follows:
+>[    0.585957] ACPI: Added _OSI(Module Device)
+>[    0.587218] ACPI: Added _OSI(Processor Device)
+>[    0.588530] ACPI: Added _OSI(3.0 _SCP Extensions)
+>[    0.589790] ACPI: Added _OSI(Processor Aggregator Device)
+>[    0.591534] ACPI Error: Illegal I/O port address/length above 64K: C806E00000004002/0x2 (20170303/hwvalid-155)
+>[    0.594351] ACPI Exception: AE_LIMIT, Unable to initialize fixed events (20170303/evevent-88)
+>[    0.597858] ACPI: Unable to start the ACPI Interpreter
+>[    0.599162] ACPI Error: Could not remove SCI handler (20170303/evmisc-281)
+>[    0.601836] kmem_cache_destroy Acpi-Operand: Slab cache still has objects
+>[    0.603556] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.12.0-rc5 #26
+>[    0.605159] Hardware name: innotek gmb_h virtual_box/virtual_box, BIOS virtual_box 12/01/2006
+>[    0.609177] Call Trace:
+>[    0.610063]  ? dump_stack+0x5c/0x81
+>[    0.611118]  ? kmem_cache_destroy+0x1aa/0x1c0
+>[    0.612632]  ? acpi_sleep_proc_init+0x27/0x27
+>[    0.613906]  ? acpi_os_delete_cache+0xa/0x10
+>[    0.617986]  ? acpi_ut_delete_caches+0x3f/0x7b
+>[    0.619293]  ? acpi_terminate+0xa/0x14
+>[    0.620394]  ? acpi_init+0x2af/0x34f
+>[    0.621616]  ? __class_create+0x4c/0x80
+>[    0.623412]  ? video_setup+0x7f/0x7f
+>[    0.624585]  ? acpi_sleep_proc_init+0x27/0x27
+>[    0.625861]  ? do_one_initcall+0x4e/0x1a0
+>[    0.627513]  ? kernel_init_freeable+0x19e/0x21f
+>[    0.628972]  ? rest_init+0x80/0x80
+>[    0.630043]  ? kernel_init+0xa/0x100
+>[    0.631084]  ? ret_from_fork+0x25/0x30
+>[    0.633343] vgaarb: loaded
+>[    0.635036] EDAC MC: Ver: 3.0.0
+>[    0.638601] PCI: Probing PCI hardware
+>[    0.639833] PCI host bridge to bus 0000:00
+>[    0.641031] pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+> ... Continue to boot and log is omitted ...
+
+I analyzed this memory leak in detail and found acpi_ds_obj_stack_pop_and_
+delete() function miscalculated the top of the stack. acpi_ds_obj_stack_push()
+function uses walk_state->operand_index for start position of the top, but
+acpi_ds_obj_stack_pop_and_delete() function considers index 0 for it.
+Therefore, this causes acpi operand memory leak.
+
+This cache leak causes a security threat because an old kernel (<= 4.9) shows
+memory locations of kernel functions in stack dump. Some malicious users
+could use this information to neutralize kernel ASLR.
+
+I made a patch to fix ACPI operand cache leak.
+
+Link: https://github.com/acpica/acpica/commit/987a3b5c
+Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://patch.msgid.link/4999480.31r3eYUQgx@rjwysocki.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+
+**YES** This commit should be backported to stable kernel trees based on
+the following analysis: ## Analysis of the Commit **1. Bug Fix Nature**:
+This commit fixes a clear memory leak bug in the ACPICA subsystem. The
+issue occurs when `acpi_ds_create_operands()` encounters an error during
+operand creation and needs to clean up allocated operands. **2. Root
+Cause**: The core issue is a mismatch between how operands are pushed
+and popped from the stack: - `acpi_ds_obj_stack_push()` uses
+`walk_state->operand_index` to track the current position -
+`acpi_ds_obj_stack_pop_and_delete()` incorrectly assumes operands start
+at index 0 - This causes incomplete cleanup when errors occur, leading
+to memory leaks **3. Code Analysis**: The fix correctly addresses the
+issue by: - Tracking the original operand count (`prev_num_operands`) -
+Calculating the correct number of operands to clean up
+(`new_num_operands`) - Setting `walk_state->num_operands = i` before
+cleanup to ensure proper indexing - Restoring the original operand count
+after cleanup **4. Security Implications**: The commit message
+explicitly mentions this is a security issue - the memory leak can
+expose kernel function addresses in older kernels (â‰¤4.9), potentially
+defeating ASLR. This elevates the importance beyond a simple memory
+leak. **5. Pattern Consistency**: This follows the exact same pattern as
+other ACPICA operand cache leak fixes that were successfully backported
+(commits `97f3c0a4b057`, `2915f16bdce2`, etc.), all authored by the same
+developer addressing similar issues. **6. Stability Characteristics**: -
+**Small and contained**: Only 8 lines of actual logic changes - **Clear
+error path**: Only affects cleanup during error conditions - **No
+behavioral changes**: No impact on normal operation - **Low regression
+risk**: Only modifies error handling paths **7. Backport Suitability
+Criteria**: - âœ… Fixes important bug affecting users (memory leak) - âœ…
+Small, contained fix with minimal risk - âœ… No architectural changes - âœ…
+Addresses security concern (ASLR bypass potential) - âœ… Follows
+established patterns for ACPICA fixes - âœ… Critical kernel subsystem
+(ACPI) **8. Historical Precedent**: The similar commits in the reference
+examples (Similar Commits #1, #2, #3) all have "Backport Status: YES"
+and address nearly identical ACPICA operand cache leak issues with
+similar fixes and commit message patterns. This commit meets all
+criteria for stable tree backporting: it's an important bugfix, has
+minimal regression risk, affects a critical subsystem, and follows
+established patterns for similar fixes that were previously backported.
+
+ drivers/acpi/acpica/dsutils.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/acpi/acpica/dsutils.c b/drivers/acpi/acpica/dsutils.c
+index fb9ed5e1da89d..2bdae8a25e084 100644
+--- a/drivers/acpi/acpica/dsutils.c
++++ b/drivers/acpi/acpica/dsutils.c
+@@ -668,6 +668,8 @@ acpi_ds_create_operands(struct acpi_walk_state *walk_state,
+ 	union acpi_parse_object *arguments[ACPI_OBJ_NUM_OPERANDS];
+ 	u32 arg_count = 0;
+ 	u32 index = walk_state->num_operands;
++	u32 prev_num_operands = walk_state->num_operands;
++	u32 new_num_operands;
+ 	u32 i;
+ 
+ 	ACPI_FUNCTION_TRACE_PTR(ds_create_operands, first_arg);
+@@ -696,6 +698,7 @@ acpi_ds_create_operands(struct acpi_walk_state *walk_state,
+ 
+ 	/* Create the interpreter arguments, in reverse order */
+ 
++	new_num_operands = index;
+ 	index--;
+ 	for (i = 0; i < arg_count; i++) {
+ 		arg = arguments[index];
+@@ -720,7 +723,11 @@ acpi_ds_create_operands(struct acpi_walk_state *walk_state,
+ 	 * pop everything off of the operand stack and delete those
+ 	 * objects
+ 	 */
+-	acpi_ds_obj_stack_pop_and_delete(arg_count, walk_state);
++	walk_state->num_operands = i;
++	acpi_ds_obj_stack_pop_and_delete(new_num_operands, walk_state);
++
++	/* Restore operand count */
++	walk_state->num_operands = prev_num_operands;
+ 
+ 	ACPI_EXCEPTION((AE_INFO, status, "While creating Arg %u", index));
+ 	return_ACPI_STATUS(status);
+-- 
+2.39.5
+
