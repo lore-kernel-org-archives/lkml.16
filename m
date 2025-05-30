@@ -1,255 +1,227 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79D3B28314B
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3965925228E
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748635755; cv=none; b=QidA0+/YP7tglViLOI4fO1HIpPA5OZTADFrvi2fcbKr7nkF/G/n+7LZycjEIf432IROiy8fK+1ldIZ2+YqtgJv4MrsTXASkDLavHeZcJ0SUHP6jJ1YRw4qteNrhZobjFgoL2xNvE9x/E0DHcW47SO7xcyAvdc23pKye9ZCtxIr8=
+	t=1748635814; cv=none; b=dn7e1jQ/3HkKPKZ6ZXQoM/De0TU6impXVHrdukOlMmTYBvvyFjo0mOPsRp6/7i9kYM+tOevzsbyMHLXwmmn70qVHeTpE1MFF5CPgiuVG27xNCrTVrweX3x5wzW9r4R6cQL+qgWc3LlMB+bCXQRuWZmqWPJpftcje7r0Y/mLhDgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748635755; c=relaxed/simple;
-	bh=gxJoteEWGrJdag0p6XLmd54/gUnvxCbINpnKlHsPOBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mtK2gHVo5zQWTUkrdrhR6be4UJZjgzWonaZLcKf6U09zjtD4ZdD9vr2Pb/ndSPZ7dpHF3aj0sLxBjSFzdnDc1Kxe31J68z0X69XzIuVCrMLSGZHUNmjIPbrHXdugOL13eEUs8FPfrrFFed1NNJjCU1nHkXeoOTWwLzQM5aBXd98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZPEUiZLX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748635814; c=relaxed/simple;
+	bh=sCz7MeL/oYeoSs34ihneRltpADK2meyF+jNWc8Z6cWU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=N7J5QYqrzfUObTVX0Q2nseEVcA3JwEmuEcfEFb5en6XH63knIX3Xid+frVI/EDKHyPk24temSgGL7N3h3BpPqp8lM21YHwyi20hDWCSueAV1sSnrBsWG1TABDr8O+aLOGYnP59oc1NfS/jhq+WzegTHXCd6E/zENJlV14Rj2WsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PMrPm9wX; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZPEUiZLX"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAZYJM031473
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:09:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Lr5s1xj96hvEFSJoflxlO+2R
-	6/H8h+Vs7x/BcGRAh5w=; b=ZPEUiZLX0xEsu7cUxMGrgpsmKWPYkQKTrf6Gat7j
-	YmbnegfBHv6QaLORxcFpIpyRcT6nZ5MJoycaIyecuZpHrfEoe+VU0QOTmR4wbDBd
-	7vQPESwRM2cTMbdrIUUpwjMyorH35adtmZqSrKsWTNLN3Q8pAV3d5JLOsHuN3I2n
-	imKgrL7VgGZva380fFwysHidSFwi+UgBVtPuTeHhTUYcKk/BtI0L8GZYTXeA9UKV
-	Wf0Q17X/UKHT7S6SM2DkB7Q+IFHA9Bcm4XLBQqeo8ouDHxkm1/KE7jnrTWOVL8ju
-	BVXPwK4YDCykilNmxlcI5EUXISLc3kLCJBFLiUw6VX5OfA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vk2e2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:09:11 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caee990722so399500685a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:09:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PMrPm9wX"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742aa6581caso1929617b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748635812; x=1749240612; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kh+gaDGepzKIFDoI7schH9Ybo0vZBkZOnYUUHBSj/0=;
+        b=PMrPm9wXRX7DafBq9f4okJ8qQjEKctMUIpLFoghdTvuAnr6oGXk2bbOSq8HxEd3BSX
+         EbwRJjHNbPAsabHr9WYNJVHHmSyONI7vraMjWAGAPojKhUdtOS9tf61H7Vovv7DVPhlo
+         iCGfFkifcHvkZOAKeWjx/AUHHM5nSRJHMsfUs1hAVeQa66ZbztoTie8g4anNhXDFEL6J
+         6mPej7mcZq8C1O9dTh/+nfqoFsjAkqYtGKuPnoVry8igkn6CCFHMvV0ZDcpOMVVND/bE
+         XNwpvNANRX+DMSyJx4LMKM5QVPpkidwjtxaZbF1mm7ysj7t+QIK8HVQTDYwb4kur2W0T
+         9xFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748635750; x=1749240550;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lr5s1xj96hvEFSJoflxlO+2R6/H8h+Vs7x/BcGRAh5w=;
-        b=foFRCscJ5DPeR2FBFmmrMu+gFgy2sIlKtdWvR4LXUyEhfSD2RFqtrYrsH5SrXrZGsx
-         XxUeqLknteqF/q4VKm7T0uhMLqMxXxs4DdR3UL1E4iKYZg6cPpktsaLWDky7RKWTBxo6
-         KzL0rYO8lS3PXvJcPQMumqKrE1gurucNBqf/QJEJS5dzm1kodS2opdRYc9L0eXirUrTr
-         ijgr5jJri0fGz65Epuxu3M9YorYnjNQvdVNGglX76HfZXdEJTclW4BQ/Vq6Tw6gmn/wu
-         nsx6VnOODtjhG5QiYSxQPIa9GF3ckeTOmaGAaHAU3Iu2ZGJBuOYvAaju+R++uChd9KpX
-         4oYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNwvMJbHdQCpbxlMOa/YLN1UfS3a9ULTK5X8gW1uJC/UngIrmo9l2rFLFge3+vFD8/q9ltG8tdykYkUQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+XeHX003vrqvJd/JHxewp2VOknDJKMMMasu+T+3kru5KW4NpY
-	0LaIE6nKvcaNQ5MrihmUcoc/9kcGQGH/gfMcIxij6SicoNpP6Fn0H5X+WRLL2veIJBKu8TNx5TC
-	SAsYBOjrKyQ3SoTgOOr9GBB5alk9z7cBFKuxW4Ov4x79KjZKxnT04/0EHgw+hmx8W3es=
-X-Gm-Gg: ASbGnctHnRVnK83tB5UE9bbwvWCIdq39itNvKinMQoIxogc2HmQZjoOE9o5I97TO+hN
-	I9Ffem6PMN7W2N2nS5vQmyT+3zPL4sz3M2d+Cm5RHX7pLIEjvG+saGYQkGnS9IMlL/SlrL3nhSD
-	cL4Lt3z/mjmwrW7PGLC6/p/6kC7wixDXlsKRPzLRUlj+zFfNsuWbXCACiQbwjr3LBl9K1Y9jVbo
-	qwLNu76QnIrbwQ13mYkl7S0xJptRPI17d2jaVnqxRqWAjlxJTR7zwzUrkFghbSJ4R5B3uN2cwFg
-	um738EDitUXCaEdcVXg+4EWV2bE1+AuaEC8BKUoUoOM39jzKgvRaJ3SSg0Pmpn60lOkfdmRo6n8
-	=
-X-Received: by 2002:a05:620a:31a2:b0:7ca:dac1:a2d9 with SMTP id af79cd13be357-7d0a4c457cemr505534985a.28.1748635750271;
-        Fri, 30 May 2025 13:09:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGxr8DtUZE4WLzMYtnDXmRGwCGjTFx8RDkihvU7FdNCuG8qkr/d30/DYFr7JUuCHRCg7VWeAQ==
-X-Received: by 2002:a05:620a:31a2:b0:7ca:dac1:a2d9 with SMTP id af79cd13be357-7d0a4c457cemr505529485a.28.1748635749833;
-        Fri, 30 May 2025 13:09:09 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55337910df8sm812496e87.139.2025.05.30.13.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 13:09:08 -0700 (PDT)
-Date: Fri, 30 May 2025 23:09:05 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Mahadevan <quic_mahap@quicinc.com>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Danila Tikhonov <danila@jiaxyga.com>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, Yongxing Mou <quic_yongmou@quicinc.com>
-Subject: Re: [PATCH v2 3/5] dt-bindings: display/msm: drop
- assigned-clock-parents for dp controller
-Message-ID: <pxo635637l45rxb5fgnmopq5jbs7lp2hd736mwrqt6jfgvw75g@kmc7rqxu6oyh>
-References: <20250530-dp_mst_bindings-v2-0-f925464d32a8@oss.qualcomm.com>
- <20250530-dp_mst_bindings-v2-3-f925464d32a8@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1748635812; x=1749240612;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9kh+gaDGepzKIFDoI7schH9Ybo0vZBkZOnYUUHBSj/0=;
+        b=gBohXJ+zsEv/y9GQppmp6NiRBSBFoxXNCIRdV0IgmytnoUizsgngmQFNuw7gpbatKc
+         fiOVMj8EgHU9uaxCYuv0QTHBjEYcd7IRZxjdCWXqcyHakxNA3p+9bBRJ895JpE94XzfT
+         qcmNppCwWfx80NRG3ocsZISl90wK6qHuFjgFP5B5vD8P86Z7BxGEhZriZL9r30Oo7de9
+         lb29a3ph00OB5ciAmI5ig/W0+EROEhqeNIHkcwbjBf37U9wd1wXeCjPFHxgm5jLy5oPX
+         TyuDoIyFfEIKxrbsTY+9YtVkX1k39XVzGOf5klgo+K4CkW0bf3dmEPmsaqYP1lKf7EJc
+         YLdw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+3fotughmpuRYuG/rwx6LKscqvoQ8CBCMqxlihOw3HXrTDgjxtsxGA3EefxI8ZTeReyLVVXJBb7Of47Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVL45rewciHyfkwOHdYK0F5zSi0GEvukhTCmSjfYICZIr/hEYS
+	PkhuBXMVf3i5onQR3rDEf095KL+vqycp9njVFD6UtubRdYZmFmmzdrJpIfKnXdF1sS72E8ISnpi
+	uNZ0xe+CBXiwJaliAyw9qGoiQTg==
+X-Google-Smtp-Source: AGHT+IEENihy0JLERsyg+Y4ZI07pawEu8Q9Kn+O3sBJa0gI+9nXyHfIoB0NTCHwNarZTFZbWxcdX0N6pLApDjLeLOQ==
+X-Received: from pfbih20.prod.google.com ([2002:a05:6a00:8c14:b0:73c:29d8:b795])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:8d2:b0:736:6ecd:8e34 with SMTP id d2e1a72fcca58-747c1c3da28mr5099597b3a.18.1748635812216;
+ Fri, 30 May 2025 13:10:12 -0700 (PDT)
+Date: Fri, 30 May 2025 13:10:11 -0700
+In-Reply-To: <b66c38ba-ca16-44c5-b498-7c8eb533d805@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530-dp_mst_bindings-v2-3-f925464d32a8@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=683a1067 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=MHIm7bi-knHlpQ7IpJwA:9
- a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Ts6bmv_qhDDAZsEwhfWOHfh213ftyey3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDE4MCBTYWx0ZWRfX+UE56WcRq4GZ
- FsrIfiuepgHfyXjAuTk6rEADl4YXYij7veAmBteMPQfkGpUM9ck4+7m0fbHO4QdStpOLDgNf8qC
- hBXCOthyezadlmBsvlib9d68XJAiXsBfsbHQ2G9Wri2z28MyKlfCAe2rWOf6TlhVkWuNCcrKZ8+
- l1E0VG88jBC0v7ALPVCUrs8kIOUzJCD9Ys9W9Cmu+wD9st7f2JOExQOw1n6kStzrplub1Cg43TB
- B1eFkRZUHQeG2xGgyU90ZU9sYMDZwFOZ/cv6EuiqcLsr1czjXIOxbAfScZzB784fgPiRA7bejXR
- pW/2/HMTc/rcpkOAiOnLV0d8FvJuNBscVweC1FpEWdLHs8jguKfqxJX5LWwFhPPhvsd1KG2RkRf
- mEhfDVn1P+YLPttlK/nUkRNydO/CGc6y+8dheqZRWhRNgOoeuli+a4opCkXsxNSCb9Jf4oIb
-X-Proofpoint-GUID: Ts6bmv_qhDDAZsEwhfWOHfh213ftyey3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_09,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=867 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505300180
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <b66c38ba-ca16-44c5-b498-7c8eb533d805@linux.intel.com>
+Message-ID: <diqzsekl6esc.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+From: Ackerley Tng <ackerleytng@google.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com, 
+	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
+	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
+	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
+	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
+	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
+	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
+	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
+	zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 30, 2025 at 10:47:26AM -0700, Jessica Zhang wrote:
-> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> 
-> Current documentation of assigned-clock-parents for dp controller does not
-> describe its functionality correctly making it harder to extend it for
-> adding multiple streams.
-> 
-> Instead of fixing up the documentation, drop the assigned-clock-parents
-> along with the usages in the chipset specific MDSS yaml files.
+Binbin Wu <binbin.wu@linux.intel.com> writes:
 
-Don't we need to drop assigned-clocks too? One doesn't really make sense
-without another.
+> On 5/15/2025 7:41 AM, Ackerley Tng wrote:
+>
+> [...]
+>> +
+>> +static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
+>> +				  size_t nr_pages, bool shared,
+>> +				  pgoff_t *error_index)
+>> +{
+>> +	struct conversion_work *work, *tmp, *rollback_stop_item;
+>> +	LIST_HEAD(work_list);
+>> +	struct inode *inode;
+>> +	enum shareability m;
+>> +	int ret;
+>> +
+>> +	inode = file_inode(file);
+>> +
+>> +	filemap_invalidate_lock(inode->i_mapping);
+>> +
+>> +	m = shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
+>> +	ret = kvm_gmem_convert_compute_work(inode, start, nr_pages, m, &work_list);
+>> +	if (ret || list_empty(&work_list))
+>> +		goto out;
+>> +
+>> +	list_for_each_entry(work, &work_list, list)
+>> +		kvm_gmem_convert_invalidate_begin(inode, work);
+>> +
+>> +	list_for_each_entry(work, &work_list, list) {
+>> +		ret = kvm_gmem_convert_should_proceed(inode, work, shared,
+>> +						      error_index);
+>
+> Since kvm_gmem_invalidate_begin() begins to handle shared memory,
+> kvm_gmem_convert_invalidate_begin() will zap the table.
+> The shared mapping could be zapped in kvm_gmem_convert_invalidate_begin() even
+> when kvm_gmem_convert_should_proceed() returns error.
+> The sequence is a bit confusing to me, at least in this patch so far.
+>
 
-> 
-> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/display/msm/dp-controller.yaml   | 7 -------
->  .../devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml         | 1 -
->  .../devicetree/bindings/display/msm/qcom,sar2130p-mdss.yaml        | 2 --
->  .../devicetree/bindings/display/msm/qcom,sc7180-mdss.yaml          | 1 -
->  .../devicetree/bindings/display/msm/qcom,sc7280-mdss.yaml          | 2 --
->  .../devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml          | 2 --
->  6 files changed, 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> index 46a50ca4a986..a63efd8de42c 100644
-> --- a/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/dp-controller.yaml
-> @@ -74,11 +74,6 @@ properties:
->        - description: link clock source
->        - description: pixel clock source
->  
-> -  assigned-clock-parents:
-> -    items:
-> -      - description: phy 0 parent
-> -      - description: phy 1 parent
-> -
->    phys:
->      maxItems: 1
->  
-> @@ -208,8 +203,6 @@ examples:
->          assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
->                            <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
->  
-> -        assigned-clock-parents = <&dp_phy 0>, <&dp_phy 1>;
-> -
->          phys = <&dp_phy>;
->          phy-names = "dp";
->  
-> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
-> index 1053b3bc4908..951e446dc828 100644
-> --- a/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sa8775p-mdss.yaml
-> @@ -393,7 +393,6 @@ examples:
->  
->              assigned-clocks = <&dispcc_mdss_dptx0_link_clk_src>,
->                                <&dispcc_mdss_dptx0_pixel0_clk_src>;
-> -            assigned-clock-parents = <&mdss0_dp0_phy 0>, <&mdss0_dp0_phy 1>;
->  
->              phys = <&mdss0_dp0_phy>;
->              phy-names = "dp";
-> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sar2130p-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sar2130p-mdss.yaml
-> index 870144b53cec..a1f5a6bd328e 100644
-> --- a/Documentation/devicetree/bindings/display/msm/qcom,sar2130p-mdss.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sar2130p-mdss.yaml
-> @@ -216,8 +216,6 @@ examples:
->  
->              assigned-clocks = <&dispcc_disp_cc_mdss_dptx0_link_clk_src>,
->                                <&dispcc_disp_cc_mdss_dptx0_pixel0_clk_src>;
-> -            assigned-clock-parents = <&usb_dp_qmpphy_QMP_USB43DP_DP_LINK_CLK>,
-> -                                     <&usb_dp_qmpphy_QMP_USB43DP_DP_VCO_DIV_CLK>;
->  
->              phys = <&usb_dp_qmpphy QMP_USB43DP_DP_PHY>;
->              phy-names = "dp";
-> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sc7180-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sc7180-mdss.yaml
-> index 7a0555b15ddf..f737a8481acb 100644
-> --- a/Documentation/devicetree/bindings/display/msm/qcom,sc7180-mdss.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sc7180-mdss.yaml
-> @@ -269,7 +269,6 @@ examples:
->                            "ctrl_link_iface", "stream_pixel";
->              assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
->                                <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> -            assigned-clock-parents = <&dp_phy 0>, <&dp_phy 1>;
->              phys = <&dp_phy>;
->              phy-names = "dp";
->  
-> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sc7280-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sc7280-mdss.yaml
-> index 2947f27e0585..7842ef274258 100644
-> --- a/Documentation/devicetree/bindings/display/msm/qcom,sc7280-mdss.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sc7280-mdss.yaml
-> @@ -298,7 +298,6 @@ examples:
->                            "stream_pixel";
->              assigned-clocks = <&dispcc DISP_CC_MDSS_EDP_LINK_CLK_SRC>,
->                                <&dispcc DISP_CC_MDSS_EDP_PIXEL_CLK_SRC>;
-> -            assigned-clock-parents = <&mdss_edp_phy 0>, <&mdss_edp_phy 1>;
->  
->              phys = <&mdss_edp_phy>;
->              phy-names = "dp";
-> @@ -389,7 +388,6 @@ examples:
->                            "stream_pixel";
->              assigned-clocks = <&dispcc DISP_CC_MDSS_DP_LINK_CLK_SRC>,
->                                <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-> -            assigned-clock-parents = <&dp_phy 0>, <&dp_phy 1>;
->              phys = <&dp_phy>;
->              phy-names = "dp";
->  
-> diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
-> index 13c5d5ffabde..3cea87def9f8 100644
-> --- a/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
-> +++ b/Documentation/devicetree/bindings/display/msm/qcom,sm7150-mdss.yaml
-> @@ -401,8 +401,6 @@ examples:
->  
->              assigned-clocks = <&dispcc_mdss_dp_link_clk_src>,
->                                <&dispcc_mdss_dp_pixel_clk_src>;
-> -            assigned-clock-parents = <&dp_phy 0>,
-> -                                     <&dp_phy 1>;
->  
->              operating-points-v2 = <&dp_opp_table>;
->              power-domains = <&rpmhpd RPMHPD_CX>;
-> 
-> -- 
-> 2.49.0
-> 
+It is true that zapping of pages from the guest page table will happen
+before we figure out whether conversion is allowed.
 
--- 
-With best wishes
-Dmitry
+For a shared-to-private conversion, we will definitely unmap from the
+host before checking if conversion is allowed, and there's no choice
+there since conversion is allowed if there are no unexpected refcounts,
+and the way to eliminate expected refcounts is to unmap from the host.
+
+Since we're unmapping before checking if conversion is allowed, I
+thought it would be fine to also zap from guest page tables before
+checking if conversion is allowed.
+
+Conversion is not meant to happen very regularly, and even if it is
+unmapped or zapped, the next access will fault in the page anyway, so
+there is a performance but not a functionality impact.
+
+Hope that helps. Is it still odd to zap before checking if conversion
+should proceed?
+
+>> +		if (ret)
+>> +			goto invalidate_end;
+>> +	}
+>> +
+>> +	list_for_each_entry(work, &work_list, list) {
+>> +		rollback_stop_item = work;
+>> +		ret = kvm_gmem_shareability_apply(inode, work, m);
+>> +		if (ret)
+>> +			break;
+>> +	}
+>> +
+>> +	if (ret) {
+>> +		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
+>> +		list_for_each_entry(work, &work_list, list) {
+>> +			if (work == rollback_stop_item)
+>> +				break;
+>> +
+>> +			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
+>> +		}
+>> +	}
+>> +
+>> +invalidate_end:
+>> +	list_for_each_entry(work, &work_list, list)
+>> +		kvm_gmem_convert_invalidate_end(inode, work);
+>> +out:
+>> +	filemap_invalidate_unlock(inode->i_mapping);
+>> +
+>> +	list_for_each_entry_safe(work, tmp, &work_list, list) {
+>> +		list_del(&work->list);
+>> +		kfree(work);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+> [...]
+>> @@ -186,15 +490,26 @@ static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
+>>   	unsigned long index;
+>>   
+>>   	xa_for_each_range(&gmem->bindings, index, slot, start, end - 1) {
+>> +		enum kvm_gfn_range_filter filter;
+>>   		pgoff_t pgoff = slot->gmem.pgoff;
+>>   
+>> +		filter = KVM_FILTER_PRIVATE;
+>> +		if (kvm_gmem_memslot_supports_shared(slot)) {
+>> +			/*
+>> +			 * Unmapping would also cause invalidation, but cannot
+>> +			 * rely on mmu_notifiers to do invalidation via
+>> +			 * unmapping, since memory may not be mapped to
+>> +			 * userspace.
+>> +			 */
+>> +			filter |= KVM_FILTER_SHARED;
+>> +		}
+>> +
+>>   		struct kvm_gfn_range gfn_range = {
+>>   			.start = slot->base_gfn + max(pgoff, start) - pgoff,
+>>   			.end = slot->base_gfn + min(pgoff + slot->npages, end) - pgoff,
+>>   			.slot = slot,
+>>   			.may_block = true,
+>> -			/* guest memfd is relevant to only private mappings. */
+>> -			.attr_filter = KVM_FILTER_PRIVATE,
+>> +			.attr_filter = filter,
+>>   		};
+>>   
+>>   		if (!found_memslot) {
+>> @@ -484,11 +799,49 @@ EXPORT_SYMBOL_GPL(kvm_gmem_memslot_supports_shared);
+>>   #define kvm_gmem_mmap NULL
+>>   #endif /* CONFIG_KVM_GMEM_SHARED_MEM */
+>>   
+> [...]
