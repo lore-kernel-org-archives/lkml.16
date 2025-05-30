@@ -1,164 +1,231 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474109475;
-	Fri, 30 May 2025 01:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C7C078F59;
+	Fri, 30 May 2025 01:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748568009; cv=none; b=ttAcxmGSI+nHPhM2ZDWZM++basjPUPN+H2X7/J/O0zlsTXgqdz+C9lnUj8ixaa8F2QSN7TPbnOLTpfcivHFnuy3Un+eiIwnkOKyZz3/DxVSDCpGpRtif0KhvFQDXA+5vMh3pGBRqfazti8n3dXbCQQvTD7pPJ0hIrKHwq4ZdRh8=
+	t=1748568133; cv=none; b=GvcoEKWzIkdnVmwAPUcYw3/ioxJQEnGi3ppzvLf/DXY24V3WA1R3vhbG37DSCFor7dGDGwoza9Y55HjHt1TYGUMBCqpvwA+co4XouocNlriTvBL7Av/uf+XhWGdRHycsgPZO/1vUmYdXKxRrpc7n4bB+RYp33XrudMywnTEKc5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748568009; c=relaxed/simple;
-	bh=Y8SThuf6xuBG1JxYeUiYYoTvwrrlE43YOnDfoVgrLas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aR4rh2VIwg1C1RLbGV2/Zvp9dA+S6SttWXRtuqwqKUgE1mqLebSezmuuZboJKhqQL/u3rVxv0VlgUvywsQ228APNWCD/shcW3LS5/G1PM550MET3i6cxcz9MBJZpwDlqiEnI52F6lX+egTTw6Qj1df8lRh0wpeQRvPjWSNxTZYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4b7lgP21PHzCth4;
-	Fri, 30 May 2025 09:16:17 +0800 (CST)
-Received: from kwepemf200016.china.huawei.com (unknown [7.202.181.9])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34DC81402CC;
-	Fri, 30 May 2025 09:20:03 +0800 (CST)
-Received: from [10.108.234.194] (10.108.234.194) by
- kwepemf200016.china.huawei.com (7.202.181.9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 30 May 2025 09:20:02 +0800
-Message-ID: <09201af5-f94c-482f-a271-f2eac322c1a2@huawei.com>
-Date: Fri, 30 May 2025 09:20:01 +0800
+	s=arc-20240116; t=1748568133; c=relaxed/simple;
+	bh=cPZgUdjIWra0PdLQpoq1G4ikubdy55BGyBeN7H0ghQc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NGgcm+Y/UsTtcoj0zO+tDRD8PDK3hGT51wfgeT9CBNrF+orZf6rWJjIQG7d9y80g94Us0XbGjjE5I4pO0Arrq8d6Cyp+soi4z6s+gqMEJCncPyEDOZi9MihQWqRtkXxBkL4khyrK3ckCFlzq+CoSLpgFzOdLh3Tk1nnJMjxaQ2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 7aeb099a3cf411f0b29709d653e92f7d-20250530
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:61bc4a82-4730-41a2-ae0f-7d2ed25cec8c,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:5
+X-CID-INFO: VERSION:1.1.45,REQID:61bc4a82-4730-41a2-ae0f-7d2ed25cec8c,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:5
+X-CID-META: VersionHash:6493067,CLOUDID:7101c88277929fe5165bb6c834cba4f3,BulkI
+	D:250529133829GCJDP53I,BulkQuantity:1,Recheck:0,SF:17|19|24|43|64|66|74|78
+	|80|81|82|83|100|101|102|841,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:99|1,Fil
+	e:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DK
+	R:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULS
+X-UUID: 7aeb099a3cf411f0b29709d653e92f7d-20250530
+X-User: jianghaoran@kylinos.cn
+Received: from [192.168.31.67] [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1991867234; Fri, 30 May 2025 09:21:58 +0800
+Message-ID: <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+Subject: =?gb2312?Q?=BB=D8=B8=B4=A3=BA=5BPATCH=5D?= LoongArch: BPF: Optimize
+ the calculation method of jmp_offset in the emit_bpf_tail_call function
+From: jianghaoran <jianghaoran@kylinos.cn>
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel@xen0n.name, chenhuacai@kernel.org, 
+ yangtiezhu@loongson.cn, haoluo@google.com, jolsa@kernel.org,
+ sdf@fomichev.me,  kpsingh@kernel.org, john.fastabend@gmail.com,
+ yonghong.song@linux.dev,  song@kernel.org, eddyz87@gmail.com,
+ martin.lau@linux.dev, andrii@kernel.org,  daniel@iogearbox.net
+Date: Fri, 30 May 2025 09:21:54 +0800
+In-Reply-To: <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com>
+References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
+	 <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2kord0k2.4.25.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] hfsplus: remove mutex_lock check in
- hfsplus_free_extents
-To: Yangtao Li <frank.li@vivo.com>, <slava@dubeyko.com>,
-	<glaubitz@physik.fu-berlin.de>, Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com>
-References: <20250529061807.2213498-1-frank.li@vivo.com>
- <7fd48db1-949a-46d9-ad73-a3cf5c95796e@huawei.com>
- <e90474a7-a84c-4585-a4f3-120b783ee0a8@vivo.com>
-Content-Language: en-US
-From: "wangjianjian (C)" <wangjianjian3@huawei.com>
-In-Reply-To: <e90474a7-a84c-4585-a4f3-120b783ee0a8@vivo.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemf200016.china.huawei.com (7.202.181.9)
 
-On 2025/5/29 18:46, Yangtao Li wrote:
-> Hi,
+
+
+
+
+在 2025-05-29星期四的 10:02 +0800，Hengqi Chen写道：
+> Hi Haoran,
 > 
-> 在 2025/5/29 18:34, wangjianjian (C) 写道:
->> [You don't often get email from wangjianjian3@huawei.com. Learn why 
->> this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>
->> On 2025/5/29 14:18, Yangtao Li wrote:
->>> Syzbot reported an issue in hfsplus filesystem:
->>>
->>> ------------[ cut here ]------------
->>> WARNING: CPU: 0 PID: 4400 at fs/hfsplus/extents.c:346
->>>       hfsplus_free_extents+0x700/0xad0
->>> Call Trace:
->>> <TASK>
->>> hfsplus_file_truncate+0x768/0xbb0 fs/hfsplus/extents.c:606
->>> hfsplus_write_begin+0xc2/0xd0 fs/hfsplus/inode.c:56
->>> cont_expand_zero fs/buffer.c:2383 [inline]
->>> cont_write_begin+0x2cf/0x860 fs/buffer.c:2446
->>> hfsplus_write_begin+0x86/0xd0 fs/hfsplus/inode.c:52
->>> generic_cont_expand_simple+0x151/0x250 fs/buffer.c:2347
->>> hfsplus_setattr+0x168/0x280 fs/hfsplus/inode.c:263
->>> notify_change+0xe38/0x10f0 fs/attr.c:420
->>> do_truncate+0x1fb/0x2e0 fs/open.c:65
->>> do_sys_ftruncate+0x2eb/0x380 fs/open.c:193
->>> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
->>> do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80
->>> entry_SYSCALL_64_after_hwframe+0x63/0xcd
->>>
->>> To avoid deadlock, Commit 31651c607151 ("hfsplus: avoid deadlock
->>> on file truncation") unlock extree before hfsplus_free_extents(),
->>> and add check wheather extree is locked in hfsplus_free_extents().
->>>
->>> However, when operations such as hfsplus_file_release,
->>> hfsplus_setattr, hfsplus_unlink, and hfsplus_get_block are executed
->>> concurrently in different files, it is very likely to trigger the
->>> WARN_ON, which will lead syzbot and xfstest to consider it as an
->>> abnormality.
->>>
->>> The comment above this warning also describes one of the easy
->>> triggering situations, which can easily trigger and cause
->>> xfstest&syzbot to report errors.
->>>
->>> [task A]                      [task B]
->>> ->hfsplus_file_release
->>>    ->hfsplus_file_truncate
->>>      ->hfs_find_init
->>>        ->mutex_lock
->>>      ->mutex_unlock
->>>                               ->hfsplus_write_begin
->>>                                 ->hfsplus_get_block
->>>                                   ->hfsplus_file_extend
->>>                                     ->hfsplus_ext_read_extent
->>>                                       ->hfs_find_init
->>>                                         ->mutex_lock
->>>      ->hfsplus_free_extents
->>>        WARN_ON(mutex_is_locked) !!!
->> I am not familiar with hfsplus, but hfsplus_file_release calls
->> hfsplus_file_truncate with inode lock, and hfsplus_write_begin can be
->> called from hfsplus_file_truncate and buffer write, which should also
->> grab inode lock, so that I think task B should be writeback process,
->> which call hfsplus_get_block.
+> On Wed, May 28, 2025 at 6:40 PM Haoran Jiang <
+> jianghaoran@kylinos.cn
+> > wrote:
+> > For a ebpf subprog JIT，the last call bpf_int_jit_compile
+> > function will
+> > directly enter the skip_init_ctx process. At this point,
+> > out_offset = -1,
+> > the jmp_offset in emit_bpf_tail_call is calculated
+> > by #define jmp_offset (out_offset - (cur_offset)) is a negative
+> > number,
+> > which does not meet expectations.The final generated assembly
+> > as follow.
+> > 
+> > 54:     bgeu            $a2, $t1, -8        # 0x0000004c
+> > 58:     addi.d          $a6, $s5, -1
+> > 5c:     bltz            $a6, -16            # 0x0000004c
+> > 60:     alsl.d          $t2, $a2, $a1, 0x3
+> > 64:     ld.d            $t2, $t2, 264
+> > 68:     beq             $t2, $zero, -28     # 0x0000004c
+> > 
+> > Before apply this patch, the follow test case will reveal soft
+> > lock issues.
+> > 
+> > cd tools/testing/selftests/bpf/
+> > ./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
+> > 
+> > dmesg:
+> > watchdog: BUG: soft lockup - CPU#2 stuck for 26s!
+> > [test_progs:25056]
+> > 
 > 
-> Did you read the commit log carefully? I mentioned different files.
+> This is a known issue. Does this change pass all tailcall tests ?
+> If not, please refer to the tailcall hierarchy patchset([1]).
+> We should address it once and for all. Thanks.
 > 
-sorry, didn't not notice that.
->>
->> And ->opencnt seems serves as something like link count of other fs, may
->> be we can move hfsplus_file_truncate to hfsplus_evict_inode, which can
->> only be called when all users of this inode disappear and writeback
->> process should also finished for this inode.
->>>
->>> Several threads could try to lock the shared extents tree.
->>> And warning can be triggered in one thread when another thread
->>> has locked the tree. This is the wrong behavior of the code and
->>> we need to remove the warning.
->>>
->>> Fixes: 31651c607151f ("hfsplus: avoid deadlock on file truncation")
->>> Reported-by: syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com
->>> Closes: https://apc01.safelinks.protection.outlook.com/? 
->>> url=https%3A%2F%2Flore.kernel.org%2Fall%2F00000000000057fa4605ef101c4c%40google.com%2F&data=05%7C02%7Cfrank.li%40vivo.com%7C54c2b4030d4c4a98c6c908dd9e9c71b1%7C923e42dc48d54cbeb5821a797a6412ed%7C0%7C0%7C638841116945048579%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=4snXozMFZN%2FsmsL9CP5VJb4mf2p0ReNhQIEuA%2B3tD3A%3D&reserved=0
->>> Signed-off-by: Yangtao Li <frank.li@vivo.com>
->>> ---
->>>   fs/hfsplus/extents.c | 3 ---
->>>   1 file changed, 3 deletions(-)
->>>
->>> diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
->>> index a6d61685ae79..b1699b3c246a 100644
->>> --- a/fs/hfsplus/extents.c
->>> +++ b/fs/hfsplus/extents.c
->>> @@ -342,9 +342,6 @@ static int hfsplus_free_extents(struct 
->>> super_block *sb,
->>>       int i;
->>>       int err = 0;
->>>
->>> -     /* Mapping the allocation file may lock the extent tree */
->>> -     WARN_ON(mutex_is_locked(&HFSPLUS_SB(sb)->ext_tree->tree_lock));
->>> -
->>>       hfsplus_dump_extent(extent);
->>>       for (i = 0; i < 8; extent++, i++) {
->>>               count = be32_to_cpu(extent->block_count);
->> -- 
->> Regards
->>
+>   [1]: 
+> https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.com/
 > 
-> Thx,
-> Yangtao
-> 
--- 
-Regards
+> Thanks,I'll keep looking into these patches.
+> > Signed-off-by: Haoran Jiang <
+> > jianghaoran@kylinos.cn
+> > >
+> > ---
+> >  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+> >  1 file changed, 9 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/arch/loongarch/net/bpf_jit.c
+> > b/arch/loongarch/net/bpf_jit.c
+> > index fa1500d4aa3e..d85490e7de89 100644
+> > --- a/arch/loongarch/net/bpf_jit.c
+> > +++ b/arch/loongarch/net/bpf_jit.c
+> > @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+> >         return true;
+> >  }
+> > 
+> > -/* initialized on the first pass of build_body() */
+> > -static int out_offset = -1;
+> > -static int emit_bpf_tail_call(struct jit_ctx *ctx)
+> > +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
+> >  {
+> >         int off;
+> >         u8 tcc = tail_call_reg(ctx);
+> > @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct
+> > jit_ctx *ctx)
+> >         u8 t2 = LOONGARCH_GPR_T2;
+> >         u8 t3 = LOONGARCH_GPR_T3;
+> >         const int idx0 = ctx->idx;
+> > -
+> > -#define cur_offset (ctx->idx - idx0)
+> > -#define jmp_offset (out_offset - (cur_offset))
+> > +       int tc_ninsn = 0;
+> > +       int jmp_offset = 0;
+> > 
+> >         /*
+> >          * a0: &ctx
+> > @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct
+> > jit_ctx *ctx)
+> >          * if (index >= array->map.max_entries)
+> >          *       goto out;
+> >          */
+> > +       tc_ninsn = insn ? ctx->offset[insn+1] - ctx-
+> > >offset[insn] :
+> > +               ctx->offset[0];
+> >         off = offsetof(struct bpf_array, map.max_entries);
+> >         emit_insn(ctx, ldwu, t1, a1, off);
+> > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> >         /* bgeu $a2, $t1, jmp_offset */
+> >         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset)
+> > < 0)
+> >                 goto toofar;
+> > @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct
+> > jit_ctx *ctx)
+> >          *       goto out;
+> >          */
+> >         emit_insn(ctx, addid, REG_TCC, tcc, -1);
+> > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> >         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC,
+> > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> >                 goto toofar;
+> > 
+> > @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct
+> > jit_ctx *ctx)
+> >         emit_insn(ctx, alsld, t2, a2, a1, 2);
+> >         off = offsetof(struct bpf_array, ptrs);
+> >         emit_insn(ctx, ldd, t2, t2, off);
+> > +       jmp_offset = tc_ninsn - (ctx->idx - idx0);
+> >         /* beq $t2, $zero, jmp_offset */
+> >         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2,
+> > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> >                 goto toofar;
+> > @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct
+> > jit_ctx *ctx)
+> >         emit_insn(ctx, ldd, t3, t2, off);
+> >         __build_epilogue(ctx, true);
+> > 
+> > -       /* out: */
+> > -       if (out_offset == -1)
+> > -               out_offset = cur_offset;
+> > -       if (cur_offset != out_offset) {
+> > -               pr_err_once("tail_call out_offset = %d,
+> > expected %d!\n",
+> > -                           cur_offset, out_offset);
+> > -               return -1;
+> > -       }
+> > -
+> >         return 0;
+> > 
+> >  toofar:
+> >         pr_info_once("tail_call: jump too far\n");
+> >         return -1;
+> > -#undef cur_offset
+> > -#undef jmp_offset
+> >  }
+> > 
+> >  static void emit_atomic(const struct bpf_insn *insn, struct
+> > jit_ctx *ctx)
+> > @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn
+> > *insn, struct jit_ctx *ctx, bool ext
+> >         /* tail call */
+> >         case BPF_JMP | BPF_TAIL_CALL:
+> >                 mark_tail_call(ctx);
+> > -               if (emit_bpf_tail_call(ctx) < 0)
+> > +               if (emit_bpf_tail_call(i, ctx) < 0)
+> >                         return -EINVAL;
+> >                 break;
+> > 
+> > @@ -1342,7 +1333,6 @@ struct bpf_prog
+> > *bpf_int_jit_compile(struct bpf_prog *prog)
+> >         if (tmp_blinded)
+> >                 bpf_jit_prog_release_other(prog, prog ==
+> > orig_prog ? tmp : orig_prog);
+> > 
+> > -       out_offset = -1;
+> > 
+> >         return prog;
+> > 
+> > --
+> > 2.43.0
+> > 
 
