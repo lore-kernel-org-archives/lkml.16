@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4CD7260A;
-	Fri, 30 May 2025 17:28:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71492367BB;
+	Fri, 30 May 2025 17:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748626084; cv=none; b=ejgAdd51ISnFEqJVgFuNQoSaH7AGhrSvcpGfbRBohZgYKxxBbJ/z89TPf2svDE658lWfXuWzh2osvnFodxN20B0ILOVwyYFC3pVihjcOYzMCMIQJC/YY/kiPeavWY6Iwqgchm1NridA44zPqD2tSM5LOgrA+gMQYzP1NphIiWVQ=
+	t=1748626088; cv=none; b=tiZsqNEM6RAqWB062QY3rsV9uz31D6QzxgcCFX7R4uytjpFS7tuUBv9wRrY6Q3CGiBspKPfcLPy0Pn41YuFWQZWYJEV7gxK+nNvc+d7xK3I43N8Mi0zBbuDPvLtcJC792XO72gRUe8LLUzbY++vSGE+v9gQeyc1qoIAvnkRYVNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748626084; c=relaxed/simple;
-	bh=WGCGD2OqK9sBpY96Mk+kaGilLcEFW9efg2e/lsJqlYY=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=eQ2ZpWnQAGBqoI8yM3KNZXF0y7V4MTfpaYQ4Ae3LMJEBHFGuZMpwvYWpckNUtKa5pAhwOEiaYOJoeXvd0BRKzgJSerH4+yPrI4XpmcK0JGsLG6ajfTIfUqkNr8sj0sNmNdt2m12psYzHy7RkslPvEToPPfjBhGXIXGcysVEOaeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPv86XE/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748626088; c=relaxed/simple;
+	bh=891xPZzJ0ARZuycB7Zn/UG369MrZJDw02j40JvIXjiE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VfgWuaGR4A6jZjTVbASApQTnoCRGOaunJnnIU6gOMUxKt97fs5ZTK7h5lCyiWb137ZZwnxuYo3vhszdpC7aS2tzHCs0xMj9uvffqygmb1PXIQOqFtlkhkpuB1XpR5iVVHAB/ayY93b3BBDGX9NDUR/nvO2jfQj+WztnEaWGgS6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWsOX/yf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPv86XE/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAD65C4CEE9;
-	Fri, 30 May 2025 17:28:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWsOX/yf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F3CC4CEE9;
+	Fri, 30 May 2025 17:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748626083;
-	bh=WGCGD2OqK9sBpY96Mk+kaGilLcEFW9efg2e/lsJqlYY=;
+	s=k20201202; t=1748626088;
+	bh=891xPZzJ0ARZuycB7Zn/UG369MrZJDw02j40JvIXjiE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=TPv86XE/kFgpgZ9pSbIUJ4N8ZLv4A2Qz653NV8ZdTuAf8nUnq/AnbGrtRtINje6SR
-	 i305MqumJ33jhlJQkcn2+DmyItq/5SCx0Q5EDuP4n8ivlHoq3fE86pXKmrJvl/bynT
-	 HpvGdmiWen2ayJfTKi0vsEy2CMYYTEZYjNmbuXRrhy1UT82vnCBvgWNct3vk5zJgYP
-	 bk9L5skaovnCe6LvwYvXjje0erftzJV6oAerfI38n0cY5zecZOVfzaLh4D61X//DwD
-	 71aOFk//zvIgr1ZYakZCgj919hgO96QIT/ojXKOkEOk0vs3NUiVZmjFESF3Axbx20+
-	 elcMiuNKn24RQ==
+	b=DWsOX/yf60+Iga2VaYy0K5lqUMU1MFmS+P9hngFYlPPKlzkvtbsQaqxPgQ61E1Lmr
+	 Vtm3jj5cy19fRwzjnZQ6M/y1+u1yudSWogBX4Mk8uAwHCfPy1nZJwPxMDAmAZ8daUn
+	 1PK3l60z6yUsf0w3CU3Bnm3dLBwJXdgXJIQUW3NjQaiAtYqoaIRozbBXPJ9+2B0X6r
+	 Yxv+V92buRF4A3cFx8x9uDDueISj2sV/5RMQxU9aVo5nq5881XDO0hL/83Vrqrk0SJ
+	 RuV3ZVfIHaRZF+i0CzKvxi6y5ymOGhBiAo0MlIOA0YQLOlC3RZ9e1ncjdKtxwU/S75
+	 pdfkuQ3+NIBlg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7101F39F1DF2;
-	Fri, 30 May 2025 17:28:38 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control changes for the v6.16 kernel
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C0A39F1DF2;
+	Fri, 30 May 2025 17:28:43 +0000 (UTC)
+Subject: Re: [PULL REQUEST] i2c-for-6.16-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYuGv=mQJB+i_1itMCdeSYHVj4bcxrbVL1z=uJCEci8OQ@mail.gmail.com>
-References: <CACRpkdYuGv=mQJB+i_1itMCdeSYHVj4bcxrbVL1z=uJCEci8OQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYuGv=mQJB+i_1itMCdeSYHVj4bcxrbVL1z=uJCEci8OQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.16-1
-X-PR-Tracked-Commit-Id: 08dcbe30be481bc66eb5ee1e82a577d64e451612
+In-Reply-To: <aDnYz2PB_euziA01@shikoro>
+References: <aDnYz2PB_euziA01@shikoro>
+X-PR-Tracked-List-Id: <linux-i2c.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aDnYz2PB_euziA01@shikoro>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc1
+X-PR-Tracked-Commit-Id: 17b7d785fc7fc94b94acc080e09de4b5023fbc1e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eafd95ea74846eda3e3eac6b2bb7f34619d8a6f8
-Message-Id: <174862611692.4033976.14109493280754242765.pr-tracker-bot@kernel.org>
-Date: Fri, 30 May 2025 17:28:36 +0000
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+X-PR-Merge-Commit-Id: 883e3c9f40814377a239ca0becbcc77deab5ffe5
+Message-Id: <174862612186.4033976.6799947837134303124.pr-tracker-bot@kernel.org>
+Date: Fri, 30 May 2025 17:28:41 +0000
+To: Wolfram Sang <wsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, Andi Shyti <andi.shyti@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 30 May 2025 16:51:33 +0200:
+The pull request you sent on Fri, 30 May 2025 18:11:59 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.16-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git tags/i2c-for-6.16-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eafd95ea74846eda3e3eac6b2bb7f34619d8a6f8
+https://git.kernel.org/torvalds/c/883e3c9f40814377a239ca0becbcc77deab5ffe5
 
 Thank you!
 
