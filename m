@@ -1,213 +1,442 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DA924BD03
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748626560; cv=fail; b=a5+nPKQ4s4xFF01F7fS+OpXQQfzPC96ORNT13T/TRFd66us2Y6sphh2EWn8qahe8Ik6l8eLvrHG1J9y77OUndDy88EKF8yTNBgulKY7uX1h2dC/vyu203KKtrKtvhnzSDFXXUa5QzbEvm5Dq+F3BcURHtYqR5pr4qwJ5zWfhtwA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748626560; c=relaxed/simple;
-	bh=tPQ4aB1ODNn8l2QQng/YYO/BfN4DOVGtyBJ0M6vX/t4=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=o6diAU7F/HebJKyBYjmHUqoFvVDHCbFHjKy9QlgPD3FD5rarX8rF5OlifvSlslxMgQkhdE0Inq0q9GTFOcLF/HSy8PyujcQv+cqw4bFjhO1w4vXjNoH9R9kxgVgQNwxCpb3jms+0MW0XETe/MoQlAcST7pIFqI94TL1Gk1xWaac=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D890uOFC; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B6B22DFB6;
+	Fri, 30 May 2025 17:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748626561; cv=none; b=TLoKcyxY724WQDFSuziteEF6MPw6TjDaw+u8Fyu4cWShsNGxcDCix15PnR+cfCmQcpnune+MjKsqEXp5BQKFzphyXPbdE9OcaQ3fwy0X21eYLZ3iw0baCCDjemgn8goG5bX5lwvP2qIW6ZXwBZoGbh9ub7/iwRg+yzQ2zsZdi74=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748626561; c=relaxed/simple;
+	bh=PFv6q/UJPqXQD2xVk0skyo4UGrMshhrpaVT5S7LYV0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I/sEAZ37h2m0mIGcbfcpAZIHTbZ4UefyHIfx8oTjAXevL9V2K38XcLuG0zyxBkn/Axba2zbQnQgqAQhxk5A9ta2fj1nwRT117HXQtDVReSf8eCtFCf9T58RrN+J+Ntt8FC5OSRdlN535TFKzUISrk8qaJg6/NKeaFZGm42o7bso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kvQmHoB9; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D890uOFC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748626559; x=1780162559;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tPQ4aB1ODNn8l2QQng/YYO/BfN4DOVGtyBJ0M6vX/t4=;
-  b=D890uOFCOmnhZvLMe72VGCJUH6h/8Ffgkq8i9AO2yrYPR6CwrGLoWzyC
-   AyA9L7Bo6R+opgBYJULiN8GhpRBE3NLy90UEWzFe/XrFtHGnOf7bLecui
-   cX1b/wkic7SO2BRvwrk6q7jRa2jEKa3MmNDkUbyNgpi4QLCqskXTpTHTC
-   QpE/aIOFANhvWpnhhXtZHC4MvivliGFXOQy5Tbd9ck4XHfrVZyfq/Wv+y
-   ebdxHv40hsyZ0yJbkHgRnn/njewXpKOqEXw0Cj22fLtTqUAobZRRsLZcM
-   yRW0nBTf2/VWvILckaee8EicEriUJR2XaW13H3Zl/OnsTa/qHlsj+CE0s
-   w==;
-X-CSE-ConnectionGUID: YNu8sZbYQgarde9wFbJjsw==
-X-CSE-MsgGUID: Eovm7YauSleSzUH4jtRXhA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="61352320"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="61352320"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:35:58 -0700
-X-CSE-ConnectionGUID: 8QAcTiP4QsuuryabcZdlHw==
-X-CSE-MsgGUID: Zs7ruAqlTLegzTy2qDwv3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="148723413"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:35:59 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Fri, 30 May 2025 10:35:58 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Fri, 30 May 2025 10:35:58 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (40.107.244.88)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Fri, 30 May 2025 10:35:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y0nSTpAXyqDx75fydbWbo7oi90KeD2xgWXFHDkEvuFIc3Ue85W38hLwBRWjJigMjh1RiFnHx9Fw68EiWs3zdnXSFlH/NNghlGHEwlv4e/MsNzLL1OiSgWsgeJ5uxyq1PApejgDIPs+Td9pOpVUjezXVKCo0h9uTAvS2sGWDRh4IjjHHoU7mZ/oaWEOTVvO7wJWfJyDTELaUvYdrcBEphaKsIDvyjOXsqMmQ8ffdLF9WB6Uo4V6dpxeLQ1l7H8CQc5aEiYme4gQE6gTVHtmZhuwhkAskl/Vg3nzG2hKgsgjv2QYBXoLRguUYOX5ZA261z64R92/QWMZUFCPgAhRKibw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SYWI4+n0oWsbnWES0G0ipCxFInK9TRMfh/qfZCwg/XQ=;
- b=ljcLiKnRL7NIK3aj2ea+K3VzZ76zw/t0kiLGwhvYrJDCZjwXP9mvjp0xHwQ/+1u9SzohX2PHoZq0NcnLVFH8/3k1u5XJlkLWa44KTXT6cHqv9aBXgv7U69yYg3pbTwwNkS62RA5cA8ktLVMwEYzUehsnDhrVPYLgeobstwp1TQhgB+II9E4wnu9+kFixCL1sbmqFb3dsG9QR6sDjJw7eqas2/YPbHUPb2g8sVTzuVmjqVpeYGUqXkAEPT3QrxaXwphGor9wHPcUeD/ZtxsomL9hwQxn5ZA3qTAtCiIKAaqvQivFHDNZ+EQQETDXEgp4KLzIhDrTJdsV9yNd3u+B/aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH8PR11MB7070.namprd11.prod.outlook.com (2603:10b6:510:216::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Fri, 30 May
- 2025 17:35:39 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8769.021; Fri, 30 May 2025
- 17:35:39 +0000
-Message-ID: <cb96c017-eed1-4875-bf82-2b38630468d3@intel.com>
-Date: Fri, 30 May 2025 10:35:37 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/resctrl: Restore the missing rdt_last_cmd_clear()
-To: Zeng Heng <zengheng4@huawei.com>
-CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<Dave.Martin@arm.com>, <tony.luck@intel.com>, <xiaochen.shen@intel.com>,
-	<bp@suse.de>, <fenghua.yu@intel.com>, <james.morse@arm.com>
-References: <20250529113353.3275066-1-zengheng4@huawei.com>
- <44a4f211-6723-4fde-822c-d739fa2d603d@intel.com>
- <c94b97ea-4dd4-7575-2144-81e4272c8fee@huawei.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <c94b97ea-4dd4-7575-2144-81e4272c8fee@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0048.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::23) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kvQmHoB9"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a3771c0f8cso1430544f8f.3;
+        Fri, 30 May 2025 10:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748626557; x=1749231357; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KoEqvuxgoUe5hPIlnNTREnqzBdqgdreCBHdNEn1xIzo=;
+        b=kvQmHoB9LTRKAY5AEe1K9If5PwWWREwYsrBGcTCNF4F1zinC2OdbZe73TvQO5jQh8R
+         UjW1X0g9m273EFAZRf8hnHoN/rHc/DnZEwJFSpjgQnxO83gyhRGky4m3w74lu6YiyC0o
+         oiPbkdz9gpoQuar/Wl9xfddPWB6q6M7aJOQfcjuU0203R/Bv6JkTHjZYAeEFOcSTCyde
+         d7HX0W/PqCVxpXXC5WHml2ZNeOGHjtugWkNXy9s2HDblNKphTx4ZXqw2y4HU8JDBoOtt
+         7wsH6rgvlFe9JFwympiNU75T/j0/Ol78LvaZMIScKWb5nvHfOqyrVmw2o94t5p+0Wac/
+         292g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748626557; x=1749231357;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KoEqvuxgoUe5hPIlnNTREnqzBdqgdreCBHdNEn1xIzo=;
+        b=SUckGDjWSmn/1hkCMKKJnAz4Z8NZVBgmdC5agVeIy/xdFh5PJ1Gyy1h/F/VSILnWvW
+         /CVzohfeL+/cWwCUD4xdBAV+8HzAgpzRzBQL+EmgZHalo6urGG+MAgIcIP2fsTY7y+9r
+         IpNYWZ3MDZidi6AiQxmn0S+zzTJgxeTC5abLWXhVBGSjD9jM0ndga7YzkigUWZwAFqT6
+         +k4X9zWBJ3uluNNp3JElXzr8A9hbo9TunpjXYamrOqa4zP7HHoY3jBCMUrOh0t1Q47Fi
+         30ElxMtKSdfEBOQvVQ1XnxXG8jzrUrOVGbiXTMWBSdxumDXLggMpzsxZoMPCugm/SG3G
+         SZPA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5oR2cpXmhkiC/Rm+NHn78DwaZxhWpr3SrZPv1BbDupN1mco79yOkBSfi71+s8a+tgTXSMwImlkmCLf1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTcYkIMsz9hqYUmQ5Z0AUvbWdSm6/vzVCt+U60vZpG/zfbjc6q
+	ISfiWbZx+uGDN2DNEP85Oy9wHTb7uTENRVVOEYFn+RLPSh7nVKxZBrtJ
+X-Gm-Gg: ASbGncssIl9u24efH8A9tGIoxii52FQZKxCgSfO4TsRPiUhYjUJAsd9AWEuxu1NPJlr
+	R6/sPRfWMNm/kjFPEKIah6/ZxkBdzIPs4XneZ6M7qxyPW3IBR9fFaRWwTlrJcnsQjFR0QCoSh2h
+	MhgLQ38du4+JoCFA0YQ9eATthHQKkkqhSvP2kuDJrIG21wj+JHyg3vlU+/Xqk3LDH3yEpqy4PtM
+	31cf1ASLiDIjZm8u4O8pffFYJILUDy+92JzoAXWSeea2fYF1NS9ylZGPqOwaxXOw3YbwB/agBfs
+	HCJHr0JsDwBjQVNcc5qhqlYP9ZHwPt6rkii0nCpnCMIGQNJAiK6ZrlNpNdT6pNzK
+X-Google-Smtp-Source: AGHT+IHau6iCfytZCNj9V9Tm3bsJ4JWnnOkWX8wjTyH9tcsTBrOizHj2PW/h7uxb5sRbkbkdGYpzkA==
+X-Received: by 2002:a05:6000:2912:b0:3a4:f744:e013 with SMTP id ffacd0b85a97d-3a4f89d3060mr2168403f8f.30.1748626557165;
+        Fri, 30 May 2025 10:35:57 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f1e7sm24092335e9.1.2025.05.30.10.35.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 10:35:56 -0700 (PDT)
+Message-ID: <726b746e-d2c1-4208-b2cc-d08d24abd7cf@gmail.com>
+Date: Fri, 30 May 2025 19:35:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH8PR11MB7070:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1bde9076-94d0-46b9-1524-08dd9fa064da
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NFM5eGdjdVIzYnB5Y0llT0srUStIS2dkcG93ME1OVGlyYjYycWFkd1B4VWNR?=
- =?utf-8?B?OGxER3hWU2ltTXAvTk9oMlN6dHhwNUdvdlpBYUpaVjUrcW9xTWZ3Wmh3czda?=
- =?utf-8?B?ajkwd2hWSU1ZZkhuUnBLR01YaUxTaTZPVEVBTHhLNWJMTm1zVFNIZ2dVUlR3?=
- =?utf-8?B?eUdiWnZQS3krSEQ0WmxFZjFXMXR6aTFlWWI2UUNVNjR0OGgxTTdobklDY0lK?=
- =?utf-8?B?V3lMT202MTNmUFJaMTQvcUlFQURwbE9qVDY0eXdlVk9Qc0lQSDdjdGE5dFZL?=
- =?utf-8?B?SXhFUVhYTU9LKzN2S3V3VFRlcmZtMnA2ZVFJSkMwUkhqbW9vWU9jamd4ODFB?=
- =?utf-8?B?Ly9qTTdFRmRaTDd1VjhZekVGU1RYSmdoRFZKUncra0hHdXovQXYrRy9Gb3Rh?=
- =?utf-8?B?NDFDMXFMblgvSFlYKy9Denp1TGpzUlNOcmQ1bC9LNnUvWE5zZGVaMmJIWjBK?=
- =?utf-8?B?bHAvZTF1V3BRdVUwMUtidkphY29mdS9ZL3NiTDRMdlo0MWk4UnNkdTRWdGRz?=
- =?utf-8?B?L00rcnpBQVVsUHIvdjFvTjNKV2VQSEpxalJ1eFpRendJOW1lcjFoV3hSN3My?=
- =?utf-8?B?N1B5d3ppQ0JSUUdQMkNOMC9Uc2VtMzJ0TS9sYTJLbFF0ZjdldEozKzZKMnJ2?=
- =?utf-8?B?ZDJMdWdQbUFsSHQxU1RieHdkZldqTXROMnhoS0Jhc0JDRzJBVFlpZjJEdHFY?=
- =?utf-8?B?U2MxY2Uxa3NFZGhNZVp0cTRFNk9NN0xURDdiR3lyKyttbXNoTmx6ZjFyRzdW?=
- =?utf-8?B?NEVqVVRYR1owNmd3cVhiZzh0NnRBMG9LZHIyRnRXb1NwVUZVcFg5ME1odXVU?=
- =?utf-8?B?SVJOQmN6ODdPVGhqU3IwT3BGVDFPdWpZdFNoRXFUeGFWaWIvOXovV0pwZ0ZL?=
- =?utf-8?B?NnBhM0R0VVFmUVhRQzEwaGxsYmcwL2RKaDdXdDZxUWV6a2E2NWlKOGc3N1Ba?=
- =?utf-8?B?ODZqa3orSE1ScnRPbWNKWUt6V0w2RjFmZXROSGU5RFJoRFIzTEVBOHhzTjRV?=
- =?utf-8?B?d1pFYXFJa3hLaC9hbVV4a0tEeWd5bmtKRmcxajN5THd4eGxzZm9pYXdLTXBh?=
- =?utf-8?B?dVBsa21QTXVKaU1JZmxNUm9uTGZDa0NnZkVocTVmMTVJV2szTUw0U3k2eloz?=
- =?utf-8?B?Rmd3VE5nOHFOcUVPS3ZDcDRCRGE2M2VNcE80ck1USnJ6QmtTc21nVE15OVFB?=
- =?utf-8?B?RGZTTm40NmdZUFJqVUM3TXFaZnYrWUEwMXMwMXQrdkhqWWZ0UVJveGRpSDFP?=
- =?utf-8?B?VkJWS0JHaXZyR0RLcTZNNHdkeVRWWDA5ZVNnZWpOczVlWmsxdTJaZzN1c0w3?=
- =?utf-8?B?b1NBbFBiRXBPRGdmQXB5TFltMi9UcFdDWTByNXh3aGZaY0IxT1Y5T3A2RkQ2?=
- =?utf-8?B?c0JMWWtvME9BamVlU1ZxTDRxaTNCMHFvMDBGWWVPWjB0TTFYdmRma2VpTmNF?=
- =?utf-8?B?Y0hzb0dEaUE1SnYwWk9IcFRIc2tzZXREK0NDdHZQeWxPWm90bmN0ZVNLMml5?=
- =?utf-8?B?QlVzd3JjNzZrNmx5MWxtb0RiOFBNdFc1NVdMSWZkOVlISy84d0tBcTdXTFE3?=
- =?utf-8?B?eEc2ZEdaTXFRS2ZnNHlPaDB6Q1hjWXU0dEJpQU9YWHVZSTZTL0EyNUlvYWV6?=
- =?utf-8?B?OVdSSTkydllYMWVxTkFJcUJKWW40NXhlUFR6TnZrSnJxS2ovZitNeEtxZ0JF?=
- =?utf-8?B?YU9Ld3A4c0xKbDdia1dTKzR1RW9WT2F5cWF2VVRFdmZJU29IZ3Qzell1R3A5?=
- =?utf-8?B?OHNVcUtqTjY2RW03SUw1Q05yUUVCMTRULzY4MFlFbkVpNEYrYXJlL0FYazll?=
- =?utf-8?B?S0hpMVkwVk1nYU45YzR4UEpQdGNTaVYrRUNndWVreVFPeFhSeEJHdVJwVnlX?=
- =?utf-8?B?QklJa0hmKzM3S0hRMWhaRmFQbU9SbE5Ea3NxN0dPZ1lHYjloYWJFZzFncEhM?=
- =?utf-8?Q?UqUGnyrY6T8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SzgvaXdwejZtL0p1QVc5TGhBRFpzai96NzJURTMyOEN1ZWhGaTlrckdGdmRC?=
- =?utf-8?B?UndXTzNsTEVXWEcrS0kzdmhkZEs4cHJEeC8yTGpzcHBQYmhXUGZuS1ErS2Uw?=
- =?utf-8?B?dXdZdmJBVnpkN0pRaS9MNmo1WUt0ODU1aEtwQml2RjcyMnlmdFhScmdiSXB0?=
- =?utf-8?B?cklNYk1DWnlTWktDVnpYeHd0M0V1TGpGdkVOSS9XVlpyTUltbG1MZmZwTEVs?=
- =?utf-8?B?d2VWUi9KNnBRdjNXK1N6V0M5ZlhNTlpBYnZaR3RmZ3B2K01qaWo5UWpkMUdS?=
- =?utf-8?B?b0hPdjNOY2RWZHg4TzFQTWdoU09pdE44M0VEcFlRZ244NCs1SGFtZ2cvSVI4?=
- =?utf-8?B?bkxVR3ZvZDVZY3VyWGxyaFZWTUpveFlBMG5KcncvREozSTJYaWpiVXZHZ0Nj?=
- =?utf-8?B?WU1ZNm5lam9tTzNKc3c2SmhxMXd2T1k2V3dhdzVIRjNRc3FKaVZ3M2luUFhH?=
- =?utf-8?B?RWd6aUdMYzJYN3NLTTg1UytRVmFDb3pORVFxTElIYVgzOGV3ektFK1dxT1py?=
- =?utf-8?B?b0NFMjVLMWpvd1VCdWNRaDR2NVM4ellFaUp6N3M0Z1ZpUUpFcWxCL24xckFF?=
- =?utf-8?B?OVBTdlhyUllIWUxBRTBXb1pZVUp6UWl1VERtWk52ZDZIeWhjaTJHbmU5a3Vw?=
- =?utf-8?B?b0JsK3ZybkRLMkVqempoMXk4TWxEd1VOVGVVd212MURKREJteWFONVZmdUc3?=
- =?utf-8?B?Rjc0aG84SkN1M1FwL1d6ZythcE1oRjRXKzlsT09VUkdCVHROYzFSSlo3N2pk?=
- =?utf-8?B?TUgzQ3Fzc2ZEZUFJNzJZRG5CTUIxV1d1c1FZUzZ3QnpCK1l4djJvK3VPSnhO?=
- =?utf-8?B?Mi9UcFRxL0VNVS96Vkx0RFl1TWtpdVM1TkZFTTlaZi9NZ1BrZ1l4K052MWVB?=
- =?utf-8?B?a2tBelQ3aGFyZUUxK2RNWDZOclY0NEF0TUVCM25oNG1LVzVaamRQRHdRam03?=
- =?utf-8?B?M2lXSXJWVklaQWhnN0Q0a3NkdExDNkRiMVlqc3NWbmVFd29NeS84dHpWSzZq?=
- =?utf-8?B?K2l1T0s5UUxrWktuVU8wai90Qlh0NVYxbnNlZWJnUkNJdmNWRUpoTXR3TjVV?=
- =?utf-8?B?Ykh5NksybDJqMFRSbHlZdDJFOFRvU3VkVkJXZXE2NkhROGNFRERwUWRJM0dl?=
- =?utf-8?B?T3NSRnNHYzZkcmpwdGZhNlhiZUdhUTRMandZU3lKbUxCdFU2ZFYxaGZSd1Jl?=
- =?utf-8?B?Vm9NTTZvQjY1SFFveTFkUTVQd3U2RitLSGFrU2c4TVRQWVFkZHBSWFBpSm9s?=
- =?utf-8?B?K2V5L0EydlB1ZklESEZXdGVXQkIrSDRWUHhrbHRjZFcxamxzbDFiQjM0MDhH?=
- =?utf-8?B?ZTlHbmQ0QkYzLzIvOWJyR3Z1cEZMd3g1SzJLRzRFSHU4NkxVZXREL2tRQm9S?=
- =?utf-8?B?a0U4ZytYK0pNSXRnN2hWbDR5Z0Q1SUtVc0ZvYmJia1hCalhCcTdIVW1LcG5O?=
- =?utf-8?B?ODJpc2J5Z0YxcFlFQmZJaXRxK0pkLzBLVStuUXA2Z2xwV0NkanY1eWxGUFVj?=
- =?utf-8?B?TGNtS1U5VXpNWURnWk5pcFd0UFY3bmQ1eEk2MVRXQVQ1N1ZMWHZZN2pMZFpx?=
- =?utf-8?B?dFpUQ2p2R20yTDQ3M1ZDS0ZaSG5JMCtVajVoVmxHSDIxVGNVVU0wZXZSeU8z?=
- =?utf-8?B?RFQwaWkza0FSSjdtTGVPRzByYWRtS2Nwbk00YUh3RG82MGY3d1VmSXlidFpI?=
- =?utf-8?B?RWxFUmRpbmpoKzkrWVB4UHN1WDFyY0kybDU3V3hwMlBjdTMrbFRieFhEYkp4?=
- =?utf-8?B?b3RBNzBTRVNjVE9ZUENSb1Mxcm1UZVJndHBlQ0JzTDN6T3d6dTNaa0xodE5a?=
- =?utf-8?B?VzJvemVWNS9LcFYvMVc4bytIMzZ3Vm9sL0pGaWRjUE1Pay9WVVo0bVdGNFlQ?=
- =?utf-8?B?OG1ySzQvWTRhS3FvbzAxT2lVclJJSWJHOEttK1MwQ3VwRE84am1YOFUwR3Ir?=
- =?utf-8?B?L1hiRkNNb0NoT2ZibWdJMXd1NUc4dzJtTGsyYjhYZVE0Y0VjWFV4ZSs5M2g0?=
- =?utf-8?B?WU1GRWw0VCtlVFMvVURZUUpuVkhHODdwNllWV29uYjNNM2lBR2w1TTJPb2FD?=
- =?utf-8?B?WkxnQldJVUxmR3pmVjRPQ2pzblpVN2pFcldhYm13bW9NZ1ZTeXNPNlNKZnFm?=
- =?utf-8?B?N295ZHlsWUd4MEYySDFFaHkyTUtBME9TUE9GbEw2MnhWWDNBREsweWI2aGNL?=
- =?utf-8?B?Smc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1bde9076-94d0-46b9-1524-08dd9fa064da
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 17:35:39.3596
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uAUx5ldDZiksWpqX3+QoHmOOy0rlX2Mu0LyJpA2/hIfSGBMAUcT6eQ0mkCO3FnK6s4NqPZ138mWjMHdkVtQesyfgfoEJRE82+BF60y6O3lQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7070
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] rust: miscdevice: properly support device drivers
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
+ rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-6-dakr@kernel.org>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250530142447.166524-6-dakr@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Zeng Heng,
-
-On 5/30/25 2:34 AM, Zeng Heng wrote:
+On 30.05.25 4:24 PM, Danilo Krummrich wrote:
+> Currently, the design of MiscDeviceRegistration is focused on creating
+> and registering a misc device directly from a module and hence does not
+> support using misc device from a device driver.
 > 
-> The patch will be corrected in version v2. Thank you again.
+> However, it is important for the design of the misc device abstraction to
+> take the driver model into account.
 > 
+> Hence, consider the use-case of using misc device from a device driver;
+> let's go through the design motivation bottom-up:
+> 
+> Ideally, we want to be able to access (bus) device resources (such as I/O
+> memory) from misc device callbacks (such as open() or ioctl()) without
+> additional overhead, i.e. without having to go through
+> Devres::try_access(), which implies an atomic check and an RCU read side
+> critical section. Instead, we want to be able to use Devres::access(),
+> which does not have any overhead, which requires a &Device<Bound> to
+> prove that we can directly access the device resource.
+> 
+> Given that all misc device callbacks are synchronized against
+> misc_deregister(), we can prove that the misc device's parent device is
+> bound iff we guarantee that the misc device's registration won't
+> out-live the parent device's unbind.
+> 
+> This can easily be proven by using devres for the misc device's
+> registration object itself.
+> 
+> Since this is only applicable for the device driver use-case, abstract
+> the actual registration instance with a Rust enum, which is either a
+> "raw" registration or a "managed" registration.
+> 
+> In order to avoid any penalties from a managed registration, structurally
+> separate the registration's private data from the "raw" misc device
+> registration (which either stays "raw" or becomes "managed") depending
+> on whether a parent device is supplied.
+> 
+> The advantage of this solution is that it is entirely transparent to the
+> user -- no separate structures or functions for whether the abstraction
+> is used directly from a module or from a device driver; instead
+> MiscDeviceRegistration::register() gets an optional parent argument.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/miscdevice.rs        | 178 ++++++++++++++++++++++++-------
+>  samples/rust/rust_misc_device.rs |   9 +-
+>  2 files changed, 143 insertions(+), 44 deletions(-)
+> 
+> diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
+> index 1b5ec13868e2..6801fe72a8a6 100644
+> --- a/rust/kernel/miscdevice.rs
+> +++ b/rust/kernel/miscdevice.rs
+> @@ -10,16 +10,17 @@
+>  
+>  use crate::{
+>      bindings, container_of,
+> -    device::Device,
+> +    device::{Bound, Device},
+> +    devres::Devres,
+>      error::{to_result, Error, Result, VTABLE_DEFAULT_ERROR},
+>      ffi::{c_int, c_long, c_uint, c_ulong},
+>      fs::File,
+>      prelude::*,
+>      seq_file::SeqFile,
+>      str::CStr,
+> -    types::{ForeignOwnable, Opaque},
+> +    types::{ARef, ForeignOwnable, Opaque},
+>  };
+> -use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin};
+> +use core::{marker::PhantomData, mem::MaybeUninit, pin::Pin, ptr::NonNull};
+>  
+>  /// Options for creating a misc device.
+>  #[derive(Copy, Clone)]
+> @@ -40,44 +41,43 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
+>      }
+>  }
+>  
+> -/// A registration of a miscdevice.
+> -///
+>  /// # Invariants
+>  ///
+> -/// `inner` is a registered misc device.
+> +/// - `inner` is a registered misc device,
+> +/// - `data` is valid for the entire lifetime of `Self`.
+>  #[repr(C)]
+>  #[pin_data(PinnedDrop)]
+> -pub struct MiscDeviceRegistration<T: MiscDevice> {
+> +struct RawDeviceRegistration<T: MiscDevice> {
+>      #[pin]
+>      inner: Opaque<bindings::miscdevice>,
+> -    #[pin]
+> -    data: Opaque<T::RegistrationData>,
+> +    data: NonNull<T::RegistrationData>,
+>      _t: PhantomData<T>,
+>  }
+>  
+> -// SAFETY:
+> -// - It is allowed to call `misc_deregister` on a different thread from where you called
+> -//   `misc_register`.
+> -// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
+> -unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
+> -
+> -// SAFETY:
+> -// - All `&self` methods on this type are written to ensure that it is safe to call them in
+> -//   parallel.
+> -// - `MiscDevice::RegistrationData` is always `Sync`.
+> -unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+> -
+> -impl<T: MiscDevice> MiscDeviceRegistration<T> {
+> -    /// Register a misc device.
+> -    pub fn register(
+> +impl<T: MiscDevice> RawDeviceRegistration<T> {
+> +    fn new<'a>(
+>          opts: MiscDeviceOptions,
+> -        data: impl PinInit<T::RegistrationData, Error>,
+> -    ) -> impl PinInit<Self, Error> {
+> +        parent: Option<&'a Device<Bound>>,
+> +        data: &'a T::RegistrationData,
+> +    ) -> impl PinInit<Self, Error> + 'a
+> +    where
+> +        T: 'a,
+> +    {
+>          try_pin_init!(Self {
+> -            data <- Opaque::pin_init(data),
+> +            // INVARIANT: `Self` is always embedded in a `MiscDeviceRegistration<T>`, hence `data`
+> +            // is guaranteed to be valid for the entire lifetime of `Self`.
+> +            data: NonNull::from(data),
+>              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::miscdevice| {
+> +                let mut value = opts.into_raw::<T>();
+> +
+> +                if let Some(parent) = parent {
+> +                    // The device core code will take care to take a reference of `parent` in
+> +                    // `device_add()` called by `misc_register()`.
+> +                    value.parent = parent.as_raw();
+> +                }
+> +
+>                  // SAFETY: The initializer can write to the provided `slot`.
+> -                unsafe { slot.write(opts.into_raw::<T>()) };
+> +                unsafe { slot.write(value) };
+>  
+>                  // SAFETY:
+>                  // * We just wrote the misc device options to the slot. The miscdevice will
+> @@ -94,12 +94,12 @@ pub fn register(
+>      }
+>  
+>      /// Returns a raw pointer to the misc device.
+> -    pub fn as_raw(&self) -> *mut bindings::miscdevice {
+> +    fn as_raw(&self) -> *mut bindings::miscdevice {
+>          self.inner.get()
+>      }
+>  
+>      /// Access the `this_device` field.
+> -    pub fn device(&self) -> &Device {
+> +    fn device(&self) -> &Device {
+>          // SAFETY: This can only be called after a successful register(), which always
+>          // initialises `this_device` with a valid device. Furthermore, the signature of this
+>          // function tells the borrow-checker that the `&Device` reference must not outlive the
+> @@ -108,6 +108,108 @@ pub fn device(&self) -> &Device {
+>          unsafe { Device::as_ref((*self.as_raw()).this_device) }
+>      }
+>  
+> +    fn data(&self) -> &T::RegistrationData {
+> +        // SAFETY: The type invariant guarantees that `data` is valid for the entire lifetime of
+> +        // `Self`.
+> +        unsafe { self.data.as_ref() }
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl<T: MiscDevice> PinnedDrop for RawDeviceRegistration<T> {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // SAFETY: We know that the device is registered by the type invariants.
+> +        unsafe { bindings::misc_deregister(self.inner.get()) };
+> +    }> +}
+> +
+> +#[expect(dead_code)]
+> +enum DeviceRegistrationInner<T: MiscDevice> {
+> +    Raw(Pin<KBox<RawDeviceRegistration<T>>>),
+> +    Managed(Devres<RawDeviceRegistration<T>>),
+> +}
+> +
+> +/// A registration of a miscdevice.
+> +#[pin_data(PinnedDrop)]
+> +pub struct MiscDeviceRegistration<T: MiscDevice> {
+> +    inner: DeviceRegistrationInner<T>,
+> +    #[pin]
+> +    data: Opaque<T::RegistrationData>,
+> +    this_device: ARef<Device>,
+> +    _t: PhantomData<T>,
+> +}
+> +
+> +// SAFETY:
+> +// - It is allowed to call `misc_deregister` on a different thread from where you called
+> +//   `misc_register`.
+> +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
+> +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
+> +
+> +// SAFETY:
+> +// - All `&self` methods on this type are written to ensure that it is safe to call them in
+> +//   parallel.
+> +// - `MiscDevice::RegistrationData` is always `Sync`.
+> +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+> +
+> +impl<T: MiscDevice> MiscDeviceRegistration<T> {
+> +    /// Register a misc device.
+> +    pub fn register<'a>(
+> +        opts: MiscDeviceOptions,
+> +        data: impl PinInit<T::RegistrationData, Error> + 'a,
+> +        parent: Option<&'a Device<Bound>>,
+> +    ) -> impl PinInit<Self, Error> + 'a
+> +    where
+> +        T: 'a,
+> +    {
+> +        let mut dev: Option<ARef<Device>> = None;
+> +
+> +        try_pin_init!(&this in Self {
+> +            data <- Opaque::pin_init(data),
+> +            // TODO: make `inner` in-place when enums get supported by pin-init.
+> +            //
+> +            // Link: https://github.com/Rust-for-Linux/pin-init/issues/59
+> +            inner: {
+> +                // SAFETY:
+> +                //   - `this` is a valid pointer to `Self`,
+> +                //   - `data` was properly initialized above.
+> +                let data = unsafe { &*(*this.as_ptr()).data.get() };
+> +
+> +                let raw = RawDeviceRegistration::new(opts, parent, data);
+> +
+> +                // FIXME: Work around a bug in rustc, to prevent the following warning:
+> +                //
+> +                //   "warning: value captured by `dev` is never read."
+> +                //
+> +                // Link: https://github.com/rust-lang/rust/issues/141615
+> +                let _ = dev;
+> +
+> +                if let Some(parent) = parent {
+> +                    let devres = Devres::new(parent, raw, GFP_KERNEL)?;
+> +
+> +                    dev = Some(devres.access(parent)?.device().into());
+> +                    DeviceRegistrationInner::Managed(devres)
+> +                } else {
+> +                    let boxed = KBox::pin_init(raw, GFP_KERNEL)?;
+> +
+> +                    dev = Some(boxed.device().into());
+> +                    DeviceRegistrationInner::Raw(boxed)
+> +                }
+> +            },
+> +            // Cache `this_device` within `Self` to avoid having to access `Devres` in the managed
+> +            // case.
+> +            this_device: {
+> +                // SAFETY: `dev` is guaranteed to be set in the initializer of `inner` above.
+> +                unsafe { dev.unwrap_unchecked() }
+> +            },
+> +            _t: PhantomData,
+> +        })
+> +    }
+> +
+> +    /// Access the `this_device` field.
+> +    pub fn device(&self) -> &Device {
+> +        &self.this_device
+> +    }
+> +
+>      /// Access the additional data stored in this registration.
+>      pub fn data(&self) -> &T::RegistrationData {
+>          // SAFETY:
+> @@ -120,9 +222,6 @@ pub fn data(&self) -> &T::RegistrationData {
+>  #[pinned_drop]
+>  impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
+>      fn drop(self: Pin<&mut Self>) {
+> -        // SAFETY: We know that the device is registered by the type invariants.
+> -        unsafe { bindings::misc_deregister(self.inner.get()) };
+> -
+>          // SAFETY: `self.data` is valid for dropping.
+>          unsafe { core::ptr::drop_in_place(self.data.get()) };
 
-I did not notice the outdated email addresses it until I received 
-the mail bounces. Here are some updated email addresses for the
-next version:
-fenghua.yu@intel.com	-> fenghuay@nvidia.com
-bp@suse.de		-> bp@alien8.de
+I think this can race for a use after free.
+The data gets freed in this `Drop` impl but the `miscdevice_deregister` call will only
+happen in the `DeviceRegistrationInner` `Drop` implementatation, since the fields 
+will only be dropped after the `drop` function has executed.
 
-Please drop Xiaochen Shen from next submission.
-Please include x86 maintainers in next submission: x86@kernel.org
+Either  inner: DeviceRegistrationInner<T> needs to be wrapped in a ManuallyDrop and
+dropped manually,
+or the Data needs to be wrapped in a type that will automatically drop it (this would
+be fine with `UnsafePinned`).
 
-Thank you
 
-Reinette
+>      }
+> @@ -137,14 +236,13 @@ pub trait MiscDevice: Sized {
+>      /// The additional data carried by the [`MiscDeviceRegistration`] for this [`MiscDevice`].
+>      /// If no additional data is required than the unit type `()` should be used.
+>      ///
+> -    /// This data can be accessed in [`MiscDevice::open()`] using
+> -    /// [`MiscDeviceRegistration::data()`].
+> +    /// This data can be accessed in [`MiscDevice::open()`].
+>      type RegistrationData: Sync;
+>  
+>      /// Called when the misc device is opened.
+>      ///
+>      /// The returned pointer will be stored as the private data for the file.
+> -    fn open(_file: &File, _misc: &MiscDeviceRegistration<Self>) -> Result<Self::Ptr>;
+> +    fn open(_file: &File, _misc: &Device, _data: &Self::RegistrationData) -> Result<Self::Ptr>;
+>  
+>      /// Called when the misc device is released.
+>      fn release(device: Self::Ptr, _file: &File) {
+> @@ -217,17 +315,17 @@ impl<T: MiscDevice> MiscdeviceVTable<T> {
+>          // SAFETY:
+>          // * `misc_open()` ensures that the `struct miscdevice` can't be unregistered and freed
+>          //   during this call to `fops_open`.
+> -        // * The `misc_ptr` always points to the `inner` field of a `MiscDeviceRegistration<T>`.
+> -        // * The `MiscDeviceRegistration<T>` is valid until the `struct miscdevice` was
+> +        // * The `misc_ptr` always points to the `inner` field of a `RawDeviceRegistration<T>`.
+> +        // * The `RawDeviceRegistration<T>` is valid until the `struct miscdevice` was
+>          //   unregistered.
+> -        let registration = unsafe { &*container_of!(misc_ptr, MiscDeviceRegistration<T>, inner) };
+> +        let registration = unsafe { &*container_of!(misc_ptr, RawDeviceRegistration<T>, inner) };
+>  
+>          // SAFETY:
+>          // * This underlying file is valid for (much longer than) the duration of `T::open`.
+>          // * There is no active fdget_pos region on the file on this thread.
+>          let file = unsafe { File::from_raw_file(raw_file) };
+>  
+> -        let ptr = match T::open(file, registration) {
+> +        let ptr = match T::open(file, registration.device(), registration.data()) {
+>              Ok(ptr) => ptr,
+>              Err(err) => return err.to_errno(),
+>          };
+> diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
+> index 843442b0ea1d..b60fd063afa8 100644
+> --- a/samples/rust/rust_misc_device.rs
+> +++ b/samples/rust/rust_misc_device.rs
+> @@ -198,7 +198,8 @@ fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+>          try_pin_init!(Self {
+>              _miscdev <- MiscDeviceRegistration::register(
+>                  options,
+> -                Arc::pin_init(new_mutex!(Inner { value: 0_i32 }), GFP_KERNEL)
+> +                Arc::pin_init(new_mutex!(Inner { value: 0_i32 }), GFP_KERNEL),
+> +                None,
+>              ),
+>          })
+>      }
+> @@ -222,15 +223,15 @@ impl MiscDevice for RustMiscDevice {
+>  
+>      type RegistrationData = Arc<Mutex<Inner>>;
+>  
+> -    fn open(_file: &File, misc: &MiscDeviceRegistration<Self>) -> Result<Pin<KBox<Self>>> {
+> -        let dev = ARef::from(misc.device());
+> +    fn open(_file: &File, misc: &Device, data: &Self::RegistrationData) -> Result<Pin<KBox<Self>>> {
+> +        let dev = ARef::from(misc);
+>  
+>          dev_info!(dev, "Opening Rust Misc Device Sample\n");
+>  
+>          KBox::try_pin_init(
+>              try_pin_init! {
+>                  RustMiscDevice {
+> -                    shared: misc.data().clone(),
+> +                    shared: data.clone(),
+>                      unique <- new_mutex!(Inner { value: 0_i32 }),
+>                      dev: dev,
+>                  }
 
