@@ -1,102 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D7C21170D;
-	Fri, 30 May 2025 10:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A18BF224B0C
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748601460; cv=none; b=TJqXTyOZCsLIFuDSGwLWYXYfHG+Ipd1bQHdRdqJdPj5er9PuJJwNRdbEHOz33ryr1yYBqUQth0m37X0Wvzdas+DbhX344g0UUpt8iV2nqzUGtuqnvxtNqeAzl8Cvqr9WhRC1vfiDkhaH1hkaLWktlHgTRkM0x8gdPWHS2KGPf5M=
+	t=1748601464; cv=none; b=cKqE2pGBDK0RtHyYG2QsH2u0VEGNNTcnPO8FKnQHXBMe7iwP0Ek1L9voKvM/6ADDUFfGrzeDAM2kUxWx7e4Nc4UT8lUaadYn/DMw2ZEp124sMc/dtxlT2XiRgnhDg7CqPhKuAfIKASDUMJHuK64p3J2FnNxp0spSVInYhGbXJ08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748601460; c=relaxed/simple;
-	bh=WPHxWQPAr2btHznTt7J65awww0BQaCR48DXniOnUmxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O97E9aeiCTs6h3J9NsOYZOdcBfSlzgkv7PFCK1E/fHO5iYaY63UjR2W4YJz0E+d/kjvPljJdz03H9j7S+Vv5mNn3R9DeQ7O4lhn9qvhO6HBnup1pvgubzGSFm5WXSSNN6nyGIaglo9y3EDs75P1TatxLg2QeAr+/fvXEXhsvaG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0rd1HcM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0rd1HcM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFCB3C4CEE9;
-	Fri, 30 May 2025 10:37:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748601459;
-	bh=WPHxWQPAr2btHznTt7J65awww0BQaCR48DXniOnUmxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i0rd1HcMJdvXasKpHlp0L/zx9S+j02WqCsoozMBNeajmeyPGk7wWHEY8snvpybyNg
-	 G6G5XP4VhgC372QYoRwD16NLnnipq1/ERWOC9BXPVbeb27UsIjPq8cXpnHIZpxDRB1
-	 Y6ahrB9UxO1hwPgpOnTCrfk5EOvJPDhJ0DkDhWKNZ8mpOM9LpiwoGdonpQ70n+cijI
-	 6zYOT4ET87NTIpbSQZsIDkL1FVwhb3opxs9nJ1D4e+5W8rB1Hj2QCb+h93435/Yrgb
-	 uCyX6wRbVWp1VDD05mOaoKUT+fdRcSg2jhkp3CfIfiVVtM4jiP8MFk5Wyg3g5w1Z6r
-	 2qLQkj90/5pQQ==
-Date: Fri, 30 May 2025 11:37:36 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v10 05/11] regmap: irq: Add support for chips without
- separate IRQ status
-Message-ID: <aDmKcNez0Bj41Tcv@finisterre.sirena.org.uk>
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
- <20250530-mdb-max7360-support-v10-5-ce3b9e60a588@bootlin.com>
+	s=arc-20240116; t=1748601464; c=relaxed/simple;
+	bh=1gNL5Rt4d56/QJoGWjP13DkH9mtmDIhFBrROFNoz7BA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GuFTM3eTH80TSKPOnzI0CC9SXd2ilEJVQoLZtwtqFUSwM4fnunqPzvx0AvXKt1S/5jITh0P3nTmPUuBwghZY4MxwrtcOXbstBU71AxsZPXXrgS6ozD+aHWVpyFgdRpAenFE8e77NqhDp/J/ryTkgsr7/aF0IRcExXKjq8J6Yi/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6B8316F2;
+	Fri, 30 May 2025 03:37:25 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E0FB3F673;
+	Fri, 30 May 2025 03:37:39 -0700 (PDT)
+Message-ID: <090440b6-9501-4f29-8b9f-1f6e6f3a6fbc@arm.com>
+Date: Fri, 30 May 2025 11:37:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eDCYdTcGZ7ZBhmc4"
-Content-Disposition: inline
-In-Reply-To: <20250530-mdb-max7360-support-v10-5-ce3b9e60a588@bootlin.com>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Enable huge-vmalloc permission change
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org
+References: <20250530090407.19237-1-dev.jain@arm.com>
+ <adfe981a-ec9a-4051-a26f-91b691230161@arm.com>
+ <381fec11-0e05-4bf0-9cd8-f272fde7558f@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <381fec11-0e05-4bf0-9cd8-f272fde7558f@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 30/05/2025 11:10, Dev Jain wrote:
+> 
+> On 30/05/25 3:33 pm, Ryan Roberts wrote:
+>> On 30/05/2025 10:04, Dev Jain wrote:
+>>> This series paves the path to enable huge mappings in vmalloc space by
+>>> default on arm64. > For this we must ensure that we can handle any permission
+>>> games on vmalloc space.
+>> And the linear map :)
+>>
+>>> Currently, __change_memory_common() uses
+>>> apply_to_page_range() which does not support changing permissions for
+>>> leaf mappings.
+>> nit: A "leaf mapping" is the lowest level entry in the page tables for a given
+>> address - i.e. it maps an address to some actual memory rather than to another
+>> pgtable. It includes what the Arm ARM calls "page mappings" (PTE level) and
+>> "block mappings" (PMD/PUD/.. level). apply_to_page_range() does support page
+>> mappings, so saying it doesn't support leaf mappings is incorrect. It doesn't
+>> support block mappings.
+> 
+> Sorry, again got confused by nomenclature : )
+> 
+>>
+>>> We attempt to move away from this by using walk_page_range_novma(),
+>>> similar to what riscv does right now; however, it is the responsibility
+>>> of the caller to ensure that we do not pass a range, or split the range
+>>> covering a partial leaf mapping.
+>>>
+>>> This series is tied with Yang Shi's attempt [1] at using huge mappings
+>>> in the linear mapping in case the system supports BBML2, in which case
+>>> we will be able to split the linear mapping if needed without break-before-make.
+>>> Thus, Yang's series, IIUC, will be one such user of my series; suppose we
+>>> are changing permissions on a range of the linear map backed by PMD-hugepages,
+>>> then the sequence of operations should look like the following:
+>>>
+>>> split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
+>>> split_range(end & ~HPAGE_PMD_MASK, end);
+>> I don't understand what the HPAGE_PMD_MASK twiddling is doing? That's not right.
+>> It's going to give you the offset within the 2M region. You just want:
+>>
+>> split_range(start)
+>> split_range(end)
+>>
+>> right?
+> 
+> Suppose start = 2M + 4K, end = 8M + 5K. Then my sequence will compute to
 
---eDCYdTcGZ7ZBhmc4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+8M + 5K is not a valid split point. It has to be at least page aligned.
 
-On Fri, May 30, 2025 at 12:00:13PM +0200, Mathieu Dubois-Briand wrote:
-> Some GPIO chips allow to rise an IRQ on GPIO level changes but do not
-> provide an IRQ status for each separate line: only the current gpio
-> level can be retrieved.
->=20
-> Add support for these chips, emulating IRQ status by comparing GPIO
-> levels with the levels during the previous interrupt.
+> split_range(2M + 4K, 3M)
+> split_range(8M, 8M + 5K)
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+We just want to split at start and end. What are the 3M and 8M params supposed
+to be? Anyway, this is off-topic for this series.
 
---eDCYdTcGZ7ZBhmc4
-Content-Type: application/pgp-signature; name="signature.asc"
+> __change_memory_common(2M + 4K, 8M + 5K)
+> 
+> So now __change_memory_common() wouldn't have to deal with splitting the
+> starts and ends. Please correct me if I am wrong.
+> 
+>>
+>>> __change_memory_common(start, end);
+>>>
+>>> However, this series can be used independently of Yang's; since currently
+>>> permission games are being played only on pte mappings (due to
+>>> apply_to_page_range
+>>> not supporting otherwise), this series provides the mechanism for enabling
+>>> huge mappings for various kernel mappings like linear map and vmalloc.
+>> In other words, you are saying that this series is a prerequisite for Yang's
+>> series (and both are prerequisites for huge vmalloc by default). Your series
+>> adds a new capability that Yang's series will rely on (the ability to change
+>> permissions on block mappings).
+> 
+> That's right.
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>> [1] https://lore.kernel.org/all/20250304222018.615808-1-
+>>> yang@os.amperecomputing.com/
+>>>
+>>> Dev Jain (3):
+>>>    mm: Allow pagewalk without locks
+>>>    arm64: pageattr: Use walk_page_range_novma() to change memory
+>>>      permissions
+>>>    mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
+>>>
+>>>   arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
+>>>   include/linux/pagewalk.h |  4 ++
+>>>   mm/pagewalk.c            | 18 +++++++--
+>>>   3 files changed, 94 insertions(+), 9 deletions(-)
+>>>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg5im8ACgkQJNaLcl1U
-h9DTwAf/UABWOSYe+DgB55VrRGIdUvqDiKGB1vhxAuuWTdVWR3ofUQBVZGPUHjNw
-AfbBY68x/zxKc+N3cgbcHMSprD4Zo/Yz5Rd3b9UESKm8mEiXkE1rPLNJUyhKXiL4
-5OqORKFdzb3OSgw6odJpOr2as2EMv4CIZO/a2cdjBLXf1itzFl8Do64rfh0QIcgn
-c8zZGISxQ/InhG/DI7s98CSaZwZ3kyIQVZx/BYUU2bCykwXi8RggU41UW/7OBCOu
-xl90au/+KXs+6WPKdv+CnZqE8J0RrqJNFi18z6vu57S6Yk/hGwTwofMAMvZ39Snf
-Yk3GjCiRd9/6ndTZDB8mOVc4Ra/ACA==
-=w5Lk
------END PGP SIGNATURE-----
-
---eDCYdTcGZ7ZBhmc4--
