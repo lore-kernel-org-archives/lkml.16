@@ -1,194 +1,125 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010041.outbound.protection.outlook.com [52.101.84.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7043321CFF6;
-	Fri, 30 May 2025 16:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621668; cv=fail; b=UrsGfMpr5kR3OIHNiY6yGa5Lv3rN1ysgXo84CKPGmNdFVzPuWZZmlil1s0bDFeUQSAAgRaVJLJGKXDByWoNyW6VLXOO5BN7yKf3RO05wANmhEF14Evp67AmEGoYRKoda3mPITCy9Xz5B77tbx/F+DKOp6ewJvsV6NXVrPhIGpeA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621668; c=relaxed/simple;
-	bh=mpoYhEbDpjg95s4tnkA+VDdzvgi09ih0AA/QfcMvuZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=abKWhx8WMezRt7atUxQQXEY85D1QwT6WdxGTierGWjMWp+jloK4LjSf6c2CpvVgEqEJfVeS5k/XX1HceQBB1ylik3Q4PZP9xz/ntE+SsmBcsBE+OBvY5iLxrlbiS2mLQT4FXSPiqeyj44o5rAymZqIzw+yfHH9lDYG8Bm8ecemw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bLutvWzX; arc=fail smtp.client-ip=52.101.84.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D47D21CFF6;
+	Fri, 30 May 2025 16:14:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748621678; cv=none; b=VgTm/RE1dJV2fReEddjAzWAJZTHQT22RemslewdwfUTQ9l4WZsHkhAanOS5DeYyhiUdRNNEwMhlcArzB4DVBOiy/YWLJPhPGDaos0wvBzE4r1M01M4TH7oZCnWkFYQjAak/owR3MlsHMFx9lzCdsgueBxxJMimeWV6nkBWhGbUY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748621678; c=relaxed/simple;
+	bh=07SjjF787R53d2NiXMYqs6iqzev11R/uOyi6Z3gUHuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mp5T9+A8Vuzm0IoIUHBJamKl/LYXDrYCCbXC0+6J8GTVdi6MHp7WsYT7GgauOCMJgKmiejV66UjtOIC/7/BCheaWOjuf/ImZtiKc0PPxYPiThM4S33ayf4PmvbxGGjqvi0zHUrR12qOi5bdRi2Mzp3+ZL+q7ILQJ/B2EgzQy9vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZfb2Bhg; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bLutvWzX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nTcTfoX0ctcIz7e/2JJmYSH2JwtrozvtQd174Q8L89cCcmlXyDXi0zM58LE09ZV3oDvES8GntNDAVf6IhCT4esAYNetfX0oCwdsC4FnAJV3GjDCLKl1DdfLjj4Gt5e0TCmrHght9v57bYhadfQQZp0wi3QI+OYr/olUPDoCwx4J9lnAyiTIFNPoOM2OARD6AIBTXXD6Y3rczafhw6Wn2qHnJH7lAAUtqg6pSfjKYKxYN0Q/mTBH3RRUM69j2RKPyeR9er+IscBiso9COD38HVr3gh0b58FFN1d8YPm2NDYLT/5EGRDqP+8hoUNZXYIsv6NSwnelFMGhf7IGVO2MSQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=th9oJsN/wXTmkd7tZ82swm26S1lJzQ7yQ8UijfTC1l0=;
- b=MZeT8fVhGeo4dsZrkaU12vd7f5P0dBGgRuu6z08riHGvGWykJs5SCRZn6N5vSMptYcp8vm1++M8zSyCvluQd6aD9KnKR3sF0RhurHHvTtxstxcsKoBEqunhxnxMjnIPOGMKq7cR/sZYX4DT0t3MeWxw5sbqLXwyRgkA2yASLpeKjBQ1Par+0jqPEhEJk0XGv9lL2NEEiaaGNnvWJvIUtTGWRoIxKDh0tFi8E5ZvyZ1r/5j8C4YnU/KPxYVeyT4Fv5pHawCW9LGV0sCz637l1CX+COw0w2PuCjLKNeVxDOUC9pXdzSiJ1rzByhjj1efCwG92iK95UhiP1R938hqeQjA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=th9oJsN/wXTmkd7tZ82swm26S1lJzQ7yQ8UijfTC1l0=;
- b=bLutvWzXl2LRNYvkn98E5HDnK+uD47XVpBxhVjq7VPzpYPqKL4eLyX03dX5ZJJjAOUUOyIUGBeeNoNd5e/AqTFNU9ZU2Wr8zvMX1cv4JAzbpqkQ1Ae/CDiw4mkvx7RWuQbME3vuOQoHMf9dcvmJNj4t0QDwSuK1gS5OC8ZL848evWENPw/afF908Enclk9twmD+Oe2/FS1i0Zr1sTL6fIaLmw9wNlPYejpPP19zkK7Vb1wjfns0++BGehU5Qvr+B0ewwYDJ7QPjnV9i/CMpTm9tDrB39U2niY5YNlQSXwaoISTzUNHxfS01+RL4XA1tLSiBrPPr3qU8npEmSTP6yRA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by GV1PR04MB10992.eurprd04.prod.outlook.com (2603:10a6:150:207::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Fri, 30 May
- 2025 16:14:22 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Fri, 30 May 2025
- 16:14:22 +0000
-Date: Fri, 30 May 2025 12:14:14 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:FREESCALE SOC DRIVERS" <linuxppc-dev@lists.ozlabs.org>,
-	"moderated list:FREESCALE SOC DRIVERS" <linux-arm-kernel@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: soc: add vf610 reset controller
-Message-ID: <aDnZVmOODuVaEzww@lizhi-Precision-Tower-5810>
-References: <20250522213951.506019-1-Frank.Li@nxp.com>
- <20250526-unpaid-mushy-d47196d04ad1@spud>
- <aDcvP975apg/dhQz@lizhi-Precision-Tower-5810>
- <20250530-construct-library-64ec665a6fea@spud>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530-construct-library-64ec665a6fea@spud>
-X-ClientProxiedBy: SJ0PR03CA0005.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZfb2Bhg"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a363d15c64so1495932f8f.3;
+        Fri, 30 May 2025 09:14:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748621675; x=1749226475; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nYfPIik2VZq+X4ZDMfQ+Lt7jynuL6/hkz3PFespndps=;
+        b=GZfb2BhgAn+bMGugKaucQ0qau/07bPJkY3vz7p4bzWezMEef+GxDol2TFiZW/kqbVs
+         r/DYbZUain3t0onU0aWTMu4jnC4YlSn+Z0IlZKGhmpN7Nbp6qysRNA03WRWO4QT+AOOC
+         jpfS3edk2LbpTReUMA7Umw8NIMGDI6Zux6u1cl73QwUcBdWcQbGFY9Q3WVX44Ezr+Y8x
+         f1w9lS7vZOSM0/yIGxv9ZSHvA8Kx3x+syVf37wt5hPrNc/Bx8NPRSC735DowUJ2lbdIa
+         YJQoOVWZJ3I2fGWLyEvvUyFziMRfkZCgZwH8tteq0hXUKnzBft/z8w+ClQXq0jf6wZ6O
+         zE6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748621675; x=1749226475;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nYfPIik2VZq+X4ZDMfQ+Lt7jynuL6/hkz3PFespndps=;
+        b=hpS/2tczC5E4aT0o3qMvmZIbkb0LjFs/bP78AoY0S3pIqI8My+hJHOlKAIt95CbgGJ
+         t1tnSEnNzt48AxzXsho+m/YXHCJ/Gw90rFI30i4jlyj9zoWVOI6eFyCeBwyoCy7oPZVU
+         a0ssfJNoT1qffmVsv2LEUD4qFQ1CCa1AslYlb2jwHmZToypWN+EOZChaHPLa7OfN6jx/
+         NgX0r5WgFWu93xMo1lmNEE1SstQg6XBIXhvVkkZsts8VjnILwcP8dWdWmcRc4qyNj5zs
+         7vDaaOzpRJAFeLNF5PxBqrqm/T9eG73HCUZZ33GRqWZZ8sd3NzbIq+KExGHVc3LPnhx4
+         AHuw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbaI/IOMK16zVjHNsQQTHHIxqAI9keDRMsHQUfhjbJL/kH4irLBMij/+TBpCm7TBknkhRylHvCYCyDawM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdwL6hn+WZFBvs0ufIq55BW2HSMVbwrYj7Jwvj/WVJWd2R345R
+	c6t8E37BWT+y3ktU5cnV9srRK6o3zTJOPT3g6FUMtqKc3CeFyWopOefx
+X-Gm-Gg: ASbGnctoC3AXF5Ao/vJeOKAbO4TEG945WToFGmecbQ/J8CRXXjbvMRW0miHVlUVxNSw
+	HuMxxUIdRu2oa5Ky9+SXJOx8NkdnqwbBWynhevW+8yEvPlmCb5BxqoaV6U7F0s5X8ZY87wdZRHV
+	urQ9d2NWI3L6LgDHvupthkfkoYKPgXfTMKXOwiwNO6bHPWZNwusux+2kbt7DPtJW1fIEh2GkwQA
+	i8sAmVo0pT5sGujA76kfzGtdrDzoJg4PJHcELJwuy/3ZuBi0RHPUzmw7Y3POncuGgz/hsBP1h9N
+	Pv1aa7qhkwXI29i5Nlf2g0dVMaIxqBXwI2TuxCL4ukd/ZWyFIGq4FOhod8ksyM7J
+X-Google-Smtp-Source: AGHT+IHiJzE7KyvRIHrRSU+sorY+syXUuDJVU/hS8oEKl6EdHGkEiBm1A0zvKqlv0HxbU5qHaF/JRA==
+X-Received: by 2002:a05:6000:310a:b0:3a4:dfc2:2a3e with SMTP id ffacd0b85a97d-3a4f7a6d223mr3555270f8f.39.1748621675123;
+        Fri, 30 May 2025 09:14:35 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8013e0esm21418975e9.39.2025.05.30.09.14.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 09:14:34 -0700 (PDT)
+Message-ID: <4d0a5cd9-c7e3-47d5-a55e-a4f234463e3e@gmail.com>
+Date: Fri, 30 May 2025 18:14:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|GV1PR04MB10992:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b53dc96-7bd0-4264-db36-08dd9f9509b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|366016|376014|7416014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7LDT/HtAb1bfJWjDFuy4e0lrYZjlONttd/QFXyFlFVSgsxvUoNSt8UnYcVHF?=
- =?us-ascii?Q?2QPq9VKcOv5h0UUIEo5U+KJmbEZgjXrvJ3b8et0dPN0TMF/8ZRuHuaOo2plC?=
- =?us-ascii?Q?P0UG0KnjUOHoWcM1XfrLI9DMssKxkA4aEARifazNNLf390Tsq5FW33XwjF1Y?=
- =?us-ascii?Q?/aM3HPIos/n3fK87kTEgQJcJeDrOVlxk6O8AJmSrc3kHP3q0EKBOo9HZJzN5?=
- =?us-ascii?Q?D/787HwuVrkJQXk2D9Fr83sUSfFjiEF7zFSmRLIzDz4kyij4+F40Stfegx4Y?=
- =?us-ascii?Q?J9KiIL8IwHGQzcUxqn/w/9xGkH9lLRAK8p975apOPiI7sCG1endFIvg1DT4K?=
- =?us-ascii?Q?cS4dWopqJnxAYC7UrHuzo+o5Jbng2HvT52t/1DbFvMGwoe4VxkDe8Fb1fXkS?=
- =?us-ascii?Q?Bi9/8tsj1Q3+yzHNYtZaWLUIgTjbBNAPJOACkrxmMkHiJPbnlpXPXXnwTJGW?=
- =?us-ascii?Q?/SYsoJmaoAAI/1wQwI+DuVVR3s41ZJOXmHoOdCpuTu9BXc6jhkfhEmzuBsn8?=
- =?us-ascii?Q?jaW+TEYf6U9L0w+rPGag/nQzYMZBy1nE3KSvseXA067LGMQxI+pcpli34RLG?=
- =?us-ascii?Q?EExfJjwClmuWFyv/M/Shg+ilDXphM6gQ3XM04ejJB5cme8O/OQSbu6hxdczl?=
- =?us-ascii?Q?ihyKqVqqs9G0gRZb+zx8Yo1+u5o63Pc38Buud1B/PnkX2Ammv0vaq8kpfXxo?=
- =?us-ascii?Q?3aXniYvLdpFfqv2tu7umPR/V88ZZ3HFhEB0BXV7YvsldeMd2wrtS3MudNJlb?=
- =?us-ascii?Q?otgVtGoIXiAWVGl/Ju39h575vXsTLIx0KbPxZdddAaQBvYNzEPSYsI5n7lZu?=
- =?us-ascii?Q?QCNFHwHilgOVz/PHdET49Avu93FeNRM8HM2TXJ2/jD0n46iap7xGs5/S5Ns/?=
- =?us-ascii?Q?1iU9bogenAlejF0+pP2FJbGENPIzKb7OD4RRN8cBO6MM+zoDDbkjXMy0SMfs?=
- =?us-ascii?Q?b5gu78LX1/NuOEalQfmyWq1nE6ZtguUHRjylGSxF0BmRjnXEY3faMh1BfPqt?=
- =?us-ascii?Q?Y/IFUwqxwKkc/xjVV854PgvWauyH+068e8dRW1HQYsYjwchLjoy4k1btSVEy?=
- =?us-ascii?Q?Hgk47GOBqOlCOcpoQFWCJZBHfCzR9KjrmH6o8QRA89Hx4VkhFNF9id260wCv?=
- =?us-ascii?Q?3tprimvgDdg+FT6UVxzE4D0Ro3r77yL01WhsjsNQMEtyr7ISDjACzEpxw8DP?=
- =?us-ascii?Q?ZCYSz3QxrMKMThd5FRedeMam5kzjfzdMzKCZJGrpQ0ARkaBIm9BfkP7EDNE+?=
- =?us-ascii?Q?D8TP466U4z7S6DLWw8lPd2zACT3PwTkgSA4gnSXAWdOwO3SyDc9m+KsiMD8o?=
- =?us-ascii?Q?Ggcg8MARQ/ok9qu2AfkHKp1YXm4c3yZImcXZ2ELkSPXVbJu4KbJKDORfSicx?=
- =?us-ascii?Q?EEArmAEMxX7WsV6ZdxjAipP7HXYt1r3g2GQReuUqU/E7fWkuj10kooUfG4Ob?=
- =?us-ascii?Q?/Y+7JprhUu0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(366016)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qOTtk77mduodRceHP/0BYhtRKIG1lWRZ/OahXMuzSov2UMvN764djCQbiZim?=
- =?us-ascii?Q?MxK+dkmqSDqdUrUpXXVzSU+yvMtvYOSAFTRElUIr8HVPnPnt7xUE2RCApmZJ?=
- =?us-ascii?Q?Al6kjJ4vbRzOp3bToLnULWE5n0uvgedTM0H01v2ToZULEGuAvL3MSC41kJKE?=
- =?us-ascii?Q?k+8ARdsUXno7816a165gusCc1EIchfACueHObcyP94QdVaI69KMund2bGyos?=
- =?us-ascii?Q?xiOXZZy7yJLGNOmppIdIG8OMixjdcTqtjS+JkpX7OpKdXnKyfFe0rUJPiLM1?=
- =?us-ascii?Q?5cq47n3dzGUjk+A3UmBmQPCLtNEW7mSm6pjgdFKP+XX/RGV6dVCnk62Dm1Pk?=
- =?us-ascii?Q?X0oChdodTlkmUzPGUSTTmxxbW2gxjOJgSXKLE06ovHQdfCOKoYxDwwuLI/GE?=
- =?us-ascii?Q?W0r/PE3PlA4IanTV5oG+N6+wuJcFMKdNVEvyalXnkTTEh67tDMaqvxiAfqcO?=
- =?us-ascii?Q?PYIKW8CsRRDbH4sEAqgAajb7A1ufV90is5sKrc4w1jObW/3xQJfozprNYxjo?=
- =?us-ascii?Q?q0oLBOJZygaUc9oc9PlSKDehpfO92k7eOAxexGM3MXzVOTO/LRNmHch7NaFa?=
- =?us-ascii?Q?onkzSwpq4iNagBOSXTTznQ5ZG8nH0bFedhWFVj26ygrtztGu8txPD8Rwf+HG?=
- =?us-ascii?Q?s4MK+t/YSfKNKnLcduTPKqbDA7ze7Ztid6ygozYmsQjbB/zaZOpmHt+DlI7q?=
- =?us-ascii?Q?M7RhOpr1L8m9bTaRy0sVaeDt/XiRmi2IbDgQvHSvXMETXQaPjosxEMWk7xCU?=
- =?us-ascii?Q?KVCRvIp7H0yFbJIPCOibe3/cUjmmQhVDrdjZXnvhj22NCro6X1fM/y2HCQ+h?=
- =?us-ascii?Q?2YkH3XrWpSGfTmebGK6BgaBcArwWv58qLUnK8nBBlrdReQ+LfBTqeFo6NLfd?=
- =?us-ascii?Q?PuXvtwdRU7kytFkNzP3AVaB0TRNX7Jqb46o8BA+LojPGB5qBVTS0LcMkP/Fe?=
- =?us-ascii?Q?iLNLwfaOmHlLynPKIgjVuSTBqlRrzxDr4cjwJv7zTPGFPHy0bTRwkI4ezR5z?=
- =?us-ascii?Q?m48sKGoU0815qImOMHbUOzTW8LjJGr5h6s6HROzwxle0KNJjU+thQQM045Pv?=
- =?us-ascii?Q?grDT+Hu+1APwjFTN04c7HXtxyVjvAgHuwQg9EJ0d/zTif9sUPt4LOkdP28X+?=
- =?us-ascii?Q?rOqW7zQAW3MwWoTq1WvjZlDn4yiG8h2+WcGR0nab5CnB9vg2F7qyAwY+EXt9?=
- =?us-ascii?Q?1JnJ1FIgQi/vIdQ49M6e7oQRIbjJVM2SteFb5Oj7VS1YuR/ZPYRVkesOxXue?=
- =?us-ascii?Q?1r9kjYseBceaZhO2l4PcuL/AXNupc5knGNA4F9SPFoNrZ/MFYrPbcsCSOuVG?=
- =?us-ascii?Q?hRqOw9eJGLj5SVpRIQLWgjT42wgUOfdM+tBB3T0GppNFU/iV43VOFLeTc3Fy?=
- =?us-ascii?Q?pDJfv0hnhxUS7P2mUlunrpjF6AJudfIGG34HhcuR/TBytKeLtc+xpYLl0h9/?=
- =?us-ascii?Q?YsFLbQ8UC+tSyTZbb+x1FcGLE60k1BqyFFPifznKoKT3rT8/aLKrB2o9KYDM?=
- =?us-ascii?Q?d9yKig3LYLQj77NMgAnIL9mE8ubCBnEMMq56810F3UQGSm/++g41EU7csZyF?=
- =?us-ascii?Q?EsqxVzn8PnPuwvQRt/yg8sZGFy4nxme4/PzdFYyd?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b53dc96-7bd0-4264-db36-08dd9f9509b7
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:14:22.0244
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hzKX7ZMYKzHTvIJ4tFKGRDJilEk8U1Ytf+zmYurETYJTF+SQ4q3GJOQGR1hJrlXT3yusF3jFvthSGx4/BLDxFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10992
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] rust: types: support fallible PinInit types in
+ Opaque::pin_init
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
+ rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-2-dakr@kernel.org>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250530142447.166524-2-dakr@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 04:23:31PM +0100, Conor Dooley wrote:
-> On Wed, May 28, 2025 at 11:43:59AM -0400, Frank Li wrote:
-> > On Mon, May 26, 2025 at 04:54:30PM +0100, Conor Dooley wrote:
-> > > On Thu, May 22, 2025 at 05:39:50PM -0400, Frank Li wrote:
-> > > > Add vf610 reset controller, which used to reboot system to fix below
-> > > > CHECK_DTB warnings:
-> > > >
-> > > > arch/arm/boot/dts/nxp/vf/vf610-bk4.dtb: /soc/bus@40000000/src@4006e000:
-> > > >     failed to match any schema with compatible: ['fsl,vf610-src', 'syscon']
-> > > >
-> > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > ---
-> > > >  .../bindings/soc/fsl/fsl,vf610-src.yaml       | 46 +++++++++++++++++++
-> > > >  1 file changed, 46 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> > > > new file mode 100644
-> > > > index 0000000000000..4c92a5e4892bf
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/soc/fsl/fsl,vf610-src.yaml
-> > > > @@ -0,0 +1,46 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas//soc/fsl/fsl,vf610-src.yaml#
-> > >
-> > > It's a reset controller then, shouldn't it be in /reset, not //soc?
-> >
-> > It is not reset controller since there are not #reset-cells property to
-> > reset other models. It just provides syscon to reboot the whole system.
->
-> | Add vf610 reset controller
-> | The System Reset Controller (SRC) generates the resets for the device.
->
-> Giving me mixed signal here chief. If you call something a reset
-> controller multiple times without any additional clarification that it
-> does not provide resets to peripherals, how is anyone reading the patch
-> not supposed to come to the same conclusion as me?
+On 30.05.25 4:24 PM, Danilo Krummrich wrote:
+> Currently, Opaque::pin_init only supports infallible PinInit
+> implementations, i.e. impl PinInit<T, Infallible>.
+> 
+> This has been sufficient so far, since users such as Revocable do not
+> support fallibility.
+> 
+> Since this is about to change, make Opaque::pin_init() generic over the
+> error type E.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
 
-Yes, reference manual call it reset controllers! But it just indicate reset
-signal happen. let me add more descrption at commit message.
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
-Frank
-
+>  rust/kernel/types.rs | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 22985b6f6982..75c99d6facf9 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -354,13 +354,13 @@ pub const fn zeroed() -> Self {
+>      }
+>  
+>      /// Create an opaque pin-initializer from the given pin-initializer.
+> -    pub fn pin_init(slot: impl PinInit<T>) -> impl PinInit<Self> {
+> -        Self::ffi_init(|ptr: *mut T| {
+> +    pub fn pin_init<E>(slot: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+> +        Self::try_ffi_init(|ptr: *mut T| -> Result<(), E> {
+>              // SAFETY:
+>              //   - `ptr` is a valid pointer to uninitialized memory,
+> -            //   - `slot` is not accessed on error; the call is infallible,
+> +            //   - `slot` is not accessed on error,
+>              //   - `slot` is pinned in memory.
+> -            let _ = unsafe { PinInit::<T>::__pinned_init(slot, ptr) };
+> +            unsafe { PinInit::<T, E>::__pinned_init(slot, ptr) }
+>          })
+>      }
+>  
 
