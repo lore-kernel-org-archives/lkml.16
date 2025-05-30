@@ -1,281 +1,124 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7271A1E1DE3;
-	Fri, 30 May 2025 13:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612355; cv=pass; b=EaQxrAxnjgpNvarwFTsog8MdJX9cAPEHKEjx5q5g6j4HglYjU8R+QmhQSBrMikT4RVraeY5ZxLHlwDTAqEoF3OwKhHsIXJHZbjrvW4j1+8/umQf6DoDLPFmrekXLGZytXSOZDI7RDV6HOwff1uUYrSIvoCR3AFfMrZ8rVLtxgtc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612355; c=relaxed/simple;
-	bh=sKm/6tWM5Dt0t5geIE4cRYOZ5L9dPbQP5AXesJ03dk8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bQgyjy8qqtyB/zYOrWs6eC+NOhQBn+9276dcDeElEsL6IFMWObx5t2hBcekfgGVi8AE1RHvLngKqz52AUlzq+MCCnxheqQGUECg3Vu5itFi8iAr72a50qfASRLGRpTsSYrFIRqchFPdn9qg2yp93mg0Gw3CeuOImg9lEwGGS8GM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=TUtxtTDX; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C147207DFE
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748612381; cv=none; b=pX0FqHi/36dKWYCdKrmr5Xsk18hAwCRTRjvDqn5bl+73/0WruVBJ29lafdZ2elkc6BNYP/ZqHaZCBZLMJcAe7MJOAOxtVBc40XPwGAEHpJ0VZLSbZazIvJeGjniyiVGknlIdvSdb0num5nM1rqrFWPeuJ5ty6VeqBTBeMOprCu0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748612381; c=relaxed/simple;
+	bh=uiPnWYUvBr2dZYGj5pih1313yI+zbVEDfWOn2toitH8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lES96Bop3xLYSlkbuKlUCf+CtCvlhRQaEYVpmhVwF5pPOunQVoD+963ANHfJaVtx1zLSL3ntYlOY6C0Wr8/vdk6UGAZ8Sod/1dS8tG6L9lptgmwipxAVCMwpQ8uB5WVHqHrqBNf1w8+ose2nk0/UsNhl9zCQR/fiJG5FVfZO2yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gRZv1CZI; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="TUtxtTDX"
-ARC-Seal: i=1; a=rsa-sha256; t=1748612327; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ca2JV1NvoRKv5pME+qb9G/ZrKNrPhFrJv4PWVsA586GumZI7xFu0nY1/ZmG7c7/RMPLDPTEtwdgo9zbD9QOQ6QmIvRxzHx2osUOcaOao5389zazozFKOBocEIv8iXm2z3p/zpAFlbcGIFe/+4UHge9vxhInXLvoFO+yD8CnHk4Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748612327; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=V3OqSA9b11oKNgkPDYr1xA9wl1ljVHhNL13TiqJ42tA=; 
-	b=CORaZ4hP1D6sx4LhiK+ihZQEJKwHBDfu0HlJqsUpqY8SQMjVwVM0L85w6sd4LKjhq+oUF3JUxtvnnupO+2rbUfYEhigUm4Ns9yZCCRn3b32PCxfNGIS1KJtHZpjqOrB8JWxSo8T9daAjFtO7gqVc+agGextqVv1k3xNMK6s2NPM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748612327;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=V3OqSA9b11oKNgkPDYr1xA9wl1ljVHhNL13TiqJ42tA=;
-	b=TUtxtTDXOcsQVd3PeEEi5CSpXzuFLcz/yiAJPn/ts3eUJKscSAj6mfzBqm+fQzeM
-	IaR8BX7vh+Mps0TLUMBE7GFGIcMz+UY+64bVzExGGxt9NZ57lcVUKUG/o6tyOSg5Qs4
-	uD+NJ6b06t8L0xoovPIwj1TxWeqACSqnpLg2vQSo=
-Received: by mx.zohomail.com with SMTPS id 1748612325008737.6186102251434;
-	Fri, 30 May 2025 06:38:45 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Fri, 30 May 2025 15:38:09 +0200
-Subject: [PATCH 2/2] PM / devfreq: rockchip-dfi: add support for LPDDR5
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gRZv1CZI"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a363d15c64so1363074f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:39:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748612377; x=1749217177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yRGPAlzvwqw6A1h+zbYAm+4VpblGusAQkDYaKOqoOyw=;
+        b=gRZv1CZIaX9Fxcw+R4Tf0ekRuSPTNaLzyEAFo50pWgQOQhpdikQ6kL5n8i/oRcMNQw
+         n3d3d//y8Qyfmm6CC/K6NBnJgeKaSo17W14tVHm4uGTF/3hPFdMvXqL7yZp3l8jxspmQ
+         OIHOyw6OJVUoM6HQ9aIg6i4+kfLv0BmnGePFcEP+AEOTgYB571VmDN36l1qxUVdlLpHw
+         DdAAlZEl7LIQJo6gdSgsbdV65kFGs6yVa56pzSqcy1ZV65lr6eVkkUL5HBtYEVL+siua
+         my4PZrVr/pTkM3TZk27ZGBuTbwYyjeCYGfdHQ0TIkQs6LEqQRgXtuO89YCdOqBaVB5LS
+         aDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748612377; x=1749217177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yRGPAlzvwqw6A1h+zbYAm+4VpblGusAQkDYaKOqoOyw=;
+        b=SvnyuQLxb4VLbif+NfSpr6tABcdVAomJ2IiXg9SbgSShc4CBGkQL6I3LT4oNlaJIFH
+         vXsSMOZUfhldXNyrBBP0nBMVNZTXGNMdYYUWZWbsNZQYYWkJ+AAurmPC9PX4E0WKFxL6
+         Nr+Ovt6VywblMuRqvRvthpo8KvLvL1XdflzZm+klWUowz+lV+vidUK2nIJFli8vm7oXV
+         +dgSuBNlVYhhhM9dTwiobMiqB5QtLzOCBDBku79VZCxqdr+e3HzDPmIB3Gd4UNH2X/qj
+         uFsH90Rjqj61m0IESeaXVEfx+lOV1cHQRfbUpfzAZ38TYkhELrvPioMQmIvOmcWa9B37
+         +pVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUG22KeR1cYF+64kHSb7x79DMRxoX+hawv2rJiSCb1nvFMwYlUbzGmrX7Q7iQLp54RTSgvLciTVd/9DheM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3HMyB9hxd4WCMKGVoFfZIt6sujCwPfTFZNYZiVGtX9Sff32al
+	7JR1pUQDLv4r6ZAk0xvcuZgOls+b0B+Tnc0OXr8UTQ6Br+xKgisqruIWgf00xEX8XRA=
+X-Gm-Gg: ASbGncsQBikW+OjToXZygcAl2ijKxPaCJYGc3mufb3eZqNId8eT1LjL7NVFtNiTHgxH
+	abBfH52twMhp8PKS/9kbpoJb1EDoAkfVhG1NHXb4udMLNfrRmGweG0erbpu1uGzjSwmGjO33qD0
+	F0eZDzfZL9gZkxrERApUzDWm2VcSg3clQwK1U9/RqmSinVcDC6bbQHuSLrPE8P7s2jzU2Srq42Q
+	qeNXTjEcG8uio0pNG21B4SV/RksEubfUPz++WzAZqFQB2iv0+KazseMFTpxod0leoY+4AKkIe9y
+	8qqMEmAzbgZoqODfjzIKFi51aTe6rV5Bd827mrdC4oqphd+W4JwwuYx8mqNNNs+D
+X-Google-Smtp-Source: AGHT+IEo9kE2Be7pLGHE2XuA9AU0Ju3nckFIvGlZabjJ2oxMPb3m4OllHxVr60DZeTamXlijFKgeCA==
+X-Received: by 2002:a05:6000:24c8:b0:3a3:55e6:eaaf with SMTP id ffacd0b85a97d-3a4f7a1cda7mr2695435f8f.24.1748612377483;
+        Fri, 30 May 2025 06:39:37 -0700 (PDT)
+Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4f009748fsm4788637f8f.80.2025.05.30.06.39.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 06:39:37 -0700 (PDT)
+Date: Fri, 30 May 2025 15:39:36 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, david@redhat.com,
+	shakeel.butt@linux.dev, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, donettom@linux.ibm.com, aboorvad@linux.ibm.com,
+	sj@kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: fix the inaccurate memory statistics issue for users
+Message-ID: <aDm1GCV8yToFG1cq@tiehlicka>
+References: <4f0fd51eb4f48c1a34226456b7a8b4ebff11bf72.1748051851.git.baolin.wang@linux.alibaba.com>
+ <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-rk3588-dfi-improvements-v1-2-6e077c243a95@collabora.com>
-References: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com>
-In-Reply-To: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>, 
- MyungJoo Ham <myungjoo.ham@samsung.com>, 
- Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-pm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529205313.a1285b431bbec2c54d80266d@linux-foundation.org>
 
-The Rockchip RK3588 SoC can also support LPDDR5 memory. This type of
-memory needs some special case handling in the rockchip-dfi driver.
+On Thu 29-05-25 20:53:13, Andrew Morton wrote:
+> On Sat, 24 May 2025 09:59:53 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+> 
+> > On some large machines with a high number of CPUs running a 64K pagesize
+> > kernel, we found that the 'RES' field is always 0 displayed by the top
+> > command for some processes, which will cause a lot of confusion for users.
+> > 
+> >     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+> >  875525 root      20   0   12480      0      0 R   0.3   0.0   0:00.08 top
+> >       1 root      20   0  172800      0      0 S   0.0   0.0   0:04.52 systemd
+> > 
+> > The main reason is that the batch size of the percpu counter is quite large
+> > on these machines, caching a significant percpu value, since converting mm's
+> > rss stats into percpu_counter by commit f1a7941243c1 ("mm: convert mm's rss
+> > stats into percpu_counter"). Intuitively, the batch number should be optimized,
+> > but on some paths, performance may take precedence over statistical accuracy.
+> > Therefore, introducing a new interface to add the percpu statistical count
+> > and display it to users, which can remove the confusion. In addition, this
+> > change is not expected to be on a performance-critical path, so the modification
+> > should be acceptable.
+> > 
+> > Fixes: f1a7941243c1 ("mm: convert mm's rss stats into percpu_counter")
+> 
+> Three years ago.
+> 
+> > Tested-by Donet Tom <donettom@linux.ibm.com>
+> > Reviewed-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> > Tested-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
+> > Acked-by: Shakeel Butt <shakeel.butt@linux.dev>
+> > Acked-by: SeongJae Park <sj@kernel.org>
+> > Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> 
+> Thanks, I added cc:stable to this.
 
-Add support for it in rockchip-dfi, as well as the needed GRF register
-definitions.
-
-This has been tested as returning both the right cycle count and
-bandwidth on a LPDDR5 board where the CKR bit is 1. I couldn't test
-whether the values are correct on a system where CKR is 0, as I'm not
-savvy enough with the Rockchip tooling to know whether this can be set
-in the DDR init blob.
-
-Downstream has some special case handling for a hardware version where
-not just the control bits differ, but also the register. Since I don't
-know whether that hardware version is in any production silicon, it's
-left unimplemented for now, with an error message urging users to report
-if they have such a system.
-
-There is a slight change of behaviour for non-LPDDR5 systems: instead of
-writing 0 as the control flags to the control register and pretending
-everything is alright if the memory type is unknown, we now explicitly
-return an error.
-
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/devfreq/event/rockchip-dfi.c | 84 ++++++++++++++++++++++++++++--------
- include/soc/rockchip/rk3588_grf.h    |  8 +++-
- include/soc/rockchip/rockchip_grf.h  |  1 +
- 3 files changed, 73 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
-index 54effb63519653d20b40eed88681330983399a77..5a2c9badcc64c552303c2f55c52e5420dec5ffc1 100644
---- a/drivers/devfreq/event/rockchip-dfi.c
-+++ b/drivers/devfreq/event/rockchip-dfi.c
-@@ -34,15 +34,18 @@
- 
- /* DDRMON_CTRL */
- #define DDRMON_CTRL	0x04
-+#define DDRMON_CTRL_LPDDR5		BIT(6)
- #define DDRMON_CTRL_DDR4		BIT(5)
- #define DDRMON_CTRL_LPDDR4		BIT(4)
- #define DDRMON_CTRL_HARDWARE_EN		BIT(3)
- #define DDRMON_CTRL_LPDDR23		BIT(2)
- #define DDRMON_CTRL_SOFTWARE_EN		BIT(1)
- #define DDRMON_CTRL_TIMER_CNT_EN	BIT(0)
--#define DDRMON_CTRL_DDR_TYPE_MASK	(DDRMON_CTRL_DDR4 | \
-+#define DDRMON_CTRL_DDR_TYPE_MASK	(DDRMON_CTRL_LPDDR5 | \
-+					 DDRMON_CTRL_DDR4 | \
- 					 DDRMON_CTRL_LPDDR4 | \
- 					 DDRMON_CTRL_LPDDR23)
-+#define DDRMON_CTRL_LP5_BANK_MODE_MASK	GENMASK(8, 7)
- 
- #define DDRMON_CH0_WR_NUM		0x20
- #define DDRMON_CH0_RD_NUM		0x24
-@@ -116,13 +119,60 @@ struct rockchip_dfi {
- 	int buswidth[DMC_MAX_CHANNELS];
- 	int ddrmon_stride;
- 	bool ddrmon_ctrl_single;
-+	u32 lp5_bank_mode;
-+	bool lp5_ckr;	/* true if in 4:1 command-to-data clock ratio mode */
- 	unsigned int count_multiplier;	/* number of data clocks per count */
- };
- 
-+static int rockchip_dfi_ddrtype_to_ctrl(struct rockchip_dfi *dfi, u32 *ctrl,
-+					u32 *mask)
-+{
-+	u32 ddrmon_ver;
-+
-+	*mask = DDRMON_CTRL_DDR_TYPE_MASK;
-+
-+	switch (dfi->ddr_type) {
-+	case ROCKCHIP_DDRTYPE_LPDDR2:
-+	case ROCKCHIP_DDRTYPE_LPDDR3:
-+		*ctrl = DDRMON_CTRL_LPDDR23;
-+		break;
-+	case ROCKCHIP_DDRTYPE_LPDDR4:
-+	case ROCKCHIP_DDRTYPE_LPDDR4X:
-+		*ctrl = DDRMON_CTRL_LPDDR4;
-+		break;
-+	case ROCKCHIP_DDRTYPE_LPDDR5:
-+		ddrmon_ver = readl_relaxed(dfi->regs);
-+		if (ddrmon_ver < 0x40) {
-+			*ctrl = DDRMON_CTRL_LPDDR5 | dfi->lp5_bank_mode;
-+			*mask |= DDRMON_CTRL_LP5_BANK_MODE_MASK;
-+			break;
-+		}
-+
-+		/*
-+		 * As it is unknown whether the unpleasant special case
-+		 * behaviour used by the vendor kernel is needed for any
-+		 * shipping hardware, ask users to report if they have
-+		 * some of that hardware.
-+		 */
-+		dev_err(&dfi->edev->dev,
-+			"unsupported DDRMON version 0x%04X, please let linux-rockchip know!\n",
-+			ddrmon_ver);
-+		return -EOPNOTSUPP;
-+	default:
-+		dev_err(&dfi->edev->dev, "unsupported memory type 0x%X\n",
-+			dfi->ddr_type);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
- static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
- {
- 	void __iomem *dfi_regs = dfi->regs;
- 	int i, ret = 0;
-+	u32 ctrl;
-+	u32 ctrl_mask;
- 
- 	mutex_lock(&dfi->mutex);
- 
-@@ -136,8 +186,11 @@ static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
- 		goto out;
- 	}
- 
-+	ret = rockchip_dfi_ddrtype_to_ctrl(dfi, &ctrl, &ctrl_mask);
-+	if (ret)
-+		goto out;
-+
- 	for (i = 0; i < dfi->max_channels; i++) {
--		u32 ctrl = 0;
- 
- 		if (!(dfi->channel_mask & BIT(i)))
- 			continue;
-@@ -147,21 +200,7 @@ static int rockchip_dfi_enable(struct rockchip_dfi *dfi)
- 			       DDRMON_CTRL_SOFTWARE_EN | DDRMON_CTRL_HARDWARE_EN),
- 			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
- 
--		/* set ddr type to dfi */
--		switch (dfi->ddr_type) {
--		case ROCKCHIP_DDRTYPE_LPDDR2:
--		case ROCKCHIP_DDRTYPE_LPDDR3:
--			ctrl = DDRMON_CTRL_LPDDR23;
--			break;
--		case ROCKCHIP_DDRTYPE_LPDDR4:
--		case ROCKCHIP_DDRTYPE_LPDDR4X:
--			ctrl = DDRMON_CTRL_LPDDR4;
--			break;
--		default:
--			break;
--		}
--
--		writel_relaxed(HIWORD_UPDATE(ctrl, DDRMON_CTRL_DDR_TYPE_MASK),
-+		writel_relaxed(HIWORD_UPDATE(ctrl, ctrl_mask),
- 			       dfi_regs + i * dfi->ddrmon_stride + DDRMON_CTRL);
- 
- 		/* enable count, use software mode */
-@@ -652,6 +691,7 @@ static int rockchip_ddr_perf_init(struct rockchip_dfi *dfi)
- 		break;
- 	case ROCKCHIP_DDRTYPE_LPDDR4:
- 	case ROCKCHIP_DDRTYPE_LPDDR4X:
-+	case ROCKCHIP_DDRTYPE_LPDDR5:
- 		dfi->burst_len = 16;
- 		break;
- 	}
-@@ -730,7 +770,7 @@ static int rk3568_dfi_init(struct rockchip_dfi *dfi)
- static int rk3588_dfi_init(struct rockchip_dfi *dfi)
- {
- 	struct regmap *regmap_pmu = dfi->regmap_pmu;
--	u32 reg2, reg3, reg4;
-+	u32 reg2, reg3, reg4, reg6;
- 
- 	regmap_read(regmap_pmu, RK3588_PMUGRF_OS_REG2, &reg2);
- 	regmap_read(regmap_pmu, RK3588_PMUGRF_OS_REG3, &reg3);
-@@ -757,6 +797,14 @@ static int rk3588_dfi_init(struct rockchip_dfi *dfi)
- 	dfi->ddrmon_stride = 0x4000;
- 	dfi->count_multiplier = 2;
- 
-+	if (dfi->ddr_type == ROCKCHIP_DDRTYPE_LPDDR5) {
-+		regmap_read(regmap_pmu, RK3588_PMUGRF_OS_REG6, &reg6);
-+		dfi->lp5_bank_mode = FIELD_GET(RK3588_PMUGRF_OS_REG6_LP5_BANK_MODE, reg6) << 7;
-+		dfi->lp5_ckr = FIELD_GET(RK3588_PMUGRF_OS_REG6_LP5_CKR, reg6);
-+		if (dfi->lp5_ckr)
-+			dfi->count_multiplier *= 2;
-+	}
-+
- 	return 0;
- };
- 
-diff --git a/include/soc/rockchip/rk3588_grf.h b/include/soc/rockchip/rk3588_grf.h
-index 630b35a550640e57f1b5a50dfbe362653a7cbcc1..02a7b2432d9942e15a77424c44fefec189faaa33 100644
---- a/include/soc/rockchip/rk3588_grf.h
-+++ b/include/soc/rockchip/rk3588_grf.h
-@@ -12,7 +12,11 @@
- #define RK3588_PMUGRF_OS_REG3_DRAMTYPE_INFO_V3		GENMASK(13, 12)
- #define RK3588_PMUGRF_OS_REG3_SYSREG_VERSION		GENMASK(31, 28)
- 
--#define RK3588_PMUGRF_OS_REG4           0x210
--#define RK3588_PMUGRF_OS_REG5           0x214
-+#define RK3588_PMUGRF_OS_REG4				0x210
-+#define RK3588_PMUGRF_OS_REG5				0x214
-+#define RK3588_PMUGRF_OS_REG6				0x218
-+#define RK3588_PMUGRF_OS_REG6_LP5_BANK_MODE		GENMASK(2, 1)
-+/* Whether the LPDDR5 is in 2:1 (= 0) or 4:1 (= 1) CKR a.k.a. DQS mode */
-+#define RK3588_PMUGRF_OS_REG6_LP5_CKR			BIT(0)
- 
- #endif /* __SOC_RK3588_GRF_H */
-diff --git a/include/soc/rockchip/rockchip_grf.h b/include/soc/rockchip/rockchip_grf.h
-index e46fd72aea8d1f649768a3269b85176dacceef0e..41c7bb26fd5387df85e5b58186b67bf74706f360 100644
---- a/include/soc/rockchip/rockchip_grf.h
-+++ b/include/soc/rockchip/rockchip_grf.h
-@@ -13,6 +13,7 @@ enum {
- 	ROCKCHIP_DDRTYPE_LPDDR3	= 6,
- 	ROCKCHIP_DDRTYPE_LPDDR4	= 7,
- 	ROCKCHIP_DDRTYPE_LPDDR4X = 8,
-+	ROCKCHIP_DDRTYPE_LPDDR5	= 9,
- };
- 
- #endif /* __SOC_ROCKCHIP_GRF_H */
+I have only noticed this new posting now. I do not think this is a
+stable material. I am also not convinced that the impact of the pcp lock
+exposure to the userspace has been properly analyzed and documented in
+the changelog. I am not nacking the patch (yet) but I would like to see
+a serious analyses that this has been properly thought through.
 
 -- 
-2.49.0
-
+Michal Hocko
+SUSE Labs
