@@ -1,116 +1,380 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D9278172;
-	Fri, 30 May 2025 20:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08852283126;
+	Fri, 30 May 2025 20:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748635585; cv=none; b=XyjFG8djXn6u54U68kwK86MI/e2l5AGw6vwnBiSZAdR1YufUhko3kX8L8QGYoSQ6FOFNmzfVFf2wJxIq5ZEEBXe2TGxTJIlXYKQkt4JWAFs6IA2RET7kI3A0QhYzZsnVkRTFQCfFH/ZNdpKe+df5Uk6QkMknhncyiEzhKYqruBM=
+	t=1748635620; cv=none; b=JcFmdcHZW7OGxuzv5h1oE47FqJaYL1aINV5eInNTJxaqKxQzwtERA+ufwsLoYxvIluQNNoPrr7itbbvH5q5BmU13IUeiXARI+nQ3k4mwKKt/aFX1A8UKsLmrunSPZk0xG75L3sCwrStPzJN+DGurFIijnPCBHbFMvyuZDAQsTUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748635585; c=relaxed/simple;
-	bh=V8aTG04ZAEGYlZwTtP2eJJ/cuAcdbMFJH1v6uIkjQdQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d8oe5kxGOGrvMqE/yRuSre5A5DteLJh5c89Y7Vh30E41+MHUFNh71zuX+ZDinaL9N62e3FC3AT7dPC89nELfhhWjeA5oXezNkt1l6CxJpqhS9ICeYUxBWG/Hk284BdEWw1Yr58HG8fMZcWPYjCT7BhkamQdImK8ROcFnhpkrBCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWVmkXkC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748635620; c=relaxed/simple;
+	bh=xPW6dKl0u9tOAE44RcC/AR/Qp+vY0ym5kEbMu2VOHzE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=k5EcKpYMc0rqq3Aa7GkVfuzs/1ZAVkk3zdja7m+stfhdL3rD6v+0Xxn7Bs5++L4+7hRhxaLRk5lE3/geqaAI+XFJa20dg6oOqbIO2jroTGHcAia1J+cZuZ231kXn74WQbaAeqLLHG2jdr70LLbq41UyUiGkgUWP1g6rqbKLP0IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugHd6+10; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWVmkXkC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E729C4CEE9;
-	Fri, 30 May 2025 20:06:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugHd6+10"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A49BC4CEEA;
+	Fri, 30 May 2025 20:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748635584;
-	bh=V8aTG04ZAEGYlZwTtP2eJJ/cuAcdbMFJH1v6uIkjQdQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KWVmkXkCWxK9+mwg0c9FMWRJgG0Fvf+KXSKGmCfTY8eO6amQuiKcdr/xN84yfFfsM
-	 7zyyRLGrxu8m1VdvEvDJaglCGZedlpsLuF4xND2zKRD5HiA/QM9qUl7rh2ukQM/Dtw
-	 j1jx8kzb3D3tQezSYlWmxHYg52T6An6BfjM001UbagESiqrwZoCKs4Ocl6p5+7tY4p
-	 vGI8MBjS7obzrC608HunVqawuJnDWI/5PMQ7lGLkR1Y7TAjyz5+u9KFh88q1hNpuuJ
-	 x2QkAPA6M8/110qZjJQftSPYBuJChVL4YJ7R+whln+uxm75fWCN7NDQA6GHJSVctpy
-	 sK+cH4z0vJXLg==
-From: SeongJae Park <sj@kernel.org>
-To: Ye Liu <ye.liu@linux.dev>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn,
-	fweimer@redhat.com,
-	stephen.s.brennan@oracle.com
-Subject: Re: [PATCH v5] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Fri, 30 May 2025 13:06:21 -0700
-Message-Id: <20250530200621.52327-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250530055855.687067-1-ye.liu@linux.dev>
-References: 
+	s=k20201202; t=1748635619;
+	bh=xPW6dKl0u9tOAE44RcC/AR/Qp+vY0ym5kEbMu2VOHzE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ugHd6+10EomDNuWrm+EfdbeqQNhmlA0jDx+9YtjiyLZQzE2CG4DfOdHPScUfCLlVD
+	 QgtFkF8YcsNMVMfJSDYVsRW75oeZj3zJxT6CWGeYCuUUepk167o3F/0/5RniVGvUGr
+	 aqglsa/Nl2a38z5xK+Cm18rGXSPQVVaRy0Ow8x43N+NJSpzEzAC6IgasL54J9XvuZz
+	 70QD+o/DAZ33rMMHEuRubDDJ0VZUq5uWV93UsJr9JSo4H1cG3t7SVQIed1wuJPEWOc
+	 FrzkmY71PbMueXEcAuwgSpV3jh2EpzZZzWx7zqBePnxHjXZx8FP9ZXkFK2xPzbOYuZ
+	 9DJoIQ29vd1jg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 May 2025 22:06:55 +0200
+Message-Id: <DA9RLBPS7QKE.3CGXHMYG1CDOU@kernel.org>
+Subject: Re: [PATCH 5/7] rust: miscdevice: properly support device drivers
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-6-dakr@kernel.org>
+In-Reply-To: <20250530142447.166524-6-dakr@kernel.org>
 
-On Fri, 30 May 2025 13:58:55 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
+> @@ -40,44 +41,43 @@ pub const fn into_raw<T: MiscDevice>(self) -> binding=
+s::miscdevice {
+>      }
+>  }
+> =20
+> -/// A registration of a miscdevice.
+> -///
+>  /// # Invariants
+>  ///
+> -/// `inner` is a registered misc device.
+> +/// - `inner` is a registered misc device,
+> +/// - `data` is valid for the entire lifetime of `Self`.
+>  #[repr(C)]
+>  #[pin_data(PinnedDrop)]
+> -pub struct MiscDeviceRegistration<T: MiscDevice> {
+> +struct RawDeviceRegistration<T: MiscDevice> {
+>      #[pin]
+>      inner: Opaque<bindings::miscdevice>,
+> -    #[pin]
+> -    data: Opaque<T::RegistrationData>,
+> +    data: NonNull<T::RegistrationData>,
+>      _t: PhantomData<T>,
 
-> From: Ye Liu <liuye@kylinos.cn>
-> 
-> Introduces a new drgn script, `show_page_info.py`, which allows users
-> to analyze the state of a page given a process ID (PID) and a virtual
-> address (VADDR). This can help kernel developers or debuggers easily
-> inspect page-related information in a live kernel or vmcore.
-> 
-> The script extracts information such as the page flags, mapping, and
-> other metadata relevant to diagnosing memory issues.
-> 
-> Output example:
-> sudo ./show_page_info.py 1 0x7fc988181000
-> PID: 1 Comm: systemd mm: 0xffff8d22c4089700
-> RAW: 0017ffffc000416c fffff939062ff708 fffff939062ffe08 ffff8d23062a12a8
-> RAW: 0000000000000000 ffff8d2323438f60 0000002500000007 ffff8d23203ff500
-> Page Address:    0xfffff93905664e00
-> Page Flags:      PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
->                  PG_private|PG_reported|PG_has_hwpoisoned
-> Page Size:       4096
-> Page PFN:        0x159938
-> Page Physical:   0x159938000
-> Page Virtual:    0xffff8d2319938000
-> Page Refcount:   37
-> Page Mapcount:   7
-> Page Index:      0x0
-> Page Memcg Data: 0xffff8d23203ff500
-> Memcg Name:      init.scope
-> Memcg Path:      /sys/fs/cgroup/memory/init.scope
+You shouldn't need the `PhantomData` here.
 
-As reported to the previous version, I show below on my test.
+Also, do we need to ask for `T: MiscDevice` here? Could we instead have
+just `T` and then below you write
+`RawDeviceRegistration<T::RegistrationData>` instead? (`new` of course
+needs to have a new generic: `U: MiscDevice<RegistrationData =3D T>`)
 
-Memcg Name:      unknown
-Memcg Path:      Unexpected error: 'struct kernfs_node' has no member 'parent'
+>  }
+> =20
+> -// SAFETY:
+> -// - It is allowed to call `misc_deregister` on a different thread from =
+where you called
+> -//   `misc_register`.
+> -// - Only implements `Send` if `MiscDevice::RegistrationData` is also `S=
+end`.
+> -unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::R=
+egistrationData: Send {}
+> -
+> -// SAFETY:
+> -// - All `&self` methods on this type are written to ensure that it is s=
+afe to call them in
+> -//   parallel.
+> -// - `MiscDevice::RegistrationData` is always `Sync`.
+> -unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+> -
+> -impl<T: MiscDevice> MiscDeviceRegistration<T> {
+> -    /// Register a misc device.
+> -    pub fn register(
+> +impl<T: MiscDevice> RawDeviceRegistration<T> {
+> +    fn new<'a>(
+>          opts: MiscDeviceOptions,
+> -        data: impl PinInit<T::RegistrationData, Error>,
+> -    ) -> impl PinInit<Self, Error> {
+> +        parent: Option<&'a Device<Bound>>,
+> +        data: &'a T::RegistrationData,
+> +    ) -> impl PinInit<Self, Error> + 'a
+> +    where
+> +        T: 'a,
+> +    {
+>          try_pin_init!(Self {
+> -            data <- Opaque::pin_init(data),
+> +            // INVARIANT: `Self` is always embedded in a `MiscDeviceRegi=
+stration<T>`, hence `data`
+> +            // is guaranteed to be valid for the entire lifetime of `Sel=
+f`.
+> +            data: NonNull::from(data),
 
-I know you explained it is an issue of drgn version on my setup, as a reply to
-my previous report.  But, could you please make the output more easy to
-understand the problem?  No strong opinion, though.
+Both the argument in the INVARIANT comment and way this works are a bit
+flawed. Instead, I'd recommend directly taking the `NonNull` as a
+parameter. Yes the function will need to be `unsafe`, but the lifetime
+that you're creating below only lives for `'a`, but the object might
+live much longer. You might still be fine, but I'd just recommend
+staying in raw pointer land (or in this case `NonNull`).
 
-> Page Mapping:    0xffff8d23062a12a8
-> Page Anon/File:  File
-> Page VMA:        0xffff8d22e06e0e40
-> VMA Start:       0x7fc988181000
-> VMA End:         0x7fc988185000
-> This page is part of a compound page.
-> This page is the head page of a compound page.
-> Head Page:       0xfffff93905664e00
-> Compound Order:  2
-> Number of Pages: 4
-> 
-> Signed-off-by: Ye Liu <liuye@kylinos.cn>
+>              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::mis=
+cdevice| {
+> +                let mut value =3D opts.into_raw::<T>();
+> +
+> +                if let Some(parent) =3D parent {
+> +                    // The device core code will take care to take a ref=
+erence of `parent` in
 
-Tested-by: SeongJae Park <sj@kernel.org>
+Just a question: with "take a reference of" you mean that it will
+increment the refcount?
 
+> +                    // `device_add()` called by `misc_register()`.
+> +                    value.parent =3D parent.as_raw();
+> +                }
+> +
+>                  // SAFETY: The initializer can write to the provided `sl=
+ot`.
+> -                unsafe { slot.write(opts.into_raw::<T>()) };
+> +                unsafe { slot.write(value) };
+> =20
+>                  // SAFETY:
+>                  // * We just wrote the misc device options to the slot. =
+The miscdevice will
+> @@ -94,12 +94,12 @@ pub fn register(
+>      }
+> =20
+>      /// Returns a raw pointer to the misc device.
+> -    pub fn as_raw(&self) -> *mut bindings::miscdevice {
+> +    fn as_raw(&self) -> *mut bindings::miscdevice {
+>          self.inner.get()
+>      }
+> =20
+>      /// Access the `this_device` field.
+> -    pub fn device(&self) -> &Device {
+> +    fn device(&self) -> &Device {
+>          // SAFETY: This can only be called after a successful register()=
+, which always
+>          // initialises `this_device` with a valid device. Furthermore, t=
+he signature of this
+>          // function tells the borrow-checker that the `&Device` referenc=
+e must not outlive the
+> @@ -108,6 +108,108 @@ pub fn device(&self) -> &Device {
+>          unsafe { Device::as_ref((*self.as_raw()).this_device) }
+>      }
+> =20
+> +    fn data(&self) -> &T::RegistrationData {
+> +        // SAFETY: The type invariant guarantees that `data` is valid fo=
+r the entire lifetime of
+> +        // `Self`.
+> +        unsafe { self.data.as_ref() }
+> +    }
+> +}
+> +
+> +#[pinned_drop]
+> +impl<T: MiscDevice> PinnedDrop for RawDeviceRegistration<T> {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // SAFETY: We know that the device is registered by the type inv=
+ariants.
+> +        unsafe { bindings::misc_deregister(self.inner.get()) };
+> +    }
+> +}
+> +
+> +#[expect(dead_code)]
+> +enum DeviceRegistrationInner<T: MiscDevice> {
+> +    Raw(Pin<KBox<RawDeviceRegistration<T>>>),
+> +    Managed(Devres<RawDeviceRegistration<T>>),
 
-Thanks,
-SJ
+These two names could be shortened (`DeviceRegistrationInner` and
+`RawDeviceRegistration`) as they are only implementation details of this
+file. How about `InnerRegistration` and `RawRegistration`? Or maybe
+something even shorter.
 
-[...]
+> +}
+> +
+> +/// A registration of a miscdevice.
+> +#[pin_data(PinnedDrop)]
+> +pub struct MiscDeviceRegistration<T: MiscDevice> {
+> +    inner: DeviceRegistrationInner<T>,
+> +    #[pin]
+> +    data: Opaque<T::RegistrationData>,
+
+Why is it necessary to store `data` inside of `Opaque`?
+
+> +    this_device: ARef<Device>,
+> +    _t: PhantomData<T>,
+> +}
+> +
+> +// SAFETY:
+> +// - It is allowed to call `misc_deregister` on a different thread from =
+where you called
+> +//   `misc_register`.
+> +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `S=
+end`.
+> +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::R=
+egistrationData: Send {}
+> +
+> +// SAFETY:
+> +// - All `&self` methods on this type are written to ensure that it is s=
+afe to call them in
+> +//   parallel.
+> +// - `MiscDevice::RegistrationData` is always `Sync`.
+> +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
+> +
+> +impl<T: MiscDevice> MiscDeviceRegistration<T> {
+> +    /// Register a misc device.
+> +    pub fn register<'a>(
+> +        opts: MiscDeviceOptions,
+> +        data: impl PinInit<T::RegistrationData, Error> + 'a,
+> +        parent: Option<&'a Device<Bound>>,
+> +    ) -> impl PinInit<Self, Error> + 'a
+> +    where
+> +        T: 'a,
+> +    {
+> +        let mut dev: Option<ARef<Device>> =3D None;
+> +
+> +        try_pin_init!(&this in Self {
+> +            data <- Opaque::pin_init(data),
+> +            // TODO: make `inner` in-place when enums get supported by p=
+in-init.
+> +            //
+> +            // Link: https://github.com/Rust-for-Linux/pin-init/issues/5=
+9
+
+You might want to add that this would avoid the extra allocation in
+`DeviceRegistrationInner`.
+
+> +            inner: {
+> +                // SAFETY:
+> +                //   - `this` is a valid pointer to `Self`,
+> +                //   - `data` was properly initialized above.
+> +                let data =3D unsafe { &*(*this.as_ptr()).data.get() };
+
+As mentioned above, this creates a reference that is valid for this
+*block*. So its lifetime will end after the `},` and before
+`this_device` is initialized.
+
+It *might* be ok to turn it back into a raw pointer in
+`RawDeviceRegistration::new`, but I wouldn't bet on it.
+
+> +
+> +                let raw =3D RawDeviceRegistration::new(opts, parent, dat=
+a);
+> +
+> +                // FIXME: Work around a bug in rustc, to prevent the fol=
+lowing warning:
+> +                //
+> +                //   "warning: value captured by `dev` is never read."
+> +                //
+> +                // Link: https://github.com/rust-lang/rust/issues/141615
+
+Note that the bug is that the compiler complains about the wrong span.
+The original value of `dev` is `None` and that value is never used, so
+the warning is justified. So this `let _ =3D dev;` still needs to stay
+until `pin-init` supports accessing previously initialized fields (now
+I'm pretty certain that I will implement that soon).
+
+> +                let _ =3D dev;
+> +
+> +                if let Some(parent) =3D parent {
+> +                    let devres =3D Devres::new(parent, raw, GFP_KERNEL)?=
+;
+> +
+> +                    dev =3D Some(devres.access(parent)?.device().into())=
+;
+> +                    DeviceRegistrationInner::Managed(devres)
+> +                } else {
+> +                    let boxed =3D KBox::pin_init(raw, GFP_KERNEL)?;
+> +
+> +                    dev =3D Some(boxed.device().into());
+> +                    DeviceRegistrationInner::Raw(boxed)
+> +                }
+> +            },
+> +            // Cache `this_device` within `Self` to avoid having to acce=
+ss `Devres` in the managed
+> +            // case.
+> +            this_device: {
+> +                // SAFETY: `dev` is guaranteed to be set in the initiali=
+zer of `inner` above.
+> +                unsafe { dev.unwrap_unchecked() }
+> +            },
+
+No need for the extra block, just do:
+
+    // Cache `this_device` within `Self` to avoid having to access `Devres`=
+ in the managed
+    // case.
+    // SAFETY: `dev` is guaranteed to be set in the initializer of `inner` =
+above.
+    this_device: unsafe { dev.unwrap_unchecked() },
+
+I'm also pretty sure that the compiler would optimize `.take().unwrap()`
+and also this is only executed once per `MiscDeviceRegistration`, so
+even if it isn't it wouldn't really matter. So I'd prefer if we don't
+use `unsafe` here even if it is painfully obvious (if I'm fast enough
+with implementing, you can rebase on top before you merge and then this
+will be gone anyways :)
+
+> +            _t: PhantomData,
+> +        })
+> +    }
+> +
+> +    /// Access the `this_device` field.
+> +    pub fn device(&self) -> &Device {
+> +        &self.this_device
+> +    }
+> +
+>      /// Access the additional data stored in this registration.
+>      pub fn data(&self) -> &T::RegistrationData {
+>          // SAFETY:
+> @@ -120,9 +222,6 @@ pub fn data(&self) -> &T::RegistrationData {
+>  #[pinned_drop]
+>  impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
+>      fn drop(self: Pin<&mut Self>) {
+> -        // SAFETY: We know that the device is registered by the type inv=
+ariants.
+> -        unsafe { bindings::misc_deregister(self.inner.get()) };
+> -
+>          // SAFETY: `self.data` is valid for dropping.
+>          unsafe { core::ptr::drop_in_place(self.data.get()) };
+>      }
+> @@ -137,14 +236,13 @@ pub trait MiscDevice: Sized {
+>      /// The additional data carried by the [`MiscDeviceRegistration`] fo=
+r this [`MiscDevice`].
+>      /// If no additional data is required than the unit type `()` should=
+ be used.
+>      ///
+> -    /// This data can be accessed in [`MiscDevice::open()`] using
+> -    /// [`MiscDeviceRegistration::data()`].
+> +    /// This data can be accessed in [`MiscDevice::open()`].
+>      type RegistrationData: Sync;
+> =20
+>      /// Called when the misc device is opened.
+>      ///
+>      /// The returned pointer will be stored as the private data for the =
+file.
+> -    fn open(_file: &File, _misc: &MiscDeviceRegistration<Self>) -> Resul=
+t<Self::Ptr>;
+> +    fn open(_file: &File, _misc: &Device, _data: &Self::RegistrationData=
+) -> Result<Self::Ptr>;
+
+What is the reason that these parameters begin with `_`? In a trait
+function without a body, the compiler shouldn't war about unused
+parameters.
+
+---
+Cheers,
+Benno
+
+> =20
+>      /// Called when the misc device is released.
+>      fn release(device: Self::Ptr, _file: &File) {
