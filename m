@@ -1,125 +1,129 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D47D21CFF6;
-	Fri, 30 May 2025 16:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326C8235345;
+	Fri, 30 May 2025 16:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621678; cv=none; b=VgTm/RE1dJV2fReEddjAzWAJZTHQT22RemslewdwfUTQ9l4WZsHkhAanOS5DeYyhiUdRNNEwMhlcArzB4DVBOiy/YWLJPhPGDaos0wvBzE4r1M01M4TH7oZCnWkFYQjAak/owR3MlsHMFx9lzCdsgueBxxJMimeWV6nkBWhGbUY=
+	t=1748621702; cv=none; b=ucZoS4kAF7RPVJ7rGs1OWK/wblOEIDBWvA2cysnQCzp+SK0EIetx2SzrYWsGVaUPjovRmjFXNZCAkDLtBwhcF6lMJ9zQ+2npiZg31GlYoX3zwoXpiDAxCP1RDjIt2mL0Ld1oo7sD8wvr2g1n+sgy22oGowPBFR66vVp93874bow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621678; c=relaxed/simple;
-	bh=07SjjF787R53d2NiXMYqs6iqzev11R/uOyi6Z3gUHuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mp5T9+A8Vuzm0IoIUHBJamKl/LYXDrYCCbXC0+6J8GTVdi6MHp7WsYT7GgauOCMJgKmiejV66UjtOIC/7/BCheaWOjuf/ImZtiKc0PPxYPiThM4S33ayf4PmvbxGGjqvi0zHUrR12qOi5bdRi2Mzp3+ZL+q7ILQJ/B2EgzQy9vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZfb2Bhg; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1748621702; c=relaxed/simple;
+	bh=3ZvnrvTmAK5qowvGTfd5VbRglX0pdlRCpg3q/YgkHvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MSdNXC43cDR7spwQ4H/CQBpnG9fwyoHvClgwAGs7da9fnw7TQgaXuXBFpjNCUWXdXul4Xdus8yLXlaDOYkMd3AFvtnJj20OTNFMXABXrhfJqzINcmi0Pj+8Mn0u9XPZYy3adzowUZYuqnHc9JAN8rx6G1pTeqYUUNhbQRDTdZps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JbV80vqH; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZfb2Bhg"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a363d15c64so1495932f8f.3;
-        Fri, 30 May 2025 09:14:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbV80vqH"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso20249261fa.3;
+        Fri, 30 May 2025 09:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748621675; x=1749226475; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nYfPIik2VZq+X4ZDMfQ+Lt7jynuL6/hkz3PFespndps=;
-        b=GZfb2BhgAn+bMGugKaucQ0qau/07bPJkY3vz7p4bzWezMEef+GxDol2TFiZW/kqbVs
-         r/DYbZUain3t0onU0aWTMu4jnC4YlSn+Z0IlZKGhmpN7Nbp6qysRNA03WRWO4QT+AOOC
-         jpfS3edk2LbpTReUMA7Umw8NIMGDI6Zux6u1cl73QwUcBdWcQbGFY9Q3WVX44Ezr+Y8x
-         f1w9lS7vZOSM0/yIGxv9ZSHvA8Kx3x+syVf37wt5hPrNc/Bx8NPRSC735DowUJ2lbdIa
-         YJQoOVWZJ3I2fGWLyEvvUyFziMRfkZCgZwH8tteq0hXUKnzBft/z8w+ClQXq0jf6wZ6O
-         zE6g==
+        d=gmail.com; s=20230601; t=1748621698; x=1749226498; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6UTq5HkLhV23M0xz/nleVLoMMJCEzvqCvQMrpj98LYs=;
+        b=JbV80vqHwel8CwcWdxj45VZ8VKN6Mu7Kus7OyUpXAoGS9EZvUFIWQZCSjBUyqgW4Yp
+         XZtg8XjUqZ75yJobNEH44YELYhKlP1tfyKkd9n1Un0c6Yp8mVfC8P/O2MiNOjq/fdYH7
+         WcfxOeSzJgoiQldJtn3rLocQDZoYfg74g2ieSrivQqg9x7O12F8FlZedg3tQnvouSYHC
+         hokM+VJI+ZnR3sDF2TDzFyxmfjW+cLlpCT0D65zJ/Ua+yjGXXM75xaQciqb6AwLOsT6u
+         4vUqnQhvtI+Lg0QB9cmNuC6RHXwmmv2cJ0Ijs5J+HTkFNRSOEGS8xcvu5C02jK6zQ6SN
+         dN5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621675; x=1749226475;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nYfPIik2VZq+X4ZDMfQ+Lt7jynuL6/hkz3PFespndps=;
-        b=hpS/2tczC5E4aT0o3qMvmZIbkb0LjFs/bP78AoY0S3pIqI8My+hJHOlKAIt95CbgGJ
-         t1tnSEnNzt48AxzXsho+m/YXHCJ/Gw90rFI30i4jlyj9zoWVOI6eFyCeBwyoCy7oPZVU
-         a0ssfJNoT1qffmVsv2LEUD4qFQ1CCa1AslYlb2jwHmZToypWN+EOZChaHPLa7OfN6jx/
-         NgX0r5WgFWu93xMo1lmNEE1SstQg6XBIXhvVkkZsts8VjnILwcP8dWdWmcRc4qyNj5zs
-         7vDaaOzpRJAFeLNF5PxBqrqm/T9eG73HCUZZ33GRqWZZ8sd3NzbIq+KExGHVc3LPnhx4
-         AHuw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbaI/IOMK16zVjHNsQQTHHIxqAI9keDRMsHQUfhjbJL/kH4irLBMij/+TBpCm7TBknkhRylHvCYCyDawM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdwL6hn+WZFBvs0ufIq55BW2HSMVbwrYj7Jwvj/WVJWd2R345R
-	c6t8E37BWT+y3ktU5cnV9srRK6o3zTJOPT3g6FUMtqKc3CeFyWopOefx
-X-Gm-Gg: ASbGnctoC3AXF5Ao/vJeOKAbO4TEG945WToFGmecbQ/J8CRXXjbvMRW0miHVlUVxNSw
-	HuMxxUIdRu2oa5Ky9+SXJOx8NkdnqwbBWynhevW+8yEvPlmCb5BxqoaV6U7F0s5X8ZY87wdZRHV
-	urQ9d2NWI3L6LgDHvupthkfkoYKPgXfTMKXOwiwNO6bHPWZNwusux+2kbt7DPtJW1fIEh2GkwQA
-	i8sAmVo0pT5sGujA76kfzGtdrDzoJg4PJHcELJwuy/3ZuBi0RHPUzmw7Y3POncuGgz/hsBP1h9N
-	Pv1aa7qhkwXI29i5Nlf2g0dVMaIxqBXwI2TuxCL4ukd/ZWyFIGq4FOhod8ksyM7J
-X-Google-Smtp-Source: AGHT+IHiJzE7KyvRIHrRSU+sorY+syXUuDJVU/hS8oEKl6EdHGkEiBm1A0zvKqlv0HxbU5qHaF/JRA==
-X-Received: by 2002:a05:6000:310a:b0:3a4:dfc2:2a3e with SMTP id ffacd0b85a97d-3a4f7a6d223mr3555270f8f.39.1748621675123;
-        Fri, 30 May 2025 09:14:35 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8013e0esm21418975e9.39.2025.05.30.09.14.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 09:14:34 -0700 (PDT)
-Message-ID: <4d0a5cd9-c7e3-47d5-a55e-a4f234463e3e@gmail.com>
-Date: Fri, 30 May 2025 18:14:33 +0200
+        d=1e100.net; s=20230601; t=1748621698; x=1749226498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6UTq5HkLhV23M0xz/nleVLoMMJCEzvqCvQMrpj98LYs=;
+        b=HUUyCyBkOGop2XKjZmSgT8C+OZaCu1j2OboVMtrbRfz45nw4i0A9S8gHTmZuAmCih6
+         5VweDU60t1wrCe3BU8CREkvCvddnyxEec35z1O82C9cXbWBzPkB3khNdwRR0Q1uRORBf
+         47Um5isQOmj+2NOUUpEYqvw0zy/h8DxttwsMTCUnQmrSNnemujkmEUycN35tepfh3+lU
+         pl5FsdVGkNT6Kn0zEMeIxSFmycMA38LM9akp2u3GfgGTBjyQgyDZrbMLulnQKrvqoZDg
+         MdslS4IR5gAz9B35dAeQ5ppvOeGF9RSkoYoQuNfME64v/BrV68KFT68Wlaym/GF/549s
+         BRdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUI1TbwI2h1d3qU4AH2ZEWOaTnORLEcCuCRUdq3hZgsQfqHTnJYFq3Fixxvm/Xri5OZofLAWPJ6v/B@vger.kernel.org, AJvYcCVjL5U0Yzo2P0UrdV08AFpU/GlTAnQNzeJfjPz/fi3NN/TsbCp9rgvrp5s8Zy5X6ntVkppxNYcX4wnceyUAgA==@vger.kernel.org, AJvYcCWy0EYfDGwH34jLiJDxANydoLEG5F3L1pF3as7WgwqCdw0X+txJdNst0/k3+6ostQS0/7HO/kgIxQ8S6wPp@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbCzoQRuZ8WiYqSkR8BrLvhvnTBxf4rY3giX1+dD+ZKfm5OMQo
+	YOOujoCbHW8UUsOl7q79n8HbWQQLs+NDEmjyzrCzDWsBO2tByPh9rix+xdwBwwEb3Mow80KsGMr
+	pdmwyq6mergBSr0UNKtO1ot38DLIMmWE=
+X-Gm-Gg: ASbGncuSS5x1jgtLuGe9RpjU1qP10etZRkc+teB2hz/JUEE5qYNk0V5x1HYX4NcKbqI
+	e21dJk/9JztG/6ajsyD+MZanDSYzVyKAlH22vJd3y9+MRxZPU31/rvlf6PV0MTvLClPkHOdVWwx
+	VglsMs20F4NeV+chKOla1DHAeKWH3tJXJdHRb6XKCfOJ91y4HNR32dvVJ1zBsTCD2UZyU=
+X-Google-Smtp-Source: AGHT+IG/NJcvokzMVAfgAUULPo5AHEfz55/2Xhz/gGIFl6PSQ86+UbqO3pGexblTmnbk2F682gpMuOlFZAHMLwVuv8c=
+X-Received: by 2002:a05:651c:509:b0:32a:8062:69b1 with SMTP id
+ 38308e7fff4ca-32a9068a6f6mr12904441fa.8.1748621697994; Fri, 30 May 2025
+ 09:14:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] rust: types: support fallible PinInit types in
- Opaque::pin_init
-To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
- rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-2-dakr@kernel.org>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250530142447.166524-2-dakr@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250530084614.2434467-1-frank.li@vivo.com>
+In-Reply-To: <20250530084614.2434467-1-frank.li@vivo.com>
+From: Steve French <smfrench@gmail.com>
+Date: Fri, 30 May 2025 11:14:45 -0500
+X-Gm-Features: AX0GCFtGHmv3izUG2w7WT1FVlkS5ZFbMOTfhnGBK58yTeSsKAU5O4zE_8tf3tkU
+Message-ID: <CAH2r5msAq6Kq4R0euj+y526imrsGWcXLa_LCJ9T+8G2-9PJx6A@mail.gmail.com>
+Subject: Re: [PATCH] cifs: correct superblock flags
+To: Yangtao Li <frank.li@vivo.com>
+Cc: pc@manguebit.com, ronniesahlberg@gmail.com, sprasad@microsoft.com, 
+	tom@talpey.com, bharathsm@microsoft.com, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30.05.25 4:24 PM, Danilo Krummrich wrote:
-> Currently, Opaque::pin_init only supports infallible PinInit
-> implementations, i.e. impl PinInit<T, Infallible>.
-> 
-> This has been sufficient so far, since users such as Revocable do not
-> support fallibility.
-> 
-> Since this is about to change, make Opaque::pin_init() generic over the
-> error type E.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> SB_NOATIME includes SB_NODIRATIME as a subset. Therefore, setting SB_NOAT=
+IME is sufficient
+
+Although technically the flag is not a subset, with current code in
+atime_needs_update() setting SB_NODIRATIME is not needed if SB_NOATIME
+is already set (see below), but it could be argued that the code is
+clearer (easier to understand) to set both flags (especially as it has
+no performance hit), and multiple other fs also do this. Any
+additional thoughts?
+
+        if (IS_NOATIME(inode))
+                return false;
+        if ((inode->i_sb->s_flags & SB_NODIRATIME) && S_ISDIR(inode->i_mode=
+))
+                return false;h
+
+
+On Fri, May 30, 2025 at 3:25=E2=80=AFAM Yangtao Li <frank.li@vivo.com> wrot=
+e:
+>
+> SB_NOATIME includes SB_NODIRATIME as a subset. Therefore,
+> setting SB_NOATIME is sufficient to disable atime updates
+> for all files and directories.
+>
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 > ---
+>  fs/smb/client/cifsfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+> index a08c42363ffc..b4bc15ea33bf 100644
+> --- a/fs/smb/client/cifsfs.c
+> +++ b/fs/smb/client/cifsfs.c
+> @@ -996,7 +996,7 @@ cifs_smb3_do_mount(struct file_system_type *fs_type,
+>         mnt_data.flags =3D flags;
+>
+>         /* BB should we make this contingent on mount parm? */
+> -       flags |=3D SB_NODIRATIME | SB_NOATIME;
+> +       flags |=3D SB_NOATIME;
+>
+>         sb =3D sget(fs_type, cifs_match_super, cifs_set_super, flags, &mn=
+t_data);
+>         if (IS_ERR(sb)) {
+> --
+> 2.48.1
+>
+>
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
->  rust/kernel/types.rs | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 22985b6f6982..75c99d6facf9 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -354,13 +354,13 @@ pub const fn zeroed() -> Self {
->      }
->  
->      /// Create an opaque pin-initializer from the given pin-initializer.
-> -    pub fn pin_init(slot: impl PinInit<T>) -> impl PinInit<Self> {
-> -        Self::ffi_init(|ptr: *mut T| {
-> +    pub fn pin_init<E>(slot: impl PinInit<T, E>) -> impl PinInit<Self, E> {
-> +        Self::try_ffi_init(|ptr: *mut T| -> Result<(), E> {
->              // SAFETY:
->              //   - `ptr` is a valid pointer to uninitialized memory,
-> -            //   - `slot` is not accessed on error; the call is infallible,
-> +            //   - `slot` is not accessed on error,
->              //   - `slot` is pinned in memory.
-> -            let _ = unsafe { PinInit::<T>::__pinned_init(slot, ptr) };
-> +            unsafe { PinInit::<T, E>::__pinned_init(slot, ptr) }
->          })
->      }
->  
+--
+Thanks,
 
+Steve
