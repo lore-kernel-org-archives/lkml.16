@@ -1,160 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1691D554;
-	Fri, 30 May 2025 18:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EBA279337
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 18:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748631011; cv=none; b=Dl6kMo0XbjcF2GR+L3iUCdqEHZQQMuxbG9hzAQpFou1zHcwcZ+U6JPhjykZoarcCIa6QIg00j2KRadkbF+NUVqG8sS3/SQEfXAUYaisK6MIxFne5Z5iehjP0JhFYWHl8vVEVfEB8ix6Rf7AA6zovdqBwjpHjqA6oVS2AhWnpvn8=
+	t=1748631014; cv=none; b=JiEiYVd/tg2+d4AFasEcN1WejQ60EDZK/axn5gr0XMHLlNMoNYZLElOAPr+O2EsnYHevdkEz2ryEntM5IuWWwMwLt33LEfu7bR4CQQmYjyU4eIy/mFvUJXIkkpLO85MuXnTDPxv150oH8+kVzvslRght+04GEYAn/lKgr6D46wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748631011; c=relaxed/simple;
-	bh=WHZlm4pkgAEEcDghKLa2sRpP9wjXqL+XkDebT7GqAHo=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=gjasg3MSfuJMsJzzUTwDWeD3rMZ6U0MEU9objamNZdA94pcdmYNmtbyyDpYhis3Hu9pAp9jZR2WonTk++ZXdHO5rHQ5yZuO4lHglQk8CNWQoQLreLY2blBsK9SWiWV6wZCeCO/9YYRtLro4UYdBq4sJM0KbuEujA0KcisWo/568=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMh3+OAq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748631014; c=relaxed/simple;
+	bh=D1P2hjUoye3he0La/a+iQ8GuVBH89z9c8PtYeykiOpQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bMmlG6NrslvUVes6YE+zEgvPNuujijGDSkr9tGEjDDrDF7cMzXgiirUnGbX3MsKLcE6CXw6y6cxIiAsaAPNfk++eqdtYyJHytc56f2OYU1b+q+A4y8Xf731Rj9unVRFCIyPxi1rNnK+IkDQWf0BPhEXcLY2u8X0SlT5vOra8i8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=edgeble.ai; spf=none smtp.mailfrom=edgeble.ai; dkim=pass (2048-bit key) header.d=edgeble-ai.20230601.gappssmtp.com header.i=@edgeble-ai.20230601.gappssmtp.com header.b=o3r7N3Ld; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=edgeble.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=edgeble.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMh3+OAq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E984BC4CEE9;
-	Fri, 30 May 2025 18:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748631009;
-	bh=WHZlm4pkgAEEcDghKLa2sRpP9wjXqL+XkDebT7GqAHo=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FMh3+OAq3YvT9qIW40lNDExUeilQsVhxCrx/j0MRaX3FQWjwxhrT0oCTiPNrtaQsE
-	 hNypyXSR4SIXqCss4u8P2bn7Lb/ixAmUlx2xNUoT++k/S5U0GqyH8VFCv7ImE9zaqn
-	 tz4tMFopJHPzkU5i2VINMQsQRnYe6hfxXSqKZrCLQvwAENZUR9EvaQaEQ/hnIZurKP
-	 Ve4tGhuXro8shQAOsrshAex2QUbl9nZeodVwIcZRKnN+3KZpweGghiUMaV6R57ZNMU
-	 iD4HNlVqoNkgK397tmmkgXke0h5HzAw53LzbG1SI218OxXAuJhFv0Mej4c0xPOGeON
-	 6+gCDl6j5mUHA==
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-400fa6eafa9so1635706b6e.1;
-        Fri, 30 May 2025 11:50:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXe1OPLJ9O4qXBMO/59SHeJz65Yvw539uv1GzNLgoV+ZU8W5FINLCgnSSgWgyRPryyYTjw/0pjSkuK@vger.kernel.org, AJvYcCXD3sq/dSVHivOaqgJe61TD3CK1X8adJ/QsSnZivGdUDnvpPY2QA8zFdzj3NUoXWG/E64I+CY8QRkiSAzpn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7JA2v57r8CmXl4mkG7LLPl4uVViWA8ygRLwU6YkRrl8OiMBYS
-	h4PjSOnPz6ZeW4dsqdcXiOyunTasVLTfiNQeL/UH14AfokD3CHgD0dyHojGKIJZGEI994KaelB/
-	r24CmblG3dZuHeZOrtqKaFZsB7ctFPIU=
-X-Google-Smtp-Source: AGHT+IFEl5wOxBWO0AWs6Xm08CvEXrt0l2bttoyZLHOeAJ/czgii7mBWyV9Cr9OMCqxM1amJ6WR66mWVE51qYVijPCA=
-X-Received: by 2002:a05:6808:a95:b0:404:d126:2e44 with SMTP id
- 5614622812f47-406797abb33mr2232778b6e.34.1748631009321; Fri, 30 May 2025
- 11:50:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=edgeble-ai.20230601.gappssmtp.com header.i=@edgeble-ai.20230601.gappssmtp.com header.b="o3r7N3Ld"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2349282084bso30187185ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=edgeble-ai.20230601.gappssmtp.com; s=20230601; t=1748631012; x=1749235812; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CX8RVGcjNGfza1J+8Y/TBJXjjM61IDQf7sORQ0CRlUE=;
+        b=o3r7N3LdxZb+mP2Gi74J071rrydJRzZ+Pb9zspL7Kt8x0zrmQxM+TjOg3IzLGD/Ilz
+         I9QlyrEcW1Gk1nJ+zPUnzYkWa2KDfhDcUtN5HG0Ecy1/ncvas1i2OX+rBns/e+uZ7a7O
+         4ZjXRvxqly4y5z452RmDlkKSjHrXGlEENaQy4Z1Ei4CHWKSBVWoZnddG8tvU/7EmL/D4
+         wzu+Ke39byEHVqJSIky7j8FjKC0+Zsy6ZGEqYeowS0g2ahqv7unAIilzTtq9JQ23mj5/
+         AL94ioEfGZKMoTwgPM4/h/yVuhMCQhpOTWSOKjHRjGO38FkJjZmSv9BDBYQ55rbyOo+t
+         7tLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748631012; x=1749235812;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CX8RVGcjNGfza1J+8Y/TBJXjjM61IDQf7sORQ0CRlUE=;
+        b=gFzrmFLLorkhsCAOvkWqT/4K+R0JQOQHXLi0WIVeQscRXTF+CiLIQq4l2ohd58Y9x1
+         AJ5LpBEOMGN8/xu46hkB5QJV8gNYhzeMA6PoQv6aKjltPVCaQ+SpIhY7wr8igcFcdNAN
+         m9u8UDeAZinLOUCLlCuuWJw9JBIBRFQzawhWZ/jH7uA35wMuAMwnCu3PEp9NfIZodYCA
+         s5zLtymaeJaWEV1jhOkK8o6Gs4OZBBqxIUdUMxjBdXgc8oYk5fSSu8zOWQkxwabO3/Aj
+         1NYrTZfzF9+XFDcrwYRv5QaLP1EEWsq1SBOBtXMD62/xHEKUxTKzZSzekFoabfakuvj6
+         +Oaw==
+X-Forwarded-Encrypted: i=1; AJvYcCXsDY0Am6CVK9llxLiHR8NNfbNOZgMbNtFkIMdLFmRsIfRm6Gh+5HqOTHNaK1WM5pFidMc13VsfCoqHpkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0GAEiMg3URqEpwip47agZSIazsxRhEW3AHostAqdmzkfMQC6Q
+	dLz4ZWHsFB0jiRH1yZBjrYAKB5M5z/gX7FfRc+it+eSkz+zPikiXb9Ul/uzLWdqUbhMVNxKS6vS
+	SceZqevuYbXIndAiVLxqmyU0eNEh8SSP8swsrOTP2UA==
+X-Gm-Gg: ASbGncvK/fauZwjAhec9rScyuoq2K5hxQM3gUylDlRLkeGLa1Uj1j+1ZKkNuU99WNSC
+	XU9a67WfFfhNasa3vB4jBJRANhCZm5rSygrSZKWCVxs+HmVZrTXdOzb6J65MT8axsaiIPuWj7Oa
+	GGAV0i+k4AHdEb9D0GWs3hVFLRE4Ox0BeMOABg4h1Dow==
+X-Google-Smtp-Source: AGHT+IFy6gculqd6TMBrN0rYJWssXVz6+60yi4DzoSheepAu+OoDDguVK86eUKc83jB1uCOQJbumvqYQqLIeYGr+pL0=
+X-Received: by 2002:a17:903:1b6c:b0:234:ba37:87b6 with SMTP id
+ d9443c01a7336-23528ef7833mr65464395ad.17.1748631012585; Fri, 30 May 2025
+ 11:50:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 30 May 2025 20:49:57 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g5C_Zk5-PxsO+W-ef=1oDgbb-PCMYq8UmE9uPi9bASvg@mail.gmail.com>
-X-Gm-Features: AX0GCFuNHXE3aioYfjUWsQzRGK-Xbjcr-jTManwuaAN14n51hJR3uq6sOuqzClk
-Message-ID: <CAJZ5v0g5C_Zk5-PxsO+W-ef=1oDgbb-PCMYq8UmE9uPi9bASvg@mail.gmail.com>
-Subject: [GIT PULL] More power management updates for v6.16-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "the arch/x86 maintainers" <x86@kernel.org>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
+In-Reply-To: <20250519-6-10-rocket-v4-0-d6dff6b4c0ae@tomeuvizoso.net>
+From: Jagan Teki <jagan@edgeble.ai>
+Date: Sat, 31 May 2025 00:20:00 +0530
+X-Gm-Features: AX0GCFvkNnwtQ--V1GCDW4BcbIzs35k_zL3RhgmHKFDsjekxRIDXrFhtYRu24lI
+Message-ID: <CA+VMnFzisyMFzze52RRf6=Gstq29jmukrPSfqXfBWrVw0a7k1Q@mail.gmail.com>
+Subject: Re: [PATCH v4 00/10] New DRM accel driver for Rockchip's RKNN NPU
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Linus,
+On Mon, 19 May 2025 at 19:14, Tomeu Vizoso <tomeu@tomeuvizoso.net> wrote:
+>
+> This series adds a new driver for the NPU that Rockchip includes in its
+> newer SoCs, developed by them on the NVDLA base.
+>
+> In its current form, it supports the specific NPU in the RK3588 SoC.
+>
+> The userspace driver is part of Mesa and an initial draft can be found at:
+>
+> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29698
+>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+> Changes in v4:
+> - Several fixes to DT bindings.
+> - Link to v3: https://lore.kernel.org/r/20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net
+>
+> Changes in v3:
+> - Reference in the device tree only the register blocks that are
+>   actually used.
+> - Several style and robustness fixes suggested in the mailing list.
+> - Added patches from Nicolas Frattaroli that add support to the NPU for
+>   the Rock 5B board.
+> - Link to v2: https://lore.kernel.org/r/20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net
+>
+> Changes in v2:
+> - Drop patch adding the rk3588 compatible to rockchip-iommu (Sebastian Reichel)
+> - Drop patch adding support for multiple power domains to rockchip-iommu (Sebastian Reichel)
+> - Link to v1: https://lore.kernel.org/r/20240612-6-10-rocket-v1-0-060e48eea250@tomeuvizoso.net
+>
+> ---
+> Nicolas Frattaroli (2):
+>       arm64: dts: rockchip: add pd_npu label for RK3588 power domains
+>       arm64: dts: rockchip: enable NPU on ROCK 5B
+>
+> Tomeu Vizoso (8):
+>       dt-bindings: npu: rockchip,rknn: Add bindings
+>       arm64: dts: rockchip: Add nodes for NPU and its MMU to rk3588s
+>       arm64: dts: rockchip: Enable the NPU on quartzpro64
+>       accel/rocket: Add registers header
+>       accel/rocket: Add a new driver for Rockchip's NPU
+>       accel/rocket: Add IOCTL for BO creation
+>       accel/rocket: Add job submission IOCTL
+>       accel/rocket: Add IOCTLs for synchronizing memory accesses
 
-Please pull from the tag
+Can this be possible to infer yolov8/10? Do we need to convert PT/ONNX
+to any other common format's unlike rknn?
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.16-rc1-2
-
-with top-most commit 3d031d0d8daab86f9c3e9e89c80fec08367fb304
-
- Merge branch 'pm-cpuidle'
-
-on top of commit 9d230d500b0e5f7be863e2bf2386be5f80dd18aa
-
- Merge tag 'driver-core-6.16-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core
-
-to receive more power management updates for 6.16-rc1.
-
-These revert an x86 commit that introduced a nasty power regression
-on some systems, fix PSCI cpuidle driver and ACPI cpufreq driver
-regressions, add Rust abstractions for cpufreq, OPP, clk, and
-cpumasks, add a Rust-based cpufreq-dt driver, and do a minor
-SCMI cpufreq driver cleanup:
-
- - Revert an x86 commit that went into 6.15 and caused idle power,
-   including power in suspend-to-idle, to rise rather dramatically
-   on systems booting with "nosmt" in the kernel command line (Rafael
-   Wysocki).
-
- - Prevent freeing an uninitialized pointer in the error path of
-   dt_idle_state_present() in the PSCI cpuidle driver (Dan Carpenter).
-
- - Use KHz as the nominal_freq units in get_max_boost_ratio() in the
-   ACPI cpufreq driver (iGautham Shenoy).
-
- - Add Rust abstractions for CPUFreq framework (Viresh Kumar).
-
- - Add Rust abstractions for OPP framework (Viresh Kumar).
-
- - Add basic Rust abstractions for Clk and Cpumask frameworks (Viresh
-   Kumar).
-
- - Clean up the SCMI cpufreq driver somewhat (Mike Tipton).
-
-Thanks!
-
-
----------------
-
-Anisse Astier (1):
-      rust: macros: enable use of hyphens in module names
-
-Dan Carpenter (1):
-      cpuidle: psci: Fix uninitialized variable in dt_idle_state_present()
-
-Gautham R. Shenoy (1):
-      acpi-cpufreq: Fix nominal_freq units to KHz in get_max_boost_ratio()
-
-Mike Tipton (1):
-      cpufreq: scmi: Skip SCMI devices that aren't used by the CPUs
-
-Rafael J. Wysocki (1):
-      Revert "x86/smp: Eliminate mwait_play_dead_cpuid_hint()"
-
-Viresh Kumar (16):
-      rust: cpumask: Add few more helpers
-      rust: cpumask: Add initial abstractions
-      MAINTAINERS: Add entry for Rust cpumask API
-      rust: clk: Add helpers for Rust code
-      rust: clk: Add initial abstractions
-      rust: cpu: Add from_cpu()
-      rust: opp: Add initial abstractions for OPP framework
-      rust: opp: Add abstractions for the OPP table
-      rust: opp: Add abstractions for the configuration options
-      rust: cpufreq: Add initial abstractions for cpufreq framework
-      rust: cpufreq: Extend abstractions for policy and driver ops
-      rust: cpufreq: Extend abstractions for driver registration
-      rust: opp: Extend OPP abstractions with cpufreq support
-      cpufreq: Add Rust-based cpufreq-dt driver
-      rust: opp: Make the doctest example depend on CONFIG_OF
-      rust: opp: Move `cfg(CONFIG_OF)` attribute to the top of doc test
-
----------------
-
- MAINTAINERS                     |   11 +
- arch/x86/kernel/smpboot.c       |   54 +-
- drivers/cpufreq/Kconfig         |   12 +
- drivers/cpufreq/Makefile        |    1 +
- drivers/cpufreq/acpi-cpufreq.c  |    2 +-
- drivers/cpufreq/rcpufreq_dt.rs  |  226 +++++++
- drivers/cpufreq/scmi-cpufreq.c  |   36 +-
- drivers/cpuidle/cpuidle-psci.c  |    9 +-
- rust/bindings/bindings_helper.h |    4 +
- rust/helpers/clk.c              |   66 ++
- rust/helpers/cpufreq.c          |   10 +
- rust/helpers/cpumask.c          |   25 +
- rust/helpers/helpers.c          |    2 +
- rust/kernel/clk.rs              |  334 ++++++++++
- rust/kernel/cpu.rs              |   30 +
- rust/kernel/cpufreq.rs          | 1321 +++++++++++++++++++++++++++++++++++++++
- rust/kernel/cpumask.rs          |  330 ++++++++++
- rust/kernel/lib.rs              |    7 +
- rust/kernel/opp.rs              | 1146 +++++++++++++++++++++++++++++++++
- rust/macros/module.rs           |   20 +-
- 20 files changed, 3624 insertions(+), 22 deletions(-)
+Thanks,
+Jagan.
