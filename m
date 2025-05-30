@@ -1,167 +1,143 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2089.outbound.protection.outlook.com [40.107.96.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625204C8E
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748569772; cv=fail; b=KgPe3poiw32XomX0iJQcMbNa8jUkKrl12GfXcWQ7uUi9FfAuqzQ65+JJ9k9kSp8PNspzcH9LIW98AqukiaSM5zOO6Qof7JvxzPIyntX7e95wFtTlFH4RMLBmd8Oh4DQSZjPG3IKPxCdR+PwXBCy1DmdjNzMgXHliNcL+Mk2iTlw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748569772; c=relaxed/simple;
-	bh=IwNABGRlPUpZp24sofjM3pklvplkcx/unYpOPFrM4MM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=jh/kY7C162g5C3wuuTq+3KxUAbXrb0FScZuzE6AX93NYUjf9PHzHQdKwUL4Uc41ycj8Z2fcF9HB2DvI/qduXt3XCUXO8MkCCL0TD0gp1U4QuSQUFYoJuJdu8rN84o0IOAdk0TBH80HdJ5jVflACfSAY0itrEHKCDd9vRReEBw3c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CCppjhTU; arc=fail smtp.client-ip=40.107.96.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDCDC133
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748569802; cv=none; b=krvOwfcl34YI1QrQxtcONHllcvyROxEUlTRtq8KI4AvbQTDJvtp8lDpFZO8QWLmBI8o21HnScsF/B9EbAUqEIWIRy+kFjoCbqY4YT1F+OvG0+Evxq1MhHkfutG/4DyRjLbQbq392vhSm8jrzhmRPyUHpamXADUwAL5qzuUL1ppQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748569802; c=relaxed/simple;
+	bh=CveUHtuP1DptHh8ecfltHD6hRz2GDjqnTk2DrPj0YRI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iwlfNjqTd+6ra/Ju4qU8S4dLDaLH+nLAi/iw5efg0AO2NNOEOpV81aXhSfUSpW8d8QE/B+acFLXV22pCc0wtu+FpeSIWcgFewuY1P5VNZhZ6l/0aYjIuYMAkFPbcxWva3YiqPsk/CuH7KUFscIz/DiQHSK3nOuXKQapaaIhamps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ezXJMaqs; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CCppjhTU"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vj+b6fqn4gszA5d/HxTxSLbrCcyYJqJRUBQhs/FW1O58cP6qvB4jFJqBTKWOoXLIxK+LVcgMcqgk84ZiGMwZ6z3IXPqx11dM1SC3iq8nLlwD8JOGmSUOUvuZApk2OefjFiyOekkual5mleFXrTi8JL6eWBemTCezNUxOTxyvYH2b2zv6q03rCP99JIRHUv9GpXCXUVRHrQU/9RPYdllhT5yfNAp8L0ZtXR+DtIBFa6uZBw7my1TwoaAQaq1A+Sw0Ma0n06zzoX8FOmDfGlk0HG3jCJp8Xc5GBPm7G1ImsS7iQr8K5Eqr18Vl2c9IB+/pq6ck73zmrr41OYjS8QRJqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r4fiRcyYgBSpv4AQdWLF3DgNKd5DgXBqQNs1ZZzmBh4=;
- b=pJLjYpqsQf7WMEWeAdTakeAGsbivU8uCwKGOSCTknBPxtpgxBc7eUQj3p6MjqXaolpEFrBPr8SbD9Vw0kJaWOD4o1j/CAIfz4MJ0pcrte7K6f8p0MAOK5dtHzdnNDfEntzuyezzFHA+F0amKKVrlOZAQ+yntuE5Cy0utRyaxFc2HW5bmpgmczyGq8ZgHiJ4gm5y2RgvhKx8apGR7wetxNnaAMhTqD16DNd+/82v3LBWlJ2Ga4n93+UuryPGW28yVGplxgVr8DWuyGuIfOBE5BuD6YTmYiOMEKj2H16KgCzpX9hU0DqDcCZo0D+frVYh5GK1qk0Ms63tPiVFKgpRU+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r4fiRcyYgBSpv4AQdWLF3DgNKd5DgXBqQNs1ZZzmBh4=;
- b=CCppjhTUbTgf3UoXqGtpOmefqkxruALDujmei17rBSXgZ0FYrTADdG+2aDKOXN1Q0Dwf3wpGns6YvPu7T3B8U2S7GdiUYNGbmHiHCVrplG4dredhmNzIm9ik5nkrwldGnXD6evkqdoGKRGQ0KajLK+Cgr2AtWcCdu3vlK18GyUwg2pKqucPzEkuOARTVlCdqeI4lK6ZTWmnPzxKTiQEDn+5WjcR2kT1nl/C6cD80QFsXaFPysmhW36hiPxg7zyMFEAfZei8mDPvai5gCWbMGX91Ez7APDP11OqFOExTaMNN03fHqGws3twXhyyENnNQts7eTNjhXbe3xsgF8mPZX8Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9)
- by SN7PR12MB6959.namprd12.prod.outlook.com (2603:10b6:806:261::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Fri, 30 May
- 2025 01:49:24 +0000
-Received: from CY8PR12MB7705.namprd12.prod.outlook.com
- ([fe80::4b06:5351:3db4:95f6]) by CY8PR12MB7705.namprd12.prod.outlook.com
- ([fe80::4b06:5351:3db4:95f6%5]) with mapi id 15.20.8769.025; Fri, 30 May 2025
- 01:49:24 +0000
-From: Alistair Popple <apopple@nvidia.com>
-To: akpm@linux-foundation.org,
-	lorenzo.stoakes@oracle.com
-Cc: david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Alistair Popple <apopple@nvidia.com>
-Subject: [PATCH] MAINTAINERS: add myself as reviewer of mm memory policy
-Date: Fri, 30 May 2025 11:49:17 +1000
-Message-ID: <20250530014917.2946940-1-apopple@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SYCPR01CA0016.ausprd01.prod.outlook.com
- (2603:10c6:10:31::28) To CY8PR12MB7705.namprd12.prod.outlook.com
- (2603:10b6:930:84::9)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ezXJMaqs"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2350b1b9129so7833915ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 18:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1748569800; x=1749174600; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=USkdCPHF2PH5TA65vT+omww+14Kmrvo8xr4kQydMtxQ=;
+        b=ezXJMaqslCLlNKM9i1+hOJzpaK/oN8rAv3zj43+6OkTaW3WUtBnHQIDndjbejVB+l+
+         aYrFR9mG0PhlrRM8QiZJxU77NEefx+Tx+I6L32AC+jZbpbn75hRsuE4/OWNbQElVC/LN
+         kowRAtStycOV8YEzN3ooyAkDhJtUK0T0hkHDg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748569800; x=1749174600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=USkdCPHF2PH5TA65vT+omww+14Kmrvo8xr4kQydMtxQ=;
+        b=Cs9Q84INmE6fO09FJcdP3RF2MMUmii5ZdHeNKvwzhQoXXmfKAk65eflXTYWQuDqUTs
+         MlQg9xyT04HJEj/yTYlUkLaxkRF2t4aIpidQWowv8WwefwJjt25DEkMCEt0+Vb1zTEbU
+         Zn4zEBUVziVy6N73yjF/jFSSLs+NEYYguSOiuWBvDvsmhnRTNfRKvOAYHxy9Mq8OHmfH
+         TwKHtxgBi+zdotg2QiVkyLwIdz8RpySuFm1Zu1QNz33Eyg2PTxbxIDXsbxOBLeUJ+pxW
+         QSLqVmrIL+2K5q3vfoTfZkM9E1l19qsER9qJGoZfG7DzFlyObLjf78P5TPbUwSi9bhS5
+         R7hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVM6ocJz/dBJIh9Wg9WAXnDFK2xIqTgTEhFXuQG9Oh5pqBm3/U0x1FYtMbx8tu36ecY3U12LJ6j260dDig=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5qC5xHBCDpQL04GNTXi+qJz/ZHUkr5j+6TgEFmY9EAF2y6Rre
+	3qCd+07/fcxa4HFK17NfhP5Og+Ou7ipMmMb29GQlOJORFmN5Qi7WdlYyDMRVVv7BJR8=
+X-Gm-Gg: ASbGncuixHhgNFrgLExKAWE6t8vix7kDsY6GerAlA9qOqsd0F4x9EKjBu1aU9oOO05v
+	gKG/iNEtsPLUIOm+rD8aADu6IQ56hJnxuEjrGpOEWS//MjLK2dRYPsQB+BEc9SfaS4c4JwcCRE6
+	fJxgG6P8bcPf7z8LrKFvCN3p7G0mxGZ9pt+LK70h87s0OeXB0YKBs7APosfN6TM612/2PrznC9u
+	Rk9tqnpVezF9QjFlDRq5h72uRt+aSkvrMgTcHQJozIKgzah1RdAsTzfw8FExAIIgRp0b8DFBGBQ
+	RgeDYGiweNRlauSSHHyvGLCtun0VmuGHKty7tELJn+HYKrXaWVzpAsDO9ns=
+X-Google-Smtp-Source: AGHT+IF30dyRi/lEN79RRLEUtNpNXnDs814PCaa5b5ybHznKzvJuCfgL1TejPuzA/dDpqBg0EpC+zQ==
+X-Received: by 2002:a17:903:2f89:b0:234:eb6:a35b with SMTP id d9443c01a7336-235396e2b3amr5777265ad.44.1748569800003;
+        Thu, 29 May 2025 18:50:00 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cd8c35sm18316405ad.154.2025.05.29.18.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 May 2025 18:49:59 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: kuba@kernel.org,
+	stfomichev@gmail.com,
+	john.cs.hey@gmail.com,
+	jacob.e.keller@intel.com,
+	Joe Damato <jdamato@fastly.com>,
+	syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH iwl-net] e1000: Move cancel_work_sync to avoid deadlock
+Date: Fri, 30 May 2025 01:49:48 +0000
+Message-ID: <20250530014949.215112-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY8PR12MB7705:EE_|SN7PR12MB6959:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36e2cb90-4ee1-4c24-faf2-08dd9f1c3475
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Xxcap0TxnK4qsE2EENntjAcgoc7EBJFFM80bFAdL86/Mjfw/+ZeeG50VgOhq?=
- =?us-ascii?Q?LRJnLtGB5FBqa0M5Gw/16+XnSMt3R8rl6DG2Y/4vCOe09+VHMLow1ZDdZ8lb?=
- =?us-ascii?Q?KAiwXfbL7MlVrvy7Gzu7rcJDESdNbMCLMue523hdVr1+o7Ia2kDEBOXWbr5r?=
- =?us-ascii?Q?Kx3x7pAE01rxRw+n8okZFFSladl/HDUKMY9VQ/HxM52lJnfLC0yD56HGoEXn?=
- =?us-ascii?Q?W930zKKUgDwL4Y1yO+g2yQnIvL3xesP8GyawVAt88YCX1tP++WZbGTh0AfQ2?=
- =?us-ascii?Q?E2TN3PUMuKAWVIQgAVTJrmVDcJAzVTsZrxEdyKnJ/2BfCa9FLeWxG7Yj6ljx?=
- =?us-ascii?Q?a8Q70d/7q9G8vnZNDnqpEF68+QZROuevVCKP6Cqss2PIvpVuY8XqWXLatXtQ?=
- =?us-ascii?Q?VWFWAboOi9lBdMTcX5Cx2hi8JHXi7P6UwBRZMtthonxSwpfXmOtZyZO1yioR?=
- =?us-ascii?Q?7ns4ARS6+eE03Q/8SBRGI7mHDMyqwh6zMsredjfCWUwgk1F3NDBMp3LKOyeY?=
- =?us-ascii?Q?QLDSqsrcuVigVcBZz85pK3uNO6zdCvORiSOop4TRA4fuAhrGfXQpX0NHiSy5?=
- =?us-ascii?Q?TxgvbgXGQqc1v1nWnP2GEtTjMasvtk73NvIV6AzvtRmgy6bk7UpQuAJFSMZ/?=
- =?us-ascii?Q?5ZZxgRACirBbyJsFfFXDjWjwyEt0b2xHLiledhT9WOhCKnQdcHfBbhIl+8Zn?=
- =?us-ascii?Q?XvS7jPGyCYmDycEXxhLSpMt2U39lQSO6fMCWY2DFAFcyDcj/sk5s3Z3Pa14H?=
- =?us-ascii?Q?IZRAhsAdxc8TU5nbsFZQIfdGOFvupkH8JGj7ycnP4E353yMDJwXqYESPjcAk?=
- =?us-ascii?Q?Q/wY/OxjwwYRq/LBtphWfHo54FWi3uD1BYOWlgkq10+cE/bgQLUC/fCDZcVp?=
- =?us-ascii?Q?CRVRkWPOYfc4ViOSbQATa6z++y/RKfT3x4b3Vuib6oHoyudt/b6e1vYoqKpv?=
- =?us-ascii?Q?i/wbtajD1c/GHpCVtqXJLupDlMqTj+RvOkLEjSzxi12cR9rzWNPoipU/VyMG?=
- =?us-ascii?Q?GaaAGtnBFd/x+P9EW/+38RkOHyGW40lUGiVVjPTIdmQsQieJdClekl0ED96T?=
- =?us-ascii?Q?058vGKs1MeRcm417n8HjCyqkeJy8b7vuLpoDwYUIQRP6hcyj/sUaCLls2CtW?=
- =?us-ascii?Q?koz7hZIhoqz3vjTgzZbXLm6mBDrWu+Fc5ZXJLdC1SYELsM+W3fce3ZS3BVKF?=
- =?us-ascii?Q?xdX35/6egERvuFqhxBrRniWseRFgAb4GePTZD11fC+2VMiXsK3TrAr6jOLod?=
- =?us-ascii?Q?dS2sFrS8ua3kUZsv7TZIeyh7XdOLLZZQYiu3c7eLzJcTJsJIpjxujtQ482WL?=
- =?us-ascii?Q?Wgdi4/Qw41mPQw7MHjhwsuFRCLU7ldAm94RcdmXIcCLZ8ifkC7pUiGxFmAFm?=
- =?us-ascii?Q?4balCxQmi3Lhls8+alnXFh/4GsQmTjvkm5VoHf7mjwoLU5yPbr+EmC9SxAkc?=
- =?us-ascii?Q?kHO8c2I9NB0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7705.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2/l/eQG+GRbKonuNfP9/gPkA7RLYH4g5EfnFPuBWLaTWw8mrEL/oRPPulNo7?=
- =?us-ascii?Q?g7PYjtyAzYgrF+EuBtj8pUQFXZXOGlrlErYKdj61AMVsQAl9xn2i12H4tnh+?=
- =?us-ascii?Q?39dGZXJ2tgy2dryHDJ+ACQRPzf6O0hDKJ5zN8zDMG7K9lFq936QVPGoiMIlY?=
- =?us-ascii?Q?r3PA7JY0pPzMz4YlOFu3x+QqFhsXO6tR7I47JbtwlrcgKF1QWtgrgP6Tpn7b?=
- =?us-ascii?Q?kaDyqs1ZgEPQe/HfotfMOKCS4shm64G3E7MHBVlY/qmvhpg1W0B3/NJnkUUY?=
- =?us-ascii?Q?pzyNiDuxNsvHGeXv/3o8HH2nttcU58NVjogGyOzp+nWbwqTozCj7UqKtb33z?=
- =?us-ascii?Q?jk9WJT5JIDDTfFKhLsbIytdwv3w3+uxMpSfGVmlAiSxTnxsT9EfSkRCijfad?=
- =?us-ascii?Q?3WulOBAxxcb6uIVoR52DOgBOFs3OC/OwzZnj/oKaU39Uq/hWMRPsmt4DIu0Z?=
- =?us-ascii?Q?8o0L9OhBQeaH0/xTS6z7/5iCtBqL8y2uCsPZ7BIsCXORbA6VeX1haaVGBd0y?=
- =?us-ascii?Q?IxwpTg/ApgeO5aJfSj6oRHz0B0Wkc+/AEa5Z6HJntQ+GSY8h5+lyIZr2784E?=
- =?us-ascii?Q?Wxi3yvUCsD5USmP0SBazmDbosALWaVT7zGYeZ7zcRRWpnOczu1Ua6i/AL8F3?=
- =?us-ascii?Q?rCmNraZ9Gy5BeCN3eO5bRX8m7Vqoauj18NA4RxjCcwinUCxyeGTFT187K3zL?=
- =?us-ascii?Q?o7hccAy8Sa2C3b403DVB+2SJodjV17YaM2Hqm7k82DnGHiwhcbipwO4Lwq6T?=
- =?us-ascii?Q?YnGqqhoDTFM5xCebwi9whOHFODc5Y3PIH4fzDQ10LkadXwlEHCYUamorLv/x?=
- =?us-ascii?Q?01WiUHgmyeLp/uWdQB6zAPKNpiju1HRn1OaCdUYM29T2Ba/blsmGDwKFazMy?=
- =?us-ascii?Q?FHWlcRqwHsLM3XSIK9pJmGfQcpAqZyo3UeWlbV84H+DM/fdqgbWhR5Jyhjp8?=
- =?us-ascii?Q?XDOZ7R8BR6LatocnusLBwIJmKn3bDI9ewsGx1gvlgtaapw45bZyf1BdAUMLf?=
- =?us-ascii?Q?l92rRW/sFubmpMBTU6QSvYOQ7dZ27/kBoo/ABtmZuCXk+hijL2j7qhEil1/6?=
- =?us-ascii?Q?jAytwAdO7I55uaHAJlu4Q6cPd6g0NLEOMyoQYyasgRxx9OHdVaG14yKMnwxc?=
- =?us-ascii?Q?vNOrVDoR8YxMhe9sWTU7ursCfiW4fAAwLDAG4he/ywKKiAzZHThqu3gvjC0r?=
- =?us-ascii?Q?XqdADKPALdZko9D9CtvYoxL8ebgKQeuElXM34m4FOp7x6X6Sz7ofayHgO7HC?=
- =?us-ascii?Q?FePBtbSW7cjPOiMQqC1kgvEtArycExB/V8mhobuu73IVVeaWenbv2sWLPghO?=
- =?us-ascii?Q?aZ1AvP0zhjqlaEKNcCwhdAbbYREt6dK3LVNJoetNwxoMCCk196WEfNzRK/x/?=
- =?us-ascii?Q?XIQbWEf5aLKp17ihXd1Bb3dXovgeoE2Pma/GZuT/2nh3YeaefHGm1wlnLiaF?=
- =?us-ascii?Q?1mMCzLYoTGrZonLZwW43CA01x8dIt8Z98oioPVL2v5TYPTugeLHAiq662mkD?=
- =?us-ascii?Q?cuAhltXgUdNbPBeokf7cnjRJlYOMJcmtomYkqBw7Ri8Upi4MIfUKeEjrt2BU?=
- =?us-ascii?Q?cX90DsIaCUnX8a+J6Y4IuGNPV7j06Cyyg0hIYBnZ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36e2cb90-4ee1-4c24-faf2-08dd9f1c3475
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7705.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 01:49:24.6383
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3Z5GdCqtHZ6FFjjr3y8QupHWPFPDY8OhowUA1/ofd2I/PdzurNaHfE2OHOJDRpwRPBekQdmEVokCiE7RMY4UpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6959
+Content-Transfer-Encoding: 8bit
 
-I'm particularly familiar with mm/migrate.c and especially
-mm/migrate_device.c so add myself to MAINTAINERS.
+Previously, e1000_down called cancel_work_sync for the e1000 reset task
+(via e1000_down_and_stop), which takes RTNL.
 
-Signed-off-by: Alistair Popple <apopple@nvidia.com>
+As reported by users and syzbot, a deadlock is possible due to lock
+inversion in the following scenario:
+
+CPU 0:
+  - RTNL is held
+  - e1000_close
+  - e1000_down
+  - cancel_work_sync (takes the work queue mutex)
+  - e1000_reset_task
+
+CPU 1:
+  - process_one_work (takes the work queue mutex)
+  - e1000_reset_task (takes RTNL)
+
+To remedy this, avoid calling cancel_work_sync from e1000_down
+(e1000_reset_task does nothing if the device is down anyway). Instead,
+call cancel_work_sync for e1000_reset_task when the device is being
+removed.
+
+Fixes: e400c7444d84 ("e1000: Hold RTNL when e1000_down can be called")
+Reported-by: syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/netdev/683837bf.a00a0220.52848.0003.GAE@google.com/
+Reported-by: John <john.cs.hey@gmail.com>
+Closes: https://lore.kernel.org/netdev/CAP=Rh=OEsn4y_2LvkO3UtDWurKcGPnZ_NPSXK=FbgygNXL37Sw@mail.gmail.com/
+Signed-off-by: Joe Damato <jdamato@fastly.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b8f1125f68da..219f887f810e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15713,6 +15713,7 @@ R:	Rakie Kim <rakie.kim@sk.com>
- R:	Byungchul Park <byungchul@sk.com>
- R:	Gregory Price <gourry@gourry.net>
- R:	Ying Huang <ying.huang@linux.alibaba.com>
-+R:	Alistair Popple <apopple@nvidia.com>
- L:	linux-mm@kvack.org
- S:	Maintained
- W:	http://www.linux-mm.org
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 3f089c3d47b2..d8595e84326d 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -477,10 +477,6 @@ static void e1000_down_and_stop(struct e1000_adapter *adapter)
+ 
+ 	cancel_delayed_work_sync(&adapter->phy_info_task);
+ 	cancel_delayed_work_sync(&adapter->fifo_stall_task);
+-
+-	/* Only kill reset task if adapter is not resetting */
+-	if (!test_bit(__E1000_RESETTING, &adapter->flags))
+-		cancel_work_sync(&adapter->reset_task);
+ }
+ 
+ void e1000_down(struct e1000_adapter *adapter)
+@@ -1266,6 +1262,10 @@ static void e1000_remove(struct pci_dev *pdev)
+ 
+ 	unregister_netdev(netdev);
+ 
++	/* Only kill reset task if adapter is not resetting */
++	if (!test_bit(__E1000_RESETTING, &adapter->flags))
++		cancel_work_sync(&adapter->reset_task);
++
+ 	e1000_phy_hw_reset(hw);
+ 
+ 	kfree(adapter->tx_ring);
 -- 
-2.47.2
+2.43.0
 
