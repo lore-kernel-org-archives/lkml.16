@@ -1,128 +1,98 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A32825DCFD
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E863225CC57;
+	Fri, 30 May 2025 17:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627824; cv=none; b=oSYXylqG0lUS2O1g45XafK7B/Nr7Qa4kkz8Vj3MZwtzvxGxXlqPv2/FS0i4Pkw/uhPlXUYJGmCDj4v8z8YgAlAY87q/wt2Jzf1jigYDEHU3++zboarxOnjLedX8TrkWO9Xp43uboOB5U51E+n/stLtVyWxPAcf/pa7LSGpbQR2E=
+	t=1748627889; cv=none; b=Zs3x+c3oV1Ix2mRLkHyCghV1FPVv5V9TtC6UlWuTS1yR9SrJsBo1LOh+c1/6CMf41XvuHcgE7vkos5i4WLFFRGjHyG3pozdgY39nGDohL8zlJxOy+uxr0hIdtQmWF5ZYJE/NeZYDuyn1WinvKHxbFkrpuHpWImfIMUHIOdkEvpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627824; c=relaxed/simple;
-	bh=nm9X/o0rnIPx+UiF+N8RenENBKrI6eSudR1LE2HsIS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWROYeCFipeRxh2sO0wp0KRlfieKpCATmbQMfq+m+AepWsxhlq1lL0XthBSzf8C5ILYrPrgMmHpZeWHgJkmGFK96v9xExGNpULdzAuViyGgBBch0/XpSIFH7XMGosG6ik+gA4sl9ULptCYnXgfqmPVMBOjeq2L+1ux6VNUyy9H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=UzFaXL9t; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748627889; c=relaxed/simple;
+	bh=3e/q5bHal7ziK2T31WoYJwIxhl30izAQYAHeNT4dv7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D8eqiIQZPwIwnZUp6sfTz6h/zNkjqZx7X+mjGVOg6D8PSAXYlhZqXIZwcazPCBGWLEYJCkny3LK+W4dRUIVfz4oTaH2BO2BNvD1qWOLNyhJKWUQ1alS3GW7PlWsR4MIihVjdu06lzmnRFRB6ueMhdwD0ODFV4CSAar5dvv7dU9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiCBF5PO; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="UzFaXL9t"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-407a0050f07so147489b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748627821; x=1749232621; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PeZnYkfCVMff3UHyU0Pr3VD4cGSKzPYxsrEG6mLaXt0=;
-        b=UzFaXL9tc2CvtuinYhfpUkYmy7FUevGBFBqRXDCekPSbZSoxg38cdEAoipwsAzxvUh
-         5h++Ig9D2UHfwg+Ak+VcPu35lFspVHiJiarKAwcIju+dCytaK2hgLjMlSL2GGfIBlSOA
-         4vxQMoNZl93vrMSlCaSEBlC2ii7nRyeIY3hMUVZKcJhBrE3G3gXhNytHYX7aSxX9YPCr
-         4ZtH0SHUUzSxzp6EDwuFzCPutIF6cRo6fgtO+p6Q6BoEsjyLpahXtVl8p169i9za7gh4
-         4saHZGNPrBlWj9MxpRi6t4t+rYt4WiiFOmuMUyQTf9otXFyAm25l+aMVIcMaaj5vI55K
-         645A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748627821; x=1749232621;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PeZnYkfCVMff3UHyU0Pr3VD4cGSKzPYxsrEG6mLaXt0=;
-        b=sDrRVr6I5uYnwaB4iOtoRWk/PE8RL3SYupVRm5/Mdei8HPYq3PyepEcAhM9WV7YZkN
-         33QCYeIC5HL5KclSHw6eY+LAlHbv+DlBFBTN4RDpy3L9bheZJvHw1vFEElRgDyGRKkcQ
-         +yJw8CylwdavlP/jGumE+TYMy5GSTYM1apZIib5GbZfXPZssq2uLS/2qLoA4cAJepTU3
-         wVYHftsvfOl4xiocMk70QL1VPotFg1NBbCciv7vzjDRdZ1uPDW5lJT0bKbqLymzKJ0If
-         gK8KNaVYyFOdBDn7PPwKUIBhplUSAGj8PRMp7JmYpalw4SjuA+nLE751BbgQImv1ThAP
-         JKNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVltEw1QilcVqlz2pbAmVsKSopSBrk58sIG1rC0G/S/ZrI6COqzqukIBizoXSl9EMGYmke7oet5zdxbTSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0a4+IbNx5lN+efyvt6k0Ev2GruXNTMzbELWCwFfAWpd4twXF2
-	+7Ri04o+tEW3/LHW0rUP/GshGpQqViZZwGbHKdTeoKBIwYi2nR32UdM5cG1Al8GRcMg=
-X-Gm-Gg: ASbGncvOQqB6LeRUCKganbaoPEHaV72U1zdG8aP1BkZXNejEHhL69QAXQbULjOQ4UsN
-	TUM+1gXU5u1q2xa0w76oJvDqpoIJ2d+es7PAjDv5Ng53xZ266pXKj6UyqPJBVbPlP8I3rwPFSAP
-	x7Qwp4cJH0Kgiusx9Rt2aJzqBkOqKSUjMlUBHCpuoreIxWXEBjrVj6QeFVfZBJeGWebSsFs9EGf
-	TspqPLrGVrtDS/t24fSpNqBr6v7k1XlOw+QqHvmLSvzeSOlNUt6/uUAf76Bn4ZasVpcagx/aKpA
-	aunkEs+xNpfMj9zJM5OY/ewkkU0jlQHvsmy7RONz8AR7gIjEriAHWAsW0wCFbxIadL7ELPvSrPs
-	8V4Nxc8f9R5pUzFbq6ix4BKvfj4UL
-X-Google-Smtp-Source: AGHT+IFeZges+t7xbl1VwiaLWGoDo7alb7u+ilJSAME1U6eD/uMKl4m8/mgL+Q3wzRQTnPYPMB9OHA==
-X-Received: by 2002:a05:6808:81c3:b0:402:1016:e9cf with SMTP id 5614622812f47-4067974cd95mr2499573b6e.34.1748627821322;
-        Fri, 30 May 2025 10:57:01 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777? ([2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af8522a9sm658347a34.18.2025.05.30.10.57.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 10:57:00 -0700 (PDT)
-Message-ID: <6825fc30-d8ef-4a10-98ec-79ed303dd145@baylibre.com>
-Date: Fri, 30 May 2025 12:57:00 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiCBF5PO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748627888; x=1780163888;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3e/q5bHal7ziK2T31WoYJwIxhl30izAQYAHeNT4dv7w=;
+  b=YiCBF5POkhwQmJHPDTKAIEns4OH02i5ECXsHCrwBVsi7I/UEA4qKE42B
+   7e7zlvN+xgSL4z+9lbDVU5/kmHJCTAcqUGE4bGp17YnBo5kM3q7IFsH0N
+   1gV1GsaeFkZjRxBUcYTOe0tQ/Pr/GkcJQcsp/oesGj15QVjaLP9ZAZOgs
+   xEsod18dcqFdg6HjWuYrCRT8KBphGFyUL6Wxdkt5MDgK/2+7c1Q4JCKuj
+   eRsymjVizB5RceQh0uDZaYWAPRo3+vvF4VWk9G2VCOj+s8fRA6aZdxX1O
+   VKIQd3cOSKnD1WBxlSJgwknBrXUBQIpchu0u7ibtcVDdXDw3lX+d1FXy+
+   Q==;
+X-CSE-ConnectionGUID: 3669O4boQJ2Ly+CJ11nSCw==
+X-CSE-MsgGUID: hxXv0lj6TS2lkUhLVbClGA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="49849007"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="49849007"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:58:07 -0700
+X-CSE-ConnectionGUID: eG7db9YHRQetSGIo/h+duQ==
+X-CSE-MsgGUID: WoPmY/5QRRi9neB6cm1ebw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="143970644"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:58:03 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uL3zT-000000024h3-1tYn;
+	Fri, 30 May 2025 20:57:59 +0300
+Date: Fri, 30 May 2025 20:57:59 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: mathieu.dubois-briand@bootlin.com
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v10 04/11] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <aDnxp8czNi_1NsI7@smile.fi.intel.com>
+References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
+ <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in
- fxls8962af_fifo_flush
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com>
- <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
- <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
- <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
- <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530-mdb-max7360-support-v10-4-ce3b9e60a588@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/30/25 12:51 PM, Andy Shevchenko wrote:
-> On Thu, May 29, 2025 at 01:49:16PM -0500, David Lechner wrote:
->> On 5/29/25 1:16 PM, Andy Shevchenko wrote:
->>> On Thu, May 29, 2025 at 7:02 PM David Lechner <dlechner@baylibre.com> wrote:
->>>> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
+On Fri, May 30, 2025 at 12:00:12PM +0200, mathieu.dubois-briand@bootlin.com wrote:
 > 
-> ...
-> 
->>>> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling the
->>>> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
->>>>
->>>> It seems like the order should be reversed.
->>>
->>> AFAIU the wake capability of IRQ line is orthogonal to the interrupt
->>> controller enabling (unmasking) / disabling (masking) the line itself.
->>> Or did you mean something else?
->>
->> I don't know enough about how suspend/wake stuff works to say for sure.
->>
->> I just saw the comment:
->>
->> 	/*
->> 	 * Disable buffer, as the buffer is so small the device will wake
->> 	 * almost immediately.
->> 	 */
->>
->> so I assumed someone had observed something like this happening already.
->> If an interrupt occurs between enable_irq_wake() and actually
->> going into a low power mode, what effect does it have? I ask because I
->> don't know.
-> 
-> To be a "wake source" means to be capable of signaling to the system that wake
-> is needed. If an event comes after enabling an IRQ line to be a wake source,
-> that should wakeup the system (independently if that IRQ line is disabled or
-> not on the IRQ controller side).
-> 
+> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+> 8 independent PWM outputs.
 
-OK, more clear now. So I should have been more specific with my previous
-comment. When I said, "before disabling the interrupt", I didn't mean
-calling disable_irq(). I meant disabling the actual output pin on the
-accelerometer chip.
+I don't like that OF node propagation, but I have no alternative to propose
+right now.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
