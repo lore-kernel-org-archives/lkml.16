@@ -1,370 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A606F6BFC0
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595693FE4
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748611517; cv=none; b=IVKZfkyCPLXCSfJJQWSlwicwxfzbxYBpNVmYHcvYwjCj0/LCXumWEza1pF9cqDf3qL9dO73Qo+20/aTSITAZX7phGLvu+JMSMMpM+3LF7O5yNcKxD8PQHJ9RSFI09jT8l4nCmj/EA6rag+awYx8+vyTW9cbqUfZ/RV95TJBfgv8=
+	t=1748611546; cv=none; b=m2ALVD4rAht0SFj4dyjB5GYssfSNfzZYZo5Y7igHJbAzUhzudqljuxm+8XL7bCiRmCzltbxJIJzl71FPtNCe/5DK9dpeKGsZaYdbtTxmqN2Pc5OILhafvKTg1Vc3BGMZQozFuO1LOY5Cyue3E/MStXAHLqpAq/9+ytOxjjW8zmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748611517; c=relaxed/simple;
-	bh=0kthnVRhTRRX2apxh9rZ0wbaR6efYxE+DnDU7flD2ts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kLe27uKqClWi5Q7cUn3gogERjDMf7n2OgxY1+uhm2N5shW/T8//f7OamalbWzTHtFRYEWtFy2s18NxK1KaHn/Ra6KNwVU0rfyYyHKp+UrjjR/mOMXiB1yDWMQJXvWM3x0HZveeKzE5o+9YYcY0SGscBKQ0Geo5yXOTaYXkBe5sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgizACTG; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748611546; c=relaxed/simple;
+	bh=PgxKpmwUXFEHD62wBJ1kOQYT5echnoyGtaLah7i4Xn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MWvV9uivaXMfKzlm+cOO0Z59I4qyrCe+Renx7dK89UJwYW9Ob/aq8iW5MU+c8/lEVpf+T6NchaEEmYtxHPqwDpAGEonyyGwvUd74XBXHnyjISkWi82AtBJvhxLlElUnqyU59tmepgiCYor2/mNLOJN3RNRLFoXu+wqBo2Nfk1IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MzQxbtLB; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgizACTG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748611516; x=1780147516;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0kthnVRhTRRX2apxh9rZ0wbaR6efYxE+DnDU7flD2ts=;
-  b=hgizACTGUm1fbCGZ07Xvi6phSWpI7uK4xonI3E/tZuURf1ytPgazrL3S
-   AXtuP2lTy2r0W3q7k5ZijG3vkM5w8pffRYH/SJ+2JlInlR3boAX1wJMM+
-   MhGPifaGf7/Bke2jxa338twDPj43+vJkekDJlQ/ZkYmieeJmuozpxJ0nr
-   74CDZ5dbGr5da4OJ2oP9sbHYxVtxlCRiKe5Xoxj5S+N35im4+we2Fmetp
-   ISXoVoG+ARMjz2Ghxkj+FG116bEtcgKMRcj9u7EPGmbih4UsiROTpuSxk
-   z9IbVZHHxGrDeH4L71nLJMKZxbS1jo25Y3NUKMXC6BKzWJhotC4RaNVns
-   A==;
-X-CSE-ConnectionGUID: +84zz486SVeGz0EhfrX/OQ==
-X-CSE-MsgGUID: RR1N25uyRXO7mByNh3ua3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50756342"
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="50756342"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:25:15 -0700
-X-CSE-ConnectionGUID: wGwFwY+DSPaWAYB57NEarQ==
-X-CSE-MsgGUID: 17mc5XVJT7yfulx2L8/uvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="144206830"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO [10.245.244.234]) ([10.245.244.234])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:25:10 -0700
-Message-ID: <1d7eb70c-7752-411f-8e20-f41f85438d31@linux.intel.com>
-Date: Fri, 30 May 2025 15:25:07 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MzQxbtLB"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-44069f5f3aaso606275e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748611542; x=1749216342; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KVWYls6nDQ73R20I/E86TcuwkZJGt1DZr9U8c6qpiXA=;
+        b=MzQxbtLBPw12rLUIoOvKbkmBFOh7rE+gCf+cB9gE8jeefrCk6RKebYT5Uyd5hAsf/j
+         zzjIXu7fT7mFrg+IpRlFqgO2jBwS0//nXJwuasSBjHras8Qu8wHS+R1NGe6idIU3Z+a1
+         +cRk7NlUQ3HX/dkXJyUboOqMdL9tPhVOPbpNSnABBDWw/g+jh/4ihCXPtTUdMZdNa8ML
+         3SWTFeYNUgUbzycX/cdLzR/nfqCmgkehrS3Ah/iL6FfR201RA4VmopWCSM6L2t2lgRug
+         /JTU7dgHXXyKaTlmYyJYm449QyzLkwj3MQ4HkVyWX4QN4NairkEeHC8hro3zXOKu1oAa
+         n26w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748611542; x=1749216342;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KVWYls6nDQ73R20I/E86TcuwkZJGt1DZr9U8c6qpiXA=;
+        b=Inwa7e7E3plQpB9L0eYXskYyaCY+NSzN7P/pCdKA0h1vdmACFZdXSbZQRcA3PiTwJU
+         2OGX0C4fXQIiIg9vPHZJvNGRD5yzuXVVmK5VdjKgBq3SQD4nOTWQLFttoG+zUOgaFoqW
+         y6+nn49bofHYmOPyeEKK6hABdgT1q7Q7edRi2t/u+Vzeryh4l/GDaRv6QXYryq7USpYr
+         /6eKjD/gVPZl/SgLbpQfeQqA3vq+sQB2C+p/Jzw2Ud/RCKwz+5lg2WmNC8zU28S+YKxE
+         832ZH7TNuaYEDS+D0jdg+7mPgxa7MAHtWtF7Na30TvX/xBZeJXFF1MpAorTforsXeUOl
+         fhdw==
+X-Gm-Message-State: AOJu0YzJWiNgjBhPWqYDCjHKNN6aHo8iKbZkrlUXaZCBiuu3youI5eAn
+	6hKnH8NLlf/8Xq13H3Vg7n+lHv84qB34Q0R4GRNuSMZQTBt1Aa5Cv/9HT3vqNex6OQg=
+X-Gm-Gg: ASbGncvdkJiGAXTd4ByscimmLNuc3b9W6AHvwhDTOJv8RQeDhNgqCMkvUrE2ecRf1Z0
+	7C1kuGZDEAzq2RM+ZmxQ7meBfbUlk+ytwlj0NEYeWEGO9a7AcJarJG+IToHg7565DRpu4AO08vK
+	ReOmP66nSsOLhBDIh8BQ5PdEChW1janucNka9xci1zoT6tgI81mD5KVrqTdmC4GHtAhAF7S7HNs
+	Bv05nlrYFXIQSuxkuA5uEpfG/PtwOxiInqKrd8h1XfriLPWJCrAVcjga0Stwsd8iY0TygASHMtX
+	lAqTKzCLwu/hh1+Vmf5Wpd4AzOv8q+ykzEaRzL4a94RF
+X-Google-Smtp-Source: AGHT+IFMDODFq8YfSUMILS9AIMysrQxARbcNqQQhkXacaq+QWyeYkvOmhljmx2uNzVHpXM/pMfqpsg==
+X-Received: by 2002:a05:600c:1c8d:b0:43b:c0fa:f9c4 with SMTP id 5b1f17b1804b1-450d7bae255mr7676065e9.4.1748611542464;
+        Fri, 30 May 2025 06:25:42 -0700 (PDT)
+Received: from localhost ([193.86.92.181])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d6358fc9sm20975115e9.1.2025.05.30.06.25.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 06:25:42 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org (open list:HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS),
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] timers/migration: remove an unneeded call to find_first_bit()
+Date: Fri, 30 May 2025 15:25:39 +0200
+Message-ID: <20250530132539.234792-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 08/10] drm/xe/nvm: add on-die non-volatile memory
- device
-To: Alexander Usyskin <alexander.usyskin@intel.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>,
- Karthik Poosa <karthik.poosa@intel.com>, Raag Jadav <raag.jadav@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
- Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250528135115.2512429-1-alexander.usyskin@intel.com>
- <20250528135115.2512429-9-alexander.usyskin@intel.com>
-Content-Language: en-US
-From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-In-Reply-To: <20250528135115.2512429-9-alexander.usyskin@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hey,
+Use simple bit arithmetic to extract the least significant bit from the
+active bitmask, because the bit position is not needed, only the bit
+itself.
 
-I was looking into testing this with the xe code on PVC, and noticed some small changes that would be useful to integrate before merging.
+No functional change.
 
-On 2025-05-28 15:51, Alexander Usyskin wrote:
-> Enable access to internal non-volatile memory on DGFX
-> with GSC/CSC devices via a child device.
-> The nvm child device is exposed via auxiliary bus.
-> 
-> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> ---
->  drivers/gpu/drm/xe/Makefile          |   1 +
->  drivers/gpu/drm/xe/xe_device.c       |   5 ++
->  drivers/gpu/drm/xe/xe_device_types.h |   6 ++
->  drivers/gpu/drm/xe/xe_nvm.c          | 107 +++++++++++++++++++++++++++
->  drivers/gpu/drm/xe/xe_nvm.h          |  15 ++++
->  drivers/gpu/drm/xe/xe_pci.c          |   6 ++
->  6 files changed, 140 insertions(+)
->  create mode 100644 drivers/gpu/drm/xe/xe_nvm.c
->  create mode 100644 drivers/gpu/drm/xe/xe_nvm.h
-> 
-> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-> index e4bf484d4121..4c51fe3520dc 100644
-> --- a/drivers/gpu/drm/xe/Makefile
-> +++ b/drivers/gpu/drm/xe/Makefile
-> @@ -80,6 +80,7 @@ xe-y += xe_bb.o \
->  	xe_mmio.o \
->  	xe_mocs.o \
->  	xe_module.o \
-> +	xe_nvm.o \
->  	xe_oa.o \
->  	xe_observation.o \
->  	xe_pat.o \
-> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
-> index d4b6e623aa48..845b38aea692 100644
-> --- a/drivers/gpu/drm/xe/xe_device.c
-> +++ b/drivers/gpu/drm/xe/xe_device.c
-> @@ -46,6 +46,7 @@
->  #include "xe_memirq.h"
->  #include "xe_mmio.h"
->  #include "xe_module.h"
-> +#include "xe_nvm.h"
->  #include "xe_oa.h"
->  #include "xe_observation.h"
->  #include "xe_pat.h"
-> @@ -884,6 +885,8 @@ int xe_device_probe(struct xe_device *xe)
->  			return err;
->  	}
->  
-> +	xe_nvm_init(xe);
-> +
->  	err = xe_heci_gsc_init(xe);
->  	if (err)
->  		return err;
-> @@ -941,6 +944,8 @@ void xe_device_remove(struct xe_device *xe)
->  {
->  	xe_display_unregister(xe);
->  
-> +	xe_nvm_fini(xe);
-> +
->  	drm_dev_unplug(&xe->drm);
->  
->  	xe_bo_pci_dev_remove_all(xe);
-> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
-> index 50b2bfa682ac..938cf1a440de 100644
-> --- a/drivers/gpu/drm/xe/xe_device_types.h
-> +++ b/drivers/gpu/drm/xe/xe_device_types.h
-> @@ -35,6 +35,7 @@
->  #include "intel_display_device.h"
->  #endif
->  
-> +struct intel_dg_nvm_dev;
->  struct xe_ggtt;
->  struct xe_pat_ops;
->  struct xe_pxp;
-> @@ -319,6 +320,8 @@ struct xe_device {
->  		u8 has_fan_control:1;
->  		/** @info.has_flat_ccs: Whether flat CCS metadata is used */
->  		u8 has_flat_ccs:1;
-> +		/** @info.has_gsc_nvm: Device has gsc non-volatile memory */
-> +		u8 has_gsc_nvm:1;
-Is this flag really needed, or is IS_DGFX() enough? It's literally only used during NVM init, so any conditions could probably just be put there.
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ kernel/time/timer_migration.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
->  		/** @info.has_heci_cscfi: device has heci cscfi */
->  		u8 has_heci_cscfi:1;
->  		/** @info.has_heci_gscfi: device has heci gscfi */
-> @@ -544,6 +547,9 @@ struct xe_device {
->  	/** @heci_gsc: graphics security controller */
->  	struct xe_heci_gsc heci_gsc;
->  
-> +	/** @nvm: discrete graphics non-volatile memory */
-> +	struct intel_dg_nvm_dev *nvm;
-> +
->  	/** @oa: oa observation subsystem */
->  	struct xe_oa oa;
->  
-> diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-> new file mode 100644
-> index 000000000000..33ba635ce116
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_nvm.c
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: MIT
-> +/*
-> + * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
-> + */
-> +
-> +#include <linux/intel_dg_nvm_aux.h>
-> +#include <linux/pci.h>
-> +
-> +#include "xe_device_types.h"
-> +#include "xe_nvm.h"
-> +#include "xe_sriov.h"
-> +
-> +#define GEN12_GUNIT_NVM_BASE 0x00102040
-> +#define GEN12_GUNIT_NVM_SIZE 0x80
-> +#define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
-> +
-> +static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
-> +	[0] = { .name = "DESCRIPTOR", },
-> +	[2] = { .name = "GSC", },
-> +	[9] = { .name = "PADDING", },
-> +	[11] = { .name = "OptionROM", },
-> +	[12] = { .name = "DAM", },
-> +};
-> +
-Small ask, can we enable PSC for PVC too? Or at least bump regions with 1 so it's doable.
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index 2f6330831f08..0f40727b6cac 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -1277,12 +1277,12 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
+ 			 * group is idle!
+ 			 */
+ 			if (!childstate.active) {
+-				unsigned long new_migr_bit, active = newstate.active;
++				u8 active = newstate.active;
+ 
+-				new_migr_bit = find_first_bit(&active, BIT_CNT);
++				if (active) {
++					u8 lsbit = active & -active;
+ 
+-				if (new_migr_bit != BIT_CNT) {
+-					newstate.migrator = BIT(new_migr_bit);
++					newstate.migrator = lsbit;
+ 				} else {
+ 					newstate.migrator = TMIGR_NONE;
+ 
+-- 
+2.49.0
 
-> +static void xe_nvm_release_dev(struct device *dev)
-> +{
-> +}
-> +
-> +int xe_nvm_init(struct xe_device *xe)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-> +	struct auxiliary_device *aux_dev;
-> +	struct intel_dg_nvm_dev *nvm;
-> +	int ret;
-> +
-> +	if (!xe->info.has_gsc_nvm)
-> +		return 0;
-> +
-> +	/* No access to internal NVM from VFs */
-> +	if (IS_SRIOV_VF(xe))
-> +		return 0;
-> +
-> +	/* Nvm pointer should be NULL here */
-> +	if (WARN_ON(xe->nvm))
-> +		return -EFAULT;
-> +
-> +	xe->nvm = kzalloc(sizeof(*nvm), GFP_KERNEL);
-> +	if (!xe->nvm)
-> +		return -ENOMEM;
-> +
-> +	nvm = xe->nvm;
-> +
-> +	nvm->writable_override = false;
-> +	nvm->bar.parent = &pdev->resource[0];
-> +	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
-> +	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
-> +	nvm->bar.flags = IORESOURCE_MEM;
-> +	nvm->bar.desc = IORES_DESC_NONE;
-> +	nvm->regions = regions;
-> +
-> +	aux_dev = &nvm->aux_dev;
-> +
-> +	aux_dev->name = "nvm";
-> +	aux_dev->id = (pci_domain_nr(pdev->bus) << 16) | pci_dev_id(pdev);
-> +	aux_dev->dev.parent = &pdev->dev;
-> +	aux_dev->dev.release = xe_nvm_release_dev;
-> +
-> +	ret = auxiliary_device_init(aux_dev);
-> +	if (ret) {
-> +		drm_err(&xe->drm, "xe-nvm aux init failed %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	ret = auxiliary_device_add(aux_dev);
-> +	if (ret) {
-> +		drm_err(&xe->drm, "xe-nvm aux add failed %d\n", ret);
-> +		auxiliary_device_uninit(aux_dev);
-> +		goto err;
-> +	}
-> +	return 0;
-> +
-> +err:
-> +	kfree(nvm);
-> +	xe->nvm = NULL;
-> +	return ret;
-> +}
-> +
-> +void xe_nvm_fini(struct xe_device *xe)
-> +{
-> +	struct intel_dg_nvm_dev *nvm = xe->nvm;
-> +
-> +	if (!xe->info.has_gsc_nvm)
-> +		return;
-> +
-> +	/* No access to internal NVM from VFs */
-> +	if (IS_SRIOV_VF(xe))
-> +		return;
-> +
-> +	/* Nvm pointer should not be NULL here */
-> +	if (WARN_ON(!nvm))
-> +		return;
-> +
-> +	auxiliary_device_delete(&nvm->aux_dev);
-> +	auxiliary_device_uninit(&nvm->aux_dev);
-> +	kfree(nvm);
-> +	xe->nvm = NULL;
-> +}
-In xe, instead of exporting nvm_fini, it would be good to use the drmm interface, like drmm_kzalloc for allocating NVM so it doesn't have to be freed on failure, and drmm_add_action_or_reset as last action in during init. That also removes all checks from fini().
-
-> diff --git a/drivers/gpu/drm/xe/xe_nvm.h b/drivers/gpu/drm/xe/xe_nvm.h
-> new file mode 100644
-> index 000000000000..7f3d5f57bed0
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_nvm.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright(c) 2019-2025 Intel Corporation. All rights reserved.
-> + */
-> +
-> +#ifndef __XE_NVM_H__
-> +#define __XE_NVM_H__
-> +
-> +struct xe_device;
-> +
-> +int xe_nvm_init(struct xe_device *xe);
-> +
-> +void xe_nvm_fini(struct xe_device *xe);
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-> index b68c90910d82..6aa9850bb342 100644
-> --- a/drivers/gpu/drm/xe/xe_pci.c
-> +++ b/drivers/gpu/drm/xe/xe_pci.c
-> @@ -63,6 +63,7 @@ struct xe_device_desc {
->  
->  	u8 has_display:1;
->  	u8 has_fan_control:1;
-> +	u8 has_gsc_nvm:1;
->  	u8 has_heci_gscfi:1;
->  	u8 has_heci_cscfi:1;
->  	u8 has_llc:1;
-> @@ -271,6 +272,7 @@ static const struct xe_device_desc dg1_desc = {
->  	PLATFORM(DG1),
->  	.dma_mask_size = 39,
->  	.has_display = true,
-> +	.has_gsc_nvm = 1,
->  	.has_heci_gscfi = 1,
->  	.require_force_probe = true,
->  };
-> @@ -282,6 +284,7 @@ static const u16 dg2_g12_ids[] = { INTEL_DG2_G12_IDS(NOP), 0 };
->  #define DG2_FEATURES \
->  	DGFX_FEATURES, \
->  	PLATFORM(DG2), \
-> +	.has_gsc_nvm = 1, \
->  	.has_heci_gscfi = 1, \
->  	.subplatforms = (const struct xe_subplatform_desc[]) { \
->  		{ XE_SUBPLATFORM_DG2_G10, "G10", dg2_g10_ids }, \
-> @@ -318,6 +321,7 @@ static const __maybe_unused struct xe_device_desc pvc_desc = {
->  	PLATFORM(PVC),
->  	.dma_mask_size = 52,
->  	.has_display = false,
-> +	.has_gsc_nvm = 1,
->  	.has_heci_gscfi = 1,
->  	.max_remote_tiles = 1,
->  	.require_force_probe = true,
-> @@ -346,6 +350,7 @@ static const struct xe_device_desc bmg_desc = {
->  	.dma_mask_size = 46,
->  	.has_display = true,
->  	.has_fan_control = true,
-> +	.has_gsc_nvm = 1,
->  	.has_heci_cscfi = 1,
->  	.needs_scratch = true,
->  };
-> @@ -589,6 +594,7 @@ static int xe_info_init_early(struct xe_device *xe,
->  	xe->info.dma_mask_size = desc->dma_mask_size;
->  	xe->info.is_dgfx = desc->is_dgfx;
->  	xe->info.has_fan_control = desc->has_fan_control;
-> +	xe->info.has_gsc_nvm = desc->has_gsc_nvm;
->  	xe->info.has_heci_gscfi = desc->has_heci_gscfi;
->  	xe->info.has_heci_cscfi = desc->has_heci_cscfi;
->  	xe->info.has_llc = desc->has_llc;
-
-Kind regards,
-Maarten Lankhorst
