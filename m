@@ -1,135 +1,139 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6254A213E6D;
-	Fri, 30 May 2025 07:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2D32AE6F;
+	Fri, 30 May 2025 07:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591198; cv=none; b=fzrDYBiLR4e5ewANl9mGxdmXXWkLgRtj1ImtVKNuhxgAoP2RE08pVDtJiM/w3tmeekmbMOIiKU0eNKyzr/pv/Y1TgDty/LSHDm5aHZTYuwyhdv0wrOUmxAerjR4zEM/cbzrl0pEASCmRDu0xLoURAdlWvUlP5gcDpGhH0FI1eOc=
+	t=1748591428; cv=none; b=p43wsagDwPzzP/nnzlpHHWcxeDkwvzPbcjIaeRwG25p79C3HF9XUArpbfHtsL6q7h5dHS/XbTl5qwTsB9UNkxg61kPXmJS6dSb8tsYFuZ+45be5Sjfv3K+gpM8tPf6NsRHVyAAnYRfP5W9O8ksI2xZcD/Om7fNGYRKLshlDRgcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591198; c=relaxed/simple;
-	bh=C/gy27BDlYkIDsDi2lK2NXljjmhG5IvM8N89F5XHS3M=;
+	s=arc-20240116; t=1748591428; c=relaxed/simple;
+	bh=R/xRZCH14sMPQAqiO3CcAxy1OeVARVf6uPlM2WeOh40=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=REoS21j7QnCTXl/QT9aZ6FjkyYngocj/tHd9G3l+rtvjx27sj1oQyE7lp2FUE/TcYTXPh/lN2gUxuEK64rH+1bPsY3wfammLAwclYL2r0Paz6Mxvw41IWs7Qz1bQV1wrEWPen0uqtnKHy1l3M/6ziQo4bP95ZeR7Io1wNEsEZGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=O/mKfuQB; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=AuiHuj4pi89SYR2Geq7F2NWLxAl1B9G5TuiQsXV23R1QV8W+Z15K060kl9PH787XqaQf7nO/KCJsSYzITBEbeDbNd7zJ8mGimbLnXP3bu84vICdksR/L5ZGtN/iJ39FiiCo/Pn4buaSvJZ1SkBDRtAnHeCK7lkg86JRLNxxEFv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtVKjHMv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="O/mKfuQB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Ut2tpuuqRAyjo9B+qNNd6yMUFNVjo/29ecFKGIED0ig=; b=O/mKfuQB0BUcNmKRdmWHnd9iSG
-	YG+hJVA3Yn5K2Cyf7t9KIzf9KxAnua8o59fak2AfljqKfB8sgaL/fJtW/VJHi+0FT0XD14AO/yh0h
-	WBYb4GNg8RPO6rM8zhtWY1VqZe77B8ZTC6DS34hH2Lje4+TY59ss4FN9jqBaXeyHrHMS089dZy7IO
-	v6tIHTswLxoPoyt4C75BFzlOtlJqTBYYKJ+BuahW0po4IZOKX596tYectV7YVC0scKjOZXFK9o3uM
-	Du8yGWMTEI5Wq0NzmCH2n21bMfmg6tTQ/LbkC/7mjUgqnyIKNEpS0AlTSXjs1pNNCiYYZTfoCFKxs
-	d4ZMt7sg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40490)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uKuRe-00027t-2K;
-	Fri, 30 May 2025 08:46:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uKuRX-0004Rl-1d;
-	Fri, 30 May 2025 08:46:19 +0100
-Date: Fri, 30 May 2025 08:46:19 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
-	Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>, Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH net-next v6 06/14] net: phy: Introduce generic SFP
- handling for PHY drivers
-Message-ID: <aDliS9uMFaLf2lCV@shell.armlinux.org.uk>
-References: <20250507135331.76021-1-maxime.chevallier@bootlin.com>
- <13770694.uLZWGnKmhe@fw-rgant>
- <aDhfyiSOnyA709oX@shell.armlinux.org.uk>
- <6159237.lOV4Wx5bFT@fw-rgant>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtVKjHMv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADBCBC4CEE9;
+	Fri, 30 May 2025 07:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748591428;
+	bh=R/xRZCH14sMPQAqiO3CcAxy1OeVARVf6uPlM2WeOh40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XtVKjHMvVjeZipMH2I69ghfgUOEMm0PtMSWpQ1BlDghOBjTmu6w5V/KDYw4wKb8fA
+	 eMm4pGiksMyCd+Bzxnkbv/TZRxD0NMPQWUDbH9V4ihh3EtbbPRtKJQiziMFSFL9vZO
+	 JjMpX7ob2hTwv1htsjnoWhFd9G3GNEWxPpuku9BnCZXP7vZbcWSsdobvKMB4CeFkOy
+	 pkZF8hOgXadFTwF1XFfdcS3oTFBXAQ1pjTpiKh+bIgSwj5Mw/tGf3HvEBqv99dm8Af
+	 YpJcPU68lNkyt9dqmwhYSP9MVZkz+E5QrbLC0NK6AEftuFamYhZlydWTUyKxCbQdNb
+	 V87xroUjne0dg==
+Date: Fri, 30 May 2025 09:50:25 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Longbin Li <looong.bin@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
+Message-ID: <azf5lzfkegr6wt3mratxra2mlfah45dc3comtkjbrbdzf4x5xc@tlzxp7oqtcfl>
+References: <20250528101139.28702-1-looong.bin@gmail.com>
+ <20250528101139.28702-4-looong.bin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ekb2tmeniacut2mz"
 Content-Disposition: inline
-In-Reply-To: <6159237.lOV4Wx5bFT@fw-rgant>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250528101139.28702-4-looong.bin@gmail.com>
 
-On Fri, May 30, 2025 at 09:28:11AM +0200, Romain Gantois wrote:
-> On Thursday, 29 May 2025 15:23:22 CEST Russell King (Oracle) wrote:
-> > On Wed, May 28, 2025 at 09:35:35AM +0200, Romain Gantois wrote:
-> > > > In that regard, you can consider 1000BaseX as a MII mode (we do have
-> > > > PHY_INTERFACE_MODE_1000BASEX).
-> > > 
-> > > Ugh, the "1000BaseX" terminology never ceases to confuse me, but yes
-> > > you're
-> > > right.
-> > 
-> > 1000BASE-X is exactly what is described in IEEE 802.3. It's a PHY
-> > interface mode because PHYs that use SerDes can connect to the host
-> > using SGMII or 1000BASE-X over the serial link.
-> > 
-> > 1000BASE-X's purpose in IEEE 802.3 is as a protocol for use over
-> > fibre links, as the basis for 1000BASE-SX, 1000BASE-LX, 1000BASE-EX
-> > etc where the S, L, E etc are all to do with the properties of the
-> > medium that the electrical 1000BASE-X is sent over. It even includes
-> > 1000BASE-CX which is over copper cable.
-> 
-> Ah makes sense, thanks for the explanation. I guess my mistake was assuming 
-> that MAC/PHY interface modes were necessarily strictly at the reconciliation 
-> sublayer level, and didn't include PCS/PMA functions.
 
-When a serdes protocol such as SGMII, 1000BASE-X, or 10GBASE-R is being
-used with a PHY, the IEEE 802.3 setup isn't followed exactly - in
-effect there are more layers.
+--ekb2tmeniacut2mz
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v5 3/3] pwm: sophgo: add driver for SG2044
+MIME-Version: 1.0
 
-On the SoC:
+Hello,
 
-	MAC
-	Reconciliation (RS)
-	PCS
-	SerDes (part of the PMA layer)
+On Wed, May 28, 2025 at 06:11:38PM +0800, Longbin Li wrote:
+> Add PWM controller for SG2044 on base of SG2042.
+>=20
+> Signed-off-by: Longbin Li <looong.bin@gmail.com>
+> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+> Tested-by: Chen Wang <unicorn_wang@outlook.com>
 
-On the PHY side of the SerDes host-to-phy link:
+Nitpick: Make your S-o-b line the last line. This way you document that
+it was you who added the tags for Chen Wang.
 
-	SerDes
-	PCS (which may or may not be exposed in the PHY register set,
-	     and is normally managed by the PHY itself)
-	(maybe other layers, could include MACs	back-to-back)
-	PCS
-	PMA
-	PMD
+> [...]
+> +static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    const struct pwm_state *state)
+> +{
+> +	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
+> +
+> +	pwm_sg2044_set_polarity(ddata, pwm, state);
+> +
+> +	pwm_sg2042_set_dutycycle(chip, pwm, state);
+> +
+> +	/*
+> +	 * re-enable PWMSTART to refresh the register period
+> +	 */
+> +	 pwm_sg2044_set_outputen(ddata, pwm, false);
 
-Hope that helps explain what's going on a little more.
+I'm astonished that checkpatch doesn't spot the wrong indention here.
 
-Another way to look at it is that with SGMII, 1000BASE-X etc between
-the PHY and host, the PHY is a media converter.
+> +
+> +	if (!state->enabled)
+> +		return 0;
+> +
+> +	pwm_sg2044_set_outputdir(ddata, pwm, true);
+> +	pwm_sg2044_set_outputen(ddata, pwm, true);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct sg2042_chip_data sg2042_chip_data =3D {
+>  	.ops =3D {
+>  		.apply =3D pwm_sg2042_apply,
+> @@ -142,11 +215,22 @@ static const struct sg2042_chip_data sg2042_chip_da=
+ta =3D {
+>  	}
+>  };
+>=20
+> +static const struct sg2042_chip_data sg2044_chip_data =3D {
+> +	.ops =3D {
+> +		.apply =3D pwm_sg2044_apply,
+> +		.get_state =3D pwm_sg2042_get_state,
+> +	}
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Missing , after }.
+
+If you're ok, I'll pick up this version and fixup the two code changes
+and the order of the tags in the commit log.
+
+Best regards
+Uwe
+
+--ekb2tmeniacut2mz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5Yz4ACgkQj4D7WH0S
+/k6d8gf9EA6hIB2KVuUHwQKu4wMvhPhW35TEI1CVTR9L04YSgFP6CudQ407fy/Aa
+IYUnsov4TI+hKOpz0/Tb05+czeAgWU6wBoi2OSBEAB3nszVZ2xQq1PcYd2l/xtHg
+ifvgWm9LWghQRH4lwb9VvHyxowfKejMZpVTeysRB6B4mcTKOUt4VFLX6mktCdHFc
+pUedFaagWDocC+OuToPxA1f9havIw9hu56PBVJUFmq3RZ9m02QBjRs2PkOTVcMJQ
+ydtu4p+MtY+s7qYAsxBqEZlrM/CCrrRFeoBmRF22OhWOOzzNOIqcJZ19BC1uowum
+YglxYBkxgm8pY8XGGJkIkAVa3rktDw==
+=oO4S
+-----END PGP SIGNATURE-----
+
+--ekb2tmeniacut2mz--
