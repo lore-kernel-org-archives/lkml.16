@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2502C188A0E;
-	Fri, 30 May 2025 14:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D58C188A0E;
+	Fri, 30 May 2025 14:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748615101; cv=none; b=AzRKO0AbXkaja4Jt39Okbx7nSW1JhyEG3ircKdCo4AmyraiFkMDeuHCMNQlxL1ZDLygHzgJvzP22qeHjjauFVT06j6lUZPIExdhP9n2bHc/cNczldMVH67xwtJn/omDZDFQN68LrTe90nMHDha9X4YCpT83SI6y/oztQ2mKGSe0=
+	t=1748615104; cv=none; b=ZLuRriL8DvJYcTXuRHjdBHLyteKX6uNHfYzHxzU5mtg+UmaPzUEHJ0HYDXxzbLeRQHW2Y0k3bKr6vnpPdaIASCCzI3cDBtJrJDwv5Teto9QPPbRrwejzfEOTHUhZ5L+vGwTgNkGPWsx+HR7bm9QqOy8FIMv0R/f3ZRkhpCgXVkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748615101; c=relaxed/simple;
-	bh=Fdsa9c0TznozF7NTXCN5fSMXio8uVFJkPAphFsl2jPw=;
+	s=arc-20240116; t=1748615104; c=relaxed/simple;
+	bh=mGiSKd4T9J6G6QXOn/6eU1w9NZ+tMNSzAqmLqysSbEM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mYuO3piegukLwsii/NwYueDF4dSH3yU7vhm8ZHL4sMI+bRATRcQ04v1ePUKUH67v4sJuwSEfOI6hvtTF8DddQDmH7bU4wI7712BidWWeao7o4yvXlPysN+AsH7NELuvethyYNm7ExT6F/mV4uKBNBft+XI+ONKDDzw5EafQx924=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENFHCPF/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WRN8y/3AekvUiltEefOdnMr5dVMwK1qqhpAnarHfWzkCVQb7UB00qBNcC+z8BqldoPRfLmyhllslgYLvKwS8UmJ8IgOX/tlZBV2Z2CVk0bdSmXcgAVSnMvzb/tDuDQZ3t1vKC6I8Ou8ouemcpCMUuvE/WGwWVNiJ/4ZOIFWRFek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NC/3F1mL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENFHCPF/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A1DEC4CEED;
-	Fri, 30 May 2025 14:24:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NC/3F1mL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00992C4CEE9;
+	Fri, 30 May 2025 14:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748615100;
-	bh=Fdsa9c0TznozF7NTXCN5fSMXio8uVFJkPAphFsl2jPw=;
+	s=k20201202; t=1748615104;
+	bh=mGiSKd4T9J6G6QXOn/6eU1w9NZ+tMNSzAqmLqysSbEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENFHCPF/4/o2MPF6ksZAyLIY0dX9PYGIAwhqJFhJ94MCuaqbxVwfR/DKimfvRlcwA
-	 aZUJfLGWGd6+goCpwATGJe+QzDDpy7uUUsEIt4uC3h2m4JkhVGmA9/aGe3KgroUM1r
-	 BZNkjH9YVWbFEs9WM14Tdx4U49UzDnggdl2cpbrJodtN0TOTPqpDGCmJl4rVZ/pr7c
-	 CSDUqdS/0Q5sot8L1srpH3J8lgoZNHCWcZ+wDbdJnzCZ+x94FPAVZEbtTcb5CLHvO6
-	 6rvFN4bXa0tUJMp4wRKAh3WuNcRLF1E87tp63qFuMlbv6GLK3XLGx3Psa0WLhDhtdz
-	 5qJtUsoADj2lQ==
+	b=NC/3F1mLHpQNX6xsAK4ArqvUk+DOlfS21gRRBlRtnyYusmAja1ljmLFlhowhn5vfX
+	 mJC/fKP0Sa6oBzDIXnS/2VO2yTXO0irhVZRWdI8efeK+qL5NogShibbvrObLpFFx4E
+	 uX1kbkhr8H+pstT0rj5e2qQaqVbR/RHoSkzpUCnNxMcURveupSt4Oo34XI+fRKNKHT
+	 qJ8As1lnSKXkrDg1CPcVLjef4Dp9XBsx3/kdhYx+RkB87VAjolx7NKB42BRCbbtygz
+	 rIug+YMiVTZgCH5BypdViw1H7jZXVidv0MUE150IZRfKK+Ds4BGdpTBBCLMcfu53QB
+	 v2V8ygVzd3ViQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -42,9 +42,9 @@ To: gregkh@linuxfoundation.org,
 Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 2/7] rust: revocable: support fallible PinInit types
-Date: Fri, 30 May 2025 16:24:15 +0200
-Message-ID: <20250530142447.166524-3-dakr@kernel.org>
+Subject: [PATCH 3/7] rust: devres: support fallible in-place init for data
+Date: Fri, 30 May 2025 16:24:16 +0200
+Message-ID: <20250530142447.166524-4-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250530142447.166524-1-dakr@kernel.org>
 References: <20250530142447.166524-1-dakr@kernel.org>
@@ -56,52 +56,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, Revocable::new() only supports infallible PinInit
-implementations, i.e. impl PinInit<T, Infallible>.
-
-This has been sufficient so far, since users such as Devres do not
-support fallibility.
-
-Since this is about to change, make Revocable::new() generic over the
-error type E.
+Currently, Devres only supports a data argument of type T. However,
+DevresInner already uses pin-init to initialize the Revocable. Hence,
+there is no need for this limitation and we can take a data argument of
+type impl PinInit<T, E> instead.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/devres.rs    | 2 +-
- rust/kernel/revocable.rs | 7 +++++--
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ rust/kernel/devres.rs | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
 diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 0f79a2ec9474..2dbe17d6ea1f 100644
+index 2dbe17d6ea1f..47aeb5196dd2 100644
 --- a/rust/kernel/devres.rs
 +++ b/rust/kernel/devres.rs
-@@ -98,7 +98,7 @@ struct DevresInner<T> {
- impl<T> DevresInner<T> {
-     fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
-         let inner = Arc::pin_init(
--            pin_init!( DevresInner {
-+            try_pin_init!( DevresInner {
-                 dev: dev.into(),
-                 callback: Self::devres_callback,
-                 data <- Revocable::new(data),
-diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-index db4aa46bb121..ca738f75dc10 100644
---- a/rust/kernel/revocable.rs
-+++ b/rust/kernel/revocable.rs
-@@ -80,8 +80,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
+@@ -96,9 +96,16 @@ struct DevresInner<T> {
+ pub struct Devres<T>(Arc<DevresInner<T>>);
  
- impl<T> Revocable<T> {
-     /// Creates a new revocable instance of the given data.
--    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
--        pin_init!(Self {
-+    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Error>
+ impl<T> DevresInner<T> {
+-    fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
+-        let inner = Arc::pin_init(
+-            try_pin_init!( DevresInner {
++    fn new<E>(
++        dev: &Device<Bound>,
++        data: impl PinInit<T, E>,
++        flags: Flags,
++    ) -> Result<Arc<DevresInner<T>>>
 +    where
 +        Error: From<E>,
 +    {
-+        try_pin_init!(Self {
-             is_available: AtomicBool::new(true),
-             data <- Opaque::pin_init(data),
-         })
++        let inner = Arc::pin_init::<Error>(
++            try_pin_init!( Self {
+                 dev: dev.into(),
+                 callback: Self::devres_callback,
+                 data <- Revocable::new(data),
+@@ -168,7 +175,10 @@ fn remove_action(this: &Arc<Self>) {
+ impl<T> Devres<T> {
+     /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
+     /// returned `Devres` instance' `data` will be revoked once the device is detached.
+-    pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
++    pub fn new<E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result<Self>
++    where
++        Error: From<E>,
++    {
+         let inner = DevresInner::new(dev, data, flags)?;
+ 
+         Ok(Devres(inner))
+@@ -176,7 +186,14 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
+ 
+     /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
+     /// is owned by devres and will be revoked / dropped, once the device is detached.
+-    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
++    pub fn new_foreign_owned<E>(
++        dev: &Device<Bound>,
++        data: impl PinInit<T, E>,
++        flags: Flags,
++    ) -> Result
++    where
++        Error: From<E>,
++    {
+         let _ = DevresInner::new(dev, data, flags)?;
+ 
+         Ok(())
 -- 
 2.49.0
 
