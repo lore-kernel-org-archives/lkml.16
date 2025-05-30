@@ -1,141 +1,190 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3726C283126
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275231B808;
+	Fri, 30 May 2025 20:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748636106; cv=none; b=ORTNsJx0FSLCaNXMMUnnibC9F4S23aQ+dPejdNinRajKBu1d+6T5jszQd3rdDOwxqztnC061W+4HFRD/sMYCmIH47RdS8UoN3z2QnQYVkYPnY+fXQVbLenzzVCVHNu/aWiJf8lyf0NU2YG3wH51CllY80a3B8Ux+Uc5Ccgj3F1A=
+	t=1748636143; cv=none; b=Xhpth2H8U4IMweqjihs5QV4bGft/GfV8/ZOAS9XyOVoNDg+ilFYmRgIalYQe376wu/Fxa0Oxdh3o+AhpDRC/B15YiBLjQ1HKpnp/F4qF4q8alJghxcRBFPKjv+Ms5HmwT96ltl46SPhAOghQY74gfoEBhSQBF1J2x2jJ0P/yK4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748636106; c=relaxed/simple;
-	bh=zKZD7kycK+DTv2eWWuFIsoyy8NdEndn/seS2tgq91d0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uo3dETBMjJ20mUssDnQT466twCnitAQcj2jls4k3JznEZZYrOE3twkDt5kauU2BQYuyftLzy3ixlXLSnAw11pf3eb5D77EbaCt+9BMhZ2ZEHj405PyfJ5mHIWOaKlyQhl8R5jonqqHfrGyZ+maPLnIUde7Im7oLsGRpCUf5TpDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=dq24m/Ux; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1748636143; c=relaxed/simple;
+	bh=KrOIZHhxSkUJP3vmGlK2SK7rs9E8suR8dQyCNjZZ+6A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=hGAm2SqGBu1o9QJv7Guo6Pcd5G8Lt3jYJm5JTPcchiGMXVyigb3k8d0v9lEkgBHtaur1mzxE7+KT+doaZTvhH0Tzzox7wAPFiowq0bORr+D1EODVXu6oYZZh5xjqZ+LyfQqHY6azHjYWx1jwVnOFYY6xRFbUBnL++Rwh9rvfeyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rPb25AMk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="dq24m/Ux"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70a57a8ffc3so26692327b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1748636104; x=1749240904; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/6M9vTIekjqMakDV8dozG4WyWbU1408sp+iknzocvmg=;
-        b=dq24m/Ux7r5bRIaTKep599VlR96VKDws42dMDOlgzHeMBRIAc3HxVFD8MN1+qCQHvI
-         uvwOjH6Mn/GOs6TqaQOQ6/qivWi6JEfgLxZU6iss3AhdZeJm6Bt+g1HOy5l9brfTc9rQ
-         squiwRu7NZroCvM9U62qg8RfhrqCIafK5aTUv4jt53kxIkRo9pEApJHZpmSLDMXOVnNo
-         bz95duKhI1yHjgUkbbRg47QmFOIpVLBEsPua6ESvIucNq1/WxzcBpb3Cm4QX8zVLsiMN
-         Mk6q+T77T+Q/5EEg8OyQh3MiWkTYKdtIW6haVImoDGyMmk05LTmd77yKS3uanxvaABAz
-         8bQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748636104; x=1749240904;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/6M9vTIekjqMakDV8dozG4WyWbU1408sp+iknzocvmg=;
-        b=gSXaXUMLpNV6f5b6T+FrAztbFwOJuUWgkfjMH89VRDFjzo1dLCBFUocq3fyjvmwYDc
-         quplkSu8zIUoT7QMOcaJAHPoNAlSNulAnoCvJ3kTQZerR8v60V8cWOwpxymCJLf8TaMQ
-         yEIdUa02/2bo6mqxNLbuM1Yu0pWPy62lf3gOX9C+OR6AMZ9QwAE6HXwVJGRHIn+WHzOf
-         Spi7qLyFZ2NasVhe5JMzKrZ5cs3vG8rLsh1ksemR3U0XgxiMFAlRsfvhryj2Ni72vjhS
-         D4KIKrozQtpat6CK2x00KH0hPGte08j6sCry+J1+l7ofvaO0wAPR4S3+Hw57hoPwS2O6
-         sdpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmqljoeRckNQ2t5lwm5vEjLO3IRP5i7TqnSNYqbd/JAZnEyhq2OJaULInUFM8ntdhpfePZsfZ6IKGvnyk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEibyLI0JXGDmY6Gs2Dbfyx0p2pW64lzBxIf/B/nt/yVewNxMo
-	A1qChYxLwyPv8k1Cyh5myGXzFh1bTc94EVlSDiIdz4YdJ41eUIFOVdUf6hbNMKBXrPkHPiN/rXe
-	KqNcxuYe7na/WtFhLFng56NASkPMoc3inoj/U0Axo
-X-Gm-Gg: ASbGnctagTcD0mPMoaG2lvaJrif2Jod49EjBF0OPNynGLNHIGhEFfdtnyIK5BL+rdB5
-	WnpmJH68I5ZPvnWR15Aw3d371MZvLstjukI0pB6kps5Tm2Lj8UgzJdLTzXgj5iOJNWSHK1iwArL
-	Rnewkqztb2NsaV9df1dlYCCqDhnT+Y6wUl
-X-Google-Smtp-Source: AGHT+IGEgHJSnIpVMDUNuG4nRg+8xziUWzrtuXTTXaLUVkbGQ8T73R7RDyW+rOrdzHlp1IDD3+QOw7QkKNA1Z0zveMw=
-X-Received: by 2002:a81:fe16:0:b0:70e:7503:1176 with SMTP id
- 00721157ae682-710504bb2b5mr39109027b3.4.1748636104081; Fri, 30 May 2025
- 13:15:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rPb25AMk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C649C4CEE9;
+	Fri, 30 May 2025 20:15:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748636142;
+	bh=KrOIZHhxSkUJP3vmGlK2SK7rs9E8suR8dQyCNjZZ+6A=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=rPb25AMkFBCUgpeNqxvLQ29tcXSqi2ZrVODYBx08eYeYlpeY79vvJDhTMV/V/9aBV
+	 w0NaYqUx1rmhMP7ubS/4sqA1ciI/oGjXsoQNy07F3omYK4rDckGaGGS6F7yTKBz4JA
+	 zCGynzbxzMSTd7DAS1/7/KpHYteceSiPgJ538iJ3PrKBHxYiS/TctRpLs8yOm0PajF
+	 kTVtOHvl8r/6FZXTyymwcWguzQca4k48EfW3yY/lA1GTPZA7X1kjdKYm56YU56WbiQ
+	 D2v9kIqtK0uxhktn9GQniQ+UoT93Leevv8g0BCTXNCB7ZhRY20+DMI2TRupCmDMs4S
+	 PNXlyIPsjzUcw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com> <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
-In-Reply-To: <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Fri, 30 May 2025 16:14:52 -0400
-X-Gm-Features: AX0GCFvae8Nhzjdj75blgRs5ebZiu1Eaj7gYSoOZMxFQAT5NXKLhQ6NPMfSadE8
-Message-ID: <CAHC9VhSLOjQr4Ph2CefyEZGiB-Vqd4a8Y9=uA2YPo79Xo=Qopg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] BPF signature verification
-To: KP Singh <kpsingh@kernel.org>
-Cc: Blaise Boscaccy <bboscaccy@linux.microsoft.com>, jarkko@kernel.org, zeffron@riotgames.com, 
-	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
-	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
-	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
-	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
-	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 May 2025 22:15:37 +0200
+Message-Id: <DA9RRZVPZSMW.1LGW9H4G0RLT5@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 7/7] rust: sample: misc: implement device driver sample
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
+ <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250530142447.166524-1-dakr@kernel.org>
+ <20250530142447.166524-8-dakr@kernel.org>
+In-Reply-To: <20250530142447.166524-8-dakr@kernel.org>
 
-On Fri, May 30, 2025 at 12:42=E2=80=AFPM KP Singh <kpsingh@kernel.org> wrot=
-e:
-> On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
-> <bboscaccy@linux.microsoft.com> wrote:
-
-...
-
-> Please hold off on further iterations, I am working on a series and
-> will share these patches based on the design that was proposed.
-
-I don't think there is any harm in Blaise continuing his work in this
-area, especially as he seems to be making reasonable progress towards
-a solution that satisfies everyone's needs.  Considering all of the
-work that Blaise has already invested in this, and his continued
-willingness to try to work with everyone in the community to converge
-on a solution, wouldn't it be more beneficial to work with Blaise on
-further developing/refining his patchset instead of posting a parallel
-effort?  It's your call of course, I'm not going to tell you, or
-anyone else, to refrain from posting patches upstream, but it seems
-like this is a good opportunity to help foster the development of a
-new contributor.
-
-> > 2. Timing of Signature Check
-> >
-> > This patchset moves the signature check to a point before
-> > security_bpf_prog_load is invoked, due to an unresolved discussion
-> > here:
+On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
+> In order to demonstrate and test a MiscDeviceRegistration with a parent
+> device, introduce CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT.
 >
-> This is fine and what I had in mind, signature verification does not
-> need to happen in the verifier and the existing hooks are good enough.
+> If CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT=3Dy the misc device sample
+> is initialized with a parent device (faux), otherwise it is initialized
+> without a parent device, i.e. the exact same way as without this patch.
+>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  samples/rust/Kconfig             |  8 +++++
+>  samples/rust/rust_misc_device.rs | 50 +++++++++++++++++++++++++++++---
+>  2 files changed, 54 insertions(+), 4 deletions(-)
+>
+> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+> index b1006ab4bc3c..9948ec0939ef 100644
+> --- a/samples/rust/Kconfig
+> +++ b/samples/rust/Kconfig
+> @@ -30,6 +30,14 @@ config SAMPLE_RUST_MISC_DEVICE
+> =20
+>  	  If unsure, say N.
+> =20
+> +config SAMPLE_RUST_MISC_DEVICE_WITH_PARENT
+> +	bool "Create a misc device with a parent device"
+> +	depends on SAMPLE_RUST_MISC_DEVICE
+> +	default n
+> +	help
+> +	  Say Y here if you want the misc device sample to create a misc
+> +	  device with a parent device.
+> +
 
-Excellent, I'm glad we can agree on the relative placement of the
-signature verification and the LSM hook.  Perhaps I misunderstood your
-design idea, but I took your comment:
+Why not create a separate file? The `cfg`s might confuse newcomers
+looking at the sample.
 
-"The signature check in the verifier (during BPF_PROG_LOAD):
+>  config SAMPLE_RUST_PRINT
+>  	tristate "Printing macros"
+>  	help
+> diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_de=
+vice.rs
+> index 9bf1a0f64e6e..175638d6d341 100644
+> --- a/samples/rust/rust_misc_device.rs
+> +++ b/samples/rust/rust_misc_device.rs
+> @@ -167,6 +167,9 @@
+>      uaccess::{UserSlice, UserSliceReader, UserSliceWriter},
+>  };
+> =20
+> +#[cfg(CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT)]
+> +use kernel::faux;
+> +
+>  const RUST_MISC_DEV_HELLO: u32 =3D _IO('|' as u32, 0x80);
+>  const RUST_MISC_DEV_GET_VALUE: u32 =3D _IOR::<i32>('|' as u32, 0x81);
+>  const RUST_MISC_DEV_SET_VALUE: u32 =3D _IOW::<i32>('|' as u32, 0x82);
+> @@ -181,19 +184,33 @@
+>      license: "GPL",
+>  }
+> =20
+> +#[cfg(not(CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT))]
+>  #[pin_data]
+>  struct RustMiscDeviceModule {
+>      #[pin]
+>      _miscdev: MiscDeviceRegistration<RustMiscDevice>,
+>  }
+> =20
+> -impl kernel::InPlaceModule for RustMiscDeviceModule {
+> -    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+> +#[cfg(CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT)]
+> +struct RustMiscDeviceModule {
+> +    _faux: faux::Registration,
+> +    _miscdev: Pin<KBox<MiscDeviceRegistration<RustMiscDevice>>>,
+> +}
+> +
+> +impl RustMiscDeviceModule {
+> +    fn init() -> MiscDeviceOptions {
+>          pr_info!("Initializing Rust Misc Device Sample\n");
+> =20
+> -        let options =3D MiscDeviceOptions {
+> +        MiscDeviceOptions {
+>              name: c_str!("rust-misc-device"),
+> -        };
+> +        }
+> +    }
+> +}
+> +
+> +#[cfg(not(CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT))]
+> +impl kernel::InPlaceModule for RustMiscDeviceModule {
+> +    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
+> +        let options =3D Self::init();
+> =20
+>          try_pin_init!(Self {
+>              _miscdev <- MiscDeviceRegistration::register(
+> @@ -205,6 +222,31 @@ fn init(_module: &'static ThisModule) -> impl PinIni=
+t<Self, Error> {
+>      }
+>  }
+> =20
+> +#[cfg(CONFIG_SAMPLE_RUST_MISC_DEVICE_WITH_PARENT)]
+> +impl kernel::Module for RustMiscDeviceModule {
+> +    fn init(_module: &'static ThisModule) -> Result<Self> {
+> +        let options =3D Self::init();
+> +        let faux =3D faux::Registration::new(c_str!("rust-misc-device-sa=
+mple"), None)?;
+> +
+> +        // For every other bus, this would be called from Driver::probe(=
+), which would return a
+> +        // `Result<Pin<KBox<T>>>`, but faux always binds to a "dummy" dr=
+iver, hence probe() is
 
- verify_pkcs7_signature(prog->aux->sha, sizeof(prog->aux->sha),
-   sig_from_bpf_attr, =E2=80=A6);"
+Not clear what `T` is supposed to be, do you mean `Self`?
 
-https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmXz46GH=
-Jh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/
+> +        // not required.
+> +        let misc =3D KBox::pin_init(
+> +            MiscDeviceRegistration::register(
+> +                options,
+> +                Arc::pin_init(new_mutex!(Inner { value: 0_i32 }), GFP_KE=
+RNEL),
+> +                Some(faux.as_ref()),
+> +            ),
+> +            GFP_KERNEL,
+> +        )?;
 
-... to mean that the PKCS7 signature verification was going to happen
-*in* the verifier, with the verifier being bpf_check().  Simply for my
-own education, if bpf_check() and/or the bpf_check() call in
-bpf_prog_load() is not the verifier, it would be helpful to know that,
-and also what code is considered the be the BPF verifier.  Regardless,
-it's a good step forward that we are all on the same page with respect
-to the authorization of signed/unsigned BPF programs.  We still have a
-ways to go it looks like, but we're making good progress.
+You could also initialize this module variation in-place. (this would
+also require the pin-init change to reference initialized fields)
 
---=20
-paul-moore.com
+---
+Cheers,
+Benno
+
+> +
+> +        Ok(Self {
+> +            _faux: faux,
+> +            _miscdev: misc,
+> +        })
+> +    }
+> +}
+> +
+>  struct Inner {
+>      value: i32,
+>  }
+
