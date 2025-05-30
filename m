@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA01A22B5AB;
-	Fri, 30 May 2025 12:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4443522F768;
+	Fri, 30 May 2025 12:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748609529; cv=none; b=pzqpuZNQrl0DKNRuLx5DSwXqS99uSu9fAH6+pwVhAWO+HQuteCDvvrRXQQzrFf5XvrJ+7C+fq/iW94S9tLX7u3w28fWAXWnhwT4uk8Ef78AjOL8p5deyPapnXRemsdG9RJ/efMFsEm5goHMsEWp3xPsF5hxVYRmVZT4DD8az2zo=
+	t=1748609530; cv=none; b=bIa3E8wy8f3rCsCKBOtCfh9vRC8jeqejiNbfPdYqcKBaohAWtvHyE+6Ut+CrOyK9arEZ78mD/rlxFYOXrswfNe0FMF7/rbLSYJFlIXZLVPiM2mTRzuu6LiPkL/hM3+4sIqc3OY0nwgi6Nj4o4RnFughtAr8vo9YM8Ox8gaQYfs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748609529; c=relaxed/simple;
-	bh=UQcVtwjs57NCo0a9YDF3wREUlaK90WOqq5g46sAvigg=;
+	s=arc-20240116; t=1748609530; c=relaxed/simple;
+	bh=vbUIxTpe1zbcbSy7TQWDtXfyWVmK9Ungp1cZ3wVutZI=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=C3QA+OqYmjpo1I1nmk/28OtT2d+LB/iRB1fPFJ2ZeIIrUPVSGmw7VZyXCNA+zpKrAEUrXHDs1xwYh0c9vk+Nous54PKVihT5ez5saUnYBifUYNgjU3M1pmsOEVHQfrycQs/7gSDwtb8D1yFhG86kLX5OL7oF7au/4xOPxiT2d44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra2olD78; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=pQialUIvg4PZhqxcixizXR9BVm9M+t3/knsra+R3c4DTBYMNpTzQCvhamke6fZGOvhX+h4H824fb5Fv2Okxo7OnkhaxG7XqJUBQnL5oJdpjhwtE9L/sumN/ElwE/sYz8ikwk8W+5Ng2p/ziy+NHoPkJu+D9xiboy80M8M4/q5pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhlJJVin; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra2olD78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 223FFC4CEE9;
-	Fri, 30 May 2025 12:52:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhlJJVin"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B092C4CEE9;
+	Fri, 30 May 2025 12:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748609528;
-	bh=UQcVtwjs57NCo0a9YDF3wREUlaK90WOqq5g46sAvigg=;
+	s=k20201202; t=1748609529;
+	bh=vbUIxTpe1zbcbSy7TQWDtXfyWVmK9Ungp1cZ3wVutZI=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Ra2olD78R+++u/Q1wQAKNFyK/4T9kaxrz3Srtkq9PeX6OmziR448c53Lcgghrathh
-	 OKRKbr6kJttLG1p8E9BJ68u4tH4LkbGZfsEtmhlFJXF+GofHpt99TiW+M+L50EmF/u
-	 kESczJ/S8aSLX0l4YWtHplRy9G/caV9ZSGB/MS0Z5/A7S2tejjbQkIrsQVnzeQPcYw
-	 1kforgKu/xq1IMD79Y7gbul6YEDjDlF8e3GOhuJUm9WupaLKV0NuPTcA6QfUZ1nmab
-	 OvN+iObUZHeEDfQ4Sx57XzGwksmiH3NFey4NfbgG1Xnc3gK4pIq+EeORaJcIzhDqkM
-	 hAVeT1v8tJCHA==
-Date: Fri, 30 May 2025 07:52:06 -0500
+	b=qhlJJVin5RFa7yO8R5H8UGOT0CkNT7TI6hGOv5mDSz2J6YPbjSXgIiMXFyzCtL9d+
+	 +9Pb4pxsu18H8La9IkoO6mDvQMvWTYsoMpAXNofU4zPZ+yVjY2BjupcZ9jAHq1xbve
+	 Vlykj+XHRS0hs+Emh0Gq17NjKBofCXrFrpFD8NoaRlT9bcXsJFIJeXvM+yFei2j91E
+	 WpiV78+M4fhJ6AxrhGtT2z4dwR7YJtbA/4tlmwrWU6Gp+36wHBnYIBzflT6leEZiHn
+	 1i6O3p2aqZJFZi9zTNBiJ+wDPfrcSyPm1PvlVNaWXgljZuYSG26Dr4XkowCCgHxHZk
+	 NNPkDBG0ahj/A==
+Date: Fri, 30 May 2025 07:52:08 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,69 +36,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: heiko@sntech.de, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- quentin.schulz@cherry.de, inindev@gmail.com, sfr@canb.auug.org.au, 
- conor+dt@kernel.org, linux-kernel@vger.kernel.org, krzk+dt@kernel.org, 
- nicolas.frattaroli@collabora.com, krzysztof.kozlowski@linaro.org, 
- andrew@lunn.ch, jonas@kwiboo.se
-To: Hsun Lai <i@chainsx.cn>
-In-Reply-To: <20250530031046.166202-1-i@chainsx.cn>
-References: <20250530031046.166202-1-i@chainsx.cn>
-Message-Id: <174860938675.1571999.8236778735226903385.robh@kernel.org>
-Subject: Re: [PATCH v5 0/2] Add support for Firefly
- Station-M3/ROC-RK3588S-PC
+Cc: Konrad Dybcio <konradybcio@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel@oss.qualcomm.com, kernel@quicinc.com, 
+ Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+In-Reply-To: <20250530092850.631831-1-quic_wasimn@quicinc.com>
+References: <20250530092850.631831-1-quic_wasimn@quicinc.com>
+Message-Id: <174860938794.1572015.9910193757044372380.robh@kernel.org>
+Subject: Re: [PATCH v9 0/4] qcom: Add support for IQ-9075-evk board
 
 
-On Fri, 30 May 2025 11:10:44 +0800, Hsun Lai wrote:
-> This series add support for Firefly Station-M3/ROC-RK3588S-PC.
+On Fri, 30 May 2025 14:58:43 +0530, Wasim Nazir wrote:
+> This series:
 > 
-> Info of device can be found at:
-> https://wiki.t-firefly.com/en/Station-M3/index.html
+> Add support for Qualcomm's iq9-evk board using QCS9075 SOC.
 > 
-> Changes in v5:
-> - Make led-1 off by default (Chukun Pan, v4)
-> - Add color settings for led (Chukun Pan, v4)
-> - Remove vcc5v0_usbdcin
-> - Put enable/gpio before regulator (Chukun Pan, v4)
-> - Remove always-on and boot-on from vcc5v0_host (Chukun Pan, v4)
-> - Update the name of vbus_typec (Chukun Pan, v4)
-> - Remove always-on and boot-on from vbus5v0_typec (Chukun Pan, v4)
-> - Put pinctrl-names before pinctrl-0 (Chukun Pan, v4)
-> - Remove usb_con node
-> - Remove extra blank lines (Chukun Pan, v4)
-> - Add phy-supply for u2phy3_host (Chukun Pan, v4)
+> QCS9075 is compatible IoT-industrial grade variant of SA8775p SOC.
+> Unlike QCS9100, it doesn't have safety monitoring feature of
+> Safety-Island(SAIL) subsystem, which affects thermal management.
 > 
-> Changes in v4:
-> - Update the name of the regulator
-> - Remove the i2s5_8ch node
+> In QCS9100 SOC, the safety subsystem monitors all thermal sensors and
+> does corrective action for each subsystem based on sensor violation
+> to comply safety standards. But as QCS9075 is non-safe SOC it requires
+> conventional thermal mitigation for thermal management.
+> In this series thermal mitigation changes are not included as it needs
+> more discussion whether to include the change in DT or in drivers.
 > 
-> Changes in v3:
-> - Update the name of leds
-> - Add more cpu nodes
-> - Update mdio compatible
-> - Fix the order in the node
-> - Add the default serial port(uart2)
-> - Patch 1: Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+> Below are detailed informations on IQ-9075-evk HW:
+> ------------------------------------------------------
+> QCS9075 SOM is stacked on top of IQ-9075-evk board.
+> On top of IQ-9075-evk board additional mezzanine boards can be stacked
+> in future.
+> IQ-9075-evk is single board supporting these peripherals:
+>   - Storage: 2 × 128 GB UFS, micro-SD card, EEPROMs for MACs,
+>     eMMC on mezzanine card
+>   - Audio/Video, Camera & Display ports
+>   - Connectivity: RJ45 2.5GbE, WLAN/Bluetooth, CAN/CAN-FD
+>   - Sensors: IMU
+>   - PCIe ports
+>   - USB & UART ports
 > 
-> Changes in v2:
-> - Fix rgmii delays
+> Currently basic features are enabled to support 'boot to shell'.
 > 
-> Changes in v1:
-> - Add support for Firefly ROC-RK3588S-PC
+> ---
+> Changelog:
 > 
-> Hsun Lai (2):
->   dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
->   arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+> v9:
+>   - Retain earlier tags from Rob Herring [1] & Krzysztof Kozlowski [2]
+>   - v8-link: [3]
 > 
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 838 ++++++++++++++++++
->  3 files changed, 844 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+> v8:
+>   - Squash UFS support [4] into initial board support patch.
+>   - Remove uart10 pinctrl settings from board, it is moved to sa8775p.dtsi.
+>   - Arrange ufs nodes in alphabetical order.
+>   - v7-link: [5]
 > 
+> [1] https://lore.kernel.org/all/173142574295.951085.7523517676553074543.robh@kernel.org/
+> [2] https://lore.kernel.org/all/20250430-enlightened-enchanted-jellyfish-7049d0@kuoka/
+> [3] https://lore.kernel.org/all/20250528122753.3623570-1-quic_wasimn@quicinc.com/
+> [4] https://lore.kernel.org/all/20250513084309.10275-1-quic_sayalil@quicinc.com/
+> [5] https://lore.kernel.org/all/20250521140807.3837019-1-quic_wasimn@quicinc.com/
+> 
+> 
+> Pratyush Brahma (1):
+>   arm64: dts: qcom: iq9: Introduce new memory map for qcs9100/qcs9075
+> 
+> Wasim Nazir (3):
+>   dt-bindings: arm: qcom: Add bindings for QCS9075 SOC based board
+>   arm64: dts: qcom: qcs9075: Introduce QCS9075 SOM
+>   arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
+> 
+>  .../devicetree/bindings/arm/qcom.yaml         |   7 +
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 +++++++
+>  .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 289 ++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs9075-som.dtsi     |  10 +
+>  5 files changed, 420 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
+> 
+> 
+> base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
 > --
-> 2.34.1
+> 2.49.0
 > 
 > 
 > 
@@ -119,15 +142,15 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: remotes/arm-soc/rockchip/dt64-31-ge463625af7f9 (exact match)
+ Base: using specified base-commit 3be1a7a31fbda82f3604b6c31e4f390110de1b46
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/rockchip/' for 20250530031046.166202-1-i@chainsx.cn:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250530092850.631831-1-quic_wasimn@quicinc.com:
 
-arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dtb: /edp@fdec0000: failed to match any schema with compatible: ['rockchip,rk3588-edp']
+arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dtb: display-controller@ae01000 (qcom,sa8775p-dpu): clock-names:0: 'nrt_bus' was expected
+	from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-dpu.yaml#
 
 
 
