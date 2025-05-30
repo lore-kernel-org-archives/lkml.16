@@ -1,170 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5869F21517C;
-	Fri, 30 May 2025 13:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC0979CF
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612652; cv=none; b=C4m6akU5D8BWvuKVmPDogssJTIRwO7iUOd1JFmrIMwGj+J4EIw99GPf8x9YtqQIvfbv1B2UTzAffDs9MLXeM/suYcf9JL3Vn1K95XY1BYfs7jgvLsuR1aOLGQtkVShafmLtYgy+kVMReV8xJTPXnBF9an2l3xfZOUHrxvPy+3yA=
+	t=1748612953; cv=none; b=YhrJpwgN+3ALH8WSdZfzFTCW8VKTQxQ5gw4fP42bFA8oufTvZ/gyGnoX+c8J3zq9jMvW25qDWiNFFKTy1sPQGHm3yMyOSDBogoV+M52AqdDW8I9dolUBn2L188sMX3JZAN2h4vYe/GZiN19cY3SpuG6cf96I9Uf36SCIzfcHSaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612652; c=relaxed/simple;
-	bh=GzYoAIWTFmgIn+wCMJ71Bjo9eHEgpY3fZvvllpFtNlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CAHl+xILOwRqc3UN22IWD8dSBLKTWrP7ixAHwPCE6FlYmosu0GK6OfYlwh4SPKA4M2clfsq18KwaJWzKpZYjesQrOomwkuDMnG9yl13P+pwm07btJxKWQSEleCEdZUiZ/UfheXnOkP5Jv0jk7HqGdIfC1DSh6gOPQDsuqo4+oWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DC2EdB1v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748612953; c=relaxed/simple;
+	bh=9Mq5hZOOvW2ZFf69WJb4Ff0N/Ky1FM83I7pmjlJ4tUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jDBBuIT3nOmF6kBaJld4FY2yy/soP/w8q1Yo1zlOtTzW/3VmzJnfIlBMPEUi2YijiaudhFC/iBIveWkFY2FN7AGwGUlH6vQCQucQfhPhTv3GWKRVTsHYotSdMRH3CucThzRtk9i3EF1ETkpQf4S03VdgRSNF/utwfDS5gVLDMtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=AdautNmN; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DC2EdB1v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060D3C4CEE9;
-	Fri, 30 May 2025 13:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748612649;
-	bh=GzYoAIWTFmgIn+wCMJ71Bjo9eHEgpY3fZvvllpFtNlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DC2EdB1vtdkpGOZMMsKx/kpyFYb4kswSJcd1XqeGzxXAnTuPdQIBXtcYPlbZvRqlu
-	 pMa0CK8OlPD5oI5U2s/euD+DSR5ZH5OS6hF1KDGAQyQLRfMjoL9SDvfkaeWH3LWEq2
-	 4qkjbHgtim+qvaXkM5RnpzMS/0FoAbQSt/od8YZM=
-Date: Fri, 30 May 2025 15:44:06 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
-Message-ID: <2025053001-navigate-worry-c75b@gregkh>
-References: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="AdautNmN"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6065803ef35so548223eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748612949; x=1749217749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tme1pCrZrM2VXTRq9FlVTDLE9dpQsp+tmaK/1R+aVG0=;
+        b=AdautNmNSb+kNQOBVfHwtvT+YM6HxbDWWEXal+gk2zjuMnae8JNvEH+hpsoWSpL1Ye
+         waoaFCpa0XX2gxVUViD1TmeP9v490GvbZgyVmtqPqyWVYwEyGK2OT8npB+VIH0njrp48
+         iM6ZoGPAyibnBYA8ylk4BjVFs6x49vdui03xmO9MXFfPylO3Z5BSWSBm0yRAJrvXMNyS
+         czsqhfYde+y7YTcR5F6efr8R9+kTrQXmbSgEBZaTs8WJxl++2OaSYmwNGBU8rf8g+ke0
+         i6DYbH414fgYqklu8TOA/lEjlNqAYXJBCr9SvyfD9sVzIo7eyRFpPe5RrO/rSor9L/5o
+         zxpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748612949; x=1749217749;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tme1pCrZrM2VXTRq9FlVTDLE9dpQsp+tmaK/1R+aVG0=;
+        b=P1gUZ/3dWHrLSAp3/iRlFxty2Au6995y12gJZUSI6dwFtkeUYfTFV+Z3lTS1Z34SA6
+         ahoTw12jXx6wfwppmRAlK0yn49liWNvu3zBxKA5dgwBS3ycVt1rqaufIesZ5xkWFJTJR
+         8sJQ6g7/7b/gt5m0vnJxRjbptiq0qT7z5CI2OPcqL1CSGZw46zf+jD78mjhUmmtPVskh
+         LowWY3hqMoL9ISlDixvkD5D6F6zt2u+tv3fuGY7riyNDxMX9V1fezhD1/wzbaL10zpRI
+         7iwzM/G7s2pv8Gkc4uBNrNnfnH8j6Qr8ivMkKyqAD/ExOU7sfch/21c9fWFJFa2NW1TK
+         Yodw==
+X-Forwarded-Encrypted: i=1; AJvYcCXbgL/LFPcrUxdR42Fyss6PDAeIYZXQwwyn6I7YQ/CyYI8hCNIz2EUwLCC2LpzbMIx/MHAGKQTVadnbtSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlhizNoOG6FTtg1zLCPg21GlVUmuBYVUmpanPPhSYoY1rkABA6
+	AY/RVDv6FeQxICJwxAUhO+npbMHYPjdLe8QV2uKZbm8T1WyKyuRB99nwZTwm3uZlDz8=
+X-Gm-Gg: ASbGncukxuKvp7NsvGaDPnZ3s59louNMq5dHhqGDsRF4xm6sy7wa4TEri43Wsy8yh69
+	vWxwCpzPTAQH+ftlopcCMSGmGk8aQE0NjI/QEifN694gqzG1hYFLvcM8cm5eD5M/bUxfUVqlmga
+	Kt2zbau3VTP/nlugcBERFFRr5Jl1rnsv99i2iLc4TLWaJ0O9wpozGXGw2KzL6VN51/y0Sgfx9Ug
+	gkzod3vOUf+TDWm8fnO8+1KTO2jiokyEdbVfSSIWwbHlQVEp365TaCSOF+bARM1LhfbnfyYxC3t
+	PyRWSG0i6SOhwQDVoGAcysAtttdSJLdegDUz6MI2FtXJXHkaS4jDOxD4mwFXx9Eq83JVGPMErpF
+	figtiRGI1DC+H0SbiyPb0/7JfqUAH
+X-Google-Smtp-Source: AGHT+IGSeNzdLtM8Wcq3bN9hHuw1X1n/uK7UqEskLwhdNIeOIspP/rFrJu1kmWlprYDK4upeBv0Wxg==
+X-Received: by 2002:a05:6820:98b:b0:60b:edbb:1f50 with SMTP id 006d021491bc7-60d52d6db2fmr1085212eaf.4.1748612948983;
+        Fri, 30 May 2025 06:49:08 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777? ([2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c8ae0asm392439eaf.20.2025.05.30.06.49.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 06:49:08 -0700 (PDT)
+Message-ID: <9ed23409-f402-4d08-ad59-af8ac48d88d2@baylibre.com>
+Date: Fri, 30 May 2025 08:49:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] iio: adc: ad7606: add enabling of optional Vrefin
+ voltage
+To: Angelo Dureghello <adureghello@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com>
+ <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
+ <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
+ <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 30, 2025 at 01:38:06PM +0100, Igor Korotin wrote:
-> `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
-> 
-> This is used by subsequent patches, in particular the i2c driver
-> abstractions, to create ACPI device ID tables.
-> 
-> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> ---
->  MAINTAINERS         |  1 +
->  rust/kernel/acpi.rs | 63 +++++++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/lib.rs  |  1 +
->  3 files changed, 65 insertions(+)
->  create mode 100644 rust/kernel/acpi.rs
+On 5/30/25 2:39 AM, Angelo Dureghello wrote:
+> On 29.05.2025 12:52, David Lechner wrote:
+>> On 5/29/25 4:13 AM, Angelo Dureghello wrote:
+>>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>>
+>>> Add optional refin voltage enabling. The property "refin-supply" is
+>>> already available and optional in the current fdt dt_schema.
+>>>
+>>> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+>>> ---
+>>>  drivers/iio/adc/ad7606.c | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+>>> index 3bbe9c05b5edbc11e8016c995c6ab64104836e7b..21e63260965c32988d0ab3b8bb1201aa2396f1ba 100644
+>>> --- a/drivers/iio/adc/ad7606.c
+>>> +++ b/drivers/iio/adc/ad7606.c
+>>> @@ -1335,6 +1335,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
+>>>  		return dev_err_probe(dev, ret,
+>>>  				     "Failed to enable Vdrive supply\n");
+>>>  
+>>> +	ret = devm_regulator_get_enable_optional(dev, "refin");
+>>> +	if (ret < 0 && ret != -ENODEV)
+>>
+>> < 0 is probably not needed.
+>>
+> The above code looks correct to me. What is the issue ?
 
-I'm not seeing any "subsequent patches" here.  Is this part of a patch
-series that didn't all get sent out properly?
+Like Nuno said, it can't be > 0, so if (ret && ret != -ENODEV)
 
-thanks,
-
-greg k-h
-
-
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b659fb27ab63..5f8dfae08454 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -302,6 +302,7 @@ F:	include/linux/acpi.h
->  F:	include/linux/fwnode.h
->  F:	include/linux/fw_table.h
->  F:	lib/fw_table.c
-> +F:	rust/kernel/acpi.rs
->  F:	tools/power/acpi/
 >  
->  ACPI APEI
-> diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
-> new file mode 100644
-> index 000000000000..bbd38910736c
-> --- /dev/null
-> +++ b/rust/kernel/acpi.rs
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Advanced Configuration and Power Interface abstractions.
-> +
-> +use crate::{bindings, device_id::RawDeviceId, prelude::*};
-> +
-> +/// IdTable type for ACPI drivers.
-> +pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
-> +
-> +/// An ACPI device id.
-> +#[repr(transparent)]
-> +#[derive(Clone, Copy)]
-> +pub struct DeviceId(bindings::acpi_device_id);
-> +
-> +// SAFETY:
-> +// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
-> +//   additional invariants, so it's safe to transmute to `RawType`.
-> +// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
-> +unsafe impl RawDeviceId for DeviceId {
-> +    type RawType = bindings::acpi_device_id;
-> +
-> +    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
-> +
-> +    fn index(&self) -> usize {
-> +        self.0.driver_data as _
-> +    }
-> +}
-> +
-> +impl DeviceId {
-> +    const ACPI_ID_LEN: usize = 16;
-> +
-> +    /// Create a new device id from an ACPI 'id' string.
-> +    pub const fn new(id: &'static CStr) -> Self {
-> +        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
-> +        let src = id.as_bytes_with_nul();
-> +        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
-> +        // SAFETY: FFI type is valid to be zero-initialized.
-> +        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
-> +        // TODO: Use `clone_from_slice` once the corresponding types do match.
-> +        let mut i = 0;
-> +        while i < src.len() {
-> +            acpi.id[i] = src[i] as _;
-> +            i += 1;
-> +        }
-> +
-> +        Self(acpi)
-> +    }
-> +}
-> +
-> +/// Create an ACPI `IdTable` with an "alias" for modpost.
-> +#[macro_export]
-> +macro_rules! acpi_device_table {
-> +    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
-> +        const $table_name: $crate::device_id::IdArray<
-> +            $crate::acpi::DeviceId,
-> +            $id_info_type,
-> +            { $table_data.len() },
-> +        > = $crate::device_id::IdArray::new($table_data);
-> +
-> +        $crate::module_device_table!("acpi", $module_table_name, $table_name);
-> +    };
-> +}
-> +
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 15c5f72976cd..05f1d3870bf7 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -78,6 +78,7 @@
->  #[cfg(CONFIG_NET)]
->  pub mod net;
->  pub mod of;
-> +pub mod acpi;
+>>> +		return dev_err_probe(dev, ret, "failed to get refin voltage\n");
+>>
+>> We aren't reading the voltage, so the message doesn't make sense.
+>>
+> Is it better a 
+> "failed to get refin-supply\n" or
+> "failed to enable refin voltage\n"
 
-Aren't these supposed to be sorted?
+I would make the message the same as Vdrive.
 
-thanks,
+ "Failed to enable REFIN supply\n");
 
-greg k-h
+> 
+> ?
+> 
+>>> +
+>>>  	st->chip_info = chip_info;
+>>>  
+>>>  	if (st->chip_info->oversampling_num) {
+>>>
+>>
+> Regards,
+> angelo
+
