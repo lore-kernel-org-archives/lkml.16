@@ -1,226 +1,323 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40F410E4;
-	Fri, 30 May 2025 01:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748567417; cv=none; b=FGadZmwXIcvMXtcCPn8dckPs5Q28H1GDAR+08J6PFgg/uASBIkiPKyKO2VJw6vJLX/FG2ptQEVzuBDwWfT0VKmLrhi0Fwns3R/Gxbmp1+o7DDQbrhL0ZH8bqItfvCCqewJ3Rkil73TdkDl8O2bwcpohgBCNa3jBXdP0RKGdFP2o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748567417; c=relaxed/simple;
-	bh=JTWoZYMV/sBS4/+ns9GwXgeHnkr4jGPNv48ZkJkgXjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MxEMH1ii0S0Aj4ZatvZaenMD7HRa2ZM/HXeI64G02dC8yk/hVoOjul3qzO6yI0EvuqN696ESVNFAPGXdsVzXYNdt9UOflHTqs03kvOmdhFyhPiwoh1SwLXWEDhsdkSkRehox4c7HZpltyGNaGPbG3I/o/vAM6N7HHOGShLrO7nI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-eb-6839056f5554
-Date: Fri, 30 May 2025 10:10:02 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [RFC v3 01/18] netmem: introduce struct netmem_desc mirroring
- struct page
-Message-ID: <20250530011002.GA3093@system.software.com>
-References: <20250529031047.7587-1-byungchul@sk.com>
- <20250529031047.7587-2-byungchul@sk.com>
- <CAHS8izNBjkMLbQsP++0r+fbkW2q7gGOdrbmE7gH-=jQUMCgJ1g@mail.gmail.com>
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FC12907;
+	Fri, 30 May 2025 01:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748567473; cv=fail; b=VhJS56sSxp/hbGetg5s77R+7gBCvhrZhrRuw6d1DUqaHUIFDAmQsXwFVfQQAVQwVD166is9YK9hgtKcC4cYu2yFpYFJd1C6uKSIGDoMBuz9/MFQNi+4mWNoMh3Lcrv8jxrxzIosRjywHgDh2uwjL9f0pk4t2m/aTuIzIOpJW5Ws=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748567473; c=relaxed/simple;
+	bh=8MJhLrbqVANU0bLGFK2+DY9SjOoM3wFE6rNg3he8FkE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=m7aDOubuNNYohpWa3zLkDtyGNuoJNHpBqreVL5LOHIq7fRqdH6d3ZORgEBLZYz9IUGll84CHHbxfXCfoWJBNqqF/WReN9SFepiNzO+5l9g2xan9YkVX+s+Ufk07FLZd+X3SbnxsL42I48L0XaNdMPxgrQulcdnrcp2+c2kTMga8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54TM0Trq017066;
+	Thu, 29 May 2025 18:10:53 -0700
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11on2081.outbound.protection.outlook.com [40.107.223.81])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46u9d45wrq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 29 May 2025 18:10:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fB2uTHw8e/XuEW437TMBHAvVd/01J0ohee5TwTC0q9u6RP3lFcMTTEH93W3ykAH1TT6aA2BmtRxIPLysdmrRVfW/c03xSZf5pGy3POMvO0LG9ksPJ+Hy4CaScgkDUBtT28HmgYwkqoOYtj3bMPYm4ZxLBVhhEy0EHf5FmNwb2hnjUxdRabLnWUAhR3eWEmNJb1yhD3f726y97ryhT8/Gverf7n8SkmuNd0WvrqBD60mDGlUA6z8aSiuU3LBcHRL94WYH4HXYGdZq/jSC+sEBHKvJYHzmC/ZfVHApQGyUrxZQVZZHmg08MVdjbZm+8jvEm2f7YuNxsrVw21nuGDFlfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Tg4aBbJuRUnT+nqEts5oR+eaWUbBxXTbBE2qQDjCkkY=;
+ b=pJmiJ1f25KwzGXVdAgmnBSrm6zWeE4jJBvt2ez3a1cIfe2Zj61SuH+lDoBRdSM2KFYlSBZrHSRXK0y3MrrXA2qqX/wJdXnhrhfVOLrn/T8u7Ids971qOlFtEulKhtrTB7ycj1kIZ4ZoREfLZvLp0CYYhGTOHFgCz+k52ufduoEVabOW40706M12a/Fe9wwCG/DLtyMKzwnnkBjuK5Mrk0BQNbQXY/0kUQeaFPbiFfHADc7jGbZE9M1Zv4sriaIkd+fBuRmED0N3UNz81ot4nF5q8/DZwwv93/5LCTpkJyXi3R2Qse3l9SbI+EARAMCP/eB3/HmbphSnlY3l5X5s/gQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from CH3PR11MB8773.namprd11.prod.outlook.com (2603:10b6:610:1cb::13)
+ by IA1PR11MB6393.namprd11.prod.outlook.com (2603:10b6:208:3ae::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Fri, 30 May
+ 2025 01:10:49 +0000
+Received: from CH3PR11MB8773.namprd11.prod.outlook.com
+ ([fe80::c241:6bd2:b212:f4b2]) by CH3PR11MB8773.namprd11.prod.outlook.com
+ ([fe80::c241:6bd2:b212:f4b2%4]) with mapi id 15.20.8769.025; Fri, 30 May 2025
+ 01:10:49 +0000
+From: "Li, Meng" <Meng.Li@windriver.com>
+To: Frank Li <Frank.li@nxp.com>
+CC: "Rob Herring (Arm)" <robh@kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        "conor+dt@kernel.org"
+	<conor+dt@kernel.org>
+Subject: RE: [PATCH] arch: arm64: dts: add big-endian property back into
+ watchdog node
+Thread-Topic: [PATCH] arch: arm64: dts: add big-endian property back into
+ watchdog node
+Thread-Index: AQHbz8I6xeJIfWjuYEeXZYWwyKzMCLPn+wEAgAEDLlCAAMkqAIAAl/zQ
+Date: Fri, 30 May 2025 01:10:49 +0000
+Message-ID:
+ <CH3PR11MB87731683ED90D09412E4898AF161A@CH3PR11MB8773.namprd11.prod.outlook.com>
+References: <20250528111751.3505224-1-Meng.Li@windriver.com>
+ <174843567469.3636722.5654586098186872724.robh@kernel.org>
+ <CH3PR11MB877336C35ECB8432FF57C821F166A@CH3PR11MB8773.namprd11.prod.outlook.com>
+ <aDiFrp/firrNlFEY@lizhi-Precision-Tower-5810>
+In-Reply-To: <aDiFrp/firrNlFEY@lizhi-Precision-Tower-5810>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH3PR11MB8773:EE_|IA1PR11MB6393:EE_
+x-ms-office365-filtering-correlation-id: ab8624a1-2c24-4fd1-771a-08dd9f16d0b5
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|366016|13003099007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?0pI715eoaORazgT+OxVskqOrjlkBlp89Ta9Xq6MMBeQWBZJabrSrNLyl2N3P?=
+ =?us-ascii?Q?Y7DtH/pTuMp7ZG69vSXnC9yNoWAyY1bQTkarrPlCeEbw1TPAVWRxFuepeJ6q?=
+ =?us-ascii?Q?fpXFr+1/VfaRg0NMqDoH7uBvda8Su8qo68Txky1jtSxZN0oPy/ZNbIo1bRDz?=
+ =?us-ascii?Q?LMus7A0L/ZzzALaKZWuwTdnlgPEeO0lKUuathwyqfwbWMQ7GT54HMyndgUva?=
+ =?us-ascii?Q?nm4Y/BVlAPxPQ7JuXvZXM1QtlwsxO5oe6c0AOk7gnf+cJpqNyYFOarTYJrkQ?=
+ =?us-ascii?Q?T+SeUaJemyxvbR3iE2A4OYrFlMu6KHksP6T4Dzqs9gG0SUB35kqZbViI4Uog?=
+ =?us-ascii?Q?+J35r3UVeHHhjnQuTeED/VoBdtzEOFZjVELsyvMrxeyJf/FvlDYLmeFFr2BT?=
+ =?us-ascii?Q?dEMCUhwAnq2mzbsFnhUbGXv+IJlZsdsVY1LPGSl/N3uu2SHFOnIlOQuxuz3i?=
+ =?us-ascii?Q?2nyXoIc0Y1xqfefrAEQCoBppAkr5obE9cackGXVsVHaK11CKQrqDPudhGDA/?=
+ =?us-ascii?Q?LF/huEz6u7QoBN3dfRJcYHgtSuucx9DgG3w9pR3eyKjveRyaWfkGz30E97EL?=
+ =?us-ascii?Q?ybsz5/CJTdDqMWDndpSyfZDHjV5XhsNFvMMbIJfH/a4Lnl3kpJvUbIPa/nxN?=
+ =?us-ascii?Q?pjrD6aVckWECguRdl63muge7qlCrI7KOmBSwWpaFPSCfoM6Ek5KhghXcUB8s?=
+ =?us-ascii?Q?z400NjiGYeK4ngkuI9zRNI+A4HbWDTvewoh7eqKdGv3tOrVmAqCJ/9pIb6sd?=
+ =?us-ascii?Q?j9Tvm3aqrhs+egaQ+2lhE1jy1g/O7XUcsvx9EDYEvztpYbKDC6wT0MWPqgDg?=
+ =?us-ascii?Q?Axd0SWHwxoRcJFIaNXLq9gJhxWfwzzcPs8kfctbMgD22CBqSmfxabHL538jQ?=
+ =?us-ascii?Q?vlTeS8VvMTO8L1VlQ0bML0oEmTGLAEa/Vr4x406n6HEAgHJiSOfZ2KsSkQFs?=
+ =?us-ascii?Q?NDq8nCyPCx5DQTKv9m9RDGv6CFm3f9TpV/ZyOtjl2Zjwvt1lh/5xfJfI5bAk?=
+ =?us-ascii?Q?rzPnK1zh49IdfuDsYBIC+YvLFdZ34t+X5cTT8rWpZSKpryrczyI1UuOjLh6J?=
+ =?us-ascii?Q?vYmLwyWJLSO4LH3jspb7UZFS+EZs7oIj0gipwIAKyi12IUpm+LEbDdk3uBfq?=
+ =?us-ascii?Q?zbUDYSDQk0IMZe26kF4pn4MQOZaiIVNKCKI/ZpnC2n5xtaMKmM/PMz8cDyc6?=
+ =?us-ascii?Q?Qhv2pA2sQbTahnAhWHcAFblCq3kh/oyAusaNLjFVoFlfz0qvW0BP6mhQ65l8?=
+ =?us-ascii?Q?Ykj49TEOjGtB7ro8Q2rWRXmvoqsfbAJYxQYF3k1RmAiHduThDw2auZVhxAnI?=
+ =?us-ascii?Q?dsdSk6KTkTL9W+5xUS+1Bxk/EC1NR/kbJML0M4j3p1tlH3tFn8o9SQ1uYW9n?=
+ =?us-ascii?Q?/4yAbPwPwnOcBy8ZUTE0wOBRGnAxkEEmj+w6nWq4AwzkJwjbNiIPt1gI9SMM?=
+ =?us-ascii?Q?/CVQgS6Har8=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8773.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(13003099007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?qJum1ptZcFEoiRzBPBd69a8eaGIfelK8N6CeU5FS7WcX/dHz9Qc5sLwqS4Ol?=
+ =?us-ascii?Q?AECYl9YhV3iYRIX+vQYhyrzUoN9z4v2TtRmVi4F82O16g/zVPEepS6HaGfuu?=
+ =?us-ascii?Q?Drig4xxWL3LiaRSHBPdQZYunxIRwYGOVThfE8aV5ydA374h/l9NJj/MYhQLi?=
+ =?us-ascii?Q?SELPy5ULrSnZhlzV93ee8cmVAOfU+4A+X4L7RXCmDOtKN+OZQLA00TvpbLIB?=
+ =?us-ascii?Q?vUdh4s62pUhiHwl6fOIxcCs08vOjUKZcinQMsbPTlwM0QK2WkgEcpEQe+vFn?=
+ =?us-ascii?Q?kbms21OFg8MYQFoeY7yNdykh5tdXeTl7VNvQ+2rLMrbEnguGOlnGG4ubzXS+?=
+ =?us-ascii?Q?b8fS1Y6+lQV2vCgBEIyJWazcaz/qDuRlx/knPpd5sWn1rEXrk8pHp3z1wLDc?=
+ =?us-ascii?Q?HH3adZaM+B3IzEdYPghDbBrir/MuBchvPuwAIorpy+iUxDcC0WpQBWWiREzO?=
+ =?us-ascii?Q?pR/4i29GFBmFAI1ZmnR6KRGAPsa0ZIF4irkC38YBySm2/otirMpwqUXibTLd?=
+ =?us-ascii?Q?RmycmLCSztH29Dh0DTdWi4//N4u1vUnta0dhpPSh92k82hbt9mIF3gfSNRFZ?=
+ =?us-ascii?Q?IvCBJ7VXRyLgZ4m/KUAcUZdJ79+mNacsyeSoxu99l//+GJXSHlYbbQk1cwAh?=
+ =?us-ascii?Q?AzdkojD3/afeiVP062oh1tKFnS+AeOB4sDYdC3+vMLwPVFMwzI025p++0ic0?=
+ =?us-ascii?Q?85UhD28aqGsr0HC6Hh0j7YOdnTMIJvFaMC8AWy79ipEiCL4nCdkynlyq/TwN?=
+ =?us-ascii?Q?gN8aLFJNSgbkX9fevYGiqRl2y7STSigRlsRNhpfSUAU33+LDO1KQVGgaETob?=
+ =?us-ascii?Q?yhp5qaDQQwT77ujicWB+rm01E+zh3iyEijI/fyZKZcoFvT6MmCT7NUcji14a?=
+ =?us-ascii?Q?tGdhuX0aXmD05VmaoIOhyc7m/ri+S5kI51wQ1rHYeAZD+soTXDjO28wf2bPG?=
+ =?us-ascii?Q?6MldtAZ2+ZWti/UDz/swivnIUqFzqe+qEZc7zpQPB5mGe9+mzV2A33P4NO3T?=
+ =?us-ascii?Q?NWcIt4Iyd3xaNRc6RgY1dMT19RGUwUvT71ehQDiGqERzWqljqx20vXyQrloK?=
+ =?us-ascii?Q?U94jYY4DZnJaBBMGiOZomEtzy3vFsVHOFRr99ju/8kqsmS0rPIMNLxDiZxGI?=
+ =?us-ascii?Q?5YDBnbfB40DWK5Rq4m/Gb+iiVp2suca4BOIAhUeAz9EsMK6c8GDEes3sws3N?=
+ =?us-ascii?Q?epqdsdK3fsiWpX49Lt5GXBQX5SI2w70KlHF7pTE+cEd+yq8Jti6feQjCpdZD?=
+ =?us-ascii?Q?PWB0VJ1TQLeNrAwNvdwgYtFLbW57u0HHYjsyYXWJoxudPg+T2mK3MPsjHh5d?=
+ =?us-ascii?Q?sEBz8jDFgMT8gmge4CWJfZuGA7LC1Ujpu+sSWrt8rSlBH7yZmD3gvOCosTQq?=
+ =?us-ascii?Q?OMlxICxoZeM+D1gcLuuTiiqUwZIzie5/sLYSX3w2/OSFXeYXmMc9FB+JeJuz?=
+ =?us-ascii?Q?ndzcQq7lWyn96EOceBsN/PhD/Z+TgYv96ybM5sJv7NQ+Xnu1+doqCnFsaCM3?=
+ =?us-ascii?Q?D0AjzNA5RSttH4zan5Mt1CgLrqok21nD8+ZI+6pFNijDUevR1zaYg1mKank/?=
+ =?us-ascii?Q?4jnzOaZBkIq/wBQHlrvQqYv1wJCRmaL7ejT5uEIR?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izNBjkMLbQsP++0r+fbkW2q7gGOdrbmE7gH-=jQUMCgJ1g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHefZe9jodva7bo5LRouxqGWJHCrUger5kdvkgCtVLvrTlnDEv
-	aRGstJs5u2iSc8Yq71mLZTqtpJaYYmooxeyislQIynCapXZziuS3H+f8z/mdD4ejFLcZX06t
-	TRZ1WkGjZGW07KvXrfWJTKhqY/3vUDBZqli4+zMNyvpsDJgqaxCMjr+XwkjjSxbu3BqjwNSR
-	ScN3ywQFA01OKfSWDtLw5HwtBc7LzSwYMicpOGMrl8DrmhwG8iZKKKjV90mhq97EQk/VXwYG
-	7QYaWowVNPTmRECTeRGMtX5B0GiplcBYdhELuZ1mFj5l9iLofOGkofB0DgJLg4OByZ8mNmIZ
-	qa7olpA640cpMVtTyMPyNSTL0UkRa+VFllhd16Tkw9snLGm+MUmTOtuIhBgyhlgyPPCOJt8a
-	3rDEUv2GJq/MjVIyYvWP4mNkW+NEjTpV1G0IOyRTvejQHrOtSmt53kbp0We/LOTBYT4YXyqw
-	U7Pc1vOUdjPNr8Alj/Klbmb5AOxwjE9nFvCrcXHDVcbNFN/L4HbTUTfP56Nx+b0miZvl/Gbs
-	KrRN5WWcgi9F2Pp5QjrT8MYtBf30zHAA/nWzcyrETbEfLvvDzZSX4oxHhdMuD34Ptrqyp10L
-	+eX4Wc1LiXsn5m0cLmqfRDNH++Dn5Q76CvI2zlEY5yiM/xXGOQozoiuRQq1NTRDUmuBAVbpW
-	nRZ4ODHBiqY+p/TUr1gbcr3eZ0c8h5Re8o1hoFIwQmpSeoIdYY5SLpCfCQ9RKeRxQvoJUZd4
-	UJeiEZPsyI+jlYvlm8aOxyn4I0KyGC+Kx0TdbFfCefjq0bb761KcOdcHi5/GdwVt8onJ3am3
-	eD+uDzKEh+tlkRmyisie5A5yLcu//lxzyKK84bVOWXdU06Et6q2Bu5O9YrdUMuNn8+t+1HSz
-	e1dFR/kSLni0df+urnzPofuaEGHljowHrnPD/T0+88RtIYFhQtHJt8uN1Z4HLhicPkdCfbcv
-	UdJJKiFoDaVLEv4BTbFk7DUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUzMcRzHfX9P9+t0/FzJV9lsZ6SM0jx80Oif+M0wxjCz1eHHna7L7up2
-	sSwVpnVXyYxfl46USpydHq6WxpXUUFZK5SFKxmah0no4D13N9N9rn/f78/r882FJ+Vnal1Vr
-	YwWdVqlRMFJKumND8vIYep0q+J55CVhsJQzcHjHCrfcOGizF5QiGRl9LYLDuCQN514dJsDSn
-	UPDTNkZCX32PBLoLPlFQfb6ChJ70BgZMKeMkJDkKCajNaaThRbmZhktj+SRUJL6XQGuVhYF3
-	JX9o+OQ0UdAoFlHQbQ6DeqsPDD/9iqDOVkHAcFoOA1ktVgZ6U7oRtNT2UJB9xozAVtNBw/iI
-	hQlT8KVFnQRfKb6V8FZ7HH+/MJBP7WgheXvxBYa3D1yU8G/aqxm+4co4xVc6BgnelNzP8D/6
-	uij+W00bw+d9/k7wttI2in9mrZPsnHNAGnpE0KgNgi5oY6RUVdusPeFYamx89JxMRF/8UpEH
-	i7lV+Pm7B5SbKW4xzi+7LHEzw/njjo5R0s3eXAC+WZNJu5nkumncZDnuZi9uPy68U0+4Wcat
-	xQPZjom+lJVzBQjbv4xJpoI5uPHqR2pq2R+7rrVMlNgJ9sO3frNT44U4uSx78pYHtwvbB9Im
-	b83lFuGH5U+IDDRLnGYSp5nE/yZxmsmKqGLkrdYaopVqzeoV+ihVvFZtXHE4JtqOJp6jIMGV
-	6UBDrVuciGORwlMG4aCS00qDPj7aiTBLKrxlSZvWqOSyI8r4k4IuJkIXpxH0TuTHUop5sq37
-	hEg5d0wZK0QJwglB9y8lWA/fRBTR1Ls399eCsLejLmUT2fU4tdaQn5Lt5/XhXHq7cdjHvnQr
-	cWNPVnjn7uvHjVnr++9eFtWmbbnkK2f9o7iEgwtjc+dXJfzyDNpzNNi8rqgrLvNQqKs4ZM3m
-	GZtnhseHzY7WZVTKxaFFP1+K27FnW1p6yLaADZq1rlLDjGWnvKpMp6MUlF6lXBlI6vTKvx4l
-	hL8YAwAA
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8773.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab8624a1-2c24-4fd1-771a-08dd9f16d0b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2025 01:10:49.5601
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: elqmtFxLXQUIubFaFZMfBPdhPicW4BWtO/ANI3DMdhegI9qwsBu3uzCI/uvSM7oe+ZAYShsv6hIVqC32ig0U4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6393
+X-Proofpoint-GUID: xXsc1bev2J9TAIA3adPB9NdiWaqRr45N
+X-Proofpoint-ORIG-GUID: xXsc1bev2J9TAIA3adPB9NdiWaqRr45N
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDAwOCBTYWx0ZWRfX4SmwDFjJY5zx Y62TWKoXLwlkN0rS7hjBrNLhToceGC3tRXbXECpjshpv/gKhfQgZkr95bjd/fK2FCnq/tMnYs55 RherLeXC8UoR4JocPodECWdhmyOStOykciviODpFBZ9dzf6iwwEVtSOHy7wSauxwq8KLh7P6/cl
+ 3hQ8UDoK3ZWa5B0sSiGykhMZwwbhET1vshL5TSA5n+pS1hljhwq+reuJgjATOel22UAuimzMsXJ TErXGtplMF98OKJeFZ/dd2BWvrjkVwClxjtzmFD+hMRcyIAMrq+I2SGOEChpEnzrLL3eSK4123w 6pt1Yf+kMznxu3w2y8PHOKcF/arzuw+oIH/cU7JmneK40/k4Igo1/d2DwrWsty+9YB1XoKsdtT5
+ RR82ndIbtWe2Z0N5JPyKVRmjiALijP8GnDgNAvVmUCp/PqXdWQIAx8DXNc/HMoNI7AOnqfU/
+X-Authority-Analysis: v=2.4 cv=fdCty1QF c=1 sm=1 tr=0 ts=6839059d cx=c_pps a=voITv4/C+4a7SpyijLYRDA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=gEfo2CItAAAA:8 a=8AirrxEcAAAA:8 a=t7CeM3EgAAAA:8 a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=iAN9nYl-EJLqXHW7wiIA:9 a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=ST-jHhOKWsTCqRlWije3:22 a=FdTzh2GWekK77mhwV6Dw:22 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-29_11,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 malwarescore=0 suspectscore=0 impostorscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505160000
+ definitions=main-2505300008
 
-On Thu, May 29, 2025 at 09:31:40AM -0700, Mina Almasry wrote:
-> On Wed, May 28, 2025 at 8:11 PM Byungchul Park <byungchul@sk.com> wrote:
-> >  struct net_iov {
-> > -       enum net_iov_type type;
-> > -       unsigned long pp_magic;
-> > -       struct page_pool *pp;
-> > -       struct net_iov_area *owner;
-> > -       unsigned long dma_addr;
-> > -       atomic_long_t pp_ref_count;
-> > +       union {
-> > +               struct netmem_desc desc;
-> > +
-> > +               /* XXX: The following part should be removed once all
-> > +                * the references to them are converted so as to be
-> > +                * accessed via netmem_desc e.g. niov->desc.pp instead
-> > +                * of niov->pp.
-> > +                *
-> > +                * Plus, once struct netmem_desc has it own instance
-> > +                * from slab, network's fields of the following can be
-> > +                * moved out of struct netmem_desc like:
-> > +                *
-> > +                *    struct net_iov {
-> > +                *       struct netmem_desc desc;
-> > +                *       struct net_iov_area *owner;
-> > +                *       ...
-> > +                *    };
-> > +                */
-> 
-> We do not need to wait until netmem_desc has its own instance from
-> slab to move the net_iov-specific fields out of netmem_desc. We can do
-> that now, because there are no size restrictions on net_iov.
 
-Got it.  Thanks for explanation.
 
-> So, I recommend change this to:
-> 
-> struct net_iov {
->   /* Union for anonymous aliasing: */
->   union {
->     struct netmem_desc desc;
->     struct {
->        unsigned long _flags;
->        unsigned long pp_magic;
->        struct page_pool *pp;
->        unsigned long _pp_mapping_pad;
->        unsigned long dma_addr;
->        atomic_long_t pp_ref_count;
->     };
->     struct net_iov_area *owner;
->     enum net_iov_type type;
-> };
-
-Do you mean?
-
-  struct net_iov {
-    /* Union for anonymous aliasing: */
-    union {
-      struct netmem_desc desc;
-      struct {
-         unsigned long _flags;
-         unsigned long pp_magic;
-         struct page_pool *pp;
-         unsigned long _pp_mapping_pad;
-         unsigned long dma_addr;
-         atomic_long_t pp_ref_count;
-      };
-    };
-    struct net_iov_area *owner;
-    enum net_iov_type type;
-  };
-
-Right?  If so, I will.
-
-> >  struct net_iov_area {
-> > @@ -48,27 +110,22 @@ struct net_iov_area {
-> >         unsigned long base_virtual;
-> >  };
+> -----Original Message-----
+> From: Frank Li <Frank.li@nxp.com>
+> Sent: Friday, May 30, 2025 12:05 AM
+> To: Li, Meng <Meng.Li@windriver.com>
+> Cc: Rob Herring (Arm) <robh@kernel.org>; devicetree@vger.kernel.org;
+> shawnguo@kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; conor+dt@kernel.org
+> Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back into
+> watchdog node
+>=20
+> CAUTION: This email comes from a non Wind River email account!
+> Do not click links or open attachments unless you recognize the sender an=
+d
+> know the content is safe.
+>=20
+> On Thu, May 29, 2025 at 04:07:27AM +0000, Li, Meng wrote:
+> > Hi Frank,
 > >
-> > -/* These fields in struct page are used by the page_pool and net stack:
-> > +/* net_iov is union'ed with struct netmem_desc mirroring struct page, so
-> > + * the page_pool can access these fields without worrying whether the
-> > + * underlying fields are accessed via netmem_desc or directly via
-> > + * net_iov, until all the references to them are converted so as to be
-> > + * accessed via netmem_desc e.g. niov->desc.pp instead of niov->pp.
-> >   *
-> > - *        struct {
-> > - *                unsigned long pp_magic;
-> > - *                struct page_pool *pp;
-> > - *                unsigned long _pp_mapping_pad;
-> > - *                unsigned long dma_addr;
-> > - *                atomic_long_t pp_ref_count;
-> > - *        };
-> > - *
-> > - * We mirror the page_pool fields here so the page_pool can access these fields
-> > - * without worrying whether the underlying fields belong to a page or net_iov.
-> > - *
-> > - * The non-net stack fields of struct page are private to the mm stack and must
-> > - * never be mirrored to net_iov.
-> > + * The non-net stack fields of struct page are private to the mm stack
-> > + * and must never be mirrored to net_iov.
-> >   */
-> > -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
-> > -       static_assert(offsetof(struct page, pg) == \
-> > +#define NET_IOV_ASSERT_OFFSET(desc, iov)                    \
-> > +       static_assert(offsetof(struct netmem_desc, desc) == \
-> >                       offsetof(struct net_iov, iov))
-> > +NET_IOV_ASSERT_OFFSET(_flags, type);
-> 
-> Remove this assertion.
+> > Do you have any suggestions for this issue?
+> > Could you please help check whether we need to fix this issue?
+>=20
+> Fix binding doc
+>=20
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> index 0da953cb71272..8006efb69ec71 100644
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+> @@ -36,6 +36,7 @@ properties:
+>                - fsl,imx8mq-wdt
+>                - fsl,ls1012a-wdt
+>                - fsl,ls1043a-wdt
+> +              - fsl,ls1046a-wdt
+>                - fsl,vf610-wdt
+>            - const: fsl,imx21-wdt
+>=20
+> @@ -103,6 +104,7 @@ allOf:
+>                enum:
+>                  - fsl,ls1012a-wdt
+>                  - fsl,ls1043a-wdt
+> +                - fsl,ls1046a-wdt
+>=20
+> fix dtsi
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 0baf256b44003..096ed81a9bc4d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -687,7 +687,7 @@ lpuart5: serial@29a0000 {
+>                 };
+>=20
+>                 wdog0: watchdog@2ad0000 {
+> -                       compatible =3D "fsl,imx21-wdt";
+> +                       compatible =3D "fsl,ls1046a-wdt", "fsl,imx21-wdt"=
+;
+>=20
+>=20
 
-I will.
+Thanks, I will verify watchdog feature with above fixing code.
 
-> 
-> >  NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
-> >  NET_IOV_ASSERT_OFFSET(pp, pp);
-> > +NET_IOV_ASSERT_OFFSET(_pp_mapping_pad, owner);
-> 
-> And this one.
+Regards,
+LImeng
 
-I will.
-
-> (_flags, type) and (_pp_mapping_pad, owner) have very different
-> semantics and usage, we should not assert they are not the same
-> offset. However (pp, pp) and (pp_magic,pp_magic) have the same
-> semantics and usage, so we do assert they are at the same offset.
-> 
-> Code is allowed to access __netmem_clear_lsb(netmem)->pp or
-> __netmem_clear_lsb(netmem)->pp_magic without caring what's the
-> underlying memory type because both fields have the same semantics and
-> usage.
-> 
-> Code should *not* assume it can access
-> __netmem_clear_lsb(netmem)->owner or __netmem_clear_lsb(netmem)->type
-> without doing a check whether the underlying memory is
-> page/netmem_desc or net_iov. These fields are only usable for net_iov,
-
-Sounds good.  Thanks.
-
-	Byungchul
-
-> so let's explicitly move them to a different place.
-> 
-> -- 
-> Thanks,
-> Mina
+> Frank
+> >
+> > Thanks,
+> > LImeng
+> >
+> > > -----Original Message-----
+> > > From: Rob Herring (Arm) <robh@kernel.org>
+> > > Sent: Wednesday, May 28, 2025 8:37 PM
+> > > To: Li, Meng <Meng.Li@windriver.com>
+> > > Cc: devicetree@vger.kernel.org; shawnguo@kernel.org; linux-
+> > > kernel@vger.kernel.org; Frank.Li@nxp.com; linux-arm-
+> > > kernel@lists.infradead.org; conor+dt@kernel.org; Li, Meng
+> > > <Meng.Li@windriver.com>
+> > > Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back
+> > > into watchdog node
+> > >
+> > > CAUTION: This email comes from a non Wind River email account!
+> > > Do not click links or open attachments unless you recognize the
+> > > sender and know the content is safe.
+> > >
+> > > On Wed, 28 May 2025 19:17:51 +0800, Meng Li wrote:
+> > > > When verifying watchdog feature on NXP ls1046ardb board, it
+> > > > doesn't work. Because the big-endian is deleted by accident, add it=
+ back.
+> > > >
+> > > > Fixes: 7c8ffc5555cb ("arm64: dts: layerscape: remove big-endian
+> > > > for mmc nodes")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Meng Li <Meng.Li@windriver.com>
+> > > > ---
+> > > >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > >
+> > >
+> > > My bot found new DTB warnings on the .dts files added or changed in
+> > > this series.
+> > >
+> > > Some warnings may be from an existing SoC .dtsi. Or perhaps the
+> > > warnings are fixed by another series. Ultimately, it is up to the
+> > > platform maintainer whether these warnings are acceptable or not. No
+> > > need to reply unless the platform maintainer has comments.
+> > >
+> > > If you already ran DT checks and didn't see these error(s), then
+> > > make sure dt- schema is up to date:
+> > >
+> > >   pip3 install dtschema --upgrade
+> > >
+> > >
+> > > This patch series was applied (using b4) to base:
+> > >  Base: attempting to guess base-commit...
+> > >  Base: failed to guess base
+> > >
+> > > If this is not the correct base, please add 'base-commit' tag (or
+> > > use b4 which does this automatically)
+> > >
+> > > New warnings running 'make CHECK_DTBS=3Dy for
+> > > arch/arm64/boot/dts/freescale/' for 20250528111751.3505224-1-
+> > > Meng.Li@windriver.com:
+> > >
+> > > arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dtb: watchdog@2ad0000
+> > > (fsl,imx21-wdt): big-endian: False schema does not allow True
+> > >         from schema $id:
+> > > http://devicetree.org/schemas/watchdog/fsl-imx-
+> > > wdt.yaml#
+> > > arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dtb:
+> watchdog@2ad0000
+> > > (fsl,imx21-wdt): big-endian: False schema does not allow True
+> > >         from schema $id:
+> > > http://devicetree.org/schemas/watchdog/fsl-imx-
+> > > wdt.yaml#
+> > > arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: watchdog@2ad0000
+> > > (fsl,imx21-wdt): big-endian: False schema does not allow True
+> > >         from schema $id:
+> > > http://devicetree.org/schemas/watchdog/fsl-imx-
+> > > wdt.yaml#
+> > > arch/arm64/boot/dts/freescale/fsl-ls1046a-tqmls1046a-mbls10xxa.dtb:
+> > > watchdog@2ad0000 (fsl,imx21-wdt): big-endian: False schema does not
+> > > allow True
+> > >         from schema $id:
+> > > http://devicetree.org/schemas/watchdog/fsl-imx-
+> > > wdt.yaml#
+> > >
+> > >
+> > >
+> > >
+> >
