@@ -1,164 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EAF21CA04;
-	Fri, 30 May 2025 10:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FF2021CA04
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599403; cv=none; b=ol5UgQUw8p9KRYADBip/gic6W7Qpr4lz5Zr+y9VKSZ8dUm/XtlgUh9s58K7CXQ/g8k7rOIliYy5MC1aWa6Yq3rmdONcXIHWjSOYWfzLXi/Vwz21YmD47gRoA5uRha31lLTW+ROKbc1CCqV1vGIB1sGZZQSoOpAMAi5jVu4b255Y=
+	t=1748599421; cv=none; b=jDmnuUAetMBz3N4lb5SEFPw1uy+RxFDQMvGxpjwWTAwoRDCEvLqNbpqIVRevOanvwgLJEIA+6JnJoJYkWNlhkUyMxMwnYIjUPGUqVgGtERAeLoBxW2tCecn7gVuF/6lD491vPPmQYHe2HFKIHR9FMhXpCsOCM9oQzSzaZYnyRcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599403; c=relaxed/simple;
-	bh=u+nTd3xfKrjFwrar8NjW54gsKZHDKaBEN6i8+8wX8Tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VAAhtiMXH418Cn3xwTGLGB44J/JS8lIkEC349ZFP5b016/+okuK4iv1TnzkBDMZ+W6tklPt2it3stCfiT48VtoMkhZj7HlJnpiuOzWHkmkGuB5geHjbKcTVql6YZUYDunrIetnNEvxyn7y9SE9fdgWvjFY8nq42BMYAxTesB5hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnuGjPnW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnuGjPnW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A17C4CEEA;
-	Fri, 30 May 2025 10:03:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748599402;
-	bh=u+nTd3xfKrjFwrar8NjW54gsKZHDKaBEN6i8+8wX8Tk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DnuGjPnWdWsvxqQdUjTYxJfrxDxPK+qpfaxOuSWF1G3yCDXZbmlg40J7IACtp+6u1
-	 neDI3mEiga+GJh4MswNKpG368AFrxLp5n8O8Md48DbmP+5IwCf09EULmqTmaxJ3L/e
-	 6CSq2d6tbnx+Y6NKfBHg+Gs+tw5tuPeAt8vlv+MLMbp+dNSmg85hSCA7+9isWB+X4c
-	 hnNBaS4QsDYXGWbox84+FiwL/OIaO4j6md58aa8ooQjWQA6U8f2HTnRZ7UUilpP9+J
-	 smKEYnQb6QMNllQKBiYwn+8+xiLvbfbBASXcz32PMv12FcXTaice8CJbzd/mMwLhON
-	 b1GmLhoI+xZcQ==
-Date: Fri, 30 May 2025 12:03:18 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [[PATCH v3] 3/4] man/man2/prctl.2,
- PR_FUTEX_HASH_GET_SLOTS.2const: Document PR_FUTEX_HASH_GET_SLOTS
-Message-ID: <ltof7edtili2ozjdlyslpcdckeoccvhtjt6hh5hsdz5smtqvyu@4ryc6myy4dwa>
-References: <20250526155523.1382465-1-bigeasy@linutronix.de>
- <20250526155523.1382465-4-bigeasy@linutronix.de>
+	s=arc-20240116; t=1748599421; c=relaxed/simple;
+	bh=2LH4iFhDDgSYMqV8yfQVIoPaIsbL9fWVCumZgbaSGbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u7Uo2UWFbDP0O7gk1r5aK0fssC2G/LLpl7MKLSy1xr+5SQ4nAe7ronHtQlfobXsXk9f2mx4reKlLIFqoizYkQt6h/H8Ke5TeDxd2kixHLegd68eI/khEMM1bnTek4Kie3M/9HR0YO/5btKhy0eOfsyFiwf7BRBgzLZTg/tM0yBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FC4A16F2;
+	Fri, 30 May 2025 03:03:22 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F40B53F694;
+	Fri, 30 May 2025 03:03:35 -0700 (PDT)
+Message-ID: <adfe981a-ec9a-4051-a26f-91b691230161@arm.com>
+Date: Fri, 30 May 2025 11:03:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7h4r2p6mgkxqsicv"
-Content-Disposition: inline
-In-Reply-To: <20250526155523.1382465-4-bigeasy@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Enable huge-vmalloc permission change
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, david@redhat.com,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org
+References: <20250530090407.19237-1-dev.jain@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250530090407.19237-1-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 30/05/2025 10:04, Dev Jain wrote:
+> This series paves the path to enable huge mappings in vmalloc space by
+> default on arm64. > For this we must ensure that we can handle any permission
+> games on vmalloc space. 
 
---7h4r2p6mgkxqsicv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [[PATCH v3] 3/4] man/man2/prctl.2,
- PR_FUTEX_HASH_GET_SLOTS.2const: Document PR_FUTEX_HASH_GET_SLOTS
-References: <20250526155523.1382465-1-bigeasy@linutronix.de>
- <20250526155523.1382465-4-bigeasy@linutronix.de>
-MIME-Version: 1.0
-In-Reply-To: <20250526155523.1382465-4-bigeasy@linutronix.de>
+And the linear map :)
 
-Hi Sebastian,
+> Currently, __change_memory_common() uses
+> apply_to_page_range() which does not support changing permissions for
+> leaf mappings. 
 
-On Mon, May 26, 2025 at 05:55:22PM +0200, Sebastian Andrzej Siewior wrote:
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+nit: A "leaf mapping" is the lowest level entry in the page tables for a given
+address - i.e. it maps an address to some actual memory rather than to another
+pgtable. It includes what the Arm ARM calls "page mappings" (PTE level) and
+"block mappings" (PMD/PUD/.. level). apply_to_page_range() does support page
+mappings, so saying it doesn't support leaf mappings is incorrect. It doesn't
+support block mappings.
 
-This page LGTM.  Thanks!  Please resend when this is merged into Linus's
-tree.
+> We attempt to move away from this by using walk_page_range_novma(),
+> similar to what riscv does right now; however, it is the responsibility
+> of the caller to ensure that we do not pass a range, or split the range
+> covering a partial leaf mapping.
+> 
+> This series is tied with Yang Shi's attempt [1] at using huge mappings
+> in the linear mapping in case the system supports BBML2, in which case
+> we will be able to split the linear mapping if needed without break-before-make.
+> Thus, Yang's series, IIUC, will be one such user of my series; suppose we
+> are changing permissions on a range of the linear map backed by PMD-hugepages,
+> then the sequence of operations should look like the following:
+> 
+> split_range(start, (start + HPAGE_PMD_SIZE) & ~HPAGE_PMD_MASK);
+> split_range(end & ~HPAGE_PMD_MASK, end);
 
-Reviewed-by: Alejandro Colomar <alx@kernel.org>
+I don't understand what the HPAGE_PMD_MASK twiddling is doing? That's not right.
+It's going to give you the offset within the 2M region. You just want:
 
+split_range(start)
+split_range(end)
 
-Have a lovely day!
-Alex
+right?
 
-> ---
->  man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const | 37 ++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
->=20
-> diff --git a/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const b/man/man2const=
-/PR_FUTEX_HASH_GET_SLOTS.2const
-> new file mode 100644
-> index 0000000000000..f5c6380ef1fe7
-> --- /dev/null
-> +++ b/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
-> @@ -0,0 +1,37 @@
-> +.\" Copyright, the authors of the Linux man-pages project
-> +.\"
-> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-> +.\"
-> +.TH PR_FUTEX_HASH_GET_SLOTS 2const (date) "Linux man-pages (unreleased)"
-> +.SH NAME
-> +PR_FUTEX_HASH_GET_SLOTS
-> +\-
-> +return the size of the private hash
-> +.SH LIBRARY
-> +Standard C library
-> +.RI ( libc ,\~ \-lc )
-> +.SH SYNOPSIS
-> +.nf
-> +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
-> +.B #include <sys/prctl.h>
-> +.P
-> +.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-> +.fi
-> +.SH DESCRIPTION
-> +Return the current size of the private hash.
-> +.SH RETURN VALUE
-> +A value of 0 means that a private hash has not been allocated
-> +and the global hash is in use.
-> +A value >0 specifies the size of the private hash.
-> +On error, \-1 is returned, and
-> +.I errno
-> +is set to indicate the error.
-> +.SH STANDARDS
-> +Linux.
-> +.SH HISTORY
-> +Linux 6.16.
-> +.SH SEE ALSO
-> +.BR prctl (2),
-> +.BR PR_FUTEX_HASH (2const),
-> +.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
-> +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
-> --=20
-> 2.49.0
->=20
+> __change_memory_common(start, end);
+> 
+> However, this series can be used independently of Yang's; since currently
+> permission games are being played only on pte mappings (due to apply_to_page_range
+> not supporting otherwise), this series provides the mechanism for enabling
+> huge mappings for various kernel mappings like linear map and vmalloc.
 
---=20
-<https://www.alejandro-colomar.es/>
+In other words, you are saying that this series is a prerequisite for Yang's
+series (and both are prerequisites for huge vmalloc by default). Your series
+adds a new capability that Yang's series will rely on (the ability to change
+permissions on block mappings).
 
---7h4r2p6mgkxqsicv
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Ryan
 
------BEGIN PGP SIGNATURE-----
+> 
+> [1] https://lore.kernel.org/all/20250304222018.615808-1-yang@os.amperecomputing.com/
+> 
+> Dev Jain (3):
+>   mm: Allow pagewalk without locks
+>   arm64: pageattr: Use walk_page_range_novma() to change memory
+>     permissions
+>   mm/pagewalk: Add pre/post_pte_table callback for lazy MMU on arm64
+> 
+>  arch/arm64/mm/pageattr.c | 81 +++++++++++++++++++++++++++++++++++++---
+>  include/linux/pagewalk.h |  4 ++
+>  mm/pagewalk.c            | 18 +++++++--
+>  3 files changed, 94 insertions(+), 9 deletions(-)
+> 
 
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmg5gmUACgkQ64mZXMKQ
-wqnK5w/7BKXZ++Q4DsPCNx4byiGSZK+HCrloeLfTQmgk/wkvwpy/fWlYkKljR9S/
-kxe2F1hTZzBg6cFZEcgLvy+GeYpNgGVva5v6O6oFG7ti5Jk6YItoO0o+1+1aA8cR
-x/GZAUZjIwRz+Dm0GjFBrrZ+SAaWKydko6j51Te7y18O6SoNAzZNo/edfU6HfT0R
-A2cWgNLGEqbCu9aMW+itYVx7byGVyCCR9kCIcqa4l+xXVoEotlLL9b5FZLB4Wp6n
-k8lt43YiSjPc3AUCpsppSFOeGqU0GEBbGwP661NO+lDE510Spr08GQAX/Y6AVlX7
-q3Mao7HfZs3idCc/L22ZgttsR93n+sTLE7Jo/b7sVG9KVSOIAGSq1vIuQCsHN+wN
-j0Nmc4CzqUDKW9rG3IG925G9yo3w9o8LWguq67yAOMou0+ijtgiKdtvwqYisslKF
-/ckHPwPiaTLIWD6EHorxbXeKyVIMZhPDx0QKBac4LjA5cvVi119UBv+bPQRZ/Gqe
-zC5bjx2cTA84wN2reFKDbUsdVlMDzPBtGyLt/kMisLI0Zy0KaKuBG2rJT8LlGG85
-AV08x7j+IU5VRd+cptARsiI6FgPZBwUXxvrqvl8+4wk9cqJSYZbTQt4tR9pXLrds
-HBcbHOx4bSzkGWQcGvcEmd0dqn91NFSKrudtSJ1tyraWm4Ch2ZA=
-=h4wj
------END PGP SIGNATURE-----
-
---7h4r2p6mgkxqsicv--
