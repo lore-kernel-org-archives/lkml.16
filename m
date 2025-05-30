@@ -1,171 +1,104 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD2E19DF41;
-	Fri, 30 May 2025 15:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB13235046
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748619362; cv=none; b=r4YF50njjFI4lqkEMrBJ3a6tYUdas+Y5/MMzNSCy6jhRXN5BLY06q875GrGcHn7CGZBzBkeU0SEYkzkotJNll5YbPtQkKC+O6zCfhbz1BYYvPk6lUho9v23RRlvrBtZ8g+Oo9SDg1EOWVUAOnUQ+GuCa0RvIroLsuYSryyGQa3Q=
+	t=1748619376; cv=none; b=TmqHXyqlSeLmO7Er8Oj2A9q1oOOuJTSqQISRkiGwWw2bl9yeHLKq/v6EjM8QRZJI89SlW4LRnB3RutnK1rbmBtjoDkXVLHZyqMx1+jN4Xuy5AdaH+Kwvz/G2WcmM35ShbhT9HJbx+YZLgK1NVfij4e9V1Fqa+74HT3/ImFDRl6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748619362; c=relaxed/simple;
-	bh=lGI7Ml61Bx/0vKqhUITDjPdL59+Gud4yiPqB0I/lT6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z6CFWlOh76du19A78Gn2n48CME/STl4qKNOTcCtHQuFk7J4eobnywcIshSR1cV0Rf4u3tXQ4iOy9axfZNqVF+vymXw6g1AuliUVKFSyZCEv2Ym8re9SHaGE5+8kiPzhiqC5euwqK77oBN18TlqHlvSQXt/NiTnIyuvEc2xXE7CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZz0K2va; arc=none smtp.client-ip=209.85.210.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748619376; c=relaxed/simple;
+	bh=RkelDLdR+ef2jdTN+XrIgdcdRMK26x8s+PgnUAYXPl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DZ9gP2/PvLFoZWNoyQpNFHZIJ6e4uCBncu16vR56TjihjLEi6zvqQkHfJ1QRkgcQm3e0erbpLiGbr3FzjPwqSARVM5lrcXYuQl4retmJiajRAU1VQTskd3WHfvo+gcRRZ8eiXv/l8nCve7t59KPR9uJ4JHS2JA/ztAtAcocbMAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aXixmb+A; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZz0K2va"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72c27166ab3so1584343a34.1;
-        Fri, 30 May 2025 08:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748619356; x=1749224156; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ECfivYZ85+kkXqokUDM85sc8NAUi1hs55XP9K+BfhRo=;
-        b=NZz0K2vaZoOZyXfqBzXZy2O+vDBsf12eDccEJUM/5edPKqKhccKcBNceD7BAts/nwY
-         u1Yic2nZ0/n+/BXGFBKamuDf9VqlLajAo/y5eZiFsiBF0jLicg+AbSHp05DPSPpCvusM
-         WVv5XByMUtewc9Gp55tJmDo8uG2FX/z4dNUBDJr/3QeontE0N8LTFh/V+1tqBTvl7Mjw
-         NHZ6s9yNM7PqFRTRpbaUdWiwi5MGLmc+Dzspez2MbUGZtSCB3L0/yXIQGVK+Vw8Ky9hc
-         eHk8NgKelosoNJeO/E4OR0nghEoSKPpSlg/PojKGET9UsywV0Zjgcer/XbI3E7IXZy0e
-         iH+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748619356; x=1749224156;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ECfivYZ85+kkXqokUDM85sc8NAUi1hs55XP9K+BfhRo=;
-        b=mAaMzoxTeKN1yEoVxie/cKAd/qPJi87y/tVgOshvmqXB6KwWzc7TvIKEz93ZJuCTua
-         dXIY/h0yzLJrH5y7F8h/URV+5B8I+j3kOYrdoD/ADjf2tKoxYaYdSvnsuNBgQTElc4aq
-         C2lF5ZiIzJ05cqIH1N4uL/qR12wc33KFMCK3+0gtCyOaC/brbWaY4Tcnz7theOb9MvS4
-         d5NX44q5g9+FTPMp01P8PcgYnz74MTSBOm/RafXjyp5NFoj+oyrlI8Az6uWP6P/FGMqN
-         ydd6XRhDgNSjK665QVa0kv7MQlsoPTFw4Fwf5TTL5E4zqzzk8jojIwsytqtmviUVQbLK
-         jxKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW22oJTclBLin/ZdKphG1dwr+R8SGXTqpaFhDF7HuI6KZx/yj32mzRj50dk/4LYeyrMnHFSW+rzbkgEN15P91WSlOsf@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoErYclaSaGxxOb+2ywiwYyeFBXkOp0TJFwKJEkli0y7PGIM8+
-	rikJhgdx0CvyO2D/KeDqiTZxItX2R8XljwoseKKwGhry7YrZqs7NlTqA
-X-Gm-Gg: ASbGncvJoq/eKQ4cwcYvJzIggzC/nPSecXVbX2IT+qHS9aT9kS6wQ+w8b/OiEr+z7K/
-	qP+sOJltSXAHQdDZFzRSCHtlpVtUaq619bnZs5zmsXJkbAFbcD5HM0qOvh60vl6ZXludJnCVHE+
-	mSIH7oQ42z+b/WWk7KfF6I0Ioxd3R4oLtfy5Y1thHTLKCSCSCGuY5HhTyieN+TqazjeKobFo5q6
-	w6Sb23DaT/AK7w6xmAn9JGtGqu6pPYTVCCnN7z4Zugp1vFii6UQFf9OuVsAKBrjn2OIa3R+IbP8
-	zKIpnEjS4P/dnJdq0AZAEa0XJ/7OAa3PswvVgTf32nuCRmHlejaxeEf3zporyHsp2/lVYCNU9QK
-	7SxTt+E/YTtt81NdWYthc+m0I0D9L4NRN1Dr0
-X-Google-Smtp-Source: AGHT+IF3vqo9sjX+GZp3WsEU1iC+kTjPy0F5RxoHM7U3v6JS34r2Xh1CgHa6Mth4nj0/KB6o97Yaag==
-X-Received: by 2002:a05:6830:6b07:b0:72b:a5e0:f76 with SMTP id 46e09a7af769-736ecdde735mr1508551a34.4.1748619356620;
-        Fri, 30 May 2025 08:35:56 -0700 (PDT)
-Received: from [192.168.1.7] (syn-067-048-091-116.res.spectrum.com. [67.48.91.116])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-735af9bc906sm622694a34.48.2025.05.30.08.35.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 08:35:56 -0700 (PDT)
-Message-ID: <04ba20e6-ce2c-4e47-8884-c563b931cd66@gmail.com>
-Date: Fri, 30 May 2025 10:35:54 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXixmb+A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748619373;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TINaLGJe/LUsyTXNKbUWuUbVXt+87LUgitg/LAQmJis=;
+	b=aXixmb+AsYp2yHlPo+/ZUVrReUUoVu6mDXvLHnPcmqsoQDWsPiKMOV6/CIuP26r22Br8Q4
+	UeqE65krtJ4jzsECnUQBrngfl7XI7xib72vnTrjQBiYciXkET2MEcaoyNx5n45BcaOSG3X
+	0oQ2G3S0+AipM/tMg2vpjjldYRfAAh8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-498-dz05wDx5OiCL3L0TP3d08g-1; Fri,
+ 30 May 2025 11:36:09 -0400
+X-MC-Unique: dz05wDx5OiCL3L0TP3d08g-1
+X-Mimecast-MFC-AGG-ID: dz05wDx5OiCL3L0TP3d08g_1748619366
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 366B51955D84;
+	Fri, 30 May 2025 15:36:06 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.37])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5433130001B7;
+	Fri, 30 May 2025 15:35:58 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 30 May 2025 17:35:25 +0200 (CEST)
+Date: Fri, 30 May 2025 17:35:16 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Alejandro Colomar <alx@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv2 perf/core 00/22] uprobes: Add support to optimize usdt
+ probes on x86_64
+Message-ID: <20250530153516.GA25160@redhat.com>
+References: <20250515121121.2332905-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] platform/x86: dell_rbu: Fix list usage
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
- platform-driver-x86@vger.kernel.org
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com>
- <20250529202758.8440-3-stuart.w.hayes@gmail.com>
- <d7adf2ca-0cd7-99eb-9be1-a2b37fa8445e@linux.intel.com>
- <c213733e-e907-40cd-ab60-ec8fa0b15e4d@gmail.com>
- <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
-Content-Language: en-US
-From: stuart hayes <stuart.w.hayes@gmail.com>
-In-Reply-To: <54523dfb-e1ff-fa55-0628-0a8377457f0d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515121121.2332905-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 5/30/2025 10:25 AM, Ilpo Järvinen wrote:
-> On Fri, 30 May 2025, stuart hayes wrote:
-> 
->> On 5/30/2025 2:54 AM, Ilpo Järvinen wrote:
->>> On Thu, 29 May 2025, Stuart Hayes wrote:
->>>
->>>> Stop using an entire struct packet_data just for the embedded list_head,
->>>> and fix usage of that list_head.
->>>>
->>>> Fixes: d19f359fbdc6 ("platform/x86: dell_rbu: don't open code
->>>> list_for_each_entry*()")
->>>> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
->>>
->>> Isn't this just refactor so Fixes tag for this commit is not warranted?
->>>
->>
->> No. The patch that this fixes had converted the driver to use
->> list_for_each_entry*() to loop through the packet list instead of a while
->> loop. But it passed (&packet_data_head.list)->next to list_for_each_entry*()
->> instead of the list head itself.
->>
->> That resulted in to issues. In the function that prints the packets, it would
->> start with the wrong packet, and in the function that deletes the packets, it
->> would get a null pointer dereference when it tried to zero out the data
->> associated with the packet that held the actual list head.
-> 
-> Oh, I see that difference now. Good catch.
-> 
-> However, that also means the ->next part is wrong and there are two
-> independent changes here, one that fixes this ->next problem and then the
-> refactoring of packet_data_head to packet_data_list?
-> 
+On 05/15, Jiri Olsa wrote:
+>
+> Changes from v1:
+> - rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
+> - keep the refcrf offset update inside write_insn and enabling it
+>   via function argument
+> - fixed locking comment for uprobe_write_opcode, but skiped suggested
+>   comment on register_for_each_vma, need more thinking on that [Oleg]
+> - added acks
+> - removed refctr from uprobe_trampoline object [Oleg]
+> - change find_nearest_page to use vm_unmapped_area [Oleg]
+> - re-structured x86 set_swbp [Andrii]
+> - use -EINVAL in __arch_uprobe_optimize [Andrii]
+> - added usdt.h from libbpf/usdt project [Andrii]
+> - several minor test code changes [Andrii]
+> - man page updates [Alejandro]
 
-Correct. Do you want those as two separate patches?
+I forgot to send this email a week ago, sorry...
 
->>>> ---
->>>>    drivers/platform/x86/dell/dell_rbu.c | 10 +++++-----
->>>>    1 file changed, 5 insertions(+), 5 deletions(-)
->>>>
->>>> diff --git a/drivers/platform/x86/dell/dell_rbu.c
->>>> b/drivers/platform/x86/dell/dell_rbu.c
->>>> index 7b019fb72e86..c03d4d55fcc1 100644
->>>> --- a/drivers/platform/x86/dell/dell_rbu.c
->>>> +++ b/drivers/platform/x86/dell/dell_rbu.c
->>>> @@ -77,14 +77,14 @@ struct packet_data {
->>>>    	int ordernum;
->>>>    };
->>>>    -static struct packet_data packet_data_head;
->>>> +static struct list_head packet_data_list;
->>>>      static struct platform_device *rbu_device;
->>>>    static int context;
->>>>      static void init_packet_head(void)
->>>>    {
->>>> -	INIT_LIST_HEAD(&packet_data_head.list);
->>>> +	INIT_LIST_HEAD(&packet_data_list);
->>>>    	rbu_data.packet_read_count = 0;
->>>>    	rbu_data.num_packets = 0;
->>>>    	rbu_data.packetsize = 0;
->>>> @@ -183,7 +183,7 @@ static int create_packet(void *data, size_t length)
->>>> __must_hold(&rbu_data.lock)
->>>>      	/* initialize the newly created packet headers */
->>>>    	INIT_LIST_HEAD(&newpacket->list);
->>>> -	list_add_tail(&newpacket->list, &packet_data_head.list);
->>>> +	list_add_tail(&newpacket->list, &packet_data_list);
->>>>      	memcpy(newpacket->data, data, length);
->>>>    @@ -292,7 +292,7 @@ static int packet_read_list(char *data, size_t *
->>>> pread_length)
->>>>    	remaining_bytes = *pread_length;
->>>>    	bytes_read = rbu_data.packet_read_count;
->>>>    -	list_for_each_entry(newpacket, (&packet_data_head.list)->next, list) {
->>>> +	list_for_each_entry(newpacket, &packet_data_list, list) {
->>>>    		bytes_copied = do_packet_read(pdest, newpacket,
->>>>    			remaining_bytes, bytes_read, &temp_count);
->>>>    		remaining_bytes -= bytes_copied;
->>>> @@ -315,7 +315,7 @@ static void packet_empty_list(void)
->>>>    {
->>>>    	struct packet_data *newpacket, *tmp;
->>>>    -	list_for_each_entry_safe(newpacket, tmp,
->>>> (&packet_data_head.list)->next, list) {
->>>> +	list_for_each_entry_safe(newpacket, tmp, &packet_data_list, list) {
->>>>    		list_del(&newpacket->list);
->>>>      		/*
->>>>
->>>
->>
-> 
+This version seems to address my concerns. I don't see anything obviously
+wrong. So if this optimization is important for users... FWIW,
+
+For 1/22 - 10/22
+
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
