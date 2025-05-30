@@ -1,100 +1,114 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51E920AF98;
-	Fri, 30 May 2025 15:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0DA258A;
+	Fri, 30 May 2025 16:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748620754; cv=none; b=gD2APEgIovBuOBDd6qNpA2iGOvZa/uaCFur3irMJJUCEHjDDTQuk1dTpXTqzFq7ShWukaFPsEXkqEvFOxoMaDEpn3Jn+7acqWZcbdHv9VE0qRV8zVogchedlFpLh7afFXF8fYDXp9vLQbCLFKR1m1lAMAQaTVn1BM6fyrw5OHcs=
+	t=1748620953; cv=none; b=FUQMJCsY42gYiNhbLbTLdU71w/N6BaCljTjv4+DGQZ61qtZTa8vzaV2SM4NWTGNKSm59GK/5JWdHXc/VW0h2baOmEyqWIiYkaHUP0/NNDgxlrU2359z/FWZgAN2e+jVdRvgU+fbyAd1AHlZZVbsq4272yyTE+JCNn2ak8F6Ok8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748620754; c=relaxed/simple;
-	bh=3b/j2p8/A0nzwn8KAPA83lK1/OE0Z6OzCby2nHC0LHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=D1abRbZV/bcz1PwofbRzcVXiRiGtqMioncHw0wH0tnxaqkC4zQRb6RDkpzNR1Ql0XuqoDj6TIeI80OAeJ7nmw6Wk7SCZTEoOlx4R8KyHB8hsGVwS9YJjd1bYLEm92p6rHjJj/8/RCTPIhP2uAXoFEIdYQjuafLab61tF6gZMI34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jpo6jYd6; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748620953; c=relaxed/simple;
+	bh=qtzGHVKWROgUsl/JT7shH/Whylxk7WmScH3cN5YJhls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ExMke1o1eXtZJoNd1MMfI0/m9QGZfzrAeNKk6PpHLxbGoX/H0PH9Kzza+2aQS8i4zDhgY7YgCRY31xiBjBPgnVl0S9jO/Wm/t3stz6TtUltUMQkpPodEMPokKja0nEIHzEvXiniuNt4V5NdFrH+U/Nnnze2EB3MZ5Hu4wU2E5sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=irLs2NV/; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpo6jYd6"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1911732a91.3;
-        Fri, 30 May 2025 08:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748620752; x=1749225552; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DNGwv4fAq8CT7cI87tqcv+XlIdXNzOHt3NdBDeO4nl8=;
-        b=jpo6jYd6yXL4O6sBdgY74aCLknxmrIRtSfjt43+cRifYJt5Oni0jzrvxOsma03fFD9
-         R676zpNCFCN5/JN5N02qfdacMIRKf8X7me/U/F3uTVzdQcXWp98cDHzrXa4jC1512xst
-         2P+9uDmDxO4yJZA46xiGhAtbDGekEMd9BBoAYWo5rL7sl3zjIeoTfqM2kMmL3nZqckam
-         y6EMqFVNmvmMCCZtILkqvytEB2ajgbjAtB4CY6gYvIW2OynTypvKa3ji0UyTyO+5jAMW
-         E6GX0cArFgTtsfodd3wlkBPCYI1+07KBfZtTfUpklGi5y1E2wkYR5copYexCaHXx+dNQ
-         d8HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748620752; x=1749225552;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DNGwv4fAq8CT7cI87tqcv+XlIdXNzOHt3NdBDeO4nl8=;
-        b=hZp9JhJGHDvAcOW47xWBAb0tLBPWS1d5A6rJLPVVJsyNkz7JaQIQPKFu/95oBxHvk+
-         40piUGaHDXtjUhqEQG/sHdUUM2MgzflkOdW9SNscgHUiJA+aZ+Vr4FhTIV/07+J2JTvw
-         uWI5B8i+NIuFuTgOPqQbnJYVMVqXAUbl4dDh6bvpJdsXz/mUy7B/GGWkrmRe/SAuTaz9
-         vTit9uawg5leIgomq/1CVYDROx9BZlNhbGKHjpDGGz9nv8YwQrLUX02Gh+UKHHoWh8X9
-         ltFhS30TwK9Ff+VKumpQqWJm3+KsdwQyYnhKGShLz1jvKRXoiMIj1sEFU9rvGleRk73o
-         poJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0Q3iD/m/TUluzQPvpPgjKaWguysPv0xvmYkS5e43GhOvUCzTuuKsifGa5jkYUwU7H56AUPfZ1CauN5Uw=@vger.kernel.org, AJvYcCXuKPVtWKxXqQ4KWOx+Xqb73I4UMnDZ7RCoSNPWdJM5OrJwz7/17kr+6il3c/YPszZAMfax6I9O@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMKxSDVns01kliDBybI4TS3vo6KzX1IM3+tELNHre8YLdIf3po
-	/YqPWDwqiQAjHdP+Xtwo/z6qgHO5e+xPpjSzZ+8koVosV75bkfR4lqIxEyEy9Is7hHwQyui41To
-	O72tZJYtfwFky2IL/Xf4RkLyQeYW4R6UQsA==
-X-Gm-Gg: ASbGncsOptTzfPYu/zbd7bhXP6E0aFNwxjzmUCuJbYwM3Zy2sUA54kCN3KAi7pQoJA+
-	eFrZvYIeUOWQ/WvbeM+3MKgafB8QYGX/41OOZ9sUXWzgJ5wPQIpyW8M1pd8X/71ku5tKNQ4/qu+
-	FTBqpCFeyWsP9vSsdtZ6lqXKZydS/Y3JhVd4UDUFxRVEek5g73QpfOTTGAQU9xIhuXuzY=
-X-Google-Smtp-Source: AGHT+IGEM67IA+KNd9AXkA7CoruGO/K0PIq5DSHiGxSP4f20FL820N0FagCNlao/fX6ogFIcvxxXyi7Eyhjgvr7jBIw=
-X-Received: by 2002:a17:90b:17c8:b0:311:9c9a:58c7 with SMTP id
- 98e67ed59e1d1-3124150e626mr6890001a91.7.1748620752000; Fri, 30 May 2025
- 08:59:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="irLs2NV/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748620952; x=1780156952;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qtzGHVKWROgUsl/JT7shH/Whylxk7WmScH3cN5YJhls=;
+  b=irLs2NV/Qu42YkvSltPMt32tF7KeGKzgACsjkbkQfeaaTAFIu2peotb4
+   AlrnQWL8xT9HjATRaP29FNGd0xioHGjPwGpFyhMY8F4ktE9nrmEJ49jrZ
+   T8ot3hrMJKYABYw9RXVkTN30Bs8+1M8Fc0zX/dJ9BeFSweccm2AroG+PH
+   E5+BdfXAw/fL3gCovr0ON/zbBfdak8ybrkDO9X6ogMPbQE30hsj/Oy3ve
+   3Os+8UVOq/83EiDEOjG2ZWFHePPlgVhX4fY5oN5bsVmObGLCvNkRSQr39
+   zYe74xET5k+9RFMTtKg1VfKDeImnc+ZndkstQkIPCHexmlYugfXAR2gd8
+   A==;
+X-CSE-ConnectionGUID: PzLQHNSJS828hKN/bfvJFQ==
+X-CSE-MsgGUID: +rNPb8SCQWq2oD7fFvY69w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50820750"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="50820750"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 09:02:30 -0700
+X-CSE-ConnectionGUID: iatMaMblTOCqy9a732VN8g==
+X-CSE-MsgGUID: +f6uIb0hSLyOIGX31ICatg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="149187620"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 09:02:27 -0700
+Date: Fri, 30 May 2025 19:02:23 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	"Tauro, Riana" <riana.tauro@intel.com>,
+	"Adatrao, Srinivasa" <srinivasa.adatrao@intel.com>,
+	intel-xe@lists.freedesktop.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Michael J. Ruhl" <michael.j.ruhl@intel.com>
+Subject: Re: [PATCH v1 2/2] drm/xe: Support for I2C attached MCUs
+Message-ID: <aDnWj-AnDxHp9hOj@black.fi.intel.com>
+References: <20250530141744.3605983-1-heikki.krogerus@linux.intel.com>
+ <20250530141744.3605983-3-heikki.krogerus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530155618.273567-1-noltari@gmail.com>
-In-Reply-To: <20250530155618.273567-1-noltari@gmail.com>
-From: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
-Date: Fri, 30 May 2025 17:58:36 +0200
-X-Gm-Features: AX0GCFs5r8NMua92KA_uc_Vr6n6-poaeQqSMLlLdCTCqXaNDNBk3m0zXKnR4RHI
-Message-ID: <CAKR-sGdu7D6StqwEahdGbM8oxL8J8amwEPiS8scVphfuPLMLhA@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: brcm: add legacy FCS tag
-To: jonas.gorski@gmail.com, florian.fainelli@broadcom.com, andrew@lunn.ch, 
-	olteanv@gmail.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250530141744.3605983-3-heikki.krogerus@linux.intel.com>
 
-El vie, 30 may 2025 a las 17:56, =C3=81lvaro Fern=C3=A1ndez Rojas
-(<noltari@gmail.com>) escribi=C3=B3:
->
-> The existing brcm legacy tag only works with BCM63xx switches.
-> These patches add a new legacy tag for BCM5325 and BCM5365 switches, whic=
-h
-> require including the FCS and length.
->
-> =C3=81lvaro Fern=C3=A1ndez Rojas (3):
->   net: dsa: tag_brcm: legacy: reorganize functions
->   net: dsa: tag_brcm: add support for legacy FCS tags
->   net: dsa: b53: support legacy FCS tags
->
->  drivers/net/dsa/b53/Kconfig      |   1 +
->  drivers/net/dsa/b53/b53_common.c |   7 +-
->  include/net/dsa.h                |   2 +
->  net/dsa/Kconfig                  |   8 +++
->  net/dsa/tag_brcm.c               | 117 ++++++++++++++++++++++++-------
->  5 files changed, 109 insertions(+), 26 deletions(-)
->
-> --
-> 2.39.5
->
+On Fri, May 30, 2025 at 05:17:44PM +0300, Heikki Krogerus wrote:
+> Adding adaption/glue layer where the I2C host adapter
+> (Synopsys DesignWare I2C adapter) and the I2C clients (the
+> microcontroller units) are enumerated.
+> 
+> The microcontroller units (MCU) that are attached to the GPU
+> depend on the OEM. The initially supported MCU will be the
+> Add-In Management Controller (AMC).
 
-Sorry, but I've just realized that I generated the patches with "-N"...
+...
+
+> diff --git a/drivers/gpu/drm/xe/regs/xe_i2c_regs.h b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+> new file mode 100644
+> index 000000000000..2acb55eeef0d
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/regs/xe_i2c_regs.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _XE_I2C_REGS_H_
+> +#define _XE_I2C_REGS_H_
+> +
+> +#include "xe_reg_defs.h"
+> +
+> +#define SOC_BASE			0x280000
+
+I just noticed we already have this in xe_pmt.h, so let's not duplicate
+it. Perhaps move it to a common header (xe_regs.h) and reuse it in both
+places?
+
+> +#define I2C_CONFIG_SPACE_OFFSET		(SOC_BASE + 0xf6000)
+> +#define I2C_MEM_SPACE_OFFSET		(SOC_BASE + 0xf7400)
+> +#define I2C_BRIDGE_OFFSET		(SOC_BASE + 0xd9000)
+> +
+> +#define CLIENT_DISC_COOKIE		XE_REG(SOC_BASE + 0x0164)
+> +#define CLIENT_DISC_ADDRESS		XE_REG(SOC_BASE + 0x0168)
+> +
+> +#endif /* _XE_I2C_REGS_H_ */
+
+Raag
