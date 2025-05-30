@@ -1,125 +1,180 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AEF205E16
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890192367CA;
+	Fri, 30 May 2025 22:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748645351; cv=none; b=pspRAC3eYW5WXJrJACdHzCv0cAKwuEdIyKzykJJL1t4dXcgp0dtD7QszFOI9X90heeRNXRDABofEXgxlE5lzBXx9YmCRkVSb/xwKI+Td0htvH4/y1pckoaTK1yFcI6+REi9h0CgFCvCJWy3aGylENDK5HIAkn7gJnrRinyqhRRs=
+	t=1748645751; cv=none; b=I2U1VonEWY2BF+pp4ueP4O9FUXuy5a7D4foaXLhZNgG6WzEkItegl3+/8vsm3wnQCFMS+32KGJtB9ZXUP2eejtoiQS9nDBkaDJPek+XwtaC9MDbkrGORwVXorzlCJkQEngW8bdOVzbR7fwta/eNbd+HpqtNCWyzwzgqfNccxE/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748645351; c=relaxed/simple;
-	bh=f+WC+n+HJyyafimeO1O9qVAO4GLSXRIklXlLnCrE57Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bn5EJXlpCZXz+vdLslMZy/V5EkGH8ozmT4I00IOVZEBROEWbRhK8GdmTm7QYPfIq/C8OTruVE5GhZk3nD5LvznODtE61rHkEJuMTc95zbU9xaeWGcSznj+CwHlZyF54TEysWsvZIoS6HkC5xjiSF7EMt02qM/ckOZZ6aExTEeZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b8JM13CkwzYQvBn
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 06:49:01 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 871F01A0F3C
-	for <linux-kernel@vger.kernel.org>; Sat, 31 May 2025 06:49:00 +0800 (CST)
-Received: from [10.82.57.70] (unknown [10.82.57.70])
-	by APP2 (Coremail) with SMTP id Syh0CgCnsWTYNTpoIKGjNw--.13722S2;
-	Sat, 31 May 2025 06:48:58 +0800 (CST)
-Message-ID: <0a91d1bd-eaa1-4ae3-9212-e63d456f7754@huaweicloud.com>
-Date: Sat, 31 May 2025 06:48:56 +0800
+	s=arc-20240116; t=1748645751; c=relaxed/simple;
+	bh=uJJuwZ6PBbIIWxoaccWNMJvc1de/B6IihV8ioH7Ho3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kt8whFYHztdMZkY8yvxAu9Ytri7/y5fkvMjBUtO6BzGVbXDbJQKIhbxmCCRUDfL9AWd6C3MGj2WaTja9eKN6FHCk1zbp8ouSLH3l97TwL9Jk2+PXSOniLwubRZOJgUnbleaRZKc6Yp64c7JVUpAufuDW6a49sJL0dPfkf73ZkY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=Cc8+WuBv; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fU1pMUYi; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="Cc8+WuBv";
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fU1pMUYi"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b8JVq2wnmz9tVV;
+	Sat, 31 May 2025 00:55:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1748645747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+XJoie9AEBmbqAgRJsukKa8ozih8Y1Wspy5pUrpo3Yo=;
+	b=Cc8+WuBvUV7GDfqiD3oaC4MXKZzLaCbhehQRRGC3LvMoTOnMCvZelp3n0gO9Lvl0tIjYT2
+	udXJ4PAfWCVooCp1cXugYZoMGckiStwp4RYj8ScAhCO5Uwlg7gPzO0pxfilxCprCOLdP9M
+	MfwfYz0vCuNlFfNr4/F1pdNpVIWLn25FiL7DW9IVyvDxAMKEnc8rswdPnGxDbupzhQ9TIO
+	fNE3ur+gpLjCTJpMgegG/UVEroZHi/BFy6Z/laIutQ3QrQXyK6iMqVA9zDqFoyCQuxvwB7
+	sk0Yz6G4gY6niZsNgA2qsDaqabrd21hHyTPwol7OltI+UkFGbrlekBA2RtSFOg==
+From: Marek Vasut <marek.vasut+renesas@mailbox.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1748645745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+XJoie9AEBmbqAgRJsukKa8ozih8Y1Wspy5pUrpo3Yo=;
+	b=fU1pMUYiLd852k/Jf4hqU0aVVnYpuvq2UTDF7f6qzHb3GDiA0BwTQkBchsQL9zS+gMB37J
+	/2otq3YSfwAtE798cSn+CS+TQRArWj0y4DR6vQ34kBRXjTOgDHtxkAHAWIz/4K2cANV9Ng
+	Mb9hdju7ITDbmaylIL08ltHJzmGl6yIO5mJsZmmH/+lVySFjNa4eZdSJnrfpzwR3cRTeM0
+	W7ubSTPculK9RHKmSHn7Xri1brYYa7qpihMTorAulAdDYSGAKyT7IcoyAwZknFZGP0+nVP
+	Gn/1lUxa5r7nwjymr1jnKhZOqbpdFvxoVyuqDM4BnZVcv8vYeDxebmmyI3T8Bw==
+To: linux-arm-kernel@lists.infradead.org
+Cc: Marek Vasut <marek.vasut+renesas@mailbox.org>,
+	Anand Moon <linux.amoon@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v2 1/3] PCI/pwrctrl: Add optional slot clock to pwrctrl driver for PCI slots
+Date: Sat, 31 May 2025 00:53:19 +0200
+Message-ID: <20250530225504.55042-1-marek.vasut+renesas@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
- expanding vma during mremap
-To: David Hildenbrand <david@redhat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, lorenzo.stoakes@oracle.com,
- mhiramat@kernel.org, peterz@infradead.org, Liam.Howlett@oracle.com,
- akpm@linux-foundation.org, vbabka@suse.cz, jannh@google.com,
- pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- pulehui@huawei.com
-References: <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
- <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
- <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
- <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
- <20250526154850.GA4156@redhat.com>
- <06bd94c0-fefe-4bdc-8483-2d9b6703c3d6@redhat.com>
- <57533126-eb30-4b56-bc4d-2f27514ae5ad@huaweicloud.com>
- <cba0155e-d2b9-41fa-bc51-f3738ae73cff@redhat.com>
- <956124be-c73c-4023-9edd-25372f3f865a@huaweicloud.com>
- <ccf359b0-8baa-4209-b2c3-75e3813ca804@redhat.com>
- <20250530180920.GC25160@redhat.com>
- <0dcec9f4-eef8-499d-a96a-dc6ab3433039@redhat.com>
-Content-Language: en-US
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <0dcec9f4-eef8-499d-a96a-dc6ab3433039@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCnsWTYNTpoIKGjNw--.13722S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1rGF4fWFWfWr1fJr4UCFg_yoW8Xw18pa
-	yFvayYgr4rKr18Ar4Ika109F4Yv3yfG3yUCr15Jw13CFWjgF1akrWI9r4Y9Fnruwsa9F10
-	ywsFgFy0y34jvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+X-MBO-RS-ID: d7ac0f4db81ab4704d4
+X-MBO-RS-META: f9zc6z889u3c4k9su4x5hdhkphnw59fm
+X-Rspamd-Queue-Id: 4b8JVq2wnmz9tVV
 
+Add the ability to enable optional slot clock into the pwrctrl driver.
+This is used to enable slot clock in split-clock topologies, where the
+PCIe host/controller supply and PCIe slot supply are not provided by
+the same clock. The PCIe host/controller clock should be described in
+the controller node as the controller clock, while the slot clock should
+be described in controller bridge/slot subnode.
 
+Example DT snippet:
+&pcicontroller {
+    clocks = <&clk_dif 0>;             /* PCIe controller clock */
 
-On 5/31/2025 2:34 AM, David Hildenbrand wrote:
-> On 30.05.25 20:09, Oleg Nesterov wrote:
->> Well, let me say this again ;) I can't really comment, I don't understand
->> this code enough.
->>
->> That said...
->>
->> On 05/30, David Hildenbrand wrote:
->>>
->>> I wonder if there might be a clean way to move the uprobe_mmap() out of
->>> vma_complete().
->>
->> Me too.
->>
->> Not only the uprobe_mmap() calls in vma_complete() doesn't look right
->> "in general" (at least to me).
->>
->> To remind, vma_complete/uprobe_mmap/install_breakpoint is not even called
->> in, say, this case when VMA grows and moves. See
->> https://lore.kernel.org/all/20250526173845.GC4156@redhat.com/
->> I guess we don't really care, but still...
->>
->>
->> But just in case... I agree with Lehui and Lorenzo in that we need a 
->> short
->> term fix, and the last patch from Lehui seems to fix the immediate 
->> problem.
-> 
-> Oh, there was a new patch yesterday. Too bad I wasn't CCed on that.
-> 
-Oops...I just realized that you weren't included in the CC list. I had 
-been using the send script which referencing the get_maintainer.pl list 
-from the initial RFC, and I sincerely apologize for the oversight. I 
-have already submitted three versions and would greatly appreciate your 
-review.
+    pci@0,0 {
+        #address-cells = <3>;
+        #size-cells = <2>;
+        reg = <0x0 0x0 0x0 0x0 0x0>;
+        compatible = "pciclass,0604";
+        device_type = "pci";
+        clocks = <&clk_dif 1>;         /* PCIe slot clock */
+        vpcie3v3-supply = <&reg_3p3v>;
+        ranges;
+    };
+};
 
-RFC v1：
-https://lore.kernel.org/all/20250521092503.3116340-1-pulehui@huaweicloud.com/
+Example clock topology:
+ ____________                    ____________
+|  PCIe host |                  | PCIe slot  |
+|            |                  |            |
+|    PCIe RX<|==================|>PCIe TX    |
+|    PCIe TX<|==================|>PCIe RX    |
+|            |                  |            |
+|   PCIe CLK<|======..  ..======|>PCIe CLK   |
+'------------'      ||  ||      '------------'
+                    ||  ||
+ ____________       ||  ||
+|  9FGV0441  |      ||  ||
+|            |      ||  ||
+|   CLK DIF0<|======''  ||
+|   CLK DIF1<|==========''
+|   CLK DIF2<|
+|   CLK DIF3<|
+'------------'
 
-RFC v2:
-https://lore.kernel.org/all/20250527132351.2050820-1-pulehui@huaweicloud.com/
+Reviewed-by: Anand Moon <linux.amoon@gmail.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+---
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+V2: - Fold PTR_ERR() into dev_err_probe()
+    - Add RB from Anand and Manivannan
+---
+ drivers/pci/pwrctrl/slot.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-v1:
-https://lore.kernel.org/all/20250529155650.4017699-1-pulehui@huaweicloud.com/
+diff --git a/drivers/pci/pwrctrl/slot.c b/drivers/pci/pwrctrl/slot.c
+index 18becc144913e..dac1ae854f72e 100644
+--- a/drivers/pci/pwrctrl/slot.c
++++ b/drivers/pci/pwrctrl/slot.c
+@@ -4,6 +4,7 @@
+  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+@@ -30,6 +31,7 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ {
+ 	struct pci_pwrctrl_slot_data *slot;
+ 	struct device *dev = &pdev->dev;
++	struct clk *clk;
+ 	int ret;
+ 
+ 	slot = devm_kzalloc(dev, sizeof(*slot), GFP_KERNEL);
+@@ -50,6 +52,13 @@ static int pci_pwrctrl_slot_probe(struct platform_device *pdev)
+ 		goto err_regulator_free;
+ 	}
+ 
++	clk = devm_clk_get_optional_enabled(dev, NULL);
++	if (IS_ERR(clk)) {
++		ret = dev_err_probe(dev, PTR_ERR(clk),
++				    "Failed to enable slot clock\n");
++		goto err_regulator_disable;
++	}
++
+ 	ret = devm_add_action_or_reset(dev, devm_pci_pwrctrl_slot_power_off,
+ 				       slot);
+ 	if (ret)
+-- 
+2.47.2
 
