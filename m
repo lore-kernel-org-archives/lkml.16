@@ -1,93 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B248B18991E;
-	Fri, 30 May 2025 05:13:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A971E570B
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748581987; cv=none; b=ohUoabE+O0dKI/9gOInaOtKnn9Eyh3tv2odSEasnP6CDGFO4LyXGrS816aqsn/WKcy7jNDx8Rs595f/Ots5h/mg4g86MnCN10eN3EDulzdfv7x0XRiqcS8HGJPQT8JzHUOQhQW1m6pmNzLBxPvHHsU+41kOg0PFjzbwtv1tsqKs=
+	t=1748582007; cv=none; b=ZqJy7wuvwd5zDmZy5x6z40xFjPThyTeVtaVbL41rC3KJB6MgkbzJKfRdmqzRuCaOGoLPFPXpN01CjgHXGCOzKjXCeCFQqMRiPdB9t1oJhiu0sXub8OrIzjtiyVmO98tQVHzmbvp51AgpTNgl1R75Acvl6Ej1knBs5l2KPTuyuP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748581987; c=relaxed/simple;
-	bh=ABXcBcI46740XMmqpKEU0ZDPqOeZjAzBxnVDnWBJ4iA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KyIzcccRnmwaov5f10rtt3yo4hSN/7cKpbbQEqkASwUpRXrPpEIZZcdkmzNM0y+Bk5JqnUwOyYKcH/N7vx7By+NFGU+6Uy1x4rjW+jLotJ/vEkgxHR25GAutoO1B3k9t2rDwzOEnOmK6eKCNsv6GN4QE0Tle/3qorKFbZHMSo2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fx7jl9Ld; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fx7jl9Ld"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39A9C4CEE9;
-	Fri, 30 May 2025 05:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748581987;
-	bh=ABXcBcI46740XMmqpKEU0ZDPqOeZjAzBxnVDnWBJ4iA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fx7jl9LdKwwReTtrI7QsT6LFaGn0vvss5pRJ32itsL/OYRvOh1jVYJSTvjGW9D0C/
-	 GOZjyEYHLPX2OImVlIKWgAnKJgI9ClF8qxwldtr6T0Yvb/+aJ+yQc0XqQj1NLWMN2O
-	 2fZsblIl5q/qxmJ8MNfwMJTxizUYJQkzJ7Eoy2wTaTOWCRxVMg6nHI+H9tbKKLnWbZ
-	 R71OVtpCqXEWTKwvI+8c65vXkLRlqn2+E85B56NL0iLqHDDe63mD2BMZ17yoAQXYST
-	 mzQAwkJqU+sh6/TQORT0Ck7ZfHqknyg7VjCcAgqKsHTIwyELFgKh8SV/iNfh6FMmtc
-	 6yzX0sgePbrlw==
-From: Christian Brauner <brauner@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Pekka Ristola <pekkarr@protonmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] rust: file: mark `LocalFile` as `repr(transparent)`
-Date: Fri, 30 May 2025 07:12:59 +0200
-Message-ID: <20250530-minuten-beheben-df4e8ce17716@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250527204636.12573-1-pekkarr@protonmail.com>
-References: <20250527204636.12573-1-pekkarr@protonmail.com>
+	s=arc-20240116; t=1748582007; c=relaxed/simple;
+	bh=80CBZ4qYgzBTvAjwCPihgoQpVTk1e4kHEhhP9lPMf2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/OFOzBdc4r72Q5Is8qHvxKpJ+RcNazgy8sZ0jlzSCFO8CUDd9m9V/CzrLzah6CumMOZi6wg3OuZEzPtjCJbudy+89fU07hHNM4ep68O0ysziBtm2pDRg20ifcMFPzpkDt2mJGRjm6vA8uSJYE2K2j1hTvoBVf7DAZ0uZszgIbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKs3B-0001uT-Md; Fri, 30 May 2025 07:13:01 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKs3A-000vYP-2X;
+	Fri, 30 May 2025 07:13:00 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uKs3A-000mgl-29;
+	Fri, 30 May 2025 07:13:00 +0200
+Date: Fri, 30 May 2025 07:13:00 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Lukasz Kucharczyk <lukasz.kucharczyk@leica-geosystems.com>
+Cc: stefan.eichenberger@toradex.com,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:FREESCALE IMX I2C DRIVER" <linux-i2c@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	bsp-development.geo@leica-geosystems.com,
+	customers.leicageo@pengutronix.de
+Subject: Re: [PATCH] i2c: imx: fix emulated smbus block read
+Message-ID: <aDk-XKZBJiT_hJq2@pengutronix.de>
+References: <20250520122252.1475403-1-lukasz.kucharczyk@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1335; i=brauner@kernel.org; h=from:subject:message-id; bh=ABXcBcI46740XMmqpKEU0ZDPqOeZjAzBxnVDnWBJ4iA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRY2sVMnL7n9POedeGPm0XmX/9eeusqo0ydab/W1vVcm 2KdvJRudJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzE/Dgjw4M85rkPefVCKxYG nLqu+tv3lrXf5ZsqwRLVutt2BlmVljAyTPl85Pfrn38ybv7abqv1Zn+oyNZPu9NK2lLqjNZVczr bcQMA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250520122252.1475403-1-lukasz.kucharczyk@leica-geosystems.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, 27 May 2025 20:48:55 +0000, Pekka Ristola wrote:
-> Unsafe code in `LocalFile`'s methods assumes that the type has the same
-> layout as the inner `bindings::file`. This is not guaranteed by the default
-> struct representation in Rust, but requires specifying the `transparent`
-> representation.
+On Tue, May 20, 2025 at 02:22:52PM +0200, Lukasz Kucharczyk wrote:
+> Acknowledge the byte count submitted by the target.
+> When I2C_SMBUS_BLOCK_DATA read operation is executed by
+> i2c_smbus_xfer_emulated(), the length of the second (read) message is set
+> to 1. Length of the block is supposed to be obtained from the target by the
+> underlying bus driver.
+> The i2c_imx_isr_read() function should emit the acknowledge on i2c bus
+> after reading the first byte (i.e., byte count) while processing such
+> message (as defined in Section 6.5.7 of System Management Bus
+> Specification [1]). Without this acknowledge, the target does not submit
+> subsequent bytes and the controller only reads 0xff's.
 > 
-> The `File` struct (which also wraps `bindings::file`) is already marked as
-> `repr(transparent)`, so this change makes their layouts equivalent.
+> In addition, store the length of block data obtained from the target in
+> the buffer provided by i2c_smbus_xfer_emulated() - otherwise the first
+> byte of actual data is erroneously interpreted as length of the data
+> block.
 > 
-> [...]
+> [1] https://smbus.org/specs/SMBus_3_3_20240512.pdf
+> 
+> Fixes: 5f5c2d4579ca ("i2c: imx: prevent rescheduling in non dma mode")
+> Signed-off-by: Lukasz Kucharczyk <lukasz.kucharczyk@leica-geosystems.com>
+ 
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Thank you!
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/2] rust: file: mark `LocalFile` as `repr(transparent)`
-      https://git.kernel.org/vfs/vfs/c/15ecd83dc062
-[2/2] rust: file: improve safety comments
-      https://git.kernel.org/vfs/vfs/c/946026ba4293
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
