@@ -1,240 +1,349 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9D22AE6F;
-	Fri, 30 May 2025 07:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE7D211A27;
+	Fri, 30 May 2025 07:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748591755; cv=none; b=Kl0MefJM/bpZri6qvaU27ABb6BspOZ/UGWOpud7gMJ0Cbnsy1UL1zeTeWsZCpJA9xhcDi4gPNBxpfOuLh5FvGmJmOm8u1Wz9532/00PcsfDTAtHkcwLCxfTKZ2dWYj5bi1cpeDGDybkgga/w6mYwCXFPd5lzoQNrc7xVa1o746c=
+	t=1748591776; cv=none; b=F4dNr987xGbAXxI3HR9181OgimYNlWGANycsWYVt9H3Ps2eZSp89lmkvhn7MNgAHT9US4ZsT16or6SrWxyi3MCRN6QBa5n9cBW9Iavp8uhBk6r2fL4A0yvKs2HIAE+6xwxiZKw2oPz4L5lSc5Z6zNQIlHup89Ojk1CXyUIlf3JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748591755; c=relaxed/simple;
-	bh=eXU7Tu8aOR6EY9AGEGiCTirtK2RqItQcxYD9axhpbvU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y9vHzVyfeGtZjKTgb/kQjX9Jax/hhcOF6+qKPmW/CstbrsHQfAXb+7ZuCISG9w9rvJQc+g1kXS+82ZN3fSCr5Ez8ItCxzkX3VDO9MpNOTFCCwC3uJo6pE8bRaSkvmF+nSe+8ntqiETPkVjZQOc7SEXxfiW3Xa7UAPa+KuIE3Q94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52403e39a23so1004764e0c.2;
-        Fri, 30 May 2025 00:55:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748591752; x=1749196552;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ok4r17T6ykjtgTAKGiGjcQeNcSghR2j2d4lkyI3DeQI=;
-        b=OCpREw5ZgBlMDhFj5fjUaGkkrHZZ8seSMD7Vk2OAu0wO55Dk4ER9Oiz6+zwsvf+iFA
-         zAZT7h0Jdt6CaISDTmgoUc7Ol/zMdNt1akOwc6r8/bJE/O9WubStINwyLmjz+QMKKc9+
-         ki8kD9HvYSZ5UMKeDhbgH1UGec5eIAO7RR8GNrZQZTwiim/TAYRlc8CjiNxjQKVor6SR
-         G2NpsSmEZiqrHkUy6G2dbjBYnOD7vpPrwiVLx/BV+M88CLGEp31reIrOQmGX/1Z+kKyK
-         Jh0ucp2kfIHco9liUz9ohOhWZ/RE2BUQAFJ8aWLaKFlifKiNA9JGQoI53Kv1fYwi9uuU
-         hjvw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7uwOG3/ee77sStBQS7LnZkoKARl9zTDJGUELYD0I2dZIG2vYVeAmmZDpvjF2sVkxZjMtQf/0QtVcMi7PB@vger.kernel.org, AJvYcCVmRJzxNvUCd2Ybe78XhnBl1XDIceZZuCUSD/5OgP5OKRT1kpAqkTmk+Pho81OmBcRRdRDa4TAJOKQz@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXyZ7ieeTyOBJ0aRDpAGcDNofCWjrcQl1LIG9RoUxwVj7aKxv4
-	4rf/WfMgBZbHa2vbg1dIW+EZ+0Pr8hGPj1iMEntEArKhbHQ1CYbQQrf0x19rvfhY
-X-Gm-Gg: ASbGncvTNyp1ttC1SkR1Wt2yZ2heS7/qWllUHwAIboo06x7N5xibiV5RiO5ygq0XOne
-	TSvxpQgmbZyPTq6ipD4xReo/r1nENyeJsT1Ol1Wg+hxDnCJKtpKJTvyfYklArTviya6FlK1F2ON
-	Tx8y8NR2Z7NYlTNiKvyxjvyQg7ZZnEFYKxbaGc9rnDC7Ix9P5CRz6hXJy/Qcah7Pr6XHPJPWgm4
-	/WtAUjCmyZqJkwoQ2pkYNGzOjnU5TZo+TAz4hcv6a8GBtMwgS18SCzYmaiw/QdLAXtVrDqheHR5
-	uiXkDBoL62LyL02pQDXAmcgI/QJy5belCdOboq6KPg5GS2s1ZgDzsQiIEI8dWgLkVuRdfSRRvCF
-	pIGn+3nmiSfKQPg==
-X-Google-Smtp-Source: AGHT+IF+uiaX/LPE1EzLkl3N4pdq9YtJQhLtrfLn2WdG7a1YctPUrkNzOGkkD2bno1czNIhgONvdsg==
-X-Received: by 2002:a05:6122:1d11:b0:529:1a6a:cc2f with SMTP id 71dfb90a1353d-530810d7929mr2260450e0c.7.1748591751740;
-        Fri, 30 May 2025 00:55:51 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53074c3202bsm2653684e0c.39.2025.05.30.00.55.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 00:55:50 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e59012c7eeso1179731137.1;
-        Fri, 30 May 2025 00:55:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVQ1U9+hPyXkb3bEu5phOdbjCWDZuWODLFw+81PSU/lEcJVmF/TiDcV57w6KFbi21EVKRWp7MKMXKdm/3tP@vger.kernel.org, AJvYcCWASq5rjwXn3sQT4KdEZCKHXh5h0boGKRoJ1r5jZHsWa1CuxC//8WcmcIUtxZ8DW5yRatm95wjhFssF@vger.kernel.org
-X-Received: by 2002:a05:6102:2acf:b0:4df:4a04:8d5e with SMTP id
- ada2fe7eead31-4e6e40f71admr2518734137.8.1748591748944; Fri, 30 May 2025
- 00:55:48 -0700 (PDT)
+	s=arc-20240116; t=1748591776; c=relaxed/simple;
+	bh=9/2s7jrItrKe9BHQE86oFTYHuG14i7s/xK/dqV+ulu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gx6ir1RAtnqFpNws+xsVCU4VOWIARBut6gYMGIGyXt4sDGBw93GMLlkb1t6OELsXWfh4IGKmlZ5VogX9mvQNnKsDAM0VixoTIVl3GzGtbBFF+lXba0sd0Txc7zUjvXjZ+DVsIuNYqwZYqySsKY08BeoNoGsQrvxb2DDtekBRTlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j5BdfYpA; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j5BdfYpA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4383543A63;
+	Fri, 30 May 2025 07:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748591770;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d5uXLy3aVascoGW7+x+sYRkxemKiyBvlPpkaZTuHscc=;
+	b=j5BdfYpAd3WxUunXRmpE2ibM9G+KVDDhSfYDrSD1+PDUyzarJgvym3lOUXc72O4YUFn6hc
+	xtiF6q4PRjWDB4Ynzs5ip4KMmRnhYdWNJfqKcpglpe4CiCwTgndCnAFRO7b2gTl2unPo+f
+	bUqgleDvtC492VcnYkRX15i7xRzTNRoXi+JhRBpALr9TfOM9+n6euiYdParj1gbWj91gbi
+	51ZCpLIqtSjDSdBsmGlnLxdhcrd3PfQfqrJKwziiui2JNdbfJtxTV+ch/7RGBSB2yHbbof
+	aOvr3GZVFPMWbkQLJ6BqlCP9NpgrgBvw8vrsdUAnr2vPGEdaTBEmP3MUuW9pmg==
+Date: Fri, 30 May 2025 09:56:08 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, Heiner Kallweit
+ <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <thomas.petazzoni@bootlin.com>,
+ <linux-arm-kernel@lists.infradead.org>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, "shenjian15@huawei.com"
+ <shenjian15@huawei.com>
+Subject: Re: [PATCH net-next v5 07/13] net: phy: phy_caps: Allow looking-up
+ link caps based on speed and duplex
+Message-ID: <20250530095608.63c42399@fedora.home>
+In-Reply-To: <5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
+References: <20250307173611.129125-1-maxime.chevallier@bootlin.com>
+	<20250307173611.129125-8-maxime.chevallier@bootlin.com>
+	<5bbf1201-e803-40ea-a081-c25919f5e89d@huawei.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529110418.481756-1-j-choudhary@ti.com> <2baf3c31-3edf-4c26-bd44-1d0560134871@ti.com>
-In-Reply-To: <2baf3c31-3edf-4c26-bd44-1d0560134871@ti.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 30 May 2025 09:55:37 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUi7pf1YfKRjMv_7VuKwjR5XekRXfcEzuPScGzHraGjyQ@mail.gmail.com>
-X-Gm-Features: AX0GCFt7oJH7p6mCJm1bY-0aqdw-heaNTVCV9PIi-1gerZa683Q1Oz7IoT6_--U
-Message-ID: <CAMuHMdUi7pf1YfKRjMv_7VuKwjR5XekRXfcEzuPScGzHraGjyQ@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: dianders@chromium.org, andrzej.hajda@intel.com, neil.armstrong@linaro.org, 
-	rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	dri-devel@lists.freedesktop.org, tomi.valkeinen@ideasonboard.com, 
-	max.krummenacher@toradex.com, ernestvanhoecke@gmail.com, jonas@kwiboo.se, 
-	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, 
-	kieran.bingham+renesas@ideasonboard.com, linux-kernel@vger.kernel.org, 
-	max.oss.09@gmail.com, devarsht@ti.com, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeegieculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopehshhgrohhjihhjihgvsehhuhgrfigvihdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehlu
+ hhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Jayesh,
+On Thu, 29 May 2025 17:36:11 +0800
+Jijie Shao <shaojijie@huawei.com> wrote:
 
-CC devicetree
-
-On Fri, 30 May 2025 at 04:54, Jayesh Choudhary <j-choudhary@ti.com> wrote:
-> On 29/05/25 16:34, Jayesh Choudhary wrote:
-> > By default, HPD was disabled on SN65DSI86 bridge. When the driver was
-> > added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
-> > call which was moved to other function calls subsequently.
-> > Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
-> > HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
-> > state always return 1 (always connected state).
+> on 2025/3/8 1:36, Maxime Chevallier wrote:
+> > As the link_caps array is efficient for <speed,duplex> lookups,
+> > implement a function for speed/duplex lookups that matches a given
+> > mask. This replicates to some extent the phy_lookup_settings()
+> > behaviour, matching full link_capabilities instead of a single linkmode.
 > >
-> > Set HPD_DISABLE bit conditionally based on "no-hpd" property.
-> > Since the HPD_STATE is reflected correctly only after waiting for debounce
-> > time (~100-400ms) and adding this delay in detect() is not feasible
-> > owing to the performace impact (glitches and frame drop), remove runtime
-> > calls in detect() and add hpd_enable()/disable() bridge hooks with runtime
-> > calls, to detect hpd properly without any delay.
+> > phy.c's phy_santize_settings() and phylink's
+> > phylink_ethtool_ksettings_set() performs such lookup using the
+> > phy_settings table, but are only interested in the actual speed/duplex
+> > that were matched, rathet than the individual linkmode.
 > >
-> > [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
+> > Similar to phy_lookup_settings(), the newly introduced phy_caps_lookup()
+> > will run through the link_caps[] array by descending speed/duplex order.
 > >
-> > Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
-> > Cc: Max Krummenacher <max.krummenacher@toradex.com>
-> > Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> > If the link_capabilities for a given <speed/duplex> tuple intersects the
+> > passed linkmodes, we consider that a match.
+> >
+> > Similar to phy_lookup_settings(), we also allow passing an 'exact'
+> > boolean, allowing non-exact match. Here, we MUST always match the
+> > linkmodes mask, but we allow matching on lower speed settings.
+> >
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 > > ---
+> >   drivers/net/phy/phy-caps.h |  4 ++++
+> >   drivers/net/phy/phy.c      | 32 ++++++--------------------
+> >   drivers/net/phy/phy_caps.c | 47 ++++++++++++++++++++++++++++++++++++++
+> >   drivers/net/phy/phylink.c  | 17 +++++++-------
+> >   4 files changed, 67 insertions(+), 33 deletions(-)
 > >
-> > Changelog v2->v3:
-> > - Change conditional based on no-hpd property to address [1]
-> > - Remove runtime calls in detect() with appropriate comments
-> > - Add hpd_enable() and hpd_disable() in drm_bridge_funcs
-> > - Not picking up "Tested-by" tag as there are new changes
-> >
-> > v2 patch link:
-> > <https://lore.kernel.org/all/20250508115433.449102-1-j-choudhary@ti.com/>
-> >
-> > [1]: <https://lore.kernel.org/all/mwh35anw57d6nvre3sguetzq3miu4kd43rokegvul7fk266lys@5h2euthpk7vq/>
-
-Thanks for your patch!
-
-> > This would also require dts changes in all the nodes of sn65dsi86
-> > to ensure that they have no-hpd property.
->
-> DTS patch is posted now:
-> <https://lore.kernel.org/all/20250529112423.484232-1-j-choudhary@ti.com/>
-
-On all Renesas platforms handled by that patch, the DP bridge's HPD pin
-is wired to the HPD pin on the mini-DP connector.  What am I missing?
-
-Regardless, breaking backwards-compatibility with existing DTBs is
-definitely a no-go.
-
-> >   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 40 +++++++++++++++++++++++----
-> >   1 file changed, 35 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > index 60224f476e1d..e9ffc58acf58 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > @@ -190,6 +190,7 @@ struct ti_sn65dsi86 {
-> >       u8                              ln_assign;
-> >       u8                              ln_polrs;
-> >       bool                            comms_enabled;
-> > +     bool                            no_hpd;
-> >       struct mutex                    comms_mutex;
-> >
-> >   #if defined(CONFIG_OF_GPIO)
-> > @@ -352,8 +353,10 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
-> >        * change this to be conditional on someone specifying that HPD should
-> >        * be used.
-> >        */
-> > -     regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
-> > -                        HPD_DISABLE);
+> > diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
+> > index 8833798f141f..aef4b54a8429 100644
+> > --- a/drivers/net/phy/phy-caps.h
+> > +++ b/drivers/net/phy/phy-caps.h
+> > @@ -51,4 +51,8 @@ phy_caps_lookup_by_linkmode(const unsigned long *link=
+modes);
+> >   const struct link_capabilities *
+> >   phy_caps_lookup_by_linkmode_rev(const unsigned long *linkmodes, bool =
+fdx_only);
+> >  =20
+> > +const struct link_capabilities *
+> > +phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *s=
+upported,
+> > +		bool exact);
 > > +
-> > +     if (pdata->no_hpd)
-> > +             regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
-> > +                                HPD_DISABLE);
-> >
-> >       pdata->comms_enabled = true;
-> >
-> > @@ -1195,9 +1198,17 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
-> >       struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-> >       int val = 0;
-> >
-> > -     pm_runtime_get_sync(pdata->dev);
-> > +     /*
-> > +      * The chip won't report HPD right after being powered on as
-> > +      * HPD_DEBOUNCED_STATE reflects correct state only after the
-> > +      * debounce time (~100-400 ms).
-> > +      * So having pm_runtime_get_sync() and immediately reading
-> > +      * the register in detect() won't work, and adding delay()
-> > +      * in detect will have performace impact in display.
-> > +      * So remove runtime calls here.
-> > +      */
-> > +
-> >       regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
-> > -     pm_runtime_put_autosuspend(pdata->dev);
-> >
-> >       return val & HPD_DEBOUNCED_STATE ? connector_status_connected
-> >                                        : connector_status_disconnected;
-> > @@ -1220,6 +1231,20 @@ static void ti_sn65dsi86_debugfs_init(struct drm_bridge *bridge, struct dentry *
-> >       debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
+> >   #endif /* __PHY_CAPS_H */
+> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> > index 8df37d221fba..562acde89224 100644
+> > --- a/drivers/net/phy/phy.c
+> > +++ b/drivers/net/phy/phy.c
+> > @@ -213,25 +213,6 @@ int phy_aneg_done(struct phy_device *phydev)
 > >   }
-> >
-> > +static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
+> >   EXPORT_SYMBOL(phy_aneg_done);
+> >  =20
+> > -/**
+> > - * phy_find_valid - find a PHY setting that matches the requested para=
+meters
+> > - * @speed: desired speed
+> > - * @duplex: desired duplex
+> > - * @supported: mask of supported link modes
+> > - *
+> > - * Locate a supported phy setting that is, in priority order:
+> > - * - an exact match for the specified speed and duplex mode
+> > - * - a match for the specified speed, or slower speed
+> > - * - the slowest supported speed
+> > - * Returns the matched phy_setting entry, or %NULL if no supported phy
+> > - * settings were found.
+> > - */
+> > -static const struct phy_setting *
+> > -phy_find_valid(int speed, int duplex, unsigned long *supported)
+> > -{
+> > -	return phy_lookup_setting(speed, duplex, supported, false);
+> > -}
+> > -
+> >   /**
+> >    * phy_supported_speeds - return all speeds currently supported by a =
+phy device
+> >    * @phy: The phy device to return supported speeds of.
+> > @@ -274,13 +255,14 @@ EXPORT_SYMBOL(phy_check_valid);
+> >    */
+> >   static void phy_sanitize_settings(struct phy_device *phydev)
+> >   {
+> > -	const struct phy_setting *setting;
+> > +	const struct link_capabilities *c;
+> > +
+> > +	c =3D phy_caps_lookup(phydev->speed, phydev->duplex, phydev->supporte=
+d,
+> > +			    false);
+> >  =20
+> > -	setting =3D phy_find_valid(phydev->speed, phydev->duplex,
+> > -				 phydev->supported);
+> > -	if (setting) {
+> > -		phydev->speed =3D setting->speed;
+> > -		phydev->duplex =3D setting->duplex;
+> > +	if (c) {
+> > +		phydev->speed =3D c->speed;
+> > +		phydev->duplex =3D c->duplex;
+> >   	} else {
+> >   		/* We failed to find anything (no supported speeds?) */
+> >   		phydev->speed =3D SPEED_UNKNOWN;
+> > diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+> > index c39f38c12ef2..0366feee2912 100644
+> > --- a/drivers/net/phy/phy_caps.c
+> > +++ b/drivers/net/phy/phy_caps.c
+> > @@ -170,6 +170,53 @@ phy_caps_lookup_by_linkmode_rev(const unsigned lon=
+g *linkmodes, bool fdx_only)
+> >   	return NULL;
+> >   }
+> >  =20
+> > +/**
+> > + * phy_caps_lookup() - Lookup capabilities by speed/duplex that matche=
+s a mask
+> > + * @speed: Speed to match
+> > + * @duplex: Duplex to match
+> > + * @supported: Mask of linkmodes to match
+> > + * @exact: Perform an exact match or not.
+> > + *
+> > + * Lookup a link_capabilities entry that intersect the supported linkm=
+odes mask,
+> > + * and that matches the passed speed and duplex.
+> > + *
+> > + * When @exact is set, an exact match is performed on speed and duplex=
+, meaning
+> > + * that if the linkmodes for the given speed and duplex intersect the =
+supported
+> > + * mask, this capability is returned, otherwise we don't have a match =
+and return
+> > + * NULL.
+> > + *
+> > + * When @exact is not set, we return either an exact match, or matchin=
+g capabilities
+> > + * at lower speed, or the lowest matching speed, or NULL.
+> > + *
+> > + * Returns: a matched link_capabilities according to the above process=
+, NULL
+> > + *	    otherwise.
+> > + */
+> > +const struct link_capabilities *
+> > +phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *s=
+upported,
+> > +		bool exact)
 > > +{
-> > +     struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
+> > +	const struct link_capabilities *lcap, *last =3D NULL;
 > > +
-> > +     pm_runtime_get_sync(pdata->dev);
+> > +	for_each_link_caps_desc_speed(lcap) {
+> > +		if (linkmode_intersects(lcap->linkmodes, supported)) {
+> > +			last =3D lcap;
+> > +			/* exact match on speed and duplex*/
+> > +			if (lcap->speed =3D=3D speed && lcap->duplex =3D=3D duplex) {
+> > +				return lcap;
+> > +			} else if (!exact) {
+> > +				if (lcap->speed <=3D speed)
+> > +					return lcap;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	if (!exact)
+> > +		return last;
+> > +
+> > +	return NULL;
 > > +}
+> > +EXPORT_SYMBOL_GPL(phy_caps_lookup);
 > > +
-> > +static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
-> > +{
-> > +     struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-> > +
-> > +     pm_runtime_put_sync(pdata->dev);
-> > +}
-> > +
-> >   static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
-> >       .attach = ti_sn_bridge_attach,
-> >       .detach = ti_sn_bridge_detach,
-> > @@ -1234,6 +1259,8 @@ static const struct drm_bridge_funcs ti_sn_bridge_funcs = {
-> >       .atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> >       .atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> >       .debugfs_init = ti_sn65dsi86_debugfs_init,
-> > +     .hpd_enable = ti_sn_bridge_hpd_enable,
-> > +     .hpd_disable = ti_sn_bridge_hpd_disable,
-> >   };
-> >
-> >   static void ti_sn_bridge_parse_lanes(struct ti_sn65dsi86 *pdata,
-> > @@ -1322,7 +1349,8 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
-> >                          ? DRM_MODE_CONNECTOR_DisplayPort : DRM_MODE_CONNECTOR_eDP;
-> >
-> >       if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort)
-> > -             pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
-> > +             pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT |
-> > +                                 DRM_BRIDGE_OP_HPD;
-> >
-> >       drm_bridge_add(&pdata->bridge);
-> >
-> > @@ -1935,6 +1963,8 @@ static int ti_sn65dsi86_probe(struct i2c_client *client)
-> >               return dev_err_probe(dev, PTR_ERR(pdata->refclk),
-> >                                    "failed to get reference clock\n");
-> >
-> > +     pdata->no_hpd = of_property_read_bool(dev->of_node, "no-hpd");
-> > +
-> >       pm_runtime_enable(dev);
-> >       pm_runtime_set_autosuspend_delay(pdata->dev, 500);
-> >       pm_runtime_use_autosuspend(pdata->dev);
+> >   /**
+> >    * phy_caps_linkmode_max_speed() - Clamp a linkmodes set to a max spe=
+ed
+> >    * @max_speed: Speed limit for the linkmode set
+> > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > index a3f64b6d2d34..cf9f019382ad 100644
+> > --- a/drivers/net/phy/phylink.c
+> > +++ b/drivers/net/phy/phylink.c
+> > @@ -20,6 +20,7 @@
+> >   #include <linux/timer.h>
+> >   #include <linux/workqueue.h>
+> >  =20
+> > +#include "phy-caps.h"
+> >   #include "sfp.h"
+> >   #include "swphy.h"
+> >  =20
+> > @@ -2852,8 +2853,8 @@ int phylink_ethtool_ksettings_set(struct phylink =
+*pl,
+> >   				  const struct ethtool_link_ksettings *kset)
+> >   {
+> >   	__ETHTOOL_DECLARE_LINK_MODE_MASK(support);
+> > +	const struct link_capabilities *c;
+> >   	struct phylink_link_state config;
+> > -	const struct phy_setting *s;
+> >  =20
+> >   	ASSERT_RTNL();
+> >  =20
+> > @@ -2896,23 +2897,23 @@ int phylink_ethtool_ksettings_set(struct phylin=
+k *pl,
+> >   		/* Autonegotiation disabled, select a suitable speed and
+> >   		 * duplex.
+> >   		 */
+> > -		s =3D phy_lookup_setting(kset->base.speed, kset->base.duplex,
+> > -				       pl->supported, false);
+> > -		if (!s)
+> > +		c =3D phy_caps_lookup(kset->base.speed, kset->base.duplex,
+> > +				    pl->supported, false);
+> > +		if (!c)
+> >   			return -EINVAL; =20
+>=20
+>=20
+>=20
+> Hi Maxime,  fc81e257d19f ("net: phy: phy_caps: Allow looking-up link caps=
+ based on speed and duplex") might have different behavior than the modific=
+ation.
+> My case is set 10M Half with disable autoneg both sides and I expect it is
+> link in 10M Half. But now, it is link in 10M Full=EF=BC=8Cwhich is not wh=
+at I
+> expect.
+>=20
+> I used followed command and trace how phy worked.
+> 	ethtool -s eth1 autoneg off speed 10 duplex half
+> The log is showed as followed:
+> ethtool-13127	[067]	6164.771853: phy_ethtool_ksettings set: (phy_ethtool =
+ksettings set+0x0/0x200) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771853:	_phy_start_aneq: ( _phy_start_ane=
+g+0x0/0xb8) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771854:	phy_caps_lookup: (phy_caps_lookup=
++0x0/0xf0) duplex=3D0 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771855:	phy_config_aneg: (phy_config_aneg=
++0x0/0x70) duplex=3D1 speed=3D10
+> kworker/u322:2-11096	[070]	6164.771856:	genphy_config_aneg:	(__genphy_con=
+fig_aneg+0X0/0X270) duplex=3D1 speed=3D10
+>=20
+> I also try to fixed it and it works. Do you have any idea about it.
 
-Gr{oetje,eeting}s,
+The !exact match logic in the rework is wrong indeed, sorry...
 
-                        Geert
+For non-exact matches we return a non-exact match too early without
+giving the chance for a potentially exact half-duplex match...
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+As for the fix, can you try this out :
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+index 703321689726..d80f6a37edf1 100644
+--- a/drivers/net/phy/phy_caps.c
++++ b/drivers/net/phy/phy_caps.c
+@@ -195,7 +195,7 @@ const struct link_capabilities *
+ phy_caps_lookup(int speed, unsigned int duplex, const unsigned long *suppo=
+rted,
+ 		bool exact)
+ {
+-	const struct link_capabilities *lcap, *last =3D NULL;
++	const struct link_capabilities *lcap, *match =3D NULL, *last =3D NULL;
+=20
+ 	for_each_link_caps_desc_speed(lcap) {
+ 		if (linkmode_intersects(lcap->linkmodes, supported)) {
+@@ -204,16 +204,19 @@ phy_caps_lookup(int speed, unsigned int duplex, const=
+ unsigned long *supported,
+ 			if (lcap->speed =3D=3D speed && lcap->duplex =3D=3D duplex) {
+ 				return lcap;
+ 			} else if (!exact) {
+-				if (lcap->speed <=3D speed)
+-					return lcap;
++				if (!match && lcap->speed <=3D speed)
++					match =3D lcap;
++
++				if (lcap->speed < speed)
++					break;
+ 			}
+ 		}
+ 	}
+=20
+-	if (!exact)
+-		return last;
++	if (!match && !exact)
++		match =3D last;
+=20
+-	return NULL;
++	return match;
+ }
+ EXPORT_SYMBOL_GPL(phy_caps_lookup);
