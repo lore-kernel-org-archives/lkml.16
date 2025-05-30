@@ -1,181 +1,158 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D750D21D5AA;
-	Fri, 30 May 2025 10:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599594; cv=fail; b=dmLe1KCQsPYLcf7ThlFdrxyAWW67gktJrVB5fgpTL+0hdU3/yLqwCUWjNjDh6PD6zAl+Bvna88xr7TyeFE8qYEh4vCooaX5785CrXlmwLkbFCzt6nE/Rn7Jw+Wgs37cYw87Pr682ffzg4Msi37MpL4XE9i0nRtneFYasv0zYIH0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599594; c=relaxed/simple;
-	bh=JxtOiWk2v8nlTRxICT7eikapiYSH58jSZh9QEHzD3Oo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bLfVibxMMVr+627QIxod8sFB0SehuMotH0hGoa/7Fuk7U4QciSzQ+IFRw4UNaA/ofDBjuORjnD+TF9og/bS3f0evv2wdkywcjbkcotLAy7lupmkH6oiCNV10R9JDzQWphUZR6BjSaaxAimSwnpO+vV1u8D7PzVCnzv6KAzSTZ24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OMo6e1BI; arc=fail smtp.client-ip=40.107.223.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A00221566
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748599609; cv=none; b=tRcqWcGQu7fUSh3ULuBEjY6naop4pAAwgNyFEzmBFs71WzEcnLYGk9+juSv8fm7fZozvCuChOgtcCyg18nmP3Nrt+GfZugDIUAtoUY7NwctzP8/O0j/hvWjpHZGePpkqs/uvEeD9IsumLQWMa0nKO8LfaLGCmTpfZT9u6EKkmMo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748599609; c=relaxed/simple;
+	bh=YSW2PIV6m+LZ4U6uEQV76zlmwvJH3P4SUFzsTmRdAhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gu36iizoaPzpOUIsKOzPbgAmF88ixFjUkqo7hrvUR5pXD6RDwvZG1HynAMiBYcx3Lg2LoyhlqfvyRio+T/WDlOBrf8R82CAcWvDiv9MvdVtBdU2e2NwAYBx+0TnxYWDREHazmYI6E6TzOfBDu3/MMkaaZGdip0KOj9fcPznXKBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VTv1CdGx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PH9UWdzC; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OM/sFBq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rBudCxP3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OMo6e1BI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K+YBaaDjbqnxSwLFjcL0RL+qmyl6jcTTdX8TNtUYU8xLcYpSDzxDA9AqUQxI4zjEHOtSFbJuuE2IuzpbWakNfCWAdkUQVok+yPno6KuBXeHmZeh2wucsVxm7B3v9vrWGzsIWxC2DuECkliIKZaNRgrVF47D94bUnIt41KScWQHJzP987p2kq0TMsQyN81PDvONVKlj32F5idMlSqJ5jcb2C59e9hi3adCJ9qAom53DenXUaQkEh+w82M0CT1lf2xpblw7J809+aSABjd1FldmuSoH8DSGZAmUfk9Y5NZ4VPKcveScau+pkfUcJnlpYGn+sOKb63kJ8Doag5VNKktwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6TNWte9CF1MX5PuBSBbQltvpicdc4+rJ2f14vXPSTKA=;
- b=CxJ/savkzblVJi9VBfZIxbtE+gA8GwUP7ip8xvhUbz1ABaDfIGWyegWLLwdpH0GM7i73pDuONkIXEtJGv9DU40Jw17cNbxDOaRK1Qo+b5X/KG0FvvAjYbJB5itzJlVDSoY1O3zypEjCNo4Etw7OzIiOApTT5SqiUkt7CleCf3Kt3/5A3O98gl8onutz2wQedsYvoYaP9Z9whXBwXFt7SpXFd0khK9Z1w9Ko1iu+xIvbhoxZbdaaxuQdQuezafYPsea9egelv2tLCxBMNJoFFmXHSUoW32pceglmKMYdp3XTHpzlsUN8MVL/6r5qYq616G+9yxEQob+YmFYdwfrQJCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6TNWte9CF1MX5PuBSBbQltvpicdc4+rJ2f14vXPSTKA=;
- b=OMo6e1BIGfQvwOOlw7DmEYtC+U/Ho9CZy/nIuDAaASEYNFIxbKxO5mMiIN4/Drm2pEt8J8tgh9y1yrIMKzVjh+zPG/vHQoKm1n9Vf8R0o9ZJAM2o0qdXyY9N5WRQLccUiPXjY1lIxqyXX1xjOfUdzB3M+IaoIp9XTDUzr3H73k4=
-Received: from SN1PR12CA0100.namprd12.prod.outlook.com (2603:10b6:802:21::35)
- by DS7PR12MB8276.namprd12.prod.outlook.com (2603:10b6:8:da::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Fri, 30 May
- 2025 10:06:30 +0000
-Received: from SN1PEPF0002BA4D.namprd03.prod.outlook.com
- (2603:10b6:802:21:cafe::3a) by SN1PR12CA0100.outlook.office365.com
- (2603:10b6:802:21::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Fri,
- 30 May 2025 10:06:29 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF0002BA4D.mail.protection.outlook.com (10.167.242.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Fri, 30 May 2025 10:06:29 +0000
-Received: from [10.136.33.30] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 30 May
- 2025 05:06:25 -0500
-Message-ID: <a30dd520-b6d2-4ae8-86f8-d4f71ef3e0e0@amd.com>
-Date: Fri, 30 May 2025 15:36:23 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VTv1CdGx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PH9UWdzC";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OM/sFBq0";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rBudCxP3"
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id BE4C01F7A3;
+	Fri, 30 May 2025 10:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748599606; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
+	b=VTv1CdGxeFX8+klTuFS5VxcB15rY2yd0lg5UXEoPfw0xRh0dRKYxQz0EtMIE6jiDWp2+qb
+	tPKuzEJicHonel/2goaUrqbEbVOTa9Jkctac9V2mBusIGST0tkU5g7dZ6YsTvcQVnok3LN
+	BVo6DdvExsJ8IU5zZC4M/yi/tzgq+fk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748599606;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
+	b=PH9UWdzCF649Gyycuuecjp1JIDgP96LfgA0oWeu5Zh8CnLlJENe5zeOEK3a14xb8JsMMFR
+	YVvGMAT+faCjhyCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748599605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
+	b=OM/sFBq0rL7Vs7xXiVCe8dcsY021Y2a25yLjl8eZjebZCN8c2CMUPMMzr5ZuEET05jj8z1
+	iT0fAKgDMQkh8CwYPzhK292SFHDRdpuPxPXp11EP9i2yNWLUPcMIZJM1XNMcWydJa89EnE
+	JYvbP/9jhTV+HDH7uGneBWa9vgT0PIA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748599605;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
+	b=rBudCxP3JBcJYezhOTJhuh8HXGvJDmBpmWCUAq4jQ2hF3jfpMLyVNaCy28LC59D3h3LR5A
+	K3kYFOsqxSnNh9Aw==
+Date: Fri, 30 May 2025 12:06:45 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Baoquan He <bhe@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <aDmDNdhW75eXw_4M@dwarf.suse.cz>
+References: <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
+ <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
+ <aDgQ0lbt1h5v0lgE@tiehlicka>
+ <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
+ <aDlsF5tAcUxo4VgT@tiehlicka>
+ <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
+ <aDl1ViMpK_6q_z06@tiehlicka>
+ <04a49de5-eb79-431b-ba5b-eae2536781c6@redhat.com>
+ <aDl7rHb34zIXEf6j@dwarf.suse.cz>
+ <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 41/59] iommu/amd: KVM: SVM: Add IRTE metadata to
- affined vCPU's list if AVIC is inhibited
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
-	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
-	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
-CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Vasant Hegde <vasant.hegde@amd.com>, "Maxim
- Levitsky" <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>,
-	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack
-	<dmatlack@google.com>
-References: <20250523010004.3240643-1-seanjc@google.com>
- <20250523010004.3240643-42-seanjc@google.com>
-Content-Language: en-US
-From: Sairaj Kodilkar <sarunkod@amd.com>
-In-Reply-To: <20250523010004.3240643-42-seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4D:EE_|DS7PR12MB8276:EE_
-X-MS-Office365-Filtering-Correlation-Id: a68657bb-b0be-4962-e1e7-08dd9f61a5ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TmNnOWRKcm9VM2diSXUzUHFibGtyZjc4WFFrV2ZObzZpVXVOTGE0Zzh5YWxu?=
- =?utf-8?B?RW02R3RhaWtNbXl4UU9hWDZ4TzgzL1k2RmtVK1BrZllDYkpYUDBPZWgySXds?=
- =?utf-8?B?UEhLNjNLLytJSlc4VExWK2UxcE1vS3MzUmd6elZWT0RHeng0bE8yS1A0ajlG?=
- =?utf-8?B?MVlucDFsVnNrdWl2TDlDOGJ4ZkVBc2cyR010dHVTMnpBYzQ2T3RKSjZDN25w?=
- =?utf-8?B?cUNTbHZVb1JLZ1pjeUVCZ3o2elRrS2J0S015L0NIQWhZeGRxVWVxSDhvVHJ1?=
- =?utf-8?B?a0EyZ0dTZjYxVHlydFlUdG4xVGpYdmtLK3ZqY29sYlI4MU9ZYks5OFUvZmVO?=
- =?utf-8?B?dE83bWFxN0FTU0tNVVJIeHZMRTNlaGpVamNwR0JJRVF4b0h3Sy9pQXlRTnNk?=
- =?utf-8?B?M0Z4WTFZY3g1S0tZejlsMFZhVTJLYWJBTjhrMkR1djI3VkNicnhNbXZndXpt?=
- =?utf-8?B?YWJWV3JOOTN0Z3FrMUZGV2JMUTE1dURmRmNSVUczZmkyeDVPdVBzSDI1bkVW?=
- =?utf-8?B?c2FTRkQwb2ptdGdKVGhwZnVYUFYwdzVZWk5RZTVZblIvbWJLWkpHSCtidjRG?=
- =?utf-8?B?ZVRFZDgrNnNucEV6NkVmalFqcGdaVGsxMVU5MXV0aWpyZGphdGV6cEoxakxm?=
- =?utf-8?B?SGNWcDFUeWxaeldKMzRBMkMrcnF5YXN2ZXNkN3ZrUlU4NUt2dHpKSWJYaHlY?=
- =?utf-8?B?UnNhazVZK3d0NlV5SEZBVFJoYWdjaGl0Nm9hN1V2dituODlqRjhvOUJBNG1h?=
- =?utf-8?B?YUg2VE5UZFJ5UURpYXpvc2RWL0daYkVnaURjZ1Q1T1lFR3NJNndkN2E2MmJR?=
- =?utf-8?B?ZUIwb2lWZUNJalV0LzZFMEdRNVcvd3VISW9NQjh2VnFOTWNCN2lwR0YyUG13?=
- =?utf-8?B?NUxrVG8rYlhuK3BsQm5UNlVNRmJBRFlBWER1UEpBR05MdU5ETUpBSHpzNDN3?=
- =?utf-8?B?QUs2RnIzSTg4K0JYUlZLY0UzUHp0bGx1ajVqYWpTV1ZjejdpVjdxT2l5RmxH?=
- =?utf-8?B?NHhMZW50YzNTUlVIZnFLTUlRT2pqSHlBSDFsbXFSeEVnaGlvUXdKYWs4ZzNM?=
- =?utf-8?B?U1FWV2hhVGFkTHVEUEhCSG80bU1yaDQrUnRPRjVwaGw1aWRzdXJPU0piR0Vs?=
- =?utf-8?B?ZTVEeDA0NFdGVFI4MnpHdVZNZjBmUmY2Mk5WUGlCL2YxKzgwRkJ6T0c1bHZP?=
- =?utf-8?B?MThqRVVWeWpJL281Ujc4VlJEWmdyWDRobmlBbHV6cnMxa3d0M1lkSmNNQm9L?=
- =?utf-8?B?N2p2M3gxQXNhL1pPazJHOXdDYlhvVkhWYTMrKy9kWmYvSGpSc2ZRYU9XRUUy?=
- =?utf-8?B?bWZxcmdjaU1VZXBzN3haRm1IQkNXTDNuSDdycGJsV0orY3ZweVlGaUVsajV6?=
- =?utf-8?B?eGxRMWRpUFRhRmpHZDFKMnlRT05IdVdjK2ZCTlRzd0RsZXRvejdEWkJSU2Fw?=
- =?utf-8?B?WFRISnNOakpMeXArbGNNYytXOGFjc01WQm5MNXZSOFVLK2JHN05pVm5VRjNr?=
- =?utf-8?B?WUYxdEZGQU54THpKcUsxMDJTdTJ4bS9zRnlzRkdBdmUrUS9IMkJCVE9pYVIy?=
- =?utf-8?B?M3hVcC85UG56bGNaWm9rSlhUY1ZFbDFsMTh3bzhTRWVXYnQzVmkwd1ptbkZC?=
- =?utf-8?B?WGlxYUN2MUZJN2dTaWloaSs5YjJTbWQwdkhWMDVVQk1lOGJHZXYyUHYzY2N6?=
- =?utf-8?B?bDB4K1FubUoxWmZMVkR1blcxVFA1S1NNa1FxbUZkS2wzbDB1KzFTTzNHRnla?=
- =?utf-8?B?ZDFRbjBzTHliUHVXbm1ubVpPc0pmT2hsV1Q3eU5SeGpSb21XbG9qOFBkUXo0?=
- =?utf-8?B?WTcrMHVtWWZlWERYdjh6R3VkdjJCRmcweGJNdjZ3ZDRUditTMHJPR3NDejFO?=
- =?utf-8?B?TFVHeVRNVjNuNFVmUkIwSVIzNldTTHJ4Q3p3aC9waGZWejlFZitxeDgzNUNh?=
- =?utf-8?B?QTdwMlczNFVFZDVIdUdPVFFMbzUxUDY5QmsrdFpUT1hpUkNwdmRhYU03Rkp5?=
- =?utf-8?B?cGwrZ0V3SXdZRWxPS2lsN20zcWFuMXNIdk9TaGZvRWhQeWZ4Y2pkQ1NXS3ZG?=
- =?utf-8?Q?jpRfPY?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 10:06:29.7580
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a68657bb-b0be-4962-e1e7-08dd9f61a5ca
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002BA4D.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8276
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ZERO(0.00)[0];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,dwarf.suse.cz:mid,localhost:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
+On Fri, May 30, 2025 at 11:47:46AM +0200, David Hildenbrand wrote:
+> > > > crashkernel=1G,cma,cma_sane_dma # no wait on transition
+> > > 
+> > > But is no wait ok? I mean, any O_DIRECT with any device would at least take
+> > > a bit, no?
+> > > 
+> > > Of course, there is a short time between the crash and actually triggerying
+> > > kdump.
+> > > 
+> > > > crashkernel=1G,cma # wait on transition with e.g. 10s timeout
+> > > 
+> > > In general, would work for me.
+> > 
+> > I don't like extending the crashkernel= syntax like this.
+> > It would make hooking into the generic parsing code in
+> > parse_crashkernel() really ugly. The syntax is already
+> > convoluted as is and hard enough to explain in the documentation.
+> 
+> Would another boolean flag (on top of the other one you are adding) really
+> make this significantly more ugly?
 
+the current code does not split the parameter by commas and treat
+the part as boolean flags.
 
-On 5/23/2025 6:29 AM, Sean Christopherson wrote:
+Both ",cma" and ",cma,cma_sane_dma" (and possibly
+",cma_sane_dma,cma") would need to be added to suffix_tbl[]
+(carefully thinking about the order because one is a prefix of the
+other); then handled almost the same except setting the flag.
 
-> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-> index 718bd9604f71..becef69a306d 100644
-> --- a/drivers/iommu/amd/iommu.c
-> +++ b/drivers/iommu/amd/iommu.c
-> @@ -3939,7 +3939,10 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *info)
->   		ir_data->ga_root_ptr = (pi_data->vapic_addr >> 12);
->   		ir_data->ga_vector = pi_data->vector;
->   		ir_data->ga_tag = pi_data->ga_tag;
-> -		ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
-> +		if (pi_data->is_guest_mode)
-> +			ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
-> +		else
-> +			ret = amd_iommu_deactivate_guest_mode(ir_data);
+Also I think using the command line is way less flexible than
+sysfs. E.g. the userspace tool loading the crash kernel (kdump)
+may want to decide if the hardware is sane using its own
+whitelist/blacklist...
 
-Hi Sean,
-Why the extra nesting here ?
-Its much more cleaner to do..
+> > I am inclined to just setting the fixed delay to 10s for now and
+> > adding a sysfs knob later if someone asks for it.
+> > 
+> > Would that work for you?
+> 
+> Sure. We could always add such a flag later if it's really a problem for
+> someone.
 
-if (pi_data && pi_data->is_guest_mode) {
-	ir_data->ga_root_ptr = (pi_data->vapic_addr >> 12);
-    	ir_data->ga_vector = pi_data->vector;
-    	ir_data->ga_tag = pi_data->ga_tag;
-	ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
-} else {
-	ret = amd_iommu_deactivate_guest_mode(ir_data);
-}
+OK, thanks! Will post the v4 shortly.
 
-Thanks
-Sairaj Kodilkar
-
->   	} else {
->   		ret = amd_iommu_deactivate_guest_mode(ir_data);
->   	}
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
