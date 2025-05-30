@@ -1,154 +1,194 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AAF155C87;
-	Fri, 30 May 2025 06:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59555155C87;
+	Fri, 30 May 2025 06:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748585021; cv=none; b=ps+UyY+FOAYfT0WtXe8Qt6ioQ1ClsIGxhvMJWfdDgWrZEWKwz6FYhySShOLleO+yxE3h0Gju8qTTE81MZtZEk2AH9tAunkFS97FA072hjL1u85jnhVQmBLOOBER7NnW1OARSRPjENrSMXtqmz8bZ/NMnxFk4rORrYoIPVcjsryU=
+	t=1748585070; cv=none; b=ffoXOHOUEdTlKnniE8Z0C3zfPWT8E0LguZAs3YOgjMI+xuvc1eM8avjCrC1ZTJ9oYrDmWwr8nUEvg7/l8wsb+bgSObX7Vwr4tZ6sG2M0lpSA22kW5HqDUzafDm7oN6ZRJD2z+y7jLy/K6YhM5HWJBZa6fcSLo4m2MRHyzg3/R28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748585021; c=relaxed/simple;
-	bh=OZddS4g8nHiT92Hjmd8MP9h8P53X3sIYXOHERf0QsDQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qLZ/12CHQTbHv8UJ5az7REdqiF8fz+bazR+Wa4L5J5vwA8TUQqQFYD5RsNp+pMo7VYo+daHcgcpueVzBv8MnCp6/D35zYto9ThjclBY7UaKmeppoNqDcpViFP2i8d39JywONeR3pGMU2ip4tXCYplnlaWztN2Jxv9PQoakzsmUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=1RHkxvfZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ie/YWIY8; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1748585070; c=relaxed/simple;
+	bh=g8jtVttjRRpBP82A1uFMOQKqTsegSsDamHgL5kRcTNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QFVKw9qnJaryj529JIselelmMzKC+k8GaQPB/uxLMPcsSoiNxqNEVNX0Cv+EAOQckGLjViaFfSjVwiYUcYFT1QT29IZcTzGL/BbM1TIyDS+v4jD4Ps19lmhoswt3buvpseqN0sGhjRoGm2IezMwGv/vw3Fw/Qwf8Msnef5nY9Ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UA6kFVrP; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="1RHkxvfZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ie/YWIY8"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 49795114015E;
-	Fri, 30 May 2025 02:03:38 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Fri, 30 May 2025 02:03:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1748585018;
-	 x=1748671418; bh=i4haqSXLls4cGXCJV0jsL0/1LVmc6rWPImypim9zABc=; b=
-	1RHkxvfZRR7Km8IoSd1pTKrCV3lbuBltgiXlAz9CPu/cZM4DaR1rTQcvh+/Q9iQc
-	/qV/UpPn2bVRh1TIC3Jv4JiknU5ASCjckII5jnWHlDVfODCwLZ+uFACccUf8ZYJy
-	cbY470Oe58LhyVUG+uxY4/boQCUb/5HIkLG8K9R7+Bdk0ySexafuDe4VDgpqlDJ1
-	ho/MyP+uu8XpOjjeQ9F+kijniawhTH/7mAC5lWKxPfbfA/oVag0t1V7NpANMdc9I
-	KW6CK5NxZrjrRxfFXez+YddLTa/cjFDQAxzLjm2IrLnotIDuEFuRlIDR/sV36//P
-	bDXgW3jn0KNoQh3/otcjzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748585018; x=
-	1748671418; bh=i4haqSXLls4cGXCJV0jsL0/1LVmc6rWPImypim9zABc=; b=I
-	e/YWIY87T+cUEAvQFtppd7cjOR332cAEv+X17P8BwTgZKHIXebSBUPV1a9BEtZ7R
-	b5U2BaEPF0H5QsgBj/0WtW/lAInLK1rW84pUo+urcmupFfI7NhvCpquRb3G4rArg
-	ahqi8ChDGt9a/AHCW4n82scvtV2J89YxCw5dVt8t/UArIGMJLnbYjxIhxcZ+veL3
-	x701C9FG8q4Q+s+bXLnS9UBKsBr4UVrSdzCdKcf/B0IqglFYkSa/BznyqbAkauPc
-	lJgZGXHpaIl1EY7BKrVqSp8K6qvCZITGxapyjj4wBPJYnTO9i2RfqBSPkVyVHZGJ
-	P8Lz+wWjFQwXWstVnz3EA==
-X-ME-Sender: <xms:OEo5aFMSBGzHZtO45qItzUyweRayyBWmiZtmaF1FoqeKZHG0B8rYzw>
-    <xme:OEo5aH97rMybNfXNW7BYwlmAOI1LHYHd73OY6mx1Y9PJ_s2BIJkTSRZSU9-Fl0rFY
-    Lmpnuo-doxr5lJOLqM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkedvgeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
-    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
-    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpeefhfehteffuddv
-    gfeigefhjeetvdekteekjeefkeekleffjeetvedvgefhhfeihfenucffohhmrghinhepkh
-    gvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepfeejpdhmoh
-    guvgepshhmthhpohhuthdprhgtphhtthhopeguvghrvghkrdhkihgvrhhnrghnsegrmhgu
-    rdgtohhmpdhrtghpthhtohepughrrghgrghnrdgtvhgvthhitgesrghmugdrtghomhdprh
-    gtphhtthhopegtrghtrghlihhnrdhmrghrihhnrghssegrrhhmrdgtohhmpdhrtghpthht
-    ohepmhhtuhhrqhhuvghtthgvsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegsrh
-    hglhessghguggvvhdrphhlpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohho
-    thhlihhnrdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlh
-    hinhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohht
-    lhhinhdrtghomhdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqd
-    hlihhsthessghrohgruggtohhmrdgtohhm
-X-ME-Proxy: <xmx:OEo5aEQH2Q6JkkQH-Mlv0t1AMoGS16Ov8O8B30zEuqzVmPS6okklKg>
-    <xmx:OEo5aBucgj621crqtYvLM-vDiDsAUtyFBxlpmn2KDBs-BWsGvxW41g>
-    <xmx:OEo5aNd9BIUZkutK3ua0dDcK95tdzyAXLq6yuQIGKaAKzADNQwuc5g>
-    <xmx:OEo5aN1aE6H6kxyxHxd0clkYHHcMNSvW3A6L6TujH5b7Wplg8PK8MA>
-    <xmx:Oko5aPQ2arYbS3SdyF_6oXUPjPShCgul_31qN6OgSnW-bIWEuAIVFICC>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9918B700062; Fri, 30 May 2025 02:03:36 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UA6kFVrP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748585068; x=1780121068;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g8jtVttjRRpBP82A1uFMOQKqTsegSsDamHgL5kRcTNA=;
+  b=UA6kFVrPSrJCHPRR+kmAIyFECwkZE3AHTeJKY0pkiiK+fXlQidwKixmv
+   Nxk0OiXpL5uAGLKt2RbPwbc0nt0AJzXnOa9a+iktqNRNzzG30dDnuMhDt
+   VQ/R+d+EORSXMH3oJSSth28gyQw4uYJ5udoAdRiWYBTq23m/eU11n4a+L
+   aZy3YCOdfYExZeQeRLI/HMJDa7P5uGEwo5FhF1LRfFCCL+ueJ6+KNPYgv
+   Cvtc0VzYaQnwo1BFFmn718qOAs+lZh6vWLQZc5BlwCs0PIdCp3S8B7FUJ
+   EVZtrnva/jFomEvVv6UvSblJaBw9QA9v44u6rdkOGP/6hOFPzso3w5Q6n
+   Q==;
+X-CSE-ConnectionGUID: 7ebF6N1GRQSGkSTLdyO7kQ==
+X-CSE-MsgGUID: 8IkwNgEcRrmTnNPo7XroSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="53293893"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="53293893"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 23:04:28 -0700
+X-CSE-ConnectionGUID: rE8VyW84Si291zFSyY6n7A==
+X-CSE-MsgGUID: GR/GcTsDTkeei3qtVEgUvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="148656468"
+Received: from drlynch-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.32])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 23:04:27 -0700
+Date: Thu, 29 May 2025 23:04:20 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Richard Narron <richard@aaazen.com>, Guenter Roeck <linux@roeck-us.net>,
+	Linux stable <stable@vger.kernel.org>,
+	Linux kernel <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
+Message-ID: <20250530060420.4zra7jlrwvvurr3k@desk>
+References: <20250520125753.836407405@linuxfoundation.org>
+ <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
+ <67f03e41-245e-202-f0df-687cc4d9a915@aaazen.com>
+ <20250528005520.dpip4qe45zvsn7vw@desk>
+ <b8a9acaf-3d3e-7931-23ce-d61ee77b4e10@aaazen.com>
+ <20250529174017.lwctaondsbg7tk37@desk>
+ <2025053037-tribunal-shortlist-5207@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tc6bcdd190696c0ef
-Date: Fri, 30 May 2025 08:03:16 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andrea della Porta" <andrea.porta@suse.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Michael Turquette" <mturquette@baylibre.com>,
- "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Florian Fainelli" <florian.fainelli@broadcom.com>,
- "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Bjorn Helgaas" <bhelgaas@google.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Will Deacon" <will@kernel.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Saravana Kannan" <saravanak@google.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Stefan Wahren" <wahrenst@gmx.net>,
- "Herve Codina" <herve.codina@bootlin.com>,
- "Luca Ceresoli" <luca.ceresoli@bootlin.com>,
- "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
- "Andrew Lunn" <andrew@lunn.ch>, "Phil Elwell" <phil@raspberrypi.com>,
- "Dave Stevenson" <dave.stevenson@raspberrypi.com>,
- kernel-list@raspberrypi.com, "Matthias Brugger" <mbrugger@suse.com>
-Message-Id: <7934ae2a-3fc5-4ea2-b79a-ecbe668fd032@app.fastmail.com>
-In-Reply-To: <aDholLnKwql-jHm1@apocalypse>
-References: <cover.1748526284.git.andrea.porta@suse.com>
- <0580b026-5139-4079-b1a7-464224a7d239@kernel.org>
- <aDholLnKwql-jHm1@apocalypse>
-Subject: Re: [PATCH v12 0/13] Add support for RaspberryPi RP1 PCI device using a DT
- overlay
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025053037-tribunal-shortlist-5207@gregkh>
 
-On Thu, May 29, 2025, at 16:00, Andrea della Porta wrote:
-> Hi Krzysztof,
->
-> On 15:50 Thu 29 May     , Krzysztof Kozlowski wrote:
->> On 29/05/2025 15:50, Andrea della Porta wrote:
->> > *** RESENDING PATCHSET AS V12 SINCE LAST ONE HAS CLOBBERED EMAIL Message-Id ***
->> > 
->> Can you slow down please? It's merge window and you keep sending the
->> same big patchset third time today.
->
-> Sorry for that, I was sending it so Florian can pick it up for this
-> merge window, and I had some trouble with formatting. Hopefully
-> this was the last one.
+On Fri, May 30, 2025 at 07:11:58AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 29, 2025 at 10:40:17AM -0700, Pawan Gupta wrote:
+> > On Wed, May 28, 2025 at 09:49:40PM -0700, Richard Narron wrote:
+> > > On Tue, 27 May 2025, Pawan Gupta wrote:
+> > > 
+> > > > On Tue, May 27, 2025 at 12:31:47PM -0700, Richard Narron wrote:
+> > > > > On Fri, 23 May 2025, Guenter Roeck wrote:
+> > > > >
+> > > > > > On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> > > > > > > This is the start of the stable review cycle for the 5.15.184 release.
+> > > > > > > There are 59 patches in this series, all will be posted as a response
+> > > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > > let me know.
+> > > > > > >
+> > > > > > > Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> > > > > > > Anything received after that time might be too late.
+> > > > > > >
+> > > > > >
+> > > > > > Build reference: v5.15.184
+> > > > > > Compiler version: x86_64-linux-gcc (GCC) 12.4.0
+> > > > > > Assembler version: GNU assembler (GNU Binutils) 2.40
+> > > > > >
+> > > > > > Configuration file workarounds:
+> > > > > >     "s/CONFIG_FRAME_WARN=.*/CONFIG_FRAME_WARN=0/"
+> > > > > >
+> > > > > > Building i386:defconfig ... passed
+> > > > > > Building i386:allyesconfig ... failed
+> > > > > > --------------
+> > > > > > Error log:
+> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> > > > > > `__static_call_transform':
+> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> > > > > > --------------
+> > > > > > Building i386:allmodconfig ... failed
+> > > > > > --------------
+> > > > > > Error log:
+> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> > > > > > `__static_call_transform':
+> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> > > > > > --------------
+> > > > > >
+> > > > > > In v5.15.y, cpu_wants_rethunk_at is only built if CONFIG_STACK_VALIDATION=y,
+> > > > > > but that is not supported for i386 builds. The dummy function in
+> > > > > > arch/x86/include/asm/alternative.h doesn't take that dependency into account.
+> > > > > >
+> > > > >
+> > > > > I found this bug too using the Slackware 15.0 32-bit kernel
+> > > > > configuration.
+> > > > >
+> > > > > Here is a simple work around patch, but there may be a better solution...
+> > > > >
+> > > > > --- arch/x86/kernel/static_call.c.orig	2025-05-22 05:08:28.000000000 -0700
+> > > > > +++ arch/x86/kernel/static_call.c	2025-05-27 10:25:27.630496538 -0700
+> > > > > @@ -81,9 +81,12 @@
+> > > > >  		break;
+> > > > >
+> > > > >  	case RET:
+> > > > > +
+> > > > > +#ifdef CONFIG_64BIT
+> > > > >  		if (cpu_wants_rethunk_at(insn))
+> > > > >  			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
+> > > > >  		else
+> > > > > +#endif
+> > > > >  			code = &retinsn;
+> > > > >  		break;
+> > > > >
+> > > >
+> > > > Another option is to define the empty function when CONFIG_STACK_VALIDATION=n as below:
+> > > >
+> > > > --- 8< ---
+> > > > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > > > Subject: [PATCH] x86/its: Fix undefined reference to cpu_wants_rethunk_at()
+> > > >
+> > > > Below error was reported in 32-bit kernel build:
+> > > >
+> > > >   static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > >   make[1]: [Makefile:1234: vmlinux] Error
+> > > >
+> > > > This is because the definition of cpu_wants_rethunk_at() depends on
+> > > > CONFIG_STACK_VALIDATION which is only enabled in 64-bit mode.
+> > > >
+> > > > Define the empty function when CONFIG_STACK_VALIDATION=n, rethunk mitigation
+> > > > is anyways not supported without it.
+> > > >
+> > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > > Link: https://lore.kernel.org/stable/0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net/
+> > > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > > > ---
+> > > >  arch/x86/include/asm/alternative.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+> > > > index 1797f80c10de..a5f704dbb4a1 100644
+> > > > --- a/arch/x86/include/asm/alternative.h
+> > > > +++ b/arch/x86/include/asm/alternative.h
+> > > > @@ -98,7 +98,7 @@ static inline u8 *its_static_thunk(int reg)
+> > > >  }
+> > > >  #endif
+> > > >
+> > > > -#ifdef CONFIG_RETHUNK
+> > > > +#if defined(CONFIG_RETHUNK) && defined(CONFIG_STACK_VALIDATION)
+> > > >  extern bool cpu_wants_rethunk(void);
+> > > >  extern bool cpu_wants_rethunk_at(void *addr);
+> > > >  #else
+> > > > --
+> > > > 2.34.1
+> > > >
+> > > 
+> > > Thanks for looking at this Pawan.
+> > > 
+> > > Your new patch works fine on both Slackware 15.0 32-bit and 64-bit
+> > > systems.
+> > 
+> > Thank you for verifying the patch.
+> 
+> Is someone going to submit this in a form we can apply it in?  (hint...)
 
-That's not how the merge window works, you missed 6.16 long ago:
+Now submitted here:
 
-Florian sent his pull requests for 6.16 in early may, see
-https://lore.kernel.org/linux-arm-kernel/20250505165810.1948927-1-florian.fainelli@broadcom.com/
-
-and he needed time to test the contents before sending them to me.
-
-If the driver is ready to be merged now, Florian can pick it up
-after -rc1 is out, and then include it in the 6.17 pull requests
-so I can include them in the next merge window.
-
-      Arnd
+https://lore.kernel.org/all/8c84125f71aec2fd81adf423dbc12156ac11706a.1748584726.git.pawan.kumar.gupta@linux.intel.com/
