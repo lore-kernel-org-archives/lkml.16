@@ -1,257 +1,115 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f67.google.com (mail-ej1-f67.google.com [209.85.218.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78126155C87
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748585364; cv=fail; b=BLeHVuWsYTeggQAFSXd41iywNB36c4/P4o/oH6Q8cSa12S8FGvoAdW5TmVtF5UInpwdFonQixgKY+KEJomK//tu98n/lHkNZQhJzxGk47Kf8qZkwA2T0xM8OVlUbOaxNohwpavXHh1enznT5I1VE4Em9efukc18Nt+LTwBRXFg8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748585364; c=relaxed/simple;
-	bh=9yzc0Q0n+UNU/O7iubKNfLHQob+Bg+HHqfj1nZljGGQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ugfJQwciMFSNesSiTyV4YFZwkIMZzwCzvAxp0rFLjnhxfeFE7n3VB2k1dK8Kp0ho+eTNjkVKNdyCcLc10dDewTIMBNtqRUTM3y2jHmYdhqGhQ27Gh4kt9NAbogjUK2PqmP1QG/BOe4qtov8klTbaT6ZK+4IDgcpBWPhuVoKwV7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jPhx2F3r; arc=fail smtp.client-ip=40.107.243.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B07D155C87
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748585433; cv=none; b=G/90WfCktCviB5SVVKxYte0xPQxuNJ0unyndPJo0bkUL1JxnarV72W/3xlzLPIhVnErRxBXOJmiJTJsPqQahoKmkpfiSKTbBg7FSHdVKYBZ4UhSU9rR8obuutjhC2SFxLi3+avdUlHEkjby1JNjQzZRG+8M3wf159vc72j9+ekc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748585433; c=relaxed/simple;
+	bh=kUs2T5YD4VPzh82X4eNvqIPGNp05D8KtiSsNdGrCMAQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=LwAXriGlFvlR1smd4hKGM8k7QhG4m4a43ntmalqDl6FJcyW2KvQdU/zjeYicQRlyLCDXJsauVGjNO03qmuAzE37mdRpvY56VjdfCH64I5RhEZVNna9Sar0/pTI6XN4gVx6mc57To2L9Mgv133ssCC+zn3l1FHX3mrGC/uyeU9wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu; spf=none smtp.mailfrom=monstr.eu; dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b=a4prr3zA; arc=none smtp.client-ip=209.85.218.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=monstr.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=monstr.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jPhx2F3r"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a7KbR7VFaRMWnC3pAbGT4sfFZ/+t3KgE7FkiGme6qvSknanl9s6JO3TMgszsDYHSuuPJIVQMf/o5SETQKH+ZXRlr6oLHJlxhlkgFF5QuuKZkJ+KjE1hx7WQuKVD+H3Cg3ZBnvMSsy3Mr/bcKu8mbV1ePN+42bKMUmGU1aHXWm8AP7jJe5SmcFEqcfw61jHgyLMXseWHR/3y+5F6IzBzFvtljN/xh4asqbwkPO//Nh7ZbyoIcUUSyaClyAzHIpPgnJoHcC2xIxL1fGj1Qpb2hz1herS8qQGFHlev3OZfBjp46hgv9mJ6yDQows0fcHJoqD4n0jttFmz26wOzA6AYagw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ziDhKNc9/qmv1C4fRn4GYrdNzd0boh0Na4jo/m+GljI=;
- b=mkcWTWbhOrwFbR3SFMDgszDZRKboJSFQM2aUbR7YVdhaD7U7ztibIqsRu5xxGBwau2S/NhzYJat8AzygMGuj6BNRW9IJ6Xo3zNrkMJD14Gf9IWnHReRkHTX8matcapK9t4ofFFhBy5GSUVFzixKvPlWbcfnTEGFcbzAvHKt0Fi+XdvgSRZ5b1oq0Cn4IACK95ounAG5JiEosEG78AHTjbdTCd/7St4W+kXqBo+jdwXc4mvUNfUIqLo75GVWbFtTyHLHTTKpUvul9AU3R8x0w5kmilRoOR1pI3Bn9a5VG7/z3ue86/ts7TtqhJIJ8J77oaJGD7heeYJuSQjteoW9+Xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ziDhKNc9/qmv1C4fRn4GYrdNzd0boh0Na4jo/m+GljI=;
- b=jPhx2F3rK8fedbSxjqpBHQ1aAK4fXD3aa4g0wcoElGWd/w3FfxckYhjFXSlpIvWe/84Deu6ux5R8TYqNAoBZ/DvrNbex1UVW1ThYr7yhp/WrBDl6SllCgPPhR9KpUnVnClo5BTHzdotm8Q/6apW5uk3cvzVYFLOr0DQUg6UAqJA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
- by BN7PPFCEE68E7BF.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6e2) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Fri, 30 May
- 2025 06:09:20 +0000
-Received: from CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
- ([fe80::d5cc:cc84:5e00:2f42%7]) with mapi id 15.20.8769.022; Fri, 30 May 2025
- 06:09:20 +0000
-Message-ID: <db88ce98-cc24-4697-a744-01c478b7f5c8@amd.com>
-Date: Fri, 30 May 2025 11:39:12 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: allow imbalance between LLCs under NUMA
-To: Jianyong Wu <jianyong.wu@outlook.com>, Jianyong Wu <wujianyong@hygon.cn>,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org
-Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
-References: <20250528070949.723754-1-wujianyong@hygon.cn>
- <e2b79e4e-f964-4fb6-8d23-6b9d9aeb6980@amd.com>
- <SI2PR04MB49310190973DC859BBE05DE2E366A@SI2PR04MB4931.apcprd04.prod.outlook.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <SI2PR04MB49310190973DC859BBE05DE2E366A@SI2PR04MB4931.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0153.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26::8) To CH3PR12MB8658.namprd12.prod.outlook.com
- (2603:10b6:610:175::8)
+	dkim=pass (2048-bit key) header.d=monstr-eu.20230601.gappssmtp.com header.i=@monstr-eu.20230601.gappssmtp.com header.b="a4prr3zA"
+Received: by mail-ej1-f67.google.com with SMTP id a640c23a62f3a-ad5566ac13cso248464766b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 23:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20230601.gappssmtp.com; s=20230601; t=1748585427; x=1749190227; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qPnX0OvzR23ytpi7s9ONmkqTEzEvGCRrZRa3/595UAs=;
+        b=a4prr3zAw8DBixQleUgkcGFsNPt8XHtP7yEBNHIXtu3SWAePD/mDo0v7f91rNC3JPO
+         MmlCqysXqcV1eskWB1ymRL7D1Hk6aI5UFYwCBXiWMSxQwRxZApzgZVMrEnx7abdVfVJX
+         +CqWNLaCFBC4K1mbqz3P2JvZO/PEcRpIZ6qLA8uEobm1lNvo8rhLiVc4Ayy+c5RYkNZV
+         lAey9RjGO+28HLkSd9VMQ0+j5ZUSI1Ik+Nse+IMqA/XezvHrcXyLJSxz2MMqA6hBEwv2
+         7MPgfCI9GlCi3T0xfTAVxcrKHtEVjGaJ5V/WxHQUH8txVtiGCj2XinOYPrSGIkiisnvl
+         aq5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748585427; x=1749190227;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qPnX0OvzR23ytpi7s9ONmkqTEzEvGCRrZRa3/595UAs=;
+        b=F+Ug87Bt7B7RccU5VRz9fra6jD2AkcYYINJGNq6e2X9FutGL72nJ26UBxVCL3z6d2q
+         WX/WWa7qjB68LNuZLYdYDsFyTOYGCy7hoPACFpdgTR2MXzm3HgL8ZlQOQhOpKMN4lSVv
+         B6d3X7v9skcgcqNv2jp1IDLWFHS0lOizHXNghrqBC7nFJ1vwA+cmvz4ZegsB/CoDo6sC
+         iTQw3mfZPAXVGqncGFCA8dQqZLxKnDRpW0ndVJTdVz1WtDaG1RZJ8mieNY2BhCEAzoht
+         9lHkkOW5ItySP7aU7m/hQTf9TFV9fLFkaxkoFfwYX8vbBIsAuLqVsUksBYiIbIozyIko
+         mT7w==
+X-Gm-Message-State: AOJu0YwwT4+DfkeM9VGFEHTRTyGHRfaD339Vdqjm1O+yGWvZOcfQQ8qY
+	lx3ZhNFWZ97UJzj6H+w5HapnrWapD0yxc9TZ+PI9x7qsk4YdJ9Sq0GOM1i+lEIR2lMHSFzVrOev
+	aBETV0yXZf6yUaw==
+X-Gm-Gg: ASbGncsClA6rz3v+q7LbeE0sECdT+U3xFmELtmC67b33nLJqOzZmkppcTY1U8IehH+p
+	lTiUqCIBoIaUpTay9K1jj6SERMhR9c6o1Eb5SEPJqCvfkDKfYNajuSGbQWma0GxvlrvZy1KrDD6
+	w9ncKR7fhAHUTfIcaZDIe9NkU8DlKMkpj4mcN+j25Ot9MTu2dsfgMcx/R3qXGt+VJFyj3mZmc1u
+	n2vxoYp1AJ7FC0yiXaivRPYhEq50JS2TvyKfwOp4MWYLqCTRN/YBLWrWXexcLyX/S4I18kVpuQM
+	7RF6UkCWhilvQ/ezv4iire3ZxMD4cp7ZppwUuPkOrV52m3w6FQJmMxfto89rhOwcqFY=
+X-Google-Smtp-Source: AGHT+IE9BHe3729nFyXb52ZLAq6vhwVaVkHCTkRZTZcfPIOAIujzSadVtHgYMWQ0z2UsxSEDtliwQg==
+X-Received: by 2002:a17:907:3d02:b0:ad8:9c30:b66 with SMTP id a640c23a62f3a-adb36b31a52mr78534266b.18.1748585427169;
+        Thu, 29 May 2025 23:10:27 -0700 (PDT)
+Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adb325c830bsm100375666b.0.2025.05.29.23.10.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 23:10:26 -0700 (PDT)
+Message-ID: <379179de-2d0f-4a0a-9534-46b10d254e40@monstr.eu>
+Date: Fri, 30 May 2025 08:10:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|BN7PPFCEE68E7BF:EE_
-X-MS-Office365-Filtering-Correlation-Id: be05b1b4-26a9-4bb0-eaf3-08dd9f4083e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T1VxY1VUNmU4ZFZ2Nkh4U1Rma1pzczhZRm5iM0U3TlhXek4rU3dwSnk0Wjdi?=
- =?utf-8?B?NU1XYUpwTUJ5L3ZJZitHNzRxeFArNWxUSEx2Tk9oN3VmeGdzam52SURUT3ZC?=
- =?utf-8?B?TTB3QzV5L2tocHF6SzY5Z25HeXdxWVFDWXJUSW4ybHBOd0M0RnZNUGpUVlh4?=
- =?utf-8?B?VXlvUmw5eFp6UFhTWnM4U1FvSmxXSWg1TExvSzE0djZkSUV5cUVYTDBqZ2dt?=
- =?utf-8?B?VFo4dlVURURpSlR2NGh6U3dCRWh4WkwzZWVFSThoSjE0SFZTZXVIbmRtQTMv?=
- =?utf-8?B?ZjFTaGFBVWFyRktEMmRhWWV2WFZ6MktUdmRWUHpZUlpIRTAwT3BTU0lOSmxn?=
- =?utf-8?B?YURsVlRBTk8xTVpPRVVxUGpwUmhIaWQyNC9menNRQ3ZUY1pMV2FZMDVyTnAx?=
- =?utf-8?B?RTZIelpPUUxOSzZjQ0pta3F6RjdtWHJHM3N2b0xaTmRTYXpJUXlhcjVTcm1N?=
- =?utf-8?B?Ly9xc2h4a2w2NXNQZjJ4VkpxL2ZvaFIrWWU2VG94bjZ5U3ZtWm5mekpjN0xw?=
- =?utf-8?B?Yy8xajh2SmxuSjBkZXpuell6V2dmNzFscVl2YXQ3ZWtrRm5hYXlhQ2owZTFm?=
- =?utf-8?B?ay84dUx6dFhRU3NVdnlDNHVORTlwYUowcGtQZC90eHNQWjBoeFVzWUUyaFVU?=
- =?utf-8?B?UTgrZ1c2M2twK3daVi9wRU5HLzVwYjhpUFNmeCtOVk5UTitaejBLSHNoVVdI?=
- =?utf-8?B?bnpaOTNEYjVhUHpHQlFMbldRZjdCRVFRMWMxTkJvSFZ2RnhkYmJySjlZdXBy?=
- =?utf-8?B?WTNJUE4zdCtZZVZVUlJaYmlXSDU0RkxlTzFqVVNYSXJtcnRvdFBNcmR6elhp?=
- =?utf-8?B?czRTMkFLQVpMdjVLM2pieWMydmNlMCswMU9kQTJCNkdzRlJjVm5GSy9qV3dt?=
- =?utf-8?B?UG1oVFJDT1ZzbkNZK3Z0aitZbjVpcG43MnM1eGo2UFc0eDZta1U2QnVacGl5?=
- =?utf-8?B?eHlDWGgzNFRtTlJlSnlQdEZ5NmdJOUsycnJUNHB6eXhwbG9GSVNINnhEVUVM?=
- =?utf-8?B?c0dLa0FON2dhWGZVYlczNE4wRnFiWjI0NXdYdkYrN2g5cmVSTDB3QVI1MjdF?=
- =?utf-8?B?alZhbGhIdEJNTitySVJKV0xPRTR2QVRMajY5OGsvNUtCdFJ6blFjVGVzSjUz?=
- =?utf-8?B?RHNybHQ3WHE4aHBhT1NtOUpOd1NramUraVVMVi9LQzJubXpSbG42ZWpXMU5K?=
- =?utf-8?B?QllSU1hlakkwTm1VZHRRdC9MQXg1c0tyK2NyYU5xc3pZcExWV0MxL3FZR2tq?=
- =?utf-8?B?RHBCQjVmVnJlZXNGNGxzVEh0cUxxa2JFcVJ1RDhESG5ySS9FR0FMblhYWjZi?=
- =?utf-8?B?cHBZOXNmYnZ1dzRPaTNnQ3F5ZHhTSzArZW5qQWI1NVllYUhGcHZvbTEvekFz?=
- =?utf-8?B?WjlBTEhnWjg5VUF2WE9QN2dpSkg0Tnd0OWNBOXB6RXZFQW8wODhwSGVCZXR2?=
- =?utf-8?B?NGRzbDIrRnZDckk1ZVNBQ3M5NXNENkRaOTdaUWYyTzcxOENnc2RyZ2l5U2Zv?=
- =?utf-8?B?aDg5ZTRyMC83eW1XKzRlNERXN1lEeDhhdnJQSjZWMFozSzU3NHhLZU9MSk9V?=
- =?utf-8?B?T3M2TVpXUU56eGJhalF4MENpTGNWb1RIRlJ5RlNSZ09PL1I0YSs0TDZVU0dp?=
- =?utf-8?B?RDc5UUJ2VDFBd2llUVp3MW45SkIxSUg5M3RSanJnR3pkTE1rcE1aMk81NGl5?=
- =?utf-8?B?MFdPMVZEbE1FT245YUk1ZFJFYjF5VFpWWG5EK1dETkQzSlBzWHI4U0I3Q2w2?=
- =?utf-8?B?TGtVNEcxZVEzT2tQdStYTVVBdHBZY3R4Z0lIc0NkYVUwV2V2czBOdVF6U0ZQ?=
- =?utf-8?B?cWxUbGlwbWdQa0dCZkJhMDNLTW8wd2pmUXFJeVNrclFGK1g3UllIdXkra0Zx?=
- =?utf-8?B?RUN3ZWpaQlIvMWNQZ0RqTitXTTNIZ2NjenRDWlIzSnFNWUZnMFdFbHNWaTB1?=
- =?utf-8?Q?wWPunpU5AAU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aGtWNSt6SHRrUjBPRVZkU0NoQ3lxb0x6UGk0cU0zK09kTTJ6Z0Z3dy9pN1hw?=
- =?utf-8?B?eGNJckVYdzBkeWdiZGk4akppbGRYVTRUcnF3TmFBbHhTT2hwa213UEhLT1lB?=
- =?utf-8?B?SVJGNm9HNjlGTDlJSjBPK0pxa2YxZnNDUWFVL3NaQnBXZnhpMnJsb3JnT3hO?=
- =?utf-8?B?L2VIaDJjOUo2TGJlSUthVHFVb2RlYUUwMzVqbHZUNGhNZzYxYlphakhCcGJK?=
- =?utf-8?B?VklFMjZQdHI0M0ZsbHJIYStHZjdycGtJbnJOS1ZHWGp1WFdsVDdlZ2FiMnhy?=
- =?utf-8?B?cmw1ZU9QSHE2QWtRekN0QzlZTy9RWHNKWEFpSXZ5aXh6UDEwWWNIOXpWSkJa?=
- =?utf-8?B?dVBsRG1zZml2eElFUDAyZTFDWXNCMVZxbVdycmpEOU5nYUxEd0xsMlNycnF1?=
- =?utf-8?B?MlQxTWlITmZyTWNJWml2YjJmVFNraWFQa2dIMWxOTVdqaVZiUVZhdDdma1N3?=
- =?utf-8?B?SXhhSmJPZDZTem9ERFYrKzYxVm9CSHFzOFU3cFpzYlB5aDV1NHFxZjl5SVYv?=
- =?utf-8?B?WnRyY3ljeTh1cVIvVkRKanZLL002TytzckFOc1Y5TVFSTllQNnNyYk9YTkIz?=
- =?utf-8?B?QjFjdTVrU0N1ZlpHclF1Mk5FYjM1NnlFbmxWbW5GRFlUQWZTMTgzVXVhMDRP?=
- =?utf-8?B?VTdlUjV5WVAxT3FOUnpRRUhmcTdBUVRhUXNOQjBCYzlUeWU3QzkzdDBGdWxR?=
- =?utf-8?B?cVZXZWF4cGhtRGV5Vk9tVWV2RkUyZ0RNVDdqRnhud0hTZW93UFo0SzczMnpk?=
- =?utf-8?B?T3RFWHNoSXBkcmxNSFQxNWl0WmRBYTJJb3dHYjYyRFJxMW9xa1lWNVNUNFlo?=
- =?utf-8?B?aUFqUG1xVTJDaE9RUThFbmRhc3RKT0hEVUdheENRdjFCdk1Ya2FxWW9LMlhQ?=
- =?utf-8?B?QlQrYnBvR045WndBSWpaQzJhS3NlRXFLWG1TblJzZVpUWUJJS3VWcFR3Q1pF?=
- =?utf-8?B?dzgrWVF0Si9sTkJPNHBGS1FZQzliaWg3NVl4OUwwaWxMeWZwVEJFUEptODlu?=
- =?utf-8?B?Z1dHVXpPTk5xRU1tNHBKSUVxU0c5bXoxSERVTjZJdkFvWWZFV3d5WjFqREF6?=
- =?utf-8?B?YUdzY2pLZGkxQ3kzNzh0YTNEQ1F3WTF2WE5ySXo4QUw3TEkxc0Qyd3RRWlZJ?=
- =?utf-8?B?eFRBb1BXN0hXRUhhOEJ0ZldNTi9IN1E0aHN3RTNMdzVoZnRTWDdoc0lvQU1p?=
- =?utf-8?B?OFU5ekg0a280M2dmRnoyU3dMelhXOUNvNlA5NktibSsvZEx0TnFQVWlSZllZ?=
- =?utf-8?B?ZCtkMXVSMnB4T0RhRjRpNGI2SnBxMUlITEdhVm9iVWJPWC9xSzRQVGxwZlZi?=
- =?utf-8?B?Y3hORXpnWWpRNFBjVzJlYzBreFZSZFRTQVdhNkJiWGhvb1FUblJVclM1TUVt?=
- =?utf-8?B?ZTArY0JxUjF5NEVIaHZVL2lxdTVOTWZxNE12eDcvQU9CV3lQTjgxRU04M3pY?=
- =?utf-8?B?OWdXRks5Q2JkMU5WTGp5VmxyTlZFM2FKV2x3QTNzS0o0STdQSjdVQmhlbXky?=
- =?utf-8?B?ajRra1k4Yk9xWDhrUk4vTnp4blM2akRkbnMwMzA1TERabGdQZ2hDbC9YOWhH?=
- =?utf-8?B?SHU5NERvWVhZeVdWY25vMzlIYmNPOFN1bnFGSnB2d0h4WVlhNlZ3R1kxVUtG?=
- =?utf-8?B?WGVKdEg0SXd3SjlqWWpHSmlCeUZFK0FFSHJpSUs3WVd1dWVoVXZIWlhFZm1y?=
- =?utf-8?B?dVpiNnZiQmRwalhtWVI4QWdFUWpuRlNNS1pNTkg2TzJIRkVJN2tvS25IRmd1?=
- =?utf-8?B?bDkyN09Fd3JuL3cvemNqcnFkTStxSnk0ZXNDMnM2RnIxN2hBUTBTMThNVzQ1?=
- =?utf-8?B?ZjZtNEJ5bjc0bmFWNmgvVDZDUXZ1OTdPUVBGRGplK21wS01SRzRSUmVxVjNj?=
- =?utf-8?B?MmFsTHZBTmtuOHAvclNYemdTeTZKMExNUkVBNjUxNy9vUjdHM2MzRVZUMFds?=
- =?utf-8?B?ZXc1c2gyZnRwdnhXV1ZkY2FTTG5VeDJoYUVPMkZVYmFadFFTbDNwV2lodmJF?=
- =?utf-8?B?L1BQbzBKdzAza1FPczlrK2VydHdxODNha2l1RHdPZjBVTjdOL1o4YXBxUi9q?=
- =?utf-8?B?cGNTcjVUdFpLVFVlemNHNzh2blZwdWU0N0dqcXNjNUpSczRVNCtkSGZXZ2pa?=
- =?utf-8?Q?aM6/ovmzclEoLJfdWUh7Nb9S7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be05b1b4-26a9-4bb0-eaf3-08dd9f4083e9
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 06:09:20.0345
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PIuue1iZJ+qp24t9K4Jk8urrdkf36ZfS/dbUYqQui41zx7jUIR2OCZPfSTWEyPkOtgZbv5Nb7QJJWy5YU1XEZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPFCEE68E7BF
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: [GIT PULL] arch/microblaze patches for 6.16-rc1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Jianyong,
+Hi Linus,
 
-On 5/29/2025 4:02 PM, Jianyong Wu wrote:
-> 
-> This will happen even when 2 task are located in a cpuset of 16 cpus that shares an LLC. I don't think that it's overloaded for this case.
+please pull this one simple patch to your tree. There is nothing else pending as 
+of today.
 
-But if they are located on 2 different CPUs, sched_balance_find_src_rq()
-should not return any CPU right? Probably just a timing thing with some
-system noise that causes the CPU running the server / client to be
-temporarily overloaded.
+Thanks,
+Michal
 
-> 
->   I've only seen
->> this happen when a noise like kworker comes in. What exactly is
->> causing these migrations in your case and is it actually that bad
->> for iperf?
-> 
-> I think it's the nohz idle balance that pulls these 2 iperf apart. But the root cause is that load balance doesn't permit even a slight imbalance among LLCs.
-> 
-> Exactly. It's easy to reproduce in those multi-LLCs NUMA system like some AMD servers.
-> 
->>
->>>
->>> Our solution: Permit controlled load imbalance between LLCs on the same
->>> NUMA node, prioritizing communication affinity over strict balance.
->>>
->>> Impact: In a virtual machine with one socket, multiple NUMA nodes (each
->>> with 4 LLCs), unpatched systems suffered 3,000+ LLC migrations in 200
->>> seconds as tasks cycled through all four LLCs. With the patch, migrations
->>> stabilize at ≤10 instances, largely suppressing the NUMA-local LLC
->>> thrashing.
->>
->> Is there any improvement in iperf numbers with these changes?
->>
-> I observe a bit of improvement with this patch in my test.
+The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
 
-I'll also give this series a spin on my end to see if it helps.
+   Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
 
-> 
->>>
->>> Signed-off-by: Jianyong Wu <wujianyong@hygon.cn>
->>> ---
->>>   kernel/sched/fair.c | 16 ++++++++++++++++
->>>   1 file changed, 16 insertions(+)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index 0fb9bf995a47..749210e6316b 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -11203,6 +11203,22 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
->>>           }
->>>   #endif
->>> +        /* Allow imbalance between LLCs within a single NUMA node */
->>> +        if (env->sd->child && env->sd->child->flags & SD_SHARE_LLC && env->sd->parent
->>> +                && env->sd->parent->flags & SD_NUMA) {
->>
->> This does not imply multiple LLC in package. SD_SHARE_LLC is
->> SDF_SHARED_CHILD and will be set from SMT domain onwards. This condition
->> will be true on Intel with SNC enabled despite not having multiple LLC
->> and llc_nr will be number of cores there.
->>
->> Perhaps multiple LLCs can be detected using:
->>
->>      !((sd->child->flags ^ sd->flags) & SD_SHARE_LLC)
+are available in the Git repository at:
 
-This should have been just
+   git://git.monstr.eu/linux-2.6-microblaze.git tags/microblaze-v6.16
 
-     (sd->child->flags ^ sd->flags) & SD_SHARE_LLC
+for you to fetch changes up to 52b70e5b605c38996b74788a140702e69f34d2e1:
 
-to find the LLC boundary. Not sure why I prefixed that "!". You also
-have to ensure sd itself is not a NUMA domain which is possible with L3
-as NUMA option EPYC platforms and Intel with SNC.
+   microblaze: Use of_property_present() for non-boolean properties (2025-02-03 
+11:29:42 +0100)
 
-> 
-> Great! Thanks!>
->>> +            int child_weight = env->sd->child->span_weight;
->>> +            int llc_nr = env->sd->span_weight / child_weight;
->>> +            int imb_nr, min;
->>> +
->>> +            if (llc_nr > 1) {
->>> +                /* Let the imbalance not be greater than half of child_weight */
->>> +                min = child_weight >= 4 ? 2 : 1;
->>> +                imb_nr = max_t(int, min, child_weight >> 2);
->>
->> Isn't this just max_t(int, child_weight >> 2, 1)?
-> 
-> I expect that imb_nr can be 2 when child_weight is 4, as I observe that the cpu number of LLC starts from 4 in the multi-LLCs NUMA system.
-> However, this may cause the LLCs a bit overload. I'm not sure if it's a good idea.
+----------------------------------------------------------------
+Microblaze patches for 6.16-rc1
 
-My bad. I interpreted ">> 2" as "/ 2" here. Couple of brain stopped
-working moments.
+- Small OF update
+
+----------------------------------------------------------------
+Rob Herring (Arm) (1):
+       microblaze: Use of_property_present() for non-boolean properties
+
+  arch/microblaze/kernel/timer.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
 -- 
-Thanks and Regards,
-Prateek
-
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP/Versal ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal/Versal NET SoCs
+TF-A maintainer - Xilinx ZynqMP/Versal/Versal NET SoCs
