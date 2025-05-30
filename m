@@ -1,270 +1,150 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AD3258A
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D292356BF;
+	Fri, 30 May 2025 16:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621329; cv=none; b=n9ePRWf0bfhnEfG3v6hs3PV8Fww0q8T/1ZdPKgcBE5MFmkTrowfKa7WJmTlG/O/47UCS/XsHni+btXv22QVhRy6yK/mmu+pqyS2ADyA+abhP7Giv/cerhN+vDUOWOcRqkInykfVnHMa43LQM3QCvhqzoCsfgHG6Ew+QLYCo0PNw=
+	t=1748621371; cv=none; b=aQqASkcMx4AXrcHGbPSgas76NjMbJ9FJOGsCQZoWAD8/qX7RNkYB67SUZJl7e75Hp9m3/Vc6uaqhMXL3I6U0yEBR8ZnV+52JWWvj9043d3laaoi7K21M0r3ifLouTqVX/9K4yILikyipO411XasO7xzGv3UfWAIxXl/7kLWAqDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621329; c=relaxed/simple;
-	bh=V7DzrP67LtCe1bctvDpJ8KQBTk3iWqS73P3krdOhUnE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RUZaNfcuLEjqpZCgZ1/gDM7hv/61wBtK0uEz/h+ck+ZRZiBTblomvGwOpIaJnYyg3g2Y3hZSLyBO6Y48jCcueCA+30DMN0e1khCu3Zv4XuS7a2glFMvQ20/17w31cow58hbRVxWIEaYMlEewMc1Tnx5w8wQne3y/5Nz8hpSbHAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KaERWWz8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KaERWWz8"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAF2fY026780
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:08:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=9bsnJonvdJ9Xrna+D3/FUX
-	cGLzFnNCzYuWULL47hZuU=; b=KaERWWz899nKi3q8WIv4vX0p1MpcH81UYqZr9K
-	w9vBdWhYQh28O9CxfL8SbDRYr1Ne5LyDMu2//wfmKonWZ/IK8Rafyl72LOMwI9jd
-	DMqDumt69CQCDRKOmbXDcRGTZTNiFycW2newzX24zevGOOZA5WT9R2dmeC2t7eNc
-	x6S11IsR8k5WUGiY4cEVPTUSP86stitVkm+5r5iz0otqyejkJyju+hUKP77P05LF
-	KqwTF3mbkrgggAxedbpEZpAfdhxD3hkkQHS3FvNQg9lfow3+siVfsDiWrbbaWKbf
-	v8e2Ks+TFzfnrVvbXieKO1ArT4zvDxZwtKG760A/xHik7bpQ==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46yarh11qr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:08:45 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caef20a527so556731385a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:08:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621311; x=1749226111;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9bsnJonvdJ9Xrna+D3/FUXcGLzFnNCzYuWULL47hZuU=;
-        b=KHbmBTzIzy6J5FB7UUmCstDbXHhapCm40pPzLhHnlIYSefIRxRS0SS8tyM53mUsXFa
-         x7OmCUkQmH7V440tr3POlLErV6RDcz5kEe/K5lezoKADZU5IZKUwqKw4rFDXyLE+DKh2
-         EaU0VahkUaFETPWLKk4UYvylSXIQ+SvjU+WHc4AdoDXq2l+j8Q3n3O58o2FRfDonyNG+
-         tdTqOrt8j1Jzyo9O+2u8YYRKVD+QdiB9nBtE0ndg8eIkN0EUbMG3B6pAe6eHG3D9+yd4
-         nfV9I802CE8NXKf5SCm2MMUxpk3UxGohnhWqGHQGk+1AdzdqzcqTl9gqfJggVKkUWoIN
-         XV5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWt1TRD5S1Q5qos/3KKzatC8y9rfnP97SPJRKjUN2ly3F0CdTHSiOOCHWuglIdsvKHOAO6JO5vgRXLSoTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxTpojOiTgV61067+fUcAzrz/dO5QU+LzM0Sg9nutFi3x0S+F9
-	EkosPcmyBEsMQ7p+7wyFpJsKUhM9/G68psf1D7W8K+/TuPHKsbLgl+Fr9iuj5UtbUU/V3tH9jlM
-	zfCNhh8LuFIwjV7jQQfTW8Sykbj1lSEutz4ipwQRgP/RJza9OkWekGH+Om4sNjHaKk8A=
-X-Gm-Gg: ASbGncttn+0ibNA/dm/yP7g7+aSqZFCjiPgBb9R+6cUy77C8mFNdczDE7QvqSZ9OI0j
-	I4AlFR+ZIj37pJDEl60J67mFdb/uUO9B1KCu3lwesnMkgFdYqFpveprddb5XEHmybSr5LU8bSaT
-	Zgxr8VBJQVLCKl/mobQJhjnOjUAdH6wsmbKfP3CUCpFXWY50NN2P287d65kHljWXPZdFFu7UGut
-	D/hDUSszAjx7YHD3+x5CkrlwKXgQvyI88ZjT8WVQBDdxTXB6QaFwhKWEBalJ6y4nYYUHxH8JKFH
-	zSpC6nZQlk1eVT7+15JiNluGMrjG/wXzoj6a6qxX2hvzl5deme1tcKDjuF821NfIOywr93ugold
-	BTmfhETZBwoxCCsOtUrCdBEPY
-X-Received: by 2002:a05:620a:269a:b0:7ca:f039:7365 with SMTP id af79cd13be357-7d0a49e64c9mr464121785a.8.1748621310971;
-        Fri, 30 May 2025 09:08:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGUfS000i7sMDJkYQFbsxdx9k+HNXQLnWsX6E03rvaPDSPkcOHokxDum4TOp01tRUwMJw4Vvg==
-X-Received: by 2002:a05:620a:269a:b0:7ca:f039:7365 with SMTP id af79cd13be357-7d0a49e64c9mr464118085a.8.1748621310387;
-        Fri, 30 May 2025 09:08:30 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55337937842sm753334e87.221.2025.05.30.09.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 09:08:29 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 30 May 2025 19:08:28 +0300
-Subject: [PATCH v2] phy: use per-PHY lockdep keys
+	s=arc-20240116; t=1748621371; c=relaxed/simple;
+	bh=JmVpSKKZOPOlCo9BFqRQoedyXzcdHKCWpOwCJrIX4hI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JpVQWXDxbHgR5xSboI8yO/MmlN4gfQA3RbumGP5wyxaSfkqGyD8bsuBD4ZHZPV7myU2xesAxXikPE8LUrarVcsz7usHfp4gfmf4cwFWJ+gk+3j1kuZQSVreUj46jq9W37dLyHectFYj7tjbv2oIxo3Ep0EwfpqkACNIPfIMm2dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b87Ph4p1Rz6L4x4;
+	Sat, 31 May 2025 00:05:44 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E5600140557;
+	Sat, 31 May 2025 00:09:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 May
+ 2025 18:09:23 +0200
+Date: Fri, 30 May 2025 17:09:22 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <andy@kernel.org>, <nuno.sa@analog.com>,
+	<Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
+	<jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
+	<linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
+	<broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
+	<andriy.shevchenko@linux.intel.com>, <rafael@kernel.org>,
+	<djrscally@gmail.com>
+Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <20250530170922.000019a5@huawei.com>
+In-Reply-To: <27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+References: <cover.1748447035.git.Jonathan.Santos@analog.com>
+	<27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-phy-subinit-v2-1-09dfe80e82a8@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAPvXOWgC/1XMQQqDMBCF4avIrBsxqaaxq96juEhibAaqsRmVi
- nj3pkIX3Qz8A+/bgFxER3DNNohuQcIwpBCnDKzXw8MxbFODKERVVEKx0a+MZoMDTqwUtlZKc2G
- khbQYo+vwfWj3JrVHmkJcD3zh3+/Pqf+chTPOzKW0uu3OUhp1C0T5a9ZPG/o+Tweafd8/jil1W
- q0AAAA=
-X-Change-ID: 20250528-phy-subinit-42c988a12b6c
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5558;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=V7DzrP67LtCe1bctvDpJ8KQBTk3iWqS73P3krdOhUnE=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoOdf9tVhhtomzo249YCB5oZ1zhqj1E15mG7Tnu
- 2HC5c11gYaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaDnX/QAKCRCLPIo+Aiko
- 1RbYB/4jvlOGLkwZoZU3nMVu+YiNuZZwpr4ll6XEdSA3oMpy6BegcHtt3OaTcZuAMAK/xG1HLbv
- q8jLnwaWSlYGluGpbi3A/HO1F1CIn5e3q6CLD+fFvz+SRTpZrIezuctQaKdanRCcLop8p+jPLmQ
- ayKCJ65R9YAis3ybRbAru5fSegTmKPwnIYQ+eLUKovAm+vgb2KthOXDrzL1N1fwzsawOi0JqZxU
- RrcH9Q65VCsaxM9pbbDoy3Xb67v2jY2HRrmpXAzHEUbfP3F54QdDbCsXHHsETYBm/kCcjeCSFqf
- r+KOmxqDSn8GGH7SGcmqV96H6J8BFpDHo10Vq1RMZ0BascTI
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDE0MyBTYWx0ZWRfX9OlhTJDBjJHv
- eZxG+FfSYTJ8WUdddMUWJsFhGDYkJg+1qPFmXGIXohbTs5WRpYM2yZ/R5y5NF/a5r/3kku1A9jf
- 7BBXNRz/qfw29ZUr2mqIW+uK+ouAL4ShE6ypZr482xhpBb3SmkdJAbVTjgby2Q3MDebwdpV2vgU
- GRo9g56XHvaudVkDCC/QaedpG1ViH8FqouziXr6YK7X/ESRep1hlwVHCcx1zm6/vTWu7VnRMjE9
- N3As+uA+n7QSx5zlKn9x97XHGq8gihCA4xqpsbqal4zEj4s0v3revaD2l59eqesCeEYgiWusxCe
- Hy3G7m9POjz1jrN1yk4737+jDlPLhMff62lzJ8A/wIhHOAMtTkmckdsaOaQgs3n8H0qE3hURKKG
- FvLIsJK6sZ0ksLxfY+4m99yQQ17JFNnzg7NSTCzk0PZ5oQJ+RPC6YNwX8tAT0zc/AnoNy2ZS
-X-Authority-Analysis: v=2.4 cv=EfHIQOmC c=1 sm=1 tr=0 ts=6839d80d cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=83vSGatpBiZI-y3EDzYA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: x8AlVNQmmLpLRRmBmlLwxNDYVSXm2la2
-X-Proofpoint-ORIG-GUID: x8AlVNQmmLpLRRmBmlLwxNDYVSXm2la2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_07,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505300143
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-If the PHY driver uses another PHY internally (e.g. in case of eUSB2,
-repeaters are represented as PHYs), then it would trigger the following
-lockdep splat because all PHYs use a single static lockdep key and thus
-lockdep can not identify whether there is a dependency or not and
-reports a false positive.
+On Thu, 29 May 2025 19:50:29 -0300
+Jonathan Santos <Jonathan.Santos@analog.com> wrote:
 
-Make PHY subsystem use dynamic lockdep keys, assigning each driver a
-separate key. This way lockdep can correctly identify dependency graph
-between mutexes.
+> The synchronization method using GPIO requires the generated pulse to be
+> truly synchronous with the base MCLK signal. When it is not possible to
+> do that in hardware, the datasheet recommends using synchronization over
+> SPI, where the generated pulse is already synchronous with MCLK. This
+> requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+>=20
+> Use trigger-sources property to enable device synchronization over SPI
+> and multi-device synchronization while replacing sync-in-gpios property.
+>=20
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 
- ============================================
- WARNING: possible recursive locking detected
- 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 Not tainted
- --------------------------------------------
- kworker/u51:0/78 is trying to acquire lock:
- ffff0008116554f0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+A couple of trivial comments.  Not enough to respin unless something else c=
+omes
+up.
 
- but task is already holding lock:
- ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+> @@ -296,6 +301,27 @@ static const struct regmap_config ad7768_regmap24_co=
+nfig =3D {
+>  	.max_register =3D AD7768_REG24_COEFF_DATA,
+>  };
+> =20
+> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
+> +{
+> +	if (st->en_spi_sync)
+> +		return regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x00);
+> +
+> +	/*
+> +	 * The datasheet specifies a minimum SYNC_IN pulse width of 1.5 =D7 Tmc=
+lk,
+> +	 * where Tmclk is the MCLK period. The supported MCLK frequencies range
+> +	 * from 0.6 MHz to 17 MHz, which corresponds to a minimum SYNC_IN pulse
+> +	 * width of approximately 2.5 =B5s in the worst-case scenario (0.6 MHz).
+> +	 *
+> +	 * Add a delay to ensure the pulse width is always sufficient to
+> +	 * trigger synchronization.
+> +	 */
+> +	gpiod_set_value_cansleep(st->gpio_sync_in, 1);
+> +	fsleep(3);
+> +	gpiod_set_value_cansleep(st->gpio_sync_in, 0);
 
-        CPU0
-        ----
-   lock(&phy->mutex);
-   lock(&phy->mutex);
+This change + comment should really have been in a separate patch
+as there is always the potential someone might want to backport it.
 
-  *** DEADLOCK ***
+> +
+> +	return 0;
+> +}
+> +
+>  static int ad7768_set_mode(struct ad7768_state *st,
+>  			   enum ad7768_conv_mode mode)
+>  {
+> @@ -392,10 +418,7 @@ static int ad7768_set_dig_fil(struct ad7768_state *s=
+t,
+>  		return ret;
+> =20
+>  	/* A sync-in pulse is required every time the filter dec rate changes */
+> -	gpiod_set_value(st->gpio_sync_in, 1);
+> -	gpiod_set_value(st->gpio_sync_in, 0);
+> -
+> -	return 0;
+> +	return ad7768_send_sync_pulse(st);
+>  }
 
-  May be due to missing lock nesting notation
+> +
+> +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> +					   struct ad7768_state *st)
+> +{
+> +	struct fwnode_handle *dev_fwnode =3D dev_fwnode(dev);
+> +
+> +	/*
+> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> +	 * to synchronize one or more devices:
+> +	 * 1. Using an external GPIO.
+> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> +	 *    synchronization pulse that drives the SYNC_IN pin.
+> +	 */
+> +	if (fwnode_property_present(dev_fwnode, "trigger-sources"))
+> +		return ad7768_trigger_sources_sync_setup(dev, dev_fwnode, st);
+> +
+> +	/*
+> +	 * In the absence of trigger-sources property, enable self
+> +	 * synchronization over SPI (SYNC_OUT).
+> +	 */
+> +	st->en_spi_sync =3D true;
 
- 4 locks held by kworker/u51:0/78:
-  #0: ffff000800010948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x18c/0x5ec
-  #1: ffff80008036bdb0 (deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1b4/0x5ec
-  #2: ffff0008094ac8f8 (&dev->mutex){....}-{4:4}, at: __device_attach+0x38/0x188
-  #3: ffff000813c10cf0 (&phy->mutex){+.+.}-{4:4}, at: phy_init+0x4c/0x12c
+Really trivial but if you respin for some reason blank line here.
 
- stack backtrace:
- CPU: 0 UID: 0 PID: 78 Comm: kworker/u51:0 Not tainted 6.15.0-rc7-next-20250522-12896-g3932f283970c #3455 PREEMPT
- Hardware name: Qualcomm CRD, BIOS 6.0.240904.BOOT.MXF.2.4-00528.1-HAMOA-1 09/ 4/2024
- Workqueue: events_unbound deferred_probe_work_func
- Call trace:
-  show_stack+0x18/0x24 (C)
-  dump_stack_lvl+0x90/0xd0
-  dump_stack+0x18/0x24
-  print_deadlock_bug+0x258/0x348
-  __lock_acquire+0x10fc/0x1f84
-  lock_acquire+0x1c8/0x338
-  __mutex_lock+0xb8/0x59c
-  mutex_lock_nested+0x24/0x30
-  phy_init+0x4c/0x12c
-  snps_eusb2_hsphy_init+0x54/0x1a0
-  phy_init+0xe0/0x12c
-  dwc3_core_init+0x450/0x10b4
-  dwc3_core_probe+0xce4/0x15fc
-  dwc3_probe+0x64/0xb0
-  platform_probe+0x68/0xc4
-  really_probe+0xbc/0x298
-  __driver_probe_device+0x78/0x12c
-  driver_probe_device+0x3c/0x160
-  __device_attach_driver+0xb8/0x138
-  bus_for_each_drv+0x84/0xe0
-  __device_attach+0x9c/0x188
-  device_initial_probe+0x14/0x20
-  bus_probe_device+0xac/0xb0
-  deferred_probe_work_func+0x8c/0xc8
-  process_one_work+0x208/0x5ec
-  worker_thread+0x1c0/0x368
-  kthread+0x14c/0x20c
-  ret_from_fork+0x10/0x20
-
-Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
-Note: I've used a Fixes tag pointing to the commit which actually
-started using nested PHYs. If you think that it's incorrect, I'm fine
-with dropping it.
-
-Note2: I've tried using mutex_lock_nested, however that didn't play
-well. We can not store nest level in the struct phy (as it can be used
-by different drivers), so using mutex_lock_nested() would require us to
-change and wrap all PHY APIs which take a lock internally. Using dynamic
-lockdep keys looks like a more ellegant solution, especially granted
-that there is no extra impact if lockdep is disabled.
----
-Changes in v2:
-- Fix lamsm ML address
-- Link to v1: https://lore.kernel.org/r/20250529-phy-subinit-v1-1-b74cadf366b8@oss.qualcomm.com
----
- drivers/phy/phy-core.c  | 5 ++++-
- include/linux/phy/phy.h | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 8e2daea81666bf8a76d9c936c1a16d6318105c91..04a5a34e7a950ae94fae915673c25d476fc071c1 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -994,7 +994,8 @@ struct phy *phy_create(struct device *dev, struct device_node *node,
- 	}
- 
- 	device_initialize(&phy->dev);
--	mutex_init(&phy->mutex);
-+	lockdep_register_key(&phy->lockdep_key);
-+	mutex_init_with_key(&phy->mutex, &phy->lockdep_key);
- 
- 	phy->dev.class = &phy_class;
- 	phy->dev.parent = dev;
-@@ -1259,6 +1260,8 @@ static void phy_release(struct device *dev)
- 	dev_vdbg(dev, "releasing '%s'\n", dev_name(dev));
- 	debugfs_remove_recursive(phy->debugfs);
- 	regulator_put(phy->pwr);
-+	mutex_destroy(&phy->mutex);
-+	lockdep_unregister_key(&phy->lockdep_key);
- 	ida_free(&phy_ida, phy->id);
- 	kfree(phy);
- }
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 437769e061b7030105c9ea4e9b0da9d32b6fa158..13add0c2c40721fe9ca3f0350d13c035cd25af45 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -154,6 +154,7 @@ struct phy_attrs {
-  * @id: id of the phy device
-  * @ops: function pointers for performing phy operations
-  * @mutex: mutex to protect phy_ops
-+ * @lockdep_key: lockdep information for this mutex
-  * @init_count: used to protect when the PHY is used by multiple consumers
-  * @power_count: used to protect when the PHY is used by multiple consumers
-  * @attrs: used to specify PHY specific attributes
-@@ -165,6 +166,7 @@ struct phy {
- 	int			id;
- 	const struct phy_ops	*ops;
- 	struct mutex		mutex;
-+	struct lock_class_key	lockdep_key;
- 	int			init_count;
- 	int			power_count;
- 	struct phy_attrs	attrs;
-
----
-base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
-change-id: 20250528-phy-subinit-42c988a12b6c
-
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> +	return 0;
+> +}
 
