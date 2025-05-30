@@ -1,158 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A00221566
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:06:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA631C2334;
+	Fri, 30 May 2025 10:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599609; cv=none; b=tRcqWcGQu7fUSh3ULuBEjY6naop4pAAwgNyFEzmBFs71WzEcnLYGk9+juSv8fm7fZozvCuChOgtcCyg18nmP3Nrt+GfZugDIUAtoUY7NwctzP8/O0j/hvWjpHZGePpkqs/uvEeD9IsumLQWMa0nKO8LfaLGCmTpfZT9u6EKkmMo=
+	t=1748599767; cv=none; b=fEnDIS7DWIR8jBuAu3WehzckyHoh7FKLPddSpOeLRSD7x+W24osER0wg6DY6kdFO/XDZfK3+g+FgUNG8SNiOz44tvKHF+aXyKIFzIPOYbJN0Bh0rB2hbvFNmAULhD8EGphg98m0g/XygpbPDSihy9PBHUxZ4sXaWKQ8YIZiLZQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599609; c=relaxed/simple;
-	bh=YSW2PIV6m+LZ4U6uEQV76zlmwvJH3P4SUFzsTmRdAhY=;
+	s=arc-20240116; t=1748599767; c=relaxed/simple;
+	bh=7+vncWVhgGu9hOTNBYzlfvyQxnA1QRVtNUr78fBBxJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gu36iizoaPzpOUIsKOzPbgAmF88ixFjUkqo7hrvUR5pXD6RDwvZG1HynAMiBYcx3Lg2LoyhlqfvyRio+T/WDlOBrf8R82CAcWvDiv9MvdVtBdU2e2NwAYBx+0TnxYWDREHazmYI6E6TzOfBDu3/MMkaaZGdip0KOj9fcPznXKBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VTv1CdGx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PH9UWdzC; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OM/sFBq0; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rBudCxP3; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwc3Y7bpd4siPa7N65g6aqkZ/yqp9YLQ9LaIMCH7wS5wWR+q4114kQQ+4MsujbmvkTkNDiSodDFl9AplCuU/c7C47ovJpZEXuaWSiiGqXiSEdrNDyHz3ywr1r/twJiuV4KEJKimyF6TxwcwT4lSzMWrLrUV0IUlOKDOkgUlYnmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BPJmYrLW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8Auf3AxE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VTv1CdGx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PH9UWdzC";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OM/sFBq0";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rBudCxP3"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id BE4C01F7A3;
-	Fri, 30 May 2025 10:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748599606; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BPJmYrLW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8Auf3AxE"
+Date: Fri, 30 May 2025 12:09:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748599758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
-	b=VTv1CdGxeFX8+klTuFS5VxcB15rY2yd0lg5UXEoPfw0xRh0dRKYxQz0EtMIE6jiDWp2+qb
-	tPKuzEJicHonel/2goaUrqbEbVOTa9Jkctac9V2mBusIGST0tkU5g7dZ6YsTvcQVnok3LN
-	BVo6DdvExsJ8IU5zZC4M/yi/tzgq+fk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748599606;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=Iz0P0ciC0BCOwyUfUHYHmHAGOomd9UFVXAEuM70LZcc=;
+	b=BPJmYrLWT1FGZGISXGEloh42Q2s8bkQFvZHtf7/ksrQIP9NWggEcQwbS2l3ALHmhze2zuZ
+	xr81rPkknZR8lb2PZ5icKXSyRjt07FHj0QHWmwHwBuGteQSWvE4jXPz6wDHlL7zeV5hfQ3
+	rtHxr1tBvaXnaBKUSfpH1YIU9SV6zSbXtcpPO8Yx/PeRBQeR5Y+7sxLgeQUAeDjvkHYBz9
+	aFJeqzGlQKcphBE9X7/1/N25jYjZNE3/PvFLKqxy7bxQJS0BZfsbdbfzfcwgT185HMrkHe
+	kab/6qEcPjvjBAtljzbTsihlT6E0+/GQknpv1HatD7qk6+tJi5HmKLUCof/mOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748599758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
-	b=PH9UWdzCF649Gyycuuecjp1JIDgP96LfgA0oWeu5Zh8CnLlJENe5zeOEK3a14xb8JsMMFR
-	YVvGMAT+faCjhyCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748599605; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
-	b=OM/sFBq0rL7Vs7xXiVCe8dcsY021Y2a25yLjl8eZjebZCN8c2CMUPMMzr5ZuEET05jj8z1
-	iT0fAKgDMQkh8CwYPzhK292SFHDRdpuPxPXp11EP9i2yNWLUPcMIZJM1XNMcWydJa89EnE
-	JYvbP/9jhTV+HDH7uGneBWa9vgT0PIA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748599605;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oTc0O1aCLWM1UbhnV91t7SUS7ltmWzNQHuNqAgRfetQ=;
-	b=rBudCxP3JBcJYezhOTJhuh8HXGvJDmBpmWCUAq4jQ2hF3jfpMLyVNaCy28LC59D3h3LR5A
-	K3kYFOsqxSnNh9Aw==
-Date: Fri, 30 May 2025 12:06:45 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, Baoquan He <bhe@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aDmDNdhW75eXw_4M@dwarf.suse.cz>
-References: <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
- <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
- <aDgQ0lbt1h5v0lgE@tiehlicka>
- <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
- <aDlsF5tAcUxo4VgT@tiehlicka>
- <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
- <aDl1ViMpK_6q_z06@tiehlicka>
- <04a49de5-eb79-431b-ba5b-eae2536781c6@redhat.com>
- <aDl7rHb34zIXEf6j@dwarf.suse.cz>
- <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
+	bh=Iz0P0ciC0BCOwyUfUHYHmHAGOomd9UFVXAEuM70LZcc=;
+	b=8Auf3AxETh6l/DYurfr+WF69RCJYFiVQi4wRfl5Uu2r+bhndw8G16qMGSk2G+Gn3FM+uw0
+	Y3KfOUHFD8DECRDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [[PATCH v3] 1/4] man/man2/prctl.2,
+ man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
+Message-ID: <20250530100916._unhdZoo@linutronix.de>
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
+ <20250526155523.1382465-2-bigeasy@linutronix.de>
+ <fs57mucg3z5ay5ga7gqr6kdhlddydtmspwfkbm3rjtpjp57b6y@opvhf34v5xq4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,dwarf.suse.cz:mid,localhost:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <fs57mucg3z5ay5ga7gqr6kdhlddydtmspwfkbm3rjtpjp57b6y@opvhf34v5xq4>
 
-On Fri, May 30, 2025 at 11:47:46AM +0200, David Hildenbrand wrote:
-> > > > crashkernel=1G,cma,cma_sane_dma # no wait on transition
-> > > 
-> > > But is no wait ok? I mean, any O_DIRECT with any device would at least take
-> > > a bit, no?
-> > > 
-> > > Of course, there is a short time between the crash and actually triggerying
-> > > kdump.
-> > > 
-> > > > crashkernel=1G,cma # wait on transition with e.g. 10s timeout
-> > > 
-> > > In general, would work for me.
-> > 
-> > I don't like extending the crashkernel= syntax like this.
-> > It would make hooking into the generic parsing code in
-> > parse_crashkernel() really ugly. The syntax is already
-> > convoluted as is and hard enough to explain in the documentation.
-> 
-> Would another boolean flag (on top of the other one you are adding) really
-> make this significantly more ugly?
+On 2025-05-30 11:51:58 [+0200], Alejandro Colomar wrote:
+> Hi Sebastian,
+Hi Alejandro,
 
-the current code does not split the parameter by commas and treat
-the part as boolean flags.
+> > diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTE=
+X_HASH.2const
+> > new file mode 100644
+> > index 0000000000000..c27adcb73d079
+> > --- /dev/null
+> > +++ b/man/man2const/PR_FUTEX_HASH.2const
+=E2=80=A6
+> > +Unrelated requests are requests which are not related to one another
+> > +because they use a different
+> > +.I uaddr
+> > +value of the syscall or the requests are issued by different processes
+>=20
+> I think 'use a different uaddr value of the syscall' is technically
+> incorrect, because two processes may have a different address for the
+> same futex word, as their address space is different, right?
 
-Both ",cma" and ",cma,cma_sane_dma" (and possibly
-",cma_sane_dma,cma") would need to be added to suffix_tbl[]
-(carefully thinking about the order because one is a prefix of the
-other); then handled almost the same except setting the flag.
+A shared futex over shared memory. Yes.
+=20
+> See futex(2):
+>=20
+> $ MANWIDTH=3D72 man futex | grep -B7 -A5 different.v
+>=20
+>      A futex is a 32=E2=80=90bit value=E2=80=94=E2=80=94referred to below=
+  as  a  futex  word=E2=80=94=E2=80=94
+>      whose  address  is  supplied to the futex() system call.  (Futexes
+>      are 32 bits in size on all platforms, including  64=E2=80=90bit  sys=
+tems.)
+>      All  futex  operations  are  governed  by this value.  In order to
+>      share a futex between processes, the futex is placed in  a  region
+>      of shared memory, created using (for example) mmap(2) or shmat(2).
+>      (Thus, the futex word may have different virtual addresses in dif=E2=
+=80=90
+>      ferent  processes, but these addresses all refer to the same loca=E2=
+=80=90
+>      tion in physical memory.)  In a multithreaded program, it is  suf=E2=
+=80=90
+>      ficient to place the futex word in a global variable shared by all
+>      threads.
+>=20
+> Maybe say 'use a different futex word'?
 
-Also I think using the command line is way less flexible than
-sysfs. E.g. the userspace tool loading the crash kernel (kdump)
-may want to decide if the hardware is sane using its own
-whitelist/blacklist...
+Oh yes, this would make it simpler to express.
 
-> > I am inclined to just setting the fixed delay to 10s for now and
-> > adding a sysfs knob later if someone asks for it.
-> > 
-> > Would that work for you?
-> 
-> Sure. We could always add such a flag later if it's really a problem for
-> someone.
-
-OK, thanks! Will post the v4 shortly.
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Sebastian
