@@ -1,100 +1,75 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EBD4202F67
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 5D8582222C0;
+	Fri, 30 May 2025 10:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748600954; cv=none; b=N2dTmy+XdL+if8msj2t7ZiaDYt02JAa7p6auNooWQbNlFVqJc+syTGNvTSOf/MhicYiGsbTLvzmENWjCBDwpkB5yr4ynZcTgwA6qEsf5o6ZXA5UymL7f3SkPW9Ehsl1NHKolnt+6JRJ2gsEcRg656gMvPyL/ffL3EWW0fUW4Q7M=
+	t=1748600976; cv=none; b=U3YlOLK5Lw/qtNJd/Mz+60VQtGrvffPXFbMO+W6GDjkAI4R//vBp2/h2FEzX9uLjlz8QqpHo0qPqfzBV7q6D5Pw/41iBGXUZVyoMoQcP6SCBRlOQzF0gjCmqJxY1ezyIEfzrrzoA+jBse87dpMDGyIrKH9PRKktQy3KQGxQlRhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748600954; c=relaxed/simple;
-	bh=MV0xDuxa36T8vlsgUZsA2Zzf4b9NecWsWrOQG1UPhhs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZIr807E7LHLuOabtTit3HUoKQEelDoJoDkrm113z8f5ugP/mQl4JoeVYeDeupSyxFrbsOuGlkGK40xRcOezmK327guJZEwlz0RnqT4zmViu7wwyEgxhtMg4t5DJ6AZ+9HNkhThh6pZl4/XFHhZjXXaCISJsJnzweJy6lAjdjRIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=FVfu5OkA; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=3quFEydw; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="FVfu5OkA";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="3quFEydw"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id C90F6209655A;
-	Fri, 30 May 2025 19:23:55 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1748600636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rpFmFQChOnE6nAGClE1PTp1IbANAehjFrMemwvKCnBA=;
-	b=FVfu5OkAEeT/aAMY30IXWqHt3wTElMeTRjsNAJ9NxCs/zLvMT6wDIaNcmmczt+DONrbYrR
-	AC5pKnvenYUSPkcBWyHT7KHVm6dmqN+PD/GibdD4TJfulfDzekmD5ooQk6Db+hAk3zAJI1
-	HJ1tGz0V4c9zLVMC0CmF718gVW7DRA7legWYJXFGdUcQkN2iyuI+h52CFO54o71tBOjwdp
-	fJAagzsO2OR885Ckfo6OlzjQjsb66MVo7vSt8teQnFNJbEIonz+dNFbMGPjtyjJzZkqGq4
-	BTZlkzUq/lU/a4i7Sh2nZZUTJWD4I1D3qWL0VHpvU/KiUzOYUBvM02jWf1tWuw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1748600636;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rpFmFQChOnE6nAGClE1PTp1IbANAehjFrMemwvKCnBA=;
-	b=3quFEydwpkRm1RJf4A43WtUSl1R4jf1sfIYTY5JCN60MUOGycxz9p/JUbNrj+VtIedi+/n
-	b2PldOz/Ks2/ZWBg==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 54UANs9t031885
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 19:23:55 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 54UANsW4064889
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 19:23:54 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 54UANswX064888;
-	Fri, 30 May 2025 19:23:54 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fat: correct superblock flags
-In-Reply-To: <20250530084648.2434569-1-frank.li@vivo.com>
-References: <20250530084648.2434569-1-frank.li@vivo.com>
-Date: Fri, 30 May 2025 19:23:54 +0900
-Message-ID: <87v7piflc5.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1748600976; c=relaxed/simple;
+	bh=DB3MFKB2EWYDWs8y86REFzNC3zVqE1NTe3DLImhWNc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=l/uOqGExU5UhnC58YgRM6dv925fqntM9aLkaj6YmJ6NYvjhwbxiM44Cd5pml7gtUkb0OyH393b8/7O6Io2t3GOQW+7NJc4eCuqk2CjSsqkGKvxZnSEwl9Ox0bqsMnwfP+IyHq6PVrbjWNZpbsUl232vYtc8I9tUb2NKAfPG6xiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [192.168.43.55] (unknown [122.96.47.185])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 4D5D06024EF3F;
+	Fri, 30 May 2025 18:29:28 +0800 (CST)
+Message-ID: <1f027931-8781-4c6c-86c8-2d680b86974f@nfschina.com>
+Date: Fri, 30 May 2025 18:29:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] afs: Replace simple_strtoul with kstrtoul in
+ afs_parse_address
+To: Jeffrey E Altman <jaltman@auristor.com>, dhowells@redhat.com,
+ marc.dionne@auristor.com
+Cc: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Content-Language: en-US
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 122.96.47.185
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <ea42a3fd-7ce8-43e0-a2d5-c5353070bfe2@auristor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Yangtao Li <frank.li@vivo.com> writes:
-
-> SB_NOATIME includes SB_NODIRATIME as a subset. Therefore,
-> setting SB_NOATIME is sufficient to disable atime updates
-> for all files and directories.
-
-SB_NODIRATIME is set at fat_fill_super(). So always SB_NODIRATIME looks
-like it is consistent even if meaningless than removing only if remount.
-
-Thanks.
-
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/fat/inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 5/30/25 7:35 AM, Jeffrey E Altman wrote:
+> On 5/27/2025 4:49 AM, Su Hui wrote:
+>> kstrtoul() is better because simple_strtoul() ignores overflow which
+>> may lead to unexpected results.
+>>
+>> Signed-off-by: Su Hui<suhui@nfschina.com>
+>> ---
+>>
+> Su Hui,
 >
-> diff --git a/fs/fat/inode.c b/fs/fat/inode.c
-> index 3852bb66358c..5da96c37386d 100644
-> --- a/fs/fat/inode.c
-> +++ b/fs/fat/inode.c
-> @@ -807,7 +807,7 @@ int fat_reconfigure(struct fs_context *fc)
->  	bool new_rdonly;
->  	struct super_block *sb = fc->root->d_sb;
->  	struct msdos_sb_info *sbi = MSDOS_SB(sb);
-> -	fc->sb_flags |= SB_NODIRATIME | (sbi->options.isvfat ? 0 : SB_NOATIME);
-> +	fc->sb_flags |= sbi->options.isvfat ? SB_NODIRATIME : SB_NOATIME;
->  
->  	sync_filesystem(sb);
+> Thank you for the contribution but I do not believe this patch is 
+> correct.
+>
+Oh, really sorry for my stupid mistake. Thanks for your review too :) .
+> The second block is required even if the simple_stroul() is replaced 
+> by kstrtoul() as it protects against an input string which does not 
+> contain the optional subnet mask but has some other characters after 
+> the address.
+>
+> afs_parse_address() already has its own overflow checks following the 
+> simple_strtoul() call which is specific to the interpretation of the 
+> allowed subnet mask values.
+Agreed, it's my fault that I only see the pattern about 
+'simple_strtoxx(....)' and 'if (*p)'.....
+>
+> Do you see an overflow condition which would not be caught by those 
+> checks which would be caught by use of kstrtoul()?
+Actually, no example in reality.
+If p can equal to '0xffffffffffffffff0000000000000001', simple_strtoul() 
+and kstroul() all transform 'p' to unsigned long value '0x1'.
+But kstrtoul() return an error and we can know overflow happens.  If 'p' 
+can be a very long string, kstroul() make sense.
 
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Su Hui
+
