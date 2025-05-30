@@ -1,35 +1,30 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94507220F2A;
-	Fri, 30 May 2025 12:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D702B220F2A;
+	Fri, 30 May 2025 12:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748609302; cv=none; b=tRcJfERw7UwNro1Lqv6/SOpVziDyZZkbxSiqToWTrPqP6IPao1xhqXQcbt7FABa2kV2apo8OSz3olxJUH2DH8Mn7MAq92+kAr1agYjcuDt//XIHkAHZIWJwZBHUVahV/uPGPKkniEKP2ZYaAplsIodydzy6JVcNTtDAcwyopyOA=
+	t=1748609361; cv=none; b=GQf7a+z8r40kBOiukcwzXeBtj6FljhW7bx+aXRSXdMA4x5e3Dt9eXRYAevkAsMvD9Sd3m4+8tcsgPQClYeEIktrDdUJeJT9mjLLpIApMqjEsrbEyWeHZ3wbsC2oIk5z+agucF0L/7L0K48WVlD6UYunI/4cy/wycuO+foae3Jb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748609302; c=relaxed/simple;
-	bh=Uu+J/75Y+APjxjZJb6aUuW0stGXdqjKN2PzkX66KaoU=;
+	s=arc-20240116; t=1748609361; c=relaxed/simple;
+	bh=vnZmTsIwG0Mzr4wpC0BNSbc3pPEH2tZSKwSBWJhgShE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FPWWex+ybaOtTA8xogcsoNifwazlM355Vhq5PBuyc/yT27Y8bNymxEi2eKeQAQ/mrjnskOHT2zqFaHvFzNQV5b6c3n3LLefxcdWl04LririCFsQqdw2JrdI4JZ50AdgM1C6JV5pp87gB0PYf/fojlFnXmL5yeUdmiWYlGm5rkA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E62F16F2;
-	Fri, 30 May 2025 05:48:02 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B243F3F673;
-	Fri, 30 May 2025 05:48:17 -0700 (PDT)
-Date: Fri, 30 May 2025 13:48:15 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC 1/7] firmware: arm_scmi: move boiler plate code into the
- get info functions
-Message-ID: <aDmpD9qz-4RUXvFq@pluto>
-References: <cover.1746443762.git.dan.carpenter@linaro.org>
- <8bee4505bdc1d74e62533ed9975dc4500b2cfe53.1746443762.git.dan.carpenter@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoW/rCKtpFlz9G3m8awxtG22j8lAT4GyHUp8LghSnk0qEjjFV/y2Ng+t9nUCuApGPBenHVwhOtCFxYzoJE3oM1hI86G8jQ/XsiDxb+WHX+W07/HW0JRln19gY6eVd6FsgrynscApCikanKNjKwPgWc24GTKflayra7DtKAdnhPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1uKyw4-0000cF-00; Fri, 30 May 2025 14:34:08 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 067FFC076D; Fri, 30 May 2025 14:33:59 +0200 (CEST)
+Date: Fri, 30 May 2025 14:33:59 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-mips@vger.kernel.org
+Subject: Re: [PATCH] MIPS: loongson2ef: lemote-2f: add missing function
+ prototypes
+Message-ID: <aDmlt0Wo0gNX5X8e@alpha.franken.de>
+References: <20250529032005.4015158-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,30 +33,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8bee4505bdc1d74e62533ed9975dc4500b2cfe53.1746443762.git.dan.carpenter@linaro.org>
+In-Reply-To: <20250529032005.4015158-1-rdunlap@infradead.org>
 
-On Mon, May 05, 2025 at 02:37:22PM +0300, Dan Carpenter wrote:
-> This code to check whether the selector is valid and if the item has
-> already been recorded in the array can be moved to the
-> scmi_pinctrl_get_function_info() type functions.  That way it's in
-> one place instead of duplicated in each of the callers.
-
-Hi Dan,
-
-thanks for this.
-
+On Wed, May 28, 2025 at 08:20:05PM -0700, Randy Dunlap wrote:
+> Add several missing function prototypes for lemote-2f to eliminate
+> build warnings:
 > 
-> I removed the check for if "pi->nr_groups == 0" because if that were the
-> case then "selector >= pi->nr_groups" would already be true.  It already
-> was not checked for pins so this makes things a bit more uniform.
+> arch/mips/loongson2ef/lemote-2f/machtype.c:10:13: warning: no previous prototype for 'mach_prom_init_machtype' [-Wmissing-prototypes]
+>    10 | void __init mach_prom_init_machtype(void)
+> arch/mips/loongson2ef/common/machtype.c:34:20: warning: no previous prototype for 'mach_prom_init_machtype' [-Wmissing-prototypes]
+>    34 | void __weak __init mach_prom_init_machtype(void)
+> arch/mips/loongson2ef/lemote-2f/pm.c:52:6: warning: no previous prototype for 'setup_wakeup_events' [-Wmissing-prototypes]
+>    52 | void setup_wakeup_events(void)
+> arch/mips/loongson2ef/lemote-2f/pm.c:90:5: warning: no previous prototype for 'wakeup_loongson' [-Wmissing-prototypes]
+>    90 | int wakeup_loongson(void)
+> arch/mips/loongson2ef/lemote-2f/pm.c:137:13: warning: no previous prototype for 'mach_suspend' [-Wmissing-prototypes]
+>   137 | void __weak mach_suspend(void)
+> arch/mips/loongson2ef/lemote-2f/pm.c:142:13: warning: no previous prototype for 'mach_resume' [-Wmissing-prototypes]
+>   142 | void __weak mach_resume(void)
 > 
-> I also removed the check for if (!pin) since pin is an offset into the
-> middle of an array and can't be NULL.
->
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> ---
+>  arch/mips/include/asm/mach-loongson2ef/loongson.h |    9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-A much needed and appreciated cleanup. LGTM.
+applied to mips-next.
 
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
- 
-Thanks,
-Cristian
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
