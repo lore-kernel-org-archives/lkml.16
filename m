@@ -1,129 +1,139 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3428C1F875C;
-	Fri, 30 May 2025 06:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E3910E4;
+	Fri, 30 May 2025 06:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748586586; cv=none; b=ZjC/LVRZJvCMWljgKS3MmbfRZnLyNbPGilJBt7c4IkNI8tnYp0mPBW/u3MBTeGxgTFcMVl6mzHAGwIzCdvJ3iS1RHH78ZUEdsMCqHHWuHorh9h+ColPKTJy5e6yRDHdr2QGAY1xoPghOsJXP3x8/7vnFa/V3flPPuWbSNfwnAmg=
+	t=1748586862; cv=none; b=vElofMBtfI8+TrDdUFjyd1SQ7rmnhhw6oNSReR9nEigHL/4DcbJ6GmThm+/1NFyB/wROEJuCQHkDFqwxK2S1GRLlt47AF2qwGIJ9GxHKZKj0aDkJJeHmNUkszYQrYoc1sMUcrwD/Bud34XINDjQJAzcefcpYi/3JtiGDB0YH2Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748586586; c=relaxed/simple;
-	bh=qhgHA/bJ8v/PS2R6f2L3oGVJ9+DXpMZEvteZ1yfDueE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OgVvHmHzUuomzBeSFA5PjrKeytIfKJ5/vXIB284sWlNSlsms6DxpiLrIHpTDYUCmW+FTNtX7KOo3dCw1TcSWSuwwbUAGZHd5O8NsE/pUOzavE/MJayibz7LrWjui9g8UDPmfVJ8XhuF8W8ez/GauxyrcobIjx8Kg6N8eeAS97YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=TCVm8yWe; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=XY8jWu8j reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1748586862; c=relaxed/simple;
+	bh=tV4VuMBLa/kEjMITalpMd3xexYEhPloYOUSsa5uWW8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XdEaYX2nJo5+2duEgYJZJrLBgQU3gmNtaICqcUP/i6mWCSsWo3IGWNcdro0g/dRPXw6gMdOFwwuk59fV/ideoRp9nEiFzhx30nZM9Bd3vATtRX9ccx4FfXOugimer9B87dkdR7pwEw4+pRAoDv/d22QHyggCNBgZiJ3vBcHsQHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=K5NDaARE; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="TCVm8yWe";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="XY8jWu8j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1748586583; x=1780122583;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xKYfvQUJsCe5Fu3IbEtXJ4DySVzCIAQxIRD4sH/yzi8=;
-  b=TCVm8yWe1jp1sSiaauO/CG5GxiQ5QzgIp2ywtcYUH7mzsfUNxNGmh6NU
-   qVuGqKjMTXiyLxDrf8ROTqlZ/obAdxMDzZ2kTVkGTTX5ppqWX2Fe1vbb5
-   SiTgKX8/42tUYh50bEuBcuhi6jkRc+SPd7rQGCj5CxjNPighOBFwC20lH
-   BS/Je0AGoOp4S2JEGIOqs7qpc1sUbQvUpGzKDrUasaL4uh8wPBLhyFkMu
-   jshHe6pdL0JnWs5+0Q+5q025yV/CNd6ti1cRNJwnzHRZVe/hSbmJipTN+
-   k2pRONKK9RSw3TfdhhpU+XYXKuU2cihnGoEn8YxJR45Z0x/Wg6fuzbt3g
-   Q==;
-X-CSE-ConnectionGUID: qQZGS3Y/Tla+y7MpA+X7nA==
-X-CSE-MsgGUID: OnaFfOnkSiWO/+xrExhjsg==
-X-IronPort-AV: E=Sophos;i="6.16,195,1744063200"; 
-   d="scan'208";a="44364193"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 30 May 2025 08:29:34 +0200
-X-CheckPoint: {6839504E-C-8CF597AF-F8BD95DC}
-X-MAIL-CPID: 5E8F613866FB26B0A053F72B1F8FAD48_3
-X-Control-Analysis: str=0001.0A006396.68395054.0069,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4D027163483;
-	Fri, 30 May 2025 08:29:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1748586569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xKYfvQUJsCe5Fu3IbEtXJ4DySVzCIAQxIRD4sH/yzi8=;
-	b=XY8jWu8ju4n5JEtBc/cmVFE2Z7uWTpCnd6BhdtlaNX6JwcXtWr6btn1mOz197fc/ggVz79
-	i93PNjpDqIfOjPbeHVSFlYeYpSHSjqJGLfkfWnlzBj4RTrnWRT+xrTyJ6Kg9T28De7YfI/
-	J86SH8jJau2i6X6hmorZLq3cfyplTzwWc77IUDLcFVOJh0B9aYaSZJ1F5tACswlH2QHRha
-	4HfchkwTlHYX6zXPGpEnmAUGIGd8FXJhika7BJEDSRI/ObZeiLAHkvET/JLG6HHkeAW0D9
-	hS7/8bbOipBRRN+yHH1AKeD1SBIBD0utqVO6DDEXr1/4B1IEDQ7U9/bYam2Akg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Gregor Herburger <gregor.herburger@tq-group.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject:
- Re: [PATCH 2/2] arm64: dts: ls1028a: Add mbls1028a and mbls1028a-ind
- devicetrees
-Date: Fri, 30 May 2025 08:29:27 +0200
-Message-ID: <7298658.31r3eYUQgx@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <aDctWKIvBKwF29lP@lizhi-Precision-Tower-5810>
-References:
- <20250527060400.1005757-1-alexander.stein@ew.tq-group.com>
- <20250527060400.1005757-2-alexander.stein@ew.tq-group.com>
- <aDctWKIvBKwF29lP@lizhi-Precision-Tower-5810>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="K5NDaARE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1748586846;
+	bh=fLRtGI/dkGFjlZENN6WGzEywpI9et7ean0MKT3oN79U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=K5NDaAREZgSKHmT+AZ7Zv8iD2RTuYYxTKa7JV/5TVgfMMjQ6v6qkEhCpfQhE+BTLX
+	 Hut9GEZh63nRRZF7nCvYBFuVlNgoXDRNTgcD7g7Rr9grZ1ruLFhqfVQajY1TLjAtZz
+	 ifam5CN2XpO6OLlQpfthyIe87UPU8ljgqPtJrHaY=
+Received: from [10.56.52.9] ([39.156.73.10])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 88210633; Fri, 30 May 2025 14:34:02 +0800
+X-QQ-mid: xmsmtpt1748586842t4r3aac12
+Message-ID: <tencent_0C1631C5C04C0820EBEE925625E195713405@qq.com>
+X-QQ-XMAILINFO: NFcI4DQTV9fmJUZxq503s5HvZwxuwcSCHrJMNC9bWMF/EMerRepCVZNm3TpeJz
+	 P6m++hwB9GvtJsp2muycCL/iYZCBnEsrKsdn7SoAYxpXzK4cFeFXRdJUwAixqXMflwJNtOZOqPJN
+	 BjMz1dv+roqxDveovyirzSm5Iin+okTdslRBOx+ltn6TsRxyejtR1kM/yK1U1MgHHGJQ52R6C+0s
+	 IH+mxvQVFyfE5ogro30FglxT7QgUfEtrl3vBNbV0IhIcLxetpN2EZIjcEIsRgN171wkMaMCjlA9Y
+	 K6olgahP19ZTlJNMrwN0at01SfZazM4cKFmcKkiuPdyD1kGkrUiSdPZFKzh53j9R7B5zAhH24IbI
+	 XUTHVoBt2spOr5jOy334SfWpQ+jTo/Mckrb4I6d3l+8SFBsBV/6dB8NGuN3gqtOuiGE/m6xTMC7f
+	 PwvjTItXbxut0+ktL8tJhf5pDhdJ6uGA+MhI5Wf353hgsxYYpz+0mV30n6c30Xp9FyzOXSE0x5/h
+	 EqTidJA+6Fh9abeiWrqd+/JYptzm9eipDsR3k207rcIHTWJ0nzPRD9WgM+exjjngJ5yKdlYKU4pH
+	 u+vA2YWOEdHOm+J/TsujWwSq0ZSd7zoUXzhn62PNiqH0of/7/jMeXVK0FNTtDolx/++2umFWeph5
+	 KyevxfzqE4deH+SCkfDJx1ckPxAm+IM/cbm0fiEo18BRBF9zg/mzS4F/6Yz/GOZrqD0WJSyknBzc
+	 kEZhsudbwCu/SpNGCxG5XauGwwrNEa8pGzesRpYnBrMhN85Q8frgg38Q7qrnvzX7ydld0IhjKzCJ
+	 ajlEOxiBwi1dYYTTkG20qyH+4DLj8cj5csJvm7t295wlE4ogWHaH9gpat3vTUPqN+cMkUb+5hNkW
+	 W6jraBdcDHAo0ZdkzJ/o+oeKd5E0IrD98b8UsO0mwXPEYWgf7X5RVddKphsoL54y5RLzCXIJvHzs
+	 inLFKOmGSriG4bkkLj3yVVcPReFZR2jrdz016lFA4e1oXCHh1sox+zK3ofWWEoCIdk9b+XoEDcag
+	 /Uw+ZqzQ==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-OQ-MSGID: <3fbc45fd-5806-495d-bea9-fa7606001a30@foxmail.com>
+Date: Fri, 30 May 2025 14:34:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next 1/2] bpf: Add bpf_task_cwd_from_pid() kfunc
+To: Yonghong Song <yonghong.song@linux.dev>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, rongtao@cestc.cn,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Juntong Deng <juntong.deng@outlook.com>,
+ Amery Hung <amery.hung@bytedance.com>,
+ Dave Marchevsky <davemarchevsky@fb.com>, Hou Tao <houtao1@huawei.com>,
+ "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)"
+ <bpf@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <cover.1748488784.git.rtoax@foxmail.com>
+ <tencent_97F8B56B340F51DB604B482FEBF012460505@qq.com>
+ <CAADnVQ+hUk2wV3M+9mgv_i5sNt_FuHpAnDpkQJ22D37bxAJHsQ@mail.gmail.com>
+ <tencent_C8CF57BAD10D440E8308A19E2C894B341507@qq.com>
+ <599838d4-7faf-41ce-9a7f-6eebd5173db7@linux.dev>
+Content-Language: en-US
+From: Rong Tao <rtoax@foxmail.com>
+In-Reply-To: <599838d4-7faf-41ce-9a7f-6eebd5173db7@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Frank,
 
-Am Mittwoch, 28. Mai 2025, 17:35:52 CEST schrieb Frank Li:
-> On Tue, May 27, 2025 at 08:03:55AM +0200, Alexander Stein wrote:
-> > From: Gregor Herburger <gregor.herburger@tq-group.com>
-> >
-> > Add device trees for the MBLS1028A and the MBLS1028A-IND and the SoM
-> > TQMLS1028A.
-> >
-> > Signed-off-by: Gregor Herburger <gregor.herburger@tq-group.com>
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> > ---
-> >  arch/arm64/boot/dts/freescale/Makefile        |   2 +
-> >  .../fsl-ls1028a-tqmls1028a-mbls1028a-ind.dts  |  68 ++++
-> >  .../fsl-ls1028a-tqmls1028a-mbls1028a.dts      | 118 +++++++
-> >  .../fsl-ls1028a-tqmls1028a-mbls1028a.dtsi     | 291 ++++++++++++++++++
-> >  .../dts/freescale/fsl-ls1028a-tqmls1028a.dtsi | 117 +++++++
->=20
-> New dts file, suggest run https://github.com/lznuaa/dt-format to nice ord=
-er
-
-Thanks for the suggestions. It does some improvements, but I also disagree
-with a lot of proposed changes:
-* Wrong indent of SPDX tag
-* model property should come first IMHO
-* {gpio,interrupt}-controller should come before #{gpio,interrupt}-cells
-* gpio-hog property should come first in a hog node
-* sorting gpio-hog nodes by name instead of line number seems wrong
-
-There are some more bogus changes, so I'll skip this tool for now.
-
-Thanks & best regards
-Alexander
-
-> Frank
-> [...]
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+On 5/30/25 09:55, Yonghong Song wrote:
+>
+>
+> On 5/29/25 6:28 PM, Rong Tao wrote:
+>>
+>> On 5/29/25 13:44, Alexei Starovoitov wrote:
+>>> On Wed, May 28, 2025 at 8:37 PM Rong Tao <rtoax@foxmail.com> wrote:
+>>>> From: Rong Tao <rongtao@cestc.cn>
+>>>>
+>>>> It is a bit troublesome to get cwd based on pid in bpf program, 
+>>>> such as
+>>>> bpftrace example [1].
+>>>>
+>>>> This patch therefore adds a new bpf_task_cwd_from_pid() kfunc which
+>>>> allows BPF programs to get cwd from a pid.
+>>>>
+>>>> [1] https://github.com/bpftrace/bpftrace/issues/3314
+>>> Yes. This is cumbersome, but adding a very specific kfunc
+>>> to the kernel is not a solution.
+>>> This is tracing, no need for precise cwd. probe_read_kernel
+>>> can do the job. bpftrace needs to have better C interop.
+>>> Once that happens any kind of tracing extraction will be
+>>> easy to write in C. Like this bpf_task_cwd_from_pid()
+>>> can already be written as C bpf program.
+>> Thanks for your reply, Yesterday I tried many ways to implement
+>> the solution of getting cwd from pid/task, but all failed. The basic
+>> idea is to rewrite the d_path() code, but in the bpf program, there
+>> will be various memory security access problems, even if enough
+>>  `if (!ptr)` are added, the program cannot be loaded successfully.
+>>
+>> https://github.com/Rtoax/bcc/commit/2ba7a2389fc1183264e5195ff26561d93038886c 
+>>
+>>
+>>     bcc/tools$ sudo ./opensnoop.py -F
+>>
+>>     ; if (dentry == vfsmnt->mnt_root || dentry == dentry->d_parent) { 
+>> @ main.c:174
+>>     109: (79) r2 = *(u64 *)(r7 +0)
+>>     R7 invalid mem access 'scalar'
+>
+> I think you can use bpf_probe_read_kernel() helper to get r2?
+Thanks a lot, bpf_probe_read_kernel() works :)
+>
+>>
+>> At the same time, bpf_d_path cannot be used because it can only be
+>> applied to functions in btf_allowlist_d_path. Currently, it is
+>> impossible to get cwd from pid/task in user mode. Any suggestions?
+>>
+>> In addition, I fully tested this patch yesterday and it performed well.
+>>
+>> Rong Tao
+>>
+>>
+>
 
