@@ -1,108 +1,97 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B317921517C;
-	Fri, 30 May 2025 13:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612310; cv=none; b=JYOGMswRlRMyJ8VfIdZ1hhtnmHyEAARPRBLJCoOuJjI7xuKn3eg1b4aVH1467rXGSGSNCb2JyUPWJJIa/VFf485L/vHfHryg46G46g9ZKIFS4NI7yk7rJd+frs3FzybJiEdQ/mfJiqBd4vIWEEjx5a++JXGhm4tZP1Ch9qZ50nA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612310; c=relaxed/simple;
-	bh=okfO53B1MuctCihtZiKCNsiS2kQIh+Mos6rbOD+jj8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=doT5GyW6Za1k5TC48tlXVlhePDTDoBgStGZlFjcTVWHG9QBeiOKYeGHoZNe2OyNx0U8YnqKBQhMoaMXOfjFzq/O+wAi4TI1wKyLI1yPKzlrtRoi+w4xJij7+5u/zmalHSlwA0Nex1O5Qrty45/9smiXfkyauAljIhGlPfKbQXOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fS7CR5L4; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20A18DB1E;
+	Fri, 30 May 2025 13:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748612354; cv=pass; b=Q+t7phOm0GB+XGv1KFAPsJExX0fvMFnFc8he2kD2VBHDIx6cDWAlbEWxGMl46HQUuYjll1IYOKSRThqqpxcsqinf3SDq9+tU2v0eM6fManxaGORs78CbFdfyN/GaThy4MQqy80XRxjREELMpX/2shp4cUAmrldpb4wPLt1lkD44=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748612354; c=relaxed/simple;
+	bh=12ntjRgwgwK+Seu77q1XPGvqWeoLN1de7YjAF0PqYkA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YUzlO2IxKhtchVikBGJNw3kNU17kmVL+gLb9eOf5NHm5pin7uwTcUq67bGp6mkfCAQ/1mbsUfQqa37l+GVzOBiRcBqB3mLzZyc+yZ1tRSKTVuh7PG1iZ9ptVa4auhNK0Pqqgn08iwuaWHxwOr9rt51qFM/P0hAM07PTgsp0W2ek=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=W7EytWms; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fS7CR5L4"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E526B89A;
-	Fri, 30 May 2025 15:37:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748612279;
-	bh=okfO53B1MuctCihtZiKCNsiS2kQIh+Mos6rbOD+jj8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fS7CR5L4Ri4EdInT3VKvDyb4ZXdL/n+8OpunXXsCmRhOXqrkJ6Q5//0GsYph7dK8l
-	 kEMESAjHk2eGNgfCRLFyQDSLpN39BLQFipBgjTOVnFrq4VlqqRPy8qE2hNNkmOume6
-	 pHhpqq783sFSsnRku5ADvJcGbzyCvA8LKu5xMOv8=
-Date: Fri, 30 May 2025 16:38:20 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-	ALOK TIWARI <alok.a.tiwari@oracle.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
-Message-ID: <20250530133820.GC18205@pendragon.ideasonboard.com>
-References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
- <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
- <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
- <20250511200333.GA2365307@ragnatech.se>
- <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
- <20250512084843.GE2365307@ragnatech.se>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="W7EytWms"
+ARC-Seal: i=1; a=rsa-sha256; t=1748612319; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=SZShYD1t7mTQ9DT2tggEIk7RVpQCf8D3/y2WWQq3xAp3QVq2TJNm8s2lhA5m3Bu7IX4+k3Azipd3wd5/YXEee8Nhg+WAmCgDktW+cPgRxy1nTbwb/ufZlgC6GS60Z0xf1vyoXRkR5neD91mJgPUZrQvyF1lH87/56WRqUC+jYPQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748612319; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=y1IxS0jtrAS2T8sDTVWHloBSuBdZ/2pcZoSIPKDAGmE=; 
+	b=H3rILkaoiVKgWlNhEKjM6EZiyvUnapLf5g56V+3Bs9THP1+BOv0Z/La9coz7lHvXU7B/RDdf5jf6e/0jm8wQ2bkzPYKyCccXL7uaJlyMPby3SAY5DytJsTzDG/N51Mn9PiN+HltABB0RZAlnB5reYvXoawUyqXogI+Fwl+SmxH8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748612319;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=y1IxS0jtrAS2T8sDTVWHloBSuBdZ/2pcZoSIPKDAGmE=;
+	b=W7EytWmsa4SYw9aRN+PY2FYG2NiUItqPeB4c07/PK1UR/4G5Jl6Yc/dXzga8aXn6
+	Pv/I+YN9TL/7dFgSsxf7naHrTNbGeWGerVZPEtxySVSOvA9VafN+FPS1QEVY+YlBGnX
+	G80zcibtcscMFFi97xEAkivPAzxujErT5+pGHHVw=
+Received: by mx.zohomail.com with SMTPS id 1748612317988810.2056390045541;
+	Fri, 30 May 2025 06:38:37 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH 0/2] RK3588 rockchip-dfi enhancements
+Date: Fri, 30 May 2025 15:38:07 +0200
+Message-Id: <20250530-rk3588-dfi-improvements-v1-0-6e077c243a95@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250512084843.GE2365307@ragnatech.se>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL+0OWgC/zWNQQqDMBBFrxJm3YEYEytepbiwZtIOJYlNUhHEu
+ zdUunwf/ns7ZEpMGQaxQ6KVM8dQobkImJ9TeBCyrQxKKiNNKzG9WtP3aB0j+yXFlTyFktF1utN
+ KXxtjFdT3ksjx9jPfxpMTvT81UM4R7lMmnKP3XAYRaCv4j8B4HF+xaBm9mgAAAA==
+X-Change-ID: 20250530-rk3588-dfi-improvements-f646424715d2
+To: Chanwoo Choi <cw00.choi@samsung.com>, 
+ MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, linux-pm@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Mon, May 12, 2025 at 10:48:43AM +0200, Niklas Söderlund wrote:
-> On 2025-05-12 09:37:48 +0200, Geert Uytterhoeven wrote:
-> > On Sun, 11 May 2025 at 22:03, Niklas Söderlund wrote:
-> > > On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
-> > > > On 11-05-2025 23:17, Niklas Söderlund wrote:
-> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0404);
-> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x040c);
-> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0414);
-> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x041c);
-> > 
-> >  [...]
-> > 
-> > > > Instead of manually writing each call, it could use a loop ?
-> > > >
-> > > > for (int i = 0x0404; i <= 0x07fc; i += 0x08) {
-> > > >     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
-> > >
-> > > Unfortunately the values are not all sequential, see the progression
-> > > 0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
-> > >
-> > > > or if values are not strictly sequential, iterating over the array.
-> > > > static const u16 register_values[]= {0x0404, 0x040c, 0x0414 etc,,}
-> > > > rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
-> > > > register_values[i]);
-> > >
-> > > I agree with you, a array of values would make this look a tad less
-> > > silly and would reduce the number of lines. I considered this while
-> > > writing it but opted for this. My reason was as most of the register
-> > > writes needed to setup the PHY are not documented in the docs I have and
-> > > I wanted to keep the driver as close to the table of magic values I have
-> > > to make it easy to compare driver and the limited documentation.
-> > >
-> > > I guess it's really a matter of style. I have no real strong opinion, if
-> > > people think an array would be nicer I have no issue switching to that.
-> > 
-> > Have you looked at the impact on kernel size?
-> 
-> That is a good point, I'm sure an array would reduce the kernel size. I 
-> could possibly even craft a few clever loops to to generate the values 
-> as they are almost sequential. As these are magic values I had opted to 
-> keep it close to the docs, but seems people prefere something else. Will 
-> change this and send new version.
+This series consists of two related patches. The first fixes the memory
+cycle counter on RK3588, which read half of what it should've been
+reading. You can easily verify this with
 
-I recommend an array of values. That will significantly reduce the size,
-while keeping the code easy to compare with the documentation. We can
-try to be more clever than that in a separate patch if desired.
+  perf stat -a -e rockchip_ddr/cycles/ sleep 1
 
+and then dividing the result by the number of Hertz the ddr init settles
+on, which for LPDDR4X on RK3588 appears to be 2112MHz.
+
+The second adds support for measuring memory bandwidth with LPDDR5
+memory. Results have been validated by comparing its reported bandwidth
+with that reported by stress-ng --stream 8 --timeout 15, which line up
+almost perfectly.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Nicolas Frattaroli (2):
+      PM / devfreq: rockchip-dfi: double count on RK3588
+      PM / devfreq: rockchip-dfi: add support for LPDDR5
+
+ drivers/devfreq/event/rockchip-dfi.c | 91 ++++++++++++++++++++++++++++--------
+ include/soc/rockchip/rk3588_grf.h    |  8 +++-
+ include/soc/rockchip/rockchip_grf.h  |  1 +
+ 3 files changed, 79 insertions(+), 21 deletions(-)
+---
+base-commit: ba2b2250bbaf005016ba85e345add6e19116a1ea
+change-id: 20250530-rk3588-dfi-improvements-f646424715d2
+
+Best regards,
 -- 
-Regards,
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Laurent Pinchart
