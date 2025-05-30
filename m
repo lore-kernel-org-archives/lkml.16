@@ -1,160 +1,102 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C2B258A
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C10C258A;
+	Fri, 30 May 2025 16:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748622445; cv=none; b=ZUhKKB7AlZ9oxzWqjjoBiQDXWKc8LsdM3BR0QrGnds5HlpH6ZATydx+KMPpobjkmn740jd7qp3fV+L+F00e+4dINGVs0Kgn8t9xjofcQC5+cYvxX6byidjb7TvJbaMKczE9PDw2IlGVaYxr2AQeayTI1cxL2kw04VSJ0/GMDaTM=
+	t=1748622519; cv=none; b=VuPmGK7sAMLsXinSMiQntzvrHFZKBsnynbjK4Ed3kjYVN0nr/cqJWFtmllbolpei0VUUNU7ZfsVDhje+15Ehdf6Crrq5jkVs4NtgpbNfRBm5cLfQiDC01F0sxsfY22tcx5L5EyDrdUrhphsTFJgfPw0sfc+2zrsa6HcVk8rKRXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748622445; c=relaxed/simple;
-	bh=dF1+gDmyxY/9rUreETaqbpogRNLbyWryW5tlSGlkXTU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tJZR8tBB3gaPt8swCeIzPjsFcet2QBNwr7gE88AvKhRnvwgvQ5NvqQAhx95YBFUjjjNjAk8PJh2vWUr05lEOQloayQdJyKUvObu97Sj+P00YzlOkc5S9aJ6M2R1u5oJpLIPR4IZwAO9CjkKSsm26obKOctUadezexKnFvcGjRQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z0SHbwEG; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748622519; c=relaxed/simple;
+	bh=3w11Gx6y9v0+7Z7wkaCwsdezYsyPjPgQjYYgblMoswE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZp3rgLr1JfDJQ0NE9Rv/Lpg7DzSTS48sQ3le0shTxNOAdtzqO0PkLI/R6QoCQ7zy+qM3LlK9qe3YqE0b75fNUSs2f3A0DlknTZIAzgCxfqnbGlRlX5BVUbytyyezzgWWHqRg/Ed2PIpLJgz7H0B6IVPAOxf/h7s/Kx6mE9KzhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmA2yna1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0SHbwEG"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so11067a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:27:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748622441; x=1749227241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wb7EzNeuZNtT7LoNB6YIvTwNTIj8nYWDYSy4GeuX+MM=;
-        b=Z0SHbwEG71b+g1+94RD8L73X7DqxpbRlt6Gi80IIC4DLXOIIgwIXnYdZlmy3wDMQMl
-         LA84e3xwjtqsj7lvyLSOq1EiQoQtJGWq/r4px+oEoc9w26PNPrvsIPAeALkDTUTYNABu
-         FbKNlpgTgh9oMD1MbKa2cmhlE6pZ2uEM6KZRNU1GfRu5TwsjVmZdIn/VDw7+7a6XmL6h
-         o+NTnuOpkZ/8bMq/z5J0egoZLu7N+VHvnjVBBOvs5u96APjc5NhwCL2vkwED94Cw4XQj
-         C0CtdI/2kagSZWeDsKsyM+HorSSungCWvwZ8xMyIFiMuKpjUioPnG8fIX8FapD4LZzEs
-         5Ugw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748622441; x=1749227241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wb7EzNeuZNtT7LoNB6YIvTwNTIj8nYWDYSy4GeuX+MM=;
-        b=C4uZTLcJCgJKw7XI/b6jdWZuQ5hNvqw/Z8mVQxuDCz8IPHAJRSt96xGJqOz//UC5TC
-         wBEUJ9E9XQdul3+SLc/2i2P9tf7sS0J5NAE3hNOUD3Zs7NJCGOcjduSOe0pzEKIdvTPK
-         X4T8DktnERd0uyHGLswSORtB/7B32FoJhwPrweMy2TB1Gv6VbC62RXf8mQpQIFvUU0Ki
-         7kha5D5n+gmNt4zICTex6n5t1B06SuuzYvSn3Z3HZXAjwr2b82beGHC1qghXpo5xmeb2
-         +ThONE1iGyBA8oeNK3tgtbEt5tLEcQJSY2fx4sHwVSplLH3FNhJanEUiv39+kMtxip6R
-         NpTw==
-X-Forwarded-Encrypted: i=1; AJvYcCU06TLeqLtimuXLBvc1NEaVZltlEYHno0PEoD0upT/LNq3T9TrBsS6LG9P6KUamCugwJuX1d3bei6XC8FM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTBkLX33FBFLwfLoaQnef/ZipIaJza5Z7MxMFJJTiWYhEvh/v0
-	MYBVC9ALyNnRWiTgzXIxQ8vkXWhJ8cqacxy7fPbtwm2vGAbecM7Gp7NDcE9o2blj6sdY0PS8JLp
-	hbQCG7uzAQhlsY4tNgaIiQN/nHr+AplyBpYsyJ+vt
-X-Gm-Gg: ASbGncuy+p8TxgfSRCt1frf9oZX3PGITrEeNKnI4ZDiAyEs0ccvNhgZAqkX8/iP1FsQ
-	ikMPt79xS0U75MxHI2NeRwRRnKyPpxl2CbBfV+wOOP9P8mZwRPIc/dTPn1NSa7mUwp9rdFr1XL7
-	+Funxn9TVQ191S6BsrXyVpEMXYbZrc6Oo5XluO4iJnddMGyRPvOCvBYkUXdXioTznxGJMtol0=
-X-Google-Smtp-Source: AGHT+IFvo4UeYXqvvR6hGpmlYjccx/P9qAgBVyNpakUtwWnk/plyYyjpSLFfr/exrsOHq2DB2NbEp4NJnsA/fPm9vYQ=
-X-Received: by 2002:a50:f608:0:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-60577a55f40mr88916a12.7.1748622440589; Fri, 30 May 2025
- 09:27:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmA2yna1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEA3C4CEE9;
+	Fri, 30 May 2025 16:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748622518;
+	bh=3w11Gx6y9v0+7Z7wkaCwsdezYsyPjPgQjYYgblMoswE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FmA2yna1gR8Ew0K1+LahkMj78ZXO3zYVUdv4Y/Vm1mMEd/+BRkqVRN/xryXr5nqRe
+	 rDnWQsNAlhCgvjhlMMvMLw0ZDX57QmctMORg0m07U2dsros+TLfg51ouUaHQ2v9Fbh
+	 Zk+Oeip7grTwJrJ8zTBJOSykBcVzXM+t0vkmr0+DKfKlgZ1pH0EFIC1yJfn4/18TaS
+	 7vh4+r9XyTcZmL4jfdb7ufjIJG04wV29wVc3seG0Kb3N4Ea/0KgKO8edTBCkTtHUG7
+	 cDJMlrifDQRPajUQyW042VM7mD2BPlOm4mQmO3a/zct9suwp1KtfdLEklQ1TRDRzzk
+	 Iw01thRvz8raQ==
+Date: Fri, 30 May 2025 17:28:31 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/23] dt-bindings: clock: Add RPMI clock service
+ message proxy bindings
+Message-ID: <20250530-stark-maximum-2306978237db@spud>
+References: <20250525084710.1665648-1-apatel@ventanamicro.com>
+ <20250525084710.1665648-9-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530140446.2387131-1-ryan.roberts@arm.com> <20250530140446.2387131-2-ryan.roberts@arm.com>
-In-Reply-To: <20250530140446.2387131-2-ryan.roberts@arm.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 30 May 2025 18:26:44 +0200
-X-Gm-Features: AX0GCFt5gaAeg9wlqckCjWiqvoyfvAtwj8XYq0jNIyzkBuWgoy0LcwI3HloBVMo
-Message-ID: <CAG48ez2k6ZmM-335EQjXeL6OtKzuOjVPWQDuJ75ww9Z6NMeg5w@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/6] fs/proc/task_mmu: Fix pte update and tlb
- maintenance ordering in pagemap_scan_pmd_entry()
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnd Bergmann <arnd@arndb.de>, David Hildenbrand <david@redhat.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	sparclinux@vger.kernel.org, virtualization@lists.linux.dev, 
-	xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
-	Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 30, 2025 at 4:04=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
- wrote:
-> pagemap_scan_pmd_entry() was previously modifying ptes while in lazy mmu
-> mode, then performing tlb maintenance for the modified ptes, then
-> leaving lazy mmu mode. But any pte modifications during lazy mmu mode
-> may be deferred until arch_leave_lazy_mmu_mode(), inverting the required
-> ordering between pte modificaiton and tlb maintenance.
->
-> Let's fix that by leaving mmu mode, forcing all the pte updates to be
-> actioned, before doing the tlb maintenance.
->
-> This is a theorectical bug discovered during code review.
->
-> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and option=
-ally clear info about PTEs")
-
-Hmm... isn't lazy mmu mode supposed to also delay TLB flushes, and
-preserve the ordering of PTE modifications and TLB flushes?
-
-Looking at the existing implementations of lazy MMU:
-
- - In Xen PV implementation of lazy MMU, I see that TLB flush
-hypercalls are delayed as well (xen_flush_tlb(),
-xen_flush_tlb_one_user() and xen_flush_tlb_multi() all use
-xen_mc_issue(XEN_LAZY_MMU) which delays issuing if lazymmu is active).
- - The sparc version also seems to delay TLB flushes, and sparc's
-arch_leave_lazy_mmu_mode() seems to do TLB flushes via
-flush_tlb_pending() if necessary.
- - powerpc's arch_leave_lazy_mmu_mode() also seems to do TLB flushes.
-
-Am I missing something?
-
-If arm64 requires different semantics compared to all existing
-implementations and doesn't delay TLB flushes for lazy mmu mode, I
-think the "Fixes" tag should point to your addition of lazy mmu
-support for arm64.
-
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  fs/proc/task_mmu.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 994cde10e3f4..361f3ffd9a0c 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -2557,10 +2557,9 @@ static int pagemap_scan_pmd_entry(pmd_t *pmd, unsi=
-gned long start,
->         }
->
->  flush_and_return:
-> +       arch_leave_lazy_mmu_mode();
->         if (flush_end)
->                 flush_tlb_range(vma, start, addr);
-> -
-> -       arch_leave_lazy_mmu_mode();
-
-I think this ordering was probably intentional, because doing it this
-way around allows Xen PV to avoid one more hypercall, because the TLB
-flush can be batched together with the page table changes?
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="OK/BrqYcriOFqq3E"
+Content-Disposition: inline
+In-Reply-To: <20250525084710.1665648-9-apatel@ventanamicro.com>
 
 
->         pte_unmap_unlock(start_pte, ptl);
->
->         cond_resched();
-> --
-> 2.43.0
->
+--OK/BrqYcriOFqq3E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, May 25, 2025 at 02:16:55PM +0530, Anup Patel wrote:
+> +  riscv,sbi-mpxy-channel-id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The SBI MPXY channel id to be used for providing RPMI access to
+> +      the supervisor software.
+
+Sorry for the delay in reviewing this series, wanted to talk to some
+folks at work before doing so. Overall these bindings all look pretty
+good to me. I don't think the description on this property here is
+particularly great, I didn't follow what it was meant to be used for
+immediately. But I don't have anything meaningfully better to
+suggest nor do I think that anyone actually writing the dts for a
+platform using this binding will struggle to understand it.
+
+--OK/BrqYcriOFqq3E
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDncrwAKCRB4tDGHoIJi
+0tEBAP4gJSJ/F4Ip4dRY+DKhJbIbOyFcYw/OQ8JRh5hAWfoGHwEAkbFUp8dZ9yHN
+D6aqOU4gwU5hRMBlh1tZavRk5xBgpAw=
+=RBEX
+-----END PGP SIGNATURE-----
+
+--OK/BrqYcriOFqq3E--
