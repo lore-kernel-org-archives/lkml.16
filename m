@@ -1,79 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EDB1E3DE8;
-	Fri, 30 May 2025 05:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF271F0984;
+	Fri, 30 May 2025 05:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748582504; cv=none; b=IcrDvmZc3hxhsF9g5H3DntqpClb2FQLPyHjDLvB5Cw0BdpxrHk2qMGfirMLPiMFnCXHyvirygGAXadOnceL0n38L9/qOZlqvj0t4KJpeTTvMwrcrPjzkGq3016wKFWEpagMvOkgnWoOnuOWfJwFCGrZ/W4NQdMh/gWcuk1PLqL4=
+	t=1748582507; cv=none; b=rYVw6DCMYqDD6kE6A7jvslUVb2KQNLUtJ7ycEDkhMs9BkMiSr28E7IBqnEOibaHMWkKTCZxFpv8aidXUfzyr7y3ucMgN0Mg5007rZi8jgLalODkpf+QbuxXUXnhStvtFRbYNhQ/LTVkEuIsKPgh/5XSsUpTxWxde2VlJPKgsU+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748582504; c=relaxed/simple;
-	bh=6GtyjWgTMcrJWZp97aOKpurW7V3N2yGrsSmdcIKOhK0=;
+	s=arc-20240116; t=1748582507; c=relaxed/simple;
+	bh=2l1YUXZItlR3yfNk88iiqJTy1FzASjZjGnqbsO5S0wI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJXUitLTm6e9OYz/4qdO8M3za/T6R51t2kK/jrPOljuo7jw1u3a+sruLiBx3aE81kWyZaGJ68CfISq/dzUpbXOoy8WPeQ26SP+bG9lzlWllUZPfvNikGQgZagSrBxhVt3ERUyT3CQZYUrTs2G4M87dQ2BxLkOKtmWnikZ35GUp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQSop8Gq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=aDVP1hZPoYhW6pz32zfFMFwm+huhEWyy9/iS1QJD6uIZSF02dBW3VrudW8JLmC7B2TXk7N8gJxQ+sxH1rqEuFTUXO2+84Rdbj8STYoRbC9Rvo2ienT6gQKHtvTvkMGZUIY4kv/zRlqRE7Q4zBU/WIK8p4xyNhzPb7ts/646mKjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKk3Y2Vl; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQSop8Gq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7596BC4CEED;
-	Fri, 30 May 2025 05:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748582503;
-	bh=6GtyjWgTMcrJWZp97aOKpurW7V3N2yGrsSmdcIKOhK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XQSop8GqsDAL4hWo/RY513CbLEFaNs486dz5ZrmHE2E++y0eYEknXCzduVAGt1/Gq
-	 gqCs4qtwUQ8T4IKvRhWEcaF2ICBGDpRY0O+LAAJYEDWLHRIO3WFQwXUn7+B9xpSISd
-	 Xg8o2vL2eQ3M9+xOhpWD2NbfICUBoN46BNjF7tSGKxaHQeJggG1XUV2hAeXdbSvDPw
-	 ne7fa4pNOsXtmm8Hf6qCjja981SO8tt3Py8N7D4PqPUNzuGz/Y0HaI0kV2rnCJ7p9K
-	 P2WLq7BRBdLuSppqSW62UXzEE1qM/OnfwVymmqqMaY9N+BVCpCBnrVVUBsj9Ba758h
-	 g24sz6aTeqdJg==
-Date: Fri, 30 May 2025 07:21:40 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, 
-	"glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>, "slava@dubeyko.com" <slava@dubeyko.com>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] hfs: correct superblock flags
-Message-ID: <20250530-gutmachen-pudding-d69332f92e08@brauner>
-References: <20250519165214.1181931-1-frank.li@vivo.com>
- <20250519165214.1181931-2-frank.li@vivo.com>
- <ca3b43ff02fd76ae4d2f2c2b422b550acadba614.camel@dubeyko.com>
- <SEZPR06MB5269D12DE8D4F48AF96E7409E867A@SEZPR06MB5269.apcprd06.prod.outlook.com>
- <e388505b98a96763ea8b5d8197a9a2a17ec08601.camel@ibm.com>
- <7deb63a4-1f5f-4d6c-9ff4-0239464bd691@vivo.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKk3Y2Vl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748582506; x=1780118506;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2l1YUXZItlR3yfNk88iiqJTy1FzASjZjGnqbsO5S0wI=;
+  b=TKk3Y2VlxxJOfHsZU+Z8KQckAuwyegoN1bucnPArO0LI5ex6pXevbEea
+   ABvO6xPNaW+z5RsjVo/MB2VJflxvwL6YEjKGep5jOrIc+cvyHSUX2d2lF
+   QWPhIZk4+OmqXTUEzq2aZJ4gblukqw4Yq9s3aQTFlePh15+g4/kbtAkQO
+   esl2CIVXdfNRzHVItFyY5zyzJ8xUWQtIzHAjhMztsBoNr5AG9HESWNbV9
+   qO6KLaCzedwWy2/WmQ5swmwVAoivtkAtFU207unEfgtdrw7mGJsTsqmLV
+   2xhnK1g6/wyxX9AxXxC8UGl7Ahx7GcgevRTG8EbUXku51R6dMkVXkVCqZ
+   A==;
+X-CSE-ConnectionGUID: OEhDLybQTN6ts/+3kDw10g==
+X-CSE-MsgGUID: 0BUafWtzR7Gm4xRGhm+jtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="61719741"
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="61719741"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:21:43 -0700
+X-CSE-ConnectionGUID: fPgJ4XzPRYa0YV2aBwMkSg==
+X-CSE-MsgGUID: lSjwr7bRRRSQNb/XQnhprA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
+   d="scan'208";a="148803763"
+Received: from drlynch-mobl1.amr.corp.intel.com (HELO desk) ([10.125.146.32])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:21:43 -0700
+Date: Thu, 29 May 2025 22:21:35 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Richard Narron <richard@aaazen.com>, Guenter Roeck <linux@roeck-us.net>,
+	Linux stable <stable@vger.kernel.org>,
+	Linux kernel <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
+Message-ID: <20250530052135.nz547z5ecbrb6muh@desk>
+References: <20250520125753.836407405@linuxfoundation.org>
+ <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
+ <67f03e41-245e-202-f0df-687cc4d9a915@aaazen.com>
+ <20250528005520.dpip4qe45zvsn7vw@desk>
+ <b8a9acaf-3d3e-7931-23ce-d61ee77b4e10@aaazen.com>
+ <20250529174017.lwctaondsbg7tk37@desk>
+ <2025053037-tribunal-shortlist-5207@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7deb63a4-1f5f-4d6c-9ff4-0239464bd691@vivo.com>
+In-Reply-To: <2025053037-tribunal-shortlist-5207@gregkh>
 
-On Thu, May 29, 2025 at 10:25:02AM +0800, Yangtao Li wrote:
-> +cc Christian Brauner
-> 
-> 在 2025/5/29 05:26, Viacheslav Dubeyko 写道:
-> > On Wed, 2025-05-28 at 16:37 +0000, 李扬韬 wrote:
-> > > Hi Slava,
+On Fri, May 30, 2025 at 07:11:58AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, May 29, 2025 at 10:40:17AM -0700, Pawan Gupta wrote:
+> > On Wed, May 28, 2025 at 09:49:40PM -0700, Richard Narron wrote:
+> > > On Tue, 27 May 2025, Pawan Gupta wrote:
 > > > 
-> > > > I am slightly confused by comment. Does it mean that the fix introduces more errors? It looks like we need to have more clear explanation of the fix here.
+> > > > On Tue, May 27, 2025 at 12:31:47PM -0700, Richard Narron wrote:
+> > > > > On Fri, 23 May 2025, Guenter Roeck wrote:
+> > > > >
+> > > > > > On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> > > > > > > This is the start of the stable review cycle for the 5.15.184 release.
+> > > > > > > There are 59 patches in this series, all will be posted as a response
+> > > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > > let me know.
+> > > > > > >
+> > > > > > > Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> > > > > > > Anything received after that time might be too late.
+> > > > > > >
+> > > > > >
+> > > > > > Build reference: v5.15.184
+> > > > > > Compiler version: x86_64-linux-gcc (GCC) 12.4.0
+> > > > > > Assembler version: GNU assembler (GNU Binutils) 2.40
+> > > > > >
+> > > > > > Configuration file workarounds:
+> > > > > >     "s/CONFIG_FRAME_WARN=.*/CONFIG_FRAME_WARN=0/"
+> > > > > >
+> > > > > > Building i386:defconfig ... passed
+> > > > > > Building i386:allyesconfig ... failed
+> > > > > > --------------
+> > > > > > Error log:
+> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> > > > > > `__static_call_transform':
+> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> > > > > > --------------
+> > > > > > Building i386:allmodconfig ... failed
+> > > > > > --------------
+> > > > > > Error log:
+> > > > > > x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> > > > > > `__static_call_transform':
+> > > > > > static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > > > > make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> > > > > > --------------
+> > > > > >
+> > > > > > In v5.15.y, cpu_wants_rethunk_at is only built if CONFIG_STACK_VALIDATION=y,
+> > > > > > but that is not supported for i386 builds. The dummy function in
+> > > > > > arch/x86/include/asm/alternative.h doesn't take that dependency into account.
+> > > > > >
+> > > > >
+> > > > > I found this bug too using the Slackware 15.0 32-bit kernel
+> > > > > configuration.
+> > > > >
+> > > > > Here is a simple work around patch, but there may be a better solution...
+> > > > >
+> > > > > --- arch/x86/kernel/static_call.c.orig	2025-05-22 05:08:28.000000000 -0700
+> > > > > +++ arch/x86/kernel/static_call.c	2025-05-27 10:25:27.630496538 -0700
+> > > > > @@ -81,9 +81,12 @@
+> > > > >  		break;
+> > > > >
+> > > > >  	case RET:
+> > > > > +
+> > > > > +#ifdef CONFIG_64BIT
+> > > > >  		if (cpu_wants_rethunk_at(insn))
+> > > > >  			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
+> > > > >  		else
+> > > > > +#endif
+> > > > >  			code = &retinsn;
+> > > > >  		break;
+> > > > >
+> > > >
+> > > > Another option is to define the empty function when CONFIG_STACK_VALIDATION=n as below:
+> > > >
+> > > > --- 8< ---
+> > > > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > > > Subject: [PATCH] x86/its: Fix undefined reference to cpu_wants_rethunk_at()
+> > > >
+> > > > Below error was reported in 32-bit kernel build:
+> > > >
+> > > >   static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> > > >   make[1]: [Makefile:1234: vmlinux] Error
+> > > >
+> > > > This is because the definition of cpu_wants_rethunk_at() depends on
+> > > > CONFIG_STACK_VALIDATION which is only enabled in 64-bit mode.
+> > > >
+> > > > Define the empty function when CONFIG_STACK_VALIDATION=n, rethunk mitigation
+> > > > is anyways not supported without it.
+> > > >
+> > > > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > > > Link: https://lore.kernel.org/stable/0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net/
+> > > > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > > > ---
+> > > >  arch/x86/include/asm/alternative.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
+> > > > index 1797f80c10de..a5f704dbb4a1 100644
+> > > > --- a/arch/x86/include/asm/alternative.h
+> > > > +++ b/arch/x86/include/asm/alternative.h
+> > > > @@ -98,7 +98,7 @@ static inline u8 *its_static_thunk(int reg)
+> > > >  }
+> > > >  #endif
+> > > >
+> > > > -#ifdef CONFIG_RETHUNK
+> > > > +#if defined(CONFIG_RETHUNK) && defined(CONFIG_STACK_VALIDATION)
+> > > >  extern bool cpu_wants_rethunk(void);
+> > > >  extern bool cpu_wants_rethunk_at(void *addr);
+> > > >  #else
+> > > > --
+> > > > 2.34.1
+> > > >
 > > > 
-> > > I'll update commit msg.
+> > > Thanks for looking at this Pawan.
 > > > 
-> > > > s->s_flags |= SB_NODIRATIME | SB_NOATIME;
-> > > 
-> > > IIUC, SB_NOATIME > SB_NODIRATIME.
-> > > 
+> > > Your new patch works fine on both Slackware 15.0 32-bit and 64-bit
+> > > systems.
 > > 
-> > Semantically, it's two different flags. One is responsible for files and another
-> > one is responsible for folders. So, this is why I believe it's more safe to have
-> > these both flags.
+> > Thank you for verifying the patch.
 > 
-> To be honest, from my point of view, SB_NOATIME is more like disabling atime
-> updates for all types of files, not just files. I would like to know what
-> vfs people think, whether we need to use both flags at the same time.
+> Is someone going to submit this in a form we can apply it in?  (hint...)
 
-SB_NODIRATIME should be a subset of SB_NOATIME. So all you should need
-is SB_NOATIME to disable it for all files.
+Oops, sending it now.
