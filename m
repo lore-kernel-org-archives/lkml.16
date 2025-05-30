@@ -1,101 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD33262FD1;
-	Fri, 30 May 2025 17:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA987275860;
+	Fri, 30 May 2025 17:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627511; cv=none; b=n+s96iQVPMQpuHuD4uM16Dj1Dtyxi/ePc7DXAZxroB2Blm2XfzDnTX2IESYCQdG5Lra0rZCuyavyUWqUIT0naeoHHWYsXL9PRyt++pf6m+dtiPIfdlJR6QsCF5NUktMqzznlaHALQUYudsrebQmmdthrvyH4GOkf6tGuUFb9uvI=
+	t=1748627556; cv=none; b=MRXodPPXKnyRpPClcnoj5THdtc0afB/MekFvs36rQMyr/XPuX1V4YOd2+0/1ctWPGVIKWOjGjfnxOFR8oDvkoRL03kas40F6nFSyn0L+zWZKYa0+wndj8RO6A2LP+Jkd/IydEFW7XqIWu8nYiX5VfquDFwea7YxRA1v2KUwt27s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627511; c=relaxed/simple;
-	bh=4glJh4nhklPrnkGM5a9SUGxv+OdnSbFstN9xhw0M7sI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H1AgmdHiGmK+5WCHHtAtL5WGhcLiuggu5LK535B5Rd1+zMssTwXYIHXz/dDY0X4j94/jEvbYAGKZ/a5qCij1qk2tVt/v5ysMM/ohOsUkN5+DfwyKh5I+I077WOeTmOwwG0aBYpA039s2VvgdUY+T1hcaiBL93LiALo+5nit+I+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: fB0BIYvDQDmpvyyEGXHR8g==
-X-CSE-MsgGUID: w22ba/XiSYypHQbzA0jlmQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="49848524"
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="49848524"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:51:49 -0700
-X-CSE-ConnectionGUID: 8FZKRsOPQGGlocHuaAMexA==
-X-CSE-MsgGUID: VCRWgnKFSxCtSTRPECEGrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
-   d="scan'208";a="144917425"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:51:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uL3tQ-000000024c6-2xsi;
-	Fri, 30 May 2025 20:51:44 +0300
-Date: Fri, 30 May 2025 20:51:44 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in
- fxls8962af_fifo_flush
-Message-ID: <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
-References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com>
- <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
- <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
- <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
+	s=arc-20240116; t=1748627556; c=relaxed/simple;
+	bh=WAD/ifSiq2fAR9i0TQSLdHv20w5bxFy9S4A+NHm69h0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=Q4BOvh7z/IwWZVSxinCH+YxXWFxBueTCmMtE4vsRL+dai+Whq5idX+QtpCBMLSFDkWut4KKu+0O7BqioIa/MHwi5StB5Nfqjf1coHFEDiMhG0t3Fhd0YL2aZqRhWRsTVJ5C1TBPWhRZNpDL0pS0LpgUUlO4/cQviap572eBdmcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=h01FH2fZ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="h01FH2fZ"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 80B6F82E;
+	Fri, 30 May 2025 19:51:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748627519;
+	bh=WAD/ifSiq2fAR9i0TQSLdHv20w5bxFy9S4A+NHm69h0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=h01FH2fZbv56YI7SsWnjCdLdkXvXC+NanrNuuWz3cr/cvPyry8sxhhSwJ8STWDsIr
+	 9Wg+Gsz8s8OVlsdgLYDmlKfOSQqJloIlnHGG4yrLGaTA+pDEJIMHYGXQz2qu0dfbOO
+	 SRQA4jnCEjqkq0PEvFTnz9DkC/j6h82nMN55jZyY=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250530154148.374663-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250530154148.374663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250530154148.374663-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 1/2] media: dt-bindings: media: renesas,fcp: Document RZ/V2N SoC
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh@kernel.org>
+Date: Fri, 30 May 2025 18:52:24 +0100
+Message-ID: <174862754481.2225057.10634069595749699787@ping.linuxembedded.co.uk>
+User-Agent: alot/0.9.1
 
-On Thu, May 29, 2025 at 01:49:16PM -0500, David Lechner wrote:
-> On 5/29/25 1:16 PM, Andy Shevchenko wrote:
-> > On Thu, May 29, 2025 at 7:02 PM David Lechner <dlechner@baylibre.com> wrote:
-> >> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
+Quoting Prabhakar (2025-05-30 16:41:47)
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>=20
+> The FCPVD block on the RZ/V2N SoC is identical to the one found on the
+> RZ/G2L SoC.
+>=20
+> No driver changes are required, as `renesas,fcpv` will be used as a
+> fallback compatible string on the RZ/V2N SoC.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/media/renesas,fcp.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/renesas,fcp.yaml b/D=
+ocumentation/devicetree/bindings/media/renesas,fcp.yaml
+> index 5ed9427fb757..074be99ca004 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,fcp.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,fcp.yaml
+> @@ -30,6 +30,7 @@ properties:
+>                - renesas,r9a07g043u-fcpvd # RZ/G2UL
+>                - renesas,r9a07g044-fcpvd # RZ/G2{L,LC}
+>                - renesas,r9a07g054-fcpvd # RZ/V2L
+> +              - renesas,r9a09g056-fcpvd # RZ/V2N
 
-...
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-> >> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling the
-> >> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
-> >>
-> >> It seems like the order should be reversed.
-> > 
-> > AFAIU the wake capability of IRQ line is orthogonal to the interrupt
-> > controller enabling (unmasking) / disabling (masking) the line itself.
-> > Or did you mean something else?
-> 
-> I don't know enough about how suspend/wake stuff works to say for sure.
-> 
-> I just saw the comment:
-> 
-> 	/*
-> 	 * Disable buffer, as the buffer is so small the device will wake
-> 	 * almost immediately.
-> 	 */
-> 
-> so I assumed someone had observed something like this happening already.
-> If an interrupt occurs between enable_irq_wake() and actually
-> going into a low power mode, what effect does it have? I ask because I
-> don't know.
-
-To be a "wake source" means to be capable of signaling to the system that wake
-is needed. If an event comes after enabling an IRQ line to be a wake source,
-that should wakeup the system (independently if that IRQ line is disabled or
-not on the IRQ controller side).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>                - renesas,r9a09g057-fcpvd # RZ/V2H(P)
+>            - const: renesas,fcpv         # Generic FCP for VSP fallback
+> =20
+> --=20
+> 2.49.0
+>
