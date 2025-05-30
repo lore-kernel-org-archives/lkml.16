@@ -1,316 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7499E19CC3A;
-	Fri, 30 May 2025 15:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63A14235055;
+	Fri, 30 May 2025 15:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748620521; cv=none; b=QD99kZSoSuiqy6IEJ/kssPCau9h0KGV5V36O8I1ymWsJh/QFfcFUrsbvWdD78/ObYpb94toyEJDWYFJxNKxsaDf6HQtxiCNzk+EKr830geLK29tXvJ+anTRoRYm28QkeUeUF9P+VSPgKecrkg7QhSpUwK9Y0KSOsGSccBP9gPzo=
+	t=1748620546; cv=none; b=PC0Y4HOwaUCDhWfHnntrnmK3QhmRmurMWE43tbCzQWWBCWOOkKYIrgAiciLeCfUUS4HnV06gXIIcDtn8NZwNLkuHXI0UujKnGyWHfTKW5A6pNENJWoxDZaV3kHIGxjK6aGZ+/3ZaCwW+8YWK6BXKj0ePFpOzEu2UDX15NQYWzeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748620521; c=relaxed/simple;
-	bh=8PdC2kYuXqxW3YVc+vbFC1LPwUWHTwY8QdyF2cDROX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dHjusrJBt3looYqHlUwPm94j+sCfuLzC+Dl2Z1T6lFyGtR5aw0Kt1E9hcShE0/B/CBuGkDu6LOhURQvK5xDifybj2WX3+LfX75roMvLXRfLnz+s4OH17+uaBK5NjTj61vQ7P80+tHudai52Ecw7T0aRUdag1tTzWoP8r/mkGclE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uGL9zKJw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uGL9zKJw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EB0C4CEE9;
-	Fri, 30 May 2025 15:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748620520;
-	bh=8PdC2kYuXqxW3YVc+vbFC1LPwUWHTwY8QdyF2cDROX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uGL9zKJwZJh+pfq2qvhUTrfetVdx3bxBkvY0kaxFYn8ts/y4uzf/jeJU0m0umP2SV
-	 SOnPULjLjdsJRi5FveA2YMtGpMjPnIOX5M9HSkaBn63im/bK4HPGkv8+o5BhpzUlvR
-	 RMsgD8aiTHejNbqeZsMVCJHaOJqyINrcktakPCjKEHKif7m3Lw8aTG7TIGKnpedhSv
-	 5lqpzYs066S6Jcz0A4bCl6OsPWA3Wbiemfu9XsnfSAkkGUYUHKrwSPdwHi20h+Wn6g
-	 f+mI9yxfXOBgkKKvh4bmNKLaiSvJGMeQxuO0ac1um6axB83LI4TLPiFT1+lhZuo3mO
-	 EcUACd9T2wcRA==
-Date: Fri, 30 May 2025 16:55:16 +0100
-From: Conor Dooley <conor@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: victor.duicu@microchip.com, jic23@kernel.org, nuno.sa@analog.com,
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marius.cristea@microchip.com,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: temperature: add support for
- MCP998X
-Message-ID: <20250530-dramatize-camisole-0a1aa9a38281@spud>
-References: <20250529093628.15042-1-victor.duicu@microchip.com>
- <20250529093628.15042-2-victor.duicu@microchip.com>
- <0f68e3f9-cba5-4df3-8e56-2cccbccf35ce@baylibre.com>
+	s=arc-20240116; t=1748620546; c=relaxed/simple;
+	bh=O1q9zomtetdd/K40YHBSG96P2D3qtTar+5z8+taIaJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EHFc1Mp1sAnnYpfZmIoUIlpO38qjctSPvG+x8ig6e/skmtdR5p/cotmo7s/4UCzk7bkQR22tAqT++QbJdk7V1YldHbZUK1UacaTMVEaGgu63A/1rMZ+Y5jK/jFIMGYVon84NmHrcZ1MylMvkHSTTXv6pI8+jE4kHu7AkgMa/saU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09446169C;
+	Fri, 30 May 2025 08:55:27 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF2053F673;
+	Fri, 30 May 2025 08:55:37 -0700 (PDT)
+Message-ID: <af9a96e1-064b-4627-bd34-e7e7e8a05452@arm.com>
+Date: Fri, 30 May 2025 16:55:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="e/ifQMFPjIAS9lJY"
-Content-Disposition: inline
-In-Reply-To: <0f68e3f9-cba5-4df3-8e56-2cccbccf35ce@baylibre.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 0/6] Lazy mmu mode fixes and improvements
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.makhalov@broadcom.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+ David Hildenbrand <david@redhat.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Alexei Starovoitov <ast@kernel.org>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ sparclinux@vger.kernel.org, virtualization@lists.linux.dev,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ Jann Horn <jannh@google.com>
+References: <20250530140446.2387131-1-ryan.roberts@arm.com>
+ <5b5d6352-9018-4658-b8fe-6eadaad46881@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <5b5d6352-9018-4658-b8fe-6eadaad46881@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 30/05/2025 15:47, Lorenzo Stoakes wrote:
+> +cc Jann who is a specialist in all things page table-y and especially scary
+> edge cases :)
+> 
+> On Fri, May 30, 2025 at 03:04:38PM +0100, Ryan Roberts wrote:
+>> Hi All,
+>>
+>> I recently added support for lazy mmu mode on arm64. The series is now in
+>> Linus's tree so should be in v6.16-rc1. But during testing in linux-next we
+>> found some ugly corners (unexpected nesting). I was able to fix those issues by
+>> making the arm64 implementation more permissive (like the other arches). But
+>> this is quite fragile IMHO. So I'd rather fix the root cause and ensure that
+>> lazy mmu mode never nests, and more importantly, that code never makes pgtable
+>> modifications expecting them to be immediate, not knowing that it's actually in
+>> lazy mmu mode so the changes get deferred.
+> 
+> When you say fragile, are you confident it _works_ but perhaps not quite as well
+> as you want? Or are you concerned this might be broken upstream in any way?
 
---e/ifQMFPjIAS9lJY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm confident that it _works_ for arm64 as it is, upstream. But if Dev's series
+were to go in _without_ the lazy_mmu bracketting in some manner, then it would
+be broken if the config includes CONFIG_DEBUG_PAGEALLOC.
 
-On Thu, May 29, 2025 at 01:13:38PM -0500, David Lechner wrote:
-> On 5/29/25 4:36 AM, victor.duicu@microchip.com wrote:
-> > From: Victor Duicu <victor.duicu@microchip.com>
-> >=20
-> > This is the devicetree schema for Microchip MCP998X/33 and
-> > MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
-> >=20
-> > Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
-> > ---
-> >  .../iio/temperature/microchip,mcp9982.yaml    | 174 ++++++++++++++++++
-> >  1 file changed, 174 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/m=
-icrochip,mcp9982.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iio/temperature/microchi=
-p,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchi=
-p,mcp9982.yaml
-> > new file mode 100644
-> > index 000000000000..249470c8953b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp99=
-82.yaml
-> > @@ -0,0 +1,174 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.y=
-aml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive
-> > +       Temperature Monitor Family
-> > +
-> > +maintainers:
-> > +  - Victor Duicu <victor.duicu@microchip.com>
-> > +
-> > +description: |
-> > +  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire mul=
-tichannel
-> > +  automotive temperature monitor.
-> > +  The datasheet can be found here:
-> > +    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/Pr=
-oductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - microchip,mcp9933
-> > +      - microchip,mcp9933d
-> > +      - microchip,mcp9982
-> > +      - microchip,mcp9982d
-> > +      - microchip,mcp9983
-> > +      - microchip,mcp9983d
-> > +      - microchip,mcp9984
-> > +      - microchip,mcp9984d
-> > +      - microchip,mcp9985
-> > +      - microchip,mcp9985d
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 2
-> > +
-> > +  interrupt-names:
-> > +    description:
-> > +      alert1 indicates a HIGH or LOW limit was exceeded.
-> > +      alert2 indicates a THERM limit was exceeded.
->=20
-> I think we need minItems: 1 here.
->=20
-> > +    items:
-> > +      - const: alert1
-> > +      - const: alert2
->=20
-> Typically, interrupts are named after the pin they are wired to, not
-> the signal. This is especially true when a single pin can be configured
-> for different signals as is the case here.
->=20
-> There is a /ALERT//THERM pin on all chips and a /THERM//ADDR pin on some
-> chips.
->=20
-> So I would expect the names to match that:
->=20
->     items:
->       - const: alert-therm
->       - const: therm-addr
->=20
-> And then extra descriptions probably aren't needed.
->=20
-> If we want to be extra careful, we could also add an -if: below to set
-> maxItems: 1 for interrupts and interrupt-names on chips that only have
-> the one pin.
->=20
-> And I assume that the /SYS_SHDN pin would never be wired up as an interru=
-pt?
->=20
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> > +
-> > +  microchip,apdd-state:
-> > +    description:
-> > +      Enable anti-parallel diode mode operation.
-> > +      MCP9984/84D/85/85D and MCP9933/33D support reading two external =
-diodes
-> > +      in anti-parallel connection on the same set of pins.
-> > +      Omit this tag to disable anti-parallel diode mode.
-> > +    type: boolean
-> > +
-> > +  microchip,recd12:
-> > +    description:
-> > +      Enable resistance error correction for external channels 1 and 2.
-> > +      Omit this tag to disable REC for channels 1 and 2.
-> > +    type: boolean
-> > +
-> > +  microchip,recd34:
-> > +    description:
-> > +      Enable resistance error correction for external channels 3 and 4.
-> > +      Omit this tag to disable REC for channels 3 and 4.
+There's a lot more explanation in the later patches as to how it can be broken,
+but for arm64, the situation is currently like this, because our implementation
+of __change_memory_common() uses apply_to_page_range() which implicitly starts
+an inner lazy_mmu_mode. We enter multiple times, but we exit one the first call
+to exit. Everything works correctly but it's not optimal because C is no longer
+deferred:
 
-Why are these two devicetree properties, rather than runtime controls?
+arch_enter_lazy_mmu_mode()                        << outer lazy mmu region
+  <do some pte changes (A)>
+  alloc_pages()
+    debug_pagealloc_map_pages()
+      __kernel_map_pages()
+        __change_memory_common()
+          arch_enter_lazy_mmu_mode()              << inner lazy mmu region
+            <change kernel pte to make valid (B)>
+          arch_leave_lazy_mmu_mode()              << exit; complete A + B
+    clear_page()
+  <do some more pte changes (C)>                  << no longer in lazy mode
+arch_leave_lazy_mmu_mode()                        << nop
 
-> > +    type: boolean
-> > +
-> > +  label:
-> > +    description: Unique name to identify which device this is.
-> > +
-> > +  vdd-supply: true
-> > +
-> > +patternProperties:
-> > +  "^channel@[1-4]$":
-> > +    description:
-> > +      Represents the external temperature channels to which
-> > +      a remote diode is connected.
-> > +    type: object
-> > +
-> > +    properties:
-> > +      reg:
-> > +        items:
-> > +          minimum: 1
-> > +          maximum: 4
-> > +
-> > +      microchip,ideality-factor:
-> > +        description:
-> > +          Each channel has an ideality factor.
-> > +          Beta compensation and resistance error correction automatica=
-lly
-> > +          correct for most ideality errors. So ideality factor does no=
-t need
-> > +          to be adjusted in general.
-> > +          Omit this tag in order to set the default value.
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        default: 18
-> > +
-> > +      label:
-> > +        description: Unique name to identify which channel this is.
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> > +    additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vdd-supply
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - microchip,mcp9982
-> > +              - microchip,mcp9982d
-> > +              - microchip,mcp9983
-> > +              - microchip,mcp9983d
-> > +    then:
-> > +      properties:
-> > +        microchip,apdd-state: false
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - microchip,mcp9982
-> > +              - microchip,mcp9982d
-> > +              - microchip,mcp9933
-> > +              - microchip,mcp9933d
-> > +    then:
-> > +      properties:
-> > +        microchip,recd34: false
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        temperature-sensor@4c {
-> > +            compatible =3D "microchip,mcp9985";
-> > +            reg =3D <0x4c>;
-> > +
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            label =3D "temperature-sensor";
->=20
-> This is the same as the node name, so probably not the best
-> example of a label.
+An alternative implementation would not add the nested lazy mmu mode, so we end
+up with this:
 
-Ye, I'm not convinced this property has any value, when the channels
-themselves can have labels.
+arch_enter_lazy_mmu_mode()                        << outer lazy mmu region
+  <do some pte changes (A)>
+  alloc_pages()
+    debug_pagealloc_map_pages()
+      __kernel_map_pages()
+        __change_memory_common()
+            <change kernel pte to make valid (B)> << deferred due to lazy mmu
+    clear_page()                                  << BANG! B has not be actioned
+  <do some more pte changes (C)>
+arch_leave_lazy_mmu_mode()
 
->=20
-> > +
-> > +            microchip,apdd-state;
-> > +            microchip,recd12;
-> > +            microchip,recd34;
-> > +            vdd-supply =3D <&vdd>;
-> > +
-> > +            channel@1 {
-> > +                reg =3D <0x1>;
->=20
-> Why 0x here?
->=20
-> > +                label =3D "CPU Temperature";
-> > +            };
-> > +
-> > +            channel@2 {
-> > +                reg =3D <0x2>;
-> > +                label =3D "GPU Temperature";
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
->=20
+This is clearly a much worse outcome. It's not happening today but it could in
+future. That's why I'm claiming it's fragile. It's much better (IMHO) to
+disallow calling the page allocator when in lazy mmu mode.
 
---e/ifQMFPjIAS9lJY
-Content-Type: application/pgp-signature; name="signature.asc"
+I won't speak for other arches; there may be more or less potential impact for them.
 
------BEGIN PGP SIGNATURE-----
+> 
+> I am thinking specifically about the proposed use in Dev's new series [0] and
+> obviously hoping (and assuming in fact) that it's the former :)
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDnU5AAKCRB4tDGHoIJi
-0jhcAQDkD/eIZOanXqiKJ11EUmuSbVgbIE//E+mQmRkb4zrMCgEA6aK7uAeokpJM
-jECgVIoOVJt//Kb9FoilMSTZfau47wE=
-=qiRt
------END PGP SIGNATURE-----
+Dev's changes aren't directly related to this, but if a version was accepted
+that didn't include the lazy mmu mode, that would cause non-obvious issues.
 
---e/ifQMFPjIAS9lJY--
+Hope that helps?
+
+Thanks,
+Ryan
+
+> 
+> [0]: https://lore.kernel.org/linux-mm/20250530090407.19237-1-dev.jain@arm.com/
+> 
+>>
+>> The first 2 patches are unrelated, very obvious bug fixes. They don't affect
+>> arm64 because arm64 only uses lazy mmu for kernel mappings. But I noticed them
+>> during code review and think they should be fixed.
+>>
+>> The next 3 patches are aimed at solving the nesting issue.
+>>
+>> And the final patch is reverting the "permissive" fix I did for arm64, which is
+>> no longer needed after the previous 3 patches.
+>>
+>> I've labelled this RFC for now because it depends on the arm64 lazy mmu patches
+>> in Linus's master, so it won't apply to mm-unstable. But I'm keen to get review
+>> and siince I'm touching various arches and modifying some core mm stuff, I
+>> thought that might take a while so thought I'd beat the rush and get a first
+>> version out early.
+>>
+>> I've build-tested all the affected arches. And I've run mm selftests for the
+>> arm64 build, with no issues (with DEBUG_PAGEALLOC and KFENCE enabled).
+>>
+>> Applies against Linus's master branch (f66bc387efbe).
+>>
+>> Thanks,
+>> Ryan
+>>
+>>
+>> Ryan Roberts (6):
+>>   fs/proc/task_mmu: Fix pte update and tlb maintenance ordering in
+>>     pagemap_scan_pmd_entry()
+>>   mm: Fix pte update and tlb maintenance ordering in
+>>     migrate_vma_collect_pmd()
+>>   mm: Avoid calling page allocator from apply_to_page_range()
+>>   mm: Introduce arch_in_lazy_mmu_mode()
+>>   mm: Avoid calling page allocator while in lazy mmu mode
+>>   Revert "arm64/mm: Permit lazy_mmu_mode to be nested"
+>>
+>>  arch/arm64/include/asm/pgtable.h              | 22 ++++----
+>>  .../include/asm/book3s/64/tlbflush-hash.h     | 15 ++++++
+>>  arch/sparc/include/asm/tlbflush_64.h          |  1 +
+>>  arch/sparc/mm/tlb.c                           | 12 +++++
+>>  arch/x86/include/asm/paravirt.h               |  5 ++
+>>  arch/x86/include/asm/paravirt_types.h         |  1 +
+>>  arch/x86/kernel/paravirt.c                    |  6 +++
+>>  arch/x86/xen/mmu_pv.c                         |  6 +++
+>>  fs/proc/task_mmu.c                            |  3 +-
+>>  include/asm-generic/tlb.h                     |  2 +
+>>  include/linux/mm.h                            |  6 +++
+>>  include/linux/pgtable.h                       |  1 +
+>>  kernel/bpf/arena.c                            |  6 +--
+>>  mm/kasan/shadow.c                             |  2 +-
+>>  mm/memory.c                                   | 54 ++++++++++++++-----
+>>  mm/migrate_device.c                           |  3 +-
+>>  mm/mmu_gather.c                               | 15 ++++++
+>>  17 files changed, 128 insertions(+), 32 deletions(-)
+>>
+>> --
+>> 2.43.0
+>>
+
