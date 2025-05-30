@@ -1,301 +1,221 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7E41F0992
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2E721FF55
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748601891; cv=none; b=cKfaQi++IjlmWzHoPjg+qbvXE0q5n2Au/9HSxwPCFM4GXLU3ruKLW8G5cZTFAgG2V/FuCG9GXmwjpjMyOs1u+7U/gwFbNzUtYxYTvJSQDCG+IjDZ0Y4vvLnaZ3qm+ezauQoapkHTkguhQ5hBi+0E7DrXqPDN4oX1V2xu7E8FG54=
+	t=1748601952; cv=none; b=VdWO2/xpvhi/U2hTm2yORZe2vqe4WO9p4ktQ7wYKoz0fmAzD2F+txvWNPxM7W1Cc9HadRabAhuH3Q2gMKWLMS/uZweT00n+LZRF/WDhqJiqWu3iWUntVzddhZyRPHuR9zTZooF3LVNcBIckW0uvZL3DuQemJX5CGTHqj4DtlOOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748601891; c=relaxed/simple;
-	bh=TWLus+4KlVrrOSWF5OOQ4tTrcLYf2lNVsXL0U9O9pZg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ROzsbewJFA8Tnfa/EHSVRbPdOvtrDTR2w9v/E0uvDdP5ypZ8OngjA2SC7r8C/a68IojqbwPdeKibM8NbG2TOvleufw/TC3fG35ZS/4QkbMD54luA63xCWgqSBl+iMqaXkK7oJCobpQxKw2pRau1bbehkJQHK3i1e1bQXvXhqJ14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z9gOfj4m; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748601952; c=relaxed/simple;
+	bh=buMPpKyVK2v1HrI0a+oYjHtLHiMcKVBqzB0VCTcxFk0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NgNC/5qd8bY71VK9cBrnQn+x0pY/QPJz3QYv71ULQkPOnHKkYb8iSOi6iD/Yg/uMivi6qZ+TUupAEIYZn+bmrZOFh/AwQVtAgy44pelPOrVVTKEfsFOsBrAUuRxlYgJF/O/xnQEp7TRY+YvkQFzaND3DUnOWpeUGZQf0oImpuG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JvmNDKtt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9gOfj4m"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so1890059a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748601889; x=1749206689; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WnmyWWnkHhL5mEaYJ42mO1WBC828RJ92PmrmoVql9C4=;
-        b=Z9gOfj4mMRLeqneeHV5Y4tjvWXqz69PQm9fTk0f6+PVay7u1fh64oTHvtwV11i7WaP
-         uzTQywJeLfoCaPDm44NwpGrFZoF6N8DBXYcYVsve4mjpZ8YaNvvTpDzVSVMuf4MOv4Fw
-         KRLRpQJBiU/OL+GstZfZMEegMp8ftx1O+FuV3ELaYAE8HUyvSwemWBvEcjoEiMTBUQ/r
-         6wfya+6GvQRwR97IJjWdMmN22zpRXnTx4LhHY7gIibDN7xqvuIhfyRVz7fee6n9lWYQx
-         fcogW3t63mPsES2xLHCsJcJnMl8P3BvWxYZrOh6xIG18liyQKLSN7b5lm+HP+6mDYOqW
-         sVOw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JvmNDKtt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748601949;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DwdYkxH5NWexRNTuYD3BgdlNehQBcazh9M5V2TAF1Ww=;
+	b=JvmNDKttUxXHnDE0/MScola33ufrOh4Cx4wNupAGTGa8tHLTPNjmP62+pO5ND/DBUN9MPn
+	kTMieftBlQoHIrqb4Qhx44P8LvYD7N/ryuUWkLngmVrTjQxO3dic7ZXmnV3JpqrDdTlThN
+	Ppiy4B3spMgfRbv44NcHW6DsaPSUh3M=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-153-TjOs9UnmP8eni2s-I2jZwg-1; Fri, 30 May 2025 06:45:47 -0400
+X-MC-Unique: TjOs9UnmP8eni2s-I2jZwg-1
+X-Mimecast-MFC-AGG-ID: TjOs9UnmP8eni2s-I2jZwg_1748601944
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso16101785e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:45:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748601889; x=1749206689;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WnmyWWnkHhL5mEaYJ42mO1WBC828RJ92PmrmoVql9C4=;
-        b=Ah98uxSR77dRGmrK5s62QEjRwGs5RAneNtYm0KFl2J3yrqdOpQ/TrT8u7h+pkeqDlY
-         0Lknuj+2tR0sZrBDWGBbGIo6bfwAUT+jA1rV846EpoDMh9tu13TE+tsc/KrelWQoQHcO
-         UoZPupN4hUT91+exciR1uz9aevZZVwXx16u/NndZoWTMIgb2HdrtId/YXRZwReAAFFhw
-         4EBt4/U6aWINVJs38Yb+IUM5bcjM9rJp4T7RaeVZsG0a9F+3R4uG1WfuwEchbHjosL45
-         klRjYOHwd6pB5Df1t+5OLShzY8a59CsbtarmVx4QfA52K6DhCPOiT9adNQ7QFolXK6Rr
-         05Rg==
-X-Gm-Message-State: AOJu0Yzgc9o7kh1/mV1uCAsyHKYxf0BnHklb6jhdHuapdOrSgFbr4wfo
-	bXaQ0cGQqZZLbdlclJCt1eB2y4/qT2pG6vLCdf4P31LyUVN4xdGuhc3A
-X-Gm-Gg: ASbGnctKK0+0xf29hlfWk4ybeDaHgf3rB25xjKeIxESE4q92YEIAH3xUxLDKO6M5Su6
-	CS+QB84Noa/uxmKsvbvinnNL6uwoS4o+Joi3AoLFtWBnLH1QGNAQ4CLMO1SkoDquacleUNKtmGn
-	o4tyk8T1k54ZQznwPVbZQUBvJVdR8HIFRwREJpHqJbvZt1s34zME+KVpMOw1lr9aqVtMMHMLLeF
-	5q12L67Jyo+uXlZZFkqUZnkBP6VRZinyPc0W64f3DEaTnl9Wwr3URtH3kCARjYBmQezJNg1iyCE
-	efUbstHhq3OvkhjEkvkjDoiJwxswZpE3SIflqUXd5omfs1jWoGni5WE8lOHXN8buqJ22O9jYjpc
-	5aliTNxYldafHnR8=
-X-Google-Smtp-Source: AGHT+IHeNd74QiY5s8umG+LXY6p1qQEn4uJ7HgGVIgmQHCms1DbpS7bfrva0vne3RuKXbvcISBeFxQ==
-X-Received: by 2002:a05:6a21:3990:b0:216:60bc:2ca9 with SMTP id adf61e73a8af0-21ad989d387mr5428702637.40.1748601888893;
-        Fri, 30 May 2025 03:44:48 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.145.159])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb35702sm1124107a12.33.2025.05.30.03.44.44
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 03:44:48 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	Tangquan Zheng <zhengtangquan@oppo.com>
-Subject: [PATCH RFC v2] mm: use per_vma lock for MADV_DONTNEED
-Date: Fri, 30 May 2025 22:44:39 +1200
-Message-Id: <20250530104439.64841-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+        d=1e100.net; s=20230601; t=1748601944; x=1749206744;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DwdYkxH5NWexRNTuYD3BgdlNehQBcazh9M5V2TAF1Ww=;
+        b=GwUDgMU2cmoMpk3jLOn51Cswj/1ZuHb3Xtd6zCdzbtn4Jq5p5yGEF+IS3FTHmlCmXC
+         bUgp6Z/PZpXN0uQOyVQkTFlzi8c3lrZ63PmeR6k9aMnUEtqHPbdZiff/iTJOG5S+zE1o
+         LIUDmRSpamGD7D/h8uPHF3u5riC1Fsc54BF/dMWqi7pcVDsdsIHTr4HmEMD4GSn/kzuB
+         aN/U6h5u0YT1E250qIcOgroZRNsKinAjs/qOdcD4+1587DVnY3BPOL1SG3Nihq2oS3Ct
+         S+7kjaxa+hsl5sggs0MYbS0yLbwJ2NobaLbo3kRV2RBybBGTc1Vlmc9dWgSDeezqWjHd
+         i3Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1N7oPaMptUbtoVkg3I6GlGjx/MArmq1mM4DiqSkm2Ib+UHX0n6m9scx6yaSGjMsw549kzbVRkS7Z8UEM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyov6kKf0gm+PXiOGCOJ3Q96afBxPXbMQ2ooxxKUlj/dNTzHjsc
+	zAsyyKH36+f/nEvez9eXdzoGf5/olrzVluQ0tAZFAEdo7qRlbBjUDNRdkzYzRwrJ/RfaJ60DxKc
+	iXtbHsft741HJYOuU1Hybq8SXFDEFLrD0zehpVXdqDUKxI7v1WUWO/U2UzA72URG6iw==
+X-Gm-Gg: ASbGncvtAAJPyHjViJGF/QN98ITs9h+/Pl9sFJ8Jndalg6MHGSJ5EnDpPK7TsC7JJ/k
+	lHHpczb97dzn/ny3fo//cpPHywC9zlMN2ID93CktBv1dRvyImVNhEbs1nnNdUfAh/0gH+Zw4jgG
+	ldpmJsyMBvmO5kb2q4ydVNlpeYPtFlgmNkcR8YX2csS+U784FabFle3E/lszYWem1fbl+JpFgbU
+	d1k212jbceAH6vpvnHqDukYNphKCvaaQbDSSGUhkkwswdJdyjF5jRJH4HxlNdPOUsWzZngCbRpl
+	lFZHkb400701CEifcevpikKFUiFp4BAltrrE2aCQOqssb2Fd8HKGJD1/tzn663JV3oYidIWnsWo
+	4HxicikS24kW7RttDaYRZpXrCgCrPoNTX2VJR/BzzWEiY49D9cw==
+X-Received: by 2002:a05:600c:198e:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-450d885e395mr13897915e9.20.1748601944293;
+        Fri, 30 May 2025 03:45:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG7p1KosJBoxSnA52uUHO8zNGeB7yLg2OEBif2rtf2efs00yVeVP3ublBcCm3+TNu4PeFchmg==
+X-Received: by 2002:a05:600c:198e:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-450d885e395mr13897625e9.20.1748601943913;
+        Fri, 30 May 2025 03:45:43 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc281csm14756015e9.40.2025.05.30.03.45.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 03:45:43 -0700 (PDT)
+Message-ID: <290b753a-47be-4c3a-b775-f2c10a0bc536@redhat.com>
+Date: Fri, 30 May 2025 12:45:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <05d60e72-3113-41f0-b81f-225397f06c81@arm.com>
+ <f3dad5b5-143d-4896-b315-38e1d7bb1248@redhat.com>
+ <9b1bac6c-fd9f-4dc1-8c94-c4da0cbb9e7f@arm.com>
+ <abe284a4-db5c-4a5f-b2fd-e28e1ab93ed1@redhat.com>
+ <6caefe0b-c909-4692-a006-7f8b9c0299a6@redhat.com>
+ <19faab84-dd8e-4dfd-bf91-80bcb4a34fe8@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <19faab84-dd8e-4dfd-bf91-80bcb4a34fe8@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+On 30.05.25 11:52, Baolin Wang wrote:
+> 
+> 
+> On 2025/5/30 17:16, David Hildenbrand wrote:
+>> On 30.05.25 11:10, David Hildenbrand wrote:
+>>> On 30.05.25 10:59, Ryan Roberts wrote:
+>>>> On 30/05/2025 09:44, David Hildenbrand wrote:
+>>>>> On 30.05.25 10:04, Ryan Roberts wrote:
+>>>>>> On 29/05/2025 09:23, Baolin Wang wrote:
+>>>>>>> As we discussed in the previous thread [1], the MADV_COLLAPSE will
+>>>>>>> ignore
+>>>>>>> the system-wide anon/shmem THP sysfs settings, which means that
+>>>>>>> even though
+>>>>>>> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE
+>>>>>>> will still
+>>>>>>> attempt to collapse into a anon/shmem THP. This violates the rule
+>>>>>>> we have
+>>>>>>> agreed upon: never means never. This patch set will address this
+>>>>>>> issue.
+>>>>>>
+>>>>>> This is a drive-by comment from me without having the previous
+>>>>>> context, but...
+>>>>>>
+>>>>>> Surely MADV_COLLAPSE *should* ignore the THP sysfs settings? It's a
+>>>>>> deliberate
+>>>>>> user-initiated, synchonous request to use huge pages for a range of
+>>>>>> memory.
+>>>>>> There is nothing *transparent* about it, it just happens to be
+>>>>>> implemented using
+>>>>>> the same logic that THP uses.
+>>>>>>
+>>>>>> I always thought this was a deliberate design decision.
+>>>>>
+>>>>> If the admin said "never", then why should a user be able to
+>>>>> overwrite that?
+>>>>
+>>>> Well my interpretation would be that the admin is saying never
+>>>> *transparently*
+>>>> give anyone any hugepages; on balance it does more harm than good for my
+>>>> workloads. The toggle is called transparent_hugepage/enabled, after all.
+>>>
+>>> I'd say it's "enabling transparent huge pages" not "transparently
+>>> enabling huge pages". After all, these things are ... transparent huge
+>>> pages.
+>>>
+>>> But yeah, it's confusing.
+>>>
+>>>>
+>>>> Whereas MADV_COLLAPSE is deliberately applied to a specific region at an
+>>>> opportune moment in time, presumably because the user knows that the
+>>>> region
+>>>> *will* benefit and because that point in the execution is not
+>>>> sensitive to latency.
+>>>
+>>> Not sure if MADV_HUGEPAGE is really *that* different.
+>>>
+>>>>
+>>>> I see them as logically separate.
+>>>>
+>>>>>
+>>>>> The design decision I recall is that if VM_NOHUGEPAGE is set, we'll
+>>>>> ignore that.
+>>>>> Because that was set by the app itself (MADV_NOHUEPAGE).
+> 
+> IIUC, MADV_COLLAPSE does not ignore the VM_NOHUGEPAGE setting, if we set
+> VM_NOHUGEPAGE, then MADV_COLLAPSE will not be allowed to collapse a THP.
+> See:
+> __thp_vma_allowable_orders() ---> vma_thp_disabled()
 
-Certain madvise operations, especially MADV_DONTNEED, occur far more
-frequently than other madvise options, particularly in native and Java
-heaps for dynamic memory management.
+Interesting, maybe I misremember things.
 
-Currently, the mmap_lock is always held during these operations, even when
-unnecessary. This causes lock contention and can lead to severe priority
-inversion, where low-priority threads—such as Android's HeapTaskDaemon—
-hold the lock and block higher-priority threads.
+Maybe because process_madvise() could try MADV_COLLAPSE on a different 
+process. And if that process as VM_NOHUGEPAGE set, it could be problematic.
 
-This patch enables the use of per-VMA locks when the advised range lies
-entirely within a single VMA, avoiding the need for full VMA traversal. In
-practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
-
-Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
-benefits from this per-VMA lock optimization. After extended runtime,
-217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
-only 1,231 fell back to mmap_lock.
-
-To simplify handling, the implementation falls back to the standard
-mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
-userfaultfd_remove().
-
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jann Horn <jannh@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Tangquan Zheng <zhengtangquan@oppo.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
----
- -v2:
- * try to hide the per-vma lock in madvise_lock, per Lorenzo;
- * ideally, for vector_madvise(), we are able to make the
-   decision of lock types for each iteration; for this moment,
-   we still use the global lock.
- -v1:
- https://lore.kernel.org/linux-mm/20250527044145.13153-1-21cnbao@gmail.com/
-
- mm/madvise.c | 79 ++++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 70 insertions(+), 9 deletions(-)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 8433ac9b27e0..d408ffa404b3 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -51,6 +51,7 @@ struct madvise_walk_private {
- struct madvise_behavior {
- 	int behavior;
- 	struct mmu_gather *tlb;
-+	struct vm_area_struct *vma;
- };
- 
- /*
-@@ -1553,6 +1554,21 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
- 	return unmapped_error;
- }
- 
-+/*
-+ * Call the visit function on the single vma with the per_vma lock
-+ */
-+static inline
-+int madvise_single_locked_vma(struct vm_area_struct *vma,
-+		unsigned long start, unsigned long end, void *arg,
-+		int (*visit)(struct vm_area_struct *vma,
-+				   struct vm_area_struct **prev, unsigned long start,
-+				   unsigned long end, void *arg))
-+{
-+	struct vm_area_struct *prev;
-+
-+	return visit(vma, &prev, start, end, arg);
-+}
-+
- #ifdef CONFIG_ANON_VMA_NAME
- static int madvise_vma_anon_name(struct vm_area_struct *vma,
- 				 struct vm_area_struct **prev,
-@@ -1603,7 +1619,7 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
- }
- #endif /* CONFIG_ANON_VMA_NAME */
- 
--static int madvise_lock(struct mm_struct *mm, int behavior)
-+static int __madvise_lock(struct mm_struct *mm, int behavior)
- {
- 	if (is_memory_failure(behavior))
- 		return 0;
-@@ -1617,7 +1633,7 @@ static int madvise_lock(struct mm_struct *mm, int behavior)
- 	return 0;
- }
- 
--static void madvise_unlock(struct mm_struct *mm, int behavior)
-+static void __madvise_unlock(struct mm_struct *mm, int behavior)
- {
- 	if (is_memory_failure(behavior))
- 		return;
-@@ -1628,6 +1644,46 @@ static void madvise_unlock(struct mm_struct *mm, int behavior)
- 		mmap_read_unlock(mm);
- }
- 
-+static int madvise_lock(struct mm_struct *mm, unsigned long start,
-+		unsigned long len, struct madvise_behavior *madv_behavior)
-+{
-+	int behavior = madv_behavior->behavior;
-+
-+	/*
-+	 * MADV_DONTNEED is commonly used with userspace heaps and most often
-+	 * affects a single VMA. In these cases, we can use per-VMA locks to
-+	 * reduce contention on the mmap_lock.
-+	 */
-+	if (behavior == MADV_DONTNEED || behavior == MADV_DONTNEED_LOCKED) {
-+		struct vm_area_struct *vma;
-+		unsigned long end;
-+
-+		start = untagged_addr(start);
-+		end = start + len;
-+		vma = lock_vma_under_rcu(mm, start);
-+		if (!vma)
-+			goto out;
-+		if (end > vma->vm_end || userfaultfd_armed(vma)) {
-+			vma_end_read(vma);
-+			goto out;
-+		}
-+		madv_behavior->vma = vma;
-+		return 0;
-+	}
-+
-+out:
-+	return __madvise_lock(mm, behavior);
-+}
-+
-+static void madvise_unlock(struct mm_struct *mm,
-+		struct madvise_behavior *madv_behavior)
-+{
-+	if (madv_behavior->vma)
-+		vma_end_read(madv_behavior->vma);
-+	else
-+		__madvise_unlock(mm, madv_behavior->behavior);
-+}
-+
- static bool madvise_batch_tlb_flush(int behavior)
- {
- 	switch (behavior) {
-@@ -1714,19 +1770,24 @@ static int madvise_do_behavior(struct mm_struct *mm,
- 		unsigned long start, size_t len_in,
- 		struct madvise_behavior *madv_behavior)
- {
-+	struct vm_area_struct *vma = madv_behavior->vma;
- 	int behavior = madv_behavior->behavior;
-+
- 	struct blk_plug plug;
- 	unsigned long end;
- 	int error;
- 
- 	if (is_memory_failure(behavior))
- 		return madvise_inject_error(behavior, start, start + len_in);
--	start = untagged_addr_remote(mm, start);
-+	start = untagged_addr(start);
- 	end = start + PAGE_ALIGN(len_in);
- 
- 	blk_start_plug(&plug);
- 	if (is_madvise_populate(behavior))
- 		error = madvise_populate(mm, start, end, behavior);
-+	else if (vma)
-+		error = madvise_single_locked_vma(vma, start, end,
-+				madv_behavior, madvise_vma_behavior);
- 	else
- 		error = madvise_walk_vmas(mm, start, end, madv_behavior,
- 					  madvise_vma_behavior);
-@@ -1817,13 +1878,13 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
- 
- 	if (madvise_should_skip(start, len_in, behavior, &error))
- 		return error;
--	error = madvise_lock(mm, behavior);
-+	error = madvise_lock(mm, start, len_in, &madv_behavior);
- 	if (error)
- 		return error;
- 	madvise_init_tlb(&madv_behavior, mm);
- 	error = madvise_do_behavior(mm, start, len_in, &madv_behavior);
- 	madvise_finish_tlb(&madv_behavior);
--	madvise_unlock(mm, behavior);
-+	madvise_unlock(mm, &madv_behavior);
- 
- 	return error;
- }
-@@ -1847,7 +1908,7 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
- 
- 	total_len = iov_iter_count(iter);
- 
--	ret = madvise_lock(mm, behavior);
-+	ret = __madvise_lock(mm, behavior);
- 	if (ret)
- 		return ret;
- 	madvise_init_tlb(&madv_behavior, mm);
-@@ -1880,8 +1941,8 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
- 
- 			/* Drop and reacquire lock to unwind race. */
- 			madvise_finish_tlb(&madv_behavior);
--			madvise_unlock(mm, behavior);
--			madvise_lock(mm, behavior);
-+			__madvise_unlock(mm, behavior);
-+			__madvise_lock(mm, behavior);
- 			madvise_init_tlb(&madv_behavior, mm);
- 			continue;
- 		}
-@@ -1890,7 +1951,7 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
- 		iov_iter_advance(iter, iter_iov_len(iter));
- 	}
- 	madvise_finish_tlb(&madv_behavior);
--	madvise_unlock(mm, behavior);
-+	__madvise_unlock(mm, behavior);
- 
- 	ret = (total_len - iov_iter_count(iter)) ? : ret;
- 
 -- 
-2.39.3 (Apple Git-146)
+Cheers,
+
+David / dhildenb
 
