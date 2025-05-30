@@ -1,163 +1,197 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2080.outbound.protection.outlook.com [40.107.237.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8974431;
-	Fri, 30 May 2025 16:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624252; cv=fail; b=OFBS1Vvf4r9yBodPQEgNAv4qvluSPDg6BPu9BK1Cljzojy7n2Q52dLq5HqrsKbarDeHect7mDCA5MRclzkEOiFpcwbPaQYHjxP5yBURSNUx97DAxJ25s/7ss2WLnbDB3KieAC4oQZsTsTLuAl7OAc6qWuXiduMpPZbbvzm0ozVA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624252; c=relaxed/simple;
-	bh=UosqIsr9LlqaozyxO126A1gb/35wOnkjs3Vwa5zJQvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b79WuVSrJMVapyKula18JHpmEmBjY1K1CpoUMOCtf1PiV1xasHQWtHuBZTeoKWIIRpe2/FrU4vkuTcXnjTWBbiQ3nlmFh7mIlbxb9b0GisrwF93HxLXw/Ed8chLtMDnzK5HS2wu75WPcQd+zhHBB2UgE9gVRY5LqpTcdxZiicrk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=A00wqL/c; arc=fail smtp.client-ip=40.107.237.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044724431;
+	Fri, 30 May 2025 16:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748624354; cv=none; b=XXVI6DLq8Ns8mXRPx/aLB/kxFi/z5h8c9/92ZgCOop4axFv4vdMtxfw9RSjzXenjOuCbEx9KivsJwxzutAVqbgsJ2MTKtEZDQdbWhF1ROnmYpjWsmGNz1h0TaW4y8eeLTYJDEb2xC5y2AxDdcAwX89keALTja8428ZTexATKaMs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748624354; c=relaxed/simple;
+	bh=QDcFjTJoMHfp/IoCanlLWHbqTOuV5QdxXMqbbOeXlDk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MTASN0+T/tiuhYlG2BocnRyaLdvYB/ws4DiPTT4jjg4vmNmKAvQ3f3Dvt57SoCwrifURkuAopwGW4Z25oTCUg01rpxtSW94wIaPDb4KF0TAYCdSMT7lkTn1QqP6IRLC7IFGtoVywYJbU111thrzcyE2Dd0rbeZa1qm4pPg9H0ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DgVVQRp+; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="A00wqL/c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sAyjfZKI2PqQpYPD9qTnEe+4Xq6RIqfMRibgDppvZvhdRxd3OSlueOWe2lvrGN0r39ZOEMxCdkKq1+XY6OD+R+irDF6/3xOK9bZmzoK5gcDmQ5eEls72Faz70gBXlcpFMxKy/FOVosHOo4F/PSRrRPa1K5rNonklYkYF8BH2Hv3G6nk4NZBly1aKuP9w5Lt0DTmS4BnOPCb1uGL79Ujz9zfyhc4dHY2SEoRXonA42E92zXtyHpTTk5h08f4hWu3iJSO1TLcNxvU2ao2LLWv4wLKTHU8Tk8P96c7+d76c1q0/wSahgGZuBDAbamQ7Co/D4KhZ+a8iAA3JF5GTNz521g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sBBrYLJXsfgIfDNZ3dRk1/4TfqhfSWZIPIL0m6o/2oo=;
- b=mcwkLgGdlfYkTexUF8/Z3l/ObDGRt9/eJJ7KZNkupQK+6PSE5XjJvmbZXldXdwQBPTQ114NuVfXi3M5GeFQHYydq9jlrXbUyqhugSkT47L7jpio7cIJhT2TUVA5qQEpZsidYnYVh6QDveG+zwPhHoJt6K53FS9woFe9hhRgCgu9j1tl2DGk+QNLwF405sOLHX5J9kFKz0LoKJdz9GaYwiXb+HXnV7669mZ37fikk5r+UC6F6dcN3Vgu+V8GRB+V/4RPFBKHFIzX0txlMG7z2dZr7Q/bcDUF874f3UYiByk3TUm/4qLu5RfQQq1kj92/Zz0o0vlQwATw1DUM55UU/Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBBrYLJXsfgIfDNZ3dRk1/4TfqhfSWZIPIL0m6o/2oo=;
- b=A00wqL/cNBZbiZlvz/IPuH/Va8qHPGX1RxQ7C8d0xHf0p+m6fMR2jDwtGaxnSKMYGx3ZCuzL3SiQsalGoqDtW9O7ia+JesMI9SPuopgc2SjBv91p0peCGfCqtAtPcZKxJob665zvApt8Yo1YrsiPHYyitYtU2Hzl8QtBRINw2KJoGLtKDWtshBJoqVIGeu8MlCIEbUi7fX3Cj0MrW0BB1kv7J+Ioj9EAGdQNBh9ghHVIoiHod+JWC09HTtu2J+gwlG/2PzwpAsAFPZaRkJovO3XJbn0NDMNxMV0WLvQ6MRq4k/ZDxjIh81elC3XAPw4lDxyUe1Br36JvPL242z1lLw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CH3PR12MB8903.namprd12.prod.outlook.com (2603:10b6:610:17a::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Fri, 30 May
- 2025 16:57:27 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 16:57:27 +0000
-Date: Fri, 30 May 2025 13:57:25 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v5 24/29] iommu/arm-smmu-v3-iommufd: Add hw_info to
- impl_ops
-Message-ID: <20250530165725.GK233377@nvidia.com>
-References: <cover.1747537752.git.nicolinc@nvidia.com>
- <9296d67c92ecbc5a6e33a1162d8f41149b2f551e.1747537752.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9296d67c92ecbc5a6e33a1162d8f41149b2f551e.1747537752.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: BN9PR03CA0161.namprd03.prod.outlook.com
- (2603:10b6:408:f4::16) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgVVQRp+"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36efcadb8so1951627f8f.0;
+        Fri, 30 May 2025 09:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748624351; x=1749229151; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vkdnsh3Xxo+Ft79KgRHH0heaPX+QG6uGdrT0HQYcCXA=;
+        b=DgVVQRp+BfTCFE2MKihSP93VJCgZd67dkItt4Y+lFg5NKP6f5f8ZWpgju7GO162ipU
+         uLkG6yLISBC1TujNDNgziMra96FajW61rYEWKTiMI2eDhUmKxuDcpHCHLGTNAdWzAZTD
+         yPu7HqPZs0LExhW5C/J6EyBOU3oFAWwq4kqM++L2CvSNzFG37Bns7wIlYycO9NT/afyU
+         Xp9CdMF3Bfb2JphM8vmRf/iRTvTBEqYz6aSteNaXCB7iyGa6E8WTXdFELUSpyU0V8xwM
+         YhjMWNfYBngbwDCNFvoyGU67+H5PGEXveDMIwG9IJLY+BRhgquTJh2wOqm0vSvkD38u/
+         b+FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748624351; x=1749229151;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vkdnsh3Xxo+Ft79KgRHH0heaPX+QG6uGdrT0HQYcCXA=;
+        b=YdEiMJOz4wzpUBKycMM6ORSqQyPehwPlgrr1qbb4Vs4HMwoV2l7NSnbqth4V58qIDJ
+         XJe8LYEqXpprWEMhxjgnftpZMOVxayIv8oa2r2H54pUCI1XOWCKohUjCDTETQMABcTdP
+         mJ/TZo1/ivFyORvs/bjub/w/kMJD8wukqRde5UQEUu3tARWuSX5l0tUDrk2zRX+xDlxG
+         91qNrezC7mPUQjbrT/9qXnuh9BZKELptaQBjjXDczA4biIA5IVkD6bW3uoFnBl5ur2Wv
+         w9UFfGJ/yFA+uwhBVYzatnhyb5wyJaHaOAzMvVlJUP4HuG5cLQfBmKlnbwTZlmQzaYWa
+         P6YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTQ4eLVzEJOFe08rE7jOiZHHxqSX0jj1pS/yvtmDmmwFsXEsAm2C9KY29VqDz1vdbaDWmNBlFAYLCdeIk3n8v4oVY=@vger.kernel.org, AJvYcCWuUSN/M0gaC5jpQ5HFasPLVlhyNNKXg8hOluFRgtIW1FRLYUA5UoqlJrnZKLafQjPGG2YSfEXDLIHVEKps@vger.kernel.org, AJvYcCXbwxBcy6TpC19blYuqYP9610x7LbIB4sPBd0KDBtLd3xSN6MMz9bbuJF8R56tDkodSeNWclh/5ETh/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHmFEA86ueAj0Ue0PQBdEtCi4xwlA4MBk0xwhQCvVFFVJfJOEb
+	C/tBXGNoYxjZEschY3NhEDuG5aOayivnlZ5LVjeodOhMV+amhEpYjGCW
+X-Gm-Gg: ASbGncuWjm+6aHUug2UDi2Ao3QBTVAxQTpBPzKv0wv7EHZlkCjmNLEI7eAefcO50Ffl
+	LmHsY+tf6AmJIX9+G7KSpb9qzI5UYPo+ffcmzAGazhsljHb9SB0V5CFGXN7Vg8mB55mtsocgVPX
+	pjKkG4UBEzZ/AX00PGe6cE5XkamSK/LR7kgaHCVeuseFU06FzvO73ZiBG9FYbNgC0oQXEI7LU8c
+	rpU1cVhg1zCSActut7FA5rsXuen0N/hzj3Z5NFBr8Y0tU/6f3CrmuyrFx/ueBlpfHfX25Vt70FL
+	+YI2sWLLP3T1qeuWnfNMEkvl+Dh+7aC7FaYHPmce/ZVkPoGVJFMsO3k5c4DZUMI0t1M6DvDkNQj
+	irS02/D1B5w==
+X-Google-Smtp-Source: AGHT+IEMdCh9bMOyoUceDJJDejeSDUZ4ZYwhPF0Vjns3pxUtXH1NXJj6z9RwihvUpQ4S/igJjH4hCw==
+X-Received: by 2002:a05:6000:220b:b0:3a4:f50a:bd5f with SMTP id ffacd0b85a97d-3a4f7a825a2mr3097258f8f.31.1748624350952;
+        Fri, 30 May 2025 09:59:10 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:bcab:7ec7:2377:13b0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f9efa3sm22733455e9.9.2025.05.30.09.59.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 09:59:10 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v6 00/12] Add DU support for RZ/V2H(P) SoC
+Date: Fri, 30 May 2025 17:58:54 +0100
+Message-ID: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CH3PR12MB8903:EE_
-X-MS-Office365-Filtering-Correlation-Id: cde0f746-b754-44eb-233f-08dd9f9b0ebd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ydZAl8DvkVomsE3dPBHdv/P/vxP11ChUoTY9vsSz8D/EKwJ+t2pz4Mzx8KOf?=
- =?us-ascii?Q?WPFHQFp7wmFsfRaOrSY95uMb575w06JkMvU9V0QKITGag77gvHj122e3FQq+?=
- =?us-ascii?Q?WDbSuogWCevyG97Evp0Kb/cFD9jVdNsKJ90XLD4B+mI771j02DqUN/l6OgRa?=
- =?us-ascii?Q?OitbmvrK5TsdoqJQpSBLSR9nyYD7Td74OaqSxCysXCX8lwZpY7WpSZZU8QZV?=
- =?us-ascii?Q?drwlQtL1/DQzCFoWZ1tJiZIo7TXWfmMFQdAADdk2yKtctAam9ta2xX9CjOgl?=
- =?us-ascii?Q?NLmthLWPfPQsDKddw6IP7MbJ/lDI2B3Z9XWD2W8nyJiOdXJbtLUDwmLWuUBb?=
- =?us-ascii?Q?vgyiagZNfWUkEOrCD/xSrVtGO+YPUQ+zOdTOsrAoBYbwUXc3UGnjnf7xyHYM?=
- =?us-ascii?Q?8lHMBe/Of2EetWCyc2zNDDpOi8ybWBOw3u4Dej3F5r0vU2rKdijRYWVfPjQJ?=
- =?us-ascii?Q?bdWT7kh4pyDaR3FW2lcEYFx0nKJyRk4VVtmgmRrdgFnTNspmKeojwSCsvMfy?=
- =?us-ascii?Q?LiHa/NPiKAi/9tLbb/72SdffcF7Kv7x6TTO60galoTZprYwEjSYeu6pohPuH?=
- =?us-ascii?Q?caGMd32OqCM9eFJtDr2oTEDBQi3uZzSR7FD3l+E4I5CoA7GsbeI180CDU1q3?=
- =?us-ascii?Q?NYtQJK81d4KHHXzrJrtEcy9zyTbQF4vUvuilC/L/Uze0wgTAzQ2BGR+aRzQz?=
- =?us-ascii?Q?RHJ7DQF2j0WZWF947UCSyDDex9BfAHR24eHgAb8tVG7IaTS+zn8XDTjuUTu5?=
- =?us-ascii?Q?QEHZ1oWjxeEfXhV80CZi/FmKPau/1Vkpi0xnCtYwIhI2oKuC0P5heSYh1p0O?=
- =?us-ascii?Q?Ttp5x1s7iDRe/z+C6ppvpsMjievSCed+pl9ISiQKNlBP0TdeQRVmP3MtlxuJ?=
- =?us-ascii?Q?35Oq5t7Ixzf9XDmNXbNr4CG4cgaykGgwpT6xfo/p4Vv4qPQdFi6BXnhxFFbx?=
- =?us-ascii?Q?WkhKCQHu6k0ziLpufEBneL4HUjLgTy9T7658FXUPUlvh2S1s5Gs3ZqCVWBB5?=
- =?us-ascii?Q?XSyjNocCHbyg/8qCx90o4d/P4F/ZvHOVGQQdxUsrg0WJNKxPUy+SeqEqAiTG?=
- =?us-ascii?Q?1epIbnuKBvuswwa5aG1PYSjB9FZj5U7uIeNiHHWltmXfPfWLIYGz0WDS8KDK?=
- =?us-ascii?Q?5dNWMHdbHkeD8Vm7h33I+e/MERWFUtzHolUgnCGr0+WfUc2tgGylx4vzSzSy?=
- =?us-ascii?Q?k0qHInDc3twM6Jw79lRwnb+dBEXG33kRl+Y5tYbs8e2n1fqRE5Q99iLCMjF5?=
- =?us-ascii?Q?eih44wXtJhJvjOi80DDOwK52ot3onSaAwq3s+IqCLcFVtag8iIeZWSHcWoOi?=
- =?us-ascii?Q?Rv5XgIW0NCBfUTAx2DD492mNrFjRQXXlzHlq8pS2cg3gTl0LimRDwhG6Vvh7?=
- =?us-ascii?Q?w7vonUfEIAj1FyuqeTI1oyzSKPhX4MtY8z+G3oEGJDadgtGrFcGR+D7c5Lf6?=
- =?us-ascii?Q?4IN0cJvhI0w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?l3u6nyNc+QqQ/4SXtKnAyRF8zqCDNIWteoTV1QKvj3uEJNhXIPdN7EKJGYWI?=
- =?us-ascii?Q?0sfEUXAA0WpHYexJXoGDjpwhVyL9Ks7lO/t9RO88HWuh9uq3HFlXw6qVCUye?=
- =?us-ascii?Q?7CSuuzzhMRNnT1JGiQeXSjknKc2sKIhxdnqHx+PAQ8nIq8vtNQtsKJYRS9o1?=
- =?us-ascii?Q?ISUKEfjJfskGLbtxIuTYpSqbhA+ksJItf7LLz6KejeTFoa98ZqquyewYGK/j?=
- =?us-ascii?Q?m2NcmpXFscqpDX/wlOQdjlNNRFJrv0BzbET0iM8zmi0G8hlMWgj8cdZhLx1a?=
- =?us-ascii?Q?7pdeBGnKTf55F8C/Onbdz+MVU7/8GppzFRkJMDwDxGx2mQNlzreGfECdE/jK?=
- =?us-ascii?Q?qM5EzqPKgaRjZerMPnezDnpHjGF/Q8ietS7F75gvL7Mn3M89RSX1OzABCy7/?=
- =?us-ascii?Q?+vYk1t/AesSEU6dZyXOzCC2G9wnLdSWY7HyLnvTQCDPPZUj52CDt2QAZA76V?=
- =?us-ascii?Q?JFFfoSWQSXHFD0FzkstD+tba0lraB0nUSETNOUaVJA+lZeH2oKSg9rbgQ+3C?=
- =?us-ascii?Q?Gy4uL1anEPH9Hohgy+iAt0IQlfVBh9ZQNvlG/HKNesRUiGLhbCOGPZkSmPGU?=
- =?us-ascii?Q?03eACwWCYTyv8uVZCC1gw7X0Ct+x6Zphbr0HMgKCbctATRnhRuTocU+BZ3vB?=
- =?us-ascii?Q?5JLJGgxhdpv1k0s6etXDg1Vc7SCqyYr++/dTO2eca/GniEZI5X9ibCDBJX1Y?=
- =?us-ascii?Q?HJuahcEowT0yYyLKCDmTJVaTuCvhFQc+UNyb99vShmUqTEFopCN/iaXpvTII?=
- =?us-ascii?Q?P4Q0mbacnV2M5C1VZd0VsW8UTKhYTF8T/5kY3NAQ059dyPVmKx5S6QQ/98po?=
- =?us-ascii?Q?X5njXIWoH0L6XdSuiX7ThHtfYMh6+IYsDoiU+At3oUYQvYHAIK+EgaEY+pwH?=
- =?us-ascii?Q?O4/+jNaAGGgIju3TL2sWiOK0NXi4kXSkCcJbRaYsfZaUlJWNza4nGSpEn232?=
- =?us-ascii?Q?xIaxC39qhDxTAaw6UuPQ9G7PX0/Y956TyIEB+lUSiZ32dkUl+B/4JA6UMzdX?=
- =?us-ascii?Q?iLvLzaOUYv1gOQLmwuphCFDtpVD9axvAhqV8lSPdxzKGY5kG/N/AfJSQoBP5?=
- =?us-ascii?Q?RgaLVSLtU6UkZIAzP5Ut028AUpp/FvBOJ2FgpdDumoKN8TG4gqM+V6aDTKnl?=
- =?us-ascii?Q?Mc1C/Ds37LrNe9AsCFncvSKfdZQqJmn/N3469atEemQNLCj0yh9HK3ixxMVV?=
- =?us-ascii?Q?wrJ98SPPzWdI0CgdM7yYPe02yI9m3uQUp9ox4Q2Ay9hPHm14VEDkVCS+Vtw7?=
- =?us-ascii?Q?dMJc16A75cOHoYmwEFBEdn590nLXfypJBUiRtR5FLnqDhYcPg+4eBxStlPPy?=
- =?us-ascii?Q?ns5qZbdsYeC3qNpMzSfDHo29jpnzcI8UtJJQeo3DW9Fl5cv8d4UChHStjzys?=
- =?us-ascii?Q?lVoae0Xf+iqF1Z+0qR9+Ox4d3NK7M7y/Ndp2lh3GqsAyOvG5DHQmDuqqMS7r?=
- =?us-ascii?Q?1VTA8C4E0vScx+aRY44U3wdTXpMrJzxkumR748yBAr7OVNM/2ECjkHw7HInn?=
- =?us-ascii?Q?dEy5XF3cI/aZxEZKyVB9ZAYe4HKBJZi5Ws0K2dXOb2dmMKnf5dZ2cLI5zORN?=
- =?us-ascii?Q?yxTwLpaMLtJJGoDI67nJQGdRFCQIaImvEUJmw7sn?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cde0f746-b754-44eb-233f-08dd9f9b0ebd
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:57:27.5001
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QS9RO/alTERXPx9hPAuYj0EGs5SKMFWvwhMIn/DVKKeYlfmWbAWgh6jEmXqQpHi+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8903
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 17, 2025 at 08:21:41PM -0700, Nicolin Chen wrote:
-> This will be used by Tegra241 CMDQV implementation to report a non-default
-> HW info data.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h         | 1 +
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 8 ++++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Hi All,
 
-Jason
+This patch series adds support for the Display Unit (DU) and prepares
+the MIPI DSI driver to support the Renesas RZ/V2H(P) SoC. These patches
+were originally part of series [0], but I have split them into two parts
+to make them easier to review and merge.
+
+This patch series does not have any clock dependencies, so it can be
+merged independently via the DU tree. The remaining patches from series
+[0] will be sent as a follow-up series, which can be merged via the
+Clock/DU tree as they have dependencies on the clock driver.
+
+[0] https://lore.kernel.org/all/20250430204112.342123-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+v5->v6:
+- Added reviewed tag from Biju and Laurent
+- Updated commit messages
+- Dropped parentheses around the calculation
+- Added min_dclk above max_dclk in rzg2l_mipi_dsi_hw_info
+- Renamed dphy_late_init to dphy_startup_late_init
+
+v4->v5:
+- Split up the series
+- Added Reviewed-by tag from Biju
+- Dropped feature flags for reset and LPCLK
+- Patch 07/12 is new.
+
+v3->v4:
+- Corrected parameter name in rzv2h_dsi_get_pll_parameters_values()
+  description freq_millihz
+- Used MILLI instead of KILO
+- Made use of mul_u32_u32() for multiplication
+- In rzv2h_dphy_find_ulpsexit() made the array static const.
+
+v2->v3:
+- Update the commit message for patch 1/15 to clarify the purpose
+  of `renesas-rzv2h-dsi.h` header
+- Used mul_u32_u32() in rzv2h_cpg_plldsi_div_determine_rate()
+- Replaced *_mhz to *_millihz for clarity
+- Updated u64->u32 for fvco limits
+- Initialized the members in declaration order for
+  RZV2H_CPG_PLL_DSI_LIMITS() macro
+- Used clk_div_mask() in rzv2h_cpg_plldsi_div_recalc_rate()
+- Replaced `unsigned long long` with u64
+- Dropped rzv2h_cpg_plldsi_clk_recalc_rate() and reused
+  rzv2h_cpg_pll_clk_recalc_rate() instead
+- In rzv2h_cpg_plldsi_div_set_rate() followed the same style
+  of RMW-operation as done in the other functions
+- Renamed rzv2h_cpg_plldsi_set_rate() to rzv2h_cpg_pll_set_rate()
+- Dropped rzv2h_cpg_plldsi_clk_register() and reused
+  rzv2h_cpg_pll_clk_register() instead
+- Added a guard in renesas-rzv2h-dsi.h header
+- Reverted CSDIV0_DIVCTL2() to use DDIV_PACK()
+- Renamed plleth_lpclk_div4 -> cdiv4_plleth_lpclk
+- Renamed plleth_lpclk -> plleth_lpclk_gear
+- Collected reviewed tag from Krzysztof for patch 3/15
+- Dropped !dsi->info check in rzg2l_mipi_dsi_probe() as it
+  is not needed.
+- Simplified V2H DSI timings array to save space
+- Switched to use fsleep() instead of udelay()
+
+v1->v2:
+- Rebased the changes on top of v6.15-rc1
+- Kept the sort order for schema validation
+- Added  `port@1: false` for RZ/V2H(P) SoC
+- Added enum for RZ/V2H as suggested by Krzysztof as the list
+  will grow in the future (while adding RZ/G3E SoC).
+- Added Reviewed-by tag from Biju and Krzysztof.
+- Replaced individual flags as reset flag
+- Dropped unused macros
+- Added missing LPCLK flag to rzvv2h info
+- Dropped FCP and VSP documentation patch and sent them separately
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (12):
+  dt-bindings: display: renesas,rzg2l-du: Add support for RZ/V2H(P) SoC
+  drm: renesas: rz-du: Add support for RZ/V2H(P) SoC
+  drm: renesas: rz-du: mipi_dsi: Add min check for VCLK range
+  drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Use VCLK for HSFREQ calculation
+  drm: renesas: rz-du: mipi_dsi: Add OF data support
+  drm: renesas: rz-du: mipi_dsi: Make "rst" reset control optional for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY frequency
+    calculations
+  drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
+  drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for
+    RZ/V2H(P)
+  drm: renesas: rz-du: mipi_dsi: Add function pointers for configuring
+    VCLK and mode validation
+  drm: renesas: rz-du: mipi_dsi: Add support for LPCLK clock handling
+
+ .../bindings/display/renesas,rzg2l-du.yaml    |  23 ++-
+ drivers/gpu/drm/renesas/rz-du/rzg2l_du_drv.c  |  11 ++
+ .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 144 ++++++++++++++----
+ .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |   2 -
+ 4 files changed, 146 insertions(+), 34 deletions(-)
+
+-- 
+2.49.0
+
