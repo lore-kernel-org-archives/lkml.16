@@ -1,209 +1,240 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2044.outbound.protection.outlook.com [40.107.244.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DF32DCBE6
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748618359; cv=none; b=jntjQuEVd/Ox8pBzqpiH8u6tEKaP8ppZIKXobRN9NxQhcdBnjtoe1nYxvThK0LuUCSHd68tSM+uh7KaK9b+bl7puRc50uE/ylpnBzh4am2mzUGlk5K0Kw/6oRXaZ4V4IlTfIjUzvBg+p8rMJzg4IMFvEcma6ULUaHj8Xh7GV1+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748618359; c=relaxed/simple;
-	bh=Vyajyv9gcTyhCO1q8L9tdCgBFcmfGA4h41nYZiOAYPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=faCLT++6leoOQho2gXFF3Tde1fa11Z1w7ayZHhFRptRnZJheXIzCRXaE+6mOol4+tvDzOQT0VY8/lAn+Z5bMjOYpTlEAAxT61om/45ehvfd0Ke4RGY4m+PXSr2K3zz0jKeuYXvYrFHtgQ1ej+3n1HXkN2dLUxpGo3o0YUudw6R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bNnyH7pH; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD7EFBF0;
+	Fri, 30 May 2025 15:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748618523; cv=fail; b=iIXfAXyvmxoNnemkGLCNUVRARMtTXfGlplIYkR3pTdj0vDLXro8Vr26BjSnPKGkW+F2wifne1jVxmS/sdWBCH8yDixld98BU80Vdeb17BROrfqlc/3AvFPdKDQEC8Dbir+LTw+kfx9kfhKU7RYEsl8/ib6qR9VNHHQf6hMXEJDg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748618523; c=relaxed/simple;
+	bh=Rww69LpGeGfaQva94fFCAE0C7dZi9xswKBG6TjUNkmU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=pp9rtmbhprfv/ewlJ8r1FSigzvlIfZFe0/7iczo+gN1tneNvn0tSdTh/CyzrDPdHDDP85TV/TlBH60xqM0C41p2jSR5qR5DsTnYnkmqwwetngrJvLwYWIyfYfjQoIwEwp/ccgkz87iZmvRCDuhspMWWC0n71tpvfZChgDkUYSOM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mx9RbOUP; arc=fail smtp.client-ip=40.107.244.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bNnyH7pH"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so14552395e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748618355; x=1749223155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rHzLL+KnCdbgcbNQWzWBQ9D1stAOWVmlpwTkZFpyF58=;
-        b=bNnyH7pHkBxEuTZFx5o985yjuj/mTwyCowwGSojK3dpBHiuUpI9+fIhvu5YNz63eg+
-         1WWj9fVC8AEvOMTfMzoNQrxL1y/vhO23tyox4harp4Gdpyq6fg0UZex9xJjtXnrxZehX
-         oMzHJv86ES+EBdA2kSWXwzLN35BxQ6oedmozU1fMJY02tMeyqa4SFC48RZaNxwrPuhhS
-         nd5gingd626Gc/jbJLUkZLdzlrlmHzvpudHusAo14oyWM3MBeSMEGVRqj8TADM0QvLwW
-         CLjsiC3BjLy7qfRskSonDgm2hmIQMVpKDHQoKWvVQ4jqBvRn3YBdkiC7i64jYTEAFOW6
-         03Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748618355; x=1749223155;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rHzLL+KnCdbgcbNQWzWBQ9D1stAOWVmlpwTkZFpyF58=;
-        b=GzI/Wx6rk8fMuiKF9i472u52HtN/z8TTMUAYyAgRUBDzAwB+Xtx3t12a3ZEHA0/HCo
-         hwFDnnHOSgQbdNVksAIUS5uePxY26rmiGOd0zLIO1G1lR9fvlvHuVT7h+2031qrY2JZN
-         oTAiB9GPwANaLxXPsl1OjP1+IcYMl3AQob7ldE+Svr92NRkOMxP0PxvjLT2CRyfGGuyP
-         41sL49LGynTs26DCdkuOMwA037b2XZ9oyhOEJuJ9iYjYLf9bKaMed/e/6YEcKRwHkgVl
-         oI4OkhG7+ksKYxCcoLNWKdCugynYI63rzoSvyOPZyQnNbbtcmzQioTqEGDQSq/2PWV6k
-         M+2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7WKey5ku9odQg0v8doMZdXQi1WCL6bNlxX2b7QQuX8ZS2UVLeHDcndwy0aMbYrTwE3+EYEC7Zxnnw1mg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYkV6i3hBw5P0K3CUkZsdAEWqd6vrewUzBUQilZzGazjHPQH7U
-	qG4R923B58Gb2t+CTTVeiFPeNGTjik1CnJuz+aulxf3fRKC3mV3wWlD7BiA+LJUwPqc=
-X-Gm-Gg: ASbGncstYaQZL/SWv0H3tSv1pm04lNuERvxlb/bQGQmnWXp+jfjXt2LYu9DH0O1Y6Cy
-	0dG12YqKNuBwRauh08QPoK7NOvURjPzgyBT3B7r0VSkd4f/Ho9j3Jsoupd+fqCw1UaManGuILAj
-	DYBaNnMZ5zXGkA/iywrCYlpHtvx2s4GkknDB4FA32e0kYONiVDoqkfHj7QyBHwmPnVV6zOr0iUp
-	7sY6jU+wAdP0h+dsKvEpaFwMBiuFKLr8T+gy+JQ6WumuqBX95wKdg+RB0t6eYYmA1U3KtuasDBv
-	7WKQj9COd/RB6mu+fAxbs3dIEPcXumn+KrqPLrl/xvrgnWYVgV3HNiO0qpCtaCNf
-X-Google-Smtp-Source: AGHT+IFfgE9YkP6zKgTOBVVj8OU3ZF8h4Ob5dU10DqOggrcEUUPJXi1L8Z4gcTvobVCqNojEWm9B7g==
-X-Received: by 2002:a05:600c:4f8b:b0:442:e147:bea6 with SMTP id 5b1f17b1804b1-450d6514eaemr35846435e9.11.1748618355407;
-        Fri, 30 May 2025 08:19:15 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f0097813sm5112533f8f.72.2025.05.30.08.19.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 08:19:15 -0700 (PDT)
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Martin Doucha <mdoucha@suse.cz>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC PATCH] memcontrol: Wait for draining of remote stocks to avoid OOM when charging
-Date: Fri, 30 May 2025 17:18:57 +0200
-Message-ID: <20250530151858.672391-1-mkoutny@suse.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mx9RbOUP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=agooRhGSfgD+201nQTUoGnEht0nKRstEkjvPRY2CPjieZ6f1Y2TVPTrRll7hn1iMTMjw+emBagApbyzDLIBCDImtKaQhM+MEXALpWs4wzj7H7MJWLq5/g+JqPNHIwtBlF2Z6j9PJi3defnWBydmpMd4VSXl7p3mCIBV7AiQxOBlENTLkJ2usADpGk6xaOS5hrBU8OtjcUmCmztv4pyB4BPCrleV9qrz5+zNOzSN4WzTz3hakG+0yW/nCWo2hcjeqWdHvv/rxio7pivZvw7QisOh25r98vSwfKjSBpw7RFM9XZ0zWYVVQJAkFCIKJPTjpHSg3S2QlJCs8T3Ty65C7fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LtJgaUQIAwLvpZiVXxacG0xS6GENvwL9iWN9kW/58xk=;
+ b=r2HAmX3n12gt6TX9JpyKnbgNeDjPYJ09wMW570rkn41csttld3hWpp9esUgX5wB665GmUfA0giSpAiMJRxatonl0kkpBvri0M3ziS/W0YgRnNsUrdF2BKKJpTu1EmyTXKzqCQdGzHhZDAaaNEslRrqpuLRTZqF90p+DRpn5daZGZSsRVglv083i3hr8MaZZSBiw6O7h7Ek0WmTNsY5JybtWhTXQ/ZyFXYlJS4+13ihi+07bjcKPYfG25hr0o/neXGVzwZ+BmjJqloEngZNbuqwZMXkRolUc55jBD9ndumX+dFGUKRC5N04Elq1nJxwGi/DhqWrsicA+7ylCsl9XtRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LtJgaUQIAwLvpZiVXxacG0xS6GENvwL9iWN9kW/58xk=;
+ b=Mx9RbOUP2ZD7pmCkfISrbA8kQbHPiTwZCqtqnVieHCY+1CHeO+fZAchqz98GhPYnJKIQZG3HSdiBxZWv/mKvFAznBmp/HRAPO2Nn3MbFgM3IZ8TVXpQvJSB82Lyof35HGlKojfuu2c6RvSrWQ423cr7M6MU0u9RF6AHCZwP03TE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL3PR12MB6426.namprd12.prod.outlook.com (2603:10b6:208:3b5::12)
+ by SA1PR12MB8965.namprd12.prod.outlook.com (2603:10b6:806:38d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 30 May
+ 2025 15:21:56 +0000
+Received: from BL3PR12MB6426.namprd12.prod.outlook.com
+ ([fe80::3e7f:241b:d574:95b4]) by BL3PR12MB6426.namprd12.prod.outlook.com
+ ([fe80::3e7f:241b:d574:95b4%7]) with mapi id 15.20.8746.030; Fri, 30 May 2025
+ 15:21:56 +0000
+Message-ID: <2df9326c-9b9f-4316-bcb9-4ccaf715c757@amd.com>
+Date: Fri, 30 May 2025 11:21:54 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: Tree for May 27 (drivers/platform/x86/amd/amd_isp4.c)
+Content-Language: en-GB
+To: Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>,
+ Benjamin Chan <benjamin.chan@amd.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>
+References: <20250527203231.3c6c0b9d@canb.auug.org.au>
+ <04577a46-9add-420c-b181-29bad582026d@infradead.org>
+ <d2ac901b-f7d2-46e6-b977-0ad90faa46f2@kernel.org>
+ <b712a69d-e899-4286-b5f6-06d87d732ed8@amd.com>
+ <e079d753-554e-7a42-11c6-a08cc095eb91@linux.intel.com>
+ <f4b8657e-17c5-49d0-bee8-8621c811b6ca@kernel.org>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <f4b8657e-17c5-49d0-bee8-8621c811b6ca@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM6PR11CA0050.namprd11.prod.outlook.com
+ (2603:10b6:5:14c::27) To BL3PR12MB6426.namprd12.prod.outlook.com
+ (2603:10b6:208:3b5::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB6426:EE_|SA1PR12MB8965:EE_
+X-MS-Office365-Filtering-Correlation-Id: 18c2bd15-61aa-4a27-b060-08dd9f8db6bf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R2hZN1lhaG8yMnN6ZlBpS0JRU0xJdGtHdlA5QmE2RFJuWTEyQUpOMTdnZU83?=
+ =?utf-8?B?d2QzL3JaVmRORzNQbWJtWE9lNlBZNHFYZEpGV2dHVHhWaTYvd3J1TTVlVmVs?=
+ =?utf-8?B?WFV1dVZ5NXlSaVNBWVNibzFlS3BVcGRaSmhaT0dJT1BJSXduWVUvU2JHVTEw?=
+ =?utf-8?B?UFBwK2Y5SHlzUjZTQnU5T1hUZ0NLNnNBQlFIUjBYTXRPSmhWN29WL2RSQmFI?=
+ =?utf-8?B?S0ZPZXFEL0FvSnZlRWl4b3BleWZiSDUvY1lKSGZqK2EwUGJEM1d3MnhBSWIz?=
+ =?utf-8?B?RmFxK3BybEYrOWlzU1VXR3NMSUh2aExkbG9tRm1OVnE5ZlJQaGNyaEJTWVpQ?=
+ =?utf-8?B?Vkk4dVZzMjI2ZWhPVjVtbkd2UlIwUDYrbTAyeWk1cjBseFRsWTdxK24wSE90?=
+ =?utf-8?B?RS91VzJqRVVGSzNyMGpDTW96M2NDcHREdUdyTmhLYnUyVFNZalY3M2F2U0hk?=
+ =?utf-8?B?K2xNMytUNVBmSjY4M1FsQlpqcHRrbDdVYzNNTm40Y2czY1FZMm9Qcmd5dDZw?=
+ =?utf-8?B?Y1ljTE5WVTlNVVZyNmRneVpIaXl0SWhkdUlRSzNyR0VuNjRhQXVMNGJGN2Mr?=
+ =?utf-8?B?Tlg0YlAvbWg0RzNqZFBxbml1OWU0azkxbVBubGd4RlByc0RlTVgyclhPdG51?=
+ =?utf-8?B?RkMxZStGZGVOMGVRSDRyODVFS1VOVU1aTzgvclpkZS95cGhWVnI2ME8rNnl4?=
+ =?utf-8?B?TFRMdFNrLy9GKzRvZlFIcnpBNzhsV0gvQ1F4K1pRZC9wbSttS0pCaUFqZ3pm?=
+ =?utf-8?B?SWZjdlFlMWpKOEdrekROa3JYNjV6eDc4WURodHBPYlJjcFVhMFpEYXlhUHp6?=
+ =?utf-8?B?VnNvVlVTRGI5VnR1TDFJU05lcTVjNDJqUFYva1dFUnNWSjUxcEJBckdzODZj?=
+ =?utf-8?B?TjFZVnhYNlVmaGtZVk9xMlZodGhzdmdZcDVVaSs2c0VvNWhMR3hhZEpNbm5Z?=
+ =?utf-8?B?WUFSUDVwWjZrcVE0VmUvbnVhNkh5ODR2QmpNRWx1RVVvcy80MjhiTUtlMFkz?=
+ =?utf-8?B?dkg1VlBrWk1nWmtJWGFvNjJGL3p1d2N0WE5OZTNwUnZ6VzNLRjF4bGR5NlBm?=
+ =?utf-8?B?VXczRjBOLzQ4UWpzelRUUHJMMkV6eXBYYzd0TDYwUDZXV0xRNU82ZXA0aVJY?=
+ =?utf-8?B?QWY2L0U5Y3kwWm5iM290ZmMvTTVabEZoV3pzeDQ0OUlqRHlRZ2d2dFpoVmRu?=
+ =?utf-8?B?MGxlTlZ4Vkp4U0JYakVUZG0zZHFIMmd4K3dqeDI0RmFtNmgyeVFqVWZGdkdD?=
+ =?utf-8?B?WEJtSWpjMjAycXJiOFZIS3dUeDJNYitPdk03RjVySzhsWjBPUGlTKzJnaGZC?=
+ =?utf-8?B?aUszUUJWVVZVbm1tK0V3UDhqczZQdXZ0NGhIaHJyRXhESEZlenNIc3E3VE5n?=
+ =?utf-8?B?YXF5cTVvWVMrUHdYRGFFdGhKc3Naem9sRmNDdjB4VEswQkFtdnVGVmd6NWZL?=
+ =?utf-8?B?aGRsRVNGeGtEclp3L3NjL2VLUzEwK1kvTi8vV0gwZ3FiZENCWUR6eEs1TkNs?=
+ =?utf-8?B?dEJybmQ5VUJVMWxzdXBzQVZsbkpITE50cmxEUVhoaVIzTUlOQlBrak1QcXpq?=
+ =?utf-8?B?WkoybklEa2tmVFZMeTYrNzVMWWhoOXJXZGtQVmZGYWdYY014T2ZxZWdBaXBF?=
+ =?utf-8?B?UWZacUpjSFFaay82ZHl4VVR5ZGtNM0N6STNYcTQ2Ymx1cmZYMkpUNGpPMUJR?=
+ =?utf-8?B?QVhXb3dlR2tEZFZZMy9maG1YVHVjWVdMZFhFMHhSQktSL2RiQUVHRVVvaTBZ?=
+ =?utf-8?B?aWtDZGlURTJ5VjBTTVhwYTBmSm4zK3NjamFWREtybjdyYkJZNGRoMHFQR3h6?=
+ =?utf-8?Q?4gtaTj5yqm1n1EMv+iGoN6AtZIMSqD3PRRtvo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6426.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T0hKRUdHdDQzRk53NzM1MWNaVWhZemYwUkJtTHBvK0hyNVVFK1RNbFhKRlpr?=
+ =?utf-8?B?NlZsZXpjQnRLS2JoTEdzMGNna0ZiV0dQZ25xbmtMZC8vYTViZ3ZkWFQ0cEVJ?=
+ =?utf-8?B?M0ZEUHFuUndDS3lPUjdqN2Y0QVkvK0hFYUs0R2I3WTRWUkFIYUhURU1xS2tr?=
+ =?utf-8?B?dVZ2UUJWT0FrSitpOWNyUkRoYVI5eGplTGdWalR0RmNrd3FTWGRWcDd0SGFD?=
+ =?utf-8?B?QmhxalVZQ3dZcjhJUitDZlE0ZThBK0M0TU1xSzFkdm8yL2NhZkdqdEllbHdz?=
+ =?utf-8?B?SDVqWCtuZXJoRGtSOThXb0VIY0ZRV2xPL0ptcW9nMjF0bitUSmllSXlRd0h5?=
+ =?utf-8?B?a0ROWWs3U3YrQUNFNjBSbEthbWRoTDhoM0xQc2NHckZFVkdqSzFZRHFnN1JB?=
+ =?utf-8?B?a0dadGRpTlNWSktpNzFvK0U0cklJRlFQYkhDc2xHQWdhTHlhVXBhRXdzcUJa?=
+ =?utf-8?B?L0ZOTHU1VlNqV3Z4a1RzZG02YWJPaG5vZVRNcXdkMDhIZ3hHS2ZhS2tHZnlq?=
+ =?utf-8?B?MHdObUxsbXIvNllaMGxsU3pNM00xSER6NmxEWEV3a2VSNndwa3R5QkRDZEFl?=
+ =?utf-8?B?OUZxUUNFZW16NjVHNThrU1lZdElQMG9sNStXUDRGZU5ubTVESjdjZHVIM0pF?=
+ =?utf-8?B?MjgxbkxhSDVhWGlCaVhzcmZ2WUxjVVcwbENBTG9CdHFaZ0ZPMkhDZmIxWVdG?=
+ =?utf-8?B?dWZxNkhMblNTZ1UzWWQ2cmNZSzhOc2U5alpEWkpNU3JnejRCUUNqUndaL0ZZ?=
+ =?utf-8?B?S0l4QkF4V0RJMTZpNEEyOEVYem5mRnNYVjdpY3Jab0lVZk1QNTU4VG83U05B?=
+ =?utf-8?B?TWhFOVBaeXZCeDgwTDBIT1lxVkt5VG4rdlVHazhPczVJc3ZNdjJIYStMZU01?=
+ =?utf-8?B?SGtJK3VaK0c2M2VaY3lXOWdGSUt1MHVoaUZ3b0VFanZWYVVZQkdUMGlQcWpT?=
+ =?utf-8?B?eVlKRGVHZ3VRSHVaY2IzR1M2VG5UOFUrSmQwY0VNcXJaMndnSFFSWGh2M1ZD?=
+ =?utf-8?B?aUJKbERDb0hSUGZUbTVyY3R5UGc4Y0FVUU5zbGxWazdxcFRxOEo0TjFKZ09w?=
+ =?utf-8?B?eVlxWEtxSUpKZHhCdjF5WVZSS2Jid1REZHkyRVAvNG5tY3hZNnpDSGNRUnZH?=
+ =?utf-8?B?WDF0dkxlZ3RNMTFPYUorWVdZano1YW5Gb29sc0ZJTC9sN0I2QWJMazVZWENK?=
+ =?utf-8?B?MFpWVXRWQWI4OWd0M05WOWtLRm9LOW42Vk16V25mbER4TnhlUUNVOFRRcGtr?=
+ =?utf-8?B?TFdRSnh2VzdBQjBnTzNha2ovMUlyT0lqdGVneGZkV0hIdjNrcUFjZkdEb2VN?=
+ =?utf-8?B?L2RYNmxSV0txNGFRbWwrL0ZERVhsaWNrVUtpUGtXYU91bEFKSURsN3pqMUZy?=
+ =?utf-8?B?S0pRY2dZU1ZJN1UxYTY1dWw5T1djNFhoYXV0ZC9Eb3p6WHBYWnRkOS92eWVT?=
+ =?utf-8?B?ZVk0ZmkrNjgwUjFwUkhSWFdIbStCQVRUZDI1UVo0akpOZ1dJTGVjWE90M1Jo?=
+ =?utf-8?B?dDB6WXFYK0JNNEJjaFJjRmZWSE8vUXVNTGhuNGFQajk2V2NVSjhYZU44cDZi?=
+ =?utf-8?B?OWtKbTdPZzVpR3N5M3h4N0xWRWhKUVVjajFudnpPRjVEbFFhTmRGQmZiZm1v?=
+ =?utf-8?B?QzExUGRpRmxIMVU3WE8vVHUrcVd4c1d6T1FBK0R1UWQ0QnhrSVA2WmVXV3Br?=
+ =?utf-8?B?OXNVM1hxOS9md0pTbFlnMEsza005S0JIWVFtV3REYThRcTVib2RuOUxwSzQv?=
+ =?utf-8?B?Wit6SGZENjZaM295SWlTM1ppVGFpeVVEUFJXYlVVV2FuRnRxNXBKVWZRODRQ?=
+ =?utf-8?B?N1Z5UW1OcnJyb2xyblQ5cC8wSHVaejd3QVZza2JYdEZlUUFpRGJRQkVLYS93?=
+ =?utf-8?B?ODl3QTM4Y2hXSklIcEpjYTg0MWx1ZmRXZFRySEJTY3pCamUwUW5tdWJGWkw1?=
+ =?utf-8?B?em1NTnlkcFFvbVBWTDZaUklxR3VwUGY4YUhCT2JHcXo5TnhzSnJ5T3pnS0V4?=
+ =?utf-8?B?RnFic2txbHdTYXdOK0NZUWtveVprdzlwUlJ2dmthNkNpWXNnZjVQeXRFMzFU?=
+ =?utf-8?B?ejMwNzAwU1BDT0J4K1JTQUMwbjlKTUxEQXRCcmh2U0E2VHRnNE9oMzY2U0pW?=
+ =?utf-8?Q?stvZMjBDnRvJLcVvsuAWNUr7F?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18c2bd15-61aa-4a27-b060-08dd9f8db6bf
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6426.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 15:21:56.3776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zn8L8jvGFXYlIGsHau83DKovhHoJjWRYF8/I/3txKbH/WtnKlhU65fzCkdn+TJUcYldcfw2zgmu4dew705vZSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8965
 
-The LTP memcontrol03.c checks behavior of memory.min protection under
-relatively tight conditions -- there is 2MiB margin for allocating task
-below test's memory.max.
+Hi Ilpo, Hans,
 
-MEMCG_CHARGE_BATCH might be over-charged to page_counters temporarily
-but this alone should not lead to OOM because this overcharged amount is
-retrieved by draining stock. Or is it?
+On 5/30/2025 3:44 AM, Hans de Goede wrote:
+> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+> 
+> 
+> Hi,
+> 
+> On 30-May-25 9:41 AM, Ilpo Järvinen wrote:
+>> On Tue, 27 May 2025, Nirujogi, Pratap wrote:
+>>> On 5/27/2025 3:43 PM, Hans de Goede wrote:
+>>>> Caution: This message originated from an External Source. Use proper caution
+>>>> when opening attachments, clicking links, or responding.
+>>>>
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 27-May-25 8:56 PM, Randy Dunlap wrote:
+>>>>>
+>>>>>
+>>>>> On 5/27/25 3:32 AM, Stephen Rothwell wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> Changes since 20250526:
+>>>>>>
+>>>>>
+>>>>> on x86_64, when
+>>>>> # CONFIG_MODULES is not set
+>>>>>
+>>>>> ../drivers/platform/x86/amd/amd_isp4.c: In function 'is_isp_i2c_adapter':
+>>>>> ../drivers/platform/x86/amd/amd_isp4.c:154:35: error: invalid use of
+>>>>> undefined type 'struct module'
+>>>>>     154 |         return !strcmp(adap->owner->name,
+>>>>> "i2c_designware_amdisp");
+>>>>>         |                                   ^~
+>>>>
+>>>> Hmm, this should not check the owner->name at all.
+>>>>
+>>>> Instead the i2c_designware_amdisp should set adap->name to something
+>>>> unique and then this should check adap->name.
+>>>>
+>>> I noticed the unique name set to "adap->name" in i2c_designware_amdisp is
+>>> getting overwritten to the generic "Synopsys DesignWare I2C adapter" name in
+>>> i2c_dw_probe_master().
+>>>
+>>> https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-master.c#L1046
+>>>
+>>> Inorder to use unique name to detect the specific adapter without making
+>>> changes in i2c-designware-master.c, I used adap->owner->name.
+>>>
+>>> Since it is causing build issues when CONFIG_MODULES is not set, can I make a
+>>> change in i2c-designware-master.c to initialize the generic "Synopsys
+>>> DesignWare I2C adapter" name only when adap->name is NULL. This way I should
+>>> be able to pass the unique name from i2c_designware_amdisp module.
+>>
+>> How can you check that, it's char name[48]; not a pointer???
+> 
+> A NULL check indeed will not work, but we can check that (name[0] != 0).
+> 
+Thanks for the feedback and suggestions on the changes. Yes, my intent 
+is to check if the name[] is uninitialized before initializing with the 
+generic name. I will make the changes and submit both i2c and platform 
+driver patches shortly.
 
-I suspect this may cause troubles when there is >MEMCG_CHARGE_BATCH charge
-preceded by a small charge:
+Thanks,
+Pratap
 
-  try_charge_memcg(memcg, ..., 1);
-    // counter->usage += 64
-    // local stock = 63
-    // no OOM but counter->usage > counter->max
-  // running on different CPU
-  try_charge_memcg(memcg, ..., 65);
-    // 4M in stock + 148M new charge, only 150M w/out hard protection to reclaim
-    try_to_free_mem_cgroup_pages
-      if (cpu == curcpu)
-        drain_local_stock // this would be ok
-      else
-        schedule_work_on(cpu, &stock->work); // this is asynchronous
-      // charging+(no more)reclaim is retried MAX_RECLAIM_RETRIES = 16 times
-      // if other cpu stock aren't flushed by now, this may cause OOM
-
-This effect is pronounced on machines with 64k page size where it makes
-MEMCG_CHARGE_BATCH worth whopping 4MiB (per CPU).
-
-Prevent the premature OOM by waiting for stock flushing (even) from remote
-CPUs.
-
-Link: https://lore.kernel.org/ltp/144b6bac-edba-470a-bf87-abf492d85ef5@suse.cz/
-Reported-by: Martin Doucha <mdoucha@suse.cz>
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Tested-by: Martin Doucha <mdoucha@suse.cz>
----
- mm/memcontrol-v1.h |  2 +-
- mm/memcontrol.c    | 15 ++++++++++-----
- 2 files changed, 11 insertions(+), 6 deletions(-)
-
-My reason(s) for RFC:
-1) I'm not sure if there isn't a simpler way than flushing stocks over
-   all CPUs (also the guard with gfpflags_allow_blocking() is there only
-   for explicitness, in case the code was moved over).
-2) It requires specific scheduling over CPUs, so it may not be so common
-   and severe in practice.
-
-diff --git a/mm/memcontrol-v1.h b/mm/memcontrol-v1.h
-index 6358464bb4160..3e57645d0c175 100644
---- a/mm/memcontrol-v1.h
-+++ b/mm/memcontrol-v1.h
-@@ -24,7 +24,7 @@
- 
- unsigned long mem_cgroup_usage(struct mem_cgroup *memcg, bool swap);
- 
--void drain_all_stock(struct mem_cgroup *root_memcg);
-+void drain_all_stock(struct mem_cgroup *root_memcg, bool sync);
- 
- unsigned long memcg_events(struct mem_cgroup *memcg, int event);
- unsigned long memcg_page_state_output(struct mem_cgroup *memcg, int item);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 2d4d65f25fecd..ddf905baab12d 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1911,7 +1911,7 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
-  * Drains all per-CPU charge caches for given root_memcg resp. subtree
-  * of the hierarchy under it.
-  */
--void drain_all_stock(struct mem_cgroup *root_memcg)
-+void drain_all_stock(struct mem_cgroup *root_memcg, bool sync)
- {
- 	int cpu, curcpu;
- 
-@@ -1948,6 +1948,11 @@ void drain_all_stock(struct mem_cgroup *root_memcg)
- 				schedule_work_on(cpu, &stock->work);
- 		}
- 	}
-+	if (sync)
-+		for_each_online_cpu(cpu) {
-+			struct memcg_stock_pcp *stock = &per_cpu(memcg_stock, cpu);
-+			flush_work(&stock->work);
-+		}
- 	migrate_enable();
- 	mutex_unlock(&percpu_charge_mutex);
- }
-@@ -2307,7 +2312,7 @@ static int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 		goto retry;
- 
- 	if (!drained) {
--		drain_all_stock(mem_over_limit);
-+		drain_all_stock(mem_over_limit, gfpflags_allow_blocking(gfp_mask));
- 		drained = true;
- 		goto retry;
- 	}
-@@ -3773,7 +3778,7 @@ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
- 	wb_memcg_offline(memcg);
- 	lru_gen_offline_memcg(memcg);
- 
--	drain_all_stock(memcg);
-+	drain_all_stock(memcg, false);
- 
- 	mem_cgroup_id_put(memcg);
- }
-@@ -4205,7 +4210,7 @@ static ssize_t memory_high_write(struct kernfs_open_file *of,
- 			break;
- 
- 		if (!drained) {
--			drain_all_stock(memcg);
-+			drain_all_stock(memcg, false);
- 			drained = true;
- 			continue;
- 		}
-@@ -4253,7 +4258,7 @@ static ssize_t memory_max_write(struct kernfs_open_file *of,
- 			break;
- 
- 		if (!drained) {
--			drain_all_stock(memcg);
-+			drain_all_stock(memcg, false);
- 			drained = true;
- 			continue;
- 		}
-
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
--- 
-2.49.0
+> Regards,
+> 
+> Hans
+> 
+> 
 
