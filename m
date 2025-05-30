@@ -1,155 +1,153 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF59EBA36
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EA15674E;
+	Fri, 30 May 2025 15:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748619888; cv=none; b=E95scFt7V/DunUz7wX9MqNUc8rjOpykbutIkLY7u7Ur2rnp8VhKopGVXZK++1/Uk85Je5Rqnj8ZL4sX4Zq7XD02PnBoaJThXOBZMtV81RaPurXB/FPfp1Ynu+/8JlirB8uChUUu5mXhiSqXHh3Lv/DALE6jUfuV/qrN7TKjzZR8=
+	t=1748619985; cv=none; b=MWkFfqQoMNiet/CROryGyopBA/0I4xMiM52TH1O0KmbMtZ4KpGAY57NmJi/E5QLk+AG5LY21iTmMPBzIS33iFJmbN3ZapCo/3R4Eresq8/FeSjvy72m0vCn6onJYyH+BuYy1umWHF9aC1RdNvdn4XMEGPn9ucE1sC9KDvVTyiP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748619888; c=relaxed/simple;
-	bh=tShNz1F8ZqHyMCW3gy3LmKwe14b90b0cKvfiiQiedF4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pgDsfu+59cdciXliRjfkuEkM4HchOmBXoWKAgLflR37dDNrAGpjBCe5pg9jJykywlvTLiZN1zrxCMfsAynNyLC2vwuKTmgzwEDz7qpXLn0Ti3ljSvBTorApYMs6fNrl3qgawtWkSEnpqlLbxxIt0EUDB6kdzubQWchknbZxg9u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=JPZwV0MS; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1748619985; c=relaxed/simple;
+	bh=oiGf5ra11ANdgRt2VzQMjcJ3gpiMOjbFOKUWlbkAUS4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Vt13yCOVK24bFalrHwJCvXp++7nniCKy8PGg9K56YOmhjGJQ5+ExUllZJLLdUpJBHzTsaneQlfsFQUv5K1PMPCaWXMDDzULtdTDzYTO7NZIacbqSVeGseThJeVgpnKPOylofmuYfSqRbHtzXqbTzcljE5qe0gOvo8vGTJol/3BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VuOy3Uj7; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JPZwV0MS"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c2ed0fe1so2052005b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1748619886; x=1749224686; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SryMm32kuymojhHrK4V1xjurKm1RRnj6DaabgF0M4vY=;
-        b=JPZwV0MSQKpX15o+jHjUMMGmtb9iFG8glz6eqYd5ZygErrCA1IpKOEm6nLwcdMah32
-         J4rBi03f0G995EwV+R595fNCg/IWwFB5AWRnBn2OPEr9OfyML3w73Lbezl2Afn4T7Gdf
-         X8n27Xg7q+LNQ6EPk877NXAXdUMH/1dGaQAwc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748619886; x=1749224686;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SryMm32kuymojhHrK4V1xjurKm1RRnj6DaabgF0M4vY=;
-        b=ElZl39NjliNsKE37Fi9tY/Imdqc6KXqK3il/miwTKlMQ1d9M4ixE3FiSP9L3sT5INz
-         eqPWF6XfhHkebaGGAVeLo9ilmc1iOX9u8dr9hC3pYA9zfj0EfVrRbN2KRUgwQWY0bQmt
-         TVyP5FQ0kSTP4JEfuUeIF73ERwOQIu1RGxBxPElBr33j4p+c0slAKUC1xfae52oVf+kv
-         gDTppcv54QCt9RAbCy0dgfWLZcp/VKljLSPx9bkIUxq8CJFCB73eCd8PMSCfprbNEqJ3
-         ozB6KjjN+863Nr27O02SsZvB0qyAXk/ZZKsknx+Hx/WAKZXF0m9SpY8Frq6BT+LUidRw
-         gDJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxYPdSIiB/7RZHUJKxHNK8AhyTtVEA5wagHxwV+TeIGdFxK8xEyMNivXCmnCG1NCi1CkKIlwth28hziBo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz47be5d6GOgfRKM2Rt4RCUvFa08GfcRNDrw8cRM0LhgmV4Mcwi
-	SA/QD4urzKhq6gYcRH1a7NNNkywHSGgR+YiEpNZStQ9ST+9IEN+7cLUnGcILg3VbmQ==
-X-Gm-Gg: ASbGncvdULc5iEMj+CUd9Lqs0pGW7Zl3Y3BNnKpjgyiXbIUqAuA9vIgC22CPxJhATFW
-	O7/AyvLe8+h10Rn+9j3mOQQMe8MjsCJVKsUmYm2QGF/cD3c6fujbW9Gh2nWUxG9Cl7dARKHZryd
-	1VdekecUL+cFhaWfC2j4yxYUrhkwOMxqIS0J7Rf2kUkGLZkB4Mwu6HicSw76JeU77n71ImWN1l+
-	60fBs06/L6yEX372vsJydOtBvbxY9TN8Qbuch9jZWi6LtoYy9y2b2wxrIP8rD9ixZuvEFvzJgr7
-	C57vHfNu9Zcry0rn2VXzHHuEwVSn49LQKgdacGhruEXwun3y67M5m1gYyKTLctzL2Tzt+QWRpnh
-	kf0Q/S7oU//LNVWwgnXgE7A==
-X-Google-Smtp-Source: AGHT+IGAK8o+8Ua0lXjHXGjY94JIpgJscQVIy88WZ6WB5EqaxsbE1cmu3G6Ju41EdiRl90z+RRovCA==
-X-Received: by 2002:a05:6a00:2305:b0:746:3040:4da2 with SMTP id d2e1a72fcca58-747bd96b918mr6023716b3a.8.1748619885949;
-        Fri, 30 May 2025 08:44:45 -0700 (PDT)
-Received: from ubuntu.. ([192.19.161.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747afe9645dsm3208018b3a.7.2025.05.30.08.44.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 08:44:45 -0700 (PDT)
-From: Ronak Doshi <ronak.doshi@broadcom.com>
-To: netdev@vger.kernel.org
-Cc: Ronak Doshi <ronak.doshi@broadcom.com>,
-	Guolin Yang <guolin.yang@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net v4] vmxnet3: correctly report gso type for UDP tunnels
-Date: Fri, 30 May 2025 15:27:00 +0000
-Message-ID: <20250530152701.70354-1-ronak.doshi@broadcom.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VuOy3Uj7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748619984; x=1780155984;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=oiGf5ra11ANdgRt2VzQMjcJ3gpiMOjbFOKUWlbkAUS4=;
+  b=VuOy3Uj7V+2eqaIVOam/j8BdCYbRpZPTZdqJVaNbfe7SbC29elAbudun
+   nc0SE8wPMg6p9kHMJtNV4D6Imw70SFeeu/DrGyUvR9frVXz7iERYl/S8r
+   h0yH9/6AhMe/RL2J2YYOlWno6/s9zEO5aBCmHEBrBFxPOBVjCwJkJ9ToI
+   M7/q4IVG3v6yOGNOz1hw5p9j/2xJNDS0dNiSpGqPwdu7OVoUv67QY6wM5
+   kZzFGGj9+XRxN+4HmfW/dw/ZQWh/sMhxEzhUx5kO46S9hMEMN4GSPY0mL
+   4idFAcfCBTJOUXUSHpc5zd6dHSB8kaB/URsQs4fWIx2DxConbs+7dSNxG
+   g==;
+X-CSE-ConnectionGUID: lmLXMQHFSPSFs2C1D8FUxg==
+X-CSE-MsgGUID: g6aFZQ4KR/6GcFlJ299Uew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="62060455"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="62060455"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:46:22 -0700
+X-CSE-ConnectionGUID: Dk6x6EEuTDiXDWr//ngQbg==
+X-CSE-MsgGUID: x9J05hO3QjCYaQE/isYEOQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144550664"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 08:46:20 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 30 May 2025 18:46:06 +0300 (EEST)
+To: stuart hayes <stuart.w.hayes@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] platform/x86: dell_rbu: Stop overwriting data
+ buffer
+In-Reply-To: <8a8ff0b4-49a9-4b07-abbd-243b754bfc0e@gmail.com>
+Message-ID: <054f2f19-cb2e-7633-8976-96c2fac7b746@linux.intel.com>
+References: <20250529202758.8440-1-stuart.w.hayes@gmail.com> <20250529202758.8440-4-stuart.w.hayes@gmail.com> <ad0301a0-f45f-900a-028d-dff5e08b9525@linux.intel.com> <8a8ff0b4-49a9-4b07-abbd-243b754bfc0e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-631951065-1748619966=:20209"
 
-Commit 3d010c8031e3 ("udp: do not accept non-tunnel GSO skbs landing
-in a tunnel") added checks in linux stack to not accept non-tunnel
-GRO packets landing in a tunnel. This exposed an issue in vmxnet3
-which was not correctly reporting GRO packets for tunnel packets.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-This patch fixes this issue by setting correct GSO type for the
-tunnel packets.
+--8323328-631951065-1748619966=:20209
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Currently, vmxnet3 does not support reporting inner fields for LRO
-tunnel packets. The issue is not seen for egress drivers that do not
-use skb inner fields. The workaround is to enable tnl-segmentation
-offload on the egress interfaces if the driver supports it. This
-problem pre-exists this patch fix and can be addressed as a separate
-future patch.
+On Fri, 30 May 2025, stuart hayes wrote:
 
-Fixes: dacce2be3312 ("vmxnet3: add geneve and vxlan tunnel offload support")
-Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
-Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+> On 5/30/2025 3:03 AM, Ilpo J=C3=A4rvinen wrote:
+> > On Thu, 29 May 2025, Stuart Hayes wrote:
+> >=20
+> > > The dell_rbu driver will use memset() to clear the data held by each
+> > > packet when it is no longer needed (when the driver is unloaded, the
+> > > packet size is changed, etc).
+> > >=20
+> > > The amount of memory that is cleared (before this patch) is the norma=
+l
+> > > packet size. However, the last packet in the list may be smaller.
+> > >=20
+> > > Fix this to only clear the memory actually used by each packet, to pr=
+event
+> > > it from writing past the end of data buffer.
+> > >=20
+> > > Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> >=20
+> > This still doesn't have Fixes tag? If it writes part the buffer, there
+> > certainly should be one in this one. Did you perhaps add it to a wrong
+> > patch?
+> >=20
+>=20
+> This fixes a bug that's existed for the life of the driver. Should I use =
+the
+> patch that introduced the driver for "Fixes:"?
 
-Changes v1-->v2:
-  Do not set encapsulation bit as inner fields are not updated
-Changes v2-->v3:
-  Update the commit message explaining the next steps to address
-  segmentation issues that pre-exists this patch fix.
-Changes v3->v4:
-  Update the commit message to clarify the workaround.
----
- drivers/net/vmxnet3/vmxnet3_drv.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Yes. They're normal commits just like every other commit. And since first=
+=20
+commits are quite complicated, it's nothing unusual to find problems that=
+=20
+have been there right from the beginning.
 
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index c676979c7ab9..287b7c20c0d6 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -1568,6 +1568,30 @@ vmxnet3_get_hdr_len(struct vmxnet3_adapter *adapter, struct sk_buff *skb,
- 	return (hlen + (hdr.tcp->doff << 2));
- }
- 
-+static void
-+vmxnet3_lro_tunnel(struct sk_buff *skb, __be16 ip_proto)
-+{
-+	struct udphdr *uh = NULL;
-+
-+	if (ip_proto == htons(ETH_P_IP)) {
-+		struct iphdr *iph = (struct iphdr *)skb->data;
-+
-+		if (iph->protocol == IPPROTO_UDP)
-+			uh = (struct udphdr *)(iph + 1);
-+	} else {
-+		struct ipv6hdr *iph = (struct ipv6hdr *)skb->data;
-+
-+		if (iph->nexthdr == IPPROTO_UDP)
-+			uh = (struct udphdr *)(iph + 1);
-+	}
-+	if (uh) {
-+		if (uh->check)
-+			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL_CSUM;
-+		else
-+			skb_shinfo(skb)->gso_type |= SKB_GSO_UDP_TUNNEL;
-+	}
-+}
-+
- static int
- vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
- 		       struct vmxnet3_adapter *adapter, int quota)
-@@ -1881,6 +1905,8 @@ vmxnet3_rq_rx_complete(struct vmxnet3_rx_queue *rq,
- 			if (segCnt != 0 && mss != 0) {
- 				skb_shinfo(skb)->gso_type = rcd->v4 ?
- 					SKB_GSO_TCPV4 : SKB_GSO_TCPV6;
-+				if (encap_lro)
-+					vmxnet3_lro_tunnel(skb, skb->protocol);
- 				skb_shinfo(skb)->gso_size = mss;
- 				skb_shinfo(skb)->gso_segs = segCnt;
- 			} else if ((segCnt != 0 || skb->len > mtu) && !encap_lro) {
--- 
-2.45.2
+> I don't think this has ever caused a problem, because, as far as I know, =
+the
+> Dell BIOS update program is the only user of this module, and it uses 409=
+6 as
+> the packet size. Because the packet data buffers are allocated with...
+>=20
+> =09ordernum =3D get_order(size);
+> =09image_update_buffer =3D
+> =09=09(unsigned char *)__get_free_pages(GRP_DMA32, ordernum);
+>=20
+> ...this will always allocate one full page for every packet data buffer.
+>=20
+> I just happened to notice that the driver could overwrite the end of the
+> buffer for the last packet if a packet size of more than 4096 was used, s=
+o I
+> thought I'd fix that.
 
+It would be worth to mention enough these details then in the changelog so=
+=20
+that other people such as stable maintainers can understand it so they can=
+=20
+base their reasoning on facts provided rather than guesswork.
+
+--=20
+ i.
+
+
+> > > ---
+> > >   drivers/platform/x86/dell/dell_rbu.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/platform/x86/dell/dell_rbu.c
+> > > b/drivers/platform/x86/dell/dell_rbu.c
+> > > index c03d4d55fcc1..7d5b26735a20 100644
+> > > --- a/drivers/platform/x86/dell/dell_rbu.c
+> > > +++ b/drivers/platform/x86/dell/dell_rbu.c
+> > > @@ -322,7 +322,7 @@ static void packet_empty_list(void)
+> > >   =09=09 * zero out the RBU packet memory before freeing
+> > >   =09=09 * to make sure there are no stale RBU packets left in memory
+> > >   =09=09 */
+> > > -=09=09memset(newpacket->data, 0, rbu_data.packetsize);
+> > > +=09=09memset(newpacket->data, 0, newpacket->length);
+> > >   =09=09set_memory_wb((unsigned long)newpacket->data,
+> > >   =09=09=091 << newpacket->ordernum);
+> > >   =09=09free_pages((unsigned long) newpacket->data,
+> > >=20
+> >=20
+>=20
+--8323328-631951065-1748619966=:20209--
