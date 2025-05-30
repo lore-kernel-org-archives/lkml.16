@@ -1,129 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20D98633F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FBE1A01BF;
+	Fri, 30 May 2025 02:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748573449; cv=none; b=CzlNY6O+Vw1YE/j7kKlrz4ZSfP9NN+G0bNKuNsuA3M8mKOSI+V5TTgJARN9XzuXmXb5cM68cDBacC8rtoYTSUdhdhnTqPUnQrne99fcIa1/tGo7F94rmuyIBKvxFWDQTxRFsg+geLFoFYbyv9i24s2lH2xldCYcVZq3Xia4lH2s=
+	t=1748573452; cv=none; b=dZWyacE6HvxzpkcWCLxDC7RUdnxQlR2CLZy3BbZ5uprFWbiYCMGxLRf7RDIn9nT58VhWW846gS7K4bAjRTV4N5E9yqMIBiA/xtUDH2KS4nIQ26IjQDu5ssDLR/bis+NHZkrZP6OB/UmXXaG6r8e334iMcY7U1CzEVWZFDDgzqBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748573449; c=relaxed/simple;
-	bh=T023SOv1UA19zCsZHpkGUkc5JUnIAmYnnBpKycWFIm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m4xCUTQU+ty9lXyDkxO1HEnEcc9zTBhAMUFYAk3fds6+hpN562X3PhHj5oBj+MVr+n9/lHz8L8DA06FEQqBFdLJjqWaQdRC2RKwbpGVrkCnsrwSlhxZW0AUY5qmgVrXXV8UGqGIlvCqyQXRBQAljor1OTHlUD9FuL0Dkl4uCkos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iEQLOc6s; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEQLOc6s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748573446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MlvNvM371O6Af3z0U0JOmOJd1PDrgbYgW0oVzGagpRg=;
-	b=iEQLOc6sOv4HQRyuyFDJXNJaUvagXpK1Fk2jYMf+jOwqQDJK5ftMGSX1Dl5nPC8+Hq6B/2
-	yyWaeGP11rykR83BmWylRioLCEhGiUkDpcDRNCPufC3bEOVtmDfcLm7lKG4/Z8hfhkgvWJ
-	EgDk6WniVr5+ZtlXoraMJqV3FcqH+nI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-_-h-PZqHPrKUldBDjYG_iw-1; Thu,
- 29 May 2025 22:50:40 -0400
-X-MC-Unique: _-h-PZqHPrKUldBDjYG_iw-1
-X-Mimecast-MFC-AGG-ID: _-h-PZqHPrKUldBDjYG_iw_1748573437
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 409331956095;
-	Fri, 30 May 2025 02:50:37 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.17.97])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E31321955D82;
-	Fri, 30 May 2025 02:50:32 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Thu, 29 May 2025 21:46:11 -0500
-Subject: [PATCH v2 09/46] panel/samsung-ams639rq08: Use refcounted
- allocation in place of devm_kzalloc()
+	s=arc-20240116; t=1748573452; c=relaxed/simple;
+	bh=5W400MBZ1HThTvR3ckF00N8iEWaCB3X849eX1DGODzg=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=BGjn7RfnOY2/f1BOHpMPSuecdR/MBdeTmrDmPr2jYKj034veg8RvNcM/9RByz6nrs/FmszNfnOcniTQGyW5A4UcnUQmwFgf9oSkF4RU8DUKTeljLBjidwB5P7q2OVImZwEX1aVptnCGW2o5Y7bL6prb4wHRQJbPr30AA/TYKzgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: e1abe4183d0011f0b29709d653e92f7d-20250530
+X-CTIC-Tags:
+	HR_CTE_8B, HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE
+	HR_FROM_DIGIT_LEN, HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
+	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
+	AMN_C_BU, ABX_MISS_RDNS
+X-CID-CACHE: Type:Local,Time:202505301049+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:ff555342-7437-46e7-ada0-25e56a6a8ad5,IP:10,
+	URL:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,A
+	CTION:release,TS:-35
+X-CID-INFO: VERSION:1.1.45,REQID:ff555342-7437-46e7-ada0-25e56a6a8ad5,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:EDM_GE969F26,AC
+	TION:release,TS:-35
+X-CID-META: VersionHash:6493067,CLOUDID:83699f22e4d7182ca7599630c796c4f1,BulkI
+	D:2505291639197H8C8EDO,BulkQuantity:4,Recheck:0,SF:17|19|24|38|44|66|78|10
+	2,TC:nil,Content:0|50,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC
+	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: e1abe4183d0011f0b29709d653e92f7d-20250530
+X-User: lijun01@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 700823638; Fri, 30 May 2025 10:50:44 +0800
+From: Li Jun <lijun01@kylinos.cn>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	lijun01@kylinos.cn,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: ppp: remove error variable
+Date: Fri, 30 May 2025 10:50:40 +0800
+Message-Id: <20250530025040.379064-1-lijun01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-9-5d75a3711e40@redhat.com>
-References: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-0-5d75a3711e40@redhat.com>
-In-Reply-To: <20250529-b4-drm_panel_mass_driver_convert_part3-v2-0-5d75a3711e40@redhat.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Robert Chiras <robert.chiras@nxp.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Markuss Broks <markuss.broks@gmail.com>, 
- Artur Weber <aweber.kernel@gmail.com>, 
- Dzmitry Sankouski <dsankouski@gmail.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, 
- Purism Kernel Team <kernel@puri.sm>, Ondrej Jirman <megi@xff.cz>, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, Janne Grunau <j@jannau.net>, 
- Michael Trimarchi <michael@amarulasolutions.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- asahi@lists.linux.dev, Anusha Srivatsa <asrivats@redhat.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748573168; l=1561;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=T023SOv1UA19zCsZHpkGUkc5JUnIAmYnnBpKycWFIm4=;
- b=ObVTNYbqTRxIyEKEOEPdsSJRVY19Ft5axjR/VVDEmA0vVwf3XGbpAb4dWjshJMEcEAd208ZvT
- ITFp9yUCJZlD72sTsf6brzjTwoFkQSK7CyuhnwKfLtlRTF6W4+L5cGE
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-Move to using the new API devm_drm_panel_alloc() to allocate the
-panel.
+the error variable did not function as a variable.
+so remove it.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+Signed-off-by: Li Jun <lijun01@kylinos.cn>
 ---
-v2: refactor. Use dev instead of &dsi->dev.
----
- drivers/gpu/drm/panel/panel-samsung-ams639rq08.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ppp/pptp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c b/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
-index 817365cb5e461f5e0a154b6d9d5c101e05b8945b..f8ebbd4a530bda494d320f691cd13c6747c5f8db 100644
---- a/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
-+++ b/drivers/gpu/drm/panel/panel-samsung-ams639rq08.c
-@@ -257,9 +257,11 @@ static int ams639rq08_probe(struct mipi_dsi_device *dsi)
- 	struct ams639rq08 *ctx;
- 	int ret;
+diff --git a/drivers/net/ppp/pptp.c b/drivers/net/ppp/pptp.c
+index 5feaa70b5f47..67239476781e 100644
+--- a/drivers/net/ppp/pptp.c
++++ b/drivers/net/ppp/pptp.c
+@@ -501,7 +501,6 @@ static int pptp_release(struct socket *sock)
+ {
+ 	struct sock *sk = sock->sk;
+ 	struct pppox_sock *po;
+-	int error = 0;
  
--	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
--		return -ENOMEM;
-+	ctx = devm_drm_panel_alloc(dev, struct ams639rq08, panel,
-+				   &ams639rq08_panel_funcs,
-+				   DRM_MODE_CONNECTOR_DSI);
-+	if (IS_ERR(ctx))
-+		return PTR_ERR(ctx);
+ 	if (!sk)
+ 		return 0;
+@@ -526,7 +525,7 @@ static int pptp_release(struct socket *sock)
+ 	release_sock(sk);
+ 	sock_put(sk);
  
- 	ret = devm_regulator_bulk_get_const(&dsi->dev,
- 					    ARRAY_SIZE(ams639rq08_supplies),
-@@ -281,8 +283,6 @@ static int ams639rq08_probe(struct mipi_dsi_device *dsi)
- 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
- 			  MIPI_DSI_CLOCK_NON_CONTINUOUS | MIPI_DSI_MODE_LPM;
+-	return error;
++	return 0;
+ }
  
--	drm_panel_init(&ctx->panel, dev, &ams639rq08_panel_funcs,
--			DRM_MODE_CONNECTOR_DSI);
- 	ctx->panel.prepare_prev_first = true;
- 
- 	ctx->panel.backlight = ams639rq08_create_backlight(dsi);
-
+ static void pptp_sock_destruct(struct sock *sk)
 -- 
-2.48.1
+2.25.1
 
