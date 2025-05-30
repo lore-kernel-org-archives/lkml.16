@@ -1,172 +1,209 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2059.outbound.protection.outlook.com [40.107.94.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88691CAA85;
-	Fri, 30 May 2025 16:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748623955; cv=fail; b=rKw6Y/+I1xEAQqwIBT+fmR8Tzc5LTwrsFzalSdGY2qSVX/kRurjzWMd0TkpBvNGp7M3tGBCJt+qxPoxjner7oqMkO+pX5iJM5KSc7oNnkNo3uG52GEGV49EqEykmaf3fDtdtzv0sGr8PDEIlAqVsDF5gcTc+CPYBpr9W5d/N5k8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748623955; c=relaxed/simple;
-	bh=gcLZi/bSoVaGxkj562EaP1Grtgy/RlFVkjt98wligQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tFrfzSp8KHs7Qt+h8zyOuIj6ktRjRoSb9QUrfXTy06mrf9OB6iKCdGy9vrAkBMzqBPz5WOeXEtl92bOfG5l1M03fCxKUhlEkVVcz007VnBRYDUzPtNwnN49hYp3Bug9tIkh0pp/aefQ4wF+fwDZcuQImkNl3Hr316dYSYLDjJW0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Gymxe580; arc=fail smtp.client-ip=40.107.94.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF1A1DC075;
+	Fri, 30 May 2025 16:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748623977; cv=none; b=mv2kXFbskZsST4V2nJhZ+Vm3DjLwWqy61SHGdIp9HOkolbnfK14LRBl3BmSzBftDOO3fJaS/VLbkoG1b38ZR8F48gKKh+YLVd8C2p4scJROUYNdsJeN8BgF7PovyAEiobpIU+vtDt8RGkPTqBFu7hdyTjzQ6Ir5znrYtC3lN2Ns=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748623977; c=relaxed/simple;
+	bh=9LVFN+EyjgnLAEk+R9OrUHQ0xryx4vozSIoV9ziH0Pc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cTcpI70mVJf/VPbqZ4NJtyZtBTGdy4SLgsd2dtk8JOx8q5xMeV2RBgPw8gZCSnSihQI+nrIOWRhs4ci/Emks91DLqUsuzMzTd95gvgX9G1pERVak0O07HVtonw2+1NSCK3MKlpk7zuzEUPsssUzlkUYGypJ6HLiwPeOYHctsAUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EdKEqozp; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Gymxe580"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E8dQzXrMvmSCrWWbSoRxM0ACVy/ojClfzyURNUQyo4lHASKUo6gmfqcap8j7607jH74aubxoE1Rb1FfOXftMZoZbN1ATBoSzGYnqEc+12ZdH1kSg61HmRiiQxRaJJCaoIWMLGnpdAXVieJkGuroLhw4SFoi/DgeK2oFsINu9uriQTTXEh+9dt7YMrvgzhcCAAhET5CRIZ29wD0uYkiqobMDXginCENPBvbP9Q5c9TM4MsnfiszEsebfHcGNKnCywlGla4ROJUBexjA9j+jfAPPHB2zsCj97ad4FkVXQgYkIQOZFtOIUKr1/wBklWoRFDi/ZiiX2ejQhKhjIVgzRudg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AbLi7uaQ5dXtTjLsgSCcqA9Jejf/4vVM2v4iDyiIOtc=;
- b=S2RqnQnFBRPS+Upii3j9+MZTmOt9PVI0yj2+/AhmJgbXeCRTV4kucjfhc7r3TaMj1evjkzBQ2T1/yKu3NjXDV9gLVkWh+suCJSyHmy/8ZZ+njHdy3KD0bcQh/+/m3ZXqSpNGfZRD56oH7bld3uI84eSdHq/Ql9JFThIr3l7s3MJ5xPCiUNyp84GfHyknzDqqKqjBCdSFYatVXtE9OXvQkIyAqN4VerrPHcs13J2vztaznKil5/mAG9KmkLVYcewltAF16rY3tcMZ7BU1qut+ZrLjd43OisAlLRfr4dnz7++u4m+ByqTdnLVEQ23+3GRqDjkVB6lsu/RiE6szGRYX4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbLi7uaQ5dXtTjLsgSCcqA9Jejf/4vVM2v4iDyiIOtc=;
- b=Gymxe580ZrxWwA55LJUshrbymOpnr7+pkKrn+K8Nc8+FSZdNBamRFG5JhlEfLLUO3l6WxH9lH6PqDmBh+RhuYstRB1NQpDEJGy3rIpox7UIpiji+KW5+q+sU0pWAPfYbgRNEIAPAd2us7KEU7a9j8LknjB631OZvGfsHD03mETwLIY5EgFF9ZVhdwWB29W/wo0oS03tMDkDA653tA4pw5vj7ivdU06FXV85zl+c9Bb5HzCSZYkqAH67rhsaFGO9Naz6D6p35xp8c2patlVpFhCbqNHaf+U4McKMQE/MHo7ir3Bi6uHBNt2aN6TdZ1RfN0BG8+hCmDPhDt2vrZ5TQ+Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by PH0PR12MB8098.namprd12.prod.outlook.com (2603:10b6:510:29a::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Fri, 30 May
- 2025 16:52:31 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 16:52:31 +0000
-Date: Fri, 30 May 2025 13:52:30 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v5 20/29] iommu: Allow an input type in hw_info op
-Message-ID: <20250530165230.GH233377@nvidia.com>
-References: <cover.1747537752.git.nicolinc@nvidia.com>
- <d75b14f77997836603650bb12437ccaf50afd2a6.1747537752.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d75b14f77997836603650bb12437ccaf50afd2a6.1747537752.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: BLAPR03CA0143.namprd03.prod.outlook.com
- (2603:10b6:208:32e::28) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdKEqozp"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6face367320so14161046d6.3;
+        Fri, 30 May 2025 09:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748623973; x=1749228773; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L6ceonNyxc//yae0QTPj5bc1vLf7f1njr9qW4dTFnws=;
+        b=EdKEqozp4njBrTmecsueD2tlCqrujwWO5XMB6P3nCjrA8EWOCbZC11/WvBylPC09aN
+         ckVUY8RgxpICdduuLBzaCduhZ04BJJrf5h3qzWkaW1cnT+3y3O+dRCPhLQi0ywbB9M/e
+         cjJPEYKGK2kht7En0bNzAsFMU2wV6AooIdxfj2/p5ZztfLdfwN9pBBpCNhjG31Tt0GWN
+         +2OxCbG8XmJh8s5lESiI3uCMeBQrxg8aLwP5fD5q2eOfbRGStqyAZa5Oi2r03omcDqMd
+         0HcT8OnJHx6Xl7VVb/Hrjh8c0x+vpp6hntQ4mWMbncQ2PrGQoiKJsP3xhXY5/conJEGF
+         zq1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748623973; x=1749228773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L6ceonNyxc//yae0QTPj5bc1vLf7f1njr9qW4dTFnws=;
+        b=lLM0ZyL/F7UXR2HjSaqOzQJA6KkpuWdWsFY3ooYrujjAHGVAyws8PV1E0ioGJWVySG
+         19+LyAIutPxa4CZl087SJql9m4dM2s6iy7y6JX0+gTi5e/xd3ILdzlwYoDZXCtO4Bgbm
+         XDVoL+FzW+HKQYXOy1PaVNRJ9SNDvlJXJ9oz19owG9PaTQK3swCDMSi1ILhdo8Fclj5d
+         f/rx6IlU38AQsy+f2apxAuT86vzeAgccBkx5cwGAYlDMrEfUp0J4V8c+VzKJwTBviQQM
+         G62JYubxPbeHTgIrq7TLT1KnxDT6/atbXbJMiIXF8MAmPkZnw18fpQ3nZyHklKntzwIa
+         ODow==
+X-Forwarded-Encrypted: i=1; AJvYcCUoVyxsXRFId4ENZkRYwpk4gXzn8z7SWsQ7v0yvz3ySdobaXRxdAEzd7zZS/F7SdiEZVMe/S1+WvLEwP0el@vger.kernel.org, AJvYcCWZ+I25+YmMY8Pb9InV7PNsm1KXpbj8Hw7IF9K0p6WW8PS2/PseLWjadeIAKJHqZLI0K5dDzzir@vger.kernel.org, AJvYcCXjGDVfseGrYnowvzDbgGxLAvQwduWjAXoQuFmjO3tVpIRyhadA/rfWPRtAlqivEgTl5D8Wa6bZ6TU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhSLF/JX+j6O3mZH/jr+3RNFBt/66MormyQnSIAggJajTyCgIJ
+	f2phlFkjZbH1BdtIwWWrd6J0PD94Tw+gxVzkFW6gCOE48guwJQi1kFYlVkc4ieqmQkbnBScojhI
+	1vF3pm9lDHfI4r2Ph2qQnOYnOHF52DME=
+X-Gm-Gg: ASbGncvO7Yxgt4aNUgrkPjRqXCZZvccceP7x7Mnq4MKSVMDilxwMlxcK0LcCHXOuKx0
+	wxFyKzasISaD9k0vFN9qKZ6P7QD4xVcsWd41nIwPh2q9FS4tQzG7A03RQ6rYfM9eDYjsFeN4jq2
+	0Bcf5QI8ncYhHK2jdDj6cAMyyOQ1oV12kUrsm0RxdW5MGC
+X-Google-Smtp-Source: AGHT+IHoTU8m4OB7wecTn9blPTc4VRTJ944sSaekMzsq1udHX0CGv9f8K0w3JZqp7Phzxa8vH39KHZr9pZZW9bpjbZA=
+X-Received: by 2002:a05:6214:300b:b0:6fa:ce87:2302 with SMTP id
+ 6a1803df08f44-6fad1ac72acmr41551796d6.40.1748623973310; Fri, 30 May 2025
+ 09:52:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|PH0PR12MB8098:EE_
-X-MS-Office365-Filtering-Correlation-Id: adc0ba3c-db16-4d1f-a586-08dd9f9a5e34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?kfqg8j13EhxG7T2O9TJQBB7SfI8nv5NsprrWOoW0ts1EmQxI4Hs/nYSB02Fl?=
- =?us-ascii?Q?bUWQDjNivIG2BzyFDZJMJK4O9QF9BbqYwBtwOPAnTXJII0z7CnVKNCvJcN3j?=
- =?us-ascii?Q?wgCPGJaKCu05CRAjN1B0od4vE2Bz96PJ2c3YM6EYLvuODIc3VudHoRYiQQTO?=
- =?us-ascii?Q?DzAOPkKWhX5efvGHZjgWu2X/BRgaADOSNfv6j5l1sf5PZVHkgwAEPJsBy8qO?=
- =?us-ascii?Q?1yRwynJHaVKR2YR0rO5B9+C9XffHrQQVADmutLvTqngnCzz9mY2rELHfVZzk?=
- =?us-ascii?Q?0oqpTV704n2HG0fb/3f1jdFTPCi+HVdR2q+xO9JorR25nyr/eHcDmuekqq7B?=
- =?us-ascii?Q?QWTE4CQcy2dIagVYy3oNx3FJG9o/TMiuHQlKPqn1XwNMREqortIvg2YpzAlG?=
- =?us-ascii?Q?+sdZAYYOXs/tejigLhuQticBdF1j8HfF/UyDVKl9GxQw0BX9KOZoG+pXc27g?=
- =?us-ascii?Q?IR0dQg/SCgOE7fBgNiPhrYoFF3lpK5BB/YrJDjkTxuc/7k00zZATkl40tlMR?=
- =?us-ascii?Q?YcH1fD6ID7dXFsPeiBkSkcOzEusX6Z40D7Gic2xa4U4t3WwtLURxnPhd0Aeq?=
- =?us-ascii?Q?/OaLAIe3bhFM0GEYD4cotaJ45O46/gnDLj7XWHvqDKcN4O3khEVeSXwYDMh3?=
- =?us-ascii?Q?R7RfPW4R0EtPkVch6fyV+4LlFwQn00VYbbjfi4dxQvoeE79CC+q6KpSAWoRU?=
- =?us-ascii?Q?ZqlWZtJm70jIaASC2V85qr2s/N+nxA+L5LWrECLyFjzYCBVvTVW2lXblJNFu?=
- =?us-ascii?Q?AFi7CdV1/52N93b2uzzhC0rkbJYwIUiMt3UFQOU62p1e9yZf0+ExcXCoEsC0?=
- =?us-ascii?Q?Tq7ApKgf2Ag5O7Od0lcyZ9TWuGGkyG5VHOdVqceCgG6YDaKy8QcbpnSUFYtU?=
- =?us-ascii?Q?nkFejki1Lvf7lQejvpaCNjqFxDG98wDKGOa0QU6lpVx4Rp3YxH2tdf9G9wRW?=
- =?us-ascii?Q?kez6xyOlojTbvViL9dwrvHESAw7Bp5Ar8waDcFzP74cozh1Nydh5sknm58VF?=
- =?us-ascii?Q?mQGT4Sw5GH7eVvp8rAhkbBYo0Zw8n+UtME1HlVacQps51ue/YIU+hhacLpDp?=
- =?us-ascii?Q?QPMvYB+sSinihuOiHPz5ao0Lgwu3IIdgZeiNdWQipvT7phL1jl6xRJes1W0S?=
- =?us-ascii?Q?3Lov8/MQPFHgcCWHMvYGDk4CxCan/YO39YkPuA7vwlOwHF3Ioz90YBPRJpOf?=
- =?us-ascii?Q?r2OkHNR7VrHuNmCpk6OptRH0Wz7MJdn2xs3qOpEno6C1gnhodB45cgmJIKC8?=
- =?us-ascii?Q?1axlSwivRhowE7RMltxUYvKSyFq42pCs4ogcOeJgSI/11pnG788Tk9K2UB3n?=
- =?us-ascii?Q?39EbyHVybUdSS8pGXvwAh1t98tr6is+yEdW8ddw4U+iDt1FdWsJHNnTb1por?=
- =?us-ascii?Q?XUTIHu7PxD2y2NinEAP+/GDaXCVdvxsiGG6eEJh3IWKlPC54K+PD45LnOW++?=
- =?us-ascii?Q?L5ELIv3r3C4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cF7qIbKGetjqq3qHqG4fra24pp8wx/BaqYKgZy6IX2qmDNHrEknhwDDy5mBG?=
- =?us-ascii?Q?xCI/ye/GEkQSuxA27pZBaYOedH73Q3lxbX4sYjAnLyZTZIRelrLc6R4yih8k?=
- =?us-ascii?Q?Pw0v7kGpA8fvQeJq1kgR/cz0nJcjCvlDCRNgDFADQ36+Bb/Z6fgvKW429oQR?=
- =?us-ascii?Q?0BRSe4xj5bbO8zAzcCuTA10ZOEA2MBWTzEwK4eYrr7qSf0znZwsMA37k0ooL?=
- =?us-ascii?Q?1RmXEgYYgn8PUleOj5mWi1z4rESRrr6qadYr4lLYdwxBHkCQUGi+0H5ADLWj?=
- =?us-ascii?Q?214IRw7tJMLTu8+OpRfjW8SrkUk0T5ML8UvLYK94cQodz7rYuB1evDBMc0Il?=
- =?us-ascii?Q?SAAiZ2/LTAnJudtboJ/ATYcDWgfWOliVMu7vtwbEjJzBeApGrTYCycslEkyJ?=
- =?us-ascii?Q?TDViItMmrvarJ3KQW9WPVXaUnU6mQxVqNJ9m+3iHdbLD0TyG1aIuKhWYU3Q6?=
- =?us-ascii?Q?5+8aGwzTG5ZfZ5dB0J3gd461aR11RxUx7AeF8AZuedvTDnXnXYR7RnEVFiEU?=
- =?us-ascii?Q?t12fpDhifqmMNiDw8N8ODwcDrBvLLESl8znLdnmlX9yRJe1z59jsQxhvsPdG?=
- =?us-ascii?Q?34/MTG1Uv0vhl6G7jO9323+Lm2t1Mjk8m1Nu4rrrsjd6Vw8kntXgNU86zGPr?=
- =?us-ascii?Q?6sy3wEijs7dNDlEMFqITg0tEqFuDeTC0rXESMDBkeFzJ06AEtz2kszlpR4Tb?=
- =?us-ascii?Q?OZtItDqeE+Q+b6XzRZTBNo4C+pyr3O1p+jNTbBx9IDds6ds5xMdU8MMrGcDv?=
- =?us-ascii?Q?5DTZI/rmFrGk5qGjdweR0pkqCIF8V2K9jYeGDP0ODF0xveMoEfJJCvDR0Jfp?=
- =?us-ascii?Q?1PPgtEow9krsjxz9VgcYgmqk/8pIXc2BohuWPen9rAyxOtEANrlp/0+druLq?=
- =?us-ascii?Q?8+q50nvvOv8RqfUcT+y56IP6pQZ2750BnoBuSPHKZj1yQKL54WZi5IOZ3Y2K?=
- =?us-ascii?Q?U15BQ2zhkdKiWztwV/gBH7tGKW6uEHCErPg3un7C9hqzjRHk5AyFSK4zgVdF?=
- =?us-ascii?Q?Xy/rMiqg+wI5lAuvALurKD9gGgXRn8cn6g1bmPx6HMqxNAijA5d0O6bB8dtF?=
- =?us-ascii?Q?j5XOHbM1xQ/ENSwOhKMzz8NmCvqFVzwMj+L6awa/t4EdOlJblgt5ng48nrn9?=
- =?us-ascii?Q?5crXh9tJgbluRQe0vOLupLRi412SEhCW8SRAwJnYJNUuNJZc2CF9Wc6teokH?=
- =?us-ascii?Q?ZLLNtiAFiILxnQGE3h8ontov3+rrvHByG/rYS/I5BgjmrNlHWKrpQlS5tmft?=
- =?us-ascii?Q?BFfkbL+3lO8D7nEWSjX73bL0T/9XHzbak4WRkpIiG32WNapuUmBf8TI6yNIl?=
- =?us-ascii?Q?N75nc9FSJDYG0pSq6atRW2XV/xNmZ3PTYYOJFbQ4N8vZvo/JMxWhXtFvKk8r?=
- =?us-ascii?Q?h+rdoRiHqLeS5xq9Z7Sl8wSnwDW0w+MaYrjPh1XngnKPfZ1bgqs8kZGM6Gx+?=
- =?us-ascii?Q?5UGO6bVykRheG0H2MVSTBzfuUbPLwTZ5EFd4+GLj155LX/ZSSQRu+W5c2kMT?=
- =?us-ascii?Q?JbSFcg3QbQyinqxJkOF6Q23b6Sjf3jH3Z+jYWR4/UQ7DUl0GCX1rQudyaqc+?=
- =?us-ascii?Q?Gx8/JL/wodq3skQxrANHRLfpTDVaRloZRAimrLeS?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: adc0ba3c-db16-4d1f-a586-08dd9f9a5e34
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:52:31.2635
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: movJm186q+hZAGRXsDx6leN5qtrI/PnbKYYKnNDRrByR/aHpvwnptBhyNCXEp47+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8098
+References: <20250429233848.3093350-1-nphamcs@gmail.com> <aDlUgVFdA7rCUvHx@yjaykim-PowerEdge-T330>
+In-Reply-To: <aDlUgVFdA7rCUvHx@yjaykim-PowerEdge-T330>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Fri, 30 May 2025 09:52:42 -0700
+X-Gm-Features: AX0GCFtz4cKX2BeWIy2JZWlB5tliwPvoCYexZVuGP618T9LnyL05hYBxApuOXM0
+Message-ID: <CAKEwX=MjyEsoyDmMBCRr0QnBfgkTA5bfrshPbfSgNp887zaxVw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 00/18] Virtual Swap Space
+To: YoungJun Park <youngjun.park@lge.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	len.brown@intel.com, chengming.zhou@linux.dev, kasong@tencent.com, 
+	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org, peterx@redhat.com, gunho.lee@lge.com, 
+	taejoon.song@lge.com, iamjoonsoo.kim@lge.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 17, 2025 at 08:21:37PM -0700, Nicolin Chen wrote:
-> The hw_info uAPI will support a bidirectional data_type field that can be
-> used as an input field for user space to request for a specific info data.
-> 
-> To prepare for the uAPI update, change the iommu layer first:
->  - Add a new IOMMU_HW_INFO_TYPE_DEFAULT as an input, for which driver can
->    output its only (or firstly) supported type
->  - Update the kdoc accordingly
->  - Roll out the type validation in the existing drivers
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  include/linux/iommu.h                               | 6 ++++--
->  include/uapi/linux/iommufd.h                        | 4 +++-
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 4 ++++
->  drivers/iommu/intel/iommu.c                         | 4 ++++
->  drivers/iommu/iommufd/device.c                      | 3 +++
->  drivers/iommu/iommufd/selftest.c                    | 4 ++++
->  6 files changed, 22 insertions(+), 3 deletions(-)
+On Thu, May 29, 2025 at 11:47=E2=80=AFPM YoungJun Park <youngjun.park@lge.c=
+om> wrote:
+>
+> On Tue, Apr 29, 2025 at 04:38:28PM -0700, Nhat Pham wrote:
+> > Changelog:
+> > * v2:
+> >       * Use a single atomic type (swap_refs) for reference counting
+> >         purpose. This brings the size of the swap descriptor from 64 KB
+> >         down to 48 KB (25% reduction). Suggested by Yosry Ahmed.
+> >       * Zeromap bitmap is removed in the virtual swap implementation.
+> >         This saves one bit per phyiscal swapfile slot.
+> >       * Rearrange the patches and the code change to make things more
+> >         reviewable. Suggested by Johannes Weiner.
+> >       * Update the cover letter a bit.
+>
+> Hi Nhat,
+>
+> Thank you for sharing this patch series.
+> I=E2=80=99ve read through it with great interest.
+>
+> I=E2=80=99m part of a kernel team working on features related to multi-ti=
+er swapping,
+> and this patch set appears quite relevant
+> to our ongoing discussions and early-stage implementation.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+May I ask - what's the use case you're thinking of here? Remote swapping?
 
-Jason
+>
+> I had a couple of questions regarding the future direction.
+>
+> > * Multi-tier swapping (as mentioned in [5]), with transparent
+> >   transferring (promotion/demotion) of pages across tiers (see [8] and
+> >   [9]). Similar to swapoff, with the old design we would need to
+> >   perform the expensive page table walk.
+>
+> Based on the discussion in [5], it seems there was some exploration
+> around enabling per-cgroup selection of multiple tiers.
+> Do you envision the current design evolving in a similar direction
+> to those past discussions, or is there a different direction you're aimin=
+g for?
+
+IIRC, that past design focused on the interface aspect of the problem,
+but never actually touched the mechanism to implement a multi-tier
+swapping solution.
+
+The simple reason is it's impossible, or at least highly inefficient
+to do it in the current design, i.e without virtualizing swap. Storing
+the physical swap location in PTEs means that changing the swap
+backend requires a full page table walk to update all the PTEs that
+refer to the old physical swap location. So you have to pick your
+poison - either:
+
+1. Pick your backend at swap out time, and never change it. You might
+not have sufficient information to decide at that time. It prevents
+you from adapting to the change in workload dynamics and working set -
+the access frequency of pages might change, so their physical location
+should change accordingly.
+
+2. Reserve the space in every tier, and associate them with the same
+handle. This is kinda what zswap is doing. It is space efficient, and
+create a lot of operational issues in production.
+
+3. Bite the bullet and perform the page table walk. This is what
+swapoff is doing, basically. Raise your hands if you're excited about
+a full page table walk every time you want to evict a page from zswap
+to disk swap. Booo.
+
+This new design will give us an efficient way to perform tier transfer
+- you need to figure out how to obtain the right to perform the
+transfer (for now, through the swap cache - but you can perhaps
+envision some sort of locks), and then you can simply make the change
+at the virtual layer.
+
+>
+> >   This idea is very similar to Kairui's work to optimize the (physical)
+> >   swap allocator. He is currently also working on a swap redesign (see
+> >   [11]) - perhaps we can combine the two efforts to take advantage of
+> >   the swap allocator's efficiency for virtual swap.
+>
+> I noticed that your patch appears to be aligned with the work from Kairui=
+.
+> It seems like the overall architecture may be headed toward introducing
+> a virtual swap device layer.
+> I'm curious if there=E2=80=99s already been any concrete discussion
+> around this abstraction, especially regarding how it might be layered ove=
+r
+> multiple physical swap devices?
+>
+> From a naive perspective, I imagine that while today=E2=80=99s swap devic=
+es
+> are in a 1:1 mapping with physical devices,
+> this virtual layer could introduce a 1:N relationship =E2=80=94
+> one virtual swap device mapped to multiple physical ones.
+> Would this virtual device behave as a new swappable block device
+> exposed via `swapon`, or is the plan to abstract it differently?
+
+That was one of the ideas I was thinking of. Problem is this is a very
+special "device", and I'm not entirely sure opting in through swapon
+like that won't cause issues. Imagine the following scenario:
+
+1. We swap on a normal swapfile.
+
+2. Users swap things with the swapfile.
+
+2. Sysadmin then swapon a virtual swap device.
+
+It will be quite nightmarish to manage things - we need to be extra
+vigilant in handling a physical swap slot for e.g, since it can back a
+PTE or a virtual swap slot. Also, swapoff becomes less efficient
+again. And the physical swap allocator, even with the swap table
+change, doesn't quite work out of the box for virtual swap yet (see
+[1]).
+
+I think it's better to just keep it separate, for now, and adopt
+elements from Kairui's work to make virtual swap allocation more
+efficient. Not a hill I will die on though,
+
+[1]: https://lore.kernel.org/linux-mm/CAKEwX=3DMmD___ukRrx=3DhLo7d_m1J_uG_K=
+e+us7RQgFUV2OSg38w@mail.gmail.com/
+
+>
+> Thanks again for your work,
+> and I would greatly appreciate any insights you could share.
+>
+> Best regards,
+> YoungJun Park
+>
