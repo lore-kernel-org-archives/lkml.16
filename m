@@ -1,433 +1,411 @@
-Received: from monticello.secure-endpoints.com (monticello.secure-endpoints.com [208.125.0.237])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B628D635
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.125.0.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E99C184;
+	Fri, 30 May 2025 00:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748563932; cv=none; b=qv2i2DBydTuVpNkN1j+YFTUShNRr+OzCd41nBf7iMQO+UVK14AQcMuCScqnGrMVUH4VVa8gtS4tRABINs23AMtqL3FRcJFB8sgoXFiZAb7gh9GZDLrUNC3egJAI8a+tW2va91rf/PAu6r1HzgIcKukyJA+kjohnDTT0d7JjoZHE=
+	t=1748564101; cv=none; b=rgm8twn14fQmpUufpeUzkQLHYkYq6tkrQGMlI1qvyhRDwbL8RUwPdBx9G+Vpjw0xDQlS881lLWR2A4Fl7zXGkXSLgLJa5jkvtTXSWW8RF70J7h9vg1MzkXMauXwsrnzOWkEIgItW/iAT6I4Aajte3KDhd8+RNxuQn0UZatolBpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748563932; c=relaxed/simple;
-	bh=jksQ+EGv90Jhhd0+lt3pwBBpLHRZ7XbQEnBqvjriGXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n84Lr54uwzbixdIjzlOQaoWtTvauNAtBPc+OdO78RZ6RsgpkoXxkAVSBhlp4siqP6YCYsQLgUDWIHeCkawcmPJmfbNuQt93bQb9PI0so7kKU7cY0/8hZvnihOgE0p2ef3xWLQC3Pa0gND//E+Mz8ABEnZcbqWg2i0gjcNRRhgDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=auristor.com; dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b=B/126sKb; arc=none smtp.client-ip=208.125.0.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auristor.com
+	s=arc-20240116; t=1748564101; c=relaxed/simple;
+	bh=J674bSYGWdtYIG1U7sWkWR3MGlCF6JV5oWnCN+kqKk8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QpHHdrkTRuZ2EYHH/bs6DvSTLKOEwGaRYjkPfZcY3URyx/+ETNabLqhcDHr3XQ1JpbQYn3DfY/1JXiGUBrqucyRD/c28nfKwdVYRCxApu9v7QkjTNu+F74WzvkdV2YCSspqBXarhpTb9jCQEQr6d9UCo/ZIFo+PbX5QrffrmznU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bO8r2se9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="B/126sKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=auristor.com; s=MDaemon; r=y; l=24235; t=1748563911;
-	x=1749168711; i=jaltman@auristor.com; q=dns/txt; h=Message-ID:
-	Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	Content-Language:From:Organization:In-Reply-To:Content-Type; z=R
-	eceived:=20from=20[IPV6=3A2603=3A7000=3A73c=3Abb00=3A8d11=3A8793
-	=3Ae55a=3A9811]=20by=20auristor.com=20(IPv6=3A2001=3A470=3A1f07=
-	3Af77=3Affff=3A=3A312)=20(MDaemon=20PRO=20v25.0.3a)=20=0D=0A=09w
-	ith=20ESMTPSA=20id=20md5001004736473.msg=3B=20Thu,=2029=20May=20
-	2025=2020=3A11=3A49=20-0400|Message-ID:=20<07b7e70b-29e3-46bd-91
-	e3-f19eabb915c8@auristor.com>|Date:=20Thu,=2029=20May=202025=202
-	0=3A11=3A59=20-0400|MIME-Version:=201.0|User-Agent:=20Mozilla=20
-	Thunderbird|Subject:=20Re=3A=20[PATCH=201/2]=20afs,=20bash=3A=20
-	Fix=20open(O_CREAT)=20on=20an=20extant=20AFS=20file=20in=0D=0A=2
-	0a=20sticky=20dir|To:=20David=20Howells=20<dhowells@redhat.com>,
-	=0D=0A=20Christian=20Brauner=20<christian@brauner.io>|Cc:=20Marc
-	=20Dionne=20<marc.dionne@auristor.com>,=20linux-afs@lists.infrad
-	ead.org,=0D=0A=20linux-fsdevel@vger.kernel.org,=20linux-kernel@v
-	ger.kernel.org,=0D=0A=20Etienne=20Champetier=20<champetier.etien
-	ne@gmail.com>,=0D=0A=20Chet=20Ramey=20<chet.ramey@case.edu>,=20C
-	heyenne=20Wills=20<cwills@sinenomine.net>,=0D=0A=20Alexander=20V
-	iro=20<viro@zeniv.linux.org.uk>,=0D=0A=20Christian=20Brauner=20<
-	brauner@kernel.org>,=20Steve=20French=20<sfrench@samba.org>,=0D=
-	0A=20openafs-devel@openafs.org,=20linux-cifs@vger.kernel.org|Ref
-	erences:=20<20250519161125.2981681-1-dhowells@redhat.com>=0D=0A=
-	20<20250519161125.2981681-2-dhowells@redhat.com>|Content-Languag
-	e:=20en-US|From:=20Jeffrey=20E=20Altman=20<jaltman@auristor.com>
-	|Organization:=20AuriStor,=20Inc.|In-Reply-To:=20<20250519161125
-	.2981681-2-dhowells@redhat.com>|Content-Type:=20multipart/signed
-	=3B=20protocol=3D"application/pkcs7-signature"=3B=20micalg=3Dsha
-	-256=3B=20boundary=3D"------------ms030208020606050101070306";
-	bh=jksQ+EGv90Jhhd0+lt3pwBBpLHRZ7XbQEnBqvjriGXE=; b=B/126sKbWco2n
-	yIizG8I+sGsZSbp5SIAMbynqNIlIh5CJXo7PrhTbGBQRNixKMwphtdM5KNTlKj6P
-	vGRlIQ/plfZCw3yZhk9l2cnKePZ7c9m85geJM+XA2cw0zdxfcYSvfP4AoPlz91HC
-	UoqjW47BuEUO/SoncjobmzlDhSc+F8=
-X-MDAV-Result: clean
-X-MDAV-Processed: monticello.secure-endpoints.com, Thu, 29 May 2025 20:11:51 -0400
-Received: from [IPV6:2603:7000:73c:bb00:8d11:8793:e55a:9811] by auristor.com (IPv6:2001:470:1f07:f77:ffff::312) (MDaemon PRO v25.0.3a) 
-	with ESMTPSA id md5001004736473.msg; Thu, 29 May 2025 20:11:49 -0400
-X-Spam-Processed: monticello.secure-endpoints.com, Thu, 29 May 2025 20:11:49 -0400
-	(not processed: message from trusted or authenticated source)
-X-MDRemoteIP: 2603:7000:73c:bb00:8d11:8793:e55a:9811
-X-MDHelo: [IPV6:2603:7000:73c:bb00:8d11:8793:e55a:9811]
-X-MDArrival-Date: Thu, 29 May 2025 20:11:49 -0400
-X-MDOrigin-Country: US, NA
-X-Authenticated-Sender: jaltman@auristor.com
-X-Return-Path: prvs=1245565365=jaltman@auristor.com
-X-Envelope-From: jaltman@auristor.com
-X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
-Message-ID: <07b7e70b-29e3-46bd-91e3-f19eabb915c8@auristor.com>
-Date: Thu, 29 May 2025 20:11:59 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bO8r2se9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 608A5C4CEE7;
+	Fri, 30 May 2025 00:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748564100;
+	bh=J674bSYGWdtYIG1U7sWkWR3MGlCF6JV5oWnCN+kqKk8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bO8r2se9IHpoCxWc61066L7mbFE0PF7L1EmP2yTEgjIvV/4rNDQfuF5KOhil60UGQ
+	 zVtLnZrhYozkx1vN1vXKzZtmiSlPTcZz4z3bUszTRV+J5zMEJ4nNoUAnVp0OGpVBMf
+	 07FVhtmUrX9MC0E8YFFsJhgsyn2bIL80SJ9zQUYsVJ1DKddpDn+FaH24X2Uexp7qru
+	 adKgoXmiJ/BJi/e0uWy5okZop4hltjCTbGYlewKguieHMSyM30rLdsHZ0RFt/IGaUA
+	 Lurn+4iJJbv46K8nwbCdUUvRz8yGYLz8ddFN4zL78etuQoFzKQDNjTESO/lI3qNtsc
+	 U/cRWcBkhc7yg==
+From: Stephen Boyd <sboyd@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] clk changes for the merge window
+Date: Thu, 29 May 2025 17:14:55 -0700
+Message-ID: <20250530001457.205397-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] afs, bash: Fix open(O_CREAT) on an extant AFS file in
- a sticky dir
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>
-Cc: Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Etienne Champetier <champetier.etienne@gmail.com>,
- Chet Ramey <chet.ramey@case.edu>, Cheyenne Wills <cwills@sinenomine.net>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Steve French <sfrench@samba.org>,
- openafs-devel@openafs.org, linux-cifs@vger.kernel.org
-References: <20250519161125.2981681-1-dhowells@redhat.com>
- <20250519161125.2981681-2-dhowells@redhat.com>
-Content-Language: en-US
-From: Jeffrey E Altman <jaltman@auristor.com>
-Organization: AuriStor, Inc.
-In-Reply-To: <20250519161125.2981681-2-dhowells@redhat.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms030208020606050101070306"
-X-MDCFSigsAdded: auristor.com
+Content-Transfer-Encoding: 8bit
 
-This is a cryptographically signed message in MIME format.
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
---------------ms030208020606050101070306
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-DQpPbiA1LzE5LzIwMjUgMTI6MTEgUE0sIERhdmlkIEhvd2VsbHMgd3JvdGU6DQo+IFNpbmNl
-IHZlcnNpb24gMS4xMSAoSmFudWFyeSAxOTkyKSBCYXNoIGhhcyBhIHdvcmsgYXJvdW5kIGlu
-IHJlZGlyX29wZW4oKQ0KPiB0aGF0IGNhdXNlcyBvcGVuKE9fQ1JFQVQpIG9mIGEgZmlsZSB0
-byBiZSByZXRyaWVkIHdpdGhvdXQgT19DUkVBVCBpZiBvcGVuKCkNCj4gZmFpbHMgd2l0aCBh
-biBFQUNDRVMgZXJyb3IgaWYgYmFzaCB3YXMgYnVpbHQgd2l0aCBBRlMgd29ya2Fyb3VuZHMN
-Cj4gY29uZmlndXJlZDoNCj4NCj4gICAgICAgICAgI2lmIGRlZmluZWQgKEFGUykNCj4gICAg
-ICAgICAgICAgICAgaWYgKChmZCA8IDApICYmIChlcnJubyA9PSBFQUNDRVMpKQ0KPiAgICAg
-ICAgICAgICAgew0KPiAgICAgICAgICAgICAgICBmZCA9IG9wZW4gKGZpbGVuYW1lLCBmbGFn
-cyAmIH5PX0NSRUFULCBtb2RlKTsNCj4gICAgICAgICAgICAgICAgZXJybm8gPSBFQUNDRVM7
-ICAgIC8qIHJlc3RvcmUgZXJybm8gKi8NCj4gICAgICAgICAgICAgIH0NCj4NCj4gICAgICAg
-ICAgI2VuZGlmIC8qIEFGUyAqLw0KPg0KPiBUaGUgfk9fQ1JFQVQgZmFsbGJhY2sgbG9naWMg
-d2FzIGludHJvZHVjZWQgdG8gd29ya2Fyb3VuZCBhIGJ1Z1sxXSBpbiB0aGUNCj4gSUJNIEFG
-UyAzLjEgY2FjaGUgbWFuYWdlciBhbmQgc2VydmVyIHdoaWNoIGNhbiByZXR1cm4gRUFDQ0VT
-IGluIHByZWZlcmVuY2UNCj4gdG8gRUVYSVNUIGlmIHRoZSByZXF1ZXN0ZWQgZmlsZSBleGlz
-dHMgYnV0IHRoZSBjYWxsZXIgaXMgbmVpdGhlciBncmFudGVkDQo+IGV4cGxpY2l0IFBSU0ZT
-X1JFQUQgcGVybWlzc2lvbiBub3IgaXMgdGhlIGZpbGUgb3duZXIgYW5kIGlzIGdyYW50ZWQN
-Cj4gUFJTRlNfSU5TRVJUIHBlcm1pc3Npb24gb24gdGhlIGRpcmVjdG9yeS4gIElCTSBBRlMg
-My4yIGFsdGVyZWQgdGhlIGNhY2hlDQo+IG1hbmFnZXIgcGVybWlzc2lvbiBjaGVja3MgYnV0
-IGZhaWxlZCB0byBjb3JyZWN0IHRoZSBwZXJtaXNzaW9uIGNoZWNrcyBpbg0KPiB0aGUgQUZT
-IHNlcnZlci4gIEFzIG9mIHRoaXMgd3JpdGluZywgYWxsIElCTSBBRlMgZGVyaXZlZCBzZXJ2
-ZXJzIGNvbnRpbnVlDQo+IHRvIHJldHVybiBFQUNDRVMgaW4gcHJlZmVyZW5jZSB0byBFRVhJ
-U1Qgd2hlbiB0aGVzZSBjb25kaXRpb25zIGFyZSBtZXQuDQo+IEJ1ZyByZXBvcnRzIGhhdmUg
-YmVlbiBmaWxlZCB3aXRoIGFsbCBpbXBsZW1lbnRhdGlvbnMuDQo+DQo+IEFzIGFuIHVuaW50
-ZW5kZWQgc2lkZSBlZmZlY3QsIHRoZSBCYXNoIGZhbGxiYWNrIGxvZ2ljIGFsc28gdW5kZXJt
-aW5lcyB0aGUNCj4gTGludXgga2VybmVsIHByb3RlY3Rpb25zIGFnYWluc3QgT19DUkVBVCBv
-cGVuaW5nIEZJRk9zIGFuZCByZWd1bGFyIGZpbGVzDQo+IG5vdCBvd25lZCBieSB0aGUgdXNl
-ciBpbiB3b3JsZCB3cml0ZWFibGUgc3RpY2t5IGRpcmVjdG9yaWVzIC0gdW5sZXNzIHRoZQ0K
-PiBvd25lciBpcyB0aGUgc2FtZSBhcyB0aGF0IG9mIHRoZSBkaXJlY3RvcnkgLSBhcyB3YXMg
-YWRkZWQgaW4gY29tbWl0DQo+IDMwYWJhNjY1NmY2MWUgKCJuYW1laTogYWxsb3cgcmVzdHJp
-Y3RlZCBPX0NSRUFUIG9mIEZJRk9zIGFuZCByZWd1bGFyDQo+IGZpbGVzIikuDQo+DQo+IEFz
-IGEgcmVzdWx0IHRoZSBCYXNoIGZhbGxiYWNrIGxvZ2ljIG1hc2tzIGFuIGluY29tcGF0aWJp
-bGl0eSBiZXR3ZWVuIHRoZQ0KPiBvd25lcnNoaXAgY2hlY2tzIHBlcmZvcm1lZCBieSBtYXlf
-Y3JlYXRlX2luX3N0aWNreSgpIGFuZCBuZXR3b3JrDQo+IGZpbGVzeXN0ZW1zIHN1Y2ggYXMg
-QUZTIHdoZXJlIHRoZSB1aWQgbmFtZXNwYWNlIGlzIGRpc2pvaW50IGZyb20gdGhlIHVpZA0K
-PiBuYW1lc3BhY2Ugb2YgdGhlIGxvY2FsIHN5c3RlbS4NCj4NCj4gSG93ZXZlciwgdGhlIGJh
-c2ggd29yayBhcm91bmQgaXMgZ29pbmcgdG8gYmUgcmVtb3ZlZFsyXS4NCj4NCj4gRml4IHRo
-aXMgaW4gdGhlIGtlcm5lbCBieToNCj4NCj4gICAoMSkgUHJvdmlkZSBhbiAtPmlzX293bmVk
-X2J5X21lKCkgaW5vZGUgb3AsIHNpbWlsYXIgdG8gLT5wZXJtaXNzaW9uKCksDQo+ICAgICAg
-IGFuZCwgaWYgcHJvdmlkZWQsIGNhbGwgdGhhdCB0byBkZXRlcm1pbmUgaWYgdGhlIGNhbGxl
-ciBvd25zIHRoZSBmaWxlDQo+ICAgICAgIGluc3RlYWQgb2YgY2hlY2tpbmcgdGhlIGlfdWlk
-IHRvIGN1cnJlbnRfZnN1aWQoKS4NCj4NCj4gICAoMikgUHJvdmlkZSBhIC0+aGF2ZV9zYW1l
-X293bmVyKCkgaW5vZGUgb3AsIHRoYXQsIGlmIHByb3ZpZGVkLCBjYW4gYmUNCj4gICAgICAg
-Y2FsbGVkIHRvIHNlZSBpZiBhbiBpbm9kZSBoYXMgdGhlIHNhbWUgb3duZXIgYXMgdGhlIHBh
-cmVudCBvbiB0aGUgcGF0aA0KPiAgICAgICB3YWxrZWQuDQo+DQo+IEZvciBrYWZzLCB1c2Ug
-dGhlIGZpcnN0IGhvb2sgdG8gY2hlY2sgdG8gc2VlIGlmIHRoZSBzZXJ2ZXIgaW5kaWNhdGVk
-IHRoZQ0KPiBBRE1JTklTVEVSIGJpdCBpbiB0aGUgYWNjZXNzIHJpZ2h0cyByZXR1cm5lZCBi
-eSB0aGUgRlMuRmV0Y2hTdGF0dXMgYW5kDQo+IHN1Y2hsaWtlIGFuZCB0aGUgc2Vjb25kIGhv
-b2sgdG8gY29tcGFyZSB0aGUgQUZTIHVzZXIgSURzIHJldHJpZXZlZCBieQ0KPiBGUy5GZXRj
-aFN0YXR1cyAod2hpY2ggbWF5IG5vdCBmaXQgaW4gYSBrdWlkIGlmIEF1cmlTdG9yJ3MgWUZT
-IHZhcmlhbnQpLg0KPg0KPiBUaGVzZSBob29rcyBzaG91bGQgcHJvYmFibHkgYmUgdXNlZCBp
-biBvdGhlciBwbGFjZXMgdG9vLCBhbmQgYSBmb2xsb3ctdXANCj4gcGF0Y2ggd2lsbCBiZSBz
-dWJtaXR0ZWQgZm9yIHRoYXQuDQo+DQo+IFRoaXMgY2FuIGJlIHRlc3RlZCBieSBjcmVhdGlu
-ZyBhIHN0aWNreSBkaXJlY3RvcnkgKHRoZSB1c2VyIG11c3QgaGF2ZSBhDQo+IHRva2VuIHRv
-IGRvIHRoaXMpIGFuZCBjcmVhdGluZyBhIGZpbGUgaW4gaXQuICBUaGVuIHN0cmFjZSBiYXNo
-IGRvaW5nICJlY2hvDQo+IGZvbyA+PmZpbGUiIGFuZCBsb29rIGF0IHdoZXRoZXIgYmFzaCBk
-b2VzIGEgc2luZ2xlLCBzdWNjZXNzZnVsIE9fQ1JFQVQgb3Blbg0KPiBvbiB0aGUgZmlsZSBv
-ciB3aGV0aGVyIHRoYXQgb25lIGZhaWxzIGFuZCB0aGVuIGJhc2ggZG9lcyBvbmUgd2l0aG91
-dA0KPiBPX0NSRUFUIHRoYXQgc3VjY2VlZHMuDQo+DQo+IEZpeGVzOiAzMGFiYTY2NTZmNjEg
-KCJuYW1laTogYWxsb3cgcmVzdHJpY3RlZCBPX0NSRUFUIG9mIEZJRk9zIGFuZCByZWd1bGFy
-IGZpbGVzIikNCj4gUmVwb3J0ZWQtYnk6IEV0aWVubmUgQ2hhbXBldGllciA8Y2hhbXBldGll
-ci5ldGllbm5lQGdtYWlsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgSG93ZWxscyA8
-ZGhvd2VsbHNAcmVkaGF0LmNvbT4NCj4gY2M6IE1hcmMgRGlvbm5lIDxtYXJjLmRpb25uZUBh
-dXJpc3Rvci5jb20+DQo+IGNjOiBKZWZmcmV5IEFsdG1hbiA8amFsdG1hbkBhdXJpc3Rvci5j
-b20+DQo+IGNjOiBDaGV0IFJhbWV5IDxjaGV0LnJhbWV5QGNhc2UuZWR1Pg0KPiBjYzogQ2hl
-eWVubmUgV2lsbHMgPGN3aWxsc0BzaW5lbm9taW5lLm5ldD4NCj4gY2M6IEFsZXhhbmRlciBW
-aXJvIDx2aXJvQHplbml2LmxpbnV4Lm9yZy51az4NCj4gY2M6IENocmlzdGlhbiBCcmF1bmVy
-IDxicmF1bmVyQGtlcm5lbC5vcmc+DQo+IGNjOiBTdGV2ZSBGcmVuY2ggPHNmcmVuY2hAc2Ft
-YmEub3JnPg0KPiBjYzogbGludXgtYWZzQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gY2M6IG9w
-ZW5hZnMtZGV2ZWxAb3BlbmFmcy5vcmcNCj4gY2M6IGxpbnV4LWNpZnNAdmdlci5rZXJuZWwu
-b3JnDQo+IGNjOiBsaW51eC1mc2RldmVsQHZnZXIua2VybmVsLm9yZw0KPiBMaW5rOiBodHRw
-czovL2dyb3Vwcy5nb29nbGUuY29tL2cvZ251LmJhc2guYnVnL2MvNlBQVGZPZ0ZkTDQvbS8y
-QVFVLVMxTjc2VUogWzFdDQo+IExpbms6IGh0dHBzOi8vZ2l0LnNhdmFubmFoLmdudS5vcmcv
-Y2dpdC9iYXNoLmdpdC90cmVlL3JlZGlyLmM/aD1iYXNoLTUuMy1yYzEjbjczMyBbMl0NCj4g
-LS0tDQo+ICAgZnMvYWZzL2Rpci5jICAgICAgIHwgIDIgKysNCj4gICBmcy9hZnMvZmlsZS5j
-ICAgICAgfCAgMiArKw0KPiAgIGZzL2Fmcy9pbnRlcm5hbC5oICB8ICAzICsrKw0KPiAgIGZz
-L2Fmcy9zZWN1cml0eS5jICB8IDUyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCj4gICBmcy9pbnRlcm5hbC5oICAgICAgfCAgMSArDQo+ICAgZnMv
-bmFtZWkuYyAgICAgICAgIHwgNTAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0NCj4gICBpbmNsdWRlL2xpbnV4L2ZzLmggfCAgMyArKysNCj4gICA3IGZp
-bGVzIGNoYW5nZWQsIDEwMyBpbnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkNCj4NCj4g
-ZGlmZiAtLWdpdCBhL2ZzL2Fmcy9kaXIuYyBiL2ZzL2Fmcy9kaXIuYw0KPiBpbmRleCA5ZTdi
-MWZlODJjMjcuLjYzNjBkYjE2NzNiMCAxMDA2NDQNCj4gLS0tIGEvZnMvYWZzL2Rpci5jDQo+
-ICsrKyBiL2ZzL2Fmcy9kaXIuYw0KPiBAQCAtNjUsNiArNjUsOCBAQCBjb25zdCBzdHJ1Y3Qg
-aW5vZGVfb3BlcmF0aW9ucyBhZnNfZGlyX2lub2RlX29wZXJhdGlvbnMgPSB7DQo+ICAgCS5w
-ZXJtaXNzaW9uCT0gYWZzX3Blcm1pc3Npb24sDQo+ICAgCS5nZXRhdHRyCT0gYWZzX2dldGF0
-dHIsDQo+ICAgCS5zZXRhdHRyCT0gYWZzX3NldGF0dHIsDQo+ICsJLmlzX293bmVkX2J5X21l
-CT0gYWZzX2lzX293bmVkX2J5X21lLA0KPiArCS5oYXZlX3NhbWVfb3duZXIgPSBhZnNfaGF2
-ZV9zYW1lX293bmVyLA0KPiAgIH07DQo+ICAgDQo+ICAgY29uc3Qgc3RydWN0IGFkZHJlc3Nf
-c3BhY2Vfb3BlcmF0aW9ucyBhZnNfZGlyX2FvcHMgPSB7DQo+IGRpZmYgLS1naXQgYS9mcy9h
-ZnMvZmlsZS5jIGIvZnMvYWZzL2ZpbGUuYw0KPiBpbmRleCBmYzE1NDk3NjA4YzYuLjAzMTdm
-MGEzNmNmMiAxMDA2NDQNCj4gLS0tIGEvZnMvYWZzL2ZpbGUuYw0KPiArKysgYi9mcy9hZnMv
-ZmlsZS5jDQo+IEBAIC00Nyw2ICs0Nyw4IEBAIGNvbnN0IHN0cnVjdCBpbm9kZV9vcGVyYXRp
-b25zIGFmc19maWxlX2lub2RlX29wZXJhdGlvbnMgPSB7DQo+ICAgCS5nZXRhdHRyCT0gYWZz
-X2dldGF0dHIsDQo+ICAgCS5zZXRhdHRyCT0gYWZzX3NldGF0dHIsDQo+ICAgCS5wZXJtaXNz
-aW9uCT0gYWZzX3Blcm1pc3Npb24sDQo+ICsJLmlzX293bmVkX2J5X21lCT0gYWZzX2lzX293
-bmVkX2J5X21lLA0KPiArCS5oYXZlX3NhbWVfb3duZXIgPSBhZnNfaGF2ZV9zYW1lX293bmVy
-LA0KPiAgIH07DQo+ICAgDQo+ICAgY29uc3Qgc3RydWN0IGFkZHJlc3Nfc3BhY2Vfb3BlcmF0
-aW9ucyBhZnNfZmlsZV9hb3BzID0gew0KPiBkaWZmIC0tZ2l0IGEvZnMvYWZzL2ludGVybmFs
-LmggYi9mcy9hZnMvaW50ZXJuYWwuaA0KPiBpbmRleCA0NDBiMGU3MzEwOTMuLmZiZmJmNjE1
-YWJlMyAxMDA2NDQNCj4gLS0tIGEvZnMvYWZzL2ludGVybmFsLmgNCj4gKysrIGIvZnMvYWZz
-L2ludGVybmFsLmgNCj4gQEAgLTE0OTUsNiArMTQ5NSw5IEBAIGV4dGVybiBzdHJ1Y3Qga2V5
-ICphZnNfcmVxdWVzdF9rZXkoc3RydWN0IGFmc19jZWxsICopOw0KPiAgIGV4dGVybiBzdHJ1
-Y3Qga2V5ICphZnNfcmVxdWVzdF9rZXlfcmN1KHN0cnVjdCBhZnNfY2VsbCAqKTsNCj4gICBl
-eHRlcm4gaW50IGFmc19jaGVja19wZXJtaXQoc3RydWN0IGFmc192bm9kZSAqLCBzdHJ1Y3Qg
-a2V5ICosIGFmc19hY2Nlc3NfdCAqKTsNCj4gICBleHRlcm4gaW50IGFmc19wZXJtaXNzaW9u
-KHN0cnVjdCBtbnRfaWRtYXAgKiwgc3RydWN0IGlub2RlICosIGludCk7DQo+ICtpbnQgYWZz
-X2lzX293bmVkX2J5X21lKHN0cnVjdCBtbnRfaWRtYXAgKmlkbWFwLCBzdHJ1Y3QgaW5vZGUg
-Kmlub2RlKTsNCj4gK2ludCBhZnNfaGF2ZV9zYW1lX293bmVyKHN0cnVjdCBtbnRfaWRtYXAg
-KmlkbWFwLCBzdHJ1Y3QgaW5vZGUgKmlub2RlLA0KPiArCQkJc3RydWN0IGRlbnRyeSAqZGVu
-dHJ5KTsNCj4gICBleHRlcm4gdm9pZCBfX2V4aXQgYWZzX2NsZWFuX3VwX3Blcm1pdF9jYWNo
-ZSh2b2lkKTsNCj4gICANCj4gICAvKg0KPiBkaWZmIC0tZ2l0IGEvZnMvYWZzL3NlY3VyaXR5
-LmMgYi9mcy9hZnMvc2VjdXJpdHkuYw0KPiBpbmRleCA2YTc3NDRjOWUyYTIuLmE0OTA3MGM4
-MzQyZCAxMDA2NDQNCj4gLS0tIGEvZnMvYWZzL3NlY3VyaXR5LmMNCj4gKysrIGIvZnMvYWZz
-L3NlY3VyaXR5LmMNCj4gQEAgLTQ3Nyw2ICs0NzcsNTggQEAgaW50IGFmc19wZXJtaXNzaW9u
-KHN0cnVjdCBtbnRfaWRtYXAgKmlkbWFwLCBzdHJ1Y3QgaW5vZGUgKmlub2RlLA0KPiAgIAly
-ZXR1cm4gcmV0Ow0KPiAgIH0NCj4gICANCj4gKy8qDQo+ICsgKiBEZXRlcm1pbmUgaWYgYW4g
-aW5vZGUgaXMgb3duZWQgYnkgJ21lJyAtIHdoYXRldmVyIHRoYXQgbWVhbnMgZm9yIHRoZQ0K
-PiArICogZmlsZXN5c3RlbS4gIEluIHRoZSBjYXNlIG9mIEFGUywgdGhpcyBtZWFucyB0aGF0
-IHRoZSBmaWxlIGlzIG93bmVkIGJ5IHRoZQ0KPiArICogQUZTIHVzZXIgcmVwcmVzZW50ZWQg
-YnkgdGhlIHRva2VuIChlLmcuIGZyb20gYSBrZXJiZXJvcyBzZXJ2ZXIpIGhlbGQgaW4gYQ0K
-PiArICoga2V5LiAgUmV0dXJucyAwIGlmIG93bmVkIGJ5IG1lLCAxIGlmIG5vdDsgY2FuIGFs
-c28gcmV0dXJuIGFuIGVycm9yLg0KPiArICovDQoNClRlY2huaWNhbGx5IEFGUyB0b2tlbnMg
-YXJlIG5vdCBpc3N1ZWQgYnkgS2VyYmVyb3MgS0RDcy7CoCBDb3VsZCB3ZSBzYXkgDQoiLi4u
-IHRoZSBmaWxlIGlzIG93bmVkDQpieSB0aGUgQUZTIHVzZXIgcmVwcmVzZW50ZWQgYnkgdGhl
-IFJ4IFNlY3VyaXR5IENsYXNzIHRva2VuIGhlbGQgaW4gYSBrZXkuIj8NCg0KPiAraW50IGFm
-c19pc19vd25lZF9ieV9tZShzdHJ1Y3QgbW50X2lkbWFwICppZG1hcCwgc3RydWN0IGlub2Rl
-ICppbm9kZSkNCj4gK3sNCj4gKwlzdHJ1Y3QgYWZzX3Zub2RlICp2bm9kZSA9IEFGU19GU19J
-KGlub2RlKTsNCj4gKwlhZnNfYWNjZXNzX3QgYWNjZXNzOw0KPiArCXN0cnVjdCBrZXkgKmtl
-eTsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJa2V5ID0gYWZzX3JlcXVlc3Rfa2V5KHZub2Rl
-LT52b2x1bWUtPmNlbGwpOw0KPiArCWlmIChJU19FUlIoa2V5KSkNCj4gKwkJcmV0dXJuIFBU
-Ul9FUlIoa2V5KTsNCj4gKw0KPiArCS8qIEdldCB0aGUgYWNjZXNzIHJpZ2h0cyBmb3IgdGhl
-IGtleSBvbiB0aGlzIGZpbGUuICovDQo+ICsJcmV0ID0gYWZzX2NoZWNrX3Blcm1pdCh2bm9k
-ZSwga2V5LCAmYWNjZXNzKTsNCj4gKwlpZiAocmV0IDwgMCkNCj4gKwkJZ290byBlcnJvcjsN
-Cj4gKw0KPiArCS8qIFdlIGdldCB0aGUgQURNSU5JU1RFUiBiaXQgaWYgd2Ugb3duIHRoZSBm
-aWxlLiAqLw0KPiArCXJldCA9IChhY2Nlc3MgJiBBRlNfQUNFX0FETUlOSVNURVIpID8gMCA6
-IDE7DQoNCkFGU19BQ0VfQURNSU5JU1RFUiBvbmx5IG1lYW5zIG93bmVyc2hpcCBpZiB0aGUg
-aW5vZGUgaXMgYSANCm5vbi1kaXJlY3RvcnkuwqAgU2hvdWxkDQp3ZSBhZGQgYW4gZXhwbGlj
-aXQgY2hlY2sgZm9yIGlub2RlIHR5cGU/DQoNCj4gK2Vycm9yOg0KPiArCWtleV9wdXQoa2V5
-KTsNCj4gKwlyZXR1cm4gcmV0Ow0KPiArfQ0KPiArDQo+ICsvKg0KPiArICogRGV0ZXJtaW5l
-IGlmIGEgZmlsZSBoYXMgdGhlIHNhbWUgb3duZXIgYXMgaXRzIHBhcmVudCAtIHdoYXRldmVy
-IHRoYXQgbWVhbnMNCj4gKyAqIGZvciB0aGUgZmlsZXN5c3RlbS4gIEluIHRoZSBjYXNlIG9m
-IEFGUywgdGhpcyBtZWFucyBjb21wYXJpbmcgdGhlaXIgQUZTDQo+ICsgKiBVSURzLiAgUmV0
-dXJucyAwIGlmIHNhbWUsIDEgaWYgbm90IHNhbWU7IGNhbiBhbHNvIHJldHVybiBhbiBlcnJv
-ci4NCj4gKyAqLw0KPiAraW50IGFmc19oYXZlX3NhbWVfb3duZXIoc3RydWN0IG1udF9pZG1h
-cCAqaWRtYXAsIHN0cnVjdCBpbm9kZSAqaW5vZGUsDQo+ICsJCQlzdHJ1Y3QgZGVudHJ5ICpk
-ZW50cnkpDQo+ICt7DQo+ICsJc3RydWN0IGFmc192bm9kZSAqdm5vZGUgPSBBRlNfRlNfSShp
-bm9kZSksICpkdm5vZGU7DQo+ICsJc3RydWN0IGRlbnRyeSAqcGFyZW50Ow0KPiArCXM2NCBv
-d25lcjsNCj4gKw0KPiArCS8qIEdldCB0aGUgb3duZXIncyBJRCBmb3IgdGhlIGRpcmVjdG9y
-eS4gIElkZWFsbHksIHdlJ2QgdXNlIFJDVSB0bw0KPiArCSAqIGFjY2VzcyB0aGUgcGFyZW50
-IHJhdGhlciB0aGFuIGdldHRpbmcgYSByZWYuDQo+ICsJICovDQo+ICsJcGFyZW50ID0gZGdl
-dF9wYXJlbnQoZGVudHJ5KTsNCj4gKwlkdm5vZGUgPSBBRlNfRlNfSShkX2JhY2tpbmdfaW5v
-ZGUocGFyZW50KSk7DQo+ICsJb3duZXIgPSBkdm5vZGUtPnN0YXR1cy5vd25lcjsNCj4gKwlk
-cHV0KHBhcmVudCk7DQo+ICsNCj4gKwlyZXR1cm4gdm5vZGUtPnN0YXR1cy5vd25lciAhPSBv
-d25lcjsNCj4gK30NCj4gKw0KPiAgIHZvaWQgX19leGl0IGFmc19jbGVhbl91cF9wZXJtaXRf
-Y2FjaGUodm9pZCkNCj4gICB7DQo+ICAgCWludCBpOw0KPiBkaWZmIC0tZ2l0IGEvZnMvaW50
-ZXJuYWwuaCBiL2ZzL2ludGVybmFsLmgNCj4gaW5kZXggYjliM2UyOWE3M2ZkLi45ZTg0YmZj
-NWFlZTYgMTAwNjQ0DQo+IC0tLSBhL2ZzL2ludGVybmFsLmgNCj4gKysrIGIvZnMvaW50ZXJu
-YWwuaA0KPiBAQCAtNTIsNiArNTIsNyBAQCBleHRlcm4gaW50IGZpbmlzaF9jbGVhbl9jb250
-ZXh0KHN0cnVjdCBmc19jb250ZXh0ICpmYyk7DQo+ICAgLyoNCj4gICAgKiBuYW1laS5jDQo+
-ICAgICovDQo+ICtpbnQgdmZzX2lub2RlX2lzX293bmVkX2J5X21lKHN0cnVjdCBtbnRfaWRt
-YXAgKmlkbWFwLCBzdHJ1Y3QgaW5vZGUgKmlub2RlKTsNCj4gICBleHRlcm4gaW50IGZpbGVu
-YW1lX2xvb2t1cChpbnQgZGZkLCBzdHJ1Y3QgZmlsZW5hbWUgKm5hbWUsIHVuc2lnbmVkIGZs
-YWdzLA0KPiAgIAkJCSAgIHN0cnVjdCBwYXRoICpwYXRoLCBzdHJ1Y3QgcGF0aCAqcm9vdCk7
-DQo+ICAgaW50IGRvX3JtZGlyKGludCBkZmQsIHN0cnVjdCBmaWxlbmFtZSAqbmFtZSk7DQo+
-IGRpZmYgLS1naXQgYS9mcy9uYW1laS5jIGIvZnMvbmFtZWkuYw0KPiBpbmRleCA4NGEwZTBi
-MDExMWMuLjlmNDJkYzQ2MzIyZiAxMDA2NDQNCj4gLS0tIGEvZnMvbmFtZWkuYw0KPiArKysg
-Yi9mcy9uYW1laS5jDQo+IEBAIC01Myw4ICs1Myw4IEBADQo+ICAgICogVGhlIG5ldyBjb2Rl
-IHJlcGxhY2VzIHRoZSBvbGQgcmVjdXJzaXZlIHN5bWxpbmsgcmVzb2x1dGlvbiB3aXRoDQo+
-ICAgICogYW4gaXRlcmF0aXZlIG9uZSAoaW4gY2FzZSBvZiBub24tbmVzdGVkIHN5bWxpbmsg
-Y2hhaW5zKS4gIEl0IGRvZXMNCj4gICAgKiB0aGlzIHdpdGggY2FsbHMgdG8gPGZzPl9mb2xs
-b3dfbGluaygpLg0KPiAtICogQXMgYSBzaWRlIGVmZmVjdCwgZGlyX25hbWVpKCksIF9uYW1l
-aSgpIGFuZCBmb2xsb3dfbGluaygpIGFyZSBub3cNCj4gLSAqIHJlcGxhY2VkIHdpdGggYSBz
-aW5nbGUgZnVuY3Rpb24gbG9va3VwX2RlbnRyeSgpIHRoYXQgY2FuIGhhbmRsZSBhbGwNCj4g
-KyAqIEFzIGEgc2lkZSBlZmZlY3QsIGRpcl9uYW1laSgpLCBfbmFtZWkoKSBhbmQgZm9sbG93
-X2xpbmsoKSBhcmUgbm93DQo+ICsgKiByZXBsYWNlZCB3aXRoIGEgc2luZ2xlIGZ1bmN0aW9u
-IGxvb2t1cF9kZW50cnkoKSB0aGF0IGNhbiBoYW5kbGUgYWxsDQo+ICAgICogdGhlIHNwZWNp
-YWwgY2FzZXMgb2YgdGhlIGZvcm1lciBjb2RlLg0KPiAgICAqDQo+ICAgICogV2l0aCB0aGUg
-bmV3IGRjYWNoZSwgdGhlIHBhdGhuYW1lIGlzIHN0b3JlZCBhdCBlYWNoIGlub2RlLCBhdCBs
-ZWFzdCBhcw0KPiBAQCAtMTE0OSw2ICsxMTQ5LDM2IEBAIGZzX2luaXRjYWxsKGluaXRfZnNf
-bmFtZWlfc3lzY3Rscyk7DQo+ICAgDQo+ICAgI2VuZGlmIC8qIENPTkZJR19TWVNDVEwgKi8N
-Cj4gICANCj4gKy8qDQo+ICsgKiBEZXRlcm1pbmUgaWYgYW4gaW5vZGUgaXMgb3duZWQgYnkg
-dGhlIHByb2Nlc3MgKGFsbG93aW5nIGZvciBmc3VpZCBvdmVycmlkZSksDQo+ICsgKiByZXR1
-cm5pbmcgMCBpZiBzbywgMSBpZiBub3QgYW5kIGEgbmVnYXRpdmUgZXJyb3IgY29kZSBpZiB0
-aGVyZSB3YXMgYSBwcm9ibGVtDQo+ICsgKiBtYWtpbmcgdGhlIGRldGVybWluYXRpb24uDQo+
-ICsgKi8NCj4gK2ludCB2ZnNfaW5vZGVfaXNfb3duZWRfYnlfbWUoc3RydWN0IG1udF9pZG1h
-cCAqaWRtYXAsIHN0cnVjdCBpbm9kZSAqaW5vZGUpDQo+ICt7DQo+ICsJaWYgKHVubGlrZWx5
-KGlub2RlLT5pX29wLT5pc19vd25lZF9ieV9tZSkpDQo+ICsJCXJldHVybiBpbm9kZS0+aV9v
-cC0+aXNfb3duZWRfYnlfbWUoaWRtYXAsIGlub2RlKTsNCj4gKw0KPiArCXJldHVybiB2ZnN1
-aWRfZXFfa3VpZChpX3VpZF9pbnRvX3Zmc3VpZChpZG1hcCwgaW5vZGUpLA0KPiArCQkJICAg
-ICAgY3VycmVudF9mc3VpZCgpKSA/IDEgOiAwOw0KPiArfQ0KPiArDQo+ICsvKg0KPiArICog
-RGV0ZXJtaW5lIGlmIHR3byBpbm9kZXMgaGF2ZSB0aGUgc2FtZSBvd25lciwgcmV0dXJuaW5n
-IDAgaWYgc28sIDEgaWYgbm90IGFuZA0KPiArICogYSBuZWdhdGl2ZSBlcnJvciBjb2RlIGlm
-IHRoZXJlIHdhcyBhIHByb2JsZW0gbWFraW5nIHRoZSBkZXRlcm1pbmF0aW9uLg0KPiArICov
-DQo+ICtzdGF0aWMgaW50IHZmc19pbm9kZXNfaGF2ZV9zYW1lX293bmVyKHN0cnVjdCBtbnRf
-aWRtYXAgKmlkbWFwLCBzdHJ1Y3QgaW5vZGUgKmlub2RlLA0KPiArCQkJCSAgICAgIGNvbnN0
-IHN0cnVjdCBuYW1laWRhdGEgKm5kKQ0KPiArew0KPiArCWlmICh1bmxpa2VseShpbm9kZS0+
-aV9vcC0+aGF2ZV9zYW1lX293bmVyKSkNCj4gKwkJcmV0dXJuIGlub2RlLT5pX29wLT5oYXZl
-X3NhbWVfb3duZXIoaWRtYXAsIGlub2RlLCBuZC0+cGF0aC5kZW50cnkpOw0KPiArDQo+ICsJ
-aWYgKHZmc3VpZF92YWxpZChuZC0+ZGlyX3Zmc3VpZCkgJiYNCj4gKwkgICAgdmZzdWlkX2Vx
-KGlfdWlkX2ludG9fdmZzdWlkKGlkbWFwLCBpbm9kZSksIG5kLT5kaXJfdmZzdWlkKSkNCj4g
-KwkJcmV0dXJuIDA7DQo+ICsJcmV0dXJuIDE7IC8qIE5vdCBzYW1lLiAqLw0KPiArfQ0KPiAr
-DQo+ICAgLyoqDQo+ICAgICogbWF5X2ZvbGxvd19saW5rIC0gQ2hlY2sgc3ltbGluayBmb2xs
-b3dpbmcgZm9yIHVuc2FmZSBzaXR1YXRpb25zDQo+ICAgICogQG5kOiBuYW1laWRhdGEgcGF0
-aHdhbGsgZGF0YQ0KPiBAQCAtMTMwMiwxMCArMTMzMiwxMCBAQCBpbnQgbWF5X2xpbmthdChz
-dHJ1Y3QgbW50X2lkbWFwICppZG1hcCwgY29uc3Qgc3RydWN0IHBhdGggKmxpbmspDQo+ICAg
-ICogUmV0dXJucyAwIGlmIHRoZSBvcGVuIGlzIGFsbG93ZWQsIC12ZSBvbiBlcnJvci4NCj4g
-ICAgKi8NCj4gICBzdGF0aWMgaW50IG1heV9jcmVhdGVfaW5fc3RpY2t5KHN0cnVjdCBtbnRf
-aWRtYXAgKmlkbWFwLCBzdHJ1Y3QgbmFtZWlkYXRhICpuZCwNCj4gLQkJCQlzdHJ1Y3QgaW5v
-ZGUgKmNvbnN0IGlub2RlKQ0KPiArCQkJCXN0cnVjdCBpbm9kZSAqaW5vZGUpDQo+ICAgew0K
-PiAgIAl1bW9kZV90IGRpcl9tb2RlID0gbmQtPmRpcl9tb2RlOw0KPiAtCXZmc3VpZF90IGRp
-cl92ZnN1aWQgPSBuZC0+ZGlyX3Zmc3VpZCwgaV92ZnN1aWQ7DQo+ICsJaW50IHJldDsNCj4g
-ICANCj4gICAJaWYgKGxpa2VseSghKGRpcl9tb2RlICYgU19JU1ZUWCkpKQ0KPiAgIAkJcmV0
-dXJuIDA7DQo+IEBAIC0xMzE2LDEzICsxMzQ2LDEzIEBAIHN0YXRpYyBpbnQgbWF5X2NyZWF0
-ZV9pbl9zdGlja3koc3RydWN0IG1udF9pZG1hcCAqaWRtYXAsIHN0cnVjdCBuYW1laWRhdGEg
-Km5kLA0KPiAgIAlpZiAoU19JU0ZJRk8oaW5vZGUtPmlfbW9kZSkgJiYgIXN5c2N0bF9wcm90
-ZWN0ZWRfZmlmb3MpDQo+ICAgCQlyZXR1cm4gMDsNCj4gICANCj4gLQlpX3Zmc3VpZCA9IGlf
-dWlkX2ludG9fdmZzdWlkKGlkbWFwLCBpbm9kZSk7DQo+IC0NCj4gLQlpZiAodmZzdWlkX2Vx
-KGlfdmZzdWlkLCBkaXJfdmZzdWlkKSkNCj4gLQkJcmV0dXJuIDA7DQo+ICsJcmV0ID0gdmZz
-X2lub2Rlc19oYXZlX3NhbWVfb3duZXIoaWRtYXAsIGlub2RlLCBuZCk7DQo+ICsJaWYgKHJl
-dCA8PSAwKQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiAgIA0KPiAtCWlmICh2ZnN1aWRfZXFfa3Vp
-ZChpX3Zmc3VpZCwgY3VycmVudF9mc3VpZCgpKSkNCj4gLQkJcmV0dXJuIDA7DQo+ICsJcmV0
-ID0gdmZzX2lub2RlX2lzX293bmVkX2J5X21lKGlkbWFwLCBpbm9kZSk7DQo+ICsJaWYgKHJl
-dCA8PSAwKQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiAgIA0KPiAgIAlpZiAobGlrZWx5KGRpcl9t
-b2RlICYgMDAwMikpIHsNCj4gICAJCWF1ZGl0X2xvZ19wYXRoX2RlbmllZChBVURJVF9BTk9N
-X0NSRUFULCAic3RpY2t5X2NyZWF0ZSIpOw0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51
-eC9mcy5oIGIvaW5jbHVkZS9saW51eC9mcy5oDQo+IGluZGV4IDAxNmIwZmUxNTM2ZS4uZWMy
-NzhkMmQzNjJhIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2ZzLmgNCj4gKysrIGIv
-aW5jbHVkZS9saW51eC9mcy5oDQo+IEBAIC0yMjM2LDYgKzIyMzYsOSBAQCBzdHJ1Y3QgaW5v
-ZGVfb3BlcmF0aW9ucyB7DQo+ICAgCQkJICAgIHN0cnVjdCBkZW50cnkgKmRlbnRyeSwgc3Ry
-dWN0IGZpbGVhdHRyICpmYSk7DQo+ICAgCWludCAoKmZpbGVhdHRyX2dldCkoc3RydWN0IGRl
-bnRyeSAqZGVudHJ5LCBzdHJ1Y3QgZmlsZWF0dHIgKmZhKTsNCj4gICAJc3RydWN0IG9mZnNl
-dF9jdHggKigqZ2V0X29mZnNldF9jdHgpKHN0cnVjdCBpbm9kZSAqaW5vZGUpOw0KPiArCWlu
-dCAoKmlzX293bmVkX2J5X21lKShzdHJ1Y3QgbW50X2lkbWFwICppZG1hcCwgc3RydWN0IGlu
-b2RlICppbm9kZSk7DQo+ICsJaW50ICgqaGF2ZV9zYW1lX293bmVyKShzdHJ1Y3QgbW50X2lk
-bWFwICppZG1hcCwgc3RydWN0IGlub2RlICppbm9kZSwNCj4gKwkJCSAgICAgICBzdHJ1Y3Qg
-ZGVudHJ5ICpkZW50cnkpOw0KPiAgIH0gX19fX2NhY2hlbGluZV9hbGlnbmVkOw0KPiAgIA0K
-PiAgIHN0YXRpYyBpbmxpbmUgaW50IGNhbGxfbW1hcChzdHJ1Y3QgZmlsZSAqZmlsZSwgc3Ry
-dWN0IHZtX2FyZWFfc3RydWN0ICp2bWEpDQpJdCB3b3VsZCBiZSBuaWNlIGlmIHRoaXMgcGF0
-Y2ggYWRkZWQgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIG5ldyANCmlub2RlX29wZXJhdGlvbnMg
-dG8NCg0KRG9jdW1lbnRhdGlvbi9maWxlc3lzdGVtcy92ZnMucnN0Lg0KDQpUaGUgbWF5X2Ny
-ZWF0ZV9pbl9zdGlja3koKSBsb2dpYyBsb29rcyBnb29kIHRvIG1lLg0KDQpUaGFua3MgZm9y
-IHRoZSBwYXRjaC4NCg0KSmVmZnJleSBBbHRtYW4NCg0K
+are available in the Git repository at:
 
---------------ms030208020606050101070306
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+  https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-DHEwggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJ
-BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEz
-MB4XDTIyMDgwNDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0Ew
-MTQxMEQwMDAwMDE4MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
-YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQCkC7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3
-xHZRtv179LHKAOcsY2jIctzieMxf82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyN
-fO/wJ0rX7G+ges22Dd7goZul8rPaTJBIxbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kI
-EEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg
-9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjG
-IcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
-BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
-BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
-My5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYDVR0TBAIwADCCASsG
-A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
-L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
-bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
-aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
-YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
-ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
-dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQY
-MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2s
-gjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwV
-eycprp8Ox1npiTyfwc5QaVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4c
-WLeQfaMrnyNeEuvHx/2CT44cdLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYq
-utYF4Chkxu4KzIpq90eDMw5ajkexw+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJo
-Qle4wDxrdXdnIhCP7g87InXKefWgZBF4VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXt
-a8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRkgIGb319a7FjslV8wggaXMIIEf6ADAgECAhBA
-AXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBDb21tZXJjaWFsIFJvb3QgQ0EgMTAe
-Fw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIBIjANBgkqhkiG9w0BAQEF
-AAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6ixaNP0JKSjTd+SG5L
-wqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6iqgB63OdHxBN/
-15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxlg+m1Vjgn
-o1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi2un0
-3bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
-VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkG
-CCsGAQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
-dHJ1c3QuY29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29t
-L3Jvb3RzL2NvbW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C
-5yZUyI42djCCASQGA1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0
-dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
-eC5odG1sMIG6BggrBgEFBQcCAjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMg
-YmVlbiBpc3N1ZWQgaW4gYWNjb3JkYW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2Vy
-dGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20v
-Y2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0
-dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20vY3JsL2NvbW1lcmNpYWxyb290Y2ExLmNy
-bDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
-CCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX6Nl4a03cDHt7TLdPxCzFvDF2
-bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN95jUXLdLPRToNxyaoB5s
-0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24GBqqVudvPRLyMJ7u
-6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azNBkfnbRq+0e88
-QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8HvgnLCBFK2s4
-Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXFC9bu
-db9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
-rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4d
-UsZyTk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJn
-p/BscizYdNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eA
-MDGCBAEwggP9AgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUG
-A1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCg
-ggKEMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUzMDAw
-MTE1OVowLwYJKoZIhvcNAQkEMSIEIB1pr8VPnesKmHgD1wtmthsysg3Q5SJj0DwabTqfHVIO
-MF0GCSsGAQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEX
-MBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQ
-AgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRy
-dXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzMMIIBVwYJKoZIhvcNAQkPMYIBSDCCAUQw
-CwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzANBggqhkiG9w0DAgIBBTAN
-BggqhkiG9w0DAgIBBTAHBgUrDgMCBzANBggqhkiG9w0DAgIBBTAHBgUrDgMCGjALBglghkgB
-ZQMEAgEwCwYJYIZIAWUDBAICMAsGCWCGSAFlAwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUD
-BAIHMAsGCWCGSAFlAwQCCDALBglghkgBZQMEAgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEB
-ATALBgkrgQUQhkg/AAIwCAYGK4EEAQsAMAgGBiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsD
-MAsGCSuBBRCGSD8AAzAIBgYrgQQBDgAwCAYGK4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMw
-DQYJKoZIhvcNAQEBBQAEggEAH1de5y0rsjUR6QfKIPa3Lz8+AZstncY3qcCrmq7UWuHoWadM
-oIIvGlim/L/LMjsknEzQvkKCP6z0DhZrrYMlHQBcRnc/TKFq5F508PrB1y07Ld0d/WHlitlE
-B16hj/CLAkYIQadxkw3v9/oC7WJhd86B/MiwPY9Wxmw3AIm/HArc8YPbcAq52hHW6ZxjgR8u
-kasnPv0c75ltfCLsWkl9SYByZbbn6n/5AHnpQsNXZLt0oJk5kTLP+rXfgyjOrRbDXR774stf
-13670SZsIj77YCUq798B/pu1374xnzsz9Qwpype/wIePYbEg/USShPbhSRG3omGLwCRzpWcA
-51S5OAAAAAAAAA==
---------------ms030208020606050101070306--
+for you to fetch changes up to 63bfd78aae9a90210b0d369bb2836cca90402a95:
 
+  Merge branches 'clk-amlogic', 'clk-allwinner', 'clk-rockchip' and 'clk-qcom' into clk-next (2025-05-29 00:30:39 -0700)
+
+----------------------------------------------------------------
+I've recently moved computers (among other things) so I'm sending this from a
+new machine. The migration process took longer than expected and disrupted my
+workflow, but I think I'm ready to go and things should speed up from here.
+
+Luckily, this has been a semi-quiet cycle. The core framework remains unchanged
+this time around. In terms of shiny new code though, we have support for the
+SpacemiT K1 SoC, Sophgo SG2044, and T-HEAD TH1520 VO clk drivers joining the
+usual silicon players like Qualcomm, Samsung, Allwinner, and Renesas.
+Surprisingly, the Qualcomm pile was smaller than usual but that is likely
+because they put one SoC support inside a driver for a different SoC that is
+very similar. Other than all those new clk drivers there are the usual clk data
+updates to fix parents, frequency tables, and add missing clks along with some
+Kconfig changes to make compile testing simpler and even more DT binding
+conversions to boot. The exciting part is still the new SoC support like
+SpacemiT and Sophgo support though, which really dominate the diffstat because
+they introduce a whole new silicon vendor clk driver.
+
+New Drivers:
+ - Camera clock controller driver for Qualcomm QCS8300
+ - DE (display engine) 3.3 clocks on Allwinner H616
+ - Samsung ExynosAutov920 CPU cluster CL0, CL1 and CL2 clock controllers
+ - Video Output (VO) subsystem clk controller in the T-HEAD TH1520 SoC
+ - Clock driver for Sophgo SG2044
+ - Clock driver for SpacemiT K1 SoC
+ - Renesas RZ/V2N (R9A09G056) SoC clk driver
+
+Updates:
+ - Correct data in various SoC clk drivers
+ - Allow clkaN to be optional in the Qualcomm RPMh clock controller
+   driver if command db doesn't define it
+ - Change Kconfig options to not enable by default during compile testing
+ - Add missing clks in various SoC clk drivers
+ - Remove some duplicate clk DT bindings and convert some more to YAML
+
+----------------------------------------------------------------
+Alexander Shiyan (1):
+      clk: rockchip: rk3588: Add PLL rate for 1500 MHz
+
+Biju Das (6):
+      clk: renesas: rzv2h: Fix a typo
+      clk: renesas: rzv2h: Support static dividers without RMW
+      clk: davinci: Use of_get_available_child_by_name()
+      dt-bindings: clock: renesas,r9a09g047-cpg: Add XSPI and GBETH PTP core clocks
+      clk: renesas: r9a09g047: Add support for xspi mux and divider
+      clk: renesas: r9a09g047: Add XSPI clock/reset
+
+Bjorn Andersson (1):
+      Merge branch '20250324-sm6350-videocc-v2-2-cc22386433f4@fairphone.com' into clk-for-6.16
+
+Chris Morgan (2):
+      dt-bindings: clock: sun50i-h616-ccu: Add LVDS reset
+      clk: sunxi-ng: h616: Add LVDS reset for LCD TCON
+
+Da Xue (1):
+      clk: meson-g12a: add missing fclk_div2 to spicc
+
+Dr. David Alan Gilbert (1):
+      clk: bcm: kona: Remove unused scaled_div_build
+
+Frank Li (1):
+      dt-bindings: clock: convert vf610-clock.txt to yaml format
+
+Geert Uytterhoeven (4):
+      Merge tag 'renesas-r9a09g056-dt-binding-defs-tag1' into renesas-clk-for-v6.16
+      Merge tag 'renesas-r9a09g057-dt-binding-defs-tag3' into renesas-clk-for-v6.16
+      clk: renesas: Use str_on_off() helper
+      Merge tag 'renesas-r9a09g047-dt-binding-defs-tag3' into renesas-clk-for-v6.16
+
+Haylen Chu (4):
+      dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+      dt-bindings: clock: spacemit: Add spacemit,k1-pll
+      clk: spacemit: Add clock support for SpacemiT K1 SoC
+      clk: spacemit: k1: Add TWSI8 bus and function clocks
+
+Heiko Stuebner (9):
+      Merge branch 'v6.16-shared/clkids' into v6.16-clk/next
+      Merge branch 'v6.16-shared/clkids' into v6.16-clk/next
+      dt-bindings: clock: rk3036: add SCLK_USB480M clock-id
+      clk: rockchip: rk3036: fix implementation of usb480m clock mux
+      clk: rockchip: rk3036: mark ddrphy as critical
+      clk: rockchip: rename branch_muxgrf to branch_grf_mux
+      clk: rockchip: rename gate-grf clk file
+      clk: rockchip: rk3576: add missing slab.h include
+      clk: rockchip: rk3528: add slab.h header include
+
+Henry Martin (1):
+      clk: bcm: rpi: Add NULL check in raspberrypi_clk_register()
+
+Imran Shaik (1):
+      clk: qcom: Add support for Camera Clock Controller on QCS8300
+
+Inochi Amaoto (6):
+      dt-bindings: clock: sophgo: Use precise compatible for CV1800 series SoC
+      clk: sophgo: Add support for newly added precise compatible
+      dt-bindings: soc: sophgo: Add SG2044 top syscon device
+      dt-bindings: clock: sophgo: add clock controller for SG2044
+      clk: sophgo: Add PLL clock controller support for SG2044 SoC
+      clk: sophgo: Add clock controller support for SG2044 SoC
+
+Konrad Dybcio (1):
+      dt-bindings: clock: add SM6350 QCOM video clock bindings
+
+Krzysztof Kozlowski (5):
+      clk: sunxi-ng: Do not enable by default during compile testing
+      clk: sunxi: Do not enable by default during compile testing
+      Merge branch 'for-v6.16/dt-bindings-clk-samsung' into next/clk
+      Merge branch 'for-v6.16/dt-bindings-clk-samsung' into next/clk
+      clk: meson: Do not enable by default during compile testing
+
+Lad Prabhakar (17):
+      clk: renesas: rzv2h: Refactor PLL configuration handling
+      clk: renesas: rzv2h: Remove unused `type` field from `struct pll_clk`
+      clk: renesas: rzv2h: Add support for enabling PLLs
+      clk: renesas: rzv2h: Rename PLL field macros for consistency
+      clk: renesas: r9a09g057: Add clock and reset entries for GE3D
+      dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants and EVK
+      dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
+      dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+      dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
+      clk: renesas: rzv2h: Sort compatible list based on SoC part number
+      clk: renesas: rzv2h: Add support for RZ/V2N SoC
+      clk: renesas: rzv2h: Add support for static mux clocks
+      clk: renesas: rzv2h: Add macro for defining static dividers
+      clk: renesas: rzv2h: Use str_on_off() helper in rzv2h_mod_clock_endisable()
+      clk: renesas: rzv2h: Use both CLK_ON and CLK_MON bits for clock state validation
+      dt-bindings: clock: renesas,r9a09g057-cpg: Add USB2 PHY and GBETH PTP core clocks
+      clk: renesas: r9a09g057: Add clock and reset entries for USB2
+
+Luca Weiss (4):
+      clk: qcom: camcc-sm6350: Add *_wait_val values for GDSCs
+      clk: qcom: dispcc-sm6350: Add *_wait_val values for GDSCs
+      clk: qcom: gcc-sm6350: Add *_wait_val values for GDSCs
+      clk: qcom: gpucc-sm6350: Add *_wait_val values for GDSCs
+
+Michal Wilczynski (2):
+      dt-bindings: clock: thead: Add TH1520 VO clock controller
+      clk: thead: Add clock support for VO subsystem in T-HEAD TH1520 SoC
+
+Nicolas Frattaroli (4):
+      dt-bindings: clock: rk3576: add IOC gated clocks
+      clk: rockchip: introduce auxiliary GRFs
+      clk: rockchip: introduce GRF gates
+      clk: rockchip: add GATE_GRFs for SAI MCLKOUT to rk3576
+
+Pengyu Luo (1):
+      clk: qcom: rpmh: make clkaN optional
+
+Pritam Manohar Sutar (1):
+      clk: samsung: correct clock summary for hsi1 block
+
+Richard Fitzgerald (1):
+      clk: test: Forward-declare struct of_phandle_args in kunit/clk.h
+
+Rob Herring (Arm) (2):
+      dt-bindings: clock: Drop maxim,max77686.txt
+      dt-bindings: clock: Drop st,stm32h7-rcc.txt
+
+Ryan Walklin (2):
+      dt-bindings: allwinner: add H616 DE33 clock binding
+      clk: sunxi-ng: ccu: add Display Engine 3.3 (DE33) support
+
+Shin Son (5):
+      dt-bindings: clock: exynosautov920: add cpucl0 clock definitions
+      clk: samsung: exynosautov920: add cpucl0 clock support
+      dt-bindings: clock: exynosautov920: add cpucl1/2 clock definitions
+      clk: samsung: exynosautov920: add cpucl1/2 clock support
+      clk: samsung: exynosautov920: Fix incorrect CLKS_NR_CPUCL0 definition
+
+Stefan Wahren (2):
+      dt-bindings: clock: convert bcm2835-aux-clock to yaml
+      clk: bcm: rpi: Drop module alias
+
+Stephen Boyd (14):
+      Merge tag 'renesas-clk-for-v6.16-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into clk-renesas
+      Merge tag 'spacemit-clk-for-6.16-1' of https://github.com/spacemit-com/linux into clk-spacemit
+      Merge tag 'socfpga_clk_updates_for_6.16_v2' of git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux into clk-socfpga
+      Merge tag 'riscv-sophgo-clk-for-v6.16' of https://github.com/sophgo/linux into clk-sophgo
+      Merge tag 'thead-clk-for-v6.16' of https://github.com/pdp7/linux into clk-thead
+      Merge tag 'renesas-clk-for-v6.16-tag2' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into clk-renesas
+      Merge tag 'samsung-clk-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into clk-samsung
+      Merge tag 'clk-meson-v6.16-1' of https://github.com/BayLibre/clk-meson into clk-amlogic
+      Merge tag 'sunxi-clk-for-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into clk-allwinner
+      Merge tag 'v6.16-rockchip-clk1' of git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip into clk-rockchip
+      Merge tag 'qcom-clk-for-6.16' of https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into clk-qcom
+      Merge branches 'clk-bindings', 'clk-renesas', 'clk-spacemit' and 'clk-cleanup' into clk-next
+      Merge branches 'clk-socfpga', 'clk-sophgo', 'clk-thead' and 'clk-samsung' into clk-next
+      Merge branches 'clk-amlogic', 'clk-allwinner', 'clk-rockchip' and 'clk-qcom' into clk-next
+
+Taniya Das (2):
+      clk: qcom: gcc: Set FORCE_MEM_CORE_ON for gcc_ufs_axi_clk for 8650/8750
+      clk: qcom: gcc-x1e80100: Set FORCE MEM CORE for UFS clocks
+
+Thorsten Blum (2):
+      clk: socfpga: clk-pll: Optimize local variables
+      clk: socfpga: stratix10: Optimize local variables
+
+Tommaso Merciai (3):
+      clk: renesas: rzv2h: Improve rzv2h_ddiv_set_rate()
+      clk: renesas: rzv2h: Simplify rzv2h_cpg_assert()/rzv2h_cpg_deassert()
+      clk: renesas: r9a09g047: Add clock and reset entries for GE3D
+
+Varada Pavani (1):
+      clk: samsung: Use samsung CCF common function
+
+Vasily Khoruzhick (1):
+      clk: rockchip: rk3568: Add PLL rate for 33.3MHz
+
+Vincent Knecht (1):
+      clk: qcom: gcc-msm8939: Fix mclk0 & mclk1 for 24 MHz
+
+Wentao Liang (1):
+      clk: qcom: Fix missing error check for dev_pm_domain_attach()
+
+Yao Zi (5):
+      clk: rockchip: Drop empty init callback for rk3588 PLL type
+      dt-bindings: clock: Add GRF clock definition for RK3528
+      clk: rockchip: Support MMC clocks in GRF region
+      clk: rockchip: rk3528: Add SD/SDIO tuning clocks in GRF region
+      clk: rockchip: Pass NULL as reg pointer when registering GRF MMC clocks
+
+ .../clock/allwinner,sun8i-a83t-de2-clk.yaml        |    1 +
+ .../bindings/clock/brcm,bcm2835-aux-clock.txt      |   31 -
+ .../bindings/clock/brcm,bcm2835-aux-clock.yaml     |   47 +
+ .../devicetree/bindings/clock/fsl,vf610-ccm.yaml   |   58 +
+ .../devicetree/bindings/clock/maxim,max77686.txt   |  114 --
+ .../devicetree/bindings/clock/qcom,videocc.yaml    |   20 +
+ .../bindings/clock/renesas,rzv2h-cpg.yaml          |    5 +-
+ .../clock/samsung,exynosautov920-clock.yaml        |   69 +
+ .../bindings/clock/sophgo,cv1800-clk.yaml          |   16 +-
+ .../bindings/clock/sophgo,sg2044-clk.yaml          |   99 ++
+ .../devicetree/bindings/clock/spacemit,k1-pll.yaml |   50 +
+ .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   71 -
+ .../bindings/clock/thead,th1520-clk-ap.yaml        |   17 +-
+ .../devicetree/bindings/clock/vf610-clock.txt      |   41 -
+ .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |    2 +
+ .../soc/renesas/renesas,r9a09g057-sys.yaml         |    1 +
+ .../devicetree/bindings/soc/renesas/renesas.yaml   |   15 +
+ .../soc/sophgo/sophgo,sg2044-top-syscon.yaml       |   49 +
+ .../bindings/soc/spacemit/spacemit,k1-syscon.yaml  |   80 +
+ MAINTAINERS                                        |    1 -
+ drivers/clk/Kconfig                                |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/bcm/clk-kona.c                         |   18 -
+ drivers/clk/bcm/clk-kona.h                         |    2 -
+ drivers/clk/bcm/clk-raspberrypi.c                  |    3 +-
+ drivers/clk/davinci/pll.c                          |   26 +-
+ drivers/clk/meson/Kconfig                          |   16 +-
+ drivers/clk/meson/g12a.c                           |    1 +
+ drivers/clk/qcom/apcs-sdx55.c                      |    6 +-
+ drivers/clk/qcom/camcc-sa8775p.c                   |  103 +-
+ drivers/clk/qcom/camcc-sm6350.c                    |   18 +
+ drivers/clk/qcom/clk-rpmh.c                        |   11 +
+ drivers/clk/qcom/dispcc-sm6350.c                   |    3 +
+ drivers/clk/qcom/gcc-msm8939.c                     |    4 +-
+ drivers/clk/qcom/gcc-sm6350.c                      |    6 +
+ drivers/clk/qcom/gcc-sm8650.c                      |    2 +
+ drivers/clk/qcom/gcc-sm8750.c                      |    3 +-
+ drivers/clk/qcom/gcc-x1e80100.c                    |    4 +
+ drivers/clk/qcom/gpucc-sm6350.c                    |    6 +
+ drivers/clk/renesas/Kconfig                        |    5 +
+ drivers/clk/renesas/Makefile                       |    1 +
+ drivers/clk/renesas/r9a09g047-cpg.c                |   52 +-
+ drivers/clk/renesas/r9a09g056-cpg.c                |  152 ++
+ drivers/clk/renesas/r9a09g057-cpg.c                |   36 +-
+ drivers/clk/renesas/renesas-cpg-mssr.c             |    3 +-
+ drivers/clk/renesas/rzg2l-cpg.c                    |    3 +-
+ drivers/clk/renesas/rzv2h-cpg.c                    |  186 +-
+ drivers/clk/renesas/rzv2h-cpg.h                    |   94 +-
+ drivers/clk/rockchip/Makefile                      |    1 +
+ drivers/clk/rockchip/clk-gate-grf.c                |  105 ++
+ drivers/clk/rockchip/clk-mmc-phase.c               |   24 +-
+ drivers/clk/rockchip/clk-pll.c                     |   11 -
+ drivers/clk/rockchip/clk-rk3036.c                  |   11 +-
+ drivers/clk/rockchip/clk-rk3288.c                  |    2 +-
+ drivers/clk/rockchip/clk-rk3328.c                  |    6 +-
+ drivers/clk/rockchip/clk-rk3528.c                  |   83 +-
+ drivers/clk/rockchip/clk-rk3568.c                  |    3 +-
+ drivers/clk/rockchip/clk-rk3576.c                  |   60 +-
+ drivers/clk/rockchip/clk-rk3588.c                  |    1 +
+ drivers/clk/rockchip/clk-rv1126.c                  |    2 +-
+ drivers/clk/rockchip/clk.c                         |   38 +-
+ drivers/clk/rockchip/clk.h                         |   75 +-
+ drivers/clk/samsung/clk-exynos4.c                  |   74 +-
+ drivers/clk/samsung/clk-exynosautov920.c           |  338 +++-
+ drivers/clk/socfpga/clk-pll-s10.c                  |    6 +-
+ drivers/clk/socfpga/clk-pll.c                      |    4 +-
+ drivers/clk/sophgo/Kconfig                         |   19 +
+ drivers/clk/sophgo/Makefile                        |    2 +
+ drivers/clk/sophgo/clk-cv1800.c                    |    2 +
+ drivers/clk/sophgo/clk-sg2044-pll.c                |  628 +++++++
+ drivers/clk/sophgo/clk-sg2044.c                    | 1812 ++++++++++++++++++++
+ drivers/clk/spacemit/Kconfig                       |   18 +
+ drivers/clk/spacemit/Makefile                      |    5 +
+ drivers/clk/spacemit/ccu-k1.c                      | 1164 +++++++++++++
+ drivers/clk/spacemit/ccu_common.h                  |   48 +
+ drivers/clk/spacemit/ccu_ddn.c                     |   83 +
+ drivers/clk/spacemit/ccu_ddn.h                     |   48 +
+ drivers/clk/spacemit/ccu_mix.c                     |  268 +++
+ drivers/clk/spacemit/ccu_mix.h                     |  218 +++
+ drivers/clk/spacemit/ccu_pll.c                     |  157 ++
+ drivers/clk/spacemit/ccu_pll.h                     |   86 +
+ drivers/clk/sunxi-ng/Kconfig                       |   48 +-
+ drivers/clk/sunxi-ng/ccu-sun50i-h616.c             |    1 +
+ drivers/clk/sunxi-ng/ccu-sun8i-de2.c               |   25 +
+ drivers/clk/sunxi/Kconfig                          |   10 +-
+ drivers/clk/thead/clk-th1520-ap.c                  |  196 ++-
+ include/dt-bindings/clock/qcom,sm6350-videocc.h    |   27 +
+ include/dt-bindings/clock/renesas,r9a09g047-cpg.h  |    3 +
+ include/dt-bindings/clock/renesas,r9a09g056-cpg.h  |   24 +
+ include/dt-bindings/clock/renesas,r9a09g057-cpg.h  |    4 +
+ include/dt-bindings/clock/rk3036-cru.h             |    1 +
+ include/dt-bindings/clock/rockchip,rk3528-cru.h    |    6 +
+ include/dt-bindings/clock/rockchip,rk3576-cru.h    |   10 +
+ include/dt-bindings/clock/samsung,exynosautov920.h |   51 +
+ include/dt-bindings/clock/sophgo,sg2044-clk.h      |  153 ++
+ include/dt-bindings/clock/sophgo,sg2044-pll.h      |   27 +
+ include/dt-bindings/clock/spacemit,k1-syscon.h     |  247 +++
+ include/dt-bindings/clock/thead,th1520-clk-ap.h    |   34 +
+ include/dt-bindings/reset/sun50i-h616-ccu.h        |    1 +
+ include/kunit/clk.h                                |    1 +
+ 100 files changed, 7298 insertions(+), 526 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm2835-aux-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/fsl,vf610-ccm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/maxim,max77686.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sophgo,sg2044-clk.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+ delete mode 100644 Documentation/devicetree/bindings/clock/vf610-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/sophgo/sophgo,sg2044-top-syscon.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-syscon.yaml
+ create mode 100644 drivers/clk/renesas/r9a09g056-cpg.c
+ create mode 100644 drivers/clk/rockchip/clk-gate-grf.c
+ create mode 100644 drivers/clk/sophgo/clk-sg2044-pll.c
+ create mode 100644 drivers/clk/sophgo/clk-sg2044.c
+ create mode 100644 drivers/clk/spacemit/Kconfig
+ create mode 100644 drivers/clk/spacemit/Makefile
+ create mode 100644 drivers/clk/spacemit/ccu-k1.c
+ create mode 100644 drivers/clk/spacemit/ccu_common.h
+ create mode 100644 drivers/clk/spacemit/ccu_ddn.c
+ create mode 100644 drivers/clk/spacemit/ccu_ddn.h
+ create mode 100644 drivers/clk/spacemit/ccu_mix.c
+ create mode 100644 drivers/clk/spacemit/ccu_mix.h
+ create mode 100644 drivers/clk/spacemit/ccu_pll.c
+ create mode 100644 drivers/clk/spacemit/ccu_pll.h
+ create mode 100644 include/dt-bindings/clock/qcom,sm6350-videocc.h
+ create mode 100644 include/dt-bindings/clock/renesas,r9a09g056-cpg.h
+ create mode 100644 include/dt-bindings/clock/sophgo,sg2044-clk.h
+ create mode 100644 include/dt-bindings/clock/sophgo,sg2044-pll.h
+ create mode 100644 include/dt-bindings/clock/spacemit,k1-syscon.h
+
+-- 
+https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+https://git.kernel.org/pub/scm/linux/kernel/git/sboyd/spmi.git
