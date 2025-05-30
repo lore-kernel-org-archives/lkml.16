@@ -1,46 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5845B28000C;
-	Fri, 30 May 2025 12:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10768280A39;
+	Fri, 30 May 2025 12:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608928; cv=none; b=Fidwo0+eXObwAzSdDC6tlazd/X0rIx7z94lH0zGJPejkJHe+Z4yrz8/ZNV7FYjlYA4r2qNDwD15tLem2qNtfuDjSOmGVhUcIitlH4LpLnzrlE9krSDYgDk6BZppXTx37Coqg9dQxE7fq46/a3v68AxBsS8pVGEaPeWUyewZWHEM=
+	t=1748608931; cv=none; b=fSfmgn7AXucuy/53XY8ZjRhPEwqec+f1FgFHbWsxpNetoCIfyNaiNZ34sMSGYaL4PNkX+cj56oASMCFYK4cuk3Kiy/kVbRsVx4l5KDTSGFwIqTi8m9mEJl5iDNJkQXWEbzOT8N2ynEX5Od0oZD3PN1mgdTfyeJkJc18zARPSQBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608928; c=relaxed/simple;
-	bh=Sacp20oqiruqxAKqXWlLaFrBKm4ITOuxqfEzh9cqjqs=;
+	s=arc-20240116; t=1748608931; c=relaxed/simple;
+	bh=mgsylCNypqzTCIVJj1R4VEgOduZnE90YK7JxXM13pLs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eCX2f/yEYh7ZP8XmcPHs71hygl7R5BbQKRne09NiFzF56V9VmMqsMUsNwpP2tRZujaSljPC6xAuRPCDdY5CTLjmJHyTUcJAZl5RSATTXOjLNJYJHn3T/YNibfktvIpf9ZvSMSyEjgX2748vUoKxYQit/HfouKAh0Ns4/X1oMuT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BhrWe8+l; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Onq5NjBSeQtluJTURd/QH7HWjc2tuBLUlYCWE9P9cTSr2apgoybBTQkUw4MRcwWCWInIGDuqeXOc1BOVWyQPHAciP7KHGMFiRHGlIzAeJuXdvV70KKQPuwXGCcd0QFSub02FC3Vx2deGyUNeEpiFvxMqviY3qxw3LKr3rngkubg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uP7Ic1Fd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BhrWe8+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C02C4CEEA;
-	Fri, 30 May 2025 12:42:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uP7Ic1Fd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C788CC4CEEF;
+	Fri, 30 May 2025 12:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608928;
-	bh=Sacp20oqiruqxAKqXWlLaFrBKm4ITOuxqfEzh9cqjqs=;
+	s=k20201202; t=1748608930;
+	bh=mgsylCNypqzTCIVJj1R4VEgOduZnE90YK7JxXM13pLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BhrWe8+lzSP2ncP65c0jUgabOen+cCdWSCX7OpLt8TZgOsUYVX3s+Y1JpY95I68SE
-	 tuamPHqDEl8PVjsQgiAoZtQ6Zd8gJGmsZeEvaJQ//LZR2vzuzfgn8xoRJ9L931odC0
-	 0m88IFCBOnJI55tCcyS8ly/NHHdOex6PWw2+LiVhZ92yKQxEeU9YGg7BBh3kuIqyrf
-	 Qf/wypcLk0IgPsrKSDPxmmZhVsFVaHo4hk7FcycdUNA96kdEPeNiknc1+psTFctldo
-	 jNjCyDvHiM6G1YtgtA/ytdT5Z8/h1z+LFrnYVvBRZiYoTnwVby7GXx/FS/Xl1AAnHE
-	 OeRUwkSff7jBA==
+	b=uP7Ic1Fdzo88HjjvWCuMTPaMV+qW9laHgiDwFDcALkb+94QAQCjgHzGXjZrAXi5Rz
+	 TsEs8puhhZlhs5FwvqYzAUnQptmzPB9GWJHMRUCwTbBesY732adupDOAhSpXCNkv1k
+	 roD5Nf0Yd4qQ9ezNGwRfJV5eMSNWAoDcNRr96P4gsjnW9GLvJo92gyMk7s3VR8FI2m
+	 7PcUs7zRTaW85yHAI5MzPjZiHC8fyumns5msUC8zvwxlBEweP0Ur7cdHtPWXM5DhiK
+	 TcTDfUEUbalnOy+LOMvqrWF6nH5/aM9mKx2NU9IC03Il0yyqKL/116cQY2ub8HuoxO
+	 Lz0eb/Av5OYEg==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Seunghun Han <kkamagui@gmail.com>,
+Cc: Charan Teja Kalla <quic_charante@quicinc.com>,
+	Patrick Daly <quic_pdaly@quicinc.com>,
 	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	robert.moore@intel.com,
-	erik.schmauss@intel.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	devel@acpica.org,
+	rjw@rjwysocki.net,
+	len.brown@intel.com,
+	pavel@ucw.cz,
+	gregkh@linuxfoundation.org,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 3/6] ACPICA: fix acpi parse and parseext cache leaks
-Date: Fri, 30 May 2025 08:42:00 -0400
-Message-Id: <20250530124203.2577122-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 5/6] PM: runtime: fix denying of auto suspend in pm_suspend_timer_fn()
+Date: Fri, 30 May 2025 08:42:02 -0400
+Message-Id: <20250530124203.2577122-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530124203.2577122-1-sashal@kernel.org>
 References: <20250530124203.2577122-1-sashal@kernel.org>
@@ -50,287 +51,112 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.4.293
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Seunghun Han <kkamagui@gmail.com>
+From: Charan Teja Kalla <quic_charante@quicinc.com>
 
-[ Upstream commit bed18f0bdcd6737a938264a59d67923688696fc4 ]
+[ Upstream commit 40d3b40dce375d6f1c1dbf08d79eed3aed6c691d ]
 
-ACPICA commit 8829e70e1360c81e7a5a901b5d4f48330e021ea5
+pm_runtime_put_autosuspend() schedules a hrtimer to expire
+at "dev->power.timer_expires". If the hrtimer's callback,
+pm_suspend_timer_fn(), observes that the current time equals
+"dev->power.timer_expires", it unexpectedly bails out instead of
+proceeding with runtime suspend.
 
-I'm Seunghun Han, and I work for National Security Research Institute of
-South Korea.
+pm_suspend_timer_fn():
 
-I have been doing a research on ACPI and found an ACPI cache leak in ACPI
-early abort cases.
+ if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
+ 	dev->power.timer_expires = 0;
+ 	rpm_suspend(..)
+ }
 
-Boot log of ACPI cache leak is as follows:
-[    0.352414] ACPI: Added _OSI(Module Device)
-[    0.353182] ACPI: Added _OSI(Processor Device)
-[    0.353182] ACPI: Added _OSI(3.0 _SCP Extensions)
-[    0.353182] ACPI: Added _OSI(Processor Aggregator Device)
-[    0.356028] ACPI: Unable to start the ACPI Interpreter
-[    0.356799] ACPI Error: Could not remove SCI handler (20170303/evmisc-281)
-[    0.360215] kmem_cache_destroy Acpi-State: Slab cache still has objects
-[    0.360648] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W
-4.12.0-rc4-next-20170608+ #10
-[    0.361273] Hardware name: innotek gmb_h virtual_box/virtual_box, BIOS
-virtual_box 12/01/2006
-[    0.361873] Call Trace:
-[    0.362243]  ? dump_stack+0x5c/0x81
-[    0.362591]  ? kmem_cache_destroy+0x1aa/0x1c0
-[    0.362944]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.363296]  ? acpi_os_delete_cache+0xa/0x10
-[    0.363646]  ? acpi_ut_delete_caches+0x6d/0x7b
-[    0.364000]  ? acpi_terminate+0xa/0x14
-[    0.364000]  ? acpi_init+0x2af/0x34f
-[    0.364000]  ? __class_create+0x4c/0x80
-[    0.364000]  ? video_setup+0x7f/0x7f
-[    0.364000]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.364000]  ? do_one_initcall+0x4e/0x1a0
-[    0.364000]  ? kernel_init_freeable+0x189/0x20a
-[    0.364000]  ? rest_init+0xc0/0xc0
-[    0.364000]  ? kernel_init+0xa/0x100
-[    0.364000]  ? ret_from_fork+0x25/0x30
+Additionally, as ->timer_expires is not cleared, all the future auto
+suspend requests will not schedule hrtimer to perform auto suspend.
 
-I analyzed this memory leak in detail. I found that “Acpi-State” cache and
-“Acpi-Parse” cache were merged because the size of cache objects was same
-slab cache size.
+rpm_suspend():
 
-I finally found “Acpi-Parse” cache and “Acpi-parse_ext” cache were leaked
-using SLAB_NEVER_MERGE flag in kmem_cache_create() function.
+ if ((rpmflags & RPM_AUTO) &&...) {
+ 	if (!(dev->power.timer_expires && ...) { <-- this will fail.
+ 		hrtimer_start_range_ns(&dev->power.suspend_timer,...);
+ 	}
+ }
 
-Real ACPI cache leak point is as follows:
-[    0.360101] ACPI: Added _OSI(Module Device)
-[    0.360101] ACPI: Added _OSI(Processor Device)
-[    0.360101] ACPI: Added _OSI(3.0 _SCP Extensions)
-[    0.361043] ACPI: Added _OSI(Processor Aggregator Device)
-[    0.364016] ACPI: Unable to start the ACPI Interpreter
-[    0.365061] ACPI Error: Could not remove SCI handler (20170303/evmisc-281)
-[    0.368174] kmem_cache_destroy Acpi-Parse: Slab cache still has objects
-[    0.369332] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W
-4.12.0-rc4-next-20170608+ #8
-[    0.371256] Hardware name: innotek gmb_h virtual_box/virtual_box, BIOS
-virtual_box 12/01/2006
-[    0.372000] Call Trace:
-[    0.372000]  ? dump_stack+0x5c/0x81
-[    0.372000]  ? kmem_cache_destroy+0x1aa/0x1c0
-[    0.372000]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.372000]  ? acpi_os_delete_cache+0xa/0x10
-[    0.372000]  ? acpi_ut_delete_caches+0x56/0x7b
-[    0.372000]  ? acpi_terminate+0xa/0x14
-[    0.372000]  ? acpi_init+0x2af/0x34f
-[    0.372000]  ? __class_create+0x4c/0x80
-[    0.372000]  ? video_setup+0x7f/0x7f
-[    0.372000]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.372000]  ? do_one_initcall+0x4e/0x1a0
-[    0.372000]  ? kernel_init_freeable+0x189/0x20a
-[    0.372000]  ? rest_init+0xc0/0xc0
-[    0.372000]  ? kernel_init+0xa/0x100
-[    0.372000]  ? ret_from_fork+0x25/0x30
-[    0.388039] kmem_cache_destroy Acpi-parse_ext: Slab cache still has objects
-[    0.389063] CPU: 1 PID: 1 Comm: swapper/0 Tainted: G        W
-4.12.0-rc4-next-20170608+ #8
-[    0.390557] Hardware name: innotek gmb_h virtual_box/virtual_box, BIOS
-virtual_box 12/01/2006
-[    0.392000] Call Trace:
-[    0.392000]  ? dump_stack+0x5c/0x81
-[    0.392000]  ? kmem_cache_destroy+0x1aa/0x1c0
-[    0.392000]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.392000]  ? acpi_os_delete_cache+0xa/0x10
-[    0.392000]  ? acpi_ut_delete_caches+0x6d/0x7b
-[    0.392000]  ? acpi_terminate+0xa/0x14
-[    0.392000]  ? acpi_init+0x2af/0x34f
-[    0.392000]  ? __class_create+0x4c/0x80
-[    0.392000]  ? video_setup+0x7f/0x7f
-[    0.392000]  ? acpi_sleep_proc_init+0x27/0x27
-[    0.392000]  ? do_one_initcall+0x4e/0x1a0
-[    0.392000]  ? kernel_init_freeable+0x189/0x20a
-[    0.392000]  ? rest_init+0xc0/0xc0
-[    0.392000]  ? kernel_init+0xa/0x100
-[    0.392000]  ? ret_from_fork+0x25/0x30
+Fix this by as well checking if current time reaches the set expiration.
 
-When early abort is occurred due to invalid ACPI information, Linux kernel
-terminates ACPI by calling acpi_terminate() function. The function calls
-acpi_ut_delete_caches() function to delete local caches (acpi_gbl_namespace_
-cache, state_cache, operand_cache, ps_node_cache, ps_node_ext_cache).
-
-But the deletion codes in acpi_ut_delete_caches() function only delete
-slab caches using kmem_cache_destroy() function, therefore the cache
-objects should be flushed before acpi_ut_delete_caches() function.
-
-"Acpi-Parse" cache and "Acpi-ParseExt" cache are used in an AML parse
-function, acpi_ps_parse_loop(). The function should complete all ops
-using acpi_ps_complete_final_op() when an error occurs due to invalid
-AML codes.
-However, the current implementation of acpi_ps_complete_final_op() does not
-complete all ops when it meets some errors and this cause cache leak.
-
-This cache leak has a security threat because an old kernel (<= 4.9) shows
-memory locations of kernel functions in stack dump. Some malicious users
-could use this information to neutralize kernel ASLR.
-
-To fix ACPI cache leak for enhancing security, I made a patch to complete all
-ops unconditionally for acpi_ps_complete_final_op() function.
-
-I hope that this patch improves the security of Linux kernel.
-
-Thank you.
-
-Link: https://github.com/acpica/acpica/commit/8829e70e
-Signed-off-by: Seunghun Han <kkamagui@gmail.com>
+Co-developed-by: Patrick Daly <quic_pdaly@quicinc.com>
+Signed-off-by: Patrick Daly <quic_pdaly@quicinc.com>
+Signed-off-by: Charan Teja Kalla <quic_charante@quicinc.com>
+Link: https://patch.msgid.link/20250515064125.1211561-1-quic_charante@quicinc.com
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://patch.msgid.link/2363774.ElGaqSPkdT@rjwysocki.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-**YES** This commit should be backported to stable kernel trees based on
-comprehensive analysis of both the commit message and code changes: ##
-Security Impact Analysis The commit fixes a critical **memory cache leak
-that poses a security threat**: - The leak exposes kernel function
-memory locations in stack dumps on older kernels (≤ 4.9) - This
-information can be exploited to neutralize **kernel ASLR** (Address
-Space Layout Randomization) - The researcher specifically mentions this
-creates a security vulnerability that malicious users could exploit ##
-Bug Analysis The commit addresses **"Acpi-Parse" and "Acpi-ParseExt"
-cache leaks** that occur during ACPI early abort scenarios: 1. **Root
-Cause**: In `acpi_ps_complete_final_op()`, when errors occur during AML
-parsing, the function would exit early without properly cleaning up all
-parse operations 2. **Leak Mechanism**: The original code had multiple
-early return paths that bypassed the cleanup loop, leaving parse cache
-objects unfreed 3. **Trigger Conditions**: Invalid/malicious ACPI tables
-causing parse errors ## Code Changes Analysis The fix in
-`drivers/acpi/acpica/psobject.c` is **well-contained and minimal**:
-**Key changes:** 1. **Eliminates early returns**: Replaces immediate
-`return_ACPI_STATUS()` calls with flag setting (`ascending = FALSE`) 2.
-**Ensures complete cleanup**: All ops are now processed through
-`acpi_ps_complete_this_op()` unconditionally 3. **Preserves error
-reporting**: Uses `return_status` to track the first/most important
-error while continuing cleanup 4. **Maintains logic flow**: The cleanup
-loop now always runs to completion, preventing cache leaks **Specific
-improvements:** - Lines 674-701: Instead of immediate return on
-`AE_CTRL_TERMINATE`, sets `ascending = FALSE` and continues - Lines
-704-712: On parse failures, sets `ascending = FALSE` and continues
-instead of returning early - Lines 715-719: Always calls
-`acpi_ps_complete_this_op()` and tracks errors without early exit ##
-Backport Suitability Assessment **✅ Meets stable tree criteria:** 1.
-**Important bug fix**: Fixes memory leaks with security implications 2.
-**Minimal risk**: Changes are confined to error handling paths in ACPI
-parser 3. **Small and contained**: Only 50 lines changed in a single
-function 4. **No architectural changes**: Preserves existing API and
-behavior 5. **Clear regression prevention**: Ensures proper resource
-cleanup in error cases **✅ Historical precedent**: The kernel tree shows
-**multiple similar ACPI cache leak fixes by the same security
-researcher** (Seunghun Han) that were backported: - `3b2d69114fef` -
-"ACPICA: Namespace: fix operand cache leak" - `97f3c0a4b057` - "ACPICA:
-acpi: acpica: fix acpi operand cache leak in nseval.c" **✅ Risk
-assessment:** - **Low regression risk**: Only affects error paths during
-ACPI parse failures - **No functional changes**: Normal ACPI parsing
-behavior unchanged - **Defensive programming**: Makes cleanup more
-robust without changing success paths The commit represents a textbook
-example of a stable-tree appropriate fix: it addresses an important
-security-related memory leak with minimal, well-contained changes that
-improve robustness without introducing new functionality or
-architectural modifications.
+Now, based on my analysis, let me provide the decision: **YES** This
+commit should be backported to stable kernel trees. Here's my extensive
+analysis: ## Bug Analysis This is a clear **logical bug fix** in the PM
+runtime autosuspend mechanism that affects device power management. The
+issue is in the `pm_suspend_timer_fn()` function at
+`drivers/base/power/runtime.c:1006`. ## The Problem The current code
+uses a strict less-than comparison: ```c if (expires > 0 && expires <
+ktime_get_mono_fast_ns()) { ``` However, this creates a race condition
+where: 1. When `pm_runtime_put_autosuspend()` schedules an hrtimer to
+expire at exactly `dev->power.timer_expires` 2. If the timer callback
+`pm_suspend_timer_fn()` observes that the current time **equals**
+`dev->power.timer_expires` (not less than), it incorrectly bails out 3.
+The timer expires but the device is not suspended 4. Since
+`timer_expires` is not cleared, all future auto-suspend requests fail
+because the condition `if (!(dev->power.timer_expires && ...))` in
+`rpm_suspend()` (line 596-597) will always be false ## The Fix The fix
+correctly changes the comparison to `<=` (less than or equal): ```c if
+(expires > 0 && expires <= ktime_get_mono_fast_ns()) { ``` This ensures
+that the suspend is triggered when the current time equals or exceeds
+the expiration time. ## Why This Should Be Backported 1. **Fixes a Real
+User-Affecting Bug**: Devices may fail to auto-suspend, leading to
+increased power consumption and potential battery drain on mobile
+devices. 2. **Minimal Risk**: This is a one-character change (`<` to
+`<=`) that fixes a clear logical error. The change is extremely
+contained and low-risk. 3. **Critical Subsystem**: PM runtime is a
+critical kernel subsystem affecting all device power management. A
+failure here can impact system-wide power efficiency. 4. **No
+Architectural Changes**: This doesn't introduce new features or change
+architecture - it simply fixes incorrect logic. 5. **Small and
+Contained**: The fix is confined to a single comparison operator in one
+function. 6. **Clear Co-authors**: The commit shows collaboration
+between Patrick Daly and Charan Teja Kalla from Qualcomm, indicating
+this was found in real-world usage. ## Comparison with Similar Commits
+Looking at the historical examples: - **Similar Commit #5 (Status:
+YES)**: Also a PM runtime timer fix with data type correction - this had
+similar characteristics and was backported - The current commit follows
+the same pattern: critical PM runtime bug fix with minimal, contained
+changes ## Stable Tree Criteria Met - ✅ Fixes important bug affecting
+users - ✅ Relatively small and contained fix - ✅ No clear side effects
+beyond fixing the issue - ✅ No major architectural changes - ✅ Touches
+critical kernel subsystem (appropriately) - ✅ Follows stable tree rules
+(important bugfix, minimal risk) - ✅ Has clear explanation of the
+problem and solution This commit perfectly fits the stable backport
+criteria and should be included in stable kernel trees to ensure proper
+device power management functionality across all kernel versions.
 
- drivers/acpi/acpica/psobject.c | 52 ++++++++++------------------------
- 1 file changed, 15 insertions(+), 37 deletions(-)
+ drivers/base/power/runtime.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/psobject.c b/drivers/acpi/acpica/psobject.c
-index 98e5c7400e547..3ea26bbd534df 100644
---- a/drivers/acpi/acpica/psobject.c
-+++ b/drivers/acpi/acpica/psobject.c
-@@ -639,7 +639,8 @@ acpi_status
- acpi_ps_complete_final_op(struct acpi_walk_state *walk_state,
- 			  union acpi_parse_object *op, acpi_status status)
- {
--	acpi_status status2;
-+	acpi_status return_status = status;
-+	u8 ascending = TRUE;
- 
- 	ACPI_FUNCTION_TRACE_PTR(ps_complete_final_op, walk_state);
- 
-@@ -653,7 +654,7 @@ acpi_ps_complete_final_op(struct acpi_walk_state *walk_state,
- 			  op));
- 	do {
- 		if (op) {
--			if (walk_state->ascending_callback != NULL) {
-+			if (ascending && walk_state->ascending_callback != NULL) {
- 				walk_state->op = op;
- 				walk_state->op_info =
- 				    acpi_ps_get_opcode_info(op->common.
-@@ -675,49 +676,26 @@ acpi_ps_complete_final_op(struct acpi_walk_state *walk_state,
- 				}
- 
- 				if (status == AE_CTRL_TERMINATE) {
--					status = AE_OK;
--
--					/* Clean up */
--					do {
--						if (op) {
--							status2 =
--							    acpi_ps_complete_this_op
--							    (walk_state, op);
--							if (ACPI_FAILURE
--							    (status2)) {
--								return_ACPI_STATUS
--								    (status2);
--							}
--						}
--
--						acpi_ps_pop_scope(&
--								  (walk_state->
--								   parser_state),
--								  &op,
--								  &walk_state->
--								  arg_types,
--								  &walk_state->
--								  arg_count);
--
--					} while (op);
--
--					return_ACPI_STATUS(status);
-+					ascending = FALSE;
-+					return_status = AE_CTRL_TERMINATE;
- 				}
- 
- 				else if (ACPI_FAILURE(status)) {
- 
- 					/* First error is most important */
- 
--					(void)
--					    acpi_ps_complete_this_op(walk_state,
--								     op);
--					return_ACPI_STATUS(status);
-+					ascending = FALSE;
-+					return_status = status;
- 				}
- 			}
- 
--			status2 = acpi_ps_complete_this_op(walk_state, op);
--			if (ACPI_FAILURE(status2)) {
--				return_ACPI_STATUS(status2);
-+			status = acpi_ps_complete_this_op(walk_state, op);
-+			if (ACPI_FAILURE(status)) {
-+				ascending = FALSE;
-+				if (ACPI_SUCCESS(return_status) ||
-+				    return_status == AE_CTRL_TERMINATE) {
-+					return_status = status;
-+				}
- 			}
- 		}
- 
-@@ -727,5 +705,5 @@ acpi_ps_complete_final_op(struct acpi_walk_state *walk_state,
- 
- 	} while (op);
- 
--	return_ACPI_STATUS(status);
-+	return_ACPI_STATUS(return_status);
- }
+diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+index d301a6de762df..7fa231076ad5f 100644
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -982,7 +982,7 @@ static enum hrtimer_restart  pm_suspend_timer_fn(struct hrtimer *timer)
+ 	 * If 'expires' is after the current time, we've been called
+ 	 * too early.
+ 	 */
+-	if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
++	if (expires > 0 && expires <= ktime_get_mono_fast_ns()) {
+ 		dev->power.timer_expires = 0;
+ 		rpm_suspend(dev, dev->power.timer_autosuspends ?
+ 		    (RPM_ASYNC | RPM_AUTO) : RPM_ASYNC);
 -- 
 2.39.5
 
