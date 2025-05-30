@@ -1,63 +1,63 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA17C2253A0
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1629D21E082
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:29:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597354; cv=none; b=jsRxn8ZZcIVgT29UGn2+A86aRY6HpD3f96GhatWN4vXwoKzqNWGXdmCb/U6eOVojWKeescczasPjxjaotOeZackouOwJKrBWKvDZ5b+eD1eQPLxnElfdB7eOq1tVmcv6Y2Rqvb5VCa3LAhReORD8ejyP+qf2jfk6yTNpJIODZ50=
+	t=1748597369; cv=none; b=R9q104r3mAr7KNlO72M1CIY9TJuFJ21x2Sngccu7WCimPACesWNrpO5E2gYwdCgiPtf4L44zOIgmbiFh6bC+UJvDeti43dpy/6nMnhSctMIVZsUza6XJF/iMOXiHay3ZLmDbfBUnpZhR+0blr4j24I2CIUyL0PUIvSoQ4brVddk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597354; c=relaxed/simple;
-	bh=VCOCu6O/NADHfF14Am0W07s7tA5GTZgRlngfMicR/Ns=;
+	s=arc-20240116; t=1748597369; c=relaxed/simple;
+	bh=HWUbzvJ0czQHj89YGQM3u0dk16ZJgWmPR8JTmwOLaAI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q7s+ySDq3H3kTkNTftmsCdKfTEGXzVGAFowU6r+K1RXj6yNJcwV6qvwvh45js6vt6Kqx9A8ebhwrlkIyPqXoisHlbfkcJSXQpfOjJPm90zGBqgUK8Q+PTiZ4NznXwzGgzF5qshAT/LR6RIps1W91QmRqDPYBNhCeBd4J3tW9t+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JF2KgJ8c; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=A1xp0eq8ChVBECTruxn57Jc8XEOjI/V7urJbkt1h3pBdEYn+Ybdun5yJWhzuRCcwoeZjHKXpqeHlhucpEVz5vTjf2SOJHP+FEL9X5/gOFsJrT6WwcnagKErOVatc5Yys7OSZx+sjpeMZEoYXy1kVNraUEcQY3cvlzz6gDAwKsjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=i+8bKHHV; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JF2KgJ8c"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23526264386so8607445ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:29:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="i+8bKHHV"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-311e993f49aso1475171a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597352; x=1749202152; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597367; x=1749202167; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qGQ/MSD2aq8Zt0uX+CveEn5QJtfmVtywDoJlykkJ748=;
-        b=JF2KgJ8cx2NSohpk333GW3x0my23qoG68NSIxWf5sYIpcvmj7bxkarfiGI+IITH+wK
-         aTcwd7A9kmW/XD7Nqc9N8Cp0KUzCcOoCrWY9y8mRvBC8RtHBmWtQtCgKUwu143NGBm2o
-         /L4ATUoviWRFPR6BmI6F/OeXAPiKS/5DIk6/4VIxNsCSFCOLtMLv257BUSqfhvQAnYM8
-         7OhsnPp33+CBv9gcOf6K9XyCogI5HvwzR36gX5UNssqDkEnYLBsshsJPvwi5Z+pNJY+6
-         tUzmm3lBJiRrwHSHt6NOPup1OvuIhn+pW7nz6kM09D44SIZ21LGlph6fmlCi80Hy891o
-         Tu7g==
+        bh=qlcCT7HpVRiKFCiWQ8GjTfMWomzbPQPS5hEo4l8oJpI=;
+        b=i+8bKHHVu0Iwh+zALug//jSVJrcArOw6+1Sb2X6JYatwx0UBHy5421qx7NXWu/ZxbF
+         ubtHM2AsBEMIoFzuk9lY5UfMjZU6imL1Z/wNa+88TU2vHdC/0qZw8IKsCrJ/z5l4UUIP
+         4tdt8H2iPqD+a4ll95djQDmPnJ8PO4U6359RE0QkHs/sbfIQAl4yzBhi/lVzBB4X2e/c
+         +dzZy19UlwSn6pBOKLY5LDSsfZbjblPBmDYvQh5MgywpsVLy5zFaCljULT4cwzRUWIUh
+         QUip7XlnryUZDvUSIQt8XnwlZW0/5WOOILHikCQUy1UNbvWQb08L7fnPDpJOiVNB8IXD
+         mN9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597352; x=1749202152;
+        d=1e100.net; s=20230601; t=1748597367; x=1749202167;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qGQ/MSD2aq8Zt0uX+CveEn5QJtfmVtywDoJlykkJ748=;
-        b=cUEgOjKkwtzuf9T6iYgvMGXoB/PTTZzwrRrzmfxEiLF9Zr224s5NHmWJ9LMKGjHWy+
-         vR5sDUSpyzGjauZfHIOcKkUzezyg6ofdO1KN8Hq3tThl9vB7IIRSbmoEnbgsJWaVu/NB
-         et2KhsLYFDvvIp3O1zvrAo3+GVmgCdw6MaatkKMwoc3UTrDac92HRt70J2iJupk2IdRf
-         vn0dynnQZWOa7AC8j4v2k8eXxX53+HnQa4w1fPzlOHjD+N4LTqgxLH1+QK1yta6nGowo
-         LPrOlcDX3UonahplVFgr1LcVAdNo/Ye+AwFDz70VbamCDSvvnOPsRZprTWhjTjp9L1+j
-         /O3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW8eEwOiMtV3XidR9dz723atBiYGyodYwWyiWRWDb7ytuM7IbQPGJYF5g0pO/cQ8lYnxrndSeZUX4KQLgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxwFPMt+KgqiAJXS2Ng6mjld726JMa+sjszcr2Vx0a4EHVQsIW
-	PibKww0yIybbMkAteShfm/drAhqAs7mCHTJD1mRkmAeetJ6P+R5i6zKZoogg7IsQowg=
-X-Gm-Gg: ASbGncuf+HlU7mMSXlCV3VMS79IhnD6Ef/XRfHsJ9eacF/5pK0l1I4DyGdGk0eZQq9h
-	N0KhueAifWGzH9/UTFFAKcc8ViR8zJzUnskBx3ypA3EGW5Db0IHVRIetyW6F+ZV/jCmYP7fIQCs
-	o03nTlTYhxHuXdb1XkBSAjxyITblHO7xWT8GCT2K3rayXiVqr6gw/ex/JzEndr2m1I3jQkmKNOw
-	NTOTAUkyug3zi2CoiLMnKz+qzb4/U8iMc6gpgkmZuaXkIt4ziZsrQ+fzwtZ45dQFeeGemfkEdcf
-	Os5rhP581hBCPxB4JxYj15FGnlWOtVAVP3d1VfR8k1oERxziecvqHGsKCGSJLJQPmjgyWAHNkfk
-	Wxt3jytLAEQ==
-X-Google-Smtp-Source: AGHT+IHXNv6SBDXy0RRoZRael/cpWOT8NPAPr0x/A4zO15FUEF6dVXWmKj+6rOHNmQu7F4oEsyx/Vw==
-X-Received: by 2002:a17:90b:3a82:b0:311:ab20:159d with SMTP id 98e67ed59e1d1-3124163a55amr3859759a91.19.1748597351985;
-        Fri, 30 May 2025 02:29:11 -0700 (PDT)
+        bh=qlcCT7HpVRiKFCiWQ8GjTfMWomzbPQPS5hEo4l8oJpI=;
+        b=jfWFl2GOrSRgZ1yiXD5II8+EM44vSEW1HE0nSvoB66qupttY9/5TDdPC06VRZuoJwO
+         X+5d7ui6JAz4IuhV/BFauD8fa4nd2ZtRJ8KU6gFgRbwXfIyQwmjsvoA5zaQLh42ztlZs
+         8VEf9VEvIfc3ZGtEfyk7pt7E4oXqqEkrhGhxnZunQ7fFkds9iitchfMVKo8iNLOde2Jt
+         a8j+WqN0wVGLjS6qzOaO7AHOwSpjiby0+ZU/QEjZ3yyLrlAZnLfeoinSGklaguAeO1AS
+         Qs4ugMd+VNSmLdyUK1GJmxKu5RfxvrIU2un26fwtvIkL4YJUFby5pCbyGLAdzSJsxpkx
+         7qbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWi0c+xARzcUIZpQexvoX9kRXLVyvjX3Bkalr0v1cYAstM9tC6vbDrcCEQCzsd4Cm94VSzGkHo9JOcy01w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhlzZbVn8CT+QmtUBdiUlKwO/uA7eMAYSueeaNtLalvV+of1cj
+	XBjIt2BuUJmP8dN+GiYVLMZLXGweLqN7LoD4YWQ6k3jLsm/UpjD2D0js30lflurz8hk=
+X-Gm-Gg: ASbGncvclYnmjFu8wo0uCeUAYXWXa++EJjxqhT1P7iu6zWQfFcaXUhYV1P1+/3RN1SC
+	T5mzHckNbpZRDefOiNMn9OVmlT2AN8blihCgjgxGmX8j9WEgWnw3gnKLwySC8xPRQKOIyO/HqpV
+	/jBk5uuRCg5vcUORqYFBeMd+zMyCW+/H/YlK8JB+sfQneH/JpQYHIAdN//ThpBR6km0qAi9JVOp
+	DJ+bVNI5hdzqFuw91kQ62rnlRA4DT//w3YYC8HryxebqwTxaP4eRarWKuCbwkQTBSCm0HfcgOG1
+	3CmqkItwz/cMcbBA7g2GJdwUpMXQA0GOO4SK66NCilims47puhg+Q2AA1h8/c3loKNZbzJsvtm6
+	eRSAxikCB3w==
+X-Google-Smtp-Source: AGHT+IHhT+/kCKbFwXp40FdH2tTAUVIIkiKVWdZUIpWhrB1L0an0nzdMBrvxVW8z9SoZzZut7sVHuQ==
+X-Received: by 2002:a17:90b:5288:b0:312:ec:4128 with SMTP id 98e67ed59e1d1-31250476af1mr2024876a91.34.1748597367284;
+        Fri, 30 May 2025 02:29:27 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.28.57
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.29.12
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:29:11 -0700 (PDT)
+        Fri, 30 May 2025 02:29:26 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +112,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 03/35] RPAL: add service registration interface
-Date: Fri, 30 May 2025 17:27:31 +0800
-Message-Id: <f3d83dbf77500433986cdfb649bf603ea9031961.1748594840.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 04/35] RPAL: add member to task_struct and mm_struct
+Date: Fri, 30 May 2025 17:27:32 +0800
+Message-Id: <aed20a6acacb2646fe45ed2ba5ada800095b5dbf.1748594840.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,242 +126,376 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Every rpal service should be registered and managed. Each RPAL service has
-a 64-bit key as its unique identifier, the key should never repeat before
-kernel reboot. Each RPAL service has an ID to indicate which 512GB virtual
-address space it can use. Any alive RPAL service has its unique ID, which
-will never be reused until the service dead.
+In lazy switch and memory-related operations, there is a need to quickly
+locate the corresponding rpal_service structure. Therefore, rpal_service
+members are added to these two data structures.
 
-This patch adds a registration interface for RPAL services. Newly
-registered rpal_service instances are assigned a key that increments
-starting from 1. The 64-bit length of the key ensures that keys are almost
-impossible to exhaust before system reboot. Meanwhile, a bitmap is used to
-allocate IDs, ensuring no duplicate IDs are assigned. RPAL services are
-managed via a hash list, which facilitates quick lookup of the
-corresponding rpal_service by key.
+This patch adds an rpal_service member to both task_struct and mm_struct,
+and introduces initialization operations. Meanwhile, rpal_service is also
+augmented with references to the task_struct and mm_struct of the
+group_leader. For threads created via fork, the kernel acquires a reference
+to rpal_service and assigns it to the new task_struct. References to
+rpal_service are released when threads exit.
+
+Regarding the deallocation of rpal_struct, since rpal_put_service may be
+called in an atomic context (where mmdrop() cannot be invoked), this patch
+uses delayed work for deallocation. The work delay is set to 30 seconds,
+which ensures that IDs are not recycled and reused in the short term,
+preventing other processes from confusing the reallocated ID with the
+previous one due to race conditions.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/rpal/service.c | 130 ++++++++++++++++++++++++++++++++++++++++
- include/linux/rpal.h    |  31 ++++++++++
- 2 files changed, 161 insertions(+)
+ arch/x86/rpal/service.c  | 77 +++++++++++++++++++++++++++++++++++++---
+ fs/exec.c                | 11 ++++++
+ include/linux/mm_types.h |  3 ++
+ include/linux/rpal.h     | 29 +++++++++++++++
+ include/linux/sched.h    |  5 +++
+ init/init_task.c         |  3 ++
+ kernel/exit.c            |  5 +++
+ kernel/fork.c            | 16 +++++++++
+ 8 files changed, 145 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index c8e609798d4f..609c9550540d 100644
+index 609c9550540d..55ecb7e0ef8c 100644
 --- a/arch/x86/rpal/service.c
 +++ b/arch/x86/rpal/service.c
-@@ -13,13 +13,56 @@
+@@ -26,9 +26,24 @@ static inline void rpal_free_service_id(int id)
  
- #include "internal.h"
- 
-+static DECLARE_BITMAP(rpal_id_bitmap, RPAL_NR_ID);
-+static atomic64_t service_key_counter;
-+static DEFINE_HASHTABLE(service_hash_table, ilog2(RPAL_NR_ID));
-+DEFINE_SPINLOCK(hash_table_lock);
- static struct kmem_cache *service_cache;
- 
-+static inline void rpal_free_service_id(int id)
-+{
-+	clear_bit(id, rpal_id_bitmap);
-+}
-+
  static void __rpal_put_service(struct rpal_service *rs)
  {
++	pr_debug("rpal: free service %d, tgid: %d\n", rs->id,
++		 rs->group_leader->pid);
++
++	rs->mm->rpal_rs = NULL;
++	mmdrop(rs->mm);
++	put_task_struct(rs->group_leader);
++	rpal_free_service_id(rs->id);
  	kmem_cache_free(service_cache, rs);
  }
  
-+static int rpal_alloc_service_id(void)
++static void rpal_put_service_async_fn(struct work_struct *work)
 +{
-+	int id;
++	struct rpal_service *rs =
++		container_of(work, struct rpal_service, delayed_put_work.work);
 +
-+	do {
-+		id = find_first_zero_bit(rpal_id_bitmap, RPAL_NR_ID);
-+		if (id == RPAL_NR_ID) {
-+			id = RPAL_INVALID_ID;
-+			break;
-+		}
-+	} while (test_and_set_bit(id, rpal_id_bitmap));
-+
-+	return id;
++	__rpal_put_service(rs);
 +}
 +
-+static bool is_valid_id(int id)
-+{
-+	return id >= 0 && id < RPAL_NR_ID;
-+}
-+
-+static u64 rpal_alloc_service_key(void)
-+{
-+	u64 key;
-+
-+	/* confirm we do not run out keys */
-+	if (unlikely(atomic64_read(&service_key_counter) == _AC(-1, UL))) {
-+		rpal_err("key is exhausted\n");
-+		return RPAL_INVALID_KEY;
-+	}
-+
-+	key = atomic64_fetch_inc(&service_key_counter);
-+	return key;
-+}
-+
- struct rpal_service *rpal_get_service(struct rpal_service *rs)
+ static int rpal_alloc_service_id(void)
+ {
+ 	int id;
+@@ -75,9 +90,16 @@ void rpal_put_service(struct rpal_service *rs)
  {
  	if (!rs)
-@@ -37,6 +80,90 @@ void rpal_put_service(struct rpal_service *rs)
- 		__rpal_put_service(rs);
+ 		return;
+-
+-	if (atomic_dec_and_test(&rs->refcnt))
+-		__rpal_put_service(rs);
++    /*
++     * Since __rpal_put_service() calls mmdrop() (which
++     * cannot be invoked in atomic context), we use
++     * delayed work to release rpal_service.
++     */
++	if (atomic_dec_and_test(&rs->refcnt)) {
++		INIT_DELAYED_WORK(&rs->delayed_put_work,
++				  rpal_put_service_async_fn);
++		schedule_delayed_work(&rs->delayed_put_work, HZ * 30);
++	}
  }
  
-+static u32 get_hash_key(u64 key)
-+{
-+	return key % RPAL_NR_ID;
-+}
-+
-+struct rpal_service *rpal_get_service_by_key(u64 key)
-+{
-+	struct rpal_service *rs, *rsp;
-+	u32 hash_key = get_hash_key(key);
-+
-+	rs = NULL;
-+	hash_for_each_possible(service_hash_table, rsp, hlist, hash_key) {
-+		if (rsp->key == key) {
-+			rs = rsp;
-+			break;
-+		}
-+	}
-+	return rpal_get_service(rs);
-+}
-+
-+static void insert_service(struct rpal_service *rs)
-+{
-+	unsigned long flags;
-+	int hash_key;
-+
-+	hash_key = get_hash_key(rs->key);
-+
-+	spin_lock_irqsave(&hash_table_lock, flags);
-+	hash_add(service_hash_table, &rs->hlist, hash_key);
-+	spin_unlock_irqrestore(&hash_table_lock, flags);
-+}
-+
-+static void delete_service(struct rpal_service *rs)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&hash_table_lock, flags);
-+	hash_del(&rs->hlist);
-+	spin_unlock_irqrestore(&hash_table_lock, flags);
-+}
-+
-+struct rpal_service *rpal_register_service(void)
-+{
-+	struct rpal_service *rs;
-+
-+	if (!rpal_inited)
-+		return NULL;
-+
-+	rs = kmem_cache_zalloc(service_cache, GFP_KERNEL);
-+	if (!rs)
+ static u32 get_hash_key(u64 key)
+@@ -128,6 +150,12 @@ struct rpal_service *rpal_register_service(void)
+ 	if (!rpal_inited)
+ 		return NULL;
+ 
++	if (!thread_group_leader(current)) {
++		rpal_err("task %d is not group leader %d\n", current->pid,
++			 current->tgid);
 +		goto alloc_fail;
++	}
 +
-+	rs->id = rpal_alloc_service_id();
-+	if (!is_valid_id(rs->id))
-+		goto id_fail;
+ 	rs = kmem_cache_zalloc(service_cache, GFP_KERNEL);
+ 	if (!rs)
+ 		goto alloc_fail;
+@@ -140,10 +168,27 @@ struct rpal_service *rpal_register_service(void)
+ 	if (unlikely(rs->key == RPAL_INVALID_KEY))
+ 		goto key_fail;
+ 
+-	atomic_set(&rs->refcnt, 1);
++	current->rpal_rs = rs;
 +
-+	rs->key = rpal_alloc_service_key();
-+	if (unlikely(rs->key == RPAL_INVALID_KEY))
-+		goto key_fail;
++	rs->group_leader = get_task_struct(current);
++	mmgrab(current->mm);
++	current->mm->rpal_rs = rs;
++	rs->mm = current->mm;
 +
-+	atomic_set(&rs->refcnt, 1);
++	/*
++	 * The reference comes from:
++	 * 1. registered service always has one reference
++	 * 2. leader_thread also has one reference
++	 * 3. mm also hold one reference
++	 */
++	atomic_set(&rs->refcnt, 3);
+ 
+ 	insert_service(rs);
+ 
++	pr_debug(
++		"rpal: register service, key: %llx, id: %d, command: %s, tgid: %d\n",
++		rs->key, rs->id, current->comm, current->tgid);
 +
-+	insert_service(rs);
-+
-+	return rs;
-+
-+key_fail:
-+	kmem_cache_free(service_cache, rs);
-+id_fail:
-+	rpal_free_service_id(rs->id);
-+alloc_fail:
-+	return NULL;
-+}
-+
-+void rpal_unregister_service(struct rpal_service *rs)
-+{
-+	if (!rs)
-+		return;
-+
-+	delete_service(rs);
+ 	return rs;
+ 
+ key_fail:
+@@ -161,7 +206,31 @@ void rpal_unregister_service(struct rpal_service *rs)
+ 
+ 	delete_service(rs);
+ 
++	pr_debug("rpal: unregister service, id: %d, tgid: %d\n", rs->id,
++		 rs->group_leader->tgid);
 +
 +	rpal_put_service(rs);
 +}
 +
- int __init rpal_service_init(void)
- {
- 	service_cache = kmem_cache_create("rpal_service_cache",
-@@ -47,6 +174,9 @@ int __init rpal_service_init(void)
- 		return -1;
- 	}
- 
-+	bitmap_zero(rpal_id_bitmap, RPAL_NR_ID);
-+	atomic64_set(&service_key_counter, RPAL_FIRST_KEY);
++void copy_rpal(struct task_struct *p)
++{
++	struct rpal_service *cur = rpal_current_service();
 +
- 	return 0;
++	p->rpal_rs = rpal_get_service(cur);
++}
++
++void exit_rpal(bool group_dead)
++{
++	struct rpal_service *rs = rpal_current_service();
++
++	if (!rs)
++		return;
++
++	current->rpal_rs = NULL;
+ 	rpal_put_service(rs);
++
++	if (group_dead)
++		rpal_unregister_service(rs);
  }
  
+ int __init rpal_service_init(void)
+diff --git a/fs/exec.c b/fs/exec.c
+index cfbb2b9ee3c9..922728aebebe 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -68,6 +68,7 @@
+ #include <linux/user_events.h>
+ #include <linux/rseq.h>
+ #include <linux/ksm.h>
++#include <linux/rpal.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/mmu_context.h>
+@@ -1076,6 +1077,16 @@ static int de_thread(struct task_struct *tsk)
+ 	/* we have changed execution domain */
+ 	tsk->exit_signal = SIGCHLD;
+ 
++#if IS_ENABLED(CONFIG_RPAL)
++	/*
++	 * The rpal process is going to load another binary, we
++	 * need to unregister rpal since it is going to be another
++	 * process. Other threads have already exited by the time
++	 * we come here, we need to set group_dead as true.
++	 */
++	exit_rpal(true);
++#endif
++
+ 	BUG_ON(!thread_group_leader(tsk));
+ 	return 0;
+ 
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 32ba5126e221..b29adef082c6 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1172,6 +1172,9 @@ struct mm_struct {
+ #ifdef CONFIG_MM_ID
+ 		mm_id_t mm_id;
+ #endif /* CONFIG_MM_ID */
++#ifdef CONFIG_RPAL
++		struct rpal_service *rpal_rs;
++#endif
+ 	} __randomize_layout;
+ 
+ 	/*
 diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 73468884cc5d..75c5acf33844 100644
+index 75c5acf33844..7b9d90b62b3f 100644
 --- a/include/linux/rpal.h
 +++ b/include/linux/rpal.h
-@@ -11,13 +11,40 @@
+@@ -11,6 +11,8 @@
  
  #include <linux/sched.h>
  #include <linux/types.h>
-+#include <linux/hashtable.h>
++#include <linux/sched/mm.h>
++#include <linux/workqueue.h>
+ #include <linux/hashtable.h>
  #include <linux/atomic.h>
  
- #define RPAL_ERROR_MSG "rpal error: "
- #define rpal_err(x...) pr_err(RPAL_ERROR_MSG x)
- #define rpal_err_ratelimited(x...) pr_err_ratelimited(RPAL_ERROR_MSG x)
+@@ -29,6 +31,9 @@
+ #define RPAL_INVALID_KEY _AC(0, UL)
  
-+/*
-+ * The first 512GB is reserved due to mmap_min_addr.
-+ * The last 512GB is dropped since stack will be initially
-+ * allocated at TASK_SIZE_MAX.
-+ */
-+#define RPAL_NR_ID 254
-+#define RPAL_INVALID_ID -1
-+#define RPAL_FIRST_KEY _AC(1, UL)
-+#define RPAL_INVALID_KEY _AC(0, UL)
-+
-+/*
-+ * Each RPAL service has a 64-bit key as its unique identifier, and
-+ * the 64-bit length ensures that the key will never repeat before
-+ * the kernel reboot.
+ /*
++ * Each RPAL process (a.k.a RPAL service) should have a pointer to
++ * struct rpal_service in all its tasks' task_struct.
 + *
-+ * Each RPAL service has an ID to indicate which 512GB virtual address
-+ * space it can use. All alive RPAL processes have unique IDs, ensuring
-+ * their address spaces do not overlap. When a process exits, its ID
-+ * is released, allowing newly started RPAL services to reuse the ID.
-+ */
+  * Each RPAL service has a 64-bit key as its unique identifier, and
+  * the 64-bit length ensures that the key will never repeat before
+  * the kernel reboot.
+@@ -39,10 +44,23 @@
+  * is released, allowing newly started RPAL services to reuse the ID.
+  */
  struct rpal_service {
-+	/* Unique identifier for RPAL service */
-+	u64 key;
-+	/* virtual address space id */
-+	int id;
-+	/* Hashtable list for this struct */
-+	struct hlist_node hlist;
++	/* The task_struct of thread group leader. */
++	struct task_struct *group_leader;
++	/* mm_struct of thread group */
++	struct mm_struct *mm;
+ 	/* Unique identifier for RPAL service */
+ 	u64 key;
+ 	/* virtual address space id */
+ 	int id;
++
++    /*
++     * Fields above should never change after initialization.
++     * Fields below may change after initialization.
++     */
++
++	/* delayed service put work */
++	struct delayed_work delayed_put_work;
++
+ 	/* Hashtable list for this struct */
+ 	struct hlist_node hlist;
  	/* reference count of this struct */
- 	atomic_t refcnt;
- };
-@@ -40,4 +67,8 @@ struct rpal_service *rpal_get_service(struct rpal_service *rs);
-  * @param rs The struct rpal_service to put.
+@@ -68,7 +86,18 @@ struct rpal_service *rpal_get_service(struct rpal_service *rs);
   */
  void rpal_put_service(struct rpal_service *rs);
+ 
++#ifdef CONFIG_RPAL
++static inline struct rpal_service *rpal_current_service(void)
++{
++	return current->rpal_rs;
++}
++#else
++static inline struct rpal_service *rpal_current_service(void) { return NULL; }
++#endif
 +
-+void rpal_unregister_service(struct rpal_service *rs);
-+struct rpal_service *rpal_register_service(void);
-+struct rpal_service *rpal_get_service_by_key(u64 key);
+ void rpal_unregister_service(struct rpal_service *rs);
+ struct rpal_service *rpal_register_service(void);
+ struct rpal_service *rpal_get_service_by_key(u64 key);
++void copy_rpal(struct task_struct *p);
++void exit_rpal(bool group_dead);
  #endif
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 45e5953b8f32..ad35b197543c 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -72,6 +72,7 @@ struct rcu_node;
+ struct reclaim_state;
+ struct robust_list_head;
+ struct root_domain;
++struct rpal_service;
+ struct rq;
+ struct sched_attr;
+ struct sched_dl_entity;
+@@ -1645,6 +1646,10 @@ struct task_struct {
+ 	struct user_event_mm		*user_event_mm;
+ #endif
+ 
++#ifdef CONFIG_RPAL
++	struct rpal_service			*rpal_rs;
++#endif
++
+ 	/* CPU-specific state of this task: */
+ 	struct thread_struct		thread;
+ 
+diff --git a/init/init_task.c b/init/init_task.c
+index e557f622bd90..0c5b1927da41 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -220,6 +220,9 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
+ #ifdef CONFIG_SECCOMP_FILTER
+ 	.seccomp	= { .filter_count = ATOMIC_INIT(0) },
+ #endif
++#ifdef CONFIG_RPAL
++	.rpal_rs = NULL,
++#endif
+ };
+ EXPORT_SYMBOL(init_task);
+ 
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 38645039dd8f..0c8387da59da 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -70,6 +70,7 @@
+ #include <linux/user_events.h>
+ #include <linux/uaccess.h>
+ #include <linux/pidfs.h>
++#include <linux/rpal.h>
+ 
+ #include <uapi/linux/wait.h>
+ 
+@@ -944,6 +945,10 @@ void __noreturn do_exit(long code)
+ 	taskstats_exit(tsk, group_dead);
+ 	trace_sched_process_exit(tsk, group_dead);
+ 
++#if IS_ENABLED(CONFIG_RPAL)
++	exit_rpal(group_dead);
++#endif
++
+ 	exit_mm();
+ 
+ 	if (group_dead)
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 85afccfdf3b1..1d1c8484a8f2 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -105,6 +105,7 @@
+ #include <uapi/linux/pidfd.h>
+ #include <linux/pidfs.h>
+ #include <linux/tick.h>
++#include <linux/rpal.h>
+ 
+ #include <asm/pgalloc.h>
+ #include <linux/uaccess.h>
+@@ -1216,6 +1217,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+ 	tsk->mm_cid_active = 0;
+ 	tsk->migrate_from_cpu = -1;
+ #endif
++
++#ifdef CONFIG_RPAL
++	tsk->rpal_rs = NULL;
++#endif
+ 	return tsk;
+ 
+ free_stack:
+@@ -1312,6 +1317,9 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ #endif
+ 	mm_init_uprobes_state(mm);
+ 	hugetlb_count_init(mm);
++#ifdef CONFIG_RPAL
++	mm->rpal_rs = NULL;
++#endif
+ 
+ 	if (current->mm) {
+ 		mm->flags = mmf_init_flags(current->mm->flags);
+@@ -2651,6 +2659,14 @@ __latent_entropy struct task_struct *copy_process(
+ 			current->signal->nr_threads++;
+ 			current->signal->quick_threads++;
+ 			atomic_inc(&current->signal->live);
++#if IS_ENABLED(CONFIG_RPAL)
++			/*
++			 * For rpal process, the child thread needs to
++			 * inherit p->rpal_rs. Therefore, we can get the
++			 * struct rpal_service for any thread of rpal process.
++			 */
++			copy_rpal(p);
++#endif
+ 			refcount_inc(&current->signal->sigcnt);
+ 			task_join_group_stop(p);
+ 			list_add_tail_rcu(&p->thread_node,
 -- 
 2.20.1
 
