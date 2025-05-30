@@ -1,105 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1D991A01BF
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EA0155335;
+	Fri, 30 May 2025 03:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748573774; cv=none; b=J/hlw1JSTQ5mtAqz8H2rMw6tLZ/fbGWcrtDvXAnMXDNRmyjyseW7zc+3TuJHYQ+02CdEG5i2ZAXlG74c7zknx8N5ZtZfkdANNYLSkDaN/1ekFM8m24tHu7IjTF0JolZeXCyNFcsfbGM9ysm9fnVAXO9QbOzBhY2ibajABKLfbxM=
+	t=1748574171; cv=none; b=XoaRa6gh5/GixAheqiRNCEq5acGZkJFr+Fs+1DliGwRbflifuRt49RPVuotsNyJ7kTiH3ZLNoBQgHgdSXz9MvLgVAdgVlFPq4W+4WQNlYDyq4X9pzZtJUvUIC2FTzRYqlknq9FzQrjQ0MhuvYUEr5gjT9x9tucO+z77s3xOquFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748573774; c=relaxed/simple;
-	bh=hxdTBWmbCq0pcJKIOji7VXJUJ3GCxmi5wkSOCdAVgkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GMqwajTWGxkq8IeD93ZsMNbn7hlRDHAD/8OxgMOjA4wFr9VwG7I59iij3dhXVEZpBzFIB4Z2Pr7hkL1V7BUTbobEisDAsoWLsOjnWEd5KRNbEcFkdHcEyx5ghdFgKtgQ71iBDEfBGWl845LTY7IySH3ELmbuJBA5ddc0s0WhNpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHAXQ/q7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748574171; c=relaxed/simple;
+	bh=H20DZxJJ1yGzZ/Nk6Ga7RSWoWgAA3WXWsCcc8u22kLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HCmrNOHsYegMhSv9pRvsjNDW5HlizYBQDUgWbGgCTnvKHp+iXjFwQ0bgTtUbIawU0HUJqmLzkqBpLQEYm11x+A+CO4OcpH0HfaHZMxGhjhswirn2/QuMlQqMCsm2WGT6+4txD1DOwtSXiIlTx+S2z04IDxa3BSZIgTrPqZtGWTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=n0E5f/jQ; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHAXQ/q7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748573771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GwPezpBUIMZVOVHCzCG+3BRCoa4zJY6BARP8ztWbI0Y=;
-	b=BHAXQ/q7VJAqrvDlhdY/iTX2TjjySM+wOt7TKxBnnPz73Ud7jFFYBvudzWVxKlALUhwJAP
-	3crLlcs5PrvWU1VOwbnTssUJx8Z9rovBg/AHcNfVH2vE5O8VIBIvWX7Cx+5WZ11AXnwFxP
-	k3fxVLSvVVFriGiRBngH339Qf+b5UiM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-145-LbYxpKf4PV-2sPw4ycAeqg-1; Thu,
- 29 May 2025 22:56:08 -0400
-X-MC-Unique: LbYxpKf4PV-2sPw4ycAeqg-1
-X-Mimecast-MFC-AGG-ID: LbYxpKf4PV-2sPw4ycAeqg_1748573767
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51AED1956089;
-	Fri, 30 May 2025 02:56:06 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.13])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9D8C51955D82;
-	Fri, 30 May 2025 02:56:04 +0000 (UTC)
-Date: Fri, 30 May 2025 10:56:00 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, kasong@tencent.com, hannes@cmpxchg.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mm: swap: fix potensial buffer overflow in
- setup_clusters()
-Message-ID: <aDkeQFMjzz0frIg/@MiWiFi-R3L-srv>
-References: <20250522122554.12209-1-shikemeng@huaweicloud.com>
- <20250522122554.12209-4-shikemeng@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="n0E5f/jQ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748574166; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=DAgpEBG7lmS2E9GcUvqSz/E0dYP9VfRFSqUiZg8V0VE=;
+	b=n0E5f/jQ4KYapFdporPqlcAh6WAwP0lvvfJOYnGY7EvC4TUJHEQ45RNU0kCcgQ/7brU4WkvV3ORWWoGKMtcX1MR4Y8F+VBzNRoSEsUfR+JeuejeSnM7hYdU76gX/p6bzBespahVQhd9FF+ywnDxqvTOZl/MyqLDTEidUoQh20Ts=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcJjWJe_1748574162 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 11:02:43 +0800
+Message-ID: <07b4db81-095d-4f02-a34f-16f0743039ce@linux.alibaba.com>
+Date: Fri, 30 May 2025 11:02:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522122554.12209-4-shikemeng@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
+ for mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-4-npache@redhat.com>
+ <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
+ <CAA1CXcA4a3pJ_dJ77TvRRimPiNYacyRe5GMY=iUEz-27NHCVxQ@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAA1CXcA4a3pJ_dJ77TvRRimPiNYacyRe5GMY=iUEz-27NHCVxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 05/22/25 at 08:25pm, Kemeng Shi wrote:
-> In setup_swap_map(), we only ensure badpages are in range (0, last_page].
-> As maxpages might be < last_page, setup_clusters() will encounter a
-> buffer overflow when a badpage is >= maxpages.
-> Only call inc_cluster_info_page() for badpage which is < maxpages to
-> fix the issue.
+
+
+On 2025/5/29 12:00, Nico Pache wrote:
+> On Fri, May 23, 2025 at 12:55 AM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> On 2025/5/15 11:22, Nico Pache wrote:
+>>> For khugepaged to support different mTHP orders, we must generalize this
+>>> to check if the PMD is not shared by another VMA and the order is
+>>> enabled.
+>>>
+>>> No functional change in this patch.
+>>>
+>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> Co-developed-by: Dev Jain <dev.jain@arm.com>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>    mm/khugepaged.c | 10 +++++-----
+>>>    1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index 5457571d505a..0c4d6a02d59c 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
+>>>    static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>>>                                   bool expect_anon,
+>>>                                   struct vm_area_struct **vmap,
+>>> -                                struct collapse_control *cc)
+>>> +                                struct collapse_control *cc, int order)
+>>>    {
+>>>        struct vm_area_struct *vma;
+>>>        unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+>>> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>>>
+>>>        if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+>>
+>> Sorry, I missed this before. Should we also change 'PMD_ORDER' to
+>> 'order' for the thp_vma_suitable_order()?
+> This was changed since the last version (v5) due to an email from Hugh.
+> https://lore.kernel.org/lkml/7a81339c-f9e5-a718-fa7f-6e3fb134dca5@google.com/
 > 
-> Fixes: b843786b0bd01 ("mm: swapfile: fix SSD detection with swapfile on btrfs")
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/swapfile.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> As I noted in my reply to him, although he was not able to reproduce
+> an issue due to this, we always need to revalidate the PMD order to
+> verify the PMD range is not shared by another VMA.
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
-> 
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index a82f4ebefca3..63ab9f14b2c6 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3208,9 +3208,13 @@ static struct swap_cluster_info *setup_clusters(struct swap_info_struct *si,
->  	 * and the EOF part of the last cluster.
->  	 */
->  	inc_cluster_info_page(si, cluster_info, 0);
-> -	for (i = 0; i < swap_header->info.nr_badpages; i++)
-> -		inc_cluster_info_page(si, cluster_info,
-> -				      swap_header->info.badpages[i]);
-> +	for (i = 0; i < swap_header->info.nr_badpages; i++) {
-> +		unsigned int page_nr = swap_header->info.badpages[i];
-> +
-> +		if (page_nr >= maxpages)
-> +			continue;
-> +		inc_cluster_info_page(si, cluster_info, page_nr);
-> +	}
->  	for (i = maxpages; i < round_up(maxpages, SWAPFILE_CLUSTER); i++)
->  		inc_cluster_info_page(si, cluster_info, i);
->  
-> -- 
-> 2.30.0
-> 
-
+OK. I see. Better to add some comments like Hugh did to make it clear.
