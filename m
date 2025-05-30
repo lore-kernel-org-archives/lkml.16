@@ -1,68 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5CF258A;
-	Fri, 30 May 2025 16:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF279258A;
+	Fri, 30 May 2025 16:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748623475; cv=none; b=jcEB1Llq6pagE/JqLeL0l0UWmQY8AxvClOgM0EueWY3yolY8GLp5wg6RwTgKG1EfEsp4HnL9Van67oMACjnqQXy/jMhmKWS/3bpwRk7CLY5PwAMlcfcqZlDraHWiWIVL3ZHttTlSFyFsbNevC8hqm5FxqnPoNGenYX/qhFHFhto=
+	t=1748623490; cv=none; b=MdR91u+xEFh3hFqJGBIZNWRTAeC/p5RAzZ04tZQun/vL7V0VaQYSlVpQTLcAuK3Qmse5NLRud7ZPN3H/7MozGSBEo+iJ2VarpBDeJOReFjWypqyhp6fEfKoGaROm3lRjjlW+YD7LQXUHZd8wOGRw2rm+1Ch+ymlIt0/2f49X9OU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748623475; c=relaxed/simple;
-	bh=W5OpwwUyJIIM5VqI45VotpF5enCBTC5BSFX/2o6LIuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0b0hjT379MnjVe1rzyWmOQCxak3n9SOe8I0opf+XgMl4kjUcdTV/Smg+r6pP24PrhrPennzRi0FcUFmmh+J/30bHfTnkZzlq4AC4FZahO8Oswt0vi5lRRSIWbb7dL/YDetQifyYcIK1f2hls/6cT7yeHicU3scEWtGf6OaYmJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1LkJqF7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748623490; c=relaxed/simple;
+	bh=pUFXPNioH5+1QSGJlHV1wuX4spmGaSHYnbG/z3bhnWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D5R+6QnJ2x/ypDwRvCXeoI3IWiUX4NaVJOfDtAD1WPpZUWtl1keL3giDCa5B/iIJXugr+5zyE5DnmOujsbi60i6vp5X9/77fQfnTpcvP/gQAbLKhR2xT7nl5H/Ep2YCq7fhk3SDN9upHShevbcLxGk3ykH2aAnnaLY/mUODJViQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=UJKJizg+; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1LkJqF7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12162C4CEE9;
-	Fri, 30 May 2025 16:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748623475;
-	bh=W5OpwwUyJIIM5VqI45VotpF5enCBTC5BSFX/2o6LIuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E1LkJqF7WWdLxXgE6GXThQxaANeHlK2/YO+4RzDNtgNYnx3C+q6JJV6xO6BzxkDSr
-	 rbmBm6Ds4EnWVMylvEy66N0V/cah6rL98swZNnty9fnd/nAQyNoZdWzLRq7ZhsHj7O
-	 iXGOS0Pksrut4PgAlL2LECTnwUo6Q18qZdqUQJs3M9EBEkhH6NMc3JGZRYuQaTAQvz
-	 n6mKpG3oShMiwwAMwUmrx/u4jqh9h1+nJkeFbXqK4hbvA8ieGj4U7cfguADG8B5u6z
-	 LizuhbySsVIo8dDXJk7wJvkNCQ0vHVy9Y4KQgcrsLLhNXgPrGmDWRFTKAwa5qMTsQw
-	 5ayriPv8tcAhw==
-Date: Fri, 30 May 2025 17:44:31 +0100
-From: Lee Jones <lee@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	ARM <linux-arm-kernel@lists.infradead.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patch in the mfd tree
-Message-ID: <20250530164431.GB7758@google.com>
-References: <20250526140400.54ac8a6c@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="UJKJizg+"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.16])
+	by mail.ispras.ru (Postfix) with ESMTPSA id 502AD40737D7;
+	Fri, 30 May 2025 16:44:38 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 502AD40737D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1748623478;
+	bh=wgZVDaiwB/ysM5KR2x6/lxy0bp5OSY9UQ0R5kiHgSPk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UJKJizg+m5aLZgu0NoDS8CBHBgkB6OpnECX5TYGhWhKU2ddcT0xNYX/CGqhDwbQhb
+	 UNFPwhH5fSk5gcZbx1YrupVuHC5yvaXJVtngZXPRzkOmLvBNeL/FaQ30GvObPolqPJ
+	 /Y2HM+G76PHkpquFI1te9Kq/Y9DkcfTJE0yeAeB4=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Takashi Iwai <tiwai@suse.com>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+	Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 0/3] ASoC: amd: fixes for runtime private data memory leaks
+Date: Fri, 30 May 2025 19:44:13 +0300
+Message-ID: <20250530164425.119102-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250526140400.54ac8a6c@canb.auug.org.au>
 
-On Mon, 26 May 2025, Stephen Rothwell wrote:
+Here follows a set of related patches regarding leaks of memory referenced
+to by runtime->private_data pointers in amd soc drivers.
 
-> Hi all,
-> 
-> The following commit is also in the arm-soc tree as a different commit
-> (but the same patch):
-> 
->   0ffcf5f1e41c ("dt-bindings: mfd: qcom,tcsr: Add compatible for ipq5018")
-> 
-> This is commit
-> 
->   1d2c5d5f3f44 ("dt-bindings: mfd: qcom,tcsr: Add compatible for ipq5018")
-> 
-> in the arm-soc tree.
+Fedor Pchelkin (3):
+  ASoC: amd: acp6x-pdm-dma: free pdm device data on closing
+  ASoC: amd: acp3x-pcm-dma: free runtime private data on closing
+  ASoC: amd: acp3x-pdm-dma: free pdm device data on closing
 
-Why is this patch in the arm-soc tree?
+ sound/soc/amd/raven/acp3x-pcm-dma.c  | 2 +-
+ sound/soc/amd/renoir/acp3x-pdm-dma.c | 2 ++
+ sound/soc/amd/yc/acp6x-pdm-dma.c     | 2 ++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
 -- 
-Lee Jones [李琼斯]
+2.49.0
+
