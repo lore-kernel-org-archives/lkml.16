@@ -1,167 +1,98 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A933A22DF84;
-	Fri, 30 May 2025 13:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1043222B8AA
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613101; cv=none; b=o+ACLDyE9oQVK18K6cqATn3lyxbJiAonbx8F5gpcNDsvTFeq6PUPFzvyJSJr0xKuoc+vcwzYY+/SDBW1XNzTIK88VJraqQrnH91lN/xps8q6/3g8VvEWP0r62wuJjVc3hq1a2jxEgOmF46MT+FYIZvPiFVDc6gVLq2g2nXl6s0E=
+	t=1748613102; cv=none; b=BL99EthdkvWZztBI5PE9zeM5WPgD7zyZRF5ehH37kA1Ollioo2f6zg52J9/d353tyNK7melcOJNXo9JGRnpH/ndPzK9CqiutNXZCr+Pmna9xe9yZX/sUbvZsIQ34yh//HL3XWTpqxRrn7k4bALd9jtnN7uHGGu8gdhtBa2f3T5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613101; c=relaxed/simple;
-	bh=qIwc/mCCkgIMzyAyWFhxe7hb7H6PsuoxUxDGrtcsi/o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M2JxlXK//vhCNGmnwdiYLI64EErl7nvtBw7dIXGw+dpopq7daza7WT8SzKgDnK935tP0grsOz1ljpt6Lsg9mgwLAglctTap8UNcThxR2bAw/NUnGXeH/BT4XDihBdEKI4R+iDufvnpnazKeSpIy88WZKuc2F4UKYFev3ST1IMLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VUHkc98H; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748613102; c=relaxed/simple;
+	bh=pX2PTHtPzqLQ5kA1NmW2FjwzP4CXJktF96ar71uadBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gQo0xcBVc0/g5nm8uh39Km/Tbn9DJyFiPiW32V0aBEBiyONO7C5xAj3HO6CPzykVjm6frJc5nTBgTg0y5xk7BtCqNhUcVJEq4u0y96F+CRDwBr/HjpMUtKNAK1YGJ6X/KAPhhEo4XFGboMGr6A0XHj4z4hfd42ui5faPWTWiEiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhZz1V7H; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VUHkc98H"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C3B1817C1;
-	Fri, 30 May 2025 15:51:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748613065;
-	bh=qIwc/mCCkgIMzyAyWFhxe7hb7H6PsuoxUxDGrtcsi/o=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VUHkc98HWhed+vpIdhccuyuXTTcpC18AuIsBwIsd1ggKUXbx6NO6dKZVxW7Gt3NwU
-	 PCHmBqM9hBXfN6Q5uKOQ3oWcVFS/1QN14E/Ud1jrxVhfpQLrK3ifA+yIh6C5QQEhut
-	 nIwuB/O5Yjp3TfuE2oO6nBgMc7CYxYtsjZgIx0uM=
-From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Date: Fri, 30 May 2025 16:50:34 +0300
-Subject: [PATCH v3 05/15] media: rcar-csi2: Move rcar2_calc_mbps()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhZz1V7H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748613100; x=1780149100;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pX2PTHtPzqLQ5kA1NmW2FjwzP4CXJktF96ar71uadBI=;
+  b=KhZz1V7HZpT1lTWCixRKiPNu0n/2jjxfxvd26JFcyq7HSGzmk1StFJXs
+   /hrhPTxEy34Gf/7602ypcwnVt4XD1SUQjX7MOpUOVOO0+NIFHMQmywyDL
+   uxdbGKiF/NAGT3Rqi3NYSG4hUkNs2/CteQ25aIIAPgNkplgTnrmuzQ4Hz
+   K4ZrglkUxOdgY9CDPhk3rTXUTMwDjPbl7PFKEB+/DDm/HbYibjzVErF/2
+   bD/zeE45H5rYbDvItCMnfsKFXLOOH95Q17T1nB7UZGOjH+zqWhv+r+3av
+   vOEx9ptOLvdTLaSGeRhSmb2FqcSXJvuhvYoLeeZq7ABsd4cNjV/oDXYLF
+   A==;
+X-CSE-ConnectionGUID: MXk8CQboQW+uhWWQJEdihg==
+X-CSE-MsgGUID: mnbBTU04T2CcE0PhoBoMmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50402009"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="50402009"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:51:39 -0700
+X-CSE-ConnectionGUID: ZJN+7x+rQCm/0h/vPOARow==
+X-CSE-MsgGUID: P+15Gi7KSJGyJHH3fdtplg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="143850083"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:51:34 -0700
+Date: Fri, 30 May 2025 16:51:30 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Alexander Usyskin <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Tomas Winkler <tomasw@gmail.com>,
+	Vitaly Lubart <lubvital@gmail.com>
+Subject: Re: [PATCH v11 04/10] mtd: intel-dg: register with mtd
+Message-ID: <aDm34rQxtYhvt6fc@black.fi.intel.com>
+References: <20250528135115.2512429-1-alexander.usyskin@intel.com>
+ <20250528135115.2512429-5-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-rcar-streams-v3-5-026655df7138@ideasonboard.com>
-References: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
-In-Reply-To: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
-To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2390;
- i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=qIwc/mCCkgIMzyAyWFhxe7hb7H6PsuoxUxDGrtcsi/o=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoObfctDcfT6hfgCPjTbCOG2kAa+pVLeecltsX5
- 3qHdE0Vvs+JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaDm33AAKCRD6PaqMvJYe
- 9XDiEACmN4VmeSBzigNfWRuYTc0vRTzvSEXZHFS05d5pIBuJp4Xk4iC1b4W+BpZ6U5THv3bxW/3
- ZsLXWV4/h43KCOxsszeTepREMBInrI8+3PD9lhuez/UytP8RtO42HM1lpljNkf4k1luZDC6Btgg
- vy7xS4ct6A8Qh/QVWoOOc6wmISR9Yong6a2CbqgnUjVSBZBbF3sxwgJi6b0Gk9Vti8in3sy5fOM
- vEFf2aqQTE5tsvkoz1Ph6Dg3JL/2GqgGvudOJSbjoLZRtzhzWLB1Wss/kvp5H6Md9jnID7ZFTlW
- l10mshfB7mrwGBznmpdvYfHxHI06cSTdaND5uTP1ekg2PsWNsQd67o7QhOiiPTW2EgFCTu67nUN
- JLwwUi5iLXw+lcA9LGJtUwH9h1yzfFytJgYU1lSOXYlpXGRMLU/+xX3KWjcx4Rl0keybCiPbqph
- bP96fEh8vgP5cHrQmw60IaLlzWMVpWy5U8DUBQU+VcU91CbjJHPhe7SimB0l5cCdzNwRfD3Ruff
- ddJC4tAyO6KTZ6BfpTUZ81RD7NoY97GhCvbzTemk95XKbV/XATj+E5iygD2J1zWDTZcXxy0FTN/
- RZ3CTpgNlAxvugAGFmsyHVUbvinKLAU83+IDPUNzbbpflh/m5WURp5RIKpeKCegypBx0yckaWAO
- pODVvuSvqfWMvsg==
-X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528135115.2512429-5-alexander.usyskin@intel.com>
 
-Move the function so that it can call rcsi2_get_active_lanes() in the
-following patch.
+On Wed, May 28, 2025 at 04:51:09PM +0300, Alexander Usyskin wrote:
+> Register the on-die nvm device with the mtd subsystem.
+> Refcount nvm object on _get and _put mtd callbacks.
+> For erase operation address and size should be 4K aligned.
+> For write operation address and size has to be 4bytes aligned.
+> 
+> CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> CC: Lucas De Marchi <lucas.demarchi@intel.com>
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Co-developed-by: Tomas Winkler <tomasw@gmail.com>
+> Signed-off-by: Tomas Winkler <tomasw@gmail.com>
+> Co-developed-by: Vitaly Lubart <lubvital@gmail.com>
+> Signed-off-by: Vitaly Lubart <lubvital@gmail.com>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
----
- drivers/media/platform/renesas/rcar-csi2.c | 66 +++++++++++++++---------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/media/platform/renesas/rcar-csi2.c b/drivers/media/platform/renesas/rcar-csi2.c
-index 698eb0e60f32..8aca35096408 100644
---- a/drivers/media/platform/renesas/rcar-csi2.c
-+++ b/drivers/media/platform/renesas/rcar-csi2.c
-@@ -951,39 +951,6 @@ static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
- 	return 0;
- }
- 
--static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
--			   unsigned int lanes)
--{
--	struct media_pad *remote_pad;
--	struct v4l2_subdev *source;
--	s64 freq;
--	u64 mbps;
--
--	if (!priv->remote)
--		return -ENODEV;
--
--	source = priv->remote;
--	remote_pad = &source->entity.pads[priv->remote_pad];
--
--	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
--	if (freq < 0) {
--		int ret = (int)freq;
--
--		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
--			source->name, ret);
--
--		return ret;
--	}
--
--	mbps = div_u64(freq * 2, MEGA);
--
--	/* Adjust for C-PHY, divide by 2.8. */
--	if (priv->cphy)
--		mbps = div_u64(mbps * 5, 14);
--
--	return mbps;
--}
--
- static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
- 				  unsigned int *lanes)
- {
-@@ -1031,6 +998,39 @@ static int rcsi2_get_active_lanes(struct rcar_csi2 *priv,
- 	return 0;
- }
- 
-+static int rcsi2_calc_mbps(struct rcar_csi2 *priv, unsigned int bpp,
-+			   unsigned int lanes)
-+{
-+	struct media_pad *remote_pad;
-+	struct v4l2_subdev *source;
-+	s64 freq;
-+	u64 mbps;
-+
-+	if (!priv->remote)
-+		return -ENODEV;
-+
-+	source = priv->remote;
-+	remote_pad = &source->entity.pads[priv->remote_pad];
-+
-+	freq = v4l2_get_link_freq(remote_pad, bpp, 2 * lanes);
-+	if (freq < 0) {
-+		int ret = (int)freq;
-+
-+		dev_err(priv->dev, "failed to get link freq for %s: %d\n",
-+			source->name, ret);
-+
-+		return ret;
-+	}
-+
-+	mbps = div_u64(freq * 2, MEGA);
-+
-+	/* Adjust for C-PHY, divide by 2.8. */
-+	if (priv->cphy)
-+		mbps = div_u64(mbps * 5, 14);
-+
-+	return mbps;
-+}
-+
- static int rcsi2_start_receiver_gen3(struct rcar_csi2 *priv,
- 				     struct v4l2_subdev_state *state)
- {
-
--- 
-2.43.0
-
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
