@@ -1,105 +1,256 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE49121C182
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EE121C182
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598849; cv=none; b=Gh1p0AIFcIFfmb50FTMaSvho5uE06hxxUYlK1DUiXn7rz9cSagOMcfbgZVeLDCEONsvg1vatR35cb+aMTaZs/dagu1mCuvI/enG9djJ3Un93v7DmY69xcVwxpxkmetYM0qtyuhWYi6rAk1RXupcPlr/posro+E4c9zXIt3b0s88=
+	t=1748599022; cv=none; b=dvWxv3TttsYnn5YuM1lKXaO3POTxtz9VSeboL5XKevk6cJK+o0e9rfbNrMbnqjsOuN5xe0ArPAT6e+QxU1rkflBYyY9EV2QCCmXynvAFnZOIjHqyBxwg4MDIAHjFcPjSSiQuIdVQcDtRdDtAg305V9Atc5lDr9qiOyc8drgDDRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598849; c=relaxed/simple;
-	bh=CseKbxBhjM0XiCNE+VYabCg1YlIjapBoWrEyeWexl34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QHJE31tblnxPHwOPcj+x8bHgmPieMhlXHTiYzFF2uMCFZTCejt4WiWoIe/b0ex3yDQ4/7T7rUkpnEQxBS7P91vqqEvsmDBdlvFzbVRrzea1AgHQJUjxNPH/p0dHCp4kOwBAje9VHAeX1g2ISYXERRs9B9gtBMCyKbyNcDRM/JfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SfpYa6JB; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748599022; c=relaxed/simple;
+	bh=PJCzMF/AUy2/duUrlV1Bk5x2yxDWOMYK54ncBNFmZC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/HRq9zuUmyl8WeEhEZB+yyAKGYXBcWzV3c9uCyRqF8A82Tgr4XU64meax2hQBshsO6FORzgTR2su5HAHcUCcSmzniygRBFM2sL8fsk2q0GQ1gnThHFWe3mactGJe9SrR/ZRlt8oUP6Th/REFYx67Xts/n/nXKqfQuM7ZDsgtpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z6z9/otf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SfpYa6JB"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so19064545e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748598845; x=1749203645; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eRxoEOZMhRODJSYZJ+F0wZvNK0em7c0dCwwEsoHNqDU=;
-        b=SfpYa6JBuRAmjA3s5fm5V7tUmw4+vtzhidgFKpSstIIj3oUf81ifsJ0rJFF/1j3Ndq
-         gx5DpXuY0XhzQjFau0d4SYdYSpYMrCEVpmdy/w9xRQG/Wm0+/fxEvoeZuxZ5ZL5svudl
-         vTgn5CTAZLnfqG/7Vk3sFlr1VxsZb9ENZEwcmhhJ4t9fLV37QMCRe641aGhEdYbi5mjU
-         rPPu8Zzc47NFA92AsxXaLqGJzeIbstKDIXUAhAYuSTWaX8c/yLFDVmI2h61h61FZpPD8
-         1z82LWUSU+JrIxsoeHrUYFrHFG706qgjvW1zDwRGfAhjyaXYLhTelSeW78uZAA5hUhZV
-         Vocg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z6z9/otf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748599019;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4aYP3vlLEMaaRLnDxd7KrLA3fGNslSBV9pk/D+1+TUs=;
+	b=Z6z9/otfBbq3scUG304dyPnogfTtatMsXVSordRqRr6Avcgo8H5BDDFKasMfB/OOvmriMJ
+	sITfDS2k5/zuzRBEjW66wSaJ3vE4dlhTnvOvKaUnz57yhI4vRf9LUQYDPqBtsDkmjUnfOY
+	gGn1mFzi5hGYHd5vu0x+2rhAfVKunZs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-161-Y0ewW889O2Wc9MImv9s1Rw-1; Fri, 30 May 2025 05:56:57 -0400
+X-MC-Unique: Y0ewW889O2Wc9MImv9s1Rw-1
+X-Mimecast-MFC-AGG-ID: Y0ewW889O2Wc9MImv9s1Rw_1748599015
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eee2398bso783427f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:56:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598845; x=1749203645;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eRxoEOZMhRODJSYZJ+F0wZvNK0em7c0dCwwEsoHNqDU=;
-        b=bGglZYDOwQ1e3kNsGMafH8CjBKN1/Kz+trb2JFLiQbPOMOShgAT7+iEVgc2va2tD3/
-         00GBFoki/odjUevsooaT1Am5vTt+kwr+dfmTyoIjFbn/YHwFsDWDzBWRYRYacZH9okYB
-         lotKQ3Y/o5sr+6tALoCXeAGGdavDdC9ECb1pKcnHWdOoEw3q/c2zITQBeFThm4bTFoUT
-         NX8sqnkoUyjdhmE69Uw+CB3UyS4boYv6X3Jjk/yrQhyXxQF8PZ3TBxOlBzj3Y7U/CV15
-         ctta/atie2LAX0xEd4ryRsWgsr/Qfe58PyyT6/sezFW3kD18svdnwXP0uKjEIzBypHNI
-         SJ0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWXJPb4x4/aLNNLi2dtuZDJXG/2R//UQkGDGtAYlq/2/ZCCNUkMNHgX95TSQssn6/Xo/PGn6DMUsU+OUZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMWVPtXpb4y2ghpOiFeSfMbcIaesml9d3YpOX8KZQvL037MGnj
-	VNKjFTfnjf+rZq5xSQ2fq/ANm30M+VThuZ4iAvbo1mmjCvZJBnlYmq2HGOnqzxNdqpE=
-X-Gm-Gg: ASbGnct44H+R+F6umc9TZAKtIEhURt+6jPCB1X9tPZX8q+Mh0lPkBkjh8vw2BMGNqR3
-	Q5RJcenHX3ElAZ6ejFc75TX0ieDS5n9DWUYWhjJL7B0eMt2vmQv0ZDBBVUxlesoahdw+UmfUE4x
-	dVg+HLkev+6ijLziroigLnprnE2qQ52MTjgXH6RTDkfm2vhSzcKypJqakLlZjIxcIvRRDVr+9yx
-	YTQ2cPXDCxkcX1qgKnplvmNzuJRxDaKau0OUVNB25nGCkHUIut4F+wkXeS13f3p+uksL5VXOlFW
-	OVZxnQOVNxXDnkSPSwUzaeBgmmhiOkrZfy53zYd5nvzsR3kuYi1693JPPd8q+lQP5pT+rr1Yt+Y
-	=
-X-Google-Smtp-Source: AGHT+IGaNzRwdlYZwrr0rVLBeL3KDtn/FBgW3cCsT7b4Bkm0T+MvmIXf3H7HJrmY+BO1AWC5F5xocg==
-X-Received: by 2002:a05:600c:620f:b0:442:e9eb:cba2 with SMTP id 5b1f17b1804b1-450d6452cadmr34288755e9.0.1748598845108;
-        Fri, 30 May 2025 02:54:05 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7fb051bsm13429285e9.18.2025.05.30.02.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 02:54:04 -0700 (PDT)
-Date: Fri, 30 May 2025 11:54:03 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, Baoquan He <bhe@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aDmAO7Hd30PtCD33@tiehlicka>
-References: <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
- <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
- <aDgQ0lbt1h5v0lgE@tiehlicka>
- <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
- <aDlsF5tAcUxo4VgT@tiehlicka>
- <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
- <aDl1ViMpK_6q_z06@tiehlicka>
- <04a49de5-eb79-431b-ba5b-eae2536781c6@redhat.com>
- <aDl7rHb34zIXEf6j@dwarf.suse.cz>
- <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
+        d=1e100.net; s=20230601; t=1748599015; x=1749203815;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4aYP3vlLEMaaRLnDxd7KrLA3fGNslSBV9pk/D+1+TUs=;
+        b=MK/LGnBj2XRZAnTvAcmuY5aaMC1V7gUqLvGv+EHs2cbTC1WZ70iUOLhaZiB+j6e9e1
+         zTdJeRJDE3HIay9tTt8qcGd6Dz06TlQur63fExtMr433Z47kbb3puAOV+oyaz5O1Yz/F
+         VWzIeD1I1SX4kWxjmmDmhDJQwxjxg8v9/afB0eyCKEgZ8RlBUScV7Z4O/h6ZyEETIolx
+         mGc7CsWfCMy15Po/v2SZ7ie6FnaYjN7bMjFbGt4CnSLbOh0v5jDaDMYOEwH3pZEfZV+n
+         bd9NJu5YL/3nohWFJZ/3qGZpK4sblwICT1A7A2OUQxxdOESQRmF2xphNRQAilujcbabG
+         nJIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXfm/wKbZed1VHny596Y5r3eu6xCvIxa/Kd5RH/W5jYEi3AhEA6WfYJvo3Fs5WHLbltPdHukukRE+rl6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGUz3/OQzfql0r3Z5/M+pcqIWvHuS0p4ieh5Hp9YzaS083h4YN
+	egA5g9RgkBSvDHt9wVUUCx9Yb6EepL+XKX4H/neF8vmqzl+MIw5lXcIxzog46t5OYB2yGW09Dwr
+	hYaD1kakmaze5pHf8+a/UoFxjeGNibbRNIIAs9ddxEewKnOymi+5m/FLrUCYP9uABDA==
+X-Gm-Gg: ASbGncvIeJVWkwLGA9kQTmHVkRQOEAmmDtQ1ic6RiEBQqSJkUzpbEGM55c8SDGQqXCE
+	qjawfU6WpDiuQ6jsFPGZbyR+AQQWklj1dj73tcDpRbETxxs7zw78PzmgIJMaXBwU1bYd9QN2LZz
+	FMfIhDpda6K78ANe7eBN2gS9DAMdRyplbwgCAa2Nc+IIZXExNG3XdpGAW45TwuQ7llNvE7ARJkY
+	3vGTWhnW3wDpqu1N7f/ffqeyaZkf98MP1MzirM/7PgE0pyUghxGuuzi4OiGNNTeDC7DLxMOM1Es
+	3LNnc1vndPlxyPtWGKOQNcC2sFW+hmA7OjcMkJtbxM5JTLNYA5qKOy9vyQThZ+t35F/t7RNDKw5
+	YY9a5ivaQJPprtYGSg4Vo7ZZb9eC3piNzJNqixT8=
+X-Received: by 2002:a05:6000:4282:b0:3a4:ea80:422d with SMTP id ffacd0b85a97d-3a4f7a02343mr1874985f8f.9.1748599015321;
+        Fri, 30 May 2025 02:56:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEnd78WFlyh8+jhQ/np4f6foO4xxrbS+AsAYm7tB70oDbzdcAg+X/BtNxRGUac3hxdHeradPQ==
+X-Received: by 2002:a05:6000:4282:b0:3a4:ea80:422d with SMTP id ffacd0b85a97d-3a4f7a02343mr1874943f8f.9.1748599014817;
+        Fri, 30 May 2025 02:56:54 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6d0dbsm4287688f8f.40.2025.05.30.02.56.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 02:56:54 -0700 (PDT)
+Message-ID: <081775ba-276f-4bbd-a18a-175cf1f217e9@redhat.com>
+Date: Fri, 30 May 2025 11:56:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f95f2f30-1393-4ae1-96b1-96e4abfc368f@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
+To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
+ kees@kernel.org, akpm@linux-foundation.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, peterz@infradead.org
+Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com,
+ harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
+ dengliang.1214@bytedance.com, xieyongji@bytedance.com,
+ chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
+ chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri 30-05-25 11:47:46, David Hildenbrand wrote:
-> On 30.05.25 11:34, Jiri Bohac wrote:
-[...]
-> > I am inclined to just setting the fixed delay to 10s for now and
-> > adding a sysfs knob later if someone asks for it.
-> > 
-> > Would that work for you?
+
 > 
-> Sure. We could always add such a flag later if it's really a problem for
-> someone.
+> ## Address space sharing
+> 
+> For address space sharing, RPAL partitions the entire userspace virtual
+> address space and allocates non-overlapping memory ranges to each process.
+> On x86_64 architectures, RPAL uses a memory range size covered by a
+> single PUD (Page Upper Directory) entry, which is 512GB. This restricts
+> each process’s virtual address space to 512GB on x86_64, sufficient for
+> most applications in our scenario. The rationale is straightforward:
+> address space sharing can be simply achieved by copying the PUD from one
+> process’s page table to another’s. So one process can directly use the
+> data pointer to access another's memory.
+> 
+> 
+>   |------------| <- 0
+>   |------------| <- 512 GB
+>   |  Process A |
+>   |------------| <- 2*512 GB
+>   |------------| <- n*512 GB
+>   |  Process B |
+>   |------------| <- (n+1)*512 GB
+>   |------------| <- STACK_TOP
+>   |  Kernel    |
+>   |------------|
 
-Yes, no objection with the most conservative approach first.
+Oh my.
+
+It reminds me a bit about mshare -- just that mshare tries to do it in a 
+less hacky way..
+
+> 
+> ## RPAL call
+> 
+> We refer to the lightweight userspace context switching mechanism as RPAL
+> call. It enables the caller (or sender) thread of one process to directly
+> switch to the callee (or receiver) thread of another process.
+> 
+> When Process A’s caller thread initiates an RPAL call to Process B’s
+> callee thread, the CPU saves the caller’s context and loads the callee’s
+> context. This enables direct userspace control flow transfer from the
+> caller to the callee. After the callee finishes data processing, the CPU
+> saves Process B’s callee context and switches back to Process A’s caller
+> context, completing a full IPC cycle.
+> 
+> 
+>   |------------|                |---------------------|
+>   |  Process A |                |  Process B          |
+>   | |-------|  |                | |-------|           |
+>   | | caller| --- RPAL call --> | | callee|    handle |
+>   | | thread| <------------------ | thread| -> event  |
+>   | |-------|  |                | |-------|           |
+>   |------------|                |---------------------|
+> 
+> # Security and compatibility with kernel subsystems
+> 
+> ## Memory protection between processes
+> 
+> Since processes using RPAL share the address space, unintended
+> cross-process memory access may occur and corrupt the data of another
+> process. To mitigate this, we leverage Memory Protection Keys (MPK) on x86
+> architectures.
+> 
+> MPK assigns 4 bits in each page table entry to a "protection key", which
+> is paired with a userspace register (PKRU). The PKRU register defines
+> access permissions for memory regions protected by specific keys (for
+> detailed implementation, refer to the kernel documentation "Memory
+> Protection Keys"). With MPK, even though the address space is shared
+> among processes, cross-process access is restricted: a process can only
+> access the memory protected by a key if its PKRU register is configured
+> with the corresponding permission. This ensures that processes cannot
+> access each other’s memory unless an explicit PKRU configuration is set.
+> 
+> ## Page fault handling and TLB flushing
+> 
+> Due to the shared address space architecture, both page fault handling and
+> TLB flushing require careful consideration. For instance, when Process A
+> accesses Process B’s memory, a page fault may occur in Process A's
+> context, but the faulting address belongs to Process B. In this case, we
+> must pass Process B's mm_struct to the page fault handler.
+
+In an mshare region, all faults would be rerouted to the mshare MM 
+either way.
+
+> 
+> TLB flushing is more complex. When a thread flushes the TLB, since the
+> address space is shared, not only other threads in the current process but
+> also other processes that share the address space may access the
+> corresponding memory (related to the TLB flush). Therefore, the cpuset used
+> for TLB flushing should be the union of the mm_cpumasks of all processes
+> that share the address space.
+
+Oh my.
+
+It all reminds me of mshare, just the context switch handling is 
+different (and significantly ... more problematic).
+
+Maybe something could be built on top of mshare, but I'm afraid the real 
+magic is the address space sharing combined with the context switching 
+... which sounds like a big can of worms.
+
+So in the current form, I understand all the NACKs.
+
 -- 
-Michal Hocko
-SUSE Labs
+Cheers,
+
+David / dhildenb
+
