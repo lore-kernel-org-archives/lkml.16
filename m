@@ -1,97 +1,219 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78226217733
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D93221D87
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598535; cv=none; b=h3+3C7YT6a6q/2GovlcWS+4Dj0qyGPW75c+uA1zE49UZIEk4SiZIGx2hEaa3V+C3/Y3cTeZRg5dpRg1T7Ev45QRYrzzBqfeVgMsiKQnhC8a+yGYpKqLVGyvf1uygC2p8TX62cm6ozlZ1TV2uuiU4/RXG2uybbgk1B92FiEfSKco=
+	t=1748598543; cv=none; b=TYXa98HhbWK1p659zW4MCQ4V0RJURPGWOflpTcbQgbKXpqBlEoUiQPeEOC6mI9NvBDrqubA83j5d2nzJ3kFRbbT6jSgvrGIqfJlCS83Z4ZTroi35CFlIcHMOTxJD38wf8pwo7ShXLKjLXLDA06ZNm3Nngu2+bnQIxqZ8NGDuiEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598535; c=relaxed/simple;
-	bh=osIVgiPlUuOifo6kGVJERafbl89rNSzwCqE6Wefp6Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ElsjhbG8GzA5nMRjjiNNWkiVx+loON2rep8YY//u7hDYRaaOWdp3pewg9/eNrUTtK0I6B9pIxX+Hd4FuncX0ig36ccnaz5THkHo51/xRL623Y5c+bpBu3veeLaGuA4EMOgoVLX0rDUhOzOEpMyG5EwmweHVvJjPeB/f0m3id4eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwLx-0004hT-3t; Fri, 30 May 2025 11:48:41 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwLw-000xHP-2C;
-	Fri, 30 May 2025 11:48:40 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwLw-000pQP-1o;
-	Fri, 30 May 2025 11:48:40 +0200
-Date: Fri, 30 May 2025 11:48:40 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Marco Felsch <kernel@pengutronix.de>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] dt-bindings: input: Add TouchNetix axiom
- touchscreen
-Message-ID: <20250530094840.o2ocasflqphr5px7@pengutronix.de>
-References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
- <20250529-v6-10-topic-touchscreen-axiom-v2-3-a5edb105a600@pengutronix.de>
- <c4514a7e-d5d5-416e-bc4d-d91476bebb35@kernel.org>
+	s=arc-20240116; t=1748598543; c=relaxed/simple;
+	bh=b0TFhFz66sFrGEwBpP8D9ETS2sHd7pzb9TO/YyI/+/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZBZ70pQFGrrtdW0ADJhG0cF0EvZFYy7xxg2ipdWq7EbgDaTjRG571jWDIft6AFAYfFJh5MciBQEVphKWpUDEqCaWFBCm6E5B9Qkc8XAbTqHyzqEilBWRWYUOUmH8gW40xGRGY92UxcRhCsCm+f4FjO4MHVg+UANAj9H1jwrm+c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jx2Tk+lM; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jx2Tk+lM"
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52f404ddf3eso1174092e0c.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748598540; x=1749203340; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
+        b=jx2Tk+lM3g9vqnFPZ1EcVbWeoM1sSBlFthcULa+r7zTtIJR3fTRqssvQqIGQ0kOFTm
+         x5ig6ZXEMBXl4FwM56HnRBCNcN+Q4iTpAg7fia/pjF+S3KcZduzAbHp+BuUTi4NEUMs9
+         wIPMQdPl/Fx6U4Th79fdWaWEIG3l08NheyFvVkNpVhbtqKG/+Ywck45omAFdAIPj9wu2
+         AE0lOzG1/W6RWQyBP0BPA6IUkmgsfuKwjwWBlxy6p8ezHOLR/eOr7bjd+OxG/trARuo0
+         ZVGTP/CEfHgAVWcT7/zMAzytHbQ6Ibrl1lZARv8a2qIwXjhRcw4i8Mqmfzj89GUdNij7
+         WETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748598540; x=1749203340;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
+        b=Qwfb/I+4oOhnnaMA/8ZLYxHPzn7LODavEjV7XG3s4u1+pr4HokqW6MpmY5L4b2phXb
+         JYm1LAICUy9ZMWTy8C68l7Fx+JMR3LC3lbQ73xVfWXXAXUNUfIxA2t5Vz6nyWi6CaN6e
+         62SAqIwkSK0IQFAmdCeJ4nBfVqR0+YPPwl2ySOoRRnoD8FVC8LQ6PvGdrYEnw2bhxggK
+         onfOPQR50rsRdUtjzwxb+E6UIGt7GZvt9kIFN7SIwpJvX7lSB8q/tRZ67l8MKsx3pOgf
+         MHcPogq3T4fpXXBLFiju/0nx/kGgTNQnS+Qa5HACZ/Dypumay21DTZZtI7XBUWgupX/a
+         0v7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXQP27tTbl0111eVKqHVUtuj8jvXP2mIg17OBTf33Cw0AZBQAj87REGJAK1inxQlPYC/qSUwKkW7el0G80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF0u0+wsdvr6jHgIphGzGiwhwDuw2uRgIe+Z0CvouaFHS1ijRO
+	zSMWQrjP672oFELuxws2M18z0p11+ILPo3NqfeCDT+bG7Vl12DI2dBxQVM/74Bfg8lVL6ywZ2fd
+	VYmTo7R8kgw3N+Ye689gVwenprjraDaOwewYUKoWE1g==
+X-Gm-Gg: ASbGncvceEKzyQ/CNZAOIAMjw9gsX2JybpBoh19V3T4m9TRZ2zp1M9oRP1RC/4AersU
+	ZaHV06VY8UUbsR5j+5RyTQLZbVvx4nwglBcUzabLYDPPhaxqM2/zrcS/0m39F+CmIOl/CAvjA1M
+	oKsZF4ud1kghQy9bjPQqq2J6qdSxMGvSzsavCuwr9aj8Mb
+X-Google-Smtp-Source: AGHT+IFCDzCsC18lIEI9eoPRpN1VBwQuWtrYeQzK5FfBQTEKVxOjXzBK+FhiElxrVAbMsJjHyUqfWwTNH+a+X8F2fyY=
+X-Received: by 2002:a05:6102:4b08:b0:4e5:8eb6:e8dd with SMTP id
+ ada2fe7eead31-4e6e40d655dmr2670174137.5.1748598540530; Fri, 30 May 2025
+ 02:49:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4514a7e-d5d5-416e-bc4d-d91476bebb35@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+ <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com> <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
+ <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com> <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
+ <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
+In-Reply-To: <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 30 May 2025 15:18:49 +0530
+X-Gm-Features: AX0GCFuc1bDuO-IvLHLzjp596VNTvH9_C6fgPX5wyzKbvtGEon1kLQjQtXhQSq4
+Message-ID: <CA+G9fYuroDkk3qrd7yJJG7twZV0sM=t3mDjhrBMm==q2MjS41A@mail.gmail.com>
+Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 25-05-29, Krzysztof Kozlowski wrote:
-> On 29/05/2025 00:08, Marco Felsch wrote:
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    i2c {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      touchscreen@66 {
-> > +        compatible = "touchnetix,ax54a";
-> > +        reg = <0x66>;
-> > +        interrupt-parent = <&gpio2>;
-> > +        interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> > +        reset-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> I have doubts that it works. It is perfectly possible that you inverted
-> the signal, but rather rare, and datasheet clearly says active low.
+Hi Robin,
 
-Good point albeit it's just an example and board specific. As you already
-pointed out, the signal can be inverted on the PCB.
+On Fri, 25 Apr 2025 at 20:48, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 11/04/2025 8:11 pm, Robin Murphy wrote:
+> [...]
+> > OK, I found it, but I'm still not sure what exactly to make of it - it's
+> > the pci_request_acs() in of_iommu_configure(), now being called early
+> > enough to actually have an effect. Booting with EDK2 already using PCI
+> > prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl`
 
-The driver itself uses gpiod and correctly assert/deassert the
-reset-gpios.
 
-Anyway, I change it to GPIO_ACTIVE_LOW to match it with the datasheet.
+Linux version 6.14.9-rc1
+# lscpi
+00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
+01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
+ATA Raid II Controller (rev 01)
+08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
+PCI-E Gigabit Ethernet Controller
 
-Regards,
-  Marco
+
+Linux version 6.15.0
+# lscpi
+00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
+01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+
+> > with 6.15-rc1:
+> >
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
+> > UpstreamFwd+ EgressCtrl- DirectTrans-
+> >
+> > whereas with the 6.14 behaviour they are all '-'. I don't have a working
+> > root filesystem with the U-Boot setup, but if I boot it with
+> > "pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge
+> > windows and discover the ethernet/SATA endpoints again. I can spend some
+> > time getting NFS working next week, but if you're able to get lspci
+> > output off a machine in the "broken" state easily that would be handy to
+> > compare.
+
+
+On the 6.15, After adding this into Kernel boot args
+pci=config_acs=000000@pci:0:0
+
+The SSD was detected and mounted successfully.
+
+Linux version 6.15.0 +  pci=config_acs=000000@pci:0:0
+# lspci
+00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
+01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
+16-Port PCIe Gen2 System Interconnect Switch (rev 02)
+03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
+ATA Raid II Controller (rev 01)
+08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
+PCI-E Gigabit Ethernet Controller
+
+> >
+> > So at this point it would seem to be something about how Linux
+> > configures ACS when doing it from scratch. What I don't really know is
+> > where to go from there. I do know Juno's possibly a bit odd in that the
+> > switch supports ACS, but both the root port and endpoints either side of
+> > it don't. Could this be tickling some subtle bug in the PCI layer, and
+> > what is EDK2 doing that makes it not happen?
+>
+> Just following up on where I ran out of ideas. I poked at things a
+> little more, and from a process of elimination, the culprit appears to
+> be is that we enable ACS source validation on the downstream port while
+> its secondary bus is still 0, *then* we get to the "bridge configuration
+> invalid" bit and reconfigure the bus numbers, but after that, config
+> space accesses to the secondary bus still apparently fail to work as
+> expected.
+>
+> What's now beyond me is whether this is just an ACS quirk of this
+> particular switch, and/or whether there's something we could or should
+> be doing in the PCI layer.
+>
+> All I can suggest a this point is that you could at least sidestep the
+> problem on the LKFT boards by updating them to a less-ancient version of
+> U-Boot which supports PCIe for Juno (looks like that landed in 2020.10),
+> which should then configure the switch at boot such that the bus
+> numbering doesn't need to change when Linux probes it - that appears to
+> be the only "magic" thing that EDK2 is doing.
+
+I will work with my team to address these issues.
+Thanks for your suggestions.
+
+>
+> Thanks,
+> Robin.
+
+- Naresh
