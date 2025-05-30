@@ -1,113 +1,141 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D225A221578;
-	Fri, 30 May 2025 12:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C460A21C19B
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608318; cv=none; b=IqVw3023yTp7SCbYivhzDJeBWeSNtv2YAyhHPi7MkZxhfNxLcQZEl/KOArAbscOacu+u9gSKFLlviJX0ZgVtEGmT+D90vvLNWfREaXAkW5QdMd2s5FJlbvacrp5WDQO0przwzU/yx3NsVZGSCpkGwXoNquYzCtvGQbvtNwqFJwY=
+	t=1748608533; cv=none; b=EBrx5b+9yRvlHnfr+V3syNEAGv7lfdyV4Q1hHmu8UkzQM0FM9LCTBwDBATKAVGrKq4C2WM3D/C8YJg+X8eJv/r0QNrN7/NiHeqkTgkX8uvYH5ug8w7Rf7vu60y4GL+61Qk+mhr5/VGXuKMWcg53BXCguFRmkyTvSyDpXwh/iqLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608318; c=relaxed/simple;
-	bh=sO2wcKkTWn8Ruc6WilodzmUuspP187dLfFR4PRbI7N8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DwmUp8BXhhpKIUonrodzMs/NnnmURfAs3Kb6W2gHYhejA/HSoQpLMpoyJ8zH8BRoD0DetTH5a28M217nmrjmm9WU7zFOyjhqT/QNHxzONVtMpOCLa6j86H39XxfN667APxC0u2zF8Es/dIYDgP+H0FxKJ9PxFbnqPjZXJ5w+Nks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iHt4FG4l; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748608533; c=relaxed/simple;
+	bh=ssTBq1hnRKFWeYNHahYmURnTBykROGxk7IhvzIj6zSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LvSBfCtp/q4FOOaEjrXd9kKUHnkIEQ/4TmUxjjGQ0ocK/tMq5zA40+tE6uTVc3/OJ67k/JB/dqj63rWwxf5wBhYa7fSIN/3wsbAjnEyEm8SY3II6llwpRB4i2UvvwYc0lM0eFI7pntJt22ByRh978gacCnBmK6lmfmLBWnt2FYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibTYds5o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iHt4FG4l"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234b9dfb842so18742185ad.1;
-        Fri, 30 May 2025 05:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748608316; x=1749213116; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=72KHt82ImNQl2pBGkQFZ11eayYSJEhzYqZXSpD4WT/4=;
-        b=iHt4FG4lr02lXD4J52bEz5Pr64NrQVze6hl62bF7Tqjsub2iT12c1pw/gjazsZOzM2
-         k/Myh177oLkPVgRd6VlRWoaiec/GHqfBoKbkfST1rXmA0+CJF7rpdd4JUvWnJLcvUDLh
-         GjeE8bWLF31a0CuwZah8wgGr9X9nk3fqkOC6t4kXEzApPMvNnV5kXn3B093hiAaBHxkC
-         SErUh/2vLhKML4OWk8k6DehsRHZeaJ17cRUO/bfdWX4ayFe85E7VjnESMuQZP65lnBTV
-         JWNXTyzZXIuPCXkKYTiuzXuNrVk0KfLHe/W37Fz0Rw7fVev9ZH5oY/O2FeGUv7A5DOrl
-         /KRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748608316; x=1749213116;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=72KHt82ImNQl2pBGkQFZ11eayYSJEhzYqZXSpD4WT/4=;
-        b=ohT4+LVPeWT2JJWDHCNtCWth1rbPapc/Oc/myam30XFNz8N+AQzIfUAHjz1dXlnLLI
-         0fBov8BNXC1svx/Gm/i6cBSCmuPyLmxW/aEmgvvW8vC9p5guuYmEglI/tC6GddQmaJ0y
-         MF+w2UuWdH4Jivs0I+6HYbUFN7n5rrvECnpJ2VpvuRU1G9ipWCyn1INrTGWkEuRCYDIC
-         90LZP33A7XE2P5R6F2h5fXZWmqMkIRmh/S1PZ572AAdMYQjkVUd2xAodcTE+blBCukTt
-         ylll6sMPN+j0h7q8VrpS2dMhAmIZkD8xdtQ9TD2XXRECoAbzlBbW6KbEnXXu+hODSGRi
-         UI8w==
-X-Gm-Message-State: AOJu0Ywy8kDA8j1KTKKcfeSf8TAph5BwJ8Gz4r2AN9D9qye2QpFiVXP9
-	AkoObp6AQaOYeqia8luHXiAo41v1GmKTHI9Z5/L4StM2vSVwc6Of1ZJv26o67wkg1quoIQ==
-X-Gm-Gg: ASbGnctYbsfrwCIx4PPkg72C5/r5AZKodz0lpc7PY2lUNYsXhsHo62CRsN6gxe4Jall
-	V3vR15lNgmqPFVjSbpEuqAUCAYyVCmC2+fzELUUeJccnfsPnaTksTJaBz8T6XeXBZ3cyD4vJTyN
-	FX3W4teddeer4w/wQGuPJbtVC1IGMyhoAF/VL4N0p/EsclY09JnHhYXSEQsoKPzwuOGp9pBvkP8
-	jivyw1PN1qpI7PIc98rk1g5g1SJYYwaCUrgc4ezybap8jtarvKzDJYtWV0r6FaMtyA57b1R4i7Q
-	qAhbj21HBIiKpnZdBoAAJUL+zrkYigjzH8VFoex9fjxD6QDMMxuWnYeXZkfNxDDGxLfaoE+a
-X-Google-Smtp-Source: AGHT+IEE5bejLJGWszuWSHkoZrP0G/Du5/ykQa29oGeJG3sxkmqpBQToVj6aYENw5V1jpLJ9egj4IQ==
-X-Received: by 2002:a17:902:f551:b0:235:737:7ba with SMTP id d9443c01a7336-23529a07743mr52983835ad.44.1748608315740;
-        Fri, 30 May 2025 05:31:55 -0700 (PDT)
-Received: from localhost.localdomain ([2409:40f2:216d:d0ee:67f1:e9e1:1106:f1b4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506d21df0sm27477595ad.229.2025.05.30.05.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 05:31:55 -0700 (PDT)
-From: saivishnu725@gmail.com
-To: rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	gregkh@linuxfoundation.org,
-	daniel.almeida@collabora.com,
-	me@kloenk.dev,
-	Sai Vishnu M <saivishnu725@gmail.com>
-Subject: [PATCH] rust: doc: Clean up formatting in io.rs
-Date: Fri, 30 May 2025 18:01:30 +0530
-Message-ID: <20250530123129.31505-2-saivishnu725@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibTYds5o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B697C4CEE9;
+	Fri, 30 May 2025 12:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748608533;
+	bh=ssTBq1hnRKFWeYNHahYmURnTBykROGxk7IhvzIj6zSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibTYds5oHy71GpvqRKYKhl7QbdfMCJ8rZgwuC+JgUtutTq9xmKUjDYyM7SpQOhnWX
+	 43/C6b5cKYALcAENNiFdXH40W3lq0R05X6JQzdFbHf/0IDVtYUnBOprYgxrmQdQB3o
+	 MSu8vJ3AswFJpY12+Ne8UFpM2jSXQTxMbHfyCTPpfBalzSJVDMi37h5QoKl0Oamh2Q
+	 fvE/QDST/ygc20cS76zL9979qO2HSttovfdRNCDOEi7X2DrYbSK119DFMFwjl2UDHi
+	 d5GrnnLG8h03RIqzKIkv8Y8UXtmaqlSfBHfwwTVG1NygFOdB5/gia6G+8yiwSxD7D9
+	 fblFqOy65X/nA==
+Date: Fri, 30 May 2025 13:35:27 +0100
+From: Will Deacon <will@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
+	anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+	kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH] arm64: Enable vmalloc-huge with ptdump
+Message-ID: <20250530123527.GA30463@willie-the-truck>
+References: <20250530082021.18182-1-dev.jain@arm.com>
+ <d2b63b97-232e-4d2e-816b-71fd5b0ffcfa@arm.com>
+ <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+ <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Sai Vishnu M <saivishnu725@gmail.com>
+On Fri, May 30, 2025 at 12:50:40PM +0100, Ryan Roberts wrote:
+> On 30/05/2025 10:14, Dev Jain wrote:
+> > 
+> > On 30/05/25 2:10 pm, Ryan Roberts wrote:
+> >> On 30/05/2025 09:20, Dev Jain wrote:
+> >>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+> >>> because an intermediate table may be removed, potentially causing the
+> >>> ptdump code to dereference an invalid address. We want to be able to
+> >>> analyze block vs page mappings for kernel mappings with ptdump, so to
+> >>> enable vmalloc-huge with ptdump, synchronize between page table removal in
+> >>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+> >>> use mmap_read_lock and not write lock because we don't need to synchronize
+> >>> between two different vm_structs; two vmalloc objects running this same
+> >>> code path will point to different page tables, hence there is no race.
+> > 
+> > My "correction" from race->no problem was incorrect after all :) There will
+> > be no race too since the vm_struct object has exclusive access to whatever
+> > table it is clearing.
+> > 
+> >>>
+> >>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> >>> ---
+> >>>   arch/arm64/include/asm/vmalloc.h | 6 ++----
+> >>>   arch/arm64/mm/mmu.c              | 7 +++++++
+> >>>   2 files changed, 9 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+> >>> index 38fafffe699f..28b7173d8693 100644
+> >>> --- a/arch/arm64/include/asm/vmalloc.h
+> >>> +++ b/arch/arm64/include/asm/vmalloc.h
+> >>> @@ -12,15 +12,13 @@ static inline bool arch_vmap_pud_supported(pgprot_t prot)
+> >>>       /*
+> >>>        * SW table walks can't handle removal of intermediate entries.
+> >>>        */
+> >>> -    return pud_sect_supported() &&
+> >>> -           !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+> >>> +    return pud_sect_supported();
+> >>>   }
+> >>>     #define arch_vmap_pmd_supported arch_vmap_pmd_supported
+> >>>   static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+> >>>   {
+> >>> -    /* See arch_vmap_pud_supported() */
+> >>> -    return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+> >>> +    return true;
+> >>>   }
+> >>>     #endif
+> >>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> >>> index ea6695d53fb9..798cebd9e147 100644
+> >>> --- a/arch/arm64/mm/mmu.c
+> >>> +++ b/arch/arm64/mm/mmu.c
+> >>> @@ -1261,7 +1261,11 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+> >>>       }
+> >>>         table = pte_offset_kernel(pmdp, addr);
+> >>> +
+> >>> +    /* Synchronize against ptdump_walk_pgd() */
+> >>> +    mmap_read_lock(&init_mm);
+> >>>       pmd_clear(pmdp);
+> >>> +    mmap_read_unlock(&init_mm);
+> >> So this works because ptdump_walk_pgd() takes the write_lock (which is mutually
+> >> exclusive with any read_lock holders) for the duration of the table walk, so it
+> >> will either consistently see the pgtables before or after this removal. It will
+> >> never disappear during the walk, correct?
+> >>
+> >> I guess there is a risk of this showing up as contention with other init_mm
+> >> write_lock holders. But I expect that pmd_free_pte_page()/pud_free_pmd_page()
+> >> are called sufficiently rarely that the risk is very small. Let's fix any perf
+> >> problem if/when we see it.
+> > 
+> > We can avoid all of that by my initial approach - to wrap the lock around
+> > CONFIG_PTDUMP_DEBUGFS.
+> > I don't have a strong opinion, just putting it out there.
+> 
+> (I wrote then failed to send earlier):
+> 
+> It's ugly though. Personally I'd prefer to keep it simple unless we have clear
+> evidence that its needed. I was just laying out my justification for not needing
+> to doing the conditional wrapping in this comment.
 
-Replace `@` with backticks in a comment of `io.rs` to follow Rust doc
-convention
+I really don't think we should be adding unconditional locking overhead
+to core mm routines purely to facilitate a rarely used debug option.
 
-Reported-by: Miguel Ojeda <ojeda@kernel.org>
-Closes: https://github.com/Rust-for-Linux/linux/issues/1167
-Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
----
- rust/kernel/io.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Instead, can we either adopt something like the RCU-like walk used by
+fast GUP or stick the locking behind a static key that's only enabled
+when a ptdump walk is in progress (a bit like how
+hugetlb_vmemmap_optimize_folio() manipulates hugetlb_optimize_vmemmap_key)?
 
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 72d80a6f131e..92bc4e3cd8ec 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -43,7 +43,7 @@ pub fn maxsize(&self) -> usize {
-     }
- }
- 
--/// IO-mapped memory, starting at the base address @addr and spanning @maxlen bytes.
-+/// IO-mapped memory, starting at the base address `addr` and spanning `maxlen` bytes.
- ///
- /// The creator (usually a subsystem / bus such as PCI) is responsible for creating the
- /// mapping, performing an additional region request etc.
--- 
-2.49.0
-
+Will
