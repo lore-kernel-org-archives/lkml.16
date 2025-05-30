@@ -1,49 +1,81 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C487F22B8D0
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC39721CFF6
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599428; cv=none; b=LfHhzhuSuVpkDD+BDjibOqWPPY6XP0y7yk0djSxWrmVf6gPOZ0SAvcOpIlA5PUz9T54S2FYVQ1Im3D8jpKO+a1kg9wGd61VtO0SEDXEgQ41JZ9cTSuRq1KJ2tFIL+Ie5nGexqqahCIHICLBsp3AjR4SivW0sc7wGCVnvxYbh3ZI=
+	t=1748599504; cv=none; b=XVcOmS2npjnREDAb9jgIrlpz5Cn3+XJZVotUdu4EihfrM0yg2GVrC5RBM9VgytVrj+ZEt+ZUmWSkEx0p+6M9quS/wqUVPKNBPAtXlxhazJSK8J/YqzrN351smwRhR7V+fWPpgSmfqVYRfJf7xujGwpbiHYw0u6rpBKNZ9Eyg1pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599428; c=relaxed/simple;
-	bh=wZ3ir5p1+a+IHOaGqQdqBBbDJXEiSVgRLAr6Z2xxecs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fMcB842CpgLkj/7USWGS/ZNv5tDzmgFNf07aIJ/e6uwfF3LkCtpDq8/++cj5m9ljR3iWZwXco050784Kyj3srzKKVnUMw7DeG0RDKZMvmWFaUS2uCbcXarAQC9y2dqXDAf4ZhnqzVUrO9lSF2ap6+xWs4e7qmL33mVozNjHV38k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4b7zHX1ZfWzCtWk;
-	Fri, 30 May 2025 17:59:52 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 59293180B27;
-	Fri, 30 May 2025 18:03:38 +0800 (CST)
-Received: from kwepemq100007.china.huawei.com (7.202.195.175) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 30 May 2025 18:03:38 +0800
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemq100007.china.huawei.com (7.202.195.175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 30 May 2025 18:03:37 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <libaihan@huawei.com>, <shenjian15@huawei.com>,
-	<shaojijie@huawei.com>, <jani.nikula@linux.intel.com>,
-	<dmitry.baryshkov@oss.qualcomm.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH drm-dp 06/10] drm/hisilicon/hibmc: add dp mode valid check
-Date: Fri, 30 May 2025 17:54:28 +0800
-Message-ID: <20250530095432.1206966-7-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250530095432.1206966-1-shiyongbang@huawei.com>
-References: <20250530095432.1206966-1-shiyongbang@huawei.com>
+	s=arc-20240116; t=1748599504; c=relaxed/simple;
+	bh=6CbaZyZk4xOXik25RDP07IMS7IVET6/eZ4E/LEtd8QQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LACnNgXl0KMYrbfbebe0tXfZF3ozycA9eV3+Hw703t9pYAjhz3YE+rdn4PWqO10AjZzmt5c31UJCHoTPlQxr+0Y4lF7HXBnZrRdM0D6PIetP/XfmLOr35c1Y/qtWUXZUFUXaJ8KE1fvR/HNp9fnyJnjgx3Yt9bYyTrh9lyGpXPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=VyFTPnrf; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="VyFTPnrf"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c336fcdaaso17295285ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:05:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748599501; x=1749204301; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fixXkG1M1gZVe7aX0RDjGdTtF+Z43t8pJite6GNJwOE=;
+        b=VyFTPnrfD+vJzBcWD/Sc/rDJO5liMUOGCW2Q5++sDAnIZNQB5NDjJ1h2QspA8K5sii
+         g+QnBGeu2i7ILu5Z8Kr1WD0jdpSMsXYh8JXx/5hae5TMDxSGn5ispQfaM8ao2oofidHn
+         gIuYVgbw0lERDzUESf2P+XKFFFeVS4wGCryECcjoWXL3jIB1H+8ICxkEOzGKMuLsvZxI
+         /RhP7ZiCzAMn6qxrONd2kyuNIEEjbcuYCY0vsoJ+JEESgS7axf/vF+ijljwloEQMhJa0
+         h7Inx6lDywTSZ+/kl00FgW/VisKmgumChhnHk4DbYLHnu/rWcoiJaKrSar1vd2SA6tdD
+         ywuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748599501; x=1749204301;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fixXkG1M1gZVe7aX0RDjGdTtF+Z43t8pJite6GNJwOE=;
+        b=UjlTV9UmjHinHOAtS8fmpwFZDdURNNvOLn7LiVctc0Q7D1Avo4N5LRSBqjKOneqTyv
+         cn8JZpebp3biVZDrBn/uIAV8E8WRAc2/7YFv7l8uclW9oeAjOeuNDAv7qiWKHEYxxZgT
+         AXXF51DclLmo3BHYlHYk+rlw/VoEBvIiTspA66t3c5+pFd1A8p07Wtmn/Q79v8LI+eVN
+         emuYjgkK0qJtE/4uXhY1q1D/hy+y599n2CIXhNeCdEgSfc2HbENa3lZG65d7ol61krHk
+         3kG29VTy6seZN5BoD8tgTcfpGZX6CqlNp+YqugeBrzbCgtwwle1Lp+Ku+RlcByIQXWgH
+         q9VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXD2RcsXoHDnss70TjBdaDWJjs4nVxtNFRPZ8YsPMsn6LstkX6rH+LGzTVL7qYhlE88CcOGel39UOdIoOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSR6hZ9xnMfYoSH4qsDhcuvhq+4a/dpu/4uedZhEg9hG7Z22Gk
+	1ngrCyhjwil/QDJHAEnhNDBsHznJ8Z5Pph8HWg18W/666jfjRoPKzGtIqPccApOGQtU=
+X-Gm-Gg: ASbGnct+Vqa4FFQeyTi9a9jBynPpB6rMmlvywzS0cYBcfm50x8ezKKJ031cvtEI9nLV
+	+o5tt/G23l5YacyTqtE/ImjhQBlJs8+tg/CUHreYQT0P4UDzkhqu9Vk+t+3vr+5DA9YGidqsE79
+	7bjgaqAbLvYK4xCCtp4lelsRMTuNTPF85pxq6v0f8LovjIx1O2CPN1lHwV61DZGXayTsl7otN3n
+	HvGU2+wUfIJq6+zBBdHT+NCE4ITD9h0BXU5Y0Yoo8WZWGSOO+6e643tY58iEwbLLSKwLfgozFTK
+	Cs9uUthDt7w2K5HfEy7cIQ5wFfjz1OEPbxxEpZyccG0zLj9TbzT5oNTI4hJ37g5NyKCU27U+Cna
+	kXQ==
+X-Google-Smtp-Source: AGHT+IG4RVcsHdkULblvqJ9RcJsiNDGpRBvkyi2qIaWH8X2iwlPWSqWZz/tZYrxglTFEBNbZ93Sw7A==
+X-Received: by 2002:a17:902:fc8f:b0:234:cc7c:d2fc with SMTP id d9443c01a7336-23529a0f482mr37363735ad.27.1748599501190;
+        Fri, 30 May 2025 03:05:01 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.8])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2eceb9711asm1060857a12.57.2025.05.30.03.04.57
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 30 May 2025 03:05:00 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: dev.jain@arm.com
+Cc: akpm@linux-foundation.org,
+	david@redhat.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com,
+	ryan.roberts@arm.com
+Subject: Re: [PATCH] gup: optimize longterm pin_user_pages() for large folio
+Date: Fri, 30 May 2025 18:04:53 +0800
+Message-ID: <20250530100453.36028-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <7684103b-8c06-4f6d-9e8c-da0267a83bf0@arm.com>
+References: <7684103b-8c06-4f6d-9e8c-da0267a83bf0@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,164 +83,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemq100007.china.huawei.com (7.202.195.175)
 
-From: Baihan Li <libaihan@huawei.com>
+On Fri, 30 May 2025 15:23:49 +0530, dev.jain@arm.com wrote:
 
-If DP is connected, add mode check and BW check in mode_valid_ctx() to
-ensure DP's cfg is usable.
+> On 30/05/25 2:53 pm, lizhe.67@bytedance.com wrote:
+> > From: Li Zhe<lizhe.67@bytedance.com>
+> >
+> > In the current implementation of the longterm pin_user_pages() function,
+> > we invoke the collect_longterm_unpinnable_folios() function. This function
+> > iterates through the list to check whether each folio belongs to the
+> > "longterm_unpinnabled" category. The folios in this list essentially
+> > correspond to a contiguous region of user-space addresses, with each folio
+> > representing a physical address in increments of PAGESIZE. If this
+> > user-space address range is mapped with large folio, we can optimize the
+> > performance of function pin_user_pages() by reducing the number of if-else
+> > branches and the frequency of memory accesses using READ_ONCE. This patch
+> > leverages this approach to achieve performance improvements.
+> >
+> > The performance test results obtained through the gup_test tool from the
+> > kernel source tree are as follows. We achieve an improvement of over 75%
+> > for large folio with pagesize=2M. For normal page, we have only observed
+> > a very slight degradation in performance.
+> 
+> 
+> Thanks for the patch! I have no idea on GUP but in my limited understanding
+> the patch looks fine, let's wait for more comments.
+> 
+> [----]
+> 
+> >   }
+> >   
+> > +static struct folio *pofs_next_folio(struct folio *folio,
+> > +				struct pages_or_folios *pofs, long *index_ptr)
+> > +{
+> > +	long i = *index_ptr + 1;
+> > +	unsigned long nr_pages = folio_nr_pages(folio);
+> > +
+> > +	if (!pofs->has_folios)
+> > +		while ((i < pofs->nr_entries) &&
+> > +			/* Is this page part of this folio? */
+> > +			(folio_page_idx(folio, pofs->pages[i]) < nr_pages))
+> > +			i++;
+> > +
+> > +	if (unlikely(i == pofs->nr_entries))
+> > +		return NULL;
+> > +	*index_ptr = i;
+> > +
+> > +	return pofs_get_folio(pofs, i);
+> > +}
+> > +
+> >   /*
+> >    * Returns the number of collected folios. Return value is always >= 0.
+> >    */
+> > @@ -2324,16 +2343,12 @@ static void collect_longterm_unpinnable_folios(
+> >   		struct list_head *movable_folio_list,
+> >   		struct pages_or_folios *pofs)
+> >   {
+> > -	struct folio *prev_folio = NULL;
+> >   	bool drain_allow = true;
+> > -	unsigned long i;
+> > -
+> > -	for (i = 0; i < pofs->nr_entries; i++) {
+> > -		struct folio *folio = pofs_get_folio(pofs, i);
+> > +	long i = 0;
+> 
+> 
+> Why not unsigned long?
 
-Fixes: f9698f802e50 ("drm/hisilicon/hibmc: Restructuring the header dp_reg.h")
-Signed-off-by: Baihan Li <libaihan@huawei.com>
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    | 10 ++++
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  7 +++
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 59 +++++++++++++++++++
- 3 files changed, 76 insertions(+)
+This is because I want to match the type of pages_or_folios->nr_entries.
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-index ee0b543afd7f..4f93d60b932b 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
-@@ -259,6 +259,16 @@ void hibmc_dp_reset_link(struct hibmc_dp *dp)
- 	dp->dp_dev->link.status.channel_equalized = false;
- }
- 
-+u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp)
-+{
-+	return dp->dp_dev->link.cap.link_rate;
-+}
-+
-+u8 hibmc_dp_get_lanes(struct hibmc_dp *dp)
-+{
-+	return dp->dp_dev->link.cap.lanes;
-+}
-+
- static const struct hibmc_dp_color_raw g_rgb_raw[] = {
- 	{CBAR_COLOR_BAR, 0x000, 0x000, 0x000},
- 	{CBAR_WHITE,     0xfff, 0xfff, 0xfff},
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-index 68867475508c..ebc7256ad006 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h
-@@ -12,6 +12,10 @@
- #include <drm/drm_print.h>
- #include <drm/display/drm_dp_helper.h>
- 
-+/* 27 * 10000000 * 80% = 216000000 */
-+#define DP_MODE_VALI_CAL	216000000
-+#define BPP_24				24
-+
- struct hibmc_dp_dev;
- 
- enum hibmc_dp_cbar_pattern {
-@@ -51,6 +55,7 @@ struct hibmc_dp {
- 	struct hibmc_dp_cbar_cfg cfg;
- 	u32 irq_status;
- 	int hpd_status;
-+	bool is_connected;
- };
- 
- int hibmc_dp_hw_init(struct hibmc_dp *dp);
-@@ -61,5 +66,7 @@ void hibmc_dp_reset_link(struct hibmc_dp *dp);
- void hibmc_dp_hpd_cfg(struct hibmc_dp *dp);
- void hibmc_dp_enable_int(struct hibmc_dp *dp);
- void hibmc_dp_disable_int(struct hibmc_dp *dp);
-+u8 hibmc_dp_get_link_rate(struct hibmc_dp *dp);
-+u8 hibmc_dp_get_lanes(struct hibmc_dp *dp);
- 
- #endif
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-index 191fb434baa7..e4b13f21ccb3 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
-@@ -16,8 +16,31 @@
- #define HIBMC_DP_MASKED_SINK_HPD_PLUG_INT	BIT(2)
- #define HIBMC_DP_MASKED_SINK_HPD_UNPLUG_INT	BIT(3)
- 
-+struct hibmc_dp_disp_clk {
-+	u16 hdisplay;
-+	u16 vdisplay;
-+	u32 clock;
-+};
-+
-+static const struct hibmc_dp_disp_clk hibmc_dp_clk_table[] = {
-+	{640, 480, 25175}, /* 25175 khz */
-+	{800, 600, 40000}, /* 40000 khz */
-+	{1024, 768, 65000}, /* 65000 khz */
-+	{1152, 864, 80000}, /* 80000 khz */
-+	{1280, 768, 79500}, /* 79500 khz */
-+	{1280, 720, 74250}, /* 74250 khz */
-+	{1280, 960, 108000}, /* 108000 khz */
-+	{1280, 1024, 108000}, /* 108000 khz */
-+	{1440, 900, 106500}, /* 106500 khz */
-+	{1600, 900, 108000}, /* 108000 khz */
-+	{1600, 1200, 162000}, /* 162000 khz */
-+	{1920, 1080, 148500}, /* 148500 khz */
-+	{1920, 1200, 193250}, /* 193250 khz */
-+};
-+
- static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
- {
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
- 	const struct drm_edid *drm_edid;
- 	int count;
- 
-@@ -27,6 +50,8 @@ static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
- 
- 	count = drm_edid_connector_add_modes(connector);
- 
-+	dp->is_connected = !!count;
-+
- 	drm_edid_free(drm_edid);
- 
- 	return count;
-@@ -43,9 +68,43 @@ static int hibmc_dp_detect(struct drm_connector *connector,
- 		return connector_status_disconnected;
- }
- 
-+static int hibmc_dp_mode_valid(struct drm_connector *connector,
-+			       const struct drm_display_mode *mode,
-+			       struct drm_modeset_acquire_ctx *ctx,
-+			       enum drm_mode_status *status)
-+{
-+	struct hibmc_dp *dp = to_hibmc_dp(connector);
-+	u64 cur_val, max_val;
-+
-+	if (!dp->is_connected) {
-+		*status = MODE_OK;
-+		return 0;
-+	}
-+
-+	/* check DP link BW */
-+	cur_val = (u64)mode->htotal * mode->vtotal * drm_mode_vrefresh(mode) * BPP_24;
-+	max_val = (u64)hibmc_dp_get_link_rate(dp) * DP_MODE_VALI_CAL * hibmc_dp_get_lanes(dp);
-+	if (cur_val > max_val)
-+		*status = MODE_CLOCK_HIGH;
-+	else
-+		*status = MODE_OK;
-+
-+	/* check the clock */
-+	for (size_t i = 0; i < ARRAY_SIZE(hibmc_dp_clk_table); i++) {
-+		if (hibmc_dp_clk_table[i].hdisplay == mode->hdisplay &&
-+		    hibmc_dp_clk_table[i].vdisplay == mode->vdisplay) {
-+			if (hibmc_dp_clk_table[i].clock != mode->clock)
-+				*status = MODE_CLOCK_RANGE;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
- 	.get_modes = hibmc_dp_connector_get_modes,
- 	.detect_ctx = hibmc_dp_detect,
-+	.mode_valid_ctx = hibmc_dp_mode_valid,
- };
- 
- static int hibmc_dp_late_register(struct drm_connector *connector)
--- 
-2.33.0
-
+Thanks,
+Zhe
