@@ -1,85 +1,165 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47337080C;
-	Fri, 30 May 2025 16:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655034431;
+	Fri, 30 May 2025 16:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624131; cv=none; b=bfDXPF2ygIP6xmLD0QkEltphrO3k9eYUvi8PA087MpukMJ8SB8xBArCzwCbQ1MgnN7ilXWPAoTDc1OrdfNjYXPL9HFDaWBTobicfrT8Bky2Gfuo7RndxfVHkYtILaNJk6ZgcOA16+YWkpTpWaLat2p1if98FXubzBA7GAd70BhI=
+	t=1748624217; cv=none; b=NJEc+25ZeIiAapOjpPT0wL75cufyeDzxbHb5EPD6yasWwOnWFMF4872GuHn1e5+QLhr8Il+i1aBE3IPz9jmZsiR846yVgLrAhZi4Dkp7AUtaue3R/T3Kqzr+8APB7h7q8kGZ/ZfaPDwCCgLWbXyoA+8JfUywDFtYyxsayJd/y/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624131; c=relaxed/simple;
-	bh=Y/ZNDhbZPxI5Q5vNyohghTIT08W7HC5P+HaToWQcWnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KUZoabc+SLnDprFvu99/Ur/nyaApwyMzAnFtQDAkSPebD8yQMc/jY05Bh+CQEN0oxtSyAAa61PoRMBIFGoKwozlNHYlX/szN4RpRcERcpw6FNqoSXMg4zk/Wd5ml3svkJUQSCZncinXLi0YC2aajkAbUi5+uUFALjC4e2+NeofA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OXW30ueo; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OXW30ueo"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 335E540E0184;
-	Fri, 30 May 2025 16:55:26 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wsJhCYL0F5jm; Fri, 30 May 2025 16:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748624122; bh=UCnscb2i8GAhr3D1Oc4ttNw0LBD6aNo9sqHqBYCJ8KU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OXW30ueoiS9Iufb5/GF5ghVFPwi+ZsJRctr5KVrHYU+4Eu4STzsRNWHb23bDb9bRY
-	 +HGLsvde6DPDjUGmlnyEYfyJOJ5/r1f1DiXYWiJu/yQ4MBprnJbAdMnmaWv5g2OvOq
-	 63nBqnuallzvsEIzeWkfxDUDPBD2/KaNQQqjMmxXhvnJWdyKT0ELyfA242yJkrJoQN
-	 6VLT9zK+KxAhwBj/J6xNnYAm1zr4HgxaVZmmTLmR4ADcFYcjAIIum63d7z2TC4qLzK
-	 kQGj/OEId9G3rpO5cIzT/GekCyVsVK81Ft9PGt881yND2uhicN+iyM5CLytgMlapxL
-	 /fd4TdDsatNNl0h4O/XNzKTvMcFylNULEVQCTxwogu/IlKyeo7NaGYadpMe19WiVRZ
-	 zhe+Gx3j8KgCJtQ05sBrPriKeGssxkHblQscUCL9o7eT8VIIrq4LRADOd3UUkK7IIB
-	 TF6X3sOihGYgPFKcfzpfwgWA5yTsY5p0pgNN55tf2U/YPqhl6oS/pZf3GsYU5IqL1K
-	 vSwT0bfMHiZ8bgt2wIxylkFSa1Pn4saT1bgFxAlP5YILMhHIQ/v/exvu4299C8zelw
-	 N55bEk9N8lx4b9/JY7eKujGzqyXo8Ckqz1Y4ykGsLZAK2KTcvzGivbLE61svN3OUh9
-	 fUv/Fz8lbiyh+D09rPeaydZI=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D71240E015E;
-	Fri, 30 May 2025 16:55:13 +0000 (UTC)
-Date: Fri, 30 May 2025 18:55:07 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature
- check
-Message-ID: <20250530165507.GBaDni69NqgOi4mFNn@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-35-ardb+git@google.com>
- <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
- <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
- <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
- <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
+	s=arc-20240116; t=1748624217; c=relaxed/simple;
+	bh=X7cpegp2UbpSBxXPF/B2OYNV11nvguV8s1OAoSDsrFk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=azDLDQEWxDpBawf+jBQBCuo56xcVD/GmYdAo4XByb2FwvLRAlaDEM2MDCy9kCsqsS908naxkj0YzF2h4j1DS9QF1O9WdpXmtS83BSAoVJYeuX3/Cqjzgp3wXxfFczrfALxVEiXAmwLUVTp8t2oAq28bUjJjkg9/NSFnHcZG0HD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b88W90j2dz6K5lR;
+	Sat, 31 May 2025 00:55:33 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id EC4431402E9;
+	Sat, 31 May 2025 00:56:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 May
+ 2025 18:56:51 +0200
+Date: Fri, 30 May 2025 17:56:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+CC: <jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
+	<andy@kernel.org>, <manuel.stahl@iis.fraunhofer.de>,
+	<~lkcamp/patches@lists.sr.ht>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: iio: gyroscope: invensense,itg3200: add
+ binding
+Message-ID: <20250530175649.000005d0@huawei.com>
+In-Reply-To: <20250527210308.4693-1-rodrigo.gobbi.7@gmail.com>
+References: <20250527210308.4693-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Fri, May 30, 2025 at 06:12:43PM +0200, Ard Biesheuvel wrote:
-> Because the assignment is moved out of the startup code later.
+On Tue, 27 May 2025 17:55:28 -0300
+Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com> wrote:
 
-Yeah, we will have to check ghcb version though.
+> There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> Originally I`ve added @Jonathan as the binding maintainer due another thread
+> but @Krzysztof mentioned at v1: "...this should be someone interested in the hardware".
+> I`m not sure who might be this person in this case, a reasonable choice would be
+> the original author of the driver, but looks like his last patch is from a
+> long time ago [2] but I`ll ping here.
+> 
+> Dear @Manuel Stahl, I`ve noticed that since the driver was added,
+> there was no binding doc for it and this is what this patch is addressing.
+> In this case, a maintainer ref is required inside the .yaml file and I would
+> like to ask if I can add you in this case. 
+> I would appreciate your comment or suggestion over this topic.
 
--- 
-Regards/Gruss,
-    Boris.
+Manuel has not been active for quite a while. You never know though!
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Fall back to me if needed given I end up seeing all these changes anyway.
+
+I can make that change whilst applying.
+
+Jonathan
+
+> 
+> Tks all and regards.
+> 
+> Changelog:
+> v2: 
+>     - removed the register map link; there is no datasheet available at public ref. At [1],
+>     it is just a product overview, so we can`t use it;
+>     - add supplies and external clocks (I`ve used as ref iio/gyroscope/invensense,mpu3050.yaml);
+>     - add the author of the driver as the maintainer of this file but I`m CC him in
+>     order to get his opinion about it;
+>     - adding some CC missing at v1;
+> 
+> v1: https://lore.kernel.org/linux-devicetree/20250515002817.81863-1-rodrigo.gobbi.7@gmail.com/
+> 
+> [1] https://invensense.tdk.com/products/motion-tracking/3-axis/itg-3200/
+> [2] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=author&q=Manuel+Stahl
+> ---
+>  .../iio/gyroscope/invensense,itg3200.yaml     | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> new file mode 100644
+> index 000000000000..4b2f9a57c6ea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/gyroscope/invensense,itg3200.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Invensense ITG-3200 Gyroscope
+> +
+> +maintainers:
+> +  - Manuel Stahl <manuel.stahl@iis.fraunhofer.de>
+> +
+> +description: |
+> +  Triple-axis, digital output gyroscope with a three 16-bit analog-to-digital
+> +  converters (ADCs) for digitizing the gyro outputs, a user-selectable internal
+> +  low-pass filter bandwidth, and a Fast-Mode I2C.
+> +
+> +properties:
+> +  compatible:
+> +    const: invensense,itg3200
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdd-supply: true
+> +
+> +  vlogic-supply: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  mount-matrix:
+> +    description: an optional 3x3 mounting rotation matrix.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ext_clock
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        gyroscope@68 {
+> +            compatible = "invensense,itg3200";
+> +            reg = <0x68>;
+> +            interrupt-parent = <&gpio2>;
+> +            interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
+> +        };
+> +    };
+
