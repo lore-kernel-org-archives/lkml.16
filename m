@@ -1,107 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C0239573;
-	Fri, 30 May 2025 16:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624365; cv=none; b=plP1Q9wRaKAveIMp6YgF1DqTh8dVKWgu8csAXqCmOuOheztzCNmRnVPALNpaDuBMSjbP3EZGO89YlEagH1XlU5JNpxgAAWyXU8ACEaAsNtTvB3YHImgbFbBlDwsfyY3yvSLF4QFxfdnVjXXpqW128SUuhQgQgqwmk5qwEBJcma0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624365; c=relaxed/simple;
-	bh=NO9wabjBf4sglqRu8I1/Z14D+qK0YvaEkQAcb2vmIFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p6MP9hYd9kA69dxr4r9yO7TDhRheCLmwIvKBdXeWuxfIW0m23nQR3ZltanB5w/ufkkw+CKKfbeGbAxlGQL4Ohz+H+UNwX0BG6jzWDOsm/SLkzAajAgahBeH8MK3mKhQ9luG4+IQI+Z6WReVk8UzjBtbz2bW5xUODMS4de96ZHH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JW2dUbV/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JW2dUbV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C828CC4CEF1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4829B238C36;
 	Fri, 30 May 2025 16:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748624364;
-	bh=NO9wabjBf4sglqRu8I1/Z14D+qK0YvaEkQAcb2vmIFE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JW2dUbV/Dp7qou5YBuTcvY07AAas/cJdNaN1Rzxfv4oFh11tXscO0R9Jdz+gu6dHc
-	 GJRdVvRiJr4PvS3izNe2f5myDX6e0vlcgZFwD0Ql1zXnIto2LE62CgjtTMOe9rgAsx
-	 loEJtUU+6s/OgvefaoeKYzWvMsit4ntUgYidMBRxOBN4boXLSL2Jj6lO7fLDY/52RI
-	 XHNFiXFTQOl7DiNAxLa5YZGkjMFuqMYI+nExcEivOAbYFxrbVTlFZ0TNoIkS6zDswb
-	 Uco7ZXrjkF6G+eM/ZBt5K2P7izVwDmDJzmJCOE1Z9AmE2oopriLeH/UpaunKf3qLsT
-	 8dQCykxejQ1TQ==
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-607dceb1afdso1411353eaf.3;
-        Fri, 30 May 2025 09:59:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWOzhu8kx6A7hXtMuz72tioe6GKzGZN9U6iBU2/p1SoiSt8PSM8mLmarc3gilhcwnlK1O8ztgqFfos=@vger.kernel.org, AJvYcCXv165VPMvF4j4LpDuGCdiIGWuI8G6nBrcLPwOEPHZ+69jLIGJcYtZJASIOWOdstcsnNpkc2m8HDup0aOM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRY86C+UPzk8mt+YT33a+R7FHqnWcEVp0Na6WCELcTtp2mpScB
-	GwaCxhi9r811r0VeZ1DGCOg35xoQvtSwGEVp7dyqGAIDG3W2jKhi2XGHS0yTtnBglKxWlOMSAgn
-	XMX9W/rYYtZtoMckV2RsIPDQhXkxkPMk=
-X-Google-Smtp-Source: AGHT+IHYlApyVkKpVSgtYuoDpj0fJFfpS3LaTtKivErXbyIvRyuUizjbXADljZRG1Zqz+3aUCp/xyNVAiP61LqzRyq0=
-X-Received: by 2002:a05:6820:2703:b0:609:dd17:795 with SMTP id
- 006d021491bc7-60c4d79ebdbmr2599358eaf.6.1748624364151; Fri, 30 May 2025
- 09:59:24 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748624366; cv=none; b=p6H10qmk09H6Q1HCDCbWoQIS1GjymipygqLPjzQ52p955YJRprNtHB/mtMXnb9vnsEFlvqg9fhKIDsPqg0YS1Rk+MWaFbk8dwnB5tk6fM0m458Xj/CwuUt0qA048BRYH1x3q8fVoxZpdQOkjA9jttxl5vwNBUdMMj+jgh7ux6xQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748624366; c=relaxed/simple;
+	bh=mR7jJwCkdaO9tiiFzSZ4K7TE7BfCp4QuufS8QmjGKXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HA9F+SUR6Ig4XTewf1mAaNwO8nSljrDEqbeJAjFJGeb7XaGsFfCMLCETAjxOMdWyFDXmke4dlvy7l9IxppkCrw3uMWs0CApuU35OwU1Q1gbS6KXSBfhFr2VUJMMAPRme9ARH4ooM9HpdLk1fIDTh4MDWMt5shZSu4J49Ps6rZt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hn3AqFCy; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hn3AqFCy"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441ab63a415so24348915e9.3;
+        Fri, 30 May 2025 09:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748624362; x=1749229162; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UOUnDZksgUPq4aY4rBL8aX+sFVS5jcV32pBW6xfenO8=;
+        b=Hn3AqFCyHSSxNGbIlR46chrj52FpV4eKtmJHuoizq3sm4mpDNcuZ4y6+nzmN+CEzgu
+         g0zTMynalNCflb7l0o2Cw5XcLYMSaV12NJ4gg0uDToxbCzV/Ui/M+zQzW/kV0pr0TJOW
+         CiQH1y2H2frVGTHumcQgyPcf1psJUE6r17l2tCd1UwxVU8c3gjc6KiVK9rHHPcLguXUu
+         YdBQTfU2sdV+WdnQE74i04UcGi+xHrHDjYyc9DlZE43JBh2WgTXrsGyEjcMqkYaVeuEv
+         +BxSWO4PdPtTx48VhnigZ4klGw7l7XshG1Opwd2+v3pyod8xXr8nAnBtASxY3giPpiga
+         TMnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748624362; x=1749229162;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UOUnDZksgUPq4aY4rBL8aX+sFVS5jcV32pBW6xfenO8=;
+        b=NxWpJtIpanHaNvplNhar9P5JanvfObsseAJctZHq1EQ4L1cxx+aITJaOjsndV0uFys
+         Z3y4067yl3Es80zeMBQRE+4/wZvQK0MF4pSIu6O0G5BYy+nSlqjO8/VWmeOFYsxczDbw
+         jfUhscMzPWuyp40WXwynkSt1KnZbqAmX7oVyIuvoC/OG+r8lpNsHsVq9w3q2tvnT4ydF
+         1Ni9R4qRo1obhLq0AJaRpW4pO7dmp3FnnMzkAVW3AEAocrk5LJgLwxomF6AU3G8F3Dbq
+         PtRJotjfIwK+CjnWo/FNrtWdMXcdOd/Wz0ZwxsQsEvo5Sc15s6eRJsbTJ2FETnlxEfS4
+         eOyg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxhBrz1M2HJXRhK69ccwea1LsyBE118CcxCcCbWHu0PZD002DHtTKV50iActU/1fb6PKIWFy7Fp67Z@vger.kernel.org, AJvYcCX2i+voPKm6KOP4z2yA0+vVi5HyIaAjFyKVgzPQXSXsQyCh5MkF7CWmcsFJXDhW9QVcWznfxjLVT8g0pMP/@vger.kernel.org, AJvYcCXVniMT3Z6IbWzyp5/XnXTOhKCoLOzEq/7v7+pziUxzOcYcQ3q+U7wJXUAE50dZaqXe5S4EYAoL4n8ckoy+PKcbvYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNIJB1rTaTkY4Q3QVBV3NeoYYGbVYv0+gM9HcxKydNgFVIchcx
+	YsB2WxhzoSVTdaH4rZrq9CHSQFQybHdC13qAyxxKP2w+jzvHowZ0dWdQ
+X-Gm-Gg: ASbGnctPdIStYqF4fd3Um1+hk4bpxWk56gu4KzqiXdZOtY8ZKgIP44eP5Pz+g3sarSZ
+	egjWYTLSulDTYk6q2LD9wv2QePbNXaS4If5P56WwFIHsfcblxbkaYV+qTTLjXOOkIGjU6BmCQJ1
+	v41dH2pnbJ/mcMFYJByEsP1c1qbcC9My9qqsrzAIYdcf5xZynUMiqf76SHmXU6YM83qL2n82k/o
+	p2OMxRbgB61IlsqxxJgIiOTFlK62d47/gVlmnUMQkpDEUAQGVTuNWJGQWxTSTG+qEbd/kjWa7ce
+	kTvyRfpOOucqMIAkxwoySwcbw81lvYsMooM7FLRoIcRH0DZxAWl7Fs8ImkZLozXG0HDqCLBLOeq
+	9JfUxaltlew==
+X-Google-Smtp-Source: AGHT+IFzgn0QIVlghz5vyCIu/2/JW6FdsqCQ2bsc/449AIyFpCyM0aAnMLMWoMv9bJ4cXTfP+tlr6A==
+X-Received: by 2002:a05:600c:524a:b0:450:cf01:7310 with SMTP id 5b1f17b1804b1-450d6515d10mr42199455e9.12.1748624362159;
+        Fri, 30 May 2025 09:59:22 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:bcab:7ec7:2377:13b0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f9efa3sm22733455e9.9.2025.05.30.09.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 09:59:21 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v6 09/12] drm: renesas: rz-du: mipi_dsi: Add feature flag for 16BPP support
+Date: Fri, 30 May 2025 17:59:03 +0100
+Message-ID: <20250530165906.411144-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250530165906.411144-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2006806.PYKUYFuaPT@rjwysocki.net> <20250528131759.GA39944@noisy.programming.kicks-ass.net>
- <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
- <20250528133807.GC39944@noisy.programming.kicks-ass.net> <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
- <20250528160523.GE39944@noisy.programming.kicks-ass.net> <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
- <20250529085358.GY24938@noisy.programming.kicks-ass.net> <CAJZ5v0hw1910Gsb57POVhax1hAbEGHa7xksr_FygNd_JL-oeOA@mail.gmail.com>
- <20250530080733.GH39944@noisy.programming.kicks-ass.net> <CAJZ5v0irHEZEbZVrd-tiaXBvxM4aD9spJg1cVRcjrDQ0_HMJAg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0irHEZEbZVrd-tiaXBvxM4aD9spJg1cVRcjrDQ0_HMJAg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 30 May 2025 18:59:13 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
-X-Gm-Features: AX0GCFtGa02oDofHaz1OkA8y5REs-IU07mpgJYRrpGF3TbaNhZXyR3kCDQnvoDA
-Message-ID: <CAJZ5v0iCesz+jhnxeBOV6-7LLViOnzi+JFXcsOw-dqK=81d8FA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit 96040f7273e2
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers <x86@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 11:18=E2=80=AFAM Rafael J. Wysocki <rafael@kernel.o=
-rg> wrote:
->
-> On Fri, May 30, 2025 at 10:07=E2=80=AFAM Peter Zijlstra <peterz@infradead=
-.org> wrote:
-> >
-> > On Thu, May 29, 2025 at 11:38:05AM +0200, Rafael J. Wysocki wrote:
-> >
-> > > First off, I'm not sure if all of the requisite things are ready then
-> > > (sysfs etc.).
-> >
-> > Pretty much everything is already running at early_initcall(). Sysfs
-> > certainly is.
-> >
-> > > We may end up doing this eventually, but it may not be straightforwar=
-d.
-> > >
-> > > More importantly, this is not a change for 6.15.y (y > 0).
-> >
-> > Seriously, have you even tried?
-> >
-> > AFAICT the below is all that is needed.  That boots just fine on the on=
-e
-> > randon system I tried, and seems to still work.
-> >
-> > And this is plenty small enough to go into 6.15.y
->
-> But there is still intel_idle_init() which is device_initcall() ATM
-> and this needs to be tested on other arches too.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-intel_idle_init() depends on ACPI which initializes via a
-subsys_initcall() and doing that earlier would mean a major redesign.
+Introduce the `RZ_MIPI_DSI_FEATURE_16BPP` flag in `rzg2l_mipi_dsi_hw_info`
+to indicate support for 16BPP pixel formats. The RZ/V2H(P) SoC supports
+16BPP, whereas this feature is missing on the RZ/G2L SoC.
 
-Pretty much same for reordering APs initialization past ACPI initialization=
-.
+Update the `mipi_dsi_host_attach()` function to check this flag before
+allowing 16BPP formats. If the SoC does not support 16BPP, return an error
+to prevent incorrect format selection.
 
-One more option is to kick the "dead" SMT siblings after the idle
-driver initializes and let them do "play dead" again, but who'd be
-responsible for doing that?
+This change enables finer-grained format support control for different
+SoC variants.
+
+Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+v5->v6:
+- Added Reviewed-by tag from Laurent
+
+v4->v5:
+- Updated RZ_MIPI_DSI_FEATURE_16BPP macro to use BIT(0)
+- Added Reviewed tag from Biju
+
+v3->v4:
+- No changes
+
+v2->v3:
+- No changes
+
+v1->v2:
+- Renamed RZ_MIPI_DSI_FEATURE_16BPP
+---
+ drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+index fd5d4551f39d..506b5503a725 100644
+--- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
++++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+@@ -28,6 +28,8 @@
+ 
+ #include "rzg2l_mipi_dsi_regs.h"
+ 
++#define RZ_MIPI_DSI_FEATURE_16BPP	BIT(0)
++
+ struct rzg2l_mipi_dsi;
+ 
+ struct rzg2l_mipi_dsi_hw_info {
+@@ -37,6 +39,7 @@ struct rzg2l_mipi_dsi_hw_info {
+ 	u32 link_reg_offset;
+ 	unsigned long min_dclk;
+ 	unsigned long max_dclk;
++	u8 features;
+ };
+ 
+ struct rzg2l_mipi_dsi {
+@@ -644,8 +647,16 @@ static int rzg2l_mipi_dsi_host_attach(struct mipi_dsi_host *host,
+ 
+ 	switch (mipi_dsi_pixel_format_to_bpp(device->format)) {
+ 	case 24:
++		break;
+ 	case 18:
+ 		break;
++	case 16:
++		if (!(dsi->info->features & RZ_MIPI_DSI_FEATURE_16BPP)) {
++			dev_err(dsi->dev, "Unsupported format 0x%04x\n",
++				device->format);
++			return -EINVAL;
++		}
++		break;
+ 	default:
+ 		dev_err(dsi->dev, "Unsupported format 0x%04x\n", device->format);
+ 		return -EINVAL;
+-- 
+2.49.0
+
