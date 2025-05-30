@@ -1,622 +1,273 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940401465B4
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B68218ACA
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748594966; cv=none; b=IM4wOYHA6Twkca8Gtdhahw9hdNLi1Uap0lqoHi47XhxZQK4xlbpfYjRxX37C0eDGLrBQ7DVwdj0D3u0YJ7HeccSPypcWR+zt3Ei+gQ8StyhTXZXirs/2icmXrVOoaJixDLLuBRcT6PmzjcxnM/tRXWNEC40fUJie9Pl77oEdG6s=
+	t=1748595032; cv=none; b=OjtFqvwlCsKcFV8FiDKY+YdfYyzGBG6/nhB2DYahS3tPXuqxxflAu8PkA92IPPzJcJcZUUclZ2wHTMb7xrVNKM2Dlbd1hZyLkpNloxWD+srWNsiP7h1OGMUd23LbKZ2HYu4RTJDhpkzaFXV8HPs43epf2h0Qv8Ymz3hWDaGODMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748594966; c=relaxed/simple;
-	bh=ucBbvM/c14wBbCHaDiYuMaPpRPHVVsNj1AuM5Oh2SlM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HaAWf8aEO/q9NFRuM7V+XvK3tziA1MkOaghOSZum/3yQ+yrJ6vuKP54VjYIVw3eXccVIBynbdh0iMYjQjLWoD1t58w3A1MmuRMCaiPhCt5ImtkyEqH1JbGzUKucMfNNj3UCjtvDi+UCqPBn057U+i/ss4GRhr/OTB4T1PShdC7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8lt1ubD; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748595032; c=relaxed/simple;
+	bh=Tbqc8hLPMrW47kJKXZ3VaiSdYPfB1sAgTwJs14fpnqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mFng6WHzhj8X4EnStgcUvdsL1rEw5f10htm9G9DyrqloYn8bZYO/Q5FfLasXattPFglcmymMDPut5rhZ6gFiCYG810dYyBd8rmII3o3Lhs97rk1RGsU5Xqyi5M+VSoq2yNqBW+NVlAmp+/sBWk830XPTY/Dl+s4aV+S6xP/wyS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TVJayZrJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8lt1ubD"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3105ef2a071so20853691fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748594961; x=1749199761; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bMp2GwF28M9nCY+1eTbEjES5I4QV1m653ObPpjGH6k=;
-        b=O8lt1ubD25zSY8rO9b2tZ5I6NbgupwUJlrqSMmCDy6vsF7PwyQ0tWO/yoKrhrwSf00
-         nqQlUHKniqN0mow2dL70fSWzwVJwxOJAwCiycmH/ldfZwtKaRgB8Ay+xHzuMRrIWrjfu
-         Wj7uS+U70rqcbouSVIsOO7dhdMp5O+uOfsGIbThp/HHbcBAp0TRX6aRFbE6n2W5cbtAn
-         tcr+8ehvMBdoYjSX1Dk9gSYh27WSfCpJtHyh+l4EWk2JK4YdnqkZ6JsywlSsmAwCHzzw
-         CejRxvB7qoM3GBbQ9PHWhOggnpc3vCOjNjG4vxpvjcTi56tMEOcJyJARo9BEpTRHevp0
-         1I+g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVJayZrJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748595029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=L0+8r+h5VJZKyWcv1fSQdLPCY66hBJlKTv4UFpyXBK8=;
+	b=TVJayZrJod8uBz5QqvTSaAl50R3znbbEsqdRT3Ti/Q+bpVBuhrigkAJkuO4f/e4oEe1NXw
+	GNbIIDJcPCyal5Emfp+Qjq6mlTpyAxHkRR016EgSKWkeslRx2+Or96MjyXkyW0hAH+3Gst
+	vEsVCwvzVExHmSJ8D3yaZMojHcNoaBE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-X66WavRWM3eyLXXSNbY0tQ-1; Fri, 30 May 2025 04:50:28 -0400
+X-MC-Unique: X66WavRWM3eyLXXSNbY0tQ-1
+X-Mimecast-MFC-AGG-ID: X66WavRWM3eyLXXSNbY0tQ_1748595027
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a367b3bc13so749389f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:50:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748594961; x=1749199761;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0bMp2GwF28M9nCY+1eTbEjES5I4QV1m653ObPpjGH6k=;
-        b=cF4oAls2TITTsCc3ktakjDmnn00/MPyE8QyV+UwPFB6RUO6QAf8gEN0b5rm5CWzKtH
-         iFTGXIK5TUqdslVISCNhHtDKbEU5R1lvcY7W8w+FfuuRc+kiw7AOyb7qoFkZdY0dUPna
-         YyIhXxf5OLrx7XgZD0kDYIu4XyIyGuX7gTmaYhWn25KN6nJOQmmhu+avHofnF1QrJZZB
-         OuOrJXzYMQ/P+IKNVv/DKo9wvoUFIVCQY/rgHGor/gw54C5Rw2Sviwt2aAFytmZ1HQUn
-         9/dvtukSRYpLQssXYpbp8YsZYw/BHDitG5DDO1KHxpeWsahjyWyyVGSiIhfzBOWgZcEz
-         j/Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4OPiehntmMEYXgTjWhSlQO6kuH4O/aCIXtzReG0FLk8a3Dpq9QvnYHLTfJeog6UeclmPUH2/mfXdd1QU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywt1jFGjr0TJsErC7jyBtRa8MW7E8EStB3pReR0ct25SE8qnOCJ
-	vMjm5vizlNQDwjjhmUrtk2gM2heGD56MGqELx2BjaMDJzC0PHgxOfEkHofVRwFL826pgUjY1ecE
-	sG7ybzp13EMk+EI/DYyjCTEloMoVxbtM=
-X-Gm-Gg: ASbGnctyggUh8qtRiQ7bU+uAuVJnzTah2PFR/9lryfszoc8oUwR++2rOzfEqxFcf9VU
-	L1EjeMwjGEDwLL295D1tLsazNDYo2kNs27UYPak1HrnF/GG5v5CXUn9ncwloUjPGsZ8HfRNPgdE
-	Eus+iLQ9Nw0gb45mjI3E/FN+C3OOA8O0Ej
-X-Google-Smtp-Source: AGHT+IHMUXxJ5vi0k1dwPqrpUyBi/SiUwVU9oHPtwN20lM6itfJnJo4i1TQfWd7HOIDyiJ+JF7GIMuHU7woIp38mUlo=
-X-Received: by 2002:a05:651c:b09:b0:32a:62a2:f72b with SMTP id
- 38308e7fff4ca-32a906cf1f8mr3745591fa.14.1748594960833; Fri, 30 May 2025
- 01:49:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748595027; x=1749199827;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L0+8r+h5VJZKyWcv1fSQdLPCY66hBJlKTv4UFpyXBK8=;
+        b=hKfsCqFDh5+NMcFbPbxK5u6rsvmyQRBzdqwNozTjvGUCQofe7IHq8ea4YErsDPEYh4
+         iy50NVnXlZXtzdWhleTt2n8AkC7BUEj/MW4NKfEC8iFueQVB+ErMtRXhBKMGJ6mdAkOE
+         dWQhquBHbWojzVo+8ww54h296BYaKU2xVfOyRfWSL+nnH5KKW/lDdWyn0p77b65su5wA
+         6t8yMzZCmQZmszopacPO5H73LgMVTeCztiar3UGAry4TuMkNr+zbVJ5ihvGXys3zhDFA
+         irUoQ26LKYb80JFtbrFAbYXQpsi13UX8XbhCQ6UCPmmkswRnWenJo2GMlF2xsoSPK8+3
+         vrCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWuV8oQCt8rWrUu754WwqW85mu8AXd4Sh5gvJmUoSvyi47iOlE08Knp+bGJCVJlcm73jt++bOKKAQlH1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwazO8WK/Ndo5hzfENwjPcN2LaMUFBc70YnjdgQlWpcZXbcbuGD
+	KW+n3DjEgyS/g/GyhwYVMtjPy0wZeuAV159wKrqhChdpr0zGqVNAMJin7I6wkiMrUXtvN73WiNk
+	6BZpCm+Dlb8Ugz9tf81OvceHrs7Bp8thI9wj+igDWVZWud2J6+OLrvtUBPPj7xSFlgg==
+X-Gm-Gg: ASbGnct6hm/SLajjKdv++j3WUZwsGBASgyrL66NmPOP1qIpRvtANUTrFypMqVHWQQ+E
+	FINiPEezEDA/pT9g9MqQe2GxpsnYPUKJLQElRMB3bgHINmDJ8NFFuHRqV7dbq412VZc8lQwyeSf
+	oaqh8qsDSoE6OdPHcPM6ZhUafHMz+WIOQ3lH1pMV3bPyLJevisIVcF5CM7qCWJ/er98b22ajKfw
+	BO0p8V2Xay+AG2/ByB7hTTnTyNYoQuQjBW5LZcuxioRCsh80SWaSV2cWI+/0MliRHEw69rmIDvN
+	i3QR1YooOEGVkQ0Nw6CifvnblgLyKj/AXJbbA9f2BHORAa/owIRh5ZFI5grmWOOrMjdUoGaFVip
+	b5GXs7BJFilLcewL5cNjM+fbqisBBA9TLsibKTMg=
+X-Received: by 2002:a05:6000:3112:b0:3a4:bac3:2792 with SMTP id ffacd0b85a97d-3a4f7a3dc11mr1778328f8f.4.1748595027201;
+        Fri, 30 May 2025 01:50:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHn1gr3Osd9HyyalCFGtczxVvHmWzyW6PptnSQ10SjPGM6h42L5/AfeMh2GjoihBYKi6RlQw==
+X-Received: by 2002:a05:6000:3112:b0:3a4:bac3:2792 with SMTP id ffacd0b85a97d-3a4f7a3dc11mr1778304f8f.4.1748595026810;
+        Fri, 30 May 2025 01:50:26 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc2725sm11823505e9.37.2025.05.30.01.50.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 01:50:26 -0700 (PDT)
+Message-ID: <172df994-7f24-4fbb-876c-4fab22937177@redhat.com>
+Date: Fri, 30 May 2025 10:50:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
- <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
- <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com>
- <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
- <CAGsJ_4z1cJfOCcpZDt4EuHK7+SON1r0ptRJNv1h=cDv+eOcdSQ@mail.gmail.com>
- <CAMgjq7CJ4_9bB=46TVzByFRuOwxNs4da=sN==x8cc++YsV+ETQ@mail.gmail.com>
- <CAGsJ_4wo6u1WSXdzj8RUUDNdk5_YCfLV_mcJtvhiv2UonXw+nw@mail.gmail.com>
- <CAMgjq7Bc0-eXZ8G=bN8bo2NG1ndtPmCUvxCi0bdM+HdqmOjaPQ@mail.gmail.com>
- <CAGsJ_4ymRwXhQdzabstHhkK0OM0JEWtvR3tjeyQppm7sKZ8FUw@mail.gmail.com> <CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com>
-In-Reply-To: <CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Fri, 30 May 2025 16:49:02 +0800
-X-Gm-Features: AX0GCFundRkueUSS1m8MxSja_2c1kn5vAhBJf6EhcMcXxkYjJcXnH5ar5KUJuQQ
-Message-ID: <CAMgjq7CTbSeNq7HEzZP6raK_6ngC6HAzt46ZSBu0f2RQftZUBQ@mail.gmail.com>
-Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Hugh Dickins <hughd@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Tim Chen <tim.c.chen@linux.intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Pu Lehui <pulehui@huaweicloud.com>, Oleg Nesterov <oleg@redhat.com>,
+ mhiramat@kernel.org, peterz@infradead.org, Liam.Howlett@oracle.com,
+ akpm@linux-foundation.org, vbabka@suse.cz, jannh@google.com,
+ pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ pulehui@huawei.com
+References: <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
+ <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
+ <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
+ <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
+ <20250526154850.GA4156@redhat.com>
+ <06bd94c0-fefe-4bdc-8483-2d9b6703c3d6@redhat.com>
+ <57533126-eb30-4b56-bc4d-2f27514ae5ad@huaweicloud.com>
+ <cba0155e-d2b9-41fa-bc51-f3738ae73cff@redhat.com>
+ <956124be-c73c-4023-9edd-25372f3f865a@huaweicloud.com>
+ <ccf359b0-8baa-4209-b2c3-75e3813ca804@redhat.com>
+ <b2dd29b0-aa12-4cb7-9c05-d3a998f7b0da@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <b2dd29b0-aa12-4cb7-9c05-d3a998f7b0da@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 27, 2025 at 11:11=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wro=
-te:
->
-> On Tue, May 27, 2025 at 3:59=E2=80=AFPM Barry Song <21cnbao@gmail.com> wr=
-ote:
-> >
-> > On Sat, May 24, 2025 at 8:01=E2=80=AFAM Kairui Song <ryncsn@gmail.com> =
-wrote:
-> > >
-> > > On Fri, May 23, 2025 at 10:30=E2=80=AFAM Barry Song <21cnbao@gmail.co=
-m> wrote:
-> > > >
-> > > > On Wed, May 21, 2025 at 2:45=E2=80=AFPM Kairui Song <ryncsn@gmail.c=
-om> wrote:
-> > > > >
-> > > > > Barry Song <21cnbao@gmail.com> =E4=BA=8E 2025=E5=B9=B45=E6=9C=882=
-1=E6=97=A5=E5=91=A8=E4=B8=89 06:33=E5=86=99=E9=81=93=EF=BC=9A
-> > > > > > Let me run test case [1] to check whether this ever happens. I =
-guess I need to
-> > > > > > hack kernel a bit to always add folio to swapcache even for SYN=
-C IO.
-> > > > >
-> > > > > That will cause quite a performance regression I think. Good thin=
-g is,
-> > > > > that's exactly the problem this series is solving by dropping the=
- SYNC
-> > > > > IO swapin path and never bypassing the swap cache, while improvin=
-g the
-> > > > > performance, eliminating things like this. One more reason to jus=
-tify
-> > > > > the approach :)
-> > >
-> > > Hi Barry,
-> > >
-> > > >
-> > > > I attempted to reproduce the scenario where a folio is added to the=
- swapcache
-> > > > after filemap_get_folio() returns NULL but before move_swap_pte()
-> > > > moves the swap PTE
-> > > > using non-synchronized I/O. Technically, this seems possible; howev=
-er,
-> > > > I was unable
-> > > > to reproduce it, likely because the time window between swapin_read=
-ahead and
-> > > > taking the page table lock within do_swap_page() is too short.
-> > >
-> > > Thank you so much for trying this!
-> > >
-> > > I have been trying to reproduce it too, and so far I didn't observe
-> > > any crash or warn. I added following debug code:
-> > >
-> > >  static __always_inline
-> > >  bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long =
-dst_end)
-> > > @@ -1163,6 +1167,7 @@ static int move_pages_pte(struct mm_struct *mm,
-> > > pmd_t *dst_pmd, pmd_t *src_pmd,
-> > >         pmd_t dummy_pmdval;
-> > >         pmd_t dst_pmdval;
-> > >         struct folio *src_folio =3D NULL;
-> > > +       struct folio *tmp_folio =3D NULL;
-> > >         struct anon_vma *src_anon_vma =3D NULL;
-> > >         struct mmu_notifier_range range;
-> > >         int err =3D 0;
-> > > @@ -1391,6 +1396,15 @@ static int move_pages_pte(struct mm_struct *mm=
-,
-> > > pmd_t *dst_pmd, pmd_t *src_pmd,
-> > >                 if (!src_folio)
-> > >                         folio =3D filemap_get_folio(swap_address_spac=
-e(entry),
-> > >                                         swap_cache_index(entry));
-> > > +               udelay(get_random_u32_below(1000));
-> > > +               tmp_folio =3D filemap_get_folio(swap_address_space(en=
-try),
-> > > +                                       swap_cache_index(entry));
-> > > +               if (!IS_ERR_OR_NULL(tmp_folio)) {
-> > > +                       if (!IS_ERR_OR_NULL(folio) && tmp_folio !=3D =
-folio) {
-> > > +                               pr_err("UFFDIO_MOVE: UNSTABLE folio
-> > > %lx (%lx) -> %lx (%lx)\n", folio, folio->swap.val, tmp_folio,
-> > > tmp_folio->swap.val);
-> > > +                       }
-> > > +                       folio_put(tmp_folio);
-> > > +               }
-> > >                 if (!IS_ERR_OR_NULL(folio)) {
-> > >                         if (folio_test_large(folio)) {
-> > >                                 err =3D -EBUSY;
-> > > @@ -1413,6 +1427,8 @@ static int move_pages_pte(struct mm_struct *mm,
-> > > pmd_t *dst_pmd, pmd_t *src_pmd,
-> > >                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr=
-,
-> > > dst_pte, src_pte,
-> > >                                 orig_dst_pte, orig_src_pte, dst_pmd, =
-dst_pmdval,
-> > >                                 dst_ptl, src_ptl, src_folio);
-> > > +               if (tmp_folio !=3D folio && !err)
-> > > +                       pr_err("UFFDIO_MOVE: UNSTABLE folio passed
-> > > check: %lx -> %lx\n", folio, tmp_folio);
-> > >         }
-> > >
-> > > And I saw these two prints are getting triggered like this (not a rea=
-l
-> > > issue though, just help to understand the problem)
-> > > ...
-> > > [ 3127.632791] UFFDIO_MOVE: UNSTABLE folio fffffdffc334cd00 (0) ->
-> > > fffffdffc7ccac80 (51)
-> > > [ 3172.033269] UFFDIO_MOVE: UNSTABLE folio fffffdffc343bb40 (0) ->
-> > > fffffdffc3435e00 (3b)
-> > > [ 3194.425213] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d481c0 (0) ->
-> > > fffffdffc34ab8c0 (76)
-> > > [ 3194.991318] UFFDIO_MOVE: UNSTABLE folio fffffdffc34f95c0 (0) ->
-> > > fffffdffc34ab8c0 (6d)
-> > > [ 3203.467212] UFFDIO_MOVE: UNSTABLE folio fffffdffc34b13c0 (0) ->
-> > > fffffdffc34eda80 (32)
-> > > [ 3206.217820] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d297c0 (0) ->
-> > > fffffdffc38cedc0 (b)
-> > > [ 3214.913039] UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdf=
-fc34db140
-> > > [ 3217.066972] UFFDIO_MOVE: UNSTABLE folio fffffdffc342b5c0 (0) ->
-> > > fffffdffc3465cc0 (21)
-> > > ...
-> > >
-> > > The "UFFDIO_MOVE: UNSTABLE folio fffffdffc3435180 (0) ->
-> > > fffffdffc3853540 (53)" worries me at first. On first look it seems th=
-e
-> > > folio is indeed freed completely from the swap cache after the first
-> > > lookup, so another swapout can reuse the entry. But as you mentioned
-> > > __remove_mapping won't release a folio if the refcount check fails, s=
-o
-> > > they must be freed by folio_free_swap or __try_to_reclaim_swap, there
-> > > are many places that can happen. But these two helpers won't free a
-> > > folio from swap cache if its swap count is not zero. And the folio
-> > > will either be swapped out (swap count non zero), or mapped (freeing
-> > > it is fine, PTE is non_swap, and another swapout will still use the
-> > > same folio).
-> > >
-> > > So after more investigation and dumping the pages, it's actually the
-> > > second lookup (tmp_folio) seeing the entry being reused by another
-> > > page table entry, after the first folio is swapped back and released.
-> > > So the page table check below will always fail just fine.
-> > >
-> > > But this also proves the first look up can see a completely irrelevan=
-t
-> > > folio too: If the src folio is swapped out, but got swapped back and
-> > > freed, then another folio B shortly got added to swap cache reuse the
-> > > src folio's old swap entry, then the folio B got seen by the look up
-> > > here and get freed from swap cache, then src folio got swapped out
-> > > again also reusing the same entry, then we have a problem as PTE seem=
-s
-> > > untouched indeed but we grabbed a wrong folio. Seems possible if I'm
-> > > not wrong:
-> > >
-> > > Something like this:
-> > > CPU1                             CPU2
-> > > move_pages_pte
-> > >   entry =3D pte_to_swp_entry(orig_src_pte);
-> > >     | Got Swap Entry S1 from src_pte
-> > >   ...
-> > >                                  <swapin src_pte, using folio A>
-> >
-> > I=E2=80=99m assuming you mean `<swapin src_pte, using folio B>`, since =
-I=E2=80=99m not
-> > sure where folio B comes from in the statement `<someone else tried to
-> > swap out folio B>`.
-> >
-> > If that assumption is correct, and folio A is still in the swapcache,
-> > how could someone swap in folio B without hitting folio A? That would
-> > suggest folio A must have been removed from the swapcache earlier=E2=80=
-=94right?
-> >
-> > >                                  <free folio A from swap cache freein=
-g S1>
-> > >                                  <someone else try swap out folio B >
->
-> Sorry my bad, I think I made people think folio B is related to
-> src_pte at this point. What I actually mean is that: Another random
-> folio B, unrelated to src_pte, could got swapped out, and using the
-> swap entry S1.
->
-> > >                                  <put folio B to swap cache using S1 =
->
-> > >                                 ...
-> > >   folio =3D swap_cache_get_folio(S1)
-> > >     | Got folio B here !!!
-> > >   move_swap_pte
-> > >                                  <free folio B from swap cache>
-> > >                                    | Holding a reference doesn't pin =
-the cache
-> > >                                    | as we have demonstrated
-> > >                                  <Swapout folio A also using S1>
-> > >     double_pt_lock
-> > >     is_pte_pages_stable
-> > >       | Passed because of S1 is reused
-> > >     folio_move_anon_rmap(...)
-> > >       | Moved invalid folio B here !!!
-> > >
-> > > But this is extremely hard to reproduce though, even if doing it
-> > > deliberately...
-> > >
-> > > So I think a "folio_swap_contains" or equivalent check here is a good
-> > > thing to have, to make it more robust and easier to understand. The
-> > > checking after locking a folio has very tiny overhead and can
-> > > definitely ensure the folio's swap entry is valid and stable.
-> > >
-> > > The "UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdffc385fb00"
-> > > here might seem problematic, but it's still not a real problem. That'=
-s
-> > > the case where the swapin in src region happens after the lookup, and
-> > > before the PTE lock. It will pass the PTE check without moving the
-> > > folio. But the folio is guaranteed to be a completely new folio here
-> > > because the folio can't be added back to the page table without
-> > > holding the PTE lock, and if that happens the following PTE check her=
-e
-> > > will fail.
-> > >
-> > > So I think we should patch the current kernel only adding a
-> > > "folio_swap_contains" equivalent check here, and maybe more comments,
-> > > how do you think?
-> >
-> > The description appears to have some inconsistencies.
-> > Would you mind rephrasing it?
->
-> Yeah, let's ignore the "UFFDIO_MOVE: UNSTABLE folio passed check: 0 ->
-> fffffdffc385fb00" part first, as both you and me have come into a
-> conclusion that "filemap_get_folio() returns NULL before
-> move_swap_pte, but a folio was added to swap cache" is OK, and this
-> output only proves that happens.
->
-> So the problematic race is:
->
-> Here move_pages_pte is moving src_pte to dst_pte, and it begins with
-> src_pte =3D=3D swap entry S1, and S1 isn't cached.
->
-> CPU1                             CPU2
-> move_pages_pte()
->   entry =3D pte_to_swp_entry(orig_src_pte);
->     | src_pte is absent, and got entry =3D=3D S1
->   ... < Somehow interrupted> ...
->                                  <swapin src_pte, using folio A>
->                                    | folio A is just a new allocated foli=
-o
->                                    | for resolving the swap in fault.
->                                  <free folio A from swap cache freeing S1=
->
->                                    | swap in fault is resolved, src_pte
->                                    | now points to folio A, so folio A
->                                    | can get freed just fine.
->                                    | And now S1 is free to be used
->                                    | by anyone.
->                                  <someone else try swap out another folio=
- B >
->                                    | Folio B is a completely unrelated
->                                    | folio swapped out by random process.
->                                    | (has nothing to do with src_pte)
->                                    | But S1 is freed so it may use S1
->                                    | as its swap entry.
->                                  <put folio B to swap cache with index S1=
- >
->                                  ...
->   folio =3D filemap_get_folio(S1)
->     | The lookup is using S1, so it
->     | got folio B here !!!
->   ... < Somehow interrupted> ...
->                                  <free folio B from swap cache>
->                                    | Folio B could fail to be swapped out
->                                    | or got swapped in again, so it can
->                                    | be freed by folio_free_swap or
->                                    | swap cache reclaim.
->                                    | CPU1 is holding a reference but it
->                                    | doesn't pin the swap cache folio
->                                    | as I have demonstrated with the
->                                    | test C program previously.
->                                    | New S1 is free to be used again.
->                                  <Swapout src_pte again using S1>
->                                    | No thing blocks this from happening
->                                    | The swapout is still using folio A,
->                                    | and src_pte =3D=3D S1.
->   folio_trylock(folio)
->   move_swap_pte
->     double_pt_lock
->     is_pte_pages_stable
->       | Passed because of S1 is reused so src_pte =3D=3D S1.
->     folio_move_anon_rmap(...)
->       | Moved invalid folio B here !!!
->
-> It's a long and complex one, I don't think it's practically possible
-> to happen in reality but in theory doable, once in a million maybe...
-> Still we have to fix it, or did I got anything wrong here?
+On 30.05.25 10:41, Lorenzo Stoakes wrote:
+> On Fri, May 30, 2025 at 10:33:16AM +0200, David Hildenbrand wrote:
+>> On 29.05.25 18:07, Pu Lehui wrote:
+>>>
+>>> On 2025/5/28 17:03, David Hildenbrand wrote:
+>>>> On 27.05.25 15:38, Pu Lehui wrote:
+>>>>> Hi David,
+>>>>>
+>>>>> On 2025/5/27 2:46, David Hildenbrand wrote:
+>>>>>> On 26.05.25 17:48, Oleg Nesterov wrote:
+>>>>>>> Hi Lehui,
+>>>>>>>
+>>>>>>> As I said, I don't understand mm/, so can't comment, but...
+>>>>>>>
+>>>>>>> On 05/26, Pu Lehui wrote:
+>>>>>>>>
+>>>>>>>> To make things simpler, perhaps we could try post-processing, that is:
+>>>>>>>>
+>>>>>>>> diff --git a/mm/mremap.c b/mm/mremap.c
+>>>>>>>> index 83e359754961..46a757fd26dc 100644
+>>>>>>>> --- a/mm/mremap.c
+>>>>>>>> +++ b/mm/mremap.c
+>>>>>>>> @@ -240,6 +240,11 @@ static int move_ptes(struct
+>>>>>>>> pagetable_move_control
+>>>>>>>> *pmc,
+>>>>>>>>                     if (pte_none(ptep_get(old_pte)))
+>>>>>>>>                             continue;
+>>>>>>>>
+>>>>>>>> +               /* skip move pte when expanded range has uprobe */
+>>>>>>>> +               if (unlikely(pte_present(*new_pte) &&
+>>>>>>>> +                            vma_has_uprobes(pmc->new, new_addr,
+>>>>>>>> new_addr +
+>>>>>>>> PAGE_SIZE)))
+>>>>>>>> +                       continue;
+>>>>>>>> +
+>>>>>>>
+>>>>>>> I was thinking about
+>>>>>>>
+>>>>>>>        WARN_ON(!pte_none(*new_pte))
+>>>>>>>
+>>>>>>> at the start of the main loop.
+>>>>>>>
+>>>>>>> Obviously not to fix the problem, but rather to make it more explicit.
+>>>>>>
+>>>>>> Yeah, WARN_ON_ONCE().
+>>>>>>
+>>>>>> We really should fix the code to not install uprobes into the area we
+>>>>>> are moving.
+>>>>> Alright, so let's try this direction.
+>>>>>
+>>>>>>
+>>>>>> Likely, the correct fix will be to pass the range as well to
+>>>>>> uprobe_mmap(), and passing that range to build_probe_list().
+>>>>>
+>>>>> It will be great. But IIUC, the range we expand to is already included
+>>>>> when entering uprobe_mmap and also build_probe_list.
+>>>>
+>>>> Right, you'd have to communicate that information through all layers
+>>>> (expanded range).
+>>>>
+>>>> As an alternative, maybe we can really call handle_vma_uprobe() after
+>>>> moving the pages.
+>>>
+>>> Hi David,
+>>>
+>>> Not sure if this is possible, but I think it would be appropriate to not
+>>> handle this uprobe_mmap at the source, and maybe we should make it clear
+>>> that new_pte must be NULL when move_ptes, otherwise it should be an
+>>> exception?
+>>
+>> Yeah, we should ay least document that if we find any non-none pte in the
+>> range we are moving to, we have a big problem.
+>>
+>> I think the main issue is that vma_complete() calls uprobe_mmap() before
+>> moving the page tables over.
+> 
+> Well vma_complete() is not _normally_ invoked before moving page tables,
+> it's mremap that's making things strange :)
+> 
+> That's why I think my suggested approach of specifically indicating that we
+> want different behaviour for mremap is a reasonable one here, as it special
+> cases things for this case.
+> 
+> However...
+> 
+>>
+>> If we could defer the uprobe_mmap() call, we might be good.
+>>
+>> The entry point is copy_vma_and_data(), where we call copy_vma() before
+>> move_page_tables().
+>>
+>> copy_vma() should trigger the uprobe_mmap() through vma_merge_new_range().
+>>
+>> I wonder if there might be a clean way to move the uprobe_mmap() out of
+>> vma_complete(). (or at least specify to skip it because it will be done
+>> manually).
+> 
+> ...I would also love to see some means of not having to invoke
+> uprobe_mmap() in the VMA code, but I mean _at all_.
+> 
+> But that leads into my desire to not do:
+> 
+> if (blah blah)
+> 	some_specific_hardcoded_case();
+> 
+> I wish we had a better means of hooking stuff like this.
+> 
+> However I don't think currently we can reasonably do so, as in all other
+> merge cases we _do_ want to invoke it.
 
-Hi Barry,
+"all other" -- not so sure.
 
-I managed to reproduce this issue, by hacking the kernel a bit (Only
-adding only delay to increase the race window, and adding a WARN to
-indicate the problem)
+Why would we invoke uprobe when merging VMAs after mprotect, mremap, 
+madvise, ordinary mremap where we are not mapping anything new but just 
+... merging VMAs?
 
-1. Applying following patch for kernel:
-=3D=3D=3D
+Really, we need to invoke uprobe only when adding new VMAs or extending 
+existing VMAs -- mapping new file ranges some way.
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index bc473ad21202..1d710adf9839 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -15,6 +15,7 @@
- #include <linux/mmu_notifier.h>
- #include <linux/hugetlb.h>
- #include <linux/shmem_fs.h>
-+#include <linux/delay.h>
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
- #include "internal.h"
-@@ -1100,6 +1101,10 @@ static int move_swap_pte(struct mm_struct *mm,
-struct vm_area_struct *dst_vma,
-         * occur and hit the swapcache after moving the PTE.
-         */
-        if (src_folio) {
-+               if (WARN_ON(src_folio->swap.val !=3D
-pte_to_swp_entry(orig_src_pte).val))
-+                       pr_err("Moving folio %lx (folio->swap =3D %lx),
-orig_src_pte =3D %lx\n",
-+                              (unsigned long)src_folio, src_folio->swap.va=
-l,
-+                              pte_to_swp_entry(orig_src_pte).val);
-                folio_move_anon_rmap(src_folio, dst_vma);
-                src_folio->index =3D linear_page_index(dst_vma, dst_addr);
-        }
-@@ -1388,9 +1393,13 @@ static int move_pages_pte(struct mm_struct *mm,
-pmd_t *dst_pmd, pmd_t *src_pmd,
-                 * folios in the swapcache. This issue needs to be resolved
-                 * separately to allow proper handling.
-                 */
-+               pr_err("DEBUG: Will do the lookup using entry %lx,
-wait 3s...\n", entry.val);
-+               mdelay(1000 * 3);
-                if (!src_folio)
-                        folio =3D filemap_get_folio(swap_address_space(entr=
-y),
-                                        swap_cache_index(entry));
-+               pr_err("DEBUG: Got folio value %lx, wait 3s...\n",
-(unsigned long)folio);
-+               mdelay(1000 * 3);
-                if (!IS_ERR_OR_NULL(folio)) {
-                        if (folio_test_large(folio)) {
-                                err =3D -EBUSY;
+Or am I missing something important?
 
-2. Save following program in userspace (didn't bother with error check
-for simpler code):
-=3D=3D=3D
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-#include <sys/syscall.h>
-#include <linux/userfaultfd.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <poll.h>
-#include <errno.h>
+-- 
+Cheers,
 
-#define PAGE_SIZE 4096
-/* Need to consume all slots so define the swap device size here */
-#define SWAP_DEVICE_SIZE (PAGE_SIZE * 1024 - 1)
+David / dhildenb
 
-char *src, *race, *dst, *place_holder;
-int uffd;
-
-void read_in(char *p) {
-    /* This test program initials memory with 0xAA to bypass zeromap */
-    while (*((volatile char*)p) !=3D 0xAA);
-}
-
-void *reader_thread(void *arg) {
-    /* Test requires kernel to wait upon uffd move */
-    read_in(dst);
-    return NULL;
-}
-
-void *fault_handler_thread(void *arg) {
-    int ret;
-    struct uffd_msg msg;
-    struct uffdio_move move;
-    struct pollfd pollfd =3D { .fd =3D uffd, .events =3D POLLIN };
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
-
-    while (1) {
-        poll(&pollfd, 1, -1);
-        read(uffd, &msg, sizeof(msg));
-
-        move.src =3D (unsigned long)src + (msg.arg.pagefault.address -
-            (unsigned long)dst);
-        move.dst =3D msg.arg.pagefault.address & ~(PAGE_SIZE - 1);
-        move.len =3D PAGE_SIZE;
-        move.mode =3D 0;
-
-        ioctl(uffd, UFFDIO_MOVE, &move);
-    }
-    return NULL;
-}
-
-int main() {
-    pthread_t fault_handler_thr, reader_thr;
-    struct uffdio_api uffdio_api =3D { .api =3D UFFD_API, .features =3D 0 }=
-;
-    struct uffdio_register uffdio_register;
-
-    src =3D mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE |
-MAP_ANONYMOUS, -1, 0);
-    dst =3D mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE |
-MAP_ANONYMOUS, -1, 0);
-    memset(src, 0xAA, PAGE_SIZE);
-    madvise(src, PAGE_SIZE, MADV_PAGEOUT);
-
-    /* Consume all slots on swap device left only one entry (S1) */
-    place_holder =3D mmap(NULL, SWAP_DEVICE_SIZE - 1, PROT_READ |
-PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    memset(place_holder, 0xAA, SWAP_DEVICE_SIZE - 1);
-    madvise(place_holder, SWAP_DEVICE_SIZE - 1, MADV_PAGEOUT);
-
-    /* Setup uffd handler and dst reader */
-    uffd =3D syscall(SYS_userfaultfd, O_CLOEXEC | O_NONBLOCK);
-    ioctl(uffd, UFFDIO_API, &uffdio_api);
-    uffdio_register.range.start =3D (unsigned long)dst;
-    uffdio_register.range.len =3D PAGE_SIZE;
-    uffdio_register.mode =3D UFFDIO_REGISTER_MODE_MISSING;
-    ioctl(uffd, UFFDIO_REGISTER, &uffdio_register);
-    pthread_create(&fault_handler_thr, NULL, fault_handler_thread, NULL);
-    pthread_create(&reader_thr, NULL, reader_thread, NULL);
-
-    /* Wait for UFFDIO to start */
-    sleep(1);
-
-    /* Release src folio (A) from swap, freeing the entry S1 */
-    read_in(src);
-
-    /* Swapout another race folio (B) using S1 */
-    race =3D mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED |
-MAP_ANONYMOUS, -1, 0);
-    memset(race, 0xAA, PAGE_SIZE);
-    madvise(race, PAGE_SIZE, MADV_PAGEOUT);
-
-    /* Wait for UFFDIO swap lookup to see the race folio (B) */
-    sleep(3);
-
-    /* Free the race folio (B) from swap */
-    read_in(race);
-    /* And swap out src folio (A) again, using S1 */
-    madvise(src, PAGE_SIZE, MADV_PAGEOUT);
-
-    /* Kernel should have moved a wrong folio by now */
-
-    pthread_join(reader_thr, NULL);
-    pthread_cancel(fault_handler_thr);
-    pthread_join(fault_handler_thr, NULL);
-    munmap(race, PAGE_SIZE);
-    munmap(src, PAGE_SIZE);
-    munmap(dst, PAGE_SIZE);
-    close(uffd);
-
-    return 0;
-}
-
-3. Run the test with (ensure no other swap device is mounted and
-current dir is on a block device):
-=3D=3D=3D
-dd if=3D/dev/zero of=3Dswap.img bs=3D1M count=3D1; mkswap swap.img; swapon
-swap.img; gcc test-uffd.c && ./a.out
-
-Then we get the WARN:
-[  348.200587] ------------[ cut here ]------------
-[  348.200599] WARNING: CPU: 7 PID: 1856 at mm/userfaultfd.c:1104
-move_pages_pte+0xdb8/0x11a0
-[  348.207544] Modules linked in: loop
-[  348.209401] CPU: 7 UID: 0 PID: 1856 Comm: a.out Kdump: loaded Not
-tainted 6.15.0-rc6ptch-00381-g99f00d7c6c6f-dirty #304
-PREEMPT(voluntary)
-[  348.214579] Hardware name: QEMU QEMU Virtual Machine, BIOS
-edk2-stable202408-prebuilt.qemu.org 08/13/2024
-[  348.218656] pstate: 81400005 (Nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=
-=3D--)
-[  348.222013] pc : move_pages_pte+0xdb8/0x11a0
-[  348.224062] lr : move_pages_pte+0x928/0x11a0
-[  348.225881] sp : ffff800088b2b8f0
-[  348.227360] x29: ffff800088b2b970 x28: 0000000000000000 x27: 0000ffffbc9=
-20000
-[  348.230228] x26: fffffdffc335e4a8 x25: 0000000000000001 x24: fffffdffc3e=
-4dd40
-[  348.233159] x23: 080000010d792403 x22: ffff0000cd792900 x21: ffff0000c5a=
-6d2c0
-[  348.236339] x20: fffffdffc335e4a8 x19: 0000000000001004 x18: 00000000000=
-00006
-[  348.239269] x17: 0000ffffbc920000 x16: 0000ffffbc922fff x15: 00000000000=
-00003
-[  348.242703] x14: ffff8000812c3b68 x13: 0000000000000003 x12: 00000000000=
-00003
-[  348.245947] x11: 0000000000000000 x10: ffff800081e4feb8 x9 : 00000000000=
-00001
-[  348.249284] x8 : 0000000000000000 x7 : 6f696c6f6620746f x6 : 47203a47554=
-24544
-[  348.252071] x5 : ffff8000815789e3 x4 : ffff8000815789e5 x3 : 00000000000=
-00000
-[  348.255358] x2 : ffff0001fed2aef0 x1 : 0000000000000000 x0 : fffffdffc33=
-5e4a8
-[  348.258134] Call trace:
-[  348.259468]  move_pages_pte+0xdb8/0x11a0 (P)
-[  348.261348]  move_pages+0x3c0/0x738
-[  348.262987]  userfaultfd_ioctl+0x3d8/0x1f98
-[  348.264916]  __arm64_sys_ioctl+0x88/0xd0
-[  348.266779]  invoke_syscall+0x64/0xec
-[  348.268347]  el0_svc_common+0xa8/0xd8
-[  348.269967]  do_el0_svc+0x1c/0x28
-[  348.271711]  el0_svc+0x40/0xe0
-[  348.273345]  el0t_64_sync_handler+0x78/0x108
-[  348.274821]  el0t_64_sync+0x19c/0x1a0
-[  348.276117] ---[ end trace 0000000000000000 ]---
-[  348.278638] Moving folio fffffdffc3e4dd40 (folio->swap =3D 0), orig_src_=
-pte =3D 1
-
-That's the new added WARN, but the test program also hung with D
-forever, and with errors with other tests like:
-[  406.893936] BUG: Bad rss-counter state mm:ffff0000c5a9ddc0
-type:MM_ANONPAGES val:-1
-[  406.894071] BUG: Bad rss-counter state mm:ffff0000c5a9ddc0
-type:MM_SHMEMPAGES val:1
-
-Because the kernel just moved the wrong folio, so unmap takes forever
-looking for the missing folio, and counting went wrong too.
-
-So this race is real. It's extremely unlikely to happen because it
-requires multiple collisions of multiple tiny race windows, however
-it's not impossible.
-
-I'll post a fix very soon.
