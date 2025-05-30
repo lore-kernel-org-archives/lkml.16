@@ -1,87 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14942220F50;
-	Fri, 30 May 2025 21:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E8E289E0E;
+	Fri, 30 May 2025 21:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748641435; cv=none; b=ApbwCILncVVIxKV3zzA7gebJz43H2PQj7WLXHOTVJAZtM4JAfYdKHKj/CTN05+f34Cgc7kYU0aZ53VePlCYmaUIf2PwT41fBgG50jKit+zst/13+89nm9EfAyLehYv1hqFPIQMENnz5Zd7WWdgIeey44xY3NR39HWYH6f9flgdA=
+	t=1748641548; cv=none; b=HAZ93pZVkOEeKBbV4CNSA91y5DaotNPTfxnIad3lXSQcebJtClreXAfljJkNUKTMfPq6eut+5jwWs6uTUpuNg1IqDk30QapyM5q5aMeHghwFGwZPL42T9S1lMkjvXySbUkyemBipAtGIV9iF+xleRBaaNvcQvMmSP2ZzWjyMVMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748641435; c=relaxed/simple;
-	bh=vwvbEjMvFyOZbpM9X3YRY0jUYKcR+uYAzw5C46mK8jI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HXbtDyAJZLI25Rwb//Y0gRkBFyCHI4YLHQSSGikPwpi+ElrnsE0dGAm0pWveHdaMmBCCiIpQmTq9aPxQjyDoR7jJDGmNtPo2qGBxCeN6a+PT/KPPKe7aHttB8EVsiUUFJzWLw5aFNZyZj4rWn5lq8sSVnSd9DYg7qKGCjtUzUv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iA3+8PSw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iA3+8PSw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15F8DC4CEEA;
-	Fri, 30 May 2025 21:43:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748641434;
-	bh=vwvbEjMvFyOZbpM9X3YRY0jUYKcR+uYAzw5C46mK8jI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iA3+8PSwE8ZlEjFaPY3Mn3AziOxG+w+vELbxBAr09sz6YpXCmWobQjr878UiHGVBt
-	 4KoDGXkvqzL9YKgWfA+jgD4spnnTqaVnmvpGoaH9uQ6396GBGbk61prC+DWgtMzEie
-	 ntOvRpkBlkm47Ph0iY/aId+R1uEQMDGomqIKDRjvNYdHrOazlay4v4AJ3wV+W4apN7
-	 d33t0kpjtC9Lsyi1QBFhiLv4OgE6cJS8KmAlr2TFz5HxYLhi1AkW5xsdr23Eiui6t3
-	 wm9gh1w3saCO2CsRVUG7td35j+lUxYRfMAYKoqoemZuidmtOVmy3n6XAMQGvBExg2/
-	 G9tIZMz+3zhTw==
-Date: Fri, 30 May 2025 23:43:48 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lee Jones <lee@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Gerald =?iso-8859-1?Q?Wisb=F6ck?= <gerald.wisboeck@feather.ink>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] rust: implement `Wrapper<T>` for `Opaque<T>`
-Message-ID: <aDomlACshW4beFj_@pollux>
-References: <20250530-b4-rust_miscdevice_registrationdata-v4-0-d313aafd7e59@gmail.com>
- <20250530-b4-rust_miscdevice_registrationdata-v4-1-d313aafd7e59@gmail.com>
- <fa66bd89-e52b-45ef-969c-c6f147f20185@gmail.com>
+	s=arc-20240116; t=1748641548; c=relaxed/simple;
+	bh=ELGDWYaT/yqGnkIaDK9K5mFt6JxZBw9PbPqY0ncpWtQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=nrbSkm3cdq3XY4JIzQXv5C1O+O97qz1valU+QjxvCQDMw8mLMreJVOgSIqM5cZLKP1kB6LCliojzv/Lou8HWaVYSAdIWfucEsuuo0WqkeYtmf3JsozumBHz7s2wTKn2tGaoCjiVOs6xPX94sKx23evYfO4M0aOUGIOFbCI3o1yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b8Gxx6496z9tj8;
+	Fri, 30 May 2025 23:45:41 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fa66bd89-e52b-45ef-969c-c6f147f20185@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 May 2025 23:45:38 +0200
+Message-Id: <DA9TOWRKLFUF.3AWTUTNDPI8OR@buenzli.dev>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v7 0/9] More Rust bindings for device property reads
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250530192856.1177011-1-remo@buenzli.dev>
+ <aDoNczwEWCDows_-@pollux>
+In-Reply-To: <aDoNczwEWCDows_-@pollux>
+X-Rspamd-Queue-Id: 4b8Gxx6496z9tj8
 
-On Fri, May 30, 2025 at 10:53:21PM +0200, Christian Schrefl wrote:
-> On 30.05.25 10:46 PM, Christian Schrefl wrote:
-> > Moves the implementation for `pin-init` from an associated function
-> > to the trait function of the `Wrapper` trait and extends the
-> > implementation to support pin-initializers with error types.
-> > 
-> > Adds a use for the `Wrapper` trait in `revocable.rs`, to use the new
-> > `pin-init` function. This is currently the only usage in the kernel.
-> > 
-> > Reviewed-by: Gerald Wisböck <gerald.wisboeck@feather.ink>
-> > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > Reviewed-by: Benno Lossin <lossin@kernel.org>
-> > Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-> > ---
-> 
-> Danilo, FYI this is basically a patch from my `UnsafePinned`
-> series [0] that I've used instead of your patch [1] that does something similar.
-> (I've only dropped `the call is infallible` from the safety
-> comment like in your patch since I missed that before).
-> 
-> Let me know if you want me to handle this any different.
+On Fri May 30, 2025 at 9:56 PM CEST, Danilo Krummrich wrote:
+> On Fri, May 30, 2025 at 09:28:47PM +0200, Remo Senekowitsch wrote:
+>> changes in v7:
+>> * Fix a typo in a commit message.
+>> * Fix bug in `FwNode::display_path`. I took a slightly different
+>>   approach than the one suggested, using `Either` to handle the
+>>   owned and borrowed case. That also removes the conditional
+>>   `fwnode_handle_put` at the end.
+>
+> That's a good idea, but also a bit unfortunate; there are efforts to remo=
+ve
+> Either [1] in favor of using - more descriptive - custom enum types.
+>
+> Can you please replace this with e.g. an enum Node with a Borrowed and Ow=
+ned
+> variant?
+>
+> [1] https://lore.kernel.org/lkml/20250519124304.79237-1-lossin@kernel.org=
+/
 
-No, that's fine, I wasn't aware of this patch, let's go with this one then.
+Sure, that seems reasonable.
 
-	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+Btw. what's the normal waiting time before posting a new version of a
+patch series? The requested changes have been getting fewer and I could
+crank these out much faster, but my gut feeling tells me not to spam the
+list too much. Or is that wrong and people can deal with quick updates
+just fine?
 
-> [0]: https://lore.kernel.org/rust-for-linux/20250511-rust_unsafe_pinned-v4-2-a86c32e47e3d@gmail.com/
-> [1]: https://lore.kernel.org/rust-for-linux/20250530142447.166524-2-dakr@kernel.org/
+Best regards,
+Remo
