@@ -1,293 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DBC21CC41
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE51F54652
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748643599; cv=none; b=aQV9FkLMUOD5MJ/Pr29h+4H7yclOJi94p/e1xN5dI3zK81/UajjbbherlSF65ueGAa6W1BENH2Jv5P+hrRZ1g9tS2Wa1vRcKswmdr/D0yu5UgXTPA/E1t8hk4qWh6hsClPtWNhifK9HFhbpsy41IaMQylHlEaxEtwZkQ8dq/dg4=
+	t=1748643667; cv=none; b=u+F4c5OVySnrUf48SR0F9Wne8T+bzUeQEygMKkFUPfBlGdAyn5rBpHmUQBhaxdUSJC47zt/+yRv8HlXhdja1ZK3h5LKXQYxTTADYigNN6FlbWEzNdDHGjFEKVPRpspUkzHj0TUTM2GSAXid7UdIZtB7h8m2PfVZyHGOBYdv1bwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748643599; c=relaxed/simple;
-	bh=X9uthOk49pVr6OwMMXKEM9aGlD7N5kUpyVLqdQJSTII=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtSpJ6ZNjZEQjGcnsuPegcyT0FDIekHI2YLNy9bmKCvieaXsYIwM/iyyMu2sEsOGX2c8jOPeBhCmBHw7yMGF+Q7V3stnPhqVsFwaaat3XQNjPg02JqTHfdo/M9/0fLWqFb/AD/nMrJDW7hV2ZhXMhU2WgxujwGPQsYoZvuoC1bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE6HGUFu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748643667; c=relaxed/simple;
+	bh=Jv3TUisoL/5nYSWnv88iDwJN0BnXpxWC2JV+vW6JSRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dNygYdMT9K2w+zo35qMa88LsuKC/NVt4cqLbnNFo1t22S2W8++D/biH5VGCeyOf4kD2AE41by6zMsYlkHv2/Q+0U5LkjgJMG1PYPrR93WvxkEEVpBM3i38TDFbJLB2FX7AY0ouxufosYIp1L6z5ZHMSAe/L9aq+M5SCXl2UsueQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iDpvJrhQ; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE6HGUFu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B603C4CEF8
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748643598;
-	bh=X9uthOk49pVr6OwMMXKEM9aGlD7N5kUpyVLqdQJSTII=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eE6HGUFuiIxdKYroKE6a52KAiL5xVDlR2K+9QCtKsk4XYYJY6t/FTCiBW4acklaO4
-	 GQH6nxlcXoPxN/aJRHPpO9pDISNwYDpx8vHgdSQCt92ubEMTRwsTvnGVV2yPsWDo5K
-	 MuIhcBUrWtsiHpxQb09p1NMD/layEIB37XKYRkf5bB4iOEF84wKFFgD/efBZ0zf4E8
-	 vE0rsbkryslEQxvUAWW9XLSwR1p3x/zjFm4bK4ew07dFH7Qlwx8P5ZLck9G0T5N3YP
-	 RRvHOOLhriaK09m0/o8VfPQy2QeTH3ffCYs53NttUVooBm0kcCHVgTHbPmtes7qT+G
-	 Jkomm3bXGk+oA==
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so4624593a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:19:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKKARcr4Nnx4C8wP2xjOHApxAs+5fRwUdyMSovJ/BtuIJi3REs4R33SqF4wP1+MC0Zp3N09FPmZnI6nDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/a+hFWpLtns66Sy3jt1p+0PNQ8nkx/76FpiDI2ceYMAlUmgoq
-	T6TyPyTUxVg9KkrTssBd3NIZqUWzvhOCttleReb4tlrOFIAUisvrVqwxy0HOBBY2PiFpyfly65E
-	O64Ko9sXrWiE5bXrxWkq+TQl9n/oCUyX6/qeraQcG
-X-Google-Smtp-Source: AGHT+IEFVbhr+VLKGTkXxmdHXBrpU1z9fZIUhNvdOJmYXkRT0zqBk/sOnT42WwibV8LQfP4xA0G3Ch+10jSuOcTqbPk=
-X-Received: by 2002:a05:6402:518a:b0:5ff:f524:90e0 with SMTP id
- 4fb4d7f45d1cf-605b751baf6mr73164a12.11.1748643597014; Fri, 30 May 2025
- 15:19:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iDpvJrhQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748643666; x=1780179666;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Jv3TUisoL/5nYSWnv88iDwJN0BnXpxWC2JV+vW6JSRM=;
+  b=iDpvJrhQSiYUa31kkYG7U1guxhl1RGOY/IsZNwT/ZNTyd7iQhAssEUc1
+   uK1xfRqYpGmG0mGmtrpvLfWJgKJvlTFpiGVsLOC5T1S2CsoBDjZKMYg00
+   GaQ7p4W786k6dsblUYL1tL4FWMjHTrsD2skYyh7dkDdnUGdL8CmjRP0tZ
+   +/ZC8tNoTY4A3YtCxLmooC/5TJYLcFr8TVaI2FeHR5kB0ww0xMdEnm7Uu
+   8koRfWOY4/yCXfL9BbvywkgFsfpt+WtlZtJcTmbt1pdvnHfVg78pT838r
+   yyovE1NnN3Erv+Qczb8K7rKu23J5vwArFh/hmO7DLA8QNGFyOOwG3k+8w
+   A==;
+X-CSE-ConnectionGUID: 0DN3RiUmSbi2yYdRnzhdag==
+X-CSE-MsgGUID: dQ+TeixUTciH6vozbweR2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50797035"
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="50797035"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 15:21:06 -0700
+X-CSE-ConnectionGUID: 0DG4olIHRxSxFtNjktTc7Q==
+X-CSE-MsgGUID: 0nASRLPSQwCclXFYDFTuDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
+   d="scan'208";a="144967492"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 30 May 2025 15:21:04 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uL861-000Y10-1q;
+	Fri, 30 May 2025 22:21:01 +0000
+Date: Sat, 31 May 2025 06:20:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Harald Freudenberger <freude@linux.ibm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>
+Subject: paes_s390.c:undefined reference to `crypto_engine_stop'
+Message-ID: <202505310614.xYOiPjac-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
- <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
- <87iklhn6ed.fsf@microsoft.com> <CACYkzJ75JXUM_C2og+JNtBat5psrEzjsgcV+b74FwrNaDF68nA@mail.gmail.com>
- <87ecw5n3tz.fsf@microsoft.com>
-In-Reply-To: <87ecw5n3tz.fsf@microsoft.com>
-From: KP Singh <kpsingh@kernel.org>
-Date: Sat, 31 May 2025 00:19:46 +0200
-X-Gmail-Original-Message-ID: <CACYkzJ4ondubPHDF8HL-sseVQo7AtJ2uo=twqhqLWaE3zJ=jEA@mail.gmail.com>
-X-Gm-Features: AX0GCFs7idCN9jaYB_SrteqON5qA41YJX-g8zbOqygcHwSu5E09ECJDr8XP25sI
-Message-ID: <CACYkzJ4ondubPHDF8HL-sseVQo7AtJ2uo=twqhqLWaE3zJ=jEA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] BPF signature verification
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org, zeffron@riotgames.com, 
-	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
-	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
-	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
-	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
-	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
-	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
-	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, May 31, 2025 at 12:14=E2=80=AFAM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
->
-> KP Singh <kpsingh@kernel.org> writes:
->
-> > On Fri, May 30, 2025 at 11:19=E2=80=AFPM Blaise Boscaccy
-> > <bboscaccy@linux.microsoft.com> wrote:
-> >>
-> >> KP Singh <kpsingh@kernel.org> writes:
-> >>
-> >
-> > [...]
-> >
-> >> >
-> >>
-> >> And that isn't at odds with the kernel being able to do it nor is it
-> >> with what I posted.
-> >>
-> >> > If your build environment that signs the BPF program is compromised
-> >> > and can inject arbitrary code, then signing does not help.  Can you
-> >> > explain what a supply chain attack would look like here?
-> >> >
-> >>
-> >> Most people here can read C code. The number of people that can read
-> >> ebpf assembly metaprogramming code is much smaller. Compromising clang
-> >> is one thing, compromising libbpf is another. Your proposal increases
-> >> the attack surface with no observable benefit. If I was going to leave=
- a
-> >> hard-to-find backdoor into ring0, gen.c would be a fun place to explor=
-e
-> >> doing it. Module and UEFI signature verification code doesn't live
-> >> inside of GCC or Clang as set of meta-instructions that get emitted, a=
-nd
-> >> there are very good reasons for that.
-> >>
-> >> Further, since the signature verification code is unique for each and
-> >> every program it needs to be verified/proved/tested for each and every
-> >> program. Additionally, since all these checks are being forced outside
-> >> of the kernel proper, with the insistence of keeping the LSM layer in
-> >> the dark of the ultimate result, the only way to test that a program
-> >> will fail if the map is corrupted is to physically corrupt each and
-> >> every program and test that individually. That isn't "elegant" nor "us=
-er
-> >> friendly" in any way, shape or form.
-> >>
-> >> >> subsystem.  Additionally, it is impossible to verify the code
-> >> >> performing the signature verification, as it is uniquely regenerate=
-d
-> >> >
-> >> > The LSM needs to ensure that it allows trusted LOADER programs i.e.
-> >> > with signatures and potentially trusted signed user-space binaries
-> >> > with unsigned or delegated signing (this will be needed for Cilium a=
-nd
-> >> > bpftrace that dynamically generate BPF programs), that's a more
-> >> > important aspect of the LSM policy from a BPF perspective.
-> >> >
-> >>
-> >> I would like to be able to sign my programs please and have the kernel
-> >> verify it was done correctly. Why are you insisting that I *don't* do
-> >> that?  I'm yet to see any technical objection to doing that. Do you ha=
-ve
-> >> one that you'd like to share at this point?
-> >
-> > The kernel allows a trusted loader that's signed with your private
-> > key, that runs in the kernel context to delegate the verification.
-> > This pattern of a trusted / delegated loader is going to be required
-> > for many of the BPF use-cases that are out there (Cilium, bpftrace)
-> > that dynamically generate eBPF programs.
-> >
-> > The technical objection is that:
-> >
-> > * It does not align with most BPF use-cases out there as most
-> > use-cases need a trusted loader.
->
-> No, it's definitely a use case. It's trivial to support both a trusted
-> loader and a signature over the hash chain of supplied assets.
->
-> > * Locks us into a UAPI, whereas a signed LOADER allows us to
-> > incrementally build signing for all use-cases without compromising the
-> > security properties.
-> >
->
-> Your proposal locks us into a UAPI as well. There is no way to make to
-> do this via UAPI without making a UAPI design choice.
->
-> > BPF's philosophy is that of flexibility and not locking the users into
-> > a rigid in-kernel implementation and UAPI.
-> >
->
-> Then why are you locking us into a rigid
-> only-signing-the-loader-is-allowed implementation?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   8477ab143069c6b05d6da4a8184ded8b969240f5
+commit: 6cd87cb5ef6ca50ae17c371482ceaab1d635e232 s390/crypto: Rework protected key AES for true asynch support
+date:   2 weeks ago
+config: s390-randconfig-002-20250531 (https://download.01.org/0day-ci/archive/20250531/202505310614.xYOiPjac-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505310614.xYOiPjac-lkp@intel.com/reproduce)
 
-I explained this before, the delegated / trusted loader is needed by
-many BPF use-cases. A UAPI is forever, thus the lock-in.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505310614.xYOiPjac-lkp@intel.com/
 
-- KP
+All errors (new ones prefixed by >>):
 
->
-> > - KP
-> >
-> >>
-> >> > MAP_EXCLUSIVE is missing and is required which prevents maps from
-> >> > being accessed by other programs as explained in the proposal.
-> >> >
-> >> > Please hold off on further iterations, I am working on a series and
-> >> > will share these patches based on the design that was proposed.
-> >> >
-> >>
-> >> So the premise here seems to be that people should only be allowed to
-> >> sign trusted loaders, and that trusted loaders must additionally be
-> >> authored by you, correct?
-> >>
-> >> When can we expect to see your patchset posted?
-> >>
-> >> >>
-> >> >> for every program.
-> >> >>
-> >> >>
-> >> >>
-> >> >> 2. Timing of Signature Check
-> >> >>
-> >> >> This patchset moves the signature check to a point before
-> >> >> security_bpf_prog_load is invoked, due to an unresolved discussion
-> >> >> here:
-> >> >
-> >> > This is fine and what I had in mind, signature verification does not
-> >> > need to happen in the verifier and the existing hooks are good enoug=
-h.
-> >> > I did not reply to Paul's comment since this is a fairly trivial
-> >> > detail and would be obvious in the implementation that the verifier =
-is
-> >> > not the right place to check the signature anyways as the instructio=
-n
-> >> > buffer is only stable pre-verification.
-> >> >
-> >> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA=
-+G64zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
-> >> >> This change allows the LSM subsystem to be informed of the signatur=
-e
-> >> >> verification result=E2=80=94if it occurred=E2=80=94and the method u=
-sed, all without
-> >> >> introducing a new hook. It improves visibility and auditability,
-> >> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the origi=
-nal design.
-> >> >
-> >> >
-> >> > On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
-> >> > <bboscaccy@linux.microsoft.com> wrote:
-> >> >>
-> >> >> As suggested or mandated by KP Singh
-> >> >> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-=
-FmXz46GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/,
-> >> >> this patchset proposes and implements an alternative hash-chain
-> >> >> algorithm for signature verification of BPF programs.
-> >> >>
-> >> >> This design diverges in two key ways:
-> >> >>
-> >> >> 1. Signature Strategy
-> >> >>
-> >> >> Two different signature strategies are
-> >> >> implemented. One verifies only the signature of the loader program =
-in
-> >> >> the kernel, as described in the link above. The other verifies the
-> >> >> program=E2=80=99s maps in-kernel via a hash chain.  The original de=
-sign
-> >> >> required loader programs to be =E2=80=9Cself-aborting=E2=80=9D and =
-embedded the
-> >> >> terminal hash verification logic as metaprogramming code generation
-> >> >> routines inside libbpf. While this patchset supports that scheme, i=
-t
-> >> >> is considered undesirable in certain environments due to the potent=
-ial
-> >> >> for supply-chain attack vectors and the lack of visibility for the =
-LSM
-> >> >> subsystem.  Additionally, it is impossible to verify the code
-> >> >> performing the signature verification, as it is uniquely regenerate=
-d
-> >> >> for every program.
-> >> >>
-> >> >> 2. Timing of Signature Check
-> >> >>
-> >> >> This patchset moves the signature check to a point before
-> >> >> security_bpf_prog_load is invoked, due to an unresolved discussion
-> >> >> here:
-> >> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA=
-+G64zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
-> >> >> This change allows the LSM subsystem to be informed of the signatur=
-e
-> >> >> verification result=E2=80=94if it occurred=E2=80=94and the method u=
-sed, all without
-> >> >> introducing a new hook. It improves visibility and auditability,
-> >> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the origi=
-nal design.
-> >> >>
-> >> >>
-> >> >> Blaise Boscaccy (3):
-> >> >>   bpf: Add bpf_check_signature
-> >> >>   bpf: Support light-skeleton signatures in autogenerated code
-> >> >>   bpftool: Allow signing of light-skeleton programs
-> >> >>
-> >> >>  include/linux/bpf.h            |   2 +
-> >> >>  include/linux/verification.h   |   1 +
-> >> >>  include/uapi/linux/bpf.h       |   4 +
-> >> >>  kernel/bpf/arraymap.c          |  11 +-
-> >> >>  kernel/bpf/syscall.c           | 123 +++++++++++++++++++-
-> >> >>  tools/bpf/bpftool/Makefile     |   4 +-
-> >> >>  tools/bpf/bpftool/common.c     | 204 +++++++++++++++++++++++++++++=
-++++
-> >> >>  tools/bpf/bpftool/gen.c        |  66 ++++++++++-
-> >> >>  tools/bpf/bpftool/main.c       |  24 +++-
-> >> >>  tools/bpf/bpftool/main.h       |  23 ++++
-> >> >>  tools/include/uapi/linux/bpf.h |   4 +
-> >> >>  tools/lib/bpf/libbpf.h         |   4 +
-> >> >>  tools/lib/bpf/skel_internal.h  |  28 ++++-
-> >> >>  13 files changed, 491 insertions(+), 7 deletions(-)
-> >> >>
-> >> >> --
-> >> >> 2.48.1
-> >> >>
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `paes_s390_fini':
+>> paes_s390.c:(.text+0x22): undefined reference to `crypto_engine_stop'
+>> s390x-linux-ld: paes_s390.c:(.text+0x2e): undefined reference to `crypto_engine_exit'
+>> s390x-linux-ld: paes_s390.c:(.text+0x4e): undefined reference to `crypto_engine_unregister_skcipher'
+   s390x-linux-ld: paes_s390.c:(.text+0x6e): undefined reference to `crypto_engine_unregister_skcipher'
+   s390x-linux-ld: paes_s390.c:(.text+0x8e): undefined reference to `crypto_engine_unregister_skcipher'
+   s390x-linux-ld: paes_s390.c:(.text+0xae): undefined reference to `crypto_engine_unregister_skcipher'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `ecb_paes_do_one_request':
+>> paes_s390.c:(.text+0x33e): undefined reference to `crypto_finalize_skcipher_request'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `ecb_paes_crypt':
+>> paes_s390.c:(.text+0x52e): undefined reference to `crypto_transfer_skcipher_request_to_engine'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `cbc_paes_do_one_request':
+   paes_s390.c:(.text+0xa1e): undefined reference to `crypto_finalize_skcipher_request'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `cbc_paes_crypt':
+   paes_s390.c:(.text+0xaae): undefined reference to `crypto_transfer_skcipher_request_to_engine'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `xts_paes_encrypt':
+   paes_s390.c:(.text+0x10ca): undefined reference to `crypto_transfer_skcipher_request_to_engine'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `xts_paes_decrypt':
+   paes_s390.c:(.text+0x11aa): undefined reference to `crypto_transfer_skcipher_request_to_engine'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `xts_paes_do_one_request':
+   paes_s390.c:(.text+0x12fe): undefined reference to `crypto_finalize_skcipher_request'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `ctr_paes_crypt':
+   paes_s390.c:(.text+0x1dd4): undefined reference to `crypto_transfer_skcipher_request_to_engine'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `ctr_paes_do_one_request':
+   paes_s390.c:(.text+0x1f0e): undefined reference to `crypto_finalize_skcipher_request'
+   s390x-linux-ld: arch/s390/crypto/paes_s390.o: in function `paes_s390_init':
+>> paes_s390.c:(.init.text+0x48): undefined reference to `crypto_engine_alloc_init_and_set'
+>> s390x-linux-ld: paes_s390.c:(.init.text+0x5e): undefined reference to `crypto_engine_start'
+>> s390x-linux-ld: paes_s390.c:(.init.text+0x74): undefined reference to `crypto_engine_exit'
+>> s390x-linux-ld: paes_s390.c:(.init.text+0xf4): undefined reference to `crypto_engine_register_skcipher'
+   s390x-linux-ld: paes_s390.c:(.init.text+0x118): undefined reference to `crypto_engine_register_skcipher'
+   s390x-linux-ld: paes_s390.c:(.init.text+0x13c): undefined reference to `crypto_engine_register_skcipher'
+   s390x-linux-ld: paes_s390.c:(.init.text+0x1b6): undefined reference to `crypto_engine_register_skcipher'
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
