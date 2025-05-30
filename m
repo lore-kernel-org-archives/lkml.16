@@ -1,208 +1,164 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D420A2222C3
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EAF21CA04;
+	Fri, 30 May 2025 10:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599264; cv=none; b=rMwUAUeeo6W+CagTWQnkhzmlKcU4dwTcxssWE6m2Zg0sOhhwWu8wSzqNR5AwwudCQBVQjhnLdwaqK5+2wOBxriLSAme5V5Eirq8fVlkl8CeHtV6Z7PuuZRb4OGWBDXYkro5orNOYC3EA6nuchwcy5t1hI57cyEw993fHTDS8WdU=
+	t=1748599403; cv=none; b=ol5UgQUw8p9KRYADBip/gic6W7Qpr4lz5Zr+y9VKSZ8dUm/XtlgUh9s58K7CXQ/g8k7rOIliYy5MC1aWa6Yq3rmdONcXIHWjSOYWfzLXi/Vwz21YmD47gRoA5uRha31lLTW+ROKbc1CCqV1vGIB1sGZZQSoOpAMAi5jVu4b255Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599264; c=relaxed/simple;
-	bh=NorrkePffBzwUUGIvwnAem9aujHkQ+vw9WO/qgC8D/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=goQgNTAPgMkgY4gHuQG+aa5Znj+0DdIgMgKyYa35LpdFm3pHOFoyMvZYUmJbW4ixEVBS+ibz8ZzQ+WhE70N+KPYOy5im2gPNVQ7ZJHLZ9Br5M9MMjetINCLI+aIABvaS8BHPfLREOLSeKykF0SuZrpskfjQcYLCJe2myOw6KLRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=n4pFlyZg; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
+	s=arc-20240116; t=1748599403; c=relaxed/simple;
+	bh=u+nTd3xfKrjFwrar8NjW54gsKZHDKaBEN6i8+8wX8Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VAAhtiMXH418Cn3xwTGLGB44J/JS8lIkEC349ZFP5b016/+okuK4iv1TnzkBDMZ+W6tklPt2it3stCfiT48VtoMkhZj7HlJnpiuOzWHkmkGuB5geHjbKcTVql6YZUYDunrIetnNEvxyn7y9SE9fdgWvjFY8nq42BMYAxTesB5hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DnuGjPnW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n4pFlyZg"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250530100058euoutp017f2fa0ec809f61e50c11387da1a2d863~ERcLp1RC90928609286euoutp01U
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:00:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250530100058euoutp017f2fa0ec809f61e50c11387da1a2d863~ERcLp1RC90928609286euoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748599258;
-	bh=fnfYVNxfL0DHQ1U8EdAdmg35bYdFSv3S7ReuuQVXUXA=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=n4pFlyZgXMvspCg1s+71PlK18cKVuR0wWjpkzwQqYYtrBJWZR7LlYILS06QKmwbNf
-	 Dna38vSGIUllRaa6REhLCjWjQmvefmZAFq6AJWcWVjYWyLc94hx6agDl02WXd+wMKi
-	 WK32BEaUPlwM3wnnk0zAFKTmnmnyCPDYge5XzP5E=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250530100058eucas1p18554bf19ac9f302a8c3636d091448582~ERcLWn2781752417524eucas1p1B;
-	Fri, 30 May 2025 10:00:58 +0000 (GMT)
-Received: from localhost.localdomain (unknown [106.210.135.126]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250530100058eusmtip24f64e7b8835dcc02dd4e605e2b87339b~ERcK-Bwjr1946319463eusmtip2i;
-	Fri, 30 May 2025 10:00:58 +0000 (GMT)
-From: "e.kubanski" <e.kubanski@partner.samsung.com>
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, "e.kubanski"
-	<e.kubanski@partner.samsung.com>
-Subject: [PATCH bpf] xsk: Fix out of order segment free in
- __xsk_generic_xmit()
-Date: Fri, 30 May 2025 11:59:57 +0200
-Message-Id: <20250530095957.43248-1-e.kubanski@partner.samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DnuGjPnW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A17C4CEEA;
+	Fri, 30 May 2025 10:03:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748599402;
+	bh=u+nTd3xfKrjFwrar8NjW54gsKZHDKaBEN6i8+8wX8Tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DnuGjPnWdWsvxqQdUjTYxJfrxDxPK+qpfaxOuSWF1G3yCDXZbmlg40J7IACtp+6u1
+	 neDI3mEiga+GJh4MswNKpG368AFrxLp5n8O8Md48DbmP+5IwCf09EULmqTmaxJ3L/e
+	 6CSq2d6tbnx+Y6NKfBHg+Gs+tw5tuPeAt8vlv+MLMbp+dNSmg85hSCA7+9isWB+X4c
+	 hnNBaS4QsDYXGWbox84+FiwL/OIaO4j6md58aa8ooQjWQA6U8f2HTnRZ7UUilpP9+J
+	 smKEYnQb6QMNllQKBiYwn+8+xiLvbfbBASXcz32PMv12FcXTaice8CJbzd/mMwLhON
+	 b1GmLhoI+xZcQ==
+Date: Fri, 30 May 2025 12:03:18 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <longman@redhat.com>
+Subject: Re: [[PATCH v3] 3/4] man/man2/prctl.2,
+ PR_FUTEX_HASH_GET_SLOTS.2const: Document PR_FUTEX_HASH_GET_SLOTS
+Message-ID: <ltof7edtili2ozjdlyslpcdckeoccvhtjt6hh5hsdz5smtqvyu@4ryc6myy4dwa>
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
+ <20250526155523.1382465-4-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250530100058eucas1p18554bf19ac9f302a8c3636d091448582
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250530100058eucas1p18554bf19ac9f302a8c3636d091448582
-X-EPHeader: CA
-X-CMS-RootMailID: 20250530100058eucas1p18554bf19ac9f302a8c3636d091448582
-References: <CGME20250530100058eucas1p18554bf19ac9f302a8c3636d091448582@eucas1p1.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7h4r2p6mgkxqsicv"
+Content-Disposition: inline
+In-Reply-To: <20250526155523.1382465-4-bigeasy@linutronix.de>
 
-Move xsk completion queue descriptor write-back to destructor.
 
-Fix xsk descriptor management in completion queue. Descriptor
-management mechanism didn't take care of situations where
-completion queue submission can happen out-of-order to
-descriptor write-back.
+--7h4r2p6mgkxqsicv
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <longman@redhat.com>
+Subject: Re: [[PATCH v3] 3/4] man/man2/prctl.2,
+ PR_FUTEX_HASH_GET_SLOTS.2const: Document PR_FUTEX_HASH_GET_SLOTS
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
+ <20250526155523.1382465-4-bigeasy@linutronix.de>
+MIME-Version: 1.0
+In-Reply-To: <20250526155523.1382465-4-bigeasy@linutronix.de>
 
-__xsk_generic_xmit() was assigning descriptor to slot right
-after completion queue slot reservation. If multiple CPUs
-access the same completion queue after xmit, this can result
-in out-of-order submission of invalid descriptor batch.
-SKB destructor call can submit descriptor batch that is
-currently in use by other CPU, instead of correct transmitted
-ones. This could result in User-Space <-> Kernel-Space data race.
+Hi Sebastian,
 
-Forbid possible out-of-order submissions:
-CPU A: Reservation + Descriptor Write
-CPU B: Reservation + Descriptor Write
-CPU B: Submit (submitted first batch reserved by CPU A)
-CPU A: Submit (submitted second batch reserved by CPU B)
+On Mon, May 26, 2025 at 05:55:22PM +0200, Sebastian Andrzej Siewior wrote:
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Move Descriptor Write to submission phase:
-CPU A: Reservation (only moves local writer)
-CPU B: Reservation (only moves local writer)
-CPU B: Descriptor Write + Submit
-CPU A: Descriptor Write + Submit
+This page LGTM.  Thanks!  Please resend when this is merged into Linus's
+tree.
 
-This solves potential out-of-order free of xsk buffers.
+Reviewed-by: Alejandro Colomar <alx@kernel.org>
 
-Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
-Fixes: e6c4047f5122 ("xsk: Use xsk_buff_pool directly for cq functions")
----
- include/linux/skbuff.h |  2 ++
- net/xdp/xsk.c          | 17 +++++++++++------
- net/xdp/xsk_queue.h    | 11 +++++++++++
- 3 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index bb2b751d274a..6785faec0699 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -622,6 +622,8 @@ struct skb_shared_info {
- 		void		*destructor_arg;
- 	};
- 
-+	u64 xsk_descs[MAX_SKB_FRAGS];
-+
- 	/* must be last field, see pskb_expand_head() */
- 	skb_frag_t	frags[MAX_SKB_FRAGS];
- };
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index a2249fd2048a..f822393907da 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -526,24 +526,24 @@ static int xsk_wakeup(struct xdp_sock *xs, u8 flags)
- 	return dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id, flags);
- }
- 
--static int xsk_cq_reserve_addr_locked(struct xsk_buff_pool *pool, u64 addr)
-+static int xsk_cq_reserve_locked(struct xsk_buff_pool *pool)
- {
- 	unsigned long flags;
- 	int ret;
- 
- 	spin_lock_irqsave(&pool->cq_lock, flags);
--	ret = xskq_prod_reserve_addr(pool->cq, addr);
-+	ret = xskq_prod_reserve(pool->cq);
- 	spin_unlock_irqrestore(&pool->cq_lock, flags);
- 
- 	return ret;
- }
- 
--static void xsk_cq_submit_locked(struct xsk_buff_pool *pool, u32 n)
-+static void xsk_cq_submit_locked(struct xsk_buff_pool *pool, u64 *descs, u32 n)
- {
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&pool->cq_lock, flags);
--	xskq_prod_submit_n(pool->cq, n);
-+	xskq_prod_write_submit_addr_n(pool->cq, descs, n);
- 	spin_unlock_irqrestore(&pool->cq_lock, flags);
- }
- 
-@@ -570,7 +570,9 @@ static void xsk_destruct_skb(struct sk_buff *skb)
- 		*compl->tx_timestamp = ktime_get_tai_fast_ns();
- 	}
- 
--	xsk_cq_submit_locked(xdp_sk(skb->sk)->pool, xsk_get_num_desc(skb));
-+	xsk_cq_submit_locked(xdp_sk(skb->sk)->pool,
-+			     skb_shinfo(skb)->xsk_descs,
-+			     xsk_get_num_desc(skb));
- 	sock_wfree(skb);
- }
- 
-@@ -749,7 +751,9 @@ static struct sk_buff *xsk_build_skb(struct xdp_sock *xs,
- 	skb->priority = READ_ONCE(xs->sk.sk_priority);
- 	skb->mark = READ_ONCE(xs->sk.sk_mark);
- 	skb->destructor = xsk_destruct_skb;
-+
- 	xsk_tx_metadata_to_compl(meta, &skb_shinfo(skb)->xsk_meta);
-+	skb_shinfo(skb)->xsk_descs[xsk_get_num_desc(skb)] = desc->addr;
- 	xsk_set_destructor_arg(skb);
- 
- 	return skb;
-@@ -760,6 +764,7 @@ static struct sk_buff *xsk_build_skb(struct xdp_sock *xs,
- 
- 	if (err == -EOVERFLOW) {
- 		/* Drop the packet */
-+		skb_shinfo(xs->skb)->xsk_descs[xsk_get_num_desc(xs->skb)] = desc->addr;
- 		xsk_set_destructor_arg(xs->skb);
- 		xsk_drop_skb(xs->skb);
- 		xskq_cons_release(xs->tx);
-@@ -802,7 +807,7 @@ static int __xsk_generic_xmit(struct sock *sk)
- 		 * if there is space in it. This avoids having to implement
- 		 * any buffering in the Tx path.
- 		 */
--		if (xsk_cq_reserve_addr_locked(xs->pool, desc.addr))
-+		if (xsk_cq_reserve_locked(xs->pool))
- 			goto out;
- 
- 		skb = xsk_build_skb(xs, &desc);
-diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
-index 46d87e961ad6..06ce89aae217 100644
---- a/net/xdp/xsk_queue.h
-+++ b/net/xdp/xsk_queue.h
-@@ -436,6 +436,17 @@ static inline void xskq_prod_submit_n(struct xsk_queue *q, u32 nb_entries)
- 	__xskq_prod_submit(q, q->ring->producer + nb_entries);
- }
- 
-+static inline void xskq_prod_write_submit_addr_n(struct xsk_queue *q, u64 *addrs, u32 nb_entries)
-+{
-+	struct xdp_umem_ring *ring = (struct xdp_umem_ring *)q->ring;
-+	u32 prod = q->ring->producer;
-+
-+	for (u32 i = 0; i < nb_entries; ++i)
-+		ring->desc[prod++ & q->ring_mask] = addrs[i];
-+
-+	__xskq_prod_submit(q, prod);
-+}
-+
- static inline bool xskq_prod_is_empty(struct xsk_queue *q)
- {
- 	/* No barriers needed since data is not accessed */
--- 
-2.34.1
+Have a lovely day!
+Alex
 
+> ---
+>  man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const | 37 ++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
+>=20
+> diff --git a/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const b/man/man2const=
+/PR_FUTEX_HASH_GET_SLOTS.2const
+> new file mode 100644
+> index 0000000000000..f5c6380ef1fe7
+> --- /dev/null
+> +++ b/man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
+> @@ -0,0 +1,37 @@
+> +.\" Copyright, the authors of the Linux man-pages project
+> +.\"
+> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> +.\"
+> +.TH PR_FUTEX_HASH_GET_SLOTS 2const (date) "Linux man-pages (unreleased)"
+> +.SH NAME
+> +PR_FUTEX_HASH_GET_SLOTS
+> +\-
+> +return the size of the private hash
+> +.SH LIBRARY
+> +Standard C library
+> +.RI ( libc ,\~ \-lc )
+> +.SH SYNOPSIS
+> +.nf
+> +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
+> +.B #include <sys/prctl.h>
+> +.P
+> +.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
+> +.fi
+> +.SH DESCRIPTION
+> +Return the current size of the private hash.
+> +.SH RETURN VALUE
+> +A value of 0 means that a private hash has not been allocated
+> +and the global hash is in use.
+> +A value >0 specifies the size of the private hash.
+> +On error, \-1 is returned, and
+> +.I errno
+> +is set to indicate the error.
+> +.SH STANDARDS
+> +Linux.
+> +.SH HISTORY
+> +Linux 6.16.
+> +.SH SEE ALSO
+> +.BR prctl (2),
+> +.BR PR_FUTEX_HASH (2const),
+> +.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
+> +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
+> --=20
+> 2.49.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--7h4r2p6mgkxqsicv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmg5gmUACgkQ64mZXMKQ
+wqnK5w/7BKXZ++Q4DsPCNx4byiGSZK+HCrloeLfTQmgk/wkvwpy/fWlYkKljR9S/
+kxe2F1hTZzBg6cFZEcgLvy+GeYpNgGVva5v6O6oFG7ti5Jk6YItoO0o+1+1aA8cR
+x/GZAUZjIwRz+Dm0GjFBrrZ+SAaWKydko6j51Te7y18O6SoNAzZNo/edfU6HfT0R
+A2cWgNLGEqbCu9aMW+itYVx7byGVyCCR9kCIcqa4l+xXVoEotlLL9b5FZLB4Wp6n
+k8lt43YiSjPc3AUCpsppSFOeGqU0GEBbGwP661NO+lDE510Spr08GQAX/Y6AVlX7
+q3Mao7HfZs3idCc/L22ZgttsR93n+sTLE7Jo/b7sVG9KVSOIAGSq1vIuQCsHN+wN
+j0Nmc4CzqUDKW9rG3IG925G9yo3w9o8LWguq67yAOMou0+ijtgiKdtvwqYisslKF
+/ckHPwPiaTLIWD6EHorxbXeKyVIMZhPDx0QKBac4LjA5cvVi119UBv+bPQRZ/Gqe
+zC5bjx2cTA84wN2reFKDbUsdVlMDzPBtGyLt/kMisLI0Zy0KaKuBG2rJT8LlGG85
+AV08x7j+IU5VRd+cptARsiI6FgPZBwUXxvrqvl8+4wk9cqJSYZbTQt4tR9pXLrds
+HBcbHOx4bSzkGWQcGvcEmd0dqn91NFSKrudtSJ1tyraWm4Ch2ZA=
+=h4wj
+-----END PGP SIGNATURE-----
+
+--7h4r2p6mgkxqsicv--
