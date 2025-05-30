@@ -1,285 +1,267 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA2921ADA2
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456E0218ACA
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748595240; cv=none; b=eCU3bFt4c1LtWk38E2+lm6PpL7bu47RZtd/fBSbesMuf6tgxyzQJHMKGYifbKwF/feDIxZrDTK8nOHgg2GHhr8VPF2vP6ZjQUazhNIJkn4YacDAlBLYm5jMBU6yJexxTGA4sUFZQ1SZuntsCriFI0tIpRyp2xmUA35P1t29Gino=
+	t=1748595379; cv=none; b=Fexb4m3Mh3igwEssLNxA5Kce8Jht+QOCHilfN3JqV8aAU07NFczC/HFnhgF2oBvJLgbcOCd2T7Jss8RGc/qWJElsSb1pOi5iilxoBcNfWoMNopsj0YAbV7lZHkh0rDgffhKdq9A/lEM+30gk5mKdCYWQp2hFV/Y9wKbEcnUnrdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748595240; c=relaxed/simple;
-	bh=trVd84a33ivYKAJg9TE37WT5ARtue713nOBQM6WgbLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QV7/+Zu57VP4Aa+EYEtOeXeBq19lRHLbzGvQizpzUgHkliiM9XyQK8zw4lwi+r8L0g8cFWv9TGKBXVU2Ko2W6mlhl+1GSohgXbt71mozf8jA8jHuBonaMpiLr63xbD1xJgxdgoZzo3EMa46Q9UHSlzvwIuK2YIhRlzGgFv5X2qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ITvpNzTN; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748595379; c=relaxed/simple;
+	bh=UWE2jdlEzI9YD+Dg6NIoCE8U1hSoBC3xQFtAghveJv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G0saVSxlla8jaEHi1POgADSdDHC1HRh+9EtxC7uXfGi2xbolu3KJaQUFSwpuI/FClZsynog1MRhDlN4K3CqDOwcpFevae70h+kFker6FsgzbUgpwhrJI09476/gFfn0pdMotA1n3XRkVUU8R4GILlPF6A+IFHZjtzvE2i5JiYRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x/ONuqt7; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITvpNzTN"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4774611d40bso197201cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:53:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/ONuqt7"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a36f26584bso988639f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748595237; x=1749200037; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8u647ndNYzdA27OG8TNeuQiC3z4GVpVKrED4QXwYPU=;
-        b=ITvpNzTN8/Q4CtxRafoLinx+/KF6kS8u02MT2vw16dhtJpjjS1iQ39KS9+1TLfpul5
-         E/KbvmaDazMOkC68YhavXUDeK4m8LWKO5AH0NUQ5DDZ1kchh0k6wauZtImivv++jTsem
-         OYn7bGQAM0E4MN832r16WaIWdUtV8ubXNRJ97tjIKl4jzHBo91wF9E3Xf+TeGfunaWjI
-         ALGBP7OEoC3Hl8+0jMVX4+V1zMuRzBerablzATIcP4Te0piRx3Qe3WNbqIHWm1iOWoLE
-         n8x/w/0sM5XFe0xl3FAwC1+CPVrNO34jPaPz+urfaCxB+GJBrGJf+5ZHoSoQ6CWBD7uh
-         iolA==
+        d=linaro.org; s=google; t=1748595375; x=1749200175; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sSnECUFkt1/JvJRDNh/81S1RiOSnxf9TGj9i5tAOdx8=;
+        b=x/ONuqt7Fj2rWWivm6D3uMSQdssDP6CWdUEEvRsnxY7iO6r1O5rZCLPXUo2K3e3+dz
+         p+cd11CNgXYJ5y/04LEfJWQOayt4JlYiTIhSeUjd8qSPfkGZHRuy+93Y9D0rkF0/1yCa
+         AgsBlE3twDA/+C6qyFVr0+9zc6r6RP+MztYFdA+1sIBlVJNr/NoX/SNtjVzodiKkZGRI
+         N+VIVpchr+Heh7bHLgqiqBfl77B+bIx2/4cmuB6hIQ099ODqmWslonr5xMxBRThK2XG2
+         2qBMGPUBCVS7q7Fv/oTKvwhFXDBKyIRKK+6gJLmiG0NiCH3rbBFKNc3feKx80GfvCgB/
+         tkbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748595237; x=1749200037;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z8u647ndNYzdA27OG8TNeuQiC3z4GVpVKrED4QXwYPU=;
-        b=RNuPbs/Xzm5QmQipE2KAvJTNZsIwjpTz8nNmnDze4oWw3vAn7x5jEPPBKPWQGRyTL8
-         gSCSCxywJUg4BkRks3zV1jsWUSBLIAj+3z55q3D3KsU8WP7edYH3dWj3tcjlyl/IivyR
-         KHINGa1GTUHduSQVwgedHFYaY0+rAo+yvq4qgx7QUXyfu34bUpxSc7AdeLiL3bEKEx/+
-         kVB0mMm8//WXFQKKmW4s/aFcbF4MafvIH8Yjpmmzphemh9zuk8fxovcDfvwUgtwqhk+O
-         d0uiv7Yu2zLQ7Ux6xnH5U2A2rvwbQN2ycKY1d9ssFLuMEX/9q0+YIvsrHbup9EObkUcI
-         2K1w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxdsTFF1FX0yeeMMl23GqGQKavhUdfYzPO23X54vyCixYprB0faLId81klhrtf+CcybPh9/2MVqYEQ0r8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKjHv2/WpvUe2LFUGshhNLXz2hhy6j02QZLNpc0PvmeKkk5KyI
-	5wy6CXDQby68krl4mbNZoKX0zIEwaUwWMWvptoNMOA0OJ376pgi32ocF+CyF+vh7nkQ/J5CP2TV
-	z+rAH/4Dt2w6tNVjOZVyiGxeuqC6OYARspYDpXPWs
-X-Gm-Gg: ASbGncu3kKSHb1jNPnKRCT7irUKhQtHdZ77WPOx8+2HQQaaGy+hYFAJbahakSQoYtmE
-	mItiGnHikcLVngSMo/nI2jUxls5M+IFB8S/OhFwntAdOxF/T2dBYzCIz/GK9fUxEuTAPaSaNjlK
-	YMXf0VUr042B2uINnxVqWPCokflGzb3rA1nDSPHNF8NnM=
-X-Google-Smtp-Source: AGHT+IFLqefnLn1v8keLkqAr4fPJAQHT//B+kwFb1ekkisV3CdeatG99dSsPZYAGw8By1B8I2vAaTr2y3/hbj85CkGA=
-X-Received: by 2002:a05:622a:1a97:b0:494:b4dd:befd with SMTP id
- d75a77b69052e-4a441022360mr2905721cf.8.1748595236277; Fri, 30 May 2025
- 01:53:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748595375; x=1749200175;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sSnECUFkt1/JvJRDNh/81S1RiOSnxf9TGj9i5tAOdx8=;
+        b=u9ODKCmeKaAnYDhYN6zTwrZXsLZUPMhhVIv8pOG051RmDJBZLH1rNErS1KhBHwI3wC
+         0+4hLCQrLbiA7TNvWfUTBpiDh4z6sMx8tIM3NwkqwRDZjAC+flm79I9WGrTTJGBwGrG4
+         fEmB12ibNT3ihEBtyz4uSGqW4rSmuh+C7D/WyX/Z2qZYE7btJkKIY0kQyPmwSqmNMbmC
+         q8wuwla0ffpOK85QBwGIObxdrL4rLzXgm708NzTWEM4l62htQRbvQwgm12cfXhv9s/yR
+         YmuUuSVVKtgkXw62a+vFTpkxNyFNPkpRlNFGq6Aug+cIxpC068fUHMLKRAmBQA5hE/XB
+         cCxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsIFiGVRFaZcYB18Ne3sk1acPreuXKM/cwCflq0L2Cnq3W3LfSNocWZKHcVAdg65LVi8KDwHB+A0Y4GlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQJ9mCOCxZXnb+pozfVGe4JWkvVgbUZyEbINOoFI142ObVU29N
+	nBrNUAWR+BnqHzCBFg2qlMMi77caRQHeNWxtxggSjczne58hiFuVkijT2Lm+UkJQKOk=
+X-Gm-Gg: ASbGnctYJ/cQkp5O3B/JJjTZZDYUpV04qm2+C1jEred6D69kenKj2GY3cX0oRCUAwKo
+	elNTzQrKBvXnLJc9hI/qnx6kDlZqGEoAs4Es/X/cMDeNtN1w6Z+4uHDCsMd2muCY35ChcWSOCBb
+	TqGxZIYT1NBlwvmHOzqMqLq9eJpfHxJfsTMQU7WydZF2Fqh1H0yuydwGXMo+LAjFewGZCGFl1oH
+	VsZ9d5DdOU9uJbcOQUMVVXf0K/WrNyp7TA4tAfJ1YFaZhREvtKQlknktYy9OUD25VGAM5SglsZY
+	Qw70wtPVkK/JR016HusBtE/lSnfbdWUBAAluLw8/rtpvR5RRhmuRlUY/OWNHi6q6c6Zy4arzK3s
+	gS+Vx8mf0shCztnQP
+X-Google-Smtp-Source: AGHT+IEdTEPwz3I3fiIOCvTUuIwyDXev7/ivsylgXDu6Xsiav4J6EpqE94XmbzdMFCw668axV924fg==
+X-Received: by 2002:a05:6000:1a8a:b0:3a4:dfc2:b9e1 with SMTP id ffacd0b85a97d-3a4f89a7e71mr1193613f8f.2.1748595375484;
+        Fri, 30 May 2025 01:56:15 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a0a96sm4271388f8f.96.2025.05.30.01.56.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 01:56:15 -0700 (PDT)
+Message-ID: <68c54d56-3e44-4f43-8bd6-f6b7fa1f379b@linaro.org>
+Date: Fri, 30 May 2025 09:56:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
- <aDU3eL7qQYrXkE3T@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aDU3eL7qQYrXkE3T@yzhao56-desk.sh.intel.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Fri, 30 May 2025 09:53:19 +0100
-X-Gm-Features: AX0GCFtqJXvp3p__kKdA5QDGvH461bYPNLmsSSbQFbO1K64Y28pB97ucjguB0DU
-Message-ID: <CA+EHjTxgO4LmdYY83a+uzBshvFf8EcJzY58Rovvz=pZgyO2yow@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds
+ access of BAM arrays
+To: Gabor Juhos <j4g8y7@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Md Sadre Alam <quic_mdalam@quicinc.com>,
+ Varadarajan Narayanan <quic_varada@quicinc.com>,
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Lakshmi Sowjanya D <quic_laksd@quicinc.com>
+References: <20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com>
+ <KuueBg3qliXMt9QN9kV_5_on2xJV-BEWZAsktO_Ce-Fq1iBAPCFypbYUVZxlV4LjF0AUZG57KqiXZZ3uefQrXw==@protonmail.internalid>
+ <20250529-qpic-snand-avoid-mem-corruption-v2-2-2f0d13afc7d2@gmail.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250529-qpic-snand-avoid-mem-corruption-v2-2-2f0d13afc7d2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-.. snip..
-
-> I noticed that in [1], the kvm_gmem_mmap() does not check the range.
-> So, the WARN() here can be hit when userspace mmap() an area larger than the
-> inode size and accesses the out of band HVA.
->
-> Maybe limit the mmap() range?
->
-> @@ -1609,6 +1620,10 @@ static int kvm_gmem_mmap(struct file *file, struct vm_area_struct *vma)
->         if (!kvm_gmem_supports_shared(file_inode(file)))
->                 return -ENODEV;
->
-> +       if (vma->vm_end - vma->vm_start + (vma->vm_pgoff << PAGE_SHIFT) > i_size_read(file_inode(file)))
-> +               return -EINVAL;
+On 29/05/2025 18:25, Gabor Juhos wrote:
+> The common QPIC code does not do any boundary checking when it handles
+> the command elements and scatter gater list arrays of a BAM transaction,
+> thus it allows to access out of bounds elements in those.
+> 
+> Although it is the responsibility of the given driver to allocate enough
+> space for all possible BAM transaction variations, however there can be
+> mistakes in the driver code which can lead to hidden memory corruption
+> issues which are hard to debug.
+> 
+> This kind of problem has been observed during testing the 'spi-qpic-snand'
+> driver. Although the driver has been fixed with a preceding patch, but it
+> still makes sense to reduce the chance of having such errors again later.
+> 
+> In order to prevent such errors, change the qcom_alloc_bam_transaction()
+> function to store the number of elements of the arrays in the
+> 'bam_transaction' strucutre during allocation. Also, add sanity checks to
+> the qcom_prep_bam_dma_desc_{cmd,data}() functions to avoid using out of
+> bounds indices for the arrays.
+> 
+> Tested-by: Lakshmi Sowjanya D <quic_laksd@quicinc.com>     # on SDX75
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> ---
+> Changes in v2:
+>    - remove the inline qcom_err_bam_array_full() function and print the error
+>      messages directly from the respective functions instead
+>    - add 'Tested-by' tag from Lakshmi Sowjanya D, and remove the
+>      "Tested with the 'spi-qpic-snand' driver only." line from the
+>      commit message as SDX75 uses the qcom_nandc driver
+>    - move the note about of the preferred merging order into the cover letter
+> ---
+>   drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
+>   include/linux/mtd/nand-qpic-common.h |  8 ++++++++
+>   2 files changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/qpic_common.c b/drivers/mtd/nand/qpic_common.c
+> index e0ed25b5afea9b289b767cd3d9c2d7572ed52008..30f17d959300cc7448d0c2e9e2516c52655494f0 100644
+> --- a/drivers/mtd/nand/qpic_common.c
+> +++ b/drivers/mtd/nand/qpic_common.c
+> @@ -57,14 +57,15 @@ qcom_alloc_bam_transaction(struct qcom_nand_controller *nandc)
+>   	bam_txn_buf += sizeof(*bam_txn);
+> 
+>   	bam_txn->bam_ce = bam_txn_buf;
+> -	bam_txn_buf +=
+> -		sizeof(*bam_txn->bam_ce) * QPIC_PER_CW_CMD_ELEMENTS * num_cw;
+> +	bam_txn->bam_ce_nitems = QPIC_PER_CW_CMD_ELEMENTS * num_cw;
+> +	bam_txn_buf += sizeof(*bam_txn->bam_ce) * bam_txn->bam_ce_nitems;
+> 
+>   	bam_txn->cmd_sgl = bam_txn_buf;
+> -	bam_txn_buf +=
+> -		sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL * num_cw;
+> +	bam_txn->cmd_sgl_nitems = QPIC_PER_CW_CMD_SGL * num_cw;
+> +	bam_txn_buf += sizeof(*bam_txn->cmd_sgl) * bam_txn->cmd_sgl_nitems;
+> 
+>   	bam_txn->data_sgl = bam_txn_buf;
+> +	bam_txn->data_sgl_nitems = QPIC_PER_CW_DATA_SGL * num_cw;
+> 
+>   	init_completion(&bam_txn->txn_done);
+> 
+> @@ -237,6 +238,11 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
+>   	struct bam_cmd_element *bam_ce_buffer;
+>   	struct bam_transaction *bam_txn = nandc->bam_txn;
+> 
+> +	if (bam_txn->bam_ce_pos + size > bam_txn->bam_ce_nitems) {
+> +		dev_err(nandc->dev, "BAM %s array is full\n", "CE");
+> +		return -EINVAL;
+> +	}
 > +
->         if ((vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) !=
->             (VM_SHARED | VM_MAYSHARE)) {
->                 return -EINVAL;
->
-> [1] https://lore.kernel.org/all/20250513163438.3942405-8-tabba@google.com/
+>   	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
+> 
+>   	/* fill the command desc */
+> @@ -258,6 +264,12 @@ int qcom_prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
+> 
+>   	/* use the separate sgl after this command */
+>   	if (flags & NAND_BAM_NEXT_SGL) {
+> +		if (bam_txn->cmd_sgl_pos >= bam_txn->cmd_sgl_nitems) {
+> +			dev_err(nandc->dev, "BAM %s array is full\n",
+> +				"CMD sgl");
+> +			return -EINVAL;
+> +		}
+> +
+>   		bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_start];
+>   		bam_ce_size = (bam_txn->bam_ce_pos -
+>   				bam_txn->bam_ce_start) *
+> @@ -297,10 +309,20 @@ int qcom_prep_bam_dma_desc_data(struct qcom_nand_controller *nandc, bool read,
+>   	struct bam_transaction *bam_txn = nandc->bam_txn;
+> 
+>   	if (read) {
+> +		if (bam_txn->rx_sgl_pos >= bam_txn->data_sgl_nitems) {
+> +			dev_err(nandc->dev, "BAM %s array is full\n", "RX sgl");
+> +			return -EINVAL;
+> +		}
+> +
+>   		sg_set_buf(&bam_txn->data_sgl[bam_txn->rx_sgl_pos],
+>   			   vaddr, size);
+>   		bam_txn->rx_sgl_pos++;
+>   	} else {
+> +		if (bam_txn->tx_sgl_pos >= bam_txn->data_sgl_nitems) {
+> +			dev_err(nandc->dev, "BAM %s array is full\n", "TX sgl");
+> +			return -EINVAL;
+> +		}
+> +
+>   		sg_set_buf(&bam_txn->data_sgl[bam_txn->tx_sgl_pos],
+>   			   vaddr, size);
+>   		bam_txn->tx_sgl_pos++;
+> diff --git a/include/linux/mtd/nand-qpic-common.h b/include/linux/mtd/nand-qpic-common.h
+> index cd7172e6c1bbffeee0363a14044980a72ea17723..3ca4073a496b8fd2a99112a9caefd3f110260568 100644
+> --- a/include/linux/mtd/nand-qpic-common.h
+> +++ b/include/linux/mtd/nand-qpic-common.h
+> @@ -240,6 +240,9 @@
+>    * @last_data_desc - last DMA desc in data channel (tx/rx).
+>    * @last_cmd_desc - last DMA desc in command channel.
+>    * @txn_done - completion for NAND transfer.
+> + * @bam_ce_nitems - the number of elements in the @bam_ce array
+> + * @cmd_sgl_nitems - the number of elements in the @cmd_sgl array
+> + * @data_sgl_nitems - the number of elements in the @data_sgl array
+>    * @bam_ce_pos - the index in bam_ce which is available for next sgl
+>    * @bam_ce_start - the index in bam_ce which marks the start position ce
+>    *		   for current sgl. It will be used for size calculation
+> @@ -258,6 +261,11 @@ struct bam_transaction {
+>   	struct dma_async_tx_descriptor *last_data_desc;
+>   	struct dma_async_tx_descriptor *last_cmd_desc;
+>   	struct completion txn_done;
+> +
+> +	unsigned int bam_ce_nitems;
+> +	unsigned int cmd_sgl_nitems;
+> +	unsigned int data_sgl_nitems;
+> +
+>   	struct_group(bam_positions,
+>   		u32 bam_ce_pos;
+>   		u32 bam_ce_start;
+> 
+> --
+> 2.49.0
+> 
+> 
 
-I don't think we want to do that for a couple of reasons. We catch
-such invalid accesses on faulting, and, by analogy, afaikt, neither
-secretmem nor memfd perform a similar check on mmap (nor do
-memory-mapped files in general).
+This one doesn't apply to -next
 
-There are also valid reasons why a user would want to deliberately
-mmap more memory than the backing store, knowing that it's only going
-to fault what it's going to use, e.g., alignment.
+deckard 
+{~/Development/worktree/reviews/linux-next-25-05-30-daily-reviews}±(linux-next-25-05-30-daily-reviews); 
+greetings, earthling [1.052Mb]$ ☞ b4 shazam 
+20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gm
+Grabbing thread from 
+lore.kernel.org/all/20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 3 messages in the thread
+Analyzing 12 code-review messages
+Checking attestation on all messages, may take a moment...
+---
+   ✓ [PATCH v2 1/2] spi: spi-qpic-snand: reallocate BAM transactions
+   ✓ [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds access 
+of BAM arrays
+   ---
+   ✓ Signed: DKIM/gmail.com
+---
+Total patches: 2
+---
+  Base: using specified base-commit b00d6864a4c948529dc6ddd2df76bf175bf27c63
+Applying: spi: spi-qpic-snand: reallocate BAM transactions
+Applying: mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
+Patch failed at 0002 mtd: nand: qpic_common: prevent out of bounds 
+access of BAM arrays
+error: patch failed: drivers/mtd/nand/qpic_common.c:237
+error: drivers/mtd/nand/qpic_common.c: patch does not apply
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am 
+--abort".
+hint: Disable this message with "git config set advice.mergeConflict false"
+deckard 
+{~/Development/worktree/reviews/linux-next-25-05-30-daily-reviews}±(linux-next-25-05-30-daily-reviews); 
+greetings, earthling [1.052Mb]$ ☞ git-log-graph
+* 4ae57ce867d8f - (HEAD -> linux-next-25-05-30-daily-reviews) spi: 
+spi-qpic-snand: reallocate BAM transactions (8 seconds ago)
 
-Cheers,
-/fuad
-
-
-> > +     return xa_to_value(entry);
-> > +}
-> > +
-> > +static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
-> > +{
-> > +     if (kvm_gmem_shareability_get(inode, index) != SHAREABILITY_ALL)
-> > +             return ERR_PTR(-EACCES);
-> > +
-> > +     return kvm_gmem_get_folio(inode, index);
-> > +}
-> > +
-> > +#else
-> > +
-> > +static int kvm_gmem_shareability_setup(struct maple_tree *mt, loff_t size, u64 flags)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static inline struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t index)
-> > +{
-> > +     WARN_ONCE("Unexpected call to get shared folio.")
-> > +     return NULL;
-> > +}
-> > +
-> > +#endif /* CONFIG_KVM_GMEM_SHARED_MEM */
-> > +
-> >  static int __kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
-> >                                   pgoff_t index, struct folio *folio)
-> >  {
-> > @@ -333,7 +404,7 @@ static vm_fault_t kvm_gmem_fault_shared(struct vm_fault *vmf)
-> >
-> >       filemap_invalidate_lock_shared(inode->i_mapping);
-> >
-> > -     folio = kvm_gmem_get_folio(inode, vmf->pgoff);
-> > +     folio = kvm_gmem_get_shared_folio(inode, vmf->pgoff);
-> >       if (IS_ERR(folio)) {
-> >               int err = PTR_ERR(folio);
-> >
-> > @@ -420,8 +491,33 @@ static struct file_operations kvm_gmem_fops = {
-> >       .fallocate      = kvm_gmem_fallocate,
-> >  };
-> >
-> > +static void kvm_gmem_free_inode(struct inode *inode)
-> > +{
-> > +     struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
-> > +
-> > +     kfree(private);
-> > +
-> > +     free_inode_nonrcu(inode);
-> > +}
-> > +
-> > +static void kvm_gmem_destroy_inode(struct inode *inode)
-> > +{
-> > +     struct kvm_gmem_inode_private *private = kvm_gmem_private(inode);
-> > +
-> > +#ifdef CONFIG_KVM_GMEM_SHARED_MEM
-> > +     /*
-> > +      * mtree_destroy() can't be used within rcu callback, hence can't be
-> > +      * done in ->free_inode().
-> > +      */
-> > +     if (private)
-> > +             mtree_destroy(&private->shareability);
-> > +#endif
-> > +}
-> > +
-> >  static const struct super_operations kvm_gmem_super_operations = {
-> >       .statfs         = simple_statfs,
-> > +     .destroy_inode  = kvm_gmem_destroy_inode,
-> > +     .free_inode     = kvm_gmem_free_inode,
-> >  };
-> >
-> >  static int kvm_gmem_init_fs_context(struct fs_context *fc)
-> > @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
-> >  static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
-> >                                                     loff_t size, u64 flags)
-> >  {
-> > +     struct kvm_gmem_inode_private *private;
-> >       struct inode *inode;
-> > +     int err;
-> >
-> >       inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
-> >       if (IS_ERR(inode))
-> >               return inode;
-> >
-> > +     err = -ENOMEM;
-> > +     private = kzalloc(sizeof(*private), GFP_KERNEL);
-> > +     if (!private)
-> > +             goto out;
-> > +
-> > +     mt_init(&private->shareability);
-> Wrap the mt_init() inside "#ifdef CONFIG_KVM_GMEM_SHARED_MEM" ?
->
-> > +     inode->i_mapping->i_private_data = private;
-> > +
-> > +     err = kvm_gmem_shareability_setup(private, size, flags);
-> > +     if (err)
-> > +             goto out;
-> > +
-> >       inode->i_private = (void *)(unsigned long)flags;
-> >       inode->i_op = &kvm_gmem_iops;
-> >       inode->i_mapping->a_ops = &kvm_gmem_aops;
-> > @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
-> >       WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
-> >
-> >       return inode;
-> > +
-> > +out:
-> > +     iput(inode);
-> > +
-> > +     return ERR_PTR(err);
-> >  }
-> >
-> >  static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
-> > @@ -654,6 +769,9 @@ int kvm_gmem_create(struct kvm *kvm, struct kvm_create_guest_memfd *args)
-> >       if (kvm_arch_vm_supports_gmem_shared_mem(kvm))
-> >               valid_flags |= GUEST_MEMFD_FLAG_SUPPORT_SHARED;
-> >
-> > +     if (flags & GUEST_MEMFD_FLAG_SUPPORT_SHARED)
-> > +             valid_flags |= GUEST_MEMFD_FLAG_INIT_PRIVATE;
-> > +
-> >       if (flags & ~valid_flags)
-> >               return -EINVAL;
-> >
-> > @@ -842,6 +960,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> >       if (!file)
-> >               return -EFAULT;
-> >
-> > +     filemap_invalidate_lock_shared(file_inode(file)->i_mapping);
-> > +
-> >       folio = __kvm_gmem_get_pfn(file, slot, index, pfn, &is_prepared, max_order);
-> >       if (IS_ERR(folio)) {
-> >               r = PTR_ERR(folio);
-> > @@ -857,8 +977,8 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
-> >               *page = folio_file_page(folio, index);
-> >       else
-> >               folio_put(folio);
-> > -
-> >  out:
-> > +     filemap_invalidate_unlock_shared(file_inode(file)->i_mapping);
-> >       fput(file);
-> >       return r;
-> >  }
-> > --
-> > 2.49.0.1045.g170613ef41-goog
-> >
-> >
