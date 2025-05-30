@@ -1,149 +1,211 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49202367D7
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B542F235079;
+	Fri, 30 May 2025 16:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621380; cv=none; b=HM47YoGoncyoco3ZgytPhqZAySVsu5RLmSO9VI5oCGPNQ+RuKQgx2YxkuOemXehBhc32Zmkf004wKvFrZC4uSX2GEVUfR3tj9ErMpYHZBQ3bOK+PCmkwyXZQsQZwDRf/JSvKP7QzvuXhlUdJ1fpE+6IPpW+iKBZOlImLMF89ZzY=
+	t=1748621423; cv=none; b=tD3veXPr459F4PDJb6RogKsLa4JDwwGYtdRUNCdU+zHlmCqBOL7byPCiQeT47vnIAXKYYg1t4Tmk6dNsVyXOkvU6llRqqP6m2KDi+r0nNWcUaf5X5QRwy3E5XLd5vCmIXNBwCOLFWUrwDY8hidX/XbOOMWF+xRYkRNlkCo5714E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621380; c=relaxed/simple;
-	bh=K+noXdjQU+U9M/qLIQSRjbQSnj/HMYLZOggdzA0wRz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rkflhf0P9IvdFlvlRqjW9PUOs2E7f0/nvb3R5yGE6yUcEPI4ExKkcNWAXptGp6k5jEW2C3tHgw5jOVEPfLEU+o0Oc1mJWoPu4MVB9qv1U/qtI0aPrbweraUWh2v3mIHXbgqIVo4jG3YyC82jWtQo1gaMOjoUGCRVSYwkywRFTTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OWFPFv75; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748621423; c=relaxed/simple;
+	bh=HrdqjSxm8EooDpiNXtzK0jxkcPuOsCkYBWG/5ijU9Vs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CD5FzBMT3OOlMC/qo6HRwEZh/R+yhW5bU8F1Bf7ad39t9Hl9VSHtgajF4AgWUKIBe5XW7x1K4UiY1Rc4F0S1Oc/byQWOY/JBVXQL85BLNQ4dk5TPKLy5pS5DRVvwyXZfuKAWs9fcUd/24NBoU+/Igw/Q7tw7v5gtUg54FO+1pLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rENlBUYw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWFPFv75"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234d366e5f2so29127625ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748621378; x=1749226178; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bxxufLK3KekEdbbP35QTahMDHa855MkqcMEQ8g1zMTk=;
-        b=OWFPFv75jUMcyKqM4kiH+1WgnnOJm4KXeza3803Uox+dAiompg3hJW5h+YD0tVjqdO
-         XATohQgUVGofAGheL5Jt3Jc9uC13xgItDQLkQp95H96DTvZu9V/btZ+Pr6LKMLsY3p45
-         A0S6zihhWrK2Cx+MyY6uy3Wf9QJxKm811VzvpC3XHsgTa895OIUTZe6sh0kbGLHKqOwP
-         lyU3LUWRiX4wjYUQ2Xy4ebv3S4Kph2L7Ve0birT984fSyVU2HffG7a7cY34QFuffT8+x
-         klN3Nivi3KPECpqmV7f6HAsSAOxhpB3eyyhRXMXnoqxAp5w4YgCUnmrB+YWDOEaIkZx7
-         8S4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621378; x=1749226178;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxxufLK3KekEdbbP35QTahMDHa855MkqcMEQ8g1zMTk=;
-        b=fDSG0I/LBkHlhWn3smL/AQjAdeJWoZ80krm+eSv1QHZPTdUYHxaBuFO6ZNEYWJuCup
-         3j+bWuU1pfVG0wh7TAxIjiJvfflIc5MZRvHB8HVNqqwraaFh3MyPwrBAmunHpuzTuxVz
-         5JCw6TpAF8GX92Z7LjVrvEwlleZTYzuT1avjeWyIjqFDE2A9VZQUcF3IDUWpUgHGzxBa
-         MzeRpoNX7xqEfuAI5dmVEEesj3nPSDu01Rrgaff30MXUMEe4vwwBopUXQcULPoZ6dN2p
-         CkTA12hYP4d5e++XIq2hvW4gATNnJvsFkxzijzaGlDNLHlfleYcfVuGWqT5slhK0HUtn
-         ganQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7UM/D2qXa51tRgS36hJiAmea74Gf53zQqh50nf36Un3Qw2QmOAOYqqILWcke9YSIAYfOCG36eARi71pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiTfDpo0+tEtCyM9g47ugkNRP7RsfXTRsXutnReSaYRL66YrWj
-	XKjFA8EWERgOKR+HEma6T3EuM5GV4p1xp/Yp849IlZAeWank+opGVtvjZAzycabJDw==
-X-Gm-Gg: ASbGnctzQFzxKM4nVqV2nJVlXv08Tcb8CISc3duuAmjKpkWmoGsZcG9sO45rEVJ7LtG
-	32e6D6i5JciL/QTqjKQTCofcLguSmw5SMkG98gCwtfhuMRydXtsXZyZYp17G9WAZRoNYkx2VQOJ
-	/D74cmrPgb1PwcWEpk39oDXNSdW/BS5S6N1Ve8vYhoVimfsa93V406HqJuVP+79ehjfvah0t0Tx
-	qxIFNxVkoCyrQ9CUMHAYo4Jr+ZjQXHngsy9gn4vZfXjUpcDVRgKViynQiEUrzwMW2UH5k3rxyUO
-	yZhhY9+wQrfW88Ab6V1zoagR5+6ZZCQ6sMHv5QIe8tM7DIcKMEcBfhWcffTsag==
-X-Google-Smtp-Source: AGHT+IEaQI64EZVaM9JygVJu/CqqQgOOBJm+b8JHY4a69IBYYuuTYL7zefQI+S32XWNK9lzdgNMIBQ==
-X-Received: by 2002:a17:903:291:b0:234:b44c:d3c8 with SMTP id d9443c01a7336-23529a28ab7mr65505535ad.37.1748621377852;
-        Fri, 30 May 2025 09:09:37 -0700 (PDT)
-Received: from thinkpad ([120.60.139.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd9478sm30412095ad.77.2025.05.30.09.09.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 09:09:37 -0700 (PDT)
-Date: Fri, 30 May 2025 21:39:28 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
- bridges
-Message-ID: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
-References: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
- <20250530113404.GA138859@bhelgaas>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rENlBUYw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5F3C4CEE9;
+	Fri, 30 May 2025 16:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748621423;
+	bh=HrdqjSxm8EooDpiNXtzK0jxkcPuOsCkYBWG/5ijU9Vs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rENlBUYwKHO69VBi1tQWKmiFmZKnZkVvbn5HBMT3R64ZgNRBclAKQkB/9eMyW/pKk
+	 uohi9UOcylwxV1RCNjbGiCFdkUBAipd/F5KH1jfJyZjnBBb6B9aGp0EblFKvPX2KHR
+	 hdJ7E1KATkw9G7mzMT7ugxwZ2pC5nk/TBrgJ7sAgaE4NSMI5X8bm/2EcYjMOx79mSC
+	 lrudjoTV35igerXVBEFaThQ7dsDxrM9DH36pFn1tktsxlfnOXDrfO6udw3u9WyvZh7
+	 F/P864zWPv4vZ3QYq/1c361XXgW68Dlc7YXVY5xpBJ9Wce2ES+xewr3dL54PxwcCUn
+	 HuG3XXOrGNAfw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] crypto/crc32: register only one shash_alg
+Date: Fri, 30 May 2025 09:09:40 -0700
+Message-ID: <20250530160940.12761-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250530113404.GA138859@bhelgaas>
 
-On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
-> On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
-> > > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
-> > > > The PCI link, when down, needs to be recovered to bring it back. But that
-> > > > cannot be done in a generic way as link recovery procedure is specific to
-> > > > host bridges. So add a new API pci_host_handle_link_down() that could be
-> > > > called by the host bridge drivers when the link goes down.
-> > > > 
-> > > > The API will iterate through all the slots and calls the pcie_do_recovery()
-> > > > function with 'pci_channel_io_frozen' as the state. This will result in the
-> > > > execution of the AER Fatal error handling code. Since the link down
-> > > > recovery is pretty much the same as AER Fatal error handling,
-> > > > pcie_do_recovery() helper is reused here. First the AER error_detected
-> > > > callback will be triggered for the bridge and the downstream devices. Then,
-> > > > pci_host_reset_slot() will be called for the slot, which will reset the
-> > > > slot using 'reset_slot' callback to recover the link. Once that's done,
-> > > > resume message will be broadcasted to the bridge and the downstream devices
-> > > > indicating successful link recovery.
-> > > 
-> > > Link down is an event for a single Root Port.  Why would we iterate
-> > > through all the Root Ports if the link went down for one of them?
-> > 
-> > Because on the reference platform (Qcom), link down notification is
-> > not per-port, but per controller. So that's why we are iterating
-> > through all ports.  The callback is supposed to identify the ports
-> > that triggered the link down event and recover them.
-> 
-> Maybe I'm missing something.  Which callback identifies the port(s)
-> that triggered the link down event?
+From: Eric Biggers <ebiggers@google.com>
 
-I was referring to the host_bridge::reset_root_port() callback that resets the
-root ports.
+Stop unnecessarily registering a "crc32-generic" shash_alg when a
+"crc32-$(ARCH)" shash_alg is registered too.
 
->  I see that
-> pci_host_handle_link_down() is called by
-> rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
-> but I don't see the logic that identifies a particular Root Port.
-> 
-> Per-controller notification of per-port events is a controller
-> deficiency, not something inherent to PCIe.  I don't think we should
-> build common infrastructure that resets all the Root Ports just
-> because one of them had an issue.
-> 
+While every algorithm does need to have a generic implementation to
+ensure uniformity of support across platforms, that doesn't mean that we
+need to make the generic implementation available through crypto_shash
+when an optimized implementation is also available.
 
-Hmm, fair enough.
+Registering the generic shash_alg did allow users of the crypto_shash or
+crypto_ahash APIs to request the generic implementation specifically,
+instead of an optimized one.  However, the only known use case for that
+was the differential fuzz tests in crypto/testmgr.c.  Equivalent test
+coverage is now provided by crc_kunit.
 
-> I think pci_host_handle_link_down() should take a Root Port, not a
-> host bridge, and the controller driver should figure out which port
-> needs to be recovered, or the controller driver can have its own loop
-> to recover all of them if it can't figure out which one needs it.
-> 
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
 
-This should also work. Feel free to drop the relevant commits for v6.16, I can
-resubmit them (including dw-rockchip after -rc1).
+I'm planning to take this through the crc tree.
 
-- Mani
+ crypto/crc32.c | 69 ++++++++------------------------------------------
+ 1 file changed, 11 insertions(+), 58 deletions(-)
 
+diff --git a/crypto/crc32.c b/crypto/crc32.c
+index cc371d42601fd..b61d5663d0bac 100644
+--- a/crypto/crc32.c
++++ b/crypto/crc32.c
+@@ -57,33 +57,16 @@ static int crc32_init(struct shash_desc *desc)
+ static int crc32_update(struct shash_desc *desc, const u8 *data,
+ 			unsigned int len)
+ {
+ 	u32 *crcp = shash_desc_ctx(desc);
+ 
+-	*crcp = crc32_le_base(*crcp, data, len);
+-	return 0;
+-}
+-
+-static int crc32_update_arch(struct shash_desc *desc, const u8 *data,
+-			     unsigned int len)
+-{
+-	u32 *crcp = shash_desc_ctx(desc);
+-
+ 	*crcp = crc32_le(*crcp, data, len);
+ 	return 0;
+ }
+ 
+ /* No final XOR 0xFFFFFFFF, like crc32_le */
+-static int __crc32_finup(u32 *crcp, const u8 *data, unsigned int len,
+-			 u8 *out)
+-{
+-	put_unaligned_le32(crc32_le_base(*crcp, data, len), out);
+-	return 0;
+-}
+-
+-static int __crc32_finup_arch(u32 *crcp, const u8 *data, unsigned int len,
+-			      u8 *out)
++static int __crc32_finup(u32 *crcp, const u8 *data, unsigned int len, u8 *out)
+ {
+ 	put_unaligned_le32(crc32_le(*crcp, data, len), out);
+ 	return 0;
+ }
+ 
+@@ -91,16 +74,10 @@ static int crc32_finup(struct shash_desc *desc, const u8 *data,
+ 		       unsigned int len, u8 *out)
+ {
+ 	return __crc32_finup(shash_desc_ctx(desc), data, len, out);
+ }
+ 
+-static int crc32_finup_arch(struct shash_desc *desc, const u8 *data,
+-		       unsigned int len, u8 *out)
+-{
+-	return __crc32_finup_arch(shash_desc_ctx(desc), data, len, out);
+-}
+-
+ static int crc32_final(struct shash_desc *desc, u8 *out)
+ {
+ 	u32 *crcp = shash_desc_ctx(desc);
+ 
+ 	put_unaligned_le32(*crcp, out);
+@@ -111,72 +88,48 @@ static int crc32_digest(struct shash_desc *desc, const u8 *data,
+ 			unsigned int len, u8 *out)
+ {
+ 	return __crc32_finup(crypto_shash_ctx(desc->tfm), data, len, out);
+ }
+ 
+-static int crc32_digest_arch(struct shash_desc *desc, const u8 *data,
+-			     unsigned int len, u8 *out)
+-{
+-	return __crc32_finup_arch(crypto_shash_ctx(desc->tfm), data, len, out);
+-}
+-
+-static struct shash_alg algs[] = {{
++static struct shash_alg alg = {
+ 	.setkey			= crc32_setkey,
+ 	.init			= crc32_init,
+ 	.update			= crc32_update,
+ 	.final			= crc32_final,
+ 	.finup			= crc32_finup,
+ 	.digest			= crc32_digest,
+ 	.descsize		= sizeof(u32),
+ 	.digestsize		= CHKSUM_DIGEST_SIZE,
+ 
+ 	.base.cra_name		= "crc32",
+-	.base.cra_driver_name	= "crc32-generic",
+ 	.base.cra_priority	= 100,
+ 	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
+ 	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
+ 	.base.cra_ctxsize	= sizeof(u32),
+ 	.base.cra_module	= THIS_MODULE,
+ 	.base.cra_init		= crc32_cra_init,
+-}, {
+-	.setkey			= crc32_setkey,
+-	.init			= crc32_init,
+-	.update			= crc32_update_arch,
+-	.final			= crc32_final,
+-	.finup			= crc32_finup_arch,
+-	.digest			= crc32_digest_arch,
+-	.descsize		= sizeof(u32),
+-	.digestsize		= CHKSUM_DIGEST_SIZE,
+-
+-	.base.cra_name		= "crc32",
+-	.base.cra_driver_name	= "crc32-" __stringify(ARCH),
+-	.base.cra_priority	= 150,
+-	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
+-	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
+-	.base.cra_ctxsize	= sizeof(u32),
+-	.base.cra_module	= THIS_MODULE,
+-	.base.cra_init		= crc32_cra_init,
+-}};
+-
+-static int num_algs;
++};
+ 
+ static int __init crc32_mod_init(void)
+ {
+-	/* register the arch flavor only if it differs from the generic one */
+-	num_algs = 1 + ((crc32_optimizations() & CRC32_LE_OPTIMIZATION) != 0);
++	const char *driver_name =
++		(crc32_optimizations() & CRC32_LE_OPTIMIZATION) ?
++			"crc32-" __stringify(ARCH) :
++			"crc32-generic";
++
++	strscpy(alg.base.cra_driver_name, driver_name, CRYPTO_MAX_ALG_NAME);
+ 
+-	return crypto_register_shashes(algs, num_algs);
++	return crypto_register_shash(&alg);
+ }
+ 
+ static void __exit crc32_mod_fini(void)
+ {
+-	crypto_unregister_shashes(algs, num_algs);
++	crypto_unregister_shash(&alg);
+ }
+ 
+ module_init(crc32_mod_init);
+ module_exit(crc32_mod_fini);
+ 
+ MODULE_AUTHOR("Alexander Boyko <alexander_boyko@xyratex.com>");
+ MODULE_DESCRIPTION("CRC32 calculations wrapper for lib/crc32");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS_CRYPTO("crc32");
+-MODULE_ALIAS_CRYPTO("crc32-generic");
+
+base-commit: f66bc387efbee59978e076ce9bf123ac353b389c
 -- 
-மணிவண்ணன் சதாசிவம்
+2.49.0
+
