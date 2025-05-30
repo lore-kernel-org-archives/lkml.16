@@ -1,98 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F701201100;
-	Fri, 30 May 2025 16:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25933235057;
+	Fri, 30 May 2025 16:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621577; cv=none; b=pSQoaMwQ/7/f/y9PDkKbRkeuAtcigFi9v3KwCetQtiysa6Ni53JYjozZJgC2ppvEAyckGqhEERyLfYQNxGRzI+An2laaRhWjUReEk6ZmtoxXWi3/edXGrGM7Yu7du5NpTLGZrcFecxw5H0+CoCezIR2Ns66acTkIjga37Pu+nAo=
+	t=1748621644; cv=none; b=kfJxY+EdLBFzz9ehYfxA+a102Tl06H/f10KLzUQRkBEagYiQVRin+aZzIpwVhXTLM+ZB+LIJU/Epz7DvTu5qRo/iq2gGBCfe++Vg5ehvMUcDD9eD1HSQ50aVgt1zLqPCaUdZSwL3VwrB9vMO5TsIZ6UVhxp98hmD8A88pn1yg9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621577; c=relaxed/simple;
-	bh=qHb0Zr+wBBx5YCrrrucwymk256PfXF/K3j1/py67w1w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MzMZO3xWzcDBrBAk9PiQzkTCo4ab7EJfxLEc1OHI53J9yWb/4aBZeLnrIQjAjVT3qYqkrG/BPFgHi4XC0/f8bG96s+q1BpeJekYHDyMYaZicNLkruz4Lk/ptLiJLKj5vvVbWkAdLHyPT/LC3d1Qb6ILPuasVxCcvGtG5pYu04w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2LVbONO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748621644; c=relaxed/simple;
+	bh=7Ha8QhcH6vxCbEOvf4pxZOBX1RWBw+HLR5G0Cw6EZFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7EosEn67Ezqdmav+DCg1WwvzV7PxpcOMp9zvHKgaaXzqGi+KxiPUCmaTGJZ8UPo3PNHZ6QBLDL9FcS7gZsD1jJcYUJIx+2Ne6D0GKcRLynDkcPNsr4TtqwaczA+uB8OuSp6VaswCpefMx4c0Upu4Ah6hbEYN1x21LTVjKPNDE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HJzXUc7q; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2LVbONO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55D4C4CEEE;
-	Fri, 30 May 2025 16:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748621576;
-	bh=qHb0Zr+wBBx5YCrrrucwymk256PfXF/K3j1/py67w1w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=U2LVbONOLENC0SSxnFVPwy6KF84qZhqfHshVyCjZf4AsR1OdpxiT+0bjA0tfgbrLC
-	 ku7Pdru5iJ8K3Ju7qcHRxm6bpfLR31QmIvZhKoD3JFcEVI52zr1TtYQLYV/+8EBEns
-	 WBa6pThc/Lh8WbecNRzrAzK8Io6Vp5Vj9i+9ecJON4bI98/odjme4TmOaKO+mPWECO
-	 w3fIS0qHqcxQUP7Z9+bKgRcQ6xUu25ff3rfln7J3ce8uapIb0pVTp2j41VT0Bd3d4x
-	 c3fx4Iq3SFVTvOBNxUhY4LwgRN5u0YYBvmtQOS2J+e3/ToKnBz9lpOtAzyP7i8gn2A
-	 l7KdVQQASJCOA==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d6f933152so3322940e87.1;
-        Fri, 30 May 2025 09:12:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWBbfPlurh+luo1FnYC1hzjPUqZZs2NgLHbjFP/FHcuMNfmyvR2jOSCC/0Cq9yPQ94f8scxkBvurm714hf9@vger.kernel.org, AJvYcCX3Cf1iloL2J/kPO54/WZLxMBxy9TRPR4rJdATQs6y0ubxpswp4madyGaJ3uVK46subcZLlyu7RHg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1ngvpM9TklaJKWQz/RlkKKG6QcucdjpCOrlkfZb6ZoGRW4MSz
-	Gwu4YPpmf1+pdFVLZGfrNoSTMWcZE5wWnBU84Tj16T0abhCTzl9Td5aS8hX9GbenAvp9yoTttoo
-	z4FlXHvjZDenfKTRUtZ8DyoCDfMvxSU0=
-X-Google-Smtp-Source: AGHT+IHwZV4mqTqRE3lmPEJbXM+Gb9AQ/0rpHd+UeKYSZtrfDsudGTdNhQ84S+QvEU/Wuv9EDKI1XJqUGy2okIaWe88=
-X-Received: by 2002:a05:6512:220d:b0:553:3945:82a3 with SMTP id
- 2adb3069b0e04-5533d14f17amr880099e87.9.1748621575303; Fri, 30 May 2025
- 09:12:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HJzXUc7q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748621642; x=1780157642;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7Ha8QhcH6vxCbEOvf4pxZOBX1RWBw+HLR5G0Cw6EZFc=;
+  b=HJzXUc7qy/Vm5S3Jn/0ujG0ylBRF/BiCiQPRWMQGfhvy2w7pAjm7QdZN
+   NbZYwx93OSNqmWSN259FlZunr1ZcABPIL6Wa592ftU2k/9rrCX6lIO/XH
+   BZw10vkiwGBRco+1GeYQgP29RuK0OsuZKcwN5vktq8FEQdVhOqZ4CBUnp
+   XRmjTOVgv1aN/P2T4KA5mud2/MNNbWVwhrV6re6P2sRYFHo2L8x4Dfheo
+   wT+i/Oj0delvYcBIxMTqYKCsraKWEAr3s/Xtsw/vJfED7N9KkCOCn4BN1
+   NgDbsgtlFbMxHoLZvOzQr3Te8NTvB6DNwECNI0/hgMePwcIwEWdcUM6Wk
+   g==;
+X-CSE-ConnectionGUID: 7V2xg0ixQ7eJRZhaW6HVoQ==
+X-CSE-MsgGUID: t8rTsH0oTpKCcMLEJtaqtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="38348580"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="38348580"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 09:14:01 -0700
+X-CSE-ConnectionGUID: cty8znblT/OT/sJyYpRcZQ==
+X-CSE-MsgGUID: YgHR8Xp7Qp+rtp4YuuUnSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144379572"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 30 May 2025 09:13:56 -0700
+Date: Sat, 31 May 2025 00:07:34 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, kvm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
+	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
+	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
+	dan.j.williams@intel.com, yilun.xu@intel.com,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
+	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050>
+References: <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
+ <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
+ <20250514163339.GD382960@nvidia.com>
+ <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
+ <9dea400f-a57b-43be-a2e4-24a9f51e6ba0@amd.com>
+ <aDE5SPzOAU0sNIt+@yilunxu-OptiPlex-7050>
+ <ae16db07-5fca-4369-aa67-cbe2e0fd60fd@amd.com>
+ <aDhyC73r149syMpc@yilunxu-OptiPlex-7050>
+ <20250529162923.GH192531@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-35-ardb+git@google.com>
- <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local> <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
- <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
-In-Reply-To: <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 30 May 2025 18:12:43 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
-X-Gm-Features: AX0GCFsVhN6DYhScAr0jOTTn1yBQuOI5_Xccmyw26HwyP9XrDXqBluV9BpaqrxY
-Message-ID: <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature check
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529162923.GH192531@nvidia.com>
 
-On Fri, 30 May 2025 at 18:08, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, May 30, 2025 at 04:28:52PM +0200, Ard Biesheuvel wrote:
-> > > > +u64 __head snp_check_hv_features(void)
-> > > > +{
-> > > > +     /*
-> > > > +      * SNP is supported in v2 of the GHCB spec which mandates support for HV
-> > > > +      * features.
-> > > > +      */
-> >
-> > ... get_hv_features() is only when SEV-SNP has already been detected.
->
-> Hmm, I see
->
-> void sev_enable(struct boot_params *bp)
-> {
->         ...
->
->         /*
->          * Setup/preliminary detection of SNP. This will be sanity-checked
->          * against CPUID/MSR values later.
->          */
->         snp = early_snp_init(bp);
->
->         ...
->
->         snp_check_hv_features();
->
->         if (snp && !(sev_status & MSR_AMD64_SEV_SNP_ENABLED))
->
-> This is called here without checking the snp boolean.
->
-> And without checking the version it is fragile anyway. Why do you even need to
-> remove the version check?
->
+On Thu, May 29, 2025 at 01:29:23PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 29, 2025 at 10:41:15PM +0800, Xu Yilun wrote:
+> 
+> > > On AMD, the host can "revoke" at any time, at worst it'll see RMP
+> > > events from IOMMU. Thanks,
+> > 
+> > Is the RMP event firstly detected by host or guest? If by host,
+> > host could fool guest by just suppress the event. Guest thought the
+> > DMA writting is successful but it is not and may cause security issue.
+> 
+> Is that in scope of the threat model though? Host must not be able to
+> change DMAs or target them to different memory, but the host can stop
+> DMA and loose it, surely?
 
-Because the assignment is moved out of the startup code later.
+This is within the threat model, this is a data integrity issue, not a
+DoS issue.  If secure firmware don't care, then no component within the
+TCB could be aware of the data loss.
+
+> 
+> Host controls the PCI memory enable bit, doesn't it?
+
+That's why DSM should fallback the device to CONFIG_UNLOCKED when memory
+enable is toggled, that makes TD/TDI aware of the problem. But for IOMMU
+PT blocking, DSM cannot be aware, TSM must do something.
+
+Zhi helps find something in SEV-TIO Firmware Interface SPEC, Section 2.11
+which seems to indicate SEV does do something for this.
+
+"If a bound TDI sends a request to the root complex, and the IOMMU detects a fault caused by host
+configuration, the root complex fences the ASID from all further I/O to or from that guest. A host
+fault is either a host page table fault or an RMP check violation. ASID fencing means that the
+IOMMU blocks all further I/O from the root complex to the guest that the TDI was bound, and the
+root complex blocks all MMIO accesses by the guest. When a guest writes to MMIO, the write is
+silently dropped. When a guest reads from MMIO, the guest reads 1s."
+
+Blocking all TDIs should definitely be avoided. Now I'm more sure Unbind
+before DMABUF revoke is necessary.
+
+Thanks,
+Yilun
+
+> 
+> Jason
