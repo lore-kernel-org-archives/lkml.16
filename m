@@ -1,184 +1,264 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A46182BC
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CD710FD
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748590195; cv=none; b=Gv4AW6plFPNDwEK4J1MCJ2WrHajG9ffhEB64yXYsfheel70C9fM6knsjJt6D90xKQGkDC5N+MwX6iyJE6RfogDR7+/8JOM3/OV8eRdmXqiqniScEgiFhPuTiW0G2FHMbjdrG/NAn8hGhuwfCOn0AzG0UJvITxof0s5i/V2gOgJk=
+	t=1748590291; cv=none; b=myzpUlLyrycOjp7olr6+fNVD7J5+bfNxI4qVe8Toz7+DtXhwu1RMHJS3FBqlbliZTnQJi2mCig4MPkCKTn0EipfKec2+rG6OwiDO+DDC6LY1upt3yO2EuBFxZzRQBw9gTZ+ARwE+vaMPkO/dvRg4RBLc+A0h1PClmZ195e70XWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748590195; c=relaxed/simple;
-	bh=lzzvlHQSXjqy3rMmpjuCfFbsEuWsuxNIkCC890RfZDw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=FkSipdKVDVFRAonS54p8716Y21QxWBmHe2HPNWWqPOc+NlxKkZiy1t/94Q0SXTZI5W63/zBjblb7H9KVPoquPksKN7LFiEOM6z6twe096kg56+1cr04Gq0AXcHETdcXFnJXk7LloFOhWwO3tVB6uOmPczFtra7lf6K/orMy+PdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D+jIjz1j; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748590291; c=relaxed/simple;
+	bh=4kWdTAYOz5Pc5WNpJNLqZME+zHvxxbllcD5V1Sv5q6E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EM9LQv4aNk/rwusARK+Ku1viRguKZPx1NV6ti3WvSgqkPNgN/1PS54B1os/CFa5D2WxO50uBoPjCUWdHLTtuPrGAOyeoVnmEex3IHZypYiu1jYBQN4siWTMw5pcdUCY2Sn9GqYBxklLggQ/Le8nA5X6EGaPkrs2k/hGD23INxBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lnkwtJqW; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D+jIjz1j"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0dZvG013716;
-	Fri, 30 May 2025 07:29:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=A/4FJmYllYDHyQiJ9derJk
-	xxuUpThuwVaYCoWHYqi5o=; b=D+jIjz1jO/SAs9me3gFOApY7VyriYUphGhFQKg
-	DVSOZMmHFJjvwNYO0gmJv0wmo2akWOxHxByO0obRp2YDc15kW11hbT1biysCgQdl
-	0IlYXO1KcV2iO0H6ACgRrhqrF2fNzRNM28ixFGbtWI8r7koOih7RDzfJof+Ap8sQ
-	APNvZEPMAUZKZrSsF1OBXxZMLhtJUAkk45hLXz1wW5d8hVTZZOlPheSF0Tiiknmf
-	k205sY8OikgR1Jgkj8Dj8niFN4NkKf9NNtApk+gZj+9tU2u4a2cyiNqhl39Zuuwc
-	/bSsjk+Lvj+2kjKbuEk4fiflHcKmJBieXP1mV36OWGcYe4sA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46wavm22ne-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 07:29:42 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54U7TgYG026845
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 07:29:42 GMT
-Received: from yuanfang4-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 30 May 2025 00:29:39 -0700
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Date: Fri, 30 May 2025 15:29:14 +0800
-Subject: [PATCH] coresight-tpdm: add trace_id sysfs node
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lnkwtJqW"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748590285; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=sUdJS8owTGJQ26ayrRUygOFvVD5DOZcz8FU13W0N0M4=;
+	b=lnkwtJqWiifuNG2n4tgc3acC6Il9R9qniL4/LlJ3+3tnudrm0fRWa3pbXsmNrGj9uwPn5lO8iEMsBeT4cAv5aF9ipA4ntYTWsghEpOGIgDY2edsd3nn0UPf88tki3lsoZxFSUWmDfk34m2L7FPjt5JILup2L9GSlavbLbV7ttH0=
+Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0WcKViDG_1748590283 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 15:31:24 +0800
+From: Bitao Hu <yaoma@linux.alibaba.com>
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	yaoma@linux.alibaba.com,
+	kanie@linux.alibaba.com
+Subject: [PATCH] nvme: Support per-device timeout settings
+Date: Fri, 30 May 2025 15:31:21 +0800
+Message-Id: <20250530073121.26683-1-yaoma@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAEpeOWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDUyNj3eKM/PKSosTk1MwUXaOUNEvDZAvLpFSLNCWgjoKi1LTMCrBp0bG
- 1tQA+uRObXQAAAA==
-X-Change-ID: 20250523-showtraceid-2df91c89be8f
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>
-CC: <kernel@oss.qualcomm.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748590179; l=2852;
- i=quic_yuanfang@quicinc.com; s=20241209; h=from:subject:message-id;
- bh=lzzvlHQSXjqy3rMmpjuCfFbsEuWsuxNIkCC890RfZDw=;
- b=bdOBpCFyYyBGlD4IOna7p33RtL9lQG9IRK1udvrdPhuR7+aaSbaZn3qttPxj+BWG8cewlic46
- YdUH8ypQZ27Ds5LjtLu8MqNH7m0UGgOb9mMD1qQBmhq9hrSN+Fkczbv
-X-Developer-Key: i=quic_yuanfang@quicinc.com; a=ed25519;
- pk=ZrIjRVq9LN8/zCQGbDEwrZK/sfnVjwQ2elyEZAOaV1Q=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: G5pnpVGpZaeECgjra_qgSV-DTe-sRA6Y
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA2MiBTYWx0ZWRfX3aAPgmUQ98FE
- pl5SgetZxmhrEMwyvBvlXy4tIsZ45T1pwlioDib60tvf9MbcFjaaELW/lNeDgpDwcYikSlidvhk
- iDhkcDSm3KM7KCKF1sIqR9+o3IFbWM10LbpqI3cH4ZpzLWZjUcnOKcjAOVLC+rp7/f/qEJChaCM
- jA7mgg1JvIoiJanck6PILvi5CUgQt5DX+o6imBSkS0NK7MiCATBZ2h0HjMk0JkX5mVC0FgHvjV9
- JL92Vjml/2nq2DP5mFu55x24E+yC5IbeQWwH3ZwivM/C5kiOjHTlsOyzIt3s73MzI3Vm8E/VTGh
- QFhUX05/OJjoT0OrzAEChsfpcRSDASn2CyrDhE8V8yyy36wEvJjupyP3K0YuHFO56Y4S+GXzDy6
- bclWvqUAWHVrkTSxzX4+jjO6He+nDyllaRmOY/kYcP/bzMJFh51GFUtE4D7q91YGnNGOF1vB
-X-Authority-Analysis: v=2.4 cv=fMk53Yae c=1 sm=1 tr=0 ts=68395e67 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=XC05_-ciSpCNkHTdwDIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: G5pnpVGpZaeECgjra_qgSV-DTe-sRA6Y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_03,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 impostorscore=0 phishscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300062
+Content-Transfer-Encoding: 8bit
 
-The trace ID of TPMD is the trace ID of the TPDA or TNOC
-which it is connected to, this change adds trace_id sysfs
-node to expose this trace id to userspace.
+The current 'admin_timeout' and 'io_timeout' parameters in
+the NVMe driver are global, meaning they apply to all NVMe
+devices in the system. However, in certain scenarios, it is
+necessary to set separate timeout values for different
+types of NVMe devices.
 
-Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+To address this requirement, we propose adding two new fields,
+'admin_timeout' and 'io_timeout', to the sysfs interface for
+each NVMe device. By default, these values will be consistent
+with the global parameters. If a user sets these values
+individually for a specific device, the user-defined values
+will take precedence.
+
+Usage example:
+To set admin_timeout=100 and io_timeout=50 for the NVMe device nvme1,
+use the following commands:
+
+echo 100 > /sys/class/nvme/nvme1/admin_timeout
+echo 50  > /sys/class/nvme/nvme1/io_timeout
+
+Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
 ---
- drivers/hwtracing/coresight/coresight-tpdm.c | 16 ++++++++++++++++
- drivers/hwtracing/coresight/coresight-tpdm.h |  2 ++
- 2 files changed, 18 insertions(+)
+ drivers/nvme/host/apple.c |  2 +-
+ drivers/nvme/host/core.c  |  6 ++--
+ drivers/nvme/host/nvme.h  |  2 +-
+ drivers/nvme/host/pci.c   |  4 +--
+ drivers/nvme/host/rdma.c  |  2 +-
+ drivers/nvme/host/sysfs.c | 62 +++++++++++++++++++++++++++++++++++++++
+ drivers/nvme/host/tcp.c   |  2 +-
+ 7 files changed, 71 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
-index 7214e65097ec9ac69f6c7c9278bcd28d25945c9e..8a5d115157924f39b09f8e3005827d7d64aa376c 100644
---- a/drivers/hwtracing/coresight/coresight-tpdm.c
-+++ b/drivers/hwtracing/coresight/coresight-tpdm.c
-@@ -497,6 +497,9 @@ static int tpdm_enable(struct coresight_device *csdev, struct perf_event *event,
+diff --git a/drivers/nvme/host/apple.c b/drivers/nvme/host/apple.c
+index b1fddfa33ab9..ec7c7cfcdf5b 100644
+--- a/drivers/nvme/host/apple.c
++++ b/drivers/nvme/host/apple.c
+@@ -821,7 +821,7 @@ static void apple_nvme_disable(struct apple_nvme *anv, bool shutdown)
+ 	 * doing a safe shutdown.
+ 	 */
+ 	if (!dead && shutdown && freeze)
+-		nvme_wait_freeze_timeout(&anv->ctrl, NVME_IO_TIMEOUT);
++		nvme_wait_freeze_timeout(&anv->ctrl);
  
- 	__tpdm_enable(drvdata);
- 	drvdata->enable = true;
-+
-+	if (path)
-+		drvdata->traceid = path->trace_id;
- 	spin_unlock(&drvdata->spinlock);
+ 	nvme_quiesce_io_queues(&anv->ctrl);
  
- 	dev_dbg(drvdata->dev, "TPDM tracing enabled\n");
-@@ -554,6 +557,7 @@ static void tpdm_disable(struct coresight_device *csdev,
- 	__tpdm_disable(drvdata);
- 	coresight_set_mode(csdev, CS_MODE_DISABLED);
- 	drvdata->enable = false;
-+	drvdata->traceid = 0;
- 	spin_unlock(&drvdata->spinlock);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index f69a232a000a..32eade3418f8 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -725,11 +725,10 @@ void nvme_init_request(struct request *req, struct nvme_command *cmd)
+ 		struct nvme_ns *ns = req->q->disk->private_data;
  
- 	dev_dbg(drvdata->dev, "TPDM tracing disabled\n");
-@@ -655,9 +659,21 @@ static ssize_t integration_test_store(struct device *dev,
+ 		logging_enabled = ns->head->passthru_err_log_enabled;
+-		req->timeout = NVME_IO_TIMEOUT;
+ 	} else { /* no queuedata implies admin queue */
+ 		logging_enabled = nr->ctrl->passthru_err_log_enabled;
+-		req->timeout = NVME_ADMIN_TIMEOUT;
+ 	}
++	req->timeout = req->q->rq_timeout;
+ 
+ 	if (!logging_enabled)
+ 		req->rq_flags |= RQF_QUIET;
+@@ -5174,10 +5173,11 @@ void nvme_unfreeze(struct nvme_ctrl *ctrl)
  }
- static DEVICE_ATTR_WO(integration_test);
+ EXPORT_SYMBOL_GPL(nvme_unfreeze);
  
-+static ssize_t traceid_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
+-int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout)
++int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl)
+ {
+ 	struct nvme_ns *ns;
+ 	int srcu_idx;
++	long timeout = ctrl->tagset->timeout;
+ 
+ 	srcu_idx = srcu_read_lock(&ctrl->srcu);
+ 	list_for_each_entry_srcu(ns, &ctrl->namespaces, list,
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index ad0c1f834f09..50b5f2848f85 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -833,7 +833,7 @@ void nvme_sync_queues(struct nvme_ctrl *ctrl);
+ void nvme_sync_io_queues(struct nvme_ctrl *ctrl);
+ void nvme_unfreeze(struct nvme_ctrl *ctrl);
+ void nvme_wait_freeze(struct nvme_ctrl *ctrl);
+-int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl, long timeout);
++int nvme_wait_freeze_timeout(struct nvme_ctrl *ctrl);
+ void nvme_start_freeze(struct nvme_ctrl *ctrl);
+ 
+ static inline enum req_op nvme_req_op(struct nvme_command *cmd)
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index e0bfe04a2bc2..e0b29b385d0b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2690,7 +2690,7 @@ static bool __nvme_delete_io_queues(struct nvme_dev *dev, u8 opcode)
+ 	unsigned long timeout;
+ 
+  retry:
+-	timeout = NVME_ADMIN_TIMEOUT;
++	timeout = dev->ctrl.admin_q->rq_timeout;
+ 	while (nr_queues > 0) {
+ 		if (nvme_delete_queue(&dev->queues[nr_queues], opcode))
+ 			break;
+@@ -2871,7 +2871,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 		 * if doing a safe shutdown.
+ 		 */
+ 		if (!dead && shutdown)
+-			nvme_wait_freeze_timeout(&dev->ctrl, NVME_IO_TIMEOUT);
++			nvme_wait_freeze_timeout(&dev->ctrl);
+ 	}
+ 
+ 	nvme_quiesce_io_queues(&dev->ctrl);
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index b5a0295b5bf4..01a9250810cf 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -888,7 +888,7 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
+ 	if (!new) {
+ 		nvme_start_freeze(&ctrl->ctrl);
+ 		nvme_unquiesce_io_queues(&ctrl->ctrl);
+-		if (!nvme_wait_freeze_timeout(&ctrl->ctrl, NVME_IO_TIMEOUT)) {
++		if (!nvme_wait_freeze_timeout(&ctrl->ctrl)) {
+ 			/*
+ 			 * If we timed out waiting for freeze we are likely to
+ 			 * be stuck.  Fail the controller initialization just
+diff --git a/drivers/nvme/host/sysfs.c b/drivers/nvme/host/sysfs.c
+index 29430949ce2f..9b8c29435bfa 100644
+--- a/drivers/nvme/host/sysfs.c
++++ b/drivers/nvme/host/sysfs.c
+@@ -10,6 +10,66 @@
+ #include "nvme.h"
+ #include "fabrics.h"
+ 
++static ssize_t admin_timeout_show(struct device *dev, struct device_attribute *attr, char *buf)
 +{
-+	unsigned long val;
-+	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
 +
-+	val = drvdata->traceid;
-+	return sprintf(buf, "%#lx\n", val);
++	return sysfs_emit(buf, "%u\n", ctrl->admin_tagset->timeout / HZ);
 +}
-+static DEVICE_ATTR_RO(traceid);
 +
- static struct attribute *tpdm_attrs[] = {
- 	&dev_attr_reset_dataset.attr,
- 	&dev_attr_integration_test.attr,
-+	&dev_attr_traceid.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/hwtracing/coresight/coresight-tpdm.h b/drivers/hwtracing/coresight/coresight-tpdm.h
-index b117543897344b689f666f6890cabb59c8ee4869..e12a64f265daa86f1b82fa3640e271e8386f99af 100644
---- a/drivers/hwtracing/coresight/coresight-tpdm.h
-+++ b/drivers/hwtracing/coresight/coresight-tpdm.h
-@@ -300,6 +300,7 @@ struct cmb_dataset {
-  * @cmb         Specifics associated to TPDM CMB.
-  * @dsb_msr_num Number of MSR supported by DSB TPDM
-  * @cmb_msr_num Number of MSR supported by CMB TPDM
-+ * @traceid:    Value of the current ID for this component.
-  */
- 
- struct tpdm_drvdata {
-@@ -313,6 +314,7 @@ struct tpdm_drvdata {
- 	struct cmb_dataset	*cmb;
- 	u32			dsb_msr_num;
- 	u32			cmb_msr_num;
-+	u8			traceid;
- };
- 
- /* Enumerate members of various datasets */
-
----
-base-commit: 94305e83eccb3120c921cd3a015cd74731140bac
-change-id: 20250523-showtraceid-2df91c89be8f
-
-Best regards,
++static ssize_t admin_timeout_store(struct device *dev,
++				   struct device_attribute *attr, const char *buf,
++				   size_t count)
++{
++	int ret;
++	unsigned int timeout;
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
++
++	ret = kstrtouint(buf, 10, &timeout);
++	if (ret < 0 || timeout == 0)
++		return -EINVAL;
++
++	timeout = timeout * HZ;
++	ctrl->admin_tagset->timeout = timeout;
++	blk_queue_rq_timeout(ctrl->admin_q, timeout);
++
++	return count;
++}
++static DEVICE_ATTR_RW(admin_timeout);
++
++static ssize_t io_timeout_show(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
++
++	return sysfs_emit(buf, "%u\n", ctrl->tagset->timeout / HZ);
++}
++
++static ssize_t io_timeout_store(struct device *dev,
++				struct device_attribute *attr, const char *buf,
++				size_t count)
++{
++	int ret, srcu_idx;
++	unsigned int timeout;
++	struct nvme_ns *ns;
++	struct nvme_ctrl *ctrl = dev_get_drvdata(dev);
++
++	ret = kstrtouint(buf, 10, &timeout);
++	if (ret < 0 || timeout == 0)
++		return -EINVAL;
++
++	timeout = timeout * HZ;
++	ctrl->tagset->timeout = timeout;
++	srcu_idx = srcu_read_lock(&ctrl->srcu);
++	list_for_each_entry_srcu(ns, &ctrl->namespaces, list,
++				srcu_read_lock_held(&ctrl->srcu)) {
++		blk_queue_rq_timeout(ns->queue, timeout);
++	}
++	srcu_read_unlock(&ctrl->srcu, srcu_idx);
++
++	return count;
++}
++static DEVICE_ATTR_RW(io_timeout);
++
+ static ssize_t nvme_sysfs_reset(struct device *dev,
+ 				struct device_attribute *attr, const char *buf,
+ 				size_t count)
+@@ -722,6 +782,8 @@ static DEVICE_ATTR(dhchap_ctrl_secret, S_IRUGO | S_IWUSR,
+ static struct attribute *nvme_dev_attrs[] = {
+ 	&dev_attr_reset_controller.attr,
+ 	&dev_attr_rescan_controller.attr,
++	&dev_attr_admin_timeout.attr,
++	&dev_attr_io_timeout.attr,
+ 	&dev_attr_model.attr,
+ 	&dev_attr_serial.attr,
+ 	&dev_attr_firmware_rev.attr,
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index f6379aa33d77..c66c98e2cfe4 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -2169,7 +2169,7 @@ static int nvme_tcp_configure_io_queues(struct nvme_ctrl *ctrl, bool new)
+ 	if (!new) {
+ 		nvme_start_freeze(ctrl);
+ 		nvme_unquiesce_io_queues(ctrl);
+-		if (!nvme_wait_freeze_timeout(ctrl, NVME_IO_TIMEOUT)) {
++		if (!nvme_wait_freeze_timeout(ctrl)) {
+ 			/*
+ 			 * If we timed out waiting for freeze we are likely to
+ 			 * be stuck.  Fail the controller initialization just
 -- 
-Yuanfang Zhang <quic_yuanfang@quicinc.com>
+2.39.5 (Apple Git-154)
 
