@@ -1,92 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8038A15E97;
-	Fri, 30 May 2025 13:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B317921517C;
+	Fri, 30 May 2025 13:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612298; cv=none; b=WZ13PQ2L2gdFvzOp7X10WyRo1kusunhYo/9bW9Bz1dy+Il3tQKajsNfMOup4l9EgcLBMkfU9gI7AqtoqwzMIgLOJeRFcMAwOEvGtOQupWAZnyuZNUDztuwcFHyQHS3GjlvIunGjJ5bOu5Wtv2KqhmiGlfLf/K+ZZccpc7nHYLx8=
+	t=1748612310; cv=none; b=JYOGMswRlRMyJ8VfIdZ1hhtnmHyEAARPRBLJCoOuJjI7xuKn3eg1b4aVH1467rXGSGSNCb2JyUPWJJIa/VFf485L/vHfHryg46G46g9ZKIFS4NI7yk7rJd+frs3FzybJiEdQ/mfJiqBd4vIWEEjx5a++JXGhm4tZP1Ch9qZ50nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612298; c=relaxed/simple;
-	bh=oErVW9B+sUdfA4HxRdKhLGzTWK6paqVXGRHYPARTOEA=;
+	s=arc-20240116; t=1748612310; c=relaxed/simple;
+	bh=okfO53B1MuctCihtZiKCNsiS2kQIh+Mos6rbOD+jj8c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xqg52a1sEhGNMIxPaIXncvngj4J5TcYaR1vfXvniY9Q7FPIo+wd3YkttXxD1HEmdoYfQr/iQmn0TFYvXczZ5Y9wxmI8gVLJZ78zI/JMIDfC0HhmOpWJPZCn6lhjRLQp+TWTqu5uUR72vdFTe+ywy0CMqBwMN5P0j9v9EKFFrIZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFYy2kW1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=doT5GyW6Za1k5TC48tlXVlhePDTDoBgStGZlFjcTVWHG9QBeiOKYeGHoZNe2OyNx0U8YnqKBQhMoaMXOfjFzq/O+wAi4TI1wKyLI1yPKzlrtRoi+w4xJij7+5u/zmalHSlwA0Nex1O5Qrty45/9smiXfkyauAljIhGlPfKbQXOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=fS7CR5L4; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFYy2kW1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7316DC4CEEB;
-	Fri, 30 May 2025 13:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748612296;
-	bh=oErVW9B+sUdfA4HxRdKhLGzTWK6paqVXGRHYPARTOEA=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="fS7CR5L4"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E526B89A;
+	Fri, 30 May 2025 15:37:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748612279;
+	bh=okfO53B1MuctCihtZiKCNsiS2kQIh+Mos6rbOD+jj8c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZFYy2kW1qmK0GWogVV0GRDlXo7mBPSS2bH4NQ1ny7s7gqibNDBod4dnfNi5ied47e
-	 f4JC+WOBnW5wR+Vxhrf3wSHL80QEg3C7uZ+rGmEkRwa/RLaN+uabxIOmYW6+bFuekR
-	 MEzlekglA30jtfTgCzKXpYo28fDi8qfWW8oQVHBPtalM4rRidb0mcLKo6wbEGXIAmz
-	 gJlugk5fRBuO5TlCitpcuegepTmsD7YIZOagfxMiFy0Df5rjqLTmPoLATclIRfp3yw
-	 pNXz4JFBEtiuqPT43wJ4apGWXy97XUKY5WfvITMl51YG7m6BU3dmUMgisfuAcU+3I8
-	 vbDQxXSDU6cTg==
-Date: Fri, 30 May 2025 14:38:12 +0100
-From: Will Deacon <will@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-	nathan@kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] arm64: Disable LLD linker ASSERT()s for the time being
-Message-ID: <20250530133811.GB30622@willie-the-truck>
-References: <20250529073507.2984959-2-ardb+git@google.com>
+	b=fS7CR5L4Ri4EdInT3VKvDyb4ZXdL/n+8OpunXXsCmRhOXqrkJ6Q5//0GsYph7dK8l
+	 kEMESAjHk2eGNgfCRLFyQDSLpN39BLQFipBgjTOVnFrq4VlqqRPy8qE2hNNkmOume6
+	 pHhpqq783sFSsnRku5ADvJcGbzyCvA8LKu5xMOv8=
+Date: Fri, 30 May 2025 16:38:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] media: rcar-csi2: Add D-PHY support for V4H
+Message-ID: <20250530133820.GC18205@pendragon.ideasonboard.com>
+References: <20250511174730.944524-1-niklas.soderlund+renesas@ragnatech.se>
+ <20250511174730.944524-5-niklas.soderlund+renesas@ragnatech.se>
+ <10d2ae58-8da8-4802-95be-951d8b376551@oracle.com>
+ <20250511200333.GA2365307@ragnatech.se>
+ <CAMuHMdUbMRBFV-7hDMQ3-UKAhzfbGM5yZJz05aGAHpOKZ5eKcQ@mail.gmail.com>
+ <20250512084843.GE2365307@ragnatech.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250529073507.2984959-2-ardb+git@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250512084843.GE2365307@ragnatech.se>
 
-On Thu, May 29, 2025 at 09:35:08AM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
+On Mon, May 12, 2025 at 10:48:43AM +0200, Niklas Söderlund wrote:
+> On 2025-05-12 09:37:48 +0200, Geert Uytterhoeven wrote:
+> > On Sun, 11 May 2025 at 22:03, Niklas Söderlund wrote:
+> > > On 2025-05-12 00:37:09 +0530, ALOK TIWARI wrote:
+> > > > On 11-05-2025 23:17, Niklas Söderlund wrote:
+> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0404);
+> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x040c);
+> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x0414);
+> > > > > +   rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, 0x041c);
+> > 
+> >  [...]
+> > 
+> > > > Instead of manually writing each call, it could use a loop ?
+> > > >
+> > > > for (int i = 0x0404; i <= 0x07fc; i += 0x08) {
+> > > >     rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG, i);
+> > >
+> > > Unfortunately the values are not all sequential, see the progression
+> > > 0x061c -> 0x0623 and 0x071c -> 0x0723 for example.
+> > >
+> > > > or if values are not strictly sequential, iterating over the array.
+> > > > static const u16 register_values[]= {0x0404, 0x040c, 0x0414 etc,,}
+> > > > rcsi2_write16(priv, V4H_CORE_DIG_COMMON_RW_DESKEW_FINE_MEM_REG,
+> > > > register_values[i]);
+> > >
+> > > I agree with you, a array of values would make this look a tad less
+> > > silly and would reduce the number of lines. I considered this while
+> > > writing it but opted for this. My reason was as most of the register
+> > > writes needed to setup the PHY are not documented in the docs I have and
+> > > I wanted to keep the driver as close to the table of magic values I have
+> > > to make it easy to compare driver and the limited documentation.
+> > >
+> > > I guess it's really a matter of style. I have no real strong opinion, if
+> > > people think an array would be nicer I have no issue switching to that.
+> > 
+> > Have you looked at the impact on kernel size?
 > 
-> It turns out that the way LLD handles ASSERT()s in the linker script can
-> result in spurious failures, so disable them for the newly introduced
-> BSS symbol export checks.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/2094
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/arm64/kernel/image-vars.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/image-vars.h b/arch/arm64/kernel/image-vars.h
-> index c5266430284b..86f088a16147 100644
-> --- a/arch/arm64/kernel/image-vars.h
-> +++ b/arch/arm64/kernel/image-vars.h
-> @@ -10,6 +10,10 @@
->  #error This file should only be included in vmlinux.lds.S
->  #endif
->  
-> +#if defined(CONFIG_LD_IS_LLD) && CONFIG_LLD_VERSION < 210000
-> +#define ASSERT(...)
-> +#endif
-> +
->  #define PI_EXPORT_SYM(sym)		\
->  	__PI_EXPORT_SYM(sym, __pi_ ## sym, Cannot export BSS symbol sym to startup code)
->  #define __PI_EXPORT_SYM(sym, pisym, msg)\
-> @@ -142,4 +146,6 @@ KVM_NVHE_ALIAS(kvm_protected_mode_initialized);
->  _kernel_codesize = ABSOLUTE(__inittext_end - _text);
->  #endif
->  
-> +#undef ASSERT
+> That is a good point, I'm sure an array would reduce the kernel size. I 
+> could possibly even craft a few clever loops to to generate the values 
+> as they are almost sequential. As these are magic values I had opted to 
+> keep it close to the docs, but seems people prefere something else. Will 
+> change this and send new version.
 
-What about the ASSERT()s at the end of vmlinux.lds.S? Are they not
-affected by the bug, for some reason?
+I recommend an array of values. That will significantly reduce the size,
+while keeping the code easy to compare with the documentation. We can
+try to be more clever than that in a separate patch if desired.
 
-Also, even with this patch applied, I still see a link failure:
+-- 
+Regards,
 
-  | ld.lld: error: assignment to symbol __init_end does not converge
-
-with the .config you sent me off-list.
-
-Will
+Laurent Pinchart
