@@ -1,77 +1,160 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 649C5258A;
-	Fri, 30 May 2025 16:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C2B258A
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748622379; cv=none; b=bpu9B6BvTPxsUcEzy0lex4Y3ASBHjZeWHBf7V1msKteV2Lve4Chr1j2lrGv0DGqdibqpmxcJ+ZSxfYmMLPvUnWrsoBpnPfT0+Z+26vFHafhw5CJm8Q2afkYu7LuunzIJQP9PbnKcY2PplAZTQpQ6Wtrn4oLfLLCwVEfGzROy0zs=
+	t=1748622445; cv=none; b=ZUhKKB7AlZ9oxzWqjjoBiQDXWKc8LsdM3BR0QrGnds5HlpH6ZATydx+KMPpobjkmn740jd7qp3fV+L+F00e+4dINGVs0Kgn8t9xjofcQC5+cYvxX6byidjb7TvJbaMKczE9PDw2IlGVaYxr2AQeayTI1cxL2kw04VSJ0/GMDaTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748622379; c=relaxed/simple;
-	bh=4gl8dUCffxbWT74cO0c8qTqtcjsb/ZE1Evms0ln2jU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mtazwsvr22co9Bu+ftW7HtyaNMQ45kM1+uxaHG9PrQaDi0dRSL7YzbSJbXgnD3TxfE5Dyp55sYZMsiajwivdQp/IFgRNUyAd6pTI4og51tOBakmVk2pRnBWuxd1uTshPlRvk6TIs88ESpC6tT1hKP1//k+pKa1mDitVXgopT0RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VImXXTJ4; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748622445; c=relaxed/simple;
+	bh=dF1+gDmyxY/9rUreETaqbpogRNLbyWryW5tlSGlkXTU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tJZR8tBB3gaPt8swCeIzPjsFcet2QBNwr7gE88AvKhRnvwgvQ5NvqQAhx95YBFUjjjNjAk8PJh2vWUr05lEOQloayQdJyKUvObu97Sj+P00YzlOkc5S9aJ6M2R1u5oJpLIPR4IZwAO9CjkKSsm26obKOctUadezexKnFvcGjRQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z0SHbwEG; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VImXXTJ4"
-Received: from [100.65.200.22] (unknown [20.236.11.185])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A16E2203EE17;
-	Fri, 30 May 2025 09:26:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A16E2203EE17
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748622376;
-	bh=kKMCiJ564pe1xngnFVI97L6tQgSCXjivTIKDQLWSdJQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VImXXTJ4G7YyU/cSHkqcyXm3pWm38kDsOdgfwLLmSjvicJeNqJdaHlIWmTUVSDKmD
-	 VDsdPMh8v+Xbkxz9980XHrVbw+zA1qnqYLVMFmOIryt2f4/joJGpnu3SiNz5OdVGET
-	 PrALftjTgvYIzv80I+q65qpkt74Wub6BQQUGK1w4=
-Message-ID: <b23fb8f4-0da7-4403-8a2d-665d5675be9c@linux.microsoft.com>
-Date: Fri, 30 May 2025 09:26:16 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z0SHbwEG"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so11067a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748622441; x=1749227241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wb7EzNeuZNtT7LoNB6YIvTwNTIj8nYWDYSy4GeuX+MM=;
+        b=Z0SHbwEG71b+g1+94RD8L73X7DqxpbRlt6Gi80IIC4DLXOIIgwIXnYdZlmy3wDMQMl
+         LA84e3xwjtqsj7lvyLSOq1EiQoQtJGWq/r4px+oEoc9w26PNPrvsIPAeALkDTUTYNABu
+         FbKNlpgTgh9oMD1MbKa2cmhlE6pZ2uEM6KZRNU1GfRu5TwsjVmZdIn/VDw7+7a6XmL6h
+         o+NTnuOpkZ/8bMq/z5J0egoZLu7N+VHvnjVBBOvs5u96APjc5NhwCL2vkwED94Cw4XQj
+         C0CtdI/2kagSZWeDsKsyM+HorSSungCWvwZ8xMyIFiMuKpjUioPnG8fIX8FapD4LZzEs
+         5Ugw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748622441; x=1749227241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wb7EzNeuZNtT7LoNB6YIvTwNTIj8nYWDYSy4GeuX+MM=;
+        b=C4uZTLcJCgJKw7XI/b6jdWZuQ5hNvqw/Z8mVQxuDCz8IPHAJRSt96xGJqOz//UC5TC
+         wBEUJ9E9XQdul3+SLc/2i2P9tf7sS0J5NAE3hNOUD3Zs7NJCGOcjduSOe0pzEKIdvTPK
+         X4T8DktnERd0uyHGLswSORtB/7B32FoJhwPrweMy2TB1Gv6VbC62RXf8mQpQIFvUU0Ki
+         7kha5D5n+gmNt4zICTex6n5t1B06SuuzYvSn3Z3HZXAjwr2b82beGHC1qghXpo5xmeb2
+         +ThONE1iGyBA8oeNK3tgtbEt5tLEcQJSY2fx4sHwVSplLH3FNhJanEUiv39+kMtxip6R
+         NpTw==
+X-Forwarded-Encrypted: i=1; AJvYcCU06TLeqLtimuXLBvc1NEaVZltlEYHno0PEoD0upT/LNq3T9TrBsS6LG9P6KUamCugwJuX1d3bei6XC8FM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTBkLX33FBFLwfLoaQnef/ZipIaJza5Z7MxMFJJTiWYhEvh/v0
+	MYBVC9ALyNnRWiTgzXIxQ8vkXWhJ8cqacxy7fPbtwm2vGAbecM7Gp7NDcE9o2blj6sdY0PS8JLp
+	hbQCG7uzAQhlsY4tNgaIiQN/nHr+AplyBpYsyJ+vt
+X-Gm-Gg: ASbGncuy+p8TxgfSRCt1frf9oZX3PGITrEeNKnI4ZDiAyEs0ccvNhgZAqkX8/iP1FsQ
+	ikMPt79xS0U75MxHI2NeRwRRnKyPpxl2CbBfV+wOOP9P8mZwRPIc/dTPn1NSa7mUwp9rdFr1XL7
+	+Funxn9TVQ191S6BsrXyVpEMXYbZrc6Oo5XluO4iJnddMGyRPvOCvBYkUXdXioTznxGJMtol0=
+X-Google-Smtp-Source: AGHT+IFvo4UeYXqvvR6hGpmlYjccx/P9qAgBVyNpakUtwWnk/plyYyjpSLFfr/exrsOHq2DB2NbEp4NJnsA/fPm9vYQ=
+X-Received: by 2002:a50:f608:0:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-60577a55f40mr88916a12.7.1748622440589; Fri, 30 May 2025
+ 09:27:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: Reduce delay after FLR of Microsoft MANA devices
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
- code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
- linux-kernel@vger.kernel.org
-References: <20250528181047.1748794-1-grwhyte@linux.microsoft.com>
- <aDg4PE4Zbzwps71E@wunner.de>
-Content-Language: en-US
-From: Graham Whyte <grwhyte@linux.microsoft.com>
-In-Reply-To: <aDg4PE4Zbzwps71E@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250530140446.2387131-1-ryan.roberts@arm.com> <20250530140446.2387131-2-ryan.roberts@arm.com>
+In-Reply-To: <20250530140446.2387131-2-ryan.roberts@arm.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 30 May 2025 18:26:44 +0200
+X-Gm-Features: AX0GCFt5gaAeg9wlqckCjWiqvoyfvAtwj8XYq0jNIyzkBuWgoy0LcwI3HloBVMo
+Message-ID: <CAG48ez2k6ZmM-335EQjXeL6OtKzuOjVPWQDuJ75ww9Z6NMeg5w@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/6] fs/proc/task_mmu: Fix pte update and tlb
+ maintenance ordering in pagemap_scan_pmd_entry()
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Juergen Gross <jgross@suse.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Arnd Bergmann <arnd@arndb.de>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	sparclinux@vger.kernel.org, virtualization@lists.linux.dev, 
+	xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
+	Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 30, 2025 at 4:04=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+> pagemap_scan_pmd_entry() was previously modifying ptes while in lazy mmu
+> mode, then performing tlb maintenance for the modified ptes, then
+> leaving lazy mmu mode. But any pte modifications during lazy mmu mode
+> may be deferred until arch_leave_lazy_mmu_mode(), inverting the required
+> ordering between pte modificaiton and tlb maintenance.
+>
+> Let's fix that by leaving mmu mode, forcing all the pte updates to be
+> actioned, before doing the tlb maintenance.
+>
+> This is a theorectical bug discovered during code review.
+>
+> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and option=
+ally clear info about PTEs")
+
+Hmm... isn't lazy mmu mode supposed to also delay TLB flushes, and
+preserve the ordering of PTE modifications and TLB flushes?
+
+Looking at the existing implementations of lazy MMU:
+
+ - In Xen PV implementation of lazy MMU, I see that TLB flush
+hypercalls are delayed as well (xen_flush_tlb(),
+xen_flush_tlb_one_user() and xen_flush_tlb_multi() all use
+xen_mc_issue(XEN_LAZY_MMU) which delays issuing if lazymmu is active).
+ - The sparc version also seems to delay TLB flushes, and sparc's
+arch_leave_lazy_mmu_mode() seems to do TLB flushes via
+flush_tlb_pending() if necessary.
+ - powerpc's arch_leave_lazy_mmu_mode() also seems to do TLB flushes.
+
+Am I missing something?
+
+If arm64 requires different semantics compared to all existing
+implementations and doesn't delay TLB flushes for lazy mmu mode, I
+think the "Fixes" tag should point to your addition of lazy mmu
+support for arm64.
+
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  fs/proc/task_mmu.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 994cde10e3f4..361f3ffd9a0c 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -2557,10 +2557,9 @@ static int pagemap_scan_pmd_entry(pmd_t *pmd, unsi=
+gned long start,
+>         }
+>
+>  flush_and_return:
+> +       arch_leave_lazy_mmu_mode();
+>         if (flush_end)
+>                 flush_tlb_range(vma, start, addr);
+> -
+> -       arch_leave_lazy_mmu_mode();
+
+I think this ordering was probably intentional, because doing it this
+way around allows Xen PV to avoid one more hypercall, because the TLB
+flush can be batched together with the page table changes?
 
 
-
-On 5/29/2025 3:34 AM, Lukas Wunner wrote:
-> On Wed, May 28, 2025 at 06:10:47PM +0000, grwhyte@linux.microsoft.com wrote:
->> Add a device-specific reset for Microsoft MANA devices with the FLR
->> delay reduced from 100ms to 10ms. While this is not compliant with the pci
->> spec, these devices safely complete the FLR much quicker than 100ms and
->> this can be reduced to optimize certain scenarios
-> 
-> How often do you reset these devices that 90 msec makes a difference?
-> What are these "certain scenarios"?
-> 
-VF removal and rescan is the main scenario for runtime repairs and driver updates.
-Doing this on scale with 100ms adds up to significant time across multiple VFs.
-
-> There are already "d3hot_delay" and "d3cold_delay" members in
-> struct pci_dev.  I'm wondering if it would make sense to add
-> another one, say, "flr_delay".  That would allow other devices
-> to reduce or lengthen the delay without each of them having to
-> duplicate pcie_flr().  The code duplication makes this difficult
-> to maintain long-term.
-> 
-This is a good suggestion, we can make this more generic.
-
-> Thanks,
-> 
-> Lukas
-
+>         pte_unmap_unlock(start_pte, ptl);
+>
+>         cond_resched();
+> --
+> 2.43.0
+>
