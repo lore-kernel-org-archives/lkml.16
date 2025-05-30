@@ -1,249 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22AE220F4B
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA27021D5BE;
+	Fri, 30 May 2025 09:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597888; cv=none; b=O7YgQG3ov5PTHE3iow33xi/wn0lUkg787G3c2eY6Rv+91qCooj4yZf1UXHz63dnKmDgU0RCs4VOCrps/h/E7ype8Qj7mOhjTt9OIb54LFCewKiCTP10asvReyLRjr3AjkIG9sCg8rwJexpywlCQ3vYsGeF7Ek/XF9zNVkCHKM8g=
+	t=1748597912; cv=none; b=tVWu17GHlKlmpDj7En4aEekW76bYWAN6pooFhDE2ZvDoil94KSsUYPhw+e1KQ9wM9NACHylMJ82eFctnz4gX7AVecSeVvgY8mAe22mCGnKrUS2kcfwyNOuwOe2qPBXnRRKSrAkiUBV+AQ1MVaUpYLGXtQ8ukwLM/kBbEOpQFejU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597888; c=relaxed/simple;
-	bh=FiXibMwqe7Bzxv2bD86eTxQ7GxvzILN7JJ8MXnunTTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ClFqM4Ri1hT/YmyE2rBAx9jwxOpHQdQDBtMOcwSIJTqQpZMJJQVcJ4JN96e+HfvbpW31nj8E0NRjHNxNdrvRH9oFiH1I6ePOgSKDU60U9maO/FmY2jr7bBq5W/EHoH1KTybfL4/33weIUdtDiG+hKz4iloxGgC959VKlgxX4e30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=m+mie/MQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748597912; c=relaxed/simple;
+	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRsH+xDKixXLZ0tlL7p36OM/vsDJUfB7StBh36e/qOgamJPeYOeFFT7JFOm9GeS/XuHOWOQZhmjaIihaeVSlo+HVpv9DsgkCl4Uowzw1BAoB8ngbItmQjE4hKwmG2zzRrl++KyEWFbWYEXZj7zo/sZhfWsldz1LUklwSBxOiNQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inxk4Yp8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="m+mie/MQ"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0aeQx007943
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:38:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zfYXyl7VrRhi9hOpPAB1dRuMBvVrvMKjYSFM2OAmP3g=; b=m+mie/MQgL01XB4R
-	H0b1nhJl21Axh657OCSabkJDPAY37Ky5czOBYYlHWVWZQLNfHH2ctOW0l8mO76gY
-	zpxEVBxa9YmA0En+bv7wHx4iiD+zrs3o4H7e//46uXASpHEsPzpA+5/gkMX5DcA5
-	omhQ9Gmjhh7pl741ah6g1O3wWjwZwbWRzv8exE1IhLeUqKOc75lWff2VrK9VACgI
-	0bdeMGWUMlYxxOusCwU69NkFWeaSRF3bMnVdbm5j0TJExJlZlRDHja5PsHVuLBHX
-	WcVnLMi2LfQLBjEuYC98un7KXlJuHoY234MsqoB3ZPC7pHf1dyGpHs2ABSrW9vRl
-	qPkyIg==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992tpaq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:38:05 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-74620e98ec8so1707451b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:38:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597885; x=1749202685;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zfYXyl7VrRhi9hOpPAB1dRuMBvVrvMKjYSFM2OAmP3g=;
-        b=ilscGh9xQN/HXspAz1zpEXlB2EeM94wBCtV2jJft0FqiRwSj540W4hJ+a2inzVXXZw
-         vjHcKF3MUruJb2mSGCFIQmyk36uRgg57FLkFYAme7tOwqL+fZ2rQVhMIf0qN63q9ZIw2
-         xx8mX0Pli9JOuoRfEgSEwOVGhXFhEo72cocWEG8W8oaSBsdfrBE84UbMEscxLFWMKx5W
-         p9dOi61KKdUpCwHIeqGztxvELGA/TbKPx9FG5Hf5vZUFTPne5AqJwiigJtnsal1cOByK
-         uMNe0DyyKVVJa1GduDzaZErrZDZRThvDUXooaXZ+DdOaTahEhC1eT7ElqwVPj8bxu4LZ
-         hE1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX2AxZHCjC+NkHNz+yteI6gE6XYOix8GVX8BTkCyCM9kTbGUmJqkZV7jJh805dAg1e/3wkhTUGSuE8U0Wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm6B43CY97DC7rRTGojXXRgIIq61kpvRm3G6slV7lgN4qwnQdI
-	mVOu0Gc/CnW4XwZ7xOWAcXxaTiEtbqcrDQBDEZjIeJ8F36gou+FBDmWgMepmzV/Kko/mPD0Kf18
-	FQWcRpPCFyaFAoCmdiDGr+1AtXYfG8Tt4s4+fqnhjn0zWus4D3jcvYFjs74T5kIcT+QI=
-X-Gm-Gg: ASbGncuoeju9G2KrADFK4SnDOOGUn8sl5atB/33vVnmOGgTyDWI1A39AOehXlxAmVjK
-	fMEnlAVz8/qbSB8hlZ99Qx4zGvyYRma600KmiMA+oW9hzKrhSRBj1tSLw4A11p8DnjPrwoKrNMF
-	aDkhYFEohj3XFuG0cqzIHZ7x+JrZL8awGohfzsPK/iJKjVMLMuMbIXLPMQmbwY2PwIyiDJOSie8
-	PszBBQ6HtDkQ/vf4aBQ3joYOYwHcAnHtQ3RKavmX9LUy7eWokHtHTsWCFTIuWrElx9+sURgUXsJ
-	RuwK/G7tL2wTJvriNshgpM1UrUojemEQbr4TBeTZq58vaSZO3FKoBHFofsS8U0vlqnGyxYG7+HI
-	/05EoFV8xitk=
-X-Received: by 2002:a05:6a00:a87:b0:742:ae7e:7da1 with SMTP id d2e1a72fcca58-747bdbe8035mr3778277b3a.0.1748597885058;
-        Fri, 30 May 2025 02:38:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH7NO4N0v3Y1dOO+Iz5dJNKpo+fSGcvNyKt4RkjS35cwzJzfWOV/qn3qrS95ChBrq+phaPJRQ==
-X-Received: by 2002:a05:6a00:a87:b0:742:ae7e:7da1 with SMTP id d2e1a72fcca58-747bdbe8035mr3778244b3a.0.1748597884623;
-        Fri, 30 May 2025 02:38:04 -0700 (PDT)
-Received: from [10.133.33.104] (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affd437asm2661533b3a.150.2025.05.30.02.38.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 02:38:03 -0700 (PDT)
-Message-ID: <3df56548-49ea-498c-9ee3-b7e1d2d85d2e@oss.qualcomm.com>
-Date: Fri, 30 May 2025 17:37:58 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inxk4Yp8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C537CC4CEE9;
+	Fri, 30 May 2025 09:38:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748597912;
+	bh=ICSGQ0Zax6RfiU1eNFI15hxlnpkjaqK5BGkuN+umx5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=inxk4Yp8xtNFcmPalhY09ck1qo1uYRCOcIWDRzIjZrLR7sPqhhXwCHPFDqMHLJd9g
+	 sHZFVXK6FD1UizbfB6DLmzqePp11GrU+bAvzTM2yyDUq4QFT+Mmn1w1ZCzuMd3Z++r
+	 2rfN38whXYJrJfbDDPu65/kN4bHjMqPADKnsMQtO+wyQwtLzyKI5dwaU3yVgl+CY6c
+	 mwSjpaGlZA383yCa/07eaFq5rD2szRfYhwQl84F4vK2iGD8hYyW2MfktL8fRWru7Gh
+	 0Cd2BNMrPJjHKZ+QZivVRi85ri4A4dqVmlF2ll/8UBkqvHhrhjueT0WLFbZE49Ec2S
+	 It9sSic/aD+Tg==
+Date: Fri, 30 May 2025 11:38:29 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: "jdelvare@suse.com" <jdelvare@suse.com>, 
+	"linux@roeck-us.net" <linux@roeck-us.net>, "robh@kernel.org" <robh@kernel.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+Message-ID: <dirkbdd5oeofjhy5pk6jiaixbuhmuq7axewhrd7bdghc3dp5x6@ok2uhywwz5ls>
+References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
+ <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+ <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
+ <bc99a27e-74ec-45a0-b77c-48f993269586@alliedtelesis.co.nz>
+ <jmxmxzzfyobuheqe75lj7qcq5rlt625wddb3rlhiernunjdodu@tgxghvfef4tl>
+ <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/8] power: supply: qcom_battmgr: Add charge control
- support
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
-        David Collins <david.collins@oss.qualcomm.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250530-qcom_battmgr_update-v2-0-9e377193a656@oss.qualcomm.com>
- <497BF3hThnrmYe-YHKmdOyZwdjP3ivm1hFYDDy3-HkSOvkCOMVSkokyhb859mcTarGb55Go5nJLfgsc553u7ZA==@protonmail.internalid>
- <20250530-qcom_battmgr_update-v2-5-9e377193a656@oss.qualcomm.com>
- <8b396edf-e344-47e9-b497-3f7fb35783ed@linaro.org>
-Content-Language: en-US
-From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
-In-Reply-To: <8b396edf-e344-47e9-b497-3f7fb35783ed@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA4MSBTYWx0ZWRfX5w8o4jrwtVLC
- xgJg+pIVRbagNIJVF0BoFJ+DZS4OkedWJFl27QXvSBNIEKAABga3LLCoY0OwXBbSVv6Nmo10afj
- nWnQX+CcpildZaeAQdZvwfcdlR/2uWm5841u1/40ddKMB4qtxNzovjUFnpMbF6Qmmh2O5RtXVdZ
- Yr4P21KyGCvNO1uxPwhrPESjQiyztOS5XseCxWSvKF1Cex/mKnrtuGDcWql6zRFdb3QrTNF2xgw
- nkqLsBNx5oN5rFDHYqtEDdTsXL/GdZCGcj3ahAY0lJqLMSSM8YUVFJSIqS9/OEAn8B/roguwDDK
- t/TswvWjKpYyMDssDLklNkdwJrKLvFomWPSwZyF9gxuJ59ZRAQUkFvMTsHA/bFjDf0ASAto1l30
- bUmxAVqOQ6RmyIIGbZzoaV5UUxlm0yCslXeKL0hqXnidCsLag9+Wp0QpJw2UYUwHAzr08LEB
-X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=68397c7e cx=c_pps
- a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=fnrE3p8kPbNp4-9vzRIA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-GUID: jdbC0pmyt3_-Og3snHbYM8MaFz_kQn3t
-X-Proofpoint-ORIG-GUID: jdbC0pmyt3_-Og3snHbYM8MaFz_kQn3t
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300081
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iwycug4hm3mtqr5n"
+Content-Disposition: inline
+In-Reply-To: <4858ce06-2081-4335-af09-f118872317ea@alliedtelesis.co.nz>
 
-Thanks for reviewing the change!
 
-On 5/30/2025 4:48 PM, Bryan O'Donoghue wrote:
-> On 30/05/2025 08:35, Fenglin Wu via B4 Relay wrote:
->> From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
->>
->> Add charge control support for SM8550 and X1E80100. It's supported
->> with below two power supply properties:
->>
->> charge_control_end_threshold: SOC threshold at which the charging
->> should be terminated.
->>
->> charge_control_start_threshold: SOC threshold at which the charging
->> should be resumed.
->
-> Maybe this is very obvious to battery charger experts but what does 
-> SOC mean here ?
->
-> Reading your patch you pass a "int soc" and compare it to a threshold 
-> value, without 'soc' having an obvious meaning.
->
-> Its a threshold right ? Why not just call it threshold ?
->
-"SOC" stands for battery State of Charge, I will rephrase the commit 
-text for better explanation.
->>
->> Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
->> ---
->>   drivers/power/supply/qcom_battmgr.c | 256 
->> ++++++++++++++++++++++++++++++++++--
->>   1 file changed, 248 insertions(+), 8 deletions(-)
->>
->> -    if (battmgr->variant == QCOM_BATTMGR_SC8280XP)
->> +    if (battmgr->variant == QCOM_BATTMGR_SC8280XP ||
->> +            battmgr->variant == QCOM_BATTMGR_X1E80100)
->
-> Please run your series through checkpatch
->
-I actually did that before sending the patches out. I run checkpatch 
-with below two commands and I saw no issues:
+--iwycug4hm3mtqr5n
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
+MIME-Version: 1.0
 
-git format -1 xxxx --stdtout | ./script/checkpatch.pl -
+Hello Chris,
 
-b4 prep --check
+On Wed, May 28, 2025 at 09:18:37PM +0000, Chris Packham wrote:
+> On 28/05/2025 18:10, Uwe Kleine-K=F6nig wrote:
+> > If I understand correctly you need the default value for duty to
+> > statically setup (or only initialize?) a fan, right?
+>=20
+> Correct.
+>=20
+> > I'm not sure I like
+> > extending #pwm-cells for a default duty value. Thinking about that a
+> > while I'd prefer a binding that looks more like the clock configuration
+> > stuff because actually having the period and flags as part of the
+> > reference to the PWM to be used is also a bit strange. So I imagine
+> > something like:
+> >
+> > 	mypwm: pwm {
+> > 		compatible =3D "...."
+> > 		#pwm-cells =3D <1>;
+> > 	};
+> >
+> > 	fan {
+> > 		compatible =3D "pwm-fan";
+> > 		pwms =3D <&mypwm 1>;
+> > 		assigned-pwms =3D <&mypwm>;
+> > 		assigned-pwm-default-period-lengths-ns =3D <40000>;
+> > 		assigned-pwm-default-flags =3D <PWM_POLARITY_INVERTED>;
+> > 	};
+> >
+> > Then specifying a period (or later a duty cycle length) would be
+> > optional and could be provided iff the device needs that for operation.
+>=20
+> The frequency and flags were already part of the standard #pwm-cells=20
+> which I think is why I was encouraged to use them.
 
-Can you let me know what specific command that you ran with it?
+Yeah, that part is fine. This might not be the long-term future, but
+today that's the norm.
 
-> 0004-power-supply-qcom_battmgr-Add-state_of_health-proper.patch has no 
-> obvious style problems and is ready for submission.
-> CHECK: Alignment should match open parenthesis
-> #95: FILE: drivers/power/supply/qcom_battmgr.c:521:
-> +    if (battmgr->variant == QCOM_BATTMGR_SC8280XP ||
-> +            battmgr->variant == QCOM_BATTMGR_X1E80100)
->
->>
->> +static int qcom_battmgr_set_charge_start_threshold(struct 
->> qcom_battmgr *battmgr, int soc)
->> +{
->> +    u32 target_soc, delta_soc;
->> +    int ret;
->> +
->> +    if (soc < CHARGE_CTRL_START_THR_MIN ||
->> +            soc > CHARGE_CTRL_START_THR_MAX) {
->> +        dev_err(battmgr->dev, "charge control start threshold exceed 
->> range: [%u - %u]\n",
->> +                CHARGE_CTRL_START_THR_MIN, CHARGE_CTRL_START_THR_MAX);
->> +        return -EINVAL;
->> +    }
->
-> 'soc' is what - a threshold as far as I can tell.
+> I was also trying to get something that would work as an ACPI overlay
+> which turned out to be really hard.
 
-I will update it with a more meaningful name
+I don't know enough about ACPI to be helpful with this quest.
 
->>
->>       if (opcode == BATTMGR_NOTIFICATION)
->>           qcom_battmgr_notification(battmgr, data, len);
->> -    else if (battmgr->variant == QCOM_BATTMGR_SC8280XP)
->> +    else if (battmgr->variant == QCOM_BATTMGR_SC8280XP ||
->> +            battmgr->variant == QCOM_BATTMGR_X1E80100)
->>           qcom_battmgr_sc8280xp_callback(battmgr, data, len);
->>       else
->>           qcom_battmgr_sm8350_callback(battmgr, data, len);
->> @@ -1333,7 +1560,8 @@ static void qcom_battmgr_pdr_notify(void *priv, 
->> int state)
->>   static const struct of_device_id qcom_battmgr_of_variants[] = {
->>       { .compatible = "qcom,sc8180x-pmic-glink", .data = (void 
->> *)QCOM_BATTMGR_SC8280XP },
->>       { .compatible = "qcom,sc8280xp-pmic-glink", .data = (void 
->> *)QCOM_BATTMGR_SC8280XP },
->> -    { .compatible = "qcom,x1e80100-pmic-glink", .data = (void 
->> *)QCOM_BATTMGR_SC8280XP },
->> +    { .compatible = "qcom,x1e80100-pmic-glink", .data = (void 
->> *)QCOM_BATTMGR_X1E80100 },
->> +    { .compatible = "qcom,sm8550-pmic-glink", .data = (void 
->> *)QCOM_BATTMGR_SM8550 },
->
-> Please separate compat string addition from functional changes.
->
-The compatible string "qcom,sm8550-pmic-glink" has been present in the 
-binding for a while and it was added as a fallback of "qcom,pmic-glink". 
-The battmgr function has been also supported well on SM8550 for a while. 
-The change here is only specifying a different match data for SM8550 so 
-the driver can handle some new features differently. Does it also need 
-to add it in a separate change? If so,  this change would be split into 
-following 3 patches I think:
+> > My mail was just me being frustrated about another special case that I'd
+> > have to handle if I go into that direction. I should have been more
+> > attentive to that development before it entered the mainline.
+>=20
+> I'd be happy to deprecate the 4 cell thing and replace it with 3 cell +=
+=20
+> vendor property for the default period if that helps.
 
-1) add QCOM_BATTMGR_SM8550/X1E80100 variants definition in 
-qcom_battmgr_variant.
+I wonder how other similar devices determine the default duty cycle.
+Isn't the norm to make the fan rotate at max speed and then when
+userspace takes over it's speeded down?
 
-2) add compatible string with corresponding match data for SM8550.
+Best regards
+Uwe
 
-3) add the charge control function support.
+--iwycug4hm3mtqr5n
+Content-Type: application/pgp-signature; name="signature.asc"
 
->>       /* Unmatched devices falls back to QCOM_BATTMGR_SM8350 */
->>       {}
->>   };
->>
->>
->> -- 
->> 2.34.1
->>
->>
->>
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg5fJIACgkQj4D7WH0S
+/k7Q/QgAhpRbbtxTmdd1TU+JKciJM1ubiQ6suwb+RqEXC/4zfLvLc7QwkWAm16v3
+MMCqJxvwSwXVWPxPoaaFEU9k4S9YHi5ggLfT4/1Bde79ynsdCFHbL6zfaH3Fq3gH
+m15Q2/Z9yPQ2z3tWe0b2PskubMtRGXpzWsEk3M2SwTb09J421hWW8qFxV//OqMf+
+PM8qkChq3fe9ZZgkHzNepPYfmJEl6uhs1mEN7FinZi6ZHqxRSF2L92celgIcmYWK
+6VqNq8381esfPA9OeA2oLFEuz2sQv5DtDE2PVsSea8iGggRFrYbGMC/oYTBLwjBp
+1WTJLq7hrYJSTtyNu1HKGvIDfj+Gew==
+=y7cT
+-----END PGP SIGNATURE-----
+
+--iwycug4hm3mtqr5n--
