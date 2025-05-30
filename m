@@ -1,192 +1,171 @@
-Received: from monticello.secure-endpoints.com (monticello.secure-endpoints.com [208.125.0.237])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773EA22CBE3
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.125.0.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23642905;
+	Fri, 30 May 2025 12:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608994; cv=none; b=Vb2ylcBnX0EcpvIkJ+XJg0uHHdDJE2eMt06v1wIp5dvK3TzLKfM3wCpfQr8LzWMHPaYiuNJUq+UC5aPgE4kzlIMM8xFfzFlYZW6NeHpufv3q9b+++dtuJiPFTN/0w6/2bXvjTRCZ9ZG7/K3PeDGYS+t2djQ8AJ1YzPrPwpS1lco=
+	t=1748609201; cv=none; b=jbDlGf2CoE0hdu6JtdSDJNci4e5gDJYm9eXB0UT4konZRWm8FjiGSKbumitfBctGIClKobjks4y8oxUK+wVmjMrma0HVZuHRcxkmIPtik4Wcz/cGzEis4Y6POF5gtQvFiqCstvmKf/Zveaj5DgVe3cGlu6G5qI1JEYwxncb4yjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608994; c=relaxed/simple;
-	bh=+RZMR1CHUJjiZB2USgqQn+XYmw90Jacjujr8YCIV2XU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tJ2wh77gQd/JAbeUISsjFle6SNGpGUh1OlWKA7pzWSBStrtj9l3DKi6v01h8feDf/M9jUfsEFxSioT5TVRvI0lfkdH90gNdN3tNfYCGoxaAgWa04AQvqWAgnQ9e/QwcOfByZsKuU4bdFy29uE/5T8T6WLxzTTRcbjAifF1Oa3vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=auristor.com; dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b=KVqyssCs; arc=none smtp.client-ip=208.125.0.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=auristor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auristor.com
+	s=arc-20240116; t=1748609201; c=relaxed/simple;
+	bh=UouTRDZWRFQY12UDfa8B7SZK9YSVYXlijP3sPSFSC+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a/jMV8DnuHuShXizNpQovk1USguCmfEmIaYI/jzCHDj4TIg15ed3Lhm9X0IMDE14vjIb8NR4efhieDx372zjJXK5TXik3dCzt54Y3bG/4TtVF8xH9xjtcHtbJ65fVpkXYecaFkiEIDlpuOnxWIZ8yZwVvlDFVwLj17V4O0eecvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNni6vbd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="KVqyssCs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=auristor.com; s=MDaemon; r=y; l=7383; t=1748608974;
-	x=1749213774; i=jaltman@auristor.com; q=dns/txt; h=Message-ID:
-	Date:MIME-Version:User-Agent:Subject:To:Cc:References:
-	Content-Language:From:Organization:Disposition-Notification-To:
-	In-Reply-To:Content-Type; z=Received:=20from=20[IPV6=3A2603=3A70
-	00=3A73c=3Abb00=3Adc7e=3A9c1d=3Ab0ad=3A49cd]=20by=20auristor.com
-	=20(IPv6=3A2001=3A470=3A1f07=3Af77=3Affff=3A=3A312)=20(MDaemon=2
-	0PRO=20v25.0.3a)=20=0D=0A=09with=20ESMTPSA=20id=20md500100473738
-	8.msg=3B=20Fri,=2030=20May=202025=2008=3A42=3A54=20-0400|Message
-	-ID:=20<f9f56006-8490-43cb-a622-6e95c3af1d24@auristor.com>|Date:
-	=20Fri,=2030=20May=202025=2008=3A43=3A00=20-0400|MIME-Version:=2
-	01.0|User-Agent:=20Mozilla=20Thunderbird|Subject:=20Re=3A=20[PAT
-	CH]=20afs=3A=20Replace=20simple_strtoul=20with=20kstrtoul=20in=0
-	D=0A=20afs_parse_address|To:=20Su=20Hui=20<suhui@nfschina.com>,=
-	20dhowells@redhat.com,=20marc.dionne@auristor.com|Cc:=20linux-af
-	s@lists.infradead.org,=20linux-kernel@vger.kernel.org,=0D=0A=20k
-	ernel-janitors@vger.kernel.org|References:=20<1f027931-8781-4c6c
-	-86c8-2d680b86974f@nfschina.com>|Content-Language:=20en-US|From:
-	=20Jeffrey=20E=20Altman=20<jaltman@auristor.com>|Organization:=2
-	0AuriStor,=20Inc.|Disposition-Notification-To:=20Jeffrey=20E=20A
-	ltman=20<jaltman@auristor.com>|In-Reply-To:=20<1f027931-8781-4c6
-	c-86c8-2d680b86974f@nfschina.com>|Content-Type:=20multipart/sign
-	ed=3B=20protocol=3D"application/pkcs7-signature"=3B=20micalg=3Ds
-	ha-256=3B=20boundary=3D"------------ms070404040307080304080807";
-	bh=+RZMR1CHUJjiZB2USgqQn+XYmw90Jacjujr8YCIV2XU=; b=KVqyssCs1X4EV
-	rUeOXV1gtk6FXHrsorwQeJfnU5TSo02lkMttZskfQDvxxUUFuEdl7NOgaRHkeUY9
-	0grcjy7sPFgWYWmW16gXMMIYSD0kT+ikKM8kcMHbmwOC9HE9AIPprH6Vd600Ndms
-	SzPs4mja6eTmBR+MHykrr7mYrdNNi8=
-X-MDAV-Result: clean
-X-MDAV-Processed: monticello.secure-endpoints.com, Fri, 30 May 2025 08:42:54 -0400
-Received: from [IPV6:2603:7000:73c:bb00:dc7e:9c1d:b0ad:49cd] by auristor.com (IPv6:2001:470:1f07:f77:ffff::312) (MDaemon PRO v25.0.3a) 
-	with ESMTPSA id md5001004737388.msg; Fri, 30 May 2025 08:42:54 -0400
-X-Spam-Processed: monticello.secure-endpoints.com, Fri, 30 May 2025 08:42:54 -0400
-	(not processed: message from trusted or authenticated source)
-X-MDRemoteIP: 2603:7000:73c:bb00:dc7e:9c1d:b0ad:49cd
-X-MDHelo: [IPV6:2603:7000:73c:bb00:dc7e:9c1d:b0ad:49cd]
-X-MDArrival-Date: Fri, 30 May 2025 08:42:54 -0400
-X-MDOrigin-Country: US, NA
-X-Authenticated-Sender: jaltman@auristor.com
-X-Return-Path: prvs=1245565365=jaltman@auristor.com
-X-Envelope-From: jaltman@auristor.com
-X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
-Message-ID: <f9f56006-8490-43cb-a622-6e95c3af1d24@auristor.com>
-Date: Fri, 30 May 2025 08:43:00 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNni6vbd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44DC5C4CEE9;
+	Fri, 30 May 2025 12:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748609200;
+	bh=UouTRDZWRFQY12UDfa8B7SZK9YSVYXlijP3sPSFSC+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MNni6vbdljirgsw19cRPr/LTI1gGIqFyBhU5hTAX6drSdzIgelY/wzaMVGGnKuK/2
+	 q4tSylmvZzlahNC6V18L4AhLFdMctn/GwEdOk4W5T+vaNf3R4md03NFOfiE+mz/gZj
+	 TLB8X7PZZuEducywcluQojApbsdkN8NsOOM87oc13zRS9x4mb0Fr/31BUhcOOnIerM
+	 nG/ehVIpH79FwQMdzPk7MFyRA1D5zC6hP4tCPtNZABVQF6S8tTZq/6eGV9yq4I/MUq
+	 FcKzl6mKGfZzJdAIAgNs2tTNKPSltTNPfYoZLevM2pAyVA3BkM6dLa4+Sk3SzBGukw
+	 F8hBQumgXeQ5w==
+Date: Fri, 30 May 2025 13:46:35 +0100
+From: Will Deacon <will@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
+ size as ARM_MAX_BRP
+Message-ID: <20250530124635.GB30463@willie-the-truck>
+References: <20250421055212.123774-1-anshuman.khandual@arm.com>
+ <20250516135958.GA13612@willie-the-truck>
+ <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] afs: Replace simple_strtoul with kstrtoul in
- afs_parse_address
-To: Su Hui <suhui@nfschina.com>, dhowells@redhat.com, marc.dionne@auristor.com
-Cc: linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <1f027931-8781-4c6c-86c8-2d680b86974f@nfschina.com>
-Content-Language: en-US
-From: Jeffrey E Altman <jaltman@auristor.com>
-Organization: AuriStor, Inc.
-In-Reply-To: <1f027931-8781-4c6c-86c8-2d680b86974f@nfschina.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070404040307080304080807"
-X-MDCFSigsAdded: auristor.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f6bba3a-4cf6-44c2-abeb-8d419ca5a6c3@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-This is a cryptographically signed message in MIME format.
+On Fri, May 30, 2025 at 09:19:53AM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 5/16/25 19:29, Will Deacon wrote:
+> > On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
+> >> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
+> >> coupled with maximum breakpoints or watchpoints which could be present on a
+> >> platform and which are defined with macros ARM_MAX_[BRP|WRP].
+> >>
+> >> Rather than explicitly trying to keep the array elements in sync with these
+> >> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
+> >> , move these two macros into the uapi ptrace header itself thus making them
+> >> available both for user space and kernel.
+> >>
+> >> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
+> >> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
+> >> structure remains usable both for breakpoint and watchpoint registers set
+> >> via ptrace() system call interface.
+> >>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> Cc: linux-perf-users@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ---
+> >> This patch applies on v6.15-rc3
+> >>
+> >>  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
+> >>  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
+> >>  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
+> >>  3 files changed, 18 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
+> >> index bd81cf17744a..63c21b515647 100644
+> >> --- a/arch/arm64/include/asm/hw_breakpoint.h
+> >> +++ b/arch/arm64/include/asm/hw_breakpoint.h
+> >> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
+> >>  #define ARM_KERNEL_STEP_ACTIVE	1
+> >>  #define ARM_KERNEL_STEP_SUSPEND	2
+> >>  
+> >> -/*
+> >> - * Limits.
+> >> - * Changing these will require modifications to the register accessors.
+> >> - */
+> >> -#define ARM_MAX_BRP		16
+> >> -#define ARM_MAX_WRP		16
+> >> -
+> >>  /* Virtual debug register bases. */
+> >>  #define AARCH64_DBG_REG_BVR	0
+> >>  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
+> >> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+> >> index 0f39ba4f3efd..8683f541a467 100644
+> >> --- a/arch/arm64/include/uapi/asm/ptrace.h
+> >> +++ b/arch/arm64/include/uapi/asm/ptrace.h
+> >> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
+> >>  	__u32		__reserved[2];
+> >>  };
+> >>  
+> >> +/*
+> >> + * Maximum number of breakpoint and watchpoint registers
+> >> + * on the platform. These macros get used both in kernel
+> >> + * and user space as well.
+> >> + */
+> >> +#define ARM_MAX_BRP		16
+> >> +#define ARM_MAX_WRP		16
+> >> +
+> >>  struct user_hwdebug_state {
+> >>  	__u32		dbg_info;
+> >>  	__u32		pad;
+> >> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
+> >>  		__u64	addr;
+> >>  		__u32	ctrl;
+> >>  		__u32	pad;
+> >> -	}		dbg_regs[16];
+> >> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
+> >>  };
+> >>  
+> >>  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
+> >> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> >> index 722ac45f9f7b..9bc51682713d 100644
+> >> --- a/arch/arm64/kernel/hw_breakpoint.c
+> >> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> >> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
+> >>  {
+> >>  	int ret;
+> >>  
+> >> +	/*
+> >> +	 * Maximum supported breakpoint and watchpoint registers must
+> >> +	 * always be the same - regardless of actual register numbers
+> >> +	 * found on a given platform. This is because the user facing
+> >> +	 * ptrace structure 'user_hwdebug_state' actually depends on
+> >> +	 * these macros to be the same.
+> >> +	 */
+> >> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
+> > 
+> > Sorry, but I don't understand why this patch is an improvement over what
+> > we have.
+> This is an improvement because
+> 
+> - user_hwdebug_state.dbg_regs[16] is hard coded for size without context
+>   requiring explicit sync up when ARM_MAX_WRP/BRP changes to 64 later on
+>   with FEAT_Debugv8p9. Defining the array size in terms of ARM_MAX_WRP/
+>   BRP provides required context and also avoids the need for an explicit
+>   hard coded sync up when those macros change.
+> 
+> - user_hwdebug_state.dbg_regs[16] gets used both for breakpoint registers
+>   and watchpoint registers. Hence there is an inherent assumption that
+>   ARM_MAX_BRP == ARM_MAX_WRP which should be ensured with a corresponding
+>   assert.
 
---------------ms070404040307080304080807
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Sorry, but I still don't see it. Plus, this is a UAPI header so I think
+it's no bad thing to require an "explicit sync up", assuming we can
+actually change this structure at all.
 
-T24gNS8zMC8yMDI1IDY6MjkgQU0sIFN1IEh1aSB3cm90ZToNCj4gT24gNS8zMC8yNSA3OjM1
-IEFNLCBKZWZmcmV5IEUgQWx0bWFuIHdyb3RlOg0KPj4NCj4+IERvIHlvdSBzZWUgYW4gb3Zl
-cmZsb3cgY29uZGl0aW9uIHdoaWNoIHdvdWxkIG5vdCBiZSBjYXVnaHQgYnkgdGhvc2UgDQo+
-PiBjaGVja3Mgd2hpY2ggd291bGQgYmUgY2F1Z2h0IGJ5IHVzZSBvZiBrc3RydG91bCgpPw0K
-PiBBY3R1YWxseSwgbm8gZXhhbXBsZSBpbiByZWFsaXR5Lg0KPiBJZiBwIGNhbiBlcXVhbCB0
-byAnMHhmZmZmZmZmZmZmZmZmZmZmMDAwMDAwMDAwMDAwMDAwMScsIA0KPiBzaW1wbGVfc3Ry
-dG91bCgpIGFuZCBrc3Ryb3VsKCkgYWxsIHRyYW5zZm9ybSAncCcgdG8gdW5zaWduZWQgbG9u
-ZyANCj4gdmFsdWUgJzB4MScuDQo+IEJ1dCBrc3RydG91bCgpIHJldHVybiBhbiBlcnJvciBh
-bmQgd2UgY2FuIGtub3cgb3ZlcmZsb3cgaGFwcGVucy7CoMKgSWYgDQo+ICdwJyBjYW4gYmUg
-YSB2ZXJ5IGxvbmcgc3RyaW5nLCBrc3Ryb3VsKCkgbWFrZSBzZW5zZS4NCj4NClRoZSBleHBl
-Y3RlZCB1c2UgY2FzZSBpcyBmb3IgdGhlIGlucHV0IHN0cmluZyBub3QgdG8gZXhjZWVkIDMg
-DQpjaGFyYWN0ZXJzLsKgIFRoZSB2YWxpZCByYW5nZSBpcyBkZWNpbWFsIDAgdG8gMTI4LsKg
-IFRoYXQgY291bGQgYmUgDQplbmZvcmNlZCBieSBzd2l0Y2hpbmcgdG8gc2ltcGxlX3N0cm50
-b3VsKCkgYW5kIHJlbHlpbmcgdXBvbiB0aGUgZXhpc3RpbmcgDQpjaGVja3MuDQo=
+Let's leave the code as it is, please.
 
---------------ms070404040307080304080807
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-DHEwggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJ
-BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEz
-MB4XDTIyMDgwNDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0Ew
-MTQxMEQwMDAwMDE4MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
-YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQCkC7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3
-xHZRtv179LHKAOcsY2jIctzieMxf82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyN
-fO/wJ0rX7G+ges22Dd7goZul8rPaTJBIxbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kI
-EEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg
-9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjG
-IcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
-BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
-BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
-My5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYDVR0TBAIwADCCASsG
-A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
-L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
-bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
-aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
-YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
-ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
-dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQY
-MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2s
-gjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwV
-eycprp8Ox1npiTyfwc5QaVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4c
-WLeQfaMrnyNeEuvHx/2CT44cdLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYq
-utYF4Chkxu4KzIpq90eDMw5ajkexw+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJo
-Qle4wDxrdXdnIhCP7g87InXKefWgZBF4VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXt
-a8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRkgIGb319a7FjslV8wggaXMIIEf6ADAgECAhBA
-AXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBDb21tZXJjaWFsIFJvb3QgQ0EgMTAe
-Fw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
-EwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIBIjANBgkqhkiG9w0BAQEF
-AAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6ixaNP0JKSjTd+SG5L
-wqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6iqgB63OdHxBN/
-15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxlg+m1Vjgn
-o1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi2un0
-3bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
-VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkG
-CCsGAQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
-dHJ1c3QuY29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29t
-L3Jvb3RzL2NvbW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C
-5yZUyI42djCCASQGA1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0
-dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
-eC5odG1sMIG6BggrBgEFBQcCAjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMg
-YmVlbiBpc3N1ZWQgaW4gYWNjb3JkYW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2Vy
-dGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20v
-Y2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0
-dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20vY3JsL2NvbW1lcmNpYWxyb290Y2ExLmNy
-bDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
-CCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX6Nl4a03cDHt7TLdPxCzFvDF2
-bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN95jUXLdLPRToNxyaoB5s
-0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24GBqqVudvPRLyMJ7u
-6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azNBkfnbRq+0e88
-QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8HvgnLCBFK2s4
-Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXFC9bu
-db9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
-rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4d
-UsZyTk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJn
-p/BscizYdNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eA
-MDGCBAEwggP9AgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUG
-A1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCg
-ggKEMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDUzMDEy
-NDMwMFowLwYJKoZIhvcNAQkEMSIEIEHtazrotQtfQKM98IGgHgZs9aHalxnewBvwb910+Ju/
-MF0GCSsGAQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEX
-MBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQ
-AgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRy
-dXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzMMIIBVwYJKoZIhvcNAQkPMYIBSDCCAUQw
-CwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzANBggqhkiG9w0DAgIBBTAN
-BggqhkiG9w0DAgIBBTAHBgUrDgMCBzANBggqhkiG9w0DAgIBBTAHBgUrDgMCGjALBglghkgB
-ZQMEAgEwCwYJYIZIAWUDBAICMAsGCWCGSAFlAwQCAzALBglghkgBZQMEAgQwCwYJYIZIAWUD
-BAIHMAsGCWCGSAFlAwQCCDALBglghkgBZQMEAgkwCwYJYIZIAWUDBAIKMAsGCSqGSIb3DQEB
-ATALBgkrgQUQhkg/AAIwCAYGK4EEAQsAMAgGBiuBBAELATAIBgYrgQQBCwIwCAYGK4EEAQsD
-MAsGCSuBBRCGSD8AAzAIBgYrgQQBDgAwCAYGK4EEAQ4BMAgGBiuBBAEOAjAIBgYrgQQBDgMw
-DQYJKoZIhvcNAQEBBQAEggEAahvJzLJJEYu/fFClCYn3Hj4oG7C5VAAnXuSyf64cnUoNCr6D
-kV+jFPD844uaXneBKV50oxQ2oEaT7EEH67LfgilU/GRxg0vGC0pCnsAcplbSEUZxoSz6KHw0
-ktCBW4W1lwKN1mEh+NL3YHtT5NjsPBmBZxFXta6R1xdCU3bE7c1rWVCy6NGPQLMglgl37YbZ
-UEw8Kxn7WxruwkEcb8FbFZeupG4o5a1U0K7r1OunjOlLv8VcGaoo8iIixTVbOFpQEL0rB8Um
-cNxMDT6mJYDcAdGQQF+pNtXomqsTvul5iHmvE+eZJDVn5MEjieHHPK9fy+OFI4/dBpnhQIA0
-NxPajgAAAAAAAA==
---------------ms070404040307080304080807--
-
+Will
