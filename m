@@ -1,25 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D37C4199EAD
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A4F20409A
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748589441; cv=none; b=KT6oHZBAVD7MXcmHcl604crCkEsPNOX89lGwJgXIAXopU/gjC7zEnq+mDG5CMaoyTxWJ81Ql9/oCUg/LQplZ3fpgFD7D3Fvmvd11dgqUp7tWK0v4HmaxEL5chYh1nYa03iXi8pcPQljs5g3xaXyOna2h2kNiySvaQ8lu9SkShYk=
+	t=1748589463; cv=none; b=nB+TTSANoa2tqzJUMqthUUzne+AHCocxtsUxZCpdoA9jllAjwR0AFM8rkAg0U91GbeWpWNMGWYQDCcOLxc9RfBM1lXGTF17duQ4EAyCi94RPbXvOTmSlu0sIMEAp57TxmK6U1Yg27V8ul1lcrZWh4k8f1pbVbSyXjkeZDVtmdlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748589441; c=relaxed/simple;
-	bh=R/Akd0eX9hNqt3T32VBrsG4IMBzgGGHpD1UISoR2jaA=;
+	s=arc-20240116; t=1748589463; c=relaxed/simple;
+	bh=5sZwonSyi7C3m9a8qMo4Ox8TcWkSzdZA/StXDXbXI38=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i8HekGFtraDTFSdWbqqqf7BWAiHTn91sDHJt+I0QJBVjYn++45SsgUpyy6gNFEv+rQbKI0aZ4y7yaImw/mulS5VOMGt2oVeqQRpIWCDsqb9ICq+oHeNF5T3p85i+uuvnZDJMmPYyrFKtexAkYJFnrN8yFHzELmdOGTwqmOKK6w4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 700BF16F8;
-	Fri, 30 May 2025 00:17:00 -0700 (PDT)
-Received: from [10.57.95.14] (unknown [10.57.95.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A91D3F5A1;
-	Fri, 30 May 2025 00:17:15 -0700 (PDT)
-Message-ID: <1cc04c6b-ba0f-4e7f-ab85-46c364c66300@arm.com>
-Date: Fri, 30 May 2025 08:17:13 +0100
+	 In-Reply-To:Content-Type; b=ojlSCVGgERZKPMRo6z7QaUP1FTV/H1dg8OqRVVLkwN+ejmpIRLqN6lqpMuxr3pxQI5OGkXBOvRobuwswsfYMeLoZZyYsMzkqRL27dtjZjHmAwG6UTj2AYgSTcPQJFfklnGacZygXRsluq717FHHnhJ7ZN9zyShIxXayoJPr5XME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bLLE8B1k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ra09o53V; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pXLHL2MQ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ID/CDlcG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bLLE8B1k";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ra09o53V";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pXLHL2MQ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ID/CDlcG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 716A0218E0;
+	Fri, 30 May 2025 07:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748589458; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=H8vYiI/lB98SVteHs9jQfydPaBWxD4ynPXxCsA6F5x0=;
+	b=bLLE8B1kEvgP4fus2Y7PKlGZFJY/VupgBfhLS4VrQ49X+NeughQcciVu1M7kCdNx3q85SO
+	uS6l4tRBYiS6W3JDqzRC+dM8aYmLAfkNCCni/4WkGyG3fH4blJyXw+uQ/1P3MXBvuk0mRh
+	HTqAi1GGc0Dr07aRmB0X/99dDWj98bE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748589458;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=H8vYiI/lB98SVteHs9jQfydPaBWxD4ynPXxCsA6F5x0=;
+	b=ra09o53Vv7SUl8quaO60r6mvr4LJ0rd49TKHsKxS/PY5jWcNX738pq+A/9IT3URvk80MSq
+	dgJX4+9uVJwV2jCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748589457; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=H8vYiI/lB98SVteHs9jQfydPaBWxD4ynPXxCsA6F5x0=;
+	b=pXLHL2MQhx2vUpVoNVIO8JK01KqorlanGuGiVb7qOGQqWLYWbWOq7bnLjYH9qekyZS3oO/
+	LpoAr/qcqT1RqFcSeQXXiyZMRal4GhfNcZVyib16l8mAMGUijffNff17OJ681sFGgHWcbx
+	VloCG/MK91sEcd19kKHndfDrWacUs9U=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748589457;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=H8vYiI/lB98SVteHs9jQfydPaBWxD4ynPXxCsA6F5x0=;
+	b=ID/CDlcGd3WQwH5XWqbtvHQvsz0u+X+n5pPFs9Smvt0XR6syQ1WUzNV3BIA1iENjfYz+gm
+	cfn5aoq6lWAzJRDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5753D132D8;
+	Fri, 30 May 2025 07:17:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /koFFZFbOWhaTAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 30 May 2025 07:17:37 +0000
+Message-ID: <51d7af3f-a5a1-4a93-967d-dc4866060a28@suse.cz>
+Date: Fri, 30 May 2025 09:17:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,135 +82,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
- <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
- <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
- <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
- <2ab5f65c-b9dc-471c-9b61-70d765af285e@os.amperecomputing.com>
- <239d4e93-7ab6-4fc9-b907-7ca9d71f81fd@arm.com>
- <1141d96c-f785-48ee-a0f6-9ec658cc11c2@os.amperecomputing.com>
- <9cdb027c-27db-4195-825d-1d63bec1b69b@os.amperecomputing.com>
- <e3e6a3e0-3012-4d95-9236-4b4d57c7974c@arm.com>
- <0769dbcb-bd9e-4c36-b2c1-a624abaeb5ce@os.amperecomputing.com>
- <e8d74579-2e32-424f-bfed-5d3eb33b0a07@os.amperecomputing.com>
- <c44cb356-112d-4dd8-854b-82212ee4815f@arm.com>
- <936cc91a-b345-4e52-9cb5-922c9810c469@arm.com>
- <a1ff2646-f429-4626-8541-19c7f301fc23@os.amperecomputing.com>
- <d1226612-7ad8-4405-93a7-28148699ce45@arm.com>
- <c2625558-a63e-4a63-a893-d2a31b3cc559@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <c2625558-a63e-4a63-a893-d2a31b3cc559@os.amperecomputing.com>
+Subject: Re: [PATCH v3 4/4] tools/testing/selftests: add VMA merge tests for
+ KSM merge
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, Stefan Roesch <shr@devkernel.io>
+References: <cover.1748537921.git.lorenzo.stoakes@oracle.com>
+ <6dec7aabf062c6b121cfac992c9c716cefdda00c.1748537921.git.lorenzo.stoakes@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ xsFNBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
+ KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
+ 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
+ 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
+ tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
+ Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
+ 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
+ LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
+ 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
+ BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABzSBWbGFzdGltaWwg
+ QmFia2EgPHZiYWJrYUBzdXNlLmN6PsLBlAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
+ AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJnyBr8BQka0IFQAAoJECJPp+fMgqZkqmMQ
+ AIbGN95ptUMUvo6aAdhxaOCHXp1DfIBuIOK/zpx8ylY4pOwu3GRe4dQ8u4XS9gaZ96Gj4bC+
+ jwWcSmn+TjtKW3rH1dRKopvC07tSJIGGVyw7ieV/5cbFffA8NL0ILowzVg8w1ipnz1VTkWDr
+ 2zcfslxJsJ6vhXw5/npcY0ldeC1E8f6UUoa4eyoskd70vO0wOAoGd02ZkJoox3F5ODM0kjHu
+ Y97VLOa3GG66lh+ZEelVZEujHfKceCw9G3PMvEzyLFbXvSOigZQMdKzQ8D/OChwqig8wFBmV
+ QCPS4yDdmZP3oeDHRjJ9jvMUKoYODiNKsl2F+xXwyRM2qoKRqFlhCn4usVd1+wmv9iLV8nPs
+ 2Db1ZIa49fJet3Sk3PN4bV1rAPuWvtbuTBN39Q/6MgkLTYHb84HyFKw14Rqe5YorrBLbF3rl
+ M51Dpf6Egu1yTJDHCTEwePWug4XI11FT8lK0LNnHNpbhTCYRjX73iWOnFraJNcURld1jL1nV
+ r/LRD+/e2gNtSTPK0Qkon6HcOBZnxRoqtazTU6YQRmGlT0v+rukj/cn5sToYibWLn+RoV1CE
+ Qj6tApOiHBkpEsCzHGu+iDQ1WT0Idtdynst738f/uCeCMkdRu4WMZjteQaqvARFwCy3P/jpK
+ uvzMtves5HvZw33ZwOtMCgbpce00DaET4y/UzsBNBFsZNTUBCACfQfpSsWJZyi+SHoRdVyX5
+ J6rI7okc4+b571a7RXD5UhS9dlVRVVAtrU9ANSLqPTQKGVxHrqD39XSw8hxK61pw8p90pg4G
+ /N3iuWEvyt+t0SxDDkClnGsDyRhlUyEWYFEoBrrCizbmahOUwqkJbNMfzj5Y7n7OIJOxNRkB
+ IBOjPdF26dMP69BwePQao1M8Acrrex9sAHYjQGyVmReRjVEtv9iG4DoTsnIR3amKVk6si4Ea
+ X/mrapJqSCcBUVYUFH8M7bsm4CSxier5ofy8jTEa/CfvkqpKThTMCQPNZKY7hke5qEq1CBk2
+ wxhX48ZrJEFf1v3NuV3OimgsF2odzieNABEBAAHCwXwEGAEKACYCGwwWIQSpQNQ0mSwujpkQ
+ PVAiT6fnzIKmZAUCZ8gcVAUJFhTonwAKCRAiT6fnzIKmZLY8D/9uo3Ut9yi2YCuASWxr7QQZ
+ lJCViArjymbxYB5NdOeC50/0gnhK4pgdHlE2MdwF6o34x7TPFGpjNFvycZqccSQPJ/gibwNA
+ zx3q9vJT4Vw+YbiyS53iSBLXMweeVV1Jd9IjAoL+EqB0cbxoFXvnjkvP1foiiF5r73jCd4PR
+ rD+GoX5BZ7AZmFYmuJYBm28STM2NA6LhT0X+2su16f/HtummENKcMwom0hNu3MBNPUOrujtW
+ khQrWcJNAAsy4yMoJ2Lw51T/5X5Hc7jQ9da9fyqu+phqlVtn70qpPvgWy4HRhr25fCAEXZDp
+ xG4RNmTm+pqorHOqhBkI7wA7P/nyPo7ZEc3L+ZkQ37u0nlOyrjbNUniPGxPxv1imVq8IyycG
+ AN5FaFxtiELK22gvudghLJaDiRBhn8/AhXc642/Z/yIpizE2xG4KU4AXzb6C+o7LX/WmmsWP
+ Ly6jamSg6tvrdo4/e87lUedEqCtrp2o1xpn5zongf6cQkaLZKQcBQnPmgHO5OG8+50u88D9I
+ rywqgzTUhHFKKF6/9L/lYtrNcHU8Z6Y4Ju/MLUiNYkmtrGIMnkjKCiRqlRrZE/v5YFHbayRD
+ dJKXobXTtCBYpLJM4ZYRpGZXne/FAtWNe4KbNJJqxMvrTOrnIatPj8NhBVI0RSJRsbilh6TE
+ m6M14QORSWTLRg==
+In-Reply-To: <6dec7aabf062c6b121cfac992c9c716cefdda00c.1748537921.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,oracle.com:email,linux.dev:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On 29/05/2025 20:52, Yang Shi wrote:
->>>> I just had another conversation about this internally, and there is another
->>>> concern; we obviously don't want to modify the pgtables while other CPUs that
->>>> don't support BBML2 could be accessing them. Even in stop_machine() this may be
->>>> possible if the CPU stacks and task structure (for example) are allocated
->>>> out of
->>>> the linear map.
->>>>
->>>> So we need to be careful to follow the pattern used by kpti; all secondary CPUs
->>>> need to switch to the idmap (which is installed in TTBR0) then install the
->>>> reserved map in TTBR1, then wait for CPU 0 to repaint the linear map, then have
->>>> the secondary CPUs switch TTBR1 back to swapper then switch back out of idmap.
->>> So the below code should be ok?
->>>
->>> cpu_install_idmap()
->>> Busy loop to wait for cpu 0 done
->>> cpu_uninstall_idmap()
->> Once you have installed the idmap, you'll need to call a function by its PA so
->> you are actually executing out of the idmap. And you will need to be in assembly
->> so you don't need the stack, and you'll need to switch TTBR1 to the reserved
->> pgtable, so that the CPU has no access to the swapper pgtable (which CPU 0 is
->> able to modify).
->>
->> You may well be able to reuse __idmap_kpti_secondary in proc.S, or lightly
->> refactor it to work for both the existing idmap_kpti_install_ng_mappings case,
->> and your case.
+On 5/29/25 19:15, Lorenzo Stoakes wrote:
+> Add test to assert that we have now allowed merging of VMAs when KSM
+> merging-by-default has been set by prctl(PR_SET_MEMORY_MERGE, ...).
 > 
-> I'm wondering whether we really need idmap for repainting. I think repainting is
-> different from kpti. We just split linear map which is *not* used by kernel
-> itself, the mappings for kernel itself is intact, we don't touch it at all. So
-> as long as CPU 0 will not repaint the linear map until all other CPUs busy
-> looping in stop_machine fn, then we are fine.
-
-But *how* are the other CPUs busy looping? Are they polling a variable? Where
-does that variable live? The docs say that a high priority thread is run for
-each CPU. So there at least needs to be a task struct and a stack. There are
-some Kconfigs where the stack comes from the linear map, so if the variable that
-is polls is on its stack (or even on CPU 0's stack then that's a problem. If the
-scheduler runs and accesses the task struct which may be allocated from the
-linear map (e.g. via kmalloc), that's a problem.
-
-The point is that you have to understand all the details of stop_machine() to be
-confident that it is never accessing the linear map. And even if you can prove
-that today, there is nothing stopping from the implementation changing in future.
-
-But then you have non-architectural memory accesses too (i.e. speculative
-accesses). It's possible that the CPU does a speculative load, which causes the
-TLB to do a translation and cache a TLB entry to the linear map. Then CPU 0
-changes the pgtable and you have broken the BBM requirements from the secondary
-CPU's perspective.
-
-So personally I think the only truely safe way to solve this is to switch the
-secondary CPUs to the idmap, then install the reserved map in TTBR1. That way,
-the secondary CPUs can't see the swapper pgtable at all and CPU 0 is free to do
-what it likes.
-
+> We simply perform a trivial mapping of adjacent VMAs expecting a merge,
+> however prior to recent changes implementing this mode earlier than before,
+> these merges would not have succeeded.
 > 
-> We can have two flags to control it. The first one should be a cpu mask, all
-> secondary CPUs set its own mask bit to tell CPU 0 it is in stop machine fn
-> (ready for repainting). The other flag is used by CPU 0 to tell all secondary
-> CPUs repainting is done, please resume. We need have the two flags in kernel
-> data section instead of stack.
+> Assert that we have fixed this!
 > 
-> The code of fn is in kernel text section, the flags are in kernel data section.
-> I don't see how come fn (just doing simple busy loop) on secondary CPUs need to
-> access linear map while repainting the linear map. After repainting the TLB will
-> be flushed before letting secondary CPUs resume, so any access to linear map
-> address after that point should be safe too.
-> 
-> Does it sound reasonable to you? Did I miss something?
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+> Tested-by: Chengming Zhou <chengming.zhou@linux.dev>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-I think the potential for speculative access is the problem. Personally, I would
-follow the pattern laid out by kpti. Then you can more easily defend it by
-pointing to an established pattern.
-
-Thanks,
-Ryan
-
-> 
-> Thanks,
-> Yang
-> 
->>
->> Thanks,
->> Ryan
->>
->>>> Given CPU 0 supports BBML2, I think it can just update the linear map live,
->>>> without needing to do the idmap dance?
->>> Yes, I think so too.
->>>
->>> Thanks,
->>> Yang
->>>
->>>> Thanks,
->>>> Ryan
->>>>
->>>>
->>>>> Thanks,
->>>>> Ryan
->>>>>
-> 
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
