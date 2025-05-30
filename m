@@ -1,27 +1,26 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032FA1487D1;
-	Fri, 30 May 2025 03:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788D719DF5F;
+	Fri, 30 May 2025 03:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748574722; cv=none; b=NtGXQus2V0DASFTudTGWPA1qHLklkfJT1N4AbZY2X7bk4lEr6TRmonDNsvsVzgvD7vkkg5i95RnNOzQfWJQYF/lL9m+xEbwXYi1u1yLdWqtyrIk/Qv/1XoJTxaF8nfHyJc/JdgXPYGBe5pFQ0babDMD7FsPAS/SPjEVaLkPIYvY=
+	t=1748574727; cv=none; b=By52ca2fNk0HCArQcJ8Fjw+3ORqcyfWkx3Hed7zbWteHX/Nuldvw3e7GwC5hzM1Is0dDzYaou3GQRk1NM/X4b1YiMokTMrxA1OZfC8x25wDHELq5lTm2jJYL7aQPNSAkh5AXSU/QPlfJR3anV3hOkbz+EsKQ4GOg7+KTMUy+eEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748574722; c=relaxed/simple;
-	bh=n5dHRGrWYAtPBjkROOdK7fTKrRqPRD4wAZpO/YnM55E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sGS+vPa0xtvpIHl+UVCzJUEbvRIhPHbKwqWC3bMv3QGt3/rA9/+THQTtNOz1siPq83ol5Ix3LtW7rWalDcL2KBtviOJaZuxHeRrjwDnZBSNmCjoj/9DrsdbNE6Ukd0wk872BpqNB5Erex5vt5remJww8LONwyKJhi9ezpv4OWxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=pass smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.254.200.128
+	s=arc-20240116; t=1748574727; c=relaxed/simple;
+	bh=mRDJbWLmmCHETsb5PuNct2QeQlKbO5aeeo2ZTshg8B0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bBITttXvG1XPjgZWGAs0v6xLJgURjTbzm3uS5CXFu0Q62hL4AJF4izE9b/JCtgMlvIHbPKtsblNQR12xa/Fn+zqAZZEIgfLgWu0yB5g4We8AdZp1ynxMQHRwSqrpgRJoz2/EZ+94P1K4J5sNwRhfD07/BClLLwpXUuCOHPxDNlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.206.16.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chainsx.cn
-X-QQ-mid: zesmtpgz3t1748574654ta3bc7e8d
-X-QQ-Originating-IP: bFSBAXbZGjY65746zkohba5EnhI/xku4pGYbgqCLo3s=
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
+X-QQ-mid: zesmtpgz3t1748574651t1f688200
+X-QQ-Originating-IP: 5OdztFYpI2CQ6CtR9zM4QisGTIm1CN/fzpZK7SrLLX8=
 Received: from chainsx-ubuntu-server.lan ( [182.245.65.180])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 30 May 2025 11:10:53 +0800 (CST)
+	id ; Fri, 30 May 2025 11:10:49 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13257807080784473651
+X-BIZMAIL-ID: 5599866305784924053
 EX-QQ-RecipientCnt: 16
 From: Hsun Lai <i@chainsx.cn>
 To: robh@kernel.org,
@@ -40,12 +39,10 @@ Cc: i@chainsx.cn,
 	linux-kernel@vger.kernel.org,
 	krzysztof.kozlowski@linaro.org,
 	linux-rockchip@lists.infradead.org
-Subject: [PATCH v5 1/2] dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
-Date: Fri, 30 May 2025 11:10:45 +0800
-Message-Id: <20250530031046.166202-2-i@chainsx.cn>
+Subject: [PATCH v5 0/2] Add support for Firefly Station-M3/ROC-RK3588S-PC
+Date: Fri, 30 May 2025 11:10:44 +0800
+Message-Id: <20250530031046.166202-1-i@chainsx.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250530031046.166202-1-i@chainsx.cn>
-References: <20250530031046.166202-1-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,53 +52,71 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: zesmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: MSyoPQEuxKCuQ9ZQ/jC7O/sFL786EHz9nsvkzSbOXYXFhRgano/bzVXn
-	FNvVsWeawm4R6l5Fw4QhDJ5nPEMJ6p8Fz2hsLUmpOQKUpATzmzMeFw1JMgclNFqwf70g26X
-	/WW4ChfrGJbixrqJXysO+2HPokxu/8EkzvzGOaqtqVkNEPnye19neb5gyfJ9YDWPGF0cQOC
-	+ZwyMDK7r6EeFlJ2gvXrVQPZW5WOtRLox3SHkFTQNDg5QUutLF/gaQnvFe1PmARkKEY+L/H
-	Tzz2x4dBrzpnx1rkidswKd1LFunBCJQpvmbddnyt7vTCO/pXpfKIPMW4y1FFGxRrssNH9+O
-	J7Izoueyf3NGIdlDlgr978EiJakkUeqLkWem+kabqXT5FD5CFZwlhyrLgIewtKtBaZuSVlK
-	kOYySZ3UcTDlctB0obxy2A5sHmzyK3/Vsp1aRO/2Zbku9aLE6iVlnVjrcQTfrTA/mGPvTLs
-	ofzS9sZ+fAHFOc5xtKYjcbWnCDEC8yk6ldUwKfgdmvGJEeiaTqoJ7aYUBlMHVzo0wZCOw4c
-	vIrLNRtVqlqlarT2YpDo0sQuatspJ5+tJc+tLXdaYOmbB61VWa8DN7EzT/vApc0jEGw1XmJ
-	NSiumwddFXJ1RD684oGMoswnyc7xtwkaNXDUPdNW3wDklX+QA62CduumjtPJU+X2+vkUChR
-	qi8WuS8sFjB1mNUjsfUGSP5Y1mZ+nlKmD9+kR2mC72wDieG17cJYj8Tc1TC3d8+SDhWkm07
-	H1hVlVhh/hpmBQb+uTl/Mu8CaZlq4ktSCmLuCy6dyvf1FWh9z6pJGmp5hsCGbHNrdlfkPz/
-	HlJ0uyLFK7m+E7rvdsHkK2mEYZNs3SRP7Rh39kqJwfKhkvoox7/Afrh+l3TL+2oF/kNzHal
-	+Cn+1IadErinRW6kGa6OngBPUz/25gc5JomMN6v9Mr4E3PXCGAcTDKqJozyneK47h1A79nY
-	zmr+iIM0UcfCiDNlgoniEAQLToG4RdpHVBO6/bLx8YiTSSecqPzDwNaO4AhERGnjEsdI=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-XMAILINFO: NkkRVlbtkC301Tdt/mvciw6xJWmZKN5WZP9uzHl6Vvverl8wNllYu39C
+	xPYAk9B3yzAXmSVx9VnGSDi48IgwYQhNpOrnB7GD70n06FqImPT2I8oia3zKbxWp/4Aw7Hh
+	nW4md6ugNS2bSQMP0585rpxAoA5yN7FdCyuyx3uf+rzOkfjmOAcqn+YwMiBwsdSagRMb62U
+	e8v+trAAZ6a1K++gSShnK7kmglAvpkU9h0wVH2V31aLv6BFxWBftqYWu/WPPjxUxXQrnYSu
+	YUO4WJJHnmgK0HauGh2LrGVa39xCNvLALgHrGsWQZ2xk0L/CLxtBFd3NcaQt8yXx6f/xgOi
+	2e82Vz7I93z/uDt9NkjeEAyF9Q+BKbVZiPJjt+NSHsDApMGsV9oRYQnwFIloM023SpJoI1W
+	QnHal33ediQjDS9wdtNM587YYyN9pHahKYE0DEOJwnBjQAMtg18YnGWNKTGZv32VKSaTHj2
+	5jPljO0XrdTYyH98KQF/aioq+jWO9qCezPvBJGLvRFOgF0Iq2o8AMVB5wo1e7EJsuuQ/ISv
+	LXMvHUnKDO20Ri8SerSGN0kNtYMI0hMlV883wb29CDu2xdV5dw65LzXGs3iFlroyDuC9e4H
+	miX50BUBVhB9XoM/INrcYe/T1HLP1EqBTf1ZtoKnKIFcwi7+KCxPV3aYWREoF2CQF9k/xo8
+	L1L4mQVvwOJQOXvE8n9eDwH/GpQAAvTsAHsqHOd+hhlHopN+3uOR1FxKRpuWhk2fYdRpwui
+	qRSfTXjoz8RomBcDDHjHjN8KHuWQrc/T4knQ5SLqDvKvejiyddTQabW0G0iYgAIpopVZJc7
+	oXL3uDrlb4mTAUQQm8/if/ZbfvdU4NIkJrQwzfRG9z9yrF448qmInmWP1IzClos/PnYhWLr
+	lqw8CJmp0kT5IJ1/7OBlHIFX4fRcTcgmhQiR7H3KWhJhMF9rr6txYKGSdGsHKB/Z98Fzt+p
+	zq6G5NnE43NDDuzOpqL4Jm5oEn8ZjcvzmBgptsMsKJ3qn26ahs3VFEpeW30Tery1Bt2+G+i
+	LYaJyHrA==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 X-QQ-RECHKSPAM: 0
 
-This documents Firefly ROC-RK3588S-PC which is a SBC based on RK3588S SoC.
+This series add support for Firefly Station-M3/ROC-RK3588S-PC.
 
-Link: https://wiki.t-firefly.com/en/Station-M3/index.html
+Info of device can be found at:
+https://wiki.t-firefly.com/en/Station-M3/index.html
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
----
+Changes in v5:
+- Make led-1 off by default (Chukun Pan, v4)
+- Add color settings for led (Chukun Pan, v4)
+- Remove vcc5v0_usbdcin
+- Put enable/gpio before regulator (Chukun Pan, v4)
+- Remove always-on and boot-on from vcc5v0_host (Chukun Pan, v4)
+- Update the name of vbus_typec (Chukun Pan, v4)
+- Remove always-on and boot-on from vbus5v0_typec (Chukun Pan, v4)
+- Put pinctrl-names before pinctrl-0 (Chukun Pan, v4)
+- Remove usb_con node
+- Remove extra blank lines (Chukun Pan, v4)
+- Add phy-supply for u2phy3_host (Chukun Pan, v4)
 
-(no changes since v1)
+Changes in v4:
+- Update the name of the regulator
+- Remove the i2s5_8ch node
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v3:
+- Update the name of leds
+- Add more cpu nodes
+- Update mdio compatible
+- Fix the order in the node
+- Add the default serial port(uart2)
+- Patch 1: Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 115c3ca43..701d68aca 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -258,6 +258,11 @@ properties:
-           - const: firefly,rk3566-roc-pc
-           - const: rockchip,rk3566
- 
-+      - description: Firefly Station M3
-+        items:
-+          - const: firefly,rk3588s-roc-pc
-+          - const: rockchip,rk3588s
-+
-       - description: Firefly Station P2
-         items:
-           - const: firefly,rk3568-roc-pc
+Changes in v2:
+- Fix rgmii delays
+
+Changes in v1:
+- Add support for Firefly ROC-RK3588S-PC
+
+Hsun Lai (2):
+  dt-bindings: arm: rockchip: Add Firefly ROC-RK3588S-PC
+  arm64: dts: rockchip: add DTs for Firefly ROC-RK3588S-PC
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../boot/dts/rockchip/rk3588s-roc-pc.dts      | 838 ++++++++++++++++++
+ 3 files changed, 844 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3588s-roc-pc.dts
+
 -- 
 2.34.1
 
