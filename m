@@ -1,190 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9616E15746E;
-	Fri, 30 May 2025 14:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6505A230BF9
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 14:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748615347; cv=none; b=krJ7Yu/b79ANK2WJKs0K2gU+wsqDJkBkRvbQZd3dgcVdT6M4dAy35Dhyw9cEfVhw+tAjbMbvFGtjg4PueBl6gFNuNmR4xwadB/FWcpcOHTdCMsk3FLVV907Nb0M4E8FMnDpdp50Gczr4E5dO0nIS1XXv0TAgp3eYa9cZBKryHt0=
+	t=1748615371; cv=none; b=juEmH11M4VM+xE7qun3vKq51ycGmp5sx0eJaN2MjGwBxtVqQxuYNwRM0/k5kFmvBkH9L6ZSusSM5EhAaa1x/rhFR3vQnLLE9mguE8ZlFo3Let4W/wQvyPE4Yv2oIYlCKWn8Lz9igWds4kfdmVfHbDmvKMTKWusvGNrU3kjrKli8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748615347; c=relaxed/simple;
-	bh=yHUgtt6QjNoZ2/oQT+YPFW2ct/TvQH3PYUbwT81dasY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jn6RKiVUA4LYZUw7qZXLZfKJHU4mvOCYIZjk+v65xIejb4te4k3yb7s4bNxFwzOTN5TCXvV3g9LvSaFgbyKBUGfpEFhhN22lF/Tnt54tjIVMS8PWx+s36ONx/5DrtnanYzDCyTb60V0CO1jkMmZHr2nZR1jbx7mY8NODhznYlWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INgpYX0m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748615371; c=relaxed/simple;
+	bh=rIK3waljLR/fjrG3pLbMe1YHZ8NPs75JNeBxI+CrkHo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MvRdh4XlhU0fJSfaUkQpMKbCwEhJO7uNARqKLC2wYahCYczb550dEAcZKN+pXwbYKQOrbKxROBvOBdIDLnY47GHb0aStfLmxtmY0v9HClIpkTo21HssjQB0ewDz1FHihhLpLB4q9HpETAZbQE7wplCJOHQaB9cxQGNBze3zFUMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=V1bBNXR2; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INgpYX0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 002CAC4CEEB;
-	Fri, 30 May 2025 14:29:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748615346;
-	bh=yHUgtt6QjNoZ2/oQT+YPFW2ct/TvQH3PYUbwT81dasY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=INgpYX0m4B9tzDtY1ZK0N8eGxmJS419QNPGpYOVMvpYZ1d17byT2AyuIuRQxzBbGw
-	 FjZwxrqlHtRaggrorj5CLsFqgOdjNx/SsZ1Uk93f2rfCaz/ndolW7rLAVqXeOH+34L
-	 1rPT8xMz9W+pyNdan8u8rwl+TF+R+vULt5hPV5n5KjsAkNQbcpKPK4gO2GlZzTLsbV
-	 XgqnlIFimA0lhdhW50ptDACFEPeABcUteatZTMC39qqfaJUQ9k3TtA7RK9ofAgf279
-	 s9gcAIBu786igM7ris+qQohNPhb3T97lXvEBFzO/AX2vssm7+8/yTlJd5lRd8nVn36
-	 YFxaDLUzSCIow==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-551efd86048so2556291e87.3;
-        Fri, 30 May 2025 07:29:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURHRrXvHpODd4q9OjqACCY7NUpTGB4qvnLfkeF1dcdp10QAHRoP/4lhcMQOg5NtJoqdV0U+UGyh50YXUeX@vger.kernel.org, AJvYcCXkq/SgHpJWjfoC6h5z+3AWzR+29OxdncVgM8qFB2fRHIUdab5FD7pSB/kqCsSE5CPj1odvqLCT6Sc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNEsPEGXsMbFluVmpFGCB9VdUPPqwdcJDCq+XvNAX0Mni8XEJj
-	r8UZS20CRelXeNgTUktvfHgW7nbr+gDFno7Jen7fFn2vq9s9G6R7K+qOu95s1dZ3pwCculfZWZT
-	d6E6lac0FkjvIHtnG52ntfFmtv44DiTk=
-X-Google-Smtp-Source: AGHT+IFnRhV3+HTUiNUqrYjZd3G12lOC37LBzo9prk1PXkbvPDPRiegfaa21qZlLGuMaRZOAqcjahfeiLOGIMUt8854=
-X-Received: by 2002:a05:6512:23a2:b0:553:3621:310a with SMTP id
- 2adb3069b0e04-5533d16dbaamr768389e87.21.1748615344329; Fri, 30 May 2025
- 07:29:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="V1bBNXR2"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a36e090102so1187544f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:29:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748615367; x=1749220167; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fry8EoRGYXADxHvT9pFJrNSVR8dhwD8t+hXmtglUTHo=;
+        b=V1bBNXR2XuOVKTXFQNzJRExkF5KAQ8nO5bhgMOY9Jo3aWfmNA1TQ9C8QW6+5QMRdxM
+         PJOUWI6ogmP9vUEXSUWD1IC7bHvetnjZZW8BOV/ocWOubuhZPGShifOUC68BHEyN86rX
+         4choYtWVpaJqsqDmePCCQgKkhR9VPtxqKhtXlNBS4WAtu/Yh176hYyK+g+KaO3wqgWsH
+         4SdPcYczWgg19daKZXzPU2cCGLv2Tl03BQCFg5pxY7oplhQaQV06bxyFeMit+aI9qaTe
+         LpG2Z37vQ0vGLZOOutk1sw3sROqZX1iCAlyKvkEmTmd8uamKylSM1zDRc0iAmsmI6Khg
+         V74g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748615368; x=1749220168;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fry8EoRGYXADxHvT9pFJrNSVR8dhwD8t+hXmtglUTHo=;
+        b=FfZL2WptIfYscBL4WDYNEE6QR2C+rsHUO7t89w7cxe5jnKr6WcTDzBU4/jstYbKZj5
+         pI3JsCQ/K+15ZkcKTeQXGoVE2Bc7G/crZL470j/TZxADQE0taSlvz+sox5smOfIOAsy+
+         vjbnZdBjVX5DcJgkh11ZhCIIDFuANSuRO5RBIhOQ/agAEIV9MnDfT2LMbL5ifyBJGWsa
+         EpVSPmfpaw4sWAk9wCK80y7H6VOZMFW7bktj+pPflbIbKgeGdE7auWB3pFTJ1TZk0OdP
+         inhwdvd0UxTca9P6RHdOK3htb9mchRnw73kmrG5WCDgSgpyz7j6eB25C4f7DCAwCAunK
+         +m0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXhYyLDArVheUEUbTFNFV2IyPzZ+WmKVB3OSvCVwcvW95AaiuGDzFM6mQa5tNaELlYTEbozu/lqk/I5GsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK1Zp8SCtLBpU+osqtbDHhGY972wMiACZu/Cw+nPQdvZdkHqi4
+	mw4YUfdey1Xo7K6vzWNx5/4RrlMQ8Hj8SYo1Xra72/N5goFYcBM6gsY2rTdMD+sJMvA=
+X-Gm-Gg: ASbGncuLZSGwZXXaiNA9TApDBZH5Xc9h+fZlUb7iq40RY/DDxBJPiZGJa44bz+2mzHC
+	Mu3u2XR7LhKIHdZOePNAzffSspn/PyXnWMahmuP57VHAS1fqF00B7jnF1JPPaShi+Z1k/kNDkci
+	z4UV6GW+FYgXsd+PJa2ko3NZjjrePo4jfDQZQaXtlPGD+qKwQMeSshT/07BwMosj8w+wR+QhMAV
+	TdiWj+Sp5Wd/WQQTUqq5Ocv/9T1B9udfsJRB7H2+Uvo0h3l/LM7XXt6vYyWbbSfoVxnQN9vgpaE
+	zH1CmflAl4yr+0SBkOCmNUIDUxOnRgpA8C3RR2+pJT9WeB5+RL3Da/stdeOGixrpdC/ylT7BEOw
+	/y2xttKZcLZLYguIgM6mvutzGcEEL3H8=
+X-Google-Smtp-Source: AGHT+IFyD1vZ35wqGpI6Aklg8LYxAbef6kulzWJMlMm0iEgURUY6T4yiqBz7bO5ajBNrPSUXmDGzvA==
+X-Received: by 2002:a05:6000:25ca:b0:3a4:df80:7284 with SMTP id ffacd0b85a97d-3a4f7a0234fmr2964955f8f.1.1748615367604;
+        Fri, 30 May 2025 07:29:27 -0700 (PDT)
+Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a0421sm4979870f8f.97.2025.05.30.07.29.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 07:29:27 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v2 0/2] iio: adc: ad7606: enable Vdrive and Vrefin power
+ supply voltages
+Date: Fri, 30 May 2025 16:27:55 +0200
+Message-Id: <20250530-wip-bl-ad7606-reference-voltages-v2-0-d5e1ad7e6f14@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-35-ardb+git@google.com>
- <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
-In-Reply-To: <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 30 May 2025 16:28:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
-X-Gm-Features: AX0GCFsHN16GrjCPQcshtyMpUhezV1a_8qejPONH3p7G-taT6t1sSUGWFP1MvPA
-Message-ID: <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
-Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature check
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGvAOWgC/5WNQQ6CMBBFr0K6dkw7kSquvIdh0ZYpTIKUtKRKC
+ He3cgOX7+fnvU0kikxJ3KtNRMqcOEwF8FQJN5ipJ+CusECJtayxgTfPYEcw3VVLDZE8RZocQQ7
+ jYnpKgNpfmhplp9CJopnLhz9H4tkWHjgtIa5HMavf+oc8K5DQ2JtXmrz0KB/WrCPbSGcXXqLd9
+ /0LL0Cvj9MAAAA=
+X-Change-ID: 20250529-wip-bl-ad7606-reference-voltages-26f49520d12c
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=806;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=rIK3waljLR/fjrG3pLbMe1YHZ8NPs75JNeBxI+CrkHo=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYsiwPJDvd0WwoMIzeuafY5k+D/P8ZR78ZzR+r7+zZFOoo
+ ++Xr16zO0pZGMS4GGTFFFnqEiNMQm+HSikvYJwNM4eVCWQIAxenAExkii8jw5JOziX9lc0Oyxx9
+ Hy4uiD0XtdjD1qjT9cbdXLvarStnbGT4nysVlJ5nHll99HPZuTMLPoiH6j8LW31HaRKHk7KSSHo
+ 7IwA=
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Fri, 30 May 2025 at 13:17, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Mon, May 12, 2025 at 09:08:47PM +0200, Ard Biesheuvel wrote:
-> > diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
-> > index 70ad9a0aa023..560985ef8df6 100644
-> > --- a/arch/x86/boot/startup/sev-shared.c
-> > +++ b/arch/x86/boot/startup/sev-shared.c
-> > @@ -66,16 +66,10 @@ sev_es_terminate(unsigned int set, unsigned int reason)
-> >               asm volatile("hlt\n" : : : "memory");
-> >  }
-> >
-> > -/*
-> > - * The hypervisor features are available from GHCB version 2 onward.
-> > - */
-> > -u64 get_hv_features(void)
-> > +static u64 __head get_hv_features(void)
-> >  {
-> >       u64 val;
-> >
-> > -     if (ghcb_version < 2)
-> > -             return 0;
->
-> Why?
->
+Enable Vdrive and Vrefin power supply voltages. Related fdt properties
+are already defined in ad7606 dt_schema.
 
-It is explained below ...
-> > -
-> >       sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
-> >       VMGEXIT();
-> >
-> > @@ -86,6 +80,31 @@ u64 get_hv_features(void)
-> >       return GHCB_MSR_HV_FT_RESP_VAL(val);
-> >  }
-> >
-> > +u64 __head snp_check_hv_features(void)
-> > +{
-> > +     /*
-> > +      * SNP is supported in v2 of the GHCB spec which mandates support for HV
-> > +      * features.
-> > +      */
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v2:
+- fix "ret < 0" as just "ret",
+- set more appropriate error message.
+- Link to v1: https://lore.kernel.org/r/20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com
 
-... get_hv_features() is only when SEV-SNP has already been detected.
+---
+Angelo Dureghello (2):
+      iio: adc: ad7606: enable Vdrive power supply
+      iio: adc: ad7606: add enabling of optional Vrefin voltage
 
-> > +     if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
-> > +             u64 hv_features;
-> > +
-> > +             hv_features = get_hv_features();
-> > +             if (!(hv_features & GHCB_HV_FT_SNP))
-> > +                     sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> > +
-> > +             /*
-> > +              * Running at VMPL0 is required unless an SVSM is present and
-> > +              * the hypervisor supports the required SVSM GHCB events.
-> > +              */
-> > +             if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
-> > +                     sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
-> > +
-> > +             return hv_features;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> >  int svsm_perform_msr_protocol(struct svsm_call *call)
-> >  {
-> >       u8 pending = 0;
-> > diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
-> > index 753cd2094080..0ae04e333f51 100644
-> > --- a/arch/x86/boot/startup/sme.c
-> > +++ b/arch/x86/boot/startup/sme.c
-> > @@ -533,6 +533,8 @@ void __head sme_enable(struct boot_params *bp)
-> >       if (snp_en ^ !!(msr & MSR_AMD64_SEV_SNP_ENABLED))
-> >               snp_abort();
-> >
-> > +     sev_hv_features = snp_check_hv_features();
->
-> Is this writing the sev_hv_features declared in
->
-> arch/x86/boot/startup/sev-startup.c
->
-> ?
->
-> arch/x86/boot/startup/sev-startup.c:45:u64 sev_hv_features __ro_after_init;
-> arch/x86/boot/startup/sme.c:536:        sev_hv_features = snp_check_hv_features();
-> arch/x86/coco/sev/core.c:980:   if (!(sev_hv_features & GHCB_HV_FT_SNP_AP_CREATION))
-> arch/x86/include/asm/sev-internal.h:5:extern u64 sev_hv_features;
-> arch/x86/include/asm/sev.h:428:extern u64 sev_hv_features;
->
-> I'm confused.
->
-> If sev_hv_features is startup code, why isn't it accessed this way...?
->
-> /me goes and looks forward in the set...
->
-> oh my, that is coming.
->
-> > +
-> >       /* Check if memory encryption is enabled */
-> >       if (feature_mask == AMD_SME_BIT) {
-> >               if (!(bp->hdr.xloadflags & XLF_MEM_ENCRYPTION))
-> > diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> > index fa7fdd11a45b..fc4f6f188d42 100644
-> > --- a/arch/x86/coco/sev/core.c
-> > +++ b/arch/x86/coco/sev/core.c
-> > @@ -1264,17 +1264,6 @@ void __init sev_es_init_vc_handling(void)
-> >       if (!sev_es_check_cpu_features())
-> >               panic("SEV-ES CPU Features missing");
-> >
-> > -     /*
-> > -      * SNP is supported in v2 of the GHCB spec which mandates support for HV
-> > -      * features.
-> > -      */
-> > -     if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
-> > -             sev_hv_features = get_hv_features();
-> > -
-> > -             if (!(sev_hv_features & GHCB_HV_FT_SNP))
-> > -                     sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> > -     }
->
-> I guess we would've terminated earlier anyway so that's probably ok...
->
-> > -
-> >       /* Initialize per-cpu GHCB pages */
-> >       for_each_possible_cpu(cpu) {
-> >               alloc_runtime_data(cpu);
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
+ drivers/iio/adc/ad7606.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+---
+base-commit: aa1b3efb8425b572d67df2f5d47ee4ed25571428
+change-id: 20250529-wip-bl-ad7606-reference-voltages-26f49520d12c
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
