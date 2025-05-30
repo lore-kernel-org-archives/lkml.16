@@ -1,129 +1,112 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A11F4E2;
-	Fri, 30 May 2025 23:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF315F4E2;
+	Fri, 30 May 2025 23:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748648804; cv=none; b=u4RE/V9UBcFtyoiQD71/8ecFhwKJqO6UYS9r7TLVRVdGWcDeF5Imzyqv7sCunodLTdsK7S0yLfBjZ6ZZFfVenxYEP3QCK115YxtHWyIPl+s3tRWrlQHYb2v0DPZeETh4oeUi3iUQj76Ui1HHcmpjbLUbLgrzz0YKNLXyZN1aVQY=
+	t=1748648897; cv=none; b=lLN+R02U4yw4LVrspXvOsTWML71gTGhIal5vjCAbqF16z+zY3g1upkuvOEksuCOSiJenOF0ID+Z4zGJE0QjwcDkva5zKPrgwvf9ZOtk/UArsZR0z/WZovEZn3/qDIWfLlV/GUl2/E5p3+lt0ABxiL3zYFqGMJl0NQ/ptcWQDLxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748648804; c=relaxed/simple;
-	bh=f/RgEcBhBOkPZPGEoH8L5VEwKbNgnJK3zfEBTZ2DxGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KNpcfNKOx2Jxhc/No74TGcNucZ+KDTsMFYy9Zfyu/lRjklgB/B7++tukS4ISyON374IroVBP1CevFJ7Qjz96a9mQJuadJmqDG7/NnpH1nSQIq7a6xHQLfMHAL8pODoPXiY4s3kLI/jNDbp0bDFk/itAPFbSVoDR2L2kByLa1jm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kn/uB6Jo; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748648897; c=relaxed/simple;
+	bh=OZITbcfUk62xAFOv+ESSVnGYPYICuavRFP4UNT0hEXA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bAL4lnTju6UFL+4JZbBTcyEzLR7L/bm2O4pf4EWTXiQX776yeb4Ie+l58CWiN72VBzSj9Ryg82tLs6ajNIbOqqiqqAGSlSR28s/rqTTfotQ8DEoFx5nUCi3cuoWwzam57l2ua4mRcxamiKkVW1XX2I+nLOENE2eHWNdR4pekcxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LCVpake5; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kn/uB6Jo"
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4e290e420eeso812139137.0;
-        Fri, 30 May 2025 16:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748648802; x=1749253602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o8r1VhQxE8YGMw2E+RF6ib2Y5lg3+2mjo9SImYhpolU=;
-        b=kn/uB6JoPHJEBKIjJtWKnz5EWIUJDAEysSVOfDU4iScgPtfYAjTHAyLaeYTBYbknmG
-         YN3UYlubP0UKCPqj7wUbEQc2bOzX07pqVh/3ZqPbHeUpn9yO7rTCfzeMaGrKkzSF0Ro7
-         v6EeCsZhz6TsMPctK1HxZeo7vWbfvvIf6WwkVXgsEQqdXIqYhgD1SNyza5D4MUiH3R2p
-         MWNyz/pHoU28sE20xlD1n6tsMeZIJHldorP9LoEWMoJnc2yqMxpPNZsY8+ppzZ/j3ASM
-         c6R6nKIIH1FchZIrm6KMizCaiEWX8I9UdF7jM7x3jLLOLtN5bhUxxPPVZ5cHZpYrFwR3
-         N3kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748648802; x=1749253602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o8r1VhQxE8YGMw2E+RF6ib2Y5lg3+2mjo9SImYhpolU=;
-        b=YJJDqTm4oSeUF6rDxB9xLWhE8cI0hN7V5HTn8/dfdefPygEkk2nYQPXfIE+1SmNV2h
-         0xopdm0+xvLWHsRdHgWalu05QvvQE4gHQisQPtg1RT616sLuIOpNb9k0qQi7EBILegUg
-         CvX8NJBmsU44irPURjY4bTY6NpFGVd0v80k4+mz8HrgPxekX0jMf04j2xe8IJ5UYCXkE
-         82j8XSOlojPfMNMNtBjCVzjnMIdOIeDE0lsEqRp4jL49kdf5usFijFwFj0v8KfXjisny
-         qAl0CBA/T1s0LVKEUGJcNYq8hBCOvJnlMf48AhcvYm7z8bd5x1pe2DT5GOy5418t8TP4
-         R0UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVG/fV9UtzP29ec3sIjNwiLqTsNhxM7UnXnzzHesGQjEyXLuk84bbbS/vXRex5ExxGzvMamX6/NogVd80k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRJR8iUyrcsdq4/V7L/BFzrZRJOO6BL5EsTEBn7NHYd7FO+bvk
-	nHhEo6aQbGQMtNr/vIlhH7KMtsQu5f3IxB74AunGNTD69eEKnRIQv/yYJRnIHRpO0fcZCQwVY2C
-	tDgcC3VIhpPCF3zB7WxB/exnvGk7DD88=
-X-Gm-Gg: ASbGncsBtbJbfZqWNWSghvBkBEGu/PGku55j4+nwN9pgz7/Py2caQHuF06c2A0D1bY/
-	xi0c8fH1PN9joN7mE8X3AsBtTRoFJjihPZAU2W6snvanbeXpK6Opl8nUTZlZWNwegzdYXhYHfDl
-	/2ney4CpZ92Ek+1/fq3pIm5FKu/C+SbyCJ6g==
-X-Google-Smtp-Source: AGHT+IGWYRqljBTNqRjcHJ1Qx5MgLEMU3w+EcX3w2i25x1ph1+e4wdYuKsPwq6FXpfXezjeuLLMkh2UEwUEoxLdnS0I=
-X-Received: by 2002:a05:6102:41ab:b0:4e6:1a8c:13dd with SMTP id
- ada2fe7eead31-4e701bcd515mr59445137.7.1748648802024; Fri, 30 May 2025
- 16:46:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LCVpake5"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54UNlpvJ2539266
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 30 May 2025 16:47:51 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54UNlpvJ2539266
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1748648872;
+	bh=MOS+EC5Dlk7EYsK0YRGrkbjqrcr1E03kzaHpwpyIQps=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LCVpake5hz9fkhzw/3SsSNiZjvN1zcO1NCRotklRGpsokSJ3eBc7DaP5yotG/44Gn
+	 oG0L7dvHKG5Qy5JXlA8bzJ4m/SQGllUUACQNBT+vFy4v1Par7ZDfXrnN+tBePJSxO0
+	 Uh3CDStmhGc92Q8ngjldWOHMc6BzQlNd8y3xVaRcJxt6iobONIpLLNLBsyQQ5vGVNt
+	 lGTWidwztVlGAIONUX7F/luy5TcwhmQ+ouWAuoZpXsRh1yVStbBJhm7i+UCDhG9Sh1
+	 NCn+e/mve0hGEMo+qzYxwoxVBghvEKuJuSG5hFm0CwNQ0iF29FBuJI8St6gVPJ2mPZ
+	 6XwMoNyRWTUWg==
+Message-ID: <6d1f1a2e-5b11-4513-b063-482483d16834@zytor.com>
+Date: Fri, 30 May 2025 16:47:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
-In-Reply-To: <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Fri, 30 May 2025 17:46:30 -0600
-X-Gm-Features: AX0GCFsAv-uR3T4qW04ZGESiTbXNp1RMaFKH2XrMAyyDm-M83KQe_2yzaPmKFXE
-Message-ID: <CADvTj4posNXP4FCXPqABtP0cMD1dPUH+hXcRQnetZ65ReKjOKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/28] KVM: x86: Rename msr_filter_changed() =>
+ recalc_msr_intercepts()
+To: Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>, Chao Gao <chao.gao@intel.com>,
+        Dapeng Mi <dapeng1.mi@linux.intel.com>
+References: <20250529234013.3826933-1-seanjc@google.com>
+ <20250529234013.3826933-19-seanjc@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250529234013.3826933-19-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 2:02=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
-> > On Tue, May 27, 2025 at 1:14=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
-ote:
-> > >
-> > > On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
-> > > > Some devices like the Allwinner H616 need the ability to select a p=
-hy
-> > > > in cases where multiple PHY's may be present in a device tree due t=
-o
-> > > > needing the ability to support multiple SoC variants with runtime
-> > > > PHY selection.
-> > >
-> > > I'm not convinced about this yet. As far as i see, it is different
-> > > variants of the H616. They should have different compatibles, since
-> > > they are not actually compatible, and you should have different DT
-> > > descriptions. So you don't need runtime PHY selection.
-> >
-> > Different compatibles for what specifically? I mean the PHY compatibles
-> > are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
->
-> You at least have a different MTD devices, exporting different
-> clocks/PWM/Reset controllers. That should have different compatibles,
-> since they are not compatible. You then need phandles to these
-> different clocks/PWM/Reset controllers, and for one of the PHYs you
-> need a phandle to the I2C bus, so the PHY driver can do the
-> initialisation. So i think in the end you know what PHY you have on
-> the board, so there is no need to do runtime detection.
+On 5/29/2025 4:40 PM, Sean Christopherson wrote:
+> Rename msr_filter_changed() to recalc_msr_intercepts() and drop the
+> trampoline wrapper now that both SVM and VMX use a filter-agnostic recalc
+> helper to react to the new userspace filter.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson<seanjc@google.com>
+> ---
+>   arch/x86/include/asm/kvm-x86-ops.h | 2 +-
+>   arch/x86/include/asm/kvm_host.h    | 2 +-
+>   arch/x86/kvm/svm/svm.c             | 8 +-------
+>   arch/x86/kvm/vmx/main.c            | 6 +++---
+>   arch/x86/kvm/vmx/vmx.c             | 7 +------
+>   arch/x86/kvm/vmx/x86_ops.h         | 2 +-
+>   arch/x86/kvm/x86.c                 | 8 +++++++-
+>   7 files changed, 15 insertions(+), 20 deletions(-)
 
-Hmm, thinking about this again, maybe it makes sense to just
-do the runtime detection in the MFD driver entirely, as it turns
-out the AC300 initialization sequence is largely a subset of the
-AC200 initialization sequence(AC300 would just not need any
-i2c part of the initialization sequence). So if we use the same
-MFD driver which internally does autodetection then we can
-avoid the need for selecting separate PHY's entirely. This at
-least is largely how the vendor BSP driver works at the moment.
+Reviewed-by: Xin Li (Intel) <xin@zytor.com>
 
-Would this approach make sense?
-
-> What you might want however is to validate the MTD device compatible
-> against the fuse and return -ENODEV if the compatible is wrong for the
-> fuse.
->
->         Andrew
