@@ -1,142 +1,277 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D1478F59
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE56621C182;
+	Fri, 30 May 2025 09:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598688; cv=none; b=RNEmCnqI6ZdKj8nUSmxj8n/ZbXwrzmp6GuxFUdv6Poca9lcN0FlHH0/HrgWnWxf4/u562OyHVAqsvdugtI/bwQpVQ7IWj5CVwnjXgWbz7Ar8yX3IZWcWo+OIbIqj+jAe4um3eruP7GiXUHYscUD2/3e10qWmXAfVss3CtiEnA2M=
+	t=1748598724; cv=none; b=WMyfGYdZVCBhZ5vFljihthcHWG/azDn09VtY3TIBEU/RBoap1Fv8vNs4H56cgrf9vfNjyoVXCvfqORWikJxQiVsKd7gGCEdfHbMTrp5UhocP1cbs8Y666O4lbpefpdlGs1D0e7HHnAI6cjlI/m48y2ZpqzHZSrVRFG+pfK1k4Hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598688; c=relaxed/simple;
-	bh=9N+xxY7aSmoiBtNGmssy3fD2lqwfMB0am0FsqpgYJhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NLsstRmZyQ+qG2BnOdKvTTN6EjrS8HwD/N1YTC0sKiGx22MuwnJUqXAqVbjIRCKfqJXL1h8rG9/CFtoc1wq3OJ0HhuG1yzpcx4I7XSJWYAuduJ1yZQ/N08qqD1QzAtEyXUgjz4+LBWd+bDzAbOb5ia/G2ym+E5fVCaoalnCS5Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qEWBiorx; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748598724; c=relaxed/simple;
+	bh=XegyYKVR+9tGAhONqolJOM9plmL4iXP2Db2nVgyv+Bw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntdFyk699v/qiBQOCgjYFOVIGvwToVv+ktTjAFnjjmEolNIrW3Xz+KOXF6hPTvLiogoFVl9RSH+fGiiy0ZQsS7lmBWUJeqfymlwjJDWgA9RUShE5AQufhOwabSlULc+8zyZQU9GXdpSqOe3MYvE4bmvI8mmyz0mkdMhF3fTmd3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZR0fvwE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qEWBiorx"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-70e4bd65106so18310007b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:51:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748598686; x=1749203486; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9N+xxY7aSmoiBtNGmssy3fD2lqwfMB0am0FsqpgYJhU=;
-        b=qEWBiorxscOGoef1JJgOr7/osNVUlHgyOFUci1nRtcR5MZRHnMBsneUzfc3LvS3VMB
-         REjnJ2CSP2P4hitZIX3+J5sE5A0qIp4hCxczOrFnMhzm0u+ECEV7RKf3jJU+5pGCRChc
-         5MzmmAzwfsPMXQIf3wGV0b5X6zMp47TM0iYCaehINC5hzzVWu37ZprA2QhQq80fJIagX
-         ieZ3/k9X1PJUWmY7D4zYix+ABicec/5vAlumelZUSjvqf0iS7yIkg/o9P89y8SxovFEf
-         IuqGcUjgjPKd6PtOLtjUnXsQJqwHplv5qBGl0XvDTdZZG5DE7pIpYr0WBX8mqA4U9li0
-         q2sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598686; x=1749203486;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9N+xxY7aSmoiBtNGmssy3fD2lqwfMB0am0FsqpgYJhU=;
-        b=OT5LzSrGkBK/HU7+bmAiCp0JJBSHskmRxxRDbzIG/6T8o/EwERwkMfCslmynlIs9ph
-         IRVYF804s3fDAC5arztOgdzx5WhRfFm7l0TUlSJgRVOTwdcgw2E5l5sf2aGJm8y1Peae
-         FidO22BTTwhxS6M5JN39O4CvTrS+hffDH4kwJLO+NkScIhWIkv5I8d403cNV44EDmxJ2
-         Yg6q4OJyrTsYARZ4EzQ923brayhmk7yoJ8F1a88uBuS9/FuQRk5HHzh8fOsp4mcdlaNe
-         Y+Clhd+zsuxTHH+h24PRPpdc8RABzGG4LvExeYX2ljUdOHSsW7+wNRmFacaQql2fW/rd
-         3c4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVOHDmFsVbk1EZkm/kzLyhSqTjUs8r8GTWe2Vn0vMIdZ6ppQXUyLkoFL5qJOzV1FqCzX0yIPdkO6UVM8dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFU69+1/JBLe8ei+FrFscjClErGnoRHwdgXBkDdMZFuSFDNs6J
-	+NS/Bk0JLbzUfR6/kDV8NBdJRAwxsGMrzDtMokN3oSxZ6zzhur6xOKMV1pLaXvJGv6fVJQ8F6Uo
-	eS+ieqrCAigUxivX83CK1cDGOgrOPnYa00+VVbPYBQA==
-X-Gm-Gg: ASbGnctnACWabkhUa1sUmw4THTUao2ncltYBLrLRX7aGC7WhPFOIQjoCQvxneNXDzMM
-	SY8GI8ibjDzrvV1R3THQrTH6fszGYWC+eGzqjnN0zmukrXUXZYm8n+MqS7a8ERrwHwtjuBMHiei
-	jJrzckNibwMR7F3b9d3ZU8hpkxJHsIyKDX2g==
-X-Google-Smtp-Source: AGHT+IHzSRq1Zn+D2K1JppDukGT+sZpKP9zzEx/fhnI37XZflFs97UedocCKfSqLpuqv6atgOvNqHnjodtGrwTGQGZA=
-X-Received: by 2002:a05:690c:3687:b0:70e:1b53:b9aa with SMTP id
- 00721157ae682-71057cf853emr18270367b3.19.1748598686198; Fri, 30 May 2025
- 02:51:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZR0fvwE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053FFC4CEE9;
+	Fri, 30 May 2025 09:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748598723;
+	bh=XegyYKVR+9tGAhONqolJOM9plmL4iXP2Db2nVgyv+Bw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OZR0fvwErBs+oQNyzFG/FLo7Y5vREPQWeKiODxE/a5DByWC34rvC7ZVgpwCZnyhk5
+	 KBF/KEHNbfAU8vpcaEp3eKz2GggCVVjMekEA+9YA1o7TsAXqWJFTH1MjQB7fQ+uG7x
+	 hlumhFuSiN4U94XZTyvwPgGcCpdnz6X1tHmoC5gAPaYQNjgqj8ZlyKBf6vsL8jlTvj
+	 0+Dsn/cZLXijWgpltKR6AL0halK120tEqtsMkx7yF9BbjezkfWhVV1loscv0HXb4Hh
+	 angSGd6VMRCnOv6AWhfPfjhRfK5icY4ElkwjcalpjNdyhobkOhp1yCqcr77j2vN2Q8
+	 59+TX99CyQpJQ==
+Date: Fri, 30 May 2025 11:51:58 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <longman@redhat.com>
+Subject: Re: [[PATCH v3] 1/4] man/man2/prctl.2,
+ man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
+Message-ID: <fs57mucg3z5ay5ga7gqr6kdhlddydtmspwfkbm3rjtpjp57b6y@opvhf34v5xq4>
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
+ <20250526155523.1382465-2-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org> <aDhWlytLCxONZdF9@lpieralisi>
- <CAFEAcA_3YLMSy+OsSsRayaRciQ1+jjh-dGzEjrh2Wa8BqdmqrA@mail.gmail.com>
- <aDhtVkHfJvDfkfaX@lpieralisi> <CAFEAcA-=0GWG+rnHDOnsHg8cUq1pszN=x1-W+4MYZXXD8H8Pkg@mail.gmail.com>
- <aDl3lXiw3+l43+Cj@lpieralisi>
-In-Reply-To: <aDl3lXiw3+l43+Cj@lpieralisi>
-From: Peter Maydell <peter.maydell@linaro.org>
-Date: Fri, 30 May 2025 10:51:14 +0100
-X-Gm-Features: AX0GCFtpWHF-oX0PV5KG99Dy_ZvteG1wTB1Qwy2wuK08Ij84L_Dw6bDr0vyWyFA
-Message-ID: <CAFEAcA9M1Wppb=Fy66iEJTj60LiJHiYdiWDQiMjU7F2Zi014HQ@mail.gmail.com>
-Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, andre.przywara@arm.com, 
-	Arnd Bergmann <arnd@arndb.de>, Sascha Bischoff <sascha.bischoff@arm.com>, 
-	Timothy Hayes <timothy.hayes@arm.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m6ivffr4o7phbinl"
+Content-Disposition: inline
+In-Reply-To: <20250526155523.1382465-2-bigeasy@linutronix.de>
 
-On Fri, 30 May 2025 at 10:17, Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
->
-> [+Suzuki]
->
-> On Thu, May 29, 2025 at 03:30:51PM +0100, Peter Maydell wrote:
-> > It's up to date in the sense that so far we've only needed
-> > to have the 'status' property have a secure- variant. My
-> > suggestion here is that we might extend that to also allow
-> > secure-reg, and to have root- and realm- prefixes too.
-> > Though I don't think we would want to permit secure-reg for
-> > any old device, so maybe something more-GICv5-specific would
-> > work better.
->
-> I am not sure this is a GICv5 only requirement (looking at SMMUv3,
-> for instance and there might be more IPs that require security
-> state awareness).
 
-For the SMMUv3 I think we're OK, because there's no separate
-set of base SMMU registers for S vs NS; there are Secure
-VATOS registers and a Secure Command queue control page, but
-those addresses are discoverable by looking at SMMU registers
-so they don't need to be encoded in the DT.
+--m6ivffr4o7phbinl
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <longman@redhat.com>
+Subject: Re: [[PATCH v3] 1/4] man/man2/prctl.2,
+ man/man2const/PR_FUTEX_HASH.2const: Document PR_FUTEX_HASH
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
+ <20250526155523.1382465-2-bigeasy@linutronix.de>
+MIME-Version: 1.0
+In-Reply-To: <20250526155523.1382465-2-bigeasy@linutronix.de>
 
-> Or maybe it is a non-existing problem IIUC the paragraph below
-> correctly (albeit to be frank I don't understand how to determine
-> whether a dtb is consumed by eg secure-world-only).
->
-> "Note that it is still valid for bindings intended for purely Secure
-> world consumers (like kernels that run entirely in Secure) to simply
-> describe the view of Secure world using the standard bindings. These
-> secure- bindings only need to be used where both the Secure and Normal
-> world views need to be described in a single device tree."
+Hi Sebastian,
 
-The purpose of this paragraph is to cover situations like the
-old versatile express cortex-a9 board, where the firmware
-booted the kernel in the Secure world. The kernel didn't care
-about that, the (non-autogenerated) device tree just told it
-where the devices were (and didn't mark them up with secure-status
-or anything). That setup (and the dts files for it) pre-date
-the addition of this secure-status binding documentation.
-The text is just saying that it isn't making that pre-existing
-setup retrospectively non-compliant.
+On Mon, May 26, 2025 at 05:55:20PM +0200, Sebastian Andrzej Siewior wrote:
+> The prctl(PR_FUTEX_HASH) is queued for the v6.16 merge window.
+> Add some documentation of the interface.
+>=20
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  man/man2/prctl.2                   |  3 +
+>  man/man2const/PR_FUTEX_HASH.2const | 92 ++++++++++++++++++++++++++++++
+>  2 files changed, 95 insertions(+)
+>  create mode 100644 man/man2const/PR_FUTEX_HASH.2const
+>=20
+> diff --git a/man/man2/prctl.2 b/man/man2/prctl.2
+> index cb5e75bf79ab2..ddfd1d1f5b940 100644
+> --- a/man/man2/prctl.2
+> +++ b/man/man2/prctl.2
+> @@ -150,6 +150,8 @@ with a significance depending on the first one.
+>  .B PR_GET_MDWE
+>  .TQ
+>  .B PR_RISCV_SET_ICACHE_FLUSH_CTX
+> +.TQ
+> +.B PR_FUTEX_HASH
+>  .SH RETURN VALUE
+>  On success,
+>  a nonnegative value is returned.
+> @@ -262,4 +264,5 @@ so these operations should be used with care.
+>  .BR PR_SET_MDWE (2const),
+>  .BR PR_GET_MDWE (2const),
+>  .BR PR_RISCV_SET_ICACHE_FLUSH_CTX (2const),
+> +.BR PR_FUTEX_HASH (2const),
+>  .BR core (5)
+> diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTEX_=
+HASH.2const
+> new file mode 100644
+> index 0000000000000..c27adcb73d079
+> --- /dev/null
+> +++ b/man/man2const/PR_FUTEX_HASH.2const
+> @@ -0,0 +1,92 @@
+> +.\" Copyright, the authors of the Linux man-pages project
+> +.\"
+> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> +.\"
+> +.TH PR_FUTEX_HASH 2const (date) "Linux man-pages (unreleased)"
+> +.SH NAME
+> +PR_FUTEX_HASH
+> +\-
+> +configure the private futex hash
+> +.SH LIBRARY
+> +Standard C library
+> +.RI ( libc ,\~ \-lc )
+> +.SH SYNOPSIS
+> +.nf
+> +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
+> +.B #include <sys/prctl.h>
+> +.P
+> +.BI "int prctl(PR_FUTEX_HASH, unsigned long " op ", ...);"
+> +.fi
+> +.SH DESCRIPTION
+> +Configure the attributes for the underlying hash used by the
+> +.BR futex (2)
+> +family of operations.
+> +The Linux kernel uses a hash to distribute the unrelated
+> +.BR futex (2)
+> +requests to different data structures
+> +in order to reduce the lock contention.
+> +Unrelated requests are requests which are not related to one another
+> +because they use a different
+> +.I uaddr
+> +value of the syscall or the requests are issued by different processes
 
-> I assume "standard bindings" there would mean that "reg" for the
-> GICv5 would be just eg "config frame" with no NS/S/Realm/Root attached.
+I think 'use a different uaddr value of the syscall' is technically
+incorrect, because two processes may have a different address for the
+same futex word, as their address space is different, right?
 
-Yes, in the (hypothetical) GICv5 case the dt for a "boot in
-Secure" system would give the address of the Secure config frame.
+See futex(2):
 
-> We don't strictly need to have the same dts file for NS and S (example),
-> NS will never "need" the S bindings at least for GICv5.
+$ MANWIDTH=3D72 man futex | grep -B7 -A5 different.v
 
-One common workflow is that EL3 firmware is passed a DTB,
-consumes it for its own purposes and passes it on to the
-NS kernel mostly untouched. This is particularly useful for
-QEMU where the DTB might have been autogenerated. So you do
-want to be able to express what EL3 needs and what NS needs
-in one DT.
+     A futex is a 32=E2=80=90bit value=E2=80=94=E2=80=94referred to below  =
+as  a  futex  word=E2=80=94=E2=80=94
+     whose  address  is  supplied to the futex() system call.  (Futexes
+     are 32 bits in size on all platforms, including  64=E2=80=90bit  syste=
+ms.)
+     All  futex  operations  are  governed  by this value.  In order to
+     share a futex between processes, the futex is placed in  a  region
+     of shared memory, created using (for example) mmap(2) or shmat(2).
+     (Thus, the futex word may have different virtual addresses in dif=E2=
+=80=90
+     ferent  processes, but these addresses all refer to the same loca=E2=
+=80=90
+     tion in physical memory.)  In a multithreaded program, it is  suf=E2=
+=80=90
+     ficient to place the futex word in a global variable shared by all
+     threads.
 
-thanks
--- PMM
+Maybe say 'use a different futex word'?
+
+> +and the
+> +.B FUTEX_PRIVATE_FLAG
+> +option is set.
+
+By referring to a different futex word, this is already implied, so we
+can drop it.
+
+> +The data structure holds the in-kernel representation of the operation a=
+nd
+> +keeps track of the current users which are enqueued and wait for a wake =
+up.
+> +It also provides synchronisation of waiters against wakers.
+> +The size of the global hash is determined at boot time
+> +and is based on the number of CPUs in the system.
+> +Due to hash collision two unrelated
+
+s/ two/, two/
+
+> +.BR futex (2)
+> +requests can share the same hash bucket.
+> +This in turn can lead to delays of the
+> +.BR futex (2)
+> +operation due to lock contention while accessing the data structure.
+> +These delays can be problematic on a real-time system
+> +since random processes can
+> +share in-kernel locks
+> +and it is not deterministic which process will be involved.
+> +.P
+> +Linux 6.16 implements a process-wide private hash which is used by all
+> +.BR futex (2)
+> +operations that specify the
+> +.B FUTEX_PRIVATE_FLAG
+> +option as part of the operation.
+> +Without any configuration
+> +the kernel will allocate 16 hash slots
+> +once the first thread has been created.
+> +If the process continues to create threads,
+> +the kernel will try to resize the private hash based on the number of th=
+reads
+> +and available CPUs in the system.
+> +The kernel will only increase the size and will make sure it does not ex=
+ceed
+> +the size of the global hash.
+> +.P
+> +The user can configure the size of the private hash which will also disa=
+ble the
+
+s/hash/\nhash/
+
+> +automatic resize provided by the kernel.
+> +.P
+> +The value in
+> +.I op
+> +is one of the options below.
+> +.TP
+> +.B PR_FUTEX_HASH_GET_IMMUTABLE
+> +.TQ
+> +.B PR_FUTEX_HASH_GET_SLOTS
+> +.TQ
+> +.B PR_FUTEX_HASH_SET_SLOTS
+> +.SH RETURN VALUE
+> +On success,
+> +these calls return a nonnegative value.
+> +On error, \-1 is returned, and
+> +.I errno
+> +is set to indicate the error.
+> +.SH STANDARDS
+> +Linux.
+> +.SH HISTORY
+> +Linux 6.16.
+> +.SH SEE ALSO
+> +.BR prctl (2),
+> +.BR futex (2),
+> +.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
+> +.BR PR_FUTEX_HASH_GET_SLOTS (2const),
+> +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
+> --=20
+> 2.49.0
+
+Have a lovely day!
+Alex
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--m6ivffr4o7phbinl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmg5f7UACgkQ64mZXMKQ
+wqnBJw//QJG448JNfN1ruE9FGWndKN5hpE8pD6XIgma2YXXCYSQtHeyrh+9nE8wF
+MoHnlVezpS3euWj4I3/9k8NyKACDRuwvaXyFyALyEKbfnnDbbJBtXMXTcSSBXUeP
+I2Je6ElezAOeIPboG4YDj9X7bCRVzcLx3YP7CbOk74itJD2d04LMZ1e2K90zTYWe
+K+ItkvWROmufgpE+UCa6dPOQ+Ma3WWfEEtx1M2xzHDJkKqBNBFvSohQU876iLsgU
+ClezSu3ZURx0T11vEK4iDITYcsCgH80QvEfDnElVa2Cc02pbjgIWxTC3dUOjJBMq
+aRg7l2ugrZaMHj6jVx9babrn8EuQZFKwcAH+ZlCF7j1nhnwZTefPSv9xydrOopAj
+0TWpVlH4DHnnKnFKnvqTEJNvSu2xhSBwnN9/iUboIzoSWPXv8Y+i5IxesfuD1TwR
+mUvgAFpmHnmFKfPoz7vUcxiRIltYOAwZYBVpQN5L+tdQYSTomVmQxaApnPhEBJHr
+FCMoMNyatKO9rj0OBKDX4ZMGw4pcSdZNCZ8ieRGT+8UHP1zjo8jx8ldlaFsYEeKl
+epcPbp8cyAlbLXrTlPc5h6HDmLpN+FTasanJIMxxHpuoaLvNQ+ta72YLEAxfN/12
+QJvHN3wwLzHr5wqhKqNv5YfqClZEYWQZa/Ry9H02HFnmH8/lHhs=
+=mUyr
+-----END PGP SIGNATURE-----
+
+--m6ivffr4o7phbinl--
