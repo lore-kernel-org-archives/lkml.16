@@ -1,172 +1,195 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ADD22B8BC
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621159; cv=none; b=iv76CCW/l1SwCpxxdnjak8OMJsSA3eQxu/sQVjf9HfEizTJeLFF+wWu65mwMRhtqBhF4DA6jFNbtMmPmyJNGpZJgwGVR82ZdBO917aIW0wwZcjZ+0qcFX1bI3x6SjfToTgyYaTGrAt0fJOYrlC0FRZPSAwGbZv1XKfOoatrnhYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621159; c=relaxed/simple;
-	bh=JkcSIO6iHR33NZe9IPVii2Kn/Hg2spT5JFFbd9tDQ8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cTN293M6xE+Cdykgvgfs/jfyX+Xl3KFsk6NM6xMRnX6WoezeLQUsdAA6tA4fdTbJIUXMDOv5Z+6Ccght+//cJbQbX9vRS3fb9RGUIEGE6fTLzh0GwkL+dB9JmQmMtybY30p9uM0HbbjLQuYBdbYwvjd9b3xfjQhJqZiUa3rOZlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MmOUYNTC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B57230BD0;
+	Fri, 30 May 2025 16:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748621160; cv=fail; b=S1/ldz4honvTtk5+5rr7vgQwpPDZMtXu2t2uD+6LfgaVACuufQlWVqLeFSNnwv9gEV2XYu9JnbAgtRyp46ogLvxNghgCIZ6Oli3maGAcweBJ78lFdu+d8Em9KyFtk90s/rgGoEaJo12qSWHoEKpgqOR3nh5P2qUt8eQylT9v6rE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748621160; c=relaxed/simple;
+	bh=KiTntR8i14a9L6vp+KFogoHNZMMoByHKpb0FBXspdOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oG37eQfImYTSndRt3wEREdFSYi7JvJSjd5wBJr677oRyosJolBbYUgJ9it/WaOvzeN1WKHVof/MryrhPJCpXjk58kT2xz+TusNqhCLp2ritq1uLU0bsJ3W2cxe7tzkl9bV7rR12C7f3dsmbpk06m+N+zQcg+sY6YsNSSPZLXKgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VEC7U5Q+; arc=fail smtp.client-ip=40.107.220.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MmOUYNTC"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UBaseY005180
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:05:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=vyhfcYM3BM8AastlNTmqLFAI
-	L5ZyT7xVQ/AliYgV9Ag=; b=MmOUYNTCJOYPwWx3XRLWoM7fXalT2FpW3Qc+Y9nX
-	Uq2nD8WWOEql39GzE+gn4o02/qIkoK1KTalNhszHBY5ZcRIbRSIJvdF2y9SRErnj
-	nxAUNrmQA/UAxFO/Dy4R4BSWUYgM5H9lz61Uayf0rmRmk0yWkRh+Aja95aTvrEw0
-	XpkDQ1PszgUCkcqTotXSXEO+MST0Q08D8ESCDlzhagGAHqI2P+tyNsMOyCVaTGYM
-	ktos41Yz0KV83Za99mfqiHUfIMpYtJp8UeKUIwEcFKhh9tkx945W51TMQ3IH4mNe
-	9IseNwhQ6pD21p9Uu+FAvYIWjuWxIlRNe6Zw4kS7TNmHDA==
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com [209.85.219.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ek9fb6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:05:56 +0000 (GMT)
-Received: by mail-yb1-f199.google.com with SMTP id 3f1490d57ef6-e7e6c3a142cso4520758276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:05:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621155; x=1749225955;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vyhfcYM3BM8AastlNTmqLFAIL5ZyT7xVQ/AliYgV9Ag=;
-        b=JeLGyWqTK5eAzWl036JneANcXRanefF3GCkin7IA7hQUUjjPqulnIjVB00N6Q85bqR
-         yGYgVW46wuvQDbCFP0IclBCPaMarWkbx/b6P2VLDMEzMea7sBoBHI59evXNJgOu3L0uz
-         TtAcBf1hElNnffjCRiDpkb5NA2I85zmMTVR4L+FQYytoXGPi5rTZGnt1f5wsRsy2BF3g
-         O5wrks8w//+8pUtbEuJ+ZHloTzhslUxmHC/BtuCqd8gEPeGK4npCwKht0uYrW/hT24g5
-         AVO/v//1j+zxy2ua1i0uLls4Xxi8amprE7T1efvCOqQ/X8cRnFV75adYjPDOgBcXe/e8
-         1BCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeUmxdEtTTVAfrVWW5tmbZdXto9pFTyoKHhbPVsiK0Vl4jGfM1fSeONVuNDaLSh0eyFunqw/tbVifYS3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfcY7kVRvGW/Z95tElyvOgI2upO/yNQl7Z3QI7YYIiLKRFzPKi
-	X1p0ubtYQuiZ2GIP59SJEf65TQW7UiPjjWpgp6lwKaMkaDy5nIfWdcZ2qhBjqzqMPeL8d4Yemxj
-	9VrItxGBSnIYl4B9ElGxUr8C7l+8rtVyOuCI1+XEqBvJlA+2UGkIMUwcNj9/zz4XqExeiLEu3Ci
-	KKzLY5++MewdGB/2vC3swEe16MVmXt+xCTaaMaMZ1WkNYXOoE6NA==
-X-Gm-Gg: ASbGncuuPhKA6MNEvcCmLpfwQZYiknh+OOBs0AKEDD25AmLrZUYYdmCwIghkzhk0hRX
-	Rp9Q1c9VErWJ1c6K3A3R6njCQ7dJfgW2r+b0AxkNDCM1OqXL6fHUwBXkg4WpMwBZBx7cpJ98PzT
-	Snk8gVKpytnEOIaPA8/ZUQlfVd+g==
-X-Received: by 2002:a05:6902:2313:b0:e7d:c4e4:3295 with SMTP id 3f1490d57ef6-e7f6f182e53mr11410782276.1.1748621154926;
-        Fri, 30 May 2025 09:05:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGkV+wYfOcdBbbGjqmaahLgRt731ef7AwmWEuaLDL/DIg0abAlw/5A3m2MgJme4BEGi3KUVodwjTjbUCkAjd/Y=
-X-Received: by 2002:a17:90b:4c8c:b0:30e:6a9d:d78b with SMTP id
- 98e67ed59e1d1-312464539fbmr5323780a91.12.1748621144113; Fri, 30 May 2025
- 09:05:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VEC7U5Q+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K/FwSnbgtv1qgW1xEs0Tdiy4kr4boQ4xWelVx7Goqqi4bC3jw1zu2B0Cou6wqZVRfN5GW57iYGExcHkC8yv73NE7n6FQmNwZe9PiawkXnoIrPDw4fPpQWSEf4yKlt24j/vXthRsDtKK/gYJ4ABP2/wVBPyb1NDv8Xdpq0Kbm1B+d2q9AD/le9U+Y5d2F9lt0Wqb7mZFIwKk5B+MMKyG/+7TUoviAcOnpnif7SS2vxx3+q+cn5hKeeVWmXBpzpVd5hCDoch1iFQR+wY2ljmXw/KLZuKQGMYTmrfO2wuidYiJyyIn+/vWqjI1Hp5bKiUZlc8XMJ14mNBuNfAyNNzHh2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X0s3Px3fsQulM5PPCE4GNDb2Rg7SbLnYAtEzWIJ4+yQ=;
+ b=UXzCzYSobjjIC66p6y6B1CcKi09auDZTk3PbAThAf3F7TLkVze2qvGXAyXmBVfVowc7P+hwVVAJBKaBPnn2IIgRf6+Iiww5RUU0LCVCScW4VKdxr6+7Zt0Y0Crpu97BmeBM5XaHtVqK44kxEis6bZbIQNm2udILvL72Tphh6633mp0u439fUXr26KwPmdX92ydijUuOnRHzDTMKogNEUbluLjIz8m2jzG68JozVBedmi95EJS0xOnD2uPUFf+9C2Wz01msskzMktxrrJat7zidHsfZeEdT6VV1hfeHBv4U0WERmIINln+z+YM37YAW0Cpu9zEBvKQPnn94QINL4IpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X0s3Px3fsQulM5PPCE4GNDb2Rg7SbLnYAtEzWIJ4+yQ=;
+ b=VEC7U5Q+iGFQUiRumVDTfzAi9ZoW/R3q/siYEWYg/Leaz8sAUdx/UscSS18+GB5Vrxs3zY9w/hEiNPrfu1VIdG/t6DG6tEvYJV5hMSTrmK3+2pOJg006OZF6gm01OcUgpTeBg0nteUyE6p17z05TgGuIfUTNJKhmh+Ybvvu8dZw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BL1PR12MB5995.namprd12.prod.outlook.com (2603:10b6:208:39b::20)
+ by CH2PR12MB9541.namprd12.prod.outlook.com (2603:10b6:610:27e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Fri, 30 May
+ 2025 16:05:56 +0000
+Received: from BL1PR12MB5995.namprd12.prod.outlook.com
+ ([fe80::7298:510:d37d:fa92]) by BL1PR12MB5995.namprd12.prod.outlook.com
+ ([fe80::7298:510:d37d:fa92%3]) with mapi id 15.20.8769.029; Fri, 30 May 2025
+ 16:05:56 +0000
+Date: Fri, 30 May 2025 11:05:50 -0500
+From: John Allen <john.allen@amd.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	tglx@linutronix.de, dave.hansen@intel.com, seanjc@google.com,
+	pbonzini@redhat.com, peterz@infradead.org,
+	rick.p.edgecombe@intel.com, weijiang.yang@intel.com, bp@alien8.de,
+	chang.seok.bae@intel.com, xin3.li@intel.com,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	Vignesh Balasubramanian <vigbalas@amd.com>
+Subject: Re: [PATCH v8 6/6] x86/fpu/xstate: Add CET supervisor xfeature
+ support as a guest-only feature
+Message-ID: <aDnXXpm9Ioj0cZlX@AUSJOHALLEN.amd.com>
+References: <20250522151031.426788-1-chao.gao@intel.com>
+ <20250522151031.426788-7-chao.gao@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522151031.426788-7-chao.gao@intel.com>
+X-ClientProxiedBy: SJ0P220CA0021.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::8) To BL1PR12MB5995.namprd12.prod.outlook.com
+ (2603:10b6:208:39b::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250529-hpd_display_off-v1-0-ce33bac2987c@oss.qualcomm.com>
-In-Reply-To: <20250529-hpd_display_off-v1-0-ce33bac2987c@oss.qualcomm.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 30 May 2025 19:05:32 +0300
-X-Gm-Features: AX0GCFv90vzmgIOYELPB5bdyh5tcPCamKQylpnA6_OeHU5ehZhBHvtxjwgstaSo
-Message-ID: <CAO9ioeUi59PNmRSYzyVbxcifhPKxYbtW9EuouOVXkT84SPOuwQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] drm/msm/dp: ST_DISPLAY_OFF hpd cleanup
-To: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>, Johan Hovold <johan@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>,
-        linux-kernel@vger.kernel.org, Yongxing Mou <quic_yongmou@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=6839d764 cx=c_pps
- a=bcYUF9iMMBfaiOy0M+g+3g==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=EUspDBNiAAAA:8 a=EXqCMmvbh7VItr34RoAA:9 a=QEXdDO2ut3YA:10
- a=4AvBJ3eyfGLrynxe6Eyb:22
-X-Proofpoint-ORIG-GUID: D23B2JQ3iEb6hF9joYFY778_ybBY0vhj
-X-Proofpoint-GUID: D23B2JQ3iEb6hF9joYFY778_ybBY0vhj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDE0MiBTYWx0ZWRfX7Yw2IceNR9XD
- DvYPdn5+wTSk8OI1SOUM+oIs5FDxyMzDf4nWtfVOgh5wS3L+rqYA0P2U21BsCeoYCbgTfQqNiC1
- ZZxiiCPP10D1l+DmE1xc01w3TdYRXcRHstIDmgdBudiD0BWGhKhxfqr7PRsEyeKTA9RtncMbVQz
- zARcfGMX/h4trTmVLsCvnlF+g5n/ToqKGYb8nkAvJGfijsdwTFlGENezgULmNXivzSe775HIN5q
- dwp0KsFlLFvnEO1v5TsE567ncy8UQU3gHekXu+qI+OLmAvqouE8o1QvCyKkV5IDWEiL1l6VT39+
- VlPS81yWufDWWSNzsaAf83lFNCbY63AWumaEK3Rsy/NLDEvI0hvhzVQFnY3HDvHH2NX9Zpml2Fj
- O8XAIVGz2tvYTwHRoFJAAw4LVCpzI0LfR4jLHAOM7HbNV3haayrE8uDMYJDRmkfENyqQbL8V
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_07,2025-05-30_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300142
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5995:EE_|CH2PR12MB9541:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9aac3ef-b1be-4a0f-ef6d-08dd9f93dc3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?D0cDzu2jdfGxFPzonk8mSRzrCZWMVuj9DROsuZkH22j2oCqD/PW28wWTh3Df?=
+ =?us-ascii?Q?YMa1yCUQz+hmUe6Ua2NyrNdKTbSZossCd6OmX8euWnPv2KnasvYz4ndcJBd2?=
+ =?us-ascii?Q?4ubFFIASkNttgT/J/zIgV5o463aU1C8UmW+QdgS1Z4W8OIaX12fdFcRgx0iW?=
+ =?us-ascii?Q?K3U7KSCFwY2/HWZJDFPSz/0//aPoZwkOlklEVDz4/vDw49prK6p1ywjhzTS5?=
+ =?us-ascii?Q?e0Z6F9Ukx5sBjVfWUptz5w7aFZCyfFg/ypAXtDk837d+cZgj87Tzq158ughB?=
+ =?us-ascii?Q?xmdQnKK0DtDb7Kpl/BqO7RUegKKj/7wHcgOaWqhgbDe3eEJ/WUURsDnqopv/?=
+ =?us-ascii?Q?ZzXiid/+9uBkF/NyayDT+/vavSKv01dKPqWrjEFqt4LQ/4gvGqPi1cKqH6ar?=
+ =?us-ascii?Q?lMyS+SH57whPgq5+56vdYYXltlTSutcJWJcheV2FgawMR80CfSIw89Td98Oe?=
+ =?us-ascii?Q?zHeDPvUQSmmUG1jMMCg8x+kxTk37HgL6TYm3Afuxf/EsNpHy/j73AtuTqvwe?=
+ =?us-ascii?Q?XkhTJxuw1GoOwfCP3PgYljZY8QIhX9VNefbEBrCBfOaK+PkQRCX7PpAh38+C?=
+ =?us-ascii?Q?Mwk7QC0XXL9ZXfHIdT62jOGJhmXb3mSc49VQaMGegY/0MsBSP4JTX1EKWrtX?=
+ =?us-ascii?Q?kCDSM0MT77ydxh76qS+Y/WgdlA70Fv5Yub9UlIpSXal2C77M8kQjc4nXueZb?=
+ =?us-ascii?Q?ydZfAObdOuCE+VF0BXrT7q0rI0ebxFTvilrMnVibaFjyvYZsiHYZE5K/7Xy6?=
+ =?us-ascii?Q?8z4kBk97PIPURIZBLHh2dOunctjAyTqCoHVgNvZjAWetR6CrjqERkq9wjBgJ?=
+ =?us-ascii?Q?tGXIrcX+yKTRcKMUJoSGfIq3HyZYzC+lX2nusSe3lHneNnRBbvIuKRgINEnH?=
+ =?us-ascii?Q?Af9aIU8pkn6Iufm30fpyNQYf3sfzEavkZmvcGVBsrkI0h4eVqfZ5Gy2cLKdD?=
+ =?us-ascii?Q?GaoCj34INj0ou6MK7SDHFXupAA8LamDchNjf6jP6quRjCgJDBVY616KTXXwo?=
+ =?us-ascii?Q?jAop0smDjUZRJ+vCgVJySeYAttCZYvcON13EBmsm29NHqnnZJF2bcj43EP1J?=
+ =?us-ascii?Q?2iBerip9eyddk4IdySdFkBn80XAzaxqvMmT8xBoN4dEW2fX3wXJv4Y6p4AhB?=
+ =?us-ascii?Q?P///ppCqZez5TvdeYOqXA6SmNG4Dg1tYFI/8ct2j+MuA/YnjfHM6u8JHjk10?=
+ =?us-ascii?Q?5Z+jSqS+7FFkssQpPZQTyBw1jf9gXZPQxIqM31PAQGnAubOmNZ0IKmMEJipF?=
+ =?us-ascii?Q?RlqWBuqTjX3zkooHL0ktsNonMsfShMH/ZPgqaKTCNZjA/9/9qMK/OLwHVNI6?=
+ =?us-ascii?Q?y1XZbCZV1xPupNalxKqvZMuXkZ72/j52i1XTRJU4mBOy/g3FZ9aMIwTON4zu?=
+ =?us-ascii?Q?v1KRgkaU+cqcrs/nnVNpyPter9fYE7/nVVaoHV4Gu+hd99V/0qqho/ebPr24?=
+ =?us-ascii?Q?7bsH+QJwXXE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5995.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TijvdUS/eQnzfAI7yu8JmWclgpwZA8bBtEO8zpq5ZnaUfCN+fEYu5mPu8+dC?=
+ =?us-ascii?Q?+9w67uNy59JYAytYmz9VD6MR5liS/gBk8PjpPQEa/glJvjg2f30DLFFniY0U?=
+ =?us-ascii?Q?Jk1IOlkKdBpusyk+JuyQxP4ptY2iH2kqJY2WogcHNyZ9W2UyOcoZnBn9NKtF?=
+ =?us-ascii?Q?pYk9T1jT2GSMoBUE9EUXS5f2od2Duyj8dVf6QdCZae6FLKLjhuy67NQvNugb?=
+ =?us-ascii?Q?HfjT3XSC4ijaQpK07mUJjqii6dNp+MmH3rP0ipC320Gt/6oEHOUBoYIw54JJ?=
+ =?us-ascii?Q?N4i2RyJDT/iX+V8qiUj+Qe+UOq8DU1bm/x8jEX2jgaCzI8sONBO3WxCyftwX?=
+ =?us-ascii?Q?BlmUVNnyechf5EZgav7ZTIpQedF8gsDVvKw0B7gZMwzgw6YikGsR+4Pll6J+?=
+ =?us-ascii?Q?Ul34krwuu9e4wMJfkCNzYuLVbNez7oxaZM0JYuJp9iSO43FfQbXxiscVCOzO?=
+ =?us-ascii?Q?EnHGJr4omekYNm105uOLoWLemFspHLxps6Cl43CB0uo/tmqefu46JGoQBsBO?=
+ =?us-ascii?Q?Zqv3b8sNS2lW/RrvUKv6bHX+jomd5r/cH8b0ROphYzzhzySgDEt1kuhSz0Q1?=
+ =?us-ascii?Q?oVw5MqhVyDa8wOXQd+fdRM7orcAfFSbRJjPxLX3unARb+oOmTl1ismMGC018?=
+ =?us-ascii?Q?mIT5dXq5ZUdCwGHcIpUe9f1lK3SjyZwx3ZGo/qbWx1JisT8Km28xpv8q1DGr?=
+ =?us-ascii?Q?kC2pceDiWzCqGBtyoiKfRsQAU7GbAY6gz8u7LRUsLOTSCGeioyUTJUyLS51F?=
+ =?us-ascii?Q?48zjccK560idgkoD6rjrXulqcDxHR1iJfwMKNjF5lo9MwF7oLY8ZFlHs2SuP?=
+ =?us-ascii?Q?m+pGvDXJvG18G2VPGjRz1SAEUaiIvHnsTwB8mYQR9U1Sb4J37vmQ7lpN+Pu3?=
+ =?us-ascii?Q?WzQjfRu8UalO3eZeYJDSagQzW+WRQcieEo01gWh0N2tCpSg8z0NS1xhalSnA?=
+ =?us-ascii?Q?+C26IoMO3g4/EfQMrqpF1GKEDhF9MZakYPQ/VD2pUpAKO4axC/x19C6n2jFN?=
+ =?us-ascii?Q?6N9WIc08pgzloD3unWGXJ+7fhu+5NRr/20v4iczNZMGIiRJSLc42XaBmmPK7?=
+ =?us-ascii?Q?RSvK6wuEH6B3ubPz5PL77EHEKUWl62bKsDNI3TjXcNXkDcwRT7Xg4mDpuHR9?=
+ =?us-ascii?Q?r2M39VX0e0+ayEwY+ACfMfhKPLJfUt9SX5+Wkn2TBrHyZnWQH82v1llGhzlX?=
+ =?us-ascii?Q?FvIgR4NZip7JtT1uhw/piZzx5SRM0Ga3vWumWBkM/az+saWDXpamR6kcxChD?=
+ =?us-ascii?Q?wP+VpuRAYMWc4VJOnK/jtz1VwJuE9neC5bSCQEkZJ/AMvVPMWEn6/+aqzDg/?=
+ =?us-ascii?Q?A3yWHx03aNgPR84IjRQ92gSn8T19DTOXqQR3JrZ35FFQ3GQvuEsKKPV4Nnlo?=
+ =?us-ascii?Q?O9HzvWW6zDLBMwtv4lrlAGkZmAuMJ0Jsz+ZfBFJ1w8tKlOywKMEbzqnmsyP6?=
+ =?us-ascii?Q?fAG0g44HB8EcRvMv5RAskGlhxDXSoOcs3yzMNjzroJnRAL1DhyTA2vj60Vbi?=
+ =?us-ascii?Q?G1Roeg9wmJ32l96Qk/WEK+rysHtiw7a2jJt4F56rFGaa4nOm4BMZZAFt7p5b?=
+ =?us-ascii?Q?d+4aDUREfquD1P7DmgryzSjGnns0rZpUz3Ctnn4H?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9aac3ef-b1be-4a0f-ef6d-08dd9f93dc3f
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5995.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:05:56.3198
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fe0c1MiCoNM10afkthf5VpDR4tWZuMte9JxssHQdxApJvx0kO8eUAT/L8l6ckhulMudLcekTv3KMg/mlKENSOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB9541
 
-On Fri, 30 May 2025 at 02:15, Jessica Zhang
-<jessica.zhang@oss.qualcomm.com> wrote:
->
-> HPD state machine in msm dp display driver manages the state transitions
-> between various HPD events and the expected state of driver to make sure
-> both match up.
->
-> Although originally done with the intent of managing userspace interactions
-> and interactions with compliance equipment, over period of time,
-> changes to this piece of code has become quite difficult to manage.
->
-> Although, unwinding this logic will take some time and will be spread over
-> various changes, to start things, this series tries to get rid of the
-> ST_DISPLAY_OFF state as firstly, its really not an hpd state but a state
-> of the display overall. Coupled with this, there are quite a few checks
-> in the current code, the origins of which need to be re-visited OR are unclear
-> which seem unlikely or redundant. With DP controller on newer chipsets supporting
-> multiple streams, this has become increasingly difficult to work with.
->
-> This series removes the redundant state checks and simplifies the logic as an
-> attempt to get rid of this ST_DISPLAY_OFF state.
->
-> Note: This series has been tested with sa8775p and sc7180 devices with multiple
-> monitors and also multiple dongles with no noticeable regressions.
-> Both of these devices use native DP PHY though. Hence, if this series can
-> be verified on some devices with USBC-DP combo PHY with the help of the other
-> developers, that will be great.
->
-> ---
-> Changes in v2:
+On Thu, May 22, 2025 at 08:10:09AM -0700, Chao Gao wrote:
+> From: Yang Weijiang <weijiang.yang@intel.com>
+> 
+> == Background ==
+> 
+> CET defines two register states: CET user, which includes user-mode control
+> registers, and CET supervisor, which consists of shadow-stack pointers for
+> privilege levels 0-2.
+> 
+> Current kernels disable shadow stacks in kernel mode, making the CET
+> supervisor state unused and eliminating the need for context switching.
+> 
+> == Problem ==
+> 
+> To virtualize CET for guests, KVM must accurately emulate hardware
+> behavior. A key challenge arises because there is no CPUID flag to indicate
+> that shadow stack is supported only in user mode. Therefore, KVM cannot
+> assume guests will not enable shadow stacks in kernel mode and must
+> preserve the CET supervisor state of vCPUs.
+> 
+> == Solution ==
+> 
+> An initial proposal to manually save and restore CET supervisor states
+> using raw RDMSR/WRMSR in KVM was rejected due to performance concerns and
+> its impact on KVM's ABI. Instead, leveraging the kernel's FPU
+> infrastructure for context switching was favored [1].
+> 
+> The main question then became whether to enable the CET supervisor state
+> globally for all processes or restrict it to vCPU processes. This decision
+> involves a trade-off between a 24-byte XSTATE buffer waste for all non-vCPU
+> processes and approximately 100 lines of code complexity in the kernel [2].
+> The agreed approach is to first try this optimal solution [3], i.e.,
+> restricting the CET supervisor state to guest FPUs only and eliminating
+> unnecessary space waste.
+> 
+> The guest-only xfeature infrastructure has already been added. Now,
+> introduce CET supervisor xstate support as the first guest-only feature
+> to prepare for the upcoming CET virtualization in KVM.
+> 
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> Signed-off-by: Chao Gao <chao.gao@intel.com>
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 
-The series is not marked as v2 though.
-
-> - Rebased on top of next-20250523
-> - Change atomic_enable() to return early if ST_DISCONENCT_PENDING
->   instead of completely dropping the
->   if (state != ST_DISPLAY_OFF && state != ST_MAINLINK_READY) check (Dmitry)
->
-> ---
-> Abhinav Kumar (4):
->       drm/msm/dp: remove redundant checks related to ST_DISPLAY_OFF in plug/irq_ipd handlers
->       drm/msm/dp: Return early from atomic_enable() if ST_DISCONNECT_PENDING
->       drm/msm/dp: replace ST_DISPLAY_OFF with power_on in msm_dp_hpd_unplug_handle()
->       drm/msm/dp: remove ST_DISPLAY_OFF as a hpd_state
->
->  drivers/gpu/drm/msm/dp/dp_display.c | 19 +++----------------
->  1 file changed, 3 insertions(+), 16 deletions(-)
-> ---
-> base-commit: daf70030586cf0279a57b58a94c32cfe901df23d
-> change-id: 20241202-hpd_display_off-6051aa510f23
->
-> Best regards,
-> --
-> Jessica Zhang <jessica.zhang@oss.qualcomm.com>
->
-
-
---
-With best wishes
-
-Dmitry
+Reviewed-by: John Allen <john.allen@amd.com>
