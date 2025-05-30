@@ -1,342 +1,268 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8046E20A5F3
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ED828312F
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748636766; cv=none; b=hbMjUnacuhoAUjrUhrR8FVSg0chK8I8UF8Smsqw1EG/l8m6iWqlNXeBs8QTeglwijU2Ef5CgYf7KWWBcEU978L1y9mj/5YUdg/ioXIpe3s2yuPxbSP2+yX38zYOXqTPcuQh3/IPky+wdOPCsiutcGzX+ZsN0t7kt5q5w17tVtr0=
+	t=1748636771; cv=none; b=GlhqFG2jGZWrxlrTE3QOk2+0nDn3E7Do6pM7ILWZnGZCovzSlMZZZ9yt9yAjol3BY61BC+VZg0KMT6NAztWqsfVF74XUArw0U5nguf6//ZWpv1E9ySkZwxpfbSqLyGY7EYv6b6dJGEqGL8FlZkwHjYFXbZJC7X4CLh1UBsB8EcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748636766; c=relaxed/simple;
-	bh=8kxhZGBbItn7x9p6TcW2nt+AMJowocw09GOLimPRAz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n6DuOcEDlFMXm58UogYtu8djBsKxSFvtQXrKRzBijU85qsj+KuAa+2LM1Ft3CuZ9HsUs3AIf4WL6TJNtai6FzIm2aeR0p5+ozfWt8HiSEbC2eX/ffBoVURis2HE/rQw67o61z8D2fE14S15Usgn1nic3GE6zlj8dQ9njYBo14Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZxvwJKn2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cVJ8M9t5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZxvwJKn2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cVJ8M9t5; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748636771; c=relaxed/simple;
+	bh=vn+2S0BPcPF9j6dxjX9RZOsCIr+BJ204l39ioxz+unk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pEAHoTN0VG/otAuuWJm8r6hH5FDymQkwj8KBRPrDcAD8Ya3hKQl4FXMl0mtpQIs+ROuj5cpssQk7c3Vu0AvenN99zVV/ca6MMmwgzxvHwUK84S+Bw3ViV/69zGqKtUIyYdF8xRaa4Ltu72ASiuRW8Ob+Gml6OThPYw7O2AzDQZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cSBNUgGA; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZxvwJKn2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cVJ8M9t5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZxvwJKn2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cVJ8M9t5"
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 615E01F45A;
-	Fri, 30 May 2025 20:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748636762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g24iCuBgnf69Wxs7HVa4iyoKJrN0liDJWTVQxQRyNuA=;
-	b=ZxvwJKn2FoHmf4g3fKM1kbYOYgXYesdqs3EK6eZLc46w9qcq9NS+MV1+wq926ENsjXMnNj
-	gxH1XiqGakYHL8fREXwqLDBjLfP5sTUGwk/oD1voT6QpfbO/m21KBRUSAPDryNe88GF0AK
-	LJE1HUH2FKuO3Ks6xfl8d902WP1H2gQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748636762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g24iCuBgnf69Wxs7HVa4iyoKJrN0liDJWTVQxQRyNuA=;
-	b=cVJ8M9t5eAyhDG4HpLkuPdbffelQgsJ+lmJy9qtZhvOwgalurOklIx2hr7/kZ6tBdgx+1m
-	afO3P5ZDo4LPenAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748636762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g24iCuBgnf69Wxs7HVa4iyoKJrN0liDJWTVQxQRyNuA=;
-	b=ZxvwJKn2FoHmf4g3fKM1kbYOYgXYesdqs3EK6eZLc46w9qcq9NS+MV1+wq926ENsjXMnNj
-	gxH1XiqGakYHL8fREXwqLDBjLfP5sTUGwk/oD1voT6QpfbO/m21KBRUSAPDryNe88GF0AK
-	LJE1HUH2FKuO3Ks6xfl8d902WP1H2gQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748636762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g24iCuBgnf69Wxs7HVa4iyoKJrN0liDJWTVQxQRyNuA=;
-	b=cVJ8M9t5eAyhDG4HpLkuPdbffelQgsJ+lmJy9qtZhvOwgalurOklIx2hr7/kZ6tBdgx+1m
-	afO3P5ZDo4LPenAg==
-Date: Fri, 30 May 2025 22:26:02 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>,
-	Michal Hocko <mhocko@suse.cz>
-Subject: [PATCH v4 1/5] Add a new optional ",cma" suffix to the crashkernel=
- command line option
-Message-ID: <aDoUWrnBguM5EkFd@dwarf.suse.cz>
-References: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cSBNUgGA"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30e85955bebso302917a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748636769; x=1749241569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=flpFqUKLM2wJe1GS/z/DSdiWKrIaoRvufNvuehZ0Jt8=;
+        b=cSBNUgGAcONhcBjmCoctgKmzj7SSLRlNkzO+qzblQxxb2r1KbLxvLXghM9ba7NSa/a
+         4+MLVIF4VzXauDSDaol3IlnEcf7609+HtRGRydnNT5TyZpqfaMShzG+S1ENOGnt5iOiT
+         LWHSZTSmPvxr0hUjAbYy2n42eY/Zj9ScrFPZj6yc0kku0ysjCH6Wkh7EMsE5FnA+h2Xi
+         hoD9CxwdQSsmu7/Cml+3bAB3ge4EzS77+eYqSWprSKkRlkakQPVQO2wzh6+sN7xZitnQ
+         PFXMmsBhKq/aWDgiCzyivTsT3omamsvOnstUAsp4wIC4JRHxJpCvLulFpvIV5K2LdFkI
+         s5pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748636769; x=1749241569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=flpFqUKLM2wJe1GS/z/DSdiWKrIaoRvufNvuehZ0Jt8=;
+        b=sLqwheMiHTz2K83CpKmdtQH/1oidCDKvkspqj+1C5wyLMY6xXjrIw+5JmXoO4diihM
+         eqFeryB+OPAGiUNJGKSUXTDvJqkuTG+MkOd3Gt936k+xZ2aT8TA0iUK2WDcvHBTpZUpe
+         BbT18GMUPJDV6upmYTTcd8qjsK7uD+i6Fk+0Uy8gQo05HTDkKAsfFIzTLPqm8chh52nR
+         /B81bdvhtbYdDE0gfXxWzO+kwK4VUeaN47nVtg6HCppoLdwksP0cuzxO9yKlSZcitC12
+         PnftxxyHjK7QI4mucgFkXpqx9eabGoxQOJl+SXDjaV8nGeq8llZdNzwgk58IwRdTasCB
+         tK9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVfFLD41xkD7rlU0iBqXmDNpixQy82QO7lHPtmPR1xhr4HC6zoZJuM/hBIL7KLBAk+8uB3kbS5RcenZD6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqDv8eKjuEz9iadrPIvueFBnZXYclyS/66pCcCPBwi2Z3Zhwpb
+	kOe4rXC+JMaTbAo9mzdC+DPP2XtQ5wbPYDBxICQ3LRUUxLdI9PPa0o1st5DzFVqx9/ceBX3KZ5E
+	6qR/ghCYWJAzUSmFeomgZ4l3dG4ENUXY=
+X-Gm-Gg: ASbGncu+oe7ZxotsJ0Bbm8ta5oee00o2px8xas7+gaAlSX2sLJwlFcUJp0bndMCJTf3
+	NKa720pIwBO8O/Nj+Oz4pnAb0PCBQKFDmvZwVF04U/h1LcWYJfaVzBJTF0fyxSTQB7hcp/6XSdu
+	k2vAIOEIwzgAtuGqq0CjDHvXEx54VCb0OX+w==
+X-Google-Smtp-Source: AGHT+IEEqPFu27tVsd7CtGRfMimvE7u2d+i+Pguv/eM7ydzb+2Us3v27PrZ0A03GNiTjSfTVnWdUAAi2kFrQWEya3d4=
+X-Received: by 2002:a17:90b:3146:b0:312:1e41:3a51 with SMTP id
+ 98e67ed59e1d1-3124d37bf8amr2073130a91.1.1748636769243; Fri, 30 May 2025
+ 13:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDoT08LfXUEkS9E4@dwarf.suse.cz>
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	URIBL_BLOCKED(0.00)[suse.cz:email,dwarf.suse.cz:mid,localhost:helo];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
+References: <CABH-8xdaDFjWyQ40Nyo59Gm5kD3Qi5hh76o-uam1yC3wNtJNqQ@mail.gmail.com>
+ <01100196f7d63f35-a7b596e2-fbb8-49e5-8645-e67ca6a0048d-000000@eu-north-1.amazonses.com>
+ <CABH-8xdDjLv9c+E7OdTFjtoEHT5Q2-oQGouOpygi_5c-W3cyvQ@mail.gmail.com>
+ <01100196f7e25204-35c40c23-8070-4aaf-ae45-7ac2625cbf90-000000@eu-north-1.amazonses.com>
+ <CABH-8xd1Nr1PpsPJnoNsur1LEEhphX6+WzKE14rc-ub_N7eS7Q@mail.gmail.com> <01100196f7f553bc-1cd7e537-430c-4138-b447-c432eaf77f33-000000@eu-north-1.amazonses.com>
+In-Reply-To: <01100196f7f553bc-1cd7e537-430c-4138-b447-c432eaf77f33-000000@eu-north-1.amazonses.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 30 May 2025 16:25:56 -0400
+X-Gm-Features: AX0GCFvUnAZ0vEU5pkcJxa6-8TptnB2D8YLYla7QmAUozo4lsFTFp0cRX02Ox1g
+Message-ID: <CADnq5_MbwMv1Hr6+N-SLK9WtGCyzsRquaPZa0JxreL5ssuoHMw@mail.gmail.com>
+Subject: Re: Regression: RX 470 fails to boot with amdgpu.dpm=1 on kernel 6.7+
+To: Ozgur Kara <ozgur@goosey.org>
+Cc: =?UTF-8?Q?Durmu=C5=9F?= <dozaltay@gmail.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Tao Zhou <tao.zhou1@amd.com>, Yan Zhen <yanzhen@vivo.com>, 
+	Greg KH <gregkh@linuxfoundation.org>, Alper Nebi Yasak <alpernebiyasak@gmail.com>, 
+	linux-kernel@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a new cma_size parameter to parse_crashkernel().
-When not NULL, call __parse_crashkernel to parse the CMA
-reservation size from "crashkernel=size,cma" and store it
-in cma_size.
+On Thu, May 22, 2025 at 8:39=E2=80=AFAM Ozgur Kara <ozgur@goosey.org> wrote=
+:
+>
+> Durmu=C5=9F <dozaltay@gmail.com>, 22 May 2025 Per, 15:15 tarihinde =C5=9F=
+unu yazd=C4=B1:
+> >
+> > I'm using dual monitors. I disconnected the HDMI to test with a single
+> > screen, but the result was the same. I also swapped the HDMI ports,
+> > but the issue still persisted.
+> > I'm not using DisplayPort =E2=80=94 in fact, it's a bit weird: I conver=
+t VGA
+> > to HDMI and connect it to the graphics card. I'm not an expert of
+> > course, but since there were no issues on the LTS kernel and the
+> > problems started with kernels after 6.7, it made me think it might be
+> > a kernel issue.
+> > If needed, I=E2=80=99ll set dpm=3D0 when I install (i don't know when) =
+Linux
+> > again and test it.
+> > If I remember correctly, when I added amdgpu.dc=3D0 to GRUB, nothing
+> > changed =E2=80=94 the system still froze after GRUB.
+> >
+>
+> Hello,
+>
+> i suspect this is related to latest patch rather than a kernel bug so
+> i will add Aurabindo because you may be affected after cfb2d41831ee
+> commit.
+> first of all, is there any chance you can revert this commit and test ker=
+nel?
+>
+> $ git revert cfb2d41831ee
 
-Set cma_size to NULL in all calls to parse_crashkernel().
+That patch has been reverted (it's included in my -fixes PR this
+week), but we are in the middle of the merge window so it may take a
+bit for the revert to land and make its way back to stable.
 
-Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/arm/kernel/setup.c              |  2 +-
- arch/arm64/mm/init.c                 |  2 +-
- arch/loongarch/kernel/setup.c        |  2 +-
- arch/mips/kernel/setup.c             |  2 +-
- arch/powerpc/kernel/fadump.c         |  2 +-
- arch/powerpc/kexec/core.c            |  2 +-
- arch/powerpc/mm/nohash/kaslr_booke.c |  2 +-
- arch/riscv/mm/init.c                 |  2 +-
- arch/s390/kernel/setup.c             |  2 +-
- arch/sh/kernel/machine_kexec.c       |  2 +-
- arch/x86/kernel/setup.c              |  2 +-
- include/linux/crash_reserve.h        |  3 ++-
- kernel/crash_reserve.c               | 16 ++++++++++++++--
- 13 files changed, 27 insertions(+), 14 deletions(-)
+Alex
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index a41c93988d2c..0bfd66c7ada0 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -1004,7 +1004,7 @@ static void __init reserve_crashkernel(void)
- 	total_mem = get_total_mem();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	/* invalid value specified or crashkernel=0 */
- 	if (ret || !crash_size)
- 		return;
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 0c8c35dd645e..ea84a61ed508 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -106,7 +106,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index b99fbb388fe0..22b27cd447a1 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -265,7 +265,7 @@ static void __init arch_reserve_crashkernel(void)
- 		return;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&crash_size, &crash_base, &low_size, &high);
-+				&crash_size, &crash_base, &low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index fbfe0771317e..11b9b6b63e19 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -458,7 +458,7 @@ static void __init mips_parse_crashkernel(void)
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	if (ret != 0 || crash_size <= 0)
- 		return;
- 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 8ca49e40c473..28cab25d5b33 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -333,7 +333,7 @@ static __init u64 fadump_calculate_reserve_size(void)
- 	 * memory at a predefined offset.
- 	 */
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&size, &base, NULL, NULL);
-+				&size, &base, NULL, NULL, NULL);
- 	if (ret == 0 && size > 0) {
- 		unsigned long max_size;
- 
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index 00e9c267b912..d1a2d755381c 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -110,7 +110,7 @@ void __init arch_reserve_crashkernel(void)
- 
- 	/* use common parsing */
- 	ret = parse_crashkernel(boot_command_line, total_mem_sz, &crash_size,
--				&crash_base, NULL, NULL);
-+				&crash_base, NULL, NULL, NULL);
- 
- 	if (ret)
- 		return;
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 5c8d1bb98b3e..5e4897daaaea 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -178,7 +178,7 @@ static void __init get_crash_kernel(void *fdt, unsigned long size)
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, size, &crash_size,
--				&crash_base, NULL, NULL);
-+				&crash_base, NULL, NULL, NULL);
- 	if (ret != 0 || crash_size == 0)
- 		return;
- 	if (crash_base == 0)
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index ab475ec6ca42..3f272aff2cf1 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1402,7 +1402,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index f244c5560e7f..b99aeb0db2ee 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -605,7 +605,7 @@ static void __init reserve_crashkernel(void)
- 	int rc;
- 
- 	rc = parse_crashkernel(boot_command_line, ident_map_size,
--			       &crash_size, &crash_base, NULL, NULL);
-+			       &crash_size, &crash_base, NULL, NULL, NULL);
- 
- 	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
- 	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
-diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
-index 8321b31d2e19..37073ca1e0ad 100644
---- a/arch/sh/kernel/machine_kexec.c
-+++ b/arch/sh/kernel/machine_kexec.c
-@@ -146,7 +146,7 @@ void __init reserve_crashkernel(void)
- 		return;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--			&crash_size, &crash_base, NULL, NULL);
-+			&crash_size, &crash_base, NULL, NULL, NULL);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
- 		crashk_res.end = crash_base + crash_size - 1;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 7d9ed79a93c0..870b06571b2e 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -582,7 +582,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/include/linux/crash_reserve.h b/include/linux/crash_reserve.h
-index 1fe7e7d1b214..e784aaff2f5a 100644
---- a/include/linux/crash_reserve.h
-+++ b/include/linux/crash_reserve.h
-@@ -16,7 +16,8 @@ extern struct resource crashk_low_res;
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
--		unsigned long long *low_size, bool *high);
-+		unsigned long long *low_size, unsigned long long *cma_size,
-+		bool *high);
- 
- #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-diff --git a/kernel/crash_reserve.c b/kernel/crash_reserve.c
-index aff7c0fdbefa..a8861f3f64fe 100644
---- a/kernel/crash_reserve.c
-+++ b/kernel/crash_reserve.c
-@@ -172,17 +172,19 @@ static int __init parse_crashkernel_simple(char *cmdline,
- 
- #define SUFFIX_HIGH 0
- #define SUFFIX_LOW  1
--#define SUFFIX_NULL 2
-+#define SUFFIX_CMA  2
-+#define SUFFIX_NULL 3
- static __initdata char *suffix_tbl[] = {
- 	[SUFFIX_HIGH] = ",high",
- 	[SUFFIX_LOW]  = ",low",
-+	[SUFFIX_CMA]  = ",cma",
- 	[SUFFIX_NULL] = NULL,
- };
- 
- /*
-  * That function parses "suffix"  crashkernel command lines like
-  *
-- *	crashkernel=size,[high|low]
-+ *	crashkernel=size,[high|low|cma]
-  *
-  * It returns 0 on success and -EINVAL on failure.
-  */
-@@ -298,9 +300,11 @@ int __init parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base,
- 			     unsigned long long *low_size,
-+			     unsigned long long *cma_size,
- 			     bool *high)
- {
- 	int ret;
-+	unsigned long long __always_unused cma_base;
- 
- 	/* crashkernel=X[@offset] */
- 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-@@ -331,6 +335,14 @@ int __init parse_crashkernel(char *cmdline,
- 
- 		*high = true;
- 	}
-+
-+	/*
-+	 * optional CMA reservation
-+	 * cma_base is ignored
-+	 */
-+	if (cma_size)
-+		__parse_crashkernel(cmdline, 0, cma_size,
-+			&cma_base, suffix_tbl[SUFFIX_CMA]);
- #endif
- 	if (!*crash_size)
- 		ret = -EINVAL;
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+>
+> So after commit, dmcub ring calls became much higher and some power
+> states became unstable i dont know i'm not expert but  these usually
+> have to do with things like dmcub firmware and  power gating (gfxoff)
+> or post-reset ring buffer access.
+> maybe this commit is that  vmin/vmax update call may now be made much
+> more frequently and this may cause dmcub to not synchronize properly
+> some power states to become unstable or firmware to crash.
+>
+> we might need to look at the contents of
+> /sys/module/amdgpu/parameters/force_vmin_vmax_update but  vmin vmax
+> potential call height might be giving an error.
+>
+> So I added Aurabindo Pillai, should have added you after 3 different
+> bug reports.
+>
+> Regards
+>
+> Ozgur
+>
+>
+> > On Thu, May 22, 2025 at 3:05=E2=80=AFPM Ozgur Kara <ozgur@goosey.org> w=
+rote:
+> > >
+> > > Durmu=C5=9F <dozaltay@gmail.com>, 22 May 2025 Per, 14:58 tarihinde =
+=C5=9Funu yazd=C4=B1:
+> > > >
+> > > > Hey, thanks for the reply, but I don't use Linux anymore, so I can'=
+t
+> > > > provide any logs or test it further. Also, FYI, this bug has been
+> > > > around since kernel v6.7. If I install Linux again soon, I'll try t=
+o
+> > > > test it. Could you please advise what I should do about amdgpu.dpm?
+> > > > Should it stay at 0 or be set to 1? When I try booting with 1, the =
+PC
+> > > > freezes right after the grub screen. I've used Linux for 2-3 months
+> > > > but still don=E2=80=99t really know how to debug these kinds of err=
+ors
+> > > > properly. Thanks!
+> > > >
+> > >
+> > > Hello,
+> > >
+> > > not problem maybe we should talk about this separately but kernel
+> > > lists are progressing complicated with too many development patch
+> > > content that is not very suitable for this.
+> > > we can also see it as a problem with kernel, gpus or amd company and
+> > > too many firmware and drivers.
+> > >
+> > > if it is hardware based especially gpu related, kernel doesnt
+> > > intervene fully at this point.
+> > > the system can be opened with amdgpu.dpm=3D0 but this is not correct =
+and
+> > > you did a very good job reporting it.
+> > > maybe by adding amdgpu.dc=3D0 the display core is disabled but this
+> > > prevents you from getting 144 mhz.
+> > >
+> > > we should make sure that there is the correct firmware under
+> > > /lib/firmware/amdgpu.
+> > > did you use DisplayPort and did you get 144 mhz output?
+> > >
+> > > $ journalctl -b -1 will give you some information.
+> > > $ glxinfo | grep OpenGL can also give you the problem or error.
+> > >
+> > > So kernel developers and AMD developers should look into this issue
+> > > but i think it is most likely a firmware blockage on the AMD side not
+> > > a kernel side.
+> > >
+> > > Regards
+> > >
+> > > Ozgur
+> > >
+> > > > On Thu, May 22, 2025 at 2:52=E2=80=AFPM Ozgur Kara <ozgur@goosey.or=
+g> wrote:
+> > > > >
+> > > > > Durmu=C5=9F <dozaltay@gmail.com>, 22 May 2025 Per, 14:27 tarihind=
+e =C5=9Funu yazd=C4=B1:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > did you get a message in dmesg from kernel, for example an error =
+like this?
+> > > > >
+> > > > > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1106268
+> > > > >
+> > > > > The dmesg command will give you an output maybe journalctl output=
+ or
+> > > > > mesa (glxinfo) output would also be sufficient because we need to=
+ know
+> > > > > which upstream it is affected by.
+> > > > > and thanks for report.
+> > > > >
+> > > > > Note: because there are two similar errors i added the necessary
+> > > > > maintainers for upstream.
+> > > > >
+> > > > > Regards
+> > > > >
+> > > > > Ozgur
+> > > > >
+> > > > > > I'm experiencing a critical issue on my system with an AMD RX 4=
+70 GPU.
+> > > > > > When booting with recent kernel versions (6.7.x or newer), the =
+system
+> > > > > > fails to boot properly unless I explicitly disable Dynamic Powe=
+r
+> > > > > > Management (DPM) via the `amdgpu.dpm=3D0` kernel parameter.
+> > > > > >
+> > > > > > When DPM is enabled (`amdgpu.dpm=3D1` or omitted, since it's th=
+e
+> > > > > > default), the system either freezes during early boot or fails =
+to
+> > > > > > initialize the display. However, using the LTS kernel (6.6.x),
+> > > > > > everything works as expected with DPM enabled.
+> > > > > >
+> > > > > > This seems to be a regression introduced in kernel 6.7 or later=
+, and
+> > > > > > it specifically affects older GCN4 (Polaris) GPUs like the RX 4=
+70.
+> > > > > > Disabling DPM allows the system to boot, but significantly redu=
+ces GPU
+> > > > > > performance.
+> > > > > >
+> > > > > > Things I=E2=80=99ve tried:
+> > > > > > - Confirmed that the latest `linux-firmware` is installed.
+> > > > > > - Verified correct firmware files exist under `/lib/firmware/am=
+dgpu/`.
+> > > > > > - Tested multiple kernels (mainline and LTS).
+> > > > > > - Using Mesa with ACO (Radeon open driver stack).
+> > > > > > - System boots fine with LTS kernel (6.6.x) + DPM enabled.
+> > > > > >
+> > > > > > System info:
+> > > > > > - GPU: AMD RX 470 (GCN 4 / Polaris)
+> > > > > > - Distro: Arch Linux
+> > > > > > - Kernel (working): linux-lts 6.6.x
+> > > > > > - Kernel (broken): 6.7.x and newer (currently tested on 6.14.6)
+> > > > > >
+> > > > > > Thanks in advance,
+> > > > > > Durmus Ozaltay
+> > > > > >
+> > > > > >
+> > > > > >
+> > > >
+> > > >
+> >
+> >
