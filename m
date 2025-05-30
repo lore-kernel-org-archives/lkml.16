@@ -1,142 +1,116 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC0979CF
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C2C79CF
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612953; cv=none; b=YhrJpwgN+3ALH8WSdZfzFTCW8VKTQxQ5gw4fP42bFA8oufTvZ/gyGnoX+c8J3zq9jMvW25qDWiNFFKTy1sPQGHm3yMyOSDBogoV+M52AqdDW8I9dolUBn2L188sMX3JZAN2h4vYe/GZiN19cY3SpuG6cf96I9Uf36SCIzfcHSaY=
+	t=1748612965; cv=none; b=dxS5BzyKEpqbKEg3cJz8ry3KSjZIUlhLvU0PLArvEtJz5Y/6CtMf7HqVanVQtSupN5f7Voi2xZ5UZPjtvz8LAYeMYDTzJvgiTvLMUG0xl99uZSoddZpgdsOe5AG3a14Xus+pVHWF8S4i1Jrv1j9pOBmiW2N2Tyj+/g3y6ziGlNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612953; c=relaxed/simple;
-	bh=9Mq5hZOOvW2ZFf69WJb4Ff0N/Ky1FM83I7pmjlJ4tUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jDBBuIT3nOmF6kBaJld4FY2yy/soP/w8q1Yo1zlOtTzW/3VmzJnfIlBMPEUi2YijiaudhFC/iBIveWkFY2FN7AGwGUlH6vQCQucQfhPhTv3GWKRVTsHYotSdMRH3CucThzRtk9i3EF1ETkpQf4S03VdgRSNF/utwfDS5gVLDMtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=AdautNmN; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="AdautNmN"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6065803ef35so548223eaf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748612949; x=1749217749; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tme1pCrZrM2VXTRq9FlVTDLE9dpQsp+tmaK/1R+aVG0=;
-        b=AdautNmNSb+kNQOBVfHwtvT+YM6HxbDWWEXal+gk2zjuMnae8JNvEH+hpsoWSpL1Ye
-         waoaFCpa0XX2gxVUViD1TmeP9v490GvbZgyVmtqPqyWVYwEyGK2OT8npB+VIH0njrp48
-         iM6ZoGPAyibnBYA8ylk4BjVFs6x49vdui03xmO9MXFfPylO3Z5BSWSBm0yRAJrvXMNyS
-         czsqhfYde+y7YTcR5F6efr8R9+kTrQXmbSgEBZaTs8WJxl++2OaSYmwNGBU8rf8g+ke0
-         i6DYbH414fgYqklu8TOA/lEjlNqAYXJBCr9SvyfD9sVzIo7eyRFpPe5RrO/rSor9L/5o
-         zxpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748612949; x=1749217749;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tme1pCrZrM2VXTRq9FlVTDLE9dpQsp+tmaK/1R+aVG0=;
-        b=P1gUZ/3dWHrLSAp3/iRlFxty2Au6995y12gJZUSI6dwFtkeUYfTFV+Z3lTS1Z34SA6
-         ahoTw12jXx6wfwppmRAlK0yn49liWNvu3zBxKA5dgwBS3ycVt1rqaufIesZ5xkWFJTJR
-         8sJQ6g7/7b/gt5m0vnJxRjbptiq0qT7z5CI2OPcqL1CSGZw46zf+jD78mjhUmmtPVskh
-         LowWY3hqMoL9ISlDixvkD5D6F6zt2u+tv3fuGY7riyNDxMX9V1fezhD1/wzbaL10zpRI
-         7iwzM/G7s2pv8Gkc4uBNrNnfnH8j6Qr8ivMkKyqAD/ExOU7sfch/21c9fWFJFa2NW1TK
-         Yodw==
-X-Forwarded-Encrypted: i=1; AJvYcCXbgL/LFPcrUxdR42Fyss6PDAeIYZXQwwyn6I7YQ/CyYI8hCNIz2EUwLCC2LpzbMIx/MHAGKQTVadnbtSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlhizNoOG6FTtg1zLCPg21GlVUmuBYVUmpanPPhSYoY1rkABA6
-	AY/RVDv6FeQxICJwxAUhO+npbMHYPjdLe8QV2uKZbm8T1WyKyuRB99nwZTwm3uZlDz8=
-X-Gm-Gg: ASbGncukxuKvp7NsvGaDPnZ3s59louNMq5dHhqGDsRF4xm6sy7wa4TEri43Wsy8yh69
-	vWxwCpzPTAQH+ftlopcCMSGmGk8aQE0NjI/QEifN694gqzG1hYFLvcM8cm5eD5M/bUxfUVqlmga
-	Kt2zbau3VTP/nlugcBERFFRr5Jl1rnsv99i2iLc4TLWaJ0O9wpozGXGw2KzL6VN51/y0Sgfx9Ug
-	gkzod3vOUf+TDWm8fnO8+1KTO2jiokyEdbVfSSIWwbHlQVEp365TaCSOF+bARM1LhfbnfyYxC3t
-	PyRWSG0i6SOhwQDVoGAcysAtttdSJLdegDUz6MI2FtXJXHkaS4jDOxD4mwFXx9Eq83JVGPMErpF
-	figtiRGI1DC+H0SbiyPb0/7JfqUAH
-X-Google-Smtp-Source: AGHT+IGSeNzdLtM8Wcq3bN9hHuw1X1n/uK7UqEskLwhdNIeOIspP/rFrJu1kmWlprYDK4upeBv0Wxg==
-X-Received: by 2002:a05:6820:98b:b0:60b:edbb:1f50 with SMTP id 006d021491bc7-60d52d6db2fmr1085212eaf.4.1748612948983;
-        Fri, 30 May 2025 06:49:08 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777? ([2600:8803:e7e4:1d00:29cb:b1cd:c8f4:2777])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60c14c8ae0asm392439eaf.20.2025.05.30.06.49.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 06:49:08 -0700 (PDT)
-Message-ID: <9ed23409-f402-4d08-ad59-af8ac48d88d2@baylibre.com>
-Date: Fri, 30 May 2025 08:49:07 -0500
+	s=arc-20240116; t=1748612965; c=relaxed/simple;
+	bh=1jTr1g5QOazu47tadj4JGVrJDAfLbg3ptCZUFAnGh6w=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=rIy6YOL7DKcFSMC4wWWNJdwkXJTQruCM1PCbA8NMDNcjzd9NNNZ0HG6liMcTrSeXCPaji6+10mKOftpLK4iTHJV5ymS9l0e6I8kMgGHoZEAAO16ePZIFsd6HTIz6YBiKVrXIaSorlIUU2WTJOgF7mSsZgkJPXfI9KSRlYgFzD0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:55896)
+	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uKzm5-005yU3-MH; Fri, 30 May 2025 07:27:53 -0600
+Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:47416 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1uKzm4-000Vcx-Jk; Fri, 30 May 2025 07:27:53 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,  Andrew Morton
+ <akpm@linux-foundation.org>
+References: <aDlty06JvlGwTfKk@gondor.apana.org.au>
+Date: Fri, 30 May 2025 08:27:14 -0500
+In-Reply-To: <aDlty06JvlGwTfKk@gondor.apana.org.au> (Herbert Xu's message of
+	"Fri, 30 May 2025 16:35:23 +0800")
+Message-ID: <87ldqegrf1.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: adc: ad7606: add enabling of optional Vrefin
- voltage
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com>
- <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
- <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
- <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1uKzm4-000Vcx-Jk;;;mid=<87ldqegrf1.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/1W1G+VTxfE0afk/cNZjBjXCe2jTfZW4E=
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.5000]
+	*  0.7 XMSubLong Long Subject
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Herbert Xu <herbert@gondor.apana.org.au>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 496 ms - load_scoreonly_sql: 0.08 (0.0%),
+	signal_user_changed: 13 (2.6%), b_tie_ro: 11 (2.2%), parse: 1.31
+	(0.3%), extract_message_metadata: 18 (3.5%), get_uri_detail_list: 1.80
+	(0.4%), tests_pri_-2000: 17 (3.5%), tests_pri_-1000: 3.2 (0.6%),
+	tests_pri_-950: 1.65 (0.3%), tests_pri_-900: 1.29 (0.3%),
+	tests_pri_-90: 109 (22.0%), check_bayes: 107 (21.5%), b_tokenize: 7
+	(1.4%), b_tok_get_all: 7 (1.3%), b_comp_prob: 2.4 (0.5%),
+	b_tok_touch_all: 88 (17.6%), b_finish: 1.12 (0.2%), tests_pri_0: 312
+	(63.0%), check_dkim_signature: 0.68 (0.1%), check_dkim_adsp: 3.5
+	(0.7%), poll_dns_idle: 0.92 (0.2%), tests_pri_10: 4.0 (0.8%),
+	tests_pri_500: 11 (2.2%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH] userns: Add forward declaration of struct seq_file in
+ user_namespace.h
+X-SA-Exim-Connect-IP: 166.70.13.52
+X-SA-Exim-Rcpt-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, herbert@gondor.apana.org.au
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
 
-On 5/30/25 2:39 AM, Angelo Dureghello wrote:
-> On 29.05.2025 12:52, David Lechner wrote:
->> On 5/29/25 4:13 AM, Angelo Dureghello wrote:
->>> From: Angelo Dureghello <adureghello@baylibre.com>
->>>
->>> Add optional refin voltage enabling. The property "refin-supply" is
->>> already available and optional in the current fdt dt_schema.
->>>
->>> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
->>> ---
->>>  drivers/iio/adc/ad7606.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
->>> index 3bbe9c05b5edbc11e8016c995c6ab64104836e7b..21e63260965c32988d0ab3b8bb1201aa2396f1ba 100644
->>> --- a/drivers/iio/adc/ad7606.c
->>> +++ b/drivers/iio/adc/ad7606.c
->>> @@ -1335,6 +1335,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
->>>  		return dev_err_probe(dev, ret,
->>>  				     "Failed to enable Vdrive supply\n");
->>>  
->>> +	ret = devm_regulator_get_enable_optional(dev, "refin");
->>> +	if (ret < 0 && ret != -ENODEV)
->>
->> < 0 is probably not needed.
->>
-> The above code looks correct to me. What is the issue ?
+Herbert Xu <herbert@gondor.apana.org.au> writes:
 
-Like Nuno said, it can't be > 0, so if (ret && ret != -ENODEV)
+> Add forward declaration of struct seq_file before using it in
+> function prototype.
 
+I don't see anything wrong with doing that.
+
+However:
+> Fixes: 9cc46516ddf4 ("userns: Add a knob to disable setgroups on a per
+> user namespace basis")
+
+That description seems to be lacking something.  The code as has been
+fine since 2014 and there is no conditional compilation involved.
+
+Did some other change cause a declaration of seq_file not to be present?
+Did user_namespace.h get included somewhere new and that new location
+doesn't wind up declaring seq_file?
+
+Especially since fixes tags tend to get code back ported I would
+appreciate a bit more context on why this is a problem in 2025 when
+it hasn't been a problem for the last decade.
+
+Thank you,
+Eric Biederman
+
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+>
+> diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
+> index a0bb6d012137..5c7aa940b1aa 100644
+> --- a/include/linux/user_namespace.h
+> +++ b/include/linux/user_namespace.h
+> @@ -16,6 +16,8 @@
+>  #define UID_GID_MAP_MAX_BASE_EXTENTS 5
+>  #define UID_GID_MAP_MAX_EXTENTS 340
 >  
->>> +		return dev_err_probe(dev, ret, "failed to get refin voltage\n");
->>
->> We aren't reading the voltage, so the message doesn't make sense.
->>
-> Is it better a 
-> "failed to get refin-supply\n" or
-> "failed to enable refin voltage\n"
-
-I would make the message the same as Vdrive.
-
- "Failed to enable REFIN supply\n");
-
-> 
-> ?
-> 
->>> +
->>>  	st->chip_info = chip_info;
->>>  
->>>  	if (st->chip_info->oversampling_num) {
->>>
->>
-> Regards,
-> angelo
-
+> +struct seq_file;
+> +
+>  struct uid_gid_extent {
+>  	u32 first;
+>  	u32 lower_first;
