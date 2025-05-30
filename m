@@ -1,196 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35426D299
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19597145348
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 12:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748606499; cv=none; b=UKe8rL9Wy1jFyI3eL4b3/9AJqIMLqVoYwL+G8U32J/TgORPyPz6ET2bAgqnixewifQpOzRUPKEUkS4UJ4JgO6GrYjxtJ9VQPbAmDAWDTGBBAH2+n1pH4XPPDMrDQcz8vn2EQaj3Z0Be7m5LmwjoBGzVGxO4/O9ThfHx0LXvmf74=
+	t=1748607134; cv=none; b=rhvT0aNvgfd09vvuzZmwDFZHuEUghFVaXEnFgDMyWaozJqAldmCw/z1D6bw8Tcf7Efq7CSmhd+fbq7MGt72oN5skLEN2dB5YpK5CvBi9SSxbm/hwa3NlhFMrEZzpav2a8icpFuf2vAJ9Y9RE0GKG9Q2FBFLDX1KTt3mhB/xnd+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748606499; c=relaxed/simple;
-	bh=ssBU7ew2CyurUUHd3fgFEYsdYoHHLH9PeUvxnIJsnCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZ+v7wrxZ4undNCYt+lbM8xyNo2gUVjM7/VKMDspt11cJCbcXIliAsBpUtjy4pruch16N3rFCVWs22aAKDrWXmkt6NT94tQ2ueTI/OHT8CpA2hQB/8kcdVVVwbl8OQIlKEeBU8wLUNdjF+xbRUwYySK7XIuxlCQg8r76xBJ/zoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CL6A4bzA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CL6A4bzA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748606496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+WPaWb2DBUzybHtEtz5+SIZgM6ykPPLxKGgnQITZGiM=;
-	b=CL6A4bzAkKdGySR7tuFX9HdB8tMJIaLsISVJe1Jf5DBTFSJXUMn6d+DiKU5P8szVOXaBWA
-	NXDvnA1t/kxa1suukX6/R+ZmDh6ERC4Yhk5pMTPDfScJwtYsNC0SQ35kup/o9y0JmMA2SZ
-	yf1nFHKEZN4nYcN8okiHIF3mZdABFNs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-156-ELLxJ_qzM5ahNlU3akBRkA-1; Fri, 30 May 2025 08:01:34 -0400
-X-MC-Unique: ELLxJ_qzM5ahNlU3akBRkA-1
-X-Mimecast-MFC-AGG-ID: ELLxJ_qzM5ahNlU3akBRkA_1748606493
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so800596f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:01:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748606493; x=1749211293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+WPaWb2DBUzybHtEtz5+SIZgM6ykPPLxKGgnQITZGiM=;
-        b=EfmE68RGZrmfmH/w7yDt6LNqnl8FpPo7w9bNEFwHdxS7MHzJJAdgAixpiwq6SmmzmV
-         qSKI8i+Lwzet6gefu7PEghEdbBEaYtCwRQbAjjXJnvt6L6goDRfPAyOKESjsN+L7VhYN
-         Bds/GjjTDwszcMHeKNndQWAChuoALG6YGolyTvnLmgFvXl9HlTKjep6AiCru0JRxpK0Y
-         tlfSvvrUoHIalOxet65amlccw7Bxkl3YqCnvWrlKYxwctDr2IvIWahwhr8f0416pTQha
-         scvyVPGDFU1xtkhr+Rv1VmOEVwNjrPIeMS5NTzRo6HB+lThf5vo0UCRIpwtushRWMkpH
-         KzPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmcxF/RacQo0sVSp7wzxnRvXp+1ZFR+w/uDPc7196KCOSbnqyyNyov4zxka/6uDps17h/WnNouYKcTFIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5xHivFCcQwK7S06n9pJ/CxbFBLtIlk1gVf3doYUY6pvkeh54C
-	/OxBDqgqtFPdWLcOU5LkDZ07Tlb7159FmUSsY6aUpqWtj3VnGB0V7aLddJvmre0NMg/CVVjbyB3
-	hj0PLEy7Q0BQLceWKwZgOj5TinXzE3w+kFiNhVt1uG5X4jpj6yYfGbeATGYiYy/5Cnw==
-X-Gm-Gg: ASbGnctZoOlpxxfJiFxvXyf5V8EbY+aGAqIMEDKJyGaZBXNuEOxJonCwAVlbVyRFaeI
-	ljaA6o7oFj2GsUm7zw1OzmcJfazgsfKqzheRBIVv0NM4FZQuRoUZCGYaIdN81ZnqYvJsAgFoQBR
-	y0IQApVZdsOsynQiTfvGDv1xuoAcKoKK61m7vKJaYUQIvxWNUIDtjvN0AQLDKanrAP38thVa426
-	TdZWx+KKCIdlq6ePAmSKsxZG+RpPB4Mrm33sstr0ZaYQ3nvX/E262TxmlaDs/NuKgwUBnOcyCEM
-	o2wD3A==
-X-Received: by 2002:a05:6000:4023:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a4f89a7defmr1467419f8f.6.1748606493157;
-        Fri, 30 May 2025 05:01:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1gVcqHAhAJ9QWvV4I/CcNLL95rHuwb8avC98d08tABfzwj9pgURbSqB3ZvasaIXJegFy+Dg==
-X-Received: by 2002:a05:6000:4023:b0:3a4:dc2a:924e with SMTP id ffacd0b85a97d-3a4f89a7defmr1467369f8f.6.1748606492597;
-        Fri, 30 May 2025 05:01:32 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe5b7b0sm4698399f8f.10.2025.05.30.05.01.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 05:01:31 -0700 (PDT)
-Date: Fri, 30 May 2025 08:01:28 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Igor Mammedov <imammedo@redhat.com>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>, qemu-arm@nongnu.org,
-	qemu-devel@nongnu.org,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Ani Sinha <anisinha@redhat.com>,
-	Eduardo Habkost <eduardo@habkost.net>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Shannon Zhao <shannon.zhaosl@gmail.com>,
-	Yanan Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 12/20] acpi/generic_event_device: add logic to detect
- if HEST addr is available
-Message-ID: <20250530080120-mutt-send-email-mst@kernel.org>
-References: <cover.1747722973.git.mchehab+huawei@kernel.org>
- <aa74b756f633dbee5442cf4baa2c1d81a669d2f9.1747722973.git.mchehab+huawei@kernel.org>
- <20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
+	s=arc-20240116; t=1748607134; c=relaxed/simple;
+	bh=D19qPlErIH+SCrDxKasrN1547X95980IAEhwTdDxYyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s4Lkt3aC37BUO5ce6itZLDsLKS+QIrzIv9Nb76HYIZtJzg6JKARdorwQKistc1V0DT/KaEwvNZYUoM3D0J0Ym50z1spCy0vcCEbU/RgllkQo8/df5tkriv4v2vuWmZTsYblxvhjhLZgfIkn1HnXDAfLgTlAQDHzSAYTe0kpZ7lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C929016F2;
+	Fri, 30 May 2025 05:11:54 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B53C43F673;
+	Fri, 30 May 2025 05:12:08 -0700 (PDT)
+Message-ID: <976b1f4a-3b5e-4978-9ea4-ff4867094f7d@arm.com>
+Date: Fri, 30 May 2025 13:12:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] mm/pagewalk: Add pre/post_pte_table callback for lazy
+ MMU on arm64
+Content-Language: en-GB
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Dev Jain <dev.jain@arm.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+ surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, steven.price@arm.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org
+References: <20250530090407.19237-1-dev.jain@arm.com>
+ <20250530090407.19237-4-dev.jain@arm.com>
+ <7b4360a0-42ef-45ab-9e63-eace52943529@lucifer.local>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <7b4360a0-42ef-45ab-9e63-eace52943529@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 05:42:12PM +0200, Igor Mammedov wrote:
-> On Tue, 20 May 2025 08:41:31 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On 30/05/2025 12:14, Lorenzo Stoakes wrote:
+> On Fri, May 30, 2025 at 02:34:07PM +0530, Dev Jain wrote:
+>> arm64 implements lazy_mmu_mode to allow deferral and batching of barriers
+>> when updating kernel PTEs, which provides a nice performance boost. arm64
+>> currently uses apply_to_page_range() to modify kernel PTE permissions,
+>> which runs inside lazy_mmu_mode. So to prevent a performance regression,
+>> let's add hooks to walk_page_range_novma() to allow continued use of
+>> lazy_mmu_mode.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>> Credits to Ryan for the patch description.
+>>
+>>  arch/arm64/mm/pageattr.c | 12 ++++++++++++
+>>  include/linux/pagewalk.h |  2 ++
+>>  mm/pagewalk.c            |  6 ++++++
+>>  3 files changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+>> index a5c829c64969..9163324b12a0 100644
+>> --- a/arch/arm64/mm/pageattr.c
+>> +++ b/arch/arm64/mm/pageattr.c
+>> @@ -75,11 +75,23 @@ static int pageattr_pte_entry(pte_t *pte, unsigned long addr,
+>>  	return 0;
+>>  }
+>>
+>> +static void pte_lazy_mmu_enter(void)
+>> +{
+>> +	arch_enter_lazy_mmu_mode();
+>> +}
 > 
-> > Create a new property (x-has-hest-addr) and use it to detect if
-> > the GHES table offsets can be calculated from the HEST address
-> > (qemu 10.0 and upper) or via the legacy way via an offset obtained
-> > from the hardware_errors firmware file.
+> Hm am I missing something? I don't see this function or the leave version
+> defined in arch/arm64?
 > 
-> 
-> it doesn't apply to current master anymore
+> No do I see __HAVE_ARCH_ENTER_LAZY_MMU_MODE?
 
-indeed. Mauro?
+arm64 is starting to use lazy_mmu_mode from v6.16 - the changes are in Linus's tree.
 
 > 
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > Reviewed-by: Igor Mammedov <imammedo@redhat.com>
-> > ---
-> >  hw/acpi/generic_event_device.c |  2 ++
-> >  hw/arm/virt-acpi-build.c       | 18 ++++++++++++++++--
-> >  hw/core/machine.c              |  5 ++++-
-> >  3 files changed, 22 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-> > index d292f61b4e41..3cf9dab0d01a 100644
-> > --- a/hw/acpi/generic_event_device.c
-> > +++ b/hw/acpi/generic_event_device.c
-> > @@ -318,6 +318,8 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
-> >  
-> >  static const Property acpi_ged_properties[] = {
-> >      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
-> > +    DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
-> > +                     ghes_state.use_hest_addr, false),
-> >  };
-> >  
-> >  static const VMStateDescription vmstate_memhp_state = {
-> > diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-> > index da3ebf403ef9..3126234e657d 100644
-> > --- a/hw/arm/virt-acpi-build.c
-> > +++ b/hw/arm/virt-acpi-build.c
-> > @@ -893,6 +893,10 @@ static const AcpiNotificationSourceId hest_ghes_notify[] = {
-> >      { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
-> >  };
-> >  
-> > +static const AcpiNotificationSourceId hest_ghes_notify_10_0[] = {
-> > +    { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
-> > +};
-> > +
-> >  static
-> >  void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
-> >  {
-> > @@ -947,15 +951,25 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
-> >  
-> >      if (vms->ras) {
-> >          AcpiGedState *acpi_ged_state;
-> > +        static const AcpiNotificationSourceId *notify;
-> > +        unsigned int notify_sz;
-> >          AcpiGhesState *ags;
-> >  
-> >          acpi_ged_state = ACPI_GED(vms->acpi_dev);
-> >          ags = &acpi_ged_state->ghes_state;
-> >          if (ags) {
-> >              acpi_add_table(table_offsets, tables_blob);
-> > +
-> > +            if (!ags->use_hest_addr) {
-> > +                notify = hest_ghes_notify_10_0;
-> > +                notify_sz = ARRAY_SIZE(hest_ghes_notify_10_0);
-> > +            } else {
-> > +                notify = hest_ghes_notify;
-> > +                notify_sz = ARRAY_SIZE(hest_ghes_notify);
-> > +            }
-> > +
-> >              acpi_build_hest(ags, tables_blob, tables->hardware_errors,
-> > -                            tables->linker, hest_ghes_notify,
-> > -                            ARRAY_SIZE(hest_ghes_notify),
-> > +                            tables->linker, notify, notify_sz,
-> >                              vms->oem_id, vms->oem_table_id);
-> >          }
-> >      }
-> > diff --git a/hw/core/machine.c b/hw/core/machine.c
-> > index b8ae155dfa11..dfd36cf063c7 100644
-> > --- a/hw/core/machine.c
-> > +++ b/hw/core/machine.c
-> > @@ -35,9 +35,12 @@
-> >  #include "hw/virtio/virtio-pci.h"
-> >  #include "hw/virtio/virtio-net.h"
-> >  #include "hw/virtio/virtio-iommu.h"
-> > +#include "hw/acpi/generic_event_device.h"
-> >  #include "audio/audio.h"
-> >  
-> > -GlobalProperty hw_compat_10_0[] = {};
-> > +GlobalProperty hw_compat_10_0[] = {
-> > +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
-> > +};
-> >  const size_t hw_compat_10_0_len = G_N_ELEMENTS(hw_compat_10_0);
-> >  
-> >  GlobalProperty hw_compat_9_2[] = {
+>> +
+>> +static void pte_lazy_mmu_leave(void)
+>> +{
+>> +	arch_leave_lazy_mmu_mode();
+>> +}
+> 
+> Are you absolutely sure you will never need to hook this stuff on higher level
+> page tables?
+> 
+> If this relates to vmalloc, then we do have huge page mappings in vmalloc logic?
+
+The performance advantage (for arm64's usage at least) really only (currently)
+beneficial in practice to PTE level since we can reduce barriers by 512x. And
+apply_to_page_range() was only using lazy mmu for the pte level anyway.
+
+But actually I think we can do better here...
+
+> 
+>> +
+>>  static const struct mm_walk_ops pageattr_ops = {
+>>  	.pud_entry	= pageattr_pud_entry,
+>>  	.pmd_entry	= pageattr_pmd_entry,
+>>  	.pte_entry	= pageattr_pte_entry,
+>>  	.walk_lock	= PGWALK_NOLOCK,
+>> +	.pre_pte_table	= pte_lazy_mmu_enter,
+>> +	.post_pte_table	= pte_lazy_mmu_leave,
+> 
+> This is kind of horrid really, are we sure the lazy mmu mode is valid for
+> everything that occurs within the the loop? I suppose it's only simple logic for
+> the ops->pte_entry stuff.
+> 
+> But it feels like hacking something in for this specific case.
+> 
+> At the same time I don't want to get in the way of an optimisation. We could do
+> something in ops->pmd_entry, but then we'd not get to turn it off afterwards...
+> 
+> Same for any higher level page table hm.
+> 
+> Is this really the only way to get this? I guess it's not feasible having this
+> just switched on for the whole operation...
+
+...I think you're right. The only reason we traditionally confine the lazy mmu
+mode to a single page table is because we want to enclose it within the PTL. But
+that requirement doesn't stand for kernel mappings. As long as the walker can
+guarrantee that it doesn't allocate any memory (because with certain debug
+settings that can cause lazy mmu nesting) or try to sleep then I think we can
+just bracket the whole walk_page_range_novma() call.
+
+So I think we can avoid these new callbacks and just do:
+
+arch_enter_lazy_mmu_mode()
+walk_page_range_novma()
+arch_leave_lazy_mmu_mode()
+
+That will even give us the benefit of optimizing at PMD/PUD levels.
+
+
+> 
+> I just fear that we could end up populating these mm_walk_ops with every corner
+> case thing we think of.
+> 
+>>  };
+>>
+>>  bool rodata_full __ro_after_init = IS_ENABLED(CONFIG_RODATA_FULL_DEFAULT_ENABLED);
+>> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+>> index 9bc8853ed3de..2157d345974c 100644
+>> --- a/include/linux/pagewalk.h
+>> +++ b/include/linux/pagewalk.h
+>> @@ -88,6 +88,8 @@ struct mm_walk_ops {
+>>  	int (*pre_vma)(unsigned long start, unsigned long end,
+>>  		       struct mm_walk *walk);
+>>  	void (*post_vma)(struct mm_walk *walk);
+>> +	void (*pre_pte_table)(void);
+>> +	void (*post_pte_table)(void);
+
+nit: If we did end up with this approach, I wonder if it's better to generalize
+and call it pre_table() and post_table(), passing in a level param? In any case,
+you'll at least want to pass the walk structure.
+
+>>  	int (*install_pte)(unsigned long addr, unsigned long next,
+>>  			   pte_t *ptep, struct mm_walk *walk);
+>>  	enum page_walk_lock walk_lock;
+>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>> index 9657cf4664b2..a441f5cbbc45 100644
+>> --- a/mm/pagewalk.c
+>> +++ b/mm/pagewalk.c
+>> @@ -33,6 +33,9 @@ static int walk_pte_range_inner(pte_t *pte, unsigned long addr,
+>>  	const struct mm_walk_ops *ops = walk->ops;
+>>  	int err = 0;
+>>
+>> +	if (walk->ops->pre_pte_table)
+>> +		walk->ops->pre_pte_table();
+> 
+> NIT: you have 'ops' already, no need for walk-> :)
+> 
+>> +
+>>  	for (;;) {
+>>  		if (ops->install_pte && pte_none(ptep_get(pte))) {
+>>  			pte_t new_pte;
+>> @@ -56,6 +59,9 @@ static int walk_pte_range_inner(pte_t *pte, unsigned long addr,
+>>  		addr += PAGE_SIZE;
+>>  		pte++;
+>>  	}
+>> +
+>> +	if (walk->ops->post_pte_table)
+>> +		walk->ops->post_pte_table();
+> 
+> NIT: same as above.
+> 
+>>  	return err;
+>>  }
+>>
+>> --
+>> 2.30.2
+>>
+> 
+> 
 
