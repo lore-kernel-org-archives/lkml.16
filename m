@@ -1,109 +1,97 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 595693FE4
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB29F22B8A8
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748611546; cv=none; b=m2ALVD4rAht0SFj4dyjB5GYssfSNfzZYZo5Y7igHJbAzUhzudqljuxm+8XL7bCiRmCzltbxJIJzl71FPtNCe/5DK9dpeKGsZaYdbtTxmqN2Pc5OILhafvKTg1Vc3BGMZQozFuO1LOY5Cyue3E/MStXAHLqpAq/9+ytOxjjW8zmM=
+	t=1748611570; cv=none; b=ExXUKkI0wbEaydD//GT8skUtkYGzEzpwQZMtHVS/8if8nXb6XQ5Lo+TIppq9DzKWadZbcgztyfDyE9avhKehwAUHE3iafVJS2zfMcic+DaxVI4h/0uCpwI5yGVrAlNnL2/ll7bd1/hh1f5oaSGHgIo91rshsusei/jVH1dHpKFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748611546; c=relaxed/simple;
-	bh=PgxKpmwUXFEHD62wBJ1kOQYT5echnoyGtaLah7i4Xn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MWvV9uivaXMfKzlm+cOO0Z59I4qyrCe+Renx7dK89UJwYW9Ob/aq8iW5MU+c8/lEVpf+T6NchaEEmYtxHPqwDpAGEonyyGwvUd74XBXHnyjISkWi82AtBJvhxLlElUnqyU59tmepgiCYor2/mNLOJN3RNRLFoXu+wqBo2Nfk1IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MzQxbtLB; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748611570; c=relaxed/simple;
+	bh=K+DxTdJkl9FaZs4zFjrusQOOAB6r3DF/j4YeuC1uLkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=KH7KWYyQTY9KKy7tZuyBH/yJWdDmNzhZPs8+2HqChvrig19Gyx/DhwdCo5Kjjc/ZefTPYr8kHekIhu9rZdhYVOb8PmXPTSlTCPmTm5TyrJEzatFIxz95BCS5f/d43G/QD9fKFyJH7npAUPWUi5UeX9L91NkIkpeRluorBZ/N/QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNiR5TNu; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MzQxbtLB"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-44069f5f3aaso606275e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748611542; x=1749216342; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KVWYls6nDQ73R20I/E86TcuwkZJGt1DZr9U8c6qpiXA=;
-        b=MzQxbtLBPw12rLUIoOvKbkmBFOh7rE+gCf+cB9gE8jeefrCk6RKebYT5Uyd5hAsf/j
-         zzjIXu7fT7mFrg+IpRlFqgO2jBwS0//nXJwuasSBjHras8Qu8wHS+R1NGe6idIU3Z+a1
-         +cRk7NlUQ3HX/dkXJyUboOqMdL9tPhVOPbpNSnABBDWw/g+jh/4ihCXPtTUdMZdNa8ML
-         3SWTFeYNUgUbzycX/cdLzR/nfqCmgkehrS3Ah/iL6FfR201RA4VmopWCSM6L2t2lgRug
-         /JTU7dgHXXyKaTlmYyJYm449QyzLkwj3MQ4HkVyWX4QN4NairkEeHC8hro3zXOKu1oAa
-         n26w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748611542; x=1749216342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KVWYls6nDQ73R20I/E86TcuwkZJGt1DZr9U8c6qpiXA=;
-        b=Inwa7e7E3plQpB9L0eYXskYyaCY+NSzN7P/pCdKA0h1vdmACFZdXSbZQRcA3PiTwJU
-         2OGX0C4fXQIiIg9vPHZJvNGRD5yzuXVVmK5VdjKgBq3SQD4nOTWQLFttoG+zUOgaFoqW
-         y6+nn49bofHYmOPyeEKK6hABdgT1q7Q7edRi2t/u+Vzeryh4l/GDaRv6QXYryq7USpYr
-         /6eKjD/gVPZl/SgLbpQfeQqA3vq+sQB2C+p/Jzw2Ud/RCKwz+5lg2WmNC8zU28S+YKxE
-         832ZH7TNuaYEDS+D0jdg+7mPgxa7MAHtWtF7Na30TvX/xBZeJXFF1MpAorTforsXeUOl
-         fhdw==
-X-Gm-Message-State: AOJu0YzJWiNgjBhPWqYDCjHKNN6aHo8iKbZkrlUXaZCBiuu3youI5eAn
-	6hKnH8NLlf/8Xq13H3Vg7n+lHv84qB34Q0R4GRNuSMZQTBt1Aa5Cv/9HT3vqNex6OQg=
-X-Gm-Gg: ASbGncvdkJiGAXTd4ByscimmLNuc3b9W6AHvwhDTOJv8RQeDhNgqCMkvUrE2ecRf1Z0
-	7C1kuGZDEAzq2RM+ZmxQ7meBfbUlk+ytwlj0NEYeWEGO9a7AcJarJG+IToHg7565DRpu4AO08vK
-	ReOmP66nSsOLhBDIh8BQ5PdEChW1janucNka9xci1zoT6tgI81mD5KVrqTdmC4GHtAhAF7S7HNs
-	Bv05nlrYFXIQSuxkuA5uEpfG/PtwOxiInqKrd8h1XfriLPWJCrAVcjga0Stwsd8iY0TygASHMtX
-	lAqTKzCLwu/hh1+Vmf5Wpd4AzOv8q+ykzEaRzL4a94RF
-X-Google-Smtp-Source: AGHT+IFMDODFq8YfSUMILS9AIMysrQxARbcNqQQhkXacaq+QWyeYkvOmhljmx2uNzVHpXM/pMfqpsg==
-X-Received: by 2002:a05:600c:1c8d:b0:43b:c0fa:f9c4 with SMTP id 5b1f17b1804b1-450d7bae255mr7676065e9.4.1748611542464;
-        Fri, 30 May 2025 06:25:42 -0700 (PDT)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d6358fc9sm20975115e9.1.2025.05.30.06.25.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 06:25:42 -0700 (PDT)
-From: Petr Tesarik <ptesarik@suse.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org (open list:HIGH-RESOLUTION TIMERS, TIMER WHEEL, CLOCKEVENTS),
-	Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH] timers/migration: remove an unneeded call to find_first_bit()
-Date: Fri, 30 May 2025 15:25:39 +0200
-Message-ID: <20250530132539.234792-1-ptesarik@suse.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNiR5TNu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748611568; x=1780147568;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=K+DxTdJkl9FaZs4zFjrusQOOAB6r3DF/j4YeuC1uLkk=;
+  b=ZNiR5TNuCNj2MTAcj5a8PuRBgLEWVZQsY/z7AQsBAXuaLEYFtaC60E48
+   EIy99uZIGc0UESwHWpBudmiYWO9FnjiaXABzk2RPrRkvM09mEQuVc/QFx
+   tHoLLg6FRORC5/C85Y0fCooe5eYAMyUot8vJNKPwcAST9CS07JUFiQyxt
+   TKiqDzsAdnUYz7ihuaxNKuE947BrTrfH6ehEUpXL3YvrNPdbCh5MKjWD0
+   +i2Vj7tqBNB9ov7BswgPK72CaAjZr91qZOuFOrrL8BVZO1anz5LAAlRa3
+   N2/nwS7/1vskijYKa+VEJpm8VqDy1Ssn6jwidgVyJJdVJkXaGYahZshrz
+   w==;
+X-CSE-ConnectionGUID: eFfp+QfpSEmcUd5siWpoOw==
+X-CSE-MsgGUID: K+my489HSwOfBldHV8BsAg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50708935"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="50708935"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:26:08 -0700
+X-CSE-ConnectionGUID: QnitC1ZcQAi7uTbKLYwUZg==
+X-CSE-MsgGUID: 1VKfWvjURRO1zaujVTrheA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="167070332"
+Received: from igk-lkp-server01.igk.intel.com (HELO b69e6467d450) ([10.211.3.150])
+  by fmviesa002.fm.intel.com with ESMTP; 30 May 2025 06:26:05 -0700
+Received: from kbuild by b69e6467d450 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKzkI-0000tm-35;
+	Fri, 30 May 2025 13:26:02 +0000
+Date: Fri, 30 May 2025 21:25:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Miri Korenblit <miriam.rachel.korenblit@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Johannes Berg <johannes.berg@intel.com>,
+	Avraham Stern <avraham.stern@intel.com>,
+	Daniel Gabay <daniel.gabay@intel.com>,
+	Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+	Anjaneyulu <pagadala.yesu.anjaneyulu@intel.com>,
+	Yedidya Benshimol <yedidya.ben.shimol@intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Shaul Triebitz <shaul.triebitz@intel.com>
+Subject: ERROR: modpost: "iwl_get_cmd_string"
+ [drivers/net/wireless/intel/iwlwifi/mld/tests/iwlmld-tests.ko] undefined!
+Message-ID: <202505302159.n8mEtUuV-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Use simple bit arithmetic to extract the least significant bit from the
-active bitmask, because the bit position is not needed, only the bit
-itself.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f66bc387efbee59978e076ce9bf123ac353b389c
+commit: d1e879ec600f9b3bdd253167533959facfefb17b wifi: iwlwifi: add iwlmld sub-driver
+date:   3 months ago
+config: x86_64-randconfig-2001-20250530 (https://download.01.org/0day-ci/archive/20250530/202505302159.n8mEtUuV-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505302159.n8mEtUuV-lkp@intel.com/reproduce)
 
-No functional change.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505302159.n8mEtUuV-lkp@intel.com/
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
----
- kernel/time/timer_migration.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 2f6330831f08..0f40727b6cac 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -1277,12 +1277,12 @@ static bool tmigr_inactive_up(struct tmigr_group *group,
- 			 * group is idle!
- 			 */
- 			if (!childstate.active) {
--				unsigned long new_migr_bit, active = newstate.active;
-+				u8 active = newstate.active;
- 
--				new_migr_bit = find_first_bit(&active, BIT_CNT);
-+				if (active) {
-+					u8 lsbit = active & -active;
- 
--				if (new_migr_bit != BIT_CNT) {
--					newstate.migrator = BIT(new_migr_bit);
-+					newstate.migrator = lsbit;
- 				} else {
- 					newstate.migrator = TMIGR_NONE;
- 
+WARNING: modpost: vmlinux: section mismatch in reference: mc_debug_data+0x0 (section: .data) -> mc_debug_data_early (section: .init.data)
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
+>> ERROR: modpost: "iwl_get_cmd_string" [drivers/net/wireless/intel/iwlwifi/mld/tests/iwlmld-tests.ko] undefined!
+>> ERROR: modpost: "__iwl_dbg" [drivers/net/wireless/intel/iwlwifi/mld/tests/iwlmld-tests.ko] undefined!
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
