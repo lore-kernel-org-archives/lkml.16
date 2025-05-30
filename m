@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F3826C3A0;
-	Fri, 30 May 2025 12:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585D26C3AE;
+	Fri, 30 May 2025 12:41:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608883; cv=none; b=iMUIA041BrsQqjtgnNAOCN+S4lIxb/gsyUHA980Z0FMnB1wvBhFcI57cSsIW4Ct2iBNxzKgeeZ7yNc5+G8opM98yRuygXsB6LLVkcsF6SRdm4oCxRH357OGBceCT421Jf8/x2INXX8vHf2cpwyuwy6uOWHE+hvIVf3y70qnSLVk=
+	t=1748608885; cv=none; b=A1csLbZJtSBZYxraIqTydcapE7bp/MmWoW8rmd0Q5uB9vzM/ia5Lqk6OmHLWl97vm/e4p4T5Obm9kEgbK5O7qXnF8HPuVXk0uOMfVMKQlvBDCjMhUtS/1510ugImbZFENSCgOjd3z07OmLkDL+Sbg87+GV1d9Ne8ClVlGIFMXn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608883; c=relaxed/simple;
-	bh=7Rao4ioxGqiBh9nwmLmh0IwTV5dELYXBN6GpPuGKPhc=;
+	s=arc-20240116; t=1748608885; c=relaxed/simple;
+	bh=4AKGyOvQ4dHH71X65Il3tBHkuJy3+oJDpCMAj0icUb0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kpIdrdyVrbw6QskPUbl6VUu6mDdYhF8p5mOr8eJx9Wwdy+xAUyeqrZvwo2en3QHzP35TOw5SgP41kaVtxWkbNKUGEO3kOiQtVlrkqg0Sp4V9p4zn3opYWkm6lnN56crpd+hCCwX7XCPgmr2MK69XUg+esbgp6cKO7isXnDBDkLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMQlnUqK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=rDMw7tdP3UXTOX0cgMqlyd3EZOiTG+SuL0o8//Qb2jPNeOb0oWJV/Om71qP5lCnx+/doMj0Mk8zaYmlnMZlbt//dUM5s54FhB4fBnnMAEFALC3g3XU2zG39Cp5Hucq7oU/ofm8B99f056DufxFT8eETIK6o2aOgsJkgl3o/5d7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WdNsrR9x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMQlnUqK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0BDDC4CEEF;
-	Fri, 30 May 2025 12:41:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WdNsrR9x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 979E3C4CEEF;
+	Fri, 30 May 2025 12:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608882;
-	bh=7Rao4ioxGqiBh9nwmLmh0IwTV5dELYXBN6GpPuGKPhc=;
+	s=k20201202; t=1748608885;
+	bh=4AKGyOvQ4dHH71X65Il3tBHkuJy3+oJDpCMAj0icUb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BMQlnUqK3EVepNM/dobzupNPfxXGlK55Tq3/i4xY1GGEjsoyyj5WsMxQYcx0hHtRi
-	 LujCzYaRvFG+f2Wpi7V8kDfTTjdFn4w0Hm7lrRjVG9VOzuOwLsW+rrHNLyXxB7ar1S
-	 ngXz6gLpYc33oK40GvLxQnJG3IVA8ENuUcw4VI6jAj9ulu6MseTkxnmGYh0VjdD7fJ
-	 oRjmoE+k0IGVajR1djwLAge17KQtf7lyIW91Wr8Sm/nLrC7RNcvPADRrGWNY4NfqL0
-	 Yh6fbwI3+BD09PQ6yR9GI+kbGUESH9D1fNaATCCiuQ6/UVVvPqmIReI0jXkX4A/Xpl
-	 m7xIK4IOMKlAw==
+	b=WdNsrR9x3isppZAc3vB14USvJMYLXPXokrbWtMhe9G9ybGG7F254utu2REZ0AFTmv
+	 3nI07xSA/wZ9VkHe9N6KFtrd4Cn8B/h0jRPIHQJM6qWkgGPyZ8pdsZyo3YRIAwDFCI
+	 qUE1l6gx41JnxhG9FXMW9Ue/BQTLvwlhQEyCgiPVEOUUECfRX5xjlswpVT0SJv6Tw7
+	 db70dUDmRtAs4M5QyofLYUPVhLmEhLukFsG4Y2nuo8+vF5y03Ppp23fzJRF0s5LzRv
+	 GvxzHVBarhjOY60fVfkFFyjY6WimT+Z0U7jK+osCdtWwei8Qx16nZekEYDcZ8iUX1P
+	 pMZd5VRSAbdLQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Armin Wolf <W_Armin@gmx.de>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Jerry Lv <Jerry.Lv@axis.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rjw@rjwysocki.net,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
+	sre@kernel.org,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 07/13] ACPI: bus: Bail out if acpi_kobj registration fails
-Date: Fri, 30 May 2025 08:41:06 -0400
-Message-Id: <20250530124112.2576343-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 09/13] power: supply: bq27xxx: Retrieve again when busy
+Date: Fri, 30 May 2025 08:41:08 -0400
+Message-Id: <20250530124112.2576343-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530124112.2576343-1-sashal@kernel.org>
 References: <20250530124112.2576343-1-sashal@kernel.org>
@@ -48,92 +48,132 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.140
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Armin Wolf <W_Armin@gmx.de>
+From: Jerry Lv <Jerry.Lv@axis.com>
 
-[ Upstream commit 94a370fc8def6038dbc02199db9584b0b3690f1a ]
+[ Upstream commit f16d9fb6cf03fdbdefa41a8b32ba1e57afb7ae3d ]
 
-The ACPI sysfs code will fail to initialize if acpi_kobj is NULL,
-together with some ACPI drivers.
+Multiple applications may access the battery gauge at the same time, so
+the gauge may be busy and EBUSY will be returned. The driver will set a
+flag to record the EBUSY state, and this flag will be kept until the next
+periodic update. When this flag is set, bq27xxx_battery_get_property()
+will just return ENODEV until the flag is updated.
 
-Follow the other firmware subsystems and bail out if the kobject
-cannot be registered.
+Even if the gauge was busy during the last accessing attempt, returning
+ENODEV is not ideal, and can cause confusion in the applications layer.
 
-Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://patch.msgid.link/20250518185111.3560-2-W_Armin@gmx.de
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Instead, retry accessing the I2C to update the flag is as expected, for
+the gauge typically recovers from busy state within a few milliseconds.
+If still failed to access the gauge, the real error code would be returned
+instead of ENODEV (as suggested by Pali Rohár).
+
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Jerry Lv <Jerry.Lv@axis.com>
+Link: https://lore.kernel.org/r/20250415-foo-fix-v2-1-5b45a395e4cc@axis.com
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-**YES** This commit should be backported to stable kernel trees. Here's
-my extensive analysis: ## Code Change Analysis The commit changes the
-behavior in `acpi_init()` when `kobject_create_and_add("acpi",
-firmware_kobj)` fails: **Before:** - If `acpi_kobj` creation fails, only
-prints a debug message and continues execution - The function proceeds
-to initialize ACPI subsystems with a NULL `acpi_kobj` - This leads to
-potential crashes/failures in other ACPI components **After:** - If
-`acpi_kobj` creation fails, prints an error message and returns
-`-ENOMEM` - Prevents initialization of ACPI subsystems with a NULL
-`acpi_kobj` - Follows proper error handling patterns ## Evidence from
-Kernel Code Investigation From examining the kernel repository, I found
-multiple critical usages of `acpi_kobj` that would fail catastrophically
-if it's NULL: 1. **drivers/acpi/sysfs.c:514**:
-`kobject_create_and_add("tables", acpi_kobj)` - NULL parent causes
-undefined behavior 2. **drivers/acpi/sysfs.c:924**:
-`sysfs_create_group(acpi_kobj, &interrupt_stats_attr_group)` - NULL
-kobject crashes 3. **drivers/acpi/platform_profile.c**: Multiple
-`sysfs_notify(acpi_kobj, ...)` calls that would crash with NULL 4.
-**drivers/acpi/platform_profile.c**: `sysfs_create_group(acpi_kobj,
-&platform_profile_group)` would fail ## Backport Criteria Assessment ✅
-**Fixes a real bug**: Yes - prevents crashes when kobject creation fails
-✅ **Small and contained**: Yes - only 4 lines changed in one function ✅
-**Clear side effects**: Yes - prevents ACPI initialization on memory
-allocation failure ✅ **No architectural changes**: Yes - just proper
-error handling ✅ **Critical subsystem**: Yes - ACPI is core kernel
-infrastructure ✅ **Minimal regression risk**: Yes - only affects rare
-failure path ✅ **Follows stable rules**: Yes - important bugfix with
-minimal risk ## Comparison with Historical Examples This commit closely
-matches **Similar Commit #1** (Status: YES) which also: - Fixed error
-handling in ACPI initialization code - Added proper cleanup/error
-handling when kobject operations fail - Was considered suitable for
-backporting The commit differs significantly from the "NO" examples
-which were: - Code cleanup/style changes (Similar Commits #2, #3, #4) -
-Refactoring without fixing actual bugs (Similar Commit #4) ## Risk
-Assessment **Low Risk**: The change only affects the extremely rare case
-where `kobject_create_and_add()` fails due to memory allocation failure.
-In such cases: - **Current behavior**: System continues with broken
-ACPI, leading to crashes - **New behavior**: ACPI initialization fails
-cleanly, system may still boot without ACPI ## Conclusion This is a
-critical bug fix that prevents crashes in ACPI subsystems when memory
-allocation fails during boot. It transforms undefined behavior/crashes
-into clean failure handling, making it an ideal candidate for stable
-backporting.
+**YES** This commit should be backported to stable kernel trees. ##
+Detailed Analysis: ### 1. **User-Visible Bug Fix** ✅ The commit fixes a
+clear user-visible issue where multiple applications accessing the
+battery gauge simultaneously receive confusing `-ENODEV` errors instead
+of actual battery data or proper error codes. This directly impacts
+battery monitoring applications and system power management tools. ###
+2. **Code Changes Analysis** **bq27xxx_battery.c change:** ```c -return
+-ENODEV; +return di->cache.flags; ``` This single-line change stops
+masking real error codes with generic `-ENODEV`, allowing applications
+to see the actual error (like `-EBUSY`) and handle it appropriately.
+**bq27xxx_battery_i2c.c changes:** - Adds retry logic with up to 3
+attempts when encountering `-EBUSY` - Uses standard `usleep_range(10000,
+11000)` for 10ms delays - Implements proper loop structure with explicit
+break conditions ### 3. **Small and Contained** ✅ The changes are
+minimal and focused: - No architectural modifications - No changes to
+driver interfaces or APIs - Limited to error handling improvement within
+the same subsystem ### 4. **Low Regression Risk** ✅ - Uses established
+kernel patterns (`usleep_range`, retry counters) - No timing changes to
+critical paths - Battery gauges typically recover from busy state within
+milliseconds - Maintains backward compatibility ### 5. **Historical
+Precedent** ✅ Analysis of similar bq27xxx commits shows consistent
+backporting: - "Fix race condition" (Similar Commit #4): **YES** -
+Similar I2C access improvement - "After charger plug in/out wait 0.5s"
+(Similar Commit #5): **YES** - Similar stability fix - "make status more
+robust" (Similar Commit #2): **YES** - Similar robustness improvement
+### 6. **Follows Kernel Conventions** ✅ - Standard I2C retry mechanisms
+are common in the kernel - Proper error code propagation instead of
+masking - Code reviewed by subsystem maintainer (Pali Rohár) - Uses
+kernel-standard delay functions ### 7. **System Impact** **Improves
+stability** by: - Preventing userspace confusion from misleading error
+codes - Gracefully handling concurrent access scenarios - Better error
+reporting for debugging - No negative side effects identified ### 8.
+**Risk Assessment** **Very Low Risk:** - No memory management changes -
+No locking mechanism modifications - Standard retry pattern with bounded
+attempts - Preserves all existing functionality This commit represents
+an ideal stable backport candidate: it fixes a real user-visible bug
+with minimal, well-understood code changes that follow established
+kernel patterns and have strong historical precedent for backporting in
+this driver subsystem.
 
- drivers/acpi/bus.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/power/supply/bq27xxx_battery.c     |  2 +-
+ drivers/power/supply/bq27xxx_battery_i2c.c | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/bus.c b/drivers/acpi/bus.c
-index a16b7de73d164..fafa15507b141 100644
---- a/drivers/acpi/bus.c
-+++ b/drivers/acpi/bus.c
-@@ -1389,8 +1389,10 @@ static int __init acpi_init(void)
- 	}
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index 2868dcf3f96dc..b3dd64ab8d32c 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -2044,7 +2044,7 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ 	mutex_unlock(&di->lock);
  
- 	acpi_kobj = kobject_create_and_add("acpi", firmware_kobj);
--	if (!acpi_kobj)
--		pr_debug("%s: kset create error\n", __func__);
-+	if (!acpi_kobj) {
-+		pr_err("Failed to register kobject\n");
-+		return -ENOMEM;
-+	}
+ 	if (psp != POWER_SUPPLY_PROP_PRESENT && di->cache.flags < 0)
+-		return -ENODEV;
++		return di->cache.flags;
  
- 	init_prmt();
- 	acpi_init_pcc();
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_STATUS:
+diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
+index 17b37354e32c0..b05d2693fde04 100644
+--- a/drivers/power/supply/bq27xxx_battery_i2c.c
++++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+@@ -6,6 +6,7 @@
+  *	Andrew F. Davis <afd@ti.com>
+  */
+ 
++#include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+@@ -32,6 +33,7 @@ static int bq27xxx_battery_i2c_read(struct bq27xxx_device_info *di, u8 reg,
+ 	struct i2c_msg msg[2];
+ 	u8 data[2];
+ 	int ret;
++	int retry = 0;
+ 
+ 	if (!client->adapter)
+ 		return -ENODEV;
+@@ -48,7 +50,16 @@ static int bq27xxx_battery_i2c_read(struct bq27xxx_device_info *di, u8 reg,
+ 	else
+ 		msg[1].len = 2;
+ 
+-	ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
++	do {
++		ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
++		if (ret == -EBUSY && ++retry < 3) {
++			/* sleep 10 milliseconds when busy */
++			usleep_range(10000, 11000);
++			continue;
++		}
++		break;
++	} while (1);
++
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.39.5
 
