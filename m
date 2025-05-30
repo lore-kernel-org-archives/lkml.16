@@ -1,387 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC40454652;
-	Fri, 30 May 2025 22:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4FE54652;
+	Fri, 30 May 2025 22:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748643431; cv=none; b=XFBHbYmtnJd+vWBjxE9WXIlyO16cLjIoQ86bRFsNoz5ycZlRTZCaBdAQgfx6VhLpq+0bfkMi8qip6lxM/0Ane5MwFlmy4trxfMtpoKEdPF9U1XkXd55J1Z8Ox6g4aIMTAUwOgx2+DOM0pbB7vn3ZDBh6z5lTfO7qSUEg7OUwhsg=
+	t=1748643445; cv=none; b=IX1TylvxVByOIpdHamzlW/8YBU4WmZnTicv/yyaKw1A0n63FNFsrymz/b5NPpTlTD31OFA5oUumdJK9qqz1eFYWaR2pi4XZfTSTjE1ouERN0G1eJBy5YeQh61YEDmeN2EJ3cXr8PQjunhafsfozoLPdUrgoFc+bWiHZ7bwbVwm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748643431; c=relaxed/simple;
-	bh=R0S3+xdmBfUjI25ccuMVTJIM7RvML05//QeEJ0lu02Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HH1cYkjlwl0kuiSuNGg8jwTj/Iy3KeK2WJaDVRz5arM9rEiSLdsSQ9WrEW0oMclCaYKgWTZUaLDGpdqTXKrR9Ak9AJmKwp4itDlvjK1/V7LSPYkFZ5mXFRU14kxFG/mthWL3D4NHjCH4VmCeQqJ2X5CzcHWxv6l++6JggRuNYvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVc6Z6u/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748643445; c=relaxed/simple;
+	bh=GmwDqseqzIm7MqhZ3/gzJXHApPchMAUBELR9XKOYZJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qQkvcVLy+CXms+5tUpfdgi/6Ch+xqbu32Yf9swUWzwzEiKjXGTN4fTNOHrMuYRNAVjZ3DI4gLwbweUl/oGWETbJ0Oz1OSQ8cHQV7Y3Bmfuzy0cuzg/kzR4Wzy2Y1LipdwTZMx64GAo3YTiWEWe4GpzkQH465gXy6KtnVsKhN+mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+fyihTW; arc=none smtp.client-ip=209.85.219.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVc6Z6u/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E9FC4CEE9;
-	Fri, 30 May 2025 22:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748643431;
-	bh=R0S3+xdmBfUjI25ccuMVTJIM7RvML05//QeEJ0lu02Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TVc6Z6u/oyU/wXCK8GTwG7p90prG3hvTSegYoqLKSxPJjMhhI9kYzVcr/IXo+uOJj
-	 bowAXbByngsghBF5nL6ZuNpYakwVhNSUPTx88exTV3MpVqFp5qIVdH69+SDfTh6Uni
-	 lxIM8AwwUIar6kzvXmp68vhTNakGd28zFbTCY2GRIiwFWaQn0u1XBqbJFYKs2KPFl1
-	 CeaFgbbZa0UPSryni7pDftxzrX8xY8hMJR5Ul/JS81Bqr9ud41rT7gk9mnFgTPA3Sy
-	 FCnCgywOaRrzIp/TqMzL8h57CtSr/CFM5l00AnCkucZ4OpmIcQwxIBX2CHLpkC81fe
-	 yM4ygnpIFuQ2Q==
-Date: Sat, 31 May 2025 00:17:05 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	chrisi.schrefl@gmail.com, rust-for-linux@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+fyihTW"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6f0ad74483fso25772326d6.1;
+        Fri, 30 May 2025 15:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748643442; x=1749248242; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zhv6lhB1mI/CkQWC95/D7LVSSPw+u5fXWeWxikhuaZA=;
+        b=Z+fyihTW+h4yeeqpwlZHgAxRWRpau4UA9cwGHyzcwV4/wwFzJswuaZ7VDXO9XbxR2g
+         0tAi9YjxZrldxHzBiPAfFLZNdH2DCy5oreveFVPVnJ7c4dDlgPyVkvvSTjM6ySsObVFU
+         yCAA7VA7hLrVmNuNGj1wohKViGshuYUIBI50r8hEGin27xVjvrorT/cx9F2fmYGZ/uzx
+         LWeeWig96tHdm+tlKsbpqXszI4/QBbJBZtYgG8ib+E6qndhVB/CVv7jXbxRT2XulGPfD
+         bhJokE8c5oRVdsuMGLMCy0QD083roHDzylJpHZXd8qOeJjz4XuGFOghufdQVbs6lRUWz
+         2YQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748643442; x=1749248242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zhv6lhB1mI/CkQWC95/D7LVSSPw+u5fXWeWxikhuaZA=;
+        b=YwDrCm9fWiJxdEnUBXF4M6DWMNMYBbt3lHNfTF/21HD5IwrrMhH5vycYqOLt4vAonU
+         p+mWBxFcce7pqTbtiFEp2M765B07PwJd5U1ILg1DBX/LyJeyPiu3dNfP7kgqD6sDWjGA
+         ZWiW0lz5E3NJ4xAr6UfEuHDHiP8WgPL3UqPedFumw1hMpQC5sAUkwiSOoOnNTdDDlXoK
+         mJBLtgTWZSzZWTqVQp3YQGpqXTtYTnAqBQDPCagTBpm16bYg1CL2YNV3IOJMpCg2eT6l
+         EFH0PAWiDARKFzAJ2Nppjq06NrOk3svj58PciPeWXEn5OEya4FdV+48lNwaHXS5S73xN
+         CbAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl6dnaschWngslXomJbvscn5KBTK5ip3ZBFIE96K6kYE1kyJx4F3tKqSVwcuRwO86OUOg0/m+KUUw+@vger.kernel.org, AJvYcCVeGfIQMSN01kBxn5MeVqh/hvTWhO74KapbdyBLbbUwkSrwJKHE5Qc41HTWO103D2F2bxlqkWkolNIlNbOA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZGeJjdPePmT7AEp8Gn+b8VtwZCtJVMu1qR0xui4atXygJYR62
+	RYLPWm4iknSEMjMqR0p0iHxEWqQDhe/XI0ugkERAOoiPSZJueD2nPqbs
+X-Gm-Gg: ASbGncv/+D36GU0Og7a8NXc1Tn6H+lkgTM2SGq3NiB6DlOSA5N2MU2uRK8mlvgogFi2
+	vgBpOqz5Tu+3KkA7TR8eu72v/VgtWDEWTXzGwLPajwuYvOP7BG1/oSZLpnAHKlYWnYRbO/XNfp6
+	mZFm7DsNuEyYTLN3tw8IWKcoOael670ydxERHtnXxiZ2kAWfeV7W26L9eHH3Qp5EY5F/jHwVyJy
+	Qw+ut3N39VGSxQ7dvZuRkMYFSNCfD0Budvumn6HByCwAdp7wb1UQKobOK/BwtMb86G1S86M7Z4P
+	FLsa5A6vJk4UWJwPmnVMdqbeA1P6EL5aSzd8e598MQrARCuAnuhnhXngf6nNNerZG/DW9SL9CZ7
+	CbTnkjUiXMTvrf1OSuwvqdft/lA==
+X-Google-Smtp-Source: AGHT+IGfTe2JaWKrTjR3it8MKEgzScIlOWAy/yBQKV2n97iFtrmSF6lgii4Qq4047HuVxPTbgYBp2A==
+X-Received: by 2002:ad4:5aa9:0:b0:6fa:c697:97b5 with SMTP id 6a1803df08f44-6facebe6d29mr76790656d6.20.1748643442404;
+        Fri, 30 May 2025 15:17:22 -0700 (PDT)
+Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac6d4d0cesm29986866d6.35.2025.05.30.15.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 15:17:21 -0700 (PDT)
+From: Adam Ford <aford173@gmail.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: aford@beaconembedded.com,
+	m.felsch@pengutronix.de,
+	Adam Ford <aford173@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/7] rust: miscdevice: properly support device drivers
-Message-ID: <aDouYRU-xSjfgMzJ@pollux>
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-6-dakr@kernel.org>
- <DA9RLBPS7QKE.3CGXHMYG1CDOU@kernel.org>
+Subject: [PATCH 0/4] Increase i.MX8MP VPU
+Date: Fri, 30 May 2025 17:17:07 -0500
+Message-ID: <20250530221713.54804-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DA9RLBPS7QKE.3CGXHMYG1CDOU@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 10:06:55PM +0200, Benno Lossin wrote:
-> On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
-> > @@ -40,44 +41,43 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
-> >      }
-> >  }
-> >  
-> > -/// A registration of a miscdevice.
-> > -///
-> >  /// # Invariants
-> >  ///
-> > -/// `inner` is a registered misc device.
-> > +/// - `inner` is a registered misc device,
-> > +/// - `data` is valid for the entire lifetime of `Self`.
-> >  #[repr(C)]
-> >  #[pin_data(PinnedDrop)]
-> > -pub struct MiscDeviceRegistration<T: MiscDevice> {
-> > +struct RawDeviceRegistration<T: MiscDevice> {
-> >      #[pin]
-> >      inner: Opaque<bindings::miscdevice>,
-> > -    #[pin]
-> > -    data: Opaque<T::RegistrationData>,
-> > +    data: NonNull<T::RegistrationData>,
-> >      _t: PhantomData<T>,
-> 
-> You shouldn't need the `PhantomData` here.
-> 
-> Also, do we need to ask for `T: MiscDevice` here? Could we instead have
-> just `T` and then below you write
-> `RawDeviceRegistration<T::RegistrationData>` instead? (`new` of course
-> needs to have a new generic: `U: MiscDevice<RegistrationData = T>`)
+Some of the VPU clocks are under rated, even for nominal ratings.
+Fix the nominial VPU clocks and clock parents, then introduce
+the overdrive clock rates.  The fluster scores don't decrease,
+but they do go faster.
 
-Sure, is there any advantage? Your proposal seems more complicated at a first
-glance.
+This series was adapted from an RFC from Marco Felsch which
+was setup to introduce the VC8000E encoder and extacted the
+parts that affect the existing infrastructure.
 
-> >  }
-> >  
-> > -// SAFETY:
-> > -// - It is allowed to call `misc_deregister` on a different thread from where you called
-> > -//   `misc_register`.
-> > -// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
-> > -unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
-> > -
-> > -// SAFETY:
-> > -// - All `&self` methods on this type are written to ensure that it is safe to call them in
-> > -//   parallel.
-> > -// - `MiscDevice::RegistrationData` is always `Sync`.
-> > -unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
-> > -
-> > -impl<T: MiscDevice> MiscDeviceRegistration<T> {
-> > -    /// Register a misc device.
-> > -    pub fn register(
-> > +impl<T: MiscDevice> RawDeviceRegistration<T> {
-> > +    fn new<'a>(
-> >          opts: MiscDeviceOptions,
-> > -        data: impl PinInit<T::RegistrationData, Error>,
-> > -    ) -> impl PinInit<Self, Error> {
-> > +        parent: Option<&'a Device<Bound>>,
-> > +        data: &'a T::RegistrationData,
-> > +    ) -> impl PinInit<Self, Error> + 'a
-> > +    where
-> > +        T: 'a,
-> > +    {
-> >          try_pin_init!(Self {
-> > -            data <- Opaque::pin_init(data),
-> > +            // INVARIANT: `Self` is always embedded in a `MiscDeviceRegistration<T>`, hence `data`
-> > +            // is guaranteed to be valid for the entire lifetime of `Self`.
-> > +            data: NonNull::from(data),
-> 
-> Both the argument in the INVARIANT comment and way this works are a bit
-> flawed.
+Adam Ford (2):
+  arm64: dts: imx8mp-nominal: Explicitly configure nominal VPU clocks
+  arm64: dts: imx8mp: Configure VPU clocks for overdrive
 
-Why is the argument flawed? Let's say we go with your proposal below, what would
-the safety requirement for RawDeviceRegistration::new and the invariant of
-RawDeviceRegistration look like? Wouldn't it be the exact same argument?
+Marco Felsch (2):
+  arm64: dts: imx8mp: drop gpcv2 vpu power-domains and clocks
+  arm64: dts: imx8mp: fix VPU_BUS clock setting
 
-> Instead, I'd recommend directly taking the `NonNull` as a
-> parameter. Yes the function will need to be `unsafe`, but the lifetime
-> that you're creating below only lives for `'a`, but the object might
-> live much longer. You might still be fine, but I'd just recommend
-> staying in raw pointer land (or in this case `NonNull`).
-> 
-> >              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::miscdevice| {
-> > +                let mut value = opts.into_raw::<T>();
-> > +
-> > +                if let Some(parent) = parent {
-> > +                    // The device core code will take care to take a reference of `parent` in
-> 
-> Just a question: with "take a reference of" you mean that it will
-> increment the refcount?
+ .../boot/dts/freescale/imx8mp-nominal.dtsi    | 18 ++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     | 21 +++++++------------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
-Exactly -- will change it to "increment the refcount" for clarity.
+-- 
+2.48.1
 
-> 
-> > +                    // `device_add()` called by `misc_register()`.
-> > +                    value.parent = parent.as_raw();
-> > +                }
-> > +
-> >                  // SAFETY: The initializer can write to the provided `slot`.
-> > -                unsafe { slot.write(opts.into_raw::<T>()) };
-> > +                unsafe { slot.write(value) };
-> >  
-> >                  // SAFETY:
-> >                  // * We just wrote the misc device options to the slot. The miscdevice will
-> > @@ -94,12 +94,12 @@ pub fn register(
-> >      }
-> >  
-> >      /// Returns a raw pointer to the misc device.
-> > -    pub fn as_raw(&self) -> *mut bindings::miscdevice {
-> > +    fn as_raw(&self) -> *mut bindings::miscdevice {
-> >          self.inner.get()
-> >      }
-> >  
-> >      /// Access the `this_device` field.
-> > -    pub fn device(&self) -> &Device {
-> > +    fn device(&self) -> &Device {
-> >          // SAFETY: This can only be called after a successful register(), which always
-> >          // initialises `this_device` with a valid device. Furthermore, the signature of this
-> >          // function tells the borrow-checker that the `&Device` reference must not outlive the
-> > @@ -108,6 +108,108 @@ pub fn device(&self) -> &Device {
-> >          unsafe { Device::as_ref((*self.as_raw()).this_device) }
-> >      }
-> >  
-> > +    fn data(&self) -> &T::RegistrationData {
-> > +        // SAFETY: The type invariant guarantees that `data` is valid for the entire lifetime of
-> > +        // `Self`.
-> > +        unsafe { self.data.as_ref() }
-> > +    }
-> > +}
-> > +
-> > +#[pinned_drop]
-> > +impl<T: MiscDevice> PinnedDrop for RawDeviceRegistration<T> {
-> > +    fn drop(self: Pin<&mut Self>) {
-> > +        // SAFETY: We know that the device is registered by the type invariants.
-> > +        unsafe { bindings::misc_deregister(self.inner.get()) };
-> > +    }
-> > +}
-> > +
-> > +#[expect(dead_code)]
-> > +enum DeviceRegistrationInner<T: MiscDevice> {
-> > +    Raw(Pin<KBox<RawDeviceRegistration<T>>>),
-> > +    Managed(Devres<RawDeviceRegistration<T>>),
-> 
-> These two names could be shortened (`DeviceRegistrationInner` and
-> `RawDeviceRegistration`) as they are only implementation details of this
-> file. How about `InnerRegistration` and `RawRegistration`? Or maybe
-> something even shorter.
-
-There's a reason why I keep them something with "DeviceRegistration" everywhere,
-which is to make it clear that it's both a device instance *and* a registration,
-which is actually rather uncommon and caused by the fact that device creation
-and registration needs to be done under the misc_mtx in misc_register().
-
-This is also the reason for those data structures to be a bit complicated; it
-would be much simpler if device creation and registration would be independent
-things.
-
-> > +}
-> > +
-> > +/// A registration of a miscdevice.
-> > +#[pin_data(PinnedDrop)]
-> > +pub struct MiscDeviceRegistration<T: MiscDevice> {
-> > +    inner: DeviceRegistrationInner<T>,
-> > +    #[pin]
-> > +    data: Opaque<T::RegistrationData>,
-> 
-> Why is it necessary to store `data` inside of `Opaque`?
-
-It was UnsafePinned before, but Alice proposed to go with Opaque for the
-meantime. Anyways, this is not introduced by this patch, it comes from
-Christians patch adding T::RegistrationData.
-
-> 
-> > +    this_device: ARef<Device>,
-> > +    _t: PhantomData<T>,
-> > +}
-> > +
-> > +// SAFETY:
-> > +// - It is allowed to call `misc_deregister` on a different thread from where you called
-> > +//   `misc_register`.
-> > +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `Send`.
-> > +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::RegistrationData: Send {}
-> > +
-> > +// SAFETY:
-> > +// - All `&self` methods on this type are written to ensure that it is safe to call them in
-> > +//   parallel.
-> > +// - `MiscDevice::RegistrationData` is always `Sync`.
-> > +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
-> > +
-> > +impl<T: MiscDevice> MiscDeviceRegistration<T> {
-> > +    /// Register a misc device.
-> > +    pub fn register<'a>(
-> > +        opts: MiscDeviceOptions,
-> > +        data: impl PinInit<T::RegistrationData, Error> + 'a,
-> > +        parent: Option<&'a Device<Bound>>,
-> > +    ) -> impl PinInit<Self, Error> + 'a
-> > +    where
-> > +        T: 'a,
-> > +    {
-> > +        let mut dev: Option<ARef<Device>> = None;
-> > +
-> > +        try_pin_init!(&this in Self {
-> > +            data <- Opaque::pin_init(data),
-> > +            // TODO: make `inner` in-place when enums get supported by pin-init.
-> > +            //
-> > +            // Link: https://github.com/Rust-for-Linux/pin-init/issues/59
-> 
-> You might want to add that this would avoid the extra allocation in
-> `DeviceRegistrationInner`.
-
-Sure, will do.
-
-> > +            inner: {
-> > +                // SAFETY:
-> > +                //   - `this` is a valid pointer to `Self`,
-> > +                //   - `data` was properly initialized above.
-> > +                let data = unsafe { &*(*this.as_ptr()).data.get() };
-> 
-> As mentioned above, this creates a reference that is valid for this
-> *block*. So its lifetime will end after the `},` and before
-> `this_device` is initialized.
-> 
-> It *might* be ok to turn it back into a raw pointer in
-> `RawDeviceRegistration::new`, but I wouldn't bet on it.
-
-Why? The reference is still valid in RawDeviceRegistration::new, no?
-
-> > +
-> > +                let raw = RawDeviceRegistration::new(opts, parent, data);
-> > +
-> > +                // FIXME: Work around a bug in rustc, to prevent the following warning:
-> > +                //
-> > +                //   "warning: value captured by `dev` is never read."
-> > +                //
-> > +                // Link: https://github.com/rust-lang/rust/issues/141615
-> 
-> Note that the bug is that the compiler complains about the wrong span.
-> The original value of `dev` is `None` and that value is never used, so
-> the warning is justified. So this `let _ = dev;` still needs to stay
-> until `pin-init` supports accessing previously initialized fields (now
-> I'm pretty certain that I will implement that soon).
-
-Do you want to propose an alternative comment about this?
-
-> > +                let _ = dev;
-> > +
-> > +                if let Some(parent) = parent {
-> > +                    let devres = Devres::new(parent, raw, GFP_KERNEL)?;
-> > +
-> > +                    dev = Some(devres.access(parent)?.device().into());
-> > +                    DeviceRegistrationInner::Managed(devres)
-> > +                } else {
-> > +                    let boxed = KBox::pin_init(raw, GFP_KERNEL)?;
-> > +
-> > +                    dev = Some(boxed.device().into());
-> > +                    DeviceRegistrationInner::Raw(boxed)
-> > +                }
-> > +            },
-> > +            // Cache `this_device` within `Self` to avoid having to access `Devres` in the managed
-> > +            // case.
-> > +            this_device: {
-> > +                // SAFETY: `dev` is guaranteed to be set in the initializer of `inner` above.
-> > +                unsafe { dev.unwrap_unchecked() }
-> > +            },
-> 
-> No need for the extra block, just do:
-> 
->     // Cache `this_device` within `Self` to avoid having to access `Devres` in the managed
->     // case.
->     // SAFETY: `dev` is guaranteed to be set in the initializer of `inner` above.
->     this_device: unsafe { dev.unwrap_unchecked() },
-
-Yes, I know, but I found the above a bit cleaner -- I don't mind changing it
-though.
-
-> I'm also pretty sure that the compiler would optimize `.take().unwrap()`
-> and also this is only executed once per `MiscDeviceRegistration`, so
-> even if it isn't it wouldn't really matter. So I'd prefer if we don't
-> use `unsafe` here even if it is painfully obvious (if I'm fast enough
-> with implementing, you can rebase on top before you merge and then this
-> will be gone anyways :)
-
-Sounds good! :)
-
-But I think that unsafe is better than unwrap() in such cases; unsafe requires
-us to explain why it's OK to do it, which makes it less likely to create bugs.
-
-(Just recently I wrote some code, hit the need for unsafe and, while writing up
-the safety comment, I had to explain to myself, why the way I was about to
-implement this was pretty broken.)
-
-unwrap() on the other hand, doesn't require any explanation, but panics the
-kernel in the worst case.
-
-> > +            _t: PhantomData,
-> > +        })
-> > +    }
-> > +
-> > +    /// Access the `this_device` field.
-> > +    pub fn device(&self) -> &Device {
-> > +        &self.this_device
-> > +    }
-> > +
-> >      /// Access the additional data stored in this registration.
-> >      pub fn data(&self) -> &T::RegistrationData {
-> >          // SAFETY:
-> > @@ -120,9 +222,6 @@ pub fn data(&self) -> &T::RegistrationData {
-> >  #[pinned_drop]
-> >  impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
-> >      fn drop(self: Pin<&mut Self>) {
-> > -        // SAFETY: We know that the device is registered by the type invariants.
-> > -        unsafe { bindings::misc_deregister(self.inner.get()) };
-> > -
-> >          // SAFETY: `self.data` is valid for dropping.
-> >          unsafe { core::ptr::drop_in_place(self.data.get()) };
-> >      }
-> > @@ -137,14 +236,13 @@ pub trait MiscDevice: Sized {
-> >      /// The additional data carried by the [`MiscDeviceRegistration`] for this [`MiscDevice`].
-> >      /// If no additional data is required than the unit type `()` should be used.
-> >      ///
-> > -    /// This data can be accessed in [`MiscDevice::open()`] using
-> > -    /// [`MiscDeviceRegistration::data()`].
-> > +    /// This data can be accessed in [`MiscDevice::open()`].
-> >      type RegistrationData: Sync;
-> >  
-> >      /// Called when the misc device is opened.
-> >      ///
-> >      /// The returned pointer will be stored as the private data for the file.
-> > -    fn open(_file: &File, _misc: &MiscDeviceRegistration<Self>) -> Result<Self::Ptr>;
-> > +    fn open(_file: &File, _misc: &Device, _data: &Self::RegistrationData) -> Result<Self::Ptr>;
-> 
-> What is the reason that these parameters begin with `_`? In a trait
-> function without a body, the compiler shouldn't war about unused
-> parameters.
-
-No idea, I just tried to be complient with the existing style of the file. :)
