@@ -1,114 +1,282 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405B619F421;
-	Fri, 30 May 2025 04:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C726A1A23AC
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 04:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748580039; cv=none; b=jkIcwJvANAX7aNXODGbHhh4MiVx54qSXzN2vcNpYW6X/kgEc02NXqS5ODyzKVbevAYgRyRky8UWfT7iL4i3P38I9CL0biBLiyeA93AVHizy4hzQhq2lMDItF8b8hJDyWSAVerEK1iWfRi6N5TVeq9Lx5j3SsypaTjvyvr5KA5dE=
+	t=1748580629; cv=none; b=UOsmA0qTZ3DqM2wiyIH7lhnUz2eOpI++pY6nnsmWzPbLe7QVQ8hI4sC8xnbaQEH7nzQuPSEzPsoQuzlJwUpuL0gn72UbJKnKuk7GsJK8TpcR8GklugC4XFcaexr1iG8/C90JVciHjo5QWF/FkuM0gQfvFLceghHRQrra4G6vsjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748580039; c=relaxed/simple;
-	bh=ZnMRKAcuaAD1rxpeXbjaOqFS9Omdp1aqc5Y0HvQwzHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fijYMe8XVj8s3cnqvTibkdezUn3QTdNexRwx45ozl8dsfKWGzGys2zkkUuLOkyD4SxJ6TzzONulgBzCkJ7CjLHHlwJx5/A56QsXPxar07SRh+gDrmhlAH7FFZKuSCkpv5VkvrZopm0vNCm+COY9xIAjaDn9Efb5ixNg8lJaFPVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TAG0axz4; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748580629; c=relaxed/simple;
+	bh=N8sW+IwYvL5X5LNdVS5M4lmPLLZ+kwZNLPyEOkP5pHA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To; b=VgJzFhr4nSiVIFrygah7L5lwtjGJOX/itdgw9c2hBxOj0ewy4ijaPUzf8A1mVGfxeUZjeZwpmdQ7Vx1FT5CYcDUeCXrKcwDg6zyq+DVbvqCohLf+YGXmstSD7HXtIAxJ9hvRY/60gOFB4imtrnNCy7hzDYIItb2aPJ8hpQj7rZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=iHxuenpq; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TAG0axz4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748580039; x=1780116039;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZnMRKAcuaAD1rxpeXbjaOqFS9Omdp1aqc5Y0HvQwzHY=;
-  b=TAG0axz46DzvNfUlJK5IbdecvsKgw0IJZL50xrvSDnAUWlOw6YeIHKvH
-   wutILlm0xBJ5G7LI5DX2QP9t/1UFzMKVjYbu2odfsKL+kRi/FlEL/yu6z
-   bBBuqCfSYNFkS9KiZx3jUqordGGHkEXUsj5slrqUE2hfOQSkXixzSA2Uf
-   IeFsrkMb2UVDjYPWa02gZZIUHgcDc9K33w7kz03m955tOk7vmq7f92KI2
-   xVfICA4R38owonYX/7+2NBhY+4Y2p6SyQNIwmgw4sDdLmKr9nggExIrcn
-   dF0eNGEbYlwFvxeq9LhjDXfkLJwclpCEz89NyTu5/dwTCsaKStGhHG2or
-   w==;
-X-CSE-ConnectionGUID: 5bBlYA6VTDyQJPoXSYDlwQ==
-X-CSE-MsgGUID: hLtRwxFvTcCbPSpLjQeAJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="49907997"
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="49907997"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 21:40:38 -0700
-X-CSE-ConnectionGUID: g09oUuRoQEW0E6yFOep4yA==
-X-CSE-MsgGUID: hRzTB1UPRx+E/ZQgolDxcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,194,1744095600"; 
-   d="scan'208";a="144747777"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 29 May 2025 21:40:34 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKrXk-000XLA-0y;
-	Fri, 30 May 2025 04:40:32 +0000
-Date: Fri, 30 May 2025 12:39:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: victor.duicu@microchip.com, jic23@kernel.org, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, marius.cristea@microchip.com,
-	victor.duicu@microchip.com, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: temperature: add support for MCP998X
-Message-ID: <202505301210.l4ZriiEX-lkp@intel.com>
-References: <20250529093628.15042-3-victor.duicu@microchip.com>
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="iHxuenpq"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso1318852b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 21:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1748580627; x=1749185427; darn=vger.kernel.org;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hPQKvC3ql9fhFzmc6zvGI30HxdvNWYp5SnQBcJyISWQ=;
+        b=iHxuenpq/7pGSEhYalJmM0fUAev/hb4TJG0UJMDoCKKZ80TytPtOdOmYnsLIZV41gJ
+         Y7YUPwuLQEDH32zfXmsSeRlNrzEDY2C7DPphXUtvli88flN8z296A4X6+txDls0BX0ZH
+         VIyKmJGRL4+jPEi46q04LaqNlmA+oKz1+do3nnJEfuAMUyS1h6VoiYSKMeJctTg9tge+
+         8mqGVTSWpSGwuzmrbzg6bs/oDpFWr8JIX1lArnjLk+C6hkeVPweKGiXDVm0Vd0nqV8Tj
+         SpZ3XGSxi+YOt/OBPy29ag9PHhlcKM8nUC4k+oUcIOcktNecOWxp9R92E7WZOgxknN0m
+         6tZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748580627; x=1749185427;
+        h=to:content-transfer-encoding:mime-version:message-id:date:subject
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hPQKvC3ql9fhFzmc6zvGI30HxdvNWYp5SnQBcJyISWQ=;
+        b=mTPptnos32dOQQCMHX7u1ZCdmJEtSo4OGXj7wW3nry1tDgCuslD3NUmxCEw/YT/7ZA
+         3L6o77ujWqZZZb84RVBvecFo+4PJ1DaueaZoVWpWtRAswfEpUIogUlIGsw70vnNLbvey
+         kxm6d6p6vkmqI3npVF/RTrc5JEqWXJj35qER2iyKYxAlEZU3Oehn557pi4WU/v22x5N2
+         eoeMZA0CDFC/nXKpHzSbcEKrSVkEbmsw4JIiE2b2fni8VjJKNQjRRBwgnOImk+TLVwht
+         ar8wUpJEkR1jmx/NOZmXc4hAIkSNutYU5v0M6LYed7lCiM9oNBPNxOQPMq/DuBhMuWzC
+         0O2w==
+X-Forwarded-Encrypted: i=1; AJvYcCX+bkW51tPOb3mGdff/PGdrMrhjMLK/Sh9hj6wQGEK5K4Tot6t3X206T044ktT6xsvcjs+I1Qwe1grvHOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGBTUZAqxyxedlADbc4cPBVwzTPySbtH8wnx7aXE3ytv7ZHLOy
+	GpZFkR4xTBDTAMUJ3OY8BxMXX0SDNp8hcsYY2M1vcGyNNG9JzeCMLIl2tzz1XvcewrY=
+X-Gm-Gg: ASbGncuthFL8M+SCFx1gipvLY9QiaQQy7TGz2sHX1YJQ1gqliMK+DN3zGkBRIEIVK62
+	hnz7f3tx4lkm+O/WTVqzeztNFrR7HQwvRSseiQ7iG91IEDQcWqj+DfJSZhRZ2pza4GF6O/ZzxNB
+	coWZSRITympVehpqvpM35Fr5fF7gSe/js/XvXOamZBa4kjzlOBcR99j48GfxzOo1FM0qTB4YPYD
+	Ii9iPRHlsY+1KCh1b3/pZpjYKlNoMtnd5/U7oJK9bA9B9/vttkuwcWHZUrTz61ZehNHgMPE8JHn
+	kv5OexQxrZ1UNF0j28yjkksGS/W349w5dRoCcnWEf9XHwVKltcbE
+X-Google-Smtp-Source: AGHT+IHqoTL77XLOwzCe4hUoocyG8Rzb3Oor60nWaLLzGCI3oRz/BPnDLMFFIcAqwWKligPLSQnBfA==
+X-Received: by 2002:a05:6a20:2449:b0:1f3:1d13:96b3 with SMTP id adf61e73a8af0-21ad94e0024mr3321043637.5.1748580626892;
+        Thu, 29 May 2025 21:50:26 -0700 (PDT)
+Received: from localhost ([157.82.128.1])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-747affafba1sm2156259b3a.110.2025.05.29.21.50.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 21:50:26 -0700 (PDT)
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+Subject: [PATCH net-next v12 00/10] tun: Introduce virtio-net hashing
+ feature
+Date: Fri, 30 May 2025 13:50:04 +0900
+Message-Id: <20250530-rss-v12-0-95d8b348de91@daynix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529093628.15042-3-victor.duicu@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPw4OWgC/4XSyW7bMBAG4FcxdC6FGXK4+dT3KHKguNREECmRF
+ MGGkXfvRHIaFTr0JnL4/Vw092bKY81Tcz7dmzEvdapDzwOUP05NvIT+dxY18UQjQRIQKDFOk8h
+ W2eR8LsHahle+jrnU6xrzq+nzLPp8nZsnrlzqNA/jbc1fcK1zkkIAB1oiYItEJKVAEZ7rpT4P7
+ ZD462cKt75e2zi8rDmL3FnUSGiIWmnAkPmvVV+WwKNeb7AoASIaBRyWOnDygGiHJG2IGDnKXsk
+ cIZt4QPov+rzhhjSjomIxLhUAnQ7IfCENCH5DhlGH0UNIFlwxB2S/kZSPnex6PJKgY9eldETuG
+ ykwG3KMbOioaFMKSXVAfo/shjyjVKwx/DpS5+6AEHYKt67hSWYKnU5WBR8KHBnu2WMzRGYUQ4z
+ By6Kw/MM+tv4b89s7d+/8aMIuTFlw/aXO59Ni2s/fHg2v/vgDNtHPdvMCAAA=
+X-Change-ID: 20240403-rss-e737d89efa77
+To: Jonathan Corbet <corbet@lwn.net>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Shuah Khan <shuah@kernel.org>, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, kvm@vger.kernel.org, 
+ virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+ Yuri Benditovich <yuri.benditovich@daynix.com>, 
+ Andrew Melnychenko <andrew@daynix.com>, 
+ Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+ Lei Yang <leiyang@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Akihiko Odaki <akihiko.odaki@daynix.com>
+X-Mailer: b4 0.15-dev-edae6
 
-Hi,
+NOTE: I'm leaving Daynix Computing Ltd., for which I worked on this
+patch series, by the end of this month.
 
-kernel test robot noticed the following build warnings:
+While net-next is closed, this is the last chance for me to send another
+version so let me send the local changes now.
 
-[auto build test WARNING on 0c86e33819785fe50616b6ee3fb35c1e4be406d5]
+Please contact Yuri Benditovich, who is CCed on this email, for anything
+about this series.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/victor-duicu-microchip-com/dt-bindings-iio-temperature-add-support-for-MCP998X/20250529-173844
-base:   0c86e33819785fe50616b6ee3fb35c1e4be406d5
-patch link:    https://lore.kernel.org/r/20250529093628.15042-3-victor.duicu%40microchip.com
-patch subject: [PATCH v2 2/2] iio: temperature: add support for MCP998X
-config: m68k-randconfig-r111-20250530 (https://download.01.org/0day-ci/archive/20250530/202505301210.l4ZriiEX-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.4.0
-reproduce: (https://download.01.org/0day-ci/archive/20250530/202505301210.l4ZriiEX-lkp@intel.com/reproduce)
+virtio-net have two usage of hashes: one is RSS and another is hash
+reporting. Conventionally the hash calculation was done by the VMM.
+However, computing the hash after the queue was chosen defeats the
+purpose of RSS.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505301210.l4ZriiEX-lkp@intel.com/
+Another approach is to use eBPF steering program. This approach has
+another downside: it cannot report the calculated hash due to the
+restrictive nature of eBPF.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/iio/temperature/mcp9982.c:200:14: sparse: sparse: symbol 'mcp9982_3db_values_map_tbl' was not declared. Should it be static?
+Introduce the code to compute hashes to the kernel in order to overcome
+thse challenges.
 
-vim +/mcp9982_3db_values_map_tbl +200 drivers/iio/temperature/mcp9982.c
+An alternative solution is to extend the eBPF steering program so that it
+will be able to report to the userspace, but it is based on context
+rewrites, which is in feature freeze. We can adopt kfuncs, but they will
+not be UAPIs. We opt to ioctl to align with other relevant UAPIs (KVM
+and vhost_net).
 
-   199	
- > 200	unsigned int mcp9982_3db_values_map_tbl[11][3][2];
-   201	static const int mcp9982_sampl_fr[][2] = {
-   202		{ 1, 16 },
-   203		{ 1, 8 },
-   204		{ 1, 4 },
-   205		{ 1, 2 },
-   206		{ 1, 1 },
-   207		{ 2, 1 },
-   208		{ 4, 1 },
-   209		{ 8, 1 },
-   210		{ 16, 1 },
-   211		{ 32, 1 },
-   212		{ 64, 1 },
-   213	};
-   214	
+The patches for QEMU to use this new feature was submitted as RFC and
+is available at:
+https://patchew.org/QEMU/20250530-hash-v5-0-343d7d7a8200@daynix.com/
 
+This work was presented at LPC 2024:
+https://lpc.events/event/18/contributions/1963/
+
+V1 -> V2:
+  Changed to introduce a new BPF program type.
+
+Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+---
+Changes in v12:
+- Updated tools/testing/selftests/net/config.
+- Split TUNSETVNETHASH.
+- Link to v11: https://lore.kernel.org/r/20250317-rss-v11-0-4cacca92f31f@daynix.com
+
+Changes in v11:
+- Added the missing code to free vnet_hash in patch
+  "tap: Introduce virtio-net hash feature".
+- Link to v10: https://lore.kernel.org/r/20250313-rss-v10-0-3185d73a9af0@daynix.com
+
+Changes in v10:
+- Split common code and TUN/TAP-specific code into separate patches.
+- Reverted a spurious style change in patch "tun: Introduce virtio-net
+  hash feature".
+- Added a comment explaining disable_ipv6 in tests.
+- Used AF_PACKET for patch "selftest: tun: Add tests for
+  virtio-net hashing". I also added the usage of FIXTURE_VARIANT() as
+  the testing function now needs access to more variant-specific
+  variables.
+- Corrected the message of patch "selftest: tun: Add tests for
+  virtio-net hashing"; it mentioned validation of configuration but
+  it is not scope of this patch.
+- Expanded the description of patch "selftest: tun: Add tests for
+  virtio-net hashing".
+- Added patch "tun: Allow steering eBPF program to fall back".
+- Changed to handle TUNGETVNETHASHCAP before taking the rtnl lock.
+- Removed redundant tests for tun_vnet_ioctl().
+- Added patch "selftest: tap: Add tests for virtio-net ioctls".
+- Added a design explanation of ioctls for extensibility and migration.
+- Removed a few branches in patch
+  "vhost/net: Support VIRTIO_NET_F_HASH_REPORT".
+- Link to v9: https://lore.kernel.org/r/20250307-rss-v9-0-df76624025eb@daynix.com
+
+Changes in v9:
+- Added a missing return statement in patch
+  "tun: Introduce virtio-net hash feature".
+- Link to v8: https://lore.kernel.org/r/20250306-rss-v8-0-7ab4f56ff423@daynix.com
+
+Changes in v8:
+- Disabled IPv6 to eliminate noises in tests.
+- Added a branch in tap to avoid unnecessary dissection when hash
+  reporting is disabled.
+- Removed unnecessary rtnl_lock().
+- Extracted code to handle new ioctls into separate functions to avoid
+  adding extra NULL checks to the code handling other ioctls.
+- Introduced variable named "fd" to __tun_chr_ioctl().
+- s/-/=/g in a patch message to avoid confusing Git.
+- Link to v7: https://lore.kernel.org/r/20250228-rss-v7-0-844205cbbdd6@daynix.com
+
+Changes in v7:
+- Ensured to set hash_report to VIRTIO_NET_HASH_REPORT_NONE for
+  VHOST_NET_F_VIRTIO_NET_HDR.
+- s/4/sizeof(u32)/ in patch "virtio_net: Add functions for hashing".
+- Added tap_skb_cb type.
+- Rebased.
+- Link to v6: https://lore.kernel.org/r/20250109-rss-v6-0-b1c90ad708f6@daynix.com
+
+Changes in v6:
+- Extracted changes to fill vnet header holes into another series.
+- Squashed patches "skbuff: Introduce SKB_EXT_TUN_VNET_HASH", "tun:
+  Introduce virtio-net hash reporting feature", and "tun: Introduce
+  virtio-net RSS" into patch "tun: Introduce virtio-net hash feature".
+- Dropped the RFC tag.
+- Link to v5: https://lore.kernel.org/r/20241008-rss-v5-0-f3cf68df005d@daynix.com
+
+Changes in v5:
+- Fixed a compilation error with CONFIG_TUN_VNET_CROSS_LE.
+- Optimized the calculation of the hash value according to:
+  https://git.dpdk.org/dpdk/commit/?id=3fb1ea032bd6ff8317af5dac9af901f1f324cab4
+- Added patch "tun: Unify vnet implementation".
+- Dropped patch "tap: Pad virtio header with zero".
+- Added patch "selftest: tun: Test vnet ioctls without device".
+- Reworked selftests to skip for older kernels.
+- Documented the case when the underlying device is deleted and packets
+  have queue_mapping set by TC.
+- Reordered test harness arguments.
+- Added code to handle fragmented packets.
+- Link to v4: https://lore.kernel.org/r/20240924-rss-v4-0-84e932ec0e6c@daynix.com
+
+Changes in v4:
+- Moved tun_vnet_hash_ext to if_tun.h.
+- Renamed virtio_net_toeplitz() to virtio_net_toeplitz_calc().
+- Replaced htons() with cpu_to_be16().
+- Changed virtio_net_hash_rss() to return void.
+- Reordered variable declarations in virtio_net_hash_rss().
+- Removed virtio_net_hdr_v1_hash_from_skb().
+- Updated messages of "tap: Pad virtio header with zero" and
+  "tun: Pad virtio header with zero".
+- Fixed vnet_hash allocation size.
+- Ensured to free vnet_hash when destructing tun_struct.
+- Link to v3: https://lore.kernel.org/r/20240915-rss-v3-0-c630015db082@daynix.com
+
+Changes in v3:
+- Reverted back to add ioctl.
+- Split patch "tun: Introduce virtio-net hashing feature" into
+  "tun: Introduce virtio-net hash reporting feature" and
+  "tun: Introduce virtio-net RSS".
+- Changed to reuse hash values computed for automq instead of performing
+  RSS hashing when hash reporting is requested but RSS is not.
+- Extracted relevant data from struct tun_struct to keep it minimal.
+- Added kernel-doc.
+- Changed to allow calling TUNGETVNETHASHCAP before TUNSETIFF.
+- Initialized num_buffers with 1.
+- Added a test case for unclassified packets.
+- Fixed error handling in tests.
+- Changed tests to verify that the queue index will not overflow.
+- Rebased.
+- Link to v2: https://lore.kernel.org/r/20231015141644.260646-1-akihiko.odaki@daynix.com
+
+---
+Akihiko Odaki (10):
+      virtio_net: Add functions for hashing
+      net: flow_dissector: Export flow_keys_dissector_symmetric
+      tun: Allow steering eBPF program to fall back
+      tun: Add common virtio-net hash feature code
+      tun: Introduce virtio-net hash feature
+      tap: Introduce virtio-net hash feature
+      selftest: tun: Test vnet ioctls without device
+      selftest: tun: Add tests for virtio-net hashing
+      selftest: tap: Add tests for virtio-net ioctls
+      vhost/net: Support VIRTIO_NET_F_HASH_REPORT
+
+ Documentation/networking/tuntap.rst  |   7 +
+ drivers/net/Kconfig                  |   1 +
+ drivers/net/ipvlan/ipvtap.c          |   2 +-
+ drivers/net/macvtap.c                |   2 +-
+ drivers/net/tap.c                    |  80 +++++-
+ drivers/net/tun.c                    |  92 +++++--
+ drivers/net/tun_vnet.h               | 165 +++++++++++-
+ drivers/vhost/net.c                  |  68 ++---
+ include/linux/if_tap.h               |   4 +-
+ include/linux/skbuff.h               |   3 +
+ include/linux/virtio_net.h           | 188 ++++++++++++++
+ include/net/flow_dissector.h         |   1 +
+ include/uapi/linux/if_tun.h          |  80 ++++++
+ net/core/flow_dissector.c            |   3 +-
+ net/core/skbuff.c                    |   4 +
+ tools/testing/selftests/net/Makefile |   2 +-
+ tools/testing/selftests/net/config   |   1 +
+ tools/testing/selftests/net/tap.c    | 131 +++++++++-
+ tools/testing/selftests/net/tun.c    | 485 ++++++++++++++++++++++++++++++++++-
+ 19 files changed, 1234 insertions(+), 85 deletions(-)
+---
+base-commit: 5cb8274d66c611b7889565c418a8158517810f9b
+change-id: 20240403-rss-e737d89efa77
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Akihiko Odaki <akihiko.odaki@daynix.com>
+
