@@ -1,46 +1,45 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9F8F22B8AA;
-	Fri, 30 May 2025 12:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E6522B8AD;
+	Fri, 30 May 2025 12:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748609997; cv=none; b=OulHC5J92NTTnlIdVNKTaDdIi3sKeJGrTBAT2VQxCcl+lyiSR+1AEko/c0zjnyfDnuz5naLnBt3jgE9Iu0ErD/0Jcd9eu4V4ok4OU9JqS3EYhcVEiWGZsbo87uLslq/DONqb3lNPnwpE9GUoipPZXjuL35nfp3Vl7zSrgPq0cEg=
+	t=1748609998; cv=none; b=hpdAqXJvMHmgJ8M3cI8HELV3rtleh7OfEts1NhBHDPsdKpkGY3EqwS6kKTkWZSmMi08NyGc9xS+mU+xt9ThEg/i2WtSCj/Ip6GOiI7EizhXckOZlaYhMgGV5emDcuEmcER2MAESzLR/31ZtF4s/io+OTtkWW0lwwsUdsi3zudJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748609997; c=relaxed/simple;
-	bh=3uEBu0h1X6/ueTrPJOrXvYkPpAgODaeIK24/k0rHMnI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UfnPlW23oIEyyzHGqn5TWbFPjQbOyGvBSlpAZEnynLOQQ3IeMJhtUNbaDjZPq98jzPO9tP8fH03IZKwbff2IIu5YJOk6LgVHDWmxw5adECQjKkjtbz+Rzyw/4O/twZFe4mF8OjTJr5XLfgSmF3y0Ft4BwS/EUnVTPrI8ksyCqEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76FF216F2;
-	Fri, 30 May 2025 05:59:37 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A0F73F5A1;
-	Fri, 30 May 2025 05:59:53 -0700 (PDT)
-Date: Fri, 30 May 2025 13:59:44 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
- driver
-Message-ID: <20250530125944.GB666854@e132581.arm.com>
-References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
- <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
- <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
- <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
- <20250523085655.GD2566836@e132581.arm.com>
- <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
- <62d1e4cb-cc13-4333-a160-66a280dca5f6@quicinc.com>
- <17abf8b5-8a2e-4573-a870-e2f98ad866a6@arm.com>
+	s=arc-20240116; t=1748609998; c=relaxed/simple;
+	bh=KOBGBR8x5nfHMAnS4nMsN6ItLvjcfgagIx2ImOBsU20=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=umgsbH7XZ+gIDwEJNNhhjGDUpYRxBfz5XbnfxJaOjBNM+YiwfqDZYJA9MVyruexO8vL1JlplmS3UKVicapt8RXwFKfnPWfyig1sctUwR8MnQ7IWJ1+LIT+Cgtmdm+XT2N2RlGuiPnRN50dSZoGIdMvey4CbzbeLoFedk2VaHy14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=YBPvQT7B; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="YBPvQT7B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=v0IgLp7bt6IrYT2OAXA8VhjjXLDapIFwTFBETrBLiwk=; b=YBPvQT7B53CmzaRy9izbxWSoZ6
+	RPz4eTReuNSJRCgofAIsfjRQPgbVDS4Q0R6ftd8FWqK3yELwaJSiOlpJU+sS4jTkW6JYiahb7bOHu
+	U18NqLu1LtjpTN6xfro0O8VyHBsBrvHd9BIpgwKQMWFtTvT9nx5gj2jVTH8DTuyG0hkPCWqJdkZyF
+	jjHKcjqjwb5/Thoj4gQOqxLJ7EbA5znl/FySoYCQ9Vo+0m0uq+SBVzbZjIGx9POCVMATCsuIQJa0J
+	8AjhMfNfpQyNFgJoorQFug/Pzud90th+75noVjTE9uJNS0IQjZT7fn+q+cfZghdXOrfhoIrdApPcw
+	naPtWxCg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uKzKv-009mtH-2l;
+	Fri, 30 May 2025 20:59:50 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 30 May 2025 20:59:49 +0800
+Date: Fri, 30 May 2025 20:59:49 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org, alex.williamson@redhat.com
+Subject: Re: [PATCH] crypto: s390/sha256 - rename module to sha256-s390
+Message-ID: <aDmrxfjlKTqKnEIC@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,52 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17abf8b5-8a2e-4573-a870-e2f98ad866a6@arm.com>
+In-Reply-To: <20250529185913.25091-1-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-On Fri, May 30, 2025 at 12:32:23PM +0100, Suzuki Kuruppassery Poulose wrote:
-
-[...]
-
-> > > 2) How does the source driver know the TraceID for exposing via sysfs ?
-> > > Does it expose its own traceid ?
-> > No, sources connecting to TNOC don't have their own traceid, it expose the ATID which allocated in TNOC.
-> > TNOC will maintain the ID in coresight_path:: trace_id, when enable source, the source can get it from path.
-> > 
-> > Here is the patch to expose id in source:
-> > https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com/
+Eric Biggers <ebiggers@kernel.org> wrote:
+> From: Eric Biggers <ebiggers@google.com>
 > 
-> Please don't do that. We don't have to fake a traceid for all sources.
-> It is only of use to the decoder, with manual input from the user. So,
-> someone using the TNOC based system must be aware of how to collect the
-> traceid and as such expose it from the TNOC and not all the other
-> sources connected to it.
+> When the s390 SHA-256 code is built as a loadable module, name it
+> sha256-s390.ko instead of sha256.ko.  This avoids a module name
+> collision with crypto/sha256.ko and makes it consistent with the other
+> architectures.
 > 
-> Simply expose it on the TNOC device node
+> We should consider making a single module provide all the SHA-256
+> library code, which would prevent issues like this.  But for now this is
+> the fix that's needed.
+> 
+> Fixes: b9eac03edcf8 ("crypto: s390/sha256 - implement library instead of shash")
+> Reported-by: Alex Williamson <alex.williamson@redhat.com>
+> Closes: https://lore.kernel.org/r/20250529110526.6d2959a9.alex.williamson@redhat.com/
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+> arch/s390/lib/crypto/Makefile | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 
-[...]
-
-> > > Good question, since we have the "path" maintaining the TraceID, we
-> > > should use that here for the TNOC. But the other question is, can there be multiple sources connected to a single TNOC ? (I am guessing, yes!. And thus it may not work with what you are proposing.
-> > > 
-> > yes, there can be multiple sources connected to one TNOC, and these sources share one Trace ID which allocate in TNOC.
-> > To decode the scenario relay on TraceID + Inport number, TraceID identifies the TNOC, the decoder maintains a table that maps each TNOC inport to its corresponding source.
-
-If the Trace ID is only used to identify a TNOC, I am just wandering
-if can use self-contained method.
-
-For example, you can generate a ID number based on the register base
-address, something like:
-
-   /* TNOC physical address */
-   drvdata->paddr = res->start;
-
-   if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
-       drvdata->atid = (drvdata->paddr >> 32) ^ (drvdata->paddr & 0xffffffffUL);
-   else
-       drvdata->atid = drvdata->paddr;
-
-Then, you can get a unique ID for each TNOC in the system, and the
-ID is determined by the pyshical address and can be calculated
-directly by decoder.
-
-Leo
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
