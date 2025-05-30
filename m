@@ -1,219 +1,156 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D93221D87
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACF178F59
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598543; cv=none; b=TYXa98HhbWK1p659zW4MCQ4V0RJURPGWOflpTcbQgbKXpqBlEoUiQPeEOC6mI9NvBDrqubA83j5d2nzJ3kFRbbT6jSgvrGIqfJlCS83Z4ZTroi35CFlIcHMOTxJD38wf8pwo7ShXLKjLXLDA06ZNm3Nngu2+bnQIxqZ8NGDuiEU=
+	t=1748598608; cv=none; b=BtZ8UwKBjjchIQ+ObBAjUT81xhmfSP+wCW9cfWet3emWRVA9ixIoElUiT+XWw2nYdgbc+jRPKpskES1282QrSjAwsSTIfUwjrb9K+0DVqBeimbWM6OnAaB4jMq2nttAtTuhhPRJPvjAlSUYToKPsIFcxy8LOek2zO62Erkk1KQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598543; c=relaxed/simple;
-	bh=b0TFhFz66sFrGEwBpP8D9ETS2sHd7pzb9TO/YyI/+/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZBZ70pQFGrrtdW0ADJhG0cF0EvZFYy7xxg2ipdWq7EbgDaTjRG571jWDIft6AFAYfFJh5MciBQEVphKWpUDEqCaWFBCm6E5B9Qkc8XAbTqHyzqEilBWRWYUOUmH8gW40xGRGY92UxcRhCsCm+f4FjO4MHVg+UANAj9H1jwrm+c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jx2Tk+lM; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748598608; c=relaxed/simple;
+	bh=QKNHAYbtuwiCx2RsCXEaPAZvPiU6ylea+Z2zbSm8TiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNjvMWs7JLgjHHnXyo54SGGq8Ajm/bd/I8z+sV3ddlDr4wkZwQMnA/ninxVRIyqB4KFlIWs8dgbbBrha+E1DALSyPMrmR+idIakQEhGqAGcaMHij+CJSvwJrfzhDL455cMizZzrVDL3RBXHQKeMJBhfNA/YmfnBPdD234YN9NUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dHzfRyDg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jx2Tk+lM"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52f404ddf3eso1174092e0c.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748598540; x=1749203340; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
-        b=jx2Tk+lM3g9vqnFPZ1EcVbWeoM1sSBlFthcULa+r7zTtIJR3fTRqssvQqIGQ0kOFTm
-         x5ig6ZXEMBXl4FwM56HnRBCNcN+Q4iTpAg7fia/pjF+S3KcZduzAbHp+BuUTi4NEUMs9
-         wIPMQdPl/Fx6U4Th79fdWaWEIG3l08NheyFvVkNpVhbtqKG/+Ywck45omAFdAIPj9wu2
-         AE0lOzG1/W6RWQyBP0BPA6IUkmgsfuKwjwWBlxy6p8ezHOLR/eOr7bjd+OxG/trARuo0
-         ZVGTP/CEfHgAVWcT7/zMAzytHbQ6Ibrl1lZARv8a2qIwXjhRcw4i8Mqmfzj89GUdNij7
-         WETA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dHzfRyDg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748598605;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=D606vLuu/mya4b2/dn7txRLIhobji5o/kJ2EzPspC2s=;
+	b=dHzfRyDglXxeviN2Hmo0qMaBfxsYPOXZNb/FGOw1bQLqTNOiXbh1Edj8dEyXmyRLo4lavo
+	VnMjaQ/k+Uj7XoXgH6FLWxuGPo+7nXn5ZR5TOwNxt1aSdMrbCFoBloRSDz6jLEQGstxhj0
+	ABbmYjEPonP4tKhbbAlddV3aBGKcf6A=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-606-SZtubkXjPkaoyLlzJW55Hg-1; Fri, 30 May 2025 05:50:03 -0400
+X-MC-Unique: SZtubkXjPkaoyLlzJW55Hg-1
+X-Mimecast-MFC-AGG-ID: SZtubkXjPkaoyLlzJW55Hg_1748598603
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f6e0c285so531451f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598540; x=1749203340;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BX16TfDwmJeuNsVzAioGXDE8NBNHgG/KwWmvHJtVfv4=;
-        b=Qwfb/I+4oOhnnaMA/8ZLYxHPzn7LODavEjV7XG3s4u1+pr4HokqW6MpmY5L4b2phXb
-         JYm1LAICUy9ZMWTy8C68l7Fx+JMR3LC3lbQ73xVfWXXAXUNUfIxA2t5Vz6nyWi6CaN6e
-         62SAqIwkSK0IQFAmdCeJ4nBfVqR0+YPPwl2ySOoRRnoD8FVC8LQ6PvGdrYEnw2bhxggK
-         onfOPQR50rsRdUtjzwxb+E6UIGt7GZvt9kIFN7SIwpJvX7lSB8q/tRZ67l8MKsx3pOgf
-         MHcPogq3T4fpXXBLFiju/0nx/kGgTNQnS+Qa5HACZ/Dypumay21DTZZtI7XBUWgupX/a
-         0v7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXQP27tTbl0111eVKqHVUtuj8jvXP2mIg17OBTf33Cw0AZBQAj87REGJAK1inxQlPYC/qSUwKkW7el0G80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF0u0+wsdvr6jHgIphGzGiwhwDuw2uRgIe+Z0CvouaFHS1ijRO
-	zSMWQrjP672oFELuxws2M18z0p11+ILPo3NqfeCDT+bG7Vl12DI2dBxQVM/74Bfg8lVL6ywZ2fd
-	VYmTo7R8kgw3N+Ye689gVwenprjraDaOwewYUKoWE1g==
-X-Gm-Gg: ASbGncvceEKzyQ/CNZAOIAMjw9gsX2JybpBoh19V3T4m9TRZ2zp1M9oRP1RC/4AersU
-	ZaHV06VY8UUbsR5j+5RyTQLZbVvx4nwglBcUzabLYDPPhaxqM2/zrcS/0m39F+CmIOl/CAvjA1M
-	oKsZF4ud1kghQy9bjPQqq2J6qdSxMGvSzsavCuwr9aj8Mb
-X-Google-Smtp-Source: AGHT+IFCDzCsC18lIEI9eoPRpN1VBwQuWtrYeQzK5FfBQTEKVxOjXzBK+FhiElxrVAbMsJjHyUqfWwTNH+a+X8F2fyY=
-X-Received: by 2002:a05:6102:4b08:b0:4e5:8eb6:e8dd with SMTP id
- ada2fe7eead31-4e6e40d655dmr2670174137.5.1748598540530; Fri, 30 May 2025
- 02:49:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748598602; x=1749203402;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D606vLuu/mya4b2/dn7txRLIhobji5o/kJ2EzPspC2s=;
+        b=S11ZOhjYYk8i1hvb3WE7MEnGBw5GFw19MMwPLmkzX8vibJRr6v+MzbR1SvU0GnZRGq
+         0JtmBbreIGV4NmIiYe9moBtRTL9/bVCVdFQJXdXDx2fapRuwVBk5ffZka7AZrAbtnFjw
+         Gg0jZ7Nw3DI9kk/Celo0+O4m3drSw3MUWHE8M/XIhR/F37hIrbbkgj7prcUcyiOCJ1+0
+         IIuLEVskLiNpFa89XRRKTs66sKGisQxaqbMALCyWI0HCk3OliH6J4B/b0HlKgEygNfnf
+         bdxKkXsxvvOIHQdfBVKmgB0i416kAw8rjtdV64JZtiMRSHIaNe3RVabR2aE6d2BNR5Wf
+         XLNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKdl6wUtnT26iAI1urwXJ18AfR9R02tJpdTQqD5HrR/cbN+P4sIbHX2toFakRD7hQQPZKaSHVAWZ5Qphc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtLtlA4NG3bJE0Um99JQ1sZTitikpEZiy/TMWCL7nHjJICUkaj
+	gCTd06/jlgZ4KsFct2zr9FIjqvjocFXbcEVQb3s+pYrpa7x4/hCEQbMZ+kbpi6wwm7KTHp7O0m6
+	dqOfSvuPi/9vDrDbchEqfPZoTyXYrCEBwNA5XMuksTMMq6qCrIpXIdPcPdYyt1wFx6w==
+X-Gm-Gg: ASbGncsWTpVmSs+PNUgCL87K+8ZOn/Up3xTfgolqxqJiV0/IWuhQQ+bHQj7P2CI4gO1
+	8YxiHKeh6E4Xw+2Y+Cn1H2nLuXXTqawkr2VwuqO2eiJKvzxzt+aJCzUT1z74TB0dOycnIX0b3gn
+	T8BOhUF2cWSp1X0rGuvV+qEa/tCSuzWH68sWRO+uWRPnW24eWoG1kx30pPJw0ZQtzKB99aMm1l6
+	4COPmcXuulWJt6BFNYqioCL+BUtd+kYSSEtbv43CYgXyNwA9ZqcP5rAWDjndyBY/5ROZwkRijMv
+	8pG9fIG2rb9pvyU83INXQwHJvPX3UnmIvTn9C5Ja9lNLHNz/jWULhwE5BuLI0CKyxm/LuXSQMAE
+	XJ+E9MWqC297MXZtlcpkno4umJPLslsLJmTg4Yt4=
+X-Received: by 2002:a05:6000:2907:b0:3a4:dd8e:e171 with SMTP id ffacd0b85a97d-3a4f7a9c331mr2066161f8f.40.1748598602641;
+        Fri, 30 May 2025 02:50:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhG6CuYlca91jnvPNsO6m01mAx4IGfo4HiavcLjfkvZvqkH7sSq2pM3vNhHRPuBMR9Aa/ueA==
+X-Received: by 2002:a05:6000:2907:b0:3a4:dd8e:e171 with SMTP id ffacd0b85a97d-3a4f7a9c331mr2066135f8f.40.1748598602216;
+        Fri, 30 May 2025 02:50:02 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d8000e9asm13173185e9.21.2025.05.30.02.50.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 02:50:01 -0700 (PDT)
+Message-ID: <515387b8-3231-4b99-886f-62425575f912@redhat.com>
+Date: Fri, 30 May 2025 11:50:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
- <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com> <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
- <5a277d1d-c7b1-430c-a463-1e307a2823f6@arm.com> <03e6283e-2ef7-498c-9460-8411114711e2@arm.com>
- <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
-In-Reply-To: <e6db6396-cb1e-4e24-8fd0-3cce388a3913@arm.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 30 May 2025 15:18:49 +0530
-X-Gm-Features: AX0GCFuc1bDuO-IvLHLzjp596VNTvH9_C6fgPX5wyzKbvtGEon1kLQjQtXhQSq4
-Message-ID: <CA+G9fYuroDkk3qrd7yJJG7twZV0sM=t3mDjhrBMm==q2MjS41A@mail.gmail.com>
-Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, 
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Strictly check vmstat_text array size
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Konstantin Khlebnikov <koct9i@gmail.com>
+References: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250529110541.2960330-1-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Robin,
+On 29.05.25 13:05, Kirill A. Shutemov wrote:
+> The /proc/vmstat displays counters from various sources. It is easy to
+> forget to add or remove a label when a new counter is added or removed.
+> 
+> There is a BUILD_BUG_ON() function that catches missing labels. However,
+> for some reason, it ignores extra labels.
+> 
+> Let's make the check strict. This would help to catch issues when
+> a counter is removed.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Konstantin Khlebnikov <koct9i@gmail.com>
+> ---
 
-On Fri, 25 Apr 2025 at 20:48, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 11/04/2025 8:11 pm, Robin Murphy wrote:
-> [...]
-> > OK, I found it, but I'm still not sure what exactly to make of it - it's
-> > the pci_request_acs() in of_iommu_configure(), now being called early
-> > enough to actually have an effect. Booting with EDK2 already using PCI
-> > prior to Linux, here's what I get for `sudo lspci -vv | grep ACSctl`
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
+-- 
+Cheers,
 
-Linux version 6.14.9-rc1
-# lscpi
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
-ATA Raid II Controller (rev 01)
-08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
-PCI-E Gigabit Ethernet Controller
+David / dhildenb
 
-
-Linux version 6.15.0
-# lscpi
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-
-> > with 6.15-rc1:
-> >
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >          ACSCtl:    SrcValid+ TransBlk- ReqRedir+ CmpltRedir+
-> > UpstreamFwd+ EgressCtrl- DirectTrans-
-> >
-> > whereas with the 6.14 behaviour they are all '-'. I don't have a working
-> > root filesystem with the U-Boot setup, but if I boot it with
-> > "pci=config_acs=000000@pci:0:0" then the kernel does assign the bridge
-> > windows and discover the ethernet/SATA endpoints again. I can spend some
-> > time getting NFS working next week, but if you're able to get lspci
-> > output off a machine in the "broken" state easily that would be handy to
-> > compare.
-
-
-On the 6.15, After adding this into Kernel boot args
-pci=config_acs=000000@pci:0:0
-
-The SSD was detected and mounted successfully.
-
-Linux version 6.15.0 +  pci=config_acs=000000@pci:0:0
-# lspci
-00:00.0 PCI bridge: PLDA PCI Express Core Reference Design
-01:00.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:01.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:02.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:03.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:0c.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:10.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-02:1f.0 PCI bridge: Microsemi / PMC / IDT 89HPES16NT16G2 16-Lane
-16-Port PCIe Gen2 System Interconnect Switch (rev 02)
-03:00.0 Mass storage controller: Silicon Image, Inc. SiI 3132 Serial
-ATA Raid II Controller (rev 01)
-08:00.0 Ethernet controller: Marvell Technology Group Ltd. 88E8057
-PCI-E Gigabit Ethernet Controller
-
-> >
-> > So at this point it would seem to be something about how Linux
-> > configures ACS when doing it from scratch. What I don't really know is
-> > where to go from there. I do know Juno's possibly a bit odd in that the
-> > switch supports ACS, but both the root port and endpoints either side of
-> > it don't. Could this be tickling some subtle bug in the PCI layer, and
-> > what is EDK2 doing that makes it not happen?
->
-> Just following up on where I ran out of ideas. I poked at things a
-> little more, and from a process of elimination, the culprit appears to
-> be is that we enable ACS source validation on the downstream port while
-> its secondary bus is still 0, *then* we get to the "bridge configuration
-> invalid" bit and reconfigure the bus numbers, but after that, config
-> space accesses to the secondary bus still apparently fail to work as
-> expected.
->
-> What's now beyond me is whether this is just an ACS quirk of this
-> particular switch, and/or whether there's something we could or should
-> be doing in the PCI layer.
->
-> All I can suggest a this point is that you could at least sidestep the
-> problem on the LKFT boards by updating them to a less-ancient version of
-> U-Boot which supports PCIe for Juno (looks like that landed in 2020.10),
-> which should then configure the switch at boot such that the bus
-> numbering doesn't need to change when Linux probes it - that appears to
-> be the only "magic" thing that EDK2 is doing.
-
-I will work with my team to address these issues.
-Thanks for your suggestions.
-
->
-> Thanks,
-> Robin.
-
-- Naresh
