@@ -1,35 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35BDC1EB5D8
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A178F1E2607;
+	Fri, 30 May 2025 09:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597060; cv=none; b=C7+LOjWQe+59977kSMAOCsV81qGAiiBu6djAsgit7IukIEPt8Ow5yHklbCSxVb/4uQKpMEgMYbcm4++iIukF+hi3MO4TUWeddq48ZMGbcdgFDfKycsESz7Bk/IFYRpd3xJ7fm8OzkvrjKY0IWyei2Qh986/IuzcfiqC1cSZhZMs=
+	t=1748597129; cv=none; b=Vzf+lhhcDRixN4weTg4nDdSXxOZf4mVszmNjExDup9xu9dAUuYkyxwDofSW97GenoFRpbGGlkjkho0jyKL3tUCyJ+JTtFng+1rcLFNGHWWGojy6ciqVpXvWF5q7Fm9aubr1qq1ZGfDFafkO3h1JTfNauuXc+UYh4xvVBm5gMkv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597060; c=relaxed/simple;
-	bh=q0oKYUaOb6DCXRw2x89nqGnsoQzpjfrzOlrmFXcemq8=;
+	s=arc-20240116; t=1748597129; c=relaxed/simple;
+	bh=VQGmwyM6dLX+gLYISfq5UOreX82SGJdDBvUZapXWo04=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cac94O1hRaXnAS18gEpJ5osStqJPVqlbkkwFSpiqq3OEeCb3PtIvQo3k43H0Sw4bmePjcqr6Rvmz+wQ2mb2LYA8r8IWJLc56v11djv7Fx4zP7ChO629AGthVdS4Fjy5bSNv6Sw4Yi6IB3wPPl/45FGTPRpuKFWYW4WPGIPy2bPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 050CE16F2;
-	Fri, 30 May 2025 02:24:02 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B0A93F5A1;
-	Fri, 30 May 2025 02:24:17 -0700 (PDT)
-Date: Fri, 30 May 2025 10:24:13 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	kernel@oss.qualcomm.com, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coresight-tpdm: add trace_id sysfs node
-Message-ID: <20250530092413.GA666854@e132581.arm.com>
-References: <20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LnamftOTNKbg4g9KKO3yQmb9IHGmG8noOzIXeZRae6nGdoZB7oyRTADdg4o3LxGcBevxQqwHIEwoI6eP9ZrM5/0IF8/GENSmjHMvykkAWctH1LmPnzrLJVlbo/kESKDJe0YTLXBNbq5Q5N32dBV2vfIPJ1sP1FHguyHZbHDx70Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=jV0apYW3; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jV0apYW3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gR91zQSzqCbc3p6LvARTFu1cbopw2P782WLK55P4y9w=; b=jV0apYW3ub6N06ZD9T9v3FuV5K
+	8OCyuhQR5SUnrJzr922AI1qgToxXFgO6EzLmuCrDcA/SAGntoV2dm5WIgeh03WDK7kBzT1wX8R5t6
+	bkw5aawChHySMdH/PAEr65qjbXWItpI1HhRp+G7EG9yqA7dJKsP+mPNGqnKBXVklbZLjojJ17Pm+F
+	9F7RLHZ8ySEobL386mYcnQHYD+DdNM+V8SbXXa0fk4RyzIclP0yJuqJME0Idb/NGKNZgONhF/3fuL
+	RRTe6GPIIVatAgaezKjvjGVe0khmr6MN/kUZHdkBUmmUOGeMaQ5WSdeWRT7gkRXHBcvQkSyDC8K2m
+	fPb95lpw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKvzA-00000000EJS-2hvT;
+	Fri, 30 May 2025 09:25:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1C03B30066A; Fri, 30 May 2025 11:25:08 +0200 (CEST)
+Date: Fri, 30 May 2025 11:25:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Alessandro Carminati <acarmina@redhat.com>,
+	linux-kselftest@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville Syrjala <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+Message-ID: <20250530092507.GC21197@noisy.programming.kicks-ass.net>
+References: <20250526132755.166150-1-acarmina@redhat.com>
+ <20250526132755.166150-2-acarmina@redhat.com>
+ <202505281546.DB9D9029@keescook>
+ <20250529090219.GA24938@noisy.programming.kicks-ass.net>
+ <202505291033.E7E3E6C@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,114 +71,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com>
+In-Reply-To: <202505291033.E7E3E6C@keescook>
 
-On Fri, May 30, 2025 at 03:29:14PM +0800, Yuanfang Zhang wrote:
-> The trace ID of TPMD is the trace ID of the TPDA or TNOC
-> which it is connected to, this change adds trace_id sysfs
-> node to expose this trace id to userspace.
+On Thu, May 29, 2025 at 10:46:15AM -0700, Kees Cook wrote:
+
+> Doing it on the other end doesn't look great (see the other reply).  I was
+> suggesting it's not on fast path because the added code is a dependant
+> conditional following an "unlikley" conditional. But if you wanted to
+> push it totally out of line, we'd likely need to pass __func__ into
+> warn_slowpath_fmt() and __warn_printk(), and then have __warn_printk()
+
+warn_slowpath_fmt() already uses buildin_return_address(0), and then it
+can use kallsyms to find the symbol name. No need to pass __func__ as a
+string.
+
+> return bool to make the call to __WARN_FLAGS() conditional. e.g.:
 > 
-> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> ---
->  drivers/hwtracing/coresight/coresight-tpdm.c | 16 ++++++++++++++++
->  drivers/hwtracing/coresight/coresight-tpdm.h |  2 ++
->  2 files changed, 18 insertions(+)
+> -		warn_slowpath_fmt(__FILE__, __LINE__, taint, arg); \
+> +		warn_slowpath_fmt(__FILE__, __LINE__, __func__, taint, arg); \
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
-> index 7214e65097ec9ac69f6c7c9278bcd28d25945c9e..8a5d115157924f39b09f8e3005827d7d64aa376c 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpdm.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpdm.c
-> @@ -497,6 +497,9 @@ static int tpdm_enable(struct coresight_device *csdev, struct perf_event *event,
->  
->  	__tpdm_enable(drvdata);
->  	drvdata->enable = true;
-> +
-> +	if (path)
-> +		drvdata->traceid = path->trace_id;
-
-In Sysfs mode, the core layer calls coresight_path_assign_trace_id().
-Eventually, the source driver's trace_id() callback is invoked to
-retrieve the trace ID.
-
-I don't see TPDM driver provides trace_id() callback, so here
-"path->trace_id" is an invalid value?
-
-Please refer to STM driver (see stm_trace_id()) for this part.
-
->  	spin_unlock(&drvdata->spinlock);
->  
->  	dev_dbg(drvdata->dev, "TPDM tracing enabled\n");
-> @@ -554,6 +557,7 @@ static void tpdm_disable(struct coresight_device *csdev,
->  	__tpdm_disable(drvdata);
->  	coresight_set_mode(csdev, CS_MODE_DISABLED);
->  	drvdata->enable = false;
-> +	drvdata->traceid = 0;
-
-Seems to me, a source device can reserve a trace ID until the module
-is unloaded.  So it is not necessary to clean up trace ID when
-disabling it.
-
-BTW, my understanding is that you are trying to allocate a trace ID in
-the TPDM driver and propagate the ID to the TNOC driver.  It would be
-helpful if you could send the patches in one go, we can review it in
-global picture.
-
-Leo.
-
->  	spin_unlock(&drvdata->spinlock);
->  
->  	dev_dbg(drvdata->dev, "TPDM tracing disabled\n");
-> @@ -655,9 +659,21 @@ static ssize_t integration_test_store(struct device *dev,
->  }
->  static DEVICE_ATTR_WO(integration_test);
->  
-> +static ssize_t traceid_show(struct device *dev,
-> +			    struct device_attribute *attr, char *buf)
-> +{
-> +	unsigned long val;
-> +	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +
-> +	val = drvdata->traceid;
-> +	return sprintf(buf, "%#lx\n", val);
-> +}
-> +static DEVICE_ATTR_RO(traceid);
-> +
->  static struct attribute *tpdm_attrs[] = {
->  	&dev_attr_reset_dataset.attr,
->  	&dev_attr_integration_test.attr,
-> +	&dev_attr_traceid.attr,
->  	NULL,
->  };
->  
-> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.h b/drivers/hwtracing/coresight/coresight-tpdm.h
-> index b117543897344b689f666f6890cabb59c8ee4869..e12a64f265daa86f1b82fa3640e271e8386f99af 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpdm.h
-> +++ b/drivers/hwtracing/coresight/coresight-tpdm.h
-> @@ -300,6 +300,7 @@ struct cmb_dataset {
->   * @cmb         Specifics associated to TPDM CMB.
->   * @dsb_msr_num Number of MSR supported by DSB TPDM
->   * @cmb_msr_num Number of MSR supported by CMB TPDM
-> + * @traceid:    Value of the current ID for this component.
->   */
->  
->  struct tpdm_drvdata {
-> @@ -313,6 +314,7 @@ struct tpdm_drvdata {
->  	struct cmb_dataset	*cmb;
->  	u32			dsb_msr_num;
->  	u32			cmb_msr_num;
-> +	u8			traceid;
->  };
->  
->  /* Enumerate members of various datasets */
+> and:
 > 
-> ---
-> base-commit: 94305e83eccb3120c921cd3a015cd74731140bac
-> change-id: 20250523-showtraceid-2df91c89be8f
+> -		__warn_printk(arg);					\
+> -		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+> +		if (__warn_printk(__func__, arg))			\
+> +			__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
 > 
-> Best regards,
-> -- 
-> Yuanfang Zhang <quic_yuanfang@quicinc.com>
-> 
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
+> But it still leaves bare __WARN unhandled...
+
+Nah, don't propagate, just eat the __WARN and handle things in
+__report_bug(), which is where they all end up.
+
+But the real purpose here seems to be to supress printk output, so why
+not use 'suppress_printk' ?
