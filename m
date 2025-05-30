@@ -1,346 +1,426 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2059.outbound.protection.outlook.com [40.107.20.59])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3B2207DFE;
-	Fri, 30 May 2025 15:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748617871; cv=fail; b=giaGGSh0a2T37AhTy4hdYYkl6XLRLeTVAuJwkNy54ZzSrxAhnGWLpolZDE5N7rYLdKnv3St46jy2lBOthQbLqJCbRWr9swz0bVTRHFHCKtYqULTTg6hus/hYV4URzxZsPD25jG6c/FG+9cYkntOnQN1L8IOa8qFgBpiTeZQxNHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748617871; c=relaxed/simple;
-	bh=WLvzv0oUXSTK2lTGB5FdZ1zS4AfHjzxxTMMIzcIEi5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rkcZGL6ZW83PIZTT8nx7sLRsXBFJS5qrBddjWFV2ClVFNqrCHO67Su1WvrRCYkhnwmMKbkgTfEf4yq0FZZYwaTjUTeTWzQuOM83LYKL7ukCyo8BLD8VpYBE4Ak4jAMF/PqqyQB90/uxU8+dyB1YQawBwwKCaYh4xjxbCf0Ew3z4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=F3xtEBY3; arc=fail smtp.client-ip=40.107.20.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FAA22D9F2
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748617904; cv=none; b=pTypNcVbujHbRv+W/XEK8ZxRbq48d7qwZ2sBDJQk2IKs6tInpRzvfa5ALqQMEBm/VVNdraRFjbpNswSqWW4RYetWTm4yjQjiuMib5zeQJdqaI3zKfJq+hKnFXUzob/hRpFOOYWCWcX+K35FdGAoVcI2S+P7LqDH1J3nggYx8cuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748617904; c=relaxed/simple;
+	bh=nUdSn3ZsgeCsHwjSCtIkAjeI0nisYP2JR9TLh72MQkU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jKbeX8d8e+iBq8uzz0NIHvWAbcIaNQA51x0H8GulbW4nWZTXHtmh9KPWaQOdBcDvzgY/feKAsz+ht11W5nie3bmI4ZELUzVvUTDeP9LZGjAZIInfUZoOUQLL2c8G8rY8A2/RbsCvp8rSVeBanIqJ1ZHUOhehQMU0vbpV/xNLq0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=dwFk8XdH; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="F3xtEBY3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OwGNHoduSomg4LYuz6PBL9HUFE47PXOK/iWDcfLVXeWhPyMnNYHQ606itjBsBdSrKrMd++SFGoqEtqqxOfi8F5CC/20YMizGjQNOxJYL9IjnJlLo5b7n9idb4buY200Yz2ZjA9cALBldKOANM6pBhSM2xFrj1xDcggk34iKOtEBwN5o3eZlnqMesikNWP2EpQ9OwtZAZr9kJttC7/GIKORYBeh0U6rI1Ke2GEXMu1RIvT18bqmlyZPyr6xF7ioiTdWyTMvcC2VXhywnwdkhzTxj2kDgF1uFR0cZW+NqURaEl01jRUGQsYt+wRKIKXWcoZwH3tElt6lfUt6LSf6+FDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WrQE2DIrhi67RpAbStb7zA9zTnvOeRQx9GzjkHcLXW4=;
- b=M/ApeHawnE9g0cG+0PqpwztRw6M5c3Byvf1SBdZWeNRfTOVkdPmvOMJHRMFlg3UWs6FcW271AqIibzUzf8gCdFXh3ULCgEq+IwOi6Mys/r6r8kqEoC4TU54mGLCbhvneSaBMXvUumtkcY2mGMUR/rJ4neansK5pbrWTPvIXPCr3GRhs18+o4zOV0bJ8Y1WBwgGyi7VZZ5v1lnjRpJCDzZpzuCcyc2imkvJ9Htv/saB2WfMUu8hAA89R+6KRndCaVvmWB6Yz0hpo4htbKwAWzAVOuzjlqpArvT0ap1DKx6pvGYITmQ2XTdCuX+Hw2PpXx06JpvmTeMlkTomxAOJGdQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WrQE2DIrhi67RpAbStb7zA9zTnvOeRQx9GzjkHcLXW4=;
- b=F3xtEBY3XMpTxnts0CO3ZQw3RnwnrC2BvJyrZWsrw5RgkUyVUSTyQUx/1YiffdxHpOdq2H2MjCkWWLPCi+28K8/J20jAgu1p8U+v/aqcdOZSPW43jRfS8B46pWhZdth1F2Y/ARyy3Fz+pdJa6oGDrOXn9iS0zzZIqQcmyK2KUpyZm94+H6SaXpEGDHXA/TZ9p9tWtlSaJxdyf0G8AzjCLCMjsKT7IqQ+lQM1xKzRieoMqvRIGUKXIS0D8oBlTZ3AuykwGNbK/PDnOUHzpGvcgAGNwwB4g4nWVXtTYI09zOhwXUKKo2pLoLxXfsilxUF4V3BJ2i55hMtZK0lYYlSLag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI0PR04MB10661.eurprd04.prod.outlook.com (2603:10a6:800:265::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.30; Fri, 30 May
- 2025 15:11:06 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%6]) with mapi id 15.20.8769.025; Fri, 30 May 2025
- 15:11:06 +0000
-Date: Fri, 30 May 2025 11:10:59 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: "Li, Meng" <Meng.Li@windriver.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>
-Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back into
- watchdog node
-Message-ID: <aDnKgx2L9/LL3U4z@lizhi-Precision-Tower-5810>
-References: <20250528111751.3505224-1-Meng.Li@windriver.com>
- <174843567469.3636722.5654586098186872724.robh@kernel.org>
- <CH3PR11MB877336C35ECB8432FF57C821F166A@CH3PR11MB8773.namprd11.prod.outlook.com>
- <aDiFrp/firrNlFEY@lizhi-Precision-Tower-5810>
- <CH3PR11MB8773E3192B27DD05E145556EF161A@CH3PR11MB8773.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CH3PR11MB8773E3192B27DD05E145556EF161A@CH3PR11MB8773.namprd11.prod.outlook.com>
-X-ClientProxiedBy: PH7PR17CA0047.namprd17.prod.outlook.com
- (2603:10b6:510:323::29) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="dwFk8XdH"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b86CD1NzZzRG3;
+	Fri, 30 May 2025 17:11:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748617896;
+	bh=pzD6RCmiXHRA+M3edlAXDavUVhBBosYzrV+HogsV9TE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dwFk8XdHXdFGmbYmHmGtQb9c3BL9Ls8RIKNRKbD21RYJaV0BJa6+26nzcBBiX8LYV
+	 jfmmBxUs+to3mm/VsTUpLN262UnFhXFBedKcqj4SKHBuyOFH0s/XBOH6cl7n0/IkL6
+	 P3mm29GiDmFMxC6KO89GolUgbppmEIYXDr9X4Vlc=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b86CC2tXpzKC2;
+	Fri, 30 May 2025 17:11:35 +0200 (CEST)
+Date: Fri, 30 May 2025 17:11:34 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>, 
+	Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, David Howells <dhowells@redhat.com>, 
+	Kees Cook <keescook@chromium.org>, linux-security-module@vger.kernel.org, 
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
+	Peter Newman <peternewman@google.com>, Andy Lutomirski <luto@amacapital.net>, 
+	Will Drewry <wad@chromium.org>
+Subject: Re: [RFC 1/2] landlock: Multithreading support for
+ landlock_restrict_self()
+Message-ID: <20250530.ozeuZufee5yu@digikod.net>
+References: <20250221184417.27954-2-gnoack3000@gmail.com>
+ <20250221184417.27954-3-gnoack3000@gmail.com>
+ <20250227.Aequah6Avieg@digikod.net>
+ <20250228.b3794e33d5c0@gnoack.org>
+ <20250304.aroh3Aifiiz9@digikod.net>
+ <20250310.990b29c809af@gnoack.org>
+ <20250311.aefai7vo6huW@digikod.net>
+ <20250518.be040c48937c@gnoack.org>
+ <20250518.xeevoom3kieY@digikod.net>
+ <aDmvpOMlaAZOXrji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10661:EE_
-X-MS-Office365-Filtering-Correlation-Id: c206a39f-bf19-43e4-41bc-08dd9f8c334a
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|52116014|376014|1800799024|366016|7053199007|13003099007|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?TVRsd3BFaEQxYjcrNFdKaTZmaWdweHMxRDN5Mk1BTFdUK05iRElRcElKeFNN?=
- =?utf-8?B?VGVReFhHNExkSjNGM2NiU0hhY2NQK2JiU1ZKYlJhTGF0YjArN2tpaFg5QUYv?=
- =?utf-8?B?azRaZG9XRG92czJ4N3I3cVJSODJhWXBuU0hWbzJJVEMvdlF0d1lpZitOOVhL?=
- =?utf-8?B?YXZwR1lxcUhGNjlqazYvbVdvWmhFUHllZUNzZmxIZTQ3bmVhS3VLbVVCaWpn?=
- =?utf-8?B?bWhDYTlETysybzZyUlRpaEJMRXdtc1loRVV5MDFDUlVxNStGVzh3a0ZFZVVK?=
- =?utf-8?B?OVIvY0pmNEZhUEcwQ2o5TWlRcStqQmc3UkxDZUVvZmpyUjRaK2MwbkpqWE1z?=
- =?utf-8?B?SmRQWTFuR2pyeDJGdmJSV2Vxa3hBTkRYcS96ZS9XYnFPSnBhQUNiaDZMb1Nw?=
- =?utf-8?B?V3hlS29pMWdNbG9ZUHpEOFl1aXJpZDl4RUVSYzFYcG5DaktpRUV6c1F0M2Vn?=
- =?utf-8?B?VGpMQTd0cnpjT2dvWmFtODc5b21lZVl1bU0wZ0hmenIxNjZuQ2hXOXFGYXdG?=
- =?utf-8?B?am04ZUs3dGh1R1RWUTl2TW51b0Ixc3VDeWROcHVJY3FQaFJWR1VLMFdVeE9j?=
- =?utf-8?B?cVpsMEFJTnQrdUtTSHIvekwyUG1iLzFlcE9vaTU2c3NUOWFabzNhaUZKeGs2?=
- =?utf-8?B?Nm80MEd6ditId05ZNjgxMXorMlFDbGZ5SUZzV3RPWTdNSEEvdS9WOEhYOFZx?=
- =?utf-8?B?M1Zic1NKd1FRU0VyZmRxWk9ONzVuQ1BjWk8vOE5lRDNDMEt4eExGOEtLV1ZD?=
- =?utf-8?B?ZVJxNk85MXAzU2dDVnhqcHI2WlpiWHlBT0xOaEZGUzlTcW1pWGhQU0lLQzVu?=
- =?utf-8?B?a0dQaFV5K2xkamJ0TFE1cnhSVXBqTHhNS3JmWG9Vbk0ySjhIL3JOZ3oyc3dS?=
- =?utf-8?B?L1NYVE1pLzRvZCtaUWlHMDI1Qmp4SUZqdHk3RUFWNmxJQW1GRWR5Q0hhei9y?=
- =?utf-8?B?aFQrYnNUcjZjbTJUc2FHTDJ0ME1iNGpJUU1ZRkZoMzErUEVVeWF1QllxcWpw?=
- =?utf-8?B?UWo1Z1paL055NXNXb2xud0svTmhGTldtcGNtdE83ZDBuYnljazFhbHFjdzQ0?=
- =?utf-8?B?ekV3Ti82akFSNFJFcHM3RVhYb21CUWNzLzhLYzJaQ0tGSy82U05QdVhkTERM?=
- =?utf-8?B?VjBlUjFuQnZPNS85aVRCQW5YYXFTWnJ2SzYrcUU4MEVxWWp1bDRhdndQZVNw?=
- =?utf-8?B?aFpuUE8yNi9aZUVpQ3dzcjQ5OW1xakxLR1RwM2dvMTJMcDJZWWllS0dvaW5u?=
- =?utf-8?B?U21nb3RhTDNJNldBRkQweGhqZFFxRWVOSHhFNUwzVVRBMFZhNEkrdmpRZ0Rw?=
- =?utf-8?B?MzZ1aG0wS01rOXd1Sy92dDFWcVErSE1NRHUzenJhdmVrTDBPV1M1UTBLaFF5?=
- =?utf-8?B?R1NGK0lBVGw4ZDZvNElOZnBNL3AxQmkvZGczTE84SGozRm9KSi9IVEdGN0dL?=
- =?utf-8?B?eE9HUGwrV05WSUFhVUFKdFcxYTRKeVlCejNyK1dPdkdkR3QycUk1M01zeHk0?=
- =?utf-8?B?Lyt3VFA4NXBSemgrbllzeUtZS1A4a21lWTNWaEc1ZzJUMHJxdEN2VFFKYzFM?=
- =?utf-8?B?OGVTVHFjWFE0QXY0dGt3RWN1Y0FqQlkzaUx6UVJXenpBeWJJRHJGNmdmTUM4?=
- =?utf-8?B?QS9OUi9PVEQyRTJsZi9RK29BOGMwV3ducFUwSDZNZGNGL2JwWFhjT0tKZzhl?=
- =?utf-8?B?eC9jQ3JQczBTdW5oQmE2L3puMjhZYXA3NTYrUy9FTVQ4S3Y5WWZGVEs0b2gw?=
- =?utf-8?B?d1lTejVXTlQvQnZaTnd2dkVEQTFqM3pCMFBsM1QzREorbWJacnN6cnd2ZnUx?=
- =?utf-8?B?cmpXRVVvTWlTdjdjQmZHR0xITDMwNjZqZGN4NmhhYVBLNkhPS0R0UkJBTTBD?=
- =?utf-8?B?YVM4em1paUZPbjdwUlVtMVpBTUpmWVJ2YTllNTdzdmlicWF1WDJSVG0zbDh5?=
- =?utf-8?Q?k6OxYFJxB/o=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(7053199007)(13003099007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?bVFJVWl2bmhwZXoxc2pKdzZBdWhNV2JNc0JGTm9oRkt2K0NYYlFQNFlheG1C?=
- =?utf-8?B?STV2RXhsbWhPbFFjOVZUbzNEdVBzaUV6M1JOVlcrczJBbjJkNlhMRTFlMHpC?=
- =?utf-8?B?ZitMRkpPOHFoaG5XbE54OHpUYmZoNkNMUjlrK3BaZGRyd2xUVjZ4VFlRSVZK?=
- =?utf-8?B?ajgvWi8rWWdwY1VCZjR5cDllNmp3d0VtZVhHNVlJeCtvTlhHREptOWVSREsr?=
- =?utf-8?B?Uk1tQ0NpRWRnYVB5dnpVb1ltY09EZmRRcjd5bmcweTY5ajFrYnhNb0s5R05s?=
- =?utf-8?B?V08zK2pyZEdDV29GSzcrMGFCTjA2Vk91Nlp5VDNBMEY1NjJXVjdYMG1qSjFh?=
- =?utf-8?B?Ulo5NklqVThCOTBXRTVRQ0VSMFNKTGJQQ3hGUFI2Mm5sZWxQaGs1WnE0N2FS?=
- =?utf-8?B?WlhmUlRUSGc2dlR3R1Y4MDdQOFgzL2YyRVh6OVhFa1Y0cEhwVDJzaDN2cVNp?=
- =?utf-8?B?bjFwSUlWMVdoRjRpMzJRNHFOdktDSy9ZVEEvbFV5OEdaVVBCbFluRi9KektQ?=
- =?utf-8?B?cDIwZWk0ZnZ0U056NnNTbWlyalh3cy9GSkFFbTlpdjRnM2Q0Z1Q2ZjNSNVhm?=
- =?utf-8?B?Y3NUcW82c3ZBV2loMFlVVzBLdTQ3c1BDNGo4ZUt4dEJqdWZIZG03a056c1Fm?=
- =?utf-8?B?UGtkNWdXQmsrNUloZXhSMmtzY0txQnQ2Qlo3Z21PT2tld0tZb3ZScjhLQm9y?=
- =?utf-8?B?YTdtM3YyMVJ0VHUvQjA0RWJ0VCtVejhYVkZyZVFYeFlWRmxQQ1YwY0dHQjZ4?=
- =?utf-8?B?TkU3bTFHQmxvMTJubFdBUFBESy9QUXFQSzJHRDVEWWJpRFNKeXVzMHRGOG5q?=
- =?utf-8?B?RldjYUo2VWJzZzRhVmI3VmkzTmVKWWhXRXZoY0pxUlcvN2ZjUWtLUFhxK0N6?=
- =?utf-8?B?ckdaZGdONlVtWWVJMmMzS2JudE9FUmE4UzFuWDRtTDZBbHhpVExrYVdtMzZF?=
- =?utf-8?B?RXBsZVRQU3VLWktkVklOQ2krNnFac3FxYkFoMzc3ZnpMdTZ1disrQXY3b1ZL?=
- =?utf-8?B?KythOUw3V2NaemdMUHF3SWFUcWpwSjFlR2VCTUt0QlpDbUplTFBSRWJNcDBh?=
- =?utf-8?B?cXozaGVKckxuRU9vTGxib293dStCUFRUZ3VlZHJMeXVVc01jTURTMEZUczVJ?=
- =?utf-8?B?c21mbWVoeHJ5SzlQdDhrdXFVbm1ZT2pSQzJNMEUycnVXcjk1RWZVWWdUUDBQ?=
- =?utf-8?B?eXRkbFphZUZTalZZYzhvUVlOYkpndUdDanhmcUNkVk9LZDVDNDV3ampvSE81?=
- =?utf-8?B?aUlMdjFBaHZlUXJQSlV1dURETGdKMDJOT09yZ2JXeFIzS29aekxmV1F4bEZa?=
- =?utf-8?B?bUowcjdwVHg1TDVCaUZVUmdpdHJEN2RaQkRTaVY1VTlxZnVZY0kwU09qRU52?=
- =?utf-8?B?MU1EUzBqVXpNU0hEQjdHN2JXdEI3M3ZNQTRURlpHV1lpQVNCZmRkejJVayts?=
- =?utf-8?B?QzZwOVBJT2hoQk05T1A0bE45UGx1SWdrU014eVN3U0JSR1RkMkpNWWxkTHRU?=
- =?utf-8?B?ZDlEQzg1V1JPSnNwdklucSt3d2FtZ3FWRUx3S3FUQldMR3labCtnOWZmTDl3?=
- =?utf-8?B?NnpxZzVQY3ZKVzhhMk1qeFlpOHUvR3RTb09CaWJsWVRQTVZoUUFCTExuTVhk?=
- =?utf-8?B?M1lvNDNzOGFoWEg2TVYrRWdsanZrMmhXc2prMStmbmFjVUxIVlloNjRHZzdB?=
- =?utf-8?B?MU95OHMyU3JJMW5tSE9LSVZkbVhPRVdSQ3hYZ3lBd1RpUlBPb2JRa3lRbzA3?=
- =?utf-8?B?YTRNNUxiRmZUUUNBNC9rcS95OEJXUkRNWFRZUm85M2IvSEtQRklMVUxodjNl?=
- =?utf-8?B?aXlQNlFsT3pmOEVVREVxb1ZOdTJXZ0J4WDEyV0JWODFYTG5UNHNxRjBMbnZ1?=
- =?utf-8?B?L0JFcXhtTitjZTE2cG54ZGVrakhYZWxNZnlUOUlscWZmcUppcHB4QkNrcU1Q?=
- =?utf-8?B?OGpqMVJ6RGJicFZvRTNQUXF0WEhveVVwM2tjc0RocWppOEpQbnpqb3hNQlU1?=
- =?utf-8?B?eFNMMk9BRSs5aFAzOGVMbTREZXhCWS9VWFpXNDFMbkVXZHhxTUtZNDVtREw4?=
- =?utf-8?B?dGZZUkZVams2ZzN3N1c5MTVlYnlKZjJ3YS8rakVoQy9oMmkyOVpsSUpCUUR2?=
- =?utf-8?Q?EYbTV8ElIv2jg56mIuCIlV6JD?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c206a39f-bf19-43e4-41bc-08dd9f8c334a
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 15:11:06.2875
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8yTXcw/iea8lf9XZhgFJnVczhR2FxGLDVN6ZgC3E773ldPTNTeu6jgW2xSrQHzHh+aiqARIwq52ukKlpbv66iQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10661
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDmvpOMlaAZOXrji@google.com>
+X-Infomaniak-Routing: alpha
 
-On Fri, May 30, 2025 at 02:12:20AM +0000, Li, Meng wrote:
->
->
-> > -----Original Message-----
-> > From: Frank Li <Frank.li@nxp.com>
-> > Sent: Friday, May 30, 2025 12:05 AM
-> > To: Li, Meng <Meng.Li@windriver.com>
-> > Cc: Rob Herring (Arm) <robh@kernel.org>; devicetree@vger.kernel.org;
-> > shawnguo@kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> > kernel@lists.infradead.org; conor+dt@kernel.org
-> > Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back into
-> > watchdog node
-> >
-> > CAUTION: This email comes from a non Wind River email account!
-> > Do not click links or open attachments unless you recognize the sender and
-> > know the content is safe.
-> >
-> > On Thu, May 29, 2025 at 04:07:27AM +0000, Li, Meng wrote:
-> > > Hi Frank,
-> > >
-> > > Do you have any suggestions for this issue?
-> > > Could you please help check whether we need to fix this issue?
-> >
-> > Fix binding doc
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> > b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> > index 0da953cb71272..8006efb69ec71 100644
-> > --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> > +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
-> > @@ -36,6 +36,7 @@ properties:
-> >                - fsl,imx8mq-wdt
-> >                - fsl,ls1012a-wdt
-> >                - fsl,ls1043a-wdt
-> > +              - fsl,ls1046a-wdt
-> >                - fsl,vf610-wdt
-> >            - const: fsl,imx21-wdt
-> >
-> > @@ -103,6 +104,7 @@ allOf:
-> >                enum:
-> >                  - fsl,ls1012a-wdt
-> >                  - fsl,ls1043a-wdt
-> > +                - fsl,ls1046a-wdt
-> >
-> > fix dtsi
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > index 0baf256b44003..096ed81a9bc4d 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > @@ -687,7 +687,7 @@ lpuart5: serial@29a0000 {
-> >                 };
-> >
-> >                 wdog0: watchdog@2ad0000 {
-> > -                       compatible = "fsl,imx21-wdt";
-> > +                       compatible = "fsl,ls1046a-wdt", "fsl,imx21-wdt";
-> >
-> >
->
-> I have a question.
-> I checked the code of ./drivers/watchdog/imx2_wdt.c, there is below item imx2_wdt_dt_ids[]
-> { .compatible = "fsl,ls1043a-wdt", .data = &imx_wdt_legacy },
-> Do you think we also need to add another below item for ls1046?
+On Fri, May 30, 2025 at 03:16:20PM +0200, Günther Noack wrote:
+> On Sun, May 18, 2025 at 09:57:32PM +0200, Mickaël Salaün wrote:
+> > On Sun, May 18, 2025 at 09:40:05AM +0200, Günther Noack wrote:
+> > > On Tue, Mar 11, 2025 at 03:32:53PM +0100, Mickaël Salaün wrote:
+> > > > On Mon, Mar 10, 2025 at 02:04:23PM +0100, Günther Noack wrote:
+> 
+> > > > > Approach 1: Use the creds API thread-by-thread (implemented here)
+> > > > > 
+> > > > >   * Each task calls prepare_creds() and commit_creds() on its own, in
+> > > > >     line with the way the API is designed to be used (from a single
+> > > > >     task).
+> > > > >   * Task work gets scheduled with a pseudo-signal and the task that
+> > > > >     invoked the syscall is waiting for all of them to return.
+> > > > >   * Task work can fail at the beginning due to prepare_creds(), in
+> > > > >     which case all tasks have to abort_creds(). Additional
+> > > > >     synchronization is needed for that.
+> > > > > 
+> > > > >   Drawback: We need to grab the system-global task lock to prevent new
+> > > > >   thread creation and also grab the per-process signal lock to prevent
+> > > > >   races with other creds accesses, for the entire time as we wait for
+> > > > >   each task to do the task work.
+> > > > 
+> > > > In other words, this approach blocks all threads from the same process.
+> > > 
+> > > It does, but that is still an improvement over the current
+> > > libpsx-based implementation in userspace.  That existing
+> > > implementation does not block, but it is running the risk that
+> > > prepare_creds() might fail on one of the threads (e.g. allocation
+> > > failure), which would leave the processes' threads in an inconsistent
+> > > state.
+> > > 
+> > > Another upside that the in-kernel implementation has is that the
+> > > implementation of that is hidden behind an API, so if we can
+> > > eventually find a better approach, we can migrate to it.  It gives us
+> > > flexibility.
+> > 
+> > > I guess a possible variant (approach 1B) would be to do the equivalent
+> > > to what userspace does today, and not make all threads wait for the
+> > > possible error of prepare_creds() on the other threads.
+> > 
+> > This 1B variant is not OK because it would remove the guarantee that the
+> > whole process is restricted.
+> 
+> 👍 Agreed.
+> 
+> 
+> > > > > Approach 2: Attempt to do the prepare_creds() step in the calling task.
+> > > > > 
+> > > > >   * Would use an API similar to what keyctl uses for the
+> > > > >     parent-process update.
+> > > > >   * This side-steps the credentials update API as it is documented in
+> > > > >     Documentation, using the cred_alloc_blank() helper and replicating
+> > > > >     some prepare_creds() logic.
+> > > > > 
+> > > > >   Drawback: This would introduce another use of the cred_alloc_blank()
+> > > > >   API (and the cred_transfer LSM hook), which would otherwise be
+> > > > >   reasonable to delete if we can remove the keyctl use case.
+> > > > >   (https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a2aa1d45e6b8@google.com/)
+> > > > 
+> > > > cred_alloc_blank() was designed to avoid dealing with -ENOMEM, which is
+> > > > a required property for this Landlock TSYNC feature (i.e. atomic and
+> > > > consistent synchronization).
+> > > 
+> > > Remark on the side, I suspect that the error handling in nptl(7)
+> > > probably also does not guarantee that, also for setuid(2) and friends.
+> > > 
+> > > 
+> > > > I think it would make sense to replace most of the
+> > > > key_change_session_keyring() code with a new cred_transfer() helper that
+> > > > will memcpy the old cred to the new, increment the appropriate ref
+> > > > counters, and call security_transfer_creds().  We could then use this
+> > > > helper in Landlock too.
+> > > > 
+> > > > To properly handle race conditions with a thread changing its own
+> > > > credentials, we would need a new LSM hook called by commit_creds().
+> > > > For the Landlock implementation, this hook would check if the process is
+> > > > being Landlocked+TSYNC and return -ERESTARTNOINTR if it is the case.
+> > > > The newly created task_work would then be free to update each thread's
+> > > > credentials while only blocking the calling thread (which is also a
+> > > > required feature).
+> > > > 
+> > > > Alternatively, instead of a new LSM hook, commit_creds() could check
+> > > > itself a new group leader's flag set if all the credentials from the
+> > > > calling process are being updated, and return -ERESTARTNOINTR in this
+> > > > case.
+> > > 
+> > > commit_creds() is explicitly documented to never return errors.
+> > > It returns a 0 integer so that it lends itself for tail calls,
+> > > and some of those usages might also rely on it always working.
+> > > There are ~15 existing calls where the return value is discarded.
+> > 
+> > Indeed, commit_creds() should always return 0.  My full proposal does
+> > not look safe enough, but the cred_transfer() helper can still be
+> > useful.
+> > 
+> > > 
+> > > If commit_creds() returns -ERESTARTNOINTR, I assume that your idea is
+> > > that the task_work would retry the prepare-and-commit when
+> > > encountering that?
+> > > 
+> > > We would have to store the fact that the process is being
+> > > Landlock+TSYNC'd in a central place (e.g. group leader flag set).
+> > > When that is done, don't we need more synchronization mechanisms to
+> > > access that (which RCU was meant to avoid)?
+> > > 
+> > > I am having a hard time wrapping my head around these synchronization
+> > > schemes, I feel this is getting too complicated for what it is trying
+> > > to do and might become difficult to maintain if we implemented it.
+> > 
+> > Fair. ERESTARTNOINTR should only be used by a syscall implementation.
+> > 
+> > > 
+> > > > > Approach 3: Store Landlock domains outside of credentials altogether
+> > > > > 
+> > > > >   * We could also store a task's Landlock domain as a pointer in the
+> > > > >     per-task security blob, and refcount these.  We would need to make
+> > > > >     sure that they get newly referenced and updated in the same
+> > > > >     scenarios as they do within struct cred today.
+> > > > >   * We could then guard accesses to a task's Landlock domain with a
+> > > > >     more classic locking mechanism.  This would make it possible to
+> > > > >     update the Landlock domain of all tasks in a process without
+> > > > >     having to go through pseudo-signals.
+> > > > > 
+> > > > >   Drawbacks:
+> > > > >   * Would have to make sure that the Landlock domain the task's LSM
+> > > > >     blob behaves exactly the same as before in the struct cred.
+> > > > >   * Potentially slower to access Landlock domains that are guarded by
+> > > > >     a mutex.
+> > > > 
+> > > > This would not work because the kernel (including LSM hooks) uses
+> > > > credentials to check access.
+> > > 
+> > > It's unclear to me what you mean by that.
+> > > 
+> > > Do you mean that it is hard to replicate for Landlock the cases where
+> > > the pointer would have to be copied, because the LSM hooks are not
+> > > suited for it?
+> > 
+> > struct cred is used to check if a task subject can access a task object.
+> > Landlock's metadata must stay in struct cred to be available when
+> > checking access to any kernel object.  The LSM hooks reflect this
+> > rationale by only passing struct cred when checking a task (e.g.
+> > security_task_kill()'s cred).
+> > 
+> > seccomp only cares about filtering raw syscalls, and the seccomp filters
+> > are just ignored when the kernel (with an LSM or not) checks task's
+> > permission to access another task.
+> > 
+> > The per-task security blob could store some state though, e.g. to
+> > identify if a domain needs to be updated, but I don't see a use case
+> > here.
+> 
+> (Side remark on the idea of storing "pending domain updates" in the task blob:
+> 
+> I have pondered such an idea as well, where we do not store the Landlock domain
+> itself in the task blob, but only a "pending" update that we need to do to the
+> Landlock domain in creds, and then to apply that opportunistically/lazily as
+> part of other Landlock LSM calls.
+> 
+> I believe in this approach, it becomes hard to control whether that update can
+> actually ever get applied.  So to be sure, we would always have to run under the
+> assumption that it does not get applied, and then we might as well store the
+> Landlock domain directly in the task blob.
+> 
+> I also don't think this makes sense.)
+> 
+> 
+> > > Here is another possible approach which a colleague suggested in a
+> > > discussion:
+> > > 
+> > > Approach 4: Freeze-and re-enforce the Landlock ruleset
+> > > 
+> > > Another option would be to have a different user space API for this,
+> > > with a flag LANDLOCK_RESTRICT_SELF_ENTER (name TBD) to enter a given
+> > > domain.
+> > > 
+> > > On first usage of landlock_restrict_self() with the flag, the enforced
+> > > ruleset would be frozen and linked to the Landlock domain which was
+> > > enforced at the end.
+> > > 
+> > > Subsequent attempts to add rules to the ruleset would fail when the
+> > > ruleset is frozen.  The ruleset FD is now representing the created
+> > > domain including all its nesting.
+> > > 
+> > > Subsequent usages of landlock_restrict_self() on a frozen ruleset would:
+> > > 
+> > > (a) check that the ruleset's domain is a narrower (nested) domain of
+> > >     the current thread's domain (so that we retain the property of
+> > >     only locking in a task further than it was before).
+> > > 
+> > > (b) set the task's domain to the domain attached to the ruleset
+> > > 
+> > > This way, we would keep a per-thread userspace API, avoiding the
+> > > issues discussed before.  It would become possible to use ruleset file
+> > > descriptors as handles for entering Landlock domains and pass them
+> > > around between processes.
+> > > 
+> > > The only drawback I can see is that it has the same issues as libpsx
+> > > and nptl(7) in that the syscall can fail on individual threads due to
+> > > ENOMEM.
+> > 
+> > Right. This approach is interesting, but it does not solve the main
+> > issue here.
+> 
+> It doesn't?
+> 
+> In my mind, the main goal of the patch set is that we can enable Landlock in
+> multithreaded processes like in Go programs or in multithreaded C(++).
 
-{ .compatible = "fsl,imx21-wdt", .data = &imx_wdt_legacy }, it is enough
-by use fallback fsl,imx21-wdt.
+Yes, but it looks like replicating a user space hack in the kernel.
 
-> { .compatible = "fsl,ls1046a-wdt", .data = &imx_wdt_legacy },
->
-> Another question
-> I also checked the code ./arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi, and I found out below item in watchdog@2ad0000 node
-> compatible = "fsl,ls1043a-wdt", "fsl,imx21-wdt";
-> but in imx2_wdt_dt_ids[], there is also the below item, it also can support the ls1043a and ls1046a platforms
-> { .compatible = "fsl,imx21-wdt", .data = &imx_wdt_legacy },
-> So, I think maybe we can remove the { .compatible = "fsl,ls1043a-wdt", .data = &imx_wdt_legacy }.
+> 
+> With Approach 4, we would admittedly still have to do some work in userspace,
+> and it would not have the nice all-or-nothing semantics, but at least, it would
+> be possible to get all threads joining the same Landlock domain.  (And after
+> all, setuid(0) also does not have the all-or-nothing semantics, from what I can
+> tell.)
+> 
+> 
+> > Anyway, being able to enter a Landlock domain would definitely be
+> > useful. I would prefer using a pidfd to refer to a task's Landlock
+> > domain, which would avoid race condition and make the API clearer.  It
+> > would be nice to be able to pass a pidfd (instead of a ruleset) to
+> > landlock_restrict_self().  If we want to directly deal with a domain, we
+> > should create a dedicated domain FD type.
+> 
+> Fair enough, a different FD type for that would also be possible.
 
-Yes, but not nessesary to do that. leave it as it.
+For this use case, a pidfd would be appropriate to avoid
+inconsistencies.
 
->
-> Based on above description, there are 2 solutions, add { .compatible = "fsl,ls1046a-wdt", .data = &imx_wdt_legacy }, or remove { .compatible = "fsl,ls1043a-wdt", .data = &imx_wdt_legacy }.
-> What is your suggestion？
+> 
+> 
+> > > If we can not find a solution for "TSYNC", it seems that this might be
+> > > a viable alternative.  For multithreaded applications enforcing a
+> > > Landlock policy, it would become an application of libpsx with the
+> > > LANDLOCK_RESTRICT_SELF_ENTER flag.
+> > > 
+> > > Let me know what you think.
+> > > 
+> > > –Günther
+> > 
+> > Thinking more about this feature, it might actually make sense to
+> > synchronize all threads from the same process without checking other
+> > threads' Landlock domain. The rationale are:
+> > 1. Linux threads are not security boundaries and it is allowed for a
+> >    thread to control other threads' memory, which means changing their
+> >    code flow.  In other words, thread's permissions are the union of all
+> >    thread's permissions in the same process.
+> > 2. libpsx and libc's set*id() ignore other thread's credentials and just
+> >    blindly execute the same code on all threads.
+> > 3. It would be simpler and would avoid another error case.
+> 
+> +1, agreed.  That would let us skip the check for the pre-existing domain on
+> these threads.
+> 
+> 
+> > An issue could happen if a Landlock domain restricting a test thread is
+> > replaced.
+> 
+> You mean for Landlock's selftests?  I thought these were running in their own
+> forked-off subprocess?  I'm probably misunderstanding you here. :)
 
-leave driver code unchange. the current driver can work.
+I was thinking about potential (far fetched) issues that
+LANDLOCK_RESTRICT_SELF_PROCESS could cause to existing code.  The main
+use case to only enforce a Landlock domain on one thread would be for
+test purpose, but this is indeed not the case for kselftest (except for
+explit pthread tests).  So yeah, not a big deal but it should be
+mentioned in the commit message and the doc that without
+LANDLOCK_RESTRICT_SELF_PROCESS, threads can remove restrictions that are
+only enforced on their siblings.
 
-Frank
+> 
+> 
+> > I don't think the benefit of avoiding this issue is worth it
+> > compared to the guarantee we get when forcing the sandboxing of a full
+> > process without error.
+> > 
+> 
+> 
+> 
+> > We should rename the flag to LANDLOCK_RESTRICT_SELF_PROCESS to make it
+> > clear what it does.
+> > 
+> > The remaining issues are still the potential memory allocation failures.
+> > There are two things:
+> > 
+> > 1. We should try as much as possible to limit useless credential
+> >    duplications by not creating a new struct cred if parent credentials
+> >    are the same.
+> > 
+> > 2. To avoid the libpsx inconsistency (because of ENOMEM or EPERM),
+> >    landlock_restrict_self(2) should handle memory allocation and
+> >    transition the process from a known state to another known state.
+> > 
+> > What about this approach:
+> > - "Freeze" all threads of the current process (not ideal but simple) to
+> >   make sure their credentials don't get updated.
+> > - Create a new blank credential for the calling thread.
+> > - Walk through all threads and create a new blank credential for all
+> >   threads with a different cred than the caller.
+> > - Inject a task work that will call cred_transfer() for all threads with
+> >   either the same new credential used by the caller (incrementing the
+> >   refcount), or it will populate and use a blank one if it has different
+> >   credentials than the caller.
+> > 
+> > This may not efficiently deduplicate credentials for all threads but it
+> > is a simple deduplication approach that should be useful in most cases.
+> > 
+> > The difficult part is mainly in the "fleezing". It would be nice to
+> > change the cred API to avoid that but I'm not sure how.
+> 
+> I don't see an option how we could freeze the credentials of other threads:
+> 
+> To freeze a task's credentials, we would have to inhibit that commit_creds()
+> succeeds on that task, and I don't see how that would be done - we can not
+> prevent these tasks from calling commit_creds() [1], and when commit_creds()
+> gets called, it is guaranteed to work.
+> 
+> So in my mind, we have to somehow deal with the possibility that a task has a
+> new and not-previously-seen struct creds, by the time that its task_work gets
+> called.  As a consequence, I think a call to prepare_creds() would then be
+> unavoidable in the task_work?
 
->
-> Thanks,
-> LImeng
->
->
->
-> > Frank
-> > >
-> > > Thanks,
-> > > LImeng
-> > >
-> > > > -----Original Message-----
-> > > > From: Rob Herring (Arm) <robh@kernel.org>
-> > > > Sent: Wednesday, May 28, 2025 8:37 PM
-> > > > To: Li, Meng <Meng.Li@windriver.com>
-> > > > Cc: devicetree@vger.kernel.org; shawnguo@kernel.org; linux-
-> > > > kernel@vger.kernel.org; Frank.Li@nxp.com; linux-arm-
-> > > > kernel@lists.infradead.org; conor+dt@kernel.org; Li, Meng
-> > > > <Meng.Li@windriver.com>
-> > > > Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back
-> > > > into watchdog node
-> > > >
-> > > > CAUTION: This email comes from a non Wind River email account!
-> > > > Do not click links or open attachments unless you recognize the
-> > > > sender and know the content is safe.
-> > > >
-> > > > On Wed, 28 May 2025 19:17:51 +0800, Meng Li wrote:
-> > > > > When verifying watchdog feature on NXP ls1046ardb board, it
-> > > > > doesn't work. Because the big-endian is deleted by accident, add it back.
-> > > > >
-> > > > > Fixes: 7c8ffc5555cb ("arm64: dts: layerscape: remove big-endian
-> > > > > for mmc nodes")
-> > > > > Cc: stable@vger.kernel.org
-> > > > > Signed-off-by: Meng Li <Meng.Li@windriver.com>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > >
-> > > >
-> > > > My bot found new DTB warnings on the .dts files added or changed in
-> > > > this series.
-> > > >
-> > > > Some warnings may be from an existing SoC .dtsi. Or perhaps the
-> > > > warnings are fixed by another series. Ultimately, it is up to the
-> > > > platform maintainer whether these warnings are acceptable or not. No
-> > > > need to reply unless the platform maintainer has comments.
-> > > >
-> > > > If you already ran DT checks and didn't see these error(s), then
-> > > > make sure dt- schema is up to date:
-> > > >
-> > > >   pip3 install dtschema --upgrade
-> > > >
-> > > >
-> > > > This patch series was applied (using b4) to base:
-> > > >  Base: attempting to guess base-commit...
-> > > >  Base: failed to guess base
-> > > >
-> > > > If this is not the correct base, please add 'base-commit' tag (or
-> > > > use b4 which does this automatically)
-> > > >
-> > > > New warnings running 'make CHECK_DTBS=y for
-> > > > arch/arm64/boot/dts/freescale/' for 20250528111751.3505224-1-
-> > > > Meng.Li@windriver.com:
-> > > >
-> > > > arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dtb: watchdog@2ad0000
-> > > > (fsl,imx21-wdt): big-endian: False schema does not allow True
-> > > >         from schema $id:
-> > > > http://devicetree.org/schemas/watchdog/fsl-imx-
-> > > > wdt.yaml#
-> > > > arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dtb:
-> > watchdog@2ad0000
-> > > > (fsl,imx21-wdt): big-endian: False schema does not allow True
-> > > >         from schema $id:
-> > > > http://devicetree.org/schemas/watchdog/fsl-imx-
-> > > > wdt.yaml#
-> > > > arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: watchdog@2ad0000
-> > > > (fsl,imx21-wdt): big-endian: False schema does not allow True
-> > > >         from schema $id:
-> > > > http://devicetree.org/schemas/watchdog/fsl-imx-
-> > > > wdt.yaml#
-> > > > arch/arm64/boot/dts/freescale/fsl-ls1046a-tqmls1046a-mbls10xxa.dtb:
-> > > > watchdog@2ad0000 (fsl,imx21-wdt): big-endian: False schema does not
-> > > > allow True
-> > > >         from schema $id:
-> > > > http://devicetree.org/schemas/watchdog/fsl-imx-
-> > > > wdt.yaml#
-> > > >
-> > > >
-> > > >
-> > > >
-> > >
+OK, we don't need to freeze all threads, just to block thread creation.
+
+What about that:
+1. lock thread creation for this process
+2. call prepare_creds() for the calling thread (called new_cred)
+3. call cred_alloc_blank() for all other threads, store them in a list,
+   and exit if ENOMEM
+4. asynchronously walk through all threads, and for each:
+  a. if its creds are the same (i.e. same pointer) as the calling
+     thread's ones, then call get_cred(new_cred) and
+     commit_credsnew_cred().
+  b. otherwise, take a blank cred, call cred_transfer(), add the
+     Landlock domain, and commit_creds() with it.
+5. free all unused blank creds (most)
+6. call commit_creds(new_creds) and return
+
+Pros:
+- do not block threads
+- minimize cred duplication
+- atomic operation (from the point of view of the caller): all or
+  nothing (with an error)
+- almost no change to existing cred API
+
+Cons:
+- block thread creation
+- initially allocate one cred per thread (but free most of them after)
+
+> 
+> 
+> —Günther
+> 
+> 
+> [1] We might be able to keep cred_prepare() and maybe cred_alloc_blank() from
+>     succeeding, but that does not mean that no one can call commit_creds() -
+>     there is still the possibility that commit_creds() gets called with a struct
+>     cred* that was acquired before decided to freeze.
+> 
+> 
