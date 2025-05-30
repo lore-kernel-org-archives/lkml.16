@@ -1,85 +1,50 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AA41E515;
-	Fri, 30 May 2025 13:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748611459; cv=fail; b=R45/rySfghDUxvzIL3S7/ueNy3vML3c7SAYH0y56C69u/EUF7DvF7wYc6xB+URMgzqaKwd1S40fucJ1fXfsa5NVmhIQcVzZlFJASSXJkgxIU6uPHf7T4gttnqw51yYI2ZgsK2dz/OkSeBvAycqG39D28zeAfJXSN2L77m2BX7l8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748611459; c=relaxed/simple;
-	bh=7HRF+PUorsgSSdOumetgp6bK4NH5r6YDRe8ZI+6Hkq4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A606F6BFC0
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748611517; cv=none; b=IVKZfkyCPLXCSfJJQWSlwicwxfzbxYBpNVmYHcvYwjCj0/LCXumWEza1pF9cqDf3qL9dO73Qo+20/aTSITAZX7phGLvu+JMSMMpM+3LF7O5yNcKxD8PQHJ9RSFI09jT8l4nCmj/EA6rag+awYx8+vyTW9cbqUfZ/RV95TJBfgv8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748611517; c=relaxed/simple;
+	bh=0kthnVRhTRRX2apxh9rZ0wbaR6efYxE+DnDU7flD2ts=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TiVDG1wA1V1jC2JiEz32wYsp9t4Lk5rqsY/4QKMdnsjrye5XmI/xQuAx+EZTFuCMQswhEeitip3C9KvMIoijUQIU0VoI+I3w6F81LpIH5yNrQKwnR8QsO6qepJg4imEYuzWdQnSZMjPF1VTV3hiVTLbpGcRoSQp2V+gEZSW7RzQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=h+jbPAg6; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=Qn2xfal6; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	 In-Reply-To:Content-Type; b=kLe27uKqClWi5Q7cUn3gogERjDMf7n2OgxY1+uhm2N5shW/T8//f7OamalbWzTHtFRYEWtFy2s18NxK1KaHn/Ra6KNwVU0rfyYyHKp+UrjjR/mOMXiB1yDWMQJXvWM3x0HZveeKzE5o+9YYcY0SGscBKQ0Geo5yXOTaYXkBe5sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hgizACTG; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="h+jbPAg6";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="Qn2xfal6"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U7Oxxm004760;
-	Fri, 30 May 2025 08:23:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=BraL+uiPimIcl44K91VdSp7ntXPCQx03rpkbFIGvAvM=; b=
-	h+jbPAg6Fuu1v7Qf9BjYRhgR7Q0DBTSwqLhL2V4+eUAN9gIQE9kYDb8MaQf/or0d
-	/zSHGgnqA5UlvGeuYtVpZQXuqNjXFtX1Rt/ZFG2tP/bKBIQ4mvFzyxi8h+zbK1Bi
-	59/7Z8oSFb4THKsmIjWWALy9A66mGaoI885Il5KgF/DUDxHXaGE7/bjI5LAJ/vXl
-	uuDTMcWkAPTq47MQ37ZQa34lFUlaRdAj7gYjx2A/jBWvON+Kdw9lK5cOu20exxqD
-	vEDGZ173fkRjZ2ZWO+wy4JKnMq6cntjBt+YTKOD0afJd1wOOoBbkaFyOx1/VCJyq
-	jTYQw/sc45VXDSvnu18wFQ==
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2118.outbound.protection.outlook.com [40.107.236.118])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 46x3msugw8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 08:23:54 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wp0xM0JWNR1YxkDz4ftG6afieCr7b2sgM4gvr5UdMDMLAFki/iUjTbqO1PziFeQEW6TQIsI4JxpTbJRReZxvm8/+4aXcHOXteuBpcQtODfYdO+uEUo37Q1fCNbYOabeuGyyYHRKZsbtXvxvmjbJ8L7DQDaNcqoQ5cdPsaHv0uRl8mJsEiLTeATfHsIl1t6jKMrjQmEKlUVUlQ0OHGP4+uZ8xJl8sncejFtU9HThU7CjFl82cc86dohKREugp8mDL3knndTDXZtOJSvI94dyqSsW+DiBykwzhCybo3ds5aK+VF26O77i1TEAtukUHzVbbabIrjOftdBKBU8YkFOJgyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BraL+uiPimIcl44K91VdSp7ntXPCQx03rpkbFIGvAvM=;
- b=lWrP/s1WWJoezi0sja6c13sWpF2yqseVGZrV7q0GIF+2oU0nDFvGJIOhIA8mbBtBEBHsrHEYN6NZ6lXeMozunx2SpnXWBSqnLa7XxkX8OfhM62a873t8rOPraeAeW2j9k53chqvP2/U2XyZbZrW8iDiMWnkfZPfFeqFLUK8Nh+7NlkHoqLQw3vNEtfi5WElCGg/fFSDe96Q1AnS+g9qmKIorQwK0J62SUsj7qwtWJCw1flFtgXCpj5WCRWAGI6vl+xtNRAChhUffAmM/DDcXDHd3MOPPSu+ohhbf7jY9Qr+L/2dl5ebt7qcI3FUiSMXT4Y0yRMyN3nwQqp734ilA0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BraL+uiPimIcl44K91VdSp7ntXPCQx03rpkbFIGvAvM=;
- b=Qn2xfal6lZ75x/g+GlBwALwqFTRouAnZmXb3trcYDczPhoirg0u+NK4aNAQEERZMY/fcVAaS0QmMgnMDsszD8DLjVih1EaETJApKzZjxhlWxiPfx7UwKJm5v7lYFJPgG48jH2sNC4FJD0s/zgNR+fevwIZ1XHdZDxeF6USUecDQ=
-Received: from MN2PR05CA0050.namprd05.prod.outlook.com (2603:10b6:208:236::19)
- by LV3PR19MB8443.namprd19.prod.outlook.com (2603:10b6:408:20c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Fri, 30 May
- 2025 13:23:49 +0000
-Received: from BL02EPF0001A0FC.namprd03.prod.outlook.com
- (2603:10b6:208:236:cafe::cf) by MN2PR05CA0050.outlook.office365.com
- (2603:10b6:208:236::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.15 via Frontend Transport; Fri,
- 30 May 2025 13:23:49 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- BL02EPF0001A0FC.mail.protection.outlook.com (10.167.242.103) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
- via Frontend Transport; Fri, 30 May 2025 13:23:49 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id CFC32406547;
-	Fri, 30 May 2025 13:23:47 +0000 (UTC)
-Received: from [198.90.194.24] (EDIN4L06LR3.ad.cirrus.com [198.90.194.24])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPSA id 1A3C9820258;
-	Fri, 30 May 2025 13:23:47 +0000 (UTC)
-Message-ID: <1f131def-8ae4-42ab-8c4c-b3489515e6fd@opensource.cirrus.com>
-Date: Fri, 30 May 2025 14:23:47 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgizACTG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748611516; x=1780147516;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0kthnVRhTRRX2apxh9rZ0wbaR6efYxE+DnDU7flD2ts=;
+  b=hgizACTGUm1fbCGZ07Xvi6phSWpI7uK4xonI3E/tZuURf1ytPgazrL3S
+   AXtuP2lTy2r0W3q7k5ZijG3vkM5w8pffRYH/SJ+2JlInlR3boAX1wJMM+
+   MhGPifaGf7/Bke2jxa338twDPj43+vJkekDJlQ/ZkYmieeJmuozpxJ0nr
+   74CDZ5dbGr5da4OJ2oP9sbHYxVtxlCRiKe5Xoxj5S+N35im4+we2Fmetp
+   ISXoVoG+ARMjz2Ghxkj+FG116bEtcgKMRcj9u7EPGmbih4UsiROTpuSxk
+   z9IbVZHHxGrDeH4L71nLJMKZxbS1jo25Y3NUKMXC6BKzWJhotC4RaNVns
+   A==;
+X-CSE-ConnectionGUID: +84zz486SVeGz0EhfrX/OQ==
+X-CSE-MsgGUID: RR1N25uyRXO7mByNh3ua3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50756342"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="50756342"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:25:15 -0700
+X-CSE-ConnectionGUID: wGwFwY+DSPaWAYB57NEarQ==
+X-CSE-MsgGUID: 17mc5XVJT7yfulx2L8/uvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="144206830"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO [10.245.244.234]) ([10.245.244.234])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 06:25:10 -0700
+Message-ID: <1d7eb70c-7752-411f-8e20-f41f85438d31@linux.intel.com>
+Date: Fri, 30 May 2025 15:25:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,111 +52,319 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kunit: configs: Enable CONFIG_INIT_STACK_ALL_PATTERN in
- all_tests
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-References: <20250411095904.1593224-1-rf@opensource.cirrus.com>
- <20250529083811.778bc31b@kernel.org>
+Subject: Re: [PATCH v11 08/10] drm/xe/nvm: add on-die non-volatile memory
+ device
+To: Alexander Usyskin <alexander.usyskin@intel.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ Karthik Poosa <karthik.poosa@intel.com>, Raag Jadav <raag.jadav@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+ Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250528135115.2512429-1-alexander.usyskin@intel.com>
+ <20250528135115.2512429-9-alexander.usyskin@intel.com>
 Content-Language: en-US
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <20250529083811.778bc31b@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+In-Reply-To: <20250528135115.2512429-9-alexander.usyskin@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FC:EE_|LV3PR19MB8443:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6ed2870a-4fce-45e1-c035-08dd9f7d36ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|61400799027;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T2hGMCtUWXF0YWNFYko4MXNjTTVOTTZZWGdLQ0ViZVl0bkM1V1h1YUVUTkk4?=
- =?utf-8?B?T1R6UStXYjl0eit6MTZROHRSMG5sbVh2MHI2NWpuTGNMM25SUmZrNHA4K0VP?=
- =?utf-8?B?bmJNNHdQdVZxeXVKTGtwcFkxWEZXenJjR2V5ZTBxeTVoSURHSDdseEZTVlUx?=
- =?utf-8?B?a3ptbGpEVjQ2ams2aWg3THJ6SWJqT0l5UXhVRzJrV2l5VGJkU0FWL3dHUnVv?=
- =?utf-8?B?UUZ5VkczZEtzR25vMmJUb2diYStHSE1aeFZXZmIySTlTMm8zOWswQWdqNXpi?=
- =?utf-8?B?NXNDeDY3WWFUdnkydGJpMkgvYXpxM2wvbmJLOHdKdHkzYldQRHgyZUlOV3lK?=
- =?utf-8?B?LytqWkxZN0JtWE9OM2s3MUFZWTdYUW5rVXBzdVpQa21zaEE0UTMxOFpUcWJr?=
- =?utf-8?B?QVZRbEJvY0xsVG42YUh1VmVYRHJLYWx2YmdmekJBZUNXVzZVU2JEZngwcCt0?=
- =?utf-8?B?eE5mcDBXcDhpcnRERXkxTjVENC8zS0Rad3I5MnU4SUJtRkNUM29yN1RPQkxG?=
- =?utf-8?B?VUVoa3QwMVpSd29rblpuaGIxYjdDZ2JwYkZFNGlIQTJJS3J1Kyt0RUVwMGtu?=
- =?utf-8?B?OTBVVlczWUpDRWFHVkpTeml4YTNlN0R1UllMRzJGZXFvV0NESEZBVllNVzM3?=
- =?utf-8?B?Ykg1T3ZKaWlQVTdFaXpLRi8ycHpKdXIvVzh1YTB1cGtnVzIwMVVrM2dFcVls?=
- =?utf-8?B?RE1HZ3d0V1dDK2p5YXM2SkdkMWptTEUvNmxDTmdOWERaOStsMjBCSGVoTmJ1?=
- =?utf-8?B?a1MvcTNYM2kydjFUQkJpTEQ0dkR4VmJqY2grUkd5S3p4ZWpHWFROQ0lranV3?=
- =?utf-8?B?TnQ1Mm80U29ONTZla3BmQUhoaWpEUy9OTVZudWU4UFBoMndudEEzZ00yS1JV?=
- =?utf-8?B?aUM5eUJjY1Y5bFl5enJaZGhZQ3gvZUVDZ2NzZnRDT0pLYTVmaXZXci9RSjlz?=
- =?utf-8?B?dGl0bXViR0VuaHRmZXd3OXFsclFiSmZlVzlZa3NqVEY4aFVEYW9ZazBOY1Q0?=
- =?utf-8?B?OEM4MTVCV0xEb0pXN01OYzR6aHkyRFE4Z3h0WllUWElOSkF5dE45S3BDZjFN?=
- =?utf-8?B?d2JKdTNjRW1JUkxrRHZJdS9HTjRzWkdaWXV1VE9zenBFNGhWTDFTMkxnZld2?=
- =?utf-8?B?R2xUZENVLzd6L09XOG9XdkY1Q3FmU2NiZXZNSDRodHowY2E0RUFBYU9yUWpF?=
- =?utf-8?B?LzdKZUVacDc0MWI1dGVGRG1jL1NZTlJZWnVGT0tOd0ljK3NyRUdFYmlJRGd4?=
- =?utf-8?B?V0F6VEduYlNIMUJ5TzlGbEJKdmZWeDFkRlZmL1M1MUFNUlBURzZZL2dyTk90?=
- =?utf-8?B?aUZjSTNCblBaSmtFeTlUdUo0T3ZmOXI1Q0w1TitJK0JVeTRuS01Lclg0MHZN?=
- =?utf-8?B?d2RDOUNnb0tPTzdmVGRCdTMxTm1Fa2RvY05lQXgyNFVUMVR1VGlod0ZoTVhU?=
- =?utf-8?B?bWJPWUlUaEt2anFsSFNIWnZmMm9VTXhKTXBlYXVyS0xkL2VxTjUrdkhBTUJT?=
- =?utf-8?B?bVFiczc2TnhrUFo0MEFETDVkZk5qVklLMEY3ZU9PQUVzOVBudHl5c0I3M2hO?=
- =?utf-8?B?RnFjYUl4Q3BUMkFzWnJtSXlzcm1DVDFaSmI3VE4yNEFDd25lTHlrTm4xRnNG?=
- =?utf-8?B?Z2NycmRST2NwTTA5RnhiR2hFYmg1eW43d1R3cnM2VCtCa211SHdoclkySVA4?=
- =?utf-8?B?VnZJOFlINk1yYkhibUFSVExmMWoxbGgwRVFpZk1HWUVKRHZJNjFpa2NNeFpV?=
- =?utf-8?B?TWd5a1NUVm8xUTVnanU2akFxZGNIRnF2NC9weVNnM201WUVuaHgvbE1QUlNC?=
- =?utf-8?B?K3lKZTh1K0V5SDc2NUJFaDd0QW15T2ZQRkJhWlJqY1ljSTVGd1JGZ0dYSDYw?=
- =?utf-8?B?R0luRjJuS0s3akNwRmZ2QndZWnBXQWVBMmxyNFJKQ1BkOHVQM3AyMTdKeDg3?=
- =?utf-8?B?cXVNSmowSXIzeVFxblR6NHdobmFsRWVCNUtaaEkvN1dpQXRkRVYxT0dCWmhw?=
- =?utf-8?B?L0JuYnF6SDl0MzBBSW9FZ3k3d3Z1RklyY2pQbE9zRnpVejI0d0pFWkVhdXA5?=
- =?utf-8?Q?FQYXni?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(61400799027);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 13:23:49.1479
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6ed2870a-4fce-45e1-c035-08dd9f7d36ad
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FC.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR19MB8443
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDExNyBTYWx0ZWRfX7MQXs4Z1GiPo uumJBmT4KWjkLia9eDd/S4q3fLn0CYW0CQx8vlc0MvmzmfyED7s/bfVa4r10WtTT8pzH65lGzYh rWe/T2xV1l1cac4Y7UqMju8ySKh52nh6S05Pr4urtuYvpzwa1xJ3moVqZbN5/Ro+XXKPFHsY3m4
- ZlXOAmTyQJhHVTgqDlaUniRUE5Eh+ubSTxFWynsZhVs+A2B5Vf9duTTbeBRNBac+CtKHR8Octpv sGW4FRkrDG4Exbh3kW489Wy1rq6hewMdPfeevXn0/AZuWFr1VKou2a56nK3/ZKdI8JftQ/DJlpj ewmdE8BiD+/UQfLxtbb3VVkfFNZkyYHVx7nlZ377bSIzoz6t0Mp6xTsGoWQtky6W4nVl1ztixuj
- 4o75RpYlDevF/O1vQBIJr0qy6cIAFDf8NCIxpfLKB37fNq2qu8yvxUxmIqGBr/2xOOYfvqe3
-X-Authority-Analysis: v=2.4 cv=Qohe3Uyd c=1 sm=1 tr=0 ts=6839b16a cx=c_pps a=KnCRqBS1W09bL7b8BvnpRQ==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=umfE2JSC5LyJRm4ppqEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: CseGHcp_nDp1toFcbz0zEJ-gnHwkJWS0
-X-Proofpoint-ORIG-GUID: CseGHcp_nDp1toFcbz0zEJ-gnHwkJWS0
-X-Proofpoint-Spam-Reason: safe
 
-On 29/5/25 16:38, Jakub Kicinski wrote:
-> On Fri, 11 Apr 2025 10:59:04 +0100 Richard Fitzgerald wrote:
->> Enable CONFIG_INIT_STACK_ALL_PATTERN in all_tests.config. This helps
->> to detect use of uninitialized local variables.
->>
->> This option found an uninitialized data bug in the cs_dsp test.
->>
->> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
->> ---
->>   tools/testing/kunit/configs/all_tests.config | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
->> index cdd9782f9646..4a60bb71fe72 100644
->> --- a/tools/testing/kunit/configs/all_tests.config
->> +++ b/tools/testing/kunit/configs/all_tests.config
->> @@ -10,6 +10,7 @@ CONFIG_KUNIT_EXAMPLE_TEST=y
->>   CONFIG_KUNIT_ALL_TESTS=y
->>   
->>   CONFIG_FORTIFY_SOURCE=y
->> +CONFIG_INIT_STACK_ALL_PATTERN=y
+Hey,
+
+I was looking into testing this with the xe code on PVC, and noticed some small changes that would be useful to integrate before merging.
+
+On 2025-05-28 15:51, Alexander Usyskin wrote:
+> Enable access to internal non-volatile memory on DGFX
+> with GSC/CSC devices via a child device.
+> The nvm child device is exposed via auxiliary bus.
 > 
-> This breaks kunit for older compilers:
+> Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+> ---
+>  drivers/gpu/drm/xe/Makefile          |   1 +
+>  drivers/gpu/drm/xe/xe_device.c       |   5 ++
+>  drivers/gpu/drm/xe/xe_device_types.h |   6 ++
+>  drivers/gpu/drm/xe/xe_nvm.c          | 107 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/xe/xe_nvm.h          |  15 ++++
+>  drivers/gpu/drm/xe/xe_pci.c          |   6 ++
+>  6 files changed, 140 insertions(+)
+>  create mode 100644 drivers/gpu/drm/xe/xe_nvm.c
+>  create mode 100644 drivers/gpu/drm/xe/xe_nvm.h
+> 
+> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
+> index e4bf484d4121..4c51fe3520dc 100644
+> --- a/drivers/gpu/drm/xe/Makefile
+> +++ b/drivers/gpu/drm/xe/Makefile
+> @@ -80,6 +80,7 @@ xe-y += xe_bb.o \
+>  	xe_mmio.o \
+>  	xe_mocs.o \
+>  	xe_module.o \
+> +	xe_nvm.o \
+>  	xe_oa.o \
+>  	xe_observation.o \
+>  	xe_pat.o \
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index d4b6e623aa48..845b38aea692 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -46,6 +46,7 @@
+>  #include "xe_memirq.h"
+>  #include "xe_mmio.h"
+>  #include "xe_module.h"
+> +#include "xe_nvm.h"
+>  #include "xe_oa.h"
+>  #include "xe_observation.h"
+>  #include "xe_pat.h"
+> @@ -884,6 +885,8 @@ int xe_device_probe(struct xe_device *xe)
+>  			return err;
+>  	}
+>  
+> +	xe_nvm_init(xe);
+> +
+>  	err = xe_heci_gsc_init(xe);
+>  	if (err)
+>  		return err;
+> @@ -941,6 +944,8 @@ void xe_device_remove(struct xe_device *xe)
+>  {
+>  	xe_display_unregister(xe);
+>  
+> +	xe_nvm_fini(xe);
+> +
+>  	drm_dev_unplug(&xe->drm);
+>  
+>  	xe_bo_pci_dev_remove_all(xe);
+> diff --git a/drivers/gpu/drm/xe/xe_device_types.h b/drivers/gpu/drm/xe/xe_device_types.h
+> index 50b2bfa682ac..938cf1a440de 100644
+> --- a/drivers/gpu/drm/xe/xe_device_types.h
+> +++ b/drivers/gpu/drm/xe/xe_device_types.h
+> @@ -35,6 +35,7 @@
+>  #include "intel_display_device.h"
+>  #endif
+>  
+> +struct intel_dg_nvm_dev;
+>  struct xe_ggtt;
+>  struct xe_pat_ops;
+>  struct xe_pxp;
+> @@ -319,6 +320,8 @@ struct xe_device {
+>  		u8 has_fan_control:1;
+>  		/** @info.has_flat_ccs: Whether flat CCS metadata is used */
+>  		u8 has_flat_ccs:1;
+> +		/** @info.has_gsc_nvm: Device has gsc non-volatile memory */
+> +		u8 has_gsc_nvm:1;
+Is this flag really needed, or is IS_DGFX() enough? It's literally only used during NVM init, so any conditions could probably just be put there.
 
-Drop it then.
-It's not essential. Just something that showed a bug in a test so I
-thought would be useful to test always. But if there are compatibility
-problems it would be better not to have it in all_tests.
+>  		/** @info.has_heci_cscfi: device has heci cscfi */
+>  		u8 has_heci_cscfi:1;
+>  		/** @info.has_heci_gscfi: device has heci gscfi */
+> @@ -544,6 +547,9 @@ struct xe_device {
+>  	/** @heci_gsc: graphics security controller */
+>  	struct xe_heci_gsc heci_gsc;
+>  
+> +	/** @nvm: discrete graphics non-volatile memory */
+> +	struct intel_dg_nvm_dev *nvm;
+> +
+>  	/** @oa: oa observation subsystem */
+>  	struct xe_oa oa;
+>  
+> diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
+> new file mode 100644
+> index 000000000000..33ba635ce116
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_nvm.c
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: MIT
+> +/*
+> + * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
+> + */
+> +
+> +#include <linux/intel_dg_nvm_aux.h>
+> +#include <linux/pci.h>
+> +
+> +#include "xe_device_types.h"
+> +#include "xe_nvm.h"
+> +#include "xe_sriov.h"
+> +
+> +#define GEN12_GUNIT_NVM_BASE 0x00102040
+> +#define GEN12_GUNIT_NVM_SIZE 0x80
+> +#define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
+> +
+> +static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
+> +	[0] = { .name = "DESCRIPTOR", },
+> +	[2] = { .name = "GSC", },
+> +	[9] = { .name = "PADDING", },
+> +	[11] = { .name = "OptionROM", },
+> +	[12] = { .name = "DAM", },
+> +};
+> +
+Small ask, can we enable PSC for PVC too? Or at least bump regions with 1 so it's doable.
 
+> +static void xe_nvm_release_dev(struct device *dev)
+> +{
+> +}
+> +
+> +int xe_nvm_init(struct xe_device *xe)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
+> +	struct auxiliary_device *aux_dev;
+> +	struct intel_dg_nvm_dev *nvm;
+> +	int ret;
+> +
+> +	if (!xe->info.has_gsc_nvm)
+> +		return 0;
+> +
+> +	/* No access to internal NVM from VFs */
+> +	if (IS_SRIOV_VF(xe))
+> +		return 0;
+> +
+> +	/* Nvm pointer should be NULL here */
+> +	if (WARN_ON(xe->nvm))
+> +		return -EFAULT;
+> +
+> +	xe->nvm = kzalloc(sizeof(*nvm), GFP_KERNEL);
+> +	if (!xe->nvm)
+> +		return -ENOMEM;
+> +
+> +	nvm = xe->nvm;
+> +
+> +	nvm->writable_override = false;
+> +	nvm->bar.parent = &pdev->resource[0];
+> +	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
+> +	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
+> +	nvm->bar.flags = IORESOURCE_MEM;
+> +	nvm->bar.desc = IORES_DESC_NONE;
+> +	nvm->regions = regions;
+> +
+> +	aux_dev = &nvm->aux_dev;
+> +
+> +	aux_dev->name = "nvm";
+> +	aux_dev->id = (pci_domain_nr(pdev->bus) << 16) | pci_dev_id(pdev);
+> +	aux_dev->dev.parent = &pdev->dev;
+> +	aux_dev->dev.release = xe_nvm_release_dev;
+> +
+> +	ret = auxiliary_device_init(aux_dev);
+> +	if (ret) {
+> +		drm_err(&xe->drm, "xe-nvm aux init failed %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = auxiliary_device_add(aux_dev);
+> +	if (ret) {
+> +		drm_err(&xe->drm, "xe-nvm aux add failed %d\n", ret);
+> +		auxiliary_device_uninit(aux_dev);
+> +		goto err;
+> +	}
+> +	return 0;
+> +
+> +err:
+> +	kfree(nvm);
+> +	xe->nvm = NULL;
+> +	return ret;
+> +}
+> +
+> +void xe_nvm_fini(struct xe_device *xe)
+> +{
+> +	struct intel_dg_nvm_dev *nvm = xe->nvm;
+> +
+> +	if (!xe->info.has_gsc_nvm)
+> +		return;
+> +
+> +	/* No access to internal NVM from VFs */
+> +	if (IS_SRIOV_VF(xe))
+> +		return;
+> +
+> +	/* Nvm pointer should not be NULL here */
+> +	if (WARN_ON(!nvm))
+> +		return;
+> +
+> +	auxiliary_device_delete(&nvm->aux_dev);
+> +	auxiliary_device_uninit(&nvm->aux_dev);
+> +	kfree(nvm);
+> +	xe->nvm = NULL;
+> +}
+In xe, instead of exporting nvm_fini, it would be good to use the drmm interface, like drmm_kzalloc for allocating NVM so it doesn't have to be freed on failure, and drmm_add_action_or_reset as last action in during init. That also removes all checks from fini().
+
+> diff --git a/drivers/gpu/drm/xe/xe_nvm.h b/drivers/gpu/drm/xe/xe_nvm.h
+> new file mode 100644
+> index 000000000000..7f3d5f57bed0
+> --- /dev/null
+> +++ b/drivers/gpu/drm/xe/xe_nvm.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: MIT */
+> +/*
+> + * Copyright(c) 2019-2025 Intel Corporation. All rights reserved.
+> + */
+> +
+> +#ifndef __XE_NVM_H__
+> +#define __XE_NVM_H__
+> +
+> +struct xe_device;
+> +
+> +int xe_nvm_init(struct xe_device *xe);
+> +
+> +void xe_nvm_fini(struct xe_device *xe);
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
+> index b68c90910d82..6aa9850bb342 100644
+> --- a/drivers/gpu/drm/xe/xe_pci.c
+> +++ b/drivers/gpu/drm/xe/xe_pci.c
+> @@ -63,6 +63,7 @@ struct xe_device_desc {
+>  
+>  	u8 has_display:1;
+>  	u8 has_fan_control:1;
+> +	u8 has_gsc_nvm:1;
+>  	u8 has_heci_gscfi:1;
+>  	u8 has_heci_cscfi:1;
+>  	u8 has_llc:1;
+> @@ -271,6 +272,7 @@ static const struct xe_device_desc dg1_desc = {
+>  	PLATFORM(DG1),
+>  	.dma_mask_size = 39,
+>  	.has_display = true,
+> +	.has_gsc_nvm = 1,
+>  	.has_heci_gscfi = 1,
+>  	.require_force_probe = true,
+>  };
+> @@ -282,6 +284,7 @@ static const u16 dg2_g12_ids[] = { INTEL_DG2_G12_IDS(NOP), 0 };
+>  #define DG2_FEATURES \
+>  	DGFX_FEATURES, \
+>  	PLATFORM(DG2), \
+> +	.has_gsc_nvm = 1, \
+>  	.has_heci_gscfi = 1, \
+>  	.subplatforms = (const struct xe_subplatform_desc[]) { \
+>  		{ XE_SUBPLATFORM_DG2_G10, "G10", dg2_g10_ids }, \
+> @@ -318,6 +321,7 @@ static const __maybe_unused struct xe_device_desc pvc_desc = {
+>  	PLATFORM(PVC),
+>  	.dma_mask_size = 52,
+>  	.has_display = false,
+> +	.has_gsc_nvm = 1,
+>  	.has_heci_gscfi = 1,
+>  	.max_remote_tiles = 1,
+>  	.require_force_probe = true,
+> @@ -346,6 +350,7 @@ static const struct xe_device_desc bmg_desc = {
+>  	.dma_mask_size = 46,
+>  	.has_display = true,
+>  	.has_fan_control = true,
+> +	.has_gsc_nvm = 1,
+>  	.has_heci_cscfi = 1,
+>  	.needs_scratch = true,
+>  };
+> @@ -589,6 +594,7 @@ static int xe_info_init_early(struct xe_device *xe,
+>  	xe->info.dma_mask_size = desc->dma_mask_size;
+>  	xe->info.is_dgfx = desc->is_dgfx;
+>  	xe->info.has_fan_control = desc->has_fan_control;
+> +	xe->info.has_gsc_nvm = desc->has_gsc_nvm;
+>  	xe->info.has_heci_gscfi = desc->has_heci_gscfi;
+>  	xe->info.has_heci_cscfi = desc->has_heci_cscfi;
+>  	xe->info.has_llc = desc->has_llc;
+
+Kind regards,
+Maarten Lankhorst
