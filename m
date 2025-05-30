@@ -1,108 +1,168 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B319C1EB5D8
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420D91EB5D8;
+	Fri, 30 May 2025 09:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748596060; cv=none; b=HVWGgFRu5CLVtIURio40Uiz23+qgx2NTYQwiHCIBsiulxGGsC/hwpfKVhktiVWiW0+YT15a3AHD9c3XIBmRVxviZ4h0yBhRdBK6CSoyZlBvaLQJffFxHhlCMUIsHBsiDxrec7Tc/HBzOJm61v6oHCO5TX4mmlobL8ucppR2TJ4Q=
+	t=1748596134; cv=none; b=U9XQdV9YYkAgBBWSWwV/f25KFGrKgMHyo3oZQF5oA7HVrTEFS79SW2swJKSYGbaCV0rI3ADubUsaN+lrSa23dNNgEAaVFPntMEfFmp2wQM6z7kxCtLpwaGFHIRpZjzzS5su5S7eMpJ+M7LDzU1/VdGL/olGBTBOC0B9ElRYiRUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748596060; c=relaxed/simple;
-	bh=h+TkNw1WSw5h2ie4iNPmD4FUqfKlAYlww7F89EL7Zj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pE+gbp6NcYWMYBqSGkRWlH02VeMaP1UbyG3l/OvNqV1AsEY7XF5tzndph+CefFiPtHIkm2vQry2pLvrlxcqfgIvNiJqh6nDXo6DfCWskF+9r1py4nbkT8VtBbF9F5P/nHyBcQ7yFxOzphIWq+t9jIbnOXqQWRmRtpq8TlURqA0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bfGIKTkI; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748596134; c=relaxed/simple;
+	bh=kyXdt8s0xKz4LjroE2u3gSZ0qK9QnI9kcAdnHQnzJj8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UpT09/elycHJ4rE5KgttTEhX+isDEivw5H1K+MZFqg7K+ISSIKJVGQdu/DHdZfqhgCcHaLxXM8mbkqCYo94qYBHZGnuLnVOWshCk1PWgXRNzF831Xbfh9HaNrsSR9RK5ds3gJrmi5WrUf9OQuZVXOQl8WFNF6e+ZemD9w2yWsBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZB1U/Pdf; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bfGIKTkI"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4508287895dso16088895e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748596056; x=1749200856; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TBoLdDgTszvKcfmqb+9eLVb2IyFbtgcQV42UVzWvyCE=;
-        b=bfGIKTkIbHwJ+9159+XtKHc/+B8CbqncqsKUB0RdiW/swP7j1VTEDyd1s65kS5HzbF
-         W7FSgVKOGrG05f75afqWkX8Fduc42BFl5Rs9V7+Bp7wHqNEB8fEHLRh8uZASjawhOOef
-         xLkPL4Tv2he21nYyZR0k8nNbQeGPiqiaNnwd+8t2QJAxSkN9C3V/ApVSs0OuyFjnOHym
-         8WkvNzGb1o5lvGvcVX5BI4ckg6s5TQl3+BMe5mOdirqxbNWDxasa9+b3bP5TfnU0VM8J
-         MMlhPyQbCMLprSI/24iYsfZMurk8REyXTC9aCc/MVH5c+EsQvzW51h+ZGllWFAxG64Mb
-         eYkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748596056; x=1749200856;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TBoLdDgTszvKcfmqb+9eLVb2IyFbtgcQV42UVzWvyCE=;
-        b=kbra0hL/OCX88URHcxPTyaK9MQ9asiMcAqlzxZnc7m18JRCJBZUv3LNib7KoBnaCDm
-         5bhsjtMVUZCkN8KmYvBF+q/L00kuV1ZiXCyhxiBDEtSViKiUdmM0L5CFHC1T/rTMUZbO
-         SJjNszbvGwbeLFerOcT/MPI3xnTeWzf9iW2SHqXYLqJv51zGTsMosslf2bTCPeJ2ipt7
-         SznT7RgyzkZ7ig2PsnZdGfX0QyGi/9E8xMP13g9moy0iOQnjqaZp4VP49vNUxr03PF4O
-         pI1wz3amltNuWE3cPFKf8re3nq94//BLFyYmm7hrqKIIuaVfw4vTcMIYKyXu+X8Gg5zC
-         3QOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUd56A8fkxhCpVefZdtL+WYj4O1gLKblmqvUX4wu1g0B0JrcDTuWM4rlROT81HAqhXCWei3L6cyGS0kY6E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypjMNVs93U0q0FIzqJHIJy7/GszR7ht7W1KbV2Gs25+HjuPWA8
-	weSs9ItLsp6MB19d/iU0+Jl+0Ro/Dj6Cl0tBOT2n0ETjJierFNGVd9XBU4Wgj593R0U=
-X-Gm-Gg: ASbGncukCeO9WP66NVRdJbLzwmYU6H4RNNv+NGpOEVxbbfrJielcKyznSLk3WP8HTzV
-	lK0oViMlNH8X59HPz/gqKCjTLHArYw/5UwhSCn36qhKuyay67CBBOvzESahIoSFX/x+CgnkwcoC
-	6oNlJWE04jC3BwQAPXhse+iCWZOVizqMFxUkASnXlAAriemvpVjVi3oyPsf8y7yJlPsvlYQxd8V
-	DlTgoyfFx2f/RS3Dll/aGV8mT2YF53hVycOXT9gBqN/3eoXz//QDvlID2k3Ln5q3a5AkxYatRMH
-	NubEofJCk9t39/ibhJJFlXYA8Xx9RgwxwPcZOJxmBF+twFRqw3y/BfUs84C/x3/fvakK245pUcE
-	inADWmBgfTQ==
-X-Google-Smtp-Source: AGHT+IEqyiCNMlturDlCUFIxx4iLoEZ93zytjOhgqluhNHe7ssc/aGQOO2bx+VoGalmOEoFz61oKqg==
-X-Received: by 2002:a05:600c:34cd:b0:450:c9e3:91fe with SMTP id 5b1f17b1804b1-450d69abea4mr18955185e9.0.1748596055760;
-        Fri, 30 May 2025 02:07:35 -0700 (PDT)
-Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450d7f1b0a4sm12546965e9.0.2025.05.30.02.07.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 02:07:35 -0700 (PDT)
-Date: Fri, 30 May 2025 11:07:34 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
-Message-ID: <aDl1ViMpK_6q_z06@tiehlicka>
-References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
- <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
- <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
- <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
- <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
- <aDgQ0lbt1h5v0lgE@tiehlicka>
- <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
- <aDlsF5tAcUxo4VgT@tiehlicka>
- <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZB1U/Pdf"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D06D643349;
+	Fri, 30 May 2025 09:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748596129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YDcQoFFC4NqCXcyobvRRuP1Ua4ytiuIE7XjIkD34fbk=;
+	b=ZB1U/Pdfi7HtDnqYB1OWNlxulO3P8Fzu1T1afPYQ754WfHDNuOCqhr37hUY6ZczMdot6mN
+	iKfgB57p8ne86qqiVAZL4T0zsuD2oXjkNi9Lx3+FRbgiijwLmb9ZSxZ3KK2eC8Xqd9CioZ
+	yzOYPApcG7YNnNy58ZNYVwhc7L78+lx/W8BrCXo2NEU35lMAFE1SSpZx26hyQJVZ3Nrnmb
+	w6+mG5x8R8W7GNQ2s81ezwluiyStYudEhpPnKiYruUKX3GhapRbICKk4/l3DWhZDNjo9ME
+	QUFFW58toUQT05s34GNXa92rPdx7Bu+JwK3kC06Yh9cWmK4T9/7lyc5QvFJqLA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>,
+ Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+ Antoine Tenart <atenart@kernel.org>, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>, Daniel Golle <daniel@makrotopia.org>,
+ Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Subject:
+ Re: [PATCH net-next v6 06/14] net: phy: Introduce generic SFP handling for
+ PHY drivers
+Date: Fri, 30 May 2025 11:08:41 +0200
+Message-ID: <12687918.O9o76ZdvQC@fw-rgant>
+In-Reply-To: <aDliS9uMFaLf2lCV@shell.armlinux.org.uk>
+References:
+ <20250507135331.76021-1-maxime.chevallier@bootlin.com>
+ <6159237.lOV4Wx5bFT@fw-rgant> <aDliS9uMFaLf2lCV@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
+Content-Type: multipart/signed; boundary="nextPart5904461.DvuYhMxLoT";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeeiudculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfgggtsehgtderredttdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfdvleekvefgieejtdduieehfeffjefhleegudeuhfelteduiedukedtieehlefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehffidqrhhgrghnthdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvg
+ hgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqmhhsmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Fri 30-05-25 10:39:39, David Hildenbrand wrote:
-> On 30.05.25 10:28, Michal Hocko wrote:
-[...]
-> > All that being said I would go with an additional parameter to the
-> > kdump cma setup - e.g. cma_sane_dma that would skip waiting and use 10s
-> > otherwise. That would make the optimized behavior opt in, we do not need
-> > to support all sorts of timeouts and also learn if this is not
-> > sufficient.
+--nextPart5904461.DvuYhMxLoT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Date: Fri, 30 May 2025 11:08:41 +0200
+Message-ID: <12687918.O9o76ZdvQC@fw-rgant>
+In-Reply-To: <aDliS9uMFaLf2lCV@shell.armlinux.org.uk>
+MIME-Version: 1.0
+
+On Friday, 30 May 2025 09:46:19 CEST Russell King (Oracle) wrote:
+> On Fri, May 30, 2025 at 09:28:11AM +0200, Romain Gantois wrote:
+> > On Thursday, 29 May 2025 15:23:22 CEST Russell King (Oracle) wrote:
+> > > On Wed, May 28, 2025 at 09:35:35AM +0200, Romain Gantois wrote:
+> > > > > In that regard, you can consider 1000BaseX as a MII mode (we do have
+> > > > > PHY_INTERFACE_MODE_1000BASEX).
+> > > > 
+> > > > Ugh, the "1000BaseX" terminology never ceases to confuse me, but yes
+> > > > you're
+> > > > right.
+> > > 
+> > > 1000BASE-X is exactly what is described in IEEE 802.3. It's a PHY
+> > > interface mode because PHYs that use SerDes can connect to the host
+> > > using SGMII or 1000BASE-X over the serial link.
+> > > 
+> > > 1000BASE-X's purpose in IEEE 802.3 is as a protocol for use over
+> > > fibre links, as the basis for 1000BASE-SX, 1000BASE-LX, 1000BASE-EX
+> > > etc where the S, L, E etc are all to do with the properties of the
+> > > medium that the electrical 1000BASE-X is sent over. It even includes
+> > > 1000BASE-CX which is over copper cable.
 > > 
-> > Makes sense?
+> > Ah makes sense, thanks for the explanation. I guess my mistake was
+> > assuming
+> > that MAC/PHY interface modes were necessarily strictly at the
+> > reconciliation sublayer level, and didn't include PCS/PMA functions.
 > 
-> Just so I understand correctly, you mean extending the "crashkernel=" option
-> with a boolean parameter? If set, e.g., wait 1s, otherwise magic number 10?
+> When a serdes protocol such as SGMII, 1000BASE-X, or 10GBASE-R is being
+> used with a PHY, the IEEE 802.3 setup isn't followed exactly - in
+> effect there are more layers.
+> 
+> On the SoC:
+> 
+> 	MAC
+> 	Reconciliation (RS)
+> 	PCS
+> 	SerDes (part of the PMA layer)
+> 
+> On the PHY side of the SerDes host-to-phy link:
+> 
+> 	SerDes
+> 	PCS (which may or may not be exposed in the PHY register set,
+> 	     and is normally managed by the PHY itself)
+> 	(maybe other layers, could include MACs	back-to-back)
+> 	PCS
+> 	PMA
+> 	PMD
+> 
+> Hope that helps explain what's going on a little more.
 
-crashkernel=1G,cma,cma_sane_dma # no wait on transition
-crashkernel=1G,cma # wait on transition with e.g. 10s timeout
+Definitely helps a lot, thanks.
+
 -- 
-Michal Hocko
-SUSE Labs
+Romain Gantois, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--nextPart5904461.DvuYhMxLoT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmg5dZkACgkQ3R9U/FLj
+285M0g/+Nz1A6obdeKee0RLc6MA2gBvM/EmqYPQ6ZduN6VFL2D6J4NATyQRqu/VW
+u4d0pjD2ZOe44w6eAeRcWHsC0LJYfnHPPMhxekF2l+qqggkvZDGp9BmWJZd5UUe0
+dDxur4qI6XF2WlWDXyf9auZ3iGvqOUnWYK7VsLu/1hMYeC8M0Q+5dwy72//aAGnH
+9lyBU77a7sd3Qhlnd5Flg5f9ZuQmfqcD7Hyjp0OXdSJr7TlXLPJ+4FffNTivOQMK
+WonmDnfUOSPfxukMd0ozR7Z2BdvUeKPrlQq6yvcC5aS+9WZvVWCZzLOLrlBylu50
+wtEnYLpXd8QVehLsZGfE8mB4u+IuJICnEKhhrQ7YSLdjmXkj4VHCZHjl28WrI5rP
+wMCczhfYk4tDM83L2TBDVX5DTvcIcBawWlGxwzOdZ8WbipSVt5LZMtAkICE9TZzz
+j0oJ6+4xxi8mXGVduWD7kztOgXFl+UAx9GG8RsWoSPE0+t1f2nO0YV55UTW5RhEA
+/hNR+P1Z8pB9SHjHM9TskW6LC4Z/NEIBnI0N98BacAdjSc/KX4uHSH01ANVHRyEs
+wD5PJQKAj705h81tvNA4RzUkqC+UAa9bjtE3gtqj0KnusZhSiPBtIRe55sJ3W9aU
+uYNbFO3CW8dD+WMqYm9fQrWtbqX/tOWRCOzdM5KMSNpbVyBWNDs=
+=r0Tf
+-----END PGP SIGNATURE-----
+
+--nextPart5904461.DvuYhMxLoT--
+
+
+
