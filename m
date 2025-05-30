@@ -1,166 +1,110 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F6C27BF86;
-	Fri, 30 May 2025 19:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F80827D782
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 19:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748633378; cv=none; b=Ejc+U8ph88T9w9lZupq0ahb4CublbaL3hMoxCNI6jl+EB3QAGMdnb9bXamWxtA/rM/08iTXU1AUNtmDX7WrnoQO3xHzJSn2JqeL45m3ZpWZotMS5KiCbCwUc/jGnYTBZvlAcO1rNjlzOxh2cS65qk4k2o9Djeyqj4WL3fE9yvxw=
+	t=1748633382; cv=none; b=apqDImN3Eh1LrHuvHj1Z0QwwTfDTpaN/xOLcK1mB5Zyd+r/K7RTgWyjL7i7+Xn4FSV9gBJzsY1aOeEj3vYXRMMBZtbAf16UaRpjefQ95oJC9IfR+Xjg6fO/M+ydlwPBvpXHet1jkuzjelPj6JXMoxOVca1kUdRK0EsSvtm1kDzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748633378; c=relaxed/simple;
-	bh=kznznVOiTt0rMPoIbwckts/UG2t7rn7iMzsEsUG214w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JMyT+3A40BNd6Cx5bzI5P2v90pT2G2QB4fg84E9F2DykrWviuDuuBDQpEi/8romBMrQH9nbKeAUInWP1Yt1CpEPyTxsvMNX80I495JRL/erwHcBD+ny06ChlK1YAwPV0yhkzb1v7pHpMXaEPvw+FaDuJq15gy0egUNWRxcct8cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b8Cws1XJzz9spY;
-	Fri, 30 May 2025 21:29:33 +0200 (CEST)
-From: Remo Senekowitsch <remo@buenzli.dev>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>,
-	Remo Senekowitsch <remo@buenzli.dev>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v7 4/9] rust: device: Enable printing fwnode name and path
-Date: Fri, 30 May 2025 21:28:51 +0200
-Message-ID: <20250530192856.1177011-5-remo@buenzli.dev>
-In-Reply-To: <20250530192856.1177011-1-remo@buenzli.dev>
-References: <20250530192856.1177011-1-remo@buenzli.dev>
+	s=arc-20240116; t=1748633382; c=relaxed/simple;
+	bh=VHN1sgts+2xB2xrF6P1F1g5v6UKe5rxGHeCV1L66Wxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ANAPrhACrni4jv1/JUyn8/HQdIF0/kPTWEmMewX2zwLrw25K+Y8k+x7iR4L59ML6S+F0r4GLabHDWUQP/hK0AJvynKP8czwSKYK4XO/I2yUnqjOXb/fEJGI/PANG+aEsSagXF/bCwTI+g92ihA6VZqgaxnBV+5J2HimK5i5EC6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qejIatAl; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qejIatAl"
+Message-ID: <0dcd01cd-419f-4225-b22c-cbaf82718235@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748633376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tkiGcg9Pp6HB9HenrxwiWzm/IMuLvXwvBc2ohIpTcuU=;
+	b=qejIatAl3IVBpVjd5b1sjdObGZ7rJABj1bGentvPoaT9Gk2nMpl/NODNwtlNVuxD7mIwiW
+	xTQUdOt6Gu3DaCC7BjJCdrWEHh521evt/yWAJJhiesYDNH5GuqToxdnr9DVQXVDc4uDjZ3
+	Hq4CVYV8tCgSZSBhWUbuMlqAshgB7wA=
+Date: Fri, 30 May 2025 12:29:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
+ 3.0
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>,
+ Andrew Jones <ajones@ventanamicro.com>
+Cc: Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Mayuresh Chitale <mchitale@ventanamicro.com>,
+ linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org,
+ linux-riscv <linux-riscv-bounces@lists.infradead.org>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+ <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+ <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+ <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+ <20250526-224478e15ee50987124a47ac@orel>
+ <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
+ <20250528-ff9f6120de39c3e4eefc5365@orel>
+ <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
+ <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
+ <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
+ <DA9G60UI0ZLC.1KIWBXCTX0427@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <DA9G60UI0ZLC.1KIWBXCTX0427@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Add two new public methods `display_name` and `display_path` to
-`FwNode`. They can be used by driver authors for logging purposes. In
-addition, they will be used by core property abstractions for automatic
-logging, for example when a driver attempts to read a required but
-missing property.
 
-Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
----
- rust/kernel/device/property.rs | 79 +++++++++++++++++++++++++++++++++-
- 1 file changed, 78 insertions(+), 1 deletion(-)
+On 5/30/25 4:09 AM, Radim Krčmář wrote:
+> 2025-05-29T11:44:38-07:00, Atish Patra <atish.patra@linux.dev>:
+>> On 5/29/25 3:24 AM, Radim Krčmář wrote:
+>>> I originally gave up on the idea, but I feel kinda bad for Drew now, so
+>>> trying again:
+>> I am sorry if some of my replies came across in the wrong way. That was
+>> never
+>> the intention.
+> I didn't mean to accuse you, my apologies.  I agree with Drew's
+> positions, so to expand on a question that wasn't touched in his mail:
+>
+>>> Even if userspace wants SBI for the M-mode interface, security minded
+>> This is probably a 3rd one ? Why we want M-mode interface in the user
+>> space ?
+> It is about turning KVM into an ISA accelerator.
+>
+> A guest thinks it is running in S/HS-mode.
+> The ecall instruction traps to M-mode.  RISC-V H extension doesn't
+> accelerate M-mode, so we have to emulate the trap in software.
+We don't need to accelerate M-mode. That's the beauty of the RISC-V H 
+extension.
+The ISA is designed in such a way that the SBI is the interface between 
+the supervisor environment (VS/HS)
+and the supervisor execution environment (HS/M).
 
-diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-index 50c61aa056e6b..8e0414b0517e4 100644
---- a/rust/kernel/device/property.rs
-+++ b/rust/kernel/device/property.rs
-@@ -9,7 +9,7 @@
- use crate::{
-     bindings,
-     str::CStr,
--    types::{ARef, Opaque},
-+    types::{ARef, Either, Opaque},
- };
- 
- /// A reference-counted fwnode_handle.
-@@ -57,6 +57,83 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-         self.0.get()
-     }
- 
-+    /// Returns an object that implements [`Display`](core::fmt::Display) for
-+    /// printing the name of a node.
-+    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
-+        struct FwNodeDisplayName<'a>(&'a FwNode);
-+
-+        impl core::fmt::Display for FwNodeDisplayName<'_> {
-+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+                // SAFETY: `self` is valid by its type invariant.
-+                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
-+                if name.is_null() {
-+                    return Ok(());
-+                }
-+                // SAFETY:
-+                // - `fwnode_get_name` returns null or a valid C string.
-+                // - `name` was checked to be non-null.
-+                let name = unsafe { CStr::from_char_ptr(name) };
-+                write!(f, "{name}")
-+            }
-+        }
-+
-+        FwNodeDisplayName(self)
-+    }
-+
-+    /// Returns an object that implements [`Display`](core::fmt::Display) for
-+    /// printing the full path of a node.
-+    pub fn display_path(&self) -> impl core::fmt::Display + '_ {
-+        struct FwNodeDisplayPath<'a>(&'a FwNode);
-+
-+        impl core::fmt::Display for FwNodeDisplayPath<'_> {
-+            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-+                // The logic here is the same as the one in lib/vsprintf.c
-+                // (fwnode_full_name_string).
-+
-+                // SAFETY: `self.0.as_raw()` is valid by its type invariant.
-+                let num_parents = unsafe { bindings::fwnode_count_parents(self.0.as_raw()) };
-+
-+                for depth in (0..=num_parents).rev() {
-+                    let fwnode = if depth == 0 {
-+                        Either::Left(self.0)
-+                    } else {
-+                        // SAFETY: `self.0.as_raw()` is valid.
-+                        let ptr =
-+                            unsafe { bindings::fwnode_get_nth_parent(self.0.as_raw(), depth) };
-+                        // SAFETY:
-+                        // - The depth passed to `fwnode_get_nth_parent` is
-+                        //   within the valid range, so the returned pointer is
-+                        //   not null.
-+                        // - The reference count was incremented by
-+                        //   `fwnode_get_nth_parent`.
-+                        // - That increment is relinquished to
-+                        //   `FwNode::from_raw`.
-+                        Either::Right(unsafe { FwNode::from_raw(ptr) })
-+                    };
-+                    // Take a reference to the owned or borrowed `FwNode`.
-+                    let fwnode: &FwNode = match &fwnode {
-+                        Either::Left(f) => f,
-+                        Either::Right(f) => f,
-+                    };
-+
-+                    // SAFETY: `fwnode` is valid by its type invariant.
-+                    let prefix = unsafe { bindings::fwnode_get_name_prefix(fwnode.as_raw()) };
-+                    if !prefix.is_null() {
-+                        // SAFETY: `fwnode_get_name_prefix` returns null or a
-+                        // valid C string.
-+                        let prefix = unsafe { CStr::from_char_ptr(prefix) };
-+                        write!(f, "{prefix}")?;
-+                    }
-+                    write!(f, "{}", fwnode.display_name())?;
-+                }
-+
-+                Ok(())
-+            }
-+        }
-+
-+        FwNodeDisplayPath(self)
-+    }
-+
-     /// Checks if property is present or not.
-     pub fn property_present(&self, name: &CStr) -> bool {
-         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
--- 
-2.49.0
+
+>
+> The ISA doesn't say that M-mode means SBI.  We try really hard to have
+> SBI on all RISC-V, but I think KVM is taking it a bit too far.
+>
+> We can discuss how best to describe SBI, so userspace can choose to
+> accelerate the M-mode in KVM, but I think that the ability to emulate
+> M-mode in userspace should be provided.
+I am still trying to understand the advantages of emulating the M-mode 
+in the user space.
+Can you please elaborate ?
+I am assuming you are not hinting Nested virtualization which can be 
+achieved with existing
+ISA provided mechanisms and accelerated by SBI NACL.
+
 
