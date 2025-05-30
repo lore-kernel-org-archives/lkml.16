@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B2927A105;
-	Fri, 30 May 2025 12:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88057233701;
+	Fri, 30 May 2025 12:41:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608914; cv=none; b=gEmVTu6Xd/fCGzZ1HzU3iyWlTUN2XngZnWU4FCFVsQIfHx/J8ZX1eRjt5Gw9b+zXBVQWR68bmBmfZGrtGzH7HMlWz8GSuQ7YdrOZ9VJbKYhrep4Iw4WkGD0kG6J9f23XyEpQ0iIHNlyC1MDJHmxDaNzTnt6jj0teL/LoSpmHfuc=
+	t=1748608917; cv=none; b=uQA7IJ/RAZAfDo56PTaAi4I3qwVbADgrRzVrfpFlPhyNlDURJVRrMRFfgdDK/dXztTs5l57mJttYaaV7fs5rPy7kpLkp8fvXIkjbjO93MUp28wZyLUM3+EtQwcTTCBxYVE4yO20YW8rUF+s3oI9rls90uBVy0xYWxJ7rtJ80MkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608914; c=relaxed/simple;
-	bh=bIsmsBorD41oHc3cckSULlGCl4kPMmuXZw2svrqf0jU=;
+	s=arc-20240116; t=1748608917; c=relaxed/simple;
+	bh=e7HZeqKfLLry3pfg2v3oJf98ykIcBU8t4Qs/CDvAOOQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gAkkT6qjo8jvNL1ofduyXCka27n1c76BTZCGXHGZZj4VAf04gnVh/5Haihx3F/loe+f89Fjg8GP66baNENB6/viQh7R0vZFACLL6AryAQWyPyXL6hCo6oeR02d4fqyBP2QO9EwK6F6+SREZiwDVtRFiaahNS2ocPOwB4jaRguo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWy2Yx1s; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=E3MAdwij4g6fkaxH7DK1D5JJAzX5o11tT9DcvrQMoI+xJUCs1bI/M84fSFEkySxKSn0SkR3WVqx4WxAW8aGUDYCBL4K3lLymY0onzboMyvBk8IROZgH24g+9MPws69yiYkzLcBGc9Zti6dG8fvwoYpbTsO0iY4q+tY5ECuNehqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOnapcMq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWy2Yx1s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40732C4CEEB;
-	Fri, 30 May 2025 12:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOnapcMq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E091C4CEF2;
+	Fri, 30 May 2025 12:41:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608914;
-	bh=bIsmsBorD41oHc3cckSULlGCl4kPMmuXZw2svrqf0jU=;
+	s=k20201202; t=1748608917;
+	bh=e7HZeqKfLLry3pfg2v3oJf98ykIcBU8t4Qs/CDvAOOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nWy2Yx1s2yH69Ih1vUs3eJ1nhOYJczRfrNBALTunauyPlnv0oIDkF8sYJ7lF4vxap
-	 SFZiPOvHkJhukuEfjE2P29ZNwk18hS237MxjARL53wp9vSgNBV6sWwcQZ4a9GkKT2d
-	 Hd+KKzti5y4rCiV03GR7iKZxusXxzoil7nRCe4JXUFglCIppp//DcJlIlor5I+w+gH
-	 /zDjEvvf3KnDfTX4MwJElfeB1hlgglrOcOZkqM9kaLB33jPI8uDsqbpHwEaI5uMsZ0
-	 TNpy/OomLB4lw2wV6pof6LiPxNqT1lkmkrcYZm75lisdt9MLs1j1jWe/+4R9EK2BuV
-	 Y/aHyR5LKumkg==
+	b=YOnapcMqxkDykUXo9E7I0nEac1uP00//+lx6e5HvvKJ9O6aA4VSxM60TNDE9qBaK4
+	 C3DvdYeErpnaYr3uUczhaQNiQ2Uyrxap/uRxc9RGwfO/c8PoNpaR7SG/5X1sdi33up
+	 kUVlG/Q+3hM+jFc5zUARcwUzVdiryspaFzrDRmmYtt2FZXpGWeAwQmuioF7WAtMCdi
+	 bPpYkFu8z+lY+VT9ow4ad/iojcdFd+mleNc+Xc1CrfCByCkroI03YBQFk/im8bXY3C
+	 6Ig7jalQ7F85z5KPrH9UubPs+BmSv+eJIgIvC76drjEvMx0Vn6JRMlwFgYnGSBZkAe
+	 fz+wsuGp8/t7w==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Hector Martin <marcan@marcan.st>,
-	Neal Gompa <neal@gompa.dev>,
-	James Calligeros <jcalligeros99@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Jerry Lv <Jerry.Lv@axis.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
+	sre@kernel.org,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 04/10] ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
-Date: Fri, 30 May 2025 08:41:42 -0400
-Message-Id: <20250530124148.2576913-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 06/10] power: supply: bq27xxx: Retrieve again when busy
+Date: Fri, 30 May 2025 08:41:44 -0400
+Message-Id: <20250530124148.2576913-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530124148.2576913-1-sashal@kernel.org>
 References: <20250530124148.2576913-1-sashal@kernel.org>
@@ -51,118 +48,132 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
-From: Hector Martin <marcan@marcan.st>
+From: Jerry Lv <Jerry.Lv@axis.com>
 
-[ Upstream commit f529c91be8a34ac12e7599bf87c65b6f4a2c9f5c ]
+[ Upstream commit f16d9fb6cf03fdbdefa41a8b32ba1e57afb7ae3d ]
 
-The ISENSE/VSENSE blocks are only powered up when the amplifier
-transitions from shutdown to active. This means that if those controls
-are flipped on while the amplifier is already playing back audio, they
-will have no effect.
+Multiple applications may access the battery gauge at the same time, so
+the gauge may be busy and EBUSY will be returned. The driver will set a
+flag to record the EBUSY state, and this flag will be kept until the next
+periodic update. When this flag is set, bq27xxx_battery_get_property()
+will just return ENODEV until the flag is updated.
 
-Fix this by forcing a power cycle around transitions in those controls.
+Even if the gauge was busy during the last accessing attempt, returning
+ENODEV is not ideal, and can cause confusion in the applications layer.
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
-Link: https://patch.msgid.link/20250406-apple-codec-changes-v5-1-50a00ec850a3@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Instead, retry accessing the I2C to update the flag is as expected, for
+the gauge typically recovers from busy state within a few milliseconds.
+If still failed to access the gauge, the real error code would be returned
+instead of ENODEV (as suggested by Pali Rohár).
+
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Signed-off-by: Jerry Lv <Jerry.Lv@axis.com>
+Link: https://lore.kernel.org/r/20250415-foo-fix-v2-1-5b45a395e4cc@axis.com
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-**YES** This commit should be backported to stable kernel trees based on
-my analysis of both the commit message and code changes. Here's my
-extensive explanation: ## Bug Fix Analysis This commit addresses a
-specific functional bug in the tas2770 audio codec driver where
-ISENSE/VSENSE controls don't work properly when changed during active
-playback. The commit message clearly states: "if those controls are
-flipped on while the amplifier is already playing back audio, they will
-have no effect." ## Code Changes Analysis The fix is contained and
-minimal, involving three key changes to `sound/soc/codecs/tas2770.c`: 1.
-**Addition of `sense_event` function (lines +21 to +43)**: This function
-implements a power cycling mechanism that forces the amplifier through a
-shutdown state when ISENSE/VSENSE controls are changed. This ensures the
-changes take effect regardless of playback state. 2. **Modified DAPM
-widget definitions (lines +45 to +48)**: The ISENSE and VSENSE switches
-are changed from simple `SND_SOC_DAPM_SWITCH` to `SND_SOC_DAPM_SWITCH_E`
-with event handling, connecting them to the new `sense_event` function.
-3. **Event triggers**: The widgets respond to `SND_SOC_DAPM_PRE_REG` and
-`SND_SOC_DAPM_POST_REG` events to perform the power cycling around
-register changes. ## Why This Should Be Backported 1. **User-Affecting
-Bug**: This fixes a real functional issue where audio controls don't
-work as expected during playback, which directly impacts user
-experience. 2. **Small and Contained**: The fix is confined to a single
-driver file (`tas2770.c`) and doesn't affect other subsystems. The
-changes are surgical and targeted. 3. **Low Risk**: The fix follows
-established ASoC patterns using standard DAPM event handling. Similar
-power cycling approaches are used throughout the ASoC subsystem. 4. **No
-New Features**: This purely fixes existing functionality rather than
-adding new features. 5. **Comparison with Similar Commits**: Looking at
-the provided examples, this commit is very similar to "Similar Commit
-#2" and "Similar Commit #5" which were both marked as backportable
-(YES). Like commit #2, it fixes incorrect hardware behavior with a small
-register/control change. Like commit #5, it addresses power state
-management issues in audio hardware. 6. **Hardware-Specific Fix**: The
-commit addresses a hardware limitation specific to the tas2770 chip
-where ISENSE/VSENSE blocks are only powered up during shutdown-to-active
-transitions. This is documented in the commit message and is a
-legitimate hardware workaround. The fix ensures that software speaker
-protection functionality works correctly by guaranteeing that IVSENSE
-controls are functional, which is critical for protecting audio hardware
-from damage.
+**YES** This commit should be backported to stable kernel trees. ##
+Detailed Analysis: ### 1. **User-Visible Bug Fix** ✅ The commit fixes a
+clear user-visible issue where multiple applications accessing the
+battery gauge simultaneously receive confusing `-ENODEV` errors instead
+of actual battery data or proper error codes. This directly impacts
+battery monitoring applications and system power management tools. ###
+2. **Code Changes Analysis** **bq27xxx_battery.c change:** ```c -return
+-ENODEV; +return di->cache.flags; ``` This single-line change stops
+masking real error codes with generic `-ENODEV`, allowing applications
+to see the actual error (like `-EBUSY`) and handle it appropriately.
+**bq27xxx_battery_i2c.c changes:** - Adds retry logic with up to 3
+attempts when encountering `-EBUSY` - Uses standard `usleep_range(10000,
+11000)` for 10ms delays - Implements proper loop structure with explicit
+break conditions ### 3. **Small and Contained** ✅ The changes are
+minimal and focused: - No architectural modifications - No changes to
+driver interfaces or APIs - Limited to error handling improvement within
+the same subsystem ### 4. **Low Regression Risk** ✅ - Uses established
+kernel patterns (`usleep_range`, retry counters) - No timing changes to
+critical paths - Battery gauges typically recover from busy state within
+milliseconds - Maintains backward compatibility ### 5. **Historical
+Precedent** ✅ Analysis of similar bq27xxx commits shows consistent
+backporting: - "Fix race condition" (Similar Commit #4): **YES** -
+Similar I2C access improvement - "After charger plug in/out wait 0.5s"
+(Similar Commit #5): **YES** - Similar stability fix - "make status more
+robust" (Similar Commit #2): **YES** - Similar robustness improvement
+### 6. **Follows Kernel Conventions** ✅ - Standard I2C retry mechanisms
+are common in the kernel - Proper error code propagation instead of
+masking - Code reviewed by subsystem maintainer (Pali Rohár) - Uses
+kernel-standard delay functions ### 7. **System Impact** **Improves
+stability** by: - Preventing userspace confusion from misleading error
+codes - Gracefully handling concurrent access scenarios - Better error
+reporting for debugging - No negative side effects identified ### 8.
+**Risk Assessment** **Very Low Risk:** - No memory management changes -
+No locking mechanism modifications - Standard retry pattern with bounded
+attempts - Preserves all existing functionality This commit represents
+an ideal stable backport candidate: it fixes a real user-visible bug
+with minimal, well-understood code changes that follow established
+kernel patterns and have strong historical precedent for backporting in
+this driver subsystem.
 
- sound/soc/codecs/tas2770.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ drivers/power/supply/bq27xxx_battery.c     |  2 +-
+ drivers/power/supply/bq27xxx_battery_i2c.c | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
-index 1928c1616a52d..629cc24d51c3d 100644
---- a/sound/soc/codecs/tas2770.c
-+++ b/sound/soc/codecs/tas2770.c
-@@ -158,11 +158,37 @@ static const struct snd_kcontrol_new isense_switch =
- static const struct snd_kcontrol_new vsense_switch =
- 	SOC_DAPM_SINGLE("Switch", TAS2770_PWR_CTRL, 2, 1, 1);
+diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+index be2aac8fbf430..b8131f823654d 100644
+--- a/drivers/power/supply/bq27xxx_battery.c
++++ b/drivers/power/supply/bq27xxx_battery.c
+@@ -2000,7 +2000,7 @@ static int bq27xxx_battery_get_property(struct power_supply *psy,
+ 	mutex_unlock(&di->lock);
  
-+static int sense_event(struct snd_soc_dapm_widget *w,
-+			struct snd_kcontrol *kcontrol, int event)
-+{
-+	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct tas2770_priv *tas2770 = snd_soc_component_get_drvdata(component);
+ 	if (psp != POWER_SUPPLY_PROP_PRESENT && di->cache.flags < 0)
+-		return -ENODEV;
++		return di->cache.flags;
+ 
+ 	switch (psp) {
+ 	case POWER_SUPPLY_PROP_STATUS:
+diff --git a/drivers/power/supply/bq27xxx_battery_i2c.c b/drivers/power/supply/bq27xxx_battery_i2c.c
+index 6fbae8fc2e501..d0c8edadec4bc 100644
+--- a/drivers/power/supply/bq27xxx_battery_i2c.c
++++ b/drivers/power/supply/bq27xxx_battery_i2c.c
+@@ -6,6 +6,7 @@
+  *	Andrew F. Davis <afd@ti.com>
+  */
+ 
++#include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+@@ -32,6 +33,7 @@ static int bq27xxx_battery_i2c_read(struct bq27xxx_device_info *di, u8 reg,
+ 	struct i2c_msg msg[2];
+ 	u8 data[2];
+ 	int ret;
++	int retry = 0;
+ 
+ 	if (!client->adapter)
+ 		return -ENODEV;
+@@ -48,7 +50,16 @@ static int bq27xxx_battery_i2c_read(struct bq27xxx_device_info *di, u8 reg,
+ 	else
+ 		msg[1].len = 2;
+ 
+-	ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
++	do {
++		ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
++		if (ret == -EBUSY && ++retry < 3) {
++			/* sleep 10 milliseconds when busy */
++			usleep_range(10000, 11000);
++			continue;
++		}
++		break;
++	} while (1);
 +
-+	/*
-+	 * Powering up ISENSE/VSENSE requires a trip through the shutdown state.
-+	 * Do that here to ensure that our changes are applied properly, otherwise
-+	 * we might end up with non-functional IVSENSE if playback started earlier,
-+	 * which would break software speaker protection.
-+	 */
-+	switch (event) {
-+	case SND_SOC_DAPM_PRE_REG:
-+		return snd_soc_component_update_bits(component, TAS2770_PWR_CTRL,
-+						    TAS2770_PWR_CTRL_MASK,
-+						    TAS2770_PWR_CTRL_SHUTDOWN);
-+	case SND_SOC_DAPM_POST_REG:
-+		return tas2770_update_pwr_ctrl(tas2770);
-+	default:
-+		return 0;
-+	}
-+}
-+
- static const struct snd_soc_dapm_widget tas2770_dapm_widgets[] = {
- 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2770_asi1_mux),
--	SND_SOC_DAPM_SWITCH("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch),
--	SND_SOC_DAPM_SWITCH("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch),
-+	SND_SOC_DAPM_SWITCH_E("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch,
-+		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
-+	SND_SOC_DAPM_SWITCH_E("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch,
-+		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
- 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2770_dac_event,
- 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
- 	SND_SOC_DAPM_OUTPUT("OUT"),
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.39.5
 
