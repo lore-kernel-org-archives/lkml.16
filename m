@@ -1,163 +1,165 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F29D27E;
-	Fri, 30 May 2025 01:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8F58834
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748570308; cv=none; b=C54O8MPtY953OgiRVSc6yUj+Mxio21vnMzozUB4HRKMWEqR7fmqJFN6zuHUFV6h2qrUwFWWs8H84VqMjoDA6IG9bFaMNWj2Uu73Qv0pIucT0O5tQmlTMeEeKpkxNjFqIXstJyr8o/cDay7QjvWgIqujbknC8dFdnzREDP9n/zRo=
+	t=1748570618; cv=none; b=ul7zCJlc2+hjzGBPNHsgN8s60/Rsa4zTgaCS1gnPL0Wm7AVXqdQSfUGn9b6yy7rcRBRAmJOVMcKcb+8WIS2O884au9niUGl2y81Nm/JgzYlEmNVWEepgXuFqS/sEcK+E7wyKjXnhVjz+VO0Cyg1Ch1Z+JMGU0ys4Fn8c15JaoNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748570308; c=relaxed/simple;
-	bh=jK356KX3q69ZTJwEnZiU9rbuhIM3Iq5jJ2lLNkTH0pE=;
+	s=arc-20240116; t=1748570618; c=relaxed/simple;
+	bh=cC+1Td4jMswjJMmANlG4ZK0JS3/VivVD8M+vllg/HDw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DYGpeQoemufmw5CFeKi37fmGTFX3RRRSw6Qvad8cuB2KEyaxMG79vHZa6DzYYW8uC777sLZvuwnox0rHhSspkGuYm/HvBEPSN4mvRzIGAwTi0N0y5ZF7837dgncriKO8N+BVHohOJI58k+VcmvLRnJwHDxcKKxJEZ1CDDk2rnbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=deRJ4ye6; arc=none smtp.client-ip=115.124.30.133
+	 In-Reply-To:Content-Type; b=ZAUS/2+3d8ODMzGWQnjO2QX/0kDZs8nrZe5mJlc94WKMZrOxy/5aO2ghByqlsOEg3skSPyLta0SIyPbPyM8OlpGBdd9FbfSP1n049fi3A5+a4H5P2uWqqM2pw8HHbOeLFYQMGq8HvWujdCCM/nFmH/J8N1sqjwP2Na4VBg0Jgww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Mnm8C3Sm; arc=none smtp.client-ip=115.124.30.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="deRJ4ye6"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Mnm8C3Sm"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1748570296; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=yy5/fgwWGRWQFc3zPba+l8G/Wl8NsYpv5LjubYSD8qY=;
-	b=deRJ4ye6ZSCP0Tobl9QmAF9gKpT4GVrfF7YMM8C0KJsBXSbkVHcyMeDZRIp9beCLx/9vy+GfKjMlPP0RzGuNa1AXJmKXIlU6vjKjJP0xGq9Ef6JIDe5SeMhPl/k5W432HcpCqxb5hMkmo8r96UXgzSTEGvSSAfemtksHbV481G0=
-Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcJNvj6_1748570294 cluster:ay36)
+	t=1748570606; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=WjSoE2jZwml6DQx8LRZ94BS0oU+lYfnOs//MHn97YYg=;
+	b=Mnm8C3SmTIok2px+mb7ajQ8hHNHJYb2PEM55seVrVxYOFdpVH45f/6TioCrdIzlh95AIcgTd96e74x89ofAKuGqTgvITLUdLc7PA/HGHt95E6eZT5+yrEKmeKw4BzwwOw3r1PIfziOEicN1XPLa9KAY0aMxIQrczH1zmbSAzkUY=
+Received: from 30.178.81.156(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcJNzay_1748570605 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 30 May 2025 09:58:15 +0800
-Message-ID: <bd89651e-0ee0-4819-87da-d3a5db04c5b3@linux.alibaba.com>
-Date: Fri, 30 May 2025 09:58:13 +0800
+          Fri, 30 May 2025 10:03:25 +0800
+Message-ID: <c33047c5-8ef2-44f6-bad9-7e618d62476e@linux.alibaba.com>
+Date: Fri, 30 May 2025 10:03:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: shmem: disallow hugepages if the system-wide
- shmem THP sysfs settings are disabled
-To: Zi Yan <ziy@nvidia.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
- <c1a6fe55f668cfe87ad113faa49120f049ba9cb5.1748506520.git.baolin.wang@linux.alibaba.com>
- <BB3BDA79-3185-4346-9260-BA5E1B9C9949@nvidia.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <BB3BDA79-3185-4346-9260-BA5E1B9C9949@nvidia.com>
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH V2 1/1] x86/resctrl: Remove unappropriate references to
+ cacheinfo in the resctrl subsystem.
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+References: <20250529031650.63880-1-qinyuntan@linux.alibaba.com>
+ <20250529031650.63880-2-qinyuntan@linux.alibaba.com>
+ <b0b3e665-4c4e-46d3-aae0-37853482938a@intel.com>
+From: qinyuntan <qinyuntan@linux.alibaba.com>
+In-Reply-To: <b0b3e665-4c4e-46d3-aae0-37853482938a@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+Hi Reinette Chatre,
 
+Thank you very much for reviewing my patch and for correcting the commit 
+log content. With your modifications, the commit log now looks much more 
+reasonable.
 
-On 2025/5/29 23:21, Zi Yan wrote:
-> On 29 May 2025, at 4:23, Baolin Wang wrote:
+I appreciate your patient guidance. I will resend the third version of 
+the patch to you shortly.
+
+Best regards,
+Qinyun Tan
+
+On 5/30/25 1:37 AM, Reinette Chatre wrote:
+> Hi Qinyun Tan,
 > 
->> The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
->> means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
->> will still attempt to collapse into a shmem THP. This violates the rule we have
->> agreed upon: never means never.
+> Thank you very much. I have a few comments about the changelog that
+> I think will help explain the issue while aiming to have it follow the
+> "tip" rules documented in Documentation/process/maintainer-tip.rst.
+> 
+> On 5/28/25 8:16 PM, Qinyun Tan wrote:
+>> In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
+>> structure previously relies on the cacheinfo interface to store L3 cache
+> 
+> "previously relies" -> "relies"
+> 
+>> information (e.g., shared_cpu_map) for monitoring. However, this approach
+>> introduces risks when CPUs go offline:
 >>
->> Then the current strategy is:
->> For shmem, if none of always, madvise, within_size, and inherit have enabled
->> PMD-sized mTHP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>> The ci field in rdt_mon_domain is initialized using the first online CPU
+>> of a NUMA node. When this CPU goes offline, its shared_cpu_map is cleared
+>> to contain only the offline CPU itself. Subsequently, attempting to read
+>> counters via smp_call_on_cpu(offline_cpu) would fail, but returning zero
+>> values for "top-level events" without error indication.
+> 
+> Last sentence of above paragraph can be modified slightly to keep it in
+> imperative tone:
+> 	Subsequently, attempting to read counters via smp_call_on_cpu(offline_cpu)
+> 	fails (and error ignored), returning zero values for "top-level events"
+> 	without any error indication.
+> 
 >>
->> For tmpfs, if the mount option is set with the 'huge=never' parameter, then
->> MADV_COLLAPSE will be prohibited from collapsing PMD-sized mTHP.
+>> To resolve these issues:
+> 
+> "To resolve these issues:" can be dropped. There is only one issue and the custom
+> is for the solution to follow the problem description.
+> 
 >>
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
+>> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+>>
+>> 2. The hdr.cpu_mask maintained by resctrl constitutes a subset of
+> 
+> "hdr.cpu_mask" -> "rdt_domain_hdr::cpu_mask"
+> 
+> I do not think "rdt_domain_hdr::cpu_mask" should be defined as a subset of
+> shared_cpu_map though ... especially since the problem description highlights how
+> shared_cpu_map can contain offline CPUs. How about:
+> 
+> "rdt_domain_hdr::cpu_mask contains the online CPUs associated with that
+> domain. When reading ..."
+> 
+>> shared_cpu_map. When reading top-level events, we dynamically select a CPU
+> 
+> drop "we" (no impersonating of code)
+> 
+> Considering the context it may help to be specific here:
+> "select a CPU" -> "select a (known to be online) CPU"
+> 
+>> from hdr.cpu_mask and utilize its corresponding shared_cpu_map for resctrl
+> 
+> "hdr.cpu_mask" -> "rdt_domain_hdr::cpu_mask"
+> 
+>> to determine valid CPUs for reading RMID counter via the MSR interface.
+> 
+> You can highlight the motivation for doing this. For example, "Considering
+> all CPUs associated with the L3 cache improves the chances of picking a
+> housekeeping CPU on which the counter reading work can be queued, avoiding an
+> unnecessary IPI."
+> 
+> Above is quite a mix of changes. Below aims to put it all together while also
+> adding more modifications as I am seeing the full picture. Please check for accuracy
+> and feel free to improve.
+> 
+> 	In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
+> 	structure representing a NUMA node relies on the cacheinfo interface
+> 	(rdt_mon_domain::ci) to store L3 cache information (e.g., shared_cpu_map)
+> 	for monitoring. The L3 cache information of a SNC NUMA node determines
+> 	which domains are summed for the "top level" L3-scoped events.
+> 
+> 	rdt_mon_domain::ci is initialized using the first online CPU
+> 	of a NUMA node. When this CPU goes offline, its shared_cpu_map is cleared
+> 	to contain only the offline CPU itself.	Subsequently, attempting to read
+> 	counters via smp_call_on_cpu(offline_cpu) fails (and error ignored),
+> 	returning zero values for "top-level events" without any error indication.
+>   
+> 	Replace the cacheinfo references in struct rdt_mon_domain and struct
+> 	rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+> 	
+> 	rdt_domain_hdr::cpu_mask contains the online CPUs associated with that
+> 	domain. When reading "top-level events", select a CPU from
+> 	rdt_domain_hdr::cpu_mask and utilize its L3 shared_cpu_map to determine
+> 	valid CPUs for reading RMID counter via the MSR interface.
+> 	Considering all CPUs associated with the L3 cache improves the chances
+> 	of picking a housekeeping CPU on which the counter reading work can be
+> 	queued, avoiding an unnecessary IPI.
+> 
+>>
+>> Fixes: 328ea68874642 ("x86/resctrl: Prepare for new Sub-NUMA Cluster (SNC) monitor files")
+>> Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
 >> ---
->>   mm/huge_memory.c |  2 +-
->>   mm/shmem.c       | 12 ++++++------
->>   2 files changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index d3e66136e41a..a8cfa37cae72 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -166,7 +166,7 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
->>   	 * own flags.
->>   	 */
->>   	if (!in_pf && shmem_file(vma->vm_file))
->> -		return shmem_allowable_huge_orders(file_inode(vma->vm_file),
->> +		return orders & shmem_allowable_huge_orders(file_inode(vma->vm_file),
->>   						   vma, vma->vm_pgoff, 0,
->>   						   !enforce_sysfs);
 > 
-> OK, here orders is checked against allowed orders.
+> With changelog polished:
+> | Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 > 
->>
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 4b42419ce6b2..4dbb28d85cd9 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -613,7 +613,7 @@ static unsigned int shmem_get_orders_within_size(struct inode *inode,
->>   }
->>
->>   static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
->> -					      loff_t write_end, bool shmem_huge_force,
->> +					      loff_t write_end,
->>   					      struct vm_area_struct *vma,
->>   					      unsigned long vm_flags)
->>   {
->> @@ -625,7 +625,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
->>   		return 0;
->>   	if (shmem_huge == SHMEM_HUGE_DENY)
->>   		return 0;
->> -	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
->> +	if (shmem_huge == SHMEM_HUGE_FORCE)
->>   		return maybe_pmd_order;
-> 
-> shmem_huge is set by sysfs?
+> Reinette
 
-Yes, through the '/sys/kernel/mm/transparent_hugepage/shmem_enabled' 
-interface.
-
->>   	/*
->> @@ -860,7 +860,7 @@ static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
->>   }
->>
->>   static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index,
->> -					      loff_t write_end, bool shmem_huge_force,
->> +					      loff_t write_end,
->>   					      struct vm_area_struct *vma,
->>   					      unsigned long vm_flags)
->>   {
->> @@ -1261,7 +1261,7 @@ static int shmem_getattr(struct mnt_idmap *idmap,
->>   			STATX_ATTR_NODUMP);
->>   	generic_fillattr(idmap, request_mask, inode, stat);
->>
->> -	if (shmem_huge_global_enabled(inode, 0, 0, false, NULL, 0))
->> +	if (shmem_huge_global_enabled(inode, 0, 0, NULL, 0))
->>   		stat->blksize = HPAGE_PMD_SIZE;
->>
->>   	if (request_mask & STATX_BTIME) {
->> @@ -1768,7 +1768,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>   		return 0;
->>
->>   	global_orders = shmem_huge_global_enabled(inode, index, write_end,
->> -						  shmem_huge_force, vma, vm_flags);
->> +						  vma, vm_flags);
->>   	/* Tmpfs huge pages allocation */
->>   	if (!vma || !vma_is_anon_shmem(vma))
->>   		return global_orders;
->> @@ -1790,7 +1790,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
->>   	/* Allow mTHP that will be fully within i_size. */
->>   	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
->>
->> -	if (vm_flags & VM_HUGEPAGE)
->> +	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
->>   		mask |= READ_ONCE(huge_shmem_orders_madvise);
->>
->>   	if (global_orders > 0)
->> -- 
->> 2.43.5
-> 
-> shmem_huge_force comes from !enforce_sysfs in __thp_vma_allowable_orders().
-> Do you know when sysfs is not enforced and why?
-
-IIUC, shmem_huge_force will only be set during MADV_COLLAPSE. 
-Originally, MADV_COLLAPSE was intended to ignore the system-wide THP 
-sysfs settings. However, if all system-wide shmem THP settings are 
-disabled, we should not allow MADV_COLLAPSE to collapse a THP. This is 
-the issue this patchset aims to fix. Thanks for the review.
