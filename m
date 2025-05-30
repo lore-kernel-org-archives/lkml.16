@@ -1,184 +1,233 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AC538B;
-	Fri, 30 May 2025 08:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748592693; cv=none; b=N/p9uNQqo24+N15t8ippfqF6bnhqBy+xEs/q4l2VX+GqbonDmD4yFuFCyvfDnJbAi3BKdybQ9D6EtrUlqWWpx/L5LiQV9ZmKUkZla/8BiZQG/kNTpYsWjNq8ftXJMgkiR1BN9l4L5VJ1+xTsatgUJdaf8jRPqw7E80D033ip5R4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748592693; c=relaxed/simple;
-	bh=nljyD7oGpKi/pB343Z0SDcbWcB4VlyF/oMtqy5oonPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=F2Gz3EDDiuW42Z88QeXxW3P3ArRe9tT8enkkR2mjQzGKzDZayl6Ww45i6tlgRcnHt4Z0VbIhigbnGgxUYm4ww0RinlhPgGdkGRcQfbOz+bb4kI0w+2XNfJrE6WsqE6lYZAZNCdyl1fFLDtDHlhj6rRX+9AM5+Awk8qsNiz6GwN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k0vN59jV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAAB6201100
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748592745; cv=fail; b=isCWaAE7V4ns758yz0RzATKNqh6eeZN9AxaSHK1hYFZUGf6PWmYKZtM6tbmSpD56P5nj9dVse6hhy286gXInx7CvEo6T2hJkkgTaxnLdH//LpMOB5jvI5ZP/JeneSDsNFKeg2HA/xhf6TwotQspABlt/0nDZllNZU8rKNZxrBjs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748592745; c=relaxed/simple;
+	bh=DTd+714fJWJiRgISYeK1AuN/RB3jw0ooOb+4Bn48yIE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J1ihOfCe7OUr8e3ei4l1MLKPei+2Cq3Wg9IK0dv9+cNMPqxzBgAIR72/ITwKNMI9I4d3285x8gjtQmrYEGNculE5GmB8MXZGp+bRBEx2LimSZC/FJSQPoBvfZKA270pGpnV/O9Eo7yu3bVAoafyENuNHpMCgKkTCCYTq2oSDQTA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Oe4l7A7c; arc=fail smtp.client-ip=40.107.243.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k0vN59jV"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U05iW9011696;
-	Fri, 30 May 2025 08:11:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BfwfesnKPE1k+zYrC748qyklIi19iAGRhf67EVTHwB4=; b=k0vN59jVEZ2nbzFw
-	r7QTiqjZxQa3AoxU8Ooq8eoojJpQrT1PZ9GGZ4tGjo6epvB7VA/NqId0k3B0zlrK
-	izjbiTsMCUDtLhh/NsTHibM3gkIWusIWJe92PD+G2WUP+hEZK7+ySUN2HRXewz96
-	ItE9XTJABMa88pGsMw0hUURBQCkCWgwOAkcbveEChJlBewiagjkCURT/6ER3C5Wr
-	rLswk/ZtmmqTk9ihJu6H6+tITRIevRHZ9KI2zQg4DMGQOD5EU4eiDQ9fhbuAlTvy
-	H1iyUcq7sVimnWbYE/x6xT5CelqswJrFUvL7xperBN6pIiYb1OcnXH1MogRc5lDm
-	+55SCA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g98bqx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 08:11:26 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54U8BPJp008217
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 08:11:25 GMT
-Received: from [10.253.39.138] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
- 2025 01:11:22 -0700
-Message-ID: <7d656b7e-3e7b-4357-80c3-24ab597bdcee@quicinc.com>
-Date: Fri, 30 May 2025 16:11:20 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Oe4l7A7c"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TJEsuY4msEaEG/lRCr+XoykbfOLP3IjkjE32lfvuIEzg9R81Axi5janJGc5o5TuTz1IcGXGC1R4iaEmPdsm9cl/mkx4cNzlKEir8UKI2fGDScxUfZhD5UABJED+SKlbZ0Y/HL2u0vLhTO//CHSzEIkirjJqxmyRItP4EDR3PdgOAzU0iOxehcyb/hKs9kaRrGcalTSMJG9nM/fiak0hc5KNfudIdUou2F1NisW5NPx+rbyWGMrj0fD/an4bFRIU8yXiOrnOx28UQilZ076Obb1xqcj2rFPuuUGq+oIaYOSvc0L5D4HjHoOhzrbjlBCuDIArbHk2Mlj+zpJjg4QWzMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M7o79EXIklUQPr/PXSd7dXNPTMm2nzV9TODg39nojr4=;
+ b=kKSZKIHHhyB4uSpVvI5RFtYLhNAetkYaUvEHQr39kH/GpIm1lHR0tpcOEwKe0VDJMapBOtldB2WMhiEs6mm8xz9sR946VKFC/vc5jF6OPiKZJSfr3q63YN6Hv4iGcijWhWsaJO00sXdW2+pNwFK9LdLEIL4hzhDL2gP3OR6vHuUAN1l/sDpYbsmugAlVu+cEMnQxk61bBwjB9GwIiTEyI1tf1FSAtRydViubg7wfcVS1ghB6jG4uNPFY44U8sVqa3OrnHCv5yC0qXSZa9hI4PRFSLazYVkHcHGso3iOtdjy4yDlYR1Jnvv7lQUqN0qz994G2Krr6R6qd2HD+uI2nlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M7o79EXIklUQPr/PXSd7dXNPTMm2nzV9TODg39nojr4=;
+ b=Oe4l7A7cJvx8HP9VQjhXOH/XUV5d0BoxuwZkJWwUStWRtbRgOJjxxZHHu0HKfi10Np7hfsDBW0eLsN8zWrZBhEK3xh3D9kZ9gB5wUv4y+LYr4SWXckzNW/Yr+Y/Z3+x6Cfd53Yg5Wa6qA2pOZYyvFeQpJTomfb7hrAUbUwyCGDU=
+Received: from CH0PR03CA0041.namprd03.prod.outlook.com (2603:10b6:610:b3::16)
+ by MW5PR12MB5598.namprd12.prod.outlook.com (2603:10b6:303:193::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Fri, 30 May
+ 2025 08:12:20 +0000
+Received: from DS2PEPF00003445.namprd04.prod.outlook.com
+ (2603:10b6:610:b3:cafe::b5) by CH0PR03CA0041.outlook.office365.com
+ (2603:10b6:610:b3::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8792.19 via Frontend Transport; Fri,
+ 30 May 2025 08:12:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003445.mail.protection.outlook.com (10.167.17.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Fri, 30 May 2025 08:12:19 +0000
+Received: from dcsm-trdripper1.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 30 May
+ 2025 03:12:16 -0500
+From: Akshay Gupta <akshay.gupta@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <gregkh@linuxfoundation.org>, <arnd@arndb.de>, <Anand.Umarji@amd.com>,
+	Akshay Gupta <akshay.gupta@amd.com>, Dan Carpenter
+	<dan.carpenter@linaro.org>, Naveen Krishna Chatradhi
+	<naveenkrishna.chatradhi@amd.com>
+Subject: [PATCH] misc: amd-sbi: Address issues reported in smatch
+Date: Fri, 30 May 2025 13:41:58 +0530
+Message-ID: <20250530081158.121137-1-akshay.gupta@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
- ttyport_close() due to uninitialized serport->tty
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
-        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
-        <quic_mohamull@quicinc.com>,
-        Panicker Harish <quic_pharish@quicinc.com>
-References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
- <2025043022-rumbling-guy-26fb@gregkh>
- <d388b471-482b-48ba-a504-694529535362@quicinc.com>
- <2025050851-splatter-thesaurus-f54e@gregkh>
- <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
- <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
- <2025052926-net-economist-a016@gregkh>
-Content-Language: en-US
-From: Xin Chen <quic_cxin@quicinc.com>
-In-Reply-To: <2025052926-net-economist-a016@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6839682e cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=X2qtyJaRkhN_4_ZcoJQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: rQSImzhdcu1SUdpJ9GWlwqoTkByhVxb1
-X-Proofpoint-GUID: rQSImzhdcu1SUdpJ9GWlwqoTkByhVxb1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA2NyBTYWx0ZWRfX/eDViJL2BQbB
- 9Hd/Ul7RBQz8n4zgD0jN36oM+Womc/u9Z3sXov7wqhrhz1sGkeDB+Cfssl0t92cVWmw5OA22JiQ
- /+3AWMin4M3lU1sdl2xKylEnWobjgqL5pQYUYlP+q8qhjjhKUg6auPBhn3p6gj4mHywPDO+a1Mb
- 0B9R7/QZP3iIwrYx6OblsU7HpyTIX1g1YVGWxpB7alL/P0IGUg2YjeDCu0BQH5OvTV6G/LbAfuy
- D8bd0KDFocBs9RWaa4QWNjbpAL25YTV6y9rOP6vjphnhyznwW+IsW3Ohp3UqFujU3euCQEanHRh
- 9PIpMH2TmdBDkOJduONdCeaOuNV2GycDzJF2Sgs29X+rE34GO544mhg5Dt9Chat4pZ11vR/5Qcm
- Plrd9kR98ARFQhxHJVPOAwyUScgF4gFzriZLajWqFPsJUT32hjne2Nl1l5yQVIW4uGMKk4Z+
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_03,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300067
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003445:EE_|MW5PR12MB5598:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce30cc28-a833-44ee-840a-08dd9f51b2e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IQRnzEsgL2/mI1fv6K0LRfRbDL4WCwJB3oWg+I55mqA1GWVnGMQQkj8/WTsG?=
+ =?us-ascii?Q?7J6+pC0qfcwJFxcIWPSZUNM7N8Nz7gE0ljxACDGxIxVOUphFk209aAeCSrh0?=
+ =?us-ascii?Q?ZSXTHdAaWjW2MEFPTO0l2vmHwsEDUBwjyTHFQFa2vzyIWx7qEYrXUi5oDNcp?=
+ =?us-ascii?Q?EoydXqR7yIZdvlRIGyhveZsH9T6ZOrbweXjweddj+eeR0Al3ystE07DyF+r1?=
+ =?us-ascii?Q?25x+oiOoMrZTl+GEmTxJzmizIhMkpVtoOL12nsa8QP+ODDUw6BavPu4DVhkp?=
+ =?us-ascii?Q?7LeMsW6K90eDpcHD1aDlTagbDtvk4SHAK9V6Uikpad4wSMlEc7IuqQUuxW43?=
+ =?us-ascii?Q?WtU00gpJkSkYaoE/BAe1CPUWoHQ4+6sYc2uenGUwt2gESaSE/ex37OwzJtN+?=
+ =?us-ascii?Q?IIwXuBP0lykPWT1CyMxi7ad8INqoOwjtNmj88wO9BCGcehzJIj/BfobGlJVI?=
+ =?us-ascii?Q?jJ2A8jxlfcJq/46UKT0gbtxZWmxsTMdK31mbrSujzgu23M3vwSYZ3ZqosCv9?=
+ =?us-ascii?Q?/2URUFg2VR6IePv/xyfmNhVj7E98mJ28GB+ylc8GcbTfJlRV0FOULQuMV8sv?=
+ =?us-ascii?Q?Um0twGR1wgsAR5gaOQMBbNYLEVN+G9GSBPSXvWfm2prE5CfNddafD8y8Ykt6?=
+ =?us-ascii?Q?66SpwOqEmsMIxNgBGRTeKJRlSCT6iRJ0d8OWsFC10kO4MuxGmVmMgzgB759M?=
+ =?us-ascii?Q?DkpxYGjR5kEuN3ok4vefPnw2b9bELGf5rz4rOIgRnZE0CfhER0dOu8dR0mx4?=
+ =?us-ascii?Q?bWVBoLO9oNen6Vo2xCkuh4Xr4U5grm3qTh5bxLOydmSlEnPJq037Yl9QbRhN?=
+ =?us-ascii?Q?0fNvKD9IySv4K5cL6sLtlJ1rv5R1vJyAneeZCSsE+qDP8nsEcKI6HsAseRNq?=
+ =?us-ascii?Q?kM6pTj6/4z5AXbxaThTA+Oku2KGIN9PofFO9cqJirGBwFwe3ybAJp22EDkDx?=
+ =?us-ascii?Q?TdyrQQvCMLxHhxG5tJLFXrpteVTcfVGEvHYfxAa2fB2qmI7ly8BOZEqfpltf?=
+ =?us-ascii?Q?/2HfmfJFaRcJ3N84Hxa2xX1dcfsaw9nluM3zDVPR/OMAzfEo4WXTX3j6Zka9?=
+ =?us-ascii?Q?ri9Kc+v/HA3T/vZg0oH8hMVt7SmfxOBMjQr7mN+ROsoO1QFhewXiTcuTW45k?=
+ =?us-ascii?Q?ygt7RqHpIUYYe5cTuP0GAqXsxVwNG+vu92ua+5dS+tf6AY7qD1mSNiDBvCAN?=
+ =?us-ascii?Q?EtmgUz7S9luEfS91cwhiuNJ81/XzdM2fhKZ1485Ytr5EVdrvgX7rVdl5iy43?=
+ =?us-ascii?Q?9fj+JJnBs4nHElfItr9kJCvAtfx7rbGo53nIFbhji7o1WJs5nDRQ06gctu9a?=
+ =?us-ascii?Q?vIj42xvGx+i8AdnEcAA4iqlEiCgMcsNTSSS/QM4YTdHWxKKAER2ptwbFrTZT?=
+ =?us-ascii?Q?gB5oQJ7uqeOCPcFF/BGtnJHmQpMa3rrZJ9lLFbE4d3FjfAKx8d81MhoNGLlJ?=
+ =?us-ascii?Q?SYi72CuJT5rCs5+QtWez1/otmE22pddmvAHuGXBk7FN7PXEg1/JNJb5CEWL7?=
+ =?us-ascii?Q?8cGJjwgvYkee6UCLkZ2S3bd/eZyPiEE2ehSO20/maVNoV8CDaIlhOC2Xtw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 08:12:19.8237
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce30cc28-a833-44ee-840a-08dd9f51b2e5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003445.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5598
 
+Smatch warnings are reported for below commit,
 
+Commit bb13a84ed6b7 ("misc: amd-sbi: Add support for CPUID protocol")
+from Apr 28, 2025 (linux-next), leads to the following Smatch static
+checker warning:
 
-On 5/29/2025 5:07 PM, Greg Kroah-Hartman wrote:
-> On Fri, May 23, 2025 at 10:52:27AM +0800, Xin Chen wrote:
->>
->>
->> On 5/14/2025 5:14 PM, Xin Chen wrote:
->>>
->>>
->>> On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
->>>> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
->>>>>
->>>>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
->>>>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
->>>>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
->>>>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
->>>>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
->>>>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
->>>>>>>  {
->>>>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
->>>>>>>  	struct tty_struct *tty = serport->tty;
->>>>>>> +	if (!tty) {
->>>>>>> +		dev_err(&ctrl->dev, "tty is null\n");
->>>>>>> +		return;
->>>>>>> +	}
->>>>>>
->>>>>> What prevents tty from going NULL right after you just checked this?
->>>>>
->>>>> First sorry for reply so late for I have a long statutory holidays.
->>>>> Maybe I don't get your point. From my side, there is nothing to prevent it.
->>>>> Check here is to avoid code go on if tty is NULL.
->>>>
->>>> Yes, but the problem is, serport->tty could change to be NULL right
->>>> after you check it, so you have not removed the real race that can
->>>> happen here.  There is no lock, so by adding this check you are only
->>>> reducing the risk of the problem happening, not actually fixing the
->>>> issue so that it will never happen.
->>>>
->>>> Please fix it so that this can never happen.
->>>>
->>>
->>> Actually I have never thought the race condition issue since the crash I met is
->>> not caused by race condition. It's caused due to Bluetooth driver call
->>> ttyport_close() after ttyport_open() failed. This two action happen one after
->>> another in one thread and it seems impossible to have race condition. And with
->>> my fix the crash doesn't happen again in several test of same case.
->>>
->>> Let me introduce the complete process for you:
->>>   1) hci_dev_open_sync()->
->>> hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
->>> here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
->>> serdev_device_close() to close tty normally. And then call serdev_device_open()
->>> to retry.
->>>   2) serdev_device_open() fails due to tty_init_dev() fails, then tty gets
->>> released, which means this time the tty has been freed succesfully.
->>>   3) Return back to upper func  hci_dev_open_sync(),
->>> hdev->close()(hci_uart_close) is called. And hci_uart_close calls
->>> hci_uart_flush() and serdev_device_close(). serdev_device_close() tries to close
->>> tty again, it's calltrace is serdev_device_close()->ttyport_close()->tty_lock(),
->>> tty_unlock(), tty_release_struct(). The four funcs hci_uart_flush(), tty_lock(),
->>> tty_unlock(), tty_release_struct() read tty pointer's value, which is invalid
->>> and causes crash.
->>>
->>
->> Hi Greg, could you please take some time to review my reply?
-> 
-> I am not disputing the fact that there is a bug here, I'm just saying
-> that you can't test for a value and then act on it without a lock
-> protecting that action because the value can be changed right after you
-> test for it.
-> 
-> You might not see this in your testing, as you have narrowed the window
-> that the value can change, but you have not solved the issue properly,
-> right?
-> 
-> thanks,
-> 
-> greg k-h
+drivers/misc/amd-sbi/rmi-core.c:132 rmi_cpuid_read() warn: bitwise OR is zero '0xffffffff00000000 & 0xffff'
+drivers/misc/amd-sbi/rmi-core.c:132 rmi_cpuid_read() warn: potential integer overflow from user 'msg->cpu_in_out << 32'
+drivers/misc/amd-sbi/rmi-core.c:213 rmi_mca_msr_read() warn: bitwise OR is zero '0xffffffff00000000 & 0xffff'
+drivers/misc/amd-sbi/rmi-core.c:213 rmi_mca_msr_read() warn: potential integer overflow from user 'msg->mcamsr_in_out << 32'
+drivers/misc/amd-sbi/rmi-core.c:376 apml_rmi_reg_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+drivers/misc/amd-sbi/rmi-core.c:394 apml_mailbox_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+drivers/misc/amd-sbi/rmi-core.c:411 apml_cpuid_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+drivers/misc/amd-sbi/rmi-core.c:428 apml_mcamsr_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
 
-From my analysis, I think there is only one thread operating the tty of
-Bluetooth. So the case of tty changed after check will not happen.
+copy_to/from_user() returns number of bytes, not copied.
+In case data not copied, return "-EFAULT".
 
-Thanks,
-Xin
+CPUID thread data from input is available at byte 4 & 5, this
+patch fixes to copy the user data correctly in the argument.
+
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/aDVyO8ByVsceybk9@stanley.mountain/
+Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
+---
+This patch is created on top of linux-next
+
+ drivers/misc/amd-sbi/rmi-core.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
+index b653a21a909e..9048517c088c 100644
+--- a/drivers/misc/amd-sbi/rmi-core.c
++++ b/drivers/misc/amd-sbi/rmi-core.c
+@@ -42,7 +42,6 @@
+ #define RD_MCA_CMD	0x86
+ 
+ /* CPUID MCAMSR mask & index */
+-#define CPUID_MCA_THRD_MASK	GENMASK(15, 0)
+ #define CPUID_MCA_THRD_INDEX	32
+ #define CPUID_MCA_FUNC_MASK	GENMASK(31, 0)
+ #define CPUID_EXT_FUNC_INDEX	56
+@@ -129,7 +128,7 @@ static int rmi_cpuid_read(struct sbrmi_data *data,
+ 		goto exit_unlock;
+ 	}
+ 
+-	thread = msg->cpu_in_out << CPUID_MCA_THRD_INDEX & CPUID_MCA_THRD_MASK;
++	thread = msg->cpu_in_out >> CPUID_MCA_THRD_INDEX;
+ 
+ 	/* Thread > 127, Thread128 CS register, 1'b1 needs to be set to 1 */
+ 	if (thread > 127) {
+@@ -210,7 +209,7 @@ static int rmi_mca_msr_read(struct sbrmi_data *data,
+ 		goto exit_unlock;
+ 	}
+ 
+-	thread = msg->mcamsr_in_out << CPUID_MCA_THRD_INDEX & CPUID_MCA_THRD_MASK;
++	thread = msg->mcamsr_in_out >> CPUID_MCA_THRD_INDEX;
+ 
+ 	/* Thread > 127, Thread128 CS register, 1'b1 needs to be set to 1 */
+ 	if (thread > 127) {
+@@ -373,7 +372,8 @@ static int apml_rmi_reg_xfer(struct sbrmi_data *data,
+ 	mutex_unlock(&data->lock);
+ 
+ 	if (msg.rflag && !ret)
+-		return copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg));
++		if (copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg)))
++			return -EFAULT;
+ 	return ret;
+ }
+ 
+@@ -391,7 +391,9 @@ static int apml_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg __use
+ 	if (ret && ret != -EPROTOTYPE)
+ 		return ret;
+ 
+-	return copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg));
++	if (copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg)))
++		return -EFAULT;
++	return ret;
+ }
+ 
+ static int apml_cpuid_xfer(struct sbrmi_data *data, struct apml_cpuid_msg __user *arg)
+@@ -408,7 +410,9 @@ static int apml_cpuid_xfer(struct sbrmi_data *data, struct apml_cpuid_msg __user
+ 	if (ret && ret != -EPROTOTYPE)
+ 		return ret;
+ 
+-	return copy_to_user(arg, &msg, sizeof(struct apml_cpuid_msg));
++	if (copy_to_user(arg, &msg, sizeof(struct apml_cpuid_msg)))
++		return -EFAULT;
++	return ret;
+ }
+ 
+ static int apml_mcamsr_xfer(struct sbrmi_data *data, struct apml_mcamsr_msg __user *arg)
+@@ -425,7 +429,9 @@ static int apml_mcamsr_xfer(struct sbrmi_data *data, struct apml_mcamsr_msg __us
+ 	if (ret && ret != -EPROTOTYPE)
+ 		return ret;
+ 
+-	return copy_to_user(arg, &msg, sizeof(struct apml_mcamsr_msg));
++	if (copy_to_user(arg, &msg, sizeof(struct apml_mcamsr_msg)))
++		return -EFAULT;
++	return ret;
+ }
+ 
+ static long sbrmi_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
+-- 
+2.34.1
+
