@@ -1,154 +1,129 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4362185A6;
-	Fri, 30 May 2025 20:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2116220E32F;
+	Fri, 30 May 2025 21:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748638638; cv=none; b=ZhBn+ABwtsJQaQS+GyKzL7RClbNJ4XTEyph2cuQI7usW7uB/NtnUEL4roY3gNwp20Me3kyU1/1zYM02pGEs7uBlRo+3DcRE7CJRthvTtcrdi7t7kHUD+d5y++Tn0oiW4GLqwQO5aoXd2YESKLigJcyMa57Xp3QyM9rZEGsSt47s=
+	t=1748638894; cv=none; b=qTzgkDrpO/+BnPrAdqRidut66uG6Qd0z/GQWFjFgIU6km965s3htQ6SzgumIX0PuTA0xjj2mtfxM/795RPP7GZPUX3kPoyfHHPzdlrdVJsonbNuZuymzMYEYAXhTFRc67fxzq8rCasxRJcUpygJC2XLouO8gJQcyn/6WB2y1b+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748638638; c=relaxed/simple;
-	bh=1jOAAXk73U1S38R3gOqQ+nFatFS8jwsPrAfMT/GzH6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=maLY9DUnZi3LzOcNQO1rstGNITA7CJHgEzrXvhS1A2yp8uhmcApYTjZj7T7O2WWyFeJ+dQ5v31bpAZCQz2qpcbyAeFxaHOF44m9ttUFliRyH50YcDfpghLdP5OmIZUJ5x3FB3Dt9WFqeLDs0LAvoE0w/UZmh1BRfAIwPnLwcOz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=rLsEP/ED; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1748638894; c=relaxed/simple;
+	bh=d4IfK2ka6jjEmZXTXqL1lPng2l65qiPmf5r7IC9XgXE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=t8C6st8oa1rW+DMQ1M2WHR78eva0db3DbbhgVX+PmRjuole5IQ5OgaghYPPvMvdguzkrLjjmGxe3/1N1F0zfXLfR3kp/Tx/3nI28kdjDZelLNMcNGgCR46zhGuUg10Gjs8opFSbVmvwqGnAuYMcndYoLuiylDCR0BJdpwlCharQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RG6pfkL0; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="rLsEP/ED"
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 77FBB2E0C3D6;
-	Fri, 30 May 2025 23:50:43 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1748638244;
-	bh=C0aowdne9wIRW/c0ibakSNgSG3zdVolJQQax96wUgZs=;
-	h=Received:From:Subject:To;
-	b=rLsEP/EDGAfM5remlMChlasFCwUGYemDaEHBFQrTa8tSRNLSbhC7sw1ARJmlXOIwJ
-	 J5Q8o9rWFYfE+pdDDe+ksdNZK99MNkywIUt+Na04DJAlCFuk04Ze1N9oC+1m8VGahb
-	 aNqzVGnbUJY+Bcg3q94qJVMm+CgRPBCL3XRV4QGA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.176) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f176.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f176.google.com with SMTP id
- 38308e7fff4ca-32a6f5cb6f9so13308141fa.2;
-        Fri, 30 May 2025 13:50:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCU6Hio8frhRhiUEpL2wyAfK4PdykDlM2iITY6/MaorMwpOjRa4kEGz/bsxZ+zWyV8fdnc86vehFzgw=@vger.kernel.org,
- AJvYcCVgreAxUV0FmjpU/YBpsWzEyHDVvgNb+GDvmcBAOe8Pjv8jxYssTemf4BaGuJBeljjFrtGivOfAT6hN8Pk=@vger.kernel.org,
- AJvYcCWYyIq5Cn+BWZUaA3ScNAEUMl8ggvq/8hqDd1uYHcHW7jxpwd4L2jPOw+8lqwu14GyR/GeB01A/7/uR261m@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0eKj5QBfFKGgRolSxXL32o4l+ZYH6t9wzjR1NMQ436KQeDGIx
-	VkJFW4oCCguh3+kVkoWHUCseeOVf8XGaMydukZNihH13rKXWESq7QCsgt85xnAOsFnDGEvdkRdK
-	QucM467zNf+EZfVDANZHauTJX1EL5VY8=
-X-Google-Smtp-Source: 
- AGHT+IEi1NF4eVCadfBKrIlDQiWO7Ji5+lJrFS3RsnyGLz+rwVxAxgJllh0f0xbLc2pAoN060SkoijWAbo673p+t+C8=
-X-Received: by 2002:a2e:b8c6:0:b0:32a:8916:55a1 with SMTP id
- 38308e7fff4ca-32a8cd3fd89mr18496941fa.7.1748638242530; Fri, 30 May 2025
- 13:50:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RG6pfkL0"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so2290230f8f.0;
+        Fri, 30 May 2025 14:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748638891; x=1749243691; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rOiB56y4MoyS/CzvCmU15wdJwiiHxlOhTBulQb1MiCk=;
+        b=RG6pfkL0tzE8LQhmdPuNSpy0rAHFcZ+EXxf4SAAswFnW68Dbn9867OQGu1lAhwwPEW
+         DrEfgPI4oVkUniB/qALagP0/1/mp/sxovsbSK2K66WfxkI+b+CoHc3TRqyj38XWDMuL7
+         U7IRfgIod2xX6DIFIQDUNeozTTLrGag0AxR0NigywuuD9W1IeFmlEpH5nI4mk4eHt9cg
+         rVmA07iS0ybu1+N0k/KFmZKTUNKl8zToZetI7GVpJglc1oNhehTLrpuUa46bs0sejrMD
+         9aEYWlFSlA5hlXEcstd6WqUaGVkIG9bTobHSfAN1IndqeKrEIh0Kg0EUkhxkKZY+fbWG
+         GXGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748638891; x=1749243691;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rOiB56y4MoyS/CzvCmU15wdJwiiHxlOhTBulQb1MiCk=;
+        b=as+BZwRY+vvyueOOQWGYo8zp54ZH3iOgyYivw13B0/ebTLvf+TOg47DjCdpkTFs/0k
+         w7jFNGICscQRzhzIS2zxwwfUFzepcF4ZgUuFwb248GWoArjeS/5aLGHVTc52wHSiGq81
+         wDlKwyrkjuyoYC16k9icdXJFXxhCVwjuFoLpjf0IpjtmCsev1QCiUFaCZZHIZiK+08DV
+         EjvNpcmVaZlS7D8J7gUrUlMI6BItOkRbShVUvCbqrVfd8BBabdPgwE6T8irTdXq+Bkh+
+         Bfj8obh5aqryePiiQ2Ab8GfapkYMor0PVooVVeEBtCahKX/YJitRCpuC0JH+VE1hFCcm
+         YA6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUa6ik4/pkiuiCP6LsN3tAUdWsTzhIjcZKEXfV6ZjkgXYtiBTrCRyutuyvdwk9R0omTN2NNtxetjosQZs0Y2yQ=@vger.kernel.org, AJvYcCWDWK3a/HBCwwBpsnrX/vKdp0UIpgX/JBCoOB1DeYdJMV8KaFxO9akSsMr1a/AYVu4r/DynUe5iDGmCWYs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa2YxuRo0VdqCM/eKwRm5TqLnp492vinCPxnesdN2D9o717nC7
+	5eXdUwrGQPNRYsNl5xHB22OkWODZLrBzOGesSexKVUr4zmfMGGmEx0iE
+X-Gm-Gg: ASbGncsGxqpCYc5JAy4EQtda6WS8uDoACBuyREfIMEjVeLmThY+kLvB56vxioon3pMh
+	TCiYkFshldJHpOpBqhIaXLw8BorYBbKfKUDTLaSBtts3s1paGCulNYP139VYh2DPOJs3Qeytlh+
+	K5W0PGITxr/5G9Q8/lA6LtQAqmMS4PtnwXaejezVVedmAjdd4z+LsrON8ZSpTMK7NietkZOA84w
+	/N7GKXSYpJ0FjIt9ycamBTSju6StNAXlpNc7w7LNtAC/hbvlLS+luAF5VG4kzpeNLesvI7UzEuX
+	M1vd0h/RAkufxoSSbFiXjcEHMmRPlW5Wa3JzsxAj7x37NBROCe4tfDHuDnofQ1Db
+X-Google-Smtp-Source: AGHT+IELYtMr8G86T/WDXfoL8a0eG5NyCgP5oG+4rgfVuvLxB0Ejdrd4sfjXgfEArS/dX/IBihHZVA==
+X-Received: by 2002:a05:6000:2890:b0:3a4:eb43:6003 with SMTP id ffacd0b85a97d-3a4f79e9846mr3851759f8f.29.1748638891290;
+        Fri, 30 May 2025 14:01:31 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00a13fasm5797576f8f.98.2025.05.30.14.01.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 14:01:31 -0700 (PDT)
+Message-ID: <013f62b1-c015-4382-89ba-2104892a2b96@gmail.com>
+Date: Fri, 30 May 2025 23:01:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511204427.327558-1-lkml@antheas.dev>
- <3a64d00e-3ca8-4a9f-9d72-e62712dc20b9@gmx.de>
-In-Reply-To: <3a64d00e-3ca8-4a9f-9d72-e62712dc20b9@gmx.de>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 30 May 2025 22:50:30 +0200
-X-Gmail-Original-Message-ID: 
- <CAGwozwE1DECoLnR2Za0UR11abgomBfvTVXV601Ok9hh6CeHjVA@mail.gmail.com>
-X-Gm-Features: AX0GCFuVlagV70nqO5wDgtf3buPGA8Kewx5UT9vnnXGUDV01B947RXTxAFZsfzE
-Message-ID: 
- <CAGwozwE1DECoLnR2Za0UR11abgomBfvTVXV601Ok9hh6CeHjVA@mail.gmail.com>
-Subject: Re: [PATCH v1 00/10] platform/x86: msi-wmi-platform: Add fan
- curves/platform profile/tdp/battery limiting
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- Kurt Borja <kuurtb@gmail.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174863824386.11456.523408226020084527@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Sky <sky@sky9.dev>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com>
+ <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com>
+ <CANiq72n0EcibX3Vx95tiPEkd04DA4hjY-TJQs9YSOmHj=VZ_5g@mail.gmail.com>
+ <0dfe6958-1dc8-4e36-aab8-e83a6da4d0e0@gmail.com>
+Content-Language: en-US, de-DE
+In-Reply-To: <0dfe6958-1dc8-4e36-aab8-e83a6da4d0e0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 19 May 2025 at 04:38, Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 11.05.25 um 22:44 schrieb Antheas Kapenekakis:
->
-> > This draft patch series brings into parity the msi-wmi-platform driver with
-> > the MSI Center M Windows application for the MSI Claw (all models).
-> > Unfortunately, MSI Center M and this interface do not have a discovery API,
-> > necessitating the introduction of a quirk system.
-> >
-> > While this patch series is fully functional and tested, there are still
-> > some issues that need to be addressed:
-> >    - Armin notes we need to disable fan curve support by default and quirk
-> >      it as well, as it is not supported on all models. However, the way
-> >      PWM enable ops work, this makes it a bit difficult, so I would like
-> >      some suggestions on how to rework this.
-> >    - It turns out that to fully disable the fan curve, we have to restore
-> >      the default fan values. This is also what is done on the OEM software.
-> >      For this, the last patch in the series is used, which is a bit dirty.
-> >
-> > Sleep was tested with all values being preserved during S0iX (platform
-> > profile, fan curve, PL1/PL2), so we do not need suspend/resume hooks, at
-> > least for the Claw devices.
-> >
-> > For PL1/PL2, we use firmware-attributes. So for that I +cc Kurt since if
-> > his new high level interface is merged beforehand, we can use that instead.
->
-> Overall the patch series looks promising, however the suspend/resume handling
-> and the quirk system still needs some work.
->
-> If you wish i can provide you with a patch for the EC-based quirk system. You
-> can then structure your exiting patches around that.
+On 30.05.25 10:22 PM, Christian Schrefl wrote:
+> On 20.05.25 11:26 PM, Miguel Ojeda wrote:
+>> On Sun, May 11, 2025 at 8:21 PM Christian Schrefl
+>> <chrisi.schrefl@gmail.com> wrote:
+>>>
+>>> Signed-off-by: Sky <sky@sky9.dev>
+>>
+>> Apologies for not noticing this earlier...
+>>
+>> Since this is a Signed-off-by, the DCO applies, and it requires that
+>> the name is a "known identity":
+>>
+>>     https://docs.kernel.org/process/submitting-patches.html#developer-s-certificate-of-origin-1-1
+>>
+>> Sky: is that name one you use to sign paperwork etc.? If so, that is
+>> fine (and apologies in that case!) -- please let me know. If not,
+>> please feel free to ping me in private if needed.
+> 
+> Since it seems like Sky has not responded for 10 days
+> is should be fine to just drop their COB & SOB.
+> 
+> I only offered to add it since the upstream implementation
+> that this is based on was entirely done by them.
+> 
+> If you want to wait for some more time that's fine as well.
 
-Hi,
-Sorry I have been busy with personal life. I will try to get back to
-this in 1-2 weeks.
+It might also make sense to wait for this PR [0]
+and use the new code as the basis for the kernel
+implementation, since that will change `UnsafePinned`
+to include `UnsafeCell` semantics.
 
-I have three minor concerns that mirror each other with using an EC based check.
+[0]: https://github.com/rust-lang/rust/pull/140638
 
-1) First is that we use boardname on the userspace side to check for
-the Claw. Therefore, using the EC ID kernel side introduces a failure
-point I am not very fond of. 2) Second is that collecting the IDs from
-users might prove more difficult 3) userspace software from MSI uses
-boardname as well.
+> 
+> Cheers
+> Christian
 
-Could we use a hybrid approach perhaps? What do you think?
-
-Antheas
-
-> Thanks,
-> Armin Wolf
->
-> > Antheas Kapenekakis (8):
-> >    platform/x86: msi-wmi-platform: Add unlocked msi_wmi_platform_query
-> >    platform/x86: msi-wmi-platform: Add quirk system
-> >    platform/x86: msi-wmi-platform: Add platform profile through shift
-> >      mode
-> >    platform/x86: msi-wmi-platform: Add PL1/PL2 support via firmware
-> >      attributes
-> >    platform/x86: msi-wmi-platform: Add charge_threshold support
-> >    platform/x86: msi-wmi-platform: Drop excess fans in dual fan devices
-> >    platform/x86: msi-wmi-platform: Update header text
-> >    platform/x86: msi-wmi-platform: Restore fan curves on PWM disable and
-> >      unload
-> >
-> > Armin Wolf (2):
-> >    platform/x86: msi-wmi-platform: Use input buffer for returning result
-> >    platform/x86: msi-wmi-platform: Add support for fan control
-> >
-> >   .../wmi/devices/msi-wmi-platform.rst          |   26 +
-> >   drivers/platform/x86/Kconfig                  |    3 +
-> >   drivers/platform/x86/msi-wmi-platform.c       | 1181 ++++++++++++++++-
-> >   3 files changed, 1156 insertions(+), 54 deletions(-)
-> >
-> >
-> > base-commit: 62b1dcf2e7af3dc2879d1a39bf6823c99486a8c2
