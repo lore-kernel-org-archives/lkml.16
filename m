@@ -1,128 +1,122 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B46C1A0728
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677A11A0728;
+	Fri, 30 May 2025 07:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748590839; cv=none; b=Xh0NGUiK0uEZKC/GUKCJt1kyr6o6QxBD1pL2USSKNLDU/aspz72VpB4hfYjZQAURqtvZyGHQ1u1uuh1A0zjes9wZ7y5rqaS6RPLzCuKn1xAzgoozW/shgfmdzIYYouZTn3ZZgl2OS6pfDLflSAe9sqjzixi2bNWlBSHxeFmNCN4=
+	t=1748590885; cv=none; b=cZYUdr7qSrRE8vgy+dd2VXlfB3EwPYZzukfjCFurVKdHqjHq42mIhJs0bXh7zTHq2t4LULknuSpibJlCKCotzZgwIhQKsYboQoQWG55YmdBl07dGAKqLEWyZGJmlXPKeO2KsDlsSG5FIOoCO0U5Uhu3h7YmWO5UPgMP9gg7UOH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748590839; c=relaxed/simple;
-	bh=+bSTfW0qZWsboO+3q3mk5MmMDncUVPODEtaeJN2kvfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T+BRkM52nDQUbJEYqZAlPmvO64cHtCU9fx3Eoqaebfntuzi3lThLCkVL4BQCDpgEDzLZ5zMtV8WjfMoGSQxAKH6F+1Mhjl0LT4+2HSpW2bHI22VKQfQAp3rjF2GT8CAiurOi4Xd2LeqYOv6IXER2NDbYo4exDobsYHDg7JvH9hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=sibxdDmV; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748590885; c=relaxed/simple;
+	bh=pBNA3dsaR/o0CK40JmO+2Oes1H+6BGMvYXHe9DWPr5g=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Re/8LFklNgTGDf4ESizXpAm4e/7uiKIvMr9l0E30gjgqJtnmaQk57Dv+gHU1d91UqZXEcPXkQiOQyiaqO4lSdpjdxRfJBVqIDx1RZOk9duNpD4Fn2soKHTiSenGig6rce6j0a/zApOMBf/yfjJyhJhqHkX6bbt+76Wh44MM8+zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XoE6WR0G; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="sibxdDmV"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso15268045e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748590835; x=1749195635; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RvsDzEdeuDGjWO0lm4J7QVc99u01mGnvNVsg9qXGJ6c=;
-        b=sibxdDmVBZB8bQTrBKCjmoe5L8NyGOVjYWVi4Qw7IInkIxmiwAuuDwgs/A8OOwKOyL
-         4QNaVFUizkHD46Qqh/ku8f95FSHHE7s4e8AxCUKO3a3n77PMX+6fedgLx71M3YwrCzdt
-         Bi0JBBIlU8usBXeJ/j/GsVhSDMZV183A8Q650kbbqSUx5WXHz3zMvuz4ABNDchHPmN7G
-         GnFo42P+LZ8JTn7dEJKMO5UGyTQl6BmPhLePAFBpHre9IAr1k4vClhRQK8DJZHyt69sc
-         +NG1CY/o2nNHWwq622Yz9HOmeB9ONFv8QS9SugSAQ4GV/zPZcI4xh85XwsIxDAtsTZT9
-         kTTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748590835; x=1749195635;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RvsDzEdeuDGjWO0lm4J7QVc99u01mGnvNVsg9qXGJ6c=;
-        b=jIrVax14esT5Rk18i5QVrTKWuIxIIPkIcUXFeqYHgws9otaAlpYWqNKnYTCNwB1HbK
-         s3A4QheGeGcgZYWXQbtk3ds/p3zelhMOc9tL0OvOUab4A33Z61Tajtfpsbf+JotvVHyg
-         4xxFUsx0pDRkNIwJtyooJzz4SSSnIgq1G6q7JaxPMYdWYar97PbOkMHCiSmLObbWBJGc
-         ejigTzoZ6cZXuk8JDpg1dl+Fv4bF+BkCmr//TeuZqjuzwv4JrxVfHqDkpiua01np2Kue
-         KV4vf68WEPoUCH3S5K8fX+B+T5Xc2Tjw52P5vFnqthzRdNFy/Vzy7K0TgB3YypL2ZA47
-         K/rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6q7RR2NarIZJ0KtMx0xmjC6N1SxydvgbNiHyLKslqFJBHZtBvghlxCjfem5u/yI6BQOSgbIeIwEkR5xI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZXqEhWw+xQRda+EbNFVrGBhumn0oJ/fUXepVpDxzUJwjXHYtM
-	DQQtge/rZPOlfS1ibaTJYwqe+oA1p2kiIbpAU7cIrl3YziBrqk3xKBJA8ujhlBsMD6eIvKtffwA
-	b+nxt
-X-Gm-Gg: ASbGncs8puYqbwk3MaBnJct29PFoeUBWMk51bmBCw+RXNpvqWcE7EedoGl9lXbBsBhd
-	kjNx7oDVEiloCoaZ9Ue2zY20CHHbqM+3cqL0o5lzAgx74hrIRLu4AqMXCYFZtehGPi4wTlFLs0/
-	1CVSW/SHBcdAORx7JxGcTYLFFoAPbgFRap1smHxoH9iqtLsQUYBHojheRYJgTOTJayzeJKhiP/N
-	kM//9+CzpJF8VWNpocWBky26nXtZN4u7gFGwevamBoe8IrcauiNPrExLZ2nnVofB705mn+HxujK
-	Cgp4Qgp/5u2F5OwYd9OPcYHBEXjPWoM4Hgt1u5Zm6Gxs1aabfzL1XfhrRHNBSOq4Y4+dw1c6SRx
-	1i8rc/PotyiIzX+uIWta3xvjgzDU2YQ==
-X-Google-Smtp-Source: AGHT+IGjHYdSP9NzIcVp9qDzXHfmzguaFDJ8Wlu8Owbt0r83ig94jmYM/ZNsHYd/fb2Ac0iOC96QbQ==
-X-Received: by 2002:a05:600c:314a:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-450d880c950mr9802165e9.9.1748590835425;
-        Fri, 30 May 2025 00:40:35 -0700 (PDT)
-Received: from archlinux (host-80-116-51-117.pool80116.interbusiness.it. [80.116.51.117])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb80f6sm10212605e9.28.2025.05.30.00.40.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 00:40:34 -0700 (PDT)
-Date: Fri, 30 May 2025 09:39:10 +0200
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: adc: ad7606: add enabling of optional Vrefin
- voltage
-Message-ID: <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
-References: <20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com>
- <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
- <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XoE6WR0G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748590884; x=1780126884;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=pBNA3dsaR/o0CK40JmO+2Oes1H+6BGMvYXHe9DWPr5g=;
+  b=XoE6WR0GdBnmKlvSdpBeAfWerdh/qADW8cxyIfJYluVW1gKIdLeHOSjv
+   BjUDrnw66psYGEXkwPPMovO2d+3Ec1g2fIJu5dU29+H+yJurnClEuD+8e
+   ieUx+xzSQVd0o424+DG1ukIPWBExReBt78gZXCN8q38RvWQpcXWuJmJUK
+   9MvkeE9/QFuhwzWNlFkJfk9SQIJye8ukTpRXF3T8gXPgfs47jQGbkpcO7
+   PZILyGHPNtPlTpLhwCWPyIGTFwDXXRHp/cOAfSUnVtUnDJEE8nsGzQBIv
+   jOXXMA/jaFROrYUw8SKmRhcVlL6HE5QM5SWzMIUEyINYBhu7wucdwp3qP
+   w==;
+X-CSE-ConnectionGUID: CALPcmILQfm+sxKkmIljLA==
+X-CSE-MsgGUID: vt2tkzdgRNCgUJKsNFhGDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="68100086"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="68100086"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 00:41:23 -0700
+X-CSE-ConnectionGUID: vVg2EkLTSeyOMHIgeWZguA==
+X-CSE-MsgGUID: MZBgCgs2RCGMowl8TS3eWw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="174689548"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 00:41:19 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 30 May 2025 10:41:15 +0300 (EEST)
+To: "Nirujogi, Pratap" <pnirujog@amd.com>, Hans de Goede <hansg@kernel.org>
+cc: Randy Dunlap <rdunlap@infradead.org>, 
+    Stephen Rothwell <sfr@canb.auug.org.au>, 
+    Linux Next Mailing List <linux-next@vger.kernel.org>, 
+    Pratap Nirujogi <pratap.nirujogi@amd.com>, 
+    Benjamin Chan <benjamin.chan@amd.com>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: linux-next: Tree for May 27
+ (drivers/platform/x86/amd/amd_isp4.c)
+In-Reply-To: <b712a69d-e899-4286-b5f6-06d87d732ed8@amd.com>
+Message-ID: <e079d753-554e-7a42-11c6-a08cc095eb91@linux.intel.com>
+References: <20250527203231.3c6c0b9d@canb.auug.org.au> <04577a46-9add-420c-b181-29bad582026d@infradead.org> <d2ac901b-f7d2-46e6-b977-0ad90faa46f2@kernel.org> <b712a69d-e899-4286-b5f6-06d87d732ed8@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On 29.05.2025 12:52, David Lechner wrote:
-> On 5/29/25 4:13 AM, Angelo Dureghello wrote:
-> > From: Angelo Dureghello <adureghello@baylibre.com>
+On Tue, 27 May 2025, Nirujogi, Pratap wrote:
+> On 5/27/2025 3:43 PM, Hans de Goede wrote:
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
 > > 
-> > Add optional refin voltage enabling. The property "refin-supply" is
-> > already available and optional in the current fdt dt_schema.
 > > 
-> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > ---
-> >  drivers/iio/adc/ad7606.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> > Hi,
 > > 
-> > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> > index 3bbe9c05b5edbc11e8016c995c6ab64104836e7b..21e63260965c32988d0ab3b8bb1201aa2396f1ba 100644
-> > --- a/drivers/iio/adc/ad7606.c
-> > +++ b/drivers/iio/adc/ad7606.c
-> > @@ -1335,6 +1335,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
-> >  		return dev_err_probe(dev, ret,
-> >  				     "Failed to enable Vdrive supply\n");
-> >  
-> > +	ret = devm_regulator_get_enable_optional(dev, "refin");
-> > +	if (ret < 0 && ret != -ENODEV)
+> > On 27-May-25 8:56 PM, Randy Dunlap wrote:
+> > > 
+> > > 
+> > > On 5/27/25 3:32 AM, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > > 
+> > > > Changes since 20250526:
+> > > > 
+> > > 
+> > > on x86_64, when
+> > > # CONFIG_MODULES is not set
+> > > 
+> > > ../drivers/platform/x86/amd/amd_isp4.c: In function 'is_isp_i2c_adapter':
+> > > ../drivers/platform/x86/amd/amd_isp4.c:154:35: error: invalid use of
+> > > undefined type 'struct module'
+> > >    154 |         return !strcmp(adap->owner->name,
+> > > "i2c_designware_amdisp");
+> > >        |                                   ^~
+> > 
+> > Hmm, this should not check the owner->name at all.
+> > 
+> > Instead the i2c_designware_amdisp should set adap->name to something
+> > unique and then this should check adap->name.
+> > 
+> I noticed the unique name set to "adap->name" in i2c_designware_amdisp is
+> getting overwritten to the generic "Synopsys DesignWare I2C adapter" name in
+> i2c_dw_probe_master().
 > 
-> < 0 is probably not needed.
->
-The above code looks correct to me. What is the issue ?
- 
-> > +		return dev_err_probe(dev, ret, "failed to get refin voltage\n");
+> https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-master.c#L1046
 > 
-> We aren't reading the voltage, so the message doesn't make sense.
+> Inorder to use unique name to detect the specific adapter without making
+> changes in i2c-designware-master.c, I used adap->owner->name.
 > 
-Is it better a 
-"failed to get refin-supply\n" or
-"failed to enable refin voltage\n"
+> Since it is causing build issues when CONFIG_MODULES is not set, can I make a
+> change in i2c-designware-master.c to initialize the generic "Synopsys
+> DesignWare I2C adapter" name only when adap->name is NULL. This way I should
+> be able to pass the unique name from i2c_designware_amdisp module.
 
-?
+How can you check that, it's char name[48]; not a pointer???
 
-> > +
-> >  	st->chip_info = chip_info;
-> >  
-> >  	if (st->chip_info->oversampling_num) {
-> > 
-> 
-Regards,
-angelo
+> Please suggest if this approach is okay?
+
+
+-- 
+ i.
+
