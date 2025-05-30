@@ -1,152 +1,113 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3635F23814A
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902F618FC80;
+	Fri, 30 May 2025 16:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621286; cv=none; b=Yfu15OH2I60HKi0VwpC5adrCHgfP+mlLY8wWBHyek6rcVWQIf6ve4GDmp2rXDK6we9qlko4E8d0MMZJsPK9rjLlcDr68MJy+UKZTwX7ft9AJj/qNAEkdyBoEBdX4hvp9Mffk9r1shE8F7g8VkJTX/LQpc2dBNFQZ4oLxultsEW0=
+	t=1748621314; cv=none; b=VDoSw6Fny8R6zHuWQllGYdbXYF9e04LcVSXsYlrms3TuRv0CEHbWYOKl3F+qvWSSUhlzwBOcXCPVp4FHWts9pi1Z7RRNuKAmkBo7IiJTlHoyOjIJOEeZZ2KqcDAL9kT+FKkjH8qaMGMmeQ/p4JFTHN8/Fb81UtG5ibDBqplNBDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621286; c=relaxed/simple;
-	bh=20+CDTw4vzWKnMq2YhSJ3lSPA2rG6reE6EsPNfWd2IM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H1X3n6I6+PcmSMN4H++j/Yix/C0WCb/ior/9quUWdMfv6Nq2O0yhOpyZRLqLtG/dlqAd4N3VT8AWDBH3rAvDVzNDutNKGcgBU1WThD2G61MUj05sEEcj0T3TOndHULBt9GWYuraAa6HJjfvpPNd2tibdcqR/a4Lf0dhG5skABbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=CPIZk51A; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1748621314; c=relaxed/simple;
+	bh=Apu/G+DHY1jr+3ezjF701L9jbgVsYzVdLmfMBcdVKHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EUB/mMYycLh3RZclNFm1M6C1zl5dHNQgSbCX81JhQOnjb/8OesO44iHxX9d1RGJnj8op/yffvHEr+8Xxi76abVfGqfWBC7tkbiu9YRSdJPrJxiRTGjKX9gm0k0sUgWA6FVheGsmHQQdLKuZrS6GE+eeVKecg4Trq1zQe9OIey5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=fYhvI+zn; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CPIZk51A"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso19679985e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1748621283; x=1749226083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GvgM2IbfWBcG4/oTfKmRrdxwIvc181owD475503ERJ8=;
-        b=CPIZk51AA9T+xpSxzYfSCixNgXTWJAROmuwpBpz+gRjV0bEY/n9gUaL6QnuCH7tmEp
-         chN7fdBcLlF5ZSgveiorpLcG+xPzSfTKOn+jDYHB6/JJ6nC/9IDJLeqZvEv+BMfgov/8
-         7NfaBjN2Gp1jPd90gPpBYYehggph5JsNXFYpo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621283; x=1749226083;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GvgM2IbfWBcG4/oTfKmRrdxwIvc181owD475503ERJ8=;
-        b=UKpCoVObRq9pqa6rgmcZgBl6BZLZ4rfRu8ouruiQGZztqq9vPsj8FF5AfL8yhZ2naA
-         QCh2I7q/l8rmuv6vb7BDtXFxaCBmfxs62Vlggty9Z41YDuis+WdfI3JRWT2e+dlCvYrd
-         wx7MV5UhIgzU9CSqw7phf+BerjZ6+9iznKDC5AdDOzQfs5KmKcM7FK8quhjVvCri1nrH
-         F0vL5FCunMaGaMu+WbasgQLKsXRSve7uX0TZKyA+DFVT+OOy8CeFApRdjMFBFydC+rYo
-         dg5yA+srCaMdkDhmYuHTAvtQNMCaZ1qzEumGUa4Ro2nlXZgjOuJe7c33akZMvSbZByP7
-         D+9A==
-X-Gm-Message-State: AOJu0YyEX+yhG8u7I167jNf//NG+7p1u41gJw806yu/R7NxQwRoent0m
-	+YDDdYMTWEyrQaTlWttf1o2RLj/dCYT7/8erS9RFLcExTaaCs5lfVDGBWNp1E9rXTM2y2qi4cWb
-	o07kE
-X-Gm-Gg: ASbGncv1X5l/rJpYvkipHMSsI4SWEYFcIYmsLEPqP2kS28g0CgzAsx2tcolNBXbhh21
-	lng7Ot1BruhRrQRmL45BNj1DvMQqUgrNokhiHHFEzE4JVrMk+7nIz/SyPpTIs0hbjJ5oPaI/SuV
-	UrM5ly8gDH7fQV02IZE2Pcm6KuRjugMSPbT8mnk3Y8n0lshHTCD/eZYIE1Q+Cbf8xrzu60KKrke
-	LKhVyOkyhwNoHpM5Y6r64DWeKX3VzmpKnrpb6PS37qWpdjii0eUbW+vU7bDpqqK77mXbsy7sEst
-	h5csK2sMGvfQtiyGHnqacXniJ9Uq8rnf4B9oQFof2/PP/DKqpnLF9GEwp8q3HJPqHsZ9F4Ixebj
-	BWAS9YxaaZCtuYAkbrMZWyAdsnP5UTWENtmViDD0biY7WctIfZ9s=
-X-Google-Smtp-Source: AGHT+IFYdaNMtebMqrcyfFwd8HXEmCu6MtcABHOw6woSEVwRzVUsS88bwdlnnTOG4SmcQTNczADG4g==
-X-Received: by 2002:a05:600c:4f87:b0:442:cd03:3e2 with SMTP id 5b1f17b1804b1-450d87fd991mr30332145e9.2.1748621283200;
-        Fri, 30 May 2025 09:08:03 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.amarulasolutions.com ([2.196.43.33])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450dcc18a80sm9716365e9.38.2025.05.30.09.08.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 09:08:02 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: michael@amarulasolutions.com,
-	Frank Li <Frank.Li@nxp.com>,
-	linux-amarula@amarulasolutions.com,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 6/6] ARM: mxs_defconfig: select new drivers used by imx28-amarula-rmm
-Date: Fri, 30 May 2025 18:07:37 +0200
-Message-ID: <20250530160748.2476088-7-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250530160748.2476088-1-dario.binacchi@amarulasolutions.com>
-References: <20250530160748.2476088-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="fYhvI+zn"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 415CC40E01A8;
+	Fri, 30 May 2025 16:08:27 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id jcEva94uPova; Fri, 30 May 2025 16:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748621303; bh=P0xzSJoODo1gq24yAKCnR+juAxDSku6fWVl26Y+tLoA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fYhvI+znEDvl9ltQ89DW9npnK0D98HzEqu9N/je3ZcU76YCkAvL6NSrb47+v5XPKj
+	 sghfB2wWkAh00QEM3smRb1hxzR3yLd7amtYanQ+miR5Fovx0chqJqsWBRlJsyIMzmI
+	 ZcEXUBKpJWQTEirjQxSRqWukH26XzxXfWOMkUme8sOHDc25UaUCkhOboKGJwRWtWO8
+	 iAzl4CFiUR2fQjmfZR+zsE7sTyXS+3dVWxq5vb0UzQHb/xroQ7uFOmc9CalzaWrQuf
+	 i5JrQtc1cSc5cqRA3It9RlcrpKzbxhg5YPyffFeEMbnUaiehA+Wvvbq2kgEsrQHZTf
+	 PXUOK7aw36Iw7A2s8zl3mIJKrZAJpfgztM1bb62yVrN0wfyF352EYEnAEswmkS5avT
+	 jOs8FwmXCuv01jk5swn0fdSyZISpjOrn3+ViySiEGAnWdJqh4vw/GjBSWpYvyb10Ou
+	 tvW5KJB2PA1SaZp1WXfOyG5ys7+O9c/q0UVsZfdcaGVtl5lSSpjtrLjw7eRq29PD/M
+	 KdWskg/0hRX9H2vp0qQfgIvIPYAxXFaxnsEDcA3sjxVWpcGbQYGHXvsc5F4yfrARGV
+	 /tDxxzPuOZar2MesU7X7SCrEFFg808/0VxYm1yNZTF7/1k0hQTJDT+PmqyND2D7jmh
+	 C1hXqMFCBQOq4BQQfHBgTyOI=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 743D440E015E;
+	Fri, 30 May 2025 16:08:14 +0000 (UTC)
+Date: Fri, 30 May 2025 18:08:09 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature
+ check
+Message-ID: <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512190834.332684-35-ardb+git@google.com>
+ <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
+ <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
 
-Select the options required by the imx28-amarula-rmm board.
+On Fri, May 30, 2025 at 04:28:52PM +0200, Ard Biesheuvel wrote:
+> > > +u64 __head snp_check_hv_features(void)
+> > > +{
+> > > +     /*
+> > > +      * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> > > +      * features.
+> > > +      */
+> 
+> ... get_hv_features() is only when SEV-SNP has already been detected.
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Hmm, I see
 
----
+void sev_enable(struct boot_params *bp)
+{
+	...
 
-Changes in v5:
-- In mxs-lradc.txt:
-  - Fix deacription formating
-- In imx28-amarula-rmm.dts:
-  - Drop #address-cells from gpmi node
+        /*
+         * Setup/preliminary detection of SNP. This will be sanity-checked
+         * against CPUID/MSR values later.
+         */
+        snp = early_snp_init(bp);
 
-Changes in v4:
-- In mxs-lradc.txt:
-  - Fix typo Low-Resoulution -> Low-Resolution'
-  - Wrap lines at 80 char.
-  - Drop '|' from the description
-  - Describe what each interrupt is for.
-  - Move touchscreen-wires constraint for imx28 to the top level
-- In imx28-amarula-rmm.dts:
-  - Drop label property (deprecated) under the leds sub-nodes.
-  - Add microSD comment above the ssp0 node.
-- Add patch 5/6 "ARM: mxs_defconfig: Cleanup mxs_defconfig"
-- Add patch 6/6 "ARM: mxs_defconfig: select new drivers used by
-  imx28-amarula-rmm"
+	...
 
-Changes in v3:
-- In imx28-amarula-rmm.dts:
-  - Drop xceiver-supply property from can0 node.
-  - Rearrange the order of specific nodes and properties
-    alphabetically.
+        snp_check_hv_features();
 
-Changes in v2:
-- In imx28-amarula-rmm.dts:
-  - Replace '-' with '@' for the pinctrl sub-nodes.
-  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
-  - Drop LCD reset hog pin.
-  - Add correct #address-cells and #size-cells to gpmi node.
-  - Replace edt-ft5x06@38 with touchscreen@38.
-- Drop from commit messages all references to LCD display.
-- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
-  json-schema".
+        if (snp && !(sev_status & MSR_AMD64_SEV_SNP_ENABLED))
 
- arch/arm/configs/mxs_defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+This is called here without checking the snp boolean.
 
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index 91723fdd3c04..3b08c63b6de4 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -64,8 +64,11 @@ CONFIG_INPUT_EVDEV=y
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
- CONFIG_INPUT_TOUCHSCREEN=y
-+CONFIG_TOUCHSCREEN_EDT_FT5X06=y
- CONFIG_TOUCHSCREEN_MXS_LRADC=y
- CONFIG_TOUCHSCREEN_TSC2007=m
-+CONFIG_INPUT_MISC=y
-+CONFIG_INPUT_PWM_BEEPER=y
- # CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_AMBA_PL011=y
+And without checking the version it is fragile anyway. Why do you even need to
+remove the version check?
+
+Just leave it in.
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
