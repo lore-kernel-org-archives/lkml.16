@@ -1,150 +1,151 @@
-Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4351D61AA
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FB038B;
+	Fri, 30 May 2025 08:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748592362; cv=none; b=tsf51qbwEJWfz46I5VehumjV7vpY5+reA7bvWVzDN4UxsLjyTt6+mH8jT8gowYr+X/Y1LqWSICOLjHaL+ux/jB+ZA0Y16L0JY9CS/WFwBXCOhf4yzU//c+s+GQhnjg++qsu13Irc22KTMEaoyIQq6ss1TzMND5xO5hyo4M1SMgA=
+	t=1748592397; cv=none; b=PS1DMPywh9PtnL0dZuCj/YHcTNBKnnoZrvk1rnDpyJ87BF+x62/wVUy0mNklku5emeuQwx3TP5DBXlZq2wAdUqJU4LP2uwrtfIZTdz0dq2UBUgb/ibKaZdoB9b0B2Oqlnka6D9OwE5t0lZ2hoqFSM2XWKHwC3kygD7PjFyoRBG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748592362; c=relaxed/simple;
-	bh=wRPtvgAFvrNkQSxGuy5+SQwve3uu0xS+y0fxFvzjIzA=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IHLk3dWgwoW6m0gRvWZpfzk4yAPr/dvW89EIhlFjljvy+MPoD+yNyebzJSn1NwrrN8K2QkgLe34oCbisOy6/2jh7BstPzQ8ja5jmgeJIDs/h2Rri9iH4fW/5deCp9Q4VH5sfRewjgd49wfAibIdGDzj2rJFKjK72phnpZwCm5zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201603.home.langchao.com
-        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202505301604430790;
-        Fri, 30 May 2025 16:04:43 +0800
-Received: from jtjnmail201604.home.langchao.com (10.100.2.4) by
- jtjnmail201603.home.langchao.com (10.100.2.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Fri, 30 May 2025 16:04:42 +0800
-Received: from jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322])
- by jtjnmail201604.home.langchao.com ([fe80::2830:53ee:1228:5322%5]) with mapi
- id 15.01.2507.039; Fri, 30 May 2025 16:04:42 +0800
-From: =?utf-8?B?U2ltb24gV2FuZyAo546L5Lyg5Zu9KQ==?= <wangchuanguo@inspur.com>
-To: SeongJae Park <sj@kernel.org>
-CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "david@redhat.com"
-	<david@redhat.com>, "mhocko@kernel.org" <mhocko@kernel.org>,
-	"zhengqi.arch@bytedance.com" <zhengqi.arch@bytedance.com>,
-	"shakeel.butt@linux.dev" <shakeel.butt@linux.dev>,
-	"lorenzo.stoakes@oracle.com" <lorenzo.stoakes@oracle.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "damon@lists.linux.dev"
-	<damon@lists.linux.dev>
-Subject: Re: [PATCH 2/2] mm/damon/sysfs-schemes: add use_nodes_of_tier on
- sysfs-schemes
-Thread-Topic: [PATCH 2/2] mm/damon/sysfs-schemes: add use_nodes_of_tier on
- sysfs-schemes
-Thread-Index: AdvRN0I/Pe3LT5XZQBaj9QtYPLbiIg==
-Date: Fri, 30 May 2025 08:04:42 +0000
-Message-ID: <d8e3000cfadb443681fabad65093b462@inspur.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1748592397; c=relaxed/simple;
+	bh=lvLxyVrYQzJysV3uOxVPsS5JhN/ohssoYL5mRw3MV+M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wu0Iq8xxEEz2i+lDQombBrC+Hzki611Bqu3MckStmGSzufIzCTBpah+B19aT8u6/LCCxOsZ7w4rQXMHclqJXhj/KTlLGVk/BjOGfDam7ywnRC2p23F1Sh9B3MrMatXWKj9wmNTGxaTRwpCFPlS5uwaLCQrY0vg7y+Wg2vmV3I3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-87dfde2aea2so467738241.2;
+        Fri, 30 May 2025 01:06:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748592390; x=1749197190;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UODADZBFNNuhdOjNi7w1d1lWaPaCSwIUX58mKie6mVI=;
+        b=oNlFZsYdIE7gwINfDQw+t7ZjXs9pJFH2MiJIefyCXFRNb3LoyWIFRswXPo3vKrwZ0F
+         F55MT1izLI/2R+uV99dSjF5pNpfRbhCxbIBHXIoPR63zMmlom8CM6bndHjrEA1gQ19FH
+         upNBiHDADq5/3yDkSDQatZwDVhN9CwwK9pm9myVvQ3wTqMzfb9gMm6Pf3vE/9fIQBwlG
+         FPBMRXwCfClsTcXqfPV1OzVidxCuej9iNI0iOyy5Kbnb668jNV3uNxUWaky35sTb9OLv
+         ukGfw0j98Qkb0pLiOWTpuSckZeSqHEAnxfJllb9Psp4S7HLcgd6b/LTynWjoLZRdFM0h
+         Fnzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUB6rnhVVrN++sOInR6FEmPk2eDAoCMYh5ClQd83Js5Ns/5ppT9QL9I2iP2K+DR6gPxpthZGswbgAYrBF81@vger.kernel.org, AJvYcCUrZFgu/FNVDqaAlnrZJlZ2DcFPnG1zKJTf506odnyBQf86ukoNglHn1vU89nIUJhh5RZyxXhf56aj+@vger.kernel.org, AJvYcCVZO/1q/TLnFA5aZpgdNvMljM4KpXOY1oJQ4GWOISsjNwnPGNGgrJTu4UmSY2YGn087TV12NncXWiDfbYw=@vger.kernel.org, AJvYcCWdG9N/PeiGpZPwLWL7rQ7J5PAohS1x75HzTmrCyhyAKPGJ3lodStRgSQuih5w2pZAJFclaPx7wuQ/c@vger.kernel.org, AJvYcCXtnh+VMDUiq2uL04wSu7KB0McGMcV4mncuOvHR48xm3txR914KqHLrdDovfocMmyDYZYazL21QBqKpZJhKNqHlhnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsXIuZPYofvTmPdqTrRKkA5c4bWeMD32QWLeHOmuRIQrmettog
+	WE5pWEeI1jMrYAcrH+R5mKw6nl+kw02d4lDow2JRgGv7M5DXiaTvatO7N1jvSEFj
+X-Gm-Gg: ASbGncvyu+cOWnwfz9IEBFd/IFUs0lh5xV8N3akIUKqjjnao3O3GNZpu+YK/KjmF315
+	c353egU9FOOC+udoVmKpZO0tpatocPWNw4A/R0A6y/sgJmzn30nCWqRQONrEwERaihroXw6zsB3
+	fBr2CsJb4OcrgN1Dnb1iUmRSOBN1ZHh7J9tw9FmS6N2Fk2sX4GzQcBEV1sAEzx5ge5htWF5XQzn
+	Qh5MXjRL8wVcKGYiptcZcFk3kpMhcNRwQxTC65UdBWv8a0j0pT5QFiy4mOomgpKu2WWeO7tGlHQ
+	q2W5Fldh/13fvdrk+78LWYwY9nsOp8eoJh206ZpXBPT9fC3TxrAo5QK9bWqiDjfmoqh7pWNUh1t
+	7JZ/lnjGkBf9b0IJtZw==
+X-Google-Smtp-Source: AGHT+IFWq1SXxMlo8s+dLVsk6Dc+TcdJkvf+UTgpCEvKu7cUsL4LnPlY+2mnpsxt3AQ+1ZkyBf/rWQ==
+X-Received: by 2002:a05:6102:508e:b0:4e5:a40b:5a72 with SMTP id ada2fe7eead31-4e6e40d93afmr2320037137.5.1748592390606;
+        Fri, 30 May 2025 01:06:30 -0700 (PDT)
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e2a3b63c9sm2320275241.31.2025.05.30.01.06.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 01:06:29 -0700 (PDT)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-527a2b89a11so728000e0c.2;
+        Fri, 30 May 2025 01:06:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZ5HETBlxCjIl/PE+SBuD3rCQluZPWGPXUYw+I/JLnNUrOsfeysr0WKJXMH9cEdPOkhXHTGR8+jiMz10g=@vger.kernel.org, AJvYcCUoWqKxhuWbBVn2M0caX90mfkkW3cwAqs7yi/7plCkst8iFwQHjJSbz76Hm7OD5/qPRocPp1i6HPRBC@vger.kernel.org, AJvYcCVqj+ulthrjb4OJEy1adZvC7MyimW/EYdxyzOOmHh1EP2fjgiZ50lR4ZTjDmQOCouiLxENqR2LykMIzPKpmrvipOvE=@vger.kernel.org, AJvYcCW87ir6kPgbN15zHj1/9dsZxVH+VY6WoFvnJ94ng4lS0HD1snAI9/gvZ4ynQ6+fA5ky9gojZEmBaO1g@vger.kernel.org, AJvYcCXi0Hxn1n6ckSApWBxIlxO2RWJ1dqZi6n7hQzWDQ+EpJ/0kEXI72JK483G2XIu9NinmCDJhv88WAI/KIoPz@vger.kernel.org
+X-Received: by 2002:a05:6122:17aa:b0:530:677b:1e93 with SMTP id
+ 71dfb90a1353d-53080df1088mr2012964e0c.0.1748592388616; Fri, 30 May 2025
+ 01:06:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-tUid: 20255301604432de45734cce98a160adada192bf9edc5
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
+ <20250528-pinctrl-const-desc-v1-14-76fe97899945@linaro.org>
+ <CAMuHMdUGDf5n_Fg7pwiPumm95nPUXyH15geAy2ULwY3U+OtZJA@mail.gmail.com> <b6b7fb61-878e-4407-b964-564efb3524b1@linaro.org>
+In-Reply-To: <b6b7fb61-878e-4407-b964-564efb3524b1@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 30 May 2025 10:06:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUHyLYk0oSN8XDNCXUvLQLe2u0k0noVJLbR+pYWDTB4+w@mail.gmail.com>
+X-Gm-Features: AX0GCFuCNZIpijI8V-LFtD11RdEuCtx09JrM6Rph_c1WT65W3SrLJtlImd30cUI
+Message-ID: <CAMuHMdUHyLYk0oSN8XDNCXUvLQLe2u0k0noVJLbR+pYWDTB4+w@mail.gmail.com>
+Subject: Re: [PATCH 14/17] pinctrl: renesas: Move fixed assignments to
+ 'pinctrl_desc' definition
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+	Joel Stanley <joel@jms.id.au>, Avi Fishman <avifishman70@gmail.com>, 
+	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
+	Benjamin Fair <benjaminfair@google.com>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	David Rhodes <david.rhodes@cirrus.com>, Richard Fitzgerald <rf@opensource.cirrus.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Sean Wang <sean.wang@kernel.org>, Jesper Nilsson <jesper.nilsson@axis.com>, 
+	Lars Persson <lars.persson@axis.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Damien Le Moal <dlemoal@kernel.org>, 
+	Vladimir Zapolskiy <vz@mleia.com>, Michal Simek <michal.simek@amd.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+	openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@axis.com, linux-riscv@lists.infradead.org, 
+	linux-rtc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="UTF-8"
 
-DQo+ID4gPiA+IFRoaXMgcGF0Y2ggYWRkcyB1c2Vfbm9kZXNfb2ZfdGllciB1bmRlcg0KPiA+ID4g
-Pg0KPiA+ID4NCj4gL3N5cy9rZXJuZWwvbW0vZGFtb24vYWRtaW4va2RhbW9uZHMvPE4+L2NvbnRl
-eHRzLzxOPi9zY2hlbWVzLzxOPi8NCj4gPiA+ID4NCj4gPiA+ID4gVGhlICd1c2Vfbm9kZXNfb2Zf
-dGllcicgY2FuIGJlIHVzZWQgdG8gc2VsZWN0IG5vZGVzIHdpdGhpbiB0aGUNCj4gPiA+ID4gc2Ft
-ZSBtZW1vcnkgdGllciBvZiB0YXJnZXRfbmlkIGZvciBEQU1PUyBhY3Rpb25zIHN1Y2ggYXMNCj4g
-PiA+IERBTU9TX01JR1JBVEVfe0hPVCxDT0xEfS4NCj4gPiA+DQo+ID4gPiBDb3VsZCB5b3UgcGxl
-YXNlIGVsYWJvcmF0ZSBpbiB3aGF0IHNldHVwIHlvdSB0aGluayB0aGlzIG9wdGlvbiBpcw0KPiA+
-ID4gdXNlZnVsLCBhbmQgbWVhc3VyZW1lbnQgb2YgdGhlIHVzZWZ1bG5lc3MgaWYgeW91IGhhdmU/
-DQo+ID4gPg0KPiA+ID4gSSdtIGFza2luZyB0aGUgYWJvdmUgcXVlc3Rpb24gYmVjYXVzZSBvZiBi
-ZWxvdyByZWFzb25zLiAgTXkNCj4gPiA+IGFudGljaWFwdGVkIHVzYWdlIG9mIERBTU9TX01JR1JB
-VEVfe0hPVCxDT0xEfSBpcyBmb3Igbm90IG9ubHkgbWVtb3J5DQo+ID4gPiB0aWVyaW5nIGJ1dCBn
-ZW5lcmljIE5VTUEgbm9kZSBtYW5hZ2VtZW50LiAgQW5kIG15IHByb3Bvc2VkIHVzYWdlIG9mDQo+
-ID4gPiB0aGVzZSBmb3IgbWVtb3J5IHRpZXJpbmcgaXMgbWFraW5nIHBlci1ub2RlIHByb21vdGlv
-bi9kZW1vdGlvbiBmb3INCj4gPiA+IGdyYWR1YWxseSBwcm9tb3RpbmcgYW5kIGRlbW90aW5nIHBh
-Z2VzIHN0ZXAgYnkgc3RlcCBiZXR3ZWVuIG5vZGUuDQo+ID4gPiBJdCBjb3VsZCBiZSBzbG93IGJ1
-dCBJIGFudGljaXBhdGUgc3VjaCBzbG93IGJ1dCBjb250aW51ZWQNCj4gPiA+IHByb21vdGlvbi9k
-ZW1vdGlvbiBpcyBtb3JlIGltcG9ydGFudCBmb3IgcmVsaWFibGUgcGVyZm9ybWFuY2Ugb24NCj4g
-cHJvZHVjdGlvbiBzeXN0ZW1zIG9mIGxhcmdlIHRpbWUgc2NhbGUuDQo+ID4gPiBBbmQgSSBiZWxp
-ZXZlIHRoZSBhcHByb2FjaCBjYW4gYmUgYXBwbGllZCB0byBnZW5lcmFsIE5VTUEgbm9kZXMNCj4g
-PiA+IG1hbmFnZW1lbnQsIG9uY2UgREFNT04gaXMgZXh0ZW5kZWQgZm9yIHBlci1DUFUgYWNjZXNz
-IG1vbml0b3JpbmcuDQo+ID4gPg0KPiA+ID4gSSdtIG5vdCBzYXlpbmcgdGhpcyBjaGFuZ2UgaXMg
-bm90IHVzZWZ1bCwgYnV0IGFza2luZyB5b3UgdG8gZ2l2ZSBtZQ0KPiA+ID4gYSBjaGFuY2UgdG8g
-bGVhcm4geW91ciBjaGFuZ2VzLCBiZXR0ZXIuDQo+ID4NCj4gPiBJIGJlbGlldmUgc29tZSB1c2Vy
-cyBtYXkgd2FudCB0byDigIvigIt1c2Ugb25seSB0aGUgdGFyZ2V0IG5vZGUncyBtZW1vcnnigIvi
-gIsNCj4gPiBhbmQgcmVzZXJ2ZSBvdGhlciBub2RlcyBpbiB0aGUgc2FtZSB0aWVyIGZvciBzcGVj
-aWZpYyBhcHBsaWNhdGlvbnMuDQo+ID4gVGhlcmVmb3JlLCBJIGFkZGVkIGEgc3dpdGNoIGZpbGUg
-dXNlX25vZGVzX29mX3RpZXIuDQo+IA0KPiBUaGFuayB5b3UgZm9yIGNsYXJpZnlpbmcsIFNpbW9u
-Lg0KPiANCj4gQmVjYXVzZSB0aGlzIGlzIGFuIEFCSSBjaGFuZ2UgdGhhdCBkaWZmaWN1bHQgdG8g
-cmV2ZXJ0IGFuZCB0aGVyZWZvcmUgd2UgbWF5DQo+IG5lZWQgdG8gc3VwcG9ydCBmb3IgbG9uZyB0
-ZXJtLCBJJ2QgbGlrZSB0byBoYXZlIG1vcmUgY2xlYXIgdGhlb3J5IGFuZC9vciBkYXRhIGlmDQo+
-IHBvc3NpYmxlLiAgSW4gbXkgaHVtYmxlIG9waW5pb24sIGFib3ZlIGNsYXJpZmljYXRpb24gZG9l
-c24ndCBzb3VuZCBsaWtlIGENCj4gc3Ryb25nIGVub3VnaCBqdXN0aWZpY2F0aW9uIGZvciBBQkkg
-Y2hhbmdlLg0KPiANCj4gTW9yZSBzcGVjaWZpY2FsbHksIGl0IHdvdWxkIGJlIGJldHRlciBpZiB5
-b3UgY291bGQgYW5zd2VyIGJlbG93IHF1ZXN0aW9ucy4NCj4gV2hvIHdvdWxkIGJlIHN1Y2ggdXNl
-cnMsIGhvdyBjb21tb24gdGhlIHVzZSBjYXNlIHdvdWxkIGJlLCBhbmQgd2hhdCBhcmUNCj4gdGhl
-IGJlbmVmaXQgb2YgZG9pbmcgc28/ICBJcyB0aGF0IG9ubHkgdGhlb3J5PyAgT3IsIGEgcmVhbCBl
-eGlzdGluZyB1c2UgY2FzZT8NCj4gQ2FuIHlvdSBzaGFyZSBtZWFzdXJlbWVudCBvZiB0aGUgYmVu
-ZWZpdCBmcm9tIHRoaXMgY2hhbmdlIHRoYXQgbWVhc3VyZWQNCj4gZnJvbSByZWFsIHdvcmtsb2Fk
-cyBvciBiZW5jaG1hcmtzPyAgSXMgdGhlcmUgYW4gYWx0ZXJuYXRpdmUgd2F5IHRvIGRvIHRoaXMN
-Cj4gd2l0aG91dCBBQkkgY2hhbmdlPw0KDQoNCllvdXIgY29uY2VybiBpcyB0aGF0IGFkZGluZyB0
-aGUgYm9vbCB1c2Vfbm9kZXNfb2ZfdGllciB2YXJpYWJsZSBhbmQgaW50cm9kdWNpbmcgDQphbiBh
-ZGRpdGlvbmFsIHBhcmFtZXRlciB0byBtdWx0aXBsZSBmdW5jdGlvbnMgd291bGQgY2F1c2UgQUJJ
-IGNoYW5nZXMsIGNvcnJlY3Q/4oCL4oCLDQoNCuKAi+KAi0kgcHJvcG9zZSBhdm9pZGluZyB0aGUg
-Y3JlYXRpb24gb2YgdGhlICd1c2Vfbm9kZXNfb2ZfdGllcicgc3lzZnMgZmlsZS4gSW5zdGVhZCwg
-DQp3ZSBjYW4gbW9kaWZ5IHRoZSBfX2RhbW9uX3BhX21pZ3JhdGVfZm9saW9fbGlzdCgpIGZ1bmN0
-aW9uIHRvIGNoYW5nZSB0aGUgYWxsb3dlZF9tYXNrIA0KZnJvbSBOT0RFX01BU0tfTk9ORSB0byB0
-aGUgZnVsbCBub2RlIG1hc2sgb2YgdGhlIGVudGlyZSB0aWVyIHdoZXJlIHRoZSB0YXJnZXRfbmlk
-IHJlc2lkZXMuIA0KVGhpcyBhcHByb2FjaCB3b3VsZCBiZSBzaW1pbGFyIHRvIHRoZSBpbXBsZW1l
-bnRhdGlvbiBpbiBjb21taXQgMzIwMDgwMjcyODkyDQogKCdtbS9kZW1vdGlvbjogZGVtb3RlIHBh
-Z2VzIGFjY29yZGluZyB0byBhbGxvY2F0aW9uIGZhbGxiYWNrIG9yZGVyJykuDQoNCkknZCBsaWtl
-IHRvIGNvbmZpcm0gdHdvIG1vZGlmaWNhdGlvbiBwb2ludHMgd2l0aCB5b3U6DQrigIvigIsxLlJl
-Z2FyZGluZyBhbGxvY19taWdyYXRlX2ZvbGlvKCnigIvigIs6DQpSZXN0b3JpbmcgdGhlIG9yaWdp
-bmFsIG5vZGVtYXNrIGFuZCBnZnBfbWFzayBpbiB0aGlzIGZ1bmN0aW9uIGlzIHRoZSBjb3JyZWN0
-IGFwcHJvYWNoLCBjb3JyZWN0Pw0K4oCL4oCLMi5SZWdhcmRpbmcgREFNT04ncyBtaWdyYXRpb24g
-bG9naWPigIvigIs6DQpUaGUgdGFyZ2V0IHNjb3BlIHNob3VsZCBiZSBleHBhbmRlZCBmcm9tIGEg
-c2luZ2xlIHNwZWNpZmllZCBub2RlIHRvIHRoZSBlbnRpcmUgbWVtb3J5IHRpZXINCiAod2hlcmUg
-dGhlIHRhcmdldCBub2RlIHJlc2lkZXMpLCBjb3JyZWN0Pw0K4oCL4oCLQ2FuIHdlIGNvbmZpcm0g
-dGhlc2UgdHdvIHBvaW50cyBhcmUgYWdyZWVkIHVwb24/4oCLDQogDQo+ID4gSSB0aGluayBpdCBt
-aWdodCBiZSBiZXR0ZXIgdG8gc2V0IHRoZSBkZWZhdWx0IHZhbHVlIG9mDQo+ID4gdXNlX25vZGVz
-X29mX3RpZXIgdG8gdHJ1ZSAoaS5lLiwgYWxsb3cgdXNpbmcgZmFsbGJhY2sgbm9kZXMpLiBXaGF0
-IGRvDQo+ID4geW91IHRoaW5rDQo+IA0KPiBJbiBteSBodW1ibGUgb3Bpbmlvbiwgd2UgY2FuIGNv
-bnNpZGVyIHNldHRpbmcgaXQgdHJ1ZSBieSBkZWZhdWx0LCBpZiB3ZSBhZ3JlZQ0KPiB0aGUgYmVu
-ZWZpdCBvZiB0aGUgY2hhbmdlIGlzIHNpZ25pZmljYW50LiAgV2l0aCBvbmx5IGN1cnJlbnRseSBn
-aXZlbiBpbmZvcm1hdGlvbiwNCj4gSSBjYW5ub3QgZWFzaWx5IHNheSBpZiBJIHRoaW5rIHRoaXMg
-Y2FuIHJlYWxseSBiZSB1c2VmdWwuICBBcyBhc2tlZCBhYm92ZWx5LCBtb3JlDQo+IGNsZWFyIHRo
-b2VyeSBhbmQvb3IgcmVhbCBkYXRhIHdvdWxkIGJlIGhlbHBmdWwuDQo+IA0KPiA+DQo+ID4gPiA+
-DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IHdhbmdjaHVhbmd1byA8d2FuZ2NodWFuZ3VvQGluc3B1
-ci5jb20+DQo+ID4gPiA+IC0tLQ0KPiA+ID4gPiAgaW5jbHVkZS9saW51eC9kYW1vbi5oICAgICAg
-ICB8ICA5ICsrKysrKysrLQ0KPiA+ID4gPiAgaW5jbHVkZS9saW51eC9tZW1vcnktdGllcnMuaCB8
-ICA1ICsrKysrDQo+ID4gPiA+ICBtbS9kYW1vbi9jb3JlLmMgICAgICAgICAgICAgIHwgIDYgKysr
-Ky0tDQo+ID4gPiA+ICBtbS9kYW1vbi9scnVfc29ydC5jICAgICAgICAgIHwgIDMgKystDQo+ID4g
-PiA+ICBtbS9kYW1vbi9wYWRkci5jICAgICAgICAgICAgIHwgMTkgKysrKysrKysrKysrLS0tLS0t
-LQ0KPiA+ID4gPiAgbW0vZGFtb24vcmVjbGFpbS5jICAgICAgICAgICB8ICAzICsrLQ0KPiA+ID4g
-PiAgbW0vZGFtb24vc3lzZnMtc2NoZW1lcy5jICAgICB8IDMxDQo+ID4gPiArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKystDQo+ID4gPiA+ICBtbS9tZW1vcnktdGllcnMuYyAgICAgICAgICAg
-IHwgMTMgKysrKysrKysrKysrKw0KPiA+ID4gPiAgc2FtcGxlcy9kYW1vbi9tdGllci5jICAgICAg
-ICB8ICAzICsrLQ0KPiA+ID4gPiAgc2FtcGxlcy9kYW1vbi9wcmNsLmMgICAgICAgICB8ICAzICsr
-LQ0KPiA+ID4gPiAgMTAgZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRp
-b25zKC0pDQo+ID4gPg0KPiA+ID4gQ2FuIHdlIHBsZWFzZSBtYWtlIHRoaXMgY2hhbmdlIG1vcmUg
-c2VwYXJhdGVkPyAgTWF5YmUgd2UgY2FuIHNwbGl0DQo+ID4gPiB0aGUgY2hhbmdlIGZvciBtZW1v
-cnktdGllcnMuYywgREFNT04gY29yZSBsYXllciwgYW5kIERBTU9OIHN5c2ZzDQo+IGludGVyZmFj
-ZS4NCj4gPiA+IFRoYXQgd2lsbCBtYWtlIHJldmlldyBtdWNoIGVhc2llci4NCj4gPg0KPiA+IFll
-cyxJJ2xsIHNwbGl0IHRoaXMgcGF0Y2ggdG8gYmUgMiBwYXRjaGVzLg0KPiANCj4gVGhhbmsgeW91
-IGZvciBhY2NlcHRpbmcgbXkgc3VnZ2VzdGlvbi4gIEJ1dCBJIHRoaW5rIGl0IGRlc2VydmVzIDMg
-cGF0Y2hlcywNCj4gZWFjaCBmb3INCj4gDQo+IC0gbWVtb3J5LXRpZXJzLmMsDQo+IC0gREFNT04g
-Y29yZSBsYXllciwgYW5kDQo+IC0gYW5kIERBTU9OIHN5c2ZzIGludGVyZmFjZS4NCj4gDQo+IEJ1
-dCwgbGV0J3MgZnVydGhlciBkaXNjdXNzIG9uIHRoZSBoaWdoIGxldmVsIHRvcGljIChpZiB0aGlz
-IGNoYW5nZSBpcyByZWFsbHkNCj4gYmVuZWZpY2lhbCBlbm91Z2ggdG8gbWFrZSBBQkkgY2hhbmdl
-KS4NCj4gDQo+IA0KPiBUaGFua3MsDQo+IFNKDQo+IA0KPiBbLi4uXQ0K
+Hi Krzysztof,
+
+CC wsa
+
+On Wed, 28 May 2025 at 19:55, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 28/05/2025 14:54, Geert Uytterhoeven wrote:
+> >>         .pmxops = &rzn1_pmx_ops,
+> >>         .confops = &rzn1_pinconf_ops,
+> >>         .owner = THIS_MODULE,
+> >> +       .pins = rzn1_pins,
+> >> +       .npins = ARRAY_SIZE(rzn1_pins),
+> >>  };
+> >>
+> >>  static int rzn1_pinctrl_parse_groups(struct device_node *np,
+> >> @@ -878,8 +880,6 @@ static int rzn1_pinctrl_probe(struct platform_device *pdev)
+> >>
+> >>         ipctl->dev = &pdev->dev;
+> >>         rzn1_pinctrl_desc.name = dev_name(&pdev->dev);
+> >
+> > ... if you would replace this assignment by a hardcoded name
+> > like "pinctrl-rzn1".
+>
+> I saw it, but this would not be equivalent. dev_name includes platform
+> bus id, e.g. pinctrl-rzn1.0 which might matter here - conflict of names.
+> Are you sure this would work fine?
+
+There can be only one anyway.
+Most drivers used a fixed name:
+
+drivers/pinctrl/renesas/pinctrl-rza1.c: rza1_pctl->desc.name = DRIVER_NAME;
+drivers/pinctrl/renesas/pinctrl-rza2.c: priv->desc.name = DRIVER_NAME;
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: pctrl->desc.name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl-rzn1.c: rzn1_pinctrl_desc.name =
+dev_name(&pdev->dev);
+drivers/pinctrl/renesas/pinctrl-rzt2h.c: desc->name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl-rzv2m.c: pctrl->desc.name = DRV_NAME;
+drivers/pinctrl/renesas/pinctrl.c: pmx->pctl_desc.name = DRV_NAME;
+
+It might change the path in debugfs (/sys/kernel/debug/pinctrl/) though.
+Wolfram?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
