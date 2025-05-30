@@ -1,434 +1,604 @@
-Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A838376F1
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABAC17BD3;
+	Fri, 30 May 2025 13:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748610987; cv=none; b=tXoS6WSyP4ABdka+3vTrmeQ1uGSkkT8q/1ovg9yyw8LN7uLk8G7HswaFeZv8hmRX/MzvCa0iRxuJwWZfhsxICoF6ToDyTjqudlPeZfmpV8Dw0ghjuBcirJnP1DRV54CulFZSgBxdJQOso8qDdtWz+wFK/ovf79xCYoHAwjwdqkI=
+	t=1748611018; cv=none; b=gjTdZuhXYh0FLfzSdObIcwrBEG1Xx5Puri4Uym61f5C4gietNHmPQ9PiycIG3rH8qrwBdeymXwIaxnpHGyAvgVGyLEaM6R9kO5GPplc+VsULSiZOTPZL2LnFYZSFfzvtpDb+fQld9Xm/svjn/bd+RfJUV15U33/Mfudt7QkozRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748610987; c=relaxed/simple;
-	bh=5KOMNpLu2WpVFkd00aYSN3RLJsSiZizQlOdLJbRz9xE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qedD37s2ZovXv5z8APtIdI8TOsq+dwQETgxJAPnJTP8Nw8C8Lbh5RLFeUf9TL2mFH5gEjqknUF1EYxeJymWQzsoWYJYRQrLsineAjbk5COgprrwld34qm5cZWlGOKStim5h3LiDoif6LtrtEv5OQT4TH/baMcc0yX2lHU5AEkAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NL32GYhq; arc=none smtp.client-ip=209.85.208.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gnoack.bounces.google.com
+	s=arc-20240116; t=1748611018; c=relaxed/simple;
+	bh=odSpI0BeOEr3gfWcu6dm8dCBXa6N3MN2XV4lNf57b3k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gugsZl6noh+fgH7Wh/dWRZ5fyNzApXOI+gdtuP2DpNLJx3TojCFq1MaWI0DF9h7ZRIcFZVsMsZhMl87M1qCBWlvnQRW/eSLkC8ireqmrSMqUMrRhrwPXGsmASPJKWuQBxp6JciZvhli8VutRfEUXQ23mKRmDjFRID5+U8A5sMRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=OlE45DgI; arc=none smtp.client-ip=148.163.152.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NL32GYhq"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-601df3b434cso3177453a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 06:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748610983; x=1749215783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IOjMzms7pPSKfR3QpxPX6uvlXEzx6nYbruXkhIiBjcc=;
-        b=NL32GYhqXEAHvLXMvaYtzeCbW2ggn/57odSAbIgU8aJ8odYKc5oR5SskVvqNZv/LeN
-         woDSrFpGXlOjH/ZgT6pKZkkZhhaqhkAGx8V/t9FaNADyyA+LFfhyoc/WAqfZdw/0bmh2
-         S8QaKJCo4r6miYOreK2fLfyi2TfPGuxV8QakOcqeUgyJG77tLHRkXCBv41YfmFOqpgc+
-         I9PXvQqIybiX0fllQCqWQX8vugpfdsumKEBS8mvV0GgLwUiwf4oqCBKEoby+Vz7YXbff
-         KD3J6Ndsu45TPs79/QeA9Z6deEfxRPIoSrcd8I9NfHyZD9OXYjlFlvrryq0A/+ixz6jL
-         6djg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748610983; x=1749215783;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IOjMzms7pPSKfR3QpxPX6uvlXEzx6nYbruXkhIiBjcc=;
-        b=U5wNEwjNTI48WOo+/NNV7SrxH7WTENzrileXRJvlg4Pol/hA6ZPBPJH5TYmlYpMSSr
-         SjG88YCXWO/1l1keB+2FZekxuIkt2apzycrbipcrs1TKyUrudEXsWtSS2ge0O7QgSgwv
-         V5aD5YbbWMPuSN6+kkvprPli4+ONt9Le68uySdxWQIgTRTUQ2+NsHAV7nM9Un0w7637Y
-         w5RBkz6jmc/00x1H++nIQn3zBexrhFM9eDUWgyzu5D2EUribsPRoVLo3EIm3yTKVlgeW
-         1SBmPvsZ3tzX27sLC5OfZXxMnEadro9HZCTSv7VxMC5L/jlghM4T7NdoqjSdTS9oCF4M
-         PqKg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5pMX+HOZDeX5DrKywBx9iKI3NQzpJpQIk/eDG0u57D5HHdF7eI9h5C8syKx72eF9WIxSFLuiq1ry4Wrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKuL+kc9VeUE9HtppV2+DoXFbIGt7REGMyNxklswzSWTtr4C0g
-	/c8hFrzE6NjQehp9I1MEsKrwYxhGYrgIjNlSvTlKK3fJqJi2iTCHm/eWkSoRLapwU9GrP9eLNW+
-	pAui3SA==
-X-Google-Smtp-Source: AGHT+IHj8ynbQPQxdrs2D9yFZEID0TqTbe9/3NBy7GO/WduE0quN9mRt47isPnPUzxmpjm4+WhNcwQPv9p8=
-X-Received: from edqp17.prod.google.com ([2002:aa7:d311:0:b0:5f6:252a:1d7e])
- (user=gnoack job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:4316:b0:5f7:2852:2010
- with SMTP id 4fb4d7f45d1cf-6056f80bff2mr2570008a12.13.1748610983613; Fri, 30
- May 2025 06:16:23 -0700 (PDT)
-Date: Fri, 30 May 2025 15:16:20 +0200
-In-Reply-To: <20250518.xeevoom3kieY@digikod.net>
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="OlE45DgI"
+Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
+	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U5tYJH013510;
+	Fri, 30 May 2025 12:57:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=default; bh=jmVUGjZmv+RCtWS4PPyAaRxK
+	z/CajiPe93qR/cXGm/M=; b=OlE45DgII48j9+M6G2hpqMr1wVVlOQrhPobOCxoS
+	luclLAuwaMPWXOY+IRpiBSXGm58sf6MIHgoi1pM/1G6u0J0XjFuykVMuanrBHtO9
+	HMdjrIcpSQ3ouDLYSI+yZGd0u7PnjOxtaOd8c9jrB6pwhh3c9LbkCKTuYLA9M/zO
+	ZfbiImQJc00xIc9QflavbZV7HUc/pM+YEXIJnIHd+4W2NWAJPXbK8/SVq3jnSMKU
+	hfe0d2ksA12MNgqI/mYXNWrv72YqmbtaSMeSuc06mYhgwNpLFj/Ej8pg3W1LS2bP
+	mVXaSYfCW3+8/PpV+fp0DeBoVzm5gu9vgS75HQjXMV+PyA==
+Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
+	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 46wj9euygu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 12:57:55 +0000 (GMT)
+Received: from ML-CTVHTF21DX.crowdstrike.sys (10.100.11.122) by
+ 04WPEXCH007.crowdstrike.sys (10.100.11.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 30 May 2025 12:57:50 +0000
+From: Slava Imameev <slava.imameev@crowdstrike.com>
+To: <qmo@kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
+        <andrii@kernel.org>, <martin.lau@linux.dev>, <eddyz87@gmail.com>,
+        <song@kernel.org>, <yonghong.song@linux.dev>,
+        <john.fastabend@gmail.com>, <kpsingh@kernel.org>, <sdf@fomichev.me>,
+        <haoluo@google.com>, <jolsa@kernel.org>, <mykolal@fb.com>,
+        <shuah@kernel.org>, <slava.imameev@crowdstrike.com>,
+        <justin.deschamp@crowdstrike.com>, <mark.fontana@crowdstrike.com>,
+        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+Subject: [PATCH bpf-next 1/2] bpftool: Use appropriate permissions for map access
+Date: Fri, 30 May 2025 22:57:16 +1000
+Message-ID: <20250530125717.34746-1-slava.imameev@crowdstrike.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250221184417.27954-2-gnoack3000@gmail.com> <20250221184417.27954-3-gnoack3000@gmail.com>
- <20250227.Aequah6Avieg@digikod.net> <20250228.b3794e33d5c0@gnoack.org>
- <20250304.aroh3Aifiiz9@digikod.net> <20250310.990b29c809af@gnoack.org>
- <20250311.aefai7vo6huW@digikod.net> <20250518.be040c48937c@gnoack.org> <20250518.xeevoom3kieY@digikod.net>
-Message-ID: <aDmvpOMlaAZOXrji@google.com>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for landlock_restrict_self()
-From: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>
-To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
-Cc: "=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack3000@gmail.com>, Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, 
-	David Howells <dhowells@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	linux-security-module@vger.kernel.org, 
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Jann Horn <jannh@google.com>, 
-	linux-kernel@vger.kernel.org, Peter Newman <peternewman@google.com>, 
-	Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: 04WPEXCH009.crowdstrike.sys (10.100.11.79) To
+ 04WPEXCH007.crowdstrike.sys (10.100.11.74)
+X-Disclaimer: USA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_05,2025-05-30_01,2025-03-28_01
 
-On Sun, May 18, 2025 at 09:57:32PM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Sun, May 18, 2025 at 09:40:05AM +0200, G=C3=BCnther Noack wrote:
-> > On Tue, Mar 11, 2025 at 03:32:53PM +0100, Micka=C3=ABl Sala=C3=BCn wrot=
-e:
-> > > On Mon, Mar 10, 2025 at 02:04:23PM +0100, G=C3=BCnther Noack wrote:
+Modify several functions in tools/bpf/bpftool/common.c to allow
+specification of requested access for file descriptors, such as
+read-only access.
 
-> > > > Approach 1: Use the creds API thread-by-thread (implemented here)
-> > > >=20
-> > > >   * Each task calls prepare_creds() and commit_creds() on its own, =
-in
-> > > >     line with the way the API is designed to be used (from a single
-> > > >     task).
-> > > >   * Task work gets scheduled with a pseudo-signal and the task that
-> > > >     invoked the syscall is waiting for all of them to return.
-> > > >   * Task work can fail at the beginning due to prepare_creds(), in
-> > > >     which case all tasks have to abort_creds(). Additional
-> > > >     synchronization is needed for that.
-> > > >=20
-> > > >   Drawback: We need to grab the system-global task lock to prevent =
-new
-> > > >   thread creation and also grab the per-process signal lock to prev=
-ent
-> > > >   races with other creds accesses, for the entire time as we wait f=
-or
-> > > >   each task to do the task work.
-> > >=20
-> > > In other words, this approach blocks all threads from the same proces=
-s.
-> >=20
-> > It does, but that is still an improvement over the current
-> > libpsx-based implementation in userspace.  That existing
-> > implementation does not block, but it is running the risk that
-> > prepare_creds() might fail on one of the threads (e.g. allocation
-> > failure), which would leave the processes' threads in an inconsistent
-> > state.
-> >=20
-> > Another upside that the in-kernel implementation has is that the
-> > implementation of that is hidden behind an API, so if we can
-> > eventually find a better approach, we can migrate to it.  It gives us
-> > flexibility.
->=20
-> > I guess a possible variant (approach 1B) would be to do the equivalent
-> > to what userspace does today, and not make all threads wait for the
-> > possible error of prepare_creds() on the other threads.
->=20
-> This 1B variant is not OK because it would remove the guarantee that the
-> whole process is restricted.
+Update bpftool to request only read access for maps when write
+access is not required. This fixes errors when reading from maps
+that are protected from modification via security_bpf_map.
 
-=F0=9F=91=8D Agreed.
+Signed-off-by: Slava Imameev <slava.imameev@crowdstrike.com>
+---
+ tools/bpf/bpftool/btf.c           |  3 +-
+ tools/bpf/bpftool/common.c        | 57 ++++++++++++++++++++++---------
+ tools/bpf/bpftool/iter.c          |  2 +-
+ tools/bpf/bpftool/link.c          |  2 +-
+ tools/bpf/bpftool/main.h          | 13 ++++---
+ tools/bpf/bpftool/map.c           | 56 +++++++++++++++++-------------
+ tools/bpf/bpftool/map_perf_ring.c |  3 +-
+ tools/bpf/bpftool/prog.c          |  4 +--
+ 8 files changed, 90 insertions(+), 50 deletions(-)
 
-
-> > > > Approach 2: Attempt to do the prepare_creds() step in the calling t=
-ask.
-> > > >=20
-> > > >   * Would use an API similar to what keyctl uses for the
-> > > >     parent-process update.
-> > > >   * This side-steps the credentials update API as it is documented =
-in
-> > > >     Documentation, using the cred_alloc_blank() helper and replicat=
-ing
-> > > >     some prepare_creds() logic.
-> > > >=20
-> > > >   Drawback: This would introduce another use of the cred_alloc_blan=
-k()
-> > > >   API (and the cred_transfer LSM hook), which would otherwise be
-> > > >   reasonable to delete if we can remove the keyctl use case.
-> > > >   (https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a=
-2aa1d45e6b8@google.com/)
-> > >=20
-> > > cred_alloc_blank() was designed to avoid dealing with -ENOMEM, which =
-is
-> > > a required property for this Landlock TSYNC feature (i.e. atomic and
-> > > consistent synchronization).
-> >=20
-> > Remark on the side, I suspect that the error handling in nptl(7)
-> > probably also does not guarantee that, also for setuid(2) and friends.
-> >=20
-> >=20
-> > > I think it would make sense to replace most of the
-> > > key_change_session_keyring() code with a new cred_transfer() helper t=
-hat
-> > > will memcpy the old cred to the new, increment the appropriate ref
-> > > counters, and call security_transfer_creds().  We could then use this
-> > > helper in Landlock too.
-> > >=20
-> > > To properly handle race conditions with a thread changing its own
-> > > credentials, we would need a new LSM hook called by commit_creds().
-> > > For the Landlock implementation, this hook would check if the process=
- is
-> > > being Landlocked+TSYNC and return -ERESTARTNOINTR if it is the case.
-> > > The newly created task_work would then be free to update each thread'=
-s
-> > > credentials while only blocking the calling thread (which is also a
-> > > required feature).
-> > >=20
-> > > Alternatively, instead of a new LSM hook, commit_creds() could check
-> > > itself a new group leader's flag set if all the credentials from the
-> > > calling process are being updated, and return -ERESTARTNOINTR in this
-> > > case.
-> >=20
-> > commit_creds() is explicitly documented to never return errors.
-> > It returns a 0 integer so that it lends itself for tail calls,
-> > and some of those usages might also rely on it always working.
-> > There are ~15 existing calls where the return value is discarded.
->=20
-> Indeed, commit_creds() should always return 0.  My full proposal does
-> not look safe enough, but the cred_transfer() helper can still be
-> useful.
->=20
-> >=20
-> > If commit_creds() returns -ERESTARTNOINTR, I assume that your idea is
-> > that the task_work would retry the prepare-and-commit when
-> > encountering that?
-> >=20
-> > We would have to store the fact that the process is being
-> > Landlock+TSYNC'd in a central place (e.g. group leader flag set).
-> > When that is done, don't we need more synchronization mechanisms to
-> > access that (which RCU was meant to avoid)?
-> >=20
-> > I am having a hard time wrapping my head around these synchronization
-> > schemes, I feel this is getting too complicated for what it is trying
-> > to do and might become difficult to maintain if we implemented it.
->=20
-> Fair. ERESTARTNOINTR should only be used by a syscall implementation.
->=20
-> >=20
-> > > > Approach 3: Store Landlock domains outside of credentials altogethe=
-r
-> > > >=20
-> > > >   * We could also store a task's Landlock domain as a pointer in th=
-e
-> > > >     per-task security blob, and refcount these.  We would need to m=
-ake
-> > > >     sure that they get newly referenced and updated in the same
-> > > >     scenarios as they do within struct cred today.
-> > > >   * We could then guard accesses to a task's Landlock domain with a
-> > > >     more classic locking mechanism.  This would make it possible to
-> > > >     update the Landlock domain of all tasks in a process without
-> > > >     having to go through pseudo-signals.
-> > > >=20
-> > > >   Drawbacks:
-> > > >   * Would have to make sure that the Landlock domain the task's LSM
-> > > >     blob behaves exactly the same as before in the struct cred.
-> > > >   * Potentially slower to access Landlock domains that are guarded =
-by
-> > > >     a mutex.
-> > >=20
-> > > This would not work because the kernel (including LSM hooks) uses
-> > > credentials to check access.
-> >=20
-> > It's unclear to me what you mean by that.
-> >=20
-> > Do you mean that it is hard to replicate for Landlock the cases where
-> > the pointer would have to be copied, because the LSM hooks are not
-> > suited for it?
->=20
-> struct cred is used to check if a task subject can access a task object.
-> Landlock's metadata must stay in struct cred to be available when
-> checking access to any kernel object.  The LSM hooks reflect this
-> rationale by only passing struct cred when checking a task (e.g.
-> security_task_kill()'s cred).
->=20
-> seccomp only cares about filtering raw syscalls, and the seccomp filters
-> are just ignored when the kernel (with an LSM or not) checks task's
-> permission to access another task.
->=20
-> The per-task security blob could store some state though, e.g. to
-> identify if a domain needs to be updated, but I don't see a use case
-> here.
-
-(Side remark on the idea of storing "pending domain updates" in the task bl=
-ob:
-
-I have pondered such an idea as well, where we do not store the Landlock do=
-main
-itself in the task blob, but only a "pending" update that we need to do to =
-the
-Landlock domain in creds, and then to apply that opportunistically/lazily a=
-s
-part of other Landlock LSM calls.
-
-I believe in this approach, it becomes hard to control whether that update =
-can
-actually ever get applied.  So to be sure, we would always have to run unde=
-r the
-assumption that it does not get applied, and then we might as well store th=
-e
-Landlock domain directly in the task blob.
-
-I also don't think this makes sense.)
-
-
-> > Here is another possible approach which a colleague suggested in a
-> > discussion:
-> >=20
-> > Approach 4: Freeze-and re-enforce the Landlock ruleset
-> >=20
-> > Another option would be to have a different user space API for this,
-> > with a flag LANDLOCK_RESTRICT_SELF_ENTER (name TBD) to enter a given
-> > domain.
-> >=20
-> > On first usage of landlock_restrict_self() with the flag, the enforced
-> > ruleset would be frozen and linked to the Landlock domain which was
-> > enforced at the end.
-> >=20
-> > Subsequent attempts to add rules to the ruleset would fail when the
-> > ruleset is frozen.  The ruleset FD is now representing the created
-> > domain including all its nesting.
-> >=20
-> > Subsequent usages of landlock_restrict_self() on a frozen ruleset would=
-:
-> >=20
-> > (a) check that the ruleset's domain is a narrower (nested) domain of
-> >     the current thread's domain (so that we retain the property of
-> >     only locking in a task further than it was before).
-> >=20
-> > (b) set the task's domain to the domain attached to the ruleset
-> >=20
-> > This way, we would keep a per-thread userspace API, avoiding the
-> > issues discussed before.  It would become possible to use ruleset file
-> > descriptors as handles for entering Landlock domains and pass them
-> > around between processes.
-> >=20
-> > The only drawback I can see is that it has the same issues as libpsx
-> > and nptl(7) in that the syscall can fail on individual threads due to
-> > ENOMEM.
->=20
-> Right. This approach is interesting, but it does not solve the main
-> issue here.
-
-It doesn't?
-
-In my mind, the main goal of the patch set is that we can enable Landlock i=
-n
-multithreaded processes like in Go programs or in multithreaded C(++).
-
-With Approach 4, we would admittedly still have to do some work in userspac=
-e,
-and it would not have the nice all-or-nothing semantics, but at least, it w=
-ould
-be possible to get all threads joining the same Landlock domain.  (And afte=
-r
-all, setuid(0) also does not have the all-or-nothing semantics, from what I=
- can
-tell.)
-
-
-> Anyway, being able to enter a Landlock domain would definitely be
-> useful. I would prefer using a pidfd to refer to a task's Landlock
-> domain, which would avoid race condition and make the API clearer.  It
-> would be nice to be able to pass a pidfd (instead of a ruleset) to
-> landlock_restrict_self().  If we want to directly deal with a domain, we
-> should create a dedicated domain FD type.
-
-Fair enough, a different FD type for that would also be possible.
-
-
-> > If we can not find a solution for "TSYNC", it seems that this might be
-> > a viable alternative.  For multithreaded applications enforcing a
-> > Landlock policy, it would become an application of libpsx with the
-> > LANDLOCK_RESTRICT_SELF_ENTER flag.
-> >=20
-> > Let me know what you think.
-> >=20
-> > =E2=80=93G=C3=BCnther
->=20
-> Thinking more about this feature, it might actually make sense to
-> synchronize all threads from the same process without checking other
-> threads' Landlock domain. The rationale are:
-> 1. Linux threads are not security boundaries and it is allowed for a
->    thread to control other threads' memory, which means changing their
->    code flow.  In other words, thread's permissions are the union of all
->    thread's permissions in the same process.
-> 2. libpsx and libc's set*id() ignore other thread's credentials and just
->    blindly execute the same code on all threads.
-> 3. It would be simpler and would avoid another error case.
-
-+1, agreed.  That would let us skip the check for the pre-existing domain o=
-n
-these threads.
-
-
-> An issue could happen if a Landlock domain restricting a test thread is
-> replaced.
-
-You mean for Landlock's selftests?  I thought these were running in their o=
-wn
-forked-off subprocess?  I'm probably misunderstanding you here. :)
-
-
-> I don't think the benefit of avoiding this issue is worth it
-> compared to the guarantee we get when forcing the sandboxing of a full
-> process without error.
->=20
-
-
-
-> We should rename the flag to LANDLOCK_RESTRICT_SELF_PROCESS to make it
-> clear what it does.
->=20
-> The remaining issues are still the potential memory allocation failures.
-> There are two things:
->=20
-> 1. We should try as much as possible to limit useless credential
->    duplications by not creating a new struct cred if parent credentials
->    are the same.
->=20
-> 2. To avoid the libpsx inconsistency (because of ENOMEM or EPERM),
->    landlock_restrict_self(2) should handle memory allocation and
->    transition the process from a known state to another known state.
->=20
-> What about this approach:
-> - "Freeze" all threads of the current process (not ideal but simple) to
->   make sure their credentials don't get updated.
-> - Create a new blank credential for the calling thread.
-> - Walk through all threads and create a new blank credential for all
->   threads with a different cred than the caller.
-> - Inject a task work that will call cred_transfer() for all threads with
->   either the same new credential used by the caller (incrementing the
->   refcount), or it will populate and use a blank one if it has different
->   credentials than the caller.
->=20
-> This may not efficiently deduplicate credentials for all threads but it
-> is a simple deduplication approach that should be useful in most cases.
->=20
-> The difficult part is mainly in the "fleezing". It would be nice to
-> change the cred API to avoid that but I'm not sure how.
-
-I don't see an option how we could freeze the credentials of other threads:
-
-To freeze a task's credentials, we would have to inhibit that commit_creds(=
-)
-succeeds on that task, and I don't see how that would be done - we can not
-prevent these tasks from calling commit_creds() [1], and when commit_creds(=
-)
-gets called, it is guaranteed to work.
-
-So in my mind, we have to somehow deal with the possibility that a task has=
- a
-new and not-previously-seen struct creds, by the time that its task_work ge=
-ts
-called.  As a consequence, I think a call to prepare_creds() would then be
-unavoidable in the task_work?
-
-
-=E2=80=94G=C3=BCnther
-
-
-[1] We might be able to keep cred_prepare() and maybe cred_alloc_blank() fr=
-om
-    succeeding, but that does not mean that no one can call commit_creds() =
--
-    there is still the possibility that commit_creds() gets called with a s=
-truct
-    cred* that was acquired before decided to freeze.
+diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
+index 6b14cbfa58aa..1ba27cb03348 100644
+--- a/tools/bpf/bpftool/btf.c
++++ b/tools/bpf/bpftool/btf.c
+@@ -905,7 +905,8 @@ static int do_dump(int argc, char **argv)
+ 			return -1;
+ 		}
+ 
+-		fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++		fd = map_parse_fd_and_info(&argc, &argv, &info, &len,
++					   BPF_F_RDONLY);
+ 		if (fd < 0)
+ 			return -1;
+ 
+diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
+index ecfa790adc13..ff1c99281beb 100644
+--- a/tools/bpf/bpftool/common.c
++++ b/tools/bpf/bpftool/common.c
+@@ -193,7 +193,8 @@ int mount_tracefs(const char *target)
+ 	return err;
+ }
+ 
+-int open_obj_pinned(const char *path, bool quiet)
++int open_obj_pinned(const char *path, bool quiet,
++		    const struct bpf_obj_get_opts *opts)
+ {
+ 	char *pname;
+ 	int fd = -1;
+@@ -205,7 +206,7 @@ int open_obj_pinned(const char *path, bool quiet)
+ 		goto out_ret;
+ 	}
+ 
+-	fd = bpf_obj_get(pname);
++	fd = bpf_obj_get_opts(pname, opts);
+ 	if (fd < 0) {
+ 		if (!quiet)
+ 			p_err("bpf obj get (%s): %s", pname,
+@@ -221,12 +222,13 @@ int open_obj_pinned(const char *path, bool quiet)
+ 	return fd;
+ }
+ 
+-int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type)
++int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type,
++			const struct bpf_obj_get_opts *opts)
+ {
+ 	enum bpf_obj_type type;
+ 	int fd;
+ 
+-	fd = open_obj_pinned(path, false);
++	fd = open_obj_pinned(path, false, opts);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -555,7 +557,7 @@ static int do_build_table_cb(const char *fpath, const struct stat *sb,
+ 	if (typeflag != FTW_F)
+ 		goto out_ret;
+ 
+-	fd = open_obj_pinned(fpath, true);
++	fd = open_obj_pinned(fpath, true, NULL);
+ 	if (fd < 0)
+ 		goto out_ret;
+ 
+@@ -928,7 +930,7 @@ int prog_parse_fds(int *argc, char ***argv, int **fds)
+ 		path = **argv;
+ 		NEXT_ARGP();
+ 
+-		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_PROG);
++		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_PROG, NULL);
+ 		if ((*fds)[0] < 0)
+ 			return -1;
+ 		return 1;
+@@ -965,7 +967,8 @@ int prog_parse_fd(int *argc, char ***argv)
+ 	return fd;
+ }
+ 
+-static int map_fd_by_name(char *name, int **fds)
++static int map_fd_by_name(char *name, int **fds,
++			  const struct bpf_get_fd_by_id_opts *opts)
+ {
+ 	unsigned int id = 0;
+ 	int fd, nb_fds = 0;
+@@ -973,6 +976,7 @@ static int map_fd_by_name(char *name, int **fds)
+ 	int err;
+ 
+ 	while (true) {
++		LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts_ro);
+ 		struct bpf_map_info info = {};
+ 		__u32 len = sizeof(info);
+ 
+@@ -985,7 +989,9 @@ static int map_fd_by_name(char *name, int **fds)
+ 			return nb_fds;
+ 		}
+ 
+-		fd = bpf_map_get_fd_by_id(id);
++		/* Request a read-only fd to query the map info */
++		opts_ro.open_flags = BPF_F_RDONLY;
++		fd = bpf_map_get_fd_by_id_opts(id, &opts_ro);
+ 		if (fd < 0) {
+ 			p_err("can't get map by id (%u): %s",
+ 			      id, strerror(errno));
+@@ -1004,6 +1010,15 @@ static int map_fd_by_name(char *name, int **fds)
+ 			continue;
+ 		}
+ 
++		/* Get an fd with the requested options. */
++		close(fd);
++		fd = bpf_map_get_fd_by_id_opts(id, opts);
++		if (fd < 0) {
++			p_err("can't get map by id (%u): %s", id,
++			      strerror(errno));
++			goto err_close_fds;
++		}
++
+ 		if (nb_fds > 0) {
+ 			tmp = realloc(*fds, (nb_fds + 1) * sizeof(int));
+ 			if (!tmp) {
+@@ -1023,8 +1038,16 @@ static int map_fd_by_name(char *name, int **fds)
+ 	return -1;
+ }
+ 
+-int map_parse_fds(int *argc, char ***argv, int **fds)
++int map_parse_fds(int *argc, char ***argv, int **fds, __u32 open_flags)
+ {
++	LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts);
++
++	if (open_flags & ~BPF_F_RDONLY) {
++		p_err("invalid open_flags: %x", open_flags);
++		return -1;
++	}
++	opts.open_flags = open_flags;
++
+ 	if (is_prefix(**argv, "id")) {
+ 		unsigned int id;
+ 		char *endptr;
+@@ -1038,7 +1061,7 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
+ 		}
+ 		NEXT_ARGP();
+ 
+-		(*fds)[0] = bpf_map_get_fd_by_id(id);
++		(*fds)[0] = bpf_map_get_fd_by_id_opts(id, &opts);
+ 		if ((*fds)[0] < 0) {
+ 			p_err("get map by id (%u): %s", id, strerror(errno));
+ 			return -1;
+@@ -1056,16 +1079,18 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
+ 		}
+ 		NEXT_ARGP();
+ 
+-		return map_fd_by_name(name, fds);
++		return map_fd_by_name(name, fds, &opts);
+ 	} else if (is_prefix(**argv, "pinned")) {
+ 		char *path;
++		LIBBPF_OPTS(bpf_obj_get_opts, get_opts);
++		get_opts.file_flags = open_flags;
+ 
+ 		NEXT_ARGP();
+ 
+ 		path = **argv;
+ 		NEXT_ARGP();
+ 
+-		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_MAP);
++		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_MAP, &get_opts);
+ 		if ((*fds)[0] < 0)
+ 			return -1;
+ 		return 1;
+@@ -1075,7 +1100,7 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
+ 	return -1;
+ }
+ 
+-int map_parse_fd(int *argc, char ***argv)
++int map_parse_fd(int *argc, char ***argv, __u32 open_flags)
+ {
+ 	int *fds = NULL;
+ 	int nb_fds, fd;
+@@ -1085,7 +1110,7 @@ int map_parse_fd(int *argc, char ***argv)
+ 		p_err("mem alloc failed");
+ 		return -1;
+ 	}
+-	nb_fds = map_parse_fds(argc, argv, &fds);
++	nb_fds = map_parse_fds(argc, argv, &fds, open_flags);
+ 	if (nb_fds != 1) {
+ 		if (nb_fds > 1) {
+ 			p_err("several maps match this handle");
+@@ -1103,12 +1128,12 @@ int map_parse_fd(int *argc, char ***argv)
+ }
+ 
+ int map_parse_fd_and_info(int *argc, char ***argv, struct bpf_map_info *info,
+-			  __u32 *info_len)
++			  __u32 *info_len, __u32 open_flags)
+ {
+ 	int err;
+ 	int fd;
+ 
+-	fd = map_parse_fd(argc, argv);
++	fd = map_parse_fd(argc, argv, open_flags);
+ 	if (fd < 0)
+ 		return -1;
+ 
+diff --git a/tools/bpf/bpftool/iter.c b/tools/bpf/bpftool/iter.c
+index 5c39c2ed36a2..ad318a8667a4 100644
+--- a/tools/bpf/bpftool/iter.c
++++ b/tools/bpf/bpftool/iter.c
+@@ -37,7 +37,7 @@ static int do_pin(int argc, char **argv)
+ 				return -1;
+ 			}
+ 
+-			map_fd = map_parse_fd(&argc, &argv);
++			map_fd = map_parse_fd(&argc, &argv, 0);
+ 			if (map_fd < 0)
+ 				return -1;
+ 
+diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
+index 3535afc80a49..8523be11dcd9 100644
+--- a/tools/bpf/bpftool/link.c
++++ b/tools/bpf/bpftool/link.c
+@@ -117,7 +117,7 @@ static int link_parse_fd(int *argc, char ***argv)
+ 		path = **argv;
+ 		NEXT_ARGP();
+ 
+-		return open_obj_pinned_any(path, BPF_OBJ_LINK);
++		return open_obj_pinned_any(path, BPF_OBJ_LINK, NULL);
+ 	}
+ 
+ 	p_err("expected 'id' or 'pinned', got: '%s'?", **argv);
+diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
+index 9eb764fe4cc8..6db704fda5c0 100644
+--- a/tools/bpf/bpftool/main.h
++++ b/tools/bpf/bpftool/main.h
+@@ -15,6 +15,7 @@
+ 
+ #include <bpf/hashmap.h>
+ #include <bpf/libbpf.h>
++#include <bpf/bpf.h>
+ 
+ #include "json_writer.h"
+ 
+@@ -140,8 +141,10 @@ void get_prog_full_name(const struct bpf_prog_info *prog_info, int prog_fd,
+ int get_fd_type(int fd);
+ const char *get_fd_type_name(enum bpf_obj_type type);
+ char *get_fdinfo(int fd, const char *key);
+-int open_obj_pinned(const char *path, bool quiet);
+-int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type);
++int open_obj_pinned(const char *path, bool quiet,
++		    const struct bpf_obj_get_opts *opts);
++int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type,
++			const struct bpf_obj_get_opts *opts);
+ int mount_bpffs_for_file(const char *file_name);
+ int create_and_mount_bpffs_dir(const char *dir_name);
+ int do_pin_any(int argc, char **argv, int (*get_fd_by_id)(int *, char ***));
+@@ -167,10 +170,10 @@ int do_iter(int argc, char **argv) __weak;
+ int parse_u32_arg(int *argc, char ***argv, __u32 *val, const char *what);
+ int prog_parse_fd(int *argc, char ***argv);
+ int prog_parse_fds(int *argc, char ***argv, int **fds);
+-int map_parse_fd(int *argc, char ***argv);
+-int map_parse_fds(int *argc, char ***argv, int **fds);
++int map_parse_fd(int *argc, char ***argv, __u32 open_flags);
++int map_parse_fds(int *argc, char ***argv, int **fds, __u32 open_flags);
+ int map_parse_fd_and_info(int *argc, char ***argv, struct bpf_map_info *info,
+-			  __u32 *info_len);
++			  __u32 *info_len, __u32 open_flags);
+ 
+ struct bpf_prog_linfo;
+ #if defined(HAVE_LLVM_SUPPORT) || defined(HAVE_LIBBFD_SUPPORT)
+diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
+index 81cc668b4b05..c7dc2eae8ba8 100644
+--- a/tools/bpf/bpftool/map.c
++++ b/tools/bpf/bpftool/map.c
+@@ -337,9 +337,9 @@ static void fill_per_cpu_value(struct bpf_map_info *info, void *value)
+ 		memcpy(value + i * step, value, info->value_size);
+ }
+ 
+-static int parse_elem(char **argv, struct bpf_map_info *info,
+-		      void *key, void *value, __u32 key_size, __u32 value_size,
+-		      __u32 *flags, __u32 **value_fd)
++static int parse_elem(char **argv, struct bpf_map_info *info, void *key,
++		      void *value, __u32 key_size, __u32 value_size,
++		      __u32 *flags, __u32 **value_fd, __u32 open_flags)
+ {
+ 	if (!*argv) {
+ 		if (!key && !value)
+@@ -362,7 +362,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
+ 			return -1;
+ 
+ 		return parse_elem(argv, info, NULL, value, key_size, value_size,
+-				  flags, value_fd);
++				  flags, value_fd, open_flags);
+ 	} else if (is_prefix(*argv, "value")) {
+ 		int fd;
+ 
+@@ -388,7 +388,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
+ 				return -1;
+ 			}
+ 
+-			fd = map_parse_fd(&argc, &argv);
++			fd = map_parse_fd(&argc, &argv, open_flags);
+ 			if (fd < 0)
+ 				return -1;
+ 
+@@ -424,7 +424,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
+ 		}
+ 
+ 		return parse_elem(argv, info, key, NULL, key_size, value_size,
+-				  flags, NULL);
++				  flags, NULL, open_flags);
+ 	} else if (is_prefix(*argv, "any") || is_prefix(*argv, "noexist") ||
+ 		   is_prefix(*argv, "exist")) {
+ 		if (!flags) {
+@@ -440,7 +440,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
+ 			*flags = BPF_EXIST;
+ 
+ 		return parse_elem(argv + 1, info, key, value, key_size,
+-				  value_size, NULL, value_fd);
++				  value_size, NULL, value_fd, open_flags);
+ 	}
+ 
+ 	p_err("expected key or value, got: %s", *argv);
+@@ -639,7 +639,7 @@ static int do_show_subset(int argc, char **argv)
+ 		p_err("mem alloc failed");
+ 		return -1;
+ 	}
+-	nb_fds = map_parse_fds(&argc, &argv, &fds);
++	nb_fds = map_parse_fds(&argc, &argv, &fds, BPF_F_RDONLY);
+ 	if (nb_fds < 1)
+ 		goto exit_free;
+ 
+@@ -672,12 +672,15 @@ static int do_show_subset(int argc, char **argv)
+ 
+ static int do_show(int argc, char **argv)
+ {
++	LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts);
+ 	struct bpf_map_info info = {};
+ 	__u32 len = sizeof(info);
+ 	__u32 id = 0;
+ 	int err;
+ 	int fd;
+ 
++	opts.open_flags = BPF_F_RDONLY;
++
+ 	if (show_pinned) {
+ 		map_table = hashmap__new(hash_fn_for_key_as_id,
+ 					 equal_fn_for_key_as_id, NULL);
+@@ -707,7 +710,7 @@ static int do_show(int argc, char **argv)
+ 			break;
+ 		}
+ 
+-		fd = bpf_map_get_fd_by_id(id);
++		fd = bpf_map_get_fd_by_id_opts(id, &opts);
+ 		if (fd < 0) {
+ 			if (errno == ENOENT)
+ 				continue;
+@@ -909,7 +912,7 @@ static int do_dump(int argc, char **argv)
+ 		p_err("mem alloc failed");
+ 		return -1;
+ 	}
+-	nb_fds = map_parse_fds(&argc, &argv, &fds);
++	nb_fds = map_parse_fds(&argc, &argv, &fds, BPF_F_RDONLY);
+ 	if (nb_fds < 1)
+ 		goto exit_free;
+ 
+@@ -997,7 +1000,7 @@ static int do_update(int argc, char **argv)
+ 	if (argc < 2)
+ 		usage();
+ 
+-	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, 0);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -1006,7 +1009,7 @@ static int do_update(int argc, char **argv)
+ 		goto exit_free;
+ 
+ 	err = parse_elem(argv, &info, key, value, info.key_size,
+-			 info.value_size, &flags, &value_fd);
++			 info.value_size, &flags, &value_fd, 0);
+ 	if (err)
+ 		goto exit_free;
+ 
+@@ -1076,7 +1079,7 @@ static int do_lookup(int argc, char **argv)
+ 	if (argc < 2)
+ 		usage();
+ 
+-	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -1084,7 +1087,8 @@ static int do_lookup(int argc, char **argv)
+ 	if (err)
+ 		goto exit_free;
+ 
+-	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL);
++	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL,
++			 BPF_F_RDONLY);
+ 	if (err)
+ 		goto exit_free;
+ 
+@@ -1127,7 +1131,7 @@ static int do_getnext(int argc, char **argv)
+ 	if (argc < 2)
+ 		usage();
+ 
+-	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -1140,8 +1144,8 @@ static int do_getnext(int argc, char **argv)
+ 	}
+ 
+ 	if (argc) {
+-		err = parse_elem(argv, &info, key, NULL, info.key_size, 0,
+-				 NULL, NULL);
++		err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL,
++				 NULL, BPF_F_RDONLY);
+ 		if (err)
+ 			goto exit_free;
+ 	} else {
+@@ -1198,7 +1202,7 @@ static int do_delete(int argc, char **argv)
+ 	if (argc < 2)
+ 		usage();
+ 
+-	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -1209,7 +1213,8 @@ static int do_delete(int argc, char **argv)
+ 		goto exit_free;
+ 	}
+ 
+-	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL);
++	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL,
++			 0);
+ 	if (err)
+ 		goto exit_free;
+ 
+@@ -1226,11 +1231,16 @@ static int do_delete(int argc, char **argv)
+ 	return err;
+ }
+ 
++static int map_parse_read_only_fd(int *argc, char ***argv)
++{
++	return map_parse_fd(argc, argv, BPF_F_RDONLY);
++}
++
+ static int do_pin(int argc, char **argv)
+ {
+ 	int err;
+ 
+-	err = do_pin_any(argc, argv, map_parse_fd);
++	err = do_pin_any(argc, argv, map_parse_read_only_fd);
+ 	if (!err && json_output)
+ 		jsonw_null(json_wtr);
+ 	return err;
+@@ -1319,7 +1329,7 @@ static int do_create(int argc, char **argv)
+ 			if (!REQ_ARGS(2))
+ 				usage();
+ 			inner_map_fd = map_parse_fd_and_info(&argc, &argv,
+-							     &info, &len);
++							     &info, &len, 0);
+ 			if (inner_map_fd < 0)
+ 				return -1;
+ 			attr.inner_map_fd = inner_map_fd;
+@@ -1368,7 +1378,7 @@ static int do_pop_dequeue(int argc, char **argv)
+ 	if (argc < 2)
+ 		usage();
+ 
+-	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
++	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, 0);
+ 	if (fd < 0)
+ 		return -1;
+ 
+@@ -1407,7 +1417,7 @@ static int do_freeze(int argc, char **argv)
+ 	if (!REQ_ARGS(2))
+ 		return -1;
+ 
+-	fd = map_parse_fd(&argc, &argv);
++	fd = map_parse_fd(&argc, &argv, 0);
+ 	if (fd < 0)
+ 		return -1;
+ 
+diff --git a/tools/bpf/bpftool/map_perf_ring.c b/tools/bpf/bpftool/map_perf_ring.c
+index 552b4ca40c27..bcb767e2d673 100644
+--- a/tools/bpf/bpftool/map_perf_ring.c
++++ b/tools/bpf/bpftool/map_perf_ring.c
+@@ -128,7 +128,8 @@ int do_event_pipe(int argc, char **argv)
+ 	int err, map_fd;
+ 
+ 	map_info_len = sizeof(map_info);
+-	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len);
++	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len,
++				       0);
+ 	if (map_fd < 0)
+ 		return -1;
+ 
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 96eea8a67225..deeaa5c1ed7d 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -1062,7 +1062,7 @@ static int parse_attach_detach_args(int argc, char **argv, int *progfd,
+ 	if (!REQ_ARGS(2))
+ 		return -EINVAL;
+ 
+-	*mapfd = map_parse_fd(&argc, &argv);
++	*mapfd = map_parse_fd(&argc, &argv, 0);
+ 	if (*mapfd < 0)
+ 		return *mapfd;
+ 
+@@ -1608,7 +1608,7 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
+ 			}
+ 			NEXT_ARG();
+ 
+-			fd = map_parse_fd(&argc, &argv);
++			fd = map_parse_fd(&argc, &argv, 0);
+ 			if (fd < 0)
+ 				goto err_free_reuse_maps;
+ 
+-- 
+2.34.1
 
