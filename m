@@ -1,73 +1,31 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EE121C182
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2644221277;
+	Fri, 30 May 2025 09:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599022; cv=none; b=dvWxv3TttsYnn5YuM1lKXaO3POTxtz9VSeboL5XKevk6cJK+o0e9rfbNrMbnqjsOuN5xe0ArPAT6e+QxU1rkflBYyY9EV2QCCmXynvAFnZOIjHqyBxwg4MDIAHjFcPjSSiQuIdVQcDtRdDtAg305V9Atc5lDr9qiOyc8drgDDRA=
+	t=1748599049; cv=none; b=ND6AiQM7qAIY/JDbUneBA7JbJLPT5kKjOPbKyp9RyOYkmQhckJoqA7PYWCdEUbe82uF96PSizTwHOERtFJQ+XgBOLEWMws3FGTFZm+69knZJFbps/RF7dh94Za+cMRfMBM2k5ebX1AMxlt24+xUAmeJ3D/aihZLCrQ9DlbPE63E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599022; c=relaxed/simple;
-	bh=PJCzMF/AUy2/duUrlV1Bk5x2yxDWOMYK54ncBNFmZC0=;
+	s=arc-20240116; t=1748599049; c=relaxed/simple;
+	bh=6rhTEcOtfuAIsXv/LIanH1QuJFYzArBu/CVVOX98c9g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l/HRq9zuUmyl8WeEhEZB+yyAKGYXBcWzV3c9uCyRqF8A82Tgr4XU64meax2hQBshsO6FORzgTR2su5HAHcUCcSmzniygRBFM2sL8fsk2q0GQ1gnThHFWe3mactGJe9SrR/ZRlt8oUP6Th/REFYx67Xts/n/nXKqfQuM7ZDsgtpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z6z9/otf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Yf97eXF8h3ApRPjieC7M7G1O5FP0SXWoaRi2JOFETsSxIfbMXaH2N+nG1Oqawlb14arV2vmHdon3NueyZJXEImPPE5Pyhd6WRkBeUUnJjQeu69ffwWT6txm+69atjqbhBOKNxZKtNlcw/FghlTYWbhupBE1NsBMxlSw2BmN9fdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=OByU6NX2; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z6z9/otf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748599019;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4aYP3vlLEMaaRLnDxd7KrLA3fGNslSBV9pk/D+1+TUs=;
-	b=Z6z9/otfBbq3scUG304dyPnogfTtatMsXVSordRqRr6Avcgo8H5BDDFKasMfB/OOvmriMJ
-	sITfDS2k5/zuzRBEjW66wSaJ3vE4dlhTnvOvKaUnz57yhI4vRf9LUQYDPqBtsDkmjUnfOY
-	gGn1mFzi5hGYHd5vu0x+2rhAfVKunZs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-161-Y0ewW889O2Wc9MImv9s1Rw-1; Fri, 30 May 2025 05:56:57 -0400
-X-MC-Unique: Y0ewW889O2Wc9MImv9s1Rw-1
-X-Mimecast-MFC-AGG-ID: Y0ewW889O2Wc9MImv9s1Rw_1748599015
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eee2398bso783427f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:56:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748599015; x=1749203815;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4aYP3vlLEMaaRLnDxd7KrLA3fGNslSBV9pk/D+1+TUs=;
-        b=MK/LGnBj2XRZAnTvAcmuY5aaMC1V7gUqLvGv+EHs2cbTC1WZ70iUOLhaZiB+j6e9e1
-         zTdJeRJDE3HIay9tTt8qcGd6Dz06TlQur63fExtMr433Z47kbb3puAOV+oyaz5O1Yz/F
-         VWzIeD1I1SX4kWxjmmDmhDJQwxjxg8v9/afB0eyCKEgZ8RlBUScV7Z4O/h6ZyEETIolx
-         mGc7CsWfCMy15Po/v2SZ7ie6FnaYjN7bMjFbGt4CnSLbOh0v5jDaDMYOEwH3pZEfZV+n
-         bd9NJu5YL/3nohWFJZ/3qGZpK4sblwICT1A7A2OUQxxdOESQRmF2xphNRQAilujcbabG
-         nJIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXfm/wKbZed1VHny596Y5r3eu6xCvIxa/Kd5RH/W5jYEi3AhEA6WfYJvo3Fs5WHLbltPdHukukRE+rl6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGUz3/OQzfql0r3Z5/M+pcqIWvHuS0p4ieh5Hp9YzaS083h4YN
-	egA5g9RgkBSvDHt9wVUUCx9Yb6EepL+XKX4H/neF8vmqzl+MIw5lXcIxzog46t5OYB2yGW09Dwr
-	hYaD1kakmaze5pHf8+a/UoFxjeGNibbRNIIAs9ddxEewKnOymi+5m/FLrUCYP9uABDA==
-X-Gm-Gg: ASbGncvIeJVWkwLGA9kQTmHVkRQOEAmmDtQ1ic6RiEBQqSJkUzpbEGM55c8SDGQqXCE
-	qjawfU6WpDiuQ6jsFPGZbyR+AQQWklj1dj73tcDpRbETxxs7zw78PzmgIJMaXBwU1bYd9QN2LZz
-	FMfIhDpda6K78ANe7eBN2gS9DAMdRyplbwgCAa2Nc+IIZXExNG3XdpGAW45TwuQ7llNvE7ARJkY
-	3vGTWhnW3wDpqu1N7f/ffqeyaZkf98MP1MzirM/7PgE0pyUghxGuuzi4OiGNNTeDC7DLxMOM1Es
-	3LNnc1vndPlxyPtWGKOQNcC2sFW+hmA7OjcMkJtbxM5JTLNYA5qKOy9vyQThZ+t35F/t7RNDKw5
-	YY9a5ivaQJPprtYGSg4Vo7ZZb9eC3piNzJNqixT8=
-X-Received: by 2002:a05:6000:4282:b0:3a4:ea80:422d with SMTP id ffacd0b85a97d-3a4f7a02343mr1874985f8f.9.1748599015321;
-        Fri, 30 May 2025 02:56:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEnd78WFlyh8+jhQ/np4f6foO4xxrbS+AsAYm7tB70oDbzdcAg+X/BtNxRGUac3hxdHeradPQ==
-X-Received: by 2002:a05:6000:4282:b0:3a4:ea80:422d with SMTP id ffacd0b85a97d-3a4f7a02343mr1874943f8f.9.1748599014817;
-        Fri, 30 May 2025 02:56:54 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6d0dbsm4287688f8f.40.2025.05.30.02.56.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 02:56:54 -0700 (PDT)
-Message-ID: <081775ba-276f-4bbd-a18a-175cf1f217e9@redhat.com>
-Date: Fri, 30 May 2025 11:56:51 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="OByU6NX2"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748599043; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ybwvx1QHJx3D3UtDCyVd1Dkp/fMn1/UpuqWpEwFvHXQ=;
+	b=OByU6NX2ZgQCv9oEn3D7hDaeYGJXM+VnZEiFhh2Kh4gHNrvylMEUyypMFEeFX42VS7jwzwhOVi1vcW6MHIdxrZ8n+BS/ju/HOqg1LC8PddV23K6EnpgvSgsjd5WjUM9foNzxB2QSnTZ05+u/qDBKJ9dR6DCz0Fb/e9SCp8r+SG4=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcL4CT5_1748598724 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 17:52:05 +0800
+Message-ID: <19faab84-dd8e-4dfd-bf91-80bcb4a34fe8@linux.alibaba.com>
+Date: Fri, 30 May 2025 17:52:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,182 +33,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
-To: Bo Li <libo.gcs85@bytedance.com>, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org,
- kees@kernel.org, akpm@linux-foundation.org, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, peterz@infradead.org
-Cc: dietmar.eggemann@arm.com, hpa@zytor.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, viro@zeniv.linux.org.uk,
- brauner@kernel.org, jack@suse.cz, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, jannh@google.com, pfalcato@suse.de, riel@surriel.com,
- harry.yoo@oracle.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, duanxiongchun@bytedance.com, yinhongbo@bytedance.com,
- dengliang.1214@bytedance.com, xieyongji@bytedance.com,
- chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com,
- chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+Subject: Re: [PATCH 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
+To: David Hildenbrand <david@redhat.com>, Ryan Roberts
+ <ryan.roberts@arm.com>, akpm@linux-foundation.org, hughd@google.com
+Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
+ <05d60e72-3113-41f0-b81f-225397f06c81@arm.com>
+ <f3dad5b5-143d-4896-b315-38e1d7bb1248@redhat.com>
+ <9b1bac6c-fd9f-4dc1-8c94-c4da0cbb9e7f@arm.com>
+ <abe284a4-db5c-4a5f-b2fd-e28e1ab93ed1@redhat.com>
+ <6caefe0b-c909-4692-a006-7f8b9c0299a6@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <6caefe0b-c909-4692-a006-7f8b9c0299a6@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
-> 
-> ## Address space sharing
-> 
-> For address space sharing, RPAL partitions the entire userspace virtual
-> address space and allocates non-overlapping memory ranges to each process.
-> On x86_64 architectures, RPAL uses a memory range size covered by a
-> single PUD (Page Upper Directory) entry, which is 512GB. This restricts
-> each process’s virtual address space to 512GB on x86_64, sufficient for
-> most applications in our scenario. The rationale is straightforward:
-> address space sharing can be simply achieved by copying the PUD from one
-> process’s page table to another’s. So one process can directly use the
-> data pointer to access another's memory.
-> 
-> 
->   |------------| <- 0
->   |------------| <- 512 GB
->   |  Process A |
->   |------------| <- 2*512 GB
->   |------------| <- n*512 GB
->   |  Process B |
->   |------------| <- (n+1)*512 GB
->   |------------| <- STACK_TOP
->   |  Kernel    |
->   |------------|
 
-Oh my.
+On 2025/5/30 17:16, David Hildenbrand wrote:
+> On 30.05.25 11:10, David Hildenbrand wrote:
+>> On 30.05.25 10:59, Ryan Roberts wrote:
+>>> On 30/05/2025 09:44, David Hildenbrand wrote:
+>>>> On 30.05.25 10:04, Ryan Roberts wrote:
+>>>>> On 29/05/2025 09:23, Baolin Wang wrote:
+>>>>>> As we discussed in the previous thread [1], the MADV_COLLAPSE will 
+>>>>>> ignore
+>>>>>> the system-wide anon/shmem THP sysfs settings, which means that 
+>>>>>> even though
+>>>>>> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE 
+>>>>>> will still
+>>>>>> attempt to collapse into a anon/shmem THP. This violates the rule 
+>>>>>> we have
+>>>>>> agreed upon: never means never. This patch set will address this 
+>>>>>> issue.
+>>>>>
+>>>>> This is a drive-by comment from me without having the previous 
+>>>>> context, but...
+>>>>>
+>>>>> Surely MADV_COLLAPSE *should* ignore the THP sysfs settings? It's a 
+>>>>> deliberate
+>>>>> user-initiated, synchonous request to use huge pages for a range of 
+>>>>> memory.
+>>>>> There is nothing *transparent* about it, it just happens to be 
+>>>>> implemented using
+>>>>> the same logic that THP uses.
+>>>>>
+>>>>> I always thought this was a deliberate design decision.
+>>>>
+>>>> If the admin said "never", then why should a user be able to 
+>>>> overwrite that?
+>>>
+>>> Well my interpretation would be that the admin is saying never 
+>>> *transparently*
+>>> give anyone any hugepages; on balance it does more harm than good for my
+>>> workloads. The toggle is called transparent_hugepage/enabled, after all.
+>>
+>> I'd say it's "enabling transparent huge pages" not "transparently
+>> enabling huge pages". After all, these things are ... transparent huge
+>> pages.
+>>
+>> But yeah, it's confusing.
+>>
+>>>
+>>> Whereas MADV_COLLAPSE is deliberately applied to a specific region at an
+>>> opportune moment in time, presumably because the user knows that the 
+>>> region
+>>> *will* benefit and because that point in the execution is not 
+>>> sensitive to latency.
+>>
+>> Not sure if MADV_HUGEPAGE is really *that* different.
+>>
+>>>
+>>> I see them as logically separate.
+>>>
+>>>>
+>>>> The design decision I recall is that if VM_NOHUGEPAGE is set, we'll 
+>>>> ignore that.
+>>>> Because that was set by the app itself (MADV_NOHUEPAGE).
 
-It reminds me a bit about mshare -- just that mshare tries to do it in a 
-less hacky way..
+IIUC, MADV_COLLAPSE does not ignore the VM_NOHUGEPAGE setting, if we set 
+VM_NOHUGEPAGE, then MADV_COLLAPSE will not be allowed to collapse a THP. 
+See:
+__thp_vma_allowable_orders() ---> vma_thp_disabled()
 
+>>> Hmm, ok. My instinct would have been the opposite; MADV_NOHUGEPAGE 
+>>> means "I
+>>> don't want the risk of latency spikes and memory bloat that THP can 
+>>> cause". Not
+>>> "ignore my explicit requests to MADV_COLLAPSE".
+>>>
+>>> But if that descision was already taken and that's the current 
+>>> behavior then I
+>>> agree we have an inconsistency with respect to the sysfs control.
+>>>
+>>> Perhaps we should be guided by real world usage - AIUI there is a 
+>>> cloud that
+>>> disables THP at system level today (Google?).
+>> The use case I am aware of for disabling it for debugging purposes.
+>> Saved us quite some headake in the past at customer sites for
+>> troubleshooting + workarounds ...
+>>
+>>
+>> Let's take a look at the man page:
+>>
+>> MADV_COLLAPSE is  independent  of  any  sysfs  (see  sysfs(5))  setting
+>> under  /sys/kernel/mm/transparent_hugepage, both in terms of determining
+>> THP eligibility, and allocation semantics.
+>>
+>> I recall we discussed that it should ignore the 
+>> max_ptes_none/swap/shared.
+>>
+>> But "any" setting would include "enable" ...
 > 
-> ## RPAL call
+> It kind-of contradicts the linked 
+> Documentation/admin-guide/mm/transhuge.rst, where we have this 
+> *beautiful* comment
 > 
-> We refer to the lightweight userspace context switching mechanism as RPAL
-> call. It enables the caller (or sender) thread of one process to directly
-> switch to the callee (or receiver) thread of another process.
+> "Transparent Hugepage Support for anonymous memory can be entirely 
+> disable (mostly for debugging purposes".
 > 
-> When Process A’s caller thread initiates an RPAL call to Process B’s
-> callee thread, the CPU saves the caller’s context and loads the callee’s
-> context. This enables direct userspace control flow transfer from the
-> caller to the callee. After the callee finishes data processing, the CPU
-> saves Process B’s callee context and switches back to Process A’s caller
-> context, completing a full IPC cycle.
-> 
-> 
->   |------------|                |---------------------|
->   |  Process A |                |  Process B          |
->   | |-------|  |                | |-------|           |
->   | | caller| --- RPAL call --> | | callee|    handle |
->   | | thread| <------------------ | thread| -> event  |
->   | |-------|  |                | |-------|           |
->   |------------|                |---------------------|
-> 
-> # Security and compatibility with kernel subsystems
-> 
-> ## Memory protection between processes
-> 
-> Since processes using RPAL share the address space, unintended
-> cross-process memory access may occur and corrupt the data of another
-> process. To mitigate this, we leverage Memory Protection Keys (MPK) on x86
-> architectures.
-> 
-> MPK assigns 4 bits in each page table entry to a "protection key", which
-> is paired with a userspace register (PKRU). The PKRU register defines
-> access permissions for memory regions protected by specific keys (for
-> detailed implementation, refer to the kernel documentation "Memory
-> Protection Keys"). With MPK, even though the address space is shared
-> among processes, cross-process access is restricted: a process can only
-> access the memory protected by a key if its PKRU register is configured
-> with the corresponding permission. This ensures that processes cannot
-> access each other’s memory unless an explicit PKRU configuration is set.
-> 
-> ## Page fault handling and TLB flushing
-> 
-> Due to the shared address space architecture, both page fault handling and
-> TLB flushing require careful consideration. For instance, when Process A
-> accesses Process B’s memory, a page fault may occur in Process A's
-> context, but the faulting address belongs to Process B. In this case, we
-> must pass Process B's mm_struct to the page fault handler.
+> I mean, "entirely" is also pretty clear to me.
 
-In an mshare region, all faults would be rerouted to the mshare MM 
-either way.
-
-> 
-> TLB flushing is more complex. When a thread flushes the TLB, since the
-> address space is shared, not only other threads in the current process but
-> also other processes that share the address space may access the
-> corresponding memory (related to the TLB flush). Therefore, the cpuset used
-> for TLB flushing should be the union of the mm_cpumasks of all processes
-> that share the address space.
-
-Oh my.
-
-It all reminds me of mshare, just the context switch handling is 
-different (and significantly ... more problematic).
-
-Maybe something could be built on top of mshare, but I'm afraid the real 
-magic is the address space sharing combined with the context switching 
-... which sounds like a big can of worms.
-
-So in the current form, I understand all the NACKs.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Yes, agree. We have encountered issues caused by THP in our Alibaba 
+fleet. The quickest way to stop the bleeding was to disable THP. In such 
+case, we do not expect MADV_HUGEPAGE to still collapse a THP.
