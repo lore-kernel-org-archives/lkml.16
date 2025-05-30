@@ -1,78 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C511527817C;
-	Fri, 30 May 2025 19:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3F32367CA;
+	Fri, 30 May 2025 19:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748633119; cv=none; b=CqrVc2MnV5JBTi95xaKN+dvgblbS6x289v/TiAIHBh7KI5nNjk7LODBGRAsxmY9gJnlnwPAog6r6V3GxugXZVR8hcyhcpewoEmAczjI0J0ZBopbmCAZS4W0Yvgu4Kg9lebpyHlQuHVHuIw21i3H/xYRWTOlS1PCPL+1wXqub5LE=
+	t=1748633374; cv=none; b=SboPy01LW89Boxvteot2VgNyMjjMwPwbLlr2t0X32SAJQmjOvttC7kRXhh67bFAUpgXJhZ87no5kpYeIUPClxNWcb+XAePpvdlsA7LoczcLlYY34tRDVDabDHYl1LNKUzjPDVcuXcUdDyfZhjNMhmedPbc38Q3p2+/rgxApw/RM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748633119; c=relaxed/simple;
-	bh=GBNlmAasQ2ugDaTm/pZUb+R+AMSrFlEhFgRgMLDuMK0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=pMLlzL5ems2qWrZYmDHaZFaaom8JrEznFhhjGu88dsNqbbMAlxCjHe2HCNhfOkFIQweArUgI6HG0gHhxZtAbb4HPpKIAa6tQ5/96wLT62xybcSNcV3HptfkxY5Hxstvlx+copgsjLYDNQCfxlR8oCJrfUaaAUKyvpGUTGGtjH3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFxm3IwF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFxm3IwF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7859EC4CEE9;
-	Fri, 30 May 2025 19:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748633118;
-	bh=GBNlmAasQ2ugDaTm/pZUb+R+AMSrFlEhFgRgMLDuMK0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=XFxm3IwFhU0eT/Tjk5xvjhphlP1obCGIGvQSwiFxSmch0LXh3BQSvRFoDz/jEabzJ
-	 8+mA4pUtOplnxwW70z5N2b4CqQ8K3/vDxkpg4nJ71IsjUHFS7GNpiCbxY58habes22
-	 L/xMJOBWs92qESO7iLXPtcwutKc5qyQoBpX/LVflbJGm20VIYybOeLbDTIat68SbNa
-	 cfE0dR4CfV1SL28gKU0+x5Q5L3hEDEwmEDO1lB7epYH+8B0Xbf6F78rZGjSyxYyOrt
-	 ytqbXT0Y9jqHleBXGPc4fWYKB9suA1yVCjfdq9tiOLw/Xmn9+x4JZIIwRXM/wYip5b
-	 mUJc9KZyThfig==
+	s=arc-20240116; t=1748633374; c=relaxed/simple;
+	bh=3309iY1rzzm1HWS42oPp3w3x9UcyYB8inFAsu6M7wNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=us5u1ccrvhCClxA2ekxW9aqRIERkSYlTxKCSbW3Tnal/36yBYiu48eVBJalXd9bRXNViDmCIAmjNsyCfsOmflWO34k5z6bMOAUbldVyHHfORHAaji/txlEyAYmBQFidrgBDXHc+pMtd16rYpzZcfI5W6yqRs/IrnV+Kee9NGpx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4b8Cwm15Rpz9tY5;
+	Fri, 30 May 2025 21:29:28 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v7 2/9] rust: device: Enable accessing the FwNode of a Device
+Date: Fri, 30 May 2025 21:28:49 +0200
+Message-ID: <20250530192856.1177011-3-remo@buenzli.dev>
+In-Reply-To: <20250530192856.1177011-1-remo@buenzli.dev>
+References: <20250530192856.1177011-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 May 2025 21:25:13 +0200
-Message-Id: <DA9QPEN1JU9D.B2HDPCQ2ZPDX@kernel.org>
-Subject: Re: [PATCH 0/7] misc device: support device drivers
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250530142447.166524-1-dakr@kernel.org>
-In-Reply-To: <20250530142447.166524-1-dakr@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4b8Cwm15Rpz9tY5
 
-On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
-> This patch series adds support for device drivers to the misc device
-> abstraction.
->
-> For design details, please see:
->   * patch 5 "rust: miscdevice: properly support device drivers"
->   * patch 6 "rust: miscdevice: expose the parent device as &Device<Bound>=
-"
->
-> This patch series depends on the pin-init series from Benno [1] as well a=
-s on
-> the misc device series from Christian [2], with UnsafePinned replaced wit=
-h
-> Opaque, as suggested by Alice, since UnsafePinned may still take a while =
-to
-> land.
->
-> A branch containing this series and its dependencies can be found in [3].
->
-> Thanks to Benno for his great help with pin-init!
+Subsequent patches will add methods for reading properties to FwNode.
+The first step to accessing these methods will be to access the "root"
+FwNode of a Device.
 
-No problem! I also found it very useful to get some more uses for
-pin-init. This way future contributors will benefit from the new
-features :)
+Add the method `fwnode` to `Device`.
 
+Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
 ---
-Cheers,
-Benno
+ rust/kernel/device.rs | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 56ee463a4bd11..0018b37de4a29 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -186,6 +186,21 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
+         };
+     }
+ 
++    /// Obtain the [`FwNode`](property::FwNode) corresponding to the device.
++    pub fn fwnode(&self) -> Option<&property::FwNode> {
++        // SAFETY: `self` is valid.
++        let fwnode_handle = unsafe { bindings::__dev_fwnode(self.as_raw()) };
++        if fwnode_handle.is_null() {
++            return None;
++        }
++        // SAFETY: `fwnode_handle` is valid. Its lifetime is tied to `&self`. We
++        // return a reference instead of an `ARef<FwNode>` because `dev_fwnode()`
++        // doesn't increment the refcount. It is safe to cast from a
++        // `struct fwnode_handle*` to a `*const FwNode` because `FwNode` is
++        // defined as a `#[repr(transparent)]` wrapper around `fwnode_handle`.
++        Some(unsafe { &*fwnode_handle.cast() })
++    }
++
+     /// Checks if property is present or not.
+     pub fn property_present(&self, name: &CStr) -> bool {
+         // SAFETY: By the invariant of `CStr`, `name` is null-terminated.
+-- 
+2.49.0
+
