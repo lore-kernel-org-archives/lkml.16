@@ -1,78 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D25A219A6B;
-	Fri, 30 May 2025 09:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB551DF72C
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748595696; cv=none; b=C+aoq78/Y3tzqBjU6lgYa5EJOtNq62uRX1rZMqj0hs7xMEtJ/QnqqWJ6HaD1bUk+xXHR9VHmgXeYQcwrTC0VqMjWclF1vrGWRAaYfFdc2ZA2jj6reAQwqMrbJf2wmejraV/Q7TLmr0dGO7ymqJ+ZIzkIlOq8jDQ8tvuw7y96i9M=
+	t=1748595879; cv=none; b=pqYZSe1jrTiefpC0Py8dW2pdzPz0lg6pIr1pgvrsdpkUZCsRPUzugtDuDkg9XEaK6mMRb/ZXSno26Ak3VSyNOYBQygStGd9+7J/boOcWVRz+/FGDlTO0cRpOD5nqIPL92MMCLwhfyrUTKEJNyxaOgSwLVf1spcWp9RH9iBP5tR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748595696; c=relaxed/simple;
-	bh=n2ZjVd2alcKnIdJEGexsGHL5f/SaS0tA+GdWnik0AJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=spM6PmS0UMvboPv9YH9GIC2CsJ5VkNl3m5mQzLQNUs/y2ojF18x3I+2hdk3CH/UnvZYTDx5DLfCOfMyqH9eGMyc7Lrtpg4TKOKpgClcZJz2bnBvJ5lU6rQt9rvtZ/af6flcQvyENqgbJfiiBtSfV0wmpsB614Fx1P1DzXoL3rhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Avn/4MnJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Avn/4MnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798A3C4CEE9;
-	Fri, 30 May 2025 09:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748595696;
-	bh=n2ZjVd2alcKnIdJEGexsGHL5f/SaS0tA+GdWnik0AJA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Avn/4MnJETTZAVpGapLc++uqRuOHnjEy1YQwrhob1PttsF3wn9f2O5mhPJryZ+mEp
-	 qAwuh7CMsn8cip9NyyLxi7TaBdjk0GoRJWzW7giwrZ3g9GZPLwDuWE6wura//uQ5pw
-	 p8jQl8bcZJLMYM002Hl8GEIRr0mh8FcTMDpFrZg4=
-Date: Fri, 30 May 2025 11:01:33 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Timur Tabi <timur@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025053050-maggot-landfall-d5eb@gregkh>
-References: <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
- <aCc_PSOPkLWTcTru@pollux>
- <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
- <CAOZdJXW+PoFgxH+wPEum-kYvRmSRd8c4kaxvbNAq5dfZJiXapA@mail.gmail.com>
- <D9Y0VJKOAQAY.2GJSAZ5II54VV@nvidia.com>
- <DA8G3G918FS4.X8D7PQMT4TGB@nvidia.com>
- <2025052932-pyramid-unvisited-68f7@gregkh>
- <DA935OIFBM1H.3CMSHQ46LLG4P@nvidia.com>
- <2025053047-theology-unsaid-d6ac@gregkh>
- <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
+	s=arc-20240116; t=1748595879; c=relaxed/simple;
+	bh=lisLegOy+6lXxdxDg5/m1b7CL468MwUWemew7FNpzIQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WtQyhlUBkuVXXdn3PINgkbelfkQp5gAKJnAqWN+l/N5oTPCPC7ty/a/eTc6T72Cyj2j1iRNV3qap0TspvxWRD//jUv2MTCjkSC5lAZ/Um6xZI7Du6JFvhjYWv0io07gt/ZspoqUrBHvocUxUszD9AGx9kBJFwS7f3olqIdcfozQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 919E116F8;
+	Fri, 30 May 2025 02:04:20 -0700 (PDT)
+Received: from MacBook-Pro.blr.arm.com (unknown [10.164.18.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F3C603F5A1;
+	Fri, 30 May 2025 02:04:31 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org
+Cc: lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	suzuki.poulose@arm.com,
+	steven.price@arm.com,
+	gshan@redhat.com,
+	linux-arm-kernel@lists.infradead.org,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH 1/3] mm: Allow pagewalk without locks
+Date: Fri, 30 May 2025 14:34:05 +0530
+Message-Id: <20250530090407.19237-2-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250530090407.19237-1-dev.jain@arm.com>
+References: <20250530090407.19237-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 30, 2025 at 03:59:03PM +0900, Alexandre Courbot wrote:
-> On Fri May 30, 2025 at 3:22 PM JST, Greg KH wrote:
-> > On Fri, May 30, 2025 at 09:58:02AM +0900, Alexandre Courbot wrote:
-> >> However, Nova also supports a couple of older chip generations that use
-> >> the same GSP firmware -  it is for these that the ELF unpacking must
-> >> occur in the kernel. IIUC this has to do with the capabilities of the
-> >> microcontroller that ultimately does the loading (more capable RISC-V on
-> >> Hopper+ vs. older and more limited Falcon).
-> >
-> > Why specifically does the kernel have to get involved here?  What
-> > requires it to do it that userspace can not?
-> 
-> I don't know of a user-space tool that is readily available and could
-> perform such extraction of the ELF content upon kernel request. Is there
-> anything like this?
+It is noted at [1] that KFENCE can manipulate kernel pgtable entries during
+softirqs. It does this by calling set_memory_valid() -> __change_memory_common().
+This being a non-sleepable context, we cannot take the init_mm mmap lock.
+Therefore, add PGWALK_NOLOCK to enable walk_page_range_novma() usage without
+locks.
 
-libelf provides you with the needed tools for this.
+[1] https://lore.kernel.org/linux-arm-kernel/89d0ad18-4772-4d8f-ae8a-7c48d26a927e@arm.com/
 
-And you didn't answer my question.
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ include/linux/pagewalk.h |  2 ++
+ mm/pagewalk.c            | 12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+index 9700a29f8afb..9bc8853ed3de 100644
+--- a/include/linux/pagewalk.h
++++ b/include/linux/pagewalk.h
+@@ -14,6 +14,8 @@ enum page_walk_lock {
+ 	PGWALK_WRLOCK = 1,
+ 	/* vma is expected to be already write-locked during the walk */
+ 	PGWALK_WRLOCK_VERIFY = 2,
++	/* no lock is needed */
++	PGWALK_NOLOCK = 3,
+ };
+ 
+ /**
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index e478777c86e1..9657cf4664b2 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -440,6 +440,8 @@ static inline void process_vma_walk_lock(struct vm_area_struct *vma,
+ 	case PGWALK_RDLOCK:
+ 		/* PGWALK_RDLOCK is handled by process_mm_walk_lock */
+ 		break;
++	default:
++		break;
+ 	}
+ #endif
+ }
+@@ -640,10 +642,12 @@ int walk_page_range_novma(struct mm_struct *mm, unsigned long start,
+ 	 * specified address range from being freed. The caller should take
+ 	 * other actions to prevent this race.
+ 	 */
+-	if (mm == &init_mm)
+-		mmap_assert_locked(walk.mm);
+-	else
+-		mmap_assert_write_locked(walk.mm);
++	if (ops->walk_lock != PGWALK_NOLOCK) {
++		if (mm == &init_mm)
++			mmap_assert_locked(walk.mm);
++		else
++			mmap_assert_write_locked(walk.mm);
++	}
+ 
+ 	return walk_pgd_range(start, end, &walk);
+ }
+-- 
+2.30.2
+
