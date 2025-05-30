@@ -1,440 +1,86 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024B222B588;
-	Fri, 30 May 2025 10:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BE822B588;
+	Fri, 30 May 2025 10:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599249; cv=none; b=Jtg0bs21/OUJ20LxRCukmFoaKZJIELr0FbVuUAGB2n60yD0OAQo/tjUV4YO5Bon/kOhPcSXhu9XnvWcI5yGILdBIhb6lK07AzND0KKo7g/cZkqgtXhxPv9yKh21tgfuT+FJZqlcyQv1KRVOH8Qs6LAz85c6uw4aKRwkkleW2CSA=
+	t=1748599261; cv=none; b=rorwaSBCchoTqjE/J/MCKUR39bwjmPEBIF2emWQ690Hgr3x5XquKTMcZTCAaJXOB+9JQxxxk2iOkgtEANmm3P9ElDzaTlE0XqUUtWz54JRwIlBptjbNVEVkxb5s6VcnavQq70apbs2Ip268OR/8bwUaKfvypUo9jBqiwcwRsB3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599249; c=relaxed/simple;
-	bh=JI3737qpZV5i/n/DYPnkPTfd1V/ujAG4pR1TJ/4gbgo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fqbE2zi5Fi5OemtMKi5+yHdjAUxk+yqctMjQa2r7nAVQaU1DbToBOCvn+229ytkQ9YATB8RvuMlDbMqr58uveE0/UJlXL4uFqK5Q4P+VXInPZhlSs6rxLJdMVdZUlN4PAPRTvfzC4GWtD6rYPaNNGoUlXBFHRa2+ikJrK4bEoxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lEXiJPs0; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lEXiJPs0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8BAFE4396B;
-	Fri, 30 May 2025 10:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748599244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uGf57HS6QUeaCcFUW+/oTiK0us3RHmT+M6Av6twgbrQ=;
-	b=lEXiJPs0g78O63YUJ7G0Vym1875igERBBzOQxLyCRXjiS96I04+aaiAn/1K0TPeIMp1BpA
-	i+Y4NRTe30XvpqMx01UW1h3mxNnjPR1MX5QrsQHL5BhqY5BkuPsF6SBOeOVSjnwtOaOwea
-	+vdYYJMgwUvxIE01671MGoLuk0jIIpvAH2QAQ7NV/0z/bWIzVg5hm0fMrVCoTndYOKekJK
-	ES4Nyzl863lWn9Q/XUDggEItPlBfBYCqqrdzWXNEV5VbFMbgFzBlmdqd6q1Q1O1nHbm5N2
-	G6hkLLGbqHiN3FkQeJS2UmOka4bzHbBtlOELLcdyDchNzGzNPaH05krWMxe+eg==
-From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 30 May 2025 12:00:17 +0200
-Subject: [PATCH v10 09/11] input: keyboard: Add support for MAX7360 keypad
+	s=arc-20240116; t=1748599261; c=relaxed/simple;
+	bh=HxTekDcfHvPbg4zlci3wAFstgpbm6hnuF6zxpsDkBpM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FelChk1OqZC4K3hUCTc2oQwbaU72l4l0pIy4SoUezQTA0z6L951OmWWQx/O03x6lGCc3t/KjIvKn+/spFNqE1/Zy2N0f76M+YFlqsbbvOIOvWLmmt4QyJNhnnjKiLE5WkUtjg6ZzsNdexhxaDZERLUaTpzq+VZ2/PAv/uhSOG4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: f79117da3d3c11f0b29709d653e92f7d-20250530
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:f0869a2c-80ac-4a14-855b-fae5cca669e5,IP:0,U
+	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:5d5f85b7ecbd36a1ef69e3a930dfcd62,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: f79117da3d3c11f0b29709d653e92f7d-20250530
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 602863747; Fri, 30 May 2025 18:00:50 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id B6D36E003506;
+	Fri, 30 May 2025 18:00:50 +0800 (CST)
+X-ns-mid: postfix-683981D2-3374552
+Received: from localhost.localdomain (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id AD36FE003505;
+	Fri, 30 May 2025 18:00:49 +0800 (CST)
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+To: rafael@kernel.org,
+	pavel@kernel.org,
+	len.brown@intel.com
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zihuan Zhang <zhangzihuan@kylinos.cn>
+Subject: [PATCH v1] PM: hibernate: Avoid redundant resume_device assignment in resume_store()
+Date: Fri, 30 May 2025 18:00:36 +0800
+Message-Id: <20250530100036.11954-1-zhangzihuan@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250530-mdb-max7360-support-v10-9-ce3b9e60a588@bootlin.com>
-References: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
-In-Reply-To: <20250530-mdb-max7360-support-v10-0-ce3b9e60a588@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748599233; l=11626;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=JI3737qpZV5i/n/DYPnkPTfd1V/ujAG4pR1TJ/4gbgo=;
- b=YgBjVkbUIiaXeh4IexaCgk6ehMEehw/uKSGdCrpTDEUmR+L4ZNxcKORrYSGKxUmDxOhX8ya8/
- xF0LKf6bhW8BgrXB1Iz7S12LsIH0gjBsRiWUCoc5SekkUS2CUw59OxT
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeejvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdefpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Transfer-Encoding: quoted-printable
 
-Add driver for Maxim Integrated MAX7360 keypad controller, providing
-support for up to 64 keys, with a matrix of 8 columns and 8 rows.
+In resume_store(), if the device number written to /sys/power/resume
+is the same as the current swsusp_resume_device, we can skip reassignment=
+.
+This avoids unnecessary locking and improves efficiency slightly.
 
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
 ---
- drivers/input/keyboard/Kconfig          |  12 ++
- drivers/input/keyboard/Makefile         |   1 +
- drivers/input/keyboard/max7360-keypad.c | 308 ++++++++++++++++++++++++++++++++
- 3 files changed, 321 insertions(+)
+ kernel/power/hibernate.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 721ab69e84ac..93b5cccf6892 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -421,6 +421,18 @@ config KEYBOARD_MAX7359
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called max7359_keypad.
- 
-+config KEYBOARD_MAX7360
-+	tristate "Maxim MAX7360 Key Switch Controller"
-+	select INPUT_MATRIXKMAP
-+	depends on I2C
-+	depends on MFD_MAX7360
-+	help
-+	  If you say yes here you get support for the keypad controller on the
-+	  Maxim MAX7360 I/O Expander.
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index 519fb09de5e0..504a1c2465ce 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -1291,6 +1291,9 @@ static ssize_t resume_store(struct kobject *kobj, s=
+truct kobj_attribute *attr,
+ 	if (error)
+ 		return error;
+=20
++	if (dev =3D=3D swsusp_resume_device)
++		return n;
 +
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max7360_keypad.
-+
- config KEYBOARD_MPR121
- 	tristate "Freescale MPR121 Touchkey"
- 	depends on I2C
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 1e0721c30709..b49d32d4003d 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_KEYBOARD_LPC32XX)		+= lpc32xx-keys.o
- obj-$(CONFIG_KEYBOARD_MAPLE)		+= maple_keyb.o
- obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
- obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
-+obj-$(CONFIG_KEYBOARD_MAX7360)		+= max7360-keypad.o
- obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
- obj-$(CONFIG_KEYBOARD_MT6779)		+= mt6779-keypad.o
- obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
-diff --git a/drivers/input/keyboard/max7360-keypad.c b/drivers/input/keyboard/max7360-keypad.c
-new file mode 100644
-index 000000000000..6bae00e7888b
---- /dev/null
-+++ b/drivers/input/keyboard/max7360-keypad.c
-@@ -0,0 +1,308 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2025 Bootlin
-+ *
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device/devres.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/input/matrix_keypad.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/regmap.h>
-+
-+struct max7360_keypad {
-+	struct input_dev *input;
-+	unsigned int rows;
-+	unsigned int cols;
-+	unsigned int debounce_ms;
-+	int irq;
-+	struct regmap *regmap;
-+	unsigned short keycodes[MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS];
-+};
-+
-+static irqreturn_t max7360_keypad_irq(int irq, void *data)
-+{
-+	struct max7360_keypad *max7360_keypad = data;
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	unsigned int row, col;
-+	unsigned int release;
-+	unsigned int code;
-+	int error;
-+
-+	error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
-+	if (error) {
-+		dev_err(dev, "Failed to read MAX7360 FIFO");
-+		return IRQ_NONE;
-+	}
-+
-+	/* FIFO overflow: ignore it and get next event. */
-+	if (val == MAX7360_FIFO_OVERFLOW) {
-+		dev_warn(dev, "max7360 FIFO overflow");
-+		error = regmap_read_poll_timeout(max7360_keypad->regmap, MAX7360_REG_KEYFIFO,
-+						 val, val != MAX7360_FIFO_OVERFLOW, 0, 1000);
-+		if (error) {
-+			dev_err(dev, "Failed to empty MAX7360 FIFO");
-+			return IRQ_NONE;
-+		}
-+	}
-+
-+	if (val == MAX7360_FIFO_EMPTY) {
-+		dev_dbg(dev, "Got a spurious interrupt");
-+
-+		return IRQ_NONE;
-+	}
-+
-+	row = FIELD_GET(MAX7360_FIFO_ROW, val);
-+	col = FIELD_GET(MAX7360_FIFO_COL, val);
-+	release = val & MAX7360_FIFO_RELEASE;
-+
-+	code = MATRIX_SCAN_CODE(row, col, get_count_order(max7360_keypad->cols));
-+
-+	dev_dbg(dev, "key[%d:%d] %s\n", row, col, release ? "release" : "press");
-+
-+	input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
-+	input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code], !release);
-+	input_sync(max7360_keypad->input);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max7360_keypad_open(struct input_dev *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	int error;
-+
-+	/* Somebody is using the device: get out of sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
-+				  MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
-+	if (error)
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+
-+	return error;
-+}
-+
-+static void max7360_keypad_close(struct input_dev *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	int error;
-+
-+	/* Nobody is using the device anymore: go to sleep. */
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG, MAX7360_CFG_SLEEP, 0);
-+	if (error)
-+		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
-+}
-+
-+static int max7360_keypad_hw_init(struct max7360_keypad *max7360_keypad)
-+{
-+	struct device *dev = max7360_keypad->input->dev.parent;
-+	unsigned int val;
-+	int error;
-+
-+	val = max7360_keypad->debounce_ms - MAX7360_DEBOUNCE_MIN;
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_DEBOUNCE,
-+				  MAX7360_DEBOUNCE,
-+				  FIELD_PREP(MAX7360_DEBOUNCE, val));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 debounce configuration\n");
-+
-+	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_INTERRUPT,
-+				  MAX7360_INTERRUPT_TIME_MASK,
-+				  FIELD_PREP(MAX7360_INTERRUPT_TIME_MASK, 1));
-+	if (error)
-+		return dev_err_probe(dev, error,
-+				     "Failed to write max7360 keypad interrupt configuration\n");
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_build_keymap(struct max7360_keypad *max7360_keypad)
-+{
-+	struct input_dev *input_dev = max7360_keypad->input;
-+	struct device *dev = input_dev->dev.parent->parent;
-+	struct matrix_keymap_data keymap_data;
-+	const char *propname = "linux,keymap";
-+	unsigned int max_keys;
-+	int error;
-+	int size;
-+
-+	size = device_property_count_u32(dev, propname);
-+	if (size <= 0) {
-+		dev_err(dev, "missing or malformed property %s: %d\n", propname, size);
-+		return size < 0 ? size : -EINVAL;
-+	}
-+
-+	max_keys = max7360_keypad->cols * max7360_keypad->rows;
-+	if (size > max_keys) {
-+		dev_err(dev, "%s size overflow (%d vs max %u)\n", propname, size, max_keys);
-+		return -EINVAL;
-+	}
-+
-+	u32 *keys __free(kfree) = kmalloc_array(size, sizeof(*keys), GFP_KERNEL);
-+	if (!keys)
-+		return -ENOMEM;
-+
-+	error = device_property_read_u32_array(dev, propname, keys, size);
-+	if (error) {
-+		dev_err(dev, "failed to read %s property: %d\n", propname, error);
-+		return error;
-+	}
-+
-+	keymap_data.keymap = keys;
-+	keymap_data.keymap_size = size;
-+	error = matrix_keypad_build_keymap(&keymap_data, NULL,
-+					   max7360_keypad->rows, max7360_keypad->cols,
-+					   max7360_keypad->keycodes, max7360_keypad->input);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_parse_fw(struct device *dev,
-+				   struct max7360_keypad *max7360_keypad,
-+				   bool *autorepeat)
-+{
-+	int error;
-+
-+	error = matrix_keypad_parse_properties(dev->parent, &max7360_keypad->rows,
-+					       &max7360_keypad->cols);
-+	if (error)
-+		return error;
-+
-+	if (!max7360_keypad->rows || !max7360_keypad->cols ||
-+	    max7360_keypad->rows > MAX7360_MAX_KEY_ROWS ||
-+	    max7360_keypad->cols > MAX7360_MAX_KEY_COLS) {
-+		dev_err(dev, "Invalid number of columns or rows (%ux%u)\n",
-+			max7360_keypad->cols, max7360_keypad->rows);
-+		return -EINVAL;
-+	}
-+
-+	*autorepeat = device_property_read_bool(dev->parent, "autorepeat");
-+
-+	max7360_keypad->debounce_ms = MAX7360_DEBOUNCE_MIN;
-+	error = device_property_read_u32(dev->parent, "keypad-debounce-delay-ms",
-+					 &max7360_keypad->debounce_ms);
-+	if (error == -EINVAL) {
-+		dev_info(dev, "Using default keypad-debounce-delay-ms: %u\n",
-+			 max7360_keypad->debounce_ms);
-+	} else if (error < 0) {
-+		dev_err(dev, "Failed to read keypad-debounce-delay-ms property\n");
-+		return error;
-+	}
-+
-+	if (!in_range(max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN,
-+		      MAX7360_DEBOUNCE_MAX - MAX7360_DEBOUNCE_MIN)) {
-+		dev_err(dev, "Invalid keypad-debounce-delay-ms: %u, should be between %u and %u.\n",
-+			max7360_keypad->debounce_ms, MAX7360_DEBOUNCE_MIN, MAX7360_DEBOUNCE_MAX);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_keypad_probe(struct platform_device *pdev)
-+{
-+	struct max7360_keypad *max7360_keypad;
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *input;
-+	struct regmap *regmap;
-+	bool autorepeat;
-+	int error;
-+	int irq;
-+
-+	regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
-+
-+	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "intk");
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
-+
-+	max7360_keypad = devm_kzalloc(dev, sizeof(*max7360_keypad), GFP_KERNEL);
-+	if (!max7360_keypad)
-+		return -ENOMEM;
-+
-+	max7360_keypad->regmap = regmap;
-+
-+	error = max7360_keypad_parse_fw(dev, max7360_keypad, &autorepeat);
-+	if (error)
-+		return error;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	max7360_keypad->input = input;
-+
-+	input->id.bustype = BUS_I2C;
-+	input->name = pdev->name;
-+	input->open = max7360_keypad_open;
-+	input->close = max7360_keypad_close;
-+
-+	error = max7360_keypad_build_keymap(max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to build keymap\n");
-+
-+	input_set_capability(input, EV_MSC, MSC_SCAN);
-+	if (autorepeat)
-+		__set_bit(EV_REP, input->evbit);
-+
-+	input_set_drvdata(input, max7360_keypad);
-+
-+	error = devm_request_threaded_irq(dev, irq, NULL, max7360_keypad_irq,
-+					  IRQF_ONESHOT,
-+					  "max7360-keypad", max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to register interrupt\n");
-+
-+	error = input_register_device(input);
-+	if (error)
-+		return dev_err_probe(dev, error, "Could not register input device\n");
-+
-+	error = max7360_keypad_hw_init(max7360_keypad);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to initialize max7360 keypad\n");
-+
-+	device_init_wakeup(dev, true);
-+	error = dev_pm_set_wake_irq(dev, irq);
-+	if (error)
-+		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
-+
-+	return 0;
-+}
-+
-+static void max7360_keypad_remove(struct platform_device *pdev)
-+{
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
-+}
-+
-+static struct platform_driver max7360_keypad_driver = {
-+	.driver = {
-+		.name	= "max7360-keypad",
-+	},
-+	.probe		= max7360_keypad_probe,
-+	.remove		= max7360_keypad_remove,
-+};
-+module_platform_driver(max7360_keypad_driver);
-+
-+MODULE_DESCRIPTION("MAX7360 Keypad driver");
-+MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
-+MODULE_LICENSE("GPL");
-
--- 
-2.39.5
+ 	sleep_flags =3D lock_system_sleep();
+ 	swsusp_resume_device =3D dev;
+ 	unlock_system_sleep(sleep_flags);
+--=20
+2.25.1
 
