@@ -1,94 +1,133 @@
-Received: from pokefinder.org (pokefinder.org [135.181.139.117])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C674A28;
-	Fri, 30 May 2025 11:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=135.181.139.117
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B70207DFE;
+	Fri, 30 May 2025 11:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748604702; cv=none; b=kXeX3q1Uq10+w0Ki826L/gGJ+wgq2YwMYz+N8L0a0AaAhilsJKz+YloF8f7N92exkQE0vFKrC1/j6vhfayYmAk0rMxK3NMPHRviRuKJWgemCQJAdp7GmBb/ZylknL2ageZLQ5N3eusUGBUnxKI7pQqP8w6qsrPR23CWMQjob4BQ=
+	t=1748604749; cv=none; b=VHE11aIqxHTAgcWpp5rZXdJU6JyNRBKQOJP7SF2f1cIl80mmX+Cgt86xXVy++M2f2JIz5cl1i6RhdoPZAOJWUMP64efJ/ez9FhJJYdiA8+qJskdr1NBgDTyQgcd9FK4ffPYRN6lpkzm8YXkVACNEH10QF2tPbc2JBdR6bq3/LYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748604702; c=relaxed/simple;
-	bh=qaf8f9ewxo378on/BO/Sf+C8sTWzEsWAsALnixH+k5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G2AZ1EkHpv9mZIosBXnpPD5Aoy5pgpJBE0bz2FjXCTWn6kGYDUS/Qs2vpzLaxD+o9HhTRXVy+GLiW9zvPe4yzHZbVzI8e9A2+/Y0QQ22CbCauxZHYatE6yKTwIfdcSNzichfOk6jCtTnUaEyIC2Vtlc9tb6rOlYlzY878ie22VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de; spf=pass smtp.mailfrom=the-dreams.de; arc=none smtp.client-ip=135.181.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=the-dreams.de
-Received: from localhost (p5486c22a.dip0.t-ipconnect.de [84.134.194.42])
-	by pokefinder.org (Postfix) with UTF8SMTPSA id B6485A40DCA;
-	Fri, 30 May 2025 13:24:47 +0200 (CEST)
-Date: Fri, 30 May 2025 13:24:46 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: linux-next: manual merge of the v4l-dvb tree with the i2c tree
-Message-ID: <aDmVftkqLvR0SV3p@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-References: <20250428104905.2b54643f@canb.auug.org.au>
- <20250428113052.38cf10da@canb.auug.org.au>
- <20250529124929.5217c6d9@canb.auug.org.au>
- <3352024.aeNJFYEL58@fw-rgant>
+	s=arc-20240116; t=1748604749; c=relaxed/simple;
+	bh=IZRoatKPztqnNabIL/RjXl6LMAJuzxeTdCveg1nxxjg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NDLsjCiwrHiTOrL6toemIHuH8OT2pqIQsT+oq0ATnzoT4QipdM/7iWf5sWfzLthnaixF6vEOm0kS0mc38JRVjH7N6EVyvamxyVr5aI2k8BlCsIfiuFK/tyKtyGHtdQt7xVjdhFrXYHk6hdRcv7sV0q5I7MNDzCDHBvc5OOjlFVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 342DC16F2;
+	Fri, 30 May 2025 04:32:10 -0700 (PDT)
+Received: from [10.57.48.160] (unknown [10.57.48.160])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E1363F5A1;
+	Fri, 30 May 2025 04:32:24 -0700 (PDT)
+Message-ID: <17abf8b5-8a2e-4573-a870-e2f98ad866a6@arm.com>
+Date: Fri, 30 May 2025 12:32:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7n2pe9lU8hdBlJS7"
-Content-Disposition: inline
-In-Reply-To: <3352024.aeNJFYEL58@fw-rgant>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
+ driver
+To: Yuanfang Zhang <quic_yuanfang@quicinc.com>, Leo Yan <leo.yan@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
+ <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
+ <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
+ <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
+ <20250523085655.GD2566836@e132581.arm.com>
+ <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
+ <62d1e4cb-cc13-4333-a160-66a280dca5f6@quicinc.com>
+Content-Language: en-GB
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <62d1e4cb-cc13-4333-a160-66a280dca5f6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+On 30/05/2025 11:28, Yuanfang Zhang wrote:
+> 
+> 
+> On 5/27/2025 6:19 PM, Suzuki K Poulose wrote:
+>> On 23/05/2025 09:56, Leo Yan wrote:
+>>> On Fri, May 23, 2025 at 04:08:58PM +0800, Yuanfang Zhang wrote:
+>>>
+>>> [...]
+>>>
+>>>>>> +static int trace_noc_init_default_data(struct trace_noc_drvdata *drvdata)
+>>>>>> +{
+>>>>>> +    int atid;
+>>>>>> +
+>>>>>> +    atid = coresight_trace_id_get_system_id();
+>>>>>> +    if (atid < 0)
+>>>>>> +        return atid;
+>>>>>> +
+>>>>>> +    drvdata->atid = atid;
+>>>>>
+>>>>> Do you need to expose this via sysfs ? Otherwise, how can you map
+>>>>> a trace to a TNOC at decoding ?
+>>>>
+>>>> yes, need to expose the atid via sysfs, but it better to expose it on source driver which connect with
+>>>> this TNOC. so dont expose it on this driver.
+>>
+>> But why ? How does that work ? The packets that come via TNOC (irrespective of the source(s)) will have the same ATID as that of the TNOC. So :
+>>
+>> 1) How does it help if the source exports the ID that was allocated in the TNOC driver ?
+>>
+> The sources connecting to TNOC will have the same ATID which allocate in TNOC.
+> This is convenient as users do not need to know which source is connected to this TNOC,
+> to get ID can through reading the trace_id sysfs node in the source directory.
+> 
+>> 2) How does the source driver know the TraceID for exposing via sysfs ?
+>> Does it expose its own traceid ?
+> No, sources connecting to TNOC don't have their own traceid, it expose the ATID which allocated in TNOC.
+> TNOC will maintain the ID in coresight_path:: trace_id, when enable source, the source can get it from path.
+> 
+> Here is the patch to expose id in source:
+> https://patchwork.kernel.org/project/linux-arm-kernel/patch/20250530-showtraceid-v1-1-2761352cf7b4@quicinc.com/
+
+Please don't do that. We don't have to fake a traceid for all sources.
+It is only of use to the decoder, with manual input from the user. So,
+someone using the TNOC based system must be aware of how to collect the
+traceid and as such expose it from the TNOC and not all the other
+sources connected to it.
+
+Simply expose it on the TNOC device node
 
 
---7n2pe9lU8hdBlJS7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Suzuki
 
 
-> Below is the resolution I came up with.
+>>
+>>>
+>>> If so, why the ID is not maintained in coresight_path::trace_id?
+>>>
+>>> A source device allocates ID and maintains in coresight path, then
+>>> this ID is passed (when enabling the link) to TNOC driver to consume it.
+>>
+> This is because there can be multiple sources connected to one TNOC, and these sources share one Trace ID, so the ID is allocated in TNOC.
+> 
+>> Good question, since we have the "path" maintaining the TraceID, we
+>> should use that here for the TNOC. But the other question is, can there be multiple sources connected to a single TNOC ? (I am guessing, yes!. And thus it may not work with what you are proposing.
+>>
+>   
+> yes, there can be multiple sources connected to one TNOC, and these sources share one Trace ID which allocate in TNOC.
+> To decode the scenario relay on TraceID + Inport number, TraceID identifies the TNOC, the decoder maintains a table that maps each TNOC inport to its corresponding source.
+> 
+>> Cheers
+>> Suzuki
+>>
+>>
+>>>
+>>> Thanks,
+>>> Leo
+>>
+>>
+>>
+> 
 
-Thank you for this...
-
-> -       for (reg_idx =3D 0; reg_idx < ARRAY_SIZE(rxport->aliased_clients)=
-;=20
-> reg_idx++) {
-
-=2E.. but it was mangled, sadly. Can you resend it properly, please?
-
-
---7n2pe9lU8hdBlJS7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmg5lXsACgkQFA3kzBSg
-KbZOLg/+IoAZEi1PQvcS03ku8ZPdJu27PYNGjSzHJ+hRLCUgefAnd08kWyl64Ivt
-IHUkUxlRFl1wIpaJbImz3XgSS/K8HmwTffxcm0Jr2yL7Xn07rd7o+gVmUqPIQpck
-ORqJWEy6gMYhsB0iUT9zj7nTRHkTphqfvoGhKTWJRLrFiWKuqPmxBfyq0+urXwC2
-+FmoQ/GWA3sbf3iWUEebVjmfMTWIG3rN8kkVC9ttT/cOsuplHDpTLNOnkj9Z1Bqh
-X6gO6hwF4megRAGEhPjU571i9R4Ae87HpOYDUpOdpVSaNCpZrgslOPpMp8/fp+U5
-2nwx3KyPNnFOXMAoTgXMPvXnhEUCD4WooEqd8rmAiGaVruLAC6yg85JqHdq/3nsc
-IV8kEN9qrF7R2fmA+7ykjDuxHSZe3d1NcsRhLOQ2gtoGeiRXbhOX/IKeR9xuGSr8
-O8asvqnFTMfNAHyfd5ad04YNgo9Fe/kti2jsDxTKOoQyVncGNIxM6MFbk66whkIu
-lh6L63lNwl32Tbt3Ovq7ZkfSUulh0HR9D5MVquSUkD/vjgGow3fCH2+RcqHJPJo8
-r5aIONmA3nkarXzGyE9X1rou+grj69d4WBmuTE6/NgLg/T5ZBgu8LKi7vrsE2vOT
-rmtBuAOTo2R0QxT66e0C6t1+jail2AiQWaYbJQF7LwaSaa1UZvI=
-=SjAB
------END PGP SIGNATURE-----
-
---7n2pe9lU8hdBlJS7--
