@@ -1,431 +1,221 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2051.outbound.protection.outlook.com [40.107.220.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4E0212B2F;
-	Fri, 30 May 2025 14:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748615587; cv=none; b=FsVh3NP0Wucte7Q2XcvWdPRTWui2eWktJ2JL3UctY7LlD7A6E3syquhKDCHXaaGbMbDZ0/1WbFTzqVGNbEQHubNpS2eiccCHHjpAISIGd6V5uxmDn+81VbH0i9PL7t9TinQbhlLSt6pv9KZ3Lu4Y5wQpjwPoPsVbGyq36IO8bGU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748615587; c=relaxed/simple;
-	bh=iqW9LRqp+1/L6GRJrQJPV2LTwjyPcPo8k29Wqaj/74M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hYAwUu9BqpQShh7t/QZZHyUBeEBKc0ITr2u89WAPRH6q2GQUX5LKiyIZEuDxNhtCzUWSefUdB6RdE6KXOA6pfsJbMnfjcnoYmpJ0DikX1773lbTojyCjEcQ4e7Ty8n2gtEHRePze9Hqzi0x9piStd3mCOGOpkHSEbk20TMAZwUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MSbH4SC0; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBB1212B2F;
+	Fri, 30 May 2025 14:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748615650; cv=fail; b=eQPgz+vu0VyLdZ85VCXAdjd5be+g4CEWIsR3TnyqD+HpJs8gquSSalYK2xQ9wGF7R//hg6VAScrVB+mPoV0veSxj5auEqniSjTZ3yLobuPdUehWcKz/9l+2sWH6Nfi0cWa+MzmKLSaRM/EV4naD2RHr9SVy4Y1plI1hSYpQ1wR8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748615650; c=relaxed/simple;
+	bh=sdS+cgcLPObodTAwDK5ZQBqmaxL1M0uEErnF0bOkIDc=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=euBpSO7fosQ54je96eKTWNEjI0YF/dQ0c8Rg9T3euDzO1TrzwwCtr8EHDadE41eyQRZvqFwj0hVwhxhyORr2IPdMVwBxAr2+7Rq16cag2MZJff/IMA4rVdsQvL3gEoqwO1B+AkoIZpsl+13vhB0kjWPE/p30utldn/iPr478IdI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GdqYnG2B; arc=fail smtp.client-ip=40.107.220.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MSbH4SC0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1748615582;
-	bh=iqW9LRqp+1/L6GRJrQJPV2LTwjyPcPo8k29Wqaj/74M=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MSbH4SC0KVOBLinlrvQ74YeiwUmbVL2DyMwbPuGVYv261J9qu/9eLBJ9/ubYf1PqR
-	 VoFfWqs+St6tz7AFU2m4zvzWnI3Dnyl91/Unhtw2vg1ZtntP6Uf/OkybDGvFE4lBF/
-	 TLpd180IvsfYyphyti+ZlpatNgoX90Yfl9ozQF4K5hlO2YlcId1BBDEM2VsEC7sgO2
-	 XPsepHWnhvYxYM8Ckt9SzlafDqiL2dFPAgooHBUgQlcg04Jp8XW1iTIqKIPug3m4Si
-	 fydY+Qy5VD3Y2Ng/vIMgFXmYt4TEhB64dyDIIFAi+pjJknniZ++glxzPbLIFPxfLeX
-	 Vn56ELpTKmv4w==
-Received: from [IPv6:2606:6d00:10:5285::5ac] (unknown [IPv6:2606:6d00:10:5285::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 800B017E0188;
-	Fri, 30 May 2025 16:33:01 +0200 (CEST)
-Message-ID: <fc57f5985a3215906ffcc6bfc7be8a1f4999a018.camel@collabora.com>
-Subject: Re: [PATCH v2 2/7] media: chips-media: wave5: Improve performance
- of decoder
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>, "mchehab@kernel.org"	
- <mchehab@kernel.org>, "hverkuil-cisco@xs4all.nl"
- <hverkuil-cisco@xs4all.nl>,  "bob.beckett@collabora.com"	
- <bob.beckett@collabora.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>,
- "lafley.kim" <lafley.kim@chipsnmedia.com>,  "b-brnich@ti.com"	
- <b-brnich@ti.com>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, Nas Chung	
- <nas.chung@chipsnmedia.com>
-Date: Fri, 30 May 2025 10:33:00 -0400
-In-Reply-To: <SE1P216MB1303C1D1C2A9FA165A01B71AED64A@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-References: <20250522072606.51-1-jackson.lee@chipsnmedia.com>
-		 <20250522072606.51-3-jackson.lee@chipsnmedia.com>
-	 <3afbd0253fabcf9f8795ab2231107e2e9da012cc.camel@collabora.com>
-	 <SE1P216MB1303C1D1C2A9FA165A01B71AED64A@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GdqYnG2B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VtVNBsmSbqmokmtlYDHSYqv2vHqyrRjWEtpZiQ0iHcfLVSe/9y2tTb+eMpyePFG3ODWCcHVRLSj/rOi8xGE9EG/l3a31ZbdBu9I6FaMv8bMR93r4bSYUmtHEyObj48d9nxtmk+z7dgy+wwXKeu3u+/cscs2rsMjCNmhJu4zYf6ZhEywyzzgYo53C2V2P1YyhSn0znkfLEpC4GYWZ7mNSPyXh33wWIxqwTcVaHj55CTCtlJxMbWgwASvZEcfQ7f5X62TTKVAq/Z/PiDqjgYjX26363cuewbXGDoL1uYoxa7brVZdfMSxo3ysWHE8dC4PlH3nhxYMFrq8tElZOrQlT6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kODLLcToKCOvnGzp7tlVwnJ+dLd7x30BtxVjBzlwnEA=;
+ b=qwDfHCp1Gu/qsR7C49pUcIij0CA+XFksfB3PfV00KLYcdgj6FwE1IDaNtUkg5sa93TYUhQDcjvShgl+KRhEeLJFgYH9ypIgbHf6NOU9ltZgnqrVQTeY+VfYJwgfDUKZJWEXd0IkjPr2YYC8LoDyejA6N6EQvfpVedPF+xLv0dI7Zl5E+CzASRMDWVfakT8uA3SsiCxzIOFr0+pM/q+Lsrg90YI2tSGVkOy1RHZs+aDIHx6LlqMlV7PI1/vacrB/3YLHWYDA5E0elO2vFN9sTbTW7NUoXpJYj+SMH9IaX9+Cy4U9OqYR4mONX5iiOLF3epaUCBnQ8OsJ6gB73iQPVxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kODLLcToKCOvnGzp7tlVwnJ+dLd7x30BtxVjBzlwnEA=;
+ b=GdqYnG2Bvn+4+FHw1/IHKdpd1/bwF5HT1KkHNnMlknxKU5ivA6fZAi6Kn3nbCksEWJukV+nWaqKuDd0PTclJq81/0enuxoSN0S0e9dJy0kohMs2E4snqsDnGCb+GSrOD1kctOGMWsnnCmJNSDQGJRa35hFtuGfIPxbtcYP0DzkL+GOG/hzAD7ZckWq7sUNueLz1Tsi2HMThh/FtpLCuqel8hlDfpyLxGkLOw9kGoGfpfJNfqkxN4Qw4Ghmk0aiY0ZuMy1SYCCG9pFrbfWJ4IFShReTqyjfuBCoZDMJ2ROwaeBBp3yX9qJlds87udr97WRYFbngx1kXs9EC5ZnOpt+Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by CH3PR12MB8548.namprd12.prod.outlook.com (2603:10b6:610:165::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Fri, 30 May
+ 2025 14:34:05 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8769.029; Fri, 30 May 2025
+ 14:34:05 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 30 May 2025 23:34:02 +0900
+Message-Id: <DA9KIGDH4IF6.2T383ZVLTJN0G@nvidia.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Timur Tabi" <timur@kernel.org>,
+ "John Hubbard" <jhubbard@nvidia.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
+ <aCc_PSOPkLWTcTru@pollux> <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
+ <CAOZdJXW+PoFgxH+wPEum-kYvRmSRd8c4kaxvbNAq5dfZJiXapA@mail.gmail.com>
+ <D9Y0VJKOAQAY.2GJSAZ5II54VV@nvidia.com>
+ <DA8G3G918FS4.X8D7PQMT4TGB@nvidia.com>
+ <2025052932-pyramid-unvisited-68f7@gregkh>
+ <DA935OIFBM1H.3CMSHQ46LLG4P@nvidia.com>
+ <2025053047-theology-unsaid-d6ac@gregkh>
+ <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
+ <2025053050-maggot-landfall-d5eb@gregkh>
+In-Reply-To: <2025053050-maggot-landfall-d5eb@gregkh>
+X-ClientProxiedBy: TYAPR01CA0238.jpnprd01.prod.outlook.com
+ (2603:1096:404:11e::34) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CH3PR12MB8548:EE_
+X-MS-Office365-Filtering-Correlation-Id: d730726f-424d-424f-2553-08dd9f8707b4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MGRhVFd4dWczVS9CdlJqN09kTGtOc0s5N3NZdTRBWmt2by9XSGJtWG14bHd4?=
+ =?utf-8?B?SWM2TVMrZFFPaWhFUC8xcHZmOGcxWHFwL0ZTU1lsK0VmeUFTL2R5ZVdxcjlk?=
+ =?utf-8?B?M1cyQ21wTFRNNzdJREtEWEgrZWJHWEh2OTYxV29STXBRdXF4bUhFOTVvbjA1?=
+ =?utf-8?B?eUVrNTlrL3h6NklMZjRpdWFHQ0k3aEZsRFNXQXRBaGtIZzNEbzVVcE1tVUxR?=
+ =?utf-8?B?bUNVbmxsYmVNcXFNTzFnYld0MitqN2FzMG9kdkw1S0tYdnJtK0lPWjVvT0Q4?=
+ =?utf-8?B?M0thQ3d1bndlUXFpTVNSVkJ3Z0hYNWhTZGgzMnFLTVJGbldyNis0akR4QzdH?=
+ =?utf-8?B?UEN5VnJVeUpWNjVNN2hBNHZQcXBjODhmS2RQK3A4UkRnMXp6cEZQcFdxdjZu?=
+ =?utf-8?B?M2lMOVlXYmZabSsyNXQ3YktmQmEvZkNkQkwvWUZFOGRLaUpHaHZpYXZuUWZL?=
+ =?utf-8?B?N0VnRHdycUJONEc2djJHZy9IWnNOVGFQa3l6USthZjJqaVpoak9FYXdmbVlO?=
+ =?utf-8?B?R0JCamcxNTlVdlpzdHJ4TjF1citvZm5Hdk0wUUVIS0NiOUU4SUZKeTRCVlcw?=
+ =?utf-8?B?KzRXS242bXVVUjBoOXZ0elBjYkVQZmlNZTlzNHVISSt0NVlTa1ljcG9aRk9N?=
+ =?utf-8?B?bUpPd1pqaFkwVHVzN1FvRjBvaEluemZMRDdEem9PdWpQNDlHVUtKWjJuU1FR?=
+ =?utf-8?B?RWFpaFUxY2dXZUtBMjlyTVFEZlhsQmV0dzdRdGxkaU9JTzdiYXNDNFJzczZT?=
+ =?utf-8?B?cnZIZm9iNmxFVVN0VGVINTNZMVptMU9HM1Q1d2tZNGQ3c2RERXVsMHZ3ZC81?=
+ =?utf-8?B?NjBkVk5kMTBpalRWRnFrNHUvM2dlQ0RHc256Sy9UM0NCeHQvaFhLNUhaTGhB?=
+ =?utf-8?B?Wnh5Vi9PNmRWMUE2bzVRRlhOcmdxeVVoZmJ0ZkxOcUNPUTI2NCtMV2s2Mk82?=
+ =?utf-8?B?V2o3MmUyQ2xkdHdvMWFKMHFXeStxM1g2cUlBcDZHcGc2VGhkVm1LQ1J0YmdO?=
+ =?utf-8?B?V0ZtMldYOVdsVXYzdEJGVWthS3drYjNTOTF2N2hSRXVySXVkdE4wNTBHcFYr?=
+ =?utf-8?B?VlJVNHdQNnphdVpyckRVdlhOZ1pJNkxnbU5OWkdpUkFneGpiNFU1YWRoM3o0?=
+ =?utf-8?B?TWE0Qy8vMkNHbVhmMFJOMDhydHhDTkQ0cEM4cEFBcmQrcmlxOHBJaUxQQ2pN?=
+ =?utf-8?B?aFVYMVdIWlJJUTc4OEJOZmptc2MxN3o2cHdHR1VSTEZjaU0xdml1WnpmSTEv?=
+ =?utf-8?B?OUY2ejdBMkE5NG5oandxMytWZGwzMWlhMFVsUitwSFpYcU80OGQ4eEREL1h5?=
+ =?utf-8?B?SWRqT0Q0YWR4OE13ZVI2QTZmWm9QOHV6Uk1IV1JuQitUdW9pYUpPcTJhK1A2?=
+ =?utf-8?B?WTVsVUVTa3JqZE52MDRyallMUXozcUdRaDBpVFNwdnVDcytGTnVEUFU2YndD?=
+ =?utf-8?B?QTg3a3kyU1kwdmJYS1RGQXR0bFU1SlRTNmpUc1Nndjk5Y0lBYy9RdmNGUmd5?=
+ =?utf-8?B?b3dxZlVGbDgvSnprdEpvUzhlSzFuVlFEWDhZQXRBMnpGVjBkV05GTzRUZ2J2?=
+ =?utf-8?B?TTkvMFJ3M3NBV3V1Vmh1ME14d0VPM1FocjBRSHpkbU5LWUJwbzRZNnlSTS9u?=
+ =?utf-8?B?K01FdnBJZW5mNExlSkZ0NTZqY25GV0h2T3BCTTZzMnVjK0FVeWxHUHBFcXJC?=
+ =?utf-8?B?L3JINjcvYlBpMU45WUh0OFdDY2FnZFREeHVtc0xhTVlnQnlOVHBWd0xTWmZy?=
+ =?utf-8?B?ajNrVDNSR2JRWEtOdkwrMk5iaUZCejQybXlRS0NUR2twSHZvYkkxT1gvUWI0?=
+ =?utf-8?B?RUI4TzdYQXlMRk5aR3dkVnE3NVY3NG4yMEJmUFkwZjVQd1R6T1RtWWhIc1FU?=
+ =?utf-8?B?cUh5YVEydFdqTmd6UklJMnJ3VUMrQ3RzODBidXlIemlqSG5tclZzSE55dnFN?=
+ =?utf-8?Q?c8E3hQvyRxg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eExhNzFGQVhBVFI5elRsV3FqK3hqZGtlb3ZzdWpqa1gzZ1VEN3E5alRFSWN3?=
+ =?utf-8?B?alpGS2VwNEp0ZUVaZnNEdklKTDJiS2ZLY3Qwd1F1UzliY1FUQUZxMGd3MzZF?=
+ =?utf-8?B?WTlrRktUMXBwb295aER3WnBtSno1WmpzNTZYN1JlWmJYemdsc04rQkd0bktF?=
+ =?utf-8?B?OVFIWE9BQ3JxeVpNVEwreVVVZzIrcEFzQ0dDUHRaNkpWZ2QvcXhrOERqSzBD?=
+ =?utf-8?B?TE5qRzBXMkFHcDZKSGhlcjduSW1BVHdjK2V6b1pIZDdkbVRHM0hWZ1JHakVR?=
+ =?utf-8?B?cVd4bElBZTlGMDk5bHlxTzgrQVo5Qm5POWxhWDIwNDdhTUVOakxxRitSQTNE?=
+ =?utf-8?B?TkMyOC9YMWRWOEFtY3UzOTFVWi92eVBhd28rRlVUbE0xZDAyVHpyYUErOUtU?=
+ =?utf-8?B?MmlXYU5rcE0xQk85R1NvRURPWERyNjQrd3FnbWV2cVFjQlJKMzhNOUI2RVZv?=
+ =?utf-8?B?MzljT2JTaGVndUpXdWdTV1I2VFdkTWszZml5V1luVSsyWXFSc3JoWEYyMVRk?=
+ =?utf-8?B?SEl6Y0psS3dnNS9aamloa2FLOVNFQ2J5c1BjVGEyWStsc09XbXlBakh0Yk9j?=
+ =?utf-8?B?aVlwTWg2eWhwRnBPYVRNQWtNbGhrM2N6RmRMSVNLQ0RhOVZRVU9lQ1dQTE5t?=
+ =?utf-8?B?N2xZQ3pHT0JDMGEzcmJ1QTNIZ0F1UTByaXJoTEpxbjJleG1mVFpBcEtXN2FR?=
+ =?utf-8?B?bU5OdWdkMm5GNWo5dkhZREtqbm9jbkQzYVFCS3NqejhmaUpld0lhVXdnOFdh?=
+ =?utf-8?B?NlM4S0tMSHk4TFM4blNrWHRubXV1ZWl4a3l4RXhsTjhUdFI2ZnNRalVYQy9D?=
+ =?utf-8?B?bng1ZW1xRnZoNzhxdUczbmZGWVlzMDZUc0ZROGNadXVLZWlOdytiNGE1NW52?=
+ =?utf-8?B?WU1haVZlUVhremtiZXFMMm9qSHZ4WU1mTkVBSnp4Y3NwcWpBenF0Y0lEWTly?=
+ =?utf-8?B?LzlnaDJXczR3dHV6QjdzWTUwVUViVCtzL29oUzZMUGliRjFhbVZHZTVpUTls?=
+ =?utf-8?B?NkYxVm1IRnRheUxCTldNei9NM2dmU0lEbHZEaHNKK0VOdUJPdHp5R0Jibkd5?=
+ =?utf-8?B?R2hrUkxSWklrbVNCNGNrNkRScGdmS2hXTEZJUmV0SWFRWWFXQkVmeWFUTG9s?=
+ =?utf-8?B?M0pud0NXcTBJejJvRTdCTUVhNnlSbmNEeVZsQisxMmZKRWhnMzNabVZ1enZZ?=
+ =?utf-8?B?WlRtNXI2aUhUMDd6bjNKRUt5eTB0RDFXNGcxWU84K2UrVk41aCt3L3hqV1VS?=
+ =?utf-8?B?QU12aDJTcFpUSG92ajBieXNtcUVWMk9qc29RaURHbE1GdzdmZjFrR0MxRXNx?=
+ =?utf-8?B?UEZyZ1Biak1lUlZTbGpXTmllbys4NjA5bW0vTzRpZFFLMTVBZkpnRExZcHhE?=
+ =?utf-8?B?aVRmZ2NNaEk5L2pjbjMyKzJaZHJ3UkZBRm0wY0dvcWp0VkpLa3BjZTd6Ni9v?=
+ =?utf-8?B?cGZuWkUwTVZWVk1LZE16MjFLYVV0UzlUNThqYkZEOUJQWnBXdjY2SytKOVRQ?=
+ =?utf-8?B?WnBQZGZnZzdKZ1FyRkJwNk11K2pEK2JuK0VYTEd0V2IySm1pbDgxVU9RK3hu?=
+ =?utf-8?B?emhCUmcyTVNWZmhjN0c2amxNQnZMOTJYYTlCQkU2V21rZlFSUXVGamlzVVIv?=
+ =?utf-8?B?M1FjWGN4aDRZY3hKUDdyUUtEUXJDYWRWYkpqY3g5WDNUaE9IajhhU1R5YUdq?=
+ =?utf-8?B?eVJZeTBqVFZ0elMzK09hd3R0d2lOT0VkenBSd3FsVFNRWlVyeGc2TXhWNFZ4?=
+ =?utf-8?B?cEhtRFAzMS9jcG9LclRpM1VCMXp4aStUdmpldDhWTkJ5WTdiZmdxOGVOOC90?=
+ =?utf-8?B?ejF0Z3FETVhxY1NUaEZmMTk1aW42eHcxMUFHUm50aFRxZmdRSzNlNkM1RWNZ?=
+ =?utf-8?B?N2M2MWtiQW5BalNQN0I3elFjSDM4RFF2N3VPRXFjTVJXcXJXdXVPRGh0aFlP?=
+ =?utf-8?B?dkdmUmVHdVlnMUxMN2l1aFp0aTlYdlBhbXRWS0lvV3RJWmZabDcwT2ZDMStl?=
+ =?utf-8?B?cm0ySFN6eW1paTdCazlkZ21nSXpaUTVoejNoeG9pQ0hXd1orZzdBcFArUmxs?=
+ =?utf-8?B?SjkrTFlqd1lYK0dMVTMvT2cyRmFXYTUwTFVGR3gxYnEzc3BzellWV1c1TDd5?=
+ =?utf-8?B?cVBwc3lCY1Fjb0tuRUoxbVd5cmRPakxhdU14OFdsTjVhNTliNkg5VWhZNUwx?=
+ =?utf-8?Q?7JmwnXja59c2wQOay1HiAepisXu1mNmi6iopg8C4ZFkD?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d730726f-424d-424f-2553-08dd9f8707b4
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 14:34:05.6725
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E1T5J3ALMB6xUMDWkRFDwck8MWaDDqbXyytjfOs32OcST6Y8iAvGdExyB5ehH7DiQGKpRCIa+gQ8XSD+bT/P+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8548
 
-Hi,
+On Fri May 30, 2025 at 6:01 PM JST, Greg KH wrote:
+> On Fri, May 30, 2025 at 03:59:03PM +0900, Alexandre Courbot wrote:
+>> On Fri May 30, 2025 at 3:22 PM JST, Greg KH wrote:
+>> > On Fri, May 30, 2025 at 09:58:02AM +0900, Alexandre Courbot wrote:
+>> >> However, Nova also supports a couple of older chip generations that u=
+se
+>> >> the same GSP firmware -  it is for these that the ELF unpacking must
+>> >> occur in the kernel. IIUC this has to do with the capabilities of the
+>> >> microcontroller that ultimately does the loading (more capable RISC-V=
+ on
+>> >> Hopper+ vs. older and more limited Falcon).
+>> >
+>> > Why specifically does the kernel have to get involved here?  What
+>> > requires it to do it that userspace can not?
+>>=20
+>> I don't know of a user-space tool that is readily available and could
+>> perform such extraction of the ELF content upon kernel request. Is there
+>> anything like this?
+>
+> libelf provides you with the needed tools for this.
+>
+> And you didn't answer my question.
 
-Le mardi 27 mai 2025 à 04:58 +0000, jackson.lee a écrit :
-> 
-> 
-> > -----Original Message-----
-> > From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > Sent: Saturday, May 24, 2025 2:39 AM
-> > To: jackson.lee <jackson.lee@chipsnmedia.com>; mchehab@kernel.org;
-> > hverkuil-cisco@xs4all.nl; sebastian.fricke@collabora.com;
-> > bob.beckett@collabora.com; dafna.hirschfeld@collabora.com
-> > Cc: linux-media@vger.kernel.org; linux-kernel@vger.kernel.org; lafley.kim
-> > <lafley.kim@chipsnmedia.com>; b-brnich@ti.com; hverkuil@xs4all.nl; Nas
-> > Chung <nas.chung@chipsnmedia.com>
-> > Subject: Re: [PATCH v2 2/7] media: chips-media: wave5: Improve performance
-> > of decoder
-> > 
-> > Hi,
-> > 
-> > Le jeudi 22 mai 2025 à 16:26 +0900, Jackson.lee a écrit :
-> > > From: Jackson Lee <jackson.lee@chipsnmedia.com>
-> > > 
-> > > The current decoding method  was to wait until each frame was decoded
-> > > after feeding a bitstream. As a result, performance was low and Wave5
-> > > could not achieve max pixel processing rate.
-> > > 
-> > > Update driver to use an asynchronous approach for decoding and feeding
-> > > a bitstream in order to achieve full capabilities of the device.
-> > > 
-> > > WAVE5 supports command-queueing to maximize performance by pipelining
-> > > internal commands and by hiding wait cycle taken to receive a command
-> > > from Host processor.
-> > > 
-> > > Instead of waiting for each command to be executed before sending the
-> > > next command, Host processor just places all the commands in the
-> > > command-queue and goes on doing other things while the commands in the
-> > > queue are processed by VPU.
-> > > 
-> > > While Host processor handles its own tasks, it can receive VPU
-> > > interrupt request (IRQ).
-> > > In this case, host processor can simply exit interrupt service routine
-> > > (ISR) without accessing to host interface to read the result of the
-> > > command reported by VPU.
-> > > After host processor completed its tasks, host processor can read the
-> > > command result when host processor needs the reports and does response
-> > > processing.
-> > > 
-> > > To archive this goal, the device_run() calls v4l2_m2m_job_finish so
-> > > that next command can be sent to VPU continuously, if there is any
-> > > result, then irq is triggered and gets decoded frames and returns them
-> > > to upper layer.
-> > > Theses processes work independently each other without waiting a
-> > > decoded frame.
-> > > 
-> > > Signed-off-by: Jackson Lee <jackson.lee@chipsnmedia.com>
-> > > Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
-> > > ---
-> > >  .../platform/chips-media/wave5/wave5-hw.c     |  2 +-
-> > >  .../chips-media/wave5/wave5-vpu-dec.c         | 84
-> > > +++++++++++--------
-> > >  .../platform/chips-media/wave5/wave5-vpuapi.c |  2 +
-> > >  .../platform/chips-media/wave5/wave5-vpuapi.h |  3 +
-> > >  4 files changed, 57 insertions(+), 34 deletions(-)
-> > > 
-> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-hw.c
-> > > b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-> > > index d94cf84c3ee5..687ce6ccf3ae 100644
-> > > --- a/drivers/media/platform/chips-media/wave5/wave5-hw.c
-> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-hw.c
-> > > @@ -102,7 +102,7 @@ static void _wave5_print_reg_err(struct vpu_device
-> > *vpu_dev, u32 reg_fail_reason
-> > >  		dev_dbg(dev, "%s: queueing failure: 0x%x\n", func, reg_val);
-> > >  		break;
-> > >  	case WAVE5_SYSERR_RESULT_NOT_READY:
-> > > -		dev_err(dev, "%s: result not ready: 0x%x\n", func,
-> > reg_fail_reason);
-> > > +		dev_dbg(dev, "%s: result not ready: 0x%x\n", func,
-> > > +reg_fail_reason);
-> > >  		break;
-> > >  	case WAVE5_SYSERR_ACCESS_VIOLATION_HW:
-> > >  		dev_err(dev, "%s: access violation: 0x%x\n", func,
-> > > reg_fail_reason); diff --git
-> > > a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-> > > b/drivers/media/platform/chips- media/wave5/wave5-vpu-dec.c index
-> > > 32de43de1870..995234a3a6d6 100644
-> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpu-dec.c
-> > > @@ -347,13 +347,12 @@ static void wave5_vpu_dec_finish_decode(struct
-> > vpu_instance *inst)
-> > >  	struct vb2_v4l2_buffer *dec_buf = NULL;
-> > >  	struct vb2_v4l2_buffer *disp_buf = NULL;
-> > >  	struct vb2_queue *dst_vq = v4l2_m2m_get_dst_vq(m2m_ctx);
-> > > -	struct queue_status_info q_status;
-> > > 
-> > >  	dev_dbg(inst->dev->dev, "%s: Fetch output info from firmware.",
-> > > __func__);
-> > > 
-> > >  	ret = wave5_vpu_dec_get_output_info(inst, &dec_info);
-> > >  	if (ret) {
-> > > -		dev_warn(inst->dev->dev, "%s: could not get output info.",
-> > __func__);
-> > > +		dev_dbg(inst->dev->dev, "%s: could not get output info.",
-> > > +__func__);
-> > 
-> > Wouldn't it be better to check the return value to possibly differentiate
-> > some errors from something similar to EGAIN?
-> > 
-> 
-> In case of this, when get_result command is requested to VPU, there could be no output.
-> So it is not error case and EAGIAN is not proper because the wave5_vpu_dec_finish_decode is triggered by PIC_Done
-> interrupt.
-> So I think it is proper code.
+Yes, extracting a section of an ELF file is as trivial as calling
+objcopy, no issue with that.
 
-Ack. You should consider working on v3 from there.
+What I don't understand is, who calls objcopy to do that in the first
+place, when, and how is the extracted section passed to the kernel?
+After digging a bit I found out about CONFIG_FW_LOADER_USER_HELPER which
+looks like it could help, but that option is disabled even on my Arch
+stock kernel.
 
-regards,
-Nicolas
+But even assuming it was readily available, how to use it is not clear
+to me and I could not find a single actual example. I assumed a udev
+rule could catch the uevent and call a script that extracts the section
+and load it through the sysfs loading interface, but
+fallback-mechanisms.rst mentions that "...however firmware loading
+support was removed from udev as of systemd commit be2ea723b1d0". Which
+makes this idea look like a dead-end.
 
-> 
-> 
-> > >  		v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
-> > >  		return;
-> > >  	}
-> > > @@ -441,20 +440,6 @@ static void wave5_vpu_dec_finish_decode(struct
-> > vpu_instance *inst)
-> > >  		}
-> > >  		spin_unlock_irqrestore(&inst->state_spinlock, flags);
-> > >  	}
-> > > -
-> > > -	/*
-> > > -	 * During a resolution change and while draining, the firmware may
-> > flush
-> > > -	 * the reorder queue regardless of having a matching decoding
-> > operation
-> > > -	 * pending. Only terminate the job if there are no more IRQ coming.
-> > > -	 */
-> > > -	wave5_vpu_dec_give_command(inst, DEC_GET_QUEUE_STATUS, &q_status);
-> > > -	if (q_status.report_queue_count == 0 &&
-> > > -	    (q_status.instance_queue_count == 0 ||
-> > dec_info.sequence_changed)) {
-> > > -		dev_dbg(inst->dev->dev, "%s: finishing job.\n", __func__);
-> > > -		pm_runtime_mark_last_busy(inst->dev->dev);
-> > > -		pm_runtime_put_autosuspend(inst->dev->dev);
-> > > -		v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
-> > > -	}
-> > >  }
-> > > 
-> > >  static int wave5_vpu_dec_querycap(struct file *file, void *fh, struct
-> > > v4l2_capability *cap) @@ -1146,8 +1131,8 @@ static int
-> > > write_to_ringbuffer(struct vpu_instance *inst, void *buffer, size_t b
-> > >  static int fill_ringbuffer(struct vpu_instance *inst)
-> > >  {
-> > >  	struct v4l2_m2m_ctx *m2m_ctx = inst->v4l2_fh.m2m_ctx;
-> > > -	struct v4l2_m2m_buffer *buf, *n;
-> > > -	int ret;
-> > > +	struct vpu_src_buffer *vpu_buf;
-> > > +	int ret = 0;
-> > > 
-> > >  	if (m2m_ctx->last_src_buf)  {
-> > >  		struct vpu_src_buffer *vpu_buf =
-> > > wave5_to_vpu_src_buf(m2m_ctx->last_src_buf);
-> > > @@ -1158,9 +1143,8 @@ static int fill_ringbuffer(struct vpu_instance
-> > *inst)
-> > >  		}
-> > >  	}
-> > > 
-> > > -	v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buf, n) {
-> > > -		struct vb2_v4l2_buffer *vbuf = &buf->vb;
-> > > -		struct vpu_src_buffer *vpu_buf = wave5_to_vpu_src_buf(vbuf);
-> > > +	list_for_each_entry(vpu_buf, &inst->avail_src_bufs, list) {
-> > > +		struct vb2_v4l2_buffer *vbuf = &vpu_buf->v4l2_m2m_buf.vb;
-> > >  		struct vpu_buf *ring_buffer = &inst->bitstream_vbuf;
-> > >  		size_t src_size = vb2_get_plane_payload(&vbuf->vb2_buf, 0);
-> > >  		void *src_buf = vb2_plane_vaddr(&vbuf->vb2_buf, 0); @@ -
-> > 1220,9
-> > > +1204,13 @@ static int fill_ringbuffer(struct vpu_instance *inst)
-> > >  			dev_dbg(inst->dev->dev, "last src buffer written to
-> > the ring buffer\n");
-> > >  			break;
-> > >  		}
-> > > +
-> > > +		inst->queuing_num++;
-> > > +		list_del_init(&vpu_buf->list);
-> > > +		break;
-> > >  	}
-> > > 
-> > > -	return 0;
-> > > +	return ret;
-> > >  }
-> > > 
-> > >  static void wave5_vpu_dec_buf_queue_src(struct vb2_buffer *vb) @@
-> > > -1236,6 +1224,11 @@ static void wave5_vpu_dec_buf_queue_src(struct
-> > vb2_buffer *vb)
-> > >  	vbuf->sequence = inst->queued_src_buf_num++;
-> > > 
-> > >  	v4l2_m2m_buf_queue(m2m_ctx, vbuf);
-> > > +
-> > > +	INIT_LIST_HEAD(&vpu_buf->list);
-> > > +	mutex_lock(&inst->feed_lock);
-> > > +	list_add_tail(&vpu_buf->list, &inst->avail_src_bufs);
-> > > +	mutex_unlock(&inst->feed_lock);
-> > >  }
-> > > 
-> > >  static void wave5_vpu_dec_buf_queue_dst(struct vb2_buffer *vb) @@
-> > > -1385,6 +1378,13 @@ static int streamoff_output(struct vb2_queue *q)
-> > >  	dma_addr_t new_rd_ptr;
-> > >  	struct dec_output_info dec_info;
-> > >  	unsigned int i;
-> > > +	struct vpu_src_buffer *vpu_buf, *tmp;
-> > > +
-> > > +	inst->retry = false;
-> > > +	inst->queuing_num = 0;
-> > > +
-> > > +	list_for_each_entry_safe(vpu_buf, tmp, &inst->avail_src_bufs, list)
-> > > +		list_del_init(&vpu_buf->list);
-> > > 
-> > >  	for (i = 0; i < v4l2_m2m_num_dst_bufs_ready(m2m_ctx); i++) {
-> > >  		ret = wave5_vpu_dec_set_disp_flag(inst, i); @@ -1580,10
-> > +1580,19 @@
-> > > static void wave5_vpu_dec_device_run(void *priv)
-> > > 
-> > >  	dev_dbg(inst->dev->dev, "%s: Fill the ring buffer with new
-> > bitstream data", __func__);
-> > >  	pm_runtime_resume_and_get(inst->dev->dev);
-> > > -	ret = fill_ringbuffer(inst);
-> > > -	if (ret) {
-> > > -		dev_warn(inst->dev->dev, "Filling ring buffer failed\n");
-> > > -		goto finish_job_and_return;
-> > > +	if (!inst->retry) {
-> > > +		mutex_lock(&inst->feed_lock);
-> > > +		ret = fill_ringbuffer(inst);
-> > > +		mutex_unlock(&inst->feed_lock);
-> > > +		if (ret < 0) {
-> > > +			dev_warn(inst->dev->dev, "Filling ring buffer
-> > failed\n");
-> > > +			goto finish_job_and_return;
-> > > +		} else if (!inst->eos &&
-> > > +				inst->queuing_num == 0 &&
-> > > +				inst->state == VPU_INST_STATE_PIC_RUN) {
-> > > +			dev_dbg(inst->dev->dev, "%s: no bitstream for feeding,
-> > so skip ", __func__);
-> > > +			goto finish_job_and_return;
-> > > +		}
-> > >  	}
-> > > 
-> > >  	switch (inst->state) {
-> > > @@ -1639,7 +1648,7 @@ static void wave5_vpu_dec_device_run(void *priv)
-> > >  		}
-> > > 
-> > >  		if (q_status.instance_queue_count) {
-> > > -			dev_dbg(inst->dev->dev, "%s: leave with active job",
-> > __func__);
-> > > +			v4l2_m2m_job_finish(inst->v4l2_m2m_dev, m2m_ctx);
-> > >  			return;
-> > >  		}
-> > > 
-> > > @@ -1650,14 +1659,21 @@ static void wave5_vpu_dec_device_run(void *priv)
-> > >  			dev_err(inst->dev->dev,
-> > >  				"Frame decoding on m2m context (%p), fail: %d
-> > (result: %d)\n",
-> > >  				m2m_ctx, ret, fail_res);
-> > > -			break;
-> > > +			goto finish_job_and_return;
-> > > +		}
-> > > +
-> > > +		if (fail_res == WAVE5_SYSERR_QUEUEING_FAIL) {
-> > > +			inst->retry = true;
-> > > +		} else {
-> > > +			inst->retry = false;
-> > > +			if (!inst->eos)
-> > > +				inst->queuing_num--;
-> > 
-> > I looked into the original state machine violation you had in previous
-> > version, and I got the impression that the reason you did hit that was
-> > that you actually call device_run passed inst->eos. Its probably not that
-> > simple in practice, but I think you forgot to adapt the job_ready() ops to
-> > prevent more device_run() called passed CMD_STOP and having all pending
-> > buffer written in the ring buffer.
-> > 
-> > As a side effect, you endup calling device_run() in a race with the
-> > finish() setting the state to STOP. I really think there is a way to use
-> > inst->eos boolean to prevent that race in the first place. Might need to
-> > be combined with checking if you have buffers prior to command stop that
-> > did not yet fit into the ring buffer.
-> > 
-> 
-> 
-> The queuing_num is used to check if there is input data or not, so it was declared in the int type.
-> If there is no input data, then the device_run will be not called until queuing input data.
-> In case of eos sent, device_run should be ran continuously until getting eos from VPU, the code was needed.
-> If my answer is not correct, please let me know.
-> 
-> 
-> > >  		}
-> > > -		/* Return so that we leave this job active */
-> > > -		dev_dbg(inst->dev->dev, "%s: leave with active job",
-> > __func__);
-> > > -		return;
-> > > -	default:
-> > > -		WARN(1, "Execution of a job in state %s illegal.\n",
-> > state_to_str(inst->state));
-> > >  		break;
-> > > +	default:
-> > > +		dev_dbg(inst->dev->dev, "Execution of a job in state %s
-> > illegal.\n",
-> > > +			state_to_str(inst->state));
-> > > +
-> > >  	}
-> > > 
-> > >  finish_job_and_return:
-> > > @@ -1755,6 +1771,8 @@ static int wave5_vpu_open_dec(struct file *filp)
-> > >  	inst->ops = &wave5_vpu_dec_inst_ops;
-> > > 
-> > >  	spin_lock_init(&inst->state_spinlock);
-> > > +	mutex_init(&inst->feed_lock);
-> > > +	INIT_LIST_HEAD(&inst->avail_src_bufs);
-> > > 
-> > >  	inst->codec_info = kzalloc(sizeof(*inst->codec_info), GFP_KERNEL);
-> > >  	if (!inst->codec_info)
-> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
-> > > b/drivers/media/platform/chips-media/wave5/wave5-
-> > > vpuapi.c
-> > > index e5e879a13e8b..68d86625538f 100644
-> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
-> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.c
-> > > @@ -255,6 +255,8 @@ int wave5_vpu_dec_close(struct vpu_instance *inst,
-> > u32 *fail_res)
-> > >  	if (inst_count == 1)
-> > >  		pm_runtime_dont_use_autosuspend(vpu_dev->dev);
-> > > 
-> > > +	mutex_destroy(&inst->feed_lock);
-> > > +
-> > >  unlock_and_return:
-> > >  	mutex_unlock(&vpu_dev->hw_lock);
-> > >  	pm_runtime_put_sync(inst->dev->dev);
-> > > diff --git a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> > > b/drivers/media/platform/chips-media/wave5/wave5-
-> > > vpuapi.h
-> > > index f3c1ad6fb3be..fd0aef0bac4e 100644
-> > > --- a/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> > > +++ b/drivers/media/platform/chips-media/wave5/wave5-vpuapi.h
-> > > @@ -818,6 +818,9 @@ struct vpu_instance {
-> > >  	bool cbcr_interleave;
-> > >  	bool nv21;
-> > >  	bool eos;
-> > > +	bool retry; /* retry to feed bitstream if failure reason is
-> > WAVE5_SYSERR_QUEUEING_FAIL*/
-> > > +	int queuing_num; /* check if there is input buffer or not */
-> > 
-> > This is described as a boolean, but is implemented as a counter. What does
-> > it count exactly ?
-> > I think it needs a better name too.
-> > 
-> 
-> Please refer to the above comment.
-> 
-> Thanks
-> Jackson
-> 
-> 
-> > Nicolas
-> > 
-> > > +	struct mutex feed_lock; /* lock for feeding bitstream buffers */
-> > >  	struct vpu_buf bitstream_vbuf;
-> > >  	dma_addr_t last_rd_ptr;
-> > >  	size_t remaining_consumed_bytes;
+So to try to answer your question, I am not disagreeing that userspace
+is capable of doing what we currently do in the kernel. My follow-up
+questions to that are: how do we command userspace to do that work for
+us when we request the firmware, how do we provide the result to the
+kernel, and is this something that distros can adopt easily? I'm happy
+to consider doing things this way, but would need a few pointers to look
+into.
