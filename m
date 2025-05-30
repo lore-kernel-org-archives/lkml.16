@@ -1,431 +1,859 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ABF148857
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A249227450;
+	Fri, 30 May 2025 05:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748581279; cv=none; b=oQPT6e7a2D7DyIG28Br7UbM+nF5hyaiR6D8UZ/DKIy4AZxQgukZnavglZXqQfmENthXVs5QHn836eOZ+jlgro2dCKOfYiTvoZiLoPIrqRYi+QMPLJrhKOY+AW0haIKFvdBXeCu9nmE5JCXMqFibBpHXI58YYEZKcocAZCjJtBSI=
+	t=1748581732; cv=none; b=VhodNYsbRbi1wycqx7pT3HzNFbu1RPqtcunsnRVSCEw2GLPQntC1BPAprFPjhNjUPgZVS9PliiJSM494Yx8AnkNk005i7wDBygZuC9k18nDKruR5voA/p1+Eu6xFscG3BI0Ifr90wM3p943CoRvCBek1iMKPtA6U60CSGK5OinM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748581279; c=relaxed/simple;
-	bh=ajONNee7DSFh9hzWW1WkECibcgt3MTxMZ7o6cVRbDfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ChmWNIGfmnRBoNKpiEGy/bstngQx8Meg50XWFiUdvl6DlEMKScYXZCXfFJ9vMWG+SpxjhFqNTpQwiSwA+tDwFgydZXVR/f5BuRkk9uIZnkE075O+qPeXMRB1LX2J2fAKCtcUg5Kykh+NMWVJm4ZAS3oSk7dnsUfTktTk0UgF+1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=cbGwXyQx; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1748581732; c=relaxed/simple;
+	bh=a9Njr0TrO+usetaHLdcvs6IhCJWytcAjqyBXFrO0nms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNVXyn6ZrnJwZUsUkiY/TuQHaQxS5HTUl6klkZyHer7g+wT3ZWexv1Kfds7n8OVQ3oU2NSEwrxFn3zAHtoxxSuywji+SLtQF4lw3CP/RdjpAt+s/LfgQ3qDzZ6JSDAKr/BK4y+ZpTaY9Y3XYTmyL/tMLUnl7c6sHKe5827gZw2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJCFxFx+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="cbGwXyQx"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c3b863b8eso1150873a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1748581276; x=1749186076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YunbdSs6YerLx1tbMdF1KtWTH3umX9wbCKgI+0kPVQc=;
-        b=cbGwXyQxPCRxDBXg6blezO/wgcfScZng2I30mmCt5O2Iym1lCgI7QBO5/EYKslblbR
-         yUWNv7OX6nAH9S9IhqUJ6WiJq+LQSfuUZs+FCM11Du9EyrlXW7spU+i1QFgJE3RivGwc
-         DlvjDWxqD32M/LH5aZ8Cdp31R9RaPFZlYh9z3CYU9NAmpEg0bgUlB43nIiQD2meDYxXd
-         1HwnI0coZK9Tg/sruAYHsfbn5eDVaNz+F3fXr9XN/bZ9xCP7FQ4sMtbK5f8W4N7Aqmk3
-         bMRd8vj7oz5k4EUVe+6g2wfgIzEd7xvy8Nf3GYrovW+FW+LX5u7izyvcIG7Mlba3t9vc
-         bPVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748581276; x=1749186076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YunbdSs6YerLx1tbMdF1KtWTH3umX9wbCKgI+0kPVQc=;
-        b=jtLlYTpgTiW5eyNskNVkSi6RQKX2+/fxsk7e2iAVjRpRTkirax3xJC5WG2ggXDdeul
-         DP7TJGfx4UvQTu3PU48EVQV1yGo/AWahX98NWAGilar0KeaIQJsrdXhCmSM+D/qIOGiE
-         GiNqIVnhsI3x+Mzz3jkmrCKfainmLkyIkpCMoH4ngl3W+RVM/7wYvRoFmFfmFYVHyIeo
-         J6MUOX1brWSBi+zuq+UDHivTmJQrZ0rjtPg92yYMLyTCvtwPQHHdnmnkf4/Ax+j6Q8XB
-         ZAU1vTDsRxTJ9TqDVDq4HvH5Ha2ruN6uuQZmeX+T2hWJd9XTUBwQcMYMZqS5sz+lNI2L
-         rXhg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0dd6JL+rjp7fV0YezDyfoUU31oeFIjbFXkNZB9FfrglaBJyrhOCKsE2hayIMu0VPM4KjZkaqBe8I/Yps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrEvE4zdkg3E8/L/rrH3W2L3TVwIDWsJ0P6SmWHNIcMqh3G/wl
-	iZwdT0UF+G5KIQnl+i1s22CPpRVyJYxQGxjtXgQ1/T7a8XfLtwEgDQyY+THTNOjqP1WpyovhOnh
-	BxpRVB0T7jNYSRaApJtjUZJOUeT7h1CxyXm3QAQrZwf2ExtbWHmMJ+Sw=
-X-Gm-Gg: ASbGncvoeWEoOxC/XWjBajJtlx8O3olYIL0P8J5V0XZ6FG+sbd7Sx2FqOkQrq1tsmjX
-	EP4YfMmj5S9ZoXB8/sz7eLlWjzzskw/Lr5IAwqnjXyXrOb8PIIbvp0268yKJecK4jkqUZKqNVII
-	VIdXGs8RrW1QOIWdKSQsX0m2YPefNuvg==
-X-Google-Smtp-Source: AGHT+IEu0lOSPJ9gaj/CnOwHje1qwXsd2Ga+tHw7jydiVfOP0oJ25upss+fSU4AYeKjvCe3VkINEKEXkzD1honycBcI=
-X-Received: by 2002:a05:622a:2305:b0:4a3:e3df:f9de with SMTP id
- d75a77b69052e-4a4400691d9mr41392931cf.23.1748581265568; Thu, 29 May 2025
- 22:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJCFxFx+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36FEBC4CEE9;
+	Fri, 30 May 2025 05:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748581732;
+	bh=a9Njr0TrO+usetaHLdcvs6IhCJWytcAjqyBXFrO0nms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uJCFxFx+bC5QU3jjApRxHQDeR6A0c4v2v3ftBIIsgMHxb6UwwW4LOk9V/ibLRTuR1
+	 vyyKne/h6vzSQBrFD9zyok0M68FTpvpdIwenY+q7kNLOfzMRqIh6q/cxW/7FSlfQwW
+	 OfxipOEZeTiEJKXMt49ptiu9mPrITgekQzxIU9pUK2153n6jgAficO1ZJZAc3mHO7J
+	 jt3aavjVGmv2FwW3JNx5OlA8tHgHskUHH2yxtEmgPCyyzPBWlSvAUdLkcZBycAlEY6
+	 +GZ1b8LnbDyzw+1XS8nhRlfIR2up1OczoIL8CngbRYwL1AzrGWD5EzoAgsZJ07+5Hc
+	 d8dG4ZgCeYxvg==
+Date: Fri, 30 May 2025 07:08:45 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Nam Cao <namcao@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, 
+	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>, 
+	Martin Karsten <mkarsten@uwaterloo.ca>, Jens Axboe <axboe@kernel.dk>, 
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
+Message-ID: <20250530-definieren-minze-7be7a10b4354@brauner>
+References: <20250527090836.1290532-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-5-pasha.tatashin@soleen.com> <aDQKrOjtHXbJqG9n@kernel.org>
-In-Reply-To: <aDQKrOjtHXbJqG9n@kernel.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 30 May 2025 01:00:28 -0400
-X-Gm-Features: AX0GCFsuGxA3WBHfUh4AZ4DEUOnu93SjPzxpR3IzxCxUZLpciEuTt-_BKbMOu1g
-Message-ID: <CA+CK2bDWVu137cPdbu7yOBNGm_ixoeJkQucZW_gPXV3FzTPMKQ@mail.gmail.com>
-Subject: Re: [RFC v2 04/16] luo: luo_core: Live Update Orchestrator
-To: Mike Rapoport <rppt@kernel.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250527090836.1290532-1-namcao@linutronix.de>
 
-> > +config LIVEUPDATE
-> > +     bool "Live Update Orchestrator"
-> > +     depends on KEXEC_HANDOVER
-> > +     help
-> > +       Enable the Live Update Orchestrator. Live Update is a mechanism,
-> > +       typically based on kexec, that allows the kernel to be updated
-> > +       while keeping selected devices operational across the transition.
-> > +       These devices are intended to be reclaimed by the new kernel and
-> > +       re-attached to their original workload without requiring a device
-> > +       reset.
-> > +
-> > +       This functionality depends on specific support within device drivers
-> > +       and related kernel subsystems.
->
-> This is not clear if the ability to reattach a device to the new kernel or
-> the entire live update functionality depends on specific support with
-> drivers.
->
-> Probably better phrase it as
->
->           Ability to handover a device from old to new kernel depends ...
+On Tue, May 27, 2025 at 11:08:36AM +0200, Nam Cao wrote:
+> The ready event list of an epoll object is protected by read-write
+> semaphore:
+> 
+>   - The consumer (waiter) acquires the write lock and takes items.
+>   - the producer (waker) takes the read lock and adds items.
+> 
+> The point of this design is enabling epoll to scale well with large number
+> of producers, as multiple producers can hold the read lock at the same
+> time.
+> 
+> Unfortunately, this implementation may cause scheduling priority inversion
+> problem. Suppose the consumer has higher scheduling priority than the
+> producer. The consumer needs to acquire the write lock, but may be blocked
+> by the producer holding the read lock. Since read-write semaphore does not
+> support priority-boosting for the readers (even with CONFIG_PREEMPT_RT=y),
+> we have a case of priority inversion: a higher priority consumer is blocked
+> by a lower priority producer. This problem was reported in [1].
+> 
+> Furthermore, this could also cause stall problem, as described in [2].
+> 
+> To fix this problem, make the event list half-lockless:
+> 
+>   - The consumer acquires a mutex (ep->mtx) and takes items.
+>   - The producer locklessly adds items to the list.
+> 
+> Performance is not the main goal of this patch, but as the producer now can
+> add items without waiting for consumer to release the lock, performance
+> improvement is observed using the stress test from
+> https://github.com/rouming/test-tools/blob/master/stress-epoll.c. This is
+> the same test that justified using read-write semaphore in the past.
+> 
+> Testing using 12 x86_64 CPUs:
+> 
+>           Before     After        Diff
+> threads  events/ms  events/ms
+>       8       6932      19753    +185%
+>      16       7820      27923    +257%
+>      32       7648      35164    +360%
+>      64       9677      37780    +290%
+>     128      11166      38174    +242%
+> 
+> Testing using 1 riscv64 CPU (averaged over 10 runs, as the numbers are
+> noisy):
+> 
+>           Before     After        Diff
+> threads  events/ms  events/ms
+>       1         73        129     +77%
+>       2        151        216     +43%
+>       4        216        364     +69%
+>       8        234        382     +63%
+>      16        251        392     +56%
+> 
+> Reported-by: Frederic Weisbecker <frederic@kernel.org>
+> Closes: https://lore.kernel.org/linux-rt-users/20210825132754.GA895675@lothringen/ [1]
+> Reported-by: Valentin Schneider <vschneid@redhat.com>
+> Closes: https://lore.kernel.org/linux-rt-users/xhsmhttqvnall.mognet@vschneid.remote.csb/ [2]
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> v3:
+>   - get rid of the "link_used" and "ready" flags. They are hard to
+>     understand and unnecessary
+>   - get rid of the obsolete lockdep_assert_irqs_enabled()
+>   - Add lockdep_assert_held(&ep->mtx)
+>   - rewrite some comments
+> v2:
+>   - rename link_locked -> link_used
+>   - replace xchg() with smp_store_release() when applicable
+>   - make sure llist_node is in clean state when not on a list
+>   - remove now-unused list_add_tail_lockless()
+> ---
 
-Updated
+Care to review this, Frederic?
 
->
-> > +
-> > +       This feature is primarily used in cloud environments to quickly
-> > +       update the kernel hypervisor with minimal disruption to the
-> > +       running virtual machines.
->
-> I wouldn't put it into Kconfig. If anything I'd make it
->
->           This feature primarily targets virtual machine hosts to quickly ...
-
-Ok
-
-> > + * The core of LUO is a state machine that tracks the progress of a live update,
-> > + * along with a callback API that allows other kernel subsystems to participate
-> > + * in the process. Example subsystems that can hook into LUO include: kvm,
-> > + * iommu, interrupts, vfio, participating filesystems, and mm.
->
-> Please spell out memory management.
-
-Done.
-
->
-> > + * LUO uses KHO to transfer memory state from the current Kernel to the next
->
-> A link to KHO docs would have been nice, but I'm not sure kernel-doc can do
-> that nicely.
-
-Added a link, a simple path to rst, is apparently correctly converted
-to a link by sphinx.
-
->
-> > + * Kernel.
->
-> Why capital 'K'? :)
-
-Fixed.
-
->
-> > + * The LUO state machine ensures that operations are performed in the correct
-> > + * sequence and provides a mechanism to track and recover from potential
-> > + * failures, and select devices and subsystems that should participate in
-> > + * live update sequence.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/kobject.h>
-> > +#include <linux/liveupdate.h>
-> > +#include <linux/rwsem.h>
-> > +#include <linux/string.h>
-> > +#include "luo_internal.h"
-> > +
-> > +static DECLARE_RWSEM(luo_state_rwsem);
-> > +
-> > +enum liveupdate_state luo_state;
->
-> static?
-
-Fixed
-
-> Hmm, luo_state is initialized to 0 (NORMAL) which means we always start
-> from NORMAL, although the second kernel is not in the normal state until
-> the handover is complete. Maybe we need an initial "unknown" state until
-> some of luo code starts running and would set an actual known state?
-
-Added: LIVEUPDATE_STATE_UNDEFINED that exists only before LUO is
-initialized during boot.
-
-> > +const char *const luo_state_str[] = {
-> > +     [LIVEUPDATE_STATE_NORMAL]       = "normal",
-> > +     [LIVEUPDATE_STATE_PREPARED]     = "prepared",
-> > +     [LIVEUPDATE_STATE_FROZEN]       = "frozen",
-> > +     [LIVEUPDATE_STATE_UPDATED]      = "updated",
-> > +};
-> > +
-> > +bool luo_enabled;
->
-> static?
-
-Fixed.
-
->
-> > +static int __init early_liveupdate_param(char *buf)
-> > +{
-> > +     return kstrtobool(buf, &luo_enabled);
-> > +}
-> > +early_param("liveupdate", early_liveupdate_param);
-> > +
-> > +/* Return true if the current state is equal to the provided state */
-> > +static inline bool is_current_luo_state(enum liveupdate_state expected_state)
-> > +{
-> > +     return READ_ONCE(luo_state) == expected_state;
-> > +}
-> > +
-> > +static void __luo_set_state(enum liveupdate_state state)
-> > +{
-> > +     WRITE_ONCE(luo_state, state);
-> > +}
-> > +
-> > +static inline void luo_set_state(enum liveupdate_state state)
-> > +{
-> > +     pr_info("Switched from [%s] to [%s] state\n",
-> > +             LUO_STATE_STR, luo_state_str[state]);
->
-> Maybe LUO_CURRENT_STATE_STR?
-
-Done
-
-> > +     __luo_set_state(state);
-> > +}
-> > +
-> > +static int luo_do_freeze_calls(void)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +static void luo_do_finish_calls(void)
-> > +{
-> > +}
-> > +
-> > +int luo_prepare(void)
-> > +{
-> > +     return 0;
-> > +}
-> > +
-> > +/**
-> > + * luo_freeze() - Initiate the final freeze notification phase for live update.
-> > + *
-> > + * Attempts to transition the live update orchestrator state from
-> > + * %LIVEUPDATE_STATE_PREPARED to %LIVEUPDATE_STATE_FROZEN. This function is
-> > + * typically called just before the actual reboot system call (e.g., kexec)
-> > + * is invoked, either directly by the orchestration tool or potentially from
-> > + * within the reboot syscall path itself.
-> > + *
-> > + * Based on the outcome of the notification process:
-> > + * - If luo_do_freeze_calls() returns 0 (all callbacks succeeded), the state
-> > + * is set to %LIVEUPDATE_STATE_FROZEN using luo_set_state(), indicating
-> > + * readiness for the imminent kexec.
-> > + * - If luo_do_freeze_calls() returns a negative error code (a callback
-> > + * failed), the state is reverted to %LIVEUPDATE_STATE_NORMAL using
-> > + * luo_set_state() to cancel the live update attempt.
->
-> The kernel-doc comments are mostly for users of a function and describe how
-> it should be used rather how it is implemented.
-
-SGTM, cleaned-up.
-
-> I don't think it's important to mention return values of
-> luo_do_freeze_calls() here. The important things are whether registered
-> subsystems succeeded to freeze or not and the state changes.
-> I'd also mention that if a subsystem fails to freeze, everything is
-> canceled.
-
-Added
-
-> > +/**
-> > + * luo_finish - Finalize the live update process in the new kernel.
-> > + *
-> > + * This function is called  after a successful live update reboot into a new
-> > + * kernel, once the new kernel is ready to transition to the normal operational
-> > + * state. It signals the completion of the live update sequence to subsystems.
-> > + *
-> > + * It first attempts to acquire the write lock for the orchestrator state.
-> > + *
-> > + * Then, it checks if the system is in the ``LIVEUPDATE_STATE_UPDATED`` state.
-> > + * If not, it logs a warning and returns ``-EINVAL``.
-> > + *
-> > + * If the state is correct, it triggers the ``LIVEUPDATE_FINISH`` notifier
->
-> Here too, you describe what the function does rather how it should be used
-
-Fixed
-
->
-> > + * chain. Note that the return value of the notifier is intentionally ignored as
-> > + * finish callbacks must not fail. Finally, the orchestrator state is
->
-> And what should happen if there was an error in a finish callback?
-
-Scream, warn, panic, we cannot allow running a system past liveupdate,
-if some state was not properly passed from the previous kernel to the
-current kernel. This may result in catastrophic memory leaks.
-
-> > +static int __init luo_startup(void)
-> > +{
-> > +     __luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> > +
-> > +     return 0;
-> > +}
-> > +early_initcall(luo_startup);
->
-> This means that the second kernel starts with luo_state == NORMAL, then
-> at early_initcall transitions to NORMAL again and later is set to UPDATED,
-> doesn't it?
-
-In the next patch, in this function we transition to UPDATED. So,
-technically, we go from NORMAL to UPDATED. However, I added UNDEFINED
-state so, in this function we either go from UNDEFINED to UPDATED or
-UNDEFINED to NORMAL.
-
-
-> > + * @return true if the system is in the ``LIVEUPDATE_STATE_NORMAL`` state,
-> > + * false otherwise.
-> > + */
-> > +bool liveupdate_state_normal(void)
-> > +{
-> > +     return is_current_luo_state(LIVEUPDATE_STATE_NORMAL);
-> > +}
-> > +EXPORT_SYMBOL_GPL(liveupdate_state_normal);
->
-> Won't liveupdate_get_state() do?
-
-Yeah, we can simply return state, and let caller to compare. However,
-I think, caller is only interested if this is normal state or if live
-update is in progress. I will keep them, and also added
-liveupdate_get_state().
-
-> > +
-> > +/**
-> > + * liveupdate_enabled - Check if the live update feature is enabled.
-> > + *
-> > + * This function returns the state of the live update feature flag, which
-> > + * can be controlled via the ``liveupdate`` kernel command-line parameter.
-> > + *
-> > + * @return true if live update is enabled, false otherwise.
-> > + */
-> > +bool liveupdate_enabled(void)
-> > +{
-> > +     return luo_enabled;
-> > +}
-> > +EXPORT_SYMBOL_GPL(liveupdate_enabled);
-> > diff --git a/drivers/misc/liveupdate/luo_internal.h b/drivers/misc/liveupdate/luo_internal.h
-> > new file mode 100644
-> > index 000000000000..34e73fb0318c
-> > --- /dev/null
-> > +++ b/drivers/misc/liveupdate/luo_internal.h
-> > @@ -0,0 +1,26 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Copyright (c) 2025, Google LLC.
-> > + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> > + */
-> > +
-> > +#ifndef _LINUX_LUO_INTERNAL_H
-> > +#define _LINUX_LUO_INTERNAL_H
-> > +
-> > +int luo_cancel(void);
-> > +int luo_prepare(void);
-> > +int luo_freeze(void);
-> > +int luo_finish(void);
-> > +
-> > +void luo_state_read_enter(void);
-> > +void luo_state_read_exit(void);
-> > +
-> > +extern const char *const luo_state_str[];
-> > +
-> > +/* Get the current state as a string */
-> > +#define LUO_STATE_STR luo_state_str[READ_ONCE(luo_state)]
->
-> IIUC you need the macro to have LUO_STATE_STR available in all files in
-> liveupdate/ but without exposing luo_state.
->
-> I think that we can do a function call to get that string, will make things
-> nicer IMHO.
-
-Done.
-
->
-> > +
-> > +extern enum liveupdate_state luo_state;
-> > +
-> > +#endif /* _LINUX_LUO_INTERNAL_H */
-> > diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> > new file mode 100644
-> > index 000000000000..c2740da70958
-> > --- /dev/null
-> > +++ b/include/linux/liveupdate.h
-> > @@ -0,0 +1,131 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Copyright (c) 2025, Google LLC.
-> > + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> > + */
-> > +#ifndef _LINUX_LIVEUPDATE_H
-> > +#define _LINUX_LIVEUPDATE_H
-> > +
-> > +#include <linux/bug.h>
-> > +#include <linux/types.h>
-> > +#include <linux/list.h>
-> > +
-> > +/**
-> > + * enum liveupdate_event - Events that trigger live update callbacks.
-> > + * @LIVEUPDATE_PREPARE: PREPARE should happens *before* the blackout window.
->
-> should happen or happens ;-)
-
-Done
-
->
-> > + *                      Subsystems should prepare for an upcoming reboot by
-> > + *                      serializing their states. However, it must be considered
->
-> It's not only about state serialization, it's also about adjusting
-> operational mode so that state that was serialized won't be changed or at
-> least the changes from PREPARE to FREEZE would be accounted somehow.
-
-By serialization, I mean is to save their state, but I agree, the
-devices and resources are also should be in a limited state where the
-serialized data should not be altered between prepare and freeze (i.e.
-no memfd resizing, no new DMA mappings, etc).
-
-Thank you for your comments.
-Pasha
+>  fs/eventpoll.c | 458 +++++++++++++++----------------------------------
+>  1 file changed, 134 insertions(+), 324 deletions(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index d4dbffdedd08e..a97a771a459c9 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -137,13 +137,7 @@ struct epitem {
+>  	};
+>  
+>  	/* List header used to link this structure to the eventpoll ready list */
+> -	struct list_head rdllink;
+> -
+> -	/*
+> -	 * Works together "struct eventpoll"->ovflist in keeping the
+> -	 * single linked chain of items.
+> -	 */
+> -	struct epitem *next;
+> +	struct llist_node rdllink;
+>  
+>  	/* The file descriptor information this item refers to */
+>  	struct epoll_filefd ffd;
+> @@ -191,22 +185,15 @@ struct eventpoll {
+>  	/* Wait queue used by file->poll() */
+>  	wait_queue_head_t poll_wait;
+>  
+> -	/* List of ready file descriptors */
+> -	struct list_head rdllist;
+> -
+> -	/* Lock which protects rdllist and ovflist */
+> -	rwlock_t lock;
+> +	/*
+> +	 * List of ready file descriptors. Adding to this list is lockless. Items can be removed
+> +	 * only with eventpoll::mtx
+> +	 */
+> +	struct llist_head rdllist;
+>  
+>  	/* RB tree root used to store monitored fd structs */
+>  	struct rb_root_cached rbr;
+>  
+> -	/*
+> -	 * This is a single linked list that chains all the "struct epitem" that
+> -	 * happened while transferring ready events to userspace w/out
+> -	 * holding ->lock.
+> -	 */
+> -	struct epitem *ovflist;
+> -
+>  	/* wakeup_source used when ep_send_events or __ep_eventpoll_poll is running */
+>  	struct wakeup_source *ws;
+>  
+> @@ -361,10 +348,14 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+>  	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+>  }
+>  
+> -/* Tells us if the item is currently linked */
+> -static inline int ep_is_linked(struct epitem *epi)
+> +/*
+> + * Add the item to its container eventpoll's rdllist; do nothing if the item is already on rdllist.
+> + */
+> +static void epitem_ready(struct epitem *epi)
+>  {
+> -	return !list_empty(&epi->rdllink);
+> +	if (&epi->rdllink == cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
+> +		llist_add(&epi->rdllink, &epi->ep->rdllist);
+> +
+>  }
+>  
+>  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
+> @@ -383,13 +374,26 @@ static inline struct epitem *ep_item_from_wait(wait_queue_entry_t *p)
+>   *
+>   * @ep: Pointer to the eventpoll context.
+>   *
+> - * Return: a value different than %zero if ready events are available,
+> - *          or %zero otherwise.
+> + * Return: true if ready events might be available, false otherwise.
+>   */
+> -static inline int ep_events_available(struct eventpoll *ep)
+> +static inline bool ep_events_available(struct eventpoll *ep)
+>  {
+> -	return !list_empty_careful(&ep->rdllist) ||
+> -		READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
+> +	bool available;
+> +	int locked;
+> +
+> +	locked = mutex_trylock(&ep->mtx);
+> +	if (!locked) {
+> +		/*
+> +		 * The lock held and someone might have removed all items while inspecting it. The
+> +		 * llist_empty() check in this case is futile. Assume that something is enqueued and
+> +		 * let ep_try_send_events() figure it out.
+> +		 */
+> +		return true;
+> +	}
+> +
+> +	available = !llist_empty(&ep->rdllist);
+> +	mutex_unlock(&ep->mtx);
+> +	return available;
+>  }
+>  
+>  #ifdef CONFIG_NET_RX_BUSY_POLL
+> @@ -724,77 +728,6 @@ static inline void ep_pm_stay_awake_rcu(struct epitem *epi)
+>  	rcu_read_unlock();
+>  }
+>  
+> -
+> -/*
+> - * ep->mutex needs to be held because we could be hit by
+> - * eventpoll_release_file() and epoll_ctl().
+> - */
+> -static void ep_start_scan(struct eventpoll *ep, struct list_head *txlist)
+> -{
+> -	/*
+> -	 * Steal the ready list, and re-init the original one to the
+> -	 * empty list. Also, set ep->ovflist to NULL so that events
+> -	 * happening while looping w/out locks, are not lost. We cannot
+> -	 * have the poll callback to queue directly on ep->rdllist,
+> -	 * because we want the "sproc" callback to be able to do it
+> -	 * in a lockless way.
+> -	 */
+> -	lockdep_assert_irqs_enabled();
+> -	write_lock_irq(&ep->lock);
+> -	list_splice_init(&ep->rdllist, txlist);
+> -	WRITE_ONCE(ep->ovflist, NULL);
+> -	write_unlock_irq(&ep->lock);
+> -}
+> -
+> -static void ep_done_scan(struct eventpoll *ep,
+> -			 struct list_head *txlist)
+> -{
+> -	struct epitem *epi, *nepi;
+> -
+> -	write_lock_irq(&ep->lock);
+> -	/*
+> -	 * During the time we spent inside the "sproc" callback, some
+> -	 * other events might have been queued by the poll callback.
+> -	 * We re-insert them inside the main ready-list here.
+> -	 */
+> -	for (nepi = READ_ONCE(ep->ovflist); (epi = nepi) != NULL;
+> -	     nepi = epi->next, epi->next = EP_UNACTIVE_PTR) {
+> -		/*
+> -		 * We need to check if the item is already in the list.
+> -		 * During the "sproc" callback execution time, items are
+> -		 * queued into ->ovflist but the "txlist" might already
+> -		 * contain them, and the list_splice() below takes care of them.
+> -		 */
+> -		if (!ep_is_linked(epi)) {
+> -			/*
+> -			 * ->ovflist is LIFO, so we have to reverse it in order
+> -			 * to keep in FIFO.
+> -			 */
+> -			list_add(&epi->rdllink, &ep->rdllist);
+> -			ep_pm_stay_awake(epi);
+> -		}
+> -	}
+> -	/*
+> -	 * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+> -	 * releasing the lock, events will be queued in the normal way inside
+> -	 * ep->rdllist.
+> -	 */
+> -	WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+> -
+> -	/*
+> -	 * Quickly re-inject items left on "txlist".
+> -	 */
+> -	list_splice(txlist, &ep->rdllist);
+> -	__pm_relax(ep->ws);
+> -
+> -	if (!list_empty(&ep->rdllist)) {
+> -		if (waitqueue_active(&ep->wq))
+> -			wake_up(&ep->wq);
+> -	}
+> -
+> -	write_unlock_irq(&ep->lock);
+> -}
+> -
+>  static void ep_get(struct eventpoll *ep)
+>  {
+>  	refcount_inc(&ep->refcount);
+> @@ -832,10 +765,12 @@ static void ep_free(struct eventpoll *ep)
+>  static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
+>  {
+>  	struct file *file = epi->ffd.file;
+> +	struct llist_node *put_back_last;
+>  	struct epitems_head *to_free;
+>  	struct hlist_head *head;
+> +	LLIST_HEAD(put_back);
+>  
+> -	lockdep_assert_irqs_enabled();
+> +	lockdep_assert_held(&ep->mtx);
+>  
+>  	/*
+>  	 * Removes poll wait queue hooks.
+> @@ -867,10 +802,20 @@ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool force)
+>  
+>  	rb_erase_cached(&epi->rbn, &ep->rbr);
+>  
+> -	write_lock_irq(&ep->lock);
+> -	if (ep_is_linked(epi))
+> -		list_del_init(&epi->rdllink);
+> -	write_unlock_irq(&ep->lock);
+> +	if (llist_on_list(&epi->rdllink)) {
+> +		put_back_last = NULL;
+> +		while (true) {
+> +			struct llist_node *n = llist_del_first(&ep->rdllist);
+> +
+> +			if (&epi->rdllink == n || WARN_ON(!n))
+> +				break;
+> +			if (!put_back_last)
+> +				put_back_last = n;
+> +			__llist_add(n, &put_back);
+> +		}
+> +		if (put_back_last)
+> +			llist_add_batch(put_back.first, put_back_last, &ep->rdllist);
+> +	}
+>  
+>  	wakeup_source_unregister(ep_wakeup_source(epi));
+>  	/*
+> @@ -974,8 +919,9 @@ static __poll_t ep_item_poll(const struct epitem *epi, poll_table *pt, int depth
+>  static __poll_t __ep_eventpoll_poll(struct file *file, poll_table *wait, int depth)
+>  {
+>  	struct eventpoll *ep = file->private_data;
+> -	LIST_HEAD(txlist);
+> -	struct epitem *epi, *tmp;
+> +	struct wakeup_source *ws;
+> +	struct llist_node *n;
+> +	struct epitem *epi;
+>  	poll_table pt;
+>  	__poll_t res = 0;
+>  
+> @@ -989,22 +935,39 @@ static __poll_t __ep_eventpoll_poll(struct file *file, poll_table *wait, int dep
+>  	 * the ready list.
+>  	 */
+>  	mutex_lock_nested(&ep->mtx, depth);
+> -	ep_start_scan(ep, &txlist);
+> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> +	while (true) {
+> +		n = llist_del_first_init(&ep->rdllist);
+> +		if (!n)
+> +			break;
+> +
+> +		epi = llist_entry(n, struct epitem, rdllink);
+> +
+>  		if (ep_item_poll(epi, &pt, depth + 1)) {
+>  			res = EPOLLIN | EPOLLRDNORM;
+> +			epitem_ready(epi);
+>  			break;
+>  		} else {
+>  			/*
+> -			 * Item has been dropped into the ready list by the poll
+> -			 * callback, but it's not actually ready, as far as
+> -			 * caller requested events goes. We can remove it here.
+> +			 * We need to activate ep before deactivating epi, to prevent autosuspend
+> +			 * just in case epi becomes active after ep_item_poll() above.
+> +			 *
+> +			 * This is similar to ep_send_events().
+>  			 */
+> +			ws = ep_wakeup_source(epi);
+> +			if (ws) {
+> +				if (ws->active)
+> +					__pm_stay_awake(ep->ws);
+> +				__pm_relax(ws);
+> +			}
+>  			__pm_relax(ep_wakeup_source(epi));
+> -			list_del_init(&epi->rdllink);
+> +
+> +			/* Just in case epi becomes active right before __pm_relax() */
+> +			if (unlikely(ep_item_poll(epi, &pt, depth + 1)))
+> +				ep_pm_stay_awake(epi);
+> +
+> +			__pm_relax(ep->ws);
+>  		}
+>  	}
+> -	ep_done_scan(ep, &txlist);
+>  	mutex_unlock(&ep->mtx);
+>  	return res;
+>  }
+> @@ -1153,12 +1116,10 @@ static int ep_alloc(struct eventpoll **pep)
+>  		return -ENOMEM;
+>  
+>  	mutex_init(&ep->mtx);
+> -	rwlock_init(&ep->lock);
+>  	init_waitqueue_head(&ep->wq);
+>  	init_waitqueue_head(&ep->poll_wait);
+> -	INIT_LIST_HEAD(&ep->rdllist);
+> +	init_llist_head(&ep->rdllist);
+>  	ep->rbr = RB_ROOT_CACHED;
+> -	ep->ovflist = EP_UNACTIVE_PTR;
+>  	ep->user = get_current_user();
+>  	refcount_set(&ep->refcount, 1);
+>  
+> @@ -1240,94 +1201,11 @@ struct file *get_epoll_tfile_raw_ptr(struct file *file, int tfd,
+>  }
+>  #endif /* CONFIG_KCMP */
+>  
+> -/*
+> - * Adds a new entry to the tail of the list in a lockless way, i.e.
+> - * multiple CPUs are allowed to call this function concurrently.
+> - *
+> - * Beware: it is necessary to prevent any other modifications of the
+> - *         existing list until all changes are completed, in other words
+> - *         concurrent list_add_tail_lockless() calls should be protected
+> - *         with a read lock, where write lock acts as a barrier which
+> - *         makes sure all list_add_tail_lockless() calls are fully
+> - *         completed.
+> - *
+> - *        Also an element can be locklessly added to the list only in one
+> - *        direction i.e. either to the tail or to the head, otherwise
+> - *        concurrent access will corrupt the list.
+> - *
+> - * Return: %false if element has been already added to the list, %true
+> - * otherwise.
+> - */
+> -static inline bool list_add_tail_lockless(struct list_head *new,
+> -					  struct list_head *head)
+> -{
+> -	struct list_head *prev;
+> -
+> -	/*
+> -	 * This is simple 'new->next = head' operation, but cmpxchg()
+> -	 * is used in order to detect that same element has been just
+> -	 * added to the list from another CPU: the winner observes
+> -	 * new->next == new.
+> -	 */
+> -	if (!try_cmpxchg(&new->next, &new, head))
+> -		return false;
+> -
+> -	/*
+> -	 * Initially ->next of a new element must be updated with the head
+> -	 * (we are inserting to the tail) and only then pointers are atomically
+> -	 * exchanged.  XCHG guarantees memory ordering, thus ->next should be
+> -	 * updated before pointers are actually swapped and pointers are
+> -	 * swapped before prev->next is updated.
+> -	 */
+> -
+> -	prev = xchg(&head->prev, new);
+> -
+> -	/*
+> -	 * It is safe to modify prev->next and new->prev, because a new element
+> -	 * is added only to the tail and new->next is updated before XCHG.
+> -	 */
+> -
+> -	prev->next = new;
+> -	new->prev = prev;
+> -
+> -	return true;
+> -}
+> -
+> -/*
+> - * Chains a new epi entry to the tail of the ep->ovflist in a lockless way,
+> - * i.e. multiple CPUs are allowed to call this function concurrently.
+> - *
+> - * Return: %false if epi element has been already chained, %true otherwise.
+> - */
+> -static inline bool chain_epi_lockless(struct epitem *epi)
+> -{
+> -	struct eventpoll *ep = epi->ep;
+> -
+> -	/* Fast preliminary check */
+> -	if (epi->next != EP_UNACTIVE_PTR)
+> -		return false;
+> -
+> -	/* Check that the same epi has not been just chained from another CPU */
+> -	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
+> -		return false;
+> -
+> -	/* Atomically exchange tail */
+> -	epi->next = xchg(&ep->ovflist, epi);
+> -
+> -	return true;
+> -}
+> -
+>  /*
+>   * This is the callback that is passed to the wait queue wakeup
+>   * mechanism. It is called by the stored file descriptors when they
+>   * have events to report.
+>   *
+> - * This callback takes a read lock in order not to contend with concurrent
+> - * events from another file descriptor, thus all modifications to ->rdllist
+> - * or ->ovflist are lockless.  Read lock is paired with the write lock from
+> - * ep_start/done_scan(), which stops all list modifications and guarantees
+> - * that lists state is seen correctly.
+> - *
+>   * Another thing worth to mention is that ep_poll_callback() can be called
+>   * concurrently for the same @epi from different CPUs if poll table was inited
+>   * with several wait queues entries.  Plural wakeup from different CPUs of a
+> @@ -1337,15 +1215,11 @@ static inline bool chain_epi_lockless(struct epitem *epi)
+>   */
+>  static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
+>  {
+> -	int pwake = 0;
+>  	struct epitem *epi = ep_item_from_wait(wait);
+>  	struct eventpoll *ep = epi->ep;
+>  	__poll_t pollflags = key_to_poll(key);
+> -	unsigned long flags;
+>  	int ewake = 0;
+>  
+> -	read_lock_irqsave(&ep->lock, flags);
+> -
+>  	ep_set_busy_poll_napi_id(epi);
+>  
+>  	/*
+> @@ -1355,7 +1229,7 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+>  	 * until the next EPOLL_CTL_MOD will be issued.
+>  	 */
+>  	if (!(epi->event.events & ~EP_PRIVATE_BITS))
+> -		goto out_unlock;
+> +		goto out;
+>  
+>  	/*
+>  	 * Check the events coming with the callback. At this stage, not
+> @@ -1364,22 +1238,10 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+>  	 * test for "key" != NULL before the event match test.
+>  	 */
+>  	if (pollflags && !(pollflags & epi->event.events))
+> -		goto out_unlock;
+> +		goto out;
+>  
+> -	/*
+> -	 * If we are transferring events to userspace, we can hold no locks
+> -	 * (because we're accessing user memory, and because of linux f_op->poll()
+> -	 * semantics). All the events that happen during that period of time are
+> -	 * chained in ep->ovflist and requeued later on.
+> -	 */
+> -	if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
+> -		if (chain_epi_lockless(epi))
+> -			ep_pm_stay_awake_rcu(epi);
+> -	} else if (!ep_is_linked(epi)) {
+> -		/* In the usual case, add event to ready list. */
+> -		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+> -			ep_pm_stay_awake_rcu(epi);
+> -	}
+> +	ep_pm_stay_awake_rcu(epi);
+> +	epitem_ready(epi);
+>  
+>  	/*
+>  	 * Wake up ( if active ) both the eventpoll wait list and the ->poll()
+> @@ -1408,15 +1270,9 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
+>  			wake_up(&ep->wq);
+>  	}
+>  	if (waitqueue_active(&ep->poll_wait))
+> -		pwake++;
+> -
+> -out_unlock:
+> -	read_unlock_irqrestore(&ep->lock, flags);
+> -
+> -	/* We have to call this outside the lock */
+> -	if (pwake)
+>  		ep_poll_safewake(ep, epi, pollflags & EPOLL_URING_WAKE);
+>  
+> +out:
+>  	if (!(epi->event.events & EPOLLEXCLUSIVE))
+>  		ewake = 1;
+>  
+> @@ -1661,8 +1517,6 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
+>  	if (is_file_epoll(tfile))
+>  		tep = tfile->private_data;
+>  
+> -	lockdep_assert_irqs_enabled();
+> -
+>  	if (unlikely(percpu_counter_compare(&ep->user->epoll_watches,
+>  					    max_user_watches) >= 0))
+>  		return -ENOSPC;
+> @@ -1674,11 +1528,10 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
+>  	}
+>  
+>  	/* Item initialization follow here ... */
+> -	INIT_LIST_HEAD(&epi->rdllink);
+> +	init_llist_node(&epi->rdllink);
+>  	epi->ep = ep;
+>  	ep_set_ffd(&epi->ffd, tfile, fd);
+>  	epi->event = *event;
+> -	epi->next = EP_UNACTIVE_PTR;
+>  
+>  	if (tep)
+>  		mutex_lock_nested(&tep->mtx, 1);
+> @@ -1745,16 +1598,13 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	/* We have to drop the new item inside our item list to keep track of it */
+> -	write_lock_irq(&ep->lock);
+> -
+>  	/* record NAPI ID of new item if present */
+>  	ep_set_busy_poll_napi_id(epi);
+>  
+>  	/* If the file is already "ready" we drop it inside the ready list */
+> -	if (revents && !ep_is_linked(epi)) {
+> -		list_add_tail(&epi->rdllink, &ep->rdllist);
+> +	if (revents) {
+>  		ep_pm_stay_awake(epi);
+> +		epitem_ready(epi);
+>  
+>  		/* Notify waiting tasks that events are available */
+>  		if (waitqueue_active(&ep->wq))
+> @@ -1763,8 +1613,6 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
+>  			pwake++;
+>  	}
+>  
+> -	write_unlock_irq(&ep->lock);
+> -
+>  	/* We have to call this outside the lock */
+>  	if (pwake)
+>  		ep_poll_safewake(ep, NULL, 0);
+> @@ -1779,11 +1627,8 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
+>  static int ep_modify(struct eventpoll *ep, struct epitem *epi,
+>  		     const struct epoll_event *event)
+>  {
+> -	int pwake = 0;
+>  	poll_table pt;
+>  
+> -	lockdep_assert_irqs_enabled();
+> -
+>  	init_poll_funcptr(&pt, NULL);
+>  
+>  	/*
+> @@ -1827,24 +1672,16 @@ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
+>  	 * list, push it inside.
+>  	 */
+>  	if (ep_item_poll(epi, &pt, 1)) {
+> -		write_lock_irq(&ep->lock);
+> -		if (!ep_is_linked(epi)) {
+> -			list_add_tail(&epi->rdllink, &ep->rdllist);
+> -			ep_pm_stay_awake(epi);
+> +		ep_pm_stay_awake(epi);
+> +		epitem_ready(epi);
+>  
+> -			/* Notify waiting tasks that events are available */
+> -			if (waitqueue_active(&ep->wq))
+> -				wake_up(&ep->wq);
+> -			if (waitqueue_active(&ep->poll_wait))
+> -				pwake++;
+> -		}
+> -		write_unlock_irq(&ep->lock);
+> +		/* Notify waiting tasks that events are available */
+> +		if (waitqueue_active(&ep->wq))
+> +			wake_up(&ep->wq);
+> +		if (waitqueue_active(&ep->poll_wait))
+> +			ep_poll_safewake(ep, NULL, 0);
+>  	}
+>  
+> -	/* We have to call this outside the lock */
+> -	if (pwake)
+> -		ep_poll_safewake(ep, NULL, 0);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1852,7 +1689,7 @@ static int ep_send_events(struct eventpoll *ep,
+>  			  struct epoll_event __user *events, int maxevents)
+>  {
+>  	struct epitem *epi, *tmp;
+> -	LIST_HEAD(txlist);
+> +	LLIST_HEAD(txlist);
+>  	poll_table pt;
+>  	int res = 0;
+>  
+> @@ -1867,19 +1704,18 @@ static int ep_send_events(struct eventpoll *ep,
+>  	init_poll_funcptr(&pt, NULL);
+>  
+>  	mutex_lock(&ep->mtx);
+> -	ep_start_scan(ep, &txlist);
+>  
+> -	/*
+> -	 * We can loop without lock because we are passed a task private list.
+> -	 * Items cannot vanish during the loop we are holding ep->mtx.
+> -	 */
+> -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> +	while (res < maxevents) {
+>  		struct wakeup_source *ws;
+> +		struct llist_node *n;
+>  		__poll_t revents;
+>  
+> -		if (res >= maxevents)
+> +		n = llist_del_first(&ep->rdllist);
+> +		if (!n)
+>  			break;
+>  
+> +		epi = llist_entry(n, struct epitem, rdllink);
+> +
+>  		/*
+>  		 * Activate ep->ws before deactivating epi->ws to prevent
+>  		 * triggering auto-suspend here (in case we reactive epi->ws
+> @@ -1896,21 +1732,30 @@ static int ep_send_events(struct eventpoll *ep,
+>  			__pm_relax(ws);
+>  		}
+>  
+> -		list_del_init(&epi->rdllink);
+> -
+>  		/*
+>  		 * If the event mask intersect the caller-requested one,
+>  		 * deliver the event to userspace. Again, we are holding ep->mtx,
+>  		 * so no operations coming from userspace can change the item.
+>  		 */
+>  		revents = ep_item_poll(epi, &pt, 1);
+> -		if (!revents)
+> +		if (!revents) {
+> +			init_llist_node(n);
+> +
+> +			/*
+> +			 * Just in case epi becomes ready after ep_item_poll() above, but before
+> +			 * init_llist_node(). Make sure to add it to the ready list, otherwise an
+> +			 * event may be lost.
+> +			 */
+> +			if (unlikely(ep_item_poll(epi, &pt, 1))) {
+> +				ep_pm_stay_awake(epi);
+> +				epitem_ready(epi);
+> +			}
+>  			continue;
+> +		}
+>  
+>  		events = epoll_put_uevent(revents, epi->event.data, events);
+>  		if (!events) {
+> -			list_add(&epi->rdllink, &txlist);
+> -			ep_pm_stay_awake(epi);
+> +			llist_add(&epi->rdllink, &ep->rdllist);
+>  			if (!res)
+>  				res = -EFAULT;
+>  			break;
+> @@ -1918,25 +1763,31 @@ static int ep_send_events(struct eventpoll *ep,
+>  		res++;
+>  		if (epi->event.events & EPOLLONESHOT)
+>  			epi->event.events &= EP_PRIVATE_BITS;
+> -		else if (!(epi->event.events & EPOLLET)) {
+> +		__llist_add(n, &txlist);
+> +	}
+> +
+> +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
+> +		init_llist_node(&epi->rdllink);
+> +
+> +		if (!(epi->event.events & EPOLLET)) {
+>  			/*
+> -			 * If this file has been added with Level
+> -			 * Trigger mode, we need to insert back inside
+> -			 * the ready list, so that the next call to
+> -			 * epoll_wait() will check again the events
+> -			 * availability. At this point, no one can insert
+> -			 * into ep->rdllist besides us. The epoll_ctl()
+> -			 * callers are locked out by
+> -			 * ep_send_events() holding "mtx" and the
+> -			 * poll callback will queue them in ep->ovflist.
+> +			 * If this file has been added with Level Trigger mode, we need to insert
+> +			 * back inside the ready list, so that the next call to epoll_wait() will
+> +			 * check again the events availability.
+>  			 */
+> -			list_add_tail(&epi->rdllink, &ep->rdllist);
+>  			ep_pm_stay_awake(epi);
+> +			epitem_ready(epi);
+>  		}
+>  	}
+> -	ep_done_scan(ep, &txlist);
+> +
+> +	__pm_relax(ep->ws);
+>  	mutex_unlock(&ep->mtx);
+>  
+> +	if (!llist_empty(&ep->rdllist)) {
+> +		if (waitqueue_active(&ep->wq))
+> +			wake_up(&ep->wq);
+> +	}
+> +
+>  	return res;
+>  }
+>  
+> @@ -2029,8 +1880,6 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+>  	wait_queue_entry_t wait;
+>  	ktime_t expires, *to = NULL;
+>  
+> -	lockdep_assert_irqs_enabled();
+> -
+>  	if (timeout && (timeout->tv_sec | timeout->tv_nsec)) {
+>  		slack = select_estimate_accuracy(timeout);
+>  		to = &expires;
+> @@ -2090,54 +1939,15 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+>  		init_wait(&wait);
+>  		wait.func = ep_autoremove_wake_function;
+>  
+> -		write_lock_irq(&ep->lock);
+> -		/*
+> -		 * Barrierless variant, waitqueue_active() is called under
+> -		 * the same lock on wakeup ep_poll_callback() side, so it
+> -		 * is safe to avoid an explicit barrier.
+> -		 */
+> -		__set_current_state(TASK_INTERRUPTIBLE);
+> +		prepare_to_wait_exclusive(&ep->wq, &wait, TASK_INTERRUPTIBLE);
+>  
+> -		/*
+> -		 * Do the final check under the lock. ep_start/done_scan()
+> -		 * plays with two lists (->rdllist and ->ovflist) and there
+> -		 * is always a race when both lists are empty for short
+> -		 * period of time although events are pending, so lock is
+> -		 * important.
+> -		 */
+> -		eavail = ep_events_available(ep);
+> -		if (!eavail)
+> -			__add_wait_queue_exclusive(&ep->wq, &wait);
+> -
+> -		write_unlock_irq(&ep->lock);
+> -
+> -		if (!eavail)
+> +		if (!ep_events_available(ep))
+>  			timed_out = !ep_schedule_timeout(to) ||
+>  				!schedule_hrtimeout_range(to, slack,
+>  							  HRTIMER_MODE_ABS);
+> -		__set_current_state(TASK_RUNNING);
+> -
+> -		/*
+> -		 * We were woken up, thus go and try to harvest some events.
+> -		 * If timed out and still on the wait queue, recheck eavail
+> -		 * carefully under lock, below.
+> -		 */
+> -		eavail = 1;
+>  
+> -		if (!list_empty_careful(&wait.entry)) {
+> -			write_lock_irq(&ep->lock);
+> -			/*
+> -			 * If the thread timed out and is not on the wait queue,
+> -			 * it means that the thread was woken up after its
+> -			 * timeout expired before it could reacquire the lock.
+> -			 * Thus, when wait.entry is empty, it needs to harvest
+> -			 * events.
+> -			 */
+> -			if (timed_out)
+> -				eavail = list_empty(&wait.entry);
+> -			__remove_wait_queue(&ep->wq, &wait);
+> -			write_unlock_irq(&ep->lock);
+> -		}
+> +		finish_wait(&ep->wq, &wait);
+> +		eavail = ep_events_available(ep);
+>  	}
+>  }
+>  
+> -- 
+> 2.39.5
+> 
