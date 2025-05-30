@@ -1,444 +1,262 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A30C2222C1
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D58222578;
+	Fri, 30 May 2025 09:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597508; cv=none; b=YLsTIkZyr/Lxj3xCg3gqtxROwEMQ4aCTWGsGdOt2faJrA08J6RLeoajEZvQAE2SeIO26phg5/XB5Sa5mH99x/IDf2lfi7jCybijaUTjRHPojwGwCI4+MtmsUraqnn/FndaRAJ5BATfnLSmWVwFlhPPBExt9u+mKay59n3q3IKpE=
+	t=1748597526; cv=none; b=mZdzxBgGVaguqIEpYZK2GxTx4gAT0pyhWgMxlq/Xs1qcDALiz5QYyxxvr8yLt530o1pvMigaKqoXl60u0lxwMJFOU/Enf01M9pOqEeQpEebqtc9xnyie3oiHD6A5L+Ej/VavcVlYBF3C/l0vboDdiFO5QU5D6yiiS0XfBv3YLMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597508; c=relaxed/simple;
-	bh=x42OvKF8cu3SGLWZonaQOFG1mLKzqSw7oCqoTulLIhU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RnyYX6BhRrqJjsUPgCdp3Cp7NgmeRhZe+UZXmUctQyN0EW1lZGQjc+KxhON7z2iA1fMCpOwMCrZ0dyzIuUSWyWll7oiOLylCNOd7rIqjPHsBVYUtnislMmL1m2LJEEQ9e5aD7KwahPXkIUrFIW50dTd4yaI6s6nY6McS6Lcv+Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UIhFXuhK; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UIhFXuhK"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3124f18c214so295304a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597506; x=1749202306; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lqEqFVUYhIQ6uCyFMSKyc3XjCtHWAqaCcpg8jFQsxWM=;
-        b=UIhFXuhKkT4Y96MhzklPzS+CDHR0Hw8VJ3D0QgE5uV/f0ZucyRKOfLHwT9vxTiLErV
-         j/R1Ct0aZGJOi9mfTNDGtDO/U7JHgHzd0D/7f3Z02wZCMehFDya7ysKmcdrLPqfa+Kgq
-         jdeAef2VgY6bSAmZeYcaxI75LLX8O8+ImWRe5C6OQmjNP64UgseKPtNB8/sBDld/OO7E
-         gBRLKl/EAGe2+e3mvcMrEiNKYFfPhqBslo/LfYZt0in/HfDVApFPGY4Fsbwe7TO0Ojl4
-         7tswhefuv5qkD9ggG7FBUkyGDBpgw0LY3WDOgW40Ng7qocSI1ce1YHVfSPN9ASiwORY7
-         nRAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597506; x=1749202306;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lqEqFVUYhIQ6uCyFMSKyc3XjCtHWAqaCcpg8jFQsxWM=;
-        b=UKpUOSuoLfv1uW43q6yaptbWcjp7xh465EXaXSJSastvM+9VuydNfi88Pd116aYjFi
-         5ZKtyDEjYWAGs0jSS/hnWbE4EMgONA4/xTuKVcfd3YBdXQhVMkNd0SipBWcuWSPeSApx
-         OS4vgH1QUstpX8waKEKDqHvEzAREto1+iXZ1FSQ/cem8y3L5ZMMGod8hl6nRFSz1Rjzt
-         FeF/XRRmLPdsHHLG1x05cbpgWxMvoGe6dEcFOSCpB8/UKk25Seah/WLinIsTBRk/fPzn
-         /4KqPIPUl4BLF35InyViOSMtJWjaEPsSWAByucUGQFBwaCtdL84XUGA9NQ1usJ+Amufe
-         TC+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUnNdgfWmbu1POJvhmU7UWHONXjlki01oJytfxO/k1uJbLmKgZ2bjYe7gBW5MecgmEurRquGGu4HuhCXbw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGiRPUhIhEalpoe/onAzJyH7pwyPpUDEMViu1/DWFqbZvLTEE0
-	srERtIVcCEwJfr8V9fRjyfeNqdBbjC6vd086022ICpmYDR0yyv97RftSt6cAteOjVkc=
-X-Gm-Gg: ASbGnct+WzVXOsNaxsH7JZme53xj0AdZv3DsA0bdi96bI83UZAmOYCsBBTYmC89E20Z
-	Q/tvl77ELaEAmZVpc1Zv0ZHJA70kukZ06y92SP//a6PWECoWmxpNppbQjyYHZgwt+zR2Zx5RKJg
-	RWp10FImbin9oYGforzrEDdnc34TmRxWQN8gSAaC5vyy8lJk+O4BNaYVanBp20869LaV/mvSgqY
-	UvY95oyAc6qISlm0izmedP6lHhSpDJ1PhTg24AghYuf+xeoQgiFcYnYkjP/w44VOYaKk8yZWNil
-	u6kAMH5nEbG1ML2tPSdbHgQGOei/iWf+axZ5z9QdSKpnbLJUGPQAT8/oCUz1ayy6u8S8DFamrUX
-	CFJj8Bv40UQ==
-X-Google-Smtp-Source: AGHT+IGF62FX0HQNv9LilxlCiViF0h8d1bY/G1W0X5Q0qQ2cdYg03wna6Pf30NCPziT41+dazZ7wew==
-X-Received: by 2002:a17:90b:3b50:b0:312:1c83:58e9 with SMTP id 98e67ed59e1d1-3124150e464mr3530070a91.5.1748597505955;
-        Fri, 30 May 2025 02:31:45 -0700 (PDT)
-Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.31.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:31:45 -0700 (PDT)
-From: Bo Li <libo.gcs85@bytedance.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	luto@kernel.org,
-	kees@kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	peterz@infradead.org
-Cc: dietmar.eggemann@arm.com,
-	hpa@zytor.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	vschneid@redhat.com,
-	jannh@google.com,
-	pfalcato@suse.de,
-	riel@surriel.com,
-	harry.yoo@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	duanxiongchun@bytedance.com,
-	yinhongbo@bytedance.com,
-	dengliang.1214@bytedance.com,
-	xieyongji@bytedance.com,
-	chaiwen.cc@bytedance.com,
-	songmuchun@bytedance.com,
-	yuanzhu@bytedance.com,
-	chengguozhu@bytedance.com,
-	sunjiadong.lff@bytedance.com,
-	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 13/35] RPAL: add tlb flushing support
-Date: Fri, 30 May 2025 17:27:41 +0800
-Message-Id: <c1eeca7e95433f2e51eeae63375f41d7fafd4c5b.1748594840.git.libo.gcs85@bytedance.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
-References: <cover.1748594840.git.libo.gcs85@bytedance.com>
+	s=arc-20240116; t=1748597526; c=relaxed/simple;
+	bh=r3EQ7kD0QYtBm/wVC83vp9ptG9VHOOzuguqUtvBO63U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DAaRP8bGhEOJ5m2o9uJgUrGh12GDM1JoNISKwv2K2nxIUV/lF61Z43l1gV/7KT3tPNn0GI++SkDIWoMcT3Ei4XHwpLUpNgD2uZtK+u4MDwRIy+rzZrDUnuhlvBWYjLPQClldvb67byZTKu8J8je/171nYoUy//9VjejOYeistfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4b7yb13zDqz2CfQD;
+	Fri, 30 May 2025 17:28:13 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id 696321A016C;
+	Fri, 30 May 2025 17:31:59 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
+ (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
+ 2025 17:31:58 +0800
+Message-ID: <6200e067-0ad1-4dc4-9694-05ee1e977f4c@huawei.com>
+Date: Fri, 30 May 2025 17:31:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] ext4: move mb_last_[group|start] to ext4_inode_info
+To: Jan Kara <jack@suse.cz>
+CC: <linux-ext4@vger.kernel.org>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>,
+	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+	<yangerkun@huawei.com>, <libaokun@huaweicloud.com>, Baokun Li
+	<libaokun1@huawei.com>
+References: <20250523085821.1329392-1-libaokun@huaweicloud.com>
+ <20250523085821.1329392-3-libaokun@huaweicloud.com>
+ <afjkyrm4y5mp5p72ew3ddqma7v4gkmjqdkcloeaidcj55ruami@zfkn6dzgqfwh>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <afjkyrm4y5mp5p72ew3ddqma7v4gkmjqdkcloeaidcj55ruami@zfkn6dzgqfwh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
 
-When a thread flushes the TLB, since the address space is shared,
-not only other threads in the current process but also other processes
-that share the address space may access the corresponding memory (related
-to the TLB flush). Therefore, the cpuset used for TLB flushing should be
-the union of the mm_cpumasks of all processes that share the address
-space.
+Hello Honza,
 
-This patch extend flush_tlb_info to store other process's mm_struct,
-and when a CPU in the union of the mm_cpumasks if invoked to handle
-tlb flushing, it will check whether cpu_tlbstate.loaded_mm matches any
-of mm_structs stored in flush_tlb_info. If match, the CPU will do local
-tlb flushing for that mm_struct.
+Thank you for you review!
 
-Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
----
- arch/x86/include/asm/tlbflush.h |  10 ++
- arch/x86/mm/tlb.c               | 172 ++++++++++++++++++++++++++++++++
- arch/x86/rpal/internal.h        |   3 -
- include/linux/rpal.h            |  12 +++
- mm/rmap.c                       |   4 +
- 5 files changed, 198 insertions(+), 3 deletions(-)
+On 2025/5/29 20:56, Jan Kara wrote:
+> On Fri 23-05-25 16:58:19, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
+>>
+>> After we optimized the block group lock, we found another lock
+>> contention issue when running will-it-scale/fallocate2 with multiple
+>> processes. The fallocate's block allocation and the truncate's block
+>> release were fighting over the s_md_lock. The problem is, this lock
+>> protects totally different things in those two processes: the list of
+>> freed data blocks (s_freed_data_list) when releasing, and where to start
+>> looking for new blocks (mb_last_[group|start]) when allocating.
+>>
+>> Moreover, when allocating data blocks, if the first try (goal allocation)
+>> fails and stream allocation is on, it tries a global goal starting from
+>> the last group we used (s_mb_last_group). This can make things faster by
+>> writing blocks close together on the disk. But when many processes are
+>> allocating, they all fight over s_md_lock and might even try to use the
+>> same group. This makes it harder to merge extents and can make files more
+>> fragmented. If different processes allocate chunks of very different sizes,
+>> the free space on the disk can also get fragmented. A small allocation
+>> might fit in a partially full group, but a big allocation might have
+>> skipped it, leading to the small IO ending up in a more empty group.
+>>
+>> So, we're changing stream allocation to work per inode. First, it tries
+>> the goal, then the last group where that inode successfully allocated a
+>> block. This keeps an inode's data closer together. Plus, after moving
+>> mb_last_[group|start] to ext4_inode_info, we don't need s_md_lock during
+>> block allocation anymore because we already have the write lock on
+>> i_data_sem. This gets rid of the contention between allocating and
+>> releasing blocks, which gives a huge performance boost to fallocate2.
+>>
+>> Performance test data follows:
+>>
+>> CPU: HUAWEI Kunpeng 920
+>> Memory: 480GB
+>> Disk: 480GB SSD SATA 3.2
+>> Test: Running will-it-scale/fallocate2 on 64 CPU-bound containers.
+>> Observation: Average fallocate operations per container per second.
+>>
+>>                        base     patched
+>> mb_optimize_scan=0    6755     23280 (+244.6%)
+>> mb_optimize_scan=1    4302     10430 (+142.4%)
+>>
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Good spotting with the s_md_lock contention here. But your changes don't
+> quite make sense to me. The idea of streaming allocation in mballoc is to
+> have an area of filesystem for large files to reduce fragmentation.  When
+> you switch to per-inode, this effect of packing large files together goes
+> away. Futhermore for each inode either all allocations will be very likely
+> streaming or not streaming (the logic uses file size) so either your
+> per-inode target will be unused or just another constantly used copy of
+> goal value.
+Sorry, I didn't intend to  break streaming allocation's semantics.
+A precise definition of streaming allocation is not found in the
+existing code, documentation, or historical records. Consequently,
+my previous understanding of it was somewhat inaccurate.
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index e9b81876ebe4..f57b745af75c 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -227,6 +227,11 @@ struct flush_tlb_info {
- 	u8			stride_shift;
- 	u8			freed_tables;
- 	u8			trim_cpumask;
-+#ifdef CONFIG_RPAL
-+	struct mm_struct **mm_list;
-+	u64 *tlb_gen_list;
-+	int nr_mm;
-+#endif
- };
- 
- void flush_tlb_local(void);
-@@ -356,6 +361,11 @@ static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *b
- 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
- }
- 
-+#ifdef CONFIG_RPAL
-+void rpal_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
-+	struct mm_struct *mm);
-+#endif
-+
- static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
- {
- 	flush_tlb_mm(mm);
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 39f80111e6f1..a0fe17b13887 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -12,6 +12,7 @@
- #include <linux/task_work.h>
- #include <linux/mmu_notifier.h>
- #include <linux/mmu_context.h>
-+#include <linux/rpal.h>
- 
- #include <asm/tlbflush.h>
- #include <asm/mmu_context.h>
-@@ -1361,6 +1362,169 @@ void flush_tlb_multi(const struct cpumask *cpumask,
- 	__flush_tlb_multi(cpumask, info);
- }
- 
-+#ifdef CONFIG_RPAL
-+static void rpal_flush_tlb_func_remote(void *info)
-+{
-+	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
-+	struct flush_tlb_info *f = info;
-+	struct flush_tlb_info tf = *f;
-+	int i;
-+
-+	/* As it comes from RPAL path, f->mm cannot be NULL */
-+	if (f->mm == loaded_mm) {
-+		flush_tlb_func(f);
-+		return;
-+	}
-+
-+	for (i = 0; i < f->nr_mm; i++) {
-+		/* We always have f->mm_list[i] != NULL */
-+		if (f->mm_list[i] == loaded_mm) {
-+			tf.mm = f->mm_list[i];
-+			tf.new_tlb_gen = f->tlb_gen_list[i];
-+			flush_tlb_func(&tf);
-+			return;
-+		}
-+	}
-+}
-+
-+static void rpal_flush_tlb_func_multi(const struct cpumask *cpumask,
-+			       const struct flush_tlb_info *info)
-+{
-+	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
-+	if (info->end == TLB_FLUSH_ALL)
-+		trace_tlb_flush(TLB_REMOTE_SEND_IPI, TLB_FLUSH_ALL);
-+	else
-+		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
-+				(info->end - info->start) >> PAGE_SHIFT);
-+
-+	if (info->freed_tables || mm_in_asid_transition(info->mm))
-+		on_each_cpu_mask(cpumask, rpal_flush_tlb_func_remote,
-+				 (void *)info, true);
-+	else
-+		on_each_cpu_cond_mask(should_flush_tlb,
-+				      rpal_flush_tlb_func_remote, (void *)info,
-+				      1, cpumask);
-+}
-+
-+static void rpal_flush_tlb_func_local(struct mm_struct *mm, int cpu,
-+				      struct flush_tlb_info *info,
-+				      u64 new_tlb_gen)
-+{
-+	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
-+
-+	if (loaded_mm == info->mm) {
-+		lockdep_assert_irqs_enabled();
-+		local_irq_disable();
-+		flush_tlb_func(info);
-+		local_irq_enable();
-+	} else {
-+		int i;
-+
-+		for (i = 0; i < info->nr_mm; i++) {
-+			if (info->mm_list[i] == loaded_mm) {
-+				lockdep_assert_irqs_enabled();
-+				local_irq_disable();
-+				info->mm = info->mm_list[i];
-+				info->new_tlb_gen = info->tlb_gen_list[i];
-+				flush_tlb_func(info);
-+				info->mm = mm;
-+				info->new_tlb_gen = new_tlb_gen;
-+				local_irq_enable();
-+			}
-+		}
-+	}
-+}
-+
-+static void rpal_flush_tlb_mm_range(struct mm_struct *mm, int cpu,
-+			     struct flush_tlb_info *info, u64 new_tlb_gen)
-+{
-+	struct rpal_service *cur = mm->rpal_rs;
-+	cpumask_t merged_mask;
-+	struct mm_struct *mm_list[MAX_REQUEST_SERVICE];
-+	u64 tlb_gen_list[MAX_REQUEST_SERVICE];
-+	int nr_mm = 0;
-+	int i;
-+
-+	cpumask_copy(&merged_mask, mm_cpumask(mm));
-+	if (cur) {
-+		struct rpal_service *tgt;
-+		struct mm_struct *tgt_mm;
-+
-+		rpal_for_each_requested_service(cur, i) {
-+			struct rpal_mapped_service *node;
-+
-+			if (i == cur->id)
-+				continue;
-+			node = rpal_get_mapped_node(cur, i);
-+			if (!rpal_service_mapped(node))
-+				continue;
-+
-+			tgt = rpal_get_service(node->rs);
-+			if (!tgt)
-+				continue;
-+			tgt_mm = tgt->mm;
-+			if (!mmget_not_zero(tgt_mm)) {
-+				rpal_put_service(tgt);
-+				continue;
-+			}
-+			mm_list[nr_mm] = tgt_mm;
-+			tlb_gen_list[nr_mm] = inc_mm_tlb_gen(tgt_mm);
-+
-+			nr_mm++;
-+			cpumask_or(&merged_mask, &merged_mask,
-+				   mm_cpumask(tgt_mm));
-+			rpal_put_service(tgt);
-+		}
-+		info->mm_list = mm_list;
-+		info->tlb_gen_list = tlb_gen_list;
-+		info->nr_mm = nr_mm;
-+	}
-+
-+	if (cpumask_any_but(&merged_mask, cpu) < nr_cpu_ids)
-+		rpal_flush_tlb_func_multi(&merged_mask, info);
-+	else
-+		rpal_flush_tlb_func_local(mm, cpu, info, new_tlb_gen);
-+
-+	for (i = 0; i < nr_mm; i++)
-+		mmput_async(mm_list[i]);
-+}
-+
-+void rpal_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
-+			      struct mm_struct *mm)
-+{
-+	struct rpal_service *cur = mm->rpal_rs;
-+	struct rpal_service *tgt;
-+	struct mm_struct *tgt_mm;
-+	int i;
-+
-+	rpal_for_each_requested_service(cur, i) {
-+		struct rpal_mapped_service *node;
-+
-+		if (i == cur->id)
-+			continue;
-+
-+		node = rpal_get_mapped_node(cur, i);
-+		if (!rpal_service_mapped(node))
-+			continue;
-+
-+		tgt = rpal_get_service(node->rs);
-+		if (!tgt)
-+			continue;
-+		tgt_mm = tgt->mm;
-+		if (!mmget_not_zero(tgt_mm)) {
-+			rpal_put_service(tgt);
-+			continue;
-+		}
-+		inc_mm_tlb_gen(tgt_mm);
-+		cpumask_or(&batch->cpumask, &batch->cpumask,
-+			   mm_cpumask(tgt_mm));
-+		mmu_notifier_arch_invalidate_secondary_tlbs(tgt_mm, 0, -1UL);
-+		rpal_put_service(tgt);
-+		mmput_async(tgt_mm);
-+	}
-+}
-+#endif
-+
- /*
-  * See Documentation/arch/x86/tlb.rst for details.  We choose 33
-  * because it is large enough to cover the vast majority (at
-@@ -1439,6 +1603,11 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	info = get_flush_tlb_info(mm, start, end, stride_shift, freed_tables,
- 				  new_tlb_gen);
- 
-+#if IS_ENABLED(CONFIG_RPAL)
-+	if (mm->rpal_rs)
-+		rpal_flush_tlb_mm_range(mm, cpu, info, new_tlb_gen);
-+	else {
-+#endif
- 	/*
- 	 * flush_tlb_multi() is not optimized for the common case in which only
- 	 * a local TLB flush is needed. Optimize this use-case by calling
-@@ -1456,6 +1625,9 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 		flush_tlb_func(info);
- 		local_irq_enable();
- 	}
-+#if IS_ENABLED(CONFIG_RPAL)
-+	}
-+#endif
- 
- 	put_flush_tlb_info();
- 	put_cpu();
-diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
-index c504b6efff64..cf6d608a994a 100644
---- a/arch/x86/rpal/internal.h
-+++ b/arch/x86/rpal/internal.h
-@@ -12,9 +12,6 @@
- #include <linux/mm.h>
- #include <linux/file.h>
- 
--#define RPAL_REQUEST_MAP 0x1
--#define RPAL_REVERSE_MAP 0x2
--
- extern bool rpal_inited;
- 
- /* service.c */
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index b9622f0235bf..36be1ab6a9f3 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -80,6 +80,11 @@
- /* No more than 15 services can be requested due to limitation of MPK. */
- #define MAX_REQUEST_SERVICE 15
- 
-+enum {
-+	RPAL_REQUEST_MAP,
-+	RPAL_REVERSE_MAP,
-+};
-+
- extern unsigned long rpal_cap;
- 
- enum rpal_task_flag_bits {
-@@ -326,6 +331,13 @@ rpal_get_mapped_node(struct rpal_service *rs, int id)
- 	return &rs->service_map[id];
- }
- 
-+static inline bool rpal_service_mapped(struct rpal_mapped_service *node)
-+{
-+	unsigned long type = (1 << RPAL_REQUEST_MAP) | (1 << RPAL_REVERSE_MAP);
-+
-+	return (node->type & type) == type;
-+}
-+
- #ifdef CONFIG_RPAL
- static inline struct rpal_service *rpal_current_service(void)
- {
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 67bb273dfb80..e68384f97ab9 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -682,6 +682,10 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
- 		return;
- 
- 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, start, end);
-+#ifdef CONFIG_RPAL
-+	if (mm->rpal_rs)
-+		rpal_tlbbatch_add_pending(&tlb_ubc->arch, mm);
-+#endif
- 	tlb_ubc->flush_required = true;
- 
- 	/*
--- 
-2.20.1
+I previously thought it was used to optimize the efficiency of linear
+traversal. For instance, if 500 inodes are created in group 0 and each
+file is sequentially filled to 1GB, each file's goal, being empty, would
+be group 1 (the second group in the inode's flex_bg).
+
+Without a global goal and in the absence of non-linear traversal,
+after the first inode is filled, the second inode would need to traverse
+groups 1 through 8 to find its first free block.
+
+This inefficiency escalates, eventually requiring the 500th inode to
+potentially traverse almost 4000 block groups to find its first available
+block.
+
+I initially believed it could be split to the inode level to reduce
+traversal time and file fragmentation. However, as you pointed out,
+its purpose is to cluster large files, not data blocks within a file.
+Given this, splitting it to the inode level no longer makes sense.
+> So I can see two sensible solutions here:
+> a) Drop streaming allocations support altogether.
+As mentioned above, it can also greatly improve the efficiency of linear
+traversal, so we can't simply remove it.
+>
+> b) Enhance streaming allocation support to avoid contention between
+> processes allocating in parallel and freeing. Frankly, there's no strong
+> reason why reads & writes of streaming allocation goal need to use a
+> spinlock AFAICS.
+Yes, since it's just a hint, we don't need a lock at all, not even
+fe_start, we just need the last fe_group.
+> We could just store a physical block number and use
+> atomic64 accessors for it? Also having single goal value is just causing
+> more contention on group locks for parallel writers that end up using it
+> (that's the problem I suspect you were hitting the most).
+Spot on! We did try a single, lockless atomic64 variable, and just as
+you pointed out, all processes started traversing from the very same
+group, which just cranked up the contention, dropping OPS to just 6745.
+>   So perhaps we
+> can keep multiple streaming goal slots in the superblock (scale the count
+> based on CPU count & filesystem group count) and just pick the slot based
+> on inode number hash to reduce contention?
+>
+> 								Honza
+That's a brilliant idea, actually!
+
+Since most containers are CPU-pinned, this would naturally cluster a single
+container's data blocks together. I believe we can also apply this to inode
+allocation, so a container's inodes and data are all in a single region,
+significantly reducing interference between containers.
+
+My gratitude for your valuable suggestion!
+I'm going to try out the CPU bucketing approach.
+
+Regards,
+Baokun
+
+
+>> ---
+>>   fs/ext4/ext4.h    |  7 ++++---
+>>   fs/ext4/mballoc.c | 20 +++++++++-----------
+>>   fs/ext4/super.c   |  2 ++
+>>   3 files changed, 15 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+>> index 9c665a620a46..16c14dd09df6 100644
+>> --- a/fs/ext4/ext4.h
+>> +++ b/fs/ext4/ext4.h
+>> @@ -1171,6 +1171,10 @@ struct ext4_inode_info {
+>>   	__u32 i_csum_seed;
+>>   
+>>   	kprojid_t i_projid;
+>> +
+>> +	/* where last allocation was done - for stream allocation */
+>> +	ext4_group_t i_mb_last_group;
+>> +	ext4_grpblk_t i_mb_last_start;
+>>   };
+>>   
+>>   /*
+>> @@ -1603,9 +1607,6 @@ struct ext4_sb_info {
+>>   	unsigned int s_mb_order2_reqs;
+>>   	unsigned int s_mb_group_prealloc;
+>>   	unsigned int s_max_dir_size_kb;
+>> -	/* where last allocation was done - for stream allocation */
+>> -	unsigned long s_mb_last_group;
+>> -	unsigned long s_mb_last_start;
+>>   	unsigned int s_mb_prefetch;
+>>   	unsigned int s_mb_prefetch_limit;
+>>   	unsigned int s_mb_best_avail_max_trim_order;
+>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+>> index 5c13d9f8a1cc..ee9696f9bac8 100644
+>> --- a/fs/ext4/mballoc.c
+>> +++ b/fs/ext4/mballoc.c
+>> @@ -2138,7 +2138,6 @@ static int mb_mark_used(struct ext4_buddy *e4b, struct ext4_free_extent *ex)
+>>   static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+>>   					struct ext4_buddy *e4b)
+>>   {
+>> -	struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
+>>   	int ret;
+>>   
+>>   	BUG_ON(ac->ac_b_ex.fe_group != e4b->bd_group);
+>> @@ -2169,10 +2168,8 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+>>   	folio_get(ac->ac_buddy_folio);
+>>   	/* store last allocated for subsequent stream allocation */
+>>   	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+>> -		spin_lock(&sbi->s_md_lock);
+>> -		sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+>> -		sbi->s_mb_last_start = ac->ac_f_ex.fe_start;
+>> -		spin_unlock(&sbi->s_md_lock);
+>> +		EXT4_I(ac->ac_inode)->i_mb_last_group = ac->ac_f_ex.fe_group;
+>> +		EXT4_I(ac->ac_inode)->i_mb_last_start = ac->ac_f_ex.fe_start;
+>>   	}
+>>   	/*
+>>   	 * As we've just preallocated more space than
+>> @@ -2844,13 +2841,14 @@ ext4_mb_regular_allocator(struct ext4_allocation_context *ac)
+>>   							   MB_NUM_ORDERS(sb));
+>>   	}
+>>   
+>> -	/* if stream allocation is enabled, use global goal */
+>> +	/* if stream allocation is enabled, use last goal */
+>>   	if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+>> -		/* TBD: may be hot point */
+>> -		spin_lock(&sbi->s_md_lock);
+>> -		ac->ac_g_ex.fe_group = sbi->s_mb_last_group;
+>> -		ac->ac_g_ex.fe_start = sbi->s_mb_last_start;
+>> -		spin_unlock(&sbi->s_md_lock);
+>> +		struct ext4_inode_info *ei = EXT4_I(ac->ac_inode);
+>> +
+>> +		if (ei->i_mb_last_group || ei->i_mb_last_start) {
+>> +			ac->ac_g_ex.fe_group = ei->i_mb_last_group;
+>> +			ac->ac_g_ex.fe_start = ei->i_mb_last_start;
+>> +		}
+>>   	}
+>>   
+>>   	/*
+>> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+>> index 181934499624..6c49c43bb2cb 100644
+>> --- a/fs/ext4/super.c
+>> +++ b/fs/ext4/super.c
+>> @@ -1416,6 +1416,8 @@ static struct inode *ext4_alloc_inode(struct super_block *sb)
+>>   	INIT_WORK(&ei->i_rsv_conversion_work, ext4_end_io_rsv_work);
+>>   	ext4_fc_init_inode(&ei->vfs_inode);
+>>   	mutex_init(&ei->i_fc_lock);
+>> +	ei->i_mb_last_group = 0;
+>> +	ei->i_mb_last_start = 0;
+>>   	return &ei->vfs_inode;
+>>   }
+>>   
+>> -- 
+>> 2.46.1
+>>
 
