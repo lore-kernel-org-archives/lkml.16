@@ -1,138 +1,124 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552A422154A;
-	Fri, 30 May 2025 11:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793EC19AD70
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748603260; cv=none; b=nOoCmbln/uEk4Jj7PikGS6/iNYaNBYvvTkiYHEDJfalDjbuvD6rboAOGoZEVcZP0vmydKRBuoIpNQpsitciVXVNkakOXrsw5LopYrHpL91j2o8rW1SrAyCtTiQ+eR+v/uQ05ZGuLtKQTReEboilX8Afg29cBqcEk52rCrU1aPtc=
+	t=1748603388; cv=none; b=YFdjkeReohjtQPDCM02uqC3px36erxHFw4O25Q4r9UnJlegNoUp5xPbkHV0z3ZLb0wRK+ftD6zFTvuLqvpKjV5IietcUisc+aRdbBx4tzK+/Mef+fDH9h5KHITOvigPkzsivmcBsFjGjIhKVc+u33iOXOngVbfY7nLitWFsh96Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748603260; c=relaxed/simple;
-	bh=FCW4DfUTseZWdlQKBXoT3iPxIReGVkSGs1EtU70fb9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dXAVfSxZ2eDRFmH49xbKOALRyr7JNPHgEuQ2pdFq3aFz3PG8m4yjygT7kZenXLhu5ht01oX3eDu5dEjT1H8ytC8mvNHxhUANkDuY5eRLxBdjbw6rIJCsDouHjK8MKQ+HRUDD6HSm8AKj2D3CULRepHfBy2p2AtF7OEba7RshumM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lLF12D8F; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748603388; c=relaxed/simple;
+	bh=or/cFM9w3xIlM9jzAAD47M+TFLTk+EUJQ2P/TRJDHnI=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=gXLLj5EPXGUp8JPV5PDE9Zc6BKokHg3Wx+QiDoeC/3/cQ6RQEXfDw/DF2I8YvAsLEvroGsnmly6SFjT34pi3TZcyFZeYV9Jv4RVU3omdKnomFi7oBGdpDp2rP3iLQp4Am+4ro9wjMmSu7fC3g3D9O6PEXqfmDKXvs+DYvCIWgkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=a5KKOTlm; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLF12D8F"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-adb2bd27c7bso230235266b.2;
-        Fri, 30 May 2025 04:07:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="a5KKOTlm"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4e6a0c274so236178f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 04:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748603256; x=1749208056; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i4ZdmHPp5u88c677hlTmVdlU6RsFYWCDgNeLS1e4+ps=;
-        b=lLF12D8FOyrmViMFcaGThomW+Ar9CrKDFVztYXskrGuosvQ+4jtpMv0r3oSJGGV+8g
-         XSWYboDqJKNmBTbAO7jH4d/mKaJ6l/voIJ3GbWidlWfExIEgrV/7pttthVrRxFzONXmN
-         tokRSgSAa5Snml79+Pc+m8TRanj4twior7o+yv3aER/ZsKE7mVYyQpq2Hm9CRSqhoNXj
-         xM6pii6AhGAU6Txt4clF7722+FylaWPd8XNEZVtTQVrBc2Q0nhYvVybgNcEhPXt2WzuS
-         5+XbbVgJrb1liRrYANv8T4AEYIy9m6iaGqUIwKHlQZo5tY3WP1ymF5UBYWcVz/jRx0I8
-         J4bA==
+        d=ventanamicro.com; s=google; t=1748603385; x=1749208185; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nKHlHU74s9id5ECnlxromIqBTzfUbM5l+HheDzzqFcg=;
+        b=a5KKOTlm8lrvJCvoAepNsW3t3q2KNwi5cWQTG+qGawkks7iWwDjfblbRcvnee5eex4
+         FZ3SCMRvIUjqwaUvP1RGL/zbOpNTFjq7V0ADheLDIydQKTyxn1RoAgYCUNZj3tyatQ+/
+         CZl/MaXmHT7K85xstZC3JVbYEJ5jBRhS7jMTyZlABVBVwnD+JBlqfJ6pj+zyVcLQmw0u
+         9ZjLuq9wZaJiP3ogOxftwAFeOuHSGioevRjJGMr1iQPmNRyveL62VB2zI2YRw9s57JAK
+         HgHw9Ewjiq7zOSS5ZS7+ILicRtCBDS2iKUKyYNjSdDYIeANMqF8OYy/aAVma9q5ggZef
+         fOiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748603256; x=1749208056;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i4ZdmHPp5u88c677hlTmVdlU6RsFYWCDgNeLS1e4+ps=;
-        b=bp3OWCQeie2+ChhlrHk0SXW205EuDTRaTwDZtBMgDimTaEiDiGA1UaTTJXlxWEMPgZ
-         teC3lmZ8aryeYxE9aKEqfuoQmX3EPghlFl24oIRFuDwEaMT11nwF2+Ol7GLj3C9Vj88d
-         rjsTYWieeNKZRAMJuktwNn8nTKj/pj4XDbjKI1LRopN7kyp5WrID62IlKbrYuSjtk2VJ
-         evQXr04o+kuFseRoQCibhgOw/K5RMy+Bxvk3h92U8knMWOHk2AWKlci7CtQkjQ+KL0hF
-         A1IQYyzKGaz/4Lb9wwkxqqU74emZfRUqQdRK9nq/LxktHapXliACU22GIyON/TEx6+pA
-         6zhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFDKwOXUlDfVadRkPIR+dsL18L34k9H4NdjfrDU/bQNbwPQc6UD+tELpU0HOdGa37ZvXF+/WJkbgmj6+nc@vger.kernel.org, AJvYcCXhw7HU+TRuBErxn29nIfAJKuzgoHqp5VJZ3xbeUmTRNO+RzSTIvV3uSq9L8InykQQSOcPPJBzHVOwlm4tx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+2p30/4fe/bp2Uo9s75i5EVvEHReX2GdgEaM3oma3w/spDwXI
-	beMr93udfGPanHFSo2cW94vsAPZMcTi7aicMFfTwJf7K3xc0AxTkmzNNiPNGRg==
-X-Gm-Gg: ASbGncuyc8rAK0hO+F8uyQHkeJOHI01W58+vPOHEeTFYQ7aUo8FMj6QDRNDUvm8nYvY
-	A6BZnQDv2gJODNX+Wj3SZJFCDFF4OtCq8ZDgY6PoTiSb/REN9mhDtYK+YrUwogfW0eF7DmFXS+f
-	oVgyCLASxaivjYiz4Dbwal/DpSxwFGKOQBXKpI1TTE/zUBZfKXB7yP6yzDpuFYZRphZJCldn9Vp
-	7WwwU61pmwjnpZTcdXR3lkWLaQMOUXYIE2rANpmvcHphoay0eFymhz7I4tUNl3hcgUfIhxodlbj
-	pab+bkUxzECYXVrn1nQz1Oh3qw2LBZcv+dKrx9H0K88BA8aDdkKOfQHJWlolEmXVfkBULk5jqbT
-	uMsC3+QBM9g7SdEPxMLYPaB+NJYE=
-X-Google-Smtp-Source: AGHT+IEJEZ0HZGATsOA3e1o6i0DTK+hWUEQ2zJOHWGQcm9LQPtIAr5i0sQqhE620G4EgLJF6VkfVkg==
-X-Received: by 2002:a17:907:3f09:b0:ad8:8d3c:8a73 with SMTP id a640c23a62f3a-adb3228d6aemr265848566b.17.1748603256265;
-        Fri, 30 May 2025 04:07:36 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad3952esm306355166b.126.2025.05.30.04.07.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 04:07:35 -0700 (PDT)
-Message-ID: <28db650d-a911-4df9-9ad4-f926ea0683e6@gmail.com>
-Date: Fri, 30 May 2025 13:07:35 +0200
+        d=1e100.net; s=20230601; t=1748603385; x=1749208185;
+        h=in-reply-to:references:cc:subject:from:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nKHlHU74s9id5ECnlxromIqBTzfUbM5l+HheDzzqFcg=;
+        b=pPaEmkC7WEFheNCwu3zZ2y+n9qqHLcZJJzd3ZfLrdD650MRtSeTHe4WPs23j97zhxv
+         eKyBciSnKbQ3xBWvh5gyf6v6kIv+PzeYZJBaw66TbzjqfqaJJxtHwwr5e4Flmobc+jR5
+         KvYuuTidMvtzmYmb2uetURhM7W1PBP8yYtl+BwI4lZrUdPFtEYN5vH5ZoyHEUmRHEmCQ
+         He52qtFAWnJmbP4GbUd3C+NDHaSSnun2p6cSkHQYRSU8B55fLxN8VrpaxjmYIkjt6dUL
+         fdzPlmntll4meArFsIWxAV03CFx52X6YqSZWNvxTQ8kz7Ua8r3FmtXmzkKFiF9BXm9x1
+         Hl8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXzRun8DqptovZpYHRiv0h65HY1i3XojaIasIfeqelZC2ALKswUWDukniTbQlvpTBWtqzqvgWr58x5wEEs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZeU0074+xDEARYER4u67+5FluoYSxVFJ+LeLkZL3vlQpHcN61
+	ftFHjfa1nsUP4aejNCmFwi8aG2xBvbSEthMaJdxtLpe00trO/Wi0YLUG4hJ4r/fKmnI=
+X-Gm-Gg: ASbGnctWauPWrQYfVRuGi0A8sE/dm5GgZUAn2K5njybb/ic1UT0HtuR2sEv2cF6wEcH
+	4T6/wD1ctTo0urhoWWhTMYpK4xEuQq8LVS5yetlqYzj18p5Ykf8WFEmyEOje/KIvFye6L4ODbId
+	QzCIfu/tiqEWO8JOsExMMUd+0s3M9zoTAYwtxkORD1VUKSvhotS0AOcFX4jk0wdb2R4L4u12hFX
+	/1ut/4aOyDDiLDdpD562AD3v9s2xVRxNsFjx7XHAJkId1JM677Jn4Vywz+CX0YIJfYCSvpgJhdS
+	HfP45ePbGjqqoSh1AcNpoHROFROeCAUaf4kX6kfb/saRuip4pUg1uoueOUU=
+X-Google-Smtp-Source: AGHT+IHWlRXsHj8fy3YljEwKBbucuDh540moRSz1XXe7HUhMOymhGLaK6eZjYnDZtJV/6QwPDY4NXA==
+X-Received: by 2002:a05:6000:228a:b0:3a4:dbdf:7152 with SMTP id ffacd0b85a97d-3a4f7ab6c2fmr730169f8f.14.1748603384676;
+        Fri, 30 May 2025 04:09:44 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:23dc:ac4e:5f79:355b])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f00972c1sm4593368f8f.68.2025.05.30.04.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 04:09:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds
- access of BAM arrays
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Mark Brown <broonie@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-References: <20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com>
- <KuueBg3qliXMt9QN9kV_5_on2xJV-BEWZAsktO_Ce-Fq1iBAPCFypbYUVZxlV4LjF0AUZG57KqiXZZ3uefQrXw==@protonmail.internalid>
- <20250529-qpic-snand-avoid-mem-corruption-v2-2-2f0d13afc7d2@gmail.com>
- <68c54d56-3e44-4f43-8bd6-f6b7fa1f379b@linaro.org>
-Content-Language: hu
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <68c54d56-3e44-4f43-8bd6-f6b7fa1f379b@linaro.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Fri, 30 May 2025 13:09:43 +0200
+Message-Id: <DA9G60UI0ZLC.1KIWBXCTX0427@ventanamicro.com>
+To: "Atish Patra" <atish.patra@linux.dev>, "Andrew Jones"
+ <ajones@ventanamicro.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version
+ to 3.0
+Cc: "Anup Patel" <anup@brainfault.org>, "Will Deacon" <will@kernel.org>,
+ "Mark Rutland" <mark.rutland@arm.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Mayuresh Chitale" <mchitale@ventanamicro.com>,
+ <linux-riscv@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <kvm-riscv@lists.infradead.org>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+ <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
+ <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
+ <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
+ <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+ <20250526-224478e15ee50987124a47ac@orel>
+ <ace8be22-3dba-41b0-81f0-bf6d661b4343@linux.dev>
+ <20250528-ff9f6120de39c3e4eefc5365@orel>
+ <1169138f-8445-4522-94dd-ad008524c600@linux.dev>
+ <DA8KL716NTCA.2QJX4EW2OI6AL@ventanamicro.com>
+ <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
+In-Reply-To: <2bac252c-883c-4f8a-9ae1-283660991520@linux.dev>
 
-2025. 05. 30. 10:56 keltezéssel, Bryan O'Donoghue írta:
+2025-05-29T11:44:38-07:00, Atish Patra <atish.patra@linux.dev>:
+> On 5/29/25 3:24 AM, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>> I originally gave up on the idea, but I feel kinda bad for Drew now, so
+>> trying again:
+>
+> I am sorry if some of my replies came across in the wrong way. That was=
+=20
+> never
+> the intention.
 
-...
+I didn't mean to accuse you, my apologies.  I agree with Drew's
+positions, so to expand on a question that wasn't touched in his mail:
 
-> This one doesn't apply to -next
+>> Even if userspace wants SBI for the M-mode interface, security minded
+> This is probably a 3rd one ? Why we want M-mode interface in the user=20
+> space ?
 
-It is because the series is based on the SPI tree, and -next contains another
-change for 'drivers/mtd/nand/qpic_common.c' which comes from the MTD tree.
+It is about turning KVM into an ISA accelerator.
 
-It can be applied by specifying the 'M' switch for b4 shazam.
+A guest thinks it is running in S/HS-mode.
+The ecall instruction traps to M-mode.  RISC-V H extension doesn't
+accelerate M-mode, so we have to emulate the trap in software.
 
+The ISA doesn't say that M-mode means SBI.  We try really hard to have
+SBI on all RISC-V, but I think KVM is taking it a bit too far.
 
-$ git reset --hard next-20250530
-HEAD is now at 3a83b350b5be Add linux-next specific files for 20250530
-$ b4 shazam -M 20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com
-Grabbing thread from lore.kernel.org/all/20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 4 messages in the thread
-Analyzing 12 code-review messages
-Checking attestation on all messages, may take a moment...
----
-  ? [PATCH v2 1/2] spi: spi-qpic-snand: reallocate BAM transactions
-  ? [PATCH v2 2/2] mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
-  ---
-  ? Signed: DKIM/gmail.com
----
-Total patches: 2
----
- Base: using specified base-commit b00d6864a4c948529dc6ddd2df76bf175bf27c63
-Magic: Preparing a sparse worktree
----
-Applying: spi: spi-qpic-snand: reallocate BAM transactions
-Applying: mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
----
-Fetching into FETCH_HEAD
-Will exec: git merge --no-ff -F /home/juhosg/devel/linux-ipq95xx/.git/b4-cover --edit FETCH_HEAD --signoff
-Press Enter to continue or Ctrl-C to abort
-Auto-merging drivers/mtd/nand/qpic_common.c
-Auto-merging drivers/spi/spi-qpic-snand.c
-Auto-merging include/linux/mtd/nand-qpic-common.h
-Merge made by the 'ort' strategy.
- drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
- drivers/spi/spi-qpic-snand.c         | 16 ++++++++++++++++
- include/linux/mtd/nand-qpic-common.h |  8 ++++++++
- 3 files changed, 50 insertions(+), 4 deletions(-)
-$
-
+We can discuss how best to describe SBI, so userspace can choose to
+accelerate the M-mode in KVM, but I think that the ability to emulate
+M-mode in userspace should be provided.
