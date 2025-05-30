@@ -1,29 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A115F21D5B3;
-	Fri, 30 May 2025 09:00:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D25A219A6B;
+	Fri, 30 May 2025 09:01:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748595651; cv=none; b=rYIePvZM7IUsjyhmrsRAa28kBz6d8RrjABuqyZ2VcAVqZjf8dSg3Zzqosw4FA4B9w+aWcj9uKErjokWJBOnFj8RZgdx+HvVZ292NtF0pjW8FX16SAbb4/b7Rq7uFKAoPn62aEKHT26y6Q/bvdr1ga1DnbnP7i8jwb725gJdz8QI=
+	t=1748595696; cv=none; b=C+aoq78/Y3tzqBjU6lgYa5EJOtNq62uRX1rZMqj0hs7xMEtJ/QnqqWJ6HaD1bUk+xXHR9VHmgXeYQcwrTC0VqMjWclF1vrGWRAaYfFdc2ZA2jj6reAQwqMrbJf2wmejraV/Q7TLmr0dGO7ymqJ+ZIzkIlOq8jDQ8tvuw7y96i9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748595651; c=relaxed/simple;
-	bh=gNIbx1N9UqqVUej1ctL6a3XA1FWPgsPdOnRM+BgoZi8=;
+	s=arc-20240116; t=1748595696; c=relaxed/simple;
+	bh=n2ZjVd2alcKnIdJEGexsGHL5f/SaS0tA+GdWnik0AJA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CH4ToLeF22esUuQow1jcFXYrUmrhzDP3XYMJYeNzoWXZ9cLdaHfXn9pQcRGn/diNLxbIgnCY921JAW7rQNES7uU8B8JVlsLNLmzKZm8+9osMPOZfGZV5gUwWZRz6uTdgrOA9jzT4vP/N+v/NhkFPFUD9fOwVAQAZQZhVXTDtL98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ctSgh+iR; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=spM6PmS0UMvboPv9YH9GIC2CsJ5VkNl3m5mQzLQNUs/y2ojF18x3I+2hdk3CH/UnvZYTDx5DLfCOfMyqH9eGMyc7Lrtpg4TKOKpgClcZJz2bnBvJ5lU6rQt9rvtZ/af6flcQvyENqgbJfiiBtSfV0wmpsB614Fx1P1DzXoL3rhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Avn/4MnJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ctSgh+iR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F68C4CEE9;
-	Fri, 30 May 2025 09:00:50 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Avn/4MnJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798A3C4CEE9;
+	Fri, 30 May 2025 09:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1748595651;
-	bh=gNIbx1N9UqqVUej1ctL6a3XA1FWPgsPdOnRM+BgoZi8=;
+	s=korg; t=1748595696;
+	bh=n2ZjVd2alcKnIdJEGexsGHL5f/SaS0tA+GdWnik0AJA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ctSgh+iRBTE0Y46oJJpPc80V1gnDTrbvbXOzn92/BCBveHrTWnWihWl/dUiZNcfDJ
-	 E7woVkfr6xJaBP7/dFRNI4rwarqEw3l/xygMcNazwNX61PMmCknsS+i0TCI2nnZ20P
-	 sF2J3I+X89jk3CFk8tdIQmVcAtZsnzOkhV+xS+BE=
-Date: Fri, 30 May 2025 11:00:47 +0200
+	b=Avn/4MnJETTZAVpGapLc++uqRuOHnjEy1YQwrhob1PttsF3wn9f2O5mhPJryZ+mEp
+	 qAwuh7CMsn8cip9NyyLxi7TaBdjk0GoRJWzW7giwrZ3g9GZPLwDuWE6wura//uQ5pw
+	 p8jQl8bcZJLMYM002Hl8GEIRr0mh8FcTMDpFrZg4=
+Date: Fri, 30 May 2025 11:01:33 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Alexandre Courbot <acourbot@nvidia.com>
 Cc: Danilo Krummrich <dakr@kernel.org>, Timur Tabi <timur@kernel.org>,
@@ -36,7 +36,7 @@ Cc: Danilo Krummrich <dakr@kernel.org>, Timur Tabi <timur@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
 Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025053007-playtime-french-c2fa@gregkh>
+Message-ID: <2025053050-maggot-landfall-d5eb@gregkh>
 References: <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
  <aCc_PSOPkLWTcTru@pollux>
  <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
@@ -45,8 +45,8 @@ References: <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
  <DA8G3G918FS4.X8D7PQMT4TGB@nvidia.com>
  <2025052932-pyramid-unvisited-68f7@gregkh>
  <DA935OIFBM1H.3CMSHQ46LLG4P@nvidia.com>
- <2025053058-siding-emperor-d8fd@gregkh>
- <DA9AS88BCFX2.FET64FP3J2WO@nvidia.com>
+ <2025053047-theology-unsaid-d6ac@gregkh>
+ <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,32 +55,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DA9AS88BCFX2.FET64FP3J2WO@nvidia.com>
+In-Reply-To: <DA9AU3OBT29Z.3CX827C91I3IH@nvidia.com>
 
-On Fri, May 30, 2025 at 03:56:37PM +0900, Alexandre Courbot wrote:
-> On Fri May 30, 2025 at 3:21 PM JST, Greg KH wrote:
+On Fri, May 30, 2025 at 03:59:03PM +0900, Alexandre Courbot wrote:
+> On Fri May 30, 2025 at 3:22 PM JST, Greg KH wrote:
 > > On Fri, May 30, 2025 at 09:58:02AM +0900, Alexandre Courbot wrote:
-> >> > But for now, doing it in generic code, that all systems end up loading,
-> >> > yet very very very few would ever actually use makes no sense.  And
-> >> > adding it to a driver also doesn't make sense as you can define your
-> >> > user/kernel api now, it's not set in stone at all given that there is no
-> >> > existing code merged.
-> >> 
-> >> Eschewing this from the driver would require duplicating the GSP
-> >> firmware (a healthy 26MB compressed binary) in linux-firmware to provide
-> >> both ELF and non-ELF versions of the same code, and also store the other
-> >> ELF sections as their own files. I expect this to be a hard sell for
-> >> linux-firmware.
+> >> However, Nova also supports a couple of older chip generations that use
+> >> the same GSP firmware -  it is for these that the ELF unpacking must
+> >> occur in the kernel. IIUC this has to do with the capabilities of the
+> >> microcontroller that ultimately does the loading (more capable RISC-V on
+> >> Hopper+ vs. older and more limited Falcon).
 > >
-> > Why would the linux-firmware people care about the size of firmware
-> > blobs being given to them?  That's the whole reason for their existance,
-> > to put them in one place instead of having to download them from random
-> > locations on the internet, or to have them in the kernel tree itself.
-> >
-> > It's already 300MB or so for the whole project, what's 26MB more?
+> > Why specifically does the kernel have to get involved here?  What
+> > requires it to do it that userspace can not?
 > 
-> Roughtly 1/10th of the current total size as avoidable overhead. ^_^;
+> I don't know of a user-space tool that is readily available and could
+> perform such extraction of the ELF content upon kernel request. Is there
+> anything like this?
 
-It's just storage on a disk, that's not an issue.  Storage sizes just
-increased by more than that in the days we've taken on this email
-thread :)
+libelf provides you with the needed tools for this.
+
+And you didn't answer my question.
