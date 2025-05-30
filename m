@@ -1,604 +1,266 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABAC17BD3;
-	Fri, 30 May 2025 13:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749A3376F1;
+	Fri, 30 May 2025 13:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748611018; cv=none; b=gjTdZuhXYh0FLfzSdObIcwrBEG1Xx5Puri4Uym61f5C4gietNHmPQ9PiycIG3rH8qrwBdeymXwIaxnpHGyAvgVGyLEaM6R9kO5GPplc+VsULSiZOTPZL2LnFYZSFfzvtpDb+fQld9Xm/svjn/bd+RfJUV15U33/Mfudt7QkozRM=
+	t=1748611270; cv=none; b=Z5+rqDweIfZI5knf/4EwIDHfcP2fYTjktwZDJL0DCoUz2mCWjOfNWzVB9dGyMFIAM9+b5hKVKca2VyUf5ymRxMjDk5AWt7NE7K/j26qmYQ9jNPRs+vr88+BTBEMH2Vbh56Ek+FpGxYqndjIRN7uHrAEnTtySIErr5CGN7v/Wk1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748611018; c=relaxed/simple;
-	bh=odSpI0BeOEr3gfWcu6dm8dCBXa6N3MN2XV4lNf57b3k=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gugsZl6noh+fgH7Wh/dWRZ5fyNzApXOI+gdtuP2DpNLJx3TojCFq1MaWI0DF9h7ZRIcFZVsMsZhMl87M1qCBWlvnQRW/eSLkC8ireqmrSMqUMrRhrwPXGsmASPJKWuQBxp6JciZvhli8VutRfEUXQ23mKRmDjFRID5+U8A5sMRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=OlE45DgI; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1748611270; c=relaxed/simple;
+	bh=PwXUXWT9DyeGI/kRb9Ez0UEJg7Zz3tLYEovJpqJVJTE=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=pADILID2Y0g93mwMoWd032nsLapMRhA964KtmsOniortjU8Fak7qptGa0g5bl6s48RVFBuodhfgQTtbYVyOA5ZxQ8r+pNz5clhtAKgN6u6oQYs+8MFJyS6zxUUv+dme+K5Xomz/2ewSQSMwLzRBwUCAZkiW4NhREcIqexHKk//Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eBT+XqcO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="OlE45DgI"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U5tYJH013510;
-	Fri, 30 May 2025 12:57:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=default; bh=jmVUGjZmv+RCtWS4PPyAaRxK
-	z/CajiPe93qR/cXGm/M=; b=OlE45DgII48j9+M6G2hpqMr1wVVlOQrhPobOCxoS
-	luclLAuwaMPWXOY+IRpiBSXGm58sf6MIHgoi1pM/1G6u0J0XjFuykVMuanrBHtO9
-	HMdjrIcpSQ3ouDLYSI+yZGd0u7PnjOxtaOd8c9jrB6pwhh3c9LbkCKTuYLA9M/zO
-	ZfbiImQJc00xIc9QflavbZV7HUc/pM+YEXIJnIHd+4W2NWAJPXbK8/SVq3jnSMKU
-	hfe0d2ksA12MNgqI/mYXNWrv72YqmbtaSMeSuc06mYhgwNpLFj/Ej8pg3W1LS2bP
-	mVXaSYfCW3+8/PpV+fp0DeBoVzm5gu9vgS75HQjXMV+PyA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 46wj9euygu-1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eBT+XqcO"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54UAAF0Q013825;
+	Fri, 30 May 2025 13:21:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=l6myu8eCUg4zijyZo6hfCq
+	Jjh+HSeDdZSggG+SVThYc=; b=eBT+XqcOfOWNSIgm013jFLFeiBH7ky+nm39ooo
+	hjALN0jk3UuHbCgCkElV/Iohk9Cxf0osFybriipvFbhLQ7OQB69/O3xfg/O8voX3
+	WY8kYw2Jp/TlCOwRrH6VmMDcpniu/l2uKIjwy+s3Y52IycnEN1+itc+neLc6RVRp
+	oBY8Lvu079Ad4Us8S3CCz/VEIjXUiRkLyXQxcF/mdSEqiy4XA8hJjIsAFM803E6j
+	7lsbQJcVk+5OZmdR84VU6KWzeF879yLv8QSDaMIA0dbZyeheR7d+pOdEjXkeDFtc
+	whAdayvboTab+yk25ksXYM6RXNg0B/wqvojpZOneAXCp/sjw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46wavm33r9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 12:57:55 +0000 (GMT)
-Received: from ML-CTVHTF21DX.crowdstrike.sys (10.100.11.122) by
- 04WPEXCH007.crowdstrike.sys (10.100.11.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 30 May 2025 12:57:50 +0000
-From: Slava Imameev <slava.imameev@crowdstrike.com>
-To: <qmo@kernel.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <andrii@kernel.org>, <martin.lau@linux.dev>, <eddyz87@gmail.com>,
-        <song@kernel.org>, <yonghong.song@linux.dev>,
-        <john.fastabend@gmail.com>, <kpsingh@kernel.org>, <sdf@fomichev.me>,
-        <haoluo@google.com>, <jolsa@kernel.org>, <mykolal@fb.com>,
-        <shuah@kernel.org>, <slava.imameev@crowdstrike.com>,
-        <justin.deschamp@crowdstrike.com>, <mark.fontana@crowdstrike.com>,
-        <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>
-Subject: [PATCH bpf-next 1/2] bpftool: Use appropriate permissions for map access
-Date: Fri, 30 May 2025 22:57:16 +1000
-Message-ID: <20250530125717.34746-1-slava.imameev@crowdstrike.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+	Fri, 30 May 2025 13:21:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54UDL1M7010765
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 13:21:01 GMT
+Received: from [10.213.98.28] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
+ 2025 06:20:55 -0700
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+Subject: [PATCH v5 00/18] clk: qcom: Add support to attach multiple power
+ domains in cc probe
+Date: Fri, 30 May 2025 18:50:45 +0530
+Message-ID: <20250530-videocc-pll-multi-pd-voting-v5-0-02303b3a582d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: 04WPEXCH009.crowdstrike.sys (10.100.11.79) To
- 04WPEXCH007.crowdstrike.sys (10.100.11.74)
-X-Disclaimer: USA
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAK2wOWgC/43NQW6DMBCF4atEXtfVeMA2zqr3qLog4yEZiWAKx
+ GoVcfc62aRVJNTl/xbfu6qZJ+FZ7XdXNXGWWdJQwr7sFJ3a4chaYmmFgBbQNDpL5ESkx77X50u
+ /iB6jzmmR4aijM3UkDgbYqyKME3fyddffP0qfZF7S9H0/y+a2/s/NRoOmjh02gVsMh7fPi5AM9
+ ErprG5yxodWgdvWsGhAEcAZPBDws1b90tBva1XRmmC7tosOHfpnrX5o1thtrS6a9YZchcFHMH+
+ 1dV1/AJ+oaMCyAQAA
+X-Change-ID: 20250218-videocc-pll-multi-pd-voting-d614dce910e7
+To: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Vladimir
+ Zapolskiy" <vladimir.zapolskiy@linaro.org>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Satya Priya
+ Kakitapalli" <quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OuF-czEiy0tJG3Wsyy0ToHPO59mn5GXg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDExNiBTYWx0ZWRfX/2ETrJTL+0UN
+ i5s1GuOpnN8ZJn6XMafPay98hJVptek4lVMglv/dX8TaDrNj9WPFBLH4Nmo4naQLxuJLjVMDcsn
+ /2fDjYlGjjWD8wVtzcYYh9uyvdbOqydP2F46voAP36EtRJ1Une9NttSKWWq+ZuJ8F6K1PQIEnEv
+ SfyAkB8OwQfyhp2ZIdBefhMgbV3EVPNAvsYTJ3tQL5j4TYe0svacYU5iFh+LYUQX+eyifEPl6ZX
+ nyktuVSDlZ4Gs9fiOQ1JwIyYZG8AQmG7GEwzCJo1QnOjWEjd66O246Qj1nxisO2qjgltw5gOP/F
+ vNZRgJQe6Vxw7jG5rApzT5uONiaU/xZNgIrWfCA0cNoCeSvFomykSHsAffAmyRnYETXwG5f5OET
+ 4lM1SSPPlThyg0/4lK7dlVqu6CC7bnJnYHlE+xKEn+NgK0bXm9kmZcggSte5XIOq2ughP8qc
+X-Authority-Analysis: v=2.4 cv=fMk53Yae c=1 sm=1 tr=0 ts=6839b0be cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=B-9y34bfxwdAmyIc5O0A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: OuF-czEiy0tJG3Wsyy0ToHPO59mn5GXg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-30_05,2025-05-30_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505300116
 
-Modify several functions in tools/bpf/bpftool/common.c to allow
-specification of requested access for file descriptors, such as
-read-only access.
+In recent QCOM chipsets, PLLs require more than one power domain to be
+kept ON to configure the PLL. But the current code doesn't enable all
+the required power domains while configuring the PLLs, this leads to
+functional issues due to suboptimal settings of PLLs.
 
-Update bpftool to request only read access for maps when write
-access is not required. This fixes errors when reading from maps
-that are protected from modification via security_bpf_map.
+To address this, add support for handling runtime power management,
+configuring plls and enabling critical clocks from qcom_cc_really_probe.
+The clock controller can specify PLLs, critical clocks, and runtime PM
+requirements using the descriptor data. The code in qcom_cc_really_probe()
+ensures all necessary power domains are enabled before configuring PLLs
+or critical clocks.
 
-Signed-off-by: Slava Imameev <slava.imameev@crowdstrike.com>
+This series fixes the below warning reported in SM8550 venus testing due
+to video_cc_pll0 not properly getting configured during videocc probe
+
+[   46.535132] Lucid PLL latch failed. Output may be unstable!
+
+The patch adding support to configure the PLLs from common code is
+picked from below series and updated it.
+https://lore.kernel.org/all/20250113-support-pll-reconfigure-v1-0-1fae6bc1062d@quicinc.com/
+
+This series is dependent on bindings patch in below Vladimir's series, hence
+included the Vladimir's series patches also in this series and updated them.
+https://lore.kernel.org/all/20250303225521.1780611-1-vladimir.zapolskiy@linaro.org/
+
+Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
 ---
- tools/bpf/bpftool/btf.c           |  3 +-
- tools/bpf/bpftool/common.c        | 57 ++++++++++++++++++++++---------
- tools/bpf/bpftool/iter.c          |  2 +-
- tools/bpf/bpftool/link.c          |  2 +-
- tools/bpf/bpftool/main.h          | 13 ++++---
- tools/bpf/bpftool/map.c           | 56 +++++++++++++++++-------------
- tools/bpf/bpftool/map_perf_ring.c |  3 +-
- tools/bpf/bpftool/prog.c          |  4 +--
- 8 files changed, 90 insertions(+), 50 deletions(-)
+Changes in v5:
+- Reversed order of patches 2 & 3 to add MXC support in SM8450
+  camcc bindings first and then moved SC8280XP camcc to SA8775P
+  camcc to have single power domain support for it.
+- Added return code for qcom_cc_clk_pll_configure() and
+  returned -EINVAL in case if PLL config or registers is
+  NULL in patch 6 [Bryan]
+- Added separate CBCR's list for SM8650 videocc and
+  updated clk_cbcrs list based on compatible in patch 8[Konrad]
+- Added R-By tags received on v4
+- Link to v4: https://lore.kernel.org/r/20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com
 
-diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
-index 6b14cbfa58aa..1ba27cb03348 100644
---- a/tools/bpf/bpftool/btf.c
-+++ b/tools/bpf/bpftool/btf.c
-@@ -905,7 +905,8 @@ static int do_dump(int argc, char **argv)
- 			return -1;
- 		}
- 
--		fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+		fd = map_parse_fd_and_info(&argc, &argv, &info, &len,
-+					   BPF_F_RDONLY);
- 		if (fd < 0)
- 			return -1;
- 
-diff --git a/tools/bpf/bpftool/common.c b/tools/bpf/bpftool/common.c
-index ecfa790adc13..ff1c99281beb 100644
---- a/tools/bpf/bpftool/common.c
-+++ b/tools/bpf/bpftool/common.c
-@@ -193,7 +193,8 @@ int mount_tracefs(const char *target)
- 	return err;
- }
- 
--int open_obj_pinned(const char *path, bool quiet)
-+int open_obj_pinned(const char *path, bool quiet,
-+		    const struct bpf_obj_get_opts *opts)
- {
- 	char *pname;
- 	int fd = -1;
-@@ -205,7 +206,7 @@ int open_obj_pinned(const char *path, bool quiet)
- 		goto out_ret;
- 	}
- 
--	fd = bpf_obj_get(pname);
-+	fd = bpf_obj_get_opts(pname, opts);
- 	if (fd < 0) {
- 		if (!quiet)
- 			p_err("bpf obj get (%s): %s", pname,
-@@ -221,12 +222,13 @@ int open_obj_pinned(const char *path, bool quiet)
- 	return fd;
- }
- 
--int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type)
-+int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type,
-+			const struct bpf_obj_get_opts *opts)
- {
- 	enum bpf_obj_type type;
- 	int fd;
- 
--	fd = open_obj_pinned(path, false);
-+	fd = open_obj_pinned(path, false, opts);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -555,7 +557,7 @@ static int do_build_table_cb(const char *fpath, const struct stat *sb,
- 	if (typeflag != FTW_F)
- 		goto out_ret;
- 
--	fd = open_obj_pinned(fpath, true);
-+	fd = open_obj_pinned(fpath, true, NULL);
- 	if (fd < 0)
- 		goto out_ret;
- 
-@@ -928,7 +930,7 @@ int prog_parse_fds(int *argc, char ***argv, int **fds)
- 		path = **argv;
- 		NEXT_ARGP();
- 
--		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_PROG);
-+		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_PROG, NULL);
- 		if ((*fds)[0] < 0)
- 			return -1;
- 		return 1;
-@@ -965,7 +967,8 @@ int prog_parse_fd(int *argc, char ***argv)
- 	return fd;
- }
- 
--static int map_fd_by_name(char *name, int **fds)
-+static int map_fd_by_name(char *name, int **fds,
-+			  const struct bpf_get_fd_by_id_opts *opts)
- {
- 	unsigned int id = 0;
- 	int fd, nb_fds = 0;
-@@ -973,6 +976,7 @@ static int map_fd_by_name(char *name, int **fds)
- 	int err;
- 
- 	while (true) {
-+		LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts_ro);
- 		struct bpf_map_info info = {};
- 		__u32 len = sizeof(info);
- 
-@@ -985,7 +989,9 @@ static int map_fd_by_name(char *name, int **fds)
- 			return nb_fds;
- 		}
- 
--		fd = bpf_map_get_fd_by_id(id);
-+		/* Request a read-only fd to query the map info */
-+		opts_ro.open_flags = BPF_F_RDONLY;
-+		fd = bpf_map_get_fd_by_id_opts(id, &opts_ro);
- 		if (fd < 0) {
- 			p_err("can't get map by id (%u): %s",
- 			      id, strerror(errno));
-@@ -1004,6 +1010,15 @@ static int map_fd_by_name(char *name, int **fds)
- 			continue;
- 		}
- 
-+		/* Get an fd with the requested options. */
-+		close(fd);
-+		fd = bpf_map_get_fd_by_id_opts(id, opts);
-+		if (fd < 0) {
-+			p_err("can't get map by id (%u): %s", id,
-+			      strerror(errno));
-+			goto err_close_fds;
-+		}
-+
- 		if (nb_fds > 0) {
- 			tmp = realloc(*fds, (nb_fds + 1) * sizeof(int));
- 			if (!tmp) {
-@@ -1023,8 +1038,16 @@ static int map_fd_by_name(char *name, int **fds)
- 	return -1;
- }
- 
--int map_parse_fds(int *argc, char ***argv, int **fds)
-+int map_parse_fds(int *argc, char ***argv, int **fds, __u32 open_flags)
- {
-+	LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts);
-+
-+	if (open_flags & ~BPF_F_RDONLY) {
-+		p_err("invalid open_flags: %x", open_flags);
-+		return -1;
-+	}
-+	opts.open_flags = open_flags;
-+
- 	if (is_prefix(**argv, "id")) {
- 		unsigned int id;
- 		char *endptr;
-@@ -1038,7 +1061,7 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
- 		}
- 		NEXT_ARGP();
- 
--		(*fds)[0] = bpf_map_get_fd_by_id(id);
-+		(*fds)[0] = bpf_map_get_fd_by_id_opts(id, &opts);
- 		if ((*fds)[0] < 0) {
- 			p_err("get map by id (%u): %s", id, strerror(errno));
- 			return -1;
-@@ -1056,16 +1079,18 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
- 		}
- 		NEXT_ARGP();
- 
--		return map_fd_by_name(name, fds);
-+		return map_fd_by_name(name, fds, &opts);
- 	} else if (is_prefix(**argv, "pinned")) {
- 		char *path;
-+		LIBBPF_OPTS(bpf_obj_get_opts, get_opts);
-+		get_opts.file_flags = open_flags;
- 
- 		NEXT_ARGP();
- 
- 		path = **argv;
- 		NEXT_ARGP();
- 
--		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_MAP);
-+		(*fds)[0] = open_obj_pinned_any(path, BPF_OBJ_MAP, &get_opts);
- 		if ((*fds)[0] < 0)
- 			return -1;
- 		return 1;
-@@ -1075,7 +1100,7 @@ int map_parse_fds(int *argc, char ***argv, int **fds)
- 	return -1;
- }
- 
--int map_parse_fd(int *argc, char ***argv)
-+int map_parse_fd(int *argc, char ***argv, __u32 open_flags)
- {
- 	int *fds = NULL;
- 	int nb_fds, fd;
-@@ -1085,7 +1110,7 @@ int map_parse_fd(int *argc, char ***argv)
- 		p_err("mem alloc failed");
- 		return -1;
- 	}
--	nb_fds = map_parse_fds(argc, argv, &fds);
-+	nb_fds = map_parse_fds(argc, argv, &fds, open_flags);
- 	if (nb_fds != 1) {
- 		if (nb_fds > 1) {
- 			p_err("several maps match this handle");
-@@ -1103,12 +1128,12 @@ int map_parse_fd(int *argc, char ***argv)
- }
- 
- int map_parse_fd_and_info(int *argc, char ***argv, struct bpf_map_info *info,
--			  __u32 *info_len)
-+			  __u32 *info_len, __u32 open_flags)
- {
- 	int err;
- 	int fd;
- 
--	fd = map_parse_fd(argc, argv);
-+	fd = map_parse_fd(argc, argv, open_flags);
- 	if (fd < 0)
- 		return -1;
- 
-diff --git a/tools/bpf/bpftool/iter.c b/tools/bpf/bpftool/iter.c
-index 5c39c2ed36a2..ad318a8667a4 100644
---- a/tools/bpf/bpftool/iter.c
-+++ b/tools/bpf/bpftool/iter.c
-@@ -37,7 +37,7 @@ static int do_pin(int argc, char **argv)
- 				return -1;
- 			}
- 
--			map_fd = map_parse_fd(&argc, &argv);
-+			map_fd = map_parse_fd(&argc, &argv, 0);
- 			if (map_fd < 0)
- 				return -1;
- 
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index 3535afc80a49..8523be11dcd9 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -117,7 +117,7 @@ static int link_parse_fd(int *argc, char ***argv)
- 		path = **argv;
- 		NEXT_ARGP();
- 
--		return open_obj_pinned_any(path, BPF_OBJ_LINK);
-+		return open_obj_pinned_any(path, BPF_OBJ_LINK, NULL);
- 	}
- 
- 	p_err("expected 'id' or 'pinned', got: '%s'?", **argv);
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index 9eb764fe4cc8..6db704fda5c0 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -15,6 +15,7 @@
- 
- #include <bpf/hashmap.h>
- #include <bpf/libbpf.h>
-+#include <bpf/bpf.h>
- 
- #include "json_writer.h"
- 
-@@ -140,8 +141,10 @@ void get_prog_full_name(const struct bpf_prog_info *prog_info, int prog_fd,
- int get_fd_type(int fd);
- const char *get_fd_type_name(enum bpf_obj_type type);
- char *get_fdinfo(int fd, const char *key);
--int open_obj_pinned(const char *path, bool quiet);
--int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type);
-+int open_obj_pinned(const char *path, bool quiet,
-+		    const struct bpf_obj_get_opts *opts);
-+int open_obj_pinned_any(const char *path, enum bpf_obj_type exp_type,
-+			const struct bpf_obj_get_opts *opts);
- int mount_bpffs_for_file(const char *file_name);
- int create_and_mount_bpffs_dir(const char *dir_name);
- int do_pin_any(int argc, char **argv, int (*get_fd_by_id)(int *, char ***));
-@@ -167,10 +170,10 @@ int do_iter(int argc, char **argv) __weak;
- int parse_u32_arg(int *argc, char ***argv, __u32 *val, const char *what);
- int prog_parse_fd(int *argc, char ***argv);
- int prog_parse_fds(int *argc, char ***argv, int **fds);
--int map_parse_fd(int *argc, char ***argv);
--int map_parse_fds(int *argc, char ***argv, int **fds);
-+int map_parse_fd(int *argc, char ***argv, __u32 open_flags);
-+int map_parse_fds(int *argc, char ***argv, int **fds, __u32 open_flags);
- int map_parse_fd_and_info(int *argc, char ***argv, struct bpf_map_info *info,
--			  __u32 *info_len);
-+			  __u32 *info_len, __u32 open_flags);
- 
- struct bpf_prog_linfo;
- #if defined(HAVE_LLVM_SUPPORT) || defined(HAVE_LIBBFD_SUPPORT)
-diff --git a/tools/bpf/bpftool/map.c b/tools/bpf/bpftool/map.c
-index 81cc668b4b05..c7dc2eae8ba8 100644
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@ -337,9 +337,9 @@ static void fill_per_cpu_value(struct bpf_map_info *info, void *value)
- 		memcpy(value + i * step, value, info->value_size);
- }
- 
--static int parse_elem(char **argv, struct bpf_map_info *info,
--		      void *key, void *value, __u32 key_size, __u32 value_size,
--		      __u32 *flags, __u32 **value_fd)
-+static int parse_elem(char **argv, struct bpf_map_info *info, void *key,
-+		      void *value, __u32 key_size, __u32 value_size,
-+		      __u32 *flags, __u32 **value_fd, __u32 open_flags)
- {
- 	if (!*argv) {
- 		if (!key && !value)
-@@ -362,7 +362,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
- 			return -1;
- 
- 		return parse_elem(argv, info, NULL, value, key_size, value_size,
--				  flags, value_fd);
-+				  flags, value_fd, open_flags);
- 	} else if (is_prefix(*argv, "value")) {
- 		int fd;
- 
-@@ -388,7 +388,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
- 				return -1;
- 			}
- 
--			fd = map_parse_fd(&argc, &argv);
-+			fd = map_parse_fd(&argc, &argv, open_flags);
- 			if (fd < 0)
- 				return -1;
- 
-@@ -424,7 +424,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
- 		}
- 
- 		return parse_elem(argv, info, key, NULL, key_size, value_size,
--				  flags, NULL);
-+				  flags, NULL, open_flags);
- 	} else if (is_prefix(*argv, "any") || is_prefix(*argv, "noexist") ||
- 		   is_prefix(*argv, "exist")) {
- 		if (!flags) {
-@@ -440,7 +440,7 @@ static int parse_elem(char **argv, struct bpf_map_info *info,
- 			*flags = BPF_EXIST;
- 
- 		return parse_elem(argv + 1, info, key, value, key_size,
--				  value_size, NULL, value_fd);
-+				  value_size, NULL, value_fd, open_flags);
- 	}
- 
- 	p_err("expected key or value, got: %s", *argv);
-@@ -639,7 +639,7 @@ static int do_show_subset(int argc, char **argv)
- 		p_err("mem alloc failed");
- 		return -1;
- 	}
--	nb_fds = map_parse_fds(&argc, &argv, &fds);
-+	nb_fds = map_parse_fds(&argc, &argv, &fds, BPF_F_RDONLY);
- 	if (nb_fds < 1)
- 		goto exit_free;
- 
-@@ -672,12 +672,15 @@ static int do_show_subset(int argc, char **argv)
- 
- static int do_show(int argc, char **argv)
- {
-+	LIBBPF_OPTS(bpf_get_fd_by_id_opts, opts);
- 	struct bpf_map_info info = {};
- 	__u32 len = sizeof(info);
- 	__u32 id = 0;
- 	int err;
- 	int fd;
- 
-+	opts.open_flags = BPF_F_RDONLY;
-+
- 	if (show_pinned) {
- 		map_table = hashmap__new(hash_fn_for_key_as_id,
- 					 equal_fn_for_key_as_id, NULL);
-@@ -707,7 +710,7 @@ static int do_show(int argc, char **argv)
- 			break;
- 		}
- 
--		fd = bpf_map_get_fd_by_id(id);
-+		fd = bpf_map_get_fd_by_id_opts(id, &opts);
- 		if (fd < 0) {
- 			if (errno == ENOENT)
- 				continue;
-@@ -909,7 +912,7 @@ static int do_dump(int argc, char **argv)
- 		p_err("mem alloc failed");
- 		return -1;
- 	}
--	nb_fds = map_parse_fds(&argc, &argv, &fds);
-+	nb_fds = map_parse_fds(&argc, &argv, &fds, BPF_F_RDONLY);
- 	if (nb_fds < 1)
- 		goto exit_free;
- 
-@@ -997,7 +1000,7 @@ static int do_update(int argc, char **argv)
- 	if (argc < 2)
- 		usage();
- 
--	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, 0);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -1006,7 +1009,7 @@ static int do_update(int argc, char **argv)
- 		goto exit_free;
- 
- 	err = parse_elem(argv, &info, key, value, info.key_size,
--			 info.value_size, &flags, &value_fd);
-+			 info.value_size, &flags, &value_fd, 0);
- 	if (err)
- 		goto exit_free;
- 
-@@ -1076,7 +1079,7 @@ static int do_lookup(int argc, char **argv)
- 	if (argc < 2)
- 		usage();
- 
--	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -1084,7 +1087,8 @@ static int do_lookup(int argc, char **argv)
- 	if (err)
- 		goto exit_free;
- 
--	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL);
-+	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL,
-+			 BPF_F_RDONLY);
- 	if (err)
- 		goto exit_free;
- 
-@@ -1127,7 +1131,7 @@ static int do_getnext(int argc, char **argv)
- 	if (argc < 2)
- 		usage();
- 
--	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -1140,8 +1144,8 @@ static int do_getnext(int argc, char **argv)
- 	}
- 
- 	if (argc) {
--		err = parse_elem(argv, &info, key, NULL, info.key_size, 0,
--				 NULL, NULL);
-+		err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL,
-+				 NULL, BPF_F_RDONLY);
- 		if (err)
- 			goto exit_free;
- 	} else {
-@@ -1198,7 +1202,7 @@ static int do_delete(int argc, char **argv)
- 	if (argc < 2)
- 		usage();
- 
--	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, BPF_F_RDONLY);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -1209,7 +1213,8 @@ static int do_delete(int argc, char **argv)
- 		goto exit_free;
- 	}
- 
--	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL);
-+	err = parse_elem(argv, &info, key, NULL, info.key_size, 0, NULL, NULL,
-+			 0);
- 	if (err)
- 		goto exit_free;
- 
-@@ -1226,11 +1231,16 @@ static int do_delete(int argc, char **argv)
- 	return err;
- }
- 
-+static int map_parse_read_only_fd(int *argc, char ***argv)
-+{
-+	return map_parse_fd(argc, argv, BPF_F_RDONLY);
-+}
-+
- static int do_pin(int argc, char **argv)
- {
- 	int err;
- 
--	err = do_pin_any(argc, argv, map_parse_fd);
-+	err = do_pin_any(argc, argv, map_parse_read_only_fd);
- 	if (!err && json_output)
- 		jsonw_null(json_wtr);
- 	return err;
-@@ -1319,7 +1329,7 @@ static int do_create(int argc, char **argv)
- 			if (!REQ_ARGS(2))
- 				usage();
- 			inner_map_fd = map_parse_fd_and_info(&argc, &argv,
--							     &info, &len);
-+							     &info, &len, 0);
- 			if (inner_map_fd < 0)
- 				return -1;
- 			attr.inner_map_fd = inner_map_fd;
-@@ -1368,7 +1378,7 @@ static int do_pop_dequeue(int argc, char **argv)
- 	if (argc < 2)
- 		usage();
- 
--	fd = map_parse_fd_and_info(&argc, &argv, &info, &len);
-+	fd = map_parse_fd_and_info(&argc, &argv, &info, &len, 0);
- 	if (fd < 0)
- 		return -1;
- 
-@@ -1407,7 +1417,7 @@ static int do_freeze(int argc, char **argv)
- 	if (!REQ_ARGS(2))
- 		return -1;
- 
--	fd = map_parse_fd(&argc, &argv);
-+	fd = map_parse_fd(&argc, &argv, 0);
- 	if (fd < 0)
- 		return -1;
- 
-diff --git a/tools/bpf/bpftool/map_perf_ring.c b/tools/bpf/bpftool/map_perf_ring.c
-index 552b4ca40c27..bcb767e2d673 100644
---- a/tools/bpf/bpftool/map_perf_ring.c
-+++ b/tools/bpf/bpftool/map_perf_ring.c
-@@ -128,7 +128,8 @@ int do_event_pipe(int argc, char **argv)
- 	int err, map_fd;
- 
- 	map_info_len = sizeof(map_info);
--	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len);
-+	map_fd = map_parse_fd_and_info(&argc, &argv, &map_info, &map_info_len,
-+				       0);
- 	if (map_fd < 0)
- 		return -1;
- 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 96eea8a67225..deeaa5c1ed7d 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -1062,7 +1062,7 @@ static int parse_attach_detach_args(int argc, char **argv, int *progfd,
- 	if (!REQ_ARGS(2))
- 		return -EINVAL;
- 
--	*mapfd = map_parse_fd(&argc, &argv);
-+	*mapfd = map_parse_fd(&argc, &argv, 0);
- 	if (*mapfd < 0)
- 		return *mapfd;
- 
-@@ -1608,7 +1608,7 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
- 			}
- 			NEXT_ARG();
- 
--			fd = map_parse_fd(&argc, &argv);
-+			fd = map_parse_fd(&argc, &argv, 0);
- 			if (fd < 0)
- 				goto err_free_reuse_maps;
- 
+Changes in v4:
+- Updated the SC8280XP camcc bindings patch to fix the
+  required-opps warning reported by kernel bot
+- Updated the description of power-domains, required-opps of SM8450 camcc
+  bindings as per review comments on v3 [Bryan]
+- Moved the PLL config checks to calling function code [Dmitry]
+- Removed qcom_clk_reg_setting struct and regmap_update_bits() code.
+  Added a .clk_regs_configure() callback that clock drivers can implement
+  if they require to update some misc register settings [Dmitry] 
+- Moved the PLLs and CBCRs data to a separate qcom_cc_driver_data
+  struct to avoid bloating up the CC descriptor structure
+- Updated the videocc and camcc driver patches to incorporate above
+  qcom_cc_driver_data change
+- Updated the commit text of DT patches [Bryan]
+- Added the R-By, T-By tags received on v3
+- Link to v3: https://lore.kernel.org/r/20250327-videocc-pll-multi-pd-voting-v3-0-895fafd62627@quicinc.com
+
+Changes in v3:
+ - Updated the videocc bindings patch to add required-opps for MXC power domain [Dmitry]
+   and added Bryan & Rob R/A-By tags received for this patch on v1.
+ - Included the Vladimir's bindings patch for SM8450 camcc bindings to
+   add multiple PD support and updated them to fix the bot warnings.
+ - Moved SC8280XP camcc bindings to SA8775P camcc since SC8280XP only
+   require single MMCX power domain
+ - Split runtime PM and PLL configuration to separate patches [Dmitry]
+ - Removed direct regmap_update_bits to configure clock CBCR's and
+   using clock helpers to configure the CBCR registers [Dmitry, Bryan]
+ - Added new helpers to configure all PLLs & update misc clock
+   register settings from common code [Dmitry, Bryan]
+ - Updated the name of qcom_clk_cfg structure to qcom_clk_reg_setting [Konrad]
+ - Updated the fields in structure from unsigned int to u32 and added
+   val field to this structure [Konrad]
+ - Added a new u32 array for cbcr branch clocks & num_clk_cbcrs fields
+   to maintain the list of critical clock cbcrs in clock controller
+   descriptor [Konrad]
+ - Updated the plls field to alpha_plls in descriptor structure [Konrad]
+ - Added WARN() in PLL configure function if PLL type passed is not
+   supported. The suggestion is to use BUG(), but updated it to
+   WARN() to avoid checkpatch warning. [Bjorn]
+ - Moved the pll configure and helper macros to PLL code from common code [Bjorn]
+ - Updated camcc drivers for SM8450, SM8550, SM8650 and X1E80100 targets
+   with support to configure PLLs from common code and added MXC power
+   domain in corresponding camcc DT nodes. [Bryan]
+ - Added Dmitry and Bryan R-By tags received on videocc DT node changes in v1
+ - Link to v2: https://lore.kernel.org/r/20250306-videocc-pll-multi-pd-voting-v2-0-0cd00612bc0e@quicinc.com
+
+Changes in v2:
+ - Added support to handle rpm, PLL configuration and enable critical
+   clocks from qcom_cc_really_probe() in common code as per v1 commments
+   from Bryan, Konrad and Dmitry
+ - Added patches to configure PLLs from common code
+ - Updated the SM8450, SM8550 videocc patches to use the newly
+   added support to handle rpm, configure PLLs from common code
+ - Split the DT change for each target separately as per
+   Dmitry comments
+ - Added R-By and A-By tags received on v1
+- Link to v1: https://lore.kernel.org/r/20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com
+
+---
+Jagadeesh Kona (15):
+      dt-bindings: clock: qcom,sm8450-videocc: Add MXC power domain
+      dt-bindings: clock: qcom,sm8450-camcc: Move sc8280xp camcc to sa8775p camcc
+      clk: qcom: common: Handle runtime power management in qcom_cc_really_probe
+      clk: qcom: common: Add support to configure clk regs in qcom_cc_really_probe
+      clk: qcom: videocc-sm8450: Move PLL & clk configuration to really probe
+      clk: qcom: videocc-sm8550: Move PLL & clk configuration to really probe
+      clk: qcom: camcc-sm8450: Move PLL & clk configuration to really probe
+      clk: qcom: camcc-sm8550: Move PLL & clk configuration to really probe
+      clk: qcom: camcc-sm8650: Move PLL & clk configuration to really probe
+      clk: qcom: camcc-x1e80100: Move PLL & clk configuration to really probe
+      arm64: dts: qcom: sm8450: Additionally manage MXC power domain in videocc
+      arm64: dts: qcom: sm8550: Additionally manage MXC power domain in videocc
+      arm64: dts: qcom: sm8650: Additionally manage MXC power domain in videocc
+      arm64: dts: qcom: sm8450: Additionally manage MXC power domain in camcc
+      arm64: dts: qcom: sm8650: Additionally manage MXC power domain in camcc
+
+Taniya Das (1):
+      clk: qcom: clk-alpha-pll: Add support for common PLL configuration function
+
+Vladimir Zapolskiy (2):
+      dt-bindings: clock: qcom,sm8450-camcc: Allow to specify two power domains
+      arm64: dts: qcom: sm8550: Additionally manage MXC power domain in camcc
+
+ .../bindings/clock/qcom,sa8775p-camcc.yaml         | 15 ++++
+ .../bindings/clock/qcom,sm8450-camcc.yaml          | 20 +++--
+ .../bindings/clock/qcom,sm8450-videocc.yaml        | 18 +++--
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               | 12 ++-
+ arch/arm64/boot/dts/qcom/sm8550.dtsi               | 12 ++-
+ arch/arm64/boot/dts/qcom/sm8650.dtsi               |  6 +-
+ drivers/clk/qcom/camcc-sm8450.c                    | 89 +++++++++++-----------
+ drivers/clk/qcom/camcc-sm8550.c                    | 85 +++++++++++----------
+ drivers/clk/qcom/camcc-sm8650.c                    | 83 ++++++++++----------
+ drivers/clk/qcom/camcc-x1e80100.c                  | 67 ++++++++--------
+ drivers/clk/qcom/clk-alpha-pll.c                   | 57 ++++++++++++++
+ drivers/clk/qcom/clk-alpha-pll.h                   |  3 +
+ drivers/clk/qcom/common.c                          | 81 +++++++++++++++++---
+ drivers/clk/qcom/common.h                          | 10 +++
+ drivers/clk/qcom/videocc-sm8450.c                  | 58 ++++++--------
+ drivers/clk/qcom/videocc-sm8550.c                  | 66 ++++++++--------
+ 16 files changed, 421 insertions(+), 261 deletions(-)
+---
+base-commit: 138cfc44b3c4a5fb800388c6e27be169970fb9f7
+change-id: 20250218-videocc-pll-multi-pd-voting-d614dce910e7
+
+Best regards,
 -- 
-2.34.1
+Jagadeesh Kona <quic_jkona@quicinc.com>
 
