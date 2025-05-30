@@ -1,217 +1,153 @@
-Received: from mail.archlinux.org (mail.archlinux.org [95.216.189.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D162288F7;
-	Fri, 30 May 2025 14:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.189.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3525B17A2F5
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 14:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748616819; cv=none; b=O989bJ1p4tuMh4a+U5+PwBNj0bCKb/1NojRfI3ekOC9sTt5IkSorCgfsindgFi280LjSEK2+98vnDeWeWePA7kJbI8ThKnlI2XmXh5oYWcb2eYTDwXFEwGzMc2jYkDncZ9IsH5v4ad/nCxeUXR5gJfu5Js2C1QSMn+02oYw9N58=
+	t=1748617037; cv=none; b=lyf5vkBtVZyXW86uYi2+sPeZ9J8fFebMqIYZLTh/P/3AME92Vjth/fx03G3VUNITVWhcaTrvORGv4Rxe/uwkKHSsRk8HDuWAohgEvr1tJG7M7T5h9mfxBW8wBAbu9AzyYKfLvlowTpqldIMepui/Z6OtGFEp1uGwGEfJE4w9i4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748616819; c=relaxed/simple;
-	bh=33GME1eBkXIG5Q9DcVjTATtuKAFedNz9230MRHkfzew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=grKZCMfeydMYojs9pHfBbGdbivJIvq+StZeapbb/wMpUE5QXi2nLmIDznB5q6f0L8+EtTQ4TeNM7nvtYE5V6fkFe1eQ8/I195pwA1q1lBEekuJj8CQk1q3CjVXJn/s0THG+B9pw9yetu4n1UUImI7I/sEFHFPOf/S6pBlfAyX6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org; spf=pass smtp.mailfrom=archlinux.org; dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=kIAbcpw/; dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=C2lhftgl; arc=none smtp.client-ip=95.216.189.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinux.org
+	s=arc-20240116; t=1748617037; c=relaxed/simple;
+	bh=2bKoqGkTK8TGfOw3TU7zJS2dU0yhvXeqK4PS3k36Lvw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ki+VjmCqAAEDTuVMMTpZq1TleKDEMYxLGBlrXGZiiBXKw2YezNyIBhfZLYxrSSTzQM9aZntHlDYaYIaCVUvQKg+m1Cvv8aoP78uMpG0aU9JqbLM/NwBM+Re2gGTmYYa+sZSMohFawvPnhTRXKthTdM80ZeF7Lh8AyLV3yhe1sPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EfsWaHgt; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="kIAbcpw/";
-	dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="C2lhftgl"
-From: George Hu <integral@archlinux.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-rsa; t=1748616805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=w5/dxK0Li9/0+xal/PCoI1Cn8loZyMgD0rI6dmAczNg=;
-	b=kIAbcpw/C2lLXOz7ysjp8OmYn1DQ0KdwHmZWXtZQhZrKqOF3qpcicBMF/4L1XAw/pSK2vx
-	6FFGo14hmo7RgA7uhIRtr5GSm3P5xK3/w3aotuMZvnIyuTz6dh2hk/3U0WB674QGYOONha
-	k+044TsY4YtjLFPcv7Ag2qWM/8KRfD0SDf/9sFIASxjgzodTWY8qe+QWSueBWX4WMM86il
-	hngMEVtNx+cqQI3Z3jatvzlKjT+HbMm7Yd+6inYgPBm7fn+VaVlx4F6JFqg4YLX23HOK08
-	L2Kqjxhgb3kWBe0LUi6q2+zZw8Vn8wnzmnZUqfSatdmQq2ODQ6tUscK+Ctuy1scNF+7LUC
-	ECgWNi9zjZULMsUU2yXCs1+xPqm4cTwezeaNtg9SZcLZpVXBUXjd8CvRWgF4WOecv/Xbzh
-	re9f7yxTYZQw7V61/XSk1OHS60NdKJvLJ8shBr/wRwx6SZcQJwZ+zHwIA3Vx8g9i2QCreH
-	pE3ShVCvGllTDSORqLr9KddK6LNlsDu2Vzdv0z487dMQj+9avJWa9s8rmy/wkfNbTcrc37
-	oof3fyGbOBc55EIQyg+QzhHNF0D7uKu9n+dKXATKnFfvZabjLbCJgb6XH17kqhIr4Stgpv
-	BxVEcY/PMlksRupac47dpdC/NKeiBVTyivC5Kjj2JMJEiU1WX7H20=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-ed25519; t=1748616805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=w5/dxK0Li9/0+xal/PCoI1Cn8loZyMgD0rI6dmAczNg=;
-	b=C2lhftglUlZWipA2jq7os1BhjG76Nv9ZcqeGq3MaT685//BOjpyQrc7/OQ2LYqGMo3fOcC
-	+f8ZijvXklDFJcCw==
-Authentication-Results: mail.archlinux.org;
-	auth=pass smtp.auth=integral smtp.mailfrom=integral@archlinux.org
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	George Hu <integral@archlinux.org>
-Subject: [PATCH] bcachefs: use union for bch_compression_opt to make encode & decode easier
-Date: Fri, 30 May 2025 22:52:43 +0800
-Message-ID: <20250530145243.163974-1-integral@archlinux.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EfsWaHgt"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so11143a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:57:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748617033; x=1749221833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dYR9KSVXGeLcD6aMhoTQngJaFUt3s4XvW1lNxkA24To=;
+        b=EfsWaHgtU38oZL7F2kYZYCzuUJQP+URxvaVP4iTlvbT3LWyQgqOvENx6Xf7t8nAq3Y
+         NeEpqf3xUXbyK18W4B9p4n0553t0JtqmVDZH4QCXYJWPrFx/mIWJlw6yeP4gDwkl9GSO
+         Nl187uGBofx46ry1j43MKRGLt2n6Uo1fs2S1z+oV1EzlHyMb8USYR5amoIVYiMwCzYNu
+         U6i4Cs5hl0Uu7rZqZdlLGMkSQyDTWn+uQdKX21hpfDRSYSdydocS/tBNgBYQ/Ch/SXLD
+         bWnhTQcoOV5c3iPj3Win/OyU4uc8K4/v4dFeuFtk3FLho1V8KAMVaeD1rjp5mHcehs3q
+         cX2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748617033; x=1749221833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dYR9KSVXGeLcD6aMhoTQngJaFUt3s4XvW1lNxkA24To=;
+        b=vz0mPiwt9ptqa5IFMb2HU1BUF1xWPDCGWW87S4y5pc2Tr3X13lx92WC9d61VsUSTTv
+         d4Myu3I2zdDnrYjSa63G9xu9/5Ftw/leeOiEX6IRBHLQ4n7ZgOLsOUTe7+/NJrzG9Z2t
+         vHxxujZb+2RsEYCeBN+62YBuSlgW7K8VjQONoSB7yLHbF+HzrAFXox99vpwuGZyynY2M
+         elALnb19wtikni9kNNSrBh5S8mqjO6KsqqBo0dSaxOIhnY/GHIamSDObeYtceBdG7qRW
+         hG6QCBHoiZfYEj62DcPiL1/td4OykJYhgvkwO4sw8fRHnrp3uhVtQFcGf6dqGKHH6vAH
+         fpsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHPnmHvHzp0bnvlzec24poCPyOJ5vkIxBebQjLn5ky6nQdcGMloLPNAHxyejhneZuWvhAU8rMejviZ3fs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyovFEmNbkmru4OJxQXJRYb8eVHFEyDE4Q1x58DTI1BwkDbRsj5
+	0WFOPmgz/Ntsj9TSwPvPcsIGRa7W9j982EGpiGaHujUgkx4aKa9y0VTo/24LSPssv3X9wdwPADv
+	ekiw6drYoMVLdM/mUz/q80kh4jUQO3JmEQqJWJLXz
+X-Gm-Gg: ASbGncuGbGeWnTXJuUiLH3PNTQUm33c3LxnCkwR9JaHIUGNSaK06Wudv8xQUOjdgdPT
+	BbsQtxNYbu4sphOlsr68nnuBzCBhHooKuLISsfSeaThhnTaBSjhutjl3cKqA/9PAeCknzYsaZ9H
+	ug9QUcJyz5VtwiWx+9o06KvXybJM7fw5/5PEHH1b3YOp+yhM1axqL8Gzfg5/FPzU+d92yo/LU=
+X-Google-Smtp-Source: AGHT+IGtLgtmO5+VAn+ilNY65s7bK5aPk8FoylUaz7kb6+EtS0xNQceBbHcJ/v5ufPboiu58SJqssv3PWYXJ8bWNBj4=
+X-Received: by 2002:a50:f608:0:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-60577a55f40mr80215a12.7.1748617033078; Fri, 30 May 2025
+ 07:57:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250404021902.48863-1-anthony.yznaga@oracle.com> <20250404021902.48863-13-anthony.yznaga@oracle.com>
+In-Reply-To: <20250404021902.48863-13-anthony.yznaga@oracle.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 30 May 2025 16:56:37 +0200
+X-Gm-Features: AX0GCFvi1yc7NtKBfRl9VGi7Izwkw6ZmWdTqjh7DsYfRRlKYZBj3cwJ62DAsuQ8
+Message-ID: <CAG48ez0gzjbumcECmE39dxsF9TTtR0ED3L7WdKdW4RupZDRyWA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/20] mm/mshare: prepare for page table sharing support
+To: Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, markhemm@googlemail.com, 
+	viro@zeniv.linux.org.uk, david@redhat.com, khalid@kernel.org, 
+	andreyknvl@gmail.com, dave.hansen@intel.com, luto@kernel.org, 
+	brauner@kernel.org, arnd@arndb.de, ebiederm@xmission.com, 
+	catalin.marinas@arm.com, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhiramat@kernel.org, 
+	rostedt@goodmis.org, vasily.averin@linux.dev, xhao@linux.alibaba.com, 
+	pcc@google.com, neilb@suse.de, maz@kernel.org, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Liam Howlett <liam.howlett@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Eliminate redundant encode & decode function by using union for
-bch_compression_opt, which reduces code complexity.
+On Fri, Apr 4, 2025 at 4:18=E2=80=AFAM Anthony Yznaga <anthony.yznaga@oracl=
+e.com> wrote:
+> In preparation for enabling the handling of page faults in an mshare
+> region provide a way to link an mshare shared page table to a process
+> page table and otherwise find the actual vma in order to handle a page
+> fault. Modify the unmap path to ensure that page tables in mshare regions
+> are unlinked and kept intact when a process exits or an mshare region
+> is explicitly unmapped.
+>
+> Signed-off-by: Khalid Aziz <khalid@kernel.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+[...]
+> diff --git a/mm/memory.c b/mm/memory.c
+> index db558fe43088..68422b606819 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+[...]
+> @@ -259,7 +260,10 @@ static inline void free_p4d_range(struct mmu_gather =
+*tlb, pgd_t *pgd,
+>                 next =3D p4d_addr_end(addr, end);
+>                 if (p4d_none_or_clear_bad(p4d))
+>                         continue;
+> -               free_pud_range(tlb, p4d, addr, next, floor, ceiling);
+> +               if (unlikely(shared_pud))
+> +                       p4d_clear(p4d);
+> +               else
+> +                       free_pud_range(tlb, p4d, addr, next, floor, ceili=
+ng);
+>         } while (p4d++, addr =3D next, addr !=3D end);
+>
+>         start &=3D PGDIR_MASK;
+[...]
+> +static void mshare_vm_op_unmap_page_range(struct mmu_gather *tlb,
+> +                               struct vm_area_struct *vma,
+> +                               unsigned long addr, unsigned long end,
+> +                               struct zap_details *details)
+> +{
+> +       /*
+> +        * The msharefs vma is being unmapped. Do not unmap pages in the
+> +        * mshare region itself.
+> +        */
+> +}
 
-Signed-off-by: George Hu <integral@archlinux.org>
----
- fs/bcachefs/compress.c | 17 +++++++++--------
- fs/bcachefs/compress.h | 32 +++++++-------------------------
- fs/bcachefs/extents.c  |  2 +-
- 3 files changed, 17 insertions(+), 34 deletions(-)
+Unmapping a VMA has three major phases:
 
-diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
-index 1bca61d17092..10e88e14f5ed 100644
---- a/fs/bcachefs/compress.c
-+++ b/fs/bcachefs/compress.c
-@@ -336,7 +336,7 @@ static int attempt_compress(struct bch_fs *c,
- 			    void *workspace,
- 			    void *dst, size_t dst_len,
- 			    void *src, size_t src_len,
--			    struct bch_compression_opt compression)
-+			    union bch_compression_opt compression)
- {
- 	enum bch_compression_type compression_type =
- 		__bch2_compression_opt_to_type[compression.type];
-@@ -426,7 +426,7 @@ static int attempt_compress(struct bch_fs *c,
- static unsigned __bio_compress(struct bch_fs *c,
- 			       struct bio *dst, size_t *dst_len,
- 			       struct bio *src, size_t *src_len,
--			       struct bch_compression_opt compression)
-+			       union bch_compression_opt compression)
- {
- 	struct bbuf src_data = { NULL }, dst_data = { NULL };
- 	void *workspace;
-@@ -553,7 +553,7 @@ unsigned bch2_bio_compress(struct bch_fs *c,
- 
- 	compression_type =
- 		__bio_compress(c, dst, dst_len, src, src_len,
--			       bch2_compression_decode(compression_opt));
-+			       (union bch_compression_opt){ .value = compression_opt });
- 
- 	dst->bi_iter.bi_size = orig_dst;
- 	src->bi_iter.bi_size = orig_src;
-@@ -602,7 +602,8 @@ static int __bch2_check_set_has_compressed_data(struct bch_fs *c, u64 f)
- int bch2_check_set_has_compressed_data(struct bch_fs *c,
- 				       unsigned compression_opt)
- {
--	unsigned compression_type = bch2_compression_decode(compression_opt).type;
-+	unsigned int compression_type = ((union bch_compression_opt){ .value = compression_opt })
-+					.type;
- 
- 	BUG_ON(compression_type >= ARRAY_SIZE(bch2_compression_opt_to_feature));
- 
-@@ -683,7 +684,7 @@ static int __bch2_fs_compress_init(struct bch_fs *c, u64 features)
- 
- static u64 compression_opt_to_feature(unsigned v)
- {
--	unsigned type = bch2_compression_decode(v).type;
-+	unsigned int type = ((union bch_compression_opt){ .value = v }).type;
- 
- 	return BIT_ULL(bch2_compression_opt_to_feature[type]);
- }
-@@ -703,7 +704,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- {
- 	char *val = kstrdup(_val, GFP_KERNEL);
- 	char *p = val, *type_str, *level_str;
--	struct bch_compression_opt opt = { 0 };
-+	union bch_compression_opt opt = { 0 };
- 	int ret;
- 
- 	if (!val)
-@@ -736,7 +737,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- 		opt.level = level;
- 	}
- 
--	*res = bch2_compression_encode(opt);
-+	*res = opt.value;
- err:
- 	kfree(val);
- 	return ret;
-@@ -744,7 +745,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- 
- void bch2_compression_opt_to_text(struct printbuf *out, u64 v)
- {
--	struct bch_compression_opt opt = bch2_compression_decode(v);
-+	union bch_compression_opt opt = { .value = v };
- 
- 	if (opt.type < BCH_COMPRESSION_OPT_NR)
- 		prt_str(out, bch2_compression_opts[opt.type]);
-diff --git a/fs/bcachefs/compress.h b/fs/bcachefs/compress.h
-index bec2f05bfd52..8cded510b2ac 100644
---- a/fs/bcachefs/compress.h
-+++ b/fs/bcachefs/compress.h
-@@ -10,41 +10,23 @@ static const unsigned __bch2_compression_opt_to_type[] = {
- #undef x
- };
- 
--struct bch_compression_opt {
--	u8		type:4,
--			level:4;
--};
--
--static inline struct bch_compression_opt __bch2_compression_decode(unsigned v)
--{
--	return (struct bch_compression_opt) {
--		.type	= v & 15,
--		.level	= v >> 4,
-+union bch_compression_opt {
-+	u8 value;
-+	struct {
-+		u8 type:4, level:4;
- 	};
--}
-+};
- 
- static inline bool bch2_compression_opt_valid(unsigned v)
- {
--	struct bch_compression_opt opt = __bch2_compression_decode(v);
-+	union bch_compression_opt opt = { .value = v };
- 
- 	return opt.type < ARRAY_SIZE(__bch2_compression_opt_to_type) && !(!opt.type && opt.level);
- }
- 
--static inline struct bch_compression_opt bch2_compression_decode(unsigned v)
--{
--	return bch2_compression_opt_valid(v)
--		? __bch2_compression_decode(v)
--		: (struct bch_compression_opt) { 0 };
--}
--
--static inline unsigned bch2_compression_encode(struct bch_compression_opt opt)
--{
--	return opt.type|(opt.level << 4);
--}
--
- static inline enum bch_compression_type bch2_compression_opt_to_type(unsigned v)
- {
--	return __bch2_compression_opt_to_type[bch2_compression_decode(v).type];
-+	return __bch2_compression_opt_to_type[((union bch_compression_opt){ .value = v }).type];
- }
- 
- struct bch_write_op;
-diff --git a/fs/bcachefs/extents.c b/fs/bcachefs/extents.c
-index 677cf453b332..64419c028662 100644
---- a/fs/bcachefs/extents.c
-+++ b/fs/bcachefs/extents.c
-@@ -1512,7 +1512,7 @@ int bch2_bkey_ptrs_validate(struct bch_fs *c, struct bkey_s_c k,
- 			const struct bch_extent_rebalance *r = &entry->rebalance;
- 
- 			if (!bch2_compression_opt_valid(r->compression)) {
--				struct bch_compression_opt opt = __bch2_compression_decode(r->compression);
-+				union bch_compression_opt opt = { .value = r->compression };
- 				prt_printf(err, "invalid compression opt %u:%u",
- 					   opt.type, opt.level);
- 				return -BCH_ERR_invalid_bkey;
--- 
-2.49.0
+1. unlinking the VMA from the VMA tree
+2. removing the VMA contents
+3. removing unneeded page tables
 
+The MM subsystem broadly assumes that after phase 2, no stuff is
+mapped in the region anymore and therefore changes to the backing file
+don't need to TLB-flush this VMA anymore, and unlinks the mapping from
+rmaps and such. If munmap() of an mshare region only removes the
+mapping of shared page tables in step 3, as implemented here, that
+means things like TLB flushes won't be able to discover all
+currently-existing mshare mappings of a host MM through rmap walks.
+
+I think it would make more sense to remove the links to shared page
+tables in step 2 (meaning in mshare_vm_op_unmap_page_range), just like
+hugetlb does, and not modify free_pgtables().
+
+>  static const struct vm_operations_struct msharefs_vm_ops =3D {
+>         .may_split =3D mshare_vm_op_split,
+>         .mprotect =3D mshare_vm_op_mprotect,
+> +       .unmap_page_range =3D mshare_vm_op_unmap_page_range,
+>  };
+>
+>  /*
+> --
+> 2.43.5
+>
