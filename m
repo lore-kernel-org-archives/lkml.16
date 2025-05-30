@@ -1,116 +1,147 @@
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C2C79CF
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE48C749C;
+	Fri, 30 May 2025 13:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748612965; cv=none; b=dxS5BzyKEpqbKEg3cJz8ry3KSjZIUlhLvU0PLArvEtJz5Y/6CtMf7HqVanVQtSupN5f7Voi2xZ5UZPjtvz8LAYeMYDTzJvgiTvLMUG0xl99uZSoddZpgdsOe5AG3a14Xus+pVHWF8S4i1Jrv1j9pOBmiW2N2Tyj+/g3y6ziGlNI=
+	t=1748613093; cv=none; b=r/Dx191InRGJbnQUpAKDByztjAv+EHS29MLlSLtvxlOYpY++PTZCePzouHu0f2pZFDQr+q7E9Il1hQpYMa6Do8O8Qhvm9CaAyF8pa5TLjPXqX+xiwEZzLa+kyMdagmp0gVfoh/A4Iz4090gFBjo8Khwj5XWdmmHFHxfDm2435Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748612965; c=relaxed/simple;
-	bh=1jTr1g5QOazu47tadj4JGVrJDAfLbg3ptCZUFAnGh6w=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=rIy6YOL7DKcFSMC4wWWNJdwkXJTQruCM1PCbA8NMDNcjzd9NNNZ0HG6liMcTrSeXCPaji6+10mKOftpLK4iTHJV5ymS9l0e6I8kMgGHoZEAAO16ePZIFsd6HTIz6YBiKVrXIaSorlIUU2WTJOgF7mSsZgkJPXfI9KSRlYgFzD0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:55896)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uKzm5-005yU3-MH; Fri, 30 May 2025 07:27:53 -0600
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:47416 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uKzm4-000Vcx-Jk; Fri, 30 May 2025 07:27:53 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,  Andrew Morton
- <akpm@linux-foundation.org>
-References: <aDlty06JvlGwTfKk@gondor.apana.org.au>
-Date: Fri, 30 May 2025 08:27:14 -0500
-In-Reply-To: <aDlty06JvlGwTfKk@gondor.apana.org.au> (Herbert Xu's message of
-	"Fri, 30 May 2025 16:35:23 +0800")
-Message-ID: <87ldqegrf1.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1748613093; c=relaxed/simple;
+	bh=3g+2Gt6ki2RAC1y5hKm8yLn0M1lJ0n9JI1E/PiZVHHU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AJRU9SwfpvezdfAsUe9k11bpsIRz+n788u2TsIZdkPJgvmHIhtkHpY1vrvxct8Wjt6Jisb/zWrRLrazGouTsieKJhZqeurAI9e7FGvE75oxEAD08Xs1h6BEIVBFwgvPOuFv80JVzcCEeZwxURSaFL0oZrMRh3+jWHx5OB70Ptnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=i1M12tVG; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="i1M12tVG"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1751E89A;
+	Fri, 30 May 2025 15:51:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748613061;
+	bh=3g+2Gt6ki2RAC1y5hKm8yLn0M1lJ0n9JI1E/PiZVHHU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=i1M12tVGYn+8VKsu5Ynf0+EMtK1xNPbCFvcVpzJnaZyAF/KWnXM6QGBX28SRFyf33
+	 2+c+jlP5uWjqIakiqY7pTYFcyorH7J10whgGT3vVul31gJVERbbjBff7BaiYWDJQ0J
+	 t0WTa+dnWJzIBvYV6Y7aDqr9TswFYZUl4gouON68=
+From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Subject: [PATCH v3 00/15] media: rcar: Streams support
+Date: Fri, 30 May 2025 16:50:29 +0300
+Message-Id: <20250530-rcar-streams-v3-0-026655df7138@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1uKzm4-000Vcx-Jk;;;mid=<87ldqegrf1.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/1W1G+VTxfE0afk/cNZjBjXCe2jTfZW4E=
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.5000]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  0.0 T_TooManySym_01 4+ unique symbols in subject
-X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Herbert Xu <herbert@gondor.apana.org.au>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 496 ms - load_scoreonly_sql: 0.08 (0.0%),
-	signal_user_changed: 13 (2.6%), b_tie_ro: 11 (2.2%), parse: 1.31
-	(0.3%), extract_message_metadata: 18 (3.5%), get_uri_detail_list: 1.80
-	(0.4%), tests_pri_-2000: 17 (3.5%), tests_pri_-1000: 3.2 (0.6%),
-	tests_pri_-950: 1.65 (0.3%), tests_pri_-900: 1.29 (0.3%),
-	tests_pri_-90: 109 (22.0%), check_bayes: 107 (21.5%), b_tokenize: 7
-	(1.4%), b_tok_get_all: 7 (1.3%), b_comp_prob: 2.4 (0.5%),
-	b_tok_touch_all: 88 (17.6%), b_finish: 1.12 (0.2%), tests_pri_0: 312
-	(63.0%), check_dkim_signature: 0.68 (0.1%), check_dkim_adsp: 3.5
-	(0.7%), poll_dns_idle: 0.92 (0.2%), tests_pri_10: 4.0 (0.8%),
-	tests_pri_500: 11 (2.2%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH] userns: Add forward declaration of struct seq_file in
- user_namespace.h
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, herbert@gondor.apana.org.au
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKe3OWgC/23Pz26DMAwG8FdBOc9T/gABTnuPaYeQOCUHSGtTt
+ Kni3ZfSSZWmHj9L/n32TTBSQhZDdROEW+KUlxLMWyX85JYTQgolCy11I7Xqgbwj4JXQzQwqBnR
+ d10psUJSVM2FM3wf3+fXIhJdrUdfH8IkO1R/ZQSQ3IwRkD2fHvE6Ur6cJ2raTDdbK9LYetvruj
+ 44RfJ7ntA5VgypGbVRteyvubVPiNdPP8cumjrrXZ28KJEQ19gaNlc6NH6n8wXkZs6PwXgoOb9N
+ Pw+j2n6GLEWSwUmrf1iq+MPZ9/wXk0UXuYQEAAA==
+X-Change-ID: 20250219-rcar-streams-1fdea8860e5e
+To: =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3422;
+ i=tomi.valkeinen+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=3g+2Gt6ki2RAC1y5hKm8yLn0M1lJ0n9JI1E/PiZVHHU=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoObfXwcE6IVUVE1gp9AlBNelbeUah8nxwL6Np8
+ mJ9QXH5376JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaDm31wAKCRD6PaqMvJYe
+ 9QIwD/9wd3vPznS65rKMksb0n7MwmVbwHpZdGoAWZTlf3iRw1doPJatGO1DikKJvBOOcivz1Csh
+ TotwicEnhkhrQBJz3FQ/kdrSqdC0BK3srbHc9u3AcESRIORKlXLf2y+fGjsqq98cQzYqg/yK7VL
+ mE5QbW22KGdDO4m23o52fXmr2/PQd48SDRxcdb0BnVa2pR9aZsG/K20rW2rpvPmfNY2JqUozIq2
+ Pk1pvGwqfuwP7E3a+GbPdL0Kr8tS9ry800MWmu6HEMvuaYSuwp+K3TM8ExV6ssw9byGP3IQNtCq
+ 4TNeASOWTGenhxEyh/OFyQKbHAC672FVpPqv5vVW4TnZ5dofGe9WIYCXPRVio6sQT3IwP/sEact
+ eiQr6gJTjqjFZwSgh98pEY49D6uyaGRnN0w7gZ5d9WwMRg9xKi9jGjEC48YU3w/ZV1JC7HCODBG
+ ShF9CTGz8xhw0y1eso0bOEhvCPQHkx0dAMg8zBFlpLAT0Fgh/f9KD1DL7A1sHBvNbBHtB6k+63b
+ Lghmp3Uxo8/Kbz4A16RG7jVZtG5Jhc2qtxgwnnhvfwYle0LecTB5f9sKtjeYVApzGcWRhLxR6VF
+ F/O9NcFlfIqeqjoskflduB/3S+v+OBm5vSsHOVJPC+1X1WjXGwRS+68sV8lRagigzDQKMwMT2iD
+ 4HSfbZODaMp0uqQ==
+X-Developer-Key: i=tomi.valkeinen+renesas@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Herbert Xu <herbert@gondor.apana.org.au> writes:
+Add streams support to Renesas rcar platform driver.
 
-> Add forward declaration of struct seq_file before using it in
-> function prototype.
+The series attempts to keep compatibility with the current upstream.
+However, in upstream there's some kind of custom multi-stream support
+implemented to the rcar driver, which breaks at patch "media: rcar-csi2:
+Simplify rcsi2_calc_mbps()".
 
-I don't see anything wrong with doing that.
+The behavior should not change when using a single stream.
 
-However:
-> Fixes: 9cc46516ddf4 ("userns: Add a knob to disable setgroups on a per
-> user namespace basis")
+Testing is problematic, as the only way currently for me to get multiple
+streams is by using the GMSL2 deserializer add-on board with GMSL2
+serializers. These are not supported in upstream. If someone has the
+hardware and wants to test, I can share the very-WIP branch that
+contains the missing pieces.
 
-That description seems to be lacking something.  The code as has been
-fine since 2014 and there is no conditional compilation involved.
+ Tomi
 
-Did some other change cause a declaration of seq_file not to be present?
-Did user_namespace.h get included somewhere new and that new location
-doesn't wind up declaring seq_file?
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+---
+Changes in v3:
+- Rebased on top of latest linux-media
+- Dropped dependencies which are already in linux-media (only remaining
+  dependency is v4l2_subdev_get_frame_desc_passthrough)
+- Tested on white-hawk board, using the staging deser TPG
+- Also tested in a WIP branch for GMSL2 (two video streams)
+- Link to v2: https://lore.kernel.org/r/20250326-rcar-streams-v2-0-d0d7002c641f@ideasonboard.com
 
-Especially since fixes tags tend to get code back ported I would
-appreciate a bit more context on why this is a problem in 2025 when
-it hasn't been a problem for the last decade.
+Changes in v2:
+- Rebased on top of latest upstream, and updated the dependencies to
+  match the latest serieses sent.
+- Add new patch "media: rcar-csi2: Use the pad version of v4l2_get_link_freq()"
+- Drop "media: rcar-csi2: Fix typo" (it was not a typo)
+- Update the code in calc_mbps(). The previous method relied on
+  V4L2_CID_LINK_FREQ, but that's not available if the link-freq is
+  provided via get_mbus_config().
+- Dropped dependencies to Niklas' old series which doesn't apply
+  cleanly. It's needed for multi-stream, but not for the current
+  upstream which only has a single stream use case.
+- Link to v1: https://lore.kernel.org/r/20250219-rcar-streams-v1-0-f1b93e370aab@ideasonboard.com
 
-Thank you,
-Eric Biederman
+---
+Tomi Valkeinen (15):
+      media: rcar-csi2: Use the pad version of v4l2_get_link_freq()
+      media: rcar-isp: Improve ISPPROCMODE_DT_PROC_MODE_VC
+      media: rcar-isp: Move {enable|disable}_streams() calls
+      media: rcar-csi2: Move {enable|disable}_streams() calls
+      media: rcar-csi2: Move rcar2_calc_mbps()
+      media: rcar-csi2: Simplify rcsi2_calc_mbps()
+      media: rcar-csi2: Optimize rcsi2_calc_mbps()
+      media: rcar-csi2: Switch to Streams API
+      media: rcar-isp: Switch to Streams API
+      media: rcar-csi2: Add .get_frame_desc op
+      media: rcar-isp: Call get_frame_desc to find out VC & DT
+      media: rcar-csi2: Add more stream support to rcsi2_calc_mbps()
+      media: rcar-csi2: Call get_frame_desc to find out VC & DT (Gen3)
+      media: rcar-csi2: Add full streams support
+      media: rcar-isp: Add full streams support
 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
->
-> diff --git a/include/linux/user_namespace.h b/include/linux/user_namespace.h
-> index a0bb6d012137..5c7aa940b1aa 100644
-> --- a/include/linux/user_namespace.h
-> +++ b/include/linux/user_namespace.h
-> @@ -16,6 +16,8 @@
->  #define UID_GID_MAP_MAX_BASE_EXTENTS 5
->  #define UID_GID_MAP_MAX_EXTENTS 340
->  
-> +struct seq_file;
-> +
->  struct uid_gid_extent {
->  	u32 first;
->  	u32 lower_first;
+ drivers/media/platform/renesas/rcar-csi2.c      | 426 +++++++++++++++++-------
+ drivers/media/platform/renesas/rcar-isp/csisp.c | 228 ++++++++++---
+ 2 files changed, 479 insertions(+), 175 deletions(-)
+---
+base-commit: 5e1ff2314797bf53636468a97719a8222deca9ae
+change-id: 20250219-rcar-streams-1fdea8860e5e
+prerequisite-change-id: 20250218-frame-desc-passthrough-66805e413974:v4
+prerequisite-patch-id: bce4a915a29a64f88ed1bb600c08df37d2ba20c6
+prerequisite-patch-id: 69b75e7dad9ced905cb39a72f18bebbf3e8f998a
+prerequisite-patch-id: 58463f6944c76acd6cf203b14a2836cdb0db2461
+
+Best regards,
+-- 
+Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+
