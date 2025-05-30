@@ -1,150 +1,149 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D292356BF;
-	Fri, 30 May 2025 16:09:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49202367D7
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621371; cv=none; b=aQqASkcMx4AXrcHGbPSgas76NjMbJ9FJOGsCQZoWAD8/qX7RNkYB67SUZJl7e75Hp9m3/Vc6uaqhMXL3I6U0yEBR8ZnV+52JWWvj9043d3laaoi7K21M0r3ifLouTqVX/9K4yILikyipO411XasO7xzGv3UfWAIxXl/7kLWAqDo=
+	t=1748621380; cv=none; b=HM47YoGoncyoco3ZgytPhqZAySVsu5RLmSO9VI5oCGPNQ+RuKQgx2YxkuOemXehBhc32Zmkf004wKvFrZC4uSX2GEVUfR3tj9ErMpYHZBQ3bOK+PCmkwyXZQsQZwDRf/JSvKP7QzvuXhlUdJ1fpE+6IPpW+iKBZOlImLMF89ZzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621371; c=relaxed/simple;
-	bh=JmVpSKKZOPOlCo9BFqRQoedyXzcdHKCWpOwCJrIX4hI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JpVQWXDxbHgR5xSboI8yO/MmlN4gfQA3RbumGP5wyxaSfkqGyD8bsuBD4ZHZPV7myU2xesAxXikPE8LUrarVcsz7usHfp4gfmf4cwFWJ+gk+3j1kuZQSVreUj46jq9W37dLyHectFYj7tjbv2oIxo3Ep0EwfpqkACNIPfIMm2dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b87Ph4p1Rz6L4x4;
-	Sat, 31 May 2025 00:05:44 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E5600140557;
-	Sat, 31 May 2025 00:09:24 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 May
- 2025 18:09:23 +0200
-Date: Fri, 30 May 2025 17:09:22 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-CC: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-acpi@vger.kernel.org>, <andy@kernel.org>, <nuno.sa@analog.com>,
-	<Michael.Hennerich@analog.com>, <marcelo.schmitt@analog.com>,
-	<jic23@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <marcelo.schmitt1@gmail.com>,
-	<linus.walleij@linaro.org>, <brgl@bgdev.pl>, <lgirdwood@gmail.com>,
-	<broonie@kernel.org>, <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
-	<andriy.shevchenko@linux.intel.com>, <rafael@kernel.org>,
-	<djrscally@gmail.com>
-Subject: Re: [PATCH v9 09/12] iio: adc: ad7768-1: add support for
- Synchronization over SPI
-Message-ID: <20250530170922.000019a5@huawei.com>
-In-Reply-To: <27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
-References: <cover.1748447035.git.Jonathan.Santos@analog.com>
-	<27cccb51cc56f1bb57cb06d279854a503d779e25.1748447035.git.Jonathan.Santos@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748621380; c=relaxed/simple;
+	bh=K+noXdjQU+U9M/qLIQSRjbQSnj/HMYLZOggdzA0wRz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rkflhf0P9IvdFlvlRqjW9PUOs2E7f0/nvb3R5yGE6yUcEPI4ExKkcNWAXptGp6k5jEW2C3tHgw5jOVEPfLEU+o0Oc1mJWoPu4MVB9qv1U/qtI0aPrbweraUWh2v3mIHXbgqIVo4jG3YyC82jWtQo1gaMOjoUGCRVSYwkywRFTTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OWFPFv75; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OWFPFv75"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234d366e5f2so29127625ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748621378; x=1749226178; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bxxufLK3KekEdbbP35QTahMDHa855MkqcMEQ8g1zMTk=;
+        b=OWFPFv75jUMcyKqM4kiH+1WgnnOJm4KXeza3803Uox+dAiompg3hJW5h+YD0tVjqdO
+         XATohQgUVGofAGheL5Jt3Jc9uC13xgItDQLkQp95H96DTvZu9V/btZ+Pr6LKMLsY3p45
+         A0S6zihhWrK2Cx+MyY6uy3Wf9QJxKm811VzvpC3XHsgTa895OIUTZe6sh0kbGLHKqOwP
+         lyU3LUWRiX4wjYUQ2Xy4ebv3S4Kph2L7Ve0birT984fSyVU2HffG7a7cY34QFuffT8+x
+         klN3Nivi3KPECpqmV7f6HAsSAOxhpB3eyyhRXMXnoqxAp5w4YgCUnmrB+YWDOEaIkZx7
+         8S4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748621378; x=1749226178;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bxxufLK3KekEdbbP35QTahMDHa855MkqcMEQ8g1zMTk=;
+        b=fDSG0I/LBkHlhWn3smL/AQjAdeJWoZ80krm+eSv1QHZPTdUYHxaBuFO6ZNEYWJuCup
+         3j+bWuU1pfVG0wh7TAxIjiJvfflIc5MZRvHB8HVNqqwraaFh3MyPwrBAmunHpuzTuxVz
+         5JCw6TpAF8GX92Z7LjVrvEwlleZTYzuT1avjeWyIjqFDE2A9VZQUcF3IDUWpUgHGzxBa
+         MzeRpoNX7xqEfuAI5dmVEEesj3nPSDu01Rrgaff30MXUMEe4vwwBopUXQcULPoZ6dN2p
+         CkTA12hYP4d5e++XIq2hvW4gATNnJvsFkxzijzaGlDNLHlfleYcfVuGWqT5slhK0HUtn
+         ganQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7UM/D2qXa51tRgS36hJiAmea74Gf53zQqh50nf36Un3Qw2QmOAOYqqILWcke9YSIAYfOCG36eARi71pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiTfDpo0+tEtCyM9g47ugkNRP7RsfXTRsXutnReSaYRL66YrWj
+	XKjFA8EWERgOKR+HEma6T3EuM5GV4p1xp/Yp849IlZAeWank+opGVtvjZAzycabJDw==
+X-Gm-Gg: ASbGnctzQFzxKM4nVqV2nJVlXv08Tcb8CISc3duuAmjKpkWmoGsZcG9sO45rEVJ7LtG
+	32e6D6i5JciL/QTqjKQTCofcLguSmw5SMkG98gCwtfhuMRydXtsXZyZYp17G9WAZRoNYkx2VQOJ
+	/D74cmrPgb1PwcWEpk39oDXNSdW/BS5S6N1Ve8vYhoVimfsa93V406HqJuVP+79ehjfvah0t0Tx
+	qxIFNxVkoCyrQ9CUMHAYo4Jr+ZjQXHngsy9gn4vZfXjUpcDVRgKViynQiEUrzwMW2UH5k3rxyUO
+	yZhhY9+wQrfW88Ab6V1zoagR5+6ZZCQ6sMHv5QIe8tM7DIcKMEcBfhWcffTsag==
+X-Google-Smtp-Source: AGHT+IEaQI64EZVaM9JygVJu/CqqQgOOBJm+b8JHY4a69IBYYuuTYL7zefQI+S32XWNK9lzdgNMIBQ==
+X-Received: by 2002:a17:903:291:b0:234:b44c:d3c8 with SMTP id d9443c01a7336-23529a28ab7mr65505535ad.37.1748621377852;
+        Fri, 30 May 2025 09:09:37 -0700 (PDT)
+Received: from thinkpad ([120.60.139.33])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd9478sm30412095ad.77.2025.05.30.09.09.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 09:09:37 -0700 (PDT)
+Date: Fri, 30 May 2025 21:39:28 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>, 
+	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Marc Zyngier <maz@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
+ bridges
+Message-ID: <bixtbu7hzs5rwrgj22ff53souxvpd7vqysktpcnxvd66jrsizf@pelid4rjhips>
+References: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
+ <20250530113404.GA138859@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250530113404.GA138859@bhelgaas>
 
-On Thu, 29 May 2025 19:50:29 -0300
-Jonathan Santos <Jonathan.Santos@analog.com> wrote:
+On Fri, May 30, 2025 at 06:34:04AM -0500, Bjorn Helgaas wrote:
+> On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
+> > On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
+> > > > The PCI link, when down, needs to be recovered to bring it back. But that
+> > > > cannot be done in a generic way as link recovery procedure is specific to
+> > > > host bridges. So add a new API pci_host_handle_link_down() that could be
+> > > > called by the host bridge drivers when the link goes down.
+> > > > 
+> > > > The API will iterate through all the slots and calls the pcie_do_recovery()
+> > > > function with 'pci_channel_io_frozen' as the state. This will result in the
+> > > > execution of the AER Fatal error handling code. Since the link down
+> > > > recovery is pretty much the same as AER Fatal error handling,
+> > > > pcie_do_recovery() helper is reused here. First the AER error_detected
+> > > > callback will be triggered for the bridge and the downstream devices. Then,
+> > > > pci_host_reset_slot() will be called for the slot, which will reset the
+> > > > slot using 'reset_slot' callback to recover the link. Once that's done,
+> > > > resume message will be broadcasted to the bridge and the downstream devices
+> > > > indicating successful link recovery.
+> > > 
+> > > Link down is an event for a single Root Port.  Why would we iterate
+> > > through all the Root Ports if the link went down for one of them?
+> > 
+> > Because on the reference platform (Qcom), link down notification is
+> > not per-port, but per controller. So that's why we are iterating
+> > through all ports.  The callback is supposed to identify the ports
+> > that triggered the link down event and recover them.
+> 
+> Maybe I'm missing something.  Which callback identifies the port(s)
+> that triggered the link down event?
 
-> The synchronization method using GPIO requires the generated pulse to be
-> truly synchronous with the base MCLK signal. When it is not possible to
-> do that in hardware, the datasheet recommends using synchronization over
-> SPI, where the generated pulse is already synchronous with MCLK. This
-> requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
->=20
-> Use trigger-sources property to enable device synchronization over SPI
-> and multi-device synchronization while replacing sync-in-gpios property.
->=20
-> Reviewed-by: David Lechner <dlechner@baylibre.com>
-> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+I was referring to the host_bridge::reset_root_port() callback that resets the
+root ports.
 
-A couple of trivial comments.  Not enough to respin unless something else c=
-omes
-up.
+>  I see that
+> pci_host_handle_link_down() is called by
+> rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
+> but I don't see the logic that identifies a particular Root Port.
+> 
+> Per-controller notification of per-port events is a controller
+> deficiency, not something inherent to PCIe.  I don't think we should
+> build common infrastructure that resets all the Root Ports just
+> because one of them had an issue.
+> 
 
+Hmm, fair enough.
 
-> @@ -296,6 +301,27 @@ static const struct regmap_config ad7768_regmap24_co=
-nfig =3D {
->  	.max_register =3D AD7768_REG24_COEFF_DATA,
->  };
-> =20
-> +static int ad7768_send_sync_pulse(struct ad7768_state *st)
-> +{
-> +	if (st->en_spi_sync)
-> +		return regmap_write(st->regmap, AD7768_REG_SYNC_RESET, 0x00);
-> +
-> +	/*
-> +	 * The datasheet specifies a minimum SYNC_IN pulse width of 1.5 =D7 Tmc=
-lk,
-> +	 * where Tmclk is the MCLK period. The supported MCLK frequencies range
-> +	 * from 0.6 MHz to 17 MHz, which corresponds to a minimum SYNC_IN pulse
-> +	 * width of approximately 2.5 =B5s in the worst-case scenario (0.6 MHz).
-> +	 *
-> +	 * Add a delay to ensure the pulse width is always sufficient to
-> +	 * trigger synchronization.
-> +	 */
-> +	gpiod_set_value_cansleep(st->gpio_sync_in, 1);
-> +	fsleep(3);
-> +	gpiod_set_value_cansleep(st->gpio_sync_in, 0);
+> I think pci_host_handle_link_down() should take a Root Port, not a
+> host bridge, and the controller driver should figure out which port
+> needs to be recovered, or the controller driver can have its own loop
+> to recover all of them if it can't figure out which one needs it.
+> 
 
-This change + comment should really have been in a separate patch
-as there is always the potential someone might want to backport it.
+This should also work. Feel free to drop the relevant commits for v6.16, I can
+resubmit them (including dw-rockchip after -rc1).
 
-> +
-> +	return 0;
-> +}
-> +
->  static int ad7768_set_mode(struct ad7768_state *st,
->  			   enum ad7768_conv_mode mode)
->  {
-> @@ -392,10 +418,7 @@ static int ad7768_set_dig_fil(struct ad7768_state *s=
-t,
->  		return ret;
-> =20
->  	/* A sync-in pulse is required every time the filter dec rate changes */
-> -	gpiod_set_value(st->gpio_sync_in, 1);
-> -	gpiod_set_value(st->gpio_sync_in, 0);
-> -
-> -	return 0;
-> +	return ad7768_send_sync_pulse(st);
->  }
+- Mani
 
-> +
-> +static int ad7768_trigger_sources_get_sync(struct device *dev,
-> +					   struct ad7768_state *st)
-> +{
-> +	struct fwnode_handle *dev_fwnode =3D dev_fwnode(dev);
-> +
-> +	/*
-> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
-> +	 * to synchronize one or more devices:
-> +	 * 1. Using an external GPIO.
-> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
-> +	 *    synchronization pulse that drives the SYNC_IN pin.
-> +	 */
-> +	if (fwnode_property_present(dev_fwnode, "trigger-sources"))
-> +		return ad7768_trigger_sources_sync_setup(dev, dev_fwnode, st);
-> +
-> +	/*
-> +	 * In the absence of trigger-sources property, enable self
-> +	 * synchronization over SPI (SYNC_OUT).
-> +	 */
-> +	st->en_spi_sync =3D true;
-
-Really trivial but if you respin for some reason blank line here.
-
-> +	return 0;
-> +}
-
+-- 
+மணிவண்ணன் சதாசிவம்
