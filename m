@@ -1,102 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553831D8A10;
-	Fri, 30 May 2025 18:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82FF189513;
+	Fri, 30 May 2025 18:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748631102; cv=none; b=PLStmXv9WE+mUnhUZvAHBybIYrLMyxqoxwh1RfpUH0jHenCIqiaE/0kL7SFOV7/Whr7y6nX9A3gEEIs/YG3i/KvO3gRwQQ1WoDISnuH8VaRcHqjlAb/BsXg8NUrELz64/bp4BtOsNz85cpwvxmkmopFwpSJJl16G8qbv4I/1m4M=
+	t=1748631169; cv=none; b=b7jUM6nYiBdB5etkcDoRHsuRHPtvqyitHuCCaIu7MTkoJUhDw75Ornay1aoSDAz/M79B3RhzQWFfId343xggdfFPJ2lBOBaedo0MdS2JlluKUjpXbha0s6itbjhgF2YhqU5CO9T0GrCEedw1UWumBEWEI//tpKTnpsgF8vEN7k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748631102; c=relaxed/simple;
-	bh=OGWupad3mxhudfRyUECpcU7Gtb3pu/gBN114jYicv8Q=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=QnjVvejl23gHruGePz71vxw5wdFtFixHuroxqnkoxKLE954ecJKfseazIcDHLHA4UzjLOcoKf2efGlAyV9I5n14TO5yGhXKF1/1dJ5b5FM93bZGNOahK+QQcUIB3fgFQdZtKgntZA3QpY//ligaV9YlBlY/e8y41YI1coNFN0hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMV+huY7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748631169; c=relaxed/simple;
+	bh=FQPMKronnbZixqRF5rYHmx0k8Hi4UbqrcPT7Lo9aCCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTBCbbxGSEraFrk0zGCzONwpAJQg6PgVJ+kqG8trT/5IzphCdue3yk0onIelrPKCdNfZwRwoCadvp/hFOvg4VRYf7VK7VelzUPlQbpMra1RAp4MZGTPLm3SxGF+f9rLrKjZJoGs9by4wvsYrLMSwc0JB9T1To6TLLE2jQbaIKSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGKZIj90; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMV+huY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77CAC4CEED;
-	Fri, 30 May 2025 18:51:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGKZIj90"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51BB2C4CEE9;
+	Fri, 30 May 2025 18:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748631101;
-	bh=OGWupad3mxhudfRyUECpcU7Gtb3pu/gBN114jYicv8Q=;
-	h=From:Date:Subject:To:Cc:From;
-	b=WMV+huY7HRMOPt/q/zgjM9I+Rwo/pYbPN8wfrK5Xa/LSnzt6g0WTaPAqyqUn3b2YM
-	 W+MuZrNKGOYTUXAPeQyW47gF+PopXV1IDH7fyGt5PXbT0iUkr4kgZYDp5Tl/3MXB//
-	 NENkIm0JttvadyOAmQFvi9dTVzEV/65OA6D0r3zqJB3OEHBgZdHudH7ZPLjdSoyId+
-	 ROjvJbG/7Q/lI7Ji3ub9B/dW5pHvSpMKkfye5VhzrVmehA6shmVb/Rn/o8SJNP/4UV
-	 jdq0uH7x03gUaqO5j7wBDB8xvsKA7Twi403gTRzfKt7Ud4keTNo4NoKfdtRnVAEkqd
-	 WZx1LfI42NHXQ==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2d09d495c6cso594931fac.3;
-        Fri, 30 May 2025 11:51:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAv+r6F+N0KKykDMcp2Uq3XX9FWxnN8CZCSFOcyD6ucUTlTklLIlIvCssHlu4hOLYgiVwErFNvv2RJ8qE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxX9BxmB78LB6uMdQyMe3auJIn5Igfi7iK+zlxsa9vIOZ0gnP0H
-	+xCCKx+uc2iIBmnpYN8DzEWnWK5j23ETg55+C2oKMOmSLoKPGDjBnumc+lBgXqoJLqeRSKJ4sT1
-	c6LI2pXmFtHQCYnNpm9a3GFU/pX/C8sE=
-X-Google-Smtp-Source: AGHT+IGjz3+bC2xHbnZw1cEeyAzaN6Vyk43XA6bFvU9xZf+GRG2XAZuKZSPTTROim601u8ljt0L4DtL9fYG/UvK8HOQ=
-X-Received: by 2002:a05:6870:46a4:b0:2e9:365:d0d3 with SMTP id
- 586e51a60fabf-2e92a422551mr1653148fac.21.1748631101019; Fri, 30 May 2025
- 11:51:41 -0700 (PDT)
+	s=k20201202; t=1748631168;
+	bh=FQPMKronnbZixqRF5rYHmx0k8Hi4UbqrcPT7Lo9aCCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VGKZIj90Q5s5AJPF1+8umGeT5/FLGKUv58yrc3F1xglLV+y+/9nkpZ/hMNuWtOnYC
+	 RuDmOXQ/Ike8Xg/kaEWCsIV0EvK5S3ugsWEqZz1SKCbdE/tq7yD9bIHGmxVz5sBOF1
+	 mw1XrSQgQDaRJmYzREBW4IZl/ukAe6mORVds5ndzU7Fjk0I1Jpx36GYRBQEA3h9pmG
+	 S+ly9EMibSnypgkOwkKGGhYGvOA7ea9UGKSxMedsMpRR4ZfITo9rYPtO/advDQXQm3
+	 4dF3rqsU+UBDPFXi/roQvmjx/bD2vRCS2O/SjSjWBNOhBFW7H+3dXZlSGZ+cOOqyMH
+	 UeIJjmXI3KgMw==
+Date: Fri, 30 May 2025 11:52:45 -0700
+From: Kees Cook <kees@kernel.org>
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
+ initialization in _DEFINE_FLEX()
+Message-ID: <202505301151.6CEDBBF8@keescook>
+References: <aBQVeyKfLOkO9Yss@kspp>
+ <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
+ <202505301054.A786A183@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 30 May 2025 20:51:30 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iDrmG44NHPtDThtYkk-v3YOX-4yxJWC7SvU0Hjq-vWGA@mail.gmail.com>
-X-Gm-Features: AX0GCFv3A9tkuZZjvO1ZqvqZWHyDI1e8Unf6uIwtMO0lJhiJPEYx3F-ibtZbddY
-Message-ID: <CAJZ5v0iDrmG44NHPtDThtYkk-v3YOX-4yxJWC7SvU0Hjq-vWGA@mail.gmail.com>
-Subject: [GIT PULL] ACPI fixes for v6.16-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505301054.A786A183@keescook>
 
-Hi Linus,
+On Fri, May 30, 2025 at 11:06:01AM -0700, Kees Cook wrote:
+> #define __DEFINE_FLEX(type, name, member, count, trailer...)		\
+>         _Static_assert(__builtin_constant_p(count),			\
+>                        "onstack flex array members require compile-time const count"); \
+>         union {								\
+>                 u8 bytes[struct_size_t(type, member, count)];		\
+>                 type obj;						\
+>         } name##_u trailer;						\
+>         type *name = (type *)&name##_u
+> 
+> #define _DEFINE_FLEX(type, name, member, count, initializer...)		\
+> 	__DEFINE_FLEX(type, name, member, count, = { .obj = initializer })
+> [...]
+> Does that look like what you'd want? (Note I didn't actually build this;
+> I want to make sure the concept is workable...)
 
-Please pull from the tag
+FWIW, this is working as expected: https://godbolt.org/z/P7Go8Tr33
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-6.16-rc1-2
+I'll send a proper patch...
 
-with top-most commit f4c606df263b6de746412dee707bc4b590adf45a
-
- Merge branches 'acpica', 'acpi-tables' and 'acpi-apei'
-
-on top of commit 3702a515edec515fcc7e085053da636fefac88d6
-
- Merge tag 'acpi-6.16-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-to receive ACPI fixes for 6.16-rc1.
-
-These address issues introduced by recent ACPI changes merged
-previously:
-
- - Unbreak acpi_ut_safe_strncpy() by restoring its previous behavior
-   changed incorrectly by a recent update (Ahmed Salem).
-
- - Make a new static checker warning in the recently introduced ACPI
-   MRRM table parser go away (Dan Carpenter).
-
- - Fix ACPI table reference leak in error path of einj_probe() (Dan
-   Carpenter).
-
-Thanks!
-
-
----------------
-
-Ahmed Salem (1):
-      ACPICA: Switch back to using strncpy() in acpi_ut_safe_strncpy()
-
-Dan Carpenter (2):
-      ACPI: APEI: EINJ: Clean up on error in einj_probe()
-      ACPI: MRRM: Silence error code static checker warning
-
----------------
-
- drivers/acpi/acpi_mrrm.c        | 4 +++-
- drivers/acpi/acpica/utnonansi.c | 2 +-
- drivers/acpi/apei/einj-core.c   | 2 +-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+-- 
+Kees Cook
