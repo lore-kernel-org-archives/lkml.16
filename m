@@ -1,317 +1,508 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2087.outbound.protection.outlook.com [40.107.101.87])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731CD2222C0;
-	Fri, 30 May 2025 14:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748613733; cv=fail; b=Cw9/8qyE9Ke4ZcAGMAB647cdzJDZ/8uoFiRjNRGbw/c64cjyFfFcU8sAe0TgBCsPXh6p/xEMnV0DxawiYrCWJJPRqizZ3N4cayuDVHtA/LW3Jas91dDWT1O3iHwZ0wl9ppyNi21XnUBq7DRB3akk5kI7NlHRfcj+niDqcGfHdmc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748613733; c=relaxed/simple;
-	bh=u+8jy58Ca8kgnhn6HHy35dBH29jfIfKdEm27lxgut20=;
-	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
-	 In-Reply-To:MIME-Version; b=A/1rsMfSdNcxB+mrUIpX6mCQGP6lb3+Prv3t9H50AudlVgm8m5a5cp0CGSjA+DkLgFhZ5Ia+iylVWgyu/kViqF/j0qCkaOnYgvqthFHqEDfveoee+B0y+u0/15M2OcSKl4DLdhNw91PttKEBCm3DCSz1phV/39Jy7tec07n3wsw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e7ltP785; arc=fail smtp.client-ip=40.107.101.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31111C683;
+	Fri, 30 May 2025 14:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748613755; cv=none; b=nAWmTyoBiF+uj07UDPSs+cHwJ2XIg19tK0EdqWBimOmXUVYPeORssjPbdGAGLyIp4w5stLJfCpOj1GWkRWxj8NeckeyFWlxKJzF9WLLGp//Xx5NzwYg0GPmKp7IjOjvYEcCugqQ/Yas8Hvn1XV4NRH08BmBOqGSvbzyjp9qLd0g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748613755; c=relaxed/simple;
+	bh=Fum/TRVThwGX58ougliYEQ3GV8bxa2jyVjaMx/4Cojw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+svjirWfRqAQKkixJCO339KCe2dxaQcCWQVCPk74uwLt4qieE1kJ+L03FXewSg7Khl3Qfd7yajQ6U64pVsgDwITiWZsLk+8Ffe87kwQFmJFTW00sFgoqdcWbpBDpP/tszMy7nakatJ4MDKi3uDfEKJ/Sm4h0B2QGEpzMpr0aZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AgBaHGyI; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e7ltP785"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c0c4Z8mdDScDb8Gutr8pdDqkp+JojW2QNi8zgQv+mBS4F1GOOw5RpblVu/wDS9bGtBNBhdp5+5nHa2/U8R5+EcK0ZuimsQ39wQgt5ahJI9mTFsAep547bIodtME9eEVUyJq/rslJw1DcGVSaMWOg9NhvtMI5A77wtsqmGw3sGS8othJ9nnS3Si1ygUdWXjwae1SMX9PwcrpzAWIn+0NO1SaMAmc0GzafR2w+jUezuJ/2MCU7Nti5oiKaE732igl1+Xdkvrdp1WxPA4+enB6rus37nC/n7Xw2i0k2+ra3dBAj/qB3tBFNe36tA74kOerCV2O1Z52cUN323PJLyU1Bvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ULcv/EYDGd93mYmVUK0Q5cJTAZBRmEGP0ARPkkLSU9M=;
- b=BFgBQExnr9y1gHsitfhoAZjBmubc6PH24ci4WVmLGwjCkGtJV6Vu5aFPIolpsGr+c9vfsZWkqAOOnhnTICgqH7id9K9MO0mlvEkA8lR8mwjqVgI+3vemQ2L52GWuTUWpF/qH75dhf9jxju815kswIBUMpyo+k1/v9EwePwyAnZrSaUN2ulAd9t5/1WCF62CAbcSrTObSGX+/5e2KVYcd0j33RvNs61fYXS9HxZXWa2jwYGqR3uUgZpzxFAlR5SCyIuKixAodiv9yGrsd1+kRTvjM7frLsnB2n+WGrCC6buGikmu3AbpcLaPgx2M/73zh0cGPhGsNOc20BDAngkGO+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULcv/EYDGd93mYmVUK0Q5cJTAZBRmEGP0ARPkkLSU9M=;
- b=e7ltP785oJfIt/B/iYgMS1uw5fFp035VEWdnjFzK/KYSGxyMGdfAtiFXTr+5Cls3BarBgBtrUGkog/7mbFruRtYZoJxvijXCrgLTpVUNWucPWIvBY9XJ0GDnIbss/QHW+EupEIZiH59M7aU9mqNteJLXaU2usMNrViDFfpwR8azsqb4OuMvdJWadoYwoprXny+kWGAxsRAwt3FkzNlW0RKTX1gZdFbGRFqwBUFJ2uZWMAcNiZTcxyHXM5l2JTXM/KCD4C7xj70y54Jfi7jzuRMBpV2KeujXFfUTDp3g4U29JmM+sKnhlOMGPc9kDXVldlskNoRyHiBP392ue4av1Aw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by CY8PR12MB8242.namprd12.prod.outlook.com (2603:10b6:930:77::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Fri, 30 May
- 2025 14:02:07 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%5]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 14:02:05 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 May 2025 23:02:02 +0900
-Message-Id: <DA9JTYA0EQU8.26M0ZX80FOBWY@nvidia.com>
-Subject: Re: [PATCH 1/2] rust: add initial scatterlist bindings
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Jason Gunthorpe" <jgg@ziepe.ca>, "Abdiel Janulgue"
- <abdiel.janulgue@gmail.com>
-Cc: <dakr@kernel.org>, <lyude@redhat.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Valentin Obst" <kernel@valentinobst.de>, "open list"
- <linux-kernel@vger.kernel.org>, "Marek Szyprowski"
- <m.szyprowski@samsung.com>, "Robin Murphy" <robin.murphy@arm.com>,
- <airlied@redhat.com>, <rust-for-linux@vger.kernel.org>, "open list:DMA
- MAPPING HELPERS" <iommu@lists.linux.dev>, "Petr Tesarik"
- <petr@tesarici.cz>, "Andrew Morton" <akpm@linux-foundation.org>, "Herbert
- Xu" <herbert@gondor.apana.org.au>, "Sui Jingfeng" <sui.jingfeng@linux.dev>,
- "Randy Dunlap" <rdunlap@infradead.org>, "Michael Kelley"
- <mhklinux@outlook.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250528221525.1705117-1-abdiel.janulgue@gmail.com>
- <20250528221525.1705117-2-abdiel.janulgue@gmail.com>
- <20250529004550.GB192517@ziepe.ca>
-In-Reply-To: <20250529004550.GB192517@ziepe.ca>
-X-ClientProxiedBy: TYCP301CA0069.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:7d::9) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AgBaHGyI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=ciHFY0VgOd5QIMYfzEsxxrFpF1H8WdgMxl2q6NzkMcQ=; b=AgBaHGyIlmAW/v8GWs/OGq2Eqr
+	yZFFmsHTkVFvnufBUGKi5lrsKHweHy7rsvU7AKLJJOUM2Wg3rh7CwDrS4pQQ+0L2q/kiYFT8DfHPI
+	45gYqEujDh3vsR6tqOsHUlXGnogpqFP8bIqYnafqB2aEaKpJc2ZV9o/bqEPLcvfZuWBDL81whZQqu
+	UDs9DW8dVQlVwKH+SAeebNs9B/1Sqp+odrGrqg4Xkd5XejCWqUABqkRqxQLUNt0q5PG7wGACXd1u8
+	ttUskYnu6/kJo7+A2bn3W6lfZzW0kh0s/wBq2XsNUNmbXRFQQTn4wHva/qQChsPNHZbIFH0oeeOSE
+	TzyIMu2Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uL0Is-00000000Fcx-41gu;
+	Fri, 30 May 2025 14:01:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8E1F330066A; Fri, 30 May 2025 16:01:40 +0200 (CEST)
+Date: Fri, 30 May 2025 16:01:40 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville Syrjala <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Guenter Roeck <linux@roeck-us.net>,
+	Alessandro Carminati <alessandro.carminati@gmail.com>,
+	Jani Nikula <jani.nikula@intel.com>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Linux Kernel Functional Testing <lkft@linaro.org>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v5 1/5] bug/kunit: Core support for suppressing warning
+ backtraces
+Message-ID: <20250530140140.GE21197@noisy.programming.kicks-ass.net>
+References: <20250526132755.166150-1-acarmina@redhat.com>
+ <20250526132755.166150-2-acarmina@redhat.com>
+ <20250529090129.GZ24938@noisy.programming.kicks-ass.net>
+ <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CY8PR12MB8242:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3be40a78-f85d-45e0-4e02-08dd9f828f18
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?S2RobnA5aU4yYVJtUzREMmRCbCtvVUVrNXRzejg2bWtFamlvTU1FUkJzSDB5?=
- =?utf-8?B?NWJqZFFHWVRTRU1tZjNTZldxVUk4eWU1bTJ3WDJRQmpSMTNDNWhsa1ppSnlH?=
- =?utf-8?B?N3prMFBUZDFqRW91d1NJRE9pUVB3Tml6MlVDamVqMmJBbVF2RGlUQWNjdkN4?=
- =?utf-8?B?bVEyK3lCUDZleWNEVU9FVjBONjEyMXlML1RFLzBTSWxxUTkrY0lSRkZjNFFt?=
- =?utf-8?B?SUR4MWR5QlFrTlE4dUhlRXdpSXRtU3lCcVdmYlR2QWMvc210ZkhMWFdYanRw?=
- =?utf-8?B?cmtRRnpDM2tPUnRpTXNCN3NmOHZzanRMUFBtQlFraUZ1TVFuajdYV0VuSDAy?=
- =?utf-8?B?aTlqcndDaDNYSkFnQ05iWGw2Zi9GWlErakJaNXJOYXplcTRwS0dxdXQ2OUFK?=
- =?utf-8?B?Ym5DWlNtNmFCdXBReXF0dG5keU8zYVllT1lyRVBRODN0YzE5MzA4NjRaeXZ1?=
- =?utf-8?B?bjlYMW5RaEViMUpDaXNqc0xNVXp0Rm9GbXp0N1ByWGpLRE0yZkxnL2prWFVM?=
- =?utf-8?B?d1B2VmZhTDhkTlJuZG4xMG91YnA5cVdJaDBYZ25CbzZhN3lYdlBrYWtCV2Mx?=
- =?utf-8?B?ekl1dHRLd2lLdk5QTzB1Q0c3ZktoOTRJWE9nRHh1cVBJb2wvQkV3TDhRaFVt?=
- =?utf-8?B?MlRGYVZMM2lyUUFlZ0JybHNHMGVDTkw3eEQ4aHptY2g1ZnhyZXR5bUN2a1Jn?=
- =?utf-8?B?Nmhhc2hiRDlhMm9yVHFjdCt6T3B4dUVNbnQyWFNnaEpua29FbWJVMkEybDdL?=
- =?utf-8?B?bDNGU1dGcGVZOWh4cGs2UkN1Uko2eEtBZmxJUkhTbmpFZWtZUU1NaVpSOTQw?=
- =?utf-8?B?Z01RM2F4MTNHNlJtdUVxeWtmSTNPUlJtWlJwNld6OTFwSEh3NTVTcjNOVG41?=
- =?utf-8?B?WEplZUtNQkt2MitZYkticmRXMWo1MnJraUN1WHhjTm5oQi9WclhaT3Q4VURa?=
- =?utf-8?B?NDVJZ1JtUlBmeHd1YkNDWnZGVHJZVmZLdTBKQ0gxLy9qSEtVRER4SGQrTVhL?=
- =?utf-8?B?T1pucTB0YmJiR1VvMSttYTQrZTJ0UjAxVzlBbkl3b2puOGlQcDFwNVBaaTRT?=
- =?utf-8?B?Uys2bnNyVE5lM0pIY0F0bHgva21DVndkTGVVOGVuaUs0QVFkb3hXMk92MjM4?=
- =?utf-8?B?eldKMEovdlc1Q3V4NDlFZVFVbWNGcWk5UTRKdTM2WFh1Y01Eb0s2MTRDOXp2?=
- =?utf-8?B?aWZWZENZdCtJZUI0bjlhWXpCSGdtYWxQRE42bjFCWkZPTElzYTc3OHczQ2lY?=
- =?utf-8?B?ZDQ5Vjk0djhhRWRTVUc3c3BvdFl0SWFxMzc1RHhqdjhxb3dJSVNXNUFRYzU2?=
- =?utf-8?B?aU5nS2hoczBTNFI1M3hzN1JsMG1Wb0ZybFpjR3BaSmJvUllSU0hUUnRUQmFz?=
- =?utf-8?B?eC9mbHlKY2E5SSttUkg5S2pCSE1rTVpuUE43ejliUnBOb1pJbjZFdmRUOXNh?=
- =?utf-8?B?a25JQndPRE5udHY5enN0TUh2eVI1cE9yejhvTmpjWFJKR0h5cWdWdC9zNmhV?=
- =?utf-8?B?MjlRVDBxbzZ2b3VPSnYwWS81VFdjZVRlV0hkQ25BSEd4cDZOZ0h5Z0g2elRz?=
- =?utf-8?B?TDR5SnNZa05JbDlUZFBxbEt5YlRpZHBFUkdLTmcycE55aWVkUVJPY2VLY010?=
- =?utf-8?B?R1lCMHRtbFU2eGVHSnorTDJmU3VMQ3dPRlQ4U2JPMm80L2paZisxQlR1TlBB?=
- =?utf-8?B?TFYvbXMzZnFCUk9ZTXc3dS9lcEVHbjFkalpNWmJSeUo4cGFSZGZzZEUxNGV2?=
- =?utf-8?B?aG0xQkhoSTdCTzdqTFV2OUpybmRLSFpzZ3lJdGNoYkl5RkFRNW9pMUR6WG1a?=
- =?utf-8?B?WTRISzlqdHRDeVAyTFJyWk9zSTgwLzg0RDgvNXFnT00vTE95T1ZuWXd6bmdB?=
- =?utf-8?B?RnhwMm1kWklNVEJwb1RtNG42cVlLb2JuZk1hakZzT01iREFrR3g2WlFQOTY2?=
- =?utf-8?Q?Uwra8iXEzuE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K3gxUi9UOGpBZkNvS1gvdTVxcEdSV1FrWC9aZ2ZOZ2VSYlpHVmF1Q1FaT1R6?=
- =?utf-8?B?L0VmaUJnYmtPbTJ1STlhTnZKNkVYTEVrVTV4TDJkV0w5bE4rNHlIKzJNbXRo?=
- =?utf-8?B?a0tLUVhyVkQzd1RVYlhDRC9lREttK2Y0MlNDZWlGZCtIaXVvN2ZZY09XZ1RK?=
- =?utf-8?B?ZGVpdzdQU0NRSUVIZ29vTEZzd002ekdNZUhjRU16ZktMSWxwZUNrQ2pjNW5k?=
- =?utf-8?B?YmFyVDdtdTQxVjZwTkZBdCsrMk9leDNiU0h6TktKNDBHTWt2ZjZQNnZJeklh?=
- =?utf-8?B?MjBzYVNGZkxwY0M2dmIzR0krYysvaEpoL1RJQzhQdFZYOVdrVTFzeExxVzdT?=
- =?utf-8?B?WVN0TEIwRTJYNnFJQW81aVFWZHg3blFMOTJqcGY1ZVFkcHZuTXpyTEdpMHd1?=
- =?utf-8?B?MG1aWWxleFJLamZId2cxSUx4aVJmVUhWcVZ2dTU1Y2ZyMHh1bllUUWQwS0s5?=
- =?utf-8?B?cGhsSXhUZlFoU1VDcTZ0T2pvRE9RVktGc3JVYUZJTFFBYm8xVVdFU0ZCbzJz?=
- =?utf-8?B?SmZsK1lWYWJWeUZuemVRYlpwL1dVbFpsK1BIaXJISHhCVklIWWpzdXA3UEk2?=
- =?utf-8?B?aUwwM2ltTEttZGNlNEsrSEtLczlHVkd3bUdjUUhTNi9WOGtUaTl1QXRsRDVL?=
- =?utf-8?B?ZmNSS1o1UUlwd2VGVjJsUTBhZlA2OHo3VUFxNHpZR1UwQjdqcUoyUnd4blc2?=
- =?utf-8?B?SUVUcXQ0b3plUE1xNGp6SkZRZUVDR2pBdkVkWmgwaWVoUWR5VCtnQ1MyMDBw?=
- =?utf-8?B?Y25CR1VCRDB0aCtTWEE5VTNKWkZmWEcyOFNBcEI5cU1KTUtkMVhHN2pSZVl6?=
- =?utf-8?B?VytHdUV2T2kzaTcvY08rVDY5SVd4blFweDVSYU03bjVvci9zSHFweEVQd2kz?=
- =?utf-8?B?UFZZd3EybEhWS002dzRHRVVZOGpQTlV6UDNDdDhMWENGejZVSWs3SEZhZzEx?=
- =?utf-8?B?aW9MWWZ4bGhlY2dtZEhlcCtxcmdFdEdiNGRwV2ZkRCtVKzhwVHEzR3Y4bHNx?=
- =?utf-8?B?YnlhSDI0Slp2M1RUNVphRURKWi9BdGJZeU9BeGtCSlAwVnBDSnVLbGVVdHdj?=
- =?utf-8?B?WXNrZmNnRHMvbFYwK200VEtUN0Z6K3V3Z3JQRnRDakU3dFpjcGhVTHh4MXpp?=
- =?utf-8?B?R3hTc3RRRVVUajN4TmZCazYyZzN2VFpvSTRkVnR3K0MzWnpycUJXNG93ZUEv?=
- =?utf-8?B?cytpQitTT0MvZHV4U2lYNXdBZmU3aW5jcmhzaVlZci9FdzYrcmUxYmFGVHJ0?=
- =?utf-8?B?KzdVZytIYWo2L0JNK1Vkd1RDaE9BY0Nob2p2R3R2SGNBMU5IR1AzYjNpVDVt?=
- =?utf-8?B?eC9CT3ptUDM0elEvb3hSdU1LVHhjVk5mVzlZWkdHVEtscjh5dkIwTjZjWTZD?=
- =?utf-8?B?eEhHOXNKQnc0MkxPRlZGYVZOMytNU0NmODQzMDhuS04xKzNSUGcvYVRzc2Jt?=
- =?utf-8?B?QXhaUGlUSW9BRWRob21iOTBGS2pOSnFoZWV1bUlrUkNEUEIrbUVOamY4YnlH?=
- =?utf-8?B?eEx3WjhQc0hkcTNHZHpHT0plMTc2N2haZ0VoLzE0QitZNk9OYWVlVlZsSEM5?=
- =?utf-8?B?UzBOc2NSTGtjQkFvUnU5akNhVkhsNEF5NGVWOS9OWEt4cFBUcnZxTXlRWWNK?=
- =?utf-8?B?SkRxWXNQbGxUU3czMklmem84d04xVE85L29kc0ZlaFF6WDFRZkVwdU9aeWJh?=
- =?utf-8?B?ZS8vQ2JMa1Y0RDd6S0V5VnRlUDJLWFBoRnNneDBoNjIzRWVid2g3Y3N3eWNh?=
- =?utf-8?B?Y2oyUFNQMUZtb2x6bDhOZnE3TFpaTXA4NEZYQnV3NzAyUEtDcTQ5OGNiM0dG?=
- =?utf-8?B?V3NrZkZkY1NxbGpITkxvZERCVHdIeHYyWVN1ZHBSVng1UlU4aWE2ZEVTNXdT?=
- =?utf-8?B?d01wbDN4QlRZVEJlSkIxUDVST3gvcjhTNGJiQlh6eEhTaldGbURzWVQyQ0pK?=
- =?utf-8?B?KzduVFp6OUx3OUtSSTJ3WUxwMWF4TmVwUDh6bEd0Y0VyRkJIbmgvWHd1STdh?=
- =?utf-8?B?WldkU28zaGJaR01xR213bE50WjYrTWk4WXY3RU9ZejB1WUFsaEFrYzRwaFRl?=
- =?utf-8?B?Szk5S3Y5ajVReHByMW1sZEdZYUlFS0NnWTAvYXZyS0J0MTJqT3VVMmx2cGdq?=
- =?utf-8?B?MEtEQ3RXR2VVOWlPK2VpR1VPTU91T25ZSVlGTzcrd0IrRXJaQmxnRkZweDVB?=
- =?utf-8?Q?9JRBs2rPHDhGk9VOgg6HkdHA06oettxl6MIMwyZvbcR0?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3be40a78-f85d-45e0-4e02-08dd9f828f18
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 14:02:05.5891
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ee9C5MhHw3w0jtliUlyNVsps7EWt3AeQRO91q0E8qoG5FEIY7IYb2NqP/vUVJ1cgwE7UY0y2P1Gk9Ih3v7BviQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8242
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGegRW76X8Fk_5qqOBw_aqBwAkQTsc8kXKHEuu9ECeXzdJwMSw@mail.gmail.com>
 
-On Thu May 29, 2025 at 9:45 AM JST, Jason Gunthorpe wrote:
-> On Thu, May 29, 2025 at 01:14:05AM +0300, Abdiel Janulgue wrote:
->> +impl SGEntry<Unmapped> {
->> +    /// Set this entry to point at a given page.
->> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
->> +        let c: *mut bindings::scatterlist =3D self.0.get();
->> +        // SAFETY: according to the `SGEntry` invariant, the scatterlis=
-t pointer is valid.
->> +        // `Page` invariant also ensures the pointer is valid.
->> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset=
-) };
->> +    }
->> +}
->
-> Wrong safety statement. sg_set_page captures the page.as_ptr() inside
-> the C datastructure so the caller must ensure it holds a reference on
-> the page while it is contained within the scatterlist.
->
-> Which this API doesn't force to happen.
->
-> Most likely for this to work for rust you have to take a page
-> reference here and ensure the page reference is put back during sg
-> destruction. A typical normal pattern would 'move' the reference from
-> the caller into the scatterlist.
 
-As Jason mentioned, we need to make sure that the backing pages don't get
-dropped while the `SGTable` is alive. The example provided unfortunately fa=
-ils
-to do that:
++Mark because he loves a hack :-)
 
-    let sgt =3D SGTable::alloc_table(4, GFP_KERNEL)?;
-    let sgt =3D sgt.init(|iter| {
-        for sg in iter {
-            sg.set_page(&Page::alloc_page(GFP_KERNEL)?, PAGE_SIZE as u32, 0=
-);
-        }
-        Ok(())
-    })?;
+On Thu, May 29, 2025 at 12:36:55PM +0200, Alessandro Carminati wrote:
 
-Here the allocated `Page`s are dropped immediately after their address is
-written by `set_page`, giving the device access to memory that may now be u=
-sed
-for completely different purposes. As long as the `SGTable` exists, the mem=
-ory
-it points to must not be released or reallocated in any way.
+> > Like I said before; you need to do this on the report_bug() size of
+> > things.
+> >
+> I fully understand your concerns, and I truly appreciate both yours
+> and Josh’s feedback on this matter.
+> Please rest assured that I took your suggestions seriously and
+> carefully evaluated the possibility of consolidating all related logic
+> within the exception handler.
+> After a thorough investigation, however, I encountered several
+> limitations that led me to maintain the check in the macro.
+> I’d like to share the rationale behind this decision:
 
-To that effect, we could simply store the `Page`s into the `SGTable`, but t=
-hat
-would cover only one of the many ways they can be constructed. For instance=
- we
-may want to share a `VVec` with a device and this just won't allow doing it=
-.
+> * In the case of WARN() messages, part of the output, the
+> user-specified content, is emitted directly by the macro, prior to
+> reaching the exception handler [1].
+>   Moving the check solely to the exception handler would not prevent
+> this early output.
 
-So we need a way to keep the provider of the pages alive into the `SGTable`=
-,
-while also having a convenient way to get its list of pages. Here is rough =
-idea
-for doing this, it is very crude and probably not bulletproof but hopefully=
- it
-can constitute a start.
+Yeah, this has been really annoying me for a long while. WARN() code gen
+is often horrible crap because of that.
 
-You would have a trait for providing the pages and their range:
+Everything I've tried so far is worse though :/ So in the end I try to
+never use WARN(), its just not worth it.
 
-    /// Provides a list of pages that can be used to build a `SGTable`.
-    trait SGTablePages {
-        /// Returns an iterator to the pages providing the backing memory o=
-f `self`.
-        fn pages_iter<'a>(&'a self) -> impl Iterator<Item =3D &'a bindings:=
-:page>;
-        /// Returns the effective range of the mapping.
-        fn range(&self) -> Range<usize>;
-    }
+... /me goes down the rabbit-hole again, because well, you can't let
+something simple like this defeat you ;-)
 
-The `SGTable` becomes something like:
+Results of today's hackery below. It might actually be worth cleaning
+up.
 
-    struct SGTable<P: SGTablePages, T: MapState>
-    {
-        table: Opaque<bindings::sg_table>,
-        pages: P,
-        _s: PhantomData<T>,
-    }
+> * Unless we change the user-facing interface that allows suppression
+> based on function names, we still need to work with those names at
+> runtime.
 
-You can then implement `SGTablePages` on anything you want to DMA map. Say =
-a
-list of pages (using newtype on purpose):
+I'm not sure I understand this. What interface and what names? This is a
+new feature, so how can there be an interface that needs to be
+preserved?
 
-    struct PagesArray(KVec<Page>);
+> * This leaves us with two main strategies: converting function names
+> to pointers (e.g., via kallsyms) or continuing to work with names.
+>   The former requires name resolution at suppression time and pointer
+> comparison in the handler, but function names are often altered by the
+> compiler due to inlining or other optimizations[2].
+>   Some WARN() sites are even marked __always_inline[3], making it
+> difficult to prevent inlining altogether.
 
-    impl SGTablePages for PagesArray {
-        fn pages_iter<'a>(&'a self) -> impl Iterator<Item =3D &'a bindings:=
-:page> {
-            self.0.iter().map(|page| unsafe { &*page.as_ptr() })
-        }
+Arguably __func__ should be the function name of the function you get
+inlined into. C inlining does not preserve the sequence point, so there
+is absolutely no point in trying to preserve the inline name.
 
-        fn range(&self) -> Range<usize> {
-            0..(PAGE_SIZE * self.0.len())
-        }
-    }
+I'm again confused though; [2] does not use __func__ at all.
 
-Or a pinned `VVec`:
+Anyway, when I do something like:
 
-    impl<T> SGTablePages for Pin<VVec<T>> {
-        fn pages_iter<'a>(&'a self) -> impl Iterator<Item =3D &'a bindings:=
-:page> {
-            // Number of pages covering `self`
-            (0..self.len().next_multiple_of(PAGE_SIZE))
-                .into_iter()
-                // pointer to virtual address of page
-                .map(|i| unsafe { self.as_ptr().add(PAGE_SIZE * i) } as *co=
-nst c_void)
-                // convert virtual address to page
-                .map(|ptr| unsafe { &*bindings::vmalloc_to_page(ptr) })
-        }
+void __attribute__((__always_inline__)) foo(void)
+{
+	puts(__func__);
+}
 
-        fn range(&self) -> Range<usize> {
-            0..self.len()
-        }
-    }
+void bar(void)
+{
+	foo();
+}
 
-You can store these into `SGTable::pages` and ensure (unless I missed
-something) that its memory stays valid, while providing the material to
-initialize the `sg_table`.
+it uses a "foo" string, which IMO is just plain wrong. Anyway, do both
+compilers guarantee it will always be foo? I don't think I've seen the
+GCC manual be explicit about this case.
 
-`SGTable` could provide an accessor to `pages` so the CPU can read/write th=
-e
-data when DMA is not active (maybe also calling `dma_sync_*` as appropriate=
-?).
-Or maybe users could put the backing object behind a smart pointer for
-concurrent accesses and pass that to `SGTable`.
+> * An alternative is to embed function names in the __bug_table.
+>   While potentially workable, this increases the size of the table and
+> requires attention to handle position-independent builds
+> (-fPIC/-fPIE), such as using offsets relative to __start_rodata.
+> 
+> However, the central challenge remains: any logic that aims to
+> suppress WARN() output must either move the entire message emission
+> into the exception handler or accept that user-specified parts of the
+> message will still be printed.
 
-One nice thing with this approach is that users don't have to figure out
-themselves how to obtain the page list for their buffer if it already has a
-`SGTablePages` implementation, like `VVec` does.
+Well, we can set suppress_printk and then all is quiet :-) Why isn't
+this good enough?
 
-Note that although the code above builds for me, I probably got a few thing=
-s
-wrong - maybe `SGTablePages` should be `unsafe`, maybe also I am misusing
-`Pin`, or overlooked a few usecases that would be impossible to implement u=
-sing
-this scheme. Hopefully we can get more feedback to validate or reject this
-idea.
+> As a secondary point, there are also less common architectures where
+> it's unclear whether suppressing these warnings is a priority, which
+> might influence how broadly the effort is applied.
+> I hoped to have addressed the concern of having faster runtime, by
+> exposing a counter that could skip the logic.
+> Kess suggested using static branching that would make things even better.
+> Could Kess' suggestion mitigate your concern on this strategy?
+> I’m absolutely open to any further thoughts or suggestions you may
+> have, and I appreciate your continued guidance.
 
+I'm not really concerned with performance here, but more with the size
+of the code emitted by WARN_ONCE(). There are a *ton* of WARN sites,
+while only one report_bug() and printk().
+
+The really offensive thing is that this is for a feature most nobody
+will ever need :/
+
+
+
+The below results in:
+
+03dc  7ac:      48 c7 c0 00 00 00 00    mov    $0x0,%rax        7af: R_X86_64_32S       .rodata.str1.1+0x223
+03e3  7b3:      ba 2a 00 00 00          mov    $0x2a,%edx
+03e8  7b8:      48 0f b9 d0             ud1    %rax,%rdx
+
+And it even works :-)
+
+Hmm... I should try and stick the format string into the __bug_table,
+its const after all. Then I can get 2 arguments covered.
+
+---
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index f0e9acf72547..88b305d49f35 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -5,6 +5,7 @@
+ #include <linux/stringify.h>
+ #include <linux/instrumentation.h>
+ #include <linux/objtool.h>
++#include <linux/args.h>
+ 
+ /*
+  * Despite that some emulators terminate on UD2, we use it for WARN().
+@@ -28,50 +29,44 @@
+ #define BUG_UD1_UBSAN		0xfffc
+ #define BUG_EA			0xffea
+ #define BUG_LOCK		0xfff0
++#define BUG_WARN		0xfe00
++#define BUG_WARN_END		0xfeff
+ 
+ #ifdef CONFIG_GENERIC_BUG
+ 
+ #ifdef CONFIG_X86_32
+-# define __BUG_REL(val)	".long " __stringify(val)
++#define ASM_BUG_REL(val)	.long val
+ #else
+-# define __BUG_REL(val)	".long " __stringify(val) " - ."
++#define ASM_BUG_REL(val)	.long val - .
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
++#define ASM_BUGTABLE_VERBOSE(file, line)				\
++	ASM_BUG_REL(file) ;						\
++	.word line
++#define ASM_BUGTABLE_VERBOSE_SIZE	6
++#else
++#define ASM_BUGTABLE_VERBOSE(file, line)
++#define ASM_BUGTABLE_VERBOSE_SIZE	0
++#endif
+ 
+-#define _BUG_FLAGS(ins, flags, extra)					\
+-do {									\
+-	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+-		     "\t.word %c1"        "\t# bug_entry::line\n"	\
+-		     "\t.word %c2"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c3\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
+-		     : : "i" (__FILE__), "i" (__LINE__),		\
+-			 "i" (flags),					\
+-			 "i" (sizeof(struct bug_entry)));		\
+-} while (0)
+-
+-#else /* !CONFIG_DEBUG_BUGVERBOSE */
++#define ASM_BUGTABLE_FLAGS(at, file, line, flags)			\
++	.pushsection __bug_table, "aw" ;				\
++	123:	ASM_BUG_REL(at) ;					\
++	ASM_BUGTABLE_VERBOSE(file, line) ;				\
++	.word	flags ;							\
++	.org 123b + 6 + ASM_BUGTABLE_VERBOSE_SIZE ;			\
++	.popsection
+ 
+-#define _BUG_FLAGS(ins, flags, extra)					\
++#define _BUG_FLAGS(ins, flags, extra, extra_args...)			\
+ do {									\
+ 	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c1\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
+-		     : : "i" (flags),					\
+-			 "i" (sizeof(struct bug_entry)));		\
++	    __stringify(ASM_BUGTABLE_FLAGS(1b, %c0, %c1, %c2)) "\n"	\
++			    extra					\
++		     : : "i" (__FILE__), "i" (__LINE__),		\
++			 "i" (flags), ## extra_args);			\
+ } while (0)
+ 
+-#endif /* CONFIG_DEBUG_BUGVERBOSE */
+-
+ #else
+ 
+ #define _BUG_FLAGS(ins, flags, extra)  asm volatile(ins)
+@@ -100,6 +95,40 @@ do {								\
+ 	instrumentation_end();					\
+ } while (0)
+ 
++#define __WARN_printf_1(taint, format)				\
++do { \
++	__auto_type __flags = BUGFLAG_WARNING | BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint); \
++	unsigned long dummy = 0; \
++	instrumentation_begin(); \
++	asm_inline volatile("1: ud1 %[fmt], %[arg]\n"			\
++	    __stringify(ASM_BUGTABLE_FLAGS(1b, %c0, %c1, %c2)) "\n"	\
++		     : : "i" (__FILE__), "i" (__LINE__),		\
++			 "i" (__flags), [fmt] "r" (format), [arg] "r" (dummy));		\
++	instrumentation_end(); \
++} while (0)
++
++#define __WARN_printf_2(taint, format, _arg)				\
++do { \
++	__auto_type __flags = BUGFLAG_WARNING | BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint); \
++	instrumentation_begin(); \
++	asm_inline volatile("1: ud1 %[fmt], %[arg]\n"			\
++	    __stringify(ASM_BUGTABLE_FLAGS(1b, %c0, %c1, %c2)) "\n"	\
++		     : : "i" (__FILE__), "i" (__LINE__),		\
++			 "i" (__flags), [fmt] "r" (format), [arg] "r" ((unsigned long)(_arg)));		\
++	instrumentation_end(); \
++} while (0)
++
++#define __WARN_printf_n(taint, fmt, arg...) do {			\
++		instrumentation_begin();				\
++		__warn_printk(fmt, arg);				\
++		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
++		instrumentation_end();					\
++	} while (0)
++
++#define WARN_ARGS(X...) __COUNT_ARGS(, ##X, n, n, n, n, n, n, n, n, n, n, n, n, n, 2, 1, 0)
++
++#define __WARN_printf(taint, arg...) CONCATENATE(__WARN_printf_, WARN_ARGS(arg))(taint, arg)
++
+ #include <asm-generic/bug.h>
+ 
+ #endif /* _ASM_X86_BUG_H */
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 94c0236963c6..b7f69f4addf4 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -81,18 +81,6 @@
+ 
+ DECLARE_BITMAP(system_vectors, NR_VECTORS);
+ 
+-__always_inline int is_valid_bugaddr(unsigned long addr)
+-{
+-	if (addr < TASK_SIZE_MAX)
+-		return 0;
+-
+-	/*
+-	 * We got #UD, if the text isn't readable we'd have gotten
+-	 * a different exception.
+-	 */
+-	return *(unsigned short *)addr == INSN_UD2;
+-}
+-
+ /*
+  * Check for UD1 or UD2, accounting for Address Size Override Prefixes.
+  * If it's a UD1, further decode to determine its use:
+@@ -102,25 +90,37 @@ __always_inline int is_valid_bugaddr(unsigned long addr)
+  * UBSan{0}:     67 0f b9 00             ud1    (%eax),%eax
+  * UBSan{10}:    67 0f b9 40 10          ud1    0x10(%eax),%eax
+  * static_call:  0f b9 cc                ud1    %esp,%ecx
++ * WARN_printf:                          ud1    %reg,%reg
+  *
+- * Notably UBSAN uses EAX, static_call uses ECX.
++ * Notably UBSAN uses (%eax), static_call uses %esp,%ecx
+  */
+ __always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
+ {
+ 	unsigned long start = addr;
++	u8 v, rex = 0, reg, rm;
+ 	bool lock = false;
+-	u8 v;
++	int type = BUG_UD1;
+ 
+ 	if (addr < TASK_SIZE_MAX)
+ 		return BUG_NONE;
+ 
+-	v = *(u8 *)(addr++);
+-	if (v == INSN_ASOP)
++	for (;;) {
+ 		v = *(u8 *)(addr++);
+ 
+-	if (v == INSN_LOCK) {
+-		lock = true;
+-		v = *(u8 *)(addr++);
++		if (v == INSN_ASOP)
++			continue;
++
++		if (v == INSN_LOCK) {
++			lock = true;
++			continue;
++		}
++
++		if ((v & 0xf0) == 0x40) {
++			rex = v;
++			continue;
++		}
++
++		break;
+ 	}
+ 
+ 	switch (v) {
+@@ -156,9 +156,13 @@ __always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
+ 	if (X86_MODRM_MOD(v) != 3 && X86_MODRM_RM(v) == 4)
+ 		addr++;			/* SIB */
+ 
++	reg = X86_MODRM_REG(v) + 8*!!X86_REX_R(rex);
++	rm  = X86_MODRM_RM(v)  + 8*!!X86_REX_B(rex);
++
+ 	/* Decode immediate, if present */
+ 	switch (X86_MODRM_MOD(v)) {
+-	case 0: if (X86_MODRM_RM(v) == 5)
++	case 0: *imm = 0;
++		if (X86_MODRM_RM(v) == 5)
+ 			addr += 4; /* RIP + disp32 */
+ 		break;
+ 
+@@ -170,18 +174,37 @@ __always_inline int decode_bug(unsigned long addr, s32 *imm, int *len)
+ 		addr += 4;
+ 		break;
+ 
+-	case 3: break;
++	case 3: if (rm != 4) /* %esp */
++			type = BUG_WARN | (rm << 4) | reg;
++		break;
+ 	}
+ 
+ 	/* record instruction length */
+ 	*len = addr - start;
+ 
+-	if (X86_MODRM_REG(v) == 0)	/* EAX */
++	if (!rm && X86_MODRM_MOD(v) != 3)	/* (%eax) */
+ 		return BUG_UD1_UBSAN;
+ 
+-	return BUG_UD1;
++	return type;
+ }
+ 
++int is_valid_bugaddr(unsigned long addr)
++{
++	int ud_type, ud_len;
++	u32 ud_imm;
++
++	if (addr < TASK_SIZE_MAX)
++		return 0;
++
++	/*
++	 * We got #UD, if the text isn't readable we'd have gotten
++	 * a different exception.
++	 */
++	ud_type = decode_bug(addr, &ud_imm, &ud_len);
++
++	return ud_type == BUG_UD2 ||
++		(ud_type >= BUG_WARN && ud_type <= BUG_WARN_END);
++}
+ 
+ static nokprobe_inline int
+ do_trap_no_signal(struct task_struct *tsk, int trapnr, const char *str,
+@@ -305,6 +328,14 @@ static inline void handle_invalid_op(struct pt_regs *regs)
+ 		      ILL_ILLOPN, error_get_trap_addr(regs));
+ }
+ 
++static inline unsigned long pt_regs_val(struct pt_regs *regs, int nr)
++{
++	int offset = pt_regs_offset(regs, nr);
++	if (WARN_ON_ONCE(offset < -0))
++		return 0;
++	return *((unsigned long *)((void *)regs + offset));
++}
++
+ static noinstr bool handle_bug(struct pt_regs *regs)
+ {
+ 	unsigned long addr = regs->ip;
+@@ -334,6 +365,14 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+ 		raw_local_irq_enable();
+ 
+ 	switch (ud_type) {
++	case BUG_WARN ... BUG_WARN_END:
++		int ud_reg = ud_type & 0xf;
++		int ud_rm  = (ud_type >> 4) & 0xf;
++
++		__warn_printk((const char *)(pt_regs_val(regs, ud_rm)),
++			      pt_regs_val(regs, ud_reg));
++		fallthrough;
++
+ 	case BUG_UD2:
+ 		if (report_bug(regs->ip, regs) == BUG_TRAP_TYPE_WARN) {
+ 			handled = true;
+diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+index 387720933973..a5960c92d70a 100644
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -101,12 +101,16 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
+ 	} while (0)
+ #else
+ #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
++
++#ifndef __WARN_printf
+ #define __WARN_printf(taint, arg...) do {				\
+ 		instrumentation_begin();				\
+ 		__warn_printk(arg);					\
+ 		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
+ 		instrumentation_end();					\
+ 	} while (0)
++#endif
++
+ #define WARN_ON_ONCE(condition) ({				\
+ 	int __ret_warn_on = !!(condition);			\
+ 	if (unlikely(__ret_warn_on))				\
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 62b3416f5e43..564513f605ac 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8703,6 +8703,8 @@ void __init sched_init(void)
+ 	preempt_dynamic_init();
+ 
+ 	scheduler_running = 1;
++
++	WARN(true, "Ultimate answer: %d\n", 42);
+ }
+ 
+ #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
