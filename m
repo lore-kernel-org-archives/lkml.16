@@ -1,158 +1,167 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345118F40
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 00:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8841F2907;
+	Fri, 30 May 2025 00:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748565576; cv=none; b=IcoowT9y+1iontszupd0PTah0Y/m80pKGIj4lnJ/W37PNJHvSY7VB1PxhDjeW+B6kl6Ej/LGNR4MF6fEECY67tYIJ+wZCb2ro+hgztXtzgec5R1AJ+wR09nszcjdf8nqOndS/OlAjy+KasQF4vF2xR38OdTLJZ0cTInd780+4S0=
+	t=1748565749; cv=none; b=RQG34tAbtTJKzdcIldK4+HtVBq7Q5TAWKLwon60qKSAcZqWW0O7XIKjPUjEzCFGHw6xslRJ7Ux9tjS29YezKtXR+tYAc0DJQuwXoXBY6671dmOxeKDJaxpGm1aEqEGEEn71HcY5pHtscu4GH66B9wGXBiwS4UvomguTa8quFwxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748565576; c=relaxed/simple;
-	bh=E1ECU+2dzr5wcY3z0ihGGbIlbdEBpj7pRa5o2dHmg7M=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=JWEZb0jZ+ErMztszX26ZGC60fK+g+he3pFa7Js+HFC0Mco5PwI2H6+8DXmIMMdKIk4O2+5zyGK+hCUdzF2NvkDiOQfCiQmn/qYm/6Y/2Hk6JzuWDYlxn9r9dZJ/eOUYQa7QyfE1OPKcdwncYgKKJ82Wc0khOHCAak099bE55F2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3dc9d335fffso27108455ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 17:39:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748565573; x=1749170373;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M30EKT760cGKOOI+8I493oqA67iAPVVj/IQG+o+sRcU=;
-        b=Mmu0XbpNNgQgrLrMK3a7NDPmYP/RuVUs9b0Q67NxIhU6uIcp3L/MS/fbdL3er6N5nf
-         3MfAeY/WIFWYJ1sGyhQrkQXE/goUW51pWaqvvWdj8pXO348g5IbTa43cbdfH5tztLa0f
-         FQmTzPlIPgTeFNz1VQWh9b1oIHl5JAnJxhiS4l1+3nbd+U8k36Mz5Jgwq5A/F7tRzwXN
-         oWC2nM4shbHWy5T0016V6rktxr6T5dLEQyn3s2mTQLO8XrOSiSYVrnahu1U7MAVaBw9R
-         8bNACN8n1srtpUv29/MycxnteSBCpf4zb62gnlOho7CT+cbisd8QDiIFQrX8MFgk04o0
-         pd7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUNzk2gTF5wZCGQstyT3xGI3RnEE3EdNxj0PA7RRocjrMlAj8512i/xfhcFBKW3CeZGQo/u3F+L8GlYuK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC0mspGjT9kl0/8KRiwHtHZhrxFkaX11kXSHEu4SJxxSlh48kV
-	8ZAmAuy1SY5xAUiRIBOQAXINzOsY2DStP/1N5UPZYB2Z60/D8jky3im9VH0Q2zSjHPFTthtbxyG
-	8bz061nyVq/nud98/Il1O4jzZZZl+0/MCuTYnTFiKo5ScJO5CnTEcy20UW+A=
-X-Google-Smtp-Source: AGHT+IF0a/RnfqUXNEj13Nlxlv9I7+jfr8Kr9IVtshIBjwR2M5IZHBtNDt/H23mhT9iERwh792PYQM8KCM9zplvFT+u/TGLlT2ce
+	s=arc-20240116; t=1748565749; c=relaxed/simple;
+	bh=7bEkvTOnQCSK2sw2Na277q6zkrloQhkHZ3+iRT9SH4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I7XFfqOcwFfRZWBXxN0n5/g7nJ1N41evUU5bJguY/yduopH5NzUjMDhbUmzUwf3CAkQgBeG4L8hkkV3t/KLoKbHHaGoV4IMZaHWXgI95qpeFzuModGI9AnZXI1edk8cW2uZVgdmHZT9D8J/YgGsBP0ml7a2Y6kNDuGXZ24UUxOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GI/DRy1T; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GI/DRy1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB180C4AF09;
+	Fri, 30 May 2025 00:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748565749;
+	bh=7bEkvTOnQCSK2sw2Na277q6zkrloQhkHZ3+iRT9SH4A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GI/DRy1TUmCvGHwjRyvzfAQQ9MFa+h9Qei6mR2XNBpi2YOZnwSghcXI+oa95zFwI3
+	 TNe1MYRk5qIVX2dr9XDoA/T1MFltSgFDvYu7d53RiTVLN9T1E5oTShrKV3o7WqkBn3
+	 tpaEz9VYjuVfgk9r5nXFQMxpkbKA+sKe+Nvjl5EGKMlT9/bySFixL0SH8pHx5b4b15
+	 No76H0/t7fTQLk/ja6zXXOQkTSs7cZLAtHNc+k/1GkJO4oxd3Ki1B1slWiOX/rycMp
+	 z4WjhK6E6A81eNOBOBPDZd64UT+x32HLh+W9pMxRzdUl15UXJUGDbKbXuNArNQ8K22
+	 npCmnaNWSLZnQ==
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476a720e806so13277411cf.0;
+        Thu, 29 May 2025 17:42:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUWFp4sOvERXOYlerA/l/gDMg6ehSp46oqsPmmizurDXPWHvg6uvPdGlSRa0SIyRQrZidw=@vger.kernel.org, AJvYcCUxk1ZLRdTG13ZmcWZgaNTeInhjqRWrH0yoo5XCgEHR3h9LT3C8hFpQDsJierDGhtmCdvOgLFpazuyBztF3@vger.kernel.org, AJvYcCVfPyjeFlL+sI/Rnjg/9+x0qMhKKYmjr/w6mYRs0NromghybUcPKIcLVjzNMof1bMzDbZU2ZIRYkdpWJE/+biw4ghCHYEl0@vger.kernel.org, AJvYcCW+rdiuov63382NWrc3r3e7Jp8ufcsog7R0YqzEpavdKTqFr31Z9BI6P5LSy0drLsYhvTrUqAG00UZ6QjcySA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+Lt9wvlgScQ2CWjsIjRaY4+MvaJa/KsJBWCtoDePtvjYjRHnc
+	ce1dkxxCHIbG1OX15MH+n3LVxdg99At2ANTjdwiecdAFXLfh39nKotEp0WqoRJuX2C6UZs19ubQ
+	I1LmNj5kjCPIV4E2YANu3JbvcMi6Kcrg=
+X-Google-Smtp-Source: AGHT+IGGGJvTIObZ60heIR5yqNHLAS2YoqnPZNzVO/6WrFAaaJsKljhGnZyGkTVQZnuSXcgLVahmSs4v22gHvONGMaY=
+X-Received: by 2002:a05:622a:1c14:b0:4a4:2f43:fb4e with SMTP id
+ d75a77b69052e-4a440010735mr31040801cf.3.1748565748062; Thu, 29 May 2025
+ 17:42:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3c04:b0:3dc:8b29:30a3 with SMTP id
- e9e14a558f8ab-3dd99c89caemr21727805ab.20.1748565573326; Thu, 29 May 2025
- 17:39:33 -0700 (PDT)
-Date: Thu, 29 May 2025 17:39:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6838fe45.a00a0220.d8eae.0001.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING: locking bug in srcu_gp_start_if_needed (2)
-From: syzbot <syzbot+d7546350ee1d5ab2f7a8@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <yti2dilasy7b3tu6iin5pugkn6oevdswrwoy6gorudb7x2cqhh@nqb3gcyxg4by>
+ <CAPhsuW4tg+bXU41fhAaS0n74d_a_KCFGvy_vkQOj7v4VLie2wg@mail.gmail.com>
+ <20250529173810.GJ2023217@ZenIV> <CAPhsuW5pAvH3E1dVa85Kx2QsUSheSLobEMg-b0mOdtyfm7s4ug@mail.gmail.com>
+ <20250529183536.GL2023217@ZenIV> <CAPhsuW7LFP0ddFg_oqkDyO9s7DZX89GFQBOnX=4n5mV=VCP5oA@mail.gmail.com>
+ <20250529201551.GN2023217@ZenIV> <CAPhsuW5DP1x_wyzT1aYjpj3hxUs4uB8vdK9iEp=+i46QLotiOg@mail.gmail.com>
+ <20250529214544.GO2023217@ZenIV> <CAPhsuW5oXZVEaMwNpSF74O7wZ_f2Qr_44pu9L4_=LBwdW5T9=w@mail.gmail.com>
+ <20250529231018.GP2023217@ZenIV>
+In-Reply-To: <20250529231018.GP2023217@ZenIV>
+From: Song Liu <song@kernel.org>
+Date: Thu, 29 May 2025 17:42:16 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
+X-Gm-Features: AX0GCFvdxMXrtmIn1lcuA6IWSFQd3Sx1TkLEWLyJGOYk7DtqDvgz8-KgHXA52OQ
+Message-ID: <CAPhsuW6-J+NUe=jX51wGVP=nMFjETu+1LUTsWZiBa1ckwq7b+w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, brauner@kernel.org, 
+	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
+	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, 
+	gnoack@google.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, May 29, 2025 at 4:10=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
+>
+> On Thu, May 29, 2025 at 03:13:10PM -0700, Song Liu wrote:
+>
+> > Is it an issue if we only hold a reference to a MNT_LOCKED mount for
+> > short period of time? "Short period" means it may get interrupted, page
+> > faults, or wait for an IO (read xattr), but it won't hold a reference t=
+o the
+> > mount and sleep indefinitely.
+>
+> MNT_LOCKED mount itself is not a problem.  What shouldn't be done is
+> looking around in the mountpoint it covers.  It depends upon the things
+> you are going to do with that, but it's very easy to get an infoleak
+> that way.
+>
+> > > OTOH, there's a good cause for moving some of the flags, MNT_LOCKED
+> > > included, out of ->mnt_flags and into a separate field in struct moun=
+t.
+> > > However, that would conflict with any code using that to deal with
+> > > your iterator safely.
+> > >
+> > > What's more, AFAICS in case of a stack of mounts each covering the ro=
+ot
+> > > of parent mount, you stop in each of those.  The trouble is, umount(2=
+)
+> > > propagation logics assumes that intermediate mounts can be pulled out=
+ of
+> > > such stack without causing trouble.  For pathname resolution that is
+> > > true; it goes through the entire stack atomically wrt that stuff.
+> > > For your API that's not the case; somebody who has no idea about an
+> > > intermediate mount being there might get caught on it while it's gett=
+ing
+> > > pulled from the stack.
+> > >
+> > > What exactly do you need around the mountpoint crossing?
+> >
+> > I thought about skipping intermediate mounts (that are hidden by
+> > other mounts). AFAICT, not skipping them will not cause any issue.
+>
+> It can.  Suppose e.g. that /mnt gets propagation from another namespace,
+> but not the other way round and you mount something on /mnt.
+>
+> Later, in that another namespace, somebody mounts something on wherever
+> your /mnt gets propagation to.  A copy will be propagated _between_
+> your /mnt and whatever you've mounted on top of it; it will be entirely
+> invisible until you umount your /mnt.  At that point the propagated
+> copy will show up there, same as if it had appeared just after your
+> umount.  Prior to that it's entirely invisible.  If its original
+> counterpart in another namespace gets unmounted first, the copy will
+> be quietly pulled out.
 
-syzbot found the following issue on:
+Thanks for sharing this information!
 
-HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d075f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
-dashboard link: https://syzkaller.appspot.com/bug?extid=d7546350ee1d5ab2f7a8
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
+> Note that choose_mountpoint_rcu() callers (including choose_mountpoint())
+> will have mount_lock seqcount sampled before the traversal _and_ recheck
+> it after having reached the bottom of stack.  IOW, if you traverse ..
+> on the way to root, you won't get caught on the sucker being pulled out.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+In some of our internal discussions, we talked about using
+choose_mountpoint() instead of follow_up(). I didn't go that direction in t=
+his
+version because it requires holding "root". But if it makes more sense
+to use, choose_mountpoint(), we sure can hold "root".
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
+Alternatively, I think it is also OK to pass a zero'ed root to
+choose_mountpoint().
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d7546350ee1d5ab2f7a8@syzkaller.appspotmail.com
+> Your iterator, OTOH, would stop in that intermediate mount - and get
+> an unpleasant surprise when it comes back to do the next step (towards
+> /mnt on root filesystem, that is) and finds that path->mnt points
+> to something that is detached from everything - no way to get from
+> it any further.  That - despite the fact that location you've started
+> from is still mounted, still has the same pathname, etc. and nothing
+> had been disrupted for it.
+>
+> And yes, landlock has a narrow race in the matching place.  Needs to
+> be fixed.  At least it does ignore those as far as any decisions are
+> concerned...
 
-------------[ cut here ]------------
-Looking for class "ACCESS_PRIVATE(sdp, lock)" with key init_srcu_struct_data.__key, but found a different class "&ACCESS_PRIVATE(sdp, lock)" with the same key
-WARNING: CPU: 0 PID: 6492 at kernel/locking/lockdep.c:944 look_up_lock_class+0xf0/0x168 kernel/locking/lockdep.c:941
-Modules linked in:
-CPU: 0 UID: 0 PID: 6492 Comm: syz-executor Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : look_up_lock_class+0xf0/0x168 kernel/locking/lockdep.c:941
-lr : look_up_lock_class+0xf0/0x168 kernel/locking/lockdep.c:941
-sp : ffff8000a2697520
-x29: ffff8000a2697520 x28: 0000000000000000 x27: fffffdffbf6fe598
-x26: ffff8000805a0df0 x25: 0000000000000001 x24: 0000000000000000
-x23: ffff800096f71000 x22: 0000000000000000 x21: ffff800096fb4780
-x20: fffffdffbf6fe598 x19: ffff800092b75178 x18: 1fffe0003386aa76
-x17: 0000000000000000 x16: ffff80008adbe9e4 x15: 0000000000000001
-x14: 1fffe0003386aae2 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60003386aae3 x10: 0000000000ff0100 x9 : 75d53356a95e1300
-x8 : 75d53356a95e1300 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff8000a2696e78 x4 : ffff80008f415ba0 x3 : ffff8000807b4b68
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000000
-Call trace:
- look_up_lock_class+0xf0/0x168 kernel/locking/lockdep.c:941 (P)
- register_lock_class+0x48/0x348 kernel/locking/lockdep.c:1295
- __lock_acquire+0xa8/0x3058 kernel/locking/lockdep.c:5110
- lock_acquire+0x14c/0x2e0 kernel/locking/lockdep.c:5866
- __raw_spin_trylock include/linux/spinlock_api_smp.h:90 [inline]
- _raw_spin_trylock+0x58/0xb0 kernel/locking/spinlock.c:138
- spin_lock_irqsave_sdp_contention kernel/rcu/srcutree.c:375 [inline]
- srcu_gp_start_if_needed+0x2c0/0x10d0 kernel/rcu/srcutree.c:1275
- __call_srcu kernel/rcu/srcutree.c:1389 [inline]
- __synchronize_srcu+0x2b8/0x348 kernel/rcu/srcutree.c:1441
- synchronize_srcu_expedited+0x24/0x34 kernel/rcu/srcutree.c:1467
- bch2_fs_btree_iter_exit+0x378/0x420 fs/bcachefs/btree_iter.c:3616
- __bch2_fs_free fs/bcachefs/super.c:564 [inline]
- bch2_fs_release+0x24c/0x72c fs/bcachefs/super.c:618
- kobject_cleanup lib/kobject.c:689 [inline]
- kobject_release lib/kobject.c:720 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x2b0/0x438 lib/kobject.c:737
- bch2_fs_free+0x308/0x378 fs/bcachefs/super.c:681
- bch2_kill_sb+0x48/0x58 fs/bcachefs/fs.c:2623
- deactivate_locked_super+0xc4/0x12c fs/super.c:473
- deactivate_super+0xe0/0x100 fs/super.c:506
- cleanup_mnt+0x31c/0x3ac fs/namespace.c:1431
- __cleanup_mnt+0x20/0x30 fs/namespace.c:1438
- task_work_run+0x1dc/0x260 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- do_notify_resume+0x16c/0x1ec arch/arm64/kernel/entry-common.c:151
- exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
- exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
- el0_svc+0xb4/0x17c arch/arm64/kernel/entry-common.c:768
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-irq event stamp: 942766
-hardirqs last  enabled at (942765): [<ffff80008addfa48>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
-hardirqs last  enabled at (942765): [<ffff80008addfa48>] _raw_spin_unlock_irqrestore+0x38/0x98 kernel/locking/spinlock.c:194
-hardirqs last disabled at (942766): [<ffff8000805a0de0>] spin_lock_irqsave_sdp_contention kernel/rcu/srcutree.c:375 [inline]
-hardirqs last disabled at (942766): [<ffff8000805a0de0>] srcu_gp_start_if_needed+0x2b0/0x10d0 kernel/rcu/srcutree.c:1275
-softirqs last  enabled at (940014): [<ffff8000803cf71c>] softirq_handle_end kernel/softirq.c:425 [inline]
-softirqs last  enabled at (940014): [<ffff8000803cf71c>] handle_softirqs+0xaf8/0xc88 kernel/softirq.c:607
-softirqs last disabled at (939939): [<ffff800080020efc>] __do_softirq+0x14/0x20 kernel/softirq.c:613
----[ end trace 0000000000000000 ]---
+If we update path_parent in this patchset with choose_mountpoint(),
+and use it in Landlock, we will close this race condition, right?
 
+>
+> Note, BTW, that it might be better off by doing that similar to
+> d_path.c - without arseloads of dget_parent/dput et.al.; not sure
+> how feasible it is, but if everything in it can be done under
+> rcu_read_lock(), that's something to look into.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+I don't think we can do everything here inside rcu_read_lock().
+But d_path.c does have some code we can probably reuse or
+learn from. Also, we probably need two variations of iterators,
+one walk until absolute root, while the other walk until root of
+current->fs, just like d_path() vs. d_absolute_path(). Does this
+sound reasonable?
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Song
