@@ -1,73 +1,61 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011049.outbound.protection.outlook.com [40.107.74.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DAB2367A0
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B37E1BD9F0
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748622182; cv=fail; b=lHoKwOOJAk6t9btNIkbThSErrZZmaqmtGjLPs15q2MgF8jMIeAfRudX0DG2vnOXBNrj2KWATAGgW0jqLtp8hG0GhSPirxYuq15fBPT3iRcyhznKgOMuZQWidOYutsG0zx5yas2fn9EduFhRGTjvTUEkwUMuZ1e9UZonLUQmWk+Q=
+	t=1748622258; cv=fail; b=kgB5+O7Vv+Pokm8+PKEofB4KcSJ9RUHdvqOmknU0+W93o7mYVFpEa+s4klbl7Qu6qqZhumukE+0h3ZjNTW3SyDT5//6u5WN6PjJ1ZIIAmMlnebgI1LyzeS0yXPnjmXwHuJhttLAEwUa/7FWlWBarHLeOIhLfzVnHBd/QkYdYEx4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748622182; c=relaxed/simple;
-	bh=sFmvWoG8UWI82YJ/HyVQD4m849oUTB2wyhnSXUCWp+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=mn2MqtuOrIGvro2NmRJqDDGPYJuqNb290L+gDT3O7QPm0pmqFWMl4mqnWpJtunQOhn8RbV20FjrgJo+HJyhlKCqA4D9EDtFJut/4gueRJAKpMaCj2FezCOVRiArpn3QgRD0at2Viy7yZOkAx68xc1C5YJ0VfpHZ7938uOHINMMI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SQGEdxb5; arc=fail smtp.client-ip=40.107.94.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1748622258; c=relaxed/simple;
+	bh=veKwduc5AUTGaMnA0mxrIAih1oWi4wKBtixJxWSoWwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uAVD2Pw40fEEEh9OqeTaNbUKmo+nRx8Hrm1jX2rWoCLTKJ4OnNzLHT4RVnMO8vkw9T7cOC/pb+7Ep9h6Mk3Wb2njBaisB9yWV8fE9YvsJmqdojZYraf63sSEsKpOuTso9QjyLkl63aKhfym3+Zj4cz/RSUKuyYdoX9oSKi6UXB0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp; spf=pass smtp.mailfrom=valinux.co.jp; dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b=L2e+Iuhm; arc=fail smtp.client-ip=40.107.74.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=valinux.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valinux.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SQGEdxb5"
+	dkim=pass (1024-bit key) header.d=valinux.co.jp header.i=@valinux.co.jp header.b="L2e+Iuhm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wDd16J2m784gQKYYgA+nG9YDZdkQ98vRkmubi0T1XCKBYGIzpCZc1ggrR/9XOMPofLesq9W4nEZoCBqs+aJr6CvS2ukulTu2davJzpn6L5Yu25KX4IzxZblJnG9kHGb1TNZjzNZ8lc5zY6C8ka725sXeXjGUIDmzsxuMkmhYyssDM2h6DChlefDJUzByVSK1X3RZv7TK4RC5/nhM8rxxe6owoq8Zx7+aHTj98DxyTvRnp4tQzwsU+b45Hxa/UBz7ro3qBrCl4XTTUu3HLlZ2iNr97LSUCJYlAyRBODRyWS7hyiN7NL9aWfU5k4rwafzLGMSkyeielF8XuQu5XZgBdA==
+ b=IMMsfaV7ARuQJhib9lPqBwlJSSS/JFqmiz5c6UKaxlVEuC4u/HMoFbgDbdqsFc+r5+JfgA0j/E0ebZ58Y5DwQtnel96mc5P5EsD7/5FLY6kQVDgjIibgZTm7qOJZg+EHTjlrG9VWcfVfD1BwFnxWuKrqkyvj+Nul6mDVEKYTsdaAtPFtiUqKnhlIFxkUtIVagj88H58aQlY0eshK5MArDZX0CPDKZljZGsD9udCjoZMw4UxqNYKGvD4prc1iN+tL9kHlErDwz+VMPNLWWBeWrBGhg7P/ONOHkerQdQYglfC4Yu9bL7mrTKgwV5Ah7l2AmBxBpNq1Yq61zfFHX1SXLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wb/Fp+uRMUu3LWYISpfCe6+ZoJXs2ED2L45GhzmoFkw=;
- b=VrU1OvYf+bP4HfW+jNWX8IBpVTs1vjY8z/8imJ41up0q1fWg00er3WlRDUZPvd/UF7o3WnABSraSrGm2TKG5JX+zz/4VapwavsB7Mb3sBslbPJOws1gaw8n1XcMxfBt1qTsZ+urX96OkcZLSfQrr+NPtkO9C6MMyQH+GF+2TXtUWGl/D0Np/hfuUNyXU9Stccp3dPtuAJ+zmrLvng7GowKT5/RkVOMTMOsbDCamA8/Oweu9iOKN+uPPCYFFo4G25oN7FF61Uo80RYIVRx+h/2lQFHKsoHdgqozld2CNSFA84Vsj5dbJSIGfD2cCB6fakkc/beyLNBGV9VbTCSo4yng==
+ bh=ik7/1V1iZPplwPCbZPLOJubwhprgGRLrh2RU0dnG4Ic=;
+ b=kXgsZB2vMUvOWKkXUl92SKHNPQwStW8Mi5JO+QPD2Lx0boO1lDOjiBSys0sfIJ3Yq5eZhPERM9FEzp692JL7+7PIzmPCZ+5G0mlOvWomLhxsSj7+v/VAXFdICOTwQjGrMXvW/mEZJyTZ6+VDoIqP9ouhVPt8QY2hLnFJ2TPR/GLkKj/PP7D3mwjrwhHRXLLaFBnSO04c2189Vo8QIreAoy+vph73hQuELzwGxrVcaM6UKx3YhHMhRIQDWAyxSz5SOrqs9vlKB9EmviBeByHqp5VgBU61DNvLFIo0IZtCx/qJonGmuonFE2EVmibUJb5F0P477meM3BKjxG+NwDGvWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=valinux.co.jp; dmarc=pass action=none
+ header.from=valinux.co.jp; dkim=pass header.d=valinux.co.jp; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valinux.co.jp;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wb/Fp+uRMUu3LWYISpfCe6+ZoJXs2ED2L45GhzmoFkw=;
- b=SQGEdxb5wOZl/U+JqwQKWscf1bT9tq61mJQEi0Ie3MTlxjisoIbufdMEZIESVMssuB9x87R+Bo7FdfirXKMa3Kzs3ByvG8I0/zq8sRyD+6/Dqm6pmVXtmBCyL1/c+6urEtiM82x/gE7ZBs34qpREKNsP3FRQIeSENROwwmJRFMIp/3yZJykw2seoCZyTLjyL5KgDNZ0UYjOixTpLf8C7zbKytc1D+g8tFTC0W5xwAKrgSBE+cCvmqOuWpetw8X9RzWX5LXv9n29FH53vQAPZG2lzS/X/8ZaN8FJOY5yvJyp5e9obO0g0/2CNDJ6Wnom9XLfOFdJi/b9+MxuO/qbM8g==
+ bh=ik7/1V1iZPplwPCbZPLOJubwhprgGRLrh2RU0dnG4Ic=;
+ b=L2e+Iuhm8F91ZMadxRhszXYfFp4j5Ng76ibf1syLqYF0Wci4iDJRUM/Spm34skvmXafBXAWBSVnbo/0PI6PG6Y2wnXoioVHuC3SwCAKwdptz1RYCPs08ZRShitCGXQSgNzYpN1TVvCho0niZ/jfMkSka09nXMnhNj4L4s4STbo8=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM3PR12MB9352.namprd12.prod.outlook.com (2603:10b6:0:4a::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.27; Fri, 30 May 2025 16:22:55 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8769.025; Fri, 30 May 2025
- 16:22:55 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Richard Chang <richardycc@google.com>,
-	linux-kernel@vger.kernel.org,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH v6 6/6] mm/page_isolation: remove migratetype parameter from more functions.
-Date: Fri, 30 May 2025 12:22:27 -0400
-Message-ID: <20250530162227.715551-7-ziy@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250530162227.715551-1-ziy@nvidia.com>
-References: <20250530162227.715551-1-ziy@nvidia.com>
+ header.d=none;dmarc=none action=none header.from=valinux.co.jp;
+Received: from OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:10d::7)
+ by OS3P286MB2105.JPNP286.PROD.OUTLOOK.COM (2603:1096:604:191::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.32; Fri, 30 May
+ 2025 16:24:08 +0000
+Received: from OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::b8c1:9057:bf46:cc35]) by OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ ([fe80::b8c1:9057:bf46:cc35%7]) with mapi id 15.20.8769.031; Fri, 30 May 2025
+ 16:24:08 +0000
+From: Koichiro Den <den@valinux.co.jp>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	yuanchu@google.com,
+	yuzhao@google.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm: vmscan: apply proportional reclaim pressure for memcg when MGLRU is enabled
+Date: Sat, 31 May 2025 01:23:53 +0900
+Message-ID: <20250530162353.541882-1-den@valinux.co.jp>
+X-Mailer: git-send-email 2.48.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0649.namprd03.prod.outlook.com
- (2603:10b6:408:13b::24) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+X-ClientProxiedBy: TYCP286CA0077.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:2b3::9) To OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:10d::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,596 +63,360 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM3PR12MB9352:EE_
-X-MS-Office365-Filtering-Correlation-Id: eea8a2c8-ea08-4ffd-f0e2-08dd9f963ba6
+X-MS-TrafficTypeDiagnostic: OS3P286MB0979:EE_|OS3P286MB2105:EE_
+X-MS-Office365-Filtering-Correlation-Id: 617077ea-5aff-47a0-6a5d-08dd9f9666e3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|10070799003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QXIOsZ6AE/Zqw+XGItAxgmCkDxDFsCkfuB1tOrj7kW9QqxHZJ86EA/bja9fH?=
- =?us-ascii?Q?/sZWGLY9wAB7TnWy9kE7JZeFGeva9WyuG90D8Vsv2hOej8phKrYESC9PFS7q?=
- =?us-ascii?Q?WeRF7gCAHWUAirSVthyZEBkcC/wWhp10Fpdfco9my/Hlz0Raybfqexwc4Wtq?=
- =?us-ascii?Q?EOmUjyjjf5KXqoT8KBuFcSCGY685Rfsh5XS0Kcwzc//cW+KaLj2mLtTlnkxY?=
- =?us-ascii?Q?GDPZctINoCule3wqVZommZpAaOljc8af8mtcJhuQgIiQSxZqN+VjUn64Ng10?=
- =?us-ascii?Q?58LofmSeSv7+uiZbgyCEsRh03+VCA1rC33cHE2/vN1xnjsv9p4Vqrj5NeuXB?=
- =?us-ascii?Q?QHrHkabX+APM1duG0BkeVabtwy17VdfFLhCOYo5iUGWpGf9XBsvNpq5nYoff?=
- =?us-ascii?Q?CFiW/jDT3eGLLqmuTRCDdYTh+TbirSdazGTpI2tM0OMqcPB4brlpBQ/oFZpt?=
- =?us-ascii?Q?KlwtMHJ1b7w7SkVUVcT8fYnLVAurRcl2Dcs/W6BI2yA9b7XcZPntlvnu0yS0?=
- =?us-ascii?Q?uZ0SxM3wktAR8DuZopytcsL9NEeV5fxU4IucJqiSRRYxhKhjS+iEu02Gg6Ue?=
- =?us-ascii?Q?Mgqzh5isS/lpDWjuJDssS5tkSVgTTXRYXth7cPEVybk2cYlyg0XanLtWDbt0?=
- =?us-ascii?Q?MV+agk4dqdqlxz8FvDYMBS87dPT84cMREe12zMOU9ThKIjKZ+U5TJtldbkQ5?=
- =?us-ascii?Q?ECtX+Js4z3g02PX4VPW1qPHX/8RyyuKgGf/GUzu3FlAZPbj6+I49yoOIRuT7?=
- =?us-ascii?Q?icc3BvPp43TzI6wPFYO82K0t0U3YrOU4oMgyjUkqmSYR2lwNPd00//oTst7T?=
- =?us-ascii?Q?EwndOW3PSVz09dkp7OLSf+grihVsdTRQOrumJkSweU54P6UtufrQ3JupjHi5?=
- =?us-ascii?Q?emV/RFm0Noh0l9urm+nKdVAwMNYzoTgpwM9wgATGWY9/CJzFdLtFK1/KlVRz?=
- =?us-ascii?Q?PdrUaHR5gHSYxWKw+V0nZYmr+0GLv6tLORscfFP38xm8fhKR4vIGVeKO3L8J?=
- =?us-ascii?Q?+rKM3uXy+iec7Y/cHqWWNQD2gUtmUqTimILLrLuTxpH9DicBnoEqgF1xjTAe?=
- =?us-ascii?Q?vvTBKp54Rx3j+3sDqpHmh4eQkY22g0iSsKoktxNJnx5tytGMJIhCpcVdlOKc?=
- =?us-ascii?Q?lYV6JoQNHJgw0s/wrRNM6NpHMK1dGr1Lo15ActcLjRFSNTRgjpjNeJgO0lXP?=
- =?us-ascii?Q?wVAq1/fAwClcXM7wYCKi+WXq4iwn3AsifGeLFDiayzUB/UVFkBj2NmAObDvm?=
- =?us-ascii?Q?8UXyckafYlGnAhUPPLn67SixTGpX6pV5oDaHMOW+dPs0ikTWsgMOSanK2/ip?=
- =?us-ascii?Q?X7yZ9YwRCSJwJCLsSISlTAmid9XEcgPgdTTkykReXYLwNXFLT53703tU7fF5?=
- =?us-ascii?Q?fzkqQ9PvJqMQOVltnQGfWN00xiigsPS+Ff/0tFNNmUXsiZ1oV5D4s7Qwccen?=
- =?us-ascii?Q?lG8L/xLhcIw=3D?=
+	=?us-ascii?Q?hKtzAUa7pvZMXb5Qlau/thSBBEkWpgTIVL3rV1NWCPj8tIieJrbUyabe+yPx?=
+ =?us-ascii?Q?66+/AUgRpYDfzO3S6rASz44FnIwMnh9+L3QjKgyFAElFj4KGOfLJyEqIdcm6?=
+ =?us-ascii?Q?9yAyV6nLRWMUWYLzGIPvcFhXHYUzA7jri2/hGtDbrGEPgnIhYJKm8VEeqD5L?=
+ =?us-ascii?Q?g1pArrqnlK/ZB412d4yRZFmLy0p06Tkr2TbAZ88YXgkUdWkGg3YdQ+BzLfIX?=
+ =?us-ascii?Q?Rd0KveY8WXOrew/g/nrF1WhzNDaqRrM3/qgZn935kQb6oSwyhrfL0+3ggAZr?=
+ =?us-ascii?Q?5ebM/rKHC/V/y9VB06y5Fc4ux5N5QKUdC5wWbaRRhR70GgC3hKFkjhkmf1RE?=
+ =?us-ascii?Q?uV//yguRtr8aC2XItQepcnGy/woKoREQSpDrw/FW2qtPJyFrDp8ddIX+8GpC?=
+ =?us-ascii?Q?yi2rKZTZRJjDcrCovF5zAY9p6hTG5U0oyLNtqR0+aiRp9mOh9uwsbanQeLBf?=
+ =?us-ascii?Q?6wFew0vELQGsOWRDyffcv+yEaPBzir49SriquWC+ipk2EL8R8429wI+itTWc?=
+ =?us-ascii?Q?1vo02g2S7x2wDyT7zr0UzRYM788PXgxMo93g2wXKEB8xqAvgTEshD4yNXlqb?=
+ =?us-ascii?Q?nhyNV8qA2yA5OT93uf6E53SccljPuXKU99Xxp/55hY0locE6SZpGI15SPpvq?=
+ =?us-ascii?Q?uoOrtNkQFREFH0op5J9JOYJwzDYIrXVd/MB9K+UxkgGpYakDPcri4kExoyGo?=
+ =?us-ascii?Q?7FvgKQ4xWHkUbgAqFaUBdmr2vbpwH8NLetF66CfyLZ9p0E/BlOplOCzsON3u?=
+ =?us-ascii?Q?8u9PMiEMfEYXe8YQCNLWi/gm+C7R+USWnL7itN4c0UVsxuuW2savnsIVyPB/?=
+ =?us-ascii?Q?bhNR68o6x58sN7hQMKH0Y/RsSFUipy908PY26qSaXmIQSLKF1aa2UZbA9ZyW?=
+ =?us-ascii?Q?oS79769KnOsJpYd47+XAUxcnXnSsEOxzARPcmE5yOApLCraKmCKplLl/GpzA?=
+ =?us-ascii?Q?vL5BHu+aO1IqpkzvNY1QCl60UWTiRx1E4eWAe9doQStTXHj4C3+uqJZsdhzR?=
+ =?us-ascii?Q?qyLyBNSmXVOIG2PF9X2OaM2DbE1+IxRILR9f/w5RI+4uuMJgX6ZiD/zc8MVy?=
+ =?us-ascii?Q?9ZPM/u+IpPFXN0Ppb7CjpFl94RxZdk1WhuudheFZ0jj5mYoQ08JyiACX2GNv?=
+ =?us-ascii?Q?wOb8M7uS7j4FdCK3pR6hF3oFnTfggAlEytBC4iS8lWfDcAvXTSy/tCKI84uI?=
+ =?us-ascii?Q?ckrqvYo2t6KrcLwlCrvbqG26NB3Nylu9mUVO8z3zbmkoNaVEbhXPhLIl4t7v?=
+ =?us-ascii?Q?BciTpf+xSPSNfadp7EhQg1xb1LcTsgZMBY0/A9k1n5X1o/b+KQgCkc4T7ggZ?=
+ =?us-ascii?Q?HuU43BvSbqcwuSR0zHKA0TOJajTefJeyJsk/5DSppc4V9XBGyXzkmMsGeRa5?=
+ =?us-ascii?Q?/Wlxrf99M3y3p5DYZBkrtjrkU4CoenaD6xVjNYdAMOsWLYbtQ+3H/Cd775wT?=
+ =?us-ascii?Q?rn5qdf/ADWU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(10070799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?4VfCvKWpcCzq7IFJVfXPiIqZ2gI4Z9f+MT2qAJCnx5gh3XiHViItRDV1cGjl?=
- =?us-ascii?Q?0Koxag2o4Mu0ky4SnXiV5vVEutwLgURCsdzKHp3TsObvcQvxpBWaQ3k7O0GV?=
- =?us-ascii?Q?23svcUH4xmj3+q1dNqiZ/5EfnUTEsnMSh1n02bUfpGMvCadMP55BQNiBI3aU?=
- =?us-ascii?Q?kF29EbnuCNBY/MR8u2ChTrHIbNgS1vb/6ABCgOkP3GpwD70xE3Pz99ZFEsGh?=
- =?us-ascii?Q?1eDhSIZTlFAaqVVEUVeXcWzSkrbMqSRVEQAZfTkH2i5FYZsee3dViKhi44y+?=
- =?us-ascii?Q?2tNSfRcjjyT3HngKVXqF0yN5Ene356T4ZTah/asE59s8xmxxaZkdB5lAlsRN?=
- =?us-ascii?Q?NMqsoMfUv6k7NhiaiDtShCww4GcsMbildSfphVzj6KY/iOkLUep1yjPgkcGj?=
- =?us-ascii?Q?jSA2VgePbnQe9JA7OLjOMLcq8cGBhRG1Dm1wDNwXVk3AyOCqyLa5EPlKnBy5?=
- =?us-ascii?Q?nyEBp+eXVLOgFZvwcD6Y9IE7XGG0YU0aGLMjyfV285dfcCbtXT0sksIklmN5?=
- =?us-ascii?Q?Bddqi6KGljzirjuIEcwHZ0AI/tGE1uyUh3iX8xpdPD9lAVT6oev3cuTfKXRn?=
- =?us-ascii?Q?KnIhvSp1ijsDrOHY20/aTFXZ3H+nPJQoXyJX/E6h2BK8vwyC9qdv6zPAyiZk?=
- =?us-ascii?Q?LGUVPY4Tepu+hK8U66qmm+blWYQ989nKeBCx5XqCZEUtilBpBaQydtTJsqiJ?=
- =?us-ascii?Q?8U/ybGK7ZVOZIGB6g3uOytPLGpsZ0rmp0yuAuhuL4LrzSXzymyGZPOXEGzOz?=
- =?us-ascii?Q?O6yeZYZ+VPRr0vQG9skndlGHRB/reZnXpxt80NFm0s0x3AVHRIMfQt1+GnfF?=
- =?us-ascii?Q?VekKAfHpHk3C9eiWkk7cBvoIht7LtxOMQCgVBMObypcPfkxHGPIHm8xwXFMY?=
- =?us-ascii?Q?lzOn6mP+1qUZ3ttVIV8DW2oXD7JzLIPgzbzC7ZEcfd2/lRVSRMmyB3MmETQP?=
- =?us-ascii?Q?fPz2jq4XU/U8zhTHK7xmsacyykuDg3H4Z/kyBNgYPjt3JhcPfDrbStd99+mJ?=
- =?us-ascii?Q?HOY740MGQTMRepgfOOlLCh5mIg1ITyL1nRTJZbmd3tntp7lRKv1n8y8wr9xs?=
- =?us-ascii?Q?p9nr81WUIUSKmjntcNS1d7/EAIeUQ5syBo+ePmAsxDLgu0KmweNmw+R+4s7p?=
- =?us-ascii?Q?+J1oS/Kuj7aJql6DBx707MSKxMAwdnbHocNu6C+FZoHlMJ6JNlh+iGv6DXoN?=
- =?us-ascii?Q?anDmTJ5NUXQyibCGSekKoJvxOZa7ZNxebQJKfI8Ksutk5Zoe7UmXcdI9pLMy?=
- =?us-ascii?Q?Jaa0VTn+qDrN+oNQd/eFXarjWn0IIK4EgDnwqNCLJmaqUwBjwhdNlM7xpHzt?=
- =?us-ascii?Q?e1iqJ5Kbbjb3czUrxOSTnjkqzqRim6ZBPNj0UAd7y/XQszwveA6+NlLFx6A4?=
- =?us-ascii?Q?Z+C/a3k+OmJK019PehGvW5y9ifpz04i01AWzGI0AXQui9TqT9d8t7subifOa?=
- =?us-ascii?Q?Vuesgf827pELqQy0hQ+kbqbEXHzzAkhKZPN/dMk7KeeRQ6vp8qaUJrWZ4xIp?=
- =?us-ascii?Q?HYZ4griR7fukzHvs//XrrJGSor8QXuFsaJgHdhxy0In49xzAMeW76RY/vIfU?=
- =?us-ascii?Q?bZ7b4ct0fp+FbPd3HL3PjgHC0iJ788D9o/qbQ/RY?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eea8a2c8-ea08-4ffd-f0e2-08dd9f963ba6
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+	=?us-ascii?Q?lqqMX5962/g3qaWu4DsFTxqQG/IF/WmGDK4oHP6dwtbkCo+GjiF8+gu4P68h?=
+ =?us-ascii?Q?pEWpCguq33xgVKvKE1dUubeGcazaUVcIp99XPnEHx2DyG7+EKTkVxwdHOPVZ?=
+ =?us-ascii?Q?/YJ0NrvTt4lIUdyCOXDZZjYYXtbD7g4f7PlwCDT7DVuc1p1nmQf8G1wJvbQT?=
+ =?us-ascii?Q?pYOLSwFCj2qmh0MgeWGZm+X7Vo3PIUF44dDIB1QmpUFbt5jIzPzFZYgtWM3n?=
+ =?us-ascii?Q?gVTKRRjfQkoxamXMbGqUq4Yp9PNA+ME9JkDjeCoRtidWktfXnks4ZxpqHlkA?=
+ =?us-ascii?Q?8nRLTTy/wWLMStpMa0NUtw3/BBEYDSWxwUt23u8VcsqkGaZncLe1IRULfMtk?=
+ =?us-ascii?Q?lC/ZtEv07+cIycM5YHvMeQbyljJ3eQdGVtOCu1bFaYkHTZsBfmZNI39iny8F?=
+ =?us-ascii?Q?vxwMBS3HGGquMgToLwBGD19s2o/EqkvFCsJyuoQPKKK92/zeiFr3hQ4t2SQI?=
+ =?us-ascii?Q?it9/W2U95lM9dK+ZyGwB8negTledIj6y8gHdc8cftKmp8ZlWJbtDLiSnbnt5?=
+ =?us-ascii?Q?N0hDzt6RhpwEh3N3/9fbzeNd5w+/yH54W1dZIcir6ZsVuAeCfk7x4IWZPLgJ?=
+ =?us-ascii?Q?VQgxDn0yQDLe1JJXX6hYHxIiKlKnPAGszkzufA7tisIC8jEWb4uhXD5XfV5w?=
+ =?us-ascii?Q?DbN9dj3PJZlO7yB4r+0oxfojKUcKti2h+TXm8rNDMD3bKfPNBRWOmWhLS2CN?=
+ =?us-ascii?Q?URfc8yqn/lEKis9UneIob+YOJQyoo7WDFJ3N9Xm3qaq0H4yYqe++js66+v/z?=
+ =?us-ascii?Q?szj1k5EtSGRDn7OEfR0B/auMi9KdX8ob/tCK7NR1SSpRZnaubwSixEdJu+/j?=
+ =?us-ascii?Q?jnAk6d8pRrkUqs4lp7NAfnnnlUCNAXrx6xP5PRAvdvEMLdIpXrBEZV1z0tR2?=
+ =?us-ascii?Q?gWIRKn6ATtITiGoCwpTbgGClh6foll38QwobRYW+3WdeLWYMK/huFSQZlDXp?=
+ =?us-ascii?Q?VAgxWRepg6vYSJmInC2Q8i13i5HMj4hMFLPdj/WoMXIiW8yDhqRWjhkMLk3t?=
+ =?us-ascii?Q?VqdgWrCdV78TCyKlAck/dQ3EBLsWsC7IQD1HdiNpgpuECUvnct7FNBxlujMR?=
+ =?us-ascii?Q?EaY4AqIar95cd3xnVSTmvusSvkNCG4E62r4fghvB3UMxlluVTpnny0Zayo9t?=
+ =?us-ascii?Q?FwkeB5tcdGkOaLTIIOcYCm0Id8S936u9go7HBfKuolJug2Pdkk1Nhg60dUbV?=
+ =?us-ascii?Q?4Q5YHRWeS+BnMK7FdG1KiRh8jyi2jgjqaPNr7a70s/anMhtwPCj4BX0cdgQg?=
+ =?us-ascii?Q?bPOq+z01RmCnkejF+4XmfvjYPcZteO8/mVycoM6MfW/LRwBEx+vZFjOWPJoQ?=
+ =?us-ascii?Q?brjdB0ehSIvkA60IMN9sojw5GSSNosTScN/Fr8smTLxYsRCO/GkPNP9kehy7?=
+ =?us-ascii?Q?6rlRlE8eacTRn8AnjVKXZmTRJU8h2wPTvDB4mKiRV0tSIIODxYJvMPKDry9P?=
+ =?us-ascii?Q?pirstbcj/nkiXEnF8yfxbz8l/d/sRnP/1gGu1Oo/1/7tKXziC3vliefcW9hK?=
+ =?us-ascii?Q?DYAulGcp6xEfOcEpPzxpiEeXK6u+BNg8xZf2XlZjZYlHFJ0dSMnvPQDGsNcf?=
+ =?us-ascii?Q?WJhu5ltC0A+pRTfdQe1VOy8PX2ePRIwND+fn69IfTme+SltCcvnYsDO9PZg5?=
+ =?us-ascii?Q?RGlnS/XUveHewNd0GLCbdi8=3D?=
+X-OriginatorOrg: valinux.co.jp
+X-MS-Exchange-CrossTenant-Network-Message-Id: 617077ea-5aff-47a0-6a5d-08dd9f9666e3
+X-MS-Exchange-CrossTenant-AuthSource: OS3P286MB0979.JPNP286.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:22:55.3079
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 16:24:08.4421
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 7a57bee8-f73d-4c5f-a4f7-d72c91c8c111
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t1LCcF+GHO/46pB1yTSsy3/ii2MDy9SHOydL0MFwSh8s9AJqtJkLCmS3g4Bpoa5s
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9352
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0eaPzEp0neIAh4QUyQCw+fRnqtbrMrOm6a/o8kMDJGjhM+SdyfNeZEx0flXtIw1RozgsVvJrIFuZaKv4L6Na0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3P286MB2105
 
-migratetype is no longer overwritten during pageblock isolation,
-start_isolate_page_range(), has_unmovable_pages(), and
-set_migratetype_isolate() no longer need which migratetype to restore
-during isolation failure.
+From: Koichiro Den <koichiro.den@canonical.com>
 
-For has_unmoable_pages(), it needs to know if the isolation is for CMA
-allocation, so adding CMA_ALLOCATION to provide the information. At the
-same time change isolation flags to enum pb_isolate_mode
-(PB_ISOLATE_MODE_MEM_OFFLINE, PB_ISOLATE_MODE_CMA_ALLOC,
-PB_ISOLATE_MODE_OTHER). Remove REPORT_FAILURE and check
-MEMORY_OFFLINE instead, since only PB_ISOLATE_MODE_MEM_OFFLINE reports
-isolation failures.
+The scan implementation for MGLRU was missing proportional reclaim
+pressure for memcg, which contradicts the description in
+Documentation/admin-guide/cgroup-v2.rst (memory.{low,min} section).
 
-alloc_contig_range() no longer needs migratetype. Replace it with
-enum acr_flags_t to tell if an allocation is for CMA. So does
-__alloc_contig_migrate_range().
+This issue can be observed in kselftest cgroup:test_memcontrol
+(specifically test_memcg_min and test_memcg_low). The following table
+shows the actual values observed in my local test env (on xfs) and the
+error "e", which is the symmetric absolute percentage error from the ideal
+values of 29M for c[0] and 21M for c[1].
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
+  test_memcg_min
+
+         | MGLRU enabled   | MGLRU enabled   | MGLRU disabled
+         | Without patch   | With patch      |
+    -----|-----------------|-----------------|---------------
+    c[0] | 25964544 (e=8%) | 28770304 (e=3%) | 27820032 (e=4%)
+    c[1] | 26214400 (e=9%) | 23998464 (e=4%) | 24776704 (e=6%)
+
+  test_memcg_low
+
+         | MGLRU enabled   | MGLRU enabled   | MGLRU disabled
+         | Without patch   | With patch      |
+    -----|-----------------|-----------------|---------------
+    c[0] | 26214400 (e=7%) | 27930624 (e=4%) | 27688960 (e=5%)
+    c[1] | 26214400 (e=9%) | 24764416 (e=6%) | 24920064 (e=6%)
+
+Factor out the proportioning logic to a new function and have MGLRU
+reuse it. While at it, update the eviction behavior via debugfs
+'lru_gen' interface ('-' command with an explicit 'nr_to_reclaim'
+parameter) to ensure eviction is limited to the specified number.
+
+Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 ---
- drivers/virtio/virtio_mem.c    |  2 +-
- include/linux/gfp.h            |  9 ++++-
- include/linux/page-isolation.h | 20 ++++++++--
- include/trace/events/kmem.h    | 14 ++++---
- mm/cma.c                       |  2 +-
- mm/memory_hotplug.c            |  6 +--
- mm/page_alloc.c                | 27 ++++++-------
- mm/page_isolation.c            | 70 +++++++++++++++-------------------
- 8 files changed, 82 insertions(+), 68 deletions(-)
+Changes in v2:
+- Leverage the new evict_folios() parameter to ensure correct eviction
+  limitation via debugfs
+- Update the commit message to use the latest upstream kselftest instead
+  of LTP memcontrol03.
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 56d0dbe62163..6bce70b139b2 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -1243,7 +1243,7 @@ static int virtio_mem_fake_offline(struct virtio_mem *vm, unsigned long pfn,
- 		if (atomic_read(&vm->config_changed))
- 			return -EAGAIN;
- 
--		rc = alloc_contig_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE,
-+		rc = alloc_contig_range(pfn, pfn + nr_pages, ACR_OTHER,
- 					GFP_KERNEL);
- 		if (rc == -ENOMEM)
- 			/* whoops, out of memory */
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index be160e8d8bcb..51990d571e3e 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -423,9 +423,16 @@ static inline bool gfp_compaction_allowed(gfp_t gfp_mask)
- extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
- 
- #ifdef CONFIG_CONTIG_ALLOC
-+
-+enum acr_flags_t {
-+	ACR_CMA,	// CMA allocation
-+	ACR_OTHER,	// other allocation
-+};
-+
- /* The below functions must be run on a range from a single zone. */
- extern int alloc_contig_range_noprof(unsigned long start, unsigned long end,
--			      unsigned migratetype, gfp_t gfp_mask);
-+				     enum acr_flags_t alloc_flags,
-+				     gfp_t gfp_mask);
- #define alloc_contig_range(...)			alloc_hooks(alloc_contig_range_noprof(__VA_ARGS__))
- 
- extern struct page *alloc_contig_pages_noprof(unsigned long nr_pages, gfp_t gfp_mask,
-diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-index 7a681a49e73c..3e2f960e166c 100644
---- a/include/linux/page-isolation.h
-+++ b/include/linux/page-isolation.h
-@@ -38,8 +38,20 @@ static inline void set_pageblock_isolate(struct page *page)
+v1: https://lore.kernel.org/all/20250404141118.3895592-1-koichiro.den@canonical.com/
+---
+ mm/vmscan.c | 149 ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 79 insertions(+), 70 deletions(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 07c51fa03434..750c0e72bda4 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2473,6 +2473,69 @@ static inline void calculate_pressure_balance(struct scan_control *sc,
+ 	*denominator = ap + fp;
  }
- #endif
  
--#define MEMORY_OFFLINE	0x1
--#define REPORT_FAILURE	0x2
-+/*
-+ * Pageblock isolation modes:
-+ * PB_ISOLATE_MODE_MEM_OFFLINE - isolate to offline (!allocate) memory
-+ *				 e.g., skip over PageHWPoison() pages and
-+ *				 PageOffline() pages. Unmovable pages will be
-+ *				 reported in this mode.
-+ * PB_ISOLATE_MODE_CMA_ALLOC   - isolate for CMA allocations
-+ * PB_ISOLATE_MODE_OTHER       - isolate for other purposes
-+ */
-+enum pb_isolate_mode {
-+	PB_ISOLATE_MODE_MEM_OFFLINE,
-+	PB_ISOLATE_MODE_CMA_ALLOC,
-+	PB_ISOLATE_MODE_OTHER,
-+};
- 
- void __meminit init_pageblock_migratetype(struct page *page,
- 					  enum migratetype migratetype,
-@@ -49,10 +61,10 @@ bool pageblock_isolate_and_move_free_pages(struct zone *zone, struct page *page)
- bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct page *page);
- 
- int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
--			     int migratetype, int flags);
-+			     enum pb_isolate_mode mode);
- 
- void undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn);
- 
- int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
--			int isol_flags);
-+			enum pb_isolate_mode mode);
- #endif
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index f74925a6cf69..7c4e2e703a23 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -304,6 +304,7 @@ TRACE_EVENT(mm_page_alloc_extfrag,
- 		__entry->change_ownership)
- );
- 
-+#ifdef CONFIG_CONTIG_ALLOC
- TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 
- 	TP_PROTO(unsigned long start,
-@@ -311,9 +312,9 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		 unsigned long nr_migrated,
- 		 unsigned long nr_reclaimed,
- 		 unsigned long nr_mapped,
--		 int migratetype),
-+		 enum acr_flags_t alloc_flags),
- 
--	TP_ARGS(start, end, nr_migrated, nr_reclaimed, nr_mapped, migratetype),
-+	TP_ARGS(start, end, nr_migrated, nr_reclaimed, nr_mapped, alloc_flags),
- 
- 	TP_STRUCT__entry(
- 		__field(unsigned long, start)
-@@ -321,7 +322,7 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		__field(unsigned long, nr_migrated)
- 		__field(unsigned long, nr_reclaimed)
- 		__field(unsigned long, nr_mapped)
--		__field(int, migratetype)
-+		__field(enum acr_flags_t, alloc_flags)
- 	),
- 
- 	TP_fast_assign(
-@@ -330,17 +331,18 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		__entry->nr_migrated = nr_migrated;
- 		__entry->nr_reclaimed = nr_reclaimed;
- 		__entry->nr_mapped = nr_mapped;
--		__entry->migratetype = migratetype;
-+		__entry->alloc_flags = alloc_flags;
- 	),
- 
--	TP_printk("start=0x%lx end=0x%lx migratetype=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
-+	TP_printk("start=0x%lx end=0x%lx alloc_flags=%d nr_migrated=%lu nr_reclaimed=%lu nr_mapped=%lu",
- 		  __entry->start,
- 		  __entry->end,
--		  __entry->migratetype,
-+		  __entry->alloc_flags,
- 		  __entry->nr_migrated,
- 		  __entry->nr_reclaimed,
- 		  __entry->nr_mapped)
- );
-+#endif
- 
- TRACE_EVENT(mm_setup_per_zone_wmarks,
- 
-diff --git a/mm/cma.c b/mm/cma.c
-index 397567883a10..9ee8fad797bc 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -822,7 +822,7 @@ static int cma_range_alloc(struct cma *cma, struct cma_memrange *cmr,
- 
- 		pfn = cmr->base_pfn + (bitmap_no << cma->order_per_bit);
- 		mutex_lock(&cma->alloc_mutex);
--		ret = alloc_contig_range(pfn, pfn + count, MIGRATE_CMA, gfp);
-+		ret = alloc_contig_range(pfn, pfn + count, ACR_CMA, gfp);
- 		mutex_unlock(&cma->alloc_mutex);
- 		if (ret == 0) {
- 			page = pfn_to_page(pfn);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index ab66acd3e6b3..19cad4460cee 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -2009,8 +2009,7 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 
- 	/* set above range as isolated */
- 	ret = start_isolate_page_range(start_pfn, end_pfn,
--				       MIGRATE_MOVABLE,
--				       MEMORY_OFFLINE | REPORT_FAILURE);
-+				       PB_ISOLATE_MODE_MEM_OFFLINE);
- 	if (ret) {
- 		reason = "failure to isolate range";
- 		goto failed_removal_pcplists_disabled;
-@@ -2069,7 +2068,8 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 			goto failed_removal_isolated;
- 		}
- 
--		ret = test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE);
-+		ret = test_pages_isolated(start_pfn, end_pfn,
-+					  PB_ISOLATE_MODE_MEM_OFFLINE);
- 
- 	} while (ret);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index a248faf30ee0..c28e5c2105e5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6697,11 +6697,12 @@ static void alloc_contig_dump_pages(struct list_head *page_list)
- 
++static unsigned long apply_proportional_protection(struct mem_cgroup *memcg,
++		struct scan_control *sc, unsigned long scan)
++{
++	unsigned long min, low;
++
++	mem_cgroup_protection(sc->target_mem_cgroup, memcg, &min, &low);
++
++	if (min || low) {
++		/*
++		 * Scale a cgroup's reclaim pressure by proportioning
++		 * its current usage to its memory.low or memory.min
++		 * setting.
++		 *
++		 * This is important, as otherwise scanning aggression
++		 * becomes extremely binary -- from nothing as we
++		 * approach the memory protection threshold, to totally
++		 * nominal as we exceed it.  This results in requiring
++		 * setting extremely liberal protection thresholds. It
++		 * also means we simply get no protection at all if we
++		 * set it too low, which is not ideal.
++		 *
++		 * If there is any protection in place, we reduce scan
++		 * pressure by how much of the total memory used is
++		 * within protection thresholds.
++		 *
++		 * There is one special case: in the first reclaim pass,
++		 * we skip over all groups that are within their low
++		 * protection. If that fails to reclaim enough pages to
++		 * satisfy the reclaim goal, we come back and override
++		 * the best-effort low protection. However, we still
++		 * ideally want to honor how well-behaved groups are in
++		 * that case instead of simply punishing them all
++		 * equally. As such, we reclaim them based on how much
++		 * memory they are using, reducing the scan pressure
++		 * again by how much of the total memory used is under
++		 * hard protection.
++		 */
++		unsigned long cgroup_size = mem_cgroup_size(memcg);
++		unsigned long protection;
++
++		/* memory.low scaling, make sure we retry before OOM */
++		if (!sc->memcg_low_reclaim && low > min) {
++			protection = low;
++			sc->memcg_low_skipped = 1;
++		} else {
++			protection = min;
++		}
++
++		/* Avoid TOCTOU with earlier protection check */
++		cgroup_size = max(cgroup_size, protection);
++
++		scan -= scan * protection / (cgroup_size + 1);
++
++		/*
++		 * Minimally target SWAP_CLUSTER_MAX pages to keep
++		 * reclaim moving forwards, avoiding decrementing
++		 * sc->priority further than desirable.
++		 */
++		scan = max(scan, SWAP_CLUSTER_MAX);
++	}
++	return scan;
++}
++
  /*
-  * [start, end) must belong to a single zone.
-- * @migratetype: using migratetype to filter the type of migration in
-+ * @alloc_flags: using acr_flags_t to filter the type of migration in
-  *		trace_mm_alloc_contig_migrate_range_info.
-  */
- static int __alloc_contig_migrate_range(struct compact_control *cc,
--		unsigned long start, unsigned long end, int migratetype)
-+					unsigned long start, unsigned long end,
-+					enum acr_flags_t alloc_flags)
- {
- 	/* This function is based on compact_zone() from compaction.c. */
- 	unsigned int nr_reclaimed;
-@@ -6773,7 +6774,7 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
- 		putback_movable_pages(&cc->migratepages);
- 	}
+  * Determine how aggressively the anon and file LRU lists should be
+  * scanned.
+@@ -2551,70 +2614,10 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	for_each_evictable_lru(lru) {
+ 		bool file = is_file_lru(lru);
+ 		unsigned long lruvec_size;
+-		unsigned long low, min;
+ 		unsigned long scan;
  
--	trace_mm_alloc_contig_migrate_range_info(start, end, migratetype,
-+	trace_mm_alloc_contig_migrate_range_info(start, end, alloc_flags,
- 						 total_migrated,
- 						 total_reclaimed,
- 						 total_mapped);
-@@ -6844,10 +6845,7 @@ static int __alloc_contig_verify_gfp_mask(gfp_t gfp_mask, gfp_t *gfp_cc_mask)
-  * alloc_contig_range() -- tries to allocate given range of pages
-  * @start:	start PFN to allocate
-  * @end:	one-past-the-last PFN to allocate
-- * @migratetype:	migratetype of the underlying pageblocks (either
-- *			#MIGRATE_MOVABLE or #MIGRATE_CMA).  All pageblocks
-- *			in range must have the same migratetype and it must
-- *			be either of the two.
-+ * @alloc_flags:	allocation information
-  * @gfp_mask:	GFP mask. Node/zone/placement hints are ignored; only some
-  *		action and reclaim modifiers are supported. Reclaim modifiers
-  *		control allocation behavior during compaction/migration/reclaim.
-@@ -6864,7 +6862,7 @@ static int __alloc_contig_verify_gfp_mask(gfp_t gfp_mask, gfp_t *gfp_cc_mask)
-  * need to be freed with free_contig_range().
-  */
- int alloc_contig_range_noprof(unsigned long start, unsigned long end,
--		       unsigned migratetype, gfp_t gfp_mask)
-+			      enum acr_flags_t alloc_flags, gfp_t gfp_mask)
- {
- 	unsigned long outer_start, outer_end;
- 	int ret = 0;
-@@ -6879,6 +6877,9 @@ int alloc_contig_range_noprof(unsigned long start, unsigned long end,
- 		.alloc_contig = true,
- 	};
- 	INIT_LIST_HEAD(&cc.migratepages);
-+	enum pb_isolate_mode mode = (alloc_flags == ACR_CMA) ?
-+					    PB_ISOLATE_MODE_CMA_ALLOC :
-+					    PB_ISOLATE_MODE_OTHER;
+ 		lruvec_size = lruvec_lru_size(lruvec, lru, sc->reclaim_idx);
+-		mem_cgroup_protection(sc->target_mem_cgroup, memcg,
+-				      &min, &low);
+-
+-		if (min || low) {
+-			/*
+-			 * Scale a cgroup's reclaim pressure by proportioning
+-			 * its current usage to its memory.low or memory.min
+-			 * setting.
+-			 *
+-			 * This is important, as otherwise scanning aggression
+-			 * becomes extremely binary -- from nothing as we
+-			 * approach the memory protection threshold, to totally
+-			 * nominal as we exceed it.  This results in requiring
+-			 * setting extremely liberal protection thresholds. It
+-			 * also means we simply get no protection at all if we
+-			 * set it too low, which is not ideal.
+-			 *
+-			 * If there is any protection in place, we reduce scan
+-			 * pressure by how much of the total memory used is
+-			 * within protection thresholds.
+-			 *
+-			 * There is one special case: in the first reclaim pass,
+-			 * we skip over all groups that are within their low
+-			 * protection. If that fails to reclaim enough pages to
+-			 * satisfy the reclaim goal, we come back and override
+-			 * the best-effort low protection. However, we still
+-			 * ideally want to honor how well-behaved groups are in
+-			 * that case instead of simply punishing them all
+-			 * equally. As such, we reclaim them based on how much
+-			 * memory they are using, reducing the scan pressure
+-			 * again by how much of the total memory used is under
+-			 * hard protection.
+-			 */
+-			unsigned long cgroup_size = mem_cgroup_size(memcg);
+-			unsigned long protection;
+-
+-			/* memory.low scaling, make sure we retry before OOM */
+-			if (!sc->memcg_low_reclaim && low > min) {
+-				protection = low;
+-				sc->memcg_low_skipped = 1;
+-			} else {
+-				protection = min;
+-			}
+-
+-			/* Avoid TOCTOU with earlier protection check */
+-			cgroup_size = max(cgroup_size, protection);
+-
+-			scan = lruvec_size - lruvec_size * protection /
+-				(cgroup_size + 1);
+-
+-			/*
+-			 * Minimally target SWAP_CLUSTER_MAX pages to keep
+-			 * reclaim moving forwards, avoiding decrementing
+-			 * sc->priority further than desirable.
+-			 */
+-			scan = max(scan, SWAP_CLUSTER_MAX);
+-		} else {
+-			scan = lruvec_size;
+-		}
+-
++		scan = apply_proportional_protection(memcg, sc, lruvec_size);
+ 		scan >>= sc->priority;
  
- 	gfp_mask = current_gfp_context(gfp_mask);
- 	if (__alloc_contig_verify_gfp_mask(gfp_mask, (gfp_t *)&cc.gfp_mask))
-@@ -6905,7 +6906,7 @@ int alloc_contig_range_noprof(unsigned long start, unsigned long end,
- 	 * put back to page allocator so that buddy can use them.
- 	 */
- 
--	ret = start_isolate_page_range(start, end, migratetype, 0);
-+	ret = start_isolate_page_range(start, end, mode);
- 	if (ret)
- 		goto done;
- 
-@@ -6921,7 +6922,7 @@ int alloc_contig_range_noprof(unsigned long start, unsigned long end,
- 	 * allocated.  So, if we fall through be sure to clear ret so that
- 	 * -EBUSY is not accidentally used or returned to caller.
- 	 */
--	ret = __alloc_contig_migrate_range(&cc, start, end, migratetype);
-+	ret = __alloc_contig_migrate_range(&cc, start, end, alloc_flags);
- 	if (ret && ret != -EBUSY)
- 		goto done;
- 
-@@ -6955,7 +6956,7 @@ int alloc_contig_range_noprof(unsigned long start, unsigned long end,
- 	outer_start = find_large_buddy(start);
- 
- 	/* Make sure the range is really isolated. */
--	if (test_pages_isolated(outer_start, end, 0)) {
-+	if (test_pages_isolated(outer_start, end, mode)) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -6998,8 +6999,8 @@ static int __alloc_contig_pages(unsigned long start_pfn,
- {
- 	unsigned long end_pfn = start_pfn + nr_pages;
- 
--	return alloc_contig_range_noprof(start_pfn, end_pfn, MIGRATE_MOVABLE,
--				   gfp_mask);
-+	return alloc_contig_range_noprof(start_pfn, end_pfn, ACR_OTHER,
-+					 gfp_mask);
+ 		/*
+@@ -4545,8 +4548,9 @@ static bool isolate_folio(struct lruvec *lruvec, struct folio *folio, struct sca
+ 	return true;
  }
  
- static bool pfn_range_valid_contig(struct zone *z, unsigned long start_pfn,
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 1edfef408faf..ece3bfc56bcd 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -31,7 +31,7 @@
-  *
-  */
- static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long end_pfn,
--				int migratetype, int flags)
-+				enum pb_isolate_mode mode)
+-static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+-		       int type, int tier, struct list_head *list)
++static int scan_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
++		       struct scan_control *sc, int type, int tier,
++		       struct list_head *list)
  {
- 	struct page *page = pfn_to_page(start_pfn);
- 	struct zone *zone = page_zone(page);
-@@ -46,7 +46,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
- 		 * isolate CMA pageblocks even when they are not movable in fact
- 		 * so consider them movable here.
- 		 */
--		if (is_migrate_cma(migratetype))
-+		if (mode == PB_ISOLATE_MODE_CMA_ALLOC)
- 			return NULL;
+ 	int i;
+ 	int gen;
+@@ -4555,7 +4559,7 @@ static int scan_folios(struct lruvec *lruvec, struct scan_control *sc,
+ 	int scanned = 0;
+ 	int isolated = 0;
+ 	int skipped = 0;
+-	int remaining = MAX_LRU_BATCH;
++	int remaining = min(nr_to_scan, MAX_LRU_BATCH);
+ 	struct lru_gen_folio *lrugen = &lruvec->lrugen;
+ 	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
  
- 		return page;
-@@ -117,7 +117,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
- 		 * The HWPoisoned page may be not in buddy system, and
- 		 * page_count() is not 0.
- 		 */
--		if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
-+		if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) && PageHWPoison(page))
- 			continue;
+@@ -4666,7 +4670,8 @@ static int get_type_to_scan(struct lruvec *lruvec, int swappiness)
+ 	return positive_ctrl_err(&sp, &pv);
+ }
  
- 		/*
-@@ -130,7 +130,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
- 		 * move these pages that still have a reference count > 0.
- 		 * (false negatives in this function only)
- 		 */
--		if ((flags & MEMORY_OFFLINE) && PageOffline(page))
-+		if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) && PageOffline(page))
- 			continue;
- 
- 		if (__PageMovable(page) || PageLRU(page))
-@@ -151,7 +151,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
-  * present in [start_pfn, end_pfn). The pageblock must intersect with
-  * [start_pfn, end_pfn).
-  */
--static int set_migratetype_isolate(struct page *page, int migratetype, int isol_flags,
-+static int set_migratetype_isolate(struct page *page, enum pb_isolate_mode mode,
- 			unsigned long start_pfn, unsigned long end_pfn)
+-static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int swappiness,
++static int isolate_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
++			  struct scan_control *sc, int swappiness,
+ 			  int *type_scanned, struct list_head *list)
  {
- 	struct zone *zone = page_zone(page);
-@@ -186,7 +186,7 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
- 				  end_pfn);
+ 	int i;
+@@ -4678,7 +4683,7 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
  
- 	unmovable = has_unmovable_pages(check_unmovable_start, check_unmovable_end,
--			migratetype, isol_flags);
-+			mode);
- 	if (!unmovable) {
- 		if (!pageblock_isolate_and_move_free_pages(zone, page)) {
- 			spin_unlock_irqrestore(&zone->lock, flags);
-@@ -198,7 +198,7 @@ static int set_migratetype_isolate(struct page *page, int migratetype, int isol_
- 	}
+ 		*type_scanned = type;
  
- 	spin_unlock_irqrestore(&zone->lock, flags);
--	if (isol_flags & REPORT_FAILURE) {
-+	if (mode == PB_ISOLATE_MODE_MEM_OFFLINE) {
- 		/*
- 		 * printk() with zone->lock held will likely trigger a
- 		 * lockdep splat, so defer it here.
-@@ -292,11 +292,10 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
-  * isolate_single_pageblock() -- tries to isolate a pageblock that might be
-  * within a free or in-use page.
-  * @boundary_pfn:		pageblock-aligned pfn that a page might cross
-- * @flags:			isolation flags
-+ * @mode:			isolation mode
-  * @isolate_before:	isolate the pageblock before the boundary_pfn
-  * @skip_isolation:	the flag to skip the pageblock isolation in second
-  *			isolate_single_pageblock()
-- * @migratetype:	migrate type to set in error recovery.
-  *
-  * Free and in-use pages can be as big as MAX_PAGE_ORDER and contain more than one
-  * pageblock. When not all pageblocks within a page are isolated at the same
-@@ -311,8 +310,9 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
-  * either. The function handles this by splitting the free page or migrating
-  * the in-use page then splitting the free page.
-  */
--static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
--		bool isolate_before, bool skip_isolation, int migratetype)
-+static int isolate_single_pageblock(unsigned long boundary_pfn,
-+			enum pb_isolate_mode mode, bool isolate_before,
-+			bool skip_isolation)
+-		scanned = scan_folios(lruvec, sc, type, tier, list);
++		scanned = scan_folios(nr_to_scan, lruvec, sc, type, tier, list);
+ 		if (scanned)
+ 			return scanned;
+ 
+@@ -4688,7 +4693,8 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
+ 	return 0;
+ }
+ 
+-static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swappiness)
++static int evict_folios(unsigned long nr_to_scan, struct lruvec *lruvec,
++			struct scan_control *sc, int swappiness)
  {
- 	unsigned long start_pfn;
- 	unsigned long isolate_pageblock;
-@@ -338,12 +338,11 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
- 				      zone->zone_start_pfn);
+ 	int type;
+ 	int scanned;
+@@ -4707,7 +4713,7 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
  
- 	if (skip_isolation) {
--		int mt __maybe_unused = get_pageblock_migratetype(pfn_to_page(isolate_pageblock));
--
--		VM_BUG_ON(!is_migrate_isolate(mt));
-+		VM_BUG_ON(!get_pageblock_isolate(pfn_to_page(isolate_pageblock)));
- 	} else {
--		ret = set_migratetype_isolate(pfn_to_page(isolate_pageblock), migratetype,
--				flags, isolate_pageblock, isolate_pageblock + pageblock_nr_pages);
-+		ret = set_migratetype_isolate(pfn_to_page(isolate_pageblock),
-+				mode, isolate_pageblock,
-+				isolate_pageblock + pageblock_nr_pages);
+ 	spin_lock_irq(&lruvec->lru_lock);
  
- 		if (ret)
- 			return ret;
-@@ -441,14 +440,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
-  * start_isolate_page_range() - mark page range MIGRATE_ISOLATE
-  * @start_pfn:		The first PFN of the range to be isolated.
-  * @end_pfn:		The last PFN of the range to be isolated.
-- * @migratetype:	Migrate type to set in error recovery.
-- * @flags:		The following flags are allowed (they can be combined in
-- *			a bit mask)
-- *			MEMORY_OFFLINE - isolate to offline (!allocate) memory
-- *					 e.g., skip over PageHWPoison() pages
-- *					 and PageOffline() pages.
-- *			REPORT_FAILURE - report details about the failure to
-- *			isolate the range
-+ * @mode:		isolation mode
-  *
-  * Making page-allocation-type to be MIGRATE_ISOLATE means free pages in
-  * the range will never be allocated. Any free pages and pages freed in the
-@@ -481,7 +473,7 @@ static int isolate_single_pageblock(unsigned long boundary_pfn, int flags,
-  * Return: 0 on success and -EBUSY if any part of range cannot be isolated.
-  */
- int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
--			     int migratetype, int flags)
-+			     enum pb_isolate_mode mode)
- {
- 	unsigned long pfn;
- 	struct page *page;
-@@ -492,8 +484,8 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 	bool skip_isolation = false;
+-	scanned = isolate_folios(lruvec, sc, swappiness, &type, &list);
++	scanned = isolate_folios(nr_to_scan, lruvec, sc, swappiness, &type, &list);
  
- 	/* isolate [isolate_start, isolate_start + pageblock_nr_pages) pageblock */
--	ret = isolate_single_pageblock(isolate_start, flags, false,
--			skip_isolation, migratetype);
-+	ret = isolate_single_pageblock(isolate_start, mode, false,
-+			skip_isolation);
- 	if (ret)
- 		return ret;
+ 	scanned += try_to_inc_min_seq(lruvec, swappiness);
  
-@@ -501,8 +493,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 		skip_isolation = true;
+@@ -4828,6 +4834,8 @@ static long get_nr_to_scan(struct lruvec *lruvec, struct scan_control *sc, int s
+ 	if (nr_to_scan && !mem_cgroup_online(memcg))
+ 		return nr_to_scan;
  
- 	/* isolate [isolate_end - pageblock_nr_pages, isolate_end) pageblock */
--	ret = isolate_single_pageblock(isolate_end, flags, true,
--			skip_isolation, migratetype);
-+	ret = isolate_single_pageblock(isolate_end, mode, true, skip_isolation);
- 	if (ret) {
- 		unset_migratetype_isolate(pfn_to_page(isolate_start));
- 		return ret;
-@@ -513,8 +504,8 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- 	     pfn < isolate_end - pageblock_nr_pages;
- 	     pfn += pageblock_nr_pages) {
- 		page = __first_valid_page(pfn, pageblock_nr_pages);
--		if (page && set_migratetype_isolate(page, migratetype, flags,
--					start_pfn, end_pfn)) {
-+		if (page && set_migratetype_isolate(page, mode, start_pfn,
-+					end_pfn)) {
- 			undo_isolate_page_range(isolate_start, pfn);
- 			unset_migratetype_isolate(
- 				pfn_to_page(isolate_end - pageblock_nr_pages));
-@@ -556,7 +547,7 @@ void undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn)
-  */
- static unsigned long
- __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
--				  int flags)
-+				  enum pb_isolate_mode mode)
- {
- 	struct page *page;
++	nr_to_scan = apply_proportional_protection(memcg, sc, nr_to_scan);
++
+ 	/* try to get away with not aging at the default priority */
+ 	if (!success || sc->priority == DEF_PRIORITY)
+ 		return nr_to_scan >> sc->priority;
+@@ -4880,7 +4888,7 @@ static bool try_to_shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
+ 		if (nr_to_scan <= 0)
+ 			break;
  
-@@ -569,11 +560,12 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
- 			 * simple way to verify that as VM_BUG_ON(), though.
- 			 */
- 			pfn += 1 << buddy_order(page);
--		else if ((flags & MEMORY_OFFLINE) && PageHWPoison(page))
-+		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
-+			 PageHWPoison(page))
- 			/* A HWPoisoned page cannot be also PageBuddy */
- 			pfn++;
--		else if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
--			 !page_count(page))
-+		else if ((mode == PB_ISOLATE_MODE_MEM_OFFLINE) &&
-+			 PageOffline(page) && !page_count(page))
- 			/*
- 			 * The responsible driver agreed to skip PageOffline()
- 			 * pages when offlining memory by dropping its
-@@ -591,11 +583,11 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
-  * test_pages_isolated - check if pageblocks in range are isolated
-  * @start_pfn:		The first PFN of the isolated range
-  * @end_pfn:		The first PFN *after* the isolated range
-- * @isol_flags:		Testing mode flags
-+ * @mode:		Testing mode
-  *
-  * This tests if all in the specified range are free.
-  *
-- * If %MEMORY_OFFLINE is specified in @flags, it will consider
-+ * If %PB_ISOLATE_MODE_MEM_OFFLINE specified in @mode, it will consider
-  * poisoned and offlined pages free as well.
-  *
-  * Caller must ensure the requested range doesn't span zones.
-@@ -603,7 +595,7 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
-  * Returns 0 if true, -EBUSY if one or more pages are in use.
-  */
- int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
--			int isol_flags)
-+			enum pb_isolate_mode mode)
- {
- 	unsigned long pfn, flags;
- 	struct page *page;
-@@ -639,7 +631,7 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
- 	/* Check all pages are free or marked as ISOLATED */
- 	zone = page_zone(page);
- 	spin_lock_irqsave(&zone->lock, flags);
--	pfn = __test_page_isolated_in_pageblock(start_pfn, end_pfn, isol_flags);
-+	pfn = __test_page_isolated_in_pageblock(start_pfn, end_pfn, mode);
- 	spin_unlock_irqrestore(&zone->lock, flags);
+-		delta = evict_folios(lruvec, sc, swappiness);
++		delta = evict_folios(nr_to_scan, lruvec, sc, swappiness);
+ 		if (!delta)
+ 			break;
  
- 	ret = pfn < end_pfn ? -EBUSY : 0;
+@@ -5501,7 +5509,8 @@ static int run_eviction(struct lruvec *lruvec, unsigned long seq, struct scan_co
+ 		if (sc->nr_reclaimed >= nr_to_reclaim)
+ 			return 0;
+ 
+-		if (!evict_folios(lruvec, sc, swappiness))
++		if (!evict_folios(nr_to_reclaim - sc->nr_reclaimed, lruvec, sc,
++				  swappiness))
+ 			return 0;
+ 
+ 		cond_resched();
 -- 
-2.47.2
+2.48.1
 
