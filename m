@@ -1,149 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D552620C4;
-	Fri, 30 May 2025 12:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608847; cv=none; b=TSh1MSQ+AKdTmgiEw5hAfwMkKpjov1R4PKTQHfW2IaXN33uOJCk0Mal9kemxpm1oPxSDkPaLr+7NdtYjvgDaq1a/raRJaF1M5+o4yFm+oYMK53gsZWpw4Ve78cVuWhj/gK6KpCACHjQlz0AH7SusXaTP/B8KxS1XEggf0ht7Oyw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608847; c=relaxed/simple;
-	bh=96mPeNIGC4RfUKmcPKwZXWn0hg6MOwcTqEcnDDd5tD8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=psimfWQ4xXjSScjPu/Q72EyyAEhU1ZoWZZpvPVGEwh2NL0UR4eJ5aS94AhPxqZUAw1raytpmrcCYan/lBQXsrBWqT+AS+ecYQl694gZRF02qoqN3b1Rj8dzX7FT4VC7Ri77HEKsqmaBd/870rmowHNEu3ctVSvca8WrZZwzFoqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbnE4Sh+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbnE4Sh+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2502CC4CEEF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2533261365;
 	Fri, 30 May 2025 12:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608847;
-	bh=96mPeNIGC4RfUKmcPKwZXWn0hg6MOwcTqEcnDDd5tD8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fbnE4Sh+jcQJD0X4RNUw1L6MA4iABmBpFcrymfCS3aOmqKttQs08bd0UzMwHkmx++
-	 sUQKq19oBR3/FHj1VoQ6+xDM4qMqONPlnnaMw/CrvwtTxncn4HWnEPqu5Ib1kgf3ZD
-	 4Ah66m4H6iqBRva5zEhHiabwUPFAPMWJuDHs7dwKK2iisrq6YlSXbfnHg0MI9MRz7r
-	 Gj5y1wnssIdw+ACKZCJNi0W23sAp4jdm+Sv+mes6eHMfGszrVuNcH/HYBFjryBD+Rq
-	 yvV6VQ0a0V7wHiNY0wHn9oAUPsBtaUr0JdxzCvDzZ4y8sLf3rI6mH+ypDQ6GBOlMQ+
-	 ifq7KiVXfj2Vg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Peter Marheine <pmarheine@chromium.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	rjw@rjwysocki.net,
-	lenb@kernel.org,
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748608848; cv=none; b=ij78lSMmSyDx6dnzQgF6avmdDu6Eaa6FJONjK92lgoqMXzcpqs1sk8eee7IjjQGd74GJz2BPBHGtdDWDFvWv5lpPCcHJ8YEAZ6HuOiofow2tQfapEIJJR7mKRwBk12PTxh+s5KsYt9IebPB1t2z5j96WdnHcIB9yMdGQ9xOTe88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748608848; c=relaxed/simple;
+	bh=XWF7ghCau7PeWDzA8J+cdCynLNNleKMMNsGblfJSVWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hK2kD5vaG/kO8BT+MYNFzmAeIq4mlZm71TXBwnVf58kldNvuKrcJq6A41a+q04x3IWQ9+Cl32Trr2eqJgMOPvQmYaFzg543NRC+/1hyPwrXX20sFTId2R0acWIbzUZswGfoT5YIFucuLWDPOLig3SGNA/SPJ+2Dkg/ZBVo4PH94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hainksAY; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hainksAY"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a363d15c64so1320142f8f.3;
+        Fri, 30 May 2025 05:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748608845; x=1749213645; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UK5nNgXBuHxDSeQY2F0dT9x4Zdv3FiZ5Mbfzw7GxZn8=;
+        b=hainksAY18GVTqkHDLWetVApZyuFRazRxghW+gW3UWtZyLaL0wFdhzfjW5Ruafi8xU
+         S979XAYfT916gh4T8k2BGe+gQnqKObF1K/+Lb4Hagwtvuz0VCCtO5/fQCuL0AkTtMtTp
+         Oq92dFz1Rr3lJwQL8xistMaZMxNNOowWhW9x6pP/9qKzfpFIISCIvTjCYmxH6jh+8GI9
+         v8Py4H8jSgIJ/g/WnGp+2JKPMMOQnMVnbHv3P02uUq9VYQ1c6l+jF089aSC6TViLEL50
+         lK3RLCS4vm/+ctTmiiZKm4Ix+/p4fvAy5gEWLqZAO4+LLVrA9wKabd+S9gIv4pyw+9qb
+         0u8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748608845; x=1749213645;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UK5nNgXBuHxDSeQY2F0dT9x4Zdv3FiZ5Mbfzw7GxZn8=;
+        b=UgaHlxpTk0RikGL2aMEsLrmSbjGxmD6JkgP1wvxLgk6tT2gNkcI9eAvnBI5HowilUE
+         1tD9+1Eow9cSXzI0iD+kKIGUzD0/LOn3nfoWiG+ius22fD1i2XerqDIxjw+hq867NqlQ
+         L09fhsnGusQVfE9c4DbL60FpZolTnQzPHSy7Z3gnDBNjieN7wdNjdAFJGiFUO4vJj2Fv
+         z+dhCCxV3y640LaEWy+gRa2jBLTiez6GBy0QhcTcw3XN6VzDQrS+igqyLljmZl+QKRgR
+         z2jpMGSbEqhRR5U7o5ArtpCPIdm/8ye/ZcSNc0Gv7e6s7u8TVPMPmG8vcgkzYOKHya3j
+         kIzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBr/v4CwHtQjRBStNr/Bwr6RDdg6DdUbZ2mcKGode0yLI5wv0XSa+Xi+RTr2HWzd5vuVBqeoNjtbejoBBDKYY=@vger.kernel.org, AJvYcCXKpaO87dPb4VCh1MJvZE2t8W62iC96yDlpyu4zAsUr49uZC59k6LNGPyPlSf7u9ctXBICikWVPtJHwE7/4@vger.kernel.org, AJvYcCXSQNbnQtNlN47bk7LayUpRYgmjdyWbD4SFyL95jJgINOpAk7S8rToiu8JWnJayVcWL003sleaGkfyt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7UTQKLfZPD65tUFJUT3a4oZ1ZH/eBgNh6o+Fo57Ttk9Ml/ikj
+	bUX3EgVZ4BZ+MHE9L2Tva90uttTx0Q6VK0mHmOc1aMqXRQobqqT0N5dL
+X-Gm-Gg: ASbGncuIk9oUFMda6SOBBCcRZY7G9spd1VnhGfFrJBgs/Gak+L776N/6QzD98tF8ZYW
+	ydLzYYkel/H6ZRj0+y4OJ91r6hm6act0W1t6Oh+TSA+B9WI2RFZ0MUZhV5NbvzrU8z7de0cYhTX
+	iAsmoDF6Zj3323qOrQwg0zSvJWGMaebOxjzQluyw0mFTRCaLNWh/a9Q0+6CW2jes6dEywd/QNk2
+	GS+6XIURDZXSZEReoQvIV0QyHIWDqDLyp9qTOXw2ayq+NTUETnvsuCMgD5wNGrVT0PEJ+naNiy9
+	0O+9sb1guza0u18kUkbTmOryPHh0LdtV496vUBOMYPnHKyBPtJVPgZ2yw07oP2w58XWNE/CcBVJ
+	bP8S76/G4dCcmBo3J02TLO8GF9wQ/
+X-Google-Smtp-Source: AGHT+IFKXKz9K3tDUkA7n5EvBtl+LosvhugkBp22Jy94or3qDXc9oEfUgmuRTn7SuyVpYTAFxKWaig==
+X-Received: by 2002:a5d:5850:0:b0:3a3:6a1b:6885 with SMTP id ffacd0b85a97d-3a4f7a6d1f5mr2638615f8f.47.1748608844502;
+        Fri, 30 May 2025 05:40:44 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4f009ff7asm4752103f8f.90.2025.05.30.05.40.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 05:40:43 -0700 (PDT)
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
 	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 26/26] ACPI: battery: negate current when discharging
-Date: Fri, 30 May 2025 08:40:12 -0400
-Message-Id: <20250530124012.2575409-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250530124012.2575409-1-sashal@kernel.org>
-References: <20250530124012.2575409-1-sashal@kernel.org>
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Igor Korotin <igor.korotin.linux@gmail.com>
+Subject: [PATCH] rust: acpi: add `acpi::DeviceId` abstraction
+Date: Fri, 30 May 2025 13:38:06 +0100
+Message-ID: <20250530123815.1766726-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.31
 Content-Transfer-Encoding: 8bit
 
-From: Peter Marheine <pmarheine@chromium.org>
+`acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
 
-[ Upstream commit 234f71555019d308c6bc6f98c78c5551cb8cd56a ]
+This is used by subsequent patches, in particular the i2c driver
+abstractions, to create ACPI device ID tables.
 
-The ACPI specification requires that battery rate is always positive,
-but the kernel ABI for POWER_SUPPLY_PROP_CURRENT_NOW
-(Documentation/ABI/testing/sysfs-class-power) specifies that it should
-be negative when a battery is discharging. When reporting CURRENT_NOW,
-massage the value to match the documented ABI.
-
-This only changes the sign of `current_now` and not `power_now` because
-documentation doesn't describe any particular meaning for `power_now` so
-leaving `power_now` unchanged is less likely to confuse userspace
-unnecessarily, whereas becoming consistent with the documented ABI is
-worth potentially confusing clients that read `current_now`.
-
-Signed-off-by: Peter Marheine <pmarheine@chromium.org>
-Link: https://patch.msgid.link/20250508024146.1436129-1-pmarheine@chromium.org
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
 ---
+ MAINTAINERS         |  1 +
+ rust/kernel/acpi.rs | 63 +++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs  |  1 +
+ 3 files changed, 65 insertions(+)
+ create mode 100644 rust/kernel/acpi.rs
 
-Based on my analysis of the commit and examination of the kernel
-codebase, I can now provide my assessment: **YES** This commit should be
-backported to stable kernel trees because: 1. **Fixes a real user-facing
-bug**: The commit addresses an ABI inconsistency where ACPI battery
-drivers were reporting current_now with the wrong sign. According to the
-kernel's power supply ABI documentation
-(Documentation/ABI/testing/sysfs-class-power), `current_now` should be
-negative when discharging and positive when charging, but ACPI battery
-drivers were reporting positive values always. 2. **Small and contained
-fix**: The change is minimal and well-contained. It only affects the
-`POWER_SUPPLY_PROP_CURRENT_NOW` case in `acpi_battery_get_property()`
-function in `drivers/acpi/battery.c`. The code adds a simple check to
-negate the current value only when: - Property requested is
-`POWER_SUPPLY_PROP_CURRENT_NOW` (not power_now) - Battery is in
-discharging state - The `acpi_battery_handle_discharging()` function
-confirms it's actually discharging 3. **Follows stable rules**: This is
-an important bugfix that corrects userspace-visible behavior to match
-documented ABI. Applications and battery monitoring tools rely on the
-documented behavior that negative current indicates discharging. 4.
-**Minimal regression risk**: The change is very conservative: - Only
-affects `current_now`, not `power_now` (as noted in commit message) -
-Uses existing `acpi_battery_handle_discharging()` logic to double-check
-the discharging state - Leaves all other battery properties unchanged 5.
-**Similar pattern in similar drivers**: From the historical examples
-provided, commits like "power: supply: bq27xxx: fix polarity of
-current_now" and "power: supply: axp20x_battery: properly report current
-when discharging" were backported with YES status for exactly the same
-type of issue - fixing current sign during discharge. 6. **Affects
-critical subsystem**: Battery reporting is crucial for power management,
-and incorrect current direction can confuse userspace tools and
-potentially impact power management decisions. The commit carefully
-addresses the ABI compliance issue while minimizing risk by only
-changing the sign for `current_now` during confirmed discharging states,
-making it an ideal candidate for stable backporting.
-
- drivers/acpi/battery.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
-index 65fa3444367a1..6a7ac34d73bda 100644
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -243,10 +243,23 @@ static int acpi_battery_get_property(struct power_supply *psy,
- 		break;
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 	case POWER_SUPPLY_PROP_POWER_NOW:
--		if (battery->rate_now == ACPI_BATTERY_VALUE_UNKNOWN)
-+		if (battery->rate_now == ACPI_BATTERY_VALUE_UNKNOWN) {
- 			ret = -ENODEV;
--		else
--			val->intval = battery->rate_now * 1000;
-+			break;
-+		}
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b659fb27ab63..5f8dfae08454 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -302,6 +302,7 @@ F:	include/linux/acpi.h
+ F:	include/linux/fwnode.h
+ F:	include/linux/fw_table.h
+ F:	lib/fw_table.c
++F:	rust/kernel/acpi.rs
+ F:	tools/power/acpi/
+ 
+ ACPI APEI
+diff --git a/rust/kernel/acpi.rs b/rust/kernel/acpi.rs
+new file mode 100644
+index 000000000000..bbd38910736c
+--- /dev/null
++++ b/rust/kernel/acpi.rs
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+		val->intval = battery->rate_now * 1000;
-+		/*
-+		 * When discharging, the current should be reported as a
-+		 * negative number as per the power supply class interface
-+		 * definition.
-+		 */
-+		if (psp == POWER_SUPPLY_PROP_CURRENT_NOW &&
-+		    (battery->state & ACPI_BATTERY_STATE_DISCHARGING) &&
-+		    acpi_battery_handle_discharging(battery)
-+				== POWER_SUPPLY_STATUS_DISCHARGING)
-+			val->intval = -val->intval;
++//! Advanced Configuration and Power Interface abstractions.
 +
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
- 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
++use crate::{bindings, device_id::RawDeviceId, prelude::*};
++
++/// IdTable type for ACPI drivers.
++pub type IdTable<T> = &'static dyn kernel::device_id::IdTable<DeviceId, T>;
++
++/// An ACPI device id.
++#[repr(transparent)]
++#[derive(Clone, Copy)]
++pub struct DeviceId(bindings::acpi_device_id);
++
++// SAFETY:
++// * `DeviceId` is a `#[repr(transparent)` wrapper of `struct acpi_device_id` and does not add
++//   additional invariants, so it's safe to transmute to `RawType`.
++// * `DRIVER_DATA_OFFSET` is the offset to the `data` field.
++unsafe impl RawDeviceId for DeviceId {
++    type RawType = bindings::acpi_device_id;
++
++    const DRIVER_DATA_OFFSET: usize = core::mem::offset_of!(bindings::acpi_device_id, driver_data);
++
++    fn index(&self) -> usize {
++        self.0.driver_data as _
++    }
++}
++
++impl DeviceId {
++    const ACPI_ID_LEN: usize = 16;
++
++    /// Create a new device id from an ACPI 'id' string.
++    pub const fn new(id: &'static CStr) -> Self {
++        assert!(id.len() <= Self::ACPI_ID_LEN, "ID exceeds 16 bytes");
++        let src = id.as_bytes_with_nul();
++        // Replace with `bindings::acpi_device_id::default()` once stabilized for `const`.
++        // SAFETY: FFI type is valid to be zero-initialized.
++        let mut acpi: bindings::acpi_device_id = unsafe { core::mem::zeroed() };
++        // TODO: Use `clone_from_slice` once the corresponding types do match.
++        let mut i = 0;
++        while i < src.len() {
++            acpi.id[i] = src[i] as _;
++            i += 1;
++        }
++
++        Self(acpi)
++    }
++}
++
++/// Create an ACPI `IdTable` with an "alias" for modpost.
++#[macro_export]
++macro_rules! acpi_device_table {
++    ($table_name:ident, $module_table_name:ident, $id_info_type: ty, $table_data: expr) => {
++        const $table_name: $crate::device_id::IdArray<
++            $crate::acpi::DeviceId,
++            $id_info_type,
++            { $table_data.len() },
++        > = $crate::device_id::IdArray::new($table_data);
++
++        $crate::module_device_table!("acpi", $module_table_name, $table_name);
++    };
++}
++
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 15c5f72976cd..05f1d3870bf7 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -78,6 +78,7 @@
+ #[cfg(CONFIG_NET)]
+ pub mod net;
+ pub mod of;
++pub mod acpi;
+ pub mod page;
+ #[cfg(CONFIG_I2C)]
+ pub mod i2c;
 -- 
-2.39.5
+2.43.0
 
