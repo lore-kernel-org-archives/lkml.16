@@ -1,160 +1,252 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4241D7E42;
-	Fri, 30 May 2025 21:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 582581D7E42;
+	Fri, 30 May 2025 21:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748639851; cv=none; b=gVGG8Y+99Dkd3pmfOszNsrBbq6mniPVym5pj+ePFfImuxgAQthg/UfvkL/ixoWCQh2GBUwYOTJOxJdLG6oM2xVd5lhZWgMUt4jzVjIkfn52rGJvt00xJ7iKDtbUzMCx58eoptsjvt6Nh0PQuRlqrwT7ZZBsiJgtjdnUz8LuB8a4=
+	t=1748639970; cv=none; b=RmWy7rFTQGjgDmWnVsF81NLzQz7Uht0+RlxnSS/UNTATyck9cYdlrLEiWpoDJVUUs8Ta0x7Ad0jWc3KtRdKAFJxdz10+mHYg62bN3Qf2QUvIbBy0yA5X9ldO0gZdyGm8djT3EfmxY5+XyzAlziOU37voXASwoJn3IumhKmMU/0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748639851; c=relaxed/simple;
-	bh=Q7wWYppq7C90E4b18X8pKHy206dMcrlyeJ0E5h2Rjgw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n3A8CGjWEDdgpWfubw6JSM5rhvJ/gVYca5Gz0J9u+TkmYsN+FCXLgmYEedafNA8qa7VM6r3b2lJlzaWBk2nDqu9MGiv5Zxgc+POMnPTbUCwyvMUyDU1CtAcSMYyV+v5RdXgf3lfKsqqOKyV7N2DrtcqhfCjU4SXwFYCXItpwSAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DoS3Hrls; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748639970; c=relaxed/simple;
+	bh=iBNKDTx8DCJklJr7P1xLJs/0HVc/KL187ghqaIj0y5o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FMo3Pd8Iizn5Wiz/jGu5gMlFpVOb4htLVS4mw0C3mahEeUmmrruMcgpseNZmMk7vHjScEzgLZtPQhr/ammPypdpJ/fxLhpjyd7rUU7lD8UQXU+ZDFi5gQQnVRaWwJvR0H5VzmCd7hzudGNdd4t02CjxPxg5OOgypNtv6T+LzMT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=NHVWqEld; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DoS3Hrls"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-31271ed809dso37081a91.1;
-        Fri, 30 May 2025 14:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748639848; x=1749244648; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DaflX9LJXzWlm3lpCgATG+sa4+dMghEczWFwcXZldgU=;
-        b=DoS3HrlsUdl7dokKIzoBLweOIYgQFngmKqXsUnZqceQuxDxqkLAB0Cazo93uv8WQ9q
-         DJLoZpHsbbT1Uq23vAEwWIa0tD+eEE70lS0d1jHtIGgDlxcceTK/JYRGghOK6L8LjU3E
-         e6YIfZz/CcPND9D5SMKxz0UuUyUcNT78eQg6MtfuT/E+vJ2r/YmjLC14zLzp5Iq4ZBCy
-         AMY2Ccg6VlobJVtJOX2soNfqMWNhe2oh7KegmRNZI+WCokFiAGR0xsXQKEQCh7ebY78p
-         A8vGsdyFbWXcObYqsFmwMVixR2MHxRUO+myj4pzBrDnSjWdR+PVgDQ+kt3buj5tyxPIK
-         6ixg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748639848; x=1749244648;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DaflX9LJXzWlm3lpCgATG+sa4+dMghEczWFwcXZldgU=;
-        b=YUKKAOj2D5Lvf2bMM0UZMuqZ54wVkqkUYyxFR+bWgPyT7hTSX5zwv/v6fnrpQglUfF
-         iGqivJuChqgTohajbyEXPYJdMOrabtRuM3uT1zxxJW6n3hTmdik0LakqbJb3M0o3IN6M
-         YqAqfcyVQg/AAW1RC6VBA9N0RKdy5LYNYXyLe4DQAZbCpv0NqAwJyCdEeS0CRN46YoNz
-         Wx0Qu/daMivGYTyiDreChvrKi+/s/524ltso2DIcTJFVXpSaYIlkpzixUq519EHpHfeS
-         opMm54TeWFS2X3ttuWt/7QMzxk+yMkQk+DidHUSgDSRH7CnO+/7Vw5vz+6ffOvJqNxAR
-         wwUw==
-X-Forwarded-Encrypted: i=1; AJvYcCVEuihrg2zG1up1+XUiK50jX13Z0k704pMh8PI7OvvVbdNuZoUr8cjv0E5WdAU0xZJnMxHgpv5gRJ2qkK8=@vger.kernel.org, AJvYcCWLYLA2ePdj9hWbIQY87/lO6sY4EplzTA5irEvHdNcMeyaX6GtSKQ8JIqwnF59aoLxx2gKqw/FL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzujraAEI4yeMeDT141+UtFZzvk3OxgbMMhQ10Ulaqradlur8eD
-	SPL7OrPNpqOqD+HIBTOt9ltVvPck4ljeC+lPHTuNcYpdVGB1UOscyAZQdH3c+twEmzBzpTzkyNr
-	JZts8sPX/+ObiTcn7Me6hcLn+2rMcELw=
-X-Gm-Gg: ASbGncvFkZF9epcz5tKvPvU513kAPlxl/I1xtFv0RSKLVuKm5MDkRPsUUyzv5OgXE2A
-	BKOnMvx7Z2aMxaQ2N76BXfIvAHBKBDY9b1MYIJjnvCT4kvjM1qHmTbsAOAgv/+Kvb/r1uXGL6uA
-	9oBkn9gSxnhkp72q28KlG/lRWQW/kd0CK5/w==
-X-Google-Smtp-Source: AGHT+IECt7Rhv1kBz/qhY52yGtnM/bwE3kNoe3ZrT2BLx0pNDo8VmJvvCSgdO27lsl/S1qo5VpuNwDSQ6ibXFmHiPW8=
-X-Received: by 2002:a17:90b:1a8f:b0:312:1dc9:9f5c with SMTP id
- 98e67ed59e1d1-3124db0a69dmr2048172a91.4.1748639847971; Fri, 30 May 2025
- 14:17:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="NHVWqEld"
+Received: from narnia (unknown [40.118.131.60])
+	by linux.microsoft.com (Postfix) with ESMTPSA id AF2632078637;
+	Fri, 30 May 2025 14:19:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AF2632078637
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748639967;
+	bh=Yi/L1evNbp/oOWb9EkOnldb8ZSyMBVNCYJXiU60dc/s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NHVWqEldeWzDyXOpU5ERUBwC3tpAl4bw9qVSZiRAZd5xkCrjoXo6hBXtVW3CMdRIG
+	 Fsgh35UUYAE/8z9gin5OIAm41Ikj5bWUZeIp5FZZ9UNqh8lBAtfx30MQoQL8xzthdM
+	 IfbfKw8rrVEjqWS7riVD9IdHsfphxCD2zr23F9BU=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: KP Singh <kpsingh@kernel.org>
+Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org,
+ zeffron@riotgames.com, xiyou.wangcong@gmail.com, kysrinivasan@gmail.com,
+ code@tyhicks.com, linux-security-module@vger.kernel.org,
+ roberto.sassu@huawei.com, James.Bottomley@hansenpartnership.com, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John
+ Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, David Howells
+ <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, Ignat Korchagin
+ <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, Jason Xing
+ <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, Anton
+ Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>,
+ Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire
+ <alan.maguire@oracle.com>, Matteo Croce <teknoraver@meta.com>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
+Subject: Re: [PATCH 0/3] BPF signature verification
+In-Reply-To: <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
+Date: Fri, 30 May 2025 14:19:22 -0700
+Message-ID: <87iklhn6ed.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524055546.1001268-1-sdl@nppct.ru>
-In-Reply-To: <20250524055546.1001268-1-sdl@nppct.ru>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 30 May 2025 17:17:16 -0400
-X-Gm-Features: AX0GCFtMHSWMn3a0e0OChFwtmZR4ehBBbTKc_CIkgLIbeEVdaBFk4XUBXRAPGEY
-Message-ID: <CADnq5_MyV_C-XJCQEiXKLQhhEGErq7SnvhqFE1AauQPJvt5aYw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: fix NULL dereference in gfx_v9_0_kcq() and kiq_init_queue()
-To: Alexey Nepomnyashih <sdl@nppct.ru>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sunil Khatri <sunil.khatri@amd.com>, 
-	Vitaly Prosyak <vitaly.prosyak@amd.com>, 
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>, Jiadong Zhu <Jiadong.Zhu@amd.com>, 
-	Yang Wang <kevinyang.wang@amd.com>, Prike Liang <Prike.Liang@amd.com>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 24, 2025 at 2:14=E2=80=AFAM Alexey Nepomnyashih <sdl@nppct.ru> =
-wrote:
->
-> A potential NULL pointer dereference may occur when accessing
-> tmp_mqd->cp_hqd_pq_control without verifying that tmp_mqd is non-NULL.
-> This may happen if mqd_backup[mqd_idx] is unexpectedly NULL.
->
-> Although a NULL check for mqd_backup[mqd_idx] existed previously, it was
-> moved to a position after the dereference in a recent commit, which
-> renders it ineffective.
+KP Singh <kpsingh@kernel.org> writes:
 
-I don't think it's possible for mqd_backup to be NULL at this point.
-We would have failed earlier in init if the mqd backup allocation
-failed.
+> On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
+> <bboscaccy@linux.microsoft.com> wrote:
+>>
+>> As suggested or mandated by KP Singh
+>> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmXz4=
+6GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/,
+>> this patchset proposes and implements an alternative hash-chain
+>> algorithm for signature verification of BPF programs.
+>>
+>>
+>>
+>> This design diverges in two key ways:
+>>
+>> 1. Signature Strategy
+>>
+>> Two different signature strategies are
+>> implemented. One verifies only the signature of the loader program in
+>> the kernel, as described in the link above. The other verifies the
+>> program=E2=80=99s maps in-kernel via a hash chain.  The original design
+>> required loader programs to be =E2=80=9Cself-aborting=E2=80=9D and embed=
+ded the
+>> terminal hash verification logic as metaprogramming code generation
+>> routines inside libbpf. While this patchset supports that scheme, it
+>> is considered undesirable in certain environments due to the potential
+>> for supply-chain attack vectors and the lack of visibility for the LSM
+>
+> The loader program is signed by a trusted entity, If you trust the
+> signature, then you trust it to do the signature verification.
 
-Alex
+That's the whole point. I explicitly don't want to be forced, by you,
+to trust unspecified third parties, BPF programs or the BPF virtual
+machine/JIT to perform signature verification, when it's demonstrably
+trivial to do this in the kernel, without precluding or limiting the
+chain loader scheme that you wish to have for Cilium/bpftrace.
 
+> This is
+> a fairly common pattern in security and a pattern that we will be
+> using in other signed bpf use-cases which can choose to depend on
+> signed loaders.
 >
-> Add an explicit NULL check for tmp_mqd before dereferencing its members.
+
+And that isn't at odds with the kernel being able to do it nor is it
+with what I posted.
+
+> If your build environment that signs the BPF program is compromised
+> and can inject arbitrary code, then signing does not help.  Can you
+> explain what a supply chain attack would look like here?
 >
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Most people here can read C code. The number of people that can read
+ebpf assembly metaprogramming code is much smaller. Compromising clang
+is one thing, compromising libbpf is another. Your proposal increases
+the attack surface with no observable benefit. If I was going to leave a
+hard-to-find backdoor into ring0, gen.c would be a fun place to explore
+doing it. Module and UEFI signature verification code doesn't live
+inside of GCC or Clang as set of meta-instructions that get emitted, and
+there are very good reasons for that.
+
+Further, since the signature verification code is unique for each and
+every program it needs to be verified/proved/tested for each and every
+program. Additionally, since all these checks are being forced outside
+of the kernel proper, with the insistence of keeping the LSM layer in
+the dark of the ultimate result, the only way to test that a program
+will fail if the map is corrupted is to physically corrupt each and
+every program and test that individually. That isn't "elegant" nor "user
+friendly" in any way, shape or form.
+
+>> subsystem.  Additionally, it is impossible to verify the code
+>> performing the signature verification, as it is uniquely regenerated
 >
-> Cc: stable@vger.kernel.org # v5.13+
-> Fixes: a330b52a9e59 ("drm/amdgpu: Init the cp MQD if it's not be initiali=
-zed before")
-> Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
+> The LSM needs to ensure that it allows trusted LOADER programs i.e.
+> with signatures and potentially trusted signed user-space binaries
+> with unsigned or delegated signing (this will be needed for Cilium and
+> bpftrace that dynamically generate BPF programs), that's a more
+> important aspect of the LSM policy from a BPF perspective.
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/=
-amdgpu/gfx_v9_0.c
-> index d7db4cb907ae..134cab16a00d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> @@ -3817,10 +3817,9 @@ static int gfx_v9_0_kiq_init_queue(struct amdgpu_r=
-ing *ring)
->          * check mqd->cp_hqd_pq_control since this value should not be 0
->          */
->         tmp_mqd =3D (struct v9_mqd *)adev->gfx.kiq[0].mqd_backup;
-> -       if (amdgpu_in_reset(adev) && tmp_mqd->cp_hqd_pq_control){
-> +       if (amdgpu_in_reset(adev) && tmp_mqd && tmp_mqd->cp_hqd_pq_contro=
-l) {
->                 /* for GPU_RESET case , reset MQD to a clean status */
-> -               if (adev->gfx.kiq[0].mqd_backup)
-> -                       memcpy(mqd, adev->gfx.kiq[0].mqd_backup, sizeof(s=
-truct v9_mqd_allocation));
-> +               memcpy(mqd, adev->gfx.kiq[0].mqd_backup, sizeof(struct v9=
-_mqd_allocation));
+
+I would like to be able to sign my programs please and have the kernel
+verify it was done correctly. Why are you insisting that I *don't* do
+that?  I'm yet to see any technical objection to doing that. Do you have
+one that you'd like to share at this point?
+
+> MAP_EXCLUSIVE is missing and is required which prevents maps from
+> being accessed by other programs as explained in the proposal.
 >
->                 /* reset ring buffer */
->                 ring->wptr =3D 0;
-> @@ -3863,7 +3862,7 @@ static int gfx_v9_0_kcq_init_queue(struct amdgpu_ri=
-ng *ring, bool restore)
->          */
->         tmp_mqd =3D (struct v9_mqd *)adev->gfx.mec.mqd_backup[mqd_idx];
+> Please hold off on further iterations, I am working on a series and
+> will share these patches based on the design that was proposed.
 >
-> -       if (!restore && (!tmp_mqd->cp_hqd_pq_control ||
-> +       if (!restore && tmp_mqd && (!tmp_mqd->cp_hqd_pq_control ||
->             (!amdgpu_in_reset(adev) && !adev->in_suspend))) {
->                 memset((void *)mqd, 0, sizeof(struct v9_mqd_allocation));
->                 ((struct v9_mqd_allocation *)mqd)->dynamic_cu_mask =3D 0x=
-FFFFFFFF;
-> @@ -3874,8 +3873,7 @@ static int gfx_v9_0_kcq_init_queue(struct amdgpu_ri=
-ng *ring, bool restore)
->                 soc15_grbm_select(adev, 0, 0, 0, 0, 0);
->                 mutex_unlock(&adev->srbm_mutex);
+
+So the premise here seems to be that people should only be allowed to
+sign trusted loaders, and that trusted loaders must additionally be
+authored by you, correct?
+
+When can we expect to see your patchset posted?
+
+>>
+>> for every program.
+>>
+>>
+>>
+>> 2. Timing of Signature Check
+>>
+>> This patchset moves the signature check to a point before
+>> security_bpf_prog_load is invoked, due to an unresolved discussion
+>> here:
 >
-> -               if (adev->gfx.mec.mqd_backup[mqd_idx])
-> -                       memcpy(adev->gfx.mec.mqd_backup[mqd_idx], mqd, si=
-zeof(struct v9_mqd_allocation));
-> +               memcpy(adev->gfx.mec.mqd_backup[mqd_idx], mqd, sizeof(str=
-uct v9_mqd_allocation));
->         } else {
->                 /* restore MQD to a clean status */
->                 if (adev->gfx.mec.mqd_backup[mqd_idx])
-> --
-> 2.43.0
+> This is fine and what I had in mind, signature verification does not
+> need to happen in the verifier and the existing hooks are good enough.
+> I did not reply to Paul's comment since this is a fairly trivial
+> detail and would be obvious in the implementation that the verifier is
+> not the right place to check the signature anyways as the instruction
+> buffer is only stable pre-verification.
 >
+>> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA+G64z=
+sOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+>> This change allows the LSM subsystem to be informed of the signature
+>> verification result=E2=80=94if it occurred=E2=80=94and the method used, =
+all without
+>> introducing a new hook. It improves visibility and auditability,
+>> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the original d=
+esign.
+>
+>
+> On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
+> <bboscaccy@linux.microsoft.com> wrote:
+>>
+>> As suggested or mandated by KP Singh
+>> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-FmXz4=
+6GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/,
+>> this patchset proposes and implements an alternative hash-chain
+>> algorithm for signature verification of BPF programs.
+>>
+>> This design diverges in two key ways:
+>>
+>> 1. Signature Strategy
+>>
+>> Two different signature strategies are
+>> implemented. One verifies only the signature of the loader program in
+>> the kernel, as described in the link above. The other verifies the
+>> program=E2=80=99s maps in-kernel via a hash chain.  The original design
+>> required loader programs to be =E2=80=9Cself-aborting=E2=80=9D and embed=
+ded the
+>> terminal hash verification logic as metaprogramming code generation
+>> routines inside libbpf. While this patchset supports that scheme, it
+>> is considered undesirable in certain environments due to the potential
+>> for supply-chain attack vectors and the lack of visibility for the LSM
+>> subsystem.  Additionally, it is impossible to verify the code
+>> performing the signature verification, as it is uniquely regenerated
+>> for every program.
+>>
+>> 2. Timing of Signature Check
+>>
+>> This patchset moves the signature check to a point before
+>> security_bpf_prog_load is invoked, due to an unresolved discussion
+>> here:
+>> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA+G64z=
+sOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+>> This change allows the LSM subsystem to be informed of the signature
+>> verification result=E2=80=94if it occurred=E2=80=94and the method used, =
+all without
+>> introducing a new hook. It improves visibility and auditability,
+>> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the original d=
+esign.
+>>
+>>
+>> Blaise Boscaccy (3):
+>>   bpf: Add bpf_check_signature
+>>   bpf: Support light-skeleton signatures in autogenerated code
+>>   bpftool: Allow signing of light-skeleton programs
+>>
+>>  include/linux/bpf.h            |   2 +
+>>  include/linux/verification.h   |   1 +
+>>  include/uapi/linux/bpf.h       |   4 +
+>>  kernel/bpf/arraymap.c          |  11 +-
+>>  kernel/bpf/syscall.c           | 123 +++++++++++++++++++-
+>>  tools/bpf/bpftool/Makefile     |   4 +-
+>>  tools/bpf/bpftool/common.c     | 204 +++++++++++++++++++++++++++++++++
+>>  tools/bpf/bpftool/gen.c        |  66 ++++++++++-
+>>  tools/bpf/bpftool/main.c       |  24 +++-
+>>  tools/bpf/bpftool/main.h       |  23 ++++
+>>  tools/include/uapi/linux/bpf.h |   4 +
+>>  tools/lib/bpf/libbpf.h         |   4 +
+>>  tools/lib/bpf/skel_internal.h  |  28 ++++-
+>>  13 files changed, 491 insertions(+), 7 deletions(-)
+>>
+>> --
+>> 2.48.1
+>>
