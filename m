@@ -1,103 +1,350 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F212538B;
-	Fri, 30 May 2025 08:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0209C1D61AA;
+	Fri, 30 May 2025 08:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748592192; cv=none; b=TsnjNjgHGBl51aKW7er6nLkJUUlqjVkQumhMg50lyT+czwUN4cylGlrwqZff5o4EU63bprWjeqkpC8qnLCP2UkQA/D/uBLKooGwi2Hv/ZxXTkIJw11Bi0n845ZwlTkLyUxyCeW/zmy0b+AOnC07YelmBEc7in86l6k/V4opa29k=
+	t=1748592231; cv=none; b=IRx+EmAkGcjnRY4i8ZkZNgqIiwfm9tCAuJSUuNncmLbbN3GgJhBefpZkJJIddc4EZovNtAZgVL9GZfMZziC73tPxyLAmC2i5vqVuHf6HymtviaORuThykDvUrjf8DZ5of/Bp6BZ5+vWftL8LNV+zqApggTl8HjHOGUD03HCHmXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748592192; c=relaxed/simple;
-	bh=/3ip+9z66tdC7aFsRMDA8XFR3EVpsy2dAXc+wOoLdoU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=HnpV9H69OVE1McxVEZkcQL9E+QQMwGNj0M/nmsMQANwoTe68Vb7syvKD1ejCRVyN22M1CKtW+NUKlU7V8B7JUCKRT2ELjv5RbVyogYB/E2IALJ7PKqoTNPw/JrNxAiw/csmgAvxrHMjMHBs3ETKxUJE+i3LjVWOr7vlpbl5oD4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S7vGkx7Q; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748592231; c=relaxed/simple;
+	bh=MOZRfILlxYLTD5YPIe1ukUVdwB74Lc8RJ5ifhuojFsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U1y83/La4Ii256wFYkfo69uiuIln5Vt7JoXQGHRrRmS2vayOMFff8iDSY3gtx/wEZGt9pCbI6XdMqO4cT+rJvVDjhpJNpySZloMxLYWBAPwVWUH3rnEX6HPFuDC5RU/PUJCe5TZp2JceKtqChlUnBcDy4TaBRkGmRi7hg+WtTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RpVg/SAz; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S7vGkx7Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748592191; x=1780128191;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/3ip+9z66tdC7aFsRMDA8XFR3EVpsy2dAXc+wOoLdoU=;
-  b=S7vGkx7QqJHiw/mhHK8wkbuPjVQXqXfOXw1P/hoZuYJx9dhhs+EvbfJB
-   aJZy+ZM+aiYttJSgYTir8RzVHvK8QnBfBb+qUOn43rze6yMVAhcHSqyer
-   1y4BofjOei660zfvDx08nBn3jzWrrPn6XCtgEkKNPPBYqqIWik7LVVqo0
-   cS3UVp5HxX5pqV8VTqkG5skzXJUA80KmEdtHJDeU4P9muYEtpy+Lhxe1u
-   nKy/zafeSM0msViUqoWX2GgLJq0yQLtfjAH/Stc5ZolI6QYVMB1YaPhGJ
-   yvfRQaDnGutXWpx86/Ek6bXElzWEeOifdNp5Ne0Areg2Ytm/ki5ZThBbq
-   A==;
-X-CSE-ConnectionGUID: CJ1clejrT+CzSV7p2bA4lg==
-X-CSE-MsgGUID: wfELXmiqSeKfdEdWqWOPFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50729804"
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="50729804"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 01:03:10 -0700
-X-CSE-ConnectionGUID: 4nNpK5sdSVSNZqrecFI/vA==
-X-CSE-MsgGUID: 5t3IhpMQRV+GMqJKZurJww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="166986441"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.183])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 01:03:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 30 May 2025 11:03:05 +0300 (EEST)
-To: Stuart Hayes <stuart.w.hayes@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] platform/x86: dell_rbu: Stop overwriting data
- buffer
-In-Reply-To: <20250529202758.8440-4-stuart.w.hayes@gmail.com>
-Message-ID: <ad0301a0-f45f-900a-028d-dff5e08b9525@linux.intel.com>
-References: <20250529202758.8440-1-stuart.w.hayes@gmail.com> <20250529202758.8440-4-stuart.w.hayes@gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RpVg/SAz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=+FQ7mAJWoOpdEQTP2UWDOkXe0sgkjazV/6cKTyxk9EY=; t=1748592229;
+	x=1749024229; b=RpVg/SAzeTHW9iVd0qAEDdquy03idZeON58JPD6gIbu2l3qxoD06zD31NS9I1
+	cOzzlm+tQXbD3e+A0EFN5hTvZiqMstEHL1rVcFB73lPBSM2vFbuSJNueLYfpETCJ/oYqJ7qi+5+0J
+	wZRGxwvD5ktppJzf5OwDmvXuWX5UMKMYWAo3NrlE8l++bCnt/V5rVT3hVpXDaG/DPnHlnU3iyFwqP
+	ARI3V2yyLiyCBgD5u4X0VBrXSQVHmzDXfV3fehr5czXxQNgbdoi1rSgR/5jqcw5fbRBR3riRhAp+x
+	nCIe+jR66WfqSgG9/gmRGNO2chPs//aPOFsZKEL0MyECdZpdvA==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1uKuRp-006ZdF-2k;
+	Fri, 30 May 2025 09:46:37 +0200
+Message-ID: <699ec35a-5453-4900-b535-a9a9863bb9bf@leemhuis.info>
+Date: Fri, 30 May 2025 09:46:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION: armv7 build mismatched types
+To: Rudraksha Gupta <guptarud@gmail.com>, linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Tamir Duberstein <tamird@gmail.com>
+References: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1748592229;a15d77b2;
+X-HE-SMSGID: 1uKuRp-006ZdF-2k
 
-On Thu, 29 May 2025, Stuart Hayes wrote:
+CCing linux-next and Tamir Duberstein, who authored the culprit.
 
-> The dell_rbu driver will use memset() to clear the data held by each
-> packet when it is no longer needed (when the driver is unloaded, the
-> packet size is changed, etc).
+On 30.05.25 08:23, Rudraksha Gupta wrote:
+> Logs: https://gitlab.postmarketos.org/LogicalErzor/pmaports/-/jobs/1368490
 > 
-> The amount of memory that is cleared (before this patch) is the normal
-> packet size. However, the last packet in the list may be smaller.
-> 
-> Fix this to only clear the memory actually used by each packet, to prevent
-> it from writing past the end of data buffer.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+> Archive: https://web.archive.org/web/20250530060232/https://
+> gitlab.postmarketos.org/LogicalErzor/pmaports/-/jobs/1368490/raw
 
-This still doesn't have Fixes tag? If it writes part the buffer, there 
-certainly should be one in this one. Did you perhaps add it to a wrong 
-patch?
+I ran into the same error on aarch64 and x86_64 when building -next for
+Fedora today using the rawhide config:
 
-> ---
->  drivers/platform/x86/dell/dell_rbu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-> index c03d4d55fcc1..7d5b26735a20 100644
-> --- a/drivers/platform/x86/dell/dell_rbu.c
-> +++ b/drivers/platform/x86/dell/dell_rbu.c
-> @@ -322,7 +322,7 @@ static void packet_empty_list(void)
->  		 * zero out the RBU packet memory before freeing
->  		 * to make sure there are no stale RBU packets left in memory
->  		 */
-> -		memset(newpacket->data, 0, rbu_data.packetsize);
-> +		memset(newpacket->data, 0, newpacket->length);
->  		set_memory_wb((unsigned long)newpacket->data,
->  			1 << newpacket->ordernum);
->  		free_pages((unsigned long) newpacket->data,
-> 
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/09103515-next-next-all/builder-live.log.gz
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-aarch64/09103515-next-next-all/builder-live.log.gz
 
--- 
- i.
+Reverting b20fbbc08a363f ("rust: check type of `$ptr` in
+`container_of!`") fixed things. That's the patch Rudraksha suspected to
+be the root of the problem (see the quote below).
+
+Ciao, Thorsten
+
+> Snip:
+> 
+> ||
+> 
+> |EXPORTS rust/exports_core_generated.h|
+> |
+> ||
+> RUSTC L rust/compiler_builtins.o
+> ||
+> RUSTC L rust/ffi.o
+> ||
+> RUSTC L rust/build_error.o
+> ||
+> RUSTC L rust/pin_init.o
+> ||
+> RUSTC L rust/bindings.o
+> ||
+> RUSTC L rust/uapi.o
+> ||
+> EXPORTS rust/exports_bindings_generated.h
+> ||
+> RUSTC L rust/kernel.o
+> ||
+> error[E0308]: mismatched types
+> ||
+> --> rust/kernel/lib.rs:234:45
+> ||
+> |
+> ||
+> 234 | $crate::assert_same_type(field_ptr, (&raw const (*container_ptr).
+> $($fields)*).cast_mut());
+> ||
+> | ------------------------ ---------
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*const
+> drm_device`, found `*mut Opaque<drm_device>`
+> ||
+> | | |
+> ||
+> | | expected all arguments to be this `*const drm_device` type because
+> they need to match the type of this parameter
+> ||
+> | arguments to this function are incorrect
+> ||
+> |
+> ||
+> ::: rust/kernel/drm/device.rs:140:18
+> ||
+> |
+> ||
+> 140 | unsafe { crate::container_of!(ptr, Self, dev) }.cast_mut()
+> ||
+> | ------------------------------------ in this macro invocation
+> ||
+> |
+> ||
+> = note: expected raw pointer `*const drm_device`
+> ||
+> found raw pointer `*mut Opaque<drm_device>`
+> ||
+> note: function defined here
+> ||
+> --> rust/kernel/lib.rs:241:8
+> ||
+> |
+> ||
+> 241 | pub fn assert_same_type<T>(_: T, _: T) {}
+> ||
+> | ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*const
+> drm_device` type of parameter #1
+> ||
+> | | |
+> ||
+> | | parameter #2 needs to match the `*const drm_device` type of this
+> parameter
+> ||
+> | parameter #1 and parameter #2 both reference this parameter `T`
+> ||
+> = note: this error originates in the macro `crate::container_of` (in
+> Nightly builds, run with -Z macro-backtrace for more info)
+> ||
+> error[E0308]: mismatched types
+> ||
+> --> rust/kernel/lib.rs:234:45
+> ||
+> |
+> ||
+> 234 | $crate::assert_same_type(field_ptr, (&raw const (*container_ptr).
+> $($fields)*).cast_mut());
+> ||
+> | ------------------------ ---------
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut
+> drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+> ||
+> | | |
+> ||
+> | | expected all arguments to be this `*mut drm_gem_object` type because
+> they need to match the type of this parameter
+> ||
+> | arguments to this function are incorrect
+> ||
+> |
+> ||
+> ::: rust/kernel/drm/gem/mod.rs:130:20
+> ||
+> |
+> ||
+> 130 | unsafe { &*crate::container_of!(self_ptr, Object<T>, obj) }
+> ||
+> | ---------------------------------------------- in this macro invocation
+> ||
+> |
+> ||
+> = note: expected raw pointer `*mut drm_gem_object`
+> ||
+> found raw pointer `*mut Opaque<drm_gem_object>`
+> ||
+> note: function defined here
+> ||
+> --> rust/kernel/lib.rs:241:8
+> ||
+> |
+> ||
+> 241 | pub fn assert_same_type<T>(_: T, _: T) {}
+> ||
+> | ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*mut
+> drm_gem_object` type of parameter #1
+> ||
+> | | |
+> ||
+> | | parameter #2 needs to match the `*mut drm_gem_object` type of this
+> parameter
+> ||
+> | parameter #1 and parameter #2 both reference this parameter `T`
+> ||
+> = note: this error originates in the macro `crate::container_of` (in
+> Nightly builds, run with -Z macro-backtrace for more info)
+> ||
+> error[E0308]: mismatched types
+> ||
+> --> rust/kernel/lib.rs:234:45
+> ||
+> |
+> ||
+> 234 | $crate::assert_same_type(field_ptr, (&raw const (*container_ptr).
+> $($fields)*).cast_mut());
+> ||
+> | ------------------------ ---------
+> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut
+> drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+> ||
+> | | |
+> ||
+> | | expected all arguments to be this `*mut drm_gem_object` type because
+> they need to match the type of this parameter
+> ||
+> | arguments to this function are incorrect
+> ||
+> |
+> ||
+> ::: rust/kernel/drm/gem/mod.rs:273:29
+> ||
+> |
+> ||
+> 273 | let this = unsafe { crate::container_of!(obj, Self, obj) };
+> ||
+> | ------------------------------------ in this macro invocation
+> ||
+> |
+> ||
+> = note: expected raw pointer `*mut drm_gem_object`
+> ||
+> found raw pointer `*mut Opaque<drm_gem_object>`
+> ||
+> note: function defined here
+> ||
+> --> rust/kernel/lib.rs:241:8
+> ||
+> |
+> ||
+> 241 | pub fn assert_same_type<T>(_: T, _: T) {}
+> ||
+> | ^^^^^^^^^^^^^^^^ - ---- ---- this parameter needs to match the `*mut
+> drm_gem_object` type of parameter #1
+> ||
+> | | |
+> ||
+> | | parameter #2 needs to match the `*mut drm_gem_object` type of this
+> parameter
+> ||
+> | parameter #1 and parameter #2 both reference this parameter `T`
+> ||
+> = note: this error originates in the macro `crate::container_of` (in
+> Nightly builds, run with -Z macro-backtrace for more info)
+> ||
+> error: aborting due to 3 previous errors
+> ||
+> For more information about this error, try `rustc --explain E0308`.
+> ||
+> make[2]: *** [rust/Makefile:538: rust/kernel.o] Error 1
+> ||
+> make[1]: *** [/home/pmos/build/src/linux-next-next-20250530/
+> Makefile:1285: prepare] Error 2
+> ||make: *** [Makefile:248: __sub-make] Error 2|
+> 
+> 
+> Bad: next-20250530
+> 
+> Good: next-20250528
+> 
+> 
+> Likely introduced with: https://lore.kernel.org/all/
+> CANiq72mFiCrzawVUVOU2giJtBVsRdAO3sGtDsZptPuFvmid3EQ@mail.gmail.com/
+> 
+> 
+> Repo: https://gitlab.postmarketos.org/LogicalErzor/pmaports/-/tree/rust/
+> device/testing/linux-next
+> 
+> How it's built (Alpine-like build system):
+> 
+> - https://archive.ph/vxEmk
+> 
+> Config fragments (in addition to qcom_defconfig):
+> 
+> - https://archive.ph/q4hfc
+> 
+> - https://archive.ph/RKgFf
+> 
+> 
+> 
 
