@@ -1,556 +1,330 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9AE1A3164;
-	Fri, 30 May 2025 16:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0C41A08A4
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 16:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748624040; cv=none; b=I16D+CiR8px2NNKk+Ytt43ajUZiy7JitWQSHVHG3g486AwXMATo4ApSTyJItU7XNjKzisyJIZOaatHbuotaWWj2tma4yZraVHkhC3+RJuyDEMQ6NRnUilA9YVMEJiypMswnOM6KjmoPVPODMWN9ntS6Qhm05Y7OXq/kHYBn1+Dc=
+	t=1748624069; cv=none; b=bX3Brz7EQLbzXj2VKqrhT19ntwTekWFa7AlW24CGIKlEdxTwdsxFp1QnA1L33WpFCEU8rpLTK1RQ2emqK72sjEUIV1MdSY2lVcpaRaP11l6U6Z3PQ5LsLRsbfAQiRxrtWTHr4gfQ0euULzKGITQwk7bmDtnZ7tlv5ct4dtPshZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748624040; c=relaxed/simple;
-	bh=lQYiABD8QOgU7w6ch1dLEC4Wn6UzkdJASAgg416P15w=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lcKXrRn9+K1Dx3TQX3U+2JAqXAaeDqEE1iVTt7zOFU52Gl/GqgP3RCuBdoumTzN3wj5YVrgbSPNyCXYLBY3tErfz7WkllEG0EHCNKSNMhzgkHYqNYjPIJ//46n2phn+e5sqne+L7WFDjBmZn3gdxuY5pWPVptYLFzrRnczgApVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b88P14JpXz67LX2;
-	Sat, 31 May 2025 00:50:13 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0243E140557;
-	Sat, 31 May 2025 00:53:54 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 30 May
- 2025 18:53:53 +0200
-Date: Fri, 30 May 2025 17:53:51 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <victor.duicu@microchip.com>
-CC: <jic23@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
-	<andy@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <marius.cristea@microchip.com>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] iio: temperature: add support for MCP998X
-Message-ID: <20250530175351.000039cb@huawei.com>
-In-Reply-To: <20250529093628.15042-3-victor.duicu@microchip.com>
-References: <20250529093628.15042-1-victor.duicu@microchip.com>
-	<20250529093628.15042-3-victor.duicu@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748624069; c=relaxed/simple;
+	bh=RXLmFWxoFIJycLMgEmUPoFkj2rLa+5V5ozpa6WNzSX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kStY6kY5wNgVbtHj9xmcete3gwQfDzvBgZgM3aom87Sk9JAW/nQjd8KyR2Rgg5AkI667N0ncrqwODDwqlmijNU5Gr7wVm+GHcybFJP3Lz8wWxrTiflVOf+mlWVsiS369FDXsM8D7CHZ+FKgKuwITbnkqn/x1jY+CvwNw4aGwHNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V8BjR+1i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=P+Z/dvim; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V8BjR+1i; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=P+Z/dvim; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V8BjR+1i";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="P+Z/dvim";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V8BjR+1i";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="P+Z/dvim"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ACFCB1F791;
+	Fri, 30 May 2025 16:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748624065; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=S9NNRjMCeuQEBzBHlmjDA51y656c4U2QaDFVTqvP2PE=;
+	b=V8BjR+1i179CcI3Oa3VQkZtxvSCHAND0N9Vhr3cJ2KIEVQOsqzZUbfUp55cce7uX86ifJY
+	svqSJsSmVzjFZfBraq7Y00L4oTE9i1EIHSYWvCM1On1Y1FaTMc9N1aMuJ888jhVKsWBPr0
+	VzRut4TXjoYFAaARQi/dp+AKDqgUmSo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748624065;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=S9NNRjMCeuQEBzBHlmjDA51y656c4U2QaDFVTqvP2PE=;
+	b=P+Z/dvimtiPDMUbz9O1pgXi/YXKGJOI5gf0eNtiGXXyCjNcVkbqgKZpGdAlPKEjeJdeuu9
+	dzfdNDvqyjO2JJDg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=V8BjR+1i;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="P+Z/dvim"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748624065; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=S9NNRjMCeuQEBzBHlmjDA51y656c4U2QaDFVTqvP2PE=;
+	b=V8BjR+1i179CcI3Oa3VQkZtxvSCHAND0N9Vhr3cJ2KIEVQOsqzZUbfUp55cce7uX86ifJY
+	svqSJsSmVzjFZfBraq7Y00L4oTE9i1EIHSYWvCM1On1Y1FaTMc9N1aMuJ888jhVKsWBPr0
+	VzRut4TXjoYFAaARQi/dp+AKDqgUmSo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748624065;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=S9NNRjMCeuQEBzBHlmjDA51y656c4U2QaDFVTqvP2PE=;
+	b=P+Z/dvimtiPDMUbz9O1pgXi/YXKGJOI5gf0eNtiGXXyCjNcVkbqgKZpGdAlPKEjeJdeuu9
+	dzfdNDvqyjO2JJDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7E5D9132D8;
+	Fri, 30 May 2025 16:54:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Y78YHsHiOWipcQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 30 May 2025 16:54:25 +0000
+Message-ID: <d3336028-174f-4312-864c-2b1e1b736e07@suse.cz>
+Date: Fri, 30 May 2025 18:54:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] mm/memory_hotplug: PG_offline_skippable for
+ offlining memory blocks with PageOffline pages
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, virtualization@lists.linux.dev,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Oscar Salvador <osalvador@suse.de>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+References: <20250520164216.866543-1-david@redhat.com>
+ <20250520164216.866543-2-david@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250520164216.866543-2-david@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,suse.cz:dkim,suse.cz:mid,suse.cz:email];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: ACFCB1F791
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
 
-On Thu, 29 May 2025 12:36:28 +0300
-victor.duicu@microchip.com wrote:
+On 5/20/25 18:42, David Hildenbrand wrote:
+> A long-term goal is supporting frozen PageOffline pages, and later
+> PageOffline pages that don't have a refcount at all. Some more work for
 
-> From: Victor Duicu <victor.duicu@microchip.com>
+Looking forward to that :)
+
+> that is needed -- in particular around non-folio page migration and
+> memory ballooning drivers -- but let's start by handling PageOffline pages
+> that can be skipped during memory offlining differently.
 > 
-> This is the driver for Microchip MCP998X/33 and MCP998XD/33D
-> Multichannel Automotive Temperature Monitor Family.
+> Note that PageOffline is used to mark pages that are logically offline
+> in an otherwise online memory block (e.g., 128 MiB). If a memory
+> block is offline, the memmap is considered compeltely uninitialized
+> and stale (see pfn_to_online_page()).
 > 
-> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
-Hi Victor,
-
-As often the case, the questions are mostly about the custom ABI.
-
-Jonathan
-
-> ---
->  .../testing/sysfs-bus-iio-temperature-mcp9982 |  27 +
->  MAINTAINERS                                   |   7 +
->  drivers/iio/temperature/Kconfig               |  10 +
->  drivers/iio/temperature/Makefile              |   1 +
->  drivers/iio/temperature/mcp9982.c             | 866 ++++++++++++++++++
->  5 files changed, 911 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
->  create mode 100644 drivers/iio/temperature/mcp9982.c
+> Let's introduce a PageOffline specific page flag (PG_offline_skippable)
+> that for now reuses PG_owner_2. In the memdesc future, it will be one of
+> a small number of per-memdesc flags stored alongside the type.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982 b/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
-> new file mode 100644
-> index 000000000000..c55e106e5863
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
-> @@ -0,0 +1,27 @@
-> +What:		/sys/bus/iio/devices/iio:deviceX/enable_extended_temp_range
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		This attribute enables extended range of temperatures.
-> +		Value 1 uses the extended range, value 0 uses the default range.
+> By setting PG_offline_skippable, a driver indicates that it can
+> restore the PageOffline state of these specific pages when re-onlining a
+> memory block: it knows that these pages are supposed to be PageOffline()
+> without the information in the vmemmap, so it can filter them out and
+> not expose them to the buddy -> they stay PageOffline().
+> 
+> While PG_offline_offlineable might be clearer, it is also super
+> confusing. Alternatives (PG_offline_sticky?) also don't quite feel right.
+> So let's use "skippable" for now.
+> 
+> The flag is not supposed to be used for movable PageOffline pages as
+> used for balloon compaction; movable PageOffline() pages can simply be
+> migrated during the memory offlining stage, turning the migration
+> destination page PageOffline() and turning the migration source page
+> into a free buddy page.
+> 
+> Let's convert the single user from our MEM_GOING_OFFLINE approach
+> to the new PG_offline_skippable approach: virtio-mem. Fortunately,
+> this simplifies the code quite a lot. The only corner case we have to
+> take care of is when force-unloading the virtio-mem driver: we have to
+> prevent partially-plugged memory blocks from getting offlined by
+> clearing PG_offline_skippable again.
+> 
+> What if someone decides to grab a reference on these pages although they
+> really shouldn't? After all, we'll now keep the refcount at 1 (until we
+> can properly stop using the refcount completely).
+> 
+> Well, less worse things will happen than would currently: currently,
+> if someone would grab a reference to these pages, in MEM_GOING_OFFLINE
+> we would run into the
+> 		if (WARN_ON(!page_ref_dec_and_test(page)))
+> 			dump_page(page, "fake-offline page referenced");
+> 
+> And once that unexpected reference would get dropped, we would end up
+> freeing that page to the buddy: ouch.
+> 
+> Now, we'll allow for offlining that memory, and when that unexpected
+> reference would get dropped, we would not end up freeing that page to
+> the buddy. Once we have frozen PageOffline() pages, it will all get a
+> lot cleaner.
 
-As mentioned below, if this corresponds to -64 as the offset, can we expose
-it as in_voltage_offset or similar?
+Hmm, a question on that later in the code (assuming I identified the right
+place).
 
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_beta1
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		This attribute controls the value of beta correction
-> +		for channel 1.
+> Note that we didn't see the existing WARN_ON so far, because nobody
+> should ever be referencing such pages.
 
-Is this something that we'd normally expect to manually update? What is
-it a characteristic of?  If it is expected to the be related to the
-diodes attached, that's a problem for firmware/dt, not sysfs interfaces.
+It's mostly a speculative refcount increase from a pfn walker, such as
+compaction scanner, that can happen due to its inherent raciness.
 
+> An alternative might be to have another callback chain from memory hotplug
+> code, where a driver that owns that page could agree to skip the
+> PageOffline() page. However, we would have to repeatedly issue these
+> callbacks for individual PageOffline() pages, which does not sound
+> compelling. As we have spare bits, let's use this simpler approach for
+> now.
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_beta2
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		This attribute controls the value of beta correction
-> +		for channel 2.
-> +
-> +What:		/sys/bus/iio/devices/iio:deviceX/in_beta_available
-> +KernelVersion:	6.17
-> +Contact:	linux-iio@vger.kernel.org
-> +Description:
-> +		This attribute displays the values that can be
-> +		set for beta correction.
+Acked-by: Vlastimil Babka <vbabka@suse.cz> # page allocator
 
-Definitely mention the automode in these docs.
+I'll leave hotplug to the experts :)
 
+<snip>
 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index f6482223e28a2..7e4c41e46a911 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -7023,12 +7023,12 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
+>  			continue;
+>  		}
+>  		/*
+> -		 * At this point all remaining PageOffline() pages have a
+> -		 * reference count of 0 and can simply be skipped.
+> +		 * At this point all remaining PageOffline() pages must be
+> +		 * "skippable" and have exactly one reference.
+>  		 */
+>  		if (PageOffline(page)) {
+> -			BUG_ON(page_count(page));
+> -			BUG_ON(PageBuddy(page));
+> +			WARN_ON_ONCE(!PageOfflineSkippable(page));
+> +			WARN_ON_ONCE(page_count(page) != 1);
 
+So is this the part where an unexpected speculative refcount might be
+detected? Should be harmless then as it will then decrease the refcount from
+e.g. 2 to 1 and nothing will happen right.
+That's assuming that once we pass __offline_isolated_pages(), the following
+actions wont modify the refcount or the struct page won't be zeroed, or
+removed completely (vmemmap). Probably something already prevents that...
 
-> diff --git a/drivers/iio/temperature/mcp9982.c b/drivers/iio/temperature/mcp9982.c
-> new file mode 100644
-> index 000000000000..89e966beffe6
-> --- /dev/null
-> +++ b/drivers/iio/temperature/mcp9982.c
-> @@ -0,0 +1,866 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * IIO driver for MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
-> + *
-> + * Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries
-> + *
-> + * Author: Victor Duicu <victor.duicu@microchip.com>
-> + *
-> + * Datasheet can be found here:
-> + * https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/device/devres.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/irq.h>
-
-Check if these are all needed.  This one doesn't seem to be...
-
-> +#include <linux/limits.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +#include <linux/string.h>
-> +#include <linux/unaligned.h>
-> +#include <linux/units.h>
-
-> +
-> +static const struct regmap_config mcp9982_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.rd_table = &mcp9982_regmap_rd_table,
-> +	.wr_table = &mcp9982_regmap_wr_table,
-> +	.volatile_reg	= mcp9982_is_volatile_reg,
-I'd use single space before =
-Forcing alignment goes wrong far too often and doesn't really help with readability.
-
-> +};
-
-> +static int mcp9982_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
-> +			    int *val, int *val2, long mask)
-> +{
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int ret, index, index2;
-> +
-> +	ret = regmap_write(priv->regmap, MCP9982_ONE_SHOT_ADDR, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	guard(mutex)(&priv->lock);
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = regmap_read(priv->regmap, MCP9982_INT_VALUE_ADDR(chan->channel), val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* The extended temperature range is offset by 64 degrees C */
-> +		if (priv->extended_temp_range)
-> +			*val -= 64;
-
-As that's the case, can we control this simply via standard ABI of IIO_CHAN_INFO_OFFSET and
-provide the available as well.  It is a little non obvious, but has the advantage of providing
-the control you want with out the need for custom ABI.
-
-
-> +
-> +		ret = regmap_read(priv->regmap, MCP9982_FRAC_VALUE_ADDR(chan->channel), val2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Only the 3 MSB in low byte registers are used */
-> +		*val2 = mcp9982_fractional_values[*val2 >> 5];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val = mcp9982_conv_rate[priv->sampl_idx][0];
-> +		*val2 = mcp9982_conv_rate[priv->sampl_idx][1];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> +
-> +		ret = regmap_read(priv->regmap, MCP9982_RUNNING_AVG_ADDR, &index2);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (index2 >= 2)
-> +			index2 -= 1;
-> +		*val = mcp9982_3db_values_map_tbl[priv->sampl_idx][index2][0];
-> +		*val2 = mcp9982_3db_values_map_tbl[priv->sampl_idx][index2][1];
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	case IIO_CHAN_INFO_HYSTERESIS:
-> +		ret = regmap_read(priv->regmap, MCP9982_HYS_ADDR, &index);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val = index;
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-> +
-> +static int mcp9982_write_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
-> +			     int val, int val2, long mask)
-> +{
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int i, ret;
-> +
-> +	guard(mutex)(&priv->lock);
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		for (i = 0; i < ARRAY_SIZE(mcp9982_conv_rate); i++)
-> +			if (val == mcp9982_conv_rate[i][0] && val2 == mcp9982_conv_rate[i][1])
-> +				break;
-> +
-> +		if (i >= ARRAY_SIZE(mcp9982_conv_rate))
-
-It won't be greater than so == is appropriate.
-
-> +			return -EINVAL;
-> +
-> +		ret = regmap_write(priv->regmap, MCP9982_CONV_ADDR, i);
-> +		if (ret)
-> +			return ret;
-> +
-> +		priv->sampl_idx = i;
-> +		return 0;
-> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> +		for (i = 0; i < ARRAY_SIZE(mcp9982_3db_values_map_tbl[priv->sampl_idx]); i++)
-> +			if (val == mcp9982_3db_values_map_tbl[priv->sampl_idx][i][0] &&
-> +			    val2 == mcp9982_3db_values_map_tbl[priv->sampl_idx][i][1])
-> +				break;
-> +
-> +		if (i >= ARRAY_SIZE(mcp9982_3db_values_map_tbl[priv->sampl_idx]))
-As above.
-
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * Filter register is coded with values:
-> +		 *-0 for OFF
-> +		 *-1 or 2 for level 1
-> +		 *-3 for level 2
-> +		 */
-> +		if (i == 2)
-> +			i = 3;
-> +		ret = regmap_write(priv->regmap, MCP9982_RUNNING_AVG_ADDR, i);
-> +
-> +		return ret;
-> +	case IIO_CHAN_INFO_HYSTERESIS:
-> +		if (val < 0 || val > 255)
-> +			return -EINVAL;
-> +
-> +		ret = regmap_write(priv->regmap, MCP9982_HYS_ADDR, val);
-> +		return ret;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-
-> +
-> +static ssize_t mcp9982_extended_temp_range_store(struct device *dev,
-> +						 struct device_attribute *attr,
-> +						 const char *buf, size_t count)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int ret, val;
-> +
-> +	ret = kstrtouint(buf, 10, &val);
-
-If you end up keeping this we have kstrtobool which tends to be more flexible
-for an on/off parameter.
-
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	switch (val) {
-> +	case 0:
-> +		priv->extended_temp_range = false;
-> +		break;
-> +	case 1:
-> +		priv->extended_temp_range = true;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	guard(mutex)(&priv->lock);
-> +	ret = regmap_assign_bits(priv->regmap, MCP9982_CFG_ADDR, MCP9982_CFG_RANGE,
-> +				 priv->extended_temp_range);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t mcp9982_show_beta(struct device *dev, struct device_attribute *attr, char *buf)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
-> +	int val, ret;
-> +
-> +	/* When APDD is enabled, betas are locked to autodetection */
-> +	if (priv->apdd_enable)
-> +		return sysfs_emit(buf, "Auto\n");
-> +
-> +	ret = regmap_read(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(this_attr->address), &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val < 15)
-> +		return sysfs_emit(buf, "%s\n", mcp9982_beta_values[val]);
-> +
-> +	if (val == 15)
-> +		return sysfs_emit(buf, "Diode_Mode\n");
-> +	else
-> +		return sysfs_emit(buf, "Auto\n");
-> +}
-> +
-> +static ssize_t mcp9982_store_beta(struct device *dev, struct device_attribute *attr,
-> +				  const char *buf, size_t count)
-> +{
-> +	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	struct iio_dev_attr *this_attr = to_iio_dev_attr(attr);
-> +	int i;
-> +
-> +	/* When APDD is enabled, betas are locked to autodetection */
-> +	if (priv->apdd_enable)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(mcp9982_beta_values); i++)
-> +		if (strncmp(buf, mcp9982_beta_values[i], 5) == 0)
-> +			break;
-> +
-> +	if (i < ARRAY_SIZE(mcp9982_beta_values)) {
-> +		regmap_write(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(this_attr->address), i);
-> +		return count;
-> +	}
-> +
-> +	if (strncmp(buf, "Diode_Mode", 10) == 0) {
-> +		regmap_write(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(this_attr->address), 15);
-> +		return count;
-> +	}
-
-This interface is non obvious. Add a full description to the ABI docs.
-
-> +
-> +	if (strncmp(buf, "Auto", 4) == 0) {
-> +		regmap_write(priv->regmap, MCP9982_EXT_BETA_CFG_ADDR(this_attr->address), BIT(4));
-> +		return count;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static ssize_t mcp9982_beta_available_show(struct device *dev,
-> +					   struct device_attribute *attr, char *buf)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < 15; i++) {
-> +		strcat(buf, mcp9982_beta_values[i]);
-> +		strcat(buf, " ");
-> +	}
-> +	strcat(buf, "Diode_Mode Auto\n");
-
-As above. What is this?
-
-> +	return sysfs_emit(buf, buf);
-> +}
-
-> +
-> +static int mcp9982_parse_of_config(struct iio_dev *indio_dev, struct device *dev,
-> +				   int device_nr_channels)
-> +{
-> +	struct mcp9982_priv *priv = iio_priv(indio_dev);
-> +	int reg_nr, iio_idx;
-> +
-> +	/* APDD, RECD12 and RECD34 are active on 0 */
-> +	if (device_property_read_bool(dev, "microchip,apdd-state"))
-> +		priv->apdd_enable = true;
-> +	else
-> +		priv->apdd_enable = false;
-
-	priv->appd_enable = device_property_read_bool();
-
-> +
-> +	if (device_property_read_bool(dev, "microchip,recd12"))
-> +		priv->recd12_enable = true;
-> +	else
-> +		priv->recd12_enable = false;
-> +
-> +	if (device_property_read_bool(dev, "microchip,recd34"))
-> +		priv->recd34_enable = true;
-> +	else
-> +		priv->recd34_enable = false;
-> +
-> +	priv->num_channels = device_get_child_node_count(dev) + 1;
-> +
-> +	if (priv->num_channels > device_nr_channels)
-> +		return dev_err_probe(dev, -EINVAL, "More channels than the chip supports\n");
-> +
-> +	priv->iio_chan = devm_kcalloc(dev, priv->num_channels, sizeof(*priv->iio_chan), GFP_KERNEL);
-> +	if (!priv->iio_chan)
-> +		return -ENOMEM;
-> +
-> +	priv->iio_chan[0] = (struct iio_chan_spec)MCP9982_CHAN(0, 0, MCP9982_INT_VALUE_ADDR(0));
-
-as below.
-
-> +
-> +	priv->labels[0] = "internal diode";
-> +	iio_idx++;
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		fwnode_property_read_u32(child, "reg", &reg_nr);
-> +		if (!reg_nr || reg_nr >= device_nr_channels)
-> +			return dev_err_probe(dev, -EINVAL,
-> +				     "The index of the channels does not match the chip\n");
-> +
-> +		if (fwnode_property_present(child, "microchip,ideality-factor")) {
-> +			fwnode_property_read_u32(child, "microchip,ideality-factor",
-> +						 &priv->ideality_value[reg_nr - 1]);
-> +			if (priv->ideality_value[reg_nr - 1] > 63)
-> +				return dev_err_probe(dev, -EINVAL,
-> +				     "The ideality value is higher than maximum\n");
-> +		} else {
-> +			/* Set default value */
-> +			priv->ideality_value[reg_nr - 1] = 18;
-> +		}
-
-Set default and rely on no side effects if the read fails + that default must
-be a valid choice.
-
-		priv->ideality_value[reg_nr - 1] = 18;
-		fwnode_property_read_u32(child, "microchip,ideality-factor",
-					 &priv->ideality_value[reg_nr - 1]);
-		if (priv->ideality_vavlue[reg_nr - 1] > 63)
-			return dev_err_probe();
-
-> +
-> +		fwnode_property_read_string(child, "label",
-> +					    (const char **)&priv->labels[reg_nr]);
-
-I'm curious why that cast is needed. Should the string in the priv be const?
-Do we perhaps have an issue with that elsewhere?
-
-> +
-> +		priv->iio_chan[iio_idx++] = (struct iio_chan_spec)MCP9982_CHAN(reg_nr, reg_nr,
-> +							 MCP9982_INT_VALUE_ADDR(reg_nr));
-
-Seems very likely that the (struct iio_chan_spec) should be in the macro definition.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int mcp9982_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct mcp9982_priv *priv;
-> +	struct iio_dev *indio_dev;
-> +	const struct mcp9982_features *chip;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*priv));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	priv = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-
-Is this used? If not don't set it.
-
-> +
-> +	priv->regmap = devm_regmap_init_i2c(client, &mcp9982_regmap_config);
-> +	if (IS_ERR(priv->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(priv->regmap),
-> +				     "Cannot initialize register map\n");
-> +
-> +	ret = devm_mutex_init(dev, &priv->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	chip = i2c_get_match_data(client);
-> +	if (!chip)
-> +		return -EINVAL;
-> +
-> +	ret = mcp9982_parse_of_config(indio_dev, &client->dev, chip->phys_channels);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Parameter parsing error\n");
-> +
-> +	ret = mcp9982_init(priv);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Cannot initialize device\n");
-> +
-> +	indio_dev->name = chip->name;
-> +	indio_dev->info = &mcp9982_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = priv->iio_chan;
-> +	indio_dev->num_channels = priv->num_channels;
-> +
-> +	ret = devm_iio_device_register(dev, indio_dev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Cannot register IIO device\n");
-> +
-> +	mcp9982_calc_all_3db_values();
-
-Seems likely you want to do this before exposing the sysfs interfaces?
-If not blank line before this return.
-
-> +	return 0;
-> +}
-
+>  			already_offline++;
+>  			pfn++;
+>  			continue;
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index b2fc5266e3d26..debd898b794ea 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -121,16 +121,11 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+>  			continue;
+>  
+>  		/*
+> -		 * We treat all PageOffline() pages as movable when offlining
+> -		 * to give drivers a chance to decrement their reference count
+> -		 * in MEM_GOING_OFFLINE in order to indicate that these pages
+> -		 * can be offlined as there are no direct references anymore.
+> -		 * For actually unmovable PageOffline() where the driver does
+> -		 * not support this, we will fail later when trying to actually
+> -		 * move these pages that still have a reference count > 0.
+> -		 * (false negatives in this function only)
+> +		 * PageOffline() pages that are marked as "skippable"
+> +		 * are treated like movable pages for memory offlining.
+>  		 */
+> -		if ((flags & MEMORY_OFFLINE) && PageOffline(page))
+> +		if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
+> +		    PageOfflineSkippable(page))
+>  			continue;
+>  
+>  		if (__PageMovable(page) || PageLRU(page))
+> @@ -577,11 +572,11 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
+>  			/* A HWPoisoned page cannot be also PageBuddy */
+>  			pfn++;
+>  		else if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
+> -			 !page_count(page))
+> +			 PageOfflineSkippable(page))
+>  			/*
+> -			 * The responsible driver agreed to skip PageOffline()
+> -			 * pages when offlining memory by dropping its
+> -			 * reference in MEM_GOING_OFFLINE.
+> +			 * If the page is a skippable PageOffline() page,
+> +			 * we can offline the memory block, as the driver will
+> +			 * re-discover them when re-onlining the memory.
+>  			 */
+>  			pfn++;
+>  		else
 
