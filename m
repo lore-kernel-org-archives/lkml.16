@@ -1,175 +1,293 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62641FF61E;
-	Fri, 30 May 2025 22:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DBC21CC41
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:19:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748643517; cv=none; b=OxeVYReq5IUAcHNRcywze/tyv+QFtudzjgAFobTGFSWevkgTIqkmq6ajUleWpqG0IVqdLRzPHtijrow8l9Frm7CruOsojQykVtkEEL4QSYSKN/XqWrR4oQQ/mOZnFQnfBMJObs7I9Yzucra6gv0yqZZWzDUCnnV5xpC39Ma7n/4=
+	t=1748643599; cv=none; b=aQV9FkLMUOD5MJ/Pr29h+4H7yclOJi94p/e1xN5dI3zK81/UajjbbherlSF65ueGAa6W1BENH2Jv5P+hrRZ1g9tS2Wa1vRcKswmdr/D0yu5UgXTPA/E1t8hk4qWh6hsClPtWNhifK9HFhbpsy41IaMQylHlEaxEtwZkQ8dq/dg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748643517; c=relaxed/simple;
-	bh=CSX3lztplHs75s4Uj3716D4/7T0kEsJj/nPzuTRkSZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AX4T4dJDvspFku/qcnjD6lW7KUabu/9Z2GCBeDvO0GjQKY7+C206eSHRJ/tCo6NEAMk3qrgvOL3aiJuVNBbn27bJP/7dSpBxyUwyZlMF+eiHtVZhGYpBJpvyYgXTPXNfjPNEPFCRILlGq7VZhi4Jf59a3NvqDwgYaea4lCI75WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6TAcMFq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748643599; c=relaxed/simple;
+	bh=X9uthOk49pVr6OwMMXKEM9aGlD7N5kUpyVLqdQJSTII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GtSpJ6ZNjZEQjGcnsuPegcyT0FDIekHI2YLNy9bmKCvieaXsYIwM/iyyMu2sEsOGX2c8jOPeBhCmBHw7yMGF+Q7V3stnPhqVsFwaaat3XQNjPg02JqTHfdo/M9/0fLWqFb/AD/nMrJDW7hV2ZhXMhU2WgxujwGPQsYoZvuoC1bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eE6HGUFu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6TAcMFq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB6DC4CEE9;
-	Fri, 30 May 2025 22:18:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eE6HGUFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B603C4CEF8
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 22:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748643517;
-	bh=CSX3lztplHs75s4Uj3716D4/7T0kEsJj/nPzuTRkSZE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=t6TAcMFqAlJHfEFKWykdz4/Gs7TXTRTSVfraDqZi6GY3RdlsWnR+zEyoy0MFuu+07
-	 7Pjqdf4pP+0J79h98LWlv/lfrDam6mQNS8LPSpJmsg51oVahz2APhfANWlijVtC+XL
-	 w5kVC1ciK9TPsAu8qpHjyTTmXuQdrIVefC5qecaRIJRk25XqbLPYx51AYLz29FdGb7
-	 HKEgLvr5c/mfrzQsJrvemuvlNNIru+Fy5C/oIQmECydv+gyQeBUhH/Fe9S1reHRnTP
-	 Ad0PLJHIgJ6nSpT1x2rVl8Kh2zIA5DiDNbCj/E4KGUU28DY09preFHjrjwWF6jMO8b
-	 BmyF+x3n6dCGA==
-From: Kees Cook <kees@kernel.org>
-To: Thiago Jung Bauermann <thiago.bauermann@linaro.org>,
-	Ingo Saitz <ingo@hannover.ccc.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] randstruct: gcc-plugin: Fix attribute addition
-Date: Fri, 30 May 2025 15:18:28 -0700
-Message-Id: <20250530221824.work.623-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1748643598;
+	bh=X9uthOk49pVr6OwMMXKEM9aGlD7N5kUpyVLqdQJSTII=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eE6HGUFuiIxdKYroKE6a52KAiL5xVDlR2K+9QCtKsk4XYYJY6t/FTCiBW4acklaO4
+	 GQH6nxlcXoPxN/aJRHPpO9pDISNwYDpx8vHgdSQCt92ubEMTRwsTvnGVV2yPsWDo5K
+	 MuIhcBUrWtsiHpxQb09p1NMD/layEIB37XKYRkf5bB4iOEF84wKFFgD/efBZ0zf4E8
+	 vE0rsbkryslEQxvUAWW9XLSwR1p3x/zjFm4bK4ew07dFH7Qlwx8P5ZLck9G0T5N3YP
+	 RRvHOOLhriaK09m0/o8VfPQy2QeTH3ffCYs53NttUVooBm0kcCHVgTHbPmtes7qT+G
+	 Jkomm3bXGk+oA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so4624593a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:19:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXKKARcr4Nnx4C8wP2xjOHApxAs+5fRwUdyMSovJ/BtuIJi3REs4R33SqF4wP1+MC0Zp3N09FPmZnI6nDo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/a+hFWpLtns66Sy3jt1p+0PNQ8nkx/76FpiDI2ceYMAlUmgoq
+	T6TyPyTUxVg9KkrTssBd3NIZqUWzvhOCttleReb4tlrOFIAUisvrVqwxy0HOBBY2PiFpyfly65E
+	O64Ko9sXrWiE5bXrxWkq+TQl9n/oCUyX6/qeraQcG
+X-Google-Smtp-Source: AGHT+IEFVbhr+VLKGTkXxmdHXBrpU1z9fZIUhNvdOJmYXkRT0zqBk/sOnT42WwibV8LQfP4xA0G3Ch+10jSuOcTqbPk=
+X-Received: by 2002:a05:6402:518a:b0:5ff:f524:90e0 with SMTP id
+ 4fb4d7f45d1cf-605b751baf6mr73164a12.11.1748643597014; Fri, 30 May 2025
+ 15:19:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5526; i=kees@kernel.org; h=from:subject:message-id; bh=CSX3lztplHs75s4Uj3716D4/7T0kEsJj/nPzuTRkSZE=; b=owGbwMvMwCVmps19z/KJym7G02pJDBlWepv3VwRfOHibmT3I6Nzmbb2O5kXzPuVnTGCPLo1Uu fO5Y79MRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwERMfzH8U8oX1brxq/Oa4tPv M/ZmKj5nYNCoXOB9g2u23MvnfddvBDP8syz0YD7ck/3Zv4efx4/lM2fDhK/yGa8aj50Urdp8OmI zAwA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250528215037.2081066-1-bboscaccy@linux.microsoft.com>
+ <CACYkzJ5oJASZ43B531gY8mESqAF3WYFKez-H5vKxnk8r48Ouxg@mail.gmail.com>
+ <87iklhn6ed.fsf@microsoft.com> <CACYkzJ75JXUM_C2og+JNtBat5psrEzjsgcV+b74FwrNaDF68nA@mail.gmail.com>
+ <87ecw5n3tz.fsf@microsoft.com>
+In-Reply-To: <87ecw5n3tz.fsf@microsoft.com>
+From: KP Singh <kpsingh@kernel.org>
+Date: Sat, 31 May 2025 00:19:46 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ4ondubPHDF8HL-sseVQo7AtJ2uo=twqhqLWaE3zJ=jEA@mail.gmail.com>
+X-Gm-Features: AX0GCFs7idCN9jaYB_SrteqON5qA41YJX-g8zbOqygcHwSu5E09ECJDr8XP25sI
+Message-ID: <CACYkzJ4ondubPHDF8HL-sseVQo7AtJ2uo=twqhqLWaE3zJ=jEA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] BPF signature verification
+To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+Cc: Paul Moore <paul@paul-moore.com>, jarkko@kernel.org, zeffron@riotgames.com, 
+	xiyou.wangcong@gmail.com, kysrinivasan@gmail.com, code@tyhicks.com, 
+	linux-security-module@vger.kernel.org, roberto.sassu@huawei.com, 
+	James.Bottomley@hansenpartnership.com, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
+	Ignat Korchagin <ignat@cloudflare.com>, Quentin Monnet <qmo@kernel.org>, 
+	Jason Xing <kerneljasonxing@gmail.com>, Willem de Bruijn <willemb@google.com>, 
+	Anton Protopopov <aspsk@isovalent.com>, Jordan Rome <linux@jordanrome.com>, 
+	Martin Kelly <martin.kelly@crowdstrike.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Matteo Croce <teknoraver@meta.com>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	keyrings@vger.kernel.org, linux-crypto@vger.kernel.org, kys@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Based on changes in the 2021 public version of the randstruct
-out-of-tree GCC plugin[1], more carefully update the attributes on
-resulting decls, to avoid tripping checks in GCC 15's
-comptypes_check_enum_int() when it has been configured with
-"--enable-checking=misc":
+On Sat, May 31, 2025 at 12:14=E2=80=AFAM Blaise Boscaccy
+<bboscaccy@linux.microsoft.com> wrote:
+>
+> KP Singh <kpsingh@kernel.org> writes:
+>
+> > On Fri, May 30, 2025 at 11:19=E2=80=AFPM Blaise Boscaccy
+> > <bboscaccy@linux.microsoft.com> wrote:
+> >>
+> >> KP Singh <kpsingh@kernel.org> writes:
+> >>
+> >
+> > [...]
+> >
+> >> >
+> >>
+> >> And that isn't at odds with the kernel being able to do it nor is it
+> >> with what I posted.
+> >>
+> >> > If your build environment that signs the BPF program is compromised
+> >> > and can inject arbitrary code, then signing does not help.  Can you
+> >> > explain what a supply chain attack would look like here?
+> >> >
+> >>
+> >> Most people here can read C code. The number of people that can read
+> >> ebpf assembly metaprogramming code is much smaller. Compromising clang
+> >> is one thing, compromising libbpf is another. Your proposal increases
+> >> the attack surface with no observable benefit. If I was going to leave=
+ a
+> >> hard-to-find backdoor into ring0, gen.c would be a fun place to explor=
+e
+> >> doing it. Module and UEFI signature verification code doesn't live
+> >> inside of GCC or Clang as set of meta-instructions that get emitted, a=
+nd
+> >> there are very good reasons for that.
+> >>
+> >> Further, since the signature verification code is unique for each and
+> >> every program it needs to be verified/proved/tested for each and every
+> >> program. Additionally, since all these checks are being forced outside
+> >> of the kernel proper, with the insistence of keeping the LSM layer in
+> >> the dark of the ultimate result, the only way to test that a program
+> >> will fail if the map is corrupted is to physically corrupt each and
+> >> every program and test that individually. That isn't "elegant" nor "us=
+er
+> >> friendly" in any way, shape or form.
+> >>
+> >> >> subsystem.  Additionally, it is impossible to verify the code
+> >> >> performing the signature verification, as it is uniquely regenerate=
+d
+> >> >
+> >> > The LSM needs to ensure that it allows trusted LOADER programs i.e.
+> >> > with signatures and potentially trusted signed user-space binaries
+> >> > with unsigned or delegated signing (this will be needed for Cilium a=
+nd
+> >> > bpftrace that dynamically generate BPF programs), that's a more
+> >> > important aspect of the LSM policy from a BPF perspective.
+> >> >
+> >>
+> >> I would like to be able to sign my programs please and have the kernel
+> >> verify it was done correctly. Why are you insisting that I *don't* do
+> >> that?  I'm yet to see any technical objection to doing that. Do you ha=
+ve
+> >> one that you'd like to share at this point?
+> >
+> > The kernel allows a trusted loader that's signed with your private
+> > key, that runs in the kernel context to delegate the verification.
+> > This pattern of a trusted / delegated loader is going to be required
+> > for many of the BPF use-cases that are out there (Cilium, bpftrace)
+> > that dynamically generate eBPF programs.
+> >
+> > The technical objection is that:
+> >
+> > * It does not align with most BPF use-cases out there as most
+> > use-cases need a trusted loader.
+>
+> No, it's definitely a use case. It's trivial to support both a trusted
+> loader and a signature over the hash chain of supplied assets.
+>
+> > * Locks us into a UAPI, whereas a signed LOADER allows us to
+> > incrementally build signing for all use-cases without compromising the
+> > security properties.
+> >
+>
+> Your proposal locks us into a UAPI as well. There is no way to make to
+> do this via UAPI without making a UAPI design choice.
+>
+> > BPF's philosophy is that of flexibility and not locking the users into
+> > a rigid in-kernel implementation and UAPI.
+> >
+>
+> Then why are you locking us into a rigid
+> only-signing-the-loader-is-allowed implementation?
 
-arch/arm64/kernel/kexec_image.c:132:14: internal compiler error: in comptypes_check_enum_int, at c/c-typeck.cc:1519
-  132 | const struct kexec_file_ops kexec_image_ops = {
-      |              ^~~~~~~~~~~~~~
- internal_error(char const*, ...), at gcc/gcc/diagnostic-global-context.cc:517
- fancy_abort(char const*, int, char const*), at gcc/gcc/diagnostic.cc:1803
- comptypes_check_enum_int(tree_node*, tree_node*, bool*), at gcc/gcc/c/c-typeck.cc:1519
- ...
+I explained this before, the delegated / trusted loader is needed by
+many BPF use-cases. A UAPI is forever, thus the lock-in.
 
-Link: https://archive.org/download/grsecurity/grsecurity-3.1-5.10.41-202105280954.patch.gz [1]
-Reported-by: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Closes: https://github.com/KSPP/linux/issues/367
-Closes: https://lore.kernel.org/lkml/20250530000646.104457-1-thiago.bauermann@linaro.org/
-Reported-by: Ingo Saitz <ingo@hannover.ccc.de>
-Closes: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1104745
-Fixes: 313dd1b62921 ("gcc-plugins: Add the randstruct plugin")
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Thiago Jung Bauermann <thiago.bauermann@linaro.org>
-Cc: Ingo Saitz <ingo@hannover.ccc.de>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: <linux-hardening@vger.kernel.org>
----
- scripts/gcc-plugins/gcc-common.h              | 32 +++++++++++++++++++
- scripts/gcc-plugins/randomize_layout_plugin.c | 22 ++++++-------
- 2 files changed, 43 insertions(+), 11 deletions(-)
+- KP
 
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-index 3222c1070444..ef12c8f929ed 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -123,6 +123,38 @@ static inline tree build_const_char_string(int len, const char *str)
- 	return cstr;
- }
- 
-+static inline void __add_type_attr(tree type, const char *attr, tree args)
-+{
-+	tree oldattr;
-+
-+	if (type == NULL_TREE)
-+		return;
-+	oldattr = lookup_attribute(attr, TYPE_ATTRIBUTES(type));
-+	if (oldattr != NULL_TREE) {
-+		gcc_assert(TREE_VALUE(oldattr) == args || TREE_VALUE(TREE_VALUE(oldattr)) == TREE_VALUE(args));
-+		return;
-+	}
-+
-+	TYPE_ATTRIBUTES(type) = copy_list(TYPE_ATTRIBUTES(type));
-+	TYPE_ATTRIBUTES(type) = tree_cons(get_identifier(attr), args, TYPE_ATTRIBUTES(type));
-+}
-+
-+static inline void add_type_attr(tree type, const char *attr, tree args)
-+{
-+	tree main_variant = TYPE_MAIN_VARIANT(type);
-+
-+	__add_type_attr(TYPE_CANONICAL(type), attr, args);
-+	__add_type_attr(TYPE_CANONICAL(main_variant), attr, args);
-+	__add_type_attr(main_variant, attr, args);
-+
-+	for (type = TYPE_NEXT_VARIANT(main_variant); type; type = TYPE_NEXT_VARIANT(type)) {
-+		if (!lookup_attribute(attr, TYPE_ATTRIBUTES(type)))
-+			TYPE_ATTRIBUTES(type) = TYPE_ATTRIBUTES(main_variant);
-+
-+		__add_type_attr(TYPE_CANONICAL(type), attr, args);
-+	}
-+}
-+
- #define PASS_INFO(NAME, REF, ID, POS)		\
- struct register_pass_info NAME##_pass_info = {	\
- 	.pass = make_##NAME##_pass(),		\
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 971a1908a8cc..ff65a4f87f24 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -73,6 +73,9 @@ static tree handle_randomize_layout_attr(tree *node, tree name, tree args, int f
- 
- 	if (TYPE_P(*node)) {
- 		type = *node;
-+	} else if (TREE_CODE(*node) == FIELD_DECL) {
-+		*no_add_attrs = false;
-+		return NULL_TREE;
- 	} else {
- 		gcc_assert(TREE_CODE(*node) == TYPE_DECL);
- 		type = TREE_TYPE(*node);
-@@ -348,15 +351,14 @@ static int relayout_struct(tree type)
- 		TREE_CHAIN(newtree[i]) = newtree[i+1];
- 	TREE_CHAIN(newtree[num_fields - 1]) = NULL_TREE;
- 
-+	add_type_attr(type, "randomize_performed", NULL_TREE);
-+	add_type_attr(type, "designated_init", NULL_TREE);
-+	if (has_flexarray)
-+		add_type_attr(type, "has_flexarray", NULL_TREE);
-+
- 	main_variant = TYPE_MAIN_VARIANT(type);
--	for (variant = main_variant; variant; variant = TYPE_NEXT_VARIANT(variant)) {
-+	for (variant = main_variant; variant; variant = TYPE_NEXT_VARIANT(variant))
- 		TYPE_FIELDS(variant) = newtree[0];
--		TYPE_ATTRIBUTES(variant) = copy_list(TYPE_ATTRIBUTES(variant));
--		TYPE_ATTRIBUTES(variant) = tree_cons(get_identifier("randomize_performed"), NULL_TREE, TYPE_ATTRIBUTES(variant));
--		TYPE_ATTRIBUTES(variant) = tree_cons(get_identifier("designated_init"), NULL_TREE, TYPE_ATTRIBUTES(variant));
--		if (has_flexarray)
--			TYPE_ATTRIBUTES(type) = tree_cons(get_identifier("has_flexarray"), NULL_TREE, TYPE_ATTRIBUTES(type));
--	}
- 
- 	/*
- 	 * force a re-layout of the main variant
-@@ -424,10 +426,8 @@ static void randomize_type(tree type)
- 	if (lookup_attribute("randomize_layout", TYPE_ATTRIBUTES(TYPE_MAIN_VARIANT(type))) || is_pure_ops_struct(type))
- 		relayout_struct(type);
- 
--	for (variant = TYPE_MAIN_VARIANT(type); variant; variant = TYPE_NEXT_VARIANT(variant)) {
--		TYPE_ATTRIBUTES(type) = copy_list(TYPE_ATTRIBUTES(type));
--		TYPE_ATTRIBUTES(type) = tree_cons(get_identifier("randomize_considered"), NULL_TREE, TYPE_ATTRIBUTES(type));
--	}
-+	add_type_attr(type, "randomize_considered", NULL_TREE);
-+
- #ifdef __DEBUG_PLUGIN
- 	fprintf(stderr, "Marking randomize_considered on struct %s\n", ORIG_TYPE_NAME(type));
- #ifdef __DEBUG_VERBOSE
--- 
-2.34.1
-
+>
+> > - KP
+> >
+> >>
+> >> > MAP_EXCLUSIVE is missing and is required which prevents maps from
+> >> > being accessed by other programs as explained in the proposal.
+> >> >
+> >> > Please hold off on further iterations, I am working on a series and
+> >> > will share these patches based on the design that was proposed.
+> >> >
+> >>
+> >> So the premise here seems to be that people should only be allowed to
+> >> sign trusted loaders, and that trusted loaders must additionally be
+> >> authored by you, correct?
+> >>
+> >> When can we expect to see your patchset posted?
+> >>
+> >> >>
+> >> >> for every program.
+> >> >>
+> >> >>
+> >> >>
+> >> >> 2. Timing of Signature Check
+> >> >>
+> >> >> This patchset moves the signature check to a point before
+> >> >> security_bpf_prog_load is invoked, due to an unresolved discussion
+> >> >> here:
+> >> >
+> >> > This is fine and what I had in mind, signature verification does not
+> >> > need to happen in the verifier and the existing hooks are good enoug=
+h.
+> >> > I did not reply to Paul's comment since this is a fairly trivial
+> >> > detail and would be obvious in the implementation that the verifier =
+is
+> >> > not the right place to check the signature anyways as the instructio=
+n
+> >> > buffer is only stable pre-verification.
+> >> >
+> >> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA=
++G64zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+> >> >> This change allows the LSM subsystem to be informed of the signatur=
+e
+> >> >> verification result=E2=80=94if it occurred=E2=80=94and the method u=
+sed, all without
+> >> >> introducing a new hook. It improves visibility and auditability,
+> >> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the origi=
+nal design.
+> >> >
+> >> >
+> >> > On Wed, May 28, 2025 at 11:50=E2=80=AFPM Blaise Boscaccy
+> >> > <bboscaccy@linux.microsoft.com> wrote:
+> >> >>
+> >> >> As suggested or mandated by KP Singh
+> >> >> https://lore.kernel.org/linux-security-module/CACYkzJ6VQUExfyt0=3D-=
+FmXz46GHJh3d=3DFXh5j4KfexcEFbHV-vg@mail.gmail.com/,
+> >> >> this patchset proposes and implements an alternative hash-chain
+> >> >> algorithm for signature verification of BPF programs.
+> >> >>
+> >> >> This design diverges in two key ways:
+> >> >>
+> >> >> 1. Signature Strategy
+> >> >>
+> >> >> Two different signature strategies are
+> >> >> implemented. One verifies only the signature of the loader program =
+in
+> >> >> the kernel, as described in the link above. The other verifies the
+> >> >> program=E2=80=99s maps in-kernel via a hash chain.  The original de=
+sign
+> >> >> required loader programs to be =E2=80=9Cself-aborting=E2=80=9D and =
+embedded the
+> >> >> terminal hash verification logic as metaprogramming code generation
+> >> >> routines inside libbpf. While this patchset supports that scheme, i=
+t
+> >> >> is considered undesirable in certain environments due to the potent=
+ial
+> >> >> for supply-chain attack vectors and the lack of visibility for the =
+LSM
+> >> >> subsystem.  Additionally, it is impossible to verify the code
+> >> >> performing the signature verification, as it is uniquely regenerate=
+d
+> >> >> for every program.
+> >> >>
+> >> >> 2. Timing of Signature Check
+> >> >>
+> >> >> This patchset moves the signature check to a point before
+> >> >> security_bpf_prog_load is invoked, due to an unresolved discussion
+> >> >> here:
+> >> >> https://lore.kernel.org/linux-security-module/CAHC9VhTj3=3DZXgrYMNA=
++G64zsOyZO+78uDs1g=3Dkh91=3DGR5KypYg@mail.gmail.com/
+> >> >> This change allows the LSM subsystem to be informed of the signatur=
+e
+> >> >> verification result=E2=80=94if it occurred=E2=80=94and the method u=
+sed, all without
+> >> >> introducing a new hook. It improves visibility and auditability,
+> >> >> reducing the =E2=80=9Ctrust me, friend=E2=80=9D aspect of the origi=
+nal design.
+> >> >>
+> >> >>
+> >> >> Blaise Boscaccy (3):
+> >> >>   bpf: Add bpf_check_signature
+> >> >>   bpf: Support light-skeleton signatures in autogenerated code
+> >> >>   bpftool: Allow signing of light-skeleton programs
+> >> >>
+> >> >>  include/linux/bpf.h            |   2 +
+> >> >>  include/linux/verification.h   |   1 +
+> >> >>  include/uapi/linux/bpf.h       |   4 +
+> >> >>  kernel/bpf/arraymap.c          |  11 +-
+> >> >>  kernel/bpf/syscall.c           | 123 +++++++++++++++++++-
+> >> >>  tools/bpf/bpftool/Makefile     |   4 +-
+> >> >>  tools/bpf/bpftool/common.c     | 204 +++++++++++++++++++++++++++++=
+++++
+> >> >>  tools/bpf/bpftool/gen.c        |  66 ++++++++++-
+> >> >>  tools/bpf/bpftool/main.c       |  24 +++-
+> >> >>  tools/bpf/bpftool/main.h       |  23 ++++
+> >> >>  tools/include/uapi/linux/bpf.h |   4 +
+> >> >>  tools/lib/bpf/libbpf.h         |   4 +
+> >> >>  tools/lib/bpf/skel_internal.h  |  28 ++++-
+> >> >>  13 files changed, 491 insertions(+), 7 deletions(-)
+> >> >>
+> >> >> --
+> >> >> 2.48.1
+> >> >>
