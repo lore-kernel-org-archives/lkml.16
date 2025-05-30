@@ -1,63 +1,64 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498A222129F
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C65A220F2A
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597632; cv=none; b=P7Unlc3WJ/9hzb8yxNyFahP4iCDhOt649Knhu240jcfoFdY+dJM312Fm9wjmh/suZOvQf25faRIKd2sy8HwxXlSApIfBPWQ/LMwRNFP4DKsXzSkUdTfNEp3TgLL2ewJq4GL9CHzYWMO2ExHj5pXYJzvwL+Hq/vk5qFktSPWH9IA=
+	t=1748597647; cv=none; b=RZka/JeQIh3HIC9Y4r74+qEI9vkiOo/lIku5YNZbgD9V9uDpwzPNHMez4lg3RKQ0ZPVkHuBwbYo0OBZHbBrjd8cFxCX0Wu1IhM3DaWDXGPzwYwqjrBD255rEFJ9TznyPS+UZZXFjmid0pkOOirrGcXwwfig89SAO6hZcuh1cWGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597632; c=relaxed/simple;
-	bh=s8bvP/o1nUrwW7KF0DJ/pHvc3b43enUVUs73szJcvsA=;
+	s=arc-20240116; t=1748597647; c=relaxed/simple;
+	bh=UOL+ld6kJQ8MITB46M/S3E58D1n58tehOr68tDVTVCQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GiVr5QKQDimoOPKqjeKaO1sRME6qUTVVgl5MhGrHYGtspNu53feOQqNtcpcZO5W6PnJsXJjQeVKW/jYF+LSKVIGH2PCKYqLKNv6UE/fmLXxf1ldygwu2VpF7SuAI5TtFeYgTwS9KunUyMxlyjEA6Eu1J7zi4b2QpxQ/gIkT49GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=U7jWFD62; arc=none smtp.client-ip=209.85.216.53
+	 MIME-Version; b=D7IoJKCC8x27n/0dKFKyJBobTxPrKI9/elM5pVskzIt/9Mzvw8T6sW215gT7YqF0uM5vVs5HUM0m5CV60BlsWaiXFpj4co7dxudYWgoauRN7WwGlrlHDkefKIoAobfWDo0mIdvu2lUElVFXUEbRbVPfne3AMrpiJKm6MHDCyxT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Tl4Miuqq; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="U7jWFD62"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3119822df05so1886086a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:33:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Tl4Miuqq"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-311d5fdf1f0so1703356a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:34:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597629; x=1749202429; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597645; x=1749202445; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+2NFrx3BFqUZITaGnYPssFKiBOpe/dz6IJRWesRURms=;
-        b=U7jWFD62nxS8TfhhmrTlMIbWjZGLXbkA3Q1GVDdMyhiibiNlV0l5YWrgI+JavnBPpb
-         Gxq6GuT3tq2RN7mnaF9YyNih9RiSM57U7umDgRMf9gzCA7z4SZVNodtbn4WIDsRDWvcb
-         BDTiIIyLlwNpb72o/C/BqOfI6mMv++FKB0YtlMAqTK7QUP77Ct2MzDCe56gVPo2RnuIa
-         ybkovV0jXidA3NGQGQtlHGZDDaLJjNDCp8qJlsHjNJN6dALtCaW3w29v1/hm4x3Bs6B1
-         T6boHJn4kXyByPOr22bDDLKGgZ4JH8Z/S43M/bOkjz2DaPNk11bLJojgqn7XecTnHmd1
-         803g==
+        bh=JJCF21JaAHh50QQNMzAFoSnSXgccx/2injFNIwjbQFo=;
+        b=Tl4MiuqqrXmkBATq/jgK2TPawTNlYG/h9+Mlq3CjwrjDxBrPcQxTtygGQhLnjVkR9o
+         FJ5CFUvXkks9Y0N6XRX65o8H2hJj5Lnm9VpK6W3Qs3daNtEEl99YbLh++fGyyNRHfb2r
+         FVIhtgvR/hjYrMqYwujJd+Fj/71j7QLBylWBnJcX2AUOGNWNpdoDJiZ4vIjRJTy8VLRg
+         VIAa5VVs3rGdL6m8hzuKCzcs7w95d+QUje+kWxGzQ8fFBSLLUF2GCAXmmGngQlP+S2iK
+         gbYIKMWKgctZryn5cAeNWLNnx2WfhUDPYT/q0wC4VklpjUb8b0CCV8pmRXUcz7Nnp16O
+         C8Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597629; x=1749202429;
+        d=1e100.net; s=20230601; t=1748597645; x=1749202445;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+2NFrx3BFqUZITaGnYPssFKiBOpe/dz6IJRWesRURms=;
-        b=kFvZ04zKeA6TfGUfZvNnzOqeTTtFG58fKASX1c4FDIgiohu/V8qzh1jFcpR+dulmsK
-         M0s80AF6jVsszaOc+ab6pJgbBiYjhZMvGTpW+P8aA5yqmwRJgX66r4UU9JAkxsVnF1D7
-         EMOuty2QIbOl3WHck0xZX5aSuv+x5Hwm/U3S5lrZXAtsAdQhz4vgZTKLyl5Y5lNDCI7Z
-         4FuG/yxXfif03JZZDiKHGCcnPW94yPIiJNx9FQ/UfkianssjATHIdo7r/QUsjOLitkPW
-         XsO4ijqf3ICXOTMnx7+A63b5hjuMIuVYb6CmaIa+bafFW43Un972vKT2vtiwKlwZLkGC
-         3IpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ+u7P1kTRTdr9nXeGiOn8ofieA3iMthsObYWXbUu9ptemyjHwryfFCx3Di1jZlCfPww+Qz3iqabNpo24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzteLB5PRcrk5b5FA0fLfW7sC9HQzrEtq5gzIum5NchWBROc6p5
-	l5FFHqvpYPjPmZR+VyxIOV0LjckXVOj6ZCoIk5G9NW8FrOrghgPHCLROUVgK8j525S8=
-X-Gm-Gg: ASbGncu4mgnR2USzKoaHIKVjXbeN57lc0w6RYjdyAKToC2QsUJlk8c4jepaXY/tLjTS
-	tATK0wpTgNhTdq/YlRmPVPBpm07mMxpraeIax/ycimY/8kjJCEK8s6GE4kmxydUgBdNr6w6hVWV
-	7qg4Av17dJeKb0hj6DpvrrwZ5YgHlaqI3mIrQtWLVmVApMkowwlUa/VHsx7PXzsxJfpWA9B/q4l
-	d0r9BT7D5mJezq6+QcGKGxLyEli0Lkk/FT0CT6nzA/6gR5wvdiaQvjj1ODmoE7r0iN/puw9/cc7
-	cvE1iNLsWMv3ZUYni7zdkIuXzseYBO9ZbntFx+++WKlkcFXBiFUjgAgqNyQxCldJ4xolf3PCkk+
-	n1aYz2LgYNQ==
-X-Google-Smtp-Source: AGHT+IHkejFlF7JacpAFc31d67Aa0abDbDTBPS+AvGZCJTX8xpAHAqZtwkMExSrIMlmiA7Dd0bS1gw==
-X-Received: by 2002:a17:90b:3ec3:b0:310:cea4:e3b9 with SMTP id 98e67ed59e1d1-31250452c5fmr1772636a91.34.1748597629413;
-        Fri, 30 May 2025 02:33:49 -0700 (PDT)
+        bh=JJCF21JaAHh50QQNMzAFoSnSXgccx/2injFNIwjbQFo=;
+        b=k8mXd9a6Q+N77/gAOaXYC0Vln/jtsvoRVxPQrJ7Hx1fbEZFqfdxCaW1Kggeq+jd2nV
+         Fno9xnKDgR9bAklhJYzbrfmOIUvxxIqYkPNhT+6/yuE+gPlWYZpQcToSQB/VhPhREcuc
+         JaEhC4V8vaGyO1QwS6wkglahhEe6/8/HukmzkhvFPFIjtwxPBcd5o77Wu1PMBVjxHSbG
+         9NeojQ9yjWVPzGAw6K8C3HkbEyjNFXnMpdlt8IOgYzzJpigEl6ymDbWlhpWAQWp2cWFV
+         lOm/YZvTaRGySkaflKVuyEjVaUOVaJ6xp87xD2B59dI2/YiFsQxa0zDZ4Y8sK/93CwZC
+         PEcA==
+X-Forwarded-Encrypted: i=1; AJvYcCVj5ZE+UEOM0hYApLbSvJ4xYuw2xTiZGhfQhC3BTKMu9IJX9KUwkMAxRw8yph87jQiTgaiYNviyn/bG4nM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS7hVk1oUjykZFE6gtou7tqVy92BRVYst9yKDXIcRuy6Pnk/5m
+	lUbl8OWfuBYw8IjOPQgR8bJKR7qQ+aAo0yTH7nTL76la7YQvFo0CMMdHDzgRKpiPMwKeBhSqvaM
+	2jpiv
+X-Gm-Gg: ASbGncsRhKMJwgNhdDG1XTQs6m5x+XVAkbS6r1klEb7WfwhQNgUz+bu3eU+tvJxR/YM
+	094u28coLD8PdyexW6qvpbhpIv6f50VFC53HbTkOdpQSt0vVZjjQu853v6WsskaeFbjsPOitDeD
+	7MQaPy9r3c4kmFiyHR+JMb1m+rgSr1WC1V0Z99xRSK4Fr4VRgDnt2uTGgBbYDVEtFPKiFlOfCB2
+	n0cCXQ6tmZf0NCNy55JvwbNz9owpPP4OxVJk8xwNFasQfK0xwwDAYYVv3lEG6cEFlba48QZIpPP
+	faCLPeIzbw2FfCvR3dB0Wg9/MoF17QeRPNEpF+6MQCfQ+HfOPHAO5oj5nfk+pTQLY1V4bK/cu/R
+	wlibCI1+E0Q==
+X-Google-Smtp-Source: AGHT+IHRhTQBcA7s5JBEKqc7+0a9k8cenFZsoQhX8jbpv2vo1Ygv4WOD6zUURQ2dI64sy1qmxMzdzQ==
+X-Received: by 2002:a17:90a:e7cb:b0:311:b3e7:fb2c with SMTP id 98e67ed59e1d1-312503643c0mr2125489a91.13.1748597644660;
+        Fri, 30 May 2025 02:34:04 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.33.34
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.33.49
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:33:49 -0700 (PDT)
+        Fri, 30 May 2025 02:34:04 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +113,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 21/35] RPAL: add kernel entry handling for lazy switch
-Date: Fri, 30 May 2025 17:27:49 +0800
-Message-Id: <924aa7959502c4c3271cb311632eb505e894e26e.1748594841.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 22/35] RPAL: rebuild receiver state
+Date: Fri, 30 May 2025 17:27:50 +0800
+Message-Id: <af2895170223142a8dc824c7096d986da57aeb96.1748594841.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,419 +127,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-At the kernel entry point, RPAL performs a lazy switch. Therefore, it is
-necessary to hook all kernel entry points to execute the logic related to
-the lazy switch. At the kernel entry, apart from some necessary operations
-related to the lazy switch (such as ensuring that the general-purpose
-registers remain unchanged before and after the lazy switch), the task
-before the lazy switch will lose its user mode context (which is passed to
-the task after the lazy switch). Therefore, the kernel entry also needs to
-handle the issue of the previous task losing its user mode context.
+When an RPAL call occurs, the sender modifies the receiver's state. If the
+sender exits abnormally after modifying the state or encounters an
+unhandled page fault and returns to a recovery point, the receiver's state
+will remain as modified by the sender (e.g., in the CALL state). Since the
+sender may have exited, the lazy switch will not occur, leaving the
+receiver unrecoverable (unable to be woken up via try_to_wake_up()).
+Therefore, the kernel must ensure the receiver's state remains valid in
+these cases.
 
-This patch hooks all locations where the transition from user mode to
-kernel mode occurs, including entry_SYSCALL_64, error_entry, and
-asm_exc_nmi. When the kernel detects a mismatch between the kernel-mode and
-user mode contexts, it executes the logic related to the lazy switch.
-Taking the switch from the sender to the receiver as an example, the
-receiver thread is first locked to the CPU where the sender is located.
-Then, the receiver thread in the CALL state is woken up through
-rpal_try_to_wake_up(). The general purpose register state (pt_regs) of the
-sender is copied to the receiver, and rpal_schedule() is executed to
-complete the lazy switch. Regarding the issue of the sender losing its
-context, the kernel loads the pre-saved user mode context of the sender
-into the sender's pt_regs and constructs the kernel stack frame of the
-sender in a manner similar to the fork operation.
+This patch addresses this by rebuild receiver's state during unhandled page
+faults or sender exits. The kernel detect the fsbase value recorded by
+the sender and use the fsbase value to locate the corresponding receiver.
+Then kernel checking if the receiver is in the CALL state set by the
+sender (using sender_id and service_id carried in the CALL state). If true,
+transitioning the receiver from CALL to WAIT state and notifying the
+receiver via sender_state that the RPAL call has completed.
 
-The handling of the switch from the receiver to the sender is similar,
-except that the receiver will be unlocked from the current CPU, and the
-receiver can only return to the user mode through the kernel return method.
+This ensures that even if the sender fails, the receiver can recover and
+resume normal operation by resetting its state and avoiding permanent
+blocking.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/entry/entry_64.S     | 137 ++++++++++++++++++++++++++++++++++
- arch/x86/kernel/asm-offsets.c |   3 +
- arch/x86/rpal/core.c          | 137 ++++++++++++++++++++++++++++++++++
- include/linux/rpal.h          |   6 ++
- 4 files changed, 283 insertions(+)
+ arch/x86/rpal/thread.c | 44 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 13b4d0684575..59c38627510d 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -118,6 +118,20 @@ SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
- 	UNTRAIN_RET
- 	CLEAR_BRANCH_HISTORY
- 
-+#ifdef CONFIG_RPAL
-+	/*
-+	 * We first check if it is a RPAL sender/receiver with
-+	 * current->rpal_cd. For non-RPAL task, we just skip it.
-+	 * For rpal task, We may need to check if it needs to do
-+	 * lazy switch.
-+	 */
-+	movq	PER_CPU_VAR(current_task), %r13
-+	movq	TASK_rpal_cd(%r13), %rax
-+	testq	%rax, %rax
-+	jz		_do_syscall
-+	jmp 	do_rpal_syscall
-+_do_syscall:
-+#endif
- 	call	do_syscall_64		/* returns with IRQs disabled */
- 
- 	/*
-@@ -190,6 +204,101 @@ SYM_CODE_START(rpal_ret_from_lazy_switch)
- 	jmp	swapgs_restore_regs_and_return_to_usermode
- #endif
- SYM_CODE_END(rpal_ret_from_lazy_switch)
-+
-+/* return address offset of stack frame */
-+#define RPAL_FRAME_RET_ADDR_OFFSET -56
-+
-+SYM_CODE_START(do_rpal_syscall)
-+	movq	%rsp, %r14
-+	call	rpal_syscall_64_context_switch
-+	testq   %rax, %rax
-+	jz		1f
-+
-+	/*
-+	 * When we come here, everything but stack switching is finished.
-+	 * This makes current task use another task's kernel stack. Thus,
-+	 * we need to do stack switching here.
-+	 *
-+	 * At the meanwhile, the previous task's stack content is corrupted,
-+	 * we also need to rebuild its stack frames, so that it will jump to
-+	 * rpal_ret_from_lazy_switch when it is scheduled in. This is inspired
-+	 * by ret_from_fork.
-+	 */
-+	movq    TASK_threadsp(%rax), %rsp
-+#ifdef CONFIG_STACKPROTECTOR
-+	movq	TASK_stack_canary(%rax), %rbx
-+	movq	%rbx, PER_CPU_VAR(__stack_chk_guard)
-+#endif
-+	/* rebuild src's frame */
-+	movq	$rpal_ret_from_lazy_switch, -8(%r14)
-+	leaq	RPAL_FRAME_RET_ADDR_OFFSET(%r14), %rbx
-+	movq	%rbx, TASK_threadsp(%r13)
-+
-+	movq	%r13, %rdi
-+	/*
-+	 * Everything of task switch is done, but we still need to do
-+	 * a little extra things for lazy switch.
-+	 */
-+	call	rpal_lazy_switch_tail
-+
-+1:
-+	movq	ORIG_RAX(%rsp), %rsi
-+	movq	%rsp, %rdi
-+	jmp		_do_syscall
-+SYM_CODE_END(do_rpal_syscall)
-+
-+SYM_CODE_START(do_rpal_error)
-+	popq	%r12
-+	movq	%rax, %rsp
-+	movq	%rax, %r14
-+	movq	%rax, %rdi
-+	call	rpal_exception_context_switch
-+	testq   %rax, %rax
-+	jz		1f
-+
-+	movq	TASK_threadsp(%rax), %rsp
-+	ENCODE_FRAME_POINTER
-+#ifdef CONFIG_STACKPROTECTOR
-+	movq	TASK_stack_canary(%rax), %rbx
-+	movq	%rbx, PER_CPU_VAR(__stack_chk_guard)
-+#endif
-+	/* rebuild src's frame */
-+	movq	$rpal_ret_from_lazy_switch, -8(%r14)
-+	leaq	RPAL_FRAME_RET_ADDR_OFFSET(%r14), %rbx
-+	movq	%rbx, TASK_threadsp(%r13)
-+
-+	movq	%r13, %rdi
-+	call	rpal_lazy_switch_tail
-+1:
-+	movq	%rsp, %rax
-+	pushq	%r12
-+	jmp		_do_error
-+SYM_CODE_END(do_rpal_error)
-+
-+SYM_CODE_START(do_rpal_nmi)
-+	movq	%rsp, %r14
-+	movq	%rsp, %rdi
-+	call	rpal_nmi_context_switch
-+	testq   %rax, %rax
-+	jz		1f
-+
-+	movq    TASK_threadsp(%rax), %rsp
-+	ENCODE_FRAME_POINTER
-+#ifdef CONFIG_STACKPROTECTOR
-+	movq	TASK_stack_canary(%rax), %rbx
-+	movq	%rbx, PER_CPU_VAR(__stack_chk_guard)
-+#endif
-+	/* rebuild src's frame */
-+	movq	$rpal_ret_from_lazy_switch, -8(%r14)
-+	leaq	RPAL_FRAME_RET_ADDR_OFFSET(%r14), %rbx
-+	movq	%rbx, TASK_threadsp(%r13)
-+
-+	movq	%r13, %rdi
-+	call	rpal_lazy_switch_tail
-+
-+1:
-+	jmp		_do_nmi
-+SYM_CODE_END(do_rpal_nmi)
- #endif
- 
- /*
-@@ -1047,7 +1156,22 @@ SYM_CODE_START(error_entry)
- 
- 	leaq	8(%rsp), %rdi			/* arg0 = pt_regs pointer */
- 	/* Put us onto the real thread stack. */
-+#ifdef CONFIG_RPAL
-+	call sync_regs
-+	/*
-+	 * Check whether we need to perform lazy switch after we
-+	 * switch to the real thread stack.
-+	 */
-+	movq	PER_CPU_VAR(current_task), %r13
-+	movq	TASK_rpal_cd(%r13), %rdi
-+	testq	%rdi, %rdi
-+	jz		_do_error
-+	jmp 	do_rpal_error
-+_do_error:
-+	RET
-+#else
- 	jmp	sync_regs
-+#endif
- 
- 	/*
- 	 * There are two places in the kernel that can potentially fault with
-@@ -1206,6 +1330,19 @@ SYM_CODE_START(asm_exc_nmi)
- 	IBRS_ENTER
- 	UNTRAIN_RET
- 
-+#ifdef CONFIG_RPAL
-+	/*
-+	 * Check whether we need to perform lazy switch only when
-+	 * we come from userspace.
-+	 */
-+	movq	PER_CPU_VAR(current_task), %r13
-+	movq	TASK_rpal_cd(%r13), %rax
-+	testq	%rax, %rax
-+	jz		_do_nmi
-+	jmp 	do_rpal_nmi
-+_do_nmi:
-+#endif
-+
- 	/*
- 	 * At this point we no longer need to worry about stack damage
- 	 * due to nesting -- we're on the normal thread stack and we're
-diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
-index 6259b474073b..010202c31b37 100644
---- a/arch/x86/kernel/asm-offsets.c
-+++ b/arch/x86/kernel/asm-offsets.c
-@@ -46,6 +46,9 @@ static void __used common(void)
- #ifdef CONFIG_STACKPROTECTOR
- 	OFFSET(TASK_stack_canary, task_struct, stack_canary);
- #endif
-+#ifdef CONFIG_RPAL
-+	OFFSET(TASK_rpal_cd, task_struct, rpal_cd);
-+#endif
- 
- 	BLANK();
- 	OFFSET(pbe_address, pbe, address);
-diff --git a/arch/x86/rpal/core.c b/arch/x86/rpal/core.c
-index ed4c11e6838c..c48df1ce4324 100644
---- a/arch/x86/rpal/core.c
-+++ b/arch/x86/rpal/core.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/rpal.h>
-+#include <linux/sched/task_stack.h>
- #include <asm/fsgsbase.h>
- 
- #include "internal.h"
-@@ -39,6 +40,20 @@ static inline void rpal_unlock_cpu_kernel_ret(struct task_struct *tsk)
- 	rpal_set_cpus_allowed_ptr(tsk, false, true);
+diff --git a/arch/x86/rpal/thread.c b/arch/x86/rpal/thread.c
+index db3b13ff82be..02c1a9c22dd7 100644
+--- a/arch/x86/rpal/thread.c
++++ b/arch/x86/rpal/thread.c
+@@ -224,6 +224,45 @@ int rpal_unregister_receiver(void)
+ 	return ret;
  }
  
-+void rpal_lazy_switch_tail(struct task_struct *tsk)
++/* sender may corrupt receiver's state if unexpectedly exited, rebuild it */
++static void rpal_rebuild_receiver_context_on_exit(void)
 +{
++	struct task_struct *receiver = NULL;
++	struct rpal_sender_data *rsd = current->rpal_sd;
++	struct rpal_sender_call_context *scc = rsd->scc;
++	struct rpal_receiver_data *rrd;
 +	struct rpal_receiver_call_context *rcc;
++	unsigned long fsbase;
++	int state = rpal_build_call_state(rsd);
 +
-+	if (rpal_test_task_thread_flag(current, RPAL_LAZY_SWITCHED_BIT)) {
-+		rcc = current->rpal_rd->rcc;
-+		atomic_cmpxchg(&rcc->receiver_state, rpal_build_call_state(tsk->rpal_sd),
-+			       RPAL_RECEIVER_STATE_LAZY_SWITCH);
-+	} else {
-+		rpal_unlock_cpu(tsk);
-+		rpal_unlock_cpu(current);
++	if (scc->ec.magic != RPAL_ERROR_MAGIC)
++		goto out;
++
++	fsbase = scc->ec.fsbase;
++	if (rpal_is_correct_address(rpal_current_service(), fsbase))
++		goto out;
++
++	receiver = rpal_find_next_task(fsbase);
++	if (!receiver)
++		goto out;
++
++	rrd = receiver->rpal_rd;
++	if (!rrd)
++		goto out;
++
++	rcc = rrd->rcc;
++
++	if (atomic_read(&rcc->receiver_state) == state) {
++		atomic_cmpxchg(&rcc->sender_state, RPAL_SENDER_STATE_CALL,
++			       RPAL_SENDER_STATE_KERNEL_RET);
++		atomic_cmpxchg(&rcc->receiver_state, state,
++			       RPAL_RECEIVER_STATE_WAIT);
 +	}
++
++out:
++	return;
 +}
 +
- void rpal_kernel_ret(struct pt_regs *regs)
- {
- 	struct task_struct *tsk;
-@@ -76,6 +91,87 @@ void rpal_kernel_ret(struct pt_regs *regs)
- 	}
- }
- 
-+static inline void rebuild_stack(struct rpal_task_context *ctx,
-+				 struct pt_regs *regs)
-+{
-+	regs->r12 = ctx->r12;
-+	regs->r13 = ctx->r13;
-+	regs->r14 = ctx->r14;
-+	regs->r15 = ctx->r15;
-+	regs->bx = ctx->rbx;
-+	regs->bp = ctx->rbp;
-+	regs->ip = ctx->rip;
-+	regs->sp = ctx->rsp;
-+}
-+
-+static inline void rebuild_sender_stack(struct rpal_sender_data *rsd,
-+				 struct pt_regs *regs)
-+{
-+	rebuild_stack(&rsd->scc->rtc, regs);
-+}
-+
-+static inline void rebuild_receiver_stack(struct rpal_receiver_data *rrd,
-+				   struct pt_regs *regs)
-+{
-+	rebuild_stack(&rrd->rcc->rtc, regs);
-+}
-+
-+static inline void update_dst_stack(struct task_struct *next,
-+				    struct pt_regs *src)
-+{
-+	struct pt_regs *dst;
-+
-+	dst = task_pt_regs(next);
-+	*dst = *src;
-+	next->thread.sp = (unsigned long)dst;
-+}
-+
-+/*
-+ * rpal_do_kernel_context_switch - the main routine of RPAL lazy switch
-+ * @next: task to switch to
-+ * @regs: the user pt_regs saved in kernel entry
-+ *
-+ * This function performs the lazy switch. When switch from sender to
-+ * receiver, we need to lock both task to current CPU to avoid double
-+ * control flow when we perform lazy switch and after then.
-+ */
-+static struct task_struct *
-+rpal_do_kernel_context_switch(struct task_struct *next, struct pt_regs *regs)
-+{
-+	struct task_struct *prev = current;
-+
-+	if (rpal_test_task_thread_flag(next, RPAL_LAZY_SWITCHED_BIT)) {
-+		current->rpal_sd->receiver = next;
-+		rpal_lock_cpu(current);
-+		rpal_lock_cpu(next);
-+		rpal_try_to_wake_up(next);
-+		update_dst_stack(next, regs);
-+		/*
-+		 * When a lazy switch occurs, we need to set the sender's
-+		 * user-mode context to a predefined state by the sender.
-+		 * Otherwise, sender's user context will be corrupted.
-+		 */
-+		rebuild_sender_stack(current->rpal_sd, regs);
-+		rpal_schedule(next);
-+	} else {
-+		update_dst_stack(next, regs);
-+		/*
-+		 * When a lazy switch occurs, we need to set the receiver's
-+		 * user-mode context to a predefined state by the receiver.
-+		 * Otherwise, sender's user context will be corrupted.
-+		 */
-+		rebuild_receiver_stack(current->rpal_rd, regs);
-+		rpal_schedule(next);
-+		rpal_clear_task_thread_flag(prev, RPAL_LAZY_SWITCHED_BIT);
-+		prev->rpal_rd->sender = NULL;
-+	}
-+	if (unlikely(!irqs_disabled())) {
-+		local_irq_disable();
-+		rpal_err("%s: irq is enabled\n", __func__);
-+	}
-+	return next;
-+}
-+
- static inline struct task_struct *rpal_get_sender_task(void)
- {
- 	struct task_struct *next;
-@@ -123,6 +219,18 @@ static inline struct task_struct *rpal_misidentify(void)
- 	return next;
- }
- 
-+static inline struct task_struct *
-+rpal_kernel_context_switch(struct pt_regs *regs)
-+{
-+	struct task_struct *next = NULL;
-+
-+	next = rpal_misidentify();
-+	if (unlikely(next != NULL))
-+		next = rpal_do_kernel_context_switch(next, regs);
-+
-+	return next;
-+}
-+
- struct task_struct *rpal_find_next_task(unsigned long fsbase)
- {
- 	struct rpal_service *cur = rpal_current_service();
-@@ -147,6 +255,35 @@ struct task_struct *rpal_find_next_task(unsigned long fsbase)
- 	return tsk;
- }
- 
-+__visible struct task_struct *
-+rpal_syscall_64_context_switch(struct pt_regs *regs, unsigned long nr)
-+{
-+	struct task_struct *next;
-+
-+	next = rpal_kernel_context_switch(regs);
-+
-+	return next;
-+}
-+
-+__visible struct task_struct *
-+rpal_exception_context_switch(struct pt_regs *regs)
-+{
-+	struct task_struct *next;
-+
-+	next = rpal_kernel_context_switch(regs);
-+
-+	return next;
-+}
-+
-+__visible struct task_struct *rpal_nmi_context_switch(struct pt_regs *regs)
-+{
-+	struct task_struct *next;
-+
-+	next = rpal_kernel_context_switch(regs);
-+
-+	return next;
-+}
-+
- static bool check_hardware_features(void)
- {
- 	if (!boot_cpu_has(X86_FEATURE_FSGSBASE)) {
-diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 01b582fa821e..b24176f3f245 100644
---- a/include/linux/rpal.h
-+++ b/include/linux/rpal.h
-@@ -479,7 +479,13 @@ struct rpal_service *rpal_get_mapped_service_by_id(struct rpal_service *rs,
  int rpal_rebuild_sender_context_on_fault(struct pt_regs *regs,
- 					 unsigned long addr, int error_code);
- struct mm_struct *rpal_pf_get_real_mm(unsigned long address, int *rebuild);
-+__visible struct task_struct *
-+rpal_syscall_64_context_switch(struct pt_regs *regs, unsigned long nr);
-+__visible struct task_struct *
-+rpal_exception_context_switch(struct pt_regs *regs);
-+__visible struct task_struct *rpal_nmi_context_switch(struct pt_regs *regs);
- struct task_struct *rpal_find_next_task(unsigned long fsbase);
-+void rpal_lazy_switch_tail(struct task_struct *tsk);
- void rpal_kernel_ret(struct pt_regs *regs);
+ 					 unsigned long addr, int error_code)
+ {
+@@ -232,6 +271,7 @@ int rpal_rebuild_sender_context_on_fault(struct pt_regs *regs,
+ 		unsigned long erip, ersp;
+ 		int magic;
  
- extern void rpal_pick_mmap_base(struct mm_struct *mm,
++		rpal_rebuild_receiver_context_on_exit();
+ 		erip = scc->ec.erip;
+ 		ersp = scc->ec.ersp;
+ 		magic = scc->ec.magic;
+@@ -249,8 +289,10 @@ int rpal_rebuild_sender_context_on_fault(struct pt_regs *regs,
+ 
+ void exit_rpal_thread(void)
+ {
+-	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT))
++	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT)) {
++		rpal_rebuild_receiver_context_on_exit();
+ 		rpal_unregister_sender();
++	}
+ 
+ 	if (rpal_test_current_thread_flag(RPAL_RECEIVER_BIT))
+ 		rpal_unregister_receiver();
 -- 
 2.20.1
 
