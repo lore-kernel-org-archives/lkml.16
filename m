@@ -1,169 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DC322489A;
-	Fri, 30 May 2025 10:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748599556; cv=none; b=cBHee4O/D0GltfezleLjX9HuM0T0NPgZux+RMaKPA7HjxLrUrq4MnFhSqQFLzwFx60IOIdLeNPdbnyZmkGdj0q0d/i1YtKIqQr8rNSKlvXr1bwUVYaLM47FrAG8nFefZrceSAw3aIhuEfVk/RvPOACs1EnZFlsSAhWbZXmuFoUc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748599556; c=relaxed/simple;
-	bh=D1WgvYUKW8ksaG5Pikj6zSs+drhugqX9qh4QXjNVoFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lnRbu5i3zWagWJbrIsrpjFHeoenPxDvKN0KVi+c/P9BZE4MUyuE5gY59BNCPLBcxZZ6c2+xHQgrKhmWX3zgYAcAcKaEqQISbOFqm/cgyGPt/e7yRU+TrFvonHQ5A9P2fOIvt26AeQcGb+z3rVA7fX9Y6Bh9WgzSA4eDAf5G9Ft0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pR7yAkIN; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D750D21D5AA;
+	Fri, 30 May 2025 10:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748599594; cv=fail; b=dmLe1KCQsPYLcf7ThlFdrxyAWW67gktJrVB5fgpTL+0hdU3/yLqwCUWjNjDh6PD6zAl+Bvna88xr7TyeFE8qYEh4vCooaX5785CrXlmwLkbFCzt6nE/Rn7Jw+Wgs37cYw87Pr682ffzg4Msi37MpL4XE9i0nRtneFYasv0zYIH0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748599594; c=relaxed/simple;
+	bh=JxtOiWk2v8nlTRxICT7eikapiYSH58jSZh9QEHzD3Oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bLfVibxMMVr+627QIxod8sFB0SehuMotH0hGoa/7Fuk7U4QciSzQ+IFRw4UNaA/ofDBjuORjnD+TF9og/bS3f0evv2wdkywcjbkcotLAy7lupmkH6oiCNV10R9JDzQWphUZR6BjSaaxAimSwnpO+vV1u8D7PzVCnzv6KAzSTZ24=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OMo6e1BI; arc=fail smtp.client-ip=40.107.223.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pR7yAkIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66646C4CEE9;
-	Fri, 30 May 2025 10:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748599555;
-	bh=D1WgvYUKW8ksaG5Pikj6zSs+drhugqX9qh4QXjNVoFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pR7yAkIN7ZdmvG8Cv2p/pXio7xoNSW2GBm8hc5ehHlo4uEAXQDqIH4ttRnYDLEuv0
-	 VePQrM0fU3vD+mx3nfbBJXbmH+BvskVWH1/ePIp8svO/yD0vEcmfe+orWnpM5fcxce
-	 1S0sN2K4aSDh/VvgxJ7+AA4v3MKJ0tyG+IVrV3SQGOd0f6prjMoSSRwIbhAXVoU8i2
-	 hRvtJrcBJjN11lceUr/6ztiMF8RhUgoWsr5sSsM1HjWZT8vgXE7p3XpUdyrZCecC8u
-	 ha6Ln6CatOn46R1Jy9bg6iMoo70b9XXiwfbtNtPN5yG6wEsyERgosBPbFUQ8xnIGil
-	 mrLyDulnaktJg==
-Date: Fri, 30 May 2025 12:05:51 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [[PATCH v3] 4/4] man/man2/prctl.2,
- PR_FUTEX_HASH_GET_IMMUTABLE.2const: Document PR_FUTEX_HASH_GET_IMMUTABLE
-Message-ID: <2fbxkgkyvvldnux3w7sjcfmkf5t5aaalx7yd2kuoyk36ptvs6g@75m75juu4nd7>
-References: <20250526155523.1382465-1-bigeasy@linutronix.de>
- <20250526155523.1382465-5-bigeasy@linutronix.de>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OMo6e1BI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K+YBaaDjbqnxSwLFjcL0RL+qmyl6jcTTdX8TNtUYU8xLcYpSDzxDA9AqUQxI4zjEHOtSFbJuuE2IuzpbWakNfCWAdkUQVok+yPno6KuBXeHmZeh2wucsVxm7B3v9vrWGzsIWxC2DuECkliIKZaNRgrVF47D94bUnIt41KScWQHJzP987p2kq0TMsQyN81PDvONVKlj32F5idMlSqJ5jcb2C59e9hi3adCJ9qAom53DenXUaQkEh+w82M0CT1lf2xpblw7J809+aSABjd1FldmuSoH8DSGZAmUfk9Y5NZ4VPKcveScau+pkfUcJnlpYGn+sOKb63kJ8Doag5VNKktwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6TNWte9CF1MX5PuBSBbQltvpicdc4+rJ2f14vXPSTKA=;
+ b=CxJ/savkzblVJi9VBfZIxbtE+gA8GwUP7ip8xvhUbz1ABaDfIGWyegWLLwdpH0GM7i73pDuONkIXEtJGv9DU40Jw17cNbxDOaRK1Qo+b5X/KG0FvvAjYbJB5itzJlVDSoY1O3zypEjCNo4Etw7OzIiOApTT5SqiUkt7CleCf3Kt3/5A3O98gl8onutz2wQedsYvoYaP9Z9whXBwXFt7SpXFd0khK9Z1w9Ko1iu+xIvbhoxZbdaaxuQdQuezafYPsea9egelv2tLCxBMNJoFFmXHSUoW32pceglmKMYdp3XTHpzlsUN8MVL/6r5qYq616G+9yxEQob+YmFYdwfrQJCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6TNWte9CF1MX5PuBSBbQltvpicdc4+rJ2f14vXPSTKA=;
+ b=OMo6e1BIGfQvwOOlw7DmEYtC+U/Ho9CZy/nIuDAaASEYNFIxbKxO5mMiIN4/Drm2pEt8J8tgh9y1yrIMKzVjh+zPG/vHQoKm1n9Vf8R0o9ZJAM2o0qdXyY9N5WRQLccUiPXjY1lIxqyXX1xjOfUdzB3M+IaoIp9XTDUzr3H73k4=
+Received: from SN1PR12CA0100.namprd12.prod.outlook.com (2603:10b6:802:21::35)
+ by DS7PR12MB8276.namprd12.prod.outlook.com (2603:10b6:8:da::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Fri, 30 May
+ 2025 10:06:30 +0000
+Received: from SN1PEPF0002BA4D.namprd03.prod.outlook.com
+ (2603:10b6:802:21:cafe::3a) by SN1PR12CA0100.outlook.office365.com
+ (2603:10b6:802:21::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Fri,
+ 30 May 2025 10:06:29 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4D.mail.protection.outlook.com (10.167.242.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Fri, 30 May 2025 10:06:29 +0000
+Received: from [10.136.33.30] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 30 May
+ 2025 05:06:25 -0500
+Message-ID: <a30dd520-b6d2-4ae8-86f8-d4f71ef3e0e0@amd.com>
+Date: Fri, 30 May 2025 15:36:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="im2srhjtfbbf4ziv"
-Content-Disposition: inline
-In-Reply-To: <20250526155523.1382465-5-bigeasy@linutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 41/59] iommu/amd: KVM: SVM: Add IRTE metadata to
+ affined vCPU's list if AVIC is inhibited
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
+	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Vasant Hegde <vasant.hegde@amd.com>, "Maxim
+ Levitsky" <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>,
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack
+	<dmatlack@google.com>
+References: <20250523010004.3240643-1-seanjc@google.com>
+ <20250523010004.3240643-42-seanjc@google.com>
+Content-Language: en-US
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <20250523010004.3240643-42-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4D:EE_|DS7PR12MB8276:EE_
+X-MS-Office365-Filtering-Correlation-Id: a68657bb-b0be-4962-e1e7-08dd9f61a5ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TmNnOWRKcm9VM2diSXUzUHFibGtyZjc4WFFrV2ZObzZpVXVOTGE0Zzh5YWxu?=
+ =?utf-8?B?RW02R3RhaWtNbXl4UU9hWDZ4TzgzL1k2RmtVK1BrZllDYkpYUDBPZWgySXds?=
+ =?utf-8?B?UEhLNjNLLytJSlc4VExWK2UxcE1vS3MzUmd6elZWT0RHeng0bE8yS1A0ajlG?=
+ =?utf-8?B?MVlucDFsVnNrdWl2TDlDOGJ4ZkVBc2cyR010dHVTMnpBYzQ2T3RKSjZDN25w?=
+ =?utf-8?B?cUNTbHZVb1JLZ1pjeUVCZ3o2elRrS2J0S015L0NIQWhZeGRxVWVxSDhvVHJ1?=
+ =?utf-8?B?a0EyZ0dTZjYxVHlydFlUdG4xVGpYdmtLK3ZqY29sYlI4MU9ZYks5OFUvZmVO?=
+ =?utf-8?B?dE83bWFxN0FTU0tNVVJIeHZMRTNlaGpVamNwR0JJRVF4b0h3Sy9pQXlRTnNk?=
+ =?utf-8?B?M0Z4WTFZY3g1S0tZejlsMFZhVTJLYWJBTjhrMkR1djI3VkNicnhNbXZndXpt?=
+ =?utf-8?B?YWJWV3JOOTN0Z3FrMUZGV2JMUTE1dURmRmNSVUczZmkyeDVPdVBzSDI1bkVW?=
+ =?utf-8?B?c2FTRkQwb2ptdGdKVGhwZnVYUFYwdzVZWk5RZTVZblIvbWJLWkpHSCtidjRG?=
+ =?utf-8?B?ZVRFZDgrNnNucEV6NkVmalFqcGdaVGsxMVU5MXV0aWpyZGphdGV6cEoxakxm?=
+ =?utf-8?B?SGNWcDFUeWxaeldKMzRBMkMrcnF5YXN2ZXNkN3ZrUlU4NUt2dHpKSWJYaHlY?=
+ =?utf-8?B?UnNhazVZK3d0NlV5SEZBVFJoYWdjaGl0Nm9hN1V2dituODlqRjhvOUJBNG1h?=
+ =?utf-8?B?YUg2VE5UZFJ5UURpYXpvc2RWL0daYkVnaURjZ1Q1T1lFR3NJNndkN2E2MmJR?=
+ =?utf-8?B?ZUIwb2lWZUNJalV0LzZFMEdRNVcvd3VISW9NQjh2VnFOTWNCN2lwR0YyUG13?=
+ =?utf-8?B?NUxrVG8rYlhuK3BsQm5UNlVNRmJBRFlBWER1UEpBR05MdU5ETUpBSHpzNDN3?=
+ =?utf-8?B?QUs2RnIzSTg4K0JYUlZLY0UzUHp0bGx1ajVqYWpTV1ZjejdpVjdxT2l5RmxH?=
+ =?utf-8?B?NHhMZW50YzNTUlVIZnFLTUlRT2pqSHlBSDFsbXFSeEVnaGlvUXdKYWs4ZzNM?=
+ =?utf-8?B?U1FWV2hhVGFkTHVEUEhCSG80bU1yaDQrUnRPRjVwaGw1aWRzdXJPU0piR0Vs?=
+ =?utf-8?B?ZTVEeDA0NFdGVFI4MnpHdVZNZjBmUmY2Mk5WUGlCL2YxKzgwRkJ6T0c1bHZP?=
+ =?utf-8?B?MThqRVVWeWpJL281Ujc4VlJEWmdyWDRobmlBbHV6cnMxa3d0M1lkSmNNQm9L?=
+ =?utf-8?B?N2p2M3gxQXNhL1pPazJHOXdDYlhvVkhWYTMrKy9kWmYvSGpSc2ZRYU9XRUUy?=
+ =?utf-8?B?bWZxcmdjaU1VZXBzN3haRm1IQkNXTDNuSDdycGJsV0orY3ZweVlGaUVsajV6?=
+ =?utf-8?B?eGxRMWRpUFRhRmpHZDFKMnlRT05IdVdjK2ZCTlRzd0RsZXRvejdEWkJSU2Fw?=
+ =?utf-8?B?WFRISnNOakpMeXArbGNNYytXOGFjc01WQm5MNXZSOFVLK2JHN05pVm5VRjNr?=
+ =?utf-8?B?WUYxdEZGQU54THpKcUsxMDJTdTJ4bS9zRnlzRkdBdmUrUS9IMkJCVE9pYVIy?=
+ =?utf-8?B?M3hVcC85UG56bGNaWm9rSlhUY1ZFbDFsMTh3bzhTRWVXYnQzVmkwd1ptbkZC?=
+ =?utf-8?B?WGlxYUN2MUZJN2dTaWloaSs5YjJTbWQwdkhWMDVVQk1lOGJHZXYyUHYzY2N6?=
+ =?utf-8?B?bDB4K1FubUoxWmZMVkR1blcxVFA1S1NNa1FxbUZkS2wzbDB1KzFTTzNHRnla?=
+ =?utf-8?B?ZDFRbjBzTHliUHVXbm1ubVpPc0pmT2hsV1Q3eU5SeGpSb21XbG9qOFBkUXo0?=
+ =?utf-8?B?WTcrMHVtWWZlWERYdjh6R3VkdjJCRmcweGJNdjZ3ZDRUditTMHJPR3NDejFO?=
+ =?utf-8?B?TFVHeVRNVjNuNFVmUkIwSVIzNldTTHJ4Q3p3aC9waGZWejlFZitxeDgzNUNh?=
+ =?utf-8?B?QTdwMlczNFVFZDVIdUdPVFFMbzUxUDY5QmsrdFpUT1hpUkNwdmRhYU03Rkp5?=
+ =?utf-8?B?cGwrZ0V3SXdZRWxPS2lsN20zcWFuMXNIdk9TaGZvRWhQeWZ4Y2pkQ1NXS3ZG?=
+ =?utf-8?Q?jpRfPY?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 10:06:29.7580
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a68657bb-b0be-4962-e1e7-08dd9f61a5ca
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4D.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8276
 
 
---im2srhjtfbbf4ziv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <longman@redhat.com>
-Subject: Re: [[PATCH v3] 4/4] man/man2/prctl.2,
- PR_FUTEX_HASH_GET_IMMUTABLE.2const: Document PR_FUTEX_HASH_GET_IMMUTABLE
-References: <20250526155523.1382465-1-bigeasy@linutronix.de>
- <20250526155523.1382465-5-bigeasy@linutronix.de>
-MIME-Version: 1.0
-In-Reply-To: <20250526155523.1382465-5-bigeasy@linutronix.de>
 
-Hi Sebastian,
+On 5/23/2025 6:29 AM, Sean Christopherson wrote:
 
-On Mon, May 26, 2025 at 05:55:23PM +0200, Sebastian Andrzej Siewior wrote:
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  .../PR_FUTEX_HASH_GET_IMMUTABLE.2const        | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
->=20
-> diff --git a/man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const b/man/man2c=
-onst/PR_FUTEX_HASH_GET_IMMUTABLE.2const
-> new file mode 100644
-> index 0000000000000..be5f457f0dcb6
-> --- /dev/null
-> +++ b/man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
-> @@ -0,0 +1,37 @@
-> +.\" Copyright, the authors of the Linux man-pages project
-> +.\"
-> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-> +.\"
-> +.TH PR_FUTEX_HASH_GET_IMMUTABLE 2const (date) "Linux man-pages (unreleas=
-ed)"
-> +.SH NAME
-> +PR_FUTEX_HASH_GET_IMMUTABLE
-> +\-
-> +check if the private hash is immutable.
-> +.SH LIBRARY
-> +Standard C library
-> +.RI ( libc ,\~ \-lc )
-> +.SH SYNOPSIS
-> +.nf
-> +.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
-> +.B #include <sys/prctl.h>
-> +.P
-> +.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
-> +.fi
-> +.SH DESCRIPTION
-> +Check if the private hash is immutable.
-> +.SH RETURN VALUE
-> +A value of 1 means that a the hash has been made immutable
-> +and not be changed.
-> +Otherwise 0.
+> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+> index 718bd9604f71..becef69a306d 100644
+> --- a/drivers/iommu/amd/iommu.c
+> +++ b/drivers/iommu/amd/iommu.c
+> @@ -3939,7 +3939,10 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *info)
+>   		ir_data->ga_root_ptr = (pi_data->vapic_addr >> 12);
+>   		ir_data->ga_vector = pi_data->vector;
+>   		ir_data->ga_tag = pi_data->ga_tag;
+> -		ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
+> +		if (pi_data->is_guest_mode)
+> +			ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
+> +		else
+> +			ret = amd_iommu_deactivate_guest_mode(ir_data);
 
-I'd reword this paragraph:
+Hi Sean,
+Why the extra nesting here ?
+Its much more cleaner to do..
 
-	If the hash is immutable,
-	it returns 1;
-	otherwise,
-	it returns 0.
+if (pi_data && pi_data->is_guest_mode) {
+	ir_data->ga_root_ptr = (pi_data->vapic_addr >> 12);
+    	ir_data->ga_vector = pi_data->vector;
+    	ir_data->ga_tag = pi_data->ga_tag;
+	ret = amd_iommu_activate_guest_mode(ir_data, pi_data->cpu);
+} else {
+	ret = amd_iommu_deactivate_guest_mode(ir_data);
+}
 
-And I'd put the following on a separate paragraph:
+Thanks
+Sairaj Kodilkar
 
-	.P
+>   	} else {
+>   		ret = amd_iommu_deactivate_guest_mode(ir_data);
+>   	}
 
-> +On error, \-1 is returned, and
-> +.I errno
-> +is set to indicate the error.
-> +.SH STANDARDS
-> +Linux.
-> +.SH HISTORY
-> +Linux 6.16.
-> +.SH SEE ALSO
-> +.BR prctl (2),
-> +.BR PR_FUTEX_HASH (2const),
-> +.BR PR_FUTEX_HASH_GET_SLOTS (2const),
-> +.BR PR_FUTEX_HASH_SET_SLOTS (2const)
-> --=20
-> 2.49.0
-
-Cheers,
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---im2srhjtfbbf4ziv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmg5gv4ACgkQ64mZXMKQ
-wql/fQ/+PAvfe1BFCs06Zt2PqfEVLywfFlmf+N72CJuySPMKBek2Kas2pFh2RCcr
-FIpU8NmE0tuy4fvymgvRFdSIf1LYmm7PK/F928ThEZIU3jFUIOT8pgHf0IPlYcZ7
-RUP2khOu2o/2qTCFedQkvLkrtUJBzVyIU8x9PCPGo4RlyYkwuTJB7BsNjXp0zRAm
-SJ3e9OUyvQrxE3pxWaM7bZA4KY0qiNLaKhv2dRgL7WBNyc9mOBAPMZogejaNdc4N
-2ZA8SxR8f6Y8SYtkmd2jmZtz6qew4QGH4gDiQdene6h+gx2CWHMYK2xw1mkAKPxT
-0Lq0HArtgwxqLlTcrtVPm2mxl/MHdwyg++FcwWAM32sX3p2XfADpegYWt6jK5b1O
-eWBahMTEiPNDQmZ3y0mEj9gf/oK1nts2tuxBEavn4TDK2VIZX/EH+MUTLrOgBoWm
-l7FW01IhFe1Pu8V29z4PJWTjAPe5khyxdVQ5fPCpLXqkoZi+zOM5N08Lhe8PUz9Z
-Sq9jvluaOd/oHD7Q/JUpywTaG/qio3Owqh54fSawmvvEK1Vz6QvvSBrGQ6SKv6sl
-AhMs2lyovIKMSMXI1JbBMa5+UYc6QNQjZY+EC6k0Jby04v8/JcqAoF0pINRhgps/
-HxCL5ej7JyW/E2KR0SCnc+5Qs5MWLzeKJsgaq4eNE+Te/ollA84=
-=qlCe
------END PGP SIGNATURE-----
-
---im2srhjtfbbf4ziv--
