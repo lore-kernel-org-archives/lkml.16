@@ -1,141 +1,141 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFCF1EE017
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49921E833F
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 08:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748593639; cv=none; b=HYbQVc82t1P2urUntizbSE83YVzKCqS6Qo0vTCygAgSuNT1MyKZwvnxu6ooUdgVhiu47ZbsWyxKcUK+y54nwT8DeQo26SyFgNkfuYHG+wn0BE9L9mPtUC+uZEC76+nra1avU/zOaHDkHARToYReyXaGqJ/HPBOUPhXL2F/wYITA=
+	t=1748593694; cv=none; b=oG6uUG81H5XTe4dSe1fR0KKl5yRHN/z2NFOtkKyh3XyWPyA8SL9ze8jUf1wijdjGVSTpTWAtNYIwuK/XOmyGC/sm0i9Q7bYg08JF0pUzXtbIZS+LQKuoThjoYgE1f/2utT880lAHufrQwWC/sbacjmYC/hJ4zVpZ+sc3700tgMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748593639; c=relaxed/simple;
-	bh=vRrRzjvalC4b5vsqPDE18UuRNxy3sXp/LnYLU8RtL7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mj0ct9dckImup277CQyr3UL13YKgnk491jf6mI30+mjcbjDsBcPL8fdsdf6K6yhd1aiZz55BCmqO2lnOc5s7nQx2rGAHlyQOV5pcpLVoHvgRCKu202ImpTJKC73+u7d8kobHAKV3eIVS8CcnVct2X6rdVcI/K47iAdQsuYuvgnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eqRiW8a3; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748593694; c=relaxed/simple;
+	bh=fmJb1Vge/hV+b9FDVR4QT1MmeFZnpkrgLzRxdbhhX+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iaj2Cgy1JC02Ukd/zAa8/e/M6HlRQ8GE6rfiqH4pU4xqqbmaLCysif8LXoMPnBZU5sX+wf2GELW6yHDIw/rSdBlAcxbusk6lZ6Qm8JuPnRYu8MizwXPZPC0ABpKNRQesY0WUyAKHXBmSvmOGiCKpEg+30VWF1qPmhFRC8X4UUlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f88FU4Lw; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqRiW8a3"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-70e78e04e48so14249697b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:27:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f88FU4Lw"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a3798794d3so1490546f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 01:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748593637; x=1749198437; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oYOli4oTQ0MFkGdltVUUX/1x4FeeDlNH5ixoZJpfc0Y=;
-        b=eqRiW8a3/dfUqAkOBk61G9ThYudPPGEAMbmEKWzTYVgPsUbyhV7tK793o3hwSoU85y
-         x4KrvebM6QN+G1ucZHrJWdJZIrww16MPhVdpx6YP3Sf1VSy8dFjd5Fa+L0xDAAcXDa6P
-         FOE7hQAG0Xdqzi3xK9lhGbrHDK+RyWSM4RVJW2WFHSotyU8EIgSPMAqWSYV8V4c3hXYC
-         I+IAPxKDG0af1aQkAzu2n4Io5FCBskkBI3gXRERzhSwORX985e7X6jQ9Y5h/8FDkrvkL
-         IZoJOZ5Zwk9qN1Rm6MLmSkQsrrX7TZC80zIk2ciFf0fI7mBNZYnVaksUNmek4ZmuQwwN
-         Hc0g==
+        d=suse.com; s=google; t=1748593689; x=1749198489; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+KfoeGtydTUpyMLEw3lr9UQ8n4o3PGMI0cTKplyap2g=;
+        b=f88FU4Lwp761A7x7tJ3K9+IQ8VeNJnGUpmWkDivwZmH7r9gm2AdxqNYYLvEJ4aOW92
+         aWcp+2h96h9JHYhzI7ssvv/qGNwDmUl/ylI+NJ4mpocr84AW8GFUUfyVEH5Y3PIHAT0R
+         RyEnda5E9oiqf+TWMLXBT2w8iq1F5YmNlCJMM9ylSq21CwdJHjt30PQHYtlCBSjZyozp
+         0QKdeBfVMiMrDDpeRLtu9xQWvLA8lauVqdAj3v3OkoAvaJdyYlClT74LEDVtXtgS48sC
+         iPAomtjz4EC3i7y8++AZE20qI2tGZ7WGWnhcUm9ZUbByf3jzPOiS3Bk2GVf5bPACOe0w
+         n6bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748593637; x=1749198437;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oYOli4oTQ0MFkGdltVUUX/1x4FeeDlNH5ixoZJpfc0Y=;
-        b=ZS1hTH72FaIPweWxjMcBahGH89jL/IHS4ax3gQgX+F8s4+ypiJ/BCCfEWzRTJsVdgI
-         JOBjHX5SOj5tpSSB/hUjOOKlHvEIY+TO2KyFgFXIgMcCMDU6LxPzot9uYnkBFo5el6i6
-         BCOobQskWwWCFgSj9q0I0sb/yHt7gWwnyXp8z72MGft5W7hA15F2RXcKaZ651Ey/H/iG
-         zgBmSS3Hgqs0h3zM2TvHtRrYOJ8WIWNOJYdWzxo+UmSPv9y138dEVTKj6Cru1u4EyZC5
-         kTfHKi8R2Njy/VhWBzjKSsBbdD0ATjexyiiz8xTGkhlKxiRFLHBdeysL3a9ZCdTVayzd
-         THnw==
-X-Gm-Message-State: AOJu0YzrYtsf6f65/yUwVqNK6pFTNpkXFTcGmqR/pxWjthf82InbOcRs
-	k3FMrvYS5LACeqUWx55Lyh3c/KwLj9H52WBWY6ThpikouMD2VeGWq1JRt7dXjD9DqAeMDj6A/q6
-	MH759RNDqSy+x4wrpeprcJSMMJIrT7mU=
-X-Gm-Gg: ASbGncvgA4hmkOunOhzEIDDSIJPlSXaKaL2V6Ot6Z6y0DFB5y51HALbdLQBnzvkwbM+
-	AmU4wwdPNsdbrCusSehMioZU3DkJP7HEs8Nhq2BEsgQ0k8VHQRqQewFzMG9x9MQDwDsnb1DpRKa
-	CNg2BV8i8LnkfQmtLJpW5jfNtO9OV3jm4=
-X-Google-Smtp-Source: AGHT+IFsqOwz2hH/6SkMcb4g5Yt5gM++f/aIIg84Ru4n0ZJdf4J+GaGTDN2HUDMjHnisBhrlGkZG3VMjpTsxTu67sqE=
-X-Received: by 2002:a05:690c:ed4:b0:70e:2168:7330 with SMTP id
- 00721157ae682-70f97ebe21cmr35975617b3.19.1748593637073; Fri, 30 May 2025
- 01:27:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748593689; x=1749198489;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KfoeGtydTUpyMLEw3lr9UQ8n4o3PGMI0cTKplyap2g=;
+        b=hj/sZJKdjLKy2+ehsQLxphx/evx6iNInUpLNYzMf88MK4SMf/BKO+GFuaYdfuhjbR5
+         4diClzjd466mk0yMcw+UtPwk7EJB1xxaf+p/LRQRd963IFBuZfp+k4S50p4yBrLsxqRh
+         LHI+qBtcBQ/uZjh6/8SzwHUnuxjoPwve8QVNjqVnE3vz6KJK//JMVSe1eRFlsa3mul9L
+         aAXImaOuc/Aoqqes8QBiLEFfaT9allY53T/SxYYHN2grKJDm24unSUu8gByPXo1paVnH
+         j9dHQIdGsvrxQm0ugW3PopJFaxAHabRtm3JL6INT86OPDdsFEeojvBVHnSdg4QaGgIUA
+         kr7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVjzWq6GtuLZgs97gXFlTRtzJoN3pQfJbElhY1yPBqslwR21rn5nWmCe75IEGstjfs/j0nreS1bzN/xwyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz24jqIAAcsfduXyiBfk3sFFSwIYbrWuno+n8+75RQJbYlvNoaj
+	W54KAJoWnLT7RvyGm1cxEWocYftYWJj5Vmh8/biI1JCUjr69KZ3HIQ+GgY67KomvR9k=
+X-Gm-Gg: ASbGncu9g64orFAgnDhWq+EdVXoss8nbRIvnVf2/U7bxnxiAmbqA3+yhSDXMu50eXBW
+	DRhSVCvg9HEKNyl7vbWleJOEQzdHUiSkVMaQbwskhYqfVzB+7pRXumglwVKg9ukQZIhf49lIeVF
+	XM92MWGafiMHywlWQGttQIRNFTNESs7n0x8HAKs1r0BlV21sF9BzBsgf87RVH02A0tK8DQRBT3b
+	isJO7s1e+EjcCy7+Zs3sTNOAUHe0t923E+jGg6JcfdnzTVjv4a9ewODRd/wdTPRYt3hxwT3OqSN
+	RfGlNwugWvOQTKpnFSGkBkQcwU9vwbwONWW3fy+raWDA7oM7kCh8ppXlMWOsQ3Y/J8nfAcsBq1I
+	=
+X-Google-Smtp-Source: AGHT+IH/hoDLzGQW3Ae82uMnYvImx0K/Ml7TX7h0dog4n2USqtNGdiSnfxDJz88krhbw1SEsk2vu0A==
+X-Received: by 2002:a05:6000:1a8f:b0:3a4:ee3f:e9a6 with SMTP id ffacd0b85a97d-3a4f7ab1641mr1698397f8f.54.1748593688757;
+        Fri, 30 May 2025 01:28:08 -0700 (PDT)
+Received: from localhost (109-81-89-112.rct.o2.cz. [109.81.89.112])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4efe6d0dbsm4093471f8f.40.2025.05.30.01.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 01:28:08 -0700 (PDT)
+Date: Fri, 30 May 2025 10:28:07 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+Message-ID: <aDlsF5tAcUxo4VgT@tiehlicka>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
+ <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
+ <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
+ <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
+ <aDgQ0lbt1h5v0lgE@tiehlicka>
+ <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530034713.4165309-1-dregan@broadcom.com>
-In-Reply-To: <20250530034713.4165309-1-dregan@broadcom.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Fri, 30 May 2025 10:27:05 +0200
-X-Gm-Features: AX0GCFu20_wlEHN11fGmhScteajc3WuMgALK6hLnwRgWbt4ITw7IMg-Z42znGps
-Message-ID: <CAOiHx=nzNZiOiBKUVqpTA5S8uY+ZNdPpLpEQGGDN9jP2-4Lj8Q@mail.gmail.com>
-Subject: Re: [PATCH] mtd: nand: brcmnand: fix mtd corrected bits stat
-To: David Regan <dregan@broadcom.com>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
-	bcm-kernel-feedback-list@broadcom.com, william.zhang@broadcom.com, 
-	anand.gore@broadcom.com, florian.fainelli@broadcom.com, 
-	kamal.dasu@broadcom.com, dan.beygelman@broadcom.com, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
-	rafal@milecki.pl, computersforpeace@gmail.com, frieder.schrempf@kontron.de, 
-	vigneshr@ti.com, richard@nod.at, bbrezillon@kernel.org, kdasu.kdev@gmail.com, 
-	jaimeliao.tw@gmail.com, kilobyte@angband.pl, dgcbueu@gmail.com, 
-	dregan@mail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
 
-Hi,
+On Fri 30-05-25 10:06:52, David Hildenbrand wrote:
+> On 29.05.25 09:46, Michal Hocko wrote:
+> > On Wed 28-05-25 23:01:04, David Hildenbrand wrote:
+> > [...]
+> > > I think we just have to be careful to document it properly -- especially the
+> > > shortcomings and that this feature might become a problem in the future.
+> > > Movable user-space page tables getting placed on CMA memory would probably
+> > > not be a problem if we don't care about ... user-space data either way.
+> > 
+> > I think makedumpfile could refuse to capture a dump if userspace memory
+> > is requested to enforce this.
+> 
+> Yeah, it will be tricky once we support placing other memory on CMA regions.
+> E.g., there was the discussion of making some slab allocations movable.
+> 
+> But probably, in such a configuration, we would later simply refuse to
+> active CMA kdump.
 
-On Fri, May 30, 2025 at 5:48=E2=80=AFAM David Regan <dregan@broadcom.com> w=
-rote:
->
-> Currently we attempt to get the amount of flipped bits from a hardware
-> location which is reset on every subpage. Instead obtain total flipped
-> bits stat from hardware accumulator. In addition identify the correct
-> maximum subpage corrected bits.
->
-> Signed-off-by: David Regan <dregan@broadcom.com>
-> Reviewed-by: William Zhang <william.zhang@broadcom.com>
-> Reviewed-by: Kamal Dasu <kamal.dasu@broadcom.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 48 ++++++++++++++++++------
->  1 file changed, 37 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/=
-raw/brcmnand/brcmnand.c
-> index 62bdda3be92f..43ab4aedda55 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -361,6 +361,7 @@ enum brcmnand_reg {
->         BRCMNAND_CORR_COUNT,
->         BRCMNAND_CORR_EXT_ADDR,
->         BRCMNAND_CORR_ADDR,
-> +       BRCMNAND_READ_ERROR_COUNT,
->         BRCMNAND_UNCORR_EXT_ADDR,
->         BRCMNAND_UNCORR_ADDR,
->         BRCMNAND_SEMAPHORE,
-> @@ -389,6 +390,7 @@ static const u16 brcmnand_regs_v21[] =3D {
->         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
->         [BRCMNAND_UNCORR_COUNT]         =3D     0,
->         [BRCMNAND_CORR_COUNT]           =3D     0,
-> +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
->         [BRCMNAND_CORR_EXT_ADDR]        =3D  0x60,
->         [BRCMNAND_CORR_ADDR]            =3D  0x64,
->         [BRCMNAND_UNCORR_EXT_ADDR]      =3D  0x68,
-> @@ -419,6 +421,7 @@ static const u16 brcmnand_regs_v33[] =3D {
->         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
->         [BRCMNAND_UNCORR_COUNT]         =3D     0,
->         [BRCMNAND_CORR_COUNT]           =3D     0,
-> +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
->         [BRCMNAND_CORR_EXT_ADDR]        =3D  0x70,
->         [BRCMNAND_CORR_ADDR]            =3D  0x74,
->         [BRCMNAND_UNCORR_EXT_ADDR]      =3D  0x78,
-> @@ -449,6 +452,7 @@ static const u16 brcmnand_regs_v50[] =3D {
->         [BRCMNAND_CORR_THRESHOLD_EXT]   =3D     0,
->         [BRCMNAND_UNCORR_COUNT]         =3D     0,
->         [BRCMNAND_CORR_COUNT]           =3D     0,
-> +       [BRCMNAND_READ_ERROR_COUNT]     =3D     0,
+Or we can make the kdump CMA region more special and only allow
+GFP_HIGHUSER_MOVABLE allocations from that. Anyaway I think we should
+deal with this once we get there.
+ 
+> > > The whole "Direct I/O takes max 1s" part is a bit shaky. Maybe it could be
+> > > configurable how long to wait? 10s is certainly "safer".
+> > 
+> > Quite honestly we will never know and rather than making this
+> > configurable I would go with reasonably large. Couple of seconds
+> > certainly do not matter for the kdump situations but I would go as far
+> > as minutes.
+> 
+> I recall that somebody raised that kdump downtime might be problematic
+> (might affect service downtime?).
+> 
+> So I would just add a kconfig option with a default of 10s.
 
-I see this register in BCM63268's NAND controller at 0x80, which is a
-v4.x one, so I'm surprised v5.0 doesn't have it. Or does it not work
-there? I don't know if v3.3 also has it or if using this on v4.x would
-require a separate brcmnand_regs entry.
+kconfig option usually doesn't really work for distro kernels. I am
+personally not really keen on having a tuning knob because there is a
+risk of cargo cult based tuning we have seen in other areas. That might
+make it hard to remove the knob later on. Fundamentally we should have 2
+situations though. Either we know that the HW is sane and then we
+shouldn't really need any sleep or the HW might misbehave and then we
+need to wait _some_ time. If our initial guess is incorrect then we can
+always increase it and we would learn about that through bug reports.
 
-Can't really comment on the remaining changes.
+All that being said I would go with an additional parameter to the
+kdump cma setup - e.g. cma_sane_dma that would skip waiting and use 10s
+otherwise. That would make the optimized behavior opt in, we do not need
+to support all sorts of timeouts and also learn if this is not
+sufficient.
 
-Regards,
-Jonas
+Makes sense?
+-- 
+Michal Hocko
+SUSE Labs
