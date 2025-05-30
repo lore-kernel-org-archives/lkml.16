@@ -1,63 +1,63 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707EB222565
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1094224B1C
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597524; cv=none; b=P+UJAdSUpORB0g0aXt9jN4dTiONVKWhOC9vnRW2J1YgGaOrSoj48IGCHTgKBNs2elqmTA7DmNfSzbtjqop3oqp7f/JgzCyFUlNkSb86teUK6UFGyJeTVkKqTMAJGijgur8f7D+ES2vP5qwvdOFxGcJhOePhA7H64a66wnfT21J4=
+	t=1748597541; cv=none; b=ZTQlDlu4DzxOGzpQoTZh3kYbRjTI7uMnWQw3rRwIYo3xMTITulRIvM6158JNxSYeIEdLLSJ49QuPkrjHJ4LJcFNXSA8HNCM4lKByAwSpTGi6jl6RKEMxEkTnZi0swjI8fdEmp/Hf17xn5U6BM5bwmK536cEohNLtNDig6epyBYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748597524; c=relaxed/simple;
-	bh=v0y8BsMdpB12xLvFn5vAwwkHzR1Wq6pNBECHF1ePs8o=;
+	s=arc-20240116; t=1748597541; c=relaxed/simple;
+	bh=Vo5W68+B44KDyLABkBRZQtt4MP6EbodSR8b0dyMCe9I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=du2HrmQiXo78CciFPwMZ8IGpbhGcvdtMpMfYkLjIxq0sM1Ctdw8m1jcAVjpOqqYlPGTBeyQD/b/dexYq1TSzWIBxymyEW7T07MZ3wVXZQOr2kVcQY9xKPueFlQ/I7I212BEocFHa9QBDkGgHkTl/K8jPAZ5JKM4/iq+fEoXvtyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HYsOtTwq; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version; b=pIzvE0SS9VaQbKpvr3Aegn5oPePLJbixR7Ofr3wBiivBOKs7jZ+4pzrx6Deu6R+pSKqu8S1Gf7Mwq9SplhTNXKEnxG69OLQ1B+f8unywtTkaMCW/+2J/WapMRTuGmHlivHnH9XlC48z9BHGste2YERI5YYixvgoPP56leRB7e1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=TkX8S0ml; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HYsOtTwq"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af6a315b491so1533617a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:32:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="TkX8S0ml"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so1205977a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748597522; x=1749202322; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748597537; x=1749202337; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dO6otkog24Nl4MqGG9SKHBZpR3sFE7cRfJye6EEtKwU=;
-        b=HYsOtTwqn7S/y04wP3C85vE2nFJV+K9wtaqiRJohu+f+XYSjGnOuUrbY8pmTlg/+p3
-         yBxR1fgOc7FXWQpwH+g+Kozu3uCpxusa5vgbfp6fpGeQR0J6TmAaAgkRdmIkSVr0sRyQ
-         p1fJ5rGcazqjI/Bz2d6Mu20bsCyE810r9VouqmECRrFC4z+MqeuO5SYb3IVFtVVhZHfb
-         Dib8PeqnNuJ5IY5b0MRXNz7iIGUxeRBO5vIetq1Ka7SpM905TsScuVZaOUWHOPmiarfj
-         JgO/C7mkZIaj1Tdo5Q+2vmca/JQYdh+6Gd+PLWIlIrFCRE3Ro2pBWSMM0E2B+O/PHF0w
-         zWKA==
+        bh=WgdxFQILtv1ZFBwGDlokBNLY9DZwyLg+1V8wfJcAxqs=;
+        b=TkX8S0mlzQALs9Xd5nJpstems/lEQiViliadNUqZ4Vy8VoDCAE5kciPed4kmjZLKad
+         n8hB45Jt3bYVFXCyFT5oyZz4lK1WLpSj5Fc4MxtiO2L4EGIFb8jmcYRiccXd2tLquT7B
+         BRHHWEKNw6hlh2CQoq2nyx+qZm+F00Y9/x74H99SsxNixZDyvF13Fhp+iLENW8YOIwKO
+         Ki8SkEP9Qe9OTkoCcdoZKTBKAAzCdYnz06HFG8XOP7N+0ymzkVd9OGk3pnex18I7Vq9Y
+         TyxCukQA/nk4bq6n4UCJ9LJ8de/svHiuUk4FzIYNo4r0Aj0tiwYsGugLD0GS90z1O7Kb
+         GdBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748597522; x=1749202322;
+        d=1e100.net; s=20230601; t=1748597537; x=1749202337;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dO6otkog24Nl4MqGG9SKHBZpR3sFE7cRfJye6EEtKwU=;
-        b=ro7BvmoWAnV1di6bz7ogFcEtGSYrjj+yMLUiwdrtYQXlyJEOARt4bn9aU6LFCPm6Gi
-         +SN7GvbRBhSG+UmroElLxudP3rxFvh4KvI1RcA3YbeK18Ah2LTLCb73LJLjXA42v1oLf
-         hMRSAIqImnApdJXiLdgl0ruAP3XsIDCvB8/7kcxmQeIrfZavKe0136158+jaDscLuI+4
-         E/eRLSPi2bYYu4hRLba3gda+fkM4xF6tsCwsClYqpFLLVrQJ1fQJDrHWE6HfeuL4OHE6
-         ExPNu0A4DNYvQbkQ/hS1ynPryJ49ZQfYlQ7yc5eTsFNTXgq7IE6FLkU2JnHjTBllHgAQ
-         2eTg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlYBzYzWKXVLbSDyvSlhqUM8j/dyE4738EeJpW0oGYTCwnRDFZZU5U0Sk9QM4jGnFgjH+zADXnx+gakzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHUIRJn4AT4RsfZZChTKGLxCPTFEuI42PkRCMmV3Li/CGgm9Zw
-	ddMpQD+zbX+Rm7mvhXjDa2YTEmjoW5CeUHs5H03I45Wjlbin6Fa36jZEGeXmvW0noxs=
-X-Gm-Gg: ASbGncvwVDYg88zWmGVXE2CNPR4z/kU0UkxHYATg4/CcuklRGwr//Bhuwvd+UxanZcZ
-	eInqoGB8mo73jruR0uQa0zAhRlkuV/UQblyMgqNdILYd6QceIIQjTtwOq4tMtipXen+ICxTIMSP
-	hkl+f6wP0zoPkaZT6bzWjwkqcr1jrSBFGFYCS8os0cH6XKkvV7Z5O6s4Asm2EdCOgQmTsV8hiQT
-	wUtYppUR275sFfZIeBnOay/76RHxq5Maj+ltQIXgGYfQRE+89WSiK0nKWOHaCksSW8deqfuKmVV
-	cLXgMy/4ROP5Kb+Z1p0ZKWSpHUo1p4oeRxjfRsmaUaJy/qORMPUO41plavZRY3rimOW1crTU350
-	iR4Bb/vwICgTVx/pG/q1m
-X-Google-Smtp-Source: AGHT+IHUkj4Y6AZ8cB5OAPZaSl8VUuiU504h/MLG14sBKE++U+CpU83URutH7UTuLZZMbY0g/ZO+FA==
-X-Received: by 2002:a17:90b:1d50:b0:311:fde5:c4b6 with SMTP id 98e67ed59e1d1-31250344995mr2213817a91.6.1748597521434;
-        Fri, 30 May 2025 02:32:01 -0700 (PDT)
+        bh=WgdxFQILtv1ZFBwGDlokBNLY9DZwyLg+1V8wfJcAxqs=;
+        b=Yd5wejABTjHSe3GHpFh1aEomkcyBe9fkuBF7nHSSgV9USIvSXucmNZaHyFn5YM97Y7
+         aDRW1naLaVm3S146r4XUtPB2N1y5e3nyiCOLI+cy1ec1MYVrxUgCXPSr+xyZ6omshOUq
+         63wox9RsXQ67IqB3eIEOFRCXtrv5RrrfWK8YCvk8c1X/qbLL7A1ut0Z4PTcmeIRJ0iqk
+         eGLDu2YpYI+jhP4+6WxYYbDLqWOXRiD9NUkOETGdN4g0AyqjTlM73gDz/cXfpwoi3rHh
+         9bMPM8k2SuNiHb23u5lo02ImOatV/vItwH2cXyFYmjogVgmkJcSuPfgIGSj3Rv7QTJHT
+         zj0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUMV1bA3TEWC+dU78v7+5nNMjxrfkR0VXkqxp1cyHaNc12s2fMnVhk7wbuA0ymfPpk+ahsMRhEKGm8rgZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLfgnDdzVp71Iw7DhMy4qKP+NAePwtk++0BTqbo9uWAaQR5Wnu
+	AgHfLBxSiL+jEfMmvQCRLxRXmfJh2N5JLDIjhHUBn83j1IzdnYE0lm/uP0OT9RkdBSg=
+X-Gm-Gg: ASbGncuuvwxKxuOAkqt+uuGv9F58Nr5ylwFQOAc9I6gXRv7LOtV3qOQDSTMwZ9GZ8vi
+	/IcIsNvwgrSJTdmwuP5eebN3zF5Hnl6ninaoRkmD0d2bHytyF4yq2Ux2wqEhqVZU3DYhE8ZFjgA
+	B+1IBsieNj70Lzsox9JkGgoyJM5MzeQnQJzscrEYZuV4kuH7/eEqmjmUu6rFFgGUMk3q4YTv+4/
+	yVP+z3z2o7YUaQ1CQW/cHaOeJ5p40PPlDN5CHYZN9p/rj/9a7gcfwj1nx/u7pkZo5mJjUVGIksz
+	JdmLDLBFWAu0T/LrJqZ0rm2eyGKHwBg7Xp8dbkRAIDQ+gz5Pd9NNnV2HgjEGR7sbxwL1ISwUsh1
+	Bxa8KTVip6g==
+X-Google-Smtp-Source: AGHT+IEJreThnxFmdrlfjlpwKZv59IFtRtCaH2wQICekYkicVpLMTveAapFUeJrWIU6RsHlorrZhig==
+X-Received: by 2002:a17:90b:314d:b0:311:c1ec:7d0c with SMTP id 98e67ed59e1d1-312504437b2mr2132223a91.27.1748597536883;
+        Fri, 30 May 2025 02:32:16 -0700 (PDT)
 Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.31.46
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.32.02
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 30 May 2025 02:32:01 -0700 (PDT)
+        Fri, 30 May 2025 02:32:16 -0700 (PDT)
 From: Bo Li <libo.gcs85@bytedance.com>
 To: tglx@linutronix.de,
 	mingo@redhat.com,
@@ -112,9 +112,9 @@ Cc: dietmar.eggemann@arm.com,
 	chengguozhu@bytedance.com,
 	sunjiadong.lff@bytedance.com,
 	Bo Li <libo.gcs85@bytedance.com>
-Subject: [RFC v2 14/35] RPAL: enable page fault handling
-Date: Fri, 30 May 2025 17:27:42 +0800
-Message-Id: <a7c183833cca723238d4173a6df771dd7e340762.1748594840.git.libo.gcs85@bytedance.com>
+Subject: [RFC v2 15/35] RPAL: add sender/receiver state
+Date: Fri, 30 May 2025 17:27:43 +0800
+Message-Id: <6582d600063dd2176558bdf2b62a6a143bd594e2.1748594840.git.libo.gcs85@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
 References: <cover.1748594840.git.libo.gcs85@bytedance.com>
@@ -126,565 +126,438 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-RPAL's address space sharing allows one process to access the memory of
-another process, which may trigger page faults. To ensure programs can run
-normally, RPAL needs to handle page faults occurring in the address space
-of other processes. Additionally, to prevent processes from generating
-coredumps due to invalid memory in other processes, RPAL must also restore
-the current thread state to a pre-saved state under specific circumstances.
+The lazy switch defines six receiver states, and their state transitions
+are as follows:
 
-For handling page faults, by passing the correct vm_area_struct to
-handle_page_fault(), RPAL locates the process corresponding to the address
-where the page fault occurred and uses its mm_struct to handle the page
-fault. Regarding thread state restoration, RPAL restores the thread's
-state to a predefined state in userspace when it cannot locate the
-mm_struct of the corresponding process (i.e., when the process has already
-exited).
+   |<--->READY<----> WAIT <----> CALL ----> LAZY_SWITCH ---> KERNEL_RET
+   |                                             |               |
+RUNNING <----------------------------------------|---------------|
+
+The receiver thread initially starts in the RUNNING state and can
+transition to the WAIT state voluntarily. The READY state is a temporary
+state before entering WAIT state.  For a receiver in the WAIT state, it
+must be in the TASK_INTERRUPTIBLE state. If the receiver thread is woken
+up, the WAIT state can transition to the RUNNING state.
+
+Once the receiver is in the WAIT state, the sender thread can
+initiate an RPAL call, causing the receiver to enter the CALL state. A
+receiver thread in the CALL state cannot be awakened until a lazy switch
+occurs or its state changes. The call state carries additional service_id
+and sender_id information.
+
+If the sender completes executing the receiver's code without entering the
+kernel after issuing the RPAL call, the receiver transitions back from the
+CALL state to the WAIT state. Conversely, if the sender enters the kernel
+during the RPAL call, the receiver's state changes to LAZY_SWITCH.
+
+From the LAZY_SWITCH state, the receiver thread has two possible state
+transitions: When the receiver thread finishes execution and switches back
+to the sender via a lazy switch, it first enters the KERNEL_RET state and
+then transitions to the RUNNING state. If the receiver thread runs for too
+long and the scheduler resumes the sender, the receiver directly
+transitions to the RUNNING state. Transitions to the RUNNING state can be
+done in userspace.
+
+The lazy switch mechanism defines three states for the sender thread:
+
+ - RUNNING: The sender starts in this state. When the sender initiates
+   an RPAL call to switch from user mode to the receiver, it transitions
+   to the CALL state.
+
+ - CALL: The sender remains in this state while the receiver is executing
+   the code triggered by the RPAL call. When the receiver switches back to
+   the sender from user mode, the sender returns to the RUNNING state.
+
+ - KERNEL_RET: If the receiver takes an extended period to switch back to
+   the sender after a lazy switch, the scheduler may preempt the sender to
+   run other tasks. In this case, the sender enters the KERNEL_RET state
+   while in the kernel. Once the sender resumes execution in user mode, it
+   transitions back to the RUNNING state.
+
+This patch implements the handling and transition of the receiver's state.
+When a receiver leaves the run queue in the READY state, its state
+transitions to the WAIT state; otherwise, it transitions to the RUNNING
+state. The patch also modifies try_to_wake_up() to handling different
+states: for the READY and WAIT states, try_to_wake_up() causes the state
+to change to the RUNNING state. For the CALL state, try_to_wake_up() cannot
+wake up the task. The patch provides a special interface,
+rpal_try_to_wake_up(), to wake up tasks in the CALL state, which can be
+used for lazy switches.
 
 Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
- arch/x86/mm/fault.c     | 271 ++++++++++++++++++++++++++++++++++++++++
- arch/x86/rpal/mm.c      |  34 +++++
- arch/x86/rpal/service.c |  24 ++++
- arch/x86/rpal/thread.c  |  23 ++++
- include/linux/rpal.h    |  81 ++++++++----
- 5 files changed, 412 insertions(+), 21 deletions(-)
+ arch/x86/kernel/process_64.c |  43 ++++++++++++
+ arch/x86/rpal/internal.h     |   7 ++
+ include/linux/rpal.h         |  50 ++++++++++++++
+ kernel/sched/core.c          | 130 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 230 insertions(+)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 998bd807fc7b..35f7c60a5e4f 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -19,6 +19,7 @@
- #include <linux/mm_types.h>
- #include <linux/mm.h>			/* find_and_lock_vma() */
- #include <linux/vmalloc.h>
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index f39ff02e498d..4830e9215de7 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -40,6 +40,7 @@
+ #include <linux/ftrace.h>
+ #include <linux/syscalls.h>
+ #include <linux/iommu.h>
 +#include <linux/rpal.h>
  
- #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
- #include <asm/traps.h>			/* dotraplinkage, ...		*/
-@@ -1460,6 +1461,268 @@ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
- 		trace_page_fault_kernel(address, regs, error_code);
+ #include <asm/processor.h>
+ #include <asm/pkru.h>
+@@ -596,6 +597,36 @@ void compat_start_thread(struct pt_regs *regs, u32 new_ip, u32 new_sp, bool x32)
  }
+ #endif
  
-+#if IS_ENABLED(CONFIG_RPAL)
-+static void rpal_do_user_addr_fault(struct pt_regs *regs, unsigned long error_code,
-+			     unsigned long address, struct mm_struct *real_mm)
-+{
-+	struct vm_area_struct *vma;
-+	vm_fault_t fault;
-+	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
-+
-+	if (unlikely(error_code & X86_PF_RSVD))
-+		pgtable_bad(regs, error_code, address);
-+
-+	if (unlikely(cpu_feature_enabled(X86_FEATURE_SMAP) &&
-+		     !(error_code & X86_PF_USER) &&
-+		     !(regs->flags & X86_EFLAGS_AC))) {
-+		page_fault_oops(regs, error_code, address);
-+		return;
-+	}
-+
-+	if (unlikely(faulthandler_disabled())) {
-+		bad_area_nosemaphore(regs, error_code, address);
-+		return;
-+	}
-+
-+	if (WARN_ON_ONCE(!(regs->flags & X86_EFLAGS_IF))) {
-+		bad_area_nosemaphore(regs, error_code, address);
-+		return;
-+	}
-+
-+	local_irq_enable();
-+
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
-+
-+	if (error_code & X86_PF_SHSTK)
-+		flags |= FAULT_FLAG_WRITE;
-+	if (error_code & X86_PF_WRITE)
-+		flags |= FAULT_FLAG_WRITE;
-+	if (error_code & X86_PF_INSTR)
-+		flags |= FAULT_FLAG_INSTRUCTION;
-+
-+	if (user_mode(regs))
-+		flags |= FAULT_FLAG_USER;
-+
-+#ifdef CONFIG_X86_64
-+	if (is_vsyscall_vaddr(address)) {
-+		if (emulate_vsyscall(error_code, regs, address))
-+			return;
-+	}
-+#endif
-+
-+	if (!(flags & FAULT_FLAG_USER))
-+		goto lock_mmap;
-+
-+	vma = lock_vma_under_rcu(real_mm, address);
-+	if (!vma)
-+		goto lock_mmap;
-+
-+	if (unlikely(access_error(error_code, vma))) {
-+		bad_area_access_error(regs, error_code, address, NULL, vma);
-+		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+		return;
-+	}
-+
-+	fault = handle_mm_fault(vma, address, flags | FAULT_FLAG_VMA_LOCK, regs);
-+	if (!(fault & (VM_FAULT_RETRY | VM_FAULT_COMPLETED)))
-+		vma_end_read(vma);
-+
-+	if (!(fault & VM_FAULT_RETRY)) {
-+		count_vm_vma_lock_event(VMA_LOCK_SUCCESS);
-+		goto done;
-+	}
-+	count_vm_vma_lock_event(VMA_LOCK_RETRY);
-+	if (fault & VM_FAULT_MAJOR)
-+		flags |= FAULT_FLAG_TRIED;
-+
-+	/* Quick path to respond to signals */
-+	if (fault_signal_pending(fault, regs)) {
-+		if (!user_mode(regs))
-+			kernelmode_fixup_or_oops(regs, error_code, address,
-+						 SIGBUS, BUS_ADRERR,
-+						 ARCH_DEFAULT_PKEY);
-+		return;
-+	}
-+lock_mmap:
-+
-+retry:
-+	/*
-+	 * Here we don't need to lock current->mm since no vma in
-+	 * current->mm is used to handle this page fault. However,
-+	 * we do need to lock real_mm, as the address belongs to
-+	 * real_mm's vma.
-+	 */
-+	vma = lock_mm_and_find_vma(real_mm, address, regs);
-+	if (unlikely(!vma)) {
-+		bad_area_nosemaphore(regs, error_code, address);
-+		return;
-+	}
-+
-+	if (unlikely(access_error(error_code, vma))) {
-+		bad_area_access_error(regs, error_code, address, real_mm, vma);
-+		return;
-+	}
-+
-+	fault = handle_mm_fault(vma, address, flags, regs);
-+
-+	if (fault_signal_pending(fault, regs)) {
-+		/*
-+		 * Quick path to respond to signals.  The core mm code
-+		 * has unlocked the mm for us if we get here.
-+		 */
-+		if (!user_mode(regs))
-+			kernelmode_fixup_or_oops(regs, error_code, address,
-+						 SIGBUS, BUS_ADRERR,
-+						 ARCH_DEFAULT_PKEY);
-+		return;
-+	}
-+
-+	/* The fault is fully completed (including releasing mmap lock) */
-+	if (fault & VM_FAULT_COMPLETED)
-+		return;
-+
-+	if (unlikely(fault & VM_FAULT_RETRY)) {
-+		flags |= FAULT_FLAG_TRIED;
-+		goto retry;
-+	}
-+
-+	mmap_read_unlock(real_mm);
-+done:
-+	if (likely(!(fault & VM_FAULT_ERROR)))
-+		return;
-+
-+	if (fatal_signal_pending(current) && !user_mode(regs)) {
-+		kernelmode_fixup_or_oops(regs, error_code, address, 0, 0,
-+					 ARCH_DEFAULT_PKEY);
-+		return;
-+	}
-+
-+	if (fault & VM_FAULT_OOM) {
-+		/* Kernel mode? Handle exceptions or die: */
-+		if (!user_mode(regs)) {
-+			kernelmode_fixup_or_oops(regs, error_code, address,
-+						 SIGSEGV, SEGV_MAPERR,
-+						 ARCH_DEFAULT_PKEY);
-+			return;
-+		}
-+
-+		pagefault_out_of_memory();
-+	} else {
-+		if (fault & (VM_FAULT_SIGBUS|VM_FAULT_HWPOISON|
-+			     VM_FAULT_HWPOISON_LARGE))
-+			do_sigbus(regs, error_code, address, fault);
-+		else if (fault & VM_FAULT_SIGSEGV)
-+			bad_area_nosemaphore(regs, error_code, address);
-+		else
-+			BUG();
-+	}
-+}
-+NOKPROBE_SYMBOL(rpal_do_user_addr_fault);
-+
-+static inline void rpal_try_to_rebuild_context(struct pt_regs *regs,
-+					       unsigned long address,
-+					       int error_code)
-+{
-+	int handle_more = 0;
-+
-+	/*
-+	 * We only rebuild sender's context, as other threads are not supposed
-+	 * to access other process's memory, thus they will not trigger a page
-+	 * fault.
-+	 */
-+	handle_more = rpal_rebuild_sender_context_on_fault(regs, address, -1);
-+	/*
-+	 * If we are not able to rebuild sender's context, just
-+	 * send a signal to let it coredump.
-+	 */
-+	if (handle_more)
-+		force_sig_fault(SIGSEGV, SEGV_MAPERR, (void __user *)address);
-+}
-+
-+/*
-+ * Most logic of this function is copied from do_user_addr_fault().
-+ * RPAL logic is added to handle special cases, such as find another
-+ * process's mm and rebuild sender's context if such page table is
-+ * not able to be handled.
-+ */
-+static bool rpal_try_user_addr_fault(struct pt_regs *regs, unsigned long error_code,
-+			      unsigned long address)
-+{
-+	struct mm_struct *real_mm;
-+	int rebuild = 0;
-+
-+	/* fast path: avoid mmget and mmput */
-+	if (unlikely((error_code & (X86_PF_USER | X86_PF_INSTR)) ==
-+		     X86_PF_INSTR)) {
-+		/*
-+		 * Whoops, this is kernel mode code trying to execute from
-+		 * user memory.  Unless this is AMD erratum #93, which
-+		 * corrupts RIP such that it looks like a user address,
-+		 * this is unrecoverable.  Don't even try to look up the
-+		 * VMA or look for extable entries.
-+		 */
-+		if (is_errata93(regs, address))
-+			return true;
-+
-+		page_fault_oops(regs, error_code, address);
-+		return true;
-+	}
-+
-+	/* kprobes don't want to hook the spurious faults: */
-+	if (WARN_ON_ONCE(kprobe_page_fault(regs, X86_TRAP_PF)))
-+		return true;
-+
-+	real_mm = rpal_pf_get_real_mm(address, &rebuild);
-+
-+	if (real_mm) {
-+#ifdef CONFIG_MEMCG
-+		struct mem_cgroup *memcg = NULL;
-+
-+		prefetchw(&real_mm->mmap_lock);
-+		/* try to charge page alloc to real_mm's memcg */
-+		if (!current->active_memcg) {
-+			memcg = get_mem_cgroup_from_mm(real_mm);
-+			if (memcg)
-+				set_active_memcg(memcg);
-+		}
-+		rpal_do_user_addr_fault(regs, error_code, address, real_mm);
-+		if (memcg) {
-+			set_active_memcg(NULL);
-+			mem_cgroup_put(memcg);
-+		}
-+#else
-+		prefetchw(&real_mm->mmap_lock);
-+		rpal_do_user_addr_fault(regs, error_code, address, real_mm);
-+#endif
-+		mmput_async(real_mm);
-+		return true;
-+	} else if (user_mode(regs) && rebuild) {
-+		rpal_try_to_rebuild_context(regs, address, -1);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool rpal_handle_page_fault(struct pt_regs *regs, unsigned long error_code,
-+			   unsigned long address)
-+{
-+	struct rpal_service *cur = rpal_current_service();
-+
-+	/*
-+	 * For RPAL process, it may access another process's memory and
-+	 * there may be page fault. We handle this case with our own routine.
-+	 * If we cannot handle this page fault, just let it go and handle
-+	 * it as a normal page fault.
-+	 */
-+	if (cur && !rpal_is_correct_address(cur, address)) {
-+		if (rpal_try_user_addr_fault(regs, error_code, address))
-+			return true;
-+	}
-+	return false;
-+}
-+#endif
-+
- static __always_inline void
- handle_page_fault(struct pt_regs *regs, unsigned long error_code,
- 			      unsigned long address)
-@@ -1473,7 +1736,15 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
- 	if (unlikely(fault_in_kernel_space(address))) {
- 		do_kern_addr_fault(regs, error_code, address);
- 	} else {
 +#ifdef CONFIG_RPAL
-+		if (rpal_handle_page_fault(regs, error_code, address)) {
-+			local_irq_disable();
-+			return;
-+		}
-+		do_user_addr_fault(regs, error_code, address);
-+#else /* !CONFIG_RPAL */
- 		do_user_addr_fault(regs, error_code, address);
-+#endif
- 		/*
- 		 * User address page fault handling might have reenabled
- 		 * interrupts. Fixing up all potential exit points of
-diff --git a/arch/x86/rpal/mm.c b/arch/x86/rpal/mm.c
-index f1003baae001..be7714ede2bf 100644
---- a/arch/x86/rpal/mm.c
-+++ b/arch/x86/rpal/mm.c
-@@ -390,3 +390,37 @@ void rpal_unmap_service(struct rpal_service *tgt)
- 	}
- 	mm_unlink_p4d(cur_mm, tgt->base);
- }
-+
-+static inline bool check_service_mapped(struct rpal_service *cur, int tgt_id)
++static void rpal_receiver_enter_wait(struct task_struct *prev_p)
 +{
-+	struct rpal_mapped_service *node;
-+	bool is_mapped = true;
-+	unsigned long type = (1 << RPAL_REVERSE_MAP) | (1 << RPAL_REQUEST_MAP);
-+
-+	node = rpal_get_mapped_node(cur, tgt_id);
-+	if (unlikely((node->type & type) != type))
-+		is_mapped = false;
-+
-+	return is_mapped;
-+}
-+
-+struct mm_struct *rpal_pf_get_real_mm(unsigned long address, int *rebuild)
-+{
-+	struct rpal_service *cur, *tgt;
-+	struct mm_struct *mm = NULL;
-+
-+	cur = rpal_current_service();
-+
-+	tgt = rpal_get_mapped_service_by_addr(cur, address);
-+	if (tgt == NULL)
-+		goto out;
-+
-+	mm = tgt->mm;
-+	if (unlikely(!check_service_mapped(cur, tgt->id) ||
-+		     !mmget_not_zero(mm)))
-+		mm = NULL;
-+	*rebuild = 1;
-+	rpal_put_service(tgt);
-+out:
-+	return mm;
-+}
-diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
-index f490ab07301d..49458321e7dc 100644
---- a/arch/x86/rpal/service.c
-+++ b/arch/x86/rpal/service.c
-@@ -148,6 +148,30 @@ static inline unsigned long calculate_base_address(int id)
- 	return RPAL_ADDRESS_SPACE_LOW + RPAL_ADDR_SPACE_SIZE * id;
- }
- 
-+struct rpal_service *rpal_get_mapped_service_by_id(struct rpal_service *rs,
-+						   int id)
-+{
-+	struct rpal_service *ret;
-+
-+	if (!is_valid_id(id))
-+		return NULL;
-+
-+	ret = rpal_get_service(rs->service_map[id].rs);
-+
-+	return ret;
-+}
-+
-+/* This function must be called after rpal_is_correct_address () */
-+struct rpal_service *rpal_get_mapped_service_by_addr(struct rpal_service *rs,
-+						     unsigned long addr)
-+{
-+	int id;
-+
-+	id = (addr - RPAL_ADDRESS_SPACE_LOW) / RPAL_ADDR_SPACE_SIZE;
-+
-+	return rpal_get_mapped_service_by_id(rs, id);
-+}
-+
- struct rpal_service *rpal_register_service(void)
- {
- 	struct rpal_service *rs;
-diff --git a/arch/x86/rpal/thread.c b/arch/x86/rpal/thread.c
-index 7550ad94b63f..e50a4c865ff8 100644
---- a/arch/x86/rpal/thread.c
-+++ b/arch/x86/rpal/thread.c
-@@ -155,6 +155,29 @@ int rpal_unregister_receiver(void)
- 	return ret;
- }
- 
-+int rpal_rebuild_sender_context_on_fault(struct pt_regs *regs,
-+					 unsigned long addr, int error_code)
-+{
-+	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT)) {
-+		struct rpal_sender_call_context *scc = current->rpal_sd->scc;
-+		unsigned long erip, ersp;
-+		int magic;
-+
-+		erip = scc->ec.erip;
-+		ersp = scc->ec.ersp;
-+		magic = scc->ec.magic;
-+		if (magic == RPAL_ERROR_MAGIC) {
-+			regs->ax = error_code;
-+			regs->ip = erip;
-+			regs->sp = ersp;
-+			/* avoid rebuild again */
-+			scc->ec.magic = 0;
-+			return 0;
-+		}
++	if (READ_ONCE(prev_p->__state) == TASK_INTERRUPTIBLE) {
++		atomic_cmpxchg(&prev_p->rpal_rd->rcc->receiver_state,
++			       RPAL_RECEIVER_STATE_READY,
++			       RPAL_RECEIVER_STATE_WAIT);
++	} else {
++		/*
++		 * Simply check RPAL_RECEIVER_STATE_READY is not enough. It is
++		 * possible task's state is TASK_RUNNING. Consider following case:
++		 *
++		 * CPU 0(prev_p)            CPU 1(waker)
++		 * set TASK_INTERRUPTIBLE
++		 * set RPAL_RECEIVER_STATE_READY
++		 *                          check TASK_INTERRUPTIBLE
++		 * clear RPAL_RECEIVER_STATE_READY
++		 * clear TASK_INTERRUPTIBLE
++		 * set TASK_INTERRUPTIBLE
++		 * set RPAL_RECEIVER_STATE_READY
++		 *                          ttwu_runnable()
++		 * schedule()
++		 */
++		atomic_cmpxchg(&prev_p->rpal_rd->rcc->receiver_state,
++			       RPAL_RECEIVER_STATE_READY,
++			       RPAL_RECEIVER_STATE_RUNNING);
 +	}
-+	return -EINVAL;
 +}
++#endif
 +
- void exit_rpal_thread(void)
- {
- 	if (rpal_test_current_thread_flag(RPAL_SENDER_BIT))
+ /*
+  *	switch_to(x,y) should switch tasks from x to y.
+  *
+@@ -704,6 +735,18 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 			loadsegment(ss, __KERNEL_DS);
+ 	}
+ 
++#ifdef CONFIG_RPAL
++	/*
++	 * When we come to here, the stack switching is finished. Therefore,
++	 * the receiver thread is prepared for a lazy switch. We then change
++	 * the receiver_state from RPAL_RECEIVER_STATE_REAY to
++	 * RPAL_RECEIVER_STATE_WAIT and other thread is able to call it with
++	 * RPAL call.
++	 */
++	if (rpal_test_task_thread_flag(prev_p, RPAL_RECEIVER_BIT))
++		rpal_receiver_enter_wait(prev_p);
++#endif
++
+ 	/* Load the Intel cache allocation PQR MSR. */
+ 	resctrl_sched_in(next_p);
+ 
+diff --git a/arch/x86/rpal/internal.h b/arch/x86/rpal/internal.h
+index cf6d608a994a..6256172bb79e 100644
+--- a/arch/x86/rpal/internal.h
++++ b/arch/x86/rpal/internal.h
+@@ -47,3 +47,10 @@ int rpal_unregister_sender(void);
+ int rpal_register_receiver(unsigned long addr);
+ int rpal_unregister_receiver(void);
+ void exit_rpal_thread(void);
++
++static inline unsigned long
++rpal_build_call_state(const struct rpal_sender_data *rsd)
++{
++	return ((rsd->rcd.service_id << RPAL_SID_SHIFT) |
++		(rsd->scc->sender_id << RPAL_ID_SHIFT) | RPAL_RECEIVER_STATE_CALL);
++}
 diff --git a/include/linux/rpal.h b/include/linux/rpal.h
-index 36be1ab6a9f3..3310d222739e 100644
+index 3310d222739e..4f4719bb7eae 100644
 --- a/include/linux/rpal.h
 +++ b/include/linux/rpal.h
-@@ -85,6 +85,8 @@ enum {
- 	RPAL_REVERSE_MAP,
- };
+@@ -87,6 +87,13 @@ enum {
  
-+#define RPAL_ERROR_MAGIC 0x98CC98CC
+ #define RPAL_ERROR_MAGIC 0x98CC98CC
+ 
++#define RPAL_SID_SHIFT 24
++#define RPAL_ID_SHIFT 8
++#define RPAL_RECEIVER_STATE_MASK ((1 << RPAL_ID_SHIFT) - 1)
++#define RPAL_SID_MASK (~((1 << RPAL_SID_SHIFT) - 1))
++#define RPAL_ID_MASK (~(0 | RPAL_RECEIVER_STATE_MASK | RPAL_SID_MASK))
++#define RPAL_MAX_ID ((1 << (RPAL_SID_SHIFT - RPAL_ID_SHIFT)) - 1)
 +
  extern unsigned long rpal_cap;
  
  enum rpal_task_flag_bits {
-@@ -198,23 +200,6 @@ struct rpal_version_info {
- 	unsigned long cap;
+@@ -94,6 +101,22 @@ enum rpal_task_flag_bits {
+ 	RPAL_RECEIVER_BIT,
  };
  
--/* End */
--
--struct rpal_shared_page {
--	unsigned long user_start;
--	unsigned long kernel_start;
--	int npage;
--	atomic_t refcnt;
--	struct list_head list;
--};
--
--struct rpal_common_data {
--	/* back pointer to task_struct */
--	struct task_struct *bp_task;
--	/* service id of rpal_service */
--	int service_id;
--};
--
- /* User registers state */
- struct rpal_task_context {
- 	u64 r15;
-@@ -232,17 +217,44 @@ struct rpal_receiver_call_context {
- 	int receiver_id;
- };
- 
--struct rpal_receiver_data {
--	struct rpal_common_data rcd;
--	struct rpal_shared_page *rsp;
--	struct rpal_receiver_call_context *rcc;
-+/* recovery point for sender */
-+struct rpal_error_context {
-+	unsigned long fsbase;
-+	u64 erip;
-+	u64 ersp;
-+	int state;
-+	int magic;
- };
- 
- struct rpal_sender_call_context {
++enum rpal_receiver_state {
++	RPAL_RECEIVER_STATE_RUNNING,
++	RPAL_RECEIVER_STATE_KERNEL_RET,
++	RPAL_RECEIVER_STATE_READY,
++	RPAL_RECEIVER_STATE_WAIT,
++	RPAL_RECEIVER_STATE_CALL,
++	RPAL_RECEIVER_STATE_LAZY_SWITCH,
++	RPAL_RECEIVER_STATE_MAX,
++};
++
++enum rpal_sender_state {
++	RPAL_SENDER_STATE_RUNNING,
++	RPAL_SENDER_STATE_CALL,
++	RPAL_SENDER_STATE_KERNEL_RET,
++};
++
+ /*
+  * user_meta will be sent to other service when requested.
+  */
+@@ -215,6 +238,8 @@ struct rpal_task_context {
+ struct rpal_receiver_call_context {
  	struct rpal_task_context rtc;
-+	struct rpal_error_context ec;
- 	int sender_id;
+ 	int receiver_id;
++	atomic_t receiver_state;
++	atomic_t sender_state;
  };
  
-+/* End */
-+
-+struct rpal_shared_page {
-+	unsigned long user_start;
-+	unsigned long kernel_start;
-+	int npage;
-+	atomic_t refcnt;
-+	struct list_head list;
-+};
-+
-+struct rpal_common_data {
-+	/* back pointer to task_struct */
-+	struct task_struct *bp_task;
-+	/* service id of rpal_service */
-+	int service_id;
-+};
-+
-+struct rpal_receiver_data {
-+	struct rpal_common_data rcd;
-+	struct rpal_shared_page *rsp;
-+	struct rpal_receiver_call_context *rcc;
-+};
-+
- struct rpal_sender_data {
- 	struct rpal_common_data rcd;
- 	struct rpal_shared_page *rsp;
-@@ -338,6 +350,26 @@ static inline bool rpal_service_mapped(struct rpal_mapped_service *node)
- 	return (node->type & type) == type;
+ /* recovery point for sender */
+@@ -390,11 +415,35 @@ static inline bool rpal_test_current_thread_flag(unsigned long bit)
+ {
+ 	return test_bit(bit, &current->rpal_flag);
  }
- 
-+static inline bool rpal_is_correct_address(struct rpal_service *rs, unsigned long address)
++
++static inline bool rpal_test_task_thread_flag(struct task_struct *tsk,
++					      unsigned long bit)
 +{
-+	if (likely(rs->base <= address &&
-+		   address < rs->base + RPAL_ADDR_SPACE_SIZE))
-+		return true;
-+
-+	/*
-+	 * [rs->base, rs->base + RPAL_ADDR_SPACE_SIZE) is always a
-+	 * sub range of [RPAL_ADDRESS_SPACE_LOW, RPAL_ADDRESS_SPACE_HIGH).
-+	 * Therefore, we can only check whether the address is in
-+	 * [RPAL_ADDRESS_SPACE_LOW, RPAL_ADDRESS_SPACE_HIGH) to determine
-+	 * whether the address may belong to another RPAL service.
-+	 */
-+	if (address >= RPAL_ADDRESS_SPACE_LOW &&
-+	    address < RPAL_ADDRESS_SPACE_HIGH)
-+		return false;
-+
-+	return true;
++	return test_bit(bit, &tsk->rpal_flag);
 +}
 +
- #ifdef CONFIG_RPAL
- static inline struct rpal_service *rpal_current_service(void)
- {
-@@ -372,6 +404,13 @@ void copy_rpal(struct task_struct *p);
- void exit_rpal(bool group_dead);
- int rpal_balloon_init(unsigned long base);
- void rpal_exit_mmap(struct mm_struct *mm);
-+struct rpal_service *rpal_get_mapped_service_by_addr(struct rpal_service *rs,
-+						     unsigned long addr);
-+struct rpal_service *rpal_get_mapped_service_by_id(struct rpal_service *rs,
-+						   int id);
-+int rpal_rebuild_sender_context_on_fault(struct pt_regs *regs,
-+					 unsigned long addr, int error_code);
-+struct mm_struct *rpal_pf_get_real_mm(unsigned long address, int *rebuild);
++static inline void rpal_set_task_thread_flag(struct task_struct *tsk,
++					     unsigned long bit)
++{
++	set_bit(bit, &tsk->rpal_flag);
++}
++
++static inline void rpal_clear_task_thread_flag(struct task_struct *tsk,
++					       unsigned long bit)
++{
++	clear_bit(bit, &tsk->rpal_flag);
++}
+ #else
+ static inline struct rpal_service *rpal_current_service(void) { return NULL; }
+ static inline void rpal_set_current_thread_flag(unsigned long bit) { }
+ static inline void rpal_clear_current_thread_flag(unsigned long bit) { }
+ static inline bool rpal_test_current_thread_flag(unsigned long bit) { return false; }
++static inline bool rpal_test_task_thread_flag(struct task_struct *tsk,
++	unsigned long bit) { return false; }
++static inline void rpal_set_task_thread_flag(struct task_struct *tsk,
++					     unsigned long bit) { }
++static inline void rpal_clear_task_thread_flag(struct task_struct *tsk,
++					       unsigned long bit) { }
+ #endif
+ 
+ void rpal_unregister_service(struct rpal_service *rs);
+@@ -414,4 +463,5 @@ struct mm_struct *rpal_pf_get_real_mm(unsigned long address, int *rebuild);
  
  extern void rpal_pick_mmap_base(struct mm_struct *mm,
  	struct rlimit *rlim_stack);
++int rpal_try_to_wake_up(struct task_struct *p);
+ #endif
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 62b3416f5e43..045e92ee2e3b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -67,6 +67,7 @@
+ #include <linux/wait_api.h>
+ #include <linux/workqueue_api.h>
+ #include <linux/livepatch_sched.h>
++#include <linux/rpal.h>
+ 
+ #ifdef CONFIG_PREEMPT_DYNAMIC
+ # ifdef CONFIG_GENERIC_ENTRY
+@@ -3820,6 +3821,40 @@ static int ttwu_runnable(struct task_struct *p, int wake_flags)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_RPAL
++static bool rpal_check_state(struct task_struct *p)
++{
++	bool ret = true;
++
++	if (rpal_test_task_thread_flag(p, RPAL_RECEIVER_BIT)) {
++		struct rpal_receiver_call_context *rcc = p->rpal_rd->rcc;
++		int state;
++
++retry:
++		state = atomic_read(&rcc->receiver_state) & RPAL_RECEIVER_STATE_MASK;
++		switch (state) {
++		case RPAL_RECEIVER_STATE_READY:
++		case RPAL_RECEIVER_STATE_WAIT:
++			if (state != atomic_cmpxchg(&rcc->receiver_state, state,
++						     RPAL_RECEIVER_STATE_RUNNING))
++				goto retry;
++			break;
++		case RPAL_RECEIVER_STATE_KERNEL_RET:
++		case RPAL_RECEIVER_STATE_LAZY_SWITCH:
++		case RPAL_RECEIVER_STATE_RUNNING:
++			break;
++		case RPAL_RECEIVER_STATE_CALL:
++			ret = false;
++			break;
++		default:
++			rpal_err("%s: invalid state: %d\n", __func__, state);
++			break;
++		}
++	}
++	return ret;
++}
++#endif
++
+ #ifdef CONFIG_SMP
+ void sched_ttwu_pending(void *arg)
+ {
+@@ -3841,6 +3876,11 @@ void sched_ttwu_pending(void *arg)
+ 		if (WARN_ON_ONCE(task_cpu(p) != cpu_of(rq)))
+ 			set_task_cpu(p, cpu_of(rq));
+ 
++#ifdef CONFIG_RPAL
++		if (!rpal_check_state(p))
++			continue;
++#endif
++
+ 		ttwu_do_activate(rq, p, p->sched_remote_wakeup ? WF_MIGRATED : 0, &rf);
+ 	}
+ 
+@@ -4208,6 +4248,17 @@ int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		if (!ttwu_state_match(p, state, &success))
+ 			goto out;
+ 
++#ifdef CONFIG_RPAL
++		/*
++		 * For rpal thread, we need to check if it can be woken up. If not,
++		 * we do not wake it up here but wake it up later by kernel worker.
++		 *
++		 * For normal thread, nothing happens.
++		 */
++		if (!rpal_check_state(p))
++			goto out;
++#endif
++
+ 		trace_sched_waking(p);
+ 		ttwu_do_wakeup(p);
+ 		goto out;
+@@ -4224,6 +4275,11 @@ int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 		if (!ttwu_state_match(p, state, &success))
+ 			break;
+ 
++#ifdef CONFIG_RPAL
++		if (!rpal_check_state(p))
++			break;
++#endif
++
+ 		trace_sched_waking(p);
+ 
+ 		/*
+@@ -4344,6 +4400,56 @@ int try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 	return success;
+ }
+ 
++#ifdef CONFIG_RPAL
++int rpal_try_to_wake_up(struct task_struct *p)
++{
++	guard(preempt)();
++	int cpu, success = 0;
++	int wake_flags = WF_TTWU;
++
++	BUG_ON(READ_ONCE(p->__state) == TASK_RUNNING);
++
++	scoped_guard (raw_spinlock_irqsave, &p->pi_lock) {
++		smp_mb__after_spinlock();
++		if (!ttwu_state_match(p, TASK_NORMAL, &success))
++			break;
++
++		trace_sched_waking(p);
++		/* see try_to_wake_up() */
++		smp_rmb();
++
++#ifdef CONFIG_SMP
++		smp_acquire__after_ctrl_dep();
++		WRITE_ONCE(p->__state, TASK_WAKING);
++		/* see try_to_wake_up() */
++		if (smp_load_acquire(&p->on_cpu) &&
++		    ttwu_queue_wakelist(p, task_cpu(p), wake_flags))
++			break;
++		smp_cond_load_acquire(&p->on_cpu, !VAL);
++
++		cpu = select_task_rq(p, p->wake_cpu, &wake_flags);
++		if (task_cpu(p) != cpu) {
++			if (p->in_iowait) {
++				delayacct_blkio_end(p);
++				atomic_dec(&task_rq(p)->nr_iowait);
++			}
++
++			wake_flags |= WF_MIGRATED;
++			psi_ttwu_dequeue(p);
++			set_task_cpu(p, cpu);
++		}
++#else
++		cpu = task_cpu(p);
++#endif
++	}
++	ttwu_queue(p, cpu, wake_flags);
++	if (success)
++		ttwu_stat(p, task_cpu(p), wake_flags);
++
++	return success;
++}
++#endif
++
+ static bool __task_needs_rq_lock(struct task_struct *p)
+ {
+ 	unsigned int state = READ_ONCE(p->__state);
+@@ -6574,6 +6680,18 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ #define SM_PREEMPT		1
+ #define SM_RTLOCK_WAIT		2
+ 
++#ifdef CONFIG_RPAL
++static inline void rpal_check_ready_state(struct task_struct *tsk, int state)
++{
++	if (rpal_test_task_thread_flag(tsk, RPAL_RECEIVER_BIT)) {
++		struct rpal_receiver_call_context *rcc = tsk->rpal_rd->rcc;
++
++		atomic_cmpxchg(&rcc->receiver_state, state,
++			       RPAL_RECEIVER_STATE_RUNNING);
++	}
++}
++#endif
++
+ /*
+  * Helper function for __schedule()
+  *
+@@ -6727,7 +6845,19 @@ static void __sched notrace __schedule(int sched_mode)
+ 			goto picked;
+ 		}
+ 	} else if (!preempt && prev_state) {
++#ifdef CONFIG_RPAL
++		if (!try_to_block_task(rq, prev, &prev_state)) {
++			/*
++			 * As the task enter TASK_RUNNING state, we should clean up
++			 * RPAL_RECEIVER_STATE_READY status. Therefore, the receiver's
++			 * state will not be change to RPAL_RECEIVER_STATE_WAIT. Thus,
++			 * there is no RPAL call when a receiver is at TASK_RUNNING state.
++			 */
++			rpal_check_ready_state(prev, RPAL_RECEIVER_STATE_READY);
++		}
++#else
+ 		try_to_block_task(rq, prev, &prev_state);
++#endif
+ 		switch_count = &prev->nvcsw;
+ 	}
+ 
 -- 
 2.20.1
 
