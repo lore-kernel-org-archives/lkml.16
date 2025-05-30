@@ -1,171 +1,367 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0434227E8F;
-	Fri, 30 May 2025 09:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA17C2253A0
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748597354; cv=none; b=Ul3X2DFWF9+3MT1rGAJ+M0GEPy13ALECoBvwNscrJfx0J8LmOZ3wlwvwMsWLtn4uoMSVqxB5Y9H4B/JaC9K9QQEYMsYoWmIUa+JWIDQ/mm+CPFmd042uRdzKOZaU1kxhuvK8ey85x4u/rndARzmkb8mHox0nWMuNAPpJkfMCJTk=
+	t=1748597354; cv=none; b=jsRxn8ZZcIVgT29UGn2+A86aRY6HpD3f96GhatWN4vXwoKzqNWGXdmCb/U6eOVojWKeescczasPjxjaotOeZackouOwJKrBWKvDZ5b+eD1eQPLxnElfdB7eOq1tVmcv6Y2Rqvb5VCa3LAhReORD8ejyP+qf2jfk6yTNpJIODZ50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748597354; c=relaxed/simple;
-	bh=ZEybsHDXyPCaqq5mNJW+mpZvnSf4f7JjB5O+755MU3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X691093w6eExPcHX2ZQDig66/ZysXyTfgwUhu8kdEDhAE3LxL5MEm5gGkwyxrcPQV+WnDokfooJJL+Kw40jSd8CtAZ4amzzA9+uVJj6H9I3lIvNrY8ru742A/hAGdgWTBp2RIVm9RiwPCUgs4YnoMMjfKA2zQHE/HNqNVU2IjoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gRDjdDlg; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	bh=VCOCu6O/NADHfF14Am0W07s7tA5GTZgRlngfMicR/Ns=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q7s+ySDq3H3kTkNTftmsCdKfTEGXzVGAFowU6r+K1RXj6yNJcwV6qvwvh45js6vt6Kqx9A8ebhwrlkIyPqXoisHlbfkcJSXQpfOjJPm90zGBqgUK8Q+PTiZ4NznXwzGgzF5qshAT/LR6RIps1W91QmRqDPYBNhCeBd4J3tW9t+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JF2KgJ8c; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gRDjdDlg"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U0T53G008030;
-	Fri, 30 May 2025 09:28:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=tzmvSRrblqgZgKJaCs+zrv
-	qpz5Rlg71VuyXyzdUPXeM=; b=gRDjdDlgopV3yajHmhLV/TvaqgRArmvhCFeiIG
-	xhfQg3TSpo34Tc4I7EK3s+84a/PcKpnAKXIcLH0rrMYTvGVOIA8mQ3nOz31zoatv
-	nPy68UGt//IYiktcVo6XvmDuL6sM7dl2kXixPRyFxXJVR6EicM7tnM1f+vsnX95o
-	W+4HNI7cjvMVBOLfmYzZdw+CgCs4eVuOZV8S91nbK5uphQdlwkN4iQ2n22dzf1RK
-	8XnpzE8L+FBZw0K6D9Ivyq4AEScQGtvtKi8gGHGnOLs8WvS8hDc6lx9WCIawvK5n
-	BUqMkIZuY+HaHS4a9qEZ73qZB0Mwm0ajeRag1dC81sBAY+Mw==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf8x28-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 09:28:57 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54U9Sq8u008752;
-	Fri, 30 May 2025 09:28:52 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 46u76my9gn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 09:28:52 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54U9Sqf8008720;
-	Fri, 30 May 2025 09:28:52 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-wasimn-hyd.qualcomm.com [10.147.246.180])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 54U9SqqA008719
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 30 May 2025 09:28:52 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3944840)
-	id 27DF259B; Fri, 30 May 2025 14:58:51 +0530 (+0530)
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        kernel@oss.qualcomm.com, Wasim Nazir <quic_wasimn@quicinc.com>
-Subject: [PATCH v9 0/4] qcom: Add support for IQ-9075-evk board
-Date: Fri, 30 May 2025 14:58:43 +0530
-Message-ID: <20250530092850.631831-1-quic_wasimn@quicinc.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JF2KgJ8c"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23526264386so8607445ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748597352; x=1749202152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qGQ/MSD2aq8Zt0uX+CveEn5QJtfmVtywDoJlykkJ748=;
+        b=JF2KgJ8cx2NSohpk333GW3x0my23qoG68NSIxWf5sYIpcvmj7bxkarfiGI+IITH+wK
+         aTcwd7A9kmW/XD7Nqc9N8Cp0KUzCcOoCrWY9y8mRvBC8RtHBmWtQtCgKUwu143NGBm2o
+         /L4ATUoviWRFPR6BmI6F/OeXAPiKS/5DIk6/4VIxNsCSFCOLtMLv257BUSqfhvQAnYM8
+         7OhsnPp33+CBv9gcOf6K9XyCogI5HvwzR36gX5UNssqDkEnYLBsshsJPvwi5Z+pNJY+6
+         tUzmm3lBJiRrwHSHt6NOPup1OvuIhn+pW7nz6kM09D44SIZ21LGlph6fmlCi80Hy891o
+         Tu7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748597352; x=1749202152;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qGQ/MSD2aq8Zt0uX+CveEn5QJtfmVtywDoJlykkJ748=;
+        b=cUEgOjKkwtzuf9T6iYgvMGXoB/PTTZzwrRrzmfxEiLF9Zr224s5NHmWJ9LMKGjHWy+
+         vR5sDUSpyzGjauZfHIOcKkUzezyg6ofdO1KN8Hq3tThl9vB7IIRSbmoEnbgsJWaVu/NB
+         et2KhsLYFDvvIp3O1zvrAo3+GVmgCdw6MaatkKMwoc3UTrDac92HRt70J2iJupk2IdRf
+         vn0dynnQZWOa7AC8j4v2k8eXxX53+HnQa4w1fPzlOHjD+N4LTqgxLH1+QK1yta6nGowo
+         LPrOlcDX3UonahplVFgr1LcVAdNo/Ye+AwFDz70VbamCDSvvnOPsRZprTWhjTjp9L1+j
+         /O3A==
+X-Forwarded-Encrypted: i=1; AJvYcCW8eEwOiMtV3XidR9dz723atBiYGyodYwWyiWRWDb7ytuM7IbQPGJYF5g0pO/cQ8lYnxrndSeZUX4KQLgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxwFPMt+KgqiAJXS2Ng6mjld726JMa+sjszcr2Vx0a4EHVQsIW
+	PibKww0yIybbMkAteShfm/drAhqAs7mCHTJD1mRkmAeetJ6P+R5i6zKZoogg7IsQowg=
+X-Gm-Gg: ASbGncuf+HlU7mMSXlCV3VMS79IhnD6Ef/XRfHsJ9eacF/5pK0l1I4DyGdGk0eZQq9h
+	N0KhueAifWGzH9/UTFFAKcc8ViR8zJzUnskBx3ypA3EGW5Db0IHVRIetyW6F+ZV/jCmYP7fIQCs
+	o03nTlTYhxHuXdb1XkBSAjxyITblHO7xWT8GCT2K3rayXiVqr6gw/ex/JzEndr2m1I3jQkmKNOw
+	NTOTAUkyug3zi2CoiLMnKz+qzb4/U8iMc6gpgkmZuaXkIt4ziZsrQ+fzwtZ45dQFeeGemfkEdcf
+	Os5rhP581hBCPxB4JxYj15FGnlWOtVAVP3d1VfR8k1oERxziecvqHGsKCGSJLJQPmjgyWAHNkfk
+	Wxt3jytLAEQ==
+X-Google-Smtp-Source: AGHT+IHXNv6SBDXy0RRoZRael/cpWOT8NPAPr0x/A4zO15FUEF6dVXWmKj+6rOHNmQu7F4oEsyx/Vw==
+X-Received: by 2002:a17:90b:3a82:b0:311:ab20:159d with SMTP id 98e67ed59e1d1-3124163a55amr3859759a91.19.1748597351985;
+        Fri, 30 May 2025 02:29:11 -0700 (PDT)
+Received: from FQ627FTG20.bytedance.net ([63.216.146.178])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f7b8sm838724a91.2.2025.05.30.02.28.57
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 30 May 2025 02:29:11 -0700 (PDT)
+From: Bo Li <libo.gcs85@bytedance.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	luto@kernel.org,
+	kees@kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	peterz@infradead.org
+Cc: dietmar.eggemann@arm.com,
+	hpa@zytor.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	riel@surriel.com,
+	harry.yoo@oracle.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	duanxiongchun@bytedance.com,
+	yinhongbo@bytedance.com,
+	dengliang.1214@bytedance.com,
+	xieyongji@bytedance.com,
+	chaiwen.cc@bytedance.com,
+	songmuchun@bytedance.com,
+	yuanzhu@bytedance.com,
+	chengguozhu@bytedance.com,
+	sunjiadong.lff@bytedance.com,
+	Bo Li <libo.gcs85@bytedance.com>
+Subject: [RFC v2 03/35] RPAL: add service registration interface
+Date: Fri, 30 May 2025 17:27:31 +0800
+Message-Id: <f3d83dbf77500433986cdfb649bf603ea9031961.1748594840.git.libo.gcs85@bytedance.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=68397a59 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8
- a=u6Jdqvu1gAsBJA_3vmsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bCPyZCNHn_0psLFWJTWRehzF6fSOhSb1
-X-Proofpoint-GUID: bCPyZCNHn_0psLFWJTWRehzF6fSOhSb1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA4MSBTYWx0ZWRfX87BzHTAyUUvr
- KevXIY5/L7DHZolCNjsZ3qC3XXmBIWOkVuGGYxaZ/pV4w/UxQNtKzHx4Qywc810h7iE814COeUy
- gqYkZhsxWiZspIO6w7FFT69DogvnVURVxGiJF6ilB2m0hQ8QxoMHO7wl0k8f7C5ESK+ZuwHbFjL
- 74A9ToIgUSF+32GeRiV31Vsvgf3Ncs9snqpjz7UbA1j1UrOLmnhScwCQeZp7vOr2merdUXicucL
- PW8JubjEjCUN48fjvaKIH/SU2W9PcvfZeoRZzOZe1rgXyx4ArnmRINFs/U1w3x85Y4S5hv39ejz
- zRYN9VJ3AFY8QhVy51Zds9Dz4gJQqFueT1DBGVowq72k8FSW2Bv2UV5MKVoQm/i4d73VXdHUOgP
- +LFiVaW6D4aLIrMmv+vyJy9BavlOkPElol07yPnxonBTKCem0d1Gg5jfAUPHO/p9vgIeXXOZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-30_04,2025-05-29_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505300081
 
-This series:
+Every rpal service should be registered and managed. Each RPAL service has
+a 64-bit key as its unique identifier, the key should never repeat before
+kernel reboot. Each RPAL service has an ID to indicate which 512GB virtual
+address space it can use. Any alive RPAL service has its unique ID, which
+will never be reused until the service dead.
 
-Add support for Qualcomm's iq9-evk board using QCS9075 SOC.
+This patch adds a registration interface for RPAL services. Newly
+registered rpal_service instances are assigned a key that increments
+starting from 1. The 64-bit length of the key ensures that keys are almost
+impossible to exhaust before system reboot. Meanwhile, a bitmap is used to
+allocate IDs, ensuring no duplicate IDs are assigned. RPAL services are
+managed via a hash list, which facilitates quick lookup of the
+corresponding rpal_service by key.
 
-QCS9075 is compatible IoT-industrial grade variant of SA8775p SOC.
-Unlike QCS9100, it doesn't have safety monitoring feature of
-Safety-Island(SAIL) subsystem, which affects thermal management.
-
-In QCS9100 SOC, the safety subsystem monitors all thermal sensors and
-does corrective action for each subsystem based on sensor violation
-to comply safety standards. But as QCS9075 is non-safe SOC it requires
-conventional thermal mitigation for thermal management.
-In this series thermal mitigation changes are not included as it needs
-more discussion whether to include the change in DT or in drivers.
-
-Below are detailed informations on IQ-9075-evk HW:
-------------------------------------------------------
-QCS9075 SOM is stacked on top of IQ-9075-evk board.
-On top of IQ-9075-evk board additional mezzanine boards can be stacked
-in future.
-IQ-9075-evk is single board supporting these peripherals:
-  - Storage: 2 × 128 GB UFS, micro-SD card, EEPROMs for MACs,
-    eMMC on mezzanine card
-  - Audio/Video, Camera & Display ports
-  - Connectivity: RJ45 2.5GbE, WLAN/Bluetooth, CAN/CAN-FD
-  - Sensors: IMU
-  - PCIe ports
-  - USB & UART ports
-
-Currently basic features are enabled to support 'boot to shell'.
-
+Signed-off-by: Bo Li <libo.gcs85@bytedance.com>
 ---
-Changelog:
+ arch/x86/rpal/service.c | 130 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/rpal.h    |  31 ++++++++++
+ 2 files changed, 161 insertions(+)
 
-v9:
-  - Retain earlier tags from Rob Herring [1] & Krzysztof Kozlowski [2]
-  - v8-link: [3]
-
-v8:
-  - Squash UFS support [4] into initial board support patch.
-  - Remove uart10 pinctrl settings from board, it is moved to sa8775p.dtsi.
-  - Arrange ufs nodes in alphabetical order.
-  - v7-link: [5]
-
-[1] https://lore.kernel.org/all/173142574295.951085.7523517676553074543.robh@kernel.org/
-[2] https://lore.kernel.org/all/20250430-enlightened-enchanted-jellyfish-7049d0@kuoka/
-[3] https://lore.kernel.org/all/20250528122753.3623570-1-quic_wasimn@quicinc.com/
-[4] https://lore.kernel.org/all/20250513084309.10275-1-quic_sayalil@quicinc.com/
-[5] https://lore.kernel.org/all/20250521140807.3837019-1-quic_wasimn@quicinc.com/
-
-
-Pratyush Brahma (1):
-  arm64: dts: qcom: iq9: Introduce new memory map for qcs9100/qcs9075
-
-Wasim Nazir (3):
-  dt-bindings: arm: qcom: Add bindings for QCS9075 SOC based board
-  arm64: dts: qcom: qcs9075: Introduce QCS9075 SOM
-  arm64: dts: qcom: Add support for qcs9075 IQ-9075-EVK
-
- .../devicetree/bindings/arm/qcom.yaml         |   7 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/iq9-reserved-memory.dtsi    | 113 +++++++
- .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 289 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/qcs9075-som.dtsi     |  10 +
- 5 files changed, 420 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/iq9-reserved-memory.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
- create mode 100644 arch/arm64/boot/dts/qcom/qcs9075-som.dtsi
-
-
-base-commit: 3be1a7a31fbda82f3604b6c31e4f390110de1b46
---
-2.49.0
+diff --git a/arch/x86/rpal/service.c b/arch/x86/rpal/service.c
+index c8e609798d4f..609c9550540d 100644
+--- a/arch/x86/rpal/service.c
++++ b/arch/x86/rpal/service.c
+@@ -13,13 +13,56 @@
+ 
+ #include "internal.h"
+ 
++static DECLARE_BITMAP(rpal_id_bitmap, RPAL_NR_ID);
++static atomic64_t service_key_counter;
++static DEFINE_HASHTABLE(service_hash_table, ilog2(RPAL_NR_ID));
++DEFINE_SPINLOCK(hash_table_lock);
+ static struct kmem_cache *service_cache;
+ 
++static inline void rpal_free_service_id(int id)
++{
++	clear_bit(id, rpal_id_bitmap);
++}
++
+ static void __rpal_put_service(struct rpal_service *rs)
+ {
+ 	kmem_cache_free(service_cache, rs);
+ }
+ 
++static int rpal_alloc_service_id(void)
++{
++	int id;
++
++	do {
++		id = find_first_zero_bit(rpal_id_bitmap, RPAL_NR_ID);
++		if (id == RPAL_NR_ID) {
++			id = RPAL_INVALID_ID;
++			break;
++		}
++	} while (test_and_set_bit(id, rpal_id_bitmap));
++
++	return id;
++}
++
++static bool is_valid_id(int id)
++{
++	return id >= 0 && id < RPAL_NR_ID;
++}
++
++static u64 rpal_alloc_service_key(void)
++{
++	u64 key;
++
++	/* confirm we do not run out keys */
++	if (unlikely(atomic64_read(&service_key_counter) == _AC(-1, UL))) {
++		rpal_err("key is exhausted\n");
++		return RPAL_INVALID_KEY;
++	}
++
++	key = atomic64_fetch_inc(&service_key_counter);
++	return key;
++}
++
+ struct rpal_service *rpal_get_service(struct rpal_service *rs)
+ {
+ 	if (!rs)
+@@ -37,6 +80,90 @@ void rpal_put_service(struct rpal_service *rs)
+ 		__rpal_put_service(rs);
+ }
+ 
++static u32 get_hash_key(u64 key)
++{
++	return key % RPAL_NR_ID;
++}
++
++struct rpal_service *rpal_get_service_by_key(u64 key)
++{
++	struct rpal_service *rs, *rsp;
++	u32 hash_key = get_hash_key(key);
++
++	rs = NULL;
++	hash_for_each_possible(service_hash_table, rsp, hlist, hash_key) {
++		if (rsp->key == key) {
++			rs = rsp;
++			break;
++		}
++	}
++	return rpal_get_service(rs);
++}
++
++static void insert_service(struct rpal_service *rs)
++{
++	unsigned long flags;
++	int hash_key;
++
++	hash_key = get_hash_key(rs->key);
++
++	spin_lock_irqsave(&hash_table_lock, flags);
++	hash_add(service_hash_table, &rs->hlist, hash_key);
++	spin_unlock_irqrestore(&hash_table_lock, flags);
++}
++
++static void delete_service(struct rpal_service *rs)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&hash_table_lock, flags);
++	hash_del(&rs->hlist);
++	spin_unlock_irqrestore(&hash_table_lock, flags);
++}
++
++struct rpal_service *rpal_register_service(void)
++{
++	struct rpal_service *rs;
++
++	if (!rpal_inited)
++		return NULL;
++
++	rs = kmem_cache_zalloc(service_cache, GFP_KERNEL);
++	if (!rs)
++		goto alloc_fail;
++
++	rs->id = rpal_alloc_service_id();
++	if (!is_valid_id(rs->id))
++		goto id_fail;
++
++	rs->key = rpal_alloc_service_key();
++	if (unlikely(rs->key == RPAL_INVALID_KEY))
++		goto key_fail;
++
++	atomic_set(&rs->refcnt, 1);
++
++	insert_service(rs);
++
++	return rs;
++
++key_fail:
++	kmem_cache_free(service_cache, rs);
++id_fail:
++	rpal_free_service_id(rs->id);
++alloc_fail:
++	return NULL;
++}
++
++void rpal_unregister_service(struct rpal_service *rs)
++{
++	if (!rs)
++		return;
++
++	delete_service(rs);
++
++	rpal_put_service(rs);
++}
++
+ int __init rpal_service_init(void)
+ {
+ 	service_cache = kmem_cache_create("rpal_service_cache",
+@@ -47,6 +174,9 @@ int __init rpal_service_init(void)
+ 		return -1;
+ 	}
+ 
++	bitmap_zero(rpal_id_bitmap, RPAL_NR_ID);
++	atomic64_set(&service_key_counter, RPAL_FIRST_KEY);
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/rpal.h b/include/linux/rpal.h
+index 73468884cc5d..75c5acf33844 100644
+--- a/include/linux/rpal.h
++++ b/include/linux/rpal.h
+@@ -11,13 +11,40 @@
+ 
+ #include <linux/sched.h>
+ #include <linux/types.h>
++#include <linux/hashtable.h>
+ #include <linux/atomic.h>
+ 
+ #define RPAL_ERROR_MSG "rpal error: "
+ #define rpal_err(x...) pr_err(RPAL_ERROR_MSG x)
+ #define rpal_err_ratelimited(x...) pr_err_ratelimited(RPAL_ERROR_MSG x)
+ 
++/*
++ * The first 512GB is reserved due to mmap_min_addr.
++ * The last 512GB is dropped since stack will be initially
++ * allocated at TASK_SIZE_MAX.
++ */
++#define RPAL_NR_ID 254
++#define RPAL_INVALID_ID -1
++#define RPAL_FIRST_KEY _AC(1, UL)
++#define RPAL_INVALID_KEY _AC(0, UL)
++
++/*
++ * Each RPAL service has a 64-bit key as its unique identifier, and
++ * the 64-bit length ensures that the key will never repeat before
++ * the kernel reboot.
++ *
++ * Each RPAL service has an ID to indicate which 512GB virtual address
++ * space it can use. All alive RPAL processes have unique IDs, ensuring
++ * their address spaces do not overlap. When a process exits, its ID
++ * is released, allowing newly started RPAL services to reuse the ID.
++ */
+ struct rpal_service {
++	/* Unique identifier for RPAL service */
++	u64 key;
++	/* virtual address space id */
++	int id;
++	/* Hashtable list for this struct */
++	struct hlist_node hlist;
+ 	/* reference count of this struct */
+ 	atomic_t refcnt;
+ };
+@@ -40,4 +67,8 @@ struct rpal_service *rpal_get_service(struct rpal_service *rs);
+  * @param rs The struct rpal_service to put.
+  */
+ void rpal_put_service(struct rpal_service *rs);
++
++void rpal_unregister_service(struct rpal_service *rs);
++struct rpal_service *rpal_register_service(void);
++struct rpal_service *rpal_get_service_by_key(u64 key);
+ #endif
+-- 
+2.20.1
 
