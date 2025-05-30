@@ -1,129 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239E21EA7C8;
-	Fri, 30 May 2025 10:39:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD27D1DA5F;
+	Fri, 30 May 2025 10:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748601553; cv=none; b=IwTCYAmsRtjnmHSKBYpb2IcHcnVVtdUPzsiBXUREDrcALawuigXnfp996kCoaRdQaVwgJwJVVlC0YNAEYnffG6agaiDNee6uwTXnusngHmgryhqZACUqJo5gBU0VYvtrgQNkQ3c5/VsNSr/FfJt2FcTYAPKB1CGLEc5ytOKXVkw=
+	t=1748601657; cv=none; b=C9HuAJbI+fEgbhTXaVJa+uqyYrFnHiEIkUalcKwQe4jDIUsOO1o6UPZt9I7CtiQt4YPD0NqhfETBh87I+CRmcTKQeS4BGIld6sqxbOAhey1rOGPOLzImiLtSYt8HYspQCkJ8TZbxPr4+q/hBOUsyPsuw4PVGICD09ITIEGdlgo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748601553; c=relaxed/simple;
-	bh=Cc2l0TKz5YaK8S3redSaC1apH9Fo0cyDOkhqfVmqyV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L4n1lM1U59PHCwVx8g1XIFdIzh5pcTcFxQQ4dPS22y9WTdCqZMXcBxb52XsJpac0fzi/pc4ZuhSFqFrbD74JT0k0FqfQu600RdOQ3AGZQ8v6OZWHVWjwbZPsS2iop5LmcVr16tvphekjcQ29ZLX5vkR1ZRHZ3PEt18Cn4NYZMDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBOVtftm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBOVtftm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23472C4CEE9;
-	Fri, 30 May 2025 10:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748601552;
-	bh=Cc2l0TKz5YaK8S3redSaC1apH9Fo0cyDOkhqfVmqyV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fBOVtftmYoDSz8Bt5BjQ/uzq726rmBsv5MS2Nm1e5hA45gB8lpcf1jec5FbGK1KoE
-	 b33TNaiQ5KuKgHbj2Wj+1lWNNr5AzT7M8Iv8SM6TuNl0kfxIHKiNcsgcnNg/avAPPq
-	 ClSX2StLLgVvq9R4VOc5JSceZquAd4Y+ek3+FQ/Ikkl3dFAisnW+R1WP4b4ZbLD5Z3
-	 3OQGXYnY/qfZ1XYdfM7oNbLigEu6iMcTvcHGVQJQkXaKEhnj73glkcscBAiqY54RRH
-	 TaC3EYyGMuRwdsXzqjBhHQbQXFElCEp7KUMQ0705zEG735JsEuNcI+i+hwId0D0G15
-	 0C2H5FgovOerw==
-Date: Fri, 30 May 2025 11:39:09 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Shuah Khan <shuah@kernel.org>, Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/filesystems: Fix build of anon_inode_test
-Message-ID: <aDmKzSkIlOAkj_Bq@finisterre.sirena.org.uk>
-References: <20250518-selftests-anon-inode-build-v1-1-71eff8183168@kernel.org>
+	s=arc-20240116; t=1748601657; c=relaxed/simple;
+	bh=0CrEa+93oV3lNWDABrVddBk4IQRMdXd+GbD0mQaKIgs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RFyMYMhsnpqcJOPEd14YNlW3deBAqXUby2EYHTvyNB/nbVzmJ+fsI3JhmaYqmSmyRt9WwDgmpLJvNsG5buVnTf58i6Vg4RXa+yLT1fh3zlz08AAprQEZFJJIVkatWAYWYDo0EMHPfYfjT/nhCQ/T+G3trHf1Rl2E4U1uDweqj5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w011.hihonor.com (unknown [10.68.20.122])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4b808Y0D6pzYl7rs;
+	Fri, 30 May 2025 18:38:53 +0800 (CST)
+Received: from a010.hihonor.com (10.68.16.52) by w011.hihonor.com
+ (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
+ 2025 18:40:52 +0800
+Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
+ (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 30 May
+ 2025 18:40:52 +0800
+From: wangtao <tao.wangtao@honor.com>
+To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
+	<kraxel@redhat.com>, <vivek.kasireddy@intel.com>, <viro@zeniv.linux.org.uk>,
+	<brauner@kernel.org>, <hughd@google.com>, <akpm@linux-foundation.org>,
+	<amir73il@gmail.com>
+CC: <benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
+	<jstultz@google.com>, <tjmercier@google.com>, <jack@suse.cz>,
+	<baolin.wang@linux.alibaba.com>, <linux-media@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linaro-mm-sig@lists.linaro.org>,
+	<linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <bintian.wang@honor.com>, <yipengxiang@honor.com>,
+	<liulu.liu@honor.com>, <feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
+Subject: [PATCH v3 3/4] udmabuf: Implement udmabuf rw_file callback
+Date: Fri, 30 May 2025 18:39:40 +0800
+Message-ID: <20250530103941.11092-4-tao.wangtao@honor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250530103941.11092-1-tao.wangtao@honor.com>
+References: <20250530103941.11092-1-tao.wangtao@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="DLuH41Ng1iRNSMtA"
-Content-Disposition: inline
-In-Reply-To: <20250518-selftests-anon-inode-build-v1-1-71eff8183168@kernel.org>
-X-Cookie: Anger is momentary madness.
+Content-Type: text/plain
+X-ClientProxiedBy: w011.hihonor.com (10.68.20.122) To a010.hihonor.com
+ (10.68.16.52)
 
+Construct bio_vec from folios, then call the other file's
+r/w callbacks for IO operations.
+Test data shows direct I/O copy_file_range improves performance by
+over 50% vs direct I/O mmap&read (2557 vs 1534).
 
---DLuH41Ng1iRNSMtA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Test data:
+|    32x32MB Read 1024MB  |Creat-ms|Close-ms|  I/O-ms|I/O-MB/s| I/O%
+|-------------------------|--------|--------|--------|--------|-----
+| 1)Beg udmabuf buffer R/W|    580 |    323 |   1238 |    867 | 100%
+| 2)     dmabuf buffer R/W|     48 |      5 |   1149 |    934 | 107%
+| 3) udma+memfd buffer R/W|    597 |    340 |   2157 |    497 |  57%
+| 4) udma+memfd direct R/W|    573 |    340 |    700 |   1534 | 176%
+| 5) u+mfd buffer sendfile|    577 |    340 |   1204 |    891 | 102%
+| 6) u+mfd direct sendfile|    567 |    339 |   2272 |    472 |  54%
+| 7)   u+mfd buffer splice|    570 |    337 |   1114 |    964 | 111%
+| 8)   u+mfd direct splice|    564 |    335 |    793 |   1355 | 156%
+| 9)  udmabuf buffer c_f_r|    577 |    323 |   1059 |   1014 | 116%
+|10)  udmabuf direct c_f_r|    582 |    325 |    420 |   2557 | 294%
+|11)End udmabuf buffer R/W|    586 |    323 |   1188 |    903 | 104%
 
-On Sun, May 18, 2025 at 03:01:34PM +0100, Mark Brown wrote:
-> The anon_inode_test test fails to build due to attempting to include
-> a nonexisting overlayfs/wrapper.h:
->=20
-> anon_inode_test.c:10:10: fatal error: overlayfs/wrappers.h: No such file =
-or directory
->    10 | #include "overlayfs/wrappers.h"
->       |          ^~~~~~~~~~~~~~~~~~~~~~
+Signed-off-by: wangtao <tao.wangtao@honor.com>
+---
+ drivers/dma-buf/udmabuf.c | 59 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-This build failure, first reported against -next and which should be
-fixed by this patch, is now present in mainline.
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index e74e36a8ecda..573275a51674 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -284,6 +284,64 @@ static int end_cpu_udmabuf(struct dma_buf *buf,
+ 	return 0;
+ }
+ 
++static ssize_t udmabuf_rw_file(struct dma_buf *dmabuf, loff_t my_pos,
++			struct file *other, loff_t pos,
++			size_t count, bool is_write)
++{
++	struct udmabuf *ubuf = dmabuf->priv;
++	loff_t my_end = my_pos + count, bv_beg, bv_end = 0;
++	pgoff_t pg_idx = my_pos / PAGE_SIZE;
++	pgoff_t pg_end = DIV_ROUND_UP(my_end, PAGE_SIZE);
++	size_t i, bv_off, bv_len, bv_num, bv_idx = 0, bv_total = 0;
++	struct bio_vec *bvec;
++	struct kiocb kiocb;
++	struct iov_iter iter;
++	unsigned int direction = is_write ? ITER_SOURCE : ITER_DEST;
++	ssize_t ret = 0, rw_total = 0;
++	struct folio *folio;
++
++	bv_num = min_t(size_t, pg_end - pg_idx + 1, 1024);
++	bvec = kvcalloc(bv_num, sizeof(*bvec), GFP_KERNEL);
++	if (!bvec)
++		return -ENOMEM;
++
++	init_sync_kiocb(&kiocb, other);
++	kiocb.ki_pos = pos;
++
++	for (i = 0; i < ubuf->nr_pinned && my_pos < my_end; i++) {
++		folio = ubuf->pinned_folios[i];
++		bv_beg = bv_end;
++		bv_end += folio_size(folio);
++		if (bv_end <= my_pos)
++			continue;
++
++		bv_len = min(bv_end, my_end) - my_pos;
++		bv_off = my_pos - bv_beg;
++		my_pos += bv_len;
++		bv_total += bv_len;
++		bvec_set_page(&bvec[bv_idx], &folio->page, bv_len, bv_off);
++		if (++bv_idx < bv_num && my_pos < my_end)
++			continue;
++
++		/* start R/W if bvec is full or count reaches zero. */
++		iov_iter_bvec(&iter, direction, bvec, bv_idx, bv_total);
++		if (is_write)
++			ret = other->f_op->write_iter(&kiocb, &iter);
++		else
++			ret = other->f_op->read_iter(&kiocb, &iter);
++		if (ret <= 0)
++			break;
++		rw_total += ret;
++		if (ret < bv_total || fatal_signal_pending(current))
++			break;
++
++		bv_idx = bv_total = 0;
++	}
++	kvfree(bvec);
++
++	return rw_total > 0 ? rw_total : ret;
++}
++
+ static const struct dma_buf_ops udmabuf_ops = {
+ 	.cache_sgt_mapping = true,
+ 	.map_dma_buf	   = map_udmabuf,
+@@ -294,6 +352,7 @@ static const struct dma_buf_ops udmabuf_ops = {
+ 	.vunmap		   = vunmap_udmabuf,
+ 	.begin_cpu_access  = begin_cpu_udmabuf,
+ 	.end_cpu_access    = end_cpu_udmabuf,
++	.rw_file = udmabuf_rw_file,
+ };
+ 
+ #define SEALS_WANTED (F_SEAL_SHRINK)
+-- 
+2.17.1
 
-> This is due to 0bd92b9fe538 ("selftests/filesystems: move wrapper.h out
-> of overlayfs subdir") which was added in the vfs-6.16.selftests branch
-> which was based on -rc5 and does not contain the newly added test so
-> once things were merged into vfs.all in the build started failing - both
-> parent commits are fine.
->=20
-> Fixes: feaa00dbff45a ("Merge branch 'vfs-6.16.selftests' into vfs.all")
-
-I see that the two branches get sent separately to Linus so the merge
-that triggers things is now:
-
-   3e406741b19890 ("Merge tag 'vfs-6.16-rc1.selftests' of git://git.kernel.=
-org/pub/scm/linux/kernel/git/vfs/vfs")
-
-I'll resend with that updated.
-
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  tools/testing/selftests/filesystems/anon_inode_test.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/testing/selftests/filesystems/anon_inode_test.c b/tool=
-s/testing/selftests/filesystems/anon_inode_test.c
-> index e8e0ef1460d2..73e0a4d4fb2f 100644
-> --- a/tools/testing/selftests/filesystems/anon_inode_test.c
-> +++ b/tools/testing/selftests/filesystems/anon_inode_test.c
-> @@ -7,7 +7,7 @@
->  #include <sys/stat.h>
-> =20
->  #include "../kselftest_harness.h"
-> -#include "overlayfs/wrappers.h"
-> +#include "wrappers.h"
-> =20
->  TEST(anon_inode_no_chown)
->  {
->=20
-> ---
-> base-commit: feaa00dbff45ad9a0dcd04a92f88c745bf880f55
-> change-id: 20250516-selftests-anon-inode-build-007e206e8422
->=20
-> Best regards,
-> --=20
-> Mark Brown <broonie@kernel.org>
->=20
-
---DLuH41Ng1iRNSMtA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg5iswACgkQJNaLcl1U
-h9A0ngf/a9bipV7ZRWFfwG/WshIDaw6GGK5V72tmc3qGRudNpzCiAiJ/qrXXJ3k3
-4CDmCgSmRRvNlIiX2JC+tk/0tZVFhLhri+RdUwOo1xx8KSHgJiW82JhZC4pdNk1O
-1n9Fqhk40psqQnMBJX5P5eBgYA9JqyavrXbTDGbQ+N4E/Kg6r99f9ktvFamL06Gt
-biRdnGJiB01Kime1zU3Q/PWz4YYRf291dwcoC+KxIKpG/NwWfUMQhHOfpPsOCSRx
-Se0RNrB5TAScO1DEXjWFjx4fG7MPWf3XjIFu8r5Grv/nxwp2lDfZN1LZsARVl1i6
-jDRAxTTwCxXrfBZw/PzO7SSBdvMovw==
-=7Piu
------END PGP SIGNATURE-----
-
---DLuH41Ng1iRNSMtA--
