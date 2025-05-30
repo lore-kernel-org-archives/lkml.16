@@ -1,63 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B86275844;
-	Fri, 30 May 2025 17:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD33262FD1;
+	Fri, 30 May 2025 17:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627496; cv=none; b=SW1PLlSGNHv3LeOnL/STEa0/xyp1OPcivs30CdAkNe2zf69YCMZOETHDkkL4r8KJXC0gWhKialm3ZK7t64MOW7NBQ0K9swTTuQUshrXoFW1vBT9W/bf3YUqr+OzB0QAAVmO4TOvQSs9IA+VOeVj3l0OqwSPUnBVeoOwZJqUg7jI=
+	t=1748627511; cv=none; b=n+s96iQVPMQpuHuD4uM16Dj1Dtyxi/ePc7DXAZxroB2Blm2XfzDnTX2IESYCQdG5Lra0rZCuyavyUWqUIT0naeoHHWYsXL9PRyt++pf6m+dtiPIfdlJR6QsCF5NUktMqzznlaHALQUYudsrebQmmdthrvyH4GOkf6tGuUFb9uvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627496; c=relaxed/simple;
-	bh=EASUUD4qyLfg0Po2bCeQbInqvYTnMlOcq8AC7xmSvIg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AilfUOIwWqdiefv86IsigOdK2k0JyMqxeNkqz8w2zJQEvOdtKw76qvu/LJe/gkO5Y1PrLdW6xUT9FxFEFBP9QxRIIsRNtZrrX4HeJ75ApGy3b9A8cQ2XIKMbml6KQMIhGh51PX5vNHswPYMtXEUrQilKM3tgzaWVdZV/12EL5HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1TwhZe/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1TwhZe/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF08CC4CEE9;
-	Fri, 30 May 2025 17:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748627495;
-	bh=EASUUD4qyLfg0Po2bCeQbInqvYTnMlOcq8AC7xmSvIg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=j1TwhZe/kVcOoM4BMtuVxKZI0URaVA+4KVUdnSCwXtGocHDbzs62OChxYf56f0cay
-	 0PdsbP2W9BaGYbpGOXH/AvWpTeqf0lfOkTQx/sm+0qpYsPZs7rX5qdY6CgwHOPjNnj
-	 IbUnCzNucwEyofrvaQ4dRyA4QM9axTfh6wyGqEH0ybP8K5bNEG3VIsxvFGnOErKBSL
-	 TySdCCY+PMUvAFnf2Ya492zhAQuzw/kJgHwzrtjJIEhcdXyG+vymm34f109gGwFu+Q
-	 dyZmWGIfh1fWeQd/bhHSwfoNqeTWd/i4cHeTlhgfVyDY5WuB9uWJ1mLe84yZc4eafS
-	 Lly9SXdOWDXyw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7142D39F1DF2;
-	Fri, 30 May 2025 17:52:10 +0000 (UTC)
-Subject: Re: [git pull] IOMMU Updates for Linux v6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aDmght5YpHmJ6qZ2@8bytes.org>
-References: <aDmght5YpHmJ6qZ2@8bytes.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aDmght5YpHmJ6qZ2@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-updates-v6.16
-X-PR-Tracked-Commit-Id: 879b141b7cfa09763f932f15f19e9bc0bcb020d5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8477ab143069c6b05d6da4a8184ded8b969240f5
-Message-Id: <174862752903.4058361.1021172028826066641.pr-tracker-bot@kernel.org>
-Date: Fri, 30 May 2025 17:52:09 +0000
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+	s=arc-20240116; t=1748627511; c=relaxed/simple;
+	bh=4glJh4nhklPrnkGM5a9SUGxv+OdnSbFstN9xhw0M7sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1AgmdHiGmK+5WCHHtAtL5WGhcLiuggu5LK535B5Rd1+zMssTwXYIHXz/dDY0X4j94/jEvbYAGKZ/a5qCij1qk2tVt/v5ysMM/ohOsUkN5+DfwyKh5I+I077WOeTmOwwG0aBYpA039s2VvgdUY+T1hcaiBL93LiALo+5nit+I+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: fB0BIYvDQDmpvyyEGXHR8g==
+X-CSE-MsgGUID: w22ba/XiSYypHQbzA0jlmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="49848524"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="49848524"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:51:49 -0700
+X-CSE-ConnectionGUID: 8FZKRsOPQGGlocHuaAMexA==
+X-CSE-MsgGUID: VCRWgnKFSxCtSTRPECEGrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144917425"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 10:51:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1uL3tQ-000000024c6-2xsi;
+	Fri, 30 May 2025 20:51:44 +0300
+Date: Fri, 30 May 2025 20:51:44 +0300
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Sean Nyekjaer <sean@geanix.com>, Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] iio: accel: fxls8962af: Fix use after free in
+ fxls8962af_fifo_flush
+Message-ID: <aDnwMDGDf3-KUb3J@smile.fi.intel.com>
+References: <20250524-fxlsrace-v1-1-dec506dc87ae@geanix.com>
+ <ed40509d-9627-43ce-b209-ca07674988ff@baylibre.com>
+ <CAHp75VeAOFXuxsiAEwJ=dMJ8NZsyA7E-h4L=2ZgpprdUXU2EUA@mail.gmail.com>
+ <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <67c33f11-0196-44f4-9cdd-762618cb88be@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The pull request you sent on Fri, 30 May 2025 14:11:50 +0200:
+On Thu, May 29, 2025 at 01:49:16PM -0500, David Lechner wrote:
+> On 5/29/25 1:16 PM, Andy Shevchenko wrote:
+> > On Thu, May 29, 2025 at 7:02 PM David Lechner <dlechner@baylibre.com> wrote:
+> >> On 5/24/25 5:34 AM, Sean Nyekjaer wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-updates-v6.16
+...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8477ab143069c6b05d6da4a8184ded8b969240f5
+> >> fxls8962af_suspend() calls enable_irq_wake(data->irq); before disabling the
+> >> interrupt by calling fxls8962af_buffer_predisable(indio_dev);
+> >>
+> >> It seems like the order should be reversed.
+> > 
+> > AFAIU the wake capability of IRQ line is orthogonal to the interrupt
+> > controller enabling (unmasking) / disabling (masking) the line itself.
+> > Or did you mean something else?
+> 
+> I don't know enough about how suspend/wake stuff works to say for sure.
+> 
+> I just saw the comment:
+> 
+> 	/*
+> 	 * Disable buffer, as the buffer is so small the device will wake
+> 	 * almost immediately.
+> 	 */
+> 
+> so I assumed someone had observed something like this happening already.
+> If an interrupt occurs between enable_irq_wake() and actually
+> going into a low power mode, what effect does it have? I ask because I
+> don't know.
 
-Thank you!
+To be a "wake source" means to be capable of signaling to the system that wake
+is needed. If an event comes after enabling an IRQ line to be a wake source,
+that should wakeup the system (independently if that IRQ line is disabled or
+not on the IRQ controller side).
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+With Best Regards,
+Andy Shevchenko
+
+
