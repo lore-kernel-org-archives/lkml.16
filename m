@@ -1,96 +1,195 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FBE1A01BF;
-	Fri, 30 May 2025 02:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC31194AD5
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748573452; cv=none; b=dZWyacE6HvxzpkcWCLxDC7RUdnxQlR2CLZy3BbZ5uprFWbiYCMGxLRf7RDIn9nT58VhWW846gS7K4bAjRTV4N5E9yqMIBiA/xtUDH2KS4nIQ26IjQDu5ssDLR/bis+NHZkrZP6OB/UmXXaG6r8e334iMcY7U1CzEVWZFDDgzqBI=
+	t=1748573450; cv=none; b=dmJOswv8BTKUJjRGg87biA7lZR3v7D5eI6pQpS0TDpA7J8Cq6AT2c/PjF8aRNelndJ5YP7OWhLLpAlSzfGdYo8suYSUe6m9QNxuh0cnZMMdKWhtQePrVDdkzYX2dtsVxwarRlLQPQzGLgRKzyStYs4IoyQ46/hV2PpK4569RkKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748573452; c=relaxed/simple;
-	bh=5W400MBZ1HThTvR3ckF00N8iEWaCB3X849eX1DGODzg=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=BGjn7RfnOY2/f1BOHpMPSuecdR/MBdeTmrDmPr2jYKj034veg8RvNcM/9RByz6nrs/FmszNfnOcniTQGyW5A4UcnUQmwFgf9oSkF4RU8DUKTeljLBjidwB5P7q2OVImZwEX1aVptnCGW2o5Y7bL6prb4wHRQJbPr30AA/TYKzgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: e1abe4183d0011f0b29709d653e92f7d-20250530
-X-CTIC-Tags:
-	HR_CTE_8B, HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE
-	HR_FROM_DIGIT_LEN, HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
-	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
-	AMN_C_BU, ABX_MISS_RDNS
-X-CID-CACHE: Type:Local,Time:202505301049+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:ff555342-7437-46e7-ada0-25e56a6a8ad5,IP:10,
-	URL:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,A
-	CTION:release,TS:-35
-X-CID-INFO: VERSION:1.1.45,REQID:ff555342-7437-46e7-ada0-25e56a6a8ad5,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:-25,RT:0,SF:-15,FILE:0,BULK:0,RULE:EDM_GE969F26,AC
-	TION:release,TS:-35
-X-CID-META: VersionHash:6493067,CLOUDID:83699f22e4d7182ca7599630c796c4f1,BulkI
-	D:2505291639197H8C8EDO,BulkQuantity:4,Recheck:0,SF:17|19|24|38|44|66|78|10
-	2,TC:nil,Content:0|50,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC
-	:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: e1abe4183d0011f0b29709d653e92f7d-20250530
-X-User: lijun01@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <lijun01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 700823638; Fri, 30 May 2025 10:50:44 +0800
-From: Li Jun <lijun01@kylinos.cn>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	lijun01@kylinos.cn,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ppp: remove error variable
-Date: Fri, 30 May 2025 10:50:40 +0800
-Message-Id: <20250530025040.379064-1-lijun01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1748573450; c=relaxed/simple;
+	bh=hRUaXp1v2L6zhTResUw4t1S9QKhL14tCPso7a8u3764=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OBwa2POYKrjkvv1s1xxb+sx9JHe/abnvMGTKNcrpz+XlulmIP0y25J9TuMbfR+p1a5oskfY02YMPYDQ8kdrjpPZ3bgmozwNSG/Tc7jRIzujjsobIkT+3Xy13zTEdfWoPK7xTQzuA4gLjtUjjs/2HbdJIS3sRLPQrvwdlg/xfSQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=emNAroho; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emNAroho"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748573447;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=44cKIolqH4V7UKsEdZUn1ZRKIHVEItoVbVOKtb7SFEo=;
+	b=emNAroho58fkkTfWoRMhz13DZtOGKbwdWXj3Z8Z9YIHSHKRKR9TdRlI2Wy4HKBDreNkx6z
+	ImyBTBeI/mnDUY8nFVrIFgtV+axR/jINWGnpqG6Q92DdhNPCPQb11jdpdYmbtxKxR7W4QW
+	TXCaYEm4MtGpKK4BUwbmmVpcHl6mHOg=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-_2YxOqyiPzubIcrKDzj5DA-1; Thu,
+ 29 May 2025 22:50:41 -0400
+X-MC-Unique: _2YxOqyiPzubIcrKDzj5DA-1
+X-Mimecast-MFC-AGG-ID: _2YxOqyiPzubIcrKDzj5DA_1748573440
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CBB011800772;
+	Fri, 30 May 2025 02:50:39 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.13])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3AA4418003FC;
+	Fri, 30 May 2025 02:50:37 +0000 (UTC)
+Date: Fri, 30 May 2025 10:50:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, kasong@tencent.com, hannes@cmpxchg.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mm: swap: correctly use maxpages in swapon syscall
+ to avoid potensial deadloop
+Message-ID: <aDkc+bdFbKLUFStl@MiWiFi-R3L-srv>
+References: <20250522122554.12209-1-shikemeng@huaweicloud.com>
+ <20250522122554.12209-3-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522122554.12209-3-shikemeng@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-the error variable did not function as a variable.
-so remove it.
+On 05/22/25 at 08:25pm, Kemeng Shi wrote:
+> We use maxpages from read_swap_header() to initialize swap_info_struct,
+> however the maxpages might be reduced in setup_swap_extents() and the
+> si->max is assigned with the reduced maxpages from the
+> setup_swap_extents().
+> Obviously, this could lead to memory waste as we allocated memory based on
+> larger maxpages, besides, this could lead to a potensial deadloop as
+                                                 ^ typo, potential
+> following:
+> 1) When calling setup_clusters() with larger maxpages, unavailable pages
+> within range [si->max, larger maxpages) are not accounted with
+> inc_cluster_info_page(). As a result, these pages are assumed available
+> but can not be allocated. The cluster contains these pages can be moved
+> to frag_clusters list after it's all available pages were allocated.
+> 2) When the cluster mentioned in 1) is the only cluster in frag_clusters
+> list, cluster_alloc_swap_entry() assume order 0 allocation will never
+> failed and will enter a deadloop by keep trying to allocate page from the
+> only cluster in frag_clusters which contains no actually available page.
+> 
+> Call setup_swap_extents() to get the final maxpages before swap_info_struct
+> initialization to fix the issue.
+> 
+> Fixes: 661383c6111a3 ("mm: swap: relaim the cached parts that got scanned")
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> ---
+>  mm/swapfile.c | 47 ++++++++++++++++++++---------------------------
+>  1 file changed, 20 insertions(+), 27 deletions(-)
 
-Signed-off-by: Li Jun <lijun01@kylinos.cn>
----
- drivers/net/ppp/pptp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Reviedwed-by: Baoquan He <bhe@redhat.com>
 
-diff --git a/drivers/net/ppp/pptp.c b/drivers/net/ppp/pptp.c
-index 5feaa70b5f47..67239476781e 100644
---- a/drivers/net/ppp/pptp.c
-+++ b/drivers/net/ppp/pptp.c
-@@ -501,7 +501,6 @@ static int pptp_release(struct socket *sock)
- {
- 	struct sock *sk = sock->sk;
- 	struct pppox_sock *po;
--	int error = 0;
- 
- 	if (!sk)
- 		return 0;
-@@ -526,7 +525,7 @@ static int pptp_release(struct socket *sock)
- 	release_sock(sk);
- 	sock_put(sk);
- 
--	return error;
-+	return 0;
- }
- 
- static void pptp_sock_destruct(struct sock *sk)
--- 
-2.25.1
+> 
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 75b69213c2e7..a82f4ebefca3 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3141,43 +3141,30 @@ static unsigned long read_swap_header(struct swap_info_struct *si,
+>  	return maxpages;
+>  }
+>  
+> -static int setup_swap_map_and_extents(struct swap_info_struct *si,
+> -					union swap_header *swap_header,
+> -					unsigned char *swap_map,
+> -					unsigned long maxpages,
+> -					sector_t *span)
+> +static int setup_swap_map(struct swap_info_struct *si,
+> +			  union swap_header *swap_header,
+> +			  unsigned char *swap_map,
+> +			  unsigned long maxpages)
+>  {
+> -	unsigned int nr_good_pages;
+>  	unsigned long i;
+> -	int nr_extents;
+> -
+> -	nr_good_pages = maxpages - 1;	/* omit header page */
+>  
+> +	swap_map[0] = SWAP_MAP_BAD; /* omit header page */
+>  	for (i = 0; i < swap_header->info.nr_badpages; i++) {
+>  		unsigned int page_nr = swap_header->info.badpages[i];
+>  		if (page_nr == 0 || page_nr > swap_header->info.last_page)
+>  			return -EINVAL;
+>  		if (page_nr < maxpages) {
+>  			swap_map[page_nr] = SWAP_MAP_BAD;
+> -			nr_good_pages--;
+> +			si->pages--;
+>  		}
+>  	}
+>  
+> -	if (nr_good_pages) {
+> -		swap_map[0] = SWAP_MAP_BAD;
+> -		si->max = maxpages;
+> -		si->pages = nr_good_pages;
+> -		nr_extents = setup_swap_extents(si, span);
+> -		if (nr_extents < 0)
+> -			return nr_extents;
+> -		nr_good_pages = si->pages;
+> -	}
+> -	if (!nr_good_pages) {
+> +	if (!si->pages) {
+>  		pr_warn("Empty swap-file\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	return nr_extents;
+> +	return 0;
+>  }
+>  
+>  #define SWAP_CLUSTER_INFO_COLS						\
+> @@ -3217,7 +3204,7 @@ static struct swap_cluster_info *setup_clusters(struct swap_info_struct *si,
+>  	 * Mark unusable pages as unavailable. The clusters aren't
+>  	 * marked free yet, so no list operations are involved yet.
+>  	 *
+> -	 * See setup_swap_map_and_extents(): header page, bad pages,
+> +	 * See setup_swap_map(): header page, bad pages,
+>  	 * and the EOF part of the last cluster.
+>  	 */
+>  	inc_cluster_info_page(si, cluster_info, 0);
+> @@ -3354,6 +3341,15 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>  		goto bad_swap_unlock_inode;
+>  	}
+>  
+> +	si->max = maxpages;
+> +	si->pages = maxpages - 1;
+> +	nr_extents = setup_swap_extents(si, &span);
+> +	if (nr_extents < 0) {
+> +		error = nr_extents;
+> +		goto bad_swap_unlock_inode;
+> +	}
+> +	maxpages = si->max;
+> +
+>  	/* OK, set up the swap map and apply the bad block list */
+>  	swap_map = vzalloc(maxpages);
+>  	if (!swap_map) {
+> @@ -3365,12 +3361,9 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>  	if (error)
+>  		goto bad_swap_unlock_inode;
+>  
+> -	nr_extents = setup_swap_map_and_extents(si, swap_header, swap_map,
+> -						maxpages, &span);
+> -	if (unlikely(nr_extents < 0)) {
+> -		error = nr_extents;
+> +	error = setup_swap_map(si, swap_header, swap_map, maxpages);
+> +	if (error)
+>  		goto bad_swap_unlock_inode;
+> -	}
+>  
+>  	/*
+>  	 * Use kvmalloc_array instead of bitmap_zalloc as the allocation order might
+> -- 
+> 2.30.0
+> 
 
