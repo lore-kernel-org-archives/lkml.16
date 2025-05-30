@@ -1,327 +1,184 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F8520296E;
-	Fri, 30 May 2025 08:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AC538B;
+	Fri, 30 May 2025 08:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748592550; cv=none; b=aqj2LXzpKoHZSEg0Flgkoou8XL1IhBdR/FpBbuMTXZOOx+nrn7U1FSniFI0bF9xOXouvMy4/touO8WInnL1WRDfDS2Qm/21YNT4fn5MQPYXN3B6YR6NhvCBg/J1sqHVbm0JgibjIBxSIxm9bVLFNij8n682w2MKPz2KwcjGv4Ow=
+	t=1748592693; cv=none; b=N/p9uNQqo24+N15t8ippfqF6bnhqBy+xEs/q4l2VX+GqbonDmD4yFuFCyvfDnJbAi3BKdybQ9D6EtrUlqWWpx/L5LiQV9ZmKUkZla/8BiZQG/kNTpYsWjNq8ftXJMgkiR1BN9l4L5VJ1+xTsatgUJdaf8jRPqw7E80D033ip5R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748592550; c=relaxed/simple;
-	bh=r3LJPAy8th9swxuOjpAlgE/XhVIli1+QsomGV1LR4tU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IFfnQHzUJVH73n+ttyCTUb0hIpBKq0ZWV7QIfrh7POgAO1olchUdhg5jU91TdESLBoLPZnFpjULjD7+vFe2LUI2tYcI0AwzFu98ac2VPJmCaWJ6wmsHByuj1qzY8XRVbf69sIUedo47rwkSg/2/dWEc/M+Is/0yFqcL++2Yna3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b7wql28XwzKHMvG;
-	Fri, 30 May 2025 16:09:07 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id B0F8E1A07BD;
-	Fri, 30 May 2025 16:09:05 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP3 (Coremail) with SMTP id _Ch0CgAne8WfZzloSi3_Ng--.6274S6;
-	Fri, 30 May 2025 16:09:05 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	johnny.chenyi@huawei.com
-Subject: [PATCH RFC 2/4] mq-deadline: switch to use elevator lock
-Date: Fri, 30 May 2025 16:03:53 +0800
-Message-Id: <20250530080355.1138759-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250530080355.1138759-1-yukuai1@huaweicloud.com>
-References: <20250530080355.1138759-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1748592693; c=relaxed/simple;
+	bh=nljyD7oGpKi/pB343Z0SDcbWcB4VlyF/oMtqy5oonPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F2Gz3EDDiuW42Z88QeXxW3P3ArRe9tT8enkkR2mjQzGKzDZayl6Ww45i6tlgRcnHt4Z0VbIhigbnGgxUYm4ww0RinlhPgGdkGRcQfbOz+bb4kI0w+2XNfJrE6WsqE6lYZAZNCdyl1fFLDtDHlhj6rRX+9AM5+Awk8qsNiz6GwN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k0vN59jV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k0vN59jV"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54U05iW9011696;
+	Fri, 30 May 2025 08:11:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BfwfesnKPE1k+zYrC748qyklIi19iAGRhf67EVTHwB4=; b=k0vN59jVEZ2nbzFw
+	r7QTiqjZxQa3AoxU8Ooq8eoojJpQrT1PZ9GGZ4tGjo6epvB7VA/NqId0k3B0zlrK
+	izjbiTsMCUDtLhh/NsTHibM3gkIWusIWJe92PD+G2WUP+hEZK7+ySUN2HRXewz96
+	ItE9XTJABMa88pGsMw0hUURBQCkCWgwOAkcbveEChJlBewiagjkCURT/6ER3C5Wr
+	rLswk/ZtmmqTk9ihJu6H6+tITRIevRHZ9KI2zQg4DMGQOD5EU4eiDQ9fhbuAlTvy
+	H1iyUcq7sVimnWbYE/x6xT5CelqswJrFUvL7xperBN6pIiYb1OcnXH1MogRc5lDm
+	+55SCA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g98bqx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 08:11:26 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54U8BPJp008217
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 30 May 2025 08:11:25 GMT
+Received: from [10.253.39.138] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 30 May
+ 2025 01:11:22 -0700
+Message-ID: <7d656b7e-3e7b-4357-80c3-24ab597bdcee@quicinc.com>
+Date: Fri, 30 May 2025 16:11:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAne8WfZzloSi3_Ng--.6274S6
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF1kGw4DZF1ftF1DGrWUCFg_yoWfJFW3pF
-	45Kan0yr4rXFsrZ3WDJa9rZw4agw4I9ry2qr93C3yfKFn7JrZrW3WjkF10vr4fAr97CFsI
-	gF4qqa98JFy7twUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUFoGdUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
+ ttyport_close() due to uninitialized serport->tty
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liulzhao@qti.qualcomm.com>, <quic_chejiang@quicinc.com>,
+        <zaiyongc@qti.qualcomm.com>, <quic_zijuhu@quicinc.com>,
+        <quic_mohamull@quicinc.com>,
+        Panicker Harish <quic_pharish@quicinc.com>
+References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+ <2025043022-rumbling-guy-26fb@gregkh>
+ <d388b471-482b-48ba-a504-694529535362@quicinc.com>
+ <2025050851-splatter-thesaurus-f54e@gregkh>
+ <38bf94e1-ebed-4d03-8ea0-4040009e8d31@quicinc.com>
+ <8e171057-b3c3-4808-b49e-f04ffd310b31@quicinc.com>
+ <2025052926-net-economist-a016@gregkh>
+Content-Language: en-US
+From: Xin Chen <quic_cxin@quicinc.com>
+In-Reply-To: <2025052926-net-economist-a016@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6839682e cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=X2qtyJaRkhN_4_ZcoJQA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: rQSImzhdcu1SUdpJ9GWlwqoTkByhVxb1
+X-Proofpoint-GUID: rQSImzhdcu1SUdpJ9GWlwqoTkByhVxb1
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTMwMDA2NyBTYWx0ZWRfX/eDViJL2BQbB
+ 9Hd/Ul7RBQz8n4zgD0jN36oM+Womc/u9Z3sXov7wqhrhz1sGkeDB+Cfssl0t92cVWmw5OA22JiQ
+ /+3AWMin4M3lU1sdl2xKylEnWobjgqL5pQYUYlP+q8qhjjhKUg6auPBhn3p6gj4mHywPDO+a1Mb
+ 0B9R7/QZP3iIwrYx6OblsU7HpyTIX1g1YVGWxpB7alL/P0IGUg2YjeDCu0BQH5OvTV6G/LbAfuy
+ D8bd0KDFocBs9RWaa4QWNjbpAL25YTV6y9rOP6vjphnhyznwW+IsW3Ohp3UqFujU3euCQEanHRh
+ 9PIpMH2TmdBDkOJduONdCeaOuNV2GycDzJF2Sgs29X+rE34GO544mhg5Dt9Chat4pZ11vR/5Qcm
+ Plrd9kR98ARFQhxHJVPOAwyUScgF4gFzriZLajWqFPsJUT32hjne2Nl1l5yQVIW4uGMKk4Z+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-30_03,2025-05-29_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505300067
 
-From: Yu Kuai <yukuai3@huawei.com>
 
-There are no functional changes, prepare to support batch request
-dispatching.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/elevator.h    |  1 +
- block/mq-deadline.c | 60 +++++++++++++++++----------------------------
- 2 files changed, 23 insertions(+), 38 deletions(-)
+On 5/29/2025 5:07 PM, Greg Kroah-Hartman wrote:
+> On Fri, May 23, 2025 at 10:52:27AM +0800, Xin Chen wrote:
+>>
+>>
+>> On 5/14/2025 5:14 PM, Xin Chen wrote:
+>>>
+>>>
+>>> On 5/8/2025 5:41 PM, Greg Kroah-Hartman wrote:
+>>>> On Thu, May 08, 2025 at 05:29:18PM +0800, Xin Chen wrote:
+>>>>>
+>>>>> On 4/30/2025 7:40 PM, Greg Kroah-Hartman wrote:
+>>>>>> On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
+>>>>>>> When ttyport_open() fails to initialize a tty device, serport->tty is not
+>>>>>>> --- a/drivers/tty/serdev/serdev-ttyport.c
+>>>>>>> +++ b/drivers/tty/serdev/serdev-ttyport.c
+>>>>>>> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
+>>>>>>>  {
+>>>>>>>  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
+>>>>>>>  	struct tty_struct *tty = serport->tty;
+>>>>>>> +	if (!tty) {
+>>>>>>> +		dev_err(&ctrl->dev, "tty is null\n");
+>>>>>>> +		return;
+>>>>>>> +	}
+>>>>>>
+>>>>>> What prevents tty from going NULL right after you just checked this?
+>>>>>
+>>>>> First sorry for reply so late for I have a long statutory holidays.
+>>>>> Maybe I don't get your point. From my side, there is nothing to prevent it.
+>>>>> Check here is to avoid code go on if tty is NULL.
+>>>>
+>>>> Yes, but the problem is, serport->tty could change to be NULL right
+>>>> after you check it, so you have not removed the real race that can
+>>>> happen here.  There is no lock, so by adding this check you are only
+>>>> reducing the risk of the problem happening, not actually fixing the
+>>>> issue so that it will never happen.
+>>>>
+>>>> Please fix it so that this can never happen.
+>>>>
+>>>
+>>> Actually I have never thought the race condition issue since the crash I met is
+>>> not caused by race condition. It's caused due to Bluetooth driver call
+>>> ttyport_close() after ttyport_open() failed. This two action happen one after
+>>> another in one thread and it seems impossible to have race condition. And with
+>>> my fix the crash doesn't happen again in several test of same case.
+>>>
+>>> Let me introduce the complete process for you:
+>>>   1) hci_dev_open_sync()->
+>>> hci_dev_init_sync()->hci_dev_setup_sync()->hdev->setup()(hci_uart_setup)->qca_setup(),
+>>> here in qca_setup(), qca_read_soc_version() fails and goto out, then calls
+>>> serdev_device_close() to close tty normally. And then call serdev_device_open()
+>>> to retry.
+>>>   2) serdev_device_open() fails due to tty_init_dev() fails, then tty gets
+>>> released, which means this time the tty has been freed succesfully.
+>>>   3) Return back to upper func  hci_dev_open_sync(),
+>>> hdev->close()(hci_uart_close) is called. And hci_uart_close calls
+>>> hci_uart_flush() and serdev_device_close(). serdev_device_close() tries to close
+>>> tty again, it's calltrace is serdev_device_close()->ttyport_close()->tty_lock(),
+>>> tty_unlock(), tty_release_struct(). The four funcs hci_uart_flush(), tty_lock(),
+>>> tty_unlock(), tty_release_struct() read tty pointer's value, which is invalid
+>>> and causes crash.
+>>>
+>>
+>> Hi Greg, could you please take some time to review my reply?
+> 
+> I am not disputing the fact that there is a bug here, I'm just saying
+> that you can't test for a value and then act on it without a lock
+> protecting that action because the value can be changed right after you
+> test for it.
+> 
+> You might not see this in your testing, as you have narrowed the window
+> that the value can change, but you have not solved the issue properly,
+> right?
+> 
+> thanks,
+> 
+> greg k-h
 
-diff --git a/block/elevator.h b/block/elevator.h
-index 8399dfe5c3b6..1b325d131c51 100644
---- a/block/elevator.h
-+++ b/block/elevator.h
-@@ -188,6 +188,7 @@ void blk_mq_sched_unreg_debugfs(struct request_queue *q);
- 
- #define elevator_lock(e)	spin_lock_irq(&(e)->lock)
- #define elevator_unlock(e)	spin_unlock_irq(&(e)->lock)
-+#define elevator_assert_lock(e)	lockdep_assert_held(&(e)->lock)
- 
- static inline struct request *elevator_dispatch_request(
- 		struct blk_mq_hw_ctx *hctx)
-diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-index 2edf1cac06d5..a68a50da6320 100644
---- a/block/mq-deadline.c
-+++ b/block/mq-deadline.c
-@@ -101,7 +101,7 @@ struct deadline_data {
- 	u32 async_depth;
- 	int prio_aging_expire;
- 
--	spinlock_t lock;
-+	struct elevator_queue *eq;
- };
- 
- /* Maps an I/O priority class to a deadline scheduler priority. */
-@@ -213,7 +213,7 @@ static void dd_merged_requests(struct request_queue *q, struct request *req,
- 	const u8 ioprio_class = dd_rq_ioclass(next);
- 	const enum dd_prio prio = ioprio_class_to_prio[ioprio_class];
- 
--	lockdep_assert_held(&dd->lock);
-+	elevator_assert_lock(q->elevator);
- 
- 	dd->per_prio[prio].stats.merged++;
- 
-@@ -253,7 +253,7 @@ static u32 dd_queued(struct deadline_data *dd, enum dd_prio prio)
- {
- 	const struct io_stats_per_prio *stats = &dd->per_prio[prio].stats;
- 
--	lockdep_assert_held(&dd->lock);
-+	elevator_assert_lock(dd->eq);
- 
- 	return stats->inserted - atomic_read(&stats->completed);
- }
-@@ -323,7 +323,7 @@ static struct request *__dd_dispatch_request(struct deadline_data *dd,
- 	enum dd_prio prio;
- 	u8 ioprio_class;
- 
--	lockdep_assert_held(&dd->lock);
-+	elevator_assert_lock(dd->eq);
- 
- 	if (!list_empty(&per_prio->dispatch)) {
- 		rq = list_first_entry(&per_prio->dispatch, struct request,
-@@ -434,7 +434,7 @@ static struct request *dd_dispatch_prio_aged_requests(struct deadline_data *dd,
- 	enum dd_prio prio;
- 	int prio_cnt;
- 
--	lockdep_assert_held(&dd->lock);
-+	elevator_assert_lock(dd->eq);
- 
- 	prio_cnt = !!dd_queued(dd, DD_RT_PRIO) + !!dd_queued(dd, DD_BE_PRIO) +
- 		   !!dd_queued(dd, DD_IDLE_PRIO);
-@@ -466,10 +466,9 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- 	struct request *rq;
- 	enum dd_prio prio;
- 
--	spin_lock(&dd->lock);
- 	rq = dd_dispatch_prio_aged_requests(dd, now);
- 	if (rq)
--		goto unlock;
-+		return rq;
- 
- 	/*
- 	 * Next, dispatch requests in priority order. Ignore lower priority
-@@ -481,9 +480,6 @@ static struct request *dd_dispatch_request(struct blk_mq_hw_ctx *hctx)
- 			break;
- 	}
- 
--unlock:
--	spin_unlock(&dd->lock);
--
- 	return rq;
- }
- 
-@@ -552,9 +548,9 @@ static void dd_exit_sched(struct elevator_queue *e)
- 		WARN_ON_ONCE(!list_empty(&per_prio->fifo_list[DD_READ]));
- 		WARN_ON_ONCE(!list_empty(&per_prio->fifo_list[DD_WRITE]));
- 
--		spin_lock(&dd->lock);
-+		elevator_lock(e);
- 		queued = dd_queued(dd, prio);
--		spin_unlock(&dd->lock);
-+		elevator_unlock(e);
- 
- 		WARN_ONCE(queued != 0,
- 			  "statistics for priority %d: i %u m %u d %u c %u\n",
-@@ -601,7 +597,7 @@ static int dd_init_sched(struct request_queue *q, struct elevator_type *e)
- 	dd->last_dir = DD_WRITE;
- 	dd->fifo_batch = fifo_batch;
- 	dd->prio_aging_expire = prio_aging_expire;
--	spin_lock_init(&dd->lock);
-+	dd->eq = eq;
- 
- 	/* We dispatch from request queue wide instead of hw queue */
- 	blk_queue_flag_set(QUEUE_FLAG_SQ_SCHED, q);
-@@ -653,14 +649,10 @@ static int dd_request_merge(struct request_queue *q, struct request **rq,
- static bool dd_bio_merge(struct request_queue *q, struct bio *bio,
- 		unsigned int nr_segs)
- {
--	struct deadline_data *dd = q->elevator->elevator_data;
- 	struct request *free = NULL;
- 	bool ret;
- 
--	spin_lock(&dd->lock);
- 	ret = blk_mq_sched_try_merge(q, bio, nr_segs, &free);
--	spin_unlock(&dd->lock);
--
- 	if (free)
- 		blk_mq_free_request(free);
- 
-@@ -681,8 +673,6 @@ static void dd_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
- 	struct dd_per_prio *per_prio;
- 	enum dd_prio prio;
- 
--	lockdep_assert_held(&dd->lock);
--
- 	prio = ioprio_class_to_prio[ioprio_class];
- 	per_prio = &dd->per_prio[prio];
- 	if (!rq->elv.priv[0])
-@@ -721,11 +711,8 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
- 			       struct list_head *list,
- 			       blk_insert_t flags)
- {
--	struct request_queue *q = hctx->queue;
--	struct deadline_data *dd = q->elevator->elevator_data;
- 	LIST_HEAD(free);
- 
--	spin_lock(&dd->lock);
- 	while (!list_empty(list)) {
- 		struct request *rq;
- 
-@@ -733,7 +720,6 @@ static void dd_insert_requests(struct blk_mq_hw_ctx *hctx,
- 		list_del_init(&rq->queuelist);
- 		dd_insert_request(hctx, rq, flags, &free);
- 	}
--	spin_unlock(&dd->lock);
- 
- 	blk_mq_free_requests(&free);
- }
-@@ -849,13 +835,13 @@ static const struct elv_fs_entry deadline_attrs[] = {
- #define DEADLINE_DEBUGFS_DDIR_ATTRS(prio, data_dir, name)		\
- static void *deadline_##name##_fifo_start(struct seq_file *m,		\
- 					  loff_t *pos)			\
--	__acquires(&dd->lock)						\
-+	__acquires(&q->elevator->lock)					\
- {									\
- 	struct request_queue *q = m->private;				\
- 	struct deadline_data *dd = q->elevator->elevator_data;		\
- 	struct dd_per_prio *per_prio = &dd->per_prio[prio];		\
- 									\
--	spin_lock(&dd->lock);						\
-+	elevator_lock(q->elevator);					\
- 	return seq_list_start(&per_prio->fifo_list[data_dir], *pos);	\
- }									\
- 									\
-@@ -870,12 +856,11 @@ static void *deadline_##name##_fifo_next(struct seq_file *m, void *v,	\
- }									\
- 									\
- static void deadline_##name##_fifo_stop(struct seq_file *m, void *v)	\
--	__releases(&dd->lock)						\
-+	__releases(&q->elevator->lock)					\
- {									\
- 	struct request_queue *q = m->private;				\
--	struct deadline_data *dd = q->elevator->elevator_data;		\
- 									\
--	spin_unlock(&dd->lock);						\
-+	elevator_unlock(q->elevator);					\
- }									\
- 									\
- static const struct seq_operations deadline_##name##_fifo_seq_ops = {	\
-@@ -941,11 +926,11 @@ static int dd_queued_show(void *data, struct seq_file *m)
- 	struct deadline_data *dd = q->elevator->elevator_data;
- 	u32 rt, be, idle;
- 
--	spin_lock(&dd->lock);
-+	elevator_lock(q->elevator);
- 	rt = dd_queued(dd, DD_RT_PRIO);
- 	be = dd_queued(dd, DD_BE_PRIO);
- 	idle = dd_queued(dd, DD_IDLE_PRIO);
--	spin_unlock(&dd->lock);
-+	elevator_unlock(q->elevator);
- 
- 	seq_printf(m, "%u %u %u\n", rt, be, idle);
- 
-@@ -957,7 +942,7 @@ static u32 dd_owned_by_driver(struct deadline_data *dd, enum dd_prio prio)
- {
- 	const struct io_stats_per_prio *stats = &dd->per_prio[prio].stats;
- 
--	lockdep_assert_held(&dd->lock);
-+	elevator_assert_lock(dd->eq);
- 
- 	return stats->dispatched + stats->merged -
- 		atomic_read(&stats->completed);
-@@ -969,11 +954,11 @@ static int dd_owned_by_driver_show(void *data, struct seq_file *m)
- 	struct deadline_data *dd = q->elevator->elevator_data;
- 	u32 rt, be, idle;
- 
--	spin_lock(&dd->lock);
-+	elevator_lock(q->elevator);
- 	rt = dd_owned_by_driver(dd, DD_RT_PRIO);
- 	be = dd_owned_by_driver(dd, DD_BE_PRIO);
- 	idle = dd_owned_by_driver(dd, DD_IDLE_PRIO);
--	spin_unlock(&dd->lock);
-+	elevator_unlock(q->elevator);
- 
- 	seq_printf(m, "%u %u %u\n", rt, be, idle);
- 
-@@ -983,13 +968,13 @@ static int dd_owned_by_driver_show(void *data, struct seq_file *m)
- #define DEADLINE_DISPATCH_ATTR(prio)					\
- static void *deadline_dispatch##prio##_start(struct seq_file *m,	\
- 					     loff_t *pos)		\
--	__acquires(&dd->lock)						\
-+	__acquires(&q->elevator->lock)					\
- {									\
- 	struct request_queue *q = m->private;				\
- 	struct deadline_data *dd = q->elevator->elevator_data;		\
- 	struct dd_per_prio *per_prio = &dd->per_prio[prio];		\
- 									\
--	spin_lock(&dd->lock);						\
-+	elevator_lock(q->elevator);					\
- 	return seq_list_start(&per_prio->dispatch, *pos);		\
- }									\
- 									\
-@@ -1004,12 +989,11 @@ static void *deadline_dispatch##prio##_next(struct seq_file *m,		\
- }									\
- 									\
- static void deadline_dispatch##prio##_stop(struct seq_file *m, void *v)	\
--	__releases(&dd->lock)						\
-+	__releases(&q->elevator->lock)					\
- {									\
- 	struct request_queue *q = m->private;				\
--	struct deadline_data *dd = q->elevator->elevator_data;		\
- 									\
--	spin_unlock(&dd->lock);						\
-+	elevator_unlock(q->elevator);					\
- }									\
- 									\
- static const struct seq_operations deadline_dispatch##prio##_seq_ops = { \
--- 
-2.39.2
+From my analysis, I think there is only one thread operating the tty of
+Bluetooth. So the case of tty changed after check will not happen.
 
+Thanks,
+Xin
