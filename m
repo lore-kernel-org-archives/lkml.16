@@ -1,79 +1,119 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD4236435;
-	Fri, 30 May 2025 17:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE9F22DFA3;
+	Fri, 30 May 2025 17:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627616; cv=none; b=o1cQm9PsJaQwSZX5i7+k1beGnGGNN6OLGuvKRQuPuKh7duYLihcV9Vo391BZHuBaTyrCTYLGnqxkj8CSWWYeLEOQmNBEGyuCNBLzSoznCcqBPCnV9V6kr1MqbEsfdHRMnOvR1ePNw5Txbl0Hza7ihckvBiaLDCZ7sLwrLZCVl5k=
+	t=1748627696; cv=none; b=BsbHZjcrieO9JPKyqx2Dyy1qbIJh3WEWxDs/Tnpa+t90jUat38zfKRrhhQZltlhuY3m0vb6k6z5Ftis/4kxNtg9bYW/mH7iBZTfscsOgeNleFoKcJrskZoFFXWmUQpK4k3Ca2t4YgngAK5WBLpQ1I8UNmBXw9nD+AJYbOEW2UUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627616; c=relaxed/simple;
-	bh=O5E3YMz9F013DqyGBDEnCDzxn4BH5eU7W9Zt9m+DCkk=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=sToNliw4y4WoDWWjbJXh7Poj1TKaUJQmJ5lNTY7BFMO0aatOnpVEcXsy4w24+3W5g9rHNIO40bPkNgDHSKF9r9MBj056WnIejOSnlk9pWhIPqknXjIl+c1E1ku6+Uo7MUgNZOkmk/VypKHTMwF1IpHbHW4T64Ym5LjIplL94puk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CV0nUY0E; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748627696; c=relaxed/simple;
+	bh=afJSsEoeyNncZPJRpEWWyUsv9XUzBnoSUUqjD9g2U5k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cxm6HDJvmmmiFZAt1PPD7gHdJK+xX+HSZUy2A2FFUpFHiB2vbAsoUOqP9Z44e6JtIPPTDoMeWQkXGuoFpN/9cxhOCmNHHKquf9ASwsLM9xK5kuFlu5KS7okxob4nyCgkvId5yOUiS9Vtt9B2Kf7CyXvRmNqb9ad+aXwHyN2UYoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSWR9CKy; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CV0nUY0E"
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id ABD0782E;
-	Fri, 30 May 2025 19:53:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748627584;
-	bh=O5E3YMz9F013DqyGBDEnCDzxn4BH5eU7W9Zt9m+DCkk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=CV0nUY0EKaZWG1s8ED1Ot41cE+trWcqxJ9vOvqBzM93O1exvnA2ddZg4pHHL/4R+J
-	 RPwKxXbApIySWM0miHi7mo2+MSQc/0d47xLkXYM5sABmvJ0y4leWrJv1DA84Ddpr/h
-	 PrcgqNlZMd4MQ8LOgVyZKKHveR1EUO/aZWy6aMZA=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSWR9CKy"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so19114055e9.1;
+        Fri, 30 May 2025 10:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748627693; x=1749232493; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kjxoToXJDlv+POyGIuKi3i3ilCXa6eLtO0vMoZzC63E=;
+        b=aSWR9CKymxQcwHwCGqXPCSDi2o3bdDb37jdiRNI/NP/Da+JHoHEBUmF8tBpsuLx4AK
+         tUCAP7xwXO88ox3tIvJ0AxMttfYWpBYMZmONI88LN8OQg1DJcvsU+L3nmUJHqytsjzDl
+         UcXQjj9s6ED32olzRnunF5mNrScHSNUGzJT7vuoj4WGGq+ThpIAkMHa24aopkmuCoZo/
+         Sx7JREeM+n6xqM2wY2dd9L8X2lhySNaXug5yc3ggLIUcGUPg1nrr+FqiOIlxhEqlUw83
+         YgKFjlgoj3i5KHfyXW544NX2wHZl7ovksEnn5wypJCCQ9nnX7zvTSlth6GvKwwPWgkVZ
+         09TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748627693; x=1749232493;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kjxoToXJDlv+POyGIuKi3i3ilCXa6eLtO0vMoZzC63E=;
+        b=TjMA+W8OJCAzo0mBYiHCWwE9WgJLIL1pdp7wCVO2HySMRVfQ+t56OJ+8XOAJb9kHoP
+         RxH7pKOHcaheXfaGPtQINhmiY7IHtsMa507whH7pqf8aEpQFR16KigzzxUoOajQSbixl
+         hWkfNtNy8pcV9uzaqrZSlKlQvFyP+CCzYx9s/ElSxThEM7LnAZ5yjnIot8IRDL9kBWQQ
+         gr3vph94otMfoDKGQp2TJ1COO0+scO64YKDfExu4qyO3l1BLAOfauPeBeLcey++b0loR
+         aO8SDfJIyjlvYNmHG/773C11UPFAHy0l0NET11OFacmPDTSrzpziovo7jY80IB97NMee
+         RMvw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3bagt4FdlN9bnqTnPHY87HJb7OAXAEUtm+JbdQZ6PmiduSDT7fGzZVx0DnfsT7R8F6eHnMzziZCRh@vger.kernel.org, AJvYcCXcbGvBqV5Q1pe2N59weXvYUxFffAEHfe7c6mDw1cX/cLJbgbABr7Y13plXuD9QR23vqm21ErxlCHTGyU5v@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxIBgNoYkG/wQfS23Y4cXWoMyDN7XeySRKuWKyv31glJupD2Xc
+	V8Af1tMmzLhNgKE/FzEGkjgmbPaBU+Y2FAj8gJBHop17gp1A1MPjVyWT
+X-Gm-Gg: ASbGnctTpH/bWlB2Ffcdb7hiTmQVd57xepHY4aYR0sV1c/rPDqzg+Qp1mEqDZ/5AmNi
+	lVNF4hc3Grhg0toGyP3f0E8Uv2U9v0Yx77fMpYIlekNOKhC/AYblGtQ+n1eAIYVLW1+D7hvsr++
+	dmh1Oe/54djVSSXcQPN1c6KMPGrhNdCNuBCrLosjbTz6yFMYbon5Wdnek9SPmazJ4ZH7Bj+v9Gx
+	CIGhE0AnA3cnGYbxgRlJQ6lX+tGVhr84uh5l4XHAHhVkD9qMZv/ECg161IGPgNKW0Mgtxnnb1nb
+	PbSilHzHBdJGxd+7tTkS/68n7dePdYVAgh14gaxcM5UFmli7ICaPljWBoECoor51dA==
+X-Google-Smtp-Source: AGHT+IEhr2N3LMQLfOqjfiyCqjiseC8V2a5mOVzLYV2OcizhkIMwXqUo0/ClUu8jbLkLM6aFx7i4Hw==
+X-Received: by 2002:a05:600c:1e1b:b0:441:b19c:96fe with SMTP id 5b1f17b1804b1-450d6537a6cmr46734105e9.10.1748627693013;
+        Fri, 30 May 2025 10:54:53 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7f8f1adsm24506375e9.7.2025.05.30.10.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 10:54:52 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: rafael@kernel.org,
+	enb@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [RESEND PATCH] x86/ACPI: invalidate all cache lines on ACPI C-state transitions
+Date: Fri, 30 May 2025 17:54:19 +0000
+Message-ID: <20250530175420.1277-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250530154148.374663-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250530154148.374663-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250530154148.374663-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 2/2] media: dt-bindings: media: renesas,vsp1: Document RZ/V2N SoC
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh@kernel.org>
-Date: Fri, 30 May 2025 18:53:29 +0100
-Message-ID: <174862760998.2225057.7000806710981504616@ping.linuxembedded.co.uk>
-User-Agent: alot/0.9.1
+Content-Transfer-Encoding: 8bit
 
-Quoting Prabhakar (2025-05-30 16:41:48)
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> The VSPD block on the RZ/V2N SoC is identical to the one found on the
-> RZ/G2L SoC.
->=20
-> No driver changes are required, as `renesas,r9a07g044-vsp2` will be used
-> as a fallback compatible string on the RZ/V2N SoC.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+According to ACPI spec 6.4 and 6.5, upon C-state
+transitions (specifically C2 and C3) it is required and explicitly
+mentioned to invalidate and writeback all modified cache line using
+WBINVD.
 
-> ---
->  Documentation/devicetree/bindings/media/renesas,vsp1.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/media/renesas,vsp1.yaml b/=
-Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-> index 9d03b972f522..722ae14718e0 100644
-> --- a/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-> +++ b/Documentation/devicetree/bindings/media/renesas,vsp1.yaml
-> @@ -25,6 +25,7 @@ properties:
->            - enum:
->                - renesas,r9a07g043u-vsp2   # RZ/G2UL
->                - renesas,r9a07g054-vsp2    # RZ/V2L
-> +              - renesas,r9a09g056-vsp2    # RZ/V2N
->                - renesas,r9a09g057-vsp2    # RZ/V2H(P)
->            - const: renesas,r9a07g044-vsp2 # RZ/G2L fallback
-> =20
-> --=20
-> 2.49.0
->
+However the current ACPI C-state entry using monitor/mwait instructions
+it have been used CLFLUSH by flushing the cache line associated by
+monitored address. That what all about this patch addresses,
+invalidating all cache lines instead of single cache line.
+
+Let me know if there any reason and decisions behind the current
+implementation.
+
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ arch/x86/kernel/acpi/cstate.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index d5ac34186555..eb3d435e08ad 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -222,6 +222,9 @@ void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
+ 	struct cstate_entry *percpu_entry;
+ 
+ 	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
++	/* flush and invalidate all modified cache line on C3 and C2 state entry*/
++	if (cx->type == ACPI_STATE_C3 || cx->type == ACPI_STATE_C2)
++		wbinvd();
+ 	mwait_idle_with_hints(percpu_entry->states[cx->index].eax,
+ 	                      percpu_entry->states[cx->index].ecx);
+ }
+-- 
+2.49.0
+
