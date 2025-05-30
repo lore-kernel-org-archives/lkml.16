@@ -1,73 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1630F21CC52
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74A51DA5F;
+	Fri, 30 May 2025 09:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598178; cv=none; b=FwuDMv0ntUw2a9le/6mt3v5aF2/TMWt4I8brMV+qYQyXbNnFfLoHAoQHcKMW09FqUWCOq58XyeQBfW83y9h86l3p6RoOr1HgCgcG+iLQM+WrOxyPBhWNMyhm6i3b0/qmRtEK5i6YVuuYYyGsnyA/4Je0m6LZqk8c+UMNNXVzEt0=
+	t=1748598362; cv=none; b=bsm2wedy/nlBbRZUZVcxym9jf8FZ5TjwR5WL0prkUelTH6LyIioRqLbokX5MoyiVQyDcXKfwGm80eoPhrlR435L7hm9u4uJhq7Tcf94sm/2NO2wD9EqbPcoP1I429N3GpKek5JGhmndLurMSvxmgyCcPGRpojJuojIki2SyQKjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598178; c=relaxed/simple;
-	bh=elpyLymxaqb7oa4Th6MKUlLdZPCM+CCtwiijx05Vekk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PvlrdmTRW1nNqXAvD435i84Hh6fZG35i4l5zT0Qd/k6SqGJvSGvbwD1XGkgPC5Mr55Vb/iCu+T85ugnSw5qhIscf4RfmEboiUG5R0IsDMWaXgdzrBqWCKYxanC4vDkssJo9zyoriaxDm1PM1GZJBIKLnUmWb9C013i0gUHbUEfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xy9siocL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748598362; c=relaxed/simple;
+	bh=NLRCiIN5IbcBPzR6AKoY5aN2dWKPrEqtbIk0FkVvJoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=BsUm/GGgRIqPR+6lqEPVPwPakV4Uz4eGDLmvO08nNgDQAU75A93d8pOLUqbOUBwL02INkyGKalgJzNqoSkMYHwIbg+vW9Q9oD/WAPZTDxhfVGt+pRTwUPCQD/OK8z2/w5OY8GKE+cLELRMgTzDukTOuqR61OCOtK8cZOcE42oIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KxD7v9cb; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xy9siocL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748598174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=zWtS7BX4jv3Md6oma03aZLTPAuckL46QoolFrxWb6FY=;
-	b=Xy9siocLka+h+1OEd2m1Jn8Xf5oDrHB2xcKtClGkcunvOIYdtEluAjqBhWKVab36je8gUw
-	XOeyyJ2y261lCyutyHfw54JoczHoyOWdl/X2YcS1Xb9h9Je/v1EuyqEZVqC/thsgiF038w
-	qBWNj06r/oIGUb6fOiy1++axKycQwmY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-53-6cVsYw1RMCiM_bRSbpacNw-1; Fri, 30 May 2025 05:42:53 -0400
-X-MC-Unique: 6cVsYw1RMCiM_bRSbpacNw-1
-X-Mimecast-MFC-AGG-ID: 6cVsYw1RMCiM_bRSbpacNw_1748598172
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f3796779so959435f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598172; x=1749202972;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zWtS7BX4jv3Md6oma03aZLTPAuckL46QoolFrxWb6FY=;
-        b=lAWJ3xQdYRiH5oHtogahre8oU/Yc0Rq3wNMtTbKeLReXWMZwC2vJRzueAYHRF+Trw6
-         bn3wgpSlpqtQW1UOK3urllbZu6bIMHK05hoO47mA2HpjkdqBGV0brJL+b+RINndZzkRN
-         AX9t/1ICQoFZAxAqUYRiGEolS9BBDhJR0i7U1ZRKnIMG3VqP0qBcyFs5bzP9kwg+jtDB
-         ET17G+e+aJ5A0wKIjb3bTlDToyNp5yhb8H4g0fwyB8t474BQt2tXO0HTau6YOxELGw5Q
-         UNhj1HtzXd+AW5wvwneY9ICqfWu9+wkTHGBOYD+TJoYguo7aPOyBi61r3u7dctVnWS5O
-         +Pfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNXjuhkmFb1OcRHW2pXLagQicwvi7c4h+cPostd7zdEBZfcVoQesIWSoAY6bkb0qONoVxUP1yI1KFL6W0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKXdYtdb4r9V77ISLj8DjGdfLekX2vBtTFPvcMX9mhwrr0POqM
-	kRGA1I5gvH9mMcaTgpbCO8PcOOlIvgZMrIltFeuexjPX+oST+RbffZ3SI5vjfYHG0OE/uqYpW4d
-	HpHFOxsZZtHLTn+zvUeRxDxSJrt7bgMN0JYNtf4OYJquYBgHSVyTd1CgbketmP6WpLw==
-X-Gm-Gg: ASbGncsjn1vmjnTn8UM0971blXrzmqRNv5DwUPa/8JLf+C3i5aeZNkZ1qbXi5T3cz4h
-	lfZ7mt6byaqCZQGOypfCbh2cKbNrBzZyWcSzUHoGc+tl/pgL6a++pUjgIXNSOlTJbfakRUJSJdh
-	AQrL++gnd9X9ONCEFpjSWD91FTI3RcKebD4QEJFt/nVo+ObVHpX0AHktpX2MiFIqllidxL78P82
-	2mUQ/zqalr2dpRRkq4sFQUoUXjS+4es43lID+ujoyr3FbgiKC2U1cO/KU3ge271lJjcfyikln6z
-	O2obT2Jgkwgu/y3yHOqKAzVdTImpdMIU2KsEb9uxZ4O90bweIJDc3PK9rUvH08hL5gFEOUGYa2z
-	azR64OEy9P7JS1AFnCBq8+v3/MgsE4+HDP+4aMuM=
-X-Received: by 2002:a05:6000:1ac6:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a4f7a3e745mr1997136f8f.11.1748598172263;
-        Fri, 30 May 2025 02:42:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEE2cC4rOgIu1Bk0E4HwZEgbfvuVj5Yx/rDkAqlZuc3fKNMuN3WR3Ck+7U4WmY934x7i63eYg==
-X-Received: by 2002:a05:6000:1ac6:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-3a4f7a3e745mr1997108f8f.11.1748598171812;
-        Fri, 30 May 2025 02:42:51 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fc24d7sm13138915e9.36.2025.05.30.02.42.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 02:42:51 -0700 (PDT)
-Message-ID: <473e974b-39a1-4ee1-b321-58f6a74c0155@redhat.com>
-Date: Fri, 30 May 2025 11:42:49 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KxD7v9cb"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54U9jVIZ3754128;
+	Fri, 30 May 2025 04:45:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748598331;
+	bh=drHOb8GqnSqwcePNWyNck3XqQQY6k98cOLP6xg6zbmM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=KxD7v9cborC2a02gEUqHxK5p5zl+fyWru2r1g1Lcn5LnCWQVgel8WKOCxkofT957o
+	 A2gh2uNZJ3wkUlJZPEeDCSqkjQ4RS+7fsPKyVCSfIIYtSFybSV6yWW3kK4zq4/HBgP
+	 zDRs1Ldkf273xDMMSqarQMc6oc1w6MZzIhUYjRZg=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54U9jVWw738175
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 30 May 2025 04:45:31 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 30
+ May 2025 04:45:31 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 30 May 2025 04:45:31 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54U9jSSF2879750;
+	Fri, 30 May 2025 04:45:29 -0500
+Message-ID: <7e983702-6662-465d-86ac-d515849d731d@ti.com>
+Date: Fri, 30 May 2025 15:15:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,115 +50,155 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/12] mm/pagewalk: Skip dax pages in pagewalk
-To: Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org
-Cc: gerald.schaefer@linux.ibm.com, dan.j.williams@intel.com, jgg@ziepe.ca,
- willy@infradead.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
- balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net
-References: <cover.541c2702181b7461b84f1a6967a3f0e823023fcc.1748500293.git-series.apopple@nvidia.com>
- <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v3 3/3] rpmsg: ctrl: Introduce RPMSG_CREATE_EPT_FD_IOCTL
+ uAPI
+To: Dawei Li <dawei.li@linux.dev>, <andersson@kernel.org>,
+        <mathieu.poirier@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <set_pte_at@outlook.com>
+References: <20250519150823.62350-1-dawei.li@linux.dev>
+ <20250519150823.62350-4-dawei.li@linux.dev>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <1799c6772825e1401e7ccad81a10646118201953.1748500293.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <20250519150823.62350-4-dawei.li@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 29.05.25 08:32, Alistair Popple wrote:
-> Previously dax pages were skipped by the pagewalk code as pud_special() or
-> vm_normal_page{_pmd}() would be false for DAX pages. Now that dax pages are
-> refcounted normally that is no longer the case, so add explicit checks to
-> skip them.
+Hi Dawei,
 
-Is this really what we want, though? If these are now just "normal" 
-pages, they shall be handled as being normal.
+On 19/05/25 20:38, Dawei Li wrote:
+> Implement RPMSG_CREATE_EPT_FD_IOCTL, new uAPI for rpmsg ctrl, which
+> shares most of operations of RPMSG_CREATE_EPT_IOCTL except that it
+> returns fd representing eptdev to userspace directly.
+>
+> Possible calling procedures for userspace are:
+> - fd = open("/dev/rpmsg_ctrlX")
+> - ioctl(fd, RPMSG_CREATE_EPT_FD_IOCTL, &info);
+> - fd_ep = info.fd
 
-I would assume that we want to check that in the callers instead.
 
-E.g., in get_mergeable_page() we already have a folio_is_zone_device() 
-check.
+We are returning a new fd to userspace from inside an IOCTL itself. Is this a
+standard way of doing things in Kernel space? (see below related comment)
 
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> - operations on fd_ep(write, read, poll ioctl)
+> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
+> - close(fd_ep)
+
+
+Can we rely on the userspace to close() the fd_ep? (if not done, could be a
+memory leak..).. Opposed to fd, which we can rely on the userspace to
+close() since they initiated the open() call. I am just trying to understand if
+this is a standard way of doing things...
+
+> - close(fd)
+>
+> Signed-off-by: Dawei Li <dawei.li@linux.dev>
 > ---
->   include/linux/memremap.h | 11 +++++++++++
->   mm/pagewalk.c            | 12 ++++++++++--
->   2 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> index 4aa1519..54e8b57 100644
-> --- a/include/linux/memremap.h
-> +++ b/include/linux/memremap.h
-> @@ -198,6 +198,17 @@ static inline bool folio_is_fsdax(const struct folio *folio)
->   	return is_fsdax_page(&folio->page);
->   }
->   
-> +static inline bool is_devdax_page(const struct page *page)
-> +{
-> +	return is_zone_device_page(page) &&
-> +		page_pgmap(page)->type == MEMORY_DEVICE_GENERIC;
-> +}
+>  drivers/rpmsg/rpmsg_ctrl.c | 38 ++++++++++++++++++++++++++++++--------
+>  include/uapi/linux/rpmsg.h | 24 ++++++++++++++++++++++++
+>  2 files changed, 54 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/rpmsg/rpmsg_ctrl.c b/drivers/rpmsg/rpmsg_ctrl.c
+> index 28f57945ccd9..9f2f118ceb7b 100644
+> --- a/drivers/rpmsg/rpmsg_ctrl.c
+> +++ b/drivers/rpmsg/rpmsg_ctrl.c
+> @@ -75,19 +75,32 @@ static long rpmsg_ctrldev_ioctl(struct file *fp, unsigned int cmd,
+>  				unsigned long arg)
+>  {
+>  	struct rpmsg_ctrldev *ctrldev = fp->private_data;
+> +	struct rpmsg_endpoint_fd_info ept_fd_info;
+>  	void __user *argp = (void __user *)arg;
+>  	struct rpmsg_endpoint_info eptinfo;
+>  	struct rpmsg_channel_info chinfo;
+>  	struct rpmsg_device *rpdev;
+>  	int ret = 0;
+> -
+> -	if (copy_from_user(&eptinfo, argp, sizeof(eptinfo)))
+> -		return -EFAULT;
+> -
+> -	memcpy(chinfo.name, eptinfo.name, RPMSG_NAME_SIZE);
+> -	chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
+> -	chinfo.src = eptinfo.src;
+> -	chinfo.dst = eptinfo.dst;
+> +	int fd = -1;
 > +
-> +static inline bool folio_is_devdax(const struct folio *folio)
-> +{
-> +	return is_devdax_page(&folio->page);
-> +}
+> +	if (cmd == RPMSG_CREATE_EPT_IOCTL || cmd == RPMSG_CREATE_DEV_IOCTL ||
+> +	    cmd == RPMSG_RELEASE_DEV_IOCTL) {
+> +		if (copy_from_user(&eptinfo, argp, sizeof(eptinfo)))
+> +			return -EFAULT;
+> +
+> +		memcpy(chinfo.name, eptinfo.name, RPMSG_NAME_SIZE);
+> +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
+> +		chinfo.src = eptinfo.src;
+> +		chinfo.dst = eptinfo.dst;
+> +	} else if (cmd == RPMSG_CREATE_EPT_FD_IOCTL) {
 
-Hm, nobody uses folio_is_devdax() in this patch :)
 
+Maybe we can put this 'else if condition' in the first 'if' and treat other
+conditions under 'else', as 'RPMSG_CREATE_EPT_FD_IOCTL' is the only
+ioctl with a different struct type.
 
--- 
-Cheers,
+Thanks,
+Beleswar
 
-David / dhildenb
-
+> +		if (copy_from_user(&ept_fd_info, argp, sizeof(ept_fd_info)))
+> +			return -EFAULT;
+> +
+> +		memcpy(chinfo.name, ept_fd_info.name, RPMSG_NAME_SIZE);
+> +		chinfo.name[RPMSG_NAME_SIZE - 1] = '\0';
+> +		chinfo.src = ept_fd_info.src;
+> +		chinfo.dst = ept_fd_info.dst;
+> +	}
+>  
+>  	mutex_lock(&ctrldev->ctrl_lock);
+>  	switch (cmd) {
+> @@ -110,6 +123,15 @@ static long rpmsg_ctrldev_ioctl(struct file *fp, unsigned int cmd,
+>  				chinfo.name, ret);
+>  		break;
+>  
+> +	case RPMSG_CREATE_EPT_FD_IOCTL:
+> +		ret = rpmsg_anonymous_eptdev_create(ctrldev->rpdev, &ctrldev->dev, chinfo,
+> +						    ept_fd_info.flags, &fd);
+> +		if (!ret) {
+> +			ept_fd_info.fd = fd;
+> +			ret = copy_to_user(argp, &ept_fd_info, sizeof(ept_fd_info));
+> +		}
+> +		break;
+> +
+>  	default:
+>  		ret = -EINVAL;
+>  	}
+> diff --git a/include/uapi/linux/rpmsg.h b/include/uapi/linux/rpmsg.h
+> index f0c8da2b185b..e7057bd23577 100644
+> --- a/include/uapi/linux/rpmsg.h
+> +++ b/include/uapi/linux/rpmsg.h
+> @@ -53,4 +53,28 @@ struct rpmsg_endpoint_info {
+>   */
+>  #define RPMSG_SET_INCOMING_FLOWCONTROL _IOR(0xb5, 0x6, int)
+>  
+> +/**
+> + * struct rpmsg_endpoint_fd_info - endpoint & fd info representation
+> + * @name: name of service
+> + * @src: local address. To set to RPMSG_ADDR_ANY if not used.
+> + * @dst: destination address. To set to RPMSG_ADDR_ANY if not used.
+> + * @flags: file flags of endpoint device, valid flags:
+> + *         O_RDONLY/O_WRONLY/O_RDWR
+> + *         O_NONBLOCK
+> + *         O_CLOEXEC
+> + * @fd: fd returned from driver
+> + */
+> +struct rpmsg_endpoint_fd_info {
+> +	char name[32];
+> +	__u32 src;
+> +	__u32 dst;
+> +	__u32 flags;
+> +	__s32 fd;
+> +};
+> +
+> +/**
+> + * Instantiate a new rmpsg endpoint which is represented by fd
+> + */
+> +#define RPMSG_CREATE_EPT_FD_IOCTL _IOWR(0xb5, 0x7, struct rpmsg_endpoint_fd_info)
+> +
+>  #endif
