@@ -1,426 +1,285 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FAA22D9F2
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1905223507E
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 15:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748617904; cv=none; b=pTypNcVbujHbRv+W/XEK8ZxRbq48d7qwZ2sBDJQk2IKs6tInpRzvfa5ALqQMEBm/VVNdraRFjbpNswSqWW4RYetWTm4yjQjiuMib5zeQJdqaI3zKfJq+hKnFXUzob/hRpFOOYWCWcX+K35FdGAoVcI2S+P7LqDH1J3nggYx8cuQ=
+	t=1748618105; cv=none; b=h8hRLuKDxcSUjWSM7HBAZVc6tcCINEayjUaamokW8ml6tJQ4GRQMGNaMENAPTtaVT9fowqZzQ2jH9nS5j0pR+QkOsVtPc4e/NzuI6vObfLDnQWQdr4uD9AZQT1RfMocWCbw1H5VMPrRCWXWDttqWHyU8l3Fk1NTVX/dm7szUxPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748617904; c=relaxed/simple;
-	bh=nUdSn3ZsgeCsHwjSCtIkAjeI0nisYP2JR9TLh72MQkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jKbeX8d8e+iBq8uzz0NIHvWAbcIaNQA51x0H8GulbW4nWZTXHtmh9KPWaQOdBcDvzgY/feKAsz+ht11W5nie3bmI4ZELUzVvUTDeP9LZGjAZIInfUZoOUQLL2c8G8rY8A2/RbsCvp8rSVeBanIqJ1ZHUOhehQMU0vbpV/xNLq0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=dwFk8XdH; arc=none smtp.client-ip=185.125.25.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1748618105; c=relaxed/simple;
+	bh=bW6CVJUiHWadt+mYwV5FCQe3aMmTEHPEdErCGuAAsAk=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=CgPOxloUoif6KSJtzLYzTiXz731u/w8+2SgPVFsU0ijLUxyOa7XYmW2xUTHxYgC2t4u2r/CZ7IF3B1000JHG0FMRNj0rujPWxrWdk9l4lW3PmCxcwBplaZ83aRqi6Puj+dNHQ7lNKcA9wMPirFtmH7+3vk0limSf6PACtCSbMAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cOHqxnB1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="dwFk8XdH"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b86CD1NzZzRG3;
-	Fri, 30 May 2025 17:11:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748617896;
-	bh=pzD6RCmiXHRA+M3edlAXDavUVhBBosYzrV+HogsV9TE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dwFk8XdHXdFGmbYmHmGtQb9c3BL9Ls8RIKNRKbD21RYJaV0BJa6+26nzcBBiX8LYV
-	 jfmmBxUs+to3mm/VsTUpLN262UnFhXFBedKcqj4SKHBuyOFH0s/XBOH6cl7n0/IkL6
-	 P3mm29GiDmFMxC6KO89GolUgbppmEIYXDr9X4Vlc=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b86CC2tXpzKC2;
-	Fri, 30 May 2025 17:11:35 +0200 (CEST)
-Date: Fri, 30 May 2025 17:11:34 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Cc: =?utf-8?Q?G=C3=BCnther?= Noack <gnoack3000@gmail.com>, 
-	Paul Moore <paul@paul-moore.com>, sergeh@kernel.org, David Howells <dhowells@redhat.com>, 
-	Kees Cook <keescook@chromium.org>, linux-security-module@vger.kernel.org, 
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
-	Peter Newman <peternewman@google.com>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for
- landlock_restrict_self()
-Message-ID: <20250530.ozeuZufee5yu@digikod.net>
-References: <20250221184417.27954-2-gnoack3000@gmail.com>
- <20250221184417.27954-3-gnoack3000@gmail.com>
- <20250227.Aequah6Avieg@digikod.net>
- <20250228.b3794e33d5c0@gnoack.org>
- <20250304.aroh3Aifiiz9@digikod.net>
- <20250310.990b29c809af@gnoack.org>
- <20250311.aefai7vo6huW@digikod.net>
- <20250518.be040c48937c@gnoack.org>
- <20250518.xeevoom3kieY@digikod.net>
- <aDmvpOMlaAZOXrji@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cOHqxnB1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748618102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5ChLR8Q53hwqQuQzMZfSkqx9lSmOwysgUPte+4AIEQQ=;
+	b=cOHqxnB1+dwgurzY/n2a1R/Sh2xcdMO0tE138CZfGSINixAx3TYuK9ckg+ldAsUDb964Kf
+	NS5wLW5kvVspmWwSp4//Ip6yB2W4KCqDZIO4sPEFB+d/hf+sYLdxffirOaejI7k6SDCUls
+	jPk3CB62Gpt0Ho0mrAA2hwlTrk3HUbg=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-630-v_-spE01OQm82eg5NQtRIw-1; Fri,
+ 30 May 2025 11:14:58 -0400
+X-MC-Unique: v_-spE01OQm82eg5NQtRIw-1
+X-Mimecast-MFC-AGG-ID: v_-spE01OQm82eg5NQtRIw_1748618096
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 64909180056F;
+	Fri, 30 May 2025 15:14:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.2])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0477A19560B2;
+	Fri, 30 May 2025 15:14:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Mina Almasry <almasrymina@google.com>
+cc: dhowells@redhat.com, willy@infradead.org, hch@infradead.org,
+    Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+    netdev@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org
+Subject: Device mem changes vs pinning/zerocopy changes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDmvpOMlaAZOXrji@google.com>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <770011.1748618092.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 30 May 2025 16:14:52 +0100
+Message-ID: <770012.1748618092@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Fri, May 30, 2025 at 03:16:20PM +0200, Günther Noack wrote:
-> On Sun, May 18, 2025 at 09:57:32PM +0200, Mickaël Salaün wrote:
-> > On Sun, May 18, 2025 at 09:40:05AM +0200, Günther Noack wrote:
-> > > On Tue, Mar 11, 2025 at 03:32:53PM +0100, Mickaël Salaün wrote:
-> > > > On Mon, Mar 10, 2025 at 02:04:23PM +0100, Günther Noack wrote:
-> 
-> > > > > Approach 1: Use the creds API thread-by-thread (implemented here)
-> > > > > 
-> > > > >   * Each task calls prepare_creds() and commit_creds() on its own, in
-> > > > >     line with the way the API is designed to be used (from a single
-> > > > >     task).
-> > > > >   * Task work gets scheduled with a pseudo-signal and the task that
-> > > > >     invoked the syscall is waiting for all of them to return.
-> > > > >   * Task work can fail at the beginning due to prepare_creds(), in
-> > > > >     which case all tasks have to abort_creds(). Additional
-> > > > >     synchronization is needed for that.
-> > > > > 
-> > > > >   Drawback: We need to grab the system-global task lock to prevent new
-> > > > >   thread creation and also grab the per-process signal lock to prevent
-> > > > >   races with other creds accesses, for the entire time as we wait for
-> > > > >   each task to do the task work.
-> > > > 
-> > > > In other words, this approach blocks all threads from the same process.
-> > > 
-> > > It does, but that is still an improvement over the current
-> > > libpsx-based implementation in userspace.  That existing
-> > > implementation does not block, but it is running the risk that
-> > > prepare_creds() might fail on one of the threads (e.g. allocation
-> > > failure), which would leave the processes' threads in an inconsistent
-> > > state.
-> > > 
-> > > Another upside that the in-kernel implementation has is that the
-> > > implementation of that is hidden behind an API, so if we can
-> > > eventually find a better approach, we can migrate to it.  It gives us
-> > > flexibility.
-> > 
-> > > I guess a possible variant (approach 1B) would be to do the equivalent
-> > > to what userspace does today, and not make all threads wait for the
-> > > possible error of prepare_creds() on the other threads.
-> > 
-> > This 1B variant is not OK because it would remove the guarantee that the
-> > whole process is restricted.
-> 
-> 👍 Agreed.
-> 
-> 
-> > > > > Approach 2: Attempt to do the prepare_creds() step in the calling task.
-> > > > > 
-> > > > >   * Would use an API similar to what keyctl uses for the
-> > > > >     parent-process update.
-> > > > >   * This side-steps the credentials update API as it is documented in
-> > > > >     Documentation, using the cred_alloc_blank() helper and replicating
-> > > > >     some prepare_creds() logic.
-> > > > > 
-> > > > >   Drawback: This would introduce another use of the cred_alloc_blank()
-> > > > >   API (and the cred_transfer LSM hook), which would otherwise be
-> > > > >   reasonable to delete if we can remove the keyctl use case.
-> > > > >   (https://lore.kernel.org/all/20240805-remove-cred-transfer-v2-0-a2aa1d45e6b8@google.com/)
-> > > > 
-> > > > cred_alloc_blank() was designed to avoid dealing with -ENOMEM, which is
-> > > > a required property for this Landlock TSYNC feature (i.e. atomic and
-> > > > consistent synchronization).
-> > > 
-> > > Remark on the side, I suspect that the error handling in nptl(7)
-> > > probably also does not guarantee that, also for setuid(2) and friends.
-> > > 
-> > > 
-> > > > I think it would make sense to replace most of the
-> > > > key_change_session_keyring() code with a new cred_transfer() helper that
-> > > > will memcpy the old cred to the new, increment the appropriate ref
-> > > > counters, and call security_transfer_creds().  We could then use this
-> > > > helper in Landlock too.
-> > > > 
-> > > > To properly handle race conditions with a thread changing its own
-> > > > credentials, we would need a new LSM hook called by commit_creds().
-> > > > For the Landlock implementation, this hook would check if the process is
-> > > > being Landlocked+TSYNC and return -ERESTARTNOINTR if it is the case.
-> > > > The newly created task_work would then be free to update each thread's
-> > > > credentials while only blocking the calling thread (which is also a
-> > > > required feature).
-> > > > 
-> > > > Alternatively, instead of a new LSM hook, commit_creds() could check
-> > > > itself a new group leader's flag set if all the credentials from the
-> > > > calling process are being updated, and return -ERESTARTNOINTR in this
-> > > > case.
-> > > 
-> > > commit_creds() is explicitly documented to never return errors.
-> > > It returns a 0 integer so that it lends itself for tail calls,
-> > > and some of those usages might also rely on it always working.
-> > > There are ~15 existing calls where the return value is discarded.
-> > 
-> > Indeed, commit_creds() should always return 0.  My full proposal does
-> > not look safe enough, but the cred_transfer() helper can still be
-> > useful.
-> > 
-> > > 
-> > > If commit_creds() returns -ERESTARTNOINTR, I assume that your idea is
-> > > that the task_work would retry the prepare-and-commit when
-> > > encountering that?
-> > > 
-> > > We would have to store the fact that the process is being
-> > > Landlock+TSYNC'd in a central place (e.g. group leader flag set).
-> > > When that is done, don't we need more synchronization mechanisms to
-> > > access that (which RCU was meant to avoid)?
-> > > 
-> > > I am having a hard time wrapping my head around these synchronization
-> > > schemes, I feel this is getting too complicated for what it is trying
-> > > to do and might become difficult to maintain if we implemented it.
-> > 
-> > Fair. ERESTARTNOINTR should only be used by a syscall implementation.
-> > 
-> > > 
-> > > > > Approach 3: Store Landlock domains outside of credentials altogether
-> > > > > 
-> > > > >   * We could also store a task's Landlock domain as a pointer in the
-> > > > >     per-task security blob, and refcount these.  We would need to make
-> > > > >     sure that they get newly referenced and updated in the same
-> > > > >     scenarios as they do within struct cred today.
-> > > > >   * We could then guard accesses to a task's Landlock domain with a
-> > > > >     more classic locking mechanism.  This would make it possible to
-> > > > >     update the Landlock domain of all tasks in a process without
-> > > > >     having to go through pseudo-signals.
-> > > > > 
-> > > > >   Drawbacks:
-> > > > >   * Would have to make sure that the Landlock domain the task's LSM
-> > > > >     blob behaves exactly the same as before in the struct cred.
-> > > > >   * Potentially slower to access Landlock domains that are guarded by
-> > > > >     a mutex.
-> > > > 
-> > > > This would not work because the kernel (including LSM hooks) uses
-> > > > credentials to check access.
-> > > 
-> > > It's unclear to me what you mean by that.
-> > > 
-> > > Do you mean that it is hard to replicate for Landlock the cases where
-> > > the pointer would have to be copied, because the LSM hooks are not
-> > > suited for it?
-> > 
-> > struct cred is used to check if a task subject can access a task object.
-> > Landlock's metadata must stay in struct cred to be available when
-> > checking access to any kernel object.  The LSM hooks reflect this
-> > rationale by only passing struct cred when checking a task (e.g.
-> > security_task_kill()'s cred).
-> > 
-> > seccomp only cares about filtering raw syscalls, and the seccomp filters
-> > are just ignored when the kernel (with an LSM or not) checks task's
-> > permission to access another task.
-> > 
-> > The per-task security blob could store some state though, e.g. to
-> > identify if a domain needs to be updated, but I don't see a use case
-> > here.
-> 
-> (Side remark on the idea of storing "pending domain updates" in the task blob:
-> 
-> I have pondered such an idea as well, where we do not store the Landlock domain
-> itself in the task blob, but only a "pending" update that we need to do to the
-> Landlock domain in creds, and then to apply that opportunistically/lazily as
-> part of other Landlock LSM calls.
-> 
-> I believe in this approach, it becomes hard to control whether that update can
-> actually ever get applied.  So to be sure, we would always have to run under the
-> assumption that it does not get applied, and then we might as well store the
-> Landlock domain directly in the task blob.
-> 
-> I also don't think this makes sense.)
-> 
-> 
-> > > Here is another possible approach which a colleague suggested in a
-> > > discussion:
-> > > 
-> > > Approach 4: Freeze-and re-enforce the Landlock ruleset
-> > > 
-> > > Another option would be to have a different user space API for this,
-> > > with a flag LANDLOCK_RESTRICT_SELF_ENTER (name TBD) to enter a given
-> > > domain.
-> > > 
-> > > On first usage of landlock_restrict_self() with the flag, the enforced
-> > > ruleset would be frozen and linked to the Landlock domain which was
-> > > enforced at the end.
-> > > 
-> > > Subsequent attempts to add rules to the ruleset would fail when the
-> > > ruleset is frozen.  The ruleset FD is now representing the created
-> > > domain including all its nesting.
-> > > 
-> > > Subsequent usages of landlock_restrict_self() on a frozen ruleset would:
-> > > 
-> > > (a) check that the ruleset's domain is a narrower (nested) domain of
-> > >     the current thread's domain (so that we retain the property of
-> > >     only locking in a task further than it was before).
-> > > 
-> > > (b) set the task's domain to the domain attached to the ruleset
-> > > 
-> > > This way, we would keep a per-thread userspace API, avoiding the
-> > > issues discussed before.  It would become possible to use ruleset file
-> > > descriptors as handles for entering Landlock domains and pass them
-> > > around between processes.
-> > > 
-> > > The only drawback I can see is that it has the same issues as libpsx
-> > > and nptl(7) in that the syscall can fail on individual threads due to
-> > > ENOMEM.
-> > 
-> > Right. This approach is interesting, but it does not solve the main
-> > issue here.
-> 
-> It doesn't?
-> 
-> In my mind, the main goal of the patch set is that we can enable Landlock in
-> multithreaded processes like in Go programs or in multithreaded C(++).
+Hi Mina,
 
-Yes, but it looks like replicating a user space hack in the kernel.
+I've seen your transmission-side TCP devicemem stuff has just gone in and =
+it
+conflicts somewhat with what I'm trying to do.  I think you're working on =
+the
+problem bottom up and I'm working on it top down, so if you're willing to
+collaborate on it...?
 
-> 
-> With Approach 4, we would admittedly still have to do some work in userspace,
-> and it would not have the nice all-or-nothing semantics, but at least, it would
-> be possible to get all threads joining the same Landlock domain.  (And after
-> all, setuid(0) also does not have the all-or-nothing semantics, from what I can
-> tell.)
-> 
-> 
-> > Anyway, being able to enter a Landlock domain would definitely be
-> > useful. I would prefer using a pidfd to refer to a task's Landlock
-> > domain, which would avoid race condition and make the API clearer.  It
-> > would be nice to be able to pass a pidfd (instead of a ruleset) to
-> > landlock_restrict_self().  If we want to directly deal with a domain, we
-> > should create a dedicated domain FD type.
-> 
-> Fair enough, a different FD type for that would also be possible.
+So, to summarise what we need to change (you may already know all of this)=
+:
 
-For this use case, a pidfd would be appropriate to avoid
-inconsistencies.
+ (*) The refcount in struct page is going to go away.  The sk_buff fragmen=
+t
+     wrangling code, however, occasionally decides to override the zerocop=
+y
+     mode and grab refs on the pages pointed to by those fragments.  sk_bu=
+ffs
+     *really* want those page refs - and it does simplify memory handling.
+     But.
 
-> 
-> 
-> > > If we can not find a solution for "TSYNC", it seems that this might be
-> > > a viable alternative.  For multithreaded applications enforcing a
-> > > Landlock policy, it would become an application of libpsx with the
-> > > LANDLOCK_RESTRICT_SELF_ENTER flag.
-> > > 
-> > > Let me know what you think.
-> > > 
-> > > –Günther
-> > 
-> > Thinking more about this feature, it might actually make sense to
-> > synchronize all threads from the same process without checking other
-> > threads' Landlock domain. The rationale are:
-> > 1. Linux threads are not security boundaries and it is allowed for a
-> >    thread to control other threads' memory, which means changing their
-> >    code flow.  In other words, thread's permissions are the union of all
-> >    thread's permissions in the same process.
-> > 2. libpsx and libc's set*id() ignore other thread's credentials and just
-> >    blindly execute the same code on all threads.
-> > 3. It would be simpler and would avoid another error case.
-> 
-> +1, agreed.  That would let us skip the check for the pre-existing domain on
-> these threads.
-> 
-> 
-> > An issue could happen if a Landlock domain restricting a test thread is
-> > replaced.
-> 
-> You mean for Landlock's selftests?  I thought these were running in their own
-> forked-off subprocess?  I'm probably misunderstanding you here. :)
+     Anyway, we need to stop taking refs where possible.  A fragment may i=
+n
+     future point to a sequence of pages and we would only be getting a re=
+f on
+     one of them.
 
-I was thinking about potential (far fetched) issues that
-LANDLOCK_RESTRICT_SELF_PROCESS could cause to existing code.  The main
-use case to only enforce a Landlock domain on one thread would be for
-test purpose, but this is indeed not the case for kselftest (except for
-explit pthread tests).  So yeah, not a big deal but it should be
-mentioned in the commit message and the doc that without
-LANDLOCK_RESTRICT_SELF_PROCESS, threads can remove restrictions that are
-only enforced on their siblings.
+ (*) Further, the page struct is intended to be slimmed down to a single t=
+yped
+     pointer if possible, so all the metadata in the net_iov struct will h=
+ave
+     to be separately allocated.
 
-> 
-> 
-> > I don't think the benefit of avoiding this issue is worth it
-> > compared to the guarantee we get when forcing the sandboxing of a full
-> > process without error.
-> > 
-> 
-> 
-> 
-> > We should rename the flag to LANDLOCK_RESTRICT_SELF_PROCESS to make it
-> > clear what it does.
-> > 
-> > The remaining issues are still the potential memory allocation failures.
-> > There are two things:
-> > 
-> > 1. We should try as much as possible to limit useless credential
-> >    duplications by not creating a new struct cred if parent credentials
-> >    are the same.
-> > 
-> > 2. To avoid the libpsx inconsistency (because of ENOMEM or EPERM),
-> >    landlock_restrict_self(2) should handle memory allocation and
-> >    transition the process from a known state to another known state.
-> > 
-> > What about this approach:
-> > - "Freeze" all threads of the current process (not ideal but simple) to
-> >   make sure their credentials don't get updated.
-> > - Create a new blank credential for the calling thread.
-> > - Walk through all threads and create a new blank credential for all
-> >   threads with a different cred than the caller.
-> > - Inject a task work that will call cred_transfer() for all threads with
-> >   either the same new credential used by the caller (incrementing the
-> >   refcount), or it will populate and use a blank one if it has different
-> >   credentials than the caller.
-> > 
-> > This may not efficiently deduplicate credentials for all threads but it
-> > is a simple deduplication approach that should be useful in most cases.
-> > 
-> > The difficult part is mainly in the "fleezing". It would be nice to
-> > change the cred API to avoid that but I'm not sure how.
-> 
-> I don't see an option how we could freeze the credentials of other threads:
-> 
-> To freeze a task's credentials, we would have to inhibit that commit_creds()
-> succeeds on that task, and I don't see how that would be done - we can not
-> prevent these tasks from calling commit_creds() [1], and when commit_creds()
-> gets called, it is guaranteed to work.
-> 
-> So in my mind, we have to somehow deal with the possibility that a task has a
-> new and not-previously-seen struct creds, by the time that its task_work gets
-> called.  As a consequence, I think a call to prepare_creds() would then be
-> unavoidable in the task_work?
+ (*) Currently, when performing MSG_ZEROCOPY, we just take refs on the use=
+r
+     pages specified by the iterator but we need to stop doing that.  We n=
+eed
+     to call GUP to take a "pin" instead (and must not take any refs).  Th=
+e
+     pages we get access to may be folio-type, anon-type, some sort of dev=
+ice
+     type.
 
-OK, we don't need to freeze all threads, just to block thread creation.
+ (*) It would be good to do a batch lookup of user buffers to cut down on =
+the
+     number of page table trawls we do - but, on the other hand, that migh=
+t
+     generate more page faults upfront.
 
-What about that:
-1. lock thread creation for this process
-2. call prepare_creds() for the calling thread (called new_cred)
-3. call cred_alloc_blank() for all other threads, store them in a list,
-   and exit if ENOMEM
-4. asynchronously walk through all threads, and for each:
-  a. if its creds are the same (i.e. same pointer) as the calling
-     thread's ones, then call get_cred(new_cred) and
-     commit_credsnew_cred().
-  b. otherwise, take a blank cred, call cred_transfer(), add the
-     Landlock domain, and commit_creds() with it.
-5. free all unused blank creds (most)
-6. call commit_creds(new_creds) and return
+ (*) Splice and vmsplice.  If only I could uninvent them...  Anyway, they =
+give
+     us buffers from a pipe - but the buffers come with destructors and sh=
+ould
+     not have refs taken on the pages we might think they have, but use th=
+e
+     destructor instead.
 
-Pros:
-- do not block threads
-- minimize cred duplication
-- atomic operation (from the point of view of the caller): all or
-  nothing (with an error)
-- almost no change to existing cred API
+ (*) The intention is to change struct bio_vec to be just physical address=
+ and
+     length, with no page pointer.  You'd then use, say, kmap_local_phys()=
+ or
+     kmap_local_bvec() to access the contents from the cpu.  We could then
+     revert the fragment pointers to being bio_vecs.
 
-Cons:
-- block thread creation
-- initially allocate one cred per thread (but free most of them after)
+ (*) Kernel services, such as network filesystems, can't pass kmalloc()'d =
+data
+     to sendmsg(MSG_SPLICE_PAGES) because slabs don't have refcounts and, =
+in
+     any case, the object lifetime is not managed by refcount.  However, i=
+f we
+     had a destructor, this restriction could go away.
 
-> 
-> 
-> —Günther
-> 
-> 
-> [1] We might be able to keep cred_prepare() and maybe cred_alloc_blank() from
->     succeeding, but that does not mean that no one can call commit_creds() -
->     there is still the possibility that commit_creds() gets called with a struct
->     cred* that was acquired before decided to freeze.
-> 
-> 
+
+So what I'd like to do is:
+
+ (1) Separate fragment lifetime management from sk_buff.  No more wangling=
+ of
+     refcounts in the skbuff code.  If you clone an skb, you stick an extr=
+a
+     ref on the lifetime management struct, not the page.
+
+ (2) Create a chainable 'network buffer' struct, e.g.:
+
+	enum net_txbuf_type {
+		NET_TXBUF_BUFFERED,	/* Buffered copy of data */
+		NET_TXBUF_ZCOPY_USER,	/* Zerocopy of user buffers */
+		NET_TXBUF_ZCOPY_KERNEL,	/* Zerocopy of kernel buffers */
+	};
+
+	struct net_txbuf {
+		struct net_txbuf	next;
+		struct mmpin		mm_pin;
+		unsigned int		start_pos;
+		unsigned int		end_pos;
+		unsigned int		extracted_to;
+		refcount_t		ref;
+		enum net_txbuf_type	type;
+		u8			nr_used;
+		bool			wmem_charged;
+		bool			got_copied;
+		union {
+			/* For NET_TXBUF_BUFFERED: */
+			struct {
+				void		*bufs[16];
+				u8		bufs_orders[16];
+				bool		last_buf_freeable;
+			};
+			/* For NET_TXBUF_ZCOPY_*: */
+			struct {
+				struct sock	*sk;
+				struct sk_buff	*notify;
+				msg_completion_t completion;
+				void		*completion_data;
+				struct bio_vec	frags[12];
+			};
+		};
+	};
+
+     (Note this is very much still a WiP and very much subject to change)
+
+     So how I envision it working depends on the type of flow in the socke=
+t.
+     For the transmission side of streaming sockets (e.g. TCP), the socket
+     maintains a single chain of these.  Each txbuf is of a single type, b=
+ut
+     multiple types can be interleaved.
+
+     For non-ZC flow, as data is imported, it's copied into pages attached=
+ to
+     the current head txbuf of type BUFFERED, with more pages being attach=
+ed
+     as we progress.  Successive writes just keep adding to the space in t=
+he
+     latest page added and each skbuff generated pins the txbuf it starts =
+at
+     and each txbuf pins its successor.
+
+     As skbuffs are consumed, they unpin the root txbuf.  However, this co=
+uld
+     leave an awful lot of memory pinned for a long time, so I would mitig=
+ate
+     this in two ways: firstly, where possible, keep track of the transmit=
+ted
+     byte position and progressively destruct the txbuf; secondly, if we
+     completely use up a partially filled txbuf then reset the queue.
+
+     An skbuff's frag list then has a bio_vec[] that refers to fragments o=
+f
+     the buffers recorded in the txbuf chain.  An skbuff may span multiple
+     txbufs and a txbuf may provision multiple skbuffs.
+
+     For the transmission side of datagram sockets (e.g. UDP) where the
+     messages may complete out of order, I think I would give each datagra=
+m
+     its own series of txbufs, but link the tails together to manage the
+     SO_EE_ORIGIN_ZEROCOPY notification generation if dealing with userspa=
+ce.
+     If dealing with the kernel, there's no need to link them together as =
+the
+     kernel can provide a destructor for each datagram.
+
+ (3) When doing zerocopy from userspace, do calls to GUP to get batches of
+     non-contiguous pages into a bio_vec array.
+
+ (4) Because AF_UNIX and the loopback driver transfer packets from the
+     transmission queue of one socket down into the reception queue of
+     another, the use of txbufs would also need to extend onto the receive
+     side (and so "txbufs" would be a misnomer).
+
+     When receiving a packet, a txbuf would need to be allocated and the
+     received buffers attached to it.  The pages wouldn't necessarily need
+     refcounts as the txbuf holds them.  The skbuff holds a ref on the txb=
+uf.
+
+ (5) Cloning an skbuff would involve just taking an extra ref on the first
+     txbuf.  Splitting off part of an skbuff would involve fast-forwarding=
+ the
+     txbuf chain for the second part and pinning that.
+
+ (6) I have a chained-bio_vec array concept with iov_iter type for it that
+     might make it easier to string together the fragments in a reassemble=
+d
+     packet and represent it as an iov_iter, thereby allowing us to use co=
+mmon
+     iterator routines for things like ICMP and packet crypto.
+
+ (7) We need to separate net_iov from struct page, and it might make thing=
+s
+     easier if we do that now, allocating net_iov from a slab.
+
+ (8) Reference the txbuf in a splice and provide a destructor that drops t=
+hat
+     reference.  For small splices, I'd be very tempted to simply copy the
+     data.  For splice-out of data that was spliced into an AF_UNIX socket=
+ or
+     zerocopy data that passed through a loopback device, I'm also very
+     tempted to make splice copy at that point.  There's a potential DoS
+     attack whereby someone can endlessly splice tiny bits of a message or
+     just sit on them, preventing the original provider from recovering it=
+s
+     memory.
+
+ (9) Make it easy for a network filesystem to create an entire compound
+     message and present it to the socket in a single sendmsg() with a
+     destructor.
+
+I've pushed my current changes (very incomplete as they are) to:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log=
+/?h=3Diov-experimental
+
+I'm writing functions to abstract out the loading of data into the txbuf c=
+hain
+and attach to skbuff.  These can be found in skbuff.c as net_txbuf_*().  I=
+'ve
+modified the TCP sendmsg to use them.
+
+David
+
