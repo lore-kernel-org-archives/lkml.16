@@ -1,223 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D2235079;
-	Fri, 30 May 2025 16:12:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F701201100;
+	Fri, 30 May 2025 16:12:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621531; cv=none; b=BEFG24PauOgb8wFOvVXGC5HoziFpvqADCtF5qewy539BMyeNwgChVZtZZXQsGdiKi8O7RvZ/gIuoF6iVwNPSSs2yMOtNYA2faKti+hfZf0NRaPrSALOIhbH0mct4x/rNdAIaBiKvHIDv0J85gqhOuGbKLJSEsum8jQkE2QoKNww=
+	t=1748621577; cv=none; b=pSQoaMwQ/7/f/y9PDkKbRkeuAtcigFi9v3KwCetQtiysa6Ni53JYjozZJgC2ppvEAyckGqhEERyLfYQNxGRzI+An2laaRhWjUReEk6ZmtoxXWi3/edXGrGM7Yu7du5NpTLGZrcFecxw5H0+CoCezIR2Ns66acTkIjga37Pu+nAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621531; c=relaxed/simple;
-	bh=Z7hYRToBzVndugVw9/+VL1oIDvZ/G481tYi7Xm5XtUw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dnHrdQ4hxGlcQ5V6g7McHVNL8K4TgYnFfyr2qCDoDP3snS8I8Pf/Cms2bQCBQEGfCg5xa/GgdfXHrg0l6x6+QwulhpjDA5plL/Rqu0SCmvynq56BE8v41pyATIJcyCOdld4hOJF1Ct1duVKefxVY4Y1HMRoN9C+qYM0RoLj5nOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmVzKZei; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748621577; c=relaxed/simple;
+	bh=qHb0Zr+wBBx5YCrrrucwymk256PfXF/K3j1/py67w1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MzMZO3xWzcDBrBAk9PiQzkTCo4ab7EJfxLEc1OHI53J9yWb/4aBZeLnrIQjAjVT3qYqkrG/BPFgHi4XC0/f8bG96s+q1BpeJekYHDyMYaZicNLkruz4Lk/ptLiJLKj5vvVbWkAdLHyPT/LC3d1Qb6ILPuasVxCcvGtG5pYu04w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2LVbONO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmVzKZei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F50AC4CEE9;
-	Fri, 30 May 2025 16:12:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2LVbONO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55D4C4CEEE;
+	Fri, 30 May 2025 16:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748621530;
-	bh=Z7hYRToBzVndugVw9/+VL1oIDvZ/G481tYi7Xm5XtUw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VmVzKZeioeqaHpjIhbGPFl5Vfs4b4wDFUxHMnpf9qmBaVUAe1Ei+dxIhB80qmZxZP
-	 b2EUuibXcVdoxa7/QqrA+MrPEfmCSOWxBvDq2Ujudd1rP1/Q+iM3eE0lbDVSlAButU
-	 Yk41dX94rrDXLbpl2WIbMW52IIb0usKL2rnStsZIPUIM3tbLv5crN0YY4NvWReLLeP
-	 bFj914ylOovL2Wc5HiWCg6p6obELgB8WnJFPMsbvNf5Pc6asIBl6NsAyluUJTVSbCU
-	 /ZWJyESI3BWrdrfddgfHgrO5Urs8vQFmW14I6ZDYf++BOaHOaloiugciw4CVVv42KL
-	 Lzghx6VtbBOhg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] crypto/crc32c: register only one shash_alg
-Date: Fri, 30 May 2025 09:10:42 -0700
-Message-ID: <20250530161042.13106-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	s=k20201202; t=1748621576;
+	bh=qHb0Zr+wBBx5YCrrrucwymk256PfXF/K3j1/py67w1w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=U2LVbONOLENC0SSxnFVPwy6KF84qZhqfHshVyCjZf4AsR1OdpxiT+0bjA0tfgbrLC
+	 ku7Pdru5iJ8K3Ju7qcHRxm6bpfLR31QmIvZhKoD3JFcEVI52zr1TtYQLYV/+8EBEns
+	 WBa6pThc/Lh8WbecNRzrAzK8Io6Vp5Vj9i+9ecJON4bI98/odjme4TmOaKO+mPWECO
+	 w3fIS0qHqcxQUP7Z9+bKgRcQ6xUu25ff3rfln7J3ce8uapIb0pVTp2j41VT0Bd3d4x
+	 c3fx4Iq3SFVTvOBNxUhY4LwgRN5u0YYBvmtQOS2J+e3/ToKnBz9lpOtAzyP7i8gn2A
+	 l7KdVQQASJCOA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d6f933152so3322940e87.1;
+        Fri, 30 May 2025 09:12:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWBbfPlurh+luo1FnYC1hzjPUqZZs2NgLHbjFP/FHcuMNfmyvR2jOSCC/0Cq9yPQ94f8scxkBvurm714hf9@vger.kernel.org, AJvYcCX3Cf1iloL2J/kPO54/WZLxMBxy9TRPR4rJdATQs6y0ubxpswp4madyGaJ3uVK46subcZLlyu7RHg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1ngvpM9TklaJKWQz/RlkKKG6QcucdjpCOrlkfZb6ZoGRW4MSz
+	Gwu4YPpmf1+pdFVLZGfrNoSTMWcZE5wWnBU84Tj16T0abhCTzl9Td5aS8hX9GbenAvp9yoTttoo
+	z4FlXHvjZDenfKTRUtZ8DyoCDfMvxSU0=
+X-Google-Smtp-Source: AGHT+IHwZV4mqTqRE3lmPEJbXM+Gb9AQ/0rpHd+UeKYSZtrfDsudGTdNhQ84S+QvEU/Wuv9EDKI1XJqUGy2okIaWe88=
+X-Received: by 2002:a05:6512:220d:b0:553:3945:82a3 with SMTP id
+ 2adb3069b0e04-5533d14f17amr880099e87.9.1748621575303; Fri, 30 May 2025
+ 09:12:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-35-ardb+git@google.com>
+ <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local> <CAMj1kXEzbBTYr2vF3g_z49muSTHwRY1QUm2iOFsaLNYuijqHDg@mail.gmail.com>
+ <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
+In-Reply-To: <20250530160809.GBaDnX6auAVJu9PFLr@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 30 May 2025 18:12:43 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
+X-Gm-Features: AX0GCFsVhN6DYhScAr0jOTTn1yBQuOI5_Xccmyw26HwyP9XrDXqBluV9BpaqrxY
+Message-ID: <CAMj1kXEeJMV5AX9NjLYEwukvpKrDQCvzRyEivj43P7TRH3qFVg@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature check
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Eric Biggers <ebiggers@google.com>
+On Fri, 30 May 2025 at 18:08, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, May 30, 2025 at 04:28:52PM +0200, Ard Biesheuvel wrote:
+> > > > +u64 __head snp_check_hv_features(void)
+> > > > +{
+> > > > +     /*
+> > > > +      * SNP is supported in v2 of the GHCB spec which mandates support for HV
+> > > > +      * features.
+> > > > +      */
+> >
+> > ... get_hv_features() is only when SEV-SNP has already been detected.
+>
+> Hmm, I see
+>
+> void sev_enable(struct boot_params *bp)
+> {
+>         ...
+>
+>         /*
+>          * Setup/preliminary detection of SNP. This will be sanity-checked
+>          * against CPUID/MSR values later.
+>          */
+>         snp = early_snp_init(bp);
+>
+>         ...
+>
+>         snp_check_hv_features();
+>
+>         if (snp && !(sev_status & MSR_AMD64_SEV_SNP_ENABLED))
+>
+> This is called here without checking the snp boolean.
+>
+> And without checking the version it is fragile anyway. Why do you even need to
+> remove the version check?
+>
 
-Stop unnecessarily registering a "crc32c-generic" shash_alg when a
-"crc32c-$(ARCH)" shash_alg is registered too.
-
-While every algorithm does need to have a generic implementation to
-ensure uniformity of support across platforms, that doesn't mean that we
-need to make the generic implementation available through crypto_shash
-when an optimized implementation is also available.
-
-Registering the generic shash_alg did allow users of the crypto_shash or
-crypto_ahash APIs to request the generic implementation specifically,
-instead of an optimized one.  However, the only known use case for that
-was the differential fuzz tests in crypto/testmgr.c.  Equivalent test
-coverage is now provided by crc_kunit.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
-
-I'm planning to take this through the crc tree.
-
- crypto/crc32c.c | 70 +++++++------------------------------------------
- 1 file changed, 10 insertions(+), 60 deletions(-)
-
-diff --git a/crypto/crc32c.c b/crypto/crc32c.c
-index e5377898414a2..e160695682f16 100644
---- a/crypto/crc32c.c
-+++ b/crypto/crc32c.c
-@@ -83,19 +83,10 @@ static int chksum_setkey(struct crypto_shash *tfm, const u8 *key,
- static int chksum_update(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length)
- {
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
--	ctx->crc = crc32c_base(ctx->crc, data, length);
--	return 0;
--}
--
--static int chksum_update_arch(struct shash_desc *desc, const u8 *data,
--			      unsigned int length)
--{
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
- 	ctx->crc = crc32c(ctx->crc, data, length);
- 	return 0;
- }
- 
- static int chksum_final(struct shash_desc *desc, u8 *out)
-@@ -105,17 +96,10 @@ static int chksum_final(struct shash_desc *desc, u8 *out)
- 	put_unaligned_le32(~ctx->crc, out);
- 	return 0;
- }
- 
- static int __chksum_finup(u32 *crcp, const u8 *data, unsigned int len, u8 *out)
--{
--	put_unaligned_le32(~crc32c_base(*crcp, data, len), out);
--	return 0;
--}
--
--static int __chksum_finup_arch(u32 *crcp, const u8 *data, unsigned int len,
--			       u8 *out)
- {
- 	put_unaligned_le32(~crc32c(*crcp, data, len), out);
- 	return 0;
- }
- 
-@@ -125,98 +109,64 @@ static int chksum_finup(struct shash_desc *desc, const u8 *data,
- 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
- 
- 	return __chksum_finup(&ctx->crc, data, len, out);
- }
- 
--static int chksum_finup_arch(struct shash_desc *desc, const u8 *data,
--			     unsigned int len, u8 *out)
--{
--	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
--
--	return __chksum_finup_arch(&ctx->crc, data, len, out);
--}
--
- static int chksum_digest(struct shash_desc *desc, const u8 *data,
- 			 unsigned int length, u8 *out)
- {
- 	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
- 
- 	return __chksum_finup(&mctx->key, data, length, out);
- }
- 
--static int chksum_digest_arch(struct shash_desc *desc, const u8 *data,
--			      unsigned int length, u8 *out)
--{
--	struct chksum_ctx *mctx = crypto_shash_ctx(desc->tfm);
--
--	return __chksum_finup_arch(&mctx->key, data, length, out);
--}
--
- static int crc32c_cra_init(struct crypto_tfm *tfm)
- {
- 	struct chksum_ctx *mctx = crypto_tfm_ctx(tfm);
- 
- 	mctx->key = ~0;
- 	return 0;
- }
- 
--static struct shash_alg algs[] = {{
-+static struct shash_alg alg = {
- 	.digestsize		= CHKSUM_DIGEST_SIZE,
- 	.setkey			= chksum_setkey,
- 	.init			= chksum_init,
- 	.update			= chksum_update,
- 	.final			= chksum_final,
- 	.finup			= chksum_finup,
- 	.digest			= chksum_digest,
- 	.descsize		= sizeof(struct chksum_desc_ctx),
- 
- 	.base.cra_name		= "crc32c",
--	.base.cra_driver_name	= "crc32c-generic",
- 	.base.cra_priority	= 100,
- 	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
- 	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
- 	.base.cra_ctxsize	= sizeof(struct chksum_ctx),
- 	.base.cra_module	= THIS_MODULE,
- 	.base.cra_init		= crc32c_cra_init,
--}, {
--	.digestsize		= CHKSUM_DIGEST_SIZE,
--	.setkey			= chksum_setkey,
--	.init			= chksum_init,
--	.update			= chksum_update_arch,
--	.final			= chksum_final,
--	.finup			= chksum_finup_arch,
--	.digest			= chksum_digest_arch,
--	.descsize		= sizeof(struct chksum_desc_ctx),
--
--	.base.cra_name		= "crc32c",
--	.base.cra_driver_name	= "crc32c-" __stringify(ARCH),
--	.base.cra_priority	= 150,
--	.base.cra_flags		= CRYPTO_ALG_OPTIONAL_KEY,
--	.base.cra_blocksize	= CHKSUM_BLOCK_SIZE,
--	.base.cra_ctxsize	= sizeof(struct chksum_ctx),
--	.base.cra_module	= THIS_MODULE,
--	.base.cra_init		= crc32c_cra_init,
--}};
--
--static int num_algs;
-+};
- 
- static int __init crc32c_mod_init(void)
- {
--	/* register the arch flavor only if it differs from the generic one */
--	num_algs = 1 + ((crc32_optimizations() & CRC32C_OPTIMIZATION) != 0);
-+	const char *driver_name =
-+		(crc32_optimizations() & CRC32C_OPTIMIZATION) ?
-+			"crc32c-" __stringify(ARCH) :
-+			"crc32c-generic";
-+
-+	strscpy(alg.base.cra_driver_name, driver_name, CRYPTO_MAX_ALG_NAME);
- 
--	return crypto_register_shashes(algs, num_algs);
-+	return crypto_register_shash(&alg);
- }
- 
- static void __exit crc32c_mod_fini(void)
- {
--	crypto_unregister_shashes(algs, num_algs);
-+	crypto_unregister_shash(&alg);
- }
- 
- module_init(crc32c_mod_init);
- module_exit(crc32c_mod_fini);
- 
- MODULE_AUTHOR("Clay Haapala <chaapala@cisco.com>");
- MODULE_DESCRIPTION("CRC32c (Castagnoli) calculations wrapper for lib/crc32c");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS_CRYPTO("crc32c");
--MODULE_ALIAS_CRYPTO("crc32c-generic");
-
-base-commit: f66bc387efbee59978e076ce9bf123ac353b389c
--- 
-2.49.0
-
+Because the assignment is moved out of the startup code later.
