@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E50A2367A3
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC37F2367CD;
+	Fri, 30 May 2025 17:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748626128; cv=none; b=QD3d6mwADA4S3iu7745fi3TE4igkxPlfjkoi9ZLcLfWHbQGeWd94vQ3fVLzWXEoL5Mi+NB5L+CP/F6/1Q8+rs5aV463LdJaE6AMjulARcQvJ4SKqM/bW+Jup8viBfiSYEKSa7GZByguqt7iEufHB+zTQdT6pYePkpe4ZWcucZB0=
+	t=1748626130; cv=none; b=DtMArfwuzxbDTEOWl/1tmdkTtIcpQYU0gU/L4lohTGIKlchoKE9kuQ4jRFYRvUMQ3CkTEvNmoOD8BsxjnOeEPUPq/N083+U1kwMcWUbHwVEmfUBx9bZFjmuDfybCXPp/U2xsfn03bonrK90KD4IA4ZWNJiHt8a5p84Y4hNZssvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748626128; c=relaxed/simple;
-	bh=CJv8XeOaSKZzbDemQJTWvxURny5ID3w1oNu4bbHZXW4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=dVdY0kzjyzXeaDddReERXVKvQJBa8E7FEbZZNXzuoyI+02yRl771aRnOLFP4NA2XqAkuAXVT92Y5Ua9QcV8yGBDb1h5ezvK8Pk/Z/yvkqCd40zu3K8Z7cVPWAC877JdvbwjC3616UEmmQACJcDxqrnlssALoeiFoYgjzHxwfPVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfEtLLet; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748626130; c=relaxed/simple;
+	bh=62LIjZRR8IINyHMONFQQjuIRkRwxOOYcCTaq3jBs5yg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=YbNJOEVniaMZh+gZGX2EGcGfA8YOFkvIxJNRAw5kbJEzw/spC9NWEjDbriEJw5QWWs5/WU6onjcaB57WmVksZSyS/T7TUNTtuD/Qba8GlKV4wHSwblghJ/yo/vf3j9fh+uIQEh/42Wuh572mE7DLIk2oQokIaG3GAGU4Do8qA5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CE4iDxAL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfEtLLet"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3BE3C4CEE9;
-	Fri, 30 May 2025 17:28:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CE4iDxAL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1980C4CEEB;
+	Fri, 30 May 2025 17:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748626127;
-	bh=CJv8XeOaSKZzbDemQJTWvxURny5ID3w1oNu4bbHZXW4=;
+	s=k20201202; t=1748626129;
+	bh=62LIjZRR8IINyHMONFQQjuIRkRwxOOYcCTaq3jBs5yg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pfEtLLetyNELDcHHLdNITaCvubl6PlNBeheb1Uao6S2/VqLEJE4zmN9Vre7WU0G0u
-	 EFzU94T2UTG3utPFAxrl+i6zeBR8lP3jYgJbFxMoksKrv6KvhSDCjQt1Q6p4aZwe98
-	 PQpeLpeqfWwMAhHR8jo2SCr/FrBPzoeuvVxuhf5+KS+QOY7uLw17KqguJr0HdidcU+
-	 fg7gfzbamf2D8Ugp22K/nIa/I7eiLJLCF39ubsW9JugiKM0sQ195nFoUpjSdDT2OJT
-	 f5ESLNx4/2FjLbEaQ2pamj32CaKyLN4wunoxpjkdLs1eHKa25H483KoYNVaE0NuaXo
-	 2zxaZFbPQ8Pag==
+	b=CE4iDxAL0ic9MB9btmmOJo5Z9WOpGOsCg5l92FUEMYdCkIXVjJjJBCkLxI4xGvUsB
+	 GjbxUtJmxRyS6aof5Rc7OPL9Njq9HWrLaxa0BRfwOTY2TCBlH9idS6rKdUvmXS1/W/
+	 /L6N5XOhl2AEANiMQ/F6TtI6xRi4gewjmGUg9N4Arp1JoFqGgE0WLRM1mS/io9Lmiz
+	 FAKUk5ZwGzQwxMMJUZM+z2OwZ8rkwGH65+J5RsUyludpZsrK8KAfNoxCHZIaNyCbJz
+	 fCv5uj9XHH0SmD56c2+oio1B4d4vUqESCGF7m1+g+2Z1yntT3DxDFOoqNn19ezOAac
+	 1H+Ie9UakZ5iQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E0439F1DF2;
-	Fri, 30 May 2025 17:29:22 +0000 (UTC)
-Subject: Re: [GIT PULL] f2fs update for 6.16-rc1
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DD839F1DF2;
+	Fri, 30 May 2025 17:29:24 +0000 (UTC)
+Subject: Re: [GIT PULL] clk changes for the merge window
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aDjQtZy0oknTlgmG@google.com>
-References: <aDjQtZy0oknTlgmG@google.com>
+In-Reply-To: <20250530001457.205397-1-sboyd@kernel.org>
+References: <20250530001457.205397-1-sboyd@kernel.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aDjQtZy0oknTlgmG@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-6.16-rc1
-X-PR-Tracked-Commit-Id: 9883494c45a13dc88d27dde4f988c04823b42a2f
+X-PR-Tracked-Message-Id: <20250530001457.205397-1-sboyd@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
+X-PR-Tracked-Commit-Id: 63bfd78aae9a90210b0d369bb2836cca90402a95
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d8441523f21375b11a4593a2d89942b407bcb44f
-Message-Id: <174862616107.4033976.5337363842507357181.pr-tracker-bot@kernel.org>
-Date: Fri, 30 May 2025 17:29:21 +0000
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux F2FS Dev Mailing List <linux-f2fs-devel@lists.sourceforge.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 9f32a03e3e0d372c520d829dd4da6022fe88832a
+Message-Id: <174862616303.4033976.12915982928469029323.pr-tracker-bot@kernel.org>
+Date: Fri, 30 May 2025 17:29:23 +0000
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 29 May 2025 21:25:09 +0000:
+The pull request you sent on Thu, 29 May 2025 17:14:55 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-6.16-rc1
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d8441523f21375b11a4593a2d89942b407bcb44f
+https://git.kernel.org/torvalds/c/9f32a03e3e0d372c520d829dd4da6022fe88832a
 
 Thank you!
 
