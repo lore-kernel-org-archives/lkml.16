@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D58C188A0E;
-	Fri, 30 May 2025 14:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19629231836;
+	Fri, 30 May 2025 14:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748615104; cv=none; b=ZLuRriL8DvJYcTXuRHjdBHLyteKX6uNHfYzHxzU5mtg+UmaPzUEHJ0HYDXxzbLeRQHW2Y0k3bKr6vnpPdaIASCCzI3cDBtJrJDwv5Teto9QPPbRrwejzfEOTHUhZ5L+vGwTgNkGPWsx+HR7bm9QqOy8FIMv0R/f3ZRkhpCgXVkI=
+	t=1748615108; cv=none; b=XQbQ3BzcaGGH+IVvEHOD98yjkpriUjJ2ap4JpE5loAAhIqp9Dtf4EjsfZaLGuhMFXnEuFN7pWF+9eSYEM/QHDd+716pVA7htXJNaMESgohfMGgIGJj68ODDBNNhY53CpZva61bIy/rfpkwb0/h1JvxGsaopzxkZl8/xVlkyHGiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748615104; c=relaxed/simple;
-	bh=mGiSKd4T9J6G6QXOn/6eU1w9NZ+tMNSzAqmLqysSbEM=;
+	s=arc-20240116; t=1748615108; c=relaxed/simple;
+	bh=HxNXcpo2opSxFgS5iz+zLkP/tQgdDrjNBAzxpDiD8C4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WRN8y/3AekvUiltEefOdnMr5dVMwK1qqhpAnarHfWzkCVQb7UB00qBNcC+z8BqldoPRfLmyhllslgYLvKwS8UmJ8IgOX/tlZBV2Z2CVk0bdSmXcgAVSnMvzb/tDuDQZ3t1vKC6I8Ou8ouemcpCMUuvE/WGwWVNiJ/4ZOIFWRFek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NC/3F1mL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FBzK/cE8gRbSJSmrE6spl1wa0ZfBbKXbsKRD9nNra4sbUt2MP4JeF6M8ZwLX/VGf3f3zGw4E5neN8pf9LGOaQeNt4AGa9rntJWqozeZWHueZJdazEIN3v5fNSKQvCLvaxHmNWvbZGwCZgzs0ytkhiy7fa+q18ihskkKX4oT5buw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCOQa0kJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NC/3F1mL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00992C4CEE9;
-	Fri, 30 May 2025 14:25:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCOQa0kJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BBA9C4CEEB;
+	Fri, 30 May 2025 14:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748615104;
-	bh=mGiSKd4T9J6G6QXOn/6eU1w9NZ+tMNSzAqmLqysSbEM=;
+	s=k20201202; t=1748615107;
+	bh=HxNXcpo2opSxFgS5iz+zLkP/tQgdDrjNBAzxpDiD8C4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NC/3F1mLHpQNX6xsAK4ArqvUk+DOlfS21gRRBlRtnyYusmAja1ljmLFlhowhn5vfX
-	 mJC/fKP0Sa6oBzDIXnS/2VO2yTXO0irhVZRWdI8efeK+qL5NogShibbvrObLpFFx4E
-	 uX1kbkhr8H+pstT0rj5e2qQaqVbR/RHoSkzpUCnNxMcURveupSt4Oo34XI+fRKNKHT
-	 qJ8As1lnSKXkrDg1CPcVLjef4Dp9XBsx3/kdhYx+RkB87VAjolx7NKB42BRCbbtygz
-	 rIug+YMiVTZgCH5BypdViw1H7jZXVidv0MUE150IZRfKK+Ds4BGdpTBBCLMcfu53QB
-	 v2V8ygVzd3ViQ==
+	b=oCOQa0kJd5GgBQkKsclbpyO9HG34OqN3vQCSMVLFIZpmV9Fj2KyvuFokxYYofhSrj
+	 Cui2MLKX/a73GWZ7vcKgC4Kfx0pxsTKyHHKjU11omPJf+p/z8lAu/XGUiwAAQrby7t
+	 DI667zbHBg5gMN2vqYqpXhUapNjPNAB7EZl+KtAWlATxuiEe8x0SDkGPXj/DlJcu5m
+	 4097pqAKapBv1FtIYjsVFhyL/zVY+ttuzPIdioCevtzFLJDx3ls4d13ar4+1E0Klew
+	 KM2Q70rdtU//3MGWD3j4hN5LHMaTcENDDmjD9eRbrd7AndPlnlyRJQfXrkI1aJuyWc
+	 pJVpfPx/PklQg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -42,9 +42,9 @@ To: gregkh@linuxfoundation.org,
 Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 3/7] rust: devres: support fallible in-place init for data
-Date: Fri, 30 May 2025 16:24:16 +0200
-Message-ID: <20250530142447.166524-4-dakr@kernel.org>
+Subject: [PATCH 4/7] rust: faux: impl AsRef<Device<Bound>> for Registration
+Date: Fri, 30 May 2025 16:24:17 +0200
+Message-ID: <20250530142447.166524-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250530142447.166524-1-dakr@kernel.org>
 References: <20250530142447.166524-1-dakr@kernel.org>
@@ -56,68 +56,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, Devres only supports a data argument of type T. However,
-DevresInner already uses pin-init to initialize the Revocable. Hence,
-there is no need for this limitation and we can take a data argument of
-type impl PinInit<T, E> instead.
+The device contained in a faux::Registration is always bound, hence
+consider this in the registrations's AsRef implementation.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/devres.rs | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ rust/kernel/faux.rs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 2dbe17d6ea1f..47aeb5196dd2 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -96,9 +96,16 @@ struct DevresInner<T> {
- pub struct Devres<T>(Arc<DevresInner<T>>);
+diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+index 8a50fcd4c9bb..395cb1172cb4 100644
+--- a/rust/kernel/faux.rs
++++ b/rust/kernel/faux.rs
+@@ -50,8 +50,8 @@ fn as_raw(&self) -> *mut bindings::faux_device {
+     }
+ }
  
- impl<T> DevresInner<T> {
--    fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
--        let inner = Arc::pin_init(
--            try_pin_init!( DevresInner {
-+    fn new<E>(
-+        dev: &Device<Bound>,
-+        data: impl PinInit<T, E>,
-+        flags: Flags,
-+    ) -> Result<Arc<DevresInner<T>>>
-+    where
-+        Error: From<E>,
-+    {
-+        let inner = Arc::pin_init::<Error>(
-+            try_pin_init!( Self {
-                 dev: dev.into(),
-                 callback: Self::devres_callback,
-                 data <- Revocable::new(data),
-@@ -168,7 +175,10 @@ fn remove_action(this: &Arc<Self>) {
- impl<T> Devres<T> {
-     /// Creates a new [`Devres`] instance of the given `data`. The `data` encapsulated within the
-     /// returned `Devres` instance' `data` will be revoked once the device is detached.
--    pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
-+    pub fn new<E>(dev: &Device<Bound>, data: impl PinInit<T, E>, flags: Flags) -> Result<Self>
-+    where
-+        Error: From<E>,
-+    {
-         let inner = DevresInner::new(dev, data, flags)?;
- 
-         Ok(Devres(inner))
-@@ -176,7 +186,14 @@ pub fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Self> {
- 
-     /// Same as [`Devres::new`], but does not return a `Devres` instance. Instead the given `data`
-     /// is owned by devres and will be revoked / dropped, once the device is detached.
--    pub fn new_foreign_owned(dev: &Device<Bound>, data: T, flags: Flags) -> Result {
-+    pub fn new_foreign_owned<E>(
-+        dev: &Device<Bound>,
-+        data: impl PinInit<T, E>,
-+        flags: Flags,
-+    ) -> Result
-+    where
-+        Error: From<E>,
-+    {
-         let _ = DevresInner::new(dev, data, flags)?;
- 
-         Ok(())
+-impl AsRef<device::Device> for Registration {
+-    fn as_ref(&self) -> &device::Device {
++impl AsRef<device::Device<device::Bound>> for Registration {
++    fn as_ref(&self) -> &device::Device<device::Bound> {
+         // SAFETY: The underlying `device` in `faux_device` is guaranteed by the C API to be
+         // a valid initialized `device`.
+         unsafe { device::Device::as_ref(addr_of_mut!((*self.as_raw()).dev)) }
 -- 
 2.49.0
 
