@@ -1,41 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FF6320B;
-	Fri, 30 May 2025 18:06:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA6D230D1E;
+	Fri, 30 May 2025 18:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748628367; cv=none; b=YeRXrRDfWU+Gnz8SqyHfus5cMcy0ECu4gemCdjfhq/qL+pn9K6/IxEboeaTgipBgf2ykOty5UuSTsfFzdGspOHZ1P4n+aAOyM2V47Hl5uMHeJKw4EyvKzQXsliPtspTp2b9kBo+Jy5hw+gEyoDqHJJ9DhBI/GkD+zAX5J/9twXA=
+	t=1748628461; cv=none; b=uupDSYOih4IjaCyeZl3YPviADCdKHIV0BkgEHLaxeOKSMbz7BYA72AxaHul2vxayhIHosowHw4twd8aCvW8NbkPhKkZdjrW1Aa0u52+2xAUSExw/im0qfw/Kb38oVIyBLeTkNGJSR9fmS+wwYIBbI23kO7cXZVRNn0xW45/uz7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748628367; c=relaxed/simple;
-	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
+	s=arc-20240116; t=1748628461; c=relaxed/simple;
+	bh=J8XMf0vUFlBtb0P+eOBHmln++KcIOG7Tsc+hBZYxgdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BxBttSELVAaXWA+lO6wEHor4iXWaE2WCsUqoU4LsmXKRxYh744V/HijdPtNlGc3s/VGDEgALNUZNuKK6UiRFFlAZc3pQ5LpvBjbfs4RIGFShCVv0F0+Yl0nTzgOKvOKBQl8n6C9OoK3rwDyAwohUkzx9d5DcGTOfd2mFWihXHFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tN4Re0Sd; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NHSg/+ukN4pEAE3A8vP6j3I5iNJgZhBq1sFaXNEV8O2pwJbtXApXeqgtsMz5XgTrOKSSjfoLSpYToE7yPSwYgq5Ne2FgSyAfAQdSmBRuEnYDhu3dZ7uyUujFsFgo3Ef92c5bLUcXYCTFvKrg0tFR9AxYq4RUBVfwxNRhxlC6B6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uHUthBaI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tN4Re0Sd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1D7C4CEE9;
-	Fri, 30 May 2025 18:06:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uHUthBaI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E41C4CEE9;
+	Fri, 30 May 2025 18:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748628366;
-	bh=vTjL12s6KvtxA3tMHxUHBMgloZwocQuSUhLfD5vvNtU=;
+	s=k20201202; t=1748628460;
+	bh=J8XMf0vUFlBtb0P+eOBHmln++KcIOG7Tsc+hBZYxgdM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tN4Re0SduTQAupT/AgsL3IJXj9KsGw3/jtt0x6mQ+11wviDGwPUzdmQ/NdKf9FTLH
-	 igXbZ6mzpvUFiZAi3IuZQqtfe7gPbwSJgkmtrxATmw5o3ZAhpF+nLPzRta2SLUEpng
-	 ZFp1w4XoguzIeaoUkNuZAtB1nH0KrnaRbm9a16FRdr74kXxyNedo4mGH4rYakB/UTO
-	 TvBobJDk021EBFRx7ognli1P2B659+5AEat0M5tsuUxnE8wK/nv3ynPmCFIhs2BFCt
-	 PVyhxifT3Mj0K+BnqmMbjIBiVKUOr5lAViQWeC9yuGILIn2ySKjWRoJ0ZU/Ve44TyT
-	 6Lh37fMXtwPUA==
-Date: Fri, 30 May 2025 11:06:01 -0700
-From: Kees Cook <kees@kernel.org>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3][next] overflow: Fix direct struct member
- initialization in _DEFINE_FLEX()
-Message-ID: <202505301054.A786A183@keescook>
-References: <aBQVeyKfLOkO9Yss@kspp>
- <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
+	b=uHUthBaI2V1BxM8csIfknNXieTWV8RxUPyHCOIKqiG15pf/ErTqbSTFk5veJxT51j
+	 qqmNXkupTdmOnJhgg/65Pb8J+fKNLcJFJbWO1edYqwflKHLebh016uufcjEBF7GdW0
+	 LnZv6f4xN2zZEv1IN20Na3U5gDvBek8QwqvmBzASM8x6i7TTHpkpQph5JnFM7JK9B2
+	 cxB8RNk/VdfAK8KqTq6Zf97V44CcCSre8lC+mvy7si7oKxY3nZPK4eQv4oy4w1F8QV
+	 pMIob6qRgBnmFW4u+eYyFpkQ20rVVQPc9NQAtwuQTd4+eWX8elC8uqNTERpg+JUkNT
+	 OSMFhbEt8AQZQ==
+Date: Fri, 30 May 2025 19:07:32 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v4 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250530180732.GS1484967@horms.kernel.org>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250528185508.GK1484967@horms.kernel.org>
+ <20250529132845.GE27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,75 +67,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d4eed1e3-6fc0-4372-8ced-ae6a49f3c5c1@intel.com>
+In-Reply-To: <20250529132845.GE27681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Fri, May 30, 2025 at 04:59:35PM +0200, Alexander Lobakin wrote:
-> Unfortunately this can hurt performance on my setup.
-> In XDP, we usually place &xdp_buff on the stack. It's 56 bytes. We
-> initialize it only during the packet processing, not in advance.
+On Thu, May 29, 2025 at 06:28:45AM -0700, Shradha Gupta wrote:
+> On Wed, May 28, 2025 at 07:55:08PM +0100, Simon Horman wrote:
+> > On Tue, May 27, 2025 at 08:57:33AM -0700, Shradha Gupta wrote:
+> > > In this patchset we want to enable the MANA driver to be able to
+> > > allocate MSI-X vectors in PCI dynamically.
+> > > 
+> > > The first patch exports pci_msix_prepare_desc() in PCI to be able to
+> > > correctly prepare descriptors for dynamically added MSI-X vectors.
+> > > 
+> > > The second patch adds the support of dynamic vector allocation in
+> > > pci-hyperv PCI controller by enabling the MSI_FLAG_PCI_MSIX_ALLOC_DYN
+> > > flag and using the pci_msix_prepare_desc() exported in first patch.
+> > > 
+> > > The third patch adds a detailed description of the irq_setup(), to
+> > > help understand the function design better.
+> > > 
+> > > The fourth patch is a preparation patch for mana changes to support
+> > > dynamic IRQ allocation. It contains changes in irq_setup() to allow
+> > > skipping first sibling CPU sets, in case certain IRQs are already
+> > > affinitized to them.
+> > > 
+> > > The fifth patch has the changes in MANA driver to be able to allocate
+> > > MSI-X vectors dynamically. If the support does not exist it defaults to
+> > > older behavior.
+> > 
+> > Hi Shradha,
+> > 
+> > It's unclear what the target tree for this patch-set is.
+> > But if it is net-next, which seems likely given the code under
+> > drivers/net/, then:
+> > 
+> > Please include that target in the subject of each patch in the patch-set.
+> > 
+> > 	Subject: [PATCH v5 net-next 0/5] ...
+> > 
+> > And, moreover, ...
+> > 
+> > ## Form letter - net-next-closed
+> > 
+> > The merge window for v6.16 has begun and therefore net-next is closed
+> > for new drivers, features, code refactoring and optimizations. We are
+> > currently accepting bug fixes only.
+> > 
+> > Please repost when net-next reopens after June 8th.
+> > 
+> > RFC patches sent for review only are obviously welcome at any time.
 > 
-> In libeth_xdp, see [1], I provide a small extension for this struct.
-> This extension is 64 byte, plus I added a definition (see
-> `__LIBETH_XDP_ONSTACK_BUFF()`) to be able to define a bigger one in case
-> a driver might need more fields there.
-> The same as with &xdp_buff, it shouldn't be initialized in advance, only
-> during the packet processing. Otherwise, it can really decrease
-> performance, you might've seen recent Mellanox report that even
-> CONFIG_INIT_STACK_ZERO provokes this.
+> Thank you Simon.
+> 
+> While posting this patchset I was a bit confused about what should be
+> the target tree. That's why in the cover letter of the V1 for this
+> series, I had requested more clarity on the same (since there are patches
+> from PCI and net-next both).
+> 
+> In such cases how do we decide which tree to target?
 
-FYI, you can use __uninitialized to force CONFIG_INIT_STACK_ZERO to
-leave an automatic variable uninitialized.
+Yes, that isn't entirely clear to me either.
+Hopefully the maintainers can negotiate this.
 
-> What would be the best option to resolve this? This flex XDP buff on the
-> stack is fully safe, there are a couple checks that its size does not
-> exceed the maximum (defined by xdp_buff_xsk) etc. And we really need to
-> initialize it field-by-field in a loop on a per-packet basis -- we are
-> sure that there will be no garbage.
-
-But yes, this is suddenly not available for _DEFINE_FLEX after the
-referenced patch.
-
-> It's even worse that most drivers will most likely not want to add any
-> additional fields, i.e. this flex array at the end will be empty, IOW
-> they just want a plain libeth_xdp_buff, but I made a unified definition,
-> with which you can declare them on the stack both with and without
-> additional fields. So, even if the drivers doesn't want any additional
-> fields and the flex array is empty, the struct will be zero-initialized
-> and the same perf hit will apply.
-> [...]
-> [1] https://lore.kernel.org/netdev/20250520205920.2134829-9-anthony.l.nguyen@intel.com
-
-Okay, so it sounds like you need the old behavior of _DEFINE_FLEX, *and*
-a way to apply attributes (like __uninitialized).
-
-How about replacing _DEFINE_FLEX with:
-
-
-#define __DEFINE_FLEX(type, name, member, count, trailer...)		\
-        _Static_assert(__builtin_constant_p(count),			\
-                       "onstack flex array members require compile-time const count"); \
-        union {								\
-                u8 bytes[struct_size_t(type, member, count)];		\
-                type obj;						\
-        } name##_u trailer;						\
-        type *name = (type *)&name##_u
-
-#define _DEFINE_FLEX(type, name, member, count, initializer...)		\
-	__DEFINE_FLEX(type, name, member, count, = { .obj = initializer })
-
-
-Which would yield this for ___LIBETH_XDP_ONSTACK_BUFF:
-
-
-#define ___LIBETH_XDP_ONSTACK_BUFF(name, ...)				\
-	__DEFINE_FLEX(struct libeth_xdp_buff, name, priv,		\
-		      LIBETH_XDP_PRIV_SZ(__VA_ARGS__ + 0),		\
-		      __uninitialized);					\
-	LIBETH_XDP_ASSERT_PRIV_SZ(__VA_ARGS__ + 0)
-
-
-Does that look like what you'd want? (Note I didn't actually build this;
-I want to make sure the concept is workable...)
-
--- 
-Kees Cook
+> 
+> Also, noted about the next merge window for net-next :-)
+> 
+> Regards,
+> Shradha.
+> 
