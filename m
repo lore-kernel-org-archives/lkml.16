@@ -1,193 +1,208 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C50374D1;
-	Fri, 30 May 2025 11:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748603831; cv=none; b=s8ZzHD7kLHUmxVvIuBl4uei2wMHj2WyesMHAMu/LT4zUlz4FLRG4LOsPg3YuwfnxyhZIwUIt/u9AC/BgCByiVAs5p3ro1pNWfIyShxomRi6eSch0DBX4ctLF2G4AoPdt4jKwqb9XnVSpzUJREMF9ed4dTZl6VSswm83u2TaUg2U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748603831; c=relaxed/simple;
-	bh=q29bzwk69xJGsp+snWqF7VSlkCsPgkVSbEQVYtdjF1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eED6uvm3Hf4EITXAN/11BRzuQiLR3CnyW6Yv3Vi78qHIUrAQ195FtOzlPA3doG4eMUahjI2fMwmP5Y7MqCzjpzWppXZDTgJ+f7anxqAT7kZfmhKMxBGK/X6s9P9UfO4umry+C1Kk7tDu6M35nlrRkA1bWZXEMZCFX4ldiVZOYSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Ub4tqPOS; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF261C84A5;
+	Fri, 30 May 2025 11:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748603962; cv=fail; b=ox1S3Rp+jmegqDf3KcjULOF8M91yx4vpoV8T9+mWTQQzWAOGiQSBFNwZlTSOpkxoTvHmp8XGWPh0moixCHCTqMdhv/7zqnvETPdz6R5PTHt+J1W1QmwlFl5AEIhYZYNm8KMauyITb7fs9ixatq9sQK5IxpjqsI9ktepnVfbIx1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748603962; c=relaxed/simple;
+	bh=0tcMO+znGFcE4tz8iKE04iq6aqEXGy7fZVgkwPRuisk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=kf+ZF4WDUJPeKkZumPPp9wFpZTFogCViZGxTdUze8qb/vujGAeOQpPCwJ/2Zc1yZ+nYrA1MxpWBqoNJBGJoxV4onf00OH7uJ3V7VL/ek+rJPYx7/wWIwgU9wca7yRTwgng/h2u4QJ1a7EK182OViKMda6703Y0INgbaYSlIDDJo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQGCe3/9; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ub4tqPOS"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D8DF840E01A8;
-	Fri, 30 May 2025 11:17:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id X3A_6v7cukEa; Fri, 30 May 2025 11:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748603820; bh=kDWmnRvHUCItuhvHdDEViZU/241goO0alVdG+41ptlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ub4tqPOS4S9GJyioHz472TThyxGN38nZmFoM1OXIEtJBRSBogDeWlXWFh3JQPhO6U
-	 BuKLSM/IOylLcu0oBPQpciGilfZ3rHMkmAt2TNHlioz1MomKxGk/RzDloyUByI5xcC
-	 p7rh5mEeUmFzS112GN3hiPWRj6FtHiWz2RspAntI0Iu4DjraLmLu0y46Hrmgab2/og
-	 CaGTVlf1KcBdoVWqCeLW0C0GMo6nOBP9pqikMiHvqQMVnfr+eTX58SMBgCRXyx6DoA
-	 q5WAAych4ehdgEGDFE3Vs2telmwF8fmiF++elGAFtmM2iZGTmELKFEta7gVLdwGz/2
-	 SGrHE+6ZXOkTN8XtDwZEpAVVUH03BCi9oKCEutrwef/If0CoENC9ylrdRdHuVNCbB6
-	 i0SdI/evjL0YnSUcSIuE+EIkQEmRl7WfV7k1F54RkGsK92P4qPji91CcveIiEaqEmR
-	 pkWYwl/OLbJYIaE446VEqH/WBzdW6YIQMPKOedNsN4O8SEE6MS0/bVPafbVpaOsI1X
-	 tY4fkna0KK0XmC8F14EGXO82aq2RTTBDImbUVzAEfIB2AWtA2qO49x+/oUUu8FXSFy
-	 zm8+kmV2agN6oAOjFJiFBgV1r4vcW2OWF57off8MXwRQpVe97k1p6gGuVbzIXVCgjx
-	 oUvwySW0zDzin8fJmae1SwwE=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B466C40E015E;
-	Fri, 30 May 2025 11:16:51 +0000 (UTC)
-Date: Fri, 30 May 2025 13:16:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 12/21] x86/sev: Unify SEV-SNP hypervisor feature
- check
-Message-ID: <20250530111645.GAaDmTneZG7KOX0ApR@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-35-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQGCe3/9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748603962; x=1780139962;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=0tcMO+znGFcE4tz8iKE04iq6aqEXGy7fZVgkwPRuisk=;
+  b=gQGCe3/9FJ6xlBFr/zg+aPC6aZ3iSOw31WkiCfSMuWA22OU+vOKmN71k
+   QiEE5gGXKVeOoUZuoYqFA8NBZGOCG/ipyG/sbfwGsU91MJnNDRdH/tz0p
+   ncshL+Yx3SBqT4NBCZGiroSN37K5itcCgKShimmsz1NITL/mbp1u3ug0y
+   KWWKIsiEav10Tv8BeYM/p59o5ep5A9dAgs0WhJKD+skugEdP0NpamxxYb
+   NA5fPkmB2+P13ZVr0LJBzhOLsMBGfYnoB/Zve/63S2oI3F77aGGO6U3Eg
+   S/GDMHJiNRZ2sCZlTzVpAKm8YV+ySjlA0yU6lQECgETC4YqMX+YZ4evVn
+   w==;
+X-CSE-ConnectionGUID: cD+z24ApR8+FunBUBoFXEA==
+X-CSE-MsgGUID: AfjcXcGzQIGy+iznYi6CbA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50841672"
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="50841672"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 04:19:21 -0700
+X-CSE-ConnectionGUID: jeFt/WYqQvqSwOwCN9LrWw==
+X-CSE-MsgGUID: 3X5LE5ofThuaVs4ZHy0FpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
+   d="scan'208";a="143828552"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 04:19:20 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Fri, 30 May 2025 04:19:20 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Fri, 30 May 2025 04:19:20 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.73) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Fri, 30 May 2025 04:19:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W/Md4egD99LLs5kbfCGk/EJHh4JpIolcp2yABPNMRqfW4TqkQ98ObvIsRzYzz2Ph8fTBynIWuYe9c4Bdmw3ixUXti0rBckKuNje7DWAc/mpWt9xgeyJCXXC6hXiXBrS1HpVawEfzziVTdRh1xaCdHTcVZtuP3D519TBY6P5BkIA8jK77d/99ZO7/NnQQZvt0K0rOzDDZfWAGs5hrn77E9s4Mdz4lQxNVJFyONXzrlBcaqUcXE54ayTqC118ltW4DlOyqg3NQ6TDf4WlvmSSQUultDUnP2FnmBGKO592EyOh1+RY+YdSzWpJNlg/I8NZPcitIVaWATpcGBBKUlzwKBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PusVhOeXD/w2iWMBv6IfVN+wOmxi9E3Bw9ukeCBGfFY=;
+ b=ZNZNE0sh4ehCoKpmbk8EwJ4GTAiNxril0m0AxXrRLibvvW2Yqu5ffBdCTB2pTtYP+Sn7+cV0p4boZWr7Re6RSUjPaPkxjMQo1W1XAd7G/kFLYO/TqIyiocqCQM9cWMi28YMo5KOAKyp5MQGD9c8vuDxPNzXcsfcQCNTjy9ghtKAVx1U98SFfU9Au6LYNMqA2gHt/YAX3BvTp9FZwDq/pmr5dY20/tKm2kHPTMMvxH2MsbcMDhdaZZWVJKZZZn0wKJ7u/IL55srKxngClYB14JSv25NPhTq9F611ZV6m+EjlPo2b/GL925H70TcpD0r/eSg6HY7KNQjUXGIXD2lCitg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
+ by PH8PR11MB8064.namprd11.prod.outlook.com (2603:10b6:510:253::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.31; Fri, 30 May
+ 2025 11:18:36 +0000
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d%5]) with mapi id 15.20.8769.025; Fri, 30 May 2025
+ 11:18:36 +0000
+From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To: George Gaidarov <gdgaidarov+lkml@gmail.com>, "Luck, Tony"
+	<tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Jason Baron
+	<jbaron@akamai.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, James Morse <james.morse@arm.com>,
+	Robert Richter <rric@kernel.org>
+Subject: RE: [PATCH 2/2] EDAC/ie31200: Document which CPUs correspond to each
+ Raptor Lake-S device ID
+Thread-Topic: [PATCH 2/2] EDAC/ie31200: Document which CPUs correspond to each
+ Raptor Lake-S device ID
+Thread-Index: AQHb0LdHIshfc04yfE2boYRbPCfMyLPrBY9Q
+Date: Fri, 30 May 2025 11:18:36 +0000
+Message-ID: <CY8PR11MB7134D62871899D47A28615F78961A@CY8PR11MB7134.namprd11.prod.outlook.com>
+References: <20250529162933.1228735-1-gdgaidarov+lkml@gmail.com>
+ <20250529162933.1228735-2-gdgaidarov+lkml@gmail.com>
+In-Reply-To: <20250529162933.1228735-2-gdgaidarov+lkml@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|PH8PR11MB8064:EE_
+x-ms-office365-filtering-correlation-id: c27a974e-d2c0-43fa-af8c-08dd9f6bb8b7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?hMajEBAyWPdQuLugXbVGdtriABGaY2yhwukBXwDEvV9TWXwbqaaHXqINojUg?=
+ =?us-ascii?Q?+eQIAsE2DmNYpevUMjfmXFmSGbT4kP7nK1GNoJrHxHoi3eePu8Mu3udp4YDh?=
+ =?us-ascii?Q?HAti18sLpL6z4j+drhdHzzJKuyvH0qn401HO9s2Zy+gW+x7VeA2Cko91zbV2?=
+ =?us-ascii?Q?BfM2C0Upt8uM4oQOx89Ouqn2MoLTvCanvOdRE17arxtsis9bKiWcP/nTpwkt?=
+ =?us-ascii?Q?qBYVIIaaOshGqxs3lj5ZAUh9umcCqC3W9h9p66ZG4ufL76mP/3lgKUSCb6HM?=
+ =?us-ascii?Q?cG2xqoshPeI8ltAhYYBnLEgCBW7KbyJG++jYPVmOm1Z2aWB075IP51wWqiH/?=
+ =?us-ascii?Q?gNwokdCoTzCO64pj+rfs63woW8WwNtbVw5M3rkNgjvrZ1ztW04/iptyGQ4lI?=
+ =?us-ascii?Q?MhLWBwh9cDlIBl+1o0uFvNFNCIfbxEqHiTZZW+lNZvBPS54RzXsSI7ht6dar?=
+ =?us-ascii?Q?uuc0TIw+9YxQOA61HKsrupKRTZJjQi6b1tGUmJFsgZdM7obox1wcIhrJdFT4?=
+ =?us-ascii?Q?codjJXnYuBMJh8418LHJRN2FM98RfTY+McUZLPU0tokR+3cJyEE9EokJIxee?=
+ =?us-ascii?Q?eE2xodZcPNuEw2Ffi1rKxXCgeou3zSeQh+ZCDOtPnoRUKrcUJluQKk6r8V8C?=
+ =?us-ascii?Q?+pHUJjB18xexZMCbPCsDTVwHsVivk9sXzuCR4BDZ4fC4PedILgXfL037XL7B?=
+ =?us-ascii?Q?FxdiNvGDJ+n8zpXzsmfZtndBnnRPddA79xsA7tDeOMA5wtM/5TwihYaKneUS?=
+ =?us-ascii?Q?6tdC19t6t+byXHYa2Ty1thPxJdCwM8lys/rvh+1hF532RcPIw6sX9vd9dx8+?=
+ =?us-ascii?Q?ksBMl7ZKF8GVtFkgX9lhUL0UIuQOA+zG1AoI4T2ojhJff9dSHZ+9/1JXp4BE?=
+ =?us-ascii?Q?o21mbH6WmmkW/buHF1LhPEw2bGyxBCfWyQUWEWEf+q9MfCugXeWHJ5i1L91m?=
+ =?us-ascii?Q?6v3t9xLYK8x01MhKCanrOhkJ9a3l/Whm6NW2c6naz3Vv5FhlwmGGCi90YhSZ?=
+ =?us-ascii?Q?UhDrqF5+efjTUIHUu5RZ/QH6C3AEkcw1oweOuA3+LRbvRweboo2HbLGki0og?=
+ =?us-ascii?Q?2QHH+os6MMa+/aZByeir0/sHX7cQdnblqIDWs3IXMAfwglbEjiDxEcuLdq+v?=
+ =?us-ascii?Q?fy/y1RuuY255qengeHD7sqbfzFfV3nMUSGlWs3LP5Er7a0D+4EZx9JE2FukN?=
+ =?us-ascii?Q?u0tz+SXJsS/3/wgWG+SioG8zP1EpK/XXqBTaEF9XHSDvVWlA677wJ0gggHTX?=
+ =?us-ascii?Q?glOoCA+4QsYGkCD7UQfgR75XdvQtJPUjRSBGyo1LSvUTj7zGQ90gzdIgRe2c?=
+ =?us-ascii?Q?8bBnvVc8Ttsv+1UqqUvrizFg7nHoSi7kByr/7UQP2b8WhZ0dXZEFi6SG755r?=
+ =?us-ascii?Q?5110dgxQTX1uR3WR/nemFw++J6IBLIBvJrzp0Z1WKlsm4WSbVdmyUfpiWQMB?=
+ =?us-ascii?Q?U57zm6PabWYGG1v82ylLktir2JWShS/+HZlePp89JIXYCm5ZVydxWK2fANpL?=
+ =?us-ascii?Q?gs7t860mdoo1Nkw=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9+E9TvadR75ZgnY0gDIMpz5B8/cB27bBh76zRSkvLes9j0LTiZLXJ2J+f7Lo?=
+ =?us-ascii?Q?xfXtcFKPOdjxOjRMZMDUMlshHqfV620Hsbaz2qRzvPdk4KKc5p6ODzZH/X4C?=
+ =?us-ascii?Q?jpiLigWJo3DM8AhvZfsMiJzMW3RB/YuR5nf1Ilk7z5gCBo8sSJiTKyehm6tF?=
+ =?us-ascii?Q?JFD51Stu4WPfVOIzpMxpJNLaKOD8A2q/3b9RB3H01bpWi2tVZ9XSX7x2ZT5G?=
+ =?us-ascii?Q?4CgbsemHQPMzXVYU822qPBmMor2y2FkunOrge7mmMNreQj4Cd7AzyySdZ6Ps?=
+ =?us-ascii?Q?LUR9b2CTWV08TS5EUbHg+vJgsUpXkbZocAZw/SKMxcWAPbNmaeZs7eIuL5In?=
+ =?us-ascii?Q?OUJ7GK0YQpp9W59Mm59xho4IC/Eb67u1DkR36gLWJqrhXphLEwMcDqn/aXvn?=
+ =?us-ascii?Q?Zv9Ax1v9gx/iotg/zvDXrbuUt1xL9gZmREjlOzkmPvujHlfncjqbqioAmZLs?=
+ =?us-ascii?Q?MhWZgmZQfUfE6NWfQxZ63WYt/f4pGu7/IxzLS8K8zI2ykZoGDcv34rGAPpOX?=
+ =?us-ascii?Q?RSDMw3JYzHRo9looIGl6imuGiLpSINI3E+NDoDWWzIXcsppTe3sxUhrgTq9V?=
+ =?us-ascii?Q?tKrV4JP4lyrmWGuNmY+YCMskYJlIek65ZOBMCGgiRn741thcD9iKn1mwnLlG?=
+ =?us-ascii?Q?N/NUKsfM1eEfO8YFdxRgHoJSjQKtEOKwtKIy+Pj9Qg2KxzuZXl/yFWnGbSTe?=
+ =?us-ascii?Q?ECei1FyfzCU6Vwpt8v9Yoaz3u4epc1gOfogoMdNphTMW4UGDmOe7qHA4H9jc?=
+ =?us-ascii?Q?DJWkbAfVRZv+BqnaVmOotj54s2vW1RNNGLDJjwBEUHCvIZMg5cHKA/ogSTzv?=
+ =?us-ascii?Q?+cBDmqEYsVLy/zJ5pU/o1kn1OvTOXNXy/NQOcSLLTu9zof09TUN2yUG4HNf8?=
+ =?us-ascii?Q?UqVodGF8IsvU/Z2oQb1PWVpNx1FCzSHumNCycn7voJT4XVH3rr+9G21wXuPh?=
+ =?us-ascii?Q?C2mI3wcwyyvmxDi+dFwKmy3QX7AkHeeFw66/s6UzZBinIRET4KNxkfdE0QyK?=
+ =?us-ascii?Q?bL1Rf+BisET/tIWZPCDGGho+1dWzqZm89fFQZUDBk9R83pnplWcS1QFi2B2I?=
+ =?us-ascii?Q?y+micqiJMkwMDcyAxxkAT4MBCg3FJjfLcov2PHsS0HXwnqP0UdNSeE6/vLGK?=
+ =?us-ascii?Q?5gv6ZTtxhan3PgUd4sk5Qo2oogqvIqgqXsRldfLWGreM+rmKjgcLwhFtvRPu?=
+ =?us-ascii?Q?HFfUnRVmKkSRQyKqWeFA+LMRrEL5NM4/6zrJYRYg/kMB2DWbcDGLkGhpNFDs?=
+ =?us-ascii?Q?/G0lmtfqeXoRFxZbEh8GZHMh+z9jVAfVYj9baKWQb99oh7JhYRpFhi1wJqyn?=
+ =?us-ascii?Q?F7uLlxNs660bAZZzHJPlxdlJhZC0NtyoeCnBtasvMSgr1lcGPK2fUy4Ts8c1?=
+ =?us-ascii?Q?cPQsrEUwJq7tjB9pnQJzIA9eOlaVqR7iNahjaA0IfEM54Uzv5qbxsiv9wo9j?=
+ =?us-ascii?Q?DzO0q2HcgiLpjy0FvoE5fOYIdV7NlrGc7Y+B5S1iQikeNgz6I4PgNI3MMX5S?=
+ =?us-ascii?Q?0gdC0KKnXwG+4hTrJ0ALlIB5EV7LPfRPGCNjENoRcspl9GKgcqfdcy/OR9SV?=
+ =?us-ascii?Q?NM2M00iFfrJ0RbxrCf+PGjeCg6pPvSJwYdsMcaAA?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250512190834.332684-35-ardb+git@google.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c27a974e-d2c0-43fa-af8c-08dd9f6bb8b7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 May 2025 11:18:36.5200
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VgIlQgSKXdbuTZa05d5PTCUwjfao7bPFDDQCszBSbBUZphie2A/dl2LPqKXBFEkcmIWdR7ZCYbtha7b/PfvJ0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8064
+X-OriginatorOrg: intel.com
 
-On Mon, May 12, 2025 at 09:08:47PM +0200, Ard Biesheuvel wrote:
-> diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
-> index 70ad9a0aa023..560985ef8df6 100644
-> --- a/arch/x86/boot/startup/sev-shared.c
-> +++ b/arch/x86/boot/startup/sev-shared.c
-> @@ -66,16 +66,10 @@ sev_es_terminate(unsigned int set, unsigned int reason)
->  		asm volatile("hlt\n" : : : "memory");
->  }
->  
-> -/*
-> - * The hypervisor features are available from GHCB version 2 onward.
-> - */
-> -u64 get_hv_features(void)
-> +static u64 __head get_hv_features(void)
->  {
->  	u64 val;
->  
-> -	if (ghcb_version < 2)
-> -		return 0;
+> From: George Gaidarov <gdgaidarov@gmail.com> On Behalf Of George
+> Gaidarov
+> Sent: Friday, May 30, 2025 12:30 AM
+> To: Luck, Tony <tony.luck@intel.com>; Borislav Petkov <bp@alien8.de>; Jas=
+on
+> Baron <jbaron@akamai.com>
+> Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; Zhuo, Qiuxu
+> <qiuxu.zhuo@intel.com>; Mauro Carvalho Chehab <mchehab@kernel.org>;
+> James Morse <james.morse@arm.com>; Robert Richter <rric@kernel.org>;
+> George Gaidarov <gdgaidarov+lkml@gmail.com>
+> Subject: [PATCH 2/2] EDAC/ie31200: Document which CPUs correspond to
+> each Raptor Lake-S device ID
+>=20
+> Based on table 103 ("Host Device ID (DID0)") in [1], document which CPUs
+> correspond to each Raptor Lake-S device ID for better readability.
+>=20
+> [1] https://www.intel.com/content/www/us/en/content-details/743844/13th-
+> generation-intel-core-intel-core-14th-generation-intel-core-processor-ser=
+ies-
+> 1-and-series-2-and-intel-xeon-e-2400-processor-datasheet-volume-1-of-
+> 2.html
+>=20
+> Signed-off-by: George Gaidarov <gdgaidarov+lkml@gmail.com>
 
-Why?
+LGTM. Thanks.
 
-> -
->  	sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
->  	VMGEXIT();
->  
-> @@ -86,6 +80,31 @@ u64 get_hv_features(void)
->  	return GHCB_MSR_HV_FT_RESP_VAL(val);
->  }
->  
-> +u64 __head snp_check_hv_features(void)
-> +{
-> +	/*
-> +	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
-> +	 * features.
-> +	 */
-> +	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
-> +		u64 hv_features;
-> +
-> +		hv_features = get_hv_features();
-> +		if (!(hv_features & GHCB_HV_FT_SNP))
-> +			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> +
-> +		/*
-> +		 * Running at VMPL0 is required unless an SVSM is present and
-> +		 * the hypervisor supports the required SVSM GHCB events.
-> +		 */
-> +		if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
-> +			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
-> +
-> +		return hv_features;
-> +	}
-> +	return 0;
-> +}
-> +
->  int svsm_perform_msr_protocol(struct svsm_call *call)
->  {
->  	u8 pending = 0;
-> diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
-> index 753cd2094080..0ae04e333f51 100644
-> --- a/arch/x86/boot/startup/sme.c
-> +++ b/arch/x86/boot/startup/sme.c
-> @@ -533,6 +533,8 @@ void __head sme_enable(struct boot_params *bp)
->  	if (snp_en ^ !!(msr & MSR_AMD64_SEV_SNP_ENABLED))
->  		snp_abort();
->  
-> +	sev_hv_features = snp_check_hv_features();
-
-Is this writing the sev_hv_features declared in
-
-arch/x86/boot/startup/sev-startup.c
-
-?
-
-arch/x86/boot/startup/sev-startup.c:45:u64 sev_hv_features __ro_after_init;
-arch/x86/boot/startup/sme.c:536:        sev_hv_features = snp_check_hv_features();
-arch/x86/coco/sev/core.c:980:   if (!(sev_hv_features & GHCB_HV_FT_SNP_AP_CREATION))
-arch/x86/include/asm/sev-internal.h:5:extern u64 sev_hv_features;
-arch/x86/include/asm/sev.h:428:extern u64 sev_hv_features;
-
-I'm confused.
-
-If sev_hv_features is startup code, why isn't it accessed this way...?
-
-/me goes and looks forward in the set...
-
-oh my, that is coming.
-
-> +
->  	/* Check if memory encryption is enabled */
->  	if (feature_mask == AMD_SME_BIT) {
->  		if (!(bp->hdr.xloadflags & XLF_MEM_ENCRYPTION))
-> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-> index fa7fdd11a45b..fc4f6f188d42 100644
-> --- a/arch/x86/coco/sev/core.c
-> +++ b/arch/x86/coco/sev/core.c
-> @@ -1264,17 +1264,6 @@ void __init sev_es_init_vc_handling(void)
->  	if (!sev_es_check_cpu_features())
->  		panic("SEV-ES CPU Features missing");
->  
-> -	/*
-> -	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
-> -	 * features.
-> -	 */
-> -	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
-> -		sev_hv_features = get_hv_features();
-> -
-> -		if (!(sev_hv_features & GHCB_HV_FT_SNP))
-> -			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
-> -	}
-
-I guess we would've terminated earlier anyway so that's probably ok...
-
-> -
->  	/* Initialize per-cpu GHCB pages */
->  	for_each_possible_cpu(cpu) {
->  		alloc_runtime_data(cpu);
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+    Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
