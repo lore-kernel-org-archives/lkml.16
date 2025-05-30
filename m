@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB9623D2A8;
-	Fri, 30 May 2025 12:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C4C23F295;
+	Fri, 30 May 2025 12:39:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608785; cv=none; b=skijGAVcKW1lIizEiqt4K4t/r3XryCH0Hg9Z02BySeIxwrjn9xeVZbZTyO4IXyUrGcsz/tKk5erxgfijBjWHGy5UspC878KflAiznvLWjENYjSkWUBlWFBOPaUN9YhGKhumxn/Ic77IVwqWoIzIj/Tofd0O3P07eTvacRJ+7rsU=
+	t=1748608787; cv=none; b=bxEdNE1w2L0aiYoDf0J6Z0DecybZmaAofCiwwVYMYqSfz1PGwY5TMdaNeiYJQpX+O0vNlG9O1DQ+1WisHhCJn27hBNuBJEpnpvTIxvCEwFgsthK537DqUYyIh2XsXcaTekFiF7HWb8hP62SMEJuJBeJZQbx+zGA8+RTEl/Nj7is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608785; c=relaxed/simple;
-	bh=bGxfaZw2BYIy87yRXG2i04vyIinc7z7zQ/CwDZpX1Og=;
+	s=arc-20240116; t=1748608787; c=relaxed/simple;
+	bh=TvNimTVgvbEym4ULdALPgk9HfGrV6xqArV1tyJRhJJM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SSiL904Qb4kuDMEcPagFuw4J8UkWYuEKWnDVgzBi016gzEE/bqsuoNXVXkuNFJ23ckqVBshUUau2fDJr5QpBdpAHCd5b+YFWTcoIA5jcrUcP8K6p07KGIkp6I7TxLAAgLtr+8PuGYki3ILHJnlvb7VH4inbb7EI3vYHe51L8kqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRUZ7l4+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CqUL9X5QY2fBfZfNa9uRiO1bYxluJoqz6e2fDO5bVxfclGIxB8kZnkeWEUc4yMJdO7TDie+s4wiSxTijN17l54yqxhpGtRiAgHe6H4qY2VGelPNJZE4GOFsOAeZdcug6/OYsaSPzjqvlo+j9FfjkJ86qLGENV5KLfOQ5ozuldik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8eub5PQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRUZ7l4+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E71AAC4CEE9;
-	Fri, 30 May 2025 12:39:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8eub5PQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD7CC4CEF1;
+	Fri, 30 May 2025 12:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608785;
-	bh=bGxfaZw2BYIy87yRXG2i04vyIinc7z7zQ/CwDZpX1Og=;
+	s=k20201202; t=1748608787;
+	bh=TvNimTVgvbEym4ULdALPgk9HfGrV6xqArV1tyJRhJJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jRUZ7l4+klWsEWnZmQtisujyQM8QbvpTOwAEeyrj9pN1Vr4UyOBiGt9w4DXSDgW4J
-	 WHqtTwol5kS13PCuymtsvEdFHqXjiTFdl99moSzgl0rhfn8hg4zEg2FhpijgN9p56d
-	 Qk/JtDLJ3D6bpHllPawmMIs5HrP6FAlJlRQyhzQLLrNyHSnULjf9+IJMOAaLxzkRHU
-	 dFnlJNJXO2nc5UXY9aGH5+WwyWwQ9u/sh8cA68YUZiVcNSECuIAETALHzV27tcvcwQ
-	 7fIU8Lz4hdkqml1ypGpBfmaf+tBroE9qJ86iPy3+i84qvzyGZNfM3adZYhhqffD+PA
-	 0nzXjgbXiOXFQ==
+	b=r8eub5PQSS/rxnIWD8Blk/PIybkelTfp028Jxi/Gc371Odkg1nhh3NMBBpoTHOKHs
+	 ztEGp6XvqBJE4FQCavUFADISnyrMgVbCc5E72nBt20PKxsv6kzWS0i4NzBTiyCsM9M
+	 B22OWiAicuq/ErDCjM9LYdjO7xnn3fW2VtV2T8Uzeoi7Kn95kIJ8Q/r4DxNva+97XS
+	 Y1J2DxzBrQRYcmdYSz/jDBLUrKrhzlc7stWGtVBqKaDGxWZ8RZ2sWxj44s4xgo2xrY
+	 rax6JUo9bw7SpmwqfxPX+YDd/qM/o090X1QYRKQ8L8O+jR27u0K2UWaflMfsCIfokt
+	 TEl/IjiInzJXQ==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Ahmed Salem <x0rw3ll@gmail.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Tony Luck <tony.luck@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	robert.moore@intel.com,
-	erik.schmauss@intel.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	devel@acpica.org,
+	bp@alien8.de,
+	mchehab@kernel.org,
+	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 08/28] ACPICA: Avoid sequence overread in call to strncmp()
-Date: Fri, 30 May 2025 08:39:14 -0400
-Message-Id: <20250530123934.2574748-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.14 10/28] EDAC/igen6: Skip absent memory controllers
+Date: Fri, 30 May 2025 08:39:16 -0400
+Message-Id: <20250530123934.2574748-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530123934.2574748-1-sashal@kernel.org>
 References: <20250530123934.2574748-1-sashal@kernel.org>
@@ -53,99 +51,214 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.14.9
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Ahmed Salem <x0rw3ll@gmail.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-[ Upstream commit 64b9dfd0776e9c38d733094859a09f13282ce6f8 ]
+[ Upstream commit 20e190b1c1fd88b21cc5106c12cfe6def5ab849d ]
 
-ACPICA commit 8b83a8d88dfec59ea147fad35fc6deea8859c58c
+Some BIOS versions may fuse off certain memory controllers and set the
+registers of these absent memory controllers to ~0. The current igen6_edac
+mistakenly enumerates these absent memory controllers and registers them
+with the EDAC core.
 
-ap_get_table_length() checks if tables are valid by
-calling ap_is_valid_header(). The latter then calls
-ACPI_VALIDATE_RSDP_SIG(Table->Signature).
+Skip the absent memory controllers to avoid mistakenly enumerating them.
 
-ap_is_valid_header() accepts struct acpi_table_header as an argument, so
-the signature size is always fixed to 4 bytes.
-
-The problem is when the string comparison is between ACPI-defined table
-signature and ACPI_SIG_RSDP. Common ACPI table header specifies the
-Signature field to be 4 bytes long[1], with the exception of the RSDP
-structure whose signature is 8 bytes long "RSD PTR " (including the
-trailing blank character)[2]. Calling strncmp(sig, rsdp_sig, 8) would
-then result in a sequence overread[3] as sig would be smaller (4 bytes)
-than the specified bound (8 bytes).
-
-As a workaround, pass the bound conditionally based on the size of the
-signature being passed.
-
-Link: https://uefi.org/specs/ACPI/6.5_A/05_ACPI_Software_Programming_Model.html#system-description-table-header [1]
-Link: https://uefi.org/specs/ACPI/6.5_A/05_ACPI_Software_Programming_Model.html#root-system-description-pointer-rsdp-structure [2]
-Link: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wstringop-overread [3]
-Link: https://github.com/acpica/acpica/commit/8b83a8d8
-Signed-off-by: Ahmed Salem <x0rw3ll@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://patch.msgid.link/2248233.Mh6RI2rZIc@rjwysocki.net
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/20250408132455.489046-2-qiuxu.zhuo@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-**YES** This commit should be backported to stable kernel trees. ##
-Detailed Analysis: ### The Problem The commit fixes a **buffer overread
-vulnerability** in the `ACPI_VALIDATE_RSDP_SIG` macro. The issue occurs
-when: 1. **Context**: The macro `ACPI_VALIDATE_RSDP_SIG(a)` calls
-`strncmp(ACPI_CAST_PTR(char, (a)), ACPI_SIG_RSDP, 8)` 2. **Problem**:
-When `a` points to a standard ACPI table header (4 bytes signature), but
-the comparison tries to read 8 bytes for RSDP validation ("RSD PTR "),
-it reads 4 bytes beyond the allocated signature field 3. **Impact**:
-This causes a sequence overread that can be detected by tools like GCC's
-`-Wstringop-overread` and security-focused architectures like
-CHERI/Morello ### The Fix The fix changes line 530 in
-`include/acpi/actypes.h`: ```c // Before: #define
-ACPI_VALIDATE_RSDP_SIG(a) (!strncmp (ACPI_CAST_PTR (char, (a)),
-ACPI_SIG_RSDP, 8)) // After: #define ACPI_VALIDATE_RSDP_SIG(a) (!strncmp
-(ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) < 8) ?
-ACPI_NAMESEG_SIZE : 8)) ``` This conditionally limits the comparison to
-`ACPI_NAMESEG_SIZE` (4 bytes) when the source is smaller than 8 bytes,
-preventing the overread. ### Why This Should Be Backported: 1.
-**Security Fix**: This addresses a buffer overread that could be
-exploited or cause crashes on security-hardened systems 2. **Small &
-Contained**: The fix is a single line change to a macro definition with
-minimal risk 3. **Widespread Usage**: The macro is used in multiple
-critical ACPI code paths: - `drivers/acpi/acpica/tbprint.c` (kernel ACPI
-table printing) - `tools/power/acpi/tools/acpidump/apdump.c` (ACPI
-debugging tools) - Various other ACPI validation functions 4. **No
-Architectural Changes**: This doesn't change functionality, just
-prevents unsafe memory access 5. **Compiler Warning Fix**: Resolves
-build warnings with newer GCC versions using `-Wstringop-overread` ###
-Comparison with Historical Commits: - **Similar to Commit #3 (YES)**:
-Like the "disable -Wstringop-truncation" commit, this fixes compiler
-warnings related to string operations, but this one actually fixes the
-underlying safety issue rather than just suppressing warnings - **Unlike
-Commits #1,#2,#4,#5 (NO)**: Those were either pure code cleanup,
-debugging improvements, or infrastructure changes without security
-implications ### Risk Assessment: - **Minimal Risk**: The fix only
-affects boundary condition handling in string comparison - **No
-Functional Impact**: Normal RSDP validation still works correctly for
-valid 8-byte signatures - **Improves Safety**: Prevents potential memory
-safety violations on hardened systems This is exactly the type of small,
-safe, security-focused bugfix that stable trees are designed for.
+**YES** This commit should be backported to stable kernel trees. Here's
+my extensive analysis: ## Bug Impact and User Experience This commit
+fixes a real problem where **some BIOS versions fuse off certain memory
+controllers** and set their registers to `~0` (all 1s). The current
+igen6_edac driver mistakenly enumerates these absent memory controllers
+and registers them with the EDAC core, which can lead to: 1. **Incorrect
+memory controller enumeration** - showing non-existent memory
+controllers to userspace 2. **Potential false error reporting** - trying
+to read error logs from non-existent hardware 3. **Resource waste** -
+allocating structures and registering devices for hardware that doesn't
+exist ## Code Analysis - Minimal and Safe Changes Looking at the
+specific code changes: ### 1. New Detection Function ```c +/* Check
+whether the memory controller is absent. model/ prompt/ src/ target/
++static bool igen6_imc_absent(void __iomem *window) +{ + return
+readl(window + MAD_INTER_CHANNEL_OFFSET) == ~0; +} ``` This is a
+**simple, conservative check** that reads a known register
+(`MAD_INTER_CHANNEL_OFFSET`) and checks if it returns all 1s (`~0`),
+which is the standard pattern for absent/fused-off hardware. ### 2.
+Modified Registration Logic The key change in `igen6_register_mcis()`:
+```c + if (igen6_imc_absent(window)) { + iounmap(window); + edac_dbg(2,
+"Skip absent mc%d\n", pmc); + continue; + } ``` This **safely skips**
+absent controllers rather than trying to register them. The logic is: -
+Map the memory controller's MMIO space - Check if it's absent (registers
+return ~0) - If absent: unmap and continue to next controller - If
+present: proceed with normal registration ### 3. Robust Error Handling
+The code maintains proper resource cleanup and adds logging for when
+fewer controllers are found than expected: ```c + if (lmc <
+res_cfg->num_imc) + igen6_printk(KERN_WARNING, "Expected %d mcs, but
+only %d detected.", + res_cfg->num_imc, lmc); ``` ## Comparison with
+Similar Commits Looking at the historical examples: **Similar Commit #1
+(YES)** - "EDAC/i10nm: Skip the absent memory controllers" has nearly
+identical logic and was backported because it fixed absent memory
+controller detection causing call traces. **Similar Commit #2 (YES)** -
+A dependency fix that prevented build errors was backported. This commit
+follows the same pattern as **Similar Commit #1** - it's a focused bug
+fix for absent hardware detection with minimal risk. ## Why This Should
+Be Backported ### 1. **Clear Bug Fix** This addresses a specific,
+reproducible issue where BIOS configurations cause incorrect driver
+behavior. ### 2. **Minimal Risk** - Small, contained change - Only
+affects the memory controller enumeration path - Adds defensive checks
+rather than changing core logic - Maintains backward compatibility ###
+3. **Follows Established Patterns** The "check register for ~0" pattern
+is well-established in kernel hardware detection and matches the
+successful backport in Similar Commit #1. ### 4. **Hardware Support
+Issue** This fixes support for legitimate hardware configurations where
+BIOS has fused off memory controllers - these systems should work
+correctly. ### 5. **Stable Tree Criteria Met** - ✅ Fixes important bug
+affecting users - ✅ Small and contained change - ✅ No architectural
+changes - ✅ Minimal regression risk - ✅ Confined to single driver
+subsystem The commit represents exactly the type of targeted hardware
+fix that stable trees are designed to include - it resolves a real-world
+compatibility issue with a safe, minimal change.
 
- include/acpi/actypes.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/edac/igen6_edac.c | 78 +++++++++++++++++++++++++++++++--------
+ 1 file changed, 62 insertions(+), 16 deletions(-)
 
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index 80767e8bf3ad4..d323dfffa4bfc 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -527,7 +527,7 @@ typedef u64 acpi_integer;
+diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
+index 595908af9e5c9..14692c2da6222 100644
+--- a/drivers/edac/igen6_edac.c
++++ b/drivers/edac/igen6_edac.c
+@@ -127,6 +127,7 @@
  
- /* Support for the special RSDP signature (8 characters) */
+ static struct res_config {
+ 	bool machine_check;
++	/* The number of present memory controllers. */
+ 	int num_imc;
+ 	u32 imc_base;
+ 	u32 cmf_base;
+@@ -1201,23 +1202,21 @@ static void igen6_check(struct mem_ctl_info *mci)
+ 		irq_work_queue(&ecclog_irq_work);
+ }
  
--#define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, 8))
-+#define ACPI_VALIDATE_RSDP_SIG(a)       (!strncmp (ACPI_CAST_PTR (char, (a)), ACPI_SIG_RSDP, (sizeof(a) < 8) ? ACPI_NAMESEG_SIZE : 8))
- #define ACPI_MAKE_RSDP_SIG(dest)        (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
+-static int igen6_register_mci(int mc, u64 mchbar, struct pci_dev *pdev)
++/* Check whether the memory controller is absent. */
++static bool igen6_imc_absent(void __iomem *window)
++{
++	return readl(window + MAD_INTER_CHANNEL_OFFSET) == ~0;
++}
++
++static int igen6_register_mci(int mc, void __iomem *window, struct pci_dev *pdev)
+ {
+ 	struct edac_mc_layer layers[2];
+ 	struct mem_ctl_info *mci;
+ 	struct igen6_imc *imc;
+-	void __iomem *window;
+ 	int rc;
  
- /* Support for OEMx signature (x can be any character) */
+ 	edac_dbg(2, "\n");
+ 
+-	mchbar += mc * MCHBAR_SIZE;
+-	window = ioremap(mchbar, MCHBAR_SIZE);
+-	if (!window) {
+-		igen6_printk(KERN_ERR, "Failed to ioremap 0x%llx\n", mchbar);
+-		return -ENODEV;
+-	}
+-
+ 	layers[0].type = EDAC_MC_LAYER_CHANNEL;
+ 	layers[0].size = NUM_CHANNELS;
+ 	layers[0].is_virt_csrow = false;
+@@ -1283,7 +1282,6 @@ static int igen6_register_mci(int mc, u64 mchbar, struct pci_dev *pdev)
+ fail2:
+ 	edac_mc_free(mci);
+ fail:
+-	iounmap(window);
+ 	return rc;
+ }
+ 
+@@ -1309,6 +1307,56 @@ static void igen6_unregister_mcis(void)
+ 	}
+ }
+ 
++static int igen6_register_mcis(struct pci_dev *pdev, u64 mchbar)
++{
++	void __iomem *window;
++	int lmc, pmc, rc;
++	u64 base;
++
++	for (lmc = 0, pmc = 0; pmc < NUM_IMC; pmc++) {
++		base   = mchbar + pmc * MCHBAR_SIZE;
++		window = ioremap(base, MCHBAR_SIZE);
++		if (!window) {
++			igen6_printk(KERN_ERR, "Failed to ioremap 0x%llx for mc%d\n", base, pmc);
++			rc = -ENOMEM;
++			goto out_unregister_mcis;
++		}
++
++		if (igen6_imc_absent(window)) {
++			iounmap(window);
++			edac_dbg(2, "Skip absent mc%d\n", pmc);
++			continue;
++		}
++
++		rc = igen6_register_mci(lmc, window, pdev);
++		if (rc)
++			goto out_iounmap;
++
++		/* Done, if all present MCs are detected and registered. */
++		if (++lmc >= res_cfg->num_imc)
++			break;
++	}
++
++	if (!lmc) {
++		igen6_printk(KERN_ERR, "No mc found.\n");
++		return -ENODEV;
++	}
++
++	if (lmc < res_cfg->num_imc)
++		igen6_printk(KERN_WARNING, "Expected %d mcs, but only %d detected.",
++			     res_cfg->num_imc, lmc);
++
++	return 0;
++
++out_iounmap:
++	iounmap(window);
++
++out_unregister_mcis:
++	igen6_unregister_mcis();
++
++	return rc;
++}
++
+ static int igen6_mem_slice_setup(u64 mchbar)
+ {
+ 	struct igen6_imc *imc = &igen6_pvt->imc[0];
+@@ -1405,7 +1453,7 @@ static void opstate_set(struct res_config *cfg, const struct pci_device_id *ent)
+ static int igen6_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	u64 mchbar;
+-	int i, rc;
++	int rc;
+ 
+ 	edac_dbg(2, "\n");
+ 
+@@ -1421,11 +1469,9 @@ static int igen6_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	opstate_set(res_cfg, ent);
+ 
+-	for (i = 0; i < res_cfg->num_imc; i++) {
+-		rc = igen6_register_mci(i, mchbar, pdev);
+-		if (rc)
+-			goto fail2;
+-	}
++	rc = igen6_register_mcis(pdev, mchbar);
++	if (rc)
++		goto fail;
+ 
+ 	if (res_cfg->num_imc > 1) {
+ 		rc = igen6_mem_slice_setup(mchbar);
 -- 
 2.39.5
 
