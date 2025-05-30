@@ -1,105 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A711FDA7B;
-	Fri, 30 May 2025 11:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F4619F10A;
+	Fri, 30 May 2025 11:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748604846; cv=none; b=DnQkHktowdWP7e6W6KZGOGFyq5Qae84PwC65DjPQ/FVf3t6eDllu8oDQ2TFEbFz8a9ebmpsKkPsl4NFqWdr30OmN5cj07Rkp06Xjacli2BQHAJ/PDXlTsqwzNiJMdAzBcEYHkpAGzEMTTPBq8ZnbdGtPm8qXfsoVb5X6ixijBUE=
+	t=1748604905; cv=none; b=W6x9himcJfJk+Yo9egeXHeqjKME0q8Ouhwls5VL0ZRP+A5pzAaqUzZYluOtuHTSAgvpn6OmdyhK2kq1TMPkFBcd7Q+yPmm64R7b3ZZJveNjH/zOCsguPRVCtlQzk/P4BCWhvRBBfZ9hR8fcN8GPd+WttdvqRN2owPQPyhFrYtDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748604846; c=relaxed/simple;
-	bh=zOCveCCe34VEq6t903fuoOoYk3Yyf1DbV6pHAyiwueA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ZwfnWVpx03wcWzvrCA59hMHQSvToEvUueoSPODn8cg1pxDkEg7+rJVrJLWGhjnAVy/9sOqdpoj3Spceeuz85EonFGIGBLnPQvg0MqWYUbfz6uPZ7GFBZY6XndrCXg5GOo8+aOLvzlHWQYQLHgDb7jP4dfK1zR39h9u0T0tdATls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTDUWXrj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748604905; c=relaxed/simple;
+	bh=CG06fp9oxw2A9Hp9lU3htFVmuec+nEGVCdamaunhVZc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Oxd7E1f7/II2wrQazwZnyNbUWg+M98ViRUvhw1bV0W+BHHuJi3Mkoj0uqmfiqyI53ZIfcqNw77QPfUsYYyXqSV2ZQhcDbfX2GTdsH5OYiVdhbs3R7hMQFjwf/Z87i3s2OmpSXxhGbt+4j2auIwDs+Bp+AC1tEZbQPuMHOOXINWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VcVOgxdF; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTDUWXrj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3FBFC4CEEA;
-	Fri, 30 May 2025 11:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748604845;
-	bh=zOCveCCe34VEq6t903fuoOoYk3Yyf1DbV6pHAyiwueA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=OTDUWXrjxfeL26hXG9wadvD1pP1t5Am6DLw7haCwKURsI+4B5n6IycmwhLGLQe5Sv
-	 9KmXAAyWbIly/941Sez2E434xCskAbE7ZYjV9umZFMwiMWfYKIG3sRvkmjdc0mARJt
-	 mAMTBIojb+efjIKDwYcmiOzdsKC6Cir2QuK9ZxDO0tn1e4xN4pB6xzKXBK6w99IJQV
-	 Rd6YiSPc9pbxBZEyIpIpKNq5Q3puB2waXHLRwKK75CdfQ8up39wiyyrlrPK1Vd2vgN
-	 iupwJIHfDQ4nmJ5vrtnzz9tjpyRPpDPxhFKBcT05AKkcMGg/sT+liHrJ9aU0ac+Ot+
-	 fhX43O5Jq4ySA==
-Date: Fri, 30 May 2025 06:34:04 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Will Deacon <will@kernel.org>, Robert Richter <rric@kernel.org>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Marc Zyngier <maz@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>, dingwei@marvell.com,
-	cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 4/5] PCI: host-common: Add link down handling for host
- bridges
-Message-ID: <20250530113404.GA138859@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcVOgxdF"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so1155056f8f.1;
+        Fri, 30 May 2025 04:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748604902; x=1749209702; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YBpe3PrQUq1ns6R+TSo33OXoWmnCrWav1Gc9aMJzuC0=;
+        b=VcVOgxdFueHnOXKCMxv9tddDpSw5rTSHnvlmbNkD0G2o61YZ++955Wa+RiYbxqDUsn
+         tFBbxpXhw+LB1pU7TsGDellDe7DmFMtRsoCWXKWfpUbaj82h12lVk9VqZLyuf+4IGpll
+         0QzTZ70tOUqMylF74/3HJsfgjduyfsvCZbU4mjU/8xgdYEtczJIbfJQZo0U+k0Xk/BHF
+         wFQjEaWtO6Zd9oc4CXjCyUWRaH667aLYlRBdL3j82p6ze4fPOlGc+cgWYy7Y4uTh1IkG
+         oD36B+r3QfxLQQMn1o47Lym5QGpBE8smiBJzUxNRf6qW90llwvPPOTrpOF+SkcQsa0Dk
+         KTzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748604902; x=1749209702;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YBpe3PrQUq1ns6R+TSo33OXoWmnCrWav1Gc9aMJzuC0=;
+        b=kSJzcbJxgOc0qnrdwW7le6wsIhTozM6Qit216ABB3utVtr/ZZ0QW86V0Asyqg8zgnm
+         ImjzSQcsX6pWPclkdmaXSs2XOtbppxD1lfRbnhChWshtBxyrEPeEqgmLmNivqhbbxoIL
+         eQzqMLYT1n/KQmldX9gvI8G7Nu5zLmVysIKeE/getHE6uOlBSNvWfaCPtYvzkeul+eSq
+         rGGunOgfBiljEhdijwA6yuiZ6bjNnj3llR3hARXkvQT5xZzisHyEPeE9oqWQ7slnrCA6
+         bjqxFQLJRchli/UR7k6HkoILSi+ADIXe2YmvNr6wn4sCgA5wx9yAjFj7vTAuAEVlKU2v
+         /Vsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQzt19WDqdsyqAcc9iYsavOb/ewxDMAWrJuqGNHhmSXdUwb1INieWnMdrut+hWqOmRlYO92lptkwY=@vger.kernel.org, AJvYcCWJDlHo6pNE3k7LLf52DLtNS+fbORjSoZ2/wUlXrS38750PS9mnLYzznPyZ0MdX8LZYlKSnUbrnbgjrwR5M@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPPEvD3A4be4FmEORf0MfeY8lJ8+B73aHZ7VubJMJ9KVHAq8DW
+	0gl5iUPQGoI3cIo9V4fbSK8RM51roO5gR+UzhGseZIKzRRJLgBAMWSuBzqWsoIWE
+X-Gm-Gg: ASbGncuF/ryZBKXbRojR4Mic80bhlTNj9g4IKDIxm/3t9IeoX/4O7/Q5hyebtVachm+
+	1yFUvBCIaQMmFEqiL7vlqJMhaeoOMJnyXwuAc4VnfYVrOHAKNGU7wTw9ndiFEb/Lo2YCYEi68w3
+	jnHQMlcY8owFDGKdBOY6rkvcSQvEgi5LIo1xxPK/ioRkbrbM+sKJiNYADcf4EiLc6Rn6birxOd0
+	y37m87mhUbEk3uLwIpA7DUWjmvD8I9hlf5MKXP+WkmtlABwx/HQrsoxGyJ5JwT6i85+UiYt8DyI
+	Km5HEmzzvRqmqRDeFKto3AyKSUJKL7/Dee4w30jFEgtdNAfmquEotwh/97c=
+X-Google-Smtp-Source: AGHT+IEoOAfnaxRfbQwqOjAF0PRksoZIKNnV5NXFbl/T8R/8GbaKzu40Keb71uToE+k8fQVEZ3Pm2w==
+X-Received: by 2002:a05:6000:4283:b0:3a4:ddd6:427f with SMTP id ffacd0b85a97d-3a4f7a6e56fmr2382612f8f.35.1748604901469;
+        Fri, 30 May 2025 04:35:01 -0700 (PDT)
+Received: from [192.168.1.187] ([161.230.67.253])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe73eebsm4535990f8f.44.2025.05.30.04.35.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 04:35:00 -0700 (PDT)
+Message-ID: <9e6d503cc7715e14c5fd6b219c123166d1cf2342.camel@gmail.com>
+Subject: Re: [PATCH 2/2] iio: adc: ad7606: add enabling of optional Vrefin
+ voltage
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Angelo Dureghello <adureghello@baylibre.com>, David Lechner
+	 <dlechner@baylibre.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
+	 <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, Nuno
+ =?ISO-8859-1?Q?S=E1?=
+	 <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Fri, 30 May 2025 12:35:05 +0100
+In-Reply-To: <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
+References: 
+	<20250529-wip-bl-ad7606-reference-voltages-v1-0-9b8f16ef0f20@baylibre.com>
+	 <20250529-wip-bl-ad7606-reference-voltages-v1-2-9b8f16ef0f20@baylibre.com>
+	 <521f5868-5836-47d9-9a68-88a9d4e843f6@baylibre.com>
+	 <dv72cvn7rihavqxg6wnybhedhunabo7bremwb5pkutqljwarcf@eo6zc7vi7fbu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fr6orvqq62hozn5g3svpyyazdshv4kh4xszchxbmpdcpgp5pg6@mlehmlasbvrm>
 
-On Fri, May 30, 2025 at 09:16:59AM +0530, Manivannan Sadhasivam wrote:
-> On Wed, May 28, 2025 at 05:35:00PM -0500, Bjorn Helgaas wrote:
-> > On Thu, May 08, 2025 at 12:40:33PM +0530, Manivannan Sadhasivam wrote:
-> > > The PCI link, when down, needs to be recovered to bring it back. But that
-> > > cannot be done in a generic way as link recovery procedure is specific to
-> > > host bridges. So add a new API pci_host_handle_link_down() that could be
-> > > called by the host bridge drivers when the link goes down.
-> > > 
-> > > The API will iterate through all the slots and calls the pcie_do_recovery()
-> > > function with 'pci_channel_io_frozen' as the state. This will result in the
-> > > execution of the AER Fatal error handling code. Since the link down
-> > > recovery is pretty much the same as AER Fatal error handling,
-> > > pcie_do_recovery() helper is reused here. First the AER error_detected
-> > > callback will be triggered for the bridge and the downstream devices. Then,
-> > > pci_host_reset_slot() will be called for the slot, which will reset the
-> > > slot using 'reset_slot' callback to recover the link. Once that's done,
-> > > resume message will be broadcasted to the bridge and the downstream devices
-> > > indicating successful link recovery.
-> > 
-> > Link down is an event for a single Root Port.  Why would we iterate
-> > through all the Root Ports if the link went down for one of them?
-> 
-> Because on the reference platform (Qcom), link down notification is
-> not per-port, but per controller. So that's why we are iterating
-> through all ports.  The callback is supposed to identify the ports
-> that triggered the link down event and recover them.
+On Fri, 2025-05-30 at 09:39 +0200, Angelo Dureghello wrote:
+> On 29.05.2025 12:52, David Lechner wrote:
+> > On 5/29/25 4:13 AM, Angelo Dureghello wrote:
+> > > From: Angelo Dureghello <adureghello@baylibre.com>
+> > >=20
+> > > Add optional refin voltage enabling. The property "refin-supply" is
+> > > already available and optional in the current fdt dt_schema.
+> > >=20
+> > > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+> > > ---
+> > > =C2=A0drivers/iio/adc/ad7606.c | 4 ++++
+> > > =C2=A01 file changed, 4 insertions(+)
+> > >=20
+> > > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+> > > index
+> > > 3bbe9c05b5edbc11e8016c995c6ab64104836e7b..21e63260965c32988d0ab3b8bb1=
+201aa
+> > > 2396f1ba 100644
+> > > --- a/drivers/iio/adc/ad7606.c
+> > > +++ b/drivers/iio/adc/ad7606.c
+> > > @@ -1335,6 +1335,10 @@ int ad7606_probe(struct device *dev, int irq, =
+void
+> > > __iomem *base_address,
+> > > =C2=A0		return dev_err_probe(dev, ret,
+> > > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Failed to enable Vdrive supply\n"=
+);
+> > > =C2=A0
+> > > +	ret =3D devm_regulator_get_enable_optional(dev, "refin");
+> > > +	if (ret < 0 && ret !=3D -ENODEV)
+> >=20
+> > < 0 is probably not needed.
+> >=20
+> The above code looks correct to me. What is the issue ?
+> =C2=A0
 
-Maybe I'm missing something.  Which callback identifies the port(s)
-that triggered the link down event?  I see that
-pci_host_handle_link_down() is called by
-rockchip_pcie_rc_sys_irq_thread() and qcom_pcie_global_irq_thread(),
-but I don't see the logic that identifies a particular Root Port.
+Not that there's an issue with the code. I think David means that ret > 0 h=
+as no
+meaning (function on return values <=3D 0) which means that if (ret) is eno=
+ugh.=20
 
-Per-controller notification of per-port events is a controller
-deficiency, not something inherent to PCIe.  I don't think we should
-build common infrastructure that resets all the Root Ports just
-because one of them had an issue.
-
-I think pci_host_handle_link_down() should take a Root Port, not a
-host bridge, and the controller driver should figure out which port
-needs to be recovered, or the controller driver can have its own loop
-to recover all of them if it can't figure out which one needs it.
-
-Bjorn
+- Nuno S=C3=A1
