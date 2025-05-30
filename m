@@ -1,76 +1,77 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8F11662E7
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FBD5C603
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 03:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748574794; cv=none; b=pv3RbeU5R2+f9owxyjAaN7XGjfmRUS2/JZFZN5JcFkFPG5a5k/SrYPp0t7yZ4pTW7Nknd4eMTsRNoVMKYBdSX6Kb+P7kneU1VF4hbopLZa/CEWjyMqjq6o/YMWw6NA0Kv1MwH7TgoEH8lx3DlaQmpXhJym14iaNrhs11h0+f3J0=
+	t=1748575000; cv=none; b=EHc8qYLq7D1Mx8R8fNnFtmQ69G5SZDn5QbIFSEALtM+rW8B19VLxxMOZjLq60bC+EEd5dfhncvWcxj95Bj8rKIm9rJRuuhko/r3C4ZgkUX22BQf5e+Oe22f7S0/ilOnetXd4yC9SZZZbre3T4xMSKYp2MXwsXJsegSSbcb9iIOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748574794; c=relaxed/simple;
-	bh=wjaoZAmbH6sgCZnO1eKlzeSIJW3PNHdGlp3qm3MddRI=;
+	s=arc-20240116; t=1748575000; c=relaxed/simple;
+	bh=XVANWFhgXMv40Jkl6FJe26HKPUpKGq1GAb0fbWJTo0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jxv9IIB10rNdxbKSCVAapvcp3jpo+RN46GHAOIFn1NhFr1eekBjoKgI7k27UqK9w4L9kJMOq2seg1MMITZ6TartNCqrV6dbVfbnbSuslIKlDYyKqrOaD3Zw8RdRudMS+/4T95rn7k0vH43/dzV6y/nLOPkKK7iPocDWxQLhlRHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WOqcLmnd; arc=none smtp.client-ip=209.85.214.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0Z7rp3Fy5f34h5GQ1dNOtPGDNZQGzqT/MRo/uTQrN7q3LNfhVhsnMBBnZBb+S/2485mx9mNrZ3HsYWofEO1Hf4Rr1u3B1rxECYeRMgmdPADIH+5By4BU6wO2O/X0QxOGgcpTOmlKFBmi5AlCo3p29azwAZyNB7ZXR0vlblj+qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sxEH+XKz; arc=none smtp.client-ip=209.85.215.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOqcLmnd"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2353a2bc210so871315ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:13:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sxEH+XKz"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af523f4511fso1287766a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 20:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748574792; x=1749179592; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748574998; x=1749179798; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=N+DPZC1n47L/JnKL6zmQew4sn71lUGxtinjfwrD9vf0=;
-        b=WOqcLmndAkAcFugUJ5fzo13csOo72Lkf5bVisG8Q0/FBaUJhe6skj5vf/B/G+44eWl
-         TLslrRUaxxw7E3S27M6OYlHfd0RTU2V4gtfQFtOafMWbSlsqtDiNl4cE1wdGPnIyf3e/
-         qLH9ScgtzEnAl07i+m89rIRU5heDvWtWV//2WaM4igi+aY6UE0OOXle5p95ldGDUzZOc
-         fkSCBJrmGjbql22PiEWUehU+Sb+vgQOTHpYqFJfrWUxUOeJIWEYstSZ4kvFqYO4zk1gq
-         kSXA4kj0PR0ll4qVo016WHvxNb505XTXZaNrq/tWOwGhVObNlbaLoTDZTeoLmYd25IGj
-         YO2g==
+        bh=hG2cMyUqEG6RKX+zXxbm5GFZDNa/fK0gHsKi+Pje0cY=;
+        b=sxEH+XKzJEKHZm0P6h5RQS63CoSgTtrMbEm+J+20svx1J+1i6UpiiRIeqf89fBT2kO
+         KYiarMEnw+5Sz00oOlCqoy2Z1xgc/8urVNRk1xqlFGbUvwqyHa5OR7TRbRAQjWfclhpC
+         WGNdqwEo66R5JiW5hazmQFv1c/MvRjIqBLAAcJ2yopLTCNgWR+WIB+wLEAhIqT54xQUG
+         dLt5xYmdmA3U5Tiiqv8E2FejE8KcWqwei9A3yBc2k9o8QKcWlIo+O05SCWoeps0EhvGQ
+         6Uq745VVgRxYkcPv+U0BscwoC7WRNC1gBtExEsDNPyMFDKa1V5DpAldcJGw9xz80tin4
+         IVbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748574792; x=1749179592;
+        d=1e100.net; s=20230601; t=1748574998; x=1749179798;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N+DPZC1n47L/JnKL6zmQew4sn71lUGxtinjfwrD9vf0=;
-        b=g0dnPQLtN+6pC5GsySBi5oeoEuZXgTynHqoqMw5YWAJ0fiftEl1ddlQPg+SrJlVIGC
-         sd9o4q9i4M/uqhmWPFm0Vd+DYYxNipwGS7ch1QUnrR692qgeOLoxJuO4sDaUKoqY7/Qq
-         rai5sQBrQ/I1LXQ1ud06TVjrMpGpwmbZYY9Sc1xhleOYZ1tCkoWVKL8eWhz4efijjxKS
-         bWjzcx5/ES9v1Cgy2rhpWSC2WP8vTRfpcqAf6zLSpTuD6/APbrW/x4ld+Ho6+A2T3RQE
-         huvFy7hvRvKle5ioGlQFVWZPDvlw0GBKHsNlDCroorfQXXQ7sbsTsbBm5Ato4fJFE433
-         F2bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUhay1BnNwlGJ7XlLwYnwTCyX+2/yz8Jdwb1tFo8ZEN5+UFnWIqjoA5WtVV0si+mU9laW+ns9kNDk56UnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWrpB5bTO2JR/JP/z+LA9wQ1QQ4gLJryEK2HSNDlv04r817XDA
-	fetzr9IRVP/eLIHkI9dZ/eTJm0eugKp1F9ripl7Xsfa7v2Rt+j6MdYuTidFcOwt9Yw==
-X-Gm-Gg: ASbGncv7Euah7/gNQZxvV4C8vm7MTmIdnRITJJ3eGYSVMSNoOz4/pLjw7yRlfHgz09m
-	rydQuHB2EkCtvndrpxIjTFJ/bFduHBcyPIUgZxmv4iRu+JSd6CV/JGDTAHomrOIUn0gdXhGcrvM
-	4UHOAbrZi5m4rd6YHxm4kWN86Rrno78SKhP0nD7fSXhQW9ZdurLKbidmlPrZduyt30ZgxQW2ffn
-	WA73ts+N2UD7N5mCLF0KWFDRILvIl8dzQsAKZoA85ntvRhFz1fJr70VHSElkNsBvIe2EsJiIayi
-	PlhyZMRWgsP6/RzY7qQKhRBRHhSt1Bb25wa5kox0Q4uuFvWAVUAo29y4Do4nmA==
-X-Google-Smtp-Source: AGHT+IHV4IkY0i9cUrY7xh6Q0CSYoJYenoRdU0u9vfUOZ6yaj5pqiEraof9TCcZDB0o6anzhNBG2Pw==
-X-Received: by 2002:a17:902:da47:b0:235:7c6:ebbf with SMTP id d9443c01a7336-235396b7f6amr8116355ad.35.1748574791920;
-        Thu, 29 May 2025 20:13:11 -0700 (PDT)
+        bh=hG2cMyUqEG6RKX+zXxbm5GFZDNa/fK0gHsKi+Pje0cY=;
+        b=Y1Nkq0cd2WWKZntFSsfQLtBZvdVwQGq1IyijyEJgFb2i0dBQxjVqrZ+PrnFMgdDZ0J
+         hTNl8B86OI5PFo0vcdwtEvM8rf7d1mHE7/yi/j/+BfYttni12lepQLdAhOYKVdvd+68B
+         0tvNbnEIDDS519pthMVnTURNhTzvf8P/m8073hagKy8NHHJ41rQg9SkWDfkfurV4uqRi
+         wEpYvKlcXzPvfAAYYWpd/2+F3Wyjj4vgr47/9HE6YabWSH3abuu8/pH4p2Lpe9UPyMY6
+         17plsOLNx8VpSLdg1egDrUR1NmdyvBSMCE0FuQWxVL9QMl3pWYcXtitPIfevZMVpVjN/
+         LlOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Csbuvwf4We0ZOqEFMyNLyeRqxXnSb366ZdVK6TMbfLU4D3Umu6jX1DbiFhqgcmnais+IRu/WQC9wxeM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+zzXxq9ViT/khLVsvQUyi53JqQCshgGUXky2aSt4mr+fATbLg
+	LMk50SqnL8Uhsiil51pvBXYUQRCaVM1QriCJeatmPWOvpUq9x7isqdZlt0iUcAbpOQ==
+X-Gm-Gg: ASbGncvX7Q6F7ppZFKe4IPpFIojMAXf9WrZZtsv4c7C8k92wCV3/TeHetrRglZa87om
+	EmL6VKp0xDcrf5320e3oKKTuaEOzphjY29pFZkkLnVaH5lVmxgBMeL4wv99sxJys4/7nY2yBoYl
+	aXQlGgovTafcfUqDOZTCeORkhvLundN6sDUZScg5gbN1g36/6GGUsCmsBN0Z4dMVnKdUnHJqHFa
+	7Bw0zUZ9MjWslGYavOTwTyFXgJcdwMmRBo+/4P6mGB4vUFgK6fsf8pvo5MZoTNXUSbpfCyVjezT
+	4kLihXjbrHryjM4bFRvm7RuYz8MZxT8cuJcScgv02FJTiwKD+6EQL5BIITJylA==
+X-Google-Smtp-Source: AGHT+IEEn8LVklbjuJd3wJMpBvcIz8GKfwJW4nlD2EaqRmi/httRb+A8B1jCr1nfQUSFXjBRRKtNHA==
+X-Received: by 2002:a17:90b:3f10:b0:312:639:a064 with SMTP id 98e67ed59e1d1-3124198adefmr2623680a91.28.1748574997839;
+        Thu, 29 May 2025 20:16:37 -0700 (PDT)
 Received: from thinkpad ([120.60.139.33])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506bd89e4sm19118435ad.54.2025.05.29.20.13.08
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e1e9103sm267399a91.0.2025.05.29.20.16.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 20:13:11 -0700 (PDT)
-Date: Fri, 30 May 2025 08:43:04 +0530
+        Thu, 29 May 2025 20:16:37 -0700 (PDT)
+Date: Fri, 30 May 2025 08:46:30 +0530
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org, 
-	Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Krzysztof Wilczy??ski <kwilczynski@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Jim Quinlan <james.quinlan@broadcom.com>, 
+To: Jim Quinlan <james.quinlan@broadcom.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	linux-pci@vger.kernel.org, Cyril Brulebois <kibi@debian.org>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Krzysztof Wilczy??ski <kwilczynski@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
 	bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, 
 	Bjorn Helgaas <bhelgaas@google.com>
 Subject: Re: [PATCH] PCI/pwrctrl: Skip creating platform device unless
  CONFIG_PCI_PWRCTL enabled
-Message-ID: <txhlqciq5zd4uilon3cnt7ao6as3llle3oachgudzfj5bka577@6mteq4zsvj34>
+Message-ID: <otrstq3g55ddtlbelzgyirpt5ahfirgkhrrietyrgbhxbueiwp@hyu4pgj6m4eo>
 References: <nt2e4gqhefkqqhce62chepz7atytai2anymrn6ce47vcgubwsq@a6baualpdmty>
  <20250527222522.GA12969@bhelgaas>
+ <CA+-6iNwo54tp4pvUGHXYjbV8sT6FWhSrd2k4pDJgtUGQWYhGXg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,39 +81,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250527222522.GA12969@bhelgaas>
+In-Reply-To: <CA+-6iNwo54tp4pvUGHXYjbV8sT6FWhSrd2k4pDJgtUGQWYhGXg@mail.gmail.com>
 
-On Tue, May 27, 2025 at 05:25:22PM -0500, Bjorn Helgaas wrote:
-> On Sat, May 24, 2025 at 02:21:04PM +0530, Manivannan Sadhasivam wrote:
-> > On Sat, May 24, 2025 at 08:29:46AM +0200, Lukas Wunner wrote:
-> > > On Fri, May 23, 2025 at 09:42:07PM -0500, Bjorn Helgaas wrote:
-> > > > What I would prefer is something like the first paragraph in that
-> > > > section: the #ifdef in a header file that declares the function and
-> > > > defines a no-op stub, with the implementation in some pwrctrl file.
-> > > 
-> > > pci_pwrctrl_create_device() is static, but it is possible to #ifdef
-> > > the whole function in the .c file and provide the stub in an #else
-> > > branch.  That's easier to follow than #ifdef'ing portions of the
-> > > function.
-> > > 
-> > 
-> > +1
+On Thu, May 29, 2025 at 03:23:29PM -0400, Jim Quinlan wrote:
+> On Tue, May 27, 2025 at 6:25 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Sat, May 24, 2025 at 02:21:04PM +0530, Manivannan Sadhasivam wrote:
+> > > On Sat, May 24, 2025 at 08:29:46AM +0200, Lukas Wunner wrote:
+> > > > On Fri, May 23, 2025 at 09:42:07PM -0500, Bjorn Helgaas wrote:
+> > > > > What I would prefer is something like the first paragraph in that
+> > > > > section: the #ifdef in a header file that declares the function and
+> > > > > defines a no-op stub, with the implementation in some pwrctrl file.
+> > > >
+> > > > pci_pwrctrl_create_device() is static, but it is possible to #ifdef
+> > > > the whole function in the .c file and provide the stub in an #else
+> > > > branch.  That's easier to follow than #ifdef'ing portions of the
+> > > > function.
+> > > >
+> > >
+> > > +1
+> >
+> > I dropped the ball here and didn't get any fix for this in v6.15.
 > 
-> I dropped the ball here and didn't get any fix for this in v6.15.
+> :-(
+> 
+> >
+> >
+> > Why do we need pci_pwrctrl_create_device() in drivers/pci/probe.c?
+> > The obvious thing would have been to put the implementation in
+> > drivers/pci/pwrctrl with a stub in drivers/pci/pci.h, so I assume
+> > there's some reason we can't do that?
+> 
+> I was wondering if we could confine PWRCTL/_SLOT to work on a per PCIe
+> controller basis.  For example, if we allow the port DT node to have
+> boolean "pwrctrl;" property, it would direct the PWRCTL code to
+> operate on the regulators within that node.  This would allow
+> CONFIG_PWRCTL/_SLOT and the pcie-brcmstb.c way of controlling
+> regulators to happily coexist.
+> 
+> One could argue that "pwrctrl;" does not describe the HW as a DT
+> property should, but I think it should be considered nevertheless.
 > 
 
-That's unfortunate. Let's try to get it backported through stable list.
-
-> Why do we need pci_pwrctrl_create_device() in drivers/pci/probe.c?
-> The obvious thing would have been to put the implementation in
-> drivers/pci/pwrctrl with a stub in drivers/pci/pci.h, so I assume
-> there's some reason we can't do that?
-
-I assumed initially that pwrctrl dependency would always be there with PCI core.
-Since now it is clear that we need to build the function conditionally, we could
-move it to drivers/pci/pwrctrl/core.c with stub in drivers/pci/pci.h.
-
-I will submit a patch for that.
+No. There were a lot of attempts previously before the advent of pwrctrl
+framework to add a DT property for powering the devices, but DT maintainer
+clearly said that there should be no DT property for this purpose. So we came up
+with this approach.
 
 - Mani
 
