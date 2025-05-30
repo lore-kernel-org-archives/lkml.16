@@ -1,73 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0571A1EB5D8
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687E91411EB
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:11:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748596236; cv=none; b=tuexOkb+M0uaP/QKBq0Ez9HfxbU6tH1FRxf4lx04iwPn3KHXfGOrIYoulYcnN7jRFOwgpJobxMmiRJHKIKgzK5S7rbDQmGsIEG+AMOIZq5GDRFXNRFcZF3YkChWWa2WKBnDyMhv/XFMmFQBk5g8wEUjknvBEpMBkDaydVlgI3as=
+	t=1748596309; cv=none; b=oS2T2W8heVJnxQKR5+/IpVRUxCz4j2CtDWzyGyZTIuPSCOBZ2m2+TYmTkZcmNHVS3A4YMHmbffupMDeuU/TsfNYXdwZt+ONCi6qccboCjuBpebWCERel+fV/BbpRhHNC8InCwCFTrfGyjEfVVsWfbpR1VOg27+FcXYQmqaCqvaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748596236; c=relaxed/simple;
-	bh=i2n+Zfvh00SWR94z0VELlIDX9Y7OMV+2vDHKYzIV9ms=;
+	s=arc-20240116; t=1748596309; c=relaxed/simple;
+	bh=pA4gDaYrX/ZskPIrVNn7kpuqs8HJHeoR/Xc+f5rMXNk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A7H/J9WRpJw93vq59aDh7ifuMw+RdqOvdcz/L7a2JH8Z9dcAJWcrjnqq79fwRuYfxhb1eSvsQ5DS+vG4T8YkP5Xd71RtY//3oUPYdN7+S7ZZ21my1XKcwnTw9+pSoxCdRtCtAEd16VrzpeyxjKz5avPbvdwbb7Q0CTXLwByCq30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chvmN4hN; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=r6TYFme9GzPg/y5HFStQ/VdcEEjIykjosEQWqv4pI63dcxjcTZwamqCWopYgKjDlun3Pa8QpPl8CHpWBtjeNR4aDLbyLdq0TUIMGMmC6TOg53Gax6L3TLfqLa4cUDRbTrvrqtG0mkSf+2c8r4zhPv5BmbiV72fwjSPfQXHtTsd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N0oeLiPp; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chvmN4hN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N0oeLiPp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748596233;
+	s=mimecast20190719; t=1748596305;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Bxb0W2Gh1ooa50suLf89Op86r0jsbF9L9U6sQJKzyW0=;
-	b=chvmN4hNQO6ZKHPzW6rONRJchTGWdFXmk4AsKebG9cN2hH8yJlb2FOpFSnukxNzYBcs1qh
-	gW06hpGlZFwdi9KSZiksBQqxVlClWDXkWEt7QXBBZQD88OHHXNoFWkhQ6DI5GmI6/YzgKV
-	JKBqkkEuX5HApigHOXodSaAv1oSuEyw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=FcLOeL0j8aYWy2M7p1kJWLoT3h6nC08D9zaPSw+D+1I=;
+	b=N0oeLiPpZSVm2kJLnIkG0SZiJ2PX782J6jmz2Z44BAJRby6Ql2EykRvXlz15L2bh7SK4YM
+	SdLR3u/cgiESCu8upEu3MVg7vjUkKY8uJRSdkteSV5e65JEGSUP1qiAtKLNtNgNUZ77BgH
+	/NV+FbXuRwL6gY6B7aHRkvOdPf6aKUU=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-184-1IRZmZw5N9KxMv_CCmPNJw-1; Fri, 30 May 2025 05:10:32 -0400
-X-MC-Unique: 1IRZmZw5N9KxMv_CCmPNJw-1
-X-Mimecast-MFC-AGG-ID: 1IRZmZw5N9KxMv_CCmPNJw_1748596231
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-440667e7f92so12445935e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:10:32 -0700 (PDT)
+ us-mta-338-FnrbumUNOayNS7kbmM-oNw-1; Fri, 30 May 2025 05:11:43 -0400
+X-MC-Unique: FnrbumUNOayNS7kbmM-oNw-1
+X-Mimecast-MFC-AGG-ID: FnrbumUNOayNS7kbmM-oNw_1748596302
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4cceb558aso868880f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:11:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748596231; x=1749201031;
+        d=1e100.net; s=20230601; t=1748596302; x=1749201102;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Bxb0W2Gh1ooa50suLf89Op86r0jsbF9L9U6sQJKzyW0=;
-        b=jpKc9U+zhLhndjHOOobTy3wjulsyUYNWXEldZrduR48+pfglkI9HnzTpjMpVxmMz92
-         PtAsXW9i/Ty8bTA1W9VMC25VRoTQub+KiFTor+YViP2lniMfEiMz9D+C+C9OvrqKY+1n
-         w1fbCD5BktGotBoaxtDD7b6M2/huPUBLT3/lygqw2fVNiyu7rK3+OCxp9p466HakSJ/v
-         +SADuKXPx6d+09gy3nJQzns8Z7qtzi1FoQPmwDgwreoA5GeupZPckp4sMiJSOD12LgHg
-         J/AI/Jgd1ifzUA3RnmD5hbj+HHDTPCQOXtETjRy8rLgmOpU3AbH6qDSqtiJXgRop1AmJ
-         pq5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV48gxVdzwRZBhRRgW4EnFxx1d6xdc6teGima1C2fwvjFJmPl08XKxKoxP7j8Y+rHDPsX7HuHfc9KeSwXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJq6qToBC71ATF8d9ewi0o8gtLVaqOw/OSs+46hz1iW3IMtJA4
-	WAWXn9yA9V/a6pEW1446cKL1Oskd0+qBmGl8JRqW3ECL4TaZ2Q/Zm2c0PL8M8m4GrocTTMIzCHw
-	Ho4vvhALrDntkzCO/vPeZUKWAznTqgA0O2aQ7m7ygJPvK98SzVjvCXL4CnQ+oezWomg==
-X-Gm-Gg: ASbGnctjLO1z8y4Pe3PIigotVREZxhIjyiSzeIQ8NguXfcWAMa+uL9bV/BlXa6rgRkY
-	90iZ8UinnZxAGSM4vEQulL2r+CWfFVUmAyzWGz+oUhr7XygJ1QJ7PRCnFjDOWKb9WU5EsfqjSBz
-	VlrFL7UfTwVJk+Ssfq/1ojubRI3rphRTbOrS4e40wukmRPoYJ/X9gzsbyD956y4362gIBVqghKc
-	VUEV4W1kDIVr6zj4463uoZEqWPxjQGTjEPw046wYRc8N2v1E2jClKGjGhrGhuYe4LK61JP/x06R
-	hxg8s9EA2yBNWMFzkOII5hF7nmGcR5ir7pfHA4nGoVh8ZmYKlhC3lM1cY/dyghdxKLvmPHvcExz
-	zGxW7MkMJOnUWBpeDx4T3UZDekFswysHP1ZTKF8w=
-X-Received: by 2002:a05:600c:1c89:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-450d651b4edmr28818185e9.3.1748596231504;
-        Fri, 30 May 2025 02:10:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEfflLrqrEXjnPZqbpip1MsBqjhVJHcWObTFxT8759BVjb+hyECfogpcPX4XQvCJ38zt84oEA==
-X-Received: by 2002:a05:600c:1c89:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-450d651b4edmr28817735e9.3.1748596231027;
-        Fri, 30 May 2025 02:10:31 -0700 (PDT)
+        bh=FcLOeL0j8aYWy2M7p1kJWLoT3h6nC08D9zaPSw+D+1I=;
+        b=Z9esl1xkmo+usUooppKMU+qsPRX+3HNVFhlstHYYlF9edEPrqxdyslFaio2lS0PVRD
+         OvC+F+5/ksABMLtY/KD8YK5WRcuoIjFvRSiPa2UwFpMEs362m5mmbTNOa7TTVfKjppCu
+         xD4xOOnqjKtI/3Je245XaKRMRbrk/pXGiRTK3+4ZzLKqoptXDgJ0MCaGBXMsz8aUv/9Z
+         ZywxbJAetDzbls5tQnkVFMpkpTNv4EWQuZ4em4Iyc7uBlJ3iYDrFZcKO0cFKBzAmMECz
+         kd4TNv58legdXxdGWGRlIsZft2OGrsTqXwUU6M59Ji7+3aDzmCF5ITMki0xucv+IhCxz
+         X7AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmJbMNlGWZRMD06UvnBcH35e2wbnlXhDHYpCHhzFbN0CqeAbQmwS1mpc+lOzSLh5g2NP9phQf+oXJgibw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4p8MYfEW9+2umfl1hIU7LIQDNBWT6ZAQ1+AciB7yh86f7TvPM
+	grNETo8NtLM9/Y244nHiVuvzo6LXkCCdGWpHS5lckw1UORBvuMiZVAlIk58RZfmHhuVCBMSoI5n
+	3fKSBeZGkjmgnqvWMC/wD+WiKpuGM/ocoS7Wr2sn5kDZYe0cKoH3DB3P8DchE5g/FiB4n6Awjn5
+	1i
+X-Gm-Gg: ASbGnct6H6tbcjShrLz2iW5g808mviwonGQwRlfUKBYWp96rkz6hTEOoxA2kuJxn6Qw
+	TFFnOQH7zet+M/8c3liK0Y3awKylKZKks1UHZcu0aPTqSXLripjIKr92uiiIeOjll7Ny0aTi8gV
+	HwMTeWbZftrAJnmsELQW5ryQoJvRIzTRfec09GHMx4DnI1W8nJPOFhy7uXv97BU2AAOkFrjQlGT
+	PYgJGIFQOdniP+1P2QJL0aZShWYmKfFnmI8mkvEajSfyqhAkbw14Fq20GQeNae1SkWoBXdkedhz
+	CiP7BwZVqrgkLTyx1snwYn2R2A4Ldxr0ySGlPQnzBGqznbeZzeFjTeq/r4iCw42AObZLvBmBAs7
+	bSnftkSyLn0xc2UaYeDFaIYP5pLIgbSQsEW8ufgA=
+X-Received: by 2002:a5d:4ad0:0:b0:3a4:f7ae:77e8 with SMTP id ffacd0b85a97d-3a4f7ae78f2mr1566388f8f.15.1748596302376;
+        Fri, 30 May 2025 02:11:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF60h8rKE0nPobuy20ZXqTnSFgBrTuintIRkVxcH5DFZBoUxjL88SfayitoqDnRNANVj/A56Q==
+X-Received: by 2002:a5d:4ad0:0:b0:3a4:f7ae:77e8 with SMTP id ffacd0b85a97d-3a4f7ae78f2mr1566375f8f.15.1748596301992;
+        Fri, 30 May 2025 02:11:41 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6c738sm4174668f8f.24.2025.05.30.02.10.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4efe6d0dbsm4192895f8f.40.2025.05.30.02.11.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 02:10:30 -0700 (PDT)
-Message-ID: <abe284a4-db5c-4a5f-b2fd-e28e1ab93ed1@redhat.com>
-Date: Fri, 30 May 2025 11:10:29 +0200
+        Fri, 30 May 2025 02:11:41 -0700 (PDT)
+Message-ID: <04a49de5-eb79-431b-ba5b-eae2536781c6@redhat.com>
+Date: Fri, 30 May 2025 11:11:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,17 +76,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- dev.jain@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1748506520.git.baolin.wang@linux.alibaba.com>
- <05d60e72-3113-41f0-b81f-225397f06c81@arm.com>
- <f3dad5b5-143d-4896-b315-38e1d7bb1248@redhat.com>
- <9b1bac6c-fd9f-4dc1-8c94-c4da0cbb9e7f@arm.com>
+Subject: Re: [PATCH v2 0/5] kdump: crashkernel reservation from CMA
+To: Michal Hocko <mhocko@suse.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+ Jiri Bohac <jbohac@suse.cz>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+ Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>,
+ Tao Liu <ltao@redhat.com>, linux-kernel@vger.kernel.org,
+ David Hildenbrand <dhildenb@redhat.com>
+References: <Z7dc9Cd8KX3b_brB@dwarf.suse.cz>
+ <04904e86-5b5f-4aa1-a120-428dac119189@redhat.com>
+ <427fec88-2a74-471e-aeb6-a108ca8c4336@redhat.com>
+ <Z8Z/gnbtiXT9QAZr@MiWiFi-R3L-srv>
+ <e9c5c247-85fb-43f1-9aa8-47d62321f37b@redhat.com>
+ <aDgQ0lbt1h5v0lgE@tiehlicka>
+ <a1a5af90-bc8a-448a-81fa-485624d592f3@redhat.com>
+ <aDlsF5tAcUxo4VgT@tiehlicka>
+ <e0f7fc1e-2227-4c6b-985a-34a697a52679@redhat.com>
+ <aDl1ViMpK_6q_z06@tiehlicka>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -133,78 +141,36 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <9b1bac6c-fd9f-4dc1-8c94-c4da0cbb9e7f@arm.com>
+In-Reply-To: <aDl1ViMpK_6q_z06@tiehlicka>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 30.05.25 10:59, Ryan Roberts wrote:
-> On 30/05/2025 09:44, David Hildenbrand wrote:
->> On 30.05.25 10:04, Ryan Roberts wrote:
->>> On 29/05/2025 09:23, Baolin Wang wrote:
->>>> As we discussed in the previous thread [1], the MADV_COLLAPSE will ignore
->>>> the system-wide anon/shmem THP sysfs settings, which means that even though
->>>> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE will still
->>>> attempt to collapse into a anon/shmem THP. This violates the rule we have
->>>> agreed upon: never means never. This patch set will address this issue.
+On 30.05.25 11:07, Michal Hocko wrote:
+> On Fri 30-05-25 10:39:39, David Hildenbrand wrote:
+>> On 30.05.25 10:28, Michal Hocko wrote:
+> [...]
+>>> All that being said I would go with an additional parameter to the
+>>> kdump cma setup - e.g. cma_sane_dma that would skip waiting and use 10s
+>>> otherwise. That would make the optimized behavior opt in, we do not need
+>>> to support all sorts of timeouts and also learn if this is not
+>>> sufficient.
 >>>
->>> This is a drive-by comment from me without having the previous context, but...
->>>
->>> Surely MADV_COLLAPSE *should* ignore the THP sysfs settings? It's a deliberate
->>> user-initiated, synchonous request to use huge pages for a range of memory.
->>> There is nothing *transparent* about it, it just happens to be implemented using
->>> the same logic that THP uses.
->>>
->>> I always thought this was a deliberate design decision.
+>>> Makes sense?
 >>
->> If the admin said "never", then why should a user be able to overwrite that?
+>> Just so I understand correctly, you mean extending the "crashkernel=" option
+>> with a boolean parameter? If set, e.g., wait 1s, otherwise magic number 10?
 > 
-> Well my interpretation would be that the admin is saying never *transparently*
-> give anyone any hugepages; on balance it does more harm than good for my
-> workloads. The toggle is called transparent_hugepage/enabled, after all.
+> crashkernel=1G,cma,cma_sane_dma # no wait on transition
 
-I'd say it's "enabling transparent huge pages" not "transparently 
-enabling huge pages". After all, these things are ... transparent huge 
-pages.
+But is no wait ok? I mean, any O_DIRECT with any device would at least 
+take a bit, no?
 
-But yeah, it's confusing.
+Of course, there is a short time between the crash and actually 
+triggerying kdump.
 
-> 
-> Whereas MADV_COLLAPSE is deliberately applied to a specific region at an
-> opportune moment in time, presumably because the user knows that the region
-> *will* benefit and because that point in the execution is not sensitive to latency.
+> crashkernel=1G,cma # wait on transition with e.g. 10s timeout
 
-Not sure if MADV_HUGEPAGE is really *that* different.
-
-> 
-> I see them as logically separate.
-> 
->>
->> The design decision I recall is that if VM_NOHUGEPAGE is set, we'll ignore that.
->> Because that was set by the app itself (MADV_NOHUEPAGE).
-> 
-> Hmm, ok. My instinct would have been the opposite; MADV_NOHUGEPAGE means "I
-> don't want the risk of latency spikes and memory bloat that THP can cause". Not
-> "ignore my explicit requests to MADV_COLLAPSE".
-> 
-> But if that descision was already taken and that's the current behavior then I
-> agree we have an inconsistency with respect to the sysfs control.
-> 
-> Perhaps we should be guided by real world usage - AIUI there is a cloud that
-> disables THP at system level today (Google?).
-The use case I am aware of for disabling it for debugging purposes. 
-Saved us quite some headake in the past at customer sites for 
-troubleshooting + workarounds ...
-
-
-Let's take a look at the man page:
-
-MADV_COLLAPSE is  independent  of  any  sysfs  (see  sysfs(5))  setting 
-under  /sys/kernel/mm/transparent_hugepage, both in terms of determining 
-THP eligibility, and allocation semantics.
-
-I recall we discussed that it should ignore the max_ptes_none/swap/shared.
-
-But "any" setting would include "enable" ...
+In general, would work for me.
 
 -- 
 Cheers,
