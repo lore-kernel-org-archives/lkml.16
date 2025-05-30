@@ -1,100 +1,63 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A8F2D600
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6D27260A;
+	Fri, 30 May 2025 17:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748626026; cv=none; b=GAbJaaXt+sQc98shXwURggJA0X1MjHwqCDqnc9jd1jbuDAWgux54Ne3QplztsE3vDFhVUCYn6e9SWWn4SDoUJmPN1KR9tV02cOHAdawx1zo0q7A6JU6FQTPT43D1/HOBCgKDGHk0ZK/jr3Qna+pR7v7BaUieRgWGKU/RTgO7ayY=
+	t=1748626080; cv=none; b=ZCogmlC98yc73QKpwdNjGSZ+HYnJBMtly6qpRHDaTpKsOLod4JzKCIMVIpy+i3yTwlKpGGtXPyOCPb4YJJUBb7ZJeUwQDuQP8210Sf+fxiUHZBxYOCY7OvL7QEo6LkXRUDsIWJM1VdZu7M7awn9IEsLpraScQN63XsATXJb13j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748626026; c=relaxed/simple;
-	bh=QnFT4UTcUmVIF557XHeZIxprQLC4uimKa9zu22sXfkw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=StsB+VG41qdPYRtFCNjR9PQ8VeN1pgAbgtptIJGHpUe2QBuY84Jvo0KM5qyNFkN4Sm9CQYjulCdFQkQJXrwDITgi2/SEu/PdkPtXZ7ls342sZW+ay13hyvgQZf8A5m0jH3BmBcDY6RYNxiueJFQg8gCeo6y3YQ76HK11P6R5hAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dd7587af8dso20062675ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:27:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748626024; x=1749230824;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PEnE3UPKhcy+AwEGJgtE9Olu+DiLoFVrDFd7ZrO9MFg=;
-        b=I/iXJyU3gEEf1LXG92eeJfn6eWM8P65tFmVdrmsW3rzUTfxH5k2mzkU12zAxNreoU9
-         ZQwNh6FRcKoXn2CMmfzoUzF8ROTeVZXkLt8ew2ZTL7hCdXyzNIy/3XieGP7RelyI3gvC
-         ELgi7l4Dm/5SbP+oHS3VGZ9FlQQulLb15SFKnOL6WzquAfHmktUCLOpQSSfSWBmm3li/
-         GyEyi4YPJjeDeMIR87EIyMMQH76yeWyM1QNaq7893vpPZWkCHmxhTdEvPtDD8Ho6me3y
-         PhNA2Jx26mvPHtt6PnW7lteIt8CjFLUwMKY/rw9M1DfR9djvXxO1cYchQLjQ4+Fb8ekT
-         UmfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvGySoMr6rYeJO/r2IoD+iIxBCcSme5Q2tfUHwotSrCNvSAU/aXAD0KRv6hPpGMGnT28GVnFpDQe6ViXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6ZKHRtb4IRvS5VoPetRaO5q4f3gmVdgca7HfzQylnNMzFiKfd
-	GSHZ8VGLzZuvKjLFi2SM53Xu/i6ldpI2usr420UZuXtlXZlBIEdSwUUbpaTrN4JOeWmYLs/4fKK
-	HstqAEEAfS5R8uTUrQ5pEiWEBA6TPbI74DR8fQGQGCWqRFG0sWac+ULReG6k=
-X-Google-Smtp-Source: AGHT+IGLEwYnF4NLSDCGONGXRq9cSsMDPGPvX/rO+eobb5oy+6F/LXDkf3vpZt1ktE3onG9mjJtHCD8NWls3pJa9JWvUafFgsj94
+	s=arc-20240116; t=1748626080; c=relaxed/simple;
+	bh=QImpCFod3f4n+1s0DpU6nr1UzDM33FhlDlCdbi4vt9I=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=pZKInGEs9HX961Q5XnOPw0C4ajDxS01bvQgfMwgjLEDgiVa8jtBPGbXHvshlKKckqkLO48UBuH+mwwp01rUXVbtLV/Dqmjq8e6WGkQHwtAW+o22b5jlENAQM+bHZWgL4SXDToTVXYq9qbDKqqPJAJJTR/TZL8nZUCglteDRbT+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbRrAgwJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbRrAgwJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB68C4CEE9;
+	Fri, 30 May 2025 17:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748626080;
+	bh=QImpCFod3f4n+1s0DpU6nr1UzDM33FhlDlCdbi4vt9I=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=qbRrAgwJqo0O7qHRNxvTVvZEUePbm1JTuNUSFF4aMaDO3QdjcgzjCdAG5TrybkBYf
+	 HzeseAfblHIE7EDxMc27eEcVILdrJqR4sBcjtL+RI5x/+1d534LU71VdISLMOwhNQ1
+	 TFk/lUkqsA6TExEvrunxPJ5BgQ4+ce4yLHTi0HB+IHtIE39ORPPAElmrHk+ylofQoZ
+	 yZ+U3QG5LS8Bf2MoVYJJNEN/geZacftviDZT6RsPkJt6FKe6zfwymLHGCx9x4yGgku
+	 uLIN5iXUFl5dMohqtB++Q2tu+LjPIoPs1wW00oyWqL5iLFCu1jpdMLbuNAbDSNApMp
+	 uob+Ka63YG0JQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB02439F1DF2;
+	Fri, 30 May 2025 17:28:34 +0000 (UTC)
+Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250530144213.GA294859@nvidia.com>
+References: <20250530144213.GA294859@nvidia.com>
+X-PR-Tracked-List-Id: <linux-rdma.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250530144213.GA294859@nvidia.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+X-PR-Tracked-Commit-Id: 92a251c3df8ea1991cd9fe00f1ab0cfce18d7711
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dd91b5e1d6448794c07378d1be12e3261c8769e7
+Message-Id: <174862611337.4033976.11450096697382345618.pr-tracker-bot@kernel.org>
+Date: Fri, 30 May 2025 17:28:33 +0000
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, Leon Romanovsky <leonro@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2789:b0:3d9:6cb6:fa52 with SMTP id
- e9e14a558f8ab-3dd99bf713dmr49207495ab.12.1748626023784; Fri, 30 May 2025
- 10:27:03 -0700 (PDT)
-Date: Fri, 30 May 2025 10:27:03 -0700
-In-Reply-To: <87r006nj7e.fsf@posteo.net>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6839ea67.a00a0220.d8eae.000c.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING in nsim_fib_event_nb
-From: syzbot <syzbot+a259a17220263c2d73fc@syzkaller.appspotmail.com>
-To: andrew@lunn.ch, charmitro@posteo.net, davem@davemloft.net, 
-	dsahern@kernel.org, edumazet@google.com, horms@kernel.org, kuba@kernel.org, 
-	kuniyu@amazon.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+The pull request you sent on Fri, 30 May 2025 11:42:13 -0300:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
 
-unregister_netdevice: waiting for lo to become free. Usage count = 601
-ref_tracker: lo@ffff888031d42610 has 600/600 users at
-     __netdev_tracker_alloc include/linux/netdevice.h:4330 [inline]
-     netdev_tracker_alloc include/linux/netdevice.h:4342 [inline]
-     netdev_get_by_index+0x79/0xb0 net/core/dev.c:1006
-     fib6_nh_init+0x1c4/0x2030 net/ipv6/route.c:3590
-     ip6_route_info_create_nh+0x139/0x870 net/ipv6/route.c:3866
-     ip6_route_mpath_info_create_nh net/ipv6/route.c:5429 [inline]
-     ip6_route_multipath_add net/ipv6/route.c:5544 [inline]
-     inet6_rtm_newroute+0x8ca/0x1d90 net/ipv6/route.c:5729
-     rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
-     netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
-     netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-     netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
-     netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-     sock_sendmsg_nosec net/socket.c:712 [inline]
-     __sock_sendmsg+0x219/0x270 net/socket.c:727
-     ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-     ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-     __sys_sendmsg net/socket.c:2652 [inline]
-     __do_sys_sendmsg net/socket.c:2657 [inline]
-     __se_sys_sendmsg net/socket.c:2655 [inline]
-     __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
-     do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-     do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-     entry_SYSCALL_64_after_hwframe+0x77/0x7f
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dd91b5e1d6448794c07378d1be12e3261c8769e7
 
+Thank you!
 
-
-Tested on:
-
-commit:         a5ecfdd9 ipv6: Fix ECMP validation for multipath routes
-git tree:       https://github.com/charmitro/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1151bff4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5a1787205a40c165
-dashboard link: https://syzkaller.appspot.com/bug?extid=a259a17220263c2d73fc
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Note: no patches were applied.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
