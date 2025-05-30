@@ -1,380 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08852283126;
-	Fri, 30 May 2025 20:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6342125228E
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748635620; cv=none; b=JcFmdcHZW7OGxuzv5h1oE47FqJaYL1aINV5eInNTJxaqKxQzwtERA+ufwsLoYxvIluQNNoPrr7itbbvH5q5BmU13IUeiXARI+nQ3k4mwKKt/aFX1A8UKsLmrunSPZk0xG75L3sCwrStPzJN+DGurFIijnPCBHbFMvyuZDAQsTUg=
+	t=1748635746; cv=none; b=I5bmCJXCyWt5F54PcfJyUiVsyQ8YM0Lt/OV6ErUlfwpVdrGsLwpzFOJICLpmpH+GCnNpnC02sCMev60ubaf7Gv7qs4ClWTU85lcnPYXi0WmRi8WwAmI9qexLkJQ6qi4WJQLJIw+ZA1w3PdTqx45tvj2342cKm5/WSv2psb/EBgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748635620; c=relaxed/simple;
-	bh=xPW6dKl0u9tOAE44RcC/AR/Qp+vY0ym5kEbMu2VOHzE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=k5EcKpYMc0rqq3Aa7GkVfuzs/1ZAVkk3zdja7m+stfhdL3rD6v+0Xxn7Bs5++L4+7hRhxaLRk5lE3/geqaAI+XFJa20dg6oOqbIO2jroTGHcAia1J+cZuZ231kXn74WQbaAeqLLHG2jdr70LLbq41UyUiGkgUWP1g6rqbKLP0IY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugHd6+10; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748635746; c=relaxed/simple;
+	bh=WShr0OuI4tMIomB97Joui1tYguEOopZuC5APNp2SA1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OMs289XWG+SMAvN4MHtKGvdbl32AyVN4ZtfnXZNkj7BlPuhkXe8vMrY0ijENNaq/J3ro3zfHTf/c7JOWCfmWIleoNUaF8FVhT2QgHTzykkJVPA6MvOek0TD5lXmQ0bJ/ELjvbyI0XZuk9+90g/DMNUTrZyyYAtrE4tasA8eFdow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C/gODcob; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugHd6+10"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A49BC4CEEA;
-	Fri, 30 May 2025 20:06:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748635619;
-	bh=xPW6dKl0u9tOAE44RcC/AR/Qp+vY0ym5kEbMu2VOHzE=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ugHd6+10EomDNuWrm+EfdbeqQNhmlA0jDx+9YtjiyLZQzE2CG4DfOdHPScUfCLlVD
-	 QgtFkF8YcsNMVMfJSDYVsRW75oeZj3zJxT6CWGeYCuUUepk167o3F/0/5RniVGvUGr
-	 aqglsa/Nl2a38z5xK+Cm18rGXSPQVVaRy0Ow8x43N+NJSpzEzAC6IgasL54J9XvuZz
-	 70QD+o/DAZ33rMMHEuRubDDJ0VZUq5uWV93UsJr9JSo4H1cG3t7SVQIed1wuJPEWOc
-	 FrzkmY71PbMueXEcAuwgSpV3jh2EpzZZzWx7zqBePnxHjXZx8FP9ZXkFK2xPzbOYuZ
-	 9DJoIQ29vd1jg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/gODcob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748635743;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UNgwVBGvhTf/t1as+uXbUDwJKi8ozSymY0URc8uI38I=;
+	b=C/gODcob2+8uE9Ix/WCpRgqedzrYJRqIlJ8G8uwUUQoPMj2o0HFDJq7vg8JKDGejo407BL
+	Gc+RiJ/F1rUbgkNUzmtjpqr6+ibhQQDWLG2WPCGoRXBzh4C4rKyUfCxPagjAsyp68e4ni5
+	fv3oUU8qz9t49+bTp4iQtV17K3GUlHg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-531-tK_lWA8rPEeMAYxPH4jCoA-1; Fri, 30 May 2025 16:09:01 -0400
+X-MC-Unique: tK_lWA8rPEeMAYxPH4jCoA-1
+X-Mimecast-MFC-AGG-ID: tK_lWA8rPEeMAYxPH4jCoA_1748635741
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450d290d542so11295115e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:09:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748635740; x=1749240540;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UNgwVBGvhTf/t1as+uXbUDwJKi8ozSymY0URc8uI38I=;
+        b=VaoBZrEDEDykJfBJ0dGAeCBhU0x6i5vVNzQ5gh6aytjTYtIaHZszw6q7/z6lX3vr83
+         zCM5ThAI8+qjw6V75vUhYh7o+KVxIyQCkfgiTbvCcuMNDbSUjcZzLP0nkwA81LPC7Onn
+         UkpDMtwRIHHiyw51AR3SNlHpKe+l6S0H6TNklFM/jFdCl7wnta112np592AdkJ68fFdI
+         yC3AG3WOaEhHz+z2GcoDTlNni71QOHGQeqqa/qocYpUttnz0dwZmmIVARjbHJzkonmFN
+         V99lRRQynZyfPECvCmUeO0wr1NAsgoaDbrDArLCIMTSWkGumUAoi/PdMzUy2w4y1th8F
+         GdOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBj6NeeG+ynjdvQqS1gVMv5TTASq2BCvT16F+t2m7+elDMFyxO5hHVoxFPGULS+bLU2fDY5GdXqo/W9G4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwchwvV/Zy+51GgpaMV8BrhSdTcjYG8N/OTlGvx/+wOUfVUuhLs
+	orc7GQwu1odx/Z5SrGOhHBFfCGEojgI1Kr3ThbbjcSEumEMIKLNKAXrgwlUHtTYoprc1G93yWmj
+	/mF4JHS59ILSHqf8lYTWMcnBvv0VjQgAFUuQRJtTB5u8GrY35ankRS1LvSHozKbO2SA==
+X-Gm-Gg: ASbGncthv4MPGZaOeQxCvEJ2NWGXYJdNKFMEKexRhBzkaT9qP2CMqUO5rKruHfHTzpk
+	17ID+TqCkcjx22IXnTfrFixbM7CS4cN/L7duSuprE8H+igsbr/K3l8I0BSB/+eSesnlTuWP5RB5
+	unbWi5l00X+PBfguKzZ1UZWQZeKyGjgEuiNzQVtBo4Ij2Xvmyu1341s/HFXHvGQg6xwVS79olvY
+	sX4hW/FOvvNtUMQ4Sxw1tXVKeSjG1aiNpEoVPa+6bhBaltu3ugkRRUqxizZeyrfK1v9UBC5hFED
+	4JkZngMrCFGAzxj3FgjlhHkN9o3HjS/1ApKj2OAA8/5hSg1ofeEzL3GjYYjbnM/W9M8Fbfn/r0F
+	pMsJM6xVVjixmSSHW2NZq+J8c41YjvUm3YiQRCf0=
+X-Received: by 2002:a05:600c:1e21:b0:442:e0f9:394d with SMTP id 5b1f17b1804b1-450d65465efmr43396845e9.24.1748635740615;
+        Fri, 30 May 2025 13:09:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPIC56+epAhH3sOsNaWeTsssy3WgoSm87TSamFxQnmWRsIdoYSkQaQ2GhGbwps+BDqxzKhzQ==
+X-Received: by 2002:a05:600c:1e21:b0:442:e0f9:394d with SMTP id 5b1f17b1804b1-450d65465efmr43396675e9.24.1748635740113;
+        Fri, 30 May 2025 13:09:00 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f03:5b00:f549:a879:b2d3:73ee? (p200300d82f035b00f549a879b2d373ee.dip0.t-ipconnect.de. [2003:d8:2f03:5b00:f549:a879:b2d3:73ee])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fb0997sm26479175e9.23.2025.05.30.13.08.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 May 2025 13:08:59 -0700 (PDT)
+Message-ID: <50da1626-5894-42ef-b3fd-935a331f14c4@redhat.com>
+Date: Fri, 30 May 2025 22:08:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 30 May 2025 22:06:55 +0200
-Message-Id: <DA9RLBPS7QKE.3CGXHMYG1CDOU@kernel.org>
-Subject: Re: [PATCH 5/7] rust: miscdevice: properly support device drivers
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>, <chrisi.schrefl@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-6-dakr@kernel.org>
-In-Reply-To: <20250530142447.166524-6-dakr@kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 6/6] mm/page_isolation: remove migratetype parameter
+ from more functions.
+To: Zi Yan <ziy@nvidia.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>,
+ linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Oscar Salvador <osalvador@suse.de>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang
+ <richardycc@google.com>, linux-kernel@vger.kernel.org
+References: <20250530162227.715551-1-ziy@nvidia.com>
+ <20250530162227.715551-7-ziy@nvidia.com>
+ <ac7351c1-cffe-4da6-9397-f9421e53f59f@redhat.com>
+ <8C1EFB3C-0F1C-46DE-878A-3546A86A141F@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <8C1EFB3C-0F1C-46DE-878A-3546A86A141F@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri May 30, 2025 at 4:24 PM CEST, Danilo Krummrich wrote:
-> @@ -40,44 +41,43 @@ pub const fn into_raw<T: MiscDevice>(self) -> binding=
-s::miscdevice {
->      }
->  }
-> =20
-> -/// A registration of a miscdevice.
-> -///
->  /// # Invariants
->  ///
-> -/// `inner` is a registered misc device.
-> +/// - `inner` is a registered misc device,
-> +/// - `data` is valid for the entire lifetime of `Self`.
->  #[repr(C)]
->  #[pin_data(PinnedDrop)]
-> -pub struct MiscDeviceRegistration<T: MiscDevice> {
-> +struct RawDeviceRegistration<T: MiscDevice> {
->      #[pin]
->      inner: Opaque<bindings::miscdevice>,
-> -    #[pin]
-> -    data: Opaque<T::RegistrationData>,
-> +    data: NonNull<T::RegistrationData>,
->      _t: PhantomData<T>,
+On 30.05.25 21:58, Zi Yan wrote:
+> On 30 May 2025, at 15:56, David Hildenbrand wrote:
+> 
+>> On 30.05.25 18:22, Zi Yan wrote:
+>>> migratetype is no longer overwritten during pageblock isolation,
+>>> start_isolate_page_range(), has_unmovable_pages(), and
+>>> set_migratetype_isolate() no longer need which migratetype to restore
+>>> during isolation failure.
+>>>
+>>> For has_unmoable_pages(), it needs to know if the isolation is for CMA
+>>> allocation, so adding CMA_ALLOCATION to provide the information. At the
+>>> same time change isolation flags to enum pb_isolate_mode
+>>> (PB_ISOLATE_MODE_MEM_OFFLINE, PB_ISOLATE_MODE_CMA_ALLOC,
+>>> PB_ISOLATE_MODE_OTHER). Remove REPORT_FAILURE and check
+>>> MEMORY_OFFLINE instead, since only PB_ISOLATE_MODE_MEM_OFFLINE reports
+>>> isolation failures.
+>>>
+>>> alloc_contig_range() no longer needs migratetype. Replace it with
+>>> enum acr_flags_t to tell if an allocation is for CMA. So does
+>>> __alloc_contig_migrate_range().
+>>>
+>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>>    drivers/virtio/virtio_mem.c    |  2 +-
+>>>    include/linux/gfp.h            |  9 ++++-
+>>>    include/linux/page-isolation.h | 20 ++++++++--
+>>>    include/trace/events/kmem.h    | 14 ++++---
+>>>    mm/cma.c                       |  2 +-
+>>>    mm/memory_hotplug.c            |  6 +--
+>>>    mm/page_alloc.c                | 27 ++++++-------
+>>>    mm/page_isolation.c            | 70 +++++++++++++++-------------------
+>>>    8 files changed, 82 insertions(+), 68 deletions(-)
+>>>
+>>> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
+>>> index 56d0dbe62163..6bce70b139b2 100644
+>>> --- a/drivers/virtio/virtio_mem.c
+>>> +++ b/drivers/virtio/virtio_mem.c
+>>> @@ -1243,7 +1243,7 @@ static int virtio_mem_fake_offline(struct virtio_mem *vm, unsigned long pfn,
+>>>    		if (atomic_read(&vm->config_changed))
+>>>    			return -EAGAIN;
+>>>   -		rc = alloc_contig_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE,
+>>> +		rc = alloc_contig_range(pfn, pfn + nr_pages, ACR_OTHER,
+>>>    					GFP_KERNEL);
+>>>    		if (rc == -ENOMEM)
+>>>    			/* whoops, out of memory */
+>>> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+>>> index be160e8d8bcb..51990d571e3e 100644
+>>> --- a/include/linux/gfp.h
+>>> +++ b/include/linux/gfp.h
+>>> @@ -423,9 +423,16 @@ static inline bool gfp_compaction_allowed(gfp_t gfp_mask)
+>>>    extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
+>>>     #ifdef CONFIG_CONTIG_ALLOC
+>>> +
+>>> +enum acr_flags_t {
+>>> +	ACR_CMA,	// CMA allocation
+>>> +	ACR_OTHER,	// other allocation
+>>> +};
+>>
+>> Hm, enum != flags.
+>>
+>> If you want to use flags, then just have ACR_CMA. ACR_OTHER is implied if not set.
+>>
+>> And ACR_CMA would then have to be "1" etc.
+> 
+> I have a fixup to change acr_flags_t to acr_mode.
+> 
+>>
+>>> +
+>>>    /* The below functions must be run on a range from a single zone. */
+>>>    extern int alloc_contig_range_noprof(unsigned long start, unsigned long end,
+>>> -			      unsigned migratetype, gfp_t gfp_mask);
+>>> +				     enum acr_flags_t alloc_flags,
+>>> +				     gfp_t gfp_mask);
+>>>    #define alloc_contig_range(...)			alloc_hooks(alloc_contig_range_noprof(__VA_ARGS__))
+>>>     extern struct page *alloc_contig_pages_noprof(unsigned long nr_pages, gfp_t gfp_mask,
+>>> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+>>> index 7a681a49e73c..3e2f960e166c 100644
+>>> --- a/include/linux/page-isolation.h
+>>> +++ b/include/linux/page-isolation.h
+>>> @@ -38,8 +38,20 @@ static inline void set_pageblock_isolate(struct page *page)
+>>>    }
+>>>    #endif
+>>>   -#define MEMORY_OFFLINE	0x1
+>>> -#define REPORT_FAILURE	0x2
+>>> +/*
+>>> + * Pageblock isolation modes:
+>>> + * PB_ISOLATE_MODE_MEM_OFFLINE - isolate to offline (!allocate) memory
+>>> + *				 e.g., skip over PageHWPoison() pages and
+>>> + *				 PageOffline() pages. Unmovable pages will be
+>>> + *				 reported in this mode.
+>>> + * PB_ISOLATE_MODE_CMA_ALLOC   - isolate for CMA allocations
+>>> + * PB_ISOLATE_MODE_OTHER       - isolate for other purposes
+>>> + */
+>>> +enum pb_isolate_mode {
+>>> +	PB_ISOLATE_MODE_MEM_OFFLINE,
+>>> +	PB_ISOLATE_MODE_CMA_ALLOC,
+>>> +	PB_ISOLATE_MODE_OTHER,
+>>> +};
+>>
+>> It's late on friady, but it looks like we are duplicating things here.
+>>
+>> Let me think about that once my brain is recharged :)
+> 
+> Sure. Take your time.
 
-You shouldn't need the `PhantomData` here.
+Could we abstract both settings and use a single one? Then, we could 
+simply reject if MEM_OFFLINE is passed into alloc_contig_range().
 
-Also, do we need to ask for `T: MiscDevice` here? Could we instead have
-just `T` and then below you write
-`RawDeviceRegistration<T::RegistrationData>` instead? (`new` of course
-needs to have a new generic: `U: MiscDevice<RegistrationData =3D T>`)
+alloc_contig_pages and page isolation, hmmmm, MEM_OFFLINE is kind-of an 
+allocation. CMA is an allocation.
 
->  }
-> =20
-> -// SAFETY:
-> -// - It is allowed to call `misc_deregister` on a different thread from =
-where you called
-> -//   `misc_register`.
-> -// - Only implements `Send` if `MiscDevice::RegistrationData` is also `S=
-end`.
-> -unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::R=
-egistrationData: Send {}
-> -
-> -// SAFETY:
-> -// - All `&self` methods on this type are written to ensure that it is s=
-afe to call them in
-> -//   parallel.
-> -// - `MiscDevice::RegistrationData` is always `Sync`.
-> -unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
-> -
-> -impl<T: MiscDevice> MiscDeviceRegistration<T> {
-> -    /// Register a misc device.
-> -    pub fn register(
-> +impl<T: MiscDevice> RawDeviceRegistration<T> {
-> +    fn new<'a>(
->          opts: MiscDeviceOptions,
-> -        data: impl PinInit<T::RegistrationData, Error>,
-> -    ) -> impl PinInit<Self, Error> {
-> +        parent: Option<&'a Device<Bound>>,
-> +        data: &'a T::RegistrationData,
-> +    ) -> impl PinInit<Self, Error> + 'a
-> +    where
-> +        T: 'a,
-> +    {
->          try_pin_init!(Self {
-> -            data <- Opaque::pin_init(data),
-> +            // INVARIANT: `Self` is always embedded in a `MiscDeviceRegi=
-stration<T>`, hence `data`
-> +            // is guaranteed to be valid for the entire lifetime of `Sel=
-f`.
-> +            data: NonNull::from(data),
+Just an idea, not sure ...
 
-Both the argument in the INVARIANT comment and way this works are a bit
-flawed. Instead, I'd recommend directly taking the `NonNull` as a
-parameter. Yes the function will need to be `unsafe`, but the lifetime
-that you're creating below only lives for `'a`, but the object might
-live much longer. You might still be fine, but I'd just recommend
-staying in raw pointer land (or in this case `NonNull`).
-
->              inner <- Opaque::try_ffi_init(move |slot: *mut bindings::mis=
-cdevice| {
-> +                let mut value =3D opts.into_raw::<T>();
-> +
-> +                if let Some(parent) =3D parent {
-> +                    // The device core code will take care to take a ref=
-erence of `parent` in
-
-Just a question: with "take a reference of" you mean that it will
-increment the refcount?
-
-> +                    // `device_add()` called by `misc_register()`.
-> +                    value.parent =3D parent.as_raw();
-> +                }
-> +
->                  // SAFETY: The initializer can write to the provided `sl=
-ot`.
-> -                unsafe { slot.write(opts.into_raw::<T>()) };
-> +                unsafe { slot.write(value) };
-> =20
->                  // SAFETY:
->                  // * We just wrote the misc device options to the slot. =
-The miscdevice will
-> @@ -94,12 +94,12 @@ pub fn register(
->      }
-> =20
->      /// Returns a raw pointer to the misc device.
-> -    pub fn as_raw(&self) -> *mut bindings::miscdevice {
-> +    fn as_raw(&self) -> *mut bindings::miscdevice {
->          self.inner.get()
->      }
-> =20
->      /// Access the `this_device` field.
-> -    pub fn device(&self) -> &Device {
-> +    fn device(&self) -> &Device {
->          // SAFETY: This can only be called after a successful register()=
-, which always
->          // initialises `this_device` with a valid device. Furthermore, t=
-he signature of this
->          // function tells the borrow-checker that the `&Device` referenc=
-e must not outlive the
-> @@ -108,6 +108,108 @@ pub fn device(&self) -> &Device {
->          unsafe { Device::as_ref((*self.as_raw()).this_device) }
->      }
-> =20
-> +    fn data(&self) -> &T::RegistrationData {
-> +        // SAFETY: The type invariant guarantees that `data` is valid fo=
-r the entire lifetime of
-> +        // `Self`.
-> +        unsafe { self.data.as_ref() }
-> +    }
-> +}
-> +
-> +#[pinned_drop]
-> +impl<T: MiscDevice> PinnedDrop for RawDeviceRegistration<T> {
-> +    fn drop(self: Pin<&mut Self>) {
-> +        // SAFETY: We know that the device is registered by the type inv=
-ariants.
-> +        unsafe { bindings::misc_deregister(self.inner.get()) };
-> +    }
-> +}
-> +
-> +#[expect(dead_code)]
-> +enum DeviceRegistrationInner<T: MiscDevice> {
-> +    Raw(Pin<KBox<RawDeviceRegistration<T>>>),
-> +    Managed(Devres<RawDeviceRegistration<T>>),
-
-These two names could be shortened (`DeviceRegistrationInner` and
-`RawDeviceRegistration`) as they are only implementation details of this
-file. How about `InnerRegistration` and `RawRegistration`? Or maybe
-something even shorter.
-
-> +}
-> +
-> +/// A registration of a miscdevice.
-> +#[pin_data(PinnedDrop)]
-> +pub struct MiscDeviceRegistration<T: MiscDevice> {
-> +    inner: DeviceRegistrationInner<T>,
-> +    #[pin]
-> +    data: Opaque<T::RegistrationData>,
-
-Why is it necessary to store `data` inside of `Opaque`?
-
-> +    this_device: ARef<Device>,
-> +    _t: PhantomData<T>,
-> +}
-> +
-> +// SAFETY:
-> +// - It is allowed to call `misc_deregister` on a different thread from =
-where you called
-> +//   `misc_register`.
-> +// - Only implements `Send` if `MiscDevice::RegistrationData` is also `S=
-end`.
-> +unsafe impl<T: MiscDevice> Send for MiscDeviceRegistration<T> where T::R=
-egistrationData: Send {}
-> +
-> +// SAFETY:
-> +// - All `&self` methods on this type are written to ensure that it is s=
-afe to call them in
-> +//   parallel.
-> +// - `MiscDevice::RegistrationData` is always `Sync`.
-> +unsafe impl<T: MiscDevice> Sync for MiscDeviceRegistration<T> {}
-> +
-> +impl<T: MiscDevice> MiscDeviceRegistration<T> {
-> +    /// Register a misc device.
-> +    pub fn register<'a>(
-> +        opts: MiscDeviceOptions,
-> +        data: impl PinInit<T::RegistrationData, Error> + 'a,
-> +        parent: Option<&'a Device<Bound>>,
-> +    ) -> impl PinInit<Self, Error> + 'a
-> +    where
-> +        T: 'a,
-> +    {
-> +        let mut dev: Option<ARef<Device>> =3D None;
-> +
-> +        try_pin_init!(&this in Self {
-> +            data <- Opaque::pin_init(data),
-> +            // TODO: make `inner` in-place when enums get supported by p=
-in-init.
-> +            //
-> +            // Link: https://github.com/Rust-for-Linux/pin-init/issues/5=
-9
-
-You might want to add that this would avoid the extra allocation in
-`DeviceRegistrationInner`.
-
-> +            inner: {
-> +                // SAFETY:
-> +                //   - `this` is a valid pointer to `Self`,
-> +                //   - `data` was properly initialized above.
-> +                let data =3D unsafe { &*(*this.as_ptr()).data.get() };
-
-As mentioned above, this creates a reference that is valid for this
-*block*. So its lifetime will end after the `},` and before
-`this_device` is initialized.
-
-It *might* be ok to turn it back into a raw pointer in
-`RawDeviceRegistration::new`, but I wouldn't bet on it.
-
-> +
-> +                let raw =3D RawDeviceRegistration::new(opts, parent, dat=
-a);
-> +
-> +                // FIXME: Work around a bug in rustc, to prevent the fol=
-lowing warning:
-> +                //
-> +                //   "warning: value captured by `dev` is never read."
-> +                //
-> +                // Link: https://github.com/rust-lang/rust/issues/141615
-
-Note that the bug is that the compiler complains about the wrong span.
-The original value of `dev` is `None` and that value is never used, so
-the warning is justified. So this `let _ =3D dev;` still needs to stay
-until `pin-init` supports accessing previously initialized fields (now
-I'm pretty certain that I will implement that soon).
-
-> +                let _ =3D dev;
-> +
-> +                if let Some(parent) =3D parent {
-> +                    let devres =3D Devres::new(parent, raw, GFP_KERNEL)?=
-;
-> +
-> +                    dev =3D Some(devres.access(parent)?.device().into())=
-;
-> +                    DeviceRegistrationInner::Managed(devres)
-> +                } else {
-> +                    let boxed =3D KBox::pin_init(raw, GFP_KERNEL)?;
-> +
-> +                    dev =3D Some(boxed.device().into());
-> +                    DeviceRegistrationInner::Raw(boxed)
-> +                }
-> +            },
-> +            // Cache `this_device` within `Self` to avoid having to acce=
-ss `Devres` in the managed
-> +            // case.
-> +            this_device: {
-> +                // SAFETY: `dev` is guaranteed to be set in the initiali=
-zer of `inner` above.
-> +                unsafe { dev.unwrap_unchecked() }
-> +            },
-
-No need for the extra block, just do:
-
-    // Cache `this_device` within `Self` to avoid having to access `Devres`=
- in the managed
-    // case.
-    // SAFETY: `dev` is guaranteed to be set in the initializer of `inner` =
-above.
-    this_device: unsafe { dev.unwrap_unchecked() },
-
-I'm also pretty sure that the compiler would optimize `.take().unwrap()`
-and also this is only executed once per `MiscDeviceRegistration`, so
-even if it isn't it wouldn't really matter. So I'd prefer if we don't
-use `unsafe` here even if it is painfully obvious (if I'm fast enough
-with implementing, you can rebase on top before you merge and then this
-will be gone anyways :)
-
-> +            _t: PhantomData,
-> +        })
-> +    }
-> +
-> +    /// Access the `this_device` field.
-> +    pub fn device(&self) -> &Device {
-> +        &self.this_device
-> +    }
-> +
->      /// Access the additional data stored in this registration.
->      pub fn data(&self) -> &T::RegistrationData {
->          // SAFETY:
-> @@ -120,9 +222,6 @@ pub fn data(&self) -> &T::RegistrationData {
->  #[pinned_drop]
->  impl<T: MiscDevice> PinnedDrop for MiscDeviceRegistration<T> {
->      fn drop(self: Pin<&mut Self>) {
-> -        // SAFETY: We know that the device is registered by the type inv=
-ariants.
-> -        unsafe { bindings::misc_deregister(self.inner.get()) };
-> -
->          // SAFETY: `self.data` is valid for dropping.
->          unsafe { core::ptr::drop_in_place(self.data.get()) };
->      }
-> @@ -137,14 +236,13 @@ pub trait MiscDevice: Sized {
->      /// The additional data carried by the [`MiscDeviceRegistration`] fo=
-r this [`MiscDevice`].
->      /// If no additional data is required than the unit type `()` should=
- be used.
->      ///
-> -    /// This data can be accessed in [`MiscDevice::open()`] using
-> -    /// [`MiscDeviceRegistration::data()`].
-> +    /// This data can be accessed in [`MiscDevice::open()`].
->      type RegistrationData: Sync;
-> =20
->      /// Called when the misc device is opened.
->      ///
->      /// The returned pointer will be stored as the private data for the =
-file.
-> -    fn open(_file: &File, _misc: &MiscDeviceRegistration<Self>) -> Resul=
-t<Self::Ptr>;
-> +    fn open(_file: &File, _misc: &Device, _data: &Self::RegistrationData=
-) -> Result<Self::Ptr>;
-
-What is the reason that these parameters begin with `_`? In a trait
-function without a body, the compiler shouldn't war about unused
-parameters.
-
----
+-- 
 Cheers,
-Benno
 
-> =20
->      /// Called when the misc device is released.
->      fn release(device: Self::Ptr, _file: &File) {
+David / dhildenb
+
