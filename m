@@ -1,131 +1,573 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3014021B9FD
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C925221FF25
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598058; cv=none; b=AQk6INVCoKmML7R6nazt1CrgC+B+mK/A0J5C3s9pXj89npPQ3nu+Pu/cdHMS08QPlXXY6fjpZTehFIei1LMv6VnWY5oiUo2doj7YxSSePg9/RVpVkkCjM1smaXsDoC7VMaStH3Tsi3wfAiBwICc7HHBYVZFvS9vfydxdYrHo9MU=
+	t=1748598099; cv=none; b=evGz3SIjdJ2ZALedegRV9fzhwHzVxFkj3Szwj8TZXc0NBUGJF/uYWfyH1/oHRj5Z6mH60+rlvgOfE+ThL0aPMeAYDsRtRTLAP2pt6JxXk0oxtKNF5LRUhUIzn34MO8RO2VuywHAGQrrBmJFqJma5gZ4LySdOFCi3wV7ZUD9aCh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598058; c=relaxed/simple;
-	bh=9L46h2bC/ZzRvJPhqqnbE6d9vQTHTHOjJrh/9UoHbpk=;
+	s=arc-20240116; t=1748598099; c=relaxed/simple;
+	bh=p8bPfn+z3z+2ASSm8ilonYZ6I3XKs306Xt2PCMPzeIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGggUStCKgnRistLmeDPkHqY1unK4mJZVdE6VmMyXKFfvOLDsjWUVzOZ10hNI38kPLwgELGCCxlLxQQ/jFsg4UXYhxfKji6BmjnVJ8z1w0xmoemOPJxNeJEqvQpzrB2q50Xwk/+vnzAz9Vkb+Tbpyc+c7Lrzj9UuoVFLQx3kTSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwED-0000T2-LD; Fri, 30 May 2025 11:40:41 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwEB-000xGk-2I;
-	Fri, 30 May 2025 11:40:39 +0200
-Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <mfe@pengutronix.de>)
-	id 1uKwEB-000pOI-1s;
-	Fri, 30 May 2025 11:40:39 +0200
-Date: Fri, 30 May 2025 11:40:39 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Marco Felsch <kernel@pengutronix.de>,
-	Henrik Rydberg <rydberg@bitmath.org>,
-	Danilo Krummrich <dakr@redhat.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] Input: Add TouchNetix aXiom I2C Touchscreen
- support
-Message-ID: <20250530094039.n5236kxskha4vrhd@pengutronix.de>
-References: <20250529-v6-10-topic-touchscreen-axiom-v2-0-a5edb105a600@pengutronix.de>
- <20250529-v6-10-topic-touchscreen-axiom-v2-4-a5edb105a600@pengutronix.de>
- <2025052902-dizzy-baggie-15ee@gregkh>
+	 Content-Type:Content-Disposition:In-Reply-To; b=otSjFeZmJbo2XPN/hdSAtTRJBs/7PT5rcEgVLcpBP1b/1weFj0BNHOv3f3zLuZRigTz5bLkLOwmpsQmd+riu/RAeEEYfpaYMaiJmrl2HOM0FE3anP9ykJgNxaITkWVV0rYreW4C/3ebPUXBdI6UmIfQadCrhIOY954rqQSxkOUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQ35yy3D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T+/sF2sH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QQ35yy3D; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=T+/sF2sH; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQ35yy3D";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T+/sF2sH";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QQ35yy3D";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="T+/sF2sH"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D6CEB2122E;
+	Fri, 30 May 2025 09:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748598093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS0O2ADLUauezUFF1y8I2YgDVhIi5NtA88euL27PlvI=;
+	b=QQ35yy3D14JKmdJBf+P1w1ZmF+yoUnDVNLavwiNgZ6UnZ1H1mebQN4+GsGl6Plm6Rmg00J
+	nrktGD1ZZ1tnqPd1ZbAA+jvBEOgQ1K4oZdA4YZb5A0eiumZbvrPOQiMNemElC/YUZTjFth
+	JOeX0aKwBjJvKtQInvPwq0/K+cGryHE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748598093;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS0O2ADLUauezUFF1y8I2YgDVhIi5NtA88euL27PlvI=;
+	b=T+/sF2sHKR5z37gD2Ul2PFeh99HsEcAVAVXJz3KUDvrxttRmnv6xGf7urNAOXw40iDruh3
+	/CKHRkKall2Qw8Dg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748598093; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS0O2ADLUauezUFF1y8I2YgDVhIi5NtA88euL27PlvI=;
+	b=QQ35yy3D14JKmdJBf+P1w1ZmF+yoUnDVNLavwiNgZ6UnZ1H1mebQN4+GsGl6Plm6Rmg00J
+	nrktGD1ZZ1tnqPd1ZbAA+jvBEOgQ1K4oZdA4YZb5A0eiumZbvrPOQiMNemElC/YUZTjFth
+	JOeX0aKwBjJvKtQInvPwq0/K+cGryHE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748598093;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pS0O2ADLUauezUFF1y8I2YgDVhIi5NtA88euL27PlvI=;
+	b=T+/sF2sHKR5z37gD2Ul2PFeh99HsEcAVAVXJz3KUDvrxttRmnv6xGf7urNAOXw40iDruh3
+	/CKHRkKall2Qw8Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F1781132D8;
+	Fri, 30 May 2025 09:41:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vTMuN0p9OWgidQAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 30 May 2025 09:41:30 +0000
+Date: Fri, 30 May 2025 10:41:25 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Bo Li <libo.gcs85@bytedance.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, luto@kernel.org, kees@kernel.org, 
+	akpm@linux-foundation.org, david@redhat.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, peterz@infradead.org, dietmar.eggemann@arm.com, hpa@zytor.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, jannh@google.com, riel@surriel.com, 
+	harry.yoo@oracle.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, duanxiongchun@bytedance.com, 
+	yinhongbo@bytedance.com, dengliang.1214@bytedance.com, xieyongji@bytedance.com, 
+	chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com, 
+	chengguozhu@bytedance.com, sunjiadong.lff@bytedance.com
+Subject: Re: [RFC v2 00/35] optimize cost of inter-process communication
+Message-ID: <4fh5aagswxyecc5ffqngpyvd2ojs5rx3xihi3eat2foyh232da@5vz26lupjwwr>
+References: <cover.1748594840.git.libo.gcs85@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2025052902-dizzy-baggie-15ee@gregkh>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1748594840.git.libo.gcs85@bytedance.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL3mhzhn45zpqpmgqn4z7synfm)];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_GT_50(0.00)[52];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On 25-05-29, Greg Kroah-Hartman wrote:
-> On Thu, May 29, 2025 at 12:08:45AM +0200, Marco Felsch wrote:
-> > +	if (!entry->info)
-> > +		WARN(1, "Unsupported usage u%x used, driver bug!", i);
+On Fri, May 30, 2025 at 05:27:28PM +0800, Bo Li wrote:
+> Changelog:
 > 
-> You just crashed the system and caused all data to be lost if this is
-> ever hit :(
+> v2:
+> - Port the RPAL functions to the latest v6.15 kernel.
+> - Add a supplementary introduction to the application scenarios and
+>   security considerations of RPAL.
 > 
-> As you did detect this, please handle the error and recover.  It's a bit
-> rude for a single i2c driver to take down a whole system, right?
-
-Good point.
-
-> > +#define AXIOM_SIMPLE_FW_DEVICE_ATTR(attr)					\
-> > +	static ssize_t								\
-> > +	fw_ ## attr ## _show(struct device *dev,				\
-> > +			     struct device_attribute *_attr, char *buf)		\
-> > +	{									\
-> > +		struct i2c_client *i2c = to_i2c_client(dev);			\
-> > +		struct axiom_data *ts = i2c_get_clientdata(i2c);		\
-> > +										\
-> > +		return sprintf(buf, "%u\n", ts->fw_##attr);			\
+> link to v1:
+> https://lore.kernel.org/lkml/CAP2HCOmAkRVTci0ObtyW=3v6GFOrt9zCn2NwLUbZ+Di49xkBiw@mail.gmail.com/
 > 
-> sysfs_emit() please for all sysfs show functions.
-
-Sure.
-
-> > +	axiom_u42_get_touchslots(ts);
-> > +	if (!ts->num_slots && update_in_process) {
-> > +		input_free_device(input);
-> > +		/*
-> > +		 * Skip input device registration but don't throw an error to
-> > +		 * not abort the update since some FW updates require a
-> > +		 * following CFG update to re-initialize the touchslot handling.
-> > +		 */
-> > +		if (update_in_process) {
-> > +			dev_info(dev, "No touchslots found after FW or CFG update, skip registering input device\n");
+> --------------------------------------------------------------------------
 > 
-> Why is this info?  What can a user do with this?  Shouldn't this be a
-> dev_warn() call at the least?
-
-Please see below.
-
-> > +			return 0;
+> # Introduction
 > 
-> You return success, but the device is NOT set up properly, how is that
-> going to work?
+> We mainly apply RPAL to the service mesh architecture widely adopted in
+> modern cloud-native data centers. Before the rise of the service mesh
+> architecture, network functions were usually integrated into monolithic
+> applications as libraries, and the main business programs invoked them
+> through function calls. However, to facilitate the independent development
+> and operation and maintenance of the main business programs and network
+> functions, the service mesh removed the network functions from the main
+> business programs and made them independent processes (called sidecars).
+> Inter-process communication (IPC) is used for interaction between the main
+> business program and the sidecar, and the introduced inter-process
+> communication has led to a sharp increase in resource consumption in
+> cloud-native data centers, and may even occupy more than 10% of the CPU of
+> the entire microservice cluster.
+> 
+> To achieve the efficient function call mechanism of the monolithic
+> architecture under the service mesh architecture, we introduced the RPAL
+> (Running Process As Library) architecture, which implements the sharing of
+> the virtual address space of processes and the switching threads in user
+> mode. Through the analysis of the service mesh architecture, we found that
+> the process memory isolation between the main business program and the
+> sidecar is not particularly important because they are split from one
+> application and were an integral part of the original monolithic
+> application. It is more important for the two processes to be independent
+> of each other because they need to be independently developed and
+> maintained to ensure the architectural advantages of the service mesh.
+> Therefore, RPAL breaks the isolation between processes while preserving the
+> independence between them.  We think that RPAL can also be applied to other
+> scenarios featuring sidecar-like architectures, such as distributed file
+> storage systems in LLM infra.
+> 
+> In RPAL architecture, multiple processes share a virtual address space, so
+> this architecture can be regarded as an advanced version of the Linux
+> shared memory mechanism:
+> 
+> 1. Traditional shared memory requires two processes to negotiate to ensure
+> the mapping of the same piece of memory. In RPAL architecture, two RPAL
+> processes still need to reach a consensus before they can successfully
+> invoke the relevant system calls of RPAL to share the virtual address
+> space.
+> 2. Traditional shared memory only shares part of the data. However, in RPAL
+> architecture, processes that have established an RPAL communication
+> relationship share a virtual address space, and all user memory (such as
+> data segments and code segments) of each RPAL process is shared among these
+> processes. However, a process cannot access the memory of other processes
+> at any time. We use the MPK mechanism to ensure that the memory of other
+> processes can only be accessed when special RPAL functions are called.
+> Otherwise, a page fault will be triggered.
+> 3. In RPAL architecture, to ensure the consistency of the execution context
+> of the shared code (such as the stack and thread local storage), we further
+> implement the thread context switching in user mode based on the ability to
+> share the virtual address space of different processes, enabling the
+> threads of different processes to directly perform fast switching in user
+> mode without falling into kernel mode for slow switching.
+> 
+> # Background
+> 
+> In traditional inter-process communication (IPC) scenarios, Unix domain
+> sockets are commonly used in conjunction with the epoll() family for event
+> multiplexing. IPC operations involve system calls on both the data and
+> control planes, thereby imposing a non-trivial overhead on the interacting
+> processes. Even when shared memory is employed to optimize the data plane,
+> two data copies still remain. Specifically, data is initially copied from
+> a process's private memory space into the shared memory area, and then it
+> is copied from the shared memory into the private memory of another
+> process.
+> 
+> This poses a question: Is it possible to reduce the overhead of IPC with
+> only minimal modifications at the application level? To address this, we
+> observed that the functionality of IPC, which encompasses data transfer
+> and invocation of the target thread, is similar to a function call, where
+> arguments are passed and the callee function is invoked to process them.
+> Inspired by this analogy, we introduce RPAL (Run Process As Library), a
+> framework designed to enable one process to invoke another as if making
+> a local function call, all without going through the kernel.
+> 
+> # Design
+> 
+> First, let’s formalize RPAL’s core objectives:
+> 
+> 1. Data-plane efficiency: Reduce the number of data copies from two (in the
+>    shared memory solution) to one.
+> 2. Control-plane optimization: Eliminate the overhead of system calls and
+>    kernel's thread switches.
+> 3. Application compatibility: Minimize the modifications to existing
+>    applications that utilize Unix domain sockets and the epoll() family.
+> 
+> To attain the first objective, processes that use RPAL share the same
+> virtual address space. So one process can access another's data directly
+> via a data pointer. This means data can be transferred from one process to
+> another with just one copy operation. 
+> 
+> To meet the second goal, RPAL relies on the shared address space to do
+> lightweight context switching in user space, which we call an "RPAL call".
+> This allows one process to execute another process's code just like a
+> local function call.
+> 
+> To achieve the third target, RPAL stays compatible with the epoll family
+> of functions, like epoll_create(), epoll_wait(), and epoll_ctl(). If an
+> application uses epoll for IPC, developers can switch to RPAL with just a
+> few small changes. For instance, you can just replace epoll_wait() with
+> rpal_epoll_wait(). The basic epoll procedure, where a process waits for
+> another to write to a monitored descriptor using an epoll file descriptor,
+> still works fine with RPAL.
+> 
+> ## Address space sharing
+> 
+> For address space sharing, RPAL partitions the entire userspace virtual
+> address space and allocates non-overlapping memory ranges to each process.
+> On x86_64 architectures, RPAL uses a memory range size covered by a
+> single PUD (Page Upper Directory) entry, which is 512GB. This restricts
+> each process’s virtual address space to 512GB on x86_64, sufficient for
+> most applications in our scenario. The rationale is straightforward: 
+> address space sharing can be simply achieved by copying the PUD from one
+> process’s page table to another’s. So one process can directly use the
+> data pointer to access another's memory.
+> 
+> 
+>  |------------| <- 0
+>  |------------| <- 512 GB
+>  |  Process A |
+>  |------------| <- 2*512 GB
+>  |------------| <- n*512 GB
+>  |  Process B |
+>  |------------| <- (n+1)*512 GB
+>  |------------| <- STACK_TOP
+>  |  Kernel    |
+>  |------------|
+> 
+> ## RPAL call
+> 
+> We refer to the lightweight userspace context switching mechanism as RPAL
+> call. It enables the caller (or sender) thread of one process to directly
+> switch to the callee (or receiver) thread of another process. 
+> 
+> When Process A’s caller thread initiates an RPAL call to Process B’s
+> callee thread, the CPU saves the caller’s context and loads the callee’s
+> context. This enables direct userspace control flow transfer from the
+> caller to the callee. After the callee finishes data processing, the CPU
+> saves Process B’s callee context and switches back to Process A’s caller
+> context, completing a full IPC cycle.
+> 
+> 
+>  |------------|                |---------------------|  
+>  |  Process A |                |  Process B          |
+>  | |-------|  |                | |-------|           |     
+>  | | caller| --- RPAL call --> | | callee|    handle |
+>  | | thread| <------------------ | thread| -> event  |
+>  | |-------|  |                | |-------|           |
+>  |------------|                |---------------------|
+> 
+> # Security and compatibility with kernel subsystems
+> 
+> ## Memory protection between processes
+> 
+> Since processes using RPAL share the address space, unintended
+> cross-process memory access may occur and corrupt the data of another
+> process. To mitigate this, we leverage Memory Protection Keys (MPK) on x86
+> architectures.
+> 
+> MPK assigns 4 bits in each page table entry to a "protection key", which
+> is paired with a userspace register (PKRU). The PKRU register defines
+> access permissions for memory regions protected by specific keys (for
+> detailed implementation, refer to the kernel documentation "Memory
+> Protection Keys"). With MPK, even though the address space is shared
+> among processes, cross-process access is restricted: a process can only
+> access the memory protected by a key if its PKRU register is configured
+> with the corresponding permission. This ensures that processes cannot
+> access each other’s memory unless an explicit PKRU configuration is set.
+> 
+> ## Page fault handling and TLB flushing
+> 
+> Due to the shared address space architecture, both page fault handling and
+> TLB flushing require careful consideration. For instance, when Process A
+> accesses Process B’s memory, a page fault may occur in Process A's
+> context, but the faulting address belongs to Process B. In this case, we
+> must pass Process B's mm_struct to the page fault handler.
+> 
+> TLB flushing is more complex. When a thread flushes the TLB, since the
+> address space is shared, not only other threads in the current process but
+> also other processes that share the address space may access the
+> corresponding memory (related to the TLB flush). Therefore, the cpuset used
+> for TLB flushing should be the union of the mm_cpumasks of all processes
+> that share the address space.
+> 
+> ## Lazy switch of kernel context
+> 
+> In RPAL, a mismatch may arise between the user context and the kernel
+> context. The RPAL call is designed solely to switch the user context,
+> leaving the kernel context unchanged. For instance, when a RPAL call takes
+> place, transitioning from caller thread to callee thread, and subsequently
+> a system call is initiated within callee thread, the kernel will
+> incorrectly utilize the caller's kernel context (such as the kernel stack)
+> to process the system call.
+> 
+> To resolve context mismatch issues, a kernel context switch is triggered at
+> the kernel entry point when the callee initiates a syscall or an
+> exception/interrupt occurs. This mechanism ensures context consistency
+> before processing system calls, interrupts, or exceptions. We refer to this
+> kernel context switch as a "lazy switch" because it defers the switching
+> operation from the traditional thread switch point to the next kernel entry
+> point.
+> 
+> Lazy switch should be minimized as much as possible, as it significantly
+> degrades performance. We currently utilize RPAL in an RPC framework, in
+> which the RPC sender thread relies on the RPAL call to invoke the RPC
+> receiver thread entirely in user space. In most cases, the receiver
+> thread is free of system calls and the code execution time is relatively
+> short. This characteristic effectively reduces the probability of a lazy
+> switch occurring.
+> 
+> ## Time slice correction
+> 
+> After an RPAL call, the callee's user mode code executes. However, the
+> kernel incorrectly attributes this CPU time to the caller due to the
+> unchanged kernel context.
+> 
+> To resolve this, we use the Time Stamp Counter (TSC) register to measure
+> CPU time consumed by the callee thread in user space. The kernel then uses
+> this user-reported timing data to adjust the CPU accounting for both the
+> caller and callee thread, similar to how CPU steal time is implemented.
+> 
+> ## Process recovery
+> 
+> Since processes can access each other’s memory, there is a risk that the
+> target process’s memory may become invalid at the access time (e.g., if
+> the target process has exited unexpectedly). The kernel must handle such
+> cases; otherwise, the accessing process could be terminated due to
+> failures originating from another process.
+> 
+> To address this issue, each thread of the process should pre-establish a
+> recovery point when accessing the memory of other processes. When such an
+> invalid access occurs, the thread traps into the kernel. Inside the page
+> fault handler, the kernel restores the user context of the thread to the
+> recovery point. This mechanism ensures that processes maintain mutual
+> independence, preventing cascading failures caused by cross-process memory
+> issues.
+> 
+> # Performance
+> 
+> To quantify the performance improvements driven by RPAL, we measured
+> latency both before and after its deployment. Experiments were conducted on
+> a server equipped with two Intel(R) Xeon(R) Platinum 8336C CPUs (2.30 GHz)
+> and 1 TB of memory. Latency was defined as the duration from when the
+> client thread initiates a message to when the server thread is invoked and
+> receives it.
+> 
+> During testing, the client transmitted 1 million 32-byte messages, and we
+> computed the per-message average latency. The results are as follows:
+> 
+> *****************
+> Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
+>  Message count: 1000000, Average latency: 19616 cycles
+> With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
+>  Message count: 1000000, Average latency: 1703 cycles
+> *****************
+> 
+> These results confirm that RPAL delivers substantial latency improvements
+> over the current epoll implementation—achieving a 17,913-cycle reduction
+> (an ~91.3% improvement) for 32-byte messages.
+> 
+> We have applied RPAL to an RPC framework that is widely used in our data
+> center. With RPAL, we have successfully achieved up to 15.5% reduction in
+> the CPU utilization of processes in real-world microservice scenario. The
+> gains primarily stem from minimizing control plane overhead through the
+> utilization of userspace context switches. Additionally, by leveraging
+> address space sharing, the number of memory copies is significantly
+> reduced.
+> 
+> # Future Work
+> 
+> Currently, RPAL requires the MPK (Memory Protection Key) hardware feature,
+> which is supported by a range of Intel CPUs. For AMD architectures, MPK is
+> supported only on the latest processor, specifically, 3th Generation AMD
+> EPYC™ Processors and subsequent generations. Patch sets that extend RPAL
+> support to systems lacking MPK hardware will be provided later.
+> 
+> Accompanying test programs are also provided in the samples/rpal/
+> directory. And the user-mode RPAL library, which realizes user-space RPAL
+> call, is in the samples/rpal/librpal directory.
+>             
+> We hope to get some community discussions and feedback on RPAL's
+> optimization approaches and architecture.
+> 
+> Look forward to your comments.
 
-As explained in the comment. If a firmware update changes the register
-layout you may end up in such a situation. A subsequent CFG update is
-required to provide a correct FW+CFG match.
+The first time you posted, you got two NACKs (from Dave Hansen and Lorenzo).
+You didn't reply and now you post this flood of patches? Please don't?
 
-We don't throw an error because the FW update itself was successful but
-a CFG update is required, therefore I went with the dev_info() but I can
-change this to dev_warn().
+From my end it's also a Big Ol' NACK.
 
-We don't know which combination requires a subsequent CFG update, e.g.
-there is a FW version 4.8.9 which comes in a 2D and a 3D flavour. Tests
-showed that updating from a 4.8.9 2D FW to a 4.8.9 3D FW don't require
-updating the CFG. Also minor FW updates may not require to update the
-CFG.
+> 
+> Bo Li (35):
+>   Kbuild: rpal support
+>   RPAL: add struct rpal_service
+>   RPAL: add service registration interface
+>   RPAL: add member to task_struct and mm_struct
+>   RPAL: enable virtual address space partitions
+>   RPAL: add user interface
+>   RPAL: enable shared page mmap
+>   RPAL: enable sender/receiver registration
+>   RPAL: enable address space sharing
+>   RPAL: allow service enable/disable
+>   RPAL: add service request/release
+>   RPAL: enable service disable notification
+>   RPAL: add tlb flushing support
+>   RPAL: enable page fault handling
+>   RPAL: add sender/receiver state
+>   RPAL: add cpu lock interface
+>   RPAL: add a mapping between fsbase and tasks
+>   sched: pick a specified task
+>   RPAL: add lazy switch main logic
+>   RPAL: add rpal_ret_from_lazy_switch
+>   RPAL: add kernel entry handling for lazy switch
+>   RPAL: rebuild receiver state
+>   RPAL: resume cpumask when fork
+>   RPAL: critical section optimization
+>   RPAL: add MPK initialization and interface
+>   RPAL: enable MPK support
+>   RPAL: add epoll support
+>   RPAL: add rpal_uds_fdmap() support
+>   RPAL: fix race condition in pkru update
+>   RPAL: fix pkru setup when fork
+>   RPAL: add receiver waker
+>   RPAL: fix unknown nmi on AMD CPU
+>   RPAL: enable time slice correction
+>   RPAL: enable fast epoll wait
+>   samples/rpal: add RPAL samples
+> 
+>  arch/x86/Kbuild                               |    2 +
+>  arch/x86/Kconfig                              |    2 +
+>  arch/x86/entry/entry_64.S                     |  160 ++
+>  arch/x86/events/amd/core.c                    |   14 +
+>  arch/x86/include/asm/pgtable.h                |   25 +
+>  arch/x86/include/asm/pgtable_types.h          |   11 +
+>  arch/x86/include/asm/tlbflush.h               |   10 +
+>  arch/x86/kernel/asm-offsets.c                 |    3 +
+>  arch/x86/kernel/cpu/common.c                  |    8 +-
+>  arch/x86/kernel/fpu/core.c                    |    8 +-
+>  arch/x86/kernel/nmi.c                         |   20 +
+>  arch/x86/kernel/process.c                     |   25 +-
+>  arch/x86/kernel/process_64.c                  |  118 +
+>  arch/x86/mm/fault.c                           |  271 ++
+>  arch/x86/mm/mmap.c                            |   10 +
+>  arch/x86/mm/tlb.c                             |  172 ++
+>  arch/x86/rpal/Kconfig                         |   21 +
+>  arch/x86/rpal/Makefile                        |    6 +
+>  arch/x86/rpal/core.c                          |  477 ++++
+>  arch/x86/rpal/internal.h                      |   69 +
+>  arch/x86/rpal/mm.c                            |  426 +++
+>  arch/x86/rpal/pku.c                           |  196 ++
+>  arch/x86/rpal/proc.c                          |  279 ++
+>  arch/x86/rpal/service.c                       |  776 ++++++
+>  arch/x86/rpal/thread.c                        |  313 +++
+>  fs/binfmt_elf.c                               |   98 +-
+>  fs/eventpoll.c                                |  320 +++
+>  fs/exec.c                                     |   11 +
+>  include/linux/mm_types.h                      |    3 +
+>  include/linux/rpal.h                          |  633 +++++
+>  include/linux/sched.h                         |   21 +
+>  init/init_task.c                              |    6 +
+>  kernel/exit.c                                 |    5 +
+>  kernel/fork.c                                 |   32 +
+>  kernel/sched/core.c                           |  676 +++++
+>  kernel/sched/fair.c                           |  109 +
+>  kernel/sched/sched.h                          |    8 +
+>  mm/mmap.c                                     |   16 +
+>  mm/mprotect.c                                 |  106 +
+>  mm/rmap.c                                     |    4 +
+>  mm/vma.c                                      |   18 +
+>  samples/rpal/Makefile                         |   17 +
+>  samples/rpal/asm_define.c                     |   14 +
+>  samples/rpal/client.c                         |  178 ++
+>  samples/rpal/librpal/asm_define.h             |    6 +
+>  samples/rpal/librpal/asm_x86_64_rpal_call.S   |   57 +
+>  samples/rpal/librpal/debug.h                  |   12 +
+>  samples/rpal/librpal/fiber.c                  |  119 +
+>  samples/rpal/librpal/fiber.h                  |   64 +
+>  .../rpal/librpal/jump_x86_64_sysv_elf_gas.S   |   81 +
+>  .../rpal/librpal/make_x86_64_sysv_elf_gas.S   |   82 +
+>  .../rpal/librpal/ontop_x86_64_sysv_elf_gas.S  |   84 +
+>  samples/rpal/librpal/private.h                |  341 +++
+>  samples/rpal/librpal/rpal.c                   | 2351 +++++++++++++++++
+>  samples/rpal/librpal/rpal.h                   |  149 ++
+>  samples/rpal/librpal/rpal_pkru.h              |   78 +
+>  samples/rpal/librpal/rpal_queue.c             |  239 ++
+>  samples/rpal/librpal/rpal_queue.h             |   55 +
+>  samples/rpal/librpal/rpal_x86_64_call_ret.S   |   45 +
+>  samples/rpal/offset.sh                        |    5 +
+>  samples/rpal/server.c                         |  249 ++
+>  61 files changed, 9710 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/x86/rpal/Kconfig
+>  create mode 100644 arch/x86/rpal/Makefile
+>  create mode 100644 arch/x86/rpal/core.c
+>  create mode 100644 arch/x86/rpal/internal.h
+>  create mode 100644 arch/x86/rpal/mm.c
+>  create mode 100644 arch/x86/rpal/pku.c
+>  create mode 100644 arch/x86/rpal/proc.c
+>  create mode 100644 arch/x86/rpal/service.c
+>  create mode 100644 arch/x86/rpal/thread.c
+>  create mode 100644 include/linux/rpal.h
+>  create mode 100644 samples/rpal/Makefile
+>  create mode 100644 samples/rpal/asm_define.c
+>  create mode 100644 samples/rpal/client.c
+>  create mode 100644 samples/rpal/librpal/asm_define.h
+>  create mode 100644 samples/rpal/librpal/asm_x86_64_rpal_call.S
+>  create mode 100644 samples/rpal/librpal/debug.h
+>  create mode 100644 samples/rpal/librpal/fiber.c
+>  create mode 100644 samples/rpal/librpal/fiber.h
+>  create mode 100644 samples/rpal/librpal/jump_x86_64_sysv_elf_gas.S
+>  create mode 100644 samples/rpal/librpal/make_x86_64_sysv_elf_gas.S
+>  create mode 100644 samples/rpal/librpal/ontop_x86_64_sysv_elf_gas.S
+>  create mode 100644 samples/rpal/librpal/private.h
+>  create mode 100644 samples/rpal/librpal/rpal.c
+>  create mode 100644 samples/rpal/librpal/rpal.h
+>  create mode 100644 samples/rpal/librpal/rpal_pkru.h
+>  create mode 100644 samples/rpal/librpal/rpal_queue.c
+>  create mode 100644 samples/rpal/librpal/rpal_queue.h
+>  create mode 100644 samples/rpal/librpal/rpal_x86_64_call_ret.S
+>  create mode 100755 samples/rpal/offset.sh
+>  create mode 100644 samples/rpal/server.c
 
-Regards,
-  Marco
+Seriously, look at all the files you're touching. All the lines you're changing.
+All the maintainers you had to CC. All for a random new RPC method you developed.
+This is _not_ mergeable.
+
+-- 
+Pedro
