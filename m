@@ -1,174 +1,188 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20E776034;
-	Fri, 30 May 2025 17:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748625145; cv=none; b=ZxNjUVYsLuf+V3PF1rYiPxm9E4etmXA2Oj++/1KXp4HkgV4mnNjoGdV9eC320akNBRDI8nfjFz76M097pKSxYt5+6mtEHKtMCXzLAodSjvMvC924y8YMoUlUL31CyqP5NHcHck/MXbgRWe0pTj90/f7jg6Z19ybMe235D6AMXG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748625145; c=relaxed/simple;
-	bh=1VPwN74SM0DtGVcv5AdvHJHGq0USSlu7yM1DezsOIVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VgpgKzMq001JDeWt4LAcILOgYWa9wXiYdI6k3KUP8cvXbd+L5UXBJkKOi5tNNkL8YtHrnzUrvP+5n8yvdeMT1dqhOXSjmi2NRiT+jZL64iUXSpz6AmK6okgPz++cI8iordwISc1jqjR5mri7pXVjvWMRgMShIhuQGUQAsbp+jUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2hOTorm; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8115D235065;
+	Fri, 30 May 2025 17:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748625148; cv=fail; b=eHt/tJccj9SK05KI/Aw522juFdgLth4DuN9TJNahFvSaYJmZZDzOv1Q3hhirQSi/9ckWslciWGgfwx8j9hA5s+qqSqThPGNSuorjpSLYo1hNbKtWIn5Z9dbWJAE/QoL6YKqcD8Y615T5nKNGxfGAywBZxZF73uCK2DbCeVA3odE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748625148; c=relaxed/simple;
+	bh=E7UhMzs4+mpZ4UhvftqORNtRMlNZJgdAS25/IdqaPkc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VDbUTBpCw7IH8YZ4zE59q6Lq8Y3WfvfSLJcGpqcrtRWHdZxt+6QzrEIwtXGccgeKFayz4AJjcZW0CWQmqUxuTkt1ZRdTRUnFtx3+f8vRok+38R/06r+tdGc02bstXAw4oY2+HAQtyyqfU23zGuh11VjdtkOTlW7baXFs3s1fEHg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qou4YHk8; arc=fail smtp.client-ip=40.107.94.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2hOTorm"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70e3c6b88dbso17048027b3.0;
-        Fri, 30 May 2025 10:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748625143; x=1749229943; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2lNSOjAMfFroLOBhwot5JPzKj1zDI43B2TC6d+niusA=;
-        b=Y2hOTormSREZG+4tpRkFvh856er0z/zrpWyD6i9EEnVfeEYwy8dEJU5vP7rvhgjHum
-         LxHfmXIiaAAHn7hCW1iaBZhBHymJ4gsfLqEMyQFHEyQLMVCGfgNbMXq8MaZk1FIiATqJ
-         JHcE13bSGgpYxSvXctzSnfp5M5LBspkLa43jsM/QZXYMLZY9X/FmKZtEh4QNxH+nxUn5
-         +OU4iIR9paziR7g0HsEcRPd3dyjMVR3VnKXd8b60kQWbI1gSywchel9RZwE12FSW5oDJ
-         OtzTnPxztG6bl8vxsGsa94ZKiRW/3MKGLEAfLi5lC5KoFNTKOkkEhDbeFQANX0Jy3fxM
-         uK/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748625143; x=1749229943;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2lNSOjAMfFroLOBhwot5JPzKj1zDI43B2TC6d+niusA=;
-        b=WkuZ/VNgm9i6c7BeEXp7AHVEnHM86aWFId1rM4Lkok8aGvWd+tcQSewm+AgvTs228Y
-         o6Tcs9QNA5GXaj/mtnStJTaDxc3mccojFYIXAeQuYVz3ZNjn5j20TdvHOgNF1BLW2MNj
-         7rSYV2j/lmithzLpBjKt0DXWZWtYi7DGoZWyFe1FH2reXRiGdyTGMnTaYN+qgM4/bqJ+
-         NyOyCqfF3J1iesf7FUepDqZbw7ascKLcnOrj6qaMq/kFVFXLREBXDTIBM/4qoSYgWWLi
-         jgUapJH7wRid0Lt4KlPE7qSYxhuchgTmW0K8mFo+lD6kAKcEYHaYtygP/wqPhN2+A+BF
-         YSEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVu0w7YS1CyQ/TbxjruBha1huJ3jJNSFFeh5MycBv+eYBjWd+vG46JF9amli5yFMBETdMlITpH0a8gdpCw=@vger.kernel.org, AJvYcCXOtw7azy5IRl7bRhTcLgFsMIaSQ4lguBafw/ZDXWUHyMKj3Fzf/w96Bu6ZXleBH/gmJuHXPF+N4AM0cJlUEXyXtw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUB1tTnhcVNtSBgxMwYxPMS9JYPZFtdB55gTcoEdAsk/qbG6Ym
-	TC/ktkvvsyMAzEKHnJvDAT2K2b6G5ETZA2J3hhgtIWyrs2GTAg4YOacFE/7k04KLRgrG9NttLK6
-	cMe6z6Z5CgnP7+m2tSqnyjGRD9PBWrE4=
-X-Gm-Gg: ASbGncvJfp0lgfQ/WNi2aioDLcsse9OoI1FWwAe0uKF4eyTxtaAIb2Ip1b2pTpP/1e/
-	gxBNrFxqNvz7rYcUAKycIgHh0tnRtNjxfX+eH+gWp9HaqOW7dyDIcm6/dYcweB2V4quhqG1yK9D
-	0qVB0HEQRfoLSh+QHkud+gecfJttQlBB99gmS/95RYcg==
-X-Google-Smtp-Source: AGHT+IFGWIoaeBGQO4MbFA/c0oijOLEFwSPammZOMT+8lREZY9DoJ17ZZKo6F+9pjJMEdrMDj8cpHSlcpXH6XT4Oo1A=
-X-Received: by 2002:a05:690c:5c0a:b0:70f:8835:b767 with SMTP id
- 00721157ae682-70f97e3221dmr50164927b3.5.1748625142719; Fri, 30 May 2025
- 10:12:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qou4YHk8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=twXjf4GF+fgqbwJNzLHgAFd3x8gA0VFNHrBmAmD0U/TH2cJ1k/KBUMgyanFXJe+2QBDvPh10K2HPTNnHAX3AbGDKLfAtgYncGrHSZ1zpzx+W1KCipN6N5qXq4RIf6ADSpcVGCMQsTXPagR7VceF1c9OgexhWmiF6KW9DjCyAvW1YF+iYRd+TsOzQilfGjeOHMWdQBnA3HBRfR72Z0/VYwEIr+k5bp2m0sTOcmUvCWu4Jd8vub73pr3M2HLLR7DAQULhRDE06OLZZ/jMbH05F/8apCV31QYEAy9LVWLzQNJMmCbvgnttf4rFbeMum4z9Q0fHtxJaLBxz1IRP3AXV4UQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oW7L4fE9+KbllYHJo9ijOMcLTCXv7Dv3wXg8jjyVTsg=;
+ b=HM4KxRs2WGJeo915gxAL3Ul9l4aO7A62NMsqdDpmIYVPPh1n/VAbivPTYiW01s4CKZ8AU84AdrrelVnIQ1SKCRgYIXyPmyh3ebFvwO7orG8duqfLu1vpjGTtsOhGETEYmWXSyZ70yh926AG+DCsSknwPElpdLP/T6QQpGf5LnSX+AQ97ZNKghC3M5Vg8Xjrxt/17tV3NrzL3u9ONbnDBpA6oveGG3EpspE/LqZ+T0Sh+5wB1a+WEBnPKpHErUr7cRt4Huwgbd4+KMeSvpSdMmCAO1rbFDHf4TXtJ9vR/to+xGPf0Cu2egYeaVMgh+d/N335FORfSgPsNvHOGADrBTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oW7L4fE9+KbllYHJo9ijOMcLTCXv7Dv3wXg8jjyVTsg=;
+ b=qou4YHk8QH2haAg2fGyOOAfC7R3Yhgyp34vDYSlnPf+3F78kC8XJ1E3yrUVu/JxPnoZDbpgO184idkaLPw68+j3aMBTdOb7QMh9QqJ/dhw/c2rJvUHbQv4s+2PInFHwCFmg3CE7/AHKvnvtDoKl/QeQItTMcsIJwlrG+zHOCzF8npZPHOamkXBMRhNtB4MJl0gHLwjHALLju95RXJEiM/Djmk+i2SuZHSzGE7eOR49oAzFucZ7A8gBgJlStga7qRCBVLPEY0rOMvFN9wo3uP5pYwj275BdNg8Gg/M82DKORiChrjkf5soeTKBZTm8woqxGz0UVgkjb06Nu8nHKvlww==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SJ5PPFDDE56F72B.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Fri, 30 May
+ 2025 17:12:24 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8769.029; Fri, 30 May 2025
+ 17:12:24 +0000
+Date: Fri, 30 May 2025 14:12:23 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com
+Subject: Re: [PATCH v5 17/29] iommufd: Add mmap interface
+Message-ID: <20250530171223.GN233377@nvidia.com>
+References: <cover.1747537752.git.nicolinc@nvidia.com>
+ <769a7395def9f68c1ac684fa08a0221957e0de6d.1747537752.git.nicolinc@nvidia.com>
+ <20250530162945.GF233377@nvidia.com>
+ <aDnj+MD0LexufNX4@Asurada-Nvidia>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDnj+MD0LexufNX4@Asurada-Nvidia>
+X-ClientProxiedBy: BN8PR04CA0010.namprd04.prod.outlook.com
+ (2603:10b6:408:70::23) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522142551.1062417-1-namhyung@kernel.org> <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
- <aC9VoTL_Cv4R7J-j@x1> <aC-hHTgArwlF_zu9@x1> <aDDy4FQe7sBwECL8@google.com>
- <CAH0uvog_5MToOmfcsEn3+hypPrftSvtQAe+Axe94TLNwgq4HbA@mail.gmail.com> <aDjHsJqV7L24qjvT@x1>
-In-Reply-To: <aDjHsJqV7L24qjvT@x1>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 30 May 2025 10:12:11 -0700
-X-Gm-Features: AX0GCFtaB2Jxpo-c6Ap6Ay5XEjdoSur3ZLAvB0OctX21EMAXBJ2N2Kqp0shQsRM
-Message-ID: <CAH0uvoga2g88LM7giL+2RqyVreosSRnEoWGtsaaUeS3B8s5TDQ@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ5PPFDDE56F72B:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7299448e-6ca6-416d-fc16-08dd9f9d256f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?MJgNg/eaSo7UW7YT8agA52htzU7dvhWCxuJLiCXqBB77l2XhIlF9fPWynB0+?=
+ =?us-ascii?Q?cs0O5tIzZN+wM7rPFAFp/kUXMMs96AGsGW8FdrkHjc/p04G5mTi7jqu5uZ69?=
+ =?us-ascii?Q?Aq17HpXz5wPBfA6yKGt/KLkkeBw4ije0xk/2LOyXVMTRnIriV+tPpPZH8ASW?=
+ =?us-ascii?Q?SFdvitY4FHYZLdnfDhKtdhY36JO/KsFLYCELW7YyUh/ErmFS3d0Stuz+6vz5?=
+ =?us-ascii?Q?duMq/jPB4Dg2vUmZXC+ExnFH/JuFFj9xNPy8lCJCpmiUpyCq53lQe8MjzxGY?=
+ =?us-ascii?Q?qgfTzd6++zYcqo5yIHdIR/5+g06peTur7fA22TvADQFrDzwNNNuaXViojMvi?=
+ =?us-ascii?Q?zcNIRw2gd76b4bW5+YuxanRCHxRSyGYuM1/m6Cra+Esaad64hIo8ur5tWJVo?=
+ =?us-ascii?Q?1wOIIxzJIbLgFH40gA7+vO8XAUGSH+xFmKelX3lcG8RFLx4E5ew2EBn0RFhI?=
+ =?us-ascii?Q?CsLhQ5VxGBcbs9OhIxY0szZ4Px6jEH3ITlzfd119iO7VwpM/eK9OnWjq4IY/?=
+ =?us-ascii?Q?5StHrS1v7HRqj1j8p+UjIPb7CuiOJiUF62gsQTaDJonJ0Rs5IVIVXhK+FPa4?=
+ =?us-ascii?Q?JWQUCRmopS8zJ7TtrDS1irP0GitSy/3007pN4UGWMQV6GIKwj/BuPt1PDvc5?=
+ =?us-ascii?Q?BkHVF1UOlT9S9bf9yYMxZawVGuTK1jAsrJlhnAGJnIm9LilQZLLpB8uNOxX5?=
+ =?us-ascii?Q?/QQAH1m61h/dsRnm6L4+AvKPZVVfN+CtWV+UG/3IEQ3vpJv64voRi1tWDYFq?=
+ =?us-ascii?Q?e2t8f0v9m5UGklPIAPv1NrAJMxS2ePhRDLGDkO2snz5JMgI0W0vhwEo7FADr?=
+ =?us-ascii?Q?Gz3SRvrPrjIzLJO/t9pJdgHVyzUH8veT4kLXhYX3UP+3x8A8BFs+NlF/5pl1?=
+ =?us-ascii?Q?l7Z0TlCUPrlNS3TAkKPxotcyknbmZAgq3qdQAA/FZ6/tIjAQyr/iQPcLFH0E?=
+ =?us-ascii?Q?6aS9h9RVIs+nasDlFxYE0NozKjudK+UJ6I60Addx1HHBpflqpIX/kljuLwce?=
+ =?us-ascii?Q?suTzet0nu/vandVHkOxhhBWP6Ee7rGZ4wa+VHF3Xv+T2lGcTC+81l/rt3q/d?=
+ =?us-ascii?Q?1gmiuczmYrjqRApjRv3kWh4iCSuO3mQm3XInYX3v+DBT/SWBXpxlFj15rZI1?=
+ =?us-ascii?Q?iwVsNlXYdBgzqUaUZM2b3ehZFCnleR3SzdqjtXliPc1NCsALr5VAvZeiFUMY?=
+ =?us-ascii?Q?5vHn1/yCKnMoISVn5ONhVXp8ZjQM25xUWolzcdc2MIEb6KZCwVI0qMUw/Xwf?=
+ =?us-ascii?Q?apnIOGl1N+enrDV5Rq+hTHT2pZOnncgO38+F/DPiOQg63sBBc4aFK6kwsQxr?=
+ =?us-ascii?Q?Id8cNdP07QRVGUXLe65Mpzd8MzEAHi0eRCn5A3LPoKr6HhJ0XOPEx4DOk+tU?=
+ =?us-ascii?Q?RHZZ7m3lYvrMzeRQVhqDCAZirSW5F0JnXAj5QvYqmqYJUsd9VB+VJawB6Gjo?=
+ =?us-ascii?Q?3PtLXo0JYwk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mv0R8ER4KYVTD4DaptH/OTNVBTwlg5OuEhijsdk7VZL0FZ+IkkhNLgNcqtbq?=
+ =?us-ascii?Q?2IHSZmp9wc1w1i84JhKti+amK8uwn/E+Lf1qXxyQVZqGjBWtZbjKlNnDUyIE?=
+ =?us-ascii?Q?V1AQzWqIuX/9ItfJs4OACq6+Rnt8c24GfIQ+IbomWQvIiyEpcfhVX0X4Q85Z?=
+ =?us-ascii?Q?4EJPxS3qpHSI0jj+ja+14TXl2tT1tE1iJ1YVBh7GGzS8a9gMKGpu7CCn11Nz?=
+ =?us-ascii?Q?/RaDctqR2mZGeFNVUZK5BTqRz+QMCB8jt8cwu9NzCHeCdp12y2+51iAMdNCC?=
+ =?us-ascii?Q?wplMhPKoBYQ9X5uDnn7Mngoj56zv8wF2LJCTPjbZWYU/KgWaV2fCCJLl5sH7?=
+ =?us-ascii?Q?lJ8q/N9dmbhYNyFwXkbpaDbeMp/dR3hCqUJ+vlMIyal3IPX/mfQZm1xUl6KL?=
+ =?us-ascii?Q?clxTpbVW/RBTOrvnojZHpBAr69NSg0qMzfuKmR6brYR/WozvHvF4BE+bAx5Z?=
+ =?us-ascii?Q?Qn0s6jZOARhQnJV8BbdBsiqKOqhpZg3beiIaBb8Wd6rt5yw9Objo15nck/7q?=
+ =?us-ascii?Q?Pz3pXz4sBVSSCunAV+dxDoMq6sc0snGawGVR5KtgnITHBAZAljEskhdeec2u?=
+ =?us-ascii?Q?/9Odn4bl0wvUxiQ6Fd4Ozb9Q5fUAwI8nkw4/vXtIBJS/4Wa44PqjTpF4AKjx?=
+ =?us-ascii?Q?S/RipBQ/DICjnHNHa5HiiJyseop4EDbnZJRZ9lSA/LluPGn+wMg+CZWYkpIN?=
+ =?us-ascii?Q?KV0fjiHtIbnR3kQqN07wVz5Pus+yrNv6i7xms/lY/fZqKHk8M6ccG6I2MsXv?=
+ =?us-ascii?Q?4EDm5/MxGxnETZ4u7OVRTZeGKqza5rJLMYz1ihFEyrQ9D4RiLo2ekT1N5VXJ?=
+ =?us-ascii?Q?QPZ10plumc6+rzdVlyfidptYEp/8oloedDo58hUiyn9dCE14p9RWDJEimoMG?=
+ =?us-ascii?Q?K7/m/XDxt8w2i3NRYRFloZ3ioIGfgwT8xPBXtzn4jIpCAk0HByS9bSbmOWmB?=
+ =?us-ascii?Q?yYgxzEGjFbPgytwyW3F83Zfu7z4SWLsSE0pJrhX57L+6ZtrQkONezK9KMKjq?=
+ =?us-ascii?Q?P4Rdv/mudxagtQ5LOkvdoS6xrDYGtbB01QF4KEUKV7pwLsWB5caS/uRN17DE?=
+ =?us-ascii?Q?7QAVQATnmTZvqNJsaKMt5ZEAdMKaQCWVEIuqkGBc4RZ3m22xAAE8++wF+Nu0?=
+ =?us-ascii?Q?EhJdAwI8QNQytwoaewvtDnPkXllIeGSsCI8L1avRVimap6m+1lxRbJ3oXsTA?=
+ =?us-ascii?Q?y1Y4G7K9QceCDkOFfi8bw7HizdyFYyfrLstreWaGgshnDrBpz961cSzzZdhr?=
+ =?us-ascii?Q?f9RLG0sh5k/+cWji4U81K//Awv3ZhlKoWWuH5G+cWAl0jzfgasDNY7rabmOj?=
+ =?us-ascii?Q?NNCoJKxpLePEAeoGK3HJfekDvhE4bsZ1NdF+LEeM3GU31cRosMowVcc7SeXU?=
+ =?us-ascii?Q?RKFHG3jenR0LeP0iZu22ltDAHH5S72r6Wg0NfZOJxt3ncwAOxgm4DYbsUCLd?=
+ =?us-ascii?Q?SxXZhVlwx0m2SC+dl9T2RvVI0TeslMbwtS4MNuX8bssd+J98fNlh+ebBp1AZ?=
+ =?us-ascii?Q?VKFwqLcfMJB5LV78lyfIEPqjzXPs8LrJYD4xrkXQoA0t9SoEuAzp50o9ldPB?=
+ =?us-ascii?Q?1VcUax4HwNocG/y2fahKsnfXzRZGVZ1JAiD7THVn?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7299448e-6ca6-416d-fc16-08dd9f9d256f
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 17:12:24.5147
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v0eWDso9HWH9n426osbG6WxbU8Hj15/MPnpmlhd7W586QCqcXOSsoqXnKfjJ2YDY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFDDE56F72B
 
-Hello Arnaldo,
+On Fri, May 30, 2025 at 09:59:36AM -0700, Nicolin Chen wrote:
+> > > +/* The vm_pgoff must be pre-allocated from mt_mmap, and given to user space */
+> > > +static int iommufd_fops_mmap(struct file *filp, struct vm_area_struct *vma)
+> > > +{
+> > > +	struct iommufd_ctx *ictx = filp->private_data;
+> > > +	size_t length = vma->vm_end - vma->vm_start;
+> > > +	struct iommufd_mmap *immap;
+> > > +	int rc;
+> > > +
+> > > +	if (!PAGE_ALIGNED(length))
+> > > +		return -EINVAL;
+> > > +	if (!(vma->vm_flags & VM_SHARED))
+> > > +		return -EINVAL;
+> > > +	if (vma->vm_flags & VM_EXEC)
+> > > +		return -EPERM;
+> > > +
+> > > +	/* vma->vm_pgoff carries an index to an mtree entry (immap) */
+> > > +	immap = mtree_load(&ictx->mt_mmap, vma->vm_pgoff);
+> > > +	if (!immap)
+> > > +		return -ENXIO;
+> > > +	/* Validate the vm_pgoff and length against the registered region */
+> > > +	if (vma->vm_pgoff != immap->startp)
+> > > +		return -ENXIO;
+> > 
+> > This check seems redundant
+> 
+> Hmm, I was trying to follow your remarks:
+> "This needs to validate that vm_pgoff is at the start of the immap"
+> https://lore.kernel.org/all/20250515164717.GL382960@nvidia.com/
 
-On Thu, May 29, 2025 at 1:46=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, May 28, 2025 at 11:59:44PM -0700, Howard Chu wrote:
-> > On Fri, May 23, 2025 at 3:12=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > > On Thu, May 22, 2025 at 07:11:41PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2=
-001
-> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > Date: Thu, 22 May 2025 19:01:47 -0300
-> > > > Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive =
-mode
->
-> > > > And it is being successfull only when running alone, probably becau=
-se
-> > > > there are some tests that add the vfs_getname probe that gets used =
-by
-> > > > 'perf trace' and alter how it does syscall arg pathname resolution.
->
-> > > > This should be removed or made a fallback to the preferred BPF mode=
- of
-> > > > getting syscall parameters, but till then, run this in exclusive mo=
-de.
->
-> > > > For reference, here are some of the tests that run close to this on=
-e:
->
-> > > >   127: perf record offcpu profiling tests                          =
-    : Ok
-> > > >   128: perf all PMU test                                           =
-    : Ok
-> > > >   129: perf stat --bpf-counters test                               =
-    : Ok
-> > > >   130: Check Arm CoreSight trace data recording and synthesized sam=
-ples: Skip
-> > > >   131: Check Arm CoreSight disassembly script completes without err=
-ors : Skip
-> > > >   132: Check Arm SPE trace data recording and synthesized samples  =
-    : Skip
-> > > >   133: Test data symbol                                            =
-    : Ok
-> > > >   134: Miscellaneous Intel PT testing                              =
-    : Skip
-> > > >   135: test Intel TPEBS counting mode                              =
-    : Skip
-> > > >   136: perf script task-analyzer tests                             =
-    : Ok
-> > > >   137: Check open filename arg using perf trace + vfs_getname      =
-    : Ok
-> > > >   138: perf trace summary                                          =
-    : Ok
->
-> > > Looks good to me.
->
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
->
-> > Nacked (sorry). I think running them tests in parallel is great
-> > because it points out a problem that perf trace has. Please check out
-> > this approach: https://lore.kernel.org/linux-perf-users/20250529065537.=
-529937-1-howardchu95@gmail.com/T/#u
->
-> I'm not saying that perf trace shouldn't be used in parallel, but the
-> vfs_getname code, IIRC, checks for the existence of that probe to do
-> pathname collection (this predates the BPF method by a long time) and
-> then counts on it to do.
->
-> There are tests that put it in place and then at the end remove it,
-> multiple tests.
->
-> So there are possible races with that and out of being conservative I
-> made it exclusive for the time being.
+Oh, right I forgot how mtree_load works again. :\ Maybe add a little
+note
 
-Thanks for explaining this.
+/* mtree_load returns the immap for any contained pgoff, only allow
+   the immap thing to be mapped. */
 
->
-> The plan is to remove that vfs_getname code in builtin-trace.c and then
-> the tests, as we have the BPF method that is way better and should allow
-> for parallel use.
-
-Agreed.
-
->
-> Probably in the meantime it would be better to mark the vfs_getname ones
-> as exclusive tho now that I that I wrote the above explanation... :-\
->
-> - Arnaldo
-
-:)
-
-Thanks,
-Howard
+Jason
