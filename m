@@ -1,209 +1,207 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD121F0E4F;
-	Fri, 30 May 2025 06:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F6C1F875C;
+	Fri, 30 May 2025 06:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748587414; cv=none; b=GY87pDoX/VhknJhn0v/Q8tNRUAdE0ie+A029D/IatD3SE5wGqBk4M8HVqX0Mav2C78YSOqlZl8zs0CtM+XdJDrXBJrIcehNJzzL+tRdLEDxmAAps/mRgf0xO8yjupZG5XfVL9uyjEWW2o32EBNmR78b6CVGidaY9lIQr/lSC7u0=
+	t=1748587439; cv=none; b=ujwtnQCNu0LGd0skkN/01KcAuXOIP7iRDnlT8ooGBJdWrALgSxARgWGtpz+q1ReYuB/0HMkDkbP7BBGST0EuX2346KCXicaSBi0R+TE4MCK8acH9/jGbExO9MEaMdRJhVKjisaRj2TcS/5ePCqESyYswj7dIP9g+BTmyZy8Y0SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748587414; c=relaxed/simple;
-	bh=UkRGREpn2OD+qsk7llMFJAA8OviK6ZCy7Wz1uPPKLeU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZCYLrt8e/gmOFHTNv5pO42IJnVlPvNuJgvv+PkIaOKWEc59s69caqWwwNwEVfFU5muJ7lU/Id8uV+bPEcYiTpWZF6q7JNtkT70RwcAK0YLbKJGH5CzFUM8DrTsE1ai2szJgUDqkunb2ANNQgVK6sHO4rmi1mjLaCsOaYBhawD9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b7twz15wbzYQtH1;
-	Fri, 30 May 2025 14:43:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 415DD1A15B7;
-	Fri, 30 May 2025 14:43:30 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgAXe1+OUzlopS7RNw--.13128S3;
-	Fri, 30 May 2025 14:43:28 +0800 (CST)
-Subject: Re: [PATCH v2] md/raid1,raid10: don't handle IO error for REQ_RAHEAD
- and REQ_NOWAIT
-To: Yu Kuai <yukuai1@huaweicloud.com>, mpatocka@redhat.com,
- zdenek.kabelac@gmail.com, song@kernel.org
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com,
- "yukuai (C)" <yukuai3@huawei.com>
-References: <20250527081407.3004055-1-yukuai1@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <7ba1f088-2dbb-74db-d9a2-1a7c466f9aa0@huaweicloud.com>
-Date: Fri, 30 May 2025 14:43:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748587439; c=relaxed/simple;
+	bh=hQpgE9FCxZY6wr0yALjhJk5QYAGAM9DyhOcet3ugtG8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=me+AydzfQ3jHe4zD/lNbexMZVP0o5F+GVI04cjfDh+UCPwn2nRyEh+7e5Txi25SSKwv7fEk9Qkzl+boOtOgWCoVsE8Yvz1JaodfYXZEiToGArcqGv1Xs+6bPttuPLRGyqaJ0XVunYZext8l+pi/nNCAn2gIvVIOtxThQNJqT5UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/eGwSJ0; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/eGwSJ0"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b2c3c689d20so1303899a12.3;
+        Thu, 29 May 2025 23:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748587436; x=1749192236; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vx3EVLF/Lzm+nHRyUt2W8drMPIm6fYD3QP8+NxtAy4Q=;
+        b=L/eGwSJ0NKfnVap1gNcFIqfJ6DJ26P+Hvzd4EKXZ1x7wemu9FKdN+iml5F0lVxIrCs
+         46iOCU4TfDEeXx7Oz2C5h23mkD+x4vXG2aRvqbqQ3q5GC6v+n33eXQpcvAvvuHXNBx6P
+         saBNXkXdv8GLpI+TLCvsJdqPqvrRW/l12qgzOXIN6mzeVjQI65dT0ILFLPbzWBqJl3yz
+         +cUNfZwJ916L0S55xrUekPPxdXP3FeIcV1OgNUhR5DR51xWhv8/tBkBJQiQERtw6u11K
+         O2OS/O4jSZVQ9ffG4bH35K7d/NLo1bJUXv1W+lWOJNjFDS/iKK2z6UYfIthjJlK9gOAj
+         z6GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748587436; x=1749192236;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vx3EVLF/Lzm+nHRyUt2W8drMPIm6fYD3QP8+NxtAy4Q=;
+        b=vUi/7W1Pqjq35dlgXeQd9Ptk282ypCJMJi8OatPAyljznhueE9gfQklwBPbvSiLFhZ
+         GHu+6aRMXPrkkB6KxIfFMhlTJbWlzdI0QKuSuIiUjJENHJePV51L2PLNr/QJRN1kVsn1
+         bdMyDWw4Kqwzv44HKq6/JrE9MwiCla56AQup747a0bt6bbl3gjH6PAjh0Sm6q7mw8RLd
+         XV4RTKtmDb9bLinqj1RjGTa2mjCOqu0FDOQVwFQ+4LBLeZsn5kfkVxBknDnRPY9Mcu/a
+         iAcimYyOBbcU5tHkQRcYGCYOctSkwgFk29OqdbDp9hEWUNB7u5+5jIhhGDfsbx0jcNW9
+         +eGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXytfgtdPxsrZrTMiF5+QxXqsKvZSDIHCTkzs/CCmirs2WAauqlsjhDOzOYOhRLUzKsULKDMuydB29bruQPlQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx84eJbzrQz3XsE+PJnQGNLu89Jf5xtSG0Gsocly7BzEF+nHKw0
+	VAc2wlSFINknqkkZuUN1b5g6i+PkcYnykFG8Xva3I97DgzAfTWY6hmOnwx+eDQ==
+X-Gm-Gg: ASbGnctejgZFQHDiUt4UcvGNl5MZWtS6M9lZ7vi/xV2r+vA40wLzkYzqhAzr5dXxK2O
+	N/MggtuPlUlS+iq6S6bhhd91VysuOhFNDudNnPqkD5VHWy/n421sjFrCv1qRzRcvKFjrzKfSJey
+	tdMAucsYhiuaQHJxtNYx9107DD7gXxNUCYOil+x5K+8+2ZDpyNfMJ1kuTTfKKW0DGKcke8Q8ulM
+	xm5FWIBnSSp5NnVrwBunJw+aYLdhdDShCV8npQCi9tCOsE3yG9uo2hPL2UZ/TZsLVEjqJeteNN5
+	YGIsVylr/Fkxf16pw9D9peq/l4+Ziqnk/g67qdpUrqOIZbHep7bakaQPpWQMbHoSs2P9foRZMRE
+	bR1vzANYkoF21CviDCRYAH/9w3TQ+rw==
+X-Google-Smtp-Source: AGHT+IGUjveKL/+AYPZ/w2nNMh65V26U7uBV/4Xki4SxCpDlysDTnfyKAkVZocmFVKyBxeKwhASJ3A==
+X-Received: by 2002:a17:90b:5285:b0:312:639:a058 with SMTP id 98e67ed59e1d1-31241b8fd54mr3353064a91.27.1748587436482;
+        Thu, 29 May 2025 23:43:56 -0700 (PDT)
+Received: from [192.168.68.61] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf50besm21776935ad.169.2025.05.29.23.43.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 May 2025 23:43:56 -0700 (PDT)
+Message-ID: <e70e3c60-4a5e-4635-a21e-c2438abf2a5c@gmail.com>
+Date: Thu, 29 May 2025 23:43:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250527081407.3004055-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: REGRESSION: armv7 build mismatched types
+From: Rudraksha Gupta <guptarud@gmail.com>
+To: linux-kernel@vger.kernel.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+References: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
+Content-Language: en-US
+In-Reply-To: <700ebe13-c2d3-48e3-800f-8dc327efb6fc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAXe1+OUzlopS7RNw--.13128S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw48tw48uryUtryxJFy7KFg_yoW7Xr1Dp3
-	y7Ga90v39xGFyUZFnrJFW7ua4Fkw1Fqay3C3yUJ34xZw1a9rZ8Ca1DJ3y5Krs8urWruw12
-	vF1vgw4Uuay2yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-�� 2025/05/27 16:14, Yu Kuai д��:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> IO with REQ_RAHEAD or REQ_NOWAIT can fail early, even if the storage medium
-> is fine, hence record badblocks or remove the disk from array does not
-> make sense.
-> 
-> This problem if found by lvm2 test lvcreate-large-raid, where dm-zero
-> will fail read ahead IO directly.
-> 
-> Reported-and-tested-by: Mikulas Patocka <mpatocka@redhat.com>
-> Closes: https://lore.kernel.org/all/34fa755d-62c8-4588-8ee1-33cb1249bdf2@redhat.com/
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
-> Changes in v2:
->   - handle REQ_NOWAIT as well.
-> 
->   drivers/md/raid1-10.c | 10 ++++++++++
->   drivers/md/raid1.c    | 19 ++++++++++---------
->   drivers/md/raid10.c   | 11 ++++++-----
->   3 files changed, 26 insertions(+), 14 deletions(-)
-> 
+Unsure why the formatting got messed up. Retrying a second time (if this 
+doesn't work, please look at the logs and excuse me).
 
-Applied to md-6.16
-Thanks
 
-> diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-> index c7efd8aab675..b8b3a9069701 100644
-> --- a/drivers/md/raid1-10.c
-> +++ b/drivers/md/raid1-10.c
-> @@ -293,3 +293,13 @@ static inline bool raid1_should_read_first(struct mddev *mddev,
->   
->   	return false;
->   }
-> +
-> +/*
-> + * bio with REQ_RAHEAD or REQ_NOWAIT can fail at anytime, before such IO is
-> + * submitted to the underlying disks, hence don't record badblocks or retry
-> + * in this case.
-> + */
-> +static inline bool raid1_should_handle_error(struct bio *bio)
-> +{
-> +	return !(bio->bi_opf & (REQ_RAHEAD | REQ_NOWAIT));
-> +}
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 657d481525be..19c5a0ce5a40 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -373,14 +373,16 @@ static void raid1_end_read_request(struct bio *bio)
->   	 */
->   	update_head_pos(r1_bio->read_disk, r1_bio);
->   
-> -	if (uptodate)
-> +	if (uptodate) {
->   		set_bit(R1BIO_Uptodate, &r1_bio->state);
-> -	else if (test_bit(FailFast, &rdev->flags) &&
-> -		 test_bit(R1BIO_FailFast, &r1_bio->state))
-> +	} else if (test_bit(FailFast, &rdev->flags) &&
-> +		 test_bit(R1BIO_FailFast, &r1_bio->state)) {
->   		/* This was a fail-fast read so we definitely
->   		 * want to retry */
->   		;
-> -	else {
-> +	} else if (!raid1_should_handle_error(bio)) {
-> +		uptodate = 1;
-> +	} else {
->   		/* If all other devices have failed, we want to return
->   		 * the error upwards rather than fail the last device.
->   		 * Here we redefine "uptodate" to mean "Don't want to retry"
-> @@ -451,16 +453,15 @@ static void raid1_end_write_request(struct bio *bio)
->   	struct bio *to_put = NULL;
->   	int mirror = find_bio_disk(r1_bio, bio);
->   	struct md_rdev *rdev = conf->mirrors[mirror].rdev;
-> -	bool discard_error;
->   	sector_t lo = r1_bio->sector;
->   	sector_t hi = r1_bio->sector + r1_bio->sectors;
-> -
-> -	discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
-> +	bool ignore_error = !raid1_should_handle_error(bio) ||
-> +		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
->   
->   	/*
->   	 * 'one mirror IO has finished' event handler:
->   	 */
-> -	if (bio->bi_status && !discard_error) {
-> +	if (bio->bi_status && !ignore_error) {
->   		set_bit(WriteErrorSeen,	&rdev->flags);
->   		if (!test_and_set_bit(WantReplacement, &rdev->flags))
->   			set_bit(MD_RECOVERY_NEEDED, &
-> @@ -511,7 +512,7 @@ static void raid1_end_write_request(struct bio *bio)
->   
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r1_bio->sector, r1_bio->sectors) &&
-> -		    !discard_error) {
-> +		    !ignore_error) {
->   			r1_bio->bios[mirror] = IO_MADE_GOOD;
->   			set_bit(R1BIO_MadeGood, &r1_bio->state);
->   		}
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index dce06bf65016..b74780af4c22 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -399,6 +399,8 @@ static void raid10_end_read_request(struct bio *bio)
->   		 * wait for the 'master' bio.
->   		 */
->   		set_bit(R10BIO_Uptodate, &r10_bio->state);
-> +	} else if (!raid1_should_handle_error(bio)) {
-> +		uptodate = 1;
->   	} else {
->   		/* If all other devices that store this block have
->   		 * failed, we want to return the error upwards rather
-> @@ -456,9 +458,8 @@ static void raid10_end_write_request(struct bio *bio)
->   	int slot, repl;
->   	struct md_rdev *rdev = NULL;
->   	struct bio *to_put = NULL;
-> -	bool discard_error;
-> -
-> -	discard_error = bio->bi_status && bio_op(bio) == REQ_OP_DISCARD;
-> +	bool ignore_error = !raid1_should_handle_error(bio) ||
-> +		(bio->bi_status && bio_op(bio) == REQ_OP_DISCARD);
->   
->   	dev = find_bio_disk(conf, r10_bio, bio, &slot, &repl);
->   
-> @@ -472,7 +473,7 @@ static void raid10_end_write_request(struct bio *bio)
->   	/*
->   	 * this branch is our 'one mirror IO has finished' event handler:
->   	 */
-> -	if (bio->bi_status && !discard_error) {
-> +	if (bio->bi_status && !ignore_error) {
->   		if (repl)
->   			/* Never record new bad blocks to replacement,
->   			 * just fail it.
-> @@ -527,7 +528,7 @@ static void raid10_end_write_request(struct bio *bio)
->   		/* Maybe we can clear some bad blocks. */
->   		if (rdev_has_badblock(rdev, r10_bio->devs[slot].addr,
->   				      r10_bio->sectors) &&
-> -		    !discard_error) {
-> +		    !ignore_error) {
->   			bio_put(bio);
->   			if (repl)
->   				r10_bio->devs[slot].repl_bio = IO_MADE_GOOD;
-> 
+   RUSTC L rust/ffi.o
+   RUSTC L rust/build_error.o
+   RUSTC L rust/pin_init.o
+   RUSTC L rust/bindings.o
+   RUSTC L rust/uapi.o
+   EXPORTS rust/exports_bindings_generated.h
+   RUSTC L rust/kernel.o
+error[E0308]: mismatched types
+    --> rust/kernel/lib.rs:234:45
+     |
+234 |         $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+     |         ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*const 
+drm_device`, found `*mut Opaque<drm_device>`
+     |         |                        |
+     |         |                        expected all arguments to be 
+this `*const drm_device` type because they need to match the type of 
+this parameter
+     |         arguments to this function are incorrect
+     |
+    ::: rust/kernel/drm/device.rs:140:18
+     |
+140 |         unsafe { crate::container_of!(ptr, Self, dev) }.cast_mut()
+     |                  ------------------------------------ in this 
+macro invocation
+     |
+     = note: expected raw pointer `*const drm_device`
+                found raw pointer `*mut Opaque<drm_device>`
+note: function defined here
+    --> rust/kernel/lib.rs:241:8
+     |
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+     |        ^^^^^^^^^^^^^^^^ -  ----  ---- this parameter needs to 
+match the `*const drm_device` type of parameter #1
+     |                         |  |
+     |                         |  parameter #2 needs to match the 
+`*const drm_device` type of this parameter
+     |                         parameter #1 and parameter #2 both 
+reference this parameter `T`
+     = note: this error originates in the macro `crate::container_of` 
+(in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+    --> rust/kernel/lib.rs:234:45
+     |
+234 |         $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+     |         ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut 
+drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+     |         |                        |
+     |         |                        expected all arguments to be 
+this `*mut drm_gem_object` type because they need to match the type of 
+this parameter
+     |         arguments to this function are incorrect
+     |
+    ::: rust/kernel/drm/gem/mod.rs:130:20
+     |
+130 |         unsafe { &*crate::container_of!(self_ptr, Object<T>, obj) }
+     | ---------------------------------------------- in this macro 
+invocation
+     |
+     = note: expected raw pointer `*mut drm_gem_object`
+                found raw pointer `*mut Opaque<drm_gem_object>`
+note: function defined here
+    --> rust/kernel/lib.rs:241:8
+     |
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+     |        ^^^^^^^^^^^^^^^^ -  ----  ---- this parameter needs to 
+match the `*mut drm_gem_object` type of parameter #1
+     |                         |  |
+     |                         |  parameter #2 needs to match the `*mut 
+drm_gem_object` type of this parameter
+     |                         parameter #1 and parameter #2 both 
+reference this parameter `T`
+     = note: this error originates in the macro `crate::container_of` 
+(in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+    --> rust/kernel/lib.rs:234:45
+     |
+234 |         $crate::assert_same_type(field_ptr, (&raw const 
+(*container_ptr).$($fields)*).cast_mut());
+     |         ------------------------ --------- 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `*mut 
+drm_gem_object`, found `*mut Opaque<drm_gem_object>`
+     |         |                        |
+     |         |                        expected all arguments to be 
+this `*mut drm_gem_object` type because they need to match the type of 
+this parameter
+     |         arguments to this function are incorrect
+     |
+    ::: rust/kernel/drm/gem/mod.rs:273:29
+     |
+273 |         let this = unsafe { crate::container_of!(obj, Self, obj) };
+     | ------------------------------------ in this macro invocation
+     |
+     = note: expected raw pointer `*mut drm_gem_object`
+                found raw pointer `*mut Opaque<drm_gem_object>`
+note: function defined here
+    --> rust/kernel/lib.rs:241:8
+     |
+241 | pub fn assert_same_type<T>(_: T, _: T) {}
+     |        ^^^^^^^^^^^^^^^^ -  ----  ---- this parameter needs to 
+match the `*mut drm_gem_object` type of parameter #1
+     |                         |  |
+     |                         |  parameter #2 needs to match the `*mut 
+drm_gem_object` type of this parameter
+     |                         parameter #1 and parameter #2 both 
+reference this parameter `T`
+     = note: this error originates in the macro `crate::container_of` 
+(in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+make[2]: *** [rust/Makefile:538: rust/kernel.o] Error 1
+make[1]: *** 
+[/home/pmos/build/src/linux-next-next-20250530/Makefile:1285: prepare] 
+Error 2
+make: *** [Makefile:248: __sub-make] Error 2
 
