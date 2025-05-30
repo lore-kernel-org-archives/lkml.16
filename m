@@ -1,115 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE982798EA
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76181235065
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748636297; cv=none; b=max2dsMV+c0MglLn8LnXg88K3g5OJkWaoZo0QBtsLxZwCFU6qvci/BrsnxBLak2fasi5ODptgGmvR1CWvg2CgPyxVdpd4whWX5UM/dkbZ7iVecrHDHsiotNaEkr00igsqvYFm/uSXHHWtGIGkHKS/fqaNRPXHcxTj//LL9S4vk8=
+	t=1748636328; cv=none; b=i4kD94W6r5nPhjs9IQnDIgRxpWnxCmB+HmKoUJMDEGFSJYrep7JuynOfzkLLLFdrXp5b4R85pfobor/mpffbRspz8zpfvBujb6+TxhzjmJ6ZJocHavyLTpX0jRB+TyPWpR3f35tGX4K8Xrlgx31Igm14xZPGkK1s0H3Z8n7IUs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748636297; c=relaxed/simple;
-	bh=gD4OE8mGUgFikae1GLGN4X9YkI2G5QLIpQiO20Ua8Eo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bJ9AXqa1du8DHflky4wFcZL9dgsPclEpAonP/VHYBqhG7zDwOALawPzsHFe5Ox5arENKx5hjz/yKJcJHsryIhB9C3Eni2Pw/fpezkHoCOBrMonorPUeIYuvZVVl0C4ygyAmqVL0LYnl0yPLXlMl9UvhZ12aIqoaLeBJptVyFihc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItY80usA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItY80usA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 077D6C4CEE9;
-	Fri, 30 May 2025 20:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748636297;
-	bh=gD4OE8mGUgFikae1GLGN4X9YkI2G5QLIpQiO20Ua8Eo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ItY80usAQwQa/V4EOFuzUL2OBmBnHjgkUrDNB181AvSdwC8INWh823XFJjMlNL5nS
-	 XkIviVDRfnwSF5BkbT3VoDQJlGSg0QdGJYU0mJniMkxJxzkOI0/II2pzYh3XBZpCAN
-	 Noogt39otuzayagT1RqWAnwBRdF/uZA7hNtUfiD7wE5x66QL/h4+y4KHYwJPsfHObw
-	 OKKgjqXX5dzAFLcs7xWOaoTGLUslmED6EzwsFDyR5hPiy3N7ct51hBuNUSuZLEiBVP
-	 BpXV1LCUpAvD95BwGjT+9sRZaiGSIoH3Nk9EqJ9q6VFmqsLBunBbkdog7XlDck+33f
-	 E45JMJZ1WTHQg==
-Date: Fri, 30 May 2025 22:18:10 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Igor Mammedov <imammedo@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
- =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
- <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
- Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
- <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
- Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 12/20] acpi/generic_event_device: add logic to detect
- if HEST addr is available
-Message-ID: <20250530221810.694ce02e@foz.lan>
-In-Reply-To: <20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
-References: <cover.1747722973.git.mchehab+huawei@kernel.org>
-	<aa74b756f633dbee5442cf4baa2c1d81a669d2f9.1747722973.git.mchehab+huawei@kernel.org>
-	<20250528174212.2823d3de@imammedo.users.ipa.redhat.com>
-	<20250530080120-mutt-send-email-mst@kernel.org>
-	<20250530164903.0f9f8444@imammedo.users.ipa.redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1748636328; c=relaxed/simple;
+	bh=oTyBlYmtNHKEVcKuoFTfsW9EOF32BnRQAt8PNwXWb/E=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BMKwwrHEFi1DBRy4LhghLiD5iS+kIB6XcFsrmYYE1yOEJbfseUIkI0vu1O5KnzrCWg6o9w4mkdgdnPFp2w3/bjRw71dJFFMQTk2S4fXSXHKsLyCGjQwy50npiSVFdjMoBvqwcTi0jOXXWbwNY6zh98/nR1dicDhRQ4H20OTzLhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3dd759fd518so30719685ab.2
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 13:18:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748636325; x=1749241125;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OBWDFRlOJGi9MAhtEAaoFqG2Wmig9qczjmcWKJlklII=;
+        b=QnHO2eoIbg8BxXDPtd2nqdKFx7EdaN6zp/REX2ZezSs5HNpnu6fwNkYGvDafEPlW5v
+         BnmzbIZmaBnQ3PxRDlzaYPoEfkOJW4+nsYWOk5XADlBEMq8tRKZzzorB8PVKky42PmeN
+         n4o42xuqjPcEo0LLMRIP8+ybq0rKM8NkWLAs066Gsp4wrpoLzR4y1c5EsJrj1TLxIPdH
+         paWubHXxfnz/yk0IcZnYrgabQCiEsxV/AiYyPuczC8sFPJz9SK49K9E38ZpMG7MtcaAk
+         qOCr76cmia65IqKar9T+mg5KFk6Ez17lu++k4nzWqBdbeQqA1rzEOFotktE/LIxvLFX+
+         UGRA==
+X-Gm-Message-State: AOJu0YxiBlmak/maQWf/fyrAXogAEcwkE8wViEnbrRrEr3YG9xmaagbF
+	tm86+2kr/CmIv+0hlFMdnuJ38NG2q76Y9dne2GLLOASM+2HLGkFZ24ewF47/L1RGhfgo3K3S2LL
+	DEOy6hYqMIQtVB+2EyKvQ4n9M0Dmlmnai3GtZzhjENf6iOFd6NwvuN1YLj80=
+X-Google-Smtp-Source: AGHT+IF73XmqCcsz67DzWJLKu7c59M+5+DnpyusKiBszdeolWjiZNnezww5hoswVuwfRlpNDk+w2Pe+HLE4S9MZopGFK6XzwMfgi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:198b:b0:3dd:752f:53c3 with SMTP id
+ e9e14a558f8ab-3dd99be40efmr49257135ab.6.1748636325461; Fri, 30 May 2025
+ 13:18:45 -0700 (PDT)
+Date: Fri, 30 May 2025 13:18:45 -0700
+In-Reply-To: <683837bf.a00a0220.52848.0003.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683a12a5.a00a0220.d8eae.000d.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [net?] possible deadlock in rtnl_newlink
+From: syzbot <syzbot+846bb38dc67fe62cc733@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Em Fri, 30 May 2025 16:49:03 +0200
-Igor Mammedov <imammedo@redhat.com> escreveu:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-> On Fri, 30 May 2025 08:01:28 -0400
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> 
-> > On Wed, May 28, 2025 at 05:42:12PM +0200, Igor Mammedov wrote:  
-> > > On Tue, 20 May 2025 08:41:31 +0200
-> > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > >     
-> > > > Create a new property (x-has-hest-addr) and use it to detect if
-> > > > the GHES table offsets can be calculated from the HEST address
-> > > > (qemu 10.0 and upper) or via the legacy way via an offset obtained
-> > > > from the hardware_errors firmware file.    
-> > > 
-> > > 
-> > > it doesn't apply to current master anymore    
-> > 
-> > indeed. Mauro?  
-> 
-> Michael,
-> it's trivial conflict in machine compat,
-> could you fix it up while applying?
+***
 
-IMHO, that's the best. The thing is, as code gets merged upstream with
-backports, conflicts happen.
+Subject: Re: [syzbot] [net?] possible deadlock in rtnl_newlink
+Author: jdamato@fastly.com
 
-I can re-send the series, if you prefer, as I'm keeping it rebasing it
-from time to time at:
-	https://gitlab.com/mchehab_kernel/qemu/-/tree/qemu_submitted?ref_type=heads
+#syz test
 
-(it is on the top of upstream/master)
-
-But even that might have conflicts on your test tree if you pick
-other patches touching this backport table:
-
-> -GlobalProperty hw_compat_10_0[] = {};
-> +GlobalProperty hw_compat_10_0[] = {
-> +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
-> +};
-
-(this was the code when I sent the PR. When applying upstream,
-such hunk is now(*):
-
- GlobalProperty hw_compat_10_0[] = {
-     { "scsi-hd", "dpofua", "off" },
-+    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
- };
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index 3f089c3d47b2..d8595e84326d 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -477,10 +477,6 @@ static void e1000_down_and_stop(struct e1000_adapter *adapter)
+ 
+ 	cancel_delayed_work_sync(&adapter->phy_info_task);
+ 	cancel_delayed_work_sync(&adapter->fifo_stall_task);
+-
+-	/* Only kill reset task if adapter is not resetting */
+-	if (!test_bit(__E1000_RESETTING, &adapter->flags))
+-		cancel_work_sync(&adapter->reset_task);
+ }
+ 
+ void e1000_down(struct e1000_adapter *adapter)
+@@ -1266,6 +1262,10 @@ static void e1000_remove(struct pci_dev *pdev)
+ 
+ 	unregister_netdev(netdev);
+ 
++	/* Only kill reset task if adapter is not resetting */
++	if (!test_bit(__E1000_RESETTING, &adapter->flags))
++		cancel_work_sync(&adapter->reset_task);
++
+ 	e1000_phy_hw_reset(hw);
+ 
+ 	kfree(adapter->tx_ring);
+-- 
+2.43.0
 
 
-(*) https://gitlab.com/mchehab_kernel/qemu/-/commit/08c4859f8c6f36d7dccf2b773be88847e5d1fe0c
-
-If you still prefer that I resubmit the entire PR, let me know.
-
-Regards,
-Mauro
