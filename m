@@ -1,198 +1,413 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588471F09A7
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748583925; cv=fail; b=TwPa01veVuKERWs4PWSrWUo7bMTIOrPg9ir2X/p4R9eJBglaSpyiGdzIi3lzPKH9PJL2Beb57mfoYPGN9qoVPXQYdlYXwVf43M/+YEiy2+k9spgYmAInblojELnWReBU/X/QU/zIs10eQyFHmKHhO1XZWyZIk3kIn7MvBX1j5EY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748583925; c=relaxed/simple;
-	bh=mwjjuBvkO9CJcj2fJxLP2NZSCUFfkba0nEP9yzIy9rA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=b+0477kxYSD5ek8JAGwq9ylSKrDrK3kxgBuUOZfSTPnLA8X3WEp7O4tRcqwhmWNcprI/7hv2R8OYWerIJYhi/yLIjHuv9F2OZff19lKFCrtNhn1rLwCbTAwEj+7qNktZdXlcpQwAPMOBJHwXMYvt2DJgqNdutMAtAazU/Oaolsw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMCnziE0; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDA728E7
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 05:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748584261; cv=none; b=Vr2ZPyphryi0CsHEfas4AXRGosI/EyddpXvjKOw7S6a5JthVw8dDDtyapWzjTBoxeVU3fhm4AT2yLkRxBngGl8JpMZMHO4/JRvERLfUBaII15cfLRKDbTKbJ5jdEvB+QHs0U+K/e5CshILyxqvFYW1tfUxjULHuFsOueax8YCaM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748584261; c=relaxed/simple;
+	bh=vLBephQXycKocJwqGcP+okUcTN3hSnO3JdX+2tdm6l8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b0NfmaQdZc8fA3yJpvDDfd+X+yvQfAXHMK7PaHn8UjqGKzLK2AemtEG6PEBrY9qpR6ockdGqHEMOrLKHWI2o5n8LN7Q7mEYMNGD9d96I/6FWgOIYj/R0+w34yvq7Ilxc0tZbnJihl8HUETi7H1OEItCGZwca+80P5E0KicOeM98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=25uBw4p5; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMCnziE0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748583924; x=1780119924;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=mwjjuBvkO9CJcj2fJxLP2NZSCUFfkba0nEP9yzIy9rA=;
-  b=OMCnziE04FEOMnImEu0PXpRXfxlz39pNGHbyOS+ihP0lV/QAH7a0rRi2
-   5ZTDutc7Cfg6FcksRjqcS8dKYQ+3O1o7QK6ThtBPCBw+6U06oQWq3+VyS
-   Ytocj1VCJYpPZWRUQ9TC/+gSj8lBhLgs+FiEnCWlcumpRcUeG2ROWEeMj
-   0G95SKmun70s6v1tOEslUcFZs0M28ubktYeCGvucjIAeNhIhPCee9sdQV
-   BwPzobYv4kzK+biwRm6VGmQyzV73ppfsS9mZTQQGySZpVxR6V+O00k+lI
-   MxNnyT9Z4hPdGiD6fS8ef42FdXZC0DuTjJ181/CG/XBWN2qhWx26miL+f
-   w==;
-X-CSE-ConnectionGUID: kYTbCNV1T1G2kPexC9sJ/Q==
-X-CSE-MsgGUID: IcGutOafTo6b25RRpIVk0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11448"; a="50365421"
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="50365421"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:45:16 -0700
-X-CSE-ConnectionGUID: aKw7MRc2S8ePUztTyRmL/g==
-X-CSE-MsgGUID: HAP8qRT7TD+u8bwpDFPJMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="148927580"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2025 22:45:15 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Thu, 29 May 2025 22:45:14 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Thu, 29 May 2025 22:45:14 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.51) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Thu, 29 May 2025 22:45:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hSQv1CTZL4Y7B2dYNzsrTgw2I3B4ZuexFI/JRkBPPj9FlTPp+iwsCARX4r9VVLf1vab5OYXFhMOtljwam69DsYVAEIl+mjC0mOk5GGp1Th+EjVzzNgVXWTW2hIydUiLlfLadf82ErB7Oyhq4Vx69VhG0iqk+SnqrASN9rsBDolwnD2dVIy0vHV/jvxPc0r3228d5p9wAJevjzQLxS9ImP/Gg706UEZFCx3N/zBzQ0M4lq4zEDMKRxXYMTldTLtIg0yKVhfkRw43yZ8pwSog7xw4b0Ekpm/EQ369d7oQ3r/6MrfXzSErwVPlNmnb5R1VqCSWS6iA2Mrub0HAaFdcf1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EA786hvPYTSQtpIl6+Yff1IGLrweF3SmOQPuO3amZBc=;
- b=VtMaIghk62mHflIvzAks3MeclxPOn7OC4ZnGxo4IaE0hhmOmNZh7+v2khLTjP+Hiib9OKQTi/9oqwzIu4xWGyfijc8j3zKBpjsPOOc7j8QEPYNnQ+VdTd8LlC+cK5cCt5cBA+Cnzrkek5O7A2dmQ3T4hEbLS1I5xc+ZMhAhSnKwTTog+4p233FySaogwhmmeII5qfncgXLabdHDeo/GTD8X8itrvkNRmS1Gnzld7v8J/nVYBI6Yl9DCPj6/0CpjbpVQkhLGDX5SL7JF51RA365N9dXLOJDjUOo80jc7E+nTGwGMeBkvY6oIbKYiJixxpBWUH3OKavMzEWbxekiVNCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
- by SJ5PPF1A7C623DA.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::816) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Fri, 30 May
- 2025 05:44:26 +0000
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332%5]) with mapi id 15.20.8769.029; Fri, 30 May 2025
- 05:44:26 +0000
-Date: Thu, 29 May 2025 22:45:57 -0700
-From: Matthew Brost <matthew.brost@intel.com>
-To: Alistair Popple <apopple@nvidia.com>
-CC: <akpm@linux-foundation.org>, <lorenzo.stoakes@oracle.com>,
-	<david@redhat.com>, <ziy@nvidia.com>, <joshua.hahnjy@gmail.com>,
-	<rakie.kim@sk.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: add myself as reviewer of mm memory policy
-Message-ID: <aDlGFTOoKhFzrRY8@lstrano-desk.jf.intel.com>
-References: <20250530014917.2946940-1-apopple@nvidia.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250530014917.2946940-1-apopple@nvidia.com>
-X-ClientProxiedBy: MW4PR04CA0105.namprd04.prod.outlook.com
- (2603:10b6:303:83::20) To PH7PR11MB6522.namprd11.prod.outlook.com
- (2603:10b6:510:212::12)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="25uBw4p5"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32918fe5334so16365851fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 29 May 2025 22:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748584257; x=1749189057; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=INBLwplXGD01pklehYkw8eTowQpHfK1Ba6k0xQd4xWw=;
+        b=25uBw4p5zUkz6Jz8VbpEhNg97S6axhrduzHz5+VCgYum5PHq0bACJzHuUhGrMZgjza
+         esGTijhNgZqmlA5Y/bWxGFg6DiK0f4ajltnif75kLtTRf+SBL92fYOqpA1HSmAw5YGyh
+         pmA+hFUxXxFWwPjfFp5Vwow4zDepbtCKCaELh6ZRxwTHryb1aO0HYJLkb/Vt6V6oZvvx
+         mfOVFJYFLzXZak066HonpZKXmBf3S/rj3NPa64mDXrzc6L26NOQUNQYd7Q1e4IzI21Rp
+         MizgAux2qzcp/I1gKWsMm7av0+6NIZWgCpk3znTnw9VMhNifQKmcHg3vkdJooP5Epz6z
+         mvJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748584257; x=1749189057;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=INBLwplXGD01pklehYkw8eTowQpHfK1Ba6k0xQd4xWw=;
+        b=GaiVc8SMuhbRmRjzleCAat10TJDKtmUCFFtmysDI2Y+sMRNukQ0iBLEVqSpjDSG8sI
+         6m9j3IAL26xh7hcA9YDSbN9W7EWzidtTBVrBYH/o7UAoFTxaFwfnLSbzpDuHGf5TxeFr
+         3HAHIPvjiIeeucVneGpz1V+2cXQTMYLilvGrfSomm0Rdfe1o06GewV5KE9gPiBIrpEKb
+         lj/9dpJ+XD6KRj4xqo7d5qZySrl75LaFk3Z92UGi97Cn3l1trmV/1StqPSoKG7kcfA07
+         C88COkp+mVXPJAkshEPL67bl/Royfz3eMXt72p/IBkjpTxOCR7Y+/VukpujlwpvQ2h6k
+         jt6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUeZGfWSjD/fejJtcG+l2vbn5wKrP3vCN52UnhrARWpWRnfbCd9sRJ7ovc7enPPJFVMq77W7oJ8jnWFXyw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzotZWBvzVT1u35Zbzz7j5r1DhhhAbw+Ynr4OPwtQkJ6rSKn+To
+	N/k9D2kQfJTHNBnpQt+7b8589RHB1nC7LUNinDqZUCnwa3FQofcUHEPGS2oIfpq/8azF5HcOu5g
+	+A9OncF8GMB4Q0yrOACrBSbGm1rPRoc5C59nnE3FP
+X-Gm-Gg: ASbGncsC8s1/GzDjADfReWzox9d8EhkyKGEu7BUkpNwAEWXPsSWcvCXfAil2diQf/0o
+	xIV+CiQ8EfskjBKYL9OFRt13/cDEk3I4ZZCaYLzkOvMa2uRLJMtNUB7IugU19rP2HUNTfOc0LPd
+	1cDiIGlQmjl8rttRb1wpBVJcRGn04sNkEi+j8pEG8l5OdCCEDEqUB4Gr0NNZidWtq8Lz5jH0lpA
+	w+HKZTk1d9br3M=
+X-Google-Smtp-Source: AGHT+IEO6BrhLbjHtpswkfL36vaSIDlW+ZWfC9w8Fut1UXNEMyxR6gxhREee6u10n/oh/th5wUqX5PlSjRrlHd/vmmE=
+X-Received: by 2002:a05:651c:f0e:b0:32a:6ccf:a48b with SMTP id
+ 38308e7fff4ca-32a8ce4e88bmr6277701fa.38.1748584256886; Thu, 29 May 2025
+ 22:50:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|SJ5PPF1A7C623DA:EE_
-X-MS-Office365-Filtering-Correlation-Id: 927389ab-7842-410b-5df8-08dd9f3d09d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?BOUiheYaX4CKTFj7mC8eFWxkhMqJJBW6h1EoLZIA6qDHl0Mv8Hs+89twONzg?=
- =?us-ascii?Q?idK+h5V26GL62tU4bW9NYtIjNHf2JDMT7MVXiAwXth1XZE7d0asIxQlTNTTk?=
- =?us-ascii?Q?oX7GzXBwhUSDonllCs8py+GvdecTMgocOrYME0udOA4m/qY4RgoH2Xk9mKZ4?=
- =?us-ascii?Q?qS1nVoy35h0yz3n1AC0+5m5mMDP660iWsV8WV4F4hyJFK39qdFPNi/PwLs5f?=
- =?us-ascii?Q?lNK9CaL5EVcDL+cqihxE4MLbWG+ljJjU4wzLifgPLOfY6wKvyJ9BRzGIakwH?=
- =?us-ascii?Q?5uW9Uyc+1HCw6UYUGgcsAzMYnqBiWRHpir2W6gWoNhcNMlIjk6dbRKJL25DN?=
- =?us-ascii?Q?Mv+Gl/+kusvlp3L+riXakaJ6U2BlPToalYy/fV20jFQhjcx4rmqpS94rUXAw?=
- =?us-ascii?Q?vkTyFl/+HhZbAVYxewiDxADk4bOfGnghffw+5eRbFUUqzwmZF4HLCxb605sP?=
- =?us-ascii?Q?8dKRyRLigPMcvTGcMcjkNuqwRUWUX5LjXPlt+Tpa4LRmoy14a6HvoxQXECAp?=
- =?us-ascii?Q?9Y7kvWdESpWBGTySx2aDtQTgfHhpOKfiSMUNxn0Y51sOUWlwyuj+4KulrDqb?=
- =?us-ascii?Q?3WA3sOvJOgx3A5LqLDbee/dmiJyL6qiWFPP44CzfOhn7YQCoHEzYf7RrS9Ek?=
- =?us-ascii?Q?Im6ol3KMLmwQH9xpWNwixFkej2ZynXFunfrejYXWy/qYFE99DhOJm4EhBwvX?=
- =?us-ascii?Q?XllHlVvPKYzla+sjKWBmWOJ/K/DPzjtACfeOj4nx+yUy3S+vfkwON7tjLLL2?=
- =?us-ascii?Q?UwtmhM4itSFrcz8zfb9GSm8bB7Hgm1Z6/i6nGwOMFSl1ExBC+UsXJ7L8JNII?=
- =?us-ascii?Q?Sx8x55380UAmGc7cYHVurNuw0758F281DN3Stbnc2qtOId/7GomOYlcWEky+?=
- =?us-ascii?Q?4eO9yER+55zK3z87QbKJ6g5m2HlQOkKDJRyb61E8lwBrk326S2CXjG9/zpO6?=
- =?us-ascii?Q?8MBXcOReKhl5ihc7aMoTsMXpyHb6LaExttm04LMjiCzhmwn18uMNhce2FNuY?=
- =?us-ascii?Q?IMNU1VDJDuIk87JDyR+BC+b3r4EPbqtLOrHDcyHcl7ds/01O9UGiclSqPJl1?=
- =?us-ascii?Q?a2EmgWHGw1b67BM98QqmQDGOzuwvRc6/E5y5LbEDvLGEO3YFV4kKhZVSVGYG?=
- =?us-ascii?Q?AMjGG+jkVLXwsT8fltOTJ+1GpmEoKOHzp/eAgJthbqPFW78qe4TmbONsw5Mk?=
- =?us-ascii?Q?4hkRg72f7gtyYkUgA5f9zpRwu1Wo25qzLSgOJVfWHPjHOpXuqtHYpdry0xtT?=
- =?us-ascii?Q?LiBFSfQeKKnGQm3kJN3v6cgSd4UydFlRCUUCWh/6jAQXVCeFgGcPIfxjV1QX?=
- =?us-ascii?Q?Ps8ScBbIsA9V7ly1amd0ut4ycy+BlF+3+f1DLJD3z/igdEYBcBvIIbsL3PQz?=
- =?us-ascii?Q?HUfaGqs=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mxXMv66P7hKqFKLGq7WM4SmlRu4nuZUoXxrAeN3TuHvU+mK9mQgGHUPfBNua?=
- =?us-ascii?Q?kpQNWvH78rEdYcXoPrv3cGRjvVT3XSZLnRJZwxhvJQ68p2507HvGAuu4h00Q?=
- =?us-ascii?Q?rNEnEOuW0lyLBLo54TkxLFRnVwcb2Af2N0oVYuoeqozY0n/9L8bAFtmqBg0s?=
- =?us-ascii?Q?Sm4AL6bmq54+GptZgXeclyt77F05YRM1VkNdZJrtAh9sH0ejqkbb1MKWrnkK?=
- =?us-ascii?Q?FJEzaOFzpjbYiPpAYOmjaSIGYMTN8WPxtZE73sOjwRgQgaze02DQyvQ0dyqx?=
- =?us-ascii?Q?P5Hn8WaHN7B39gHEM0VYX7drbdLN0u6pnCG+U4H9DiKQRIvbKtcJ2nzoZ88M?=
- =?us-ascii?Q?dMlsCoyfPdIIRnl5Z5D2A0zn2d5nK4S/b7ZUHi2o1Ci/oSipmOtjD+hC8hHX?=
- =?us-ascii?Q?0n2tkCxnoSP6qfT513omIz0rg/3oLHzdtoaIfr39QKj6uOzAF3Y7hA9s0SMi?=
- =?us-ascii?Q?ZgSxW3qMFlKpAQ4KGs2QzW2cDUpu2F6UxN5r/Y235gKUZbZ8Jo/JYC9tq57P?=
- =?us-ascii?Q?twQ0+E6CEaoVI+YyftmNPDPTRr2C119u5MqVD4N3jwSwecCjhQAKKOVcUbW/?=
- =?us-ascii?Q?ZPFBc/q4+vj4lHkSIPRe/ecy6aUDyJ3kzcwr7maVYclVlguuHxdcvkQkkiqW?=
- =?us-ascii?Q?QT2ISoHArulq2EYj0pAQlj/MnfGxskVCPNS1rXUSI2VenI5ImqQM1QHp74Vk?=
- =?us-ascii?Q?D6vN70AG1zLTKIJaukMHCV9WfjjU8AE/P2pyMtEXpwpAC1DWOgQ7LrV4J0Wm?=
- =?us-ascii?Q?aG6dyWgP6rC2ICrRul2WRF34ILTbYqdaxe6RBV3kFz29/m3GJPnYkpdMJ8SJ?=
- =?us-ascii?Q?Z4r+FPWj+e4D8ChPPdptHHD0OkfT9fv2rznGI8vvStBRNYYgYeKAopnAzX7Z?=
- =?us-ascii?Q?kyQXg2B7ceWQpleya6wx8V0QNHQLCHXY6BNCanzpY4hHHgG+3/FXegNAHZmG?=
- =?us-ascii?Q?/Q9TThDNFLDIDhv4Vj6Gew7cEFT06UnpktEqRzRD5/yDA1zWn2DeO4czucZv?=
- =?us-ascii?Q?1s3Bxe1rIz/0odktqTqXQVB6XL6jh/5phjeLpetdpTjbAb3cpS/YJrF/7Lxr?=
- =?us-ascii?Q?zveKEXCMcg1vJSKeT+mqMxhDqByqOlL6QhIFPNVOm2yPySxJTOf4fQKMXZDC?=
- =?us-ascii?Q?dFIA5zivJqBuwpSdMV2bUZpxzNtu/r8MyP7bkqWHWIk8a4ptfT9XSLd39Opf?=
- =?us-ascii?Q?3pL/dK/vEXEv62DIkTB8vuNBP6ZJ115AREnQbtzStbffTk+2J1Dha9oFnrGF?=
- =?us-ascii?Q?yb+XA/QLFHj0JvL1dg2AOLQ35gzKO+ecNJWExthI3c7/WyliHjklU8NR5umf?=
- =?us-ascii?Q?iyjDWkNFqfP3gGENFldOMNwLTpu33hW7j5nDUyas2SD3TqC22pPmduHWjnVL?=
- =?us-ascii?Q?b9ZI9UMg/UC1bm9voHtDYurCjt/reLhAy1GX6RXShzWLKAap39zcDIJXTg7e?=
- =?us-ascii?Q?+Q/+YsvfuV8pYplwFbtYlZVDEHzA35eE6MsKVK+X4CtvM0zxIlWCxOyLPfB3?=
- =?us-ascii?Q?63S8qldcnIPwAC4aNdty/f/tp+e8Zv5zwVE4PddGMzDmm78QTlnxb8sIkzlO?=
- =?us-ascii?Q?fXZ/XrpMQCfSmiiumejAGpALgl2qd0MmfnbVg6Nmh3J+kVZcaP2mznR8yD5Q?=
- =?us-ascii?Q?Ew=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 927389ab-7842-410b-5df8-08dd9f3d09d0
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 05:44:26.3991
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uiimZKhQoAk/Ra+F15Xi7ZwAACUq7Uo0iv60D6PMCIt5vnb97sIc/c0W23mp9TpQdJyc3jRCATbKnCY9PvhFeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1A7C623DA
-X-OriginatorOrg: intel.com
+References: <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+ <aBvwFPRwA2LVQJkO@google.com> <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+ <aCdo6Vz2MVv3N0kk@google.com> <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
+ <aCveO4qQGy03ow5p@google.com> <CACT4Y+YdnQebkGTQJ9yhLs2j12WBYk2ReiBAq5cE+wtu1RRU5A@mail.gmail.com>
+ <aC0HH45JCBTchZMc@google.com> <CACT4Y+apAJ_m9W=P2hsGvWrGZnTzxB+9qgJg=ujjU8OWCVcUoQ@mail.gmail.com>
+ <CACT4Y+Z3Bbn3KcwhjOYAmzHWqRSZ4ywCrw8FNNxj5MrDUzFtVg@mail.gmail.com> <aDdYEH3lIYHAB-lk@google.com>
+In-Reply-To: <aDdYEH3lIYHAB-lk@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 30 May 2025 07:50:45 +0200
+X-Gm-Features: AX0GCFuUYlNBKJjfgHZYx5fcKYOyGp7qG4tPZ--E-krw1qKWOpr-6xYXbPDRg9s
+Message-ID: <CACT4Y+Y=1aXG_25ONnfD4TxMbsrnW3uFOOL9yrcP+LYeh4pHpg@mail.gmail.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in system-wide mode
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 30, 2025 at 11:49:17AM +1000, Alistair Popple wrote:
-> I'm particularly familiar with mm/migrate.c and especially
-> mm/migrate_device.c so add myself to MAINTAINERS.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+On Wed, 28 May 2025 at 20:38, Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> On Tue, May 27, 2025 at 09:14:34AM +0200, Dmitry Vyukov wrote:
+> > On Wed, 21 May 2025 at 09:30, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > On Wed, 21 May 2025 at 00:50, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > Sorry for the delay.
+> > > > > > > >
+> > > > > > > > On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
+> > > > > > > > > On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
+> > > > > > > > > > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > > > > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
+> > > > > > > > > > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Basically yes, but you can use --sample-cpu to add it.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
+> > > > > > > > > > > >
+> > > > > > > > > > > > We may disable latency column by default in this case and show warning
+> > > > > > > > > > > > if it's requested.  Or we may add a new attribute to emit sched-switch
+> > > > > > > > > > > > records only for idle tasks and enable the latency report only if the
+> > > > > > > > > > > > data has sched-switch records.
+> > > > > > > > > > > >
+> > > > > > > > > > > > What do you think?
+> > > > > > > > > > >
+> > > > > > > > > > > Depends on what problem we are trying to solve:
+> > > > > > > > > > >
+> > > > > > > > > > > 1. Enabling latency profiling for system-wide mode.
+> > > > > > > > > > >
+> > > > > > > > > > > 2. Switch events bloating trace too much.
+> > > > > > > > > > >
+> > > > > > > > > > > 3. Lost switch events lead to imprecise accounting.
+> > > > > > > > > > >
+> > > > > > > > > > > The patch mentions all 3 :)
+> > > > > > > > > > > But I think 2 and 3 are not really specific to system-wide mode.
+> > > > > > > > > > > An active single process profile can emit more samples than a
+> > > > > > > > > > > system-wide profile on a lightly loaded system.
+> > > > > > > > > >
+> > > > > > > > > > True.  But we don't need to care about lightly loaded systems as they
+> > > > > > > > > > won't cause problems.
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > Similarly, if we rely on switch events for system-wide mode, then it's
+> > > > > > > > > > > equally subject to the lost events problem.
+> > > > > > > > > >
+> > > > > > > > > > Right, but I'm afraid practically it'll increase the chance of lost
+> > > > > > > > > > in system-wide mode.  The default size of the sample for system-wide
+> > > > > > > > > > is 56 byte and the size of the switch is 48 byte.  And the default
+> > > > > > > > > > sample frequency is 4000 Hz but it cannot control the rate of the
+> > > > > > > > > > switch.  I saw around 10000 Hz of switches per CPU on my work env.
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > For problem 1: we can just permit --latency for system wide mode and
+> > > > > > > > > > > fully rely on switch events.
+> > > > > > > > > > > It's not any worse than we do now (wrt both profile size and lost events).
+> > > > > > > > > >
+> > > > > > > > > > This can be an option and it'd work well on lightly loaded systems.
+> > > > > > > > > > Maybe we can just try it first.  But I think it's better to have an
+> > > > > > > > > > option to make it work on heavily loaded systems.
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > For problem 2: yes, we could emit only switches to idle tasks. Or
+> > > > > > > > > > > maybe just a fake CPU sample for an idle task? That's effectively what
+> > > > > > > > > > > we want, then your current accounting code will work w/o any changes.
+> > > > > > > > > > > This should help wrt trace size only for system-wide mode (provided
+> > > > > > > > > > > that user already enables CPU accounting for other reasons, otherwise
+> > > > > > > > > > > it's unclear what's better -- attaching CPU to each sample, or writing
+> > > > > > > > > > > switch events).
+> > > > > > > > > >
+> > > > > > > > > > I'm not sure how we can add the fake samples.  The switch events will be
+> > > > > > > > > > from the kernel and we may add the condition in the attribute.
+> > > > > > > > > >
+> > > > > > > > > > And PERF_SAMPLE_CPU is on by default in system-wide mode.
+> > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > For problem 3: switches to idle task won't really help. There can be
+> > > > > > > > > > > lots of them, and missing any will lead to wrong accounting.
+> > > > > > > > > >
+> > > > > > > > > > I don't know how severe the situation will be.  On heavily loaded
+> > > > > > > > > > systems, the idle task won't run much and data size won't increase.
+> > > > > > > > > > On lightly loaded systems, increased data will likely be handled well.
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > A principled approach would be to attach a per-thread scheduler
+> > > > > > > > > > > quantum sequence number to each CPU sample. The sequence number would
+> > > > > > > > > > > be incremented on every context switch. Then any subset of CPU should
+> > > > > > > > > > > be enough to understand when a task was scheduled in and out
+> > > > > > > > > > > (scheduled in on the first CPU sample with sequence number N, and
+> > > > > > > > > > > switched out on the last sample with sequence number N).
+> > > > > > > > > >
+> > > > > > > > > > I'm not sure how it can help.  We don't need the switch info itself.
+> > > > > > > > > > What's needed is when the CPU was idle, right?
+> > > > > > > > >
+> > > > > > > > > I mean the following.
+> > > > > > > > > Each sample has a TID.
+> > > > > > > > > We add a SEQ field, which is per-thread and is incremented after every
+> > > > > > > > > rescheduling of the thread.
+> > > > > > > > >
+> > > > > > > > > When we see the last sample for (TID,SEQ), we pretend there is SCHED
+> > > > > > > > > OUT event for this thread at this timestamp. When we see the first
+> > > > > > > > > sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
+> > > > > > > > > thread at this timestamp.
+> > > > > > > > >
+> > > > > > > > > These SCHED IN/OUT events are not injected by the kernel. We just
+> > > > > > > > > pretend they happen for accounting purposes. We may actually
+> > > > > > > > > materialize them in the perf tool, or me may just update parallelism
+> > > > > > > > > as if they happen.
+> > > > > > > >
+> > > > > > > > Thanks for the explanation.  But I don't think it needs the SEQ and
+> > > > > > > > SCHED IN/OUT generated from it to track lost records.  Please see below.
+> > > > > > > >
+> > > > > > > > >
+> > > > > > > > > With this scheme we can lose absolutely any subset of samples, and
+> > > > > > > > > still get very precise accounting. When we lose samples, the profile
+> > > > > > > > > of course becomes a bit less precise, but the effect is local and
+> > > > > > > > > recoverable.
+> > > > > > > > >
+> > > > > > > > > If we lose the last/first event for (TID,SEQ), then we slightly
+> > > > > > > > > shorten/postpone the thread accounting in the process parallelism
+> > > > > > > > > level. If we lose a middle (TID,SEQ), then parallelism is not
+> > > > > > > > > affected.
+> > > > > > > >
+> > > > > > > > I'm afraid it cannot check parallelism by just seeing the current thread.
+> > > > > > > > I guess it would need information from other threads even if it has same
+> > > > > > > > SEQ.
+> > > > > > >
+> > > > > > > Yes, we still count parallelism like you do in this patch, we just use
+> > > > > > > the SEQ info instead of CPU numbers and explicit switch events.
+> > > > > >
+> > > > > > I mean after record lost, let's say
+> > > > > >
+> > > > > >   t1: SAMPLE for TID 1234, seq 10  (parallelism = 4)
+> > > > > >   t2: LOST
+> > > > > >   t3: SAMPLE for TID 1234, seq 10  (parallelism = ?)
+> > > > > >
+> > > > > > I don't think we can continue to use parallelism of 4 after LOST even if
+> > > > > > it has the same seq because it cannot know if other threads switched on
+> > > > > > other CPUs.  Then do we need really the seq?
+> > > > >
+> > > > > I do not understand the problem you describe.
+> > > > > We just keep updating parallelism according to the algorithm I
+> > > > > described. It works fine in the presence of lost events.
+> > > >
+> > > > Do you think it's ok to use 4 if seq is the same?  I'm afraid it'd be
+> > > > inaccurate.
+> > >
+> > > It will be inaccurate briefly for the period of 1 sample if we lost
+> > > specifically the last/first sample of a thread scheduling quantum. And
+> > > then it will recover and will be precise.
+> > >
+> > > But it's exactly the same in your scheme, right. If we stopped seeing
+> > > events on a CPU due to lost events, we will assume it's not running.
+> > >
+> > > And generally lost events will always lead to imprecision. That's
+> > > unavoidable. It's only important if the imprecision is limited and
+> > > proportional to the number of lost events. And this is the case for
+> > > the SEQ scheme.
+> > >
+> > >
+> > > > > > > > Also postpone thread accounting can be complex.  I think it should wait
+> > > > > > > > for all other threads to get a sample.  Maybe some threads exited and
+> > > > > > > > lost too.
+> > > > > > >
+> > > > > > > Yes, in order to understand what's the last event for (TID,SEQ) we
+> > > > > > > need to look ahead and find the event (TID,SEQ+1). The easiest way to
+> > > > > > > do it would be to do 2 passes over the trace. That's the cost of
+> > > > > > > saving trace space + being resilient to lost events.
+> > > > > > >
+> > > > > > > Do you see any other issues with this scheme besides requiring 2 passes?
+> > > > > >
+> > > > > > Well.. 2 pass itself can be a problem due to slowness it'd bring.  Some
+> > > > > > people complain about the speed of perf report as of now.
+> > > > >
+> > > > > Is trace processing CPU-bound or memory-bound? If it's CPU-bound, then
+> > > > > the second pass may be OK-ish, since we will need minimal CPU
+> > > > > processing during the first pass.
+> > > >
+> > > > It depends on the size of data, but I guess it's CPU-bound in most cases.
+> > > >
+> > > > >
+> > > > >
+> > > > > > I think we can simply reset the parallelism in all processes after LOST
+> > > > > > and set current process to the idle task.  It'll catch up as soon as it
+> > > > > > sees samples from all CPUs.
+> > > > >
+> > > > > I guess we can approximate parallelism as you described here:
+> > > > >
+> > > > > > Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
+> > > > > > CPU and clear the current thread after some period (2x of given freq?).
+> > > > >
+> > > > > We probably don't need to do anything special for lost events in this
+> > > > > scheme at all. If the gap caused by lost events is tiny, then we
+> > > > > consider nothing happened. If the gap is large enough, then we
+> > > > > consider the CPU as idle for the duration of the gap. Either way it
+> > > > > will be handled on common grounds.
+> > > >
+> > > > How do you know if it's tiny?  Do you mean the seq remains after lost?
+> > >
+> > > I was talking about your scheme based on CPU numbers.
+> > >
+> > >
+> > > > > But tuning of these heuristics + testing and verification may be a bit
+> > > > > of a problem. I would hate to end up with a tool which I won't trust.
+> > > > >
+> > > > > Here:
+> > > > > "after some period (2x of given freq?)"
+> > > > > do you mean 2x average/median period, or 1/2 average/median period?
+> > > > > (2x freq is 1/2 period)
+> > > >
+> > > > Oh, sorry.  It's 2x period.
+> > > >
+> > > > >
+> > > > > Ideally, we consider a CPU idle after 1/2 period after it switched to
+> > > > > the idle task and we stop receiving samples.
+> > > > > But on the other hand, we don't want to consider it constantly
+> > > > > becoming idle, when it's just doing normal sampling with the normal
+> > > > > period...
+> > > > >
+> > > > > So ideally the algorithm should be something like:
+> > > > > let's say average/median sampling period is P
+> > > > > we got last sample for CPU X at time T
+> > > > > if by time T+2P we have not seen any other sample on CPU X, then
+> > > > > consider CPU X idle since T+0.5P
+> > > > >
+> > > > > But this would also require either 2 passes over the data, or some
+> > > > > kind of look ahead similar to the algo I proposed...
+> > > >
+> > > > I think we can do it in 1 pass.  For each sample,
+> > > >
+> > > >   for_each_cpu(cpu) {
+> > > >       if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
+> > > >           if (current[cpu]->thread != idle) {
+> > > >               current[cpu]->thread->parallelism--;
+> > > >               current[cpu]->thread = idle;
+> > > >           }
+> > > >       }
+> > > >   }
+> > > >
+> > > >   leader = machine__findnew_thread(machine, sample->pid);
+> > > >   current[sample->cpu]->last_timestamp = sample->timestamp;
+> > > >
+> > > >   if (current[sample->cpu]->thread != leader) {
+> > > >       if (current[sample->cpu]->thread != idle)
+> > > >           current[sample->cpu]->thread->parallelism--;
+> > > >
+> > > >       current[sample->cpu]->thread = leader;
+> > > >       leader->parallelism++;
+> > > >   }
+> > > >
+> > > >   sample->parallelism = leader->parallelism;
+> > >
+> > > As I described, for this simple 1 pass algorithm, I am afraid of imprecision.
+> > > The thread has not continued to run for 2 periods. I run for 0-1 period.
+> > >
+> > >
+> > >
+> > > > > Also, do we take the median period? or average? do we update it over
+> > > > > time (say, if CPU freq changes)? do we count it globally, or per CPU
+> > > > > (in case CPUs run at different freqs)?
+> > > >
+> > > > Oh, perf tools use default frequency of 4000 Hz.
+> > >
+> > > Is the actual sample rate reasonably precise across time/CPUs?
+> > >
+> > > > Maybe we can use this
+> > > > only for the frequency mode which means user didn't use -c option or
+> > > > similar in the event description.
+> >
+> >
+> > All-in-all I think the best option for now is using CPU IDs to track
+> > parallelism as you suggested, but be more precise with idle detection.
+> > 2 passes over the trace may be fine to detect idle points. I see the
+> > most time now spent in hist_entry__cmp, which accesses other entries
+> > and is like a part of O(N*logN) processing, so a simple O(N) pass
+> > shouldn't slow it down much.
+> > That's what I would try. But I would also try to assess the precision
+> > of this approach by comparing with results of using explicit switch
+> > events.
+>
+> It's not clear to me how you want to maintain the idle info in the 2
+> pass approach.  Please feel free to propose something based on this
+> work.
 
-Acked-by: Matthew Brost <matthew.brost@intel.com>
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b8f1125f68da..219f887f810e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15713,6 +15713,7 @@ R:	Rakie Kim <rakie.kim@sk.com>
->  R:	Byungchul Park <byungchul@sk.com>
->  R:	Gregory Price <gourry@gourry.net>
->  R:	Ying Huang <ying.huang@linux.alibaba.com>
-> +R:	Alistair Popple <apopple@nvidia.com>
->  L:	linux-mm@kvack.org
->  S:	Maintained
->  W:	http://www.linux-mm.org
-> -- 
-> 2.47.2
-> 
+What part of it is unclear?
+
+Basically, in the first pass we only mark events as sched_out/in.
+When we don't see samples on a CPU for 2*period, we mark the previous
+sample on the CPU as sched_out:
+
+  // Assuming the period is stable across time and CPUs.
+  for_each_cpu(cpu) {
+      if (current[cpu]->last_timestamp + 2*period < sample->timestamp) {
+          if (current[cpu]->thread != idle)
+              current[cpu]->last_sample->sched_out = true;
+      }
+  }
+
+  leader = machine__findnew_thread(machine, sample->pid);
+  if (current[sample->cpu]->thread != leader) {
+    current[sample->cpu]->last_sample->sched_out = true;
+    sample->sched_in = true;
+  }
+  current[sample->cpu]->thread = leader;
+  current[sample->cpu]->last_sample = sample;
+  current[sample->cpu]->last_timestamp = sample->timestamp;
+
+
+On the second pass we use the precomputed sched_in/out to calculate parallelism:
+
+  leader = machine__findnew_thread(machine, sample->pid);
+  if (sample->sched_in)
+    leader->parallelism++;
+  sample->parallelism = leader->parallelism;
+  if (sample->sched_out)
+    leader->parallelism--;
+
+This is more precise b/c we don't consider a thread running for
+2*period after it stopped running.
+
+A more precise approach would probably be to consider the thread
+running for 0.5*period after the last sample (and similarly for
+0.5*period before the first sample), but it would require injecting
+sched_in/out events into the trace at these points.
