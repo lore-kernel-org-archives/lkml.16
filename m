@@ -1,180 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83DF22579B;
-	Fri, 30 May 2025 11:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1641E21D3EC
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748605819; cv=none; b=YXJZWaBu4ecSDUnS/0RPUV/DVAA28znB0TfJ969WGQrbzfTrUEh7Bekc+aaMoxQcYQCYk33QF2jn2Gbz6loYGGTXIlIzUeEsB4VecvDsWb1VZG4X375R/LloYU4hPfv7WO5pDgChSxccZIhaPEABDHKRmjjyrCY5knnWrb+2tuY=
+	t=1748605847; cv=none; b=Kda7i0s8klxW2Rs8Iq985gfqNzagsclAjAAE7ArIdgMHq4o9VMEUgltWwIXPYG6UgnO8bhuu23pc6BtPwzXo1nuD+5sDWNcR5bG2b+Hfe/XyB8Xo0ukVBHWKZrKFfT2aBiWXVUIEhC3c32mngBBnauE3cpolFZlTrTgYHTfhzrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748605819; c=relaxed/simple;
-	bh=fz3ZQSWr7CY1akxZLr471YVGDzGqo++bGWSlgdU6ahw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7x2oyhduiHEVSZg//1S5nWsi53Xvivml/XbwTkfp0jn91eWuuL36AhbCdC3i7QRfwBvq3MSf09gHZ0ktLJIqRBh+OSV7XNheOpHhttaTnOfqRDSz02BcDNekyB1Ok39dfwS9+rGY1JH+2PU4V9LtsSyuuArqo8xnLhiA6t+LjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePLDMET0; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePLDMET0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748605818; x=1780141818;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fz3ZQSWr7CY1akxZLr471YVGDzGqo++bGWSlgdU6ahw=;
-  b=ePLDMET0IoI8Ue0dAHLJUJQx3aqTnlFFryrDrdvP7jdfd0ikCVfrZfAI
-   jvYStHp8H4+j3QCyURZaS9JXC3uYeI92DZdbN3oSnnLD/Yfwwthb5NEZU
-   Lo3Y7l3MzTxxG+9mTj6q6/mS+7GOgoNVQyIaK1maGUYvMfMIpGonI+eSw
-   Z83VvsojGz6QJM1ruELKsXvnszJ10lXu4LgySgQdWlMIbu+Xo45LwGdao
-   HK0CJCDkkH1ofRZZa1+cSejBvPQp9t01iL3XAojMTcFEbltZF+6nvXro5
-   ulGWjHj+PZe7Gd3YLWo/3dRHJdZp16dXgnOOAQaBkiGEwYUkbZiNeqUdc
-   Q==;
-X-CSE-ConnectionGUID: FuSBA4z2QIaF58kaVpX9PQ==
-X-CSE-MsgGUID: Liy4hCN7TQqbwgFi/Bzgyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50565722"
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="50565722"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 04:50:15 -0700
-X-CSE-ConnectionGUID: Mdc9ZpEFTCq33nDfnQxj5g==
-X-CSE-MsgGUID: Gu9Gr+uqRoC3L7F7Kr3HGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,195,1744095600"; 
-   d="scan'208";a="174858935"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 30 May 2025 04:50:11 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKyFV-000Xbw-1S;
-	Fri, 30 May 2025 11:50:09 +0000
-Date: Fri, 30 May 2025 19:49:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hilda Wu <hildawu@realtek.com>, marcel@holtmann.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	luiz.dentz@gmail.com, linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org, max.chou@realtek.com,
-	alex_lu@realsil.com.cn
-Subject: Re: [PATCH 2/2] Bluetooth: btrtl: Add enhanced download support
-Message-ID: <202505301910.8q5W0vf5-lkp@intel.com>
-References: <20250529124816.4186320-3-hildawu@realtek.com>
+	s=arc-20240116; t=1748605847; c=relaxed/simple;
+	bh=8J7MijuSmv8BbECeoJk6Iux4Xa8Uk9BEZ3d9RPs87d8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O2QuP9OHzJTsFoFjKc5KHkLRRj+fKpwCCgneH3oqVPNKnjduRpcTX5bErmAC8HE0+BCVUr0a4vx93tQ7gEF4GjcUDDg83H+OwEiV1hJivXlsGqb2yKJlMz+V2lynHzl9wH+cyw4RG/akrq4TgmgJI11dOo7+TP/Ikk2cj04hAHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C679A16F2;
+	Fri, 30 May 2025 04:50:27 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EB2C3F5A1;
+	Fri, 30 May 2025 04:50:42 -0700 (PDT)
+Message-ID: <4202a03d-dacd-429c-91e6-81a5d05726a4@arm.com>
+Date: Fri, 30 May 2025 12:50:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529124816.4186320-3-hildawu@realtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: Enable vmalloc-huge with ptdump
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+ kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ david@redhat.com
+References: <20250530082021.18182-1-dev.jain@arm.com>
+ <d2b63b97-232e-4d2e-816b-71fd5b0ffcfa@arm.com>
+ <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Hilda,
+On 30/05/2025 10:14, Dev Jain wrote:
+> 
+> On 30/05/25 2:10 pm, Ryan Roberts wrote:
+>> On 30/05/2025 09:20, Dev Jain wrote:
+>>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+>>> because an intermediate table may be removed, potentially causing the
+>>> ptdump code to dereference an invalid address. We want to be able to
+>>> analyze block vs page mappings for kernel mappings with ptdump, so to
+>>> enable vmalloc-huge with ptdump, synchronize between page table removal in
+>>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+>>> use mmap_read_lock and not write lock because we don't need to synchronize
+>>> between two different vm_structs; two vmalloc objects running this same
+>>> code path will point to different page tables, hence there is no race.
+> 
+> My "correction" from race->no problem was incorrect after all :) There will
+> be no race too since the vm_struct object has exclusive access to whatever
+> table it is clearing.
+> 
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   arch/arm64/include/asm/vmalloc.h | 6 ++----
+>>>   arch/arm64/mm/mmu.c              | 7 +++++++
+>>>   2 files changed, 9 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+>>> index 38fafffe699f..28b7173d8693 100644
+>>> --- a/arch/arm64/include/asm/vmalloc.h
+>>> +++ b/arch/arm64/include/asm/vmalloc.h
+>>> @@ -12,15 +12,13 @@ static inline bool arch_vmap_pud_supported(pgprot_t prot)
+>>>       /*
+>>>        * SW table walks can't handle removal of intermediate entries.
+>>>        */
+>>> -    return pud_sect_supported() &&
+>>> -           !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>>> +    return pud_sect_supported();
+>>>   }
+>>>     #define arch_vmap_pmd_supported arch_vmap_pmd_supported
+>>>   static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+>>>   {
+>>> -    /* See arch_vmap_pud_supported() */
+>>> -    return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>>> +    return true;
+>>>   }
+>>>     #endif
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index ea6695d53fb9..798cebd9e147 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1261,7 +1261,11 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>>>       }
+>>>         table = pte_offset_kernel(pmdp, addr);
+>>> +
+>>> +    /* Synchronize against ptdump_walk_pgd() */
+>>> +    mmap_read_lock(&init_mm);
+>>>       pmd_clear(pmdp);
+>>> +    mmap_read_unlock(&init_mm);
+>> So this works because ptdump_walk_pgd() takes the write_lock (which is mutually
+>> exclusive with any read_lock holders) for the duration of the table walk, so it
+>> will either consistently see the pgtables before or after this removal. It will
+>> never disappear during the walk, correct?
+>>
+>> I guess there is a risk of this showing up as contention with other init_mm
+>> write_lock holders. But I expect that pmd_free_pte_page()/pud_free_pmd_page()
+>> are called sufficiently rarely that the risk is very small. Let's fix any perf
+>> problem if/when we see it.
+> 
+> We can avoid all of that by my initial approach - to wrap the lock around
+> CONFIG_PTDUMP_DEBUGFS.
+> I don't have a strong opinion, just putting it out there.
 
-kernel test robot noticed the following build warnings:
+(I wrote then failed to send earlier):
 
-[auto build test WARNING on bluetooth/master]
-[also build test WARNING on bluetooth-next/master linus/master v6.15 next-20250530]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It's ugly though. Personally I'd prefer to keep it simple unless we have clear
+evidence that its needed. I was just laying out my justification for not needing
+to doing the conditional wrapping in this comment.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hilda-Wu/Bluetooth-btrtl-Firmware-format-v3-support/20250529-205020
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git master
-patch link:    https://lore.kernel.org/r/20250529124816.4186320-3-hildawu%40realtek.com
-patch subject: [PATCH 2/2] Bluetooth: btrtl: Add enhanced download support
-config: i386-buildonly-randconfig-004-20250530 (https://download.01.org/0day-ci/archive/20250530/202505301910.8q5W0vf5-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250530/202505301910.8q5W0vf5-lkp@intel.com/reproduce)
+> 
+>>
+>>>       __flush_tlb_kernel_pgtable(addr);
+>> And the tlbi doesn't need to be serialized because there is no security issue.
+>> The walker can be trusted to only dereference memory that it sees as it walks
+>> the pgtable (obviously).
+>>
+>>>       pte_free_kernel(NULL, table);
+>>>       return 1;
+>>> @@ -1289,7 +1293,10 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>>           pmd_free_pte_page(pmdp, next);
+>>>       } while (pmdp++, next += PMD_SIZE, next != end);
+>>>   +    /* Synchronize against ptdump_walk_pgd() */
+>>> +    mmap_read_lock(&init_mm);
+>>>       pud_clear(pudp);
+>>> +    mmap_read_unlock(&init_mm);
+>> Hmm, so pud_free_pmd_page() is now going to cause us to acquire and release the
+>> (upto) lock 513 times (for a 4K kernel). I wonder if there is an argument for
+>> clearing the pud first (under the lock), then the pmds can all be cleared
+>> without a lock, since the walker won't be able to see the pmds once the pud is
+>> cleared.
+> 
+> Yes, we can isolate the PMD table in case the caller of pmd_free_pte_page is
+> pud_free_pmd_page. In this case, vm_struct_1 has exclusive access to the entire
+> pmd page, hence no race will occur. But, in case of vmap_try_huge_pmd() being the
+> caller, we cannot drop the locks around pmd_free_pte_page. So we can have something
+> like
+> 
+> #ifdef CONFIG_PTDUMP_DEBUGFS
+> static inline void ptdump_synchronize_lock(bool flag)
+> {
+>     if (flag)
+>         mmap_read_lock(&init_mm);
+> }
+> 
+> and pass false when the caller is pud_free_pmd_page.
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>       __flush_tlb_kernel_pgtable(addr);
+>>>       pmd_free(NULL, table);
+>>>       return 1;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505301910.8q5W0vf5-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/bluetooth/btrtl.c:1339:7: warning: format specifies type 'unsigned long' but the argument has type 'unsigned int' [-Wformat]
-    1338 |                 bt_dev_err(hdev, "got invalid cmd complete, %u %lu", skb->len,
-         |                                                                ~~~
-         |                                                                %u
-    1339 |                            sizeof(*ev));
-         |                            ^~~~~~~~~~~
-   include/net/bluetooth/bluetooth.h:280:42: note: expanded from macro 'bt_dev_err'
-     280 |         BT_ERR("%s: " fmt, bt_dev_name(hdev), ##__VA_ARGS__)
-         |                       ~~~                       ^~~~~~~~~~~
-   include/net/bluetooth/bluetooth.h:265:45: note: expanded from macro 'BT_ERR'
-     265 | #define BT_ERR(fmt, ...)        bt_err(fmt "\n", ##__VA_ARGS__)
-         |                                        ~~~         ^~~~~~~~~~~
-   drivers/bluetooth/btrtl.c:2071:1: error: function definition is not allowed here
-    2071 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2113:1: error: function definition is not allowed here
-    2113 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2172:1: error: function definition is not allowed here
-    2172 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2199:1: error: function definition is not allowed here
-    2199 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2219:1: error: function definition is not allowed here
-    2219 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2246:1: error: function definition is not allowed here
-    2246 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2286:1: error: function definition is not allowed here
-    2286 | {
-         | ^
-   drivers/bluetooth/btrtl.c:2404:48: error: expected '}'
-    2404 | MODULE_FIRMWARE("rtl_bt/rtl8922au_config.bin");
-         |                                                ^
-   drivers/bluetooth/btrtl.c:1878:1: note: to match this '{'
-    1878 | {
-         | ^
-   1 warning and 8 errors generated.
-
-
-vim +1339 drivers/bluetooth/btrtl.c
-
-  1322	
-  1323	static int btrtl_enhanced_download_mode_enable(struct hci_dev *hdev,
-  1324						struct btrtl_device_info *btrtl_dev)
-  1325	{
-  1326		struct hci_rp_enhanced_download_mode *ev;
-  1327		struct sk_buff *skb;
-  1328		u16 opcode = 0xfc1f;
-  1329		u8 val = 1;
-  1330		int ret = -EINVAL;
-  1331	
-  1332		skb = __hci_cmd_sync(hdev, opcode, 1, &val, HCI_CMD_TIMEOUT);
-  1333		if (IS_ERR(skb)) {
-  1334			bt_dev_err(hdev, "send %04x error (%lu)", opcode, PTR_ERR(skb));
-  1335			return -EIO;
-  1336		}
-  1337		if (skb->len != sizeof(*ev)) {
-  1338			bt_dev_err(hdev, "got invalid cmd complete, %u %lu", skb->len,
-> 1339				   sizeof(*ev));
-  1340			goto err;
-  1341		}
-  1342		ev = (struct hci_rp_enhanced_download_mode *)skb->data;
-  1343		if (ev->status) {
-  1344			bt_dev_err(hdev, "got invalid status 0x%02x", ev->status);
-  1345			goto err;
-  1346		}
-  1347		btrtl_dev->handle = le16_to_cpu(ev->handle);
-  1348		btrtl_dev->acldata_pkt_len = le16_to_cpu(ev->acldata_pkt_len);
-  1349		kfree_skb(skb);
-  1350	
-  1351		bt_dev_info(hdev, "enhanced download mode enabled, handle %04x, acl %u",
-  1352			    btrtl_dev->handle, btrtl_dev->acldata_pkt_len);
-  1353	
-  1354		return 0;
-  1355	err:
-  1356		kfree_skb(skb);
-  1357		return ret;
-  1358	}
-  1359	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
