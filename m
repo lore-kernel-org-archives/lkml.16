@@ -1,325 +1,226 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614FC184540
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 043281DA5F
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 09:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748598387; cv=none; b=Ff7bU6z0/LhhScSex6iNT2a47Eu6lmgemJ4GgJ49zUnym0JDYpYtXljhxsOJPs5cFUzOg6br3NLd1FdiT/lYy5HmYkbssOHRWoiCCIZodI21Kwqfx4gGcgO/m82V57/HooA2qoMAPJhDBDul2iCksDtm02EAa3gXnXTeoB5P6cw=
+	t=1748598455; cv=none; b=o1MgLuR+/zIfPRNdcQAimr61HrluAl161AlQ08t54923TYz/BGgUwb9PoQDvJKXgjJJIymgzHSqOUZKGB8LQvdE4RjzGRc9iH31pbN2zlh7lMT2vrE1AN31ZbmLtE3A4TpsMydRw3kJAuHscKtS0dLFJJWwXYOjpEivmlfsDMjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748598387; c=relaxed/simple;
-	bh=1JxPp94yu8DXGtTX7nsw/Vy6yoxIUfLieXiixTYycic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=br+NSTqdAYMGG9ZXWZvuP4bHtBwvsDSMhQnRw5Yp5NLYz1lEPPVFxFLaxDYx1eKwrapg15ZSR+AAVJdpgb+RDiu+CAdZtACOn42tqe3w1MXBDAqeUTnrXj+SEFrgMpK+zMKQiDCgxCEmiQ5A4yVT8vhZgIYmYr3zbcQGfGJNjC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LuIOSvSg; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LuIOSvSg"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e7dc3df7ac3so1861171276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 02:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748598384; x=1749203184; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=N6UY2y9MOEwZlIGv1rKrrngNk7HNQITxylPxlIC9Qrk=;
-        b=LuIOSvSgSrzcYXmVBpZoE713lYH4TpVCBGMAj7n2HzDWReiBZupqLBpB9PKFgPG+Wc
-         rQ7xQP0V71ITrA4sPuaZiNC1ScK0qMKs8U9C7BUwysULfbRqwR2XutU9U1GeUr9C867J
-         B5f3YchoYLI9cDe6yscmiNzrUEOJ4BpCr1AU5uKYk5fYTHlGCTZj+v6/WSXTfBfVK2v8
-         XP3i7GNn1+RKOgtZZIdITAvPD9/ijv2nSqXneQvbsq27Z8FHMgfD9Ij0fw0GQNxb0T+a
-         OMJfwRzAaWNR8w6sTC9A2O2mcvM0nqpWxuAAaaiYHXr7RdC0ewJAT5lWNp21ulp1uP51
-         ikFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748598384; x=1749203184;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N6UY2y9MOEwZlIGv1rKrrngNk7HNQITxylPxlIC9Qrk=;
-        b=uj//PBXnwhMak9dJ58FqiGxbxbfx+R/VZc093wAlp7Ag+kIush6iGlca1y8B7ZKmex
-         pDzKySfhgkMLmur6xJ8L3vYPPlgoX3dIWcvuv92xN5G2ewoRQJXjPcYWOVTY4hSqnxFi
-         KRV5YjmET5FamSZxqG2tvT4MoODz4hJcyzzrZkUKNteCmM6wSSXIMyz4dC/YJOBuYI9y
-         Zn9hLcfP36DvsKGB7V+Eq7IGI7XiXCgiz5s/Vh4hnt9EHA5+ff+LaIN4aAb7vP4zSh2R
-         uKVHMC04+1vFRtLvL5HJc5UTxdLk5NNhNAQkN+BZcNVQncCCVD6af3Ga+qzDLidQMSbB
-         XCPw==
-X-Forwarded-Encrypted: i=1; AJvYcCV9G21ghmV5XfAN6yOJJ/Al6H3q+5B5eAEhwHnADj1IZJ56nZ9OAnw4YpKeKqkeYFp1DNOHKn2K2S6SL/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP1DFCB3Yn3oGoictTls6IKLf5+CP5UKJHaEXx6N930x8Cpcoh
-	heudAdZQc3hGm7w/Vn57eXrgOdY1GjX4V7VZuucS3Ln7FUHp7xwWM5jQm1XX1qHt+WyHU7o8VjG
-	h1SJKUNQdpFmffmwEfo4MiJ+F2PZM9iV7E069WYWWVQ==
-X-Gm-Gg: ASbGncvqoJne+rRwyk01yIH2eSKvqf3YVkX8ENA/RwBSaRJiG6AOpRCxBizWz6hayIt
-	xSyuEjM0XRezFBKp6CDHLzF/5A7ij2pgWNo6KEIEnQ5MJh7jBpGStsIsEJaa6tzATrFynjbNrwt
-	SZg+nX1n5+39zO/Xxk+6+DCKx3Y1MPt3HWsA==
-X-Google-Smtp-Source: AGHT+IHDOOob+rYy5PewBfFSnwrXwwsdqV4NLiR/14XgYNCnd/4FiuYQbhODXW8eT2YWicTg9hQl3xI77mVLBp8m+Dw=
-X-Received: by 2002:a05:6902:26c3:b0:e7d:8875:bfe2 with SMTP id
- 3f1490d57ef6-e7f81f15dedmr3191276276.43.1748598384251; Fri, 30 May 2025
- 02:46:24 -0700 (PDT)
+	s=arc-20240116; t=1748598455; c=relaxed/simple;
+	bh=UV7i5g7iDoyITDauLFhYMgYAiMZ1h9iDNM7iBFJxR3k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZW/SeqJn9YgFdFbdd1t5OKILgSSdk99/oLc/i6rd8ulSrvvsl6PAJ9uy2rugNXarojW8IdQxP0OkPwDkQLIYNtlR3zKahOsTql8EgOOcvnzLXN/nUD1aFBh8SODahOd/z4Fuf5XCVMSYaJTf06S+H7jR4QkV0p3ZrnlIyMO8A4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86A5E16F2;
+	Fri, 30 May 2025 02:47:16 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CD193F5A1;
+	Fri, 30 May 2025 02:47:31 -0700 (PDT)
+Message-ID: <6280e181-9f05-4aa0-9fe7-23d4e86000e5@arm.com>
+Date: Fri, 30 May 2025 10:47:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521041840.GB28017@nxa18884-linux> <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
- <20250523191713.nylhi74jq6z4hqmr@hiago-nb> <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
- <20250527000510.fofehmsdhifcwlys@hiago-nb> <20250527023921.GA14252@nxa18884-linux>
- <CAPDyKFqZkcaGfss=Oi+H9UERFU29jY2t5uTPnGVGQgSAJSeCoA@mail.gmail.com>
- <20250527134525.f7yzs4ww64xxmjmr@hiago-nb> <20250528173813.rxqu6pzqgu4m5joo@hiago-nb>
- <PAXPR04MB845941FFF347274012A0ECA88866A@PAXPR04MB8459.eurprd04.prod.outlook.com>
- <20250529201544.azoqdrgnlqfxi6mb@hiago-nb>
-In-Reply-To: <20250529201544.azoqdrgnlqfxi6mb@hiago-nb>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 30 May 2025 11:45:48 +0200
-X-Gm-Features: AX0GCFsQvcDOUqaNaQ5cjuiIbQU68DMjg5d50KglTL5dTEGM-jQJUgFg_7R2SME
-Message-ID: <CAPDyKFrDvxpFeBU5noRDBZCA1N96iPNYYjM0kqd1R4z_4CUV3w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
- remote core attachment
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
-	Hiago De Franco <hiago.franco@toradex.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	"Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>, Fabio Estevam <festevam@gmail.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: Enable vmalloc-huge with ptdump
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
+ kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ david@redhat.com
+References: <20250530082021.18182-1-dev.jain@arm.com>
+ <d2b63b97-232e-4d2e-816b-71fd5b0ffcfa@arm.com>
+ <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <832e84a9-4303-4e21-a88b-94395898fa3e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 May 2025 at 22:15, Hiago De Franco <hiagofranco@gmail.com> wrote:
->
-> On Thu, May 29, 2025 at 03:54:47AM +0000, Peng Fan wrote:
->
-> [...]
->
-> > > We are making progress ;-)
-> > >
-> > > With the patches you shared Ulf (I added them on top of the current
-> > > master branch), it works as expected, dev_pm_genpd_is_on() returns 0
-> > > when I boot the kernel without M4 running and it returns 1 when I
-> > > boot the kernel with M4 running with a hello-world demo.
-> > >
-> > > However now I tried to, if dev_pm_genpd_is_on() returns 1, put the
-> > > DETACHED state, something as
-> > >
-> > > if (dev_pm_genpd_is_on(priv->pd_list->pd_devs[0]))
-> > >     priv->rproc->state = RPROC_DETACHED;
-> > >
-> > > In this case I used 0 because I understand this is the
-> > > IMX_SC_R_M4_0_PID0 defined in my device tree overlay:
-> > >
-> > >             power-domains = <&pd IMX_SC_R_M4_0_PID0>,
-> > >                             <&pd IMX_SC_R_M4_0_MU_1A>;
-> > >
-> > > But in this case, the kernel does not boot anymore, I see the "Starting
-> > > kernel..." and nothing else.
-> >
-> > Please add "earlycon" in bootargs to see where it hangs.
->
-> Thanks Peng! I was able to catch the kernel panic yesterday, however I
-> must say that today I was doing the tests again and the issue is gone.
-> Sorry, I might have done something wrong yesterday with the tests.
-> Anyway, here is the log:
->
-> [    1.271163] remoteproc remoteproc0: imx-rproc is available
-> [    1.280296] remoteproc remoteproc0: attaching to imx-rproc
-> [    1.285756] Unable to handle kernel paging request at virtual address ffff80005ae3dd79
-> [    1.293624] Mem abort info:
-> [    1.294655] mmc0: SDHCI controller on 5b010000.mmc [5b010000.mmc] using ADMA
-> [    1.296386]   ESR = 0x0000000096000005
-> [    1.307194]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [    1.312473]   SET = 0, FnV = 0
-> [    1.315566]   EA = 0, S1PTW = 0
-> [    1.318649]   FSC = 0x05: level 1 translation fault
-> [    1.323510] Data abort info:
-> [    1.326370]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
-> [    1.331846]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> [    1.336882]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> [    1.342182] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000096bc1000
-> [    1.348870] [ffff80005ae3dd79] pgd=0000000000000000, p4d=1000000097054003, pud=0000000000000000
-> [    1.357565] Internal error: Oops: 0000000096000005 [#1]  SMP
-> [    1.363198] Modules linked in:
-> [    1.366236] CPU: 2 UID: 0 PID: 47 Comm: kworker/u16:3 Not tainted 6.15.0-03667-g3f5f09105c40-dirty #826 PREEMPT
-> [    1.376405] Hardware name: Toradex Colibri iMX8QXP on Colibri Evaluation Board V3 (DT)
-> [    1.384313] Workqueue: events_unbound deferred_probe_work_func
-> [    1.390128] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    1.397076] pc : rproc_handle_resources.constprop.0+0x78/0x1d0
-> [    1.402896] lr : rproc_boot+0x368/0x56c
-> [    1.406717] sp : ffff8000819c3990
-> [    1.410017] x29: ffff8000819c3990 x28: ffff80005ae3dd7d x27: 0000000000000000
-> [    1.417145] x26: 0000000000000000 x25: ffff0000015ec038 x24: ffff800080f0c0a8
-> [    1.424268] x23: ffff8000813a6110 x22: 00000000d999ad79 x21: ffff0000015ec000
-> [    1.431392] x20: 0000000026665683 x19: ffff80005ae3dd79 x18: 0000000000000006
-> [    1.438516] x17: ffff000001799400 x16: ffff000001798e00 x15: 4addd15cca11c529
-> [    1.445639] x14: 53ebce6d5564d787 x13: 4addd15cca11c529 x12: 53ebce6d5564d787
-> [    1.452763] x11: 95a1e33b6b190674 x10: 9e3c9abdb41ca345 x9 : ab17b4eaffd6fd1c
-> [    1.459887] x8 : d5da055de4cfbb87 x7 : dfd7fa31596acbbc x6 : 9946d97107d0dcca
-> [    1.467011] x5 : ffff0000010c7800 x4 : 00000000000003fc x3 : ffff0000010c7780
-> [    1.474134] x2 : fffffffffffffff0 x1 : ffff8000814a3000 x0 : ffff8000814a3000
-> [    1.481261] Call trace:
-> [    1.483690]  rproc_handle_resources.constprop.0+0x78/0x1d0 (P)
-> [    1.487705] mmc0: new HS400 MMC card at address 0001
-> [    1.489502]  rproc_boot+0x368/0x56c
-> [    1.495349] mmcblk0: mmc0:0001 Q2J55L 7.09 GiB
-> [    1.497929]  rproc_add+0x184/0x190
-> [    1.504356]  mmcblk0: p1 p2
-> [    1.505747]  imx_rproc_probe+0x458/0x528
-> [    1.509238] mmcblk0boot0: mmc0:0001 Q2J55L 16.0 MiB
-> [    1.512437]  platform_probe+0x68/0xc0
-> [    1.512452]  really_probe+0xc0/0x38c
-> [    1.520584] mmcblk0boot1: mmc0:0001 Q2J55L 16.0 MiB
-> [    1.520951]  __driver_probe_device+0x7c/0x15c
-> [    1.527522] mmcblk0rpmb: mmc0:0001 Q2J55L 4.00 MiB, chardev (242:0)
-> [    1.529377]  driver_probe_device+0x3c/0x10c
-> [    1.544263]  __device_attach_driver+0xbc/0x158
-> [    1.548586]  bus_for_each_drv+0x84/0xe0
-> [    1.552407]  __device_attach+0x9c/0x1ac
-> [    1.556231]  device_initial_probe+0x14/0x20
-> [    1.560401]  bus_probe_device+0xac/0xb0
-> [    1.564221]  deferred_probe_work_func+0x9c/0xec
-> [    1.568741]  process_one_work+0x14c/0x28c
-> [    1.572735]  worker_thread+0x2cc/0x3d4
-> [    1.576473]  kthread+0x12c/0x208
-> [    1.579687]  ret_from_fork+0x10/0x20
-> [    1.583253] Code: 8b36c033 9100127c 54000924 d503201f (b9400261)
-> [    1.589337] ---[ end trace 0000000000000000 ]---
->
-> But again, the issue is not happening anymore ;-) I will keep testing to
-> see if the issue happens again, but for now is working fine, I can now
-> attach to the remote processor.
->
-> This is the git diff on top of Ulf patches I have been testing:
->
-> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> index 6da25e2c81d2..661a6aad40a8 100644
-> --- a/drivers/pmdomain/core.c
-> +++ b/drivers/pmdomain/core.c
-> @@ -599,6 +599,23 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
->
-> +bool dev_pm_genpd_is_on(struct device *dev)
-> +{
-> +        struct generic_pm_domain *genpd;
-> +        bool is_on;
-> +
-> +        genpd = dev_to_genpd_safe(dev);
-> +        if (!genpd)
-> +                return false;
-> +
-> +        genpd_lock(genpd);
-> +        is_on = genpd_status_on(genpd);
-> +        genpd_unlock(genpd);
-> +
-> +        return is_on;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_is_on);
-> +
->  /**
->   * dev_pm_genpd_set_next_wakeup - Notify PM framework of an impending wakeup.
->   *
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 627e57a88db2..9688370f9bb5 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -18,6 +18,7 @@
->  #include <linux/of_reserved_mem.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/reboot.h>
->  #include <linux/regmap.h>
->  #include <linux/remoteproc.h>
-> @@ -891,9 +892,7 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
->  {
->         struct device *dev = priv->dev;
->         int ret;
-> -       struct dev_pm_domain_attach_data pd_data = {
-> -               .pd_flags = PD_FLAG_DEV_LINK_ON,
-> -       };
-> +       bool test;
->
->         /*
->          * If there is only one power-domain entry, the platform driver framework
-> @@ -902,7 +901,16 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
->         if (dev->pm_domain)
->                 return 0;
->
-> -       ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
-> +       ret = dev_pm_domain_attach_list(dev, NULL, &priv->pd_list);
-> +       printk("hfranco: returned pd devs is %d", ret);
-> +       for (int i = 0; i < ret; i++) {
-> +               test = dev_pm_genpd_is_on(priv->pd_list->pd_devs[i]);
-> +               printk("hfranco: returned value is %d", test);
-> +               if (test) {
-> +                       priv->rproc->state = RPROC_DETACHED;
-> +                       break;
-> +               }
-> +       }
->         return ret < 0 ? ret : 0;
->  }
->
-> @@ -1146,6 +1154,9 @@ static int imx_rproc_probe(struct platform_device *pdev)
->                 }
->         }
->
-> +       pm_runtime_enable(dev);
-> +       pm_runtime_get_sync(dev);
-> +
->         ret = rproc_add(rproc);
->         if (ret) {
->                 dev_err(dev, "rproc_add failed\n");
-> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-> index 756b842dcd30..16d1fca2a8c5 100644
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -95,6 +95,7 @@ extern void pm_runtime_put_suppliers(struct device *dev);
->  extern void pm_runtime_new_link(struct device *dev);
->  extern void pm_runtime_drop_link(struct device_link *link);
->  extern void pm_runtime_release_supplier(struct device_link *link);
-> +bool dev_pm_genpd_is_on(struct device *dev);
->
->  int devm_pm_runtime_set_active_enabled(struct device *dev);
->  extern int devm_pm_runtime_enable(struct device *dev);
->
-> This is the rproc output when bootaux is used:
->
-> root@colibri-imx8x-07308754:~# dmesg | grep hfranco
-> [    0.478475] hfranco: returned pd devs is 2
-> [    0.478496] hfranco: returned value is 1
-> root@colibri-imx8x-07308754:~# dmesg | grep rproc
-> [    0.478797] remoteproc remoteproc0: imx-rproc is available
-> [    0.478878] remoteproc remoteproc0: attaching to imx-rproc
-> [    0.478961] remoteproc remoteproc0: remote processor imx-rproc is now attached
->
-> I will cleanup everything and try to come up with a patch. Ulf, in this
-> case, as your patches have not yet been merged, should I wait for them?
+On 30/05/2025 10:14, Dev Jain wrote:
+> 
+> On 30/05/25 2:10 pm, Ryan Roberts wrote:
+>> On 30/05/2025 09:20, Dev Jain wrote:
+>>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+>>> because an intermediate table may be removed, potentially causing the
+>>> ptdump code to dereference an invalid address. We want to be able to
+>>> analyze block vs page mappings for kernel mappings with ptdump, so to
+>>> enable vmalloc-huge with ptdump, synchronize between page table removal in
+>>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+>>> use mmap_read_lock and not write lock because we don't need to synchronize
+>>> between two different vm_structs; two vmalloc objects running this same
+>>> code path will point to different page tables, hence there is no race.
+> 
+> My "correction" from race->no problem was incorrect after all :) There will
+> be no race too since the vm_struct object has exclusive access to whatever
+> table it is clearing.
+> 
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   arch/arm64/include/asm/vmalloc.h | 6 ++----
+>>>   arch/arm64/mm/mmu.c              | 7 +++++++
+>>>   2 files changed, 9 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+>>> index 38fafffe699f..28b7173d8693 100644
+>>> --- a/arch/arm64/include/asm/vmalloc.h
+>>> +++ b/arch/arm64/include/asm/vmalloc.h
+>>> @@ -12,15 +12,13 @@ static inline bool arch_vmap_pud_supported(pgprot_t prot)
+>>>       /*
+>>>        * SW table walks can't handle removal of intermediate entries.
+>>>        */
+>>> -    return pud_sect_supported() &&
+>>> -           !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>>> +    return pud_sect_supported();
+>>>   }
+>>>     #define arch_vmap_pmd_supported arch_vmap_pmd_supported
+>>>   static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+>>>   {
+>>> -    /* See arch_vmap_pud_supported() */
+>>> -    return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+>>> +    return true;
+>>>   }
+>>>     #endif
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index ea6695d53fb9..798cebd9e147 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1261,7 +1261,11 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>>>       }
+>>>         table = pte_offset_kernel(pmdp, addr);
+>>> +
+>>> +    /* Synchronize against ptdump_walk_pgd() */
+>>> +    mmap_read_lock(&init_mm);
+>>>       pmd_clear(pmdp);
+>>> +    mmap_read_unlock(&init_mm);
+>> So this works because ptdump_walk_pgd() takes the write_lock (which is mutually
+>> exclusive with any read_lock holders) for the duration of the table walk, so it
+>> will either consistently see the pgtables before or after this removal. It will
+>> never disappear during the walk, correct?
+>>
+>> I guess there is a risk of this showing up as contention with other init_mm
+>> write_lock holders. But I expect that pmd_free_pte_page()/pud_free_pmd_page()
+>> are called sufficiently rarely that the risk is very small. Let's fix any perf
+>> problem if/when we see it.
+> 
+> We can avoid all of that by my initial approach - to wrap the lock around
+> CONFIG_PTDUMP_DEBUGFS.
+> I don't have a strong opinion, just putting it out there.
+> 
+>>
+>>>       __flush_tlb_kernel_pgtable(addr);
+>> And the tlbi doesn't need to be serialized because there is no security issue.
+>> The walker can be trusted to only dereference memory that it sees as it walks
+>> the pgtable (obviously).
+>>
+>>>       pte_free_kernel(NULL, table);
+>>>       return 1;
+>>> @@ -1289,7 +1293,10 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>>           pmd_free_pte_page(pmdp, next);
+>>>       } while (pmdp++, next += PMD_SIZE, next != end);
+>>>   +    /* Synchronize against ptdump_walk_pgd() */
+>>> +    mmap_read_lock(&init_mm);
+>>>       pud_clear(pudp);
+>>> +    mmap_read_unlock(&init_mm);
+>> Hmm, so pud_free_pmd_page() is now going to cause us to acquire and release the
+>> (upto) lock 513 times (for a 4K kernel). I wonder if there is an argument for
+>> clearing the pud first (under the lock), then the pmds can all be cleared
+>> without a lock, since the walker won't be able to see the pmds once the pud is
+>> cleared.
+> 
+> Yes, we can isolate the PMD table in case the caller of pmd_free_pte_page is
+> pud_free_pmd_page. In this case, vm_struct_1 has exclusive access to the entire
+> pmd page, hence no race will occur. But, in case of vmap_try_huge_pmd() being the
+> caller, we cannot drop the locks around pmd_free_pte_page. So we can have something
+> like
+> 
+> #ifdef CONFIG_PTDUMP_DEBUGFS
+> static inline void ptdump_synchronize_lock(bool flag)
+> {
+>     if (flag)
+>         mmap_read_lock(&init_mm);
+> }
+> 
+> and pass false when the caller is pud_free_pmd_page.
 
-I think you can state in the cover-letter that your series depends on
-mine, so please go ahead and submit them.
+of something like this? (completely untested):
 
->
-> Thanks for all the help guys.
->
-> >
-> > >
-> > > I am using the pm_runtime functions before rproc_add():
-> > >
-> > > @@ -1146,6 +1154,9 @@ static int imx_rproc_probe(struct
-> > > platform_device *pdev)
-> > >                 }
-> > >         }
-> > >
-> > > +       pm_runtime_enable(dev);
-> > > +       pm_runtime_get_sync(dev);
-> >
-> > I think only make this apply for i.MX8QX/8QM/DX, then no
-> > impact to other patforms.
+---8<---
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 8fcf59ba39db..1f3a922167e4 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1267,7 +1267,7 @@ int pmd_clear_huge(pmd_t *pmdp)
+        return 1;
+ }
 
-In general I think we should avoid such quirks in drivers, unless it's
-really needed. Just wanted to share my opinion, but it's totally up to
-you.
+-int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
++static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, bool lock)
+ {
+        pte_t *table;
+        pmd_t pmd;
+@@ -1280,12 +1280,23 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+        }
 
-[...]
+        table = pte_offset_kernel(pmdp, addr);
++
++       if (lock)
++               mmap_read_lock(&init_mm);
+        pmd_clear(pmdp);
++       if (lock)
++               mmap_read_unlock(&init_mm);
++
+        __flush_tlb_kernel_pgtable(addr);
+        pte_free_kernel(NULL, table);
+        return 1;
+ }
 
-Kind regards
-Uffe
++int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
++{
++       return __pmd_free_pte_page(pmdp, addr, true);
++}
++
+ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+ {
+        pmd_t *table;
+@@ -1300,15 +1311,19 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+                return 1;
+        }
+
++       /* Synchronize against ptdump_walk_pgd() */
++       mmap_read_lock(&init_mm);
++       pud_clear(pudp);
++       mmap_read_unlock(&init_mm);
++
+        table = pmd_offset(pudp, addr);
+        pmdp = table;
+        next = addr;
+        end = addr + PUD_SIZE;
+        do {
+-               pmd_free_pte_page(pmdp, next);
++               __pmd_free_pte_page(pmdp, next, false);
+        } while (pmdp++, next += PMD_SIZE, next != end);
+
+-       pud_clear(pudp);
+        __flush_tlb_kernel_pgtable(addr);
+        pmd_free(NULL, table);
+        return 1;
+---8<---
+
+
+
+> 
+>>
+>> Thanks,
+>> Ryan
+>>
+>>>       __flush_tlb_kernel_pgtable(addr);
+>>>       pmd_free(NULL, table);
+>>>       return 1;
+
