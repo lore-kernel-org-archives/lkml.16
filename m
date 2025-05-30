@@ -1,106 +1,125 @@
-Received: from lgeamrelo03.lge.com (lgeamrelo03.lge.com [156.147.51.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD01B6CE4
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 07:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.102
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34FED156F28;
+	Fri, 30 May 2025 07:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748588554; cv=none; b=TALtLFsnfQopnXtIdOG3X53usl6A9AX9Qpc9IucoOckaxSWUxPcxT36HtSERHwIFJXXDzH0IFAS9WWKUIKbRVWTPHzq+QN9LFSie086rfYm7dsY1ZKPULHBqbcpmleGtoR+B8Hkyyy7qf9rwpqZe4Ui6RyHHgNKWvO+5G/5bQLA=
+	t=1748588747; cv=none; b=kaBztZKJ/lxvPp/xtePqVvd2XI6FGXg3zp8KUDRRrIrnjfNuNYKWvkOEBKJEnZTtjHuIJ9wW7LeZQThk/k2ZglcJ0ZzMsekjVFIBYAt/QgJ81zkyX33VRyG02glmrdmgic+zGoIJ3mJPI87KnPrCIBF7oYPgweYXqYcih7Yiils=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748588554; c=relaxed/simple;
-	bh=E/O9HAYc1pxKvwei2SjnR9l+4Xm5rk6K33BGfGo/hgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9s7Pa8CevPGbNxzmc4ETNSVauhoXOFl578yhLzIj241gt4oDHDZVZOF6yzfIQ7/dcT4OrKONWeLkIOUD0AGIDjkFHbUuRb/RxoUsnfSL6iQ3FLhPNL6CedWu7o6OS0AC0idd+aYp6E6039k/3ip5dUxoER7fxh95POFNS6nHIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
-	by 156.147.51.102 with ESMTP; 30 May 2025 15:47:30 +0900
-X-Original-SENDERIP: 10.177.112.156
-X-Original-MAILFROM: youngjun.park@lge.com
-Date: Fri, 30 May 2025 15:47:29 +0900
-From: YoungJun Park <youngjun.park@lge.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org,
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, len.brown@intel.com,
-	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
-	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
-	pavel@kernel.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-pm@vger.kernel.org, peterx@redhat.com, gunho.lee@lge.com,
-	taejoon.song@lge.com, iamjoonsoo.kim@lge.com
-Subject: Re: [RFC PATCH v2 00/18] Virtual Swap Space
-Message-ID: <aDlUgVFdA7rCUvHx@yjaykim-PowerEdge-T330>
-References: <20250429233848.3093350-1-nphamcs@gmail.com>
+	s=arc-20240116; t=1748588747; c=relaxed/simple;
+	bh=3Qva9AYaf1X3Lii8gW2OzKo3rX9mkLIMXrDUaBMBK6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o87Rbc43GPhZi1iRaLYQFBfUn0eV6jR7xJw6cgEtaZt8SxGESiJBwQbp5AcIxiobaXMtIVSGdX76zU9e9jexjbwipB9inMLoOH7oycFjWHxgdmCvnczPSBk0btCN2qwIv6GfxelV+8oyvS9Bbut4/S6uCxllHKr2pAXjq7G0TFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88EE016F8;
+	Fri, 30 May 2025 00:05:27 -0700 (PDT)
+Received: from [10.57.95.14] (unknown [10.57.95.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6101E3F5A1;
+	Fri, 30 May 2025 00:05:42 -0700 (PDT)
+Message-ID: <63060234-007e-450b-a4d5-dacb9d2b87d5@arm.com>
+Date: Fri, 30 May 2025 08:05:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: Restrict pagetable teardown to avoid false
+ warning
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
+Cc: david@redhat.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+References: <20250527082633.61073-1-dev.jain@arm.com>
+ <914071fe-c133-4c9d-bb2d-9b9fca8a1798@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <914071fe-c133-4c9d-bb2d-9b9fca8a1798@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429233848.3093350-1-nphamcs@gmail.com>
 
-On Tue, Apr 29, 2025 at 04:38:28PM -0700, Nhat Pham wrote:
-> Changelog:
-> * v2:
-> 	* Use a single atomic type (swap_refs) for reference counting
-> 	  purpose. This brings the size of the swap descriptor from 64 KB
-> 	  down to 48 KB (25% reduction). Suggested by Yosry Ahmed.
-> 	* Zeromap bitmap is removed in the virtual swap implementation.
-> 	  This saves one bit per phyiscal swapfile slot.
-> 	* Rearrange the patches and the code change to make things more
-> 	  reviewable. Suggested by Johannes Weiner.
-> 	* Update the cover letter a bit.
+On 30/05/2025 04:55, Dev Jain wrote:
+> 
+> On 27/05/25 1:56 pm, Dev Jain wrote:
+>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
 
-Hi Nhat,
+nit: "Commit 9c006972c3fe" should have actually been:
 
-Thank you for sharing this patch series.
-I’ve read through it with great interest.
+Commit 9c006972c3fe ("arm64: mmu: drop pXd_present() checks from
+pXd_free_pYd_table()")
 
-I’m part of a kernel team working on features related to multi-tier swapping,
-and this patch set appears quite relevant
-to our ongoing discussions and early-stage implementation.
+>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+>> a pmd_present() check in pud_free_pmd_page().
+>>
+>> This problem was found by code inspection.
+>>
+>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from
+>> pXd_free_pYd_table())
+> 
+> I missed double quotes around the fixes commit message. Can Will or Catalin fix
+> that,
+> or shall I resend.
 
-I had a couple of questions regarding the future direction.
+For future, I have the following in my ~/.gitconfig
 
-> * Multi-tier swapping (as mentioned in [5]), with transparent
->   transferring (promotion/demotion) of pages across tiers (see [8] and
->   [9]). Similar to swapoff, with the old design we would need to
->   perform the expensive page table walk.
+"""
+[pretty]
+        fixes = Fixes: %h (\"%s\")
+        commit = Commit %h (\"%s\")
+"""
 
-Based on the discussion in [5], it seems there was some exploration
-around enabling per-cgroup selection of multiple tiers.
-Do you envision the current design evolving in a similar direction
-to those past discussions, or is there a different direction you're aiming for?
+Then I can do:
 
->   This idea is very similar to Kairui's work to optimize the (physical)
->   swap allocator. He is currently also working on a swap redesign (see
->   [11]) - perhaps we can combine the two efforts to take advantage of
->   the swap allocator's efficiency for virtual swap.
+$ git show --pretty=fixes <SHA> | head -n 1
 
-I noticed that your patch appears to be aligned with the work from Kairui.
-It seems like the overall architecture may be headed toward introducing
-a virtual swap device layer.
-I'm curious if there’s already been any concrete discussion
-around this abstraction, especially regarding how it might be layered over
-multiple physical swap devices?
+or
 
-From a naive perspective, I imagine that while today’s swap devices
-are in a 1:1 mapping with physical devices,
-this virtual layer could introduce a 1:N relationship —
-one virtual swap device mapped to multiple physical ones.
-Would this virtual device behave as a new swappable block device
-exposed via `swapon`, or is the plan to abstract it differently?
+$ git show --pretty=commit <SHA> | head -n 1
 
-Thanks again for your work, 
-and I would greatly appreciate any insights you could share.
+to get the correct format. Note that "Fixes:" is a tag and should all be on a
+single line. "Commit" is just a way to refer to other commits in prose and can
+be broken across lines at the usual character limit.
 
-Best regards,  
-YoungJun Park
+Perhaps there is an even easier way to do it, but this works for me.
+
+Thanks,
+Ryan
+
+
+> 
+>> Cc: <stable@vger.kernel.org>
+>> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>> This patch is based on 6.15-rc6.
+>>
+>> v2->v3:
+>>   - Use pmdp_get()
+>>
+>> v1->v2:
+>>   - Enforce check in caller
+>>
+>>   arch/arm64/mm/mmu.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index ea6695d53fb9..5a9bf291c649 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>       next = addr;
+>>       end = addr + PUD_SIZE;
+>>       do {
+>> -        pmd_free_pte_page(pmdp, next);
+>> +        if (pmd_present(pmdp_get(pmdp)))
+>> +            pmd_free_pte_page(pmdp, next);
+>>       } while (pmdp++, next += PMD_SIZE, next != end);
+>>         pud_clear(pudp);
+
