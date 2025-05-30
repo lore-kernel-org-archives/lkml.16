@@ -1,176 +1,148 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F9C262FDE
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4510267B01
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 17:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748627160; cv=none; b=uhjW6rocVYzecrpgfLo3ngakfCDma3q0JWHPOa6MWxTY6a8Bd3a1bEMdLfAn2XV15xTli1ElmPt3QHIfbm97ec5ZHQ7bDxiZ64quS99kz6HOMdvuJRFjDzHNtcInwyrAdjhYUtjxzeRkBPekbhBMxDSak2ryjyNELK4HDEkuvcw=
+	t=1748627203; cv=none; b=g9ifI7ile5TYiWwUxk5re8p4x1q8qBr8C3KP5eMjy20bSygudurMFCs05JnpwpCVncjoXeXfF54O69dKKCYmiNvh77FQnA7YYzNg1MYLZh/e2f301X+C5o30/fIlTn67DGsmBJr9QVTa3r8HuXKYedpVO+/Z/IpRy22Wj08bCAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748627160; c=relaxed/simple;
-	bh=gAMcET+cuuKL0RWwCyWMytv8F9RmoUjag07rOTeO4/A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PR4oR5YQ47VNQJNRso6qzS/RYcvVUdJ2XHjcBA/+1zKoO5smF3ejcSReD6Na+ciA3N9thKTMww2+anRc6qXpZgjRNTqLhpHYfNELvfCTagZCs+DtK9z/scJ0S8FZvIlxDR39c1Z425ena0tL8R/Ii6IDCieS3ww8CcpPkD9eU5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ndufresne.ca; spf=pass smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=w80jX+rx; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1748627203; c=relaxed/simple;
+	bh=8/rRsYd5JSLeJh6AS9GM17uwsqHj9NnqSj1CiHBfh1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I2ygW/T1ALmFIy5NqYzE3scnJqPZ7u4p24t5p2ImQlN6Vo+ShWiFkbSWh88iCBUAtRxcUptX45cFuZ9fA9zfL5GnIWge51NSyMy84AoemHtt77bDgSQZCT6gwTe4QEcRUDtHpeJhYmv9N+o9fPt/nDRzFUTbV7DIDClmqsbT5AM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQc020xD; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="w80jX+rx"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-401c43671ecso1277020b6e.0
-        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:45:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQc020xD"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so755a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 10:46:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748627158; x=1749231958; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gAMcET+cuuKL0RWwCyWMytv8F9RmoUjag07rOTeO4/A=;
-        b=w80jX+rxmo1ljwTTY7so/w0xWQwJRLILwKK/1bogFysKkZSoi2ZBg1gWJOMC+YRjmi
-         djNtbAlHOuXlWm53069HeRFVHU7H4RbNOMNkxaqOUsQ6mYNEvgv/X4fvjUR6+2FYRUTS
-         uRT78/lnLxIaEkTqsAPInhwfkWsc12ohQPvUhWpgJNhSwDXFZlXEwI3LPG1kVSJhUXQh
-         EN/D3TNvycjgol6G/rNCwf/AO3pqR++iSXiDKTPuqWMCGQMm9nRvRmfhZ1tvIeceh4PA
-         8hIXEDXfZtjm6oMYOOwwPz1F+BmIWsmhvJTT+bhgGc5j3acQAVRGe1Y+vJ31GZGrMXB0
-         Re4Q==
+        d=google.com; s=20230601; t=1748627199; x=1749231999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ihn3lqu8Zt6o9S0Gm/cjJQZ8oEZNZXj7TjU4dT1ISYE=;
+        b=bQc020xDvzIaFIL3v9Jg0LyaBSrXH2yW4ppEHZi3DYPfh8IPlXZRzGoehKPw7LCHET
+         L0SLyRaTjkgkjC2q7oKEJhKciSFq/54enx8+T+SMxidHVyyDO1MxwEyM519EcqJAbLiy
+         +9aWQ6jh097lZk6me03TlWUHExTspu2XqKyZ0Kdaj/3v4ojWdOZ/lc+ulqltquHiFPH1
+         oowKDkWbMK5DVzntCJUXEbQ3azETloXFzL2E3G4pbxCuUKL77I9NRsu88TnbqQNDqPgK
+         wig8AmGN2iOfvSupK1Yit99xEC+WGsR8zFzbSu70u/4Ja1sjF/+Jh0Yq1N6UaFZ/NhxI
+         WHtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748627158; x=1749231958;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gAMcET+cuuKL0RWwCyWMytv8F9RmoUjag07rOTeO4/A=;
-        b=CmyLzWUcleFdBF+1nLBfdxpXPR1RYbQ8mL/eJmCACvk93WkPLPdtvv1YAAJIGWtDmD
-         EXqkwvvvrreLJhX5fk7J7Afg30ja2p6bTbrRuKemPgaTEWFGJxzT0GCdE8YsDq3AvUbe
-         thDv08mm7IsX2jTetrWDm4PuibYpBhbShg9jjlm3iivg2T22FhjRflCdJGBlaZCaQhPy
-         H6+rxFyTzKtTguMaHYRhwSgXFCGx3RnlEccWcJ7HMZbwtytAHA1yAy1YLp4pO0wmmsXE
-         VIKo+BQryNCaYM2ib+ZUt0IQXFW5DWUiCjkYR3XUPEJMLhxrDMFgQUeNayuUgZ0ty1YY
-         wsDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUW/5Fh0zq7h85HM8hFMuuA04aRaHsMtq2c51os101MkEtehR7zyKSHDgl/a70uxRNYcwGqNqUBTzbaLjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRrEy2gHJfHasyegB0jg41QenmN+qDo31BYCkX3+XcZo9ewH4x
-	Ul2ES8zFYCJOwttgH+zeJXG1CeFh1LT9UaCY/H8Vt2t8sz7LyO917fwM2sfsQDS0dEDtorGuVXJ
-	hUmpztW0=
-X-Gm-Gg: ASbGncsFwq5WXbHTfxPhCzWPlZx52jjR6fEmecr4IUZQf0YB+tyZI1S52P04+rel+lO
-	CNYNvL7xX4+IfLUO+LeTso7YF/hVFxFD6itbzPXO/gAfnIBiOUWrHrWgqTEikDD9yTuU6TE+MU+
-	hqktw+4AxlE6zXl8firJ8ivu2EoYTcvTDczlutmzYMptfAVpcHAA3265ikpekXhv0olHmbT3JI1
-	twYSdObnMiKBVxTBHxlnsv9Q/7mWnF6EHm0+qME0JE8WcgtcvXALEAN/ykqVZNJGhkBngl2Tfi3
-	KBmr5dxN7rw4KuNeUh2Wk6+++ZpZsIUu+b7e2ciHUsbDyjVp/wq0Mv56mPAMSXmnlvY=
-X-Google-Smtp-Source: AGHT+IHyl1e3Yym/gxdy5g4CfoGGquz0lE1x+UxDToQUNLQVwUIPOg1TJW9EOWFrIUF4GMcwRcWJcA==
-X-Received: by 2002:a05:622a:514e:b0:4a4:3f16:c2e4 with SMTP id d75a77b69052e-4a4409b955dmr70951691cf.15.1748627147504;
-        Fri, 30 May 2025 10:45:47 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:10:5285::5ac? ([2606:6d00:10:5285::5ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a435767a5csm23220391cf.10.2025.05.30.10.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 May 2025 10:45:47 -0700 (PDT)
-Message-ID: <23ace820d130e5d18c599d29e960652be49e1457.camel@ndufresne.ca>
-Subject: Re: [PATCH v5 00/12] Enable jpeg enc & dec multi-hardwares for
- MT8196
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Kyrie Wu <kyrie.wu@mediatek.com>, Hans Verkuil
- <hverkuil-cisco@xs4all.nl>,  Mauro Carvalho Chehab	 <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger	
- <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno	
- <angelogioacchino.delregno@collabora.com>, linux-media@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Cc: srv_heupstream@mediatek.com
-Date: Fri, 30 May 2025 13:45:46 -0400
-In-Reply-To: <20250530074537.26338-1-kyrie.wu@mediatek.com>
-References: <20250530074537.26338-1-kyrie.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+        d=1e100.net; s=20230601; t=1748627199; x=1749231999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ihn3lqu8Zt6o9S0Gm/cjJQZ8oEZNZXj7TjU4dT1ISYE=;
+        b=E6n3diCvhlL2B7NzEAFVWxSDdZNeYT1WUYgTRKdPkPhP04MDIJxfqqYfXHPdYp5HvF
+         1WkBuqRZT/zsiKkicyYQzrktkG8jUNRs3VbIr72u5RaD+qjcn0c5jVubota7BQaSRDys
+         J34g2xBHY5wt8SzC8/F7Fe+EOcAm2pkDiDjPrldyUKhWrjphKa8NzN07XFBXBNsZXllv
+         JdnMvGqztI7tei9G9B6EUwiODAyxXyF5twQSE2iCgRHBK8MRPfJqVzxBUUp8Unb77I3y
+         oEO/bXEONoT2fh4/uo1zv3xytbQ1dWqxWoFTDuXjpZbHHLBXvVWyW6urAcVs05SEZgWI
+         p+kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzAplzIU0MA2Qe8nwxkceUFFN/5nHR+MEESu54SrSiI2aEaRAIED0Pl2s3RYHrMysS2Wr0DEKw3mRcg08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBWCNJMK5B0cuspezcZBSrfsxIMxj/1Xb6STjuPjSWBaaru/Ho
+	JL6jDQVbqa91WtbTrcR6o3dXFCRoMcmSIgeLqokoSzfmrEYaQruc0114IRpPn8ieSE7UzRwlAOy
+	Ob5GjnY0dNp6xMUkWy0p1gsQ/3hevwZJZnO/+YeEt
+X-Gm-Gg: ASbGncvy04YIGhu+lRcyC1WnqNdOvtvJ6EiieoSB/ugr3jrdy8zkPkQaGbfRkwVAv99
+	1xynDvVtEEcC+hltKN0iTTZRscgm7j5E2Wxjs+63mhPT73+PA9EIJrHYzhCac3TEsU9DNtW7O+k
+	RTmFHWRfsEr5QTzSQr0dSXY7SEHHlzcABOn8dF1t7ZXNZQdBn76RqqJVZW19jeo7NVhgLT6IE=
+X-Google-Smtp-Source: AGHT+IFlIzSWLpiRPWX4PVcfGklgRFG+QAA+iehSSjEDDk9XEYQUHXFbDDpIGgjFzNVjN6xbkHl/xyDhsDUsEr6S+OI=
+X-Received: by 2002:aa7:d5ce:0:b0:604:5b98:7c9b with SMTP id
+ 4fb4d7f45d1cf-605accfe0b1mr1879a12.0.1748627198767; Fri, 30 May 2025 10:46:38
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250404021902.48863-1-anthony.yznaga@oracle.com>
+ <20250404021902.48863-9-anthony.yznaga@oracle.com> <CAG48ez3cUZf+xOtP6UkkS2-CmOeo+3K5pvny0AFL_XBkHh5q_g@mail.gmail.com>
+ <bd7d2ebe-f9be-437f-8cd8-683c809326f1@oracle.com>
+In-Reply-To: <bd7d2ebe-f9be-437f-8cd8-683c809326f1@oracle.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 30 May 2025 19:46:02 +0200
+X-Gm-Features: AX0GCFtcbPmabOKu0l_GvwpOc7YrLnX_imk60FuH-p4r20hytH-nZKj_S8c80B0
+Message-ID: <CAG48ez3TTicKSxXyScmqq5Gg91+-KCSk80EccwkbvsQjLzjCFA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/20] mm/mshare: flush all TLBs when updating PTEs in
+ an mshare range
+To: Anthony Yznaga <anthony.yznaga@oracle.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, markhemm@googlemail.com, 
+	viro@zeniv.linux.org.uk, david@redhat.com, khalid@kernel.org, 
+	andreyknvl@gmail.com, dave.hansen@intel.com, luto@kernel.org, 
+	brauner@kernel.org, arnd@arndb.de, ebiederm@xmission.com, 
+	catalin.marinas@arm.com, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhiramat@kernel.org, 
+	rostedt@goodmis.org, vasily.averin@linux.dev, xhao@linux.alibaba.com, 
+	pcc@google.com, neilb@suse.de, maz@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, May 30, 2025 at 6:30=E2=80=AFPM Anthony Yznaga
+<anthony.yznaga@oracle.com> wrote:
+> On 5/30/25 7:41 AM, Jann Horn wrote:
+> > On Fri, Apr 4, 2025 at 4:18=E2=80=AFAM Anthony Yznaga <anthony.yznaga@o=
+racle.com> wrote:
+> >> Unlike the mm of a task, an mshare host mm is not updated on context
+> >> switch. In particular this means that mm_cpumask is never updated
+> >> which results in TLB flushes for updates to mshare PTEs only being
+> >> done on the local CPU. To ensure entries are flushed for non-local
+> >> TLBs, set up an mmu notifier on the mshare mm and use the
+> >> .arch_invalidate_secondary_tlbs callback to flush all TLBs.
+> >> arch_invalidate_secondary_tlbs guarantees that TLB entries will be
+> >> flushed before pages are freed when unmapping pages in an mshare regio=
+n.
+> >
+> > Thanks for working on this, I think this is a really nice feature.
+> >
+> > An issue that I think this series doesn't address is:
+> > There could be mmu_notifiers (for things like KVM or SVA IOMMU) that
+> > want to be notified on changes to an mshare VMA; if those are not
+> > invoked, we could get UAF of page contents. So either we propagate MMU
+> > notifier invocations in the host mm into the mshare regions that use
+> > it, or we'd have to somehow prevent a process from using MMU notifiers
+> > and mshare at the same time.
+>
+> Thanks, Jann. I've noted this as an issue. Ultimately I think the
+> notifiers calls will need to be propagated. It's going to be tricky, but
+> I have some ideas.
 
-Le vendredi 30 mai 2025 =C3=A0 15:45 +0800, Kyrie Wu a =C3=A9crit=C2=A0:
-> This series adds support for mt8196 multi-hardwares jpeg enc & dec,
-> by first adding mt8196 jpegdec and jpegenc compatible to install
-> kernel driver. Add smmu setting to support smmu and iommu at the
-> same time.
-> Secondly refactor buffer and clock setting to support multi-hw jpeg
-> working.
-> Lastly, fix some bugs, including resolution change handleing, stop
-> streaming sw flow and others.
->=20
-> This series has been tested with MT8196 tast test.
-> Encoding and decoding worked for this chip.
->=20
-> Patches 1-3 Adds jpeg encoder and decoder compatible.
-> Patches 4 add jpeg smmu sid setting.
-> Patches 5 fix jpeg hw count setting to support different chips.
-> Patches 6 refactor jpeg buffer payload setting to handle buffer
-> size bug while resolution changed.
-> Patches 7 reconstruct jpeg dst buffer layout.
-> Patches 8 fix multi-core stop streaming flow
-> Patches 9 refactor multi-core clk suspend/resume setting
-> Patches 10 fix decoding buffer number setting timing issue
-> Patches 11 refactor decoding resolution change operation
-> Patches 12 fix remove buffer operation
+Very naively I think you could basically register your own notifier on
+the host mm that has notifier callbacks vaguely like this that walk
+the rmap of the mshare file and invoke nested mmu notifiers on each
+VMA that maps the file, basically like unmap_mapping_pages() except
+that you replace unmap_mapping_range_vma() with a notifier invocation?
 
-Just general comment, you built your patchset up-side-down. Start
-with the fixes of things that was already broken, then do your multi-core
-support refactoring, and only then add MT8196. Looking for a v6 with
-a re-organization of the set.
+static int mshare_mmu_notifier_invalidate_range_start(struct mmu_notifier *=
+mn,
+    const struct mmu_notifier_range *range)
+{
+  struct vm_area_struct *vma;
+  pgoff_t first_index, last_index;
 
-Nicolas
+  if (range->end < host_mm->mmap_base)
+    return 0;
+  first_index =3D (max(range->start, host_mm->mmap_base) -
+host_mm->mmap_base) / PAGE_SIZE;
+  last_index =3D (range->end - host_mm->mmap_base) / PAGE_SIZE;
+  i_mmap_lock_read(mapping);
+  vma_interval_tree_foreach(vma, &mapping->i_mmap, first_index, last_index)=
+ {
+    struct mmu_notifier_range nested_range;
 
->=20
-> ---
-> This series patches dependent on:
-> [1]
-> https://patchwork.linuxtv.org/project/linux-media/patch/20250424090824.53=
-09-1-jianhua.lin@mediatek.com/
->=20
-> Changes compared with v4:
-> --fix kernel robot build errors for patch 4.
-> --add reviewer for patch 1 and patch 2.
->=20
-> Changes compared with v3:
-> --change patch subject of jpeg encoder and decoder compatible.
->=20
-> Changes compared with v2:
-> --refactor smmu sid setting function interface
-> --Some modifications for patch v2's review comments.
->=20
-> Changes compared with v1:
-> --refine jpeg dt-bindings for MT8196
-> --optimize software code to manage jpeg HW count
-> --refactor smmu sid setting function interface
-> --Some modifications for patch v1's review comments.
->=20
-> Kyrie Wu (12):
-> =C2=A0 media: dt-bindings: mediatek,jpeg: Add mediatek, mt8196-jpgdec
-> =C2=A0=C2=A0=C2=A0 compatible
-> =C2=A0 media: dt-bindings: mediatek,jpeg: Add mediatek, mt8196-jpgenc
-> =C2=A0=C2=A0=C2=A0 compatible
-> =C2=A0 media: mediatek: jpeg: add jpeg compatible
-> =C2=A0 media: mediatek: jpeg: add jpeg smmu sid setting
-> =C2=A0 media: mediatek: jpeg: fix jpeg hw count setting
-> =C2=A0 media: mediatek: jpeg: refactor jpeg buffer payload setting
-> =C2=A0 media: mediatek: jpeg: refactor jpeg dst buffer layout
-> =C2=A0 media: mediatek: jpeg: fix stop streaming flow for multi-core
-> =C2=A0 media: mediatek: jpeg: refactor multi-core clk suspend and resume
-> =C2=A0=C2=A0=C2=A0 setting
-> =C2=A0 media: mediatek: jpeg: fix decoding buffer number setting timing i=
-ssue
-> =C2=A0 media: mediatek: jpeg: refactor decoding resolution change operati=
-on
-> =C2=A0 media: mediatek: jpeg: fix remove buffer operation for multi-core
->=20
-> =C2=A0.../media/mediatek,mt8195-jpegdec.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0.../media/mediatek,mt8195-jpegenc.yaml=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
-> =C2=A0.../platform/mediatek/jpeg/mtk_jpeg_core.c=C2=A0=C2=A0=C2=A0 | 169 =
-+++++++++++++-----
-> =C2=A0.../platform/mediatek/jpeg/mtk_jpeg_core.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 21 ++-
-> =C2=A0.../platform/mediatek/jpeg/mtk_jpeg_dec_hw.c=C2=A0 | 112 ++++++++++=
-+-
-> =C2=A0.../platform/mediatek/jpeg/mtk_jpeg_enc_hw.c=C2=A0 | 112 ++++++++++=
-+-
-> =C2=A06 files changed, 377 insertions(+), 53 deletions(-)
+    [... same math as in unmap_mapping_range_tree ...]
+    mmu_notifier_range_init(&nested_range, range->event, vma->vm_mm,
+nested_start, nested_end);
+    mmu_notifier_invalidate_range_start(&nested_range);
+  }
+  i_mmap_unlock_read(mapping);
+}
+
+And ensure that when mm_take_all_locks() encounters an mshare VMA, it
+basically recursively does mm_take_all_locks() on the mshare host mm?
+
+I think that might be enough to make it work, and the rest beyond that
+would be optimizations?
