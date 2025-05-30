@@ -1,134 +1,113 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F261A5B8B;
-	Fri, 30 May 2025 16:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52AE221CFF6;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748621740; cv=none; b=jI5DB0omRoa1X10bksc8uPk0nTxYRMMJ/w13B4sOI6AdNEqrontvzQm5hXhSKP1JnG4KwR1k7aXoeYowxu/gcoNQKXFK2aQC2CVlZBSOaep1+4BTGCSu7Ah/LRRKkFpFWfpO7LFVqf3XjCWhMHSenSlZevfnvq9aIiqNYJB7iyo=
+	t=1748621743; cv=none; b=Bbl7yfw4h2+FUMlEzAxDTtQelkUmYKvQ77M+mBtx71uvH0jM3QX4mN2FsTbpT2ZyqTU6I3ZNQlATqqlXbbodZYkNHxS7vBZZHs7qpQEjJxKNiPX7N/LeyU3VYJyB6nbHZUn6wBPiM2srCrrYd9qQ7Ak0v7xSolfpN97Vzt0ylGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748621740; c=relaxed/simple;
-	bh=nMHhGzKx6l1yFtYUlEhM7VyCxgik5nVNLeVZurJT0e8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I+iGNQAdhuVe9KgxfOmyC/HOiOvkseetYSERx51nWRoT9OnUPjgVvjP53q90C3SrOD9ILcYO65gvhpZNAx9dzz7jR2m0FVdwl9GZNXowccA/cXof42Qlo8kDldyCMPcosiFlj3sV0xCBlUAsBy5Yqu1pUvM8Q/RjvEpz4iqopQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YUr+R+IG; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748621743; c=relaxed/simple;
+	bh=J2tLUrNZJeP0b5EenQFGoAgg3wG4OtOoEYwTiiW8gcU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nZNf/szBzNCBmOEOpXc4yIsdpoDESjFIHQDW36UnR0H/WbE6FALxgcZci0A6OQQ3c42fKI3J7VCVMVorPy8W9r9qX4gvHFA81+id64alEgB6ly1VbcrccB3cc021+VPisq+VZUACmmBBg20A+ibXmVYkW3MKscjLrWav8kQmFbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GHzSCSsr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUr+R+IG"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-442f9043f56so13813185e9.0;
-        Fri, 30 May 2025 09:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748621736; x=1749226536; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qy6uONJd9YDsRJcfKs6FIt0MY6YyHzNaH+4QdToi3oA=;
-        b=YUr+R+IGaL/e8+/FZ/+dFP8WXDe6jjbfpHobP7stBPsIN0E3GqmR06x67+gXnbNKFi
-         CVCgYHBTdKz8UDwQd4ogiC2rj9v6pR5wOpgDnnihaJBo2e1mDHbPOvlEbEKBBySQA01F
-         sJcX2X7GO/eT/WKG9lQ3R83idbBWp7PECbmabjA3o5eQUCb0fr7awqRJuUkdsAfRtAQ6
-         DGJ3umOXgbDZJ5HDui0Qu4byIQVPhxUR6fi9zIaVE8e8uk31yM7/VpCJxQ7LDAzh32H+
-         UBx0g0TN5Pm7O1KNwGl7C1Y9fs0axQlTZ01MvMthGimIFkaQINJl6uoQTcp8hXUFKtLi
-         6mJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748621736; x=1749226536;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qy6uONJd9YDsRJcfKs6FIt0MY6YyHzNaH+4QdToi3oA=;
-        b=dTaRxoRnbNhgzUE/vCI8HRL4oW58/g/te1AhNjKGZ2yxdwKHumyci6m5i5Xvx7Ke1n
-         YTHcOkY1GFcapfiYvEkBGpOcVVNYwZI/b5TzQn98lib2stxVfjsLcKP16xhnz2myyoY4
-         tsDHo4dKe9a6AeDZOshVujDoP1rWaWbhRyq+Hn/imQFAluMHmA9sT87r9DjprHl+i5nt
-         obeOX9gFEVGyXrBU7gs0YkzEYecVOEbohQlFslJCL9gbwOnKiQ7hD+1b+McQnuQU5zmr
-         7e/BDyZHZomH6pNQMMpofDVDPeBs/McXOU3JE1IHbXD9tFax1oFSiVgBKTETKtTyNElO
-         Z1Sg==
-X-Forwarded-Encrypted: i=1; AJvYcCVu5mLIoWKNO5NKAZyPQq7N4w3ToKbleVs/gz84AvZVk8hkTDLQTcVWmRZ6NdNwkSgfVTcTxdqAeKCt2aQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweOUYpWf8IUg9ItN+zl5//O73i9mLjQwBAM1xnEOJDfGyOJVdk
-	AqPtmF4uCb/1E4kXnfsDJjS+UYdEZR9KrRZ7L9oxpHMJjkrE/88rSwh9
-X-Gm-Gg: ASbGncu0t4pYaYINnggkZFF8D+H4iOf0KpcfcWq+VydqVbHRjunrQizcWw8LbUyOetT
-	L9MrYy+BYY44zp3cw6AArl0ezaTm+pDZfOkbes7/8x1xXs4BXzBhURgwvSPgYNSq3QXS19BohCU
-	jL+UOHZm1DTlTBGhHNHknN5LiJsO5NOE/Dh657FiwETVdcxpW55lmHTZ648M4yb1livCA4aUauF
-	dam0YsQoYTzaBa4Cu/Aw24q+hDX3dC81eIOfnVJoBIUEQp/ZWkqEm1nzhJ+hqQm5l1rR7Wbuc6i
-	nj5eLB5A9BE/tmbYKRBXMVam6aKdZiebisFxwIX/wxYjZ4EFcgIcR9nNa9tYqSmB
-X-Google-Smtp-Source: AGHT+IF3Qheau+41FJN4zh+ru7u19FUa9vqxVjioTQgILtoyR31hRsBY/unJ+M14by/h2EdXRVD++A==
-X-Received: by 2002:a05:600c:4fc6:b0:43d:fa59:cc8f with SMTP id 5b1f17b1804b1-450d6599897mr37801315e9.33.1748621736182;
-        Fri, 30 May 2025 09:15:36 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:cd68::171c? ([2001:871:22a:cd68::171c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450d7fa2493sm21651905e9.16.2025.05.30.09.15.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 May 2025 09:15:35 -0700 (PDT)
-Message-ID: <d30be54d-f2dd-4394-b677-193cb2d77f1c@gmail.com>
-Date: Fri, 30 May 2025 18:15:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GHzSCSsr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 220C1C4CEEE;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748621743;
+	bh=J2tLUrNZJeP0b5EenQFGoAgg3wG4OtOoEYwTiiW8gcU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=GHzSCSsrVX5d/+mwa2WFH6Ya5D+zt0CCMbcaohPkqfoCopBbJitO9BKdVDRR1Zrej
+	 zuRcgfSKsRLackm/ljGKT3yy/5V9LRM+w4fpcJGoMTevKW18p8O1E5mJ9O5ndFs0Ld
+	 p8MYmZ2Ir2w8qvKaCWo75/joSmznZHNpJXrYGxU4fZJudjXfbzuVrRpndSrRrtIeYw
+	 xBrmsekl226FtRgkJ5hu+dYEwFeIfab9TyBSzL61HhC9CFVWs+Rru0vTy4GygBSPIK
+	 RPNLmHN8crKXKAJ2gTv4grd+IGB4k6Lte7NlkyTxpv+C98HHVhSHjHtqeKDVWVwAJB
+	 7AIIbXvQOcIoA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDE9C5B549;
+	Fri, 30 May 2025 16:15:43 +0000 (UTC)
+From: Jake Hillion via B4 Relay <devnull+jake.hillion.co.uk@kernel.org>
+Date: Fri, 30 May 2025 17:15:21 +0100
+Subject: [PATCH 1/2] x86/platform/amd: move final timeout check to after
+ final sleep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] rust: revocable: support fallible PinInit types
-To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
- rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250530142447.166524-1-dakr@kernel.org>
- <20250530142447.166524-3-dakr@kernel.org>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250530142447.166524-3-dakr@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250530-amd-hsmp-v1-1-3222bffa4008@hillion.co.uk>
+References: <20250530-amd-hsmp-v1-0-3222bffa4008@hillion.co.uk>
+In-Reply-To: <20250530-amd-hsmp-v1-0-3222bffa4008@hillion.co.uk>
+To: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>, 
+ Carlos Bilbao <carlos.bilbao@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ sched-ext@meta.com, Jake Hillion <jake@hillion.co.uk>, 
+ Blaise Sanouillet <linux@blaise.sanouillet.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748621741; l=1760;
+ i=jake@hillion.co.uk; s=20250530; h=from:subject:message-id;
+ bh=4EV5qkO85AXhQhZuF40dcwxkZ1W5E4mea6iYRbqFyME=;
+ b=xjApLCcXbb/4z3p6GORkeT1jDsc2Rt6qJRaECX1Dq6LZy1MStYB8zbFBtnV17nUNRboTmtBI9
+ yTFLmXUaVYsBoJ3UfAwjyHXOISz0UR3AuuPcqMFITVl9jHJbppFd7r6
+X-Developer-Key: i=jake@hillion.co.uk; a=ed25519;
+ pk=8cznmqtMcMEcU8QH55k8DrySboD889OBB/BEUMJh3dw=
+X-Endpoint-Received: by B4 Relay for jake@hillion.co.uk/20250530 with
+ auth_id=419
+X-Original-From: Jake Hillion <jake@hillion.co.uk>
+Reply-To: jake@hillion.co.uk
 
-On 30.05.25 4:24 PM, Danilo Krummrich wrote:
-> Currently, Revocable::new() only supports infallible PinInit
-> implementations, i.e. impl PinInit<T, Infallible>.
-> 
-> This has been sufficient so far, since users such as Devres do not
-> support fallibility.
-> 
-> Since this is about to change, make Revocable::new() generic over the
-> error type E.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
+From: Jake Hillion <jake@hillion.co.uk>
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+__hsmp_send_message sleeps between result read attempts and has a
+timeout of 100ms. Under extreme load it's possible for these sleeps to
+take a long time, exceeding the 100ms. In this case the current code
+does not check the register and fails with ETIMEDOUT.
 
->  rust/kernel/devres.rs    | 2 +-
->  rust/kernel/revocable.rs | 7 +++++--
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-> index 0f79a2ec9474..2dbe17d6ea1f 100644
-> --- a/rust/kernel/devres.rs
-> +++ b/rust/kernel/devres.rs
-> @@ -98,7 +98,7 @@ struct DevresInner<T> {
->  impl<T> DevresInner<T> {
->      fn new(dev: &Device<Bound>, data: T, flags: Flags) -> Result<Arc<DevresInner<T>>> {
->          let inner = Arc::pin_init(
-> -            pin_init!( DevresInner {
-> +            try_pin_init!( DevresInner {
->                  dev: dev.into(),
->                  callback: Self::devres_callback,
->                  data <- Revocable::new(data),
-> diff --git a/rust/kernel/revocable.rs b/rust/kernel/revocable.rs
-> index db4aa46bb121..ca738f75dc10 100644
-> --- a/rust/kernel/revocable.rs
-> +++ b/rust/kernel/revocable.rs
-> @@ -80,8 +80,11 @@ unsafe impl<T: Sync + Send> Sync for Revocable<T> {}
->  
->  impl<T> Revocable<T> {
->      /// Creates a new revocable instance of the given data.
-> -    pub fn new(data: impl PinInit<T>) -> impl PinInit<Self> {
-> -        pin_init!(Self {
-> +    pub fn new<E>(data: impl PinInit<T, E>) -> impl PinInit<Self, Error>
-> +    where
-> +        Error: From<E>,
-> +    {
-> +        try_pin_init!(Self {
->              is_available: AtomicBool::new(true),
->              data <- Opaque::pin_init(data),
->          })
+Refactor the loop to ensure there is at least one read of the register
+after a sleep of any duration. This removes instances of ETIMEDOUT with
+a single caller, even with a misbehaving scheduler. Tested on AMD
+Bergamo machines.
+
+Suggested-by: Blaise Sanouillet <linux@blaise.sanouillet.com>
+Signed-off-by: Jake Hillion <jake@hillion.co.uk>
+---
+ drivers/platform/x86/amd/hsmp/hsmp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/amd/hsmp/hsmp.c b/drivers/platform/x86/amd/hsmp/hsmp.c
+index e262e8a97b4542a389e09a82dad71f7d2e8b2449..f35c639457ac425e79dead2515c0eddea0759323 100644
+--- a/drivers/platform/x86/amd/hsmp/hsmp.c
++++ b/drivers/platform/x86/amd/hsmp/hsmp.c
+@@ -99,7 +99,7 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 	short_sleep = jiffies + msecs_to_jiffies(HSMP_SHORT_SLEEP);
+ 	timeout	= jiffies + msecs_to_jiffies(HSMP_MSG_TIMEOUT);
+ 
+-	while (time_before(jiffies, timeout)) {
++	while (true) {
+ 		ret = sock->amd_hsmp_rdwr(sock, mbinfo->msg_resp_off, &mbox_status, HSMP_RD);
+ 		if (ret) {
+ 			dev_err(sock->dev, "Error %d reading mailbox status\n", ret);
+@@ -108,6 +108,10 @@ static int __hsmp_send_message(struct hsmp_socket *sock, struct hsmp_message *ms
+ 
+ 		if (mbox_status != HSMP_STATUS_NOT_READY)
+ 			break;
++
++		if (!time_before(jiffies, timeout))
++			break;
++
+ 		if (time_before(jiffies, short_sleep))
+ 			usleep_range(50, 100);
+ 		else
+
+-- 
+2.47.2
+
 
