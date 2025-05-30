@@ -1,564 +1,170 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8B0283C9E
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748638018; cv=fail; b=Hxy3Tf+dTXHAfmf4ijfTZxa1XP11bV6WoXCzBbK4scWu1/+Kjk9li/6E3wfVbejUZk+jD0Cb5x0+AHC1glsQ6EQNCZv+2FLxWTVBkWpg3uQ9KTzo4HEfsVNNlkISz96l5QvO+cY+h6YQEhXU72AIytsL3W+YQJpm9OyqGq2JcuY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748638018; c=relaxed/simple;
-	bh=z2vGsRxvNz48Aj3ZMsZvLhnK2A/pKJ8YCV3GT2O5Id8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O1vA389pMfwEmLJ8/g74up9Ybk848L/yY1+2C47JiGYcivMrjvt55iBl6qbFOqeYtD1ipTaPakOsDjUyEghj34X3b+PX1NFpuEnvviir1fra9L7ZPddOITWHFwxfDMahOuVBRbyH/x3EDoPysGXyixb0X3VCeevG/g2AvdAcrGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KOi8WZNN; arc=fail smtp.client-ip=40.107.92.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DDA20E034
+	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 20:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748638080; cv=none; b=cgn1vi4pvMpCAWKoWZGOPJ5urw9rTuudzci3aUt5wtko9jJeDAwOu6C7lL0+4MysUGhYMDLodgK+mFupHNVqXyiaJUpCMuOjCZ8F6VrT8XWuoqBrlYe62qO+LlICC9ml0IoDZijkJyqKI41nxDJG6E28qmZhWpi4bYWZdhaWKZ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748638080; c=relaxed/simple;
+	bh=kVdHzQBgB53jpSCE7iH/Z1xba4HCOoFk0p585OMCppE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gybi6YVU6WSHQYI2IwqjzLVpWOQ1pAwDV7+Hc0ydctCuxwHu+M1c9gNPM/SxhPvIidYPrgfcpdke4ZJivd8G5KPOYskRM4Jn9C1zFtKoxuWvHVX9ABwEhX5kanO59KXowyeWIhhLaSls7fnfZY3O6DTvjtAFa3/xPvrnubEVc5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n3l/hwyU; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KOi8WZNN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IGkQR0U91VExf0StrDhwWdWRI62L4g2x1DJuVgo+ncQVJuUxlB1nvpMsKG/WQorPuNuXSpZkq9wddo9dyOVYlgC16ox0teby3VytwZH53IhUqATSwhk3xFPcS5CekatS/pvGW8lelxN1xZz2U82DPDqf5zh8iAELiBeAgjIhbZlLpUemuEb7l10CLgGXa1Bd4kMwExPNhRABHb+0f01fyfeBuENDNrFP1NF5nAIJ/cVR6yRqHI40GyVmNL25dU0KuAvH1XJmcfHcuO8mrL1/6n+ZvRwwpyiLHNct1uoRMlEWdcsePI+8RW/oTOEf5rQ02JGcm+MwRf2qu9b3lZz19g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bjJbRXPj1eK9dG0hfNkuiSbTM0NUOKtHqNOIAtSZ2ks=;
- b=LLF8eftbZdGJ6DEkEk7EW+T66utx1swm8ycXAtVpkq811O+UWfiGeAzf2FYOvet+jPC6/sl5mFdmv7wZe6O9WVq5My6TI3T/jOLntrcozIXR+7TYE1gyXf1XfoM8NVBo318r4nBXqFrqzIx3uxTclxc3VFQErDH9b/55+2eayB2OvwOCinlELbSt+jManOPYVmcnq05R8l+vi94ZHBmwTsWwA4krMCJz8oU1wf/0N8pgJHiqjXDiW6I3eCA7mM+n4r2I9zhthJqILo0J9xmPfNIPINyXNgUwX1CPMQQnaj89+q4rLg6x4fhtlSPV3rpSZzJtvyA3TqNhw215mJjTQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bjJbRXPj1eK9dG0hfNkuiSbTM0NUOKtHqNOIAtSZ2ks=;
- b=KOi8WZNNJg77AwWZdboJSnxA8G85LCc/pezoMBvhFVGnUdYZ7GwH847HaVFGbpTGNyAjZtIPva5fM6trS03P/XYCb1QbkxaxPlekDuCT8lD+efdWHDf9LBvzyaSgk6/Msym6eZ2T3TGk37VFGcy0DpZSq9qhBnYrMLLGeKK3k13rr9fM4lCUUncwZ9fJAne0IJQqCeapFuk87pbARO8v8T/mPZxpq6DnEotsiC0BmNO1ByxX294z9I7U941iPPuwF8tpAAk9feqgOIDFrrZi9WJ2Fd/xxMGKx5SKIwlrlhtkBDcfsd4CqGCkgpkhU7bD4grxvxANbI3tHUmAP51L0g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- PH8PR12MB7208.namprd12.prod.outlook.com (2603:10b6:510:224::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.24; Fri, 30 May 2025 20:46:51 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8769.025; Fri, 30 May 2025
- 20:46:51 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>,
- linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] mm/page_isolation: remove migratetype parameter
- from more functions.
-Date: Fri, 30 May 2025 16:46:49 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <BA6A258B-04D4-48F3-BB47-1F1DDAA0BDED@nvidia.com>
-In-Reply-To: <50da1626-5894-42ef-b3fd-935a331f14c4@redhat.com>
-References: <20250530162227.715551-1-ziy@nvidia.com>
- <20250530162227.715551-7-ziy@nvidia.com>
- <ac7351c1-cffe-4da6-9397-f9421e53f59f@redhat.com>
- <8C1EFB3C-0F1C-46DE-878A-3546A86A141F@nvidia.com>
- <50da1626-5894-42ef-b3fd-935a331f14c4@redhat.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BLAPR03CA0049.namprd03.prod.outlook.com
- (2603:10b6:208:32d::24) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n3l/hwyU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748638078; x=1780174078;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=kVdHzQBgB53jpSCE7iH/Z1xba4HCOoFk0p585OMCppE=;
+  b=n3l/hwyUkjvy8YO2vKjP/sTu7kI5FwPXmGhphB8OFyexb+5fyfUAJs8S
+   TE6k5a0Y3Lkuov9D7cdERfmb2JQqS8dgQ7MsPq1JZDhOslB5IUodHnchG
+   FVbX7Ywi2NtWWbzOMCV884vKUYKCRTjwexip8S4pBMP+M4JKR8awN/PDh
+   UTKxLKdZFNdgJlL0Z5BA+xauLD+iZzFw4orDQ6V+ooeZJ1MlCmtWYEMd4
+   LozS7Fc5rTG8+6ySPnaI+QWCOEQ5qo7gsjn+2raeFNa6Ptb7xl6/Bf9HX
+   lOIU8r/4bmwXb+7B04DQNZBQqLnrDbuGEaKkJzGrGBe5wGRcMiS9CZYM0
+   Q==;
+X-CSE-ConnectionGUID: H5OGcPnORluFAa3XojCXLg==
+X-CSE-MsgGUID: FpGusTVYQpmY5on/E8iX3w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="38369549"
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="38369549"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 13:47:58 -0700
+X-CSE-ConnectionGUID: TClzUYvGQBqcagOv8GjclQ==
+X-CSE-MsgGUID: CHsgVe2QQVWp6IIPmUYPJQ==
+X-Ironport-Invalid-End-Of-Message: True
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,196,1744095600"; 
+   d="scan'208";a="144311295"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 30 May 2025 13:47:56 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uL6du-000Xx0-0k;
+	Fri, 30 May 2025 20:47:54 +0000
+Date: Sat, 31 May 2025 04:47:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rong Xu <xur@google.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Han Shen <shenhan@google.com>, Kees Cook <kees@kernel.org>
+Subject: drivers/iio/accel/sca3000.c:1447:12: warning: stack frame size
+ (8472) exceeds limit (8192) in 'sca3000_probe'
+Message-ID: <202505310435.F9RU4dQi-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|PH8PR12MB7208:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21878c39-76f4-4aff-a6b8-08dd9fbb1ad4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3tpSFy3tWgxbU2aJP04rXUgXeYGfGDFVHVmBI2DLonfxAIdPlmyCx3EeFZHF?=
- =?us-ascii?Q?hNcJP6a31UB20KH1RPMeZThKZ8Um1ZGqIACYd8jj8KacM7i+4x2Z4SNZ6Zy/?=
- =?us-ascii?Q?OIHy5xb7xzf4N4SwvIMwoMeHw7EftkJXZbOiYKfzo0LzU8HJHoGNpwRxhPDE?=
- =?us-ascii?Q?fZ9AocGFhbuqFR7DPBgMiN6BP4OP0GC4SeO+bi8LzwpHcnF8wIRoAGlHeSCp?=
- =?us-ascii?Q?CP6YoXgpzxXh37Mbj88JITa9VYDib4sgQ2BRqYH6RIpu4Ea3TGDLIdmEiZsl?=
- =?us-ascii?Q?2VlwvnL93dmFtL8joEM2SqafYDH2dDZ4+4qHY3trbkjJbJ2zriaKKhhSrxj8?=
- =?us-ascii?Q?OhIgJoy16joUCVzgfgzuQtahDI4xJWUkgOptnxQVHEM9uVtH80MMkm+E2mob?=
- =?us-ascii?Q?2A1hOPJ572WtWXvDswZdpkdCTJBalWtBRLEseknJMBo/RD75gHgA2mU1kGLI?=
- =?us-ascii?Q?5tevuowpV8RqXhF6edttYz8APZnetrnXkKWv6R1A0fVJtsBuCdxwk+D4CTS4?=
- =?us-ascii?Q?yQK0g3TaKIzgZ1SbZGeIm4YgW2zmkaAO9UzjWL9f01ubvYXGYNMp3fAIlb/N?=
- =?us-ascii?Q?WGDiHTBKcgcfXf5o423guu1Mwpr3TPbYg5Sx2Go3HU4qvj83GxVz55J6O6za?=
- =?us-ascii?Q?RbKcarhLjcwHxQgdWMBgyL0D+1tKu43JGmNV+N+ulGWdEyj3NWYGovM0Mk65?=
- =?us-ascii?Q?ERUSibSHnQnoRBM33gze8S5eD2JEST42maYZ2vDAHzG+hEbY+kv/SEybFLcR?=
- =?us-ascii?Q?hczz+dNFkreSQGFaMZ7gF9EdMk20p619+fiNfHiVEUIT6tICsM9jgCcyAPVx?=
- =?us-ascii?Q?HCjIb8Hp4mcs7k9JmDwP58MYtAFWk96w8VSt4n9x5JcV3bS8XvvDdQQp73+4?=
- =?us-ascii?Q?1+XbJDRywnu+pkD0KE+k0yMN/DYbYjG3EGDhh6elEpSDZQ3sy7YlJT5Wj+t0?=
- =?us-ascii?Q?N623x5mWBXIImrRZlMAdvqfRpV1iOSBmSi0SoPlWiA4xLExaLMpR50bnLYid?=
- =?us-ascii?Q?siR513HHLgjcz4wCG4/EfsfqWfXo7XTutEdPoldUCyJxtrrDMjRrfmYNdwpP?=
- =?us-ascii?Q?DunnZGnAZBSACuWVB2W8dxE7hDYCJAMjMQ+ZI0nEkyYtR0kGU6GqSOH+bvzi?=
- =?us-ascii?Q?g+Iwjmcj74zvniK37XWTn7WRAJHnAmT5KRNX3rEYBtQxSu3Ab9a26LLQfFOK?=
- =?us-ascii?Q?e/U57trkQtrScY+DvrqfyD3cK3Mp1jC9O/jPTnqJP+J6/N0NWydfFolqh1uK?=
- =?us-ascii?Q?Y2eU67Ku2xGV98GlJ9a+tubYQqzIoHL+qDgvy9zrgyxMzRv9jYQoV1grvIAf?=
- =?us-ascii?Q?EBkBbIAL2wITSI3efUVRzsfBMJfbNScEPxC2uJuF6/QffKrbBjr8F+RsL6Ck?=
- =?us-ascii?Q?sh+WbZvVY1WGBiDYsNBzYU+9jdSSXLKIRdMWqF0xB1QJNTC/lTcvMWHXBc6w?=
- =?us-ascii?Q?Qc37yFRsnw4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GxpW/Nke2yxII7Y4wzJY3ZuXMuFUngQmNVP7IfcErYGZqu2T6B5dLpZMmLk2?=
- =?us-ascii?Q?bLNxmIAyM13WnJ18TsR39A8xeRWRudpOPl9NixKwJnNRqCBvFi1PQcaoUU5t?=
- =?us-ascii?Q?BiAEnoYvmUjDqLzFvlVfGkFGKHyW4qUcwTtOPKo+Z8LVUPgUox4wyujm7Qfv?=
- =?us-ascii?Q?0zOebLfP52QO9zuznvohbc9zDidZ0S9hm/2wnpxuHIJGuhdC4s6OrYEcXZbZ?=
- =?us-ascii?Q?FeOZwx85rIi3Xgj40PsDAgH16U2Dc7RB/SZT54zVuZOImclTQJrMDD5Z8qhb?=
- =?us-ascii?Q?KMVzMXIfZq/BMmizEkOoFKhZjpubjH0pgO+BSH5A8x+PzbZNJ1un6XF6WQRx?=
- =?us-ascii?Q?9GCd+XZE51azyiNHq4aqPniJzwLmBOrBCmonsvC4hVXscnZ2Wwo8qMY8QX2p?=
- =?us-ascii?Q?ewOIZLyKrBVQY/1EYYb2J6hAQ/qQbHt/0iDpLcqgJhk0MyDPsbYNPQrjBrxv?=
- =?us-ascii?Q?F5C5IhuDZBVOTQOHiJtd6gEObnm7zfmhhQW+oMLTOhd7dqKQBtrZEWOyuRdj?=
- =?us-ascii?Q?I3MpTLJ4P6FBMs9l81hPJqHBl8nbvbIJbBhI6pJCGbz+qlpeSjb+/+iwMlCk?=
- =?us-ascii?Q?6FjLrdDBsiycpqOHX/RayUlk0CFapN72P+k6ZAfveyVowGtFMdPC+K7nTlmT?=
- =?us-ascii?Q?zctQCXw9HWxRFIrbFIgRtlUPfcxDkuxal2AMeAw7tNO9YQw6LsVKnuW0++fO?=
- =?us-ascii?Q?6xyaWyjhStgY3b2kkleLqHxx42H6BqT4oXFlu+ds+FoSlhQkoC/v0hJWVOaa?=
- =?us-ascii?Q?ACdjWjRnWisuB7+6uRo6rIDUFHNHiVa2bJGrrAmlc3Z0U7TSXaaFB7jFetiO?=
- =?us-ascii?Q?u7F1d7dc/NgFNmiwYrkp81++ckvaMCO9Z2TlDFvWtbD0R5tE6jYJhyUkMvVp?=
- =?us-ascii?Q?aC/6fz/pKy05kEf/SgB71PrMOPorbpIRWrJ03rpS+hmfesOvDsBjnI05+UiZ?=
- =?us-ascii?Q?DjdOUaLlVRQ2mEUreDtcJoEA9ZRXkBW+pfATUnPBT/MbqUVlNcPoUHI2i/+a?=
- =?us-ascii?Q?mar/z1Jh2BR6JeGzm+QjCyuhmp4IsxQ2DWfdhY94UGJ3/Hl1/XYsYYRcKusQ?=
- =?us-ascii?Q?QVIpbKnA1sFOnIZbCXR1JFRRaqCZN+BnGKcfnnknIqYCREYn6cL9BZdOSGcj?=
- =?us-ascii?Q?hZ0zz1vrjcurvmPy+VLsW1xXya7iWAW8de9TEWw9agQ1nGO2i0SnPggBcqdD?=
- =?us-ascii?Q?dWF3IafugAuDHfsBcmjmpaDX+lGVo7RYS5ayw0iYXdgqxZQhaey3ePPjyYiO?=
- =?us-ascii?Q?aZ/A+sQrr6epEcepLsTQZiaY6zoRvM94VK7Rx6LSGxXd11tGZ7KDKDTwBJvY?=
- =?us-ascii?Q?ChYsus9XKm8btC0rS88JlPz4s2dviadcHYBxQzLjbPQDRJS9YjtnSb0leWtR?=
- =?us-ascii?Q?mNHlkrM/5mHQ/tWeqXuOBI+rshMkqPA01oHvnZd8WfTDDNbtLaKMXRzg2wiC?=
- =?us-ascii?Q?umOoJNsWQu6SCYgZYqHyjzBZotxzvfT31uAg4+tXhwlgyFzHppxxR8bTG+69?=
- =?us-ascii?Q?hA1njrAMV/UoMoFEcOWOo3ITN0d/b7baKRC78Lz5GoVxZpjQyOMxu9hzH1hB?=
- =?us-ascii?Q?1ie6HVDljwOw1Y2Z3W3HTUQYJnQasCACQG+Q0i/P?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21878c39-76f4-4aff-a6b8-08dd9fbb1ad4
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2025 20:46:51.5521
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dD0mmBAWdJ8eEGhzNARqmy8Ax4jNjVUY8aLz+HXldlHazNPM0MYdQOLe5RrCpWYy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7208
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 30 May 2025, at 16:08, David Hildenbrand wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   8477ab143069c6b05d6da4a8184ded8b969240f5
+commit: 315ad8780a129e82e2c5c65ee6e970d91a577acb kbuild: Add AutoFDO support for Clang build
+date:   7 months ago
+config: x86_64-randconfig-161-20250531 (https://download.01.org/0day-ci/archive/20250531/202505310435.F9RU4dQi-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250531/202505310435.F9RU4dQi-lkp@intel.com/reproduce)
 
-> On 30.05.25 21:58, Zi Yan wrote:
->> On 30 May 2025, at 15:56, David Hildenbrand wrote:
->>
->>> On 30.05.25 18:22, Zi Yan wrote:
->>>> migratetype is no longer overwritten during pageblock isolation,
->>>> start_isolate_page_range(), has_unmovable_pages(), and
->>>> set_migratetype_isolate() no longer need which migratetype to restor=
-e
->>>> during isolation failure.
->>>>
->>>> For has_unmoable_pages(), it needs to know if the isolation is for C=
-MA
->>>> allocation, so adding CMA_ALLOCATION to provide the information. At =
-the
->>>> same time change isolation flags to enum pb_isolate_mode
->>>> (PB_ISOLATE_MODE_MEM_OFFLINE, PB_ISOLATE_MODE_CMA_ALLOC,
->>>> PB_ISOLATE_MODE_OTHER). Remove REPORT_FAILURE and check
->>>> MEMORY_OFFLINE instead, since only PB_ISOLATE_MODE_MEM_OFFLINE repor=
-ts
->>>> isolation failures.
->>>>
->>>> alloc_contig_range() no longer needs migratetype. Replace it with
->>>> enum acr_flags_t to tell if an allocation is for CMA. So does
->>>> __alloc_contig_migrate_range().
->>>>
->>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
->>>> ---
->>>>    drivers/virtio/virtio_mem.c    |  2 +-
->>>>    include/linux/gfp.h            |  9 ++++-
->>>>    include/linux/page-isolation.h | 20 ++++++++--
->>>>    include/trace/events/kmem.h    | 14 ++++---
->>>>    mm/cma.c                       |  2 +-
->>>>    mm/memory_hotplug.c            |  6 +--
->>>>    mm/page_alloc.c                | 27 ++++++-------
->>>>    mm/page_isolation.c            | 70 +++++++++++++++--------------=
------
->>>>    8 files changed, 82 insertions(+), 68 deletions(-)
->>>>
->>>> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem=
-=2Ec
->>>> index 56d0dbe62163..6bce70b139b2 100644
->>>> --- a/drivers/virtio/virtio_mem.c
->>>> +++ b/drivers/virtio/virtio_mem.c
->>>> @@ -1243,7 +1243,7 @@ static int virtio_mem_fake_offline(struct virt=
-io_mem *vm, unsigned long pfn,
->>>>    		if (atomic_read(&vm->config_changed))
->>>>    			return -EAGAIN;
->>>>   -		rc =3D alloc_contig_range(pfn, pfn + nr_pages, MIGRATE_MOVABLE,=
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505310435.F9RU4dQi-lkp@intel.com/
 
->>>> +		rc =3D alloc_contig_range(pfn, pfn + nr_pages, ACR_OTHER,
->>>>    					GFP_KERNEL);
->>>>    		if (rc =3D=3D -ENOMEM)
->>>>    			/* whoops, out of memory */
->>>> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
->>>> index be160e8d8bcb..51990d571e3e 100644
->>>> --- a/include/linux/gfp.h
->>>> +++ b/include/linux/gfp.h
->>>> @@ -423,9 +423,16 @@ static inline bool gfp_compaction_allowed(gfp_t=
- gfp_mask)
->>>>    extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
->>>>     #ifdef CONFIG_CONTIG_ALLOC
->>>> +
->>>> +enum acr_flags_t {
->>>> +	ACR_CMA,	// CMA allocation
->>>> +	ACR_OTHER,	// other allocation
->>>> +};
->>>
->>> Hm, enum !=3D flags.
->>>
->>> If you want to use flags, then just have ACR_CMA. ACR_OTHER is implie=
-d if not set.
->>>
->>> And ACR_CMA would then have to be "1" etc.
->>
->> I have a fixup to change acr_flags_t to acr_mode.
->>
->>>
->>>> +
->>>>    /* The below functions must be run on a range from a single zone.=
- */
->>>>    extern int alloc_contig_range_noprof(unsigned long start, unsigne=
-d long end,
->>>> -			      unsigned migratetype, gfp_t gfp_mask);
->>>> +				     enum acr_flags_t alloc_flags,
->>>> +				     gfp_t gfp_mask);
->>>>    #define alloc_contig_range(...)			alloc_hooks(alloc_contig_range_=
-noprof(__VA_ARGS__))
->>>>     extern struct page *alloc_contig_pages_noprof(unsigned long nr_p=
-ages, gfp_t gfp_mask,
->>>> diff --git a/include/linux/page-isolation.h b/include/linux/page-iso=
-lation.h
->>>> index 7a681a49e73c..3e2f960e166c 100644
->>>> --- a/include/linux/page-isolation.h
->>>> +++ b/include/linux/page-isolation.h
->>>> @@ -38,8 +38,20 @@ static inline void set_pageblock_isolate(struct p=
-age *page)
->>>>    }
->>>>    #endif
->>>>   -#define MEMORY_OFFLINE	0x1
->>>> -#define REPORT_FAILURE	0x2
->>>> +/*
->>>> + * Pageblock isolation modes:
->>>> + * PB_ISOLATE_MODE_MEM_OFFLINE - isolate to offline (!allocate) mem=
-ory
->>>> + *				 e.g., skip over PageHWPoison() pages and
->>>> + *				 PageOffline() pages. Unmovable pages will be
->>>> + *				 reported in this mode.
->>>> + * PB_ISOLATE_MODE_CMA_ALLOC   - isolate for CMA allocations
->>>> + * PB_ISOLATE_MODE_OTHER       - isolate for other purposes
->>>> + */
->>>> +enum pb_isolate_mode {
->>>> +	PB_ISOLATE_MODE_MEM_OFFLINE,
->>>> +	PB_ISOLATE_MODE_CMA_ALLOC,
->>>> +	PB_ISOLATE_MODE_OTHER,
->>>> +};
->>>
->>> It's late on friady, but it looks like we are duplicating things here=
-=2E
->>>
->>> Let me think about that once my brain is recharged :)
->>
->> Sure. Take your time.
->
-> Could we abstract both settings and use a single one? Then, we could si=
-mply reject if MEM_OFFLINE is passed into alloc_contig_range().
->
-> alloc_contig_pages and page isolation, hmmmm, MEM_OFFLINE is kind-of an=
- allocation. CMA is an allocation.
->
-> Just an idea, not sure ...
+All warnings (new ones prefixed by >>):
 
-I think so.
-
-This is the fixup of removing acr_flags_t. It is on top of the original
-patch. Take your time. I guess I will send V7 with all fixups next week.
-
-The one strange part is that in virtio_mem_fake_offline,
-PB_ISOLATE_MODE_OTHER is used instead of PB_ISOLATE_MODE_MEM_OFFLINE.
-I guess you do not want to report failures there.
-
-=46rom b4bed6ec8bd07df40952bff2009905ae4093b3be Mon Sep 17 00:00:00 2001
-From: Zi Yan <ziy@nvidia.com>
-Date: Fri, 30 May 2025 13:58:11 -0400
-Subject: [PATCH] remove acr_flags_t and use enum pb_isolate_mode instead.=
+   In file included from drivers/iio/accel/sca3000.c:15:
+   In file included from include/linux/spi/spi.h:17:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/iio/accel/sca3000.c:1447:12: warning: stack frame size (8472) exceeds limit (8192) in 'sca3000_probe' [-Wframe-larger-than]
+    1447 | static int sca3000_probe(struct spi_device *spi)
+         |            ^
+   2 warnings generated.
 
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
----
- drivers/virtio/virtio_mem.c    |  4 ++--
- include/linux/gfp.h            | 19 ++++++++++++++-----
- include/linux/page-isolation.h | 15 ---------------
- include/trace/events/kmem.h    | 12 ++++++------
- mm/cma.c                       |  3 ++-
- mm/page_alloc.c                | 24 ++++++++++++------------
- 6 files changed, 36 insertions(+), 41 deletions(-)
+vim +/sca3000_probe +1447 drivers/iio/accel/sca3000.c
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 6bce70b139b2..535680a54ff5 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -1243,8 +1243,8 @@ static int virtio_mem_fake_offline(struct virtio_me=
-m *vm, unsigned long pfn,
- 		if (atomic_read(&vm->config_changed))
- 			return -EAGAIN;
+6fe8135fccd66a drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1446  
+4ae1c61ff2ba4f drivers/staging/iio/accel/sca3000_core.c Bill Pemberton     2012-11-19 @1447  static int sca3000_probe(struct spi_device *spi)
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1448  {
+d2fffd6c2fd60f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-10-14  1449  	int ret;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1450  	struct sca3000_state *st;
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1451  	struct iio_dev *indio_dev;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1452  
+0189d93fdf82cd drivers/staging/iio/accel/sca3000_core.c Sachin Kamat       2013-08-24  1453  	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+0189d93fdf82cd drivers/staging/iio/accel/sca3000_core.c Sachin Kamat       2013-08-24  1454  	if (!indio_dev)
+0189d93fdf82cd drivers/staging/iio/accel/sca3000_core.c Sachin Kamat       2013-08-24  1455  		return -ENOMEM;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1456  
+03bda05d9ced3a drivers/staging/iio/accel/sca3000_core.c Dan Carpenter      2011-06-29  1457  	st = iio_priv(indio_dev);
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1458  	spi_set_drvdata(spi, indio_dev);
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1459  	st->us = spi;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1460  	mutex_init(&st->lock);
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1461  	st->info = &sca3000_spi_chip_info_tbl[spi_get_device_id(spi)
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1462  					      ->driver_data];
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1463  
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1464  	indio_dev->name = spi_get_device_id(spi)->name;
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1465  	indio_dev->info = &sca3000_info;
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1466  	if (st->info->temp_output) {
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1467  		indio_dev->channels = sca3000_channels_with_temp;
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1468  		indio_dev->num_channels =
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1469  			ARRAY_SIZE(sca3000_channels_with_temp);
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1470  	} else {
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1471  		indio_dev->channels = sca3000_channels;
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1472  		indio_dev->num_channels = ARRAY_SIZE(sca3000_channels);
+bb0090e99b0194 drivers/staging/iio/accel/sca3000_core.c Peter Meerwald     2014-01-13  1473  	}
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1474  	indio_dev->modes = INDIO_DIRECT_MODE;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1475  
+e03ed893e2cf73 drivers/iio/accel/sca3000.c              Alexandru Ardelean 2021-02-15  1476  	ret = devm_iio_kfifo_buffer_setup(&spi->dev, indio_dev,
+e03ed893e2cf73 drivers/iio/accel/sca3000.c              Alexandru Ardelean 2021-02-15  1477  					  &sca3000_ring_setup_ops);
+da2d54494c5633 drivers/iio/accel/sca3000.c              Christophe JAILLET 2018-04-08  1478  	if (ret)
+da2d54494c5633 drivers/iio/accel/sca3000.c              Christophe JAILLET 2018-04-08  1479  		return ret;
+d2fffd6c2fd60f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-10-14  1480  
+3e2c96eab92783 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-10-12  1481  	if (spi->irq) {
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1482  		ret = request_threaded_irq(spi->irq,
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1483  					   NULL,
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1484  					   &sca3000_event_handler,
+a91aff1c09fc41 drivers/staging/iio/accel/sca3000_core.c Lars-Peter Clausen 2012-07-02  1485  					   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1486  					   "sca3000",
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1487  					   indio_dev);
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1488  		if (ret)
+9a4936dc89a34e drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1489  			return ret;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1490  	}
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1491  	ret = sca3000_clean_setup(st);
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1492  	if (ret)
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1493  		goto error_free_irq;
+7ab9fa0052878c drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1494  
+7ab9fa0052878c drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1495  	ret = sca3000_print_rev(indio_dev);
+7ab9fa0052878c drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1496  	if (ret)
+7ab9fa0052878c drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1497  		goto error_free_irq;
+7ab9fa0052878c drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1498  
+9a4936dc89a34e drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1499  	return iio_device_register(indio_dev);
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1500  
+25888dc51163a5 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-05-18  1501  error_free_irq:
+3e2c96eab92783 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-10-12  1502  	if (spi->irq)
+83f0422dc6a16f drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2011-06-27  1503  		free_irq(spi->irq, indio_dev);
+9a4936dc89a34e drivers/staging/iio/accel/sca3000.c      Jonathan Cameron   2016-10-08  1504  
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1505  	return ret;
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1506  }
+574fb258d63658 drivers/staging/iio/accel/sca3000_core.c Jonathan Cameron   2009-08-18  1507  
 
--		rc =3D alloc_contig_range(pfn, pfn + nr_pages, ACR_OTHER,
--					GFP_KERNEL);
-+		rc =3D alloc_contig_range(pfn, pfn + nr_pages,
-+					PB_ISOLATE_MODE_OTHER, GFP_KERNEL);
- 		if (rc =3D=3D -ENOMEM)
- 			/* whoops, out of memory */
- 			return rc;
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 51990d571e3e..17b92888d6de 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -423,15 +423,24 @@ static inline bool gfp_compaction_allowed(gfp_t gfp=
-_mask)
- extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
+:::::: The code at line 1447 was first introduced by commit
+:::::: 4ae1c61ff2ba4fea4e4c1a045cb1f34520608789 staging: iio: remove use of __devinit
 
- #ifdef CONFIG_CONTIG_ALLOC
--
--enum acr_flags_t {
--	ACR_CMA,	// CMA allocation
--	ACR_OTHER,	// other allocation
-+/*
-+ * Pageblock isolation modes:
-+ * PB_ISOLATE_MODE_MEM_OFFLINE - isolate to offline (!allocate) memory
-+ *				 e.g., skip over PageHWPoison() pages and
-+ *				 PageOffline() pages. Unmovable pages will be
-+ *				 reported in this mode.
-+ * PB_ISOLATE_MODE_CMA_ALLOC   - isolate for CMA allocations
-+ * PB_ISOLATE_MODE_OTHER       - isolate for other purposes
-+ */
-+enum pb_isolate_mode {
-+	PB_ISOLATE_MODE_MEM_OFFLINE,
-+	PB_ISOLATE_MODE_CMA_ALLOC,
-+	PB_ISOLATE_MODE_OTHER,
- };
+:::::: TO: Bill Pemberton <wfp5p@virginia.edu>
+:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- /* The below functions must be run on a range from a single zone. */
- extern int alloc_contig_range_noprof(unsigned long start, unsigned long =
-end,
--				     enum acr_flags_t alloc_flags,
-+				     enum pb_isolate_mode isol_mode,
- 				     gfp_t gfp_mask);
- #define alloc_contig_range(...)			alloc_hooks(alloc_contig_range_noprof(=
-__VA_ARGS__))
-
-diff --git a/include/linux/page-isolation.h b/include/linux/page-isolatio=
-n.h
-index 3e2f960e166c..7ed60a339a02 100644
---- a/include/linux/page-isolation.h
-+++ b/include/linux/page-isolation.h
-@@ -38,21 +38,6 @@ static inline void set_pageblock_isolate(struct page *=
-page)
- }
- #endif
-
--/*
-- * Pageblock isolation modes:
-- * PB_ISOLATE_MODE_MEM_OFFLINE - isolate to offline (!allocate) memory
-- *				 e.g., skip over PageHWPoison() pages and
-- *				 PageOffline() pages. Unmovable pages will be
-- *				 reported in this mode.
-- * PB_ISOLATE_MODE_CMA_ALLOC   - isolate for CMA allocations
-- * PB_ISOLATE_MODE_OTHER       - isolate for other purposes
-- */
--enum pb_isolate_mode {
--	PB_ISOLATE_MODE_MEM_OFFLINE,
--	PB_ISOLATE_MODE_CMA_ALLOC,
--	PB_ISOLATE_MODE_OTHER,
--};
--
- void __meminit init_pageblock_migratetype(struct page *page,
- 					  enum migratetype migratetype,
- 					  bool isolate);
-diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
-index 7c4e2e703a23..e0bcbc43a548 100644
---- a/include/trace/events/kmem.h
-+++ b/include/trace/events/kmem.h
-@@ -312,9 +312,9 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		 unsigned long nr_migrated,
- 		 unsigned long nr_reclaimed,
- 		 unsigned long nr_mapped,
--		 enum acr_flags_t alloc_flags),
-+		 enum pb_isolate_mode isol_mode),
-
--	TP_ARGS(start, end, nr_migrated, nr_reclaimed, nr_mapped, alloc_flags),=
-
-+	TP_ARGS(start, end, nr_migrated, nr_reclaimed, nr_mapped, isol_mode),
-
- 	TP_STRUCT__entry(
- 		__field(unsigned long, start)
-@@ -322,7 +322,7 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		__field(unsigned long, nr_migrated)
- 		__field(unsigned long, nr_reclaimed)
- 		__field(unsigned long, nr_mapped)
--		__field(enum acr_flags_t, alloc_flags)
-+		__field(enum pb_isolate_mode, isol_mode)
- 	),
-
- 	TP_fast_assign(
-@@ -331,13 +331,13 @@ TRACE_EVENT(mm_alloc_contig_migrate_range_info,
- 		__entry->nr_migrated =3D nr_migrated;
- 		__entry->nr_reclaimed =3D nr_reclaimed;
- 		__entry->nr_mapped =3D nr_mapped;
--		__entry->alloc_flags =3D alloc_flags;
-+		__entry->isol_mode =3D isol_mode;
- 	),
-
--	TP_printk("start=3D0x%lx end=3D0x%lx alloc_flags=3D%d nr_migrated=3D%lu=
- nr_reclaimed=3D%lu nr_mapped=3D%lu",
-+	TP_printk("start=3D0x%lx end=3D0x%lx isol_mode=3D%d nr_migrated=3D%lu n=
-r_reclaimed=3D%lu nr_mapped=3D%lu",
- 		  __entry->start,
- 		  __entry->end,
--		  __entry->alloc_flags,
-+		  __entry->isol_mode,
- 		  __entry->nr_migrated,
- 		  __entry->nr_reclaimed,
- 		  __entry->nr_mapped)
-diff --git a/mm/cma.c b/mm/cma.c
-index 9ee8fad797bc..23aa35193122 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -822,7 +822,8 @@ static int cma_range_alloc(struct cma *cma, struct cm=
-a_memrange *cmr,
-
- 		pfn =3D cmr->base_pfn + (bitmap_no << cma->order_per_bit);
- 		mutex_lock(&cma->alloc_mutex);
--		ret =3D alloc_contig_range(pfn, pfn + count, ACR_CMA, gfp);
-+		ret =3D alloc_contig_range(pfn, pfn + count,
-+					 PB_ISOLATE_MODE_CMA_ALLOC, gfp);
- 		mutex_unlock(&cma->alloc_mutex);
- 		if (ret =3D=3D 0) {
- 			page =3D pfn_to_page(pfn);
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index dd761f5e6310..619b1a9de9b7 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6696,12 +6696,12 @@ static void alloc_contig_dump_pages(struct list_h=
-ead *page_list)
-
- /*
-  * [start, end) must belong to a single zone.
-- * @alloc_flags: using acr_flags_t to filter the type of migration in
-+ * @isol_mode: using pb_isolate_mode filter the type of migration in
-  *		trace_mm_alloc_contig_migrate_range_info.
-  */
- static int __alloc_contig_migrate_range(struct compact_control *cc,
- 					unsigned long start, unsigned long end,
--					enum acr_flags_t alloc_flags)
-+					enum pb_isolate_mode isol_mode)
- {
- 	/* This function is based on compact_zone() from compaction.c. */
- 	unsigned int nr_reclaimed;
-@@ -6773,7 +6773,7 @@ static int __alloc_contig_migrate_range(struct comp=
-act_control *cc,
- 		putback_movable_pages(&cc->migratepages);
- 	}
-
--	trace_mm_alloc_contig_migrate_range_info(start, end, alloc_flags,
-+	trace_mm_alloc_contig_migrate_range_info(start, end, isol_mode,
- 						 total_migrated,
- 						 total_reclaimed,
- 						 total_mapped);
-@@ -6844,7 +6844,7 @@ static int __alloc_contig_verify_gfp_mask(gfp_t gfp=
-_mask, gfp_t *gfp_cc_mask)
-  * alloc_contig_range() -- tries to allocate given range of pages
-  * @start:	start PFN to allocate
-  * @end:	one-past-the-last PFN to allocate
-- * @alloc_flags:	allocation information
-+ * @isol_mode:	allocation information used for pageblock isolation
-  * @gfp_mask:	GFP mask. Node/zone/placement hints are ignored; only some=
-
-  *		action and reclaim modifiers are supported. Reclaim modifiers
-  *		control allocation behavior during compaction/migration/reclaim.
-@@ -6861,7 +6861,7 @@ static int __alloc_contig_verify_gfp_mask(gfp_t gfp=
-_mask, gfp_t *gfp_cc_mask)
-  * need to be freed with free_contig_range().
-  */
- int alloc_contig_range_noprof(unsigned long start, unsigned long end,
--			      enum acr_flags_t alloc_flags, gfp_t gfp_mask)
-+			      enum pb_isolate_mode isol_mode, gfp_t gfp_mask)
- {
- 	unsigned long outer_start, outer_end;
- 	int ret =3D 0;
-@@ -6876,9 +6876,9 @@ int alloc_contig_range_noprof(unsigned long start, =
-unsigned long end,
- 		.alloc_contig =3D true,
- 	};
- 	INIT_LIST_HEAD(&cc.migratepages);
--	enum pb_isolate_mode mode =3D (alloc_flags =3D=3D ACR_CMA) ?
--					    PB_ISOLATE_MODE_CMA_ALLOC :
--					    PB_ISOLATE_MODE_OTHER;
-+
-+	if (isol_mode =3D=3D PB_ISOLATE_MODE_MEM_OFFLINE)
-+		return -EINVAL;
-
- 	gfp_mask =3D current_gfp_context(gfp_mask);
- 	if (__alloc_contig_verify_gfp_mask(gfp_mask, (gfp_t *)&cc.gfp_mask))
-@@ -6905,7 +6905,7 @@ int alloc_contig_range_noprof(unsigned long start, =
-unsigned long end,
- 	 * put back to page allocator so that buddy can use them.
- 	 */
-
--	ret =3D start_isolate_page_range(start, end, mode);
-+	ret =3D start_isolate_page_range(start, end, isol_mode);
- 	if (ret)
- 		goto done;
-
-@@ -6921,7 +6921,7 @@ int alloc_contig_range_noprof(unsigned long start, =
-unsigned long end,
- 	 * allocated.  So, if we fall through be sure to clear ret so that
- 	 * -EBUSY is not accidentally used or returned to caller.
- 	 */
--	ret =3D __alloc_contig_migrate_range(&cc, start, end, alloc_flags);
-+	ret =3D __alloc_contig_migrate_range(&cc, start, end, isol_mode);
- 	if (ret && ret !=3D -EBUSY)
- 		goto done;
-
-@@ -6955,7 +6955,7 @@ int alloc_contig_range_noprof(unsigned long start, =
-unsigned long end,
- 	outer_start =3D find_large_buddy(start);
-
- 	/* Make sure the range is really isolated. */
--	if (test_pages_isolated(outer_start, end, mode)) {
-+	if (test_pages_isolated(outer_start, end, isol_mode)) {
- 		ret =3D -EBUSY;
- 		goto done;
- 	}
-@@ -6998,7 +6998,7 @@ static int __alloc_contig_pages(unsigned long start=
-_pfn,
- {
- 	unsigned long end_pfn =3D start_pfn + nr_pages;
-
--	return alloc_contig_range_noprof(start_pfn, end_pfn, ACR_OTHER,
-+	return alloc_contig_range_noprof(start_pfn, end_pfn, PB_ISOLATE_MODE_OT=
-HER,
- 					 gfp_mask);
- }
-
--- =
-
-2.47.2
-
-
-
-Best Regards,
-Yan, Zi
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
