@@ -1,65 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804521D63D8;
-	Fri, 30 May 2025 23:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D7828C2C8;
+	Fri, 30 May 2025 23:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748646575; cv=none; b=WR6SGTj/aeA0amT1OSNR0TjUCHBydUAbgDnzVb8kqeq+9vpgXmg8F3hmAlAY8HStK4bA8GcPc4QEnqS2xFvhuZMTlsr/OIlnFdBL0T64hrApJ4wIttCL20t13EE6a8JC+dLVlPCFmabMytnfnLu2VXGyvKT35iEAeHpCQSWKjK8=
+	t=1748646771; cv=none; b=kaTZ5nlIbVONIX/EOQ1Loq/Hcp5L3rYpcJAbKD8vKpp4CBFe5K3R+BqV+9MMVvqWp3E5/wB5/C+nkv7rv1EDkfCvC9DVPS4S5C75zRhw2ku2YFzu6duVmnQsmE0J6/YxZfX1LAFlmJjTZ6ea3zU9/cYp/gY/LatMpmjDMTA97iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748646575; c=relaxed/simple;
-	bh=LoyjE9kdzjoi6fevHiJCdYiahDxSoe9dp4RhP57cdSs=;
+	s=arc-20240116; t=1748646771; c=relaxed/simple;
+	bh=nbrt/PGJxMyE3yw1a7SCXWcYovhnujWuWgoE4oy4YWw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipA7zbQHamwvjuZ6G1PQEhvJGuUd9bWZCB4FdfwC+2KtIb3c18vz0ACaJzbUK+KVGReqjeKP6NEvtsaZ7pVPyYNlo+Hcdr5udPQvBey5QmNf+cELENR/BnXwFiviohNY1eKoV7o+EbBIxt4MwRKCGdb0QMebH4HqfyFXw5Hjcfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GlNTLfW8; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=FgP2eV/pUw/dJZ4ng5xMOPc3tnAXRW3zMp0HxhRBwroNWIxVrLNa5jHmgeF8T3JeHwNSHTx1/iHOrj8+BxsJQB1af5VhxEyovIHRAGy0aL5psET2GYpXRgIL28kVfCsaWSmYEp+MB4lJ9x/VYJ1gz8ApKvIUoIToq+g1Qn9FiA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTxiw/O/; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlNTLfW8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748646573; x=1780182573;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LoyjE9kdzjoi6fevHiJCdYiahDxSoe9dp4RhP57cdSs=;
-  b=GlNTLfW8ubkwkGspOoogMz5HL3tpDkJvwprQqx467Vg4w68Cq4u5XvCg
-   Onh2B9TFfjeRtPWhrmuWsYpvNSVqOKYII8iboixyKnQyhifgj3qoZf0In
-   0mGhDxoLerD767vReRM8OTdpNEhKWz6L4oQ/YomcHv5LozA9nBI3n1Kpm
-   SDZveGx9+woLagF4lDQOpP5NY2/9JajG+SA5oaY89EFwESV5YKMC4lxV1
-   bKon5dGwvHc2CQ3hI8R1/yR7zIXeaHlEsHNNh0y3JOeEcVCIzWDKmNLd6
-   IExH3k9GmqCFjBupeQ9inW19N/mHKEHK0OkHCLbnO/DGU7PiMnw5zK97M
-   g==;
-X-CSE-ConnectionGUID: gxiRDxEoRmmDfidzFrcZXA==
-X-CSE-MsgGUID: Q4Wf3ucvQCeZc18X8ff4Dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11449"; a="50618276"
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="50618276"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 16:09:33 -0700
-X-CSE-ConnectionGUID: OK7YvfbETYid7DukXd+cRg==
-X-CSE-MsgGUID: HAogEd4dS2+ky+skW9xPcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,197,1744095600"; 
-   d="scan'208";a="147885592"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2025 16:09:33 -0700
-Date: Fri, 30 May 2025 16:09:31 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, robert.moore@intel.com,
-	Jonathan.Cameron@huawei.com, ira.weiny@intel.com,
-	Benjamin.Cheatham@amd.com, dan.j.williams@intel.com, arnd@arndb.de,
-	Avadhut.Naik@amd.com, john.allen@amd.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v7 9/9] ACPI: APEI: EINJ: Update the documentation for
- EINJv2 support
-Message-ID: <aDo6q74ADqfUXjO3@agluck-desk3>
-References: <20250506213814.2365788-1-zaidal@os.amperecomputing.com>
- <20250506213814.2365788-10-zaidal@os.amperecomputing.com>
- <20250530102711.GAaDmH_1O7lc6kuveY@fat_crate.local>
- <aDoal24J-BMTIBCq@agluck-desk3>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTxiw/O/"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so2076316b3a.1;
+        Fri, 30 May 2025 16:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748646769; x=1749251569; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MqUM//8SfQwKzGfaGh29crkUGUUF/A3WL9Up46EW+mM=;
+        b=nTxiw/O/60ufTT5xKeRiwSFFDG1xGlJboOwudwglDcKyr+sFcKUa3u8mG388rzuy++
+         tsjhU6kbLUPi5hxnEWAnCfF+A6buw88PPdK1YdBZhq4X6qJkv6J7yqUTR4uEa99JP0Hc
+         jRrPXTaMcLFZiHG98H9CQwQkaID2uGjzD2FGOz2skkga4EjvJhyj1kBi42Whe7xM/jQh
+         RPm/LOXsFbo9d8y8dCBn5wj93Efpb1KTWGFBmcYDTDHFGnWSqG7nQy1zHHWyI9M5RGjh
+         ydC4CYbBYG3sYkxAGwpnLeSx4E997gtzgqRFtpLu6G3gkonI6guABrgdvyNabfsc9O+s
+         SEAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748646769; x=1749251569;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MqUM//8SfQwKzGfaGh29crkUGUUF/A3WL9Up46EW+mM=;
+        b=MZkUHGPfmVP2UKLXUJmesfLgr1CK3VngepCV6ajUp5MtRf2GjEOb3K0qvwW3BoIVYY
+         fzDdZePV0B0uv4T+GpUp++tbE7hNuWyHHFa10sWUXrtjAehBQS6LQ/uPptVn15WmWSH1
+         pVqZxBmpoTnYBsuiCz6ukxeqZgVAihjpxj/kVjzGYA9yinBvHMz2T8OthFlOMhRDEGbT
+         dgkgDzfZFaTvXit/rV/2b5/vd8wrHx/zX4mEznx8IWQfTQmupB0JAiApyWEgdo5z0q9Y
+         KKhptNTkcWWVir8/KRZykszH408mvRs6baeGoJOEM05BfZbYSJVNVc+CQmvYxjQWIu91
+         wkkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWr3wZhRL5Hqivljn4aEqBaydH8+D2KZk3BO/SrQx+HbJaMovpYXg2ozzqFGIa3C5E3Tcfz0KjHnApKzRVZ@vger.kernel.org, AJvYcCX/XSbzM8iVmIBCYR4BcEdeJylg01nGUpg8wcCoBQ7qfqVtPFUgq8Inbt0Svwu6vVMuKjm+uq8apKLyiQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiJhDhW+QhWvMgHGIE/ibdr67mnB1+dw73tR4bGdwkvQpqRYlA
+	VgLJ2jzdkpbvZ9x3WxWUWarl46gXCXOA0ykr2O4c9Bk6F3y2XORPI5fF
+X-Gm-Gg: ASbGncsXW4DaMffFL5jgipcAPw/CLz1hrcxDHYO9jIgVIQ3e6SZ5d9C5iyKf0kT16fj
+	wVf60e40Nmlw18wXQAveHEDyBGNfY56yLfGUR5SinbILsPJHtcBFtbd5n6U6fe0B/ivOGU6ZB21
+	bXU9aKAEE8l+oNeKpAJEQkLskwQakj06dRwqhkY+CmGXw6x/C485EArrNADfgyFZfhe1lE6uHK8
+	mxz9XTX5o6620avZvN2ef/K5ln9j9x7iSrIx1afaW/PAKRGbKgVszpwPuBmQSFWXLwh+2cffxDe
+	4L/Gi8CrS+IG5MJF+dFfzeG4sWAtXElYq7LrI/ctcUIQ4sclbu64
+X-Google-Smtp-Source: AGHT+IFHeyI9jVuPAyDeBaVv7nMJ1xnzkjCCEZ326DeO/nr42OA9VJ/9hB3rIhvTlv+eLYcNY/yLfQ==
+X-Received: by 2002:a05:6a21:164e:b0:1fd:f4df:96ed with SMTP id adf61e73a8af0-21ad9764696mr7528449637.26.1748646769223;
+        Fri, 30 May 2025 16:12:49 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:24e0:5639:ebc6:8c16])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-747affafb01sm3670106b3a.104.2025.05.30.16.12.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 May 2025 16:12:48 -0700 (PDT)
+Date: Fri, 30 May 2025 16:12:46 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Gatien Chevallier <gatien.chevallier@foss.st.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Paul Cercueil <paul@crapouillou.net>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rt-devel@lists.linux.dev, fabrice.gasnier@foss.st.com
+Subject: Re: [PATCH v2 0/2] Input: gpio-keys - Fixes for interrupt callbacks
+Message-ID: <ozixu2kocpxmtlh5mymdpm3hlovtvrepoedcu7gafqoxchcyjx@h5ajy7ujqye4>
+References: <20250528-gpio_keys_preempt_rt-v2-0-3fc55a9c3619@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,18 +74,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aDoal24J-BMTIBCq@agluck-desk3>
+In-Reply-To: <20250528-gpio_keys_preempt_rt-v2-0-3fc55a9c3619@foss.st.com>
 
-On Fri, May 30, 2025 at 01:52:41PM -0700, Luck, Tony wrote:
-> On Fri, May 30, 2025 at 12:27:11PM +0200, Borislav Petkov wrote:
-> > On Tue, May 06, 2025 at 02:38:13PM -0700, Zaid Alali wrote:
-> There isn't a fancy "debugfs_create_x128_le()" helper to manage these
-> 128-bit little endian numbers. So I've coded with the basic building
-> blocks (though using copy_from_user() and copy_to_user() feels like
-> back in the stone age). If there some helpers that I missed I'd be
-> happy to see that part simplified.
+On Wed, May 28, 2025 at 10:50:20AM +0200, Gatien Chevallier wrote:
+> This patchset fixes a "BUG: sleeping function called from invalid
+> context" when CFG_PREEMPT_RT is enabled and a possible concurrent access
+> on button data between gpio_keys_irq_timer() and gpio_keys_irq_isr().
+> 
+> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
 
-simple_read_from_buffer() and simple_write_to_buffer() may be the
-helpers that I didn't spot earlier.
+Applied, thank you.
 
--Tony
+-- 
+Dmitry
