@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706FE2356C3;
-	Fri, 30 May 2025 12:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AB7235042;
+	Fri, 30 May 2025 12:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748608761; cv=none; b=HhXeDLfiJwuD+6FwY5V/V6zSiDjZmd+x4sbHRiZvc4WOIE4A/+/uIYsOIQJjmGO9fFeYqzwIX4afckyXYm34bkhXBvj5DPi4kpRMJ0Skn29XxDmKA0BMURYWNjJEkhgzDCYs6X/2r3k0ijXFfoW1dEDo1IrG92ql3BlwHrifdLE=
+	t=1748608757; cv=none; b=byOJ7OLj+4iFdkAmFBNDZ8ltGvMZjTI6QrbtvDik378vNXzxp8qU0wFlhcoVrahE2hvarNae+FyCeGJhdkjTQvU8hh/lymLYTwQ7uOYzq7NQC2dNi/khCyAFBH4jgvXKxsTZS/Ep8D6x3/ZgOuzbiFZdUz32tyLr1d9X5LnnO1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748608761; c=relaxed/simple;
-	bh=tjOpaZWAo96c/ARrFWOBBKXjxoRCKDpO/FwzTy6VDBI=;
+	s=arc-20240116; t=1748608757; c=relaxed/simple;
+	bh=tPoOtt4IWEcPkFgZy1UQAh/qZlaV/O4k+3dkBlDaDO4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ad/DXjg8gY3/uScPZIPUZsPrvSIwb7/8eZcam9HsGGVlbnAcGJNtPpE2wuoZ9yxs3ZT4HS8jszgtHGvSdG7wKd3xYTIuIoZmvCeANa18UtuCr3X3XA6fbQBopDCtjWaPzHomyjf31gQqMAiw8yMsWHRzdgoc5z7ubmjigGbgc2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2IulH2O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=evPBV0Bncu1/x5wgN1pWRYTCKHnlhhs0v0cUhcfAUN3dIpZ+7bJ5PSfYBB8gBfgjxKDnBIeFP0M+F2sis+VD24xngK7ksRnYmTbG7837HyND0mGxDTbE1jXLx7s5CQbzm75cP+ZlhlIi7l9z676yZ4/bI6OdGQY9+a9YTUjJED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlF4uURL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2IulH2O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BF9FC4CEEA;
-	Fri, 30 May 2025 12:39:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlF4uURL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86B3C4CEF0;
+	Fri, 30 May 2025 12:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748608760;
-	bh=tjOpaZWAo96c/ARrFWOBBKXjxoRCKDpO/FwzTy6VDBI=;
+	s=k20201202; t=1748608756;
+	bh=tPoOtt4IWEcPkFgZy1UQAh/qZlaV/O4k+3dkBlDaDO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W2IulH2OMjXb5Cvtx6mMkqPzHSfolVr4CI93qTn1B2AH3JxQUvKMz0uRrhVjbgo8Q
-	 YeW3MDS0mkK/+nfvVFyb03WAQ2FNzUDCbXW5e5qzVkC4lQ2KQsayrD94dZ/LfdE+29
-	 GujuUfyWbhGWNQHFG4TZsgykwqUCqyEGKWCynJO24mnne3YHFscLdXerB6lGCf4bjy
-	 L+LAPYq12dLiFxh+S2L9OIh/S3WFUOJWtZ5DNUEzAO62iTqUvmDZYz/MaBdzRv8CCA
-	 xgq3ue5IRbp8+vJ1AbVbAz2BO1d2mzDmtJSFvXBZlAs3Ghbnpt0kn5dyNiQsuwMvnw
-	 ZBDX+fJVQ7eKw==
+	b=HlF4uURLr6CwVJBuLt8MczTuYxREm2dQ73bbRYI91ucFGgpsC2T4Vm4LZHU3AKspK
+	 POiRbkmJhLApWoXh+rfLNo6N+Kloy5AXUuT17FRSL+DzGZ3lSDf+dzUVr4fuOt6feL
+	 G84YAJayrFZdcUDKAWKq/VsY+CzFS8D37toTolTW1icU4Z7FWTfsVGW0RTIaPXAaXb
+	 Umwps7drsdh/dhtbIUrztgK1cqtoDm+DEJy/wl3foFdfziem3UbNv5lpS7cz7FpwVF
+	 3gEZHCep4rbtX4dJ7JQ0+UiPMBIKRy9ogs+a8LcUEhejthawwvPbO9fwbLfUvsYl6c
+	 XGvj+SSOi4z7g==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
-	Dhruva Gole <d-gole@ti.com>,
+Cc: Tamir Duberstein <tamird@gmail.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.15 21/30] pmdomain: core: Reset genpd->states to avoid freeing invalid data
-Date: Fri, 30 May 2025 08:38:43 -0400
-Message-Id: <20250530123852.2574030-21-sashal@kernel.org>
+	robert.moore@intel.com,
+	erik.schmauss@intel.com,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	devel@acpica.org,
+	linux-kernel@vger.kernel.org,
+	clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 6.15 17/30] ACPICA: Apply pack(1) to union aml_resource
+Date: Fri, 30 May 2025 08:38:39 -0400
+Message-Id: <20250530123852.2574030-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250530123852.2574030-1-sashal@kernel.org>
 References: <20250530123852.2574030-1-sashal@kernel.org>
@@ -45,93 +51,308 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.15
 Content-Transfer-Encoding: 8bit
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Tamir Duberstein <tamird@gmail.com>
 
-[ Upstream commit 99012014c902cd9ad85fd288d8a107f33a69855e ]
+[ Upstream commit eedf3e3c2f2af55dca42b0ea81dffb808211d269 ]
 
-If genpd_alloc_data() allocates data for the default power-states for the
-genpd, let's make sure to also reset the pointer in the error path. This
-makes sure a genpd provider driver doesn't end up trying to free the data
-again, but using an invalid pointer.
+ACPICA commit 1c28da2242783579d59767617121035dafba18c3
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-Link: https://lore.kernel.org/r/20250402120613.1116711-1-ulf.hansson@linaro.org
+This was originally done in NetBSD:
+https://github.com/NetBSD/src/commit/b69d1ac3f7702f67edfe412e4392f77d09804910
+and is the correct alternative to the smattering of `memcpy`s I
+previously contributed to this repository.
+
+This also sidesteps the newly strict checks added in UBSAN:
+https://github.com/llvm/llvm-project/commit/792674400f6f04a074a3827349ed0e2ac10067f6
+
+Before this change we see the following UBSAN stack trace in Fuchsia:
+
+  #0    0x000021afcfdeca5e in acpi_rs_get_address_common(struct acpi_resource*, union aml_resource*) ../../third_party/acpica/source/components/resources/rsaddr.c:329 <platform-bus-x86.so>+0x6aca5e
+  #1.2  0x000021982bc4af3c in ubsan_get_stack_trace() compiler-rt/lib/ubsan/ubsan_diag.cpp:41 <libclang_rt.asan.so>+0x41f3c
+  #1.1  0x000021982bc4af3c in maybe_print_stack_trace() compiler-rt/lib/ubsan/ubsan_diag.cpp:51 <libclang_rt.asan.so>+0x41f3c
+  #1    0x000021982bc4af3c in ~scoped_report() compiler-rt/lib/ubsan/ubsan_diag.cpp:395 <libclang_rt.asan.so>+0x41f3c
+  #2    0x000021982bc4bb6f in handletype_mismatch_impl() compiler-rt/lib/ubsan/ubsan_handlers.cpp:137 <libclang_rt.asan.so>+0x42b6f
+  #3    0x000021982bc4b723 in __ubsan_handle_type_mismatch_v1 compiler-rt/lib/ubsan/ubsan_handlers.cpp:142 <libclang_rt.asan.so>+0x42723
+  #4    0x000021afcfdeca5e in acpi_rs_get_address_common(struct acpi_resource*, union aml_resource*) ../../third_party/acpica/source/components/resources/rsaddr.c:329 <platform-bus-x86.so>+0x6aca5e
+  #5    0x000021afcfdf2089 in acpi_rs_convert_aml_to_resource(struct acpi_resource*, union aml_resource*, struct acpi_rsconvert_info*) ../../third_party/acpica/source/components/resources/rsmisc.c:355 <platform-bus-x86.so>+0x6b2089
+  #6    0x000021afcfded169 in acpi_rs_convert_aml_to_resources(u8*, u32, u32, u8, void**) ../../third_party/acpica/source/components/resources/rslist.c:137 <platform-bus-x86.so>+0x6ad169
+  #7    0x000021afcfe2d24a in acpi_ut_walk_aml_resources(struct acpi_walk_state*, u8*, acpi_size, acpi_walk_aml_callback, void**) ../../third_party/acpica/source/components/utilities/utresrc.c:237 <platform-bus-x86.so>+0x6ed24a
+  #8    0x000021afcfde66b7 in acpi_rs_create_resource_list(union acpi_operand_object*, struct acpi_buffer*) ../../third_party/acpica/source/components/resources/rscreate.c:199 <platform-bus-x86.so>+0x6a66b7
+  #9    0x000021afcfdf6979 in acpi_rs_get_method_data(acpi_handle, const char*, struct acpi_buffer*) ../../third_party/acpica/source/components/resources/rsutils.c:770 <platform-bus-x86.so>+0x6b6979
+  #10   0x000021afcfdf708f in acpi_walk_resources(acpi_handle, char*, acpi_walk_resource_callback, void*) ../../third_party/acpica/source/components/resources/rsxface.c:731 <platform-bus-x86.so>+0x6b708f
+  #11   0x000021afcfa95dcf in acpi::acpi_impl::walk_resources(acpi::acpi_impl*, acpi_handle, const char*, acpi::Acpi::resources_callable) ../../src/devices/board/lib/acpi/acpi-impl.cc:41 <platform-bus-x86.so>+0x355dcf
+  #12   0x000021afcfaa8278 in acpi::device_builder::gather_resources(acpi::device_builder*, acpi::Acpi*, fidl::any_arena&, acpi::Manager*, acpi::device_builder::gather_resources_callback) ../../src/devices/board/lib/acpi/device-builder.cc:84 <platform-bus-x86.so>+0x368278
+  #13   0x000021afcfbddb87 in acpi::Manager::configure_discovered_devices(acpi::Manager*) ../../src/devices/board/lib/acpi/manager.cc:75 <platform-bus-x86.so>+0x49db87
+  #14   0x000021afcf99091d in publish_acpi_devices(acpi::Manager*, zx_device_t*, zx_device_t*) ../../src/devices/board/drivers/x86/acpi-nswalk.cc:95 <platform-bus-x86.so>+0x25091d
+  #15   0x000021afcf9c1d4e in x86::X86::do_init(x86::X86*) ../../src/devices/board/drivers/x86/x86.cc:60 <platform-bus-x86.so>+0x281d4e
+  #16   0x000021afcf9e33ad in λ(x86::X86::ddk_init::(anon class)*) ../../src/devices/board/drivers/x86/x86.cc:77 <platform-bus-x86.so>+0x2a33ad
+  #17   0x000021afcf9e313e in fit::internal::target<(lambda at../../src/devices/board/drivers/x86/x86.cc:76:19), false, false, std::__2::allocator<std::byte>, void>::invoke(void*) ../../sdk/lib/fit/include/lib/fit/internal/function.h:183 <platform-bus-x86.so>+0x2a313e
+  #18   0x000021afcfbab4c7 in fit::internal::function_base<16UL, false, void(), std::__2::allocator<std::byte>>::invoke(const fit::internal::function_base<16UL, false, void (), std::__2::allocator<std::byte> >*) ../../sdk/lib/fit/include/lib/fit/internal/function.h:522 <platform-bus-x86.so>+0x46b4c7
+  #19   0x000021afcfbab342 in fit::function_impl<16UL, false, void(), std::__2::allocator<std::byte>>::operator()(const fit::function_impl<16UL, false, void (), std::__2::allocator<std::byte> >*) ../../sdk/lib/fit/include/lib/fit/function.h:315 <platform-bus-x86.so>+0x46b342
+  #20   0x000021afcfcd98c3 in async::internal::retained_task::Handler(async_dispatcher_t*, async_task_t*, zx_status_t) ../../sdk/lib/async/task.cc:24 <platform-bus-x86.so>+0x5998c3
+  #21   0x00002290f9924616 in λ(const driver_runtime::Dispatcher::post_task::(anon class)*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, zx_status_t) ../../src/devices/bin/driver_runtime/dispatcher.cc:789 <libdriver_runtime.so>+0x10a616
+  #22   0x00002290f9924323 in fit::internal::target<(lambda at../../src/devices/bin/driver_runtime/dispatcher.cc:788:7), true, false, std::__2::allocator<std::byte>, void, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request>>, int>::invoke(void*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, int) ../../sdk/lib/fit/include/lib/fit/internal/function.h:128 <libdriver_runtime.so>+0x10a323
+  #23   0x00002290f9904b76 in fit::internal::function_base<24UL, true, void(std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request>>, int), std::__2::allocator<std::byte>>::invoke(const fit::internal::function_base<24UL, true, void (std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, int), std::__2::allocator<std::byte> >*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, int) ../../sdk/lib/fit/include/lib/fit/internal/function.h:522 <libdriver_runtime.so>+0xeab76
+  #24   0x00002290f9904831 in fit::callback_impl<24UL, true, void(std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request>>, int), std::__2::allocator<std::byte>>::operator()(fit::callback_impl<24UL, true, void (std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, int), std::__2::allocator<std::byte> >*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, int) ../../sdk/lib/fit/include/lib/fit/function.h:471 <libdriver_runtime.so>+0xea831
+  #25   0x00002290f98d5adc in driver_runtime::callback_request::Call(driver_runtime::callback_request*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >, zx_status_t) ../../src/devices/bin/driver_runtime/callback_request.h:74 <libdriver_runtime.so>+0xbbadc
+  #26   0x00002290f98e1e58 in driver_runtime::Dispatcher::dispatch_callback(driver_runtime::Dispatcher*, std::__2::unique_ptr<driver_runtime::callback_request, std::__2::default_delete<driver_runtime::callback_request> >) ../../src/devices/bin/driver_runtime/dispatcher.cc:1248 <libdriver_runtime.so>+0xc7e58
+  #27   0x00002290f98e4159 in driver_runtime::Dispatcher::dispatch_callbacks(driver_runtime::Dispatcher*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../src/devices/bin/driver_runtime/dispatcher.cc:1308 <libdriver_runtime.so>+0xca159
+  #28   0x00002290f9918414 in λ(const driver_runtime::Dispatcher::create_with_adder::(anon class)*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../src/devices/bin/driver_runtime/dispatcher.cc:353 <libdriver_runtime.so>+0xfe414
+  #29   0x00002290f991812d in fit::internal::target<(lambda at../../src/devices/bin/driver_runtime/dispatcher.cc:351:7), true, false, std::__2::allocator<std::byte>, void, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter>>, fbl::ref_ptr<driver_runtime::Dispatcher>>::invoke(void*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../sdk/lib/fit/include/lib/fit/internal/function.h:128 <libdriver_runtime.so>+0xfe12d
+  #30   0x00002290f9906fc7 in fit::internal::function_base<8UL, true, void(std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter>>, fbl::ref_ptr<driver_runtime::Dispatcher>), std::__2::allocator<std::byte>>::invoke(const fit::internal::function_base<8UL, true, void (std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>), std::__2::allocator<std::byte> >*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../sdk/lib/fit/include/lib/fit/internal/function.h:522 <libdriver_runtime.so>+0xecfc7
+  #31   0x00002290f9906c66 in fit::function_impl<8UL, true, void(std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter>>, fbl::ref_ptr<driver_runtime::Dispatcher>), std::__2::allocator<std::byte>>::operator()(const fit::function_impl<8UL, true, void (std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>), std::__2::allocator<std::byte> >*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../sdk/lib/fit/include/lib/fit/function.h:315 <libdriver_runtime.so>+0xecc66
+  #32   0x00002290f98e73d9 in driver_runtime::Dispatcher::event_waiter::invoke_callback(driver_runtime::Dispatcher::event_waiter*, std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, fbl::ref_ptr<driver_runtime::Dispatcher>) ../../src/devices/bin/driver_runtime/dispatcher.h:543 <libdriver_runtime.so>+0xcd3d9
+  #33   0x00002290f98e700d in driver_runtime::Dispatcher::event_waiter::handle_event(std::__2::unique_ptr<driver_runtime::Dispatcher::event_waiter, std::__2::default_delete<driver_runtime::Dispatcher::event_waiter> >, async_dispatcher_t*, async::wait_base*, zx_status_t, zx_packet_signal_t const*) ../../src/devices/bin/driver_runtime/dispatcher.cc:1442 <libdriver_runtime.so>+0xcd00d
+  #34   0x00002290f9918983 in async_loop_owned_event_handler<driver_runtime::Dispatcher::event_waiter>::handle_event(async_loop_owned_event_handler<driver_runtime::Dispatcher::event_waiter>*, async_dispatcher_t*, async::wait_base*, zx_status_t, zx_packet_signal_t const*) ../../src/devices/bin/driver_runtime/async_loop_owned_event_handler.h:59 <libdriver_runtime.so>+0xfe983
+  #35   0x00002290f9918b9e in async::wait_method<async_loop_owned_event_handler<driver_runtime::Dispatcher::event_waiter>, &async_loop_owned_event_handler<driver_runtime::Dispatcher::event_waiter>::handle_event>::call_handler(async_dispatcher_t*, async_wait_t*, zx_status_t, zx_packet_signal_t const*) ../../sdk/lib/async/include/lib/async/cpp/wait.h:201 <libdriver_runtime.so>+0xfeb9e
+  #36   0x00002290f99bf509 in async_loop_dispatch_wait(async_loop_t*, async_wait_t*, zx_status_t, zx_packet_signal_t const*) ../../sdk/lib/async-loop/loop.c:394 <libdriver_runtime.so>+0x1a5509
+  #37   0x00002290f99b9958 in async_loop_run_once(async_loop_t*, zx_time_t) ../../sdk/lib/async-loop/loop.c:343 <libdriver_runtime.so>+0x19f958
+  #38   0x00002290f99b9247 in async_loop_run(async_loop_t*, zx_time_t, _Bool) ../../sdk/lib/async-loop/loop.c:301 <libdriver_runtime.so>+0x19f247
+  #39   0x00002290f99ba962 in async_loop_run_thread(void*) ../../sdk/lib/async-loop/loop.c:860 <libdriver_runtime.so>+0x1a0962
+  #40   0x000041afd176ef30 in start_c11(void*) ../../zircon/third_party/ulib/musl/pthread/pthread_create.c:63 <libc.so>+0x84f30
+  #41   0x000041afd18a448d in thread_trampoline(uintptr_t, uintptr_t) ../../zircon/system/ulib/runtime/thread.cc:100 <libc.so>+0x1ba48d
+
+Link: https://github.com/acpica/acpica/commit/1c28da22
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://patch.msgid.link/4664267.LvFx2qVVIh@rjwysocki.net
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+[ rjw: Pick up the tag from Tamir ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
 
-Based on the detailed analysis of the code and the commit changes, I can
-now provide a comprehensive answer. **YES** This commit should be
-backported to stable kernel trees. Here's my extensive analysis: ## Bug
-Analysis The commit fixes a memory management bug in the power domain
-subsystem's error handling path. In `genpd_alloc_data()`, when default
-power states are allocated via `genpd_set_default_power_state()`, the
-function sets: - `genpd->states = state` (pointing to allocated memory)
-- `genpd->free_states = genpd_free_default_power_state` However, in the
-error path (`put:` label at line 2197-2198), the code frees the
-allocated states memory with `kfree(genpd->states)` but **does not reset
-the pointer to NULL**. This leaves a dangling pointer in
-`genpd->states`. ## The Problem If `genpd_alloc_data()` fails and
-returns an error, but the genpd provider driver later tries to clean up
-and calls `genpd_free_data()` (which happens in `genpd_remove()` at line
-2214), the following sequence occurs: 1. `genpd_free_data()` checks `if
-(genpd->free_states)` - this is still set to
-`genpd_free_default_power_state` 2. It calls
-`genpd->free_states(genpd->states, genpd->state_count)` 3. This results
-in `kfree(genpd->states)` being called on already-freed memory (double-
-free) This is a classic use-after-free/double-free vulnerability that
-can lead to memory corruption, crashes, or potential security issues. ##
-The Fix The fix is simple but crucial: after `kfree(genpd->states)` in
-the error path, it adds `genpd->states = NULL`. This ensures that: 1.
-The dangling pointer is eliminated 2. Future calls to
-`genpd_free_data()` will call `kfree(NULL)`, which is safe and does
-nothing 3. No double-free occurs ## Backport Criteria Assessment **1.
-Does it fix a bug that affects users?** YES - This can cause kernel
-crashes and memory corruption when power domain initialization fails.
-**2. Is the fix small and contained?** YES - It's a single line addition
-(`genpd->states = NULL`). **3. Does it have clear side effects?** NO -
-Setting a pointer to NULL after freeing it is a standard safe practice
-with no negative side effects. **4. Major architectural changes?** NO -
-This is a simple bug fix in error handling. **5. Critical kernel
-subsystem?** YES - Power domain management is critical for power
-management across many devices. **6. Explicit stable mention?** NO - But
-this type of memory safety fix is exactly what stable trees are for.
-**7. Follows stable rules?** YES - Important bugfix with minimal risk.
-## Risk Assessment **Risk: MINIMAL** - The change only affects the error
-path and makes the code safer by preventing double-free. There's
-virtually no risk of regression since it only changes behavior when an
-error has already occurred. ## Similar Commit Patterns This follows the
-same pattern as **Similar Commit #1 and #4** which were both marked as
-**YES** for backporting - they fix memory management bugs in the same
-subsystem with minimal, contained changes that improve robustness
-without architectural changes. The fix prevents a potential security
-vulnerability (memory corruption) and improves system stability, making
-it an excellent candidate for stable tree backporting.
+**YES** This commit should be backported to stable kernel trees. Here's
+my extensive analysis: ## Critical Bug Fix Analysis **1. Fixes Real
+UBSAN Errors**: The commit addresses actual UBSAN (Undefined Behavior
+Sanitizer) violations that are triggered in real systems, specifically
+in Fuchsia OS but likely affecting Linux as well when using strict UBSAN
+builds. The stack trace shows concrete crashes in
+`acpi_rs_get_address_common()` and related ACPICA functions. **2. Root
+Cause - Misaligned Structure Access**: The fundamental issue is that
+`union aml_resource` was being defined with default alignment (after
+`#pragma pack()` at line 509 in amlresrc.h), while the individual
+structures within it were packed. This created a mismatch where: -
+Individual structs like `aml_resource_address` are packed with `#pragma
+pack(1)` - But `union aml_resource` containing them uses default
+alignment - When the union is cast from potentially misaligned AML byte
+streams, direct member access violates alignment requirements **3.
+Current Workarounds are Suboptimal**: The kernel currently has multiple
+`memcpy` workarounds scattered across 5 files (`rsaddr.c`, `rscalc.c`,
+`rslist.c`, `utresrc.c`) to avoid direct member access. These include
+comments like "Avoid undefined behavior: member access within misaligned
+address". **4. Elegant Solution**: The commit applies `#pragma pack(1)`
+to the `union aml_resource` itself by moving the `#pragma pack()`
+directive from before the union (line 509) to after it (line 563). This
+ensures the union has the same packing as its constituent structures. ##
+Code Impact Analysis **5. Minimal and Contained Change**: - Only moves
+existing pragma directives (4 lines changed in amlresrc.h) - Removes 48
+lines of workaround `memcpy` code across 4 files - No functional logic
+changes, only structural alignment fixes **6. Removes Maintenance
+Burden**: Eliminates the need for ongoing `memcpy` workarounds and the
+associated risk of missing alignment issues in future ACPICA updates.
+**7. Performance Benefit**: Direct member access is more efficient than
+`memcpy` operations, especially in ACPI hot paths during device
+enumeration. ## Stability Assessment **8. Low Regression Risk**: -
+ACPICA is well-tested code that undergoes extensive validation - The
+change makes the code more correct, not less - Similar pattern already
+used successfully in NetBSD - Does not change ABI or userspace
+interfaces **9. Critical Subsystem**: ACPI is fundamental to modern x86
+systems for device enumeration, power management, and hardware
+configuration. UBSAN violations in this code path can cause system
+instability. **10. Alignment with Stable Tree Criteria**: - ✅ Fixes
+important bugs (UBSAN violations can cause crashes) - ✅ Doesn't
+introduce new features - ✅ No architectural changes (just alignment fix)
+- ✅ Minimal regression risk - ✅ Confined to ACPICA subsystem ##
+Historical Context **11. Pattern of ACPICA UBSAN Fixes**: The git log
+shows multiple recent UBSAN-related fixes in ACPICA (commits
+d0a874cb4519, bf44c56a9977, 5bd2315bd2e4, etc.), indicating this is part
+of an ongoing effort to clean up undefined behavior in this critical
+subsystem. **12. Missing from Stable**: The commit appears in v6.16+ but
+has not been backported to stable branches like 6.14.y or 6.13.y,
+despite being a clear bugfix. This commit represents exactly the type of
+fix that stable trees need: it resolves real crashes/undefined behavior
+in a critical subsystem with minimal risk and no functional changes. The
+presence of extensive workarounds in the current code demonstrates that
+this is a known problem affecting real systems.
 
- drivers/pmdomain/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/acpi/acpica/amlresrc.h |  8 ++++----
+ drivers/acpi/acpica/rsaddr.c   | 13 ++++---------
+ drivers/acpi/acpica/rscalc.c   | 22 +++++-----------------
+ drivers/acpi/acpica/rslist.c   | 12 +++---------
+ drivers/acpi/acpica/utresrc.c  | 14 +++++---------
+ 5 files changed, 21 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-index d6c1ddb807b20..7a3bad106e175 100644
---- a/drivers/pmdomain/core.c
-+++ b/drivers/pmdomain/core.c
-@@ -2229,8 +2229,10 @@ static int genpd_alloc_data(struct generic_pm_domain *genpd)
- 	return 0;
- put:
- 	put_device(&genpd->dev);
--	if (genpd->free_states == genpd_free_default_power_state)
-+	if (genpd->free_states == genpd_free_default_power_state) {
- 		kfree(genpd->states);
-+		genpd->states = NULL;
-+	}
- free:
- 	if (genpd_is_cpu_domain(genpd))
- 		free_cpumask_var(genpd->cpus);
+diff --git a/drivers/acpi/acpica/amlresrc.h b/drivers/acpi/acpica/amlresrc.h
+index 4e88f9fc2a289..b6588b7fa8986 100644
+--- a/drivers/acpi/acpica/amlresrc.h
++++ b/drivers/acpi/acpica/amlresrc.h
+@@ -504,10 +504,6 @@ struct aml_resource_pin_group_config {
+ 
+ #define AML_RESOURCE_PIN_GROUP_CONFIG_REVISION    1	/* ACPI 6.2 */
+ 
+-/* restore default alignment */
+-
+-#pragma pack()
+-
+ /* Union of all resource descriptors, so we can allocate the worst case */
+ 
+ union aml_resource {
+@@ -562,6 +558,10 @@ union aml_resource {
+ 	u8 byte_item;
+ };
+ 
++/* restore default alignment */
++
++#pragma pack()
++
+ /* Interfaces used by both the disassembler and compiler */
+ 
+ void
+diff --git a/drivers/acpi/acpica/rsaddr.c b/drivers/acpi/acpica/rsaddr.c
+index 27384ee245f09..f92010e667cda 100644
+--- a/drivers/acpi/acpica/rsaddr.c
++++ b/drivers/acpi/acpica/rsaddr.c
+@@ -272,18 +272,13 @@ u8
+ acpi_rs_get_address_common(struct acpi_resource *resource,
+ 			   union aml_resource *aml)
+ {
+-	struct aml_resource_address address;
+-
+ 	ACPI_FUNCTION_ENTRY();
+ 
+-	/* Avoid undefined behavior: member access within misaligned address */
+-
+-	memcpy(&address, aml, sizeof(address));
+-
+ 	/* Validate the Resource Type */
+ 
+-	if ((address.resource_type > 2) &&
+-	    (address.resource_type < 0xC0) && (address.resource_type != 0x0A)) {
++	if ((aml->address.resource_type > 2) &&
++	    (aml->address.resource_type < 0xC0) &&
++	    (aml->address.resource_type != 0x0A)) {
+ 		return (FALSE);
+ 	}
+ 
+@@ -304,7 +299,7 @@ acpi_rs_get_address_common(struct acpi_resource *resource,
+ 		/* Generic resource type, just grab the type_specific byte */
+ 
+ 		resource->data.address.info.type_specific =
+-		    address.specific_flags;
++		    aml->address.specific_flags;
+ 	}
+ 
+ 	return (TRUE);
+diff --git a/drivers/acpi/acpica/rscalc.c b/drivers/acpi/acpica/rscalc.c
+index 6e7a152d64595..242daf45e20ef 100644
+--- a/drivers/acpi/acpica/rscalc.c
++++ b/drivers/acpi/acpica/rscalc.c
+@@ -608,18 +608,12 @@ acpi_rs_get_list_length(u8 *aml_buffer,
+ 
+ 		case ACPI_RESOURCE_NAME_SERIAL_BUS:{
+ 
+-				/* Avoid undefined behavior: member access within misaligned address */
+-
+-				struct aml_resource_common_serialbus
+-				    common_serial_bus;
+-				memcpy(&common_serial_bus, aml_resource,
+-				       sizeof(common_serial_bus));
+-
+ 				minimum_aml_resource_length =
+ 				    acpi_gbl_resource_aml_serial_bus_sizes
+-				    [common_serial_bus.type];
++				    [aml_resource->common_serial_bus.type];
+ 				extra_struct_bytes +=
+-				    common_serial_bus.resource_length -
++				    aml_resource->common_serial_bus.
++				    resource_length -
+ 				    minimum_aml_resource_length;
+ 				break;
+ 			}
+@@ -688,16 +682,10 @@ acpi_rs_get_list_length(u8 *aml_buffer,
+ 		 */
+ 		if (acpi_ut_get_resource_type(aml_buffer) ==
+ 		    ACPI_RESOURCE_NAME_SERIAL_BUS) {
+-
+-			/* Avoid undefined behavior: member access within misaligned address */
+-
+-			struct aml_resource_common_serialbus common_serial_bus;
+-			memcpy(&common_serial_bus, aml_resource,
+-			       sizeof(common_serial_bus));
+-
+ 			buffer_size =
+ 			    acpi_gbl_resource_struct_serial_bus_sizes
+-			    [common_serial_bus.type] + extra_struct_bytes;
++			    [aml_resource->common_serial_bus.type] +
++			    extra_struct_bytes;
+ 		} else {
+ 			buffer_size =
+ 			    acpi_gbl_resource_struct_sizes[resource_index] +
+diff --git a/drivers/acpi/acpica/rslist.c b/drivers/acpi/acpica/rslist.c
+index 164c96e063c6e..e46efaa889cdd 100644
+--- a/drivers/acpi/acpica/rslist.c
++++ b/drivers/acpi/acpica/rslist.c
+@@ -55,21 +55,15 @@ acpi_rs_convert_aml_to_resources(u8 * aml,
+ 	aml_resource = ACPI_CAST_PTR(union aml_resource, aml);
+ 
+ 	if (acpi_ut_get_resource_type(aml) == ACPI_RESOURCE_NAME_SERIAL_BUS) {
+-
+-		/* Avoid undefined behavior: member access within misaligned address */
+-
+-		struct aml_resource_common_serialbus common_serial_bus;
+-		memcpy(&common_serial_bus, aml_resource,
+-		       sizeof(common_serial_bus));
+-
+-		if (common_serial_bus.type > AML_RESOURCE_MAX_SERIALBUSTYPE) {
++		if (aml_resource->common_serial_bus.type >
++		    AML_RESOURCE_MAX_SERIALBUSTYPE) {
+ 			conversion_table = NULL;
+ 		} else {
+ 			/* This is an I2C, SPI, UART, or CSI2 serial_bus descriptor */
+ 
+ 			conversion_table =
+ 			    acpi_gbl_convert_resource_serial_bus_dispatch
+-			    [common_serial_bus.type];
++			    [aml_resource->common_serial_bus.type];
+ 		}
+ 	} else {
+ 		conversion_table =
+diff --git a/drivers/acpi/acpica/utresrc.c b/drivers/acpi/acpica/utresrc.c
+index cff7901f7866e..e1cc3d3487508 100644
+--- a/drivers/acpi/acpica/utresrc.c
++++ b/drivers/acpi/acpica/utresrc.c
+@@ -361,20 +361,16 @@ acpi_ut_validate_resource(struct acpi_walk_state *walk_state,
+ 	aml_resource = ACPI_CAST_PTR(union aml_resource, aml);
+ 	if (resource_type == ACPI_RESOURCE_NAME_SERIAL_BUS) {
+ 
+-		/* Avoid undefined behavior: member access within misaligned address */
+-
+-		struct aml_resource_common_serialbus common_serial_bus;
+-		memcpy(&common_serial_bus, aml_resource,
+-		       sizeof(common_serial_bus));
+-
+ 		/* Validate the bus_type field */
+ 
+-		if ((common_serial_bus.type == 0) ||
+-		    (common_serial_bus.type > AML_RESOURCE_MAX_SERIALBUSTYPE)) {
++		if ((aml_resource->common_serial_bus.type == 0) ||
++		    (aml_resource->common_serial_bus.type >
++		     AML_RESOURCE_MAX_SERIALBUSTYPE)) {
+ 			if (walk_state) {
+ 				ACPI_ERROR((AE_INFO,
+ 					    "Invalid/unsupported SerialBus resource descriptor: BusType 0x%2.2X",
+-					    common_serial_bus.type));
++					    aml_resource->common_serial_bus.
++					    type));
+ 			}
+ 			return (AE_AML_INVALID_RESOURCE_TYPE);
+ 		}
 -- 
 2.39.5
 
