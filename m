@@ -1,89 +1,121 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528E01F0E56
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B51224AFE;
+	Fri, 30 May 2025 11:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748606199; cv=none; b=ZImMgeC2KHZ2xuszS+r5pSjqQwMTRJCo6+znXs8KDB7XGojJrE6SYp8cNSOeeOq/hJnzbXmf8VFoTcAtq3S+dJUmmcuC3cJX6VrI13npb9m/Sp+0lnOy9U+qgRFDZU9i+0zVvmo9It0CPxZDvA2S4tlpJpnUR6GpKZKipz2D0Uk=
+	t=1748606235; cv=none; b=JoguiK4Q+jP8Ct2geOsfU9jTa4F9Fw7GA2cqkVrOF8ShZ2G5sf54giKlNSbNRQ04x6sLcEhGyMhDt09ZVFvZpXAwFHue6Y3p3E3GnAPaNBjdlMYhGGUPnaTARN0sbpkxW19bcc4B5UxdnFW1+H7RJpAQDihQoFMl5FeediPNPOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748606199; c=relaxed/simple;
-	bh=TgIyGIIOuLpJxK/0mNRaPvdDf1D8N2z4h+Hm2SzufqU=;
-	h=Mime-Version:Subject:From:To:CC:In-Reply-To:Message-ID:Date:
-	 Content-Type:References; b=Hstq4e4rhHuPvy9RNdlhNdPdn4ro3APsloOO9bREVYhg4Wi8PeTQ6mD/7SaMWbGRaXcc13PVbKwpSbofDqqDu0alZEdf5IMsYPyGAK0K9rA0CpXzZj4eXU5GTiHW234Yf+JTn0TdCpzUAdkBF8tE2UWcE1PV4zFzeOJIbU8KS3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JPTQ4/y2; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
+	s=arc-20240116; t=1748606235; c=relaxed/simple;
+	bh=yprLKIL5EOcfMSlo6iTpsD0WWz5KZsnDgNEziHBUpCc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LhbfEK6OW0BmZE3R8X39AW/sUoVa7i/x/oivsOs2E3RLgyyd9K0wkeerRG7sRlDoH9v3G8QybyYYvrLKOksv5eqexcWIu2ieN8gqVLt5tQQaOlx8LeV51hxh+qvCoJvrlHTG5x+Q9a6ujUVRJcyKEjtfDXMUiItVjptGZcGdHLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=urltr8Tj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JPTQ4/y2"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250530115635euoutp012108c013364736e523e3feb4e42df994~ETBH78Y5p0994309943euoutp01b
-	for <linux-kernel@vger.kernel.org>; Fri, 30 May 2025 11:56:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250530115635euoutp012108c013364736e523e3feb4e42df994~ETBH78Y5p0994309943euoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748606195;
-	bh=TgIyGIIOuLpJxK/0mNRaPvdDf1D8N2z4h+Hm2SzufqU=;
-	h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-	b=JPTQ4/y2PuLMNh6igXoJ0WI8Ybyy6IirYc2wCbexf3QyQmgdCbUly1NT77wTNWn+N
-	 xWcELr4XlzPccrDdJ70b1SOxSu4AKyUay7V2HZhx7czk6T2QtHcI2p0ZO4sTgFHcj2
-	 W45v5zp71Sqy9TJWoqOQV/zAMhNG+lTZBvqclbNw=
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="urltr8Tj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57C3C4CEE9;
+	Fri, 30 May 2025 11:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748606234;
+	bh=yprLKIL5EOcfMSlo6iTpsD0WWz5KZsnDgNEziHBUpCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=urltr8TjlU9yevlGNGZYsW/5ttQm+SYDwETSXdMS3H13s3KG0PtZ4rdgpYccnZuo7
+	 253TbK6rChcXrbul0cug2artRTruvBWS6CVFbrFtoIPntZVUXKKZv1MTzdTtGvDVGx
+	 PtfSlmfkGu7zg5W6ZLrkIr9cMOpGftxMON+PfOT4=
+Date: Fri, 30 May 2025 13:57:11 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] uaccess: rust: add strncpy_from_user
+Message-ID: <2025053041-zeppelin-used-1d3d@gregkh>
+References: <20250527-strncpy-from-user-v4-0-82168470d472@google.com>
+ <20250527-strncpy-from-user-v4-1-82168470d472@google.com>
+ <DA9GNN7GH1VE.2NDPJZLNHAUP4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: RE: [PATCH bpf v2] xsk: Fix out of order segment free in
- __xsk_generic_xmit()
-Reply-To: e.kubanski@partner.samsung.com
-Sender: Eryk Kubanski <e.kubanski@partner.samsung.com>
-From: Eryk Kubanski <e.kubanski@partner.samsung.com>
-To: Eryk Kubanski <e.kubanski@partner.samsung.com>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: "bjorn@kernel.org" <bjorn@kernel.org>, "magnus.karlsson@intel.com"
-	<magnus.karlsson@intel.com>, "maciej.fijalkowski@intel.com"
-	<maciej.fijalkowski@intel.com>, "jonathan.lemon@gmail.com"
-	<jonathan.lemon@gmail.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20250530103456.53564-1-e.kubanski@partner.samsung.com>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20250530115635eucms1p43454c8aa2f2215d2b86bc41ee9d1085e@eucms1p4>
-Date: Fri, 30 May 2025 13:56:35 +0200
-X-CMS-MailID: 20250530115635eucms1p43454c8aa2f2215d2b86bc41ee9d1085e
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009
-X-EPHeader: Mail
-X-ConfirmMail: N,general
-X-CMS-RootMailID: 20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009
-References: <20250530103456.53564-1-e.kubanski@partner.samsung.com>
-	<CGME20250530103506eucas1p1e4091678f4157b928ddfa6f6534a0009@eucms1p4>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA9GNN7GH1VE.2NDPJZLNHAUP4@kernel.org>
 
-It seems that CI tests have failed:
+On Fri, May 30, 2025 at 01:32:44PM +0200, Benno Lossin wrote:
+> On Tue May 27, 2025 at 2:34 PM CEST, Alice Ryhl wrote:
+> > This patch adds a direct wrapper around the C function of the same name.
+> > It's not really intended for direct use by Rust code since
+> > strncpy_from_user has a somewhat unfortunate API where it only
+> > nul-terminates the buffer if there's space for the nul-terminator. This
+> > means that a direct Rust wrapper around it could not return a &CStr
+> > since the buffer may not be a cstring. However, we still add the method
+> > to build more convenient APIs on top of it, which will happen in
+> > subsequent patches.
+> >
+> > Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> 
+> Reviewed-by: Benno Lossin <lossin@kernel.org>
+> 
+> One question below.
+> 
+> > ---
+> >  rust/kernel/uaccess.rs | 35 ++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 34 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > index 80a9782b1c6e98ed6eae308ade8551afa7adc188..9b1e4016fca2c25a44a8417c7e35e0fcf08aa959 100644
+> > --- a/rust/kernel/uaccess.rs
+> > +++ b/rust/kernel/uaccess.rs
+> > @@ -8,7 +8,7 @@
+> >      alloc::{Allocator, Flags},
+> >      bindings,
+> >      error::Result,
+> > -    ffi::c_void,
+> > +    ffi::{c_char, c_void},
+> >      prelude::*,
+> >      transmute::{AsBytes, FromBytes},
+> >  };
+> > @@ -369,3 +369,36 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+> >          Ok(())
+> >      }
+> >  }
+> > +
+> > +/// Reads a nul-terminated string into `dst` and returns the length.
+> > +///
+> > +/// This reads from userspace until a NUL byte is encountered, or until `dst.len()` bytes have been
+> > +/// read. Fails with [`EFAULT`] if a read happens on a bad address (some data may have been
+> > +/// copied). When the end of the buffer is encountered, no NUL byte is added, so the string is
+> > +/// *not* guaranteed to be NUL-terminated when `Ok(dst.len())` is returned.
+> > +///
+> > +/// # Guarantees
+> > +///
+> > +/// When this function returns `Ok(len)`, it is guaranteed that the first `len` bytes of `dst` are
+> > +/// initialized and non-zero. Furthermore, if `len < dst.len()`, then `dst[len]` is a NUL byte.
+> > +/// Unsafe code may rely on these guarantees.
+> > +#[inline]
+> > +#[expect(dead_code)]
+> > +fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> Result<usize> {
+> 
+> We could also return `&[u8]` here instead of the size. Would that
+> improve the users of this API?
 
-First test_progs failure (test_progs-aarch64-gcc-14):
-#610/3 xdp_adjust_tail/xdp_adjust_tail_grow2
-...
-test_xdp_adjust_tail_grow2:FAIL:case-128 retval unexpected case-128 retval: actual 1 != expected 3
-test_xdp_adjust_tail_grow2:FAIL:case-128 data_size_out unexpected case-128 data_size_out: actual 128 != expected 3520
-test_xdp_adjust_tail_grow2:FAIL:case-128-data cnt unexpected case-128-data cnt: actual 0 != expected 3392
-test_xdp_adjust_tail_grow2:FAIL:case-128-data data_size_out unexpected case-128-data data_size_out: actual 128 != expected 3520
-...
-#620 xdp_do_redirect
-...
-test_max_pkt_size:FAIL:prog_run_max_size unexpected error: -22 (errno 22)
+That would differ from the C function, strncpy_from_user() and force us
+reviewers to try to remember what is supposed to be happening here.  So
+I wouldn't recommend that if at all possible please.
 
-But Im not sure why?
+thanks,
 
-My changes impact only AF_XDP generic_xmit functions, these bpf tests don't touch
-AF_XDP sockets xmit path. Changes should impact only sendmsg socket syscall.
-Most of changes are Translation Unit local to xsk module.
-The only thing i think could impact that is skb_shared_info, but why?
-
-xsk tests didn't fail. Could you help me figure it out?
-Should I be worried? Maybe tests are broken?
+greg k-h
